@@ -659,7 +659,7 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	/****DMA Transfer start***/
 	//WDC_DMASyncCpu(pDMABufInfos);
 	/* Flush the I/O caches (see documentation of WDC_DMASyncIo()) */
-	WDC_DMASyncIo(pDMABufInfos);
+	//WDC_DMASyncIo(pDMABufInfos);
 	
 
 
