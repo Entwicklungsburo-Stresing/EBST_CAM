@@ -267,6 +267,12 @@ BOOL CCDDrvInit(UINT drvno)
 	//SetupPCIE_DMA(drvno);
 	//StartPCIE_DMAWrite(drvno);
 
+	//set hardware start des dma  via DREQ withe data = 0x4000000
+	ULONG mask = 0x40000000;
+	ULONG data = 0;// 0x40000000;
+	if (HWINTR_EN)
+		data = 0x40000000;
+	SetS0Reg(data, mask, 0x38, DRV);
 	return TRUE;	  // no Error, driver found
 }; //CCDDrvInit
 
@@ -599,7 +605,7 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	volatile UINT64 ISREndTime = 0;
 	volatile UINT64 CurrentISRTime = 0;
 
-	//ISRStartTime = ticksTimestamp();
+	ISRStartTime = ticksTimestamp();
 	
 	if (!Running)
 	{
@@ -616,7 +622,6 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	//OutTrigLow(DRV);
 	
 
-	SetS0Reg(0x40000000, 0x40000000, 0x38, DRV);
 	/*PUSHORT pVal;
 	pVal = pDMABufInfos->pUserAddr;
 	pVal += (DMACounter *_PIXEL / 4);
@@ -650,9 +655,10 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	//SetPCIeDMAInitRegs(DRV);
 	//StartPCIE_DMAWrite(DRV);
 	/****DMA Transfer start***/
-
+	//WDC_DMASyncCpu(pDMABufInfos);
 	/* Flush the I/O caches (see documentation of WDC_DMASyncIo()) */
-	//WDC_DMASyncIo(pDMABufInfos);
+	WDC_DMASyncIo(pDMABufInfos);
+	
 
 
 	/*ISREndTime = ticksTimestamp();
@@ -687,8 +693,9 @@ void SetupPCIE_DMA(UINT drvno)
 		return;
 	}
 
-	if(!SendDMAInfoToKP())
-		WDC_Err("sendDMAInfoToKP failed");;
+	if (HWINTR_EN)
+		if(!SendDMAInfoToKP())
+			WDC_Err("sendDMAInfoToKP failed");;
 
 	FirstPageOffset = pDMABufInfos->Page[0].dwBytes / 2;
 
@@ -709,15 +716,9 @@ void SetupPCIE_DMA(UINT drvno)
 	}
 
 
-	//set hardware start des dma  via DREQ withe data = 0x4000000
-	UINT data = 0;// 0x40000000;
-	if (HWINTR_EN)
-		data = 0x40000000;
 	
-	SetS0Reg(data, data, 0x38, DRV);
-	
-	if (!HWINTR_EN)
-		SetDMAStart();
+	//if (!HWINTR_EN)
+		//SetDMAStart();
 
 	ULONG CtrlData;
 	//WriteLongS0(DRV, 0, 0x38); //set DREQ
@@ -727,22 +728,22 @@ void SetupPCIE_DMA(UINT drvno)
 }
 void StartPCIE_DMAWrite(UINT drvno)
 {	// starts transfer from PCIe board to PCs main RAM
-	
-	//SetDMAReset();
-	//WDC_Err("entered StartPCIE_DMAWrit\n");
-	// DCSR: set the Iniator Reset 
-	//SetDMAReset();
+	if (!HWINTR_EN){
+		
+		//WDC_Err("entered StartPCIE_DMAWrit\n");
+		// DCSR: set the Iniator Reset 
+		SetDMAReset();
 
-	/* Flush the I/O caches (see documentation of WDC_DMASyncIo()) */
-	//WDC_DMASyncIo(pDMABufInfos);
-	/****DMA Transfer start***/
-	/* Flush the CPU caches (see documentation of WDC_DMASyncCpu()) */
-	//WDC_DMASyncCpu(pDMABufInfos);
+		/* Flush the I/O caches (see documentation of WDC_DMASyncIo()) */
+		//WDC_DMASyncIo(pDMABufInfos);
+		/****DMA Transfer start***/
+		/* Flush the CPU caches (see documentation of WDC_DMASyncCpu()) */
+		//WDC_DMASyncCpu(pDMABufInfos);
 
-	//SetDMADataPattern();
-	/* DDMACR: Start DMA - write to the device to initiate the DMA transfer */
-	//SetDMAStart();
-	
+		//SetDMADataPattern();
+		/* DDMACR: Start DMA - write to the device to initiate the DMA transfer */
+		SetDMAStart();
+	}
 }
 
 //not needed anymore, or?
