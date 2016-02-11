@@ -541,6 +541,7 @@ BOOL SendDMAInfoToKP(void){
 	WDC_Err("WDC:  dwPages %u\n", pDMABufInfos->dwPages);
 	WDC_Err("WDC:  hCard %u\n", pDMABufInfos->hCard);
 
+	/*for WDK Flush
 	pData = &dwDMABufSize;
 	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_BUFSIZE, pData, pdwResult);
 	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
@@ -548,7 +549,8 @@ BOOL SendDMAInfoToKP(void){
 		WDC_Err("sendDMAInfoToKP dwDMABufSize send failed\n");
 		return FALSE;
 	}
-
+	*/
+	//for JUNGO Flush, complete WD_DMA struct
 	pData = pDMABufInfos;
 	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_WDDMA, pData, pdwResult);
 	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
@@ -557,6 +559,7 @@ BOOL SendDMAInfoToKP(void){
 		return FALSE;
 	}
 
+	//for Testfkt to write to the Regs
 	pData = &hDev;
 	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_HDEV, pData, pdwResult);
 	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
@@ -566,10 +569,9 @@ BOOL SendDMAInfoToKP(void){
 	}
 
 	/*
-	//send dwOptions of WD_DMA struct to KP
+	//for JUNGO Flush , fragmented WD_DMA struct
 	dwOptions = pDMABufInfos->dwPages; //Im using dwPages instead of dwOptions 
-	//because the structure is mixed. I think it is a bug. 
-	//Jungo says our dll or h files are mixed up
+
 	pData = &dwOptions;
 	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_DWOPT, pData, pdwResult);
 	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
