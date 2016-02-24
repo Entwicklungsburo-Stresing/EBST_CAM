@@ -39,7 +39,7 @@ WD_PCI_CARD_INFO deviceInfo;
 WDC_DEVICE_HANDLE hDev = NULL;
 ULONG DMACounter = 0;//for debugging
 //Buffer in the RAM
-PVOID pDMAUserBuf;
+USHORT *pDMAUserBuf;
 WD_DMA *pDMABufInfos = NULL; //there will be saved the neccesary parameters for the dma buffer
 BOOL DMAAlreadyStarted = FALSE;
 
@@ -560,7 +560,7 @@ BOOL SendDMAInfoToKP(void){
 	}
 
 	//for Testfkt to write to the Regs
-	pData = &deviceInfo.Card;// &hDev;
+	pData = &hDev;// &deviceInfo.Card;// 
 	WDC_Err("deviceInfo.Card.Item[0].I.Mem.pTransAddr : 0x %x\n", deviceInfo.Card.Item[0].I.Mem.pTransAddr);
 	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_TESTSIGNALPREP, pData, pdwResult);
 	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
@@ -686,8 +686,8 @@ void SetupPCIE_DMA(UINT drvno)
 	/* Allocate and lock a SG DMA buffer: No need with DIODEN */
 	//pDMAUserBuf = malloc(dwDMABufSize);
 	//if (!pDMAUserBuf) return;
-	//dwStatus = WDC_DMAContigBufLock(hDev, &pDMAUserBuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
-	dwStatus = WDC_DMASGBufLock(hDev, &DIODENRingBuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
+	dwStatus = WDC_DMAContigBufLock(hDev, &pDMAUserBuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
+	//dwStatus = WDC_DMASGBufLock(hDev, &DIODENRingBuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ErrLog("Failed locking a contiguous DMA buffer. Error 0x%lx - %s\n",
@@ -958,7 +958,7 @@ BOOL SetBoardVars(UINT drvno, BOOL sym, BOOL burst,ULONG pixel, ULONG waits,ULON
 		}
 
 	//! GST Test: ND count soll > CAMACK sein damit keine ueberlappung
-	reg = 600;
+	reg = 1500;
 
     if (pclk>6) pclk=6;
 	reg |= pclk << 16;
@@ -2985,10 +2985,10 @@ void __cdecl ReadRingThread(void *dummy)
 				//for (k=100;k<4500;k++)
 				{
 					//if (*(pRingBuf + RingWRCnt*_NO_TLPS * 128 / 2 + 7) < 0x4000) //wert etwa > 0x4000
-					if (*(pRingBuf + RingWRCnt*pixel + 1000) !=500) 
+					if (*(pDMAUserBuf/*pRingBuf + RingWRCnt*pixel*/ + 1083) !=539) 
 					{//FetchActLine=TRUE;
-						ErrVal = *(pRingBuf + RingWRCnt*pixel + 1000);
-						ErrCnt += 1;
+						ErrVal = *(/*pRingBuf + RingWRCnt*pixel*/pDMAUserBuf + 1083);
+						ErrCnt  += 1;
 					}}
 #else
 				//FetchActLine=FALSE;// dont display if no error
