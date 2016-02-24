@@ -560,8 +560,9 @@ BOOL SendDMAInfoToKP(void){
 	}
 
 	//for Testfkt to write to the Regs
-	pData = &hDev;
-	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_HDEV, pData, pdwResult);
+	pData = &deviceInfo.Card;// &hDev;
+	WDC_Err("deviceInfo.Card.Item[0].I.Mem.pTransAddr : 0x %x\n", deviceInfo.Card.Item[0].I.Mem.pTransAddr);
+	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_TESTSIGNALPREP, pData, pdwResult);
 	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
 	{
 		WDC_Err("sendDMAInfoToKP hDev send failed\n");
@@ -679,7 +680,7 @@ void SetupPCIE_DMA(UINT drvno)
 {
 	//***open the DMA
 	WDC_Err("entered SetupPCIE_DMA\n");
-	DWORD dwOptions = DMA_FROM_DEVICE;
+	DWORD dwOptions = DMA_FROM_DEVICE;// | DMA_ALLOW_CACHE;
 	DWORD dwStatus;
 
 	/* Allocate and lock a SG DMA buffer: No need with DIODEN */
