@@ -183,7 +183,7 @@ BOOL PixelOdd = FALSE;				//display offset
 
 
 //for ReadSoftFifo example
-int ExpTime = 100; //in µs
+int ExpTime = 20; //in µs
 __int16 Releasems =1; //>=1	>1 or keyboard does not work - could be exposuretime	
 ULONG Threadp = 31;  //<=15  8=default,15=highest in current process,31=time critical
 
