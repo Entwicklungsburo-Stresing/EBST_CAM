@@ -33,7 +33,7 @@ enum {
 	KP_LSCPCIEJ_MSG_DWOPT = 3, /* Kernel Plugin receiving the DMA Options */
 	KP_LSCPCIEJ_MSG_BUFSIZE = 4,
 	KP_LSCPCIEJ_MSG_WDDMA = 5,
-	KP_LSCPCIEJ_MSG_HDEV = 6
+	KP_LSCPCIEJ_MSG_TESTSIGNALPREP = 6
 };
 
 /* Kernel PlugIn messages status */

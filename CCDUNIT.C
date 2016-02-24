@@ -170,9 +170,12 @@ CopytoDispbuf()
  		testcnt = 0;
 		DIODEN[0][0];
 	}
+	for (i = 0; i < _PIXEL; i++){
+		//pDMAUserBuf++;
+		DisplData[0][i] = *(pDMAUserBuf + i);//DIODENRingBuf[i + 0*FirstPageOffset + 0 * RAMPAGESIZE];//20: its a random number of the Ringbuffer (max 99)
+	}
+	//pDMAUserBuf -= _PIXEL;
 	for (i = 0; i < _PIXEL; i++)
-		DisplData[0][i] = DIODENRingBuf[i + 0*FirstPageOffset + 0 * RAMPAGESIZE];//20: its a random number of the Ringbuffer (max 99)
-		for (i = 0; i < _PIXEL; i++)
 			DisplData[1][i] = DIODEN[1][i];//* (pDIODEN+_PIXEL+i);
 		
 		//GetNextScan = FALSE;//act vals in disp buffer
