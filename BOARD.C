@@ -1265,7 +1265,7 @@ BOOL GETCCD(UINT drvno, void* pdioden, ULONG fftlines, long fkt, ULONG zadr)
 
 
 
-
+//replaced by StartReadWithDma
 	BOOL CallWRFile(UINT drvno, void* pdioden, ULONG arraylength, ULONG fkt)
 {	//here  the standard read fkt=1 is implemented
 	//wrap call to WriteFile to avaoid driver problem if target array>4k
@@ -1327,7 +1327,7 @@ BOOL GETCCD(UINT drvno, void* pdioden, ULONG fftlines, long fkt, ULONG zadr)
 
 
 
-//  call of the read function - FIFO version
+//replaced by StartReadWithDma
 BOOL ReadPCIEFifo(UINT drvno, void* pdioden, long fkt)
 {	//reads fifo data to buffer dioden
 	//drvno: driver number 1..4; 1 for LSCPCI
@@ -2912,6 +2912,7 @@ UserBufValid=FALSE; //set FALSE here if next buffer has a different address
 //read is done by ReadRing if tread>twrite
 // or by ReadLastRing if tread<twrite
 
+//replaced by StartReadWithDma
 void __cdecl ReadRingThread(void *dummy)
 
 {// max priority
@@ -3048,7 +3049,7 @@ void __cdecl ReadRingThread(void *dummy)
 }//ReadRingThread
 
 
-
+//replaced by StartReadWithDma
 void StartRingReadThread(UINT drvno, ULONG ringfifodepth, ULONG threadp, __int16 releasems)
 {	ULONG pixel = aPIXEL[drvno];
 	ULONG linesize = pixel * sizeof(ArrayT);
@@ -3062,7 +3063,7 @@ void StartRingReadThread(UINT drvno, ULONG ringfifodepth, ULONG threadp, __int16
 	ULONG Errorcode = 0;
 	ULONG ReturnedLength = 0;
 
-	if(!HWINTR_EN) dwDMABufSize = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
+	dwDMABufSize = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
 	if (!DMAAlreadyStarted){
 		SetupPCIE_DMA(DRV);
 		DMAAlreadyStarted = TRUE;
@@ -3102,7 +3103,7 @@ void StartRingReadThread(UINT drvno, ULONG ringfifodepth, ULONG threadp, __int16
 
 	return;
 }
-
+//replaced by StartReadWithDma
 void StopRingReadThread(void)
 {
 	RingCopyAct=FALSE;
