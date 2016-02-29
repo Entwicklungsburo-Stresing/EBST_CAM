@@ -2674,7 +2674,97 @@ ULONG ExpTime; //in micro sec - needed only in DLL, defined in DLL.h
 //FIFO
 //***************  Fifo only Functions   ***************
 
+void StartReadWithDma(UINT drvno){
 
+	//old startringreadthread routine
+	dwDMABufSize = aPIXEL[drvno] * sizeof(USHORT) + 100;//+100 sefty firts if it is not right calculated
+
+	if (_HWCH2) dwDMABufSize *= 2;
+
+	if (!DMAAlreadyStarted){
+		SetupPCIE_DMA(DRV);
+		DMAAlreadyStarted = TRUE;
+	}
+
+	//old ReadRingThread Routine
+	//read the actual trigger input of trigger or OPTO1 & 2 in CtrlC
+	if (RingCtrlRegOfs>0) ReadByteS0(Ringdrvno, &RingCtrlReg, RingCtrlRegOfs);
+
+	//old ReadPCIeFifo Routine
+	pArrayT pReadArray;
+	pArrayT	pDiodenBase;
+	pArrayT	pDiodenBase2;
+
+	ULONG length = 0;
+	ULONG i = 0;
+	ULONG lwritten = 0;
+	BOOL addalloc = FALSE;
+
+	if (!aINIT[drvno]) return FALSE;	// return with error if no init
+
+	pReadArray = pDMAUserBuf;
+	//	pReadArray = pReadArray + (db-1) * pixel;
+	pDiodenBase = pReadArray;
+
+	if (_FKT == 0) // set array to 0
+	{
+		for (i = 0; i< _PIXEL; i++)
+			*(pReadArray++) = 0;
+		return TRUE;
+	}
+
+	if (_FKT == 5) // set array to i
+	{
+		for (i = 0; i< _PIXEL; i++)
+			*(pReadArray++) = (USHORT)i;
+		return TRUE;
+	}
+
+	if (_FKT>9)
+		return FALSE;  // function not implemented
+
+
+	if ((_FKT == 2) || (_FKT == -1)) //read in our local array ladioden - add and clrread
+	{
+		//alloc local array dioden, so we don't overwrite our DIODEN
+		pReadArray = (USHORT)malloc(aPIXEL[drvno]);
+		if (pReadArray == 0)
+		{
+			ErrorMsg("alloc ADD/CLR Buffer failed");
+			return FALSE;
+		}
+		addalloc = TRUE;
+	}
+
+	if (_FKT == -1)
+	{ // return , nothing else to do
+		if (addalloc) free(pReadArray);
+		return TRUE;
+	}
+
+	if (_RESORT) Resort(drvno, pReadArray, pReadArray);  //pixel resort
+
+	if ((_HA_IR) && (_FKT != 2)) // copy back
+	{
+		pDiodenBase2 = pReadArray;
+		length = aPIXEL[drvno];  //resort only 300 values
+		if (_HWCH2) length *= 2;
+		for (i = 0; i< length; i++)
+			* (pDiodenBase++) = *(pDiodenBase2 + 2 * i + 1);
+	}
+
+
+	//clrread and add fkt=-1 and 2 could not be implemented with dma
+	//so we do it here after reading
+	if (_FKT == 2) // we must now add our data to DIODEN for online add
+	{
+		pDiodenBase2 = pReadArray;
+		for (i = 0; i<_PIXEL; i++)
+			* (pDiodenBase++) += *(pDiodenBase2++);
+	}
+
+	if (addalloc) free(pReadArray);
+}
 //  read a range from start to stop relative to actual Counter to user buffer
 UINT8 ReadRingBlock(void* pdioden, INT32 start, INT32 stop)	
 // when calling this function, the actual RingWRCnt value is used as relative zero
@@ -2810,7 +2900,7 @@ else //not wrapped
 	}
 
 UserBufValid=FALSE; //set FALSE here if next buffer has a different address
-};  // CopyRingtoUserBuf
+} // CopyRingtoUserBuf
 
 
 
@@ -2865,9 +2955,6 @@ void __cdecl ReadRingThread(void *dummy)
 		//read the actual trigger input of trigger or OPTO1 & 2 in CtrlC
 		if (RingCtrlRegOfs>0) ReadByteS0(Ringdrvno, &RingCtrlReg, RingCtrlRegOfs);
 		
-
-
-		//TODO: has to go somewhere in th dma
 		linestofetch = ReadFFCounter(Ringdrvno);
 		//if(linestofetch > 0)WDC_Err("linestofetch: %i \n", linestofetch);
 		//	if (FFValid(Ringdrvno))
@@ -2958,12 +3045,7 @@ void __cdecl ReadRingThread(void *dummy)
 	_endthread();
 }//ReadRingThread
 
-void StartReadWithDMA(UINT drvno){
-	dwDMABufSize = aPIXEL[drvno] * sizeof(USHORT);
-	
-	if (_HWCH2) dwDMABufSize *= 2;
 
-}
 
 void StartRingReadThread(UINT drvno, ULONG ringfifodepth, ULONG threadp, __int16 releasems)
 {	ULONG pixel = aPIXEL[drvno];
@@ -2978,6 +3060,11 @@ void StartRingReadThread(UINT drvno, ULONG ringfifodepth, ULONG threadp, __int16
 	ULONG Errorcode = 0;
 	ULONG ReturnedLength = 0;
 
+	if(!HWINTR_EN) dwDMABufSize = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
+	if (!DMAAlreadyStarted){
+		SetupPCIE_DMA(DRV);
+		DMAAlreadyStarted = TRUE;
+	}
 
 #if (_TESTRUP)
 	Roilines = ROILINES;
