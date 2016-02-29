@@ -34,6 +34,20 @@ General definitions
 // globals within board
 // don't change values here - are set within functions SetBoardVars...
 
+//DMA Addresses
+enum{
+	DmaAddr_DCSR		= 0x000,
+	DmaAddr_DDMACR		= 0x004,
+	DmaAddr_WDMATLPA	= 0x008,
+	DmaAddr_WDMATLPS	= 0x00C,
+	DmaAddr_WDMATLPC	= 0x010,
+	DmaAddr_WDMATLPP	= 0x014,
+	DmaAddr_RDMATLPP	= 0x018,
+	DmaAddr_RDMATLPA	= 0x01C,
+	DmaAddr_RDMATLPS	= 0x020,
+	DmaAddr_RDMATLPC	= 0x024
+};
+
 //jungodriver specific variables
 WD_PCI_CARD_INFO deviceInfo;
 WDC_DEVICE_HANDLE hDev = NULL;
@@ -351,43 +365,6 @@ return foundBoards;
 
 
 //**************  new for PCIE   *******************************
-/*old driver:
-void DisablePCIE_INTR(UINT drvno)
-{
-	BOOL fResult = FALSE;
-	DWORD   ReturnedLength;
-	ULONG	ctrlcode = 0;
-	ULONG   Errorcode = 0;
-
-	ctrlcode = 0x0;
-	fResult = DeviceIoControl(ahCCDDRV[drvno], IOCTL_DISABLE_INTERRUPTS,  // read error code
-		&ctrlcode,        // Buffer to driver.
-		sizeof(ctrlcode),
-		&Errorcode, sizeof(Errorcode), &ReturnedLength, NULL);
-	if (!fResult)  { ErrorMsg("disable INTR failed"); };
-}
-*/
-/*old driver
-void EnablePCIE_INTR(UINT drvno)
-{
-	BOOL fResult = FALSE;
-	DWORD   ReturnedLength;
-	ULONG	ctrlcode = 0;
-	ULONG   Errorcode = 0;
-
-	ctrlcode = 0x0;
-	fResult = DeviceIoControl(ahCCDDRV[drvno], IOCTL_ENABLE_INTERRUPTS,  // read error code
-		&ctrlcode,        // Buffer to driver.
-		sizeof(ctrlcode),
-		&Errorcode, sizeof(Errorcode), &ReturnedLength, NULL);
-	if (!fResult)  { ErrorMsg("enable INTR failed"); };
-}
-*/
-
-//TODO Fehlermeldung wenn DMA intitaliserung failed
-//TODO Interrupts
-//done
-
 
 BOOL SetDMAReg(ULONG Data, ULONG Bitmask, CHAR Address, UINT drvno){//the bitmask have "1" on the data dates like Bitmask: 1110 Data:1010 
 	ULONG OldRegisterValues;
@@ -437,18 +414,7 @@ BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT drvno){
 	}
 	return TRUE;
 }
-void SetDMADataPattern(void){
-	ULONG BitMask;
-	ULONG RegisterValues;
-
-	BitMask = 0xFFFFFFFF;
-	RegisterValues = 0xFFFFFFFF;
-	if (!SetDMAReg(RegisterValues, BitMask, 0x14, DRV)){
-		WDC_Err("set data pattern for the DMA failed");
-		return;
-	}
-}
-BOOL SetDMAAddrReg(UINT64 PhysAddrDMABuf64, ULONG tlpSize, UINT drvno){
+BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, UINT drvno){
 
 	ULONG PhysAddrDMABuf;
 	ULONG RegisterValues;
@@ -464,52 +430,51 @@ BOOL SetDMAAddrReg(UINT64 PhysAddrDMABuf64, ULONG tlpSize, UINT drvno){
 	//WDMATLPA (Reg name): write the lower part (bit 03:32) of the DMA adress to the DMA controller
 	PhysAddrDMABuf = (ULONG)PhysAddrDMABuf64;
 	BitMask = 0xFFFFFFFC;
-	if (!SetDMAReg(PhysAddrDMABuf, BitMask, 0x8, drvno)){
+	if (!SetDMAReg(PhysAddrDMABuf, BitMask,DmaAddr_WDMATLPA, drvno)){
 		WDC_Err("Set the lower part of the DMA Address failed");
 		return FALSE;
 	}
 
-	//WDMATLPS: write the upper part (bit 32:39) of the address
-	
+	//WDMATLPS: write the upper part (bit 32:39) of the address	
 	PhysAddrDMABuf = PhysAddrDMABuf64 >> 32;	//shift to the upper part 
 	PhysAddrDMABuf = PhysAddrDMABuf << 24;		//shift to prepare for the Register
 	BitMask = 0xFF001FFF;
 	//CHECK proof 0x20 from old driver
 	//ULONG TLPSize = 0x20;//(*ppDma)->Page->dwBytes / sizeof(WORD);//divide by 4 because of the conversion from bytes to WORD
 	RegisterValues = PhysAddrDMABuf | tlpSize;
-	if (!SetDMAReg(RegisterValues, BitMask, 0xC, drvno)){
+	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_WDMATLPS, drvno)){
 		WDC_Err("Set the upper part of the DMA Address and the TLPsize failed");
 		return FALSE;
 	}
 
 	//WDMATLPC: Set the number of DMA transfer count
 	BitMask = 0xFFFF;
-	if (!SetDMAReg(_NO_TLPS, BitMask, 0x10, drvno)){
+	if (!SetDMAReg(_NO_TLPS, BitMask, DmaAddr_WDMATLPC, drvno)){
 		WDC_Err("Set the number of DMA transfer count failed");
 		return FALSE;
 	}
 }
-BOOL SetPCIeDMAInitRegs(UINT drvno){
+BOOL SetDMAAddrTlp(UINT drvno){
 	WD_DMA **ppDma = &pDMABufInfos;
 	UINT64 PhysAddrDMABuf64;
 	ULONG BitMask;
-
+	
 	//write Address
 	PhysAddrDMABuf64 = (*ppDma)->Page[0].pPhysicalAddr;
-	SetDMAAddrReg(PhysAddrDMABuf64, 0x20, drvno);
+	SetDMAAddrTlpRegs(PhysAddrDMABuf64, TLPSize, drvno);
 }
 void SetDMAReset(void){
 	ULONG BitMask;
 	ULONG RegisterValues;
 	BitMask = 0x1;
 	RegisterValues = 0x1;
-	if (!SetDMAReg(RegisterValues, BitMask, 0x0, DRV)){
+	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_DCSR, DRV)){
 		WDC_Err("switch on the Initiator Reset for the DMA failed");
 		return;
 	}
 	// DCSR: reset the Iniator Reset 
 	RegisterValues = 0x0;
-	if (!SetDMAReg(RegisterValues, BitMask, 0x0, DRV)){
+	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_DCSR, DRV)){
 		WDC_Err("switch off the Initiator Reset for the DMA failed");
 		return;
 	}
@@ -519,7 +484,7 @@ void SetDMAStart(void){
 	ULONG RegisterValues;
 	BitMask = 0x1;
 	RegisterValues = 0x1;
-	if (!SetDMAReg(RegisterValues, BitMask, 0x4, DRV)){
+	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_DDMACR, DRV)){
 		WDC_Err("Set the Start Command for th DMA failed");
 		return;
 	}
@@ -551,6 +516,7 @@ BOOL SendDMAInfoToKP(void){
 	}
 	*/
 	//for JUNGO Flush, complete WD_DMA struct
+	/*
 	pData = pDMABufInfos;
 	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_WDDMA, pData, pdwResult);
 	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
@@ -558,8 +524,9 @@ BOOL SendDMAInfoToKP(void){
 		WDC_Err("sendDMAInfoToKP WD_DMA send failed\n");
 		return FALSE;
 	}
-
+	*/
 	//for Testfkt to write to the Regs
+	/*
 	pData = &hDev;// &deviceInfo.Card;// 
 	WDC_Err("deviceInfo.Card.Item[0].I.Mem.pTransAddr : 0x %x\n", deviceInfo.Card.Item[0].I.Mem.pTransAddr);
 	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_TESTSIGNALPREP, pData, pdwResult);
@@ -568,7 +535,7 @@ BOOL SendDMAInfoToKP(void){
 		WDC_Err("sendDMAInfoToKP hDev send failed\n");
 		return FALSE;
 	}
-
+	*/
 	/*
 	//for JUNGO Flush , fragmented WD_DMA struct
 	dwOptions = pDMABufInfos->dwPages; //Im using dwPages instead of dwOptions 
@@ -600,6 +567,7 @@ BOOL SendDMAInfoToKP(void){
 VOID DLLCALLCONV interrupt_handler(PVOID pData)
 {
 	//WDC_Err("entered interrupt handle\n");
+	/*
 	PWDC_DEVICE pDev = (PWDC_DEVICE)pData;
 	ULONG RegisterValues;
 	ULONG BitMask = 0x100;
@@ -607,13 +575,9 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	volatile UINT64 ISRStartTime;
 	volatile UINT64 ISREndTime = 0;
 	volatile UINT64 CurrentISRTime = 0;
+	*/
+//	ISRStartTime = ticksTimestamp();
 
-	ISRStartTime = ticksTimestamp();
-	
-	if (!Running)
-	{
-		return;
-	}
 	/*
 	BYTE regdata;// = 0x08000000;
 	ReadByteS0(DRV, &regdata, 0x4);
@@ -683,9 +647,6 @@ void SetupPCIE_DMA(UINT drvno)
 	DWORD dwOptions = DMA_FROM_DEVICE;// | DMA_ALLOW_CACHE;
 	DWORD dwStatus;
 
-	/* Allocate and lock a SG DMA buffer: No need with DIODEN */
-	//pDMAUserBuf = malloc(dwDMABufSize);
-	//if (!pDMAUserBuf) return;
 	dwStatus = WDC_DMAContigBufLock(hDev, &pDMAUserBuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
 	//dwStatus = WDC_DMASGBufLock(hDev, &DIODENRingBuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
 	if (WD_STATUS_SUCCESS != dwStatus)
@@ -696,14 +657,14 @@ void SetupPCIE_DMA(UINT drvno)
 		return;
 	}
 
+	/*for KP
 	if (HWINTR_EN)
 		if(!SendDMAInfoToKP())
-			WDC_Err("sendDMAInfoToKP failed");;
-
-	FirstPageOffset = pDMABufInfos->Page[0].dwBytes / 2;
+			WDC_Err("sendDMAInfoToKP failed");
+	*/
 
 	//set Init Regs
-	if (!SetPCIeDMAInitRegs(drvno)){
+	if (!SetDMAAddrTlp(drvno)){
 		ErrLog("DMARegisterInit failed \n");
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 	}
@@ -718,16 +679,12 @@ void SetupPCIE_DMA(UINT drvno)
 		return;
 	}
 
-
-	
-	//if (!HWINTR_EN)
-		//SetDMAStart();
-
+	/*for testing
 	ULONG CtrlData;
 	//WriteLongS0(DRV, 0, 0x38); //set DREQ
 	ReadLongS0(DRV, &CtrlData, 0x38);
 	WDC_Err("S0Data Offs. 0x38: %x \n", CtrlData);
-
+	*/
 }
 void StartPCIE_DMAWrite(UINT drvno)
 {	// starts transfer from PCIe board to PCs main RAM
@@ -747,24 +704,6 @@ void StartPCIE_DMAWrite(UINT drvno)
 		/* DDMACR: Start DMA - write to the device to initiate the DMA transfer */
 		SetDMAStart();
 	}
-}
-
-//not needed anymore, or?
-ULONG GetPCIE_DMAWriteStat(UINT drvno)
-{	//get status register DCR2 of DMA engine
-	BOOL fResult = FALSE;
-	DWORD   ReturnedLength;
-	ULONG	ctrlcode = 0;
-	ULONG   data = 0;
-
-	ctrlcode = 0x01; //is DCR2 as *4
-	fResult = DeviceIoControl(ahCCDDRV[drvno], IOCTL_GET_DMA_REGISTER,  // read error code
-		&ctrlcode,        // Buffer to driver.
-		sizeof(ctrlcode),
-		&data, sizeof(data), &ReturnedLength, NULL);
-	if (!fResult)  { ErrorMsg("GetWriteStat failed"); };
-
-	return data;
 }
 
 void CleanupPCIE_DMA(UINT drvno)
@@ -788,8 +727,6 @@ void CleanupPCIE_DMA(UINT drvno)
 	if (!fResult)  { ErrorMsg("Cleanup failed"); };
 	*/
 }
-
-
 
 BOOL ActMouse(UINT drvno)
 	{		// inits PCI Board and gets all needed addresses
