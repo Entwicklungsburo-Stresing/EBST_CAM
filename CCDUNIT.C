@@ -518,8 +518,10 @@ void Contimess(void *dummy)
 	//StartPCIE_DMAWrite(DRV);
 
 	//start 2nd thread for getting data in highest std priority, ring=200 lines
-	StartRingReadThread(DRV, 200, _THREADPRI, -1);
-
+	if (HWINTR_EN)
+		StartRingReadThread(DRV, 200, _THREADPRI, -1);
+	else
+		StartReadWithDma(DRV);
 	//while (!RingThreadOn) {}; // wait until ReadThread is running
 
 	//start thread to display data

@@ -2958,7 +2958,12 @@ void __cdecl ReadRingThread(void *dummy)
 	_endthread();
 }//ReadRingThread
 
+void StartReadWithDMA(UINT drvno){
+	dwDMABufSize = aPIXEL[drvno] * sizeof(USHORT);
+	
+	if (_HWCH2) dwDMABufSize *= 2;
 
+}
 
 void StartRingReadThread(UINT drvno, ULONG ringfifodepth, ULONG threadp, __int16 releasems)
 {	ULONG pixel = aPIXEL[drvno];

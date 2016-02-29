@@ -73,13 +73,14 @@ typedef ArrayT* pArrayT;
 
 
 
-									// array type is defined in board.h
+//delete after deleting ringreadthread									// array type is defined in board.h
 ArrayT DIODEN[_MAXDB][_PIXEL];		// global data array, could be 1 or 2 dim
 ArrayT DIODENRingBuf[100 * RAMPAGESIZE];
-DWORD dwDMABufSize = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
 DWORD FirstPageOffset;
 pArrayT pDIODEN = (pArrayT) &DIODEN;
 
+//jungo
+DWORD dwDMABufSize;// = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
 ULONG DisplData[2][_PIXEL];//array for display for 2 cams parallel
 
 
