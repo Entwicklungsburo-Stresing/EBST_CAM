@@ -335,6 +335,11 @@ void UpdateTxT(void)
 	}
 
 #if (_ERRTEST)
+		if (*(pDMAUserBuf + 1083) != 539)
+		{
+			ErrVal = *(pDMAUserBuf + 1083);
+			ErrCnt += 1;
+		}
 	j += sprintf_s(TrmsString + j, 260, " , err=%d , val=%d", ErrCnt, ErrVal);
 #endif
 
@@ -350,7 +355,6 @@ void DisplayData()
 	char header[260];
 	int j=0;
 	int i=0;
-
 
 // display loop in normal priority
 do
@@ -475,11 +479,7 @@ void Contimess(void *dummy)
 	SetIntFFTrig(DRV);
 	RSFifo(DRV);
 
-//startdma war hier mal
-	if (!DMAAlreadyStarted){
-		SetupPCIE_DMA(DRV);
-		DMAAlreadyStarted = TRUE;
-	}
+
 	
 	// write header
 	j=sprintf_s(header,260," Online Loop - Cancel with ESC or space- key  " );
@@ -518,10 +518,12 @@ void Contimess(void *dummy)
 	//StartPCIE_DMAWrite(DRV);
 
 	//start 2nd thread for getting data in highest std priority, ring=200 lines
-	if (HWINTR_EN)
+	if (!HWINTR_EN)
 		StartRingReadThread(DRV, 200, _THREADPRI, -1);
 	else
 		StartReadWithDma(DRV);
+		
+	//StartRingReadThread(DRV, 200, _THREADPRI, -1);
 	//while (!RingThreadOn) {}; // wait until ReadThread is running
 
 	//start thread to display data
