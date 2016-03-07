@@ -267,7 +267,7 @@ BOOL CCDDrvInit(UINT drvno)
 	pData = &Data;
 	DWORD dwResult;
 	PDWORD	pdwResult = &dwResult;
-	
+	/*
 	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_VERSION, pData, pdwResult);
 	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
 	{
@@ -277,7 +277,7 @@ BOOL CCDDrvInit(UINT drvno)
 		return FALSE;
 	}
 	WDC_Err("KPCALL: Version: %u \n", Data.dwVer);
-
+	*/
 	//SetupPCIE_DMA(drvno);
 	//StartPCIE_DMAWrite(drvno);
 
