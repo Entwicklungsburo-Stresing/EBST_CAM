@@ -448,7 +448,7 @@ void Contimess(void *dummy)
 
 
 	//SetTORReg(DRV, 0);  //XCK  
-	SetTORReg(DRV,1);	//outtrig
+	//SetTORReg(DRV,1);	//outtrig
 	//SetTORReg(DRV, 2);  //FFREAD  geht : 20 microsec
 	//SetTORReg(DRV, 3);  // area read
 	//SetTORReg(DRV, 1);// 0);  // 
