@@ -171,7 +171,7 @@ WDC_DEVICE_HANDLE LSCPCIEJ_DeviceOpen(const WD_PCI_CARD_INFO *pDeviceInfo)
     devAddrDesc.dwNumAddrSpaces = pDev->dwNumAddrSpaces;
     devAddrDesc.pAddrDesc = pDev->pAddrDesc;
 
-    /* Open a handle to a Kernel PlugIn driver */
+    /* Open a handle to a Kernel PlugIn driver 
 	dwStatus = WDC_KernelPlugInOpen(hDev, KP_LSCPCIEJ_DRIVER_NAME, &devAddrDesc);
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
@@ -180,7 +180,7 @@ WDC_DEVICE_HANDLE LSCPCIEJ_DeviceOpen(const WD_PCI_CARD_INFO *pDeviceInfo)
 		goto Error;
 	}
 	WDC_Err("succesfull created KErnelplugin handle\n");
-
+	*/
 
     /* Validate device information */
     if (!DeviceValidate((PWDC_DEVICE)hDev))
