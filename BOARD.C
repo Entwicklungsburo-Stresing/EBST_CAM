@@ -644,8 +644,11 @@ void SetupPCIE_DMA(UINT drvno)
 {
 	//***open the DMA
 	WDC_Err("entered SetupPCIE_DMA\n");
-	DWORD dwOptions = DMA_FROM_DEVICE;// | DMA_ALLOW_CACHE;
+	DWORD dwOptions = DMA_FROM_DEVICE | DMA_ALLOW_64BIT_ADDRESS ;// | DMA_ALLOW_CACHE;
 	DWORD dwStatus;
+
+	//only for test:
+	dwDMABufSize = 100;// *1000 * 1000;//100mb max
 
 	dwStatus = WDC_DMAContigBufLock(hDev, &pDMAUserBuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
 	//dwStatus = WDC_DMASGBufLock(hDev, &DIODENRingBuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
