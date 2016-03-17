@@ -640,13 +640,14 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	//WDC_Err("DMACounter: %d \n", DMACounter);
 }
 
-void SetupPCIE_DMA(UINT drvno)
+BOOL SetupPCIE_DMA(UINT drvno)
 {
 	//***open the DMA
 	WDC_Err("entered SetupPCIE_DMA\n");
 	DWORD dwOptions = DMA_FROM_DEVICE;// | DMA_ALLOW_CACHE;
 	DWORD dwStatus;
 
+	dwDMABufSize = 2000  * 1000 * 1000;
 	dwStatus = WDC_DMAContigBufLock(hDev, &pDMAUserBuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
 	//dwStatus = WDC_DMASGBufLock(hDev, &DIODENRingBuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
 	if (WD_STATUS_SUCCESS != dwStatus)
@@ -654,7 +655,7 @@ void SetupPCIE_DMA(UINT drvno)
 		ErrLog("Failed locking a contiguous DMA buffer. Error 0x%lx - %s\n",
 			dwStatus, Stat2Str(dwStatus));
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
-		return;
+		return FALSE;
 	}
 
 	/*for KP
@@ -685,6 +686,7 @@ void SetupPCIE_DMA(UINT drvno)
 	ReadLongS0(DRV, &CtrlData, 0x38);
 	WDC_Err("S0Data Offs. 0x38: %x \n", CtrlData);
 	*/
+	return TRUE;
 }
 void StartPCIE_DMAWrite(UINT drvno)
 {	// starts transfer from PCIe board to PCs main RAM
@@ -2682,7 +2684,7 @@ void StartReadWithDma(UINT drvno){
 	if (_HWCH2) dwDMABufSize *= 2;
 
 	if (!DMAAlreadyStarted){
-		SetupPCIE_DMA(DRV);
+		if(!SetupPCIE_DMA(DRV)) return;
 		DMAAlreadyStarted = TRUE;
 	}
 

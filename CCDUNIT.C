@@ -527,16 +527,18 @@ void Contimess(void *dummy)
 	//while (!RingThreadOn) {}; // wait until ReadThread is running
 
 	//start thread to display data
-	_beginthread( DisplayData, 2000, &hMSDC ); 
+	if(DMAAlreadyStarted)
+		_beginthread( DisplayData, 2000, &hMSDC ); 
 
 
 	//start hardware timer - must be the last
-	if (EXTTRIGFLAG)
-		 {SetExtFFTrig(DRV); }
-	else
-		{SetIntFFTrig(DRV);
-		StartFFTimer(DRV, ExpTime); // in micro sec
-		}
+	if (DMAAlreadyStarted)
+		if (EXTTRIGFLAG)
+			 {SetExtFFTrig(DRV); }
+		else
+			{SetIntFFTrig(DRV);
+			StartFFTimer(DRV, ExpTime); // in micro sec
+			}
 
 	}//Contimess
 
