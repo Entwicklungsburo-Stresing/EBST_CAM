@@ -463,7 +463,18 @@ BOOL SetDMAAddrTlp(UINT drvno){
 	
 	//write Address
 	PhysAddrDMABuf64 = (*ppDma)->Page[0].pPhysicalAddr;
-	SetDMAAddrTlpRegs(PhysAddrDMABuf64, TLPSize, drvno);
+	if (!SetDMAAddrTlpRegs(PhysAddrDMABuf64, TLPSize, drvno)) 
+		return FALSE;
+	return TRUE;
+}
+BOOL SetDMABufRegs(UINT drvno){
+	//set DMA Buffer size in scans
+	if(!SetS0Reg(1, 0xffffffff, 0x4C, drvno))
+		return FALSE;
+	//set Scans per Interrupt
+	if(!SetS0Reg(1, 0xffffffff, 0x4C, drvno))
+		return FALSE;
+	return TRUE;
 }
 void SetDMAReset(void){
 	ULONG BitMask;
@@ -667,8 +678,12 @@ void SetupPCIE_DMA(UINT drvno)
 
 	//set Init Regs
 	if (!SetDMAAddrTlp(drvno)){
-		ErrLog("DMARegisterInit failed \n");
+		ErrLog("DMARegisterInit for TLP and Addr failed \n");
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
+	}
+	if (!SetDMABufRegs(drvno)){
+	ErrLog("DMARegisterInit for Buffer failed \n");
+	WDC_Err("%s", LSCPCIEJ_GetLastErr());
 	}
 
 	// Enable DMA interrupts (if not polling)
@@ -1532,7 +1547,7 @@ BOOL ReadLongDMA(UINT drvno, ULONG *DWData, ULONG PortOff)
 };  // ReadLongDMA
 //done
 BOOL ReadByteS0(UINT drvno,BYTE *data, ULONG PortOff)
-	{// reads byte in space0 area
+	{// reads byte in space0 area except r10-r1f
 	// PortOff: Offset from BaseAdress - in Bytes !
 	// returns TRUE if success
 	volatile DWORD dwStatus = 0;
@@ -1721,7 +1736,7 @@ BOOL WriteByteDMA(UINT drvno, USHORT DWData, ULONG PortOff)
 */
 //done
 BOOL WriteByteS0(UINT drvno, BYTE DWData, ULONG PortOff)
-{	// writes byte to space0 register
+{	// writes byte to space0 register except r10-r1f
 	// PortOff: Reg Offset from BaseAdress - in bytes
 	// returns TRUE if success
 	BOOL fResult = FALSE;
