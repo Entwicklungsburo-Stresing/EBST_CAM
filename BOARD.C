@@ -655,13 +655,12 @@ BOOL SetupPCIE_DMA(UINT drvno)
 {
 	//***open the DMA
 	WDC_Err("entered SetupPCIE_DMA\n");
-	DWORD dwOptions = DMA_FROM_DEVICE | DMA_ALLOW_64BIT_ADDRESS ;// | DMA_ALLOW_CACHE;
+	DWORD dwOptions = DMA_FROM_DEVICE;// | DMA_ALLOW_64BIT_ADDRESS;// | DMA_ALLOW_CACHE;
 	DWORD dwStatus;
 
 	//only for test:
-	dwDMABufSize = 100;// *1000 * 1000;//100mb max
+	//dwDMABufSize = 100;// *1000 * 1000;//100mb max
 
-	dwDMABufSize = 2000  * 1000 * 1000;
 	dwStatus = WDC_DMAContigBufLock(hDev, &pDMAUserBuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
 	//dwStatus = WDC_DMASGBufLock(hDev, &DIODENRingBuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
 	if (WD_STATUS_SUCCESS != dwStatus)
@@ -2697,7 +2696,7 @@ ULONG ExpTime; //in micro sec - needed only in DLL, defined in DLL.h
 void StartReadWithDma(UINT drvno){
 
 	//old startringreadthread routine
-	dwDMABufSize = aPIXEL[drvno] * sizeof(USHORT) + 100;//+100 sefty firts if it is not right calculated
+	dwDMABufSize = aPIXEL[drvno] * sizeof(USHORT);// +100;//+100 safty first if it is not right calculated
 
 	if (_HWCH2) dwDMABufSize *= 2;
 
