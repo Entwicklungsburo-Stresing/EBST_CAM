@@ -45,7 +45,9 @@ enum{
 	DmaAddr_RDMATLPP	= 0x018,
 	DmaAddr_RDMATLPA	= 0x01C,
 	DmaAddr_RDMATLPS	= 0x020,
-	DmaAddr_RDMATLPC	= 0x024
+	DmaAddr_RDMATLPC	= 0x024,
+	DmaAddr_DmaBufSize	= 0x04C,
+	DmaAddr_ScansPerIntr= 0x050
 };
 
 //jungodriver specific variables
@@ -56,6 +58,7 @@ ULONG DMACounter = 0;//for debugging
 USHORT *pDMAUserBuf;
 WD_DMA *pDMABufInfos = NULL; //there will be saved the neccesary parameters for the dma buffer
 BOOL DMAAlreadyStarted = FALSE;
+DWORD dwDMABufSize;
 
 // handle array for our drivers
 HANDLE ahCCDDRV[5] = {INVALID_HANDLE_VALUE,INVALID_HANDLE_VALUE,INVALID_HANDLE_VALUE,INVALID_HANDLE_VALUE,INVALID_HANDLE_VALUE};		
@@ -467,10 +470,10 @@ BOOL SetDMAAddrTlp(UINT drvno){
 }
 BOOL SetDMABufRegs(UINT drvno){
 	//set DMA Buffer size in scans
-	if(!SetS0Reg(1, 0xffffffff, 0x4C, drvno))
+	if(!SetS0Reg(DMABufSizeInScans, 0xffffffff, DmaAddr_DmaBufSize, drvno))
 		return FALSE;
 	//set Scans per Interrupt
-	if(!SetS0Reg(1, 0xffffffff, 0x4C, drvno))
+	if (!SetS0Reg(DMABufSizeInScans/2, 0xffffffff, DmaAddr_ScansPerIntr, drvno))
 		return FALSE;
 	return TRUE;
 }
@@ -2696,7 +2699,7 @@ ULONG ExpTime; //in micro sec - needed only in DLL, defined in DLL.h
 void StartReadWithDma(UINT drvno){
 
 	//old startringreadthread routine
-	dwDMABufSize = aPIXEL[drvno] * sizeof(USHORT);// +100;//+100 safty first if it is not right calculated
+	dwDMABufSize = DMABufSizeInScans * aPIXEL[drvno] * sizeof(USHORT);// +10;//+100 safty first if it is not right calculated
 
 	if (_HWCH2) dwDMABufSize *= 2;
 
