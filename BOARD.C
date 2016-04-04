@@ -604,21 +604,22 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	//OutTrigLow(DRV);
 
 	// copy pDMABuf to UserBuffer 
+	if (pDev->Int.dwCounter > 3)
+		return;
 	
-	
-	//if (!(pDev->Int.dwCounter % (USERBUFINSCANS/IntFreqInScans))){
+	if (!(pDev->Int.dwCounter % (USERBUFINSCANS/IntFreqInScans))){
 		pDMAUserBuf = &DMAUserBuf[0][0];
 		WDC_Err("reset ringbuf to zero\n");
-	//}
+	}
 	if (pDev->Int.dwCounter % 2) { //odds
 		memcpy(pDMAUserBuf, pDMABuf, IntFreqInScans * _PIXEL * sizeof(USHORT));
 		WDC_Err("ODDS\n");
 	}
 	else {                         //evens
-		memcpy(pDMAUserBuf + IntFreqInScans, pDMABuf, IntFreqInScans * _PIXEL * sizeof(USHORT));
+		memcpy(pDMAUserBuf, pDMABuf + IntFreqInScans, IntFreqInScans * _PIXEL * sizeof(USHORT));
 		WDC_Err("EVENS\n");
 	}
-	pDMAUserBuf += pDev->Int.dwCounter * _PIXEL; //count user buf like a ringbuf up
+	pDMAUserBuf += IntFreqInScans * _PIXEL; //count user buf like a ringbuf up
 	
 	/*ISREndTime = ticksTimestamp();
 	
