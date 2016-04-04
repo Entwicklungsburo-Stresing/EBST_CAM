@@ -608,17 +608,17 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	// copy pDMABuf to UserBuffer 
 	
 	
-	if (!(pDev->Int.dwCounter % (USERBUFINSCANS/IntFreqInScans))){
+	//if (!(pDev->Int.dwCounter % (USERBUFINSCANS/IntFreqInScans))){
 		pDMAUserBuf = &DMAUserBuf[0][0];
-		WDC_ERR("reset ringbuf to zero\n");
-	}
+		WDC_Err("reset ringbuf to zero\n");
+	//}
 	if (pDev->Int.dwCounter % 2) { //odds
 		memcpy(pDMAUserBuf, pDMABuf, IntFreqInScans * _PIXEL * sizeof(USHORT));
-		WDC_ERR("ODDS\n");
+		WDC_Err("ODDS\n");
 	}
 	else {                         //evens
 		memcpy(pDMAUserBuf + IntFreqInScans, pDMABuf, IntFreqInScans * _PIXEL * sizeof(USHORT));
-		WDC_ERR("EVENS\n");
+		WDC_Err("EVENS\n");
 	}
 	pDMAUserBuf += pDev->Int.dwCounter * _PIXEL; //count user buf like a ringbuf up
 	
@@ -630,7 +630,7 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 		MaxISRTime = CurrentISRTime;
 	*/
 
-	//WDC_Err("Got %d interrupts ", pDev->Int.dwCounter);
+	WDC_Err("Got %d interrupts\n ", pDev->Int.dwCounter);
 	//WDC_Err("DMACounter: %d \n", DMACounter);
 }
 
