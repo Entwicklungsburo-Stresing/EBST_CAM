@@ -85,7 +85,7 @@ pArrayT pDIODEN = (pArrayT) &DIODEN;
 //jungo
 
 USHORT DMAUserBuf[_PIXEL][USERBUFINSCANS];
-PUSHORT pDMAUserBuf = &UserBuf[0][0];
+PUSHORT pDMAUserBuf = &DMAUserBuf[0][0];
 //DWORD dwDMABufSize;// = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
 ULONG DisplData[2][_PIXEL];//array for display for 2 cams parallel
 
