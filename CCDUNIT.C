@@ -171,10 +171,10 @@ CopytoDispbuf()
 		DIODEN[0][0];
 	}
 	for (i = 0; i < _PIXEL; i++){
-		//pDMAUserBuf++;
-		DisplData[0][i] = *(pDMAUserBuf + i);//DIODENRingBuf[i + 0*FirstPageOffset + 0 * RAMPAGESIZE];//20: its a random number of the Ringbuffer (max 99)
+		//pDMABuf++;
+		DisplData[0][i] = *(pDMAUserBuf  + i*100);//DIODENRingBuf[i + 0*FirstPageOffset + 0 * RAMPAGESIZE];//20: its a random number of the Ringbuffer (max 99)
 	}
-	//pDMAUserBuf -= _PIXEL;
+	//pDMABuf -= _PIXEL;
 	for (i = 0; i < _PIXEL; i++)
 			DisplData[1][i] = DIODEN[1][i];//* (pDIODEN+_PIXEL+i);
 		
@@ -335,9 +335,9 @@ void UpdateTxT(void)
 	}
 
 #if (_ERRTEST)
-		if (*(pDMAUserBuf + 1083) != 539)
+		if (*(pDMABuf + 1083) != 539)
 		{
-			ErrVal = *(pDMAUserBuf + 1083);
+			ErrVal = *(pDMABuf + 1083);
 			ErrCnt += 1;
 		}
 	j += sprintf_s(TrmsString + j, 260, " , err=%d , val=%d", ErrCnt, ErrVal);

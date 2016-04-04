@@ -55,7 +55,7 @@ WD_PCI_CARD_INFO deviceInfo;
 WDC_DEVICE_HANDLE hDev = NULL;
 ULONG DMACounter = 0;//for debugging
 //Buffer in the RAM
-USHORT *pDMAUserBuf;
+USHORT *pDMABuf;
 WD_DMA *pDMABufInfos = NULL; //there will be saved the neccesary parameters for the dma buffer
 BOOL DMAAlreadyStarted = FALSE;
 DWORD dwDMABufSize;
@@ -470,10 +470,10 @@ BOOL SetDMAAddrTlp(UINT drvno){
 }
 BOOL SetDMABufRegs(UINT drvno){
 	//set DMA Buffer size in scans
-	if(!SetS0Reg(DMABufSizeInScans, 0xffffffff, DmaAddr_DmaBufSize, drvno))
+	if (!SetS0Reg(DMABufSizeInScans, 0xffffffff, DmaAddr_DmaBufSize, drvno))//DMABufSizeInScans
 		return FALSE;
 	//set Scans per Interrupt
-	if (!SetS0Reg(DMABufSizeInScans/2, 0xffffffff, DmaAddr_ScansPerIntr, drvno))
+	if (!SetS0Reg(IntFreqInScans, 0xffffffff, DmaAddr_ScansPerIntr, drvno))
 		return FALSE;
 	return TRUE;
 }
@@ -581,8 +581,9 @@ BOOL SendDMAInfoToKP(void){
 VOID DLLCALLCONV interrupt_handler(PVOID pData)
 {
 	//WDC_Err("entered interrupt handle\n");
-	/*
+	
 	PWDC_DEVICE pDev = (PWDC_DEVICE)pData;
+	/*
 	ULONG RegisterValues;
 	ULONG BitMask = 0x100;
 	UINT64 PhysAddrDMABuf64;
@@ -601,45 +602,16 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	//SetS0Reg(regdata, regdata, 0x1, DRV);
 	//OutTrigHigh(DRV);
 	//OutTrigLow(DRV);
-	
 
-	/*PUSHORT pVal;
-	pVal = pDMABufInfos->pUserAddr;
-	pVal += (DMACounter *_PIXEL / 4);
-	WDC_Err("UserAddress : %x \n", pVal);
-	for (int i = 0; i < 3; i++){
-		WDC_Err("%i : %i \n", i * 5, *pVal);
-		pVal += 10;
-	}*/
-	//copy data: no need because of the definition of DIODEN as the DMA Buffer
-	/*if (!GetNextScan){
-		for (int i = 0; i < _PIXEL; i++){
-			DIODEN[0][i] =  *pVal;
-			pVal++;
-		}
-		GetNextScan = TRUE;
-	}*/
+	// copy pDMABuf to UserBuffer 
+	pUserBuf += pDev->Int.dwCounter * _PIXEL; //count user buf like a ringbuf up
+	if (!(pDev->Int.dwCounter % (USERBUFINSCANS*2)) )
+		pDMAUserBuf = &DMAUserBuf[0][0];
 
-	
-	// That creates the Ringbuffer ( its a bit waste of RAM because we write in every transfer in a new RAM PAge)
-	//TODO: What happen if one DMA transfer is bigger than a Pagesize or the firstpagesize, because that is smaller
-	/*
-	if (DMACounter == 99){
-		PhysAddrDMABuf64 = pDMABufInfos->Page[0].pPhysicalAddr;
-		DMACounter = 0;
-	}
-	else{
-		DMACounter++;
-		PhysAddrDMABuf64 = pDMABufInfos->Page[DMACounter].pPhysicalAddr;
-	}
-	SetDMAAddrReg(PhysAddrDMABuf64, 0x20, DRV);*/
-	//SetPCIeDMAInitRegs(DRV);
-	//StartPCIE_DMAWrite(DRV);
-	/****DMA Transfer start***/
-	//WDC_DMASyncCpu(pDMABufInfos);
-	/* Flush the I/O caches (see documentation of WDC_DMASyncIo()) */
-	//WDC_DMASyncIo(pDMABufInfos);
-	
+	if (pDev->Int.dwCounter % 2)  //odds
+		memcpy(pDMAUserBuf, pDMABuf, IntFreqInScans * _PIXEL * sizeof(USHORT));
+	else                          //evens
+		memcpy(pDMAUserBuf + IntFreqInScans, pDMABuf, IntFreqInScans * _PIXEL * sizeof(USHORT));
 
 
 	/*ISREndTime = ticksTimestamp();
@@ -649,7 +621,7 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	//if (CurrentISRTime > MaxISRTime) 
 		MaxISRTime = CurrentISRTime;
 	*/
-	//StartPCIE_DMAWrite(DRV);
+
 	//WDC_Err("Got %d interrupts ", pDev->Int.dwCounter);
 	//WDC_Err("DMACounter: %d \n", DMACounter);
 }
@@ -664,7 +636,7 @@ BOOL SetupPCIE_DMA(UINT drvno)
 	//only for test:
 	//dwDMABufSize = 100;// *1000 * 1000;//100mb max
 
-	dwStatus = WDC_DMAContigBufLock(hDev, &pDMAUserBuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
+	dwStatus = WDC_DMAContigBufLock(hDev, &pDMABuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
 	//dwStatus = WDC_DMASGBufLock(hDev, &DIODENRingBuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
@@ -2724,7 +2696,7 @@ void StartReadWithDma(UINT drvno){
 
 	if (!aINIT[drvno]) return FALSE;	// return with error if no init
 
-	pReadArray = pDMAUserBuf;
+	pReadArray = pDMABuf;
 	//	pReadArray = pReadArray + (db-1) * pixel;
 	pDiodenBase = pReadArray;
 
@@ -3032,9 +3004,9 @@ void __cdecl ReadRingThread(void *dummy)
 				//for (k=100;k<4500;k++)
 				{
 					//if (*(pRingBuf + RingWRCnt*_NO_TLPS * 128 / 2 + 7) < 0x4000) //wert etwa > 0x4000
-					if (*(pDMAUserBuf/*pRingBuf + RingWRCnt*pixel*/ + 1083) !=539) 
+					if (*(pDMABuf/*pRingBuf + RingWRCnt*pixel*/ + 1083) !=539) 
 					{//FetchActLine=TRUE;
-						ErrVal = *(/*pRingBuf + RingWRCnt*pixel*/pDMAUserBuf + 1083);
+						ErrVal = *(/*pRingBuf + RingWRCnt*pixel*/pDMABuf + 1083);
 						ErrCnt  += 1;
 					}}
 #else

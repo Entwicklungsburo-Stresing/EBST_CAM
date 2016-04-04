@@ -61,7 +61,10 @@ BOOL DISP2 = FALSE;		//display 2 cameras parallel, TRUE for double line
 #define _PIXEL  1200				// no of pixels min 300, should be multiple of 300, max 8100
 #define _MAXDB	4					// no. of lines
 #define Nos _MAXDB
-#define DMABufSize 100 *_PIXEL * 2
+#define USERBUFINSCANS 1000
+#define DMABufSizeInScans  100
+#define IntFreqInScans  DMABufSizeInScans/2 //DMABufSizeInScans / 2;
+//#define DMABufSize 600 *_PIXEL * 2
 #define HWINTR_EN TRUE
 
 	typedef USHORT ArrayT; //!! USHORT for linear 12/16bit word array or resort or highest speed
@@ -80,7 +83,10 @@ DWORD FirstPageOffset;
 pArrayT pDIODEN = (pArrayT) &DIODEN;
 
 //jungo
-DWORD dwDMABufSize;// = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
+
+USHORT DMAUserBuf[_PIXEL][USERBUFINSCANS];
+PUSHORT pDMAUserBuf = &UserBuf[0][0];
+//DWORD dwDMABufSize;// = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
 ULONG DisplData[2][_PIXEL];//array for display for 2 cams parallel
 
 
