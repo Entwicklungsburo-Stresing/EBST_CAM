@@ -290,7 +290,9 @@ BOOL CCDDrvInit(UINT drvno)
 	if (HWINTR_EN)
 		data = 0x40000000;
 	SetS0Reg(data, mask, 0x38, DRV);
+	SetDMABufRegs(DRV);
 	return TRUE;	  // no Error, driver found
+
 }; //CCDDrvInit
 
 
@@ -406,6 +408,7 @@ BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT drvno){
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		return FALSE;
 	}
+	WDC_Err("S0 OldRegVal: %x\n", OldRegisterValues);
 	//save the bits, which shall not changed
 	OldRegisterValues = OldRegisterValues & ~Bitmask;
 	NewRegisterValues = Data | OldRegisterValues;
@@ -417,6 +420,7 @@ BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT drvno){
 	}
 	return TRUE;
 }
+
 BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, UINT drvno){
 
 	ULONG PhysAddrDMABuf;
@@ -472,9 +476,14 @@ BOOL SetDMABufRegs(UINT drvno){
 	//set DMA Buffer size in scans
 	if (!SetS0Reg(DMABufSizeInScans, 0xffffffff, DmaAddr_DmaBufSize, drvno))//DMABufSizeInScans
 		return FALSE;
+	//ULONG reg;
+	//ReadLongS0(DRV, &reg, DmaAddr_DmaBufSize);
+	//WDC_Err("readreg DMABufSize: %x \n", reg);
 	//set Scans per Interrupt
 	if (!SetS0Reg(IntFreqInScans, 0xffffffff, DmaAddr_ScansPerIntr, drvno))
 		return FALSE;
+	//ReadLongS0(DRV, &reg, DmaAddr_ScansPerIntr);
+	//WDC_Err("readreg SCANSPERINTR: %x \n", reg);
 	return TRUE;
 }
 void SetDMAReset(void){
