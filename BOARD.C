@@ -59,7 +59,9 @@ USHORT *pDMABuf;
 WD_DMA *pDMABufInfos = NULL; //there will be saved the neccesary parameters for the dma buffer
 BOOL DMAAlreadyStarted = FALSE;
 DWORD dwDMABufSize;
-BYTE ISRCounter = 0;
+BYTE ISRCounter = -1;
+SHORT DMAUserBufIndex = 0;
+//BYTE DontReadUserBufIndex = 0;
 
 // handle array for our drivers
 HANDLE ahCCDDRV[5] = {INVALID_HANDLE_VALUE,INVALID_HANDLE_VALUE,INVALID_HANDLE_VALUE,INVALID_HANDLE_VALUE,INVALID_HANDLE_VALUE};		
@@ -591,7 +593,7 @@ BOOL SendDMAInfoToKP(void){
 VOID DLLCALLCONV interrupt_handler(PVOID pData)
 {
 	//WDC_Err("entered interrupt handle\n");
-	
+	OutTrigHigh(DRV);
 	PWDC_DEVICE pDev = (PWDC_DEVICE)pData;
 	/*
 	ULONG RegisterValues;
@@ -610,32 +612,37 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	WriteByteS0(DRV, regdata, 0x4);
 	*/
 	//SetS0Reg(regdata, regdata, 0x1, DRV);
-	//OutTrigHigh(DRV);
-	//OutTrigLow(DRV);
+
 
 
 	// copy pDMABuf to UserBuffer 
-	if (pDev->Int.dwCounter > 20)
+	/*if (pDev->Int.dwCounter > 100){
+		OutTrigLow(DRV);
 		return;
+	}*/
 	
-	if (!(pDev->Int.dwCounter % (USERBUFINSCANS/IntFreqInScans))){
+	if (!(pDev->Int.dwCounter % (USERBUFINSCANS/IntFreqInScans))){//count until UserBuffer==UserBufinScansSize but divide because the ISR cames with IntFrqInScnas
 		pDMAUserBuf = &DMAUserBuf[0][0];
+		DMAUserBufIndex = 0;
 		WDC_Err("reset ringbuf to zero\n");
 	}
 
 	//WDC_Err(" mod makes %d and USERBUFINSCANS/IntFreqInScans : %d and IntFreqInScans %d\n", pDev->Int.dwCounter % (USERBUFINSCANS / IntFreqInScans), (USERBUFINSCANS / IntFreqInScans), IntFreqInScans);
 	PUSHORT pPartOfDMABuf;
-
+	if (ISRCounter < 0){
+		ISRCounter++;
+		return;
+	}
 		pPartOfDMABuf = pDMABuf + (ISRCounter *  IntFreqInScans);
 		//if (pDev->Int.dwCounter % 2) { //odds
 		memcpy(pDMAUserBuf, pPartOfDMABuf, IntFreqInScans * _PIXEL * sizeof(USHORT));
-		WDC_Err("Part of the DMA Buffer: %d\n", pPartOfDMABuf);
+		WDC_Err("Partnumber of the DMA Buffer: %d\n", ISRCounter);
 		ISRCounter++;
 		if (ISRCounter > 3)//number of ISR per dmaBuf - 1
 			ISRCounter = 0;
 
 	pDMAUserBuf += IntFreqInScans * _PIXEL; //count user buf like a ringbuf up
-	
+	DMAUserBufIndex++;
 	/*ISREndTime = ticksTimestamp();
 	
 	CurrentISRTime = ISREndTime - ISRStartTime;
@@ -645,6 +652,7 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	*/
 
 	WDC_Err("Got %d interrupts\n ", pDev->Int.dwCounter);
+	OutTrigLow(DRV);
 	//WDC_Err("DMACounter: %d \n", DMACounter);
 }
 
@@ -654,7 +662,7 @@ BOOL SetupPCIE_DMA(UINT drvno)
 	WDC_Err("entered SetupPCIE_DMA\n");
 	DWORD dwOptions = DMA_FROM_DEVICE;// | DMA_ALLOW_64BIT_ADDRESS;// | DMA_ALLOW_CACHE;
 	DWORD dwStatus;
-
+	SetTORReg(DRV, 1);
 	//only for test:
 	//dwDMABufSize = 100;// *1000 * 1000;//100mb max
 
