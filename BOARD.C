@@ -59,6 +59,7 @@ USHORT *pDMABuf;
 WD_DMA *pDMABufInfos = NULL; //there will be saved the neccesary parameters for the dma buffer
 BOOL DMAAlreadyStarted = FALSE;
 DWORD dwDMABufSize;
+BYTE ISRCounter = 0;
 
 // handle array for our drivers
 HANDLE ahCCDDRV[5] = {INVALID_HANDLE_VALUE,INVALID_HANDLE_VALUE,INVALID_HANDLE_VALUE,INVALID_HANDLE_VALUE,INVALID_HANDLE_VALUE};		
@@ -612,22 +613,27 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	//OutTrigHigh(DRV);
 	//OutTrigLow(DRV);
 
+
 	// copy pDMABuf to UserBuffer 
-	if (pDev->Int.dwCounter > 5)
+	if (pDev->Int.dwCounter > 20)
 		return;
 	
 	if (!(pDev->Int.dwCounter % (USERBUFINSCANS/IntFreqInScans))){
 		pDMAUserBuf = &DMAUserBuf[0][0];
 		WDC_Err("reset ringbuf to zero\n");
 	}
-	if (pDev->Int.dwCounter % 2) { //odds
-		memcpy(pDMAUserBuf, pDMABuf, IntFreqInScans * _PIXEL * sizeof(USHORT));
-		WDC_Err("ODDS\n");
-	}
-	else {                         //evens
-		memcpy(pDMAUserBuf, pDMABuf + IntFreqInScans, IntFreqInScans * _PIXEL * sizeof(USHORT));
-		WDC_Err("EVENS\n");
-	}
+
+	//WDC_Err(" mod makes %d and USERBUFINSCANS/IntFreqInScans : %d and IntFreqInScans %d\n", pDev->Int.dwCounter % (USERBUFINSCANS / IntFreqInScans), (USERBUFINSCANS / IntFreqInScans), IntFreqInScans);
+	PUSHORT pPartOfDMABuf;
+
+		pPartOfDMABuf = pDMABuf + (ISRCounter *  IntFreqInScans);
+		//if (pDev->Int.dwCounter % 2) { //odds
+		memcpy(pDMAUserBuf, pPartOfDMABuf, IntFreqInScans * _PIXEL * sizeof(USHORT));
+		WDC_Err("Part of the DMA Buffer: %d\n", pPartOfDMABuf);
+		ISRCounter++;
+		if (ISRCounter > 3)//number of ISR per dmaBuf - 1
+			ISRCounter = 0;
+
 	pDMAUserBuf += IntFreqInScans * _PIXEL; //count user buf like a ringbuf up
 	
 	/*ISREndTime = ticksTimestamp();
