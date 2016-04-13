@@ -613,7 +613,7 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	//OutTrigLow(DRV);
 
 	// copy pDMABuf to UserBuffer 
-	if (pDev->Int.dwCounter > 3)
+	if (pDev->Int.dwCounter > 5)
 		return;
 	
 	if (!(pDev->Int.dwCounter % (USERBUFINSCANS/IntFreqInScans))){
@@ -2687,7 +2687,7 @@ ULONG ExpTime; //in micro sec - needed only in DLL, defined in DLL.h
 void StartReadWithDma(UINT drvno){
 
 	//old startringreadthread routine
-	dwDMABufSize = DMABufSizeInScans * aPIXEL[drvno] * sizeof(USHORT);// +10;//+100 safty first if it is not right calculated
+	dwDMABufSize = (DMABufSizeInScans + 10) * aPIXEL[drvno] * sizeof(USHORT);// +10;//+100 safty first if it is not right calculated
 
 	if (_HWCH2) dwDMABufSize *= 2;
 
