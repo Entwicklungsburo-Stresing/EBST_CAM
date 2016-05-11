@@ -16,9 +16,9 @@ Internal definitions
 *************************************************************/
 /* WinDriver license registration string */
 
-//Dont trust the debuger its CRAP!
+//Dont trust the debugger its CRAP!
 
-#define LSCPCIEJ_DEFAULT_LICENSE_STRING "6f19fa9c7e362e62fdbd44c8a8c17b2b41f30f98686333.WD1210_64_NL_Entwicklungsbüro_Stresing"//"643c749b4b3f16a065e15c1a2aec0c067c1fb30a0677f92e6c0cbe50.WD1200_64_NL_Entwicklungsbüro_Stresing"
+#define LSCPCIEJ_DEFAULT_LICENSE_STRING "643c749b4b3f16a065e15c1a2aec0c067c1fb30a0677f92e6c0cbe50.WD1200_64_NL_Entwicklungsbüro_Stresing"
 #define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
 
 /*************************************************************
@@ -301,6 +301,8 @@ BOOL CCDDrvInit(UINT drvno)
 		data = 0x40000000;
 	SetS0Reg(data, mask, 0x38, DRV);
 	SetDMABufRegs(DRV);
+
+	WDC_Err("finished DRVInit\n");
 	return TRUE;	  // no Error, driver found
 
 }; //CCDDrvInit
@@ -316,7 +318,7 @@ void CCDDrvExit(UINT drvno)
 	aINIT[drvno] = FALSE;
 };
 
-
+//no needed after jungo???
 BOOL InitBoard(UINT drvno)
 {		// inits PCI Board and gets all needed addresses
 	// and gets Errorcode if any
@@ -325,48 +327,49 @@ BOOL InitBoard(UINT drvno)
 	DWORD   ReturnedLength;
 	ULONG	ctrlcode = 1; // Init Board
 
-
+	/*
 	fResult = DeviceIoControl(ahCCDDRV[drvno], IOCTL_SetFct,  // read error code
-		&ctrlcode,        // Buffer to driver.
-		sizeof(ctrlcode),
-		&Errorcode, sizeof(Errorcode), &ReturnedLength, NULL);
+	&ctrlcode,        // Buffer to driver.
+	sizeof(ctrlcode),
+	&Errorcode, sizeof(Errorcode), &ReturnedLength, NULL);
 	if (!fResult)
 	{
-		ErrorMsg("InitBoard failed");
+	ErrorMsg("InitBoard failed");
 	};
 
 	// these error messages are for inspection of the driver only
 	// they can be omitted because here should be no error
 	if (Errorcode == NoError)
 	{
-		return TRUE;
+	return TRUE;
 	}  // everything went fine
 
 	else   switch (Errorcode)
 	{
 	case Error_notinitiated: ErrorMsg("CCD Board not initialized");
-		break;
+	break;
 	case Error_noregkey: ErrorMsg(" No registry entry found ");
-		break;
+	break;
 	case Error_nosubregkey: ErrorMsg(" No registry sub entry found ");
-		break;
+	break;
 	case Error_nobufspace: ErrorMsg(" Can't init buffer space ");
-		break;
+	break;
 	case Error_nobios: ErrorMsg(" No PCI bios found ");
-		break;
+	break;
 	case Error_noboard: ErrorMsg(" Can't find CCD Board ");
-		break;
+	break;
 	case Error_noIORegBase: ErrorMsg(" Can't find PCI space ");
-		break;
+	break;
 	case Error_Physnotmapped: ErrorMsg(" Can't map PCI space ");
-		break;
+	break;
 	case Error_Fktnotimplemented: ErrorMsg(" function not implemented");
-		break;
+	break;
 	case Error_Timer: ErrorMsg(" PCI Timer Error ");
-		break;
+	break;
 
 	}
 	return FALSE;
+	*/
 };  // InitBoard
 
 char CntBoards(void)
@@ -603,7 +606,7 @@ BOOL SendDMAInfoToKP(void){
 
 VOID DLLCALLCONV interrupt_handler(PVOID pData)
 {
-	//WDC_Err("entered interrupt handle\n");
+	WDC_Err("entered interrupt handle\n");
 	OutTrigHigh(DRV);
 	PWDC_DEVICE pDev = (PWDC_DEVICE)pData;
 	/*
@@ -632,15 +635,21 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	return;
 	}*/
 
-	if (!(pDev->Int.dwCounter % (USERBUFINSCANS / IntFreqInScans))){//count until UserBuffer==UserBufinScansSize but divide because the ISR cames with IntFrqInScnas
-		pDMAUserBuf = &DMAUserBuf[0][0];
+	if (!(pDev->Int.dwCounter % (UserBufInScans / IntFreqInScans))) {//count until UserBuffer==UserBufinScansSize but divide because the ISR cames with IntFrqInScnas
+		if (OneRingBufShot) {
+			StopFFTimer(DRV);
+			SetIntFFTrig(DRV);//disable ext input
+			OneRingBufShot = FALSE;
+			return;
+		}
+		pDMAUserBuf = &DMAUserBuf[0][0];//pAppDMAUserBuf;//
 		DMAUserBufIndex = 0;
 		WDC_Err("reset ringbuf to zero\n");
 	}
 
 	//WDC_Err(" mod makes %d and USERBUFINSCANS/IntFreqInScans : %d and IntFreqInScans %d\n", pDev->Int.dwCounter % (USERBUFINSCANS / IntFreqInScans), (USERBUFINSCANS / IntFreqInScans), IntFreqInScans);
 	PUSHORT pPartOfDMABuf;
-	if (ISRCounter < 0){
+	if (ISRCounter < 0) {
 		ISRCounter++;
 		return;
 	}
@@ -667,7 +676,7 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	//WDC_Err("DMACounter: %d \n", DMACounter);
 }
 
-BOOL SetupPCIE_DMA(UINT drvno)
+BOOL SetupPCIE_DMA(UINT drvno, PUSHORT pDMAUserBufFromApp)
 {
 	//***open the DMA
 	WDC_Err("entered SetupPCIE_DMA\n");
@@ -676,7 +685,7 @@ BOOL SetupPCIE_DMA(UINT drvno)
 	SetTORReg(DRV, 1);
 	//only for test:
 	//dwDMABufSize = 100;// *1000 * 1000;//100mb max
-
+	dwStatus = WD_STATUS_SUCCESS;
 	dwStatus = WDC_DMAContigBufLock(hDev, &pDMABuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
 	//dwStatus = WDC_DMASGBufLock(hDev, &DIODENRingBuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
 	if (WD_STATUS_SUCCESS != dwStatus)
@@ -704,7 +713,7 @@ BOOL SetupPCIE_DMA(UINT drvno)
 	}
 
 	// Enable DMA interrupts (if not polling)
-	dwStatus = LSCPCIEJ_IntEnable(hDev, interrupt_handler);
+	//dwStatus = LSCPCIEJ_IntEnable(hDev, interrupt_handler);
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ErrLog("Failed to enable the Interrupts. Error 0x%lx - %s\n",
@@ -719,6 +728,7 @@ BOOL SetupPCIE_DMA(UINT drvno)
 	ReadLongS0(DRV, &CtrlData, 0x38);
 	WDC_Err("S0Data Offs. 0x38: %x \n", CtrlData);
 	*/
+	pAppDMAUserBuf = pDMAUserBufFromApp;
 	return TRUE;
 }
 void StartPCIE_DMAWrite(UINT drvno)
@@ -1562,13 +1572,14 @@ BOOL CallIORead(UINT drvno, void* pdioden, ULONG fkt)
 
 
 	//read camera data
+	/*old driver
 	fResult = DeviceIoControl(ahCCDDRV[drvno], IOCTL_GetCCD,
-		&CCDfkt, sizeof(CCDfkt),
-		pRArray, arraylength,
-		&ReturnedLength, NULL);
+	&CCDfkt, sizeof(CCDfkt),
+	pRArray, arraylength,
+	&ReturnedLength, NULL);
 	if ((!fResult) || (ReturnedLength != arraylength))
-		return FALSE;
-
+	return FALSE;
+	*/
 	if (aFLAG816[drvno] == 2)
 	{	// resort 8 bit array -> BYTE sort to data array 8,16 or 32
 		ULONG i = 0;
@@ -3123,7 +3134,7 @@ void StartReadWithDma(UINT drvno){
 	if (_HWCH2) dwDMABufSize *= 2;
 
 	if (!DMAAlreadyStarted){
-		if (!SetupPCIE_DMA(DRV)) return;
+		if (!SetupPCIE_DMA(DRV, &DMAUserBuf[0][0])) return;
 		DMAAlreadyStarted = TRUE;
 	}
 
@@ -3143,7 +3154,7 @@ void StartReadWithDma(UINT drvno){
 
 	if (!aINIT[drvno]) return FALSE;	// return with error if no init
 
-	pReadArray = pDMABuf;
+	//pReadArray = pDMABuf;
 	//	pReadArray = pReadArray + (db-1) * pixel;
 	pDiodenBase = pReadArray;
 
@@ -3506,7 +3517,7 @@ void StartRingReadThread(UINT drvno, ULONG ringfifodepth, ULONG threadp, __int16
 
 	dwDMABufSize = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
 	if (!DMAAlreadyStarted){
-		SetupPCIE_DMA(DRV);
+		SetupPCIE_DMA(DRV, &DMAUserBuf[0][0]);
 		DMAAlreadyStarted = TRUE;
 	}
 
