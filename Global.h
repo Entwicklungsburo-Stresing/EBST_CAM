@@ -258,3 +258,6 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
                         WPARAM wParam,       
                         LPARAM lParam);
 
+PUSHORT pAppDMAUserBuf;
+BOOL OneRingBufShot = FALSE;
+WORD UserBufInScans;
