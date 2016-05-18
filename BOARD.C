@@ -18,7 +18,7 @@ Internal definitions
 
 //Dont trust the debuger its CRAP!
 
-#define LSCPCIEJ_DEFAULT_LICENSE_STRING "6f19fa9c7e362e62fdbd44c8a8c17b2b41f30f98686333.WD1210_64_NL_Entwicklungsbüro_Stresing"//"643c749b4b3f16a065e15c1a2aec0c067c1fb30a0677f92e6c0cbe50.WD1200_64_NL_Entwicklungsbüro_Stresing"
+#define LSCPCIEJ_DEFAULT_LICENSE_STRING "643c749b4b3f16a065e15c1a2aec0c067c1fb30a0677f92e6c0cbe50.WD1200_64_NL_Entwicklungsbüro_Stresing"
 #define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
 
 /*************************************************************
