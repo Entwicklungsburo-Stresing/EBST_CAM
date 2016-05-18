@@ -63,7 +63,7 @@ BOOL DISP2 = FALSE;		//display 2 cameras parallel, TRUE for double line
 #define Nos _MAXDB
 #define USERBUFINSCANS 1000
 #define DMABufSizeInScans  100
-#define IntFreqInScans  (DMABufSizeInScans/4) //DMABufSizeInScans / 2;
+#define IntFreqInScans  DMABufSizeInScans/2 //DMABufSizeInScans / 2;
 //#define DMABufSize 600 *_PIXEL * 2
 #define HWINTR_EN TRUE
 
