@@ -163,7 +163,9 @@ CopytoDispbuf()
 {	//display buffer is long
 	//data array is word
 	int i;
-	PUSHORT tempBuf = &DMAUserBuf[0][0];
+	PUSHORT tempBuf;
+	if(DMAUserBufIndex < 1000)
+	tempBuf = &DMAUserBuf[0][DMAUserBufIndex];
 	//while (!GetNextScan){ Sleep(5); }
 	testcnt++;
 	if (testcnt == 100){
@@ -172,7 +174,7 @@ CopytoDispbuf()
 	}
 	for (i = 0; i < _PIXEL; i++){
 		//pDMABuf++;
-		DisplData[0][i] = *(tempBuf  + i*100);//DIODENRingBuf[i + 0*FirstPageOffset + 0 * RAMPAGESIZE];//20: its a random number of the Ringbuffer (max 99)
+		DisplData[0][i] = *(tempBuf  + i);//DIODENRingBuf[i + 0*FirstPageOffset + 0 * RAMPAGESIZE];//20: its a random number of the Ringbuffer (max 99)
 	}
 	//pDMABuf -= _PIXEL;
 	for (i = 0; i < _PIXEL; i++)
@@ -541,10 +543,3 @@ void Contimess(void *dummy)
 			}
 
 	}//Contimess
-
-
-
-
-
-
-
