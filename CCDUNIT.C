@@ -159,26 +159,41 @@ void Display(unsigned long db,BOOL Plot)
 
 
 
-CopytoDispbuf()
+void CopytoDispbuf(void)
 {	//display buffer is long
 	//data array is word
 	int i;
 	PUSHORT tempBuf;
-	if(DMAUserBufIndex < 1000)
-	tempBuf = &DMAUserBuf[0][DMAUserBufIndex];
+//	if(DMAUserBufIndex < 1000)
+
+	//!!
+
+	tempBuf = &DMAUserBuf[0][0] + testcnt * _PIXEL;// DMAUserBufIndex];
 	//while (!GetNextScan){ Sleep(5); }
 	testcnt++;
-	if (testcnt == 100){
+	if (testcnt >= 100){
  		testcnt = 0;
-		DIODEN[0][0];
+		tempBuf = &DMAUserBuf[0][0];
 	}
-	for (i = 0; i < _PIXEL; i++){
+
+	//!!GS
+	tempBuf = &DMAUserBuf[0][0];//offset:  +_PIXEL * 2;
+
+	for (i = 0; i < (_PIXEL - 1); i++){
+		//pDMABuf++;
+		DisplData[0][i] =  *(tempBuf + i);//DIODENRingBuf[i + 0*FirstPageOffset + 0 * RAMPAGESIZE];//20: its a random number of the Ringbuffer (max 99)
+	}
+
+
+	/* was GS
+	for (i = -150; i < (_PIXEL-150); i++){
 		//pDMABuf++;
 		DisplData[0][i] = *(tempBuf  + i);//DIODENRingBuf[i + 0*FirstPageOffset + 0 * RAMPAGESIZE];//20: its a random number of the Ringbuffer (max 99)
 	}
+	*/
 	//pDMABuf -= _PIXEL;
-	for (i = 0; i < _PIXEL; i++)
-			DisplData[1][i] = DIODEN[1][i];//* (pDIODEN+_PIXEL+i);
+	//for (i = 0; i < _PIXEL; i++)
+		//	DisplData[1][i] = DIODEN[1][i];//* (pDIODEN+_PIXEL+i);
 		
 		//GetNextScan = FALSE;//act vals in disp buffer
 	
@@ -441,12 +456,30 @@ void Contimess(void *dummy)
 #endif
 */	
 
-	
-	if (_ISPDA)	{ SetISPDA(DRV, TRUE); }
-	else SetISPDA(DRV, FALSE);
-	if (_ISFFT) { SetISFFT(DRV, TRUE); }
-	else SetISFFT(DRV, FALSE);
-	
+	//stop all and clear FIFO
+	StopFFTimer(DRV);
+	SetIntFFTrig(DRV);
+	RSFifo(DRV);
+
+	//make init here, that CCDExamp can be used to read the act regs...
+	SetBoardVars(DRV, SYM_PULSE, BURSTMODE, _PIXEL - 12, WAITS, FLAG816, PPORTADR, FREQ, XCKDELAY);
+
+	//set hardware start des dma  via DREQ withe data = 0x4000000
+	ULONG mask = 0x40000000;
+	ULONG data = 0;// 0x40000000;
+	if (HWINTR_EN)
+		data = 0x40000000;
+	SetS0Reg(data, mask, 0x38, DRV);
+	//SetDMABufRegs(DRV); not here
+
+
+
+	//setups
+	//	SetupDELAY(DRV,DELAYini);	//init WRFIFO delay
+
+	RsTOREG(DRV); // reset TOREG
+	//set TrigOut, default= XCK
+	SetTORReg(DRV, 0);
 
 
 	//SetTORReg(DRV, 0);  //XCK  
@@ -469,18 +502,11 @@ void Contimess(void *dummy)
 //		SendFLCAM(DRV, 1, 0x42, 0x00); //clk align
 	//  SendFLCAM(DRV,1, 0x25, 0x40); //ramp pattern
 
-	//SetEC(DRV, 1000); //test EC in 10ns
-	RSEC(DRV);
+	//RSEC(DRV);
 
 	gain = 6;
 	SetADGain(DRV, 1, gain, gain, gain, gain, gain, gain, gain, gain); //set gain to values g1..g8 in Board.C
 //	SetADGain(DRV, 1, 0, 0, 0, 0, 0, 0, 0, 0); //set gain to values g1..g8 in Board.C
-
-	//stop all and clear FIFO
-	StopFFTimer(DRV);
-	SetIntFFTrig(DRV);
-	RSFifo(DRV);
-
 
 	
 	// write header
@@ -488,30 +514,6 @@ void Contimess(void *dummy)
 	TextOut(hMSDC,100,LOY-17,header,j);
 	RedrawWindow(hMSWND,NULL,NULL,RDW_INVALIDATE);
 
-//	SetupIR(DRV,0);
-
-
-	// set slope for ext. trigger
-	if (TrigMod==0)	HighSlope(DRV);
-	if (TrigMod==1)	LowSlope(DRV);
-	if (TrigMod==2)	BothSlope(DRV);
-
-/*
-	// set amplification if switchable
-	if (HIAMP)	{V_On(DRV);}
-	else {	V_Off(DRV);}
-	
-	if (_USESHUTTER) {OpenShutter(DRV);}
-	//else CloseShutter(DRV);
-
-	//setup for 16bit
-	if (_AD16ADC)  {OpenShutter(DRV); // 16 bit needs openshutter
-					CAL_AD(DRV,  ZADR); }
-
-
-	if ((_FFTLINES>0)&&(!_HA_MODULE))
-		SetupVCLKReg(DRV, _FFTLINES, (UCHAR) VFREQ);
-*/
 
 
 	Running=TRUE;
@@ -521,7 +523,7 @@ void Contimess(void *dummy)
 
 	//start 2nd thread for getting data in highest std priority, ring=200 lines
 	if (!HWINTR_EN)
-		StartRingReadThread(DRV, 200, _THREADPRI, -1);
+		{StartRingReadThread(DRV, 200, _THREADPRI, -1); }
 	else
 		StartReadWithDma(DRV);
 		

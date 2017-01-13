@@ -1,7 +1,12 @@
+//   UNIT BOARD.C for all examples equal
+//	PCIE version with DMA and INTR
+//	V1.00  GS  6/2016
+
+
 
 //#include "stdafx.h"		// use in C++ only
 //#include "global.h"		// use in C++ only
-#include "ccdctrl.h" //"ccdctl.h"
+#include "ccdctl.h" //"ccdctrl.h"
 #include "board.h"
 #include <limits.h>
 #include <process.h>
@@ -16,13 +21,14 @@ Internal definitions
 *************************************************************/
 /* WinDriver license registration string */
 
-//Dont trust the debuger its CRAP!
+//Dont trust the debugger its CRAP
 
-***REMOVED***#define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
+***REMOVED******REMOVED***#define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
 
 /*************************************************************
 General definitions
-*************************************************************/
+***************************************************readloop
+**********/
 /* Error messages display */
 #define LSCPCIEJ_ERR printf
 
@@ -54,12 +60,13 @@ enum{
 WD_PCI_CARD_INFO deviceInfo;
 WDC_DEVICE_HANDLE hDev = NULL;
 ULONG DMACounter = 0;//for debugging
-//Buffer in the RAM
-USHORT *pDMABuf;
-WD_DMA *pDMABufInfos = NULL; //there will be saved the neccesary parameters for the dma buffer
+//Buffer of WDC_DMAContigBufLock function = one DMA sub block - will be copied to the big pDMABigBuf later
+USHORT *pDMASubBuf;
+//PUSHORT *pDMASubBuf;  //!!GS
+WD_DMA *pDMASubBufInfos = NULL; //there will be saved the neccesary parameters for the dma buffer
 BOOL DMAAlreadyStarted = FALSE;
-DWORD dwDMABufSize;
-BYTE ISRCounter = -1;
+DWORD dwDMASubBufSize;
+char ISRCounter = 0;//!!GS
 SHORT DMAUserBufIndex = 0;
 //BYTE DontReadUserBufIndex = 0;
 
@@ -123,7 +130,7 @@ __int16 RELEASETHREADms = 0;
 BOOL _SHOW_MSG = TRUE;
 
 
-
+BOOL OneRingBufShot = FALSE;
 
 // ***********     functions    **********************
 //B! FIXME die jungo-library für fehler und co müsste wahrscheinlich in BOARD.C reingeschrieben werden 
@@ -261,6 +268,9 @@ BOOL CCDDrvInit(UINT drvno)
 		return NULL;
 	}
 
+	pDev = ((PWDC_DEVICE)hDev);
+	WDC_Err("DRVInit hDev id % x\n DRVInit hDev pci slot %x\n DRVInit hDev pci bus %x\n DRVInit hDev pci function %x\n DRVInit hDevNumAddrSp %x "
+		, pDev->id, pDev->slot.pciSlot.dwSlot, pDev->slot.pciSlot.dwBus, pDev->slot.pciSlot.dwFunction, pDev->dwNumAddrSpaces);
 
 	/*hccddrv = WDC_GetWDHandle();
 	if (hccddrv == (HANDLE)INVALID_HANDLE_VALUE)
@@ -292,13 +302,9 @@ BOOL CCDDrvInit(UINT drvno)
 	//SetupPCIE_DMA(drvno);
 	//StartPCIE_DMAWrite(drvno);
 
-	//set hardware start des dma  via DREQ withe data = 0x4000000
-	ULONG mask = 0x40000000;
-	ULONG data = 0;// 0x40000000;
-	if (HWINTR_EN)
-		data = 0x40000000;
-	SetS0Reg(data, mask, 0x38, DRV);
-	SetDMABufRegs(DRV);
+
+
+	WDC_Err("finished DRVInit\n");
 	return TRUE;	  // no Error, driver found
 
 }; //CCDDrvInit
@@ -308,13 +314,14 @@ void CCDDrvExit(UINT drvno)
 {
 	WDC_DriverClose();
 	WDC_PciDeviceClose(hDev);
+	WDC_Err("Driver closed and PciDeviceClosed \n");
 	//if (ahCCDDRV[drvno]!=INVALID_HANDLE_VALUE)
 	//CloseHandle(ahCCDDRV[drvno]);	   // close driver
 	ahCCDDRV[drvno] = INVALID_HANDLE_VALUE;
 	aINIT[drvno] = FALSE;
 };
 
-
+//no needed after jungo???
 BOOL InitBoard(UINT drvno)
 {		// inits PCI Board and gets all needed addresses
 	// and gets Errorcode if any
@@ -323,7 +330,7 @@ BOOL InitBoard(UINT drvno)
 	DWORD   ReturnedLength;
 	ULONG	ctrlcode = 1; // Init Board
 
-
+	/*
 	fResult = DeviceIoControl(ahCCDDRV[drvno], IOCTL_SetFct,  // read error code
 		&ctrlcode,        // Buffer to driver.
 		sizeof(ctrlcode),
@@ -364,7 +371,9 @@ BOOL InitBoard(UINT drvno)
 		break;
 
 	}
-	return FALSE;
+	*/
+	return TRUE;
+	
 };  // InitBoard
 
 char CntBoards(void)
@@ -435,9 +444,10 @@ BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT drvno){
 
 BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, UINT drvno){
 
-	ULONG PhysAddrDMABuf;
-	ULONG RegisterValues;
-	ULONG BitMask;
+	UINT64 addr64 = 0;
+	ULONG PhysAddrDMABuf=0;
+	ULONG RegisterValues=0;
+	ULONG BitMask=0;
 	//proof the physical address for the max. size of the DMA Controller
 	/*this error never happens. I think there is no need for this check
 	if (PhysAddrDMABuf64 > 0x3fffffffff){
@@ -455,8 +465,11 @@ BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, UINT drvno){
 	}
 
 	//WDMATLPS: write the upper part (bit 32:39) of the address	
-	PhysAddrDMABuf = PhysAddrDMABuf64 >> 32;	//shift to the upper part 
-	PhysAddrDMABuf = PhysAddrDMABuf << 24;		//shift to prepare for the Register
+	addr64 = PhysAddrDMABuf64 >> 32;
+	PhysAddrDMABuf = (ULONG) addr64;	//shift to the upper part 
+	addr64 = PhysAddrDMABuf;
+	addr64 = addr64 << 24 ;
+	PhysAddrDMABuf = (ULONG)addr64;		//shift to prepare for the Register
 	BitMask = 0xFF001FFF;
 	//CHECK proof 0x20 from old driver
 	//ULONG TLPSize = 0x20;//(*ppDma)->Page->dwBytes / sizeof(WORD);//divide by 4 because of the conversion from bytes to WORD
@@ -472,9 +485,11 @@ BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, UINT drvno){
 		WDC_Err("Set the number of DMA transfer count failed");
 		return FALSE;
 	}
-}
+	return TRUE;
+}//SetDMAAddrTlpRegs
+
 BOOL SetDMAAddrTlp(UINT drvno){
-	WD_DMA **ppDma = &pDMABufInfos;
+	WD_DMA **ppDma = &pDMASubBufInfos;
 	UINT64 PhysAddrDMABuf64;
 	ULONG BitMask;
 
@@ -533,26 +548,26 @@ BOOL SendDMAInfoToKP(void){
 	PDWORD	pdwResult = &dwResult;
 
 
-	WDC_Err("WDC:  hDma %u\n", pDMABufInfos->hDma);
-	WDC_Err("WDC:  pUserAddr %u\n", pDMABufInfos->pUserAddr);
-	WDC_Err("WDC:  pKernelAddr %u\n", pDMABufInfos->pKernelAddr);
-	WDC_Err("WDC:  dwBytes %u\n", pDMABufInfos->dwBytes);
-	WDC_Err("WDC:  dwOptions %u\n", pDMABufInfos->dwOptions);
-	WDC_Err("WDC:  dwPages %u\n", pDMABufInfos->dwPages);
-	WDC_Err("WDC:  hCard %u\n", pDMABufInfos->hCard);
+	WDC_Err("WDC:  hDma %u\n", pDMASubBufInfos->hDma);
+	WDC_Err("WDC:  pUserAddr %u\n", pDMASubBufInfos->pUserAddr);
+	WDC_Err("WDC:  pKernelAddr %u\n", pDMASubBufInfos->pKernelAddr);
+	WDC_Err("WDC:  dwBytes %u\n", pDMASubBufInfos->dwBytes);
+	WDC_Err("WDC:  dwOptions %u\n", pDMASubBufInfos->dwOptions);
+	WDC_Err("WDC:  dwPages %u\n", pDMASubBufInfos->dwPages);
+	WDC_Err("WDC:  hCard %u\n", pDMASubBufInfos->hCard);
 
 	/*for WDK Flush
-	pData = &dwDMABufSize;
+	pData = &dwDMASubBufSize;
 	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_BUFSIZE, pData, pdwResult);
 	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
 	{
-	WDC_Err("sendDMAInfoToKP dwDMABufSize send failed\n");
+	WDC_Err("sendDMAInfoToKP dwDMASubBufSize send failed\n");
 	return FALSE;
 	}
 	*/
 	//for JUNGO Flush, complete WD_DMA struct
 	/*
-	pData = pDMABufInfos;
+	pData = pDMASubBufInfos;
 	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_WDDMA, pData, pdwResult);
 	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
 	{
@@ -573,7 +588,7 @@ BOOL SendDMAInfoToKP(void){
 	*/
 	/*
 	//for JUNGO Flush , fragmented WD_DMA struct
-	dwOptions = pDMABufInfos->dwPages; //Im using dwPages instead of dwOptions
+	dwOptions = pDMASubBufInfos->dwPages; //Im using dwPages instead of dwOptions
 
 	pData = &dwOptions;
 	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_DWOPT, pData, pdwResult);
@@ -584,7 +599,7 @@ BOOL SendDMAInfoToKP(void){
 	}
 
 	//send hDma of WD_DMA struct to KP
-	hDma = pDMABufInfos->dwBytes;	 //Im using pUserAddr instead of hDma
+	hDma = pDMASubBufInfos->dwBytes;	 //Im using pUserAddr instead of hDma
 	//because the structure is mixed. I think it is a bug.
 	//Jungo says our dll or h files are mixed up
 	pData = &hDma;
@@ -600,8 +615,11 @@ BOOL SendDMAInfoToKP(void){
 }
 
 VOID DLLCALLCONV interrupt_handler(PVOID pData)
-{
-	//WDC_Err("entered interrupt handle\n");
+{	//here the DMASubBuf is copied to the DMABigBuf
+	//DMA tranfer is always via DMASubBuf
+	// the INTR occurs every 25 reads and copies 25 scans at once
+
+	WDC_Err("entered interrupt handle\n");
 	OutTrigHigh(DRV);
 	PWDC_DEVICE pDev = (PWDC_DEVICE)pData;
 	/*
@@ -624,34 +642,60 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 
 
 
-	// copy pDMABuf to UserBuffer 
+	// copy pDMASubBuf to DMABigBuf 
 	/*if (pDev->Int.dwCounter > 100){
 	OutTrigLow(DRV);
 	return;
 	}*/
-
-	if (!(pDev->Int.dwCounter % (USERBUFINSCANS / IntFreqInScans))){//count until UserBuffer==UserBufinScansSize but divide because the ISR cames with IntFrqInScnas
-		pDMAUserBuf = &DMAUserBuf[0][0];
-		DMAUserBufIndex = 0;
-		WDC_Err("reset ringbuf to zero\n");
+	WDC_Err("ISR 1\n");
+	if (!(pDev->Int.dwCounter % (UserBufInScans / IntFreqInScans))) {//count until UserBuffer==UserBufinScansSize but divide because the ISR came with IntFrqInScans
+		if (OneRingBufShot) { //stop
+			StopFFTimer(DRV);
+			SetIntFFTrig(DRV);//disable ext input
+			OneRingBufShot = FALSE;
+			OutTrigLow(DRV);
+			WDC_Err("ISR 2\n");
+			return;
+		}
+		//set Ring BigBuf back to first element
+		pDMABigBuf = pDMABigBufBase;
+		//DMAUserBufIndex = 0;
+		WDC_Err("reset userringbuf to zero\n");
 	}
-
+	WDC_Err("ISR 3\n");
 	//WDC_Err(" mod makes %d and USERBUFINSCANS/IntFreqInScans : %d and IntFreqInScans %d\n", pDev->Int.dwCounter % (USERBUFINSCANS / IntFreqInScans), (USERBUFINSCANS / IntFreqInScans), IntFreqInScans);
 	PUSHORT pPartOfDMABuf;
-	if (ISRCounter < 0){
+
+/*	if (ISRCounter < 0) {
 		ISRCounter++;
+		WDC_Err("ISR 4\n");
 		return;
 	}
-	pPartOfDMABuf = pDMABuf + (ISRCounter *  IntFreqInScans);
+*/
+	//copy a quarter of the small DMASubBuf to the Big DMABigBuf
+	pPartOfDMABuf = pDMASubBuf + (ISRCounter *  IntFreqInScans);
 	//if (pDev->Int.dwCounter % 2) { //odds
-	memcpy(pDMAUserBuf, pPartOfDMABuf, IntFreqInScans * _PIXEL * sizeof(USHORT));
+	WDC_Err("ISR 5\n");
+
+	//!!GS
+	//!!test write
+	//memset(pDMASubBuf, (ISRCounter+1) * 10, IntFreqInScans * _PIXEL *sizeof(USHORT));
+
+	//copy from block buffer pPartOfDMABuf to main buffer pDMABigBuf
+	memcpy(pDMABigBuf, pPartOfDMABuf, IntFreqInScans * _PIXEL * sizeof(USHORT));
+
+
+
 	WDC_Err("Partnumber of the DMA Buffer: %d\n", ISRCounter);
 	ISRCounter++;
-	if (ISRCounter > 3)//number of ISR per dmaBuf - 1
+	if (ISRCounter >= 4)//number of ISR per dmaBuf - 1
 		ISRCounter = 0;
 
-	pDMAUserBuf += IntFreqInScans * _PIXEL; //count user buf like a ringbuf up
-	DMAUserBufIndex++;
+
+	
+	//count up the UserRingBuf
+	pDMABigBuf += IntFreqInScans * _PIXEL; 
+	//DMAUserBufIndex++;
 	/*ISREndTime = ticksTimestamp();
 
 	CurrentISRTime = ISREndTime - ISRStartTime;
@@ -663,20 +707,33 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	WDC_Err("Got %d interrupts\n ", pDev->Int.dwCounter);
 	OutTrigLow(DRV);
 	//WDC_Err("DMACounter: %d \n", DMACounter);
-}
+}//DLLCALLCONV
 
 BOOL SetupPCIE_DMA(UINT drvno)
 {
 	//***open the DMA
+	//gets address of DMASubBuf from driver
+
 	WDC_Err("entered SetupPCIE_DMA\n");
 	DWORD dwOptions = DMA_FROM_DEVICE;// | DMA_ALLOW_64BIT_ADDRESS;// | DMA_ALLOW_CACHE;
 	DWORD dwStatus;
-	SetTORReg(DRV, 1);
-	//only for test:
-	//dwDMABufSize = 100;// *1000 * 1000;//100mb max
 
-	dwStatus = WDC_DMAContigBufLock(hDev, &pDMABuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
-	//dwStatus = WDC_DMASGBufLock(hDev, &DIODENRingBuf, dwOptions, dwDMABufSize, &pDMABufInfos); //size in Bytes
+	//do not read and write at the same time to the same range!
+	//write 25 scans but read in INTR Handler only 25 always behind
+	dwDMASubBufSize = (DMABufSizeInScans)  * _PIXEL * sizeof(USHORT);  //in bytes
+
+	
+	//only for test:
+	//dwDMASubBufSize = 100;// *1000 * 1000;//100mb max
+
+	// pDMASubBuf is the space which is allocated by this function = output - should be global
+	dwStatus = WDC_DMAContigBufLock(hDev, &pDMASubBuf, dwOptions, dwDMASubBufSize, &pDMASubBufInfos); //size in Bytes
+	//GS dwStatus = WDC_DMAContigBufLock(hDev, &pDMASubBuf, dwOptions, dwDMASubBufSize, &pDMASubBufInfos); //size in Bytes
+	//dwStatus = WDC_DMASGBufLock(hDev, &DIODENRingBuf, dwOptions, dwDMASubBufSize, &pDMASubBufInfos); //size in Bytes
+
+
+//GS	pDMASubBuf = &DIODENRingBuf;
+
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ErrLog("Failed locking a contiguous DMA buffer. Error 0x%lx - %s\n",
@@ -689,16 +746,30 @@ BOOL SetupPCIE_DMA(UINT drvno)
 	if (HWINTR_EN)
 	if(!SendDMAInfoToKP())
 	WDC_Err("sendDMAInfoToKP failed");
+	/*for KP
+	if (HWINTR_EN)
+	if(!SendDMAInfoToKP())
+	WDC_Err("sendDMAInfoToKP failed");
 	*/
+	/*for KP
+	if (HWINTR_EN)
+	if(!SendDMAInfoToKP())
+	WDC_Err("sendDMAInfoToKP failed");
+	*/
+	//
 
 	//set Init Regs
 	if (!SetDMAAddrTlp(drvno)){
 		ErrLog("DMARegisterInit for TLP and Addr failed \n");
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
+		ErrorMsg("DMARegisterInit for TLP and Addr failed");
+		return FALSE;
 	}
 	if (!SetDMABufRegs(drvno)){
 		ErrLog("DMARegisterInit for Buffer failed \n");
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
+		ErrorMsg("DMARegisterInit for Buffer failed");
+		return FALSE;
 	}
 
 	// Enable DMA interrupts (if not polling)
@@ -708,7 +779,8 @@ BOOL SetupPCIE_DMA(UINT drvno)
 		ErrLog("Failed to enable the Interrupts. Error 0x%lx - %s\n",
 			dwStatus, Stat2Str(dwStatus));
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
-		return;
+		ErrorMsg("Failed to enable the Interrupts");
+		return FALSE;
 	}
 
 	/*for testing
@@ -717,8 +789,15 @@ BOOL SetupPCIE_DMA(UINT drvno)
 	ReadLongS0(DRV, &CtrlData, 0x38);
 	WDC_Err("S0Data Offs. 0x38: %x \n", CtrlData);
 	*/
+
+	ISRCounter = 0;
+	//set user buf to firts element
+
+
+	WDC_Err("finished SetupDMA\n");
 	return TRUE;
-}
+}//SetupPCIE_DMA
+
 void StartPCIE_DMAWrite(UINT drvno)
 {	// starts transfer from PCIe board to PCs main RAM
 	if (!HWINTR_EN){
@@ -728,10 +807,10 @@ void StartPCIE_DMAWrite(UINT drvno)
 		SetDMAReset();
 
 		/* Flush the I/O caches (see documentation of WDC_DMASyncIo()) */
-		//WDC_DMASyncIo(pDMABufInfos);
+		//WDC_DMASyncIo(pDMASubBufInfos);
 		/****DMA Transfer start***/
 		/* Flush the CPU caches (see documentation of WDC_DMASyncCpu()) */
-		//WDC_DMASyncCpu(pDMABufInfos);
+		//WDC_DMASyncCpu(pDMASubBufInfos);
 
 		//SetDMADataPattern();
 		/* DDMACR: Start DMA - write to the device to initiate the DMA transfer */
@@ -744,7 +823,7 @@ void CleanupPCIE_DMA(UINT drvno)
 	/* Disable DMA interrupts */
 	WDC_IntDisable(hDev);
 	/* Unlock and free the DMA buffer */
-	WDC_DMABufUnlock(pDMABufInfos);
+	WDC_DMABufUnlock(pDMASubBufInfos);
 
 	/*
 	BOOL fResult = FALSE;
@@ -871,24 +950,10 @@ BOOL SetBoardVars(UINT drvno, BOOL sym, BOOL burst, ULONG pixel, ULONG waits, UL
 	//sym=FALSE; //use what is passed here
 	//burst=TRUE;
 
+	WriteByteS0(drvno, 0, 0x05);  //write CTRLB reg in S0
+	
+	WriteByteS0(drvno, 0, 0x06);  //write CTRLC reg in S0
 
-
-
-
-	{
-		data = 0;
-		if (flag816 == 1)  { data |= 0x040; } //for 16Bit set F_DP
-		WriteByteS0(drvno, data, 0x05);  //write CTRLB reg in S0
-	};
-
-
-	{//30 MHz cams can use dma burst mode
-
-		// set burst flag for 33MHz ND-freq
-		ReadByteS0(drvno, &data, 0x06);
-		data = data | 0x08;
-		WriteByteS0(drvno, data, 0x06);  //write CTRLC reg in S0
-	}
 
 
 
@@ -909,28 +974,8 @@ BOOL SetBoardVars(UINT drvno, BOOL sym, BOOL burst, ULONG pixel, ULONG waits, UL
 	if (flag816 == 1) { reg = 2 * aPIXEL[drvno]; }//16 bit
 	else { reg = aPIXEL[drvno]; };
 
-	if (_FFPCI133 == TRUE)
-		reg = aPIXEL[drvno];
-
-	if (_OPTSTATE)//decrement pixel if shutterstate input with OPTO1 is impacted
-		if (_FFPCI133) { reg -= 1; }
-		else reg -= 2;
-
-
-		if (_HA_IR) 	reg *= 2; // V2.45  read 600pixel, take every 2nd
-
-		if (HA_MODULE)
-		{
-			reg = reg * 4 + 4 * 8 * FFTLINES;  //4*pixel+vlks+
-			//!!2.4
-			if (HA_IRSingleCH)
-			{
-				reg *= 2;
-				CloseShutter(drvno);//set to IR
-			}
-			else
-				OpenShutter(drvno);//set to FFT
-		}
+	OpenShutter(drvno);//set to FFT
+		
 
 		//! GST Test: ND count soll > CAMACK sein damit keine ueberlappung
 		reg = 1500;
@@ -944,9 +989,7 @@ BOOL SetBoardVars(UINT drvno, BOOL sym, BOOL burst, ULONG pixel, ULONG waits, UL
 
 
 		/*
-		//new for new boards check for S0 length if DELAY reg is there
-		ReadLongIOPort(drvno,&reg,0); //read LCR0 for check length 0xffffffco
-		reg	=  ~reg; //length is inverted
+
 		if (reg>0x24) WriteLongS0(drvno,0, 0x24);	//reset ECReg
 		if (reg>0x34) WriteLongS0(drvno,DELAY, 0x34);	//set WRFFDELAY
 		*/
@@ -1149,163 +1192,6 @@ void Resort(UINT drvno, void* ptarget, void* psource)
 
 
 
-//  call of the read function for no FIFO version, with FIFO use CallIORead
-BOOL GETCCD(UINT drvno, void* pdioden, ULONG fftlines, long fkt, ULONG zadr)
-{	//starts data transfer and gets data in buffer dioden
-	//drvno: driver number 1..4; 1 for LSCISA1
-	//pdioden: pointer to destination array of ULONGs
-	//fftlines: vertical lines of FFT sensors: vclks=2 * no of lines
-	//fkt:  -1=clrread; 0=init dest array with 0; 1=standard read; 2=add to data
-	//zadr: cam address on bus -> for series2000 addressed mode
-	//returns true; false on error
-
-	BOOL fResult = FALSE;
-	DWORD   ReturnedLength = 0;
-	pArrayT pReadArray = NULL;
-	pArrayT pCorArray = NULL;
-	pArrayT	pDiodenBase = NULL;
-	pArrayT	pDiodenBase2 = NULL;
-	ULONG arraylength = 0;
-	sCCDFkts CCDfkt;
-	ULONG i = 0;
-	BOOL addalloc = FALSE;
-	BOOL coralloc = FALSE;
-	BYTE chl = 1;
-	BYTE chh = 1;
-	char pstring[22] = "";
-
-	if (!aINIT[drvno]) return FALSE;	// return with error if no init
-
-	//set function recs
-	CCDfkt.NoOfLines = 0; // NoOfLines = block in FIFO DMA on demand
-	CCDfkt.ADFlag = 10000; //delay before DMA Start (driver 2.x)	
-	CCDfkt.Adrwaits = aXCKDelay[drvno]; // pass wait between XCK and ND
-	if (_TI)
-	{
-		CCDfkt.Waits = 0;  // 6000 only valid for  TI sensors, time of vclks in 0 = 2mu
-		CCDfkt.Vclks = fftlines * 4;
-	}
-	else
-	{// vclks for no FIFO 
-		CCDfkt.Waits = VFREQ;  // 6000 only valid for  FFT sensors- no FIFO, time of vclks in ns = 6000
-		CCDfkt.Vclks = fftlines * 2;
-	}
-	CCDfkt.Fkt = fkt;
-	CCDfkt.Zadr = zadr;
-
-	pReadArray = (pArrayT)pdioden;
-	//	pReadArray = pReadArray + (db-1) * pixel;
-	pDiodenBase = pReadArray;
-	arraylength = aPIXEL[drvno] * sizeof(ArrayT); //length in bytes
-
-	if (fkt == 0) // set array to 0
-	{
-		for (i = 0; i< _PIXEL; i++)
-			*(pReadArray++) = 0;
-		return TRUE;
-	}
-
-	if (fkt>2)
-		return FALSE;  // function not implemented
-
-#if (_IR2)
-	//alloc array for correction 4 x pixel
-	//for IR - need 2. array
-	pDiodenBase2 = (pArrayT)pdioden + aPIXEL[drvno];
-	pCorArray = (pArrayT)calloc(aPIXEL[drvno] * 4, sizeof(ArrayT));
-	if (pCorArray == 0)
-	{
-		ErrorMsg("alloc Cor Buffer failed");
-		return FALSE;
-	}
-	coralloc = TRUE;
-	pReadArray = pCorArray;
-	arraylength *= 4;
-	CCDfkt.Fkt = 1;		//make standard read
-#else
-
-
-	if (_HA_IR)
-	{//alloc local array because it is 2*PIXEL -> has to be resortet later
-		pReadArray = (pArrayT)calloc(2 * aPIXEL[drvno], sizeof(ArrayT));
-		if (pReadArray == 0)
-		{
-			ErrorMsg("alloc IR Buffer failed");
-			return FALSE;
-		}
-		addalloc = TRUE;
-		CCDfkt.Fkt = 1;		//make standard read and add later
-	}
-
-	else
-		if (fkt != 1) //read in our local array ladioden - add and clrread
-		{
-			//alloc local array dioden, so we don't overwrite our DIODEN
-			pReadArray = (pArrayT)calloc(aPIXEL[drvno], sizeof(ArrayT));
-			if (pReadArray == 0)
-			{
-				ErrorMsg("alloc ADD/CLR Buffer failed");
-				return FALSE;
-			}
-			CCDfkt.Fkt = 1;		//make standard read and clr later
-			addalloc = TRUE;
-		}
-
-#endif
-
-
-	//read camera data
-	fResult = DeviceIoControl(ahCCDDRV[drvno], IOCTL_GetCCD,
-		&CCDfkt, sizeof(CCDfkt),
-		pReadArray, arraylength,
-		&ReturnedLength, NULL);
-
-	if ((!fResult) || (ReturnedLength != arraylength))
-	{
-		ErrorMsg("Read DMA Buffer failed");
-		if (addalloc) free(pReadArray);
-		if (coralloc) free(pCorArray);
-		return FALSE;
-	}
-
-	//clrread and add: fkt=-1 and 2 could not be implemented with dma
-	//so we do it here after reading
-	if (fkt == -1)
-	{ // return , nothing else to do
-		if (addalloc) free(pReadArray);
-		if (coralloc) free(pCorArray);
-		return TRUE;
-	}
-
-	if (_RESORT) Resort(drvno, pReadArray, pReadArray);
-
-	if ((_HA_IR) && (fkt != 2)) // copy back
-	{
-		pDiodenBase2 = pReadArray;
-		for (i = 0; i< (2 * aPIXEL[drvno]); i++)
-			* (pDiodenBase++) = *(pDiodenBase2++);
-	}
-
-	if (fkt == 2) // we must now add our data to DIODEN for online add
-	{
-		pDiodenBase2 = pReadArray;
-		for (i = 0; i< _PIXEL; i++)
-			* (pDiodenBase++) += *(pDiodenBase2++);
-	}
-
-	if (addalloc) free(pReadArray);
-	if (coralloc) free(pCorArray);
-
-#if _IS_C4350
-	//special for Ha Detector head C4350
-	V_On(drvno);  //starts new read sequence to Fifo
-	V_Off(drvno);
-	//special end
-#endif
-
-	return TRUE; // no Error, all went fine
-};  // GETCCD
-
 
 
 
@@ -1357,7 +1243,7 @@ BOOL CallWRFile(UINT drvno, void* pdioden, ULONG arraylength, ULONG fkt)
 	//if ((! fResult) || (ReturnedLength!=arraylength))
 	//return FALSE;
 
-	//!!!!
+	
 	//	rtnlength = ReturnedLength;
 	//	ValMsg(arraylength);
 	//	ValMsg(ReturnedLength);
@@ -1446,14 +1332,7 @@ BOOL ReadPCIEFifo(UINT drvno, void* pdioden, long fkt)
 
 	if (_RESORT) Resort(drvno, pReadArray, pReadArray);  //pixel resort
 
-	if ((_HA_IR) && (fkt != 2)) // copy back
-	{
-		pDiodenBase2 = pReadArray;
-		length = aPIXEL[drvno];  //resort only 300 values
-		if (_HWCH2) length *= 2;
-		for (i = 0; i< length; i++)
-			* (pDiodenBase++) = *(pDiodenBase2 + 2 * i + 1);
-	}
+
 
 
 	//clrread and add fkt=-1 and 2 could not be implemented with dma
@@ -1543,7 +1422,7 @@ BOOL CallIORead(UINT drvno, void* pdioden, ULONG fkt)
 		else
 		{
 			arraylength = 2 * aPIXEL[drvno]; //2bytes per word
-			if (_HA_IR) arraylength *= 2;
+
 			if (_HWCH2) arraylength *= 2; //double if 2 cams 
 			//alloc local array dioden, so we don't overwrite our DIODEN
 			//2.200 pRArray = (BYTE*) calloc(aPIXEL[drvno],4*sizeof(BYTE)); 
@@ -1560,13 +1439,14 @@ BOOL CallIORead(UINT drvno, void* pdioden, ULONG fkt)
 
 
 	//read camera data
+	/*old driver
 	fResult = DeviceIoControl(ahCCDDRV[drvno], IOCTL_GetCCD,
 		&CCDfkt, sizeof(CCDfkt),
 		pRArray, arraylength,
 		&ReturnedLength, NULL);
 	if ((!fResult) || (ReturnedLength != arraylength))
 		return FALSE;
-
+	*/
 	if (aFLAG816[drvno] == 2)
 	{	// resort 8 bit array -> BYTE sort to data array 8,16 or 32
 		ULONG i = 0;
@@ -1668,7 +1548,7 @@ BOOL CallIORead(UINT drvno, void* pdioden, ULONG fkt)
 				}//HA_MODULE
 				else //not HA_MODULE
 				{
-					if (_HA_IR) pixel *= 2;
+	
 					for (i = 0; i<pixel; i++) //_PIXEL
 					{//standard resort for FIFO 1 channel word->long
 						//2.227 hi/lo changed -> for FFT and PDA
@@ -1728,7 +1608,7 @@ BOOL CallIORead(UINT drvno, void* pdioden, ULONG fkt)
 				else
 				{//standard read
 					if (_HILO) { a = 0; b = 1; }
-					if (_HA_IR) pixel *= 2;
+
 					for (i = 0; i<pixel; i++)
 					{//change lo-hi
 						ptarray[i * 2] = psarray[i * 2 + a];	// lo byte
@@ -1787,19 +1667,7 @@ BOOL ReadFifo(UINT drvno, void* pdioden, long fkt)
 		return FALSE;  // function not implemented
 
 	//if ((_IR) && (!addalloc))
-	if (_HA_IR)
-	{
-		//alloc local array because it is 2*PIXEL -> has to be resortet later
-		pReadArray = (pArrayT)calloc(4 * aPIXEL[drvno], sizeof(ArrayT));
-		if (pReadArray == 0)
-		{
-			ErrorMsg("alloc IR Buffer failed");
-			return FALSE;
-		}
-		addalloc = TRUE;
-	}
 
-	else
 		if ((fkt == 2) || (fkt == -1)) //read in our local array ladioden - add and clrread
 		{
 			//alloc local array dioden, so we don't overwrite our DIODEN
@@ -1829,15 +1697,6 @@ BOOL ReadFifo(UINT drvno, void* pdioden, long fkt)
 	}
 
 	if (_RESORT) Resort(drvno, pReadArray, pReadArray);  //pixel resort
-
-	if ((_HA_IR) && (fkt != 2)) // copy back
-	{
-		pDiodenBase2 = pReadArray;
-		length = aPIXEL[drvno];  //resort only 300 values
-		if (_HWCH2) length *= 2;
-		for (i = 0; i< length; i++)
-			* (pDiodenBase++) = *(pDiodenBase2 + 2 * i + 1);
-	}
 
 
 	//clrread and add fkt=-1 and 2 could not be implemented with dma
@@ -2237,6 +2096,7 @@ void AboutDrv(UINT drvno)
 	HWND hWnd = GetActiveWindow();
 	HDC aDC = GetDC(hWnd);
 
+	/*
 	fResult = DeviceIoControl(ahCCDDRV[drvno], IOCTL_GetVersion,
 		&PortNumber,        // Buffer to driver.
 		4, &version, sizeof(version), &ReturnedLength, NULL);
@@ -2250,6 +2110,7 @@ void AboutDrv(UINT drvno)
 	{
 		ErrorMsg("About DeviceIo failed");
 	};
+	*/
 
 	// read ISA Id from S0Base+7
 	ReadLongS0(drvno, &S0Data, 4); // Board ID =5053
@@ -2260,8 +2121,10 @@ void AboutDrv(UINT drvno)
 	sprintf_s(pstring, 80, "     ID = 0x%x", S0Data);
 	if (MessageBox(hWnd, pstring, " Board ID=53 ", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 
-	ReadLongIOPort(drvno, &S0Data, 0); //read LCR0 for check length 0xffffffco
-	S0Data = ~S0Data; //length is inverted
+	//ReadLongIOPort(drvno, &S0Data, 0); //read LCR0 for check length 0xffffffco
+	//S0Data = ~S0Data; //length is inverted
+	//GS
+	S0Data = 0x07FF;
 
 	if (S0Data == 0) { ErrorMsg(" no Space0!"); return; }
 
@@ -2323,21 +2186,21 @@ void HighSlope(UINT drvno)
 }; //HighSlope
 
 void BothSlope(UINT drvno)
-{// set bit D7
-	BYTE IRQCNTHH;
+{// set bit D4
+	BYTE CtrlA;
 
 	HighSlope(drvno);
-	ReadByteS0(drvno, &IRQCNTHH, 0x3B);
-	IRQCNTHH |= 0x80;
-	WriteByteS0(drvno, IRQCNTHH, 0x3B);
+	ReadByteS0(drvno, &CtrlA, 4);
+	CtrlA |= 0x10;
+	WriteByteS0(drvno, CtrlA, 4);
 }; //BothSlope
 
 void NotBothSlope(UINT drvno)
-{// set bit D7
-	BYTE IRQCNTHH;
-	ReadByteS0(drvno, &IRQCNTHH, 0x3B);
-	IRQCNTHH &= 0x7F;
-	WriteByteS0(drvno, IRQCNTHH, 0x3B);
+{// set bit D4
+	BYTE CtrlA;
+	ReadByteS0(drvno, &CtrlA, 4);
+	CtrlA &= 0xEF;
+	WriteByteS0(drvno, CtrlA, 4);
 }; //NotBothSlope
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -2653,7 +2516,7 @@ void RsTOREG(UINT32 drvno)
 }
 
 
-//!!!
+
 //**************************  new setup of fiber link camera
 // send setup	d0:d15 = data for AD-Reg  ADS5294
 //				d16:d23 = ADR of  AD-Reg
@@ -2708,7 +2571,7 @@ void ClrShCam(UINT drvno, UINT zadr) //clear for Shutter cameras
 	pArrayT dummy = NULL;
 	CloseShutter(drvno);              //IFC=low
 	Sleep(5);
-	GETCCD(drvno, dummy, 0, -1, zadr);
+	//GETCCD(drvno, dummy, 0, -1, zadr);
 	Sleep(5);
 	OpenShutter(drvno);               //IFC=High
 	Sleep(5);
@@ -2791,20 +2654,13 @@ void SendCommand(UINT drvno, BYTE adr, BYTE data)
 	//	Sleep(1);
 	WriteByteS0(drvno, adr, 0); // write address to bus
 
-	if (_PRGRMVON)
-	{//clk with VON
-		regno = 4;
-		ReadByteS0(drvno, &regorg, regno);// get reg data
-		regh = regorg | 0x01; // VON
-		regl = regorg & 0xFE;
-	}
-	else
-	{//clk with ND
+
+	//clk with ND
 		regno = 5;
 		ReadByteS0(drvno, &regorg, regno);// get reg data
 		regh = regorg & 0xDF;			//ND_DIS clk is inverted
 		regl = regorg | 0x20;
-	}
+	
 
 	WriteByteS0(drvno, regh, regno); // // ND/VON hi  setup
 
@@ -2827,23 +2683,7 @@ void SendCommand(UINT drvno, BYTE adr, BYTE data)
 
 void SetHiamp(UINT drvno, BOOL hiamp)
 {
-	if (_TI)
-	{
-		CloseShutter(drvno);// IFC=lo
-		RSEC(drvno);
-		Sleep(1);
-		if (hiamp)
-		{
-			SendCommand(drvno, 0x99, 1);
-		} //1
-		else
-		{
-			SendCommand(drvno, 0x99, 1);
-		} //0
-		Sleep(1);
-		OpenShutter(drvno);// IFC=hi
-		return;
-	}
+
 	//	if (_HA_IR) CloseShutter(drvno);// IR uses #11 or #14
 	if (hiamp) { V_On(drvno); }	//standard use #11 VON
 	else { V_Off(drvno); }
@@ -2950,133 +2790,9 @@ void SetDA(UINT drvno, BYTE gain, BYTE ch)
 	Sleep(1);
 }//SetDA
 
-void SetAndantFSYNC(UINT drvno, ULONG microsec)
-// for Andanta FPA320x256
-{	/*
-	set the high time for FSYNC
-	if FSYNC goes low, the integration starts -> FSYNC shorter then VON
-	FSYNC in micro sec, implements integrate while read
-	0 = integrate then read: FSYNC = VON = FRAME
-	here a register in the S6 FPGA is used,
-	so value must be transferred via SendCommand
-	*/
-	ULONG data = 0;
-
-	if (_PRGRMVON)
-	{
-		ErrorMsg("PRGRMVON must be FALSE!");
-		return;
-	}
-
-	CloseShutter(drvno);// IFC=lo
-	RSEC(drvno);
-	Sleep(1);
-
-	data = microsec;
-	data &= 0xFF;
-	SendCommand(drvno, 0x90, (BYTE)data); //send lo word
-	data = microsec;
-	data = data >> 8;
-	SendCommand(drvno, 0x91, (BYTE)data); //send hi word
-
-	Sleep(1);
-	OpenShutter(drvno);		// IFC=hi
-	Sleep(1);
-}//SetAndantFSYNC
-
-void SendIRAndant(UINT drvno, BYTE first, BYTE secnd, BYTE third, BYTE fourth)
-//for Andanta FPA320x256
-{	/*
-	first ST WIN ITR GC PW1 PW0 I2 I1
-	1   0	  0  1   1   0   1  0
-	secnd I0 AP2 AP1 AP0 BW1 BW0 IMRO NDR0
-	0   1   0   0   0   0   0    0
-	third TS7 TS6 TS5 TS4 TS3 TS2 TS1 TS0
-	0   0   0    0   0  0   0   0
-	fourth RO2 RO1 RO0 OM1 OM0 RE RST OEN
-	0   0   0   0   0  0   0   0
-	*/
-
-	if (_PRGRMVON)
-	{
-		ErrorMsg("PRGRMVON must be FALSE!");
-		return;
-	}
-
-	CloseShutter(drvno);// IFC=lo
-	RSEC(drvno);
-	Sleep(1);
-
-	SendCommand(drvno, 0xB2, first); //send 
-	SendCommand(drvno, 0xC3, secnd); //send 
-	SendCommand(drvno, 0xD4, third); //send 
-	SendCommand(drvno, 0xE5, fourth); //send 
-	SendCommand(drvno, 0xF6, 1); //load SH
-	SendCommand(drvno, 0xF6, 2); // SH send to AD
-	Sleep(1);
-	OpenShutter(drvno);		// IFC=hi
-	Sleep(1);
-
-
-}//SendIRAndant
-
-
-void SendAndantROI(UINT drvno, UINT pixanz, UINT lineanz, UINT startpix, UINT startline)
-{// send range of interest for OSC9806
-
-	BYTE first, secnd, third, fourth;
-
-	first = 0xC0;
-	first |= (startpix / 2) >> 2;
-	secnd = (startpix / 2) << 6;
-	secnd |= (startline / 2) >> 1;
-	third = (startline / 2) << 7;
-	third |= (pixanz / 2) >> 1;
-	fourth = (pixanz / 2) << 7;
-	fourth |= (lineanz / 2) - 1;
-
-	SendIRAndant(drvno, first, secnd, third, fourth);
-}//SendAndantROI
 
 
 
-void SetupIR(UINT drvno, BYTE fkt)
-//for Andanta FPA320x256
-{	/*	fkt=0 reset RST
-	fkt=1 set to default
-	fkt=2 set high gain GC
-	fkt=3 set lo gain GC
-
-	first ST WIN ITR GC PW1 PW0 I2 I1
-	1   0	  0  1   1   0   1  0
-	secnd I0 AP2 AP1 AP0 BW1 BW0 IMRO NDR0
-	0   1   0   0   0   0   0    0
-	third TS7 TS6 TS5 TS4 TS3 TS2 TS1 TS0
-	0   0   0    0   0  0   0   0
-	fourth RO2 RO1 RO0 OM1 OM0 RE RST OEN
-	0   0   0   0   0  0   0   0
-	*/
-	BYTE first = 0x9A;
-	BYTE secnd = 0x40;
-	BYTE third = 0x0;
-	BYTE fourth = 0x0;
-	ULONG keepareg = 0;
-
-	// setupir works only if not int while read 
-	// if  int while read is used, rewrite register afterwards
-	SetAndantFSYNC(drvno, 0);
-
-	if (fkt == 0) fourth |= 0x02;//reset
-	if (fkt == 1) first = 0x9A;//default init
-	if (fkt == 2) first &= 0xEF;// high gain  F7
-	if (fkt == 3) first |= 0x10;// lo gain   F8
-
-	if (fkt == 10) first &= 0xDF;//test with F5
-	//	if (fkt==10) fourth |= 0x18;//test with F5
-
-	SendIRAndant(drvno, first, secnd, third, fourth);
-
-}//SetupIR
 
 
 
@@ -3116,9 +2832,9 @@ ULONG ExpTime; //in micro sec - needed only in DLL, defined in DLL.h
 void StartReadWithDma(UINT drvno){
 
 	//old startringreadthread routine
-	dwDMABufSize = (DMABufSizeInScans + 10) * aPIXEL[drvno] * sizeof(USHORT);// +10;//+100 safty first if it is not right calculated
-
-	if (_HWCH2) dwDMABufSize *= 2;
+//	dwDMASubBufSize = (DMABufSizeInScans + 10) * aPIXEL[drvno] * sizeof(USHORT);// +10;//+100 safty first if it is not right calculated
+//	dwDMASubBufSize = DMABufSizeInScans  * _PIXEL * sizeof(USHORT);// +10;//+100 safty first if it is not right calculated
+	if (_HWCH2) dwDMASubBufSize *= 2;
 
 	if (!DMAAlreadyStarted){
 		if (!SetupPCIE_DMA(DRV)) return;
@@ -3141,7 +2857,7 @@ void StartReadWithDma(UINT drvno){
 
 	if (!aINIT[drvno]) return FALSE;	// return with error if no init
 
-	pReadArray = pDMABuf;
+	//pReadArray = pDMASubBuf;
 	//	pReadArray = pReadArray + (db-1) * pixel;
 	pDiodenBase = pReadArray;
 
@@ -3149,18 +2865,18 @@ void StartReadWithDma(UINT drvno){
 	{
 		for (i = 0; i< _PIXEL; i++)
 			*(pReadArray++) = 0;
-		return TRUE;
+		return ;
 	}
 
 	if (_FKT == 5) // set array to i
 	{
 		for (i = 0; i< _PIXEL; i++)
 			*(pReadArray++) = (USHORT)i;
-		return TRUE;
+		return ;
 	}
 
 	if (_FKT>9)
-		return FALSE;  // function not implemented
+		return ;  // function not implemented
 
 
 	if ((_FKT == 2) || (_FKT == -1)) //read in our local array ladioden - add and clrread
@@ -3170,7 +2886,7 @@ void StartReadWithDma(UINT drvno){
 		if (pReadArray == 0)
 		{
 			ErrorMsg("alloc ADD/CLR Buffer failed");
-			return FALSE;
+			return ;
 		}
 		addalloc = TRUE;
 	}
@@ -3178,19 +2894,12 @@ void StartReadWithDma(UINT drvno){
 	if (_FKT == -1)
 	{ // return , nothing else to do
 		if (addalloc) free(pReadArray);
-		return TRUE;
+		return ;
 	}
 
 	if (_RESORT) Resort(drvno, pReadArray, pReadArray);  //pixel resort
 
-	if ((_HA_IR) && (_FKT != 2)) // copy back
-	{
-		pDiodenBase2 = pReadArray;
-		length = aPIXEL[drvno];  //resort only 300 values
-		if (_HWCH2) length *= 2;
-		for (i = 0; i< length; i++)
-			* (pDiodenBase++) = *(pDiodenBase2 + 2 * i + 1);
-	}
+
 
 
 	//clrread and add fkt=-1 and 2 could not be implemented with dma
@@ -3203,7 +2912,10 @@ void StartReadWithDma(UINT drvno){
 	}
 
 	if (addalloc) free(pReadArray);
-}
+}//StartReadWithDma
+
+
+
 //  read a range from start to stop relative to actual Counter to user buffer
 UINT8 ReadRingBlock(void* pdioden, INT32 start, INT32 stop)
 // when calling this function, the actual RingWRCnt value is used as relative zero
@@ -3323,7 +3035,7 @@ void CopyRingtoUserBuf(INT32 fetchzero)
 		//tests
 		//memset((PUCHAR) puser ,0x88,blocksize1);//range1
 		//memset((PUCHAR) puser + blocksize1 ,0xee,blocksize2);//range2
-		//ValMsg(puser);//!!
+		//ValMsg(puser);
 		//memset((PUCHAR) puser ,range1,1); //show split ranges in 1st pixel
 		//memset((PUCHAR) puser+1,range2,1);
 
@@ -3400,7 +3112,7 @@ void __cdecl ReadRingThread(void *dummy)
 		//if(linestofetch > 0)WDC_Err("linestofetch: %i \n", linestofetch);
 		//	if (FFValid(Ringdrvno))
 		//	if (linestofetch!=0)
-		//!!!
+		
 		if (linestofetch > 0)
 		{
 			//linestofetch = ReadFFCounter(Ringdrvno);
@@ -3450,9 +3162,9 @@ void __cdecl ReadRingThread(void *dummy)
 				//for (k=100;k<4500;k++)
 				{
 					//if (*(pRingBuf + RingWRCnt*_NO_TLPS * 128 / 2 + 7) < 0x4000) //wert etwa > 0x4000
-					if (*(pDMABuf/*pRingBuf + RingWRCnt*pixel*/ + 1083) != 539)
+					if (*(pDMASubBuf/*pRingBuf + RingWRCnt*pixel*/ + 1083) != 539)
 					{//FetchActLine=TRUE;
-						ErrVal = *(/*pRingBuf + RingWRCnt*pixel*/pDMABuf + 1083);
+						ErrVal = *(/*pRingBuf + RingWRCnt*pixel*/pDMASubBuf + 1083);
 						ErrCnt += 1;
 					}}
 #else
@@ -3502,7 +3214,7 @@ void StartRingReadThread(UINT drvno, ULONG ringfifodepth, ULONG threadp, __int16
 	ULONG Errorcode = 0;
 	ULONG ReturnedLength = 0;
 
-	dwDMABufSize = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
+	dwDMASubBufSize = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
 	if (!DMAAlreadyStarted){
 		SetupPCIE_DMA(DRV);
 		DMAAlreadyStarted = TRUE;

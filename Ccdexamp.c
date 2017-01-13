@@ -1,5 +1,5 @@
-/* simple window App for calling CCDlsc Driver via DeviceIoControl
-	Version 1.3		© Entwicklungsbuero G. Stresing	1/00
+/* simple window App for calling CCDlsc Driver via Jungo driver
+	Version 1.0		© Entwicklungsbuero G. Stresing	1/16
 */
 
 #include <windows.h> 
@@ -113,20 +113,11 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 //	TPS = InitHRCounter();
 //	if (TPS==0) return (FALSE);
 
-	// init board 
-//	if(_HA_MODULE) SetupHAModule(_HA_IRSingleCH,_FFTLINES);
-//    SetBoardVars(DRV,SYM_PULSE, BURSTMODE,_PIXEL,WAITS, FLAG816,PPORTADR,FREQ,XCKDELAY);	
-//	if (_PARALLEL)
-		SetBoardVars(DRV,SYM_PULSE, BURSTMODE,_PIXEL - 12 ,WAITS, FLAG816,PPORTADR,FREQ,XCKDELAY);
 
-		/*
-	//setups
-//	SetupDELAY(DRV,DELAYini);	//init WRFIFO delay
-//	SetArray(DRV, _ARRAYLINES); // setup Andanta IR area Sensor
-//	RsTOREG(DRV); // reset TOREG
-	//set TrigOut 
-//	SetTORReg(DRV,0);
 
+
+
+/*
 	CloseShutter(DRV); //set cooling  off
 
 	if (_ISPDA)	{SetISPDA(DRV, TRUE); } else SetISPDA(DRV, FALSE);
@@ -308,14 +299,15 @@ void AboutCFS(HWND hWnd)
 }//AboutCFS
 
 
-void AboutS0(HWND hWnd)
+void AboutS0(void)
 {
 	int i, j = 0;
 	int numberOfBars = 0;
-	char fn[460];
+	char fn[1000];
 	ULONG S0Data = 0;
 	ULONG length = 0;
-	char LUTS0Reg[16][20] = {
+	HWND hWnd;
+	char LUTS0Reg[32][30] = {
 		"DBR \t",
 		"CTRLA \t",
 		"XCKLL \t",
@@ -331,7 +323,23 @@ void AboutS0(HWND hWnd)
 		"GIOREG \t",
 		"DELAY EC/REG ",
 		"IRQREG \t",
-		"PCI board version"
+		"PCI board version",
+		"R10 \t",
+		"R11 \t",
+		"R12 \t",
+		"R13 DMABUFSIZE",
+		"R14 SCANSPERINTR",
+		"R15 SCANINDEX",
+		"R16 \t",
+		"R17 \t",
+		"R18 \t",
+		"R19 \t",
+		"R1a \t",
+		"R1b \t",
+		"R1c \t",
+		"R1d \t",
+		"R1e \t ",
+		"R1f \t"
 	}; //Look-Up-Table for the S0 Registers
 
 	//for debug
@@ -342,6 +350,10 @@ void AboutS0(HWND hWnd)
 		ErrorMsg(" BOARD not found! ");
 		return;
 	}
+
+	hWnd = GetActiveWindow();
+
+
 	
 	j = sprintf(fn, "S0- registers   \n");
 
@@ -356,10 +368,10 @@ void AboutS0(HWND hWnd)
 	*/
 
 
-	for (i = 0; i <= 15; i++)
+	for (i = 0; i <= 31; i++)
 	{
 		ReadLongS0(DRV, &S0Data, i * 4);
-		j += sprintf(fn + j, "%s \t: 0x%x\n", LUTS0Reg[i], S0Data);
+		j += sprintf(fn + j, "%s \t: 0x%I32x\n", LUTS0Reg[i], S0Data);
 	}
 
 	MessageBox(hWnd, fn, "S0 regs", MB_OK);
@@ -514,9 +526,15 @@ int span=0;
 						break;
 	
 				 case IDM_SETEC :
-				 		DialogBox( hInst, MAKEINTRESOURCE(IDD_SETEC), hWnd, (DLGPROC)SetupEC);
+					 DialogBox(hInst, MAKEINTRESOURCE(IDD_SETEC), hWnd, (DLGPROC)SetupEC);   //IDD_SETEC
 						break;			 
+
+
+//!!!
 				 
+//				 case IDM_SETAD:
+	//				 DialogBox(hInst, MAKEINTRESOURCE(IDD_SETUPAD), hWnd, (DLGPROC)SetupEC);
+		//			 break;
 
 				case IDM_ShowTRMS : //invert state
 					 if (ShowTrms==TRUE) 
@@ -568,7 +586,7 @@ int span=0;
 					 }
 				 case VK_F5: //send IR_Setup
 					//SetupIR(DRV,1); //reset
-					SetupIR(DRV,1); // RE&RS enable
+					 // RE&RS enable
 				//WriteByteS0(DRV,0x0f,0x30);
                     break;
 				 case VK_F7: //set high amp
@@ -706,6 +724,13 @@ BOOL success=FALSE;
 				if (IsDlgButtonChecked(hDlg,IDC_RADIO1)==BST_CHECKED) TrigMod=0;
 				if (IsDlgButtonChecked(hDlg,IDC_RADIO2)==BST_CHECKED) TrigMod=1;
 				if (IsDlgButtonChecked(hDlg,IDC_RADIO3)==BST_CHECKED) TrigMod=2;
+
+				// set slope for ext. trigger
+				if (TrigMod == 0)	HighSlope(DRV);
+				if (TrigMod == 1)	LowSlope(DRV);
+				if (TrigMod == 2)	BothSlope(DRV);
+
+
 				EndDialog(hDlg, TRUE);        
                 return (TRUE);
 				break;
@@ -767,150 +792,138 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 BYTE dbyte=0;
 ULONG longval=0;
 BOOL success=FALSE;
-   switch (message) 
-   {
-       case WM_INITDIALOG:
-		   SetDlgItemInt(hDlg,IDC_SETDAT,tDAT,FALSE);
-		   SetDlgItemInt(hDlg,IDC_SETEC,(tIFC&0x07ffffff),FALSE);
-		   SetDlgItemInt(hDlg,IDC_SETECADJ,tECADJ,FALSE);
-		   SetDlgItemInt(hDlg,IDC_SETTCNT,tTICNT,FALSE);
-		   SetDlgItemInt(hDlg,IDC_SETTCNT2,tTOCNT,FALSE);
-		   CheckDlgButton(hDlg,IDC_CHECK_NOPDARS,m_noPDARS);
-		   switch (m_TOmodus) 
-				{	case 2: 		   CheckDlgButton(hDlg,IDC_EC_RADIO2,TRUE); break; //REG
-					case 3: 		   CheckDlgButton(hDlg,IDC_EC_RADIO3,TRUE); break; //EC
-					case 4: 		   CheckDlgButton(hDlg,IDC_EC_RADIO4,TRUE); break; //DAT
-					case 5: 		   CheckDlgButton(hDlg,IDC_EC_RADIO5,TRUE); break; //TRIGIN
-					case 6: 		   CheckDlgButton(hDlg,IDC_EC_RADIO6,TRUE); break; //FFXCK
-					default: 		   CheckDlgButton(hDlg,IDC_EC_RADIO1,TRUE); // XCKI 0 or 5
-				}	
 
-		   switch (m_ECmodus) 
-				{	case 2: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO2); break; //REG
-					case 3: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO3); break; //EC
-					case 4: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO4); break; //DAT
-					default: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO1); // XCKI 0 or 5
-				}	
+switch (message)
+{
+case WM_INITDIALOG:
 
-		   switch (m_ECTrigmodus) 
-				{	case 2: 		   CheckDlgButton(hDlg,IDC_RADIO12,TRUE); break; //REG
-					case 3: 		   CheckDlgButton(hDlg,IDC_RADIO13,TRUE); break; //EC
-					case 4: 		   CheckDlgButton(hDlg,IDC_RADIO14,TRUE); break; //DAT
-					default: 		   CheckDlgButton(hDlg,IDC_RADIO11,TRUE); // XCKI 0 or 5
-				}
-           return (TRUE);
-		   break;
+				SetDlgItemInt(hDlg, IDC_SETDAT, tDAT, FALSE);
+				SetDlgItemInt(hDlg, IDC_SETXDLY, tXDLY, FALSE);
+			   SetDlgItemInt(hDlg,IDC_SETTCNT,tTICNT,FALSE);
+			   SetDlgItemInt(hDlg,IDC_SETTCNT2,tTOCNT,FALSE);
+			   CheckDlgButton(hDlg,IDC_CHECK_NOPDARS,m_noPDARS);
+			   switch (m_TOmodus)
+			   {	case 2: 		   CheckDlgButton(hDlg,IDC_EC_RADIO2,TRUE); break; //REG
+			   case 3: 		   CheckDlgButton(hDlg,IDC_EC_RADIO3,TRUE); break; //EC
+			   case 4: 		   CheckDlgButton(hDlg,IDC_EC_RADIO4,TRUE); break; //DAT
+			   case 5: 		   CheckDlgButton(hDlg,IDC_EC_RADIO5,TRUE); break; //TRIGIN
+			   case 6: 		   CheckDlgButton(hDlg,IDC_EC_RADIO6,TRUE); break; //FFXCK
+			   default: 		   CheckDlgButton(hDlg,IDC_EC_RADIO1,TRUE); // XCKI 0 or 5
+			   }
 
-       case WM_COMMAND:      
-		   switch( LOWORD( wParam ) )
-		   {
-			case IDCANCEL:
-                EndDialog(hDlg, TRUE);        
-                return (TRUE);
-				break;
+			   switch (m_ECmodus)
+			   {	case 2: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO2); break; //REG
+			   case 3: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO3); break; //EC
+			   case 4: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO4); break; //DAT
+			   default: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO1); // XCKI 0 or 5
+			   }
 
-			case IDOK:
-	//			EXTTRIGFLAG= IsDlgButtonChecked(hDlg,IDC_ExtTrig);
+			   switch (m_ECTrigmodus)
+			   {	case 2: 		   CheckDlgButton(hDlg,IDC_RADIO12,TRUE); break; //REG
+			   case 3: 		   CheckDlgButton(hDlg,IDC_RADIO13,TRUE); break; //EC
+			   case 4: 		   CheckDlgButton(hDlg,IDC_RADIO14,TRUE); break; //DAT
+			   default: 		   CheckDlgButton(hDlg,IDC_RADIO11,TRUE); // XCKI 0 or 5
+			   }
 
-				longval = GetDlgItemInt(hDlg,IDC_SETDAT,&success ,FALSE);	
-				if (success) tDAT=longval;
-				longval=tDAT;
-				if (longval != 0) longval |= 0x80000000;
-				WriteLongS0(DRV,longval,0x20); // DAT reg
-				longval = GetDlgItemInt(hDlg,IDC_SETEC,&success ,FALSE);	
-				if (success) tIFC=longval;
-				longval = GetDlgItemInt(hDlg,IDC_SETECADJ,&success ,FALSE);	
-				if (success) tECADJ=longval;
-				if (tECADJ>0xffff) tECADJ=0xffff;
-				if (tECADJ>0) tECADJ |= 0x8000;//enable
-				WriteByteS0(1,tECADJ&0x0ff,0x36);//lo byte
-				WriteByteS0(1,tECADJ>>8,0x37);//hi byte & enable
+			   
+	return (TRUE);
+	break;
 
-			//	if (longval != 0) longval |= 0x80000000;
-			//	WriteLongS0(DRV,longval,0x24); // EC reg
-				val = GetDlgItemInt(hDlg,IDC_SETTCNT,&success ,FALSE);	
-				if (success) tTICNT=val;
-				val = tTICNT;
-				if (val>1) {val -= 1;}
-				else val = 0;
-				if (val != 0) val |= 0x80;
-				// devider n=1 -> n /2
-				WriteByteS0(DRV,(BYTE) val,0x28);//TICNT reg
-				val = GetDlgItemInt(hDlg,IDC_SETTCNT2,&success ,FALSE);	
-				if (success) tTOCNT=val;
-				val = tTOCNT;
-				if (val>1) {val -= 1;}
-				else val = 0;
-				if (val != 0) val |= 0x80;
-				// devider n=1 -> n /2
-				WriteByteS0(DRV,(BYTE) val,0x2A);//TOCNT reg
+case WM_COMMAND:
+	switch (LOWORD(wParam))
+	{
+	case IDCANCEL:
+		EndDialog(hDlg, TRUE);
+		return (TRUE);
+		break;
 
-//				CheckRadioButton(hDlg,IDC_RADIO1,IDC_RADIO5,m_TOmodus);
-				if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO1)==TRUE) m_TOmodus=1;
-				if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO2)==TRUE) m_TOmodus=2;
-				if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO3)==TRUE) m_TOmodus=3;
-				if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO4)==TRUE) m_TOmodus=4;
-				if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO5)==TRUE) m_TOmodus=5;
-				if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO6)==TRUE) m_TOmodus=6;
+	case IDOK:
+		//			EXTTRIGFLAG= IsDlgButtonChecked(hDlg,IDC_ExtTrig);
+					//get DAT value
+					longval = GetDlgItemInt(hDlg, IDC_SETDAT, &success, FALSE);
+					if (success)
+						{
+						tDAT = longval;
+						longval = tDAT;
+						if (longval != 0) longval |= 0x80000000;
+						WriteLongS0(DRV, longval, 0x20); // DAT reg
+						}
+					//get XCKDLY val
+					longval = GetDlgItemInt(hDlg, IDC_SETXDLY, &success, FALSE);
+					if (success)
+					{
+						tXDLY = longval;
+						longval = tXDLY;
+						if (longval != 0) longval |= 0x80000000;
+						WriteLongS0(DRV, longval, 0x24); // XCKDLY reg
+					}
 
-				switch (m_TOmodus) 
-				{	case 1: dbyte = 0x0; break; //XCK
+
+					val = GetDlgItemInt(hDlg,IDC_SETTCNT,&success ,FALSE);
+					if (success) tTICNT=val;
+					val = tTICNT;
+					if (val>1) {val -= 1;}
+					else val = 0;
+					if (val != 0) val |= 0x80;
+					// devider n=1 -> n /2
+					WriteByteS0(DRV,(BYTE) val,0x28);//TICNT reg
+					val = GetDlgItemInt(hDlg,IDC_SETTCNT2,&success ,FALSE);
+					if (success) tTOCNT=val;
+					val = tTOCNT;
+					if (val>1) {val -= 1;}
+					else val = 0;
+					if (val != 0) val |= 0x80;
+					// devider n=1 -> n /2
+					WriteByteS0(DRV,(BYTE) val,0x2A);//TOCNT reg
+
+					//				CheckRadioButton(hDlg,IDC_RADIO1,IDC_RADIO5,m_TOmodus);
+					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO1)==TRUE) m_TOmodus=1;
+					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO2)==TRUE) m_TOmodus=2;
+					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO3)==TRUE) m_TOmodus=3;
+					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO4)==TRUE) m_TOmodus=4;
+					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO5)==TRUE) m_TOmodus=5;
+					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO6)==TRUE) m_TOmodus=6;
+
+					switch (m_TOmodus)
+					{	case 1: dbyte = 0x0; break; //XCK
 					case 2: dbyte = 0x80; break; //REG
 					case 3: dbyte = 0x40; break; //EC
 					case 4: dbyte = 0x08; break; //DAT
 					case 5: dbyte = 0x20; break; //TRIGIN
 					case 6: dbyte = 0x10; break; //FFXCK
 					default:  dbyte = 0x0; // XCKI
-				}
-				
-				m_noPDARS = IsDlgButtonChecked(hDlg,IDC_CHECK_NOPDARS);
-				if (m_noPDARS==TRUE) dbyte |= 0x04;
-				WriteByteS0(DRV, dbyte,0x2B);//TOFLAG reg
+					}
 
-				if (IsDlgButtonChecked(hDlg,IDC_ECCNT_RADIO1)==TRUE) m_ECmodus=1; //CNT
-				if (IsDlgButtonChecked(hDlg,IDC_ECCNT_RADIO2)==TRUE) m_ECmodus=2;
-				if (IsDlgButtonChecked(hDlg,IDC_ECCNT_RADIO3)==TRUE) m_ECmodus=3;
-				if (IsDlgButtonChecked(hDlg,IDC_ECCNT_RADIO4)==TRUE) m_ECmodus=4;
+					m_noPDARS = IsDlgButtonChecked(hDlg,IDC_CHECK_NOPDARS);
+					if (m_noPDARS==TRUE) dbyte |= 0x04;
+					WriteByteS0(DRV, dbyte,0x2B);//TOFLAG reg
 
-				if (IsDlgButtonChecked(hDlg,IDC_RADIO11)==TRUE) {m_ECTrigmodus=1;}
-				if (IsDlgButtonChecked(hDlg,IDC_RADIO12)==TRUE) {m_ECTrigmodus=2;}
-				if (IsDlgButtonChecked(hDlg,IDC_RADIO13)==TRUE) {m_ECTrigmodus=3;}
-				if (IsDlgButtonChecked(hDlg,IDC_RADIO14)==TRUE) {m_ECTrigmodus=4;}
+					if (IsDlgButtonChecked(hDlg,IDC_ECCNT_RADIO1)==TRUE) m_ECmodus=1; //CNT
+					if (IsDlgButtonChecked(hDlg,IDC_ECCNT_RADIO2)==TRUE) m_ECmodus=2;
+					if (IsDlgButtonChecked(hDlg,IDC_ECCNT_RADIO3)==TRUE) m_ECmodus=3;
+					if (IsDlgButtonChecked(hDlg,IDC_ECCNT_RADIO4)==TRUE) m_ECmodus=4;
 
-				if (tIFC==0) {
+					if (IsDlgButtonChecked(hDlg,IDC_RADIO11)==TRUE) {m_ECTrigmodus=1;}
+					if (IsDlgButtonChecked(hDlg,IDC_RADIO12)==TRUE) {m_ECTrigmodus=2;}
+					if (IsDlgButtonChecked(hDlg,IDC_RADIO13)==TRUE) {m_ECTrigmodus=3;}
+					if (IsDlgButtonChecked(hDlg,IDC_RADIO14)==TRUE) {m_ECTrigmodus=4;}
+
+
 					m_ECmodus=1; //reset to timer mode
-					m_ECTrigmodus=1; }//reset if timer mode
-				if (tIFC != 0) tIFC |= 0x80000000; //!! set EC enable
+					m_ECTrigmodus=1;
 
-				switch (m_ECmodus) //EC input
-				{	case 1: tIFC &= 0x9FFFFFFF; break; //timer
-					case 2: tIFC |= 0x60000000; break; //PCIin
-					case 3: tIFC |= 0x20000000; break; //opt1
-					case 4: tIFC |= 0x40000000; break; //opt2
-					default:  ; //case 0 = timer
-				}
 
-				switch (m_ECTrigmodus) //EC trig input
-				{	case 1: tIFC &= 0xE7FFFFFF; break; //timer
-					case 2: tIFC |= 0x18000000; break; //PCIin
-					case 3: tIFC |= 0x08000000; break; //opt1
-					case 4: tIFC |= 0x10000000; break; //opt2
-					default:  ;  
-				}
 
-				WriteLongS0(1,tIFC,0x24);//EC reg
+		//			OpenShutter(DRV); //EC works only if shutter open
+					
+		EndDialog(hDlg, TRUE);
+		return (TRUE);
+		break;
+		} //WM_COMMAND	
 
-				OpenShutter(DRV); //EC works only if shutter open
-
-				EndDialog(hDlg, TRUE);        
-                return (TRUE);
-				break;
-		   }
-        break; //WM_COMMAND	
-   }
-
+	}//	   message
    return (FALSE); 
-}
+}//SetupEC
 
 
 
