@@ -1,0 +1,305 @@
+/*
+==========================================================================================
+                          "Copyright © 2014 EB Stresing All Rights Reserved.
+============================================================================================
+THIS SOFTWARE IS provided “AS IS” WITHOUT WARRANTY OF ANY KIND.  EB Stresing MAKES NO WARRANTIES, 
+EITHER EXPRESS OR IMPLIED, WITH RESPECT TO THIS SOFTWARE.  EB Stresing SPECIFICALLY DISCLAIMS THE 
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY WARRANTY 
+AGAINST INFRINGEMENT OF ANY INTELLECTUAL PROPERTY RIGHT OF ANY THIRD PARTY WITH REGARD TO 
+THIS SOFTWARE. EB Stresing RESERVES THE RIGHT, WITHOUT NOTICE, TO MAKE CHANGES TO THIS SOFTWARE. 
+ 
+IN NO EVENT SHALL EB Stresing BE LIABLE FOR ANY INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL 
+DAMAGES OF ANY KIND OR NATURE, INCLUDING, WITHOUT LIMITATION, BUSINESS INTERRUPTION COSTS, 
+LOSS OF PROFIT OR REVENUE, LOSS OF DATA, PROMOTIONAL OR MANUFACTURING EXPENSES, OVERHEAD, 
+INJURY TO REPUTATION OR LOSS OF CUSTOMERS ARISING OUT OF THE USE OR INSTALLATION OF THIS 
+SOFTWARE."
+============================================================================================ 
+
+Header for PCIE driver V1.0
+GST  5/2014
+
+*/
+#ifndef _IOCTRL_H_
+#define _IOCTRL_H_
+
+//	Version:
+#define NTPCI_version 0x101
+
+
+// DMA Register Locations (byte offset from BAR 0)
+#define DCR_OFFSET					0x0				// Device Control Register
+#define	DCSR_OFFSET					0x4				// Device Control and Status Register
+#define WRITE_TLPADDR_OFFSET		0x8				// Write DMA TLP Address Register
+#define WRITE_TLPSIZE_OFFSET		0xC				// Write DMA TLP Size Register
+#define WRITE_TLPCOUNT_OFFSET		0x10			// Write DMA TLP Count Register
+#define WRITE_PATTERN_OFFSET		0x14			// Write DMA Data Pattern Register
+#define READ_PATTERN_OFFSET			0x18			// Read  DMA Data Pattern Register
+#define READ_TLPADDR_OFFSET			0x1C			// Read  DMA TLP Address Register
+#define READ_TLPSIZE_OFFSET			0x20			// Read  DMA TLP Size Register
+#define READ_TLPCOUNT_OFFSET		0x24			// Read  DMA TLP Count Register
+#define WRITE_DMA_PERF_OFFSET		0x28			// Write DMA Performance Statistics Register
+#define READ_DMA_PERF_OFFSET		0x2C			// Read  DMA Performance Statistics Register
+#define READ_DMA_STATUS_OFFSET		0x30			// Read  DMA Status Register
+#define READ_DMA_COMPLETE_OFFSET	0x34			// Read  DMA Number of Completions Register
+#define READ_DMA_COMPLETE_SIZE		0x38			// Read  DMA Size of Completions Register
+#define DEVICE_LINK_WIDTH_STATUS	0x3C			// PCIe Device Link Width Register
+#define DEVICE_LINK_TRANS_SIZE		0x40			// PCIe Device Link Transaction Size Register
+
+
+#define MAX_TRANSFER_SIZE	32768					// RRW - match application allocation
+
+
+// Device type           -- in the "User Defined" range."
+#define GPD_TYPE	FILE_DEVICE_UNKNOWN		// was 40000 in my driver, here for first tests = file unknown for compatibility
+
+
+// IOCTL code
+#define MDS_IOCTL_SET_BAR CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x000,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define MDS_IOCTL_SET_OFFSET CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x001,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define MDS_IOCTL_GET_USER_LED_STATE CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x002,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define MDS_IOCTL_SET_USER_LED_STATE CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x003,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_INITIATOR_RESET CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x004,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_CLEAR_INITIATOR_RESET CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x005,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define MDS_IOCTL_GET_DIP_STATE CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x006,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define MDS_IOCTL_GET_PB_STATE CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x007,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_SET_DMA_WRITE_ADDR CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x008,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_SET_DMA_WRITE_TLPSIZE CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x009,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_SET_DMA_WRITE_TLPCOUNT CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x00A,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_SET_DMA_WRITE_PATTERN CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x00B,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_SET_DMA_READ_ADDR CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x00C,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_SET_DMA_READ_TLPSIZE CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x00D,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_SET_DMA_READ_TLPCOUNT CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x00E,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_SET_DMA_READ_PATTERN CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x00F,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+
+#define IOCTL_DMA_START CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x010,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_GET_DMA_STATUS CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x011,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_GET_DMA_WRITE_PERF CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x012,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_GET_DMA_READ_PERF CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x013,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_GET_DMA_WRITE_ADDR CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x014,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_GET_DMA_WRITE_SIZE CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x015,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_GET_DMA_WRITE_COUNT CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x016,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_GET_DMA_WRITE_PATTERN CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x017,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_GET_DMA_READ_ADDR CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x018,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_GET_DMA_READ_SIZE CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x019,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_GET_DMA_READ_COUNT CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x01A,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_GET_DMA_READ_PATTERN CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x01B,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_GET_DMA_REGISTER CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x01C,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_CLEANUP CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x01D,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_DISABLE_INTERRUPTS CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x01E,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_ENABLE_INTERRUPTS CTL_CODE (FILE_DEVICE_UNKNOWN,   \
+                                    0x01F,                 \
+                                    METHOD_BUFFERED,       \
+                                    FILE_ANY_ACCESS)
+
+#define IOCTL_SETUP_DMA_PCIE_PAYLOADVALS CTL_CODE(FILE_DEVICE_UNKNOWN, \
+									0x020, \
+									METHOD_BUFFERED, \
+									FILE_ANY_ACCESS)
+
+
+// The IOCTL function codes from 0x800 to 0xFFF are for customer use.
+
+// get software version of driver
+#define IOCTL_GetVersion \
+	CTL_CODE(GPD_TYPE, 0x900, METHOD_BUFFERED, FILE_READ_ACCESS)
+// gets byte of PCI: space0 / ISA: Portoffset
+#define IOCTL_ReadByteS0\
+	CTL_CODE(GPD_TYPE, 0x901, METHOD_BUFFERED, FILE_READ_ACCESS)
+//read camera data to array
+#define IOCTL_GetCCD \
+	CTL_CODE(GPD_TYPE, 0x902, METHOD_IN_DIRECT, FILE_READ_ACCESS) //!direct
+// read long in space0
+#define IOCTL_ReadLongS0\
+	CTL_CODE(GPD_TYPE, 0x903, METHOD_BUFFERED, FILE_READ_ACCESS)
+// gets long from Port of IORunRegs of PCI board
+#define IOCTL_ReadLongIORunReg \
+	CTL_CODE(GPD_TYPE, 0x904, METHOD_BUFFERED, FILE_READ_ACCESS)
+// read key input from port 0x60
+#define IOCTL_ReadKey \
+	CTL_CODE(GPD_TYPE, 0x905, METHOD_BUFFERED, FILE_READ_ACCESS)
+// initialize PCI board and get addresses, de-/ activate mouse
+#define IOCTL_SetFct \
+	CTL_CODE(GPD_TYPE, 0x906, METHOD_BUFFERED, FILE_READ_ACCESS)
+#define IOCTL_ReadByteIORunReg \
+	CTL_CODE(GPD_TYPE, 0x907, METHOD_BUFFERED, FILE_READ_ACCESS)
+#define IOCTL_ReadLongDMAReg \
+	CTL_CODE(GPD_TYPE, 0x908, METHOD_BUFFERED, FILE_READ_ACCESS)
+
+#define IOCTL_WriteByteS0\
+	CTL_CODE(GPD_TYPE, 0x911, METHOD_BUFFERED, FILE_WRITE_ACCESS)
+// gets byte of PCI: space0 / ISA: Portoffset
+#define IOCTL_WriteLongIORunReg \
+	CTL_CODE(GPD_TYPE, 0x912, METHOD_BUFFERED, FILE_WRITE_ACCESS)
+// write long to Port of RunReg PCI board
+#define IOCTL_WriteLongS0 \
+	CTL_CODE(GPD_TYPE, 0x913, METHOD_BUFFERED, FILE_WRITE_ACCESS)
+// write long to space0 address
+#define IOCTL_WriteByteIORunReg \
+	CTL_CODE(GPD_TYPE, 0x914, METHOD_BUFFERED, FILE_WRITE_ACCESS)
+#define IOCTL_WriteBytePort0 \
+	CTL_CODE(GPD_TYPE, 0x915, METHOD_BUFFERED, FILE_WRITE_ACCESS)
+#define IOCTL_WriteLongDMAReg \
+	CTL_CODE(GPD_TYPE, 0x916, METHOD_BUFFERED, FILE_WRITE_ACCESS)
+
+typedef struct  _sDLDATA {
+	ULONG   POff;     // write 2 longs to driver
+	ULONG   Data;
+}   sDLDATA;
+
+
+typedef struct _sCCDFkts{  // struct for passing parameters to GETCCD
+
+	ULONG NoOfLines; // lines of a blockread
+	ULONG ADFlag;  // no function for PCI 
+	ULONG Adrwaits; // Adress delay for FFTs -> 6mu
+	ULONG Waits;	// PCI: VCLK waits for FFTs -> 3mu
+	ULONG Vclks;
+	ULONG Fkt;
+	ULONG Zadr;
+
+} sCCDFkts, *PsCCDFkts;
+
+
+//Errorcodes of PCI vxd driver
+//are mostly not used in sys driver
+#define NoError					0
+#define Error_notinitiated		1 
+#define Error_noregkey			2	//no registry key
+#define Error_nosubregkey		3	//no registry sub key
+#define Error_nobufspace		4
+#define Error_nobios			5	//no PCI bios 
+#define Error_noboard			6	//no Interfaceboard
+#define Error_noIORegBase		7	//no PCI runtime address
+#define Error_Physnotmapped		8
+#define Error_Fktnotimplemented	9	//in SetBoard
+#define Error_Timer				10	//PCI board Timer for vclks
+#define Error_Mouse				11	//Mouse Act/Deact Error
+
+
+
+
+#endif // _IOCTRL_H_
