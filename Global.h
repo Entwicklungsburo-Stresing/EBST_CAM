@@ -55,8 +55,8 @@ BOOL DISP2 = FALSE;		//display 2 cameras parallel, TRUE for double line
 						// could be 2..4 for multiple boards
 
 // global Camera data
-#define  _NO_TLPS  0x11 //0x11				//0x11=17*128  = 2176 Bytes  = 1088 WORDS
-#define TLPSize 0x20
+#define  _NO_TLPS  0xa //oldpc: 0x11				//0x11=17*128  = 2176 Bytes  = 1088 WORDS
+#define TLPSize 0x40	//0x20 on old pc
 #define RAMPAGESIZE 4096
 #define _PIXEL  1200				// no of pixels min 300, should be multiple of 300, max 8100
 #define _MAXDB	4					// no. of lines
