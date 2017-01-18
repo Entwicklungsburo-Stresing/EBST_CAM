@@ -523,7 +523,9 @@ void Contimess(void *dummy)
 
 	//start 2nd thread for getting data in highest std priority, ring=200 lines
 	if (!HWINTR_EN)
-		{StartRingReadThread(DRV, 200, _THREADPRI, -1); }
+	{
+		StartRingReadThread(DRV, 200, _THREADPRI, -1);
+	}
 	else
 		StartReadWithDma(DRV);
 		

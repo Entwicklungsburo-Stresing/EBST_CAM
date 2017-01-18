@@ -37,6 +37,16 @@ General definitions
 // use LSCPCI1 on PCI Boards
 #define	DRIVERNAME	"\\\\.\\LSCPCIE"
 
+
+
+//****************************   !!!!!!!!!!!!!!!!!!!!!!!!    ****************************
+//try different methodes - only one may be TRUE!
+#define DMA_CONTIGBUF TRUE		// use if DMABigBuf is set by driver (data must be copied afterwards to DMABigBuf)
+#define DMA_SGBUF FALSE			// use if DMABigBuf is set by application (pointer must be passed to SetupPCIE_DMA)
+
+
+
+
 // globals within board
 // don't change values here - are set within functions SetBoardVars...
 
@@ -52,8 +62,12 @@ enum{
 	DmaAddr_RDMATLPA = 0x01C,
 	DmaAddr_RDMATLPS = 0x020,
 	DmaAddr_RDMATLPC = 0x024,
-	DmaAddr_DmaBufSize = 0x04C,
-	DmaAddr_ScansPerIntr = 0x050
+	DmaAddr_PCIEFLAGS = 0x40,
+	DmaAddr_DmaBufSize = 0x04C,//maybe delete?
+	DmaAddr_DmaBufSizeInScans = 0x04C,		// length in scans
+	DmaAddr_ScansPerIntr = 0x050,
+	DmaAddr_ScanIndex = 0x48,
+	DmaAddr_NOS = 0x44
 };
 
 //jungodriver specific variables
@@ -62,6 +76,8 @@ WDC_DEVICE_HANDLE hDev = NULL;
 ULONG DMACounter = 0;//for debugging
 //Buffer of WDC_DMAContigBufLock function = one DMA sub block - will be copied to the big pDMABigBuf later
 USHORT *pDMASubBuf;
+// maybe replace : DWORD_PTR *pDMASubBuf = NULL;
+
 //PUSHORT *pDMASubBuf;  //!!GS
 WD_DMA *pDMASubBufInfos = NULL; //there will be saved the neccesary parameters for the dma buffer
 BOOL DMAAlreadyStarted = FALSE;
@@ -131,6 +147,7 @@ BOOL _SHOW_MSG = TRUE;
 
 
 BOOL OneRingBufShot = FALSE;
+BOOL DMAISRunning = FALSE;
 
 // ***********     functions    **********************
 //B! FIXME die jungo-library für fehler und co müsste wahrscheinlich in BOARD.C reingeschrieben werden 
@@ -147,7 +164,7 @@ void ErrMsgBoxOff(void)
 	_SHOW_MSG = FALSE;
 }
 
-void ErrorMsg(char ErrMsg[40])
+void ErrorMsg(char ErrMsg[100])
 {
 	if (_SHOW_MSG)
 	{
@@ -155,18 +172,118 @@ void ErrorMsg(char ErrMsg[40])
 	}
 };
 
-void ValMsg(long val)
+void ValMsg(UINT64 val)
 {
-	char AString[40];
+	char AString[60];
 	if (_SHOW_MSG)
 	{
-		sprintf_s(AString, 40, "%s%d", "val= ", val);
+		sprintf_s(AString, 60, "%s%d 0x%I64x", "val= ", val, val);
 		if (MessageBox(GetActiveWindow(), AString, "ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 	}
 };
 
+
+void AboutDMARegs(UINT32 drv)
+{//regs des Contig DMA Buf 
+	HWND hWnd = GetActiveWindow();
+	int j = 0;
+#define s_size 1000
+	char fn[s_size];
+	PUCHAR pmaxaddr = NULL;
+
+	if (!pDMASubBufInfos) { j = sprintf_s(fn, s_size, " pBufInfo = 0x%p \n", pDMASubBufInfos); }
+	else {
+		j = 0;
+		if (DMA_SGBUF) 		j = sprintf_s(fn, s_size, " SG version \n\n");
+		if (DMA_CONTIGBUF) 		j = sprintf_s(fn, s_size, " Contig Buf version \n\n");
+
+		if (j == 0)
+		{
+			ErrorMsg("not SG and not Contig");
+			return;
+		}
+
+		pmaxaddr = pDMASubBufInfos->pUserAddr;// calc the upper addr
+		pmaxaddr += pDMASubBufInfos->dwBytes;
+		j += sprintf_s(fn + j, s_size, " pBufInfo = 0x%p \n", pDMASubBufInfos);
+		j += sprintf_s(fn + j, s_size, " hDMA = 0x%I32x \n", pDMASubBufInfos->hDma);
+		j += sprintf_s(fn + j, s_size, " pUserAddr = 0x%p \n", pDMASubBufInfos->pUserAddr);
+		j += sprintf_s(fn + j, s_size, " pMAXUserAddr = 0x%p \n", pmaxaddr);
+		j += sprintf_s(fn + j, s_size, " pKernelAddr = 0x%p \n", pDMASubBufInfos->pKernelAddr);
+		j += sprintf_s(fn + j, s_size, " dwBytes = 0x%I32x = %d\n", pDMASubBufInfos->dwBytes, pDMASubBufInfos->dwBytes);
+		j += sprintf_s(fn + j, s_size, " dwOptions = 0x%I32x \n", pDMASubBufInfos->dwOptions);
+		j += sprintf_s(fn + j, s_size, " dwPages = 0x%I32x \n", pDMASubBufInfos->dwPages);
+		j += sprintf_s(fn + j, s_size, " hCard = 0x%I32x \n", pDMASubBufInfos->hCard);
+		j += sprintf_s(fn + j, s_size, " physAddr(page0) = 0x%p \n", pDMASubBufInfos->Page[0].pPhysicalAddr);
+		j += sprintf_s(fn + j, s_size, " MAXphysAddr(page0) = 0x%p \n", pDMASubBufInfos->Page[0].pPhysicalAddr + pDMASubBufInfos->dwBytes);
+		j += sprintf_s(fn + j, s_size, " pagesize(page0) = 0x%I32x \n", pDMASubBufInfos->Page[0].dwBytes);
+		j += sprintf_s(fn + j, s_size, " physAddr(page1) = 0x%p \n", pDMASubBufInfos->Page[1].pPhysicalAddr);
+		j += sprintf_s(fn + j, s_size, " pagesize(page1) = 0x%I32x \n", pDMASubBufInfos->Page[1].dwBytes);
+	}
+	if (MessageBox(hWnd, fn, " DMA Buf Regs ", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+
+}
+
+void AboutS0(UINT32 drvno)
+{
+	int i, j = 0;
+	int numberOfBars = 0;
+	char fn[1000];
+	ULONG S0Data = 0;
+	ULONG length = 0;
+	HWND hWnd;
+	char LUTS0Reg[32][30] = {
+		"DBR \t",
+		"CTRLA \t",
+		"XCKLL \t",
+		"XCKCNTLL",
+		"PIXREG \t",
+		"FIFOCNT \t",
+		"VCLKCTRL",
+		"'EBST' \t",
+		"DAT \t",
+		"XDLY \t",
+		"TOR \t",
+		"nc \t",
+		"GIOREG \t",
+		"nc ",
+		"IRQREG \t",
+		"PCI board version",
+		"R10 FLAGS",
+		"R11 NOS\t",
+		"R12 SCANINDEX",
+		"R13 DMABUFSIZE",
+		"R14 SCANSPERINTR",
+		"R15 \t",
+		"R16 \t",
+		"R17 \t",
+		"R18 \t",
+		"R19 \t",
+		"R1a \t",
+		"R1b \t",
+		"R1c \t",
+		"R1d \t",
+		"R1e \t ",
+		"R1f \t"
+	}; //Look-Up-Table for the S0 Registers
+
+	hWnd = GetActiveWindow();
+
+	j = sprintf(fn, "S0- registers   \n");
+
+	//Hier werden alle 6 Adressen der BARs in Hex abgefragt
+
+	for (i = 0; i <= 31; i++)
+	{
+		ReadLongS0(DRV, &S0Data, i * 4);
+		j += sprintf(fn + j, "%s \t: 0x%I32x\n", LUTS0Reg[i], S0Data);
+	}
+
+	MessageBox(hWnd, fn, "S0 regs", MB_OK);
+
+}//AboutS0
 //done
-BOOL CCDDrvInit(UINT drvno)
+BOOL CCDDrvInit(UINT32 drvno)
 {// returns true if driver was found
 	ULONG MAXDMABUFLENGTH = 0x07fff; //val look in registry driver parameters
 	//depends on os, how big a buffer can be
@@ -302,6 +419,15 @@ BOOL CCDDrvInit(UINT drvno)
 	//SetupPCIE_DMA(drvno);
 	//StartPCIE_DMAWrite(drvno);
 
+	//set hardware start des dma  via DREQ withe data = 0x4000000
+	/*function is moved to setup_PCIEDMA
+	ULONG mask = 0x40000000;
+	ULONG data = 0;// 0x40000000;
+	if (HWINTR_EN)
+	data = 0x40000000;
+	SetS0Reg(data, mask, 0x38, DRV);
+	*/
+	//	SetDMABufRegs(DRV); not here
 
 
 	WDC_Err("finished DRVInit\n");
@@ -310,8 +436,9 @@ BOOL CCDDrvInit(UINT drvno)
 }; //CCDDrvInit
 
 
-void CCDDrvExit(UINT drvno)
+void CCDDrvExit(UINT32 drvno)
 {
+	CleanupPCIE_DMA(drvno);
 	WDC_DriverClose();
 	WDC_PciDeviceClose(hDev);
 	WDC_Err("Driver closed and PciDeviceClosed \n");
@@ -322,7 +449,7 @@ void CCDDrvExit(UINT drvno)
 };
 
 //no needed after jungo???
-BOOL InitBoard(UINT drvno)
+BOOL InitBoard(UINT32 drvno)
 {		// inits PCI Board and gets all needed addresses
 	// and gets Errorcode if any
 	ULONG Errorcode = Error_notinitiated;
@@ -392,7 +519,7 @@ char CntBoards(void)
 
 //**************  new for PCIE   *******************************
 
-BOOL SetDMAReg(ULONG Data, ULONG Bitmask, CHAR Address, UINT drvno){//the bitmask have "1" on the data dates like Bitmask: 1110 Data:1010 
+BOOL SetDMAReg(ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno){//the bitmask have "1" on the data dates like Bitmask: 1110 Data:1010 
 	ULONG OldRegisterValues;
 	ULONG NewRegisterValues;
 	//read the old Register Values in the DMA Address Reg
@@ -412,15 +539,10 @@ BOOL SetDMAReg(ULONG Data, ULONG Bitmask, CHAR Address, UINT drvno){//the bitmas
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		return FALSE;
 	}
-
-	if (!ReadLongDMA(drvno, &OldRegisterValues, Address)){
-		ErrLog("ReadLong DMA Failed in SetDMAReg \n");
-		WDC_Err("%s", LSCPCIEJ_GetLastErr());
-		return FALSE;
-	}
 	return TRUE;
 }
-BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT drvno){
+
+BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno){
 	ULONG OldRegisterValues;
 	ULONG NewRegisterValues;
 	//read the old Register Values in the S0 Address Reg
@@ -442,10 +564,10 @@ BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT drvno){
 	return TRUE;
 }
 
-BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, UINT drvno){
+BOOL SetDMAAddrTlpRegs(PUSHORT PhysAddrDMABuf64, ULONG tlpSize, UINT32 drvno){
 
 	UINT64 addr64 = 0;
-	ULONG PhysAddrDMABuf=0;
+	UINT64 PhysAddrDMABuf=0;
 	ULONG RegisterValues=0;
 	ULONG BitMask=0;
 	//proof the physical address for the max. size of the DMA Controller
@@ -457,23 +579,32 @@ BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, UINT drvno){
 	return FALSE;
 	}*/
 	//WDMATLPA (Reg name): write the lower part (bit 03:32) of the DMA adress to the DMA controller
-	PhysAddrDMABuf = (ULONG)PhysAddrDMABuf64;
+	RegisterValues = PhysAddrDMABuf64;
 	BitMask = 0xFFFFFFFC;
-	if (!SetDMAReg(PhysAddrDMABuf, BitMask, DmaAddr_WDMATLPA, drvno)){
+	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_WDMATLPA, drvno)){
 		WDC_Err("Set the lower part of the DMA Address failed");
 		return FALSE;
 	}
 
 	//WDMATLPS: write the upper part (bit 32:39) of the address	
+	//WDMATLPS: write the upper part (bit 32:39) of the address	
+	PhysAddrDMABuf = (PUSHORT)PhysAddrDMABuf64;
+	PhysAddrDMABuf >> 32;	//shift to the upper part 
+	PhysAddrDMABuf << 24;		//shift to prepare for the Register
+	/*old...dontknow  if the new code is working from dll
 	addr64 = PhysAddrDMABuf64 >> 32;
 	PhysAddrDMABuf = (ULONG) addr64;	//shift to the upper part 
 	addr64 = PhysAddrDMABuf;
 	addr64 = addr64 << 24 ;
 	PhysAddrDMABuf = (ULONG)addr64;		//shift to prepare for the Register
+	*/
 	BitMask = 0xFF001FFF;
 	//CHECK proof 0x20 from old driver
 	//ULONG TLPSize = 0x20;//(*ppDma)->Page->dwBytes / sizeof(WORD);//divide by 4 because of the conversion from bytes to WORD
-	RegisterValues = PhysAddrDMABuf | tlpSize;
+	//old before dll RegisterValues = PhysAddrDMABuf | tlpSize;
+	RegisterValues = (ULONG)PhysAddrDMABuf;
+	RegisterValues |= tlpSize;
+
 	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_WDMATLPS, drvno)){
 		WDC_Err("Set the upper part of the DMA Address and the TLPsize failed");
 		return FALSE;
@@ -488,9 +619,9 @@ BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, UINT drvno){
 	return TRUE;
 }//SetDMAAddrTlpRegs
 
-BOOL SetDMAAddrTlp(UINT drvno){
+BOOL SetDMAAddrTlp(UINT32 drvno){
 	WD_DMA **ppDma = &pDMASubBufInfos;
-	UINT64 PhysAddrDMABuf64;
+	DWORD_PTR PhysAddrDMABuf64;
 	ULONG BitMask;
 
 	//write Address
@@ -499,14 +630,17 @@ BOOL SetDMAAddrTlp(UINT drvno){
 		return FALSE;
 	return TRUE;
 }
-BOOL SetDMABufRegs(UINT drvno){
+BOOL SetDMABufRegs(UINT32 drvno, ULONG nos){
 	//set DMA Buffer size in scans
-	if (!SetS0Reg(DMABufSizeInScans, 0xffffffff, DmaAddr_DmaBufSize, drvno))//DMABufSizeInScans
+	//here: make one big buffer for nos scans
+
+	if (!SetS0Reg(nos + 5, 0xffffffff, DmaAddr_DmaBufSizeInScans, drvno))//DMABufSizeInScans - use 1 block
 		return FALSE;
 	//ULONG reg;
 	//ReadLongS0(DRV, &reg, DmaAddr_DmaBufSize);
 	//WDC_Err("readreg DMABufSize: %x \n", reg);
 	//set Scans per Interrupt
+	IntFreqInScans = nos / 2;
 	if (!SetS0Reg(IntFreqInScans, 0xffffffff, DmaAddr_ScansPerIntr, drvno))
 		return FALSE;
 	//ReadLongS0(DRV, &reg, DmaAddr_ScansPerIntr);
@@ -613,6 +747,16 @@ BOOL SendDMAInfoToKP(void){
 
 	return TRUE;
 }
+ULONG GetScanindex(UINT32 drvno)
+{
+	ULONG ldata = 0;
+	if (!ReadLongS0(drvno, &ldata, DmaAddr_ScanIndex))
+	{
+		ErrorMsg("Error GetScanindex");
+		return 0;
+	}
+	return ldata;
+}
 
 VOID DLLCALLCONV interrupt_handler(PVOID pData)
 {	//here the DMASubBuf is copied to the DMABigBuf
@@ -648,6 +792,7 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	return;
 	}*/
 	WDC_Err("ISR 1\n");
+	/* commented like in dll
 	if (!(pDev->Int.dwCounter % (UserBufInScans / IntFreqInScans))) {//count until UserBuffer==UserBufinScansSize but divide because the ISR came with IntFrqInScans
 		if (OneRingBufShot) { //stop
 			StopFFTimer(DRV);
@@ -657,11 +802,12 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 			WDC_Err("ISR 2\n");
 			return;
 		}
+		*/
 		//set Ring BigBuf back to first element
-		pDMABigBuf = pDMABigBufBase;
+	//dll change	pDMABigBuf = pDMABigBufBase;
 		//DMAUserBufIndex = 0;
 		WDC_Err("reset userringbuf to zero\n");
-	}
+	//}
 	WDC_Err("ISR 3\n");
 	//WDC_Err(" mod makes %d and USERBUFINSCANS/IntFreqInScans : %d and IntFreqInScans %d\n", pDev->Int.dwCounter % (USERBUFINSCANS / IntFreqInScans), (USERBUFINSCANS / IntFreqInScans), IntFreqInScans);
 	PUSHORT pPartOfDMABuf;
@@ -673,7 +819,7 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	}
 */
 	//copy a quarter of the small DMASubBuf to the Big DMABigBuf
-	pPartOfDMABuf = pDMASubBuf + (ISRCounter *  IntFreqInScans);
+//dll change	pPartOfDMABuf = pDMASubBuf + (ISRCounter *  IntFreqInScans);
 	//if (pDev->Int.dwCounter % 2) { //odds
 	WDC_Err("ISR 5\n");
 
@@ -682,7 +828,7 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	//memset(pDMASubBuf, (ISRCounter+1) * 10, IntFreqInScans * _PIXEL *sizeof(USHORT));
 
 	//copy from block buffer pPartOfDMABuf to main buffer pDMABigBuf
-	memcpy(pDMABigBuf, pPartOfDMABuf, IntFreqInScans * _PIXEL * sizeof(USHORT));
+	//dll change memcpy(pDMABigBuf, pPartOfDMABuf, IntFreqInScans * _PIXEL * sizeof(USHORT));
 
 
 
@@ -694,7 +840,7 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 
 	
 	//count up the UserRingBuf
-	pDMABigBuf += IntFreqInScans * _PIXEL; 
+	//dll change pDMABigBuf += IntFreqInScans * _PIXEL; 
 	//DMAUserBufIndex++;
 	/*ISREndTime = ticksTimestamp();
 
@@ -709,7 +855,7 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	//WDC_Err("DMACounter: %d \n", DMACounter);
 }//DLLCALLCONV
 
-BOOL SetupPCIE_DMA(UINT drvno)
+BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos)
 {
 	//***open the DMA
 	//gets address of DMASubBuf from driver
