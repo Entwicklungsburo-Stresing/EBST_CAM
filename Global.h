@@ -243,6 +243,7 @@ HANDLE hCopyToDispBuf ;//Mutex for data buffer write
 #define IntFreqInScans  (DMABufSizeInScans/4) //DMABufSizeInScans / 2;
 //#define DMABufSize 600 *_PIXEL * 2
 #define HWINTR_EN TRUE
+#define IS_DLL FALSE
 
 
 //jungo
@@ -261,6 +262,8 @@ ArrayT DIODEN[_MAXDB][1200];		// global data array, could be 1 or 2 dim
 ArrayT DIODENRingBuf[(DMABufSizeInScans + 10) * 1200 * sizeof(USHORT)];
 DWORD FirstPageOffset;
 pArrayT pDIODEN = (pArrayT)&DIODEN;
+
+
 
 
 
