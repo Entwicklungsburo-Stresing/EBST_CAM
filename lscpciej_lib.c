@@ -27,7 +27,7 @@
  *       string below is your specific WinDriver license registration string
  *       and set the driver name to your driver's name */
 //#define LSCPCIEJ_DEFAULT_LICENSE_STRING "643c749b4b3f16a065cd01a30e8f3ea2d6ff4a01972d366c100fcf7a.WD1180_64_NL_Entwicklungsburo_Stresing"
-#define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
+//#define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
 
 /* LSCPCIEJ device information struct */
 typedef struct {

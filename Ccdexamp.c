@@ -8,6 +8,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <process.h>	  // for Thread example
+#include <windows.h>
+#include <CommCtrl.h>
 
 #include "resource.h"
 #include "BOARD.h"
@@ -33,6 +35,8 @@ HINSTANCE hInst;   // current instance
 LPCTSTR lpszAppName  = "CCDEXAMP";
 LPCTSTR lpszTitle    = "CCDEXAMP"; 
 
+HWND     hwndTrack;
+HWND     hwndTrack2;
 
 BOOL RegisterWin95( CONST WNDCLASS* lpwc );
 
@@ -65,6 +69,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
    else if ( !RegisterClass( &wc ) )
       return( FALSE );
 
+   DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hMSWND, (DLGPROC)AllocateBuf);
 
    hInst = hInstance; 
 
@@ -74,7 +79,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
                         lpszTitle,    
                         WS_OVERLAPPEDWINDOW, 
                         CW_USEDEFAULT, 0, 
-                        XLENGTH+40 , YLENGTH + 140,//640/380,  
+                        XLENGTH/XOFF+40 , YLENGTH + 140,//640/380,  
                         NULL,              
                         NULL,              
                         hInstance,         
@@ -298,7 +303,7 @@ void AboutCFS(HWND hWnd)
 
 }//AboutCFS
 
-
+/*
 void AboutS0(void)
 {
 	int i, j = 0;
@@ -367,7 +372,7 @@ void AboutS0(void)
 	j += sprintf(fn + j, "PCIE number of BARs = %x\n", numberOfBars);
 	*/
 
-
+/*
 	for (i = 0; i <= 31; i++)
 	{
 		ReadLongS0(DRV, &S0Data, i * 4);
@@ -377,6 +382,7 @@ void AboutS0(void)
 	MessageBox(hWnd, fn, "S0 regs", MB_OK);
 
 }//AboutS0
+*/
 
 void AboutDMA(HWND hWnd)
 {
@@ -481,8 +487,56 @@ static HWND hBtn  = NULL;
 int i=0;
 int span=0;
 
+DWORD cur_nospb = 0;
+DWORD cur_nob = 0;
+char *s = (char*)malloc(10);
    switch ( uMsg ) 
    {
+   case WM_CREATE:
+	   //not working fine yet, just creating the trackbar
+	   hwndTrack = CreateWindow(TRACKBAR_CLASS,
+		   "", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
+		   TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY,
+		   300, 300,
+		   120, 30,
+		   hWnd, (HMENU)ID_TRACKBAR,
+		   hInst,
+		   NULL);
+	   SendMessage(hwndTrack, TBM_SETRANGE, TRUE,
+		   MAKELONG(0/*MIN RANGE*/, Nospb - 1/*MAX RANGE*/));  //Optional, Default is 0-100
+
+	   hwndTrack2 = CreateWindow(TRACKBAR_CLASS,
+		   "", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
+		   TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY,
+		   450, 300,
+		   120, 30,
+		   hWnd, (HMENU)ID_TRACKBAR,
+		   hInst,
+		   NULL);
+	   SendMessage(hwndTrack2, TBM_SETRANGE, TRUE,
+		   MAKELONG(0/*MIN RANGE*/, Nob - 1/*MAX RANGE*/));  //Optional, Default is 0-100
+
+	   //ShowScrollBar(scrollb, SB_BOTH, TRUE);
+	   break;
+   case WM_HSCROLL://ID_TRACKBAR:
+	   //Define your function.
+
+	   cur_nospb = SendMessage(hwndTrack, TBM_GETPOS, 0, 0);
+	   cur_nob = SendMessage(hwndTrack2, TBM_GETPOS, 0, 0);
+	   CopytoDispbuf(cur_nob*_PIXEL + cur_nospb);
+	   Display(1, PLOTFLAG);
+
+	   char TrmsString[260];
+	   int j = 0;
+	   int xPos = GetCursorPosition();
+	   int yVal = DisplData[0][xPos];// YVal(1, xPos);
+	   j = sprintf_s(TrmsString + j, 260, " x: %i y: %i=0x%x ", xPos, yVal, yVal);
+	   TextOut(hMSDC, 20, YLENGTH + 50, TrmsString, j);
+
+	   //sprintf(s, "%d", dwPos);
+	   //MessageBox(hMSWND, s, "Position", MB_OK);
+	   break;
+
       case WM_COMMAND :
               switch( LOWORD( wParam ) )
               {
@@ -743,7 +797,53 @@ BOOL success=FALSE;
 }
 
 
+LRESULT CALLBACK AllocateBuf(HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
+{
+	UINT nob_input = 0, nospb_input = 0;
+	BOOL success = FALSE;
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		SetDlgItemInt(hDlg, IDC_nob, Nob, FALSE);
+		SetDlgItemInt(hDlg, IDC_nospb, Nospb, FALSE);
+		return (TRUE);
+		break;
 
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDCANCEL:
+			EndDialog(hDlg, TRUE);
+			return (TRUE);
+			break;
+
+		case IDOK:
+			nob_input = GetDlgItemInt(hDlg, IDC_nob, &success, FALSE);
+			nospb_input = GetDlgItemInt(hDlg, IDC_nospb, &success, FALSE);
+			if (success)
+			{
+				Nob = nob_input;
+				Nospb = nospb_input;
+				if (!BufLock(DRV, Nob, Nospb))
+					MessageBox(hMSWND, "allocating Buffer fails", "Error", MB_OK);
+				else
+					MessageBox(hMSWND, "allocating Buffer succeeded", "Message", MB_OK);
+			}
+
+
+			EndDialog(hDlg, TRUE);
+			return (TRUE);
+			break;
+		}
+		break; //WM_COMMAND
+
+	}
+
+	return (FALSE);
+}
 
 LRESULT CALLBACK SetupTLevel( HWND hDlg,           
                         UINT message,        
@@ -891,6 +991,7 @@ case WM_COMMAND:
 					case 4: dbyte = 0x08; break; //DAT
 					case 5: dbyte = 0x20; break; //TRIGIN
 					case 6: dbyte = 0x10; break; //FFXCK
+					case 7: dbyte |= 0x70; break; //Block Trig
 					default:  dbyte = 0x0; // XCKI
 					}
 
