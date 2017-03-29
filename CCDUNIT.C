@@ -160,7 +160,7 @@ void Display(unsigned long db,BOOL Plot)
 
 
 
-void CopytoDispbuf(void)
+void CopytoDispbuf(ULONG scan)
 {	//display buffer is long
 	//data array is word
 	int i;
@@ -169,16 +169,18 @@ void CopytoDispbuf(void)
 
 	//!!
 
-	tempBuf = &DMAUserBuf[0][0] + testcnt * _PIXEL;// DMAUserBufIndex];
+	//tempBuf = &DMAUserBuf[0][0] + testcnt * _PIXEL;
+	tempBuf = pDMABigBuf + scan * _PIXEL;
+	// DMAUserBufIndex];
 	//while (!GetNextScan){ Sleep(5); }
-	testcnt++;
-	if (testcnt >= 100){
- 		testcnt = 0;
-		tempBuf = &DMAUserBuf[0][0];
-	}
+	//testcnt++;
+	//if (testcnt >= 100){
+ 	//	testcnt = 0;
+	//	tempBuf = &DMAUserBuf[0][0];
+	//}
 
 	//!!GS
-	tempBuf = &DMAUserBuf[0][0];//offset:  +_PIXEL * 2;
+	//tempBuf = &DMAUserBuf[0][0];//offset:  +_PIXEL * 2;
 
 	for (i = 0; i < (_PIXEL - 1); i++){
 		//pDMABuf++;
@@ -385,7 +387,7 @@ do
 		//B! FetchLastRingLine(pDIODEN);
 		TICKSDISP = ticksTimestamp();		
 
-		CopytoDispbuf();
+		CopytoDispbuf(Nob*Nos);
 		Display(1,PLOTFLAG);
 		if (ShowTrms) CalcTrms();
 		//OutTrigLow(1);
@@ -456,6 +458,15 @@ void Contimess(void *dummy)
 	if (!SetThreadPriority(hTHREAD, 15)) ErrorMsg(" No Thread set ");
 #endif
 */	
+	if (!DBGNOCAM)
+	{
+		//Check if Camera there
+		if (!FindCam(DRV))
+		{
+			ErrorMsg("no Camera found");
+			return;
+		}
+	}
 
 	//stop all and clear FIFO
 	StopFFTimer(DRV);
@@ -509,6 +520,14 @@ void Contimess(void *dummy)
 	SetADGain(DRV, 1, gain, gain, gain, gain, gain, gain, gain, gain); //set gain to values g1..g8 in Board.C
 //	SetADGain(DRV, 1, 0, 0, 0, 0, 0, 0, 0, 0); //set gain to values g1..g8 in Board.C
 
+	pDMABigBufBase = pBLOCKBUF;
+
+	//DMA_Setup
+	if (!SetupPCIE_DMA(DRV, Nos, Nob))  //get also buffer address
+	{
+		ErrorMsg("Error in SetupPCIE_DMA");
+		return;
+	}
 	
 	// write header
 	j=sprintf_s(header,260," Online Loop - Cancel with ESC or space- key  " );
@@ -522,14 +541,17 @@ void Contimess(void *dummy)
 
 	//StartPCIE_DMAWrite(DRV);
 
+	ReadFFLoop(DRV, ExpTime, FREQ, EXTTRIGFLAG, 0,  0);
+
 	//start 2nd thread for getting data in highest std priority, ring=200 lines
+	/*
 	if (!HWINTR_EN)
 	{
 		StartRingReadThread(DRV, 200, _THREADPRI, -1);
 	}
 	else
 		StartReadWithDma(DRV);
-		
+		*/
 	//StartRingReadThread(DRV, 200, _THREADPRI, -1);
 	//while (!RingThreadOn) {}; // wait until ReadThread is running
 
