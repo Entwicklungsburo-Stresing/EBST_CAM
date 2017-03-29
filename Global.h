@@ -5,6 +5,7 @@
 
 #define IDM_EXIT           100
 
+#define DBGNOCAM	FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
 
 #define _ERRTEST FALSE //test data for integrity
 

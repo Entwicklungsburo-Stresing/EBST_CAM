@@ -550,6 +550,7 @@ BOOL BufLock(UINT drvno, LONG nob, SHORT nospb)
 	if (pBLOCKBUF != 0) return TRUE;
 	else return FALSE;
 }
+
 //**************  new for PCIE   *******************************
 
 BOOL SetDMAReg(ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno){//the bitmask have "1" on the data dates like Bitmask: 1110 Data:1010 
@@ -3262,6 +3263,164 @@ void StopRingReadThread(void)
 	RingThreadOn = FALSE;// global variable ends thread and frees mem
 }//StopRingFFTimer
 
+void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch)
+{//const burst loop with DMA initiated by hardware DREQ
+	//read nos lines from FIFO
+	//
+	//local declarations
+	char string[20] = "";
+	void *dummy = NULL;
+
+	BOOL Abbruch = FALSE;
+	BOOL Space = FALSE;
+	BOOL ExTrig = FALSE;
+	ULONG  lcnt = 0;
+	PUSHORT pdest;
+	BYTE	cnt = 0;
+	int i = 0;
+	ULONG dwdata = 0;
+	ULONG nos = 0;
+	ULONG val = 0;
+	ReadLongS0(drv, &dwdata, 0x44); //NOS is in reg R1
+	nos = dwdata;
+
+	// ErrorMsg("jump to DLLReadFFLoop");
+
+	WDC_Err("entered DLLReadFFLoop\n");
+
+
+
+	if (!DBGNOCAM)
+	{
+		//Check if Camera there
+		if (!FindCam(DRV))
+		{
+			ErrorMsg("no Camera found");
+			return;
+		}
+	}
+
+
+
+	// only one of exposure time or frequency is permitted to be unequal zero
+	if ((exptus != 0) && (freq != 0)) {
+		ErrorMsg(" expt + freq ");
+		return;
+	}
+
+	//calculate exposure time [us] if frequency is given 
+	if (freq != 0) {
+		if (freq <= 1000000) {
+			exptus = 1000000 / freq;// in us
+		}
+		else {
+			ErrorMsg(" freq too high ");
+			return;
+		}
+	}
+
+
+	//reset the internal block counter and ScanIndex before START
+	//set to hw stop of timer hwstop=TRUE
+	RS_DMAAllCounter(drv, TRUE);
+	//reset intr copy buf function
+	ISRCounter = 0;
+	SubBufCounter = 0;
+	pDMABigBufIndex = pDMABigBufBase; // reset buffer index to base we got from labview
+
+
+
+	//ErrorMsg("in DLLReadFFLoop - start timer");
+	if (exttrig != 0) {
+		ExTrig = TRUE;
+		SetExtFFTrig(drv);
+	}
+	else {
+		ExTrig = FALSE;
+		SetIntFFTrig(drv);
+
+	}
+
+	ReadLongS0(DRV, &val, DmaAddr_BLOCKS); //get the needed Blocks
+	ULONG Blocks = val;
+	ULONG blockcnt = 0;
+
+	do //block read function
+	{
+		//if Block tigger
+		if (blocktrigger != 0)
+		{	//wait for trigger
+			BOOL StartbyTrig = FALSE;
+			while (!StartbyTrig){ // check for kill ?
+				//	Sleep(1);
+				if (GetAsyncKeyState(VK_ESCAPE))
+				{ //stop if ESC was pressed
+					StopFFTimer(drv);
+					//SetIntFFTrig(drv);//disable ext input
+					SetDMAReset();	//Initiator reset
+					return;
+				}
+				if (GetAsyncKeyState(VK_SPACE))
+				{ //start if Space was pressed
+
+					while (GetAsyncKeyState(VK_SPACE) & 0x8000 == 0x8000){}; //wait for release
+					StartbyTrig = TRUE;
+				}
+				if (BlockTrig(drv, btrig_ch))			StartbyTrig = TRUE;
+			}//while !StartbyTrig
+		}
+		//make signal on trig out plug via PCIEFLAGS:D4 - needed to count Blocks
+		ReadLongS0(DRV, &val, DmaAddr_PCIEFLAGS); //set TrigStart flag for TRIGO signal to monitor the signal
+		val |= 0x10;
+		WriteLongS0(DRV, val, DmaAddr_PCIEFLAGS); //make pulse for BlockTrigger
+		val &= 0xffffffef;
+		WriteLongS0(DRV, val, DmaAddr_PCIEFLAGS); //reset signal
+
+		RS_ScanCounter(DRV); //reset scan counter for next block - or timer is disabled
+
+		//start Timer !!!
+		StartFFTimer(drv, exptus);
+		WDC_Err("before finished oneshot\n");
+
+		//main read loop - runs until nos is reached or ESC key
+		//if nos is reached the flag RegXCKMSB:b30 = TimerOn is reset by hardware
+		while (IsTimerOn(drv)){ // check for kill ?
+			//	Sleep(1);
+			if (GetAsyncKeyState(VK_ESCAPE))
+			{ //stop if ESC was pressed
+				StopFFTimer(drv);
+				//SetIntFFTrig(drv);//disable ext input
+				SetDMAReset();
+			}
+
+		}
+		//if the Buffersize is not a multiple of the DMA Buffer the rest has to be taken  
+		GetLastBufPart();
+		blockcnt++;
+
+	}//  block read function
+	while (blockcnt < Blocks);
+
+	StopFFTimer(drv);
+
+
+
+	WDC_Err("after finished oneshot\n");
+
+
+	//ErrorMsg("stopped");
+	//stop timer
+	//SetIntFFTrig(drv);
+
+
+#if (DMA_CONTIGBUF)
+	//test with memset if data is transferred
+	//memset(pDMASubBuf, 20, (nos-1)*_PIXEL*sizeof(USHORT)+100);
+	//copy data from DMABuf to our data buf
+	//memcpy(pDMABigBuf, pDMASubBuf, nos*_PIXEL*sizeof(USHORT));
+#endif
+
+}
 
 //  call of the read function if write is faster then read
 // ReadRingFifoThread is writing fast to the ring buffer
