@@ -69,7 +69,7 @@ enum{
 	DmaAddr_ScanIndex = 0x48,
 	DmaAddr_DmaBufSizeInScans = 0x04C,		// length in scans
 	DmaAddr_ScansPerIntr = 0x050,
-	DmaAddr_BLOCKS = 0x054,
+	DmaAddr_NOB = 0x054,
 	DmaAddr_BLOCKINDEX = 0x058
 };
 
@@ -672,7 +672,7 @@ BOOL SetDMAAddrTlp(UINT32 drvno){
 		return FALSE;
 	return TRUE;
 }
-BOOL SetDMABufRegs(UINT32 drvno, ULONG nos){
+BOOL SetDMABufRegs(UINT32 drvno, ULONG nos, ULONG nob){
 	//set DMA_BUFSIZEINSCANS
 	//set DMA_SCANSPERINTR
 	//set NOS
@@ -687,6 +687,9 @@ BOOL SetDMABufRegs(UINT32 drvno, ULONG nos){
 		error = TRUE;
 
 	if (!SetS0Reg(nos, 0xffffffff, DmaAddr_NOS, drvno))
+		error = TRUE;
+
+	if (!SetS0Reg(nob, 0xffffffff, DmaAddr_NOB, drvno))
 		error = TRUE;
 
 	if (error)
@@ -881,7 +884,7 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 
 	pDMABigBufIndex += subbuflengthinbytes;
 	//error prevention...not needed if counter counts correct
-	ReadLongS0(DRV, &blocks, DmaAddr_BLOCKS);
+	ReadLongS0(DRV, &blocks, DmaAddr_NOB);
 
 	if (pDMABigBufIndex > pDMABigBufBase + nos * blocks *_PIXEL*sizeof(USHORT))
 	{
@@ -895,7 +898,7 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	//WDC_Err("DMACounter: %d \n", DMACounter);
 }//DLLCALLCONV interrupt_handler
 
-BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos)
+BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 {	//alloc DMA buffer - should only be called once
 	//gets address of DMASubBuf from driver and copy it later to our pDMABigBuf
 	DWORD dwStatus;
@@ -965,7 +968,7 @@ BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos)
 		return FALSE;
 	}
 
-	if (!SetDMABufRegs(drvno, nos)){
+	if (!SetDMABufRegs(drvno, nos, nob)){
 		ErrLog("DMARegisterInit for Buffer failed \n");
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		ErrorMsg("DMARegisterInit for Buffer failed");
@@ -2837,7 +2840,7 @@ void StartReadWithDma(UINT32 drvno){
 	if (_HWCH2) DMA_bufsizeinbytes *= 2;
 
 	if (!DMAAlreadyStarted){
-		if (!SetupPCIE_DMA(DRV, UserBufInScans)) return;
+		if (!SetupPCIE_DMA(DRV, UserBufInScans, Nob)) return;
 		DMAAlreadyStarted = TRUE;
 	}
 
@@ -3216,7 +3219,7 @@ void StartRingReadThread(UINT32 drvno, ULONG ringfifodepth, ULONG threadp, __int
 
 	//DMA_bufsizeinbytes = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
 	if (!DMAAlreadyStarted){
-		SetupPCIE_DMA(DRV, UserBufInScans);
+		SetupPCIE_DMA(DRV, UserBufInScans, Nob);
 		DMAAlreadyStarted = TRUE;
 	}
 
@@ -3341,7 +3344,7 @@ void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blo
 
 	}
 
-	ReadLongS0(DRV, &val, DmaAddr_BLOCKS); //get the needed Blocks
+	ReadLongS0(DRV, &val, DmaAddr_NOB); //get the needed Blocks
 	ULONG Blocks = val;
 	ULONG blockcnt = 0;
 
