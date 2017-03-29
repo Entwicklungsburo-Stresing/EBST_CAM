@@ -18,6 +18,7 @@ BOOL CCDDrvInit(UINT drvno);	// init the driver -> true if found
 
 void CCDDrvExit(UINT drvno);	// closes the driver
 BOOL InitBoard(UINT drvno);	// init the board and alloc mem, call only once !
+BOOL BufLock(UINT drvno, LONG nob, SHORT nospb);
 void RSInterface(UINT drvno);		//set all registers to zero
 BOOL SetBoardVars(UINT drvno, BOOL sym, BOOL burst, ULONG pixel, ULONG waits, ULONG flag816, ULONG pportadr,
 	ULONG pclk, ULONG xckdelay);

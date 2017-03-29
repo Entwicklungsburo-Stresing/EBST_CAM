@@ -1,13 +1,9 @@
-﻿Build started 2/1/2017 5:26:52 PM.
-     1>Project "C:\ENTW\PCIE\64bit\Ex2CoFifo_Jungo\CCDEXAMP.vcxproj" on node 2 (Build target(s)).
+﻿Build started 3/28/2017 5:55:25 PM.
+     1>Project "C:\ENTW\PCIE\64bit\Ex2CoFifo_Jungo_1230\CCDEXAMP.vcxproj" on node 2 (Build target(s)).
      1>Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:".\x64\Debug/CCDEXAMP.exe" /INCREMENTAL:NO /NOLOGO wdapi1210.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:".\Debug/CCDEXAMP.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE:NO /IMPLIB:"C:\ENTW\PCIE\64bit\Ex2CoFifo_Jungo\x64\Debug\CCDEXAMP.lib" /MACHINE:X64 x64\Debug\CCDExamp.res
-         .\Debug/Ccdexamp.obj
-         CCDEXAMP.vcxproj -> C:\ENTW\PCIE\64bit\Ex2CoFifo_Jungo\x64\Debug\CCDEXAMP.exe
-       BscMake:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\bscmake.exe /nologo /o"C:\ENTW\PCIE\64bit\Ex2CoFifo_Jungo\x64\Debug\CCDEXAMP.bsc" x64\Debug\Ccdexamp.sbr
-     1>Done Building Project "C:\ENTW\PCIE\64bit\Ex2CoFifo_Jungo\CCDEXAMP.vcxproj" (Build target(s)).
+         CCDEXAMP.vcxproj -> C:\ENTW\PCIE\64bit\Ex2CoFifo_Jungo_1230\x64\Debug\CCDEXAMP.exe
+     1>Done Building Project "C:\ENTW\PCIE\64bit\Ex2CoFifo_Jungo_1230\CCDEXAMP.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.50
+Time Elapsed 00:00:00.18

@@ -3,6 +3,8 @@
 // Used by CCDExamp.rc
 //
 #define IDS_STRING1                     1
+#define IDOK2                           3
+#define IDOK1                           3
 #define NOBIOSERR                       101
 #define NOCCDERR                        102
 #define IDD_DIALOG1                     104
@@ -11,6 +13,7 @@
 #define IDD_SETEC                       107
 #define IDD_SETUPAD                     108
 #define IDD_SETEC1                      109
+#define IDD_ALLOCBBUF                   110
 #define IDC_ADAMP                       1002
 #define IDC_M_EXPTIME                   1003
 #define IDC_TLevel                      1004
@@ -26,7 +29,9 @@
 #define IDC_RADIO1                      1017
 #define IDC_RADIO2                      1018
 #define IDC_RADIO3                      1019
-
+#define IDC_nob                         1021
+#define IDC_nos                         1022
+#define IDC_nospb                       1022
 #define IDC_EC_RADIO2                   1060
 #define IDC_EC_RADIO3                   1061
 #define IDC_EC_RADIO5                   1062
@@ -34,7 +39,7 @@
 #define IDC_EC_RADIO6                   1064
 #define IDC_CHECK_NOPDARS               1158
 #define IDC_SETDAT                      1159
-#define IDC_SETXDLY                       1165
+#define IDC_SETXDLY                     1165
 #define IDC_SETTCNT                     1166
 #define IDC_SETTCNT2                    1167
 #define IDC_EC_RADIO1                   1168
@@ -60,6 +65,7 @@
 #define IDM_ABOUTPCI                    40018
 #define IDM_ABOUTDMA                    40019
 #define IDM_ABOUTCFS                    40020
+#define ID_TRACKBAR                     40021
 #define IDC_EDIT1                       -1
 #define IDC_STATIC                      -1
 
@@ -68,9 +74,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        110
+#define _APS_NEXT_RESOURCE_VALUE        111
 #define _APS_NEXT_COMMAND_VALUE         40021
-#define _APS_NEXT_CONTROL_VALUE         1021
+#define _APS_NEXT_CONTROL_VALUE         1022
 #define _APS_NEXT_SYMED_VALUE           103
 #endif
 #endif

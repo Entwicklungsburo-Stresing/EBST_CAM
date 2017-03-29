@@ -58,9 +58,18 @@ BOOL DISP2 = FALSE;		//display 2 cameras parallel, TRUE for double line
 #define  _NO_TLPS  0xa //oldpc: 0x11				//0x11=17*128  = 2176 Bytes  = 1088 WORDS
 #define TLPSize 0x40	//0x20 on old pc
 #define RAMPAGESIZE 4096
+#define DMA_BUFSIZEINSCANS 1000		//default: BUFSIZE=1000, INTR all 500
+#define DMA_HW_BUFPARTS 2
+#define DMA_SCANSPERINTR DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb nochmal /2
+
 #define _PIXEL  1200				// no of pixels min 300, should be multiple of 300, max 8100
 #define _MAXDB	4					// no. of lines
 #define Nos _MAXDB
+#define DMA_64BIT_EN FALSE
+#define KER_MODE FALSE
+//for jungo projects
+#define KERNEL_64BIT	
+#define WINNT
 
 
 
@@ -245,6 +254,14 @@ HANDLE hCopyToDispBuf ;//Mutex for data buffer write
 #define HWINTR_EN TRUE
 #define IS_DLL FALSE
 
+#define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
+#define INTR_EN TRUE		// enables INTR
+
+//globals
+WORD UserBufInScans;
+INT_PTR pDMABigBufIndex = NULL;
+//INT_PTR pDMABigBufBase = NULL;
+
 
 //jungo
 
@@ -263,7 +280,9 @@ ArrayT DIODENRingBuf[(DMABufSizeInScans + 10) * 1200 * sizeof(USHORT)];
 DWORD FirstPageOffset;
 pArrayT pDIODEN = (pArrayT)&DIODEN;
 
-
+LONG Nob = 10;
+SHORT Nospb = 100;
+pArrayT pBLOCKBUF = 0;
 
 
 
@@ -287,4 +306,8 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
                         UINT message,        
                         WPARAM wParam,       
                         LPARAM lParam);
+LRESULT CALLBACK AllocateBuf(HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam);
 
