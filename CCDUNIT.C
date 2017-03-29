@@ -1,4 +1,5 @@
 
+
 BYTE Dispcnt = 0;
 int yVal = 0;
 volatile int testcnt = 0;
@@ -306,18 +307,6 @@ void MeasureFifo(HDC aDC)
 };	 // MeasureFifo- readloop
 */
 
-int GetCursorPosition()
-{
-	POINT CurPos;
-
-	GetCursorPos(&CurPos);
-	ScreenToClient(hMSWND, &CurPos);
-
-	int x = CurPos.x -LOX;
-	return (int)x;// CurPos.x;
-}
-
-
 void UpdateTxT(void)
 {
 	char TrmsString[400];
@@ -366,6 +355,18 @@ void UpdateTxT(void)
 
 	RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
 }
+
+int GetCursorPosition()
+{
+	POINT CurPos;
+
+	GetCursorPos(&CurPos);
+	ScreenToClient(hMSWND, &CurPos);
+
+	int x = CurPos.x -LOX;
+	return (int)x;// CurPos.x;
+}
+
 
 void DisplayData()
 {
