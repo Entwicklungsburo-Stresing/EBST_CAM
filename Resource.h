@@ -32,6 +32,13 @@
 #define IDC_nob                         1021
 #define IDC_nos                         1022
 #define IDC_nospb                       1022
+#define IDALLOC                         1023
+#define IDC_BUILTINRAM                  1024
+#define IDC_FREERAM                     1025
+#define IDC_CALCRAM                     1026
+#define IDC_ALLOCRAM                    1027
+#define IDALLOC2                        1028
+#define IDCALC                          1028
 #define IDC_EC_RADIO2                   1060
 #define IDC_EC_RADIO3                   1061
 #define IDC_EC_RADIO5                   1062
@@ -66,6 +73,8 @@
 #define IDM_ABOUTDMA                    40019
 #define IDM_ABOUTCFS                    40020
 #define ID_TRACKBAR                     40021
+#define ID_START_ALLOCATEBUFF           40021
+#define ID_START_ALLOC                  40022
 #define IDC_EDIT1                       -1
 #define IDC_STATIC                      -1
 
@@ -75,8 +84,8 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        111
-#define _APS_NEXT_COMMAND_VALUE         40021
-#define _APS_NEXT_CONTROL_VALUE         1022
+#define _APS_NEXT_COMMAND_VALUE         40023
+#define _APS_NEXT_CONTROL_VALUE         1026
 #define _APS_NEXT_SYMED_VALUE           103
 #endif
 #endif

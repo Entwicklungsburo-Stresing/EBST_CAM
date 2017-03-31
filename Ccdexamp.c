@@ -69,9 +69,14 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
    else if ( !RegisterClass( &wc ) )
       return( FALSE );
 
-   DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hMSWND, (DLGPROC)AllocateBuf);
+
+  if (! CCDDrvInit(DRV)) 
+		{ErrorMsg(" Can't open CCD driver ");
+		return (FALSE);
+		};
 
    hInst = hInstance; 
+  DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hMSWND, (DLGPROC)AllocateBuf);
 
    // Create the main application window.
    //....................................
@@ -79,24 +84,16 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
                         lpszTitle,    
                         WS_OVERLAPPEDWINDOW, 
                         CW_USEDEFAULT, 0, 
-                        XLENGTH/XOFF+40 , YLENGTH + 140,//640/380,  
+                        XLENGTH/XOFF+40 , YLENGTH + 170,//640/380,  
                         NULL,              
                         NULL,              
                         hInstance,         
                         NULL               
                       );
 
+   if ( !hWnd )  return( FALSE );
 
-
-
-   if ( !hWnd ) 
-      return( FALSE );
-
-   if (! CCDDrvInit(DRV)) 
-		{ErrorMsg(" Can't open CCD driver ");
-		return (FALSE);
-		};
-
+ 
 //RSInterface(DRV);
 
 //	if (! InitBoard(DRV)) //Error message in InitBoard
@@ -495,10 +492,10 @@ char *s = (char*)malloc(10);
    case WM_CREATE:
 	   //not working fine yet, just creating the trackbar
 	   hwndTrack = CreateWindow(TRACKBAR_CLASS,
-		   "", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
-		   TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY,
+		   "NOS", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
+		   TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY | WS_CAPTION,
 		   300, 300,
-		   120, 30,
+		   120, 60,
 		   hWnd, (HMENU)ID_TRACKBAR,
 		   hInst,
 		   NULL);
@@ -506,16 +503,15 @@ char *s = (char*)malloc(10);
 		   MAKELONG(0/*MIN RANGE*/, Nospb - 1/*MAX RANGE*/));  //Optional, Default is 0-100
 
 	   hwndTrack2 = CreateWindow(TRACKBAR_CLASS,
-		   "", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
-		   TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY,
+		   "NOB", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
+		   TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY | WS_CAPTION,
 		   450, 300,
-		   120, 30,
+		   120, 60,
 		   hWnd, (HMENU)ID_TRACKBAR,
 		   hInst,
 		   NULL);
 	   SendMessage(hwndTrack2, TBM_SETRANGE, TRUE,
 		   MAKELONG(0/*MIN RANGE*/, Nob - 1/*MAX RANGE*/));  //Optional, Default is 0-100
-
 	   //ShowScrollBar(scrollb, SB_BOTH, TRUE);
 	   break;
    case WM_HSCROLL://ID_TRACKBAR:
@@ -523,7 +519,7 @@ char *s = (char*)malloc(10);
 
 	   cur_nospb = SendMessage(hwndTrack, TBM_GETPOS, 0, 0);
 	   cur_nob = SendMessage(hwndTrack2, TBM_GETPOS, 0, 0);
-	   CopytoDispbuf(cur_nob*_PIXEL + cur_nospb);
+	   CopytoDispbuf(cur_nob*cur_nospb + cur_nospb);
 	   Display(1, PLOTFLAG);
 
 	   char TrmsString[260];
@@ -596,6 +592,10 @@ char *s = (char*)malloc(10);
 					   else
 						{ShowTrms=TRUE;}
 						break;
+
+				case ID_START_ALLOC :
+					DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hMSWND, (DLGPROC)AllocateBuf);
+					break;
 
 				 case IDM_EXIT :
 
@@ -804,11 +804,19 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 {
 	UINT nob_input = 0, nospb_input = 0;
 	BOOL success = FALSE;
+	UINT64 builtinram, freeram, freeram_old, calcram, allocram;
+	UINT divMB = 1024 * 1024;
+
 	switch (message)
 	{
 	case WM_INITDIALOG:
 		SetDlgItemInt(hDlg, IDC_nob, Nob, FALSE);
 		SetDlgItemInt(hDlg, IDC_nospb, Nospb, FALSE);
+
+		FreeMemInfo(&builtinram, &freeram);
+		SetDlgItemInt(hDlg, IDC_FREERAM, freeram / divMB, 0);
+		SetDlgItemInt(hDlg, IDC_BUILTINRAM, builtinram / divMB, 0);
+
 		return (TRUE);
 		break;
 
@@ -833,10 +841,66 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 					MessageBox(hMSWND, "allocating Buffer succeeded", "Message", MB_OK);
 			}
 
+			//update trackbars
+			SendMessage(hwndTrack2, TBM_SETRANGE, TRUE,
+				MAKELONG(0/*MIN RANGE*/, Nob - 1/*MAX RANGE*/));  //Optional, Default is 0-100
+			SendMessage(hwndTrack, TBM_SETRANGE, TRUE,
+				MAKELONG(0/*MIN RANGE*/, Nospb - 1/*MAX RANGE*/));  //Optional, Default is 0-100
 
 			EndDialog(hDlg, TRUE);
 			return (TRUE);
 			break;
+
+		case IDCALC:
+			nob_input = GetDlgItemInt(hDlg, IDC_nob, &success, FALSE);
+			nospb_input = GetDlgItemInt(hDlg, IDC_nospb, &success, FALSE);
+			if (success)
+			{
+				Nob = nob_input;
+				Nospb = nospb_input;
+			}
+			calcram = Nob * Nospb * _PIXEL * sizeof(USHORT) / divMB;
+			if (calcram < 100000)
+				SetDlgItemInt(hDlg, IDC_CALCRAM, calcram, 0);
+			else
+				SetDlgItemText(hDlg, IDC_CALCRAM, "calculation error");
+			break;
+
+		case IDALLOC:
+			nob_input = GetDlgItemInt(hDlg, IDC_nob, &success, FALSE);
+			nospb_input = GetDlgItemInt(hDlg, IDC_nospb, &success, FALSE);
+			if (success)
+			{
+				Nob = nob_input;
+				Nospb = nospb_input;
+
+				if (pBLOCKBUF)
+					free(pBLOCKBUF);
+
+				FreeMemInfo(&builtinram, &freeram);
+				freeram_old = freeram;
+
+				if (!BufLock(DRV, Nob, Nospb))
+					MessageBox(hMSWND, "allocating Buffer fails", "Error", MB_OK);
+				else
+					MessageBox(hMSWND, "allocating Buffer succeeded", "Message", MB_OK);
+			}
+
+			FreeMemInfo(&builtinram, &freeram);
+			SetDlgItemInt(hDlg, IDC_FREERAM, freeram/divMB, 0);
+			SetDlgItemInt(hDlg, IDC_BUILTINRAM, builtinram/divMB, 0);
+
+			allocram = (freeram_old - freeram) / divMB;
+			if (allocram < 100000)
+				SetDlgItemInt(hDlg, IDC_ALLOCRAM, allocram, 0);
+			else//if RAM is bigger than 100gb
+				SetDlgItemText(hDlg, IDC_ALLOCRAM, "calculation error");
+
+			
+				
+
+			break;
+
 		}
 		break; //WM_COMMAND
 

@@ -412,6 +412,8 @@ RedrawWindow(hMSWND,NULL,NULL,RDW_INVALIDATE);
 
 
 void Contimess(void *dummy)
+
+
 	{// main read loop setup
 
 	int i = 0;
@@ -458,32 +460,29 @@ void Contimess(void *dummy)
 	if (!SetThreadPriority(hTHREAD, 15)) ErrorMsg(" No Thread set ");
 #endif
 */	
-	if (!DBGNOCAM)
-	{
-		//Check if Camera there
-		if (!FindCam(DRV))
-		{
-			ErrorMsg("no Camera found");
-			return;
-		}
-	}
+
 
 	//stop all and clear FIFO
+	//WDC_Err(DRV);
 	StopFFTimer(DRV);
 	SetIntFFTrig(DRV);
 	RSFifo(DRV);
 
-	//make init here, that CCDExamp can be used to read the act regs...
-	SetBoardVars(DRV, SYM_PULSE, BURSTMODE, _PIXEL - 12, WAITS, FLAG816, PPORTADR, FREQ, XCKDELAY);
 
+	//make init here, that CCDExamp can be used to read the act regs...
+	if (!SetBoardVars(DRV, _PIXEL, FLAG816, XCKDELAY))
+		{
+		ErrorMsg("Error in SetBoardVars");
+		return;
+		}
 	//set hardware start des dma  via DREQ withe data = 0x4000000
-	ULONG mask = 0x40000000;
+	/*ULONG mask = 0x40000000;
 	ULONG data = 0;// 0x40000000;
 	if (HWINTR_EN)
 		data = 0x40000000;
 	SetS0Reg(data, mask, 0x38, DRV);
 	//SetDMABufRegs(DRV); not here
-
+	*/
 
 
 	//setups
@@ -522,13 +521,15 @@ void Contimess(void *dummy)
 
 	pDMABigBufBase = pBLOCKBUF;
 
+	//!!GS
+	Nob = 1;
 	//DMA_Setup
 	if (!SetupPCIE_DMA(DRV, Nos, Nob))  //get also buffer address
 	{
 		ErrorMsg("Error in SetupPCIE_DMA");
 		return;
 	}
-	
+
 	// write header
 	j=sprintf_s(header,260," Online Loop - Cancel with ESC or space- key  " );
 	TextOut(hMSDC,100,LOY-17,header,j);
@@ -554,7 +555,7 @@ void Contimess(void *dummy)
 		*/
 	//StartRingReadThread(DRV, 200, _THREADPRI, -1);
 	//while (!RingThreadOn) {}; // wait until ReadThread is running
-
+/*
 	//start thread to display data
 	if(DMAAlreadyStarted)
 		_beginthread( DisplayData, 2000, &hMSDC ); 
@@ -568,5 +569,5 @@ void Contimess(void *dummy)
 			{SetIntFFTrig(DRV);
 			StartFFTimer(DRV, ExpTime); // in micro sec
 			}
-
+*/
 	}//Contimess

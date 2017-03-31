@@ -289,13 +289,14 @@ void AboutS0(UINT32 drvno)
 //done
 BOOL CCDDrvInit(UINT32 drvno)
 {// returns true if driver was found
+	WDC_Err(drvno);
 	ULONG MAXDMABUFLENGTH = 0x07fff; //val look in registry driver parameters
 	//depends on os, how big a buffer can be
 	BOOL fResult = FALSE;
 	char AString[80] = "";
 	HANDLE hccddrv = INVALID_HANDLE_VALUE;
 
-	WDC_Err("CCDDrvInit start \n");
+
 	if ((drvno < 1) || (drvno>4)) return FALSE;
 
 	if ((ULONG)_PIXEL > (ULONG)(MAXDMABUFLENGTH / 4))
@@ -347,7 +348,7 @@ BOOL CCDDrvInit(UINT32 drvno)
 		ErrorMsg("driver closed.\n");
 		return FALSE;
 	}
-
+	//ErrorMsg("CCDDrvInit start of %x \n", drvno);
 	/* Open a handle to the driver and initialize the WDC library */
 
 ***REMOVED***	if (WD_STATUS_SUCCESS != dwStatus)
@@ -542,9 +543,11 @@ char CntBoards(void)
 	return foundBoards;
 }//CntBoards
 
-BOOL BufLock(UINT drvno, LONG nob, SHORT nospb)
+BOOL BufLock(UINT drvno, int nob, int nospb)
 {
-	pBLOCKBUF = calloc(nob, nob*nospb * _PIXEL * sizeof(DWORD));
+
+
+	pBLOCKBUF = calloc(nob, nospb * _PIXEL * sizeof(USHORT));
 	//pDIODEN = (pArrayT)calloc(nob, nospb * _PIXEL * sizeof(ArrayT));
 
 	if (pBLOCKBUF != 0) return TRUE;
@@ -1074,7 +1077,7 @@ void RSInterface(UINT32 drvno)
 
 
 
-BOOL SetBoardVars(UINT32 drvno, ULONG pixel, ULONG flag816, ULONG pclk, ULONG xckdelay)
+BOOL SetBoardVars(UINT32 drvno, ULONG pixel, ULONG flag816, ULONG xckdelay)
 {	//	initiates board   Registers
 	//  flag816 =1 for 16 bit (also 14 or 12bit), =2 for 8bit
 	//	pclk -> not used
@@ -3330,7 +3333,6 @@ void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blo
 	ISRCounter = 0;
 	SubBufCounter = 0;
 	pDMABigBufIndex = pDMABigBufBase; // reset buffer index to base we got from labview
-
 
 
 	//ErrorMsg("in DLLReadFFLoop - start timer");

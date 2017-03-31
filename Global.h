@@ -63,7 +63,7 @@ BOOL DISP2 = FALSE;		//display 2 cameras parallel, TRUE for double line
 #define DMA_HW_BUFPARTS 2
 #define DMA_SCANSPERINTR DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb nochmal /2
 
-#define _PIXEL  1200				// no of pixels min 300, should be multiple of 300, max 8100
+#define _PIXEL  1088				// no of pixels min 300, should be multiple of 300, max 8100
 #define _MAXDB	4					// no. of lines
 #define Nos _MAXDB
 #define DMA_64BIT_EN FALSE
@@ -281,8 +281,8 @@ ArrayT DIODENRingBuf[(DMABufSizeInScans + 10) * 1200 * sizeof(USHORT)];
 DWORD FirstPageOffset;
 pArrayT pDIODEN = (pArrayT)&DIODEN;
 
-LONG Nob = 10;
-SHORT Nospb = 100;
+int Nob = 10;
+int Nospb = 100;
 pArrayT pBLOCKBUF = 0;
 
 
