@@ -1,6 +1,6 @@
 //   UNIT BOARD.C for all examples equal
 //	PCIE version with DMA and INTR
-//	V2.02  GS  3/2017
+//	V2.03  GS  3/2017
 //	- new function DLLFreeMemInfo(UINT64 memory_all, UINT64 memory_free)
 
 
@@ -588,6 +588,7 @@ BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno){
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		return FALSE;
 	}
+	WDC_Err("S0 Register val: 0x%x \n", OldRegisterValues);
 	//save the bits, which shall not changed
 	OldRegisterValues = OldRegisterValues & ~Bitmask;
 	NewRegisterValues = Data | OldRegisterValues;
@@ -889,9 +890,14 @@ VOID DLLCALLCONV interrupt_handler(PVOID pData)
 	//error prevention...not needed if counter counts correct
 	ReadLongS0(DRV, &blocks, DmaAddr_NOB);
 
-	if (pDMABigBufIndex > pDMABigBufBase + nos * blocks *_PIXEL*sizeof(USHORT))
+	//!!GS  //add space for last val and reset base if error
+	UINT64 pDMAbigbufsize = nos * blocks *_PIXEL*sizeof(USHORT) + subbuflengthinbytes;
+	if (pDMABigBufIndex > pDMABigBufBase + pDMAbigbufsize)
 	{
 		ErrorMsg("ISR: buffer overrun !");
+		WDC_Err("pDMABigBufBase: 0x%x \n", pDMABigBufBase);
+		WDC_Err("pDMAbigbufsize: 0x%x \n", pDMAbigbufsize);
+		WDC_Err("pDMABigBufIndex: 0x%x \n", pDMABigBufIndex);
 		pDMABigBufIndex = pDMABigBufBase; //wrap if error - but now all is mixed up!
 	}
 
@@ -2591,6 +2597,8 @@ void SetTORReg(UINT32 drvno, BYTE fkt)
 	if (fkt == 8) val = 0x80; // set to INTRSR
 	if (fkt == 9) val = 0x90; // set to INTRSR
 	if (fkt == 10) val = 0xa0; // set to INTRSR
+	if (fkt == 11) val = 0xb0; // set to BlockOn
+	if (fkt == 12) val = 0xc0; // set to MeasureOn
 
 	ReadByteS0(drvno, &val2, 0x2B);
 	val2 &= 0x0f; //dont disturb lower bits
@@ -3350,6 +3358,8 @@ void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blo
 	ULONG Blocks = val;
 	ULONG blockcnt = 0;
 
+	//set MeasureOn Bit
+	SetS0Reg(0x20, 0x20, DmaAddr_PCIEFLAGS, DRV);
 	do //block read function
 	{
 		//if Block tigger
@@ -3385,37 +3395,36 @@ void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blo
 
 		//start Timer !!!
 		StartFFTimer(drv, exptus);
-		WDC_Err("before finished oneshot\n");
+		WDC_Err("before scan loop start\n");
 
-		//main read loop - runs until nos is reached or ESC key
+		//main read loop - wait here until nos is reached or ESC key
 		//if nos is reached the flag RegXCKMSB:b30 = TimerOn is reset by hardware
-		while (IsTimerOn(drv)){ // check for kill ?
-			//	Sleep(1);
-			if (GetAsyncKeyState(VK_ESCAPE))
+		while (IsTimerOn(drv)){
+			if (GetAsyncKeyState(VK_ESCAPE)) // check for kill ?
 			{ //stop if ESC was pressed
 				StopFFTimer(drv);
-				//SetIntFFTrig(drv);//disable ext input
 				SetDMAReset();
 			}
 
 		}
 		//if the Buffersize is not a multiple of the DMA Buffer the rest has to be taken  
+		// must delay or last block has wrong values
+		Sleep(1); //DMA is not ready
 		GetLastBufPart();
-		blockcnt++;
+		ReadLongS0(DRV, &blockcnt, DmaAddr_BLOCKINDEX); //get block counts
 
 	}//  block read function
 	while (blockcnt < Blocks);
-
+	//reset MeasureOn bit
+	SetS0Reg(0x00, 0x20, DmaAddr_PCIEFLAGS, DRV);
 	StopFFTimer(drv);
 
 
 
-	WDC_Err("after finished oneshot\n");
+	WDC_Err("after finished scan loop\n");
 
 
-	//ErrorMsg("stopped");
-	//stop timer
-	//SetIntFFTrig(drv);
+	SetIntFFTrig(drv);//disable ext input
 
 
 #if (DMA_CONTIGBUF)
@@ -4104,7 +4113,7 @@ BOOL FindCam(UINT32 drv)
 {//test if SFP module is there and fiber is linked up
 	ULONG dwdata = 0;
 	ReadLongS0(drv, &dwdata, 0x40);  // read in PCIEFLAGS register
-
+	WDC_Err("Findcam: PCIEFLAGS: 0x%x\n", dwdata);
 	if ((dwdata & 0x80000000) > 0) { //SFP error
 		ErrorMsg("Fiber or Camera error");
 		return FALSE;
@@ -4118,8 +4127,6 @@ BOOL FindCam(UINT32 drv)
 
 	return TRUE;
 }//FindCam
-
-
 
 
 void SetADGain(UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8)

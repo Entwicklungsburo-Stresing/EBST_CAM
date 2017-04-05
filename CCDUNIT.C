@@ -369,7 +369,7 @@ int GetCursorPosition()
 	return (int)x;// CurPos.x;
 }
 
-
+/*
 void DisplayData()
 {
 	char header[260];
@@ -387,7 +387,7 @@ do
 		//B! FetchLastRingLine(pDIODEN);
 		TICKSDISP = ticksTimestamp();		
 
-		CopytoDispbuf(Nob*Nos);
+		CopytoDispbuf(Nob*Nospb);
 		Display(1,PLOTFLAG);
 		if (ShowTrms) CalcTrms();
 		//OutTrigLow(1);
@@ -408,7 +408,7 @@ RedrawWindow(hMSWND,NULL,NULL,RDW_INVALIDATE);
 
 //ActMouse(DRV);
 }//DisplayData
-
+*/
 
 
 void Contimess(void *dummy)
@@ -522,9 +522,9 @@ void Contimess(void *dummy)
 	pDMABigBufBase = pBLOCKBUF;
 
 	//!!GS
-	Nob = 1;
+	//Nob = 1;
 	//DMA_Setup
-	if (!SetupPCIE_DMA(DRV, Nos, Nob))  //get also buffer address
+	if (!SetupPCIE_DMA(DRV, Nospb, Nob))  //get also buffer address
 	{
 		ErrorMsg("Error in SetupPCIE_DMA");
 		return;
@@ -541,7 +541,7 @@ void Contimess(void *dummy)
 	UpdateDispl=FALSE;
 
 	//StartPCIE_DMAWrite(DRV);
-
+	Sleep(100);
 	ReadFFLoop(DRV, ExpTime, FREQ, EXTTRIGFLAG, 0,  0);
 
 	//start 2nd thread for getting data in highest std priority, ring=200 lines
