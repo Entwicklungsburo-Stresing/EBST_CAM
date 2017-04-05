@@ -65,7 +65,7 @@ BOOL DISP2 = FALSE;		//display 2 cameras parallel, TRUE for double line
 
 #define _PIXEL  1088				// no of pixels min 300, should be multiple of 300, max 8100
 #define _MAXDB	4					// no. of lines
-#define Nos _MAXDB
+//#define Nos _MAXDB
 #define DMA_64BIT_EN FALSE
 #define KER_MODE FALSE
 //for jungo projects
@@ -281,8 +281,8 @@ ArrayT DIODENRingBuf[(DMABufSizeInScans + 10) * 1200 * sizeof(USHORT)];
 DWORD FirstPageOffset;
 pArrayT pDIODEN = (pArrayT)&DIODEN;
 
-int Nob = 10;
-int Nospb = 100;
+int Nob = 1;
+int Nospb = 60000;
 pArrayT pBLOCKBUF = 0;
 
 
