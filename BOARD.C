@@ -549,7 +549,8 @@ BOOL BufLock(UINT drvno, int nob, int nospb)
 
 	pBLOCKBUF = calloc(nob, nospb * _PIXEL * sizeof(USHORT));
 	//pDIODEN = (pArrayT)calloc(nob, nospb * _PIXEL * sizeof(ArrayT));
-
+	pDMABigBufBase = pBLOCKBUF;
+	pDMABigBuf = pBLOCKBUF;
 	if (pBLOCKBUF != 0) return TRUE;
 	else return FALSE;
 }
@@ -579,7 +580,7 @@ BOOL SetDMAReg(ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno){//the bit
 	return TRUE;
 }
 
-BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno){
+BOOL SetS0Reg(ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno){
 	ULONG OldRegisterValues;
 	ULONG NewRegisterValues;
 	//read the old Register Values in the S0 Address Reg
@@ -619,10 +620,10 @@ BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, UINT32 drvno){
 
 
 	//WDMATLPA (Reg name): write the lower part (bit 02:31) of the DMA adress to the DMA controller
-	WDC_Err("64 bit Address 0x%llx\n", PhysAddrDMABuf64);
+	//WDC_Err("64 bit Address 0x%llx\n", PhysAddrDMABuf64);
 	RegisterValues = (ULONG)PhysAddrDMABuf64;
 	BitMask = 0xFFFFFFFC;
-	WDC_Err("lower part of 64 bit Address 0x%x\n", RegisterValues);
+	//WDC_Err("lower part of 64 bit Address 0x%x\n", RegisterValues);
 	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_WDMATLPA, drvno)){
 		WDC_Err("Set the lower part of the DMA Address failed");
 		return FALSE;
@@ -633,7 +634,7 @@ BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, UINT32 drvno){
 	//WDMATLPS: write the upper part (bit 32:39) of the address	
 	PhysAddrDMABuf = ((UINT64)PhysAddrDMABuf64 >> 32);
 
-	WDC_Err("upper part of 64 bit Address 0x%x\n", PhysAddrDMABuf);
+	//WDC_Err("upper part of 64 bit Address 0x%x\n", PhysAddrDMABuf);
 	//PhysAddrDMABuf >> 32;	//shift to the upper part 
 	PhysAddrDMABuf = PhysAddrDMABuf << 24;		//shift to prepare for the Register
 	BitMask = 0xFF081FFF;
@@ -647,7 +648,7 @@ BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, UINT32 drvno){
 		RegisterValues |= wr_addr_64bit_en;
 	}
 
-	WDC_Err("upper part of 64 bit Address prepared for WDMATLPS 0x%x\n", RegisterValues);
+	//WDC_Err("upper part of 64 bit Address prepared for WDMATLPS 0x%x\n", RegisterValues);
 
 	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_WDMATLPS, drvno)){
 		WDC_Err("Set the upper part of the DMA Address and the TLPsize failed");
@@ -705,7 +706,19 @@ BOOL SetDMABufRegs(UINT32 drvno, ULONG nos, ULONG nob){
 	//WDC_Err("readreg SCANSPERINTR: %x \n", reg);
 	return TRUE;
 }
-void SetDMAReset(void){
+
+void DisableDMA(void)
+{//disables DMA as lond as bit1 is high
+ULONG BitMask;
+ULONG RegisterValues;
+BitMask = 0x1;
+RegisterValues = 0x1;
+if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_DCSR, DRV)){
+	ErrorMsg("switch on the Initiator Reset for the DMA failed");
+	}
+}//DisableDMA
+
+void SetDMAReset(void){//set and reset bit1 of DCSR
 	ULONG BitMask;
 	ULONG RegisterValues;
 	BitMask = 0x1;
@@ -720,8 +733,9 @@ void SetDMAReset(void){
 		ErrorMsg("switch off the Initiator Reset for the DMA failed");
 		return;
 	}
-}
-void SetDMAStart(void){
+}//SetDMAReset
+
+void SetDMAStart(void){//enables DMA
 	ULONG BitMask;
 	ULONG RegisterValues;
 	BitMask = 0x1;
@@ -730,7 +744,8 @@ void SetDMAStart(void){
 		ErrorMsg("Set the Start Command for th DMA failed");
 		return;
 	}
-}
+}//SetDMAStart
+
 BOOL SendDMAInfoToKP(void){
 
 	DWORD hDma;
@@ -912,6 +927,10 @@ BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 	//gets address of DMASubBuf from driver and copy it later to our pDMABigBuf
 	DWORD dwStatus;
 	WDC_Err("entered SetupPCIE_DMA\n");
+	ULONG dwdata = 0;
+
+	//GS avoid DMA start during setup
+	DisableDMA();
 
 	DMA_bufsizeinbytes = DMA_BUFSIZEINSCANS *_PIXEL *sizeof(USHORT);
 
@@ -943,12 +962,14 @@ BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 		return FALSE;
 	}
 	// data must be copied afterwards to user Buffer 
+
+
 #endif
 
 	pDMABigBufIndex = pDMABigBufBase;	//reset destination buffer to start value
 	WD_DMA **ppDma = &pDMASubBufInfos;
 
-	WDC_Err("RAM Adresses for DMA Buf: %x \n DMA Buf Size: %x\n", (*ppDma)->Page[0].pPhysicalAddr, (*ppDma)->dwBytes);
+	//WDC_Err("RAM Adresses for DMA Buf: %x \n DMA Buf Size: %x\n", (*ppDma)->Page[0].pPhysicalAddr, (*ppDma)->dwBytes);
 
 	//	ErrorMsg("nach WDC_DMAContigBufLock");
 	//	AboutDMARegs();
@@ -977,6 +998,7 @@ BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 		return FALSE;
 	}
 
+
 	if (!SetDMABufRegs(drvno, nos, nob)){
 		ErrLog("DMARegisterInit for Buffer failed \n");
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
@@ -984,13 +1006,53 @@ BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 		return FALSE;
 	}
 
+
+	ReadLongS0(DRV, &dwdata, 0x40);  // read in PCIEFLAGS register
+	WDC_Err("after set buf regs PCIEFLAGS: 0x%x\n", dwdata);
+
 	// DREQ: every XCK h->l starts DMA by hardware
 	//set hardware start des dma  via DREQ withe data = 0x4000000
 	ULONG mask = 0x40000000;
 	ULONG data = 0;// 0x40000000;
 	if (HWDREQ_EN)
 		data = 0x40000000;
-	SetS0Reg(data, mask, 0x38, DRV);
+//	SetS0Reg(data, mask, 0x38, drvno);
+
+
+
+	ULONG Data = data; 
+	ULONG Bitmask = mask; 
+	ULONG Address = 0x38; 
+	ULONG OldRegisterValues;
+	ULONG NewRegisterValues;
+	//read the old Register Values in the S0 Address Reg
+	if (!ReadLongS0(DRV, &OldRegisterValues, Address)){
+		ErrLog("ReadLong S0 Failed in SetDMAReg \n");
+		WDC_Err("%s", LSCPCIEJ_GetLastErr());
+		return FALSE;
+	}
+	WDC_Err("DREQ Reg before val: 0x%x \n", OldRegisterValues);
+	//save the bits, which shall not changed
+	OldRegisterValues = OldRegisterValues & ~Bitmask;
+	NewRegisterValues = Data | OldRegisterValues;
+	//write the data to the S0 controller
+	if (!WriteLongS0(drvno, NewRegisterValues, Address)){
+		ErrLog("WriteLong S0 Failed in SetDMAReg \n");
+		WDC_Err("%s", LSCPCIEJ_GetLastErr());
+		return FALSE;
+	}
+	if (!ReadLongS0(DRV, &OldRegisterValues, Address)){
+		ErrLog("ReadLong S0 Failed in SetDMAReg \n");
+		WDC_Err("%s", LSCPCIEJ_GetLastErr());
+		return FALSE;
+	}
+	WDC_Err("DREQ Reg after val: 0x%x \n", OldRegisterValues);
+
+	ReadLongS0(DRV, &dwdata, 0x40);  // read in PCIEFLAGS register
+	WDC_Err("after dreq PCIEFLAGS: 0x%x\n", dwdata);
+
+
+//return FALSE;
 
 	// Enable DMA interrupts (if not polling)
 	// INTR should copy DMA buffer to user buf: 
@@ -1006,6 +1068,9 @@ BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 			return FALSE;
 		}
 	}
+
+	ReadLongS0(DRV, &dwdata, 0x40);  // read in PCIEFLAGS register
+	WDC_Err("after intr PCIEFLAGS: 0x%x\n", dwdata);
 
 	WDC_Err("finished SetupDMA\n");
 	return TRUE;
@@ -3303,7 +3368,7 @@ void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blo
 	WDC_Err("entered DLLReadFFLoop\n");
 
 
-
+	
 	if (!DBGNOCAM)
 	{
 		//Check if Camera there
@@ -3313,7 +3378,7 @@ void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blo
 			return;
 		}
 	}
-
+	
 
 
 	// only one of exposure time or frequency is permitted to be unequal zero
@@ -3342,6 +3407,7 @@ void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blo
 	SubBufCounter = 0;
 	pDMABigBufIndex = pDMABigBufBase; // reset buffer index to base we got from labview
 
+	SetDMAStart(); //activate DMA
 
 	//ErrorMsg("in DLLReadFFLoop - start timer");
 	if (exttrig != 0) {

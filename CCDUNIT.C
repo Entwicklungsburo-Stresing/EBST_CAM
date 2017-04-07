@@ -461,6 +461,9 @@ void Contimess(void *dummy)
 #endif
 */	
 
+	ULONG dwdata = 0;
+	ReadLongS0(DRV, &dwdata, 0x40);  // read in PCIEFLAGS register
+	WDC_Err("contimessstart PCIEFLAGS: 0x%x\n", dwdata);
 
 	//stop all and clear FIFO
 	//WDC_Err(DRV);
@@ -470,11 +473,13 @@ void Contimess(void *dummy)
 
 
 	//make init here, that CCDExamp can be used to read the act regs...
-	if (!SetBoardVars(DRV, _PIXEL, FLAG816, XCKDELAY))
-		{
-		ErrorMsg("Error in SetBoardVars");
-		return;
-		}
+	
+	//B!
+	//if (!SetBoardVars(DRV, _PIXEL, FLAG816, XCKDELAY))
+	//	{
+		//ErrorMsg("Error in SetBoardVars");
+		//return;
+		//}
 	//set hardware start des dma  via DREQ withe data = 0x4000000
 	/*ULONG mask = 0x40000000;
 	ULONG data = 0;// 0x40000000;
@@ -500,8 +505,8 @@ void Contimess(void *dummy)
 	//SetTORReg(DRV, 1);// 0);  // 
 	// ohne displ : 9 microsec
 
-	//!!!
-	SendFLCAM(DRV, 1, 0x0, 1);	//reset
+	//B!
+	//SendFLCAM(DRV, 1, 0x0, 1);	//reset
 
 	//Version 2 ch byte
 //-2	SendFLCAM(DRV,1, 0x28, 0x0000); //set to byte wise mode
@@ -524,23 +529,22 @@ void Contimess(void *dummy)
 	//!!GS
 	//Nob = 1;
 	//DMA_Setup
+	ReadLongS0(DRV, &dwdata, 0x40);  // read in PCIEFLAGS register
+	WDC_Err("before dmasetup: PCIEFLAGS: 0x%x\n", dwdata);
 	if (!SetupPCIE_DMA(DRV, Nospb, Nob))  //get also buffer address
 	{
 		ErrorMsg("Error in SetupPCIE_DMA");
 		return;
 	}
+	ReadLongS0(DRV, &dwdata, 0x40);  // read in PCIEFLAGS register
+	WDC_Err("after setupdma: PCIEFLAGS: 0x%x\n", dwdata);
 
 	// write header
 	j=sprintf_s(header,260," Online Loop - Cancel with ESC or space- key  " );
 	TextOut(hMSDC,100,LOY-17,header,j);
 	RedrawWindow(hMSWND,NULL,NULL,RDW_INVALIDATE);
 
-
-
-	Running=TRUE;
-	UpdateDispl=FALSE;
-
-	//StartPCIE_DMAWrite(DRV);
+	//GS why delay?
 	Sleep(100);
 	ReadFFLoop(DRV, ExpTime, FREQ, EXTTRIGFLAG, 0,  0);
 
