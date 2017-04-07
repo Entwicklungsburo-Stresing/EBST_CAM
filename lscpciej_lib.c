@@ -340,7 +340,7 @@ DWORD LSCPCIEJ_IntEnable(WDC_DEVICE_HANDLE hDev, LSCPCIEJ_INT_HANDLER funcIntHan
     /* TODO: You can add code here to write to the device in order
              to physically enable the hardware interrupts */
 
-    TraceLog("LSCPCIEJ_IntEnable: Interrupts enabled\n");
+    WDC_Err("LSCPCIEJ_IntEnable: Interrupts enabled\n");
 
     return WD_STATUS_SUCCESS;
 }

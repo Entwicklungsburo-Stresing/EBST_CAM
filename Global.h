@@ -265,12 +265,13 @@ INT_PTR pDMABigBufIndex = NULL;
 
 
 //jungo
+pArrayT pBLOCKBUF = 0;
 
 USHORT DMAUserBuf[1200][USERBUFINSCANS];//not for dll
 WORD UserBufInScans = USERBUFINSCANS;
 //DMAUserBuf is the complete memory of the application
-PUSHORT pDMABigBuf = &DMAUserBuf[0][0]; //not for dll
-PUSHORT pDMABigBufBase = &DMAUserBuf[0][0]; //not for dll
+PUSHORT pDMABigBuf; //not for dll
+PUSHORT pDMABigBufBase; //not for dll
 
 //DWORD dwDMABufSize;// = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
 ULONG DisplData[2][1200];//array for display for 2 cams parallel
@@ -283,7 +284,7 @@ pArrayT pDIODEN = (pArrayT)&DIODEN;
 
 int Nob = 1;
 int Nospb = 60000;
-pArrayT pBLOCKBUF = 0;
+
 
 
 
