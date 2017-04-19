@@ -56,8 +56,8 @@ BOOL DISP2 = FALSE;		//display 2 cameras parallel, TRUE for double line
 						// could be 2..4 for multiple boards
 
 // global Camera data
-#define  _NO_TLPS  0xa //oldpc: 0x11				//0x11=17*128  = 2176 Bytes  = 1088 WORDS
-#define TLPSize 0x40	//0x20 on old pc
+#define  _NO_TLPS  0x12 //oldpc: 0x11				//0x11=17*128  = 2176 Bytes  = 1088 WORDS
+#define TLPSize 0x20	//0x20 on old pc
 #define RAMPAGESIZE 4096
 #define DMA_BUFSIZEINSCANS 1000		//default: BUFSIZE=1000, INTR all 500
 #define DMA_HW_BUFPARTS 2
@@ -71,6 +71,12 @@ BOOL DISP2 = FALSE;		//display 2 cameras parallel, TRUE for double line
 //for jungo projects
 #define KERNEL_64BIT	
 #define WINNT
+
+
+//#define HWINTR_EN TRUE
+
+#define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
+#define INTR_EN TRUE		// enables INTR
 
 
 
@@ -248,15 +254,10 @@ HANDLE hCopyToDispBuf ;//Mutex for data buffer write
 
 
 
-#define USERBUFINSCANS 1000
-#define DMABufSizeInScans  100
-#define IntFreqInScans  (DMABufSizeInScans/4) //DMABufSizeInScans / 2;
-//#define DMABufSize 600 *_PIXEL * 2
-#define HWINTR_EN TRUE
-#define IS_DLL FALSE
+//#define USERBUFINSCANS 1000
+//#define DMABufSizeInScans  1000
 
-#define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
-#define INTR_EN TRUE		// enables INTR
+
 
 //globals
 WORD UserBufInScans;
@@ -267,20 +268,20 @@ INT_PTR pDMABigBufIndex = NULL;
 //jungo
 pArrayT pBLOCKBUF = 0;
 
-USHORT DMAUserBuf[1200][USERBUFINSCANS];//not for dll
-WORD UserBufInScans = USERBUFINSCANS;
+//USHORT DMAUserBuf[1200][USERBUFINSCANS];//not for dll
+//WORD UserBufInScans = USERBUFINSCANS;
 //DMAUserBuf is the complete memory of the application
-PUSHORT pDMABigBuf; //not for dll
+//PUSHORT pDMABigBuf; //not for dll
 PUSHORT pDMABigBufBase; //not for dll
 
 //DWORD dwDMABufSize;// = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
 ULONG DisplData[2][1200];//array for display for 2 cams parallel
 
 //delete after deleting ringreadthread									// array type is defined in board.h
-ArrayT DIODEN[_MAXDB][1200];		// global data array, could be 1 or 2 dim
-ArrayT DIODENRingBuf[(DMABufSizeInScans + 10) * 1200 * sizeof(USHORT)];
+//ArrayT DIODEN[_MAXDB][1200];		// global data array, could be 1 or 2 dim
+//ArrayT DIODENRingBuf[(DMABufSizeInScans + 10) * 1200 * sizeof(USHORT)];
 DWORD FirstPageOffset;
-pArrayT pDIODEN = (pArrayT)&DIODEN;
+//pArrayT pDIODEN = (pArrayT)&DIODEN;
 
 int Nob = 1;
 int Nospb = 60000;
