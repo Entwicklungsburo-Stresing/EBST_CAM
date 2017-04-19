@@ -486,32 +486,45 @@ int span=0;
 
 DWORD cur_nospb = 0;
 DWORD cur_nob = 0;
+int trackbar_nob, trackbar_nospb, trackbar_nob_multiplier = 1, trackbar_nospb_multiplier = 1;
 char *s = (char*)malloc(10);
    switch ( uMsg ) 
    {
    case WM_CREATE:
-	   //not working fine yet, just creating the trackbar
+	   //if nos or nospb becomes a higher value then 30000 the gui is not posible to deisplay it
+	   //so we are checking this and dividing the displayed value. Therefore we are seeing a wrong value when we are using the trackbar
+	   trackbar_nospb = Nospb;
+	   while(trackbar_nospb > 30000){ //max for trackbar length
+		   trackbar_nospb /= 10;
+		   trackbar_nospb_multiplier *= 10;
+	   }
+	   trackbar_nob = Nob;
+	   while (trackbar_nob > 30000){ //max for trackbar length
+		   trackbar_nob /= 10;
+		   trackbar_nob_multiplier *= 10;
+	   }
+
 	   hwndTrack = CreateWindow(TRACKBAR_CLASS,
 		   "NOS", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
 		   TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY | WS_CAPTION,
 		   300, 300,
-		   120, 60,
+		   400, 70,
 		   hWnd, (HMENU)ID_TRACKBAR,
 		   hInst,
 		   NULL);
 	   SendMessage(hwndTrack, TBM_SETRANGE, TRUE,
-		   MAKELONG(0/*MIN RANGE*/, Nospb - 1/*MAX RANGE*/));  //Optional, Default is 0-100
+		   MAKELONG(0/*MIN RANGE*/, trackbar_nospb - 1/*MAX RANGE*/));  //Optional, Default is 0-100
 
 	   hwndTrack2 = CreateWindow(TRACKBAR_CLASS,
 		   "NOB", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
 		   TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY | WS_CAPTION,
-		   450, 300,
-		   120, 60,
+		   710, 300,
+		   400, 70,
 		   hWnd, (HMENU)ID_TRACKBAR,
 		   hInst,
 		   NULL);
 	   SendMessage(hwndTrack2, TBM_SETRANGE, TRUE,
-		   MAKELONG(0/*MIN RANGE*/, Nob - 1/*MAX RANGE*/));  //Optional, Default is 0-100
+		   MAKELONG(0/*MIN RANGE*/, trackbar_nob - 1/*MAX RANGE*/));  //Optional, Default is 0-100
 	   //ShowScrollBar(scrollb, SB_BOTH, TRUE);
 	   break;
    case WM_HSCROLL://ID_TRACKBAR:
@@ -519,6 +532,8 @@ char *s = (char*)malloc(10);
 
 	   cur_nospb = SendMessage(hwndTrack, TBM_GETPOS, 0, 0);
 	   cur_nob = SendMessage(hwndTrack2, TBM_GETPOS, 0, 0);
+	   cur_nospb *= trackbar_nospb_multiplier;
+	   cur_nob *= trackbar_nob_multiplier;
 	   CopytoDispbuf(cur_nob*cur_nospb + cur_nospb);
 	   Display(1, PLOTFLAG);
 
@@ -701,7 +716,7 @@ char *s = (char*)malloc(10);
 			  //stop timer if it is still running
 			  Running=FALSE;
 			  Sleep(20); // if the DMA Interrupt is running
-			  CleanupPCIE_DMA(DRV);
+			  //CleanupPCIE_DMA(DRV);
 			  StopRingReadThread();
 			  StopFFTimer(DRV);
 			  SetIntFFTrig(DRV);//disables ext. Trig.
