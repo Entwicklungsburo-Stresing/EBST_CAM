@@ -170,7 +170,7 @@ void CopytoDispbuf(ULONG scan)
 	//!!
 
 	//tempBuf = &DMAUserBuf[0][0] + testcnt * _PIXEL;
-	tempBuf = pDMABigBuf + scan * _PIXEL;
+	tempBuf = pDMABigBufBase + scan * _PIXEL;
 	// DMAUserBufIndex];
 	//while (!GetNextScan){ Sleep(5); }
 	//testcnt++;
@@ -430,7 +430,7 @@ void Contimess(void *dummy)
 	char fn[3000];
 	char header[260];
 	volatile	ULONG S0Data = 0;
-	PUSHORT pdata = pDIODEN;
+	//PUSHORT pdata = pDIODEN;
 	ULONG cnt = 0;
 	BOOL FFfull = FALSE;
 	char TrmsString[2000];
@@ -461,34 +461,18 @@ void Contimess(void *dummy)
 #endif
 */	
 
-	ULONG dwdata = 0;
-	ReadLongS0(DRV, &dwdata, 0x40);  // read in PCIEFLAGS register
-	WDC_Err("contimessstart PCIEFLAGS: 0x%x\n", dwdata);
-
 	//stop all and clear FIFO
 	//WDC_Err(DRV);
 	StopFFTimer(DRV);
 	SetIntFFTrig(DRV);
 	RSFifo(DRV);
 
-
 	//make init here, that CCDExamp can be used to read the act regs...
-	
-	//B!
-	//if (!SetBoardVars(DRV, _PIXEL, FLAG816, XCKDELAY))
-	//	{
-		//ErrorMsg("Error in SetBoardVars");
-		//return;
-		//}
-	//set hardware start des dma  via DREQ withe data = 0x4000000
-	/*ULONG mask = 0x40000000;
-	ULONG data = 0;// 0x40000000;
-	if (HWINTR_EN)
-		data = 0x40000000;
-	SetS0Reg(data, mask, 0x38, DRV);
-	//SetDMABufRegs(DRV); not here
-	*/
-
+	if (!SetBoardVars(DRV, _PIXEL, FLAG816, XCKDELAY))
+		{
+		ErrorMsg("Error in SetBoardVars");
+		return;
+		}
 
 	//setups
 	//	SetupDELAY(DRV,DELAYini);	//init WRFIFO delay
@@ -525,19 +509,16 @@ void Contimess(void *dummy)
 //	SetADGain(DRV, 1, 0, 0, 0, 0, 0, 0, 0, 0); //set gain to values g1..g8 in Board.C
 
 	pDMABigBufBase = pBLOCKBUF;
+	UserBufInScans = Nospb;
 
 	//!!GS
 	//Nob = 1;
 	//DMA_Setup
-	ReadLongS0(DRV, &dwdata, 0x40);  // read in PCIEFLAGS register
-	WDC_Err("before dmasetup: PCIEFLAGS: 0x%x\n", dwdata);
 	if (!SetupPCIE_DMA(DRV, Nospb, Nob))  //get also buffer address
 	{
 		ErrorMsg("Error in SetupPCIE_DMA");
 		return;
 	}
-	ReadLongS0(DRV, &dwdata, 0x40);  // read in PCIEFLAGS register
-	WDC_Err("after setupdma: PCIEFLAGS: 0x%x\n", dwdata);
 
 	// write header
 	j=sprintf_s(header,260," Online Loop - Cancel with ESC or space- key  " );
