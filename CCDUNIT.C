@@ -467,12 +467,7 @@ void Contimess(void *dummy)
 	SetIntFFTrig(DRV);
 	RSFifo(DRV);
 
-	//make init here, that CCDExamp can be used to read the act regs...
-	if (!SetBoardVars(DRV, _PIXEL, FLAG816, XCKDELAY))
-		{
-		ErrorMsg("Error in SetBoardVars");
-		return;
-		}
+
 
 	//setups
 	//	SetupDELAY(DRV,DELAYini);	//init WRFIFO delay
@@ -514,11 +509,7 @@ void Contimess(void *dummy)
 	//!!GS
 	//Nob = 1;
 	//DMA_Setup
-	if (!SetupPCIE_DMA(DRV, Nospb, Nob))  //get also buffer address
-	{
-		ErrorMsg("Error in SetupPCIE_DMA");
-		return;
-	}
+	
 
 	// write header
 	j=sprintf_s(header,260," Online Loop - Cancel with ESC or space- key  " );

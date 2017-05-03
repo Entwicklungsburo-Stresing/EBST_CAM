@@ -1,6 +1,6 @@
 //   UNIT BOARD.C for all examples equal
 //	PCIE version with DMA and INTR
-//	V2.03  GS  3/2017
+//	V2.03.1  GS  3/2017
 //	- new function DLLFreeMemInfo(UINT64 memory_all, UINT64 memory_free)
 
 
@@ -73,12 +73,19 @@ enum{
 	DmaAddr_BLOCKINDEX = 0x058
 };
 
+//PCIe Addresses
+enum{
+	PCIeAddr_devCap		= 0x5C,
+	PCIeAddr_devStatCtrl	= 0x60
+};
+
 //jungodriver specific variables
 WD_PCI_CARD_INFO deviceInfo;
 WDC_DEVICE_HANDLE hDev = NULL;
 ULONG DMACounter = 0;//for debugging
 //Buffer of WDC_DMAContigBufLock function = one DMA sub block - will be copied to the big pDMABigBuf later
 INT_PTR *pDMASubBuf = NULL;
+//pDMASubBuf = NULL;
 //PUSHORT *pDMASubBuf;  //!!GS
 WD_DMA *pDMASubBufInfos = NULL; //there will be saved the neccesary parameters for the dma buffer
 BOOL DMAAlreadyStarted = FALSE;
@@ -227,6 +234,57 @@ void AboutDMARegs(UINT32 drv)
 
 }
 
+AboutTLPs(UINT32 drvno)
+{
+	ULONG BData = 0;
+	ULONG j = 0;
+	char fn[600];
+	ULONG actpayload = 0;
+
+	j += sprintf(fn + j, "PAY_LOAD values : 0 = 128 bytes, 1 = 256 bytes, 2 = 512 bytes\n");
+	ReadLongIOPort(drvno, &BData, PCIeAddr_devCap);//0x4c		
+	j += sprintf(fn + j, "PAY_LOAD Supported : 0x%x\n", BData & 0x7);
+
+	//		WriteLongIOPort(DRV,0x2840,0x60);  not working  !! destroys PC? !!
+	ReadLongIOPort(drvno, &BData, PCIeAddr_devStatCtrl);
+	actpayload = (BData >> 5) & 0x7;
+	j += sprintf(fn + j, "PAY_LOAD : 0x%x\n", actpayload);
+
+
+
+	ReadLongIOPort(drvno, &BData, PCIeAddr_devStatCtrl);
+	j += sprintf(fn + j, "MAX_READ_REQUEST_SIZE : 0x%x\n\n", (BData >> 12) & 0x7);
+
+	//BData &= 0xFFFF8FFF;//set from 256 to 128 max read request size
+	//BData |= 0x00001000;//set from 128 to 256 
+	//WriteLongIOPort(DRV, BData, PCIeAddr_devStatCtrl);
+
+	//ReadLongIOPort(DRV, &BData, PCIeAddr_devStatCtrl);
+	//j += sprintf(fn + j, "MAX_READ_REQUEST_SIZE after : 0x%x\n\n", (BData >> 12) & 0x7);
+
+	BData = aPIXEL[drvno];
+	j += sprintf(fn + j, "pixel: %d \n", BData);
+
+	switch (actpayload)
+	{
+	case 0: BData = 0x20;		break;
+	case 1: BData = 0x40;		break;
+	case 2: BData = 0x80;		break;
+	case 3: BData = 0x100;		break;
+	}
+
+	j += sprintf(fn + j, "TLP_SIZE is: %d DWORDs = %d BYTEs\n", BData, BData * 4);
+
+	BData = (_PIXEL - 1) / (BData * 2) + 1 +1;
+	j += sprintf(fn + j, "number of TLPs should be: %d\n", BData);
+	ReadLongDMA(drvno, &BData, 16);
+	j += sprintf(fn + j, "number of TLPs is: %d \n", BData);
+
+	MessageBox(GetActiveWindow(), fn, "DMA transfer payloads", MB_OK | MB_DEFBUTTON2);
+
+}//AboutTLPs
+
+
 void AboutS0(UINT32 drvno)
 {
 	int i, j = 0;
@@ -278,15 +336,18 @@ void AboutS0(UINT32 drvno)
 
 	for (i = 0; i <= 31; i++)
 	{
-		ReadLongS0(DRV, &S0Data, i * 4);
+		ReadLongS0(drvno, &S0Data, i * 4);
 		j += sprintf(fn + j, "%s \t: 0x%I32x\n", LUTS0Reg[i], S0Data);
 	}
 
 	MessageBox(hWnd, fn, "S0 regs", MB_OK);
 
+	AboutTLPs(drvno);
+
 }//AboutS0
 
-//done
+
+
 BOOL CCDDrvInit(UINT32 drvno)
 {// returns true if driver was found
 	WDC_Err(drvno);
@@ -543,16 +604,7 @@ char CntBoards(void)
 	return foundBoards;
 }//CntBoards
 
-BOOL BufLock(UINT drvno, int nob, int nospb)
-{
 
-
-	pBLOCKBUF = calloc(nob, nospb * _PIXEL * sizeof(USHORT));
-	//pDIODEN = (pArrayT)calloc(nob, nospb * _PIXEL * sizeof(ArrayT));
-
-	if (pBLOCKBUF != 0) return TRUE;
-	else return FALSE;
-}
 
 //**************  new for PCIE   *******************************
 
@@ -600,7 +652,7 @@ BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno){
 	return TRUE;
 }
 
-BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, UINT32 drvno){
+BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno){
 
 	UINT64 PhysAddrDMABuf;
 	ULONG RegisterValues;
@@ -656,7 +708,7 @@ BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, UINT32 drvno){
 
 	//WDMATLPC: Set the number of DMA transfer count
 	BitMask = 0xFFFF;
-	if (!SetDMAReg(_NO_TLPS, BitMask, DmaAddr_WDMATLPC, drvno)){
+	if (!SetDMAReg(no_tlps, BitMask, DmaAddr_WDMATLPC, drvno)){
 		WDC_Err("Set the number of DMA transfer count failed");
 		return FALSE;
 	}
@@ -667,11 +719,43 @@ BOOL SetDMAAddrTlp(UINT32 drvno){
 	WD_DMA **ppDma = &pDMASubBufInfos;
 	UINT64 PhysAddrDMABuf64;
 	ULONG BitMask;
+	ULONG BData = 0;
+	int tlpmode = 0;
 
+	ReadLongIOPort(DRV, &BData, PCIeAddr_devStatCtrl);
+	tlpmode = BData & 0x000000E0 ;
+	tlpmode = tlpmode >> 4;
+	if (_FORCETOPLS128) tlpmode = 0;
+
+	BData &= 0xFFFFFF1F;//delete the old values
+	switch (tlpmode)
+	{
+	case 0:
+		BData |= 0x00;//set to 128 bytes = 32 DWORDS 
+		//BData |= 0x00000020;//set from 128 to 256 
+		WriteLongIOPort(DRV, BData, PCIeAddr_devStatCtrl);
+		NO_TLPS = 0x12;
+		TLPSIZE = 0x20;
+		break;
+	case 1:
+		BData |= 0x20;//set to 256 bytes = 64 DWORDS 
+		//BData |= 0x00000020;//set to 256 
+		WriteLongIOPort(DRV, BData, PCIeAddr_devStatCtrl);
+		NO_TLPS = 0x9;
+		TLPSIZE = 0x40;
+		break;
+	case 2:
+		BData |= 0x40;//set to 512 bytes = 128 DWORDS 
+		//BData |= 0x00000020;//set to 512 
+		WriteLongIOPort(DRV, BData, PCIeAddr_devStatCtrl);
+		NO_TLPS = 0x5;
+		TLPSIZE = 0x80;
+		break;
+	}
 
 	//write Address
 	PhysAddrDMABuf64 = (*ppDma)->Page[0].pPhysicalAddr;
-	if (!SetDMAAddrTlpRegs(PhysAddrDMABuf64, TLPSize, drvno))
+	if (!SetDMAAddrTlpRegs(PhysAddrDMABuf64, TLPSIZE, NO_TLPS, drvno))
 		return FALSE;
 	return TRUE;
 }
@@ -1139,6 +1223,33 @@ BOOL SetBoardVars(UINT32 drvno, ULONG pixel, ULONG flag816, ULONG xckdelay)
 	return TRUE; //no error
 };  // SetBoardVars
 
+BOOL BufLock(UINT drvno, int nob, int nospb)
+{
+	if (WDC_IntIsEnabled(hDev))
+		CleanupPCIE_DMA(DRV);
+
+	pBLOCKBUF = calloc(nob, nospb * _PIXEL * sizeof(USHORT));
+	//pDIODEN = (pArrayT)calloc(nob, nospb * _PIXEL * sizeof(ArrayT));
+
+	if (pBLOCKBUF != 0){
+		//pDMABigBufBase = pBLOCKBUF;
+		//make init here, that CCDExamp can be used to read the act regs...
+		if (!SetBoardVars(DRV, _PIXEL, FLAG816, XCKDELAY))
+		{
+			ErrorMsg("Error in SetBoardVars");
+			return FALSE;
+		}
+		if (!SetupPCIE_DMA(DRV, Nospb, Nob))  //get also buffer address
+		{
+			ErrorMsg("Error in SetupPCIE_DMA");
+			return FALSE;
+		}
+
+		return TRUE;
+	}
+	else return FALSE;
+}
+
 // ***************************  camera read stuff  **********
 //*********************************************************
 
@@ -1443,7 +1554,7 @@ BOOL ReadPCIEFifo(UINT32 drvno, void* pdioden, long fkt)
 
 	//call the read  -  only copy _NO_TLPS * 128 ! - target array may be greater
 	//if (!WriteFile(ahCCDDRV[drvno], pReadArray, _NO_TLPS * 128, &lwritten, NULL)) //write to PC RAM, length in BYTES
-	if (!CallWRFile(drvno, pReadArray, _NO_TLPS * 128, fkt))
+	if (!CallWRFile(drvno, pReadArray, NO_TLPS * 128, fkt))
 	{
 		ErrorMsg("Read DMA Buffer - FIFO failed");
 		if (addalloc) free(pReadArray);
@@ -2640,7 +2751,7 @@ void RsTOREG(UINT32 drvno)
 //				d25 = ADDR1		AD=0
 //				d26 makes load pulse
 //				all written to DB0 in Space0 = Long0
-//				for AD set maddr=01
+//				for AD set maddr=01, adaddr address of reg
 void SendFLCAM(UINT32 drvno, BYTE maddr, BYTE adaddr, USHORT data)
 {
 	ULONG ldata = 0;
