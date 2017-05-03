@@ -286,10 +286,9 @@ DWORD FirstPageOffset;
 int Nob = 1;
 int Nospb = 60000;
 
-
-
-
-
+#define _FORCETOPLS128 TRUE	//only use payload size 128byte
+ULONG NO_TLPS = 0x12; //was 0x11-> x-offset			//0x11=17*128  = 2176 Bytes  = 1088 WORDS
+ULONG TLPSIZE = 0x20;
 
 
 // Prototypes 

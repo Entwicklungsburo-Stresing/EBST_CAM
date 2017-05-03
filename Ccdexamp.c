@@ -493,6 +493,7 @@ char *s = (char*)malloc(10);
    case WM_CREATE:
 	   //if nos or nospb becomes a higher value then 30000 the gui is not posible to deisplay it
 	   //so we are checking this and dividing the displayed value. Therefore we are seeing a wrong value when we are using the trackbar
+
 	   trackbar_nospb = Nospb;
 	   while(trackbar_nospb > 30000){ //max for trackbar length
 		   trackbar_nospb /= 10;
@@ -717,7 +718,7 @@ char *s = (char*)malloc(10);
 			  Running=FALSE;
 			  Sleep(20); // if the DMA Interrupt is running
 			  //CleanupPCIE_DMA(DRV);
-			  StopRingReadThread();
+			  //StopRingReadThread();
 			  StopFFTimer(DRV);
 			  SetIntFFTrig(DRV);//disables ext. Trig.
 			  CCDDrvExit(DRV);
@@ -821,6 +822,8 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 	BOOL success = FALSE;
 	UINT64 builtinram, freeram, freeram_old, calcram, allocram;
 	UINT divMB = 1024 * 1024;
+	int trackbar_nob, trackbar_nospb, trackbar_nob_multiplier = 1, trackbar_nospb_multiplier = 1;
+
 
 	switch (message)
 	{
@@ -856,11 +859,21 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 					MessageBox(hMSWND, "allocating Buffer succeeded", "Message", MB_OK);
 			}
 
+			trackbar_nospb = Nospb;
+			while (trackbar_nospb > 30000){ //max for trackbar length
+				trackbar_nospb /= 10;
+				trackbar_nospb_multiplier *= 10;
+			}
+			trackbar_nob = Nob;
+			while (trackbar_nob > 30000){ //max for trackbar length
+				trackbar_nob /= 10;
+				trackbar_nob_multiplier *= 10;
+			}
 			//update trackbars
 			SendMessage(hwndTrack2, TBM_SETRANGE, TRUE,
-				MAKELONG(0/*MIN RANGE*/, Nob - 1/*MAX RANGE*/));  //Optional, Default is 0-100
+				MAKELONG(0/*MIN RANGE*/, trackbar_nob - 1/*MAX RANGE*/));  //Optional, Default is 0-100
 			SendMessage(hwndTrack, TBM_SETRANGE, TRUE,
-				MAKELONG(0/*MIN RANGE*/, Nospb - 1/*MAX RANGE*/));  //Optional, Default is 0-100
+				MAKELONG(0/*MIN RANGE*/, trackbar_nospb - 1/*MAX RANGE*/));  //Optional, Default is 0-100
 
 			EndDialog(hDlg, TRUE);
 			return (TRUE);
