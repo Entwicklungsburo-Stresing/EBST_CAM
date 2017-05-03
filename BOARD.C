@@ -2509,7 +2509,8 @@ void WaitTrigger(UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrKey)
 		if (ReturnKey == _ScanCode_End) Space = TRUE;
 #else	//other keyboard -> do not use highest priority thread
 		// or use Sleep to serve the interrupt
-		if (GetAsyncKeyState(VK_ESCAPE))  Abbr = TRUE;
+		if (GetAsyncKeyState(VK_ESCAPE))  
+			Abbr = TRUE;
 		if (GetAsyncKeyState(VK_SPACE))  Space = TRUE;
 #endif
 	} while ((!HiEdge) && (!Abbr));
@@ -2549,7 +2550,8 @@ void WaitTriggerShort(UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrK
 		if (ReturnKey == _ScanCode_End) Space = TRUE;
 #else	//other keyboard -> do not use highest priority thread
 		// or use Sleep to serve the interrupt
-		if (GetAsyncKeyState(VK_ESCAPE))  Abbr = TRUE;
+		if (GetAsyncKeyState(VK_ESCAPE))  
+			Abbr = TRUE;
 		if (GetAsyncKeyState(VK_SPACE))  Space = TRUE;
 #endif
 	} while ((!HiEdge) && (!Abbr));
@@ -3480,7 +3482,7 @@ void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blo
 			BOOL StartbyTrig = FALSE;
 			while (!StartbyTrig){ // check for kill ?
 				//	Sleep(1);
-				if (GetAsyncKeyState(VK_ESCAPE))
+				if (GetAsyncKeyState(VK_ESCAPE) )
 				{ //stop if ESC was pressed
 					StopFFTimer(drv);
 					//SetIntFFTrig(drv);//disable ext input
@@ -3511,8 +3513,8 @@ void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blo
 
 		//main read loop - wait here until nos is reached or ESC key
 		//if nos is reached the flag RegXCKMSB:b30 = TimerOn is reset by hardware if flag HWDREQ_EN is TRUE
-		while (IsTimerOn(drv)){
-			if (GetAsyncKeyState(VK_ESCAPE)) // check for kill ?
+	while (IsTimerOn(drv)){
+		if (GetAsyncKeyState(VK_ESCAPE) | !FindCam(DRV)) // check for kill ?
 			{ //stop if ESC was pressed
 				StopFFTimer(drv);
 				SetIntFFTrig(drv);//disable ext input
