@@ -3,6 +3,8 @@
 BYTE Dispcnt = 0;
 int yVal = 0;
 volatile int testcnt = 0;
+UINT choosen_board = 1;
+BOOL both_boards = FALSE;
 
 void GetRmsVal(BYTE ch, ULONG nos)
 			{
@@ -165,26 +167,19 @@ void CopytoDispbuf(ULONG scan)
 	//data array is word
 	int i;
 	PUSHORT tempBuf;
-//	if(DMAUserBufIndex < 1000)
 
-	//!!
-
-	//tempBuf = &DMAUserBuf[0][0] + testcnt * _PIXEL;
-	tempBuf = pDMABigBufBase + scan * _PIXEL;
-	// DMAUserBufIndex];
-	//while (!GetNextScan){ Sleep(5); }
-	//testcnt++;
-	//if (testcnt >= 100){
- 	//	testcnt = 0;
-	//	tempBuf = &DMAUserBuf[0][0];
-	//}
-
-	//!!GS
-	//tempBuf = &DMAUserBuf[0][0];//offset:  +_PIXEL * 2;
-
+	tempBuf = pDMABigBufBase[choosen_board] + scan * _PIXEL;
 	for (i = 0; i < (_PIXEL - 1); i++){
-		//pDMABuf++;
+	
 		DisplData[0][i] =  *(tempBuf + i);//DIODENRingBuf[i + 0*FirstPageOffset + 0 * RAMPAGESIZE];//20: its a random number of the Ringbuffer (max 99)
+	}
+
+
+	if (both_boards){
+		tempBuf = pDMABigBufBase[2] + scan * _PIXEL;
+		for (i = 0; i < (_PIXEL - 1); i++){
+			DisplData[1][i] = *(tempBuf + i);//DIODENRingBuf[i + 0*FirstPageOffset + 0 * RAMPAGESIZE];//20: its a random number of the Ringbuffer (max 99)
+		}
 	}
 
 
@@ -247,38 +242,38 @@ void MeasureFifo(HDC aDC)
 
 //hCopyToDispBuf = CreateMutex(NULL,FALSE,NULL);
 
-	ClrRead(DRV, 0, 0, 16);
+	ClrRead(choosen_board, 0, 0, 16);
 	GetNextScan=FALSE;
 	MaxLineCnt=0;
 
 	//Clear FIFO and start timer
-	RSFifo(DRV);
+	RSFifo(choosen_board);
 	if (EXTTRIGFLAG)
-		{StopFFTimer(DRV);
-		SetExtTrig(DRV);}
+		{StopFFTimer(choosen_board);
+		SetExtTrig(choosen_board);}
 	else
-		{SetIntTrig(DRV);
-		StartFFTimer(DRV, ExpTime*1000);} // in micro sec
+		{SetIntTrig(choosen_board);
+		StartFFTimer(choosen_board, ExpTime*1000);} // in micro sec
 
 
 	do	{
 		i=0;
-//		ReadFifo(DRV,pDIODEN,0);//clear array for add
+//		ReadFifo(choosen_board,pDIODEN,0);//clear array for add
 		do  {
 			i += 1;
 
 			do	{//wait for linecounter has at least one line
 				}
-			while ((! FFValid(DRV)) );//&& (!Abbruch));
+			while ((! FFValid(choosen_board)) );//&& (!Abbruch));
 			j=0;
 			do //if there are more then1 line, get them all
 				{//
-				//OutTrigHigh(DRV);
-				ReadFifo(DRV,pRingFifo+,FKT);//FKT);
-				//OutTrigLow(DRV);
+				//OutTrigHigh(choosen_board);
+				ReadFifo(choosen_board,pRingFifo+,FKT);//FKT);
+				//OutTrigLow(choosen_board);
 				j+=1;
 				}
-			while (ReadFFCounter(DRV)>=1);
+			while (ReadFFCounter(choosen_board)>=1);
 			if (j>MaxLineCnt) MaxLineCnt=j;
  
 			if (ShowTrms) CalcTrms();
@@ -296,9 +291,9 @@ void MeasureFifo(HDC aDC)
 		while((i<ADDREP) && (Running));	
 	} 
 	while (Running);
-	StopFFTimer(DRV);
+	StopFFTimer(choosen_board);
 	Running=FALSE;
-	SetIntTrig(DRV);//stop if external trigger
+	SetIntTrig(choosen_board);//stop if external trigger
 
 	CloseHandle(hCopyToDispBuf) ;
 #if (_USETHREAD)
@@ -351,7 +346,7 @@ void UpdateTxT(void)
 	j += sprintf_s(TrmsString + j, 260, " , err=%d , val=%d", ErrCnt, ErrVal);
 #endif
 
-	if (FFOvl(DRV) == TRUE) 	{ j += sprintf_s(TrmsString + j, 260, " , overflow! "); }
+	if (FFOvl(choosen_board) == TRUE) 	{ j += sprintf_s(TrmsString + j, 260, " , overflow! "); }
 	else j += sprintf_s(TrmsString + j, 260, "                      ");
 	TextOut(hMSDC, 20, YLENGTH + 50, TrmsString, j);
 
@@ -406,7 +401,7 @@ j=sprintf_s(header,260," Measurement stopped !                                  
 TextOut(hMSDC,100,LOY-17,header,j);
 RedrawWindow(hMSWND,NULL,NULL,RDW_INVALIDATE);
 
-//ActMouse(DRV);
+//ActMouse(choosen_board);
 }//DisplayData
 */
 
@@ -444,6 +439,9 @@ void Contimess(void *dummy)
 	ULONG val1 = 0;
 	ULONG gain = 0;
 
+
+
+	contimess_run_once = TRUE;
 	// if thread is wanted ...
 /*
 #if  (_USETHREAD)//
@@ -462,48 +460,66 @@ void Contimess(void *dummy)
 */	
 
 	//stop all and clear FIFO
-	//WDC_Err(DRV);
-	StopFFTimer(DRV);
-	SetIntFFTrig(DRV);
-	RSFifo(DRV);
+	//WDC_Err(choosen_board);
+	StopFFTimer(choosen_board);
+	SetIntFFTrig(choosen_board);
+	RSFifo(choosen_board);
 
 
 
 	//setups
-	//	SetupDELAY(DRV,DELAYini);	//init WRFIFO delay
+	//	SetupDELAY(choosen_board,DELAYini);	//init WRFIFO delay
 
-	RsTOREG(DRV); // reset TOREG
+	RsTOREG(choosen_board); // reset TOREG
 	//set TrigOut, default= XCK
-	SetTORReg(DRV, 0);
+	SetTORReg(choosen_board, 0);
 
 
-	//SetTORReg(DRV, 0);  //XCK  
-	//SetTORReg(DRV,1);	//outtrig
-	//SetTORReg(DRV, 2);  //FFREAD  geht : 20 microsec
-	//SetTORReg(DRV, 3);  // area read
-	//SetTORReg(DRV, 1);// 0);  // 
+
+
+	//SetTORReg(choosen_board, 0);  //XCK  
+	//SetTORReg(choosen_board,1);	//outtrig
+	//SetTORReg(choosen_board, 2);  //FFREAD  geht : 20 microsec
+	//SetTORReg(choosen_board, 3);  // area read
+	//SetTORReg(choosen_board, 1);// 0);  // 
 	// ohne displ : 9 microsec
 
 	//B!
-	//SendFLCAM(DRV, 1, 0x0, 1);	//reset
+	//SendFLCAM(choosen_board, 1, 0x0, 1);	//reset
 
 	//Version 2 ch byte
-//-2	SendFLCAM(DRV,1, 0x28, 0x0000); //set to byte wise mode
-//-2	SendFLCAM(DRV, 1, 0x46, 0x8409); //set to 2 wire mode & 14bit & MSB first
+//-2	SendFLCAM(choosen_board,1, 0x28, 0x0000); //set to byte wise mode
+//-2	SendFLCAM(choosen_board, 1, 0x46, 0x8409); //set to 2 wire mode & 14bit & MSB first
 
-//		SendFLCAM(DRV,1, 0x26, 0x00b0); //set custom pattern D4=bit0 -> 10=1, 80=8, 800=80, f0=1111=15, fff=max
-	//	SendFLCAM(DRV, 1, 0x25, 0x11); //set custom pattern with D0(=D12)+D1(=D13)=1 -> max=3fff=16383
-//		SendFLCAM(DRV,1, 0x25, 0x10); //single custom pattern
-//		SendFLCAM(DRV, 1, 0x42, 0x00); //clk align
-	//  SendFLCAM(DRV,1, 0x25, 0x40); //ramp pattern
+//		SendFLCAM(choosen_board,1, 0x26, 0x00b0); //set custom pattern D4=bit0 -> 10=1, 80=8, 800=80, f0=1111=15, fff=max
+	//	SendFLCAM(choosen_board, 1, 0x25, 0x11); //set custom pattern with D0(=D12)+D1(=D13)=1 -> max=3fff=16383
+//		SendFLCAM(choosen_board,1, 0x25, 0x10); //single custom pattern
+//		SendFLCAM(choosen_board, 1, 0x42, 0x00); //clk align
+	//  SendFLCAM(choosen_board,1, 0x25, 0x40); //ramp pattern
 
-	//RSEC(DRV);
+	//RSEC(choosen_board);
 
 	gain = 6;
-	SetADGain(DRV, 1, gain, gain, gain, gain, gain, gain, gain, gain); //set gain to values g1..g8 in Board.C
-//	SetADGain(DRV, 1, 0, 0, 0, 0, 0, 0, 0, 0); //set gain to values g1..g8 in Board.C
+	SetADGain(choosen_board, 1, gain, gain, gain, gain, gain, gain, gain, gain); //set gain to values g1..g8 in Board.C
+//	SetADGain(choosen_board, 1, 0, 0, 0, 0, 0, 0, 0, 0); //set gain to values g1..g8 in Board.C
+	if (both_boards){
+		StopFFTimer(2);
+		SetIntFFTrig(2);
+		RSFifo(2);
 
-	pDMABigBufBase = pBLOCKBUF;
+
+
+		//setups
+		//	SetupDELAY(choosen_board,DELAYini);	//init WRFIFO delay
+
+		RsTOREG(2); // reset TOREG
+		//set TrigOut, default= XCK
+		SetTORReg(2, 0);
+
+		gain = 6;
+		SetADGain(2, 1, gain, gain, gain, gain, gain, gain, gain, gain);
+	}
+	
 	UserBufInScans = Nospb;
 
 	//!!GS
@@ -518,18 +534,39 @@ void Contimess(void *dummy)
 
 	//GS why delay?
 	Sleep(100);
-	ReadFFLoop(DRV, ExpTime, FREQ, EXTTRIGFLAG, 0,  0);
 
+	struct ffloopparams params;
+	params.drv = choosen_board;
+	params.exptus = ExpTime;
+	params.freq = FREQ;
+	params.exttrig = EXTTRIGFLAG;
+	params.blocktrigger = 0;
+	params.btrig_ch = 0;
+
+	_beginthread(ReadFFLoopThread, 0, &params);
+	if (both_boards){
+		struct ffloopparams params2;
+		params2.drv = 2;
+		params2.exptus = ExpTime;
+		params2.freq = FREQ;
+		params2.exttrig = EXTTRIGFLAG;
+		params2.blocktrigger = 0;
+		params2.btrig_ch = 0;
+
+		_beginthread(ReadFFLoopThread, 0, &params2);
+	}
+	//ReadFFLoop(choosen_board, ExpTime, FREQ, EXTTRIGFLAG, 0,  0);
+	Sleep(1000);
 	//start 2nd thread for getting data in highest std priority, ring=200 lines
 	/*
 	if (!HWINTR_EN)
 	{
-		StartRingReadThread(DRV, 200, _THREADPRI, -1);
+		StartRingReadThread(choosen_board, 200, _THREADPRI, -1);
 	}
 	else
-		StartReadWithDma(DRV);
+		StartReadWithDma(choosen_board);
 		*/
-	//StartRingReadThread(DRV, 200, _THREADPRI, -1);
+	//StartRingReadThread(choosen_board, 200, _THREADPRI, -1);
 	//while (!RingThreadOn) {}; // wait until ReadThread is running
 /*
 	//start thread to display data
@@ -540,10 +577,10 @@ void Contimess(void *dummy)
 	//start hardware timer - must be the last
 	if (DMAAlreadyStarted)
 		if (EXTTRIGFLAG)
-			 {SetExtFFTrig(DRV); }
+			 {SetExtFFTrig(choosen_board); }
 		else
-			{SetIntFFTrig(DRV);
-			StartFFTimer(DRV, ExpTime); // in micro sec
+			{SetIntFFTrig(choosen_board);
+			StartFFTimer(choosen_board, ExpTime); // in micro sec
 			}
 */
 	}//Contimess
