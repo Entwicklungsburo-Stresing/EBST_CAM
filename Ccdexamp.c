@@ -38,6 +38,10 @@ LPCTSTR lpszTitle    = "CCDEXAMP";
 HWND     hwndTrack;
 HWND     hwndTrack2;
 
+
+DWORD cur_nospb = 0;
+DWORD cur_nob = 0;
+
 BOOL RegisterWin95( CONST WNDCLASS* lpwc );
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
@@ -70,10 +74,24 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
       return( FALSE );
 
 
-  if (! CCDDrvInit(DRV)) 
+  if (! CCDDrvInit()) 
 		{ErrorMsg(" Can't open CCD driver ");
 		return (FALSE);
 		};
+
+
+  if (!InitBoard(1))
+  {
+	  ErrorMsg(" Can't open first board ");
+	  return (FALSE);
+  };
+  if (number_of_boards >= 2)
+	  if (!InitBoard(2))
+	  {
+		  ErrorMsg(" Can't open second board ");
+		  return (FALSE);
+	  }
+ 
 
    hInst = hInstance; 
   DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hMSWND, (DLGPROC)AllocateBuf);
@@ -84,7 +102,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
                         lpszTitle,    
                         WS_OVERLAPPEDWINDOW, 
                         CW_USEDEFAULT, 0, 
-                        XLENGTH/XOFF+40 , YLENGTH + 170,//640/380,  
+                        XLENGTH/XOFF+40 , YLENGTH + 220,//640/380,  
                         NULL,              
                         NULL,              
                         hInstance,         
@@ -94,9 +112,9 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
    if ( !hWnd )  return( FALSE );
 
  
-//RSInterface(DRV);
+//RSInterface(choosen_board);
 
-//	if (! InitBoard(DRV)) //Error message in InitBoard
+//	if (! InitBoard(choosen_board)) //Error message in InitBoard
 //		return (FALSE); 
 
  
@@ -108,7 +126,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	ShowWindow( hWnd, nCmdShow ); 
 	UpdateWindow( hWnd );
-//	AboutDrv(DRV);		// shows driver version and Board ID
+//	AboutDrv(choosen_board);		// shows driver version and Board ID
 
 
 	// init high resolution counter 	
@@ -120,14 +138,14 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 
 /*
-	CloseShutter(DRV); //set cooling  off
+	CloseShutter(choosen_board); //set cooling  off
 
-	if (_ISPDA)	{SetISPDA(DRV, TRUE); } else SetISPDA(DRV, FALSE);
-	if (_ISFFT) {SetISFFT(DRV, TRUE); } else SetISFFT(DRV, FALSE);
+	if (_ISPDA)	{SetISPDA(choosen_board, TRUE); } else SetISPDA(choosen_board, FALSE);
+	if (_ISFFT) {SetISFFT(choosen_board, TRUE); } else SetISFFT(choosen_board, FALSE);
 
 	if (_AD16cds)  {//resets EC reg!
-					InitCDS_AD(DRV, m_SHA,m_Amp,m_Ofs,m_TIgain);
-					OpenShutter(DRV);	//IFC must be hi or EC would not work				
+					InitCDS_AD(choosen_board, m_SHA,m_Amp,m_Ofs,m_TIgain);
+					OpenShutter(choosen_board);	//IFC must be hi or EC would not work				
 					}
 */
    while( GetMessage( &msg, NULL, 0, 0) )   
@@ -220,7 +238,7 @@ void AboutCFS(HWND hWnd)
 	ULONG actpayload;
 
 
-	if (!ReadLongIOPort(DRV, &S0Data, 0))
+	if (!ReadLongIOPort(choosen_board, &S0Data, 0))
 	{
 		ErrorMsg(" BOARD not found! ");
 		return;
@@ -229,20 +247,20 @@ void AboutCFS(HWND hWnd)
 	j=sprintf(fn,"CFS - registers   \n");
 	j+=sprintf(fn+j,"PCIE number of BARs = 0x%x\n",S0Data);
 
-	ReadLongIOPort(DRV,&S0Data,1);
+	ReadLongIOPort(choosen_board,&S0Data,1);
 	j+=sprintf(fn+j,"BAR0 address = 0x%x\n",S0Data);
-	ReadLongIOPort(DRV,&S0Data,2);
+	ReadLongIOPort(choosen_board,&S0Data,2);
 	j+=sprintf(fn+j,"BAR0 length 2 = 0x%x\n",S0Data);
-	ReadLongIOPort(DRV,&S0Data,3);
+	ReadLongIOPort(choosen_board,&S0Data,3);
 	j+=sprintf(fn+j,"BAR1 address 3 = 0x%x\n",S0Data);
-	ReadByteS0(DRV,&S0Data,8); //!B basties test
+	ReadByteS0(choosen_board,&S0Data,8); //!B basties test
 	j+=sprintf(fn+j,"BAR1 length 4 = 0x%x\n",S0Data);
 	*/
 	/* dev sn not implemented
 	j=0;
-	ReadLongIOPort(DRV,&BData,0x104);
+	ReadLongIOPort(choosen_board,&BData,0x104);
 	j+=sprintf(fn+j,"i=0x%x : 0x%.8x\n",0x104,BData);
-	ReadLongIOPort(DRV,&BData,0x108);
+	ReadLongIOPort(choosen_board,&BData,0x108);
 	j+=sprintf(fn+j,"i=0x%x : 0x%.8x\n",0x108,BData);
 
 	MessageBox(hWnd,fn,"Dev SN",MB_OK);
@@ -250,7 +268,7 @@ void AboutCFS(HWND hWnd)
 	j = 0;
 	for (i = 0x0; i<0x40; i = i + 4)
 	{
-		ReadLongIOPort(DRV, &BData, i);
+		ReadLongIOPort(choosen_board, &BData, i);
 		j += sprintf(fn + j, "i=0x%x : 0x%.8x\n", i, BData);
 		//i+=3;
 	}
@@ -259,7 +277,7 @@ void AboutCFS(HWND hWnd)
 
 	for (j = 0, i = 0x40; i<0x6c; i = i + 4)
 	{
-		ReadLongIOPort(DRV, &BData, i);
+		ReadLongIOPort(choosen_board, &BData, i);
 		j += sprintf(fn + j, "i=0x%x : 0x%.8x\n", i, BData);
 	}
 	MessageBox(hWnd, fn, "Conf Space ext. capabilities", MB_OK);
@@ -267,17 +285,17 @@ void AboutCFS(HWND hWnd)
 
 	j = 0;
 	j += sprintf(fn + j, "PAY_LOAD values : 0 = 128 bytes, 1 = 256 bytes, 2 = 512 bytes\n");
-	ReadLongIOPort(DRV, &BData, 0x5C);//0x4c		
+	ReadLongIOPort(choosen_board, &BData, 0x5C);//0x4c		
 	j += sprintf(fn + j, "PAY_LOAD Supported : 0x%x\n", BData & 0x7);
 
-	//		WriteLongIOPort(DRV,0x2840,0x60);  not working  !! destroys PC? !!
-	ReadLongIOPort(DRV, &BData, 0x60);
+	//		WriteLongIOPort(choosen_board,0x2840,0x60);  not working  !! destroys PC? !!
+	ReadLongIOPort(choosen_board, &BData, 0x60);
 	actpayload = (BData >> 5) & 0x7;
 	j += sprintf(fn + j, "PAY_LOAD : 0x%x\n", actpayload);
-	ReadLongIOPort(DRV, &BData, 0x60);
+	ReadLongIOPort(choosen_board, &BData, 0x60);
 	j += sprintf(fn + j, "MAX_READ_REQUEST_SIZE : 0x%x\n\n", (BData >> 12) & 0x7);
 
-	BData = aPIXEL[DRV];
+	BData = aPIXEL[choosen_board];
 	j += sprintf(fn + j, "pixel: %d \n", BData);
 
 	switch (actpayload)
@@ -292,7 +310,7 @@ void AboutCFS(HWND hWnd)
 
 	BData = (_PIXEL - 1) / (BData * 2) + 1;
 	j += sprintf(fn + j, "number of TLPs should be: %d\n", BData);
-	ReadLongDMA(DRV, &BData, 16);
+	ReadLongDMA(choosen_board, &BData, 16);
 	j += sprintf(fn + j, "number of TLPs is: %d \n", BData);
 
 	MessageBox(hWnd, fn, "DMA transfer payloads", MB_OK);
@@ -345,9 +363,9 @@ void AboutS0(void)
 	}; //Look-Up-Table for the S0 Registers
 
 	//for debug
-	//CleanupPCIE_DMA(DRV);
+	//CleanupPCIE_DMA(choosen_board);
 	
-	if (!ReadLongIOPort(DRV, &S0Data, 0))
+	if (!ReadLongIOPort(choosen_board, &S0Data, 0))
 	{
 		ErrorMsg(" BOARD not found! ");
 		return;
@@ -362,7 +380,7 @@ void AboutS0(void)
 	//Hier werden alle 6 Adressen der BARs in Hex abgefragt
 	//FIXME was soll dass denn? Falsche Schleife!
 	/*for (i = 80; i<40; i = i + 4){
-		ReadLongIOPort(DRV, &S0Data, i);
+		ReadLongIOPort(choosen_board, &S0Data, i);
 		if (S0Data != 0) numberOfBars++;
 	}
 
@@ -372,7 +390,7 @@ void AboutS0(void)
 /*
 	for (i = 0; i <= 31; i++)
 	{
-		ReadLongS0(DRV, &S0Data, i * 4);
+		ReadLongS0(choosen_board, &S0Data, i * 4);
 		j += sprintf(fn + j, "%s \t: 0x%I32x\n", LUTS0Reg[i], S0Data);
 	}
 
@@ -409,7 +427,7 @@ void AboutDMA(HWND hWnd)
 		"DMISCCONT"
 	}; //Look-Up-Table for the DMA Registers
 
-	/*	if (! ReadLongIOPort(DRV,&S0Data,0))
+	/*	if (! ReadLongIOPort(choosen_board,&S0Data,0))
 	{
 	ErrorMsg(" BOARD not found! ");
 	return;
@@ -418,7 +436,7 @@ void AboutDMA(HWND hWnd)
 
 	//Hier werden alle 6 Adressen der BARs in Hex abgefragt
 	for (i=16;i<40;i=i+4){
-	ReadLongIOPort(DRV,&S0Data,i);
+	ReadLongIOPort(choosen_board,&S0Data,i);
 	if(S0Data != 0) numberOfBars++;
 	}
 
@@ -428,7 +446,7 @@ void AboutDMA(HWND hWnd)
 	j = 0;
 	for (i = 0; i <= 17; i++)
 	{
-		ReadLongDMA(DRV, &S0Data, i * 4);
+		ReadLongDMA(choosen_board, &S0Data, i * 4);
 		j += sprintf(fn + j, "%s \t : 0x%x\n", LUTDMAReg[i], S0Data);
 	}
 
@@ -437,8 +455,8 @@ void AboutDMA(HWND hWnd)
 	j = 0;
 	for (i=0;i<=0xffffffff;i++)
 	{
-	WriteLongDMA(DRV,i,0x14);
-	ReadLongDMA(DRV,&S0Data,0x14);
+	WriteLongDMA(choosen_board,i,0x14);
+	ReadLongDMA(choosen_board,&S0Data,0x14);
 	if(i != S0Data){
 	j+=sprintf(fn+j,"Error: Readvalue is different to the writevalue : 0x%x\n",S0Data);
 	break;
@@ -466,7 +484,7 @@ j=sprintf_s(fn,s_size,"PCI - registers   \n");
 	//00-0f
 	for (i=0; i<0x30;i++)
 		{
-		ReadLongIOPort(DRV,&S0Data,i*4);
+		ReadLongIOPort(choosen_board,&S0Data,i*4);
 		j+=sprintf_s(fn+j,s_size,"0x%x = 0x%x\n",i*4,S0Data);	
 		}
 
@@ -484,10 +502,15 @@ static HWND hBtn  = NULL;
 int i=0;
 int span=0;
 
-DWORD cur_nospb = 0;
-DWORD cur_nob = 0;
 int trackbar_nob, trackbar_nospb, trackbar_nob_multiplier = 1, trackbar_nospb_multiplier = 1;
 char *s = (char*)malloc(10);
+
+
+char TrmsString[260];
+int j = 0;
+int xPos = GetCursorPosition();
+int yVal = DisplData[0][xPos];// YVal(1, xPos);
+
    switch ( uMsg ) 
    {
    case WM_CREATE:
@@ -508,7 +531,7 @@ char *s = (char*)malloc(10);
 	   hwndTrack = CreateWindow(TRACKBAR_CLASS,
 		   "NOS", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
 		   TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY | WS_CAPTION,
-		   300, 300,
+		   300, 345,
 		   400, 70,
 		   hWnd, (HMENU)ID_TRACKBAR,
 		   hInst,
@@ -519,7 +542,7 @@ char *s = (char*)malloc(10);
 	   hwndTrack2 = CreateWindow(TRACKBAR_CLASS,
 		   "NOB", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
 		   TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY | WS_CAPTION,
-		   710, 300,
+		   710, 345,
 		   400, 70,
 		   hWnd, (HMENU)ID_TRACKBAR,
 		   hInst,
@@ -538,12 +561,9 @@ char *s = (char*)malloc(10);
 	   CopytoDispbuf(cur_nob*cur_nospb + cur_nospb);
 	   Display(1, PLOTFLAG);
 
-	   char TrmsString[260];
-	   int j = 0;
-	   int xPos = GetCursorPosition();
-	   int yVal = DisplData[0][xPos];// YVal(1, xPos);
-	   j = sprintf_s(TrmsString + j, 260, " x: %i y: %i=0x%x ", xPos, yVal, yVal);
-	   TextOut(hMSDC, 20, YLENGTH + 50, TrmsString, j);
+	   UpdateTxT();
+	   //j = sprintf_s(TrmsString + j, 260, " x: %i y: %i=0x%x ", xPos, yVal, yVal);
+	   //TextOut(hMSDC, 20, YLENGTH + 50, TrmsString, j);
 
 	   //sprintf(s, "%d", dwPos);
 	   //MessageBox(hMSWND, s, "Position", MB_OK);
@@ -555,7 +575,7 @@ char *s = (char*)malloc(10);
 
                  case IDM_ABOUT :
 				 		DialogBox( hInst, "AboutBox", hWnd, (DLGPROC)About );
-						AboutDrv(DRV);
+						AboutDrv(choosen_board);
 						break;
 
                  case IDM_ABOUTTIME :
@@ -567,7 +587,7 @@ char *s = (char*)malloc(10);
 						break;
 
 	             case IDM_ABOUTS0 :
-					    AboutS0(hWnd);
+					    AboutS0(choosen_board);
 						break;
 
 				 case IDM_ABOUTDMA:
@@ -593,7 +613,11 @@ char *s = (char*)malloc(10);
 	
 				 case IDM_SETEC :
 					 DialogBox(hInst, MAKEINTRESOURCE(IDD_SETEC), hWnd, (DLGPROC)SetupEC);   //IDD_SETEC
-						break;			 
+						break;	
+				 case ID_CHOOSEBOARD :
+					 DialogBox(hInst, MAKEINTRESOURCE(IDD_CHOOSEBOARD), hWnd, (DLGPROC)ChooseBoard);
+					 break;
+
 
 
 //!!!
@@ -631,22 +655,22 @@ char *s = (char*)malloc(10);
 					if (! Running) Contimess(&dummy);
                     break;
 				 case VK_F2://switch cooling on
-					ActCooling(DRV,TRUE);
+					ActCooling(choosen_board,TRUE);
 					break;
 				 case VK_F3://switch cooling off
-					ActCooling(DRV,FALSE);
+					ActCooling(choosen_board,FALSE);
 					break;
 				 case VK_F4:
 					 {//check temp good
 					int j=0;
 					char header[260];
 
-					if (TempGood(DRV,1)==TRUE)
+					if (TempGood(choosen_board,1)==TRUE)
 					{j=sprintf_s(header,260," temp1 good        " );}
 					else
 					j=sprintf_s(header,260," temp1 not good " );
 
-					if (TempGood(DRV,2)==TRUE)
+					if (TempGood(choosen_board,2)==TRUE)
 					{j+=sprintf_s(header+j,260," temp2 good        " );}
 					else
 					j+=sprintf_s(header+j,260," temp2 not good " );
@@ -655,17 +679,17 @@ char *s = (char*)malloc(10);
 					break;
 					 }
 				 case VK_F5: //send IR_Setup
-					//SetupIR(DRV,1); //reset
+					//SetupIR(choosen_board,1); //reset
 					 // RE&RS enable
-				//WriteByteS0(DRV,0x0f,0x30);
+				//WriteByteS0(choosen_board,0x0f,0x30);
                     break;
 				 case VK_F7: //set high amp
 					HIAMP=TRUE;
-					V_On(DRV);
+					V_On(choosen_board);
                     break;
 				 case VK_F8: //set low amp
 					HIAMP=FALSE;
-					V_Off(DRV);
+					V_Off(choosen_board);
 					break;
 
 				 //case VK_SHIFT:
@@ -696,16 +720,23 @@ char *s = (char*)malloc(10);
 				 case VK_SPACE:
 					Running=FALSE;
 					//Sleep(20);
-					//CleanupPCIE_DMA(DRV);
+					//CleanupPCIE_DMA(choosen_board);
 					StopRingReadThread();
-					StopFFTimer(DRV);
-					SetIntFFTrig(DRV);//disables ext. Trig.
+					StopFFTimer(choosen_board);
+					SetIntFFTrig(choosen_board);//disables ext. Trig.
 					UpdateTxT();
                     break;
 
 
 			  }
         break;
+
+		case WM_MOUSEMOVE :
+			if (contimess_run_once){
+				UpdateTxT();
+			}
+			
+			break;
 
 /*		case WM_PAINT:
 		case WM_WINDOWPOSCHANGED  :
@@ -717,11 +748,23 @@ char *s = (char*)malloc(10);
 			  //stop timer if it is still running
 			  Running=FALSE;
 			  Sleep(20); // if the DMA Interrupt is running
-			  //CleanupPCIE_DMA(DRV);
+			  //CleanupPCIE_DMA(choosen_board);
 			  //StopRingReadThread();
-			  StopFFTimer(DRV);
-			  SetIntFFTrig(DRV);//disables ext. Trig.
-			  CCDDrvExit(DRV);
+			  //board 1
+
+			  if (number_of_boards >= 2){
+				  StopFFTimer(2);
+				  SetIntFFTrig(2);//disables ext. Trig.
+				  CCDDrvExit(2);
+			  }
+
+			  StopFFTimer(1);
+			  SetIntFFTrig(1);//disables ext. Trig.
+			  //WDC_DriverClose();
+			  CCDDrvExit(1);
+			  //board 2
+			
+
 			  ReleaseDC(hMSWND,hMSDC);
               
 			  PostQuitMessage(0);
@@ -796,9 +839,9 @@ BOOL success=FALSE;
 				if (IsDlgButtonChecked(hDlg,IDC_RADIO3)==BST_CHECKED) TrigMod=2;
 
 				// set slope for ext. trigger
-				if (TrigMod == 0)	HighSlope(DRV);
-				if (TrigMod == 1)	LowSlope(DRV);
-				if (TrigMod == 2)	BothSlope(DRV);
+				if (TrigMod == 0)	HighSlope(choosen_board);
+				if (TrigMod == 1)	LowSlope(choosen_board);
+				if (TrigMod == 2)	BothSlope(choosen_board);
 
 
 				EndDialog(hDlg, TRUE);        
@@ -853,10 +896,15 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 			{
 				Nob = nob_input;
 				Nospb = nospb_input;
-				if (!BufLock(DRV, Nob, Nospb))
+				if (!BufLock(choosen_board, Nob, Nospb))
 					MessageBox(hMSWND, "allocating Buffer fails", "Error", MB_OK);
 				else
 					MessageBox(hMSWND, "allocating Buffer succeeded", "Message", MB_OK);
+				if (both_boards)
+					if (!BufLock(2, Nob, Nospb))
+						MessageBox(hMSWND, "allocating Buffer of secound Board  fails", "Error", MB_OK);
+					else
+						MessageBox(hMSWND, "allocating Buffer of secound Board succeeded", "Message", MB_OK);
 			}
 
 			trackbar_nospb = Nospb;
@@ -902,13 +950,13 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 				Nob = nob_input;
 				Nospb = nospb_input;
 
-				if (pBLOCKBUF)
-					free(pBLOCKBUF);
+				if (pBLOCKBUF[choosen_board])
+					free(pBLOCKBUF[choosen_board]);
 
 				FreeMemInfo(&builtinram, &freeram);
 				freeram_old = freeram;
 
-				if (!BufLock(DRV, Nob, Nospb))
+				if (!BufLock(choosen_board, Nob, Nospb))
 					MessageBox(hMSWND, "allocating Buffer fails", "Error", MB_OK);
 				else
 					MessageBox(hMSWND, "allocating Buffer succeeded", "Message", MB_OK);
@@ -937,6 +985,51 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 	return (FALSE);
 }
 
+LRESULT CALLBACK ChooseBoard(HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
+{
+
+	switch (message)
+	{
+	case WM_INITDIALOG:
+
+		switch (choosen_board)
+		{
+		case 1: 
+			if (both_boards)
+				CheckDlgButton(hDlg, IDC_EC_RADIO_BOTH, TRUE);
+			else
+				CheckDlgButton(hDlg, IDC_EC_RADIO1, TRUE); 
+			break;
+		case 2: 		   CheckDlgButton(hDlg, IDC_EC_RADIO2, TRUE); break; //EC
+
+		}
+		return (TRUE);
+		break;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDCANCEL:
+			EndDialog(hDlg, TRUE);
+			return (TRUE);
+			break;
+
+		case IDOK:
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO1) == TRUE) { choosen_board = 1; both_boards = FALSE; }
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO2) == TRUE) { choosen_board = 2; both_boards = FALSE; }
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO_BOTH) == TRUE) { choosen_board = 1; both_boards = TRUE; }
+
+			EndDialog(hDlg, TRUE);
+			return (TRUE);
+			break;
+		} //WM_COMMAND	
+
+	}//	   message
+}
+
 LRESULT CALLBACK SetupTLevel( HWND hDlg,           
                         UINT message,        
                         WPARAM wParam,       
@@ -962,7 +1055,7 @@ BOOL success=FALSE;
 				val = GetDlgItemInt(hDlg,IDC_TLevel,&success ,FALSE);	
 				if (success) 
 					{TempLevel=val;
-					SetTemp(DRV,(UCHAR)TempLevel);}
+					SetTemp(choosen_board,(UCHAR)TempLevel);}
 
 
 				EndDialog(hDlg, TRUE);        
@@ -1038,7 +1131,7 @@ case WM_COMMAND:
 						tDAT = longval;
 						longval = tDAT;
 						if (longval != 0) longval |= 0x80000000;
-						WriteLongS0(DRV, longval, 0x20); // DAT reg
+						WriteLongS0(choosen_board, longval, 0x20); // DAT reg
 						}
 					//get XCKDLY val
 					longval = GetDlgItemInt(hDlg, IDC_SETXDLY, &success, FALSE);
@@ -1047,7 +1140,7 @@ case WM_COMMAND:
 						tXDLY = longval;
 						longval = tXDLY;
 						if (longval != 0) longval |= 0x80000000;
-						WriteLongS0(DRV, longval, 0x24); // XCKDLY reg
+						WriteLongS0(choosen_board, longval, 0x24); // XCKDLY reg
 					}
 
 
@@ -1058,7 +1151,7 @@ case WM_COMMAND:
 					else val = 0;
 					if (val != 0) val |= 0x80;
 					// devider n=1 -> n /2
-					WriteByteS0(DRV,(BYTE) val,0x28);//TICNT reg
+					WriteByteS0(choosen_board,(BYTE) val,0x28);//TICNT reg
 					val = GetDlgItemInt(hDlg,IDC_SETTCNT2,&success ,FALSE);
 					if (success) tTOCNT=val;
 					val = tTOCNT;
@@ -1066,7 +1159,7 @@ case WM_COMMAND:
 					else val = 0;
 					if (val != 0) val |= 0x80;
 					// devider n=1 -> n /2
-					WriteByteS0(DRV,(BYTE) val,0x2A);//TOCNT reg
+					WriteByteS0(choosen_board,(BYTE) val,0x2A);//TOCNT reg
 
 					//				CheckRadioButton(hDlg,IDC_RADIO1,IDC_RADIO5,m_TOmodus);
 					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO1)==TRUE) m_TOmodus=1;
@@ -1089,7 +1182,7 @@ case WM_COMMAND:
 
 					m_noPDARS = IsDlgButtonChecked(hDlg,IDC_CHECK_NOPDARS);
 					if (m_noPDARS==TRUE) dbyte |= 0x04;
-					WriteByteS0(DRV, dbyte,0x2B);//TOFLAG reg
+					WriteByteS0(choosen_board, dbyte,0x2B);//TOFLAG reg
 
 					if (IsDlgButtonChecked(hDlg,IDC_ECCNT_RADIO1)==TRUE) m_ECmodus=1; //CNT
 					if (IsDlgButtonChecked(hDlg,IDC_ECCNT_RADIO2)==TRUE) m_ECmodus=2;
@@ -1107,7 +1200,7 @@ case WM_COMMAND:
 
 
 
-		//			OpenShutter(DRV); //EC works only if shutter open
+		//			OpenShutter(choosen_board); //EC works only if shutter open
 					
 		EndDialog(hDlg, TRUE);
 		return (TRUE);

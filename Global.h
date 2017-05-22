@@ -47,7 +47,7 @@
 
 
 //display 2 graphics
-BOOL DISP2 = FALSE;		//display 2 cameras parallel, TRUE for double line 
+BOOL DISP2 = TRUE;		//display 2 cameras parallel, TRUE for double line 
 #define _HWCH2	FALSE	//true if 2 words are packet in one long ->resort to db1&db2 = PCI with adaptor board
 						//all double line systems
 #define _RESORTDB	FALSE	//true if ->resort to db1&db2 - only no FIFO
@@ -78,6 +78,7 @@ BOOL DISP2 = FALSE;		//display 2 cameras parallel, TRUE for double line
 #define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
 #define INTR_EN TRUE		// enables INTR
 
+#define MAXPCIECARDS 5
 
 
 	typedef USHORT ArrayT; //!! USHORT for linear 12/16bit word array or resort or highest speed
@@ -261,18 +262,17 @@ HANDLE hCopyToDispBuf ;//Mutex for data buffer write
 
 //globals
 WORD UserBufInScans;
-INT_PTR pDMABigBufIndex = NULL;
+INT_PTR pDMABigBufIndex[3] = { NULL, NULL, NULL };
 //INT_PTR pDMABigBufBase = NULL;
 
 
 //jungo
-pArrayT pBLOCKBUF = 0;
-
+pArrayT pBLOCKBUF[3] = { NULL, NULL, NULL };
 //USHORT DMAUserBuf[1200][USERBUFINSCANS];//not for dll
 //WORD UserBufInScans = USERBUFINSCANS;
 //DMAUserBuf is the complete memory of the application
 //PUSHORT pDMABigBuf; //not for dll
-PUSHORT pDMABigBufBase; //not for dll
+PUSHORT pDMABigBufBase[3]; //not for dll
 
 //DWORD dwDMABufSize;// = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
 ULONG DisplData[2][1200];//array for display for 2 cams parallel
@@ -313,3 +313,7 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 	WPARAM wParam,
 	LPARAM lParam);
 
+LRESULT CALLBACK ChooseBoard(HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam);
