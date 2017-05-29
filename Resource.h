@@ -12,7 +12,6 @@
 #define IDD_SETTEMP                     106
 #define IDD_SETEC                       107
 #define IDD_SETUPAD                     108
-#define IDD_SETEC1                      109
 #define IDD_ALLOCBBUF                   110
 #define IDD_CHOOSEBOARD                 111
 #define IDC_ADAMP                       1002
@@ -46,12 +45,19 @@
 #define IDC_EC_RADIO5                   1062
 #define IDC_EC_RADIO4                   1063
 #define IDC_EC_RADIO6                   1064
+#define IDC_EC_RADIO8                   1065
+#define IDC_EC_RADIO9                   1066
+#define IDC_EC_RADIO18                  1067
+#define IDC_EC_RADIO19                  1068
+#define IDC_EC_RADIO17                  1069
+#define IDC_EC_RADIO20                  1070
 #define IDC_CHECK_NOPDARS               1158
 #define IDC_SETDAT                      1159
 #define IDC_SETXDLY                     1165
 #define IDC_SETTCNT                     1166
 #define IDC_SETTCNT2                    1167
 #define IDC_EC_RADIO1                   1168
+#define IDC_EC_RADIO7                   1169
 #define IDC_SETECADJ                    1172
 #define IDC_RADIO11                     1177
 #define IDC_RADIO12                     1178

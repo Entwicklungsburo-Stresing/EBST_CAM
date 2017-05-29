@@ -1088,26 +1088,35 @@ case WM_INITDIALOG:
 			   SetDlgItemInt(hDlg,IDC_SETTCNT2,tTOCNT,FALSE);
 			   CheckDlgButton(hDlg,IDC_CHECK_NOPDARS,m_noPDARS);
 			   switch (m_TOmodus)
-			   {	case 2: 		   CheckDlgButton(hDlg,IDC_EC_RADIO2,TRUE); break; //REG
-			   case 3: 		   CheckDlgButton(hDlg,IDC_EC_RADIO3,TRUE); break; //EC
-			   case 4: 		   CheckDlgButton(hDlg,IDC_EC_RADIO4,TRUE); break; //DAT
-			   case 5: 		   CheckDlgButton(hDlg,IDC_EC_RADIO5,TRUE); break; //TRIGIN
-			   case 6: 		   CheckDlgButton(hDlg,IDC_EC_RADIO6,TRUE); break; //FFXCK
-			   default: 		   CheckDlgButton(hDlg,IDC_EC_RADIO1,TRUE); // XCKI 0 or 5
+			   {
+				   case 0:		   CheckDlgButton(hDlg, IDC_EC_RADIO1, TRUE); break; //REG
+				   case 1:		   CheckDlgButton(hDlg, IDC_EC_RADIO2, TRUE); break; //REG
+				   case 2: 		   CheckDlgButton(hDlg,IDC_EC_RADIO3,TRUE); break; //REG
+				   case 3: 		   CheckDlgButton(hDlg,IDC_EC_RADIO4,TRUE); break; //EC
+				   case 4: 		   CheckDlgButton(hDlg,IDC_EC_RADIO5,TRUE); break; //DAT
+				   case 5: 		   CheckDlgButton(hDlg,IDC_EC_RADIO6,TRUE); break; //TRIGIN
+				   case 6: 		   CheckDlgButton(hDlg,IDC_EC_RADIO7,TRUE); break; //FFXCK
+				   case 7: 		   CheckDlgButton(hDlg, IDC_EC_RADIO8, TRUE); break; //EC
+				   case 8: 		   CheckDlgButton(hDlg, IDC_EC_RADIO9, TRUE); break; //DAT
+				   case 9: 		   CheckDlgButton(hDlg, IDC_EC_RADIO17, TRUE); break; //TRIGIN
+				   case 10: 	   CheckDlgButton(hDlg, IDC_EC_RADIO18, TRUE); break; //FFXCK
+				   case 11: 	   CheckDlgButton(hDlg, IDC_EC_RADIO19, TRUE); break; //EC
+				   case 12: 	   CheckDlgButton(hDlg, IDC_EC_RADIO20, TRUE); break; //DAT
+				   default:		   CheckDlgButton(hDlg,IDC_EC_RADIO1,TRUE); // XCKI 0 or 5
 			   }
 
 			   switch (m_ECmodus)
 			   {	case 2: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO2); break; //REG
-			   case 3: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO3); break; //EC
-			   case 4: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO4); break; //DAT
-			   default: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO1); // XCKI 0 or 5
+				   case 3: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO3); break; //EC
+				   case 4: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO4); break; //DAT
+				   default: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO1); // XCKI 0 or 5
 			   }
 
 			   switch (m_ECTrigmodus)
 			   {	case 2: 		   CheckDlgButton(hDlg,IDC_RADIO12,TRUE); break; //REG
-			   case 3: 		   CheckDlgButton(hDlg,IDC_RADIO13,TRUE); break; //EC
-			   case 4: 		   CheckDlgButton(hDlg,IDC_RADIO14,TRUE); break; //DAT
-			   default: 		   CheckDlgButton(hDlg,IDC_RADIO11,TRUE); // XCKI 0 or 5
+				   case 3: 		   CheckDlgButton(hDlg,IDC_RADIO13,TRUE); break; //EC
+				   case 4: 		   CheckDlgButton(hDlg,IDC_RADIO14,TRUE); break; //DAT
+				   default: 		   CheckDlgButton(hDlg,IDC_RADIO11,TRUE); // XCKI 0 or 5
 			   }
 
 			   
@@ -1162,27 +1171,42 @@ case WM_COMMAND:
 					WriteByteS0(choosen_board,(BYTE) val,0x2A);//TOCNT reg
 
 					//				CheckRadioButton(hDlg,IDC_RADIO1,IDC_RADIO5,m_TOmodus);
-					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO1)==TRUE) m_TOmodus=1;
-					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO2)==TRUE) m_TOmodus=2;
-					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO3)==TRUE) m_TOmodus=3;
-					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO4)==TRUE) m_TOmodus=4;
-					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO5)==TRUE) m_TOmodus=5;
-					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO6)==TRUE) m_TOmodus=6;
+					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO1)==TRUE) m_TOmodus=0;
+					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO2)==TRUE) m_TOmodus=1;
+					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO3)==TRUE) m_TOmodus=2;
+					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO4)==TRUE) m_TOmodus=3;
+					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO5)==TRUE) m_TOmodus=4;
+					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO6)==TRUE) m_TOmodus=5;
+					if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO7) == TRUE) m_TOmodus = 6;
+					if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO8) == TRUE) m_TOmodus = 7;
+					if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO9) == TRUE) m_TOmodus = 8;
+					if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO17) == TRUE) m_TOmodus = 9;
+					if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO18) == TRUE) m_TOmodus = 10;
+					if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO19) == TRUE) m_TOmodus = 11;
+					if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO20) == TRUE) m_TOmodus = 12;
 
+					RsTOREG(choosen_board);
+					SetTORReg(choosen_board, m_TOmodus);
+					/*
 					switch (m_TOmodus)
 					{	case 1: dbyte = 0x0; break; //XCK
-					case 2: dbyte = 0x80; break; //REG
-					case 3: dbyte = 0x40; break; //EC
-					case 4: dbyte = 0x08; break; //DAT
-					case 5: dbyte = 0x20; break; //TRIGIN
-					case 6: dbyte = 0x10; break; //FFXCK
-					case 7: dbyte |= 0x70; break; //Block Trig
-					default:  dbyte = 0x0; // XCKI
+						case 2: dbyte = 0x80; break; //REG
+						case 3: dbyte = 0x40; break; //EC
+						case 4: dbyte = 0x08; break; //DAT
+						case 5: d
+							
+							
+							byte = 0x20; break; //TRIGIN
+						case 6: dbyte = 0x10; break; //FFXCK
+						case 7: dbyte |= 0x70; break; //Block Trig
+						default:  dbyte = 0x0; // XCKI
 					}
 
 					m_noPDARS = IsDlgButtonChecked(hDlg,IDC_CHECK_NOPDARS);
-					if (m_noPDARS==TRUE) dbyte |= 0x04;
+					if (m_noPDARS) dbyte |= 0x04;
+			
 					WriteByteS0(choosen_board, dbyte,0x2B);//TOFLAG reg
+					*/
 
 					if (IsDlgButtonChecked(hDlg,IDC_ECCNT_RADIO1)==TRUE) m_ECmodus=1; //CNT
 					if (IsDlgButtonChecked(hDlg,IDC_ECCNT_RADIO2)==TRUE) m_ECmodus=2;

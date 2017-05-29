@@ -470,9 +470,9 @@ void Contimess(void *dummy)
 	//setups
 	//	SetupDELAY(choosen_board,DELAYini);	//init WRFIFO delay
 
-	RsTOREG(choosen_board); // reset TOREG
+	//RsTOREG(choosen_board); // reset TOREG
 	//set TrigOut, default= XCK
-	SetTORReg(choosen_board, 0);
+	//SetTORReg(choosen_board, 8);
 
 
 
@@ -543,6 +543,8 @@ void Contimess(void *dummy)
 	params.blocktrigger = 0;
 	params.btrig_ch = 0;
 
+	IsrCounter = 0;
+
 	_beginthread(ReadFFLoopThread, 0, &params);
 	if (both_boards){
 		struct ffloopparams params2;
@@ -555,8 +557,17 @@ void Contimess(void *dummy)
 
 		_beginthread(ReadFFLoopThread, 0, &params2);
 	}
+
+	DWORD64 IsrNumber = Nob*Nospb / (DMA_BUFSIZEINSCANS/DMA_HW_BUFPARTS);
+
+	while (IsrCounter < IsrNumber){
+		j = sprintf_s(header, 260, " Online Loop - Cancel with ESC or space- key isr: %i of %i ",IsrCounter+1, IsrNumber);//+1 cheating
+		TextOut(hMSDC, 100, LOY - 17, header, j);
+		RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
+		
+	}
 	//ReadFFLoop(choosen_board, ExpTime, FREQ, EXTTRIGFLAG, 0,  0);
-	Sleep(1000);
+	Sleep(100); //for the thread if there is just one isr 
 	//start 2nd thread for getting data in highest std priority, ring=200 lines
 	/*
 	if (!HWINTR_EN)
