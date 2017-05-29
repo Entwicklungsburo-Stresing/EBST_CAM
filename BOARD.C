@@ -100,6 +100,7 @@ WD_DMA *pDMASubBufInfos[3] = { NULL, NULL, NULL }; //there will be saved the nec
 BOOL DMAAlreadyStarted = FALSE;
 //DWORD64 ISRCounter[2] = { 0, 0};
 DWORD64 SubBufCounter[3] = {0, 0, 0 };
+DWORD64 IsrCounter = 0;
 SHORT DMAUserBufIndex = 0;
 DWORD64 val = 0x0;
 //BYTE DontReadUserBufIndex = 0;
@@ -960,7 +961,7 @@ void isr(UINT drvno, PVOID pData)
 	//WDC_Err("DMACounter: %d \n", DMACounter);
 }//DLLCALLCONV interrupt_handler
 
-VOID DLLCALLCONV interrupt_handler1(PVOID pData){ isr(1, pData); }
+VOID DLLCALLCONV interrupt_handler1(PVOID pData){ isr(1, pData); IsrCounter++; }
 
 VOID DLLCALLCONV interrupt_handler2(PVOID pData){ isr(2, pData); }
 
@@ -3552,154 +3553,8 @@ void __cdecl ReadFFLoopThread(void *parg)
 	UINT8 blocktrigger = par->blocktrigger;
 	UINT8 btrig_ch = par ->btrig_ch;
 	//local declarations
-	char string[20] = "";
-	void *dummy = NULL;
-
-	BOOL Abbruch = FALSE;
-	BOOL Space = FALSE;
-	BOOL ExTrig = FALSE;
-	ULONG  lcnt = 0;
-	PUSHORT pdest;
-	BYTE	cnt = 0;
-	int i = 0;
-	ULONG dwdata = 0;
-	ULONG nos = 0;
-	ULONG val = 0;
-	ReadLongS0(drv, &dwdata, 0x44); //NOS is in reg R1
-	nos = dwdata;
-
-	// ErrorMsg("jump to DLLReadFFLoop");
-
-	WDC_Err("entered DLLReadFFLoop\n");
-
-	if (!DBGNOCAM)
-	{
-		//Check if Camera there
-		if (!FindCam(drv))
-		{
-			ErrorMsg("no Camera found");
-			return;
-		}
-	}
-
-	// only one of exposure time or frequency is permitted to be unequal zero
-	if ((exptus != 0) && (freq != 0)) {
-		ErrorMsg(" expt + freq ");
-		return;
-	}
-
-	//calculate exposure time [us] if frequency is given 
-	if (freq != 0) {
-		if (freq <= 1000000) {
-			exptus = 1000000 / freq;// in us
-		}
-		else {
-			ErrorMsg(" freq too high ");
-			return;
-		}
-	}
-
-
-	//reset the internal block counter and ScanIndex before START
-	//set to hw stop of timer hwstop=TRUE
-	RS_DMAAllCounter(drv, TRUE);
-	//reset intr copy buf function
-
-	SubBufCounter[drv] = 0;
-	pDMABigBufIndex[drv] = pDMABigBufBase[drv]; // reset buffer index to base we got from labview
-
-
-	//ErrorMsg("in DLLReadFFLoop - start timer");
-	if (exttrig != 0) {
-		ExTrig = TRUE;
-		SetExtFFTrig(drv);
-	}
-	else {
-		ExTrig = FALSE;
-		SetIntFFTrig(drv);
-
-	}
-
-	ReadLongS0(drv, &val, DmaAddr_NOB); //get the needed Blocks
-	ULONG Blocks = val;
-	ULONG blockcnt = 0;
-
-	//set MeasureOn Bit
-	SetS0Reg(0x20, 0x20, DmaAddr_PCIEFLAGS, drv);
-
-	do //block read function
-	{
-		//if Block tigger
-		if (blocktrigger != 0)
-		{	//wait for trigger
-			BOOL StartbyTrig = FALSE;
-			while (!StartbyTrig){ // check for kill ?
-				//	Sleep(1);
-				if (GetAsyncKeyState(VK_ESCAPE))
-				{ //stop if ESC was pressed
-					StopFFTimer(drv);
-					//SetIntFFTrig(drv);//disable ext input
-					SetDMAReset(drv);	//Initiator reset
-					return;
-				}
-				if (GetAsyncKeyState(VK_SPACE))
-				{ //start if Space was pressed
-
-					while (GetAsyncKeyState(VK_SPACE) & 0x8000 == 0x8000){}; //wait for release
-					StartbyTrig = TRUE;
-				}
-				if (BlockTrig(drv, btrig_ch))			StartbyTrig = TRUE;
-			}//while !StartbyTrig
-		}
-		//make signal on trig out plug via PCIEFLAGS:D4 - needed to count Blocks
-		ReadLongS0(drv, &val, DmaAddr_PCIEFLAGS); //set TrigStart flag for TRIGO signal to monitor the signal
-		val |= 0x10;
-		WriteLongS0(drv, val, DmaAddr_PCIEFLAGS); //make pulse for BlockTrigger
-		val &= 0xffffffef;
-		WriteLongS0(drv, val, DmaAddr_PCIEFLAGS); //reset signal
-
-		RS_ScanCounter(drv); //reset scan counter for next block - or timer is disabled
-
-		//start Timer !!!
-		StartFFTimer(drv, exptus);
-		WDC_Err("before scan loop start\n");
-
-		//main read loop - wait here until nos is reached or ESC key
-		//if nos is reached the flag RegXCKMSB:b30 = TimerOn is reset by hardware if flag HWDREQ_EN is TRUE
-		while (IsTimerOn(drv)){
-			if (GetAsyncKeyState(VK_ESCAPE) | !FindCam(drv)) // check for kill ?
-			{ //stop if ESC was pressed
-				StopFFTimer(drv);
-				SetIntFFTrig(drv);//disable ext input
-				SetS0Reg(0x00, 0x20, DmaAddr_PCIEFLAGS, drv);	//reset MeasureOn bit
-				SetDMAReset(drv);
-				return;
-			}
-
-		}
-		WDC_Err("after timer loop \n");
-		//if the Buffersize is not a multiple of the DMA Buffer the rest has to be taken  
-		// must delay or last block has wrong values
-		Sleep(1); //DMA is not ready
-		GetLastBufPart(drv);
-		ReadLongS0(drv, &blockcnt, DmaAddr_BLOCKINDEX); //get block counts
-
-	}//  block read function
-	while (blockcnt < Blocks);
-
-	SetS0Reg(0x00, 0x20, DmaAddr_PCIEFLAGS, drv);	//reset MeasureOn bit
-	StopFFTimer(drv);
-	SetIntFFTrig(drv);//disable ext input
-
-	WDC_Err("after finished scan loop\n");
-
-#if (DMA_CONTIGBUF)
-	//test with memset if data is transferred
-	//memset(pDMASubBuf[drvno], 20, (nos-1)*_PIXEL*sizeof(USHORT)+100);
-	//copy data from DMABuf to our data buf
-	//memcpy(pDMABigBuf, pDMASubBuf[drvno], nos*_PIXEL*sizeof(USHORT));
-#endif
-
+	ReadFFLoop( drv,  exptus,  freq,  exttrig,  blocktrigger,btrig_ch);
+	
 	_endthread();
 
 }
@@ -4382,7 +4237,6 @@ BOOL FindCam(UINT32 drv)
 {//test if SFP module is there and fiber is linked up
 	ULONG dwdata = 0;
 	ReadLongS0(drv, &dwdata, 0x40);  // read in PCIEFLAGS register
-	WDC_Err("PCIEFLAGS: 0x%x\n",dwdata);
 	if ((dwdata & 0x80000000) > 0) { //SFP error
 		ErrorMsg("Fiber or Camera error");
 		return FALSE;
