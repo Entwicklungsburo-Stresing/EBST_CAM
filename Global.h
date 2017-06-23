@@ -47,7 +47,7 @@
 
 
 //display 2 graphics
-BOOL DISP2 = TRUE;		//display 2 cameras parallel, TRUE for double line 
+BOOL DISP2 = FALSE;		//display 2 cameras parallel, TRUE for double line 
 #define _HWCH2	FALSE	//true if 2 words are packet in one long ->resort to db1&db2 = PCI with adaptor board
 						//all double line systems
 #define _RESORTDB	FALSE	//true if ->resort to db1&db2 - only no FIFO

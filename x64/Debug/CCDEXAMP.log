@@ -1,4 +1,4 @@
-﻿Build started 5/29/2017 5:20:18 PM.
+﻿Build started 6/23/2017 6:30:39 PM.
      1>Project "C:\ENTW\PCIE\64bit\Ex2CoFifo_Jungo_1230\CCDEXAMP.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Ob1 /D WINNT /D WIN32 /D _DEBUG /D _WINDOWS /D _VC80_UPGRADE=0x0710 /GF /Gm- /EHsc /MTd /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\Debug/" /Fd".\Debug/vc120.pdb" /FR"x64\Debug\\" /Gz /TC /errorReport:prompt Ccdexamp.c
@@ -59,44 +59,44 @@
      1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(937): warning C4022: 'memcpy_s' : pointer mismatch for actual parameter 3
      1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(954): warning C4047: '>' : 'INT_PTR' differs in levels of indirection from 'PUSHORT'
      1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(960): warning C4047: '=' : 'INT_PTR' differs in levels of indirection from 'PUSHORT'
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(974): warning C4029: declared formal parameter list different from definition
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(999): warning C4244: 'function' : conversion from 'DWORD64' to 'DWORD', possible loss of data
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1011): warning C4047: '=' : 'INT_PTR' differs in levels of indirection from 'PUSHORT'
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1065): warning C4113: 'void (__cdecl *)(PVOID)' differs in parameter lists from 'LSCPCIEJ_INT_HANDLER'
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1077): warning C4113: 'void (__cdecl *)(PVOID)' differs in parameter lists from 'LSCPCIEJ_INT_HANDLER'
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1125): warning C4098: 'CleanupPCIE_DMA' : 'void' function returning a value
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1166): warning C4028: formal parameter 2 different from declaration
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1166): warning C4028: formal parameter 3 different from declaration
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1166): warning C4029: declared formal parameter list different from definition
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1450): warning C4101: 'pDioden' : unreferenced local variable
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1960): warning C4101: 'ReturnedLength' : unreferenced local variable
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2024): warning C4101: 'ReturnedLength' : unreferenced local variable
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2057): warning C4101: 'ReturnedLength' : unreferenced local variable
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2090): warning C4101: 'WriteData' : unreferenced local variable
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2091): warning C4101: 'DataLength' : unreferenced local variable
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2092): warning C4101: 'ReturnedLength' : unreferenced local variable
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2180): warning C4101: 'WriteData' : unreferenced local variable
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2246): warning C4101: 'WriteData' : unreferenced local variable
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2247): warning C4101: 'DataLength' : unreferenced local variable
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2248): warning C4101: 'ReturnedLength' : unreferenced local variable
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2948): warning C4142: benign redefinition of type
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2983): warning C4098: 'StartReadWithDma' : 'void' function returning a value
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3010): warning C4047: '=' : 'pArrayT' differs in levels of indirection from 'USHORT'
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3073): warning C4018: '>' : signed/unsigned mismatch
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3108): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3252): warning C4018: '>' : signed/unsigned mismatch
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3421): warning C4013: 'FindCam' undefined; assuming extern returning int
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3452): warning C4047: '=' : 'INT_PTR' differs in levels of indirection from 'PUSHORT'
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3491): warning C4554: '&' : check operator precedence for possible error; use parentheses to clarify precedence
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3512): warning C4013: 'IsTimerOn' undefined; assuming extern returning int
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3405): warning C4101: 'pdest' : unreferenced local variable
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3894): warning C4244: 'function' : conversion from 'ULONG' to 'BYTE', possible loss of data
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(4227): warning C4133: 'function' : incompatible types - from 'ULONG *' to 'BYTE *'
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(4229): warning C4244: 'function' : conversion from 'ULONG' to 'BYTE', possible loss of data
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(4234): warning C4133: 'function' : incompatible types - from 'ULONG *' to 'BYTE *'
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(4236): warning C4244: 'function' : conversion from 'ULONG' to 'BYTE', possible loss of data
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(4296): warning C4244: 'function' : conversion from 'DWORD' to 'USHORT', possible loss of data
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(4304): warning C4244: 'function' : conversion from 'DWORD' to 'USHORT', possible loss of data
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(975): warning C4029: declared formal parameter list different from definition
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1000): warning C4244: 'function' : conversion from 'DWORD64' to 'DWORD', possible loss of data
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1012): warning C4047: '=' : 'INT_PTR' differs in levels of indirection from 'PUSHORT'
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1066): warning C4113: 'void (__cdecl *)(PVOID)' differs in parameter lists from 'LSCPCIEJ_INT_HANDLER'
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1078): warning C4113: 'void (__cdecl *)(PVOID)' differs in parameter lists from 'LSCPCIEJ_INT_HANDLER'
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1126): warning C4098: 'CleanupPCIE_DMA' : 'void' function returning a value
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1167): warning C4028: formal parameter 2 different from declaration
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1167): warning C4028: formal parameter 3 different from declaration
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1167): warning C4029: declared formal parameter list different from definition
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1452): warning C4101: 'pDioden' : unreferenced local variable
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(1962): warning C4101: 'ReturnedLength' : unreferenced local variable
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2026): warning C4101: 'ReturnedLength' : unreferenced local variable
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2059): warning C4101: 'ReturnedLength' : unreferenced local variable
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2092): warning C4101: 'WriteData' : unreferenced local variable
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2093): warning C4101: 'DataLength' : unreferenced local variable
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2094): warning C4101: 'ReturnedLength' : unreferenced local variable
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2182): warning C4101: 'WriteData' : unreferenced local variable
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2248): warning C4101: 'WriteData' : unreferenced local variable
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2249): warning C4101: 'DataLength' : unreferenced local variable
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2250): warning C4101: 'ReturnedLength' : unreferenced local variable
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2950): warning C4142: benign redefinition of type
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(2985): warning C4098: 'StartReadWithDma' : 'void' function returning a value
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3012): warning C4047: '=' : 'pArrayT' differs in levels of indirection from 'USHORT'
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3075): warning C4018: '>' : signed/unsigned mismatch
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3110): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3254): warning C4018: '>' : signed/unsigned mismatch
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3423): warning C4013: 'FindCam' undefined; assuming extern returning int
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3454): warning C4047: '=' : 'INT_PTR' differs in levels of indirection from 'PUSHORT'
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3493): warning C4554: '&' : check operator precedence for possible error; use parentheses to clarify precedence
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3514): warning C4013: 'IsTimerOn' undefined; assuming extern returning int
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3407): warning C4101: 'pdest' : unreferenced local variable
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(3896): warning C4244: 'function' : conversion from 'ULONG' to 'BYTE', possible loss of data
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(4229): warning C4133: 'function' : incompatible types - from 'ULONG *' to 'BYTE *'
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(4231): warning C4244: 'function' : conversion from 'ULONG' to 'BYTE', possible loss of data
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(4236): warning C4133: 'function' : incompatible types - from 'ULONG *' to 'BYTE *'
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(4238): warning C4244: 'function' : conversion from 'ULONG' to 'BYTE', possible loss of data
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(4298): warning C4244: 'function' : conversion from 'DWORD' to 'USHORT', possible loss of data
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\BOARD.C(4306): warning C4244: 'function' : conversion from 'DWORD' to 'USHORT', possible loss of data
      1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\CCDUNIT.C(320): warning C4013: 'GetCursorPosition' undefined; assuming extern returning int
      1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\CCDUNIT.C(323): warning C4018: '>' : signed/unsigned mismatch
      1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\CCDUNIT.C(503): warning C4244: 'function' : conversion from 'ULONG' to 'UINT8', possible loss of data
@@ -133,14 +133,13 @@
      1>Ccdexamp.c(557): warning C4244: '=' : conversion from 'LRESULT' to 'DWORD', possible loss of data
      1>Ccdexamp.c(558): warning C4244: '=' : conversion from 'LRESULT' to 'DWORD', possible loss of data
      1>Ccdexamp.c(509): warning C4101: 'TrmsString' : unreferenced local variable
-     1>Ccdexamp.c(878): warning C4244: 'function' : conversion from 'UINT64' to 'UINT', possible loss of data
-     1>Ccdexamp.c(879): warning C4244: 'function' : conversion from 'UINT64' to 'UINT', possible loss of data
-     1>Ccdexamp.c(940): warning C4244: 'function' : conversion from 'UINT64' to 'UINT', possible loss of data
-     1>Ccdexamp.c(966): warning C4244: 'function' : conversion from 'UINT64' to 'UINT', possible loss of data
-     1>Ccdexamp.c(967): warning C4244: 'function' : conversion from 'UINT64' to 'UINT', possible loss of data
-     1>Ccdexamp.c(971): warning C4244: 'function' : conversion from 'UINT64' to 'UINT', possible loss of data
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\ccdexamp.c(1031): warning C4715: 'ChooseBoard' : not all control paths return a value
-     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\board.c(2987): warning C4700: uninitialized local variable 'pReadArray' used
+     1>Ccdexamp.c(872): warning C4244: 'function' : conversion from 'UINT64' to 'UINT', possible loss of data
+     1>Ccdexamp.c(873): warning C4244: 'function' : conversion from 'UINT64' to 'UINT', possible loss of data
+     1>Ccdexamp.c(934): warning C4244: 'function' : conversion from 'UINT64' to 'UINT', possible loss of data
+     1>Ccdexamp.c(960): warning C4244: 'function' : conversion from 'UINT64' to 'UINT', possible loss of data
+     1>Ccdexamp.c(961): warning C4244: 'function' : conversion from 'UINT64' to 'UINT', possible loss of data
+     1>Ccdexamp.c(965): warning C4244: 'function' : conversion from 'UINT64' to 'UINT', possible loss of data
+     1>c:\entw\pcie\64bit\ex2cofifo_jungo_1230\board.c(2989): warning C4700: uninitialized local variable 'pReadArray' used
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:".\x64\Debug/CCDEXAMP.exe" /INCREMENTAL:NO /NOLOGO wdapi1230.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:".\Debug/CCDEXAMP.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE:NO /IMPLIB:"C:\ENTW\PCIE\64bit\Ex2CoFifo_Jungo_1230\x64\Debug\CCDEXAMP.lib" /MACHINE:X64 x64\Debug\CCDExamp.res
          .\Debug/Ccdexamp.obj
@@ -151,4 +150,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.83
+Time Elapsed 00:00:02.26
