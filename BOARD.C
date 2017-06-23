@@ -959,9 +959,10 @@ void isr(UINT drvno, PVOID pData)
 	val &= 0xfffffff7;
 	WriteLongS0(drvno, val, DmaAddr_PCIEFLAGS); //just to see when its on
 	//WDC_Err("DMACounter: %d \n", DMACounter);
+	IsrCounter++;
 }//DLLCALLCONV interrupt_handler
 
-VOID DLLCALLCONV interrupt_handler1(PVOID pData){ isr(1, pData); IsrCounter++; }
+VOID DLLCALLCONV interrupt_handler1(PVOID pData){ isr(1, pData);  }
 
 VOID DLLCALLCONV interrupt_handler2(PVOID pData){ isr(2, pData); }
 
@@ -1240,7 +1241,8 @@ BOOL BufLock(UINT drvno, int nob, int nospb)
 
 		return TRUE;
 	}
-	else return FALSE;
+	else 
+		return FALSE;
 }
 
 // ***************************  camera read stuff  **********

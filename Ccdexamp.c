@@ -614,17 +614,14 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
 				 case IDM_SETEC :
 					 DialogBox(hInst, MAKEINTRESOURCE(IDD_SETEC), hWnd, (DLGPROC)SetupEC);   //IDD_SETEC
 						break;	
-				 case ID_CHOOSEBOARD :
-					 DialogBox(hInst, MAKEINTRESOURCE(IDD_CHOOSEBOARD), hWnd, (DLGPROC)ChooseBoard);
+				 case ID_START_ALLOC:
+					 DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hWnd, (DLGPROC)AllocateBuf);//
 					 break;
 
 
-
-//!!!
-				 
-//				 case IDM_SETAD:
-	//				 DialogBox(hInst, MAKEINTRESOURCE(IDD_SETUPAD), hWnd, (DLGPROC)SetupEC);
-		//			 break;
+				 case ID_CHOOSEBOARD :
+					 DialogBox(hInst, MAKEINTRESOURCE(IDD_CHOOSEBOARD), hWnd, (DLGPROC)ChooseBoard);
+					 break;
 
 				case IDM_ShowTRMS : //invert state
 					 if (ShowTrms==TRUE) 
@@ -633,10 +630,7 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
 						{ShowTrms=TRUE;}
 						break;
 
-				case ID_START_ALLOC :
-					DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hMSWND, (DLGPROC)AllocateBuf);
-					break;
-
+				
 				 case IDM_EXIT :
 
                         DestroyWindow( hWnd );
@@ -902,9 +896,9 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 					MessageBox(hMSWND, "allocating Buffer succeeded", "Message", MB_OK);
 				if (both_boards)
 					if (!BufLock(2, Nob, Nospb))
-						MessageBox(hMSWND, "allocating Buffer of secound Board  fails", "Error", MB_OK);
+						MessageBox(hMSWND, "allocating Buffer of second Board fails", "Error", MB_OK);
 					else
-						MessageBox(hMSWND, "allocating Buffer of secound Board succeeded", "Message", MB_OK);
+						MessageBox(hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK);
 			}
 
 			trackbar_nospb = Nospb;
@@ -985,30 +979,42 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 	return (FALSE);
 }
 
+
+
 LRESULT CALLBACK ChooseBoard(HWND hDlg,
 	UINT message,
 	WPARAM wParam,
 	LPARAM lParam)
 {
-
+	UINT val = 0;
+	BOOL success = FALSE;
 	switch (message)
 	{
 	case WM_INITDIALOG:
+		//if there is just one board initialized gray out board 2 option and both option
+		if (number_of_boards < 2){
+			EnableWindow(GetDlgItem(hDlg, IDC_EC_RADIO2), FALSE);
+			EnableWindow(GetDlgItem(hDlg, IDC_EC_RADIO_BOTH), FALSE);
+			CheckDlgButton(hDlg, IDC_EC_RADIO1, TRUE);
+		}
+		else{
+			switch (choosen_board)
+			{
+			case 1:
+				if (both_boards)
+					CheckDlgButton(hDlg, IDC_EC_RADIO_BOTH, TRUE);
+				else{
+					CheckDlgButton(hDlg, IDC_EC_RADIO1, TRUE);
+				}
+				break;
+			case 2:
+				CheckDlgButton(hDlg, IDC_EC_RADIO2, TRUE);
+				break; //EC
 
-		switch (choosen_board)
-		{
-		case 1: 
-			if (both_boards)
-				CheckDlgButton(hDlg, IDC_EC_RADIO_BOTH, TRUE);
-			else
-				CheckDlgButton(hDlg, IDC_EC_RADIO1, TRUE); 
-			break;
-		case 2: 		   CheckDlgButton(hDlg, IDC_EC_RADIO2, TRUE); break; //EC
-
+			}
 		}
 		return (TRUE);
-		break;
-
+	
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
@@ -1018,16 +1024,24 @@ LRESULT CALLBACK ChooseBoard(HWND hDlg,
 			break;
 
 		case IDOK:
-			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO1) == TRUE) { choosen_board = 1; both_boards = FALSE; }
-			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO2) == TRUE) { choosen_board = 2; both_boards = FALSE; }
-			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO_BOTH) == TRUE) { choosen_board = 1; both_boards = TRUE; }
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO1) == TRUE) { choosen_board = 1; both_boards = FALSE; DISP2 = FALSE; }
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO2) == TRUE) { choosen_board = 2; both_boards = FALSE; DISP2 = FALSE; }
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO_BOTH) == TRUE) { choosen_board = 1; both_boards = TRUE; DISP2 = TRUE; }
 
 			EndDialog(hDlg, TRUE);
+			
+			//if the second buffer is not initilized
+			if (choosen_board == 2 || both_boards)
+				if (!pBLOCKBUF[2])
+					DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hMSWND, (DLGPROC)AllocateBuf);
 			return (TRUE);
 			break;
-		} //WM_COMMAND	
+		}
+		break; //WM_COMMAND
 
-	}//	   message
+	}
+
+	return (FALSE);
 }
 
 LRESULT CALLBACK SetupTLevel( HWND hDlg,           
