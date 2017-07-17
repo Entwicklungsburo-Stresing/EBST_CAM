@@ -98,6 +98,7 @@ INT_PTR *pDMASubBuf[3] = { NULL, NULL, NULL };
 //PUSHORT *pDMASubBuf;  //!!GS
 WD_DMA *pDMASubBufInfos[3] = { NULL, NULL, NULL }; //there will be saved the neccesary parameters for the dma buffer
 BOOL DMAAlreadyStarted = FALSE;
+BOOL escape_readffloop = FALSE;
 //DWORD64 ISRCounter[2] = { 0, 0};
 DWORD64 SubBufCounter[3] = {0, 0, 0 };
 DWORD64 IsrCounter = 0;
@@ -933,7 +934,7 @@ void isr(UINT drvno, PVOID pData)
 		//		memset(pDMABigBufIndex[drvno], "35", subbuflengthinbytes); // 0x3131=12593
 	}
 
-	WDC_Err("SubBufCounter of the DMA Buffer: %d\n", SubBufCounter);
+	WDC_Err("SubBufCounter of the DMA Buffer: %d of %i\n", SubBufCounter[drvno], drvno);
 
 	SubBufCounter[drvno]++;
 	if (SubBufCounter[drvno] >= DMA_HW_BUFPARTS)		//number of ISR per dmaBuf - 1
@@ -1214,6 +1215,7 @@ BOOL SetBoardVars(UINT32 drvno, ULONG pixel, ULONG flag816, ULONG xckdelay)
 	return TRUE; //no error
 };  // SetBoardVars
 
+#ifndef _DLL
 BOOL BufLock(UINT drvno, int nob, int nospb)
 {
 	if (WDC_IntIsEnabled(hDev[drvno]))
@@ -1244,6 +1246,7 @@ BOOL BufLock(UINT drvno, int nob, int nospb)
 	else 
 		return FALSE;
 }
+#endif
 
 // ***************************  camera read stuff  **********
 //*********************************************************
@@ -3507,7 +3510,7 @@ void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blo
 		//main read loop - wait here until nos is reached or ESC key
 		//if nos is reached the flag RegXCKMSB:b30 = TimerOn is reset by hardware if flag HWDREQ_EN is TRUE
 	while (IsTimerOn(drv)){
-		if (GetAsyncKeyState(VK_ESCAPE) | !FindCam(drv)) // check for kill ?
+		if (GetAsyncKeyState(VK_ESCAPE) | !FindCam(drv) | escape_readffloop) // check for kill ?
 			{ //stop if ESC was pressed
 				StopFFTimer(drv);
 				SetIntFFTrig(drv);//disable ext input
