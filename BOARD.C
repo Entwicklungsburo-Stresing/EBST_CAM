@@ -81,7 +81,7 @@ enum{
 };
 
 struct ffloopparams{
-	UINT32 drv; 
+	UINT8 drv; 
 	UINT32 exptus; 
 	UINT32 freq;
 	UINT8 exttrig; 
@@ -110,7 +110,7 @@ DWORD64 DMA_bufsizeinbytes = 0;
 
 WDC_PCI_SCAN_RESULT scanResult;
 
-UINT number_of_boards = 0;
+UINT8 NUMBER_OF_BOARDS = 0;
 
 // handle array for our drivers
 HANDLE ahCCDDRV[5] = { INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE };
@@ -454,7 +454,7 @@ BOOL CCDDrvInit(void)
 		ErrorMsg("driver closed.\n");
 		return FALSE;
 	}
-	number_of_boards = scanResult.dwNumDevices;
+	NUMBER_OF_BOARDS = scanResult.dwNumDevices;
 
 	return TRUE;	  // no Error, driver found
 
@@ -907,7 +907,7 @@ void isr(UINT drvno, PVOID pData)
 	size_t subbuflengthinbytes = DMA_bufsizeinbytes / DMA_HW_BUFPARTS;
 	INT_PTR pdmasubbuf_base = pDMASubBuf[drvno];
 
-	WDC_Err("entered interrupt # %\n",drvno);
+	WDC_Err("\nentered interrupt of PCIEcard # %i\n",drvno);
 
 	ReadLongS0(drvno, &val, DmaAddr_ScansPerIntr); //get scans per intr
 	ReadLongS0(drvno, &nos, DmaAddr_NOS);
@@ -920,7 +920,7 @@ void isr(UINT drvno, PVOID pData)
 	pdmasubbuf_base += SubBufCounter[drvno] * subbuflengthinbytes;
 
 	if (SubBufCounter[drvno] == 1){ //copy upper half
-		WDC_Err("\nupper BigBufIndex: %x  subbuf: %x  lenth: %llx\n", pDMABigBufIndex[drvno], pdmasubbuf_base, subbuflengthinbytes); //2
+		//WDC_Err("\nupper BigBufIndex: %x  subbuf: %x  lenth: %llx\n", pDMABigBufIndex[drvno], pdmasubbuf_base, subbuflengthinbytes); //2
 		//WDC_Err("\leng: 0x%x, = %d \n", leng,leng);
 		memcpy_s(pDMABigBufIndex[drvno], subbuflengthinbytes, pdmasubbuf_base, subbuflengthinbytes);//DMA_bufsizeinbytes/10
 		//memset(pDMABigBufIndex[drvno], "31", subbuflengthinbytes); // 0x3131=12593
@@ -928,13 +928,13 @@ void isr(UINT drvno, PVOID pData)
 	}
 
 	if (SubBufCounter[drvno] == 0){ //copy lower half
-		WDC_Err("\nupper BigBufIndex: %x  subbuf: %x  lenth: %llx\n", pDMABigBufIndex[drvno], pdmasubbuf_base, subbuflengthinbytes); //2
+		//WDC_Err("\nupper BigBufIndex: %x  subbuf: %x  lenth: %llx\n", pDMABigBufIndex[drvno], pdmasubbuf_base, subbuflengthinbytes); //2
 		//WDC_Err("\leng: 0x%x, = %d \n", leng,leng);
 		memcpy_s(pDMABigBufIndex[drvno], subbuflengthinbytes, pdmasubbuf_base, subbuflengthinbytes);//DMA_bufsizeinbytes/10
 		//		memset(pDMABigBufIndex[drvno], "35", subbuflengthinbytes); // 0x3131=12593
 	}
 
-	WDC_Err("SubBufCounter of the DMA Buffer: %d of %i\n", SubBufCounter[drvno], drvno);
+	WDC_Err("SubBufCounter of the DMA Buffer: %d \n", SubBufCounter[drvno]);
 
 	SubBufCounter[drvno]++;
 	if (SubBufCounter[drvno] >= DMA_HW_BUFPARTS)		//number of ISR per dmaBuf - 1
@@ -2330,7 +2330,7 @@ void AboutDrv(UINT32 drvno)
 
 	//or
 	//S0Data = (UCHAR)ReadByteS0(8); // ID=53
-	sprintf_s(pstring, 80, "     ID = 0x%I32x", S0Data);
+	sprintf_s(pstring, 80, " Board #%i    ID = 0x%I32x",drvno, S0Data);
 	if (MessageBox(hWnd, pstring, " Board ID=53 ", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 
 	//ReadLongIOPort(drvno, &S0Data, 0); //read LCR0 for check length 0xffffffco
@@ -2338,10 +2338,10 @@ void AboutDrv(UINT32 drvno)
 	//GS
 	S0Data = 0x07FF;
 
-	if (S0Data == 0) { ErrorMsg(" no Space0!"); return; }
+	if (S0Data == 0) { ErrorMsg("Board #%i  no Space0!", drvno); return; }
 
-	sprintf_s(pstring, 80, "     length = 0x%I32x", S0Data);
-	if (MessageBox(hWnd, pstring, " PCI space0 length=", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+	sprintf_s(pstring, 80, "Board #%i     length = 0x%I32x", drvno, S0Data);
+	if (MessageBox(hWnd, pstring, "  PCI space0 length=", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 
 	if (S0Data >= 0x1F)
 	{//if WE -> has space 0x20
@@ -2349,15 +2349,15 @@ void AboutDrv(UINT32 drvno)
 		ReadByteS0(drvno, &udata2, 0x1D);
 		ReadByteS0(drvno, &udata3, 0x1E);
 		ReadByteS0(drvno, &udata4, 0x1F);
-		sprintf_s(pstring, 80, " ven ID = %c%c%c%c", udata1, udata2, udata3, udata4);
+		sprintf_s(pstring, 80, "Board #%i  ven ID = %c%c%c%c", drvno, udata1, udata2, udata3, udata4);
 		if (MessageBox(hWnd, pstring, " Board vendor=EBST ", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 	}
 
 	if (S0Data >= 0x3F)
 	{//if 9056 -> has space 0x40
 		ReadLongS0(drvno, &S0Data, 0x3C);
-		sprintf_s(pstring, 80, " board version = 0x%I32x", S0Data);
-		if (MessageBox(hWnd, pstring, " Board version ", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+		sprintf_s(pstring, 80, "Board #%i   board version = 0x%I32x", drvno, S0Data);
+		if (MessageBox(hWnd, pstring, "Board version ", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 	}
 
 	ReleaseDC(hWnd, aDC);
@@ -3390,7 +3390,7 @@ void StopRingReadThread(void)
 
 
 //TODO:
-void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch)
+void ReadFFLoop(UINT8 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch)
 {//const burst loop with DMA initiated by hardware DREQ
 	//read nos lines from FIFO
 	//
@@ -3413,7 +3413,7 @@ void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blo
 
 	// ErrorMsg("jump to DLLReadFFLoop");
 
-	WDC_Err("entered DLLReadFFLoop\n");
+	WDC_Err("entered DLLReadFFLoop of PCIEcard #%i\n", drv);
 
 	if (!DBGNOCAM)
 	{
@@ -3548,10 +3548,10 @@ void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blo
 void __cdecl ReadFFLoopThread(void *parg)
 {//const burst loop with DMA initiated by hardware DREQ
 	//read nos lines from FIFO
-	//
-	struct ffloopparams *par;
+	//struct has to be volatile, if not readffloop is always called with drv=1
+	volatile struct ffloopparams *par;
 	par = parg;
-	UINT32 drv = par->drv;
+	UINT8 drv = par->drv;
 	UINT32 exptus = par->exptus; 
 	UINT32 freq = par->freq;
 	UINT8 exttrig = par->exttrig;

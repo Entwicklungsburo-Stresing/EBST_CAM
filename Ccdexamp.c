@@ -85,7 +85,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	  ErrorMsg(" Can't open first board ");
 	  return (FALSE);
   };
-  if (number_of_boards >= 2)
+  if (NUMBER_OF_BOARDS >= 2)
 	  if (!InitBoard(2))
 	  {
 		  ErrorMsg(" Can't open second board ");
@@ -746,7 +746,7 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
 			  //StopRingReadThread();
 			  //board 1
 
-			  if (number_of_boards >= 2){
+			  if (NUMBER_OF_BOARDS >= 2){
 				  StopFFTimer(2);
 				  SetIntFFTrig(2);//disables ext. Trig.
 				  CCDDrvExit(2);
@@ -992,7 +992,7 @@ LRESULT CALLBACK ChooseBoard(HWND hDlg,
 	{
 	case WM_INITDIALOG:
 		//if there is just one board initialized gray out board 2 option and both option
-		if (number_of_boards < 2){
+		if (NUMBER_OF_BOARDS < 2){
 			EnableWindow(GetDlgItem(hDlg, IDC_EC_RADIO2), FALSE);
 			EnableWindow(GetDlgItem(hDlg, IDC_EC_RADIO_BOTH), FALSE);
 			CheckDlgButton(hDlg, IDC_EC_RADIO1, TRUE);
