@@ -934,7 +934,7 @@ void isr(UINT drvno, PVOID pData)
 		//		memset(pDMABigBufIndex[drvno], "35", subbuflengthinbytes); // 0x3131=12593
 	}
 
-	WDC_Err("SubBufCounter of the DMA Buffer: %d \n", SubBufCounter[drvno]);
+	WDC_Err("ISRCounter: %d \n", IsrCounter);
 
 	SubBufCounter[drvno]++;
 	if (SubBufCounter[drvno] >= DMA_HW_BUFPARTS)		//number of ISR per dmaBuf - 1
@@ -1055,6 +1055,7 @@ BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 
 	// Enable DMA interrupts (if not polling)
 	// INTR should copy DMA buffer to user buf: 
+
 	if (INTR_EN)
 	{
 		switch (drvno){
@@ -3535,13 +3536,6 @@ void ReadFFLoop(UINT8 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 bloc
 	SetIntFFTrig(drv);//disable ext input
 
 	WDC_Err("after finished scan loop\n");
-
-#if (DMA_CONTIGBUF)
-	//test with memset if data is transferred
-	//memset(pDMASubBuf[drvno], 20, (nos-1)*_PIXEL*sizeof(USHORT)+100);
-	//copy data from DMABuf to our data buf
-	//memcpy(pDMABigBuf, pDMASubBuf[drvno], nos*_PIXEL*sizeof(USHORT));
-#endif
 
 }
 
