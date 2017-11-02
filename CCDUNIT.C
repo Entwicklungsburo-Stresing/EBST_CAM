@@ -546,7 +546,7 @@ void Contimess(void *dummy)
 	IsrCounter = 0;
 
 	_beginthread(ReadFFLoopThread, 0, &params);
-	if (both_boards){
+	if (FALSE){//both_boards){
 		struct ffloopparams params2;
 		params2.drv = 2;
 		params2.exptus = ExpTime;
