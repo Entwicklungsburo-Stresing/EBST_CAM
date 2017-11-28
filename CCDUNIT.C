@@ -346,7 +346,8 @@ void UpdateTxT(void)
 	j += sprintf_s(TrmsString + j, 260, " , err=%d , val=%d", ErrCnt, ErrVal);
 #endif
 
-	if (FFOvl(choosen_board) == TRUE) 	{ j += sprintf_s(TrmsString + j, 260, " , overflow! "); }
+	if (FFOvl(choosen_board) == TRUE) 	{
+		j += sprintf_s(TrmsString + j, 260, " , overflow! "); }
 	else j += sprintf_s(TrmsString + j, 260, "                      ");
 	TextOut(hMSDC, 20, YLENGTH + 50, TrmsString, j);
 
@@ -538,7 +539,6 @@ void Contimess(void *dummy)
 	struct ffloopparams params;
 	params.drv = choosen_board;
 	params.exptus = ExpTime;
-	params.freq = FREQ;
 	params.exttrig = EXTTRIGFLAG;
 	params.blocktrigger = 0;
 	params.btrig_ch = 0;
@@ -546,11 +546,11 @@ void Contimess(void *dummy)
 	IsrCounter = 0;
 
 	_beginthread(ReadFFLoopThread, 0, &params);
-	if (FALSE){//both_boards){
+
+	if (both_boards){
 		struct ffloopparams params2;
 		params2.drv = 2;
 		params2.exptus = ExpTime;
-		params2.freq = FREQ;
 		params2.exttrig = EXTTRIGFLAG;
 		params2.blocktrigger = 0;
 		params2.btrig_ch = 0;

@@ -26,7 +26,7 @@ Internal definitions
 
 //Dont trust the debugger its CRAP
 
-***REMOVED******REMOVED******REMOVED******REMOVED***#define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***#define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
 
 /*************************************************************
 General definitions
@@ -54,7 +54,7 @@ General definitions
 // don't change values here - are set within functions SetBoardVars...
 
 //DMA Addresses
-enum{
+enum {
 	DmaAddr_DCSR = 0x000,
 	DmaAddr_DDMACR = 0x004,
 	DmaAddr_WDMATLPA = 0x008,
@@ -75,32 +75,27 @@ enum{
 };
 
 //PCIe Addresses
-enum{
-	PCIeAddr_devCap		= 0x5C,
-	PCIeAddr_devStatCtrl	= 0x60
+enum {
+	PCIeAddr_devCap = 0x5C,
+	PCIeAddr_devStatCtrl = 0x60
 };
 
-struct ffloopparams{
-	UINT8 drv; 
-	UINT32 exptus; 
-	UINT32 freq;
-	UINT8 exttrig; 
-	UINT8 blocktrigger; 
-	UINT8 btrig_ch;
-};
+//extern volatile PUSHORT pDMABigBufBase[3];
+
 //jungodriver specific variables
 WD_PCI_CARD_INFO deviceInfo[MAXPCIECARDS];
 WDC_DEVICE_HANDLE hDev[MAXPCIECARDS];
 ULONG DMACounter = 0;//for debugging
-//Buffer of WDC_DMAContigBufLock function = one DMA sub block - will be copied to the big pDMABigBuf later
+					 //Buffer of WDC_DMAContigBufLock function = one DMA sub block - will be copied to the big pDMABigBuf later
 INT_PTR *pDMASubBuf[3] = { NULL, NULL, NULL };
 //pDMASubBuf = NULL;
 //PUSHORT *pDMASubBuf;  //!!GS
 WD_DMA *pDMASubBufInfos[3] = { NULL, NULL, NULL }; //there will be saved the neccesary parameters for the dma buffer
 BOOL DMAAlreadyStarted = FALSE;
 BOOL escape_readffloop = FALSE;
+BOOL contffloop = FALSE;
 //DWORD64 ISRCounter[2] = { 0, 0};
-DWORD64 SubBufCounter[3] = {0, 0, 0 };
+DWORD64 SubBufCounter[3] = { 0, 0, 0 };
 DWORD64 IsrCounter = 0;
 SHORT DMAUserBufIndex = 0;
 DWORD64 val = 0x0;
@@ -217,7 +212,7 @@ void AboutDMARegs(UINT32 drv)
 #define s_size 1000
 	char fn[s_size];
 	PUCHAR pmaxaddr = NULL;
-	
+
 	if (!pDMASubBufInfos[drv]) { j = sprintf_s(fn, s_size, " pBufInfo = 0x%p \n", pDMASubBufInfos[drv]); }
 	else {
 		j = 0;
@@ -229,7 +224,7 @@ void AboutDMARegs(UINT32 drv)
 			ErrorMsg("not SG and not Contig");
 			return;
 		}
-		for (int i = 1; i < 3; i++){ 
+		for (int i = 1; i < 3; i++) {
 			pmaxaddr = pDMASubBufInfos[i]->pUserAddr;// calc the upper addr
 			pmaxaddr += pDMASubBufInfos[i]->dwBytes;
 			j += sprintf_s(fn + j, s_size, " pBufInfo = 0x%p \n", pDMASubBufInfos[i]);
@@ -249,7 +244,7 @@ void AboutDMARegs(UINT32 drv)
 		}
 	}
 	if (MessageBox(hWnd, fn, " DMA Buf Regs ", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
-	
+
 }
 
 AboutTLPs(UINT32 drvno)
@@ -293,7 +288,7 @@ AboutTLPs(UINT32 drvno)
 
 	j += sprintf(fn + j, "TLP_SIZE is: %d DWORDs = %d BYTEs\n", BData, BData * 4);
 
-	BData = (_PIXEL - 1) / (BData * 2) + 1 +1;
+	BData = (_PIXEL - 1) / (BData * 2) + 1 + 1;
 	j += sprintf(fn + j, "number of TLPs should be: %d\n", BData);
 	ReadLongDMA(drvno, &BData, 16);
 	j += sprintf(fn + j, "number of TLPs is: %d \n", BData);
@@ -368,9 +363,9 @@ void AboutS0(UINT32 drvno)
 
 BOOL CCDDrvInit(void)
 {// returns true if driver was found
-	//WDC_Err(drvno);
+ //WDC_Err(drvno);
 	ULONG MAXDMABUFLENGTH = 0x07fff; //val look in registry driver parameters
-	//depends on os, how big a buffer can be
+									 //depends on os, how big a buffer can be
 	BOOL fResult = FALSE;
 	char AString[80] = "";
 	HANDLE hccddrv = INVALID_HANDLE_VALUE;
@@ -463,8 +458,11 @@ BOOL CCDDrvInit(void)
 
 void CCDDrvExit(UINT32 drvno)
 {
-	CleanupPCIE_DMA(drvno);
-	if(drvno == 1) WDC_DriverClose();
+	if (WDC_IntIsEnabled(hDev[drvno]))
+	{
+		CleanupPCIE_DMA(drvno);
+	}
+	if (drvno == 1) WDC_DriverClose();
 	WDC_PciDeviceClose(hDev[drvno]);
 	WDC_Err("Driver closed and PciDeviceClosed \n");
 	//if (ahCCDDRV[drvno]!=INVALID_HANDLE_VALUE)
@@ -534,28 +532,28 @@ BOOL InitBoard(UINT32 drvno)
 	ahCCDDRV[drvno] = hDev[drvno];//hccddrv;
 
 
-	/*
-	//for testing
-	KP_LSCPCIEJ_VERSION Data;
-	KP_LSCPCIEJ_VERSION *pData;
-	pData = &Data;
-	DWORD dwResult;
-	PDWORD	pdwResult = &dwResult;
+								  /*
+								  //for testing
+								  KP_LSCPCIEJ_VERSION Data;
+								  KP_LSCPCIEJ_VERSION *pData;
+								  pData = &Data;
+								  DWORD dwResult;
+								  PDWORD	pdwResult = &dwResult;
 
-	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_VERSION, pData, pdwResult);
-	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
-	{
-	ErrLog("KP_CALL failed!!!.\n"
-	"Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
-	WDC_Err("%s", LSCPCIEJ_GetLastErr());
-	return FALSE;
-	}
-	WDC_Err("KPCALL: Version: %u \n", Data.dwVer);
-	*/
+								  WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_VERSION, pData, pdwResult);
+								  if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
+								  {
+								  ErrLog("KP_CALL failed!!!.\n"
+								  "Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
+								  WDC_Err("%s", LSCPCIEJ_GetLastErr());
+								  return FALSE;
+								  }
+								  WDC_Err("KPCALL: Version: %u \n", Data.dwVer);
+								  */
 
 
 
-	//Sleep(1000);
+								  //Sleep(1000);
 
 	return TRUE;
 
@@ -576,13 +574,13 @@ char CntBoards(void)
 
 
 
-//**************  new for PCIE   *******************************
+ //**************  new for PCIE   *******************************
 
-BOOL SetDMAReg(ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno){//the bitmask have "1" on the data dates like Bitmask: 1110 Data:1010 
+BOOL SetDMAReg(ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno) {//the bitmask have "1" on the data dates like Bitmask: 1110 Data:1010 
 	ULONG OldRegisterValues;
 	ULONG NewRegisterValues;
 	//read the old Register Values in the DMA Address Reg
-	if (!ReadLongDMA(drvno, &OldRegisterValues, Address)){
+	if (!ReadLongDMA(drvno, &OldRegisterValues, Address)) {
 		ErrLog("ReadLong DMA Failed in SetDMAReg \n");
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		return FALSE;
@@ -593,7 +591,7 @@ BOOL SetDMAReg(ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno){//the bit
 
 	NewRegisterValues = Data | OldRegisterValues;
 	//write the data to the DMA controller
-	if (!WriteLongDMA(drvno, NewRegisterValues, Address)){
+	if (!WriteLongDMA(drvno, NewRegisterValues, Address)) {
 		ErrLog("WriteLong DMA Failed in SetDMAReg \n");
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		return FALSE;
@@ -601,11 +599,11 @@ BOOL SetDMAReg(ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno){//the bit
 	return TRUE;
 }
 
-BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno){
+BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno) {
 	ULONG OldRegisterValues;
 	ULONG NewRegisterValues;
 	//read the old Register Values in the S0 Address Reg
-	if (!ReadLongS0(drvno, &OldRegisterValues, Address)){
+	if (!ReadLongS0(drvno, &OldRegisterValues, Address)) {
 		ErrLog("ReadLong S0 Failed in SetDMAReg \n");
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		return FALSE;
@@ -614,7 +612,7 @@ BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno){
 	OldRegisterValues = OldRegisterValues & ~Bitmask;
 	NewRegisterValues = Data | OldRegisterValues;
 	//write the data to the S0 controller
-	if (!WriteLongS0(drvno, NewRegisterValues, Address)){
+	if (!WriteLongS0(drvno, NewRegisterValues, Address)) {
 		ErrLog("WriteLong S0 Failed in SetDMAReg \n");
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		return FALSE;
@@ -622,7 +620,7 @@ BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno){
 	return TRUE;
 }
 
-BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno){
+BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno) {
 
 	UINT64 PhysAddrDMABuf;
 	ULONG RegisterValues;
@@ -640,11 +638,11 @@ BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UI
 
 
 	//WDMATLPA (Reg name): write the lower part (bit 02:31) of the DMA adress to the DMA controller
-	WDC_Err("64 bit Address 0x%llx\n", PhysAddrDMABuf64);
+	//WDC_Err("64 bit Address 0x%llx\n", PhysAddrDMABuf64);
 	RegisterValues = (ULONG)PhysAddrDMABuf64;
 	BitMask = 0xFFFFFFFC;
-	WDC_Err("lower part of 64 bit Address 0x%x\n", RegisterValues);
-	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_WDMATLPA, drvno)){
+	//WDC_Err("lower part of 64 bit Address 0x%x\n", RegisterValues);
+	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_WDMATLPA, drvno)) {
 		WDC_Err("Set the lower part of the DMA Address failed");
 		return FALSE;
 	}
@@ -654,7 +652,7 @@ BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UI
 	//WDMATLPS: write the upper part (bit 32:39) of the address	
 	PhysAddrDMABuf = ((UINT64)PhysAddrDMABuf64 >> 32);
 
-	WDC_Err("upper part of 64 bit Address 0x%x\n", PhysAddrDMABuf);
+	//WDC_Err("upper part of 64 bit Address 0x%x\n", PhysAddrDMABuf);
 	//PhysAddrDMABuf >> 32;	//shift to the upper part 
 	PhysAddrDMABuf = PhysAddrDMABuf << 24;		//shift to prepare for the Register
 	BitMask = 0xFF081FFF;
@@ -664,13 +662,11 @@ BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UI
 	RegisterValues |= tlpSize;
 
 	//64bit address enable
-	if (DMA_64BIT_EN){
+	if (DMA_64BIT_EN) {
 		RegisterValues |= wr_addr_64bit_en;
 	}
 
-	WDC_Err("upper part of 64 bit Address prepared for WDMATLPS 0x%x\n", RegisterValues);
-
-	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_WDMATLPS, drvno)){
+	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_WDMATLPS, drvno)) {
 		WDC_Err("Set the upper part of the DMA Address and the TLPsize failed");
 		return FALSE;
 	}
@@ -678,14 +674,14 @@ BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UI
 
 	//WDMATLPC: Set the number of DMA transfer count
 	BitMask = 0xFFFF;
-	if (!SetDMAReg(no_tlps, BitMask, DmaAddr_WDMATLPC, drvno)){
+	if (!SetDMAReg(no_tlps, BitMask, DmaAddr_WDMATLPC, drvno)) {
 		WDC_Err("Set the number of DMA transfer count failed");
 		return FALSE;
 	}
 	return TRUE;
 }//SetDMAAddrTlpRegs
 
-BOOL SetDMAAddrTlp(UINT32 drvno){
+BOOL SetDMAAddrTlp(UINT32 drvno) {
 	WD_DMA **ppDma = &pDMASubBufInfos[drvno];
 	UINT64 PhysAddrDMABuf64;
 	ULONG BitMask;
@@ -693,7 +689,7 @@ BOOL SetDMAAddrTlp(UINT32 drvno){
 	int tlpmode = 0;
 
 	ReadLongIOPort(drvno, &BData, PCIeAddr_devStatCtrl);
-	tlpmode = BData & 0x000000E0 ;
+	tlpmode = BData & 0x000000E0;
 	tlpmode = tlpmode >> 4;
 	if (_FORCETOPLS128) tlpmode = 0;
 
@@ -702,21 +698,21 @@ BOOL SetDMAAddrTlp(UINT32 drvno){
 	{
 	case 0:
 		BData |= 0x00;//set to 128 bytes = 32 DWORDS 
-		//BData |= 0x00000020;//set from 128 to 256 
+					  //BData |= 0x00000020;//set from 128 to 256 
 		WriteLongIOPort(drvno, BData, PCIeAddr_devStatCtrl);
 		NO_TLPS = 0x12;
 		TLPSIZE = 0x20;
 		break;
 	case 1:
 		BData |= 0x20;//set to 256 bytes = 64 DWORDS 
-		//BData |= 0x00000020;//set to 256 
+					  //BData |= 0x00000020;//set to 256 
 		WriteLongIOPort(drvno, BData, PCIeAddr_devStatCtrl);
 		NO_TLPS = 0x9;
 		TLPSIZE = 0x40;
 		break;
 	case 2:
 		BData |= 0x40;//set to 512 bytes = 128 DWORDS 
-		//BData |= 0x00000020;//set to 512 
+					  //BData |= 0x00000020;//set to 512 
 		WriteLongIOPort(drvno, BData, PCIeAddr_devStatCtrl);
 		NO_TLPS = 0x5;
 		TLPSIZE = 0x80;
@@ -729,7 +725,7 @@ BOOL SetDMAAddrTlp(UINT32 drvno){
 		return FALSE;
 	return TRUE;
 }
-BOOL SetDMABufRegs(UINT32 drvno, ULONG nos, ULONG nob){
+BOOL SetDMABufRegs(UINT32 drvno, ULONG nos, ULONG nob) {
 	//set DMA_BUFSIZEINSCANS
 	//set DMA_SCANSPERINTR
 	//set NOS
@@ -758,28 +754,28 @@ BOOL SetDMABufRegs(UINT32 drvno, ULONG nos, ULONG nob){
 	//WDC_Err("readreg SCANSPERINTR: %x \n", reg);
 	return TRUE;
 }
-void SetDMAReset(UINT32 drvno){
+void SetDMAReset(UINT32 drvno) {
 	ULONG BitMask;
 	ULONG RegisterValues;
 	BitMask = 0x1;
 	RegisterValues = 0x1;
-	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_DCSR, drvno)){
+	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_DCSR, drvno)) {
 		ErrorMsg("switch on the Initiator Reset for the DMA failed");
 		return;
 	}
 	// DCSR: reset the Iniator Reset 
 	RegisterValues = 0x0;
-	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_DCSR, drvno)){
+	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_DCSR, drvno)) {
 		ErrorMsg("switch off the Initiator Reset for the DMA failed");
 		return;
 	}
 }
-void SetDMAStart(UINT32 drvno){
+void SetDMAStart(UINT32 drvno) {
 	ULONG BitMask;
 	ULONG RegisterValues;
 	BitMask = 0x1;
 	RegisterValues = 0x1;
-	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_DDMACR, drvno)){
+	if (!SetDMAReg(RegisterValues, BitMask, DmaAddr_DDMACR, drvno)) {
 		ErrorMsg("Set the Start Command for th DMA failed");
 		return;
 	}
@@ -787,77 +783,77 @@ void SetDMAStart(UINT32 drvno){
 /*
 BOOL SendDMAInfoToKP(void){
 
-	DWORD hDma;
-	DWORD dwOptions;
-	PVOID pData;
-	DWORD dwResult;
-	PDWORD	pdwResult = &dwResult;
+DWORD hDma;
+DWORD dwOptions;
+PVOID pData;
+DWORD dwResult;
+PDWORD	pdwResult = &dwResult;
 
 
-	WDC_Err("WDC:  hDma %u\n", pDMASubBufInfos->hDma);
-	WDC_Err("WDC:  pUserAddr %u\n", pDMASubBufInfos->pUserAddr);
-	WDC_Err("WDC:  pKernelAddr %u\n", pDMASubBufInfos->pKernelAddr);
-	WDC_Err("WDC:  dwBytes %u\n", pDMASubBufInfos->dwBytes);
-	WDC_Err("WDC:  dwOptions %u\n", pDMASubBufInfos->dwOptions);
-	WDC_Err("WDC:  dwPages %u\n", pDMASubBufInfos->dwPages);
-	WDC_Err("WDC:  hCard %u\n", pDMASubBufInfos->hCard);
+WDC_Err("WDC:  hDma %u\n", pDMASubBufInfos->hDma);
+WDC_Err("WDC:  pUserAddr %u\n", pDMASubBufInfos->pUserAddr);
+WDC_Err("WDC:  pKernelAddr %u\n", pDMASubBufInfos->pKernelAddr);
+WDC_Err("WDC:  dwBytes %u\n", pDMASubBufInfos->dwBytes);
+WDC_Err("WDC:  dwOptions %u\n", pDMASubBufInfos->dwOptions);
+WDC_Err("WDC:  dwPages %u\n", pDMASubBufInfos->dwPages);
+WDC_Err("WDC:  hCard %u\n", pDMASubBufInfos->hCard);
 
-	/*for WDK Flush
+/*for WDK Flush
 
-	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_BUFSIZE, pData, pdwResult);
-	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
-	{
-	WDC_Err("sendDMAInfoToKP dwDMASubBufSize send failed\n");
-	return FALSE;
-	}
-	*/
-	//for JUNGO Flush, complete WD_DMA struct
-	/*
-	pData = pDMASubBufInfos;
-	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_WDDMA, pData, pdwResult);
-	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
-	{
-	WDC_Err("sendDMAInfoToKP WD_DMA send failed\n");
-	return FALSE;
-	}
-	*/
-	//for Testfkt to write to the Regs
-	/*
-	pData = &hDev;// &deviceInfo.Card;//
-	WDC_Err("deviceInfo.Card.Item[0].I.Mem.pTransAddr : 0x %x\n", deviceInfo.Card.Item[0].I.Mem.pTransAddr);
-	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_TESTSIGNALPREP, pData, pdwResult);
-	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
-	{
-	WDC_Err("sendDMAInfoToKP hDev send failed\n");
-	return FALSE;
-	}
-	*/
-	/*
-	//for JUNGO Flush , fragmented WD_DMA struct
-	dwOptions = pDMASubBufInfos->dwPages; //Im using dwPages instead of dwOptions
+WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_BUFSIZE, pData, pdwResult);
+if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
+{
+WDC_Err("sendDMAInfoToKP dwDMASubBufSize send failed\n");
+return FALSE;
+}
+*/
+//for JUNGO Flush, complete WD_DMA struct
+/*
+pData = pDMASubBufInfos;
+WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_WDDMA, pData, pdwResult);
+if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
+{
+WDC_Err("sendDMAInfoToKP WD_DMA send failed\n");
+return FALSE;
+}
+*/
+//for Testfkt to write to the Regs
+/*
+pData = &hDev;// &deviceInfo.Card;//
+WDC_Err("deviceInfo.Card.Item[0].I.Mem.pTransAddr : 0x %x\n", deviceInfo.Card.Item[0].I.Mem.pTransAddr);
+WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_TESTSIGNALPREP, pData, pdwResult);
+if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
+{
+WDC_Err("sendDMAInfoToKP hDev send failed\n");
+return FALSE;
+}
+*/
+/*
+//for JUNGO Flush , fragmented WD_DMA struct
+dwOptions = pDMASubBufInfos->dwPages; //Im using dwPages instead of dwOptions
 
-	pData = &dwOptions;
-	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_DWOPT, pData, pdwResult);
-	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
-	{
-	WDC_Err("sendDMAInfoToKP dwOptions send failed\n");
-	return FALSE;
-	}
+pData = &dwOptions;
+WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_DWOPT, pData, pdwResult);
+if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
+{
+WDC_Err("sendDMAInfoToKP dwOptions send failed\n");
+return FALSE;
+}
 
-	//send hDma of WD_DMA struct to KP
-	hDma = pDMASubBufInfos->dwBytes;	 //Im using pUserAddr instead of hDma
-	//because the structure is mixed. I think it is a bug.
-	//Jungo says our dll or h files are mixed up
-	pData = &hDma;
-	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_HDMA, pData, pdwResult);
-	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
-	{
-	WDC_Err("sendDMAInfoToKP hDma send failed\n");
-	return FALSE;
-	}
-	
+//send hDma of WD_DMA struct to KP
+hDma = pDMASubBufInfos->dwBytes;	 //Im using pUserAddr instead of hDma
+//because the structure is mixed. I think it is a bug.
+//Jungo says our dll or h files are mixed up
+pData = &hDma;
+WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_HDMA, pData, pdwResult);
+if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
+{
+WDC_Err("sendDMAInfoToKP hDma send failed\n");
+return FALSE;
+}
 
-	return TRUE;
+
+return TRUE;
 }
 */
 
@@ -873,7 +869,7 @@ ULONG GetScanindex(UINT32 drvno)
 }
 
 //for the restpart of the buffer
-void GetLastBufPart(UINT32 drvno){
+void GetLastBufPart(UINT32 drvno) {
 	//get the rest if buffer is not multiple of 500 (BUFSIZEINSCANS/2)
 	//also if nos is < BUFSIZEINSCANS/2 - here: no intr occurs
 
@@ -881,13 +877,13 @@ void GetLastBufPart(UINT32 drvno){
 	ULONG nos_rest = 0;
 	ReadLongS0(drvno, &nos_rest, DmaAddr_NOS); //get nos
 	nos_rest = nos_rest % (DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS); //how many were left?
-	size_t restlength = nos_rest*_PIXEL*sizeof(USHORT);
+	size_t restlength = nos_rest*_PIXEL * sizeof(USHORT);
 
 	//!!! must delay or last block has wrong values
 	Sleep(1); //DMA is not ready
 
 	WDC_Err("last block to copy: %d\n", nos_rest);
-	if (nos_rest){
+	if (nos_rest) {
 		INT_PTR pDMASubBuf_index = pDMASubBuf[drvno];
 		pDMASubBuf_index += SubBufCounter[drvno] * DMA_bufsizeinbytes / DMA_HW_BUFPARTS;
 		memcpy(pDMABigBufIndex[drvno], pDMASubBuf_index, restlength);
@@ -906,8 +902,9 @@ void isr(UINT drvno, PVOID pData)
 	ULONG val = 0;
 	size_t subbuflengthinbytes = DMA_bufsizeinbytes / DMA_HW_BUFPARTS;
 	INT_PTR pdmasubbuf_base = pDMASubBuf[drvno];
+	PUSHORT tempBuf;
 
-	WDC_Err("\nentered interrupt of PCIEcard # %i\n",drvno);
+	WDC_Err("entered interrupt # %i\n", IsrCounter);
 
 	ReadLongS0(drvno, &val, DmaAddr_ScansPerIntr); //get scans per intr
 	ReadLongS0(drvno, &nos, DmaAddr_NOS);
@@ -919,22 +916,10 @@ void isr(UINT drvno, PVOID pData)
 
 	pdmasubbuf_base += SubBufCounter[drvno] * subbuflengthinbytes;
 
-	if (SubBufCounter[drvno] == 1){ //copy upper half
-		//WDC_Err("\nupper BigBufIndex: %x  subbuf: %x  lenth: %llx\n", pDMABigBufIndex[drvno], pdmasubbuf_base, subbuflengthinbytes); //2
-		//WDC_Err("\leng: 0x%x, = %d \n", leng,leng);
-		memcpy_s(pDMABigBufIndex[drvno], subbuflengthinbytes, pdmasubbuf_base, subbuflengthinbytes);//DMA_bufsizeinbytes/10
-		//memset(pDMABigBufIndex[drvno], "31", subbuflengthinbytes); // 0x3131=12593
-		//val++;
-	}
+	//here  the copyprocess happens
+	memcpy_s(pDMABigBufIndex[drvno], subbuflengthinbytes, pdmasubbuf_base, subbuflengthinbytes);//DMA_bufsizeinbytes/10
 
-	if (SubBufCounter[drvno] == 0){ //copy lower half
-		//WDC_Err("\nupper BigBufIndex: %x  subbuf: %x  lenth: %llx\n", pDMABigBufIndex[drvno], pdmasubbuf_base, subbuflengthinbytes); //2
-		//WDC_Err("\leng: 0x%x, = %d \n", leng,leng);
-		memcpy_s(pDMABigBufIndex[drvno], subbuflengthinbytes, pdmasubbuf_base, subbuflengthinbytes);//DMA_bufsizeinbytes/10
-		//		memset(pDMABigBufIndex[drvno], "35", subbuflengthinbytes); // 0x3131=12593
-	}
-
-	WDC_Err("ISRCounter: %d \n", IsrCounter);
+	WDC_Err("SubBufCounter of the DMA Buffer: %d \n\n", SubBufCounter[drvno]);
 
 	SubBufCounter[drvno]++;
 	if (SubBufCounter[drvno] >= DMA_HW_BUFPARTS)		//number of ISR per dmaBuf - 1
@@ -959,21 +944,31 @@ void isr(UINT drvno, PVOID pData)
 	ReadLongS0(drvno, &val, DmaAddr_PCIEFLAGS); //reset INTRSR flag for TRIGO
 	val &= 0xfffffff7;
 	WriteLongS0(drvno, val, DmaAddr_PCIEFLAGS); //just to see when its on
-	//WDC_Err("DMACounter: %d \n", DMACounter);
+												//WDC_Err("DMACounter: %d \n", DMACounter);
 	IsrCounter++;
+
+	//WDC_Err("ISR: pix42 of ReturnFrame: 0x%d \n", *(USHORT*)(pDMABigBufBase[drvno] + 420));
+
 }//DLLCALLCONV interrupt_handler
 
-VOID DLLCALLCONV interrupt_handler1(PVOID pData){ isr(1, pData);  }
+VOID DLLCALLCONV interrupt_handler1(PVOID pData) { isr(1, pData); }
 
-VOID DLLCALLCONV interrupt_handler2(PVOID pData){ isr(2, pData); }
+VOID DLLCALLCONV interrupt_handler2(PVOID pData) { isr(2, pData); }
 
 BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 {	//alloc DMA buffer - should only be called once
 	//gets address of DMASubBuf from driver and copy it later to our pDMABigBuf
 	DWORD dwStatus;
+	PUSHORT tempBuf;
 	WDC_Err("entered SetupPCIE_DMA\n");
 
-	DMA_bufsizeinbytes = DMA_BUFSIZEINSCANS *_PIXEL *sizeof(USHORT);
+
+	//tempBuf = (PUSHORT)pDMABigBufBase[drvno] + 500 * sizeof(USHORT);
+	//WDC_Err("setupdma: bigbuf Pixel500: %i\n", *tempBuf);
+
+
+
+	DMA_bufsizeinbytes = DMA_BUFSIZEINSCANS *_PIXEL * sizeof(USHORT);
 
 	DWORD dwOptions = DMA_FROM_DEVICE | DMA_KERNEL_BUFFER_ALLOC;// | DMA_ALLOW_64BIT_ADDRESS;// DMA_ALLOW_CACHE ;
 	if (DMA_64BIT_EN)
@@ -992,7 +987,7 @@ BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 #endif
 
 #if (DMA_CONTIGBUF)		//usually we use contig buf: here we get the buffer address from labview.
-	// pDMASubBuf is the space which is allocated by this function = output - must be global
+																										   // pDMASubBuf is the space which is allocated by this function = output - must be global
 	dwStatus = WDC_DMAContigBufLock(hDev[drvno], &pDMASubBuf[drvno], dwOptions, DMA_bufsizeinbytes, &pDMASubBufInfos[drvno]); //size in Bytes
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
@@ -1008,8 +1003,8 @@ BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 	pDMABigBufIndex[drvno] = pDMABigBufBase[drvno];	//reset destination buffer to start value
 	WD_DMA **ppDma = &pDMASubBufInfos[drvno];
 
-	WDC_Err("RAM Adresses for DMA Buf: %x ,DMA Buf Size: %x\n", (*ppDma)->Page[0].pPhysicalAddr, (*ppDma)->dwBytes);
-	WDC_Err("RAM Adresses for BigBufBase: %x ,DMA BufSizeinbytes: %x\n", pDMABigBufBase[drvno], DMA_bufsizeinbytes);
+	//WDC_Err("RAM Adresses for DMA Buf: %x ,DMA Buf Size: %x\n", (*ppDma)->Page[0].pPhysicalAddr, (*ppDma)->dwBytes);
+	//WDC_Err("RAM Adresses for BigBufBase: %x ,DMA BufSizeinbytes: %x\n", pDMABigBufBase[drvno], DMA_bufsizeinbytes);
 
 	//	ErrorMsg("nach WDC_DMAContigBufLock");
 	//	AboutDMARegs();
@@ -1031,14 +1026,14 @@ BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 	//
 
 	//set Init Regs
-	if (!SetDMAAddrTlp(drvno)){
+	if (!SetDMAAddrTlp(drvno)) {
 		ErrLog("DMARegisterInit for TLP and Addr failed \n");
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		ErrorMsg("DMARegisterInit for TLP and Addr failed");
 		return FALSE;
 	}
 
-	if (!SetDMABufRegs(drvno, nos, nob)){
+	if (!SetDMABufRegs(drvno, nos, nob)) {
 		ErrLog("DMARegisterInit for Buffer failed \n");
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		ErrorMsg("DMARegisterInit for Buffer failed");
@@ -1055,18 +1050,16 @@ BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 
 	// Enable DMA interrupts (if not polling)
 	// INTR should copy DMA buffer to user buf: 
-
 	if (INTR_EN)
 	{
-		switch (drvno){
+		switch (drvno) {
 		case 1:
 			dwStatus = LSCPCIEJ_IntEnable(hDev[drvno], interrupt_handler1);
 			if (WD_STATUS_SUCCESS != dwStatus)
 			{
-				ErrLog("Failed to enable the Interrupts1. Error 0x%lx - %s\n",
+				WDC_Err("Failed to enable the Interrupts1. Error 0x%lx - %s\n",
 					dwStatus, Stat2Str(dwStatus));
-				WDC_Err("%s", LSCPCIEJ_GetLastErr());
-				ErrorMsg("Failed to enable the Interrupts");
+				//(ErrorMsg("Failed to enable the Interrupts");
 				return FALSE;
 			}
 			break;
@@ -1075,10 +1068,9 @@ BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 			dwStatus = LSCPCIEJ_IntEnable(hDev[drvno], interrupt_handler2);
 			if (WD_STATUS_SUCCESS != dwStatus)
 			{
-				ErrLog("Failed to enable the Interrupts2. Error 0x%lx - %s\n",
+				WDC_Err("Failed to enable the Interrupts2. Error 0x%lx - %s\n",
 					dwStatus, Stat2Str(dwStatus));
-				WDC_Err("%s", LSCPCIEJ_GetLastErr());
-				ErrorMsg("Failed to enable the Interrupts");
+				//ErrorMsg("Failed to enable the Interrupts");
 				return FALSE;
 			}
 			break;
@@ -1090,7 +1082,7 @@ BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 
 void StartPCIE_DMAWrite(UINT32 drvno)
 {	// starts transfer from PCIe board to PCs main RAM
-	if (!HWDREQ_EN){
+	if (!HWDREQ_EN) {
 
 		//WDC_Err("entered StartPCIE_DMAWrit\n");
 		// DCSR: set the Iniator Reset 
@@ -1122,6 +1114,7 @@ void CleanupPCIE_DMA(UINT32 drvno)
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		return FALSE;
 	}
+	free(pDMABigBufBase[drvno]);
 	WDC_Err("Unlock DMABuf Succesfull\n");
 	/*
 	BOOL fResult = FALSE;
@@ -1154,7 +1147,7 @@ void RSInterface(UINT32 drvno)
 	ReadLongIOPort(drvno, &reg, 0); //read LCR0 for check length 0xffffffco
 	reg = ~reg; //length is inverted
 
-	//set all to zero
+				//set all to zero
 	for (i = 0; i<reg / 4; i++) WriteLongS0(drvno, 0, i * 4);
 }
 
@@ -1182,7 +1175,7 @@ BOOL SetBoardVars(UINT32 drvno, ULONG pixel, ULONG flag816, ULONG xckdelay)
 
 	if (!WriteByteS0(drvno, 0x23, 0x04)) return FALSE;  //write CTRLA reg in S0
 
-	//if (_COOLER) ActCooling(drvno, FALSE); //deactivate cooler
+														//if (_COOLER) ActCooling(drvno, FALSE); //deactivate cooler
 
 
 	if (!WriteByteS0(drvno, 0, 0x05)) return FALSE;;  //write CTRLB reg in S0
@@ -1192,7 +1185,7 @@ BOOL SetBoardVars(UINT32 drvno, ULONG pixel, ULONG flag816, ULONG xckdelay)
 
 
 
-	//set global vars if driver is there
+													  //set global vars if driver is there
 
 	aFLAG816[drvno] = flag816;
 	aPIXEL[drvno] = pixel;
@@ -1207,7 +1200,7 @@ BOOL SetBoardVars(UINT32 drvno, ULONG pixel, ULONG flag816, ULONG xckdelay)
 	reg = pixel;
 	if (!WriteLongS0(drvno, reg, 0x10)) return FALSE;; //set pixelreg -> counts received FFwrites and resets XCKI
 
-	// XDLY must be send to camera
+													   // XDLY must be send to camera
 
 	aINIT[drvno] = TRUE;  //init done
 
@@ -1225,7 +1218,7 @@ BOOL BufLock(UINT drvno, int nob, int nospb)
 	pBLOCKBUF[drvno] = calloc(nob, nospb * _PIXEL * sizeof(USHORT));
 	//pDIODEN = (pArrayT)calloc(nob, nospb * _PIXEL * sizeof(ArrayT));
 
-	if (pBLOCKBUF[drvno] != 0){
+	if (pBLOCKBUF[drvno] != 0) {
 		//pDMABigBufBase = pBLOCKBUF;
 		//make init here, that CCDExamp can be used to read the act regs...
 		if (!SetBoardVars(drvno, _PIXEL, FLAG816, XCKDELAY))
@@ -1244,7 +1237,7 @@ BOOL BufLock(UINT drvno, int nob, int nospb)
 
 		return TRUE;
 	}
-	else 
+	else
 		return FALSE;
 }
 #endif
@@ -1433,7 +1426,7 @@ void Resort(UINT32 drvno, void* ptarget, void* psource)
 
 
 
-//replaced by StartReadWithDma
+	//replaced by StartReadWithDma
 BOOL CallWRFile(UINT32 drvno, void* pdioden, ULONG arraylength, ULONG fkt)
 {	//here  the standard read fkt=1 is implemented
 	//wrap call to WriteFile to avaoid driver problem if target array>4k
@@ -1450,7 +1443,7 @@ BOOL CallWRFile(UINT32 drvno, void* pdioden, ULONG arraylength, ULONG fkt)
 	ULONG firstFFTclks = 0;// fftlines*8
 	PUSHORT pDioden;
 
-//	pDioden = &DIODEN;// (USHORT*)calloc(arraylength, sizeof(USHORT));
+	//	pDioden = &DIODEN;// (USHORT*)calloc(arraylength, sizeof(USHORT));
 
 
 	//set function recs - here all have to be 0 - as we read the Fifo
@@ -1495,7 +1488,7 @@ BOOL CallWRFile(UINT32 drvno, void* pdioden, ULONG arraylength, ULONG fkt)
 
 
 
-//replaced by StartReadWithDma
+ //replaced by StartReadWithDma
 BOOL ReadPCIEFifo(UINT32 drvno, void* pdioden, long fkt)
 {	//reads fifo data to buffer dioden
 	//drvno: driver number 1..4; 1 for LSCPCI
@@ -1573,8 +1566,8 @@ BOOL ReadPCIEFifo(UINT32 drvno, void* pdioden, long fkt)
 
 
 
-	//clrread and add fkt=-1 and 2 could not be implemented with dma
-	//so we do it here after reading
+														 //clrread and add fkt=-1 and 2 could not be implemented with dma
+														 //so we do it here after reading
 	if (fkt == 2) // we must now add our data to DIODEN for online add
 	{
 		pDiodenBase2 = pReadArray;
@@ -1592,7 +1585,7 @@ BOOL ReadPCIEFifo(UINT32 drvno, void* pdioden, long fkt)
 
 
 
-// *********************** PCI board registers
+	// *********************** PCI board registers
 
 
 BOOL CallIORead(UINT32 drvno, void* pdioden, ULONG fkt)
@@ -1610,7 +1603,7 @@ BOOL CallIORead(UINT32 drvno, void* pdioden, ULONG fkt)
 	BYTE b = 0;
 	ULONG firstFFTclks = 0;// fftlines*8
 
-	//set function recs - here all have to be 0 - as we read the Fifo
+						   //set function recs - here all have to be 0 - as we read the Fifo
 	CCDfkt.NoOfLines = 0; // NoOfLines = block in FIFO DMA on demand
 	CCDfkt.ADFlag = 0;	//dsdelay = delay before DMA start
 	CCDfkt.Adrwaits = 0; // adrwaits -> 3mu
@@ -1646,9 +1639,9 @@ BOOL CallIORead(UINT32 drvno, void* pdioden, ULONG fkt)
 			if (HA_IRSingleCH) arraylength *= 2;
 			arraylength += firstFFTclks * 4; //FFT lines
 
-			//if (_HWCH2) arraylength *= 2; //double if 2 cams 
-			//alloc local array dioden, so we don't overwrite our DIODEN
-			//2.200 pRArray = (BYTE*) calloc(aPIXEL[drvno],4*sizeof(BYTE)); 
+											 //if (_HWCH2) arraylength *= 2; //double if 2 cams 
+											 //alloc local array dioden, so we don't overwrite our DIODEN
+											 //2.200 pRArray = (BYTE*) calloc(aPIXEL[drvno],4*sizeof(BYTE)); 
 			pRArray = (BYTE*)calloc(arraylength, sizeof(BYTE));
 			if (pRArray == 0)
 			{
@@ -1662,8 +1655,8 @@ BOOL CallIORead(UINT32 drvno, void* pdioden, ULONG fkt)
 			arraylength = 2 * aPIXEL[drvno]; //2bytes per word
 
 			if (_HWCH2) arraylength *= 2; //double if 2 cams 
-			//alloc local array dioden, so we don't overwrite our DIODEN
-			//2.200 pRArray = (BYTE*) calloc(aPIXEL[drvno],4*sizeof(BYTE)); 
+										  //alloc local array dioden, so we don't overwrite our DIODEN
+										  //2.200 pRArray = (BYTE*) calloc(aPIXEL[drvno],4*sizeof(BYTE)); 
 			pRArray = (BYTE*)calloc(arraylength, sizeof(BYTE));
 			if (pRArray == 0)
 			{
@@ -1744,10 +1737,10 @@ BOOL CallIORead(UINT32 drvno, void* pdioden, ULONG fkt)
 					ptarray[i * 4 + 2] = psarray[4 * i + b + 1]; // target2 lo	
 					ptarray[i * 4 + 3] = psarray[4 * i + a + 1]; //	target2 hi  
 
-					//			ptarray[i*8] =   //psarray[8*i+4]; // war +4 target1 lo byte
-					//			ptarray[i*8+1] = 0;//psarray[8*i+2]; //psarray[8*i-2];   // war +2 target2 hi byte
-					//			ptarray[i*8-4] = 0;//psarray[8*i];//psarray[8*i+4]; // target1 lo byte war -4
-					//			ptarray[i*8-3] = 0;//psarray[8*i-2];//psarray[8*i+2];   // t1 target1 hi byte				
+																 //			ptarray[i*8] =   //psarray[8*i+4]; // war +4 target1 lo byte
+																 //			ptarray[i*8+1] = 0;//psarray[8*i+2]; //psarray[8*i-2];   // war +2 target2 hi byte
+																 //			ptarray[i*8-4] = 0;//psarray[8*i];//psarray[8*i+4]; // target1 lo byte war -4
+																 //			ptarray[i*8-3] = 0;//psarray[8*i-2];//psarray[8*i+2];   // t1 target1 hi byte				
 				}
 			}
 			else //not HWCH2
@@ -1756,12 +1749,12 @@ BOOL CallIORead(UINT32 drvno, void* pdioden, ULONG fkt)
 					if (_HILO) { a = 0; b = 1; };
 					for (i = 0; i<pixel; i++) //_PIXEL
 					{// resort for 1 channel word->long
-						// for HA Module C8061 and C7041
-						//if FFT first clks for vclk are not valid
-						/* take every value
-						ptarray[i*4] =  psarray[2*i+a+firstFFTclks*4]; // target1 lo byte
-						ptarray[i*4+1] = psarray[2*i+b+firstFFTclks*4];    // target1 hi byte
-						*/
+					 // for HA Module C8061 and C7041
+					 //if FFT first clks for vclk are not valid
+					 /* take every value
+					 ptarray[i*4] =  psarray[2*i+a+firstFFTclks*4]; // target1 lo byte
+					 ptarray[i*4+1] = psarray[2*i+b+firstFFTclks*4];    // target1 hi byte
+					 */
 						if (HA_IRSingleCH)
 						{
 							if (_HILO) { a = 8; b = 9; }
@@ -1789,7 +1782,7 @@ BOOL CallIORead(UINT32 drvno, void* pdioden, ULONG fkt)
 
 					for (i = 0; i<pixel; i++) //_PIXEL
 					{//standard resort for FIFO 1 channel word->long
-						//2.227 hi/lo changed -> for FFT and PDA
+					 //2.227 hi/lo changed -> for FFT and PDA
 						if (_HILO) { a = 0; b = 1; };
 						ptarray[i * 4] = psarray[2 * i + a]; // target1 lo byte
 						ptarray[i * 4 + 1] = psarray[2 * i + b];    // target1 hi byte
@@ -1799,14 +1792,14 @@ BOOL CallIORead(UINT32 drvno, void* pdioden, ULONG fkt)
 				}
 		}; //32 bit
 
-		//resort 12 bit array takes 4ns / pixel on a 3GHz PC
+		   //resort 12 bit array takes 4ns / pixel on a 3GHz PC
 		if (sizeof(ArrayT) == 2) //target 16 bit array
 		{
 			if (_HWCH2) //2 cams
 			{
 				for (i = 0; i<pixel - 1; i++)
 				{//here the 2cam 12bit is appended
-					//append 2nd cam first
+				 //append 2nd cam first
 					if (_HILO) { a = 2; b = 0; }
 					else { a = 0; b = 2; };
 					ptarray[2 * pixel + i * 2 + 1] = psarray[i * 4 + a + 1];	// hi byte cam2 
@@ -1862,7 +1855,7 @@ BOOL CallIORead(UINT32 drvno, void* pdioden, ULONG fkt)
 }//CallIORead
 
 
-//  call of the read function - FIFO version
+ //  call of the read function - FIFO version
 BOOL ReadFifo(UINT32 drvno, void* pdioden, long fkt)
 {	//reads fifo data to buffer dioden
 	//drvno: driver number 1..4; 1 for LSCPCI
@@ -1903,7 +1896,7 @@ BOOL ReadFifo(UINT32 drvno, void* pdioden, long fkt)
 	if (fkt>9)
 		return FALSE;  // function not implemented
 
-	//if ((_IR) && (!addalloc))
+					   //if ((_IR) && (!addalloc))
 
 	if ((fkt == 2) || (fkt == -1)) //read in our local array ladioden - add and clrread
 	{
@@ -1936,8 +1929,8 @@ BOOL ReadFifo(UINT32 drvno, void* pdioden, long fkt)
 	if (_RESORT) Resort(drvno, pReadArray, pReadArray);  //pixel resort
 
 
-	//clrread and add fkt=-1 and 2 could not be implemented with dma
-	//so we do it here after reading
+														 //clrread and add fkt=-1 and 2 could not be implemented with dma
+														 //so we do it here after reading
 	if (fkt == 2) // we must now add our data to DIODEN for online add
 	{
 		pDiodenBase2 = pReadArray;
@@ -1951,12 +1944,12 @@ BOOL ReadFifo(UINT32 drvno, void* pdioden, long fkt)
 };  // ReadFifo
 
 
-//done
+	//done
 BOOL ReadLongIOPort(UINT32 drvno, ULONG *DWData, ULONG PortOff)
 //this function reads the memory mapped data , not the I/O Data
 {// reads long of PCIruntime register LCR
-	// PortOff: Reg Offset from BaseAdress - in bytes
-	// on return -> TRUE if success
+ // PortOff: Reg Offset from BaseAdress - in bytes
+ // on return -> TRUE if success
 	volatile DWORD dwStatus = 0;
 	DWORD   ReturnedLength;
 	ULONG	PortOffset;
@@ -1965,9 +1958,7 @@ BOOL ReadLongIOPort(UINT32 drvno, ULONG *DWData, ULONG PortOff)
 	dwStatus = WDC_PciReadCfg(hDev[drvno], PortOff, DWData, sizeof(ULONG));
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		ErrLog("Failed to read the PCI Cfg Space\n"
-			"Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
-		WDC_Err("%s", LSCPCIEJ_GetLastErr());
+		WDC_Err("ReadLongIOPort in address 0x%x failed\n", PortOff);
 		//old message...i kept it because i dont know what it does
 		ErrorMsg("Read IORunReg failed");
 		return FALSE;
@@ -1983,11 +1974,11 @@ BOOL ReadLongIOPort(UINT32 drvno, ULONG *DWData, ULONG PortOff)
 	return TRUE;
 };  // ReadLongIOPort
 
-//done
+	//done
 BOOL ReadLongS0(UINT32 drvno, ULONG *DWData, ULONG PortOff)
 {// reads long on space0 area
-	// PortOff: Offset from BaseAdress - in Bytes !
-	// return -> TRUE if success
+ // PortOff: Offset from BaseAdress - in Bytes !
+ // return -> TRUE if success
 	volatile DWORD dwStatus = 0;
 	ULONG	PortOffset;
 
@@ -1998,10 +1989,7 @@ BOOL ReadLongS0(UINT32 drvno, ULONG *DWData, ULONG PortOff)
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		ErrLog("Failed to read the AddrBlock as an long in space0\n"
-			"Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
-		WDC_Err("%s", LSCPCIEJ_GetLastErr());
-		//old message...i kept it because i dont know what it does
+		WDC_Err("ReadLongS0 in address 0x%x failed\n", PortOff);
 		ErrorMsg("Read long in space0 failed");
 		return FALSE;
 	}
@@ -2016,11 +2004,11 @@ BOOL ReadLongS0(UINT32 drvno, ULONG *DWData, ULONG PortOff)
 	return TRUE;
 };  // ReadLongS0
 
-//done
+	//done
 BOOL ReadLongDMA(UINT32 drvno, PULONG pDWData, ULONG PortOff)
 {// reads long on DMA area
-	// PortOff: Offset from BaseAdress - in Bytes !
-	// return -> TRUE if success
+ // PortOff: Offset from BaseAdress - in Bytes !
+ // return -> TRUE if success
 	volatile DWORD dwStatus = 0;
 	DWORD   ReturnedLength;
 	ULONG	PortOffset;
@@ -2030,10 +2018,7 @@ BOOL ReadLongDMA(UINT32 drvno, PULONG pDWData, ULONG PortOff)
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		ErrLog("Failed to read the AddrBlock of DMA\n"
-			"Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
-		WDC_Err("%s", LSCPCIEJ_GetLastErr());
-		//old message...i kept it because i dont know what it does
+		WDC_Err("ReadLongDMA in address 0x%x failed\n", PortOff);
 		ErrorMsg("Read long in DMA failed");
 		return FALSE;
 	}
@@ -2049,11 +2034,11 @@ BOOL ReadLongDMA(UINT32 drvno, PULONG pDWData, ULONG PortOff)
 	*/
 	return TRUE;
 };  // ReadLongDMA
-//done
+	//done
 BOOL ReadByteS0(UINT32 drvno, BYTE *data, ULONG PortOff)
 {// reads byte in space0 area except r10-r1f
-	// PortOff: Offset from BaseAdress - in Bytes !
-	// returns TRUE if success
+ // PortOff: Offset from BaseAdress - in Bytes !
+ // returns TRUE if success
 	volatile DWORD dwStatus = 0;
 	DWORD   ReturnedLength;
 	ULONG	PortOffset;
@@ -2063,10 +2048,7 @@ BOOL ReadByteS0(UINT32 drvno, BYTE *data, ULONG PortOff)
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		ErrLog("Failed to read the AddrBlock as an byte in spaceS0\n"
-			"Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
-		WDC_Err("%s", LSCPCIEJ_GetLastErr());
-		//old message...i kept it because i dont know what it does
+		WDC_Err("ReadByteS0 in address 0x%x failed\n", PortOff);
 		ErrorMsg("Read byte in space0 failed");
 		return FALSE;
 	}
@@ -2082,7 +2064,7 @@ BOOL ReadByteS0(UINT32 drvno, BYTE *data, ULONG PortOff)
 	return TRUE;
 };  // ReadByteS0
 
-//done
+	//done
 BOOL WriteLongIOPort(UINT32 drvno, ULONG DWData, ULONG PortOff)
 {	// writes long to PCIruntime register
 	// PortOff: Reg Offset from BaseAdress - in bytes
@@ -2101,10 +2083,7 @@ BOOL WriteLongIOPort(UINT32 drvno, ULONG DWData, ULONG PortOff)
 	dwStatus = WDC_PciWriteCfg(hDev[drvno], PortOff, data, sizeof(ULONG));
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		ErrLog("Failed to write to the PCI Cfg space\n"
-			"Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
-		WDC_Err("%s", LSCPCIEJ_GetLastErr());
-		//old message...i kept it because i dont know what it does
+		WDC_Err("WriteLongIOPort in address 0x%x with data: 0x%x failed\n", PortOff, DWData);
 		ErrorMsg("WriteLongIOPort failed");
 		return FALSE;
 	}
@@ -2120,7 +2099,7 @@ BOOL WriteLongIOPort(UINT32 drvno, ULONG DWData, ULONG PortOff)
 	return TRUE;
 };  // WriteLongIOPort
 
-//done
+	//done
 BOOL WriteLongS0(UINT32 drvno, ULONG DWData, ULONG PortOff)
 {	// writes long to space0 register
 	// PortOff: Reg Offset from BaseAdress - in bytes
@@ -2137,10 +2116,7 @@ BOOL WriteLongS0(UINT32 drvno, ULONG DWData, ULONG PortOff)
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		ErrLog("Failed to write the AddrBlock as an long in space0\n"
-			"Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
-		WDC_Err("%s", LSCPCIEJ_GetLastErr());
-		//old message...i kept it because i dont know what it does
+		WDC_Err("WriteLongS0 in address 0x%x with data: 0x%x failed\n", PortOff, DWData);
 		ErrorMsg("WriteLongS0 failed");
 		return FALSE;
 	}
@@ -2172,7 +2148,7 @@ BOOL WriteLongS0(UINT32 drvno, ULONG DWData, ULONG PortOff)
 	*/
 	return TRUE;
 };  // WriteLongS0
-//done
+	//done
 BOOL WriteLongDMA(UINT32 drvno, ULONG DWData, ULONG PortOff)
 {	// writes long to space0 register
 	// PortOff: Reg Offset from BaseAdress - in bytes
@@ -2186,10 +2162,7 @@ BOOL WriteLongDMA(UINT32 drvno, ULONG DWData, ULONG PortOff)
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		ErrLog("Failed to write the AddrBlock of DMA\n"
-			"Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
-		WDC_Err("%s", LSCPCIEJ_GetLastErr());
-		//old message...i kept it because i dont know what it does
+		WDC_Err("WriteLongDMA in address 0x%x with data: 0x%x failed\n", PortOff, DWData);
 		ErrorMsg("WriteLongDMA failed");
 		return FALSE;
 	}
@@ -2211,34 +2184,34 @@ BOOL WriteLongDMA(UINT32 drvno, ULONG DWData, ULONG PortOff)
 	*/
 	return TRUE;
 };  // WriteLongDMA
-//done
-/*
-BOOL WriteByteDMA(UINT32 drvno, USHORT DWData, ULONG PortOff)
-{	// writes long to space0 register
-// PortOff: Reg Offset from BaseAdress - in bytes
-// returns TRUE if success
-BOOL fResult = FALSE;
-sDLDATA WriteData;
-ULONG	DataLength;
-DWORD   ReturnedLength;
-volatile DWORD dwStatus = 0;
-PUSHORT data = &DWData;
+	//done
+	/*
+	BOOL WriteByteDMA(UINT32 drvno, USHORT DWData, ULONG PortOff)
+	{	// writes long to space0 register
+	// PortOff: Reg Offset from BaseAdress - in bytes
+	// returns TRUE if success
+	BOOL fResult = FALSE;
+	sDLDATA WriteData;
+	ULONG	DataLength;
+	DWORD   ReturnedLength;
+	volatile DWORD dwStatus = 0;
+	PUSHORT data = &DWData;
 
-dwStatus = WDC_WriteAddrBlock(hDev[drvno], 0, PortOff, sizeof(USHORT), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
-//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
-if (WD_STATUS_SUCCESS != dwStatus)
-{
-ErrLog("Failed to write the AddrBlock of DMA\n"
-"Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
-WDC_Err("%s", LSCPCIEJ_GetLastErr());
-//old message...i kept it because i dont know what it does
-ErrorMsg("WriteLongDMA failed");
-return FALSE;
-}
-return TRUE;
-};
-*/
-//done
+	dwStatus = WDC_WriteAddrBlock(hDev[drvno], 0, PortOff, sizeof(USHORT), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
+	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
+	if (WD_STATUS_SUCCESS != dwStatus)
+	{
+	ErrLog("Failed to write the AddrBlock of DMA\n"
+	"Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
+	WDC_Err("%s", LSCPCIEJ_GetLastErr());
+	//old message...i kept it because i dont know what it does
+	ErrorMsg("WriteLongDMA failed");
+	return FALSE;
+	}
+	return TRUE;
+	};
+	*/
+	//done
 BOOL WriteByteS0(UINT32 drvno, BYTE DWData, ULONG PortOff)
 {	// writes byte to space0 register except r10-r1f
 	// PortOff: Reg Offset from BaseAdress - in bytes
@@ -2258,10 +2231,7 @@ BOOL WriteByteS0(UINT32 drvno, BYTE DWData, ULONG PortOff)
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		ErrLog("Failed to write the AddrBlock as an byte in spaceS0\n"
-			"Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
-		WDC_Err("%s", LSCPCIEJ_GetLastErr());
-		//old message...i kept it because i dont know what it does
+		WDC_Err("WriteByteS0 in address 0x%x with data: 0x%x failed\n", PortOff, DWData);
 		ErrorMsg("WriteByteS0 failed");
 		return FALSE;
 	}
@@ -2269,9 +2239,9 @@ BOOL WriteByteS0(UINT32 drvno, BYTE DWData, ULONG PortOff)
 	//no comparison possible because some Read-Only-Register are changing when we are writing in the same register
 	BYTE checkdata;
 	ReadByteS0(drvno, &checkdata, PortOff);
-	if (*data != checkdata){
+	if (*data != checkdata) {
 		;// WDC_Err("\nWriteByteError:\ndata to write: %x\n", *data);
-		//WDC_Err("data read: %x\n", checkdata);
+		 //WDC_Err("data read: %x\n", checkdata);
 	}
 
 
@@ -2331,7 +2301,7 @@ void AboutDrv(UINT32 drvno)
 
 	//or
 	//S0Data = (UCHAR)ReadByteS0(8); // ID=53
-	sprintf_s(pstring, 80, " Board #%i    ID = 0x%I32x",drvno, S0Data);
+	sprintf_s(pstring, 80, " Board #%i    ID = 0x%I32x", drvno, S0Data);
 	if (MessageBox(hWnd, pstring, " Board ID=53 ", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 
 	//ReadLongIOPort(drvno, &S0Data, 0); //read LCR0 for check length 0xffffffco
@@ -2421,9 +2391,9 @@ void NotBothSlope(UINT32 drvno)
 	WriteByteS0(drvno, CtrlA, 4);
 }; //NotBothSlope
 
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-/* Ausgabe eines High-Signals an Pin 17                                      */
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+   /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+   /* Ausgabe eines High-Signals an Pin 17                                      */
+   /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 void OutTrigLow(UINT32 drvno)
 {
@@ -2433,12 +2403,12 @@ void OutTrigLow(UINT32 drvno)
 	WriteByteS0(drvno, CtrlA, 4);
 };						//OutTrigLow
 
-/*---------------------------------------------------------------------------*/
+						/*---------------------------------------------------------------------------*/
 
 
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-/* Ausgabe eines Low-Signals an Pin 17                                       */
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+						/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+						/* Ausgabe eines Low-Signals an Pin 17                                       */
+						/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 void OutTrigHigh(UINT32 drvno)
 {
@@ -2449,9 +2419,9 @@ void OutTrigHigh(UINT32 drvno)
 }; //OutTrigHigh
 
 
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-/* Ausgabe eines PulseWidth breiten Rechteckpulses an Pin 17                 */
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+   /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+   /* Ausgabe eines PulseWidth breiten Rechteckpulses an Pin 17                 */
+   /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 void OutTrigPulse(UINT32 drvno, ULONG PulseWidth)
 {
@@ -2503,7 +2473,7 @@ void WaitTrigger(UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrKey)
 		if (ReturnKey == _ScanCode_End) Space = TRUE;
 #else	//other keyboard -> do not use highest priority thread
 		// or use Sleep to serve the interrupt
-		if (GetAsyncKeyState(VK_ESCAPE))  
+		if (GetAsyncKeyState(VK_ESCAPE))
 			Abbr = TRUE;
 		if (GetAsyncKeyState(VK_SPACE))  Space = TRUE;
 #endif
@@ -2513,10 +2483,10 @@ void WaitTrigger(UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrKey)
 };// WaitTrigger
 
 
-//******************** the triginput has an optional FF to detect short pulses
-// the FF is edge triggered and must be reset via RSTrigShort after each pulse to arm it again
-// it is enabled once by EnTrigShort()
-//********************
+  //******************** the triginput has an optional FF to detect short pulses
+  // the FF is edge triggered and must be reset via RSTrigShort after each pulse to arm it again
+  // it is enabled once by EnTrigShort()
+  //********************
 
 void WaitTriggerShort(UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrKey)
 // returns if Trigger or Key
@@ -2544,7 +2514,7 @@ void WaitTriggerShort(UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrK
 		if (ReturnKey == _ScanCode_End) Space = TRUE;
 #else	//other keyboard -> do not use highest priority thread
 		// or use Sleep to serve the interrupt
-		if (GetAsyncKeyState(VK_ESCAPE))  
+		if (GetAsyncKeyState(VK_ESCAPE))
 			Abbr = TRUE;
 		if (GetAsyncKeyState(VK_SPACE))  Space = TRUE;
 #endif
@@ -2584,7 +2554,7 @@ void DisTrigShort(UINT32 drvno)
 }; //SetTrigShort
 
 
-/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+   /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 void CloseShutter(UINT32 drvno)   // IFC = low
 {
@@ -2594,7 +2564,7 @@ void CloseShutter(UINT32 drvno)   // IFC = low
 	WriteByteS0(drvno, CtrlA, 4);
 }; //CloseShutter
 
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+   /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 void OpenShutter(UINT32 drvno)   // IFC = high
 {
@@ -2627,9 +2597,9 @@ void V_On(UINT32 drvno)
 	WriteByteS0(drvno, CtrlA, 4);
 }; //V_On
 
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-/* set V_ON high (V = 1)                                                  */
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+   /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+   /* set V_ON high (V = 1)                                                  */
+   /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 void V_Off(UINT32 drvno)
 {
@@ -2640,7 +2610,7 @@ void V_Off(UINT32 drvno)
 }; //V_Off
 
 
-// optional Opto Couplers
+   // optional Opto Couplers
 void SetOpto(UINT32 drvno, BYTE ch)
 {//sets signal=low
 	BYTE ctrlc;
@@ -2730,7 +2700,7 @@ void SetISPDA(UINT32 drvno, BOOL set)
 
 void SetISFFT(UINT32 drvno, BOOL set)
 {//set bit if FFT sensor - used for vclks and IFC
-	// also OpenShutter must be set!
+ // also OpenShutter must be set!
 	BYTE val = 0;
 	ReadByteS0(drvno, &val, 0x2B);
 	if (set != 0) { val |= 0x01; }
@@ -2808,8 +2778,8 @@ void ClrShCam(UINT32 drvno, UINT32 zadr) //clear for Shutter cameras
 
 UCHAR ReadKeyPort(UINT32 drvno)
 {		//Reads PS2 Key directly -> very low jitter
-	// !!! works with PS2 keyboard only !!!!!!!!
-	// on WINNT, getasynckeystate does not work with highest priority
+		// !!! works with PS2 keyboard only !!!!!!!!
+		// on WINNT, getasynckeystate does not work with highest priority
 
 	UCHAR Data = 0;
 	BOOL fResult = FALSE;
@@ -2831,28 +2801,28 @@ UCHAR ReadKeyPort(UINT32 drvno)
 
 
 
-/*
-void SendCommand(UINT32 drvno, BYTE adr, BYTE data)
-//for programming of seriell port for AD98xx
-{//before calling IFC has to be set to low
-BYTE regorg=0;
-BYTE reg=0;
-//	Sleep(1);
-WriteByteS0(drvno,adr,0); // write address to bus
+	/*
+	void SendCommand(UINT32 drvno, BYTE adr, BYTE data)
+	//for programming of seriell port for AD98xx
+	{//before calling IFC has to be set to low
+	BYTE regorg=0;
+	BYTE reg=0;
+	//	Sleep(1);
+	WriteByteS0(drvno,adr,0); // write address to bus
 
-ReadByteS0(drvno,&regorg,5);// get reg data
-reg = regorg | 0x20;
-WriteByteS0(drvno,reg,5); // // ND lo pulse
-WriteByteS0(drvno,regorg,5); // ND hi pulse
+	ReadByteS0(drvno,&regorg,5);// get reg data
+	reg = regorg | 0x20;
+	WriteByteS0(drvno,reg,5); // // ND lo pulse
+	WriteByteS0(drvno,regorg,5); // ND hi pulse
 
-WriteByteS0(drvno,data,0);	// write data to bus
+	WriteByteS0(drvno,data,0);	// write data to bus
 
-WriteByteS0(drvno, reg ,5); // ND lo pulse
-//	Sleep(1);
-WriteByteS0(drvno,regorg,5);	// ND hi pulse
-//	Sleep(1);
-}//SendCommand
-*/
+	WriteByteS0(drvno, reg ,5); // ND lo pulse
+	//	Sleep(1);
+	WriteByteS0(drvno,regorg,5);	// ND hi pulse
+	//	Sleep(1);
+	}//SendCommand
+	*/
 
 void RSEC(UINT32 drvno)
 //reset EC register to zero (enables programming IFC via register)
@@ -2874,7 +2844,7 @@ void RSEC(UINT32 drvno)
 void SendCommand(UINT32 drvno, BYTE adr, BYTE data)
 //for programming of seriell port for AD98xx
 {//before calling IFC has to be set to low
-	//and EC must be set 0 with 	RSEC(drvno);
+ //and EC must be set 0 with 	RSEC(drvno);
 	BYTE regorg = 0;
 	BYTE regh = 0;
 	BYTE regl = 0;
@@ -2883,7 +2853,7 @@ void SendCommand(UINT32 drvno, BYTE adr, BYTE data)
 	WriteByteS0(drvno, adr, 0); // write address to bus
 
 
-	//clk with ND
+								//clk with ND
 	regno = 5;
 	ReadByteS0(drvno, &regorg, regno);// get reg data
 	regh = regorg & 0xDF;			//ND_DIS clk is inverted
@@ -2943,8 +2913,8 @@ BOOL CheckFFTrig(UINT32 drvno) //ext trigger in FF for short pulses
 }//CheckFFTrig
 
 
-// ExpTime is passed as global var here
-// function is not used in WCCD
+ // ExpTime is passed as global var here
+ // function is not used in WCCD
 #ifndef ExpTime
 ULONG ExpTime; //in micro sec - needed only in DLL, defined in DLL.h
 #endif
@@ -2952,17 +2922,17 @@ ULONG ExpTime; //in micro sec - needed only in DLL, defined in DLL.h
 
 
 
-//FIFO
-//***************  Fifo only Functions   ***************
+			   //FIFO
+			   //***************  Fifo only Functions   ***************
 
-void StartReadWithDma(UINT32 drvno){
+void StartReadWithDma(UINT32 drvno) {
 
 	//old startringreadthread routine
 	//	DMA_bufsizeinbytes = (DMABufSizeInScans + 10) * aPIXEL[drvno] * sizeof(USHORT);// +10;//+100 safty first if it is not right calculated
 	//	DMA_bufsizeinbytes = DMABufSizeInScans  * _PIXEL * sizeof(USHORT);// +10;//+100 safty first if it is not right calculated
 	if (_HWCH2) DMA_bufsizeinbytes *= 2;
 
-	if (!DMAAlreadyStarted){
+	if (!DMAAlreadyStarted) {
 		if (!SetupPCIE_DMA(drvno, UserBufInScans, Nob)) return;
 		DMAAlreadyStarted = TRUE;
 	}
@@ -2983,8 +2953,8 @@ void StartReadWithDma(UINT32 drvno){
 
 	if (!aINIT[drvno]) return FALSE;	// return with error if no init
 
-	//pReadArray = pDMASubBuf;
-	//	pReadArray = pReadArray + (db-1) * pixel;
+										//pReadArray = pDMASubBuf;
+										//	pReadArray = pReadArray + (db-1) * pixel;
 	pDiodenBase = pReadArray;
 
 	if (_FKT == 0) // set array to 0
@@ -3028,8 +2998,8 @@ void StartReadWithDma(UINT32 drvno){
 
 
 
-	//clrread and add fkt=-1 and 2 could not be implemented with dma
-	//so we do it here after reading
+														 //clrread and add fkt=-1 and 2 could not be implemented with dma
+														 //so we do it here after reading
 	if (_FKT == 2) // we must now add our data to DIODEN for online add
 	{
 		pDiodenBase2 = pReadArray;
@@ -3042,7 +3012,7 @@ void StartReadWithDma(UINT32 drvno){
 
 
 
-//  read a range from start to stop relative to actual Counter to user buffer
+ //  read a range from start to stop relative to actual Counter to user buffer
 UINT8 ReadRingBlock(void* pdioden, INT32 start, INT32 stop)
 // when calling this function, the actual RingWRCnt value is used as relative zero
 // if start or stop is negative it is in the past 
@@ -3111,7 +3081,7 @@ UINT8 ReadRingBlock(void* pdioden, INT32 start, INT32 stop)
 	//ValMsg(range);
 
 	RingCopyAct = TRUE; //start ring copy
-	//wait until data is copied to userbuf
+						//wait until data is copied to userbuf
 	do {} while ((RingCopyAct) && (RingThreadOn));
 
 	return 0;
@@ -3146,7 +3116,7 @@ void CopyRingtoUserBuf(INT32 fetchzero)
 	//wrap at 0 <-> RingFifoDepth
 	if (fetchzero + 1 - range < 0)
 	{// is wrapped around 0
-		//	wrapped=TRUE;
+	 //	wrapped=TRUE;
 
 		range2 = fetchzero + 1;
 		range1 = range - range2;
@@ -3182,13 +3152,13 @@ void CopyRingtoUserBuf(INT32 fetchzero)
 
 
 
-//***** Ring Fifo fkts **************************************
-//starts an own thread for writing to a ring buffer of size FifoDepth
-//allocates the buffer here
-//read is done by ReadRing if tread>twrite
-// or by ReadLastRing if tread<twrite
+  //***** Ring Fifo fkts **************************************
+  //starts an own thread for writing to a ring buffer of size FifoDepth
+  //allocates the buffer here
+  //read is done by ReadRing if tread>twrite
+  // or by ReadLastRing if tread<twrite
 
-//replaced by StartReadWithDma
+  //replaced by StartReadWithDma
 void __cdecl ReadRingThread(void *dummy)
 
 {// max priority
@@ -3252,18 +3222,18 @@ void __cdecl ReadRingThread(void *dummy)
 				RingWRCnt += 1;
 				if (RingWRCnt>RingFifoDepth - 1) RingWRCnt = 0;//wrap counter
 #if (!testdata)
-				//read fifo is DMA so here it can be back before ready
+															   //read fifo is DMA so here it can be back before ready
 
-				//			WriteFile(ahCCDDRV[Ringdrvno], pRingBuf + RingWRCnt*pixel, pixel*2, &lwritten, NULL); //write to PC RAM
-				//pRingBuf will crash even if written to DMA write addr reg
-				//this function wraps the call, pixel does not matter here, but must be > as 1088
+															   //			WriteFile(ahCCDDRV[Ringdrvno], pRingBuf + RingWRCnt*pixel, pixel*2, &lwritten, NULL); //write to PC RAM
+															   //pRingBuf will crash even if written to DMA write addr reg
+															   //this function wraps the call, pixel does not matter here, but must be > as 1088
 				ReadPCIEFifo(Ringdrvno, (pArrayT)pRingBuf + RingWRCnt*pixel, _FKT); //*linesize in short
 
-				//			ReadFifo(Ringdrvno, (PUCHAR) pRingBuf+RingWRCnt*linesize, _FKT);	
-				//			memset((PUCHAR) pRingBuf+RingWRCnt*linesize,RingWRCnt,linesize);//test cnt
-				//			*((PUINT32)pRingBuf+RingWRCnt*pixel+4) = RingWRCnt; //test: write cnter to pixel=4
+																					//			ReadFifo(Ringdrvno, (PUCHAR) pRingBuf+RingWRCnt*linesize, _FKT);	
+																					//			memset((PUCHAR) pRingBuf+RingWRCnt*linesize,RingWRCnt,linesize);//test cnt
+																					//			*((PUINT32)pRingBuf+RingWRCnt*pixel+4) = RingWRCnt; //test: write cnter to pixel=4
 
-				//if ReadRingBlock want's to read in future
+																					//if ReadRingBlock want's to read in future
 				if (RingFetchFutureAct)
 				{
 					RingFutureWrCnt += 1;
@@ -3304,7 +3274,7 @@ void __cdecl ReadRingThread(void *dummy)
 			//be shure the first range is in ring buffer before getting here (1st call)
 			if (RingCopyAct == TRUE)// if userbuf needs data, copy it here
 			{//todo: if range is too big (>1000) the copy should be broken into smaller pieces
-				// one block per loop ..
+			 // one block per loop ..
 				CopyRingtoUserBuf(RingWRCnt);
 				RingCopyAct = FALSE;
 			}
@@ -3312,7 +3282,7 @@ void __cdecl ReadRingThread(void *dummy)
 			//WaitTrigger(Ringdrvno,FALSE,&Space, &Abbruch);
 			//if (Abbruch==TRUE)RingThreadOn=FALSE;
 		}//else
-		//	if (RELEASETHREADms>=0) Sleep(RELEASETHREADms); // <0 don' release		
+		 //	if (RELEASETHREADms>=0) Sleep(RELEASETHREADms); // <0 don' release		
 
 	}//while
 	free(pRingBuf);
@@ -3325,9 +3295,9 @@ void __cdecl ReadRingThread(void *dummy)
 }//ReadRingThread
 
 
-//replaced by StartReadWithDma
+ //replaced by StartReadWithDma
 void StartRingReadThread(UINT32 drvno, ULONG ringfifodepth, ULONG threadp, __int16 releasems)
-{
+{//TODO still thread...has to be converted to threadex
 	ULONG pixel = aPIXEL[drvno];
 	ULONG linesize = pixel * sizeof(ArrayT);
 	//set globals in BOARD
@@ -3341,7 +3311,7 @@ void StartRingReadThread(UINT32 drvno, ULONG ringfifodepth, ULONG threadp, __int
 	ULONG ReturnedLength = 0;
 
 	//DMA_bufsizeinbytes = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
-	if (!DMAAlreadyStarted){
+	if (!DMAAlreadyStarted) {
 		SetupPCIE_DMA(drvno, UserBufInScans, Nob);
 		DMAAlreadyStarted = TRUE;
 	}
@@ -3390,12 +3360,11 @@ void StopRingReadThread(void)
 }//StopRingFFTimer
 
 
-//TODO:
-void ReadFFLoop(UINT8 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch)
+void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch)
 {//const burst loop with DMA initiated by hardware DREQ
-	//read nos lines from FIFO
-	//
-	//local declarations
+ //read nos lines from FIFO
+ //
+ //local declarations
 	char string[20] = "";
 	void *dummy = NULL;
 
@@ -3410,6 +3379,7 @@ void ReadFFLoop(UINT8 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 bloc
 	ULONG nos = 0;
 	ULONG val = 0;
 	ReadLongS0(drv, &dwdata, 0x44); //NOS is in reg R1
+
 	nos = dwdata;
 
 	// ErrorMsg("jump to DLLReadFFLoop");
@@ -3426,22 +3396,12 @@ void ReadFFLoop(UINT8 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 bloc
 		}
 	}
 
-	// only one of exposure time or frequency is permitted to be unequal zero
-	if ((exptus != 0) && (freq != 0)) {
-		ErrorMsg(" expt + freq ");
+	if (exptus == 0) {
+		ErrorMsg(" exposure time = 0 ");
 		return;
 	}
 
-	//calculate exposure time [us] if frequency is given 
-	if (freq != 0) {
-		if (freq <= 1000000) {
-			exptus = 1000000 / freq;// in us
-		}
-		else {
-			ErrorMsg(" freq too high ");
-			return;
-		}
-	}
+
 
 
 	//reset the internal block counter and ScanIndex before START
@@ -3453,7 +3413,7 @@ void ReadFFLoop(UINT8 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 bloc
 	pDMABigBufIndex[drv] = pDMABigBufBase[drv]; // reset buffer index to base we got from labview
 
 
-	//ErrorMsg("in DLLReadFFLoop - start timer");
+												//ErrorMsg("in DLLReadFFLoop - start timer");
 	if (exttrig != 0) {
 		ExTrig = TRUE;
 		SetExtFFTrig(drv);
@@ -3471,15 +3431,16 @@ void ReadFFLoop(UINT8 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 bloc
 	//set MeasureOn Bit
 	SetS0Reg(0x20, 0x20, DmaAddr_PCIEFLAGS, drv);
 
+
 	do //block read function
 	{
 		//if Block tigger
 		if (blocktrigger != 0)
 		{	//wait for trigger
 			BOOL StartbyTrig = FALSE;
-			while (!StartbyTrig){ // check for kill ?
-				//	Sleep(1);
-				if (GetAsyncKeyState(VK_ESCAPE) )
+			while (!StartbyTrig) { // check for kill ?
+								   //	Sleep(1);
+				if (GetAsyncKeyState(VK_ESCAPE))
 				{ //stop if ESC was pressed
 					StopFFTimer(drv);
 					//SetIntFFTrig(drv);//disable ext input
@@ -3489,10 +3450,11 @@ void ReadFFLoop(UINT8 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 bloc
 				if (GetAsyncKeyState(VK_SPACE))
 				{ //start if Space was pressed
 
-					while (GetAsyncKeyState(VK_SPACE) & 0x8000 == 0x8000){}; //wait for release
+					while (GetAsyncKeyState(VK_SPACE) & 0x8000 == 0x8000) {}; //wait for release
 					StartbyTrig = TRUE;
 				}
-				if (BlockTrig(drv, btrig_ch))			StartbyTrig = TRUE;
+				// drv=1 always trigger both on board1
+				if (BlockTrig(1, btrig_ch))			StartbyTrig = TRUE;
 			}//while !StartbyTrig
 		}
 		//make signal on trig out plug via PCIEFLAGS:D4 - needed to count Blocks
@@ -3504,14 +3466,14 @@ void ReadFFLoop(UINT8 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 bloc
 
 		RS_ScanCounter(drv); //reset scan counter for next block - or timer is disabled
 
-		//start Timer !!!
+							 //start Timer !!!
 		StartFFTimer(drv, exptus);
 		WDC_Err("before scan loop start\n");
 
 		//main read loop - wait here until nos is reached or ESC key
 		//if nos is reached the flag RegXCKMSB:b30 = TimerOn is reset by hardware if flag HWDREQ_EN is TRUE
-	while (IsTimerOn(drv)){
-		if (GetAsyncKeyState(VK_ESCAPE) | !FindCam(drv) | escape_readffloop) // check for kill ?
+		while (IsTimerOn(drv)) {
+			if (GetAsyncKeyState(VK_ESCAPE) | !FindCam(drv) | escape_readffloop) // check for kill ?
 			{ //stop if ESC was pressed
 				StopFFTimer(drv);
 				SetIntFFTrig(drv);//disable ext input
@@ -3537,24 +3499,51 @@ void ReadFFLoop(UINT8 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 bloc
 
 	WDC_Err("after finished scan loop\n");
 
+#if (DMA_CONTIGBUF)
+	//test with memset if data is transferred
+	//memset(pDMASubBuf[drvno], 20, (nos-1)*_PIXEL*sizeof(USHORT)+100);
+	//copy data from DMABuf to our data buf
+	//memcpy(pDMABigBuf, pDMASubBuf[drvno], nos*_PIXEL*sizeof(USHORT));
+#endif
+
 }
 
-void __cdecl ReadFFLoopThread(void *parg)
+//B!void __cdecl ReadFFLoopThread(void *parg)//thread
+unsigned int __stdcall ReadFFLoopThread(void *parg)//threadex
 {//const burst loop with DMA initiated by hardware DREQ
-	//read nos lines from FIFO
-	//struct has to be volatile, if not readffloop is always called with drv=1
+ //read nos lines from FIFO
+ //struct has to be volatile, if not readffloop is always called with drv=1
 	volatile struct ffloopparams *par;
 	par = parg;
-	UINT8 drv = par->drv;
-	UINT32 exptus = par->exptus; 
-	UINT32 freq = par->freq;
+	UINT32 drv = par->drv;
+	UINT32 exptus = par->exptus;
 	UINT8 exttrig = par->exttrig;
 	UINT8 blocktrigger = par->blocktrigger;
-	UINT8 btrig_ch = par ->btrig_ch;
+	UINT8 btrig_ch = par->btrig_ch;
 	//local declarations
-	ReadFFLoop( drv,  exptus,  freq,  exttrig,  blocktrigger,btrig_ch);
-	
-	_endthread();
+
+
+	if (contffloop) //run continiously
+	{
+		do {
+
+			if (GetAsyncKeyState(VK_ESCAPE))
+			{ //stop if ESC was pressed
+				StopFFTimer(drv);
+				//SetIntFFTrig(drv);//disable ext input
+				SetDMAReset(drv);	//Initiator reset
+				return 1;
+			}
+
+			ReadFFLoop(drv, exptus, exttrig, blocktrigger, btrig_ch);
+
+		} while (1);
+	}
+	else
+		ReadFFLoop(drv, exptus, exttrig, blocktrigger, btrig_ch);
+
+	//_endthread();//thread
+	return 1;//endthreadex is called automatically
 
 }
 
@@ -3570,7 +3559,7 @@ void StartFetchRingBuf(void)
 
 BOOL RingThreadIsOFF(void)
 {//return state of thread
-	//use this for sync to outside
+ //use this for sync to outside
 	return RingThreadOFF;
 }
 
@@ -3627,10 +3616,10 @@ BOOL BlockTrig(UINT32 drv, UINT8 btrig_ch)
 {	//return state of trigger in signal
 	//global value RingCtrlReg is updated in every loop of ringreadthread
 	//in ringreadthread also the board drv is set
-	//ch=0 -> no read of state is performed
-	//ch=1 is pci tig in
-	//ch=2 is opto1
-	//ch=3 is opto2
+	//btrig_ch=0 -> no read of state is performed
+	//btrig_ch=1 is pci tig in
+	//btrig_ch=2 is opto1
+	//btrig_ch=3 is opto2
 	BYTE data = 0;
 	BOOL state = FALSE;
 	RingCtrlRegOfs = 0;
@@ -3663,7 +3652,7 @@ void SetExtSWTrig(BOOL ext)
 }//SetExtSWTrig
 
 
-//*************** Hardware Fifo fkts ******************
+ //*************** Hardware Fifo fkts ******************
 
 void StartFFTimer(UINT32 drvno, ULONG exptime)
 {//exptime in microsec
@@ -3709,6 +3698,7 @@ BOOL IsTimerOn(UINT32 drvno)
 
 BOOL FFValid(UINT32 drvno)
 {	// not empty & XCK = low -> true
+	WDC_Err("FFValid\n");
 	BYTE data = 0;
 	ReadByteS0(drvno, &data, 0x13);
 	data &= 0x80;
@@ -3720,6 +3710,7 @@ BOOL FFValid(UINT32 drvno)
 
 BOOL FFFull(UINT32 drvno)
 {	// Fifo is full
+	WDC_Err("FFFull\n");
 	BYTE data = 0;
 	ReadByteS0(drvno, &data, 0x13);
 	data &= 0x20;
@@ -3730,6 +3721,7 @@ BOOL FFFull(UINT32 drvno)
 
 BOOL FFOvl(UINT32 drvno)
 {	// had Fifo overflow
+	WDC_Err("FFOvl\n");
 	BYTE data = 0;
 	ReadByteS0(drvno, &data, 0x13);
 	data &= 0x08; //0x20; if not saved
@@ -3740,6 +3732,7 @@ BOOL FFOvl(UINT32 drvno)
 
 BOOL FlagXCKI(UINT32 drvno)
 {	// XCKI write to FIFO is active 
+	WDC_Err("FlagXCKI\n");
 	BYTE data = 0;
 	ReadByteS0(drvno, &data, 0x13);
 	data &= 0x10;
@@ -3826,7 +3819,7 @@ void SetupVCLKrt(ULONG vfreq)
 	VFREQ = vfreq;// VFREQ is global in BOARD
 }//Setup VFREQ from setup
 
-//not yet working
+ //not yet working
 void SetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep)
 {	//partial binning in registers R10,R11 and and R12
 	//range: specifies R 1..5
@@ -3838,35 +3831,35 @@ void SetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep)
 	{
 	case 1:	adr = 0x40;
 		if (keep) { lines |= 0x8000; }
-		else  { lines &= 0x7fff; }
+		else { lines &= 0x7fff; }
 		break;
 	case 2:	adr = 0x42;
 		if (keep) { lines |= 0x8000; }
-		else  { lines &= 0x7fff; }
+		else { lines &= 0x7fff; }
 		break;
 	case 3:	adr = 0x44;
 		if (keep) { lines |= 0x8000; }
-		else  { lines &= 0x7fff; }
+		else { lines &= 0x7fff; }
 		break;
 	case 4:	adr = 0x46;
 		if (keep) { lines |= 0x8000; }
-		else  { lines &= 0x7fff; }
+		else { lines &= 0x7fff; }
 		break;
 	case 5:	adr = 0x48;
 		if (keep) { lines |= 0x8000; }
-		else  { lines &= 0x7fff; }
+		else { lines &= 0x7fff; }
 		break;
 	case 6:	adr = 0x4A;
 		if (keep) { lines |= 0x8000; }
-		else  { lines &= 0x7fff; }
+		else { lines &= 0x7fff; }
 		break;
 	case 7:	adr = 0x4C;
 		if (keep) { lines |= 0x8000; }
-		else  { lines &= 0x7fff; }
+		else { lines &= 0x7fff; }
 		break;
 	case 8:	adr = 0x4E;
 		if (keep) { lines |= 0x8000; }
-		else  { lines &= 0x7fff; }
+		else { lines &= 0x7fff; }
 		break;
 	}
 	//TODO make function write word or split in writebytes
@@ -3879,7 +3872,7 @@ void SetupDELAY(UINT32 drvno, ULONG delay)
 	ULONG reg = 0;
 	DELAY = delay;// DELAY is global in BOARD
 
-	//new for new boards check for S0 length if DELAY reg is there
+				  //new for new boards check for S0 length if DELAY reg is there
 	ReadLongIOPort(drvno, &reg, 0); //read LCR0 for check length 0xffffffco
 	reg = ~reg; //length is inverted
 	if (reg>0x34)
@@ -3891,7 +3884,7 @@ void SetupDELAY(UINT32 drvno, ULONG delay)
 
 void SetupHAModule(BOOL irsingle, ULONG fftlines)
 {//set to module for C8061 & C7041
-	//set the globals in BOARD
+ //set the globals in BOARD
 	FFTLINES = fftlines;
 	HA_MODULE = TRUE;
 	HA_IRSingleCH = irsingle;
@@ -3910,7 +3903,7 @@ void PickOneFifoscan(UINT32 drvno, pArrayT pdioden, BOOL* pabbr, BOOL* pspace, U
 		WaitTrigger(drvno, FALSE, pspace, pabbr);//test abbruch
 	} while ((!FlagXCKI(drvno)) && (*pabbr == FALSE));//sync to active read
 
-	//don't reset Fifo during a read
+													  //don't reset Fifo during a read
 	do {//here used for Keypressed
 		WaitTrigger(drvno, FALSE, pspace, pabbr);//test abbruch
 	} while ((FlagXCKI(drvno)) && (*pabbr == FALSE));//wait for not active read
@@ -3921,16 +3914,16 @@ void PickOneFifoscan(UINT32 drvno, pArrayT pdioden, BOOL* pabbr, BOOL* pspace, U
 		WaitTrigger(drvno, FALSE, pspace, pabbr);//test abbruch
 	} while ((!FFValid(drvno)) && (*pabbr == FALSE));//wait for 1 line in Fifo
 
-	//copy data from fifo to buffer pDIODEN
-	//ReadFifo(drvno,pdioden,fkt);
+													 //copy data from fifo to buffer pDIODEN
+													 //ReadFifo(drvno,pdioden,fkt);
 	WriteFile(ahCCDDRV[drvno], pdioden, pixel * 2, &lwritten, NULL); //write to PC RAM
 
-	//	DisableFifo(drvno);
+																	 //	DisableFifo(drvno);
 }//PickOneFifoscan
 
 
 
-//********************  thread priority stuff
+ //********************  thread priority stuff
 
 BOOL ThreadToPriClass(ULONG threadp, DWORD *priclass, DWORD *prilevel)
 { //converts threadp value (1..31) to process priority class and thread priority level 
@@ -4026,7 +4019,7 @@ UINT64 LargeToInt(LARGE_INTEGER li)
 
 UINT64 InitHRCounter()
 {//returns TPS ticks per sec
-	// init high resolution counter 
+ // init high resolution counter 
 	BOOL ifcounter;
 	UINT64 tps = 0;
 	LARGE_INTEGER freq;
@@ -4053,10 +4046,10 @@ UINT64 ticksTimestamp()
 }//ticksTimestamp
 
 
-//calc delay in ticks from us
+ //calc delay in ticks from us
 UINT64 ustoTicks(ULONG us)
 {// init high resolution counter 
-	// and calcs DELAYTICKS from m_belPars.m_belDelayMsec
+ // and calcs DELAYTICKS from m_belPars.m_belDelayMsec
 	BOOL ifcounter;
 	UINT64 delaytks = 0;
 	UINT64 tps = 0; //ticks per second
@@ -4080,7 +4073,7 @@ UINT64 ustoTicks(ULONG us)
 
 UINT32 Tickstous(UINT64 tks)
 {// init high resolution counter 
-	// and returns ms
+ // and returns ms
 	BOOL ifcounter;
 	UINT64 delay = 0;
 	UINT64 tps = 0; //ticks per second
@@ -4100,7 +4093,7 @@ UINT32 Tickstous(UINT64 tks)
 } // Tickstous
 
 
-// ************************  COOLER Functions  *********************
+  // ************************  COOLER Functions  *********************
 
 void ActCooling(UINT32 drvno, BOOL on)
 {//activates cooling with IFC signal
@@ -4300,12 +4293,12 @@ void SetADGain(UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, 
 
 void FreeMemInfo(UINT64 *pmemory_all, UINT64 *pmemory_free)
 {		//get info: how much memory is installed and how much is available
-	// Use to convert bytes to KB
+		// Use to convert bytes to KB
 #define DIV 1024
 
-	// Specify the width of the field in which to print the numbers. 
-	// The asterisk in the format specifier "%*I64d" takes an integer 
-	// argument and uses it to pad and right justify the number.
+		// Specify the width of the field in which to print the numbers. 
+		// The asterisk in the format specifier "%*I64d" takes an integer 
+		// argument and uses it to pad and right justify the number.
 #define WIDTH 7
 
 
