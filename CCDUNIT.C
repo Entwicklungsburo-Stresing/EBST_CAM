@@ -545,7 +545,8 @@ void Contimess(void *dummy)
 
 	IsrCounter = 0;
 
-	_beginthread(ReadFFLoopThread, 0, &params);
+	//_beginthread(ReadFFLoopThread, 0, &params);//thread
+	_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//cam_thread[0] = (HANDLE)_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//threadex
 
 	if (both_boards){
 		struct ffloopparams params2;
@@ -555,7 +556,8 @@ void Contimess(void *dummy)
 		params2.blocktrigger = 0;
 		params2.btrig_ch = 0;
 
-		_beginthread(ReadFFLoopThread, 0, &params2);
+		//_beginthread(ReadFFLoopThread, 0, &params2);//thread
+		_beginthreadex(0, 0, &ReadFFLoopThread, &params2, 0, 0);//cam_thread[1] = (HANDLE)_beginthreadex(0, 0, &ReadFFLoopThread , &params2, 0, 0); //threadex
 	}
 
 	DWORD64 IsrNumber = Nob*Nospb / (DMA_BUFSIZEINSCANS/DMA_HW_BUFPARTS);

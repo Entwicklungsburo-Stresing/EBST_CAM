@@ -959,14 +959,7 @@ BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 {	//alloc DMA buffer - should only be called once
 	//gets address of DMASubBuf from driver and copy it later to our pDMABigBuf
 	DWORD dwStatus;
-	PUSHORT tempBuf;
 	WDC_Err("entered SetupPCIE_DMA\n");
-
-
-	//tempBuf = (PUSHORT)pDMABigBufBase[drvno] + 500 * sizeof(USHORT);
-	//WDC_Err("setupdma: bigbuf Pixel500: %i\n", *tempBuf);
-
-
 
 	DMA_bufsizeinbytes = DMA_BUFSIZEINSCANS *_PIXEL * sizeof(USHORT);
 
@@ -3721,12 +3714,13 @@ BOOL FFFull(UINT32 drvno)
 
 BOOL FFOvl(UINT32 drvno)
 {	// had Fifo overflow
-	WDC_Err("FFOvl\n");
 	BYTE data = 0;
 	ReadByteS0(drvno, &data, 0x13);
 	data &= 0x08; //0x20; if not saved
-	if (data>0) return TRUE; //empty
-
+	if (data > 0) {
+		WDC_Err("FFOvl\n");
+		return TRUE; 
+	}
 	return FALSE;
 }
 
