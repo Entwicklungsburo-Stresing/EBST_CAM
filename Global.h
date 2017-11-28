@@ -88,6 +88,13 @@ BOOL DISP2 = FALSE;		//display 2 cameras parallel, TRUE for double line
 typedef ArrayT* pArrayT; 
 //!! long for standard
 
+struct ffloopparams {
+	UINT32 drv;
+	UINT32 exptus;
+	UINT8 exttrig;
+	UINT8 blocktrigger;
+	UINT8 btrig_ch;
+};
 
 /*
 //delete after deleting ringreadthread									// array type is defined in board.h
