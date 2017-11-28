@@ -868,8 +868,7 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 		SetDlgItemInt(hDlg, IDC_nob, Nob, FALSE);
 		SetDlgItemInt(hDlg, IDC_nospb, Nospb, FALSE);
 
-		FreeMemInfo(&builtinram, &freeram);
-		SetDlgItemInt(hDlg, IDC_FREERAM, freeram / divMB, 0);
+		FreeMemInfo(&builtinram, &freeram); 
 		SetDlgItemInt(hDlg, IDC_BUILTINRAM, builtinram / divMB, 0);
 
 		return (TRUE);
