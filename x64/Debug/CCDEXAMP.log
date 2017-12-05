@@ -125,39 +125,39 @@ c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(426): warning C4101: 'fn': unrefere
 c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(439): warning C4101: 'val': unreferenced local variable
 c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(423): warning C4101: 'test': unreferenced local variable
 c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(432): warning C4101: 'TrmsString': unreferenced local variable
-Ccdexamp.c(157): warning C4244: 'return': conversion from 'WPARAM' to 'int', possible loss of data
-Ccdexamp.c(68): warning C4996: 'GetVersion': was declared deprecated
+Ccdexamp.c(156): warning C4244: 'return': conversion from 'WPARAM' to 'int', possible loss of data
+Ccdexamp.c(67): warning C4996: 'GetVersion': was declared deprecated
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\um\sysinfoapi.h(184): note: see declaration of 'GetVersion'
-Ccdexamp.c(272): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+Ccdexamp.c(271): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\stdio.h(1772): note: see declaration of 'sprintf'
-Ccdexamp.c(281): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+Ccdexamp.c(280): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\stdio.h(1772): note: see declaration of 'sprintf'
-Ccdexamp.c(287): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+Ccdexamp.c(286): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\stdio.h(1772): note: see declaration of 'sprintf'
-Ccdexamp.c(289): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+Ccdexamp.c(288): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\stdio.h(1772): note: see declaration of 'sprintf'
-Ccdexamp.c(294): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+Ccdexamp.c(293): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\stdio.h(1772): note: see declaration of 'sprintf'
-Ccdexamp.c(296): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+Ccdexamp.c(295): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\stdio.h(1772): note: see declaration of 'sprintf'
-Ccdexamp.c(299): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+Ccdexamp.c(298): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\stdio.h(1772): note: see declaration of 'sprintf'
-Ccdexamp.c(309): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+Ccdexamp.c(308): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\stdio.h(1772): note: see declaration of 'sprintf'
-Ccdexamp.c(312): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+Ccdexamp.c(311): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\stdio.h(1772): note: see declaration of 'sprintf'
-Ccdexamp.c(314): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+Ccdexamp.c(313): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\stdio.h(1772): note: see declaration of 'sprintf'
-Ccdexamp.c(450): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+Ccdexamp.c(449): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\ucrt\stdio.h(1772): note: see declaration of 'sprintf'
+Ccdexamp.c(556): warning C4244: '=': conversion from 'LRESULT' to 'DWORD', possible loss of data
 Ccdexamp.c(557): warning C4244: '=': conversion from 'LRESULT' to 'DWORD', possible loss of data
-Ccdexamp.c(558): warning C4244: '=': conversion from 'LRESULT' to 'DWORD', possible loss of data
-Ccdexamp.c(509): warning C4101: 'TrmsString': unreferenced local variable
-Ccdexamp.c(872): warning C4244: 'function': conversion from 'UINT64' to 'UINT', possible loss of data
-Ccdexamp.c(933): warning C4244: 'function': conversion from 'UINT64' to 'UINT', possible loss of data
+Ccdexamp.c(508): warning C4101: 'TrmsString': unreferenced local variable
+Ccdexamp.c(871): warning C4244: 'function': conversion from 'UINT64' to 'UINT', possible loss of data
+Ccdexamp.c(932): warning C4244: 'function': conversion from 'UINT64' to 'UINT', possible loss of data
+Ccdexamp.c(958): warning C4244: 'function': conversion from 'UINT64' to 'UINT', possible loss of data
 Ccdexamp.c(959): warning C4244: 'function': conversion from 'UINT64' to 'UINT', possible loss of data
-Ccdexamp.c(960): warning C4244: 'function': conversion from 'UINT64' to 'UINT', possible loss of data
-Ccdexamp.c(964): warning C4244: 'function': conversion from 'UINT64' to 'UINT', possible loss of data
+Ccdexamp.c(963): warning C4244: 'function': conversion from 'UINT64' to 'UINT', possible loss of data
 c:\entw\pcie\64bit\ex2cofifo_jungo\board.c(2957): warning C4700: uninitialized local variable 'pReadArray' used
   CCDEXAMP.vcxproj -> C:\ENTW\PCIE\64bit\Ex2CoFifo_Jungo\x64\Debug\CCDEXAMP.exe
   CCDEXAMP.vcxproj -> .\Debug/CCDEXAMP.pdb (Full PDB)
