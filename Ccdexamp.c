@@ -8,7 +8,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <process.h>	  // for Thread example
-#include <windows.h>
 #include <CommCtrl.h>
 
 #include "resource.h"
