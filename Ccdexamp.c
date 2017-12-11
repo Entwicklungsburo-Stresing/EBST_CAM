@@ -11,12 +11,22 @@
 #include <CommCtrl.h>
 
 #include "resource.h"
-#include "BOARD.h"
 #include "GLOBAL.h" 
-#include "BOARD.C"
 #include "CCDUNIT.C"
 
- 
+#ifdef _DLL
+	UINT8 Number_of_boards = 0;
+	BOOL contimess_run_once = FALSE;
+
+	ULONG aFLAG816[5] = { 1, 1, 1, 1, 1 };  //AD-Flag
+	ULONG aPIXEL[5] = { 0, 0, 0, 0, 0 };	// pixel
+	ULONG aXCKDelay[5] = { 1000, 1000, 1000, 1000, 1000 };	// sensor specific delay
+	BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
+#else
+	#include "BOARD.C"
+#endif
+
+
 
 #if defined (WIN32)
 	#define IS_WIN32 TRUE
@@ -72,7 +82,21 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
    else if ( !RegisterClass( &wc ) )
       return( FALSE );
 
+#ifdef _DLL
+   Number_of_boards = DLLCCDDrvInit(DRV);
 
+   if (Number_of_boards < 1)
+   {
+	   ErrorMsg(" Can't open CCD driver ");
+	   return (FALSE);
+   };
+
+   if (!DLLInitBoard(DRV, _PIXEL, FLAG816, 0, aXCKDelay))//pclk is not used
+   {
+	   ErrorMsg(" Can't set Boardvars in intiboard ");
+	   return (FALSE);
+   };
+#else
   if (! CCDDrvInit()) 
 		{ErrorMsg(" Can't open CCD driver ");
 		return (FALSE);
@@ -90,6 +114,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		  ErrorMsg(" Can't open second board ");
 		  return (FALSE);
 	  }
+#endif
  
 
    hInst = hInstance; 
@@ -745,7 +770,7 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
 			  //StopRingReadThread();
 			  //board 1
 
-			  if (NUMBER_OF_BOARDS >= 2){
+			  if (Number_of_boards >= 2){
 				  StopFFTimer(2);
 				  SetIntFFTrig(2);//disables ext. Trig.
 				  CCDDrvExit(2);
@@ -942,6 +967,13 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 				Nob = nob_input;
 				Nospb = nospb_input;
 
+#ifdef _DLL
+				DLLSetupDMA(DRV, Nospb, Nob);
+				if (both_boards)
+					DLLSetupDMA(2, Nospb, Nob);
+			}
+#else
+
 				if (pBLOCKBUF[choosen_board])
 					free(pBLOCKBUF[choosen_board]);
 
@@ -963,7 +995,7 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 				SetDlgItemInt(hDlg, IDC_ALLOCRAM, allocram, 0);
 			else//if RAM is bigger than 100gb
 				SetDlgItemText(hDlg, IDC_ALLOCRAM, "calculation error");
-
+#endif
 			
 				
 
@@ -990,7 +1022,7 @@ LRESULT CALLBACK ChooseBoard(HWND hDlg,
 	{
 	case WM_INITDIALOG:
 		//if there is just one board initialized gray out board 2 option and both option
-		if (NUMBER_OF_BOARDS < 2){
+		if (Number_of_boards < 2){
 			EnableWindow(GetDlgItem(hDlg, IDC_EC_RADIO2), FALSE);
 			EnableWindow(GetDlgItem(hDlg, IDC_EC_RADIO_BOTH), FALSE);
 			CheckDlgButton(hDlg, IDC_EC_RADIO1, TRUE);

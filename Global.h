@@ -84,6 +84,9 @@ BOOL DISP2 = FALSE;		//display 2 cameras parallel, TRUE for double line
 	typedef USHORT ArrayT; //!! USHORT for linear 12/16bit word array or resort or highest speed
 	#define MAXVAL USHRT_MAX
 
+#ifdef _DLL
+	BOOL contimess_run_once = FALSE;
+#endif
 
 typedef ArrayT* pArrayT; 
 //!! long for standard
