@@ -16,7 +16,6 @@
 
 #ifdef _DLL
 	UINT8 Number_of_boards = 0;
-	BOOL contimess_run_once = FALSE;
 
 	ULONG aFLAG816[5] = { 1, 1, 1, 1, 1 };  //AD-Flag
 	ULONG aPIXEL[5] = { 0, 0, 0, 0, 0 };	// pixel
@@ -213,8 +212,11 @@ int j=0;
 char fn[260];
 ULONG TDispus=0;
 
-TDispus = Tickstous(TICKSDISP); // in us
-
+#ifdef _DLL
+	TDispus = DLLTickstous(TICKSDISP); // in us
+#else
+	TDispus = Tickstous(TICKSDISP); // in us
+#endif
 j=sprintf_s(fn,260,"Timing  \n");
 //j+=sprintf(fn+j,"treadpix:\t\t%04d ns \n",TReadPix);
 j+=sprintf_s(fn+j,260,"tdisplay:\t\t%06d µs \n",TDispus);

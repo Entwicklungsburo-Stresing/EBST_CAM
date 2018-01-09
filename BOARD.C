@@ -3,8 +3,7 @@
 //	V2.03.1  GS  3/2017
 //	- new function DLLFreeMemInfo(UINT64 memory_all, UINT64 memory_free)
 
-
-
+#ifndef _DLL
 //#include "stdafx.h"		// use in C++ only
 //#include "global.h"		// use in C++ only
 #include "ccdctl.h" //"ccdctrl.h"
@@ -4338,3 +4337,4 @@ void FreeMemInfo(UINT64 *pmemory_all, UINT64 *pmemory_free)
 	return;
 
 }
+#endif

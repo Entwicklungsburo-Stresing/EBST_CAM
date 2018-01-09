@@ -1,10 +1,13 @@
 
-
+#ifndef _DLL
+#include "BOARD.h"
+#endif
 BYTE Dispcnt = 0;
 int yVal = 0;
 volatile int testcnt = 0;
 UINT choosen_board = 1;
 BOOL both_boards = FALSE;
+
 
 void GetRmsVal(BYTE ch, ULONG nos)
 			{
@@ -313,8 +316,8 @@ void UpdateTxT(void)
 
 
 	
-	j = sprintf_s(TrmsString, 260, " , linecounter max is %u , ", GetLastMaxLines());
-	j += sprintf_s(TrmsString + j, 260, " ISRTime: %u us", GetISRTime());
+	//B!j = sprintf_s(TrmsString, 260, " , linecounter max is %u , ", GetLastMaxLines());
+	//B!j += sprintf_s(TrmsString + j, 260, " ISRTime: %u us", GetISRTime());
 
 	
 	xPos = GetCursorPosition();
@@ -346,9 +349,10 @@ void UpdateTxT(void)
 	j += sprintf_s(TrmsString + j, 260, " , err=%d , val=%d", ErrCnt, ErrVal);
 #endif
 
-	if (FFOvl(choosen_board) == TRUE) 	{
+	/*B!if (FFOvl(choosen_board) == TRUE) 	{
 		j += sprintf_s(TrmsString + j, 260, " , overflow! "); }
 	else j += sprintf_s(TrmsString + j, 260, "                      ");
+	*/
 	TextOut(hMSDC, 20, YLENGTH + 50, TrmsString, j);
 
 	RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
@@ -462,12 +466,35 @@ void Contimess(void *dummy)
 
 	//stop all and clear FIFO
 	//WDC_Err(choosen_board);
+#ifdef _DLL
+	DLLStopFFTimer(choosen_board);
+	DLLSetIntTrig(choosen_board);
+	DLLRSFifo(choosen_board);
+
+	gain = 6;
+	DLLSetADGain(choosen_board, 1, gain, gain, gain, gain, gain, gain, gain, gain); //set gain to values g1..g8 in Board.C
+																				 //	SetADGain(choosen_board, 1, 0, 0, 0, 0, 0, 0, 0, 0); //set gain to values g1..g8 in Board.C
+	if (both_boards) {
+		DLLStopFFTimer(2);
+		DLLSetIntTrig(2);
+		DLLRSFifo(2);
+
+
+
+		//setups
+		//	SetupDELAY(choosen_board,DELAYini);	//init WRFIFO delay
+
+		DLLRsTOREG(2); // reset TOREG
+					//set TrigOut, default= XCK
+		DLLSetTORReg(2, 0);
+
+		gain = 6;
+		DLLSetADGain(2, 1, gain, gain, gain, gain, gain, gain, gain, gain);
+	}
+#else
 	StopFFTimer(choosen_board);
 	SetIntFFTrig(choosen_board);
 	RSFifo(choosen_board);
-
-
-
 	//setups
 	//	SetupDELAY(choosen_board,DELAYini);	//init WRFIFO delay
 
@@ -489,21 +516,21 @@ void Contimess(void *dummy)
 	//SendFLCAM(choosen_board, 1, 0x0, 1);	//reset
 
 	//Version 2 ch byte
-//-2	SendFLCAM(choosen_board,1, 0x28, 0x0000); //set to byte wise mode
-//-2	SendFLCAM(choosen_board, 1, 0x46, 0x8409); //set to 2 wire mode & 14bit & MSB first
+	//-2	SendFLCAM(choosen_board,1, 0x28, 0x0000); //set to byte wise mode
+	//-2	SendFLCAM(choosen_board, 1, 0x46, 0x8409); //set to 2 wire mode & 14bit & MSB first
 
-//		SendFLCAM(choosen_board,1, 0x26, 0x00b0); //set custom pattern D4=bit0 -> 10=1, 80=8, 800=80, f0=1111=15, fff=max
+	//		SendFLCAM(choosen_board,1, 0x26, 0x00b0); //set custom pattern D4=bit0 -> 10=1, 80=8, 800=80, f0=1111=15, fff=max
 	//	SendFLCAM(choosen_board, 1, 0x25, 0x11); //set custom pattern with D0(=D12)+D1(=D13)=1 -> max=3fff=16383
-//		SendFLCAM(choosen_board,1, 0x25, 0x10); //single custom pattern
-//		SendFLCAM(choosen_board, 1, 0x42, 0x00); //clk align
+	//		SendFLCAM(choosen_board,1, 0x25, 0x10); //single custom pattern
+	//		SendFLCAM(choosen_board, 1, 0x42, 0x00); //clk align
 	//  SendFLCAM(choosen_board,1, 0x25, 0x40); //ramp pattern
 
 	//RSEC(choosen_board);
 
 	gain = 6;
 	SetADGain(choosen_board, 1, gain, gain, gain, gain, gain, gain, gain, gain); //set gain to values g1..g8 in Board.C
-//	SetADGain(choosen_board, 1, 0, 0, 0, 0, 0, 0, 0, 0); //set gain to values g1..g8 in Board.C
-	if (both_boards){
+																				 //	SetADGain(choosen_board, 1, 0, 0, 0, 0, 0, 0, 0, 0); //set gain to values g1..g8 in Board.C
+	if (both_boards) {
 		StopFFTimer(2);
 		SetIntFFTrig(2);
 		RSFifo(2);
@@ -514,12 +541,15 @@ void Contimess(void *dummy)
 		//	SetupDELAY(choosen_board,DELAYini);	//init WRFIFO delay
 
 		RsTOREG(2); // reset TOREG
-		//set TrigOut, default= XCK
+					//set TrigOut, default= XCK
 		SetTORReg(2, 0);
 
 		gain = 6;
 		SetADGain(2, 1, gain, gain, gain, gain, gain, gain, gain, gain);
 	}
+#endif
+
+
 	
 	UserBufInScans = Nospb;
 
@@ -536,15 +566,22 @@ void Contimess(void *dummy)
 	//GS why delay?
 	Sleep(100);
 
+
+
+
+#ifdef _DLL
+	if(both_boards)
+		DLLReadFFLoop(choosen_board, ExpTime, EXTTRIGFLAG, 0, 0, 3);//if both cams are activated
+	else
+		DLLReadFFLoop(choosen_board, ExpTime, EXTTRIGFLAG, 0, 0, choosen_board);
+#else
+	IsrCounter = 0;
 	struct ffloopparams params;
 	params.drv = choosen_board;
 	params.exptus = ExpTime;
 	params.exttrig = EXTTRIGFLAG;
 	params.blocktrigger = 0;
 	params.btrig_ch = 0;
-
-	IsrCounter = 0;
-
 	//_beginthread(ReadFFLoopThread, 0, &params);//thread
 	_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//cam_thread[0] = (HANDLE)_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//threadex
 
@@ -569,8 +606,9 @@ void Contimess(void *dummy)
 		
 	}
 	//ReadFFLoop(choosen_board, ExpTime, FREQ, EXTTRIGFLAG, 0,  0);
-	Sleep(100); //for the thread if there is just one isr 
+	Sleep(100);//for the thread if there is just one isr 
 	//start 2nd thread for getting data in highest std priority, ring=200 lines
+#endif
 	/*
 	if (!HWINTR_EN)
 	{
