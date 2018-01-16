@@ -15,7 +15,7 @@
 #include "CCDUNIT.C"
 
 #ifdef _DLL
-	UINT8 Number_of_boards = 0;
+	UINT8 NUMBER_OF_BOARDS = 0;
 
 	ULONG aFLAG816[5] = { 1, 1, 1, 1, 1 };  //AD-Flag
 	ULONG aPIXEL[5] = { 0, 0, 0, 0, 0 };	// pixel
@@ -82,9 +82,9 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
       return( FALSE );
 
 #ifdef _DLL
-   Number_of_boards = DLLCCDDrvInit(DRV);
+   NUMBER_OF_BOARDS = DLLCCDDrvInit(DRV);
 
-   if (Number_of_boards < 1)
+   if (NUMBER_OF_BOARDS < 1)
    {
 	   ErrorMsg(" Can't open CCD driver ");
 	   return (FALSE);
@@ -263,7 +263,7 @@ void AboutCFS(HWND hWnd)
 	ULONG BData;
 	ULONG actpayload;
 
-
+#ifndef _DLL
 	if (!ReadLongIOPort(choosen_board, &S0Data, 0))
 	{
 		ErrorMsg(" BOARD not found! ");
@@ -340,6 +340,85 @@ void AboutCFS(HWND hWnd)
 	j += sprintf(fn + j, "number of TLPs is: %d \n", BData);
 
 	MessageBox(hWnd, fn, "DMA transfer payloads", MB_OK);
+
+#else
+	if (!DLLReadLongIOPort(choosen_board, &S0Data, 0))
+	{
+		ErrorMsg(" BOARD not found! ");
+		return;
+	}
+	/*
+	j=sprintf(fn,"CFS - registers   \n");
+	j+=sprintf(fn+j,"PCIE number of BARs = 0x%x\n",S0Data);
+
+	ReadLongIOPort(choosen_board,&S0Data,1);
+	j+=sprintf(fn+j,"BAR0 address = 0x%x\n",S0Data);
+	ReadLongIOPort(choosen_board,&S0Data,2);
+	j+=sprintf(fn+j,"BAR0 length 2 = 0x%x\n",S0Data);
+	ReadLongIOPort(choosen_board,&S0Data,3);
+	j+=sprintf(fn+j,"BAR1 address 3 = 0x%x\n",S0Data);
+	ReadByteS0(choosen_board,&S0Data,8); //!B basties test
+	j+=sprintf(fn+j,"BAR1 length 4 = 0x%x\n",S0Data);
+	*/
+	/* dev sn not implemented
+	j=0;
+	ReadLongIOPort(choosen_board,&BData,0x104);
+	j+=sprintf(fn+j,"i=0x%x : 0x%.8x\n",0x104,BData);
+	ReadLongIOPort(choosen_board,&BData,0x108);
+	j+=sprintf(fn+j,"i=0x%x : 0x%.8x\n",0x108,BData);
+
+	MessageBox(hWnd,fn,"Dev SN",MB_OK);
+	*/
+	j = 0;
+	for (i = 0x0; i<0x40; i = i + 4)
+	{
+		DLLReadLongIOPort(choosen_board, &BData, i);
+		j += sprintf(fn + j, "i=0x%x : 0x%.8x\n", i, BData);
+		//i+=3;
+	}
+
+	MessageBox(hWnd, fn, "Conf Space Header", MB_OK);
+
+	for (j = 0, i = 0x40; i<0x6c; i = i + 4)
+	{
+		DLLReadLongIOPort(choosen_board, &BData, i);
+		j += sprintf(fn + j, "i=0x%x : 0x%.8x\n", i, BData);
+	}
+	MessageBox(hWnd, fn, "Conf Space ext. capabilities", MB_OK);
+	//the following code have to be printed in binary code , not in hex
+
+	j = 0;
+	j += sprintf(fn + j, "PAY_LOAD values : 0 = 128 bytes, 1 = 256 bytes, 2 = 512 bytes\n");
+	DLLReadLongIOPort(choosen_board, &BData, 0x5C);//0x4c		
+	j += sprintf(fn + j, "PAY_LOAD Supported : 0x%x\n", BData & 0x7);
+
+	//		WriteLongIOPort(choosen_board,0x2840,0x60);  not working  !! destroys PC? !!
+	DLLReadLongIOPort(choosen_board, &BData, 0x60);
+	actpayload = (BData >> 5) & 0x7;
+	j += sprintf(fn + j, "PAY_LOAD : 0x%x\n", actpayload);
+	DLLReadLongIOPort(choosen_board, &BData, 0x60);
+	j += sprintf(fn + j, "MAX_READ_REQUEST_SIZE : 0x%x\n\n", (BData >> 12) & 0x7);
+
+	BData = aPIXEL[choosen_board];
+	j += sprintf(fn + j, "pixel: %d \n", BData);
+
+	switch (actpayload)
+	{
+	case 0: BData = 0x20;		break;
+	case 1: BData = 0x40;		break;
+	case 2: BData = 0x80;		break;
+	case 3: BData = 0x100;		break;
+	}
+
+	j += sprintf(fn + j, "TLP_SIZE is: %d DWORDs = %d BYTEs\n", BData, BData * 4);
+
+	BData = (_PIXEL - 1) / (BData * 2) + 1;
+	j += sprintf(fn + j, "number of TLPs should be: %d\n", BData);
+	DLLReadLongDMA(choosen_board, &BData, 16);
+	j += sprintf(fn + j, "number of TLPs is: %d \n", BData);
+
+	MessageBox(hWnd, fn, "DMA transfer payloads", MB_OK);
+#endif
 
 
 }//AboutCFS
@@ -598,7 +677,7 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
       case WM_COMMAND :
               switch( LOWORD( wParam ) )
               {
-
+#ifndef _DLL
                  case IDM_ABOUT :
 				 		DialogBox( hInst, "AboutBox", hWnd, (DLGPROC)About );
 						AboutDrv(choosen_board);
@@ -624,6 +703,33 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
 				 case IDM_ABOUTCFS:
 					 AboutCFS(hWnd);
 					 break;
+#else
+			  case IDM_ABOUT:
+				  DialogBox(hInst, "AboutBox", hWnd, (DLGPROC)About);
+				  DLLAboutDrv(choosen_board);
+				  break;
+
+			  case IDM_ABOUTTIME:
+				  DLLAboutTiming(hWnd);
+				  break;
+
+			  case IDM_ABOUTKEYS:
+				  DLLAboutKeys(hWnd);
+				  break;
+
+			  case IDM_ABOUTS0:
+				  DLLAboutS0(choosen_board);
+				  break;
+
+			  case IDM_ABOUTDMA:
+				  DLLAboutDMA(hWnd);
+				  break;
+
+
+			  case IDM_ABOUTCFS:
+				  DLLAboutCFS(hWnd);
+				  break;
+#endif
 
 				 case IDM_START :
 						if (! Running) Contimess(&dummy);
@@ -772,7 +878,7 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
 			  //StopRingReadThread();
 			  //board 1
 
-			  if (Number_of_boards >= 2){
+			  if (NUMBER_OF_BOARDS >= 2){
 				  StopFFTimer(2);
 				  SetIntFFTrig(2);//disables ext. Trig.
 				  CCDDrvExit(2);
@@ -1024,7 +1130,7 @@ LRESULT CALLBACK ChooseBoard(HWND hDlg,
 	{
 	case WM_INITDIALOG:
 		//if there is just one board initialized gray out board 2 option and both option
-		if (Number_of_boards < 2){
+		if (NUMBER_OF_BOARDS < 2){
 			EnableWindow(GetDlgItem(hDlg, IDC_EC_RADIO2), FALSE);
 			EnableWindow(GetDlgItem(hDlg, IDC_EC_RADIO_BOTH), FALSE);
 			CheckDlgButton(hDlg, IDC_EC_RADIO1, TRUE);
