@@ -1,6 +1,6 @@
 
 #ifndef _DLL
-#include "BOARD.h"
+	#include "board.h"
 #endif
 BYTE Dispcnt = 0;
 int yVal = 0;

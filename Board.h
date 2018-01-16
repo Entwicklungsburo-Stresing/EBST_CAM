@@ -9,6 +9,10 @@
 #define BoardVN  "2.31"
 
 
+BOOL contimess_run_once = FALSE;
+
+DWORD64 IsrCounter = 0;
+
 void ErrMsgBoxOn(void);
 void ErrMsgBoxOff(void); // switch to suppress error message boxes
 void ErrorMsg(char ErrMsg[40]);
@@ -145,6 +149,8 @@ void SetADGain(UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, 
 
 //jungo dma
 void StartReadWithDma(UINT32 drvno);
+
+unsigned int __stdcall ReadFFLoopThread(void *parg);
 
 // software ring buffer thread functions
 void StartRingReadThread(UINT32 drvno, ULONG ringfifodepth, ULONG threadp, __int16 releasems);

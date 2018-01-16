@@ -7,7 +7,7 @@
 //#include "stdafx.h"		// use in C++ only
 //#include "global.h"		// use in C++ only
 #include "ccdctl.h" //"ccdctrl.h"
-#include "board.h"
+//#include "board.h"
 #include <limits.h>
 #include <process.h>
 #include "windrvr.h"
@@ -95,7 +95,6 @@ BOOL escape_readffloop = FALSE;
 BOOL contffloop = FALSE;
 //DWORD64 ISRCounter[2] = { 0, 0};
 DWORD64 SubBufCounter[3] = { 0, 0, 0 };
-DWORD64 IsrCounter = 0;
 SHORT DMAUserBufIndex = 0;
 DWORD64 val = 0x0;
 //BYTE DontReadUserBufIndex = 0;
@@ -167,8 +166,6 @@ BOOL _SHOW_MSG = TRUE;
 
 
 BOOL DMAISRunning = FALSE;
-
-BOOL contimess_run_once = FALSE;
 
 // ***********     functions    **********************
 //B! FIXME die jungo-library für fehler und co müsste wahrscheinlich in BOARD.C reingeschrieben werden 
