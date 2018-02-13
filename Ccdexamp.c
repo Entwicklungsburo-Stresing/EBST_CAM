@@ -86,13 +86,13 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
    if (NUMBER_OF_BOARDS < 1)
    {
-	   ErrorMsg(" Can't open CCD driver ");
+	   DLLErrorMsg(" Can't open CCD driver ");
 	   return (FALSE);
    };
 
    if (!DLLInitBoard(DRV, _PIXEL, FLAG816, 0, aXCKDelay))//pclk is not used
    {
-	   ErrorMsg(" Can't set Boardvars in intiboard ");
+	   DLLErrorMsg(" Can't set Boardvars in intiboard ");
 	   return (FALSE);
    };
 #else
@@ -344,7 +344,7 @@ void AboutCFS(HWND hWnd)
 #else
 	if (!DLLReadLongIOPort(choosen_board, &S0Data, 0))
 	{
-		ErrorMsg(" BOARD not found! ");
+		DLLErrorMsg(" BOARD not found! ");
 		return;
 	}
 	/*
@@ -551,7 +551,12 @@ void AboutDMA(HWND hWnd)
 	j = 0;
 	for (i = 0; i <= 17; i++)
 	{
+#ifndef _DLL
 		ReadLongDMA(choosen_board, &S0Data, i * 4);
+#else
+		DLLReadLongDMA(choosen_board, &S0Data, i * 4);
+#endif
+
 		j += sprintf(fn + j, "%s \t : 0x%x\n", LUTDMAReg[i], S0Data);
 	}
 
@@ -589,7 +594,12 @@ j=sprintf_s(fn,s_size,"PCI - registers   \n");
 	//00-0f
 	for (i=0; i<0x30;i++)
 		{
-		ReadLongIOPort(choosen_board,&S0Data,i*4);
+
+#ifndef _DLL
+		ReadLongIOPort(choosen_board, &S0Data, i * 4);
+#else
+		DLLReadLongIOPort(choosen_board, &S0Data, i * 4);
+#endif
 		j+=sprintf_s(fn+j,s_size,"0x%x = 0x%x\n",i*4,S0Data);	
 		}
 
@@ -710,11 +720,11 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
 				  break;
 
 			  case IDM_ABOUTTIME:
-				  DLLAboutTiming(hWnd);
+				  AboutTiming(hWnd);
 				  break;
 
 			  case IDM_ABOUTKEYS:
-				  DLLAboutKeys(hWnd);
+				  AboutKeys(hWnd);
 				  break;
 
 			  case IDM_ABOUTS0:
@@ -722,12 +732,12 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
 				  break;
 
 			  case IDM_ABOUTDMA:
-				  DLLAboutDMA(hWnd);
+				  AboutDMA(hWnd);
 				  break;
 
 
 			  case IDM_ABOUTCFS:
-				  DLLAboutCFS(hWnd);
+				  AboutCFS(hWnd);
 				  break;
 #endif
 
@@ -780,6 +790,7 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
 				 case VK_F6:
 					if (! Running) Contimess(&dummy);
                     break;
+#ifndef _DLL
 				 case VK_F2://switch cooling on
 					ActCooling(choosen_board,TRUE);
 					break;
@@ -895,6 +906,128 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
               
 			  PostQuitMessage(0);
               break;
+#else
+				 case VK_F2://switch cooling on
+					 DLLActCooling(choosen_board, TRUE);
+					 break;
+				 case VK_F3://switch cooling off
+					 DLLActCooling(choosen_board, FALSE);
+					 break;
+				 case VK_F4:
+				 {//check temp good
+					 int j = 0;
+					 char header[260];
+
+					 if (DLLTempGood(choosen_board, 1) == TRUE)
+					 {
+						 j = sprintf_s(header, 260, " temp1 good        ");
+					 }
+					 else
+						 j = sprintf_s(header, 260, " temp1 not good ");
+
+					 if (DLLTempGood(choosen_board, 2) == TRUE)
+					 {
+						 j += sprintf_s(header + j, 260, " temp2 good        ");
+					 }
+					 else
+						 j += sprintf_s(header + j, 260, " temp2 not good ");
+
+					 TextOut(hMSDC, 100, LOY + YLENGTH + 17, header, j);
+					 break;
+				 }
+				 case VK_F5: //send IR_Setup
+							 //SetupIR(choosen_board,1); //reset
+							 // RE&RS enable
+							 //WriteByteS0(choosen_board,0x0f,0x30);
+					 break;
+				 case VK_F7: //set high amp
+					 HIAMP = TRUE;
+					 DLLVOn(choosen_board);
+					 break;
+				 case VK_F8: //set low amp
+					 HIAMP = FALSE;
+					 DLLVOff(choosen_board);
+					 break;
+
+					 //case VK_SHIFT:
+				 case VK_UP: //change y-scale
+					 if (GetAsyncKeyState(VK_SHIFT)) { YSHIFT += 1; }
+					 else XOFF += 1;
+					 if (YSHIFT>16) YSHIFT = 16;
+					 if (XOFF>_PIXEL / 600) XOFF = _PIXEL / 600;
+					 break;
+				 case VK_DOWN:
+					 if (GetAsyncKeyState(VK_SHIFT)) { YSHIFT -= 1; }
+					 else XOFF -= 1;
+					 if (YSHIFT<0) YSHIFT = 0;
+					 if (XOFF<1) XOFF = 1;
+					 break;
+				 case VK_RIGHT:
+					 /*XStart += 100;
+					 if (XStart>_PIXEL-XLENGTH*XOFF)
+					 XStart -= 100;*/
+					 PixelOdd = TRUE;
+					 break;
+				 case VK_LEFT:
+					 /* XStart -= 100;
+					 if (XStart<0) XStart=0; */
+					 PixelOdd = FALSE;
+					 break;
+				 case VK_ESCAPE: //stop measurement
+				 case VK_SPACE:
+					 Running = FALSE;
+					 //Sleep(20);
+					 //CleanupPCIE_DMA(choosen_board);
+					 DLLStopRingReadThread();
+					 DLLStopFFTimer(choosen_board);
+					 DLLSetIntTrig(choosen_board);//disables ext. Trig.
+					 UpdateTxT();
+					 break;
+
+
+			  }
+			  break;
+
+		case WM_MOUSEMOVE:
+			if (contimess_run_once) {
+				UpdateTxT();
+			}
+
+			break;
+
+			/*		case WM_PAINT:
+			case WM_WINDOWPOSCHANGED  :
+			ShowWindow(hWnd,SW_SHOW);
+			//Display( 1,PLOTFLAG);
+			break;
+			*/
+		case WM_DESTROY:
+			//stop timer if it is still running
+			Running = FALSE;
+			Sleep(20); // if the DMA Interrupt is running
+					   //CleanupPCIE_DMA(choosen_board);
+					   //StopRingReadThread();
+					   //board 1
+
+			if (NUMBER_OF_BOARDS >= 2) {
+				DLLStopFFTimer(2);
+				DLLSetIntTrig(2);//disables ext. Trig.
+				//DLLCCDDrvExit(2);//check for two boards happens in the dll
+			}
+
+			DLLStopFFTimer(1);
+			DLLSetIntTrig(1);//disables ext. Trig.
+							//WDC_DriverClose();
+			DLLCCDDrvExit(1);
+			//board 2
+
+
+			ReleaseDC(hMSWND, hMSDC);
+
+			PostQuitMessage(0);
+			break;
+
+#endif
 
       default : 
             return( DefWindowProc( hWnd, uMsg, wParam, lParam ) );
@@ -965,10 +1098,15 @@ BOOL success=FALSE;
 				if (IsDlgButtonChecked(hDlg,IDC_RADIO3)==BST_CHECKED) TrigMod=2;
 
 				// set slope for ext. trigger
+#ifndef _DLL
 				if (TrigMod == 0)	HighSlope(choosen_board);
 				if (TrigMod == 1)	LowSlope(choosen_board);
 				if (TrigMod == 2)	BothSlope(choosen_board);
-
+#else
+				if (TrigMod == 0)	DLLHighSlope(choosen_board);
+				if (TrigMod == 1)	DLLLowSlope(choosen_board);
+				if (TrigMod == 2)	DLLBothSlope(choosen_board);
+#endif
 
 				EndDialog(hDlg, TRUE);        
                 return (TRUE);
@@ -1000,7 +1138,11 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 		SetDlgItemInt(hDlg, IDC_nob, Nob, FALSE);
 		SetDlgItemInt(hDlg, IDC_nospb, Nospb, FALSE);
 
-		FreeMemInfo(&builtinram, &freeram); 
+#ifndef _DLL
+		FreeMemInfo(&builtinram, &freeram);
+#else
+		DLLFreeMemInfo(&builtinram, &freeram); 
+#endif
 		SetDlgItemInt(hDlg, IDC_BUILTINRAM, builtinram / divMB, 0);
 
 		return (TRUE);
@@ -1021,6 +1163,12 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 			{
 				Nob = nob_input;
 				Nospb = nospb_input;
+#ifdef _DLL
+				DLLSetupDMA(DRV, Nospb, Nob);
+				if (both_boards)
+					DLLSetupDMA(2, Nospb, Nob);
+			}
+#else
 				if (!BufLock(choosen_board, Nob, Nospb))
 					MessageBox(hMSWND, "allocating Buffer fails", "Error", MB_OK);
 				else
@@ -1031,6 +1179,7 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 					else
 						MessageBox(hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK);
 			}
+#endif
 
 			trackbar_nospb = Nospb;
 			while (trackbar_nospb > 30000){ //max for trackbar length
@@ -1207,8 +1356,11 @@ BOOL success=FALSE;
 				val = GetDlgItemInt(hDlg,IDC_TLevel,&success ,FALSE);	
 				if (success) 
 					{TempLevel=val;
-					SetTemp(choosen_board,(UCHAR)TempLevel);}
-
+#ifndef _DLL
+					SetTemp(choosen_board, (UCHAR)TempLevel);}
+#else
+					DLLSetTemp(choosen_board,(UCHAR)TempLevel);}
+#endif
 
 				EndDialog(hDlg, TRUE);        
                 return (TRUE);
@@ -1292,8 +1444,12 @@ case WM_COMMAND:
 						tDAT = longval;
 						longval = tDAT;
 						if (longval != 0) longval |= 0x80000000;
+#ifndef _DLL
 						WriteLongS0(choosen_board, longval, 0x20); // DAT reg
-						}
+#else
+						DLLWriteLongS0(choosen_board, longval, 0x20); // DAT reg
+#endif
+					}
 					//get XCKDLY val
 					longval = GetDlgItemInt(hDlg, IDC_SETXDLY, &success, FALSE);
 					if (success)
@@ -1301,7 +1457,12 @@ case WM_COMMAND:
 						tXDLY = longval;
 						longval = tXDLY;
 						if (longval != 0) longval |= 0x80000000;
-						WriteLongS0(choosen_board, longval, 0x24); // XCKDLY reg
+#ifndef _DLL
+						WriteLongS0(choosen_board, longval, 0x24); // DAT reg
+#else
+						DLLWriteLongS0(choosen_board, longval, 0x24); // DAT reg
+#endif
+
 					}
 
 
@@ -1312,7 +1473,11 @@ case WM_COMMAND:
 					else val = 0;
 					if (val != 0) val |= 0x80;
 					// devider n=1 -> n /2
-					WriteByteS0(choosen_board,(BYTE) val,0x28);//TICNT reg
+#ifndef _DLL
+					WriteByteS0(choosen_board, (BYTE)val, 0x28);//TICNT reg
+#else
+					DLLWriteByteS0(choosen_board, (BYTE)val, 0x28);//TICNT reg
+#endif
 					val = GetDlgItemInt(hDlg,IDC_SETTCNT2,&success ,FALSE);
 					if (success) tTOCNT=val;
 					val = tTOCNT;
@@ -1320,8 +1485,11 @@ case WM_COMMAND:
 					else val = 0;
 					if (val != 0) val |= 0x80;
 					// devider n=1 -> n /2
-					WriteByteS0(choosen_board,(BYTE) val,0x2A);//TOCNT reg
-
+#ifndef _DLL
+					WriteByteS0(choosen_board, (BYTE)val, 0x2A);//TOCNT reg
+#else
+					DLLWriteByteS0(choosen_board, (BYTE)val, 0x2A);//TOCNT reg
+#endif
 					//				CheckRadioButton(hDlg,IDC_RADIO1,IDC_RADIO5,m_TOmodus);
 					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO1)==TRUE) m_TOmodus=0;
 					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO2)==TRUE) m_TOmodus=1;
@@ -1337,8 +1505,14 @@ case WM_COMMAND:
 					if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO19) == TRUE) m_TOmodus = 11;
 					if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO20) == TRUE) m_TOmodus = 12;
 
+#ifndef _DLL
 					RsTOREG(choosen_board);
 					SetTORReg(choosen_board, m_TOmodus);
+#else
+					DLLRsTOREG(choosen_board);
+					DLLSetTORReg(choosen_board, m_TOmodus);
+#endif
+					
 					/*
 					switch (m_TOmodus)
 					{	case 1: dbyte = 0x0; break; //XCK
