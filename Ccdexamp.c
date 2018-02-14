@@ -1164,9 +1164,9 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 				Nob = nob_input;
 				Nospb = nospb_input;
 #ifdef _DLL
-				DLLSetupDMA(DRV, Nospb, Nob);
+				nDLLSetupDMA(DRV, Nospb, Nob);
 				if (both_boards)
-					DLLSetupDMA(2, Nospb, Nob);
+					nDLLSetupDMA(2, Nospb, Nob);
 			}
 #else
 				if (!BufLock(choosen_board, Nob, Nospb))
@@ -1225,9 +1225,9 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 				Nospb = nospb_input;
 
 #ifdef _DLL
-				DLLSetupDMA(DRV, Nospb, Nob);
+				nDLLSetupDMA(DRV, Nospb, Nob);
 				if (both_boards)
-					DLLSetupDMA(2, Nospb, Nob);
+					nDLLSetupDMA(2, Nospb, Nob);
 			}
 #else
 
