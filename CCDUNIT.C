@@ -168,19 +168,30 @@ void Display(unsigned long db,BOOL Plot)
 void CopytoDispbuf(ULONG scan)
 {	//display buffer is long
 	//data array is word
-	int i;
-	PUSHORT tempBuf;
-
-	tempBuf = pDMABigBufBase[choosen_board] + scan * _PIXEL;
-	for (i = 0; i < (_PIXEL - 1); i++){
 	
-		DisplData[0][i] =  *(tempBuf + i);//DIODENRingBuf[i + 0*FirstPageOffset + 0 * RAMPAGESIZE];//20: its a random number of the Ringbuffer (max 99)
+	int i;
+#ifdef _DLL
+	UINT16 tempBuf[1200];
+	DLLReturnFrame(choosen_board, scan, 0, &tempBuf);
+
+	
+#else
+	
+	PUSHORT tempBuf;
+	tempBuf = pDMABigBufBase[choosen_board] + scan * _PIXEL;
+#endif
+	for (i = 0; i < (_PIXEL - 1); i++) {
+
+		DisplData[0][i] = *(tempBuf + i);
 	}
 
-
 	if (both_boards){
+#ifdef _DLL
+		DLLReturnFrame(2, scan, 0, &tempBuf);
+#else
 		tempBuf = pDMABigBufBase[2] + scan * _PIXEL;
-		for (i = 0; i < (_PIXEL - 1); i++){
+#endif
+		for (i = 0; i < (_PIXEL - 1); i++) {
 			DisplData[1][i] = *(tempBuf + i);//DIODENRingBuf[i + 0*FirstPageOffset + 0 * RAMPAGESIZE];//20: its a random number of the Ringbuffer (max 99)
 		}
 	}
