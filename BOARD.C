@@ -472,7 +472,7 @@ BOOL InitBoard(UINT32 drvno)
 
 	if ((drvno < 1) || (drvno>2)) return FALSE;
 	//PWDC_DEVICE pDev = (PWDC_DEVICE)hDev;
-	 DWORD dwStatus = 0;
+	DWORD dwStatus = 0;
 
 
 
