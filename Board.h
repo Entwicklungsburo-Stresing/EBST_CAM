@@ -25,7 +25,7 @@ BOOL CCDDrvInit(UINT32 drvno);	// init the driver -> true if found
 void CCDDrvExit(UINT32 drvno);	// closes the driver
 BOOL InitBoard(UINT32 drvno);	// init the board and alloc mem, call only once !
 void RSInterface(UINT32 drvno);		//set all registers to zero
-BOOL SetBoardVars(UINT32 drvno, BOOL sym, BOOL burst, ULONG pixel, ULONG waits, ULONG flag816, ULONG pportadr,
+BOOL SetBoardVars(UINT32 drvno, UINT32 camcnt, BOOL sym, BOOL burst, ULONG pixel, ULONG waits, ULONG flag816, ULONG pportadr,
 	ULONG pclk, ULONG xckdelay);
 BOOL SetupPCIE_DMA(UINT32 drvno);
 void StartPCIE_DMAWrite(UINT32 drvno);
