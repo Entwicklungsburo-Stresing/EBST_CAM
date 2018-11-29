@@ -47,8 +47,8 @@
 
 
 //display 2 graphics
-BOOL DISP2 = FALSE;		//display 2 cameras parallel, TRUE for double line 
-#define _HWCH2	FALSE	//true if 2 words are packet in one long ->resort to db1&db2 = PCI with adaptor board
+BOOL DISP2 = TRUE;		//display 2 cameras parallel, TRUE for double line 
+#define _HWCH2	TRUE	//true if 2 words are packet in one long ->resort to db1&db2 = PCI with adaptor board
 						//all double line systems
 #define _RESORTDB	FALSE	//true if ->resort to db1&db2 - only no FIFO
 
@@ -64,6 +64,7 @@ BOOL DISP2 = FALSE;		//display 2 cameras parallel, TRUE for double line
 #define DMA_SCANSPERINTR DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb nochmal /2
 
 #define _PIXEL  1088				// no of pixels min 300, should be multiple of 300, max 8100
+#define CAMCNT 2	
 #define _MAXDB	4					// no. of lines
 //#define Nos _MAXDB
 #define DMA_64BIT_EN FALSE
@@ -285,7 +286,7 @@ pArrayT pBLOCKBUF[3] = { NULL, NULL, NULL };
 PUSHORT pDMABigBufBase[3]; //not for dll
 
 //DWORD dwDMABufSize;// = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
-ULONG DisplData[2][1200];//array for display for 2 cams parallel
+ULONG DisplData[2][1200*CAMCNT];//array for display for 2 cams parallel
 
 //delete after deleting ringreadthread									// array type is defined in board.h
 //ArrayT DIODEN[_MAXDB][1200];		// global data array, could be 1 or 2 dim

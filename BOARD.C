@@ -64,13 +64,15 @@ enum {
 	DmaAddr_RDMATLPA = 0x01C,
 	DmaAddr_RDMATLPS = 0x020,
 	DmaAddr_RDMATLPC = 0x024,
+	//for extenden S0-Space:
 	DmaAddr_PCIEFLAGS = 0x40,
 	DmaAddr_NOS = 0x44,
 	DmaAddr_ScanIndex = 0x48,
 	DmaAddr_DmaBufSizeInScans = 0x04C,		// length in scans
 	DmaAddr_ScansPerIntr = 0x050,
 	DmaAddr_NOB = 0x054,
-	DmaAddr_BLOCKINDEX = 0x058
+	DmaAddr_BLOCKINDEX = 0x058,
+	DmaAddr_CAMCNT = 0x05C
 };
 
 //PCIe Addresses
@@ -78,6 +80,38 @@ enum {
 	PCIeAddr_devCap = 0x5C,
 	PCIeAddr_devStatCtrl = 0x60
 };
+
+//S0 Addresses
+enum {
+	S0Addr_DBR = 0x0,
+	S0Addr_CTRLA = 0x4,
+	S0Addr_CTRLB = 0x5,
+	S0Addr_CTRLC = 0x6,
+	S0Addr_XCKLL = 0x8,
+	S0Addr_XCKLH = 0x9,
+	S0Addr_XCKHL = 0xa,
+	S0Addr_XCKMSB = 0xb,
+	S0Addr_XCKCNTLL = 0xc,
+	S0Addr_XCKCNTLH = 0xd,
+	S0Addr_XCKCNTHL = 0xe,
+	S0Addr_XCKCNTMSB = 0xf,
+	S0Addr_PIXREGlow = 0x10,
+	S0Addr_PIXREGhigh = 0x11,
+	S0Addr_FREQREG = 0x12,
+	S0Addr_FF_FLAGS = 0x13,
+	S0Addr_FIFOCNT = 0x14,
+	S0Addr_VCLKCTRL = 0x18,
+	S0Addr_EBST = 0x1C,
+	S0Addr_DAT = 0x20,
+	S0Addr_EC = 0x24,
+	S0Addr_TOR = 0x28,
+	S0Addr_ARREG = 0x2C,
+	S0Addr_GIOREG = 0x30,
+	S0Addr_DELAYEC = 0x34,
+	S0Addr_IRQREG = 0x38,
+	S0Addr_PCI = 0x3C
+};
+
 
 //extern volatile PUSHORT pDMABigBufBase[3];
 
@@ -1142,7 +1176,7 @@ void RSInterface(UINT32 drvno)
 
 
 
-BOOL SetBoardVars(UINT32 drvno, ULONG pixel, ULONG flag816, ULONG xckdelay)
+BOOL SetBoardVars(UINT32 drvno, UINT32 camcnt, ULONG pixel, ULONG flag816, ULONG xckdelay)
 {	//	initiates board   Registers
 	//  flag816 =1 for 16 bit (also 14 or 12bit), =2 for 8bit
 	//	pclk -> not used
@@ -1162,14 +1196,14 @@ BOOL SetBoardVars(UINT32 drvno, ULONG pixel, ULONG flag816, ULONG xckdelay)
 
 	//set startval for CTRLA Reg  +slope, IFC=h, VON=1 
 
-	if (!WriteByteS0(drvno, 0x23, 0x04)) return FALSE;  //write CTRLA reg in S0
+	if (!WriteByteS0(drvno, 0x23, S0Addr_CTRLA)) return FALSE;  //write CTRLA reg in S0
 
 														//if (_COOLER) ActCooling(drvno, FALSE); //deactivate cooler
 
 
-	if (!WriteByteS0(drvno, 0, 0x05)) return FALSE;;  //write CTRLB reg in S0
+	if (!WriteByteS0(drvno, 0, S0Addr_CTRLB)) return FALSE;;  //write CTRLB reg in S0
 
-	if (!WriteByteS0(drvno, 0, 0x06)) return FALSE;;  //write CTRLC reg in S0
+	if (!WriteByteS0(drvno, 0, S0Addr_CTRLC)) return FALSE;;  //write CTRLC reg in S0
 
 
 
@@ -1187,8 +1221,9 @@ BOOL SetBoardVars(UINT32 drvno, ULONG pixel, ULONG flag816, ULONG xckdelay)
 
 	//write pixel to PIXREG  & stop timer & int trig
 	reg = pixel;
-	if (!WriteLongS0(drvno, reg, 0x10)) return FALSE;; //set pixelreg -> counts received FFwrites and resets XCKI
-
+	if (!WriteLongS0(drvno, reg, S0Addr_PIXREGlow)) return FALSE;; //set pixelreg -> counts received FFwrites and resets XCKI
+	reg = camcnt;
+	if (!SetS0Reg(reg, 0xF, DmaAddr_CAMCNT, drvno)) return FALSE;
 													   // XDLY must be send to camera
 
 	aINIT[drvno] = TRUE;  //init done
@@ -1199,18 +1234,18 @@ BOOL SetBoardVars(UINT32 drvno, ULONG pixel, ULONG flag816, ULONG xckdelay)
 };  // SetBoardVars
 
 #ifndef _DLL
-BOOL BufLock(UINT drvno, int nob, int nospb)
+BOOL BufLock(UINT drvno, UINT camcnt, int nob, int nospb)
 {
 	if (WDC_IntIsEnabled(hDev[drvno]))
 		CleanupPCIE_DMA(drvno);
 
-	pBLOCKBUF[drvno] = calloc(nob, nospb * _PIXEL * sizeof(USHORT));
+	pBLOCKBUF[drvno] = calloc(nob, camcnt *  nospb * _PIXEL * sizeof(USHORT));
 	//pDIODEN = (pArrayT)calloc(nob, nospb * _PIXEL * sizeof(ArrayT));
 
 	if (pBLOCKBUF[drvno] != 0) {
 		//pDMABigBufBase = pBLOCKBUF;
 		//make init here, that CCDExamp can be used to read the act regs...
-		if (!SetBoardVars(drvno, _PIXEL, FLAG816, XCKDELAY))
+		if (!SetBoardVars(drvno, camcnt, _PIXEL, FLAG816, XCKDELAY))
 		{
 			ErrorMsg("Error in SetBoardVars");
 			return FALSE;
