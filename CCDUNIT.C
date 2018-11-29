@@ -90,7 +90,7 @@ for (i=0;i<	_PIXEL;i++)
 int YVal(unsigned long db, int pixeli)
 	{ unsigned long val;
 	ULONG xofs=0;
-	if ((PixelOdd)&&(pixeli<_PIXEL)) { xofs +=1;}
+	if ((PixelOdd)&&(pixeli<(_PIXEL*CAMCNT))) { xofs +=1;}
 	else xofs=0;
 //	xofs=XStart;
 	 val = DisplData[db-1][pixeli*XOFF+xofs] ;
@@ -149,8 +149,8 @@ void Display(unsigned long db,BOOL Plot)
 		{		//array is: dioden[db][i] and dioden[db+1][i]
 		if (Plot)
 			for	(i=0;i<xlength-1;i++)
-			{	y1 = LOY + YLENGTH/2 - YVal(db+1,i)/2 ;
-			y2 = LOY + YLENGTH/2 - YVal(db+1,i+1)/2;
+			{	y1 = LOY + YLENGTH/2 - YVal(db,i + _PIXEL)/2 ;//y1 = LOY + YLENGTH/2 - YVal(db+1,i)/2 ;
+			y2 = LOY + YLENGTH/2 - YVal(db,i+1+_PIXEL)/2;//y2 = LOY + YLENGTH/2 - YVal(db+1,i+1)/2;
 			MoveToEx(hMSDC, LOX+i,y1,NULL);
 			LineTo(hMSDC,LOX+i+1,y2);
 			}
@@ -178,9 +178,9 @@ void CopytoDispbuf(ULONG scan)
 #else
 	
 	PUSHORT tempBuf;
-	tempBuf = pDMABigBufBase[choosen_board] + scan * _PIXEL;
+	tempBuf = pDMABigBufBase[choosen_board] + CAMCNT * scan * _PIXEL;
 #endif
-	for (i = 0; i < (_PIXEL - 1); i++) {
+	for (i = 0; i < (_PIXEL*CAMCNT - 1); i++) {
 
 		DisplData[0][i] = *(tempBuf + i);
 	}
@@ -189,9 +189,9 @@ void CopytoDispbuf(ULONG scan)
 #ifdef _DLL
 		DLLReturnFrame(2, scan, 0, &tempBuf);
 #else
-		tempBuf = pDMABigBufBase[2] + scan * _PIXEL;
+		tempBuf = pDMABigBufBase[2] + scan * _PIXEL*CAMCNT;
 #endif
-		for (i = 0; i < (_PIXEL - 1); i++) {
+		for (i = 0; i < (_PIXEL*CAMCNT - 1); i++) {
 			DisplData[1][i] = *(tempBuf + i);//DIODENRingBuf[i + 0*FirstPageOffset + 0 * RAMPAGESIZE];//20: its a random number of the Ringbuffer (max 99)
 		}
 	}
@@ -503,6 +503,8 @@ void Contimess(void *dummy)
 		DLLSetADGain(2, 1, gain, gain, gain, gain, gain, gain, gain, gain);
 	}
 #else
+
+
 	StopFFTimer(choosen_board);
 	SetIntFFTrig(choosen_board);
 	RSFifo(choosen_board);
@@ -538,6 +540,15 @@ void Contimess(void *dummy)
 
 	//RSEC(choosen_board);
 
+	SendFLCAM(DRV, 3, 1, 1088);//set Pixel in Camera Regs
+	SendFLCAM(DRV, 3, 2, 3);//activate channel a and b
+	SendFLCAM(DRV, 1, 0, 0x80);//ad setup
+	SendFLCAM(DRV, 1, 2, 0x1);//Data = 5h, for test signal (defined in slide 7)
+							//Data = 1h, for ADC data
+	//SendFLCAM(DRV, 1, 3, 0xaa);//testpattern
+	//SendFLCAM(DRV, 1, 4, 0xaa);//testpattern
+
+
 	gain = 6;
 	SetADGain(choosen_board, 1, gain, gain, gain, gain, gain, gain, gain, gain); //set gain to values g1..g8 in Board.C
 																				 //	SetADGain(choosen_board, 1, 0, 0, 0, 0, 0, 0, 0, 0); //set gain to values g1..g8 in Board.C
@@ -558,6 +569,14 @@ void Contimess(void *dummy)
 		gain = 6;
 		SetADGain(2, 1, gain, gain, gain, gain, gain, gain, gain, gain);
 	}
+
+	SendFLCAM(DRV, 3, 1, 1088);
+	SendFLCAM(DRV, 3, 2, 0);
+	SendFLCAM(DRV, 3, 3, 1);
+
+
+
+
 #endif
 
 
