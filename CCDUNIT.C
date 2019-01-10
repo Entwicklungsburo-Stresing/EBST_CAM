@@ -629,6 +629,7 @@ void Contimess(void *dummy)
 
 	DWORD64 IsrNumber = Nob*Nospb / (DMA_BUFSIZEINSCANS/DMA_HW_BUFPARTS);
 	if (both_boards) IsrNumber *= 2;
+	if (CAMCNT == 2) IsrNumber *= 2;
 	while (IsrCounter < IsrNumber){
 		j = sprintf_s(header, 260, " Online Loop - Cancel with ESC or space- key isr: %i of %i ",IsrCounter+1, IsrNumber);//+1 cheating
 		TextOut(hMSDC, 100, LOY - 17, header, j);
