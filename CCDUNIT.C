@@ -571,7 +571,7 @@ void Contimess(void *dummy)
 	}
 
 	SendFLCAM(DRV, 3, 1, 1088);
-	SendFLCAM(DRV, 3, 2, 0);
+	SendFLCAM(DRV, 3, 2, 3);
 	SendFLCAM(DRV, 3, 3, 1);
 
 
