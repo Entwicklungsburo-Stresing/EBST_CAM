@@ -596,7 +596,7 @@ char CntBoards(void)
 	int foundBoards = 0;
 	ErrorMsg("CntBoards.\n");
 	for (i = 1; i<5; i++) // check for max 4
-		if (CCDDrvInit(i)) //call once per cam
+		if (InitBoard(i)) //call once per cam
 		{
 			foundBoards += 1;
 		}
@@ -1339,7 +1339,7 @@ BOOL BufLock(UINT drvno, UINT camcnt, int nob, int nospb)
 	if (pBLOCKBUF[drvno] != 0) {
 		//pDMABigBufBase = pBLOCKBUF;
 		//make init here, that CCDExamp can be used to read the act regs...
-		if (!SetBoardVars(drvno, camcnt, _PIXEL, FLAG816, XCKDELAY))
+		if (!SetBoardVars(drvno, aCAMCNT[drvno], _PIXEL, FLAG816, XCKDELAY))
 		{
 			ErrorMsg("Error in SetBoardVars");
 			return FALSE;
