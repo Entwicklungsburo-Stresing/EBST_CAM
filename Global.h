@@ -46,8 +46,6 @@
 //BOOL _OLDCAL = FALSE;		// TRUE for  ADC16061
 
 
-//display 2 graphics
-BOOL DISP2 = TRUE;		//display 2 cameras parallel, TRUE for double line 
 #define _HWCH2	TRUE	//true if 2 words are packet in one long ->resort to db1&db2 = PCI with adaptor board
 						//all double line systems
 #define _RESORTDB	FALSE	//true if ->resort to db1&db2 - only no FIFO
@@ -64,7 +62,15 @@ BOOL DISP2 = TRUE;		//display 2 cameras parallel, TRUE for double line
 #define DMA_SCANSPERINTR DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb nochmal /2
 
 #define _PIXEL  1088				// no of pixels min 300, should be multiple of 300, max 8100
-#define CAMCNT 2	
+#define CAMCNT 2
+
+#if CAMCNT == 1
+BOOL DISP2 = FALSE;		//display 1 camera
+#endif
+#if CAMCNT == 2
+BOOL DISP2 = TRUE;		//display 2 cameras parallel, TRUE for double line 
+#endif
+
 #define _MAXDB	4					// no. of lines
 //#define Nos _MAXDB
 #define DMA_64BIT_EN FALSE

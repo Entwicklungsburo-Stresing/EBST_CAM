@@ -74,7 +74,7 @@ enum {
 	DmaAddr_NOS = 0x44,
 	DmaAddr_ScanIndex = 0x48,
 	DmaAddr_DmaBufSizeInScans = 0x04C,		// length in scans
-	DmaAddr_ScansPerIntr = 0x050,
+	DmaAddr_DMAsPerIntr = 0x050,
 	DmaAddr_NOB = 0x054,
 	DmaAddr_BLOCKINDEX = 0x058,
 	DmaAddr_CAMCNT = 0x05C
@@ -363,10 +363,10 @@ void AboutS0(UINT32 drvno)
 		"R1 NOS\t",
 		"R2 SCANINDEX",
 		"R3 DMABUFSIZE",
-		"R4 SCANSPERINTR",
+		"R4  DMASPERINTR",
 		"R5 BLOCKS",
 		"R6 BLOCKINDEX",
-		"R7 \t",
+		"R7 CAMCNT\t",
 		"R8 \t",
 		"R9 TRIGCNT",
 		"R10 \t",
@@ -801,7 +801,7 @@ BOOL SetDMABufRegs(UINT32 drvno, ULONG nos, ULONG nob, ULONG camcnt) {
 		error = TRUE;
 
 	//scans per intr must be 2x per DMA_BUFSIZEINSCANS to copy hi/lo part
-	if (!SetS0Reg(DMA_SCANSPERINTR, 0xffffffff, DmaAddr_ScansPerIntr, drvno))
+	if (!SetS0Reg(DMA_SCANSPERINTR, 0xffffffff, DmaAddr_DMAsPerIntr, drvno))
 		error = TRUE;
 
 	if (!SetS0Reg(nos, 0xffffffff, DmaAddr_NOS, drvno))
@@ -818,8 +818,8 @@ BOOL SetDMABufRegs(UINT32 drvno, ULONG nos, ULONG nob, ULONG camcnt) {
 		ErrorMsg("SetDMABufRegs failed");
 		return FALSE;
 	}
-	//ReadLongS0(DRV, &reg, DmaAddr_ScansPerIntr);
-	//WDC_Err("readreg SCANSPERINTR: %x \n", reg);
+	//ReadLongS0(DRV, &reg, DmaAddr_DMAsPerIntr);
+	//WDC_Err("readreg DMASPERINTR: %x \n", reg);
 	return TRUE;
 }
 void SetDMAReset(UINT32 drvno) {
@@ -959,7 +959,7 @@ void GetLastBufPart(UINT32 drvno) {
 	*/
 	ReadLongS0(drvno, &nob, DmaAddr_NOB);
 	ReadLongS0(drvno, &nos, DmaAddr_NOS);
-	ReadLongS0(drvno, &spi, DmaAddr_ScansPerIntr); //get scans per intr
+	ReadLongS0(drvno, &spi, DmaAddr_DMAsPerIntr); //get scans per intr
 	ReadLongS0(drvno, &camcnt, DmaAddr_CAMCNT);
 		//!! aCAMCNT  l�schen !
 		
@@ -987,8 +987,8 @@ void GetLastBufPart(UINT32 drvno) {
 }//GetLastBufPart
 
 void isr(UINT drvno, PVOID pData)
-{	//this call comes every SCANSPERINTR here a DMASubBuf could be copied to the DMABigBuf
-	// the INTR occurs every SCANSPERINTR and copies this block of scans in sub blocks
+{	//this call comes every DMASPERINTR = 500 here a DMASubBuf could be copied to the DMABigBuf
+	// the INTR occurs every DMASPERINTR and copies this block of scans in sub blocks
 
 	ULONG nos = 0;
 	ULONG blocks = 0;
@@ -1024,8 +1024,8 @@ void isr(UINT drvno, PVOID pData)
 		return;
 		}
 	
-		ReadLongS0(drvno, &spi, DmaAddr_ScansPerIntr); //get scans per intr = 500
-													   //WDC_Err("DmaAddr_ScansPerIntr: 0x%x \n", val);
+		ReadLongS0(drvno, &spi, DmaAddr_DMAsPerIntr); //get scans per intr = 500
+													   //WDC_Err("DmaAddr_DMAsPerIntr: 0x%x \n", val);
 		WDC_Err("in isr -- nos: 0x%x, nob: 0x%x, spi: 0x%x, blocks: 0x%x\n", nos, blocks, spi);
 		//if (rest < spi) return without interrupt; // do not use INTR, but GetLastBufPart instead if rest is small enough
 		if ((nos*blocks * aCAMCNT[drvno]) < spi)
@@ -1068,7 +1068,7 @@ void isr(UINT drvno, PVOID pData)
 		pDMABigBufIndex[drvno] = pDMABigBufBase[drvno]; //wrap if error - but now all is mixed up!
 	}
 */
-	pDMABigBufIndex[drvno] += subbuflengthinbytes / sizeof(USHORT); //!!GS  calc for USHORT
+	pDMABigBufIndex[drvno] += subbuflengthinbytes;// / sizeof(USHORT); //!!GS  calc for USHORT
 	ReadLongS0(drvno, &val, DmaAddr_PCIEFLAGS); //reset INTRSR flag for TRIGO
 	val &= 0xfffffff7;
 	WriteLongS0(drvno, val, DmaAddr_PCIEFLAGS); //just to see when its on
@@ -1122,6 +1122,7 @@ BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 #endif
 
 	pDMABigBufIndex[drvno] = pDMABigBufBase[drvno];	//reset destination buffer to start value
+	IsrCounter = 0;
 	WD_DMA **ppDma = &pDMASubBufInfos[drvno];
 
 	//WDC_Err("RAM Adresses for DMA Buf: %x ,DMA Buf Size: %x\n", (*ppDma)->Page[0].pPhysicalAddr, (*ppDma)->dwBytes);
@@ -1167,7 +1168,7 @@ BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 	ULONG data = 0;// 0x40000000;
 	if (HWDREQ_EN)
 		data = 0x40000000;
-	SetS0Reg(data, mask, 0x38, drvno);
+	SetS0Reg(data, mask, S0Addr_IRQREG, drvno);
 
 	// Enable DMA interrupts (if not polling)
 	// INTR should copy DMA buffer to user buf: 
@@ -2419,7 +2420,7 @@ void AboutDrv(UINT32 drvno)
 	*/
 
 	// read ISA Id from S0Base+7
-	ReadLongS0(drvno, &S0Data, 4); // Board ID =5053
+	ReadLongS0(drvno, &S0Data, S0Addr_CTRLA); // Board ID =5053
 	S0Data = S0Data >> 16;
 
 	//or
@@ -2449,7 +2450,7 @@ void AboutDrv(UINT32 drvno)
 
 	if (S0Data >= 0x3F)
 	{//if 9056 -> has space 0x40
-		ReadLongS0(drvno, &S0Data, 0x3C);
+		ReadLongS0(drvno, &S0Data, S0Addr_PCI);
 		sprintf_s(pstring, 80, "Board #%i   board version = 0x%I32x", drvno, S0Data);
 		if (MessageBox(hWnd, pstring, "Board version ", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 	}
@@ -2481,9 +2482,9 @@ void LowSlope(UINT32 drvno)
 	BYTE CtrlA;
 
 	NotBothSlope(drvno);
-	ReadByteS0(drvno, &CtrlA, 4);
+	ReadByteS0(drvno, &CtrlA, S0Addr_CTRLA);
 	CtrlA &= 0x0df;
-	WriteByteS0(drvno, CtrlA, 4);
+	WriteByteS0(drvno, CtrlA, S0Addr_CTRLA);
 }; //LowSlope
 
 void HighSlope(UINT32 drvno)
@@ -2491,9 +2492,9 @@ void HighSlope(UINT32 drvno)
 	BYTE CtrlA;
 
 	NotBothSlope(drvno);
-	ReadByteS0(drvno, &CtrlA, 4);
+	ReadByteS0(drvno, &CtrlA, S0Addr_CTRLA);
 	CtrlA |= 0x20;
-	WriteByteS0(drvno, CtrlA, 4);
+	WriteByteS0(drvno, CtrlA, S0Addr_CTRLA);
 }; //HighSlope
 
 void BothSlope(UINT32 drvno)
@@ -2501,17 +2502,17 @@ void BothSlope(UINT32 drvno)
 	BYTE CtrlA;
 
 	HighSlope(drvno);
-	ReadByteS0(drvno, &CtrlA, 4);
+	ReadByteS0(drvno, &CtrlA, S0Addr_CTRLA);
 	CtrlA |= 0x10;
-	WriteByteS0(drvno, CtrlA, 4);
+	WriteByteS0(drvno, CtrlA, S0Addr_CTRLA);
 }; //BothSlope
 
 void NotBothSlope(UINT32 drvno)
 {// set bit D4
 	BYTE CtrlA;
-	ReadByteS0(drvno, &CtrlA, 4);
+	ReadByteS0(drvno, &CtrlA, S0Addr_CTRLA);
 	CtrlA &= 0xEF;
-	WriteByteS0(drvno, CtrlA, 4);
+	WriteByteS0(drvno, CtrlA, S0Addr_CTRLA);
 }; //NotBothSlope
 
    /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -2521,9 +2522,9 @@ void NotBothSlope(UINT32 drvno)
 void OutTrigLow(UINT32 drvno)
 {
 	BYTE CtrlA;
-	ReadByteS0(drvno, &CtrlA, 4);
+	ReadByteS0(drvno, &CtrlA, S0Addr_CTRLA);
 	CtrlA &= 0xf7;
-	WriteByteS0(drvno, CtrlA, 4);
+	WriteByteS0(drvno, CtrlA, S0Addr_CTRLA);
 };						//OutTrigLow
 
 						/*---------------------------------------------------------------------------*/
@@ -2536,9 +2537,9 @@ void OutTrigLow(UINT32 drvno)
 void OutTrigHigh(UINT32 drvno)
 {
 	BYTE CtrlA;
-	ReadByteS0(drvno, &CtrlA, 4);
+	ReadByteS0(drvno, &CtrlA, S0Addr_CTRLA);
 	CtrlA |= 0x08;
-	WriteByteS0(drvno, CtrlA, 4);
+	WriteByteS0(drvno, CtrlA, S0Addr_CTRLA);
 }; //OutTrigHigh
 
 
@@ -2625,7 +2626,7 @@ void WaitTriggerShort(UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrK
 	{
 		if (ExtTrigFlag)
 		{
-			ReadByteS0(drvno, &ReadTrigPin, 4);
+			ReadByteS0(drvno, &ReadTrigPin, S0Addr_CTRLA);
 			ReadTrigPin &= 0x040;
 			if (ReadTrigPin > 0) HiEdge = TRUE;
 		}
@@ -2644,36 +2645,36 @@ void WaitTriggerShort(UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrK
 	} while ((!HiEdge) && (!Abbr));
 	if (Abbr) *AbrKey = TRUE;	//stops immediately
 	if (Space) *SpaceKey = TRUE;	//stops after next trigger
-	RSTrigShort(drvno);//!
+	RSTrigShort(drvno);
 };// WaitTrigger^Short
 
 
 void EnTrigShort(UINT32 drvno)
 {//use the short trig pulse FF for ext TrigIn
 	UCHAR CtrlA;
-	ReadByteS0(drvno, &CtrlA, 4);
+	ReadByteS0(drvno, &CtrlA, S0Addr_CTRLA);
 	CtrlA |= 0x080;	// set trigger path to FF
 	CtrlA |= 0x010; // enable FF
-	WriteByteS0(drvno, CtrlA, 4);
+	WriteByteS0(drvno, CtrlA, S0Addr_CTRLA);
 }; //EnTrigShort
 
 void RSTrigShort(UINT32 drvno)
 {//reset the short trig pulse FF 
 	UCHAR CtrlA;
-	ReadByteS0(drvno, &CtrlA, 4);
+	ReadByteS0(drvno, &CtrlA, S0Addr_CTRLA);
 	CtrlA &= 0x0EF; // write CLR to FF
-	WriteByteS0(drvno, CtrlA, 4);
+	WriteByteS0(drvno, CtrlA, S0Addr_CTRLA);
 	CtrlA |= 0x010; // arm FF again
-	WriteByteS0(drvno, CtrlA, 4);
+	WriteByteS0(drvno, CtrlA, S0Addr_CTRLA);
 }; //RSTrigShort
 
 void DisTrigShort(UINT32 drvno)
 {//use the direct input for ext TrigIn
 	UCHAR CtrlA;
-	ReadByteS0(drvno, &CtrlA, 4);
+	ReadByteS0(drvno, &CtrlA, S0Addr_CTRLA);
 	CtrlA &= 0x07F;	// set trigger path to FF
 	CtrlA &= 0x0EF; // clr  FF
-	WriteByteS0(drvno, CtrlA, 4);
+	WriteByteS0(drvno, CtrlA, S0Addr_CTRLA);
 }; //SetTrigShort
 
 
@@ -2682,9 +2683,9 @@ void DisTrigShort(UINT32 drvno)
 void CloseShutter(UINT32 drvno)   // IFC = low
 {
 	UCHAR CtrlA;
-	ReadByteS0(drvno, &CtrlA, 4);
+	ReadByteS0(drvno, &CtrlA, S0Addr_CTRLA);
 	CtrlA &= 0x0fd;	/* $FD = 1111 1101 */
-	WriteByteS0(drvno, CtrlA, 4);
+	WriteByteS0(drvno, CtrlA, S0Addr_CTRLA);
 }; //CloseShutter
 
    /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -2692,16 +2693,16 @@ void CloseShutter(UINT32 drvno)   // IFC = low
 void OpenShutter(UINT32 drvno)   // IFC = high
 {
 	UCHAR CtrlA;
-	ReadByteS0(drvno, &CtrlA, 4);
+	ReadByteS0(drvno, &CtrlA, S0Addr_CTRLA);
 	CtrlA |= 0x02;
-	WriteByteS0(drvno, CtrlA, 4);
+	WriteByteS0(drvno, CtrlA, S0Addr_CTRLA);
 }; //OpenShutter
 
 
 BOOL GetShutterState(UINT32 drvno)
 {
 	UCHAR CtrlA;
-	ReadByteS0(drvno, &CtrlA, 4);
+	ReadByteS0(drvno, &CtrlA, S0Addr_CTRLA);
 	CtrlA &= 0x02;
 	if (CtrlA == 0) return FALSE;
 	return TRUE;
@@ -2715,9 +2716,9 @@ BOOL GetShutterState(UINT32 drvno)
 void V_On(UINT32 drvno)
 {
 	UCHAR CtrlA;
-	ReadByteS0(drvno, &CtrlA, 4);
+	ReadByteS0(drvno, &CtrlA, S0Addr_CTRLA);
 	CtrlA |= 0x01;
-	WriteByteS0(drvno, CtrlA, 4);
+	WriteByteS0(drvno, CtrlA, S0Addr_CTRLA);
 }; //V_On
 
    /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -2727,9 +2728,9 @@ void V_On(UINT32 drvno)
 void V_Off(UINT32 drvno)
 {
 	UCHAR CtrlA;
-	ReadByteS0(drvno, &CtrlA, 4);
+	ReadByteS0(drvno, &CtrlA, S0Addr_CTRLA);
 	CtrlA &= 0xfe;	// $FE = 1111 1110 
-	WriteByteS0(drvno, CtrlA, 4);
+	WriteByteS0(drvno, CtrlA, S0Addr_CTRLA);
 }; //V_Off
 
 
@@ -2737,27 +2738,27 @@ void V_Off(UINT32 drvno)
 void SetOpto(UINT32 drvno, BYTE ch)
 {//sets signal=low
 	BYTE ctrlc;
-	ReadByteS0(drvno, &ctrlc, 6);
+	ReadByteS0(drvno, &ctrlc, S0Addr_CTRLC);
 	if (ch == 2) { ctrlc |= 0x04; }
 	else ctrlc |= 0x02;
-	WriteByteS0(drvno, ctrlc, 6);
+	WriteByteS0(drvno, ctrlc, S0Addr_CTRLC);
 }; //SetOpto
 
 
 void RsetOpto(UINT32 drvno, BYTE ch)
 { //sets signal=high
 	BYTE ctrlc;
-	ReadByteS0(drvno, &ctrlc, 6);
+	ReadByteS0(drvno, &ctrlc, S0Addr_CTRLC);
 	if (ch == 2) { ctrlc &= 0xfb; }
 	else ctrlc &= 0xfd;
-	WriteByteS0(drvno, ctrlc, 6);
+	WriteByteS0(drvno, ctrlc, S0Addr_CTRLC);
 }; //RsetOpto
 
 
 BOOL GetOpto(UINT32 drvno, BYTE ch)
 {//no input or low -> high / high input -> low 
 	BYTE ctrlc;
-	ReadByteS0(drvno, &ctrlc, 6);
+	ReadByteS0(drvno, &ctrlc, S0Addr_CTRLC);
 	if (ch == 2) { ctrlc &= 0x04; }
 	else ctrlc &= 0x02;
 	if (ctrlc>0) return TRUE;
@@ -2767,23 +2768,24 @@ BOOL GetOpto(UINT32 drvno, BYTE ch)
 void SetDAT(UINT32 drvno, ULONG datin100ns)
 {//delay after trigger HW register
 	datin100ns |= 0x80000000; // enable delay
-	WriteLongS0(drvno, datin100ns, 0x20);
+	WriteLongS0(drvno, datin100ns, S0Addr_DAT);
 }; //SetDAT
 
 void RSDAT(UINT32 drvno)
 {//delay after trigger HW register
-	WriteLongS0(drvno, 0, 0x20);
+	WriteLongS0(drvno, 0, S0Addr_DAT);
 }; //RSDAT
 
 
 void SetEC(UINT32 drvno, ULONG ecin100ns)
 {//delay after trigger HW register
 	ULONG data = 0;
-	ReadLongS0(drvno, &data, 0x24);
+	ReadLongS0(drvno, &data, S0Addr_EC);
 	ecin100ns |= data;
 	ecin100ns |= 0x80000000; // enable delay
-	WriteLongS0(drvno, ecin100ns, 0x24);
+	WriteLongS0(drvno, ecin100ns, S0Addr_EC);
 }; //SetDAT
+
 
 
 
@@ -2858,11 +2860,12 @@ void SendFLCAM(UINT32 drvno, BYTE maddr, BYTE adaddr, USHORT data)
 	ldata |= adaddr;
 	ldata = ldata << 16;
 	ldata |= data;
-	WriteLongS0(drvno, ldata, 0x0);
+	WriteLongS0(drvno, ldata, S0Addr_DBR);
 	ldata |= 0x4000000;		//load val
 	WriteLongS0(drvno, ldata, 0x0);
 	ldata = 0;		//rs load
-	WriteLongS0(drvno, ldata, 0x0);
+	WriteLongS0(drvno, ldata, S0Addr_DBR);
+	Sleep(1);
 
 }//SendFLCAM
 
@@ -3560,6 +3563,32 @@ void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UI
 
 	do //block read function
 	{
+		//if Block tigger
+		if (blocktrigger != 0)
+		{	//wait for trigger
+			BOOL StartbyTrig = FALSE;
+			while (!StartbyTrig) { // check for kill ?
+								   //	Sleep(1);
+				if (GetAsyncKeyState(VK_ESCAPE))
+				{ //stop if ESC was pressed
+					StopFFTimer(drv);
+					//SetIntFFTrig(drv);//disable ext input
+					SetDMAReset(drv);	//Initiator reset
+					return;
+				}
+				if (GetAsyncKeyState(VK_SPACE))
+				{ //start if Space was pressed
+
+					while (GetAsyncKeyState(VK_SPACE) & 0x8000 == 0x8000) {}; //wait for release
+					StartbyTrig = TRUE;
+				}
+				// only look on drv=1
+				//wait for low
+				if (!BlockTrig(1, btrig_ch))	StartbyTrig = TRUE;
+			}//while !StartbyTrig
+		}
+
+
 		//if Block tigger
 		if (blocktrigger != 0)
 		{	//wait for trigger
@@ -4320,15 +4349,15 @@ void RS_DMAAllCounter(UINT32 drv, BOOL hwstop)
 	ULONG dwdata = 0;
 	//reset the internal intr collect counter
 	//Problem: erste scan löst INTR aus
-	//aber ohne: erste Block ist 1 zu wenig!0,
+	//aber ohne: erste Block ist 1 zu wenig!0, -> in hardware RS to 0x1
 
-	ReadLongS0(drv, &dwdata, DmaAddr_ScansPerIntr);
+	ReadLongS0(drv, &dwdata, DmaAddr_DMAsPerIntr);
 	dwdata |= 0x80000000;
-	WriteLongS0(drv, dwdata, DmaAddr_ScansPerIntr);
+	WriteLongS0(drv, dwdata, DmaAddr_DMAsPerIntr);
 	dwdata &= 0x7fffffff;
-	WriteLongS0(drv, dwdata, DmaAddr_ScansPerIntr);
+	WriteLongS0(drv, dwdata, DmaAddr_DMAsPerIntr);
 
-	//reset the internal block counter
+	//reset the internal block counter - is not BLOCKINDEX!
 	ReadLongS0(drv, &dwdata, DmaAddr_DmaBufSizeInScans);
 	dwdata |= 0x80000000;
 	WriteLongS0(drv, dwdata, DmaAddr_DmaBufSizeInScans);
