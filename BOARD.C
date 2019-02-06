@@ -1,4 +1,4 @@
-//   UNIT BOARD.C for all examples equal
+ï»¿//   UNIT BOARD.C for all examples equal
 //	PCIE version with DMA and INTR
 //	V2.03.1  GS  3/2017
 //	- new function DLLFreeMemInfo(UINT64 memory_all, UINT64 memory_free)
@@ -25,10 +25,10 @@ Internal definitions
 
 //Dont trust the debugger its CRAP
 
-//#define LSCPCIEJ_DEFAULT_LICENSE_STRING "643c749b4b3f16a065e15c1a2aec0c067c1fb30a0677f92e6c0cbe50.WD1200_64_NL_Entwicklungsbüro_Stresing"
-//#define LSCPCIEJ_DEFAULT_LICENSE_STRING "6f19fa9c7e362e62fdbd44c8a8c17b2b41f30f98686333.WD1210_64_NL_Entwicklungsbüro_Stresing"
+//#define LSCPCIEJ_DEFAULT_LICENSE_STRING "643c749b4b3f16a065e15c1a2aec0c067c1fb30a0677f92e6c0cbe50.WD1200_64_NL_EntwicklungsbÃ¼ro_Stresing"
+//#define LSCPCIEJ_DEFAULT_LICENSE_STRING "6f19fa9c7e362e62fdbd44c8a8c17b2b41f30f98686333.WD1210_64_NL_EntwicklungsbÃ¼ro_Stresing"
 #define LSCPCIEJ_DEFAULT_LICENSE_STRING "87244a4c6cb75b3386857b676b153685468744582da7606720b166f47a8e.WD1230_64_NL_Entwicklungsburo_Stresing"
-//#define LSCPCIEJ_DEFAULT_LICENSE_STRING "87244a4f5a2a96536ef8292752d1aed92d3fce6683b2cd63d9bd327c38.WD1230_64_F_Entwicklungsbüro_Stresing_Exp_26-Jun-17"
+//#define LSCPCIEJ_DEFAULT_LICENSE_STRING "87244a4f5a2a96536ef8292752d1aed92d3fce6683b2cd63d9bd327c38.WD1230_64_F_EntwicklungsbÃ¼ro_Stresing_Exp_26-Jun-17"
 //#define LSCPCIEJ_DEFAULT_LICENSE_STRING "87244a4c6cb75b3386857b676b153695c8043c8e33f8022c605125c6b16f.WD1230_64_NL_Entwicklungsburo_Stresing"
 #define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
 
@@ -149,6 +149,7 @@ HANDLE ahCCDDRV[5] = { INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDL
 
 
 ULONG aFLAG816[5] = { 1, 1, 1, 1, 1 };  //AD-Flag
+ULONG aCAMCNT[5] = { 1, 1, 1, 1, 1 };	// cameras parallel
 ULONG aPIXEL[5] = { 0, 0, 0, 0, 0 };	// pixel
 ULONG aXCKDelay[5] = { 1000, 1000, 1000, 1000, 1000 };	// sensor specific delay
 BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
@@ -207,7 +208,7 @@ BOOL _SHOW_MSG = TRUE;
 BOOL DMAISRunning = FALSE;
 
 // ***********     functions    **********************
-//B! FIXME die jungo-library für fehler und co müsste wahrscheinlich in BOARD.C reingeschrieben werden 
+//B! FIXME die jungo-library fÃ¼r fehler und co mÃ¼sste wahrscheinlich in BOARD.C reingeschrieben werden 
 #include "lscpciej_lib.c"
 //#include "kp_lscpciej.c"
 
@@ -394,7 +395,7 @@ void AboutS0(UINT32 drvno)
 
 }//AboutS0
 
-
+ 
 
 BOOL CCDDrvInit(void)
 {// returns true if driver was found
@@ -655,7 +656,35 @@ BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno) {
 	}
 	return TRUE;
 }
+BOOL SetS0Bit(ULONG bitnumber, CHAR Address, UINT32 drvno) {
+	
+		ULONG bitmask = 0x1 << bitnumber;
+	
+		if (!SetS0Reg(0xFFFFFFFF, bitmask, Address, drvno)) {
+		ErrLog("WriteLong S0 Failed in SetDMAReg \n");
+		WDC_Err("%s", LSCPCIEJ_GetLastErr());
+		return FALSE;
+		
+	}
+	return TRUE;
+	
+		
+}
 
+BOOL ResetS0Bit(ULONG bitnumber, CHAR Address, UINT32 drvno) {
+	
+		ULONG bitmask = 0x1 << bitnumber;
+	
+		if (!SetS0Reg(0x0, bitmask, Address, drvno)) {
+		ErrLog("WriteLong S0 Failed in SetDMAReg \n");
+		WDC_Err("%s", LSCPCIEJ_GetLastErr());
+		return FALSE;
+		
+	}
+	return TRUE;
+	
+		
+}
 BOOL SetDMAAddrTlpRegs(UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno) {
 
 	UINT64 PhysAddrDMABuf;
@@ -761,7 +790,7 @@ BOOL SetDMAAddrTlp(UINT32 drvno) {
 		return FALSE;
 	return TRUE;
 }
-BOOL SetDMABufRegs(UINT32 drvno, ULONG nos, ULONG nob) {
+BOOL SetDMABufRegs(UINT32 drvno, ULONG nos, ULONG nob, ULONG camcnt) {
 	//set DMA_BUFSIZEINSCANS
 	//set DMA_SCANSPERINTR
 	//set NOS
@@ -780,6 +809,9 @@ BOOL SetDMABufRegs(UINT32 drvno, ULONG nos, ULONG nob) {
 
 	if (!SetS0Reg(nob, 0xffffffff, DmaAddr_NOB, drvno))
 		error = TRUE;
+
+	if (!SetS0Reg(camcnt, 0xffffffff, DmaAddr_CAMCNT, drvno))
+		 error = TRUE;
 
 	if (error)
 	{
@@ -908,8 +940,12 @@ ULONG GetScanindex(UINT32 drvno)
 void GetLastBufPart(UINT32 drvno) {
 	//get the rest if buffer is not multiple of 500 (BUFSIZEINSCANS/2)
 	//also if nos is < BUFSIZEINSCANS/2 - here: no intr occurs
-
-
+	ULONG nos = 0;
+	ULONG nob = 0;
+	ULONG spi = 0;
+	ULONG halfbufsize = 0;
+	ULONG camcnt = 0;
+	/*
 	ULONG nos_rest = 0;
 	ReadLongS0(drvno, &nos_rest, DmaAddr_NOS); //get nos
 	nos_rest = nos_rest % (DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS); //how many were left?
@@ -920,13 +956,34 @@ void GetLastBufPart(UINT32 drvno) {
 
 	WDC_Err("last block to copy: %d\n", nos_rest);
 	if (nos_rest) {
+	*/
+	ReadLongS0(drvno, &nob, DmaAddr_NOB);
+	ReadLongS0(drvno, &nos, DmaAddr_NOS);
+	ReadLongS0(drvno, &spi, DmaAddr_ScansPerIntr); //get scans per intr
+	ReadLongS0(drvno, &camcnt, DmaAddr_CAMCNT);
+		//!! aCAMCNT  lï¿½schen !
+		
+			//halfbufize is 500 with default values
+		halfbufsize = DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS;
+	ULONG scans_all_cams = nos * nob * camcnt;
+	ULONG rest_overall = scans_all_cams % halfbufsize;
+	size_t rest_in_bytes = rest_overall * _PIXEL * sizeof(USHORT);
+	
+		WDC_Err("*GetLastBufPart():\n");
+	WDC_Err("nos: 0x%x, nob: 0x%x, spi: 0x%x, camcnt: 0x%x\n", nos, nob, spi, camcnt);
+	WDC_Err("scans_all_cams: 0x%x \n", scans_all_cams);
+	WDC_Err("rest_overall: 0x%x, rest_in_bytes: 0x%x\n", rest_overall, rest_in_bytes);
+	WDC_Err("DMA_bufsizeinbytes: 0x%x \n", DMA_bufsizeinbytes);
+	
+		if (rest_overall) { // if (rest_per_block)
+		WDC_Err("has rest_overall:\n");
 		INT_PTR pDMASubBuf_index = pDMASubBuf[drvno];
-		pDMASubBuf_index += SubBufCounter[drvno] * DMA_bufsizeinbytes / DMA_HW_BUFPARTS;
-		memcpy(pDMABigBufIndex[drvno], pDMASubBuf_index, restlength);
+		//pDMASubBuf_index += SubBufCounter[drvno] * DMA_bufsizeinbytes / DMA_HW_BUFPARTS;
+		//memcpy(pDMABigBufIndex[drvno], pDMASubBuf_index, restlength);
 		//memset(pDMABigBufIndex[drvno], "31", restlength); // 0x3131=12593
 	}
 	SubBufCounter[drvno] = 0; //reset for next block
-	pDMABigBufIndex[drvno] += restlength;
+	//pDMABigBufIndex[drvno] += restlength;
 }//GetLastBufPart
 
 void isr(UINT drvno, PVOID pData)
@@ -936,21 +993,54 @@ void isr(UINT drvno, PVOID pData)
 	ULONG nos = 0;
 	ULONG blocks = 0;
 	ULONG val = 0;
-	size_t subbuflengthinbytes = DMA_bufsizeinbytes / DMA_HW_BUFPARTS;
-	INT_PTR pdmasubbuf_base = pDMASubBuf[drvno];
-	PUSHORT tempBuf;
+	//size_t subbuflengthinbytes = DMA_bufsizeinbytes / DMA_HW_BUFPARTS;
+	//INT_PTR pdmasubbuf_base = pDMASubBuf[drvno];
+	//PUSHORT tempBuf;
+	ULONG spi = 0;
+	size_t subbuflengthinbytes = DMA_bufsizeinbytes / DMA_HW_BUFPARTS; //1088000 bytes
+																		   //usually DMA_bufsizeinbytes = 1000scans 
+																			   //subbuflengthinbytes = 1000 * pixel *2 -> /2 = 500 scans = 1088000 bytes
+																			   // that means one 500 scan copy block has 1088000 bytes
+	ULONG dma_subbufinscans = DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS; //500
 
 	WDC_Err("entered interrupt # %i\n", IsrCounter);
 
-	ReadLongS0(drvno, &val, DmaAddr_ScansPerIntr); //get scans per intr
+	//ReadLongS0(drvno, &val, DmaAddr_ScansPerIntr); //get scans per intr
 	ReadLongS0(drvno, &nos, DmaAddr_NOS);
-	if (nos < val) return; // do not use INTR, but GetLastBufPart instead if nos is small enough
+	//if (nos < val) return; // do not use INTR, but GetLastBufPart instead if nos is small enough
+
+	//ReadLongS0(drvno, &nob, DmaAddr_NOB);
+	ReadLongS0(drvno, &blocks, DmaAddr_NOB);
+	
+	USHORT* pdmasubbuf_base = pDMASubBuf[drvno];
+	ULONG introverall = blocks * nos / dma_subbufinscans * aCAMCNT[drvno];
+	
+			//!GS sometimes (all 10 minutes) one INTR more occurs -> just do not serve it and return
+			// Fehler wenn zu viele ISRs -> memcpy out of range
+		if (IsrCounter > (introverall - 1))
+		 {
+		WDC_Err("introverall: 0x%x \n", introverall);
+		WDC_Err("ISR Counter overflow: 0x%x \n", IsrCounter);
+		return;
+		}
+	
+		ReadLongS0(drvno, &spi, DmaAddr_ScansPerIntr); //get scans per intr = 500
+													   //WDC_Err("DmaAddr_ScansPerIntr: 0x%x \n", val);
+		WDC_Err("in isr -- nos: 0x%x, nob: 0x%x, spi: 0x%x, blocks: 0x%x\n", nos, blocks, spi);
+		//if (rest < spi) return without interrupt; // do not use INTR, but GetLastBufPart instead if rest is small enough
+		if ((nos*blocks * aCAMCNT[drvno]) < spi)
+		 {
+		WDC_Err("must get rest: 0x%x \n", nos*blocks * aCAMCNT[drvno] % spi);
+		return;
+		}
+	
+		//ValMsg(val);
 
 	ReadLongS0(drvno, &val, DmaAddr_PCIEFLAGS); //set INTRSR flag for TRIGO signal to monitor the signal
 	val |= 0x08;
 	WriteLongS0(drvno, val, DmaAddr_PCIEFLAGS);
 
-	pdmasubbuf_base += SubBufCounter[drvno] * subbuflengthinbytes;
+	pdmasubbuf_base += SubBufCounter[drvno] * subbuflengthinbytes / sizeof(USHORT);  // cnt in USHORT;
 
 	//here  the copyprocess happens
 	memcpy_s(pDMABigBufIndex[drvno], subbuflengthinbytes, pdmasubbuf_base, subbuflengthinbytes);//DMA_bufsizeinbytes/10
@@ -962,7 +1052,7 @@ void isr(UINT drvno, PVOID pData)
 		SubBufCounter[drvno] = 0;						//SubBufCounter is 0 or 1 for buffer devided in 2 parts
 
 
-	pDMABigBufIndex[drvno] += subbuflengthinbytes;
+/*
 	//error prevention...not needed if counter counts correct
 	ReadLongS0(drvno, &blocks, DmaAddr_NOB);
 
@@ -974,9 +1064,11 @@ void isr(UINT drvno, PVOID pData)
 		WDC_Err("pDMABigBufBase: 0x%x \n", pDMABigBufBase[drvno]);
 		WDC_Err("pDMAbigbufsize: 0x%x \n", pDMAbigbufsize);
 		WDC_Err("pDMABigBufIndex: 0x%x \n", pDMABigBufIndex[drvno]);
+		
 		pDMABigBufIndex[drvno] = pDMABigBufBase[drvno]; //wrap if error - but now all is mixed up!
 	}
-
+*/
+	pDMABigBufIndex[drvno] += subbuflengthinbytes / sizeof(USHORT); //!!GS  calc for USHORT
 	ReadLongS0(drvno, &val, DmaAddr_PCIEFLAGS); //reset INTRSR flag for TRIGO
 	val &= 0xfffffff7;
 	WriteLongS0(drvno, val, DmaAddr_PCIEFLAGS); //just to see when its on
@@ -1062,7 +1154,7 @@ BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob)
 		return FALSE;
 	}
 
-	if (!SetDMABufRegs(drvno, nos, nob)) {
+	if (!SetDMABufRegs(drvno, nos, nob, aCAMCNT[drvno])) {
 		ErrLog("DMARegisterInit for Buffer failed \n");
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		ErrorMsg("DMARegisterInit for Buffer failed");
@@ -1218,6 +1310,7 @@ BOOL SetBoardVars(UINT32 drvno, UINT32 camcnt, ULONG pixel, ULONG flag816, ULONG
 
 	aFLAG816[drvno] = flag816;
 	aPIXEL[drvno] = pixel;
+	aCAMCNT[drvno] = camcnt;
 	aXCKDelay[drvno] = xckdelay;
 
 	//	if (flag816 == 1) { reg = 2 * aPIXEL[drvno]; }//16 bit
@@ -2711,6 +2804,9 @@ void SetTORReg(UINT32 drvno, BYTE fkt)
 	if (fkt == 10) val = 0xa0; // set to INTRSR
 	if (fkt == 11) val = 0xb0; // set to BlockOn
 	if (fkt == 12) val = 0xc0; // set to MeasureOn
+	if (fkt == 13) val = 0xd0; // set to XCKDLYON
+	if (fkt == 14) val = 0xe0; // set to VON
+	if (fkt == 15) val = 0xf0; // set to IFC
 
 	ReadByteS0(drvno, &val2, 0x2B);
 	val2 &= 0x0f; //dont disturb lower bits
@@ -3442,7 +3538,7 @@ void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UI
 	SubBufCounter[drv] = 0;
 	pDMABigBufIndex[drv] = pDMABigBufBase[drv]; // reset buffer index to base we got from labview
 
-
+	IsrCounter = 0;
 												//ErrorMsg("in DLLReadFFLoop - start timer");
 	if (exttrig != 0) {
 		ExTrig = TRUE;
@@ -3456,7 +3552,7 @@ void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UI
 
 	ReadLongS0(drv, &val, DmaAddr_NOB); //get the needed Blocks
 	ULONG Blocks = val;
-	ULONG blockcnt = 0;
+	volatile ULONG blockcnt = 0;
 
 	//set MeasureOn Bit
 	SetS0Reg(0x20, 0x20, DmaAddr_PCIEFLAGS, drv);
@@ -3519,6 +3615,7 @@ void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UI
 		Sleep(1); //DMA is not ready
 		GetLastBufPart(drv);
 		ReadLongS0(drv, &blockcnt, DmaAddr_BLOCKINDEX); //get block counts
+		ReadLongS0(drv, &blockcnt, DmaAddr_BLOCKINDEX); //first read sometimes is wrong
 
 	}//  block read function
 	while (blockcnt < Blocks);
@@ -3528,6 +3625,9 @@ void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UI
 	SetIntFFTrig(drv);//disable ext input
 
 	WDC_Err("after finished scan loop\n");
+	//! must delay or last block has wrong values
+	Sleep(1); //DMA is not ready
+	GetLastBufPart(drv);
 
 #if (DMA_CONTIGBUF)
 	//test with memset if data is transferred
@@ -4219,7 +4319,7 @@ void RS_DMAAllCounter(UINT32 drv, BOOL hwstop)
 	//hwstop: timer is stopped by hardware if nos is reached
 	ULONG dwdata = 0;
 	//reset the internal intr collect counter
-	//Problem: erste scan löst INTR aus
+	//Problem: erste scan lÃ¶st INTR aus
 	//aber ohne: erste Block ist 1 zu wenig!0,
 
 	ReadLongS0(drv, &dwdata, DmaAddr_ScansPerIntr);
@@ -4321,6 +4421,48 @@ void SetADGain(UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, 
 	data |= c;
 	SendFLCAM(drvno, 1, 0x02B, data);	//gain7..8
 }//SetGain
+
+void SendFLCAM_DAC(UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature)
+ {	//send data to DAC8568
+		//mapping of bits DAC8568:	4 prefix, 4 control, 4 address, 16 data, 4 feature
+		UINT16	hi_bytes = 0,
+		lo_bytes = 0;
+	BYTE	maddr_DAC = 0b11,
+		hi_byte_addr = 0x01,
+		lo_byte_addr = 0x02;
+	
+		
+		if (ctrl & 0x10) //4 ctrl bits => only lower 4 bits allowed
+		 {
+		ErrorMsg("Only values between 0 and 15 are allowed for control bits.");
+		return;
+		}
+	if (addr & 0x10) //4 addr bits => only lower 4 bits allowed
+	 {
+		ErrorMsg("Only values between 0 and 15 are allowed for address bits.");
+		return;
+		}
+	if (feature & 0x10) //4 ctrl bits => only lower 4 bits allowed
+		 {
+		ErrorMsg("Only values between 0 and 15 are allowed for feature bits.");
+		return;
+		}
+	
+		hi_bytes |= 0x0;	//4 prefix bits, first bit always 0 (0xxx)
+	hi_bytes <<= 4;
+	hi_bytes |= ctrl & 0x0F;	//4 control bits
+	hi_bytes <<= 4;
+	hi_bytes |= addr & 0x0F;	//4 address bits
+	hi_bytes <<= 4;
+	hi_bytes |= data >> 12; //4 data bits (upper 4 bits of 16 bits data)
+	
+		lo_bytes |= data & 0x0FFF; //12 data bits (lower 12 bits of 16 bit data)
+	lo_bytes <<= 4;
+	lo_bytes |= feature;	//4 feature bits
+	
+	SendFLCAM(drvno, maddr_DAC, hi_byte_addr, hi_bytes);
+	SendFLCAM(drvno, maddr_DAC, lo_byte_addr, lo_bytes);
+	}
 
 void FreeMemInfo(UINT64 *pmemory_all, UINT64 *pmemory_free)
 {		//get info: how much memory is installed and how much is available
