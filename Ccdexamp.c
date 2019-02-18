@@ -1314,7 +1314,8 @@ LRESULT CALLBACK ChooseBoard(HWND hDlg,
 			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO1) == TRUE) { choosen_board = 1; both_boards = FALSE; DISP2 = FALSE; }
 			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO2) == TRUE) { choosen_board = 2; both_boards = FALSE; DISP2 = FALSE; }
 			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO_BOTH) == TRUE) { choosen_board = 1; both_boards = TRUE; DISP2 = TRUE; }
-
+			if(both_boards == TRUE)
+				BOARD_SEL = 3;
 			EndDialog(hDlg, TRUE);
 			
 			//if the second buffer is not initilized
