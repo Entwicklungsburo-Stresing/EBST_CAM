@@ -143,6 +143,7 @@ DWORD64 DMA_bufsizeinbytes = 0;
 WDC_PCI_SCAN_RESULT scanResult;
 
 UINT8 NUMBER_OF_BOARDS = 0;
+UINT32 BOARD_SEL = 1;
 
 // handle array for our drivers
 HANDLE ahCCDDRV[5] = { INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE };
@@ -1004,6 +1005,7 @@ void isr(UINT drvno, PVOID pData)
 	ULONG dma_subbufinscans = DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS; //500
 
 	WDC_Err("entered interrupt # %i\n", IsrCounter);
+	SetS0Bit(3, DmaAddr_PCIEFLAGS, drvno);//set INTRSR flag for TRIGO
 
 	//ReadLongS0(drvno, &val, DmaAddr_ScansPerIntr); //get scans per intr
 	ReadLongS0(drvno, &nos, DmaAddr_NOS);
@@ -1013,7 +1015,11 @@ void isr(UINT drvno, PVOID pData)
 	ReadLongS0(drvno, &blocks, DmaAddr_NOB);
 	
 	USHORT* pdmasubbuf_base = pDMASubBuf[drvno];
-	ULONG introverall = blocks * nos / dma_subbufinscans * aCAMCNT[drvno];
+	ULONG introverall;	
+	if (BOARD_SEL > 2)
+		introverall = blocks * nos / dma_subbufinscans * aCAMCNT[drvno] * NUMBER_OF_BOARDS;
+	else
+		introverall = blocks * nos / dma_subbufinscans * aCAMCNT[drvno];
 	
 			//!GS sometimes (all 10 minutes) one INTR more occurs -> just do not serve it and return
 			// Fehler wenn zu viele ISRs -> memcpy out of range
@@ -1021,6 +1027,7 @@ void isr(UINT drvno, PVOID pData)
 		 {
 		WDC_Err("introverall: 0x%x \n", introverall);
 		WDC_Err("ISR Counter overflow: 0x%x \n", IsrCounter);
+		ResetS0Bit(3, DmaAddr_PCIEFLAGS, drvno);//reset INTRSR flag for TRIGO
 		return;
 		}
 	
@@ -1031,6 +1038,8 @@ void isr(UINT drvno, PVOID pData)
 		if ((nos*blocks * aCAMCNT[drvno]) < spi)
 		 {
 		WDC_Err("must get rest: 0x%x \n", nos*blocks * aCAMCNT[drvno] % spi);
+		GetLastBufPart(drvno);
+		ResetS0Bit(3, DmaAddr_PCIEFLAGS, drvno);//reset INTRSR flag for TRIGO
 		return;
 		}
 	
@@ -1046,6 +1055,7 @@ void isr(UINT drvno, PVOID pData)
 	memcpy_s(pDMABigBufIndex[drvno], subbuflengthinbytes, pdmasubbuf_base, subbuflengthinbytes);//DMA_bufsizeinbytes/10
 
 	WDC_Err("SubBufCounter of the DMA Buffer: %d \n\n", SubBufCounter[drvno]);
+	WDC_Err("pixel 100: 0x%x \n", *(pDMABigBufBase[drvno] + 100));
 
 	SubBufCounter[drvno]++;
 	if (SubBufCounter[drvno] >= DMA_HW_BUFPARTS)		//number of ISR per dmaBuf - 1
@@ -1074,6 +1084,7 @@ void isr(UINT drvno, PVOID pData)
 	WriteLongS0(drvno, val, DmaAddr_PCIEFLAGS); //just to see when its on
 												//WDC_Err("DMACounter: %d \n", DMACounter);
 	IsrCounter++;
+	ResetS0Bit(3, DmaAddr_PCIEFLAGS, drvno);//reset INTRSR flag for TRIGO
 
 	//WDC_Err("ISR: pix42 of ReturnFrame: 0x%d \n", *(USHORT*)(pDMABigBufBase[drvno] + 420));
 
