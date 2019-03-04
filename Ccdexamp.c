@@ -113,6 +113,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		  ErrorMsg(" Can't open second board ");
 		  return (FALSE);
 	  }
+
 #endif
  
 
