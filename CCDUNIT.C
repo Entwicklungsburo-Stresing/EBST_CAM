@@ -8,7 +8,7 @@ volatile int testcnt = 0;
 UINT choosen_board = 1;
 BOOL both_boards = FALSE;
 
-
+/*
 void GetRmsVal(BYTE ch, ULONG nos)
 			{
 			double trms=0.0;
@@ -51,7 +51,7 @@ void CalcTrms()
 			}
 
 }//CalcTrms
-
+*/
 
 void Resort_to_DBs(UINT drvno, void* p1dim, void* p2dim, BYTE db1,BYTE db2)
 {// repack array word [pixel][db]  to long [db][pixel]
@@ -607,7 +607,8 @@ void Contimess(void *dummy)
 #else
 	IsrCounter = 0;
 	struct ffloopparams params;
-	params.drv = choosen_board;
+	if (both_boards)	params.board_sel = 3;
+	else				params.board_sel = choosen_board;
 	params.exptus = ExpTime;
 	params.exttrig = EXTTRIGFLAG;
 	params.blocktrigger = 0;
@@ -615,17 +616,6 @@ void Contimess(void *dummy)
 	//_beginthread(ReadFFLoopThread, 0, &params);//thread
 	_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//cam_thread[0] = (HANDLE)_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//threadex
 
-	if (both_boards){
-		struct ffloopparams params2;
-		params2.drv = 2;
-		params2.exptus = ExpTime;
-		params2.exttrig = EXTTRIGFLAG;
-		params2.blocktrigger = 0;
-		params2.btrig_ch = 0;
-
-		//_beginthread(ReadFFLoopThread, 0, &params2);//thread
-		_beginthreadex(0, 0, &ReadFFLoopThread, &params2, 0, 0);//cam_thread[1] = (HANDLE)_beginthreadex(0, 0, &ReadFFLoopThread , &params2, 0, 0); //threadex
-	}
 
 	DWORD64 IsrNumber = Nob*Nospb / (DMA_BUFSIZEINSCANS/DMA_HW_BUFPARTS);
 	if (both_boards) IsrNumber *= 2;
