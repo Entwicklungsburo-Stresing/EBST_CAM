@@ -1,2 +1,155 @@
-﻿  CCDEXAMP.vcxproj -> C:\ENTW\PCIE\64bit\Ex2CoFifo_Jungo\x64\Debug\CCDEXAMP.exe
+﻿  Ccdexamp.c
+c:\entw\pcie\64bit\ex2cofifo_jungo\GLOBAL.h(80): warning C4005: 'WINNT': macro redefinition
+  c:\entw\pcie\64bit\ex2cofifo_jungo\GLOBAL.h(80): note: command-line arguments:  see previous definition of 'WINNT'
+c:\entw\pcie\64bit\ex2cofifo_jungo\GLOBAL.h(282): warning C4047: 'initializing': 'INT_PTR' differs in levels of indirection from 'void *'
+c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(334): warning C4013: 'GetCursorPosition' undefined; assuming extern returning int
+c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(337): warning C4018: '>': signed/unsigned mismatch
+c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(553): warning C4244: 'function': conversion from 'ULONG' to 'UINT8', possible loss of data
+c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(570): warning C4244: 'function': conversion from 'ULONG' to 'UINT8', possible loss of data
+c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(634): warning C4477: 'sprintf_s' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'DWORD64'
+  c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(634): note: consider using '%lli' in the format string
+  c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(634): note: consider using '%Ii' in the format string
+  c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(634): note: consider using '%I64i' in the format string
+c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(634): warning C4477: 'sprintf_s' : format string '%i' requires an argument of type 'int', but variadic argument 2 has type 'DWORD64'
+  c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(634): note: consider using '%lli' in the format string
+  c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(634): note: consider using '%Ii' in the format string
+  c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(634): note: consider using '%I64i' in the format string
+c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(441): warning C4101: 'fn': unreferenced local variable
+c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(454): warning C4101: 'val': unreferenced local variable
+c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(438): warning C4101: 'test': unreferenced local variable
+c:\entw\pcie\64bit\ex2cofifo_jungo\CCDUNIT.C(447): warning C4101: 'TrmsString': unreferenced local variable
+c:\entw\pcie\64bit\ex2cofifo_jungo\lscpciej_lib.c(57): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): note: see declaration of '_snprintf'
+c:\entw\pcie\64bit\ex2cofifo_jungo\lscpciej_lib.c(160): warning C4020: 'WDC_PciDeviceOpen': too many actual parameters
+c:\entw\pcie\64bit\ex2cofifo_jungo\lscpciej_lib.c(527): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): note: see declaration of '_snprintf'
+c:\entw\pcie\64bit\ex2cofifo_jungo\lscpciej_lib.c(528): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): note: see declaration of '_snprintf'
+c:\entw\pcie\64bit\ex2cofifo_jungo\lscpciej_lib.c(535): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): note: see declaration of '_snprintf'
+c:\entw\pcie\64bit\ex2cofifo_jungo\lscpciej_lib.c(541): warning C4996: '_snprintf': This function or variable may be unsafe. Consider using _snprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1961): note: see declaration of '_snprintf'
+c:\entw\pcie\64bit\ex2cofifo_jungo\lscpciej_lib.c(875): warning C4996: '_vsnprintf': This function or variable may be unsafe. Consider using _vsnprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1400): note: see declaration of '_vsnprintf'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(235): warning C4028: formal parameter 1 different from declaration
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(239): warning C4477: 'sprintf_s' : format string '%d' requires an argument of type 'int', but variadic argument 2 has type 'UINT64'
+  c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(239): note: consider using '%lld' in the format string
+  c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(239): note: consider using '%Id' in the format string
+  c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(239): note: consider using '%I64d' in the format string
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(271): warning C4477: 'sprintf_s' : format string '%p' requires an argument of type 'void *', but variadic argument 1 has type 'KPTR'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(276): warning C4477: 'sprintf_s' : format string '%p' requires an argument of type 'void *', but variadic argument 1 has type 'DMA_ADDR'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(277): warning C4477: 'sprintf_s' : format string '%p' requires an argument of type 'void *', but variadic argument 1 has type 'DMA_ADDR'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(279): warning C4477: 'sprintf_s' : format string '%p' requires an argument of type 'void *', but variadic argument 1 has type 'DMA_ADDR'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(330): warning C4013: 'ReadLongDMA' undefined; assuming extern returning int
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(294): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(296): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(301): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(306): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(316): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(326): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(329): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(331): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(383): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(390): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(402): warning C4026: function declared with formal parameter list
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(455): warning C4020: 'ErrorMsg': too many actual parameters
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(490): warning C4244: '=': conversion from 'DWORD' to 'UINT8', possible loss of data
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(555): warning C4047: 'return': 'BOOL' differs in levels of indirection from 'void *'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(632): warning C4013: 'WriteLongDMA' undefined; assuming extern returning int
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(753): warning C4101: 'BitMask': unreferenced local variable
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(826): warning C4027: function declared without formal parameter list
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(941): warning C4027: function declared without formal parameter list
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(981): warning C4047: 'initializing': 'INT_PTR' differs in levels of indirection from 'INT_PTR *'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(1055): warning C4022: 'memcpy_s': pointer mismatch for actual parameter 1
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(1017): warning C4133: 'initializing': incompatible types - from 'INT_PTR *' to 'USHORT *'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(1098): warning C4029: declared formal parameter list different from definition
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(1123): warning C4244: 'function': conversion from 'DWORD64' to 'DWORD', possible loss of data
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(1135): warning C4047: '=': 'INT_PTR' differs in levels of indirection from 'PUSHORT'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(1190): warning C4113: 'void (__cdecl *)(PVOID)' differs in parameter lists from 'LSCPCIEJ_INT_HANDLER'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(1201): warning C4113: 'void (__cdecl *)(PVOID)' differs in parameter lists from 'LSCPCIEJ_INT_HANDLER'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(1248): warning C4098: 'CleanupPCIE_DMA': 'void' function returning a value
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(1290): warning C4028: formal parameter 3 different from declaration
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(1290): warning C4028: formal parameter 4 different from declaration
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(1290): warning C4029: declared formal parameter list different from definition
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(1579): warning C4101: 'pDioden': unreferenced local variable
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(2089): warning C4101: 'ReturnedLength': unreferenced local variable
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(2148): warning C4101: 'ReturnedLength': unreferenced local variable
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(2178): warning C4101: 'ReturnedLength': unreferenced local variable
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(2210): warning C4101: 'ReturnedLength': unreferenced local variable
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(2209): warning C4101: 'DataLength': unreferenced local variable
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(2208): warning C4101: 'WriteData': unreferenced local variable
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(2292): warning C4101: 'WriteData': unreferenced local variable
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(2357): warning C4101: 'ReturnedLength': unreferenced local variable
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(2356): warning C4101: 'DataLength': unreferenced local variable
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(2355): warning C4101: 'WriteData': unreferenced local variable
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(2447): warning C4020: 'ErrorMsg': too many actual parameters
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(3059): warning C4142: 'ExpTime': benign redefinition of type
+  c:\entw\pcie\64bit\ex2cofifo_jungo\GLOBAL.h(224): note: see declaration of 'ExpTime'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(3094): warning C4098: 'StartReadWithDma': 'void' function returning a value
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(3121): warning C4047: '=': 'pArrayT' differs in levels of indirection from 'USHORT'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(3184): warning C4018: '>': signed/unsigned mismatch
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(3219): warning C4018: '<': signed/unsigned mismatch
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(3363): warning C4018: '>': signed/unsigned mismatch
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(3504): warning C4028: formal parameter 3 different from declaration
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(3504): warning C4029: declared formal parameter list different from definition
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(3532): warning C4013: 'FindCam' undefined; assuming extern returning int
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(3553): warning C4047: '=': 'INT_PTR' differs in levels of indirection from 'PUSHORT'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(3593): warning C4554: '&': check operator precedence for possible error; use parentheses to clarify precedence
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(3619): warning C4554: '&': check operator precedence for possible error; use parentheses to clarify precedence
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(3641): warning C4013: 'IsTimerOn' undefined; assuming extern returning int
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(3657): warning C4090: 'function': different 'volatile' qualifiers
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(3658): warning C4090: 'function': different 'volatile' qualifiers
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(3515): warning C4101: 'pdest': unreferenced local variable
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(4052): warning C4244: 'function': conversion from 'ULONG' to 'BYTE', possible loss of data
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(4385): warning C4133: 'function': incompatible types - from 'ULONG *' to 'BYTE *'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(4387): warning C4244: 'function': conversion from 'ULONG' to 'BYTE', possible loss of data
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(4392): warning C4133: 'function': incompatible types - from 'ULONG *' to 'BYTE *'
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(4394): warning C4244: 'function': conversion from 'ULONG' to 'BYTE', possible loss of data
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(4454): warning C4244: 'function': conversion from 'DWORD' to 'USHORT', possible loss of data
+c:\entw\pcie\64bit\ex2cofifo_jungo\BOARD.C(4462): warning C4244: 'function': conversion from 'DWORD' to 'USHORT', possible loss of data
+Ccdexamp.c(180): warning C4244: 'return': conversion from 'WPARAM' to 'int', possible loss of data
+Ccdexamp.c(76): warning C4996: 'GetVersion': was declared deprecated
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\um\sysinfoapi.h(135): note: see declaration of 'GetVersion'
+Ccdexamp.c(298): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+Ccdexamp.c(307): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+Ccdexamp.c(313): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+Ccdexamp.c(315): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+Ccdexamp.c(320): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+Ccdexamp.c(322): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+Ccdexamp.c(325): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+Ccdexamp.c(335): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+Ccdexamp.c(338): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+Ccdexamp.c(340): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+Ccdexamp.c(560): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\stdio.h(1774): note: see declaration of 'sprintf'
+Ccdexamp.c(672): warning C4244: '=': conversion from 'LRESULT' to 'DWORD', possible loss of data
+Ccdexamp.c(673): warning C4244: '=': conversion from 'LRESULT' to 'DWORD', possible loss of data
+Ccdexamp.c(624): warning C4101: 'TrmsString': unreferenced local variable
+Ccdexamp.c(1146): warning C4244: 'function': conversion from 'UINT64' to 'UINT', possible loss of data
+Ccdexamp.c(1214): warning C4244: 'function': conversion from 'UINT64' to 'UINT', possible loss of data
+Ccdexamp.c(1247): warning C4244: 'function': conversion from 'UINT64' to 'UINT', possible loss of data
+Ccdexamp.c(1248): warning C4244: 'function': conversion from 'UINT64' to 'UINT', possible loss of data
+Ccdexamp.c(1252): warning C4244: 'function': conversion from 'UINT64' to 'UINT', possible loss of data
+c:\entw\pcie\64bit\ex2cofifo_jungo\board.c(3098): warning C4700: uninitialized local variable 'pReadArray' used
+  CCDEXAMP.vcxproj -> C:\ENTW\PCIE\64bit\Ex2CoFifo_Jungo\x64\Debug\CCDEXAMP.exe
   CCDEXAMP.vcxproj -> .\Debug/CCDEXAMP.pdb (Full PDB)

@@ -234,7 +234,7 @@ BOOL Running=FALSE;
 BOOL UpdateDispl=FALSE;
 
 //for trms calcs
-#define TRMSpix  950 //(8-1)*150-100// _PIXEL/2	//pixel no for which the rms value is sampled
+#define TRMSpix  1 //(8-1)*150-100// _PIXEL/2	//pixel no for which the rms value is sampled
 
 #define NOS  300  //number of samples for trms calcs
 ULONG m_lfdTrmsNr=0;
