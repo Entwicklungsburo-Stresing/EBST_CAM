@@ -1174,11 +1174,14 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 					MessageBox(hMSWND, "allocating Buffer fails", "Error", MB_OK);
 				else
 					MessageBox(hMSWND, "allocating Buffer succeeded", "Message", MB_OK);
-				if (both_boards)
+				SetCamVars(choosen_board, 2, _PIXEL, 0, 0);
+				if (both_boards) {
 					if (!BufLock(2, CAMCNT, Nob, Nospb))
 						MessageBox(hMSWND, "allocating Buffer of second Board fails", "Error", MB_OK);
 					else
 						MessageBox(hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK);
+					SetCamVars(2, 2, _PIXEL, 0, 0);
+				}
 			}
 #endif
 
