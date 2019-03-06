@@ -135,6 +135,7 @@ ULONG DMACounter = 0;//for debugging
 //Buffer of WDC_DMAContigBufLock function = one DMA sub block - will be copied to the big pDMABigBuf later
 //INT_PTR *pDMASubBuf[3] = { NULL, NULL, NULL };
 USHORT* pDMASubBuf[3] = { NULL, NULL, NULL };
+DWORD64 IsrCounter = 0;
 
 //pDMASubBuf = NULL;
 //PUSHORT *pDMASubBuf;  //!!GS
@@ -144,7 +145,7 @@ BOOL escape_readffloop = FALSE;
 BOOL contffloop = FALSE;
 //DWORD64 ISRCounter[2] = { 0, 0};
 DWORD64 SubBufCounter[3] = {0, 0, 0 };
-DWORD64 IsrCounter = 0;
+//DWORD64 IsrCounter = 0;
 SHORT DMAUserBufIndex = 0;
 DWORD64 val = 0x0;
 //BYTE DontReadUserBufIndex = 0;
@@ -219,11 +220,10 @@ BOOL _SHOW_MSG = TRUE;
 
 BOOL DMAISRunning = FALSE;
 
-BOOL contimess_run_once = FALSE;
 
 
 //ULONG TRMSVals[4][300];
-double TRMSval[4];
+//double TRMSval[4];
 
 // ***********     functions    **********************
 //B! FIXME die jungo-library für fehler und co müsste wahrscheinlich in BOARD.C reingeschrieben werden 
@@ -1113,11 +1113,7 @@ void isr(UINT drvno, PVOID pData)
 	}
 */
 	ResetS0Bit(3, DmaAddr_PCIEFLAGS, drvno);//reset INTRSR flag for TRIGO
-	pDMABigBufIndex[drvno] += subbuflengthinbytes;// / sizeof(USHORT); //!!GS  calc for USHORT
-	ReadLongS0(drvno, &val, DmaAddr_PCIEFLAGS); //reset INTRSR flag for TRIGO
-	val &= 0xfffffff7;
-	WriteLongS0(drvno, val, DmaAddr_PCIEFLAGS); //just to see when its on
-												//WDC_Err("DMACounter: %d \n", DMACounter);
+
 	IsrCounter++;
 
 	//WDC_Err("ISR: pix42 of ReturnFrame: 0x%d \n", *(USHORT*)(pDMABigBufBase[drvno] + 420));
@@ -1287,10 +1283,10 @@ void CleanupPCIE_DMA(UINT32 drvno)
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		return FALSE;
 	}
-	if (newDLL == 1) {//checks if a new instance called the programm and the buffer is initialized in the dll
+	/*if (newDLL == 1) {//checks if a new instance called the programm and the buffer is initialized in the dll
 		WDC_Err("free in CleanupPCIE_DMA\n");
 		free(pDMABigBufBase[drvno]);
-	}
+	}*/
 	WDC_Err("Unlock DMABuf Succesfull\n");
 	/*
 	BOOL fResult = FALSE;
@@ -1402,12 +1398,14 @@ void SetCamVars(UINT32 drvno, UINT32 camsys, UINT16 pixel, UINT16 gain, UINT16 t
 }
 
 #ifndef _DLL
-BOOL BufLock(UINT drvno, int nob, int nospb)
+BOOL BufLock(UINT drvno, UINT camcnt, int nob, int nospb)
 {
 	if (WDC_IntIsEnabled(hDev[drvno]))
 		CleanupPCIE_DMA(drvno);
+	aCAMCNT[drvno] = camcnt;
+	volatile int size = nob * nospb * _PIXEL * sizeof(USHORT);
 
-	pBLOCKBUF[drvno] = calloc(nob, camcnt * nospb * _PIXEL * sizeof(USHORT));
+	pBLOCKBUF[drvno] = calloc(camcnt, nob *  nospb * _PIXEL * sizeof(USHORT));//B! "2 *" because the buffer is just 2/3 of the needed size 
 	//pDIODEN = (pArrayT)calloc(nob, nospb * _PIXEL * sizeof(ArrayT));
 
 	if (pBLOCKBUF[drvno] != 0){
@@ -4775,7 +4773,7 @@ void GetRmsVal(ULONG nos, ULONG *TRMSVals, double *mwf, double *trms)
 
 }//GetRmsVal
 
-void CalcTrms(UINT32 drvno, UINT32 nos, ULONG TRMSpix, double *mwf, double *trms)
+void CalcTrms(UINT32 drvno, UINT32 nos, ULONG trmspix, double *mwf, double *trms)
 {// online calc TRMS noise val of pix
 	ULONG *TRMSVals;
 
@@ -4783,7 +4781,7 @@ void CalcTrms(UINT32 drvno, UINT32 nos, ULONG TRMSpix, double *mwf, double *trms
 
 	//storing the values of one pix for the rms analysis
 	for (int scan = 0; scan < nos; scan++) {
-		int TRMSpix_of_current_scan = TRMSpix + scan * aCAMCNT[drvno] * _PIXEL;// *sizeof(USHORT);
+		int TRMSpix_of_current_scan = trmspix + scan * aCAMCNT[drvno] * _PIXEL;// *sizeof(USHORT);
 		TRMSVals[scan] = pDMABigBufBase[drvno][TRMSpix_of_current_scan];
 	}
 

@@ -9,10 +9,6 @@
 #define BoardVN  "2.31"
 
 
-BOOL contimess_run_once = FALSE;
-
-DWORD64 IsrCounter = 0;
-
 void ErrMsgBoxOn(void);
 void ErrMsgBoxOff(void); // switch to suppress error message boxes
 void ErrorMsg(char ErrMsg[40]);
@@ -33,6 +29,8 @@ void StartPCIE_DMAWrite(UINT32 drvno);
 void SetDMAReset(void);
 void CleanupPCIE_DMA(UINT32 drvno);
 void GetLastBufPart(void);
+
+extern DWORD64 IsrCounter;
 
 int GetNumofProcessors();
 
