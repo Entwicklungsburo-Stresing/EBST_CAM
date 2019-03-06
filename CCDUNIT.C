@@ -456,8 +456,8 @@ void Contimess(void *dummy)
 	ULONG gain = 0;
 
 
-
 	contimess_run_once = TRUE;
+
 	// if thread is wanted ...
 /*
 #if  (_USETHREAD)//
