@@ -7,6 +7,7 @@ int yVal = 0;
 volatile int testcnt = 0;
 UINT choosen_board = 1;
 BOOL both_boards = FALSE;
+BOOL cont_mode = FALSE;
 
 /*
 void GetRmsVal(BYTE ch, ULONG nos)
@@ -624,9 +625,22 @@ void Contimess(void *dummy)
 		j = sprintf_s(header, 260, " Online Loop - Cancel with ESC or space- key isr: %i of %i ",IsrCounter+1, IsrNumber);//+1 cheating
 		TextOut(hMSDC, 100, LOY - 17, header, j);
 		RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
-		
 	}
 	//ReadFFLoop(choosen_board, ExpTime, FREQ, EXTTRIGFLAG, 0,  0);
+	BOOL cancel = FALSE;
+	if(cont_mode)
+		while (!cancel) {
+
+			CopytoDispbuf(0);
+			Display(1, PLOTFLAG);
+
+			UpdateTxT();
+
+			if (GetAsyncKeyState(VK_ESCAPE))
+				cancel = TRUE;
+			if (GetAsyncKeyState(VK_SPACE))
+				cancel = TRUE;
+		}
 	Sleep(100);//for the thread if there is just one isr 
 	//start 2nd thread for getting data in highest std priority, ring=200 lines
 #endif

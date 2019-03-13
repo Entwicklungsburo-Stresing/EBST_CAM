@@ -1158,6 +1158,7 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 			break;
 
 		case IDOK:
+			cont_mode = FALSE;
 			nob_input = GetDlgItemInt(hDlg, IDC_nob, &success, FALSE);
 			nospb_input = GetDlgItemInt(hDlg, IDC_nospb, &success, FALSE);
 			if (success)
@@ -1260,6 +1261,45 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 			
 				
 
+			break;
+		case IDCONT:
+			cont_mode = TRUE;
+			Nob = 1;
+			Nospb = 1;
+#ifdef _DLL
+			nDLLSetupDMA(DRV, Nospb, Nob);
+			if (both_boards)
+				nDLLSetupDMA(2, Nospb, Nob);
+		}
+#else
+			if (!BufLock(choosen_board, CAMCNT, Nob, Nospb))
+				MessageBox(hMSWND, "allocating Buffer fails", "Error", MB_OK);
+			else
+				MessageBox(hMSWND, "allocating Buffer succeeded", "Message", MB_OK);
+			SetCamVars(choosen_board, 2, _PIXEL, 0, 0);
+			if (both_boards) {
+				if (!BufLock(2, CAMCNT, Nob, Nospb))
+					MessageBox(hMSWND, "allocating Buffer of second Board fails", "Error", MB_OK);
+				else
+					MessageBox(hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK);
+				SetCamVars(2, 2, _PIXEL, 0, 0);
+			}
+			
+#endif
+
+			trackbar_nospb = Nospb;
+			
+			trackbar_nob = Nob;
+			
+			//update trackbars
+			SendMessage(hwndTrack2, TBM_SETRANGE, TRUE,
+				MAKELONG(0/*MIN RANGE*/, trackbar_nob - 1/*MAX RANGE*/));  //Optional, Default is 0-100
+			SendMessage(hwndTrack, TBM_SETRANGE, TRUE,
+				MAKELONG(0/*MIN RANGE*/, trackbar_nospb - 1/*MAX RANGE*/));  //Optional, Default is 0-100
+			EnableWindow(hwndTrack, FALSE);
+			UpdateWindow(hwndTrack);
+			EndDialog(hDlg, TRUE);
+			return (TRUE);
 			break;
 
 		}
