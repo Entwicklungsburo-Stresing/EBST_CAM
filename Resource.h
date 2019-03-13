@@ -5,6 +5,7 @@
 #define IDS_STRING1                     1
 #define IDOK2                           3
 #define IDOK1                           3
+#define IDCONT                          3
 #define NOBIOSERR                       101
 #define NOCCDERR                        102
 #define IDD_DIALOG1                     104
