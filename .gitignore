@@ -189,4 +189,4 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 *.opensdf
-*.db
+*.VC.db
