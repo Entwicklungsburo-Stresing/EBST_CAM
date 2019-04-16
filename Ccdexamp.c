@@ -1142,7 +1142,7 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 #ifndef _DLL
 		FreeMemInfo(&builtinram, &freeram);
 #else
-		DLLFreeMemInfo(&builtinram, &freeram); 
+		DLLFreeMemInfo(&builtinram, &freeram);
 #endif
 		SetDlgItemInt(hDlg, IDC_BUILTINRAM, builtinram / divMB, 0);
 
@@ -1169,7 +1169,7 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 				nDLLSetupDMA(DRV, Nospb, Nob);
 				if (both_boards)
 					nDLLSetupDMA(2, Nospb, Nob);
-			}
+
 #else
 				if (!BufLock(choosen_board, CAMCNT, Nob, Nospb))
 					MessageBox(hMSWND, "allocating Buffer fails", "Error", MB_OK);
@@ -1183,16 +1183,16 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 						MessageBox(hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK);
 					SetCamVars(2, 2, _PIXEL, 0, 0);
 				}
-			}
+			
 #endif
-
+			}
 			trackbar_nospb = Nospb;
-			while (trackbar_nospb > 30000){ //max for trackbar length
+			while (trackbar_nospb > 30000) { //max for trackbar length
 				trackbar_nospb /= 10;
 				trackbar_nospb_multiplier *= 10;
 			}
 			trackbar_nob = Nob;
-			while (trackbar_nob > 30000){ //max for trackbar length
+			while (trackbar_nob > 30000) { //max for trackbar length
 				trackbar_nob /= 10;
 				trackbar_nob_multiplier *= 10;
 			}
@@ -1246,11 +1246,11 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 					MessageBox(hMSWND, "allocating Buffer fails", "Error", MB_OK);
 				else
 					MessageBox(hMSWND, "allocating Buffer succeeded", "Message", MB_OK);
-			}
+		}
 
 			FreeMemInfo(&builtinram, &freeram);
-			SetDlgItemInt(hDlg, IDC_FREERAM, freeram/divMB, 0);
-			SetDlgItemInt(hDlg, IDC_BUILTINRAM, builtinram/divMB, 0);
+			SetDlgItemInt(hDlg, IDC_FREERAM, freeram / divMB, 0);
+			SetDlgItemInt(hDlg, IDC_BUILTINRAM, builtinram / divMB, 0);
 
 			allocram = (freeram_old - freeram) / divMB;
 			if (allocram < 100000)
@@ -1258,8 +1258,8 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 			else//if RAM is bigger than 100gb
 				SetDlgItemText(hDlg, IDC_ALLOCRAM, "calculation error");
 #endif
-			
-				
+
+
 
 			break;
 		case IDCONT:
@@ -1270,7 +1270,7 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 			nDLLSetupDMA(DRV, Nospb, Nob);
 			if (both_boards)
 				nDLLSetupDMA(2, Nospb, Nob);
-		}
+
 #else
 			if (!BufLock(choosen_board, CAMCNT, Nob, Nospb))
 				MessageBox(hMSWND, "allocating Buffer fails", "Error", MB_OK);
@@ -1284,13 +1284,13 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 					MessageBox(hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK);
 				SetCamVars(2, 2, _PIXEL, 0, 0);
 			}
-			
+
 #endif
 
 			trackbar_nospb = Nospb;
-			
+
 			trackbar_nob = Nob;
-			
+
 			//update trackbars
 			SendMessage(hwndTrack2, TBM_SETRANGE, TRUE,
 				MAKELONG(0/*MIN RANGE*/, trackbar_nob - 1/*MAX RANGE*/));  //Optional, Default is 0-100
@@ -1302,13 +1302,13 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 			return (TRUE);
 			break;
 
-		}
+			}
 		break; //WM_COMMAND
 
-	}
+		}
 
 	return (FALSE);
-}
+	}
 
 
 
@@ -1359,7 +1359,9 @@ LRESULT CALLBACK ChooseBoard(HWND hDlg,
 			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO2) == TRUE) { choosen_board = 2; both_boards = FALSE; DISP2 = FALSE; }
 			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO_BOTH) == TRUE) { choosen_board = 1; both_boards = TRUE; DISP2 = TRUE; }
 			if(both_boards == TRUE)
+#ifndef _DLL
 				BOARD_SEL = 3;
+#endif
 			EndDialog(hDlg, TRUE);
 			
 			//if the second buffer is not initilized
