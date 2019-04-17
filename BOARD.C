@@ -26,7 +26,7 @@ Internal definitions
 
 //Dont trust the debugger its CRAP
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***#define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***#define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
 
 /*************************************************************
 General definitions
@@ -580,7 +580,7 @@ BOOL InitBoard(UINT32 drvno)
 
 	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
 	WDC_Err("DRVInit hDev id % x, hDev pci slot %x, hDev pci bus %x, hDev pci function %x, hDevNumAddrSp %x \n"
-		, pDev->id, pDev->slot.pciSlot.dwSlot, pDev->slot.pciSlot.dwBus, pDev->slot.pciSlot.dwFunction, pDev->dwNumAddrSpaces);
+		, pDev->id, pDev->slot.dwSlot, pDev->slot.dwBus, pDev->slot.dwFunction, pDev->dwNumAddrSpaces);
 
 	/*hccddrv = WDC_GetWDHandle();
 	if (hccddrv == (HANDLE)INVALID_HANDLE_VALUE)
