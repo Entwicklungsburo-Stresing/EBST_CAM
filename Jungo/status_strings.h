@@ -1,4 +1,4 @@
-/* Jungo Connectivity Confidential. Copyright (c) 2016 Jungo Connectivity Ltd.  http://www.jungo.com */
+/* Jungo Connectivity Confidential. Copyright (c) 2019 Jungo Connectivity Ltd.  https://www.jungo.com */
 
 #ifndef _STATUS_STRINGS_H_
 #define _STATUS_STRINGS_H_

@@ -1,4 +1,4 @@
-/* Jungo Connectivity Confidential. Copyright (c) 2016 Jungo Connectivity Ltd.  http://www.jungo.com */
+/* Jungo Connectivity Confidential. Copyright (c) 2019 Jungo Connectivity Ltd.  https://www.jungo.com */
 
 #ifndef _WD_KP_H_
 #define _WD_KP_H_
@@ -21,7 +21,7 @@
 typedef void (__cdecl *KP_FUNC_CLOSE)(PVOID pDrvContext);
 // called when WD_KernelPlugInCall() is called
 typedef void (__cdecl *KP_FUNC_CALL)(PVOID pDrvContext,
-    WD_KERNEL_PLUGIN_CALL *kpCall, BOOL fKernelMode);
+    WD_KERNEL_PLUGIN_CALL *kpCall);
 // called when WD_IntEnable() is called, with a kernel plugin handler specified
 // the pIntContext will be passed to the rest of the functions handling
 // interrupts.
@@ -65,8 +65,7 @@ typedef BOOL (__cdecl *KP_FUNC_OPEN)(KP_OPEN_CALL *kpOpenCall, HANDLE hWD,
 typedef struct
 {
     DWORD dwVerWD; // version of the WinDriver Kernel PlugIn library
-    CHAR cDriverName[12]; // return the device driver name, up to 11
-                          // chars.
+    CHAR cDriverName[WD_MAX_KP_NAME_LENGTH]; // return the device driver name
     KP_FUNC_OPEN funcOpen; // returns the KP_Open function
     KP_FUNC_OPEN funcOpen_32_64; // returns the KP_Open function for 32 bit app
                                  // with 64 bit KP.

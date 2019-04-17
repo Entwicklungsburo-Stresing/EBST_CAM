@@ -1,32 +1,11 @@
-/* Jungo Connectivity Confidential. Copyright (c) 2016 Jungo Connectivity Ltd.  http://www.jungo.com */
+/* Jungo Connectivity Confidential. Copyright (c) 2019 Jungo Connectivity Ltd.  https://www.jungo.com */
 
-/* 
- * This program is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU General Public License version 2 as published by
- * the Free Software Foundation.
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License v2 for
- * more details.
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, contact Jungo Connectivity Ltd. at
- * support@jungo.com
- */
+/* \n * This program is free software; you can redistribute it and\/or modify it \n * under the terms of the GNU General Public License version 2 as published by\n * the Free Software Foundation.\n * This program is distributed in the hope that it will be useful, but WITHOUT\n * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or\n * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License v2 for\n * more details.\n * You should have received a copy of the GNU General Public License along with\n * this program. If not, contact Jungo Connectivity Ltd. at\n * support@jungo.com\n */
 
-/* 
- * Alternately, if compiling for Microsoft Windows, Windows CE, Mac, this
- * file is licensed under the WinDriver commercial license provided with the
- * Software.
- */
+/* \n * Alternately, if compiling for Microsoft Windows, Mac, this\n * file is licensed under the WinDriver commercial license provided with the\n * Software.\n */
 
 #if !defined(_WINDRVR_USB_H_)
 #define _WINDRVR_USB_H_
-
-/* Structures on PPC64 are 8 byte aligned, even on 32 bit applications,
- * therefore packing is necessary. */
-#if defined(LINUX) && defined(PPC64)
-    #pragma pack(push, 1)
-#endif
 
 #if defined(LINUX)
     #if !defined(__P_TYPES__)
@@ -65,6 +44,7 @@ typedef enum {
 #define WD_USB_MAX_PIPE_NUMBER 32
 #define WD_USB_MAX_ENDPOINTS WD_USB_MAX_PIPE_NUMBER
 #define WD_USB_MAX_INTERFACES 30
+#define WD_USB_MAX_ALT_SETTINGS 255
 
 typedef enum {
     WDU_DIR_IN     = 1,
@@ -83,9 +63,6 @@ enum {
                                                     URB size */
     /* All OS */
     USB_STREAM_OVERWRITE_BUFFER_WHEN_FULL = 0x200,
-
-    /* WinCE only, ignored on other OS */
-    USB_STREAM_MAX_TRANSFER_SIZE_OVERRIDE = 0x400,
 
     /* The following flags are no longer used beginning with v6.0: */
     USB_TRANSFER_HALT = 0x1,
@@ -368,10 +345,6 @@ typedef struct
     DWORD dwBytesInBuffer;
     DWORD dwReserved;
 } WDU_STREAM_STATUS;
-
-#if defined(LINUX) && defined(PPC64)
-    #pragma pack(pop)
-#endif
 
 #endif /* _WINDRVR_USB_H_ */
 

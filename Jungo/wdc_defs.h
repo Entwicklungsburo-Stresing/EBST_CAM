@@ -1,4 +1,4 @@
-/* Jungo Connectivity Confidential. Copyright (c) 2016 Jungo Connectivity Ltd.  http://www.jungo.com */
+/* Jungo Connectivity Confidential. Copyright (c) 2019 Jungo Connectivity Ltd.  https://www.jungo.com */
 
 #ifndef _WDC_DEFS_H_
 #define _WDC_DEFS_H_
@@ -23,42 +23,28 @@
     Memory / I/O / Registers
    ----------------------------------------------- */
 
-#if defined(LINUX) || defined(MACOS)
-    #define PACK __attribute((packed))
-#elif defined(WINNT)
-    #define PACK
-    #include <pshpack1.h>
-#elif !defined(WINCE) && !defined(APPLE)
-    #error Unrecognized OS for packing constraints
-#endif
-
 /* Address space information struct */
 typedef struct {
-    DWORD dwAddrSpace;         /* Address space number */
-    BOOL  fIsMemory;           /* TRUE: memory address space; FALSE: I/O */
-    DWORD dwItemIndex;         /* Index of address space in the
-                                  pDev->cardReg.Card.Item array */
+    DWORD  dwAddrSpace;        /* Address space number */
+    BOOL   fIsMemory;          /* TRUE: memory address space; FALSE: I/O */
+    DWORD  dwItemIndex;        /* Index of address space in the
+                                * pDev->cardReg.Card.Item array */
     DWORD  reserved;
     UINT64 qwBytes;            /* Size of address space */
     KPTR   pAddr;              /* I/O / Memory kernel mapped address -- for
-                                  WD_Transfer(), WD_MultiTransfer(), or direct
-                                  kernel access */
-    UPTR pUserDirectMemAddr;   /* Memory address for direct user-mode access */
+                                * WD_Transfer(), WD_MultiTransfer(), or direct
+                                * kernel access */
+    UPTR   pUserDirectMemAddr; /* Memory address for direct user-mode access */
 } WDC_ADDR_DESC;
 
 /* -----------------------------------------------
     General
    ----------------------------------------------- */
-/* PCI/PCMCIA device ID */
-typedef union {
-    WD_PCI_ID    pciId;
-    WD_PCMCIA_ID pcmciaId;
-} WDC_ID_U;
 
 /* Device information struct */
 typedef struct WDC_DEVICE {
-    WDC_ID_U                id;              /* PCI/PCMCIA device ID */
-    WDC_SLOT_U              slot;            /* PCI/PCMCIA device slot location
+    WD_PCI_ID               id;              /* PCI device ID */
+    WD_PCI_SLOT             slot;            /* PCI device slot location
                                               * information */
     DWORD                   dwNumAddrSpaces; /* Total number of device's address
                                               * spaces */
@@ -76,11 +62,6 @@ typedef struct WDC_DEVICE {
 
     PVOID                   pCtx;            /* User-specific context */
 } WDC_DEVICE, *PWDC_DEVICE;
-
-#undef PACK
-#if defined(WINNT)
-    #include <poppack.h>
-#endif
 
 /*************************************************************
   General utility macros
@@ -119,14 +100,14 @@ typedef struct WDC_DEVICE {
 #define WDC_GET_CARD_HANDLE(pDev) (((PWDC_DEVICE)(pDev))->cardReg.hCard)
 
 /* Get pointer to WD PCI slot */
-#define WDC_GET_PPCI_SLOT(pDev) (&(((PWDC_DEVICE)(pDev))->slot.pciSlot))
-
-/* Get pointer to PCI/PCMCIA slot */
-#define WDC_GET_PPCMCIA_SLOT(pDev) (&(((PWDC_DEVICE)(pDev))->slot.pcmciaSlot))
+#define WDC_GET_PPCI_SLOT(pDev) (&(((PWDC_DEVICE)(pDev))->slot))
 
 /* Get address space descriptor */
 #define WDC_GET_ADDR_DESC(pDev, dwAddrSpace) \
     (&(((PWDC_DEVICE)(pDev))->pAddrDesc[dwAddrSpace]))
+
+#define WDC_GET_ADDR_SPACE_SIZE(pDev, dwAddrSpace) \
+    ((((PWDC_DEVICE)(pDev))->pAddrDesc[dwAddrSpace]).qwBytes)
 
 /* Get type of enabled interrupt */
 #define WDC_GET_ENABLED_INT_TYPE(pDev) \

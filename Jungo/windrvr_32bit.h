@@ -10,12 +10,8 @@
 extern "C" {
 #endif
 
-#if defined(LINUX) || defined(APPLE)
-   #if defined(PPC64)
-        #pragma pack(push,1)
-   #else
-        #pragma pack(push,4)
-   #endif
+#if defined(LINUX)
+    #pragma pack(push,4)
 #endif
 
 typedef u32 ptr32;
@@ -23,7 +19,7 @@ typedef u32 WD_BUS_TYPE_32B;
 
 typedef struct
 {
-    WD_BUS_TYPE_32B dwBusType; /* Bus Type: ISA, EISA, PCI, PCMCIA. */
+    WD_BUS_TYPE_32B dwBusType; /* Bus Type: ISA, EISA, PCI. */
     u32 dwBusNum;              /* Bus number. */
     u32 dwSlotFunc;            /* Slot number on Bus. */
 } WD_BUS_V30_32B;
@@ -80,12 +76,6 @@ typedef struct
 
 typedef struct
 {
-    WORD wManufacturerId; // card manufacturer
-    WORD wCardId;         // card type and model
-} WD_PCMCIA_ID_32B;
-
-typedef struct
-{
     u32 hKernelPlugIn;
     u32 dwMessage;
     ptr32 pData;
@@ -132,8 +122,8 @@ typedef struct
 typedef struct
 {
     u32 hKernelPlugIn;
-    ptr32 pcDriverName;
-    ptr32 pcDriverPath;
+    CHAR cDriverName[WD_MAX_KP_NAME_LENGTH];
+    CHAR cDriverPath[WD_MAX_KP_NAME_LENGTH];
     ptr32 pOpenData;
 } WD_KERNEL_PLUGIN_V40_32B;
 
@@ -143,14 +133,6 @@ typedef struct
     u32 dwSlot;
     u32 dwFunction;
 } WD_PCI_SLOT_32B;
-
-typedef struct
-{
-    BYTE uBus;         // bus number (first bus is 0)
-    BYTE uSocket;      // socket number (first socket is 0)
-    BYTE uFunction;    // function number (first function is 0)
-    BYTE uPadding;     // 1 byte padding so structure will be 4 bytes aligned
-} WD_PCMCIA_SLOT_V622_32B;
 
 typedef struct
 {
@@ -174,11 +156,6 @@ typedef struct
         } Usb;
         struct
         {
-            WD_PCMCIA_ID_32B deviceId;
-            WD_PCMCIA_SLOT_V622_32B slot;
-        } Pcmcia;
-        struct
-        {
             u32 hIpc;
             u32 dwSubGroupID;
             u32 dwGroupID;
@@ -191,12 +168,6 @@ typedef struct
     u32 dwNumMatchTables; // in
     WDU_MATCH_TABLE matchTables[1]; // in
 } WD_EVENT_V121_32B;
-
-/* PCI/PCMCIA slot */
-typedef union {
-    WD_PCI_SLOT_32B    pciSlot;
-    WD_PCMCIA_SLOT_V622_32B pcmciaSlot;
-} WDC_SLOT_U_32B;
 
 /* Only wdc_defs.h structures should be packed */
 #if defined(WINNT)
@@ -217,16 +188,10 @@ typedef struct {
     u32 pUserDirectMemAddr; /* Memory address for direct user-mode access */
 } WDC_ADDR_DESC_32B;
 
-/* PCI/PCMCIA device ID */
-typedef union {
-    WD_PCI_ID_32B    pciId;
-    WD_PCMCIA_ID_32B pcmciaId;
-} WDC_ID_U_32B;
-
 /* Device information struct */
 typedef struct WDC_DEVICE_32B{
-    WDC_ID_U_32B                id;              /* PCI/PCMCIA device ID */
-    WDC_SLOT_U_32B              slot;            /* PCI/PCMCIA device slot
+    WD_PCI_ID_32B               id;              /* PCI device ID */
+    WD_PCI_SLOT_32B             slot;            /* PCI device slot
                                                   * location information */
     u32                         dwNumAddrSpaces; /* Total number of device's
                                                   * address spaces */
@@ -249,7 +214,7 @@ typedef struct WDC_DEVICE_32B{
     #include <poppack.h>
 #endif
 
-#if defined(LINUX) || defined(APPLE)
+#if defined(LINUX)
     #pragma pack(pop)
 #endif
 

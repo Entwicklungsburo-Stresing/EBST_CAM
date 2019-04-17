@@ -1,4 +1,4 @@
-/* Jungo Connectivity Confidential. Copyright (c) 2016 Jungo Connectivity Ltd.  http://www.jungo.com */
+/* Jungo Connectivity Confidential. Copyright (c) 2019 Jungo Connectivity Ltd.  https://www.jungo.com */
 
 #ifndef _WD_USB_H_
 #define _WD_USB_H_
@@ -216,7 +216,7 @@ DWORD DLLCALLCONV WDU_ResetPipe(WDU_DEVICE_HANDLE hDevice, DWORD dwPipeNum);
 
 /*
  * Function: WDU_ResetDevice()
- *   Resets a device (supported only on Windows and Windows CE 5.0 and newer).
+ *   Resets a device (supported only on Windows).
  * Parameters:
  *   [in] hDevice:   A unique identifier for the device/interface
  *   [in] dwOptions: Can be 0 or:
@@ -231,8 +231,7 @@ DWORD DLLCALLCONV WDU_ResetPipe(WDU_DEVICE_HANDLE hDevice, DWORD dwPipeNum);
  *                       newer.
  * Return Value:
  *   WinDriver Error Code
- * NOTE: This function is supported only on Windows and Windows CE, beginning
- *       with Windows CE 5.0.
+ * NOTE: This function is supported only on Windows.
  *       The CYCLE_PORT option is supported only on Windows XP and newer.
  */
 DWORD DLLCALLCONV WDU_ResetDevice(WDU_DEVICE_HANDLE hDevice, DWORD dwOptions);
@@ -288,8 +287,7 @@ DWORD DLLCALLCONV WDU_SelectiveSuspend(WDU_DEVICE_HANDLE hDevice,
  *                       the next available frame) while performing the data
  *                       transfer. Use this flag if you notice unused frames
  *                       during the transfer, on low-speed or full-speed
- *                       devices (USB 1.1 only) and on Windows only
- *                       (excluding Windows CE).
+ *                       devices (USB 1.1 only) and on Windows only.
  *                   USB_ISOCH_RESET - Resets the isochronous pipe before the
  *                       data transfer. It also resets the pipe after minor
  *                       errors, consequently allowing the transfer to

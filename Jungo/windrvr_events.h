@@ -1,4 +1,4 @@
-/* Jungo Connectivity Confidential. Copyright (c) 2016 Jungo Connectivity Ltd.  http://www.jungo.com */
+/* Jungo Connectivity Confidential. Copyright (c) 2019 Jungo Connectivity Ltd.  https://www.jungo.com */
 
 #ifndef _WINDRVR_EVENTS_H_
 #define _WINDRVR_EVENTS_H_
@@ -23,8 +23,6 @@ WD_EVENT * DLLCALLCONV UsbEventCreate(WDU_MATCH_TABLE *pMatchTables,
     DWORD dwNumMatchTables, DWORD dwOptions, DWORD dwAction);
 WD_EVENT * DLLCALLCONV PciEventCreate(WD_PCI_ID cardId, WD_PCI_SLOT pciSlot,
     DWORD dwOptions, DWORD dwAction);
-WD_EVENT * DLLCALLCONV PcmciaEventCreate(WD_PCMCIA_ID deviceId,
-    WD_PCMCIA_SLOT pcmciaSlot, DWORD dwOptions, DWORD dwAction);
 
 #ifdef __cplusplus
 }

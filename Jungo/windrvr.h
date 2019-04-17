@@ -1,4 +1,4 @@
-/* Jungo Connectivity Confidential. Copyright (c) 2016 Jungo Connectivity Ltd.  http://www.jungo.com */
+/* Jungo Connectivity Confidential. Copyright (c) 2019 Jungo Connectivity Ltd.  https://www.jungo.com */
 
 /*
  * W i n D r i v e r
@@ -11,7 +11,7 @@
  * or evaluation purposes. The only exception is distribution to Linux.
  * For details refer to \WinDriver\docs\license.txt.
  *
- * Web site: http://www.jungo.com
+ * Web site: https://www.jungo.com
  * Email:    support@jungo.com
  */
 #ifndef _WINDRVR_H_
@@ -29,7 +29,7 @@
     #define DLLCALLCONV
 #endif
 
-#if defined(WIN32) || defined(WINCE)
+#if defined(WIN32)
     #define WD_DRIVER_NAME_PREFIX "\\\\.\\"
 #elif defined(LINUX)
     #define WD_DRIVER_NAME_PREFIX "/dev/"
@@ -37,7 +37,7 @@
     #define WD_DRIVER_NAME_PREFIX ""
 #endif
 
-#if !defined(APPLE) && !defined(CONFIG_WD_LITE)
+#if !defined(CONFIG_WD_LITE)
     /* This definition is used at do_setenv and should be before other
      * alternative definitions */
     /* If version suffix removed, it should be also removed from do_setenv
@@ -49,13 +49,10 @@
     #define WD_DEFAULT_DRIVER_NAME_BASE "windrvr_lite"
     #define WD_DEFAULT_DRIVER_NAME \
         WD_DRIVER_NAME_PREFIX WD_DEFAULT_DRIVER_NAME_BASE
-#else /* Apple */
-    /* Driver name should be same as the name of the main class */
-    #define WD_DEFAULT_DRIVER_NAME_BASE "WinDriver"
-    #define WD_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
 #endif
 
 #define WD_MAX_DRIVER_NAME_LENGTH 128
+#define WD_MAX_KP_NAME_LENGTH 128
 
 #if defined(WD_DRIVER_NAME_CHANGE)
     const char* DLLCALLCONV WD_DriverName(const char *sName);
@@ -71,20 +68,11 @@
     #define WD_PROD_NAME "WinDriver"
 #endif
 
-#if !defined(SPARC) && (defined(__sparc__) || defined(__sparc) || \
-        defined(sparc))
-    #define SPARC
-#endif
-
-#if !defined(POWERPC) && !defined(PPC64) && !defined(IA64) && \
-    !defined(x86) && ( defined(LINUX) || (defined(WIN32) && \
-    !defined(WINCE) && !defined(_ALPHA_)) || \
-    ((defined(APPLE) && ((defined(__i386__) || defined(__x86_64__))))))
-    #define x86
-#endif
-
-#if defined(APPLE) && defined(__LP64__) && !defined(KERNEL_64BIT)
-    #define KERNEL_64BIT
+#if !defined(ARM) && \
+    !defined(ARM64) && \
+    !defined(x86) && \
+    (defined(LINUX) || (defined(WIN32)))
+        #define x86
 #endif
 
 #if !defined(x86_64) && \
@@ -92,36 +80,18 @@
     #define x86_64
 #endif
 
-#if defined(WINCE)
-    #if defined(ARM)
-        #define WD_CPU_SPEC " ARM"
-    #elif defined(MIPS)
-        #define WD_CPU_SPEC " MIPS"
-    #elif defined(x86)
-        #define WD_CPU_SPEC " x86"
-    #else
-        #define WD_CPU_SPEC ""
-    #endif
+#if defined(x86_64)
+    #define WD_CPU_SPEC " x86_64"
+#elif defined(ARM)
+    #define WD_CPU_SPEC " ARM"
+#elif defined(ARM64)
+    #define WD_CPU_SPEC " ARM64"
 #else
-    #if defined(SPARC)
-        #define WD_CPU_SPEC " Sparc"
-    #elif defined(POWERPC)
-        #define WD_CPU_SPEC " PowerPC"
-    #elif defined(PPC64)
-        #define WD_CPU_SPEC " ppc64"
-    #elif defined(x86_64)
-        #define WD_CPU_SPEC " x86_64"
-    #elif defined(IA64)
-        #define WD_CPU_SPEC " ia64"
-    #else
-        #define WD_CPU_SPEC " X86"
-    #endif
+    #define WD_CPU_SPEC " X86"
 #endif
 
 #if defined(WINNT)
     #define WD_FILE_FORMAT " SYS"
-#elif defined(WINCE)
-    #define WD_FILE_FORMAT " DLL"
 #else
     #define WD_FILE_FORMAT ""
 #endif
@@ -137,7 +107,7 @@
         " Build Date: " __DATE__ \
     WD_CPU_SPEC WD_DATA_MODEL WD_FILE_FORMAT
 
-#if !defined(POSIX) && (defined(LINUX) || defined(APPLE))
+#if !defined(POSIX) && defined(LINUX)
     #define POSIX
 #endif
 
@@ -145,15 +115,11 @@
     #define UNIX
 #endif
 
-#if !defined(WIN32) && (defined(WINCE) || defined(WINNT))
+#if !defined(WIN32) && defined(WINNT)
     #define WIN32
 #endif
 
-#if defined(_WIN32_WCE) && !defined(WINCE)
-    #define WINCE
-#endif
-
-#if !defined(WIN32) && !defined(WINCE) && !defined(UNIX) && !defined(APPLE)
+#if !defined(WIN32) && !defined(UNIX)
     #define WIN32
 #endif
 
@@ -173,86 +139,10 @@
     #define _KERNEL
 #endif
 
-#if !defined(POWERPC) && defined(APPLE) && !defined(x86)
-    #define POWERPC
-#endif
-#if !defined(_BIGENDIAN) && (defined(SPARC) || defined(POWERPC) || \
-    defined(PPC64))
-    #define _BIGENDIAN
-#endif
-
-#if defined(LINUX) && defined(x86_64) && !defined(__KERNEL__)
+#if defined(LINUX) && defined(__x86_64__) && !defined(__KERNEL__)
     /* This fixes binary compatibility with older version of GLIBC
      * (64bit only) */
     __asm__(".symver memcpy,memcpy@GLIBC_2.2.5");
-#endif
-
-/* Structures on PPC64 are 8 byte aligned, even on 32 bit applications,
- * therefore packing is necessary. */
-#if defined(LINUX) && defined(PPC64)
-    #pragma pack(push, 1)
-#endif
-
-#if defined(APPLE)
-    #if defined(__KERNEL__)
-        #include <IOKit/IOTypes.h>
-    #else
-        #include <AvailabilityMacros.h>
-        #include <IOKit/IOKitLib.h>
-        #include <stdio.h>
-    #endif
-    enum {
-        kWinDriverMethodSyncIoctl = 0,
-        kWinDriverNumOfMethods,
-    };
-
-#endif
-
-#if defined(APPLE)
-    #include <libkern/OSAtomic.h>
-
-    #if !defined(__P_TYPES__)
-        #define __P_TYPES__
-        typedef void VOID;
-        typedef unsigned char UCHAR;
-        typedef UInt16 USHORT;
-        typedef UInt32 UINT;
-        typedef UInt32 ULONG;
-        typedef unsigned long BOOL;
-        typedef void *PVOID;
-        typedef UInt8 *PBYTE;
-        typedef char CHAR;
-        typedef char *PCHAR;
-        typedef UInt16 *PWORD;
-        typedef unsigned long DWORD, *PDWORD;
-        typedef PVOID HANDLE;
-        typedef UInt8 u8;
-        typedef UInt16 u16;
-        typedef UInt32 u32;
-        typedef void *FILEHANDLE;
-        typedef UInt32 PRCHANDLE;
-    #if !defined(__KERNEL__)
-        #include <string.h>
-            #include <ctype.h>
-        #include <stdlib.h>
-    #endif
-    #ifndef TRUE
-        #define TRUE true
-    #endif
-    #ifndef FALSE
-        #define FALSE false
-    #endif
-    #define __cdecl
-    #define WINAPI
-    #endif
-    #ifdef __LP64__
-        #define PTR2INT(value) ((UInt64)(value))
-    #else
-        #define PTR2INT(value) ((UInt32)(value))
-    #endif
-    #define MAC_UC_MAGIC_MASK 0xFF0000FF
-    #define MAC_UC_MAGIC_NUM  0x7E000041
-    #define MAC_UC_64BIT_APP  0x100
 #endif
 
 #if defined(UNIX)
@@ -290,13 +180,8 @@
         #if defined(LINUX)
             /* For _IO macros and for mapping Linux status codes
              * to WD status codes */
-            #if defined(POWERPC) || defined(PPC64)
-                #include <asm/ioctl.h>
-                #include <linux/errno.h>
-            #else
-                #include <asm-generic/ioctl.h>
-                #include <asm-generic/errno.h>
-            #endif
+            #include <asm-generic/ioctl.h>
+            #include <asm-generic/errno.h>
         #endif
     #else
         #include <unistd.h>
@@ -311,22 +196,6 @@
         #include <fcntl.h>
     #endif
         typedef unsigned long long UINT64;
-#elif defined(WINCE)
-    #include <windows.h>
-    #include <winioctl.h>
-    typedef char CHAR;
-    typedef unsigned __int64 UINT64;
-    #define perror(str) fprintf(stderr, "%s: error no. %d\n", (str), \
-    GetLastError())
-    #if defined(PRIO_WIN32_TO_CE)
-        #define WD_CE6_PRIORITY(prio) PRIO_WIN32_TO_CE(prio)
-    #else
-        /* Define CE6_256 priority level as defined in winbase.h
-         * MAX_CE_PRIORITY_LEVELS = 256
-         * MAX_WIN32_PRIORITY_LEVELS = 8
-         * this definition exist only for CE 6.00 and up */
-        #define WD_CE6_PRIORITY(prio) ((prio) + 256 - 8)
-    #endif
 #elif defined(WIN32)
     #if defined(__KERNEL__)
         int sprintf(char *buffer, const char *format, ...);
@@ -361,7 +230,7 @@
 #endif
 
 // formatting for printing a 64bit variable
-#if defined(UNIX) || defined(APPLE)
+#if defined(UNIX)
     #define PRI64       "ll"
 #elif defined(WIN32)
     #define PRI64       "I64"
@@ -370,8 +239,14 @@
 // formatting for printing a kernel pointer
 #if defined(KERNEL_64BIT)
     #define KPRI PRI64
+    #if defined(WIN32)
+        #define UPRI KPRI
+    #else
+        #define UPRI "l"
+    #endif
 #else
     #define KPRI "l"
+    #define UPRI KPRI
 #endif
 
 /*
@@ -384,14 +259,10 @@
     typedef DWORD KPTR;
 #endif
 
-#if defined(__KERNEL_)
-    typedef KPTR UPTR;
+#if defined(UNIX)
+    typedef unsigned long UPTR;
 #else
-    #if defined(UNIX)
-        typedef unsigned long UPTR;
-    #else
-        typedef size_t UPTR;
-    #endif
+    typedef size_t UPTR;
 #endif
 
 typedef UINT64 DMA_ADDR;
@@ -399,7 +270,7 @@ typedef UINT64 PHYS_ADDR;
 
 #include "windrvr_usb.h"
 
-#if defined(WIN32)
+#if defined(WIN32) && !defined(QT_CORE_LIB)
     #if !defined(inline)
         #define inline __inline
     #endif
@@ -483,7 +354,20 @@ typedef enum {
     DMA_ALLOW_NO_HCARD = 0x100, // Allow memory lock without hCard
 
     DMA_GET_EXISTING_BUF = 0x200, // Get existing buffer by hDma handle
+
+    DMA_RESERVED_MEM = 0x400,
+
+    DMA_KBUF_ALLOC_SPECIFY_BITS = 0x800, // Linux: If DMA_KERNEL_BUFFER_ALLOC
+        // is used, the fourth byte of dwOptions will be the maximum amount of
+        // allowed bits in the address of the requested DMA buffer.
+
 } WD_DMA_OPTIONS;
+
+#define DMA_OPTIONS_ALL \
+    (DMA_KERNEL_BUFFER_ALLOC | DMA_KBUF_BELOW_16M | DMA_LARGE_BUFFER \
+    | DMA_ALLOW_CACHE | DMA_KERNEL_ONLY_MAP | DMA_FROM_DEVICE | DMA_TO_DEVICE \
+    | DMA_ALLOW_64BIT_ADDRESS | DMA_ALLOW_NO_HCARD | DMA_GET_EXISTING_BUF \
+    | DMA_RESERVED_MEM | DMA_KBUF_ALLOC_SPECIFY_BITS)
 
 #define DMA_DIRECTION_MASK DMA_TO_FROM_DEVICE
 
@@ -491,12 +375,14 @@ typedef enum {
 #define DMA_READ_FROM_DEVICE DMA_FROM_DEVICE
 #define DMA_WRITE_TO_DEVICE DMA_TO_DEVICE
 
-enum {
-    WD_MATCH_EXCLUDE = 0x1 /* Exclude if there is a match */
-};
+#define DMA_OPTIONS_MAX_SHIFT 24 /* 3 bytes (24 bits) are needed for
+                                    WD_DMA_OPTIONS so the fourth byte will be
+                                    used for storing the maximum amount of
+                                    allowed bits in the address of the requested
+                                    buffer */
 
 enum {
-    WD_CPCI_PNP_SUPPORT = 0x1   /* Set this flag to use OS PnP support */
+    WD_MATCH_EXCLUDE = 0x1 /* Exclude if there is a match */
 };
 
 typedef struct
@@ -511,7 +397,9 @@ typedef struct
     PVOID pUserAddr;        // User address
     KPTR  pKernelAddr;      // Kernel address
     DWORD dwBytes;          // Size of buffer
-    DWORD dwOptions;        // Refer to WD_DMA_OPTIONS
+    DWORD dwOptions;        // The first three bytes refer to WD_DMA_OPTIONS
+                            // Linux: The fourth byte is used for specifying the
+                            // amount of DMA bits in the requested buffer
     DWORD dwPages;          // Number of pages in buffer.
     DWORD hCard;            // Handle of relevant card as received from
                             // WD_CardRegister()
@@ -519,6 +407,10 @@ typedef struct
 } WD_DMA, WD_DMA_V80;
 
 typedef enum {
+    /* KER_BUF_ALLOC_NON_CONTIG and KER_BUF_GET_EXISTING_BUF options are valid
+     * only as part of "WinDriver for Server" API and require
+     * "WinDriver for Server" license. Note that "WinDriver for Server" APIs are
+     * included in WinDriver evaluation version. */
     KER_BUF_ALLOC_NON_CONTIG = 0x0001,
     KER_BUF_ALLOC_CONTIG     = 0x0002,
     KER_BUF_ALLOC_CACHED     = 0x0004,
@@ -607,77 +499,11 @@ typedef struct
     CHAR cVer[128];
 } WD_VERSION, WD_VERSION_V30;
 
-enum
-{
-    LICENSE_DEMO     = 0x00000001,
-    LICENSE_WD       = 0x00000004,
-    LICENSE_IO       = 0x00000008,
-    LICENSE_MEM      = 0x00000010,
-    LICENSE_INT      = 0x00000020,
-    LICENSE_PCI      = 0x00000040,
-    LICENSE_DMA      = 0x00000080,
-    LICENSE_NT       = 0x00000100,
-    LICENSE_ISAPNP   = 0x00000400,
-    LICENSE_PCMCIA   = 0x00000800,
-    LICENSE_PCI_DUMP = 0x00001000,
-    LICENSE_MSG_GEN  = 0x00002000,
-    LICENSE_MSG_EDU  = 0x00004000,
-    LICENSE_MSG_INT  = 0x00008000,
-    LICENSE_KER_PLUG = 0x00010000,
-    LICENSE_LINUX    = 0x00020000,
-    LICENSE_CE       = 0x00080000,
-    LICENSE_CE2013   = 0x00800000,
-    LICENSE_THIS_PC  = 0x00100000,
-    LICENSE_WIZARD   = 0x00200000,
-    LICENSE_KD       = 0x00400000,
-    LICENSE_CPU0     = 0x00040000,
-    LICENSE_CPU1     = 0x01000000,
-    LICENSE_CPU2     = 0x02000000,
-    LICENSE_CPU3     = 0x04000000,
-    LICENSE_USB      = 0x08000000,
-    LICENSE_IPC      = 0x10000000,
-    LICENSE_APPLE    = 0x20000000,
-    LICENSE_KER_BUF  = 0x40000000,
-};
-
-enum
-{
-    LICENSE2_EVENT        = 0x00000008,
-    LICENSE2_WDLIB        = 0x00000010,
-    LICENSE2_VISTA        = 0x00000080,
-    LICENSE2_OS_UNLIMITED = 0x00000200
-};
-
-enum
-{
-    LICENSE_OS_WITH_WIZARD = LICENSE_NT | LICENSE_LINUX | LICENSE_APPLE,
-    LICENSE_OS_WITHOUT_WIZARD = LICENSE_CE | LICENSE_CE2013
-};
-
-enum
-{
-    LICENSE_CPU_ALL = LICENSE_CPU3 | LICENSE_CPU2 | LICENSE_CPU1 | LICENSE_CPU0,
-    LICENSE_X86 = LICENSE_CPU0,
-    LICENSE_ALPHA = LICENSE_CPU1,
-    LICENSE_SPARC = LICENSE_CPU1 | LICENSE_CPU0,
-    LICENSE_PPC = LICENSE_CPU2,
-    LICENSE_X86_64 = LICENSE_CPU2 | LICENSE_CPU0,
-    LICENSE_IA64 = LICENSE_CPU1 | LICENSE_CPU2,
-    LICENSE_PPC64 = LICENSE_CPU2 | LICENSE_CPU1 | LICENSE_CPU0
-};
-
-#define WD_LICENSE_LENGTH 1024
+#define WD_LICENSE_LENGTH 3072
 typedef struct
 {
-    CHAR cLicense[WD_LICENSE_LENGTH]; // Buffer with license string to put.
-                      // If empty string then get current license setting
-                      // into dwLicense.
-    DWORD dwLicense;  // Returns license settings: LICENSE_DEMO, LICENSE_WD
-                      // etc..., or 0 for invalid license.
-    DWORD dwLicense2; // Returns additional license settings, if dwLicense
-                      // could not hold all the information.
-                      // Then dwLicense will return 0.
-} WD_LICENSE, WD_LICENSE_V116;
+    CHAR cLicense[WD_LICENSE_LENGTH]; /* Buffer with license string to put */
+} WD_LICENSE, WD_LICENSE_V122;
 
 enum
 {
@@ -686,13 +512,12 @@ enum
     WD_BUS_ISA = 1,                 /* ISA */
     WD_BUS_EISA = 2,                /* EISA, including ISA PnP */
     WD_BUS_PCI = 5,                 /* PCI */
-    WD_BUS_PCMCIA = 8               /* PCMCIA */
 };
 typedef DWORD WD_BUS_TYPE;
 
 typedef struct
 {
-    WD_BUS_TYPE dwBusType;  /* Bus Type: WD_BUS_PCI/PCMCIA/ISA/EISA */
+    WD_BUS_TYPE dwBusType;  /* Bus Type: WD_BUS_PCI/ISA/EISA */
     DWORD dwBusNum;         /* Bus number */
     DWORD dwSlotFunc;       /* Slot number on the bus */
 } WD_BUS, WD_BUS_V30;
@@ -713,17 +538,6 @@ typedef enum
     WD_ITEM_MEM_ALLOW_CACHE = 2,       /* Map physical memory as cached;
                                         * applicable only to host RAM, not to
                                         * local memory on the card */
-    WD_ITEM_MEM_CE_MAP_VIRTUAL = 3     /* For Windows CE only -- perform kernel
-                                        * mapping of physical memory to
-                                        * non-static virtual system addresses,
-                                        * as opposed to the default static
-                                        * kernel address mapping.
-                                        * NOTE: Do not set this flag for items
-                                        * that need to be accessed in kernel
-                                        * mode -- namely, items that will be
-                                        * used to create interrupt transfer
-                                        * commands or items that will be used
-                                        * from a Kernel PlugIn driver.  */
 } WD_ITEM_MEM_OPTIONS;
 
 typedef struct
@@ -852,7 +666,7 @@ typedef struct
 
 enum { WD_FORCE_CLEANUP = 0x1 };
 
-enum { WD_PCI_CARDS = 100 }; // Slots max X Functions max
+enum { WD_PCI_CARDS = 256 }; // Slots max X Functions max
 
 typedef struct
 {
@@ -881,7 +695,7 @@ typedef struct
 
     /* Scan Options */
     DWORD dwOptions;        /* Scan options -- WD_PCI_SCAN_OPTIONS */
-} WD_PCI_SCAN_CARDS, WD_PCI_SCAN_CARDS_V80;
+} WD_PCI_SCAN_CARDS, WD_PCI_SCAN_CARDS_V124;
 
 typedef enum {
     WD_PCI_SCAN_DEFAULT = 0x0,
@@ -922,6 +736,12 @@ typedef struct
 typedef struct
 {
     WD_PCI_SLOT pciSlot;    /* PCI slot information */
+    DWORD       dwNumVFs;   /* Number of Virtual Functions */
+} WD_PCI_SRIOV, WD_PCI_SRIOV_V122;
+
+typedef struct
+{
+    WD_PCI_SLOT pciSlot;    /* PCI slot information */
     WD_CARD Card;           /* Card information */
 } WD_PCI_CARD_INFO, WD_PCI_CARD_INFO_V118;
 
@@ -932,14 +752,6 @@ typedef enum
     PCI_BAD_BUS = 2,
     PCI_BAD_SLOT = 3
 } PCI_ACCESS_RESULT;
-
-typedef enum
-{
-    PCMCIA_ACCESS_OK = 0,
-    PCMCIA_BAD_SOCKET = 1,
-    PCMCIA_BAD_OFFSET = 2,
-    PCMCIA_ACCESS_ERROR = 3
-} PCMCIA_ACCESS_RESULT;
 
 typedef struct
 {
@@ -1014,108 +826,6 @@ typedef struct
     DWORD dwResult;   // ISAPNP_ACCESS_RESULT.
 } WD_ISAPNP_CONFIG_DUMP, WD_ISAPNP_CONFIG_DUMP_V40;
 
-// PCMCIA Card Services
-
-// Extreme case - two PCMCIA slots and two multi-function (4 functions) cards
-enum
-{
-    WD_PCMCIA_CARDS = 8,
-    WD_PCMCIA_VERSION_LEN = 4,
-    WD_PCMCIA_MANUFACTURER_LEN = 48,
-    WD_PCMCIA_PRODUCTNAME_LEN = 48,
-    WD_PCMCIA_MAX_SOCKET = 2,
-    WD_PCMCIA_MAX_FUNCTION = 2
-};
-
-typedef struct
-{
-    BYTE uBus;      /* Bus number (first bus is 0) */
-    BYTE uSocket;   /* Socket number (first socket is 0) */
-    BYTE uFunction; /* Function number (first function is 0) */
-    BYTE uPadding;  /* 1-byte padding so structure will be 4 bytes aligned */
-} WD_PCMCIA_SLOT, WD_PCMCIA_SLOT_V622;
-
-typedef struct
-{
-    WORD wManufacturerId; // card manufacturer
-    WORD wCardId;         // card type and model
-} WD_PCMCIA_ID;
-
-typedef struct
-{
-    /* Scan Parameters */
-    WD_PCMCIA_ID searchId;  /* PCMCIA vendor and/or device IDs to search for;
-                               dwVendorId==0 -- scan all PCMCIA vendor IDs;
-                               dwDeviceId==0 -- scan all PCMCIA device IDs */
-    DWORD dwCards;          /* Number of matching PCI cards */
-
-    /* Scan Results */
-    WD_PCMCIA_ID cardId[WD_PCMCIA_CARDS];     /* Array of matching card IDs */
-    WD_PCMCIA_SLOT cardSlot[WD_PCMCIA_CARDS]; /* Array of matching PCMCIA slots
-                                                 information */
-
-    /* Scan Options */
-    DWORD dwOptions;    /* Reserved for future use; set to 0 */
-} WD_PCMCIA_SCAN_CARDS, WD_PCMCIA_SCAN_CARDS_V622;
-
-typedef struct
-{
-    WD_PCMCIA_SLOT pcmciaSlot; /* PCMCIA slot information */
-    WD_CARD Card;              /* Card information */
-    CHAR cVersion[WD_PCMCIA_VERSION_LEN];
-    CHAR cManufacturer[WD_PCMCIA_MANUFACTURER_LEN];
-    CHAR cProductName[WD_PCMCIA_PRODUCTNAME_LEN];
-    WORD wManufacturerId;    // card manufacturer
-    WORD wCardId;            // card type and model
-    WORD wFuncId;            // card function code
-    DWORD dwOptions;  // reserved for future use, set to 0
-} WD_PCMCIA_CARD_INFO, WD_PCMCIA_CARD_INFO_V118;
-
-typedef struct
-{
-    WD_PCMCIA_SLOT pcmciaSlot;  /* PCMCIA slot information */
-    PVOID pBuffer;      /* Pointer to a read/write data buffer */
-    DWORD dwOffset;     /* PCMCIA configuration space offset to read/write */
-    DWORD dwBytes;      /* Input -- number of bytes to read/write;
-                           Output -- number of bytes read/written */
-    DWORD fIsRead;      /* 1 -- read data; 0 -- write data */
-    DWORD dwResult;     /* PCMCIA_ACCESS_RESULT */
-    DWORD dwOptions;    /* Reserved for future use; set to 0 */
-} WD_PCMCIA_CONFIG_DUMP, WD_PCMCIA_CONFIG_DUMP_V622;
-
-typedef enum {
-    WD_PCMCIA_ACC_SPEED_DEFAULT, // use default access speed
-    WD_PCMCIA_ACC_SPEED_250NS,
-    WD_PCMCIA_ACC_SPEED_200NS,
-    WD_PCMCIA_ACC_SPEED_150NS,
-    WD_PCMCIA_ACC_SPEED_100NS
-} WD_PCMCIA_ACC_SPEED;
-
-typedef enum {
-    WD_PCMCIA_ACC_WIDTH_DEFAULT, // use default bus width
-    WD_PCMCIA_ACC_WIDTH_8BIT,
-    WD_PCMCIA_ACC_WIDTH_16BIT
-} WD_PCMCIA_ACC_WIDTH;
-
-typedef enum {
-    WD_PCMCIA_VPP_DEFAULT, // use default power level of the PCMCIA Vpp pin
-    WD_PCMCIA_VPP_OFF,     // set voltage on the Vpp pin to zero (disable)
-    WD_PCMCIA_VPP_ON,      // set voltage on the Vpp pin to 12V (enable)
-    WD_PCMCIA_VPP_AS_VCC   // set voltage on the Vpp pin equal to Vcc
-} WD_PCMCIA_VPP;
-
-typedef struct
-{
-    DWORD dwOptions;            /* reserved for future use, set to 0 */
-    WD_PCMCIA_SLOT pcmciaSlot;  /* PCMCIA slot information */
-    BYTE uAccessSpeed;          /* One of WD_PCMCIA_ACC_SPEED_XXX values */
-    BYTE uBusWidth;             /* One of WD_PCMCIA_ACC_WIDTH_XXX values */
-    BYTE uVppLevel;             /* One of WD_PCMCIA_VPP_XXX values */
-    BYTE uReserved;
-    DWORD dwCardBase;           /* Offset in the PCMCIA device's memory where
-                                   the memory mapping begins */
-} WD_PCMCIA_CONTROL, WD_PCMCIA_CONTROL_V623;
-
 enum { SLEEP_BUSY = 0, SLEEP_NON_BUSY = 1 };
 typedef struct
 {
@@ -1143,7 +853,6 @@ typedef enum
     S_MISC      = 0x00000100,
     S_LICENSE   = 0x00000200,
     S_ISAPNP    = 0x00000400,
-    S_PCMCIA    = 0x00000800,
     S_PNP       = 0x00001000,
     S_CARD_REG  = 0x00002000,
     S_KER_DRV   = 0x00004000,
@@ -1183,10 +892,10 @@ typedef struct
     DWORD dwBufferSize; // size of buffer in kernel
 } WD_DEBUG, WD_DEBUG_V40;
 
+#define DEBUG_USER_BUF_LEN 2048
 typedef struct
 {
-    PCHAR pcBuffer;  // buffer to receive debug messages
-    DWORD dwSize;    // size of buffer in bytes
+    CHAR cBuffer[DEBUG_USER_BUF_LEN];  // buffer to receive debug messages
 } WD_DEBUG_DUMP, WD_DEBUG_DUMP_V40;
 
 typedef struct
@@ -1199,8 +908,8 @@ typedef struct
 typedef struct
 {
     DWORD hKernelPlugIn;
-    PCHAR pcDriverName;
-    PCHAR pcDriverPath; // Should be NULL (exists for backward compatibility).
+    CHAR cDriverName[WD_MAX_KP_NAME_LENGTH];
+    CHAR cDriverPath[WD_MAX_KP_NAME_LENGTH]; // Should be NULL (exists for backward compatibility).
                         // The driver will be searched in the operating
                         // system's drivers/modules directory.
     PVOID pOpenData;
@@ -1298,13 +1007,7 @@ typedef enum {
     WD_USBD_STATUS_RESERVED2 = (int)0xC000000BL,
     WD_USBD_STATUS_BUFFER_OVERRUN = (int)0xC000000CL,
     WD_USBD_STATUS_BUFFER_UNDERRUN = (int)0xC000000DL,
-#if defined(WINCE)
-    WD_USBD_STATUS_NOT_ACCESSED_ALT = (int)0xC000000FL,  // HCD maps this to E
-                                                         // when encountered
-    WD_USBD_STATUS_NOT_ACCESSED = (int)0xC000000EL,
-#else
     WD_USBD_STATUS_NOT_ACCESSED = (int)0xC000000FL,
-#endif
     WD_USBD_STATUS_FIFO = (int)0xC0000010L,
 
 #if defined(WIN32)
@@ -1313,14 +1016,7 @@ typedef enum {
     WD_USBD_STATUS_DATA_BUFFER_ERROR = (int)0xC0000013L,
 #endif
 
-#if defined(WINCE)
-    WD_USBD_STATUS_ISOCH = 0xC0000100L,
-    WD_USBD_STATUS_CANCELED = 0xC0000101L,
-    WD_USBD_STATUS_NOT_COMPLETE = (int)0xC0000103L,
-    WD_USBD_STATUS_CLIENT_BUFFER = (int)0xC0000104L,
-#else
     WD_USBD_STATUS_CANCELED = (int)0xC0010000L,
-#endif
 
     // Returned by HCD (Host Controller Driver) if a transfer is submitted to
     // an endpoint that is stalled:
@@ -1411,8 +1107,8 @@ typedef enum
 {
     WD_INSERT                  = 0x1,
     WD_REMOVE                  = 0x2,
-    WD_CPCI_REENUM             = 0x8,
-    WD_POWER_CHANGED_D0        = 0x10, // Power states for the power management
+    WD_OBSOLETE                = 0x8,  /* Obsolete */
+    WD_POWER_CHANGED_D0        = 0x10, /* Power states for the power management */
     WD_POWER_CHANGED_D1        = 0x20,
     WD_POWER_CHANGED_D2        = 0x40,
     WD_POWER_CHANGED_D3        = 0x80,
@@ -1426,8 +1122,6 @@ typedef enum
     WD_IPC_MULTICAST_MSG       = 0x8000,
 } WD_EVENT_ACTION;
 
-#define WD_CPCI_INSERT (WD_INSERT | WD_CPCI_REENUM)
-#define WD_CPCI_REMOVE (WD_REMOVE | WD_CPCI_REENUM)
 #define WD_IPC_ALL_MSG (WD_IPC_UNICAST_MSG | WD_IPC_MULTICAST_MSG)
 
 typedef enum
@@ -1442,14 +1136,14 @@ typedef enum
     WD_POWER_SYSTEM_HIBERNATE | WD_POWER_SYSTEM_SHUTDOWN)
 #define WD_ACTIONS_ALL (WD_ACTIONS_POWER | WD_INSERT | WD_REMOVE)
 
-typedef enum
+enum
 {
     WD_EVENT_TYPE_UNKNOWN = 0,
     WD_EVENT_TYPE_PCI     = 1,
-    WD_EVENT_TYPE_PCMCIA  = 2,
     WD_EVENT_TYPE_USB     = 3,
     WD_EVENT_TYPE_IPC     = 4,
-} WD_EVENT_TYPE;
+};
+typedef DWORD WD_EVENT_TYPE;
 
 typedef struct
 {
@@ -1471,11 +1165,6 @@ typedef struct
         {
             DWORD dwUniqueID;
         } Usb;
-        struct
-        {
-            WD_PCMCIA_ID deviceId;
-            WD_PCMCIA_SLOT slot;
-        } Pcmcia;
         struct
         {
             DWORD hIpc;        /* Acts as a unique identifier */
@@ -1505,33 +1194,12 @@ enum
     WD_USB_CYCLE_PORT = 2
 };
 
-typedef struct
-{
-    WORD wVendorId;
-    WORD wDeviceId;
-    WORD wSubVendorId;
-    WORD wSubDeviceId;
-    DWORD dwOptions; // WD_MATCH_EXCLUDE
-} WD_HS_MATCH_TABLE;
-
-typedef struct {
-    DWORD handle;
-    DWORD dwOptions; // WD_CPCI_PNP_SUPPORT in case we want to use OS PnP
-                     // support
-    DWORD dwNumMatchTables;
-    WD_HS_MATCH_TABLE matchTables[1];
-} WD_HS_WATCH, WD_HS_WATCH_V622;
-
 #ifndef BZERO
     #define BZERO(buf) memset(&(buf), 0, sizeof(buf))
 #endif
 
 #ifndef INVALID_HANDLE_VALUE
-    #if defined(APPLE)
-        #define INVALID_HANDLE_VALUE IO_OBJECT_NULL
-    #else
-        #define INVALID_HANDLE_VALUE ((HANDLE)(-1))
-    #endif
+    #define INVALID_HANDLE_VALUE ((HANDLE)(-1))
 #endif
 
 #ifndef CTL_CODE
@@ -1554,7 +1222,7 @@ typedef struct {
         _IOC(_IOC_READ|_IOC_WRITE, WD_TYPE, wFuncNum, 0)
     #define WD_CTL_DECODE_FUNC(IoControlCode) _IOC_NR(IoControlCode)
     #define WD_CTL_DECODE_TYPE(IoControlCode) _IOC_TYPE(IoControlCode)
-#elif defined(UNIX) || defined(APPLE) /* XXX: Temporarily */
+#elif defined(UNIX)
     #define WD_TYPE 0
     #define WD_CTL_CODE(wFuncNum) (wFuncNum)
     #define WD_CTL_DECODE_FUNC(IoControlCode) (IoControlCode)
@@ -1577,7 +1245,7 @@ typedef struct {
 #if defined(LINUX)
     #define WD_CTL_IS_64BIT_AWARE(IoControlCode) \
         (_IOC_DIR(IoControlCode) & (_IOC_READ|_IOC_WRITE))
-#elif defined(UNIX) || defined(APPLE) /* XXX: Temporarily */
+#elif defined(UNIX)
     #define WD_CTL_IS_64BIT_AWARE(IoControlCode) TRUE
 #else
     #define WD_CTL_IS_64BIT_AWARE(IoControlCode) \
@@ -1593,7 +1261,7 @@ typedef struct {
 #define IOCTL_WD_DMA_UNLOCK               WD_CTL_CODE(0x902)
 #define IOCTL_WD_TRANSFER                 WD_CTL_CODE(0x98c)
 #define IOCTL_WD_MULTI_TRANSFER           WD_CTL_CODE(0x98d)
-#define IOCTL_WD_PCI_SCAN_CARDS           WD_CTL_CODE(0x9a3)
+#define IOCTL_WD_PCI_SCAN_CARDS           WD_CTL_CODE(0x9fa)
 #define IOCTL_WD_PCI_GET_CARD_INFO        WD_CTL_CODE(0x9e8)
 #define IOCTL_WD_VERSION                  WD_CTL_CODE(0x910)
 #define IOCTL_WD_PCI_CONFIG_DUMP          WD_CTL_CODE(0x91a)
@@ -1610,12 +1278,9 @@ typedef struct {
 #define IOCTL_WD_DEBUG_DUMP               WD_CTL_CODE(0x929)
 #define IOCTL_WD_CARD_UNREGISTER          WD_CTL_CODE(0x9e7)
 #define IOCTL_WD_ISAPNP_GET_CARD_INFO     WD_CTL_CODE(0x9e9)
-#define IOCTL_WD_PCMCIA_SCAN_CARDS        WD_CTL_CODE(0x996)
-#define IOCTL_WD_PCMCIA_GET_CARD_INFO     WD_CTL_CODE(0x9ea)
-#define IOCTL_WD_PCMCIA_CONFIG_DUMP       WD_CTL_CODE(0x998)
 #define IOCTL_WD_CARD_REGISTER            WD_CTL_CODE(0x9e6)
 #define IOCTL_WD_INT_WAIT                 WD_CTL_CODE(0x9b9)
-#define IOCTL_WD_LICENSE                  WD_CTL_CODE(0x9e4)
+#define IOCTL_WD_LICENSE                  WD_CTL_CODE(0x9f9)
 #define IOCTL_WD_EVENT_REGISTER           WD_CTL_CODE(0x9ef)
 #define IOCTL_WD_EVENT_UNREGISTER         WD_CTL_CODE(0x9f0)
 #define IOCTL_WD_EVENT_PULL               WD_CTL_CODE(0x9f1)
@@ -1627,13 +1292,10 @@ typedef struct {
 #define IOCTL_WDU_RESET_PIPE              WD_CTL_CODE(0x982)
 #define IOCTL_WDU_TRANSFER                WD_CTL_CODE(0x983)
 #define IOCTL_WDU_HALT_TRANSFER           WD_CTL_CODE(0x985)
-#define IOCTL_WD_WATCH_PCI_START          WD_CTL_CODE(0x9d6)
-#define IOCTL_WD_WATCH_PCI_STOP           WD_CTL_CODE(0x99a)
 #define IOCTL_WDU_WAKEUP                  WD_CTL_CODE(0x98a)
 #define IOCTL_WDU_RESET_DEVICE            WD_CTL_CODE(0x98b)
 #define IOCTL_WD_GET_DEVICE_PROPERTY      WD_CTL_CODE(0x990)
 #define IOCTL_WD_CARD_CLEANUP_SETUP       WD_CTL_CODE(0x995)
-#define IOCTL_WD_PCMCIA_CONTROL           WD_CTL_CODE(0x99b)
 #define IOCTL_WD_DMA_SYNC_CPU             WD_CTL_CODE(0x99f)
 #define IOCTL_WD_DMA_SYNC_IO              WD_CTL_CODE(0x9a0)
 #define IOCTL_WDU_STREAM_OPEN             WD_CTL_CODE(0x9a8)
@@ -1649,6 +1311,11 @@ typedef struct {
 #define IOCTL_WD_IPC_UNREGISTER           WD_CTL_CODE(0x9ec)
 #define IOCTL_WD_IPC_SCAN_PROCS           WD_CTL_CODE(0x9ed)
 #define IOCTL_WD_IPC_SEND                 WD_CTL_CODE(0x9ee)
+#define IOCTL_WD_PCI_SRIOV_ENABLE         WD_CTL_CODE(0x9f5)
+#define IOCTL_WD_PCI_SRIOV_DISABLE        WD_CTL_CODE(0x9f6)
+#define IOCTL_WD_PCI_SRIOV_GET_NUMVFS     WD_CTL_CODE(0x9f7)
+#define IOCTL_WD_IPC_SHARED_INT_ENABLE    WD_CTL_CODE(0x9fc)
+#define IOCTL_WD_IPC_SHARED_INT_DISABLE   WD_CTL_CODE(0x9fd)
 
 #if defined(UNIX)
     typedef struct
@@ -1669,43 +1336,29 @@ typedef struct {
     #define WD_FUNCTION(wFuncNum, h, pParam, dwSize, fWait) \
         KP_DeviceIoControl((DWORD)wFuncNum, h, (PVOID)pParam, (DWORD)dwSize)
 #else
-    typedef enum
+    #define REGKEY_BUFSIZE 256
+    #define OS_CAN_NOT_DETECT_TEXT "OS CAN NOT DETECT"
+    #define INSTALLATION_TYPE_NOT_DETECT_TEXT "unknown"
+    typedef struct
     {
-        OS_NOT_SET = 0,
-        OS_CAN_NOT_DETECT,
-        OS_WIN_NT_4,  /* Windows NT 4.0 */
-        OS_WIN_NT_5,  /* Windows 2000, XP, Server 2003 */
-        OS_WIN_NT_6,  /* Windows Vista, 7, 8, 8.1 */
-        OS_WIN_NT_10, /* Windows 10 */
-        OS_LINUX,
-        OS_OS2,
-        OS_WINCE_4,   /* Windows CE 4 and 5 */
-        OS_WINCE_6,   /* Windows CE 6 and 7 */
-        OS_WINCE_8,   /* Windows CE 8 */
-        OS_APPLE,     /* MAC OS X */
-    } OS_TYPE;
+        CHAR cProdName[REGKEY_BUFSIZE];
+        CHAR cInstallationType[REGKEY_BUFSIZE];
+        #ifdef WIN32
+            CHAR cCurrentVersion[REGKEY_BUFSIZE];
+            CHAR cBuild[REGKEY_BUFSIZE];
+            CHAR cCsdVersion[REGKEY_BUFSIZE];
+            DWORD dwMajorVersion;
+            DWORD dwMinorVersion;
+        #else
+            CHAR cRelease[REGKEY_BUFSIZE];
+            CHAR cReleaseVersion[REGKEY_BUFSIZE];
+        #endif
+   } WD_OS_INFO;
 
-    OS_TYPE DLLCALLCONV get_os_type(void);
+    WD_OS_INFO DLLCALLCONV get_os_type(void);
+    DWORD DLLCALLCONV check_secureBoot_enabled(void);
 
-    #if defined(APPLE)
-        DWORD WD_FUNCTION_LOCAL(int wFuncNum, HANDLE h, PVOID pParam,
-            DWORD dwSize, BOOL fWait);
-
-        HANDLE WD_OpenLocal(void);
-
-        void WD_CloseLocal(HANDLE h);
-
-        #define WD_OpenStreamLocal(read,sync) INVALID_HADLE_VALUE
-
-        #define WD_UStreamRead(hFile, pBuffer, dwNumberOfBytesToRead, \
-            dwNumberOfBytesRead)\
-            WD_NOT_IMPLEMENTED
-
-        #define WD_UStreamWrite(hFile, pBuffer, dwNumberOfBytesToWrite, \
-            dwNumberOfBytesWritten)\
-            WD_NOT_IMPLEMENTED
-
-    #elif defined(UNIX)
+    #if defined(UNIX)
         static inline ULONG WD_FUNCTION_LOCAL(int wFuncNum, HANDLE h,
             PVOID pParam, DWORD dwSize, BOOL fWait)
         {
@@ -1721,7 +1374,7 @@ typedef struct {
         }
 
             #define WD_OpenLocal()\
-                ((HANDLE)(DWORD)open(WD_DRIVER_NAME, O_RDWR))
+                ((HANDLE)(DWORD)open(WD_DRIVER_NAME, O_RDWR | O_SYNC))
             #define WD_OpenStreamLocal(read,sync) \
                 ((HANDLE)(DWORD)open(WD_DRIVER_NAME, \
                     ((read) ? O_RDONLY : O_WRONLY) | \
@@ -1737,16 +1390,7 @@ typedef struct {
             dwNumberOfBytesWritten)\
             WD_NOT_IMPLEMENTED
 
-    #elif defined(WINCE) && defined(_WIN32_WCE_EMULATION)
-        HANDLE WINAPI WCE_EMU_WD_Open();
-        void WINAPI WCE_EMU_WD_Close(HANDLE hWD);
-        BOOL WINAPI WCE_EMU_WD_FUNCTION(DWORD wFuncNum, HANDLE h, PVOID pParam,
-            DWORD dwSize);
-        #define WD_OpenLocal() WCE_EMU_WD_Open()
-        #define WD_CloseLocal(h) WCE_EMU_WD_Close(h)
-        #define WD_FUNCTION_LOCAL(wFuncNum, h, pParam, dwSize, fWait) \
-            WCE_EMU_WD_FUNCTION(wFuncNum, h, pParam, dwSize)
-    #elif defined(WIN32) || defined(WINCE)
+    #elif defined(WIN32)
         #define WD_CloseLocal(h) CloseHandle(h)
 
         #define WD_UStreamRead(hFile, pBuffer, dwNumberOfBytesToRead, \
@@ -1761,45 +1405,7 @@ typedef struct {
                 dwNumberOfBytesWritten, NULL) ? WD_STATUS_SUCCESS : \
                 WD_OPERATION_FAILED
 
-        #if defined(WINCE)
-            void DLLCALLCONV OsSetMaxProcPermissions(void);
-            #if defined(WD_CE_ENHANCED_INTR)
-                #define InterruptDisable CE_InterruptDisable
-                #include <ceddk.h>
-                #include <pkfuncs.h>
-                #undef InterruptDisable
-            #endif
-
-            #define WD_OpenLocal()\
-                (OsSetMaxProcPermissions(), CreateFile(\
-                    TEXT("WDR1:"),\
-                    GENERIC_READ,\
-                    FILE_SHARE_READ | FILE_SHARE_WRITE,\
-                    NULL, OPEN_EXISTING, 0, NULL))
-
-            #define WD_OpenStreamLocal(read,sync)\
-                (OsSetMaxProcPermissions(), CreateFile(\
-                    TEXT("WDR1:"),\
-                    (read) ? GENERIC_READ : GENERIC_WRITE,\
-                    FILE_SHARE_READ | FILE_SHARE_WRITE,\
-                    NULL, OPEN_EXISTING, (sync) ? 0 : FILE_FLAG_OVERLAPPED,\
-                    NULL))
-
-            #define WD_CE_PRIORITY(prio)\
-                (get_os_type() >= OS_WINCE_6 ? WD_CE6_PRIORITY(prio) : prio)
-
-            static DWORD WD_FUNCTION_LOCAL(int wFuncNum, HANDLE h, PVOID pParam,
-                DWORD dwSize, BOOL fWait)
-            {
-                DWORD dwTmp;
-                DWORD rc = WD_WINDRIVER_STATUS_ERROR;
-
-                (DWORD)DeviceIoControl(h, (DWORD)wFuncNum, pParam, dwSize, &rc,
-                    sizeof(DWORD), &dwTmp, NULL);
-
-                return rc;
-            }
-        #elif defined(WIN32)
+        #if defined(WIN32)
             #define WD_OpenLocal()\
                 CreateFileA(\
                     WD_DRIVER_NAME,\
@@ -1846,12 +1452,8 @@ typedef struct {
     ((DWORD)(sizeof(WD_DMA) + ((pDma)->dwPages <= WD_DMA_PAGES ? \
         0 : ((pDma)->dwPages - WD_DMA_PAGES) * sizeof(WD_DMA_PAGE))))
 #define SIZE_OF_WD_EVENT(pEvent) \
-    ((DWORD)(sizeof(WD_EVENT) + sizeof(WDU_MATCH_TABLE) * \
-        ((pEvent)->dwNumMatchTables - 1)))
-#define SIZE_OF_WD_HS_WATCH(pHsWatch) \
-    ((DWORD)(sizeof(WD_HS_WATCH) + sizeof(WD_HS_MATCH_TABLE) * \
-        ((pHsWatch)->dwNumMatchTables - 1)))
-
+    ((DWORD)(sizeof(WD_EVENT) + ((pEvent)->dwNumMatchTables > 0 ? \
+    sizeof(WDU_MATCH_TABLE) * ((pEvent)->dwNumMatchTables - 1) : 0)))
 #define WD_Debug(h,pDebug)\
     WD_FUNCTION(IOCTL_WD_DEBUG, h, pDebug, sizeof(WD_DEBUG), FALSE)
 #define WD_DebugDump(h,pDebugDump)\
@@ -1895,6 +1497,20 @@ typedef struct {
         sizeof(WD_IPC_SCAN_PROCS), FALSE)
 #define WD_IpcSend(h, pIpcSend) \
     WD_FUNCTION(IOCTL_WD_IPC_SEND, h, pIpcSend, sizeof(WD_IPC_SEND), FALSE)
+#define WD_SharedIntEnable(h, pIpcRegister) \
+    WD_FUNCTION(IOCTL_WD_IPC_SHARED_INT_ENABLE, h, pIpcRegister, \
+        sizeof(WD_IPC_REGISTER), FALSE)
+#define WD_SharedIntDisable(h) \
+    WD_FUNCTION(IOCTL_WD_IPC_SHARED_INT_DISABLE, h, 0, 0, FALSE)
+#define WD_PciSriovEnable(h,pPciSRIOV) \
+    WD_FUNCTION(IOCTL_WD_PCI_SRIOV_ENABLE, h, pPciSRIOV, \
+        sizeof(WD_PCI_SRIOV), FALSE)
+#define WD_PciSriovDisable(h,pPciSRIOV) \
+    WD_FUNCTION(IOCTL_WD_PCI_SRIOV_DISABLE, h, pPciSRIOV, \
+        sizeof(WD_PCI_SRIOV), FALSE)
+#define WD_PciSriovGetNumVFs(h,pPciSRIOV) \
+    WD_FUNCTION(IOCTL_WD_PCI_SRIOV_GET_NUMVFS, h, pPciSRIOV, \
+        sizeof(WD_PCI_SRIOV), FALSE)
 #define WD_CardCleanupSetup(h,pCardCleanup)\
     WD_FUNCTION(IOCTL_WD_CARD_CLEANUP_SETUP, h, pCardCleanup, \
         sizeof(WD_CARD_CLEANUP), FALSE)
@@ -1941,18 +1557,6 @@ typedef struct {
 #define WD_IsapnpConfigDump(h,pIsapnpConfigDump)\
     WD_FUNCTION(IOCTL_WD_ISAPNP_CONFIG_DUMP, h, pIsapnpConfigDump, \
         sizeof(WD_ISAPNP_CONFIG_DUMP), FALSE)
-#define WD_PcmciaScanCards(h,pPcmciaScan)\
-    WD_FUNCTION(IOCTL_WD_PCMCIA_SCAN_CARDS, h, pPcmciaScan, \
-        sizeof(WD_PCMCIA_SCAN_CARDS), FALSE)
-#define WD_PcmciaGetCardInfo(h,pPcmciaCard)\
-    WD_FUNCTION(IOCTL_WD_PCMCIA_GET_CARD_INFO, h, pPcmciaCard, \
-        sizeof(WD_PCMCIA_CARD_INFO), FALSE)
-#define WD_PcmciaConfigDump(h,pPcmciaConfigDump)\
-    WD_FUNCTION(IOCTL_WD_PCMCIA_CONFIG_DUMP, h, pPcmciaConfigDump, \
-        sizeof(WD_PCMCIA_CONFIG_DUMP), FALSE)
-#define WD_PcmciaControl(h,pPcmciaControl)\
-    WD_FUNCTION(IOCTL_WD_PCMCIA_CONTROL, h, pPcmciaControl, \
-        sizeof(WD_PCMCIA_CONTROL), FALSE)
 #define WD_Sleep(h,pSleep)\
     WD_FUNCTION(IOCTL_WD_SLEEP, h, pSleep, sizeof(WD_SLEEP), FALSE)
 #define WD_EventRegister(h, pEvent) \
@@ -1985,12 +1589,6 @@ typedef struct {
 #define WD_UHaltTransfer(h, pHaltTrans) \
     WD_FUNCTION(IOCTL_WDU_HALT_TRANSFER, h, pHaltTrans, \
         sizeof(WDU_HALT_TRANSFER), FALSE);
-#define WD_WatchPciStart(h, pHsWatch)\
-    WD_FUNCTION(IOCTL_WD_WATCH_PCI_START, h, pHsWatch, \
-        SIZE_OF_WD_HS_WATCH(pHsWatch), FALSE)
-#define WD_WatchPciStop(h, pHsWatch)\
-    WD_FUNCTION(IOCTL_WD_WATCH_PCI_STOP, h, pHsWatch, \
-        SIZE_OF_WD_HS_WATCH(pHsWatch), FALSE)
 #define WD_UWakeup(h, pWakeup) \
     WD_FUNCTION(IOCTL_WDU_WAKEUP, h, pWakeup, sizeof(WDU_WAKEUP), FALSE);
 #define WD_USelectiveSuspend(h, pSelectiveSuspend) \
@@ -2032,9 +1630,7 @@ typedef struct {
 #endif
 #define SAFE_STRING(s) ((s) ? (s) : "")
 
-#if defined(LINUX) && defined(PPC64)
-    #pragma pack(pop)
-#endif
+#define UNUSED_VAR(x) (void)x
 
 #ifdef __cplusplus
 }

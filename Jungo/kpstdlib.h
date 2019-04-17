@@ -1,4 +1,4 @@
-/* Jungo Connectivity Confidential. Copyright (c) 2016 Jungo Connectivity Ltd.  http://www.jungo.com */
+/* Jungo Connectivity Confidential. Copyright (c) 2019 Jungo Connectivity Ltd.  https://www.jungo.com */
 
 #ifndef _KPSTDLIB_H_
 #define _KPSTDLIB_H_
@@ -7,7 +7,7 @@
     #define __KERNEL__
 #endif
 
-#if !defined(UNIX) && (defined(LINUX) || defined(APPLE))
+#if !defined(UNIX) && defined(LINUX)
     #define UNIX
 #endif
 
@@ -20,22 +20,13 @@ extern "C" {
 #endif
 
 /* Spinlocks and interlocked operations */
-#if defined(APPLE)
-    typedef void KP_SPINLOCK;
-#else
-    typedef struct _KP_SPINLOCK KP_SPINLOCK;
-#endif
+typedef struct _KP_SPINLOCK KP_SPINLOCK;
 KP_SPINLOCK *kp_spinlock_init(void);
 void kp_spinlock_wait(KP_SPINLOCK *spinlock);
 void kp_spinlock_release(KP_SPINLOCK *spinlock);
 void kp_spinlock_uninit(KP_SPINLOCK *spinlock);
 
-#if defined(APPLE)
-    typedef volatile SInt32 KP_INTERLOCKED;
-#else
-    typedef volatile int KP_INTERLOCKED;
-#endif
-
+typedef volatile int KP_INTERLOCKED;
 void kp_interlocked_init(KP_INTERLOCKED *target);
 void kp_interlocked_uninit(KP_INTERLOCKED *target);
 int kp_interlocked_increment(KP_INTERLOCKED *target);
@@ -45,7 +36,7 @@ int kp_interlocked_read(KP_INTERLOCKED *target);
 void kp_interlocked_set(KP_INTERLOCKED *target, int val);
 int kp_interlocked_exchange(KP_INTERLOCKED *target, int val);
 
-#if defined(WINNT) || defined(WINCE) || defined(WIN32)
+#if defined(WINNT) || defined(WIN32)
     #if defined(_WIN64) && !defined(KERNEL_64BIT)
         #define KERNEL_64BIT
     #endif
@@ -72,26 +63,14 @@ int kp_interlocked_exchange(KP_INTERLOCKED *target, int val);
     #endif
 #endif
 
-#if defined(WINNT) || defined(WINCE) || defined(WIN32)
+#if defined(WINNT) || defined(WIN32)
     #define OS_needs_copy_from_user(fKernelMode) FALSE
     #define COPY_FROM_USER(dst,src,n) memcpy(dst,src,n)
     #define COPY_TO_USER(dst,src,n) memcpy(dst,src,n)
 #elif defined(LINUX)
-    #define OS_needs_copy_from_user(fKernelMode) \
-        (!fKernelMode && LINUX_need_copy_from_user())
+    #define OS_needs_copy_from_user(fKernelMode) (!fKernelMode)
     #define COPY_FROM_USER(dst,src,n) LINUX_copy_from_user(dst,src,n)
     #define COPY_TO_USER(dst,src,n) LINUX_copy_to_user(dst,src,n)
-#elif defined(APPLE)
-    #define OS_needs_copy_from_user(fKernelMode) (!fKernelMode)
-    #define COPY_FROM_USER(dst,src,n) copyin((user_addr_t)src, dst, n)
-    #define COPY_TO_USER(dst,src,n) copyout(src, (user_addr_t)dst, n)
-#endif
-
-#if defined(WINCE)
-    #define CE_map_ptr(ptr,fKernelMode) \
-        (fKernelMode ? (ptr) : (MapPtrToProcess((ptr),GetCallerProcess())))
-#else
-    #define CE_map_ptr(ptr,fKernelMode) (ptr)
 #endif
 
 #define COPY_FROM_USER_OR_KERNEL(dst, src, n, fKernelMode) \
@@ -99,7 +78,7 @@ int kp_interlocked_exchange(KP_INTERLOCKED *target, int val);
     if (OS_needs_copy_from_user(fKernelMode)) \
         COPY_FROM_USER(dst, src, n); \
     else \
-        memcpy(dst, CE_map_ptr(src,fKernelMode), n); \
+        memcpy(dst, src, n); \
 }
 
 #define COPY_TO_USER_OR_KERNEL(dst, src, n, fKernelMode) \
@@ -107,7 +86,7 @@ int kp_interlocked_exchange(KP_INTERLOCKED *target, int val);
     if (OS_needs_copy_from_user(fKernelMode)) \
         COPY_TO_USER(dst, src, n); \
     else \
-        memcpy(CE_map_ptr(dst,fKernelMode), src, n); \
+        memcpy(dst, src, n); \
 }
 
 #ifndef FALSE
@@ -180,15 +159,6 @@ void __cdecl free(void *buf);
     #define snprintf _snprintf
     #define vsnprintf _vsnprintf
     #define strncpy _strncpy
-#elif defined(APPLE)
-        #include <IOKit/IOLib.h>
-        #include <IOKit/assert.h>
-        #include <libkern/OSAtomic.h>
-#elif defined(WINCE)
-    int __cdecl snprintf(char *buffer, unsigned long Limit, const char *format,
-        ...);
-    int __cdecl vsnprintf(char *buffer, unsigned long Limit, const char *format,
-        va_list Next);
 #endif
 
 #ifdef __cplusplus

@@ -1,12 +1,12 @@
-/* Jungo Connectivity Confidential. Copyright (c) 2016 Jungo Connectivity Ltd.  http://www.jungo.com */
+/* Jungo Connectivity Confidential. Copyright (c) 2019 Jungo Connectivity Ltd.  https://www.jungo.com */
 
 #ifndef _WD_UTILS_H_
 #define _WD_UTILS_H_
 
-#if defined(__KERNEL_DRIVER__)
-    #include "kd.h"
-#elif defined(__KERNEL__)
+#if defined(__KERNEL__)
     #include "kpstdlib.h"
+#else
+    #include <stdio.h>
 #endif
 
 #include "windrvr.h"
@@ -19,8 +19,9 @@ extern "C" {
     #define MAX_PATH 4096
 #endif
 
-#if !defined(LINUX) && !defined(APPLE)
+#if !defined(LINUX)
     #define snprintf _snprintf
+    #define stricmp _stricmp
     #if !defined(vsnprintf)
         #define vsnprintf _vsnprintf
     #endif
@@ -28,7 +29,7 @@ extern "C" {
 
 typedef void (DLLCALLCONV *HANDLER_FUNC)(void *pData);
 
-#if !defined(WIN32) || defined(WINCE) || defined(_MT)
+#if !defined(WIN32) || defined(_MT)
 DWORD DLLCALLCONV ThreadStart(HANDLE *phThread, HANDLER_FUNC pFunc,
     void *pData);
 void DLLCALLCONV ThreadWait(HANDLE hThread);
@@ -65,25 +66,14 @@ DWORD DLLCALLCONV UtilGetStringFromUser(PCHAR pcString, DWORD dwSizeStr,
 
 DWORD DLLCALLCONV UtilGetFileName(PCHAR pcFileName, DWORD dwFileNameSize,
     const CHAR *pcDefaultFileName);
-
-void DLLCALLCONV UtilClrScr(void);
 #endif
 
-#if defined(LINUX) || defined(APPLE)
+#if defined(LINUX)
     #if !defined(stricmp)
         #define stricmp strcasecmp
     #endif
     #if !defined(strnicmp)
         #define strnicmp strncasecmp
-    #endif
-#endif
-
-#if defined(WINCE)
-    #if !defined(stricmp)
-        #define stricmp _stricmp
-    #endif
-    #if !defined(strnicmp)
-        #define strnicmp _strnicmp
     #endif
 #endif
 

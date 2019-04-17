@@ -1,4 +1,4 @@
-/* Jungo Connectivity Confidential. Copyright (c) 2016 Jungo Connectivity Ltd.  http://www.jungo.com */
+/* Jungo Connectivity Confidential. Copyright (c) 2019 Jungo Connectivity Ltd.  https://www.jungo.com */
 
 #ifndef _WDS_LIB_H_
 #define _WDS_LIB_H_
@@ -23,6 +23,15 @@
 /**************************************************************
   General definitions
  **************************************************************/
+
+/* -------------------------------------------------------------------------
+    IPC
+   ------------------------------------------------------------------------- */
+/* IPC API functions are not part of the standard WinDriver API, and not
+ * included in the standard version of WinDriver. The functions are part of
+ * "WinDriver for Server" API and require "WinDriver for Server" license.
+ * Note that "WinDriver for Server" APIs are included in WinDriver evaluation
+ * version. */
 
 /* IPC scan processes results */
 typedef struct {
@@ -69,12 +78,29 @@ DWORD DLLCALLCONV WDS_SharedBufferAlloc(UINT64 qwBytes, DWORD dwOptions,
 /* Get kernel buffer global handle */
 #define WDS_SharedBufferGetGlobalHandle(pKerBuf) ((pKerBuf)->hKerBuf)
 
-/* Get a shared kernel buffer */
+/* Get a shared kernel buffer.
+ * This API function is not part of the standard WinDriver API, and not included
+ * in the standard version of WinDriver. It is part of
+ * "WinDriver for Server" API and requires "WinDriver for Server" license. Note
+ * that "WinDriver for Server" APIs are included in WinDriver evaluation
+ * version. */
 DWORD DLLCALLCONV WDS_SharedBufferGet(DWORD hKerBuf,
     WD_KERNEL_BUFFER **ppKerBuf);
 
 /* Free a shared kernel buffer */
 DWORD DLLCALLCONV WDS_SharedBufferFree(WD_KERNEL_BUFFER *pKerBuf);
+
+/* Enable shared Interrupts via IPC */
+DWORD DLLCALLCONV WDS_SharedIntEnable(const CHAR *pcProcessName,
+    DWORD dwGroupID, DWORD dwSubGroupID, DWORD dwAction,
+    IPC_MSG_RX_HANDLER pFunc, void *pData);
+
+/* Disable shared Interrupts via IPC for all processes */
+DWORD DLLCALLCONV WDS_SharedIntDisableGlobal(void);
+/* Disable shared Interrupts via IPC for the current process */
+DWORD DLLCALLCONV WDS_SharedIntDisableLocal(void);
+
+BOOL DLLCALLCONV WDS_IsSharedIntsEnabledLocally(void);
 
 #ifdef __cplusplus
 }

@@ -1,4 +1,4 @@
-/* Jungo Connectivity Confidential. Copyright (c) 2016 Jungo Connectivity Ltd.  http://www.jungo.com */
+/* Jungo Connectivity Confidential. Copyright (c) 2019 Jungo Connectivity Ltd.  https://www.jungo.com */
 
 #ifndef _WDC_LIB_H_
 #define _WDC_LIB_H_
@@ -16,6 +16,7 @@
 #include "windrvr_int_thread.h"
 #include "windrvr_events.h"
 #include "bits.h"
+#include "pci_regs.h"
 
 #ifdef __cplusplus
     extern "C" {
@@ -30,12 +31,7 @@
 /* Handle to device information struct */
 typedef void *WDC_DEVICE_HANDLE;
 
-/* PCI/PCMCIA slot */
-typedef union {
-    WD_PCI_SLOT    pciSlot;
-    WD_PCMCIA_SLOT pcmciaSlot;
-} WDC_SLOT_U;
-
+#ifndef __KERNEL__
 /* PCI scan results */
 typedef struct {
     DWORD       dwNumDevices;             /* Number of matching devices */
@@ -43,15 +39,7 @@ typedef struct {
     WD_PCI_SLOT deviceSlot[WD_PCI_CARDS]; /* Array of matching device locations
                                            */
 } WDC_PCI_SCAN_RESULT;
-
-/* PCMCIA scan results */
-typedef struct {
-    DWORD          dwNumDevices;                /* Number of matching devices */
-    WD_PCMCIA_ID   deviceId[WD_PCMCIA_CARDS];   /* Array of matching device IDs
-                                                 */
-    WD_PCMCIA_SLOT deviceSlot[WD_PCMCIA_CARDS]; /* Array of matching device
-                                                   locations */
-} WDC_PCMCIA_SCAN_RESULT;
+#endif
 
 /* PCI capabilities scan results */
 typedef struct {
@@ -157,8 +145,7 @@ typedef enum {
     ((size) > WDC_SIZE_16) ? WDC_MODE_32 : \
     ((size) > WDC_SIZE_8) ? WDC_MODE_16 : WDC_MODE_8)
 
-/* Device configuration space identifier
- * (PCI configuration space / PCMCIA attribute space) */
+/* Device configuration space identifier (PCI configuration space) */
 #define WDC_AD_CFG_SPACE 0xFF
 
 /**************************************************************
@@ -190,47 +177,63 @@ DWORD DLLCALLCONV WDC_DriverOpen(WDC_DRV_OPEN_OPTIONS openOptions,
 DWORD DLLCALLCONV WDC_DriverClose(void);
 
 /* -----------------------------------------------
-    Scan bus (PCI/PCMCIA)
+    Scan bus (PCI)
    ----------------------------------------------- */
+#ifndef __KERNEL__
 DWORD DLLCALLCONV WDC_PciScanDevices(DWORD dwVendorId, DWORD dwDeviceId,
     WDC_PCI_SCAN_RESULT *pPciScanResult);
 DWORD DLLCALLCONV WDC_PciScanDevicesByTopology(DWORD dwVendorId,
     DWORD dwDeviceId, WDC_PCI_SCAN_RESULT *pPciScanResult);
 DWORD DLLCALLCONV WDC_PciScanRegisteredDevices(DWORD dwVendorId,
     DWORD dwDeviceId, WDC_PCI_SCAN_RESULT *pPciScanResult);
-DWORD DLLCALLCONV WDC_PcmciaScanDevices(WORD wManufacturerId, WORD wDeviceId,
-    WDC_PCMCIA_SCAN_RESULT *pPcmciaScanResult);
+#endif
 
 /* -----------------------------------------------
     Scan PCI Capabilities
    ----------------------------------------------- */
+DWORD DLLCALLCONV WDC_PciGetExpressOffset(WDC_DEVICE_HANDLE hDev, DWORD
+    *pdwOffset);
+DWORD DLLCALLCONV WDC_PciGetHeaderType(WDC_DEVICE_HANDLE hDev,
+    WDC_PCI_HEADER_TYPE *header_type);
 DWORD DLLCALLCONV WDC_PciScanCaps(WDC_DEVICE_HANDLE hDev, DWORD dwCapId,
+    WDC_PCI_SCAN_CAPS_RESULT *pScanCapsResult);
+DWORD DLLCALLCONV WDC_PciScanCapsBySlot(WD_PCI_SLOT *pPciSlot, DWORD dwCapId,
     WDC_PCI_SCAN_CAPS_RESULT *pScanCapsResult);
 DWORD DLLCALLCONV WDC_PciScanExtCaps(WDC_DEVICE_HANDLE hDev, DWORD dwCapId,
     WDC_PCI_SCAN_CAPS_RESULT *pScanCapsResult);
+DWORD DLLCALLCONV WDC_GetPciExpressGenBySlot(WD_PCI_SLOT *pPciSlot);
+DWORD DLLCALLCONV WDC_GetPciExpressGen(WDC_DEVICE_HANDLE hDev);
 
 /* -------------------------------------------------
-    Get device's resources information (PCI/PCMCIA)
+    Get device's resources information (PCI)
    ------------------------------------------------- */
+#ifndef __KERNEL__
 DWORD DLLCALLCONV WDC_PciGetDeviceInfo(WD_PCI_CARD_INFO *pDeviceInfo);
-DWORD DLLCALLCONV WDC_PcmciaGetDeviceInfo(WD_PCMCIA_CARD_INFO *pDeviceInfo);
+#endif
+
+/* -------------------------------------------------
+    Control device's SR-IOV capability (PCIe)
+   ------------------------------------------------- */
+/* SR-IOV API functions are not part of the standard WinDriver API, and not
+ * included in the standard version of WinDriver. The functions are part of
+ * "WinDriver for Server" API and require "WinDriver for Server" license.
+ * Note that "WinDriver for Server" APIs are included in WinDriver evaluation
+ * version. */
+DWORD DLLCALLCONV WDC_PciSriovEnable(WDC_DEVICE_HANDLE hDev, DWORD dwNumVFs);
+DWORD DLLCALLCONV WDC_PciSriovDisable(WDC_DEVICE_HANDLE hDev);
+DWORD DLLCALLCONV WDC_PciSriovGetNumVFs(WDC_DEVICE_HANDLE hDev,
+    DWORD *pdwNumVFs);
 
 /* -----------------------------------------------
     Open/Close device
    ----------------------------------------------- */
 #if !defined(__KERNEL__)
 DWORD DLLCALLCONV WDC_PciDeviceOpen(WDC_DEVICE_HANDLE *phDev,
-    const WD_PCI_CARD_INFO *pDeviceInfo, const PVOID pDevCtx,
-    PVOID reserved, const CHAR *pcKPDriverName, PVOID pKPOpenData);
-DWORD DLLCALLCONV WDC_PcmciaDeviceOpen(WDC_DEVICE_HANDLE *phDev,
-    const WD_PCMCIA_CARD_INFO *pDeviceInfo, const PVOID pDevCtx,
-    PVOID reserved, const CHAR *pcKPDriverName, PVOID pKPOpenData);
+    const WD_PCI_CARD_INFO *pDeviceInfo, const PVOID pDevCtx);
 DWORD DLLCALLCONV WDC_IsaDeviceOpen(WDC_DEVICE_HANDLE *phDev,
-    const WD_CARD *pDeviceInfo, const PVOID pDevCtx,
-    PVOID reserved, const CHAR *pcKPDriverName, PVOID pKPOpenData);
+    const WD_CARD *pDeviceInfo, const PVOID pDevCtx);
 
 DWORD DLLCALLCONV WDC_PciDeviceClose(WDC_DEVICE_HANDLE hDev);
-DWORD DLLCALLCONV WDC_PcmciaDeviceClose(WDC_DEVICE_HANDLE hDev);
 DWORD DLLCALLCONV WDC_IsaDeviceClose(WDC_DEVICE_HANDLE hDev);
 #endif
 
@@ -258,20 +261,20 @@ DWORD DLLCALLCONV WDC_CallKerPlug(WDC_DEVICE_HANDLE hDev, DWORD dwMsg,
 /* Direct memory read/write macros */
 #define WDC_ReadMem8(addr, off) *(volatile BYTE *)((UPTR)(addr) + (UPTR)(off))
 #define WDC_ReadMem16(addr, off) \
-    dtoh16(*(volatile WORD *)((UPTR)(addr) + (UPTR)(off)))
+    *(volatile WORD *)((UPTR)(addr) + (UPTR)(off))
 #define WDC_ReadMem32(addr, off) \
-    dtoh32(*(volatile UINT32 *)((UPTR)(addr) + (UPTR)(off)))
+    *(volatile UINT32 *)((UPTR)(addr) + (UPTR)(off))
 #define WDC_ReadMem64(addr, off) \
-    dtoh64(*(volatile UINT64 *)((UPTR)(addr) + (UPTR)(off)))
+    *(volatile UINT64 *)((UPTR)(addr) + (UPTR)(off))
 
 #define WDC_WriteMem8(addr, off, val) \
     *(volatile BYTE * )(((UPTR)(addr) + (UPTR)(off))) = (val)
 #define WDC_WriteMem16(addr, off, val) \
-    *(volatile WORD * )(((UPTR)(addr) + (UPTR)(off))) = dtoh16(val)
+    *(volatile WORD * )(((UPTR)(addr) + (UPTR)(off))) = (val)
 #define WDC_WriteMem32(addr, off, val) \
-    *(volatile UINT32 *)(((UPTR)(addr) + (UPTR)(off))) = dtoh32(val)
+    *(volatile UINT32 *)(((UPTR)(addr) + (UPTR)(off))) = (val)
 #define WDC_WriteMem64(addr, off, val) \
-    *(volatile UINT64 *)(((UPTR)(addr) + (UPTR)(off))) = dtoh64(val)
+    *(volatile UINT64 *)(((UPTR)(addr) + (UPTR)(off))) = (val)
 
 /* Read/write a device's address space (8/16/32/64 bits) */
 DWORD DLLCALLCONV WDC_ReadAddr8(WDC_DEVICE_HANDLE hDev, DWORD dwAddrSpace,
@@ -390,25 +393,8 @@ DWORD DLLCALLCONV WDC_PciWriteCfg64(WDC_DEVICE_HANDLE hDev, DWORD dwOffset,
     UINT64 val);
 
 /* -----------------------------------------------
-    Access PCMCIA attribute space
-   ----------------------------------------------- */
-DWORD DLLCALLCONV WDC_PcmciaReadAttribSpace(WDC_DEVICE_HANDLE hDev,
-    DWORD dwOffset, PVOID pData, DWORD dwBytes);
-DWORD DLLCALLCONV WDC_PcmciaWriteAttribSpace(WDC_DEVICE_HANDLE hDev,
-    DWORD dwOffset, PVOID pData, DWORD dwBytes);
-
-/* -----------------------------------------------
-    Modify settings of PCMCIA bus controller
-   ----------------------------------------------- */
-DWORD DLLCALLCONV WDC_PcmciaSetWindow(WDC_DEVICE_HANDLE hDev,
-    WD_PCMCIA_ACC_SPEED speed, WD_PCMCIA_ACC_WIDTH width, DWORD dwCardBase);
-
-DWORD DLLCALLCONV WDC_PcmciaSetVpp(WDC_DEVICE_HANDLE hDev, WD_PCMCIA_VPP vpp);
-
-/* -----------------------------------------------
     DMA (Direct Memory Access)
    ----------------------------------------------- */
-#if !defined(__KERNEL__)
 /* Allocate and lock a contiguous DMA buffer */
 DWORD DLLCALLCONV WDC_DMAContigBufLock(WDC_DEVICE_HANDLE hDev, PVOID *ppBuf,
     DWORD dwOptions, DWORD dwDMABufSize, WD_DMA **ppDma);
@@ -417,15 +403,24 @@ DWORD DLLCALLCONV WDC_DMAContigBufLock(WDC_DEVICE_HANDLE hDev, PVOID *ppBuf,
 DWORD DLLCALLCONV WDC_DMASGBufLock(WDC_DEVICE_HANDLE hDev, PVOID pBuf,
     DWORD dwOptions, DWORD dwDMABufSize, WD_DMA **ppDma);
 
+/* Lock a reserved contiguous DMA buffer */
+DWORD DLLCALLCONV WDC_DMAReservedBufLock(WDC_DEVICE_HANDLE hDev,
+    PHYS_ADDR qwAddr, PVOID *ppBuf, DWORD dwOptions, DWORD dwDMABufSize,
+    WD_DMA **ppDma);
+
 /* Unlock a DMA buffer */
 DWORD DLLCALLCONV WDC_DMABufUnlock(WD_DMA *pDma);
 
 /* Get DMA buffer global handle */
 #define WDC_DMAGetGlobalHandle(pDma) ((pDma)->hDma)
 
-/* Get a shared DMA buffer */
+/* Get a shared DMA buffer.
+ * This API function is not part of the standard WinDriver API, and not included
+ * in the standard version of WinDriver. It is part of
+ * "WinDriver for Server" API and requires "WinDriver for Server" license. Note
+ * that "WinDriver for Server" APIs are included in WinDriver evaluation
+ * version. */
 DWORD DLLCALLCONV WDC_DMABufGet(DWORD hDma, WD_DMA **ppDma);
-#endif
 
 /* Synchronize cache of all CPUs with the DMA buffer,
  * should be called before DMA transfer */
@@ -447,6 +442,9 @@ DWORD DLLCALLCONV WDC_IntDisable(WDC_DEVICE_HANDLE hDev);
 
 /* Are interrupts enabled */
 BOOL DLLCALLCONV WDC_IntIsEnabled(WDC_DEVICE_HANDLE hDev);
+
+/* Converts interrupts type to string */
+const CHAR * DLLCALLCONV WDC_IntType2Str(DWORD dwIntType);
 
 /* -----------------------------------------------
     Plug-and-play and power management events

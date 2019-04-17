@@ -5,12 +5,12 @@
     extern "C" {
 #endif
 
-#if defined(LINUX) || defined(WINNT) || defined(WINCE)
+#if defined(LINUX) || defined(WINNT)
     typedef unsigned char u8;
     typedef unsigned short u16;
     typedef unsigned int u32;
 
-    #if defined(WINNT) || defined(WINCE)
+    #if defined(WINNT)
         typedef unsigned __int64 u64;
     #else
         typedef unsigned long long u64;

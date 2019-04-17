@@ -1,4 +1,4 @@
-/* Jungo Connectivity Confidential. Copyright (c) 2016 Jungo Connectivity Ltd.  http://www.jungo.com */
+/* Jungo Connectivity Confidential. Copyright (c) 2019 Jungo Connectivity Ltd.  https://www.jungo.com */
 
 #ifndef _CSTRING_H_
 #define _CSTRING_H_
@@ -43,7 +43,7 @@ public:
     CCString StrRemove(PCSTR str);
     CCString StrReplace(PCSTR str, PCSTR new_str);
 
-    int Length();
+    int Length() const;
     bool contains(PCSTR substr);
     bool is_empty();
     char *m_str; // The String itself
@@ -60,6 +60,10 @@ public:
     void tolower();
     CCString tolower_copy(void) const;
     CCString toupper_copy(void) const;
+    int find_first(char c) const;
+    int find_last(char c) const;
+    CCString substr(int start, int end) const;
+    CCString trim(int index) const;
 
 protected:
     void Init();

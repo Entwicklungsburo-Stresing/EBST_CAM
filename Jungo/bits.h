@@ -1,4 +1,4 @@
-/* Jungo Connectivity Confidential. Copyright (c) 2016 Jungo Connectivity Ltd.  http://www.jungo.com */
+/* Jungo Connectivity Confidential. Copyright (c) 2019 Jungo Connectivity Ltd.  https://www.jungo.com */
 
 /*
  * File - bits.h
@@ -42,48 +42,6 @@ enum
     BIT30 = 0x40000000,
     BIT31 = (int)0x80000000
 };
-
-#define SWAP_ENDIAN_16(data) \
-    ((((data) & (WORD)0x00FF) << 8) | \
-    (((data) & (WORD)0xFF00) >> 8))
-
-#define SWAP_ENDIAN_32(data) \
-    ((((data) & 0x000000FF) << 24) | \
-    (((data) & 0x0000FF00) << 8) | \
-    (((data) & 0x00FF0000) >> 8) | \
-    (((data) & 0xFF000000) >> 24))
-
-#define SWAP_ENDIAN_64(data) \
-    ((((data) & 0x00000000000000FFULL) << 56) | \
-    (((data) & 0x000000000000FF00ULL) << 40) | \
-    (((data) & 0x0000000000FF0000ULL) << 24) | \
-    (((data) & 0x00000000FF000000ULL) << 8) | \
-    (((data) & 0x000000FF00000000ULL) >> 8) | \
-    (((data) & 0x0000FF0000000000ULL) >> 24) | \
-    (((data) & 0x00FF000000000000ULL) >> 40) | \
-    (((data) & 0xFF00000000000000ULL) >> 56))
-
-// Endiannes conversion for PCI Master access (access is initiated by device)
-#if defined(POWERPC) || defined(PPC64)
-    #define htod16(data) SWAP_ENDIAN_16(data)
-    #define htod32(data) SWAP_ENDIAN_32(data)
-    #define htod64(data) SWAP_ENDIAN_64(data)
-#else
-    #define htod16(data) (data)
-    #define htod32(data) (data)
-    #define htod64(data) (data)
-#endif
-
-// Endiannes conversion for PCI Target access (access is initiated by host)
-#if defined(POWERPC) || defined(PPC64)
-    #define dtoh16(data) SWAP_ENDIAN_16(data)
-    #define dtoh32(data) SWAP_ENDIAN_32(data)
-    #define dtoh64(data) SWAP_ENDIAN_64(data)
-#else
-    #define dtoh16(data) (data)
-    #define dtoh32(data) (data)
-    #define dtoh64(data) (data)
-#endif
 
 #endif /* _BITS_H_ */
 
