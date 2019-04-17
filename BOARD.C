@@ -28,9 +28,10 @@ Internal definitions
 
 //#define LSCPCIEJ_DEFAULT_LICENSE_STRING "643c749b4b3f16a065e15c1a2aec0c067c1fb30a0677f92e6c0cbe50.WD1200_64_NL_Entwicklungsbüro_Stresing"
 //#define LSCPCIEJ_DEFAULT_LICENSE_STRING "6f19fa9c7e362e62fdbd44c8a8c17b2b41f30f98686333.WD1210_64_NL_Entwicklungsbüro_Stresing"
-#define LSCPCIEJ_DEFAULT_LICENSE_STRING "87244a4c6cb75b3386857b676b153685468744582da7606720b166f47a8e.WD1230_64_NL_Entwicklungsburo_Stresing"
+//#define LSCPCIEJ_DEFAULT_LICENSE_STRING "87244a4c6cb75b3386857b676b153685468744582da7606720b166f47a8e.WD1230_64_NL_Entwicklungsburo_Stresing"
 //#define LSCPCIEJ_DEFAULT_LICENSE_STRING "87244a4f5a2a96536ef8292752d1aed92d3fce6683b2cd63d9bd327c38.WD1230_64_F_Entwicklungsbüro_Stresing_Exp_26-Jun-17"
 //#define LSCPCIEJ_DEFAULT_LICENSE_STRING "87244a4c6cb75b3386857b676b153695c8043c8e33f8022c605125c6b16f.WD1230_64_NL_Entwicklungsburo_Stresing"
+#define LSCPCIEJ_DEFAULT_LICENSE_STRING "872759e7d022a2499e5dcb42c25d1f889fdfac803544b6979f345330df98.WD1400_64_NL_Entwicklungsbuero_Stresing"
 #define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
 
 /*************************************************************
@@ -586,7 +587,7 @@ BOOL InitBoard(UINT32 drvno)
 
 	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
 	WDC_Err("DRVInit hDev id % x, hDev pci slot %x, hDev pci bus %x, hDev pci function %x, hDevNumAddrSp %x \n"
-		, pDev->id, pDev->slot.pciSlot.dwSlot, pDev->slot.pciSlot.dwBus, pDev->slot.pciSlot.dwFunction, pDev->dwNumAddrSpaces);
+		, pDev->id, pDev->slot.dwSlot, pDev->slot.dwBus, pDev->slot.dwFunction, pDev->dwNumAddrSpaces);
 
 	/*hccddrv = WDC_GetWDHandle();
 	if (hccddrv == (HANDLE)INVALID_HANDLE_VALUE)
