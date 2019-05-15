@@ -26,7 +26,8 @@ Internal definitions
 
 //Dont trust the debugger its CRAP
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***#define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//#define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
+#define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
 
 /*************************************************************
 General definitions
@@ -444,7 +445,7 @@ BOOL CCDDrvInit(void)
 #if defined(WD_DRIVER_NAME_CHANGE)
 	/* Set the driver name */
 
-	if (!WD_DriverName(LSCPCIEJ_DEFAULT_DRIVER_NAME))
+	if (!WD_DriverName(LSCPCIEJ_STRESING_DRIVER_NAME))
 	{
 		ErrLog("Failed to set the driver name for WDC library.\n");
 		return WD_SYSTEM_INTERNAL_ERROR;
