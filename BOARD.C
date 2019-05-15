@@ -32,7 +32,8 @@ Internal definitions
 //#define LSCPCIEJ_DEFAULT_LICENSE_STRING "87244a4f5a2a96536ef8292752d1aed92d3fce6683b2cd63d9bd327c38.WD1230_64_F_Entwicklungsbüro_Stresing_Exp_26-Jun-17"
 //#define LSCPCIEJ_DEFAULT_LICENSE_STRING "87244a4c6cb75b3386857b676b153695c8043c8e33f8022c605125c6b16f.WD1230_64_NL_Entwicklungsburo_Stresing"
 #define LSCPCIEJ_DEFAULT_LICENSE_STRING "872759e7d022a2499e5dcb42c25d1f889fdfac803544b6979f345330df98.WD1400_64_NL_Entwicklungsbuero_Stresing"
-#define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
+//#define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
+#define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
 
 /*************************************************************
 General definitions
@@ -450,7 +451,7 @@ BOOL CCDDrvInit(void)
 #if defined(WD_DRIVER_NAME_CHANGE)
 	/* Set the driver name */
 
-	if (!WD_DriverName(LSCPCIEJ_DEFAULT_DRIVER_NAME))
+	if (!WD_DriverName(LSCPCIEJ_STRESING_DRIVER_NAME))
 	{
 		ErrLog("Failed to set the driver name for WDC library.\n");
 		return WD_SYSTEM_INTERNAL_ERROR;
