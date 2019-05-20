@@ -25,7 +25,7 @@
 /* TODO: When using a registered WinDriver version, replace the license string
          below with your specific WinDriver license registration string and
          replace the driver name below with your driver's name. */
-#define LSCPCIEJ_DEFAULT_LICENSE_STRING "872759e7d022a2499e5dcb42c25d1f889fdfac803544b6979f345330df98.WD1400_64_NL_Entwicklungsbuero_Stresing"
+//#define LSCPCIEJ_DEFAULT_LICENSE_STRING "872759e7d022a2499e5dcb42c25d1f889fdfac803544b6979f345330df98.WD1400_64_NL_Entwicklungsbuero_Stresing"
 //#define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
 //#define LSCPCIEJ_STRESING_DRIVER_NAME "LSCPCIE Board ChipA7 Gen1 Lane1"//"lscpciej"
 
