@@ -26,7 +26,7 @@ Internal definitions
 
 //Dont trust the debugger its CRAP
 
-***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//#define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
+***REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED******REMOVED***//#define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
 #define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
 
 /*************************************************************
