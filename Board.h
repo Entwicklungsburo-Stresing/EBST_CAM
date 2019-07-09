@@ -168,3 +168,6 @@ BOOL BlockTrig(UINT32 drv, UINT8 btrig_ch); //read state of trigger in signals d
 void SetADGain(UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8);
 
 
+int GetIndexOfPixel(UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block /*NOT IMPLEMENTED*/, UINT16 CAM);
+
+UINT8 WaitforTelapsed(UINT32 musec);
