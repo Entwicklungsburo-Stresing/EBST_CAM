@@ -3,6 +3,8 @@
 // can be used for PCIE board
 // for CCDExample and ESLSCDLL
 
+#define _CCDEXAMP
+
 #define IDM_EXIT           100
 
 #define DBGNOCAM	FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
@@ -196,6 +198,7 @@ static BOOL HIAMP = FALSE;			// Amplification for switchable sensors
 
 
 __int64 TPS = 0;				// ticks per second; is set in InitHRCounter
+__int64 START = 0;				// global variable for sync to systemtimer
 //__int64 DELAY = 0;			   //also set in InitHRCounter
 __int64 TICKSDISP =0;			//display time in ticks
 
