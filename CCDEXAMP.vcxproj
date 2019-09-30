@@ -311,7 +311,7 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <AdditionalDependencies>$(SolutionDir)Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;d2d1.lib;dwrite.lib;windowscodecs.lib;dxgi.lib;d3d10_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Debug|x64'">
@@ -549,6 +549,7 @@
     </ClCompile>
     <ClCompile Include="cppTest.cpp" />
     <ClCompile Include="cpp_connector.cpp" />
+    <ClCompile Include="Direct2dViewer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CCDExamp.rc" />
@@ -556,6 +557,7 @@
   <ItemGroup>
     <ClInclude Include="ccdctrl.h" />
     <ClInclude Include="cppTest.h" />
+    <ClInclude Include="Direct2dViewer.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="cpp_connector.h" />
     <ClInclude Include="lscpciej_lib.h" />
