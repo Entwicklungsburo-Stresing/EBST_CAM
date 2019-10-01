@@ -11,6 +11,7 @@ extern "C"
 	void* Direct2dViewer_new();
 	void Direct2dViewer_Initialize(void* D2dV);
 	void Direct2dViewer_delete(void *D2dV);
+	void Direct2dViewer_show(void *D2dV);
 
 #ifdef __cplusplus    
 }
