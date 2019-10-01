@@ -62,6 +62,10 @@ BEGIN
         MENUITEM "PCI space",                   IDM_ABOUTCFS
         MENUITEM "DMA",                         40019
     END
+    POPUP "View"
+    BEGIN
+        MENUITEM "2D Viewer",                   ID_VIEW_2DVIEWER
+    END
 END
 
 
@@ -331,6 +335,14 @@ BEGIN
         RIGHTMARGIN, 148
         TOPMARGIN, 7
         BOTTOMMARGIN, 152
+    END
+
+    IDD_SETEC, DIALOG
+    BEGIN
+    END
+
+    IDD_SETUPAD, DIALOG
+    BEGIN
     END
 END
 #endif    // APSTUDIO_INVOKED
