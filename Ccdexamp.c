@@ -596,417 +596,407 @@ int j = 0;
 int xPos = GetCursorPosition();
 int yVal = DisplData[0][xPos];// YVal(1, xPos);
 
-   switch ( uMsg ) 
-   {
-   case WM_CREATE:
-	   //if nos or nospb becomes a higher value then 30000 the gui is not posible to deisplay it
-	   //so we are checking this and dividing the displayed value. Therefore we are seeing a wrong value when we are using the trackbar
+	switch ( uMsg ) 
+	{
+	case WM_CREATE:
+		//if nos or nospb becomes a higher value then 30000 the gui is not posible to deisplay it
+		//so we are checking this and dividing the displayed value. Therefore we are seeing a wrong value when we are using the trackbar
 
-	   trackbar_nospb = Nospb;
-	   while(trackbar_nospb > 30000){ //max for trackbar length
-		   trackbar_nospb /= 10;
-		   trackbar_nospb_multiplier *= 10;
-	   }
-	   trackbar_nob = Nob;
-	   while (trackbar_nob > 30000){ //max for trackbar length
-		   trackbar_nob /= 10;
-		   trackbar_nob_multiplier *= 10;
-	   }
+		trackbar_nospb = Nospb;
+		while(trackbar_nospb > 30000){ //max for trackbar length
+			trackbar_nospb /= 10;
+			trackbar_nospb_multiplier *= 10;
+		}
+		trackbar_nob = Nob;
+		while (trackbar_nob > 30000){ //max for trackbar length
+			trackbar_nob /= 10;
+			trackbar_nob_multiplier *= 10;
+		}
 
-	   hwndTrack = CreateWindow(TRACKBAR_CLASS,
-		   "NOS", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
-		   TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY | WS_CAPTION,
-		   300, 345,
-		   400, 70,
-		   hWnd, (HMENU)ID_TRACKBAR,
-		   hInst,
-		   NULL);
-	   SendMessage(hwndTrack, TBM_SETRANGE, TRUE,
-		   MAKELONG(0/*MIN RANGE*/, trackbar_nospb - 1/*MAX RANGE*/));  //Optional, Default is 0-100
+		hwndTrack = CreateWindow(TRACKBAR_CLASS,
+			"NOS", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
+			TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY | WS_CAPTION,
+			300, 345,
+			400, 70,
+			hWnd, (HMENU)ID_TRACKBAR,
+			hInst,
+			NULL);
+		SendMessage(hwndTrack, TBM_SETRANGE, TRUE,
+			MAKELONG(0/*MIN RANGE*/, trackbar_nospb - 1/*MAX RANGE*/));  //Optional, Default is 0-100
 
-	   hwndTrack2 = CreateWindow(TRACKBAR_CLASS,
-		   "NOB", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
-		   TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY | WS_CAPTION,
-		   710, 345,
-		   400, 70,
-		   hWnd, (HMENU)ID_TRACKBAR,
-		   hInst,
-		   NULL);
-	   SendMessage(hwndTrack2, TBM_SETRANGE, TRUE,
-		   MAKELONG(0/*MIN RANGE*/, trackbar_nob - 1/*MAX RANGE*/));  //Optional, Default is 0-100
-	   //ShowScrollBar(scrollb, SB_BOTH, TRUE);
-	   break;
-   case WM_HSCROLL://ID_TRACKBAR:
-	   //Define your function.
+		hwndTrack2 = CreateWindow(TRACKBAR_CLASS,
+			"NOB", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
+			TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY | WS_CAPTION,
+			710, 345,
+			400, 70,
+			hWnd, (HMENU)ID_TRACKBAR,
+			hInst,
+			NULL);
+		SendMessage(hwndTrack2, TBM_SETRANGE, TRUE,
+			MAKELONG(0/*MIN RANGE*/, trackbar_nob - 1/*MAX RANGE*/));  //Optional, Default is 0-100
+		//ShowScrollBar(scrollb, SB_BOTH, TRUE);
+		break;
+	case WM_HSCROLL://ID_TRACKBAR:
+		//Define your function.
 
-	   cur_nospb = SendMessage(hwndTrack, TBM_GETPOS, 0, 0);
-	   cur_nob = SendMessage(hwndTrack2, TBM_GETPOS, 0, 0);
-	   cur_nospb *= trackbar_nospb_multiplier;
-	   cur_nob *= trackbar_nob_multiplier;
-	   CopytoDispbuf(cur_nob*cur_nospb + cur_nospb);
-	   Display(1, PLOTFLAG);
+		cur_nospb = SendMessage(hwndTrack, TBM_GETPOS, 0, 0);
+		cur_nob = SendMessage(hwndTrack2, TBM_GETPOS, 0, 0);
+		cur_nospb *= trackbar_nospb_multiplier;
+		cur_nob *= trackbar_nob_multiplier;
+		CopytoDispbuf(cur_nob*cur_nospb + cur_nospb);
+		Display(1, PLOTFLAG);
 
-	   UpdateTxT();
-	   //j = sprintf_s(TrmsString + j, 260, " x: %i y: %i=0x%x ", xPos, yVal, yVal);
-	   //TextOut(hMSDC, 20, YLENGTH + 50, TrmsString, j);
+		UpdateTxT();
+		//j = sprintf_s(TrmsString + j, 260, " x: %i y: %i=0x%x ", xPos, yVal, yVal);
+		//TextOut(hMSDC, 20, YLENGTH + 50, TrmsString, j);
 
-	   //sprintf(s, "%d", dwPos);
-	   //MessageBox(hMSWND, s, "Position", MB_OK);
-	   break;
+		//sprintf(s, "%d", dwPos);
+		//MessageBox(hMSWND, s, "Position", MB_OK);
+		break;
 
-		case WM_COMMAND :
-			switch( LOWORD( wParam ) )
-            {
+	case WM_COMMAND :
+		switch( LOWORD( wParam ) )
+        {
 #ifndef _DLL
-				case IDM_ABOUT :
-					DialogBox( hInst, "AboutBox", hWnd, (DLGPROC)About );
-					AboutDrv(choosen_board);
-					break;
+		case IDM_ABOUT :
+			DialogBox( hInst, "AboutBox", hWnd, (DLGPROC)About );
+			AboutDrv(choosen_board);
+			break;
 
-				case IDM_ABOUTTIME :
-					AboutTiming(hWnd);
-					break;
+		case IDM_ABOUTTIME :
+			AboutTiming(hWnd);
+			break;
 
-				case IDM_ABOUTKEYS :
-					AboutKeys(hWnd);
-					break;
+		case IDM_ABOUTKEYS :
+			AboutKeys(hWnd);
+			break;
 
-				case IDM_ABOUTS0 :
-					AboutS0(choosen_board);
-					break;
+		case IDM_ABOUTS0 :
+			AboutS0(choosen_board);
+			break;
 
-				case IDM_ABOUTDMA:
-					AboutDMA(hWnd);
-					break;
+		case IDM_ABOUTDMA:
+			AboutDMA(hWnd);
+			break;
 
 
-				case IDM_ABOUTCFS:
-					AboutCFS(hWnd);
-					break;
+		case IDM_ABOUTCFS:
+			AboutCFS(hWnd);
+			break;
 #else
-				case IDM_ABOUT:
-					DialogBox(hInst, "AboutBox", hWnd, (DLGPROC)About);
-					DLLAboutDrv(choosen_board);
-					break;
+		case IDM_ABOUT:
+			DialogBox(hInst, "AboutBox", hWnd, (DLGPROC)About);
+			DLLAboutDrv(choosen_board);
+			break;
 
-				case IDM_ABOUTTIME:
-					AboutTiming(hWnd);
-					break;
+		case IDM_ABOUTTIME:
+			AboutTiming(hWnd);
+			break;
 
-				case IDM_ABOUTKEYS:
-					AboutKeys(hWnd);
-					break;
+		case IDM_ABOUTKEYS:
+			AboutKeys(hWnd);
+			break;
 
-				case IDM_ABOUTS0:
-					DLLAboutS0(choosen_board);
-					break;
+		case IDM_ABOUTS0:
+			DLLAboutS0(choosen_board);
+			break;
 
-				case IDM_ABOUTDMA:
-					AboutDMA(hWnd);
-					break;
+		case IDM_ABOUTDMA:
+			AboutDMA(hWnd);
+			break;
 
 
-				case IDM_ABOUTCFS:
-					AboutCFS(hWnd);
-					break;
+		case IDM_ABOUTCFS:
+			AboutCFS(hWnd);
+			break;
 #endif
 
-				case IDM_START :
-					if (! Running) Contimess(&dummy);
-					break;
+		case IDM_START :
+			if (! Running) Contimess(&dummy);
+			break;
 
-				case IDM_SETEXP :
-					DialogBox( hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, (DLGPROC)SetupMeasure);
-					break;
+		case IDM_SETEXP :
+			DialogBox( hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, (DLGPROC)SetupMeasure);
+			break;
 
-				case IDM_SETTLEVEL :
-					DialogBox( hInst, MAKEINTRESOURCE(IDD_SETTEMP), hWnd, (DLGPROC)SetupTLevel);
-					break;
+		case IDM_SETTLEVEL :
+			DialogBox( hInst, MAKEINTRESOURCE(IDD_SETTEMP), hWnd, (DLGPROC)SetupTLevel);
+			break;
 	
-				case IDM_SETEC :
-					DialogBox(hInst, MAKEINTRESOURCE(IDD_SETEC), hWnd, (DLGPROC)SetupEC);   //IDD_SETEC
-					break;	
-				case ID_START_ALLOC:
-					DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hWnd, (DLGPROC)AllocateBuf);//
-					break;
+		case IDM_SETEC :
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_SETEC), hWnd, (DLGPROC)SetupEC);   //IDD_SETEC
+			break;	
+		case ID_START_ALLOC:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hWnd, (DLGPROC)AllocateBuf);//
+			break;
 
 
-				case ID_CHOOSEBOARD :
-					DialogBox(hInst, MAKEINTRESOURCE(IDD_CHOOSEBOARD), hWnd, (DLGPROC)ChooseBoard);
-					break;
+		case ID_CHOOSEBOARD :
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_CHOOSEBOARD), hWnd, (DLGPROC)ChooseBoard);
+			break;
 
-				case IDM_ShowTRMS : //invert state
-					if (ShowTrms==TRUE) 
-					{ShowTrms=FALSE;}
-					else
-					{ShowTrms=TRUE;}
-					break;
+		case IDM_ShowTRMS : //invert state
+			if (ShowTrms==TRUE) 
+			{ShowTrms=FALSE;}
+			else
+			{ShowTrms=TRUE;}
+			break;
 
-				case ID_VIEW_2DVIEWER :
-					Direct2dViewer_Initialize(Direct2dViewer);
+		case ID_VIEW_2DVIEWER :
+			Direct2dViewer_Initialize(Direct2dViewer);
 
-					//Direct2dViewer_show(Direct2dViewer);
-					break;
+			//Direct2dViewer_show(Direct2dViewer);
+			break;
 				
-				case IDM_EXIT :
+		case IDM_EXIT :
 
-					DestroyWindow( hWnd );
-					break;
-			  }
-              break;
-
-
-		case WM_KEYDOWN: 
-              switch( wParam ) 
-              {
- 				 case VK_F1:
-					AboutTiming(hWnd);
-					break;
-				 case VK_F6:
-					if (! Running) Contimess(&dummy);
-                    break;
-#ifndef _DLL
-				 case VK_F2://switch cooling on
-					ActCooling(choosen_board,TRUE);
-					break;
-				 case VK_F3://switch cooling off
-					ActCooling(choosen_board,FALSE);
-					break;
-				 case VK_F4:
-					 {//check temp good
-					int j=0;
-					char header[260];
-
-					if (TempGood(choosen_board,1)==TRUE)
-					{j=sprintf_s(header,260," temp1 good        " );}
-					else
-					j=sprintf_s(header,260," temp1 not good " );
-
-					if (TempGood(choosen_board,2)==TRUE)
-					{j+=sprintf_s(header+j,260," temp2 good        " );}
-					else
-					j+=sprintf_s(header+j,260," temp2 not good " );
-
-					TextOut(hMSDC,100,LOY+YLENGTH+17,header,j);
-					break;
-					 }
-				 case VK_F5: //send IR_Setup
-					//SetupIR(choosen_board,1); //reset
-					 // RE&RS enable
-				//WriteByteS0(choosen_board,0x0f,0x30);
-                    break;
-				 case VK_F7: //set high amp
-					HIAMP=TRUE;
-					V_On(choosen_board);
-                    break;
-				 case VK_F8: //set low amp
-					HIAMP=FALSE;
-					V_Off(choosen_board);
-					break;
-
-				 //case VK_SHIFT:
-				 case VK_UP: //change y-scale
-						if (GetAsyncKeyState(VK_SHIFT)) {YSHIFT += 1;}
-						else XOFF += 1;
-				 if (YSHIFT>16) YSHIFT=16;
-				 if (XOFF>_PIXEL/600) XOFF=_PIXEL/600;
-				 break;
-				 case VK_DOWN:
-						if (GetAsyncKeyState(VK_SHIFT)) {YSHIFT -= 1;}
-						else XOFF -=1 ;
-				 if (YSHIFT<0) YSHIFT=0;
-				 if (XOFF<1) XOFF=1;
-				 break;
-				 case VK_RIGHT:
-					 /*XStart += 100;	
-					 if (XStart>_PIXEL-XLENGTH*XOFF)
-						XStart -= 100;*/			 
-					PixelOdd=TRUE;
-				 break;
-				 case VK_LEFT:
-					/* XStart -= 100;
-					 if (XStart<0) XStart=0; */
-					PixelOdd=FALSE;
-				 break;
-				 case VK_ESCAPE: //stop measurement
-				 case VK_SPACE:
-					Running=FALSE;
-					//Sleep(20);
-					//CleanupPCIE_DMA(choosen_board);
-					StopRingReadThread();
-					StopFFTimer(choosen_board);
-					SetIntFFTrig(choosen_board);//disables ext. Trig.
-					UpdateTxT();
-                    break;
-
-
-			  }
+			DestroyWindow( hWnd );
+			break;
+		}
         break;
 
-		case WM_MOUSEMOVE :
-			if (contimess_run_once){
-				UpdateTxT();
-			}
-			
+	case WM_KEYDOWN: 
+        switch( wParam ) 
+        {
+ 			case VK_F1:
+			AboutTiming(hWnd);
+			break;
+			case VK_F6:
+			if (! Running) Contimess(&dummy);
+            break;
+#ifndef _DLL
+			case VK_F2://switch cooling on
+			ActCooling(choosen_board,TRUE);
+			break;
+			case VK_F3://switch cooling off
+			ActCooling(choosen_board,FALSE);
+			break;
+			case VK_F4:
+				{//check temp good
+			int j=0;
+			char header[260];
+
+			if (TempGood(choosen_board,1)==TRUE)
+			{j=sprintf_s(header,260," temp1 good        " );}
+			else
+			j=sprintf_s(header,260," temp1 not good " );
+
+			if (TempGood(choosen_board,2)==TRUE)
+			{j+=sprintf_s(header+j,260," temp2 good        " );}
+			else
+			j+=sprintf_s(header+j,260," temp2 not good " );
+
+			TextOut(hMSDC,100,LOY+YLENGTH+17,header,j);
+			break;
+				}
+			case VK_F5: //send IR_Setup
+			//SetupIR(choosen_board,1); //reset
+				// RE&RS enable
+			//WriteByteS0(choosen_board,0x0f,0x30);
+            break;
+			case VK_F7: //set high amp
+			HIAMP=TRUE;
+			V_On(choosen_board);
+            break;
+			case VK_F8: //set low amp
+			HIAMP=FALSE;
+			V_Off(choosen_board);
 			break;
 
-/*		case WM_PAINT:
-		case WM_WINDOWPOSCHANGED  :
-              ShowWindow(hWnd,SW_SHOW);
-				  //Display( 1,PLOTFLAG);
- 			  break;			  
+			//case VK_SHIFT:
+			case VK_UP: //change y-scale
+				if (GetAsyncKeyState(VK_SHIFT)) {YSHIFT += 1;}
+				else XOFF += 1;
+			if (YSHIFT>16) YSHIFT=16;
+			if (XOFF>_PIXEL/600) XOFF=_PIXEL/600;
+			break;
+			case VK_DOWN:
+				if (GetAsyncKeyState(VK_SHIFT)) {YSHIFT -= 1;}
+				else XOFF -=1 ;
+			if (YSHIFT<0) YSHIFT=0;
+			if (XOFF<1) XOFF=1;
+			break;
+			case VK_RIGHT:
+				/*XStart += 100;	
+				if (XStart>_PIXEL-XLENGTH*XOFF)
+				XStart -= 100;*/			 
+			PixelOdd=TRUE;
+			break;
+			case VK_LEFT:
+			/* XStart -= 100;
+				if (XStart<0) XStart=0; */
+			PixelOdd=FALSE;
+			break;
+			case VK_ESCAPE: //stop measurement
+			case VK_SPACE:
+			Running=FALSE;
+			//Sleep(20);
+			//CleanupPCIE_DMA(choosen_board);
+			StopRingReadThread();
+			StopFFTimer(choosen_board);
+			SetIntFFTrig(choosen_board);//disables ext. Trig.
+			UpdateTxT();
+            break;
+		}
+		break;
+	case WM_MOUSEMOVE :
+		if (contimess_run_once){
+			UpdateTxT();
+		}
+		break;
+
+/*	case WM_PAINT:
+	case WM_WINDOWPOSCHANGED  :
+        ShowWindow(hWnd,SW_SHOW);
+		//Display( 1,PLOTFLAG);
+ 		break;			  
 */
-		case WM_DESTROY :
-			  //stop timer if it is still running
-			  Running=FALSE;
-			  Sleep(20); // if the DMA Interrupt is running
-			  //CleanupPCIE_DMA(choosen_board);
-			  //StopRingReadThread();
-			  //board 1
+	case WM_DESTROY :
+		//stop timer if it is still running
+		Running=FALSE;
+		Sleep(20); // if the DMA Interrupt is running
+		//CleanupPCIE_DMA(choosen_board);
+		//StopRingReadThread();
+		//board 1
 
-			  if (NUMBER_OF_BOARDS >= 2){
-				  StopFFTimer(2);
-				  SetIntFFTrig(2);//disables ext. Trig.
-				  CCDDrvExit(2);
-			  }
+		if (NUMBER_OF_BOARDS >= 2){
+			StopFFTimer(2);
+			SetIntFFTrig(2);//disables ext. Trig.
+			CCDDrvExit(2);
+		}
 
-			  StopFFTimer(1);
-			  SetIntFFTrig(1);//disables ext. Trig.
-			  //WDC_DriverClose();
-			  CCDDrvExit(1);
-			  //board 2
-			
-
-			  ReleaseDC(hMSWND,hMSDC);
+		StopFFTimer(1);
+		SetIntFFTrig(1);//disables ext. Trig.
+		//WDC_DriverClose();
+		CCDDrvExit(1);
+		//board 2
+		ReleaseDC(hMSWND,hMSDC);
               
-			  PostQuitMessage(0);
-              break;
+		PostQuitMessage(0);
+        break;
 #else
-				 case VK_F2://switch cooling on
-					 DLLActCooling(choosen_board, TRUE);
-					 break;
-				 case VK_F3://switch cooling off
-					 DLLActCooling(choosen_board, FALSE);
-					 break;
-				 case VK_F4:
-				 {//check temp good
-					 int j = 0;
-					 char header[260];
+	case VK_F2://switch cooling on
+		DLLActCooling(choosen_board, TRUE);
+		break;
+	case VK_F3://switch cooling off
+		DLLActCooling(choosen_board, FALSE);
+		break;
+	case VK_F4:
+	{//check temp good
+		int j = 0;
+		char header[260];
 
-					 if (DLLTempGood(choosen_board, 1) == TRUE)
-					 {
-						 j = sprintf_s(header, 260, " temp1 good        ");
-					 }
-					 else
-						 j = sprintf_s(header, 260, " temp1 not good ");
+		if (DLLTempGood(choosen_board, 1) == TRUE)
+		{
+			j = sprintf_s(header, 260, " temp1 good        ");
+		}
+		else
+			j = sprintf_s(header, 260, " temp1 not good ");
 
-					 if (DLLTempGood(choosen_board, 2) == TRUE)
-					 {
-						 j += sprintf_s(header + j, 260, " temp2 good        ");
-					 }
-					 else
-						 j += sprintf_s(header + j, 260, " temp2 not good ");
+		if (DLLTempGood(choosen_board, 2) == TRUE)
+		{
+			j += sprintf_s(header + j, 260, " temp2 good        ");
+		}
+		else
+			j += sprintf_s(header + j, 260, " temp2 not good ");
 
-					 TextOut(hMSDC, 100, LOY + YLENGTH + 17, header, j);
-					 break;
-				 }
-				 case VK_F5: //send IR_Setup
-							 //SetupIR(choosen_board,1); //reset
-							 // RE&RS enable
-							 //WriteByteS0(choosen_board,0x0f,0x30);
-					 break;
-				 case VK_F7: //set high amp
-					 HIAMP = TRUE;
-					 DLLVOn(choosen_board);
-					 break;
-				 case VK_F8: //set low amp
-					 HIAMP = FALSE;
-					 DLLVOff(choosen_board);
-					 break;
+		TextOut(hMSDC, 100, LOY + YLENGTH + 17, header, j);
+		break;
+	}
+	case VK_F5: //send IR_Setup
+				//SetupIR(choosen_board,1); //reset
+				// RE&RS enable
+				//WriteByteS0(choosen_board,0x0f,0x30);
+		break;
+	case VK_F7: //set high amp
+		HIAMP = TRUE;
+		DLLVOn(choosen_board);
+		break;
+	case VK_F8: //set low amp
+		HIAMP = FALSE;
+		DLLVOff(choosen_board);
+		break;
 
-					 //case VK_SHIFT:
-				 case VK_UP: //change y-scale
-					 if (GetAsyncKeyState(VK_SHIFT)) { YSHIFT += 1; }
-					 else XOFF += 1;
-					 if (YSHIFT>16) YSHIFT = 16;
-					 if (XOFF>_PIXEL / 600) XOFF = _PIXEL / 600;
-					 break;
-				 case VK_DOWN:
-					 if (GetAsyncKeyState(VK_SHIFT)) { YSHIFT -= 1; }
-					 else XOFF -= 1;
-					 if (YSHIFT<0) YSHIFT = 0;
-					 if (XOFF<1) XOFF = 1;
-					 break;
-				 case VK_RIGHT:
-					 /*XStart += 100;
-					 if (XStart>_PIXEL-XLENGTH*XOFF)
-					 XStart -= 100;*/
-					 PixelOdd = TRUE;
-					 break;
-				 case VK_LEFT:
-					 /* XStart -= 100;
-					 if (XStart<0) XStart=0; */
-					 PixelOdd = FALSE;
-					 break;
-				 case VK_ESCAPE: //stop measurement
-				 case VK_SPACE:
-					 Running = FALSE;
-					 //Sleep(20);
-					 //CleanupPCIE_DMA(choosen_board);
-					 DLLStopRingReadThread();
-					 DLLStopFFTimer(choosen_board);
-					 DLLSetIntTrig(choosen_board);//disables ext. Trig.
-					 UpdateTxT();
-					 break;
+		//case VK_SHIFT:
+	case VK_UP: //change y-scale
+		if (GetAsyncKeyState(VK_SHIFT)) { YSHIFT += 1; }
+		else XOFF += 1;
+		if (YSHIFT>16) YSHIFT = 16;
+		if (XOFF>_PIXEL / 600) XOFF = _PIXEL / 600;
+		break;
+	case VK_DOWN:
+		if (GetAsyncKeyState(VK_SHIFT)) { YSHIFT -= 1; }
+		else XOFF -= 1;
+		if (YSHIFT<0) YSHIFT = 0;
+		if (XOFF<1) XOFF = 1;
+		break;
+	case VK_RIGHT:
+		/*XStart += 100;
+		if (XStart>_PIXEL-XLENGTH*XOFF)
+		XStart -= 100;*/
+		PixelOdd = TRUE;
+		break;
+	case VK_LEFT:
+		/* XStart -= 100;
+		if (XStart<0) XStart=0; */
+		PixelOdd = FALSE;
+		break;
+	case VK_ESCAPE: //stop measurement
+	case VK_SPACE:
+		Running = FALSE;
+		//Sleep(20);
+		//CleanupPCIE_DMA(choosen_board);
+		DLLStopRingReadThread();
+		DLLStopFFTimer(choosen_board);
+		DLLSetIntTrig(choosen_board);//disables ext. Trig.
+		UpdateTxT();
+		break;
 
+		//TODO: What is this?
+		}
+		break;
 
-			  }
-			  break;
+	case WM_MOUSEMOVE:
+		if (contimess_run_once) {
+			UpdateTxT();
+		}
 
-		case WM_MOUSEMOVE:
-			if (contimess_run_once) {
-				UpdateTxT();
-			}
+		break;
 
-			break;
+	/*case WM_PAINT:
+	case WM_WINDOWPOSCHANGED  :
+		ShowWindow(hWnd,SW_SHOW);
+		//Display( 1,PLOTFLAG);
+		break;
+		*/
+	case WM_DESTROY:
+		//stop timer if it is still running
+		Running = FALSE;
+		Sleep(20); // if the DMA Interrupt is running
+		//CleanupPCIE_DMA(choosen_board);
+		//StopRingReadThread();
+		//board 1
 
-			/*		case WM_PAINT:
-			case WM_WINDOWPOSCHANGED  :
-			ShowWindow(hWnd,SW_SHOW);
-			//Display( 1,PLOTFLAG);
-			break;
-			*/
-		case WM_DESTROY:
-			//stop timer if it is still running
-			Running = FALSE;
-			Sleep(20); // if the DMA Interrupt is running
-					   //CleanupPCIE_DMA(choosen_board);
-					   //StopRingReadThread();
-					   //board 1
+		if (NUMBER_OF_BOARDS >= 2) {
+			DLLStopFFTimer(2);
+			DLLSetIntTrig(2);//disables ext. Trig.
+			//DLLCCDDrvExit(2);//check for two boards happens in the dll
+		}
 
-			if (NUMBER_OF_BOARDS >= 2) {
-				DLLStopFFTimer(2);
-				DLLSetIntTrig(2);//disables ext. Trig.
-				//DLLCCDDrvExit(2);//check for two boards happens in the dll
-			}
+		DLLStopFFTimer(1);
+		DLLSetIntTrig(1);//disables ext. Trig.
+						//WDC_DriverClose();
+		DLLCCDDrvExit(1);
+		//board 2
 
-			DLLStopFFTimer(1);
-			DLLSetIntTrig(1);//disables ext. Trig.
-							//WDC_DriverClose();
-			DLLCCDDrvExit(1);
-			//board 2
+		ReleaseDC(hMSWND, hMSDC);
 
-
-			ReleaseDC(hMSWND, hMSDC);
-
-			PostQuitMessage(0);
-			break;
-
+		PostQuitMessage(0);
+		break;
 #endif
-
-      default : 
-            return( DefWindowProc( hWnd, uMsg, wParam, lParam ) );
-   }
+    default : 
+        return( DefWindowProc( hWnd, uMsg, wParam, lParam ) );
+	}
    return( 0L );
 }
 
