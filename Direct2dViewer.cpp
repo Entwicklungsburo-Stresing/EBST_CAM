@@ -1,7 +1,7 @@
+// This is a Direct2D Viewer for bitmaps used in CCD example. It was created by using Microsofts example "SimpleDirect2DApplication", originally released under MIT license.
 // https://github.com/microsoft/Windows-classic-samples/tree/master/Samples/Win7Samples/multimedia/Direct2D/SimpleDirect2DApplication
 
 #include "Direct2dViewer.h"
-
 
 //
 // Provides the entry point to the application.
@@ -97,7 +97,7 @@ HRESULT Direct2dViewer::Initialize()
         // Create the application window.
         m_hwnd = CreateWindow(
             L"Direct2dViewer",
-            L"Data Viewer",
+            L"2D Viewer",
             WS_OVERLAPPEDWINDOW,
             CW_USEDEFAULT,
             CW_USEDEFAULT,
