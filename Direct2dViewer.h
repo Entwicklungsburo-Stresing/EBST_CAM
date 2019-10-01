@@ -20,7 +20,6 @@
 
 // C RunTime Header Files
 #include <stdlib.h>
-#include <stdint.h> // included for uint16_t
 
 #include <malloc.h>
 #include <memory.h>
@@ -83,6 +82,12 @@ public:
 
     void RunMessageLoop();
 
+	void setBitmapSource(
+		void *addr,
+		UINT width,
+		UINT height
+	);
+
 private:
     HRESULT CreateDeviceIndependentResources();
     HRESULT CreateDeviceResources();
@@ -106,9 +111,6 @@ private:
     HRESULT Load16bitGreyscaleBitmapFromMemory(
         ID2D1RenderTarget *pRenderTarget,
 		IWICImagingFactory *pIWICFactory,
-		UINT width,
-		UINT height,
-		BYTE* data,
         ID2D1Bitmap **ppBitmap
         );
 
@@ -119,6 +121,13 @@ private:
     IDWriteFactory *m_pDWriteFactory;
     ID2D1HwndRenderTarget *m_pRenderTarget;
     ID2D1Bitmap *m_pBitmap;
+
+	struct _BitmapSource
+	{
+		void	*addr;
+		UINT	width;
+		UINT	height;
+	} _bitmapSource;
 };
 
 

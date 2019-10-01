@@ -11,6 +11,7 @@
 #include "GLOBAL.h" 
 #include "CCDUNIT.C"
 #include "Direct2dViewer_c.h"
+#include <stdint.h> // included for uint16_t
 
 #ifdef _DLL
 UINT8 NUMBER_OF_BOARDS = 0;
@@ -33,6 +34,9 @@ BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
 #define IS_WIN32S  IS_WIN32 && (BOOL)(!(IS_NT) && (LOBYTE(LOWORD(GetVersion()))<4))
 #define IS_WIN95   (BOOL)(!(IS_NT) && !(IS_WIN32S)) && IS_WIN32
 
+#define TESTBITMAP_WIDTH 1000
+#define TESTBITMAP_HEIGTH 200
+
 // global variables
 HINSTANCE hInst;   // current instance
 
@@ -46,6 +50,7 @@ DWORD cur_nospb = 0;
 DWORD cur_nob = 0;
 
 void* Direct2dViewer;
+uint16_t testbitmap[TESTBITMAP_WIDTH * TESTBITMAP_HEIGTH];
 
 // function declerations
 BOOL RegisterWin95(CONST WNDCLASS* lpwc);
@@ -65,3 +70,4 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 LRESULT CALLBACK ChooseBoard(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK SetupTLevel(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK SetupEC(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+void createTestBitmap();

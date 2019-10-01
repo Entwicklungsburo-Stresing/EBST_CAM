@@ -131,6 +131,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 
 	//initialize 2D Viewer
 	Direct2dViewer = Direct2dViewer_new();
+	createTestBitmap();
 
 	// init high resolution counter 	
 //	TPS = InitHRCounter();
@@ -743,11 +744,14 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
 			break;
 
 		case ID_VIEW_2DVIEWER :
+		{
+
+			Direct2dViewer_setBitmapSource(Direct2dViewer, (void *)testbitmap, TESTBITMAP_WIDTH, TESTBITMAP_HEIGTH);
 			Direct2dViewer_Initialize(Direct2dViewer);
 
 			//Direct2dViewer_show(Direct2dViewer);
 			break;
-				
+		}
 		case IDM_EXIT :
 
 			DestroyWindow( hWnd );
@@ -1573,4 +1577,20 @@ case WM_COMMAND:
 }//SetupEC
 
 
+void createTestBitmap() {
+	//create test data
+	uint16_t i = 0;
+	int j = 0;
 
+	for (int line = 0; line < TESTBITMAP_HEIGTH - 1; line++) {
+		for (int pixel = 0; pixel < TESTBITMAP_WIDTH - 1; pixel++) {
+			testbitmap[i + j * 0xffff] = i;
+			i++;
+			if (i % 0xffff == 0) {
+				i = 0;
+				j++;
+			}
+		}
+	}
+	return;
+}

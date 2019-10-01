@@ -186,32 +186,11 @@ HRESULT Direct2dViewer::CreateDeviceResources()
 			);
 		}
 
-		//create test data
-		uint16_t i = 0;
-		int j = 0;
-		const int width = 1000;
-		const int height = 200;
-		uint16_t testdata[height * width] = {};
-
-		for (int line = 0; line < height - 1; line++) {
-			for (int pixel = 0; pixel < width - 1; pixel++) {
-				testdata[i + j * 0xffff] = i;
-				i++;
-				if (i % 0xffff == 0) {
-					i = 0;
-					j++;
-				}
-			}
-		}
-
         if (SUCCEEDED(hr))
         {
 			hr = Load16bitGreyscaleBitmapFromMemory(
 				m_pRenderTarget,
 				m_pWICFactory,
-				width,
-				height,
-				reinterpret_cast<BYTE*>(testdata),
 				&m_pBitmap
 			);
         }
@@ -331,12 +310,12 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
     if (message == WM_CREATE)
     {
         LPCREATESTRUCT pcs = (LPCREATESTRUCT)lParam;
-        Direct2dViewer *pDemoApp = (Direct2dViewer *)pcs->lpCreateParams;
+        Direct2dViewer *D2DV = (Direct2dViewer *)pcs->lpCreateParams;
 
         ::SetWindowLongPtrW(
             hwnd,
             GWLP_USERDATA,
-            PtrToUlong(pDemoApp)
+            PtrToUlong(D2DV)
             );
 
         result = 1;
@@ -403,9 +382,6 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
 HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory(
     ID2D1RenderTarget *pRenderTarget,
 	IWICImagingFactory *pIWICFactory,
-	UINT width,
-	UINT height,
-	BYTE* data,
     ID2D1Bitmap **ppBitmap
     )
 {
@@ -414,17 +390,16 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory(
 	IWICBitmap            *ppIBitmap = NULL;
 
 
-
 	if (SUCCEEDED(hr))
 	{
 		// Create the initial frame.
 		hr = pIWICFactory->CreateBitmapFromMemory(
-			width,
-			height,
+			_bitmapSource.width,
+			_bitmapSource.height,
 			GUID_WICPixelFormat16bppGray,
-			width*2,
-			height*width*2,
-			data,
+			_bitmapSource.width * 2,
+			_bitmapSource.height * _bitmapSource.width * 2,
+			reinterpret_cast<BYTE*>(_bitmapSource.addr),
 			&ppIBitmap
 		);
 	}
@@ -460,4 +435,12 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory(
 	SafeRelease(&ppIBitmap);
 
     return hr;
+}
+
+void Direct2dViewer::setBitmapSource(void *addr, UINT width, UINT height)
+{
+	_bitmapSource.addr = addr;
+	_bitmapSource.width = width;
+	_bitmapSource.height = height;
+	return;
 }
