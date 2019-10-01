@@ -555,6 +555,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ccdctrl.h" />
+    <ClInclude Include="Ccdexamp.h" />
     <ClInclude Include="Direct2dViewer.h" />
     <ClInclude Include="Direct2dViewer_c.h" />
     <ClInclude Include="Global.h" />
