@@ -79,6 +79,7 @@ public:
     ~Direct2dViewer();
 
     HRESULT Initialize();
+	void ShowViewer();
 
     void RunMessageLoop();
 

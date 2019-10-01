@@ -130,8 +130,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 	//	AboutDrv(choosen_board);		//shows driver version and Board ID
 
 	//initialize 2D Viewer
-	void* Direct2dViewer = Direct2dViewer_new();
-	Direct2dViewer_Initialize(Direct2dViewer);
+	Direct2dViewer = Direct2dViewer_new();
 
 	// init high resolution counter 	
 //	TPS = InitHRCounter();
@@ -655,99 +654,104 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
 	   //MessageBox(hMSWND, s, "Position", MB_OK);
 	   break;
 
-      case WM_COMMAND :
-              switch( LOWORD( wParam ) )
-              {
+		case WM_COMMAND :
+			switch( LOWORD( wParam ) )
+            {
 #ifndef _DLL
-                 case IDM_ABOUT :
-				 		DialogBox( hInst, "AboutBox", hWnd, (DLGPROC)About );
-						AboutDrv(choosen_board);
-						break;
+				case IDM_ABOUT :
+					DialogBox( hInst, "AboutBox", hWnd, (DLGPROC)About );
+					AboutDrv(choosen_board);
+					break;
 
-                 case IDM_ABOUTTIME :
-					    AboutTiming(hWnd);
-						break;
+				case IDM_ABOUTTIME :
+					AboutTiming(hWnd);
+					break;
 
-                 case IDM_ABOUTKEYS :
-					    AboutKeys(hWnd);
-						break;
+				case IDM_ABOUTKEYS :
+					AboutKeys(hWnd);
+					break;
 
-	             case IDM_ABOUTS0 :
-					    AboutS0(choosen_board);
-						break;
+				case IDM_ABOUTS0 :
+					AboutS0(choosen_board);
+					break;
 
-				 case IDM_ABOUTDMA:
-					 AboutDMA(hWnd);
-					 break;
+				case IDM_ABOUTDMA:
+					AboutDMA(hWnd);
+					break;
 
 
-				 case IDM_ABOUTCFS:
-					 AboutCFS(hWnd);
-					 break;
+				case IDM_ABOUTCFS:
+					AboutCFS(hWnd);
+					break;
 #else
-			  case IDM_ABOUT:
-				  DialogBox(hInst, "AboutBox", hWnd, (DLGPROC)About);
-				  DLLAboutDrv(choosen_board);
-				  break;
+				case IDM_ABOUT:
+					DialogBox(hInst, "AboutBox", hWnd, (DLGPROC)About);
+					DLLAboutDrv(choosen_board);
+					break;
 
-			  case IDM_ABOUTTIME:
-				  AboutTiming(hWnd);
-				  break;
+				case IDM_ABOUTTIME:
+					AboutTiming(hWnd);
+					break;
 
-			  case IDM_ABOUTKEYS:
-				  AboutKeys(hWnd);
-				  break;
+				case IDM_ABOUTKEYS:
+					AboutKeys(hWnd);
+					break;
 
-			  case IDM_ABOUTS0:
-				  DLLAboutS0(choosen_board);
-				  break;
+				case IDM_ABOUTS0:
+					DLLAboutS0(choosen_board);
+					break;
 
-			  case IDM_ABOUTDMA:
-				  AboutDMA(hWnd);
-				  break;
+				case IDM_ABOUTDMA:
+					AboutDMA(hWnd);
+					break;
 
 
-			  case IDM_ABOUTCFS:
-				  AboutCFS(hWnd);
-				  break;
+				case IDM_ABOUTCFS:
+					AboutCFS(hWnd);
+					break;
 #endif
 
-				 case IDM_START :
-						if (! Running) Contimess(&dummy);
-						break;
+				case IDM_START :
+					if (! Running) Contimess(&dummy);
+					break;
 
-				 case IDM_SETEXP :
-				 		DialogBox( hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, (DLGPROC)SetupMeasure);
-						break;
+				case IDM_SETEXP :
+					DialogBox( hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, (DLGPROC)SetupMeasure);
+					break;
 
-				 case IDM_SETTLEVEL :
-				 		DialogBox( hInst, MAKEINTRESOURCE(IDD_SETTEMP), hWnd, (DLGPROC)SetupTLevel);
-						break;
+				case IDM_SETTLEVEL :
+					DialogBox( hInst, MAKEINTRESOURCE(IDD_SETTEMP), hWnd, (DLGPROC)SetupTLevel);
+					break;
 	
-				 case IDM_SETEC :
-					 DialogBox(hInst, MAKEINTRESOURCE(IDD_SETEC), hWnd, (DLGPROC)SetupEC);   //IDD_SETEC
-						break;	
-				 case ID_START_ALLOC:
-					 DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hWnd, (DLGPROC)AllocateBuf);//
-					 break;
+				case IDM_SETEC :
+					DialogBox(hInst, MAKEINTRESOURCE(IDD_SETEC), hWnd, (DLGPROC)SetupEC);   //IDD_SETEC
+					break;	
+				case ID_START_ALLOC:
+					DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hWnd, (DLGPROC)AllocateBuf);//
+					break;
 
 
-				 case ID_CHOOSEBOARD :
-					 DialogBox(hInst, MAKEINTRESOURCE(IDD_CHOOSEBOARD), hWnd, (DLGPROC)ChooseBoard);
-					 break;
+				case ID_CHOOSEBOARD :
+					DialogBox(hInst, MAKEINTRESOURCE(IDD_CHOOSEBOARD), hWnd, (DLGPROC)ChooseBoard);
+					break;
 
 				case IDM_ShowTRMS : //invert state
-					 if (ShowTrms==TRUE) 
-						{ShowTrms=FALSE;}
-					   else
-						{ShowTrms=TRUE;}
-						break;
+					if (ShowTrms==TRUE) 
+					{ShowTrms=FALSE;}
+					else
+					{ShowTrms=TRUE;}
+					break;
 
+				case ID_VIEW_2DVIEWER :
+					Direct2dViewer_Initialize(Direct2dViewer);
+
+					//Direct2dViewer_show(Direct2dViewer);
+					break;
 				
-				 case IDM_EXIT :
+				case IDM_EXIT :
 
-                        DestroyWindow( hWnd );
-                        break;
+					DestroyWindow( hWnd );
+					break;
 			  }
               break;
 

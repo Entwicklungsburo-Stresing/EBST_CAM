@@ -119,6 +119,12 @@ HRESULT Direct2dViewer::Initialize()
     return hr;
 }
 
+// not used
+void Direct2dViewer::ShowViewer() {
+	ShowWindow(m_hwnd, SW_HIDE); //SW_SHOWNORMAL
+	UpdateWindow(m_hwnd);
+}
+
 
 //
 // Create resources which are not bound
@@ -337,7 +343,7 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
     }
     else
     {
-        Direct2dViewer *pDemoApp = reinterpret_cast<Direct2dViewer *>(static_cast<LONG_PTR>(
+        Direct2dViewer *D2DV = reinterpret_cast<Direct2dViewer *>(static_cast<LONG_PTR>(
             ::GetWindowLongPtrW(
                 hwnd,
                 GWLP_USERDATA
@@ -345,7 +351,7 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
 
         bool wasHandled = false;
 
-        if (pDemoApp)
+        if (D2DV)
         {
             switch (message)
             {
@@ -353,7 +359,7 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
                 {
                     UINT width = LOWORD(lParam);
                     UINT height = HIWORD(lParam);
-                    pDemoApp->OnResize(width, height);
+                    D2DV->OnResize(width, height);
                 }
                 result = 0;
                 wasHandled = true;
@@ -364,7 +370,7 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
                 {
                     PAINTSTRUCT ps;
                     BeginPaint(hwnd, &ps);
-                    pDemoApp->OnRender();
+                    D2DV->OnRender();
                     EndPaint(hwnd, &ps);
                 }
                 result = 0;
@@ -372,11 +378,11 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
                 break;
 
             case WM_DESTROY:
-                {
-                    PostQuitMessage(0);
-                }
-                result = 1;
-                wasHandled = true;
+                //{
+                //    PostQuitMessage(0);
+                //}
+                //result = 1;
+                ////wasHandled = true;
                 break;
             }
         }
