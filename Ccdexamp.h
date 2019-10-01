@@ -45,6 +45,8 @@ HWND     hwndTrack2;
 DWORD cur_nospb = 0;
 DWORD cur_nob = 0;
 
+void* Direct2dViewer;
+
 // function declerations
 BOOL RegisterWin95(CONST WNDCLASS* lpwc);
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow);
