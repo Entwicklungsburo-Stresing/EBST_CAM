@@ -547,19 +547,17 @@
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</BrowseInformation>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='DLL_Release|x64'">true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="cppTest.cpp" />
-    <ClCompile Include="cpp_connector.cpp" />
     <ClCompile Include="Direct2dViewer.cpp" />
+    <ClCompile Include="Direct2dViewer_c.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CCDExamp.rc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ccdctrl.h" />
-    <ClInclude Include="cppTest.h" />
     <ClInclude Include="Direct2dViewer.h" />
+    <ClInclude Include="Direct2dViewer_c.h" />
     <ClInclude Include="Global.h" />
-    <ClInclude Include="cpp_connector.h" />
     <ClInclude Include="lscpciej_lib.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
