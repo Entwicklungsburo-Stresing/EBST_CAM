@@ -1,0 +1,53 @@
+#pragma once
+
+#include <windows.h> 
+#include <stdlib.h> 
+#include <conio.h>
+#include <string.h>
+#include <stdio.h>
+#include <process.h>	  // for Thread example
+#include <CommCtrl.h>
+#include "resource.h"
+#include "GLOBAL.h" 
+#include "CCDUNIT.C"
+#include "Direct2dViewer_c.h"
+
+#ifdef _DLL
+UINT8 NUMBER_OF_BOARDS = 0;
+
+ULONG aFLAG816[5] = { 1, 1, 1, 1, 1 };  //AD-Flag
+ULONG aPIXEL[5] = { 0, 0, 0, 0, 0 };	// pixel
+ULONG aXCKDelay[5] = { 1000, 1000, 1000, 1000, 1000 };	// sensor specific delay
+BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
+#else
+#include "BOARD.C"
+#endif
+
+#if defined (WIN32)
+#define IS_WIN32 TRUE
+#else
+#define IS_WIN32 FALSE
+#endif
+
+#define IS_NT      IS_WIN32 && (BOOL)(GetVersion() < 0x80000000)
+#define IS_WIN32S  IS_WIN32 && (BOOL)(!(IS_NT) && (LOBYTE(LOWORD(GetVersion()))<4))
+#define IS_WIN95   (BOOL)(!(IS_NT) && !(IS_WIN32S)) && IS_WIN32
+
+// global variables
+HINSTANCE hInst;   // current instance
+
+LPCTSTR lpszAppName = "CCDEXAMP";
+LPCTSTR lpszTitle = "CCDEXAMP";
+
+HWND     hwndTrack;
+HWND     hwndTrack2;
+
+DWORD cur_nospb = 0;
+DWORD cur_nob = 0;
+
+// function declerations
+BOOL RegisterWin95(CONST WNDCLASS* lpwc);
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow);
+BOOL InitApplication(HINSTANCE hInstance);
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow);
+LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

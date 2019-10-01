@@ -1,169 +1,141 @@
 /* simple window App for calling CCDlsc Driver via Jungo driver
 	Version 1.0		© Entwicklungsbuero G. Stresing	1/16
 */
+#include "Ccdexamp.h"
 
-#include <windows.h> 
-#include <stdlib.h> 
-#include <conio.h>
-#include <string.h>
-#include <stdio.h>
-#include <process.h>	  // for Thread example
-#include <CommCtrl.h>
-
-#include "resource.h"
-#include "GLOBAL.h" 
-#include "CCDUNIT.C"
-#include "Direct2dViewer_c.h"
-
-#ifdef _DLL
-	UINT8 NUMBER_OF_BOARDS = 0;
-
-	ULONG aFLAG816[5] = { 1, 1, 1, 1, 1 };  //AD-Flag
-	ULONG aPIXEL[5] = { 0, 0, 0, 0, 0 };	// pixel
-	ULONG aXCKDelay[5] = { 1000, 1000, 1000, 1000, 1000 };	// sensor specific delay
-	BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
-#else
-	#include "BOARD.C"
-#endif
-
-
-
-#if defined (WIN32)
-	#define IS_WIN32 TRUE
-#else
-	#define IS_WIN32 FALSE
-#endif
-
-#define IS_NT      IS_WIN32 && (BOOL)(GetVersion() < 0x80000000)
-#define IS_WIN32S  IS_WIN32 && (BOOL)(!(IS_NT) && (LOBYTE(LOWORD(GetVersion()))<4))
-#define IS_WIN95   (BOOL)(!(IS_NT) && !(IS_WIN32S)) && IS_WIN32
-
-
-HINSTANCE hInst;   // current instance
-
-LPCTSTR lpszAppName  = "CCDEXAMP";
-LPCTSTR lpszTitle    = "CCDEXAMP"; 
-
-HWND     hwndTrack;
-HWND     hwndTrack2;
-HWND     hwndTrack2dViewer;
-
-
-DWORD cur_nospb = 0;
-DWORD cur_nob = 0;
-
-BOOL RegisterWin95( CONST WNDCLASS* lpwc );
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
                       LPTSTR lpCmdLine, int nCmdShow)
 {
-   MSG      msg;
-   HWND     hWnd; 
-   WNDCLASS wc;
+	MSG      msg;
+
+	if (!InitApplication(hInstance))
+		return FALSE;
+
+	//show allocate buffer dialog before entering main application
+	DialogBox(hInstance, MAKEINTRESOURCE(IDD_ALLOCBBUF), hMSWND, (DLGPROC)AllocateBuf);
+
+	if (!InitInstance(hInstance, nCmdShow))
+		return FALSE;
+
+	while( GetMessage( &msg, NULL, 0, 0) )   
+	{
+		TranslateMessage( &msg );			// exit is the only message
+		DispatchMessage( &msg );  
+	}
+   return( msg.wParam ); 
+}	// END WinMain
 
 
-   // Register the main application window class.
-   //............................................
-   wc.style         = CS_HREDRAW | CS_VREDRAW;
-   wc.lpfnWndProc   = (WNDPROC)WndProc;       
-   wc.cbClsExtra    = 0;                      
-   wc.cbWndExtra    = 0;                      
-   wc.hInstance     = hInstance;              
-   wc.hIcon         = LoadIcon( hInstance, lpszAppName ); 
-   wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
-   wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
-   wc.lpszMenuName  = lpszAppName;              
-   wc.lpszClassName = lpszAppName;              
 
-   if ( IS_WIN95 )
-   {
-      if ( !RegisterWin95( &wc ) )
-         return( FALSE );
-   }
-   else if ( !RegisterClass( &wc ) )
-      return( FALSE );
+BOOL InitApplication(HINSTANCE hInstance) {
+
+	WNDCLASS wc;
+
+
+	// Register the main application window class.
+	//............................................
+	wc.style = CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc = (WNDPROC)WndProc;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hInstance = hInstance;
+	wc.hIcon = LoadIcon(hInstance, lpszAppName);
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wc.lpszMenuName = lpszAppName;
+	wc.lpszClassName = lpszAppName;
+
+	if (IS_WIN95)
+	{
+		if (!RegisterWin95(&wc))
+			return(FALSE);
+	}
+	else if (!RegisterClass(&wc))
+		return(FALSE);
 
 #ifdef _DLL
-   NUMBER_OF_BOARDS = DLLCCDDrvInit(DRV);
+	NUMBER_OF_BOARDS = DLLCCDDrvInit(DRV);
 
-   if (NUMBER_OF_BOARDS < 1)
-   {
-	   DLLErrorMsg(" Can't open CCD driver ");
-	   return (FALSE);
-   };
-
-   if (!DLLInitBoard(DRV, _PIXEL, FLAG816, 0, aXCKDelay))//pclk is not used
-   {
-	   DLLErrorMsg(" Can't set Boardvars in intiboard ");
-	   return (FALSE);
-   };
-#else
-  if (! CCDDrvInit()) 
-		{ErrorMsg(" Can't open CCD driver ");
+	if (NUMBER_OF_BOARDS < 1)
+	{
+		DLLErrorMsg(" Can't open CCD driver ");
 		return (FALSE);
-		};
+	};
+
+	if (!DLLInitBoard(DRV, _PIXEL, FLAG816, 0, aXCKDelay))//pclk is not used
+	{
+		DLLErrorMsg(" Can't set Boardvars in intiboard ");
+		return (FALSE);
+	};
+#else
+	if (!CCDDrvInit())
+	{
+		ErrorMsg(" Can't open CCD driver ");
+		return (FALSE);
+	};
 
 
-  if (!InitBoard(1))
-  {
-	  ErrorMsg(" Can't open first board ");
-	  return (FALSE);
-  };
-  if (NUMBER_OF_BOARDS >= 2)
-	  if (!InitBoard(2))
-	  {
-		  ErrorMsg(" Can't open second board ");
-		  return (FALSE);
-	  }
+	if (!InitBoard(1))
+	{
+		ErrorMsg(" Can't open first board ");
+		return (FALSE);
+	};
+	if (NUMBER_OF_BOARDS >= 2)
+		if (!InitBoard(2))
+		{
+			ErrorMsg(" Can't open second board ");
+			return (FALSE);
+		}
 
 #endif
- 
-
-   hInst = hInstance; 
-  DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hMSWND, (DLGPROC)AllocateBuf);
-
-   // Create the main application window.
-   //....................................
-   hWnd = CreateWindow( lpszAppName, 
-                        lpszTitle,    
-                        WS_OVERLAPPEDWINDOW, 
-                        CW_USEDEFAULT, 0, 
-                        XLENGTH/XOFF+40 , YLENGTH + 220,//640/380,  
-                        NULL,              
-                        NULL,              
-                        hInstance,         
-                        NULL               
-                      );
-
-   if ( !hWnd )  return( FALSE );
+	return TRUE;
+}
 
 
-//RSInterface(choosen_board);
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 
-//	if (! InitBoard(choosen_board)) //Error message in InitBoard
-//		return (FALSE); 
+	HWND     hWnd;
 
- 
+	// Save the application-instance handle. 
+	hInst = hInstance;
+
+	// Create the main application window.
+	//....................................
+	hWnd = CreateWindow(lpszAppName,
+		lpszTitle,
+		WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, 0,
+		XLENGTH / XOFF + 40, YLENGTH + 220,//640/380,  
+		NULL,
+		NULL,
+		hInstance,
+		NULL
+	);
+
+	if (!hWnd)  return(FALSE);
+
+
+	//RSInterface(choosen_board);
+	//	if (! InitBoard(choosen_board)) //Error message in InitBoard
+	//		return (FALSE); 
 
 	//set global handle for our window
 	// must be outside the thread
 	hMSWND = hWnd;
-	hMSDC = GetDC(hMSWND) ;
+	hMSDC = GetDC(hMSWND);
 
-	ShowWindow( hWnd, nCmdShow ); 
-	UpdateWindow( hWnd );
-//	AboutDrv(choosen_board);		// shows driver version and Board ID
+	ShowWindow(hWnd, nCmdShow);
+	UpdateWindow(hWnd);
+	//	AboutDrv(choosen_board);		//shows driver version and Board ID
 
+	//initialize 2D Viewer
 	void* Direct2dViewer = Direct2dViewer_new();
 	Direct2dViewer_Initialize(Direct2dViewer);
 
 	// init high resolution counter 	
 //	TPS = InitHRCounter();
 //	if (TPS==0) return (FALSE);
-
-
-
-
 
 /*
 	CloseShutter(choosen_board); //set cooling  off
@@ -173,21 +145,11 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	if (_AD16cds)  {//resets EC reg!
 					InitCDS_AD(choosen_board, m_SHA,m_Amp,m_Ofs,m_TIgain);
-					OpenShutter(choosen_board);	//IFC must be hi or EC would not work				
+					OpenShutter(choosen_board);	//IFC must be hi or EC would not work
 					}
 */
-
-	while( GetMessage( &msg, NULL, 0, 0) )   
-	{
-		TranslateMessage( &msg );			// exit is the only message
-		DispatchMessage( &msg );  
-	}
-
-   return( msg.wParam ); 
-}	// END WinMain
-
-
-
+	return TRUE;
+}
 
 
 BOOL RegisterWin95( CONST WNDCLASS* lpwc )
