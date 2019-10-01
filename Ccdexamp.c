@@ -13,7 +13,7 @@
 #include "resource.h"
 #include "GLOBAL.h" 
 #include "CCDUNIT.C"
-#include "cpp_connector.h"
+#include "Direct2dViewer_c.h"
 
 #ifdef _DLL
 	UINT8 NUMBER_OF_BOARDS = 0;
@@ -46,6 +46,7 @@ LPCTSTR lpszTitle    = "CCDEXAMP";
 
 HWND     hwndTrack;
 HWND     hwndTrack2;
+HWND     hwndTrack2dViewer;
 
 
 DWORD cur_nospb = 0;
@@ -153,9 +154,8 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	UpdateWindow( hWnd );
 //	AboutDrv(choosen_board);		// shows driver version and Board ID
 
-	//show cpp test window:
-	void* testcpp = testcpp_new();
-	createNewWindow_c(testcpp);
+	void* Direct2dViewer = Direct2dViewer_new();
+	Direct2dViewer_Initialize(Direct2dViewer);
 
 	// init high resolution counter 	
 //	TPS = InitHRCounter();
@@ -185,6 +185,9 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
    return( msg.wParam ); 
 }	// END WinMain
+
+
+
 
 
 BOOL RegisterWin95( CONST WNDCLASS* lpwc )
