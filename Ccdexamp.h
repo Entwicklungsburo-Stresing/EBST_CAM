@@ -36,6 +36,7 @@ BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
 
 #define TESTBITMAP_WIDTH 1000
 #define TESTBITMAP_HEIGTH 200
+#define TESTBITMAP_BLOCKS 5
 
 // global variables
 HINSTANCE hInst;   // current instance
@@ -50,7 +51,7 @@ DWORD cur_nospb = 0;
 DWORD cur_nob = 0;
 
 void* Direct2dViewer;
-uint16_t testbitmap[TESTBITMAP_WIDTH * TESTBITMAP_HEIGTH];
+uint16_t testbitmap[TESTBITMAP_WIDTH * TESTBITMAP_HEIGTH * TESTBITMAP_BLOCKS];
 
 // function declerations
 BOOL RegisterWin95(CONST WNDCLASS* lpwc);
