@@ -90,12 +90,12 @@ BOOL DISP2 = TRUE;		//display 2 cameras parallel, TRUE for double line
 #define MAXPCIECARDS 5
 
 
-	typedef USHORT ArrayT; //!! USHORT for linear 12/16bit word array or resort or highest speed
-	#define MAXVAL USHRT_MAX
+typedef USHORT ArrayT; //!! USHORT for linear 12/16bit word array or resort or highest speed
+#define MAXVAL USHRT_MAX
 
-	BOOL contimess_run_once = FALSE;
+BOOL contimess_run_once = FALSE;
 
-typedef ArrayT* pArrayT; 
+typedef ArrayT* pArrayT;
 //!! long for standard 
 
 struct ffloopparams {
@@ -124,7 +124,7 @@ ULONG DisplData[2][_PIXEL];//array for display for 2 cams parallel
 //this is the read from FIFO frequency
 static BOOL SYM_PULSE = FALSE;		// read FIFO is allways higest speed
 static BOOL BURSTMODE = TRUE;
-static 	unsigned long WAITS = 0x0;	
+static 	unsigned long WAITS = 0x0;
 
 
 
@@ -184,13 +184,13 @@ static	unsigned long _FKT = 1;		// -1:clearread, 0:datab=0, 1:read 5: testdata
 //static	unsigned long ZADR = 1;		// Adress for adressed mode
 									//for IR ZADR=0 -> both channels
 
-											
+
 
 // parameter for Loop
 static int ADDREP = 1;			 	//addition loop for fkt=2; 1 else
 BOOL EXTTRIGFLAG = FALSE;		// run with external Trigger
 									// DELAYMS is here wait after trigger!
-int TrigMod=0;						//pos slope
+int TrigMod = 0;						//pos slope
 //static BOOL HISLOPE = TRUE;			// Slope for external Trigger
 
 static BOOL HIAMP = FALSE;			// Amplification for switchable sensors
@@ -200,13 +200,13 @@ static BOOL HIAMP = FALSE;			// Amplification for switchable sensors
 __int64 TPS = 0;				// ticks per second; is set in InitHRCounter
 __int64 START = 0;				// global variable for sync to systemtimer
 //__int64 DELAY = 0;			   //also set in InitHRCounter
-__int64 TICKSDISP =0;			//display time in ticks
+__int64 TICKSDISP = 0;			//display time in ticks
 
 
 // Display data
 static BOOL PLOTFLAG = TRUE;		// TRUE for dense, FALSE for dots
 int XOFF = 1;// _PIXEL / 600;			// index offset for display	
-int XStart =0;						//start index of display
+int XStart = 0;						//start index of display
 static int	LOX = 21;				// left upper x-corner of plot
 static int	LOY = 41;				// left upper x-corner of plot
 static unsigned int XLENGTH = 1100;			// x-width of  plot
@@ -223,25 +223,25 @@ BOOL PixelOdd = FALSE;				//display offset
 
 //for ReadSoftFifo example
 int ExpTime = 100; //in µs
-__int16 Releasems =1; //>=1	>1 or keyboard does not work - could be exposuretime	
+__int16 Releasems = 1; //>=1	>1 or keyboard does not work - could be exposuretime	
 ULONG Threadp = 31;  //<=15  8=default,15=highest in current process,31=time critical
 
-int TempLevel =0;
+int TempLevel = 0;
 #define _COOLER FALSE
 
 //for 2 thread display
 BOOL GetNextScan = FALSE;
-BOOL Running=FALSE;
-BOOL UpdateDispl=FALSE;
+BOOL Running = FALSE;
+BOOL UpdateDispl = FALSE;
 
 //for trms calcs
 #define TRMSpix  1 //(8-1)*150-100// _PIXEL/2	//pixel no for which the rms value is sampled
 
 #define NOS  300  //number of samples for trms calcs
-ULONG m_lfdTrmsNr=0;
+ULONG m_lfdTrmsNr = 0;
 double TRMSval[2];
 ULONG TRMSVals[2][NOS];
-BOOL ShowTrms=FALSE;
+BOOL ShowTrms = FALSE;
 
 //globals for cds setup
 //BOOL m_SHA = TRUE;  //TRUE for SHA, FALSE for CDS
@@ -250,16 +250,16 @@ BOOL ShowTrms=FALSE;
 //UINT m_TIgain =0;
 
 // globals for EC control with FIFO
-ULONG	tDAT=0; // delay after trigger
-ULONG	tXDLY=0; // exposure control for special sensors: PDA, ILC6, TH78xx
+ULONG	tDAT = 0; // delay after trigger
+ULONG	tXDLY = 0; // exposure control for special sensors: PDA, ILC6, TH78xx
 //ULONG   tECADJ=0; //delay adjust for EC
-BYTE	tTICNT=0; // trigger input divider
-BYTE	tTOCNT=0; // trigger output divider
-int m_TOmodus=1; //trigger out plug signal
-int m_ECTrigmodus=1;
-int m_ECmodus=1;
+BYTE	tTICNT = 0; // trigger input divider
+BYTE	tTOCNT = 0; // trigger output divider
+int m_TOmodus = 1; //trigger out plug signal
+int m_ECTrigmodus = 1;
+int m_ECmodus = 1;
 
-BOOL m_noPDARS=FALSE;
+BOOL m_noPDARS = FALSE;
 
 
 
@@ -269,7 +269,7 @@ HWND hMSWND; // global stored measure HWND of our window
 HANDLE hTHREAD;
 HANDLE hPROCESS;
 
-HANDLE hCopyToDispBuf ;//Mutex for data buffer write
+HANDLE hCopyToDispBuf;//Mutex for data buffer write
 
 
 
@@ -293,7 +293,7 @@ pArrayT pBLOCKBUF[3] = { NULL, NULL, NULL };
 PUSHORT pDMABigBufBase[3]; //not for dll
 
 //DWORD dwDMABufSize;// = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
-ULONG DisplData[2][1200*CAMCNT];//array for display for 2 cams parallel
+ULONG DisplData[2][1200 * CAMCNT];//array for display for 2 cams parallel
 
 //delete after deleting ringreadthread									// array type is defined in board.h
 //ArrayT DIODEN[_MAXDB][1200];		// global data array, could be 1 or 2 dim
@@ -310,22 +310,22 @@ ULONG TLPSIZE = 0x20;
 
 
 // Prototypes 
-LRESULT CALLBACK WndProc  (HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK About    (HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK SetupMeasure( HWND hDlg,           
-                        UINT message,        
-                        WPARAM wParam,       
-                        LPARAM lParam);
+LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK About(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK SetupMeasure(HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam);
 
-LRESULT CALLBACK SetupTLevel( HWND hDlg,           
-                        UINT message,        
-                        WPARAM wParam,       
-                        LPARAM lParam);
+LRESULT CALLBACK SetupTLevel(HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam);
 
-LRESULT CALLBACK SetupEC( HWND hDlg,           
-                        UINT message,        
-                        WPARAM wParam,       
-                        LPARAM lParam);
+LRESULT CALLBACK SetupEC(HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam);
 LRESULT CALLBACK AllocateBuf(HWND hDlg,
 	UINT message,
 	WPARAM wParam,
