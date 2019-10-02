@@ -40,15 +40,15 @@
 template<class Interface>
 inline void
 SafeRelease(
-    Interface **ppInterfaceToRelease
-    )
+	Interface **ppInterfaceToRelease
+)
 {
-    if (*ppInterfaceToRelease != NULL)
-    {
-        (*ppInterfaceToRelease)->Release();
+	if (*ppInterfaceToRelease != NULL)
+	{
+		(*ppInterfaceToRelease)->Release();
 
-        (*ppInterfaceToRelease) = NULL;
-    }
+		(*ppInterfaceToRelease) = NULL;
+	}
 }
 
 #ifndef Assert
@@ -74,13 +74,13 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 class Direct2dViewer
 {
 public:
-    Direct2dViewer();
-    ~Direct2dViewer();
+	Direct2dViewer();
+	~Direct2dViewer();
 
-    HRESULT Initialize();
+	HRESULT Initialize();
 	void ShowViewer();
 
-    void RunMessageLoop();
+	void RunMessageLoop();
 
 	void setBitmapSource(
 		void *addr,
@@ -89,38 +89,38 @@ public:
 	);
 
 private:
-    HRESULT CreateDeviceIndependentResources();
-    HRESULT CreateDeviceResources();
+	HRESULT CreateDeviceIndependentResources();
+	HRESULT CreateDeviceResources();
 
-    void DiscardDeviceResources();
+	void DiscardDeviceResources();
 
-    HRESULT OnRender();
+	HRESULT OnRender();
 
-    void OnResize(
-        UINT width,
-        UINT height
-        );
+	void OnResize(
+		UINT width,
+		UINT height
+	);
 
-    static LRESULT CALLBACK WndProc(
-        HWND hWnd,
-        UINT message,
-        WPARAM wParam,
-        LPARAM lParam
-        );
+	static LRESULT CALLBACK WndProc(
+		HWND hWnd,
+		UINT message,
+		WPARAM wParam,
+		LPARAM lParam
+	);
 
-    HRESULT Load16bitGreyscaleBitmapFromMemory(
-        ID2D1RenderTarget *pRenderTarget,
+	HRESULT Load16bitGreyscaleBitmapFromMemory(
+		ID2D1RenderTarget *pRenderTarget,
 		IWICImagingFactory *pIWICFactory,
-        ID2D1Bitmap **ppBitmap
-        );
+		ID2D1Bitmap **ppBitmap
+	);
 
 private:
-    HWND m_hwnd;
-    ID2D1Factory *m_pD2DFactory;
-    IWICImagingFactory *m_pWICFactory;
-    IDWriteFactory *m_pDWriteFactory;
-    ID2D1HwndRenderTarget *m_pRenderTarget;
-    ID2D1Bitmap *m_pBitmap;
+	HWND m_hwnd;
+	ID2D1Factory *m_pD2DFactory;
+	IWICImagingFactory *m_pWICFactory;
+	IDWriteFactory *m_pDWriteFactory;
+	ID2D1HwndRenderTarget *m_pRenderTarget;
+	ID2D1Bitmap *m_pBitmap;
 
 	struct _BitmapSource
 	{
