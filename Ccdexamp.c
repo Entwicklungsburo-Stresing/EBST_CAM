@@ -4,8 +4,8 @@
 #include "Ccdexamp.h"
 
 
-int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
-                      LPTSTR lpCmdLine, int nCmdShow)
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+	LPTSTR lpCmdLine, int nCmdShow)
 {
 	MSG      msg;
 
@@ -18,12 +18,12 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	if (!InitInstance(hInstance, nCmdShow))
 		return FALSE;
 
-	while( GetMessage( &msg, NULL, 0, 0) )   
+	while (GetMessage(&msg, NULL, 0, 0))
 	{
-		TranslateMessage( &msg );			// exit is the only message
-		DispatchMessage( &msg );  
+		TranslateMessage(&msg);			// exit is the only message
+		DispatchMessage(&msg);
 	}
-   return( msg.wParam ); 
+	return(msg.wParam);
 }	// END WinMain
 
 
@@ -152,74 +152,74 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 }
 
 
-BOOL RegisterWin95( CONST WNDCLASS* lpwc )
+BOOL RegisterWin95(CONST WNDCLASS* lpwc)
 {
-   WNDCLASSEX wcex;
+	WNDCLASSEX wcex;
 
-   wcex.style         = lpwc->style;
-   wcex.lpfnWndProc   = lpwc->lpfnWndProc;
-   wcex.cbClsExtra    = lpwc->cbClsExtra;
-   wcex.cbWndExtra    = lpwc->cbWndExtra;
-   wcex.hInstance     = lpwc->hInstance;
-   wcex.hIcon         = lpwc->hIcon;
-   wcex.hCursor       = lpwc->hCursor;
-   wcex.hbrBackground = lpwc->hbrBackground;
-   wcex.lpszMenuName  = lpwc->lpszMenuName;
-   wcex.lpszClassName = lpwc->lpszClassName;
+	wcex.style = lpwc->style;
+	wcex.lpfnWndProc = lpwc->lpfnWndProc;
+	wcex.cbClsExtra = lpwc->cbClsExtra;
+	wcex.cbWndExtra = lpwc->cbWndExtra;
+	wcex.hInstance = lpwc->hInstance;
+	wcex.hIcon = lpwc->hIcon;
+	wcex.hCursor = lpwc->hCursor;
+	wcex.hbrBackground = lpwc->hbrBackground;
+	wcex.lpszMenuName = lpwc->lpszMenuName;
+	wcex.lpszClassName = lpwc->lpszClassName;
 
-   // Added elements for Windows 95.
-   //...............................
-   wcex.cbSize = sizeof(WNDCLASSEX);
-   wcex.hIconSm = LoadImage(wcex.hInstance, lpwc->lpszClassName, 
-                            IMAGE_ICON, 16, 16,
-                            LR_DEFAULTCOLOR );
-			
-   return RegisterClassEx( &wcex );
+	// Added elements for Windows 95.
+	//...............................
+	wcex.cbSize = sizeof(WNDCLASSEX);
+	wcex.hIconSm = LoadImage(wcex.hInstance, lpwc->lpszClassName,
+		IMAGE_ICON, 16, 16,
+		LR_DEFAULTCOLOR);
+
+	return RegisterClassEx(&wcex);
 }
 
 void AboutTiming(HWND hWnd)
 {
-int j=0;
-char fn[260];
-ULONG TDispus=0;
+	int j = 0;
+	char fn[260];
+	ULONG TDispus = 0;
 
 #ifdef _DLL
 	TDispus = DLLTickstous(TICKSDISP); // in us
 #else
 	TDispus = Tickstous(TICKSDISP); // in us
 #endif
-j=sprintf_s(fn,260,"Timing  \n");
-//j+=sprintf(fn+j,"treadpix:\t\t%04d ns \n",TReadPix);
-j+=sprintf_s(fn+j,260,"tdisplay:\t\t%06d µs \n",TDispus);
-j+=sprintf_s(fn+j,260,"exp. time:\t\t%04d ms ",ExpTime);
-MessageBox(hWnd,fn,"time",MB_OK);	
+	j = sprintf_s(fn, 260, "Timing  \n");
+	//j+=sprintf(fn+j,"treadpix:\t\t%04d ns \n",TReadPix);
+	j += sprintf_s(fn + j, 260, "tdisplay:\t\t%06d µs \n", TDispus);
+	j += sprintf_s(fn + j, 260, "exp. time:\t\t%04d ms ", ExpTime);
+	MessageBox(hWnd, fn, "time", MB_OK);
 }
 
 
 void AboutKeys(HWND hWnd)
 {
-int j=0;
+	int j = 0;
 #define s_size 1000
-char fn[s_size];
+	char fn[s_size];
 
 
-j=sprintf_s(fn,s_size,"F- Keys  \n");
-j+=sprintf_s(fn+j,s_size,"F1 : timing info \n");
-j+=sprintf_s(fn+j,s_size,"F2 : activate cooling \n");
-j+=sprintf_s(fn+j,s_size,"F3 : deactivate cooling \n");
-j+=sprintf_s(fn+j,s_size,"F4 : check cool good? \n");
-//j+=sprintf_s(fn+j,s_size,"F5 : send IR Setup \n");
-j+=sprintf_s(fn+j,s_size,"F6 : start measure \n");
-j+=sprintf_s(fn+j,s_size,"F7 : high amp on \n");
-j+=sprintf_s(fn+j,s_size,"F8 : high amp off \n");
-j+=sprintf_s(fn+j,s_size,"arrow up : change X-scale span\n");
-j+=sprintf_s(fn+j,s_size,"arrow dn : change X-scale span\n");
-j+=sprintf_s(fn+j,s_size,"arrow up : change X-scale offset\n");
-j+=sprintf_s(fn+j,s_size,"arrow dn : change X-scale offset\n");
-j+=sprintf_s(fn+j,s_size,"shift + arrow up : change Y-scale span\n");
-j+=sprintf_s(fn+j,s_size,"shift + arrow dn : change Y-scale span\n");
-j+=sprintf_s(fn+j,s_size,"\n");
-MessageBox(hWnd,fn,"time",MB_OK);	
+	j = sprintf_s(fn, s_size, "F- Keys  \n");
+	j += sprintf_s(fn + j, s_size, "F1 : timing info \n");
+	j += sprintf_s(fn + j, s_size, "F2 : activate cooling \n");
+	j += sprintf_s(fn + j, s_size, "F3 : deactivate cooling \n");
+	j += sprintf_s(fn + j, s_size, "F4 : check cool good? \n");
+	//j+=sprintf_s(fn+j,s_size,"F5 : send IR Setup \n");
+	j += sprintf_s(fn + j, s_size, "F6 : start measure \n");
+	j += sprintf_s(fn + j, s_size, "F7 : high amp on \n");
+	j += sprintf_s(fn + j, s_size, "F8 : high amp off \n");
+	j += sprintf_s(fn + j, s_size, "arrow up : change X-scale span\n");
+	j += sprintf_s(fn + j, s_size, "arrow dn : change X-scale span\n");
+	j += sprintf_s(fn + j, s_size, "arrow up : change X-scale offset\n");
+	j += sprintf_s(fn + j, s_size, "arrow dn : change X-scale offset\n");
+	j += sprintf_s(fn + j, s_size, "shift + arrow up : change Y-scale span\n");
+	j += sprintf_s(fn + j, s_size, "shift + arrow dn : change Y-scale span\n");
+	j += sprintf_s(fn + j, s_size, "\n");
+	MessageBox(hWnd, fn, "time", MB_OK);
 }
 
 
@@ -263,7 +263,7 @@ void AboutCFS(HWND hWnd)
 	MessageBox(hWnd,fn,"Dev SN",MB_OK);
 	*/
 	j = 0;
-	for (i = 0x0; i<0x40; i = i + 4)
+	for (i = 0x0; i < 0x40; i = i + 4)
 	{
 		ReadLongIOPort(choosen_board, &BData, i);
 		j += sprintf(fn + j, "i=0x%x : 0x%.8x\n", i, BData);
@@ -272,7 +272,7 @@ void AboutCFS(HWND hWnd)
 
 	MessageBox(hWnd, fn, "Conf Space Header", MB_OK);
 
-	for (j = 0, i = 0x40; i<0x6c; i = i + 4)
+	for (j = 0, i = 0x40; i < 0x6c; i = i + 4)
 	{
 		ReadLongIOPort(choosen_board, &BData, i);
 		j += sprintf(fn + j, "i=0x%x : 0x%.8x\n", i, BData);
@@ -341,7 +341,7 @@ void AboutCFS(HWND hWnd)
 	MessageBox(hWnd,fn,"Dev SN",MB_OK);
 	*/
 	j = 0;
-	for (i = 0x0; i<0x40; i = i + 4)
+	for (i = 0x0; i < 0x40; i = i + 4)
 	{
 		DLLReadLongIOPort(choosen_board, &BData, i);
 		j += sprintf(fn + j, "i=0x%x : 0x%.8x\n", i, BData);
@@ -350,7 +350,7 @@ void AboutCFS(HWND hWnd)
 
 	MessageBox(hWnd, fn, "Conf Space Header", MB_OK);
 
-	for (j = 0, i = 0x40; i<0x6c; i = i + 4)
+	for (j = 0, i = 0x40; i < 0x6c; i = i + 4)
 	{
 		DLLReadLongIOPort(choosen_board, &BData, i);
 		j += sprintf(fn + j, "i=0x%x : 0x%.8x\n", i, BData);
@@ -437,43 +437,30 @@ void AboutS0(void)
 		"R1e \t ",
 		"R1f \t"
 	}; //Look-Up-Table for the S0 Registers
-
 	//for debug
 	//CleanupPCIE_DMA(choosen_board);
-	
 	if (!ReadLongIOPort(choosen_board, &S0Data, 0))
 	{
 		ErrorMsg(" BOARD not found! ");
 		return;
 	}
-
 	hWnd = GetActiveWindow();
-
-
-	
 	j = sprintf(fn, "S0- registers   \n");
-
 	//Hier werden alle 6 Adressen der BARs in Hex abgefragt
 	//FIXME was soll dass denn? Falsche Schleife!
 	/*for (i = 80; i<40; i = i + 4){
 		ReadLongIOPort(choosen_board, &S0Data, i);
 		if (S0Data != 0) numberOfBars++;
 	}
-
 	j += sprintf(fn + j, "PCIE number of BARs = %x\n", numberOfBars);
-	*/
-
-/*
 	for (i = 0; i <= 31; i++)
 	{
 		ReadLongS0(choosen_board, &S0Data, i * 4);
 		j += sprintf(fn + j, "%s \t: 0x%I32x\n", LUTS0Reg[i], S0Data);
 	}
-
 	MessageBox(hWnd, fn, "S0 regs", MB_OK);
-
-}//AboutS0
-*/
+	}//AboutS0
+	*/
 
 void AboutDMA(HWND hWnd)
 {
@@ -554,62 +541,62 @@ void AboutDMA(HWND hWnd)
 
 void AboutPCI(HWND hWnd)
 {
-int i,j=0;
+	int i, j = 0;
 #define s_size 1000
-char fn[s_size];
-ULONG S0Data=0;
-ULONG length=0;
+	char fn[s_size];
+	ULONG S0Data = 0;
+	ULONG length = 0;
 
-j=sprintf_s(fn,s_size,"PCI - registers   \n");
+	j = sprintf_s(fn, s_size, "PCI - registers   \n");
 
 	//00-0f
-	for (i=0; i<0x30;i++)
-		{
+	for (i = 0; i < 0x30; i++)
+	{
 
 #ifndef _DLL
 		ReadLongIOPort(choosen_board, &S0Data, i * 4);
 #else
 		DLLReadLongIOPort(choosen_board, &S0Data, i * 4);
 #endif
-		j+=sprintf_s(fn+j,s_size,"0x%x = 0x%x\n",i*4,S0Data);	
-		}
+		j += sprintf_s(fn + j, s_size, "0x%x = 0x%x\n", i * 4, S0Data);
+	}
 
-MessageBox(hWnd,fn,"PCI regs",MB_OK);	
+	MessageBox(hWnd, fn, "PCI regs", MB_OK);
 }//AboutPCI
 
 
 
-LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-		int dummy;
-static HWND hText = NULL;
-static HWND hEdit = NULL;
-static HWND hBtn  = NULL;
-int i=0;
-int span=0;
+	int dummy;
+	static HWND hText = NULL;
+	static HWND hEdit = NULL;
+	static HWND hBtn = NULL;
+	int i = 0;
+	int span = 0;
 
-int trackbar_nob, trackbar_nospb, trackbar_nob_multiplier = 1, trackbar_nospb_multiplier = 1;
-char *s = (char*)malloc(10);
+	int trackbar_nob, trackbar_nospb, trackbar_nob_multiplier = 1, trackbar_nospb_multiplier = 1;
+	char *s = (char*)malloc(10);
 
 
-char TrmsString[260];
-int j = 0;
-int xPos = GetCursorPosition();
-int yVal = DisplData[0][xPos];// YVal(1, xPos);
+	char TrmsString[260];
+	int j = 0;
+	int xPos = GetCursorPosition();
+	int yVal = DisplData[0][xPos];// YVal(1, xPos);
 
-	switch ( uMsg ) 
+	switch (uMsg)
 	{
 	case WM_CREATE:
 		//if nos or nospb becomes a higher value then 30000 the gui is not posible to deisplay it
 		//so we are checking this and dividing the displayed value. Therefore we are seeing a wrong value when we are using the trackbar
 
 		trackbar_nospb = Nospb;
-		while(trackbar_nospb > 30000){ //max for trackbar length
+		while (trackbar_nospb > 30000) { //max for trackbar length
 			trackbar_nospb /= 10;
 			trackbar_nospb_multiplier *= 10;
 		}
 		trackbar_nob = Nob;
-		while (trackbar_nob > 30000){ //max for trackbar length
+		while (trackbar_nob > 30000) { //max for trackbar length
 			trackbar_nob /= 10;
 			trackbar_nob_multiplier *= 10;
 		}
@@ -655,24 +642,24 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
 		//MessageBox(hMSWND, s, "Position", MB_OK);
 		break;
 
-	case WM_COMMAND :
-		switch( LOWORD( wParam ) )
-        {
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
 #ifndef _DLL
-		case IDM_ABOUT :
-			DialogBox( hInst, "AboutBox", hWnd, (DLGPROC)About );
+		case IDM_ABOUT:
+			DialogBox(hInst, "AboutBox", hWnd, (DLGPROC)About);
 			AboutDrv(choosen_board);
 			break;
 
-		case IDM_ABOUTTIME :
+		case IDM_ABOUTTIME:
 			AboutTiming(hWnd);
 			break;
 
-		case IDM_ABOUTKEYS :
+		case IDM_ABOUTKEYS:
 			AboutKeys(hWnd);
 			break;
 
-		case IDM_ABOUTS0 :
+		case IDM_ABOUTS0:
 			AboutS0(choosen_board);
 			break;
 
@@ -712,38 +699,42 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
 			break;
 #endif
 
-		case IDM_START :
-			if (! Running) Contimess(&dummy);
+		case IDM_START:
+			if (!Running) Contimess(&dummy);
 			break;
 
-		case IDM_SETEXP :
-			DialogBox( hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, (DLGPROC)SetupMeasure);
+		case IDM_SETEXP:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, (DLGPROC)SetupMeasure);
 			break;
 
-		case IDM_SETTLEVEL :
-			DialogBox( hInst, MAKEINTRESOURCE(IDD_SETTEMP), hWnd, (DLGPROC)SetupTLevel);
+		case IDM_SETTLEVEL:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_SETTEMP), hWnd, (DLGPROC)SetupTLevel);
 			break;
-	
-		case IDM_SETEC :
+
+		case IDM_SETEC:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_SETEC), hWnd, (DLGPROC)SetupEC);   //IDD_SETEC
-			break;	
+			break;
 		case ID_START_ALLOC:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hWnd, (DLGPROC)AllocateBuf);//
 			break;
 
 
-		case ID_CHOOSEBOARD :
+		case ID_CHOOSEBOARD:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_CHOOSEBOARD), hWnd, (DLGPROC)ChooseBoard);
 			break;
 
-		case IDM_ShowTRMS : //invert state
-			if (ShowTrms==TRUE) 
-			{ShowTrms=FALSE;}
+		case IDM_ShowTRMS: //invert state
+			if (ShowTrms == TRUE)
+			{
+				ShowTrms = FALSE;
+			}
 			else
-			{ShowTrms=TRUE;}
+			{
+				ShowTrms = TRUE;
+			}
 			break;
 
-		case ID_VIEW_2DVIEWER :
+		case ID_VIEW_2DVIEWER:
 		{
 
 			Direct2dViewer_setBitmapSource(Direct2dViewer, (void *)testbitmap, TESTBITMAP_WIDTH, TESTBITMAP_HEIGTH);
@@ -752,118 +743,122 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
 			//Direct2dViewer_show(Direct2dViewer);
 			break;
 		}
-		case IDM_EXIT :
+		case IDM_EXIT:
 
-			DestroyWindow( hWnd );
+			DestroyWindow(hWnd);
 			break;
 		}
-        break;
+		break;
 
-	case WM_KEYDOWN: 
-        switch( wParam ) 
-        {
- 			case VK_F1:
+	case WM_KEYDOWN:
+		switch (wParam)
+		{
+		case VK_F1:
 			AboutTiming(hWnd);
 			break;
-			case VK_F6:
-			if (! Running) Contimess(&dummy);
-            break;
+		case VK_F6:
+			if (!Running) Contimess(&dummy);
+			break;
 #ifndef _DLL
-			case VK_F2://switch cooling on
-			ActCooling(choosen_board,TRUE);
+		case VK_F2://switch cooling on
+			ActCooling(choosen_board, TRUE);
 			break;
-			case VK_F3://switch cooling off
-			ActCooling(choosen_board,FALSE);
+		case VK_F3://switch cooling off
+			ActCooling(choosen_board, FALSE);
 			break;
-			case VK_F4:
-				{//check temp good
-			int j=0;
+		case VK_F4:
+		{//check temp good
+			int j = 0;
 			char header[260];
 
-			if (TempGood(choosen_board,1)==TRUE)
-			{j=sprintf_s(header,260," temp1 good        " );}
+			if (TempGood(choosen_board, 1) == TRUE)
+			{
+				j = sprintf_s(header, 260, " temp1 good        ");
+			}
 			else
-			j=sprintf_s(header,260," temp1 not good " );
+				j = sprintf_s(header, 260, " temp1 not good ");
 
-			if (TempGood(choosen_board,2)==TRUE)
-			{j+=sprintf_s(header+j,260," temp2 good        " );}
+			if (TempGood(choosen_board, 2) == TRUE)
+			{
+				j += sprintf_s(header + j, 260, " temp2 good        ");
+			}
 			else
-			j+=sprintf_s(header+j,260," temp2 not good " );
+				j += sprintf_s(header + j, 260, " temp2 not good ");
 
-			TextOut(hMSDC,100,LOY+YLENGTH+17,header,j);
+			TextOut(hMSDC, 100, LOY + YLENGTH + 17, header, j);
 			break;
-				}
-			case VK_F5: //send IR_Setup
-			//SetupIR(choosen_board,1); //reset
-				// RE&RS enable
-			//WriteByteS0(choosen_board,0x0f,0x30);
-            break;
-			case VK_F7: //set high amp
-			HIAMP=TRUE;
+		}
+		case VK_F5: //send IR_Setup
+		//SetupIR(choosen_board,1); //reset
+			// RE&RS enable
+		//WriteByteS0(choosen_board,0x0f,0x30);
+			break;
+		case VK_F7: //set high amp
+			HIAMP = TRUE;
 			V_On(choosen_board);
-            break;
-			case VK_F8: //set low amp
-			HIAMP=FALSE;
+			break;
+		case VK_F8: //set low amp
+			HIAMP = FALSE;
 			V_Off(choosen_board);
 			break;
 
 			//case VK_SHIFT:
-			case VK_UP: //change y-scale
-				if (GetAsyncKeyState(VK_SHIFT)) {YSHIFT += 1;}
-				else XOFF += 1;
-			if (YSHIFT>16) YSHIFT=16;
-			if (XOFF>_PIXEL/600) XOFF=_PIXEL/600;
+		case VK_UP: //change y-scale
+			if (GetAsyncKeyState(VK_SHIFT)) { YSHIFT += 1; }
+			else XOFF += 1;
+			if (YSHIFT > 16) YSHIFT = 16;
+			if (XOFF > _PIXEL / 600) XOFF = _PIXEL / 600;
 			break;
-			case VK_DOWN:
-				if (GetAsyncKeyState(VK_SHIFT)) {YSHIFT -= 1;}
-				else XOFF -=1 ;
-			if (YSHIFT<0) YSHIFT=0;
-			if (XOFF<1) XOFF=1;
+		case VK_DOWN:
+			if (GetAsyncKeyState(VK_SHIFT)) { YSHIFT -= 1; }
+			else XOFF -= 1;
+			if (YSHIFT < 0) YSHIFT = 0;
+			if (XOFF < 1) XOFF = 1;
 			break;
-			case VK_RIGHT:
-				/*XStart += 100;	
-				if (XStart>_PIXEL-XLENGTH*XOFF)
-				XStart -= 100;*/			 
-			PixelOdd=TRUE;
+		case VK_RIGHT:
+			/*XStart += 100;
+			if (XStart>_PIXEL-XLENGTH*XOFF)
+			XStart -= 100;*/
+			PixelOdd = TRUE;
 			break;
-			case VK_LEFT:
+		case VK_LEFT:
 			/* XStart -= 100;
 				if (XStart<0) XStart=0; */
-			PixelOdd=FALSE;
+			PixelOdd = FALSE;
 			break;
-			case VK_ESCAPE: //stop measurement
-			case VK_SPACE:
-			Running=FALSE;
+		case VK_ESCAPE: //stop measurement
+		case VK_SPACE:
+			Running = FALSE;
 			//Sleep(20);
 			//CleanupPCIE_DMA(choosen_board);
 			StopRingReadThread();
 			StopFFTimer(choosen_board);
 			SetIntFFTrig(choosen_board);//disables ext. Trig.
 			UpdateTxT();
-            break;
+			break;
 		}
 		break;
-	case WM_MOUSEMOVE :
-		if (contimess_run_once){
+	case WM_MOUSEMOVE:
+		if (contimess_run_once) {
 			UpdateTxT();
 		}
 		break;
 
-/*	case WM_PAINT:
-	case WM_WINDOWPOSCHANGED  :
-        ShowWindow(hWnd,SW_SHOW);
-		//Display( 1,PLOTFLAG);
- 		break;			  
-*/
-	case WM_DESTROY :
+		/*	case WM_PAINT:
+			case WM_WINDOWPOSCHANGED  :
+				ShowWindow(hWnd,SW_SHOW);
+				//Display( 1,PLOTFLAG);
+				break;
+		*/
+	case WM_DESTROY:
 		//stop timer if it is still running
-		Running=FALSE;
+		Running = FALSE;
 		Sleep(20); // if the DMA Interrupt is running
 		//CleanupPCIE_DMA(choosen_board);
 		//StopRingReadThread();
 		//board 1
 
-		if (NUMBER_OF_BOARDS >= 2){
+		if (NUMBER_OF_BOARDS >= 2) {
 			StopFFTimer(2);
 			SetIntFFTrig(2);//disables ext. Trig.
 			CCDDrvExit(2);
@@ -874,90 +869,90 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
 		//WDC_DriverClose();
 		CCDDrvExit(1);
 		//board 2
-		ReleaseDC(hMSWND,hMSDC);
-              
+		ReleaseDC(hMSWND, hMSDC);
+
 		PostQuitMessage(0);
-        break;
+		break;
 #else
-	case VK_F2://switch cooling on
-		DLLActCooling(choosen_board, TRUE);
-		break;
-	case VK_F3://switch cooling off
-		DLLActCooling(choosen_board, FALSE);
-		break;
-	case VK_F4:
-	{//check temp good
-		int j = 0;
-		char header[260];
+		case VK_F2://switch cooling on
+			DLLActCooling(choosen_board, TRUE);
+			break;
+		case VK_F3://switch cooling off
+			DLLActCooling(choosen_board, FALSE);
+			break;
+		case VK_F4:
+		{//check temp good
+			int j = 0;
+			char header[260];
 
-		if (DLLTempGood(choosen_board, 1) == TRUE)
-		{
-			j = sprintf_s(header, 260, " temp1 good        ");
+			if (DLLTempGood(choosen_board, 1) == TRUE)
+			{
+				j = sprintf_s(header, 260, " temp1 good        ");
+			}
+			else
+				j = sprintf_s(header, 260, " temp1 not good ");
+
+			if (DLLTempGood(choosen_board, 2) == TRUE)
+			{
+				j += sprintf_s(header + j, 260, " temp2 good        ");
+			}
+			else
+				j += sprintf_s(header + j, 260, " temp2 not good ");
+
+			TextOut(hMSDC, 100, LOY + YLENGTH + 17, header, j);
+			break;
 		}
-		else
-			j = sprintf_s(header, 260, " temp1 not good ");
+		case VK_F5: //send IR_Setup
+					//SetupIR(choosen_board,1); //reset
+					// RE&RS enable
+					//WriteByteS0(choosen_board,0x0f,0x30);
+			break;
+		case VK_F7: //set high amp
+			HIAMP = TRUE;
+			DLLVOn(choosen_board);
+			break;
+		case VK_F8: //set low amp
+			HIAMP = FALSE;
+			DLLVOff(choosen_board);
+			break;
 
-		if (DLLTempGood(choosen_board, 2) == TRUE)
-		{
-			j += sprintf_s(header + j, 260, " temp2 good        ");
-		}
-		else
-			j += sprintf_s(header + j, 260, " temp2 not good ");
+			//case VK_SHIFT:
+		case VK_UP: //change y-scale
+			if (GetAsyncKeyState(VK_SHIFT)) { YSHIFT += 1; }
+			else XOFF += 1;
+			if (YSHIFT > 16) YSHIFT = 16;
+			if (XOFF > _PIXEL / 600) XOFF = _PIXEL / 600;
+			break;
+		case VK_DOWN:
+			if (GetAsyncKeyState(VK_SHIFT)) { YSHIFT -= 1; }
+			else XOFF -= 1;
+			if (YSHIFT < 0) YSHIFT = 0;
+			if (XOFF < 1) XOFF = 1;
+			break;
+		case VK_RIGHT:
+			/*XStart += 100;
+			if (XStart>_PIXEL-XLENGTH*XOFF)
+			XStart -= 100;*/
+			PixelOdd = TRUE;
+			break;
+		case VK_LEFT:
+			/* XStart -= 100;
+			if (XStart<0) XStart=0; */
+			PixelOdd = FALSE;
+			break;
+		case VK_ESCAPE: //stop measurement
+		case VK_SPACE:
+			Running = FALSE;
+			//Sleep(20);
+			//CleanupPCIE_DMA(choosen_board);
+			DLLStopRingReadThread();
+			DLLStopFFTimer(choosen_board);
+			DLLSetIntTrig(choosen_board);//disables ext. Trig.
+			UpdateTxT();
+			break;
 
-		TextOut(hMSDC, 100, LOY + YLENGTH + 17, header, j);
-		break;
+			//TODO: What is this?
 	}
-	case VK_F5: //send IR_Setup
-				//SetupIR(choosen_board,1); //reset
-				// RE&RS enable
-				//WriteByteS0(choosen_board,0x0f,0x30);
-		break;
-	case VK_F7: //set high amp
-		HIAMP = TRUE;
-		DLLVOn(choosen_board);
-		break;
-	case VK_F8: //set low amp
-		HIAMP = FALSE;
-		DLLVOff(choosen_board);
-		break;
-
-		//case VK_SHIFT:
-	case VK_UP: //change y-scale
-		if (GetAsyncKeyState(VK_SHIFT)) { YSHIFT += 1; }
-		else XOFF += 1;
-		if (YSHIFT>16) YSHIFT = 16;
-		if (XOFF>_PIXEL / 600) XOFF = _PIXEL / 600;
-		break;
-	case VK_DOWN:
-		if (GetAsyncKeyState(VK_SHIFT)) { YSHIFT -= 1; }
-		else XOFF -= 1;
-		if (YSHIFT<0) YSHIFT = 0;
-		if (XOFF<1) XOFF = 1;
-		break;
-	case VK_RIGHT:
-		/*XStart += 100;
-		if (XStart>_PIXEL-XLENGTH*XOFF)
-		XStart -= 100;*/
-		PixelOdd = TRUE;
-		break;
-	case VK_LEFT:
-		/* XStart -= 100;
-		if (XStart<0) XStart=0; */
-		PixelOdd = FALSE;
-		break;
-	case VK_ESCAPE: //stop measurement
-	case VK_SPACE:
-		Running = FALSE;
-		//Sleep(20);
-		//CleanupPCIE_DMA(choosen_board);
-		DLLStopRingReadThread();
-		DLLStopFFTimer(choosen_board);
-		DLLSetIntTrig(choosen_board);//disables ext. Trig.
-		UpdateTxT();
-		break;
-
-		//TODO: What is this?
-		}
 		break;
 
 	case WM_MOUSEMOVE:
@@ -967,12 +962,12 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
 
 		break;
 
-	/*case WM_PAINT:
-	case WM_WINDOWPOSCHANGED  :
-		ShowWindow(hWnd,SW_SHOW);
-		//Display( 1,PLOTFLAG);
-		break;
-		*/
+		/*case WM_PAINT:
+		case WM_WINDOWPOSCHANGED  :
+			ShowWindow(hWnd,SW_SHOW);
+			//Display( 1,PLOTFLAG);
+			break;
+			*/
 	case WM_DESTROY:
 		//stop timer if it is still running
 		Running = FALSE;
@@ -998,34 +993,34 @@ int yVal = DisplData[0][xPos];// YVal(1, xPos);
 		PostQuitMessage(0);
 		break;
 #endif
-    default : 
-        return( DefWindowProc( hWnd, uMsg, wParam, lParam ) );
+	default:
+		return(DefWindowProc(hWnd, uMsg, wParam, lParam));
 	}
-   return( 0L );
+	return(0L);
 }
 
 
-LRESULT CALLBACK About( HWND hDlg,           
-                        UINT message,        
-                        WPARAM wParam,       
-                        LPARAM lParam)
+LRESULT CALLBACK About(HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
 {
-   switch (message) 
-   {
-       case WM_INITDIALOG:
-               return (TRUE);
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return (TRUE);
 
-       case WM_COMMAND:                              
-               if (   LOWORD(wParam) == IDOK         
-                   || LOWORD(wParam) == IDCANCEL)    
-               {
-                       EndDialog(hDlg, TRUE);        
-                       return (TRUE);
-               }
-               break;
-   }
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDOK
+			|| LOWORD(wParam) == IDCANCEL)
+		{
+			EndDialog(hDlg, TRUE);
+			return (TRUE);
+		}
+		break;
+	}
 
-   return (FALSE); 
+	return (FALSE);
 }
 
 
@@ -1033,59 +1028,60 @@ LRESULT CALLBACK About( HWND hDlg,
 
 
 
-LRESULT CALLBACK SetupMeasure( HWND hDlg,           
-                        UINT message,        
-                        WPARAM wParam,       
-                        LPARAM lParam)
-{UINT val=0;
-BOOL success=FALSE;
-   switch (message) 
-   {
-       case WM_INITDIALOG:
-		   SetDlgItemInt(hDlg,IDC_M_EXPTIME,ExpTime,FALSE);
-		   CheckDlgButton(hDlg,IDC_ExtTrig,EXTTRIGFLAG);
-		   if (TrigMod==0) CheckDlgButton(hDlg,IDC_RADIO1,BST_CHECKED);
-		   if (TrigMod==1) CheckDlgButton(hDlg,IDC_RADIO2,BST_CHECKED);
-		   if (TrigMod==2) CheckDlgButton(hDlg,IDC_RADIO3,BST_CHECKED);
-           return (TRUE);
-		   break;
+LRESULT CALLBACK SetupMeasure(HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
+{
+	UINT val = 0;
+	BOOL success = FALSE;
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		SetDlgItemInt(hDlg, IDC_M_EXPTIME, ExpTime, FALSE);
+		CheckDlgButton(hDlg, IDC_ExtTrig, EXTTRIGFLAG);
+		if (TrigMod == 0) CheckDlgButton(hDlg, IDC_RADIO1, BST_CHECKED);
+		if (TrigMod == 1) CheckDlgButton(hDlg, IDC_RADIO2, BST_CHECKED);
+		if (TrigMod == 2) CheckDlgButton(hDlg, IDC_RADIO3, BST_CHECKED);
+		return (TRUE);
+		break;
 
-       case WM_COMMAND:      
-		   switch( LOWORD( wParam ) )
-		   {
-			case IDCANCEL:
-                EndDialog(hDlg, TRUE);        
-                return (TRUE);
-				break;
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDCANCEL:
+			EndDialog(hDlg, TRUE);
+			return (TRUE);
+			break;
 
-			case IDOK:
-				EXTTRIGFLAG= IsDlgButtonChecked(hDlg,IDC_ExtTrig);
-				val = GetDlgItemInt(hDlg,IDC_M_EXPTIME,&success ,FALSE);	
-				if (success) ExpTime=val;
-				if (IsDlgButtonChecked(hDlg,IDC_RADIO1)==BST_CHECKED) TrigMod=0;
-				if (IsDlgButtonChecked(hDlg,IDC_RADIO2)==BST_CHECKED) TrigMod=1;
-				if (IsDlgButtonChecked(hDlg,IDC_RADIO3)==BST_CHECKED) TrigMod=2;
+		case IDOK:
+			EXTTRIGFLAG = IsDlgButtonChecked(hDlg, IDC_ExtTrig);
+			val = GetDlgItemInt(hDlg, IDC_M_EXPTIME, &success, FALSE);
+			if (success) ExpTime = val;
+			if (IsDlgButtonChecked(hDlg, IDC_RADIO1) == BST_CHECKED) TrigMod = 0;
+			if (IsDlgButtonChecked(hDlg, IDC_RADIO2) == BST_CHECKED) TrigMod = 1;
+			if (IsDlgButtonChecked(hDlg, IDC_RADIO3) == BST_CHECKED) TrigMod = 2;
 
-				// set slope for ext. trigger
+			// set slope for ext. trigger
 #ifndef _DLL
-				if (TrigMod == 0)	HighSlope(choosen_board);
-				if (TrigMod == 1)	LowSlope(choosen_board);
-				if (TrigMod == 2)	BothSlope(choosen_board);
+			if (TrigMod == 0)	HighSlope(choosen_board);
+			if (TrigMod == 1)	LowSlope(choosen_board);
+			if (TrigMod == 2)	BothSlope(choosen_board);
 #else
-				if (TrigMod == 0)	DLLHighSlope(choosen_board);
-				if (TrigMod == 1)	DLLLowSlope(choosen_board);
-				if (TrigMod == 2)	DLLBothSlope(choosen_board);
+			if (TrigMod == 0)	DLLHighSlope(choosen_board);
+			if (TrigMod == 1)	DLLLowSlope(choosen_board);
+			if (TrigMod == 2)	DLLBothSlope(choosen_board);
 #endif
 
-				EndDialog(hDlg, TRUE);        
-                return (TRUE);
-				break;
-		   }
-        break; //WM_COMMAND
-	
-   }
+			EndDialog(hDlg, TRUE);
+			return (TRUE);
+			break;
+		}
+		break; //WM_COMMAND
 
-   return (FALSE); 
+	}
+
+	return (FALSE);
 }
 
 
@@ -1151,7 +1147,7 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 						MessageBox(hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK);
 					SetCamVars(2, 2, _PIXEL, 0, 0);
 				}
-			
+
 #endif
 			}
 			trackbar_nospb = Nospb;
@@ -1214,7 +1210,7 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 					MessageBox(hMSWND, "allocating Buffer fails", "Error", MB_OK);
 				else
 					MessageBox(hMSWND, "allocating Buffer succeeded", "Message", MB_OK);
-		}
+			}
 
 			FreeMemInfo(&builtinram, &freeram);
 			SetDlgItemInt(hDlg, IDC_FREERAM, freeram / divMB, 0);
@@ -1270,13 +1266,13 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 			return (TRUE);
 			break;
 
-			}
+		}
 		break; //WM_COMMAND
 
-		}
+	}
 
 	return (FALSE);
-	}
+}
 
 
 
@@ -1291,18 +1287,18 @@ LRESULT CALLBACK ChooseBoard(HWND hDlg,
 	{
 	case WM_INITDIALOG:
 		//if there is just one board initialized gray out board 2 option and both option
-		if (NUMBER_OF_BOARDS < 2){
+		if (NUMBER_OF_BOARDS < 2) {
 			EnableWindow(GetDlgItem(hDlg, IDC_EC_RADIO2), FALSE);
 			EnableWindow(GetDlgItem(hDlg, IDC_EC_RADIO_BOTH), FALSE);
 			CheckDlgButton(hDlg, IDC_EC_RADIO1, TRUE);
 		}
-		else{
+		else {
 			switch (choosen_board)
 			{
 			case 1:
 				if (both_boards)
 					CheckDlgButton(hDlg, IDC_EC_RADIO_BOTH, TRUE);
-				else{
+				else {
 					CheckDlgButton(hDlg, IDC_EC_RADIO1, TRUE);
 				}
 				break;
@@ -1313,7 +1309,7 @@ LRESULT CALLBACK ChooseBoard(HWND hDlg,
 			}
 		}
 		return (TRUE);
-	
+
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
@@ -1326,12 +1322,12 @@ LRESULT CALLBACK ChooseBoard(HWND hDlg,
 			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO1) == TRUE) { choosen_board = 1; both_boards = FALSE; DISP2 = FALSE; }
 			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO2) == TRUE) { choosen_board = 2; both_boards = FALSE; DISP2 = FALSE; }
 			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO_BOTH) == TRUE) { choosen_board = 1; both_boards = TRUE; DISP2 = TRUE; }
-			if(both_boards == TRUE)
+			if (both_boards == TRUE)
 #ifndef _DLL
 				BOARD_SEL = 3;
 #endif
 			EndDialog(hDlg, TRUE);
-			
+
 			//if the second buffer is not initilized
 			if (choosen_board == 2 || both_boards)
 				if (!pBLOCKBUF[2])
@@ -1346,234 +1342,241 @@ LRESULT CALLBACK ChooseBoard(HWND hDlg,
 	return (FALSE);
 }
 
-LRESULT CALLBACK SetupTLevel( HWND hDlg,           
-                        UINT message,        
-                        WPARAM wParam,       
-                        LPARAM lParam)
-{UINT val=0;
-BOOL success=FALSE;
-   switch (message) 
-   {
-       case WM_INITDIALOG:
-		   SetDlgItemInt(hDlg,IDC_TLevel,TempLevel,FALSE);
-           return (TRUE);
-		   break;
+LRESULT CALLBACK SetupTLevel(HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
+{
+	UINT val = 0;
+	BOOL success = FALSE;
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		SetDlgItemInt(hDlg, IDC_TLevel, TempLevel, FALSE);
+		return (TRUE);
+		break;
 
-       case WM_COMMAND:      
-		   switch( LOWORD( wParam ) )
-		   {
-			case IDCANCEL:
-                EndDialog(hDlg, TRUE);        
-                return (TRUE);
-				break;
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDCANCEL:
+			EndDialog(hDlg, TRUE);
+			return (TRUE);
+			break;
 
-			case IDOK:
-				val = GetDlgItemInt(hDlg,IDC_TLevel,&success ,FALSE);	
-				if (success) 
-					{TempLevel=val;
+		case IDOK:
+			val = GetDlgItemInt(hDlg, IDC_TLevel, &success, FALSE);
+			if (success)
+			{
+				TempLevel = val;
 #ifndef _DLL
-					SetTemp(choosen_board, (UCHAR)TempLevel);}
+				SetTemp(choosen_board, (UCHAR)TempLevel);
+			}
 #else
-					DLLSetTemp(choosen_board,(UCHAR)TempLevel);}
+				DLLSetTemp(choosen_board, (UCHAR)TempLevel);
+		}
 #endif
 
-				EndDialog(hDlg, TRUE);        
-                return (TRUE);
-				break;
-		   }
-        break; //WM_COMMAND
-	
-   }
+			EndDialog(hDlg, TRUE);
+			return (TRUE);
+			break;
+		}
+		break; //WM_COMMAND
 
-   return (FALSE); 
+	}
+
+	return (FALSE);
 }
 
-LRESULT CALLBACK SetupEC( HWND hDlg,           
-                        UINT message,        
-                        WPARAM wParam,       
-                        LPARAM lParam)
-{UINT val=0;
-BYTE dbyte=0;
-ULONG longval=0;
-BOOL success=FALSE;
-
-switch (message)
+LRESULT CALLBACK SetupEC(HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
 {
-case WM_INITDIALOG:
+	UINT val = 0;
+	BYTE dbyte = 0;
+	ULONG longval = 0;
+	BOOL success = FALSE;
 
-				SetDlgItemInt(hDlg, IDC_SETDAT, tDAT, FALSE);
-				SetDlgItemInt(hDlg, IDC_SETXDLY, tXDLY, FALSE);
-			   SetDlgItemInt(hDlg,IDC_SETTCNT,tTICNT,FALSE);
-			   SetDlgItemInt(hDlg,IDC_SETTCNT2,tTOCNT,FALSE);
-			   CheckDlgButton(hDlg,IDC_CHECK_NOPDARS,m_noPDARS);
-			   switch (m_TOmodus)
-			   {
-				   case 0:		   CheckDlgButton(hDlg, IDC_EC_RADIO1, TRUE); break; //REG
-				   case 1:		   CheckDlgButton(hDlg, IDC_EC_RADIO2, TRUE); break; //REG
-				   case 2: 		   CheckDlgButton(hDlg,IDC_EC_RADIO3,TRUE); break; //REG
-				   case 3: 		   CheckDlgButton(hDlg,IDC_EC_RADIO4,TRUE); break; //EC
-				   case 4: 		   CheckDlgButton(hDlg,IDC_EC_RADIO5,TRUE); break; //DAT
-				   case 5: 		   CheckDlgButton(hDlg,IDC_EC_RADIO6,TRUE); break; //TRIGIN
-				   case 6: 		   CheckDlgButton(hDlg,IDC_EC_RADIO7,TRUE); break; //FFXCK
-				   case 7: 		   CheckDlgButton(hDlg, IDC_EC_RADIO8, TRUE); break; //EC
-				   case 8: 		   CheckDlgButton(hDlg, IDC_EC_RADIO9, TRUE); break; //DAT
-				   case 9: 		   CheckDlgButton(hDlg, IDC_EC_RADIO17, TRUE); break; //TRIGIN
-				   case 10: 	   CheckDlgButton(hDlg, IDC_EC_RADIO18, TRUE); break; //FFXCK
-				   case 11: 	   CheckDlgButton(hDlg, IDC_EC_RADIO19, TRUE); break; //EC
-				   case 12: 	   CheckDlgButton(hDlg, IDC_EC_RADIO20, TRUE); break; //DAT
-				   default:		   CheckDlgButton(hDlg,IDC_EC_RADIO1,TRUE); // XCKI 0 or 5
-			   }
-
-			   switch (m_ECmodus)
-			   {	case 2: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO2); break; //REG
-				   case 3: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO3); break; //EC
-				   case 4: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO4); break; //DAT
-				   default: 		   CheckRadioButton(hDlg,IDC_ECCNT_RADIO1,IDC_ECCNT_RADIO4,IDC_ECCNT_RADIO1); // XCKI 0 or 5
-			   }
-
-			   switch (m_ECTrigmodus)
-			   {	case 2: 		   CheckDlgButton(hDlg,IDC_RADIO12,TRUE); break; //REG
-				   case 3: 		   CheckDlgButton(hDlg,IDC_RADIO13,TRUE); break; //EC
-				   case 4: 		   CheckDlgButton(hDlg,IDC_RADIO14,TRUE); break; //DAT
-				   default: 		   CheckDlgButton(hDlg,IDC_RADIO11,TRUE); // XCKI 0 or 5
-			   }
-
-			   
-	return (TRUE);
-	break;
-
-case WM_COMMAND:
-	switch (LOWORD(wParam))
+	switch (message)
 	{
-	case IDCANCEL:
-		EndDialog(hDlg, TRUE);
+	case WM_INITDIALOG:
+
+		SetDlgItemInt(hDlg, IDC_SETDAT, tDAT, FALSE);
+		SetDlgItemInt(hDlg, IDC_SETXDLY, tXDLY, FALSE);
+		SetDlgItemInt(hDlg, IDC_SETTCNT, tTICNT, FALSE);
+		SetDlgItemInt(hDlg, IDC_SETTCNT2, tTOCNT, FALSE);
+		CheckDlgButton(hDlg, IDC_CHECK_NOPDARS, m_noPDARS);
+		switch (m_TOmodus)
+		{
+		case 0:		   CheckDlgButton(hDlg, IDC_EC_RADIO1, TRUE); break; //REG
+		case 1:		   CheckDlgButton(hDlg, IDC_EC_RADIO2, TRUE); break; //REG
+		case 2: 		   CheckDlgButton(hDlg, IDC_EC_RADIO3, TRUE); break; //REG
+		case 3: 		   CheckDlgButton(hDlg, IDC_EC_RADIO4, TRUE); break; //EC
+		case 4: 		   CheckDlgButton(hDlg, IDC_EC_RADIO5, TRUE); break; //DAT
+		case 5: 		   CheckDlgButton(hDlg, IDC_EC_RADIO6, TRUE); break; //TRIGIN
+		case 6: 		   CheckDlgButton(hDlg, IDC_EC_RADIO7, TRUE); break; //FFXCK
+		case 7: 		   CheckDlgButton(hDlg, IDC_EC_RADIO8, TRUE); break; //EC
+		case 8: 		   CheckDlgButton(hDlg, IDC_EC_RADIO9, TRUE); break; //DAT
+		case 9: 		   CheckDlgButton(hDlg, IDC_EC_RADIO17, TRUE); break; //TRIGIN
+		case 10: 	   CheckDlgButton(hDlg, IDC_EC_RADIO18, TRUE); break; //FFXCK
+		case 11: 	   CheckDlgButton(hDlg, IDC_EC_RADIO19, TRUE); break; //EC
+		case 12: 	   CheckDlgButton(hDlg, IDC_EC_RADIO20, TRUE); break; //DAT
+		default:		   CheckDlgButton(hDlg, IDC_EC_RADIO1, TRUE); // XCKI 0 or 5
+		}
+
+		switch (m_ECmodus)
+		{
+		case 2: 		   CheckRadioButton(hDlg, IDC_ECCNT_RADIO1, IDC_ECCNT_RADIO4, IDC_ECCNT_RADIO2); break; //REG
+		case 3: 		   CheckRadioButton(hDlg, IDC_ECCNT_RADIO1, IDC_ECCNT_RADIO4, IDC_ECCNT_RADIO3); break; //EC
+		case 4: 		   CheckRadioButton(hDlg, IDC_ECCNT_RADIO1, IDC_ECCNT_RADIO4, IDC_ECCNT_RADIO4); break; //DAT
+		default: 		   CheckRadioButton(hDlg, IDC_ECCNT_RADIO1, IDC_ECCNT_RADIO4, IDC_ECCNT_RADIO1); // XCKI 0 or 5
+		}
+
+		switch (m_ECTrigmodus)
+		{
+		case 2: 		   CheckDlgButton(hDlg, IDC_RADIO12, TRUE); break; //REG
+		case 3: 		   CheckDlgButton(hDlg, IDC_RADIO13, TRUE); break; //EC
+		case 4: 		   CheckDlgButton(hDlg, IDC_RADIO14, TRUE); break; //DAT
+		default: 		   CheckDlgButton(hDlg, IDC_RADIO11, TRUE); // XCKI 0 or 5
+		}
+
+
 		return (TRUE);
 		break;
 
-	case IDOK:
-		//			EXTTRIGFLAG= IsDlgButtonChecked(hDlg,IDC_ExtTrig);
-					//get DAT value
-					longval = GetDlgItemInt(hDlg, IDC_SETDAT, &success, FALSE);
-					if (success)
-						{
-						tDAT = longval;
-						longval = tDAT;
-						if (longval != 0) longval |= 0x80000000;
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDCANCEL:
+			EndDialog(hDlg, TRUE);
+			return (TRUE);
+			break;
+
+		case IDOK:
+			//			EXTTRIGFLAG= IsDlgButtonChecked(hDlg,IDC_ExtTrig);
+						//get DAT value
+			longval = GetDlgItemInt(hDlg, IDC_SETDAT, &success, FALSE);
+			if (success)
+			{
+				tDAT = longval;
+				longval = tDAT;
+				if (longval != 0) longval |= 0x80000000;
 #ifndef _DLL
-						WriteLongS0(choosen_board, longval, 0x20); // DAT reg
+				WriteLongS0(choosen_board, longval, 0x20); // DAT reg
 #else
-						DLLWriteLongS0(choosen_board, longval, 0x20); // DAT reg
+				DLLWriteLongS0(choosen_board, longval, 0x20); // DAT reg
 #endif
-					}
-					//get XCKDLY val
-					longval = GetDlgItemInt(hDlg, IDC_SETXDLY, &success, FALSE);
-					if (success)
-					{
-						tXDLY = longval;
-						longval = tXDLY;
-						if (longval != 0) longval |= 0x80000000;
+			}
+			//get XCKDLY val
+			longval = GetDlgItemInt(hDlg, IDC_SETXDLY, &success, FALSE);
+			if (success)
+			{
+				tXDLY = longval;
+				longval = tXDLY;
+				if (longval != 0) longval |= 0x80000000;
 #ifndef _DLL
-						WriteLongS0(choosen_board, longval, 0x24); // DAT reg
+				WriteLongS0(choosen_board, longval, 0x24); // DAT reg
 #else
-						DLLWriteLongS0(choosen_board, longval, 0x24); // DAT reg
+				DLLWriteLongS0(choosen_board, longval, 0x24); // DAT reg
 #endif
 
-					}
+			}
 
 
-					val = GetDlgItemInt(hDlg,IDC_SETTCNT,&success ,FALSE);
-					if (success) tTICNT=val;
-					val = tTICNT;
-					if (val>1) {val -= 1;}
-					else val = 0;
-					if (val != 0) val |= 0x80;
-					// devider n=1 -> n /2
+			val = GetDlgItemInt(hDlg, IDC_SETTCNT, &success, FALSE);
+			if (success) tTICNT = val;
+			val = tTICNT;
+			if (val > 1) { val -= 1; }
+			else val = 0;
+			if (val != 0) val |= 0x80;
+			// devider n=1 -> n /2
 #ifndef _DLL
-					WriteByteS0(choosen_board, (BYTE)val, 0x28);//TICNT reg
+			WriteByteS0(choosen_board, (BYTE)val, 0x28);//TICNT reg
 #else
-					DLLWriteByteS0(choosen_board, (BYTE)val, 0x28);//TICNT reg
+			DLLWriteByteS0(choosen_board, (BYTE)val, 0x28);//TICNT reg
 #endif
-					val = GetDlgItemInt(hDlg,IDC_SETTCNT2,&success ,FALSE);
-					if (success) tTOCNT=val;
-					val = tTOCNT;
-					if (val>1) {val -= 1;}
-					else val = 0;
-					if (val != 0) val |= 0x80;
-					// devider n=1 -> n /2
+			val = GetDlgItemInt(hDlg, IDC_SETTCNT2, &success, FALSE);
+			if (success) tTOCNT = val;
+			val = tTOCNT;
+			if (val > 1) { val -= 1; }
+			else val = 0;
+			if (val != 0) val |= 0x80;
+			// devider n=1 -> n /2
 #ifndef _DLL
-					WriteByteS0(choosen_board, (BYTE)val, 0x2A);//TOCNT reg
+			WriteByteS0(choosen_board, (BYTE)val, 0x2A);//TOCNT reg
 #else
-					DLLWriteByteS0(choosen_board, (BYTE)val, 0x2A);//TOCNT reg
+			DLLWriteByteS0(choosen_board, (BYTE)val, 0x2A);//TOCNT reg
 #endif
 					//				CheckRadioButton(hDlg,IDC_RADIO1,IDC_RADIO5,m_TOmodus);
-					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO1)==TRUE) m_TOmodus=0;
-					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO2)==TRUE) m_TOmodus=1;
-					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO3)==TRUE) m_TOmodus=2;
-					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO4)==TRUE) m_TOmodus=3;
-					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO5)==TRUE) m_TOmodus=4;
-					if (IsDlgButtonChecked(hDlg,IDC_EC_RADIO6)==TRUE) m_TOmodus=5;
-					if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO7) == TRUE) m_TOmodus = 6;
-					if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO8) == TRUE) m_TOmodus = 7;
-					if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO9) == TRUE) m_TOmodus = 8;
-					if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO17) == TRUE) m_TOmodus = 9;
-					if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO18) == TRUE) m_TOmodus = 10;
-					if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO19) == TRUE) m_TOmodus = 11;
-					if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO20) == TRUE) m_TOmodus = 12;
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO1) == TRUE) m_TOmodus = 0;
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO2) == TRUE) m_TOmodus = 1;
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO3) == TRUE) m_TOmodus = 2;
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO4) == TRUE) m_TOmodus = 3;
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO5) == TRUE) m_TOmodus = 4;
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO6) == TRUE) m_TOmodus = 5;
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO7) == TRUE) m_TOmodus = 6;
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO8) == TRUE) m_TOmodus = 7;
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO9) == TRUE) m_TOmodus = 8;
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO17) == TRUE) m_TOmodus = 9;
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO18) == TRUE) m_TOmodus = 10;
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO19) == TRUE) m_TOmodus = 11;
+			if (IsDlgButtonChecked(hDlg, IDC_EC_RADIO20) == TRUE) m_TOmodus = 12;
 
 #ifndef _DLL
-					RsTOREG(choosen_board);
-					SetTORReg(choosen_board, m_TOmodus);
+			RsTOREG(choosen_board);
+			SetTORReg(choosen_board, m_TOmodus);
 #else
-					DLLRsTOREG(choosen_board);
-					DLLSetTORReg(choosen_board, m_TOmodus);
+			DLLRsTOREG(choosen_board);
+			DLLSetTORReg(choosen_board, m_TOmodus);
 #endif
-					
-					/*
-					switch (m_TOmodus)
-					{	case 1: dbyte = 0x0; break; //XCK
-						case 2: dbyte = 0x80; break; //REG
-						case 3: dbyte = 0x40; break; //EC
-						case 4: dbyte = 0x08; break; //DAT
-						case 5: d
-							
-							
-							byte = 0x20; break; //TRIGIN
-						case 6: dbyte = 0x10; break; //FFXCK
-						case 7: dbyte |= 0x70; break; //Block Trig
-						default:  dbyte = 0x0; // XCKI
-					}
 
-					m_noPDARS = IsDlgButtonChecked(hDlg,IDC_CHECK_NOPDARS);
-					if (m_noPDARS) dbyte |= 0x04;
-			
-					WriteByteS0(choosen_board, dbyte,0x2B);//TOFLAG reg
-					*/
-
-					if (IsDlgButtonChecked(hDlg,IDC_ECCNT_RADIO1)==TRUE) m_ECmodus=1; //CNT
-					if (IsDlgButtonChecked(hDlg,IDC_ECCNT_RADIO2)==TRUE) m_ECmodus=2;
-					if (IsDlgButtonChecked(hDlg,IDC_ECCNT_RADIO3)==TRUE) m_ECmodus=3;
-					if (IsDlgButtonChecked(hDlg,IDC_ECCNT_RADIO4)==TRUE) m_ECmodus=4;
-
-					if (IsDlgButtonChecked(hDlg,IDC_RADIO11)==TRUE) {m_ECTrigmodus=1;}
-					if (IsDlgButtonChecked(hDlg,IDC_RADIO12)==TRUE) {m_ECTrigmodus=2;}
-					if (IsDlgButtonChecked(hDlg,IDC_RADIO13)==TRUE) {m_ECTrigmodus=3;}
-					if (IsDlgButtonChecked(hDlg,IDC_RADIO14)==TRUE) {m_ECTrigmodus=4;}
+			/*
+			switch (m_TOmodus)
+			{	case 1: dbyte = 0x0; break; //XCK
+				case 2: dbyte = 0x80; break; //REG
+				case 3: dbyte = 0x40; break; //EC
+				case 4: dbyte = 0x08; break; //DAT
+				case 5: d
 
 
-					m_ECmodus=1; //reset to timer mode
-					m_ECTrigmodus=1;
+					byte = 0x20; break; //TRIGIN
+				case 6: dbyte = 0x10; break; //FFXCK
+				case 7: dbyte |= 0x70; break; //Block Trig
+				default:  dbyte = 0x0; // XCKI
+			}
+
+			m_noPDARS = IsDlgButtonChecked(hDlg,IDC_CHECK_NOPDARS);
+			if (m_noPDARS) dbyte |= 0x04;
+
+			WriteByteS0(choosen_board, dbyte,0x2B);//TOFLAG reg
+			*/
+
+			if (IsDlgButtonChecked(hDlg, IDC_ECCNT_RADIO1) == TRUE) m_ECmodus = 1; //CNT
+			if (IsDlgButtonChecked(hDlg, IDC_ECCNT_RADIO2) == TRUE) m_ECmodus = 2;
+			if (IsDlgButtonChecked(hDlg, IDC_ECCNT_RADIO3) == TRUE) m_ECmodus = 3;
+			if (IsDlgButtonChecked(hDlg, IDC_ECCNT_RADIO4) == TRUE) m_ECmodus = 4;
+
+			if (IsDlgButtonChecked(hDlg, IDC_RADIO11) == TRUE) { m_ECTrigmodus = 1; }
+			if (IsDlgButtonChecked(hDlg, IDC_RADIO12) == TRUE) { m_ECTrigmodus = 2; }
+			if (IsDlgButtonChecked(hDlg, IDC_RADIO13) == TRUE) { m_ECTrigmodus = 3; }
+			if (IsDlgButtonChecked(hDlg, IDC_RADIO14) == TRUE) { m_ECTrigmodus = 4; }
+
+
+			m_ECmodus = 1; //reset to timer mode
+			m_ECTrigmodus = 1;
 
 
 
-		//			OpenShutter(choosen_board); //EC works only if shutter open
-					
-		EndDialog(hDlg, TRUE);
-		return (TRUE);
-		break;
+			//			OpenShutter(choosen_board); //EC works only if shutter open
+
+			EndDialog(hDlg, TRUE);
+			return (TRUE);
+			break;
 		} //WM_COMMAND	
 
 	}//	   message
-   return (FALSE); 
+	return (FALSE);
 }//SetupEC
 
 
