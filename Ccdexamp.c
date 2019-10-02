@@ -27,11 +27,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 }	// END WinMain
 
 
-
 BOOL InitApplication(HINSTANCE hInstance) {
 
 	WNDCLASS wc;
-
 
 	// Register the main application window class.
 	//............................................
@@ -46,12 +44,7 @@ BOOL InitApplication(HINSTANCE hInstance) {
 	wc.lpszMenuName = lpszAppName;
 	wc.lpszClassName = lpszAppName;
 
-	if (IS_WIN95)
-	{
-		if (!RegisterWin95(&wc))
-			return(FALSE);
-	}
-	else if (!RegisterClass(&wc))
+	if (!RegisterClass(&wc))
 		return(FALSE);
 
 #ifdef _DLL
@@ -115,7 +108,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 
 	if (!hWnd)  return(FALSE);
 
-
 	//RSInterface(choosen_board);
 	//	if (! InitBoard(choosen_board)) //Error message in InitBoard
 	//		return (FALSE); 
@@ -136,7 +128,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 	// init high resolution counter 	
 //	TPS = InitHRCounter();
 //	if (TPS==0) return (FALSE);
-
 /*
 	CloseShutter(choosen_board); //set cooling  off
 
@@ -626,18 +617,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_HSCROLL://ID_TRACKBAR:
 		//Define your function.
-
 		cur_nospb = SendMessage(hwndTrack, TBM_GETPOS, 0, 0);
 		cur_nob = SendMessage(hwndTrack2, TBM_GETPOS, 0, 0);
 		cur_nospb *= trackbar_nospb_multiplier;
 		cur_nob *= trackbar_nob_multiplier;
 		CopytoDispbuf(cur_nob*cur_nospb + cur_nospb);
 		Display(1, PLOTFLAG);
-
 		UpdateTxT();
+		//TODO: doesn't work yet:
+		// display different frame in 2D viewer when nob changes
+		void* pointer_to_current_block = testbitmap + cur_nob * TESTBITMAP_WIDTH * TESTBITMAP_HEIGTH;
+		Direct2dViewer_setBitmapSource(Direct2dViewer, pointer_to_current_block, TESTBITMAP_WIDTH, TESTBITMAP_HEIGTH);
+		//BOOL succeeded = FALSE;
+		////succeeded = UpdateWindow(Direct2dViewer_getWindowHandler(Direct2dViewer));
+		//succeeded = RedrawWindow(Direct2dViewer_getWindowHandler(Direct2dViewer), NULL, NULL, RDW_INTERNALPAINT);
+		//if(succeeded) MessageBox(hWnd, "yes", "DMA transfer payloads", MB_OK);
+		//else   MessageBox(hWnd, "no", "DMA transfer payloads", MB_OK);
 		//j = sprintf_s(TrmsString + j, 260, " x: %i y: %i=0x%x ", xPos, yVal, yVal);
 		//TextOut(hMSDC, 20, YLENGTH + 50, TrmsString, j);
-
 		//sprintf(s, "%d", dwPos);
 		//MessageBox(hMSWND, s, "Position", MB_OK);
 		break;
@@ -717,12 +714,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case ID_START_ALLOC:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hWnd, (DLGPROC)AllocateBuf);//
 			break;
-
-
 		case ID_CHOOSEBOARD:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_CHOOSEBOARD), hWnd, (DLGPROC)ChooseBoard);
 			break;
-
 		case IDM_ShowTRMS: //invert state
 			if (ShowTrms == TRUE)
 			{
@@ -733,23 +727,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				ShowTrms = TRUE;
 			}
 			break;
-
 		case ID_VIEW_2DVIEWER:
 		{
-
-			Direct2dViewer_setBitmapSource(Direct2dViewer, (void *)testbitmap, TESTBITMAP_WIDTH, TESTBITMAP_HEIGTH);
-			Direct2dViewer_Initialize(Direct2dViewer);
-
-			//Direct2dViewer_show(Direct2dViewer);
+			//calculate pointer to current block in data to be displayed
+			void* pointer_to_current_block = testbitmap + cur_nob * TESTBITMAP_WIDTH * TESTBITMAP_HEIGTH;
+			//tell 2D viewer which data to use
+			Direct2dViewer_setBitmapSource(Direct2dViewer, pointer_to_current_block, TESTBITMAP_WIDTH, TESTBITMAP_HEIGTH);
+			//start 2D viewer
+			Direct2dViewer_Initialize(Direct2dViewer, hMSWND);
 			break;
 		}
 		case IDM_EXIT:
-
 			DestroyWindow(hWnd);
 			break;
 		}
 		break;
-
+	case WM_2DVIEWER_CLOSED:
+		//recreate instance of 2D viewer
+		Direct2dViewer_delete(Direct2dViewer);
+		Direct2dViewer = Direct2dViewer_new();
+		break;
 	case WM_KEYDOWN:
 		switch (wParam)
 		{
@@ -843,13 +840,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			UpdateTxT();
 		}
 		break;
-
-		/*	case WM_PAINT:
-			case WM_WINDOWPOSCHANGED  :
-				ShowWindow(hWnd,SW_SHOW);
-				//Display( 1,PLOTFLAG);
-				break;
-		*/
+	/*case WM_PAINT:
+	case WM_WINDOWPOSCHANGED  :
+		ShowWindow(hWnd,SW_SHOW);
+		//Display( 1,PLOTFLAG);
+		break;
+	*/
 	case WM_DESTROY:
 		//stop timer if it is still running
 		Running = FALSE;
@@ -857,117 +853,108 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		//CleanupPCIE_DMA(choosen_board);
 		//StopRingReadThread();
 		//board 1
-
 		if (NUMBER_OF_BOARDS >= 2) {
 			StopFFTimer(2);
 			SetIntFFTrig(2);//disables ext. Trig.
 			CCDDrvExit(2);
 		}
-
 		StopFFTimer(1);
 		SetIntFFTrig(1);//disables ext. Trig.
 		//WDC_DriverClose();
 		CCDDrvExit(1);
 		//board 2
 		ReleaseDC(hMSWND, hMSDC);
-
 		PostQuitMessage(0);
 		break;
 #else
-		case VK_F2://switch cooling on
-			DLLActCooling(choosen_board, TRUE);
-			break;
-		case VK_F3://switch cooling off
-			DLLActCooling(choosen_board, FALSE);
-			break;
-		case VK_F4:
-		{//check temp good
-			int j = 0;
-			char header[260];
-
-			if (DLLTempGood(choosen_board, 1) == TRUE)
-			{
-				j = sprintf_s(header, 260, " temp1 good        ");
-			}
-			else
-				j = sprintf_s(header, 260, " temp1 not good ");
-
-			if (DLLTempGood(choosen_board, 2) == TRUE)
-			{
-				j += sprintf_s(header + j, 260, " temp2 good        ");
-			}
-			else
-				j += sprintf_s(header + j, 260, " temp2 not good ");
-
-			TextOut(hMSDC, 100, LOY + YLENGTH + 17, header, j);
-			break;
-		}
-		case VK_F5: //send IR_Setup
-					//SetupIR(choosen_board,1); //reset
-					// RE&RS enable
-					//WriteByteS0(choosen_board,0x0f,0x30);
-			break;
-		case VK_F7: //set high amp
-			HIAMP = TRUE;
-			DLLVOn(choosen_board);
-			break;
-		case VK_F8: //set low amp
-			HIAMP = FALSE;
-			DLLVOff(choosen_board);
-			break;
-
-			//case VK_SHIFT:
-		case VK_UP: //change y-scale
-			if (GetAsyncKeyState(VK_SHIFT)) { YSHIFT += 1; }
-			else XOFF += 1;
-			if (YSHIFT > 16) YSHIFT = 16;
-			if (XOFF > _PIXEL / 600) XOFF = _PIXEL / 600;
-			break;
-		case VK_DOWN:
-			if (GetAsyncKeyState(VK_SHIFT)) { YSHIFT -= 1; }
-			else XOFF -= 1;
-			if (YSHIFT < 0) YSHIFT = 0;
-			if (XOFF < 1) XOFF = 1;
-			break;
-		case VK_RIGHT:
-			/*XStart += 100;
-			if (XStart>_PIXEL-XLENGTH*XOFF)
-			XStart -= 100;*/
-			PixelOdd = TRUE;
-			break;
-		case VK_LEFT:
-			/* XStart -= 100;
-			if (XStart<0) XStart=0; */
-			PixelOdd = FALSE;
-			break;
-		case VK_ESCAPE: //stop measurement
-		case VK_SPACE:
-			Running = FALSE;
-			//Sleep(20);
-			//CleanupPCIE_DMA(choosen_board);
-			DLLStopRingReadThread();
-			DLLStopFFTimer(choosen_board);
-			DLLSetIntTrig(choosen_board);//disables ext. Trig.
-			UpdateTxT();
-			break;
-
-			//TODO: What is this?
-	}
+	case VK_F2://switch cooling on
+		DLLActCooling(choosen_board, TRUE);
 		break;
+	case VK_F3://switch cooling off
+		DLLActCooling(choosen_board, FALSE);
+		break;
+	case VK_F4:
+	{//check temp good
+		int j = 0;
+		char header[260];
 
+		if (DLLTempGood(choosen_board, 1) == TRUE)
+		{
+			j = sprintf_s(header, 260, " temp1 good        ");
+		}
+		else
+			j = sprintf_s(header, 260, " temp1 not good ");
+
+		if (DLLTempGood(choosen_board, 2) == TRUE)
+		{
+			j += sprintf_s(header + j, 260, " temp2 good        ");
+		}
+		else
+			j += sprintf_s(header + j, 260, " temp2 not good ");
+
+		TextOut(hMSDC, 100, LOY + YLENGTH + 17, header, j);
+		break;
+	}
+	case VK_F5: //send IR_Setup
+				//SetupIR(choosen_board,1); //reset
+				// RE&RS enable
+				//WriteByteS0(choosen_board,0x0f,0x30);
+		break;
+	case VK_F7: //set high amp
+		HIAMP = TRUE;
+		DLLVOn(choosen_board);
+		break;
+	case VK_F8: //set low amp
+		HIAMP = FALSE;
+		DLLVOff(choosen_board);
+		break;
+	//case VK_SHIFT:
+	case VK_UP: //change y-scale
+		if (GetAsyncKeyState(VK_SHIFT)) { YSHIFT += 1; }
+		else XOFF += 1;
+		if (YSHIFT > 16) YSHIFT = 16;
+		if (XOFF > _PIXEL / 600) XOFF = _PIXEL / 600;
+		break;
+	case VK_DOWN:
+		if (GetAsyncKeyState(VK_SHIFT)) { YSHIFT -= 1; }
+		else XOFF -= 1;
+		if (YSHIFT < 0) YSHIFT = 0;
+		if (XOFF < 1) XOFF = 1;
+		break;
+	case VK_RIGHT:
+		/*XStart += 100;
+		if (XStart>_PIXEL-XLENGTH*XOFF)
+		XStart -= 100;*/
+		PixelOdd = TRUE;
+		break;
+	case VK_LEFT:
+		/* XStart -= 100;
+		if (XStart<0) XStart=0; */
+		PixelOdd = FALSE;
+		break;
+	case VK_ESCAPE: //stop measurement
+	case VK_SPACE:
+		Running = FALSE;
+		//Sleep(20);
+		//CleanupPCIE_DMA(choosen_board);
+		DLLStopRingReadThread();
+		DLLStopFFTimer(choosen_board);
+		DLLSetIntTrig(choosen_board);//disables ext. Trig.
+		UpdateTxT();
+		break;
+	}
+	break;
 	case WM_MOUSEMOVE:
 		if (contimess_run_once) {
 			UpdateTxT();
 		}
-
 		break;
-
-		/*case WM_PAINT:
-		case WM_WINDOWPOSCHANGED  :
-			ShowWindow(hWnd,SW_SHOW);
-			//Display( 1,PLOTFLAG);
-			break;
-			*/
+	/*case WM_PAINT:
+	case WM_WINDOWPOSCHANGED  :
+		ShowWindow(hWnd,SW_SHOW);
+		//Display( 1,PLOTFLAG);
+		break;
+		*/
 	case WM_DESTROY:
 		//stop timer if it is still running
 		Running = FALSE;
@@ -984,12 +971,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		DLLStopFFTimer(1);
 		DLLSetIntTrig(1);//disables ext. Trig.
-						//WDC_DriverClose();
+		//WDC_DriverClose();
 		DLLCCDDrvExit(1);
 		//board 2
-
 		ReleaseDC(hMSWND, hMSDC);
-
 		PostQuitMessage(0);
 		break;
 #endif
@@ -1585,13 +1570,15 @@ void createTestBitmap() {
 	uint16_t i = 0;
 	int j = 0;
 
-	for (int line = 0; line < TESTBITMAP_HEIGTH - 1; line++) {
-		for (int pixel = 0; pixel < TESTBITMAP_WIDTH - 1; pixel++) {
-			testbitmap[i + j * 0xffff] = i;
-			i++;
-			if (i % 0xffff == 0) {
-				i = 0;
-				j++;
+	for (int blocks = 0; blocks < TESTBITMAP_BLOCKS; blocks++) {
+		for (int line = 0; line < TESTBITMAP_HEIGTH - 1; line++) {
+			for (int pixel = 0; pixel < TESTBITMAP_WIDTH - 1; pixel++) {
+				testbitmap[i + j * 0xffff] = i * blocks;
+				i++;
+				if (i % 0xffff == 0) {
+					i = 0;
+					j++;
+				}
 			}
 		}
 	}

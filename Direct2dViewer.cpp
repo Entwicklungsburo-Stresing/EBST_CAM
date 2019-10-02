@@ -22,7 +22,7 @@ int WINAPI WinMain_old(
 		{
 			Direct2dViewer app;
 
-			if (SUCCEEDED(app.Initialize()))
+			if (SUCCEEDED(app.Initialize(NULL)))
 			{
 				app.RunMessageLoop();
 			}
@@ -61,7 +61,7 @@ Direct2dViewer::~Direct2dViewer()
 // Creates the application window and initializes
 // device-independent resources.
 //
-HRESULT Direct2dViewer::Initialize()
+HRESULT Direct2dViewer::Initialize(HWND hWndParent)
 {
 	HRESULT hr = S_OK;
 
@@ -103,7 +103,7 @@ HRESULT Direct2dViewer::Initialize()
 			CW_USEDEFAULT,
 			static_cast<UINT>(ceil(640.f * dpiX / 96.f)),
 			static_cast<UINT>(ceil(480.f * dpiY / 96.f)),
-			NULL,
+			hWndParent,
 			NULL,
 			HINST_THISCOMPONENT,
 			this
@@ -267,7 +267,6 @@ HRESULT Direct2dViewer::OnRender()
 				renderTargetSize.height)
 		);
 
-
 		hr = m_pRenderTarget->EndDraw();
 
 		if (hr == D2DERR_RECREATE_TARGET)
@@ -317,8 +316,6 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
 			GWLP_USERDATA,
 			PtrToUlong(D2DV)
 		);
-
-		result = 1;
 	}
 	else
 	{
@@ -357,11 +354,11 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
 			break;
 
 			case WM_DESTROY:
-				//{
-				//    PostQuitMessage(0);
-				//}
-				//result = 1;
-				////wasHandled = true;
+				//send custom message to main window about closing 2d viewer
+				HWND hWndOwner = GetWindow(hwnd, GW_OWNER);
+				SendMessage(hWndOwner, WM_2DVIEWER_CLOSED, NULL, NULL);
+				result = 1;
+				wasHandled = true;
 				break;
 			}
 		}
@@ -443,4 +440,9 @@ void Direct2dViewer::setBitmapSource(void *addr, UINT width, UINT height)
 	_bitmapSource.width = width;
 	_bitmapSource.height = height;
 	return;
+}
+
+HWND Direct2dViewer::getWindowHandler()
+{
+	return m_hwnd;
 }

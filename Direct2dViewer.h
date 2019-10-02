@@ -65,6 +65,7 @@ EXTERN_C IMAGE_DOS_HEADER __ImageBase;
 #define HINST_THISCOMPONENT ((HINSTANCE)&__ImageBase)
 #endif
 
+#define WM_2DVIEWER_CLOSED (WM_USER + 0x0001)
 /******************************************************************
 *                                                                 *
 *  Direct2dViewer                                                 *
@@ -77,7 +78,7 @@ public:
 	Direct2dViewer();
 	~Direct2dViewer();
 
-	HRESULT Initialize();
+	HRESULT Initialize(HWND hWndParent);
 	void ShowViewer();
 
 	void RunMessageLoop();
@@ -87,6 +88,8 @@ public:
 		UINT width,
 		UINT height
 	);
+
+	HWND getWindowHandler();
 
 private:
 	HRESULT CreateDeviceIndependentResources();
