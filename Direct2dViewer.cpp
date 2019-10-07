@@ -4,37 +4,6 @@
 #include "Direct2dViewer.h"
 
 //
-// Provides the entry point to the application.
-//
-int WINAPI WinMain_old(
-	HINSTANCE /* hInstance */,
-	HINSTANCE /* hPrevInstance */,
-	LPSTR /* lpCmdLine */,
-	int /* nCmdShow */
-)
-{
-	// Ignore the return value because we want to continue running even in the
-	// unlikely event that HeapSetInformation fails.
-	HeapSetInformation(NULL, HeapEnableTerminationOnCorruption, NULL, 0);
-
-	if (SUCCEEDED(CoInitialize(NULL)))
-	{
-		{
-			Direct2dViewer app;
-
-			if (SUCCEEDED(app.Initialize(NULL)))
-			{
-				app.RunMessageLoop();
-			}
-		}
-		CoUninitialize();
-	}
-
-	return 0;
-}
-
-
-//
 // Initialize members.
 //
 Direct2dViewer::Direct2dViewer() :
@@ -118,13 +87,6 @@ HRESULT Direct2dViewer::Initialize(HWND hWndParent)
 
 	return hr;
 }
-
-// not used
-void Direct2dViewer::ShowViewer() {
-	ShowWindow(m_hwnd, SW_HIDE); //SW_SHOWNORMAL
-	UpdateWindow(m_hwnd);
-}
-
 
 //
 // Create resources which are not bound
@@ -387,13 +349,13 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory(
 
 	if (SUCCEEDED(hr))
 	{
-		// Create the initial frame.
+		// Create the initial frame as WIC bitmap.
 		hr = pIWICFactory->CreateBitmapFromMemory(
 			_bitmapSource.width,
 			_bitmapSource.height,
 			GUID_WICPixelFormat16bppGray,
-			_bitmapSource.width * 2,
-			_bitmapSource.height * _bitmapSource.width * 2,
+			_bitmapSource.width * 2, //two bytes per pixel
+			_bitmapSource.height * _bitmapSource.width * 2, //two bytes per pixel
 			reinterpret_cast<BYTE*>(_bitmapSource.addr),
 			&ppIBitmap
 		);
@@ -448,8 +410,10 @@ HWND Direct2dViewer::getWindowHandler()
 HRESULT Direct2dViewer::updateBitmap() {
 	HRESULT hr = S_OK;
 
+	//release old bitmap
 	SafeRelease(&m_pBitmap);
 
+	//create new bitmap
 	hr = Load16bitGreyscaleBitmapFromMemory(
 		m_pRenderTarget,
 		m_pWICFactory,
