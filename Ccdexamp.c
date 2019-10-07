@@ -623,8 +623,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// display different frame in 2D viewer when nob changes
 		// check if 2d viewer instance is existing
 		if (Direct2dViewer) {
-			void* pointer_to_current_block = testbitmap + cur_nob * TESTBITMAP_WIDTH * TESTBITMAP_HEIGTH;
-			Direct2dViewer_setBitmapSource(Direct2dViewer, pointer_to_current_block, TESTBITMAP_WIDTH, TESTBITMAP_HEIGTH);
+			//calculate pointer to current block in data to be displayed
+			void* pointer_to_current_block = testbitmap + cur_nob * _PIXEL * Nospb;
+			//tell 2D viewer which data to use
+			Direct2dViewer_setBitmapSource(Direct2dViewer, pointer_to_current_block, _PIXEL, Nospb);
+			//update 2D viewer
 			Direct2dViewer_updateBitmap(Direct2dViewer);
 			SendMessage(Direct2dViewer_getWindowHandler(Direct2dViewer), WM_PAINT, NULL, NULL);
 		}
@@ -717,13 +720,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 		case ID_VIEW_2DVIEWER:
 		{
+			testbitmap = malloc(_PIXEL * Nospb * Nob * sizeof(uint16_t));
 			//initialize 2D Viewer
 			Direct2dViewer = Direct2dViewer_new();
-			createTestBitmap();
+			createTestBitmap(Nob, Nospb, _PIXEL);
 			//calculate pointer to current block in data to be displayed
-			void* pointer_to_current_block = testbitmap + cur_nob * TESTBITMAP_WIDTH * TESTBITMAP_HEIGTH;
+			void* pointer_to_current_block = testbitmap + cur_nob * _PIXEL * Nospb;
 			//tell 2D viewer which data to use
-			Direct2dViewer_setBitmapSource(Direct2dViewer, pointer_to_current_block, TESTBITMAP_WIDTH, TESTBITMAP_HEIGTH);
+			Direct2dViewer_setBitmapSource(Direct2dViewer, pointer_to_current_block, _PIXEL, Nospb);
 			//start 2D viewer
 			Direct2dViewer_Initialize(Direct2dViewer, hMSWND);
 			break;
@@ -737,6 +741,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		//release instance of 2D viewer
 		Direct2dViewer_delete(Direct2dViewer);
 		Direct2dViewer = NULL;
+		free(testbitmap);
 		break;
 	case WM_KEYDOWN:
 		switch (wParam)
@@ -1538,15 +1543,15 @@ LRESULT CALLBACK SetupEC(HWND hDlg,
 }//SetupEC
 
 
-void createTestBitmap() {
+void createTestBitmap(UINT blocks, UINT height, UINT width) {
 	//create test data
 	uint16_t i = 0;
 	int j = 0;
 
-	for (int blocks = 0; blocks < TESTBITMAP_BLOCKS; blocks++) {
-		for (int line = 0; line < TESTBITMAP_HEIGTH - 1; line++) {
-			for (int pixel = 0; pixel < TESTBITMAP_WIDTH - 1; pixel++) {
-				testbitmap[i + j * 0xffff] = i * blocks;
+	for (int b = 0; b < blocks; b++) {
+		for (int line = 0; line < height - 1; line++) {
+			for (int pixel = 0; pixel < width - 1; pixel++) {
+				testbitmap[i + j * 0xffff] = i + b;
 				i++;
 				if (i % 0xffff == 0) {
 					i = 0;
