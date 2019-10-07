@@ -121,10 +121,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 	UpdateWindow(hWnd);
 	//	AboutDrv(choosen_board);		//shows driver version and Board ID
 
-	//initialize 2D Viewer
-	Direct2dViewer = Direct2dViewer_new();
-	createTestBitmap();
-
 	// init high resolution counter 	
 //	TPS = InitHRCounter();
 //	if (TPS==0) return (FALSE);
@@ -624,22 +620,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CopytoDispbuf(cur_nob*cur_nospb + cur_nospb);
 		Display(1, PLOTFLAG);
 		UpdateTxT();
-		//TODO: doesn't work yet:
 		// display different frame in 2D viewer when nob changes
-		void* pointer_to_current_block = testbitmap + cur_nob * TESTBITMAP_WIDTH * TESTBITMAP_HEIGTH;
-		Direct2dViewer_setBitmapSource(Direct2dViewer, pointer_to_current_block, TESTBITMAP_WIDTH, TESTBITMAP_HEIGTH);
-		Direct2dViewer_updateBitmap(Direct2dViewer);
-		SendMessage(Direct2dViewer_getWindowHandler(Direct2dViewer), WM_PAINT, NULL, NULL);
-
-		//BOOL succeeded = FALSE;
-		////succeeded = UpdateWindow(Direct2dViewer_getWindowHandler(Direct2dViewer));
-		//succeeded = RedrawWindow(Direct2dViewer_getWindowHandler(Direct2dViewer), NULL, NULL, RDW_INTERNALPAINT);
-		//if(succeeded) MessageBox(hWnd, "yes", "DMA transfer payloads", MB_OK);
-		//else   MessageBox(hWnd, "no", "DMA transfer payloads", MB_OK);
-		//j = sprintf_s(TrmsString + j, 260, " x: %i y: %i=0x%x ", xPos, yVal, yVal);
-		//TextOut(hMSDC, 20, YLENGTH + 50, TrmsString, j);
-		//sprintf(s, "%d", dwPos);
-		//MessageBox(hMSWND, s, "Position", MB_OK);
+		// check if 2d viewer instance is existing
+		if (Direct2dViewer) {
+			void* pointer_to_current_block = testbitmap + cur_nob * TESTBITMAP_WIDTH * TESTBITMAP_HEIGTH;
+			Direct2dViewer_setBitmapSource(Direct2dViewer, pointer_to_current_block, TESTBITMAP_WIDTH, TESTBITMAP_HEIGTH);
+			Direct2dViewer_updateBitmap(Direct2dViewer);
+			SendMessage(Direct2dViewer_getWindowHandler(Direct2dViewer), WM_PAINT, NULL, NULL);
+		}
 		break;
 
 	case WM_COMMAND:
@@ -729,6 +717,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 		case ID_VIEW_2DVIEWER:
 		{
+			//initialize 2D Viewer
+			Direct2dViewer = Direct2dViewer_new();
+			createTestBitmap();
 			//calculate pointer to current block in data to be displayed
 			void* pointer_to_current_block = testbitmap + cur_nob * TESTBITMAP_WIDTH * TESTBITMAP_HEIGTH;
 			//tell 2D viewer which data to use
@@ -743,9 +734,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case WM_2DVIEWER_CLOSED:
-		//recreate instance of 2D viewer
+		//release instance of 2D viewer
 		Direct2dViewer_delete(Direct2dViewer);
-		Direct2dViewer = Direct2dViewer_new();
+		Direct2dViewer = NULL;
 		break;
 	case WM_KEYDOWN:
 		switch (wParam)
