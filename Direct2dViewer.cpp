@@ -226,7 +226,9 @@ HRESULT Direct2dViewer::OnRender()
 				0,
 				0,
 				renderTargetSize.width,
-				renderTargetSize.height)
+				renderTargetSize.height),
+			1.0f,
+			D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR
 		);
 
 		hr = m_pRenderTarget->EndDraw();
