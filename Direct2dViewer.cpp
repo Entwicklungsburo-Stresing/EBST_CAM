@@ -337,9 +337,9 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
 				UINT height = HIWORD(lParam);
 				D2DV->OnResize(width, height);
 			}
-			result = 0;
-			wasHandled = true;
-			break;
+				result = 0;
+				wasHandled = true;
+				break;
 
 			case WM_PAINT:
 			case WM_DISPLAYCHANGE:
@@ -349,9 +349,9 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
 				D2DV->OnRender();
 				EndPaint(hwnd, &ps);
 			}
-			result = 0;
-			wasHandled = true;
-			break;
+				result = 0;
+				wasHandled = true;
+				break;
 
 			case WM_DESTROY:
 				//send custom message to main window about closing 2d viewer
@@ -362,13 +362,11 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
 				break;
 			}
 		}
-
 		if (!wasHandled)
 		{
 			result = DefWindowProc(hwnd, message, wParam, lParam);
 		}
 	}
-
 	return result;
 }
 
@@ -445,4 +443,18 @@ void Direct2dViewer::setBitmapSource(void *addr, UINT width, UINT height)
 HWND Direct2dViewer::getWindowHandler()
 {
 	return m_hwnd;
+}
+
+HRESULT Direct2dViewer::updateBitmap() {
+	HRESULT hr = S_OK;
+
+	SafeRelease(&m_pBitmap);
+
+	hr = Load16bitGreyscaleBitmapFromMemory(
+		m_pRenderTarget,
+		m_pWICFactory,
+		&m_pBitmap
+	);
+
+	return hr;
 }

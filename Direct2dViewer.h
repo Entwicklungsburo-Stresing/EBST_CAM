@@ -89,6 +89,8 @@ public:
 		UINT height
 	);
 
+	HRESULT updateBitmap();
+
 	HWND getWindowHandler();
 
 private:
