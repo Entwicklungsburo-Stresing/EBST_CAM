@@ -172,21 +172,6 @@ void Direct2dViewer::DiscardDeviceResources()
 }
 
 //
-// The main window message loop.
-//
-void Direct2dViewer::RunMessageLoop()
-{
-	MSG msg;
-
-	while (GetMessage(&msg, NULL, 0, 0))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-}
-
-
-//
 //  Called whenever the application needs to display the client
 //  window.
 //
