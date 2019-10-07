@@ -19,13 +19,6 @@ void Direct2dViewer_Initialize(void* D2dV, HWND hWndParent)
 	return;
 }
 
-void Direct2dViewer_show(void *D2dV)
-{
-	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
-	D2d->ShowViewer();
-	return;
-}
-
 void Direct2dViewer_setBitmapSource(void *D2dV, void *addr, UINT width, UINT height)
 {
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
