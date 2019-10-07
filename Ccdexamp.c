@@ -628,6 +628,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// display different frame in 2D viewer when nob changes
 		void* pointer_to_current_block = testbitmap + cur_nob * TESTBITMAP_WIDTH * TESTBITMAP_HEIGTH;
 		Direct2dViewer_setBitmapSource(Direct2dViewer, pointer_to_current_block, TESTBITMAP_WIDTH, TESTBITMAP_HEIGTH);
+		Direct2dViewer_updateBitmap(Direct2dViewer);
+		SendMessage(Direct2dViewer_getWindowHandler(Direct2dViewer), WM_PAINT, NULL, NULL);
+
 		//BOOL succeeded = FALSE;
 		////succeeded = UpdateWindow(Direct2dViewer_getWindowHandler(Direct2dViewer));
 		//succeeded = RedrawWindow(Direct2dViewer_getWindowHandler(Direct2dViewer), NULL, NULL, RDW_INTERNALPAINT);
@@ -664,7 +667,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			AboutDMA(hWnd);
 			break;
 
-
 		case IDM_ABOUTCFS:
 			AboutCFS(hWnd);
 			break;
@@ -690,12 +692,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			AboutDMA(hWnd);
 			break;
 
-
 		case IDM_ABOUTCFS:
 			AboutCFS(hWnd);
 			break;
 #endif
-
 		case IDM_START:
 			if (!Running) Contimess(&dummy);
 			break;
@@ -984,7 +984,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return(0L);
 }
 
-
 LRESULT CALLBACK About(HWND hDlg,
 	UINT message,
 	WPARAM wParam,
@@ -1007,11 +1006,6 @@ LRESULT CALLBACK About(HWND hDlg,
 
 	return (FALSE);
 }
-
-
-
-
-
 
 LRESULT CALLBACK SetupMeasure(HWND hDlg,
 	UINT message,
@@ -1184,10 +1178,8 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 					nDLLSetupDMA(2, Nospb, Nob);
 			}
 #else
-
 				if (pBLOCKBUF[choosen_board])
 					free(pBLOCKBUF[choosen_board]);
-
 				FreeMemInfo(&builtinram, &freeram);
 				freeram_old = freeram;
 
@@ -1196,7 +1188,6 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 				else
 					MessageBox(hMSWND, "allocating Buffer succeeded", "Message", MB_OK);
 			}
-
 			FreeMemInfo(&builtinram, &freeram);
 			SetDlgItemInt(hDlg, IDC_FREERAM, freeram / divMB, 0);
 			SetDlgItemInt(hDlg, IDC_BUILTINRAM, builtinram / divMB, 0);
@@ -1207,9 +1198,6 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 			else//if RAM is bigger than 100gb
 				SetDlgItemText(hDlg, IDC_ALLOCRAM, "calculation error");
 #endif
-
-
-
 			break;
 		case IDCONT:
 			cont_mode = TRUE;
@@ -1219,7 +1207,6 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 			nDLLSetupDMA(DRV, Nospb, Nob);
 			if (both_boards)
 				nDLLSetupDMA(2, Nospb, Nob);
-
 #else
 			if (!BufLock(choosen_board, CAMCNT, Nob, Nospb))
 				MessageBox(hMSWND, "allocating Buffer fails", "Error", MB_OK);
@@ -1233,13 +1220,9 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 					MessageBox(hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK);
 				SetCamVars(2, 2, _PIXEL, 0, 0);
 			}
-
 #endif
-
 			trackbar_nospb = Nospb;
-
 			trackbar_nob = Nob;
-
 			//update trackbars
 			SendMessage(hwndTrack2, TBM_SETRANGE, TRUE,
 				MAKELONG(0/*MIN RANGE*/, trackbar_nob - 1/*MAX RANGE*/));  //Optional, Default is 0-100
@@ -1250,7 +1233,6 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 			EndDialog(hDlg, TRUE);
 			return (TRUE);
 			break;
-
 		}
 		break; //WM_COMMAND
 

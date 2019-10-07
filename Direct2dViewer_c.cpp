@@ -38,3 +38,10 @@ HWND Direct2dViewer_getWindowHandler(void *D2dV)
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
 	return D2d->getWindowHandler();
 }
+
+void Direct2dViewer_updateBitmap(void* D2dV)
+{
+	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
+	D2d->updateBitmap();
+	return;
+}
