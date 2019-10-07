@@ -210,8 +210,6 @@ void AboutKeys(HWND hWnd)
 }
 
 
-
-
 void AboutCFS(HWND hWnd)
 {
 	int i, j = 0;
@@ -524,8 +522,6 @@ void AboutDMA(HWND hWnd)
 }//AboutDMA
 
 
-
-
 void AboutPCI(HWND hWnd)
 {
 	int i, j = 0;
@@ -550,7 +546,6 @@ void AboutPCI(HWND hWnd)
 
 	MessageBox(hWnd, fn, "PCI regs", MB_OK);
 }//AboutPCI
-
 
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -718,10 +713,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				ShowTrms = TRUE;
 			}
 			break;
-		case ID_VIEW_2DVIEWER:
+		case ID_2DVIEW_SHOW:
 		{
 			//check if 2d viewer instance is existing.
-			//only open new when when not existing
+			//only open new 2d viewer when not existing
 			if (!Direct2dViewer) {
 				testbitmap = malloc(_PIXEL * Nospb * Nob * sizeof(uint16_t));
 				//initialize 2D Viewer
@@ -734,6 +729,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				//start 2D viewer
 				Direct2dViewer_Initialize(Direct2dViewer, hMSWND);
 			}
+			break;
+		}
+		case ID_2DVIEW_START:
+		{
+			SendMessage(hwndTrack2, TBM_SETPOS, TRUE, 1);
+			SendMessage(hMSWND, WM_HSCROLL, NULL, NULL); 
 			break;
 		}
 		case IDM_EXIT:
@@ -1550,24 +1551,10 @@ LRESULT CALLBACK SetupEC(HWND hDlg,
 void createTestBitmap(UINT blocks, UINT height, UINT width) {
 	//create test data
 	uint16_t grey = 0;
-	int j = 0;
 
-	for (UINT i = 0; i < blocks * (height - 1) * (width - 1); i++) {
+	for (UINT i = 0; i < blocks * height * width; i++) {
 		testbitmap[i] = grey;
 		grey++;
 	}
-
-	//for (int b = 0; b < blocks; b++) {
-	//	for (int line = 0; line < height - 1; line++) {
-	//		for (int pixel = 0; pixel < width - 1; pixel++) {
-	//			testbitmap[i + j * 0xffff] = i;
-	//			i++;
-	//			if (i % 0xffff == 0) {
-	//				i = 0;
-	//				j++;
-	//			}
-	//		}
-	//	}
-	//}
 	return;
 }

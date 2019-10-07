@@ -79,7 +79,6 @@ public:
 	~Direct2dViewer();
 
 	HRESULT Initialize(HWND hWndParent);
-	void RunMessageLoop();
 	void setBitmapSource(
 		void *addr,
 		UINT width,

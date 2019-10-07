@@ -62,9 +62,10 @@ BEGIN
         MENUITEM "PCI space",                   IDM_ABOUTCFS
         MENUITEM "DMA",                         40019
     END
-    POPUP "View"
+    POPUP "2D View"
     BEGIN
-        MENUITEM "2D Viewer",                   ID_VIEW_2DVIEWER
+        MENUITEM "Show",						ID_2DVIEW_SHOW
+        MENUITEM "Play",                        ID_2DVIEW_START
     END
 END
 
