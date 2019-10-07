@@ -1549,20 +1549,25 @@ LRESULT CALLBACK SetupEC(HWND hDlg,
 
 void createTestBitmap(UINT blocks, UINT height, UINT width) {
 	//create test data
-	uint16_t i = 0;
+	uint16_t grey = 0;
 	int j = 0;
 
-	for (int b = 0; b < blocks; b++) {
-		for (int line = 0; line < height - 1; line++) {
-			for (int pixel = 0; pixel < width - 1; pixel++) {
-				testbitmap[i + j * 0xffff] = i;
-				i++;
-				if (i % 0xffff == 0) {
-					i = 0;
-					j++;
-				}
-			}
-		}
+	for (UINT i = 0; i < blocks * (height - 1) * (width - 1); i++) {
+		testbitmap[i] = grey;
+		grey++;
 	}
+
+	//for (int b = 0; b < blocks; b++) {
+	//	for (int line = 0; line < height - 1; line++) {
+	//		for (int pixel = 0; pixel < width - 1; pixel++) {
+	//			testbitmap[i + j * 0xffff] = i;
+	//			i++;
+	//			if (i % 0xffff == 0) {
+	//				i = 0;
+	//				j++;
+	//			}
+	//		}
+	//	}
+	//}
 	return;
 }
