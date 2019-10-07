@@ -79,40 +79,30 @@ public:
 	~Direct2dViewer();
 
 	HRESULT Initialize(HWND hWndParent);
-	void ShowViewer();
-
 	void RunMessageLoop();
-
 	void setBitmapSource(
 		void *addr,
 		UINT width,
 		UINT height
 	);
-
 	HRESULT updateBitmap();
-
 	HWND getWindowHandler();
 
 private:
 	HRESULT CreateDeviceIndependentResources();
 	HRESULT CreateDeviceResources();
-
 	void DiscardDeviceResources();
-
 	HRESULT OnRender();
-
 	void OnResize(
 		UINT width,
 		UINT height
 	);
-
 	static LRESULT CALLBACK WndProc(
 		HWND hWnd,
 		UINT message,
 		WPARAM wParam,
 		LPARAM lParam
 	);
-
 	HRESULT Load16bitGreyscaleBitmapFromMemory(
 		ID2D1RenderTarget *pRenderTarget,
 		IWICImagingFactory *pIWICFactory,
@@ -126,7 +116,6 @@ private:
 	IDWriteFactory *m_pDWriteFactory;
 	ID2D1HwndRenderTarget *m_pRenderTarget;
 	ID2D1Bitmap *m_pBitmap;
-
 	struct _BitmapSource
 	{
 		void	*addr;

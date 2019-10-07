@@ -14,7 +14,6 @@ extern "C"
 	void* Direct2dViewer_new();
 	void Direct2dViewer_Initialize(void* D2dV, HWND hWndParent);
 	void Direct2dViewer_delete(void *D2dV);
-	void Direct2dViewer_show(void *D2dV);
 	void Direct2dViewer_setBitmapSource(void *D2dV, void *addr, UINT width, UINT height);
 	HWND Direct2dViewer_getWindowHandler(void *D2dV);
 	void Direct2dViewer_updateBitmap(void* D2dV);
