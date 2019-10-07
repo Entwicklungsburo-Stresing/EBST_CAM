@@ -720,16 +720,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 		case ID_VIEW_2DVIEWER:
 		{
-			testbitmap = malloc(_PIXEL * Nospb * Nob * sizeof(uint16_t));
-			//initialize 2D Viewer
-			Direct2dViewer = Direct2dViewer_new();
-			createTestBitmap(Nob, Nospb, _PIXEL);
-			//calculate pointer to current block in data to be displayed
-			void* pointer_to_current_block = testbitmap + cur_nob * _PIXEL * Nospb;
-			//tell 2D viewer which data to use
-			Direct2dViewer_setBitmapSource(Direct2dViewer, pointer_to_current_block, _PIXEL, Nospb);
-			//start 2D viewer
-			Direct2dViewer_Initialize(Direct2dViewer, hMSWND);
+			//check if 2d viewer instance is existing.
+			//only open new when when not existing
+			if (!Direct2dViewer) {
+				testbitmap = malloc(_PIXEL * Nospb * Nob * sizeof(uint16_t));
+				//initialize 2D Viewer
+				Direct2dViewer = Direct2dViewer_new();
+				createTestBitmap(Nob, Nospb, _PIXEL);
+				//calculate pointer to current block in data to be displayed
+				void* pointer_to_current_block = testbitmap + cur_nob * _PIXEL * Nospb;
+				//tell 2D viewer which data to use
+				Direct2dViewer_setBitmapSource(Direct2dViewer, pointer_to_current_block, _PIXEL, Nospb);
+				//start 2D viewer
+				Direct2dViewer_Initialize(Direct2dViewer, hMSWND);
+			}
 			break;
 		}
 		case IDM_EXIT:
@@ -1551,7 +1555,7 @@ void createTestBitmap(UINT blocks, UINT height, UINT width) {
 	for (int b = 0; b < blocks; b++) {
 		for (int line = 0; line < height - 1; line++) {
 			for (int pixel = 0; pixel < width - 1; pixel++) {
-				testbitmap[i + j * 0xffff] = i + b;
+				testbitmap[i + j * 0xffff] = i;
 				i++;
 				if (i % 0xffff == 0) {
 					i = 0;
