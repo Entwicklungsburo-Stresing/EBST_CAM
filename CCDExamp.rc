@@ -64,7 +64,7 @@ BEGIN
     END
     POPUP "2D View"
     BEGIN
-        MENUITEM "Show",						ID_2DVIEW_SHOW
+        MENUITEM "Show",                        ID_2DVIEW_SHOW
         MENUITEM "Play",                        ID_2DVIEW_START
     END
 END
@@ -136,14 +136,14 @@ BEGIN
     LTEXT           "Number of scans per block",IDC_STATIC,7,68,85,8
     EDITTEXT        IDC_nob,162,44,70,14,ES_AUTOHSCROLL
     EDITTEXT        IDC_nospb,163,68,69,14,ES_AUTOHSCROLL
-    DEFPUSHBUTTON   "allocate",IDALLOC,182,110,50,14
+    PUSHBUTTON      "allocate",IDALLOC,182,110,50,14
     LTEXT           "FREE RAM MB",IDC_STATIC,7,23,46,8
     LTEXT           "BUILT-IN RAM MB",IDC_STATIC,7,7,58,8
     LTEXT           "0",IDC_BUILTINRAM,69,7,50,8
     LTEXT           "0",IDC_FREERAM,69,23,61,8
     LTEXT           "ALLOCATED RAM MB",IDC_STATIC,87,94,68,8
     LTEXT           "0",IDC_ALLOCRAM,171,94,61,8
-    DEFPUSHBUTTON   "Continuous",IDCONT,7,133,50,14
+    PUSHBUTTON      "Continuous",IDCONT,7,133,50,14
 END
 
 IDD_CHOOSEBOARD DIALOGEX 0, 0, 155, 159
