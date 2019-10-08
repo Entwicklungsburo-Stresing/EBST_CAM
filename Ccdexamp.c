@@ -560,7 +560,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	int trackbar_nob, trackbar_nospb, trackbar_nob_multiplier = 1, trackbar_nospb_multiplier = 1;
 	char *s = (char*)malloc(10);
 
-
 	char TrmsString[260];
 	int j = 0;
 	int xPos = GetCursorPosition();
@@ -1076,20 +1075,17 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 	UINT divMB = 1024 * 1024;
 	int trackbar_nob, trackbar_nospb, trackbar_nob_multiplier = 1, trackbar_nospb_multiplier = 1;
 
-
 	switch (message)
 	{
 	case WM_INITDIALOG:
 		SetDlgItemInt(hDlg, IDC_nob, Nob, FALSE);
 		SetDlgItemInt(hDlg, IDC_nospb, Nospb, FALSE);
-
 #ifndef _DLL
 		FreeMemInfo(&builtinram, &freeram);
 #else
 		DLLFreeMemInfo(&builtinram, &freeram);
 #endif
 		SetDlgItemInt(hDlg, IDC_BUILTINRAM, builtinram / divMB, 0);
-
 		return (TRUE);
 		break;
 
@@ -1113,7 +1109,6 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 				nDLLSetupDMA(DRV, Nospb, Nob);
 				if (both_boards)
 					nDLLSetupDMA(2, Nospb, Nob);
-
 #else
 				if (!BufLock(choosen_board, CAMCNT, Nob, Nospb))
 					MessageBox(hMSWND, "allocating Buffer fails", "Error", MB_OK);
@@ -1127,7 +1122,6 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 						MessageBox(hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK);
 					SetCamVars(2, 2, _PIXEL, 0, 0);
 				}
-
 #endif
 			}
 			trackbar_nospb = Nospb;
@@ -1172,7 +1166,6 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 			{
 				Nob = nob_input;
 				Nospb = nospb_input;
-
 #ifdef _DLL
 				nDLLSetupDMA(DRV, Nospb, Nob);
 				if (both_boards)
@@ -1236,13 +1229,9 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 			break;
 		}
 		break; //WM_COMMAND
-
 	}
-
 	return (FALSE);
 }
-
-
 
 LRESULT CALLBACK ChooseBoard(HWND hDlg,
 	UINT message,
