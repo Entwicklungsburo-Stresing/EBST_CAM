@@ -191,3 +191,4 @@ ModelManifest.xml
 *.opensdf
 .vs/enc_temp_folder/
 enc_temp_folder/
+.vs/

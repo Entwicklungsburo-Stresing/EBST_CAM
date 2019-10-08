@@ -43,8 +43,6 @@ General definitions
 // use LSCPCI1 on PCI Boards
 #define	DRIVERNAME	"\\\\.\\LSCPCIE"
 
-
-
 //****************************   !!!!!!!!!!!!!!!!!!!!!!!!    ****************************
 //try different methodes - only one may be TRUE!
 #define DMA_CONTIGBUF TRUE		// use if DMABigBuf is set by driver (data must be copied afterwards to DMABigBuf)
@@ -954,8 +952,6 @@ BOOL SendDMAInfoToKP(void){
 	WDC_Err("sendDMAInfoToKP hDma send failed\n");
 	return FALSE;
 	}
-	
-
 	return TRUE;
 }
 */
@@ -4873,3 +4869,56 @@ UINT8 WaitforTelapsed(LONGLONG musec)
 	if (loopcnt<100) return 1;
 	return 0; // loop was too short - exposure time must be increased
 }//WaitforTelapsed
+
+/*
+* Init routine for Camera System 3001
+* Sets register in camera.
+* param1: drvno - selects PCIe board
+* param2: pixel - pixel amount of camera
+* param3: trigger_input - selects trigger input. 0 - XCK, 1 - EXTTRIG, 2 - DAT
+* param4: IS_FFT - turns vclk on
+* return: void
+*/
+void InitCamera3001(UINT32 drvno, UINT16 pixel, UINT16 trigger_input, BOOL IS_FFT) {
+	//set camera pixel register
+	SendFLCAM(drvno, MADDR_CAM, CAM_REGADDR_PIXEL, pixel);
+	//set trigger input
+	SendFLCAM(drvno, MADDR_CAM, CAM_REGADDR_TRIG_IN, trigger_input);
+	//select vclk on
+	SendFLCAM(drvno, MADDR_CAM, CAM_REGADDR_VCLK, (UINT16)IS_FFT);
+}
+
+/*
+* Init routine for Camera System 3010
+* sensor S12198, frame rate 8kHz, 125us exp time
+* Sets register in camera and ADC LTC2271.
+* param1: drvno - selects PCIe board
+* param2: pixel - pixel amount of camera
+* param3: trigger_input - selects trigger input. 0 - XCK, 1 - EXTTRIG, 2 - DAT
+* param4: testmode - turns ADC test mode on
+* param5: testpattern - fixed output for testmode, ignored when testmode FALSE
+* param6: LED_ON
+* param7: GAIN_HIGH
+* return: void
+*/
+void InitCamera3010(UINT32 drvno, UINT16 pixel, UINT16 trigger_input, BOOL testmode, UINT16 testpattern, BOOL LED_ON, BOOL GAIN_HIGH) {
+	//reset ADC
+	SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_RESET, ADC_LTC2271_MSG_RESET);
+	//output mode
+	if (testmode) {
+		SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_OUTMODE, ADC_LTC2271_MSG_TESTPATTERN);
+		SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_TESTPATTERN_MSB, testpattern >> 8);
+		SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_TESTPATTERN_LSB, testpattern & 0x00FF);
+	}
+	else SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_OUTMODE, ADC_LTC2271_MSG_NORMAL_MODE);
+	//set camera pixel register
+	SendFLCAM(drvno, MADDR_CAM, CAM_REGADDR_PIXEL, pixel);
+	//set gain and led
+	SendFLCAM(drvno, MADDR_CAM, CAM_REGADDR_GAIN_LED, LED_ON << 4 & GAIN_HIGH);
+	//set trigger input
+	SendFLCAM(drvno, MADDR_CAM, CAM_REGADDR_TRIG_IN, trigger_input);
+}
+
+void InitCamera3030(UINT32 drvno) {
+
+}
