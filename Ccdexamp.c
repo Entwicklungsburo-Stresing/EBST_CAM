@@ -182,7 +182,6 @@ void AboutTiming(HWND hWnd)
 	MessageBox(hWnd, fn, "time", MB_OK);
 }
 
-
 void AboutKeys(HWND hWnd)
 {
 	int j = 0;
@@ -208,7 +207,6 @@ void AboutKeys(HWND hWnd)
 	j += sprintf_s(fn + j, s_size, "\n");
 	MessageBox(hWnd, fn, "time", MB_OK);
 }
-
 
 void AboutCFS(HWND hWnd)
 {
@@ -618,7 +616,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// check if 2d viewer instance is existing
 		if (Direct2dViewer) {
 			//calculate pointer to current block in data to be displayed
-			void* pointer_to_current_block = testbitmap + cur_nob * _PIXEL * Nospb;
+			void* pointer_to_current_block = testbitmap + cur_nob * _PIXEL * Nospb; // TODO: pDMABigBufBase is pointer to real data
 			//tell 2D viewer which data to use
 			Direct2dViewer_setBitmapSource(Direct2dViewer, pointer_to_current_block, _PIXEL, Nospb);
 			//update 2D viewer
