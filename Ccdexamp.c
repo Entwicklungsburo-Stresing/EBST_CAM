@@ -682,7 +682,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 #endif
 		case IDM_START:
-			if (!Running) Contimess(&dummy);
+			if (!Running) startMess(&dummy);
 			break;
 
 		case IDM_SETEXP:
@@ -736,7 +736,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SendMessage(hMSWND, WM_HSCROLL, NULL, NULL);
 			SetTimer(hMSWND,			// handle to main window 
 				IDT_TIMER1,					// timer identifier 
-				50,					// 1-second interval 
+				10,					
 				(TIMERPROC)NULL);		// no timer callback 
 			break;
 		}
@@ -753,7 +753,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_TIMER:
 		cur_nob++;
-		if (cur_nob > Nob) {
+		if (cur_nob >= Nob) {
 			KillTimer(hMSWND, IDT_TIMER1);
 			cur_nob--;
 		}
@@ -769,7 +769,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			AboutTiming(hWnd);
 			break;
 		case VK_F6:
-			if (!Running) Contimess(&dummy);
+			if (!Running) startMess(&dummy);
 			break;
 #ifndef _DLL
 		case VK_F2://switch cooling on
