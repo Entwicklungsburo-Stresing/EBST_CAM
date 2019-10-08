@@ -731,8 +731,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		case ID_2DVIEW_START:
 		{
-			SendMessage(hwndTrack2, TBM_SETPOS, TRUE, 1);
-			SendMessage(hMSWND, WM_HSCROLL, NULL, NULL); 
+			cur_nob = 0;
+			SendMessage(hwndTrack2, TBM_SETPOS, TRUE, cur_nob);
+			SendMessage(hMSWND, WM_HSCROLL, NULL, NULL);
+			SetTimer(hMSWND,			// handle to main window 
+				IDT_TIMER1,					// timer identifier 
+				50,					// 1-second interval 
+				(TIMERPROC)NULL);		// no timer callback 
 			break;
 		}
 		case IDM_EXIT:
@@ -745,6 +750,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		Direct2dViewer_delete(Direct2dViewer);
 		Direct2dViewer = NULL;
 		free(testbitmap);
+		break;
+	case WM_TIMER:
+		cur_nob++;
+		if (cur_nob > Nob) {
+			KillTimer(hMSWND, IDT_TIMER1);
+			cur_nob--;
+		}
+		else {
+			SendMessage(hwndTrack2, TBM_SETPOS, TRUE, cur_nob);
+			SendMessage(hMSWND, WM_HSCROLL, NULL, NULL);
+		}
 		break;
 	case WM_KEYDOWN:
 		switch (wParam)
@@ -1160,7 +1176,6 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 			else
 				SetDlgItemText(hDlg, IDC_CALCRAM, "calculation error");
 
-
 			//refresh test bitmap
 			createTestBitmap(Nob, Nospb, _PIXEL);
 
@@ -1192,14 +1207,12 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 			FreeMemInfo(&builtinram, &freeram);
 			SetDlgItemInt(hDlg, IDC_FREERAM, freeram / divMB, 0);
 			SetDlgItemInt(hDlg, IDC_BUILTINRAM, builtinram / divMB, 0);
-
 			allocram = (freeram_old - freeram) / divMB;
 			if (allocram < 100000)
 				SetDlgItemInt(hDlg, IDC_ALLOCRAM, allocram, 0);
 			else//if RAM is bigger than 100gb
 				SetDlgItemText(hDlg, IDC_ALLOCRAM, "calculation error");
 #endif
-
 			//refresh test bitmap
 			createTestBitmap(Nob, Nospb, _PIXEL);
 
@@ -1304,9 +1317,7 @@ LRESULT CALLBACK ChooseBoard(HWND hDlg,
 			break;
 		}
 		break; //WM_COMMAND
-
 	}
-
 	return (FALSE);
 }
 
@@ -1344,7 +1355,6 @@ LRESULT CALLBACK SetupTLevel(HWND hDlg,
 				DLLSetTemp(choosen_board, (UCHAR)TempLevel);
 		}
 #endif
-
 			EndDialog(hDlg, TRUE);
 			return (TRUE);
 			break;
