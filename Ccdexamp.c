@@ -717,7 +717,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			//check if 2d viewer instance is existing.
 			//only open new 2d viewer when not existing
 			if (!Direct2dViewer) {
-				testbitmap = malloc(_PIXEL * Nospb * Nob * sizeof(uint16_t));
 				//initialize 2D Viewer
 				Direct2dViewer = Direct2dViewer_new();
 				createTestBitmap(Nob, Nospb, _PIXEL);
@@ -1140,6 +1139,9 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 			SendMessage(hwndTrack, TBM_SETRANGE, TRUE,
 				MAKELONG(0/*MIN RANGE*/, trackbar_nospb - 1/*MAX RANGE*/));  //Optional, Default is 0-100
 
+			//refresh test bitmap
+			createTestBitmap(Nob, Nospb, _PIXEL);
+
 			EndDialog(hDlg, TRUE);
 			return (TRUE);
 			break;
@@ -1157,6 +1159,11 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 				SetDlgItemInt(hDlg, IDC_CALCRAM, calcram, 0);
 			else
 				SetDlgItemText(hDlg, IDC_CALCRAM, "calculation error");
+
+
+			//refresh test bitmap
+			createTestBitmap(Nob, Nospb, _PIXEL);
+
 			break;
 
 		case IDALLOC:
@@ -1192,6 +1199,10 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 			else//if RAM is bigger than 100gb
 				SetDlgItemText(hDlg, IDC_ALLOCRAM, "calculation error");
 #endif
+
+			//refresh test bitmap
+			createTestBitmap(Nob, Nospb, _PIXEL);
+
 			break;
 		case IDCONT:
 			cont_mode = TRUE;
@@ -1540,6 +1551,7 @@ LRESULT CALLBACK SetupEC(HWND hDlg,
 void createTestBitmap(UINT blocks, UINT height, UINT width) {
 	//create test data
 	uint16_t grey = 0;
+	testbitmap = malloc(_PIXEL * Nospb * Nob * sizeof(uint16_t));
 
 	for (UINT i = 0; i < blocks * height * width; i++) {
 		testbitmap[i] = grey;
