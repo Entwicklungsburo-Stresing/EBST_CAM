@@ -26,7 +26,13 @@
 // to avoid interrupt dependend routines; look BOARD->WaitTrigger
 #define _PS2KEYBOARD FALSE 
 
-
+//camera system select
+enum {
+	camera_system_3001 = 1,
+	camera_system_3010 = 2,
+	camera_system_3030 = 3
+};
+#define CAMERA_SYSTEM camera_system_3001
 //#define _HA_IR FALSE		//  must be true for Ha series G920x IR sensor - not for G11608
 //#define _HA_IRSingleCH FALSE// TRUE for Ha series G920x if IR Sensor has 256 pixel, FALSE if 512 - not G11608
 //#define _IR2 FALSE			// must be true for 2 parallel IR sensors of type G920x - not G11608
@@ -47,7 +53,6 @@
 //#define _FFPCI133 FALSE		// PCI version 133.x
 //BOOL _OLDCAL = FALSE;		// TRUE for  ADC16061
 
-
 #define _HWCH2	TRUE	//true if 2 words are packet in one long ->resort to db1&db2 = PCI with adaptor board
 						//all double line systems
 #define _RESORTDB	FALSE	//true if ->resort to db1&db2 - only no FIFO
@@ -64,7 +69,7 @@
 #define DMA_DMASPERINTR DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb nochmal /2
 
 #define _PIXEL  1088				// no of pixels min 300, should be multiple of 300, max 8100
-#define CAMCNT 2
+#define CAMCNT 1
 
 #if CAMCNT == 1
 BOOL DISP2 = FALSE;		//display 1 camera
@@ -126,10 +131,6 @@ static BOOL SYM_PULSE = FALSE;		// read FIFO is allways higest speed
 static BOOL BURSTMODE = TRUE;
 static 	unsigned long WAITS = 0x0;
 
-
-
-
-
 //valid for FIFO mode only
 //static	unsigned long PCLK = 5;	
 //this is the write to FIFO frequency / FREQ=datarate=pclk*2 if 12/16bit
@@ -137,10 +138,6 @@ static ULONG FREQ = 0; //=waits -> 0=33MHz;1=16MHz;2=8MHz max 6=0
 static ULONG DELAYini = 0;			//DELAY for WRFIFO
 
 static ULONG XCKDELAY = 3; //100ns+n*400ns, 1<n<8 Sony=7
-
-
-
-
 
 //only for ISA
 static	unsigned long FOURMAX = _MAXDB * _PIXEL;
@@ -174,9 +171,6 @@ static	unsigned long _FKT = 1;		// -1:clearread, 0:datab=0, 1:read 5: testdata
 
 #define Vfreqini 7		//vclk freq for FFTs with FIFO in divider of12MHz (0..15)
 						//=3 for highest speed with 7030-0906
-
-
-
 
 
 //#define _ARRAYLINES 0		//=0 only for Andanta IR area sensor =256
@@ -271,12 +265,8 @@ HANDLE hPROCESS;
 
 HANDLE hCopyToDispBuf;//Mutex for data buffer write
 
-
-
 //#define USERBUFINSCANS 1000
 //#define DMABufSizeInScans  1000
-
-
 
 //globals
 WORD UserBufInScans;

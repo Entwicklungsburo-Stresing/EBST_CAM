@@ -8,6 +8,21 @@
 #define BoardType  "PCI"
 #define BoardVN  "2.31"
 
+#define MADDR_CAM							0x00
+#define MADDR_ADC							0x01
+#define MADDR_IOCTRL						0x02
+#define CAM_REGADDR_GAIN_LED				0x00
+#define CAM_REGADDR_PIXEL					0x01
+#define CAM_REGADDR_TRIG_IN					0x02
+#define CAM_REGADDR_CH_SEL					0x03
+#define CAM_REGADDR_VCLK					0x04
+#define ADC_LTC2271_REGADDR_RESET			0x00
+#define ADC_LTC2271_REGADDR_OUTMODE			0x02
+#define ADC_LTC2271_REGADDR_TESTPATTERN_MSB	0x03
+#define ADC_LTC2271_REGADDR_TESTPATTERN_LSB	0x04
+#define ADC_LTC2271_MSG_RESET				0x80
+#define ADC_LTC2271_MSG_NORMAL_MODE			0x01
+#define ADC_LTC2271_MSG_TESTPATTERN			0x05
 
 void ErrMsgBoxOn(void);
 void ErrMsgBoxOff(void); // switch to suppress error message boxes
@@ -28,7 +43,7 @@ BOOL SetupPCIE_DMA(UINT32 drvno);
 void StartPCIE_DMAWrite(UINT32 drvno);
 void SetDMAReset(void);
 void CleanupPCIE_DMA(UINT32 drvno);
-void GetLastBufPart(void);
+void GetLastBufPart(UINT32 drvno);
 
 extern DWORD64 IsrCounter;
 
@@ -92,10 +107,6 @@ void SetOvsmpl(UINT32 drvno, UINT32 zadr);
 void SetHiamp(UINT32 drvno, BOOL hiamp);
 
 
-
-
-
-
 // FIFO functions
 void StartFFTimer(UINT32 drvno, ULONG exptime);	//starts 28bit timer of PCI board
 void SWTrig(UINT32 drvno);						//start a read to FIFO by software
@@ -143,7 +154,9 @@ void SetTORReg(UINT32 drvno, BYTE fkt);
 void RsTOREG(UINT32 drvno);					//reset the TOREG - should be called before SetISPDA or SetISFFT
 void SetupHAModule(BOOL irsingle, ULONG fftlines);//set the module C8061&C7041 inits
 void SendFLCAM(UINT32 drvno, BYTE maddr, BYTE adaddr, USHORT data);//B! test
-
+void InitCamera3001(UINT32 drvno, UINT16 pixel, UINT16 trigger_input, BOOL IS_FFT);
+void InitCamera3010(UINT32 drvno, UINT16 pixel, UINT16 trigger_input, BOOL testmode, UINT16 testpattern, BOOL LED_ON, BOOL GAIN_HIGH);
+void InitCamera3030(UINT32 drvno);
 void SetADGain(UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8);//B!test
 
 //jungo dma
