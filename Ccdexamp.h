@@ -33,6 +33,7 @@ BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
 #define IS_NT      IS_WIN32 && (BOOL)(GetVersion() < 0x80000000)
 #define IS_WIN32S  IS_WIN32 && (BOOL)(!(IS_NT) && (LOBYTE(LOWORD(GetVersion()))<4))
 #define IS_WIN95   (BOOL)(!(IS_NT) && !(IS_WIN32S)) && IS_WIN32
+#define IDT_TIMER1 1
 
 // global variables
 HINSTANCE hInst;   // current instance
