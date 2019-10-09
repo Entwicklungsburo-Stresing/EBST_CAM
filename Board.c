@@ -4665,7 +4665,7 @@ void SetADGain(UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, 
 	data |= b;
 	data = data << 4;
 	data |= f;
-	SendFLCAM(drvno, 1, 0x02A, data);	//gain1..4
+	SendFLCAM(drvno, MADDR_ADC, ADC_ADS5294_REGADDR_GAIN_1_to_4, data);	//gain1..4
 	data = h;
 	data = data << 4;
 	data |= d;
@@ -4673,7 +4673,7 @@ void SetADGain(UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, 
 	data |= g;
 	data = data << 4;
 	data |= c;
-	SendFLCAM(drvno, 1, 0x02B, data);	//gain7..8
+	SendFLCAM(drvno, MADDR_ADC, ADC_ADS5294_REGADDR_GAIN_5_to_8, data);	//gain7..8
 }//SetGain
 //weg?
 void SendFLCAM_DAC(UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature)
@@ -4827,20 +4827,19 @@ void CalcTrms(UINT32 drvno, UINT32 nos, ULONG TRMSpixel, UINT16 CAMpos, double *
 *	drvno	- indentifier of PCIe card
 *	pixel	- position in one scan (0...1087)
 *	sample	- position in samples (0...nos)
-*   block	- position in blocks (0...nob) TODO: not implemented
+*   block	- position in blocks (0...nob)
 *	CAM		- position in camera count (0...CAMCNT)
 */
-int GetIndexOfPixel(UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block /*NOT IMPLEMENTED*/, UINT16 CAM)
+int GetIndexOfPixel(UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block, UINT16 CAM)
 {
 	//init index with base position of pixel
 	int index = pixel;
-
 	//position of index at CAM position
 	index += CAM * _PIXEL;
-
 	//position of index at sample
 	index += sample * aCAMCNT[drvno] * _PIXEL;
-
+	//position of index at block
+	index *= (block + 1);
 	return index;
 }//GetIndexOfPixel
 
@@ -4896,31 +4895,68 @@ void InitCamera3001(UINT32 drvno, UINT16 pixel, UINT16 trigger_input, BOOL IS_FF
 * param1: drvno - selects PCIe board
 * param2: pixel - pixel amount of camera
 * param3: trigger_input - selects trigger input. 0 - XCK, 1 - EXTTRIG, 2 - DAT
-* param4: testmode - turns ADC test mode on
-* param5: testpattern - fixed output for testmode, ignored when testmode FALSE
+* param4: adc_mode - 0: normal mode, 2: custom pattern
+* param5: custom_pattern - fixed output for testmode, ignored when testmode FALSE
 * param6: LED_ON
 * param7: GAIN_HIGH
 * return: void
 */
-void InitCamera3010(UINT32 drvno, UINT16 pixel, UINT16 trigger_input, BOOL testmode, UINT16 testpattern, BOOL LED_ON, BOOL GAIN_HIGH)
+void InitCamera3010(UINT32 drvno, UINT16 pixel, UINT8 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, BOOL led_on, BOOL gain_high)
 {
 	//reset ADC
 	SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_RESET, ADC_LTC2271_MSG_RESET);
 	//output mode
-	if (testmode) {
+	switch (adc_mode)
+	{
+	case 2:
 		SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_OUTMODE, ADC_LTC2271_MSG_TESTPATTERN);
-		SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_TESTPATTERN_MSB, testpattern >> 8);
-		SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_TESTPATTERN_LSB, testpattern & 0x00FF);
+		SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_TESTPATTERN_MSB, custom_pattern >> 8);
+		SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_TESTPATTERN_LSB, custom_pattern & 0x00FF);
+		break;
+	case 0:
+	default:
+		SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_OUTMODE, ADC_LTC2271_MSG_NORMAL_MODE);
+		break;
 	}
-	else SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_OUTMODE, ADC_LTC2271_MSG_NORMAL_MODE);
 	//set camera pixel register
 	SendFLCAM(drvno, MADDR_CAM, CAM_REGADDR_PIXEL, pixel);
 	//set gain and led
-	SendFLCAM(drvno, MADDR_CAM, CAM_REGADDR_GAIN_LED, LED_ON << 4 & GAIN_HIGH);
+	SendFLCAM(drvno, MADDR_CAM, CAM_REGADDR_GAIN_LED, led_on << 4 & gain_high);
 	//set trigger input
 	SendFLCAM(drvno, MADDR_CAM, CAM_REGADDR_TRIG_IN, trigger_input);
 }
 
-void InitCamera3030(UINT32 drvno) {
-
+/*
+* Init routine for Camera System 3030
+* Sets register in ADC ADS5294.
+* param1: drvno - selects PCIe board
+* param2: adc_mode - 0: normal mode, 1: ramp, 2: custom pattern
+* param3: custom_pattern - only used when adc_mode = 2, lower 14 bits are used as output of ADC
+* param4: gain in ADC
+* return: void
+*/
+void InitCamera3030(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain) {
+	//set gain
+	SetADGain(drvno, 1, gain, gain, gain, gain, gain, gain, gain, gain);
+	switch (adc_mode)
+	{
+	case 1:
+		//ramp
+		SendFLCAM(drvno, MADDR_ADC, ADC_ADS5294_REGADDR_MODE, ADC_ADS5294_MSG_RAMP);
+		break;
+	case 2:
+		//custom pattern
+		//to activate custom pattern the following messages are necessary:
+		//d - data
+		//at addr 0x25 (mode and higher bits): 0b00000000000100dd
+		SendFLCAM(drvno, MADDR_ADC, ADC_ADS5294_REGADDR_MODE, ADC_ADS5294_MSG_CUSTOMPATTERN | ((custom_pattern >> 12) & 0x3));
+		//at addr 0x26 (lower bits): 0bdddddddddddd0000
+		SendFLCAM(drvno, MADDR_ADC, ADC_ADS5294_REGADDR_CUSTOMPATTERN, custom_pattern << 4);
+		break;
+	case 0:
+	default:
+		//normal mode
+		SendFLCAM(drvno, MADDR_ADC, ADC_ADS5294_REGADDR_RESET, ADC_ADS5294_MSG_RESET);
+		break;
+	}
 }
