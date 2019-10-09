@@ -67,7 +67,6 @@ enum adc_mode {
 
 #define		DRV		1	//1 if only one interface board LSCPCI1 or LSCISA1 in example
 						// could be 2..4 for multiple boards
-
 // global Camera data
 #define  _NO_TLPS  0x12 //oldpc: 0x11				//0x11=17*128  = 2176 Bytes  = 1088 WORDS
 #define TLPSize 0x20	//0x20 on old pc
@@ -194,20 +193,20 @@ enum trigger_mode {
 	dat = 2
 };
 #define TRIGGER_MODE xck
+#if TRIGGER_MODE == 1
+BOOL EXTTRIGFLAG = TRUE;		// run with external Trigger
+#else
 BOOL EXTTRIGFLAG = FALSE;		// run with external Trigger
+#endif
 									// DELAYMS is here wait after trigger!
 int TrigMod = 0;						//pos slope
 //static BOOL HISLOPE = TRUE;			// Slope for external Trigger
 
 static BOOL HIAMP = FALSE;			// Amplification for switchable sensors
-
-
-
 __int64 TPS = 0;				// ticks per second; is set in InitHRCounter
 __int64 START = 0;				// global variable for sync to systemtimer
 //__int64 DELAY = 0;			   //also set in InitHRCounter
 __int64 TICKSDISP = 0;			//display time in ticks
-
 
 // Display data
 static BOOL PLOTFLAG = TRUE;		// TRUE for dense, FALSE for dots
@@ -219,8 +218,6 @@ static unsigned int XLENGTH = 1100;			// x-width of  plot
 static unsigned int YLENGTH = 255;			// y-width
 //static unsigned int YLENGTH = 510;			// zoom y
 BOOL PixelOdd = FALSE;				//display offset
-
-
 
 // key to stop measure loop
 #define _ScanCode_End	 57 //E=18   Space 57

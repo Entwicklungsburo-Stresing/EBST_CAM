@@ -4839,7 +4839,7 @@ int GetIndexOfPixel(UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block, UINT
 	//position of index at sample
 	index += sample * aCAMCNT[drvno] * _PIXEL;
 	//position of index at block
-	index *= (block + 1);
+	index += block * Nospb * aCAMCNT[drvno] * _PIXEL;
 	return index;
 }//GetIndexOfPixel
 
