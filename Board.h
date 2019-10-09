@@ -23,6 +23,14 @@
 #define ADC_LTC2271_MSG_RESET				0x80
 #define ADC_LTC2271_MSG_NORMAL_MODE			0x01
 #define ADC_LTC2271_MSG_TESTPATTERN			0x05
+#define ADC_ADS5294_REGADDR_RESET			0x00
+#define ADC_ADS5294_REGADDR_MODE			0x25
+#define ADC_ADS5294_REGADDR_CUSTOMPATTERN	0x26
+#define ADC_ADS5294_REGADDR_GAIN_1_to_4		0x2A
+#define ADC_ADS5294_REGADDR_GAIN_5_to_8		0x2B
+#define ADC_ADS5294_MSG_RESET				0x01
+#define ADC_ADS5294_MSG_RAMP				0x40
+#define ADC_ADS5294_MSG_CUSTOMPATTERN		0x10
 
 void ErrMsgBoxOn(void);
 void ErrMsgBoxOff(void); // switch to suppress error message boxes
@@ -155,8 +163,8 @@ void RsTOREG(UINT32 drvno);					//reset the TOREG - should be called before SetI
 void SetupHAModule(BOOL irsingle, ULONG fftlines);//set the module C8061&C7041 inits
 void SendFLCAM(UINT32 drvno, BYTE maddr, BYTE adaddr, USHORT data);//B! test
 void InitCamera3001(UINT32 drvno, UINT16 pixel, UINT16 trigger_input, BOOL IS_FFT);
-void InitCamera3010(UINT32 drvno, UINT16 pixel, UINT16 trigger_input, BOOL testmode, UINT16 testpattern, BOOL LED_ON, BOOL GAIN_HIGH);
-void InitCamera3030(UINT32 drvno);
+void InitCamera3010(UINT32 drvno, UINT16 pixel, UINT8 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, BOOL led_on, BOOL gain_high);
+void InitCamera3030(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain);
 void SetADGain(UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8);//B!test
 
 //jungo dma
@@ -177,10 +185,6 @@ void ReadRingLine(void* pdioden, UINT32 lno); // read line with index lno to pdi
 UINT8 ReadRingBlock(void* pdioden, INT32 start, INT32 stop); // copy a block of lines to userbuffer pdioden	
 //start<0 is in the past, stop>0 is in the future, relative to call of this function
 BOOL BlockTrig(UINT32 drv, UINT8 btrig_ch); //read state of trigger in signals during thread loop
-
 void SetADGain(UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8);
-
-
-int GetIndexOfPixel(UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block /*NOT IMPLEMENTED*/, UINT16 CAM);
-
+int GetIndexOfPixel(UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block, UINT16 CAM);
 UINT8 WaitforTelapsed(UINT32 musec);

@@ -4,15 +4,10 @@
 // for CCDExample and ESLSCDLL
 
 #define _CCDEXAMP
-
 #define IDM_EXIT           100
-
-#define DBGNOCAM	FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
-
+#define DBGNOCAM FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
 #define _ERRTEST FALSE //test data for integrity
-
 #define _33MHz FALSE //true for highest speed cams
-
 //set TRUE if you want to change the thread priority:
 #define _USETHREAD	TRUE
 //#define _USETHREAD !_FIFO  // with FIFO don't change priority
@@ -27,12 +22,25 @@
 #define _PS2KEYBOARD FALSE 
 
 //camera system select
-enum {
+enum camera_system {
 	camera_system_3001 = 1,
 	camera_system_3010 = 2,
 	camera_system_3030 = 3
 };
 #define CAMERA_SYSTEM camera_system_3001
+enum adc_mode {
+	normal = 0,
+	ramp = 1,
+	custom_pattern = 2
+};
+#define ADC_MODE normal
+#define ADC_CUSTOM_PATTERN 0xFFFF
+//options for 3010
+#define LED_ON FALSE
+#define GAIN_HIGH FALSE
+//options for 3030
+#define GAIN 6
+
 //#define _HA_IR FALSE		//  must be true for Ha series G920x IR sensor - not for G11608
 //#define _HA_IRSingleCH FALSE// TRUE for Ha series G920x if IR Sensor has 256 pixel, FALSE if 512 - not G11608
 //#define _IR2 FALSE			// must be true for 2 parallel IR sensors of type G920x - not G11608
@@ -178,10 +186,14 @@ static	unsigned long _FKT = 1;		// -1:clearread, 0:datab=0, 1:read 5: testdata
 //static	unsigned long ZADR = 1;		// Adress for adressed mode
 									//for IR ZADR=0 -> both channels
 
-
-
 // parameter for Loop
 static int ADDREP = 1;			 	//addition loop for fkt=2; 1 else
+enum trigger_mode {
+	xck = 0,
+	exttrig = 1,
+	dat = 2
+};
+#define TRIGGER_MODE xck
 BOOL EXTTRIGFLAG = FALSE;		// run with external Trigger
 									// DELAYMS is here wait after trigger!
 int TrigMod = 0;						//pos slope
