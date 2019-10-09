@@ -37,8 +37,8 @@ BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
 // global variables
 HINSTANCE hInst;   // current instance
 
-LPCTSTR lpszAppName = "CCDEXAMP";
-LPCTSTR lpszTitle = "CCDEXAMP";
+LPCTSTR lpszAppName = "CCDExamp";
+LPCTSTR lpszTitle = "CCDExamp";
 
 HWND     hwndTrack;
 HWND     hwndTrack2;

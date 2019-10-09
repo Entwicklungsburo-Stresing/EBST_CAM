@@ -418,7 +418,6 @@ RedrawWindow(hMSWND,NULL,NULL,RDW_INVALIDATE);
 
 void initMeasurement()
 {
-	ULONG gain = 0;
 	//stop all and clear FIFO
 	//WDC_Err(choosen_board);
 #ifdef _DLL
@@ -427,7 +426,6 @@ void initMeasurement()
 	DLLRSFifo(choosen_board);
 	gain = 6;
 	DLLSetADGain(choosen_board, 1, gain, gain, gain, gain, gain, gain, gain, gain); //set gain to values g1..g8 in Board.C
-	//SetADGain(choosen_board, 1, 0, 0, 0, 0, 0, 0, 0, 0); //set gain to values g1..g8 in Board.C
 	if (both_boards)
 	{
 		DLLStopFFTimer(2);
@@ -445,30 +443,19 @@ void initMeasurement()
 	StopFFTimer(choosen_board);
 	SetIntFFTrig(choosen_board);
 	RSFifo(choosen_board);
-	//setups
-	//	SetupDELAY(choosen_board,DELAYini);	//init WRFIFO delay
-	//Version 2 ch byte
-	//-2	SendFLCAM(choosen_board,1, 0x28, 0x0000); //set to byte wise mode
-	//-2	SendFLCAM(choosen_board, 1, 0x46, 0x8409); //set to 2 wire mode & 14bit & MSB first
 
-	//		SendFLCAM(choosen_board,1, 0x26, 0x00b0); //set custom pattern D4=bit0 -> 10=1, 80=8, 800=80, f0=1111=15, fff=max
-	//SendFLCAM(choosen_board, 1, 0x25, 0x11); //set custom pattern with D0(=D12)+D1(=D13)=1 -> max=3fff=16383
-	//SendFLCAM(choosen_board,1, 0x25, 0x10); //single custom pattern
-	//SendFLCAM(choosen_board, 1, 0x42, 0x00); //clk align
-	//SendFLCAM(choosen_board,1, 0x25, 0x40); //ramp pattern
-	//RSEC(choosen_board);
-
-	SendFLCAM(DRV, 3, 1, 1088);//set Pixel in Camera Regs
-	SendFLCAM(DRV, 3, 2, 3);//activate channel a and b
-	SendFLCAM(DRV, 1, 0, 0x80);//ad setup
-	SendFLCAM(DRV, 1, 2, 0x1);//Data = 5h, for test signal (defined in slide 7)
-							//Data = 1h, for ADC data
-	//SendFLCAM(DRV, 1, 3, 0xaa);//testpattern
-	//SendFLCAM(DRV, 1, 4, 0xaa);//testpattern
-
-	gain = 6;
-	SetADGain(choosen_board, 1, gain, gain, gain, gain, gain, gain, gain, gain); //set gain to values g1..g8 in Board.C
-	//SetADGain(choosen_board, 1, 0, 0, 0, 0, 0, 0, 0, 0); //set gain to values g1..g8 in Board.C
+	switch (CAMERA_SYSTEM)
+	{
+	case camera_system_3001:
+		InitCamera3001(DRV, _PIXEL, TRIGGER_MODE, _ISFFT);
+		break;
+	case camera_system_3010:
+		InitCamera3010(DRV, _PIXEL, TRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
+		break;
+	case camera_system_3030:
+		InitCamera3030(DRV, ADC_MODE, ADC_CUSTOM_PATTERN, GAIN);
+		break;
+	}
 	if (both_boards) {
 		StopFFTimer(2);
 		SetIntFFTrig(2);
@@ -478,13 +465,19 @@ void initMeasurement()
 		RsTOREG(2); // reset TOREG
 		//set TrigOut, default= XCK
 		SetTORReg(2, 0);
-		gain = 6;
-		SetADGain(2, 1, gain, gain, gain, gain, gain, gain, gain, gain);
+		switch (CAMERA_SYSTEM)
+		{
+		case camera_system_3001:
+			InitCamera3001(2, _PIXEL, TRIGGER_MODE, _ISFFT);
+			break;
+		case camera_system_3010:
+			InitCamera3010(2, _PIXEL, TRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
+			break;
+		case camera_system_3030:
+			InitCamera3030(2, ADC_MODE, ADC_CUSTOM_PATTERN, GAIN);
+			break;
+		}
 	}
-
-	SendFLCAM(DRV, 3, 1, 1088);
-	SendFLCAM(DRV, 3, 2, 3);
-	SendFLCAM(DRV, 3, 3, 1);
 #endif
 }
 
