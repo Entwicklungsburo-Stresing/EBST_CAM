@@ -1,7 +1,7 @@
 /* simple window App for calling CCDlsc Driver via Jungo driver
 	Version 1.0		© Entwicklungsbuero G. Stresing	1/16
 */
-#include "Ccdexamp.h"
+#include "CCDExamp.h"
 
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
@@ -1560,8 +1560,8 @@ LRESULT CALLBACK SetupEC(HWND hDlg,
 
 void createTestBitmap(UINT blocks, UINT height, UINT width) {
 	//create test data
-	uint16_t grey = 0;
-	testbitmap = malloc(_PIXEL * Nospb * Nob * sizeof(uint16_t));
+	UINT16 grey = 0;
+	testbitmap = malloc(_PIXEL * Nospb * Nob * sizeof(UINT16));
 
 	for (UINT i = 0; i < blocks * height * width; i++) {
 		testbitmap[i] = grey;
