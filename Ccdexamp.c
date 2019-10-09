@@ -1085,7 +1085,8 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 	WPARAM wParam,
 	LPARAM lParam)
 {
-	UINT nob_input = 0, nospb_input = 0;
+	UINT	nob_input = 0,
+			nospb_input = 0;
 	BOOL success = FALSE;
 	UINT64 builtinram, freeram, freeram_old, calcram, allocram;
 	UINT divMB = 1024 * 1024;
@@ -1130,13 +1131,12 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 					MessageBox(hMSWND, "allocating Buffer fails", "Error", MB_OK);
 				else
 					MessageBox(hMSWND, "allocating Buffer succeeded", "Message", MB_OK);
-				SetCamVars(choosen_board, 2, _PIXEL, 0, 0);
+
 				if (both_boards) {
 					if (!BufLock(2, CAMCNT, Nob, Nospb))
 						MessageBox(hMSWND, "allocating Buffer of second Board fails", "Error", MB_OK);
 					else
 						MessageBox(hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK);
-					SetCamVars(2, 2, _PIXEL, 0, 0);
 				}
 #endif
 			}
@@ -1231,13 +1231,11 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 				MessageBox(hMSWND, "allocating Buffer fails", "Error", MB_OK);
 			else
 				MessageBox(hMSWND, "allocating Buffer succeeded", "Message", MB_OK);
-			SetCamVars(choosen_board, 2, _PIXEL, 0, 0);
 			if (both_boards) {
 				if (!BufLock(2, CAMCNT, Nob, Nospb))
 					MessageBox(hMSWND, "allocating Buffer of second Board fails", "Error", MB_OK);
 				else
 					MessageBox(hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK);
-				SetCamVars(2, 2, _PIXEL, 0, 0);
 			}
 #endif
 			trackbar_nospb = Nospb;
