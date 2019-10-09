@@ -8,10 +8,9 @@
 #include <process.h>	  // for Thread example
 #include <CommCtrl.h>
 #include "resource.h"
-#include "GLOBAL.h" 
-#include "CCDUNIT.C"
+#include "Global.h" 
+#include "CCDUnit.c"
 #include "Direct2dViewer_c.h"
-#include <stdint.h> // included for uint16_t
 
 #ifdef _DLL
 UINT8 NUMBER_OF_BOARDS = 0;
@@ -21,7 +20,7 @@ ULONG aPIXEL[5] = { 0, 0, 0, 0, 0 };	// pixel
 ULONG aXCKDelay[5] = { 1000, 1000, 1000, 1000, 1000 };	// sensor specific delay
 BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
 #else
-#include "BOARD.C"
+#include "Board.c"
 #endif
 
 #if defined (WIN32)
@@ -48,7 +47,7 @@ DWORD cur_nospb = 0;
 DWORD cur_nob = 0;
 
 void* Direct2dViewer;
-uint16_t *testbitmap;
+UINT16 *testbitmap;
 
 // function declerations
 BOOL RegisterWin95(CONST WNDCLASS* lpwc);

@@ -9,8 +9,8 @@
 
 //#include "stdafx.h"		// use in C++ only
 //#include "global.h"		// use in C++ only
-#include "ccdctl.h" //"ccdctrl.h"
-#include "board.h"
+#include "CCDCtl.h" //"ccdctrl.h"
+#include "Board.h"
 #include <limits.h>
 #include <process.h>
 #include "windrvr.h"
