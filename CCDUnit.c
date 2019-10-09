@@ -416,6 +416,36 @@ RedrawWindow(hMSWND,NULL,NULL,RDW_INVALIDATE);
 }//DisplayData
 */
 
+void initCamera()
+{
+	switch (CAMERA_SYSTEM)
+	{
+	case camera_system_3001:
+		InitCamera3001(DRV, _PIXEL, TRIGGER_MODE, _ISFFT);
+		break;
+	case camera_system_3010:
+		InitCamera3010(DRV, _PIXEL, TRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
+		break;
+	case camera_system_3030:
+		InitCamera3030(DRV, ADC_MODE, ADC_CUSTOM_PATTERN, GAIN);
+		break;
+	}
+	if (both_boards) {
+		switch (CAMERA_SYSTEM)
+		{
+		case camera_system_3001:
+			InitCamera3001(2, _PIXEL, TRIGGER_MODE, _ISFFT);
+			break;
+		case camera_system_3010:
+			InitCamera3010(2, _PIXEL, TRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
+			break;
+		case camera_system_3030:
+			InitCamera3030(2, ADC_MODE, ADC_CUSTOM_PATTERN, GAIN);
+			break;
+		}
+	}
+}
+
 void initMeasurement()
 {
 	//stop all and clear FIFO
@@ -443,19 +473,7 @@ void initMeasurement()
 	StopFFTimer(choosen_board);
 	SetIntFFTrig(choosen_board);
 	RSFifo(choosen_board);
-
-	switch (CAMERA_SYSTEM)
-	{
-	case camera_system_3001:
-		InitCamera3001(DRV, _PIXEL, TRIGGER_MODE, _ISFFT);
-		break;
-	case camera_system_3010:
-		InitCamera3010(DRV, _PIXEL, TRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
-		break;
-	case camera_system_3030:
-		InitCamera3030(DRV, ADC_MODE, ADC_CUSTOM_PATTERN, GAIN);
-		break;
-	}
+	initCamera();
 	if (both_boards) {
 		StopFFTimer(2);
 		SetIntFFTrig(2);
@@ -465,18 +483,6 @@ void initMeasurement()
 		RsTOREG(2); // reset TOREG
 		//set TrigOut, default= XCK
 		SetTORReg(2, 0);
-		switch (CAMERA_SYSTEM)
-		{
-		case camera_system_3001:
-			InitCamera3001(2, _PIXEL, TRIGGER_MODE, _ISFFT);
-			break;
-		case camera_system_3010:
-			InitCamera3010(2, _PIXEL, TRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
-			break;
-		case camera_system_3030:
-			InitCamera3030(2, ADC_MODE, ADC_CUSTOM_PATTERN, GAIN);
-			break;
-		}
 	}
 #endif
 }

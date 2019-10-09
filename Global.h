@@ -27,7 +27,7 @@ enum camera_system {
 	camera_system_3010 = 2,
 	camera_system_3030 = 3
 };
-#define CAMERA_SYSTEM camera_system_3001
+#define CAMERA_SYSTEM camera_system_3030
 enum adc_mode {
 	normal = 0,
 	ramp = 1,
