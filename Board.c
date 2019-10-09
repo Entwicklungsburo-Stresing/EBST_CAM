@@ -23,6 +23,8 @@
 //#include "wd_kp.h"
 //siehe beginn functions
 //#include "lscpciej_lib.h" 
+#define BoardType							"PCI"
+#define BoardVN								"2.31"
 /*************************************************************
 Internal definitions
 *************************************************************/
@@ -37,9 +39,7 @@ General definitions
 **********/
 /* Error messages display */
 #define LSCPCIEJ_ERR printf
-
 #define _CNT255 TRUE   //TRUE if FIFO version has 8bit Counter / TRUE is default
-
 // use LSCPCI1 on PCI Boards
 #define	DRIVERNAME	"\\\\.\\LSCPCIE"
 
@@ -54,12 +54,11 @@ General definitions
 ULONG ExpTime; //in micro sec - needed only in DLL, defined in DLL.h
 #endif
 
-
 // globals within board
 // don't change values here - are set within functions SetBoardVars...
 
 //DMA Addresses
-enum {
+enum dma_addresses{
 	DmaAddr_DCSR = 0x000,
 	DmaAddr_DDMACR = 0x004,
 	DmaAddr_WDMATLPA = 0x008,
@@ -82,13 +81,13 @@ enum {
 };
 
 //PCIe Addresses
-enum {
+enum pcie_addresses {
 	PCIeAddr_devCap = 0x5C,
 	PCIeAddr_devStatCtrl = 0x60
 };
 
 //S0 Addresses
-enum {
+enum s0_addresses{
 	S0Addr_DBR = 0x0,
 	S0Addr_CTRLA = 0x4,
 	S0Addr_CTRLB = 0x5,
@@ -119,20 +118,37 @@ enum {
 };
 
 //Cam Addresses könnten später bei unterschiedlichen cam systemen vaariieren
-enum {
-	maddr_CAM = 0x0,
-	maddr_ADC = 0x1,
-	maddr_IOCTRL = 0x2,
-	maaddr_CAM_adaddr_gain = 0x0,
-	maaddr_CAM_adaddr_pixel = 0x1,
-	maaddr_CAM_adaddr_trig = 0x2,
-	maaddr_CAM_adaddr_ch = 0x3,
-	maaddr_CAM_adaddr_vclk = 0x4,
-	maaddr_CAM_adaddr_LEDoff = 0x5
+enum cam_addresses{
+	maddr_cam =								0x00,
+	maddr_adc =								0x01,
+	maddr_ioctrl =							0x02,
+	cam_adaddr_gain_led =					0x00,
+	cam_adaddr_pixel =						0x01,
+	cam_adaddr_trig_in =					0x02,
+	cam_adaddr_ch =							0x03,
+	cam_adaddr_vclk =						0x04,
+	cam_adaddr_LEDoff =						0x05,
+	adc_ltc2271_regaddr_reset =				0x00,
+	adc_ltc2271_regaddr_outmode =			0x02,
+	adc_ltc2271_regaddr_custompattern_msb = 0x03,
+	adc_ltc2271_regaddr_custompattern_lsb = 0x04,
+	adc_ads5294_regaddr_reset =				0x00,
+	adc_ads5294_regaddr_mode =				0x25,
+	adc_ads5294_regaddr_custompattern =		0x26,
+	adc_ads5294_regaddr_gain_1_to_4 =		0x2A,
+	adc_ads5294_regaddr_gain_5_to_8 =		0x2B,
+};
+
+enum cam_messages {
+	adc_ltc2271_msg_reset =			0x80,
+	adc_ltc2271_msg_normal_mode =	0x01,
+	adc_ltc2271_msg_custompattern = 0x05,
+	adc_ads5294_msg_reset =			0x01,
+	adc_ads5294_msg_ramp =			0x40,
+	adc_ads5294_msg_custompattern = 0x10,
 };
 
 //extern volatile PUSHORT pDMABigBufBase[3];
-
 //jungodriver specific variables
 WD_PCI_CARD_INFO deviceInfo[MAXPCIECARDS];
 WDC_DEVICE_HANDLE hDev[MAXPCIECARDS];
@@ -155,23 +171,16 @@ DWORD64 val = 0x0;
 //BYTE DontReadUserBufIndex = 0;
 INT_PTR pTestBuf_index;
 DWORD64 DMA_bufsizeinbytes = 0;
-
 WDC_PCI_SCAN_RESULT scanResult;
-
 UINT8 NUMBER_OF_BOARDS = 0;
 UINT32 BOARD_SEL = 1;
-
 // handle array for our drivers
 HANDLE ahCCDDRV[5] = { INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE };
-
-
 ULONG aFLAG816[5] = { 1, 1, 1, 1, 1 };  //AD-Flag
 ULONG aCAMCNT[5] = { 1, 1, 1, 1, 1 };	// cameras parallel
 ULONG aPIXEL[5] = { 0, 0, 0, 0, 0 };	// pixel
 ULONG aXCKDelay[5] = { 1000, 1000, 1000, 1000, 1000 };	// sensor specific delay
 BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
-
-
 //globals for Ring buffer
 pArrayT pRingBuf = NULL;
 ULONG RingFifoDepth = 0;
@@ -192,7 +201,6 @@ volatile BOOL RingFetchFutureAct = FALSE;
 volatile INT32 RingFutureWrCnt = 0;
 UCHAR RingCtrlReg = 0;
 volatile ULONG RingCtrlRegOfs = 0;
-
 ULONG DELAY = 0x100;
 ULONG VFREQ = Vfreqini;
 ULONG FFTLINES = 0;
@@ -203,7 +211,6 @@ ULONG RRT_FftLines = 0;
 BOOL RRT_ExtTrigFlag = FALSE;
 ULONG ErrCnt = 0;
 ULONG ErrVal = 0;
-
 //global for ANDANTA ROI function in testfunction
 #if (_TESTRUP)
 ULONG Roilines = 256;
@@ -217,22 +224,15 @@ ULONG OLDPRICLASS = 0;
 HANDLE hPROCESS = 0;
 HANDLE hTHREAD = 0;
 __int16 RELEASETHREADms = 0;
-
 //general switch to suppress ErrorMsg windows , global in BOARD
 BOOL _SHOW_MSG = TRUE;
-
-
 BOOL DMAISRunning = FALSE;
-
-
-
 //ULONG TRMSVals[4][300];
 #ifndef _CCDEXAMP
 double TRMSval[4];
 #endif
+
 // ***********     functions    ********************** 
-
-
 //weg? wrapped in vi
 void ErrMsgBoxOn(void)
 {//general switch to suppress error mesage box
@@ -261,7 +261,6 @@ void ValMsg(UINT64 val)
 		if (MessageBox(GetActiveWindow(), AString, "ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 	}
 };
-
 
 void AboutDMARegs(UINT32 drv)
 {//regs des Contig DMA Buf 
@@ -355,7 +354,6 @@ AboutTLPs(UINT32 drvno)
 
 }//AboutTLPs
 
-
 void AboutS0(UINT32 drvno)
 {
 	int i, j = 0;
@@ -416,8 +414,6 @@ void AboutS0(UINT32 drvno)
 	AboutTLPs(drvno);
 
 }//AboutS0
-
-
 
 BOOL CCDDrvInit(void)
 {// returns true if driver was found
@@ -1336,8 +1332,6 @@ void RSInterface(UINT32 drvno)
 	for (i = 0; i < reg / 4; i++) WriteLongS0(drvno, 0, i * 4);
 }
 
-
-
 BOOL SetBoardVars(UINT32 drvno, UINT32 camcnt, ULONG pixel, ULONG flag816, ULONG xckdelay)
 {	//	initiates board   Registers
 	//  flag816 =1 for 16 bit (also 14 or 12bit), =2 for 8bit
@@ -1356,21 +1350,13 @@ BOOL SetBoardVars(UINT32 drvno, UINT32 camcnt, ULONG pixel, ULONG flag816, ULONG
 		return FALSE;
 	}
 
-
 	//set startval for CTRLA Reg  +slope, IFC=h, VON=1 
 
 	if (!WriteByteS0(drvno, 0x23, S0Addr_CTRLA)) return FALSE;  //write CTRLA reg in S0
-
 	//if (_COOLER) ActCooling(drvno, FALSE); //deactivate cooler
-
-
 	if (!WriteByteS0(drvno, 0, S0Addr_CTRLB)) return FALSE;;  //write CTRLB reg in S0
 
 	if (!WriteByteS0(drvno, 0, S0Addr_CTRLC)) return FALSE;;  //write CTRLC reg in S0
-
-
-
-
 	//set global vars if driver is there
 
 	aFLAG816[drvno] = flag816;
@@ -1399,16 +1385,6 @@ BOOL SetBoardVars(UINT32 drvno, UINT32 camcnt, ULONG pixel, ULONG flag816, ULONG
 
 	return TRUE; //no error
 };  // SetBoardVars
-
-void SetCamVars(UINT32 drvno, UINT32 camsys, UINT16 pixel, UINT16 gain, UINT16 triginput) {
-
-	SendFLCAM(drvno, maddr_ADC, 0, 0x80);//reset
-	SendFLCAM(drvno, maddr_ADC, 2, 0x1);//4 lanes output mode register
-
-	SendFLCAM(drvno, maddr_CAM, maaddr_CAM_adaddr_pixel, pixel);
-	SendFLCAM(drvno, maddr_CAM, maaddr_CAM_adaddr_gain, gain);
-	SendFLCAM(drvno, maddr_CAM, maaddr_CAM_adaddr_trig, triginput);
-}
 
 #ifndef _DLL
 BOOL BufLock(UINT drvno, UINT camcnt, int nob, int nospb)
@@ -4665,7 +4641,7 @@ void SetADGain(UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, 
 	data |= b;
 	data = data << 4;
 	data |= f;
-	SendFLCAM(drvno, MADDR_ADC, ADC_ADS5294_REGADDR_GAIN_1_to_4, data);	//gain1..4
+	SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_gain_1_to_4, data);	//gain1..4
 	data = h;
 	data = data << 4;
 	data |= d;
@@ -4673,7 +4649,7 @@ void SetADGain(UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, 
 	data |= g;
 	data = data << 4;
 	data |= c;
-	SendFLCAM(drvno, MADDR_ADC, ADC_ADS5294_REGADDR_GAIN_5_to_8, data);	//gain7..8
+	SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_gain_5_to_8, data);	//gain7..8
 }//SetGain
 //weg?
 void SendFLCAM_DAC(UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature)
@@ -4881,11 +4857,11 @@ UINT8 WaitforTelapsed(LONGLONG musec)
 void InitCamera3001(UINT32 drvno, UINT16 pixel, UINT16 trigger_input, BOOL IS_FFT)
 {
 	//set camera pixel register
-	SendFLCAM(drvno, MADDR_CAM, CAM_REGADDR_PIXEL, pixel);
+	SendFLCAM(drvno, maddr_cam, cam_adaddr_pixel, pixel);
 	//set trigger input
-	SendFLCAM(drvno, MADDR_CAM, CAM_REGADDR_TRIG_IN, trigger_input);
+	SendFLCAM(drvno, maddr_cam, cam_adaddr_trig_in, trigger_input);
 	//select vclk on
-	SendFLCAM(drvno, MADDR_CAM, CAM_REGADDR_VCLK, (UINT16)IS_FFT);
+	SendFLCAM(drvno, maddr_cam, cam_adaddr_vclk, (UINT16)IS_FFT);
 }
 
 /*
@@ -4904,26 +4880,26 @@ void InitCamera3001(UINT32 drvno, UINT16 pixel, UINT16 trigger_input, BOOL IS_FF
 void InitCamera3010(UINT32 drvno, UINT16 pixel, UINT8 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, BOOL led_on, BOOL gain_high)
 {
 	//reset ADC
-	SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_RESET, ADC_LTC2271_MSG_RESET);
+	SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_reset, adc_ltc2271_msg_reset);
 	//output mode
 	switch (adc_mode)
 	{
 	case 2:
-		SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_OUTMODE, ADC_LTC2271_MSG_TESTPATTERN);
-		SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_TESTPATTERN_MSB, custom_pattern >> 8);
-		SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_TESTPATTERN_LSB, custom_pattern & 0x00FF);
+		SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_custompattern);
+		SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_msb, custom_pattern >> 8);
+		SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_lsb, custom_pattern & 0x00FF);
 		break;
 	case 0:
 	default:
-		SendFLCAM(drvno, MADDR_ADC, ADC_LTC2271_REGADDR_OUTMODE, ADC_LTC2271_MSG_NORMAL_MODE);
+		SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_normal_mode);
 		break;
 	}
 	//set camera pixel register
-	SendFLCAM(drvno, MADDR_CAM, CAM_REGADDR_PIXEL, pixel);
+	SendFLCAM(drvno, maddr_cam, cam_adaddr_pixel, pixel);
 	//set gain and led
-	SendFLCAM(drvno, MADDR_CAM, CAM_REGADDR_GAIN_LED, led_on << 4 & gain_high);
+	SendFLCAM(drvno, maddr_cam, cam_adaddr_gain_led, led_on << 4 & gain_high);
 	//set trigger input
-	SendFLCAM(drvno, MADDR_CAM, CAM_REGADDR_TRIG_IN, trigger_input);
+	SendFLCAM(drvno, maddr_cam, cam_adaddr_trig_in, trigger_input);
 }
 
 /*
@@ -4942,21 +4918,21 @@ void InitCamera3030(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 g
 	{
 	case 1:
 		//ramp
-		SendFLCAM(drvno, MADDR_ADC, ADC_ADS5294_REGADDR_MODE, ADC_ADS5294_MSG_RAMP);
+		SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_ramp);
 		break;
 	case 2:
 		//custom pattern
 		//to activate custom pattern the following messages are necessary:
 		//d - data
 		//at addr 0x25 (mode and higher bits): 0b00000000000100dd
-		SendFLCAM(drvno, MADDR_ADC, ADC_ADS5294_REGADDR_MODE, ADC_ADS5294_MSG_CUSTOMPATTERN | ((custom_pattern >> 12) & 0x3));
+		SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_custompattern | ((custom_pattern >> 12) & 0x3));
 		//at addr 0x26 (lower bits): 0bdddddddddddd0000
-		SendFLCAM(drvno, MADDR_ADC, ADC_ADS5294_REGADDR_CUSTOMPATTERN, custom_pattern << 4);
+		SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_custompattern, custom_pattern << 4);
 		break;
 	case 0:
 	default:
 		//normal mode
-		SendFLCAM(drvno, MADDR_ADC, ADC_ADS5294_REGADDR_RESET, ADC_ADS5294_MSG_RESET);
+		SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_reset, adc_ads5294_msg_reset);
 		break;
 	}
 }

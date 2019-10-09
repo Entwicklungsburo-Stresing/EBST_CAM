@@ -4,76 +4,35 @@
 //  new: data array ushort
 //2.31: 64 bit dma acces
 
-
-#define BoardType  "PCI"
-#define BoardVN  "2.31"
-
-#define MADDR_CAM							0x00
-#define MADDR_ADC							0x01
-#define MADDR_IOCTRL						0x02
-#define CAM_REGADDR_GAIN_LED				0x00
-#define CAM_REGADDR_PIXEL					0x01
-#define CAM_REGADDR_TRIG_IN					0x02
-#define CAM_REGADDR_CH_SEL					0x03
-#define CAM_REGADDR_VCLK					0x04
-#define ADC_LTC2271_REGADDR_RESET			0x00
-#define ADC_LTC2271_REGADDR_OUTMODE			0x02
-#define ADC_LTC2271_REGADDR_TESTPATTERN_MSB	0x03
-#define ADC_LTC2271_REGADDR_TESTPATTERN_LSB	0x04
-#define ADC_LTC2271_MSG_RESET				0x80
-#define ADC_LTC2271_MSG_NORMAL_MODE			0x01
-#define ADC_LTC2271_MSG_TESTPATTERN			0x05
-#define ADC_ADS5294_REGADDR_RESET			0x00
-#define ADC_ADS5294_REGADDR_MODE			0x25
-#define ADC_ADS5294_REGADDR_CUSTOMPATTERN	0x26
-#define ADC_ADS5294_REGADDR_GAIN_1_to_4		0x2A
-#define ADC_ADS5294_REGADDR_GAIN_5_to_8		0x2B
-#define ADC_ADS5294_MSG_RESET				0x01
-#define ADC_ADS5294_MSG_RAMP				0x40
-#define ADC_ADS5294_MSG_CUSTOMPATTERN		0x10
-
 void ErrMsgBoxOn(void);
 void ErrMsgBoxOff(void); // switch to suppress error message boxes
-void ErrorMsg(char ErrMsg[40]);
-void ValMsg(long val);
+void ErrorMsg(char ErrMsg[100]);
+void ValMsg(UINT64 val);
 void AboutS0(UINT32 drvno);
-
 //  same header file for ISA and PCI version
-BOOL CCDDrvInit(UINT32 drvno);	// init the driver -> true if found
-
+BOOL CCDDrvInit(void);
 void CCDDrvExit(UINT32 drvno);	// closes the driver
 BOOL InitBoard(UINT32 drvno);	// init the board and alloc mem, call only once !
 void RSInterface(UINT32 drvno);		//set all registers to zero
-BOOL SetBoardVars(UINT32 drvno, UINT32 camcnt, BOOL sym, BOOL burst, ULONG pixel, ULONG waits, ULONG flag816, ULONG pportadr,
-	ULONG pclk, ULONG xckdelay);
-void SetCamVars(UINT32 drvno, UINT32 camsys, UINT16 pixel, UINT16 gain, UINT16 triginput);
-BOOL SetupPCIE_DMA(UINT32 drvno);
+BOOL SetBoardVars(UINT32 drvno, UINT32 camcnt, ULONG pixel, ULONG flag816, ULONG xckdelay);
+BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob);
 void StartPCIE_DMAWrite(UINT32 drvno);
-void SetDMAReset(void);
+void StartPCIE_DMAWrite(UINT32 drvno);
 void CleanupPCIE_DMA(UINT32 drvno);
 void GetLastBufPart(UINT32 drvno);
-
 extern DWORD64 IsrCounter;
-
 int GetNumofProcessors();
-
-void ErrorMsg(char ErrMsg[20]);		// error msg box
+void ErrorMsg(char ErrMsg[100]);
 BOOL ReadLongIOPort(UINT32 drvno, ULONG *DWData, ULONG PortOff);// read long from IO runreg
 BOOL ReadLongS0(UINT32 drvno, ULONG *DWData, ULONG PortOff);	// read long from space0
-BOOL ReadByteS0(UINT32 drvno, UCHAR *data, ULONG PortOff);	// read byte from space0
+BOOL ReadByteS0(UINT32 drvno, BYTE *data, ULONG PortOff);	// read byte from space0
 BOOL WriteLongIOPort(UINT32 drvno, ULONG DWData, ULONG PortOff);// write long to IO runreg
 BOOL WriteLongS0(UINT32 drvno, ULONG DWData, ULONG PortOff);// write long to space0
 BOOL WriteByteS0(UINT32 drvno, BYTE DWData, ULONG PortOff); // write byte to space0
-
-// camera read function
-BOOL GETCCD(UINT32 drvno, void* dioden, ULONG fftlines, long fkt, ULONG zadr);
-
 void ClrRead(UINT32 drvno, ULONG fftlines, ULONG zadr, ULONG ccdclrcount);
 // clear camera with reads
 void ClrShCam(UINT32 drvno, UINT32 zadr);// clears Shuttercamera with IFC signal
-
 void AboutDrv(UINT32 drvno);	// displays the version and board ID = test if board is there
-
 //	functions for managing controlbits in CtrlA register
 void HighSlope(UINT32 drvno);		//set input Trigger slope high
 void LowSlope(UINT32 drvno);		//set input Trigger slope low
@@ -89,32 +48,21 @@ void EnTrigShort(UINT32 drvno);
 void RSTrigShort(UINT32 drvno);
 void DisTrigShort(UINT32 drvno);
 BOOL CheckFFTrig(UINT32 drvno);		// trigger sets FF - clear via write CtrlA 0x10
-
 void OpenShutter(UINT32 drvno);		// set IFC=high
 void CloseShutter(UINT32 drvno);	// set IFC=low
 BOOL GetShutterState(UINT32 drvno);	//get the actual state
 void V_On(UINT32 drvno);			// set V_On signal low (V = V_Fak)
 void V_Off(UINT32 drvno);			// set V_On signal high (V = 1)
-
 void SetOpto(UINT32 drvno, BYTE ch);  // set opto channel if output
 void RsetOpto(UINT32 drvno, BYTE ch); // reset opto channel if output
 BOOL GetOpto(UINT32 drvno, BYTE ch);	//read opto channel if input
-
 void SetDAT(UINT32 drvno, ULONG tin100ns); // delay after trigger in 100ns
 void RSDAT(UINT32 drvno); // disable delay after trigger in S0+0x20
-
 // new Keyboard read which is not interrupt dependend
 // reads OEM scan code directly on port 0x60
 UCHAR ReadKeyPort(UINT32 drvno);
-
-//old 16bit ADs functions
-void CAL_AD(UINT32 drvno, UINT32 zadr);
-void SetOvsmpl(UINT32 drvno, UINT32 zadr);
-
 //TIs electron multiplier
 void SetHiamp(UINT32 drvno, BOOL hiamp);
-
-
 // FIFO functions
 void StartFFTimer(UINT32 drvno, ULONG exptime);	//starts 28bit timer of PCI board
 void SWTrig(UINT32 drvno);						//start a read to FIFO by software
@@ -132,30 +80,21 @@ void SetupVCLKReg(UINT32 drvno, ULONG lines, UCHAR vfreq);//setup hardware vclk 
 void SetupVCLKrt(ULONG vfreq);					//setup vclkfreq for rt version(noFIFO)
 void SetupDELAY(UINT32 drvno, ULONG delay);		//setup DELAY for WRFIFO
 BOOL FFOvl(UINT32 drvno);							//TRUE if FIFO overflow since last RSFifo call
-
-void PickOneFifoscan(UINT32 drvno, void* pdioden, BOOL* pabbr, BOOL* pspace, ULONG fkt); //get one scan of free running fifo timer
-
+void PickOneFifoscan(UINT32 drvno, pArrayT pdioden, BOOL* pabbr, BOOL* pspace, ULONG fkt); //get one scan of free running fifo timer
 // Class & Thread priority functions
 BOOL SetPriority(ULONG threadp);		//set priority threadp 1..31 / 8 = normal and keep old in global variable
 BOOL ResetPriority();					//switch back to old level
-
 // System Timer
 UINT64 InitHRCounter();				//init system counter and returns TPS: ticks per sec
 UINT64 ticksTimestamp();				//reads actual ticks of system counter
 UINT64 ustoTicks(ULONG us);			//calcs microsec to ticks  
 UINT32 Tickstous(UINT64 tks);			//calcs ticks to microsec
-
 // Cooler& special functions
 void ActCooling(UINT32 drvno, BOOL on);				//activates/deactivates cooling
 BOOL TempGood(UINT32 drvno, UINT32 ch);						//high if temperature is reached
 void SetTemp(UINT32 drvno, ULONG level);				//set temperature - 8 levels possible
-
 void RS_ScanCounter(UINT32 drv);
 void RS_DMAAllCounter(UINT32 drv, BOOL hwstop);
-
-void SetArray(UINT32 drvno, ULONG lines);		//setup for IR array sensor 
-void SetROILines(ULONG lines);				// set global for andanta roi=range of interest
-
 void SetISPDA(UINT32 drvno, BOOL set);		//hardware switch for IFC and VON if PDA
 void SetISFFT(UINT32 drvno, BOOL set);		//hardware switch for IFC and VON if FFT
 void SetTORReg(UINT32 drvno, BYTE fkt);
@@ -166,18 +105,13 @@ void InitCamera3001(UINT32 drvno, UINT16 pixel, UINT16 trigger_input, BOOL IS_FF
 void InitCamera3010(UINT32 drvno, UINT16 pixel, UINT8 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, BOOL led_on, BOOL gain_high);
 void InitCamera3030(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain);
 void SetADGain(UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8);//B!test
-
 //jungo dma
 void StartReadWithDma(UINT32 drvno);
-
 unsigned int __stdcall ReadFFLoopThread(void *parg);
-
 // software ring buffer thread functions
 void StartRingReadThread(UINT32 drvno, ULONG ringfifodepth, ULONG threadp, __int16 releasems);
 void StopRingReadThread(void); //starts and ends background thread 
-
-void ReadFFLoop(UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch);
-
+void ReadFFLoop(UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch);
 void StartFetchRingBuf(void); //starts getting the data to ring
 BOOL RingThreadIsOFF(void);	//checks state of thread
 void FetchLastRingLine(void* pdioden); //copy last line to pdioden
@@ -187,4 +121,4 @@ UINT8 ReadRingBlock(void* pdioden, INT32 start, INT32 stop); // copy a block of 
 BOOL BlockTrig(UINT32 drv, UINT8 btrig_ch); //read state of trigger in signals during thread loop
 void SetADGain(UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8);
 int GetIndexOfPixel(UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block, UINT16 CAM);
-UINT8 WaitforTelapsed(UINT32 musec);
+UINT8 WaitforTelapsed(LONGLONG musec);
