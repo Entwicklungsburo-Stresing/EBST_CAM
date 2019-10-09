@@ -93,12 +93,14 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 	// Save the application-instance handle. 
 	hInst = hInstance;
 
+	//CreateWindowA(lpClassName, lpWindowName, dwStyle, x, y, \
+	//	nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam)\
 	// Create the main application window.
 	//....................................
 	hWnd = CreateWindow(lpszAppName,
 		lpszTitle,
 		WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, 0,
+		(GetSystemMetrics(SM_CXSCREEN) - (XLENGTH / XOFF + 40))/2 , (GetSystemMetrics(SM_CYSCREEN) - (YLENGTH + 220))/2,
 		XLENGTH / XOFF + 40, YLENGTH + 220,//640/380,  
 		NULL,
 		NULL,
