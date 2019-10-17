@@ -12,17 +12,17 @@ void Direct2dViewer_delete(void *D2dV)
 	return;
 }
 
-void Direct2dViewer_Initialize(void* D2dV, HWND hWndParent)
+void Direct2dViewer_start2dViewer(void *D2dV, HWND hWndParent, void *bitmapAddr, UINT width, UINT height)
 {
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
-	D2d->Initialize(hWndParent);
+	D2d->start2dViewer(hWndParent, bitmapAddr, width, height);
 	return;
 }
 
-void Direct2dViewer_setBitmapSource(void *D2dV, void *addr, UINT width, UINT height)
+void Direct2dViewer_showNewBitmap(void *D2dV, void *addr, UINT width, UINT height)
 {
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
-	D2d->setBitmapSource(addr, width, height);
+	D2d->showNewBitmap(addr, width, height);
 	return;
 }
 
@@ -30,11 +30,4 @@ HWND Direct2dViewer_getWindowHandler(void *D2dV)
 {
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
 	return D2d->getWindowHandler();
-}
-
-void Direct2dViewer_updateBitmap(void* D2dV)
-{
-	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
-	D2d->updateBitmap();
-	return;
 }
