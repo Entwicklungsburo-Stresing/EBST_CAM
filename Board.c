@@ -4819,6 +4819,18 @@ int GetIndexOfPixel(UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block, UINT
 	return index;
 }//GetIndexOfPixel
 
+/* GetAdressOfPixel returns the address of a pixel located in pDMABigBufBase
+*	drvno	- indentifier of PCIe card
+*	pixel	- position in one scan (0...1087)
+*	sample	- position in samples (0...nos)
+*   block	- position in blocks (0...nob)
+*	CAM		- position in camera count (0...CAMCNT)
+*/
+void* GetAddressOfPixel(UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block, UINT16 CAM)
+{
+	return &pDMABigBufBase[drvno][GetIndexOfPixel(drvno, pixel, sample, block, CAM)];
+}//GetAdressOfPixel
+
 UINT8 WaitforTelapsed(LONGLONG musec)
 {
 	BOOL Space = FALSE;
