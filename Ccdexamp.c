@@ -617,11 +617,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// display different frame in 2D viewer when nob changes
 		// check if 2d viewer instance is existing
 		if (Direct2dViewer) {
-			//calculate pointer to current block in data to be displayed
-			void* pointer_to_current_block = &pDMABigBufBase[DRV][GetIndexOfPixel(DRV, 0, 0, cur_nob, 0)];
 			//void* pointer_to_current_block = testbitmap + cur_nob * _PIXEL * Nospb;
 			//update 2d viewer bitmap
-			Direct2dViewer_showNewBitmap(Direct2dViewer, pointer_to_current_block, _PIXEL, Nospb);
+			Direct2dViewer_showNewBitmap(Direct2dViewer, GetAddressOfPixel(DRV, 0, 0, cur_nob, 0), _PIXEL, Nospb);
 		}
 		break;
 
