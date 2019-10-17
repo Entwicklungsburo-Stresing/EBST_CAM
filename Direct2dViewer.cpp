@@ -182,7 +182,6 @@ void Direct2dViewer::DiscardDeviceResources()
 //  invocation, and will recreate the resources the next time it's
 //  invoked.
 //
-
 HRESULT Direct2dViewer::OnRender()
 {
 	HRESULT hr = S_OK;
@@ -319,10 +318,10 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
 	return result;
 }
 
-//
-// Creates a Direct2D bitmap from memory.
-// Interpretes data in memory as 16 bit greyscale per pixel
-//
+/*
+* Creates a Direct2D bitmap from memory.
+* Interpretes data in memory as 16 bit greyscale per pixel
+*/
 HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory(
 	ID2D1RenderTarget *pRenderTarget,
 	IWICImagingFactory *pIWICFactory,
@@ -381,6 +380,9 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory(
 	return hr;
 }
 
+/*
+* set information about which data is used for displaying a bitmap
+*/
 void Direct2dViewer::setBitmapSource(void *addr, UINT width, UINT height)
 {
 	_bitmapSource.addr = addr;
@@ -389,11 +391,18 @@ void Direct2dViewer::setBitmapSource(void *addr, UINT width, UINT height)
 	return;
 }
 
+/*
+* returns the window handler of 2d viewer
+*/
 HWND Direct2dViewer::getWindowHandler()
 {
 	return m_hwnd;
 }
 
+/*
+* recreates the graphic rescource bitmap from memory
+* use setBitmapSource before when you want to show a new bitmap
+*/
 HRESULT Direct2dViewer::updateBitmap() {
 	HRESULT hr = S_OK;
 
@@ -407,5 +416,32 @@ HRESULT Direct2dViewer::updateBitmap() {
 		&m_pBitmap
 	);
 
+	return hr;
+}
+
+/*
+* starts 2d viewer with a initial bitmap
+* use this to start 2d viewer. Call constructor before.
+*/
+HRESULT Direct2dViewer::start2dViewer(HWND hWndParent, void *bitmapAddr, UINT width, UINT height)
+{
+	//tell 2D viewer which data to use
+	setBitmapSource(bitmapAddr, width, height);
+	//start 2D viewer
+	HRESULT hr = Initialize(hWndParent);
+	return hr;
+}
+
+/*
+* updates the displayed bitmap in 2d viewer
+*/
+HRESULT Direct2dViewer::showNewBitmap(void *addr, UINT width, UINT height)
+{
+	//tell 2D viewer which data to use
+	setBitmapSource(addr, width, height);
+	//update 2D viewer bitmap graphic rescource
+	HRESULT hr = updateBitmap();
+	//send message to 2d viewer window to repaint
+	SendMessage(getWindowHandler(), WM_PAINT, NULL, NULL);
 	return hr;
 }

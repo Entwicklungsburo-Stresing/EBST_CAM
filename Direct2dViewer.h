@@ -78,16 +78,31 @@ public:
 	Direct2dViewer();
 	~Direct2dViewer();
 
+	HRESULT start2dViewer
+	(
+		HWND hWndParent,
+		void *bitmapAddr,
+		UINT width,
+		UINT height
+	);
+	HRESULT showNewBitmap
+	(
+		void *addr,
+		UINT width,
+		UINT height
+	);
+
+	HWND getWindowHandler();
+
+private:
 	HRESULT Initialize(HWND hWndParent);
-	void setBitmapSource(
+	void setBitmapSource
+	(
 		void *addr,
 		UINT width,
 		UINT height
 	);
 	HRESULT updateBitmap();
-	HWND getWindowHandler();
-
-private:
 	HRESULT CreateDeviceIndependentResources();
 	HRESULT CreateDeviceResources();
 	void DiscardDeviceResources();

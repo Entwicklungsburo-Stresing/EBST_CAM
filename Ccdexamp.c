@@ -620,11 +620,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			//calculate pointer to current block in data to be displayed
 			void* pointer_to_current_block = &pDMABigBufBase[DRV][GetIndexOfPixel(DRV, 0, 0, cur_nob, 0)];
 			//void* pointer_to_current_block = testbitmap + cur_nob * _PIXEL * Nospb;
-			//tell 2D viewer which data to use
-			Direct2dViewer_setBitmapSource(Direct2dViewer, pointer_to_current_block, _PIXEL, Nospb);
-			//update 2D viewer
-			Direct2dViewer_updateBitmap(Direct2dViewer);
-			SendMessage(Direct2dViewer_getWindowHandler(Direct2dViewer), WM_PAINT, NULL, NULL);
+			//update 2d viewer bitmap
+			Direct2dViewer_showNewBitmap(Direct2dViewer, pointer_to_current_block, _PIXEL, Nospb);
 		}
 		break;
 
@@ -718,15 +715,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			//check if 2d viewer instance is existing.
 			//only open new 2d viewer when not existing
 			if (!Direct2dViewer) {
+				//createTestBitmap(Nob, Nospb, _PIXEL);
 				//initialize 2D Viewer
 				Direct2dViewer = Direct2dViewer_new();
-				createTestBitmap(Nob, Nospb, _PIXEL);
 				//calculate pointer to current block in data to be displayed
 				void* pointer_to_current_block = &pDMABigBufBase[DRV][GetIndexOfPixel(DRV, 0, 0, cur_nob, 0)];
-				//tell 2D viewer which data to use
-				Direct2dViewer_setBitmapSource(Direct2dViewer, pointer_to_current_block, _PIXEL, Nospb);
-				//start 2D viewer
-				Direct2dViewer_Initialize(Direct2dViewer, hMSWND);
+				//start 2d viewer
+				Direct2dViewer_start2dViewer(Direct2dViewer, hMSWND, pointer_to_current_block, _PIXEL, Nospb);
 			}
 			break;
 		}
@@ -750,7 +745,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		//release instance of 2D viewer
 		Direct2dViewer_delete(Direct2dViewer);
 		Direct2dViewer = NULL;
-		free(testbitmap);
+		//free(testbitmap);
 		break;
 	case WM_TIMER:
 		cur_nob++;
@@ -1157,7 +1152,7 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 				MAKELONG(0/*MIN RANGE*/, trackbar_nospb - 1/*MAX RANGE*/));  //Optional, Default is 0-100
 
 			//refresh test bitmap
-			createTestBitmap(Nob, Nospb, _PIXEL);
+			//createTestBitmap(Nob, Nospb, _PIXEL);
 
 			EndDialog(hDlg, TRUE);
 			return (TRUE);
@@ -1178,7 +1173,7 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 				SetDlgItemText(hDlg, IDC_CALCRAM, "calculation error");
 
 			//refresh test bitmap
-			createTestBitmap(Nob, Nospb, _PIXEL);
+			//createTestBitmap(Nob, Nospb, _PIXEL);
 
 			break;
 
@@ -1215,7 +1210,7 @@ LRESULT CALLBACK AllocateBuf(HWND hDlg,
 				SetDlgItemText(hDlg, IDC_ALLOCRAM, "calculation error");
 #endif
 			//refresh test bitmap
-			createTestBitmap(Nob, Nospb, _PIXEL);
+			//createTestBitmap(Nob, Nospb, _PIXEL);
 
 			break;
 		case IDCONT:
