@@ -11,6 +11,7 @@ Direct2dViewer::Direct2dViewer() :
 	m_pD2DFactory(NULL),
 	m_pWICFactory(NULL),
 	m_pRenderTarget(NULL),
+	m_pDeviceContext(NULL),
 	m_pBitmap(NULL)
 {
 }
@@ -23,6 +24,7 @@ Direct2dViewer::~Direct2dViewer()
 	SafeRelease(&m_pD2DFactory);
 	SafeRelease(&m_pWICFactory);
 	SafeRelease(&m_pRenderTarget);
+	SafeRelease( &m_pDeviceContext );
 	SafeRelease(&m_pBitmap);
 }
 
@@ -156,6 +158,24 @@ HRESULT Direct2dViewer::CreateDeviceResources()
 				&m_pBitmap
 			);
 		}
+
+		if (SUCCEEDED( hr ))
+		{
+			// Obtain hwndRenderTarget's deviceContext
+			hr = m_pRenderTarget->QueryInterface( __uuidof(ID2D1DeviceContext), (void**)&m_pDeviceContext );
+		}
+
+		if (SUCCEEDED( hr ))
+		{
+			m_pDeviceContext->CreateEffect( CLSID_D2D1GammaTransfer, &gammaTransferEffect );
+
+			gammaTransferEffect->SetInput( 0, m_pBitmap );
+
+			gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_RED_AMPLITUDE, 4.0f );
+			gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_GREEN_AMPLITUDE, 4.0f );
+			gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_BLUE_AMPLITUDE, 4.0f );
+		}
+
 	}
 
 	return hr;
@@ -169,6 +189,7 @@ void Direct2dViewer::DiscardDeviceResources()
 {
 	SafeRelease(&m_pRenderTarget);
 	SafeRelease(&m_pBitmap);
+	SafeRelease(&m_pDeviceContext);
 }
 
 //
@@ -197,14 +218,14 @@ HRESULT Direct2dViewer::OnRender()
 
 		m_pRenderTarget->BeginDraw();
 
-		m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+		//m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 
-		m_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
+		//m_pDeviceContext->Clear(D2D1::ColorF(D2D1::ColorF::White));
 
 		//D2D1_SIZE_F size = m_pBitmap->GetSize();
 
-		// Draw bitmap
-		m_pRenderTarget->DrawBitmap(
+		//Draw bitmap
+		m_pDeviceContext->DrawBitmap(
 			m_pBitmap,
 			D2D1::RectF(
 				0,
@@ -214,6 +235,8 @@ HRESULT Direct2dViewer::OnRender()
 			1.0f,
 			D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR
 		);
+
+		m_pDeviceContext->DrawImage(gammaTransferEffect,D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
 
 		hr = m_pRenderTarget->EndDraw();
 
@@ -233,6 +256,8 @@ HRESULT Direct2dViewer::OnRender()
 //
 void Direct2dViewer::OnResize(UINT width, UINT height)
 {
+	HRESULT hr = S_OK;
+
 	if (m_pRenderTarget)
 	{
 		D2D1_SIZE_U size;
@@ -242,7 +267,7 @@ void Direct2dViewer::OnResize(UINT width, UINT height)
 		// Note: This method can fail, but it's okay to ignore the
 		// error here -- it will be repeated on the next call to
 		// EndDraw.
-		m_pRenderTarget->Resize(size);
+		hr = m_pRenderTarget->Resize(size);
 	}
 }
 
