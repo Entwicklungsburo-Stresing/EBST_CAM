@@ -30,7 +30,7 @@
 #include <d2d1helper.h>
 #include <dwrite.h>
 #include <wincodec.h>
-
+#include <d2d1_1.h>
 /******************************************************************
 *                                                                 *
 *  Macros                                                         *
@@ -129,7 +129,10 @@ private:
 	IWICImagingFactory *m_pWICFactory;
 	IDWriteFactory *m_pDWriteFactory;
 	ID2D1HwndRenderTarget *m_pRenderTarget;
+	ID2D1DeviceContext *m_pDeviceContext;
 	ID2D1Bitmap *m_pBitmap;
+	ID2D1Effect *gammaTransferEffect;
+
 	struct _BitmapSource
 	{
 		void	*addr;

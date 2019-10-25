@@ -33,7 +33,7 @@ enum adc_mode {
 	ramp = 1,
 	custom_pattern = 2
 };
-#define ADC_MODE normal
+#define ADC_MODE ramp
 #define ADC_CUSTOM_PATTERN 0xFFFF
 //options for 3010
 #define LED_ON FALSE
