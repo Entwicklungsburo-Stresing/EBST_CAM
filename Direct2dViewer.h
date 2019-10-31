@@ -102,15 +102,13 @@ private:
 		UINT width,
 		UINT height
 	);
-	HRESULT updateBitmap();
+	HRESULT loadBitmap();
 	HRESULT CreateDeviceIndependentResources();
 	HRESULT CreateDeviceResources();
+	void CreateGammaEffect();
+	void ScaleRenderTarget();
 	void DiscardDeviceResources();
 	HRESULT OnRender();
-	void OnResize(
-		UINT width,
-		UINT height
-	);
 	static LRESULT CALLBACK WndProc(
 		HWND hWnd,
 		UINT message,
@@ -118,9 +116,7 @@ private:
 		LPARAM lParam
 	);
 	HRESULT Load16bitGreyscaleBitmapFromMemory(
-		ID2D1RenderTarget *pRenderTarget,
-		IWICImagingFactory *pIWICFactory,
-		ID2D1Bitmap **ppBitmap
+		
 	);
 
 private:
