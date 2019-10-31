@@ -94,8 +94,8 @@ public:
 	HWND getWindowHandler();
 	void SetGammaValue
 	(
-		FLOAT amplitude,
-		FLOAT offset
+		UINT white,
+		UINT black
 	);
 
 private:

@@ -430,12 +430,14 @@ HRESULT Direct2dViewer::loadBitmap()
 
 /*
 * set gamma value
-* default values are: offset = 0, amplitude = 1 (16 bit), amplitude = 4 (14 bit)
+* param1 white: set value for maximum brightness
+* param2 black: set value for minimum brightness
+* default values are: black = 0, white = 0xFFFF (16 bit), amplitude = 0x3FFF (14 bit)
 */
-void Direct2dViewer::SetGammaValue(FLOAT amplitude, FLOAT offset)
+void Direct2dViewer::SetGammaValue(UINT white, UINT black)
 {
-	_gamma_amplitude = amplitude;
-	_gamma_offset = offset;
+	_gamma_amplitude = (FLOAT) 0xFFFF / white; //default = 1
+	_gamma_offset = (FLOAT) black; //default = 0
 
 	//apply gamma effects
 	if(m_pRenderTarget) CreateGammaEffect();
