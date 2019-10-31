@@ -24,7 +24,7 @@ Direct2dViewer::~Direct2dViewer()
 	SafeRelease(&m_pD2DFactory);
 	SafeRelease(&m_pWICFactory);
 	SafeRelease(&m_pRenderTarget);
-	SafeRelease( &m_pDeviceContext );
+	SafeRelease(&m_pDeviceContext );
 	SafeRelease(&m_pBitmap);
 }
 
@@ -394,9 +394,12 @@ void Direct2dViewer::CreateGammaEffect()
 	{
 		m_pDeviceContext->CreateEffect( CLSID_D2D1GammaTransfer, &gammaTransferEffect );
 		gammaTransferEffect->SetInput( 0, m_pBitmap );
-		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_RED_AMPLITUDE, 4.0f );
-		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_GREEN_AMPLITUDE, 4.0f );
-		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_BLUE_AMPLITUDE, 4.0f );
+		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_RED_AMPLITUDE, _gamma_amplitude );
+		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_GREEN_AMPLITUDE, _gamma_amplitude );
+		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_BLUE_AMPLITUDE, _gamma_amplitude );
+		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_RED_OFFSET, _gamma_offset );
+		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_GREEN_OFFSET, _gamma_offset );
+		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_BLUE_OFFSET, _gamma_offset );
 	}
 	return;
 }
@@ -423,6 +426,21 @@ HRESULT Direct2dViewer::loadBitmap()
 	CreateGammaEffect();
 
 	return hr;
+}
+
+/*
+* set gamma value
+* default values are: offset = 0, amplitude = 1 (16 bit), amplitude = 4 (14 bit)
+*/
+void Direct2dViewer::SetGammaValue(FLOAT amplitude, FLOAT offset)
+{
+	_gamma_amplitude = amplitude;
+	_gamma_offset = offset;
+
+	//apply gamma effects
+	if(m_pRenderTarget) CreateGammaEffect();
+
+	return;
 }
 
 /*

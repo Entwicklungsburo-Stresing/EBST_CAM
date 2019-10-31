@@ -31,3 +31,10 @@ HWND Direct2dViewer_getWindowHandler(void *D2dV)
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
 	return D2d->getWindowHandler();
 }
+
+void Direct2dViewer_setGammaValue( void *D2dV, FLOAT amplitude, FLOAT offset )
+{
+	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
+	D2d->SetGammaValue( amplitude, offset);
+	return;
+}

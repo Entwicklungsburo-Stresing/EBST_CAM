@@ -718,6 +718,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				Direct2dViewer = Direct2dViewer_new();
 				//calculate pointer to current block in data to be displayed
 				void* pointer_to_current_block = &pDMABigBufBase[DRV][GetIndexOfPixel(DRV, 0, 0, cur_nob, 0)];
+				if (CAMERA_SYSTEM == camera_system_3030) Direct2dViewer_setGammaValue( Direct2dViewer, 4, 0 );
 				//start 2d viewer
 				Direct2dViewer_start2dViewer(Direct2dViewer, hMSWND, pointer_to_current_block, _PIXEL, Nospb);
 			}
