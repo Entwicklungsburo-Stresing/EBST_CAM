@@ -735,6 +735,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				(TIMERPROC)NULL);		// no timer callback 
 			break;
 		}
+		case ID_2DVIEW_SETGAMMA:
+		{
+			// TODO: insert set gamma dialog here
+			break;
+		}
 		case IDM_EXIT:
 			DestroyWindow(hWnd);
 			break;

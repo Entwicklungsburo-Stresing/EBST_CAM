@@ -86,8 +86,9 @@
 #define ID_START_ALLOC                  40022
 #define ID_START_CHOOSEBOARD            40023
 #define ID_CHOOSEBOARD                  40024
-#define ID_2DVIEW_SHOW					40025
+#define ID_2DVIEW_SHOW                  40025
 #define ID_2DVIEW_START                 40026
+#define ID_2DVIEW_SETGAMMA              40027
 #define IDC_EDIT1                       -1
 #define IDC_STATIC                      -1
 
@@ -97,7 +98,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        111
-#define _APS_NEXT_COMMAND_VALUE         40027
+#define _APS_NEXT_COMMAND_VALUE         40028
 #define _APS_NEXT_CONTROL_VALUE         1027
 #define _APS_NEXT_SYMED_VALUE           103
 #endif
