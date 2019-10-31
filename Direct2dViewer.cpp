@@ -437,7 +437,8 @@ HRESULT Direct2dViewer::loadBitmap()
 void Direct2dViewer::SetGammaValue(UINT white, UINT black)
 {
 	_gamma_amplitude = (FLOAT) 0xFFFF / white; //default = 1
-	_gamma_offset = (FLOAT) black; //default = 0
+	//offset doesn't work as I expected, so I hardcoded it to 0
+	_gamma_offset = (FLOAT) 0; //default = 0
 
 	//apply gamma effects
 	if(m_pRenderTarget) CreateGammaEffect();
