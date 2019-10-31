@@ -91,8 +91,12 @@ public:
 		UINT width,
 		UINT height
 	);
-
 	HWND getWindowHandler();
+	void SetGammaValue
+	(
+		FLOAT amplitude,
+		FLOAT offset
+	);
 
 private:
 	HRESULT Initialize(HWND hWndParent);
@@ -128,6 +132,8 @@ private:
 	ID2D1DeviceContext *m_pDeviceContext;
 	ID2D1Bitmap *m_pBitmap;
 	ID2D1Effect *gammaTransferEffect;
+	FLOAT _gamma_amplitude = 1;
+	FLOAT _gamma_offset = 0;
 
 	struct _BitmapSource
 	{
