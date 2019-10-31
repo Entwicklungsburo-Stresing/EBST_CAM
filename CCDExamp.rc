@@ -66,6 +66,7 @@ BEGIN
     BEGIN
         MENUITEM "Show",                        ID_2DVIEW_SHOW
         MENUITEM "Play",                        ID_2DVIEW_START
+        MENUITEM "Set gamma",                   ID_2DVIEW_SETGAMMA
     END
 END
 
