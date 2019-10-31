@@ -152,30 +152,8 @@ HRESULT Direct2dViewer::CreateDeviceResources()
 
 		if (SUCCEEDED(hr))
 		{
-			hr = Load16bitGreyscaleBitmapFromMemory(
-				m_pRenderTarget,
-				m_pWICFactory,
-				&m_pBitmap
-			);
+			hr = loadBitmap();
 		}
-
-		if (SUCCEEDED( hr ))
-		{
-			// Obtain hwndRenderTarget's deviceContext
-			hr = m_pRenderTarget->QueryInterface( __uuidof(ID2D1DeviceContext), (void**)&m_pDeviceContext );
-		}
-
-		if (SUCCEEDED( hr ))
-		{
-			m_pDeviceContext->CreateEffect( CLSID_D2D1GammaTransfer, &gammaTransferEffect );
-
-			gammaTransferEffect->SetInput( 0, m_pBitmap );
-
-			gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_RED_AMPLITUDE, 4.0f );
-			gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_GREEN_AMPLITUDE, 4.0f );
-			gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_BLUE_AMPLITUDE, 4.0f );
-		}
-
 	}
 
 	return hr;
@@ -251,28 +229,6 @@ HRESULT Direct2dViewer::OnRender()
 }
 
 //
-//  If the application receives a WM_SIZE message, this method
-//  resize the render target appropriately.
-//
-void Direct2dViewer::OnResize(UINT width, UINT height)
-{
-	HRESULT hr = S_OK;
-
-	if (m_pRenderTarget)
-	{
-		D2D1_SIZE_U size;
-		size.width = width;
-		size.height = height;
-
-		// Note: This method can fail, but it's okay to ignore the
-		// error here -- it will be repeated on the next call to
-		// EndDraw.
-		hr = m_pRenderTarget->Resize(size);
-	}
-}
-
-
-//
 // The window message handler.
 //
 LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -304,16 +260,6 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
 		{
 			switch (message)
 			{
-			case WM_SIZE:
-			{
-				UINT width = LOWORD(lParam);
-				UINT height = HIWORD(lParam);
-				D2DV->OnResize(width, height);
-			}
-				result = 0;
-				wasHandled = true;
-				break;
-
 			case WM_PAINT:
 			case WM_DISPLAYCHANGE:
 			{
@@ -347,11 +293,7 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
 * Creates a Direct2D bitmap from memory.
 * Interpretes data in memory as 16 bit greyscale per pixel
 */
-HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory(
-	ID2D1RenderTarget *pRenderTarget,
-	IWICImagingFactory *pIWICFactory,
-	ID2D1Bitmap **ppBitmap
-)
+HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 {
 	HRESULT hr = S_OK;
 	IWICFormatConverter *pConverter = NULL;
@@ -361,7 +303,7 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory(
 	if (SUCCEEDED(hr))
 	{
 		// Create the initial frame as WIC bitmap.
-		hr = pIWICFactory->CreateBitmapFromMemory(
+		hr = m_pWICFactory->CreateBitmapFromMemory(
 			_bitmapSource.width,
 			_bitmapSource.height,
 			GUID_WICPixelFormat16bppGray,
@@ -376,7 +318,7 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory(
 	{
 		// Convert the image format to 32bppPBGRA
 		// (DXGI_FORMAT_B8G8R8A8_UNORM + D2D1_ALPHA_MODE_PREMULTIPLIED).
-		hr = pIWICFactory->CreateFormatConverter(&pConverter);
+		hr = m_pWICFactory->CreateFormatConverter(&pConverter);
 	}
 	if (SUCCEEDED(hr))
 	{
@@ -392,10 +334,10 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory(
 	if (SUCCEEDED(hr))
 	{
 		//create a Direct2D bitmap from the WIC bitmap.
-		hr = pRenderTarget->CreateBitmapFromWicBitmap(
+		hr = m_pRenderTarget->CreateBitmapFromWicBitmap(
 			pConverter,
 			NULL,
-			ppBitmap
+			&m_pBitmap
 		);
 	}
 
@@ -424,22 +366,61 @@ HWND Direct2dViewer::getWindowHandler()
 	return m_hwnd;
 }
 
+void Direct2dViewer::ScaleRenderTarget()
+{
+	// Retrieve the size of the render target.
+	D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
+	// calculate scale factors
+	float scale_x = renderTargetSize.width / _bitmapSource.width;
+	float scale_y = renderTargetSize.height / _bitmapSource.height;
+	// scale render target
+	m_pRenderTarget->SetTransform( D2D1::Matrix3x2F::Scale(
+		D2D1::Size( scale_x, scale_y ),
+		D2D1::Point2F( 0.0f, 0.0f ) ) );
+	return;
+}
+
+void Direct2dViewer::CreateGammaEffect()
+{
+	HRESULT hr = S_OK;
+
+	if (SUCCEEDED( hr ))
+	{
+		// Obtain hwndRenderTarget's deviceContext
+		hr = m_pRenderTarget->QueryInterface( __uuidof(ID2D1DeviceContext), (void**)&m_pDeviceContext );
+	}
+
+	if (SUCCEEDED( hr ))
+	{
+		m_pDeviceContext->CreateEffect( CLSID_D2D1GammaTransfer, &gammaTransferEffect );
+		gammaTransferEffect->SetInput( 0, m_pBitmap );
+		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_RED_AMPLITUDE, 4.0f );
+		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_GREEN_AMPLITUDE, 4.0f );
+		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_BLUE_AMPLITUDE, 4.0f );
+	}
+	return;
+}
+
 /*
-* recreates the graphic rescource bitmap from memory
+* creates the graphic rescource bitmap from memory,
+* scales render target and applies gamma effects depending on bit setting to bitmap
 * use setBitmapSource before when you want to show a new bitmap
 */
-HRESULT Direct2dViewer::updateBitmap() {
+HRESULT Direct2dViewer::loadBitmap()
+{
 	HRESULT hr = S_OK;
 
 	//release old bitmap
-	SafeRelease(&m_pBitmap);
+	if(m_pBitmap != NULL) SafeRelease(&m_pBitmap);
 
 	//create new bitmap
-	hr = Load16bitGreyscaleBitmapFromMemory(
-		m_pRenderTarget,
-		m_pWICFactory,
-		&m_pBitmap
-	);
+	hr = Load16bitGreyscaleBitmapFromMemory();
+
+	//scale render target to window size
+	ScaleRenderTarget();
+
+	//apply gamma effects
+	CreateGammaEffect();
 
 	return hr;
 }
@@ -465,7 +446,7 @@ HRESULT Direct2dViewer::showNewBitmap(void *addr, UINT width, UINT height)
 	//tell 2D viewer which data to use
 	setBitmapSource(addr, width, height);
 	//update 2D viewer bitmap graphic rescource
-	HRESULT hr = updateBitmap();
+	HRESULT hr = loadBitmap();
 	//send message to 2d viewer window to repaint
 	SendMessage(getWindowHandler(), WM_PAINT, NULL, NULL);
 	return hr;
