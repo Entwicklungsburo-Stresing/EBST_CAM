@@ -192,7 +192,7 @@ HRESULT Direct2dViewer::OnRender()
 	if (SUCCEEDED(hr) && !(m_pRenderTarget->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED))
 	{
 		m_pRenderTarget->BeginDraw();
-		m_pDeviceContext->DrawImage(gammaTransferEffect, D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
+		m_pDeviceContext->DrawImage(linearTransferEffect, D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
 		hr = m_pRenderTarget->EndDraw();
 		if (hr == D2DERR_RECREATE_TARGET)
 		{
@@ -274,7 +274,8 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 	HRESULT hr = S_OK;
 	IWICFormatConverter *pConverter = NULL;
 	IWICBitmap            *ppIBitmap = NULL;
-
+	IWICBitmapLock *pILock = NULL;
+	WICRect rcLock = { 0, 0, _bitmapSource.width, _bitmapSource.height };
 
 	if (SUCCEEDED(hr))
 	{
@@ -289,6 +290,38 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 			&ppIBitmap
 		);
 	}
+
+	//if (SUCCEEDED( hr ))
+	//{
+	//	// Obtain a bitmap lock for exclusive write.
+	//	// The lock is for a  _bitmapSource.width x _bitmapSource.height rectangle starting at the top left of the
+	//	// bitmap.
+	//	hr = ppIBitmap->Lock( &rcLock, WICBitmapLockWrite, &pILock );
+
+	//	//Process the pixel data that is now locked by the IWICBitmapLock object.
+	//		
+	//		if (SUCCEEDED( hr ))
+	//		{
+	//			UINT cbBufferSize = 0;
+	//			BYTE *pv = NULL;
+
+	//			// Retrieve a pointer to the pixel data.
+	//			if (SUCCEEDED( hr ))
+	//			{
+	//				hr = pILock->GetDataPointer( &cbBufferSize, &pv );
+	//			}
+
+	//			for (UINT i=0; i < _bitmapSource.width; i++)
+	//			{
+	//				BYTE *p_pixel = pv + i*2;
+	//				UINT16 new_value = (UINT16) (&p_pixel) * 10;
+	//				memset( p_pixel, new_value, 1 );
+	//			}
+
+	//			// Release the bitmap lock.
+	//			SafeRelease( &pILock );
+	//		}
+	//}
 
 	if (SUCCEEDED(hr))
 	{
@@ -368,14 +401,14 @@ void Direct2dViewer::CreateGammaEffect()
 
 	if (SUCCEEDED( hr ))
 	{
-		m_pDeviceContext->CreateEffect( CLSID_D2D1GammaTransfer, &gammaTransferEffect );
-		gammaTransferEffect->SetInput( 0, m_pBitmap );
-		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_RED_AMPLITUDE, _gamma_amplitude );
-		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_GREEN_AMPLITUDE, _gamma_amplitude );
-		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_BLUE_AMPLITUDE, _gamma_amplitude );
-		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_RED_OFFSET, _gamma_offset );
-		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_GREEN_OFFSET, _gamma_offset );
-		gammaTransferEffect->SetValue( D2D1_GAMMATRANSFER_PROP_BLUE_OFFSET, _gamma_offset );
+		m_pDeviceContext->CreateEffect( CLSID_D2D1LinearTransfer, &linearTransferEffect );
+		linearTransferEffect->SetInput( 0, m_pBitmap );
+		linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_RED_SLOPE, _gamma_amplitude );
+		linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_GREEN_SLOPE, _gamma_amplitude );
+		linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_BLUE_SLOPE, _gamma_amplitude );
+		linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_RED_Y_INTERCEPT, _gamma_offset );
+		linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_GREEN_Y_INTERCEPT, _gamma_offset );
+		linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_BLUE_Y_INTERCEPT, _gamma_offset );
 	}
 	return;
 }
@@ -414,7 +447,7 @@ void Direct2dViewer::SetGammaValue(UINT white, UINT black)
 {
 	_gamma_amplitude = (FLOAT) 0xFFFF / white; //default = 1
 	//offset doesn't work as I expected, so I hardcoded it to 0
-	_gamma_offset = (FLOAT) 0; //default = 0
+	_gamma_offset = (FLOAT) - (black / UINT(0xFFFF)); //default = 0
 
 	//apply gamma effects
 	if(m_pRenderTarget) CreateGammaEffect();

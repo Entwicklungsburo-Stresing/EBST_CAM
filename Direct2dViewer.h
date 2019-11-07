@@ -131,7 +131,7 @@ private:
 	ID2D1HwndRenderTarget *m_pRenderTarget;
 	ID2D1DeviceContext *m_pDeviceContext;
 	ID2D1Bitmap *m_pBitmap;
-	ID2D1Effect *gammaTransferEffect;
+	ID2D1Effect *linearTransferEffect;
 	FLOAT _gamma_amplitude = 1;
 	FLOAT _gamma_offset = 0;
 
