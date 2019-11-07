@@ -191,33 +191,9 @@ HRESULT Direct2dViewer::OnRender()
 
 	if (SUCCEEDED(hr) && !(m_pRenderTarget->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED))
 	{
-		// Retrieve the size of the render target.
-		D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
-
 		m_pRenderTarget->BeginDraw();
-
-		//m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-
-		//m_pDeviceContext->Clear(D2D1::ColorF(D2D1::ColorF::White));
-
-		//D2D1_SIZE_F size = m_pBitmap->GetSize();
-
-		//Draw bitmap
-		m_pDeviceContext->DrawBitmap(
-			m_pBitmap,
-			D2D1::RectF(
-				0,
-				0,
-				renderTargetSize.width,
-				renderTargetSize.height),
-			1.0f,
-			D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR
-		);
-
-		m_pDeviceContext->DrawImage(gammaTransferEffect,D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
-
+		m_pDeviceContext->DrawImage(gammaTransferEffect, D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
 		hr = m_pRenderTarget->EndDraw();
-
 		if (hr == D2DERR_RECREATE_TARGET)
 		{
 			hr = S_OK;
