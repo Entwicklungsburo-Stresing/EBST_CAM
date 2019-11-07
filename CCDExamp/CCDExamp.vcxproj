@@ -151,7 +151,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)Jungo;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir);$(SolutionDir)Jungo;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Debug|x64'">
@@ -176,7 +176,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)Jungo;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir);$(SolutionDir)Jungo;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|x64'">
@@ -535,18 +535,17 @@
     <Text Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Direct2dViewer.cpp" />
+    <ClCompile Include="..\Direct2dViewer_c.cpp" />
     <ClCompile Include="CCDExamp.c" />
-    <ClCompile Include="Direct2dViewer.cpp" />
-    <ClCompile Include="Direct2dViewer_c.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CCDExamp.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CCDCtl.h" />
+    <ClInclude Include="..\Direct2dViewer.h" />
+    <ClInclude Include="..\Direct2dViewer_c.h" />
     <ClInclude Include="CCDExamp.h" />
-    <ClInclude Include="Direct2dViewer.h" />
-    <ClInclude Include="Direct2dViewer_c.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="lscpciej_lib.h" />
     <ClInclude Include="Resource.h" />

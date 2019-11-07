@@ -14,10 +14,10 @@
     <ClCompile Include="ESLSCDLL.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Direct2dViewer.cpp">
+    <ClCompile Include="..\Direct2dViewer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Direct2dViewer_c.cpp">
+    <ClCompile Include="..\Direct2dViewer_c.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -82,10 +82,10 @@
     <ClInclude Include="Jungo\cstring.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Direct2dViewer.h">
+    <ClInclude Include="..\Direct2dViewer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Direct2dViewer_c.h">
+    <ClInclude Include="..\Direct2dViewer_c.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
