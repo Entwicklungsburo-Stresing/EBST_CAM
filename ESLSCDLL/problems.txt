@@ -1,0 +1,9 @@
+Für Int_enable von Jungo wird das FLag Kernel_64BIT benötigt
+
+
+
+added ALLOW_64_BIT_ADDRESS Flag for the DMA Buffer allocation and changed to scatter gather . Now the max size is almost 5GB (0x80001 mem pages). Updated to Jungo 12.30 (didnt felt a difference)
+
+added DMA_64_EN Flag for 64 bit addresses. When DREQ bit is also set you can only initialize (DMA_Setup) the Program (e.g. LAbview Loopsel) once. If you try it a second time, you will get camera errors and no handle available and so on. When DREQ is not set you will repeat the initializing routine but you wont be able to start the read process
+
+
