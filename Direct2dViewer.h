@@ -133,7 +133,7 @@ private:
 	ID2D1Bitmap *m_pBitmap;
 	ID2D1Effect *linearTransferEffect;
 	FLOAT _gamma_amplitude = 1;
-	UINT16 _gamma_offset = 0;
+	INT32 _gamma_offset = 0;
 
 	struct _BitmapSource
 	{
