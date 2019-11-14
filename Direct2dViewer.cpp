@@ -316,7 +316,12 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 				// pointer to one pixel: base pointer + iterator which is multiplied by two, for two bytes per pixel
 				UINT16 *p_pixel = (UINT16*) (pv + (i * sizeof( UINT16 )));
 				// manipulate pixel data here
-				*p_pixel = *p_pixel * 16;
+				if (*p_pixel * _gamma_amplitude - _gamma_offset > 0xFFFF)
+					*p_pixel = 0xFFFF;
+				else if (*p_pixel * _gamma_amplitude - _gamma_offset < 0)
+					*p_pixel = 0;
+				else
+					*p_pixel = *p_pixel * _gamma_amplitude - _gamma_offset;
 			}
 
 			// Release the bitmap lock.
@@ -404,12 +409,12 @@ void Direct2dViewer::CreateGammaEffect()
 	{
 		m_pDeviceContext->CreateEffect( CLSID_D2D1LinearTransfer, &linearTransferEffect );
 		linearTransferEffect->SetInput( 0, m_pBitmap );
-		linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_RED_SLOPE, _gamma_amplitude );
-		linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_GREEN_SLOPE, _gamma_amplitude );
-		linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_BLUE_SLOPE, _gamma_amplitude );
-		linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_RED_Y_INTERCEPT, _gamma_offset );
-		linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_GREEN_Y_INTERCEPT, _gamma_offset );
-		linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_BLUE_Y_INTERCEPT, _gamma_offset );
+		//linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_RED_SLOPE, _gamma_amplitude );
+		//linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_GREEN_SLOPE, _gamma_amplitude );
+		//linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_BLUE_SLOPE, _gamma_amplitude );
+		//linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_RED_Y_INTERCEPT, _gamma_offset );
+		//linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_GREEN_Y_INTERCEPT, _gamma_offset );
+		//linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_BLUE_Y_INTERCEPT, _gamma_offset );
 	}
 	return;
 }
@@ -444,15 +449,10 @@ HRESULT Direct2dViewer::loadBitmap()
 * param2 black: set value for minimum brightness
 * default values are: black = 0, white = 0xFFFF (16 bit), amplitude = 0x3FFF (14 bit)
 */
-void Direct2dViewer::SetGammaValue(UINT white, UINT black)
+void Direct2dViewer::SetGammaValue(UINT16 white, UINT16 black)
 {
-	_gamma_amplitude = (FLOAT) 0xFFFF / white; //default = 1
-	//offset doesn't work as I expected, so I hardcoded it to 0
-	_gamma_offset = (FLOAT) - (black / UINT(0xFFFF)); //default = 0
-
-	//apply gamma effects
-	if(m_pRenderTarget) CreateGammaEffect();
-
+	_gamma_offset = black; //default = 0
+	_gamma_amplitude = (FLOAT) /* offset amplitude correction */ (1 - _gamma_offset / 0xFFFF) * /*new amplitude*/0xFFFF / white; //default = 1
 	return;
 }
 
