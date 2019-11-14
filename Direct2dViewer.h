@@ -109,7 +109,7 @@ private:
 	HRESULT loadBitmap();
 	HRESULT CreateDeviceIndependentResources();
 	HRESULT CreateDeviceResources();
-	void CreateGammaEffect();
+	void CreateEffect();
 	void ScaleRenderTarget();
 	void DiscardDeviceResources();
 	HRESULT OnRender();

@@ -395,7 +395,7 @@ void Direct2dViewer::ScaleRenderTarget()
 	return;
 }
 
-void Direct2dViewer::CreateGammaEffect()
+void Direct2dViewer::CreateEffect()
 {
 	HRESULT hr = S_OK;
 
@@ -407,14 +407,10 @@ void Direct2dViewer::CreateGammaEffect()
 
 	if (SUCCEEDED( hr ))
 	{
+		//This has no effect, because gamma transfer is now applied before converting bitmap to direct2d bitmap
+		//But it is still needed to show the bitmap with the effect pointer.
 		m_pDeviceContext->CreateEffect( CLSID_D2D1LinearTransfer, &linearTransferEffect );
 		linearTransferEffect->SetInput( 0, m_pBitmap );
-		//linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_RED_SLOPE, _gamma_amplitude );
-		//linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_GREEN_SLOPE, _gamma_amplitude );
-		//linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_BLUE_SLOPE, _gamma_amplitude );
-		//linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_RED_Y_INTERCEPT, _gamma_offset );
-		//linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_GREEN_Y_INTERCEPT, _gamma_offset );
-		//linearTransferEffect->SetValue( D2D1_LINEARTRANSFER_PROP_BLUE_Y_INTERCEPT, _gamma_offset );
 	}
 	return;
 }
@@ -438,7 +434,7 @@ HRESULT Direct2dViewer::loadBitmap()
 	ScaleRenderTarget();
 
 	//apply gamma effects
-	CreateGammaEffect();
+	CreateEffect();
 
 	return hr;
 }
