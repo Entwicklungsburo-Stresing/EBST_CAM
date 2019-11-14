@@ -738,6 +738,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case ID_2DVIEW_SETGAMMA:
 		{
 			// TODO: insert set gamma dialog here
+			//Direct2dViewer_setGammaValue( Direct2dViewer, white, black );
 			break;
 		}
 		case IDM_EXIT:
