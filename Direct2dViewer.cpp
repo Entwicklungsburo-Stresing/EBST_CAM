@@ -451,8 +451,10 @@ HRESULT Direct2dViewer::loadBitmap()
 */
 void Direct2dViewer::SetGammaValue(UINT16 white, UINT16 black)
 {
-	_gamma_offset = black; //default = 0
-	_gamma_amplitude = (FLOAT) /* offset amplitude correction */ (1 - _gamma_offset / 0xFFFF) * /*new amplitude*/0xFFFF / white; //default = 1
+	if (black >= white) black = white - 1;
+	_gamma_amplitude = (FLOAT) 0xFFFF/(white - black); //default = 1
+	_gamma_offset = _gamma_amplitude * white - 0xFFFF; //default = 0
+
 	return;
 }
 
