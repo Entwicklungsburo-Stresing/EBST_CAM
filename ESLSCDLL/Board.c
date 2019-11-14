@@ -664,17 +664,26 @@ BOOL SetDMAReg(ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno) {//the bi
 }
 
 BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno) {
-	ULONG OldRegisterValues;
-	ULONG NewRegisterValues;
+	ULONG OldRegisterValues, Setbit_mask, OldRegVals_and_SetBits, Clearbit_mask, NewRegisterValues;
+
 	//read the old Register Values in the S0 Address Reg
 	if (!ReadLongS0(drvno, &OldRegisterValues, Address)) {
 		ErrLog("ReadLong S0 Failed in SetDMAReg \n");
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		return FALSE;
 	}
-	//save the bits, which shall not changed
-	OldRegisterValues = OldRegisterValues & ~Bitmask;
-	NewRegisterValues = Data | OldRegisterValues;
+
+	//step 0: delete not needed "1"s
+	Data &= Bitmask;
+	//step 1: save Data as setbitmask for making this part humanreadable
+	Setbit_mask = Data;
+	//step 2: setting high bits in the Data
+	OldRegVals_and_SetBits = OldRegisterValues | Setbit_mask;
+	//step 3: prepare to clear bits
+	Clearbit_mask = Data | ~Bitmask;
+	//step 4: clear the low bits in the Data
+	NewRegisterValues = OldRegVals_and_SetBits & Clearbit_mask;
+
 	//write the data to the S0 controller
 	if (!WriteLongS0(drvno, NewRegisterValues, Address)) {
 		ErrLog("WriteLong S0 Failed in SetDMAReg \n");
@@ -686,7 +695,7 @@ BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno) {
 
 
 BOOL SetS0Bit(ULONG bitnumber, CHAR Address, UINT32 drvno) {
-
+	//bitnumber: 0...31
 	ULONG bitmask = 0x1 << bitnumber;
 
 	if (!SetS0Reg(0xFFFFFFFF, bitmask, Address, drvno)) {
@@ -3922,6 +3931,7 @@ void ReadFFLoop(UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigg
 
 
 }//ReadFFLoop
+
 //weg?!
 //B!void __cdecl ReadFFLoopThread(void *parg)//thread
 unsigned int __stdcall ReadFFLoopThread(void *parg)//threadex
