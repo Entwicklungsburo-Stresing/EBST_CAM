@@ -291,37 +291,38 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 		);
 	}
 
-	//if (SUCCEEDED( hr ))
-	//{
-	//	// Obtain a bitmap lock for exclusive write.
-	//	// The lock is for a  _bitmapSource.width x _bitmapSource.height rectangle starting at the top left of the
-	//	// bitmap.
-	//	hr = ppIBitmap->Lock( &rcLock, WICBitmapLockWrite, &pILock );
+	if (SUCCEEDED( hr ))
+	{
+		// Obtain a bitmap lock for exclusive write.
+		// The lock is for a  _bitmapSource.width x _bitmapSource.height rectangle starting at the top left of the
+		// bitmap.
+		hr = ppIBitmap->Lock( &rcLock, WICBitmapLockWrite, &pILock );
 
-	//	//Process the pixel data that is now locked by the IWICBitmapLock object.
-	//		
-	//		if (SUCCEEDED( hr ))
-	//		{
-	//			UINT cbBufferSize = 0;
-	//			BYTE *pv = NULL;
+		//Process the pixel data that is now locked by the IWICBitmapLock object.
+			
+		if (SUCCEEDED( hr ))
+		{
+			UINT cbBufferSize = 0;
+			BYTE *pv = NULL;
 
-	//			// Retrieve a pointer to the pixel data.
-	//			if (SUCCEEDED( hr ))
-	//			{
-	//				hr = pILock->GetDataPointer( &cbBufferSize, &pv );
-	//			}
+			// Retrieve a pointer to the pixel data.
+			if (SUCCEEDED( hr ))
+			{
+				hr = pILock->GetDataPointer( &cbBufferSize, &pv );
+			}
+			// manipulate data in every pixel of bitmap
+			for (UINT i=0; i < _bitmapSource.width * _bitmapSource.height; i++)
+			{
+				// pointer to one pixel: base pointer + iterator which is multiplied by two, for two bytes per pixel
+				UINT16 *p_pixel = (UINT16*) (pv + (i * sizeof( UINT16 )));
+				// manipulate pixel data here
+				*p_pixel = *p_pixel * 16;
+			}
 
-	//			for (UINT i=0; i < _bitmapSource.width; i++)
-	//			{
-	//				BYTE *p_pixel = pv + i*2;
-	//				UINT16 new_value = (UINT16) (&p_pixel) * 10;
-	//				memset( p_pixel, new_value, 1 );
-	//			}
-
-	//			// Release the bitmap lock.
-	//			SafeRelease( &pILock );
-	//		}
-	//}
+			// Release the bitmap lock.
+			SafeRelease( &pILock );
+		}
+	}
 
 	if (SUCCEEDED(hr))
 	{
