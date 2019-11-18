@@ -105,6 +105,7 @@ enum s0_addresses {
 	S0Addr_FF_FLAGS = 0x13,
 	S0Addr_FIFOCNT = 0x14,
 	S0Addr_VCLKCTRL = 0x18,
+	S0Addr_VCLKFREQ = 0x1b,
 	S0Addr_EBST = 0x1C,
 	S0Addr_DAT = 0x20,
 	S0Addr_EC = 0x24,
@@ -672,7 +673,6 @@ BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno) {
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		return FALSE;
 	}
-
 	//step 0: delete not needed "1"s
 	Data &= Bitmask;
 	//step 1: save Data as setbitmask for making this part humanreadable
@@ -697,7 +697,6 @@ BOOL SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno) {
 BOOL SetS0Bit(ULONG bitnumber, CHAR Address, UINT32 drvno) {
 	//bitnumber: 0...31
 	ULONG bitmask = 0x1 << bitnumber;
-
 	if (!SetS0Reg(0xFFFFFFFF, bitmask, Address, drvno)) {
 		ErrLog("WriteLong S0 Failed in SetDMAReg \n");
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
@@ -2346,7 +2345,6 @@ BOOL WriteLongS0(UINT32 drvno, ULONG DWData, ULONG PortOff)
 	PULONG data = &DWData;
 
 	PortOffset = PortOff + 0x80;
-
 	dwStatus = WDC_WriteAddrBlock(hDev[drvno], 0, PortOffset, sizeof(ULONG), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
@@ -4262,8 +4260,8 @@ void SetupVCLKReg(UINT32 drvno, ULONG lines, UCHAR vfreq)
 	FFTLINES = lines; //set global var
 	if (!HA_MODULE)
 	{
-		WriteLongS0(drvno, lines * 2, 0x18);// write no of vclks=2*lines
-		WriteByteS0(drvno, vfreq, 0x1b);// write v freq
+		WriteLongS0(drvno, lines * 2, S0Addr_VCLKCTRL );// write no of vclks=2*lines
+		WriteByteS0( drvno, vfreq, S0Addr_VCLKFREQ );//  write v freq
 		VFREQ = vfreq;//keep freq global
 	}
 }//SetupVCLKReg
