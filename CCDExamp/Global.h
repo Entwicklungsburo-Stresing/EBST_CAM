@@ -27,7 +27,7 @@ enum camera_system {
 	camera_system_3010 = 2,
 	camera_system_3030 = 3
 };
-#define CAMERA_SYSTEM camera_system_3030
+#define CAMERA_SYSTEM camera_system_3001
 enum adc_mode {
 	normal = 0,
 	ramp = 1,
@@ -75,7 +75,7 @@ enum adc_mode {
 #define DMA_HW_BUFPARTS 2
 #define DMA_DMASPERINTR DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb nochmal /2
 
-#define _PIXEL  1088				// no of pixels min 300, should be multiple of 300, max 8100
+#define _PIXEL  576				// no of pixels min 300, should be multiple of 300, max 8100
 #define CAMCNT 1
 
 #if CAMCNT == 1
