@@ -1,56 +1,4 @@
-/*   **********************************************
-	DLL for CCD Camera driver of
-	for linking to labview
-
-  Entwicklungsbuero Stresing
-  Germany
-
- Version V2.022  3/2017
-
-  this DLL translates DLL calls from Labview or others
-  to the unit Board.c
-  the drivers must have been installed before calling !
-
-
-  for using the PCI Board, copy PCIB\board.c and .h to actual folder
-	and make a rebuild all
-
-	V1: 	all declarations use stdcall (WinAPI)
-	V2.023: with block read functions
-		- new function DLLFreeMemInfo
-	V2.030 correct timer stop error in P202.2
-
-	*/
-
-#include <windows.h>
-#include <tchar.h> // for FreeMem-Function
-
-
-#include <stdlib.h> 
-#include <conio.h>
-#include <string.h>
-#include <stdio.h>
-#include <process.h>	// for Thread example
-#include <malloc.h>		// msize
-
-
-// Make this data shared among all 
-// all applications that use this DLL.
-//....................................
-#pragma data_seg( ".GLOBALS" )
-int nProcessCount = 0;
-int nThreadCount = 0;
-//#pragma data_seg()
-void	*dummy;
-
-#include "GLOBAL.H"
-#include "eslscdll.h"
-#include "shared_src/board.c"
-#include "shared_src/Direct2dViewer_c.h"
-//extern volatile PUSHORT pDMABigBufBase[3];
-
-
-volatile struct ffloopparams params, params2;
+#include "ESLSCDLL.h"
 
 BOOL WINAPI DLLMain( HINSTANCE hInstDLL, DWORD dwNotification, LPVOID lpReserved )
 {
@@ -316,8 +264,6 @@ DllAccess UINT8 DLLReadKeyPort( UINT32 drv )   //before calling, mouse must be d
 	return ReadKeyPort( drv );
 }
 
-
-
 DllAccess void DLLClrRead( UINT32 drvno, UINT32 fftlines, UINT32 zadr, UINT32 CCDClrCount )
 {
 	ClrRead( drvno, fftlines, zadr, CCDClrCount );
@@ -328,13 +274,7 @@ DllAccess void DLLClrShCam( UINT32 drvno, UINT32 zadr )
 	ClrShCam( drvno, zadr );
 }
 
-
-
-
-
-
 // ****************   New functions for LabView includes FIFO version
-
 
 DllAccess void DLLStartTimer( UINT32 drvno, UINT32 exptime )
 {//exptime in microsec
@@ -366,15 +306,11 @@ DllAccess void DLLRSFifo( UINT32 drvno )						// reset FIFO and linecounter
 }
 DllAccess void DLLSetExtTrig( UINT32 drvno )					// read to FIFO is triggered by external input I of PCI board
 {
-
 	SetExtFFTrig( drvno );
-
 }
 DllAccess void DLLSetIntTrig( UINT32 drvno )					// read to FIFO is triggered by Timer
 {
-
 	SetIntFFTrig( drvno );// set hw register
-
 }
 DllAccess BYTE DLLReadFFCounter( UINT32 drvno )					// reads 4bit linecounter 
 {
@@ -410,19 +346,12 @@ DllAccess UINT8 DLLFFOvl( UINT32 drvno )						// TRUE if linecounter>0
 	else return 0;
 }
 
-
-
-
 DllAccess void DLLSetupVCLK( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 {
 
 	SetupVCLKReg( drvno, lines, vfreq );
 
 }//DLLSetupVCLK
-
-
-
-
 
 //*************  Software ring buffer for multi core
 DllAccess void DLLStartRingReadThread( UINT32 drvno, UINT32 ringfifodepth, UINT32 threadp, __int16 releasems )	//starts 28bit timer and get thread
@@ -473,7 +402,6 @@ DllAccess UINT8 DLLBlockTrig( UINT32 drv, UCHAR btrig_ch )
 	else return 0;
 }
 
-
 // for test purposes only: output of 2 strings 
 void TestMsg( char testMsg1[20], char testMsg2[20] )
 {
@@ -519,24 +447,18 @@ DllAccess UINT8 DLLWaitforTelapsed( LONGLONG musec )
 	return 0; // loop was too short - exposure time must be increased
 }//DLLWaitforTelapsed
 
-
 DllAccess UINT64 DLLTicksTimestamp( void )
 {
 	WDC_Err( "entered tickstimestamp\n" );
 	return ticksTimestamp();
 }
 
-
 DllAccess UINT32 DLLTickstous( UINT64 tks )
 {
 	return Tickstous( tks );
 }
 
-
-
 //**********   complexer read functions
-
-
 DllAccess void DLLSetupDMA( UINT32 drv, void*  pdioden, UINT32 nos, UINT32 nob )
 {//setup DMA initiated by hardware DREQ
  //call this func once as it takes time to allocate the resources
@@ -621,7 +543,6 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 	Nob = nob;
 	Nospb = nos;
 
-
 	WDC_Err( "entered nDLLSetupDMA with drv: %i nos: %i and nob: %i and camcnt: %i\n", drv, nos, nob, aCAMCNT[drv] );
 
 	//checks if the dam routine was already called
@@ -665,7 +586,6 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 	}
 
 	//pDIODEN = (pArrayT)calloc(nob, nospb * _PIXEL * sizeof(ArrayT));
-
 
 //pDMABigBufBase[drv] = pdioden;
 	UserBufInScans = nos;  //one buffer for all
@@ -727,12 +647,9 @@ DllAccess void DLLReadFFLoop( UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 extt
 	//read nos lines from FIFO
 	//
 	//local declarations
-
 	ReadFFLoop( drv, exptus, exttrig, blocktrigger, btrig_ch );
 
-
 }//DLLReadFFLoop
-
 
 DllAccess void nDLLReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch )
 //cam_sel = 1 for only use first cam, cam_sel = 2 for sec. cam and cam_sel = 3 for both
@@ -787,7 +704,6 @@ DllAccess void DLLSetContFFLoop( UINT8 activate ) {
 }
 
 //********  cooling functions
-
 DllAccess void DLLActCooling( UINT32 drvno, UINT8 on )
 {
 	ActCooling( drvno, on );
