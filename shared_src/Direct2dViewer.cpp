@@ -7,12 +7,12 @@
 // Initialize members.
 //
 Direct2dViewer::Direct2dViewer() :
-	m_hwnd(NULL),
-	m_pD2DFactory(NULL),
-	m_pWICFactory(NULL),
-	m_pRenderTarget(NULL),
-	m_pDeviceContext(NULL),
-	m_pBitmap(NULL)
+	m_hwnd( NULL ),
+	m_pD2DFactory( NULL ),
+	m_pWICFactory( NULL ),
+	m_pRenderTarget( NULL ),
+	m_pDeviceContext( NULL ),
+	m_pBitmap( NULL )
 {
 }
 
@@ -21,49 +21,49 @@ Direct2dViewer::Direct2dViewer() :
 //
 Direct2dViewer::~Direct2dViewer()
 {
-	SafeRelease(&m_pD2DFactory);
-	SafeRelease(&m_pWICFactory);
-	SafeRelease(&m_pRenderTarget);
-	SafeRelease(&m_pDeviceContext );
-	SafeRelease(&m_pBitmap);
+	SafeRelease( &m_pD2DFactory );
+	SafeRelease( &m_pWICFactory );
+	SafeRelease( &m_pRenderTarget );
+	SafeRelease( &m_pDeviceContext );
+	SafeRelease( &m_pBitmap );
 }
 
 //
 // Creates the application window and initializes
 // device-independent resources.
 //
-HRESULT Direct2dViewer::Initialize(HWND hWndParent)
+HRESULT Direct2dViewer::Initialize( HWND hWndParent )
 {
 	HRESULT hr = S_OK;
 
-	if (SUCCEEDED(hr)) {
+	if (SUCCEEDED( hr )) {
 		// Initialize device-indpendent resources, such
 		// as the Direct2D factory.
 		hr = CreateDeviceIndependentResources();
 	}
 
-	if (SUCCEEDED(hr))
+	if (SUCCEEDED( hr ))
 	{
 		// Register the window class.
-		WNDCLASSEX wcex = { sizeof(WNDCLASSEX) };
+		WNDCLASSEX wcex = { sizeof( WNDCLASSEX ) };
 		wcex.style = CS_HREDRAW | CS_VREDRAW;
 		wcex.lpfnWndProc = Direct2dViewer::WndProc;
 		wcex.cbClsExtra = 0;
-		wcex.cbWndExtra = sizeof(LONG_PTR);
+		wcex.cbWndExtra = sizeof( LONG_PTR );
 		wcex.hInstance = HINST_THISCOMPONENT;
 		wcex.hbrBackground = NULL;
 		wcex.lpszMenuName = NULL;
-		wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
+		wcex.hCursor = LoadCursor( NULL, IDC_ARROW );
 		wcex.lpszClassName = L"Direct2dViewer";
 
-		RegisterClassEx(&wcex);
+		RegisterClassEx( &wcex );
 
 		// Create the application window.
 		//
 		// Because the CreateWindow function takes its size in pixels, we
 		// obtain the system DPI and use it to scale the window size.
 		FLOAT dpiX, dpiY;
-		m_pD2DFactory->GetDesktopDpi(&dpiX, &dpiY);
+		m_pD2DFactory->GetDesktopDpi( &dpiX, &dpiY );
 
 		// Create the application window.
 		m_hwnd = CreateWindow(
@@ -72,18 +72,18 @@ HRESULT Direct2dViewer::Initialize(HWND hWndParent)
 			WS_OVERLAPPEDWINDOW,
 			CW_USEDEFAULT,
 			CW_USEDEFAULT,
-			static_cast<UINT>(ceil(640.f * dpiX / 96.f)),
-			static_cast<UINT>(ceil(480.f * dpiY / 96.f)),
+			static_cast<UINT>(ceil( 640.f * dpiX / 96.f )),
+			static_cast<UINT>(ceil( 480.f * dpiY / 96.f )),
 			hWndParent,
 			NULL,
 			HINST_THISCOMPONENT,
 			this
 		);
 		hr = m_hwnd ? S_OK : E_FAIL;
-		if (SUCCEEDED(hr))
+		if (SUCCEEDED( hr ))
 		{
-			ShowWindow(m_hwnd, SW_SHOWNORMAL);
-			UpdateWindow(m_hwnd);
+			ShowWindow( m_hwnd, SW_SHOWNORMAL );
+			UpdateWindow( m_hwnd );
 		}
 	}
 
@@ -102,11 +102,11 @@ HRESULT Direct2dViewer::CreateDeviceIndependentResources()
 {
 	HRESULT hr = S_OK;
 
-	if (SUCCEEDED(hr)) {
+	if (SUCCEEDED( hr )) {
 		// Create a Direct2D factory.
-		hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
+		hr = D2D1CreateFactory( D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory );
 	}
-	if (SUCCEEDED(hr))
+	if (SUCCEEDED( hr ))
 	{
 		// Create WIC factory.
 		hr = CoCreateInstance(
@@ -134,23 +134,23 @@ HRESULT Direct2dViewer::CreateDeviceResources()
 	if (!m_pRenderTarget)
 	{
 		RECT rc;
-		GetClientRect(m_hwnd, &rc);
+		GetClientRect( m_hwnd, &rc );
 
 		D2D1_SIZE_U size = D2D1::SizeU(
 			rc.right - rc.left,
 			rc.bottom - rc.top
 		);
-		if (SUCCEEDED(hr))
+		if (SUCCEEDED( hr ))
 		{
 			// Create a Direct2D render target.
 			hr = m_pD2DFactory->CreateHwndRenderTarget(
 				D2D1::RenderTargetProperties(),
-				D2D1::HwndRenderTargetProperties(m_hwnd, size),
+				D2D1::HwndRenderTargetProperties( m_hwnd, size ),
 				&m_pRenderTarget
 			);
 		}
 
-		if (SUCCEEDED(hr))
+		if (SUCCEEDED( hr ))
 		{
 			hr = loadBitmap();
 		}
@@ -165,9 +165,9 @@ HRESULT Direct2dViewer::CreateDeviceResources()
 //
 void Direct2dViewer::DiscardDeviceResources()
 {
-	SafeRelease(&m_pRenderTarget);
-	SafeRelease(&m_pBitmap);
-	SafeRelease(&m_pDeviceContext);
+	SafeRelease( &m_pRenderTarget );
+	SafeRelease( &m_pBitmap );
+	SafeRelease( &m_pDeviceContext );
 }
 
 //
@@ -185,14 +185,14 @@ HRESULT Direct2dViewer::OnRender()
 {
 	HRESULT hr = S_OK;
 
-	if (SUCCEEDED(hr)) {
+	if (SUCCEEDED( hr )) {
 		hr = CreateDeviceResources();
 	}
 
-	if (SUCCEEDED(hr) && !(m_pRenderTarget->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED))
+	if (SUCCEEDED( hr ) && !(m_pRenderTarget->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED))
 	{
 		m_pRenderTarget->BeginDraw();
-		m_pDeviceContext->DrawImage(linearTransferEffect, D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
+		m_pDeviceContext->DrawImage( linearTransferEffect, D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR );
 		hr = m_pRenderTarget->EndDraw();
 		if (hr == D2DERR_RECREATE_TARGET)
 		{
@@ -207,7 +207,7 @@ HRESULT Direct2dViewer::OnRender()
 //
 // The window message handler.
 //
-LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Direct2dViewer::WndProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	LRESULT result = 0;
 
@@ -237,18 +237,18 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
 			case WM_DISPLAYCHANGE:
 			{
 				PAINTSTRUCT ps;
-				BeginPaint(hwnd, &ps);
+				BeginPaint( hwnd, &ps );
 				D2DV->OnRender();
-				EndPaint(hwnd, &ps);
+				EndPaint( hwnd, &ps );
 			}
-				result = 0;
-				wasHandled = true;
-				break;
+			result = 0;
+			wasHandled = true;
+			break;
 
 			case WM_DESTROY:
 				//send custom message to main window about closing 2d viewer
-				HWND hWndOwner = GetWindow(hwnd, GW_OWNER);
-				SendMessage(hWndOwner, WM_2DVIEWER_CLOSED, NULL, NULL);
+				HWND hWndOwner = GetWindow( hwnd, GW_OWNER );
+				SendMessage( hWndOwner, WM_2DVIEWER_CLOSED, NULL, NULL );
 				result = 1;
 				wasHandled = true;
 				break;
@@ -256,7 +256,7 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
 		}
 		if (!wasHandled)
 		{
-			result = DefWindowProc(hwnd, message, wParam, lParam);
+			result = DefWindowProc( hwnd, message, wParam, lParam );
 		}
 	}
 	return result;
@@ -274,7 +274,7 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 	IWICBitmapLock *pILock = NULL;
 	WICRect rcLock = { 0, 0, _bitmapSource.width, _bitmapSource.height };
 
-	if (SUCCEEDED(hr))
+	if (SUCCEEDED( hr ))
 	{
 		// Create the initial frame as WIC bitmap.
 		hr = m_pWICFactory->CreateBitmapFromMemory(
@@ -296,7 +296,7 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 		hr = ppIBitmap->Lock( &rcLock, WICBitmapLockWrite, &pILock );
 
 		//Process the pixel data that is now locked by the IWICBitmapLock object.
-			
+
 		if (SUCCEEDED( hr ))
 		{
 			UINT cbBufferSize = 0;
@@ -308,10 +308,10 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 				hr = pILock->GetDataPointer( &cbBufferSize, &pv );
 			}
 			// manipulate data in every pixel of bitmap
-			for (UINT i=0; i < _bitmapSource.width * _bitmapSource.height; i++)
+			for (UINT i = 0; i < _bitmapSource.width * _bitmapSource.height; i++)
 			{
 				// pointer to one pixel: base pointer + iterator which is multiplied by two, for two bytes per pixel
-				UINT16 *p_pixel = (UINT16*) (pv + (i * sizeof( UINT16 )));
+				UINT16 *p_pixel = (UINT16*)(pv + (i * sizeof( UINT16 )));
 				// manipulate pixel data here
 				if (*p_pixel * _gamma_amplitude - _gamma_offset > 0xFFFF)
 					*p_pixel = 0xFFFF;
@@ -326,13 +326,13 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 		}
 	}
 
-	if (SUCCEEDED(hr))
+	if (SUCCEEDED( hr ))
 	{
 		// Convert the image format to 32bppPBGRA
 		// (DXGI_FORMAT_B8G8R8A8_UNORM + D2D1_ALPHA_MODE_PREMULTIPLIED).
-		hr = m_pWICFactory->CreateFormatConverter(&pConverter);
+		hr = m_pWICFactory->CreateFormatConverter( &pConverter );
 	}
-	if (SUCCEEDED(hr))
+	if (SUCCEEDED( hr ))
 	{
 		hr = pConverter->Initialize(
 			ppIBitmap,
@@ -343,7 +343,7 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 			WICBitmapPaletteTypeMedianCut
 		);
 	}
-	if (SUCCEEDED(hr))
+	if (SUCCEEDED( hr ))
 	{
 		//create a Direct2D bitmap from the WIC bitmap.
 		hr = m_pRenderTarget->CreateBitmapFromWicBitmap(
@@ -353,8 +353,8 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 		);
 	}
 
-	SafeRelease(&pConverter);
-	SafeRelease(&ppIBitmap);
+	SafeRelease( &pConverter );
+	SafeRelease( &ppIBitmap );
 
 	return hr;
 }
@@ -362,7 +362,7 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 /*
 * set information about which data is used for displaying a bitmap
 */
-void Direct2dViewer::setBitmapSource(void *addr, UINT width, UINT height)
+void Direct2dViewer::setBitmapSource( void *addr, UINT width, UINT height )
 {
 	_bitmapSource.addr = addr;
 	_bitmapSource.width = width;
@@ -422,7 +422,7 @@ HRESULT Direct2dViewer::loadBitmap()
 	HRESULT hr = S_OK;
 
 	//release old bitmap
-	if(m_pBitmap != NULL) SafeRelease(&m_pBitmap);
+	if (m_pBitmap != NULL) SafeRelease( &m_pBitmap );
 
 	//create new bitmap
 	hr = Load16bitGreyscaleBitmapFromMemory();
@@ -442,10 +442,10 @@ HRESULT Direct2dViewer::loadBitmap()
 * param2 black: set value for minimum brightness
 * default values are: black = 0, white = 0xFFFF (16 bit), amplitude = 0x3FFF (14 bit)
 */
-void Direct2dViewer::SetGammaValue(UINT16 white, UINT16 black)
+void Direct2dViewer::SetGammaValue( UINT16 white, UINT16 black )
 {
 	if (black >= white) black = white - 1;
-	_gamma_amplitude = (FLOAT) 0xFFFF/(white - black); //default = 1
+	_gamma_amplitude = (FLOAT)0xFFFF / (white - black); //default = 1
 	_gamma_offset = _gamma_amplitude * white - 0xFFFF; //default = 0
 
 	return;
@@ -455,25 +455,25 @@ void Direct2dViewer::SetGammaValue(UINT16 white, UINT16 black)
 * starts 2d viewer with a initial bitmap
 * use this to start 2d viewer. Call constructor before.
 */
-HRESULT Direct2dViewer::start2dViewer(HWND hWndParent, void *bitmapAddr, UINT width, UINT height)
+HRESULT Direct2dViewer::start2dViewer( HWND hWndParent, void *bitmapAddr, UINT width, UINT height )
 {
 	//tell 2D viewer which data to use
-	setBitmapSource(bitmapAddr, width, height);
+	setBitmapSource( bitmapAddr, width, height );
 	//start 2D viewer
-	HRESULT hr = Initialize(hWndParent);
+	HRESULT hr = Initialize( hWndParent );
 	return hr;
 }
 
 /*
 * updates the displayed bitmap in 2d viewer
 */
-HRESULT Direct2dViewer::showNewBitmap(void *addr, UINT width, UINT height)
+HRESULT Direct2dViewer::showNewBitmap( void *addr, UINT width, UINT height )
 {
 	//tell 2D viewer which data to use
-	setBitmapSource(addr, width, height);
+	setBitmapSource( addr, width, height );
 	//update 2D viewer bitmap graphic rescource
 	HRESULT hr = loadBitmap();
 	//send message to 2d viewer window to repaint
-	SendMessage(getWindowHandler(), WM_PAINT, NULL, NULL);
+	SendMessage( getWindowHandler(), WM_PAINT, NULL, NULL );
 	return hr;
 }
