@@ -99,7 +99,7 @@ public:
 	);
 
 private:
-	HRESULT Initialize(HWND hWndParent);
+	HRESULT Initialize( HWND hWndParent );
 	void setBitmapSource
 	(
 		void *addr,
@@ -120,7 +120,7 @@ private:
 		LPARAM lParam
 	);
 	HRESULT Load16bitGreyscaleBitmapFromMemory(
-		
+
 	);
 
 private:

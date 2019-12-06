@@ -16,8 +16,8 @@
 
 // set data array
 
-	typedef USHORT ArrayT; //!! USHORT for linear 12/16bit word array or resort
-	#define MAXVAL USHRT_MAX
+typedef USHORT ArrayT; //!! USHORT for linear 12/16bit word array or resort
+#define MAXVAL USHRT_MAX
 
 
 //for Win98
@@ -32,7 +32,7 @@ struct ffloopparams {
 };
 
 
-typedef ArrayT* pArrayT; 
+typedef ArrayT* pArrayT;
 
 
 #include "shared_src/board.h"
@@ -134,13 +134,13 @@ ULONG DisplData[2][1200];//array for display for 2 cams parallel
 
 //delete after deleting ringreadthread									// array type is defined in board.h
 ArrayT DIODEN[_MAXDB][1200];		// global data array, could be 1 or 2 dim
-ArrayT DIODENRingBuf[(100 + 10) * 1200 * sizeof(USHORT)];
+ArrayT DIODENRingBuf[(100 + 10) * 1200 * sizeof( USHORT )];
 DWORD FirstPageOffset;
 pArrayT pDIODEN = (pArrayT)&DIODEN;
 
 
 int Nob = 10;
-int Nospb = 100; 
+int Nospb = 100;
 
 int newDLL = 0;
 void	*Direct2dViewer = NULL;
