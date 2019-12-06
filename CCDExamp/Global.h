@@ -309,28 +309,28 @@ ULONG TLPSIZE = 0x20;
 
 
 // Prototypes 
-LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK About(HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK SetupMeasure(HWND hDlg,
+LRESULT CALLBACK WndProc( HWND, UINT, WPARAM, LPARAM );
+LRESULT CALLBACK About( HWND, UINT, WPARAM, LPARAM );
+LRESULT CALLBACK SetupMeasure( HWND hDlg,
 	UINT message,
 	WPARAM wParam,
-	LPARAM lParam);
+	LPARAM lParam );
 
-LRESULT CALLBACK SetupTLevel(HWND hDlg,
+LRESULT CALLBACK SetupTLevel( HWND hDlg,
 	UINT message,
 	WPARAM wParam,
-	LPARAM lParam);
+	LPARAM lParam );
 
-LRESULT CALLBACK SetupEC(HWND hDlg,
+LRESULT CALLBACK SetupEC( HWND hDlg,
 	UINT message,
 	WPARAM wParam,
-	LPARAM lParam);
-LRESULT CALLBACK AllocateBuf(HWND hDlg,
+	LPARAM lParam );
+LRESULT CALLBACK AllocateBuf( HWND hDlg,
 	UINT message,
 	WPARAM wParam,
-	LPARAM lParam);
+	LPARAM lParam );
 
-LRESULT CALLBACK ChooseBoard(HWND hDlg,
+LRESULT CALLBACK ChooseBoard( HWND hDlg,
 	UINT message,
 	WPARAM wParam,
-	LPARAM lParam);
+	LPARAM lParam );
