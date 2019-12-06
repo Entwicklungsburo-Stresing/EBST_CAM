@@ -45,8 +45,8 @@ void	*dummy;
 
 #include "GLOBAL.H"
 #include "eslscdll.h"
-#include "board.c"
-#include "Direct2dViewer_c.h"
+#include "shared_src/board.c"
+#include "shared_src/Direct2dViewer_c.h"
 //extern volatile PUSHORT pDMABigBufBase[3];
 
 

@@ -35,7 +35,7 @@ struct ffloopparams {
 typedef ArrayT* pArrayT; 
 
 
-#include "board.h"
+#include "shared_src/board.h"
 
 // key to stop measure loop
 #define _ScanCode_End	 57 //E=18   Space 57

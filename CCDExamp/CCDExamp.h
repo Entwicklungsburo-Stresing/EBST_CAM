@@ -10,7 +10,7 @@
 #include "resource.h"
 #include "Global.h" 
 #include "CCDUnit.c"
-#include "Direct2dViewer_c.h"
+#include "shared_src/Direct2dViewer_c.h"
 
 #ifdef _DLL
 UINT8 NUMBER_OF_BOARDS = 0;

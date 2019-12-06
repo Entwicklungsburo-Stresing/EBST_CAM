@@ -139,7 +139,7 @@
     <IntDir>.\Debug\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(SolutionDir)\Jungo;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);C:\WinDriver\lib\amd64;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)Jungo;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Debug|Win32'">
     <OutDir>.\Debug\</OutDir>
@@ -151,7 +151,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir);$(SolutionDir)Jungo;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Debug|x64'">
@@ -164,7 +164,7 @@
     <IntDir>.\Release\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>C:\WinDriver\lib\amd64;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)Jungo;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|Win32'">
     <OutDir>.\Release\</OutDir>
@@ -176,7 +176,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir);$(SolutionDir)Jungo;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|x64'">
@@ -535,16 +535,16 @@
     <Text Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Direct2dViewer.cpp" />
-    <ClCompile Include="..\Direct2dViewer_c.cpp" />
+    <ClCompile Include="..\shared_src\Direct2dViewer.cpp" />
+    <ClCompile Include="..\shared_src\Direct2dViewer_c.cpp" />
     <ClCompile Include="CCDExamp.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CCDExamp.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Direct2dViewer.h" />
-    <ClInclude Include="..\Direct2dViewer_c.h" />
+    <ClInclude Include="..\shared_src\Direct2dViewer.h" />
+    <ClInclude Include="..\shared_src\Direct2dViewer_c.h" />
     <ClInclude Include="CCDExamp.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="lscpciej_lib.h" />
