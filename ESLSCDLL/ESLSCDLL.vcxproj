@@ -186,6 +186,7 @@
   <ItemGroup>
     <ClInclude Include="..\shared_src\Direct2dViewer.h" />
     <ClInclude Include="..\shared_src\Direct2dViewer_c.h" />
+    <ClInclude Include="CCDCTL.H" />
     <ClInclude Include="ESLSCDLL.h" />
     <ClInclude Include="GLOBAL.H" />
     <ClInclude Include="Jungo\bits.h" />
