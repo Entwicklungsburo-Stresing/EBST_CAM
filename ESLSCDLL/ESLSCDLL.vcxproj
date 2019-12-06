@@ -184,28 +184,11 @@
     <ClCompile Include="ESLSCDLL.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\shared_src\CCDCTL.H" />
     <ClInclude Include="..\shared_src\Direct2dViewer.h" />
     <ClInclude Include="..\shared_src\Direct2dViewer_c.h" />
-    <ClInclude Include="CCDCTL.H" />
     <ClInclude Include="ESLSCDLL.h" />
     <ClInclude Include="GLOBAL.H" />
-    <ClInclude Include="Jungo\bits.h" />
-    <ClInclude Include="Jungo\cstring.h" />
-    <ClInclude Include="Jungo\kpstdlib.h" />
-    <ClInclude Include="Jungo\pci_regs.h" />
-    <ClInclude Include="Jungo\status_strings.h" />
-    <ClInclude Include="Jungo\utils.h" />
-    <ClInclude Include="Jungo\wdc_defs.h" />
-    <ClInclude Include="Jungo\wdc_lib.h" />
-    <ClInclude Include="Jungo\wdu_lib.h" />
-    <ClInclude Include="Jungo\wd_kp.h" />
-    <ClInclude Include="Jungo\wd_log.h" />
-    <ClInclude Include="Jungo\wd_ver.h" />
-    <ClInclude Include="Jungo\windrvr.h" />
-    <ClInclude Include="Jungo\windrvr_events.h" />
-    <ClInclude Include="Jungo\windrvr_hotswap.h" />
-    <ClInclude Include="Jungo\windrvr_int_thread.h" />
-    <ClInclude Include="Jungo\windrvr_usb.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

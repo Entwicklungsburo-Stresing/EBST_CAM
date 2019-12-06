@@ -1,3 +1,4 @@
+#pragma once
 // CCDCTL.h    defines the Interface between the application and the driver
 //	V2.1
 //	is used for LSCISA and LSCPCI version
@@ -15,6 +16,7 @@
 // 2048-4095 are reserved for customers.
 //
 
+#include <Windows.h>
 
 #define CTL_CODE( DeviceType, Function, Method, Access ) (                 \
     ((DeviceType) << 16) | ((Access) << 14) | ((Function) << 2) | (Method) \

@@ -543,11 +543,11 @@
     <ResourceCompile Include="CCDExamp.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\shared_src\CCDCTL.H" />
     <ClInclude Include="..\shared_src\Direct2dViewer.h" />
     <ClInclude Include="..\shared_src\Direct2dViewer_c.h" />
     <ClInclude Include="CCDExamp.h" />
     <ClInclude Include="Global.h" />
-    <ClInclude Include="lscpciej_lib.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>

@@ -10,14 +10,19 @@
 *
 *  Jungo Connectivity Confidential. Copyright (c) 2019 Jungo Connectivity Ltd.  https://www.jungo.com
 *************************************************************************/
-
-#include "Jungo/wdc_lib.h"
+#include <stdio.h>
+#include <stdarg.h>
+#include "Jungo/wdc_defs.h"
+#include "Jungo/utils.h"
+#include "Jungo/status_strings.h"
 #include "Jungo/pci_regs.h"
-#include "bits.h"
+#include "Jungo/wdc_lib.h"
+#include "Jungo/bits.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 
 /*************************************************************
   General definitions
@@ -30,9 +35,6 @@ extern "C" {
 /* TODO: Replace the ID values with your device's vendor and device IDs */
 #define LSCPCIEJ_DEFAULT_VENDOR_ID 0x10EE /* Vendor ID */
 #define LSCPCIEJ_DEFAULT_DEVICE_ID 0x7 /* Device ID */
-
-
-
 
 
 /* Address space information struct */
@@ -69,6 +71,45 @@ typedef void (*LSCPCIEJ_INT_HANDLER)(WDC_DEVICE_HANDLE hDev,
 typedef void (*LSCPCIEJ_EVENT_HANDLER)(WDC_DEVICE_HANDLE hDev, DWORD dwAction);
 
 
+/*************************************************************
+  Internal definitions
+ *************************************************************/
+ /* WinDriver license registration string */
+ /* TODO: When using a registered WinDriver version, replace the license string
+		  below with your specific WinDriver license registration string and
+		  replace the driver name below with your driver's name. */
+#define LSCPCIEJ_DEFAULT_LICENSE_STRING "872759e7d022a2499e5dcb42c25d1f889fdfac803544b6979f345330df98.WD1400_64_NL_Entwicklungsbuero_Stresing"
+#define LSCPCIEJ_DEFAULT_DRIVER_NAME WD_DEFAULT_DRIVER_NAME_BASE
+
+		  /* PCI device information struct */
+typedef struct {
+
+	LSCPCIEJ_INT_HANDLER   funcDiagIntHandler;   /* Interrupt handler routine */
+	LSCPCIEJ_EVENT_HANDLER funcDiagEventHandler; /* Event handler routine */
+
+} LSCPCIEJ_DEV_CTX, *PLSCPCIEJ_DEV_CTX;
+/* TODO: You can add fields to store additional device-specific information. */
+
+/*************************************************************
+  Global variables definitions
+ *************************************************************/
+ /* Last error information string */
+static CHAR gsLSCPCIEJ_LastErr[256];
+
+/* Library initialization reference count */
+static DWORD LibInit_count = 0;
+
+/*************************************************************
+  Static functions prototypes and inline implementation
+ *************************************************************/
+
+#ifndef __KERNEL__
+static BOOL DeviceValidate( const PWDC_DEVICE pDev );
+static void LSCPCIEJ_EventHandler( WD_EVENT *pEvent, PVOID pData );
+#endif
+static void DLLCALLCONV LSCPCIEJ_IntHandler( PVOID pData );
+void ErrLog( const CHAR *sFormat, ... );
+static void TraceLog( const CHAR *sFormat, ... );
 
 /*************************************************************
   Function prototypes
