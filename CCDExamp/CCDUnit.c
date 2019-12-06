@@ -1,6 +1,6 @@
 
 #ifndef _DLL
-#include "board.h"
+#include "shared_src/board.h"
 #endif
 BYTE Dispcnt = 0;
 int yVal = 0;
