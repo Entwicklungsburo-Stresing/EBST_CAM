@@ -31,65 +31,14 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Jungo\kpstdlib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Jungo\pci_regs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Jungo\status_strings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Jungo\utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Jungo\wd_kp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Jungo\wd_log.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Jungo\wd_ver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Jungo\wdc_defs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Jungo\wdc_lib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Jungo\wdu_lib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Jungo\windrvr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Jungo\windrvr_events.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Jungo\windrvr_hotswap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Jungo\windrvr_int_thread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Jungo\windrvr_usb.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Jungo\bits.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Jungo\cstring.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\shared_src\Direct2dViewer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\shared_src\Direct2dViewer_c.h">
+    <ClInclude Include="..\shared_src\CCDCTL.H">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CCDCTL.H">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\shared_src\Direct2dViewer_c.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
