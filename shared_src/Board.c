@@ -4885,7 +4885,7 @@ void GetRmsVal(ULONG nos, ULONG *TRMSVals, double *mwf, double *trms)
  *	*mwf	- pointer for mean value
  *	*trms	- pointer for noise
  */
-void CalcTrms(UINT32 drvno, UINT32 nos, ULONG TRMSpixel, UINT16 CAMpos, double *mwf, double *trms)
+void CalcTrms(UINT32 drvno, UINT32 nos, ULONG TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms)
 {
 	ULONG *TRMSVals;
 
@@ -4893,7 +4893,7 @@ void CalcTrms(UINT32 drvno, UINT32 nos, ULONG TRMSpixel, UINT16 CAMpos, double *
 
 	//storing the values of one pix for the rms analysis
 	for (int scan = 10; scan < nos; scan++) {
-		int TRMSpix_of_current_scan = GetIndexOfPixel(drvno, TRMSpixel, scan, 0, CAMpos);
+		int TRMSpix_of_current_scan = GetIndexOfPixel(drvno, TRMS_pixel, scan, 0, CAMpos);
 		TRMSVals[scan] = pDMABigBufBase[drvno][TRMSpix_of_current_scan];
 	}
 

@@ -20,7 +20,7 @@ ULONG aPIXEL[5] = { 0, 0, 0, 0, 0 };	// pixel
 ULONG aXCKDelay[5] = { 1000, 1000, 1000, 1000, 1000 };	// sensor specific delay
 BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
 #else
-#include "Board.c"
+#include "shared_src/Board.c"
 #endif
 
 #if defined (WIN32)

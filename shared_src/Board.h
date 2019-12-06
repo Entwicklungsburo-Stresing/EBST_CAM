@@ -22,7 +22,7 @@ void RSInterface(UINT32 drvno);		//set all registers to zero
 BOOL SetBoardVars(UINT32 drvno, UINT32 camcnt, ULONG pixel, ULONG flag816, ULONG xckdelay);
 BOOL SetupPCIE_DMA(UINT32 drvno, ULONG nos, ULONG nob);
 void StartPCIE_DMAWrite(UINT32 drvno); 
-void SetDMAReset(void);
+void SetDMAReset( UINT32 drvno );
 void CleanupPCIE_DMA(UINT32 drvno);
 void GetLastBufPart(UINT32 drvno);
 int GetNumofProcessors();
@@ -31,14 +31,13 @@ BOOL ResetS0Bit(ULONG bitnumber, CHAR Address, UINT32 drvno);
 void ErrorMsg(char ErrMsg[100]);
 BOOL ReadLongIOPort(UINT32 drvno, ULONG *DWData, ULONG PortOff);// read long from IO runreg
 BOOL ReadLongS0(UINT32 drvno, ULONG *DWData, ULONG PortOff);	// read long from space0
-BOOL ReadByteS0(UINT32 drvno, UCHAR *data, ULONG PortOff);	// read byte from space0
+BOOL ReadByteS0(UINT32 drvno, BYTE *data, ULONG PortOff );	// read byte from space0
 BOOL WriteLongIOPort(UINT32 drvno, ULONG DWData, ULONG PortOff);// write long to IO runreg
 BOOL WriteLongS0(UINT32 drvno, ULONG DWData, ULONG PortOff);// write long to space0
 BOOL WriteByteS0(UINT32 drvno, BYTE DWData, ULONG PortOff); // write byte to space0
 BOOL ReadLongDMA(UINT32 drvno, PULONG pDWData, ULONG PortOff);
 BOOL WriteLongDMA(UINT32 drvno, ULONG DWData, ULONG PortOff);
 // camera read function
-BOOL GETCCD(UINT32 drvno, void* dioden, ULONG fftlines, long fkt, ULONG zadr);
 void ClrRead(UINT32 drvno, ULONG fftlines, ULONG zadr, ULONG ccdclrcount);
 // clear camera with reads
 void ClrShCam(UINT32 drvno, UINT32 zadr);// clears Shuttercamera with IFC signal
@@ -71,9 +70,6 @@ void RSDAT(UINT32 drvno); // disable delay after trigger in S0+0x20
 // new Keyboard read which is not interrupt dependend
 // reads OEM scan code directly on port 0x60
 UCHAR ReadKeyPort(UINT32 drvno);
-//old 16bit ADs functions
-void CAL_AD(UINT32 drvno, UINT32 zadr);
-void SetOvsmpl(UINT32 drvno, UINT32 zadr);
 //TIs electron multiplier
 void SetHiamp(UINT32 drvno, BOOL hiamp);
 // FIFO functions
@@ -108,8 +104,6 @@ BOOL TempGood(UINT32 drvno, UINT32 ch);						//high if temperature is reached
 void SetTemp(UINT32 drvno, ULONG level);				//set temperature - 8 levels possible
 void RS_ScanCounter(UINT32 drv);
 void RS_DMAAllCounter(UINT32 drv, BOOL hwstop);
-void SetArray(UINT32 drvno, ULONG lines);		//setup for IR array sensor 
-void SetROILines(ULONG lines);				// set global for andanta roi=range of interest
 void SetISPDA(UINT32 drvno, BOOL set);		//hardware switch for IFC and VON if PDA
 void SetISFFT(UINT32 drvno, BOOL set);		//hardware switch for IFC and VON if FFT
 void SetTORReg(UINT32 drvno, BYTE fkt);
@@ -123,6 +117,7 @@ void SetADGain(UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, 
 void SendFLCAM_DAC(UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature); //function for sending 32 bits to DAC8568 in HS-FLCAM on PCB 2189-7(+)
 //jungo dma
 void StartReadWithDma(UINT32 drvno);
+unsigned int __stdcall ReadFFLoopThread( void *parg );
 // software ring buffer thread functions
 void StartRingReadThread(UINT32 drvno, ULONG ringfifodepth, ULONG threadp, __int16 releasems);
 void StopRingReadThread(void); //starts and ends background thread 
@@ -138,7 +133,9 @@ UINT8 ReadRingBlock(void* pdioden, INT32 start, INT32 stop); // copy a block of 
 //start<0 is in the past, stop>0 is in the future, relative to call of this function
 BOOL BlockTrig(UINT32 drv, UINT8 btrig_ch); //read state of trigger in signals during thread loop
 void SetADGain(UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8);
-void CalcTrms(UINT32 drvno, UINT32 nos, ULONG TRMSpix, UINT16 CAMpos, double *mwf, double *trms);
+void CalcTrms(UINT32 drvno, UINT32 nos, ULONG TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms);
 int GetIndexOfPixel(UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block, UINT16 CAM);
 void* GetAddressOfPixel(UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block, UINT16 CAM);
 UINT8 WaitforTelapsed(LONGLONG musec);
+
+extern DWORD64 IsrCounter;
