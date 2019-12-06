@@ -11,8 +11,8 @@
 *  Jungo Connectivity Confidential. Copyright (c) 2019 Jungo Connectivity Ltd.  https://www.jungo.com
 *************************************************************************/
 
-#include "wdc_lib.h"
-#include "pci_regs.h"
+#include "Jungo/wdc_lib.h"
+#include "Jungo/pci_regs.h"
 #include "bits.h"
 
 #ifdef __cplusplus

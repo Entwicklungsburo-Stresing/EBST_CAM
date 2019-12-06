@@ -12,10 +12,10 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#include "wdc_defs.h"
-#include "utils.h"
-#include "status_strings.h"
-#include "pci_regs.h"
+#include "Jungo/wdc_defs.h"
+#include "Jungo/utils.h"
+#include "Jungo/status_strings.h"
+#include "Jungo/pci_regs.h"
 #include "lscpciej_lib.h"
 
 /*************************************************************
