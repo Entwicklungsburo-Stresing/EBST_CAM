@@ -215,20 +215,17 @@ LRESULT CALLBACK Direct2dViewer::WndProc(HWND hwnd, UINT message, WPARAM wParam,
 	{
 		LPCREATESTRUCT pcs = (LPCREATESTRUCT)lParam;
 		Direct2dViewer *D2DV = (Direct2dViewer *)pcs->lpCreateParams;
-
 		::SetWindowLongPtrW(
 			hwnd,
 			GWLP_USERDATA,
-			PtrToUlong(D2DV)
+			// This line differs from the example, because a bug was induced here that caused the application to crash.
+			// orig line: PtrToUlong(D2DV) The problem is that it drops the upper half of a 64 bit address.
+			reinterpret_cast<LONG_PTR>(D2DV)
 		);
 	}
 	else
 	{
-		Direct2dViewer *D2DV = reinterpret_cast<Direct2dViewer *>(static_cast<LONG_PTR>(
-			::GetWindowLongPtrW(
-				hwnd,
-				GWLP_USERDATA
-			)));
+		Direct2dViewer *D2DV = reinterpret_cast<Direct2dViewer *>(::GetWindowLongPtr( hwnd, GWLP_USERDATA ));
 
 		bool wasHandled = false;
 
@@ -407,8 +404,8 @@ void Direct2dViewer::CreateEffect()
 
 	if (SUCCEEDED( hr ))
 	{
-		//This has no effect, because gamma transfer is now applied before converting bitmap to direct2d bitmap
-		//But it is still needed to show the bitmap with the effect pointer.
+		//This has no effect, because gamma transfer is now applied before converting bitmap to direct2d bitmap and no effect is applied here.
+		//But this is still needed to show the bitmap with the effect pointer.
 		m_pDeviceContext->CreateEffect( CLSID_D2D1LinearTransfer, &linearTransferEffect );
 		linearTransferEffect->SetInput( 0, m_pBitmap );
 	}
