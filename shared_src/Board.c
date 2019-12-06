@@ -14,9 +14,9 @@
 #include "board.h"
 #include <limits.h>
 #include <process.h>
-#include "windrvr.h"
-#include "wdc_lib.h"
-#include "wdc_defs.h"
+#include "Jungo/windrvr.h"
+#include "Jungo/wdc_lib.h"
+#include "Jungo/wdc_defs.h"
 #include "wchar.h"
 #include "lscpciej_lib.c"
 //#include "kp_lscpciej.c"

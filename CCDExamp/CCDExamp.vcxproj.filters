@@ -4,12 +4,6 @@
     <ClInclude Include="CCDExamp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Direct2dViewer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Direct2dViewer_c.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -17,6 +11,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\Direct2dViewer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\Direct2dViewer_c.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -45,10 +45,10 @@
     <ClCompile Include="CCDExamp.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Direct2dViewer.cpp">
+    <ClCompile Include="..\shared_src\Direct2dViewer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Direct2dViewer_c.cpp">
+    <ClCompile Include="..\shared_src\Direct2dViewer_c.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -71,22 +71,22 @@
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)\Jungo</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir);$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\Jungo</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)</IncludePath>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\Jungo</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir);$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\Jungo</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);</LibraryPath>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -179,13 +179,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Direct2dViewer.cpp" />
-    <ClCompile Include="..\Direct2dViewer_c.cpp" />
+    <ClCompile Include="..\shared_src\Direct2dViewer.cpp" />
+    <ClCompile Include="..\shared_src\Direct2dViewer_c.cpp" />
     <ClCompile Include="ESLSCDLL.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Direct2dViewer.h" />
-    <ClInclude Include="..\Direct2dViewer_c.h" />
+    <ClInclude Include="..\shared_src\Direct2dViewer.h" />
+    <ClInclude Include="..\shared_src\Direct2dViewer_c.h" />
     <ClInclude Include="ESLSCDLL.h" />
     <ClInclude Include="GLOBAL.H" />
     <ClInclude Include="Jungo\bits.h" />
@@ -209,9 +209,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="dll_description.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ESLSCDLL.def" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ESLSCDLL.rc" />
