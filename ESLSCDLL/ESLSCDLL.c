@@ -857,3 +857,11 @@ DllAccess void DLLSetGammaValue( UINT16 white, UINT16 black )
 	}
 	return;
 }
+
+DllAccess void DLLInitGPX( UINT drvno, ULONG delay ) {
+	InitGPX( drvno, delay );
+}
+
+DllAccess void DLLAboutGPX( UINT drvno) {
+	AboutGPX( drvno );
+}
