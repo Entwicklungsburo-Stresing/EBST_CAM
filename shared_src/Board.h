@@ -139,3 +139,5 @@ void* GetAddressOfPixel( UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block,
 UINT8 WaitforTelapsed( LONGLONG musec );
 
 extern DWORD64 IsrCounter;
+void InitGPX( UINT drvno, ULONG delay );
+void AboutGPX( UINT drvno );

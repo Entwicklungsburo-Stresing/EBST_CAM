@@ -143,3 +143,5 @@ DllAccess void DLLStart2dViewer( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT 
 DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos );
 DllAccess void DLLDeinit2dViewer();
 DllAccess void DLLSetGammaValue( UINT16 white, UINT16 black );
+DllAccess void DLLInitGPX( UINT drvno, ULONG delay);
+DllAccess void DLLAboutGPX( UINT drvno);
