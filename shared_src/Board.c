@@ -1410,6 +1410,9 @@ BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel, ULONG flag816, ULON
 		*/
 	switch (pixel)
 	{
+	case 128:
+		NO_TLPS = 0x3;//3
+		break;
 	case 192:
 		NO_TLPS = 0x4;//4
 		break;
@@ -5250,6 +5253,13 @@ void AboutGPX( UINT drvno ) {
 			//		ReadLongS0(drvno, &regData, 0x58);
 			//		if (regData &= 0x08 != 0) { empty = TRUE; };
 			SetGPXCtrl( drvno, 8, 1 ); //read access follows                 lege addr 8 an bus !!!!
+			ReadLongS0( drvno, &regData, S0Addr_TDCData );
+			j += sprintf( fn + j, "%d \t: 0x%I32x\n", i, regData );
+
+			i += 1;
+			//		ReadLongS0(drvno, &regData, 0x58);
+			//		if (regData &= 0x08 != 0) { empty = TRUE; };
+			SetGPXCtrl( drvno, 9, 1 ); //read access follows                 lege addr 9 an bus !!!!
 			ReadLongS0( drvno, &regData, S0Addr_TDCData );
 			j += sprintf( fn + j, "%d \t: 0x%I32x\n", i, regData );
 		}
