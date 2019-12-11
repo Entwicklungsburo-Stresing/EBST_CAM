@@ -5276,6 +5276,8 @@ void AboutGPX( UINT drvno ) {
 
 	MessageBox( hWnd, fn, "GPX regs", MB_OK );
 
+	SetGPXCtrl( drvno, 8, 1 ); //read access follows                 set addr 8 to bus !!!!
+
 	//master reset
 //	SetGPXCtrl(drvno, 4, 0); // write to reg4
 //	WriteLongS0(drvno, 0x06400300, 0x5C);
