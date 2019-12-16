@@ -5106,7 +5106,7 @@ void InitGPX( UINT drvno, ULONG delay ) {
 	WriteLongS0( drvno, regData, S0Addr_TDCCtrl );
 	regData &= 0xFFFFFFFE;
 	WriteLongS0( drvno, regData, S0Addr_TDCCtrl ); //reset bit
-
+	
 	/*
 	//setup M mode -> time between start and stop
 	// does not work, get no empty
@@ -5172,7 +5172,7 @@ void InitGPX( UINT drvno, ULONG delay ) {
 
 	SetGPXCtrl( drvno, 8, 1 ); //read access follows                 set addr 8 to bus !!!!
 	ReadLongS0( drvno, &regData, S0Addr_TDCData );
-
+	
 }
 
 void AboutGPX( UINT drvno ) {
