@@ -5063,16 +5063,20 @@ void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 
 }
 
 
-BOOL SetGPXCtrl( UINT drvno, ULONG GPXAddress, UINT8 gpxread ) {
+BOOL SetGPXCtrl( UINT drvno, ULONG GPXAddress, ULONG GPXData, UINT8 gpxread ) {
+	//gpxread = 1: readaccess        gpxread = 0: writeaccess
 	ULONG regData, tempData;
 	//Read old data of ctrl gpx reg
 	if (!ReadLongS0( drvno, &regData, S0Addr_TDCCtrl )) return FALSE;
 	//shift gpx addr to the right place for the gpx ctrl reg
 	tempData = GPXAddress << 28;
 	//set CSexpand bit if read
-	if (gpxread != 0)
+	if (gpxread)
 	{
 		tempData |= 0x08000000;
+	}
+	else {
+		tempData &= 0xF7FFFFFF;
 	}
 	//hold the other bits of the ctrl gpx reg
 	regData &= 0x0FFFFFFF;
@@ -5080,6 +5084,9 @@ BOOL SetGPXCtrl( UINT drvno, ULONG GPXAddress, UINT8 gpxread ) {
 	regData |= tempData;
 	//write to the gpxctrl reg
 	if (!WriteLongS0( drvno, regData, S0Addr_TDCCtrl )) return FALSE;
+
+	if (gpxread) ReadLongS0( drvno, GPXData, S0Addr_TDCData );
+	if (gpxread == 0) WriteLongS0( drvno, GPXData, S0Addr_TDCData );
 
 	return TRUE;
 }
@@ -5137,41 +5144,35 @@ void InitGPX( UINT drvno, ULONG delay ) {
 	WriteLongS0(drvno, 0x0, 0x5C);
 	*/
 
-	//setup R mode -> time between start and stop	
-	SetGPXCtrl( drvno, 0, 0 ); // write to reg0
-	WriteLongS0( drvno, 0x00000080, S0Addr_TDCData );		//0x80    disable inputs
-	SetGPXCtrl( drvno, 1, 0 ); // write to reg1
-	WriteLongS0( drvno, 0x0620620, S0Addr_TDCData );		//0x0620620 adjust
+	//setup R mode -> time between start and stop
+	SetGPXCtrl( drvno, 0, 0x00000080, 0 ); // write to reg0: 0x80    disable inputs
 
-	SetGPXCtrl( drvno, 2, 0 ); // write to reg2
-	WriteLongS0( drvno, 0x00062E04, S0Addr_TDCData );		//62E04  R-mode, en CH0..5 (3 werte)
-	SetGPXCtrl( drvno, 3, 0 ); // write to reg3
-	WriteLongS0( drvno, 0x00000000, S0Addr_TDCData );			//0 set to ecl
-	SetGPXCtrl( drvno, 4, 0 ); // write to reg4
-	WriteLongS0( drvno, 0x02000000, S0Addr_TDCData );			//0x02000000 EF flag=on
-	SetGPXCtrl( drvno, 5, 0 ); // write to reg5
-	WriteLongS0( drvno, regVal, S0Addr_TDCData );			//82000000 retrigger, disable after start-> reduce to 1 val
-	//start offset 0x4da=100
-	SetGPXCtrl( drvno, 6, 0 ); // write to reg6
-	WriteLongS0( drvno, 0x08000001, S0Addr_TDCData );        // ecl + FILL=1 
-	SetGPXCtrl( drvno, 7, 0 ); // write to reg7
-	WriteLongS0( drvno, 0x00001FB4, S0Addr_TDCData );		//res= 27ps
-	SetGPXCtrl( drvno, 11, 0 ); // write to reg11
-	WriteLongS0( drvno, 0x07ff0000, S0Addr_TDCData );		//7ff all error flags (layout flag is not connected)
-	SetGPXCtrl( drvno, 12, 0 ); // write to reg12
-	WriteLongS0( drvno, 0x00000000, S0Addr_TDCData );		//no ir flags - is used anyway when 1 hit
-	SetGPXCtrl( drvno, 14, 0 ); // write to reg14
-	WriteLongS0( drvno, 0x0, S0Addr_TDCData );
+	SetGPXCtrl( drvno, 1, 0x0620620, 0 ); // write to reg1: 0x0620620 adjust
+
+	SetGPXCtrl( drvno, 2, 0x00062E04, 0 ); // write to reg2: 62E04  R-mode, en CH0..5 (3 werte
+
+	SetGPXCtrl( drvno, 3, 0x00000000, 0 ); // write to reg3: 0 set to ecl
+
+	SetGPXCtrl( drvno, 4, 0x02000000, 0 ); // write to reg4: 0x02000000 EF flag=on
+
+	SetGPXCtrl( drvno, 5, regVal, 0 ); // write to reg5: 82000000 retrigger, disable after start-> reduce to 1 val
+
+	SetGPXCtrl( drvno, 6, 0x08000001, 0 ); // write to reg6: ecl + FILL=1 
+
+	SetGPXCtrl( drvno, 7, 0x00001FB4, 0 ); // write to reg7: res= 27ps
+
+	SetGPXCtrl( drvno, 11, 0x07ff0000, 0 ); // write to reg11: 7ff all error flags (layout flag is not connected)
+
+	SetGPXCtrl( drvno, 12, 0x00000000, 0 ); // write to reg12: no ir flags - is used anyway when 1 hit
+
+	SetGPXCtrl( drvno, 14, 0x0, 0 ); // write to reg14
 
 	//scharf setzen
-	SetGPXCtrl( drvno, 4, 0 ); // write to reg4 
-	WriteLongS0( drvno, 0x02400000, S0Addr_TDCData );				//master reset
+	SetGPXCtrl( drvno, 4, 0x02400000, 0 ); // write to reg4: master reset 
 
-	SetGPXCtrl( drvno, 0, 0 ); // write to reg0
-	WriteLongS0( drvno, 0x0000008B, S0Addr_TDCData );		//0x8B > en pos edge inputs = set inputs active
+	SetGPXCtrl( drvno, 0, 0x0000008B, 0 ); // write to reg0: /0x8B > en pos edge inputs = set inputs active
 
-	SetGPXCtrl( drvno, 8, 1 ); //read access follows                 set addr 8 to bus !!!!
-	ReadLongS0( drvno, &regData, S0Addr_TDCData );
+	SetGPXCtrl( drvno, 8, &regData, 1 ); //read access follows                 set addr 8 to bus !!!!
 	
 }
 
@@ -5209,15 +5210,13 @@ void AboutGPX( UINT drvno ) {
 
 	for (i = 0; i < 8; i++)
 	{
-		SetGPXCtrl( drvno, i, 1 ); //read access follows
-		ReadLongS0( drvno, &regData, S0Addr_TDCData );
+		SetGPXCtrl( drvno, i, &regData, 1 ); 
 		j += sprintf( fn + j, "%s \t: 0x%I32x\n", LUTS0Reg[i], regData );
 	}
 
 	for (i = 11; i < 13; i++)
 	{
-		SetGPXCtrl( drvno, i, 1 ); //read access follows
-		ReadLongS0( drvno, &regData, S0Addr_TDCData );
+		SetGPXCtrl( drvno, i, &regData, 1 );
 		j += sprintf( fn + j, "%s \t: 0x%I32x\n", LUTS0Reg[i], regData );
 	}
 
@@ -5252,31 +5251,27 @@ void AboutGPX( UINT drvno ) {
 			i += 1;
 			//		ReadLongS0(drvno, &regData, 0x58);
 			//		if (regData &= 0x08 != 0) { empty = TRUE; };
-			SetGPXCtrl( drvno, 8, 1 ); //read access follows                 lege addr 8 an bus !!!!
-			ReadLongS0( drvno, &regData, S0Addr_TDCData );
+			SetGPXCtrl( drvno, 8, &regData, 1 ); //lege addr 8 an bus !!!!
 			j += sprintf( fn + j, "%d \t: 0x%I32x\n", i, regData );
 
 			i += 1;
 			//		ReadLongS0(drvno, &regData, 0x58);
 			//		if (regData &= 0x08 != 0) { empty = TRUE; };
-			SetGPXCtrl( drvno, 9, 1 ); //read access follows                 lege addr 9 an bus !!!!
-			ReadLongS0( drvno, &regData, S0Addr_TDCData );
+			SetGPXCtrl( drvno, 9, &regData, 1 ); //lege addr 9 an bus !!!!
 			j += sprintf( fn + j, "%d \t: 0x%I32x\n", i, regData );
 		}
 		MessageBox( hWnd, fn, "GPX regs", MB_OK );
 
 	}
 
-	SetGPXCtrl( drvno, 11, 1 ); //read access follows
-	ReadLongS0( drvno, &regData, S0Addr_TDCData );
+	SetGPXCtrl( drvno, 11, &regData, 1 ); 
 	j += sprintf( fn + j, "%s \t: 0x%I32x\n", " stop hits", regData );
-	SetGPXCtrl( drvno, 12, 1 ); //read access follows
-	ReadLongS0( drvno, &regData, S0Addr_TDCData );
+	SetGPXCtrl( drvno, 12, &regData, 1 );
 	j += sprintf( fn + j, "%s \t: 0x%I32x\n", " flags", regData );
 
 	MessageBox( hWnd, fn, "GPX regs", MB_OK );
 
-	SetGPXCtrl( drvno, 8, 1 ); //read access follows                 set addr 8 to bus !!!!
+	SetGPXCtrl( drvno, 8, &regData, 1 ); //read access follows                 set addr 8 to bus !!!!
 
 	//master reset
 //	SetGPXCtrl(drvno, 4, 0); // write to reg4
