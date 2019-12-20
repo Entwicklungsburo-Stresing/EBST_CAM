@@ -5084,22 +5084,41 @@ BOOL SetGPXCtrl( UINT drvno, ULONG GPXAddress, ULONG GPXData, UINT8 gpxread ) {
 	regData |= tempData;
 	//write to the gpxctrl reg
 	if (!WriteLongS0( drvno, regData, S0Addr_TDCCtrl )) return FALSE;
-
 	if (gpxread) ReadLongS0( drvno, GPXData, S0Addr_TDCData );
 	if (gpxread == 0) WriteLongS0( drvno, GPXData, S0Addr_TDCData );
 
+	//Sleep( 1 );
 	return TRUE;
 }
 
 
 void InitGPX( UINT drvno, ULONG delay ) {
-	ULONG regData, regNumber, tempData;
+
+	HWND hWnd;
+	char pstring[80] = "";
+	int i, j = 0;
+	char fn[1000];
+	ULONG regData, regNumber, tempData, err_cnt = 0;
 	BOOL space, abbr, irf, empty;
 
 	ULONG mask = 0x3FFFF;
 	delay &= mask;
 	ULONG regVal = 0x08200000 | delay;
-
+	ULONG RegData[12][2] = {
+		{ 0, 0x00000080 },	// write to reg0: 0x80    disable inputs
+		{ 1, 0x0620620 },	// write to reg1: 0x0620620 adjust
+		{ 2, 0x00062E04 },	// write to reg2: 62E04  R-mode, en CH0..5 (3 werte
+		{ 3, 0x00000000 },	// write to reg3: 0 set to ecl
+		{ 4, 0x02000000 },	// write to reg4: 0x02000000 EF flag=on
+		{ 6, 0x08000001 },	// write to reg6: ecl + FILL=1
+		{ 7, 0x00001FB4 },	// write to reg7: res= 27ps 
+		{ 11, 0x07ff0000 },	// write to reg11: 7ff all error flags (layout flag is not connected)
+		{ 12, 0x00000000 },	// write to reg12: no ir flags - is used anyway when 1 hit
+		{ 14, 0x0 },
+		//scharf setzen
+		{ 4, 0x02400000 },	// write to reg4: master reset
+		{ 0, 0x0000008B }	// write to reg0: /0x8B > en pos edge inputs = set inputs active
+	};
 
 
 	//	SetGPXCtrl(drvno, 0);
@@ -5145,35 +5164,24 @@ void InitGPX( UINT drvno, ULONG delay ) {
 	*/
 
 	//setup R mode -> time between start and stop
-	SetGPXCtrl( drvno, 0, 0x00000080, 0 ); // write to reg0: 0x80    disable inputs
+	for (int write_reg = 0; write_reg < 12; write_reg++) {
 
-	SetGPXCtrl( drvno, 1, 0x0620620, 0 ); // write to reg1: 0x0620620 adjust
+		SetGPXCtrl( drvno, RegData[write_reg][0], RegData[write_reg][1], 0 );//write
+		SetGPXCtrl( drvno, RegData[write_reg][0], &regData, 1 );//read
 
-	SetGPXCtrl( drvno, 2, 0x00062E04, 0 ); // write to reg2: 62E04  R-mode, en CH0..5 (3 werte
-
-	SetGPXCtrl( drvno, 3, 0x00000000, 0 ); // write to reg3: 0 set to ecl
-
-	SetGPXCtrl( drvno, 4, 0x02000000, 0 ); // write to reg4: 0x02000000 EF flag=on
+		if (RegData[write_reg][1] != regData) err_cnt++;//compare write data with readdata
+	}
 
 	SetGPXCtrl( drvno, 5, regVal, 0 ); // write to reg5: 82000000 retrigger, disable after start-> reduce to 1 val
 
-	SetGPXCtrl( drvno, 6, 0x08000001, 0 ); // write to reg6: ecl + FILL=1 
-
-	SetGPXCtrl( drvno, 7, 0x00001FB4, 0 ); // write to reg7: res= 27ps
-
-	SetGPXCtrl( drvno, 11, 0x07ff0000, 0 ); // write to reg11: 7ff all error flags (layout flag is not connected)
-
-	SetGPXCtrl( drvno, 12, 0x00000000, 0 ); // write to reg12: no ir flags - is used anyway when 1 hit
-
-	SetGPXCtrl( drvno, 14, 0x0, 0 ); // write to reg14
-
-	//scharf setzen
-	SetGPXCtrl( drvno, 4, 0x02400000, 0 ); // write to reg4: master reset 
-
-	SetGPXCtrl( drvno, 0, 0x0000008B, 0 ); // write to reg0: /0x8B > en pos edge inputs = set inputs active
-
 	SetGPXCtrl( drvno, 8, &regData, 1 ); //read access follows                 set addr 8 to bus !!!!
 	
+	hWnd = GetActiveWindow();
+
+	j = sprintf( fn, "GPX- write_errors:  %d of 12 \n" , err_cnt);
+
+	MessageBox( hWnd, fn, "GPX errs", MB_OK );
+
 }
 
 void AboutGPX( UINT drvno ) {
