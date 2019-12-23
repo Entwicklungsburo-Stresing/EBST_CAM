@@ -1,4 +1,3 @@
-
 //   UNIT BOARD.C for all examples equal
 //	PCIE version with DMA and INTR
 //	V2.1  BB  7/2019
@@ -5070,21 +5069,27 @@ BOOL SetGPXCtrl( UINT drvno, ULONG GPXAddress, ULONG GPXData, UINT8 gpxread ) {
 	if (!ReadLongS0( drvno, &regData, S0Addr_TDCCtrl )) return FALSE;
 	//shift gpx addr to the right place for the gpx ctrl reg
 	tempData = GPXAddress << 28;
+
+
 	//set CSexpand bit if read
 	if (gpxread)
 	{
-		tempData |= 0x08000000;
-	}
-	else {
-		tempData &= 0xF7FFFFFF;
+		tempData |= 0x08000000;//set CS Bit
+	}else 
+	{
+		tempData &= 0xF0000000;//reset CS Bit
 	}
 	//hold the other bits of the ctrl gpx reg
-	regData &= 0x0FFFFFFF;
+	regData &= 0x07FFFFFF;
 	//combine the old ctrl bits with the new address
 	regData |= tempData;
 	//write to the gpxctrl reg
 	if (!WriteLongS0( drvno, regData, S0Addr_TDCCtrl )) return FALSE;
-	if (gpxread) ReadLongS0( drvno, GPXData, S0Addr_TDCData );
+	if (gpxread) {
+		ReadLongS0( drvno, GPXData, S0Addr_TDCData );
+		//regData &= 0xF7FFFFFF;
+		//WriteLongS0( drvno, regData, S0Addr_TDCCtrl );
+	}
 	if (gpxread == 0) WriteLongS0( drvno, GPXData, S0Addr_TDCData );
 
 	//Sleep( 1 );
