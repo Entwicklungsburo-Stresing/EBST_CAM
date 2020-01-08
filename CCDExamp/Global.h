@@ -166,10 +166,10 @@ static int YSHIFT = 6;			// 14 bit
 
 static	unsigned long _FKT = 1;		// -1:clearread, 0:datab=0, 1:read 5: testdata
 									//, 2:add ; not implemented in DMA is 3:sub 
-#define _FFTLINES 0 		// no of vertical lines of FFT sensors, usually 64
+#define _FFTLINES 128 		// no of vertical lines of FFT sensors, usually 64
 							// =0 if not FFT
 #define _ISPDA FALSE			//set RS after read; TRUE for HA S39xx
-#define _ISFFT FALSE		//set vclk generator; TRUE for HA S703x
+#define _ISFFT TRUE		//set vclk generator; TRUE for HA S703x
 
 //#define _HA_MODULE FALSE		//TRUE for HA module C7041 or C8061
 
@@ -331,6 +331,16 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 	LPARAM lParam );
 
 LRESULT CALLBACK ChooseBoard( HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam );
+
+LRESULT CALLBACK Set3ROI( HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam );
+
+LRESULT CALLBACK Set5ROI( HWND hDlg,
 	UINT message,
 	WPARAM wParam,
 	LPARAM lParam );
