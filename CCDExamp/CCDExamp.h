@@ -67,4 +67,6 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 LRESULT CALLBACK ChooseBoard( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 LRESULT CALLBACK SetupTLevel( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 LRESULT CALLBACK SetupEC( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
+LRESULT CALLBACK Set3ROI( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
+LRESULT CALLBACK Set5ROI( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 void createTestBitmap( UINT blocks, UINT height, UINT width );

@@ -15,6 +15,8 @@
 #define IDD_SETUPAD                     108
 #define IDD_ALLOCBBUF                   110
 #define IDD_CHOOSEBOARD                 111
+#define IDD_SETROI_3                    112
+#define IDD_SETROI_5                    113
 #define IDC_ADAMP                       1002
 #define IDC_M_EXPTIME                   1003
 #define IDC_TLevel                      1004
@@ -39,8 +41,14 @@
 #define IDC_CALCRAM                     1026
 #define IDC_EC_RADIO_BOTH               1026
 #define IDC_ALLOCRAM                    1027
+#define IDC_ROI_1                       1027
 #define IDALLOC2                        1028
 #define IDCALC                          1028
+#define IDC_ROI_2                       1028
+#define IDC_ROI_3                       1029
+#define IDC_ROI_4                       1030
+#define IDC_ROI_5                       1031
+#define IDC_ROI_6                       1032
 #define IDC_EC_RADIO2                   1060
 #define IDC_EC_RADIO3                   1061
 #define IDC_EC_RADIO5                   1062
@@ -89,6 +97,9 @@
 #define ID_2DVIEW_SHOW                  40025
 #define ID_2DVIEW_START                 40026
 #define ID_2DVIEW_SETGAMMA              40027
+#define ID_START_SETRANGEOFINTEREST     40028
+#define ID_SETRANGEOFINTEREST_3RANGES   40029
+#define ID_SETRANGEOFINTEREST_5RANGES   40030
 #define IDC_EDIT1                       -1
 #define IDC_STATIC                      -1
 
@@ -98,8 +109,8 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        111
-#define _APS_NEXT_COMMAND_VALUE         40028
-#define _APS_NEXT_CONTROL_VALUE         1027
+#define _APS_NEXT_COMMAND_VALUE         40031
+#define _APS_NEXT_CONTROL_VALUE         1030
 #define _APS_NEXT_SYMED_VALUE           103
 #endif
 #endif

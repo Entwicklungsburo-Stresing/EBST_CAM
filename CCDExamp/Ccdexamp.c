@@ -4,6 +4,10 @@
 #include "CCDExamp.h"
 
 
+
+UINT roi[5] = { 15, 42, 15, 42, 10 };
+BOOL keep[5] = { FALSE, TRUE, FALSE, TRUE, FALSE };
+
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	LPTSTR lpCmdLine, int nCmdShow )
 {
@@ -697,6 +701,12 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 		case ID_CHOOSEBOARD:
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_CHOOSEBOARD ), hWnd, (DLGPROC)ChooseBoard );
+			break;
+		case ID_SETRANGEOFINTEREST_3RANGES:
+			DialogBox( hInst, MAKEINTRESOURCE( IDD_SETROI_3 ), hWnd, (DLGPROC)Set3ROI );
+			break;
+		case ID_SETRANGEOFINTEREST_5RANGES:
+			DialogBox( hInst, MAKEINTRESOURCE( IDD_SETROI_5 ), hWnd, (DLGPROC)Set5ROI );
 			break;
 		case IDM_ShowTRMS: //invert state
 			if (ShowTrms == TRUE)
@@ -1555,6 +1565,188 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 	}//	   message
 	return (FALSE);
 }//SetupEC
+
+LRESULT CALLBACK Set3ROI( HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam )
+{
+	#define ROI 3
+	UINT val = 0;
+	BOOL success = FALSE;
+
+
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		SetDlgItemInt( hDlg, IDC_ROI_2, roi[1], FALSE );
+		SetDlgItemInt( hDlg, IDC_ROI_1, roi[0], FALSE );
+		return (TRUE);
+		break;
+	case WM_COMMAND:
+		switch (LOWORD( wParam ))
+		{
+		case IDC_ROI_1:
+		case IDC_ROI_2:
+#if  ROI == 5
+		case IDC_ROI_3:
+		case IDC_ROI_4:
+#endif
+			roi[ROI - 1] = _FFTLINES;
+			roi[0] = GetDlgItemInt( hDlg, IDC_ROI_1, &success, FALSE );
+			if (success) roi[1] = GetDlgItemInt( hDlg, IDC_ROI_2, &success, FALSE );
+			if (ROI == 5) {
+				if (success) roi[2] = GetDlgItemInt( hDlg, IDC_ROI_3, &success, FALSE );
+				if (success) roi[3] = GetDlgItemInt( hDlg, IDC_ROI_4, &success, FALSE );
+			}
+			if (success)
+				for (int i = 0; i < ROI - 1; i++)
+					roi[ROI - 1] -= roi[i];
+			SetDlgItemInt( hDlg, IDC_ROI_3, roi[ROI - 1], FALSE );//
+			break;
+	
+		case IDCANCEL:
+			EndDialog( hDlg, TRUE );
+			return (TRUE);
+			break;
+
+		case IDOK:
+				for (int i = 0; i < ROI; i++) {
+	#ifndef _DLL
+					SetupVPB( choosen_board, i+1, roi[i], keep[i] );
+	#else
+					DLLSetupVPB( choosen_board, i+1, roi[i], keep[i] );
+	#endif
+				}
+#ifndef _DLL
+				//reset auto start in case of setting before
+				ResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+				ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+				ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+				//int partial binning
+				WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
+				WriteLongS0( choosen_board, ROI, 0x2C ); // S0Addr_ARREG = 0x2C,
+				SetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
+#else
+				//reset auto start in case of setting before
+				DLLResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+				DLLResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+				DLLResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+				//int partial binning
+				DLLWriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
+				DLLWriteLongS0( choosen_board, ROI, 0x2C ); // S0Addr_ARREG = 0x2C,
+				DLLSetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
+#endif
+			EndDialog( hDlg, TRUE );
+			return (TRUE);
+			break;
+	}
+
+
+		break; //WM_COMMAND
+
+
+
+
+}
+
+	return (FALSE);
+}
+
+LRESULT CALLBACK Set5ROI( HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam )
+{
+#define ROI 5
+	BOOL success = FALSE;
+
+
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		SetDlgItemInt( hDlg, IDC_ROI_4, roi[3], FALSE );
+		SetDlgItemInt( hDlg, IDC_ROI_3, roi[2], FALSE );
+		SetDlgItemInt( hDlg, IDC_ROI_2, roi[1], FALSE );
+		SetDlgItemInt( hDlg, IDC_ROI_1, roi[0], FALSE );
+		return (TRUE);
+		break;
+	case WM_COMMAND:
+		switch (LOWORD( wParam ))
+		{
+		case IDC_ROI_1:
+		case IDC_ROI_2:
+#if  ROI == 5
+		case IDC_ROI_3:
+		case IDC_ROI_4:
+#endif
+			roi[ROI - 1] = _FFTLINES;
+			roi[0] = GetDlgItemInt( hDlg, IDC_ROI_1, &success, FALSE );
+			if (success) roi[1] = GetDlgItemInt( hDlg, IDC_ROI_2, &success, FALSE );
+			if (ROI == 5) {
+				if (success) roi[2] = GetDlgItemInt( hDlg, IDC_ROI_3, &success, FALSE );
+				if (success) roi[3] = GetDlgItemInt( hDlg, IDC_ROI_4, &success, FALSE );
+			}
+			if (success)
+				for (int i = 0; i < ROI - 1; i++)
+					roi[ROI - 1] -= roi[i];
+			SetDlgItemInt( hDlg, IDC_ROI_5, roi[ROI - 1], FALSE );//
+			break;
+
+		case IDCANCEL:
+			EndDialog( hDlg, TRUE );
+			return (TRUE);
+			break;
+
+		case IDOK:
+			SetupVPB( choosen_board, 1, 5, FALSE );
+			SetupVPB( choosen_board, 2, 25, TRUE );
+			SetupVPB( choosen_board, 3, 5, TRUE );
+			SetupVPB( choosen_board, 4, 25, TRUE );
+			SetupVPB( choosen_board, 5, 5, FALSE );/*
+				for (int i = 0; i < ROI; i++) {
+#ifndef _DLL
+					SetupVPB( choosen_board, i + 1, roi[i], keep[i] );
+#else
+					DLLSetupVPB( choosen_board, i+1, roi[i], keep[i] );
+#endif
+				}*/
+#ifndef _DLL
+				//reset auto start in case of setting before
+				ResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+				ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+				ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+				//int partial binning
+				WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
+				WriteLongS0( choosen_board, 5, 0x2C ); // S0Addr_ARREG = 0x2C,
+				SetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
+#else
+				//reset auto start in case of setting before
+				DLLResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+				DLLResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+				DLLResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+				//int partial binning
+				DLLWriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
+				DLLWriteLongS0( choosen_board, ROI, 0x2C ); // S0Addr_ARREG = 0x2C,
+				DLLSetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
+#endif
+
+			EndDialog( hDlg, TRUE );
+			return (TRUE);
+			break;
+		}
+
+
+		break; //WM_COMMAND
+
+
+
+
+	}
+
+	return (FALSE);
+}
+
 
 
 void createTestBitmap( UINT blocks, UINT height, UINT width ) {
