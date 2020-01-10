@@ -340,7 +340,12 @@ LRESULT CALLBACK Set3ROI( HWND hDlg,
 	WPARAM wParam,
 	LPARAM lParam );
 
-LRESULT CALLBACK Set5ROI( HWND hDlg,
+LRESULT CALLBACK Set5ROI(HWND hDlg,
 	UINT message,
 	WPARAM wParam,
-	LPARAM lParam );
+	LPARAM lParam);
+
+LRESULT CALLBACK ResetROI(HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam);

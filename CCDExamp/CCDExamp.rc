@@ -56,6 +56,7 @@ BEGIN
         BEGIN
             MENUITEM "3 ranges",                    ID_SETRANGEOFINTEREST_3RANGES
             MENUITEM "5 ranges",                    ID_SETRANGEOFINTEREST_5RANGES
+            MENUITEM "no Ranges (full binning)",    ID_SETRANGEOFINTEREST_NORANGES
         END
     END
     POPUP "&Help"
@@ -262,6 +263,16 @@ BEGIN
     LTEXT           "range 4 (keep)",-1,17,102,48,8
 END
 
+IDD_RESETROI DIALOGEX 0, 0, 269, 63
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Reset Range of Interest"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,147,40,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,211,40,50,14
+    LTEXT           "Activate full binning?",-1,36,19,67,8
+END
+
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -397,6 +408,12 @@ BEGIN
     BEGIN
         RIGHTMARGIN, 268
         BOTTOMMARGIN, 189
+    END
+
+    IDD_RESETROI, DIALOG
+    BEGIN
+        RIGHTMARGIN, 268
+        BOTTOMMARGIN, 54
     END
 END
 #endif    // APSTUDIO_INVOKED

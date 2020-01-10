@@ -5180,13 +5180,13 @@ void InitGPX( UINT drvno, ULONG delay ) {
 	SetGPXCtrl( drvno, 5, regVal, 0 ); // write to reg5: 82000000 retrigger, disable after start-> reduce to 1 val
 
 	SetGPXCtrl( drvno, 8, &regData, 1 ); //read access follows                 set addr 8 to bus !!!!
-	
+	/*
 	hWnd = GetActiveWindow();
 
 	j = sprintf( fn, "GPX- write_errors:  %d of 12 \n" , err_cnt);
 
 	MessageBox( hWnd, fn, "GPX errs", MB_OK );
-
+	*/
 }
 
 void AboutGPX( UINT drvno ) {
