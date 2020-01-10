@@ -17,6 +17,8 @@
 #define IDD_CHOOSEBOARD                 111
 #define IDD_SETROI_3                    112
 #define IDD_SETROI_5                    113
+#define IDD_SETROI_6                    114
+#define IDD_RESETROI                    114
 #define IDC_ADAMP                       1002
 #define IDC_M_EXPTIME                   1003
 #define IDC_TLevel                      1004
@@ -100,6 +102,7 @@
 #define ID_START_SETRANGEOFINTEREST     40028
 #define ID_SETRANGEOFINTEREST_3RANGES   40029
 #define ID_SETRANGEOFINTEREST_5RANGES   40030
+#define ID_SETRANGEOFINTEREST_NORANGES  40031
 #define IDC_EDIT1                       -1
 #define IDC_STATIC                      -1
 
@@ -109,7 +112,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        111
-#define _APS_NEXT_COMMAND_VALUE         40031
+#define _APS_NEXT_COMMAND_VALUE         40032
 #define _APS_NEXT_CONTROL_VALUE         1030
 #define _APS_NEXT_SYMED_VALUE           103
 #endif

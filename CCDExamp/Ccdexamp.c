@@ -5,8 +5,9 @@
 
 
 
-UINT roi[5] = { 15, 42, 15, 42, 10 };
+UINT roi[6] = { 15, 42, 15, 42, 10,6 };
 BOOL keep[5] = { FALSE, TRUE, FALSE, TRUE, FALSE };
+BOOL ROI_CALLING = FALSE;
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	LPTSTR lpCmdLine, int nCmdShow )
@@ -615,9 +616,17 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		cur_nob = SendMessage( hwndTrack2, TBM_GETPOS, 0, 0 );
 		cur_nospb *= trackbar_nospb_multiplier;
 		cur_nob *= trackbar_nob_multiplier;
-		CopytoDispbuf( cur_nob*cur_nospb + cur_nospb );
+		CopytoDispbuf( cur_nob*Nospb + cur_nospb );
 		Display( 1, PLOTFLAG );
 		UpdateTxT();
+		/*
+		//reset auto start in case of setting before
+		ResetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+		ResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+		ResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+		//Reset partial binning
+		WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
+		*/
 		// display different frame in 2D viewer when nob changes
 		// check if 2d viewer instance is existing
 		if (Direct2dViewer) {
@@ -707,6 +716,9 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 		case ID_SETRANGEOFINTEREST_5RANGES:
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_SETROI_5 ), hWnd, (DLGPROC)Set5ROI );
+			break;
+		case ID_SETRANGEOFINTEREST_NORANGES:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_RESETROI), hWnd, (DLGPROC)ResetROI);
 			break;
 		case IDM_ShowTRMS: //invert state
 			if (ShowTrms == TRUE)
@@ -1101,12 +1113,14 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 	UINT64 builtinram, freeram, freeram_old, calcram, allocram;
 	UINT divMB = 1024 * 1024;
 	int trackbar_nob, trackbar_nospb, trackbar_nob_multiplier = 1, trackbar_nospb_multiplier = 1;
-
+	
 	switch (message)
 	{
 	case WM_INITDIALOG:
 		SetDlgItemInt( hDlg, IDC_nob, Nob, FALSE );
 		SetDlgItemInt( hDlg, IDC_nospb, Nospb, FALSE );
+		//set Nos to readonly if #this fundtion is called by Range Of Interest fundtion
+		SendMessage(GetDlgItem(hDlg, IDC_nospb), EM_SETREADONLY, ROI_CALLING, 0L);
 #ifndef _DLL
 		FreeMemInfo( &builtinram, &freeram );
 #else
@@ -1623,7 +1637,7 @@ LRESULT CALLBACK Set3ROI( HWND hDlg,
 				ResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 				ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 				ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-				//int partial binning
+				//init partial binning
 				WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
 				WriteLongS0( choosen_board, ROI, 0x2C ); // S0Addr_ARREG = 0x2C,
 				SetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
@@ -1660,7 +1674,7 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 {
 #define ROI 5
 	BOOL success = FALSE;
-
+	//roi[0] = 12;
 
 	switch (message)
 	{
@@ -1681,7 +1695,8 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 		case IDC_ROI_4:
 #endif
 			roi[ROI - 1] = _FFTLINES;
-			roi[0] = GetDlgItemInt( hDlg, IDC_ROI_1, &success, FALSE );
+			GetDlgItemInt(hDlg, IDC_ROI_1, &success, FALSE);
+			if (success)roi[0] = GetDlgItemInt( hDlg, IDC_ROI_1, &success, FALSE );
 			if (success) roi[1] = GetDlgItemInt( hDlg, IDC_ROI_2, &success, FALSE );
 			if (ROI == 5) {
 				if (success) roi[2] = GetDlgItemInt( hDlg, IDC_ROI_3, &success, FALSE );
@@ -1699,18 +1714,19 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 			break;
 
 		case IDOK:
+			/*
 			SetupVPB( choosen_board, 1, 5, FALSE );
 			SetupVPB( choosen_board, 2, 25, TRUE );
-			SetupVPB( choosen_board, 3, 5, TRUE );
+			SetupVPB( choosen_board, 3, 5, FALSE );
 			SetupVPB( choosen_board, 4, 25, TRUE );
-			SetupVPB( choosen_board, 5, 5, FALSE );/*
+			SetupVPB( choosen_board, 5, 5, FALSE );*/
 				for (int i = 0; i < ROI; i++) {
 #ifndef _DLL
 					SetupVPB( choosen_board, i + 1, roi[i], keep[i] );
 #else
 					DLLSetupVPB( choosen_board, i+1, roi[i], keep[i] );
 #endif
-				}*/
+				}
 #ifndef _DLL
 				//reset auto start in case of setting before
 				ResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
@@ -1730,8 +1746,65 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 				DLLWriteLongS0( choosen_board, ROI, 0x2C ); // S0Addr_ARREG = 0x2C,
 				DLLSetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
 #endif
-
+				//allocate Buffer with matching NOS
+				Nospb = ROI;
+				ROI_CALLING = TRUE;
+				DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hMSWND, (DLGPROC)AllocateBuf);
+				ROI_CALLING = FALSE;
 			EndDialog( hDlg, TRUE );
+			return (TRUE);
+			break;
+		}
+
+
+		break; //WM_COMMAND
+
+
+
+
+	}
+
+	return (FALSE);
+}
+
+LRESULT CALLBACK ResetROI(HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
+{
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return (TRUE);
+		break;
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDCANCEL:
+			EndDialog(hDlg, TRUE);
+			return (TRUE);
+			break;
+
+		case IDOK:
+#ifndef _DLL
+			//reset auto start in case of setting before
+			ResetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			ResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			ResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			//Reset partial binning
+			WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
+			//vclks
+			SetupVCLKReg(choosen_board, _FFTLINES, 7);
+#else
+			//reset auto start in case of setting before
+			DLLResetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			DLLResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			DLLResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			//int partial binning
+			DLLWriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,#
+			DLLSetupVCLK(choosen_board, _FFTLINES,7);
+#endif
+			EndDialog(hDlg, TRUE);
 			return (TRUE);
 			break;
 		}
