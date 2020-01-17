@@ -107,6 +107,7 @@ void RS_DMAAllCounter( UINT32 drv, BOOL hwstop );
 void SetISPDA( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if PDA
 void SetISFFT( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if FFT
 void SetTORReg( UINT32 drvno, BYTE fkt );
+void SetPDAnotFFT(UINT32 drvno, BOOL set);
 void RsTOREG( UINT32 drvno );					//reset the TOREG - should be called before SetISPDA or SetISFFT
 void SetupHAModule( BOOL irsingle, ULONG fftlines );//set the module C8061&C7041 inits
 void SendFLCAM( UINT32 drvno, BYTE maddr, BYTE adaddr, USHORT data );//B! test
