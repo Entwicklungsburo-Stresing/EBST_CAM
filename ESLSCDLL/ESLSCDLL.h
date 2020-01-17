@@ -129,6 +129,7 @@ DllAccess void DLLSetTORReg( UINT32 drvno, UINT8 fkt );
 DllAccess void DLLSetupDELAY( UINT32 drvno, UINT32 delay );
 DllAccess void DLLSetISPDA( UINT32 drvno, UINT8 set );
 DllAccess void DLLSetISFFT( UINT32 drvno, UINT8 set );
+DllAccess void DLLSetPDAnotFFT(UINT32 drvno, UINT8 set);
 DllAccess void DLLRsTOREG( UINT32 drvno );
 DllAccess void DLLSetupHAModule( UINT8 irsingle, UINT32 fftlines );
 DllAccess void DLLSetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep );
