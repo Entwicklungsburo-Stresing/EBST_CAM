@@ -130,6 +130,7 @@ enum cam_addresses {
 	cam_adaddr_ch = 0x03,
 	cam_adaddr_vclk = 0x04,
 	cam_adaddr_LEDoff = 0x05,
+	cam_adaddr_coolTemp = 0x06,
 	adc_ltc2271_regaddr_reset = 0x00,
 	adc_ltc2271_regaddr_outmode = 0x02,
 	adc_ltc2271_regaddr_custompattern_msb = 0x03,
@@ -2326,7 +2327,8 @@ BOOL WriteLongIOPort( UINT32 drvno, ULONG DWData, ULONG PortOff )
 		WDC_Err( "WriteLongIOPort in address 0x%x with data: 0x%x failed\n", PortOff, DWData );
 		ErrorMsg( "WriteLongIOPort failed" );
 		return FALSE;
-	}
+	}else
+		WDC_Err("I0PortWrite /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
 	/*
 	fResult = DeviceIoControl(ahCCDDRV[drvno],IOCTL_WriteLongIORunReg,
 	&WriteData,
@@ -2357,7 +2359,8 @@ BOOL WriteLongS0( UINT32 drvno, ULONG DWData, ULONG PortOff )
 		WDC_Err( "WriteLongS0 in address 0x%x with data: 0x%x failed\n", PortOff, DWData );
 		ErrorMsg( "WriteLongS0 failed" );
 		return FALSE;
-	}
+	}else
+		WDC_Err("LongS0Write /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
 	/*
 	ULONG checkdata;
 	ReadLongS0(DRV, &checkdata, PortOff);
@@ -2403,7 +2406,8 @@ BOOL WriteLongDMA( UINT32 drvno, ULONG DWData, ULONG PortOff )
 		WDC_Err( "WriteLongDMA in address 0x%x with data: 0x%x failed\n", PortOff, DWData );
 		ErrorMsg( "WriteLongDMA failed" );
 		return FALSE;
-	}
+	}else
+		WDC_Err("DMAWrite /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
 
 
 	/*
@@ -2472,7 +2476,8 @@ BOOL WriteByteS0( UINT32 drvno, BYTE DWData, ULONG PortOff )
 		WDC_Err( "WriteByteS0 in address 0x%x with data: 0x%x failed\n", PortOff, DWData );
 		ErrorMsg( "WriteByteS0 failed" );
 		return FALSE;
-	}
+	}else
+		WDC_Err("ByteS0Write /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
 
 	//no comparison possible because some Read-Only-Register are changing when we are writing in the same register
 	BYTE checkdata;
@@ -2905,7 +2910,7 @@ void ResetEC( UINT32 drvno )
 void SetTORReg( UINT32 drvno, BYTE fkt )
 {
 	BYTE val = 0; //defaut XCK= high during read
-	BYTE val2 = 0;
+	BYTE read_val = 0;
 	if (fkt == 0) val = 0x00; // set to XCK
 	if (fkt == 1) val = 0x10; // set to REG -> OutTrig
 	if (fkt == 2) val = 0x20; // set to TO_CNT
@@ -2922,11 +2927,11 @@ void SetTORReg( UINT32 drvno, BYTE fkt )
 	if (fkt == 13) val = 0xd0; // set to XCKDLYON
 	if (fkt == 14) val = 0xe0; // set to VON
 	if (fkt == 15) val = 0xf0; // set to IFC
-
-	ReadByteS0( drvno, &val2, 0x2B );
-	val2 &= 0x0f; //dont disturb lower bits
-	val |= val2;
-	WriteByteS0( drvno, val, 0x2B );
+	
+	ReadByteS0( drvno, &read_val, S0Addr_TOR + 3);
+	read_val &= 0x0f; //dont disturb lower bits
+	val |= read_val;
+	WriteByteS0( drvno, val, S0Addr_TOR + 3);
 }//SetTORReg
 //weg?
 void SetISPDA( UINT32 drvno, BOOL set )
@@ -2948,6 +2953,12 @@ void SetISFFT( UINT32 drvno, BOOL set )
 	else val &= 0xfe;
 	WriteByteS0( drvno, val, 0x2B );
 }//SetISFFT
+
+void SetPDAnotFFT(UINT32 drvno, BOOL set)
+{
+	SetISPDA(drvno, set);
+	SetISFFT(drvno, !set);
+}
 
 void RsTOREG( UINT32 drvno )
 {// reset TOREG
@@ -3081,43 +3092,6 @@ void RSEC( UINT32 drvno )
 
 	WriteLongS0( drvno, 0, 0x24 );
 }
-
-//weg? - >connectet with set Temp
-void SendCommand( UINT32 drvno, BYTE adr, BYTE data )
-//for programming of seriell port for AD98xx
-{//before calling IFC has to be set to low
-	//and EC must be set 0 with 	RSEC(drvno);
-	BYTE regorg = 0;
-	BYTE regh = 0;
-	BYTE regl = 0;
-	BYTE regno = 0;
-	//	Sleep(1);
-	WriteByteS0( drvno, adr, 0 ); // write address to bus
-
-
-	//clk with ND
-	regno = 5;
-	ReadByteS0( drvno, &regorg, regno );// get reg data
-	regh = regorg & 0xDF;			//ND_DIS clk is inverted
-	regl = regorg | 0x20;
-
-
-	WriteByteS0( drvno, regh, regno ); // // ND/VON hi  setup
-
-	WriteByteS0( drvno, regl, regno ); // // ND/VON lo 
-	WriteByteS0( drvno, regh, regno ); // // ND/VON hi
-
-	WriteByteS0( drvno, data, 0 );	// write data to bus
-
-	WriteByteS0( drvno, regl, regno ); // // ND/VON lo 
-	WriteByteS0( drvno, regh, regno ); // // ND/VON hi
-
-
-	WriteByteS0( drvno, regorg, regno ); // ND/VON restore
-	WriteByteS0( drvno, 0, 0 );	// write 0 to bus
-
-}//SendCommand 
-
 
 
 //weg?
@@ -4623,7 +4597,7 @@ void SetTemp( UINT32 drvno, ULONG level )
 	Sleep( 1 );
 
 	if (level >= 8) level = 0;
-	SendCommand( drvno, 0xA1, (BYTE)level );
+	SendFLCAM(drvno, maddr_cam, cam_adaddr_coolTemp, (BYTE)level);
 
 	Sleep( 1 );
 	OpenShutter( drvno );		// IFC=hi

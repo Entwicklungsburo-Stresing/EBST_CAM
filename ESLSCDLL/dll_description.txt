@@ -364,6 +364,12 @@ input1: board number (=1 if one PCI board)
 input2: if set is true (not 0)-> bit is set, reset else
 output: none
 
+DLLdef.: void  DLLSetPDAnotFFT(UINT32 drv, UINT8 set);
+function: sets PDA sensor timing(set Reg TOR:D25 -> manual) or FFT
+input1: board number (=1 if one PCI board)
+input2: if set is true (not 0)-> PDA, FFT else
+output: none
+
 DLLdef.: void  DLLSetOvsmpl(UINT32 drv, int32_t zadr);
 function: set oversample function - only available for special sensors
 input1: board number (=1 if one PCI board)

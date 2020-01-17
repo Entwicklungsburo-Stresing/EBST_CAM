@@ -748,6 +748,15 @@ DllAccess void DLLSetISPDA( UINT32 drvno, UINT8 set )
 	else SetISPDA( drvno, TRUE );
 }
 
+DllAccess void DLLSetPDAnotFFT(UINT32 drvno, UINT8 set)
+{
+	if (set == 0)
+	{
+		SetPDAnotFFT(drvno, FALSE);
+	}
+	else SetPDAnotFFT(drvno, TRUE);
+}
+
 DllAccess void DLLSetISFFT( UINT32 drvno, UINT8 set )
 {
 	if (set == 0)

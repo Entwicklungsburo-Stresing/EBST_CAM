@@ -470,6 +470,14 @@ void initMeasurement()
 		DLLSetADGain(2, 1, gain, gain, gain, gain, gain, gain, gain, gain);
 	}
 #else
+
+
+	if (_ISPDA) { SetISPDA(choosen_board, TRUE); }
+	else SetISPDA(choosen_board, FALSE);
+	if (_ISFFT) { SetISFFT(choosen_board, TRUE); }
+	else SetISFFT(choosen_board, FALSE);
+	//set TrigOut, default= XCK
+	SetTORReg(1, 0);
 	StopFFTimer(choosen_board);
 	SetIntFFTrig(choosen_board);
 	RSFifo(choosen_board);
@@ -480,7 +488,6 @@ void initMeasurement()
 		RSFifo(2);
 		//setups
 		//SetupDELAY(choosen_board,DELAYini);	//init WRFIFO delay
-		RsTOREG(2); // reset TOREG
 		//set TrigOut, default= XCK
 		SetTORReg(2, 0);
 	}

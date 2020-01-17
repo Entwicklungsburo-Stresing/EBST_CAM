@@ -166,6 +166,8 @@ static int YSHIFT = 6;			// 14 bit
 
 static	unsigned long _FKT = 1;		// -1:clearread, 0:datab=0, 1:read 5: testdata
 									//, 2:add ; not implemented in DMA is 3:sub 
+
+
 #define _FFTLINES 128 		// no of vertical lines of FFT sensors, usually 64
 							// =0 if not FFT
 #define _ISPDA FALSE			//set RS after read; TRUE for HA S39xx
