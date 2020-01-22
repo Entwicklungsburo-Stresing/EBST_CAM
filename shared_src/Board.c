@@ -2937,10 +2937,10 @@ void SetTORReg( UINT32 drvno, BYTE fkt )
 void SetISPDA( UINT32 drvno, BOOL set )
 {//set bit if PDA sensor - used for EC and IFC
 	BYTE val = 0;
-	ReadByteS0( drvno, &val, 0x2B );
+	ReadByteS0( drvno, &val, S0Addr_TOR + 3);
 	if (set != 0) { val |= 0x02; }
 	else val &= 0xfd;
-	WriteByteS0( drvno, val, 0x2B );
+	WriteByteS0( drvno, val, S0Addr_TOR + 3);
 	OpenShutter( drvno ); //enable output
 }//SetISPDA
 
@@ -2948,10 +2948,10 @@ void SetISFFT( UINT32 drvno, BOOL set )
 {//set bit if FFT sensor - used for vclks and IFC
 	// also OpenShutter must be set!
 	BYTE val = 0;
-	ReadByteS0( drvno, &val, 0x2B );
+	ReadByteS0( drvno, &val, S0Addr_TOR + 3);
 	if (set != 0) { val |= 0x01; }
 	else val &= 0xfe;
-	WriteByteS0( drvno, val, 0x2B );
+	WriteByteS0( drvno, val, S0Addr_TOR + 3);
 }//SetISFFT
 
 void SetPDAnotFFT(UINT32 drvno, BOOL set)
@@ -2962,7 +2962,7 @@ void SetPDAnotFFT(UINT32 drvno, BOOL set)
 
 void RsTOREG( UINT32 drvno )
 {// reset TOREG
-	WriteByteS0( drvno, 0, 0x2B );
+	WriteByteS0( drvno, 0, S0Addr_TOR + 3);
 }
 
 

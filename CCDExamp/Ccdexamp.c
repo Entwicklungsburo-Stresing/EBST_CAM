@@ -557,6 +557,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 	static HWND hText = NULL;
 	static HWND hEdit = NULL;
 	static HWND hBtn = NULL;
+	UINT FFTMenuEnable;
 	int i = 0;
 	int span = 0;
 
@@ -571,9 +572,15 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 	switch (uMsg)
 	{
 	case WM_CREATE:
+		//enable or disable fftmenu
+		if (_ISFFT) FFTMenuEnable = MF_ENABLED;
+		else FFTMenuEnable = MF_GRAYED;
+		EnableMenuItem(GetMenu(hWnd), ID_SETRANGEOFINTEREST_3RANGES, FFTMenuEnable);
+		EnableMenuItem(GetMenu(hWnd), ID_SETRANGEOFINTEREST_5RANGES, FFTMenuEnable);
+		EnableMenuItem(GetMenu(hWnd), ID_SETRANGEOFINTEREST_NORANGES, FFTMenuEnable);
+
 		//if nos or nospb becomes a higher value then 30000 the gui is not posible to deisplay it
 		//so we are checking this and dividing the displayed value. Therefore we are seeing a wrong value when we are using the trackbar
-
 		trackbar_nospb = Nospb;
 		while (trackbar_nospb > 30000) { //max for trackbar length
 			trackbar_nospb /= 10;
@@ -1523,8 +1530,8 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 			if (IsDlgButtonChecked( hDlg, IDC_EC_RADIO20 ) == TRUE) m_TOmodus = 12;
 
 #ifndef _DLL
-			//RsTOREG( choosen_board );
-			SetTORReg( choosen_board, m_TOmodus );
+			RsTOREG( choosen_board );
+			//SetTORReg( choosen_board, m_TOmodus );
 #else
 			DLLRsTOREG( choosen_board );
 			DLLSetTORReg( choosen_board, m_TOmodus );
@@ -1618,6 +1625,20 @@ LRESULT CALLBACK Set3ROI( HWND hDlg,
 			if (success)
 				for (int i = 0; i < ROI - 1; i++)
 					roi[ROI - 1] -= roi[i];
+			//check if the summ of all roi is larger than fftlines 
+			//and write message and deactivate the ok button
+			if (roi[ROI - 1] > _FFTLINES) {
+				//write message
+				SetWindowText(GetDlgItem(hDlg, ROI_ERR_MESS), "The sum of all ranges are larger than FFTLINES.\n Please correct it!");
+				//disable ok button
+				EnableWindow(GetDlgItem(hDlg, IDOK), FALSE);
+			}
+			else {
+				//unshow message
+				SetWindowText(GetDlgItem(hDlg, ROI_ERR_MESS), "");
+				//enable ok button
+				EnableWindow(GetDlgItem(hDlg, IDOK), TRUE);
+			}
 #if  ROI == 5
 			SetDlgItemInt(hDlg, IDC_ROI_5, roi[ROI - 1], FALSE);
 #else
@@ -1647,6 +1668,7 @@ LRESULT CALLBACK Set3ROI( HWND hDlg,
 			WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
 			WriteLongS0(choosen_board, ROI, 0x2C); // S0Addr_ARREG = 0x2C,
 			SetS0Bit(15, 0x2C, choosen_board);// S0Addr_ARREG = 0x2C,
+			SetupVCLKReg(choosen_board, _FFTLINES, 7);
 #else
 			//reset auto start in case of setting before
 			DLLResetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
@@ -1716,6 +1738,20 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 			if (success)
 				for (int i = 0; i < ROI - 1; i++)
 					roi[ROI - 1] -= roi[i];
+			//check if the summ of all roi is larger than fftlines 
+			//and write message and deactivate the ok button
+			if (roi[ROI - 1] > _FFTLINES) {
+				//write message
+				SetWindowText(GetDlgItem(hDlg, ROI_ERR_MESS), "The sum of all ranges are larger than FFTLINES.\n Please correct it!");
+				//disable ok button
+				EnableWindow(GetDlgItem(hDlg,IDOK),FALSE);
+			}
+			else {
+				//unshow message
+				SetWindowText(GetDlgItem(hDlg, ROI_ERR_MESS), "");
+				//enable ok button
+				EnableWindow(GetDlgItem(hDlg, IDOK), TRUE);
+			}
 			SetDlgItemInt( hDlg, IDC_ROI_5, roi[ROI - 1], FALSE );//
 			break;
 
@@ -1747,6 +1783,7 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 				WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
 				WriteLongS0( choosen_board, 5, 0x2C ); // S0Addr_ARREG = 0x2C,
 				SetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
+				SetupVCLKReg(choosen_board, _FFTLINES, 7);
 #else
 				//reset auto start in case of setting before
 				DLLResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
