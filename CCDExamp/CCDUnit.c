@@ -470,8 +470,12 @@ void initMeasurement()
 		DLLSetADGain(2, 1, gain, gain, gain, gain, gain, gain, gain, gain);
 	}
 #else
-
-	//SetPDAnotFFT(choosen_board, TRUE);
+	if (_MSHUT) {
+		CloseShutter(choosen_board);
+		SetEC(choosen_board, ExpTime * 1000000);
+	}
+	else { ResetEC(choosen_board); }
+	//set PDA and FFT
 	if (_ISPDA) { SetISPDA(choosen_board, TRUE); }
 	else SetISPDA(choosen_board, FALSE);
 	if (_ISFFT) { SetISFFT(choosen_board, TRUE); }
@@ -486,7 +490,7 @@ void initMeasurement()
 		WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
 	}
 	//set TrigOut, default= XCK
-	SetTORReg(1, 0);
+	SetTORReg(choosen_board, 15);
 	StopFFTimer(choosen_board);
 	SetIntFFTrig(choosen_board);
 	RSFifo(choosen_board);
@@ -558,12 +562,16 @@ void startMess(void *dummy)
 	struct ffloopparams params;
 	if (both_boards)	params.board_sel = 3;
 	else				params.board_sel = choosen_board;
-	params.exptus = ExpTime;
+	if(_MSHUT) params.exptus = RepTime;
+	else  params.exptus = ExpTime;
 	params.exttrig = EXTTRIGFLAG;
 	params.blocktrigger = 0;
 	params.btrig_ch = 0;
 	//_beginthread(ReadFFLoopThread, 0, &params);//thread
-	_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//cam_thread[0] = (HANDLE)_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//threadex
+	if (_MSHUT && RepTime < _MINREPTIME)//dontstart
+		;
+	else
+		_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//cam_thread[0] = (HANDLE)_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//threadex
 
 	DWORD64 IsrNumber = Nob * Nospb / (DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS);
 	if (both_boards) IsrNumber *= 2;

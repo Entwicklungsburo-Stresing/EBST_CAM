@@ -2892,7 +2892,6 @@ void RSDAT( UINT32 drvno )
 	WriteLongS0( drvno, 0, S0Addr_DAT );
 }; //RSDAT
 
-//weg? 
 void SetEC( UINT32 drvno, ULONG ecin100ns )
 {//delay after trigger HW register
 	//ULONG data = 0;
@@ -2926,7 +2925,7 @@ void SetTORReg( UINT32 drvno, BYTE fkt )
 	if (fkt == 12) val = 0xc0; // set to MeasureOn
 	if (fkt == 13) val = 0xd0; // set to XCKDLYON
 	if (fkt == 14) val = 0xe0; // set to VON
-	if (fkt == 15) val = 0xf0; // set to IFC
+	if (fkt == 15) val = 0xf0; // set to MSHUT
 	
 	ReadByteS0( drvno, &read_val, S0Addr_TOR + 3);
 	read_val &= 0x0f; //dont disturb lower bits

@@ -1060,17 +1060,40 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		SetDlgItemInt( hDlg, IDC_M_EXPTIME, ExpTime, FALSE );
+		SetDlgItemInt(hDlg, IDC_M_EXPTIME, ExpTime, FALSE);
+		SetDlgItemInt(hDlg, IDC_M_REPTIME, RepTime, FALSE);
 		CheckDlgButton( hDlg, IDC_ExtTrig, EXTTRIGFLAG );
 		if (TrigMod == 0) CheckDlgButton( hDlg, IDC_RADIO1, BST_CHECKED );
 		if (TrigMod == 1) CheckDlgButton( hDlg, IDC_RADIO2, BST_CHECKED );
 		if (TrigMod == 2) CheckDlgButton( hDlg, IDC_RADIO3, BST_CHECKED );
+		if(!_MSHUT)//disable Reptime
+			EnableWindow(GetDlgItem(hDlg, IDC_M_REPTIME), FALSE);
 		return (TRUE);
 		break;
 
 	case WM_COMMAND:
 		switch (LOWORD( wParam ))
 		{
+		case IDC_M_REPTIME:
+			//check if the summ of all roi is larger than fftlines 
+			//and write message and deactivate the ok button
+			if (_MSHUT) {
+				val = GetDlgItemInt(hDlg, IDC_M_REPTIME, &success, FALSE);
+				if (success) RepTime = val;
+				if (RepTime < _MINREPTIME) {
+					//write message
+					SetWindowText(GetDlgItem(hDlg, REP_ERR_MESS), "The Reptime limit is reached.\n Please increase Rep Time or change _MINREPTIME in the code!");
+					//disable ok button
+					//EnableWindow(GetDlgItem(hDlg, IDOK), FALSE);
+				}
+				else {
+					//unshow message
+					SetWindowText(GetDlgItem(hDlg, REP_ERR_MESS), "");
+					//enable ok button
+					//EnableWindow(GetDlgItem(hDlg, IDOK), TRUE);
+				}
+			}
+			break;
 		case IDCANCEL:
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
@@ -1078,7 +1101,7 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 
 		case IDOK:
 			EXTTRIGFLAG = IsDlgButtonChecked( hDlg, IDC_ExtTrig );
-			val = GetDlgItemInt( hDlg, IDC_M_EXPTIME, &success, FALSE );
+			val = GetDlgItemInt(hDlg, IDC_M_EXPTIME, &success, FALSE);
 			if (success) ExpTime = val;
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO1 ) == BST_CHECKED) TrigMod = 0;
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO2 ) == BST_CHECKED) TrigMod = 1;

@@ -56,6 +56,8 @@ enum adc_mode {
 #define _USESHUTTER FALSE	//TRUE if sensor has shutter function
 //#define _PRGRMVON FALSE		//TRUE for SENDCOMMAND with VON instead of ND
 //#define _OPTSTATE FALSE //decrement pixel if shutterstate input with OPTO1 is used on old boards
+#define _MSHUT TRUE
+#define _MINREPTIME 20
 
 //ADC16061 specials
 //#define _FFPCI133 FALSE		// PCI version 133.x
@@ -228,6 +230,7 @@ BOOL PixelOdd = FALSE;				//display offset
 
 //for ReadSoftFifo example
 int ExpTime = 100; //in µs
+int RepTime = 2* _MINREPTIME; //in ms for _MSHUT
 __int16 Releasems = 1; //>=1	>1 or keyboard does not work - could be exposuretime	
 ULONG Threadp = 31;  //<=15  8=default,15=highest in current process,31=time critical
 
