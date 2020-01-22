@@ -471,11 +471,20 @@ void initMeasurement()
 	}
 #else
 
-
+	//SetPDAnotFFT(choosen_board, TRUE);
 	if (_ISPDA) { SetISPDA(choosen_board, TRUE); }
 	else SetISPDA(choosen_board, FALSE);
 	if (_ISFFT) { SetISFFT(choosen_board, TRUE); }
 	else SetISFFT(choosen_board, FALSE);
+
+	if (!_ISFFT) {
+		//reset auto start in case of setting before
+		ResetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+		ResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+		ResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+		//Reset partial binning
+		WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
+	}
 	//set TrigOut, default= XCK
 	SetTORReg(1, 0);
 	StopFFTimer(choosen_board);
