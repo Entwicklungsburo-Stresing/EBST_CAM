@@ -59,6 +59,8 @@ void DisTrigShort( UINT32 drvno );
 BOOL CheckFFTrig( UINT32 drvno );		// trigger sets FF - clear via write CtrlA 0x10
 void OpenShutter( UINT32 drvno );		// set IFC=high
 void CloseShutter( UINT32 drvno );	// set IFC=low
+void SetEC(UINT32 drvno, ULONG ecin100ns);
+void ResetEC(UINT32 drvno);
 BOOL GetShutterState( UINT32 drvno );	//get the actual state
 void V_On( UINT32 drvno );			// set V_On signal low (V = V_Fak)
 void V_Off( UINT32 drvno );			// set V_On signal high (V = 1)
