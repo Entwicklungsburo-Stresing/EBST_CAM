@@ -22,6 +22,7 @@
 #define IDC_ADAMP                       1002
 #define IDC_M_EXPTIME                   1003
 #define IDC_TLevel                      1004
+#define IDC_M_REPTIME                   1004
 #define IDC_ExtTrig                     1006
 #define IDC_ADOFS                       1007
 #define IDC_ADAMP2                      1008
@@ -49,6 +50,7 @@
 #define IDC_ROI_2                       1028
 #define IDC_ROI_3                       1029
 #define IDC_ROI_4                       1030
+#define REP_ERR_MESS                    1030
 #define IDC_ROI_5                       1031
 #define IDC_ROI_6                       1032
 #define IDC_EC_RADIO2                   1060
@@ -115,7 +117,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        111
 #define _APS_NEXT_COMMAND_VALUE         40032
-#define _APS_NEXT_CONTROL_VALUE         1030
+#define _APS_NEXT_CONTROL_VALUE         1031
 #define _APS_NEXT_SYMED_VALUE           103
 #endif
 #endif
