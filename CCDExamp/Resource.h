@@ -103,8 +103,10 @@
 #define ID_SETRANGEOFINTEREST_3RANGES   40029
 #define ID_SETRANGEOFINTEREST_5RANGES   40030
 #define ID_SETRANGEOFINTEREST_NORANGES  40031
+#define ROI_ERR_MESS                    40032
 #define IDC_EDIT1                       -1
 #define IDC_STATIC                      -1
+#define ranges                          65535
 
 // Next default values for new objects
 // 
