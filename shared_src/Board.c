@@ -3,6 +3,25 @@
 //	V2.1  BB  7/2019
 //	- kopierbar für DLL und Examp mit neuem Flag CCDEXAMP , was nur in der Global vo, CCD Example gesetzt werden darf
 
+/*
+This file is part of CCDExamp and ECLSCDLL.
+
+CCDExamp and ECLSCDLL are free software : you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+CCDExamp and ECLSCDLL are distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Foobar.If not, see < http://www.gnu.org/licenses/>.
+
+Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
+*/
+
 //#define LSCPCIEJ_DEFAULT_LICENSE_STRING "643c749b4b3f16a065e15c1a2aec0c067c1fb30a0677f92e6c0cbe50.WD1200_64_NL_Entwicklungsbüro_Stresing"
 //#define LSCPCIEJ_DEFAULT_LICENSE_STRING "6f19fa9c7e362e62fdbd44c8a8c17b2b41f30f98686333.WD1210_64_NL_Entwicklungsbüro_Stresing"
 //#define LSCPCIEJ_DEFAULT_LICENSE_STRING "87244a4c6cb75b3386857b676b153685468744582da7606720b166f47a8e.WD1230_64_NL_Entwicklungsburo_Stresing"
