@@ -3791,12 +3791,12 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 			data1 |= exptus & 0x0FFFFFFF;
 			data1 |= 0x40000000;			//set timer on
 
-			ReadLongS0( 2, &data2, 0x08 ); //reset	
+			ReadLongS0( 2, &data2, S0Addr_XCKLL); //reset	
 			data2 &= 0xF0000000;
 			data2 |= exptus & 0x0FFFFFFF;
 			data2 |= 0x40000000;			//set timer on
 
-			ULONG	PortOffset = 0x08 + 0x80;
+			ULONG	PortOffset = S0Addr_XCKLL + 0x80;
 
 			//old
 			//WDC_WriteAddrBlock(hDev[2], 0, PortOffset, sizeof(ULONG), &data2, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
@@ -4077,11 +4077,11 @@ void SetExtSWTrig( BOOL ext )
 void StartFFTimer( UINT32 drvno, ULONG exptime )
 {//exptime in microsec
 	ULONG data = 0;
-	ReadLongS0( drvno, &data, 0x08 ); //reset	
+	ReadLongS0( drvno, &data, S0Addr_XCKLL); //reset	
 	data &= 0xF0000000;
 	data |= exptime & 0x0FFFFFFF;
 	data |= 0x40000000;			//set timer on
-	WriteLongS0( drvno, data, 0x08 );
+	WriteLongS0( drvno, data, S0Addr_XCKLL);
 }
 
 //weg?!
@@ -4091,20 +4091,20 @@ void SWTrig( UINT32 drvno )
 	//	ReadByteS0(drvno,&reg,11);  //enable timer
 	//	reg |= 0x40;  
 	//	WriteByteS0(drvno,reg,11);	
-	ReadByteS0( drvno, &reg, 0x12 );
+	ReadByteS0( drvno, &reg, S0Addr_FREQREG);
 	reg |= 0x40;
-	WriteByteS0( drvno, reg, 0x12 ); //set Trigger
+	WriteByteS0( drvno, reg, S0Addr_FREQREG); //set Trigger
 	reg &= 0xBF;
-	WriteByteS0( drvno, reg, 0x12 ); //reset
+	WriteByteS0( drvno, reg, S0Addr_FREQREG); //reset
 }
 
 
 void StopFFTimer( UINT32 drvno )
 {
 	BYTE data = 0;
-	ReadByteS0( drvno, &data, 11 );
+	ReadByteS0( drvno, &data, S0Addr_XCKMSB);
 	data &= 0xBF;
-	WriteByteS0( drvno, data, 11 );
+	WriteByteS0( drvno, data, S0Addr_XCKMSB);
 }
 
 BOOL IsTimerOn( UINT32 drvno )
@@ -4121,7 +4121,7 @@ BOOL FFValid( UINT32 drvno )
 {	// not empty & XCK = low -> true
 	WDC_Err( "FFValid\n" );
 	BYTE data = 0;
-	ReadByteS0( drvno, &data, 0x13 );
+	ReadByteS0( drvno, &data, S0Addr_FF_FLAGS);
 	data &= 0x80;
 	if (data > 0) return TRUE;
 
@@ -4134,7 +4134,7 @@ BOOL FFFull( UINT32 drvno )
 {	// Fifo is full
 	WDC_Err( "FFFull\n" );
 	BYTE data = 0;
-	ReadByteS0( drvno, &data, 0x13 );
+	ReadByteS0( drvno, &data, S0Addr_FF_FLAGS);
 	data &= 0x20;
 	if (data > 0) return TRUE; //empty
 
@@ -4146,7 +4146,7 @@ BOOL FFOvl( UINT32 drvno )
 {	// had Fifo overflow
 	WDC_Err( "FFOvl\n" );
 	BYTE data = 0;
-	ReadByteS0( drvno, &data, 0x13 );
+	ReadByteS0( drvno, &data, S0Addr_FF_FLAGS);
 	data &= 0x08; //0x20; if not saved
 	if (data > 0) return TRUE; //empty
 
@@ -4158,7 +4158,7 @@ BOOL FlagXCKI( UINT32 drvno )
 {	// XCKI write to FIFO is active 
 	WDC_Err( "FlagXCKI\n" );
 	BYTE data = 0;
-	ReadByteS0( drvno, &data, 0x13 );
+	ReadByteS0( drvno, &data, S0Addr_FF_FLAGS);
 	data &= 0x10;
 	if (data > 0) return TRUE; //is running
 
@@ -4169,11 +4169,11 @@ BOOL FlagXCKI( UINT32 drvno )
 void RSFifo( UINT32 drvno )
 {	//reset FIFO and FFcounter
 	BYTE data = 0;
-	ReadByteS0( drvno, &data, 0x12 );
+	ReadByteS0( drvno, &data, S0Addr_FREQREG);
 	data |= 0x80;
-	WriteByteS0( drvno, data, 0x12 );
+	WriteByteS0( drvno, data, S0Addr_FREQREG);
 	data &= 0x7F;
-	WriteByteS0( drvno, data, 0x12 );
+	WriteByteS0( drvno, data, S0Addr_FREQREG);
 }
 
 
@@ -4181,9 +4181,9 @@ void RSFifo( UINT32 drvno )
 void DisableFifo( UINT32 drvno )
 {	//reset FIFO and FFcounter
 	BYTE data = 0;
-	ReadByteS0( drvno, &data, 0x12 );
+	ReadByteS0( drvno, &data, S0Addr_FREQREG);
 	data |= 0x80;
-	WriteByteS0( drvno, data, 0x12 );
+	WriteByteS0( drvno, data, S0Addr_FREQREG);
 	//	data &= 0x7F;
 	//	WriteByteS0(drvno,data,0x12);
 }
@@ -4193,20 +4193,20 @@ void DisableFifo( UINT32 drvno )
 void EnableFifo( UINT32 drvno )
 {	//reset FIFO and FFcounter
 	BYTE data = 0;
-	ReadByteS0( drvno, &data, 0x12 );
+	ReadByteS0( drvno, &data, S0Addr_FREQREG);
 	//	data |= 0x80;
 	//	WriteByteS0(drvno,data,0x12);
 	data &= 0x7F;
-	WriteByteS0( drvno, data, 0x12 );
+	WriteByteS0( drvno, data, S0Addr_FREQREG);
 }
 
 //weg? wenn es bleibt, adresse ändern with enum
 void SetExtFFTrig( UINT32 drvno )  // set external Trigger
 {
 	BYTE data = 0;
-	ReadByteS0( drvno, &data, 11 );
+	ReadByteS0( drvno, &data, S0Addr_XCKMSB);
 	data |= 0x80;
-	WriteByteS0( drvno, data, 11 );
+	WriteByteS0( drvno, data, S0Addr_XCKMSB);
 
 }//SetExtFFTrig
 
@@ -4215,9 +4215,9 @@ void SetExtFFTrig( UINT32 drvno )  // set external Trigger
 void SetIntFFTrig( UINT32 drvno ) // set internal Trigger
 {
 	BYTE data = 0;
-	ReadByteS0( drvno, &data, 11 );
+	ReadByteS0( drvno, &data, S0Addr_XCKMSB);
 	data &= 0x7F;
-	WriteByteS0( drvno, data, 11 );
+	WriteByteS0( drvno, data, S0Addr_XCKMSB);
 }//SetIntFFTrig
 
 
@@ -4229,7 +4229,7 @@ BYTE ReadFFCounter( UINT32 drvno )
 	//max. 16 || capacity of FIFO /(pixel*sizeof(ArrayT)) (7205=8k)
 	//new: if _CNT255 ff counts up to 255
 	BYTE data = 0;
-	ReadByteS0( drvno, &data, 0x14 );
+	ReadByteS0( drvno, &data, S0Addr_FIFOCNT);
 	if (_CNT255) {}
 	else data &= 0x0f;
 	return data;

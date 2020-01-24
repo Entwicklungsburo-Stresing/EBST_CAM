@@ -470,11 +470,6 @@ void initMeasurement()
 		DLLSetADGain(2, 1, gain, gain, gain, gain, gain, gain, gain, gain);
 	}
 #else
-	if (_MSHUT) {
-		CloseShutter(choosen_board);
-		SetEC(choosen_board, ExpTime * 1000000);
-	}
-	else { ResetEC(choosen_board); }
 	//set PDA and FFT
 	if (_ISPDA) { SetISPDA(choosen_board, TRUE); }
 	else SetISPDA(choosen_board, FALSE);
@@ -489,6 +484,14 @@ void initMeasurement()
 		//Reset partial binning
 		WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
 	}
+
+
+	if (_MSHUT) {
+		CloseShutter(choosen_board);
+		SetEC(choosen_board, ExpTime * 100);
+
+	}
+	else { ResetEC(choosen_board); }
 	//set TrigOut, default= XCK
 	SetTORReg(choosen_board, 15);
 	StopFFTimer(choosen_board);
@@ -562,8 +565,8 @@ void startMess(void *dummy)
 	struct ffloopparams params;
 	if (both_boards)	params.board_sel = 3;
 	else				params.board_sel = choosen_board;
-	if(_MSHUT) params.exptus = RepTime;
-	else  params.exptus = ExpTime;
+	if(_MSHUT) params.exptus = RepTime*1000;
+	else  params.exptus = ExpTime*1000;
 	params.exttrig = EXTTRIGFLAG;
 	params.blocktrigger = 0;
 	params.btrig_ch = 0;

@@ -1862,6 +1862,9 @@ LRESULT CALLBACK ResetROI(HWND hDlg,
 			ResetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
 			ResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
 			ResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			//Triger stuff
+			ResetS0Bit(4, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			ResetS0Bit(5, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
 			//Reset partial binning
 			WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
 			//vclks
