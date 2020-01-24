@@ -1,6 +1,25 @@
 // This is a Direct2D Viewer for bitmaps used in CCD example. It was created by using Microsofts example "SimpleDirect2DApplication", originally released under MIT license.
 // https://github.com/microsoft/Windows-classic-samples/tree/master/Samples/Win7Samples/multimedia/Direct2D/SimpleDirect2DApplication
 
+/*
+This file is part of CCDExamp and ECLSCDLL.
+
+CCDExamp and ECLSCDLL are free software : you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+CCDExamp and ECLSCDLL are distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Foobar.If not, see < http://www.gnu.org/licenses/>.
+
+Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
+*/
+
 #include "Direct2dViewer.h"
 
 //
