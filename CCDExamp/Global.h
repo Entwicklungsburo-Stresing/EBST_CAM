@@ -56,7 +56,7 @@ enum adc_mode {
 #define _USESHUTTER FALSE	//TRUE if sensor has shutter function
 //#define _PRGRMVON FALSE		//TRUE for SENDCOMMAND with VON instead of ND
 //#define _OPTSTATE FALSE //decrement pixel if shutterstate input with OPTO1 is used on old boards
-#define _MSHUT FALSE
+#define _MSHUT TRUE
 #define _MINREPTIME 20
 
 //ADC16061 specials
