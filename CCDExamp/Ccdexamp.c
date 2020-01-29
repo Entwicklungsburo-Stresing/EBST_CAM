@@ -149,6 +149,20 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow ) {
 	// init high resolution counter 	
 //	TPS = InitHRCounter();
 //	if (TPS==0) return (FALSE);
+	if (_ISFFT) {//set full binning as standard mode
+
+		//reset auto start in case of setting before
+		ResetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+		ResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+		ResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+		//Triger stuff
+		ResetS0Bit(4, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+		ResetS0Bit(5, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+		//Reset partial binning
+		WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
+		//vclks
+		SetupVCLKReg(choosen_board, _FFTLINES, 7);
+	}
 
 	CloseShutter(choosen_board); //set cooling  off
 

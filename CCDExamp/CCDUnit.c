@@ -490,10 +490,13 @@ void initMeasurement()
 		CloseShutter(choosen_board);
 		SetEC(choosen_board, ExpTime * 100);
 
+		SetTORReg(choosen_board, 15);
 	}
-	else { ResetEC(choosen_board); }
+	else { 
+		ResetEC(choosen_board);
+		SetTORReg(choosen_board, 0);
+	}
 	//set TrigOut, default= XCK
-	SetTORReg(choosen_board, 15);
 	StopFFTimer(choosen_board);
 	SetIntFFTrig(choosen_board);
 	RSFifo(choosen_board);
@@ -566,7 +569,7 @@ void startMess(void *dummy)
 	if (both_boards)	params.board_sel = 3;
 	else				params.board_sel = choosen_board;
 	if(_MSHUT) params.exptus = RepTime*1000;
-	else  params.exptus = ExpTime*1000;
+	else  params.exptus = ExpTime;
 	params.exttrig = EXTTRIGFLAG;
 	params.blocktrigger = 0;
 	params.btrig_ch = 0;
