@@ -46,6 +46,7 @@ BEGIN
     POPUP "Start"
     BEGIN
         MENUITEM "Start \tF6",                  IDM_START
+        MENUITEM "Start continuously",          ID_START_STARTCONTINUOUSLY
         MENUITEM "Set exposuretime",            IDM_SETEXP
         MENUITEM "Set Temperature Level",       IDM_SETTLEVEL
         MENUITEM "Set EC",                      40014
@@ -241,9 +242,9 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,147,118,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,211,118,50,14
     EDITTEXT        IDC_ROI_2,135,41,58,14,ES_AUTOHSCROLL
-    LTEXT           "range 1",-1,15,14,26,8
-    LTEXT           "range 2 (keep)",-1,16,44,48,8
-    LTEXT           "range 3",-1,16,73,26,8
+    LTEXT           "range 1",text3,15,14,26,8,NOT WS_GROUP
+    LTEXT           "range 2 (keep)",text3,16,44,48,8,NOT WS_GROUP
+    LTEXT           "range 3",text3,16,73,26,8,NOT WS_GROUP
     EDITTEXT        IDC_ROI_1,134,12,58,14,ES_AUTOHSCROLL
     EDITTEXT        IDC_ROI_3,135,70,58,14,ES_AUTOHSCROLL | ES_READONLY
     LTEXT           "Static",ROI_ERR_MESS,33,94,211,20,NOT WS_GROUP

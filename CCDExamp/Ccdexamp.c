@@ -728,7 +728,23 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 #endif
 		case IDM_START:
+			contffloop = FALSE;
 			if (!Running) startMess( &dummy );
+			break;
+		case ID_START_STARTCONTINUOUSLY:
+			contffloop = TRUE;
+			if (!Running) startMess(&dummy);
+			Sleep(100);
+			while (Running) {
+				CopytoDispbuf(cur_nob*Nospb + cur_nospb);
+				Display(1, PLOTFLAG);
+				UpdateTxT(); 
+				if (Direct2dViewer) {
+					//void* pointer_to_current_block = testbitmap + cur_nob * _PIXEL * Nospb;
+					//update 2d viewer bitmap
+					Direct2dViewer_showNewBitmap(Direct2dViewer, GetAddressOfPixel(DRV, 0, 0, cur_nob, 0), _PIXEL, Nospb);
+				}
+			}
 			break;
 
 		case IDM_SETEXP:
@@ -774,6 +790,10 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			if (!Direct2dViewer) {
 				//createTestBitmap(Nob, Nospb, _PIXEL);
 				//initialize 2D Viewer
+
+				//vclks
+				SetupVCLKReg(choosen_board, 1, 7);
+				SetS0Bit(0, 0x5, choosen_board);//CTRLB Reg
 				Direct2dViewer = Direct2dViewer_new();
 				//calculate pointer to current block in data to be displayed
 				void* pointer_to_current_block = &pDMABigBufBase[DRV][GetIndexOfPixel( DRV, 0, 0, cur_nob, 0 )];
