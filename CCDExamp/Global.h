@@ -56,7 +56,7 @@ enum adc_mode {
 #define _USESHUTTER FALSE	//TRUE if sensor has shutter function
 //#define _PRGRMVON FALSE		//TRUE for SENDCOMMAND with VON instead of ND
 //#define _OPTSTATE FALSE //decrement pixel if shutterstate input with OPTO1 is used on old boards
-#define _MSHUT TRUE
+#define _MSHUT FALSE
 #define _MINREPTIME 20
 
 //ADC16061 specials
@@ -160,9 +160,8 @@ static	unsigned long FOURMAX = _MAXDB * _PIXEL;
 // use these values for 12 or 16 Bit cameras 
 static	unsigned long FLAG816 = 1;  // 2=8Bit, 1=12/16Bit
 //static int YSHIFT = 4;				// 12Bit=4 or more for addrep>1
-//static int YSHIFT = 8;			// 16bit=8
+static int YSHIFT = 8;			// 16bit=8
 //static int YSHIFT = 6;			// 14 bit
-static int YSHIFT = 6;			// 14 bit
 
 // camera values for calling GETCCD and InitBoard
 
@@ -229,8 +228,8 @@ BOOL PixelOdd = FALSE;				//display offset
 
 
 //for ReadSoftFifo example
-int ExpTime = 100; //in µs
-int RepTime = 2* _MINREPTIME; //in ms for _MSHUT
+int ExpTime = 1000; //in µs
+int RepTime = 1 * _MINREPTIME; //in ms for _MSHUT
 __int16 Releasems = 1; //>=1	>1 or keyboard does not work - could be exposuretime	
 ULONG Threadp = 31;  //<=15  8=default,15=highest in current process,31=time critical
 
@@ -306,7 +305,11 @@ DWORD FirstPageOffset;
 //pArrayT pDIODEN = (pArrayT)&DIODEN;
 
 int Nob = 1;
-int Nospb = 1000;
+#if _MSHUT == TRUE
+	int Nospb= 100;
+#else
+	int Nospb = 1000;
+#endif
 
 #define _FORCETOPLS128 TRUE	//only use payload size 128byte
 ULONG NO_TLPS = 0x12; //was 0x11-> x-offset			//0x11=17*128  = 2176 Bytes  = 1088 WORDS
