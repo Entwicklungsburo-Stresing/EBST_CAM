@@ -106,9 +106,12 @@
 #define ID_SETRANGEOFINTEREST_5RANGES   40030
 #define ID_SETRANGEOFINTEREST_NORANGES  40031
 #define ROI_ERR_MESS                    40032
+#define ID_START_STARTCONTINUOUSLY      40032
 #define IDC_EDIT1                       -1
 #define IDC_STATIC                      -1
 #define ranges                          65535
+#define text3                           65535
+#define text2                           65535
 
 // Next default values for new objects
 // 
@@ -116,7 +119,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        111
-#define _APS_NEXT_COMMAND_VALUE         40032
+#define _APS_NEXT_COMMAND_VALUE         40033
 #define _APS_NEXT_CONTROL_VALUE         1031
 #define _APS_NEXT_SYMED_VALUE           103
 #endif

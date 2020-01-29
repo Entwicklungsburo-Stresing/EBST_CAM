@@ -3958,6 +3958,7 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 	SetPriority( READTHREADPriority );  //run in higher priority
 	escape_readffloop = FALSE;
 	IsrCounter = 0;
+	Running = TRUE;
 	if (contffloop) //run continiously
 	{
 		do {
@@ -3976,6 +3977,8 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 					//SetIntFFTrig(drv);//disable ext input
 					SetDMAReset( 2 );	//Initiator reset
 				}
+
+				Running = FALSE;
 				return 1;
 			}
 
@@ -3987,6 +3990,7 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 		ReadFFLoop( board_sel, exptus, exttrig, blocktrigger, btrig_ch );
 	}
 
+	Running = FALSE;
 	//_endthread();//thread
 	return 1;//endthreadex is called automatically
 
