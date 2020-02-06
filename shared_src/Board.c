@@ -4239,9 +4239,6 @@ void SetIntFFTrig( UINT32 drvno ) // set internal Trigger
 	WriteByteS0( drvno, data, S0Addr_XCKMSB);
 }//SetIntFFTrig
 
-
-
-
 //weg? wenn es bleibt, adresse ändern with enum
 BYTE ReadFFCounter( UINT32 drvno )
 {   //count number of lines in FIFO 

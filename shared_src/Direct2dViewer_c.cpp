@@ -46,6 +46,13 @@ void Direct2dViewer_showNewBitmap( void *D2dV, void *addr, UINT width, UINT heig
 	return;
 }
 
+void Direct2dViewer_reloadBitmap( void *D2dV )
+{
+	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
+	D2d->reloadBitmap();
+	return;
+}
+
 HWND Direct2dViewer_getWindowHandler( void *D2dV )
 {
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
@@ -57,4 +64,16 @@ void Direct2dViewer_setGammaValue( void *D2dV, UINT16 white, UINT16 black )
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
 	D2d->SetGammaValue( white, black );
 	return;
+}
+
+UINT16 Direct2dViewer_getGammaWhite( void *D2dV )
+{
+	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
+	return D2d->GetGammaWhite();
+}
+
+UINT16 Direct2dViewer_getGammaBlack( void *D2dV )
+{
+	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
+	return D2d->GetGammaBlack();
 }

@@ -655,7 +655,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		// check if 2d viewer instance is existing
 		if (Direct2dViewer)
 		{
-			//void* pointer_to_current_block = testbitmap + cur_nob * _PIXEL * Nospb;
 			//update 2d viewer bitmap
 			Direct2dViewer_showNewBitmap( Direct2dViewer, GetAddressOfPixel( DRV, 0, 0, cur_nob, 0 ), _PIXEL, Nospb );
 		}
@@ -730,7 +729,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 				UpdateTxT();
 				if (Direct2dViewer)
 				{
-					//void* pointer_to_current_block = testbitmap + cur_nob * _PIXEL * Nospb;
 					//update 2d viewer bitmap
 					Direct2dViewer_showNewBitmap( Direct2dViewer, GetAddressOfPixel( DRV, 0, 0, cur_nob, 0 ), _PIXEL, Nospb );
 				}
@@ -782,11 +780,9 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 				SetS0Bit( 0, 0x5, choosen_board );//CTRLB Reg
 				//initialize 2D Viewer
 				Direct2dViewer = Direct2dViewer_new();
-				//calculate pointer to current block in data to be displayed
-				void* pointer_to_current_block = &pDMABigBufBase[DRV][GetIndexOfPixel( DRV, 0, 0, cur_nob, 0 )];
-				if (CAMERA_SYSTEM == camera_system_3030) Direct2dViewer_setGammaValue( Direct2dViewer, 0x3FFF, 0 );
+				Direct2dViewer_setGammaValue( Direct2dViewer, direct2dviewer_gamma_white, direct2dviewer_gamma_black );
 				//start 2d viewer
-				Direct2dViewer_start2dViewer( Direct2dViewer, hMSWND, pointer_to_current_block, _PIXEL, Nospb );
+				Direct2dViewer_start2dViewer( Direct2dViewer, hMSWND, GetAddressOfPixel( DRV, 0, 0, cur_nob, 0 ), _PIXEL, Nospb );
 			}
 			break;
 		}
@@ -803,8 +799,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		}
 		case ID_2DVIEW_SETGAMMA:
 		{
-			// TODO: insert set gamma dialog here
-			//Direct2dViewer_setGammaValue( Direct2dViewer, white, black );
+			DialogBox( hInst, MAKEINTRESOURCE( IDD_SETGAMMA ), hWnd, (DLGPROC)SetGamma );
 			break;
 		}
 		case IDM_EXIT:
@@ -1904,6 +1899,49 @@ LRESULT CALLBACK ResetROI( HWND hDlg,
 			DLLSetupVCLK( choosen_board, _FFTLINES, 7 );
 #endif
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
+			EndDialog( hDlg, TRUE );
+			return (TRUE);
+			break;
+		}
+		break; //WM_COMMAND
+	}
+	return (FALSE);
+}
+
+LRESULT CALLBACK SetGamma( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
+{
+	BOOL success = FALSE;
+
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		if (Direct2dViewer)
+		{
+			GetDlgItemInt( hDlg, IDC_GAMMA_WHITE, &success, FALSE );
+			if (success) direct2dviewer_gamma_white = GetDlgItemInt( hDlg, IDC_GAMMA_WHITE, &success, FALSE );
+			if (success) direct2dviewer_gamma_black = GetDlgItemInt( hDlg, IDC_GAMMA_BLACK, &success, FALSE );
+		}
+		SetDlgItemInt( hDlg, IDC_GAMMA_WHITE, direct2dviewer_gamma_white, FALSE );
+		SetDlgItemInt( hDlg, IDC_GAMMA_BLACK, direct2dviewer_gamma_black, FALSE );
+		return (TRUE);
+		break;
+	case WM_COMMAND:
+		switch (LOWORD( wParam ))
+		{
+		case IDCANCEL:
+			EndDialog( hDlg, TRUE );
+			return (TRUE);
+			break;
+
+		case IDOK:
+			GetDlgItemInt( hDlg, IDC_GAMMA_WHITE, &success, FALSE );
+			if (success) direct2dviewer_gamma_white = GetDlgItemInt( hDlg, IDC_GAMMA_WHITE, &success, FALSE );
+			if (success) direct2dviewer_gamma_black = GetDlgItemInt( hDlg, IDC_GAMMA_BLACK, &success, FALSE );
+			if (Direct2dViewer)
+			{
+				Direct2dViewer_setGammaValue( Direct2dViewer, direct2dviewer_gamma_white, direct2dviewer_gamma_black );
+				Direct2dViewer_reloadBitmap( Direct2dViewer );
+			}
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;

@@ -43,8 +43,13 @@ HWND     hwndTrack2;
 DWORD cur_nospb = 0;
 DWORD cur_nob = 0;
 void* Direct2dViewer;
-UINT16 *testbitmap;
-UINT roi[6] = { 15, 42, 15, 42, 10,6 };
+#if CAMERA_SYSTEM == camera_system_3030
+UINT16 direct2dviewer_gamma_white = 0x3FFF;
+#else
+UINT16 direct2dviewer_gamma_white = 0xFFFF;
+#endif
+UINT16 direct2dviewer_gamma_black = 0;
+UINT roi[6] = { 15, 42, 15, 42, 10, 6 };
 BOOL keep[5] = { FALSE, TRUE, FALSE, TRUE, FALSE };
 BOOL ROI_CALLING = FALSE;
 
@@ -67,6 +72,6 @@ LRESULT CALLBACK ChooseBoard( HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 LRESULT CALLBACK SetupTLevel( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 LRESULT CALLBACK SetupEC( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 LRESULT CALLBACK Set3ROI( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
-LRESULT CALLBACK Set5ROI(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
-LRESULT CALLBACK ResetROI(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
-void createTestBitmap( UINT blocks, UINT height, UINT width );
+LRESULT CALLBACK Set5ROI( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
+LRESULT CALLBACK ResetROI( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
+LRESULT CALLBACK SetGamma( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
