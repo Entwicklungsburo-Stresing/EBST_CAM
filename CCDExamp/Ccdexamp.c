@@ -21,14 +21,7 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 */
 #include "CCDExamp.h"
 
-
-
-UINT roi[6] = { 15, 42, 15, 42, 10,6 };
-BOOL keep[5] = { FALSE, TRUE, FALSE, TRUE, FALSE };
-BOOL ROI_CALLING = FALSE;
-
-int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
-	LPTSTR lpCmdLine, int nCmdShow )
+int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow )
 {
 	MSG      msg;
 
@@ -49,9 +42,8 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	return(msg.wParam);
 }	// END WinMain
 
-
-BOOL InitApplication( HINSTANCE hInstance ) {
-
+BOOL InitApplication( HINSTANCE hInstance )
+{
 	WNDCLASS wc;
 
 	// Register the main application window class.
@@ -91,7 +83,6 @@ BOOL InitApplication( HINSTANCE hInstance ) {
 		return (FALSE);
 	};
 
-
 	if (!InitBoard( 1 ))
 	{
 		ErrorMsg( " Can't open first board " );
@@ -103,14 +94,12 @@ BOOL InitApplication( HINSTANCE hInstance ) {
 			ErrorMsg( " Can't open second board " );
 			return (FALSE);
 		}
-
 #endif
 	return TRUE;
 }
 
-
-BOOL InitInstance( HINSTANCE hInstance, int nCmdShow ) {
-
+BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
+{
 	HWND     hWnd;
 
 	// Save the application-instance handle. 
@@ -131,7 +120,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow ) {
 		NULL
 	);
 
-	if (!hWnd)  return(FALSE);
+	if (!hWnd) return(FALSE);
 
 	//RSInterface(choosen_board);
 	//	if (! InitBoard(choosen_board)) //Error message in InitBoard
@@ -149,22 +138,23 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow ) {
 	// init high resolution counter 	
 //	TPS = InitHRCounter();
 //	if (TPS==0) return (FALSE);
-	if (_ISFFT) {//set full binning as standard mode
+	if (_ISFFT)
+	{//set full binning as standard mode
 
-		//reset auto start in case of setting before
-		ResetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-		ResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-		ResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+//reset auto start in case of setting before
+		ResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+		ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+		ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 		//Triger stuff
-		ResetS0Bit(4, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-		ResetS0Bit(5, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+		ResetS0Bit( 4, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+		ResetS0Bit( 5, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 		//Reset partial binning
-		WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
+		WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
 		//vclks
-		SetupVCLKReg(choosen_board, _FFTLINES, 7);
+		SetupVCLKReg( choosen_board, _FFTLINES, 7 );
 	}
 
-	CloseShutter(choosen_board); //set cooling  off
+	CloseShutter( choosen_board ); //set cooling  off
 
 /*
 	if (_AD16cds)  {//resets EC reg!
@@ -174,7 +164,6 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow ) {
 */
 	return TRUE;
 }
-
 
 BOOL RegisterWin95( CONST WNDCLASS* lpwc )
 {
@@ -224,8 +213,6 @@ void AboutKeys( HWND hWnd )
 	int j = 0;
 #define s_size 1000
 	char fn[s_size];
-
-
 	j = sprintf_s( fn, s_size, "F- Keys  \n" );
 	j += sprintf_s( fn + j, s_size, "F1 : timing info \n" );
 	j += sprintf_s( fn + j, s_size, "F2 : activate cooling \n" );
@@ -556,7 +543,6 @@ void AboutDMA( HWND hWnd )
 	*/
 }//AboutDMA
 
-
 void AboutPCI( HWND hWnd )
 {
 	int i, j = 0;
@@ -582,7 +568,6 @@ void AboutPCI( HWND hWnd )
 	MessageBox( hWnd, fn, "PCI regs", MB_OK );
 }//AboutPCI
 
-
 LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	int dummy;
@@ -607,19 +592,21 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		//enable or disable fftmenu
 		if (_ISFFT) FFTMenuEnable = MF_ENABLED;
 		else FFTMenuEnable = MF_GRAYED;
-		EnableMenuItem(GetMenu(hWnd), ID_SETRANGEOFINTEREST_3RANGES, FFTMenuEnable);
-		EnableMenuItem(GetMenu(hWnd), ID_SETRANGEOFINTEREST_5RANGES, FFTMenuEnable);
-		EnableMenuItem(GetMenu(hWnd), ID_SETRANGEOFINTEREST_NORANGES, FFTMenuEnable);
+		EnableMenuItem( GetMenu( hWnd ), ID_SETRANGEOFINTEREST_3RANGES, FFTMenuEnable );
+		EnableMenuItem( GetMenu( hWnd ), ID_SETRANGEOFINTEREST_5RANGES, FFTMenuEnable );
+		EnableMenuItem( GetMenu( hWnd ), ID_SETRANGEOFINTEREST_NORANGES, FFTMenuEnable );
 
 		//if nos or nospb becomes a higher value then 30000 the gui is not posible to deisplay it
 		//so we are checking this and dividing the displayed value. Therefore we are seeing a wrong value when we are using the trackbar
 		trackbar_nospb = Nospb;
-		while (trackbar_nospb > 30000) { //max for trackbar length
+		while (trackbar_nospb > 30000)
+		{ //max for trackbar length
 			trackbar_nospb /= 10;
 			trackbar_nospb_multiplier *= 10;
 		}
 		trackbar_nob = Nob;
-		while (trackbar_nob > 30000) { //max for trackbar length
+		while (trackbar_nob > 30000)
+		{ //max for trackbar length
 			trackbar_nob /= 10;
 			trackbar_nob_multiplier *= 10;
 		}
@@ -666,7 +653,8 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		*/
 		// display different frame in 2D viewer when nob changes
 		// check if 2d viewer instance is existing
-		if (Direct2dViewer) {
+		if (Direct2dViewer)
+		{
 			//void* pointer_to_current_block = testbitmap + cur_nob * _PIXEL * Nospb;
 			//update 2d viewer bitmap
 			Direct2dViewer_showNewBitmap( Direct2dViewer, GetAddressOfPixel( DRV, 0, 0, cur_nob, 0 ), _PIXEL, Nospb );
@@ -733,16 +721,18 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 		case ID_START_STARTCONTINUOUSLY:
 			contffloop = TRUE;
-			if (!Running) startMess(&dummy);
-			Sleep(100);
-			while (Running) {
-				CopytoDispbuf(cur_nob*Nospb + cur_nospb);
-				Display(1, PLOTFLAG);
-				UpdateTxT(); 
-				if (Direct2dViewer) {
+			if (!Running) startMess( &dummy );
+			Sleep( 100 );
+			while (Running)
+			{
+				CopytoDispbuf( cur_nob*Nospb + cur_nospb );
+				Display( 1, PLOTFLAG );
+				UpdateTxT();
+				if (Direct2dViewer)
+				{
 					//void* pointer_to_current_block = testbitmap + cur_nob * _PIXEL * Nospb;
 					//update 2d viewer bitmap
-					Direct2dViewer_showNewBitmap(Direct2dViewer, GetAddressOfPixel(DRV, 0, 0, cur_nob, 0), _PIXEL, Nospb);
+					Direct2dViewer_showNewBitmap( Direct2dViewer, GetAddressOfPixel( DRV, 0, 0, cur_nob, 0 ), _PIXEL, Nospb );
 				}
 			}
 			break;
@@ -750,11 +740,9 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case IDM_SETEXP:
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_DIALOG1 ), hWnd, (DLGPROC)SetupMeasure );
 			break;
-
 		case IDM_SETTLEVEL:
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_SETTEMP ), hWnd, (DLGPROC)SetupTLevel );
 			break;
-
 		case IDM_SETEC:
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_SETEC ), hWnd, (DLGPROC)SetupEC );   //IDD_SETEC
 			break;
@@ -771,7 +759,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_SETROI_5 ), hWnd, (DLGPROC)Set5ROI );
 			break;
 		case ID_SETRANGEOFINTEREST_NORANGES:
-			DialogBox(hInst, MAKEINTRESOURCE(IDD_RESETROI), hWnd, (DLGPROC)ResetROI);
+			DialogBox( hInst, MAKEINTRESOURCE( IDD_RESETROI ), hWnd, (DLGPROC)ResetROI );
 			break;
 		case IDM_ShowTRMS: //invert state
 			if (ShowTrms == TRUE)
@@ -787,13 +775,12 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		{
 			//check if 2d viewer instance is existing.
 			//only open new 2d viewer when not existing
-			if (!Direct2dViewer) {
-				//createTestBitmap(Nob, Nospb, _PIXEL);
-				//initialize 2D Viewer
-
+			if (!Direct2dViewer)
+			{
 				//vclks
-				SetupVCLKReg(choosen_board, 1, 7);
-				SetS0Bit(0, 0x5, choosen_board);//CTRLB Reg
+				SetupVCLKReg( choosen_board, 1, 7 );
+				SetS0Bit( 0, 0x5, choosen_board );//CTRLB Reg
+				//initialize 2D Viewer
 				Direct2dViewer = Direct2dViewer_new();
 				//calculate pointer to current block in data to be displayed
 				void* pointer_to_current_block = &pDMABigBufBase[DRV][GetIndexOfPixel( DRV, 0, 0, cur_nob, 0 )];
@@ -833,11 +820,13 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		break;
 	case WM_TIMER:
 		cur_nob++;
-		if (cur_nob >= Nob) {
+		if (cur_nob >= Nob)
+		{
 			KillTimer( hMSWND, IDT_TIMER1 );
 			cur_nob--;
 		}
-		else {
+		else
+		{
 			SendMessage( hwndTrack2, TBM_SETPOS, TRUE, cur_nob );
 			SendMessage( hMSWND, WM_HSCROLL, NULL, NULL );
 		}
@@ -931,7 +920,8 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		}
 		break;
 	case WM_MOUSEMOVE:
-		if (contimess_run_once) {
+		if (contimess_run_once)
+		{
 			UpdateTxT();
 		}
 		break;
@@ -948,7 +938,8 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		//CleanupPCIE_DMA(choosen_board);
 		//StopRingReadThread();
 		//board 1
-		if (NUMBER_OF_BOARDS >= 2) {
+		if (NUMBER_OF_BOARDS >= 2)
+		{
 			StopFFTimer( 2 );
 			SetIntFFTrig( 2 );//disables ext. Trig.
 			CCDDrvExit( 2 );
@@ -1040,7 +1031,8 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 	}
 		break;
 	case WM_MOUSEMOVE:
-		if (contimess_run_once) {
+		if (contimess_run_once)
+		{
 			UpdateTxT();
 		}
 		break;
@@ -1058,7 +1050,8 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		//StopRingReadThread();
 		//board 1
 
-		if (NUMBER_OF_BOARDS >= 2) {
+		if (NUMBER_OF_BOARDS >= 2)
+		{
 			DLLStopFFTimer( 2 );
 			DLLSetIntTrig( 2 );//disables ext. Trig.
 			//DLLCCDDrvExit(2);//check for two boards happens in the dll
@@ -1112,14 +1105,14 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		SetDlgItemInt(hDlg, IDC_M_EXPTIME, ExpTime, FALSE);
-		SetDlgItemInt(hDlg, IDC_M_REPTIME, RepTime, FALSE);
+		SetDlgItemInt( hDlg, IDC_M_EXPTIME, ExpTime, FALSE );
+		SetDlgItemInt( hDlg, IDC_M_REPTIME, RepTime, FALSE );
 		CheckDlgButton( hDlg, IDC_ExtTrig, EXTTRIGFLAG );
 		if (TrigMod == 0) CheckDlgButton( hDlg, IDC_RADIO1, BST_CHECKED );
 		if (TrigMod == 1) CheckDlgButton( hDlg, IDC_RADIO2, BST_CHECKED );
 		if (TrigMod == 2) CheckDlgButton( hDlg, IDC_RADIO3, BST_CHECKED );
-		if(!_MSHUT)//disable Reptime
-			EnableWindow(GetDlgItem(hDlg, IDC_M_REPTIME), FALSE);
+		if (!_MSHUT)//disable Reptime
+			EnableWindow( GetDlgItem( hDlg, IDC_M_REPTIME ), FALSE );
 		return (TRUE);
 		break;
 
@@ -1129,18 +1122,21 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 		case IDC_M_REPTIME:
 			//check if the summ of all roi is larger than fftlines 
 			//and write message and deactivate the ok button
-			if (_MSHUT) {
-				val = GetDlgItemInt(hDlg, IDC_M_REPTIME, &success, FALSE);
+			if (_MSHUT)
+			{
+				val = GetDlgItemInt( hDlg, IDC_M_REPTIME, &success, FALSE );
 				if (success) RepTime = val;
-				if (RepTime < _MINREPTIME) {
+				if (RepTime < _MINREPTIME)
+				{
 					//write message
-					SetWindowText(GetDlgItem(hDlg, REP_ERR_MESS), "The Reptime limit is reached.\n Please increase Rep Time or change _MINREPTIME in the code!");
+					SetWindowText( GetDlgItem( hDlg, REP_ERR_MESS ), "The Reptime limit is reached.\n Please increase Rep Time or change _MINREPTIME in the code!" );
 					//disable ok button
 					//EnableWindow(GetDlgItem(hDlg, IDOK), FALSE);
 				}
-				else {
+				else
+				{
 					//unshow message
-					SetWindowText(GetDlgItem(hDlg, REP_ERR_MESS), "");
+					SetWindowText( GetDlgItem( hDlg, REP_ERR_MESS ), "" );
 					//enable ok button
 					//EnableWindow(GetDlgItem(hDlg, IDOK), TRUE);
 				}
@@ -1153,7 +1149,7 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 
 		case IDOK:
 			EXTTRIGFLAG = IsDlgButtonChecked( hDlg, IDC_ExtTrig );
-			val = GetDlgItemInt(hDlg, IDC_M_EXPTIME, &success, FALSE);
+			val = GetDlgItemInt( hDlg, IDC_M_EXPTIME, &success, FALSE );
 			if (success) ExpTime = val;
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO1 ) == BST_CHECKED) TrigMod = 0;
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO2 ) == BST_CHECKED) TrigMod = 1;
@@ -1193,14 +1189,14 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 	UINT64 builtinram, freeram, freeram_old, calcram, allocram;
 	UINT divMB = 1024 * 1024;
 	int trackbar_nob, trackbar_nospb, trackbar_nob_multiplier = 1, trackbar_nospb_multiplier = 1;
-	
+
 	switch (message)
 	{
 	case WM_INITDIALOG:
 		SetDlgItemInt( hDlg, IDC_nob, Nob, FALSE );
 		SetDlgItemInt( hDlg, IDC_nospb, Nospb, FALSE );
 		//set Nos to readonly if #this fundtion is called by Range Of Interest fundtion
-		SendMessage(GetDlgItem(hDlg, IDC_nospb), EM_SETREADONLY, ROI_CALLING, 0L);
+		SendMessage( GetDlgItem( hDlg, IDC_nospb ), EM_SETREADONLY, ROI_CALLING, 0L );
 #ifndef _DLL
 		FreeMemInfo( &builtinram, &freeram );
 #else
@@ -1236,7 +1232,8 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 				else
 					MessageBox( hMSWND, "allocating Buffer succeeded", "Message", MB_OK );
 
-				if (both_boards) {
+				if (both_boards)
+				{
 					if (!BufLock( 2, CAMCNT, Nob, Nospb ))
 						MessageBox( hMSWND, "allocating Buffer of second Board fails", "Error", MB_OK );
 					else
@@ -1245,12 +1242,14 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 #endif
 			}
 			trackbar_nospb = Nospb;
-			while (trackbar_nospb > 30000) { //max for trackbar length
+			while (trackbar_nospb > 30000)
+			{ //max for trackbar length
 				trackbar_nospb /= 10;
 				trackbar_nospb_multiplier *= 10;
 			}
 			trackbar_nob = Nob;
-			while (trackbar_nob > 30000) { //max for trackbar length
+			while (trackbar_nob > 30000)
+			{ //max for trackbar length
 				trackbar_nob /= 10;
 				trackbar_nob_multiplier *= 10;
 			}
@@ -1259,10 +1258,6 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 				MAKELONG( 0/*MIN RANGE*/, trackbar_nob - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
 			SendMessage( hwndTrack, TBM_SETRANGE, TRUE,
 				MAKELONG( 0/*MIN RANGE*/, trackbar_nospb - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
-
-			//refresh test bitmap
-			//createTestBitmap(Nob, Nospb, _PIXEL);
-
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
@@ -1280,10 +1275,6 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 				SetDlgItemInt( hDlg, IDC_CALCRAM, calcram, 0 );
 			else
 				SetDlgItemText( hDlg, IDC_CALCRAM, "calculation error" );
-
-			//refresh test bitmap
-			//createTestBitmap(Nob, Nospb, _PIXEL);
-
 			break;
 
 		case IDALLOC:
@@ -1318,9 +1309,6 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 			else//if RAM is bigger than 100gb
 				SetDlgItemText( hDlg, IDC_ALLOCRAM, "calculation error" );
 #endif
-			//refresh test bitmap
-			//createTestBitmap(Nob, Nospb, _PIXEL);
-
 			break;
 		case IDCONT:
 			cont_mode = TRUE;
@@ -1335,7 +1323,8 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 				MessageBox( hMSWND, "allocating Buffer fails", "Error", MB_OK );
 			else
 				MessageBox( hMSWND, "allocating Buffer succeeded", "Message", MB_OK );
-			if (both_boards) {
+			if (both_boards)
+			{
 				if (!BufLock( 2, CAMCNT, Nob, Nospb ))
 					MessageBox( hMSWND, "allocating Buffer of second Board fails", "Error", MB_OK );
 				else
@@ -1371,25 +1360,27 @@ LRESULT CALLBACK ChooseBoard( HWND hDlg,
 	{
 	case WM_INITDIALOG:
 		//if there is just one board initialized gray out board 2 option and both option
-		if (NUMBER_OF_BOARDS < 2) {
+		if (NUMBER_OF_BOARDS < 2)
+		{
 			EnableWindow( GetDlgItem( hDlg, IDC_EC_RADIO2 ), FALSE );
 			EnableWindow( GetDlgItem( hDlg, IDC_EC_RADIO_BOTH ), FALSE );
 			CheckDlgButton( hDlg, IDC_EC_RADIO1, TRUE );
 		}
-		else {
+		else
+		{
 			switch (choosen_board)
 			{
 			case 1:
 				if (both_boards)
 					CheckDlgButton( hDlg, IDC_EC_RADIO_BOTH, TRUE );
-				else {
+				else
+				{
 					CheckDlgButton( hDlg, IDC_EC_RADIO1, TRUE );
 				}
 				break;
 			case 2:
 				CheckDlgButton( hDlg, IDC_EC_RADIO2, TRUE );
 				break; //EC
-
 			}
 		}
 		return (TRUE);
@@ -1463,9 +1454,7 @@ LRESULT CALLBACK SetupTLevel( HWND hDlg,
 			break;
 		}
 		break; //WM_COMMAND
-
 	}
-
 	return (FALSE);
 }
 
@@ -1521,8 +1510,6 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 		case 4: 		   CheckDlgButton( hDlg, IDC_RADIO14, TRUE ); break; //DAT
 		default: 		   CheckDlgButton( hDlg, IDC_RADIO11, TRUE ); // XCKI 0 or 5
 		}
-
-
 		return (TRUE);
 		break;
 
@@ -1561,10 +1548,7 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 #else
 				DLLWriteLongS0( choosen_board, longval, 0x24 ); // DAT reg
 #endif
-
 			}
-
-
 			val = GetDlgItemInt( hDlg, IDC_SETTCNT, &success, FALSE );
 			if (success) tTICNT = val;
 			val = tTICNT;
@@ -1643,14 +1627,9 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO13 ) == TRUE) { m_ECTrigmodus = 3; }
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO14 ) == TRUE) { m_ECTrigmodus = 4; }
 
-
 			m_ECmodus = 1; //reset to timer mode
 			m_ECTrigmodus = 1;
-
-
-
 			//			OpenShutter(choosen_board); //EC works only if shutter open
-
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
@@ -1673,15 +1652,15 @@ LRESULT CALLBACK Set3ROI( HWND hDlg,
 	{
 	case WM_INITDIALOG:
 #if  ROI == 5
-		SetDlgItemInt(hDlg, IDC_ROI_4, roi[3], FALSE);
-		SetDlgItemInt(hDlg, IDC_ROI_3, roi[2], FALSE);
+		SetDlgItemInt( hDlg, IDC_ROI_4, roi[3], FALSE );
+		SetDlgItemInt( hDlg, IDC_ROI_3, roi[2], FALSE );
 #endif
-		SetDlgItemInt(hDlg, IDC_ROI_2, roi[1], FALSE);
-		SetDlgItemInt(hDlg, IDC_ROI_1, roi[0], FALSE);
+		SetDlgItemInt( hDlg, IDC_ROI_2, roi[1], FALSE );
+		SetDlgItemInt( hDlg, IDC_ROI_1, roi[0], FALSE );
 		return (TRUE);
 		break;
 	case WM_COMMAND:
-		switch (LOWORD(wParam))
+		switch (LOWORD( wParam ))
 		{
 		case IDC_ROI_1:
 		case IDC_ROI_2:
@@ -1690,88 +1669,85 @@ LRESULT CALLBACK Set3ROI( HWND hDlg,
 		case IDC_ROI_4:
 #endif
 			roi[ROI - 1] = _FFTLINES;
-			GetDlgItemInt(hDlg, IDC_ROI_1, &success, FALSE);
-			if (success)roi[0] = GetDlgItemInt(hDlg, IDC_ROI_1, &success, FALSE);
-			if (success) roi[1] = GetDlgItemInt(hDlg, IDC_ROI_2, &success, FALSE);
-			if (ROI == 5) {
-				if (success) roi[2] = GetDlgItemInt(hDlg, IDC_ROI_3, &success, FALSE);
-				if (success) roi[3] = GetDlgItemInt(hDlg, IDC_ROI_4, &success, FALSE);
+			GetDlgItemInt( hDlg, IDC_ROI_1, &success, FALSE );
+			if (success)roi[0] = GetDlgItemInt( hDlg, IDC_ROI_1, &success, FALSE );
+			if (success) roi[1] = GetDlgItemInt( hDlg, IDC_ROI_2, &success, FALSE );
+			if (ROI == 5)
+			{
+				if (success) roi[2] = GetDlgItemInt( hDlg, IDC_ROI_3, &success, FALSE );
+				if (success) roi[3] = GetDlgItemInt( hDlg, IDC_ROI_4, &success, FALSE );
 			}
 			if (success)
 				for (int i = 0; i < ROI - 1; i++)
 					roi[ROI - 1] -= roi[i];
 			//check if the summ of all roi is larger than fftlines 
 			//and write message and deactivate the ok button
-			if (roi[ROI - 1] > _FFTLINES) {
+			if (roi[ROI - 1] > _FFTLINES)
+			{
 				//write message
-				SetWindowText(GetDlgItem(hDlg, ROI_ERR_MESS), "The sum of all ranges are larger than FFTLINES.\n Please correct it!");
+				SetWindowText( GetDlgItem( hDlg, ROI_ERR_MESS ), "The sum of all ranges are larger than FFTLINES.\n Please correct it!" );
 				//disable ok button
-				EnableWindow(GetDlgItem(hDlg, IDOK), FALSE);
+				EnableWindow( GetDlgItem( hDlg, IDOK ), FALSE );
 			}
-			else {
+			else
+			{
 				//unshow message
-				SetWindowText(GetDlgItem(hDlg, ROI_ERR_MESS), "");
+				SetWindowText( GetDlgItem( hDlg, ROI_ERR_MESS ), "" );
 				//enable ok button
-				EnableWindow(GetDlgItem(hDlg, IDOK), TRUE);
+				EnableWindow( GetDlgItem( hDlg, IDOK ), TRUE );
 			}
 #if  ROI == 5
-			SetDlgItemInt(hDlg, IDC_ROI_5, roi[ROI - 1], FALSE);
+			SetDlgItemInt( hDlg, IDC_ROI_5, roi[ROI - 1], FALSE );
 #else
-			SetDlgItemInt(hDlg, IDC_ROI_3, roi[ROI - 1], FALSE);
+			SetDlgItemInt( hDlg, IDC_ROI_3, roi[ROI - 1], FALSE );
 #endif
 			break;
 
 		case IDCANCEL:
-			EndDialog(hDlg, TRUE);
+			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
 
 		case IDOK:
-			for (int i = 0; i < ROI; i++) {
+			for (int i = 0; i < ROI; i++)
+			{
 #ifndef _DLL
-				SetupVPB(choosen_board, i + 1, roi[i], keep[i]);
+				SetupVPB( choosen_board, i + 1, roi[i], keep[i] );
 #else
-				DLLSetupVPB(choosen_board, i + 1, roi[i], keep[i]);
+				DLLSetupVPB( choosen_board, i + 1, roi[i], keep[i] );
 #endif
 			}
 #ifndef _DLL
 			//reset auto start in case of setting before
-			ResetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			ResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			ResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			ResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			//int partial binning
-			WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
-			WriteLongS0(choosen_board, ROI, 0x2C); // S0Addr_ARREG = 0x2C,
-			SetS0Bit(15, 0x2C, choosen_board);// S0Addr_ARREG = 0x2C,
-			SetupVCLKReg(choosen_board, _FFTLINES, 7);
+			WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
+			WriteLongS0( choosen_board, ROI, 0x2C ); // S0Addr_ARREG = 0x2C,
+			SetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
+			SetupVCLKReg( choosen_board, _FFTLINES, 7 );
 #else
 			//reset auto start in case of setting before
-			DLLResetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			DLLResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			DLLResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			DLLResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			DLLResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			DLLResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			//int partial binning
-			DLLWriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
-			DLLWriteLongS0(choosen_board, ROI, 0x2C); // S0Addr_ARREG = 0x2C,
-			DLLSetS0Bit(15, 0x2C, choosen_board);// S0Addr_ARREG = 0x2C,
+			DLLWriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
+			DLLWriteLongS0( choosen_board, ROI, 0x2C ); // S0Addr_ARREG = 0x2C,
+			DLLSetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
 #endif
 				//allocate Buffer with matching NOS
 			Nospb = ROI;
 			ROI_CALLING = TRUE;
-			DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hMSWND, (DLGPROC)AllocateBuf);
+			DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
 			ROI_CALLING = FALSE;
-			EndDialog(hDlg, TRUE);
+			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
 		}
-
-
 		break; //WM_COMMAND
-
-
-
-
 	}
-
 	return (FALSE);
 }
 
@@ -1803,10 +1779,11 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 		case IDC_ROI_4:
 #endif
 			roi[ROI - 1] = _FFTLINES;
-			GetDlgItemInt(hDlg, IDC_ROI_1, &success, FALSE);
+			GetDlgItemInt( hDlg, IDC_ROI_1, &success, FALSE );
 			if (success)roi[0] = GetDlgItemInt( hDlg, IDC_ROI_1, &success, FALSE );
 			if (success) roi[1] = GetDlgItemInt( hDlg, IDC_ROI_2, &success, FALSE );
-			if (ROI == 5) {
+			if (ROI == 5)
+			{
 				if (success) roi[2] = GetDlgItemInt( hDlg, IDC_ROI_3, &success, FALSE );
 				if (success) roi[3] = GetDlgItemInt( hDlg, IDC_ROI_4, &success, FALSE );
 			}
@@ -1815,17 +1792,19 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 					roi[ROI - 1] -= roi[i];
 			//check if the summ of all roi is larger than fftlines 
 			//and write message and deactivate the ok button
-			if (roi[ROI - 1] > _FFTLINES) {
+			if (roi[ROI - 1] > _FFTLINES)
+			{
 				//write message
-				SetWindowText(GetDlgItem(hDlg, ROI_ERR_MESS), "The sum of all ranges are larger than FFTLINES.\n Please correct it!");
+				SetWindowText( GetDlgItem( hDlg, ROI_ERR_MESS ), "The sum of all ranges are larger than FFTLINES.\n Please correct it!" );
 				//disable ok button
-				EnableWindow(GetDlgItem(hDlg,IDOK),FALSE);
+				EnableWindow( GetDlgItem( hDlg, IDOK ), FALSE );
 			}
-			else {
+			else
+			{
 				//unshow message
-				SetWindowText(GetDlgItem(hDlg, ROI_ERR_MESS), "");
+				SetWindowText( GetDlgItem( hDlg, ROI_ERR_MESS ), "" );
 				//enable ok button
-				EnableWindow(GetDlgItem(hDlg, IDOK), TRUE);
+				EnableWindow( GetDlgItem( hDlg, IDOK ), TRUE );
 			}
 			SetDlgItemInt( hDlg, IDC_ROI_5, roi[ROI - 1], FALSE );//
 			break;
@@ -1842,58 +1821,52 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 			SetupVPB( choosen_board, 3, 5, FALSE );
 			SetupVPB( choosen_board, 4, 25, TRUE );
 			SetupVPB( choosen_board, 5, 5, FALSE );*/
-				for (int i = 0; i < ROI; i++) {
+			for (int i = 0; i < ROI; i++)
+			{
 #ifndef _DLL
-					SetupVPB( choosen_board, i + 1, roi[i], keep[i] );
+				SetupVPB( choosen_board, i + 1, roi[i], keep[i] );
 #else
-					DLLSetupVPB( choosen_board, i+1, roi[i], keep[i] );
+				DLLSetupVPB( choosen_board, i + 1, roi[i], keep[i] );
 #endif
-				}
+			}
 #ifndef _DLL
-				//reset auto start in case of setting before
-				ResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-				ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-				ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-				//int partial binning
-				WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
-				WriteLongS0( choosen_board, 5, 0x2C ); // S0Addr_ARREG = 0x2C,
-				SetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
-				SetupVCLKReg(choosen_board, _FFTLINES, 7);
+			//reset auto start in case of setting before
+			ResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			//int partial binning
+			WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
+			WriteLongS0( choosen_board, 5, 0x2C ); // S0Addr_ARREG = 0x2C,
+			SetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
+			SetupVCLKReg( choosen_board, _FFTLINES, 7 );
 #else
-				//reset auto start in case of setting before
-				DLLResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-				DLLResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-				DLLResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-				//int partial binning
-				DLLWriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
-				DLLWriteLongS0( choosen_board, ROI, 0x2C ); // S0Addr_ARREG = 0x2C,
-				DLLSetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
+			//reset auto start in case of setting before
+			DLLResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			DLLResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			DLLResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			//int partial binning
+			DLLWriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
+			DLLWriteLongS0( choosen_board, ROI, 0x2C ); // S0Addr_ARREG = 0x2C,
+			DLLSetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
 #endif
-				//allocate Buffer with matching NOS
-				Nospb = ROI;
-				ROI_CALLING = TRUE;
-				DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hMSWND, (DLGPROC)AllocateBuf);
-				ROI_CALLING = FALSE;
+			//allocate Buffer with matching NOS
+			Nospb = ROI;
+			ROI_CALLING = TRUE;
+			DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
+			ROI_CALLING = FALSE;
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
 		}
-
-
 		break; //WM_COMMAND
-
-
-
-
 	}
-
 	return (FALSE);
 }
 
-LRESULT CALLBACK ResetROI(HWND hDlg,
+LRESULT CALLBACK ResetROI( HWND hDlg,
 	UINT message,
 	WPARAM wParam,
-	LPARAM lParam)
+	LPARAM lParam )
 {
 	switch (message)
 	{
@@ -1901,60 +1874,41 @@ LRESULT CALLBACK ResetROI(HWND hDlg,
 		return (TRUE);
 		break;
 	case WM_COMMAND:
-		switch (LOWORD(wParam))
+		switch (LOWORD( wParam ))
 		{
 		case IDCANCEL:
-			EndDialog(hDlg, TRUE);
+			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
 
 		case IDOK:
 #ifndef _DLL
 			//reset auto start in case of setting before
-			ResetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			ResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			ResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			ResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			//Triger stuff
-			ResetS0Bit(4, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			ResetS0Bit(5, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			ResetS0Bit( 4, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			ResetS0Bit( 5, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			//Reset partial binning
-			WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
+			WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
 			//vclks
-			SetupVCLKReg(choosen_board, _FFTLINES, 7);
+			SetupVCLKReg( choosen_board, _FFTLINES, 7 );
 #else
 			//reset auto start in case of setting before
-			DLLResetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			DLLResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			DLLResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			DLLResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			DLLResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			DLLResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			//int partial binning
-			DLLWriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,#
-			DLLSetupVCLK(choosen_board, _FFTLINES,7);
+			DLLWriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,#
+			DLLSetupVCLK( choosen_board, _FFTLINES, 7 );
 #endif
-			DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hMSWND, (DLGPROC)AllocateBuf);
-			EndDialog(hDlg, TRUE);
+			DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
+			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
 		}
-
-
 		break; //WM_COMMAND
-
-
-
-
 	}
-
 	return (FALSE);
-}
-
-void createTestBitmap( UINT blocks, UINT height, UINT width ) {
-	//create test data
-	UINT16 grey = 0;
-	testbitmap = malloc( _PIXEL * Nospb * Nob * sizeof( UINT16 ) );
-
-	for (UINT i = 0; i < blocks * height * width; i++) {
-		testbitmap[i] = grey;
-		grey++;
-	}
-	return;
 }

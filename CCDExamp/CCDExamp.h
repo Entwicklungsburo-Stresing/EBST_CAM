@@ -36,18 +36,17 @@ BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
 
 // global variables
 HINSTANCE hInst;   // current instance
-
 LPCTSTR lpszAppName = "CCDExamp";
 LPCTSTR lpszTitle = "CCDExamp";
-
 HWND     hwndTrack;
 HWND     hwndTrack2;
-
 DWORD cur_nospb = 0;
 DWORD cur_nob = 0;
-
 void* Direct2dViewer;
 UINT16 *testbitmap;
+UINT roi[6] = { 15, 42, 15, 42, 10,6 };
+BOOL keep[5] = { FALSE, TRUE, FALSE, TRUE, FALSE };
+BOOL ROI_CALLING = FALSE;
 
 // function declerations
 BOOL RegisterWin95( CONST WNDCLASS* lpwc );

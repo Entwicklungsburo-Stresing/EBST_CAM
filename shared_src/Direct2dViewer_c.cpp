@@ -20,7 +20,8 @@ Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
 #include "Direct2dViewer_c.h"
 #include "Direct2dViewer.h"
 
-void* Direct2dViewer_new() {
+void* Direct2dViewer_new()
+{
 	return new Direct2dViewer();
 }
 
