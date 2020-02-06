@@ -31,7 +31,8 @@ Direct2dViewer::Direct2dViewer() :
 	m_pWICFactory( NULL ),
 	m_pRenderTarget( NULL ),
 	m_pDeviceContext( NULL ),
-	m_pBitmap( NULL )
+	m_pBitmap( NULL ),
+	linearTransferEffect( NULL )
 {
 }
 
@@ -45,6 +46,7 @@ Direct2dViewer::~Direct2dViewer()
 	SafeRelease( &m_pRenderTarget );
 	SafeRelease( &m_pDeviceContext );
 	SafeRelease( &m_pBitmap );
+	SafeRelease( &linearTransferEffect );
 }
 
 //
@@ -122,11 +124,13 @@ HRESULT Direct2dViewer::CreateDeviceIndependentResources()
 	HRESULT hr = S_OK;
 
 	if (SUCCEEDED( hr )) {
+		SafeRelease( &m_pD2DFactory );
 		// Create a Direct2D factory.
 		hr = D2D1CreateFactory( D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory );
 	}
 	if (SUCCEEDED( hr ))
 	{
+		SafeRelease( &m_pWICFactory );
 		// Create WIC factory.
 		hr = CoCreateInstance(
 			CLSID_WICImagingFactory,
@@ -161,6 +165,7 @@ HRESULT Direct2dViewer::CreateDeviceResources()
 		);
 		if (SUCCEEDED( hr ))
 		{
+			SafeRelease( &m_pRenderTarget );
 			// Create a Direct2D render target.
 			hr = m_pD2DFactory->CreateHwndRenderTarget(
 				D2D1::RenderTargetProperties(),
@@ -364,6 +369,7 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 	}
 	if (SUCCEEDED( hr ))
 	{
+		SafeRelease( &m_pBitmap );
 		//create a Direct2D bitmap from the WIC bitmap.
 		hr = m_pRenderTarget->CreateBitmapFromWicBitmap(
 			pConverter,
@@ -417,6 +423,7 @@ void Direct2dViewer::CreateEffect()
 
 	if (SUCCEEDED( hr ))
 	{
+		SafeRelease( &m_pDeviceContext );
 		// Obtain hwndRenderTarget's deviceContext
 		hr = m_pRenderTarget->QueryInterface( __uuidof(ID2D1DeviceContext), (void**)&m_pDeviceContext );
 	}
@@ -425,6 +432,7 @@ void Direct2dViewer::CreateEffect()
 	{
 		//This has no effect, because gamma transfer is now applied before converting bitmap to direct2d bitmap and no effect is applied here.
 		//But this is still needed to show the bitmap with the effect pointer.
+		SafeRelease( &linearTransferEffect );
 		m_pDeviceContext->CreateEffect( CLSID_D2D1LinearTransfer, &linearTransferEffect );
 		linearTransferEffect->SetInput( 0, m_pBitmap );
 	}
@@ -439,19 +447,12 @@ void Direct2dViewer::CreateEffect()
 HRESULT Direct2dViewer::loadBitmap()
 {
 	HRESULT hr = S_OK;
-
-	//release old bitmap
-	if (m_pBitmap != NULL) SafeRelease( &m_pBitmap );
-
 	//create new bitmap
 	hr = Load16bitGreyscaleBitmapFromMemory();
-
 	//scale render target to window size
 	ScaleRenderTarget();
-
 	//apply gamma effects
 	CreateEffect();
-
 	return hr;
 }
 
