@@ -1917,10 +1917,11 @@ LRESULT CALLBACK SetGamma( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 	case WM_INITDIALOG:
 		if (Direct2dViewer)
 		{
-			GetDlgItemInt( hDlg, IDC_GAMMA_WHITE, &success, FALSE );
-			if (success) direct2dviewer_gamma_white = GetDlgItemInt( hDlg, IDC_GAMMA_WHITE, &success, FALSE );
-			if (success) direct2dviewer_gamma_black = GetDlgItemInt( hDlg, IDC_GAMMA_BLACK, &success, FALSE );
+			// receive gamma from direct 2d module & write to ccdexamp gamma variables
+			direct2dviewer_gamma_white = Direct2dViewer_getGammaWhite( Direct2dViewer );
+			direct2dviewer_gamma_black = Direct2dViewer_getGammaBlack( Direct2dViewer );
 		}
+		// set gamma to dialog box
 		SetDlgItemInt( hDlg, IDC_GAMMA_WHITE, direct2dviewer_gamma_white, FALSE );
 		SetDlgItemInt( hDlg, IDC_GAMMA_BLACK, direct2dviewer_gamma_black, FALSE );
 		return (TRUE);
@@ -1934,6 +1935,7 @@ LRESULT CALLBACK SetGamma( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 			break;
 
 		case IDOK:
+			// receive gamma from dialog box & write to ccdexamp gamma variables
 			GetDlgItemInt( hDlg, IDC_GAMMA_WHITE, &success, FALSE );
 			if (success) direct2dviewer_gamma_white = GetDlgItemInt( hDlg, IDC_GAMMA_WHITE, &success, FALSE );
 			if (success) direct2dviewer_gamma_black = GetDlgItemInt( hDlg, IDC_GAMMA_BLACK, &success, FALSE );
@@ -1945,6 +1947,20 @@ LRESULT CALLBACK SetGamma( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
+
+		case IDDEFAULT:
+			// set gamma to dialog box
+			switch (CAMERA_SYSTEM)
+			{
+			case camera_system_3001:
+			case camera_system_3010:
+				SetDlgItemInt( hDlg, IDC_GAMMA_WHITE, 0xFFFF, FALSE );
+				break;
+			case camera_system_3030:
+				SetDlgItemInt( hDlg, IDC_GAMMA_WHITE, 0x3FFF, FALSE );
+				break;
+			}
+			SetDlgItemInt( hDlg, IDC_GAMMA_BLACK, 0, FALSE );
 		}
 		break; //WM_COMMAND
 	}
