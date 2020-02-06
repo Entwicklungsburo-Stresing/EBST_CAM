@@ -32,6 +32,8 @@ struct ffloopparams {
 };
 
 
+BOOL Running = FALSE;
+
 typedef ArrayT* pArrayT;
 
 

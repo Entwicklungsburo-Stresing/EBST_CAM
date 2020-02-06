@@ -2346,8 +2346,7 @@ BOOL WriteLongIOPort( UINT32 drvno, ULONG DWData, ULONG PortOff )
 		WDC_Err( "WriteLongIOPort in address 0x%x with data: 0x%x failed\n", PortOff, DWData );
 		ErrorMsg( "WriteLongIOPort failed" );
 		return FALSE;
-	}else
-		WDC_Err("I0PortWrite /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
+	}//else WDC_Err("I0PortWrite /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
 	/*
 	fResult = DeviceIoControl(ahCCDDRV[drvno],IOCTL_WriteLongIORunReg,
 	&WriteData,
@@ -2378,8 +2377,7 @@ BOOL WriteLongS0( UINT32 drvno, ULONG DWData, ULONG PortOff )
 		WDC_Err( "WriteLongS0 in address 0x%x with data: 0x%x failed\n", PortOff, DWData );
 		ErrorMsg( "WriteLongS0 failed" );
 		return FALSE;
-	}else
-		WDC_Err("LongS0Write /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
+	}//else WDC_Err("LongS0Write /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
 	/*
 	ULONG checkdata;
 	ReadLongS0(DRV, &checkdata, PortOff);
@@ -2425,8 +2423,7 @@ BOOL WriteLongDMA( UINT32 drvno, ULONG DWData, ULONG PortOff )
 		WDC_Err( "WriteLongDMA in address 0x%x with data: 0x%x failed\n", PortOff, DWData );
 		ErrorMsg( "WriteLongDMA failed" );
 		return FALSE;
-	}else
-		WDC_Err("DMAWrite /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
+	}//else WDC_Err("DMAWrite /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
 
 
 	/*
@@ -2495,8 +2492,7 @@ BOOL WriteByteS0( UINT32 drvno, BYTE DWData, ULONG PortOff )
 		WDC_Err( "WriteByteS0 in address 0x%x with data: 0x%x failed\n", PortOff, DWData );
 		ErrorMsg( "WriteByteS0 failed" );
 		return FALSE;
-	}else
-		WDC_Err("ByteS0Write /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
+	}//else WDC_Err("ByteS0Write /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
 
 	//no comparison possible because some Read-Only-Register are changing when we are writing in the same register
 	BYTE checkdata;
@@ -5172,7 +5168,7 @@ void InitGPX( UINT drvno, ULONG delay ) {
 
 		if (RegData[write_reg][1] != regData) err_cnt++;//compare write data with readdata
 	}
-
+	WDC_Err("TDC:Delay: %x\n", regVal);
 	SetGPXCtrl( drvno, 5, regVal, 0 ); // write to reg5: 82000000 retrigger, disable after start-> reduce to 1 val
 
 	SetGPXCtrl( drvno, 8, &regData, 1 ); //read access follows                 set addr 8 to bus !!!!
