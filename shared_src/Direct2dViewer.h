@@ -91,12 +91,15 @@ public:
 		UINT width,
 		UINT height
 	);
+	HRESULT reloadBitmap();
 	HWND getWindowHandler();
 	void SetGammaValue
 	(
 		UINT16 white,
 		UINT16 black
 	);
+	UINT16 GetGammaWhite();
+	UINT16 GetGammaBlack();
 
 private:
 	HRESULT Initialize( HWND hWndParent );
@@ -123,7 +126,6 @@ private:
 
 	);
 
-private:
 	HWND m_hwnd;
 	ID2D1Factory *m_pD2DFactory;
 	IWICImagingFactory *m_pWICFactory;
@@ -134,6 +136,8 @@ private:
 	ID2D1Effect *linearTransferEffect;
 	FLOAT _gamma_amplitude = 1;
 	INT32 _gamma_offset = 0;
+	UINT16 _gamma_white = 0xFFFF;
+	UINT16 _gamma_black = 0;
 
 	struct _BitmapSource
 	{

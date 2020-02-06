@@ -15,8 +15,11 @@ extern "C"
 	void Direct2dViewer_delete( void *D2dV );
 	void Direct2dViewer_start2dViewer( void *D2dV, HWND hWndParent, void *bitmapAddr, UINT width, UINT height );
 	void Direct2dViewer_showNewBitmap( void *D2dV, void *addr, UINT width, UINT height );
+	void Direct2dViewer_reloadBitmap( void *D2dV );
 	void Direct2dViewer_setGammaValue( void *D2dV, UINT16 white, UINT16 black );
+	UINT16 Direct2dViewer_getGammaWhite( void *D2dV );
+	UINT16 Direct2dViewer_getGammaBlack( void *D2dV );
 	HWND Direct2dViewer_getWindowHandler( void *D2dV );
-#ifdef __cplusplus    
+#ifdef __cplusplus
 }
 #endif

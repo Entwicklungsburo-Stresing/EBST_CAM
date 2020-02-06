@@ -19,6 +19,7 @@
 #define IDD_SETROI_5                    113
 #define IDD_SETROI_6                    114
 #define IDD_RESETROI                    114
+#define IDD_SETGAMMA                    116
 #define IDC_ADAMP                       1002
 #define IDC_M_EXPTIME                   1003
 #define IDC_TLevel                      1004
@@ -52,7 +53,9 @@
 #define IDC_ROI_4                       1030
 #define REP_ERR_MESS                    1030
 #define IDC_ROI_5                       1031
+#define IDC_GAMMA_WHITE                 1031
 #define IDC_ROI_6                       1032
+#define IDC_GAMMA_BLACK                 1032
 #define IDC_EC_RADIO2                   1060
 #define IDC_EC_RADIO3                   1061
 #define IDC_EC_RADIO5                   1062
@@ -118,9 +121,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        111
+#define _APS_NEXT_RESOURCE_VALUE        117
 #define _APS_NEXT_COMMAND_VALUE         40033
-#define _APS_NEXT_CONTROL_VALUE         1031
+#define _APS_NEXT_CONTROL_VALUE         1032
 #define _APS_NEXT_SYMED_VALUE           103
 #endif
 #endif
