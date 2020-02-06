@@ -775,9 +775,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			//only open new 2d viewer when not existing
 			if (!Direct2dViewer)
 			{
-				//vclks
-				SetupVCLKReg( choosen_board, 1, 7 );
-				SetS0Bit( 0, 0x5, choosen_board );//CTRLB Reg
 				//initialize 2D Viewer
 				Direct2dViewer = Direct2dViewer_new();
 				Direct2dViewer_setGammaValue( Direct2dViewer, direct2dviewer_gamma_white, direct2dviewer_gamma_black );
@@ -811,7 +808,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		//release instance of 2D viewer
 		Direct2dViewer_delete( Direct2dViewer );
 		Direct2dViewer = NULL;
-		//free(testbitmap);
 		break;
 	case WM_TIMER:
 		cur_nob++;
