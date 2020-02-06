@@ -129,7 +129,6 @@ private:
 	HWND m_hwnd;
 	ID2D1Factory *m_pD2DFactory;
 	IWICImagingFactory *m_pWICFactory;
-	IDWriteFactory *m_pDWriteFactory;
 	ID2D1HwndRenderTarget *m_pRenderTarget;
 	ID2D1DeviceContext *m_pDeviceContext;
 	ID2D1Bitmap *m_pBitmap;
