@@ -43,7 +43,7 @@ HWND     hwndTrack2;
 DWORD cur_nospb = 0;
 DWORD cur_nob = 0;
 void* Direct2dViewer;
-#if CAMERA_SYSTEM == camera_system_3030
+#if CAMERA_SYSTEM == 3
 UINT16 direct2dviewer_gamma_white = 0x3FFF;
 #else
 UINT16 direct2dviewer_gamma_white = 0xFFFF;
