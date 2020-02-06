@@ -466,8 +466,25 @@ void Direct2dViewer::SetGammaValue( UINT16 white, UINT16 black )
 	if (black >= white) black = white - 1;
 	_gamma_amplitude = (FLOAT)0xFFFF / (white - black); //default = 1
 	_gamma_offset = _gamma_amplitude * white - 0xFFFF; //default = 0
-
+	_gamma_white = white;
+	_gamma_black = black;
 	return;
+}
+
+/*
+* return gamma value white
+*/
+UINT16 Direct2dViewer::GetGammaWhite()
+{
+	return _gamma_white;
+}
+
+/*
+* return gamma value black
+*/
+UINT16 Direct2dViewer::GetGammaBlack()
+{
+	return _gamma_black;
 }
 
 /*
@@ -484,13 +501,23 @@ HRESULT Direct2dViewer::start2dViewer( HWND hWndParent, void *bitmapAddr, UINT w
 }
 
 /*
-* updates the displayed bitmap in 2d viewer
+* show a new bitmap in 2d viewer
 */
 HRESULT Direct2dViewer::showNewBitmap( void *addr, UINT width, UINT height )
 {
 	//tell 2D viewer which data to use
 	setBitmapSource( addr, width, height );
-	//update 2D viewer bitmap graphic rescource
+	//update 2D viewer bitmap
+	HRESULT hr = reloadBitmap();
+	return hr;
+}
+
+/*
+* reload the displayed bitmap in 2d viewer
+*/
+HRESULT Direct2dViewer::reloadBitmap()
+{
+	//load same bitmap again
 	HRESULT hr = loadBitmap();
 	//send message to 2d viewer window to repaint
 	SendMessage( getWindowHandler(), WM_PAINT, NULL, NULL );
