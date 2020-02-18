@@ -5099,9 +5099,9 @@ void InitGPX( UINT drvno, ULONG delay ) {
 	delay &= mask;
 	ULONG regVal = 0x08200000 | delay;
 	ULONG RegData[12][2] = {
-		{ 0, 0x00000080 },	// write to reg0: 0x80    disable inputs
+		{ 0, 0x000000AB },	// write to reg0: 0x80    disable inputs
 		{ 1, 0x0620620 },	// write to reg1: 0x0620620 channel adjust
-		{ 2, 0x00062E04 },	// write to reg2: 62E04  R-mode, en CH0..5 (3 werte
+		{ 2, 0x00062FFC },	// write to reg2: 62E04  R-mode, disable all CH
 		{ 3, 0x00000000 },	// write to reg3: 0 set to ecl
 		{ 4, 0x02000000 },	// write to reg4: 0x02000000 EF flag=on
 		{ 6, 0x08000001 },	// write to reg6: ecl + FILL=1
@@ -5111,7 +5111,7 @@ void InitGPX( UINT drvno, ULONG delay ) {
 		{ 14, 0x0 },
 		//scharf setzen
 		{ 4, 0x02400000 },	// write to reg4: master reset
-		{ 0, 0x000000AB }	// write to reg0: /0xAB > en pos edge inputs = set inputs active for 2 ch
+		{ 2, 0x00062004 }	// write to reg2: 62E04  R-mode, en CH0..5 (3 werte
 	};
 
 
@@ -5158,6 +5158,8 @@ void InitGPX( UINT drvno, ULONG delay ) {
 	*/
 
 	//setup R mode -> time between start and stop
+	SetGPXCtrl( drvno, 5, regVal, 0 ); // write to reg5: 82000000 retrigger, disable after start-> reduce to 1 val
+
 	for (int write_reg = 0; write_reg < 12; write_reg++) {
 
 		SetGPXCtrl( drvno, RegData[write_reg][0], RegData[write_reg][1], 0 );//write
@@ -5165,9 +5167,6 @@ void InitGPX( UINT drvno, ULONG delay ) {
 
 		if (RegData[write_reg][1] != regData) err_cnt++;//compare write data with readdata
 	}
-	WDC_Err("TDC:Delay: %x\n", regVal);
-	SetGPXCtrl( drvno, 5, regVal, 0 ); // write to reg5: 82000000 retrigger, disable after start-> reduce to 1 val
-
 	//SetGPXCtrl( drvno, 8, &regData, 1 ); //read access follows                 set addr 8 to bus !!!!
 	/*
 	hWnd = GetActiveWindow();
