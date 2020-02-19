@@ -1089,13 +1089,13 @@ void isr( UINT drvno, PVOID pData )
 	//WDC_Err("DmaAddr_DMAsPerIntr: 0x%x \n", val);
 	WDC_Err( "in isr -- nos: 0x%x, nob: 0x%x, spi: 0x%x, blocks: 0x%x\n", nos, Nob, spi, blocks );
 	//if (rest < spi) return without interrupt; // do not use INTR, but GetLastBufPart instead if rest is small enough
-	if ((nos*blocks * aCAMCNT[drvno]) < spi)
+	/*if ((nos*blocks * aCAMCNT[drvno]) < spi)
 	{
 		WDC_Err( "must get rest: 0x%x \n", nos*blocks * aCAMCNT[drvno] % spi );
 		GetLastBufPart( drvno );
 		ResetS0Bit( 3, DmaAddr_PCIEFLAGS, drvno );//reset INTRSR flag for TRIGO
 		return;
-	}
+	}*/
 
 	//ValMsg(val);
 
@@ -3897,18 +3897,20 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 				//ReadLongS0(drv, &blockcnt, DmaAddr_BLOCKINDEX); //get block counts
 				//ReadLongS0(drv, &blockcnt, DmaAddr_BLOCKINDEX); //first read sometimes is wrong
 		}
-
-		if (board_sel == 1 || board_sel == 3) {
-			Sleep( 2 ); //DMA is not ready
-			GetLastBufPart( 1 );
-		}
-		if (NUMBER_OF_BOARDS == 2 && (board_sel == 2 || board_sel == 3)) {
-			Sleep( 2 ); //DMA is not ready
-			GetLastBufPart( 2 );
-		}
 	}//  block read function
 		//while (blockcnt < Blocks);
 
+	WDC_Err( "FINISHED THREAD!!!!!!!!!!!!!!!!!!!!" );
+	if (board_sel == 1 || board_sel == 3)
+	{
+		Sleep( 2 ); //DMA is not ready
+		GetLastBufPart( 1 );
+	}
+	if (NUMBER_OF_BOARDS == 2 && (board_sel == 2 || board_sel == 3))
+	{
+		Sleep( 2 ); //DMA is not ready
+		GetLastBufPart( 2 );
+	}
 		//	WDC_Err("blockcnt %x\n", blockcnt);
 			//WDC_Err("Blocks%x\n", Blocks);
 
