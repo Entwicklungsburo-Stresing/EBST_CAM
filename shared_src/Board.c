@@ -5236,7 +5236,6 @@ void InitGPX( UINT32 drvno, UINT32 delay )
 	{ 4, 0x02400000 },	// write to reg4: master reset
 	{ 2, 0x00062004 }	// write to reg2: 62E04  R-mode, en CH0..5 (3 werte
 	};
-
 	// setupo GPX chip for mode M
 	//reset GPX  ´bit0 in GPXCTRL reg
 	ReadLongS0( drvno, &regData, S0Addr_TDCCtrl );
@@ -5282,8 +5281,6 @@ void AboutGPX( UINT32 drvno )
 		"Reg15\t"
 	}; //Look-Up-Table for the S0 Registers
 
-
-
 	hWnd = GetActiveWindow();
 
 	j = sprintf( fn, "GPX- registers   \n" );
@@ -5299,11 +5296,7 @@ void AboutGPX( UINT32 drvno )
 		ReadGPXCtrl( drvno, i, &regData );
 		j += sprintf( fn + j, "%s \t: 0x%I32x\n", LUTS0Reg[i], regData );
 	}
-
-
 	MessageBox( hWnd, fn, "GPX regs", MB_OK );
-
-
 	j = sprintf( fn, "delay- registers   \n" );
 	i = 0;
 	abbr = FALSE;
@@ -5313,8 +5306,6 @@ void AboutGPX( UINT32 drvno )
 		//master reset - 
 //		SetGPXCtrl(drvno, 4, 0); // write to reg4
 //		WriteLongS0(drvno, 0x02800000, 0x5C);
-
-
 		WaitTrigger( 1, FALSE, &space, &abbr );
 		irf = FALSE;
 		//		while (!irf & !abbr)
@@ -5323,7 +5314,6 @@ void AboutGPX( UINT32 drvno )
 //			if ((regData & 0x02) > 0) { irf = TRUE; }; //02=IR , 04=LF, 08=empty
 //			WaitTrigger(1, FALSE, &space, &abbr);
 		}
-
 		i = 0;
 		j = sprintf( fn, "read- regs   \n" );
 		//		while (!abbr & i < 1)
@@ -5341,20 +5331,15 @@ void AboutGPX( UINT32 drvno )
 			j += sprintf( fn + j, "%d \t: 0x%I32x\n", i, regData );
 		}
 		MessageBox( hWnd, fn, "GPX regs", MB_OK );
-
 	}
-
 	ReadGPXCtrl( drvno, 11, &regData );
 	j += sprintf( fn + j, "%s \t: 0x%I32x\n", " stop hits", regData );
 	ReadGPXCtrl( drvno, 12, &regData );
 	j += sprintf( fn + j, "%s \t: 0x%I32x\n", " flags", regData );
-
 	MessageBox( hWnd, fn, "GPX regs", MB_OK );
-
 	ReadGPXCtrl( drvno, 8, &regData ); //read access follows                 set addr 8 to bus !!!!
-
 	//master reset
 //	SetGPXCtrl(drvno, 4, 0); // write to reg4
 //	WriteLongS0(drvno, 0x06400300, 0x5C);
-
+	return;
 }
