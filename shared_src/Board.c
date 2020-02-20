@@ -5097,14 +5097,32 @@ void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS
 */
 void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high )
 {
-	//reset ADC
+	/*FL301 is intended for sensor S12198 !
+	with frame rate 8kHz = min. 125µs exp time*/
+	/*ADC LTC2271 neets a reset via SPI first. Bit D7
+	of the resetregister A0 with address 00h is set to 1.
+	D6:D0 are don't care. So address is 00h and data is
+	 80h = 10000000b for e.g.  
+	This has to be done after every startup.
+	Then the ADC can be programmed further via SPI in the next frames.*/
 	SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_reset, adc_ltc2271_msg_reset );
-	//output mode
+	/*Output Mode Register A2, address 02h:
+	LVDS output current bits (D7:D5) = 000, (3.5 mA)
+	Internal terminator bit D4 = 0, (off)
+	Output enable bit D3 = 0, (enabled)
+	Output test pattern bit D2 = 1, (on/off)
+	Number of output lanes bits (D1:D0) = 01, (4 lanes)
+	Address = 02h;
+	Data = 1h: ADC sends sample data
+	Data = 5h: ADC sends test pattern (a contant defined
+	in frames 3 and 4)*/
 	switch (adc_mode)
 	{
 	case 2:
 		SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_custompattern );
+		//Test pattern MSB regsiter A3 (TP15:TP8) Address = 03h, Data = custom (8 bit)
 		SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_msb, custom_pattern >> 8 );
+		//Test pattern LSB regsiter A4 (TP7:TP0)	Address = 04h, Data = custom (8 bit)
 		SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_lsb, custom_pattern & 0x00FF );
 		break;
 	case 0:
