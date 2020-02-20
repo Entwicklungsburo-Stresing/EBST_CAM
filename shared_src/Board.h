@@ -112,9 +112,9 @@ void SetTORReg( UINT32 drvno, BYTE fkt );
 void SetPDAnotFFT( UINT32 drvno, BOOL set );
 void RsTOREG( UINT32 drvno );					//reset the TOREG - should be called before SetISPDA or SetISFFT
 void SetupHAModule( BOOL irsingle, ULONG fftlines );//set the module C8061&C7041 inits
-void SendFLCAM( UINT32 drvno, BYTE maddr, BYTE adaddr, USHORT data );//B! test
-void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, BOOL IS_FFT );
-void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT8 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, BOOL led_on, BOOL gain_high );
+void SendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data );
+void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT );
+void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high );
 void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain );
 void SetADGain( UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8 );//B!test
 void SendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature ); //function for sending 32 bits to DAC8568 in HS-FLCAM on PCB 2189-7(+)

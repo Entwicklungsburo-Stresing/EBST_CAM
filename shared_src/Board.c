@@ -3029,10 +3029,9 @@ void RsTOREG( UINT32 drvno )
 //				d26 makes load pulse
 //				all written to DB0 in Space0 = Long0
 //				for AD set maddr=01, adaddr address of reg
-void SendFLCAM( UINT32 drvno, BYTE maddr, BYTE adaddr, USHORT data )
+void SendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data )
 {
 	UINT32 ldata = 0;
-
 	ldata = maddr;
 	ldata = ldata << 8;
 	ldata |= adaddr;
@@ -3044,7 +3043,7 @@ void SendFLCAM( UINT32 drvno, BYTE maddr, BYTE adaddr, USHORT data )
 	ldata = 0;		//rs load
 	WriteLongS0( drvno, ldata, S0Addr_DBR );
 	Sleep( 1 );
-
+	return;
 }//SendFLCAM
 
 
@@ -5069,17 +5068,18 @@ UINT8 WaitforTelapsed( LONGLONG musec )
 * param1: drvno - selects PCIe board
 * param2: pixel - pixel amount of camera
 * param3: trigger_input - selects trigger input. 0 - XCK, 1 - EXTTRIG, 2 - DAT
-* param4: IS_FFT - turns vclk on
+* param4: IS_FFT - =1 vclk on, =0 vclk off
 * return: void
 */
-void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, BOOL IS_FFT )
+void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT )
 {
 	//set camera pixel register
 	SendFLCAM( drvno, maddr_cam, cam_adaddr_pixel, pixel );
 	//set trigger input
 	SendFLCAM( drvno, maddr_cam, cam_adaddr_trig_in, trigger_input );
 	//select vclk on
-	SendFLCAM( drvno, maddr_cam, cam_adaddr_vclk, (UINT16)IS_FFT );
+	SendFLCAM( drvno, maddr_cam, cam_adaddr_vclk, IS_FFT );
+	return;
 }
 
 /*
@@ -5091,11 +5091,11 @@ void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, BOOL IS_F
 * param3: trigger_input - selects trigger input. 0 - XCK, 1 - EXTTRIG, 2 - DAT
 * param4: adc_mode - 0: normal mode, 2: custom pattern
 * param5: custom_pattern - fixed output for testmode, ignored when testmode FALSE
-* param6: LED_ON
-* param7: GAIN_HIGH
+* param6: LED_ON - 1 led on, 0 led off
+* param7: GAIN_HIGH - 1 gain on, 0 gain off
 * return: void
 */
-void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT8 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, BOOL led_on, BOOL gain_high )
+void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high )
 {
 	//reset ADC
 	SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_reset, adc_ltc2271_msg_reset );
@@ -5118,6 +5118,7 @@ void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT8 trigger_input, UINT8 adc_
 	SendFLCAM( drvno, maddr_cam, cam_adaddr_gain_led, led_on << 4 & gain_high );
 	//set trigger input
 	SendFLCAM( drvno, maddr_cam, cam_adaddr_trig_in, trigger_input );
+	return;
 }
 
 /*
@@ -5154,6 +5155,7 @@ void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 
 		SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_reset, adc_ads5294_msg_reset );
 		break;
 	}
+	return;
 }
 
 /**
