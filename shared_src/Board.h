@@ -30,10 +30,10 @@ BOOL SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno );
 BOOL ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno );
 void ErrorMsg( char ErrMsg[100] );
 BOOL ReadLongIOPort( UINT32 drvno, ULONG *DWData, ULONG PortOff );// read long from IO runreg
-BOOL ReadLongS0( UINT32 drvno, ULONG *DWData, ULONG PortOff );	// read long from space0
+BOOL ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff );	// read long from space0
 BOOL ReadByteS0( UINT32 drvno, BYTE *data, ULONG PortOff );	// read byte from space0
 BOOL WriteLongIOPort( UINT32 drvno, ULONG DWData, ULONG PortOff );// write long to IO runreg
-BOOL WriteLongS0( UINT32 drvno, ULONG DWData, ULONG PortOff );// write long to space0
+BOOL WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff );// write long to space0
 BOOL WriteByteS0( UINT32 drvno, BYTE DWData, ULONG PortOff ); // write byte to space0
 BOOL ReadLongDMA( UINT32 drvno, PULONG pDWData, ULONG PortOff );
 BOOL WriteLongDMA( UINT32 drvno, ULONG DWData, ULONG PortOff );
@@ -59,7 +59,7 @@ void DisTrigShort( UINT32 drvno );
 BOOL CheckFFTrig( UINT32 drvno );		// trigger sets FF - clear via write CtrlA 0x10
 void OpenShutter( UINT32 drvno );		// set IFC=high
 void CloseShutter( UINT32 drvno );	// set IFC=low
-void SetEC(UINT32 drvno, ULONG ecin100ns);
+void SetEC(UINT32 drvno, UINT32 ecin100ns);
 void ResetEC(UINT32 drvno);
 BOOL GetShutterState( UINT32 drvno );	//get the actual state
 void V_On( UINT32 drvno );			// set V_On signal low (V = V_Fak)
@@ -67,7 +67,7 @@ void V_Off( UINT32 drvno );			// set V_On signal high (V = 1)
 void SetOpto( UINT32 drvno, BYTE ch );  // set opto channel if output
 void RsetOpto( UINT32 drvno, BYTE ch ); // reset opto channel if output
 BOOL GetOpto( UINT32 drvno, BYTE ch );	//read opto channel if input
-void SetDAT( UINT32 drvno, ULONG tin100ns ); // delay after trigger in 100ns
+void SetDAT( UINT32 drvno, UINT32 tin100ns ); // delay after trigger in 100ns
 void RSDAT( UINT32 drvno ); // disable delay after trigger in S0+0x20
 // new Keyboard read which is not interrupt dependend
 // reads OEM scan code directly on port 0x60
@@ -75,7 +75,7 @@ UCHAR ReadKeyPort( UINT32 drvno );
 //TIs electron multiplier
 void SetHiamp( UINT32 drvno, BOOL hiamp );
 // FIFO functions
-void StartFFTimer( UINT32 drvno, ULONG exptime );	//starts 28bit timer of PCI board
+void StartFFTimer( UINT32 drvno, UINT32 exptime );	//starts 28bit timer of PCI board
 void SWTrig( UINT32 drvno );						//start a read to FIFO by software
 void StopFFTimer( UINT32 drvno );					// stop timer
 BOOL FFValid( UINT32 drvno );						// TRUE if linecounter>0
@@ -140,7 +140,7 @@ void CalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMS_pixel, UINT16 CAMpos, double
 int GetIndexOfPixel( UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block, UINT16 CAM );
 void* GetAddressOfPixel( UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block, UINT16 CAM );
 UINT8 WaitforTelapsed( LONGLONG musec );
-
 extern DWORD64 IsrCounter;
-void InitGPX( UINT drvno, ULONG delay );
-void AboutGPX( UINT drvno );
+void InitGPX( UINT32 drvno, UINT32 delay );
+void AboutGPX( UINT32 drvno );
+BOOL SetGPXCtrl( UINT32 drvno, ULONG GPXAddress, UINT32 GPXData, UINT8 gpxread );

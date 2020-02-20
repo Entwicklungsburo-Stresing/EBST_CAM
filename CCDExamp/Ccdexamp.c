@@ -1456,7 +1456,7 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 {
 	UINT val = 0;
 	BYTE dbyte = 0;
-	ULONG longval = 0;
+	UINT32 longval = 0;
 	BOOL success = FALSE;
 
 	switch (message)
