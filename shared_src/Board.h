@@ -59,8 +59,8 @@ void DisTrigShort( UINT32 drvno );
 BOOL CheckFFTrig( UINT32 drvno );		// trigger sets FF - clear via write CtrlA 0x10
 void OpenShutter( UINT32 drvno );		// set IFC=high
 void CloseShutter( UINT32 drvno );	// set IFC=low
-void SetEC(UINT32 drvno, UINT32 ecin100ns);
-void ResetEC(UINT32 drvno);
+void SetEC( UINT32 drvno, UINT32 ecin100ns );
+void ResetEC( UINT32 drvno );
 BOOL GetShutterState( UINT32 drvno );	//get the actual state
 void V_On( UINT32 drvno );			// set V_On signal low (V = V_Fak)
 void V_Off( UINT32 drvno );			// set V_On signal high (V = 1)
@@ -109,7 +109,7 @@ void RS_DMAAllCounter( UINT32 drv, BOOL hwstop );
 void SetISPDA( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if PDA
 void SetISFFT( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if FFT
 void SetTORReg( UINT32 drvno, BYTE fkt );
-void SetPDAnotFFT(UINT32 drvno, BOOL set);
+void SetPDAnotFFT( UINT32 drvno, BOOL set );
 void RsTOREG( UINT32 drvno );					//reset the TOREG - should be called before SetISPDA or SetISFFT
 void SetupHAModule( BOOL irsingle, ULONG fftlines );//set the module C8061&C7041 inits
 void SendFLCAM( UINT32 drvno, BYTE maddr, BYTE adaddr, USHORT data );//B! test
