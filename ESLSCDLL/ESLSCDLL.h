@@ -129,7 +129,7 @@ DllAccess void DLLSetTORReg( UINT32 drvno, UINT8 fkt );
 DllAccess void DLLSetupDELAY( UINT32 drvno, UINT32 delay );
 DllAccess void DLLSetISPDA( UINT32 drvno, UINT8 set );
 DllAccess void DLLSetISFFT( UINT32 drvno, UINT8 set );
-DllAccess void DLLSetPDAnotFFT(UINT32 drvno, UINT8 set);
+DllAccess void DLLSetPDAnotFFT( UINT32 drvno, UINT8 set );
 DllAccess void DLLRsTOREG( UINT32 drvno );
 DllAccess void DLLSetupHAModule( UINT8 irsingle, UINT32 fftlines );
 DllAccess void DLLSetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep );
@@ -144,5 +144,10 @@ DllAccess void DLLStart2dViewer( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT 
 DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos );
 DllAccess void DLLDeinit2dViewer();
 DllAccess void DLLSetGammaValue( UINT16 white, UINT16 black );
-DllAccess void DLLInitGPX( UINT drvno, ULONG delay);
-DllAccess void DLLAboutGPX( UINT drvno);
+//************  GPX
+DllAccess void DLLInitGPX( UINT32 drvno, UINT32 delay );
+DllAccess void DLLAboutGPX( UINT32 drvno );
+//************  Init CAM
+DllAccess void DLLInitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT );
+DllAccess void DLLInitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high );
+DllAccess void DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain );
