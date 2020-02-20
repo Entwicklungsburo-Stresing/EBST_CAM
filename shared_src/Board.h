@@ -143,4 +143,5 @@ UINT8 WaitforTelapsed( LONGLONG musec );
 extern DWORD64 IsrCounter;
 void InitGPX( UINT32 drvno, UINT32 delay );
 void AboutGPX( UINT32 drvno );
-BOOL SetGPXCtrl( UINT32 drvno, ULONG GPXAddress, UINT32 GPXData, UINT8 gpxread );
+BOOL SetGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32 GPXData );
+BOOL ReadGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32* GPXData );

@@ -5052,41 +5052,59 @@ void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 
 	}
 }
 
-
-BOOL SetGPXCtrl( UINT32 drvno, ULONG GPXAddress, UINT32 GPXData, UINT8 gpxread ) {
-	//gpxread = 1: readaccess        gpxread = 0: writeaccess
-	UINT32 regData, tempData;
+/**
+* Set GPXCtrl register
+* param1: drvno - select PCIe board
+* param2: GPXAddress - address to access
+* param3: GPXData - data to write
+* return bool: true - success, false - read/write error
+*/
+BOOL SetGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32 GPXData )
+{
+	UINT32 regData=0,
+		tempData=0;
 	//Read old data of ctrl gpx reg
 	if (!ReadLongS0( drvno, &regData, S0Addr_TDCCtrl )) return FALSE;
 	//shift gpx addr to the right place for the gpx ctrl reg
 	tempData = GPXAddress << 28;
-
-
-	//set CSexpand bit if read
-	if (gpxread)
-	{
-		tempData |= 0x08000000;//set CS Bit
-	}else 
-	{
-		tempData &= 0xF0000000;//reset CS Bit
-	}
+	//set CSexpand bit: reset CS Bit
+	tempData &= 0xF0000000;
 	//hold the other bits of the ctrl gpx reg
 	regData &= 0x07FFFFFF;
 	//combine the old ctrl bits with the new address
 	regData |= tempData;
 	//write to the gpxctrl reg
 	if (!WriteLongS0( drvno, regData, S0Addr_TDCCtrl )) return FALSE;
-	if (gpxread) {
-		ReadLongS0( drvno, GPXData, S0Addr_TDCData );
-		//regData &= 0xF7FFFFFF;
-		//WriteLongS0( drvno, regData, S0Addr_TDCCtrl );
-	}
-	if (gpxread == 0) WriteLongS0( drvno, GPXData, S0Addr_TDCData );
-
-	//Sleep( 1 );
+	WriteLongS0( drvno, GPXData, S0Addr_TDCData );
 	return TRUE;
 }
 
+/**
+* Read GPXCtrl register
+* param1: drvno - select PCIe board
+* param2: GPXAddress - address to access
+* param3: GPXData - pointer where read data is written to
+* return bool: true - success, false - read/write error
+*/
+BOOL ReadGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32* GPXData )
+{
+	UINT32 regData=0,
+		tempData=0;
+	//Read old data of ctrl gpx reg
+	if (!ReadLongS0( drvno, &regData, S0Addr_TDCCtrl )) return FALSE;
+	//shift gpx addr to the right place for the gpx ctrl reg
+	tempData = GPXAddress << 28;
+	//set CSexpand bit set CS Bit
+	tempData |= 0x08000000;
+	//hold the other bits of the ctrl gpx reg
+	regData &= 0x07FFFFFF;
+	//combine the old ctrl bits with the new address
+	regData |= tempData;
+	//write to the gpxctrl reg
+	if (!WriteLongS0( drvno, regData, S0Addr_TDCCtrl )) return FALSE;
+	ReadLongS0( drvno, GPXData, S0Addr_TDCData );
+	return TRUE;
+}
 
 void InitGPX( UINT32 drvno, UINT32 delay ) {
 
@@ -5096,11 +5114,10 @@ void InitGPX( UINT32 drvno, UINT32 delay ) {
 	char fn[1000];
 	UINT32 regData, regNumber, tempData, err_cnt = 0;
 	BOOL space, abbr, irf, empty;
-
-	ULONG mask = 0x3FFFF;
+	UINT32 mask = 0x3FFFF;
 	delay &= mask;
 	UINT32 regVal = 0x08200000 | delay;
-	ULONG RegData[12][2] = {
+	UINT32 RegData[12][2] = {
 		{ 0, 0x000000AB },	// write to reg0: 0x80    disable inputs
 		{ 1, 0x0620620 },	// write to reg1: 0x0620620 channel adjust
 		{ 2, 0x00062FFC },	// write to reg2: 62E04  R-mode, disable all CH
@@ -5160,12 +5177,11 @@ void InitGPX( UINT32 drvno, UINT32 delay ) {
 	*/
 
 	//setup R mode -> time between start and stop
-	SetGPXCtrl( drvno, 5, regVal, 0 ); // write to reg5: 82000000 retrigger, disable after start-> reduce to 1 val
-
-	for (int write_reg = 0; write_reg < 12; write_reg++) {
-
-		SetGPXCtrl( drvno, RegData[write_reg][0], RegData[write_reg][1], 0 );//write
-		SetGPXCtrl( drvno, RegData[write_reg][0], &regData, 1 );//read
+	SetGPXCtrl( drvno, 5, regVal ); // write to reg5: 82000000 retrigger, disable after start-> reduce to 1 val
+	for (int write_reg = 0; write_reg < 12; write_reg++)
+	{
+		SetGPXCtrl( drvno, RegData[write_reg][0], RegData[write_reg][1] );//write
+		ReadGPXCtrl( drvno, RegData[write_reg][0], &regData );//read
 
 		if (RegData[write_reg][1] != regData) err_cnt++;//compare write data with readdata
 	}
@@ -5177,6 +5193,7 @@ void InitGPX( UINT32 drvno, UINT32 delay ) {
 
 	MessageBox( hWnd, fn, "GPX errs", MB_OK );
 	*/
+	return;
 }
 
 void AboutGPX( UINT32 drvno ) {
@@ -5213,13 +5230,13 @@ void AboutGPX( UINT32 drvno ) {
 
 	for (i = 0; i < 8; i++)
 	{
-		SetGPXCtrl( drvno, i, &regData, 1 ); 
+		ReadGPXCtrl( drvno, i, &regData );
 		j += sprintf( fn + j, "%s \t: 0x%I32x\n", LUTS0Reg[i], regData );
 	}
 
 	for (i = 11; i < 13; i++)
 	{
-		SetGPXCtrl( drvno, i, &regData, 1 );
+		ReadGPXCtrl( drvno, i, &regData );
 		j += sprintf( fn + j, "%s \t: 0x%I32x\n", LUTS0Reg[i], regData );
 	}
 
@@ -5254,27 +5271,27 @@ void AboutGPX( UINT32 drvno ) {
 			i += 1;
 			//		ReadLongS0(drvno, &regData, 0x58);
 			//		if (regData &= 0x08 != 0) { empty = TRUE; };
-			SetGPXCtrl( drvno, 8, &regData, 1 ); //lege addr 8 an bus !!!!
+			ReadGPXCtrl( drvno, 8, &regData ); //lege addr 8 an bus !!!!
 			j += sprintf( fn + j, "%d \t: 0x%I32x\n", i, regData );
 
 			i += 1;
 			//		ReadLongS0(drvno, &regData, 0x58);
 			//		if (regData &= 0x08 != 0) { empty = TRUE; };
-			SetGPXCtrl( drvno, 9, &regData, 1 ); //lege addr 9 an bus !!!!
+			ReadGPXCtrl( drvno, 9, &regData ); //lege addr 9 an bus !!!!
 			j += sprintf( fn + j, "%d \t: 0x%I32x\n", i, regData );
 		}
 		MessageBox( hWnd, fn, "GPX regs", MB_OK );
 
 	}
 
-	SetGPXCtrl( drvno, 11, &regData, 1 ); 
+	ReadGPXCtrl( drvno, 11, &regData );
 	j += sprintf( fn + j, "%s \t: 0x%I32x\n", " stop hits", regData );
-	SetGPXCtrl( drvno, 12, &regData, 1 );
+	ReadGPXCtrl( drvno, 12, &regData );
 	j += sprintf( fn + j, "%s \t: 0x%I32x\n", " flags", regData );
 
 	MessageBox( hWnd, fn, "GPX regs", MB_OK );
 
-	SetGPXCtrl( drvno, 8, &regData, 1 ); //read access follows                 set addr 8 to bus !!!!
+	ReadGPXCtrl( drvno, 8, &regData ); //read access follows                 set addr 8 to bus !!!!
 
 	//master reset
 //	SetGPXCtrl(drvno, 4, 0); // write to reg4
