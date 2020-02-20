@@ -81,19 +81,23 @@ DllAccess  void DLLErrMsgBoxOff( void )
 }
 
 
-DllAccess UINT8 DLLCCDDrvInit( UINT32 drv ) {			//must be called once before any other
-													//is called automatically for 2 boards
-	if (CCDDrvInit()) {
+DllAccess UINT8 DLLCCDDrvInit( UINT32 drv )
+{			//must be called once before any other
+	   //is called automatically for 2 boards
+	if (CCDDrvInit())
+	{
 		WDC_Err( "finished DRVInit back in DLL\n" );
 		return 1;
 	}
 	return 0;
 }
 
-DllAccess UINT8 nDLLCCDDrvInit( void ) {			//must be called once before any other
-													//is called automatically for 2 boards
+DllAccess UINT8 nDLLCCDDrvInit( void )
+{			//must be called once before any other
+			//is called automatically for 2 boards
 	newDLL = 1;
-	if (CCDDrvInit()) {
+	if (CCDDrvInit())
+	{
 		WDC_Err( "finished DRVInit back in DLL\n" );
 		return NUMBER_OF_BOARDS;
 	}
@@ -118,7 +122,8 @@ DllAccess UINT8 DLLInitBoard( UINT32 drv, UINT32 pixel, UINT32 flag816, UINT32 p
 	InitBoard( drv );
 	if (!SetBoardVars( drv, camcnt, pixel, flag816, xckdelay )) return 0; //sets data for transfer
 	//for second board
-	if (NUMBER_OF_BOARDS == 2) {
+	if (NUMBER_OF_BOARDS == 2)
+	{
 		InitBoard( 2 );
 		if (!SetBoardVars( 2, camcnt, pixel, flag816, xckdelay )) return 0; //sets data for transfer
 	}
@@ -427,12 +432,14 @@ void TestMsg( char testMsg1[20], char testMsg2[20] )
 	if (MessageBox( GetActiveWindow(), testMsg1, testMsg2, MB_OK | MB_ICONEXCLAMATION ) == IDOK) {};
 }
 
-DllAccess UINT8 DLLSetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno ) {
+DllAccess UINT8 DLLSetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
+{
 
 	return SetS0Bit( bitnumber, Address, drvno );
 }
 
-DllAccess UINT8 DLLResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno ) {
+DllAccess UINT8 DLLResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
+{
 
 	return ResetS0Bit( bitnumber, Address, drvno );
 }
@@ -594,12 +601,14 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 	needed_mem_mb = needed_mem / (1024 * 1024);
 
 	//check if enough space is available in the physical ram
-	if (*memory_free > (UINT64)needed_mem) {
+	if (*memory_free > (UINT64)needed_mem)
+	{
 		pDMABigBufBase[drv] = calloc( aCAMCNT[drv] * (nos)*nob * _PIXEL, sizeof( USHORT ) );   //!! +1 oder *2 weil sonst absturz im continuous mode
 		// sometimes it makes one ISR more, so better to allocate nos+1 thaT IN THIS CASE THE ADDRESS pDMAIndex is valid
 		WDC_Err( "available memory:%lld MB\n \tmemory needed: %lld MB\n", memory_free_mb, needed_mem_mb );
 	}
-	else {
+	else
+	{
 		ErrorMsg( "Not enough physical RAM available!" );
 		WDC_Err( "ERROR for buffer %d: available memory: %lld MB \n \tmemory needed: %lld MB\n", NUMBER_OF_BOARDS, memory_free_mb, needed_mem_mb );
 	}
@@ -632,7 +641,8 @@ DllAccess void DLLCleanupDMA( UINT32 drv )
 	CleanupPCIE_DMA( drv );
 }
 
-DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 *pdioden, UINT32 length ) {
+DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 *pdioden, UINT32 length )
+{
 	ULONGLONG addr = 0;
 	USHORT* pframe;
 
@@ -713,11 +723,13 @@ DllAccess void nDLLReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, U
 	//CloseHandle(cam_thread[1]);//threadex
 }//DLLReadFFLoop
 
-DllAccess void DLLStopFFLoop( void ) {
+DllAccess void DLLStopFFLoop( void )
+{
 	escape_readffloop = TRUE;
 }
 
-DllAccess void DLLSetContFFLoop( UINT8 activate ) {
+DllAccess void DLLSetContFFLoop( UINT8 activate )
+{
 
 	contffloop = activate;//0 or 1
 }
@@ -767,13 +779,13 @@ DllAccess void DLLSetISPDA( UINT32 drvno, UINT8 set )
 	else SetISPDA( drvno, TRUE );
 }
 
-DllAccess void DLLSetPDAnotFFT(UINT32 drvno, UINT8 set)
+DllAccess void DLLSetPDAnotFFT( UINT32 drvno, UINT8 set )
 {
 	if (set == 0)
 	{
-		SetPDAnotFFT(drvno, FALSE);
+		SetPDAnotFFT( drvno, FALSE );
 	}
-	else SetPDAnotFFT(drvno, TRUE);
+	else SetPDAnotFFT( drvno, TRUE );
 }
 
 DllAccess void DLLSetISFFT( UINT32 drvno, UINT8 set )
@@ -859,7 +871,8 @@ DllAccess void DLLStart2dViewer( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT 
 
 DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos )
 {
-	if (Direct2dViewer != NULL) {
+	if (Direct2dViewer != NULL)
+	{
 		Direct2dViewer_showNewBitmap(
 			Direct2dViewer,
 			GetAddressOfPixel( drvno, 0, 0, cur_nob, cam ),
@@ -880,16 +893,39 @@ DllAccess void DLLDeinit2dViewer()
 }
 DllAccess void DLLSetGammaValue( UINT16 white, UINT16 black )
 {
-	if (Direct2dViewer != NULL) {
+	if (Direct2dViewer != NULL)
+	{
 		Direct2dViewer_setGammaValue( Direct2dViewer, white, black );
 	}
 	return;
 }
 
-DllAccess void DLLInitGPX( UINT32 drvno, UINT32 delay ) {
+DllAccess void DLLInitGPX( UINT32 drvno, UINT32 delay )
+{
 	InitGPX( drvno, delay );
+	return;
 }
 
-DllAccess void DLLAboutGPX( UINT32 drvno) {
+DllAccess void DLLAboutGPX( UINT32 drvno )
+{
 	AboutGPX( drvno );
+	return;
+}
+
+DllAccess void DLLInitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT )
+{
+	InitCamera3001( drvno, pixel, trigger_input, IS_FFT );
+	return;
+}
+
+DllAccess void DLLInitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high )
+{
+	InitCamera3010( drvno, pixel, trigger_input, adc_mode, custom_pattern, led_on, gain_high );
+	return;
+}
+
+DllAccess void DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain )
+{
+	InitCamera3030( drvno, adc_mode, custom_pattern, gain );
+	return;
 }
