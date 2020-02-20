@@ -390,7 +390,7 @@ void AboutS0( UINT32 drvno )
 	int i, j = 0;
 	int numberOfBars = 0;
 	char fn[1000];
-	ULONG S0Data = 0;
+	UINT32 S0Data = 0;
 	ULONG length = 0;
 	HWND hWnd;
 	char LUTS0Reg[32][30] = {
@@ -695,7 +695,7 @@ BOOL SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno ) {//the 
 }
 
 BOOL SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno ) {
-	ULONG OldRegisterValues, Setbit_mask, OldRegVals_and_SetBits, Clearbit_mask, NewRegisterValues;
+	UINT32 OldRegisterValues, Setbit_mask, OldRegVals_and_SetBits, Clearbit_mask, NewRegisterValues;
 
 	//read the old Register Values in the S0 Address Reg
 	if (!ReadLongS0( drvno, &OldRegisterValues, Address )) {
@@ -993,7 +993,7 @@ BOOL SendDMAInfoToKP(void){
 
 ULONG GetScanindex( UINT32 drvno )
 {
-	ULONG ldata = 0;
+	UINT32 ldata = 0;
 	if (!ReadLongS0( drvno, &ldata, DmaAddr_ScanIndex ))
 	{
 		ErrorMsg( "Error GetScanindex" );
@@ -1007,11 +1007,11 @@ void GetLastBufPart( UINT32 drvno ) {
 	//return;
 	//get the rest if buffer is not multiple of 500 (BUFSIZEINSCANS/2)
 	//also if nos is < BUFSIZEINSCANS/2 - here: no intr occurs
-	ULONG nos = 0;
-	ULONG nob = 0;
-	ULONG spi = 0;
-	ULONG halfbufsize = 0;
-	ULONG camcnt = 0;
+	UINT32 nos = 0;
+	UINT32 nob = 0;
+	UINT32 spi = 0;
+	UINT32 halfbufsize = 0;
+	UINT32 camcnt = 0;
 	//size_t rest_in_bytes = 0;
 
 	ReadLongS0( drvno, &nob, DmaAddr_NOB );
@@ -1022,8 +1022,8 @@ void GetLastBufPart( UINT32 drvno ) {
 
 	//halfbufize is 500 with default values
 	halfbufsize = DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS;
-	ULONG scans_all_cams = nos * nob *camcnt;
-	ULONG rest_overall = scans_all_cams % halfbufsize;
+	UINT32 scans_all_cams = nos * nob *camcnt;
+	UINT32 rest_overall = scans_all_cams % halfbufsize;
 	size_t rest_in_bytes;
 	rest_in_bytes = rest_overall * _PIXEL * sizeof( USHORT );
 
@@ -1055,11 +1055,11 @@ void isr( UINT drvno, PVOID pData )
 	WDC_Err( "DMA_bufsizeinbytes: 0x%x \n", DMA_bufsizeinbytes );
 	SetS0Bit( 3, DmaAddr_PCIEFLAGS, drvno );//set INTRSR flag for TRIGO
 
-	ULONG nos = 0;
+	UINT32 nos = 0;
 	//ULONG nob = 0;
-	ULONG blocks = 0;
-	ULONG val = 0;
-	ULONG spi = 0;//scans_per_intr
+	UINT32 blocks = 0;
+	UINT32 val = 0;
+	UINT32 spi = 0;//scans_per_intr
 	size_t subbuflengthinbytes = DMA_bufsizeinbytes / DMA_HW_BUFPARTS; //1088000 bytes
 	//usually DMA_bufsizeinbytes = 1000scans 
 	//subbuflengthinbytes = 1000 * pixel *2 -> /2 = 500 scans = 1088000 bytes
@@ -1379,7 +1379,7 @@ BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel, ULONG flag816, ULON
 	//	returns TRUE if ok
 
 	BYTE data = 0;
-	ULONG reg = 0;
+	UINT32 reg = 0;
 	ULONG i = 0;
 	BOOL result = FALSE;
 
@@ -2245,7 +2245,7 @@ BOOL ReadLongIOPort( UINT32 drvno, ULONG *DWData, ULONG PortOff )
 	return TRUE;
 };  // ReadLongIOPort
 
-BOOL ReadLongS0( UINT32 drvno, ULONG *DWData, ULONG PortOff )
+BOOL ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff )
 {// reads long on space0 area
 	// PortOff: Offset from BaseAdress - in Bytes !
 	// return -> TRUE if success
@@ -2367,7 +2367,7 @@ BOOL WriteLongIOPort( UINT32 drvno, ULONG DWData, ULONG PortOff )
 	return TRUE;
 };  // WriteLongIOPort
 
-BOOL WriteLongS0( UINT32 drvno, ULONG DWData, ULONG PortOff )
+BOOL WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff )
 {	// writes long to space0 register
 	// PortOff: Reg Offset from BaseAdress - in bytes
 	// returns TRUE if success
@@ -2533,7 +2533,7 @@ BOOL WriteByteS0( UINT32 drvno, BYTE DWData, ULONG PortOff )
 void AboutDrv( UINT32 drvno )
 {
 	USHORT version = 0;
-	ULONG S0Data = 0;
+	UINT32 S0Data = 0;
 	UCHAR udata1, udata2, udata3, udata4 = 0;
 	BOOL fResult = FALSE;
 	ULONG PortNumber = 0;		// must be 0
@@ -2904,7 +2904,7 @@ BOOL GetOpto( UINT32 drvno, BYTE ch )
 }; //GetOpto
 
 //weg? 
-void SetDAT( UINT32 drvno, ULONG datin100ns )
+void SetDAT( UINT32 drvno, UINT32 datin100ns )
 {//delay after trigger HW register
 	datin100ns |= 0x80000000; // enable delay
 	WriteLongS0( drvno, datin100ns, S0Addr_DAT );
@@ -2915,7 +2915,7 @@ void RSDAT( UINT32 drvno )
 	WriteLongS0( drvno, 0, S0Addr_DAT );
 }; //RSDAT
 
-void SetEC( UINT32 drvno, ULONG ecin100ns )
+void SetEC( UINT32 drvno, UINT32 ecin100ns )
 {//delay after trigger HW register
 	//ULONG data = 0;
 	//ReadLongS0(drvno, &data, S0Addr_EC);
@@ -2999,7 +2999,7 @@ void RsTOREG( UINT32 drvno )
 //				for AD set maddr=01, adaddr address of reg
 void SendFLCAM( UINT32 drvno, BYTE maddr, BYTE adaddr, USHORT data )
 {
-	ULONG ldata = 0;
+	UINT32 ldata = 0;
 
 	ldata = maddr;
 	ldata = ldata << 8;
@@ -3591,10 +3591,10 @@ void StopRingReadThread( void )
 	RingThreadOn = FALSE;// global variable ends thread and frees mem
 }//StopRingFFTimer
 //weg?!
-void initReadFFLoop( UINT32 drv, UINT32 exptus, UINT8 exttrig, ULONG* Blocks ) {
-	ULONG dwdata = 0;
-	ULONG nos = 0;
-	ULONG val = 0;
+void initReadFFLoop( UINT32 drv, UINT32 exptus, UINT8 exttrig, UINT32 * Blocks ) {
+	UINT32 dwdata = 0;
+	UINT32 nos = 0;
+	UINT32 val = 0;
 	BOOL ExTrig = FALSE;
 
 	ReadLongS0( drv, &dwdata, 0x44 ); //NOS is in reg R1
@@ -3806,8 +3806,8 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 			//StartFFTimer(1, exptus);
 			//StartFFTimer(2, exptus);
 
-			ULONG data1 = 0;
-			ULONG data2 = 0;
+			UINT32 data1 = 0;
+			UINT32 data2 = 0;
 
 			ReadLongS0( 1, &data1, 0x08 ); //reset	
 			data1 &= 0xF0000000;
@@ -3819,7 +3819,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 			data2 |= exptus & 0x0FFFFFFF;
 			data2 |= 0x40000000;			//set timer on
 
-			ULONG	PortOffset = S0Addr_XCKLL + 0x80;
+			UINT32	PortOffset = S0Addr_XCKLL + 0x80;
 
 			//old
 			//WDC_WriteAddrBlock(hDev[2], 0, PortOffset, sizeof(ULONG), &data2, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
@@ -4103,9 +4103,9 @@ void SetExtSWTrig( BOOL ext )
 
 //*************** Hardware Fifo fkts ******************
 
-void StartFFTimer( UINT32 drvno, ULONG exptime )
+void StartFFTimer( UINT32 drvno, UINT32 exptime )
 {//exptime in microsec
-	ULONG data = 0;
+	UINT32 data = 0;
 	ReadLongS0( drvno, &data, S0Addr_XCKLL); //reset	
 	data &= 0xF0000000;
 	data |= exptime & 0x0FFFFFFF;
@@ -4637,7 +4637,7 @@ void SetTemp( UINT32 drvno, ULONG level )
 void RS_ScanCounter( UINT32 drv )
 {	//RS scan counter
 	//is read only - but highest bit=reset
-	ULONG dwdata = 0;
+	UINT32 dwdata = 0;
 	dwdata = 0x80000000; //set
 	WriteLongS0( drv, dwdata, DmaAddr_ScanIndex );
 	dwdata &= 0x7fffffff; //reset
@@ -4647,7 +4647,7 @@ void RS_ScanCounter( UINT32 drv )
 void RS_BlockCounter( UINT32 drv )
 {	// RS_BlockCounter 
 	//is read only - but highest bit=reset
-	ULONG dwdata = 0;
+	UINT32 dwdata = 0;
 	dwdata = 0x80000000; //set
 	WriteLongS0( drv, dwdata, DmaAddr_BLOCKINDEX );
 	dwdata &= 0x7fffffff; //reset
@@ -4658,7 +4658,7 @@ void RS_BlockCounter( UINT32 drv )
 void RS_DMAAllCounter( UINT32 drv, BOOL hwstop )
 {	//drv : board number
 	//hwstop: timer is stopped by hardware if nos is reached
-	ULONG dwdata = 0;
+	UINT32 dwdata = 0;
 	//reset the internal intr collect counter
 	//Problem: erste scan löst INTR aus
 	//aber ohne: erste Block ist 1 zu wenig!0, -> in hardware RS to 0x1
@@ -4699,7 +4699,7 @@ void RS_DMAAllCounter( UINT32 drv, BOOL hwstop )
 //weg?
 BOOL FindCam( UINT32 drv )
 {//test if SFP module is there and fiber is linked up
-	ULONG dwdata = 0;
+	UINT32 dwdata = 0;
 	ReadLongS0( drv, &dwdata, 0x40 );  // read in PCIEFLAGS register
 	if ((dwdata & 0x80000000) > 0) { //SFP error
 		ErrorMsg( "Fiber or Camera error" );
@@ -5061,9 +5061,9 @@ void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 
 }
 
 
-BOOL SetGPXCtrl( UINT drvno, ULONG GPXAddress, ULONG GPXData, UINT8 gpxread ) {
+BOOL SetGPXCtrl( UINT32 drvno, ULONG GPXAddress, UINT32 GPXData, UINT8 gpxread ) {
 	//gpxread = 1: readaccess        gpxread = 0: writeaccess
-	ULONG regData, tempData;
+	UINT32 regData, tempData;
 	//Read old data of ctrl gpx reg
 	if (!ReadLongS0( drvno, &regData, S0Addr_TDCCtrl )) return FALSE;
 	//shift gpx addr to the right place for the gpx ctrl reg
@@ -5096,18 +5096,18 @@ BOOL SetGPXCtrl( UINT drvno, ULONG GPXAddress, ULONG GPXData, UINT8 gpxread ) {
 }
 
 
-void InitGPX( UINT drvno, ULONG delay ) {
+void InitGPX( UINT32 drvno, UINT32 delay ) {
 
 	HWND hWnd;
 	char pstring[80] = "";
 	int i, j = 0;
 	char fn[1000];
-	ULONG regData, regNumber, tempData, err_cnt = 0;
+	UINT32 regData, regNumber, tempData, err_cnt = 0;
 	BOOL space, abbr, irf, empty;
 
 	ULONG mask = 0x3FFFF;
 	delay &= mask;
-	ULONG regVal = 0x08200000 | delay;
+	UINT32 regVal = 0x08200000 | delay;
 	ULONG RegData[12][2] = {
 		{ 0, 0x000000AB },	// write to reg0: 0x80    disable inputs
 		{ 1, 0x0620620 },	// write to reg1: 0x0620620 channel adjust
@@ -5187,7 +5187,7 @@ void InitGPX( UINT drvno, ULONG delay ) {
 	*/
 }
 
-void AboutGPX( UINT drvno ) {
+void AboutGPX( UINT32 drvno ) {
 	HWND hWnd;
 	char pstring[80] = "";
 	int i, j = 0;
