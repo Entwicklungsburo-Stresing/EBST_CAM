@@ -1709,8 +1709,8 @@ LRESULT CALLBACK Set3ROI( HWND hDlg,
 #endif
 			}
 #ifndef _DLL
-			//reset auto start in case of setting before
-			ResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			//Set auto start 
+			SetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			//int partial binning
@@ -1719,8 +1719,8 @@ LRESULT CALLBACK Set3ROI( HWND hDlg,
 			SetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
 			SetupVCLKReg( choosen_board, _FFTLINES, 7 );
 #else
-			//reset auto start in case of setting before
-			DLLResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			//Set auto start 
+			DLLSetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			DLLResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			DLLResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			//int partial binning
@@ -1821,8 +1821,8 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 #endif
 			}
 #ifndef _DLL
-			//reset auto start in case of setting before
-			ResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			//Set auto start 
+			SetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			//int partial binning
@@ -1831,8 +1831,8 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 			SetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
 			SetupVCLKReg( choosen_board, _FFTLINES, 7 );
 #else
-			//reset auto start in case of setting before
-			DLLResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+			//Set auto start
+			DLLSetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			DLLResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			DLLResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			//int partial binning
