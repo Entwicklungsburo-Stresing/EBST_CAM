@@ -4654,16 +4654,6 @@ UINT32 Tickstous( UINT64 tks )
 	return (UINT32)delay;
 } // Tickstous
 
-
-// ************************  COOLER Functions  *********************
-//weg? ->kombi mit closeshutter
-void ActCooling( UINT32 drvno, BOOL on )
-{//activates cooling with IFC signal
-	if (on) { OpenShutter( drvno ); }
-	else CloseShutter( drvno );
-}
-
-
 BOOL TempGood( UINT32 drvno, UINT32 ch )
 {//reads EOI Signal = D4 CTRLC
 	BYTE CtrlC = 0;
@@ -4705,22 +4695,19 @@ BOOL TempGood( UINT32 drvno, UINT32 ch )
 	return FALSE;
 }//TempGood
 
-
-void SetTemp( UINT32 drvno, ULONG level )
+/*
+* func: SetTemp
+* Set cooling level.
+* param1: drvno - selects PCIe board
+* param2: level - cooling level from 0 to 7
+* return: void
+*/
+void SetTemp( UINT32 drvno, UINT8 level )
 {// set temperature controler (8 levels)
-	CloseShutter( drvno );// IFC=lo
-	Sleep( 1 );
-
 	if (level >= 8) level = 0;
-	SendFLCAM( drvno, maddr_cam, cam_adaddr_coolTemp, (BYTE)level );
-
-	Sleep( 1 );
-	OpenShutter( drvno );		// IFC=hi
-	Sleep( 1 );
-
-	if (level == 0) ActCooling( drvno, FALSE );
+	SendFLCAM( drvno, maddr_cam, cam_adaddr_coolTemp, level );
+	return;
 }
-
 
 // *****   new HS CAM stuff
 //weg??? bleibt, oder?
