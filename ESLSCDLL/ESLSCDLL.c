@@ -735,17 +735,12 @@ DllAccess void DLLSetContFFLoop( UINT8 activate )
 }
 
 //********  cooling functions
-DllAccess void DLLActCooling( UINT32 drvno, UINT8 on )
-{
-	ActCooling( drvno, on );
-}
-
 DllAccess UINT8 DLLTempGood( UINT32 drvno, UINT32 ch )
 {
 	return TempGood( drvno, ch );
 }
 
-DllAccess void DLLSetTemp( UINT32 drvno, UINT32 level )
+DllAccess void DLLSetTemp( UINT32 drvno, UINT8 level )
 {
 	SetTemp( drvno, level );
 }

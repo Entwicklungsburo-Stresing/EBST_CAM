@@ -121,9 +121,8 @@ DllAccess UINT8 DLLWaitforTelapsed( LONGLONG musec );
 DllAccess UINT64 DLLTicksTimestamp( void );
 DllAccess UINT32 DLLTickstous( UINT64 tks );
 //************  Cooling
-DllAccess void DLLActCooling( UINT32 drvno, UINT8 on );
 DllAccess UINT8 DLLTempGood( UINT32 drvno, UINT32 ch );
-DllAccess void DLLSetTemp( UINT32 drvno, UINT32 level );
+DllAccess void DLLSetTemp( UINT32 drvno, UINT8 level );
 DllAccess void DLLSetEC( UINT32 drvno, UINT64 ecin100ns );
 DllAccess void DLLSetTORReg( UINT32 drvno, UINT8 fkt );
 DllAccess void DLLSetupDELAY( UINT32 drvno, UINT32 delay );
