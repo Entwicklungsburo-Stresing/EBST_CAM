@@ -832,11 +832,9 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			if (!Running) startMess( &dummy );
 			break;
 #ifndef _DLL
-		case VK_F2://switch cooling on
-			ActCooling( choosen_board, TRUE );
+		case VK_F2:
 			break;
-		case VK_F3://switch cooling off
-			ActCooling( choosen_board, FALSE );
+		case VK_F3:
 			break;
 		case VK_F4:
 		{//check temp good

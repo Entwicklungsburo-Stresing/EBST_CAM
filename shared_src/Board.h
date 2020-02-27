@@ -101,9 +101,8 @@ UINT64 ticksTimestamp();				//reads actual ticks of system counter
 UINT64 ustoTicks( ULONG us );			//calcs microsec to ticks  
 UINT32 Tickstous( UINT64 tks );			//calcs ticks to microsec
 // Cooler& special functions
-void ActCooling( UINT32 drvno, BOOL on );				//activates/deactivates cooling
 BOOL TempGood( UINT32 drvno, UINT32 ch );						//high if temperature is reached
-void SetTemp( UINT32 drvno, ULONG level );				//set temperature - 8 levels possible
+void SetTemp( UINT32 drvno, UINT8 level );				//set temperature - 8 levels possible
 void RS_ScanCounter( UINT32 drv );
 void RS_DMAAllCounter( UINT32 drv, BOOL hwstop );
 void SetISPDA( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if PDA
