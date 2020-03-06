@@ -4998,10 +4998,10 @@ void CalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMS_pixel, UINT16 CAMpos, double
 *   block	- position in blocks (0...nob)
 *	CAM		- position in camera count (0...CAMCNT)
 */
-int GetIndexOfPixel( UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block, UINT16 CAM )
+UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block, UINT16 CAM )
 {
 	//init index with base position of pixel
-	int index = pixel;
+	UINT32 index = pixel;
 	//position of index at CAM position
 	index += CAM * _PIXEL;
 	//position of index at sample
@@ -5018,7 +5018,7 @@ int GetIndexOfPixel( UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block, UIN
 *   block	- position in blocks (0...nob)
 *	CAM		- position in camera count (0...CAMCNT)
 */
-void* GetAddressOfPixel( UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block, UINT16 CAM )
+void* GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block, UINT16 CAM )
 {
 	return &pDMABigBufBase[drvno][GetIndexOfPixel( drvno, pixel, sample, block, CAM )];
 }//GetAdressOfPixel
