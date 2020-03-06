@@ -136,8 +136,8 @@ UINT8 ReadRingBlock( void* pdioden, INT32 start, INT32 stop ); // copy a block o
 BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch ); //read state of trigger in signals during thread loop
 void SetADGain( UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8 );
 void CalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );
-int GetIndexOfPixel( UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block, UINT16 CAM );
-void* GetAddressOfPixel( UINT32 drvno, ULONG pixel, UINT16 sample, UINT16 block, UINT16 CAM );
+UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block, UINT16 CAM );
+void* GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block, UINT16 CAM );
 UINT8 WaitforTelapsed( LONGLONG musec );
 extern DWORD64 IsrCounter;
 void InitGPX( UINT32 drvno, UINT32 delay );

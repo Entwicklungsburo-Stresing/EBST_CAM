@@ -58,6 +58,7 @@ DllAccess UINT8 nDLLCCDDrvInit( void );		// init the driver -> true if found
 DllAccess void DLLCCDDrvExit( UINT32 drv );		// closes the driver
 DllAccess void DLLCleanupPCIE_DMA( UINT32 drv );
 DllAccess void DLLCleanupDMA( UINT32 drv );
+DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 *pdioden, UINT32 length );
 DllAccess UINT8 DLLInitBoard( UINT32 drv, UINT32 pixel, UINT32 flag816, UINT32 pclk, UINT32 xckdelay );
 DllAccess UINT8 DLLReadByteS0( UINT32 drv, UINT8 *data, UINT32 PortOff );// read byte from Port, PortOff = Regs of Board
 DllAccess UINT8 DLLWriteByteS0( UINT32 drv, UINT8 DataByte, UINT32 PortOff ); // writes DataByte to Port

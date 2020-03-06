@@ -634,41 +634,42 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 DllAccess void DLLCleanupPCIE_DMA( UINT32 drv )
 {//free resources
 	CleanupPCIE_DMA( drv );
+	return;
 }
 
 DllAccess void DLLCleanupDMA( UINT32 drv )
 {//free resources
 	CleanupPCIE_DMA( drv );
+	return;
 }
 
+/* DLLReturnFrame copies one frame of pixel data to pdioden
+* param1: drv -  indentifier of PCIe card
+* param2: curr_nos - position in samples (0...nos)
+* param3: curr_nob - position in blocks (0...nob)
+* param4: *pdioden - address where data is written
+* param5: length - lenght of frame, typically pixel count (1088)
+* param6: NOT IMPLEMENTED: cam_pos - position in camera count (0...CAMCNT)
+* return void
+*/
 DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 *pdioden, UINT32 length )
 {
 	ULONGLONG addr = 0;
-	USHORT* pframe;
-
 	addr = curr_nob * Nospb * _PIXEL + curr_nos * _PIXEL;
 	//complet buffer:	|nob0|nob1|...|curr_nob|...|Nob|
 	// one nob:			|nos0|nos1|...|curr_nos|...|Nospb|
-
-	/*
-	if (curr_nob > 0)
-	{
-		addr -= 50 * _PIXEL;
-	};
-	*/
-
-	pframe = pDMABigBufBase[drv] + addr;  //calc in words
+	USHORT* pframe = pDMABigBufBase[drv] + addr;  //calc in words
+	// This doesn't work as expected. Where is the problem?
+	//USHORT* pframe = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, cam_pos );
 	memcpy( pdioden, pframe, length * sizeof( USHORT ) );  // length in bytes
-
 	/*
 	WDC_Err("FRAME1: drv: %d, curr_nob: %d, _PIXEL: %d\n",drv,curr_nos,_PIXEL);
-
 	WDC_Err("FRAME2: address Buff: 0x%x \n", pDMABigBufBase[drv]);
 	WDC_Err("FRAME2: address pdio: 0x%x \n", pdioden);
-
 	WDC_Err("FRAME3: pix42 of ReturnFrame: %d \n", *((USHORT*)pdioden + 420));
 	WDC_Err("FRAME3: pix43 of ReturnFrame: %d \n", *((USHORT*)pdioden + 422));
 	*/
+	return;
 }
 
 DllAccess void DLLReadFFLoop( UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch )
@@ -677,7 +678,7 @@ DllAccess void DLLReadFFLoop( UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 extt
 	//
 	//local declarations
 	ReadFFLoop( drv, exptus, exttrig, blocktrigger, btrig_ch );
-
+	return;
 }//DLLReadFFLoop
 
 DllAccess void nDLLReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch )
