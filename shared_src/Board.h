@@ -37,8 +37,6 @@ BOOL WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff );// write long to 
 BOOL WriteByteS0( UINT32 drvno, BYTE DWData, ULONG PortOff ); // write byte to space0
 BOOL ReadLongDMA( UINT32 drvno, PULONG pDWData, ULONG PortOff );
 BOOL WriteLongDMA( UINT32 drvno, ULONG DWData, ULONG PortOff );
-// camera read function
-void ClrRead( UINT32 drvno, ULONG fftlines, ULONG zadr, ULONG ccdclrcount );
 // clear camera with reads
 void ClrShCam( UINT32 drvno, UINT32 zadr );// clears Shuttercamera with IFC signal
 void AboutDrv( UINT32 drvno );	// displays the version and board ID = test if board is there
@@ -72,29 +70,21 @@ void RSDAT( UINT32 drvno ); // disable delay after trigger in S0+0x20
 // new Keyboard read which is not interrupt dependend
 // reads OEM scan code directly on port 0x60
 UCHAR ReadKeyPort( UINT32 drvno );
-//TIs electron multiplier
-void SetHiamp( UINT32 drvno, BOOL hiamp );
 // FIFO functions
 void StartFFTimer( UINT32 drvno, UINT32 exptime );	//starts 28bit timer of PCI board
 void SWTrig( UINT32 drvno );						//start a read to FIFO by software
 void StopFFTimer( UINT32 drvno );					// stop timer
 BOOL FFValid( UINT32 drvno );						// TRUE if linecounter>0
-BOOL FlagXCKI( UINT32 drvno );						// TRUE if read to FIFO is active
 void RSFifo( UINT32 drvno );						// reset FIFO and linecounter
 void SetExtFFTrig( UINT32 drvno );					// read to FIFO is triggered by external input I of PCI board
 void SetIntFFTrig( UINT32 drvno );					// read to FIFO is triggered by Timer
-BYTE ReadFFCounter( UINT32 drvno );					// reads 4bit linecounter 
-BOOL ReadFifo( UINT32 drvno, void* pdioden, long fkt ); //reads fifo data
 void DisableFifo( UINT32 drvno );					//switch FIFO off
-void EnableFifo( UINT32 drvno );					//switch Fifo on
 void SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq );//setup hardware vclk generator
 void SetupVCLKrt( ULONG vfreq );					//setup vclkfreq for rt version(noFIFO)
 void SetupDELAY( UINT32 drvno, ULONG delay );		//setup DELAY for WRFIFO
 BOOL FFOvl( UINT32 drvno );							//TRUE if FIFO overflow since last RSFifo call
-void PickOneFifoscan( UINT32 drvno, pArrayT pdioden, BOOL* pabbr, BOOL* pspace, ULONG fkt ); //get one scan of free running fifo timer
 // Class & Thread priority functions
 BOOL SetPriority( ULONG threadp );		//set priority threadp 1..31 / 8 = normal and keep old in global variable
-BOOL ResetPriority();					//switch back to old level
 // System Timer
 UINT64 InitHRCounter();				//init system counter and returns TPS: ticks per sec
 UINT64 ticksTimestamp();				//reads actual ticks of system counter
@@ -121,20 +111,15 @@ void SendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 fea
 void StartReadWithDma( UINT32 drvno );
 unsigned int __stdcall ReadFFLoopThread( void *parg );
 // software ring buffer thread functions
-void StartRingReadThread( UINT32 drvno, ULONG ringfifodepth, ULONG threadp, __int16 releasems );
 void StopRingReadThread( void ); //starts and ends background thread 
 void allBlocksOnSingleTrigger( UINT32 board_sel, UINT8 btrig_ch, BOOL* StartByTrig );
 void oneTriggerPerBlock( UINT32 board_sel, UINT8 btrig_ch );
 int  keyCheckForBlockTrigger( UINT32 board_sel );
 void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch );
-void StartFetchRingBuf( void ); //starts getting the data to ring
-BOOL RingThreadIsOFF( void );	//checks state of thread
 void FetchLastRingLine( void* pdioden ); //copy last line to pdioden
 void ReadRingLine( void* pdioden, UINT32 lno ); // read line with index lno to pdioden
-UINT8 ReadRingBlock( void* pdioden, INT32 start, INT32 stop ); // copy a block of lines to userbuffer pdioden	
 //start<0 is in the past, stop>0 is in the future, relative to call of this function
 BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch ); //read state of trigger in signals during thread loop
-void SetADGain( UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8 );
 void CalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );
 UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block, UINT16 CAM );
 void* GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block, UINT16 CAM );
