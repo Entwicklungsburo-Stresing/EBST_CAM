@@ -38,7 +38,6 @@ BOOL WriteByteS0( UINT32 drvno, BYTE DWData, ULONG PortOff ); // write byte to s
 BOOL ReadLongDMA( UINT32 drvno, PULONG pDWData, ULONG PortOff );
 BOOL WriteLongDMA( UINT32 drvno, ULONG DWData, ULONG PortOff );
 // clear camera with reads
-void ClrShCam( UINT32 drvno, UINT32 zadr );// clears Shuttercamera with IFC signal
 void AboutDrv( UINT32 drvno );	// displays the version and board ID = test if board is there
 //	functions for managing controlbits in CtrlA register
 void HighSlope( UINT32 drvno );		//set input Trigger slope high
@@ -69,7 +68,6 @@ void SetDAT( UINT32 drvno, UINT32 tin100ns ); // delay after trigger in 100ns
 void RSDAT( UINT32 drvno ); // disable delay after trigger in S0+0x20
 // new Keyboard read which is not interrupt dependend
 // reads OEM scan code directly on port 0x60
-UCHAR ReadKeyPort( UINT32 drvno );
 // FIFO functions
 void StartFFTimer( UINT32 drvno, UINT32 exptime );	//starts 28bit timer of PCI board
 void SWTrig( UINT32 drvno );						//start a read to FIFO by software

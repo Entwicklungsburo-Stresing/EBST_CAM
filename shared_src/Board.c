@@ -2858,66 +2858,6 @@ void SendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data )
 }//SendFLCAM
 
 //weg?
-void ClrShCam( UINT32 drvno, UINT32 zadr ) //clear for Shutter cameras
-{
-	pArrayT dummy = NULL;
-	CloseShutter( drvno );              //IFC=low
-	Sleep( 5 );
-	//GETCCD(drvno, dummy, 0, -1, zadr);
-	Sleep( 5 );
-	OpenShutter( drvno );               //IFC=High
-	Sleep( 5 );
-}; //ClrShCam
-
-//weg? ->alte treiberfunktion drinne deviceiocontrol
-UCHAR ReadKeyPort( UINT32 drvno )
-{		//Reads PS2 Key directly -> very low jitter
-	// !!! works with PS2 keyboard only !!!!!!!!
-	// on WINNT, getasynckeystate does not work with highest priority
-
-	UCHAR Data = 0;
-	BOOL fResult = FALSE;
-	DWORD   ReturnedLength;
-	ULONG	PortOffset = 0; //has no function
-
-	fResult = DeviceIoControl( ahCCDDRV[drvno], IOCTL_ReadKey,  // read one byte
-		&PortOffset,        // Buffer to driver.
-		sizeof( PortOffset ),
-		&Data, sizeof( Data ), &ReturnedLength, NULL );
-	if (!fResult)
-	{
-		ErrorMsg( "Read Key Ioctl failed" );
-		exit( 0 );
-	};
-	return Data;
-};  // ReadKeyPort
-
-
-
-
-/*
-void SendCommand(UINT32 drvno, BYTE adr, BYTE data)
-//for programming of seriell port for AD98xx
-{//before calling IFC has to be set to low
-BYTE regorg=0;
-BYTE reg=0;
-//	Sleep(1);
-WriteByteS0(drvno,adr,0); // write address to bus
-
-ReadByteS0(drvno,&regorg,5);// get reg data
-reg = regorg | 0x20;
-WriteByteS0(drvno,reg,5); // // ND lo pulse
-WriteByteS0(drvno,regorg,5); // ND hi pulse
-
-WriteByteS0(drvno,data,0);	// write data to bus
-
-WriteByteS0(drvno, reg ,5); // ND lo pulse
-//	Sleep(1);
-WriteByteS0(drvno,regorg,5);	// ND hi pulse
-//	Sleep(1);
-}//SendCommand
-*/
-//weg?
 void RSEC( UINT32 drvno )
 //reset EC register to zero (enables programming IFC via register)
 {
