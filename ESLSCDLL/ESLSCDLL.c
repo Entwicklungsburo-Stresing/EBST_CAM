@@ -27,37 +27,29 @@ BOOL WINAPI DLLMain( HINSTANCE hInstDLL, DWORD dwNotification, LPVOID lpReserved
 		// DLL initialization code goes here. Formerly this 
 		// would be in the LibMain function of a 16-bit DLL.
 		//..................................................
-
 		nProcessCount++;
 		return(TRUE);
-
 	case DLL_PROCESS_DETACH:
 		// DLL cleanup code goes here. Formerly this would
 		// be in the WEP function of a 16-bit DLL.
 		//................................................
-
 	 //	CCDDrvExit(DRV);
-
 		nProcessCount--;
 		break;
-
 	case DLL_THREAD_ATTACH:
 		// Special initialization code for new threads goes here.
 		// This is so the DLL can "Thread Protect" itself.
 		//.......................................................
 		nThreadCount++;
 		break;
-
 	case DLL_THREAD_DETACH:
 		// Special cleanup code for threads goes here.
 		//............................................
 		nThreadCount--;
 		break;
 	}
-
 	return(FALSE);
 }
-
 
 DllAccess int DLLGetProcessCount()
 {
@@ -70,14 +62,16 @@ DllAccess int DLLGetThreadCount()
 }
 
 // ******************  attached calls to unit BOARD.C
-
 DllAccess  void DLLErrMsgBoxOn( void )
 {
 	ErrMsgBoxOn();
+	return;
 }
+
 DllAccess  void DLLErrMsgBoxOff( void )
 {
 	ErrMsgBoxOff();
+	return;
 }
 
 DllAccess UINT8 nDLLCCDDrvInit( void )
@@ -94,9 +88,8 @@ DllAccess UINT8 nDLLCCDDrvInit( void )
 
 DllAccess void DLLCCDDrvExit( UINT32 drv )		// closes the driver
 {
-
 	CCDDrvExit( drv );
-
+	return;
 }
 
 DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 flag816, UINT32 pclk, UINT32 xckdelay )		// init the driver -> true if found
@@ -121,13 +114,12 @@ DllAccess UINT8 DLLReadByteS0( UINT32 drv, UINT8 *data, UINT32 PortOff )	// read
 
 DllAccess UINT8 DLLWriteByteS0( UINT32 drv, UINT8 DataByte, UINT32 PortOff ) // writes DataByte to Port
 {
-
 	if (!WriteByteS0( drv, DataByte, PortOff )) { return 0; }
 	return 1;
 }
+
 DllAccess UINT8 DLLReadLongS0( UINT32 drv, UINT32 *data, UINT32 PortOff )	// read byte from Port, PortOff 0..3= Regs of Board
 {
-
 	if (!ReadLongS0( drv, data, PortOff )) { return 0; }
 	return 1;
 }
@@ -140,7 +132,6 @@ DllAccess UINT8 DLLWriteLongS0( UINT32 drv, UINT32 DataL, UINT32 PortOff ) // wr
 
 DllAccess UINT8 DLLReadLongDMA( UINT32 drv, UINT32 *data, UINT32 PortOff )	// read byte from Port, PortOff 0..3= Regs of Board
 {
-
 	if (!ReadLongDMA( drv, data, PortOff )) { return 0; }
 	return 1;
 }
@@ -153,14 +144,12 @@ DllAccess UINT8 DLLWriteLongDMA( UINT32 drv, UINT32 DataL, UINT32 PortOff ) // w
 
 DllAccess UINT8 DLLReadLongIOPort( UINT32 drv, UINT32 *data, UINT32 PortOff ) // writes DataByte to Port
 {
-
 	if (!ReadLongIOPort( drv, data, PortOff )) { return 0; }
 	return 1;
 }
 
 DllAccess UINT8 DLLWriteLongIOPort( UINT32 drv, UINT32 DataL, UINT32 PortOff ) // writes DataByte to Port
 {
-
 	if (!WriteLongIOPort( drv, DataL, PortOff )) { return 0; }
 	return 1;
 }
@@ -169,6 +158,7 @@ DllAccess void DLLAboutDrv( UINT32 drv )	// displays the version and board ID = 
 {//is called automatically for 2 boards
 	AboutDrv( drv );
 	if (NUMBER_OF_BOARDS == 2) AboutDrv( 2 );
+	return;
 }
 
 //	functions for managing controlbits in CtrlA register
@@ -200,50 +190,52 @@ DllAccess void DLLOutTrigHigh( UINT32 drv )		//set output Trigger signal high
 DllAccess void DLLOutTrigLow( UINT32 drv )		//set output Trigger signal low
 {
 	OutTrigLow( drv );
+	return;
 }
 
 DllAccess void DLLOutTrigPulse( UINT32 drv, UINT32 PulseWidth )	// pulses high output Trigger signal
 {
 	OutTrigPulse( drv, PulseWidth );
+	return;
 }
+
 DllAccess void DLLOpenShutter( UINT32 drv )	// set IFC=high
 {
 	OpenShutter( drv );
+	return;
 }
 
 DllAccess void DLLCloseShutter( UINT32 drv )	// set IFC=low
 {
 	CloseShutter( drv );
-}
-
-DllAccess UINT8 DLLReadKeyPort( UINT32 drv )   //before calling, mouse must be deactivated
-{
-	return ReadKeyPort( drv );
-}
-
-DllAccess void DLLClrShCam( UINT32 drvno, UINT32 zadr )
-{
-	ClrShCam( drvno, zadr );
+	return;
 }
 
 // ****************   New functions for LabView includes FIFO version
 DllAccess void DLLSWTrig( UINT32 drvno )						//start a read to FIFO by software
 {
 	SWTrig( drvno );
+	return;
 }
+
 DllAccess UINT8 DLLFFValid( UINT32 drvno )						// TRUE if linecounter>0
 {
 	if (FFValid( drvno ) == TRUE) { return 1; }
 	else return 0;
 }
+
 DllAccess void DLLSetExtTrig( UINT32 drvno )					// read to FIFO is triggered by external input I of PCI board
 {
 	SetExtFFTrig( drvno );
+	return;
 }
+
 DllAccess void DLLSetIntTrig( UINT32 drvno )					// read to FIFO is triggered by Timer
 {
 	SetIntFFTrig( drvno );// set hw register
+	return;
 }
+
 DllAccess UINT8 DLLFFOvl( UINT32 drvno )						// TRUE if linecounter>0
 {
 	if (FFOvl( drvno ) == TRUE) { return 1; }
@@ -252,15 +244,16 @@ DllAccess UINT8 DLLFFOvl( UINT32 drvno )						// TRUE if linecounter>0
 
 DllAccess void DLLSetupVCLK( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 {
-
 	SetupVCLKReg( drvno, lines, vfreq );
-
+	return;
 }//DLLSetupVCLK
+
 DllAccess void DLLReadRingLine( pArrayT pdioden, UINT32 lno ) //read in ring buffer
 {
 	ReadRingLine( pdioden, lno );
 	return;
 }
+
 DllAccess UINT8 DLLBlockTrig( UINT32 drv, UCHAR btrig_ch )
 {//get trigger state ext input
 	if (BlockTrig( drv, btrig_ch ) == TRUE) { return 1; }
@@ -271,17 +264,16 @@ DllAccess UINT8 DLLBlockTrig( UINT32 drv, UCHAR btrig_ch )
 void TestMsg( char testMsg1[20], char testMsg2[20] )
 {
 	if (MessageBox( GetActiveWindow(), testMsg1, testMsg2, MB_OK | MB_ICONEXCLAMATION ) == IDOK) {};
+	return;
 }
 
 DllAccess UINT8 DLLSetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
-
 	return SetS0Bit( bitnumber, Address, drvno );
 }
 
 DllAccess UINT8 DLLResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
-
 	return ResetS0Bit( bitnumber, Address, drvno );
 }
 DllAccess UINT64 DLLTicksTimestamp( void )
@@ -307,7 +299,6 @@ DllAccess void DLLSetupDMA( UINT32 drv, void*  pdioden, UINT32 nos, UINT32 nob )
  //local declarations
  //	char string[20] = "";
  //	void *dummy = NULL;
-
 	BOOL Abbruch = FALSE;
 	BOOL Space = FALSE;
 	BOOL ExTrig = FALSE;
@@ -347,7 +338,7 @@ DllAccess void DLLSetupDMA( UINT32 drv, void*  pdioden, UINT32 nos, UINT32 nob )
 		ErrorMsg( "Error in SetupPCIE_DMA" );
 		return;
 	}
-
+	return;
 }//DLLSetupDMA
 
 DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
@@ -361,7 +352,6 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 	//local declarations
 //	char string[20] = "";
 //	void *dummy = NULL;
-
 	BOOL Abbruch = FALSE;
 	BOOL Space = FALSE;
 	BOOL ExTrig = FALSE;
@@ -423,23 +413,20 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 		ErrorMsg( "Not enough physical RAM available!" );
 		WDC_Err( "ERROR for buffer %d: available memory: %lld MB \n \tmemory needed: %lld MB\n", NUMBER_OF_BOARDS, memory_free_mb, needed_mem_mb );
 	}
-
 	//pDIODEN = (pArrayT)calloc(nob, nospb * _PIXEL * sizeof(ArrayT));
-
-//pDMABigBufBase[drv] = pdioden;
+	//pDMABigBufBase[drv] = pdioden;
 	UserBufInScans = nos;  //one buffer for all
 
 	//ErrorMsg(" Camera found"); //without this message is a crash in the first call ...
 	//must before the functionSetupPCIE_DMA or after DLLDrvInit
 	//Sleep(1000);
 
-
 	if (!SetupPCIE_DMA( drv, nos, nob ))  //get also buffer address
 	{
 		ErrorMsg( "Error in SetupPCIE_DMA" );
 		return;
 	}
-
+	return;
 }//nDLLSetupDMA
 
 /* DLLReturnFrame copies one frame of pixel data to pdioden
@@ -448,21 +435,15 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 * param3: curr_nob - position in blocks (0...nob)
 * param4: *pdioden - address where data is written
 * param5: length - lenght of frame, typically pixel count (1088)
-* param6: NOT IMPLEMENTED: cam_pos - position in camera count (0...CAMCNT)
+* param6: curr_cam - position in camera count (0...CAMCNT)
 * return void
 */
-DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 *pdioden, UINT32 length )
+DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdioden, UINT32 length )
 {
-	ULONGLONG addr = 0;
-	addr = curr_nob * Nospb * _PIXEL + curr_nos * _PIXEL;
-	//complet buffer:	|nob0|nob1|...|curr_nob|...|Nob|
-	// one nob:			|nos0|nos1|...|curr_nos|...|Nospb|
-	USHORT* pframe = pDMABigBufBase[drv] + addr;  //calc in words
-	// This doesn't work as expected. Where is the problem?
-	//USHORT* pframe = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, cam_pos );
+	void* pframe = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, curr_cam );
 	memcpy( pdioden, pframe, length * sizeof( USHORT ) );  // length in bytes
 	/*
-	WDC_Err("FRAME1: drv: %d, curr_nob: %d, _PIXEL: %d\n",drv,curr_nos,_PIXEL);
+	WDC_Err( "RETURN FRAME: drv: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, _PIXEL: %u, length: %u\n", drv, curr_nos, curr_nob, curr_cam, _PIXEL, length );
 	WDC_Err("FRAME2: address Buff: 0x%x \n", pDMABigBufBase[drv]);
 	WDC_Err("FRAME2: address pdio: 0x%x \n", pdioden);
 	WDC_Err("FRAME3: pix42 of ReturnFrame: %d \n", *((USHORT*)pdioden + 420));
@@ -512,43 +493,50 @@ DllAccess void nDLLReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, U
 
 	//CloseHandle(cam_thread[0]);//threadex
 	//CloseHandle(cam_thread[1]);//threadex
+	return;
 }//DLLReadFFLoop
 
 DllAccess void DLLStopFFLoop( void )
 {
 	escape_readffloop = TRUE;
+	return;
 }
 
 DllAccess void DLLSetContFFLoop( UINT8 activate )
 {
-
 	contffloop = activate;//0 or 1
+	return;
 }
 
 //********  cooling functions
 DllAccess void DLLSetTemp( UINT32 drvno, UINT8 level )
 {
 	SetTemp( drvno, level );
+	return;
 }
 
 DllAccess void DLLSetEC( UINT32 drvno, UINT64 ecin100ns )
 {
 	SetEC( drvno, ecin100ns );
+	return;
 }
 
 DllAccess void DLLResetEC( UINT32 drvno )
 {
 	ResetEC( drvno );
+	return;
 }
 
 DllAccess void DLLSetTORReg( UINT32 drvno, UINT8 fkt )
 {
 	SetTORReg( drvno, fkt );
+	return;
 }
 
 DllAccess void DLLSetupDELAY( UINT32 drvno, UINT32 delay )
 {
 	SetupDELAY( drvno, delay );
+	return;
 }
 
 DllAccess void DLLSetISPDA( UINT32 drvno, UINT8 set )
@@ -558,6 +546,7 @@ DllAccess void DLLSetISPDA( UINT32 drvno, UINT8 set )
 		SetISPDA( drvno, FALSE );
 	}
 	else SetISPDA( drvno, TRUE );
+	return;
 }
 
 DllAccess void DLLSetPDAnotFFT( UINT32 drvno, UINT8 set )
@@ -567,6 +556,7 @@ DllAccess void DLLSetPDAnotFFT( UINT32 drvno, UINT8 set )
 		SetPDAnotFFT( drvno, FALSE );
 	}
 	else SetPDAnotFFT( drvno, TRUE );
+	return;
 }
 
 DllAccess void DLLSetISFFT( UINT32 drvno, UINT8 set )
@@ -576,16 +566,19 @@ DllAccess void DLLSetISFFT( UINT32 drvno, UINT8 set )
 		SetISFFT( drvno, FALSE );
 	}
 	else SetISFFT( drvno, TRUE );
+	return;
 }
 
 DllAccess void DLLRsTOREG( UINT32 drvno )
 {//reset TOREG
 	RsTOREG( drvno );
+	return;
 }
 
 DllAccess void DLLSetupHAModule( UINT8 irsingle, UINT32 fftlines )
 {//set to module for C8061 & C7041
 	SetupHAModule( (irsingle != 0), fftlines );
+	return;
 }
 
 DllAccess void DLLSetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep )
@@ -596,6 +589,7 @@ DllAccess void DLLSetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep
 	}
 	else
 		SetupVPB( drvno, range, lines, FALSE );
+	return;
 }
 
 DllAccess void DLLAboutS0( UINT32 drv )
@@ -631,6 +625,7 @@ DllAccess void DLLErrorMsg( char ErrMsg[20] )
 DllAccess void DLLCalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMSpix, UINT16 CAMpos, double *mwf, double *trms )
 {
 	CalcTrms( drvno, nos, TRMSpix, CAMpos, mwf, trms );
+	return;
 }
 
 DllAccess void DLLStart2dViewer( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos )
@@ -660,6 +655,7 @@ DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT 
 	}
 	return;
 }
+
 DllAccess void DLLDeinit2dViewer()
 {
 	if (Direct2dViewer != NULL)
@@ -670,6 +666,7 @@ DllAccess void DLLDeinit2dViewer()
 	}
 	return;
 }
+
 DllAccess void DLLSetGammaValue( UINT16 white, UINT16 black )
 {
 	if (Direct2dViewer != NULL)
