@@ -1796,105 +1796,6 @@ BOOL CallWRFile( UINT32 drvno, void* pdioden, ULONG arraylength, ULONG fkt )
 }//CallWRFile
 
 
-
-//weg!?
-//replaced by StartReadWithDma
-BOOL ReadPCIEFifo( UINT32 drvno, void* pdioden, long fkt )
-{	//reads fifo data to buffer dioden
-	//drvno: driver number 1..4; 1 for LSCPCI
-	//dioden: pointer to destination array of type ArrayT
-	//fkt=-1->read&don't store;fkt=0->clear array; fkt=1->read; fkt=2->add; 
-	//returns true; false on error
-	//same as GETCCD, but no parameters for fftlines .. zadr
-
-
-	pArrayT pReadArray;
-	pArrayT	pDiodenBase;
-	pArrayT	pDiodenBase2;
-
-	ULONG length = 0;
-	ULONG i = 0;
-	ULONG lwritten = 0;
-	BOOL addalloc = FALSE;
-
-	if (!aINIT[drvno]) return FALSE;	// return with error if no init
-
-	pReadArray = (pArrayT)pdioden;
-	//	pReadArray = pReadArray + (db-1) * pixel;
-	pDiodenBase = pReadArray;
-
-	if (fkt == 0) // set array to 0
-	{
-		for (i = 0; i < _PIXEL; i++)
-			*(pReadArray++) = 0;
-		return TRUE;
-	}
-
-	if (fkt == 5) // set array to i
-	{
-		for (i = 0; i < _PIXEL; i++)
-			*(pReadArray++) = (ArrayT)i;
-		return TRUE;
-	}
-
-	if (fkt > 9)
-		return FALSE;  // function not implemented
-
-
-	if ((fkt == 2) || (fkt == -1)) //read in our local array ladioden - add and clrread
-	{
-		//alloc local array dioden, so we don't overwrite our DIODEN
-		pReadArray = (pArrayT)calloc( aPIXEL[drvno], sizeof( ArrayT ) );
-		if (pReadArray == 0)
-		{
-			ErrorMsg( "alloc ADD/CLR Buffer failed" );
-			return FALSE;
-		}
-		addalloc = TRUE;
-	}
-
-
-	//call the read  -  only copy _NO_TLPS * 128 ! - target array may be greater
-	//if (!WriteFile(ahCCDDRV[drvno], pReadArray, _NO_TLPS * 128, &lwritten, NULL)) //write to PC RAM, length in BYTES
-	if (!CallWRFile( drvno, pReadArray, NO_TLPS * 128, fkt ))
-	{
-		ErrorMsg( "Read DMA Buffer - FIFO failed" );
-		if (addalloc) free( pReadArray );
-		return FALSE;
-	}
-
-
-
-	if (fkt == -1)
-	{ // return , nothing else to do
-		if (addalloc) free( pReadArray );
-		return TRUE;
-	}
-
-	if (_RESORT) Resort( drvno, pReadArray, pReadArray );  //pixel resort
-
-
-
-
-	//clrread and add fkt=-1 and 2 could not be implemented with dma
-	//so we do it here after reading
-	if (fkt == 2) // we must now add our data to DIODEN for online add
-	{
-		pDiodenBase2 = pReadArray;
-		for (i = 0; i < _PIXEL; i++)
-			* (pDiodenBase++) += *(pDiodenBase2++);
-	}
-
-	if (addalloc) free( pReadArray );
-
-	return TRUE; // no Error, all went fine
-};  // ReadPCIEFifo
-
-
-
-
-
-
 // *********************** PCI board registers
 
 //weg!? verknüpft mir vi ReadFifo->alles weg!
@@ -2154,96 +2055,6 @@ BOOL CallIORead( UINT32 drvno, void* pdioden, ULONG fkt )
 	if (b12alloc) free( pRArray );
 	return TRUE;
 }//CallIORead
-
-//weg!? verknüpft mir vi ReadFifo->alles weg!
-//  call of the read function - FIFO version
-BOOL ReadFifo( UINT32 drvno, void* pdioden, long fkt )
-{	//reads fifo data to buffer dioden
-	//drvno: driver number 1..4; 1 for LSCPCI
-	//dioden: pointer to destination array of type ArrayT
-	//fkt=-1->read&don't store;fkt=0->clear array; fkt=1->read; fkt=2->add; 
-	//returns true; false on error
-	//same as GETCCD, but no parameters for fftlines .. zadr
-
-
-	pArrayT pReadArray;
-	pArrayT	pDiodenBase;
-	pArrayT	pDiodenBase2;
-
-	ULONG length = 0;
-	ULONG i = 0;
-	BOOL addalloc = FALSE;
-
-	if (!aINIT[drvno]) return FALSE;	// return with error if no init
-
-	pReadArray = (pArrayT)pdioden;
-	//	pReadArray = pReadArray + (db-1) * pixel;
-	pDiodenBase = pReadArray;
-
-	if (fkt == 0) // set array to 0
-	{
-		for (i = 0; i < _PIXEL; i++)
-			*(pReadArray++) = 0;
-		return TRUE;
-	}
-	/*
-	if (fkt==5) // set array to i
-	{
-	for (i=0;i<	_PIXEL;i++)
-	*(pReadArray++) =  (ArrayT) i;
-	return TRUE;
-	}
-	*/
-	if (fkt > 9)
-		return FALSE;  // function not implemented
-
-	//if ((_IR) && (!addalloc))
-
-	if ((fkt == 2) || (fkt == -1)) //read in our local array ladioden - add and clrread
-	{
-		//alloc local array dioden, so we don't overwrite our DIODEN
-		pReadArray = (pArrayT)calloc( aPIXEL[drvno], sizeof( ArrayT ) );
-		if (pReadArray == 0)
-		{
-			ErrorMsg( "alloc ADD/CLR Buffer failed" );
-			return FALSE;
-		}
-		addalloc = TRUE;
-	}
-
-
-	//call the read
-	if (!CallIORead( drvno, pReadArray, fkt ))
-	{
-		ErrorMsg( "Read DMA Buffer - FIFO failed" );
-		if (addalloc) free( pReadArray );
-		return FALSE;
-	}
-
-
-	if (fkt == -1)
-	{ // return , nothing else to do
-		if (addalloc) free( pReadArray );
-		return TRUE;
-	}
-
-	if (_RESORT) Resort( drvno, pReadArray, pReadArray );  //pixel resort
-
-
-	//clrread and add fkt=-1 and 2 could not be implemented with dma
-	//so we do it here after reading
-	if (fkt == 2) // we must now add our data to DIODEN for online add
-	{
-		pDiodenBase2 = pReadArray;
-		for (i = 0; i < _PIXEL; i++)
-			* (pDiodenBase++) += *(pDiodenBase2++);
-	}
-
-	if (addalloc) free( pReadArray );
-
-	return TRUE; // no Error, all went fine
-};  // ReadFifo
-
 
 BOOL ReadLongIOPort( UINT32 drvno, ULONG *DWData, ULONG PortOff )
 //this function reads the memory mapped data , not the I/O Data
@@ -3046,29 +2857,6 @@ void SendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data )
 	return;
 }//SendFLCAM
 
-
-//weg?
-void ClrRead( UINT32 drvno, ULONG fftlines, ULONG zadr, ULONG ccdclrcount )
-//normal clear for Kamera is a complete read out
-//most cams needs up to 10 complete reads for resetting the sensor
-//depends how much it was overexposured
-{
-	UINT32 i;
-	SetIntFFTrig( drvno );
-	StartFFTimer( drvno, 1000 );
-	//	RSFifo(drvno);
-	for (i = 0; i < ccdclrcount; i++)
-	{
-		SWTrig( drvno );
-		while (FlagXCKI( drvno ))
-		{
-		}//wait until its ready
-	}
-	StopFFTimer( drvno );
-	RSFifo( drvno );
-}; //ClrRead
-
-
 //weg?
 void ClrShCam( UINT32 drvno, UINT32 zadr ) //clear for Shutter cameras
 {
@@ -3145,20 +2933,6 @@ void RSEC( UINT32 drvno )
 
 	WriteLongS0( drvno, 0, 0x24 );
 }
-
-
-//weg?
-void SetHiamp( UINT32 drvno, BOOL hiamp )
-{
-
-	//	if (_HA_IR) CloseShutter(drvno);// IR uses #11 or #14
-	if (hiamp) { V_On( drvno ); }	//standard use #11 VON
-	else { V_Off( drvno ); }
-}//SetHiamp
-
-
-
-
 
 //weg?
 BOOL CheckFFTrig( UINT32 drvno ) //ext trigger in FF for short pulses
@@ -3273,355 +3047,6 @@ void StartReadWithDma( UINT32 drvno )
 	if (addalloc) free( pReadArray );
 }//StartReadWithDma
 
-
-//weg? ->and remove vi
-//  read a range from start to stop relative to actual Counter to user buffer
-UINT8 ReadRingBlock( void* pdioden, INT32 start, INT32 stop )
-// when calling this function, the actual RingWRCnt value is used as relative zero
-// if start or stop is negative it is in the past 
-// if start or stop is positive it is in the future - waits until stop reached
-// if it is 0 the actual line RingWRCnt is used
-// returns 0 if no error, else error codes see below
-// in fact if stop>0 thread is waiting until stop reached
-// after that the last range of lines is copied to user buffer
-{
-	//set globals
-	INT32 range = 0;
-	ULONG pixel = aPIXEL[Ringdrvno];
-
-	//here the user buffer is set
-	pUserBuf = (PUCHAR)pdioden;
-	UserBufValid = TRUE;
-
-	RingFetchFutureAct = FALSE;
-	RingFutureWrCnt = 0;
-
-	RingCopyStop = stop;
-	RingCopyAct = FALSE;
-
-	//check range
-	range = stop - start + 1;
-	RingCopyRange = range;
-
-	//check for size with reserve 50, ringbuffer must be bigger then userbuf
-	if (range > RingFifoDepth - 2)
-	{
-		ErrorMsg( "ring buffer depth too small" );
-		RingThreadOn = FALSE;
-		return 1; // range bigger then ringbuffer
-	}
-	if (range <= 0)
-	{
-		ErrorMsg( "ring buffer range zero" );
-		RingThreadOn = FALSE;
-		return 2; // range bigger then ringbuffer
-	}
-	if (stop < start)
-	{
-		ErrorMsg( "stop must be > start" );
-		RingThreadOn = FALSE;
-		return 3; // range bigger then ringbuffer
-	}
-	if (!RingThreadOn) // thread is not on
-	{
-		ErrorMsg( "thread not running" );
-		return 4; // thread is not on
-	}
-
-	if (stop > 0) //in the future: wait until end reached
-	{// ringthread is counting from now up to stop
-		RingFetchFutureAct = TRUE;
-		do
-		{
-			//check for ESC keypressed
-		}
-		while ((RingFetchFutureAct) && (RingThreadOn));//wait for readthread to reach stop
-	}
-
-
-	//wait until 1st run reached range
-	do {}
-	while (RingFirstRun < range + 5);
-
-	//ValMsg(range);
-
-	RingCopyAct = TRUE; //start ring copy
-	//wait until data is copied to userbuf
-	do {}
-	while ((RingCopyAct) && (RingThreadOn));
-
-	return 0;
-}  // ReadRingBlock
-
-//weg?!
-void CopyRingtoUserBuf( INT32 fetchzero )
-{	//reads fifo data to user buffer dioden, fetchzero is the actual ring pointer
-	ULONG pixel = aPIXEL[Ringdrvno];
-	ULONG linesize = pixel * sizeof( ArrayT );
-	INT32 blocksize1 = 0;
-	INT32 blocksize2 = 0;
-	INT32 range = 0;
-	INT32 range1 = 0;
-	INT32 range2 = 0;
-	INT32 lno = 0;
-	INT32 lno2 = 0;
-	PUCHAR puser = NULL;
-
-
-	//in the first run buffer is not set
-	//don't copy if so
-	if (UserBufValid == FALSE) return;
-	puser = pUserBuf;
-	if (_HWCH2) linesize *= 2;
-	range = RingCopyRange;
-
-	//keep actual ring pointer fetchzero, this is our trigger point
-	//if (RingWRCnt<fetchzero+stop) return 3; //user stop
-
-	//if counter was wrapped at 0
-	//wrap at 0 <-> RingFifoDepth
-	if (fetchzero + 1 - range < 0)
-	{// is wrapped around 0
-		//	wrapped=TRUE;
-
-		range2 = fetchzero + 1;
-		range1 = range - range2;
-
-		//	lno = RingFifoDepth-range+fetchzero+1;
-		lno = RingFifoDepth - range1;
-		lno2 = 0;
-
-		blocksize1 = linesize * range1; //block in bytes
-		blocksize2 = linesize * range2;
-
-		//tests
-		//memset((PUCHAR) puser ,0x88,blocksize1);//range1
-		//memset((PUCHAR) puser + blocksize1 ,0xee,blocksize2);//range2
-		//ValMsg(puser);
-		//memset((PUCHAR) puser ,range1,1); //show split ranges in 1st pixel
-		//memset((PUCHAR) puser+1,range2,1);
-
-		memcpy( (PUCHAR)pUserBuf, (PUCHAR)pRingBuf + lno * linesize, blocksize1 );//before depth
-		memcpy( (PUCHAR)pUserBuf + blocksize1, (PUCHAR)pRingBuf + lno2 * linesize, blocksize2 );//from zero
-	}
-	else //not wrapped
-	{
-		//	wrapped = FALSE;
-		lno = fetchzero + 1 - range;
-		blocksize1 = linesize * range;
-		//memset((PUCHAR) pUserBuf,0x22,blocksize1);
-		memcpy( (PUCHAR)pUserBuf, (PUCHAR)pRingBuf + lno * linesize, blocksize1 );
-	}
-
-	UserBufValid = FALSE; //set FALSE here if next buffer has a different address
-} // CopyRingtoUserBuf
-
-
-
-//***** Ring Fifo fkts **************************************
-//starts an own thread for writing to a ring buffer of size FifoDepth
-//allocates the buffer here
-//read is done by ReadRing if tread>twrite
-// or by ReadLastRing if tread<twrite
-
-//weg?!
-//replaced by StartReadWithDma
-void __cdecl ReadRingThread( void *dummy )
-
-{// max priority
-	UINT32 i = 0;
-	UINT32 j = 0;
-	int k = 0;
-	BOOL Space = FALSE;
-	BOOL Abbruch = FALSE;
-	//alloc Fifo
-	ULONG pixel = aPIXEL[Ringdrvno]; //use _NO_TLPS instead
-	ULONG linesize = pixel * sizeof( ArrayT );
-
-	volatile BYTE linestofetch = 0;
-	ULONG lwritten = 0;
-
-	if (_HWCH2) linesize *= 2;
-	MaxLineCounter = 0;
-
-#define testdata FALSE  //for test purpose only, generates dummy data
-
-
-	//SetThreadIdealProcessor(GetC urrentThread(),3);
-
-
-	SetPriority( READTHREADPriority );
-#if (_ERRTEST)
-	ErrCnt = 0;
-#endif
-	RingFirstRun = 0;
-	RingWRCnt = -1;
-	RingThreadOFF = FALSE;
-
-	RingFetchFutureAct = FALSE;
-	RingFutureWrCnt = 0;
-	RingCopyAct = FALSE;
-	RingCtrlReg = 0;
-
-
-	// Timer on loop
-	RingThreadOn = TRUE;// before loop
-	while (RingThreadOn == TRUE) // || FFValid(FFdrvno))
-	{
-		//read the actual trigger input of trigger or OPTO1 & 2 in CtrlC
-		if (RingCtrlRegOfs > 0) ReadByteS0( Ringdrvno, &RingCtrlReg, RingCtrlRegOfs );
-
-		linestofetch = ReadFFCounter( Ringdrvno );
-		//if(linestofetch > 0)WDC_Err("linestofetch: %i \n", linestofetch);
-		//	if (FFValid(Ringdrvno))
-		//	if (linestofetch!=0)
-
-		if (linestofetch > 0)
-		{
-			//linestofetch = ReadFFCounter(Ringdrvno);
-			//keep and show how many lines were written to fifo
-			if (MaxLineCounter < linestofetch) MaxLineCounter = linestofetch;
-
-			for (i = 1; i <= linestofetch; i++)
-			{//read all whats there
-				RingFirstRun += 1; //count first run before usercopy may start.
-				if (RingFirstRun > MAXINT) RingFirstRun = MAXINT;
-				RingWRCnt += 1;
-				if (RingWRCnt > RingFifoDepth - 1) RingWRCnt = 0;//wrap counter
-#if (!testdata)
-				//read fifo is DMA so here it can be back before ready
-
-				//			WriteFile(ahCCDDRV[Ringdrvno], pRingBuf + RingWRCnt*pixel, pixel*2, &lwritten, NULL); //write to PC RAM
-				//pRingBuf will crash even if written to DMA write addr reg
-				//this function wraps the call, pixel does not matter here, but must be > as 1088
-				ReadPCIEFifo( Ringdrvno, (pArrayT)pRingBuf + RingWRCnt * pixel, _FKT ); //*linesize in short
-
-				//			ReadFifo(Ringdrvno, (PUCHAR) pRingBuf+RingWRCnt*linesize, _FKT);	
-				//			memset((PUCHAR) pRingBuf+RingWRCnt*linesize,RingWRCnt,linesize);//test cnt
-				//			*((PUINT32)pRingBuf+RingWRCnt*pixel+4) = RingWRCnt; //test: write cnter to pixel=4
-
-				//if ReadRingBlock want's to read in future
-				if (RingFetchFutureAct)
-				{
-					RingFutureWrCnt += 1;
-					if (RingFutureWrCnt > RingCopyStop)
-					{
-						RingFutureWrCnt = 0;
-						RingFetchFutureAct = FALSE;
-					}
-				}
-
-#else		//testdata
-				memset( pRingBuf + RingWRCnt * pixel, RingWRCnt, pixel * 2 );//sets bytes
-#endif
-
-
-#if (_TESTRUP) //set outtrig if pixel 1 and 256 found
-				if (*(pRingBuf + RingWRCnt * pixel + 4) == 1) OutTrigHigh( Ringdrvno );
-				if (*(pRingBuf + RingWRCnt * pixel + 4) == Roilines - 2) OutTrigLow( Ringdrvno );
-#endif
-
-#if (_ERRTEST) //test data for integrity	
-				//for (k=100;k<4500;k++)
-				{
-					//if (*(pRingBuf + RingWRCnt*_NO_TLPS * 128 / 2 + 7) < 0x4000) //wert etwa > 0x4000
-					if (*(pDMASubBuf[drvno]/*pRingBuf + RingWRCnt*pixel*/ + 1083) != 539)
-					{//FetchActLine=TRUE;
-						ErrVal = *(/*pRingBuf + RingWRCnt*pixel*/pDMASubBuf[drvno] + 1083);
-						ErrCnt += 1;
-					}
-				}
-#else
-				//FetchActLine=FALSE;// dont display if no error
-#endif
-
-			}//for (i=1;i<=linestofetch;i++)
-		}//if (FFValid(Ringdrvno))
-		else //no valid line, use time to check for copy user data
-		{
-			//be shure the first range is in ring buffer before getting here (1st call)
-			if (RingCopyAct == TRUE)// if userbuf needs data, copy it here
-			{//todo: if range is too big (>1000) the copy should be broken into smaller pieces
-				// one block per loop ..
-				CopyRingtoUserBuf( RingWRCnt );
-				RingCopyAct = FALSE;
-			}
-			//we use waittrigger just for checking keys
-			//WaitTrigger(Ringdrvno,FALSE,&Space, &Abbruch);
-			//if (Abbruch==TRUE)RingThreadOn=FALSE;
-		}//else
-		//	if (RELEASETHREADms>=0) Sleep(RELEASETHREADms); // <0 don' release		
-
-	}//while
-	free( pRingBuf );
-	RingCopyAct = FALSE;
-	UserBufValid = FALSE;
-	ResetPriority();
-	RingThreadOFF = TRUE;
-
-	_endthread();
-}//ReadRingThread
-
-//weg?!
-//replaced by StartReadWithDma
-void StartRingReadThread( UINT32 drvno, ULONG ringfifodepth, ULONG threadp, __int16 releasems )
-{//TODO still thread...has to be converted to threadex
-	ULONG pixel = aPIXEL[drvno];
-	ULONG linesize = pixel * sizeof( ArrayT );
-	//set globals in BOARD
-	Ringdrvno = drvno;
-	RingRDCnt = 0;
-	RingWRCnt = 0;
-
-	ULONG ctrlcode = 0;
-	ULONG fResult = 0;
-	ULONG Errorcode = 0;
-	ULONG ReturnedLength = 0;
-
-	//DMA_bufsizeinbytes = 100 * RAMPAGESIZE * 2;// 100: ringbufsize 2:because  we need the size in bytes
-	if (!DMAAlreadyStarted)
-	{
-		SetupPCIE_DMA( drvno, UserBufInScans, Nob );
-		DMAAlreadyStarted = TRUE;
-	}
-
-#if (_TESTRUP)
-	Roilines = ROILINES;
-#endif	
-	READTHREADPriority = threadp; // pass vals as globals
-	RELEASETHREADms = releasems;
-
-	if (_HWCH2) linesize *= 2;
-	pRingBuf = (pArrayT)calloc( linesize, ringfifodepth ); //allooc buffer
-	if (pRingBuf == 0)
-	{
-		ErrorMsg( "alloc RingFifo Buffer failed, abort function" );
-		return;
-	}
-	RingCopyAct = FALSE;
-
-	/*
-	ctrlcode = pRingBuf;//set data array address
-	fResult = DeviceIoControl(ahCCDDRV[1], IOCTL_SET_DMA_WRITE_ADDR,
-	&ctrlcode,        // Buffer to driver.
-	sizeof(ctrlcode),
-	&Errorcode, sizeof(Errorcode), &ReturnedLength, NULL);
-	if (!fResult)  { ErrorMsg("SetupAddress failed"); };
-
-	if (!DMAAlreadyStarted){
-	SetupPCIE_DMA(DRV);
-	DMAAlreadyStarted = TRUE;
-	}
-	*/
-	//StartDMA first time
-	//StartPCIE_DMAWrite(DRV);
-
-	RingFifoDepth = ringfifodepth;
-	//ReadRingThread(NULL);
-	_beginthread( ReadRingThread, 0, NULL ); // starts get loop in an own thread
-
-	return;
-}
 //weg?!
 //replaced by StartReadWithDma
 void StopRingReadThread( void )
@@ -4076,35 +3501,6 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 
 }
 
-
-//  call of the read function if write is faster then read
-// ReadRingFifoThread is writing fast to the ring buffer
-// if global flag FetchActLine is set, the thread copies last line to pCopyDispBuf
-
-//weg?!
-void StartFetchRingBuf( void )
-{//pdioden points to the user buffer
-	RingCopyAct = TRUE; //set global flag starting the copy
-}
-//weg?!
-BOOL RingThreadIsOFF( void )
-{//return state of thread
-	//use this for sync to outside
-	return RingThreadOFF;
-}
-//weg?!
-// FetchLastRingLine gets latest valid displ buf
-void FetchLastRingLine( void* pdioden )
-{	//reads displ buf data to user buffer dioden
-	int i = 0;
-	ULONG pixel = aPIXEL[Ringdrvno];
-	//ULONG linesize = pixel * sizeof(ArrayT);
-	//if (_HWCH2) linesize *=2;
-
-	//memset(pdioden,16, pixel*2 +2 );//*range);
-	ReadRingBlock( pdioden, 0, 0 );
-};  // FetchLastRingLine
-
 //weg?!
 ULONG GetLastMaxLines( void )
 {	//returns the max no. of lines which accumulated
@@ -4125,22 +3521,6 @@ void ReadRingLine( void* pdioden, UINT32 lno )
 
 	memcpy( pdioden, pRingBuf + lno * pixel, linesize );
 };  // ReadRingLine
-
-
-
-//weg?
-ULONG ReadRingCounter()
-{
-	ULONG diff = 0;
-	diff = RingWRCnt - RingRDCnt;
-	return  diff;
-}//ReadRingCounter
-//weg?!
-BOOL RingValid()
-{
-	if ((RingWRCnt - RingRDCnt) == 0) { return FALSE; }
-	else return TRUE;
-}//RingValid
 
 //weg? -> unser jungo blockreg?
 BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch )
@@ -4209,7 +3589,6 @@ void SWTrig( UINT32 drvno )
 	WriteByteS0( drvno, reg, S0Addr_FREQREG ); //reset
 }
 
-
 void StopFFTimer( UINT32 drvno )
 {
 	BYTE data = 0;
@@ -4252,7 +3631,6 @@ BOOL FFFull( UINT32 drvno )
 	return FALSE;
 }
 
-//weg? wenn es bleibt, adresse ändern with enum
 BOOL FFOvl( UINT32 drvno )
 {	// had Fifo overflow
 	WDC_Err( "FFOvl\n" );
@@ -4265,48 +3643,12 @@ BOOL FFOvl( UINT32 drvno )
 }
 
 //weg? wenn es bleibt, adresse ändern with enum
-BOOL FlagXCKI( UINT32 drvno )
-{	// XCKI write to FIFO is active 
-	WDC_Err( "FlagXCKI\n" );
-	BYTE data = 0;
-	ReadByteS0( drvno, &data, S0Addr_FF_FLAGS );
-	data &= 0x10;
-	if (data > 0) return TRUE; //is running
-
-	return FALSE;
-}
-
-//weg? wenn es bleibt, adresse ändern with enum
 void RSFifo( UINT32 drvno )
 {	//reset FIFO and FFcounter
 	BYTE data = 0;
 	ReadByteS0( drvno, &data, S0Addr_FREQREG );
 	data |= 0x80;
 	WriteByteS0( drvno, data, S0Addr_FREQREG );
-	data &= 0x7F;
-	WriteByteS0( drvno, data, S0Addr_FREQREG );
-}
-
-
-//weg? wenn es bleibt, adresse ändern with enum
-void DisableFifo( UINT32 drvno )
-{	//reset FIFO and FFcounter
-	BYTE data = 0;
-	ReadByteS0( drvno, &data, S0Addr_FREQREG );
-	data |= 0x80;
-	WriteByteS0( drvno, data, S0Addr_FREQREG );
-	//	data &= 0x7F;
-	//	WriteByteS0(drvno,data,0x12);
-}
-
-
-//weg? wenn es bleibt, adresse ändern with enum
-void EnableFifo( UINT32 drvno )
-{	//reset FIFO and FFcounter
-	BYTE data = 0;
-	ReadByteS0( drvno, &data, S0Addr_FREQREG );
-	//	data |= 0x80;
-	//	WriteByteS0(drvno,data,0x12);
 	data &= 0x7F;
 	WriteByteS0( drvno, data, S0Addr_FREQREG );
 }
@@ -4330,18 +3672,6 @@ void SetIntFFTrig( UINT32 drvno ) // set internal Trigger
 	data &= 0x7F;
 	WriteByteS0( drvno, data, S0Addr_XCKMSB );
 }//SetIntFFTrig
-
-//weg? wenn es bleibt, adresse ändern with enum
-BYTE ReadFFCounter( UINT32 drvno )
-{   //count number of lines in FIFO 
-	//max. 16 || capacity of FIFO /(pixel*sizeof(ArrayT)) (7205=8k)
-	//new: if _CNT255 ff counts up to 255
-	BYTE data = 0;
-	ReadByteS0( drvno, &data, S0Addr_FIFOCNT );
-	if (_CNT255) {}
-	else data &= 0x0f;
-	return data;
-}
 
 //weg? wenn es bleibt, adresse ändern with enum
 void SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq )
@@ -4438,46 +3768,6 @@ void SetupHAModule( BOOL irsingle, ULONG fftlines )
 	HA_IRSingleCH = irsingle;
 }//SetupHAModule
 
-
-
-//weg?!! wenn es bleibt, adresse ändern with enum
-void PickOneFifoscan( UINT32 drvno, pArrayT pdioden, BOOL* pabbr, BOOL* pspace, ULONG fkt )
-{	//get one scan off free running fifo timer
-	//don't enable Fifo during a read
-	//so wait for a complete read and enable afterwards
-	ULONG lwritten = 0;
-	ULONG pixel = aPIXEL[drvno];
-
-	do
-	{//here used for Keypressed
-		WaitTrigger( drvno, FALSE, pspace, pabbr );//test abbruch
-	}
-	while ((!FlagXCKI( drvno )) && (*pabbr == FALSE));//sync to active read
-
- //don't reset Fifo during a read
-	do
-	{//here used for Keypressed
-		WaitTrigger( drvno, FALSE, pspace, pabbr );//test abbruch
-	}
-	while ((FlagXCKI( drvno )) && (*pabbr == FALSE));//wait for not active read
-
-	RSFifo( drvno );
-
-	do
-	{//here used for Keypressed and 1 line valid
-		WaitTrigger( drvno, FALSE, pspace, pabbr );//test abbruch
-	}
-	while ((!FFValid( drvno )) && (*pabbr == FALSE));//wait for 1 line in Fifo
-
- //copy data from fifo to buffer pDIODEN
- //ReadFifo(drvno,pdioden,fkt);
-	WriteFile( ahCCDDRV[drvno], pdioden, pixel * 2, &lwritten, NULL ); //write to PC RAM
-
-	//	DisableFifo(drvno);
-}//PickOneFifoscan
-
-
-
 //********************  thread priority stuff
 
 //weg?!! connected with readffloop wenn es bleibt, adresse ändern with enum
@@ -4543,27 +3833,6 @@ BOOL SetPriority( ULONG threadp )
 	}
 	return TRUE;
 }//SetPriority
-
-
-
-//weg? wenn es bleibt, adresse ändern with enum
-BOOL ResetPriority()
-{
-	// reset the class Priority and stop thread
-	if (!SetPriorityClass( hPROCESS, OLDPRICLASS ))
-	{
-		ErrorMsg( " No Class reset " );
-		return FALSE;
-	}
-	if (!SetThreadPriority( hTHREAD, OLDTHREADLEVEL ))
-	{
-		ErrorMsg( " No Thread reset " );
-		return FALSE;
-	}
-
-	return TRUE;
-}
-
 
 //***********************  System Timer in Ticks
 //weg? stimmt diese Umrechnung noch?

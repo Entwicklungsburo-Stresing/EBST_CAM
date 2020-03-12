@@ -37,11 +37,6 @@ input1: board number (=1 if one PCI board)
 input2: on (=1 = true)
 output: none
 
-DLLdef.: void  DLLActMouse(UINT32 drv);
-function: activate mouse (should only be used for single core systems)
-input1: board number (=1 if one PCI board)
-output: none
-
 DLLdef.: DllAccess void DLLBothSlope(UINT32 drv);
 function: set trigger input to pos. & neg. slope
 input1: board number (=1 if one PCI board)
@@ -69,15 +64,6 @@ function: sets the IFC Bit of Interface for sensors with shutter function
 input1: board number (=1 if one PCI board)
 output: none
 
-DLLdef.: void  DLLClrRead(UINT32 drvno, UINT32 fftlines, UINT32 zadr, UINT32 CCDClrCount);
-function: needed to erase all charges after a long pause and overexposure
-	reads camera clrcount times and don't keep data.
-input1: board number (=1 if one PCI board)
-input2: fftlines =0 for most sensors, = number of lines for binning if FFT sensor
-input3: zadr = 1, not needed, only if in addressed mode
-input4: clrcount : number of reads, depends on sensor
-output: none
-
 DLLdef.: void DLLClrShCam(UINT32 drvno, UINT32 zadr);
 function: clr for cameras with shutter function
 	- only NO FIFO version
@@ -85,23 +71,8 @@ input1: board number (=1 if one PCI board)
 input2: zadr = 1, only if in addressed mode
 output: none
 
-DLLdef.: void  DLLDeactMouse(UINT32 drv);
-function: deactivate mouse (should only be used for single core systems)
-input1: board number (=1 if one PCI board)
-output: none
-
 DLLdef.: void  DLLDeinit2dViewer();
 function: call when closing 2d viewer or at least before opening a new 2d viewer
-output: none
-
-DLLdef.: void  DLLDisableFifo(UINT32 drv);
-function: disable FIFO
-input1: board number (=1 if one PCI board)
-output: none
-
-DLLdef.: void  DLLEnableFifo(UINT32 drv);
-function: enable FIFO
-input1: board number (=1 if one PCI board)
 output: none
 
 DLLdef.: UINT8 DLLFFOvl(UINT32 drv);
@@ -119,20 +90,6 @@ DLLdef.: UINT8 DLLFlagXCKI(UINT32 drv);
 function: is high if camera read is active
 input1: board number (=1 if one PCI board)
 output: is true (not 0) if read is currently active
-
-DLLdef.: void  DLLGETCCD(UINT32 drv, UINT32 *dioden, UINT32 fftlines, int32_t fkt, UINT32 zadr);
-function: read camera for NO FIFO version only
-	each call reads camera and distance to next read defines exposure time
-input1: board number (=1 if one PCI board)
-input2: pdioden = pointer to data array
-input3: fftlines =0 for most sensors, = number of lines for binning if FFT sensor
-input4: fkt = 1 for standard read, others are possible -> C source
-input5: zadr = 1, not needed, only if in addressed mode
-
-DLLdef.: void  DLLHighSlope(UINT32 drv);
-function: set the external trigger slope to + (PCI Reg CrtlA:D5 -> manual)
-input1: board number (=1 if one PCI board)
-output: none
 
 DLLdef.: void  DLLInitBoard(UINT32 drv, UINT8 sym, UINT8 burst, UINT32 pixel, UINT32 waits, UINT32 flag816, UINT32 pportadr, UINT32 pclk, UINT32 xckdelay);
 function: initialize the PCI board, must be called once at the start
@@ -312,13 +269,6 @@ input2: 4 control bits
 input3: 4 address bits
 input4: 16 data bits
 input5: 4 feature bits
-output: none
-
-DLLdef.: void  DLLSetADAmpRed(UINT32 drv, UINT8 gain);
-function: set internal register for amplification of AD9826 (cds converter for sensor ILC6)
-	full scale of A/D must be adjusted to full scale of signal 
-input1: board number (=1 if one PCI board)
-input2: gain 0..64
 output: none
 
 DLLdef.: void  DLLSetAD16Default(UINT32 drv, UINT32 res);
@@ -543,21 +493,6 @@ input2: current nob
 input3: which camera to display (when camcnt is >1)
 input4: pixels of one line
 input5: samples in one block
-output: none
-
-DLLdef.: void  DLLStartFetchRingBuf(void );
-function: start thread to copy data from ring buffer to display buffer, 
-	special function of RingReadThread (see example GetRingFF or GetRing2cam)
-input1: none
-output: none
-
-DLLdef.: void  DLLStartRingReadThread(UINT32 drv, UINT32 ringdepth, UINT32 threadp, int16_t releasems);
-function: get act counter value of ring buffer, 
-	special function of RingReadThread (see example GetRingFF or GetRing2cam)
-input1: board number (=1 if one PCI board)
-input2: ringdepth = size of ring buffer
-input3: threadp = 31, priority of thread (1..31/ 31 is highest -> see manual)
-input4: releasems = -1, time to release thread in ms (for long exposuretimes), <0 means don't release
 output: none
 
 DLLdef.: void  DLLStopRingReadThread(void );

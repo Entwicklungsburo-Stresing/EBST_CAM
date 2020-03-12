@@ -80,18 +80,6 @@ DllAccess  void DLLErrMsgBoxOff( void )
 	ErrMsgBoxOff();
 }
 
-
-DllAccess UINT8 DLLCCDDrvInit( UINT32 drv )
-{			//must be called once before any other
-	   //is called automatically for 2 boards
-	if (CCDDrvInit())
-	{
-		WDC_Err( "finished DRVInit back in DLL\n" );
-		return 1;
-	}
-	return 0;
-}
-
 DllAccess UINT8 nDLLCCDDrvInit( void )
 {			//must be called once before any other
 			//is called automatically for 2 boards
@@ -111,31 +99,6 @@ DllAccess void DLLCCDDrvExit( UINT32 drv )		// closes the driver
 
 }
 
-
-DllAccess UINT8 DLLInitBoard( UINT32 drv, UINT32 pixel, UINT32 flag816, UINT32 pclk, UINT32 xckdelay )		// init the driver -> true if found
-{//returns TRUE if success									
-	//is called automatically for 2 boards
-//if (!InitBoard(drv)) return 0; //must be called once before any other
-//if FIFO pclk=waits : read frequency; waits is set = 0 for max. FIFO read frequency
-// NO FIFO version: pclk not used.
-	UINT32 camcnt = 1; //for backward compatibility
-	InitBoard( drv );
-	if (!SetBoardVars( drv, camcnt, pixel, flag816, xckdelay )) return 0; //sets data for transfer
-	//for second board
-	if (NUMBER_OF_BOARDS == 2)
-	{
-		InitBoard( 2 );
-		if (!SetBoardVars( 2, camcnt, pixel, flag816, xckdelay )) return 0; //sets data for transfer
-	}
-
-	_PIXEL = pixel; // set globals
-	ADRDELAY = xckdelay;
-
-	// AboutS0(drv);
-
-	return 1; // no error
-}
-
 DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 flag816, UINT32 pclk, UINT32 xckdelay )		// init the driver -> true if found
 {//returns TRUE if success									
  //is called automatically for 2 boards
@@ -144,12 +107,9 @@ DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 
  // NO FIFO version: pclk not used.
 	InitBoard( drv );
 	if (!SetBoardVars( drv, camcnt, pixel, flag816, xckdelay )) return 0; //sets data for transfer
-
 	_PIXEL = pixel; // set globals
 	ADRDELAY = xckdelay;
-
 	// AboutS0(drv);
-
 	return 1; // no error
 }
 
@@ -205,9 +165,6 @@ DllAccess UINT8 DLLWriteLongIOPort( UINT32 drv, UINT32 DataL, UINT32 PortOff ) /
 	return 1;
 }
 
-
-
-
 DllAccess void DLLAboutDrv( UINT32 drv )	// displays the version and board ID = test if board is there
 {//is called automatically for 2 boards
 	AboutDrv( drv );
@@ -218,23 +175,26 @@ DllAccess void DLLAboutDrv( UINT32 drv )	// displays the version and board ID = 
 DllAccess void DLLHighSlope( UINT32 drv )		//set input Trigger slope high
 {
 	HighSlope( drv );
-
+	return;
 }
 
 DllAccess void DLLLowSlope( UINT32 drv )		//set input Trigger slope low
 {
 	LowSlope( drv );
+	return;
 }
 
 DllAccess void DLLBothSlope( UINT32 drv )		//set input Trigger slope low
 {
 	BothSlope( drv );
+	return;
 }
 
 //following functions are not optimized for 2 cams
 DllAccess void DLLOutTrigHigh( UINT32 drv )		//set output Trigger signal high
 {
 	OutTrigHigh( drv );
+	return;
 }
 
 DllAccess void DLLOutTrigLow( UINT32 drv )		//set output Trigger signal low
@@ -246,23 +206,6 @@ DllAccess void DLLOutTrigPulse( UINT32 drv, UINT32 PulseWidth )	// pulses high o
 {
 	OutTrigPulse( drv, PulseWidth );
 }
-
-DllAccess void DLLWaitTrigger( UINT32 drv, UINT8 ExtTrigFlag, UINT8 *sk, UINT8 *ek )	// waits for trigger input or Key
-{
-	BOOL bExtTrigFlag = FALSE;
-	BOOL SpaceKey = FALSE;
-	BOOL EscapeKey = FALSE;
-	if (ExtTrigFlag != 0) { bExtTrigFlag = TRUE; }
-	WaitTrigger( drv, bExtTrigFlag, &SpaceKey, &EscapeKey );
-
-
-	if (SpaceKey == TRUE) { *sk = 1; }
-	else *sk = 0;
-	if (EscapeKey == TRUE) { *ek = 1; }
-	else *ek = 0;
-}
-
-
 DllAccess void DLLOpenShutter( UINT32 drv )	// set IFC=high
 {
 	OpenShutter( drv );
@@ -273,24 +216,9 @@ DllAccess void DLLCloseShutter( UINT32 drv )	// set IFC=low
 	CloseShutter( drv );
 }
 
-DllAccess void DLLVOn( UINT32 drv )			// set V_On signal low (V = V_Fak)
-{
-	V_On( drv );
-}
-
-DllAccess void DLLVOff( UINT32 drv )			// set V_On signal high (V = 1)
-{
-	V_Off( drv );
-}
-
 DllAccess UINT8 DLLReadKeyPort( UINT32 drv )   //before calling, mouse must be deactivated
 {
 	return ReadKeyPort( drv );
-}
-
-DllAccess void DLLClrRead( UINT32 drvno, UINT32 fftlines, UINT32 zadr, UINT32 CCDClrCount )
-{
-	ClrRead( drvno, fftlines, zadr, CCDClrCount );
 }
 
 DllAccess void DLLClrShCam( UINT32 drvno, UINT32 zadr )
@@ -299,34 +227,14 @@ DllAccess void DLLClrShCam( UINT32 drvno, UINT32 zadr )
 }
 
 // ****************   New functions for LabView includes FIFO version
-
-DllAccess void DLLStartTimer( UINT32 drvno, UINT32 exptime )
-{//exptime in microsec
-
-	StartFFTimer( drvno, exptime );//starts 28bit timer of PCI board with 1ns res
-
-}
 DllAccess void DLLSWTrig( UINT32 drvno )						//start a read to FIFO by software
 {
 	SWTrig( drvno );
-}
-DllAccess void DLLStopFFTimer( UINT32 drvno )					// stop timer
-{
-	StopFFTimer( drvno );
 }
 DllAccess UINT8 DLLFFValid( UINT32 drvno )						// TRUE if linecounter>0
 {
 	if (FFValid( drvno ) == TRUE) { return 1; }
 	else return 0;
-}
-DllAccess UINT8 DLLFlagXCKI( UINT32 drvno )						// TRUE if read to FIFO is active
-{
-	if (FlagXCKI( drvno ) == TRUE) { return 1; }
-	else return 0;
-}
-DllAccess void DLLRSFifo( UINT32 drvno )						// reset FIFO and linecounter
-{
-	RSFifo( drvno );
 }
 DllAccess void DLLSetExtTrig( UINT32 drvno )					// read to FIFO is triggered by external input I of PCI board
 {
@@ -336,34 +244,6 @@ DllAccess void DLLSetIntTrig( UINT32 drvno )					// read to FIFO is triggered by
 {
 	SetIntFFTrig( drvno );// set hw register
 }
-DllAccess BYTE DLLReadFFCounter( UINT32 drvno )					// reads 4bit linecounter 
-{
-	return ReadFFCounter( drvno );
-}
-DllAccess void DLLReadFifo( UINT32 drvno, pArrayT pdioden, INT32 fkt ) //read camera
-{
-	ReadFifo( drvno, pdioden, fkt );
-}
-DllAccess void DLLDisableFifo( UINT32 drvno ) //switch fifo off
-{
-	DisableFifo( drvno );
-}
-DllAccess void DLLEnableFifo( UINT32 drvno ) //switch fifo off
-{
-	EnableFifo( drvno );
-}
-DllAccess void DLLPickOneFifoscan( UINT32 drvno, pArrayT pdioden, UINT8* pabbr, UINT8* pspace, INT32 fkt )
-{
-	BOOL SpaceKey = FALSE;
-	BOOL EscapeKey = FALSE;
-	PickOneFifoscan( drvno, pdioden, &EscapeKey, &SpaceKey, fkt );
-
-	if (SpaceKey == TRUE) { *pspace = 1; }
-	else *pspace = 0;
-	if (EscapeKey == TRUE) { *pabbr = 1; }
-	else *pabbr = 0;
-}
-
 DllAccess UINT8 DLLFFOvl( UINT32 drvno )						// TRUE if linecounter>0
 {
 	if (FFOvl( drvno ) == TRUE) { return 1; }
@@ -376,50 +256,11 @@ DllAccess void DLLSetupVCLK( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 	SetupVCLKReg( drvno, lines, vfreq );
 
 }//DLLSetupVCLK
-
-//*************  Software ring buffer for multi core
-DllAccess void DLLStartRingReadThread( UINT32 drvno, UINT32 ringfifodepth, UINT32 threadp, __int16 releasems )	//starts 28bit timer and get thread
-{
-	StartRingReadThread( drvno, ringfifodepth, threadp, releasems );
-}
-DllAccess void DLLStopRingReadThread( void )	//starts 28bit timer and get thread
-{
-	StopRingReadThread();
-}
-DllAccess UINT32 DLLReadRingCounter( UINT32 drvno )
-{
-	return (ULONG)ReadRingCounter();
-}
 DllAccess void DLLReadRingLine( pArrayT pdioden, UINT32 lno ) //read in ring buffer
 {
 	ReadRingLine( pdioden, lno );
+	return;
 }
-DllAccess UINT8 DLLReadRingBlock( void* pdioden, UINT32 start, UINT32 stop )
-{//read ring buffer to user buffer relative to act ring pointer
-//start,stop<0 : in the past, >0 wait until reached and copy afterwards
-	return ReadRingBlock( pdioden, start, stop );
-}
-DllAccess void DLLStartFetchRingBuf( void )
-{
-	StartFetchRingBuf();
-}
-DllAccess UINT8 DLLFetchLastRingLine( pArrayT pdioden ) //read last ring buffer line
-{
-	FetchLastRingLine( pdioden );
-	return 0;
-}
-DllAccess UINT8 DLLRingValid( UINT32 drvno )						// TRUE if linecounter>0
-{
-	if (RingValid() == TRUE) { return 1; }
-	else return 0;
-}
-
-DllAccess UINT8 DLLRingThreadIsOFF( void )
-{//get thread state of ring read thread
-	if (RingThreadIsOFF() == TRUE) { return 1; }
-	else return 0;
-}
-
 DllAccess UINT8 DLLBlockTrig( UINT32 drv, UCHAR btrig_ch )
 {//get trigger state ext input
 	if (BlockTrig( drv, btrig_ch ) == TRUE) { return 1; }
@@ -443,36 +284,6 @@ DllAccess UINT8 DLLResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 
 	return ResetS0Bit( bitnumber, Address, drvno );
 }
-
-//***** system timer sync for constant exposure
-DllAccess UINT64 DLLInitSysTimer( void )
-{
-	TPS = InitHRCounter(); // set global variable TPS and check if timer there
-	return TPS;
-}
-
-DllAccess UINT8 DLLWaitforTelapsed( LONGLONG musec )
-{
-	BOOL Space = FALSE;
-	BOOL Abbruch = FALSE;
-	LONGLONG expttics = musec * TPS / 1000000;
-	LONGLONG loopcnt = 0;
-
-	//SetPriority(15);		//set priority threadp 1..31 / 15 = highestnormal
-
-	while ((expttics + START > ticksTimestamp()) && (!Abbruch))
-	{// wait until time elapsed
-		WaitTrigger( 1, FALSE, &Space, &Abbruch ); //check for ESC key - PS2 only
-		loopcnt += 1;
-	}
-
-	//ResetPriority();
-	START = ticksTimestamp(); //set global START for next loop
-
-	if (loopcnt < 100) return 1;
-	return 0; // loop was too short - exposure time must be increased
-}//DLLWaitforTelapsed
-
 DllAccess UINT64 DLLTicksTimestamp( void )
 {
 	WDC_Err( "entered tickstimestamp\n" );
@@ -631,18 +442,6 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 
 }//nDLLSetupDMA
 
-DllAccess void DLLCleanupPCIE_DMA( UINT32 drv )
-{//free resources
-	CleanupPCIE_DMA( drv );
-	return;
-}
-
-DllAccess void DLLCleanupDMA( UINT32 drv )
-{//free resources
-	CleanupPCIE_DMA( drv );
-	return;
-}
-
 /* DLLReturnFrame copies one frame of pixel data to pdioden
 * param1: drv -  indentifier of PCIe card
 * param2: curr_nos - position in samples (0...nos)
@@ -671,15 +470,6 @@ DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UIN
 	*/
 	return;
 }
-
-DllAccess void DLLReadFFLoop( UINT32 drv, UINT32 exptus, UINT32 freq, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch )
-{//const burst loop with DMA initiated by hardware DREQ
-	//read nos lines from FIFO
-	//
-	//local declarations
-	ReadFFLoop( drv, exptus, exttrig, blocktrigger, btrig_ch );
-	return;
-}//DLLReadFFLoop
 
 DllAccess void nDLLReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch )
 //cam_sel = 1 for only use first cam, cam_sel = 2 for sec. cam and cam_sel = 3 for both
@@ -736,11 +526,6 @@ DllAccess void DLLSetContFFLoop( UINT8 activate )
 }
 
 //********  cooling functions
-DllAccess UINT8 DLLTempGood( UINT32 drvno, UINT32 ch )
-{
-	return TempGood( drvno, ch );
-}
-
 DllAccess void DLLSetTemp( UINT32 drvno, UINT8 level )
 {
 	SetTemp( drvno, level );
@@ -816,33 +601,31 @@ DllAccess void DLLSetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep
 DllAccess void DLLAboutS0( UINT32 drv )
 {
 	AboutS0( drv );
-
+	return;
 }//AboutS0
-
-//optimized for 2 cams
-DllAccess void DLLSetADGain( UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8 )
-{
-	SetADGain( drvno, fkt, g1, g2, g3, g4, g5, g6, g7, g8 );
-}//SetADGain
 
 DllAccess void DLLSendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data )
 {
 	SendFLCAM( drvno, maddr, adaddr, data );
+	return;
 }
 
 DllAccess void DLLSendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature )
 {
 	SendFLCAM_DAC( drvno, ctrl, addr, data, feature );
+	return;
 }
 
 DllAccess void DLLFreeMemInfo( UINT64 memory_all, UINT64 memory_free )
 {
 	FreeMemInfo( memory_all, memory_free );
+	return;
 }
 
 DllAccess void DLLErrorMsg( char ErrMsg[20] )
 {
 	ErrorMsg( ErrMsg );
+	return;
 }
 
 DllAccess void DLLCalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMSpix, UINT16 CAMpos, double *mwf, double *trms )
