@@ -66,6 +66,8 @@ DllAccess UINT8 DLLWriteLongDMA( UINT32 drv, UINT32 DataL, UINT32 PortOff ); // 
 DllAccess UINT8 DLLReadLongIOPort( UINT32 drv, UINT32 *data, UINT32 PortOff ); // writes DataByte to Port
 DllAccess UINT8 DLLWriteLongIOPort( UINT32 drv, UINT32 DataL, UINT32 PortOff ); // writes DataByte to Port
 DllAccess void DLLAboutDrv( UINT32 drv );	// displays the version and board ID = test if board is there
+DllAccess double DLLCalcRamUsageInMB( UINT32 nos, UINT32 nob );
+DllAccess double DLLCalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in_ms );
 //************	functions for managing controlbits in CtrlA register
 DllAccess void DLLHighSlope( UINT32 drv );		//set input Trigger slope high
 DllAccess void DLLLowSlope( UINT32 drv );		//set input Trigger slope low
@@ -95,6 +97,7 @@ DllAccess UINT32 DLLTickstous( UINT64 tks );
 //************  Cooling
 DllAccess void DLLSetTemp( UINT32 drvno, UINT8 level );
 DllAccess void DLLSetEC( UINT32 drvno, UINT64 ecin100ns );
+DllAccess void DLLResetEC( UINT32 drvno );
 DllAccess void DLLSetTORReg( UINT32 drvno, UINT8 fkt );
 DllAccess void DLLSetupDELAY( UINT32 drvno, UINT32 delay );
 DllAccess void DLLSetISPDA( UINT32 drvno, UINT8 set );

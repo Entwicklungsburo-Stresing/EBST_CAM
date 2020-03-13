@@ -4559,3 +4559,19 @@ void AboutGPX( UINT32 drvno )
 //	WriteLongS0(drvno, 0x06400300, 0x5C);
 	return;
 }
+
+double CalcRamUsageInMB( UINT32 nos, UINT32 nob )
+{
+	double ramUsage = 0;
+	for (int i=0; i<NUMBER_OF_BOARDS; i++)
+		ramUsage += nos * nob * aPIXEL[i+1] * aCAMCNT[i+1] * sizeof( UINT16 );
+	ramUsage = ramUsage / 1048576;
+	WDC_Err( "ram usage: %f", ramUsage );
+	return ramUsage;
+}
+
+double CalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in_ms  )
+{
+	double measureTime = (double)nos * (double)nob * exposure_time_in_ms / 1000;
+	return measureTime;
+}
