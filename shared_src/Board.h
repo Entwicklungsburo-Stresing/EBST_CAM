@@ -129,3 +129,4 @@ BOOL SetGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32 GPXData );
 BOOL ReadGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32* GPXData );
 double CalcRamUsageInMB( UINT32 nos, UINT32 nob );
 double CalcMeasureTimeInSeconds( UINT32 drvno, UINT32 nos, double exposure_time_in_ms );
+void BlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 );
