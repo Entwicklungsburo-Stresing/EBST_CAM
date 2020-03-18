@@ -715,3 +715,9 @@ DllAccess void DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pa
 	InitCamera3030( drvno, adc_mode, custom_pattern, gain );
 	return;
 }
+
+DllAccess void DLLBlockSyncStart( UINT32 drvno, UINT8 S1, UINT16 S2 )
+{
+	void BlockSyncStart( drvno, S1, S2 );
+	return;
+}

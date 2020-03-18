@@ -122,7 +122,7 @@ enum s0_addresses
 	S0Addr_XCKCNTMSB = 0xf,
 	S0Addr_PIXREGlow = 0x10,
 	S0Addr_PIXREGhigh = 0x11,
-	S0Addr_FREQREG = 0x12,
+	S0Addr_BTRIGREG = 0x12,
 	S0Addr_FF_FLAGS = 0x13,
 	S0Addr_FIFOCNT = 0x14,
 	S0Addr_VCLKCTRL = 0x18,
@@ -1500,7 +1500,8 @@ BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel, ULONG flag816, ULON
 
 	//write pixel to PIXREG  & stop timer & int trig
 	reg = pixel;
-	if (!WriteLongS0( drvno, reg, S0Addr_PIXREGlow )) return FALSE;; //set pixelreg -> counts received FFwrites and resets XCKI
+	if (!SetS0Reg( reg, 0xFFFF, S0Addr_PIXREGlow, drvno )) return FALSE;;
+	//if (!WriteLongS0( drvno, reg, S0Addr_PIXREGlow )) return FALSE;; //set pixelreg -> counts received FFwrites and resets XCKI
 	reg = camcnt;
 	if (!SetS0Reg( reg, 0xF, DmaAddr_CAMCNT, drvno )) return FALSE;
 
@@ -3522,11 +3523,11 @@ void SWTrig( UINT32 drvno )
 	//	ReadByteS0(drvno,&reg,11);  //enable timer
 	//	reg |= 0x40;  
 	//	WriteByteS0(drvno,reg,11);	
-	ReadByteS0( drvno, &reg, S0Addr_FREQREG );
+	ReadByteS0( drvno, &reg, S0Addr_BTRIGREG );
 	reg |= 0x40;
-	WriteByteS0( drvno, reg, S0Addr_FREQREG ); //set Trigger
+	WriteByteS0( drvno, reg, S0Addr_BTRIGREG ); //set Trigger
 	reg &= 0xBF;
-	WriteByteS0( drvno, reg, S0Addr_FREQREG ); //reset
+	WriteByteS0( drvno, reg, S0Addr_BTRIGREG ); //reset
 }
 
 void StopFFTimer( UINT32 drvno )
@@ -3586,11 +3587,11 @@ BOOL FFOvl( UINT32 drvno )
 void RSFifo( UINT32 drvno )
 {	//reset FIFO and FFcounter
 	BYTE data = 0;
-	ReadByteS0( drvno, &data, S0Addr_FREQREG );
+	ReadByteS0( drvno, &data, S0Addr_BTRIGREG );
 	data |= 0x80;
-	WriteByteS0( drvno, data, S0Addr_FREQREG );
+	WriteByteS0( drvno, data, S0Addr_BTRIGREG );
 	data &= 0x7F;
-	WriteByteS0( drvno, data, S0Addr_FREQREG );
+	WriteByteS0( drvno, data, S0Addr_BTRIGREG );
 }
 
 //weg? wenn es bleibt, adresse ändern with enum
@@ -4574,4 +4575,15 @@ double CalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in
 {
 	double measureTime = (double)nos * (double)nob * exposure_time_in_ms / 1000;
 	return measureTime;
+}
+
+void BlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 )
+{	//set s1 or s2 to sn#ync for Blocktrig
+	BYTE data = 0;
+	BYTE mode = 0;
+	if (S1) mode |= 0x1;
+	if (S2) mode |= 0x2;
+	ReadByteS0( drvno, &data, S0Addr_BTRIGREG );
+	data |= 3;// mode;
+	WriteByteS0( drvno, data, S0Addr_BTRIGREG );
 }
