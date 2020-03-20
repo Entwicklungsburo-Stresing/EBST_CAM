@@ -602,6 +602,12 @@ DllAccess void DLLSetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep
 	return;
 }
 
+DllAccess void DLLSetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first)
+{
+	SetupROI(drvno, number_of_regions, lines, keep_first);
+	return;
+}
+
 DllAccess void DLLAboutS0( UINT32 drv )
 {
 	AboutS0( drv );
