@@ -3645,45 +3645,61 @@ void SetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep )
 	lines *= 2; //vclks=lines*2
 	switch (range)
 	{
-	case 1:	adr = 0x68;//0x40;
-		if (keep) { lines |= 0x8000; }
-		else { lines &= 0x7fff; }
+	case 1:
+		adr = 0x68;//0x40;
 		break;
-	case 2:	adr = 0x6A;//0x42;
-		if (keep) { lines |= 0x8000; }
-		else { lines &= 0x7fff; }
+	case 2:
+		adr = 0x6A;//0x42;
 		break;
-	case 3:	adr = 0x6C;//0x44;
-		if (keep) { lines |= 0x8000; }
-		else { lines &= 0x7fff; }
+	case 3:
+		adr = 0x6C;//0x44;
 		break;
-	case 4:	adr = 0x6E;//0x46;
-		if (keep) { lines |= 0x8000; }
-		else { lines &= 0x7fff; }
+	case 4:
+		adr = 0x6E;//0x46;
 		break;
-	case 5:	adr = 0x70;//0x48;
-		if (keep) { lines |= 0x8000; }
-		else { lines &= 0x7fff; }
+	case 5:
+		adr = 0x70;//0x48;
 		break;
-	case 6:	adr = 0x72;//0x4A;
-		if (keep) { lines |= 0x8000; }
-		else { lines &= 0x7fff; }
+	case 6:
+		adr = 0x72;//0x4A;
 		break;
-	case 7:	adr = 0x74;//0x4C;
-		if (keep) { lines |= 0x8000; }
-		else { lines &= 0x7fff; }
+	case 7:
+		adr = 0x74;//0x4C;
 		break;
-	case 8:	adr = 0x76;//0x4E;
-		if (keep) { lines |= 0x8000; }
-		else { lines &= 0x7fff; }
+	case 8:
+		adr = 0x76;//0x4E;
 		break;
 	}
+	if (keep) { lines |= 0x8000; }
+	else { lines &= 0x7fff; }
 	//TODO make function write word or split in writebytes
 	//WriteWordS0(drvno, lines, adr);// write range
 	WriteByteS0( drvno, (BYTE)lines, adr );
 	WriteByteS0( drvno, (BYTE)(lines >> 8), adr + 1 );
 }// SetupVPB
 
+/*
+* SetupROI initializes region of interest.
+* param1 drvno - PCIe identifier
+* param2 number_of_regions - determines how many region of interests are initialized, choose 2 to 8
+* param3 lines - number of total lines in camera
+* param4 keep_first - kept regions are alternating, determine whether first is kept
+* return void
+*/
+void SetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, BOOL keep_first)
+{
+	BOOL keep = keep_first;
+	UINT32 lines_per_region = lines / number_of_regions;
+	UINT32 lines_in_last_region = lines - lines_per_region * (number_of_regions - 1);
+	WDC_Err("Setup ROI: lines_per_region: %u , lines_in_last_region: %u\n", lines_per_region, lines_in_last_region);
+	for (int i = 1; i <= number_of_regions; i++)
+	{
+		if (i == number_of_regions) SetupVPB(drvno, i, lines_in_last_region, keep);
+		else SetupVPB(drvno, i, lines_per_region, keep);
+		keep = !keep;
+	}
+	return;
+}
 
 //weg? wenn es bleibt, adresse ändern with enum
 void SetupDELAY( UINT32 drvno, ULONG delay )
