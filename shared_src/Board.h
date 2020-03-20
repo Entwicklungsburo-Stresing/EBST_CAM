@@ -76,9 +76,10 @@ BOOL FFValid( UINT32 drvno );						// TRUE if linecounter>0
 void RSFifo( UINT32 drvno );						// reset FIFO and linecounter
 void SetExtFFTrig( UINT32 drvno );					// read to FIFO is triggered by external input I of PCI board
 void SetIntFFTrig( UINT32 drvno );					// read to FIFO is triggered by Timer
-void DisableFifo( UINT32 drvno );					//switch FIFO off
 void SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq );//setup hardware vclk generator
 void SetupVCLKrt( ULONG vfreq );					//setup vclkfreq for rt version(noFIFO)
+void SetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep);
+void SetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines);
 void SetupDELAY( UINT32 drvno, ULONG delay );		//setup DELAY for WRFIFO
 BOOL FFOvl( UINT32 drvno );							//TRUE if FIFO overflow since last RSFifo call
 // Class & Thread priority functions
@@ -114,7 +115,6 @@ void allBlocksOnSingleTrigger( UINT32 board_sel, UINT8 btrig_ch, BOOL* StartByTr
 void oneTriggerPerBlock( UINT32 board_sel, UINT8 btrig_ch );
 int  keyCheckForBlockTrigger( UINT32 board_sel );
 void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch );
-void FetchLastRingLine( void* pdioden ); //copy last line to pdioden
 void ReadRingLine( void* pdioden, UINT32 lno ); // read line with index lno to pdioden
 //start<0 is in the past, stop>0 is in the future, relative to call of this function
 BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch ); //read state of trigger in signals during thread loop
