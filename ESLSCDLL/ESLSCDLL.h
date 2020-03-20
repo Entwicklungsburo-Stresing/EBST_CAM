@@ -122,4 +122,4 @@ DllAccess void DLLAboutGPX( UINT32 drvno );
 DllAccess void DLLInitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT );
 DllAccess void DLLInitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high );
 DllAccess void DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain );
-DllAccess void DLLBlockSyncStart( UINT32 drvno, UINT8 S1, UINT16 S2 );
+DllAccess void DLLBlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 );
