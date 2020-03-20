@@ -2336,7 +2336,6 @@ BOOL WriteByteS0( UINT32 drvno, BYTE DWData, ULONG PortOff )
 
 	dwStatus = WDC_WriteAddrBlock( hDev[drvno], 0, PortOffset, 1/*sizeof(BYTE)*/, data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
-	WDC_Err( "xxx WriteByteS0 in address 0x%x with data 0x%x\n", PortOff, DWData );
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		WDC_Err( "WriteByteS0 in address 0x%x with data: 0x%x failed\n", PortOff, DWData );
@@ -4603,7 +4602,5 @@ void BlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 )
 	ReadByteS0( drvno, &data, S0Addr_BTRIGREG );
 	data &= 0xFC;
 	data |= mode;
-
-	WDC_Err( "BlockSyncStart with data 0x%x \n", data );
 	WriteByteS0( drvno, data, S0Addr_BTRIGREG );
 }
