@@ -3682,11 +3682,12 @@ void SetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep )
 * param1 drvno - PCIe identifier
 * param2 number_of_regions - determines how many region of interests are initialized, choose 2 to 8
 * param3 lines - number of total lines in camera
+* param4 keep_first - kept regions are alternating, determine whether first is kept
 * return void
 */
-void SetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines)
+void SetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, BOOL keep_first)
 {
-	BOOL keep = FALSE;
+	BOOL keep = keep_first;
 	UINT32 lines_per_region = lines / number_of_regions;
 	UINT32 lines_in_last_region = lines - lines_per_region * (number_of_regions - 1);
 	WDC_Err("Setup ROI: lines_per_region: %u , lines_in_last_region: %u\n", lines_per_region, lines_in_last_region);

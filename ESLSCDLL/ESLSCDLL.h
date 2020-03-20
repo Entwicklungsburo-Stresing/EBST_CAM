@@ -106,7 +106,7 @@ DllAccess void DLLSetPDAnotFFT( UINT32 drvno, UINT8 set );
 DllAccess void DLLRsTOREG( UINT32 drvno );
 DllAccess void DLLSetupHAModule( UINT8 irsingle, UINT32 fftlines );
 DllAccess void DLLSetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep);
-DllAccess void DLLSetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines);
+DllAccess void DLLSetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first);
 DllAccess void DLLSetupDMA( UINT32 drv, void*  pdioden, UINT32 nos, UINT32 blocks );
 DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 blocks );
 DllAccess void DLLErrorMsg( char ErrMsg[20] );
