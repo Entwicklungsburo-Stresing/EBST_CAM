@@ -49,7 +49,6 @@ Internal definitions
 
 //Dont trust the debugger its CRAP
 
-
 /*************************************************************
 General definitions
 *************************************************
@@ -332,7 +331,7 @@ void AboutDMARegs( UINT32 drv )
 
 }
 
-AboutTLPs( UINT32 drvno )
+void AboutTLPs( UINT32 drvno )
 {
 	ULONG BData = 0;
 	ULONG j = 0;
@@ -546,7 +545,6 @@ BOOL CCDDrvInit( void )
 
 }; //CCDDrvInit
 
-
 void CCDDrvExit( UINT32 drvno )
 {
 	WDC_Err( "drvexit\n" );
@@ -666,8 +664,6 @@ char CntBoards( void )
 	return foundBoards;
 }//CntBoards
 
-
-
 //**************  new for PCIE   *******************************
 
 BOOL SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno )
@@ -728,7 +724,6 @@ BOOL SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno )
 	return TRUE;
 }
 
-
 BOOL SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
 	//bitnumber: 0...31
@@ -757,7 +752,6 @@ BOOL ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 	return TRUE;
 
 }
-
 
 BOOL SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno )
 {
@@ -871,6 +865,7 @@ BOOL SetDMAAddrTlp( UINT32 drvno )
 		return FALSE;
 	return TRUE;
 }
+
 BOOL SetDMABufRegs( UINT32 drvno, ULONG nos, ULONG nob, ULONG camcnt )
 {
 	//set DMA_BUFSIZEINSCANS
@@ -906,6 +901,7 @@ BOOL SetDMABufRegs( UINT32 drvno, ULONG nos, ULONG nob, ULONG camcnt )
 	//WDC_Err("readreg DMASPERINTR: %x \n", reg);
 	return TRUE;
 }
+
 void SetDMAReset( UINT32 drvno )
 {
 	ULONG BitMask;
@@ -925,6 +921,7 @@ void SetDMAReset( UINT32 drvno )
 		return;
 	}
 }
+
 void SetDMAStart( UINT32 drvno )
 {
 	ULONG BitMask;
@@ -937,6 +934,7 @@ void SetDMAStart( UINT32 drvno )
 		return;
 	}
 }
+
 /*
 BOOL SendDMAInfoToKP(void){
 
@@ -1734,8 +1732,6 @@ void Resort( UINT32 drvno, void* ptarget, void* psource )
 
 }	//Resort 
 
-
-
 //weg!?
 //replaced by StartReadWithDma
 BOOL CallWRFile( UINT32 drvno, void* pdioden, ULONG arraylength, ULONG fkt )
@@ -1795,7 +1791,6 @@ BOOL CallWRFile( UINT32 drvno, void* pdioden, ULONG arraylength, ULONG fkt )
 	//if (b12alloc) free(pRArray);
 	return TRUE;
 }//CallWRFile
-
 
 // *********************** PCI board registers
 
@@ -2505,8 +2500,6 @@ void OutTrigLow( UINT32 drvno )
 };						//OutTrigLow
 
 /*---------------------------------------------------------------------------*/
-
-
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /* Ausgabe eines Low-Signals an Pin 17                                       */
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -2518,7 +2511,6 @@ void OutTrigHigh( UINT32 drvno )
 	CtrlA |= 0x08;
 	WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
 }; //OutTrigHigh
-
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /* Ausgabe eines PulseWidth breiten Rechteckpulses an Pin 17                 */
@@ -2585,7 +2577,6 @@ void WaitTrigger( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrKey )
 	if (Space) *SpaceKey = TRUE;	//stops after next trigger
 };// WaitTrigger
 
-
 //******************** the triginput has an optional FF to detect short pulses
 // the FF is edge triggered and must be reset via RSTrigShort after each pulse to arm it again
 // it is enabled once by EnTrigShort()
@@ -2628,7 +2619,6 @@ void WaitTriggerShort( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *Abr
 	RSTrigShort( drvno );
 };// WaitTrigger^Short
 
-
 void EnTrigShort( UINT32 drvno )
 {//use the short trig pulse FF for ext TrigIn
 	UCHAR CtrlA;
@@ -2657,7 +2647,6 @@ void DisTrigShort( UINT32 drvno )
 	WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
 }; //SetTrigShort
 
-
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 void CloseShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
@@ -2678,7 +2667,6 @@ void OpenShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 	WriteByteS0( drvno, CtrlB, S0Addr_CTRLB );
 }; //OpenShutter
 
-
 BOOL GetShutterState( UINT32 drvno )
 {
 	UCHAR CtrlB;
@@ -2687,7 +2675,6 @@ BOOL GetShutterState( UINT32 drvno )
 	if (CtrlB == 0) return FALSE;
 	return TRUE;
 }
-
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /* set V_ON low (V = V_Fak)                                               */
@@ -2714,7 +2701,6 @@ void V_Off( UINT32 drvno )
 	WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
 }; //V_Off
 
-
 // optional Opto Couplers
 //weg? 
 void SetOpto( UINT32 drvno, BYTE ch )
@@ -2726,7 +2712,6 @@ void SetOpto( UINT32 drvno, BYTE ch )
 	WriteByteS0( drvno, ctrlc, S0Addr_CTRLC );
 }; //SetOpto
 
-
 void RsetOpto( UINT32 drvno, BYTE ch )
 { //sets signal=high
 	BYTE ctrlc;
@@ -2735,7 +2720,6 @@ void RsetOpto( UINT32 drvno, BYTE ch )
 	else ctrlc &= 0xfd;
 	WriteByteS0( drvno, ctrlc, S0Addr_CTRLC );
 }; //RsetOpto
-
 
 BOOL GetOpto( UINT32 drvno, BYTE ch )
 {//no input or low -> high / high input -> low 
@@ -2831,8 +2815,6 @@ void RsTOREG( UINT32 drvno )
 	WriteByteS0( drvno, 0, S0Addr_TOR + 3 );
 }
 
-
-
 //**************************  new setup of fiber link camera
 // send setup	d0:d15 = data for AD-Reg  ADS5294
 //				d16:d23 = ADR of  AD-Reg
@@ -2895,7 +2877,6 @@ BOOL CheckFFTrig( UINT32 drvno ) //ext trigger in FF for short pulses
 	}
 	return FALSE;
 }//CheckFFTrig
-
 
 //FIFO
 //***************  Fifo only Functions   ***************
@@ -3503,7 +3484,6 @@ void SetExtSWTrig( BOOL ext )
 	else RRT_ExtTrigFlag = FALSE;
 }//SetExtSWTrig
 
-
 //*************** Hardware Fifo fkts ******************
 
 void StartFFTimer( UINT32 drvno, UINT32 exptime )
@@ -3559,7 +3539,6 @@ BOOL FFValid( UINT32 drvno )
 	return FALSE;
 }
 
-
 //weg? wenn es bleibt, adresse ändern with enum
 BOOL FFFull( UINT32 drvno )
 {	// Fifo is full
@@ -3603,7 +3582,6 @@ void SetExtFFTrig( UINT32 drvno )  // set external Trigger
 	WriteByteS0( drvno, data, S0Addr_XCKMSB );
 
 }//SetExtFFTrig
-
 
 //weg? wenn es bleibt, adresse ändern with enum
 void SetIntFFTrig( UINT32 drvno ) // set internal Trigger
@@ -3777,8 +3755,6 @@ BOOL ThreadToPriClass( ULONG threadp, DWORD *priclass, DWORD *prilevel )
 	}
 }
 
-
-
 //weg? wenn es bleibt, adresse ändern with enum
 BOOL SetPriority( ULONG threadp )
 {
@@ -3820,7 +3796,6 @@ UINT64 LargeToInt( LARGE_INTEGER li )
 	return res;
 } //LargeToInt
 
-
 //weg?
 LONGLONG InitHRCounter()
 {//returns TPS ticks per sec
@@ -3851,7 +3826,6 @@ LONGLONG ticksTimestamp()
 
 }//ticksTimestamp
 
-
 //calc delay in ticks from us
 UINT64 ustoTicks( ULONG us )
 {// init high resolution counter 
@@ -3874,7 +3848,6 @@ UINT64 ustoTicks( ULONG us )
 	delaytks = delaytks / 1000000;
 	return delaytks;
 } // ustoTicks
-
 
 //weg? wird das real benutzt
 UINT32 Tickstous( UINT64 tks )
@@ -3975,7 +3948,6 @@ void RS_BlockCounter( UINT32 drv )
 	WriteLongS0( drv, dwdata, DmaAddr_BLOCKINDEX );
 }//RS_BlockCounter
 
-
 void RS_DMAAllCounter( UINT32 drv, BOOL hwstop )
 {	//drv : board number
 	//hwstop: timer is stopped by hardware if nos is reached
@@ -4038,8 +4010,6 @@ BOOL FindCam( UINT32 drv )
 
 	return TRUE;
 }//FindCam
-
-
 
 //weg?
 void SetADGain( UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8 )
@@ -4128,7 +4098,6 @@ void SendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 fea
 	SendFLCAM( drvno, maddr_DAC, hi_byte_addr, hi_bytes );
 	SendFLCAM( drvno, maddr_DAC, lo_byte_addr, lo_bytes );
 }
-
 
 void FreeMemInfo( UINT64 *pmemory_all, UINT64 *pmemory_free )
 {		//get info: how much memory is installed and how much is available
@@ -4233,7 +4202,6 @@ void CalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMS_pixel, UINT16 CAMpos, double
 	GetRmsVal( nos, TRMSVals, mwf, trms );
 
 }//CalcTrms
-
 
 /* GetIndexOfPixel returns the index of a pixel located in pDMABigBufBase
 *	drvno	- indentifier of PCIe card
