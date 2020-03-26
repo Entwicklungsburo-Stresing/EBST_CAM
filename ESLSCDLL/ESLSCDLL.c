@@ -627,6 +627,12 @@ DllAccess void DLLSendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 da
 	return;
 }
 
+DllAccess void DLLDAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output )
+{
+	DAC_setOutput( drvno, channel, output );
+	return;
+}
+
 DllAccess void DLLFreeMemInfo( UINT64 memory_all, UINT64 memory_free )
 {
 	FreeMemInfo( memory_all, memory_free );

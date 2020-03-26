@@ -10,7 +10,6 @@
 
 extern DWORD64 IsrCounter;
 
-//DWORD64 IsrCounter = 0;
 void ErrMsgBoxOn( void );
 void ErrMsgBoxOff( void ); // switch to suppress error message boxes
 void ErrorMsg( char ErrMsg[100] );
@@ -140,6 +139,7 @@ void RS_DMAAllCounter( UINT32 drv, BOOL hwstop );
 BOOL FindCam( UINT32 drv );
 void SetADGain( UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8 );//B!test
 void SendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature ); //function for sending 32 bits to DAC8568 in HS-FLCAM on PCB 2189-7(+)
+void DAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output ); //set output of DAC (PCB 2189-7)
 void FreeMemInfo( UINT64 *pmemory_all, UINT64 *pmemory_free );
 void GetRmsVal( ULONG nos, ULONG *TRMSVals, double *mwf, double *trms );
 void CalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );

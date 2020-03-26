@@ -4011,7 +4011,6 @@ BOOL FindCam( UINT32 drv )
 	return TRUE;
 }//FindCam
 
-//weg?
 void SetADGain( UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8 )
 {	//set gain for ADS5294
 	//fkt =0 reset to db=0, fkt=1 set to g1..g8
@@ -4056,7 +4055,7 @@ void SetADGain( UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4,
 	data |= c;
 	SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_gain_5_to_8, data );	//gain7..8
 }//SetGain
-//weg?
+
 void SendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature )
 {	//send data to DAC8568
 	//mapping of bits DAC8568:	4 prefix, 4 control, 4 address, 16 data, 4 feature
@@ -4066,20 +4065,19 @@ void SendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 fea
 		hi_byte_addr = 0x01,
 		lo_byte_addr = 0x02;
 
-
 	if (ctrl & 0x10) //4 ctrl bits => only lower 4 bits allowed
 	{
-		ErrorMsg( "Only values between 0 and 15 are allowed for control bits." );
+		ErrorMsg( "SendFLCAM_DAC: Only values between 0 and 15 are allowed for control bits." );
 		return;
 	}
 	if (addr & 0x10) //4 addr bits => only lower 4 bits allowed
 	{
-		ErrorMsg( "Only values between 0 and 15 are allowed for address bits." );
+		ErrorMsg( "SendFLCAM_DAC: Only values between 0 and 15 are allowed for address bits." );
 		return;
 	}
 	if (feature & 0x10) //4 ctrl bits => only lower 4 bits allowed
 	{
-		ErrorMsg( "Only values between 0 and 15 are allowed for feature bits." );
+		ErrorMsg( "SendFLCAM_DAC: Only values between 0 and 15 are allowed for feature bits." );
 		return;
 	}
 
@@ -4097,6 +4095,21 @@ void SendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 fea
 
 	SendFLCAM( drvno, maddr_DAC, hi_byte_addr, hi_bytes );
 	SendFLCAM( drvno, maddr_DAC, lo_byte_addr, lo_bytes );
+	return;
+}
+
+/*
+* DAC_setOutput sets the output of the DAC on PCB 2189-7
+* param1 drvno - pcie board identifier
+* param2 channel - select one of eight output channel (0 ... 7)
+* param3 output - output value that will be converted to analog voltage (0 ... 0xFFFF)
+* return void
+*/
+void DAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output )
+{
+	//ctrl 3: write and update DAC register
+	SendFLCAM_DAC( drvno, 3, channel, output, 0 );
+	return;
 }
 
 void FreeMemInfo( UINT64 *pmemory_all, UINT64 *pmemory_free )
