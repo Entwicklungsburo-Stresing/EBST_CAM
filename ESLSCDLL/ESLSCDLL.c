@@ -286,6 +286,7 @@ DllAccess UINT8 DLLResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
 	return ResetS0Bit( bitnumber, Address, drvno );
 }
+
 DllAccess UINT64 DLLTicksTimestamp( void )
 {
 	WDC_Err( "entered tickstimestamp\n" );
@@ -602,9 +603,9 @@ DllAccess void DLLSetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep
 	return;
 }
 
-DllAccess void DLLSetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first)
+DllAccess void DLLSetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first, UINT8* region_size)
 {
-	SetupROI(drvno, number_of_regions, lines, keep_first);
+	SetupROI(drvno, number_of_regions, lines, keep_first, region_size );
 	return;
 }
 

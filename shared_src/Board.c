@@ -3675,6 +3675,7 @@ void SetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep )
 	//WriteWordS0(drvno, lines, adr);// write range
 	WriteByteS0( drvno, (BYTE)lines, adr );
 	WriteByteS0( drvno, (BYTE)(lines >> 8), adr + 1 );
+	return;
 }// SetupVPB
 
 /*
@@ -3683,18 +3684,33 @@ void SetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep )
 * param2 number_of_regions - determines how many region of interests are initialized, choose 2 to 8
 * param3 lines - number of total lines in camera
 * param4 keep_first - kept regions are alternating, determine whether first is kept
+* param5 region_size - determines the size of each region. array of size number_of_regions.
+	When region_size[0]==0 the lines are equally distributed for all regions.
+	I don't know what happens when  region_size[0]!=0 and region_size[1]==0. Maybe don't do this.
+	The sum of all regions should equal lines.
 * return void
 */
-void SetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, BOOL keep_first)
+void SetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, BOOL keep_first, UINT8* region_size)
 {
 	BOOL keep = keep_first;
+	// calculate how many lines are in each region when equally distributed
 	UINT32 lines_per_region = lines / number_of_regions;
+	// calculate the rest of lines when equally distributed
 	UINT32 lines_in_last_region = lines - lines_per_region * (number_of_regions - 1);
 	WDC_Err("Setup ROI: lines_per_region: %u , lines_in_last_region: %u\n", lines_per_region, lines_in_last_region);
+	// go from region 1 to number_of_regions
 	for (int i = 1; i <= number_of_regions; i++)
 	{
-		if (i == number_of_regions) SetupVPB(drvno, i, lines_in_last_region, keep);
-		else SetupVPB(drvno, i, lines_per_region, keep);
+		// check whether lines should be distributed equally or by custom region size
+		if (*region_size == 0)
+		{
+			if (i == number_of_regions) SetupVPB( drvno, i, lines_in_last_region, keep );
+			else SetupVPB( drvno, i, lines_per_region, keep );
+		}
+		else
+		{
+			SetupVPB( drvno, i, *(region_size+(i-1)), keep );
+		}
 		keep = !keep;
 	}
 	return;
@@ -3714,6 +3730,7 @@ void SetupDELAY( UINT32 drvno, ULONG delay )
 		WriteByteS0( drvno, DELAY & 0x0ff, 0x34 );	//set WRFFDELAY
 		WriteByteS0( drvno, DELAY >> 8, 0x35 );
 	}
+	return;
 }//SetupDELAY
 
 //weg? wenn es bleibt, adresse ändern with enum
@@ -3723,6 +3740,7 @@ void SetupHAModule( BOOL irsingle, ULONG fftlines )
 	FFTLINES = fftlines;
 	HA_MODULE = TRUE;
 	HA_IRSingleCH = irsingle;
+	return;
 }//SetupHAModule
 
 //********************  thread priority stuff
@@ -4597,8 +4615,8 @@ void BlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 )
 {	//set s1 or s2 to sn#ync for Blocktrig
 	BYTE data = 0;
 	BYTE mode = 0;
-	if (S1) mode |= 0x1;
-	if (S2) mode |= 0x2;
+	if (S1) mode |= 0b01;
+	if (S2) mode |= 0b10;
 	ReadByteS0( drvno, &data, S0Addr_BTRIGREG );
 	data &= 0xFC;
 	data |= mode;

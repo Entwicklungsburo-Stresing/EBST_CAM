@@ -79,7 +79,7 @@ void SetIntFFTrig( UINT32 drvno );					// read to FIFO is triggered by Timer
 void SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq );//setup hardware vclk generator
 void SetupVCLKrt( ULONG vfreq );					//setup vclkfreq for rt version(noFIFO)
 void SetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep);
-void SetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, BOOL keep_first);
+void SetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, BOOL keep_first, UINT8* region_size);
 void SetupDELAY( UINT32 drvno, ULONG delay );		//setup DELAY for WRFIFO
 BOOL FFOvl( UINT32 drvno );							//TRUE if FIFO overflow since last RSFifo call
 // Class & Thread priority functions
