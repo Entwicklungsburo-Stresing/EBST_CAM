@@ -93,8 +93,8 @@ HRESULT Direct2dViewer::Initialize( HWND hWndParent )
 			WS_OVERLAPPEDWINDOW,
 			CW_USEDEFAULT,
 			CW_USEDEFAULT,
-			static_cast<UINT>(ceil( 640.f * dpiX / 96.f )),
-			static_cast<UINT>(ceil( 480.f * dpiY / 96.f )),
+			static_cast<INT>(ceil( 640.f * dpiX / 96.f )),
+			static_cast<INT>(ceil( 480.f * dpiY / 96.f )),
 			hWndParent,
 			NULL,
 			HINST_THISCOMPONENT,
@@ -160,8 +160,8 @@ HRESULT Direct2dViewer::CreateDeviceResources()
 		GetClientRect( m_hwnd, &rc );
 
 		D2D1_SIZE_U size = D2D1::SizeU(
-			rc.right - rc.left,
-			rc.bottom - rc.top
+			static_cast<UINT>(rc.right - rc.left),
+			static_cast<UINT>(rc.bottom - rc.top)
 		);
 		if (SUCCEEDED( hr ))
 		{
@@ -242,8 +242,6 @@ LRESULT CALLBACK Direct2dViewer::WndProc( HWND hwnd, UINT message, WPARAM wParam
 		::SetWindowLongPtrW(
 			hwnd,
 			GWLP_USERDATA,
-			// This line differs from the example, because a bug was induced here that caused the application to crash.
-			// orig line: PtrToUlong(D2DV) The problem is that it drops the upper half of a 64 bit address.
 			reinterpret_cast<LONG_PTR>(D2DV)
 		);
 	}
