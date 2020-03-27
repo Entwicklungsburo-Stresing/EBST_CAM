@@ -30,6 +30,7 @@ Direct2dViewer::Direct2dViewer() :
 	m_pD2DFactory( NULL ),
 	m_pWICFactory( NULL ),
 	m_pRenderTarget( NULL ),
+	m_pTextFormat( NULL ),
 	m_pBitmap( NULL )
 {
 }
@@ -42,6 +43,7 @@ Direct2dViewer::~Direct2dViewer()
 	SafeRelease( &m_pD2DFactory );
 	SafeRelease( &m_pWICFactory );
 	SafeRelease( &m_pRenderTarget );
+	SafeRelease( &m_pTextFormat );
 	SafeRelease( &m_pBitmap );
 }
 
@@ -117,6 +119,8 @@ HRESULT Direct2dViewer::Initialize( HWND hWndParent )
 //
 HRESULT Direct2dViewer::CreateDeviceIndependentResources()
 {
+	static const WCHAR msc_fontName[] = L"Verdana";
+	static const FLOAT msc_fontSize = 50;
 	HRESULT hr = S_OK;
 
 	if (SUCCEEDED( hr )) {
@@ -136,7 +140,35 @@ HRESULT Direct2dViewer::CreateDeviceIndependentResources()
 			reinterpret_cast<void **>(&m_pWICFactory)
 		);
 	}
-
+	if (SUCCEEDED( hr ))
+	{
+		// Create a DirectWrite factory.
+		hr = DWriteCreateFactory(
+			DWRITE_FACTORY_TYPE_SHARED,
+			__uuidof(m_pDWriteFactory),
+			reinterpret_cast<IUnknown **>(&m_pDWriteFactory)
+		);
+	}
+	if (SUCCEEDED( hr ))
+	{
+		// Create a DirectWrite text format object.
+		hr = m_pDWriteFactory->CreateTextFormat(
+			msc_fontName,
+			NULL,
+			DWRITE_FONT_WEIGHT_NORMAL,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			msc_fontSize,
+			L"", //locale
+			&m_pTextFormat
+		);
+	}
+	if (SUCCEEDED( hr ))
+	{
+		// Center the text horizontally and vertically.
+		m_pTextFormat->SetTextAlignment( DWRITE_TEXT_ALIGNMENT_CENTER );
+		m_pTextFormat->SetParagraphAlignment( DWRITE_PARAGRAPH_ALIGNMENT_FAR );
+	}
 	return hr;
 }
 
@@ -218,6 +250,7 @@ HRESULT Direct2dViewer::OnRender()
 
 	if (SUCCEEDED( hr ) && !(m_pRenderTarget->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED))
 	{
+		static const WCHAR sc_helloWorld[] = L"Stresing";
 		// Retrieve the size of the render target.
 		D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
 
@@ -233,6 +266,13 @@ HRESULT Direct2dViewer::OnRender()
 				renderTargetSize.height-50 ),
 			1.0f,
 			D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR
+		);
+		m_pRenderTarget->DrawText(
+			sc_helloWorld,
+			ARRAYSIZE( sc_helloWorld ) - 1,
+			m_pTextFormat,
+			D2D1::RectF( 0, 0, renderTargetSize.width, renderTargetSize.height ),
+			m_pBlackBrush
 		);
 		//m_pRenderTarget->DrawLine(
 		//	D2D1::Point2F( 0.0f, 0.0f ),

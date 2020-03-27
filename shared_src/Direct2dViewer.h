@@ -129,7 +129,9 @@ private:
 	HWND m_hwnd;
 	ID2D1Factory *m_pD2DFactory;
 	IWICImagingFactory *m_pWICFactory;
+	IDWriteFactory *m_pDWriteFactory;
 	ID2D1HwndRenderTarget *m_pRenderTarget;
+	IDWriteTextFormat *m_pTextFormat;
 	ID2D1SolidColorBrush *m_pBlackBrush;
 	ID2D1Bitmap *m_pBitmap;
 	FLOAT _gamma_amplitude = 1;
