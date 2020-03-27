@@ -112,27 +112,26 @@ private:
 	HRESULT loadBitmap();
 	HRESULT CreateDeviceIndependentResources();
 	HRESULT CreateDeviceResources();
-	void CreateEffect();
-	void ScaleRenderTarget();
 	void DiscardDeviceResources();
 	HRESULT OnRender();
+	void OnResize(
+		UINT width,
+		UINT height
+	);
 	static LRESULT CALLBACK WndProc(
 		HWND hWnd,
 		UINT message,
 		WPARAM wParam,
 		LPARAM lParam
 	);
-	HRESULT Load16bitGreyscaleBitmapFromMemory(
-
-	);
+	HRESULT Load16bitGreyscaleBitmapFromMemory();
 
 	HWND m_hwnd;
 	ID2D1Factory *m_pD2DFactory;
 	IWICImagingFactory *m_pWICFactory;
 	ID2D1HwndRenderTarget *m_pRenderTarget;
-	ID2D1DeviceContext *m_pDeviceContext;
+	ID2D1SolidColorBrush *m_pBlackBrush;
 	ID2D1Bitmap *m_pBitmap;
-	ID2D1Effect *linearTransferEffect;
 	FLOAT _gamma_amplitude = 1;
 	INT32 _gamma_offset = 0;
 	UINT16 _gamma_white = 0xFFFF;
