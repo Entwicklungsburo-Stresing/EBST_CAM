@@ -30,9 +30,7 @@ Direct2dViewer::Direct2dViewer() :
 	m_pD2DFactory( NULL ),
 	m_pWICFactory( NULL ),
 	m_pRenderTarget( NULL ),
-	m_pDeviceContext( NULL ),
-	m_pBitmap( NULL ),
-	linearTransferEffect( NULL )
+	m_pBitmap( NULL )
 {
 }
 
@@ -44,9 +42,7 @@ Direct2dViewer::~Direct2dViewer()
 	SafeRelease( &m_pD2DFactory );
 	SafeRelease( &m_pWICFactory );
 	SafeRelease( &m_pRenderTarget );
-	SafeRelease( &m_pDeviceContext );
 	SafeRelease( &m_pBitmap );
-	SafeRelease( &linearTransferEffect );
 }
 
 //
@@ -173,6 +169,14 @@ HRESULT Direct2dViewer::CreateDeviceResources()
 				&m_pRenderTarget
 			);
 		}
+		if (SUCCEEDED( hr ))
+		{
+			// Create a black brush.
+			hr = m_pRenderTarget->CreateSolidColorBrush(
+				D2D1::ColorF( D2D1::ColorF::Black ),
+				&m_pBlackBrush
+			);
+		}
 
 		if (SUCCEEDED( hr ))
 		{
@@ -191,7 +195,6 @@ void Direct2dViewer::DiscardDeviceResources()
 {
 	SafeRelease( &m_pRenderTarget );
 	SafeRelease( &m_pBitmap );
-	SafeRelease( &m_pDeviceContext );
 }
 
 //
@@ -215,8 +218,29 @@ HRESULT Direct2dViewer::OnRender()
 
 	if (SUCCEEDED( hr ) && !(m_pRenderTarget->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED))
 	{
+		// Retrieve the size of the render target.
+		D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
+
 		m_pRenderTarget->BeginDraw();
-		m_pDeviceContext->DrawImage( linearTransferEffect, D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR );
+		m_pRenderTarget->SetTransform( D2D1::Matrix3x2F::Identity() );
+		m_pRenderTarget->Clear( D2D1::ColorF( D2D1::ColorF::White ) );
+		m_pRenderTarget->DrawBitmap(
+			m_pBitmap,
+			D2D1::RectF(
+				0,
+				0,
+				renderTargetSize.width,
+				renderTargetSize.height-50 ),
+			1.0f,
+			D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR
+		);
+		//m_pRenderTarget->DrawLine(
+		//	D2D1::Point2F( 0.0f, 0.0f ),
+		//	D2D1::Point2F( renderTargetSize.width, renderTargetSize.height ),
+		//	m_pBlackBrush,
+		//	0.5f,
+		//	NULL
+		//);
 		hr = m_pRenderTarget->EndDraw();
 		if (hr == D2DERR_RECREATE_TARGET)
 		{
@@ -227,6 +251,26 @@ HRESULT Direct2dViewer::OnRender()
 
 	return hr;
 }
+
+//
+//  If the application receives a WM_SIZE message, this method
+//  resize the render target appropriately.
+//
+void Direct2dViewer::OnResize(UINT width, UINT height)
+{
+	if (m_pRenderTarget)
+	{
+		D2D1_SIZE_U size;
+		size.width = width;
+		size.height = height;
+
+		// Note: This method can fail, but it's okay to ignore the
+		// error here -- it will be repeated on the next call to
+		// EndDraw.
+		m_pRenderTarget->Resize(size);
+	}
+}
+
 
 //
 // The window message handler.
@@ -255,6 +299,16 @@ LRESULT CALLBACK Direct2dViewer::WndProc( HWND hwnd, UINT message, WPARAM wParam
 		{
 			switch (message)
 			{
+			case WM_SIZE:
+			{
+				UINT width = LOWORD(lParam);
+				UINT height = HIWORD(lParam);
+				D2DV->OnResize(width, height);
+			}
+				result = 0;
+				wasHandled = true;
+				break;
+
 			case WM_PAINT:
 			case WM_DISPLAYCHANGE:
 			{
@@ -401,42 +455,6 @@ HWND Direct2dViewer::getWindowHandler()
 	return m_hwnd;
 }
 
-void Direct2dViewer::ScaleRenderTarget()
-{
-	// Retrieve the size of the render target.
-	D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
-	// calculate scale factors
-	float scale_x = renderTargetSize.width / _bitmapSource.width;
-	float scale_y = renderTargetSize.height / _bitmapSource.height;
-	// scale render target
-	m_pRenderTarget->SetTransform( D2D1::Matrix3x2F::Scale(
-		D2D1::Size( scale_x, scale_y ),
-		D2D1::Point2F( 0.0f, 0.0f ) ) );
-	return;
-}
-
-void Direct2dViewer::CreateEffect()
-{
-	HRESULT hr = S_OK;
-
-	if (SUCCEEDED( hr ))
-	{
-		SafeRelease( &m_pDeviceContext );
-		// Obtain hwndRenderTarget's deviceContext
-		hr = m_pRenderTarget->QueryInterface( __uuidof(ID2D1DeviceContext), (void**)&m_pDeviceContext );
-	}
-
-	if (SUCCEEDED( hr ))
-	{
-		//This has no effect, because gamma transfer is now applied before converting bitmap to direct2d bitmap and no effect is applied here.
-		//But this is still needed to show the bitmap with the effect pointer.
-		SafeRelease( &linearTransferEffect );
-		m_pDeviceContext->CreateEffect( CLSID_D2D1LinearTransfer, &linearTransferEffect );
-		linearTransferEffect->SetInput( 0, m_pBitmap );
-	}
-	return;
-}
-
 /*
 * creates the graphic rescource bitmap from memory,
 * scales render target and applies gamma effects depending on bit setting to bitmap
@@ -447,10 +465,6 @@ HRESULT Direct2dViewer::loadBitmap()
 	HRESULT hr = S_OK;
 	//create new bitmap
 	hr = Load16bitGreyscaleBitmapFromMemory();
-	//scale render target to window size
-	ScaleRenderTarget();
-	//apply gamma effects
-	CreateEffect();
 	return hr;
 }
 
