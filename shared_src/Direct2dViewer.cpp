@@ -209,7 +209,6 @@ HRESULT Direct2dViewer::CreateDeviceResources()
 				&m_pBlackBrush
 			);
 		}
-
 		if (SUCCEEDED( hr ))
 		{
 			hr = loadBitmap();
@@ -250,7 +249,8 @@ HRESULT Direct2dViewer::OnRender()
 
 	if (SUCCEEDED( hr ) && !(m_pRenderTarget->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED))
 	{
-		std::wstring position_string = L"Pos x: " + std::to_wstring( _mouse_xpos ) + L" Pos y: " + std::to_wstring( _mouse_ypos );
+		CalcCursorPos();
+		std::wstring position_string = L" pixel: " + std::to_wstring( _cursorPos.pixel+1 ) + L" nos: " + std::to_wstring( _cursorPos.nos+1 );
 		// Retrieve the size of the render target.
 		D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
 
@@ -260,10 +260,10 @@ HRESULT Direct2dViewer::OnRender()
 		m_pRenderTarget->DrawBitmap(
 			m_pBitmap,
 			D2D1::RectF(
-				0,
-				0,
-				renderTargetSize.width,
-				renderTargetSize.height-_margin_bottom ),
+				_margin.left,
+				_margin.top,
+				renderTargetSize.width-_margin.right,
+				renderTargetSize.height-_margin.bottom ),
 			1.0f,
 			D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR
 		);
@@ -349,8 +349,8 @@ LRESULT CALLBACK Direct2dViewer::WndProc( HWND hwnd, UINT message, WPARAM wParam
 				wasHandled = true;
 				break;
 			case WM_MOUSEMOVE:
-				D2DV->_mouse_xpos = GET_X_LPARAM( lParam );
-				D2DV->_mouse_ypos = GET_Y_LPARAM( lParam );
+				D2DV->_cursorPos.x = GET_X_LPARAM( lParam );
+				D2DV->_cursorPos.y = GET_Y_LPARAM( lParam );
 			case WM_PAINT:
 			case WM_DISPLAYCHANGE:
 			{
@@ -430,12 +430,12 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 				// pointer to one pixel: base pointer + iterator which is multiplied by two, for two bytes per pixel
 				UINT16 *p_pixel = (UINT16*)(pv + (i * sizeof( UINT16 )));
 				// manipulate pixel data here
-				if (*p_pixel * _gamma_amplitude - _gamma_offset > 0xFFFF)
+				if (*p_pixel * _gamma.amplitude - _gamma.offset > 0xFFFF)
 					*p_pixel = 0xFFFF;
-				else if (*p_pixel * _gamma_amplitude - _gamma_offset < 0)
+				else if (*p_pixel * _gamma.amplitude - _gamma.offset < 0)
 					*p_pixel = 0;
 				else
-					*p_pixel = *p_pixel * _gamma_amplitude - _gamma_offset;
+					*p_pixel = *p_pixel * _gamma.amplitude - _gamma.offset;
 			}
 
 			// Release the bitmap lock.
@@ -518,10 +518,10 @@ HRESULT Direct2dViewer::loadBitmap()
 void Direct2dViewer::SetGammaValue( UINT16 white, UINT16 black )
 {
 	if (black >= white) black = white - 1;
-	_gamma_amplitude = (FLOAT)0xFFFF / (white - black); //default = 1
-	_gamma_offset = _gamma_amplitude * white - 0xFFFF; //default = 0
-	_gamma_white = white;
-	_gamma_black = black;
+	_gamma.amplitude = (FLOAT)0xFFFF / (white - black); //default = 1
+	_gamma.offset = _gamma.amplitude * white - 0xFFFF; //default = 0
+	_gamma.white = white;
+	_gamma.black = black;
 	return;
 }
 
@@ -530,7 +530,7 @@ void Direct2dViewer::SetGammaValue( UINT16 white, UINT16 black )
 */
 UINT16 Direct2dViewer::GetGammaWhite()
 {
-	return _gamma_white;
+	return _gamma.white;
 }
 
 /*
@@ -538,7 +538,7 @@ UINT16 Direct2dViewer::GetGammaWhite()
 */
 UINT16 Direct2dViewer::GetGammaBlack()
 {
-	return _gamma_black;
+	return _gamma.black;
 }
 
 /*
@@ -576,4 +576,20 @@ HRESULT Direct2dViewer::reloadBitmap()
 	//send message to 2d viewer window to repaint
 	SendMessage( getWindowHandler(), WM_PAINT, NULL, NULL );
 	return hr;
+}
+
+void Direct2dViewer::CalcCursorPos()
+{
+	D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
+	// horizontal
+	DOUBLE widthScaleFactor = (_cursorPos.x - _margin.left) / (renderTargetSize.width - _margin.right - _margin.left);
+	if (widthScaleFactor < 0) widthScaleFactor = 0;
+	else if (widthScaleFactor > 1) widthScaleFactor = 1;
+	_cursorPos.pixel = widthScaleFactor * _bitmapSource.width;
+	// vertical
+	DOUBLE heightScaleFactor = (_cursorPos.y - _margin.top) / (renderTargetSize.height - _margin.bottom - _margin.top);
+	if (heightScaleFactor < 0) heightScaleFactor = 0;
+	else if (heightScaleFactor > 1) heightScaleFactor = 1;
+	_cursorPos.nos = heightScaleFactor * _bitmapSource.height;
+	return;
 }
