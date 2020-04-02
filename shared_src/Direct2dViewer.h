@@ -147,8 +147,8 @@ private:
 	struct _Margin
 	{
 		FLOAT top = 0;
-		FLOAT left = 0;
-		FLOAT bottom = 50;
+		FLOAT left = 20;
+		FLOAT bottom = 40;
 		FLOAT right = 0;
 	} _margin;
 	struct _CursorPos
@@ -158,7 +158,7 @@ private:
 		int y = 0;
 		// position in camera data
 		int pixel = 0;
-		int nos = 0;
+		int line = 0;
 	} _cursorPos;
 	struct _BitmapSource
 	{
