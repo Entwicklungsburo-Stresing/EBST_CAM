@@ -127,6 +127,7 @@ private:
 		LPARAM lParam
 	);
 	HRESULT Load16bitGreyscaleBitmapFromMemory();
+	void CalcCursorPos();
 
 	HWND m_hwnd;
 	ID2D1Factory *m_pD2DFactory;
@@ -136,14 +137,29 @@ private:
 	IDWriteTextFormat *m_pTextFormat;
 	ID2D1SolidColorBrush *m_pBlackBrush;
 	ID2D1Bitmap *m_pBitmap;
-	FLOAT _gamma_amplitude = 1;
-	INT32 _gamma_offset = 0;
-	UINT16 _gamma_white = 0xFFFF;
-	UINT16 _gamma_black = 0;
-	FLOAT _margin_bottom = 50;
-	int _mouse_xpos = 0;
-	int _mouse_ypos = 0;
-
+	struct _Gamma
+	{
+		FLOAT amplitude = 1;
+		INT32 offset = 0;
+		UINT16 white = 0xFFFF;
+		UINT16 black = 0;
+	} _gamma;
+	struct _Margin
+	{
+		FLOAT top = 0;
+		FLOAT left = 0;
+		FLOAT bottom = 50;
+		FLOAT right = 0;
+	} _margin;
+	struct _CursorPos
+	{
+		// relative position to upper left corner of direct2d window
+		int x = 0;
+		int y = 0;
+		// position in camera data
+		int pixel = 0;
+		int nos = 0;
+	} _cursorPos;
 	struct _BitmapSource
 	{
 		void	*addr;
