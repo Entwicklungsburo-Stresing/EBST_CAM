@@ -128,7 +128,17 @@ private:
 	);
 	HRESULT Load16bitGreyscaleBitmapFromMemory();
 	void CalcCursorPos();
-
+	void DrawScale();
+	void DrawVerticalLine(
+		D2D1_POINT_2F startPoint,
+		FLOAT length,
+		FLOAT strokeWidth
+	);
+	void DrawHorizontalLine(
+		D2D1_POINT_2F startPoint,
+		FLOAT length,
+		FLOAT strokeWidth
+	);
 	HWND m_hwnd;
 	ID2D1Factory *m_pD2DFactory;
 	IWICImagingFactory *m_pWICFactory;
@@ -137,6 +147,12 @@ private:
 	IDWriteTextFormat *m_pTextFormat;
 	ID2D1SolidColorBrush *m_pBlackBrush;
 	ID2D1Bitmap *m_pBitmap;
+	struct _Scale
+	{
+		FLOAT length = 12;
+		FLOAT width = 1;
+		int distance = 10;
+	} _scale;
 	struct _Gamma
 	{
 		FLOAT amplitude = 1;

@@ -254,7 +254,7 @@ HRESULT Direct2dViewer::OnRender()
 	if (SUCCEEDED( hr ) && !(m_pRenderTarget->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED))
 	{
 		CalcCursorPos();
-		std::wstring position_string = L"pixel: " + std::to_wstring( _cursorPos.pixel ) + L"  line: " + std::to_wstring( _cursorPos.line+1 );
+		std::wstring cursorPosString = L"pixel: " + std::to_wstring( _cursorPos.pixel ) + L"  line: " + std::to_wstring( _cursorPos.line+1 );
 		// Retrieve the size of the render target.
 		D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
 
@@ -272,19 +272,13 @@ HRESULT Direct2dViewer::OnRender()
 			D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR
 		);
 		m_pRenderTarget->DrawText(
-			position_string.c_str(),
-			static_cast<UINT32>(position_string.size()),
+			cursorPosString.c_str(),
+			static_cast<UINT32>(cursorPosString.size()),
 			m_pTextFormat,
 			D2D1::RectF( 0, 0, renderTargetSize.width, renderTargetSize.height ),
 			m_pBlackBrush
 		);
-		//m_pRenderTarget->DrawLine(
-		//	D2D1::Point2F( 0.0f, 0.0f ),
-		//	D2D1::Point2F( renderTargetSize.width, renderTargetSize.height ),
-		//	m_pBlackBrush,
-		//	0.5f,
-		//	NULL
-		//);
+		DrawScale();
 		hr = m_pRenderTarget->EndDraw();
 		if (hr == D2DERR_RECREATE_TARGET)
 		{
@@ -595,5 +589,53 @@ void Direct2dViewer::CalcCursorPos()
 	if (heightScaleFactor < 0 || heightScaleFactor > 1)_cursorPos.line = -2; //-2 because it is displayed with +1
 	else _cursorPos.line = static_cast<INT>(heightScaleFactor * _bitmapSource.height);
 	if (_cursorPos.line == _bitmapSource.height) _cursorPos.line = _bitmapSource.height - 1;
+	return;
+}
+
+void Direct2dViewer::DrawScale()
+{
+	D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
+	// horizontal scale
+	D2D1_POINT_2F scalePosition = D2D1::Point2F( _margin.left, renderTargetSize.height-_margin.bottom+2 );
+	while (scalePosition.x < renderTargetSize.width - _margin.right)
+	{
+		DrawVerticalLine( scalePosition, _scale.length, _scale.width );
+		scalePosition.x = scalePosition.x + _scale.distance;
+	}
+	// vertical scale
+	scalePosition = D2D1::Point2F( _margin.left - _scale.length-2, _margin.top );
+	while (scalePosition.y < renderTargetSize.height - _margin.bottom)
+	{
+		DrawHorizontalLine( scalePosition, _scale.length, _scale.width );
+		scalePosition.y = scalePosition.y + _scale.distance;
+	}
+	return;
+}
+
+void Direct2dViewer::DrawVerticalLine( D2D1_POINT_2F startPoint, FLOAT length, FLOAT strokeWidth )
+{
+	D2D1_POINT_2F endPoint = startPoint;
+	endPoint.y = endPoint.y + length;
+	m_pRenderTarget->DrawLine(
+		startPoint,
+		endPoint,
+		m_pBlackBrush,
+		strokeWidth,
+		NULL
+	);
+	return;
+}
+
+void Direct2dViewer::DrawHorizontalLine( D2D1_POINT_2F startPoint, FLOAT length, FLOAT strokeWidth )
+{
+	D2D1_POINT_2F endPoint = startPoint;
+	endPoint.x = endPoint.x + length;
+	m_pRenderTarget->DrawLine(
+		startPoint,
+		endPoint,
+		m_pBlackBrush,
+		strokeWidth,
+		NULL
+	);
 	return;
 }
