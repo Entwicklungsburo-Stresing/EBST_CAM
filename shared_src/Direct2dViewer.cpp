@@ -250,7 +250,7 @@ HRESULT Direct2dViewer::OnRender()
 
 	if (SUCCEEDED( hr ) && !(m_pRenderTarget->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED))
 	{
-		static const WCHAR sc_helloWorld[] = L"Stresing";
+		std::wstring position_string = L"Pos x: " + std::to_wstring( _mouse_xpos ) + L" Pos y: " + std::to_wstring( _mouse_ypos );
 		// Retrieve the size of the render target.
 		D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
 
@@ -263,13 +263,13 @@ HRESULT Direct2dViewer::OnRender()
 				0,
 				0,
 				renderTargetSize.width,
-				renderTargetSize.height-50 ),
+				renderTargetSize.height-_margin_bottom ),
 			1.0f,
 			D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR
 		);
 		m_pRenderTarget->DrawText(
-			sc_helloWorld,
-			ARRAYSIZE( sc_helloWorld ) - 1,
+			position_string.c_str(),
+			position_string.size(),
 			m_pTextFormat,
 			D2D1::RectF( 0, 0, renderTargetSize.width, renderTargetSize.height ),
 			m_pBlackBrush
@@ -348,7 +348,9 @@ LRESULT CALLBACK Direct2dViewer::WndProc( HWND hwnd, UINT message, WPARAM wParam
 				result = 0;
 				wasHandled = true;
 				break;
-
+			case WM_MOUSEMOVE:
+				D2DV->_mouse_xpos = GET_X_LPARAM( lParam );
+				D2DV->_mouse_ypos = GET_Y_LPARAM( lParam );
 			case WM_PAINT:
 			case WM_DISPLAYCHANGE:
 			{
@@ -360,7 +362,6 @@ LRESULT CALLBACK Direct2dViewer::WndProc( HWND hwnd, UINT message, WPARAM wParam
 			result = 0;
 			wasHandled = true;
 			break;
-
 			case WM_DESTROY:
 				//send custom message to main window about closing 2d viewer
 				HWND hWndOwner = GetWindow( hwnd, GW_OWNER );
