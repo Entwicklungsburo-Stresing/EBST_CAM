@@ -151,7 +151,8 @@ private:
 	{
 		FLOAT length = 12;
 		FLOAT width = 1;
-		int distance = 10;
+		int distance_x = 10;
+		int distance_y = 10;
 	} _scale;
 	struct _Gamma
 	{
