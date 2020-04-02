@@ -596,18 +596,20 @@ void Direct2dViewer::DrawScale()
 {
 	D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
 	// horizontal scale
+	//_scale.distance_x = _bitmapSource.width / (renderTargetSize.width - _margin.right - _margin.left);
 	D2D1_POINT_2F scalePosition = D2D1::Point2F( _margin.left, renderTargetSize.height-_margin.bottom+2 );
 	while (scalePosition.x < renderTargetSize.width - _margin.right)
 	{
 		DrawVerticalLine( scalePosition, _scale.length, _scale.width );
-		scalePosition.x = scalePosition.x + _scale.distance;
+		scalePosition.x = scalePosition.x + _scale.distance_x;
 	}
 	// vertical scale
+	//_scale.distance_y = (renderTargetSize.height - _margin.top - _margin.bottom) / _bitmapSource.height;
 	scalePosition = D2D1::Point2F( _margin.left - _scale.length-2, _margin.top );
 	while (scalePosition.y < renderTargetSize.height - _margin.bottom)
 	{
 		DrawHorizontalLine( scalePosition, _scale.length, _scale.width );
-		scalePosition.y = scalePosition.y + _scale.distance;
+		scalePosition.y = scalePosition.y + _scale.distance_y;
 	}
 	return;
 }
