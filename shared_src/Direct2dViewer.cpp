@@ -583,13 +583,15 @@ void Direct2dViewer::CalcCursorPos()
 	D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
 	// horizontal
 	DOUBLE widthScaleFactor = (_cursorPos.x - _margin.left) / (renderTargetSize.width - _margin.right - _margin.left);
-	if (widthScaleFactor <= 0) widthScaleFactor = 0;
-	else if (widthScaleFactor >= 1) widthScaleFactor = 1;
+	if (widthScaleFactor < 0) widthScaleFactor = 0;
+	else if (widthScaleFactor > 1) widthScaleFactor = 1;
 	_cursorPos.pixel = static_cast<INT>(widthScaleFactor * _bitmapSource.width);
+	if (_cursorPos.pixel == _bitmapSource.width) _cursorPos.pixel = _bitmapSource.width - 1;
 	// vertical
 	DOUBLE heightScaleFactor = (_cursorPos.y - _margin.top) / (renderTargetSize.height - _margin.bottom - _margin.top);
-	if (heightScaleFactor <= 0) heightScaleFactor = 0;
-	else if (heightScaleFactor >= 1) heightScaleFactor = 1;
+	if (heightScaleFactor < 0) heightScaleFactor = 0;
+	else if (heightScaleFactor > 1) heightScaleFactor = 1;
 	_cursorPos.nos = static_cast<INT>(heightScaleFactor * _bitmapSource.height);
+	if (_cursorPos.nos == _bitmapSource.height) _cursorPos.nos = _bitmapSource.height - 1;
 	return;
 }
