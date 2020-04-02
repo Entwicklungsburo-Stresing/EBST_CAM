@@ -17,6 +17,7 @@
 #define WIN32_LEAN_AND_MEAN     // Exclude rarely-used stuff from Windows headers
 // Windows Header Files:
 #include <windows.h>
+#include <Windowsx.h>
 
 // C RunTime Header Files
 #include <stdlib.h>
@@ -25,6 +26,7 @@
 #include <memory.h>
 #include <wchar.h>
 #include <math.h>
+#include <string>
 
 #include <d2d1.h>
 #include <d2d1helper.h>
@@ -138,6 +140,9 @@ private:
 	INT32 _gamma_offset = 0;
 	UINT16 _gamma_white = 0xFFFF;
 	UINT16 _gamma_black = 0;
+	FLOAT _margin_bottom = 50;
+	int _mouse_xpos = 0;
+	int _mouse_ypos = 0;
 
 	struct _BitmapSource
 	{
