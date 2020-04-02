@@ -269,7 +269,7 @@ HRESULT Direct2dViewer::OnRender()
 		);
 		m_pRenderTarget->DrawText(
 			position_string.c_str(),
-			position_string.size(),
+			static_cast<UINT32>(position_string.size()),
 			m_pTextFormat,
 			D2D1::RectF( 0, 0, renderTargetSize.width, renderTargetSize.height ),
 			m_pBlackBrush
@@ -389,7 +389,7 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 	IWICFormatConverter *pConverter = NULL;
 	IWICBitmap            *ppIBitmap = NULL;
 	IWICBitmapLock *pILock = NULL;
-	WICRect rcLock = { 0, 0, _bitmapSource.width, _bitmapSource.height };
+	WICRect rcLock = { 0, 0, static_cast<INT>(_bitmapSource.width), static_cast<INT>(_bitmapSource.height) };
 
 	if (SUCCEEDED( hr ))
 	{
@@ -435,7 +435,7 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 				else if (*p_pixel * _gamma.amplitude - _gamma.offset < 0)
 					*p_pixel = 0;
 				else
-					*p_pixel = *p_pixel * _gamma.amplitude - _gamma.offset;
+					*p_pixel = static_cast<UINT16>(*p_pixel * _gamma.amplitude - _gamma.offset);
 			}
 
 			// Release the bitmap lock.
@@ -519,7 +519,7 @@ void Direct2dViewer::SetGammaValue( UINT16 white, UINT16 black )
 {
 	if (black >= white) black = white - 1;
 	_gamma.amplitude = (FLOAT)0xFFFF / (white - black); //default = 1
-	_gamma.offset = _gamma.amplitude * white - 0xFFFF; //default = 0
+	_gamma.offset = static_cast<INT32>(_gamma.amplitude * white - 0xFFFF); //default = 0
 	_gamma.white = white;
 	_gamma.black = black;
 	return;
@@ -583,13 +583,13 @@ void Direct2dViewer::CalcCursorPos()
 	D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
 	// horizontal
 	DOUBLE widthScaleFactor = (_cursorPos.x - _margin.left) / (renderTargetSize.width - _margin.right - _margin.left);
-	if (widthScaleFactor < 0) widthScaleFactor = 0;
-	else if (widthScaleFactor > 1) widthScaleFactor = 1;
-	_cursorPos.pixel = widthScaleFactor * _bitmapSource.width;
+	if (widthScaleFactor <= 0) widthScaleFactor = 0;
+	else if (widthScaleFactor >= 1) widthScaleFactor = 1;
+	_cursorPos.pixel = static_cast<INT>(widthScaleFactor * _bitmapSource.width);
 	// vertical
 	DOUBLE heightScaleFactor = (_cursorPos.y - _margin.top) / (renderTargetSize.height - _margin.bottom - _margin.top);
-	if (heightScaleFactor < 0) heightScaleFactor = 0;
-	else if (heightScaleFactor > 1) heightScaleFactor = 1;
-	_cursorPos.nos = heightScaleFactor * _bitmapSource.height;
+	if (heightScaleFactor <= 0) heightScaleFactor = 0;
+	else if (heightScaleFactor >= 1) heightScaleFactor = 1;
+	_cursorPos.nos = static_cast<INT>(heightScaleFactor * _bitmapSource.height);
 	return;
 }
