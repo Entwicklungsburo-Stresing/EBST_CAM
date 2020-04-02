@@ -29,9 +29,11 @@ Direct2dViewer::Direct2dViewer() :
 	m_hwnd( NULL ),
 	m_pD2DFactory( NULL ),
 	m_pWICFactory( NULL ),
+	m_pDWriteFactory( NULL ),
 	m_pRenderTarget( NULL ),
 	m_pTextFormat( NULL ),
-	m_pBitmap( NULL )
+	m_pBitmap( NULL ),
+	m_pBlackBrush( NULL )
 {
 }
 
@@ -42,9 +44,11 @@ Direct2dViewer::~Direct2dViewer()
 {
 	SafeRelease( &m_pD2DFactory );
 	SafeRelease( &m_pWICFactory );
+	SafeRelease( &m_pDWriteFactory );
 	SafeRelease( &m_pRenderTarget );
 	SafeRelease( &m_pTextFormat );
 	SafeRelease( &m_pBitmap );
+	SafeRelease( &m_pBlackBrush );
 }
 
 //
@@ -120,7 +124,7 @@ HRESULT Direct2dViewer::Initialize( HWND hWndParent )
 HRESULT Direct2dViewer::CreateDeviceIndependentResources()
 {
 	static const WCHAR msc_fontName[] = L"Verdana";
-	static const FLOAT msc_fontSize = 50;
+	static const FLOAT msc_fontSize = 20;
 	HRESULT hr = S_OK;
 
 	if (SUCCEEDED( hr )) {
@@ -250,7 +254,7 @@ HRESULT Direct2dViewer::OnRender()
 	if (SUCCEEDED( hr ) && !(m_pRenderTarget->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED))
 	{
 		CalcCursorPos();
-		std::wstring position_string = L" pixel: " + std::to_wstring( _cursorPos.pixel+1 ) + L" nos: " + std::to_wstring( _cursorPos.nos+1 );
+		std::wstring position_string = L"pixel: " + std::to_wstring( _cursorPos.pixel ) + L"  line: " + std::to_wstring( _cursorPos.line+1 );
 		// Retrieve the size of the render target.
 		D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
 
@@ -583,15 +587,13 @@ void Direct2dViewer::CalcCursorPos()
 	D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
 	// horizontal
 	DOUBLE widthScaleFactor = (_cursorPos.x - _margin.left) / (renderTargetSize.width - _margin.right - _margin.left);
-	if (widthScaleFactor < 0) widthScaleFactor = 0;
-	else if (widthScaleFactor > 1) widthScaleFactor = 1;
-	_cursorPos.pixel = static_cast<INT>(widthScaleFactor * _bitmapSource.width);
+	if (widthScaleFactor < 0 || widthScaleFactor > 1) _cursorPos.pixel = -1;
+	else _cursorPos.pixel = static_cast<INT>(widthScaleFactor * _bitmapSource.width);
 	if (_cursorPos.pixel == _bitmapSource.width) _cursorPos.pixel = _bitmapSource.width - 1;
 	// vertical
 	DOUBLE heightScaleFactor = (_cursorPos.y - _margin.top) / (renderTargetSize.height - _margin.bottom - _margin.top);
-	if (heightScaleFactor < 0) heightScaleFactor = 0;
-	else if (heightScaleFactor > 1) heightScaleFactor = 1;
-	_cursorPos.nos = static_cast<INT>(heightScaleFactor * _bitmapSource.height);
-	if (_cursorPos.nos == _bitmapSource.height) _cursorPos.nos = _bitmapSource.height - 1;
+	if (heightScaleFactor < 0 || heightScaleFactor > 1)_cursorPos.line = -2; //-2 because it is displayed with +1
+	else _cursorPos.line = static_cast<INT>(heightScaleFactor * _bitmapSource.height);
+	if (_cursorPos.line == _bitmapSource.height) _cursorPos.line = _bitmapSource.height - 1;
 	return;
 }
