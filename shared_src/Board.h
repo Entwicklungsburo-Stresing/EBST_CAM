@@ -47,10 +47,10 @@ BOOL ReadLongIOPort( UINT32 drvno, ULONG *DWData, ULONG PortOff );// read long f
 BOOL ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff );	// read long from space0
 BOOL ReadLongDMA( UINT32 drvno, PULONG pDWData, ULONG PortOff );
 BOOL ReadByteS0( UINT32 drvno, BYTE *data, ULONG PortOff );	// read byte from space0
-BOOL WriteLongIOPort( UINT32 drvno, ULONG DWData, ULONG PortOff );// write long to IO runreg
+BOOL WriteLongIOPort( UINT32 drvno, ULONG DataL, ULONG PortOff );// write long to IO runreg
 BOOL WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff );// write long to space0
 BOOL WriteLongDMA( UINT32 drvno, ULONG DWData, ULONG PortOff );
-BOOL WriteByteS0( UINT32 drvno, BYTE DWData, ULONG PortOff ); // write byte to space0
+BOOL WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff ); // write byte to space0
 // clear camera with reads
 void AboutDrv( UINT32 drvno );	// displays the version and board ID = test if board is there
 //	functions for managing controlbits in CtrlA register

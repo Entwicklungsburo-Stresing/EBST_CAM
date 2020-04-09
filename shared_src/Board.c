@@ -545,6 +545,11 @@ BOOL CCDDrvInit( void )
 
 }; //CCDDrvInit
 
+/**
+\brief Frees handle and memory -> exit driver.
+\param drvno board number (=1 if one PCI board)
+\return none
+*/
 void CCDDrvExit( UINT32 drvno )
 {
 	WDC_Err( "drvexit\n" );
@@ -2052,6 +2057,13 @@ BOOL CallIORead( UINT32 drvno, void* pdioden, ULONG fkt )
 	return TRUE;
 }//CallIORead
 
+/**
+\brief Read long (32 bit) from runtime register of PCIe board.
+\param drvno board number (=1 if one PCI board)
+\param DWData pointer to where data is stored
+\param PortOff PortOff of register (count in bytes)
+\return ==0 if error
+*/
 BOOL ReadLongIOPort( UINT32 drvno, ULONG *DWData, ULONG PortOff )
 //this function reads the memory mapped data , not the I/O Data
 {// reads long of PCIruntime register LCR
@@ -2081,6 +2093,13 @@ BOOL ReadLongIOPort( UINT32 drvno, ULONG *DWData, ULONG PortOff )
 	return TRUE;
 };  // ReadLongIOPort
 
+/**
+\brief Read long (32 bit) from register in space0 of PCIe board.
+\param drvno board number (=1 if one PCI board)
+\param DWData pointer to where data is stored
+\param PortOff PortOff of register 0..3 (count in bytes)
+\return ==0 if error
+*/
 BOOL ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff )
 {// reads long on space0 area
 	// PortOff: Offset from BaseAdress - in Bytes !
@@ -2110,6 +2129,9 @@ BOOL ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff )
 	return TRUE;
 };  // ReadLongS0
 
+/**
+\brief Read byte from Port, PortOff 0..3= Regs of Board.
+*/
 BOOL ReadLongDMA( UINT32 drvno, PULONG pDWData, ULONG PortOff )
 {// reads long on DMA area
 	// PortOff: Offset from BaseAdress - in Bytes !
@@ -2140,6 +2162,13 @@ BOOL ReadLongDMA( UINT32 drvno, PULONG pDWData, ULONG PortOff )
 	return TRUE;
 };  // ReadLongDMA
 
+/**
+\brief Read byte (8 bit) from register in space0 of PCIe board.
+\param drvno board number (=1 if one PCI board)
+\param data pointer to where data is stored
+\param PortOff PortOff of register (count in bytes)
+\return ==0 if error
+*/
 BOOL ReadByteS0( UINT32 drvno, BYTE *data, ULONG PortOff )
 {// reads byte in space0 area except r10-r1f
 	// PortOff: Offset from BaseAdress - in Bytes !
@@ -2169,7 +2198,14 @@ BOOL ReadByteS0( UINT32 drvno, BYTE *data, ULONG PortOff )
 	return TRUE;
 };  // ReadByteS0
 
-BOOL WriteLongIOPort( UINT32 drvno, ULONG DWData, ULONG PortOff )
+/**
+\brief Write long (32 bit) to register in space0 of PCIe board.
+\param drvno board number (=1 if one PCI board)
+\param DataL long value to write
+\param PortOff PortOff of register
+\return ==0 if error
+*/
+BOOL WriteLongIOPort( UINT32 drvno, ULONG DataL, ULONG PortOff )
 {	// writes long to PCIruntime register
 	// PortOff: Reg Offset from BaseAdress - in bytes
 	// returns TRUE if success
@@ -2178,7 +2214,7 @@ BOOL WriteLongIOPort( UINT32 drvno, ULONG DWData, ULONG PortOff )
 	ULONG	DataLength;
 	DWORD   ReturnedLength;
 	volatile DWORD dwStatus = 0;
-	PULONG data = &DWData;
+	PULONG data = &DataL;
 
 	//WriteData.POff	= PortOff;
 	//WriteData.Data	= DWData;
@@ -2187,7 +2223,7 @@ BOOL WriteLongIOPort( UINT32 drvno, ULONG DWData, ULONG PortOff )
 	dwStatus = WDC_PciWriteCfg( hDev[drvno], PortOff, data, sizeof( ULONG ) );
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		WDC_Err( "WriteLongIOPort in address 0x%x with data: 0x%x failed\n", PortOff, DWData );
+		WDC_Err( "WriteLongIOPort in address 0x%x with data: 0x%x failed\n", PortOff, DataL );
 		ErrorMsg( "WriteLongIOPort failed" );
 		return FALSE;
 	}//else WDC_Err("I0PortWrite /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
@@ -2203,6 +2239,13 @@ BOOL WriteLongIOPort( UINT32 drvno, ULONG DWData, ULONG PortOff )
 	return TRUE;
 };  // WriteLongIOPort
 
+/**
+\brief Write long (32 bit) to register in space0 of PCIe board.
+\param drvno board number (=1 if one PCI board)
+\param DWData long value to write
+\param PortOff PortOff of register (count in bytes)
+output: ==0 if error
+*/
 BOOL WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff )
 {	// writes long to space0 register
 	// PortOff: Reg Offset from BaseAdress - in bytes
@@ -2251,6 +2294,9 @@ BOOL WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff )
 	return TRUE;
 };  // WriteLongS0
 
+/**
+\brief Writes DataByte to Port.
+*/
 BOOL WriteLongDMA( UINT32 drvno, ULONG DWData, ULONG PortOff )
 {	// writes long to space0 register
 	// PortOff: Reg Offset from BaseAdress - in bytes
@@ -2314,7 +2360,14 @@ return TRUE;
 };
 */
 
-BOOL WriteByteS0( UINT32 drvno, BYTE DWData, ULONG PortOff )
+/**
+\brief Write byte (8 bit) to register in space0 of PCIe board.
+\param drv board number (=1 if one PCI board)
+\param DataByte byte value to write
+\param PortOff PortOff of register (count in bytes)
+\return ==0 if error
+*/
+BOOL WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff )
 {	// writes byte to space0 register except r10-r1f
 	// PortOff: Reg Offset from BaseAdress - in bytes
 	// returns TRUE if success
@@ -2323,27 +2376,27 @@ BOOL WriteByteS0( UINT32 drvno, BYTE DWData, ULONG PortOff )
 	ULONG	DataLength;
 	DWORD   ReturnedLength;
 	volatile DWORD dwStatus = 0;
-	PBYTE data = &DWData;
+	PBYTE data = &DataByte;
 	ULONG	PortOffset;
 
 
 	PortOffset = PortOff + 0x80;
 
-	dwStatus = WDC_WriteAddrBlock( hDev[drvno], 0, PortOffset, 1/*sizeof(BYTE)*/, data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
+	dwStatus = WDC_WriteAddrBlock( hDev[drv], 0, PortOffset, 1/*sizeof(BYTE)*/, data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		WDC_Err( "WriteByteS0 in address 0x%x with data: 0x%x failed\n", PortOff, DWData );
+		WDC_Err( "WriteByteS0 in address 0x%x with data: 0x%x failed\n", PortOff, DataByte );
 		ErrorMsg( "WriteByteS0 failed" );
 		return FALSE;
 	}//else WDC_Err("ByteS0Write /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
 
 	//no comparison possible because some Read-Only-Register are changing when we are writing in the same register
 	BYTE checkdata;
-	ReadByteS0( drvno, &checkdata, PortOff );
+	ReadByteS0( drv, &checkdata, PortOff );
 	if (*data != checkdata)
 	{
-		WDC_Err( "\nWriteByteError in address 0x%x:\ndata to write: %x\n", PortOff, DWData );
+		WDC_Err( "\nWriteByteError in address 0x%x:\ndata to write: %x\n", PortOff, DataByte );
 		WDC_Err( "data read: %x\n", checkdata );
 	}
 
@@ -2367,6 +2420,19 @@ BOOL WriteByteS0( UINT32 drvno, BYTE DWData, ULONG PortOff )
 };  // WriteByteS0
 
 //weg? verknüpft mit vi...es wird doch aber nur AbotDMA und AboutTLP und so genutz`t?
+/**
+\brief Return infos about the PCIe board.
+	Shows 5 info messages. Can be used to test the communication with the PCI board.
+	Is called automatically for 2 boards.
+
+- win1 : version of driver
+- win2 : ID = 53xx
+- win3 : length of space0 BAR =0x3f
+- win4 : vendor ID = EBST
+- win5 : PCI board version (same as label on PCI board)
+\param drvno board number (=1 if one PCI board)
+\return none
+*/
 void AboutDrv( UINT32 drvno )
 {
 	USHORT version = 0;
@@ -2449,6 +2515,12 @@ D7, D8 have no function
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 */
+
+/**
+\brief Set the external trigger slope to low (PCI Reg CrtlA:D5 -> manual).
+\param drvno board number (=1 if one PCI board)
+\return none
+*/
 void LowSlope( UINT32 drvno )
 {// clear bit D5
 	BYTE CtrlA;
@@ -2459,6 +2531,9 @@ void LowSlope( UINT32 drvno )
 	WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
 }; //LowSlope
 
+/**
+\brief Functions for managing controlbits in CtrlA register. Set input Trigger slope high.
+*/
 void HighSlope( UINT32 drvno )
 {// set bit D5
 	BYTE CtrlA;
@@ -2469,6 +2544,11 @@ void HighSlope( UINT32 drvno )
 	WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
 }; //HighSlope
 
+/**
+\brief Set trigger input to pos. & neg. slope.
+\param drvno board number (=1 if one PCI board)
+\return none
+*/
 void BothSlope( UINT32 drvno )
 {// set bit D4
 	BYTE CtrlA;
@@ -2491,6 +2571,14 @@ void NotBothSlope( UINT32 drvno )
 /* Ausgabe eines High-Signals an Pin 17                                      */
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
+/**
+\brief Reset trigger out(Reg CtrlA:D3) of PCI board. Can be used to control timing issues in software.
+
+The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual.
+Functions is not optimized for 2 cams.
+\param drvno board number (=1 if one PCI board)
+\return none
+*/
 void OutTrigLow( UINT32 drvno )
 {
 	BYTE CtrlA;
@@ -2504,6 +2592,14 @@ void OutTrigLow( UINT32 drvno )
 /* Ausgabe eines Low-Signals an Pin 17                                       */
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
+/**
+\brief Set trigger out(Reg CtrlA:D3) of PCIe board. Can be used to control timing issues in software.
+
+The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual.
+Functions is not optimized for 2 cams.
+\param drvno board number (=1 if one PCI board)
+\return none
+*/
 void OutTrigHigh( UINT32 drvno )
 {
 	BYTE CtrlA;
@@ -2516,6 +2612,14 @@ void OutTrigHigh( UINT32 drvno )
 /* Ausgabe eines PulseWidth breiten Rechteckpulses an Pin 17                 */
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
+/**
+\brief Pulses trigger out(Reg CtrlA:D3) of PCI board. Can be used to control timing issues in software.
+
+The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual
+\param drvno board number (=1 if one PCI board)
+\param PulseWidth duration of pulse in ms
+\return none
+*/
 void OutTrigPulse( UINT32 drvno, ULONG PulseWidth )
 {
 	OutTrigHigh( drvno );
@@ -2649,6 +2753,11 @@ void DisTrigShort( UINT32 drvno )
 
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
+/**
+\brief Sets the IFC Bit of Interface for sensors with shutter function. IFC=low
+\param drvno board number (=1 if one PCI board)
+\return none
+*/
 void CloseShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 {
 	UCHAR CtrlB;
@@ -2659,6 +2768,11 @@ void CloseShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
+/**
+\brief Open shutter for sensors with EC (exposure control) / sets IFC signal = high.
+\param drvno board number (=1 if one PCI board)
+\return none
+*/
 void OpenShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 {
 	UCHAR CtrlB;
@@ -2784,6 +2898,13 @@ void SetTORReg( UINT32 drvno, BYTE fkt )
 	WriteByteS0( drvno, val, S0Addr_TOR + 3 );
 }//SetTORReg
 //weg?
+
+/**
+\brief Set/reset bit for PDA sensor timing(set Reg TOR:D25 -> manual).
+\param drvno board number (=1 if one PCI board)
+\param set if set is true (not 0)-> bit is set, reset else
+\return none
+*/
 void SetISPDA( UINT32 drvno, BOOL set )
 {//set bit if PDA sensor - used for EC and IFC
 	BYTE val = 0;
@@ -2794,6 +2915,12 @@ void SetISPDA( UINT32 drvno, BOOL set )
 	OpenShutter( drvno ); //enable output
 }//SetISPDA
 
+/**
+\brief Set/reset bit for FFT sensor timing(set Reg TOR:D24 -> manual).
+\param drvno board number (=1 if one PCI board)
+\param set if set is true (not 0)-> bit is set, reset else
+\return none
+*/
 void SetISFFT( UINT32 drvno, BOOL set )
 {//set bit if FFT sensor - used for vclks and IFC
 	// also OpenShutter must be set!
@@ -2804,25 +2931,45 @@ void SetISFFT( UINT32 drvno, BOOL set )
 	WriteByteS0( drvno, val, S0Addr_TOR + 3 );
 }//SetISFFT
 
+/**
+\return Sets PDA sensor timing(set Reg TOR:D25 -> manual) or FFT.
+\param drvno board number (=1 if one PCI board)
+\param set if set is true (not 0)-> PDA, FFT else
+\return none
+*/
 void SetPDAnotFFT( UINT32 drvno, BOOL set )
 {
 	SetISPDA( drvno, set );
 	SetISFFT( drvno, !set );
 }
 
+/**
+\brief Reset TOR register. Is used to set the signal of the O-plug of interface board) -> manual.
+\param drvno board number (=1 if one PCI board)
+\return none
+*/
 void RsTOREG( UINT32 drvno )
 {// reset TOREG
 	WriteByteS0( drvno, 0, S0Addr_TOR + 3 );
 }
 
-//**************************  new setup of fiber link camera
-// send setup	d0:d15 = data for AD-Reg  ADS5294
-//				d16:d23 = ADR of  AD-Reg
-//				d24 = ADDR0		AD=1
-//				d25 = ADDR1		AD=0
-//				d26 makes load pulse
-//				all written to DB0 in Space0 = Long0
-//				for AD set maddr=01, adaddr address of reg
+/**
+\brief Sends data via fibre link, e.g. used for sending data to ADC (ADS5294).
+
+Send setup:
+- d0:d15 = data for AD-Reg  ADS5294
+- d16:d23 = ADR of  AD-Reg
+- d24 = ADDR0		AD=1
+- d25 = ADDR1		AD=0
+- d26 makes load pulse
+- all written to DB0 in Space0 = Long0
+- for AD set maddr=01, adaddr address of reg
+\param drvno board number (=1 if one PCI board)
+\param maddr master address for specifying device (2 for ADC)
+\param adaddr register address
+\param data data
+\return none
+*/
 void SendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data )
 {
 	UINT32 ldata = 0;
@@ -3435,7 +3582,13 @@ UINT64 GetISRTime( void )
 };
 
 //weg?!
-//  call of the read function if write is slower then read
+/**
+\brief Read line lno of ring buffer,
+	special function of RingReadThread (see example GetRingFF or GetRing2cam).
+\param pdioden
+\param lno
+\return none
+*/
 void ReadRingLine( void* pdioden, UINT32 lno )
 {	//reads fifo data to user buffer dioden
 	ULONG pixel = aPIXEL[Ringdrvno];
@@ -3445,6 +3598,12 @@ void ReadRingLine( void* pdioden, UINT32 lno )
 };  // ReadRingLine
 
 //weg? -> unser jungo blockreg?
+/**
+\brief Reads the binary state of an ext. trigger input.
+\param drv board number
+\param btrig_ch ch=0: PCI in, ch=2: opto1, ch=3: opto2
+\return
+*/
 BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch )
 {	//return state of trigger in signal
 	//global value RingCtrlReg is updated in every loop of ringreadthread
@@ -3497,6 +3656,11 @@ void StartFFTimer( UINT32 drvno, UINT32 exptime )
 }
 
 //weg?!
+/**
+\brief Triggers one camera read by calling this function.
+\param drvno board number (=1 if one PCI board)
+\return none
+*/
 void SWTrig( UINT32 drvno )
 {//start 1 write trigger to FIFO by software
 	UCHAR reg = 0;
@@ -3528,6 +3692,11 @@ BOOL IsTimerOn( UINT32 drvno )
 }
 
 //weg?! wenn es bleibt, adresse ändern with enum
+/**
+\brief Checks content of FIFO.
+\param drvno board number (=1 if one PCI board)
+\return Is true (not 0) if FIFO keeps >= 1 complete lines (linecounter>0).
+*/
 BOOL FFValid( UINT32 drvno )
 {	// not empty & XCK = low -> true
 	WDC_Err( "FFValid\n" );
@@ -3551,6 +3720,12 @@ BOOL FFFull( UINT32 drvno )
 	return FALSE;
 }
 
+/**
+\brief Check ovl flag (overflow of FIFO).
+	If occured stays active until a call of FFRS.
+\param drvno board number (=1 if one PCI board)
+\return Is true (not 0) if overflow occured (linecounter>0).
+*/
 BOOL FFOvl( UINT32 drvno )
 {	// had Fifo overflow
 	WDC_Err( "FFOvl\n" );
@@ -3574,7 +3749,12 @@ void RSFifo( UINT32 drvno )
 }
 
 //weg? wenn es bleibt, adresse ändern with enum
-void SetExtFFTrig( UINT32 drvno )  // set external Trigger
+/**
+\brief Set trigger to extern.
+\param drvno board number (=1 if one PCI board)
+\return none
+*/
+void SetExtFFTrig( UINT32 drvno )
 {
 	BYTE data = 0;
 	ReadByteS0( drvno, &data, S0Addr_XCKMSB );
@@ -3584,6 +3764,11 @@ void SetExtFFTrig( UINT32 drvno )  // set external Trigger
 }//SetExtFFTrig
 
 //weg? wenn es bleibt, adresse ändern with enum
+/**
+\brief Set trigger to intern.
+\param drvno board number (=1 if one PCI board)
+\return none
+*/
 void SetIntFFTrig( UINT32 drvno ) // set internal Trigger
 {
 	BYTE data = 0;
@@ -3593,6 +3778,13 @@ void SetIntFFTrig( UINT32 drvno ) // set internal Trigger
 }//SetIntFFTrig
 
 //weg? wenn es bleibt, adresse ändern with enum
+/**
+\brief Set REG VCLKCTRL for FFT sensors.
+\param drvno board number (=1 if one PCI board)
+\param lines number of vertical lines
+\param vfreq vertical clk frequency
+\return none
+*/
 void SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq )
 {
 	FFTLINES = lines; //set global var
@@ -3656,17 +3848,17 @@ void SetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep )
 	return;
 }// SetupVPB
 
-/*
-* SetupROI initializes region of interest.
-* param1 drvno - PCIe identifier
-* param2 number_of_regions - determines how many region of interests are initialized, choose 2 to 8
-* param3 lines - number of total lines in camera
-* param4 keep_first - kept regions are alternating, determine whether first is kept
-* param5 region_size - determines the size of each region. array of size number_of_regions.
+/**
+\brief Initializes region of interest.
+\param drvno PCIe identifier
+\param number_of_regions determines how many region of interests are initialized, choose 2 to 8
+\param lines number of total lines in camera
+\param keep_first kept regions are alternating, determine whether first is kept
+\param region_size determines the size of each region. array of size number_of_regions.
 	When region_size[0]==0 the lines are equally distributed for all regions.
 	I don't know what happens when  region_size[0]!=0 and region_size[1]==0. Maybe don't do this.
 	The sum of all regions should equal lines.
-* return void
+\return void
 */
 void SetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, BOOL keep_first, UINT8* region_size)
 {
@@ -3695,6 +3887,12 @@ void SetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, BOOL keep_fi
 }
 
 //weg? wenn es bleibt, adresse ändern with enum
+/**
+\brief Set DELAY register (is used to delay write to FIFO signal) -> manual.
+\param drvno board number (=1 if one PCI board)
+\param delay delay
+\return none
+*/
 void SetupDELAY( UINT32 drvno, ULONG delay )
 {
 	ULONG reg = 0;
@@ -3712,6 +3910,12 @@ void SetupDELAY( UINT32 drvno, ULONG delay )
 }//SetupDELAY
 
 //weg? wenn es bleibt, adresse ändern with enum
+/**
+\brief Set software to HA Module C8061 or C7041.
+\param irsingle IR single channel module (=1 for IR Module with 256 pixel)
+\param fftlines vertical lines of FFT sensor (=0 for IR)
+\return none
+*/
 void SetupHAModule( BOOL irsingle, ULONG fftlines )
 {//set to module for C8061 & C7041
 	//set the globals in BOARD
@@ -3817,6 +4021,11 @@ LONGLONG InitHRCounter()
 
 } // InitHRCounter
 
+/**
+\brief Rreads system timer: read 2x ticks and calculate the difference between the calls
+	in microsec with DLLTickstous, init timer by calling DLLInitSysTimer before use.
+\return act ticks
+*/
 LONGLONG ticksTimestamp()
 {
 	LARGE_INTEGER PERFORMANCECOUNTERVAL = { 0, 0 };
@@ -3826,7 +4035,9 @@ LONGLONG ticksTimestamp()
 
 }//ticksTimestamp
 
-//calc delay in ticks from us
+/** 
+\brief Calc delay in ticks from us
+*/
 UINT64 ustoTicks( ULONG us )
 {// init high resolution counter 
 	// and calcs DELAYTICKS from m_belPars.m_belDelayMsec
@@ -3912,12 +4123,11 @@ BOOL TempGood( UINT32 drvno, UINT32 ch )
 	return FALSE;
 }//TempGood
 
-/*
-* func: SetTemp
-* Set cooling level.
-* param1: drvno - selects PCIe board
-* param2: level - cooling level from 0 to 7
-* return: void
+/**
+\brief Set temperature level for cooled cameras.
+\param drvno board number (=1 if one PCI board)
+\param level level 0..7 / 0=off, 7=min -> see cooling manual
+\return none
 */
 void SetTemp( UINT32 drvno, UINT8 level )
 {// set temperature controler (8 levels)
@@ -4011,9 +4221,13 @@ BOOL FindCam( UINT32 drv )
 	return TRUE;
 }//FindCam
 
+/**
+\brief Set gain for ADS5294.
+
+fkt =0 reset to db=0, fkt=1 set to g1..g8
+*/
 void SetADGain( UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8 )
-{	//set gain for ADS5294
-	//fkt =0 reset to db=0, fkt=1 set to g1..g8
+{
 	DWORD data = 0;
 	BYTE a, b, c, d, e, f, g, h;
 
@@ -4056,6 +4270,15 @@ void SetADGain( UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4,
 	SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_gain_5_to_8, data );	//gain7..8
 }//SetGain
 
+/**
+\brief Sends data via fibre link to DAC8568.
+\param drvno board number (=1 if one PCI board)
+\param ctrl 4 control bits
+\param addr 4 address bits
+\param data 16 data bits
+\param feature 4 feature bits
+\return none
+*/
 void SendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature )
 {	//send data to DAC8568
 	//mapping of bits DAC8568:	4 prefix, 4 control, 4 address, 16 data, 4 feature
@@ -4098,12 +4321,12 @@ void SendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 fea
 	return;
 }
 
-/*
-* DAC_setOutput sets the output of the DAC on PCB 2189-7
-* param1 drvno - pcie board identifier
-* param2 channel - select one of eight output channel (0 ... 7)
-* param3 output - output value that will be converted to analog voltage (0 ... 0xFFFF)
-* return void
+/**
+\brief Sets the output of the DAC8568 on PCB 2189-7.
+\param drvno pcie board identifier
+\param channel select one of eight output channel (0 ... 7)
+\param output output value that will be converted to analog voltage (0 ... 0xFFFF)
+\return void
 */
 void DAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output )
 {
@@ -4112,8 +4335,14 @@ void DAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output )
 	return;
 }
 
+/**
+\brief Get the free and installed memory info.
+\param pmemory_all how much is installed
+\param pmemory_free how much is free
+\return none
+*/
 void FreeMemInfo( UINT64 *pmemory_all, UINT64 *pmemory_free )
-{		//get info: how much memory is installed and how much is available
+{
 	// Use to convert bytes to KB
 #define DIV 1024
 
@@ -4190,13 +4419,14 @@ void GetRmsVal( ULONG nos, ULONG *TRMSVals, double *mwf, double *trms )
 
 }//GetRmsVal
 
-/* CalcTrms online calc TRMS noise val of pix
- *	drvno	- indentifier of PCIe card
- *	nos		- number of samples
- *	TRMSpix	- pixel for calculating noise (0...1087)
- *	CAMpos	- index for camcount (0...CAMCNT)
- *	*mwf	- pointer for mean value
- *	*trms	- pointer for noise
+/**
+\brief Online calc TRMS noise val of pix.
+\param drvno indentifier of PCIe card
+\param nos number of samples
+\param TRMS_pixel pixel for calculating noise (0...1087)
+\param CAMpos index for camcount (0...CAMCNT)
+\param mwf pointer for mean value
+\param trms pointer for noise
  */
 void CalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
 {
@@ -4216,12 +4446,13 @@ void CalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMS_pixel, UINT16 CAMpos, double
 
 }//CalcTrms
 
-/* GetIndexOfPixel returns the index of a pixel located in pDMABigBufBase
-*	drvno	- indentifier of PCIe card
-*	pixel	- position in one scan (0...1087)
-*	sample	- position in samples (0...nos)
-*   block	- position in blocks (0...nob)
-*	CAM		- position in camera count (0...CAMCNT)
+/**
+\brief Returns the index of a pixel located in pDMABigBufBase.
+\param drvno indentifier of PCIe card
+\param pixel position in one scan (0...1087)
+\param sample position in samples (0...nos)
+\param block position in blocks (0...nob)
+\param CAM position in camera count (0...CAMCNT)
 */
 UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block, UINT16 CAM )
 {
@@ -4234,19 +4465,20 @@ UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block,
 	//position of index at block
 	index += block * Nospb * aCAMCNT[drvno] * _PIXEL;
 	return index;
-}//GetIndexOfPixel
+}
 
-/* GetAdressOfPixel returns the address of a pixel located in pDMABigBufBase
-*	drvno	- indentifier of PCIe card
-*	pixel	- position in one scan (0...1087)
-*	sample	- position in samples (0...nos)
-*   block	- position in blocks (0...nob)
-*	CAM		- position in camera count (0...CAMCNT)
+/**
+\brief Returns the address of a pixel located in pDMABigBufBase.
+\param drvno indentifier of PCIe card
+\param pixel position in one scan (0...1087)
+\param sample position in samples (0...nos)
+\param block position in blocks (0...nob)
+\param CAM position in camera count (0...CAMCNT)
 */
 void* GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block, UINT16 CAM )
 {
 	return &pDMABigBufBase[drvno][GetIndexOfPixel( drvno, pixel, sample, block, CAM )];
-}//GetAdressOfPixel
+}
 
 UINT8 WaitforTelapsed( LONGLONG musec )
 {
@@ -4274,14 +4506,14 @@ UINT8 WaitforTelapsed( LONGLONG musec )
 	return 0; // loop was too short - exposure time must be increased
 }//WaitforTelapsed
 
-/*
-* Init routine for Camera System 3001
-* Sets register in camera.
-* param1: drvno - selects PCIe board
-* param2: pixel - pixel amount of camera
-* param3: trigger_input - selects trigger input. 0 - XCK, 1 - EXTTRIG, 2 - DAT
-* param4: IS_FFT - =1 vclk on, =0 vclk off
-* return: void
+/**
+\brief Init routine for Camera System 3001.
+	Sets register in camera.
+\param drvno selects PCIe board
+\param pixel pixel amount of camera
+\param trigger_input selects trigger input. 0 - XCK, 1 - EXTTRIG, 2 - DAT
+\param IS_FFT =1 vclk on, =0 vclk off
+\return void
 */
 void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT )
 {
@@ -4294,18 +4526,19 @@ void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS
 	return;
 }
 
-/*
-* Init routine for Camera System 3010
-* sensor S12198, frame rate 8kHz, 125us exp time
-* Sets register in camera and ADC LTC2271.
-* param1: drvno - selects PCIe board
-* param2: pixel - pixel amount of camera
-* param3: trigger_input - selects trigger input. 0 - XCK, 1 - EXTTRIG, 2 - DAT
-* param4: adc_mode - 0: normal mode, 2: custom pattern
-* param5: custom_pattern - fixed output for testmode, ignored when testmode FALSE
-* param6: LED_ON - 1 led on, 0 led off
-* param7: GAIN_HIGH - 1 gain on, 0 gain off
-* return: void
+/**
+\brief Init routine for Camera System 3010.
+
+sensor S12198, frame rate 8kHz, 125us exp time
+Sets register in camera and ADC LTC2271.
+\param drvno selects PCIe board
+\param pixel pixel amount of camera
+\param trigger_input selects trigger input. 0 - XCK, 1 - EXTTRIG, 2 - DAT
+\param adc_mode 0: normal mode, 2: custom pattern
+\param custom_pattern fixed output for testmode, ignored when testmode FALSE
+\param led_on 1 led on, 0 led off
+\param gain_high 1 gain on, 0 gain off
+\return void
 */
 void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high )
 {
@@ -4351,14 +4584,14 @@ void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc
 	return;
 }
 
-/*
-* Init routine for Camera System 3030
-* Sets register in ADC ADS5294.
-* param1: drvno - selects PCIe board
-* param2: adc_mode - 0: normal mode, 1: ramp, 2: custom pattern
-* param3: custom_pattern - only used when adc_mode = 2, lower 14 bits are used as output of ADC
-* param4: gain in ADC
-* return: void
+/**
+\brief Init routine for Camera System 3030.
+	Sets register in ADC ADS5294.
+\param drvno selects PCIe board
+\param adc_mode 0: normal mode, 1: ramp, 2: custom pattern
+\param custom_pattern only used when adc_mode = 2, lower 14 bits are used as output of ADC
+\param gain in ADC
+\return void
 */
 void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain )
 {
@@ -4389,11 +4622,11 @@ void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 
 }
 
 /**
-* Set GPXCtrl register
-* param1: drvno - select PCIe board
-* param2: GPXAddress - address to access
-* param3: GPXData - data to write
-* return bool: true - success, false - read/write error
+\brief Set GPXCtrl register.
+\param drvno select PCIe board
+\param GPXAddress address to access
+\param GPXData data to write
+\return bool: true - success, false - read/write error
 */
 BOOL SetGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32 GPXData )
 {
@@ -4416,11 +4649,11 @@ BOOL SetGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32 GPXData )
 }
 
 /**
-* Read GPXCtrl register
-* param1: drvno - select PCIe board
-* param2: GPXAddress - address to access
-* param3: GPXData - pointer where read data is written to
-* return bool: true - success, false - read/write error
+\brief Read GPXCtrl register.
+\param drvno select PCIe board
+\param GPXAddress address to access
+\param GPXData pointer where read data is written to
+\return bool: true - success, false - read/write error
 */
 BOOL ReadGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32* GPXData )
 {
