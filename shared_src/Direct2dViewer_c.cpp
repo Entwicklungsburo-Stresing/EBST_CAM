@@ -20,11 +20,18 @@ Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
 #include "Direct2dViewer_c.h"
 #include "Direct2dViewer.h"
 
+/**
+\copydoc Direct2dViewer::Direct2dViewer
+\return Handle of new Direct2dViewer instance.
+*/
 void* Direct2dViewer_new()
 {
 	return new Direct2dViewer();
 }
 
+/**
+\copydoc Direct2dViewer::~Direct2dViewer
+*/
 void Direct2dViewer_delete( void *D2dV )
 {
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
@@ -32,6 +39,10 @@ void Direct2dViewer_delete( void *D2dV )
 	return;
 }
 
+/**
+\copydoc Direct2dViewer::start2dViewer
+\param D2dV Hanle of Direct2dViewer instance.
+*/
 void Direct2dViewer_start2dViewer( void *D2dV, HWND hWndParent, void *bitmapAddr, UINT width, UINT height )
 {
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
@@ -39,6 +50,10 @@ void Direct2dViewer_start2dViewer( void *D2dV, HWND hWndParent, void *bitmapAddr
 	return;
 }
 
+/**
+\copydoc Direct2dViewer::showNewBitmap
+\param D2dV Hanle of Direct2dViewer instance.
+*/
 void Direct2dViewer_showNewBitmap( void *D2dV, void *addr, UINT width, UINT height )
 {
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
@@ -46,6 +61,9 @@ void Direct2dViewer_showNewBitmap( void *D2dV, void *addr, UINT width, UINT heig
 	return;
 }
 
+/**
+\copydoc Direct2dViewer::reloadBitmap
+*/
 void Direct2dViewer_reloadBitmap( void *D2dV )
 {
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
@@ -53,12 +71,18 @@ void Direct2dViewer_reloadBitmap( void *D2dV )
 	return;
 }
 
+/**
+\copydoc Direct2dViewer::getWindowHandler
+*/
 HWND Direct2dViewer_getWindowHandler( void *D2dV )
 {
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
 	return D2d->getWindowHandler();
 }
 
+/**
+\copydoc Direct2dViewer::SetGammaValue
+*/
 void Direct2dViewer_setGammaValue( void *D2dV, UINT16 white, UINT16 black )
 {
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
@@ -66,12 +90,18 @@ void Direct2dViewer_setGammaValue( void *D2dV, UINT16 white, UINT16 black )
 	return;
 }
 
+/**
+\copydoc Direct2dViewer::GetGammaWhite
+*/
 UINT16 Direct2dViewer_getGammaWhite( void *D2dV )
 {
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
 	return D2d->GetGammaWhite();
 }
 
+/**
+\copydoc Direct2dViewer::GetGammaBlack
+*/
 UINT16 Direct2dViewer_getGammaBlack( void *D2dV )
 {
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
