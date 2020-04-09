@@ -115,7 +115,7 @@ DllAccess void DLLAboutS0( UINT32 drv );
 DllAccess void DLLSendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data );
 DllAccess void DLLSendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature );
 DllAccess void DLLDAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output ); //set output of DAC (PCB 2189-7)
-DllAccess void DLLFreeMemInfo( UINT64 memory_all, UINT64 memory_free );
+DllAccess void DLLFreeMemInfo( UINT64* memory_all, UINT64* memory_free );
 DllAccess void DLLErrorMsg( char ErrMsg[20] );
 DllAccess void DLLCalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMSpix, UINT16 CAMpos, double *mwf, double *trms );
 //************  2d greyscale viewer
