@@ -19,6 +19,9 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 
 #include "ESLSCDLL.h"
 
+/**
+\brief Main Windows
+*/
 BOOL WINAPI DLLMain( HINSTANCE hInstDLL, DWORD dwNotification, LPVOID lpReserved )
 {
 	switch (dwNotification)
@@ -74,6 +77,10 @@ DllAccess  void DLLErrMsgBoxOff( void )
 	return;
 }
 
+/**
+\brief Initialize the driver. Must be called before any other function.
+\return Is true (not 0) if driver was found.
+*/
 DllAccess UINT8 nDLLCCDDrvInit( void )
 {			//must be called once before any other
 			//is called automatically for 2 boards
@@ -86,12 +93,28 @@ DllAccess UINT8 nDLLCCDDrvInit( void )
 	return 0;
 }
 
+/**
+\brief Frees handle and memory -> exit driver.
+\param drv board number (=1 if one PCI board)
+\return none
+*/
 DllAccess void DLLCCDDrvExit( UINT32 drv )		// closes the driver
 {
 	CCDDrvExit( drv );
 	return;
 }
 
+
+/**
+\brief initialize the PCI board, must be called once at the start
+\param drv board number (=1 if one PCI board)
+\param camcnt
+\param pixel number of all pixel (active + dummy pixel)
+\param flag816 =1 if AD resolution 12 to 16 bit, =2 if 8bit
+\param pclk =0 pixelclock, not used here
+\param xckdelay =3, depends on sensor, sets a delay after xck goes high, =7 for Sony sensors
+\return none
+*/
 DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 flag816, UINT32 pclk, UINT32 xckdelay )		// init the driver -> true if found
 {//returns TRUE if success									
  //is called automatically for 2 boards
@@ -106,24 +129,52 @@ DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 
 	return 1; // no error
 }
 
-DllAccess UINT8 DLLReadByteS0( UINT32 drv, UINT8 *data, UINT32 PortOff )	// read byte from Port, PortOff 0..3= Regs of Board
+/**
+\brief Read byte (8 bit) from register in space0 of PCIe board.
+\param drv board number (=1 if one PCI board)
+\param data pointer to where data is stored
+\param PortOff PortOff of register (count in bytes)
+\return ==0 if error
+*/
+DllAccess UINT8 DLLReadByteS0( UINT32 drv, UINT8 *data, UINT32 PortOff )
 {
 	if (!ReadByteS0( drv, data, PortOff )) { return 0; }
 	return 1;
 }
 
+/**
+\brief Write byte (8 bit) to register in space0 of PCIe board.
+\param drv board number (=1 if one PCI board)
+\param DataByte byte value to write
+\param PortOff PortOff of register (count in bytes)
+\return ==0 if error
+*/
 DllAccess UINT8 DLLWriteByteS0( UINT32 drv, UINT8 DataByte, UINT32 PortOff ) // writes DataByte to Port
 {
 	if (!WriteByteS0( drv, DataByte, PortOff )) { return 0; }
 	return 1;
 }
 
+/**
+\brief Read long (32 bit) from register in space0 of PCIe board.
+\param drv board number (=1 if one PCI board)
+\param data pointer to where data is stored
+\param PortOff PortOff of register (count in bytes)
+\return ==0 if error
+*/
 DllAccess UINT8 DLLReadLongS0( UINT32 drv, UINT32 *data, UINT32 PortOff )	// read byte from Port, PortOff 0..3= Regs of Board
 {
 	if (!ReadLongS0( drv, data, PortOff )) { return 0; }
 	return 1;
 }
 
+/**
+\brief Write long (32 bit) to register in space0 of PCIe board.
+\param drv board number (=1 if one PCI board)
+\param DataByte long value to write
+\param PortOff PortOff of register (count in bytes)
+output: ==0 if error
+*/
 DllAccess UINT8 DLLWriteLongS0( UINT32 drv, UINT32 DataL, UINT32 PortOff ) // writes DataByte to Port
 {
 	if (!WriteLongS0( drv, DataL, PortOff )) { return 0; }
@@ -142,18 +193,44 @@ DllAccess UINT8 DLLWriteLongDMA( UINT32 drv, UINT32 DataL, UINT32 PortOff ) // w
 	return 1;
 }
 
+/**
+\brief Read long (32 bit) from runtime register of PCIe board.
+\param drv board number (=1 if one PCI board)
+\param data pointer to where data is stored
+\param PortOff PortOff of register (count in bytes)
+\return ==0 if error
+*/
 DllAccess UINT8 DLLReadLongIOPort( UINT32 drv, UINT32 *data, UINT32 PortOff ) // writes DataByte to Port
 {
 	if (!ReadLongIOPort( drv, data, PortOff )) { return 0; }
 	return 1;
 }
 
+/**
+\brief Write long (32 bit) to register in space0 of PCIe board.
+\param drv board number (=1 if one PCI board)
+\param DataL long value to write
+\param PortOff PortOff of register
+\return ==0 if error
+*/
 DllAccess UINT8 DLLWriteLongIOPort( UINT32 drv, UINT32 DataL, UINT32 PortOff ) // writes DataByte to Port
 {
 	if (!WriteLongIOPort( drv, DataL, PortOff )) { return 0; }
 	return 1;
 }
 
+/**
+\brief Return infos about the PCI board.
+	Shows 5 info messages. Can be used to test the communication with the PCI board.
+
+- win1 : version of driver
+- win2 : ID =53xx
+- win3 : length of space0 BAR =0x3f
+- win4 : vendor ID = EBST
+- win5 : PCI board version (same as label on PCI board)
+\param drv board number (=1 if one PCI board)
+\return none
+*/
 DllAccess void DLLAboutDrv( UINT32 drv )	// displays the version and board ID = test if board is there
 {//is called automatically for 2 boards
 	AboutDrv( drv );
@@ -178,92 +255,180 @@ DllAccess void DLLHighSlope( UINT32 drv )		//set input Trigger slope high
 	return;
 }
 
+/**
+\brief Set the external trigger slope to - (PCI Reg CrtlA:D5 -> manual).
+\param drv board number (=1 if one PCI board)
+\return none
+*/
 DllAccess void DLLLowSlope( UINT32 drv )		//set input Trigger slope low
 {
 	LowSlope( drv );
 	return;
 }
 
+/**
+\brief Set trigger input to pos. & neg. slope.
+\param drv board number (=1 if one PCI board)
+\return none
+*/
 DllAccess void DLLBothSlope( UINT32 drv )		//set input Trigger slope low
 {
 	BothSlope( drv );
 	return;
 }
 
-//following functions are not optimized for 2 cams
+/**
+\brief Set trigger out(Reg CtrlA:D3) of PCIe board. Can be used to control timing issues in software.
+
+The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual.
+Functions is not optimized for 2 cams.
+\param drv board number (=1 if one PCI board)
+\return none
+*/
 DllAccess void DLLOutTrigHigh( UINT32 drv )		//set output Trigger signal high
 {
 	OutTrigHigh( drv );
 	return;
 }
 
+/**
+\brief Reset trigger out(Reg CtrlA:D3) of PCI board. Can be used to control timing issues in software.
+
+The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual.
+Functions is not optimized for 2 cams.
+\param drv board number (=1 if one PCI board)
+\return none
+*/
 DllAccess void DLLOutTrigLow( UINT32 drv )		//set output Trigger signal low
 {
 	OutTrigLow( drv );
 	return;
 }
 
+/**
+\brief Pulses trigger out(Reg CtrlA:D3) of PCI board. Can be used to control timing issues in software.
+
+The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual
+\param drv board number (=1 if one PCI board)
+\param PulseWidth duration of pulse in ms
+\return none
+*/
 DllAccess void DLLOutTrigPulse( UINT32 drv, UINT32 PulseWidth )	// pulses high output Trigger signal
 {
 	OutTrigPulse( drv, PulseWidth );
 	return;
 }
 
+/**
+\brief Open shutter for sensors with EC (exposure control) / sets IFC signal.
+\param drv board number (=1 if one PCI board)
+\return none
+*/
 DllAccess void DLLOpenShutter( UINT32 drv )	// set IFC=high
 {
 	OpenShutter( drv );
 	return;
 }
 
+/**
+\brief Sets the IFC Bit of Interface for sensors with shutter function.
+\param drv board number (=1 if one PCI board)
+\return none
+*/
 DllAccess void DLLCloseShutter( UINT32 drv )	// set IFC=low
 {
 	CloseShutter( drv );
 	return;
 }
 
-// ****************   New functions for LabView includes FIFO version
-DllAccess void DLLSWTrig( UINT32 drvno )						//start a read to FIFO by software
+/**
+\brief Triggers one camera read by calling this function.
+\param drvno board number (=1 if one PCI board)
+\return none
+*/
+DllAccess void DLLSWTrig( UINT32 drvno )
 {
 	SWTrig( drvno );
 	return;
 }
 
-DllAccess UINT8 DLLFFValid( UINT32 drvno )						// TRUE if linecounter>0
+/**
+\brief Checks content of FIFO.
+\param drvno board number (=1 if one PCI board)
+\return Is true (not 0) if FIFO keeps >= 1 complete lines (linecounter>0).
+*/
+DllAccess UINT8 DLLFFValid( UINT32 drvno )
 {
 	if (FFValid( drvno ) == TRUE) { return 1; }
 	else return 0;
 }
 
+/**
+\brief Set trigger to extern. If extern trigger should be stopped, switch to internal and stop timer.
+\param drvno board number (=1 if one PCI board)
+\return none
+*/
 DllAccess void DLLSetExtTrig( UINT32 drvno )					// read to FIFO is triggered by external input I of PCI board
 {
 	SetExtFFTrig( drvno );
 	return;
 }
 
+/**
+\brief Set trigger to intern.
+\param drvno board number (=1 if one PCI board)
+\return none
+*/
 DllAccess void DLLSetIntTrig( UINT32 drvno )					// read to FIFO is triggered by Timer
 {
 	SetIntFFTrig( drvno );// set hw register
 	return;
 }
 
+/**
+\brief Check ovl flag (overflow of FIFO).
+	If occured stays active until a call of FFRS.
+\param drvno board number (=1 if one PCI board)
+\return Is true (not 0) if overflow occured.
+*/
 DllAccess UINT8 DLLFFOvl( UINT32 drvno )						// TRUE if linecounter>0
 {
 	if (FFOvl( drvno ) == TRUE) { return 1; }
 	else return 0;
 }
 
+/**
+\brief Set REG VCLKCTRL for FFT sensors.
+\param drvno board number (=1 if one PCI board)
+\param lines number of vertical lines
+\param vfreq vertical clk frequency
+\return none
+*/
 DllAccess void DLLSetupVCLK( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 {
 	SetupVCLKReg( drvno, lines, vfreq );
 	return;
 }//DLLSetupVCLK
 
+/**
+\brief Read line lno of ring buffer, 
+	special function of RingReadThread (see example GetRingFF or GetRing2cam).
+\param pdioden
+\param lno
+\return none
+*/
 DllAccess void DLLReadRingLine( pArrayT pdioden, UINT32 lno ) //read in ring buffer
 {
 	ReadRingLine( pdioden, lno );
 	return;
 }
 
+/**
+\brief Reads the binary state of an ext. trigger input.
+\param drv board number
+\param btrig_ch ch=0: PCI in, ch=2: opto1, ch=3: opto2
+\return
+*/
 DllAccess UINT8 DLLBlockTrig( UINT32 drv, UCHAR btrig_ch )
 {//get trigger state ext input
 	if (BlockTrig( drv, btrig_ch ) == TRUE) { return 1; }
@@ -287,12 +452,22 @@ DllAccess UINT8 DLLResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 	return ResetS0Bit( bitnumber, Address, drvno );
 }
 
+/**
+\brief Rreads system timer: read 2x ticks and calculate the difference between the calls
+	in microsec with DLLTickstous, init timer by calling DLLInitSysTimer before use.
+\return act ticks 
+*/
 DllAccess UINT64 DLLTicksTimestamp( void )
 {
 	WDC_Err( "entered tickstimestamp\n" );
 	return ticksTimestamp();
 }
 
+/**
+\brief Translate ticks to micro seconds.
+\param tks ticks of system timer
+\return micro seconds of tks
+*/
 DllAccess UINT32 DLLTickstous( UINT64 tks )
 {
 	return Tickstous( tks );
@@ -463,6 +638,15 @@ DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UIN
 	return;
 }
 
+/**
+\brief
+\param board_sel board number (=1 if one PCI board)
+\param exptus exposure time in micro sec. If this entry is used, freq must be set to 0
+\param exttrig true (not 0) if external trigger for each scan, 0 else
+\param blocktrigger true (not 0) if one external trigger starts block of nos scans which run with internal timer
+\param btrig_ch
+output: none
+*/
 DllAccess void nDLLReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch )
 //cam_sel = 1 for only use first cam, cam_sel = 2 for sec. cam and cam_sel = 3 for both
 {//const burst loop with DMA initiated by hardware DREQ
@@ -519,7 +703,12 @@ DllAccess void DLLSetContFFLoop( UINT8 activate )
 	return;
 }
 
-//********  cooling functions
+/**
+\brief Set temperature level for cooled cameras.
+\param drvno board number (=1 if one PCI board)
+\param level level 0..7 / 0=off, 7=min -> see cooling manual
+\return none
+*/
 DllAccess void DLLSetTemp( UINT32 drvno, UINT8 level )
 {
 	SetTemp( drvno, level );
@@ -544,12 +733,24 @@ DllAccess void DLLSetTORReg( UINT32 drvno, UINT8 fkt )
 	return;
 }
 
+/**
+\brief Set DELAY register (is used to delay write to FIFO signal) -> manual.
+\param drvno board number (=1 if one PCI board)
+\return none
+*/
 DllAccess void DLLSetupDELAY( UINT32 drvno, UINT32 delay )
 {
 	SetupDELAY( drvno, delay );
 	return;
 }
 
+
+/**
+\brief Set/reset bit for PDA sensor timing(set Reg TOR:D25 -> manual).
+\param drvno board number (=1 if one PCI board)
+\param set if set is true (not 0)-> bit is set, reset else
+\return none
+*/
 DllAccess void DLLSetISPDA( UINT32 drvno, UINT8 set )
 {
 	if (set == 0)
@@ -560,6 +761,12 @@ DllAccess void DLLSetISPDA( UINT32 drvno, UINT8 set )
 	return;
 }
 
+/**
+\return Sets PDA sensor timing(set Reg TOR:D25 -> manual) or FFT.
+\param drvno board number (=1 if one PCI board)
+\param set if set is true (not 0)-> PDA, FFT else
+\return none
+*/
 DllAccess void DLLSetPDAnotFFT( UINT32 drvno, UINT8 set )
 {
 	if (set == 0)
@@ -570,6 +777,12 @@ DllAccess void DLLSetPDAnotFFT( UINT32 drvno, UINT8 set )
 	return;
 }
 
+/**
+\brief Set/reset bit for FFT sensor timing(set Reg TOR:D24 -> manual).
+\param drvno board number (=1 if one PCI board)
+\param set if set is true (not 0)-> bit is set, reset else
+\return none
+*/
 DllAccess void DLLSetISFFT( UINT32 drvno, UINT8 set )
 {
 	if (set == 0)
@@ -580,12 +793,23 @@ DllAccess void DLLSetISFFT( UINT32 drvno, UINT8 set )
 	return;
 }
 
+/**
+\brief Reset TOR register. Is used to set the signal of the O-plug of interface board) -> manual.
+\param drvno board number (=1 if one PCI board)
+\return none
+*/
 DllAccess void DLLRsTOREG( UINT32 drvno )
 {//reset TOREG
 	RsTOREG( drvno );
 	return;
 }
 
+/**
+\brief Set software to HA Module C8061 or C7041.
+\param irsingle IR single channel module (=1 for IR Module with 256 pixel)
+\param fftlines vertical lines of FFT sensor (=0 for IR)
+\return none
+*/
 DllAccess void DLLSetupHAModule( UINT8 irsingle, UINT32 fftlines )
 {//set to module for C8061 & C7041
 	SetupHAModule( (irsingle != 0), fftlines );
@@ -615,12 +839,29 @@ DllAccess void DLLAboutS0( UINT32 drv )
 	return;
 }//AboutS0
 
+/**
+\brief Sends data via fibre link, e.g. used for sending data to ADC (ADS5294).
+\param drvno board number (=1 if one PCI board)
+\param maddr master address for specifying device (2 for ADC)
+\param adaddr register address
+\param data data
+\return none
+*/
 DllAccess void DLLSendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data )
 {
 	SendFLCAM( drvno, maddr, adaddr, data );
 	return;
 }
 
+/**
+\brief Sends data via fibre link to DAC8568.
+\param drvno board number (=1 if one PCI board)
+\param ctrl 4 control bits
+\param addr 4 address bits
+\param data 16 data bits
+\param feature 4 feature bits
+\return none
+*/
 DllAccess void DLLSendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature )
 {
 	SendFLCAM_DAC( drvno, ctrl, addr, data, feature );
@@ -633,6 +874,12 @@ DllAccess void DLLDAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output )
 	return;
 }
 
+/**
+\brief Get the free and installed memory info.
+\param memory_all how much is installed
+\param memory_free how much is free
+\return none
+*/
 DllAccess void DLLFreeMemInfo( UINT64 memory_all, UINT64 memory_free )
 {
 	FreeMemInfo( memory_all, memory_free );
@@ -651,6 +898,15 @@ DllAccess void DLLCalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMSpix, UINT16 CAMp
 	return;
 }
 
+/**
+\brief Start 2d viewer.
+\param drvno board number
+\param cur_nob current number of block
+\param cam which camera to display (when camcnt is >1)
+\param pixelAmount pixels of one line
+\param nos samples in one block
+\return none
+*/
 DllAccess void DLLStart2dViewer( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos )
 {
 	if (Direct2dViewer == NULL)
@@ -666,6 +922,15 @@ DllAccess void DLLStart2dViewer( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT 
 	return;
 }
 
+/**
+\brief Update the displayed bitmap.
+\param drvno board number
+\param cur_nob current number of blocks
+\param cam which camera to display (when camcnt is >1)
+\param pixelAmount pixels of one line
+\param nos samples in one block
+\return none
+*/
 DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos )
 {
 	if (Direct2dViewer != NULL)
@@ -679,6 +944,10 @@ DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT 
 	return;
 }
 
+/**
+\brief Call when closing 2d viewer or at least before opening a new 2d viewer.
+\return none
+*/
 DllAccess void DLLDeinit2dViewer()
 {
 	if (Direct2dViewer != NULL)
