@@ -865,6 +865,9 @@ DllAccess void DLLDeinit2dViewer()
 	return;
 }
 
+/**
+\copydoc Direct2dViewer_setGammaValue
+*/
 DllAccess void DLLSetGammaValue( UINT16 white, UINT16 black )
 {
 	if (Direct2dViewer != NULL)
