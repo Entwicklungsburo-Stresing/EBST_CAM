@@ -729,6 +729,12 @@ BOOL SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno )
 	return TRUE;
 }
 
+/**
+\brief Set bit to 1 in register at memory address.
+\param bitnumber 0...31, 0 is LSB, 31 MSB
+\param Address register address
+\param drvno board number (=1 if one PCI board)
+*/
 BOOL SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
 	//bitnumber: 0...31
@@ -743,6 +749,12 @@ BOOL SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 
 }
 
+/**
+\brief Set bit to 0 in register at memory address.
+\param bitnumber 0...31, 0 is LSB, 31 MSB
+\param Address register address
+\param drvno board number (=1 if one PCI board)
+*/
 BOOL ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
 

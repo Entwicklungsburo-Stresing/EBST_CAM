@@ -54,23 +54,34 @@ BOOL WINAPI DLLMain( HINSTANCE hInstDLL, DWORD dwNotification, LPVOID lpReserved
 	return(FALSE);
 }
 
+/**
+\brief Function for multithreading.
+*/
 DllAccess int DLLGetProcessCount()
 {
 	return(nProcessCount);
 }
 
+/**
+\brief Function for multithreading.
+*/
 DllAccess int DLLGetThreadCount()
 {
 	return(nThreadCount);
 }
 
-// ******************  attached calls to unit BOARD.C
+/**
+\brief Switch on error message boxes.
+*/
 DllAccess  void DLLErrMsgBoxOn( void )
 {
 	ErrMsgBoxOn();
 	return;
 }
 
+/**
+\brief Disable error message boxes.
+*/
 DllAccess  void DLLErrMsgBoxOff( void )
 {
 	ErrMsgBoxOff();
@@ -377,11 +388,17 @@ void TestMsg( char testMsg1[20], char testMsg2[20] )
 	return;
 }
 
+/**
+\copydoc SetS0Bit
+*/
 DllAccess UINT8 DLLSetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
 	return SetS0Bit( bitnumber, Address, drvno );
 }
 
+/**
+\copydoc ResetS0Bit
+*/
 DllAccess UINT8 DLLResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
 	return ResetS0Bit( bitnumber, Address, drvno );
