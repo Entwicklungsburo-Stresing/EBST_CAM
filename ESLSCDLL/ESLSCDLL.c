@@ -208,11 +208,17 @@ DllAccess void DLLAboutDrv( UINT32 drvno )
 	return;
 }
 
+/**
+\copydoc CalcRamUsageInMB
+*/
 DllAccess double DLLCalcRamUsageInMB( UINT32 nos, UINT32 nob )
 {
 	return CalcRamUsageInMB( nos, nob );
 }
 
+/**
+\copydoc CalcMeasureTimeInSeconds
+*/
 DllAccess double DLLCalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in_ms )
 {
 	return CalcMeasureTimeInSeconds( nos, nob, exposure_time_in_ms );

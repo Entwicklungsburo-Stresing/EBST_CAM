@@ -4807,6 +4807,12 @@ void AboutGPX( UINT32 drvno )
 	return;
 }
 
+/**
+\brief Calculate needed RAM in MB for given nos and nob.
+\param nos number of samples
+\param nob number of blocks
+\return RAM in MB
+*/
 double CalcRamUsageInMB( UINT32 nos, UINT32 nob )
 {
 	double ramUsage = 0;
@@ -4817,6 +4823,13 @@ double CalcRamUsageInMB( UINT32 nos, UINT32 nob )
 	return ramUsage;
 }
 
+/**
+\brief Calculate the theoretical time needed for one measurement.
+\param nos number of samples
+\param nob number of blocks
+\param exposure_time_in_ms exposure time in ms
+\return time in seconds
+*/
 double CalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in_ms  )
 {
 	double measureTime = (double)nos * (double)nob * exposure_time_in_ms / 1000;
