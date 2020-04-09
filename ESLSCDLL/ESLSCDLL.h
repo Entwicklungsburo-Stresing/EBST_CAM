@@ -55,28 +55,28 @@ DllAccess int DLLGetThreadCount();
 DllAccess  void DLLErrMsgBoxOn( void );	//BOARD.C sends error messages on default
 DllAccess  void DLLErrMsgBoxOff( void );	//general deactivate of error message boxes
 DllAccess UINT8 nDLLCCDDrvInit( void );		// init the driver -> true if found
-DllAccess void DLLCCDDrvExit( UINT32 drv );		// closes the driver
+DllAccess void DLLCCDDrvExit( UINT32 drvno );		// closes the driver
 DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 flag816, UINT32 pclk, UINT32 xckdelay );		// init the driver -> true if found
-DllAccess UINT8 DLLReadByteS0( UINT32 drv, UINT8 *data, UINT32 PortOff );// read byte from Port, PortOff = Regs of Board
+DllAccess UINT8 DLLReadByteS0( UINT32 drvno, UINT8 *data, UINT32 PortOff );// read byte from Port, PortOff = Regs of Board
 DllAccess UINT8 DLLWriteByteS0( UINT32 drv, UINT8 DataByte, UINT32 PortOff ); // writes DataByte to Port
-DllAccess UINT8 DLLReadLongS0( UINT32 drv, UINT32 *data, UINT32 PortOff );	// read long from Port, PortOff Regs of Board
-DllAccess UINT8 DLLWriteLongS0( UINT32 drv, UINT32 DataL, UINT32 PortOff ); // writes DataLong to Port
+DllAccess UINT8 DLLReadLongS0( UINT32 drvno, UINT32 * DWData, UINT32 PortOff );	// read long from Port, PortOff Regs of Board
+DllAccess UINT8 DLLWriteLongS0( UINT32 drvno, UINT32 DWData, UINT32 PortOff ); // writes DataLong to Port
 DllAccess UINT8 DLLReadLongDMA( UINT32 drv, UINT32 *data, UINT32 PortOff );	// read long from Port, PortOff Regs of Board
 DllAccess UINT8 DLLWriteLongDMA( UINT32 drv, UINT32 DataL, UINT32 PortOff ); // writes DataLong to Port
-DllAccess UINT8 DLLReadLongIOPort( UINT32 drv, UINT32 *data, UINT32 PortOff ); // writes DataByte to Port
-DllAccess UINT8 DLLWriteLongIOPort( UINT32 drv, UINT32 DataL, UINT32 PortOff ); // writes DataByte to Port
-DllAccess void DLLAboutDrv( UINT32 drv );	// displays the version and board ID = test if board is there
+DllAccess UINT8 DLLReadLongIOPort( UINT32 drvno, UINT32 * DWData, UINT32 PortOff ); // writes DataByte to Port
+DllAccess UINT8 DLLWriteLongIOPort( UINT32 drvno, UINT32 DataL, UINT32 PortOff ); // writes DataByte to Port
+DllAccess void DLLAboutDrv( UINT32 drvno );	// displays the version and board ID = test if board is there
 DllAccess double DLLCalcRamUsageInMB( UINT32 nos, UINT32 nob );
 DllAccess double DLLCalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in_ms );
 //************	functions for managing controlbits in CtrlA register
 DllAccess void DLLHighSlope( UINT32 drv );		//set input Trigger slope high
-DllAccess void DLLLowSlope( UINT32 drv );		//set input Trigger slope low
-DllAccess void DLLBothSlope( UINT32 drv );	//trigger on each slope
-DllAccess void DLLOutTrigHigh( UINT32 drv );		//set output Trigger signal high
-DllAccess void DLLOutTrigLow( UINT32 drv );		//set output Trigger signal low
-DllAccess void DLLOutTrigPulse( UINT32 drv, UINT32 PulseWidth );	// pulses high output Trigger signal
-DllAccess void DLLOpenShutter( UINT32 drv );	// set IFC=high
-DllAccess void DLLCloseShutter( UINT32 drv );	// set IFC=low
+DllAccess void DLLLowSlope( UINT32 drvno );		//set input Trigger slope low
+DllAccess void DLLBothSlope( UINT32 drvno );	//trigger on each slope
+DllAccess void DLLOutTrigHigh( UINT32 drvno );		//set output Trigger signal high
+DllAccess void DLLOutTrigLow( UINT32 drvno );		//set output Trigger signal low
+DllAccess void DLLOutTrigPulse( UINT32 drvno, UINT32 PulseWidth );	// pulses high output Trigger signal
+DllAccess void DLLOpenShutter( UINT32 drvno );	// set IFC=high
+DllAccess void DLLCloseShutter( UINT32 drvno );	// set IFC=low
 //************ FIFO version functions
 DllAccess void DLLSWTrig( UINT32 drvno );						//start a read to FIFO by software
 DllAccess UINT8 DLLFFValid( UINT32 drvno );						// TRUE if linecounter>0
@@ -115,9 +115,9 @@ DllAccess void DLLAboutS0( UINT32 drv );
 DllAccess void DLLSendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data );
 DllAccess void DLLSendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature );
 DllAccess void DLLDAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output ); //set output of DAC (PCB 2189-7)
-DllAccess void DLLFreeMemInfo( UINT64* memory_all, UINT64* memory_free );
+DllAccess void DLLFreeMemInfo( UINT64 * pmemory_all, UINT64 * pmemory_free );
 DllAccess void DLLErrorMsg( char ErrMsg[20] );
-DllAccess void DLLCalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMSpix, UINT16 CAMpos, double *mwf, double *trms );
+DllAccess void DLLCalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );
 //************  2d greyscale viewer
 DllAccess void DLLStart2dViewer( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos );
 DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos );

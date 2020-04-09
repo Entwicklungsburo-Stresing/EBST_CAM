@@ -22,9 +22,9 @@ Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
 
 #include "Direct2dViewer.h"
 
-//
-// Initialize members.
-//
+/**
+\brief Initialize members.
+*/
 Direct2dViewer::Direct2dViewer() :
 	m_hwnd( NULL ),
 	m_pD2DFactory( NULL ),
@@ -37,9 +37,9 @@ Direct2dViewer::Direct2dViewer() :
 {
 }
 
-//
-// Release resources.
-//
+/**
+\brief Release resources.
+*/
 Direct2dViewer::~Direct2dViewer()
 {
 	SafeRelease( &m_pD2DFactory );
@@ -51,10 +51,10 @@ Direct2dViewer::~Direct2dViewer()
 	SafeRelease( &m_pBlackBrush );
 }
 
-//
-// Creates the application window and initializes
-// device-independent resources.
-//
+/**
+\brief Creates the application window and initializes
+	device-independent resources.
+*/
 HRESULT Direct2dViewer::Initialize( HWND hWndParent )
 {
 	HRESULT hr = S_OK;
@@ -113,14 +113,14 @@ HRESULT Direct2dViewer::Initialize( HWND hWndParent )
 	return hr;
 }
 
-//
-// Create resources which are not bound
-// to any device. Their lifetime effectively extends for the
-// duration of the app. These resources include the Direct2D,
-// DirectWrite, and WIC factories; and a DirectWrite Text Format object
-// (used for identifying particular font characteristics) and
-// a Direct2D geometry.
-//
+/**
+\brief Create resources which are not bound
+	to any device. Their lifetime effectively extends for the
+	duration of the app. These resources include the Direct2D,
+	DirectWrite, and WIC factories; and a DirectWrite Text Format object
+	(used for identifying particular font characteristics) and
+	a Direct2D geometry.
+*/
 HRESULT Direct2dViewer::CreateDeviceIndependentResources()
 {
 	static const WCHAR msc_fontName[] = L"Verdana";
@@ -176,12 +176,12 @@ HRESULT Direct2dViewer::CreateDeviceIndependentResources()
 	return hr;
 }
 
-//
-//  This method creates resources which are bound to a particular
-//  Direct3D device. It's all centralized here, in case the resources
-//  need to be recreated in case of Direct3D device loss (eg. display
-//  change, remoting, removal of video card, etc).
-//
+/**
+\brief This method creates resources which are bound to a particular
+Direct3D device. It's all centralized here, in case the resources
+need to be recreated in case of Direct3D device loss (eg. display
+change, remoting, removal of video card, etc).
+*/
 HRESULT Direct2dViewer::CreateDeviceResources()
 {
 	HRESULT hr = S_OK;
@@ -222,27 +222,28 @@ HRESULT Direct2dViewer::CreateDeviceResources()
 	return hr;
 }
 
-//
-//  Discard device-specific resources which need to be recreated
-//  when a Direct3D device is lost
-//
+
+/**
+\brief Discard device-specific resources which need to be recreated
+when a Direct3D device is lost.
+*/
 void Direct2dViewer::DiscardDeviceResources()
 {
 	SafeRelease( &m_pRenderTarget );
 	SafeRelease( &m_pBitmap );
 }
 
-//
-//  Called whenever the application needs to display the client
-//  window.
-//
-//  Note that this function will not render anything if the window
-//  is occluded (e.g. when the screen is locked).
-//  Also, this function will automatically discard device-specific
-//  resources if the Direct3D device disappears during function
-//  invocation, and will recreate the resources the next time it's
-//  invoked.
-//
+/**
+\brief Called whenever the application needs to display the client
+window.
+
+Note that this function will not render anything if the window
+is occluded (e.g. when the screen is locked).
+Also, this function will automatically discard device-specific
+resources if the Direct3D device disappears during function
+invocation, and will recreate the resources the next time it's
+invoked.
+*/
 HRESULT Direct2dViewer::OnRender()
 {
 	HRESULT hr = S_OK;
@@ -290,10 +291,10 @@ HRESULT Direct2dViewer::OnRender()
 	return hr;
 }
 
-//
-//  If the application receives a WM_SIZE message, this method
-//  resize the render target appropriately.
-//
+/**
+\brief If the application receives a WM_SIZE message, this method
+resize the render target appropriately.
+*/
 void Direct2dViewer::OnResize(UINT width, UINT height)
 {
 	if (m_pRenderTarget)
@@ -309,10 +310,9 @@ void Direct2dViewer::OnResize(UINT width, UINT height)
 	}
 }
 
-
-//
-// The window message handler.
-//
+/**
+\brief The window message handler.
+*/
 LRESULT CALLBACK Direct2dViewer::WndProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	LRESULT result = 0;
@@ -377,9 +377,9 @@ LRESULT CALLBACK Direct2dViewer::WndProc( HWND hwnd, UINT message, WPARAM wParam
 	return result;
 }
 
-/*
-* Creates a Direct2D bitmap from memory.
-* Interpretes data in memory as 16 bit greyscale per pixel
+/**
+\brief Creates a Direct2D bitmap from memory.
+	Interpretes data in memory as 16 bit greyscale per pixel.
 */
 HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 {
@@ -475,8 +475,8 @@ HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
 	return hr;
 }
 
-/*
-* set information about which data is used for displaying a bitmap
+/**
+\brief Set information about which data is used for displaying a bitmap.
 */
 void Direct2dViewer::setBitmapSource( void *addr, UINT width, UINT height )
 {
@@ -486,18 +486,18 @@ void Direct2dViewer::setBitmapSource( void *addr, UINT width, UINT height )
 	return;
 }
 
-/*
-* returns the window handler of 2d viewer
+/**
+\brief Returns the window handler of 2d viewer
 */
 HWND Direct2dViewer::getWindowHandler()
 {
 	return m_hwnd;
 }
 
-/*
-* creates the graphic rescource bitmap from memory,
-* scales render target and applies gamma effects depending on bit setting to bitmap
-* use setBitmapSource before when you want to show a new bitmap
+/**
+\brief Creates the graphic rescource bitmap from memory,
+scales render target and applies gamma effects depending on bit setting to bitmap
+use setBitmapSource before when you want to show a new bitmap.
 */
 HRESULT Direct2dViewer::loadBitmap()
 {
@@ -507,11 +507,10 @@ HRESULT Direct2dViewer::loadBitmap()
 	return hr;
 }
 
-/*
-* set gamma value
-* param1 white: set value for maximum brightness
-* param2 black: set value for minimum brightness
-* default values are: black = 0, white = 0xFFFF (16 bit), amplitude = 0x3FFF (14 bit)
+/**
+\brief Set gamma value.
+\param white set value for maximum brightness. Default: 0xFFFF (16 bit),  0x3FFF (14 bit)
+\param black set value for minimum brightness. Default: 0
 */
 void Direct2dViewer::SetGammaValue( UINT16 white, UINT16 black )
 {
@@ -523,25 +522,29 @@ void Direct2dViewer::SetGammaValue( UINT16 white, UINT16 black )
 	return;
 }
 
-/*
-* return gamma value white
+/**
+\brief return gamma value white
 */
 UINT16 Direct2dViewer::GetGammaWhite()
 {
 	return _gamma.white;
 }
 
-/*
-* return gamma value black
+/**
+\brief return gamma value black
 */
 UINT16 Direct2dViewer::GetGammaBlack()
 {
 	return _gamma.black;
 }
 
-/*
-* starts 2d viewer with a initial bitmap
-* use this to start 2d viewer. Call constructor before.
+/**
+\brief Starts 2d viewer with a initial bitmap.
+Use this to start 2d viewer. Call constructor before.
+\param hWndParent Window handler of parent window.
+\param bitmapAddr Address to first byte of bitmap data.
+\param width Width of bitmap.
+\param height Height of bitmap.
 */
 HRESULT Direct2dViewer::start2dViewer( HWND hWndParent, void *bitmapAddr, UINT width, UINT height )
 {
@@ -552,8 +555,11 @@ HRESULT Direct2dViewer::start2dViewer( HWND hWndParent, void *bitmapAddr, UINT w
 	return hr;
 }
 
-/*
-* show a new bitmap in 2d viewer
+/**
+\brief Show a new bitmap in 2d viewer.
+\param addr Address to first byte of bitmap data.
+\param width Width of bitmap.
+\param height Height of bitmap.
 */
 HRESULT Direct2dViewer::showNewBitmap( void *addr, UINT width, UINT height )
 {
@@ -564,8 +570,8 @@ HRESULT Direct2dViewer::showNewBitmap( void *addr, UINT width, UINT height )
 	return hr;
 }
 
-/*
-* reload the displayed bitmap in 2d viewer
+/**
+\brief Reload the displayed bitmap in 2d viewer.
 */
 HRESULT Direct2dViewer::reloadBitmap()
 {

@@ -940,80 +940,79 @@ void SetDMAStart( UINT32 drvno )
 	}
 }
 
-/*
-BOOL SendDMAInfoToKP(void){
+//BOOL SendDMAInfoToKP(void){
+//
+//	DWORD hDma;
+//	DWORD dwOptions;
+//	PVOID pData;
+//	DWORD dwResult;
+//	PDWORD	pdwResult = &dwResult;
+//
+//
+//	WDC_Err("WDC:  hDma %u\n", pDMASubBufInfos->hDma);
+//	WDC_Err("WDC:  pUserAddr %u\n", pDMASubBufInfos->pUserAddr);
+//	WDC_Err("WDC:  pKernelAddr %u\n", pDMASubBufInfos->pKernelAddr);
+//	WDC_Err("WDC:  dwBytes %u\n", pDMASubBufInfos->dwBytes);
+//	WDC_Err("WDC:  dwOptions %u\n", pDMASubBufInfos->dwOptions);
+//	WDC_Err("WDC:  dwPages %u\n", pDMASubBufInfos->dwPages);
+//	WDC_Err("WDC:  hCard %u\n", pDMASubBufInfos->hCard);
+//
+//	/*for WDK Flush
+//
+//	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_BUFSIZE, pData, pdwResult);
+//	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
+//	{
+//	WDC_Err("sendDMAInfoToKP dwDMASubBufSize send failed\n");
+//	return FALSE;
+//	}
+//	*/
+//	//for JUNGO Flush, complete WD_DMA struct
+//	/*
+//	pData = pDMASubBufInfos;
+//	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_WDDMA, pData, pdwResult);
+//	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
+//	{
+//	WDC_Err("sendDMAInfoToKP WD_DMA send failed\n");
+//	return FALSE;
+//	}
+//	*/
+//	//for Testfkt to write to the Regs
+//	/*
+//	pData = &hDev;// &deviceInfo.Card;//
+//	WDC_Err("deviceInfo.Card.Item[0].I.Mem.pTransAddr : 0x %x\n", deviceInfo.Card.Item[0].I.Mem.pTransAddr);
+//	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_TESTSIGNALPREP, pData, pdwResult);
+//	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
+//	{
+//	WDC_Err("sendDMAInfoToKP hDev send failed\n");
+//	return FALSE;
+//	}
+//	*/
+//	/*
+//	//for JUNGO Flush , fragmented WD_DMA struct
+//	dwOptions = pDMASubBufInfos->dwPages; //Im using dwPages instead of dwOptions
+//
+//	pData = &dwOptions;
+//	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_DWOPT, pData, pdwResult);
+//	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
+//	{
+//	WDC_Err("sendDMAInfoToKP dwOptions send failed\n");
+//	return FALSE;
+//	}
+//
+//	//send hDma of WD_DMA struct to KP
+//	hDma = pDMASubBufInfos->dwBytes;	 //Im using pUserAddr instead of hDma
+//	//because the structure is mixed. I think it is a bug.
+//	//Jungo says our dll or h files are mixed up
+//	pData = &hDma;
+//	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_HDMA, pData, pdwResult);
+//	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
+//	{
+//	WDC_Err("sendDMAInfoToKP hDma send failed\n");
+//	return FALSE;
+//	}
+//	return TRUE;
+//}
 
-	DWORD hDma;
-	DWORD dwOptions;
-	PVOID pData;
-	DWORD dwResult;
-	PDWORD	pdwResult = &dwResult;
-
-
-	WDC_Err("WDC:  hDma %u\n", pDMASubBufInfos->hDma);
-	WDC_Err("WDC:  pUserAddr %u\n", pDMASubBufInfos->pUserAddr);
-	WDC_Err("WDC:  pKernelAddr %u\n", pDMASubBufInfos->pKernelAddr);
-	WDC_Err("WDC:  dwBytes %u\n", pDMASubBufInfos->dwBytes);
-	WDC_Err("WDC:  dwOptions %u\n", pDMASubBufInfos->dwOptions);
-	WDC_Err("WDC:  dwPages %u\n", pDMASubBufInfos->dwPages);
-	WDC_Err("WDC:  hCard %u\n", pDMASubBufInfos->hCard);
-
-	/*for WDK Flush
-
-	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_BUFSIZE, pData, pdwResult);
-	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
-	{
-	WDC_Err("sendDMAInfoToKP dwDMASubBufSize send failed\n");
-	return FALSE;
-	}
-	*/
-	//for JUNGO Flush, complete WD_DMA struct
-	/*
-	pData = pDMASubBufInfos;
-	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_WDDMA, pData, pdwResult);
-	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
-	{
-	WDC_Err("sendDMAInfoToKP WD_DMA send failed\n");
-	return FALSE;
-	}
-	*/
-	//for Testfkt to write to the Regs
-	/*
-	pData = &hDev;// &deviceInfo.Card;//
-	WDC_Err("deviceInfo.Card.Item[0].I.Mem.pTransAddr : 0x %x\n", deviceInfo.Card.Item[0].I.Mem.pTransAddr);
-	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_TESTSIGNALPREP, pData, pdwResult);
-	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
-	{
-	WDC_Err("sendDMAInfoToKP hDev send failed\n");
-	return FALSE;
-	}
-	*/
-	/*
-	//for JUNGO Flush , fragmented WD_DMA struct
-	dwOptions = pDMASubBufInfos->dwPages; //Im using dwPages instead of dwOptions
-
-	pData = &dwOptions;
-	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_DWOPT, pData, pdwResult);
-	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
-	{
-	WDC_Err("sendDMAInfoToKP dwOptions send failed\n");
-	return FALSE;
-	}
-
-	//send hDma of WD_DMA struct to KP
-	hDma = pDMASubBufInfos->dwBytes;	 //Im using pUserAddr instead of hDma
-	//because the structure is mixed. I think it is a bug.
-	//Jungo says our dll or h files are mixed up
-	pData = &hDma;
-	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_HDMA, pData, pdwResult);
-	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
-	{
-	WDC_Err("sendDMAInfoToKP hDma send failed\n");
-	return FALSE;
-	}
-	return TRUE;
-}
-*/
 
 ULONG GetScanindex( UINT32 drvno )
 {
@@ -1248,20 +1247,20 @@ BOOL SetupPCIE_DMA( UINT32 drvno, ULONG nos, ULONG nob )
 	//	ErrorMsg("nach WDC_DMAContigBufLock");
 	//	AboutDMARegs();
 
-	/*for KP
-	if (HWDREQ_EN)
-	if(!SendDMAInfoToKP())
-	WDC_Err("sendDMAInfoToKP failed");
-	/*for KP
-	if (HWDREQ_EN)
-	if(!SendDMAInfoToKP())
-	WDC_Err("sendDMAInfoToKP failed");
-	*/
-	/*for KP
-	if (HWDREQ_EN)
-	if(!SendDMAInfoToKP())
-	WDC_Err("sendDMAInfoToKP failed");
-	*/
+	//for KP
+	//if (HWDREQ_EN)
+	//if(!SendDMAInfoToKP())
+	//WDC_Err("sendDMAInfoToKP failed");
+	//for KP
+	//if (HWDREQ_EN)
+	//if(!SendDMAInfoToKP())
+	//WDC_Err("sendDMAInfoToKP failed");
+	//
+	//for KP
+	//if (HWDREQ_EN)
+	//if(!SendDMAInfoToKP())
+	//WDC_Err("sendDMAInfoToKP failed");
+	//
 	//
 
 	//set Init Regs
@@ -1555,8 +1554,7 @@ BOOL BufLock( UINT drvno, UINT camcnt, int nob, int nospb )
 }
 #endif
 
-// ***************************  camera read stuff  **********
-//*********************************************************
+// camera read stuff
 
 //weg? wird viel gecalled
 void Resort( UINT32 drvno, void* ptarget, void* psource )
@@ -2681,10 +2679,10 @@ void WaitTrigger( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrKey )
 	if (Space) *SpaceKey = TRUE;	//stops after next trigger
 };// WaitTrigger
 
-//******************** the triginput has an optional FF to detect short pulses
+// the triginput has an optional FF to detect short pulses
 // the FF is edge triggered and must be reset via RSTrigShort after each pulse to arm it again
 // it is enabled once by EnTrigShort()
-//********************
+//
 
 void WaitTriggerShort( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrKey )
 // returns if Trigger or Key
@@ -3026,7 +3024,7 @@ BOOL CheckFFTrig( UINT32 drvno ) //ext trigger in FF for short pulses
 }//CheckFFTrig
 
 //FIFO
-//***************  Fifo only Functions   ***************
+//  Fifo only Functions
 
 //weg-> alte dma routine
 void StartReadWithDma( UINT32 drvno )
@@ -3643,7 +3641,7 @@ void SetExtSWTrig( BOOL ext )
 	else RRT_ExtTrigFlag = FALSE;
 }//SetExtSWTrig
 
-//*************** Hardware Fifo fkts ******************
+// Hardware Fifo fkts
 
 void StartFFTimer( UINT32 drvno, UINT32 exptime )
 {//exptime in microsec
@@ -3925,7 +3923,7 @@ void SetupHAModule( BOOL irsingle, ULONG fftlines )
 	return;
 }//SetupHAModule
 
-//********************  thread priority stuff
+// thread priority stuff
 
 //weg?!! connected with readffloop wenn es bleibt, adresse ändern with enum
 BOOL ThreadToPriClass( ULONG threadp, DWORD *priclass, DWORD *prilevel )
@@ -3989,7 +3987,7 @@ BOOL SetPriority( ULONG threadp )
 	return TRUE;
 }//SetPriority
 
-//***********************  System Timer in Ticks
+// System Timer in Ticks
 //weg? stimmt diese Umrechnung noch?
 UINT64 LargeToInt( LARGE_INTEGER li )
 { //converts Large to Int64
