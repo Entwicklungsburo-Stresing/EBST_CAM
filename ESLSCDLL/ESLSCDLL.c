@@ -915,9 +915,9 @@ DllAccess void DLLAboutGPX( UINT32 drvno )
 /**
 \copydoc InitCamera3001
 */
-DllAccess void DLLInitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT )
+DllAccess void DLLInitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA )
 {
-	InitCamera3001( drvno, pixel, trigger_input, IS_FFT );
+	InitCamera3001( drvno, pixel, trigger_input, IS_FFT, IS_AREA );
 	return;
 }
 

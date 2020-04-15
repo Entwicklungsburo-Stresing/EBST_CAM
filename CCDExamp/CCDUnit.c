@@ -421,7 +421,7 @@ void initCamera()
 	switch (CAMERA_SYSTEM)
 	{
 	case camera_system_3001:
-		InitCamera3001(DRV, _PIXEL, TRIGGER_MODE, _ISFFT);
+		InitCamera3001(DRV, _PIXEL, TRIGGER_MODE, _ISFFT, _ISAREA );
 		break;
 	case camera_system_3010:
 		InitCamera3010(DRV, _PIXEL, TRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
@@ -434,7 +434,7 @@ void initCamera()
 		switch (CAMERA_SYSTEM)
 		{
 		case camera_system_3001:
-			InitCamera3001(2, _PIXEL, TRIGGER_MODE, _ISFFT);
+			InitCamera3001(2, _PIXEL, TRIGGER_MODE, _ISFFT, _ISAREA);
 			break;
 		case camera_system_3010:
 			InitCamera3010(2, _PIXEL, TRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
