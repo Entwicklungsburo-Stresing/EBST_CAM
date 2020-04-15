@@ -146,6 +146,7 @@ static	unsigned long _FKT = 1;		// -1:clearread, 0:datab=0, 1:read 5: testdata
 							// =0 if not FFT
 #define _ISPDA FALSE			//set RS after read; TRUE for HA S39xx
 #define _ISFFT TRUE		//set vclk generator; TRUE for HA S703x
+#define _ISAREA TRUE	//set AREA Mode on CAMERA
 //#define _HA_MODULE FALSE		//TRUE for HA module C7041 or C8061
 //vclk frequency 
 
