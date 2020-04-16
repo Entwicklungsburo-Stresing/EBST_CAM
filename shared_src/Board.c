@@ -4532,10 +4532,7 @@ void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS
 	//set trigger input
 	SendFLCAM( drvno, maddr_cam, cam_adaddr_trig_in, trigger_input );
 	//select vclk and Area mode on
-	WDC_Err( "IS_AREA: 0x%x", IS_AREA );
 	IS_AREA <<= 15;
-	WDC_Err( "IS_AREA: 0x%x", IS_AREA );
-	WDC_Err( "IS_FFT | IS_AREA: 0x%x", (IS_FFT | IS_AREA) );
 	SendFLCAM( drvno, maddr_cam, cam_adaddr_vclk, IS_FFT | IS_AREA );
 	return;
 }
