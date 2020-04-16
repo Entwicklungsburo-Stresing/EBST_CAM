@@ -227,12 +227,7 @@ HRESULT Direct2dViewer::CreateDeviceResources()
 				&m_pBlackBrush
 			);
 		}
-		if (SUCCEEDED( hr ))
-		{
-			hr = loadBitmap();
-		}
 	}
-
 	return hr;
 }
 
@@ -266,7 +261,10 @@ HRESULT Direct2dViewer::OnRender()
 	if (SUCCEEDED( hr )) {
 		hr = CreateDeviceResources();
 	}
-
+	if (SUCCEEDED( hr ))
+	{
+		hr = loadBitmap();
+	}
 	if (SUCCEEDED( hr ) && !(m_pRenderTarget->CheckWindowState() & D2D1_WINDOW_STATE_OCCLUDED))
 	{
 		CalcCursorPos();
@@ -396,7 +394,7 @@ LRESULT CALLBACK Direct2dViewer::WndProc( HWND hwnd, UINT message, WPARAM wParam
 \brief Creates a Direct2D bitmap from memory.
 	Interpretes data in memory as 16 bit greyscale per pixel.
 */
-HRESULT Direct2dViewer::Load16bitGreyscaleBitmapFromMemory()
+HRESULT Direct2dViewer::loadBitmap()
 {
 	HRESULT hr = S_OK;
 	IWICFormatConverter *pConverter = NULL;
@@ -510,19 +508,6 @@ HWND Direct2dViewer::getWindowHandler()
 }
 
 /**
-\brief Creates the graphic rescource bitmap from memory,
-scales render target and applies gamma effects depending on bit setting to bitmap
-use setBitmapSource before when you want to show a new bitmap.
-*/
-HRESULT Direct2dViewer::loadBitmap()
-{
-	HRESULT hr = S_OK;
-	//create new bitmap
-	hr = Load16bitGreyscaleBitmapFromMemory();
-	return hr;
-}
-
-/**
 \brief Set gamma value.
 \param white set value for maximum brightness. Default: 0xFFFF (16 bit),  0x3FFF (14 bit)
 \param black set value for minimum brightness. Default: 0
@@ -577,25 +562,22 @@ HRESULT Direct2dViewer::start2dViewer( HWND hWndParent, void *bitmapAddr, UINT w
 \param width Width of bitmap.
 \param height Height of bitmap.
 */
-HRESULT Direct2dViewer::showNewBitmap( void *addr, UINT width, UINT height )
+void Direct2dViewer::showNewBitmap( void *addr, UINT width, UINT height )
 {
 	//tell 2D viewer which data to use
 	setBitmapSource( addr, width, height );
 	//update 2D viewer bitmap
-	HRESULT hr = reloadBitmap();
-	return hr;
+	repaintWindow();
+	return;
 }
 
 /**
 \brief Reload the displayed bitmap in 2d viewer.
 */
-HRESULT Direct2dViewer::reloadBitmap()
+void Direct2dViewer::repaintWindow()
 {
-	//load same bitmap again
-	HRESULT hr = loadBitmap();
 	//send message to 2d viewer window to repaint
 	SendMessage( getWindowHandler(), WM_PAINT, NULL, NULL );
-	return hr;
 }
 
 void Direct2dViewer::CalcCursorPos()
@@ -625,13 +607,13 @@ void Direct2dViewer::DrawScale()
 	BOOL draw_number = TRUE;
 	int number = 0;
 	D2D1_POINT_2F number_position;
-	while (scalePosition.x < renderTargetSize.width - _margin.right)
+	while (scalePosition.x <= renderTargetSize.width - _margin.right )
 	{
 		DrawVerticalLine( scalePosition, _scale.length, _scale.width );
 		if (draw_number)
 		{
-			number_position.x = scalePosition.x - 0.5;
-			number_position.y = scalePosition.y - 2 + _scale.length;
+			number_position.x = scalePosition.x - (FLOAT)0.5;
+			number_position.y = scalePosition.y - (FLOAT)2 + _scale.length;
 			DrawNumber( number_position, number );
 		}
 		// prepare next line
@@ -646,13 +628,13 @@ void Direct2dViewer::DrawScale()
 	scalePosition = D2D1::Point2F( _margin.left - _scale.length-2, _margin.top );
 	draw_number = FALSE;
 	number = 0;
-	while (scalePosition.y < renderTargetSize.height - _margin.bottom)
+	while (scalePosition.y <= renderTargetSize.height - _margin.bottom )
 	{
 		DrawHorizontalLine( scalePosition, _scale.length, _scale.width );
 		if (draw_number)
 		{
-			number_position.x = scalePosition.x - 10;
-			number_position.y = scalePosition.y - 7.5;
+			number_position.x = scalePosition.x - (FLOAT)10;
+			number_position.y = scalePosition.y - (FLOAT)7.5;
 			DrawNumber( number_position, number );
 		}
 		// prepare next line
@@ -702,5 +684,12 @@ void Direct2dViewer::DrawHorizontalLine( D2D1_POINT_2F startPoint, FLOAT length,
 		strokeWidth,
 		NULL
 	);
+	return;
+}
+
+void Direct2dViewer::Scale_setSkipLines( int x, int y )
+{
+	_scale.skip_x = x;
+	_scale.skip_y = y;
 	return;
 }
