@@ -1,17 +1,6 @@
-Description of DLL functions
-
 project settings for DLL:
 to avoid linker error LNK1019
 set properties for compiler of DLL
 C/C++-> Preprocessor-> Preprocessor Definitions = ;ESLSCDLL_EXPORTS;WINNT
 set preferences for compiler of calling program to
 Linker-> Input-> Additional Dependencies = ESLSCDLL.LIB
-
-
-** general message box suppress ** 
-by default the DLL sends message boxes on error
-if this is not wanted, it can be suppressed by calling: DLLErrMsgBoxOff
-
-				// if msg was turned off, it can be turned on gain by calling this func
-void DLLErrMsgBoxOn(void);	// BOARD.C sends error messages on default
-void DLLErrMsgBoxOff(void);	//general deactivate of error message boxes

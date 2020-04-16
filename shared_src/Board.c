@@ -268,7 +268,7 @@ double TRMSval[4];
 
 //weg? wrapped in vi
 /**
-\brief Switch on error message boxes.
+\brief Switch on error message boxes. Default is On.
 \return none
 */
 void ErrMsgBoxOn( void )
