@@ -49,7 +49,7 @@ void	*dummy;
 
 volatile struct ffloopparams params, params2;
 
-BOOL WINAPI DLLMain( HINSTANCE hInstDLL, DWORD dwNotification, LPVOID lpReserved );
+BOOL WINAPI DLLMain( HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpReserved );
 DllAccess int DLLGetProcessCount();
 DllAccess int DLLGetThreadCount();
 DllAccess  void DLLErrMsgBoxOn( void );	//BOARD.C sends error messages on default
@@ -111,7 +111,7 @@ DllAccess void DLLRsTOREG( UINT32 drvno );
 DllAccess void DLLSetupHAModule( UINT8 irsingle, UINT32 fftlines );
 DllAccess void DLLSetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep);
 DllAccess void DLLSetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first, UINT8* region_size);
-DllAccess void DLLAboutS0( UINT32 drv );
+DllAccess void DLLAboutS0( UINT32 drvno );
 DllAccess void DLLSendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data );
 DllAccess void DLLSendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature );
 DllAccess void DLLDAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output ); //set output of DAC (PCB 2189-7)

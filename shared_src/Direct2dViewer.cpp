@@ -1,6 +1,3 @@
-// This is a Direct2D Viewer for bitmaps used in CCD example. It was created by using Microsofts example "SimpleDirect2DApplication", originally released under MIT license.
-// https://github.com/microsoft/Windows-classic-samples/tree/master/Samples/Win7Samples/multimedia/Direct2D/SimpleDirect2DApplication
-
 /*
 This file is part of CCDExamp and ECLSCDLL.
 
@@ -511,6 +508,7 @@ HRESULT Direct2dViewer::loadBitmap()
 \brief Set gamma value.
 \param white set value for maximum brightness. Default: 0xFFFF (16 bit),  0x3FFF (14 bit)
 \param black set value for minimum brightness. Default: 0
+\return void
 */
 void Direct2dViewer::SetGammaValue( UINT16 white, UINT16 black )
 {

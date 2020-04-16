@@ -1,4 +1,7 @@
 #pragma once
+/** \file Direct2dViewer.h This is a Direct2D Viewer for bitmaps. It was created by using Microsofts example "SimpleDirect2DApplication", originally released under MIT license.
+// https://github.com/microsoft/Windows-classic-samples/tree/master/Samples/Win7Samples/multimedia/Direct2D/SimpleDirect2DApplication
+*/
 
 // Modify the following defines if you have to target a platform prior to the ones specified below.
 // Refer to MSDN for the latest info on corresponding values for different platforms.

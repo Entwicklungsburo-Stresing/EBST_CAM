@@ -41,7 +41,7 @@ void Direct2dViewer_delete( void *D2dV )
 
 /**
 \copydoc Direct2dViewer::start2dViewer
-\param D2dV Hanle of Direct2dViewer instance.
+\param D2dV Handle of Direct2dViewer instance.
 */
 void Direct2dViewer_start2dViewer( void *D2dV, HWND hWndParent, void *bitmapAddr, UINT width, UINT height )
 {
@@ -52,7 +52,7 @@ void Direct2dViewer_start2dViewer( void *D2dV, HWND hWndParent, void *bitmapAddr
 
 /**
 \copydoc Direct2dViewer::showNewBitmap
-\param D2dV Hanle of Direct2dViewer instance.
+\param D2dV Handle of Direct2dViewer instance.
 */
 void Direct2dViewer_showNewBitmap( void *D2dV, void *addr, UINT width, UINT height )
 {
