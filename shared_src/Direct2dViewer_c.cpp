@@ -62,12 +62,12 @@ void Direct2dViewer_showNewBitmap( void *D2dV, void *addr, UINT width, UINT heig
 }
 
 /**
-\copydoc Direct2dViewer::reloadBitmap
+\copydoc Direct2dViewer::repaintWindow
 */
-void Direct2dViewer_reloadBitmap( void *D2dV )
+void Direct2dViewer_repaintWindow( void *D2dV )
 {
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
-	D2d->reloadBitmap();
+	D2d->repaintWindow();
 	return;
 }
 

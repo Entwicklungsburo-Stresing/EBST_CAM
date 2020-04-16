@@ -1936,7 +1936,7 @@ LRESULT CALLBACK SetGamma( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 			if (Direct2dViewer)
 			{
 				Direct2dViewer_setGammaValue( Direct2dViewer, direct2dviewer_gamma_white, direct2dviewer_gamma_black );
-				Direct2dViewer_reloadBitmap( Direct2dViewer );
+				Direct2dViewer_repaintWindow( Direct2dViewer );
 			}
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
