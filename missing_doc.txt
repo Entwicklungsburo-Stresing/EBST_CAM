@@ -1,0 +1,87 @@
+◆ DLLAboutGPX( UINT32 drvno )
+/**
+\brief 
+\param drvno PCIe board identifier
+\return none
+*/
+
+◆ DLLAboutS0( UINT32 drvno )
+/**
+\brief 
+\param drvno PCIe board identifier
+\return none
+*/
+
+◆ DLLBlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 )
+/**
+\brief
+\param drvno
+\param S1
+\param S2
+\return none
+*/
+	
+◆ DLLInitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA )
+/**
+\brief Init routine for Camera System 3001.
+	Sets register in camera.
+\param drvno selects PCIe board
+\param pixel pixel amount of camera
+\param trigger_input selects trigger input. 0 - XCK, 1 - EXTTRIG, 2 - DAT
+\param IS_FFT =1 vclk on, =0 vclk off
+\param IS_AREA
+\return void
+*/
+
+◆ DLLResetEC( UINT32 drvno )
+/**
+\brief 
+\param drvno PCIe board identifier
+\return none
+*/
+
+◆ DLLSetEC( UINT32 drvno, UINT32 ecin100ns )
+/**
+\brief
+\param drvno PCIe board identifier
+\param ecin100ns
+\return none
+*/
+
+	
+◆ DLLSetupDMA( UINT32 drv, void*  pdioden, UINT32 nos, UINT32 nob )
+/**
+\brief Setup DMA initiated by hardware DREQ
+
+Call this func once as it takes time to allocate the resources.
+But be aware: the buffer size and nos is set here and may not be changed later.
+If size changes: DLLClenupDMA and DLLSetupDMA must be called.
+Read nos lines from FIFO, copy to just just one very big contigous block: pdioden.
+\param drv
+\param pdioden
+\param nos
+\param nob
+\return none
+*/
+
+◆ DLLSetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep )
+/**
+\brief
+\param drvno PCIe board identifier
+\param range
+\param lines
+\param keep
+\return none
+*/
+	
+
+◆ nDLLReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch )
+/**
+\brief Read nos lines from FIFO. Const burst loop with DMA initiated by hardware DREQ. Is called automatically for 2 boards.
+\param board_sel board number (=1 if one PCI board)
+\param exptus exposure time in micro sec. If this entry is used, freq must be set to 0
+\param exttrig true (not 0) if external trigger for each scan, 0 else
+\param blocktrigger true (not 0) if one external trigger starts block of nos scans which run with internal timer
+\param btrig_ch
+\return none
+*/

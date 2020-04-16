@@ -20,11 +20,17 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 #include "ESLSCDLL.h"
 
 /**
-\brief Main Windows
+\brief DllMain entry point
+
+An optional entry point into a dynamic-link library (DLL). When the system starts or terminates a process or thread, it calls the entry-point function for each loaded DLL using the first thread of the process. The system also calls the entry-point function for a DLL when it is loaded or unloaded using the LoadLibrary and FreeLibrary functions. More information: https://docs.microsoft.com/en-us/windows/win32/dlls/dllmain
+\param[in] hinstDLL A handle to the DLL module. The value is the base address of the DLL. The HINSTANCE of a DLL is the same as the HMODULE of the DLL, so hinstDLL can be used in calls to functions that require a module handle.
+\param[in] fdwReason	The reason code that indicates why the DLL entry-point function is being called. This parameter can be one of the following values.
+\param[in] lpvReserved If fdwReason is DLL_PROCESS_ATTACH, lpvReserved is NULL for dynamic loads and non-NULL for static loads. If fdwReason is DLL_PROCESS_DETACH, lpvReserved is NULL if FreeLibrary has been called or the DLL load failed and non-NULL if the process is terminating.
+\return When the system calls the DllMain function with the DLL_PROCESS_ATTACH value, the function returns TRUE if it succeeds or FALSE if initialization fails. If the return value is FALSE when DllMain is called because the process uses the LoadLibrary function, LoadLibrary returns NULL. (The system immediately calls your entry-point function with DLL_PROCESS_DETACH and unloads the DLL.) If the return value is FALSE when DllMain is called during process initialization, the process terminates with an error. To get extended error information, call GetLastError. When the system calls the DllMain function with any value other than DLL_PROCESS_ATTACH, the return value is ignored.
 */
-BOOL WINAPI DLLMain( HINSTANCE hInstDLL, DWORD dwNotification, LPVOID lpReserved )
+BOOL WINAPI DLLMain( HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpReserved )
 {
-	switch (dwNotification)
+	switch (fdwReason)
 	{
 	case DLL_PROCESS_ATTACH:
 		// DLL initialization code goes here. Formerly this 
@@ -71,7 +77,7 @@ DllAccess int DLLGetThreadCount()
 }
 
 /**
-\brief Switch on error message boxes.
+\copydoc ErrMsgBoxOn
 */
 DllAccess  void DLLErrMsgBoxOn( void )
 {
@@ -80,7 +86,7 @@ DllAccess  void DLLErrMsgBoxOn( void )
 }
 
 /**
-\brief Disable error message boxes.
+\copydoc ErrMsgBoxOff
 */
 DllAccess  void DLLErrMsgBoxOff( void )
 {
@@ -117,7 +123,7 @@ DllAccess void DLLCCDDrvExit( UINT32 drvno )
 \brief Initialize the PCIe board. Must be called once at the start.
 	Is called automatically for 2 boards.
 \param drv board number (=1 if one PCI board)
-\param camcnt
+\param camcnt amount of cameras
 \param pixel number of all pixel (active + dummy pixel)
 \param flag816 =1 if AD resolution 12 to 16 bit, =2 if 8bit
 \param pclk =0 pixelclock, not used here
@@ -362,15 +368,6 @@ DllAccess void DLLSetupVCLK( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 }
 
 /**
-\copydoc ReadRingLine
-*/
-DllAccess void DLLReadRingLine( pArrayT pdioden, UINT32 lno )
-{
-	ReadRingLine( pdioden, lno );
-	return;
-}
-
-/**
 \copydoc BlockTrig
 */
 DllAccess UINT8 DLLBlockTrig( UINT32 drv, UCHAR btrig_ch )
@@ -381,6 +378,9 @@ DllAccess UINT8 DLLBlockTrig( UINT32 drv, UCHAR btrig_ch )
 
 /**
 \brief For test purposes only: output of 2 strings.
+\param testMsg1 string1
+\param testMsg2 string2
+\return none
 */  
 void TestMsg( char testMsg1[20], char testMsg2[20] )
 {
@@ -430,6 +430,11 @@ Call this func once as it takes time to allocate the resources.
 But be aware: the buffer size and nos is set here and may not be changed later.
 If size changes: DLLClenupDMA and DLLSetupDMA must be called.
 Read nos lines from FIFO, copy to just just one very big contigous block: pdioden.
+\param drv
+\param pdioden
+\param nos
+\param nob
+\return none
 */
 DllAccess void DLLSetupDMA( UINT32 drv, void*  pdioden, UINT32 nos, UINT32 nob )
 {
@@ -485,6 +490,10 @@ Call this func once as it takes time to allocate the resources.
 But be aware: the buffer size and nos is set here and may not be changed later.
 If size changes: DLLClenupDMA and DLLSetupDMA must be called.
 Read nos lines from FIFO, copy to just  one very big contigous block: pDMABigBufBase.
+\param drv PCIe board identifier.
+\param nos number of samples
+\param nob number of blocks
+\return none
 */
 DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 {
@@ -543,7 +552,7 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 	//check if enough space is available in the physical ram
 	if (*memory_free > (UINT64)needed_mem)
 	{
-		pDMABigBufBase[drv] = calloc( aCAMCNT[drv] * (nos)*nob * _PIXEL, sizeof( USHORT ) );   //!! +1 oder *2 weil sonst absturz im continuous mode
+		pDMABigBufBase[drv] = calloc( aCAMCNT[drv] * (nos)*nob * _PIXEL, sizeof( USHORT ) );   // +1 oder *2 weil sonst absturz im continuous mode
 		// sometimes it makes one ISR more, so better to allocate nos+1 thaT IN THIS CASE THE ADDRESS pDMAIndex is valid
 		WDC_Err( "available memory:%lld MB\n \tmemory needed: %lld MB\n", memory_free_mb, needed_mem_mb );
 	}
@@ -573,9 +582,9 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 \param drv indentifier of PCIe card
 \param curr_nos position in samples (0...nos)
 \param curr_nob position in blocks (0...nob)
-\param pdioden address where data is written
-\param length lenght of frame, typically pixel count (1088)
 \param curr_cam position in camera count (0...CAMCNT)
+\param pdioden address where data is written, should be buffer with size length * sizeof( USHORT )
+\param length lenght of frame, typically pixel count (1088)
 \return void
 */
 DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdioden, UINT32 length )
@@ -593,33 +602,22 @@ DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UIN
 }
 
 /**
-\brief
+\brief Read nos lines from FIFO. Const burst loop with DMA initiated by hardware DREQ. Is called automatically for 2 boards.
 \param board_sel board number (=1 if one PCI board)
 \param exptus exposure time in micro sec. If this entry is used, freq must be set to 0
 \param exttrig true (not 0) if external trigger for each scan, 0 else
 \param blocktrigger true (not 0) if one external trigger starts block of nos scans which run with internal timer
 \param btrig_ch
-output: none
+\return none
 */
 DllAccess void nDLLReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch )
-//cam_sel = 1 for only use first cam, cam_sel = 2 for sec. cam and cam_sel = 3 for both
-{//const burst loop with DMA initiated by hardware DREQ
-	//read nos lines from FIFO
-	//
-	//local declarations
-	//is called automatically for 2 boards
-	//old: ReadFFLoop(drv, exptus, freq, exttrig, blocktrigger, btrig_ch);
-	//HANDLE cam_thread[2];
-	//if (cam_sel == 1 || cam_sel == 3){
-		//struct has to be volatile, if not readffloop is always called with drv=1
-
+{
 	params.board_sel = board_sel;
 	params.exptus = exptus;
 	params.exttrig = exttrig;
 	params.blocktrigger = blocktrigger;
 	params.btrig_ch = btrig_ch;
 
-	//_beginthread(ReadFFLoopThread, 0, &params);//thread
 	//thread wit prio 15
 	_beginthreadex( 0, 0, &ReadFFLoopThread, &params, 0, 0 );//cam_thread[0] = (HANDLE)_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//threadex
 //}
@@ -645,12 +643,21 @@ DllAccess void nDLLReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, U
 	return;
 }//DLLReadFFLoop
 
+/**
+\brief Abort measurement.
+\return none
+*/
 DllAccess void DLLStopFFLoop( void )
 {
 	escape_readffloop = TRUE;
 	return;
 }
 
+/**
+\brief Activate or deactivate continuous read.
+\param activate 0 - deactivate, 1 - activate
+\return none
+*/
 DllAccess void DLLSetContFFLoop( UINT8 activate )
 {
 	contffloop = activate;//0 or 1
@@ -666,18 +673,27 @@ DllAccess void DLLSetTemp( UINT32 drvno, UINT8 level )
 	return;
 }
 
+/**
+\copydoc SetEC
+*/
 DllAccess void DLLSetEC( UINT32 drvno, UINT64 ecin100ns )
 {
 	SetEC( drvno, ecin100ns );
 	return;
 }
 
+/**
+\copydoc ResetEC
+*/
 DllAccess void DLLResetEC( UINT32 drvno )
 {
 	ResetEC( drvno );
 	return;
 }
 
+/**
+\copydoc SetTORReg
+*/
 DllAccess void DLLSetTORReg( UINT32 drvno, UINT8 fkt )
 {
 	SetTORReg( drvno, fkt );
@@ -750,6 +766,9 @@ DllAccess void DLLSetupHAModule( UINT8 irsingle, UINT32 fftlines )
 	return;
 }
 
+/**
+\copydoc SetupVPB
+*/
 DllAccess void DLLSetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep )
 {
 	if (keep != 0)
@@ -770,9 +789,12 @@ DllAccess void DLLSetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines,
 	return;
 }
 
-DllAccess void DLLAboutS0( UINT32 drv )
+/**
+\copydoc AboutS0
+*/
+DllAccess void DLLAboutS0( UINT32 drvno )
 {
-	AboutS0( drv );
+	AboutS0( drvno );
 	return;
 }
 
@@ -812,6 +834,9 @@ DllAccess void DLLFreeMemInfo( UINT64 * pmemory_all, UINT64 * pmemory_free )
 	return;
 }
 
+/**
+\copydoc ErrorMsg
+*/
 DllAccess void DLLErrorMsg( char ErrMsg[20] )
 {
 	ErrorMsg( ErrMsg );
@@ -906,6 +931,9 @@ DllAccess void DLLInitGPX( UINT32 drvno, UINT32 delay )
 	return;
 }
 
+/**
+\copydoc AboutGPX
+*/
 DllAccess void DLLAboutGPX( UINT32 drvno )
 {
 	AboutGPX( drvno );
@@ -939,6 +967,9 @@ DllAccess void DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pa
 	return;
 }
 
+/**
+\copydoc BlockSyncStart
+*/
 DllAccess void DLLBlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 )
 {
 	BlockSyncStart( drvno, S1, S2 );
