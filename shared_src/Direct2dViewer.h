@@ -142,20 +142,26 @@ private:
 		FLOAT length,
 		FLOAT strokeWidth
 	);
+	void DrawNumber(
+		D2D1_POINT_2F location, int number
+	);
 	HWND m_hwnd;
 	ID2D1Factory *m_pD2DFactory;
 	IWICImagingFactory *m_pWICFactory;
 	IDWriteFactory *m_pDWriteFactory;
 	ID2D1HwndRenderTarget *m_pRenderTarget;
 	IDWriteTextFormat *m_pTextFormat;
+	IDWriteTextFormat *m_pTextFormat_scale;
 	ID2D1SolidColorBrush *m_pBlackBrush;
 	ID2D1Bitmap *m_pBitmap;
 	struct _Scale
 	{
 		FLOAT length = 12;
 		FLOAT width = 1;
-		int distance_x = 10;
-		int distance_y = 10;
+		FLOAT distance_x = 10;
+		FLOAT distance_y = 10;
+		int skip_x = 25;
+		int skip_y = 5;
 	} _scale;
 	struct _Gamma
 	{
@@ -167,8 +173,8 @@ private:
 	struct _Margin
 	{
 		FLOAT top = 0;
-		FLOAT left = 20;
-		FLOAT bottom = 40;
+		FLOAT left = 35;
+		FLOAT bottom = 50;
 		FLOAT right = 0;
 	} _margin;
 	struct _CursorPos

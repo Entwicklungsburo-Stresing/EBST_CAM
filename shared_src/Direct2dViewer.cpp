@@ -29,6 +29,7 @@ Direct2dViewer::Direct2dViewer() :
 	m_pDWriteFactory( NULL ),
 	m_pRenderTarget( NULL ),
 	m_pTextFormat( NULL ),
+	m_pTextFormat_scale( NULL ),
 	m_pBitmap( NULL ),
 	m_pBlackBrush( NULL )
 {
@@ -44,6 +45,7 @@ Direct2dViewer::~Direct2dViewer()
 	SafeRelease( &m_pDWriteFactory );
 	SafeRelease( &m_pRenderTarget );
 	SafeRelease( &m_pTextFormat );
+	SafeRelease( &m_pTextFormat_scale );
 	SafeRelease( &m_pBitmap );
 	SafeRelease( &m_pBlackBrush );
 }
@@ -122,6 +124,7 @@ HRESULT Direct2dViewer::CreateDeviceIndependentResources()
 {
 	static const WCHAR msc_fontName[] = L"Verdana";
 	static const FLOAT msc_fontSize = 20;
+	static const FLOAT msc_fontSize_scale = 10;
 	HRESULT hr = S_OK;
 
 	if (SUCCEEDED( hr )) {
@@ -163,12 +166,26 @@ HRESULT Direct2dViewer::CreateDeviceIndependentResources()
 			L"", //locale
 			&m_pTextFormat
 		);
+		// Create a DirectWrite text format object.
+		hr = m_pDWriteFactory->CreateTextFormat(
+			msc_fontName,
+			NULL,
+			DWRITE_FONT_WEIGHT_NORMAL,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			msc_fontSize_scale,
+			L"", //locale
+			&m_pTextFormat_scale
+		);
 	}
 	if (SUCCEEDED( hr ))
 	{
 		// Center the text horizontally and vertically.
 		m_pTextFormat->SetTextAlignment( DWRITE_TEXT_ALIGNMENT_CENTER );
+		m_pTextFormat_scale->SetTextAlignment( DWRITE_TEXT_ALIGNMENT_CENTER );
 		m_pTextFormat->SetParagraphAlignment( DWRITE_PARAGRAPH_ALIGNMENT_FAR );
+		m_pTextFormat->SetWordWrapping( DWRITE_WORD_WRAPPING_NO_WRAP );
+		m_pTextFormat_scale->SetWordWrapping( DWRITE_WORD_WRAPPING_NO_WRAP );
 	}
 	return hr;
 }
@@ -228,6 +245,7 @@ void Direct2dViewer::DiscardDeviceResources()
 {
 	SafeRelease( &m_pRenderTarget );
 	SafeRelease( &m_pBitmap );
+	SafeRelease( &m_pBlackBrush );
 }
 
 /**
@@ -600,23 +618,64 @@ void Direct2dViewer::DrawScale()
 {
 	D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
 	// horizontal scale
-	//_scale.distance_x = _bitmapSource.width / (renderTargetSize.width - _margin.right - _margin.left);
+	// one line every skip_x pixel
+	_scale.distance_x = _scale.skip_x * (renderTargetSize.width - _margin.right - _margin.left) /  _bitmapSource.width;
+	// start horizontal scale at left bottom with small seperation to bitmap
 	D2D1_POINT_2F scalePosition = D2D1::Point2F( _margin.left, renderTargetSize.height-_margin.bottom+2 );
+	BOOL draw_number = TRUE;
+	int number = 0;
+	D2D1_POINT_2F number_position;
 	while (scalePosition.x < renderTargetSize.width - _margin.right)
 	{
 		DrawVerticalLine( scalePosition, _scale.length, _scale.width );
+		if (draw_number)
+		{
+			number_position.x = scalePosition.x - 0.5;
+			number_position.y = scalePosition.y - 2 + _scale.length;
+			DrawNumber( number_position, number );
+		}
+		// prepare next line
 		scalePosition.x = scalePosition.x + _scale.distance_x;
+		draw_number = !draw_number;
+		number = number + _scale.skip_x;
 	}
 	// vertical scale
-	//_scale.distance_y = (renderTargetSize.height - _margin.top - _margin.bottom) / _bitmapSource.height;
+	// one line every skip_y line
+	_scale.distance_y = _scale.skip_y * (renderTargetSize.height - _margin.top - _margin.bottom) / _bitmapSource.height;
+	// start vertical scale at left top with small seperation to bitmap
 	scalePosition = D2D1::Point2F( _margin.left - _scale.length-2, _margin.top );
+	draw_number = FALSE;
+	number = 0;
 	while (scalePosition.y < renderTargetSize.height - _margin.bottom)
 	{
 		DrawHorizontalLine( scalePosition, _scale.length, _scale.width );
+		if (draw_number)
+		{
+			number_position.x = scalePosition.x - 10;
+			number_position.y = scalePosition.y - 7.5;
+			DrawNumber( number_position, number );
+		}
+		// prepare next line
 		scalePosition.y = scalePosition.y + _scale.distance_y;
+		draw_number = !draw_number;
+		number = number + _scale.skip_y;
 	}
 	return;
 }
+
+void Direct2dViewer::DrawNumber( D2D1_POINT_2F location, int number )
+{
+	std::wstring number_wstring = std::to_wstring( number );
+	m_pRenderTarget->DrawText(
+		number_wstring.c_str(),
+		static_cast<UINT32>(number_wstring.size()),
+		m_pTextFormat_scale,
+		D2D1::RectF( location.x, location.y, location.x + 1, location.y + 10 ),
+		m_pBlackBrush
+	);
+	return;
+}
+
 
 void Direct2dViewer::DrawVerticalLine( D2D1_POINT_2F startPoint, FLOAT length, FLOAT strokeWidth )
 {
