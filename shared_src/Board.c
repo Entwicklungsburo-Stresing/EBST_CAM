@@ -2167,7 +2167,7 @@ BOOL ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff )
 \param PortOff Offset from BaseAdress - in Bytes ! 0..3= Regs of Board.
 \return TRUE (!=0) if success
 */
-BOOL ReadLongDMA( UINT32 drvno, PULONG pDWData, ULONG PortOff )
+BOOL ReadLongDMA( UINT32 drvno, PULONG* pDWData, ULONG PortOff )
 {
 	volatile DWORD dwStatus = 0;
 	DWORD   ReturnedLength;
@@ -2329,9 +2329,10 @@ BOOL WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff )
 
 /**
 \brief Writes long to space0 register.
+\param drvno PCIe board identifier.
 \param DWData data to write
 \param PortOff Register offset from BaseAdress - in bytes
-\retrun Returns TRUE if success.
+\return Returns TRUE if success.
 */
 BOOL WriteLongDMA( UINT32 drvno, ULONG DWData, ULONG PortOff )
 {

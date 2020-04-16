@@ -28,7 +28,7 @@ An optional entry point into a dynamic-link library (DLL). When the system start
 \param[in] lpvReserved If fdwReason is DLL_PROCESS_ATTACH, lpvReserved is NULL for dynamic loads and non-NULL for static loads. If fdwReason is DLL_PROCESS_DETACH, lpvReserved is NULL if FreeLibrary has been called or the DLL load failed and non-NULL if the process is terminating.
 \return When the system calls the DllMain function with the DLL_PROCESS_ATTACH value, the function returns TRUE if it succeeds or FALSE if initialization fails. If the return value is FALSE when DllMain is called because the process uses the LoadLibrary function, LoadLibrary returns NULL. (The system immediately calls your entry-point function with DLL_PROCESS_DETACH and unloads the DLL.) If the return value is FALSE when DllMain is called during process initialization, the process terminates with an error. To get extended error information, call GetLastError. When the system calls the DllMain function with any value other than DLL_PROCESS_ATTACH, the return value is ignored.
 */
-BOOL WINAPI DLLMain( HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpReserved )
+BOOL WINAPI DLLMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved )
 {
 	switch (fdwReason)
 	{
@@ -182,18 +182,18 @@ DllAccess UINT8 DLLWriteLongS0( UINT32 drvno, UINT32 DWData, UINT32 PortOff )
 /**
 \copydoc ReadLongDMA
 */
-DllAccess UINT8 DLLReadLongDMA( UINT32 drv, UINT32 *data, UINT32 PortOff )
+DllAccess UINT8 DLLReadLongDMA( UINT32 drvno, UINT32* pDWData, UINT32 PortOff )
 {
-	if (!ReadLongDMA( drv, data, PortOff )) { return 0; }
+	if (!ReadLongDMA( drvno, pDWData, PortOff )) { return 0; }
 	return 1;
 }
 
 /**
 \copydoc WriteLongDMA
 */
-DllAccess UINT8 DLLWriteLongDMA( UINT32 drv, UINT32 DataL, UINT32 PortOff ) 
+DllAccess UINT8 DLLWriteLongDMA( UINT32 drvno, UINT32 DWData, UINT32 PortOff ) 
 {
-	if (!WriteLongDMA( drv, DataL, PortOff )) { return 0; }
+	if (!WriteLongDMA( drvno, DWData, PortOff )) { return 0; }
 	return 1;
 }
 
