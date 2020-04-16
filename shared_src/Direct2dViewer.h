@@ -90,13 +90,13 @@ public:
 		UINT width,
 		UINT height
 	);
-	HRESULT showNewBitmap
+	void showNewBitmap
 	(
 		void *addr,
 		UINT width,
 		UINT height
 	);
-	HRESULT reloadBitmap();
+	void repaintWindow();
 	HWND getWindowHandler();
 	void SetGammaValue
 	(
@@ -129,7 +129,6 @@ private:
 		WPARAM wParam,
 		LPARAM lParam
 	);
-	HRESULT Load16bitGreyscaleBitmapFromMemory();
 	void CalcCursorPos();
 	void DrawScale();
 	void DrawVerticalLine(
@@ -143,7 +142,12 @@ private:
 		FLOAT strokeWidth
 	);
 	void DrawNumber(
-		D2D1_POINT_2F location, int number
+		D2D1_POINT_2F location,
+		int number
+	);
+	void Scale_setSkipLines(
+		int x,
+		int y
 	);
 	HWND m_hwnd;
 	ID2D1Factory *m_pD2DFactory;
@@ -170,7 +174,7 @@ private:
 		UINT16 white = 0xFFFF;
 		UINT16 black = 0;
 	} _gamma;
-	struct _Margin
+	const struct _Margin
 	{
 		FLOAT top = 0;
 		FLOAT left = 35;
