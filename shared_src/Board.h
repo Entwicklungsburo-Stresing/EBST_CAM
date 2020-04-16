@@ -100,8 +100,6 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 unsigned int __stdcall ReadFFLoopThread( void *parg ); //jungo dma
 ULONG GetLastMaxLines( void );
 UINT64 GetISRTime( void );
-// software ring buffer thread functions
-void ReadRingLine( void* pdioden, UINT32 lno ); // read line with index lno to pdioden
 //start<0 is in the past, stop>0 is in the future, relative to call of this function
 BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch ); //read state of trigger in signals during thread loop
 void SetExtSWTrig( BOOL ext );
