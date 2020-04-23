@@ -594,7 +594,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		else FFTMenuEnable = MF_GRAYED;
 		EnableMenuItem( GetMenu( hWnd ), ID_SETRANGEOFINTEREST_3RANGES, FFTMenuEnable );
 		EnableMenuItem( GetMenu( hWnd ), ID_SETRANGEOFINTEREST_5RANGES, FFTMenuEnable );
-		EnableMenuItem( GetMenu( hWnd ), ID_SETRANGEOFINTEREST_NORANGES, FFTMenuEnable );
+		EnableMenuItem( GetMenu( hWnd ), ID_SETFULLBINNING, FFTMenuEnable );
 
 		//if nos or nospb becomes a higher value then 30000 the gui is not posible to deisplay it
 		//so we are checking this and dividing the displayed value. Therefore we are seeing a wrong value when we are using the trackbar
@@ -756,8 +756,11 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case ID_SETRANGEOFINTEREST_5RANGES:
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_SETROI_5 ), hWnd, (DLGPROC)Set5ROI );
 			break;
-		case ID_SETRANGEOFINTEREST_NORANGES:
-			DialogBox( hInst, MAKEINTRESOURCE( IDD_RESETROI ), hWnd, (DLGPROC)ResetROI );
+		case ID_SETFULLBINNING:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_FULLBIN), hWnd, (DLGPROC)FullBinning);
+			break;
+		case ID_AREAMODE:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_SETAREA), hWnd, (DLGPROC)AreaMode);
 			break;
 		case IDM_ShowTRMS: //invert state
 			if (ShowTrms == TRUE)
@@ -1138,6 +1141,10 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 
 		case IDOK:
 			EXTTRIGFLAG = IsDlgButtonChecked( hDlg, IDC_ExtTrig );
+
+			//for I-Input Plug
+			ResetS0Bit(4, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			ResetS0Bit(5, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
 			val = GetDlgItemInt( hDlg, IDC_M_EXPTIME, &success, FALSE );
 			if (success) ExpTime = val;
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO1 ) == BST_CHECKED) TrigMod = 0;
@@ -1185,7 +1192,7 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 		SetDlgItemInt( hDlg, IDC_nob, Nob, FALSE );
 		SetDlgItemInt( hDlg, IDC_nospb, Nospb, FALSE );
 		//set Nos to readonly if #this fundtion is called by Range Of Interest fundtion
-		SendMessage( GetDlgItem( hDlg, IDC_nospb ), EM_SETREADONLY, ROI_CALLING, 0L );
+		SendMessage( GetDlgItem( hDlg, IDC_nospb ), EM_SETREADONLY, CALLING_WITH_NOS, 0L );
 #ifndef _DLL
 		FreeMemInfo( &builtinram, &freeram );
 #else
@@ -1728,9 +1735,9 @@ LRESULT CALLBACK Set3ROI( HWND hDlg,
 #endif
 				//allocate Buffer with matching NOS
 			Nospb = ROI;
-			ROI_CALLING = TRUE;
+			CALLING_WITH_NOS = TRUE;
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
-			ROI_CALLING = FALSE;
+			CALLING_WITH_NOS = FALSE;
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
@@ -1840,9 +1847,9 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 #endif
 			//allocate Buffer with matching NOS
 			Nospb = ROI;
-			ROI_CALLING = TRUE;
+			CALLING_WITH_NOS = TRUE;
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
-			ROI_CALLING = FALSE;
+			CALLING_WITH_NOS = FALSE;
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
@@ -1852,7 +1859,7 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 	return (FALSE);
 }
 
-LRESULT CALLBACK ResetROI( HWND hDlg,
+LRESULT CALLBACK FullBinning( HWND hDlg,
 	UINT message,
 	WPARAM wParam,
 	LPARAM lParam )
@@ -1901,6 +1908,61 @@ LRESULT CALLBACK ResetROI( HWND hDlg,
 	}
 	return (FALSE);
 }
+
+LRESULT CALLBACK AreaMode(HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
+{
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return (TRUE);
+		break;
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDCANCEL:
+			EndDialog(hDlg, TRUE);
+			return (TRUE);
+			break;
+
+		case IDOK:
+#ifndef _DLL
+			//set auto start
+			SetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			ResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			ResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			//Triger stuff
+			ResetS0Bit(4, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			ResetS0Bit(5, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			//Reset partial binning
+			WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
+			//vclks
+			SetupVCLKReg(choosen_board, 1, Vfreqini);
+#else
+			//set auto start 
+			DLLSetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			DLLResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			DLLResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			//int partial binning
+			DLLWriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,#
+			DLLSetupVCLK(choosen_board, _FFTLINES, 7);
+#endif
+			//allocate Buffer with matching NOS
+			Nospb = _FFTLINES;
+			CALLING_WITH_NOS = TRUE;
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hMSWND, (DLGPROC)AllocateBuf);
+			CALLING_WITH_NOS = FALSE;
+			EndDialog(hDlg, TRUE);
+			return (TRUE);
+			break;
+		}
+		break; //WM_COMMAND
+	}
+	return (FALSE);
+}
+
 
 LRESULT CALLBACK SetGamma( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
