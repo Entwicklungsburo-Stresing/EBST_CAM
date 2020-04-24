@@ -55,7 +55,7 @@ enum adc_mode
 #define _USESHUTTER FALSE	//TRUE if sensor has shutter function
 //#define _PRGRMVON FALSE		//TRUE for SENDCOMMAND with VON instead of ND
 //#define _OPTSTATE FALSE //decrement pixel if shutterstate input with OPTO1 is used on old boards
-#define _MSHUT TRUE
+#define _MSHUT FALSE
 #define _MINREPTIME 20
 //ADC16061 specials
 //#define _FFPCI133 FALSE		// PCI version 133.x
@@ -142,7 +142,7 @@ static int YSHIFT = 8;			// 16bit=8
 // camera values for calling GETCCD and InitBoard
 static	unsigned long _FKT = 1;		// -1:clearread, 0:datab=0, 1:read 5: testdata
 									//, 2:add ; not implemented in DMA is 3:sub 
-#define _FFTLINES 128 		// no of vertical lines of FFT sensors, usually 64
+#define _FFTLINES 256 		// no of vertical lines of FFT sensors, usually 64
 							// =0 if not FFT
 #define _ISPDA FALSE			//set RS after read; TRUE for HA S39xx
 #define _ISFFT TRUE		//set vclk generator; TRUE for HA S703x
@@ -150,7 +150,7 @@ static	unsigned long _FKT = 1;		// -1:clearread, 0:datab=0, 1:read 5: testdata
 //#define _HA_MODULE FALSE		//TRUE for HA module C7041 or C8061
 //vclk frequency 
 
-#define Vfreqini 7		//vclk freq for FFTs with FIFO in divider of12MHz (0..15)
+#define Vfreqini 40		//vclk freq for FFTs with FIFO in divider of12MHz (0..15)
 						//=3 for highest speed with 7030-0906
 //#define _ARRAYLINES 0		//=0 only for Andanta IR area sensor =256
 //static	unsigned long ZADR = 1;		// Adress for adressed mode
@@ -296,7 +296,7 @@ LRESULT CALLBACK Set5ROI(HWND hDlg,
 	WPARAM wParam,
 	LPARAM lParam);
 
-LRESULT CALLBACK ResetROI(HWND hDlg,
+LRESULT CALLBACK FullBinning(HWND hDlg,
 	UINT message,
 	WPARAM wParam,
 	LPARAM lParam);

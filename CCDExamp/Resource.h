@@ -19,9 +19,9 @@
 #define IDD_CHOOSEBOARD                 111
 #define IDD_SETROI_3                    112
 #define IDD_SETROI_5                    113
-#define IDD_SETROI_6                    114
-#define IDD_RESETROI                    114
+#define IDD_FULLBIN                     114
 #define IDD_SETGAMMA                    116
+#define IDD_SETAREA                     117
 #define IDC_ADAMP                       1002
 #define IDC_M_EXPTIME                   1003
 #define IDC_TLevel                      1004
@@ -108,15 +108,17 @@
 #define ID_2DVIEW_SETGAMMA              40027
 #define ID_START_SETRANGEOFINTEREST     40028
 #define ID_SETRANGEOFINTEREST_3RANGES   40029
-#define ID_SETRANGEOFINTEREST_5RANGES   40030
-#define ID_SETRANGEOFINTEREST_NORANGES  40031
-#define ROI_ERR_MESS                    40032
-#define ID_START_STARTCONTINUOUSLY      40032
+#define ID_SETRANGEOFINTEREST_AREAMODE  40033
+#define ID_AREAMODE                     40034
+#define ID_SETRANGEOFINTEREST_5RANGES   40130
+#define ID_SETFULLBINNING               40131
+#define ROI_ERR_MESS                    40132
+#define ID_START_STARTCONTINUOUSLY      40133
+#define ranges                          40134
+#define text3                           40135
+#define text2                           40136
 #define IDC_EDIT1                       -1
 #define IDC_STATIC                      -1
-#define ranges                          65535
-#define text3                           65535
-#define text2                           65535
 
 // Next default values for new objects
 // 
@@ -124,7 +126,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        117
-#define _APS_NEXT_COMMAND_VALUE         40033
+#define _APS_NEXT_COMMAND_VALUE         40035
 #define _APS_NEXT_CONTROL_VALUE         1032
 #define _APS_NEXT_SYMED_VALUE           103
 #endif
