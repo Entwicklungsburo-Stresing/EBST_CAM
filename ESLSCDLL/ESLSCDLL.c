@@ -126,7 +126,7 @@ DllAccess void DLLCCDDrvExit( UINT32 drvno )
 /**
 \brief Initialize the PCIe board. Must be called once at the start.
 	Is called automatically for 2 boards.
-\param drv board number (=1 if one PCI board)
+\param drvno board number (=1 if one PCI board)
 \param camcnt amount of cameras
 \param pixel number of all pixel (active + dummy pixel)
 \param flag816 =1 if AD resolution 12 to 16 bit, =2 if 8bit
@@ -136,14 +136,14 @@ DllAccess void DLLCCDDrvExit( UINT32 drvno )
 */
 DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 flag816, UINT32 pclk, UINT32 xckdelay )
 {								
- //if (!InitBoard(drv)) return 0; //must be called once before any other
+ //if (!InitBoard(drvno)) return 0; //must be called once before any other
  //if FIFO pclk=waits : read frequency; waits is set = 0 for max. FIFO read frequency
  // NO FIFO version: pclk not used.
 	InitBoard( drv );
 	if (!SetBoardVars( drv, camcnt, pixel, flag816, xckdelay )) return 0; //sets data for transfer
 	_PIXEL = pixel; // set globals
 	ADRDELAY = xckdelay;
-	// AboutS0(drv);
+	// AboutS0(drvno);
 	return 1; // no error
 }
 
@@ -248,9 +248,9 @@ DllAccess double DLLCalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exp
 /**
 \copydoc HighSlope
 */
-DllAccess void DLLHighSlope( UINT32 drv )
+DllAccess void DLLHighSlope( UINT32 drvno )
 {
-	HighSlope( drv );
+	HighSlope( drvno );
 	return;
 }
 
@@ -434,13 +434,13 @@ Call this func once as it takes time to allocate the resources.
 But be aware: the buffer size and nos is set here and may not be changed later.
 If size changes: DLLClenupDMA and DLLSetupDMA must be called.
 Read nos lines from FIFO, copy to just just one very big contigous block: pdioden.
-\param drv
-\param pdioden
-\param nos
-\param nob
+\param drvno PCIe board identifier.
+\param pdioden Pointer to destination.
+\param nos number of samples
+\param nob number of blocks
 \return none
 */
-DllAccess void DLLSetupDMA( UINT32 drv, void*  pdioden, UINT32 nos, UINT32 nob )
+DllAccess void DLLSetupDMA( UINT32 drv, void* pdioden, UINT32 nos, UINT32 nob )
 {
  //local declarations
  //	char string[20] = "";
@@ -494,7 +494,7 @@ Call this func once as it takes time to allocate the resources.
 But be aware: the buffer size and nos is set here and may not be changed later.
 If size changes: DLLClenupDMA and DLLSetupDMA must be called.
 Read nos lines from FIFO, copy to just  one very big contigous block: pDMABigBufBase.
-\param drv PCIe board identifier.
+\param drvno PCIe board identifier.
 \param nos number of samples
 \param nob number of blocks
 \return none
@@ -533,7 +533,7 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 	/*if (!DBGNOCAM)
 	{
 		//Check if Camera there
-		if (!FindCam(drv))
+		if (!FindCam(drvno))
 		{
 			ErrorMsg("no Camera found");
 			return;
@@ -566,7 +566,7 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 		WDC_Err( "ERROR for buffer %d: available memory: %lld MB \n \tmemory needed: %lld MB\n", NUMBER_OF_BOARDS, memory_free_mb, needed_mem_mb );
 	}
 	//pDIODEN = (pArrayT)calloc(nob, nospb * _PIXEL * sizeof(ArrayT));
-	//pDMABigBufBase[drv] = pdioden;
+	//pDMABigBufBase[drvno] = pdioden;
 	UserBufInScans = nos;  //one buffer for all
 
 	//ErrorMsg(" Camera found"); //without this message is a crash in the first call ...
@@ -583,7 +583,7 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 
 /**
 \brief Copies one frame of pixel data to pdioden.
-\param drv indentifier of PCIe card
+\param drvno indentifier of PCIe card
 \param curr_nos position in samples (0...nos)
 \param curr_nob position in blocks (0...nob)
 \param curr_cam position in camera count (0...CAMCNT)
@@ -596,8 +596,8 @@ DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UIN
 	void* pframe = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, curr_cam );
 	memcpy( pdioden, pframe, length * sizeof( USHORT ) );  // length in bytes
 	/*
-	WDC_Err( "RETURN FRAME: drv: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, _PIXEL: %u, length: %u\n", drv, curr_nos, curr_nob, curr_cam, _PIXEL, length );
-	WDC_Err("FRAME2: address Buff: 0x%x \n", pDMABigBufBase[drv]);
+	WDC_Err( "RETURN FRAME: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, _PIXEL: %u, length: %u\n", drvno, curr_nos, curr_nob, curr_cam, _PIXEL, length );
+	WDC_Err("FRAME2: address Buff: 0x%x \n", pDMABigBufBase[drvno]);
 	WDC_Err("FRAME2: address pdio: 0x%x \n", pdioden);
 	WDC_Err("FRAME3: pix42 of ReturnFrame: %d \n", *((USHORT*)pdioden + 420));
 	WDC_Err("FRAME3: pix43 of ReturnFrame: %d \n", *((USHORT*)pdioden + 422));
@@ -611,7 +611,11 @@ DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UIN
 \param exptus exposure time in micro sec. If this entry is used, freq must be set to 0
 \param exttrig true (not 0) if external trigger for each scan, 0 else
 \param blocktrigger true (not 0) if one external trigger starts block of nos scans which run with internal timer
-\param btrig_ch
+\param btrig_ch 
+	- btrig_ch=0 -> no read of state is performed
+	- btrig_ch=1 is pci tig in
+	- btrig_ch=2 is opto1
+	- btrig_ch=3 is opto2
 \return none
 */
 DllAccess void nDLLReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch )
@@ -627,8 +631,8 @@ DllAccess void nDLLReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, U
 //}
 /*
 	if (NUMBER_OF_BOARDS == 2 && (cam_sel == 2 || cam_sel == 3)){
-		//struct has to be volatile, if not readffloop is always called with drv=1
-		params2.drv = 2;
+		//struct has to be volatile, if not readffloop is always called with drvno=1
+		params2.drvno = 2;
 		params2.exptus = exptus;
 		params2.exttrig = exttrig;
 		params2.blocktrigger = blocktrigger;
@@ -929,6 +933,9 @@ DllAccess void DLLSetGammaValue( UINT16 white, UINT16 black )
 	return;
 }
 
+/**
+\copydoc InitGPX
+*/
 DllAccess void DLLInitGPX( UINT32 drvno, UINT32 delay )
 {
 	InitGPX( drvno, delay );

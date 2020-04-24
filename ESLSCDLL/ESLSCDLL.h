@@ -69,7 +69,7 @@ DllAccess void DLLAboutDrv( UINT32 drvno );	// displays the version and board ID
 DllAccess double DLLCalcRamUsageInMB( UINT32 nos, UINT32 nob );
 DllAccess double DLLCalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in_ms );
 //************	functions for managing controlbits in CtrlA register
-DllAccess void DLLHighSlope( UINT32 drv );		//set input Trigger slope high
+DllAccess void DLLHighSlope( UINT32 drvno );		//set input Trigger slope high
 DllAccess void DLLLowSlope( UINT32 drvno );		//set input Trigger slope low
 DllAccess void DLLBothSlope( UINT32 drvno );	//trigger on each slope
 DllAccess void DLLOutTrigHigh( UINT32 drvno );		//set output Trigger signal high
