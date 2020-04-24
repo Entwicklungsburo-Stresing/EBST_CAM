@@ -51,7 +51,7 @@ UINT16 direct2dviewer_gamma_white = 0xFFFF;
 UINT16 direct2dviewer_gamma_black = 0;
 UINT roi[6] = { 15, 42, 15, 42, 10, 6 };
 BOOL keep[5] = { FALSE, TRUE, FALSE, TRUE, FALSE };
-BOOL ROI_CALLING = FALSE;
+BOOL CALLING_WITH_NOS = FALSE;
 
 // function declerations
 BOOL RegisterWin95( CONST WNDCLASS* lpwc );
@@ -73,5 +73,6 @@ LRESULT CALLBACK SetupTLevel( HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 LRESULT CALLBACK SetupEC( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 LRESULT CALLBACK Set3ROI( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 LRESULT CALLBACK Set5ROI( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
-LRESULT CALLBACK ResetROI( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
+LRESULT CALLBACK FullBinning(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK AreaMode(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK SetGamma( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
