@@ -272,7 +272,7 @@ double TRMSval[4];
 \return none
 */
 void ErrMsgBoxOn( void )
-{//general switch to suppress error mesage box
+{
 	_SHOW_MSG = TRUE;
 }
 
@@ -282,7 +282,7 @@ void ErrMsgBoxOn( void )
 \return none
 */
 void ErrMsgBoxOff( void )
-{//general switch to suppress error mesage box
+{
 	_SHOW_MSG = FALSE;
 }
 
@@ -310,8 +310,11 @@ void ValMsg( UINT64 val )
 	}
 };
 
+/**
+\brief Regs des Contig DMA Buf.
+*/
 void AboutDMARegs( UINT32 drv )
-{//regs des Contig DMA Buf 
+{
 	HWND hWnd = GetActiveWindow();
 	int j = 0;
 #define s_size 1000
@@ -408,7 +411,7 @@ void AboutTLPs( UINT32 drvno )
 }//AboutTLPs
 
 /**
-\brief
+\brief Read registers of space0. Space0 are the control registers of the PCIe board.
 \param drvno PCIe board identifier
 \return none
 */
@@ -473,8 +476,11 @@ void AboutS0( UINT32 drvno )
 	return;
 }//AboutS0
 
+/**
+\return true if driver was found
+*/
 BOOL CCDDrvInit( void )
-{// returns true if driver was found
+{
 	//WDC_Err(drvno);
 	ULONG MAXDMABUFLENGTH = 0x07fff; //val look in registry driver parameters
 	//depends on os, how big a buffer can be
@@ -598,7 +604,6 @@ void CCDDrvExit( UINT32 drvno )
 
 BOOL InitBoard( UINT32 drvno )
 {
-
 	if ((drvno < 1) || (drvno > 2)) return FALSE;
 	//PWDC_DEVICE pDev = (PWDC_DEVICE)hDev;
 	volatile DWORD dwStatus = 0;
@@ -685,8 +690,11 @@ BOOL InitBoard( UINT32 drvno )
 };  // InitBoard
 
 //weg?
+/**
+\brief Get how many PCI boards are there.
+*/
 char CntBoards( void )
-{//get how many PCI boards are there
+{
 	int i = 0;
 	int foundBoards = 0;
 	ErrorMsg( "CntBoards.\n" );
@@ -801,7 +809,6 @@ BOOL ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 
 BOOL SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno )
 {
-
 	UINT64 PhysAddrDMABuf;
 	ULONG RegisterValues;
 	ULONG wr_addr_64bit_en = 0x1 << 19; //bit 19 is for 64bit enable
@@ -1066,7 +1073,9 @@ ULONG GetScanindex( UINT32 drvno )
 	return ldata;
 }
 
-//for the restpart of the buffer
+/**
+\brief For the rest part of the buffer.
+*/
 void GetLastBufPart( UINT32 drvno )
 {
 	//return;
@@ -1114,9 +1123,12 @@ void GetLastBufPart( UINT32 drvno )
 
 }//GetLastBufPart
 
+/**
+\brief This call comes every DMASPERINTR=500 here a DMASubBuf could be copied to the DMABigBuf.
+The INTR occurs every DMASPERINTR and copies this block of scans in sub blocks.
+*/
 void isr( UINT drvno, PVOID pData )
-{	//this call comes every DMASPERINTR=500 here a DMASubBuf could be copied to the DMABigBuf
-	// the INTR occurs every DMASPERINTR and copies this block of scans in sub blocks
+{
 	WDC_Err( "*isr(): 0x%x\n", IsrCounter );
 	WDC_Err( "DMA_bufsizeinbytes: 0x%x \n", DMA_bufsizeinbytes );
 	SetS0Bit( 3, DmaAddr_PCIEFLAGS, drvno );//set INTRSR flag for TRIGO
@@ -1235,9 +1247,12 @@ VOID DLLCALLCONV interrupt_handler1( PVOID pData ) { isr( 1, pData ); }
 
 VOID DLLCALLCONV interrupt_handler2( PVOID pData ) { isr( 2, pData ); }
 
+/**
+\brief Alloc DMA buffer - should only be called once.
+Gets address of DMASubBuf from driver and copy it later to our pDMABigBuf.
+*/
 BOOL SetupPCIE_DMA( UINT32 drvno, ULONG nos, ULONG nob )
-{	//alloc DMA buffer - should only be called once
-	//gets address of DMASubBuf from driver and copy it later to our pDMABigBuf
+{	
 	DWORD dwStatus;
 	PUSHORT tempBuf;
 	WDC_Err( "entered SetupPCIE_DMA\n" );
@@ -1363,8 +1378,11 @@ BOOL SetupPCIE_DMA( UINT32 drvno, ULONG nos, ULONG nob )
 	return TRUE;
 }//SetupPCIE_DMA
 
+/**
+\brief Starts transfer from PCIe board to PCs main RAM
+*/
 void StartPCIE_DMAWrite( UINT32 drvno )
-{	// starts transfer from PCIe board to PCs main RAM
+{
 	if (!HWDREQ_EN)
 	{
 
@@ -1442,13 +1460,14 @@ void RSInterface( UINT32 drvno )
 	for (i = 0; i < reg / 4; i++) WriteLongS0( drvno, 0, i * 4 );
 }
 
+/**
+\brief Initiates board registers.
+\param flag816 =1 for 16 bit (also 14 or 12bit), =2 for 8bit
+\param xckdelay set delay between XCK goes high and start of hor. clocks in reg XDLY 0x24
+\return TRUE if ok
+*/
 BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel, ULONG flag816, ULONG xckdelay )
-{	//	initiates board   Registers
-	//  flag816 =1 for 16 bit (also 14 or 12bit), =2 for 8bit
-	//	pclk -> not used
-	//  xckdelay set delay between XCK goes high and start of hor. clocks in reg XDLY 0x24
-	//	returns TRUE if ok
-
+{
 	BYTE data = 0;
 	UINT32 reg = 0;
 	ULONG i = 0;
@@ -1598,10 +1617,12 @@ BOOL BufLock( UINT drvno, UINT camcnt, int nob, int nospb )
 // camera read stuff
 
 //weg? wird viel gecalled
+/**
+\brief Example for resort array for 1 PCI board with 2 slots.
+Array type long 8bit vals in +0 port1 and +1 in port2.
+Resort for display -> port1 longs in DB1 and port2 longs in DB2.
+*/
 void Resort( UINT32 drvno, void* ptarget, void* psource )
-//		example for resort array for 1 PCI board with 2 slots
-//      array type long 8bit vals in +0 port1 and +1 in port2
-//		resort for display -> port1 longs in DB1 and port2 longs in DB2 
 {
 	ULONG i = 0;
 	ULONG barraylength = 0;
@@ -1777,11 +1798,13 @@ void Resort( UINT32 drvno, void* ptarget, void* psource )
 }	//Resort 
 
 //weg!?
-//replaced by StartReadWithDma
+/**
+\brief Replaced by StartReadWithDma.
+Here the standard read fkt=1 is implemented.
+Wrap call to WriteFile to avaoid driver problem if target array>4k.
+*/
 BOOL CallWRFile( UINT32 drvno, void* pdioden, ULONG arraylength, ULONG fkt )
-{	//here  the standard read fkt=1 is implemented
-	//wrap call to WriteFile to avaoid driver problem if target array>4k
-
+{	
 	BOOL fResult = FALSE;
 	DWORD   ReturnedLength = 0;
 	sCCDFkts CCDfkt;
@@ -1839,10 +1862,12 @@ BOOL CallWRFile( UINT32 drvno, void* pdioden, ULONG arraylength, ULONG fkt )
 // *********************** PCI board registers
 
 //weg!? verknüpft mir vi ReadFifo->alles weg!
+/**
+\brief here  the standard read fkt=1 is implemented
+FIFO version -> = ReadFifo with resort & for double line cams
+*/
 BOOL CallIORead( UINT32 drvno, void* pdioden, ULONG fkt )
-{	//here  the standard read fkt=1 is implemented
-	//FIFO version -> = ReadFifo with resort & for double line cams
-
+{
 	BOOL fResult = FALSE;
 	DWORD   ReturnedLength = 0;
 	sCCDFkts CCDfkt;
@@ -2097,17 +2122,14 @@ BOOL CallIORead( UINT32 drvno, void* pdioden, ULONG fkt )
 }//CallIORead
 
 /**
-\brief Read long (32 bit) from runtime register of PCIe board.
+\brief Read long (32 bit) from runtime register of PCIe board. This function reads the memory mapped data , not the I/O Data.
 \param drvno board number (=1 if one PCI board)
 \param DWData pointer to where data is stored
-\param PortOff PortOff of register (count in bytes)
-\return ==0 if error
+\param PortOff offset of register (count in bytes)
+\return ==0 if error, TRUE if success
 */
 BOOL ReadLongIOPort( UINT32 drvno, ULONG *DWData, ULONG PortOff )
-//this function reads the memory mapped data , not the I/O Data
-{// reads long of PCIruntime register LCR
-	// PortOff: Reg Offset from BaseAdress - in bytes
-	// on return -> TRUE if success
+{
 	volatile DWORD dwStatus = 0;
 	DWORD   ReturnedLength;
 	ULONG	PortOffset;
@@ -2136,13 +2158,11 @@ BOOL ReadLongIOPort( UINT32 drvno, ULONG *DWData, ULONG PortOff )
 \brief Read long (32 bit) from register in space0 of PCIe board.
 \param drvno board number (=1 if one PCI board)
 \param DWData pointer to where data is stored
-\param PortOff PortOff of register 0..3 (count in bytes)
-\return ==0 if error
+\param PortOff offset of register from base address (count in bytes)
+\return ==0 if error, TRUE if success
 */
 BOOL ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff )
-{// reads long on space0 area
-	// PortOff: Offset from BaseAdress - in Bytes !
-	// return -> TRUE if success
+{
 	volatile DWORD dwStatus = 0;
 	ULONG	PortOffset;
 
@@ -2204,16 +2224,14 @@ BOOL ReadLongDMA( UINT32 drvno, PULONG* pDWData, ULONG PortOff )
 };  // ReadLongDMA
 
 /**
-\brief Read byte (8 bit) from register in space0 of PCIe board.
+\brief Read byte (8 bit) from register in space0 of PCIe board, except r10-r1f.
 \param drvno board number (=1 if one PCI board)
 \param data pointer to where data is stored
-\param PortOff PortOff of register (count in bytes)
-\return ==0 if error
+\param PortOff offset of register from base address (count in bytes)
+\return ==0 if error, TRUE if success
 */
 BOOL ReadByteS0( UINT32 drvno, BYTE *data, ULONG PortOff )
-{// reads byte in space0 area except r10-r1f
-	// PortOff: Offset from BaseAdress - in Bytes !
-	// returns TRUE if success
+{
 	volatile DWORD dwStatus = 0;
 	DWORD   ReturnedLength;
 	ULONG	PortOffset;
@@ -2243,13 +2261,11 @@ BOOL ReadByteS0( UINT32 drvno, BYTE *data, ULONG PortOff )
 \brief Write long (32 bit) to register in space0 of PCIe board.
 \param drvno board number (=1 if one PCI board)
 \param DataL long value to write
-\param PortOff PortOff of register
-\return ==0 if error
+\param PortOff offset from base address of register (count in bytes)
+\return ==0 if error, TRUE if success
 */
 BOOL WriteLongIOPort( UINT32 drvno, ULONG DataL, ULONG PortOff )
-{	// writes long to PCIruntime register
-	// PortOff: Reg Offset from BaseAdress - in bytes
-	// returns TRUE if success
+{
 	BOOL fResult = FALSE;
 	sDLDATA WriteData;
 	ULONG	DataLength;
@@ -2284,15 +2300,11 @@ BOOL WriteLongIOPort( UINT32 drvno, ULONG DataL, ULONG PortOff )
 \brief Write long (32 bit) to register in space0 of PCIe board.
 \param drvno board number (=1 if one PCI board)
 \param DWData long value to write
-\param PortOff PortOff of register (count in bytes)
-\return ==0 if error
+\param PortOff offset of register from base address (count in bytes)
+\return ==0 if error, TRUE if success
 */
 BOOL WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff )
-{	// writes long to space0 register
-	// PortOff: Reg Offset from BaseAdress - in bytes
-	// returns TRUE if success
-
-
+{
 	volatile DWORD dwStatus = 0;
 	ULONG	PortOffset;
 	PULONG data = &DWData;
@@ -2404,16 +2416,14 @@ return TRUE;
 */
 
 /**
-\brief Write byte (8 bit) to register in space0 of PCIe board.
+\brief Write byte (8 bit) to register in space0 of PCIe board, except r10-r1f.
 \param drv board number (=1 if one PCI board)
 \param DataByte byte value to write
-\param PortOff PortOff of register (count in bytes)
-\return ==0 if error
+\param PortOff Offset drom BaseAdress of register (count in bytes)
+\return ==0 if error, TRUE if success
 */
 BOOL WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff )
-{	// writes byte to space0 register except r10-r1f
-	// PortOff: Reg Offset from BaseAdress - in bytes
-	// returns TRUE if success
+{
 	BOOL fResult = FALSE;
 	sDLDATA WriteData;
 	ULONG	DataLength;
@@ -2576,6 +2586,7 @@ void LowSlope( UINT32 drvno )
 
 /**
 \brief Functions for managing controlbits in CtrlA register. Set input Trigger slope high.
+\param drvno board number (=1 if one PCI board)
 */
 void HighSlope( UINT32 drvno )
 {// set bit D5
@@ -2670,9 +2681,9 @@ void OutTrigPulse( UINT32 drvno, ULONG PulseWidth )
 	OutTrigLow( drvno );
 };
 
-/*---------------------------------------------------------------------------*/
-
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//weg? ->in vi verknüpft und T elapsed ,  muss bleiben, oder? folgende triggerfkt. auch?
+/**
+\brief Returns if trigger or key.
 
 Wait for raising edge of Pin #17 SubD = D6 in CtrlA register
 ReturnKey is 0 if trigger, else keycode (except space )
@@ -2682,13 +2693,10 @@ D6 depends on Slope (D5)
 HighSlope = TRUE  : pos. edge
 HighSlope = FALSE : neg. edge
 
-if ExtTrigFlag=FALSE this function is used to get the keyboard input
-
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-
-//weg? ->in vi verknüpft und T elapsed ,  muss bleiben, oder? folgende triggerfkt. auch?
+\param drvno PCIe board identifier
+\param ExtTrigFlag =FALSE: this function is used to get the keyboard input
+*/
 void WaitTrigger( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrKey )
-// returns if Trigger or Key
 {
 	BOOL FirstLo = FALSE;
 	BOOL HiEdge = FALSE;
@@ -2724,13 +2732,16 @@ void WaitTrigger( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrKey )
 	if (Space) *SpaceKey = TRUE;	//stops after next trigger
 };// WaitTrigger
 
-// the triginput has an optional FF to detect short pulses
-// the FF is edge triggered and must be reset via RSTrigShort after each pulse to arm it again
-// it is enabled once by EnTrigShort()
-//
+/**
+\brief Returns if trigger or key.
 
+The triginput has an optional FF to detect short pulses.
+The FF is edge triggered and must be reset via RSTrigShort after each pulse to arm it again.
+It is enabled once by EnTrigShort()
+\param drvno PCIe board identifier
+\return none
+*/
 void WaitTriggerShort( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrKey )
-// returns if Trigger or Key
 {
 	BOOL FirstLo = FALSE;
 	BOOL HiEdge = FALSE;
@@ -2766,8 +2777,13 @@ void WaitTriggerShort( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *Abr
 	RSTrigShort( drvno );
 };// WaitTrigger^Short
 
+/**
+\brief Use the short trig pulse FF for ext TrigIn.
+\param drvno PCIe board identifier.
+\return none
+*/
 void EnTrigShort( UINT32 drvno )
-{//use the short trig pulse FF for ext TrigIn
+{
 	UCHAR CtrlA;
 	ReadByteS0( drvno, &CtrlA, S0Addr_CTRLA );
 	CtrlA |= 0x080;	// set trigger path to FF
@@ -2775,8 +2791,13 @@ void EnTrigShort( UINT32 drvno )
 	WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
 }; //EnTrigShort
 
+/**
+\brief Reset the short trig pulse FF.
+\param drvno PCIe board identifier.
+\return none
+*/
 void RSTrigShort( UINT32 drvno )
-{//reset the short trig pulse FF 
+{
 	UCHAR CtrlA;
 	ReadByteS0( drvno, &CtrlA, S0Addr_CTRLA );
 	CtrlA &= 0x0EF; // write CLR to FF
@@ -2785,8 +2806,11 @@ void RSTrigShort( UINT32 drvno )
 	WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
 }; //RSTrigShort
 
+/**
+\brief use the direct input for ext TrigIn
+*/
 void DisTrigShort( UINT32 drvno )
-{//use the direct input for ext TrigIn
+{
 	UCHAR CtrlA;
 	ReadByteS0( drvno, &CtrlA, S0Addr_CTRLA );
 	CtrlA &= 0x07F;	// set trigger path to FF
@@ -2833,11 +2857,12 @@ BOOL GetShutterState( UINT32 drvno )
 	return TRUE;
 }
 
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-/* set V_ON low (V = V_Fak)                                               */
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-
 //weg? ->vi, bleibt?!
+/**
+\brief set V_ON low (V = V_Fak) 
+\param drvno PCIe board identifier.
+\return none
+*/
 void V_On( UINT32 drvno )
 {
 	UCHAR CtrlA;
@@ -2846,10 +2871,11 @@ void V_On( UINT32 drvno )
 	WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
 }; //V_On
 
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-/* set V_ON high (V = 1)                                                  */
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-
+/**
+\brief set V_ON high (V = 1)
+\param drvno PCIe board identifier.
+\return none
+*/
 void V_Off( UINT32 drvno )
 {
 	UCHAR CtrlA;
@@ -2860,8 +2886,13 @@ void V_Off( UINT32 drvno )
 
 // optional Opto Couplers
 //weg? 
+/**
+\brief sets signal=low
+\param drvno PCIe board identifier
+\return none
+*/
 void SetOpto( UINT32 drvno, BYTE ch )
-{//sets signal=low
+{
 	BYTE ctrlc;
 	ReadByteS0( drvno, &ctrlc, S0Addr_CTRLC );
 	if (ch == 2) { ctrlc |= 0x04; }
@@ -2869,8 +2900,13 @@ void SetOpto( UINT32 drvno, BYTE ch )
 	WriteByteS0( drvno, ctrlc, S0Addr_CTRLC );
 }; //SetOpto
 
+/**
+\brief sets sets signal=high
+\param drvno PCIe board identifier
+\return none
+*/
 void RsetOpto( UINT32 drvno, BYTE ch )
-{ //sets signal=high
+{
 	BYTE ctrlc;
 	ReadByteS0( drvno, &ctrlc, S0Addr_CTRLC );
 	if (ch == 2) { ctrlc &= 0xfb; }
@@ -2878,8 +2914,13 @@ void RsetOpto( UINT32 drvno, BYTE ch )
 	WriteByteS0( drvno, ctrlc, S0Addr_CTRLC );
 }; //RsetOpto
 
+/**
+\brief no input or low -> high / high input -> low 
+\param drvno PCIe board identifier
+\return none
+*/
 BOOL GetOpto( UINT32 drvno, BYTE ch )
-{//no input or low -> high / high input -> low 
+{
 	BYTE ctrlc;
 	ReadByteS0( drvno, &ctrlc, S0Addr_CTRLC );
 	if (ch == 2) { ctrlc &= 0x04; }
@@ -2888,26 +2929,38 @@ BOOL GetOpto( UINT32 drvno, BYTE ch )
 	return FALSE;
 }; //GetOpto
 
-//weg? 
+//weg?
+/**
+\brief Sets delay after trigger gardware register.
+\param drvno PCIe board identifier.
+\param datin100ns Time in 100 ns steps.
+\return none
+*/
 void SetDAT( UINT32 drvno, UINT32 datin100ns )
-{//delay after trigger HW register
+{
 	datin100ns |= 0x80000000; // enable delay
 	WriteLongS0( drvno, datin100ns, S0Addr_DAT );
 }; //SetDAT
 
+/**
+\brief Resets delay after trigger hardware register.
+\param drvno PCIe board identifier.
+\return none
+*/
 void RSDAT( UINT32 drvno )
-{//delay after trigger HW register
+{
 	WriteLongS0( drvno, 0, S0Addr_DAT );
 }; //RSDAT
 
 /**
-\brief
+\brief Exposure control (EC) signal is used for mechanical shutter or sensors with EC function.
+Starts after delay after trigger (DAT) signal and is active for ecin100ns.
 \param drvno PCIe board identifier
-\param ecin100ns
+\param ecin100ns Time in 100 ns steps.
 \return none
 */
 void SetEC( UINT32 drvno, UINT32 ecin100ns )
-{//delay after trigger HW register
+{
 	//ULONG data = 0;
 	//ReadLongS0(drvno, &data, S0Addr_EC);
 	//ecin100ns |= data;
@@ -2916,12 +2969,12 @@ void SetEC( UINT32 drvno, UINT32 ecin100ns )
 }; //SetEC
 
 /**
-\brief 
+\brief Resets additional delay after trigger hardware register.
 \param drvno PCIe board identifier
 \return none
 */
 void ResetEC( UINT32 drvno )
-{//delay after trigger HW register
+{
 	WriteLongS0( drvno, 0, S0Addr_EC );
 }; //ResetEC
 
@@ -3008,7 +3061,7 @@ void SetISFFT( UINT32 drvno, BOOL set )
 }//SetISFFT
 
 /**
-\return Sets PDA sensor timing(set Reg TOR:D25 -> manual) or FFT.
+\brief Sets PDA sensor timing(set Reg TOR:D25 -> manual) or FFT.
 \param drvno board number (=1 if one PCI board)
 \param set if set is true (not 0)-> PDA, FFT else
 \return none
@@ -3105,10 +3158,11 @@ BOOL CheckFFTrig( UINT32 drvno ) //ext trigger in FF for short pulses
 //  Fifo only Functions
 
 //weg-> alte dma routine
+/**
+\brief old startringreadthread routine
+*/
 void StartReadWithDma( UINT32 drvno )
 {
-
-	//old startringreadthread routine
 	//	DMA_bufsizeinbytes = (DMABufSizeInScans + 10) * aPIXEL[drvno] * sizeof(USHORT);// +10;//+100 safty first if it is not right calculated
 	//	DMA_bufsizeinbytes = DMABufSizeInScans  * _PIXEL * sizeof(USHORT);// +10;//+100 safty first if it is not right calculated
 	if (_HWCH2) DMA_bufsizeinbytes *= 2;
@@ -3193,12 +3247,15 @@ void StartReadWithDma( UINT32 drvno )
 }//StartReadWithDma
 
 //weg?!
-//replaced by StartReadWithDma
+/**
+\brief Replaced by StartReadWithDma.
+*/
 void StopRingReadThread( void )
 {
 	RingCopyAct = FALSE;
 	RingThreadOn = FALSE;// global variable ends thread and frees mem
 }//StopRingFFTimer
+
 //weg?!
 void initReadFFLoop( UINT32 drv, UINT32 exptus, UINT8 exttrig, UINT32 * Blocks )
 {
@@ -3337,16 +3394,19 @@ int keyCheckForBlockTrigger( UINT32 board_sel )
 	return 0;
 }
 
+/**
+\brief Const burst loop with DMA initiated by hardware DREQ. Read nos lines from FIFO.
+\param exttrig Is TRUE if every single scan is triggered externally.
+\param blocktrigger Is TRUE if each block is triggered externally (by Input or btrigger generator
+\param btrig_ch 
+	- btrig_ch=0 -> no read of state is performed
+	- btrig_ch=1 is pci tig in
+	- btrig_ch=2 is opto1
+	- btrig_ch=3 is opto2
+\return none
+*/
 void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch )
-{//const burst loop with DMA initiated by hardware DREQ
-	//read nos lines from FIFO
-	//exttrig is TRUE if every single scan is triggered externally
-	//blocktrigger is TRUE if each block is triggered externally (by Input or btrigger generator
-	//btrig_ch=0 -> no read of state is performed
-	//btrig_ch=1 is pci tig in
-	//btrig_ch=2 is opto1
-	//btrig_ch=3 is opto2
-
+{
 	//local declarations
 	char string[20] = "";
 	void *dummy = NULL;
@@ -3584,10 +3644,12 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 }//ReadFFLoop
 
 //weg?!
-//B!void __cdecl ReadFFLoopThread(void *parg)//thread
+/**
+\brief Const burst loop with DMA initiated by hardware DREQ.
+Read nos lines from FIFO
+*/
 unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
-{//const burst loop with DMA initiated by hardware DREQ
-	//read nos lines from FIFO
+{
 	//struct has to be volatile, if not readffloop is always called with drv=1
 	volatile struct ffloopparams *par;
 	par = parg;
@@ -3599,7 +3661,6 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 
 	BOARD_SEL = board_sel;
 	//local declarations
-
 	SetPriority( READTHREADPriority );  //run in higher priority
 	escape_readffloop = FALSE;
 	IsrCounter = 0;
@@ -3608,11 +3669,8 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 	{
 		do
 		{
-
-
 			if (GetAsyncKeyState( VK_ESCAPE ))
 			{ //stop if ESC was pressed
-
 				if (board_sel == 1 || board_sel == 3)
 				{
 					StopFFTimer( 1 );
@@ -3625,11 +3683,9 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 					//SetIntFFTrig(drv);//disable ext input
 					SetDMAReset( 2 );	//Initiator reset
 				}
-
 				Running = FALSE;
 				return 1;
 			}
-
 			ReadFFLoop( board_sel, exptus, exttrig, blocktrigger, btrig_ch );
 			Sleep( 100 );
 		}
@@ -3639,21 +3695,26 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 	{
 		ReadFFLoop( board_sel, exptus, exttrig, blocktrigger, btrig_ch );
 	}
-
 	Running = FALSE;
 	//_endthread();//thread
 	return 1;//endthreadex is called automatically
-
 }
 
 //weg?!
+/**
+\return max no. of lines which accumulated.
+*/
 ULONG GetLastMaxLines( void )
-{	//returns the max no. of lines which accumulated
+{
 	return MaxLineCounter;
-};  // GetLastMaxLines
+};
+
 //weg?
+/**
+\return timespan for the ISR
+*/
 UINT64 GetISRTime( void )
-{	//returns the timespan for the ISR
+{
 	return MaxISRTime;
 };
 
@@ -3697,16 +3758,21 @@ BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch )
 }
 
 //weg?!
+/**
+\brief set the global flag - used in ringreadthread
+*/
 void SetExtSWTrig( BOOL ext )
-{//set the global flag - used in ringreadthread
+{
 	if (ext) RRT_ExtTrigFlag = TRUE;
 	else RRT_ExtTrigFlag = FALSE;
 }//SetExtSWTrig
 
-// Hardware Fifo fkts
-
+/**
+\brief Hardware Fifo fkts
+\param exptime in microsec
+*/
 void StartFFTimer( UINT32 drvno, UINT32 exptime )
-{//exptime in microsec
+{
 	UINT32 data = 0;
 	ReadLongS0( drvno, &data, S0Addr_XCKLL ); //reset	
 	data &= 0xF0000000;
@@ -3722,7 +3788,7 @@ void StartFFTimer( UINT32 drvno, UINT32 exptime )
 \return none
 */
 void SWTrig( UINT32 drvno )
-{//start 1 write trigger to FIFO by software
+{
 	UCHAR reg = 0;
 	//	ReadByteS0(drvno,&reg,11);  //enable timer
 	//	reg |= 0x40;  
@@ -3742,8 +3808,11 @@ void StopFFTimer( UINT32 drvno )
 	WriteByteS0( drvno, data, S0Addr_XCKMSB );
 }
 
+/**
+\brief Check if timer is active.
+*/
 BOOL IsTimerOn( UINT32 drvno )
-{	//check if timer is active 
+{
 	BYTE data = 0;
 	ReadByteS0( drvno, &data, S0Addr_XCKMSB );
 	data &= 0x40;
@@ -3769,14 +3838,16 @@ BOOL FFValid( UINT32 drvno )
 }
 
 //weg? wenn es bleibt, adresse ändern with enum
+/**
+\brief Fifo is full
+*/
 BOOL FFFull( UINT32 drvno )
-{	// Fifo is full
+{
 	WDC_Err( "FFFull\n" );
 	BYTE data = 0;
 	ReadByteS0( drvno, &data, S0Addr_FF_FLAGS );
 	data &= 0x20;
 	if (data > 0) return TRUE; //empty
-
 	return FALSE;
 }
 
@@ -3787,7 +3858,7 @@ BOOL FFFull( UINT32 drvno )
 \return Is true (not 0) if overflow occured (linecounter>0).
 */
 BOOL FFOvl( UINT32 drvno )
-{	// had Fifo overflow
+{
 	WDC_Err( "FFOvl\n" );
 	BYTE data = 0;
 	ReadByteS0( drvno, &data, S0Addr_FF_FLAGS );
@@ -3798,8 +3869,12 @@ BOOL FFOvl( UINT32 drvno )
 }
 
 //weg? wenn es bleibt, adresse ändern with enum
+/**
+\brief reset FIFO and FFcounter
+\param drvno PCIe board identifier.
+*/
 void RSFifo( UINT32 drvno )
-{	//reset FIFO and FFcounter
+{
 	BYTE data = 0;
 	ReadByteS0( drvno, &data, S0Addr_BTRIGREG );
 	data |= 0x80;
@@ -3865,18 +3940,15 @@ void SetupVCLKrt( ULONG vfreq )
 //weg? wenn es bleibt, adresse ändern with enum
 //not yet working
 /**
-\brief
+\brief Sets partial binning in registers R10,R11 and and R12. Only for FFT sensors.
 \param drvno PCIe board identifier
-\param range
-\param lines
-\param keep
+\param range specifies R 1..5
+\param lines number of vertical clks for next read
+\param keep TRUE if scan should be written to FIFO
 \return none
 */
 void SetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep )
-{	//partial binning in registers R10,R11 and and R12
-	//range: specifies R 1..5
-	//lines: number of vertical clks for next read
-	//keep: TRUE if scan should be written to FIFO
+{
 	WDC_Err( "entered SetupVPB with range: 0x%x , lines: 0x%x and keep: %x\n", range, lines, keep );
 	ULONG adr = 0;
 	lines *= 2; //vclks=lines*2
@@ -3979,14 +4051,13 @@ void SetupDELAY( UINT32 drvno, ULONG delay )
 
 //weg? wenn es bleibt, adresse ändern with enum
 /**
-\brief Set software to HA Module C8061 or C7041.
+\brief Set software to HA Module C8061 or C7041. Set the globals in BOARD
 \param irsingle IR single channel module (=1 for IR Module with 256 pixel)
 \param fftlines vertical lines of FFT sensor (=0 for IR)
 \return none
 */
 void SetupHAModule( BOOL irsingle, ULONG fftlines )
-{//set to module for C8061 & C7041
-	//set the globals in BOARD
+{
 	FFTLINES = fftlines;
 	HA_MODULE = TRUE;
 	HA_IRSingleCH = irsingle;
@@ -3996,9 +4067,11 @@ void SetupHAModule( BOOL irsingle, ULONG fftlines )
 // thread priority stuff
 
 //weg?!! connected with readffloop wenn es bleibt, adresse ändern with enum
+/**
+\brief Converts threadp value (1..31) to process priority class and thread priority level.
+*/
 BOOL ThreadToPriClass( ULONG threadp, DWORD *priclass, DWORD *prilevel )
-{ //converts threadp value (1..31) to process priority class and thread priority level 
-
+{
 	DWORD propriclass[31] = { IDLE_PRIORITY_CLASS, IDLE_PRIORITY_CLASS, IDLE_PRIORITY_CLASS, IDLE_PRIORITY_CLASS, IDLE_PRIORITY_CLASS, IDLE_PRIORITY_CLASS,
 		NORMAL_PRIORITY_CLASS, NORMAL_PRIORITY_CLASS, NORMAL_PRIORITY_CLASS, NORMAL_PRIORITY_CLASS, NORMAL_PRIORITY_CLASS,
 		HIGH_PRIORITY_CLASS, HIGH_PRIORITY_CLASS, HIGH_PRIORITY_CLASS, HIGH_PRIORITY_CLASS,
@@ -4059,8 +4132,11 @@ BOOL SetPriority( ULONG threadp )
 
 // System Timer in Ticks
 //weg? stimmt diese Umrechnung noch?
+/**
+\brief Converts Large to Int64.
+*/
 UINT64 LargeToInt( LARGE_INTEGER li )
-{ //converts Large to Int64
+{
 	UINT64 res = 0;
 	res = li.HighPart;
 	res = res << 32;
@@ -4069,9 +4145,12 @@ UINT64 LargeToInt( LARGE_INTEGER li )
 } //LargeToInt
 
 //weg?
+/**
+\brief Init high resolution counter.
+\return TPS ticks per sec
+*/
 LONGLONG InitHRCounter()
-{//returns TPS ticks per sec
-	// init high resolution counter 
+{
 	BOOL ifcounter;
 	UINT64 tps = 0;
 	LARGE_INTEGER freq;
@@ -4086,7 +4165,6 @@ LONGLONG InitHRCounter()
 	WDC_Err( "TPS: %lld\n", tps );
 
 	return tps;
-
 } // InitHRCounter
 
 /**
@@ -4104,11 +4182,10 @@ LONGLONG ticksTimestamp()
 }//ticksTimestamp
 
 /** 
-\brief Calc delay in ticks from us
+\brief Calc delay in ticks from us. Init high resolution counter and calcs DELAYTICKS from m_belPars.m_belDelayMsec.
 */
 UINT64 ustoTicks( ULONG us )
-{// init high resolution counter 
-	// and calcs DELAYTICKS from m_belPars.m_belDelayMsec
+{
 	BOOL ifcounter;
 	UINT64 delaytks = 0;
 	UINT64 tps = 0; //ticks per second
@@ -4129,9 +4206,12 @@ UINT64 ustoTicks( ULONG us )
 } // ustoTicks
 
 //weg? wird das real benutzt
+/**
+\brief Init high resolution counter.
+\return ms
+*/
 UINT32 Tickstous( UINT64 tks )
-{// init high resolution counter 
-	// and returns ms
+{
 	BOOL ifcounter;
 	UINT64 delay = 0;
 	UINT64 tps = 0; //ticks per second
@@ -4150,8 +4230,11 @@ UINT32 Tickstous( UINT64 tks )
 	return (UINT32)delay;
 } // Tickstous
 
+/**
+\brief Reads EOI Signal = D4 CTRLC.
+*/
 BOOL TempGood( UINT32 drvno, UINT32 ch )
-{//reads EOI Signal = D4 CTRLC
+{
 	BYTE CtrlC = 0;
 	ReadByteS0( drvno, &CtrlC, 6 );
 
@@ -4198,7 +4281,7 @@ BOOL TempGood( UINT32 drvno, UINT32 ch )
 \return none
 */
 void SetTemp( UINT32 drvno, UINT8 level )
-{// set temperature controler (8 levels)
+{
 	if (level >= 8) level = 0;
 	SendFLCAM( drvno, maddr_cam, cam_adaddr_coolTemp, level );
 	return;
@@ -4206,9 +4289,11 @@ void SetTemp( UINT32 drvno, UINT8 level )
 
 // *****   new HS CAM stuff
 //weg??? bleibt, oder?
+/**
+\brief RS scan counter. Is read only - but highest bit=reset.
+*/
 void RS_ScanCounter( UINT32 drv )
-{	//RS scan counter
-	//is read only - but highest bit=reset
+{
 	UINT32 dwdata = 0;
 	dwdata = 0x80000000; //set
 	WriteLongS0( drv, dwdata, DmaAddr_ScanIndex );
@@ -4216,9 +4301,11 @@ void RS_ScanCounter( UINT32 drv )
 	WriteLongS0( drv, dwdata, DmaAddr_ScanIndex );
 }//RS_ScanCounter
 
+/**
+\brief Iis read only - but highest bit=reset.
+*/
 void RS_BlockCounter( UINT32 drv )
-{	// RS_BlockCounter 
-	//is read only - but highest bit=reset
+{
 	UINT32 dwdata = 0;
 	dwdata = 0x80000000; //set
 	WriteLongS0( drv, dwdata, DmaAddr_BLOCKINDEX );
@@ -4226,11 +4313,15 @@ void RS_BlockCounter( UINT32 drv )
 	WriteLongS0( drv, dwdata, DmaAddr_BLOCKINDEX );
 }//RS_BlockCounter
 
+/**
+\brief Reset the internal intr collect counter.
+\param drv board number
+\param hwstop timer is stopped by hardware if nos is reached
+\return none
+*/
 void RS_DMAAllCounter( UINT32 drv, BOOL hwstop )
-{	//drv : board number
-	//hwstop: timer is stopped by hardware if nos is reached
+{
 	UINT32 dwdata = 0;
-	//reset the internal intr collect counter
 	//Problem: erste scan löst INTR aus
 	//aber ohne: erste Block ist 1 zu wenig!0, -> in hardware RS to 0x1
 
@@ -4269,8 +4360,13 @@ void RS_DMAAllCounter( UINT32 drv, BOOL hwstop )
 }//RS_DMAAllCounter
 
 //weg?
+/**
+\brief Test if SFP module is there and fiber is linked up.
+\param drv PCIe board identifier.
+\return True if cam found.
+*/
 BOOL FindCam( UINT32 drv )
-{//test if SFP module is there and fiber is linked up
+{
 	UINT32 dwdata = 0;
 	ReadLongS0( drv, &dwdata, 0x40 );  // read in PCIEFLAGS register
 	if ((dwdata & 0x80000000) > 0)
@@ -4284,8 +4380,6 @@ BOOL FindCam( UINT32 drv )
 		ErrorMsg( "Fiber connection error" );
 		return FALSE;
 	}
-
-
 	return TRUE;
 }//FindCam
 
@@ -4293,6 +4387,16 @@ BOOL FindCam( UINT32 drv )
 \brief Set gain for ADS5294.
 
 fkt =0 reset to db=0, fkt=1 set to g1..g8
+\param drvno PCIe board identifier.
+\param g1 channel 1
+\param g2 channel 2
+\param g3 channel 3
+\param g4 channel 4
+\param g5 channel 5
+\param g6 channel 6
+\param g7 channel 7
+\param g8 channel 8
+\return none
 */
 void SetADGain( UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8 )
 {
@@ -4339,7 +4443,7 @@ void SetADGain( UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4,
 }//SetGain
 
 /**
-\brief Sends data via fibre link to DAC8568.
+\brief Sends data via fibre link to DAC8568. Mapping of bits in DAC8568: 4 prefix, 4 control, 4 address, 16 data, 4 feature.
 \param drvno board number (=1 if one PCI board)
 \param ctrl 4 control bits
 \param addr 4 address bits
@@ -4348,8 +4452,7 @@ void SetADGain( UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4,
 \return none
 */
 void SendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature )
-{	//send data to DAC8568
-	//mapping of bits DAC8568:	4 prefix, 4 control, 4 address, 16 data, 4 feature
+{
 	UINT16	hi_bytes = 0,
 		lo_bytes = 0;
 	BYTE	maddr_DAC = 0b11,
@@ -4413,39 +4516,23 @@ void FreeMemInfo( UINT64 *pmemory_all, UINT64 *pmemory_free )
 {
 	// Use to convert bytes to KB
 #define DIV 1024
-
 	// Specify the width of the field in which to print the numbers. 
 	// The asterisk in the format specifier "%*I64d" takes an integer 
 	// argument and uses it to pad and right justify the number.
 #define WIDTH 7
-
-
 	MEMORYSTATUSEX statex;
-
 	statex.dwLength = sizeof( statex );
-
 	GlobalMemoryStatusEx( &statex );
-
 	//_tprintf(TEXT("There is  %*ld percent of memory in use.\n"),
 	//	WIDTH, statex.dwMemoryLoad);
-
-
 	//_tprintf(TEXT("There are %*I64d total KB of physical memory.\n"),
 	//	WIDTH, 
-
 	*pmemory_all = statex.ullTotalPhys;
-
-
 	// DIV);
 	//_tprintf(TEXT("There are %*I64d free  KB of physical memory.\n"),
 	//WIDTH, 
-
 	*pmemory_free = statex.ullAvailPhys;
-
-
 	// DIV);
-
-
 	//_tprintf(TEXT("There are %*I64d total KB of paging file.\n"),
 	//	WIDTH, statex.ullTotalPageFile / DIV);
 	//_tprintf(TEXT("There are %*I64d free  KB of paging file.\n"),
@@ -4454,13 +4541,10 @@ void FreeMemInfo( UINT64 *pmemory_all, UINT64 *pmemory_free )
 	//	WIDTH, statex.ullTotalVirtual / DIV);
 	//_tprintf(TEXT("There are %*I64d free  KB of virtual memory.\n"),
 	//	WIDTH, statex.ullAvailVirtual / DIV);
-
 	// Show the amount of extended memory available.
-
 	//_tprintf(TEXT("There are %*I64d free  KB of extended memory.\n"),
 	//	WIDTH, statex.ullAvailExtendedVirtual / DIV);
 	return;
-
 }
 
 void GetRmsVal( ULONG nos, ULONG *TRMSVals, double *mwf, double *trms )
@@ -4484,7 +4568,7 @@ void GetRmsVal( ULONG nos, ULONG *TRMSVals, double *mwf, double *trms )
 	}
 	*trms = sumvar / (nos - 10 + 1);
 	*trms = sqrt( *trms );
-
+	return;
 }//GetRmsVal
 
 /**
@@ -4578,10 +4662,10 @@ UINT8 WaitforTelapsed( LONGLONG musec )
 \brief Init routine for Camera System 3001.
 	Sets register in camera.
 \param drvno selects PCIe board
-\param pixel pixel amount of camera
+\param pixel pixel count of camera
 \param trigger_input selects trigger input. 0 - XCK, 1 - EXTTRIG, 2 - DAT
 \param IS_FFT =1 vclk on, =0 vclk off
-\param IS_AREA
+\param IS_AREA =1 area mode on, =0 area mode off
 \return void
 */
 void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA )
@@ -4612,7 +4696,7 @@ Sets register in camera and ADC LTC2271.
 */
 void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high )
 {
-	/*FL301 is intended for sensor S12198 !
+	/*FL3010 is intended for sensor S12198 !
 	with frame rate 8kHz = min. 125µs exp time*/
 	/*ADC LTC2271 neets a reset via SPI first. Bit D7
 	of the resetregister A0 with address 00h is set to 1.
@@ -4745,6 +4829,12 @@ BOOL ReadGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32* GPXData )
 	return TRUE;
 }
 
+/**
+\brief Initialize the TDC-GPX chip. TDC: time delay counter option.
+\param drvno PCIe board identifier.
+\param delay GPX offset is used to increase accuracy. A counter value can be added, usually 1000.
+\return
+*/
 void InitGPX( UINT32 drvno, UINT32 delay )
 {
 	HWND hWnd;
@@ -4790,7 +4880,7 @@ void InitGPX( UINT32 drvno, UINT32 delay )
 }
 
 /**
-\brief
+\brief Reads registers 0 to 12 of TDC-GPX chip. Time delay counter option.
 \param drvno PCIe board identifier
 \return none
 */
@@ -4914,14 +5004,16 @@ double CalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in
 }
 
 /**
-\brief
-\param drvno
-\param S1
-\param S2
+\brief Sets register BTRIGREG.
+
+The input trigger can be synchronized to S1 or S2 input. S1 or S2 is usally connected to a chopper signal. Set S1 or S2 to sync for blocktrigger. A block starts always to the chopper open signal. S1 and S2 can be used simultaneously as block trigger.
+\param drvno Identifier of PCIe board.
+\param S1 Input 1 of PCIe board. Set true (!=0) to use S1 as block trigger. Set to false (==0) to stop using S1 as block trigger.
+\param S2 Input 2 of PCIe board. Set true (!=0) to use S2 as block trigger. Set to false (==0) to stop using S2 as block trigger.
 \return none
 */
 void BlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 )
-{	//set s1 or s2 to sn#ync for Blocktrig
+{
 	BYTE data = 0;
 	BYTE mode = 0;
 	if (S1) mode |= 0b01;
