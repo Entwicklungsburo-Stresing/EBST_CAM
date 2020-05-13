@@ -1106,7 +1106,7 @@ void GetLastBufPart( UINT32 drvno )
 		pDMASubBuf_index += SubBufCounter[drvno] * DMA_bufsizeinbytes / DMA_HW_BUFPARTS;
 
 		memcpy( pDMABigBufIndex[drvno], pDMASubBuf_index, rest_in_bytes );
-		//memset(pDMABigBufIndex[drvno], 0x01, restlength); //  0xAAAA=43690 , 0101= 257
+		//memset(pDMABigBufIndex[drvno], 0x0101, rest_in_bytes ); //  0xAAAA=43690 , 0101= 257
 
 		//if (nos < spi)  // do not use INTR, but GetLastBufPart instead if nos is small enough
 		//	{pDMABigBufIndex[drvno] += rest_summary; } // may only be added here if no isr
@@ -1516,6 +1516,12 @@ BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel, ULONG flag816, ULON
 		20	1984
 		21	2048
 		22	2112
+		23  2176
+		...
+		41  4096
+		42  4160
+		...
+		82  8256
 		*/
 	switch (pixel)
 	{
@@ -1536,6 +1542,12 @@ BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel, ULONG flag816, ULON
 		break;
 	case 2112:
 		NO_TLPS = 0x22;//22
+		break;
+	case 4160:
+		NO_TLPS = 0x42;//42
+		break;
+	case 8256:
+		NO_TLPS = 0x82;//82
 		break;
 	default:
 		return FALSE;
