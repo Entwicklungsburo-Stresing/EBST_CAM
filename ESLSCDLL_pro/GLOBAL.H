@@ -5,20 +5,14 @@
 //
 #ifdef _DLL
 #define DllAccess __declspec( dllexport )
-
 #else
 #define DllAccess __declspec( dllimport )
+
 #endif
-
 #define DBGNOCAM	FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
-
-
 // set data array
-
 typedef USHORT ArrayT; //!! USHORT for linear 12/16bit word array or resort
 #define MAXVAL USHRT_MAX
-
-
 //for Win98
 typedef BYTE UINT8;
 typedef short INT16;
@@ -29,19 +23,10 @@ struct ffloopparams {
 	UINT8 blocktrigger;
 	UINT8 btrig_ch;
 };
-
-
 BOOL Running = FALSE;
-
 typedef ArrayT* pArrayT;
-
-
-#include "shared_src/board.h"
-
 // key to stop measure loop
-#define _ScanCode_End	 57 //E=18   Space 57
 #define _ScanCode_Cancel  01 //Q=16   ESC 01
-
 //TRUE if you use PS2 Keyboard, FALSE else
 // on WinNT/2000/xp the function GetAsyncKeystate works only
 // if the Thread Class is not highest or 
@@ -49,11 +34,7 @@ typedef ArrayT* pArrayT;
 // so here a special hardware read of PS2Keyboard is used
 // to avoid interrupt dependend routines; look BOARD->WaitTrigger
 #define _PS2KEYBOARD FALSE 
-
-
-#define	DRV		1	//1 if only one interface board LSCPCI1 or LSCISA1 in example
-						// could be 2..4 for multiple boards
-
+#define _HA_IR FALSE		//  must be true for Ha series G920x IR sensor - not for G11608
 #define _HA_IR FALSE		//  must be true for Ha series G920x IR sensor - not for G11608
 #define _IR2 FALSE			// must be true for 2 parallel IR sensors of series G920x
 //#define _TI FALSE			// must be true for TI TC253 sensor
@@ -144,3 +125,4 @@ int Nob = 10;
 int Nospb = 100;
 
 int newDLL = 0;
+void	*Direct2dViewer = NULL;
