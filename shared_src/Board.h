@@ -39,7 +39,7 @@ void StartPCIE_DMAWrite( UINT32 drvno );
 void CleanupPCIE_DMA( UINT32 drvno );
 int GetNumofProcessors();
 void RSInterface( UINT32 drvno );		//set all registers to zero
-BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel, ULONG flag816, ULONG xckdelay );
+BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel, ULONG xckdelay );
 void Resort( UINT32 drvno, void* ptarget, void* psource );
 BOOL CallWRFile( UINT32 drvno, void* pdioden, ULONG arraylength, ULONG fkt );
 BOOL CallIORead( UINT32 drvno, void* pdioden, ULONG fkt );
