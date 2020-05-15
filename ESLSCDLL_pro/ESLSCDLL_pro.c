@@ -64,6 +64,12 @@ BOOL WINAPI DLLMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved )
 	return(FALSE);
 }
 
+DllAccess void DLLInitProDll( UINT64 ppDMABigBufBase )
+{
+	pDMABigBufBase = ppDMABigBufBase;
+	return;
+}
+
 /**
 \brief Start 2d viewer.
 \param drvno board number
