@@ -44,7 +44,6 @@ void	*dummy;
 
 #include "GLOBAL.H"
 #include "shared_src/board.c"
-#include "shared_src/Direct2dViewer_c.h"
 //extern volatile PUSHORT pDMABigBufBase[3];
 
 volatile struct ffloopparams params, params2;
@@ -118,11 +117,6 @@ DllAccess void DLLDAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output ); /
 DllAccess void DLLFreeMemInfo( UINT64 * pmemory_all, UINT64 * pmemory_free );
 DllAccess void DLLErrorMsg( char ErrMsg[20] );
 DllAccess void DLLCalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );
-//************  2d greyscale viewer
-DllAccess void DLLStart2dViewer( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos );
-DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos );
-DllAccess void DLLDeinit2dViewer();
-DllAccess void DLLSetGammaValue( UINT16 white, UINT16 black );
 //************  GPX
 DllAccess void DLLInitGPX( UINT32 drvno, UINT32 delay );
 DllAccess void DLLAboutGPX( UINT32 drvno );
