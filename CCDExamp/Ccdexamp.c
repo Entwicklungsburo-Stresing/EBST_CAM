@@ -868,11 +868,11 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 		case VK_F7: //set high amp
 			HIAMP = TRUE;
-			V_On( choosen_board );
+			//TODO
 			break;
 		case VK_F8: //set low amp
 			HIAMP = FALSE;
-			V_Off( choosen_board );
+			//TODO
 			break;
 
 			//case VK_SHIFT:
@@ -904,7 +904,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			Running = FALSE;
 			//Sleep(20);
 			//CleanupPCIE_DMA(choosen_board);
-			StopRingReadThread();
+			//StopRingReadThread();
 			StopFFTimer( choosen_board );
 			SetIntFFTrig( choosen_board );//disables ext. Trig.
 			UpdateTxT();

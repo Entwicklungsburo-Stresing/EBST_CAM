@@ -134,8 +134,6 @@ static	unsigned long FOURMAX = _MAXDB * _PIXEL;
 // settings for 8 Bit cameras
 //static	unsigned long FLAG816 = 2;  // 2=8Bit, 1=12/16Bit
 //static int YSHIFT = 0;				// 8Bit=0, 12Bit=4 or more for ddrep>1
-// use these values for 12 or 16 Bit cameras 
-static	unsigned long FLAG816 = 1;  // 2=8Bit, 1=12/16Bit
 //static int YSHIFT = 4;				// 12Bit=4 or more for addrep>1
 static int YSHIFT = 8;			// 16bit=8
 //static int YSHIFT = 6;			// 14 bit
