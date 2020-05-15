@@ -11,12 +11,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\shared_src\Direct2dViewer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\shared_src\Direct2dViewer_c.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ESLSCDLL.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -31,13 +25,7 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\shared_src\Direct2dViewer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\shared_src\CCDCTL.H">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\shared_src\Direct2dViewer_c.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
