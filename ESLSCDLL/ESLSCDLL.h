@@ -55,7 +55,7 @@ DllAccess  void DLLErrMsgBoxOn( void );	//BOARD.C sends error messages on defaul
 DllAccess  void DLLErrMsgBoxOff( void );	//general deactivate of error message boxes
 DllAccess UINT8 nDLLCCDDrvInit( void );		// init the driver -> true if found
 DllAccess void DLLCCDDrvExit( UINT32 drvno );		// closes the driver
-DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 flag816, UINT32 pclk, UINT32 xckdelay );		// init the driver -> true if found
+DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 pclk, UINT32 xckdelay );		// init the driver -> true if found
 DllAccess UINT8 DLLReadByteS0( UINT32 drvno, UINT8 *data, UINT32 PortOff );// read byte from Port, PortOff = Regs of Board
 DllAccess UINT8 DLLWriteByteS0( UINT32 drv, UINT8 DataByte, UINT32 PortOff ); // writes DataByte to Port
 DllAccess UINT8 DLLReadLongS0( UINT32 drvno, UINT32 * DWData, UINT32 PortOff );	// read long from Port, PortOff Regs of Board
@@ -83,7 +83,6 @@ DllAccess void DLLSetExtTrig( UINT32 drvno );					// read to FIFO is triggered b
 DllAccess void DLLSetIntTrig( UINT32 drvno );					// read to FIFO is triggered by Timer
 DllAccess UINT8 DLLFFOvl( UINT32 drvno );					//TRUE if fifo overflow occured
 DllAccess void DLLSetupVCLK( UINT32 drvno, UINT32 lines, UINT8 vfreq );//set the VCLK regs
-DllAccess void DLLReadRingLine( pArrayT pdioden, UINT32 lno ); //read ring buffer line number lno 
 DllAccess UINT8 DLLBlockTrig( UINT32 drv, UCHAR btrig_ch ); //read trigger input ->ch=1:pci in, ch=2:opto1, ch=3:opto2
 //************ camera reads FIFO version
 DllAccess UINT8 DLLSetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno );
@@ -102,7 +101,6 @@ DllAccess void DLLSetTemp( UINT32 drvno, UINT8 level );
 DllAccess void DLLSetEC( UINT32 drvno, UINT64 ecin100ns );
 DllAccess void DLLResetEC( UINT32 drvno );
 DllAccess void DLLSetTORReg( UINT32 drvno, UINT8 fkt );
-DllAccess void DLLSetupDELAY( UINT32 drvno, UINT32 delay );
 DllAccess void DLLSetISPDA( UINT32 drvno, UINT8 set );
 DllAccess void DLLSetPDAnotFFT( UINT32 drvno, UINT8 set );
 DllAccess void DLLSetISFFT( UINT32 drvno, UINT8 set );
