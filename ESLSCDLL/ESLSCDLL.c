@@ -134,13 +134,13 @@ DllAccess void DLLCCDDrvExit( UINT32 drvno )
 \param xckdelay =3, depends on sensor, sets a delay after xck goes high, =7 for Sony sensors
 \return true if success
 */
-DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 flag816, UINT32 pclk, UINT32 xckdelay )
+DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 pclk, UINT32 xckdelay )
 {								
  //if (!InitBoard(drvno)) return 0; //must be called once before any other
  //if FIFO pclk=waits : read frequency; waits is set = 0 for max. FIFO read frequency
  // NO FIFO version: pclk not used.
 	InitBoard( drv );
-	if (!SetBoardVars( drv, camcnt, pixel, flag816, xckdelay )) return 0; //sets data for transfer
+	if (!SetBoardVars( drv, camcnt, pixel, xckdelay )) return 0; //sets data for transfer
 	_PIXEL = pixel; // set globals
 	ADRDELAY = xckdelay;
 	// AboutS0(drvno);
@@ -708,14 +708,6 @@ DllAccess void DLLSetTORReg( UINT32 drvno, UINT8 fkt )
 	return;
 }
 
-/**
-\copydoc SetupDELAY
-*/
-DllAccess void DLLSetupDELAY( UINT32 drvno, UINT32 delay )
-{
-	SetupDELAY( drvno, delay );
-	return;
-}
 
 /**
 \copydoc SetISPDA
@@ -762,15 +754,6 @@ DllAccess void DLLSetISFFT( UINT32 drvno, UINT8 set )
 DllAccess void DLLRsTOREG( UINT32 drvno )
 {
 	RsTOREG( drvno );
-	return;
-}
-
-/**
-\copydoc SetupHAModule
-*/
-DllAccess void DLLSetupHAModule( UINT8 irsingle, UINT32 fftlines )
-{
-	SetupHAModule( (irsingle != 0), fftlines );
 	return;
 }
 
