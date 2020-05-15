@@ -99,7 +99,7 @@ ULONG TLPSIZE;					//with0x21: crash
 WORD UserBufInScans;
 
 volatile USHORT*   pDMABigBufIndex[3] = { NULL, NULL, NULL };
-USHORT* pDMABigBufBase[3] = { NULL, NULL, NULL };
+USHORT** pDMABigBufBase;
 //UINT_PTR   pDMABigBufBase[3] = { NULL, NULL, NULL };
 
 //jungo
