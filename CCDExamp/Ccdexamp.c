@@ -1889,7 +1889,7 @@ LRESULT CALLBACK FullBinning( HWND hDlg,
 			//Reset partial binning
 			WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
 			//vclks
-			SetupVCLKReg( choosen_board, _FFTLINES, 7 );
+			SetupVCLKReg( choosen_board, _FFTLINES, Vfreqini);
 #else
 			//reset auto start in case of setting before
 			DLLResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
