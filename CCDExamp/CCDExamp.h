@@ -51,7 +51,7 @@ UINT16 direct2dviewer_gamma_white = 0xFFFF;
 UINT16 direct2dviewer_gamma_black = 0;
 UINT roi[6] = { 15, 42, 15, 42, 10, 6 };
 BOOL keep[5] = { FALSE, TRUE, FALSE, TRUE, FALSE };
-BOOL CALLING_WITH_NOS = FALSE;
+BOOL CALLING_WITH_NOS, CALLING_WITH_NOB = FALSE;
 
 // function declerations
 BOOL RegisterWin95( CONST WNDCLASS* lpwc );
