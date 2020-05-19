@@ -72,7 +72,7 @@ enum adc_mode
 #define DMA_BUFSIZEINSCANS 1000		//default: BUFSIZE=1000, INTR all 500
 #define DMA_HW_BUFPARTS 2
 #define DMA_DMASPERINTR DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb nochmal /2
-#define _PIXEL  1088				// no of pixels min 300, should be multiple of 300, max 8100
+#define _PIXEL  2112				// no of pixels min 300, should be multiple of 300, max 8100
 #define CAMCNT 1
 #if CAMCNT == 1
 BOOL DISP2 = FALSE;		//display 1 camera
@@ -140,15 +140,15 @@ static int YSHIFT = 8;			// 16bit=8
 // camera values for calling GETCCD and InitBoard
 static	unsigned long _FKT = 1;		// -1:clearread, 0:datab=0, 1:read 5: testdata
 									//, 2:add ; not implemented in DMA is 3:sub 
-#define _FFTLINES 256 		// no of vertical lines of FFT sensors, usually 64
+#define _FFTLINES 70 		// no of vertical lines of FFT sensors, usually 64
 							// =0 if not FFT
 #define _ISPDA FALSE			//set RS after read; TRUE for HA S39xx
 #define _ISFFT TRUE		//set vclk generator; TRUE for HA S703x
-#define _ISAREA TRUE	//set AREA Mode on CAMERA
+#define _ISAREA FALSE	//set AREA Mode on CAMERA
 //#define _HA_MODULE FALSE		//TRUE for HA module C7041 or C8061
 //vclk frequency 
 
-#define Vfreqini 40		//vclk freq for FFTs with FIFO in divider of12MHz (0..15)
+#define Vfreqini 30		//vclk freq for FFTs with FIFO in divider of12MHz (0..15)
 						//=3 for highest speed with 7030-0906
 //#define _ARRAYLINES 0		//=0 only for Andanta IR area sensor =256
 //static	unsigned long ZADR = 1;		// Adress for adressed mode
@@ -181,7 +181,7 @@ int XOFF = 1;// _PIXEL / 600;			// index offset for display
 int XStart = 0;						//start index of display
 static int	LOX = 21;				// left upper x-corner of plot
 static int	LOY = 41;				// left upper x-corner of plot
-static unsigned int XLENGTH = 1100;			// x-width of  plot
+static unsigned int XLENGTH = 2200;			// x-width of  plot
 static unsigned int YLENGTH = 255;			// y-width
 //static unsigned int YLENGTH = 510;			// zoom y
 BOOL PixelOdd = FALSE;				//display offset
