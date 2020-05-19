@@ -720,6 +720,11 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 		case ID_START_STARTCONTINUOUSLY:
 			contffloop = TRUE;
+			Nospb = 10;
+			Nob = 1;
+			CALLING_WITH_NOS = TRUE;
+			CALLING_WITH_NOB = TRUE;
+			DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
 			if (!Running) startMess( &dummy );
 			Sleep( 100 );
 			while (Running)
@@ -1193,6 +1198,9 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 		SetDlgItemInt( hDlg, IDC_nospb, Nospb, FALSE );
 		//set Nos to readonly if #this fundtion is called by Range Of Interest fundtion
 		SendMessage( GetDlgItem( hDlg, IDC_nospb ), EM_SETREADONLY, CALLING_WITH_NOS, 0L );
+		SendMessage( GetDlgItem( hDlg, IDC_nob ), EM_SETREADONLY, CALLING_WITH_NOB, 0L );
+		CALLING_WITH_NOS = FALSE;
+		CALLING_WITH_NOB = FALSE;
 #ifndef _DLL
 		FreeMemInfo( &builtinram, &freeram );
 #else
@@ -1737,7 +1745,6 @@ LRESULT CALLBACK Set3ROI( HWND hDlg,
 			Nospb = ROI;
 			CALLING_WITH_NOS = TRUE;
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
-			CALLING_WITH_NOS = FALSE;
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
@@ -1849,7 +1856,6 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 			Nospb = ROI;
 			CALLING_WITH_NOS = TRUE;
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
-			CALLING_WITH_NOS = FALSE;
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
@@ -1953,7 +1959,6 @@ LRESULT CALLBACK AreaMode(HWND hDlg,
 			Nospb = _FFTLINES;
 			CALLING_WITH_NOS = TRUE;
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hMSWND, (DLGPROC)AllocateBuf);
-			CALLING_WITH_NOS = FALSE;
 			EndDialog(hDlg, TRUE);
 			return (TRUE);
 			break;
