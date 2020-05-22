@@ -1,5 +1,5 @@
 #include <windows.h>
-#include "shared_src/Direct2dViewer_c.h"
+#include "Direct2dViewer_c.h"
 // Make this data shared among all 
 // all applications that use this DLL.
 //....................................
