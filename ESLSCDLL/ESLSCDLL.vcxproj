@@ -131,6 +131,11 @@
       <Culture>0x0407</Culture>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>copy $(OutputPath)$(ProjectName).lib $(SolutionDir)CCDExamp\
+copy $(TargetPath) $(SolutionDir)CCDExamp\$(IntermediateOutputPath)</Command>
+      <Message>copy $(ProjectName) output to CCDExamp</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -179,10 +184,11 @@
       <AdditionalDependencies>$(SolutionDir)Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);windowscodecs.lib;d2d1.lib;dxguid.lib;dwrite.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(OutputPath)$(ProjectName).lib $(SolutionDir)CCDExamp\</Command>
+      <Command>copy $(OutputPath)$(ProjectName).lib $(SolutionDir)CCDExamp\
+copy $(TargetPath) $(SolutionDir)CCDExamp\$(IntermediateOutputPath)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>copy $(ProjectName).lib to CCDExamp</Message>
+      <Message>copy $(ProjectName) output to CCDExamp</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
