@@ -131,6 +131,12 @@
       <Culture>0x0407</Culture>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>copy $(OutputPath)$(ProjectName).lib $(SolutionDir)CCDExamp\
+copy $(ProjectDir)Direct2dViewer_c.h $(SolutionDir)CCDExamp\
+copy $(TargetPath) $(SolutionDir)CCDExamp\$(IntermediateOutputPath)</Command>
+      <Message>Copy $(ProjectName) to CCDExamp</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -184,7 +190,7 @@ copy $(ProjectDir)Direct2dViewer_c.h $(SolutionDir)CCDExamp\
 copy $(TargetPath) $(SolutionDir)CCDExamp\$(IntermediateOutputPath)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>Copy $(ProjectName).lib to CCDExamp</Message>
+      <Message>Copy $(ProjectName) to CCDExamp</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
