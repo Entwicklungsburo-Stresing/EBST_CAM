@@ -22,42 +22,7 @@ along with Foobar.If not, see < http://www.gnu.org/licenses/>.
 Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
 */
 
-
-***REMOVED***#define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
-
-//#include "stdafx.h"		// use in C++ only
-//#include "global.h"		// use in C++ only
-#include "ccdctl.h" //"ccdctrl.h"
-#include "board.h"
-#include <limits.h>
-#include <process.h>
-#include "Jungo/windrvr.h"
-#include "Jungo/wdc_lib.h"
-#include "Jungo/wdc_defs.h"
-#include "wchar.h"
-#include "lscpciej_lib.c"
-//#include "kp_lscpciej.c"
-
-//#include "wd_kp.h"
-//siehe beginn functions
-//#include "lscpciej_lib.h" 
-
-//Dont trust the debugger its CRAP
-
-/* Error messages display */
-#define LSCPCIEJ_ERR printf
-// use LSCPCI1 on PCI Boards
-#define	DRIVERNAME	"\\\\.\\LSCPCIE"
-
-//try different methodes - only one can be TRUE!
-#define DMA_CONTIGBUF TRUE		// use if DMABigBuf is set by driver (data must be copied afterwards to DMABigBuf)
-#define DMA_SGBUF FALSE			// use if DMABigBuf is set by application (pointer must be passed to SetupPCIE_DMA)
-
-// ExpTime is passed as global var here
-// function is not used in WCCD
-#ifndef ExpTime
-ULONG ExpTime; //in micro sec - needed only in DLL, defined in DLL.h
-#endif
+#include "Board.h"
 
 //DMA Addresses
 enum dma_addresses
@@ -162,26 +127,19 @@ enum cam_messages
 
 //jungodriver specific variables
 WD_PCI_CARD_INFO deviceInfo[MAXPCIECARDS];
-WDC_DEVICE_HANDLE hDev[MAXPCIECARDS];
 ULONG DMACounter = 0;//for debugging
 //Buffer of WDC_DMAContigBufLock function = one DMA sub block - will be copied to the big pDMABigBuf later
 USHORT* pDMASubBuf[3] = { NULL, NULL, NULL };
 WD_DMA *pDMASubBufInfos[3] = { NULL, NULL, NULL }; //there will be saved the neccesary parameters for the dma buffer
 BOOL DMAAlreadyStarted = FALSE;
-BOOL escape_readffloop = FALSE;
-BOOL contffloop = FALSE;
 DWORD64 IsrCounter = 0;
 //DWORD64 ISRCounter[2] = { 0, 0};
 DWORD64 SubBufCounter[3] = { 0, 0, 0 };
 DWORD64 val = 0x0;
 DWORD64 DMA_bufsizeinbytes = 0;
 WDC_PCI_SCAN_RESULT scanResult;
-UINT8 NUMBER_OF_BOARDS = 0;
-UINT32 BOARD_SEL = 1;
 // handle array for our drivers
 HANDLE ahCCDDRV[5] = { INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE };
-ULONG aCAMCNT[5] = { 1, 1, 1, 1, 1 };	// cameras parallel
-ULONG aPIXEL[5] = { 0, 0, 0, 0, 0 };	// pixel
 
 volatile UCHAR RingCtrlReg = 0; // was not volatile 22.1.2019
 volatile ULONG RingCtrlRegOfs = 0;
@@ -209,6 +167,34 @@ BOOL DMAISRunning = FALSE;
 #ifndef _CCDEXAMP
 double TRMSval[4];
 #endif
+__int64 TPS = 0;				// ticks per second; is set in InitHRCounter
+ULONG TLPSIZE;					//with0x21: crash
+ULONG NO_TLPS;//0x12; //was 0x11-> x-offset			//0x11=17*128  = 2176 Bytes  = 1088 WORDS
+volatile USHORT*   pDMABigBufIndex[3] = { NULL, NULL, NULL };
+__int64 START = 0;				// global variable for sync to systemtimer
+//USHORT* pDMABigBufBase[3] = { NULL, NULL, NULL };
+
+static ULONG XCKDELAY = 3; //100ns+n*400ns, 1<n<8 Sony=7
+
+// extern global variables
+int newDLL = 0;
+UINT8 NUMBER_OF_BOARDS = 0;
+#if defined (CCDExamp)
+#else
+ULONG _PIXEL = 544;			// here as variable with defaults
+#endif
+int Nob = 10;
+int Nospb = 100;
+ULONG aCAMCNT[5] = { 1, 1, 1, 1, 1 };	// cameras parallel
+BOOL escape_readffloop = FALSE;
+BOOL contffloop = FALSE;
+USHORT* pDMABigBufBase[3] = { NULL, NULL, NULL };
+WDC_DEVICE_HANDLE hDev[MAXPCIECARDS];
+ULONG aPIXEL[5] = { 0, 0, 0, 0, 0 };	// pixel
+BOOL Running = FALSE;
+pArrayT pBLOCKBUF[3] = { NULL, NULL, NULL };
+UINT32 BOARD_SEL = 1;
+
 
 // ***********     functions    ********************** 
 

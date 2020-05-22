@@ -194,15 +194,18 @@ copy "$(TargetPath)" "$(SolutionDir)CCDExamp\$(IntermediateOutputPath)"</Command
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\shared_src\Board.c" />
+    <ClCompile Include="..\shared_src\lscpciej_lib.c" />
     <ClCompile Include="Direct2dViewer.cpp" />
     <ClCompile Include="Direct2dViewer_c.cpp" />
     <ClCompile Include="ESLSCDLL_pro.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\shared_src\Board.h" />
+    <ClInclude Include="..\shared_src\lscpciej_lib.h" />
     <ClInclude Include="Direct2dViewer.h" />
     <ClInclude Include="Direct2dViewer_c.h" />
     <ClInclude Include="ESLSCDLL_pro.h" />
-    <ClInclude Include="GLOBAL.H" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

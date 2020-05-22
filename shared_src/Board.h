@@ -1,14 +1,99 @@
+#pragma once
 //  Board.h				PCI V2.31
 //	all functions for managing Interfaceboard
 //	with & without Fifo  
 //  new: data array ushort
 //2.31: 64 bit dma acces
 
+***REMOVED***#define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
+
+//#include "stdafx.h"		// use in C++ only
+//#include "global.h"		// use in C++ only
+#include "ccdctl.h" //"ccdctrl.h"
+#include <limits.h>
+#include <process.h>
+#include "Jungo/windrvr.h"
+#include "Jungo/wdc_lib.h"
+#include "Jungo/wdc_defs.h"
+#include "wchar.h"
+#include "lscpciej_lib.h"
+//#include "kp_lscpciej.c"
+
+//#include "wd_kp.h"
+//siehe beginn functions
+//#include "lscpciej_lib.h" 
+
+//Dont trust the debugger its CRAP
+
+/* Error messages display */
+#define LSCPCIEJ_ERR printf
+// use LSCPCI1 on PCI Boards
+#define	DRIVERNAME	"\\\\.\\LSCPCIE"
+
+//try different methodes - only one can be TRUE!
+#define DMA_CONTIGBUF TRUE		// use if DMABigBuf is set by driver (data must be copied afterwards to DMABigBuf)
+#define DMA_SGBUF FALSE			// use if DMABigBuf is set by application (pointer must be passed to SetupPCIE_DMA)
+
+// ExpTime is passed as global var here
+// function is not used in WCCD
+#ifndef ExpTime
+ULONG ExpTime; //in micro sec - needed only in DLL, defined in DLL.h
+#endif
 
 #define BoardType  "PCI"
 #define BoardVN  "2.31"
+#define MAXPCIECARDS 5
+#define Vfreqini 7			// only FIFO set in SetupVCLKReg
+							//frequence of vclks for FFTs S703x
+#define DMA_64BIT_EN FALSE
+#define _FORCETOPLS128 TRUE	//only use payload size 128byte
+#define DMA_BUFSIZEINSCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
+#define DMA_HW_BUFPARTS 2
+#define DMA_DMASPERINTR DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb 
+#define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
+#define INTR_EN TRUE		// enables INTR
+#define DBGNOCAM	FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
+//TRUE if you use PS2 Keyboard, FALSE else
+// on WinNT/2000/xp the function GetAsyncKeystate works only
+// if the Thread Class is not highest or 
+// if the Sleep function is used inside Contimess->Measure
+// so here a special hardware read of PS2Keyboard is used
+// to avoid interrupt dependend routines; look BOARD->WaitTrigger
+#define _PS2KEYBOARD FALSE 
 
+struct ffloopparams
+{
+	UINT32 board_sel;
+	UINT32 exptus;
+	UINT8 exttrig;
+	UINT8 blocktrigger;
+	UINT8 btrig_ch;
+};
+
+typedef USHORT ArrayT; //!! USHORT for linear 12/16bit word array or resort or highest speed
+typedef ArrayT* pArrayT;
+
+extern int newDLL;
+#if defined(CCDExamp)
+#define _PIXEL  1088				// no of pixels min 300, should be multiple of 300, max 8100
+#else
+extern ULONG _PIXEL;			// here as variable with defaults
+#endif
+extern USHORT* pDMABigBufBase[3];
+extern int Nob;
+extern int Nospb;
+extern ULONG aCAMCNT[5];	// cameras parallel
+extern WDC_DEVICE_HANDLE hDev[MAXPCIECARDS];
+extern BOOL escape_readffloop;
+extern BOOL contffloop;
+extern UINT8 NUMBER_OF_BOARDS;
 extern DWORD64 IsrCounter;
+extern ULONG aPIXEL[5];	// pixel
+extern BOOL Running;
+extern pArrayT pBLOCKBUF[3];
+extern UINT32 BOARD_SEL;
+
+
 
 void ErrMsgBoxOn( void );
 void ErrMsgBoxOff( void ); // switch to suppress error message boxes

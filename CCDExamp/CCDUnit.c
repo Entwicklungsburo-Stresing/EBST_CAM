@@ -1,7 +1,4 @@
 
-#ifndef _DLL
-#include "shared_src/board.h"
-#endif
 BYTE Dispcnt = 0;
 int yVal = 0;
 volatile int testcnt = 0;

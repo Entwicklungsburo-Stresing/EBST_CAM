@@ -6,14 +6,25 @@
 #pragma data_seg( ".GLOBALS" )
 int nProcessCount = 0;
 int nThreadCount = 0;
-//#pragma data_seg()
-void	*dummy;
 
-#include "GLOBAL.H"
-#include "shared_src/board.c"
+#include "shared_src/board.h"
+
+USHORT** ppDMABigBufBase;
+void	*Direct2dViewer = NULL;
+
+// Microsoft C/C++ specific import/export specifier.
+// These take the place of the EXPORTS and IMPORTS
+// statements in the application and DLL .DEF files.
+//..................................................
+//
+#ifdef _DLL
+#define DllAccess __declspec( dllexport )
+#else
+#define DllAccess __declspec( dllimport )
+#endif
 
 BOOL WINAPI DLLMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved );
-DllAccess void DLLInitProDll( UINT64 ppDMABigBufBase );
+DllAccess void DLLInitProDll( UINT64 ppDMABuf );
 //************  2d greyscale viewer
 DllAccess void DLLStart2dViewer( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos );
 DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos );
