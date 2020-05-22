@@ -79,7 +79,7 @@ extern int newDLL;
 #else
 extern ULONG _PIXEL;			// here as variable with defaults
 #endif
-extern USHORT* pDMABigBufBase[3];
+extern USHORT** pDMABigBufBase;
 extern int Nob;
 extern int Nospb;
 extern ULONG aCAMCNT[5];	// cameras parallel

@@ -9,7 +9,6 @@ int nThreadCount = 0;
 
 #include "shared_src/board.h"
 
-USHORT** ppDMABigBufBase;
 void	*Direct2dViewer = NULL;
 
 // Microsoft C/C++ specific import/export specifier.
