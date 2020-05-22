@@ -651,13 +651,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		//Reset partial binning
 		WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
 		*/
-		// display different frame in 2D viewer when nob changes
-		// check if 2d viewer instance is existing
-		if (Direct2dViewer)
-		{
-			//update 2d viewer bitmap
-			Direct2dViewer_showNewBitmap( Direct2dViewer, GetAddressOfPixel( DRV, 0, 0, cur_nob, 0 ), _PIXEL, Nospb );
-		}
+		DLLShowNewBitmap( DRV, cur_nob, 0, _PIXEL, Nospb );
 		break;
 
 	case WM_COMMAND:
@@ -732,11 +726,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 				CopytoDispbuf( cur_nob*Nospb + cur_nospb );
 				Display( 1, PLOTFLAG );
 				UpdateTxT();
-				if (Direct2dViewer)
-				{
-					//update 2d viewer bitmap
-					Direct2dViewer_showNewBitmap( Direct2dViewer, GetAddressOfPixel( DRV, 0, 0, cur_nob, 0 ), _PIXEL, Nospb );
-				}
+				DLLShowNewBitmap( DRV, cur_nob, 0, _PIXEL, Nospb );
 			}
 			break;
 
@@ -779,16 +769,8 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 		case ID_2DVIEW_SHOW:
 		{
-			//check if 2d viewer instance is existing.
-			//only open new 2d viewer when not existing
-			if (!Direct2dViewer)
-			{
-				//initialize 2D Viewer
-				Direct2dViewer = Direct2dViewer_new();
-				Direct2dViewer_setGammaValue( Direct2dViewer, direct2dviewer_gamma_white, direct2dviewer_gamma_black );
-				//start 2d viewer
-				Direct2dViewer_start2dViewer( Direct2dViewer, hMSWND, GetAddressOfPixel( DRV, 0, 0, cur_nob, 0 ), _PIXEL, Nospb );
-			}
+			DLLInitProDll(&pDMABigBufBase);
+			DLLStart2dViewer( DRV, cur_nob, 0, _PIXEL, Nospb );
 			break;
 		}
 		case ID_2DVIEW_START:
@@ -813,9 +795,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		}
 		break;
 	case WM_2DVIEWER_CLOSED:
-		//release instance of 2D viewer
-		Direct2dViewer_delete( Direct2dViewer );
-		Direct2dViewer = NULL;
+		DLLDeinit2dViewer();
 		break;
 	case WM_TIMER:
 		cur_nob++;
@@ -1976,15 +1956,16 @@ LRESULT CALLBACK SetGamma( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		if (Direct2dViewer)
-		{
-			// receive gamma from direct 2d module & write to ccdexamp gamma variables
-			direct2dviewer_gamma_white = Direct2dViewer_getGammaWhite( Direct2dViewer );
-			direct2dviewer_gamma_black = Direct2dViewer_getGammaBlack( Direct2dViewer );
-		}
-		// set gamma to dialog box
-		SetDlgItemInt( hDlg, IDC_GAMMA_WHITE, direct2dviewer_gamma_white, FALSE );
-		SetDlgItemInt( hDlg, IDC_GAMMA_BLACK, direct2dviewer_gamma_black, FALSE );
+		//TODO: receive gamma values from pro dll to display them when opening dialog
+		//if (Direct2dViewer)
+		//{
+		//	// receive gamma from direct 2d module & write to ccdexamp gamma variables
+		//	direct2dviewer_gamma_white = Direct2dViewer_getGammaWhite( Direct2dViewer );
+		//	direct2dviewer_gamma_black = Direct2dViewer_getGammaBlack( Direct2dViewer );
+		//}
+		//// set gamma to dialog box
+		//SetDlgItemInt( hDlg, IDC_GAMMA_WHITE, direct2dviewer_gamma_white, FALSE );
+		//SetDlgItemInt( hDlg, IDC_GAMMA_BLACK, direct2dviewer_gamma_black, FALSE );
 		return (TRUE);
 		break;
 	case WM_COMMAND:
@@ -2000,11 +1981,7 @@ LRESULT CALLBACK SetGamma( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 			GetDlgItemInt( hDlg, IDC_GAMMA_WHITE, &success, FALSE );
 			if (success) direct2dviewer_gamma_white = GetDlgItemInt( hDlg, IDC_GAMMA_WHITE, &success, FALSE );
 			if (success) direct2dviewer_gamma_black = GetDlgItemInt( hDlg, IDC_GAMMA_BLACK, &success, FALSE );
-			if (Direct2dViewer)
-			{
-				Direct2dViewer_setGammaValue( Direct2dViewer, direct2dviewer_gamma_white, direct2dviewer_gamma_black );
-				Direct2dViewer_repaintWindow( Direct2dViewer );
-			}
+			DLLSetGammaValue( direct2dviewer_gamma_white, direct2dviewer_gamma_black );
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
