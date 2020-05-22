@@ -543,7 +543,7 @@ BOOL LSCPCIEJ_GetAddrSpaceInfo(WDC_DEVICE_HANDLE hDev,
     Debugging and error handling
    ----------------------------------------------- */
 /* Log a debug error message */
-static void ErrLog(const CHAR *sFormat, ...)
+void ErrLog(const CHAR *sFormat, ...)
 {
     va_list argp;
 

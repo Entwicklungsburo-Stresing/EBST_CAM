@@ -19,6 +19,8 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 
 #include "ESLSCDLL.h"
 
+volatile struct ffloopparams params, params2;
+
 /**
 \brief DllMain entry point
 

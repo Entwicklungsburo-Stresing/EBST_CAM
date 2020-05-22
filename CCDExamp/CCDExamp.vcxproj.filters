@@ -4,13 +4,19 @@
     <ClInclude Include="CCDExamp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Global.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\shared_src\CCDCTL.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\lscpciej_lib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\Board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -37,6 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCDExamp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared_src\lscpciej_lib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared_src\Board.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

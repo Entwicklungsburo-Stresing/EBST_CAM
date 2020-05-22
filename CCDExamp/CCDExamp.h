@@ -8,20 +8,21 @@
 #include <process.h>	  // for Thread example
 #include <CommCtrl.h>
 #include "resource.h"
-#include "Global.h" 
-#include "CCDUnit.c"
 #include "Direct2dViewer_c.h"
 
 #ifdef _DLL
-UINT8 NUMBER_OF_BOARDS = 0;
+NUMBER_OF_BOARDS = 0;
 
 ULONG aFLAG816[5] = { 1, 1, 1, 1, 1 };  //AD-Flag
 ULONG aPIXEL[5] = { 0, 0, 0, 0, 0 };	// pixel
 ULONG aXCKDelay[5] = { 1000, 1000, 1000, 1000, 1000 };	// sensor specific delay
 BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
 #else
-#include "shared_src/Board.c"
+#include "shared_src/Board.h"
 #endif
+#include "Global.h" 
+#include "CCDUnit.c"
+
 
 #if defined (WIN32)
 #define IS_WIN32 TRUE

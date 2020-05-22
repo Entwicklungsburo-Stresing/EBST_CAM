@@ -41,12 +41,19 @@ int nProcessCount = 0;
 int nThreadCount = 0;
 //#pragma data_seg()
 void	*dummy;
+ULONG ADRDELAY = 1000;			// -> is set in SetBoardVars
+WORD UserBufInScans;
 
-#include "GLOBAL.H"
-#include "shared_src/board.c"
+//#include "GLOBAL.H"
+#include "shared_src/board.h"
 //extern volatile PUSHORT pDMABigBufBase[3];
 
-volatile struct ffloopparams params, params2;
+#ifdef _DLL
+#define DllAccess __declspec( dllexport )
+
+#else
+#define DllAccess __declspec( dllimport )
+#endif
 
 BOOL WINAPI DLLMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved );
 DllAccess int DLLGetProcessCount();
