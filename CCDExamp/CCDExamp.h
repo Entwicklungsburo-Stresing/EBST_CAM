@@ -10,7 +10,7 @@
 #include "resource.h"
 #include "Global.h" 
 #include "CCDUnit.c"
-#include "shared_src/Direct2dViewer_c.h"
+#include "Direct2dViewer_c.h"
 
 #ifdef _DLL
 UINT8 NUMBER_OF_BOARDS = 0;
@@ -42,7 +42,6 @@ HWND     hwndTrack;
 HWND     hwndTrack2;
 DWORD cur_nospb = 0;
 DWORD cur_nob = 0;
-void* Direct2dViewer;
 #if CAMERA_SYSTEM == 3
 UINT16 direct2dviewer_gamma_white = 0x3FFF;
 #else
