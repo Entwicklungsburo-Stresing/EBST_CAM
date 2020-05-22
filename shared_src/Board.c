@@ -188,7 +188,8 @@ int Nospb = 100;
 ULONG aCAMCNT[5] = { 1, 1, 1, 1, 1 };	// cameras parallel
 BOOL escape_readffloop = FALSE;
 BOOL contffloop = FALSE;
-USHORT* pDMABigBufBase[3] = { NULL, NULL, NULL };
+USHORT* temp_pDMABigBufBase[3] = { NULL, NULL, NULL };
+USHORT** pDMABigBufBase= temp_pDMABigBufBase;
 WDC_DEVICE_HANDLE hDev[MAXPCIECARDS];
 ULONG aPIXEL[5] = { 0, 0, 0, 0, 0 };	// pixel
 BOOL Running = FALSE;

@@ -66,7 +66,7 @@ BOOL WINAPI DLLMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved )
 
 DllAccess void DLLInitProDll( UINT64 ppDMABuf )
 {
-	ppDMABigBufBase = ppDMABuf;
+	pDMABigBufBase = ppDMABuf;
 	return;
 }
 
