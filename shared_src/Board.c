@@ -2911,16 +2911,15 @@ void SetIntFFTrig( UINT32 drvno ) // set internal Trigger
 \param drvno board number (=1 if one PCI board)
 \param lines number of vertical lines
 \param vfreq vertical clk frequency
-\return none
+\return True for success.
 */
-void SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq )
+BOOL SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq )
 {
 	FFTLINES = lines; //set global var
-
-	WriteLongS0( drvno, lines * 2, S0Addr_VCLKCTRL );// write no of vclks=2*lines
-	WriteByteS0( drvno, vfreq, S0Addr_VCLKFREQ );//  write v freq
+	BOOL success = WriteLongS0( drvno, lines * 2, S0Addr_VCLKCTRL );// write no of vclks=2*lines
+	success &= WriteByteS0( drvno, vfreq, S0Addr_VCLKFREQ );//  write v freq
 	VFREQ = vfreq;//keep freq global
-	
+	return success;
 }//SetupVCLKReg
 
 /**
@@ -2929,9 +2928,9 @@ void SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq )
 \param range specifies R 1..5
 \param lines number of vertical clks for next read
 \param keep TRUE if scan should be written to FIFO
-\return none
+\return True for success
 */
-void SetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep )
+BOOL SetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep )
 {
 	WDC_Err( "entered SetupVPB with range: 0x%x , lines: 0x%x and keep: %x\n", range, lines, keep );
 	ULONG adr = 0;
@@ -2967,48 +2966,10 @@ void SetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep )
 	else { lines &= 0x7fff; }
 	//TODO make function write word or split in writebytes
 	//WriteWordS0(drvno, lines, adr);// write range
-	WriteByteS0( drvno, (BYTE)lines, adr );
-	WriteByteS0( drvno, (BYTE)(lines >> 8), adr + 1 );
-	return;
+	BOOL success = WriteByteS0( drvno, (BYTE)lines, adr );
+	success &= WriteByteS0( drvno, (BYTE)(lines >> 8), adr + 1 );
+	return success;
 }// SetupVPB
-
-/**
-\brief Initializes region of interest.
-\param drvno PCIe identifier
-\param number_of_regions determines how many region of interests are initialized, choose 2 to 8
-\param lines number of total lines in camera
-\param keep_first kept regions are alternating, determine whether first is kept
-\param region_size determines the size of each region. array of size number_of_regions.
-	When region_size[0]==0 the lines are equally distributed for all regions.
-	I don't know what happens when  region_size[0]!=0 and region_size[1]==0. Maybe don't do this.
-	The sum of all regions should equal lines.
-\return void
-*/
-void SetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, BOOL keep_first, UINT8* region_size)
-{
-	BOOL keep = keep_first;
-	// calculate how many lines are in each region when equally distributed
-	UINT32 lines_per_region = lines / number_of_regions;
-	// calculate the rest of lines when equally distributed
-	UINT32 lines_in_last_region = lines - lines_per_region * (number_of_regions - 1);
-	WDC_Err("Setup ROI: lines_per_region: %u , lines_in_last_region: %u\n", lines_per_region, lines_in_last_region);
-	// go from region 1 to number_of_regions
-	for (int i = 1; i <= number_of_regions; i++)
-	{
-		// check whether lines should be distributed equally or by custom region size
-		if (*region_size == 0)
-		{
-			if (i == number_of_regions) SetupVPB( drvno, i, lines_in_last_region, keep );
-			else SetupVPB( drvno, i, lines_per_region, keep );
-		}
-		else
-		{
-			SetupVPB( drvno, i, *(region_size+(i-1)), keep );
-		}
-		keep = !keep;
-	}
-	return;
-}
 
 // thread priority stuff
 
@@ -4030,4 +3991,52 @@ void BlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 )
 	data &= 0xFC;
 	data |= mode;
 	WriteByteS0( drvno, data, S0Addr_BTRIGREG );
+}
+
+/**
+\brief For FFTs: Setup full binning.
+\param drvno PCIe board identifier.
+\param lines Lines in camera.
+\param vfreq Frequency for vertical clock.
+\return True for success.
+*/
+BOOL SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
+{
+	BOOL success = SetupVCLKReg( drvno, lines, vfreq );
+	success &= SetPartialBinning( drvno, 0 );
+	return success;
+}
+
+/**
+\brief Turn partial binning on or off.
+\param drvno PCIe board identifier.
+\param number_of_regions =0 to turn partial binning off. !=0 to turn on.
+\return True for success.
+*/
+BOOL SetPartialBinning( UINT32 drvno, UINT16 number_of_regions )
+{
+	return WriteLongS0( drvno, number_of_regions, S0Addr_ARREG );
+}
+
+/**
+\brief Turn autostart for xck for lines on.
+\param drvno PCIe board identifier.
+\return True for success.
+*/
+BOOL AutostartXckForLines( UINT32 drvno )
+{
+	return SetS0Bit( 0, S0Addr_CTRLB, drvno );
+}
+
+/**
+\brief Turn autostart for xck for lines on.
+\param drvno PCIe board identifier.
+\return True for success.
+*/
+BOOL ResetAutostartXck( UINT32 drvno )
+{
+	BOOL success = ResetS0Bit( 0, S0Addr_CTRLB, drvno );
+	success &= ResetS0Bit( 1, S0Addr_CTRLB, drvno );
+	success &= ResetS0Bit( 2, S0Addr_CTRLB, drvno );
+	return success;
 }

@@ -89,7 +89,7 @@ DllAccess UINT8 DLLFFValid( UINT32 drvno );						// TRUE if linecounter>0
 DllAccess void DLLSetExtTrig( UINT32 drvno );					// read to FIFO is triggered by external input I of PCI board
 DllAccess void DLLSetIntTrig( UINT32 drvno );					// read to FIFO is triggered by Timer
 DllAccess UINT8 DLLFFOvl( UINT32 drvno );					//TRUE if fifo overflow occured
-DllAccess void DLLSetupVCLK( UINT32 drvno, UINT32 lines, UINT8 vfreq );//set the VCLK regs
+DllAccess UINT8 DLLSetupVCLK( UINT32 drvno, UINT32 lines, UINT8 vfreq );//set the VCLK regs
 DllAccess UINT8 DLLBlockTrig( UINT32 drv, UCHAR btrig_ch ); //read trigger input ->ch=1:pci in, ch=2:opto1, ch=3:opto2
 //************ camera reads FIFO version
 DllAccess UINT8 DLLSetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno );
@@ -113,7 +113,6 @@ DllAccess void DLLSetPDAnotFFT( UINT32 drvno, UINT8 set );
 DllAccess void DLLSetISFFT( UINT32 drvno, UINT8 set );
 DllAccess void DLLRsTOREG( UINT32 drvno );
 DllAccess void DLLSetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep);
-DllAccess void DLLSetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first, UINT8* region_size);
 DllAccess void DLLAboutS0( UINT32 drvno );
 DllAccess void DLLSendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data );
 DllAccess void DLLSendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature );
@@ -129,4 +128,5 @@ DllAccess void DLLInitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_inp
 DllAccess void DLLInitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high );
 DllAccess void DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain );
 DllAccess void DLLBlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 );
+DllAccess UINT8 DLLSetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq );
 DllAccess UINT64 returnBigBufBase();

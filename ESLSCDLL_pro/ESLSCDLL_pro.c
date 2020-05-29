@@ -64,9 +64,14 @@ BOOL WINAPI DLLMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved )
 	return(FALSE);
 }
 
-DllAccess void DLLInitProDll( UINT64 ppDMABuf )
+/**
+\brief Call before using pro DLL.
+\param ppDMABigBufBase Address of camera data in DMA.
+\return none
+*/
+DllAccess void DLLInitProDll( UINT64 ppDMABigBufBase )
 {
-	pDMABigBufBase = ppDMABuf;
+	pDMABigBufBase = ppDMABigBufBase;
 	return;
 }
 
@@ -142,4 +147,64 @@ DllAccess void DLLSetGammaValue( UINT16 white, UINT16 black )
 		Direct2dViewer_repaintWindow( Direct2dViewer );
 	}
 	return;
+}
+
+/**
+\brief Initializes region of interest.
+\param drvno PCIe identifier
+\param number_of_regions determines how many region of interests are initialized, choose 2 to 8
+\param lines number of total lines in camera
+\param keep_first kept regions are alternating, determine whether first is kept
+\param region_size determines the size of each region. array of size number_of_regions.
+	When region_size[0]==0 the lines are equally distributed for all regions.
+	I don't know what happens when  region_size[0]!=0 and region_size[1]==0. Maybe don't do this.
+	The sum of all regions should equal lines.
+\return True for success.
+*/
+DllAccess UINT8 DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first, UINT8* region_size, UINT8 vfreq )
+{
+	BOOL success = TRUE;
+	BOOL keep = keep_first;
+	// calculate how many lines are in each region when equally distributed
+	UINT32 lines_per_region = lines / number_of_regions;
+	// calculate the rest of lines when equally distributed
+	UINT32 lines_in_last_region = lines - lines_per_region * (number_of_regions - 1);
+	WDC_Err( "Setup ROI: lines_per_region: %u , lines_in_last_region: %u\n", lines_per_region, lines_in_last_region );
+	// go from region 1 to number_of_regions
+	for (int i = 1; i <= number_of_regions; i++)
+	{
+		// check whether lines should be distributed equally or by custom region size
+		if (*region_size == 0)
+		{
+			if (i == number_of_regions) success &= SetupVPB( drvno, i, lines_in_last_region, keep );
+			else success &= SetupVPB( drvno, i, lines_per_region, keep );
+		}
+		else
+		{
+			success &= SetupVPB( drvno, i, *(region_size + (i - 1)), keep );
+		}
+		keep = !keep;
+	}
+	success &= ResetAutostartXck( drvno );
+	success &= SetupVCLKReg( drvno, lines, vfreq );
+	success &= SetPartialBinning( drvno, 0 ); //I don't know why there first is 0 written, I just copied it from Labview. - FH
+	success &= SetPartialBinning( drvno, number_of_regions );
+	success &= SetS0Bit( 15, S0Addr_ARREG, drvno ); //I don't know what that does, I just copied it from Labview. - FH
+	success &= AutostartXckForLines( drvno );
+	return success;
+}
+
+/**
+\brief For FFTs: Setup area mode.
+\param drvno PCIe board identifier.
+\param lines_binning Determines how many lines are binned (summed) when reading camera in area mode.
+\param vfreq Frequency for vertical clock.
+\return True for success.
+*/
+DllAccess UINT8 DLLSetupArea( UINT32 drvno, UINT32 lines_binning, UINT8 vfreq )
+{
+	BOOL success = SetupVCLKReg( drvno, lines_binning, vfreq );
+	success &= AutostartXckForLines( drvno );
+	success &= SetPartialBinning( drvno, 0 );
+	return success;
 }
