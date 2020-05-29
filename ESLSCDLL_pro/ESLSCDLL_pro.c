@@ -64,6 +64,11 @@ BOOL WINAPI DLLMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved )
 	return(FALSE);
 }
 
+/**
+\brief Call before using pro DLL.
+\param ppDMABigBufBase Address of camera data in DMA.
+\return none
+*/
 DllAccess void DLLInitProDll( UINT64 ppDMABigBufBase )
 {
 	pDMABigBufBase = ppDMABigBufBase;
