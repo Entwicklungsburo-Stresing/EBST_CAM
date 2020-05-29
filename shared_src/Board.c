@@ -2924,7 +2924,7 @@ void SetIntFFTrig( UINT32 drvno ) // set internal Trigger
 \param drvno board number (=1 if one PCI board)
 \param lines number of vertical lines
 \param vfreq vertical clk frequency
-\return none
+\return True for success.
 */
 BOOL SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq )
 {
@@ -2941,9 +2941,9 @@ BOOL SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq )
 \param range specifies R 1..5
 \param lines number of vertical clks for next read
 \param keep TRUE if scan should be written to FIFO
-\return none
+\return True for success
 */
-void SetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep )
+BOOL SetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep )
 {
 	WDC_Err( "entered SetupVPB with range: 0x%x , lines: 0x%x and keep: %x\n", range, lines, keep );
 	ULONG adr = 0;
@@ -2979,9 +2979,9 @@ void SetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep )
 	else { lines &= 0x7fff; }
 	//TODO make function write word or split in writebytes
 	//WriteWordS0(drvno, lines, adr);// write range
-	WriteByteS0( drvno, (BYTE)lines, adr );
-	WriteByteS0( drvno, (BYTE)(lines >> 8), adr + 1 );
-	return;
+	BOOL success = WriteByteS0( drvno, (BYTE)lines, adr );
+	success &= WriteByteS0( drvno, (BYTE)(lines >> 8), adr + 1 );
+	return success;
 }// SetupVPB
 
 // thread priority stuff
@@ -4016,21 +4016,40 @@ void BlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 )
 BOOL SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 {
 	BOOL success = SetupVCLKReg( drvno, lines, vfreq );
-	success &= TurnPartialBinningOff( drvno );
+	success &= SetPartialBinning( drvno, 0 );
 	return success;
 }
 
 /**
-\brief Turn partial binning off.
+\brief Turn partial binning on or off.
+\param drvno PCIe board identifier.
+\param number_of_regions =0 to turn partial binning off. !=0 to turn on.
+\return True for success.
+*/
+BOOL SetPartialBinning( UINT32 drvno, UINT16 number_of_regions )
+{
+	return WriteLongS0( drvno, number_of_regions, S0Addr_ARREG );
+}
+
+/**
+\brief Turn autostart for xck for lines on.
 \param drvno PCIe board identifier.
 \return True for success.
 */
-BOOL TurnPartialBinningOff( UINT32 drvno )
-{
-	return WriteLongS0( drvno, 0, S0Addr_ARREG );
-}
-
 BOOL AutostartXckForLines( UINT32 drvno )
 {
 	return SetS0Bit( 0, S0Addr_CTRLB, drvno );
+}
+
+/**
+\brief Turn autostart for xck for lines on.
+\param drvno PCIe board identifier.
+\return True for success.
+*/
+BOOL ResetAutostartXck( UINT32 drvno )
+{
+	BOOL success = ResetS0Bit( 0, S0Addr_CTRLB, drvno );
+	success &= ResetS0Bit( 1, S0Addr_CTRLB, drvno );
+	success &= ResetS0Bit( 2, S0Addr_CTRLB, drvno );
+	return success;
 }
