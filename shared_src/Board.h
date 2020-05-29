@@ -4,7 +4,6 @@
 //  new: data array ushort
 //2.31: 64 bit dma acces
 
-
 #define BoardType  "PCI"
 #define BoardVN  "2.31"
 
