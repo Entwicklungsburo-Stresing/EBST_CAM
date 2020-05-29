@@ -231,7 +231,13 @@ void* GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block
 UINT8 WaitforTelapsed( LONGLONG musec );
 void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA );
 void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high );
+void Cam3010_ADC_reset(UINT32 drvno);
+void Cam3010_ADC_setMode(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern);
 void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain );
+void Cam3030_ADC_reset(UINT32 drvno);
+void Cam3030_ADC_twoWireModeEN(UINT32 drvno);
+void Cam3030_ADC_SetGain(UINT32 drvno, UINT8 gain);
+void Cam3030_ADC_RampOrPattern(UINT32 drvno);
 BOOL SetGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32 GPXData );
 BOOL ReadGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32* GPXData );
 void InitGPX( UINT32 drvno, UINT32 delay );
