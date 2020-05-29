@@ -772,15 +772,6 @@ DllAccess void DLLSetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep
 }
 
 /**
-\copydoc SetupROI
-*/
-DllAccess void DLLSetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first, UINT8* region_size)
-{
-	SetupROI(drvno, number_of_regions, lines, keep_first, region_size );
-	return;
-}
-
-/**
 \copydoc AboutS0
 */
 DllAccess void DLLAboutS0( UINT32 drvno )
