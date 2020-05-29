@@ -1,7 +1,7 @@
 //   UNIT BOARD.C for all examples equal
 //	PCIE version with DMA and INTR
 //	V2.1  BB  7/2019
-//	- kopierbar für DLL und Examp mit neuem Flag CCDEXAMP , was nur in der Global vo, CCD Example gesetzt werden darf
+//	- kopierbar fÃ¼r DLL und Examp mit neuem Flag CCDEXAMP , was nur in der Global vo, CCD Example gesetzt werden darf
 
 /*
 This file is part of CCDExamp and ECLSCDLL.
@@ -91,7 +91,7 @@ enum s0_addresses
 
 };
 
-//Cam Addresses könnten später bei unterschiedlichen cam systemen vaariieren
+//Cam Addresses kÃ¶nnten spÃ¤ter bei unterschiedlichen cam systemen vaariieren
 enum cam_addresses
 {
 	maddr_cam = 0x00,
@@ -997,7 +997,7 @@ void GetLastBufPart( UINT32 drvno )
 	ReadLongS0( drvno, &nos, DmaAddr_NOS );
 	ReadLongS0( drvno, &spi, DmaAddr_DMAsPerIntr ); //get scans per intr
 	ReadLongS0( drvno, &camcnt, DmaAddr_CAMCNT );
-	//!! aCAMCNT  löschen !
+	//!! aCAMCNT  lÃ¶schen !
 
 	//halfbufize is 500 with default values
 	halfbufsize = DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS;
@@ -3262,7 +3262,7 @@ void RS_BlockCounter( UINT32 drv )
 void RS_DMAAllCounter( UINT32 drv, BOOL hwstop )
 {
 	UINT32 dwdata = 0;
-	//Problem: erste scan löst INTR aus
+	//Problem: erste scan lÃ¶st INTR aus
 	//aber ohne: erste Block ist 1 zu wenig!0, -> in hardware RS to 0x1
 
 	ReadLongS0( drv, &dwdata, DmaAddr_DMAsPerIntr );
@@ -3623,7 +3623,7 @@ void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS
 \brief Init routine for Camera System 3010.
 	Sets registers in camera and ADC LTC2271.
 	FL3010 is intended for sensor S12198 !
-	with frame rate 8kHz = min. 125µs exp time
+	with frame rate 8kHz = min. 125Âµs exp time
 \param drvno selects PCIe board
 \param pixel pixel amount of camera
 \param trigger_input selects trigger input. 0 - XCK, 1 - EXTTRIG, 2 - DAT
@@ -3870,7 +3870,7 @@ void InitGPX( UINT32 drvno, UINT32 delay )
 	{ 2, 0x00062004 }	// write to reg2: 62E04  R-mode, en CH0..5 (3 werte
 	};
 	// setupo GPX chip for mode M
-	//reset GPX  ´bit0 in GPXCTRL reg
+	//reset GPX  Â´bit0 in GPXCTRL reg
 	ReadLongS0( drvno, &regData, S0Addr_TDCCtrl );
 	regData |= 0x01;
 	WriteLongS0( drvno, regData, S0Addr_TDCCtrl );
