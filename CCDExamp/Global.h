@@ -26,7 +26,7 @@ enum camera_system
 	camera_system_3010 = 2,
 	camera_system_3030 = 3
 };
-#define CAMERA_SYSTEM 1  // use 1 to 3 like in enum above
+#define CAMERA_SYSTEM 3  // use 1 to 3 like in enum above
 enum adc_mode
 {
 	normal = 0,
@@ -72,7 +72,7 @@ enum adc_mode
 #define DMA_BUFSIZEINSCANS 1000		//default: BUFSIZE=1000, INTR all 500
 #define DMA_HW_BUFPARTS 2
 #define DMA_DMASPERINTR DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb nochmal /2
-#define _PIXEL  2112				// no of pixels min 300, should be multiple of 300, max 8100
+#define _PIXEL  1088				// no of pixels min 300, should be multiple of 300, max 8100
 #define CAMCNT 1
 #if CAMCNT == 1
 BOOL DISP2 = FALSE;		//display 1 camera
