@@ -203,7 +203,7 @@ void AboutTiming( HWND hWnd )
 #endif
 	j = sprintf_s( fn, 260, "Timing  \n" );
 	//j+=sprintf(fn+j,"treadpix:\t\t%04d ns \n",TReadPix);
-	j += sprintf_s( fn + j, 260, "tdisplay:\t\t%06d µs \n", TDispus );
+	j += sprintf_s( fn + j, 260, "tdisplay:\t\t%06d Âµs \n", TDispus );
 	j += sprintf_s( fn + j, 260, "exp. time:\t\t%04d ms ", ExpTime );
 	MessageBox( hWnd, fn, "time", MB_OK );
 }
