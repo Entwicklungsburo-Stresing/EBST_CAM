@@ -143,3 +143,41 @@ DllAccess void DLLSetGammaValue( UINT16 white, UINT16 black )
 	}
 	return;
 }
+
+/**
+\brief Initializes region of interest.
+\param drvno PCIe identifier
+\param number_of_regions determines how many region of interests are initialized, choose 2 to 8
+\param lines number of total lines in camera
+\param keep_first kept regions are alternating, determine whether first is kept
+\param region_size determines the size of each region. array of size number_of_regions.
+	When region_size[0]==0 the lines are equally distributed for all regions.
+	I don't know what happens when  region_size[0]!=0 and region_size[1]==0. Maybe don't do this.
+	The sum of all regions should equal lines.
+\return void
+*/
+DllAccess void DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first, UINT8* region_size )
+{
+	BOOL keep = keep_first;
+	// calculate how many lines are in each region when equally distributed
+	UINT32 lines_per_region = lines / number_of_regions;
+	// calculate the rest of lines when equally distributed
+	UINT32 lines_in_last_region = lines - lines_per_region * (number_of_regions - 1);
+	WDC_Err( "Setup ROI: lines_per_region: %u , lines_in_last_region: %u\n", lines_per_region, lines_in_last_region );
+	// go from region 1 to number_of_regions
+	for (int i = 1; i <= number_of_regions; i++)
+	{
+		// check whether lines should be distributed equally or by custom region size
+		if (*region_size == 0)
+		{
+			if (i == number_of_regions) SetupVPB( drvno, i, lines_in_last_region, keep );
+			else SetupVPB( drvno, i, lines_per_region, keep );
+		}
+		else
+		{
+			SetupVPB( drvno, i, *(region_size + (i - 1)), keep );
+		}
+		keep = !keep;
+	}
+	return;
+}
