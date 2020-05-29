@@ -367,10 +367,9 @@ DllAccess UINT8 DLLFFOvl( UINT32 drvno )
 /**
 \copydoc SetupVCLKReg
 */
-DllAccess void DLLSetupVCLK( UINT32 drvno, UINT32 lines, UINT8 vfreq )
+DllAccess UINT8 DLLSetupVCLK( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 {
-	SetupVCLKReg( drvno, lines, vfreq );
-	return;
+	return SetupVCLKReg( drvno, lines, vfreq );
 }
 
 /**
@@ -774,15 +773,6 @@ DllAccess void DLLSetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep
 }
 
 /**
-\copydoc SetupROI
-*/
-DllAccess void DLLSetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first, UINT8* region_size)
-{
-	SetupROI(drvno, number_of_regions, lines, keep_first, region_size );
-	return;
-}
-
-/**
 \copydoc AboutS0
 */
 DllAccess void DLLAboutS0( UINT32 drvno )
@@ -907,4 +897,12 @@ DllAccess void DLLBlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 )
 DllAccess UINT64 returnBigBufBase()
 {
 	return &pDMABigBufBase;
+}
+
+/**
+\copydoc SetupFullBinning
+*/
+DllAccess UINT8 DLLSetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
+{
+	return SetupFullBinning( drvno, lines, vfreq );
 }
