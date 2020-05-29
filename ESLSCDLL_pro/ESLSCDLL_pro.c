@@ -154,10 +154,11 @@ DllAccess void DLLSetGammaValue( UINT16 white, UINT16 black )
 	When region_size[0]==0 the lines are equally distributed for all regions.
 	I don't know what happens when  region_size[0]!=0 and region_size[1]==0. Maybe don't do this.
 	The sum of all regions should equal lines.
-\return void
+\return True for success.
 */
-DllAccess void DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first, UINT8* region_size )
+DllAccess UINT8 DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first, UINT8* region_size, UINT8 vfreq )
 {
+	BOOL success = TRUE;
 	BOOL keep = keep_first;
 	// calculate how many lines are in each region when equally distributed
 	UINT32 lines_per_region = lines / number_of_regions;
@@ -170,16 +171,22 @@ DllAccess void DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, UINT32 lines
 		// check whether lines should be distributed equally or by custom region size
 		if (*region_size == 0)
 		{
-			if (i == number_of_regions) SetupVPB( drvno, i, lines_in_last_region, keep );
-			else SetupVPB( drvno, i, lines_per_region, keep );
+			if (i == number_of_regions) success &= SetupVPB( drvno, i, lines_in_last_region, keep );
+			else success &= SetupVPB( drvno, i, lines_per_region, keep );
 		}
 		else
 		{
-			SetupVPB( drvno, i, *(region_size + (i - 1)), keep );
+			success &= SetupVPB( drvno, i, *(region_size + (i - 1)), keep );
 		}
 		keep = !keep;
 	}
-	return;
+	success &= ResetAutostartXck( drvno );
+	success &= SetupVCLKReg( drvno, lines, vfreq );
+	success &= SetPartialBinning( drvno, 0 ); //I don't know why there first is 0 written, I just copied it from Labview. - FH
+	success &= SetPartialBinning( drvno, number_of_regions );
+	success &= SetS0Bit( 15, S0Addr_ARREG, drvno ); //I don't know what that does, I just copied it from Labview. - FH
+	success &= AutostartXckForLines( drvno );
+	return success;
 }
 
 /**
@@ -193,6 +200,6 @@ DllAccess UINT8 DLLSetupArea( UINT32 drvno, UINT32 lines_binning, UINT8 vfreq )
 {
 	BOOL success = SetupVCLKReg( drvno, lines_binning, vfreq );
 	success &= AutostartXckForLines( drvno );
-	success &= TurnPartialBinningOff( drvno );
+	success &= SetPartialBinning( drvno, 0 );
 	return success;
 }
