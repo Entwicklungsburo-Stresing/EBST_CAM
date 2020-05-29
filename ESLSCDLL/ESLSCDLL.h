@@ -106,7 +106,6 @@ DllAccess void DLLSetPDAnotFFT( UINT32 drvno, UINT8 set );
 DllAccess void DLLSetISFFT( UINT32 drvno, UINT8 set );
 DllAccess void DLLRsTOREG( UINT32 drvno );
 DllAccess void DLLSetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep);
-DllAccess void DLLSetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first, UINT8* region_size);
 DllAccess void DLLAboutS0( UINT32 drvno );
 DllAccess void DLLSendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data );
 DllAccess void DLLSendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature );

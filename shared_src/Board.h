@@ -115,7 +115,6 @@ void SetIntFFTrig( UINT32 drvno );					// read to FIFO is triggered by Timer
 void SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq );//setup hardware vclk generator
 void SetupVCLKrt( ULONG vfreq );					//setup vclkfreq for rt version(noFIFO)
 void SetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep);
-void SetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, BOOL keep_first, UINT8* region_size);
 void SetupDELAY( UINT32 drvno, ULONG delay );		//setup DELAY for WRFIFO
 void SetupHAModule( BOOL irsingle, ULONG fftlines );//set the module C8061&C7041 inits
 BOOL ThreadToPriClass( ULONG threadp, DWORD *priclass, DWORD *prilevel );
