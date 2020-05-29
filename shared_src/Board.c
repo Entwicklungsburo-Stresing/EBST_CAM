@@ -148,6 +148,9 @@ enum cam_addresses
 	adc_ads5294_regaddr_custompattern = 0x26,
 	adc_ads5294_regaddr_gain_1_to_4 = 0x2A,
 	adc_ads5294_regaddr_gain_5_to_8 = 0x2B,
+	adc_ads5294_regaddr_2wireMode = 0x46,
+	adc_ads5294_regaddr_wordWiseOutput = 0x28,
+	adc_ads5294_regaddr_ddrClkAlign = 0x42,
 };
 
 enum cam_messages
@@ -158,6 +161,9 @@ enum cam_messages
 	adc_ads5294_msg_reset = 0x01,
 	adc_ads5294_msg_ramp = 0x40,
 	adc_ads5294_msg_custompattern = 0x10,
+	adc_ads5294_msg_2wireMode = 0x8401,
+	adc_ads5294_msg_wordWiseOutput = 0x80FF,
+	adc_ads5294_msg_ddrClkAlign = 0x60,
 };
 
 //jungodriver specific variables
@@ -3628,9 +3634,9 @@ void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS
 
 /**
 \brief Init routine for Camera System 3010.
-
-sensor S12198, frame rate 8kHz, 125us exp time
-Sets register in camera and ADC LTC2271.
+	Sets registers in camera and ADC LTC2271.
+	FL3010 is intended for sensor S12198 !
+	with frame rate 8kHz = min. 125µs exp time
 \param drvno selects PCIe board
 \param pixel pixel amount of camera
 \param trigger_input selects trigger input. 0 - XCK, 1 - EXTTRIG, 2 - DAT
@@ -3640,41 +3646,11 @@ Sets register in camera and ADC LTC2271.
 \param gain_high 1 gain on, 0 gain off
 \return void
 */
-void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high )
-{
-	/*FL3010 is intended for sensor S12198 !
-	with frame rate 8kHz = min. 125µs exp time*/
-	/*ADC LTC2271 neets a reset via SPI first. Bit D7
-	of the resetregister A0 with address 00h is set to 1.
-	D6:D0 are don't care. So address is 00h and data is
-	 80h = 10000000b for e.g.  
-	This has to be done after every startup.
-	Then the ADC can be programmed further via SPI in the next frames.*/
-	SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_reset, adc_ltc2271_msg_reset );
-	/*Output Mode Register A2, address 02h:
-	LVDS output current bits (D7:D5) = 000, (3.5 mA)
-	Internal terminator bit D4 = 0, (off)
-	Output enable bit D3 = 0, (enabled)
-	Output test pattern bit D2 = 1, (on/off)
-	Number of output lanes bits (D1:D0) = 01, (4 lanes)
-	Address = 02h;
-	Data = 1h: ADC sends sample data
-	Data = 5h: ADC sends test pattern (a contant defined
-	in frames 3 and 4)*/
-	switch (adc_mode)
-	{
-	case 2:
-		SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_custompattern );
-		//Test pattern MSB regsiter A3 (TP15:TP8) Address = 03h, Data = custom (8 bit)
-		SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_msb, custom_pattern >> 8 );
-		//Test pattern LSB regsiter A4 (TP7:TP0)	Address = 04h, Data = custom (8 bit)
-		SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_lsb, custom_pattern & 0x00FF );
-		break;
-	case 0:
-	default:
-		SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_normal_mode );
-		break;
-	}
+void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, 
+					 UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high )
+
+{	Cam3010_ADC_reset(drvno);
+	Cam3010_ADC_setMode(drvno, adc_mode, custom_pattern);
 	//set camera pixel register
 	SendFLCAM( drvno, maddr_cam, cam_adaddr_pixel, pixel );
 	//set gain and led
@@ -3685,41 +3661,140 @@ void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc
 }
 
 /**
+\brief ADC reset routine for Camera System 3010.
+	ADC LTC2271 neets a reset via SPI first. Bit D7
+	of the resetregister A0 with address 00h is set to 1.
+	D6:D0 are don't care. So address is 00h and data is
+	80h = 10000000b for e.g.
+	This has to be done after every startup.
+	Then the ADC can be programmed further via SPI in the next frames.
+	Called by InitCamera3010
+\param drvno selects PCIe board
+\return void
+*/
+void Cam3010_ADC_reset(UINT32 drvno) {
+	SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_reset, adc_ltc2271_msg_reset);
+}
+
+/**
+\brief ADC mode set (normal or pattern) for Camera System 3010.
+	Lets ADC send sample data or a custom pattern (value).
+	Output Mode Register A2, address 02h:
+	LVDS output current bits (D7:D5) = 000, (3.5 mA)
+	Internal terminator bit D4 = 0, (off)
+	Output enable bit D3 = 0, (enabled)
+	Output test pattern bit D2 = 1, (on/off)
+	Number of output lanes bits (D1:D0) = 01, (4 lanes)
+	Address = 02h;
+	Data = 1h: ADC sends sample data
+	Data = 5h: ADC sends test pattern (a contant defined
+	in frames 3 and 4)
+	Called by InitCamera3010.
+\param drvno selects PCIe board
+\param adc_mode 0: normal, 2: custom pattern
+\param custom_pattern (only used when adc_mode = 2)
+\return void
+*/
+void Cam3010_ADC_setMode(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern) {
+
+	switch (adc_mode) {
+		case 2:
+			SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_custompattern);
+			//Test pattern MSB regsiter A3 (TP15:TP8) Address = 03h, Data = custom (8 bit)
+			SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_msb, custom_pattern >> 8);
+			//Test pattern LSB regsiter A4 (TP7:TP0)	Address = 04h, Data = custom (8 bit)
+			SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_lsb, custom_pattern & 0x00FF);
+			break;
+		case 0:
+		default:
+			SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_normal_mode);
+			break;
+	}
+}
+
+/**
 \brief Init routine for Camera System 3030.
-	Sets register in ADC ADS5294.
+	Sets registers in ADC ADS5294.
 \param drvno selects PCIe board
 \param adc_mode 0: normal mode, 1: ramp, 2: custom pattern
 \param custom_pattern only used when adc_mode = 2, lower 14 bits are used as output of ADC
 \param gain in ADC
 \return void
 */
-void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain )
-{
-	//set gain
-	SetADGain( drvno, 1, gain, gain, gain, gain, gain, gain, gain, gain );
-	switch (adc_mode)
-	{
-	case 1:
-		//ramp
-		SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_ramp );
-		break;
-	case 2:
-		//custom pattern
-		//to activate custom pattern the following messages are necessary:
-		//d - data
-		//at addr 0x25 (mode and higher bits): 0b00000000000100dd
-		SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_custompattern | ((custom_pattern >> 12) & 0x3) );
-		//at addr 0x26 (lower bits): 0bdddddddddddd0000
-		SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_custompattern, custom_pattern << 4 );
-		break;
-	case 0:
-	default:
-		//normal mode
-		SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_reset, adc_ads5294_msg_reset );
-		break;
-	}
-	return;
+void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain ) {
+
+	Cam3030_ADC_reset(drvno);
+	Cam3030_ADC_twoWireModeEN(drvno); //two wire mode output interface for pal versions P209_2 and above
+	Cam3030_ADC_SetGain(drvno, gain);
+	if (adc_mode)
+		Cam3030_ADC_RampOrPattern(drvno, adc_mode, custom_pattern);
 }
+
+/**
+\brief ADC reset routine for Camera System 3030.
+	Resets register of ADC ADS5294 to default state (output interface is 1 wire!).
+	Called by InitCamera3030
+\param drvno selects PCIe board
+\return void
+*/
+void Cam3030_ADC_reset(UINT32 drvno) {
+	SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_reset, adc_ads5294_msg_reset);
+}
+
+/**
+\brief ADC output interface config routine for Camera System 3030.
+	Enables two wire LVDS data transfer mode of ADC ADS5294.
+	Only works with PAL versions P209_2 and above.
+	Called by InitCamera3030 - comment for older versions and rebuild
+	or use on e-lab test computer desktop LabView folder lv64hs (bool switch in 3030 init tab) 
+\param drvno selects PCIe board
+\return void
+*/
+void Cam3030_ADC_twoWireModeEN(UINT32 drvno) {
+	SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_2wireMode, adc_ads5294_msg_2wireMode);
+	SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_wordWiseOutput, adc_ads5294_msg_wordWiseOutput);
+	SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_ddrClkAlign, adc_ads5294_msg_ddrClkAlign);
+}
+
+/**
+\brief ADC gain config routine for Camera System 3030.
+	Sets gain of ADC ADS5294 0...15 by callig SetADGain() subroutine.
+	Called by InitCamera3030
+\param drvno selects PCIe board
+\param gain of ADC
+\return void
+*/
+void Cam3030_ADC_SetGain(UINT32 drvno, UINT8 gain) { 
+	SetADGain(drvno, 1, gain, gain, gain, gain, gain, gain, gain, gain);
+}
+
+/**
+\brief ADC debug mode for Camera System 3030.
+	Lets ADC send a ramp or a custom pattern (value) instead of ADC sample data.
+	Called by InitCamera3030 when adc_mode > 0.
+\param drvno selects PCIe board
+\param adc_mode 1: ramp, 2: custom pattern
+\param custom_pattern (only used when adc_mode = 2)
+\return void
+*/
+void Cam3030_ADC_RampOrPattern(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern) {
+
+	switch(adc_mode) {
+		case 1: //ramp
+			SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_ramp);
+			break;
+		case 2: //custom pattern
+			//to activate custom pattern the following messages are necessary: d - data
+			//at addr 0x25 (mode and higher bits): 0b00000000000100dd
+			SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_custompattern | ((custom_pattern >> 12) & 0x3));
+			//at addr 0x26 (lower bits): 0bdddddddddddd0000
+			SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_custompattern, custom_pattern << 4);
+			break;
+		default:
+			break;
+	}
+}
+
 
 /**
 \brief Set GPXCtrl register.
