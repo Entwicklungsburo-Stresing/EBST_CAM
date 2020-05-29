@@ -123,7 +123,7 @@ BOOL PixelOdd = FALSE;				//display offset
 #define _ScanCode_End	 57 //E=18   Space 57
 #define _ScanCode_Cancel  01 //Q=16   ESC 01
 //for ReadSoftFifo example
-int ExpTime = 1000; //in µs
+int ExpTime = 1000; //in Âµs
 int RepTime = 1 * _MINREPTIME; //in ms for _MSHUT
 __int16 Releasems = 1; //>=1	>1 or keyboard does not work - could be exposuretime	
 ULONG Threadp = 31;  //<=15  8=default,15=highest in current process,31=time critical
