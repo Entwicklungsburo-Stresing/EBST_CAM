@@ -114,7 +114,7 @@ void SetExtFFTrig( UINT32 drvno );					// read to FIFO is triggered by external 
 void SetIntFFTrig( UINT32 drvno );					// read to FIFO is triggered by Timer
 BOOL SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq );//setup hardware vclk generator
 void SetupVCLKrt( ULONG vfreq );					//setup vclkfreq for rt version(noFIFO)
-void SetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep);
+BOOL SetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep);
 void SetupDELAY( UINT32 drvno, ULONG delay );		//setup DELAY for WRFIFO
 void SetupHAModule( BOOL irsingle, ULONG fftlines );//set the module C8061&C7041 inits
 BOOL ThreadToPriClass( ULONG threadp, DWORD *priclass, DWORD *prilevel );
@@ -150,7 +150,7 @@ void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 
 void Cam3030_ADC_reset(UINT32 drvno);
 void Cam3030_ADC_twoWireModeEN(UINT32 drvno);
 void Cam3030_ADC_SetGain(UINT32 drvno, UINT8 gain);
-void Cam3030_ADC_RampOrPattern(UINT32 drvno);
+void Cam3030_ADC_RampOrPattern( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern);
 BOOL SetGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32 GPXData );
 BOOL ReadGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32* GPXData );
 void InitGPX( UINT32 drvno, UINT32 delay );
@@ -159,5 +159,6 @@ double CalcRamUsageInMB( UINT32 nos, UINT32 nob );
 double CalcMeasureTimeInSeconds( UINT32 drvno, UINT32 nos, double exposure_time_in_ms );
 void BlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 );
 BOOL SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq );
-BOOL TurnPartialBinningOff( UINT32 drvno );
+BOOL SetPartialBinning( UINT32 drvno, UINT16 number_of_regions );
 BOOL AutostartXckForLines( UINT32 drvno );
+BOOL ResetAutostartXck( UINT32 drvno );
