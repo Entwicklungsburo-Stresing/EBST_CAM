@@ -112,7 +112,7 @@ BOOL FFOvl( UINT32 drvno );							//TRUE if FIFO overflow since last RSFifo call
 void RSFifo( UINT32 drvno );						// reset FIFO and linecounter
 void SetExtFFTrig( UINT32 drvno );					// read to FIFO is triggered by external input I of PCI board
 void SetIntFFTrig( UINT32 drvno );					// read to FIFO is triggered by Timer
-void SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq );//setup hardware vclk generator
+BOOL SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq );//setup hardware vclk generator
 void SetupVCLKrt( ULONG vfreq );					//setup vclkfreq for rt version(noFIFO)
 void SetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep);
 void SetupDELAY( UINT32 drvno, ULONG delay );		//setup DELAY for WRFIFO
@@ -158,3 +158,6 @@ void AboutGPX( UINT32 drvno );
 double CalcRamUsageInMB( UINT32 nos, UINT32 nob );
 double CalcMeasureTimeInSeconds( UINT32 drvno, UINT32 nos, double exposure_time_in_ms );
 void BlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 );
+BOOL SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq );
+BOOL TurnPartialBinningOff( UINT32 drvno );
+BOOL AutostartXckForLines( UINT32 drvno );

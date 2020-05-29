@@ -181,3 +181,18 @@ DllAccess void DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, UINT32 lines
 	}
 	return;
 }
+
+/**
+\brief For FFTs: Setup area mode.
+\param drvno PCIe board identifier.
+\param lines_binning Determines how many lines are binned (summed) when reading camera in area mode.
+\param vfreq Frequency for vertical clock.
+\return True for success.
+*/
+DllAccess UINT8 DLLSetupArea( UINT32 drvno, UINT32 lines_binning, UINT8 vfreq )
+{
+	BOOL success = SetupVCLKReg( drvno, lines_binning, vfreq );
+	success &= AutostartXckForLines( drvno );
+	success &= TurnPartialBinningOff( drvno );
+	return success;
+}
