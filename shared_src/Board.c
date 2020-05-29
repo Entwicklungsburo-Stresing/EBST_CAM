@@ -2926,14 +2926,13 @@ void SetIntFFTrig( UINT32 drvno ) // set internal Trigger
 \param vfreq vertical clk frequency
 \return none
 */
-void SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq )
+BOOL SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq )
 {
 	FFTLINES = lines; //set global var
-
-	WriteLongS0( drvno, lines * 2, S0Addr_VCLKCTRL );// write no of vclks=2*lines
-	WriteByteS0( drvno, vfreq, S0Addr_VCLKFREQ );//  write v freq
+	BOOL success = WriteLongS0( drvno, lines * 2, S0Addr_VCLKCTRL );// write no of vclks=2*lines
+	success &= WriteByteS0( drvno, vfreq, S0Addr_VCLKFREQ );//  write v freq
 	VFREQ = vfreq;//keep freq global
-	
+	return success;
 }//SetupVCLKReg
 
 /**
@@ -4005,4 +4004,33 @@ void BlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 )
 	data &= 0xFC;
 	data |= mode;
 	WriteByteS0( drvno, data, S0Addr_BTRIGREG );
+}
+
+/**
+\brief For FFTs: Setup full binning.
+\param drvno PCIe board identifier.
+\param lines Lines in camera.
+\param vfreq Frequency for vertical clock.
+\return True for success.
+*/
+BOOL SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
+{
+	BOOL success = SetupVCLKReg( drvno, lines, vfreq );
+	success &= TurnPartialBinningOff( drvno );
+	return success;
+}
+
+/**
+\brief Turn partial binning off.
+\param drvno PCIe board identifier.
+\return True for success.
+*/
+BOOL TurnPartialBinningOff( UINT32 drvno )
+{
+	return WriteLongS0( drvno, 0, S0Addr_ARREG );
+}
+
+BOOL AutostartXckForLines( UINT32 drvno )
+{
+	return SetS0Bit( 0, S0Addr_CTRLB, drvno );
 }
