@@ -40,7 +40,6 @@
 #ifndef ExpTime
 ULONG ExpTime; //in micro sec - needed only in DLL, defined in DLL.h
 #endif
-
 #define BoardType  "PCI"
 #define BoardVN  "2.31"
 #define MAXPCIECARDS 5
