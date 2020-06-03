@@ -5,7 +5,6 @@
 #define IDS_STRING1                     1
 #define IDOK2                           3
 #define IDOK1                           3
-#define IDCONT                          3
 #define IDCANCEL2                       3
 #define IDDEFAULT                       3
 #define NOBIOSERR                       101
