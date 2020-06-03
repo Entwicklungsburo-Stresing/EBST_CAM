@@ -421,7 +421,7 @@ void initCamera()
 	switch (CAMERA_SYSTEM)
 	{
 	case camera_system_3001:
-		InitCamera3001(DRV, _PIXEL, TRIGGER_MODE, _ISFFT, _ISAREA );
+		InitCamera3001(DRV, _PIXEL, TRIGGER_MODE, _ISFFT, 0 );
 		break;
 	case camera_system_3010:
 		InitCamera3010(DRV, _PIXEL, TRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
@@ -434,7 +434,7 @@ void initCamera()
 		switch (CAMERA_SYSTEM)
 		{
 		case camera_system_3001:
-			InitCamera3001(2, _PIXEL, TRIGGER_MODE, _ISFFT, _ISAREA);
+			InitCamera3001(2, _PIXEL, TRIGGER_MODE, _ISFFT, _IsArea );
 			break;
 		case camera_system_3010:
 			InitCamera3010(2, _PIXEL, TRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
@@ -552,7 +552,10 @@ void startMess(void *dummy)
 	//Nob = 1;
 	//DMA_Setup
 	// write header
-	j = sprintf_s(header, 260, " Online Loop - Cancel with ESC or space- key  ");
+	if(cont_mode)
+		j = sprintf_s(header, 260, " Continuous mode - Cancel with ESC or space- key  ");
+	else
+		j = sprintf_s( header, 260, " One Shot mode  " );
 	TextOut(hMSDC, 100, LOY - 17, header, j);
 	RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
 

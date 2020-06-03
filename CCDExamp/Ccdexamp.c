@@ -611,7 +611,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			trackbar_nob_multiplier *= 10;
 		}
 
-		hwndTrack = CreateWindow( TRACKBAR_CLASS,
+		hwndTrackNos = CreateWindow( TRACKBAR_CLASS,
 			"NOS", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
 			TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY | WS_CAPTION,
 			300, 345,
@@ -619,10 +619,10 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			hWnd, (HMENU)ID_TRACKBAR,
 			hInst,
 			NULL );
-		SendMessage( hwndTrack, TBM_SETRANGE, TRUE,
+		SendMessage( hwndTrackNos, TBM_SETRANGE, TRUE,
 			MAKELONG( 0/*MIN RANGE*/, trackbar_nospb - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
 
-		hwndTrack2 = CreateWindow( TRACKBAR_CLASS,
+		hwndTrackNob = CreateWindow( TRACKBAR_CLASS,
 			"NOB", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
 			TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY | WS_CAPTION,
 			710, 345,
@@ -630,14 +630,14 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			hWnd, (HMENU)ID_TRACKBAR,
 			hInst,
 			NULL );
-		SendMessage( hwndTrack2, TBM_SETRANGE, TRUE,
+		SendMessage( hwndTrackNob, TBM_SETRANGE, TRUE,
 			MAKELONG( 0/*MIN RANGE*/, trackbar_nob - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
 		//ShowScrollBar(scrollb, SB_BOTH, TRUE);
 		break;
 	case WM_HSCROLL://ID_TRACKBAR:
 		//Define your function.
-		cur_nospb = SendMessage( hwndTrack, TBM_GETPOS, 0, 0 );
-		cur_nob = SendMessage( hwndTrack2, TBM_GETPOS, 0, 0 );
+		cur_nospb = SendMessage( hwndTrackNos, TBM_GETPOS, 0, 0 );
+		cur_nob = SendMessage( hwndTrackNob, TBM_GETPOS, 0, 0 );
 		cur_nospb *= trackbar_nospb_multiplier;
 		cur_nob *= trackbar_nob_multiplier;
 		CopytoDispbuf( cur_nob*Nospb + cur_nospb );
@@ -710,15 +710,37 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 #endif
 		case IDM_START:
 			contffloop = FALSE;
+			cont_mode = FALSE;
 			if (!Running) startMess( &dummy );
 			break;
 		case ID_START_STARTCONTINUOUSLY:
 			contffloop = TRUE;
+			cont_mode = TRUE;
+			Nob = 1; 
 			Nospb = 10;
-			Nob = 1;
 			CALLING_WITH_NOS = TRUE;
 			CALLING_WITH_NOB = TRUE;
-			DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
+			if (_IsArea)
+			{
+				Nospb = _FFTLINES;
+				Nob = 3;
+				DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
+				SendMessage( hwndTrackNob, TBM_SETPOS, TRUE, 2 );
+			}
+			else
+			{
+				if (_IsROI)
+				{
+					Nospb = _IsROI;
+					Nob = 3;
+					DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
+					SendMessage( hwndTrackNob, TBM_SETPOS, TRUE, 2 );
+					SendMessage( hwndTrackNos, TBM_SETPOS, TRUE, 1 );
+				}
+				else {//full binning
+					DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
+				}
+			}
 			if (!Running) startMess( &dummy );
 			Sleep( 100 );
 			while (Running)
@@ -776,7 +798,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case ID_2DVIEW_START:
 		{
 			cur_nob = 0;
-			SendMessage( hwndTrack2, TBM_SETPOS, TRUE, cur_nob );
+			SendMessage( hwndTrackNob, TBM_SETPOS, TRUE, cur_nob );
 			SendMessage( hMSWND, WM_HSCROLL, NULL, NULL );
 			SetTimer( hMSWND,			// handle to main window 
 				IDT_TIMER1,					// timer identifier 
@@ -806,7 +828,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		}
 		else
 		{
-			SendMessage( hwndTrack2, TBM_SETPOS, TRUE, cur_nob );
+			SendMessage( hwndTrackNob, TBM_SETPOS, TRUE, cur_nob );
 			SendMessage( hMSWND, WM_HSCROLL, NULL, NULL );
 		}
 		break;
@@ -1199,7 +1221,6 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 			break;
 
 		case IDOK:
-			cont_mode = FALSE;
 			nob_input = GetDlgItemInt( hDlg, IDC_nob, &success, FALSE );
 			nospb_input = GetDlgItemInt( hDlg, IDC_nospb, &success, FALSE );
 			if (success)
@@ -1238,9 +1259,9 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 				trackbar_nob_multiplier *= 10;
 			}
 			//update trackbars
-			SendMessage( hwndTrack2, TBM_SETRANGE, TRUE,
+			SendMessage( hwndTrackNob, TBM_SETRANGE, TRUE,
 				MAKELONG( 0/*MIN RANGE*/, trackbar_nob - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
-			SendMessage( hwndTrack, TBM_SETRANGE, TRUE,
+			SendMessage( hwndTrackNos, TBM_SETRANGE, TRUE,
 				MAKELONG( 0/*MIN RANGE*/, trackbar_nospb - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
@@ -1294,10 +1315,6 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 				SetDlgItemText( hDlg, IDC_ALLOCRAM, "calculation error" );
 #endif
 			break;
-		case IDCONT:
-			cont_mode = TRUE;
-			Nob = 1;
-			Nospb = 1;
 #ifdef _DLL
 			nDLLSetupDMA( DRV, Nospb, Nob );
 			if (both_boards)
@@ -1318,12 +1335,12 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 			trackbar_nospb = Nospb;
 			trackbar_nob = Nob;
 			//update trackbars
-			SendMessage( hwndTrack2, TBM_SETRANGE, TRUE,
+			SendMessage( hwndTrackNob, TBM_SETRANGE, TRUE,
 				MAKELONG( 0/*MIN RANGE*/, trackbar_nob - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
-			SendMessage( hwndTrack, TBM_SETRANGE, TRUE,
+			SendMessage( hwndTrackNos, TBM_SETRANGE, TRUE,
 				MAKELONG( 0/*MIN RANGE*/, trackbar_nospb - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
-			EnableWindow( hwndTrack, FALSE );
-			UpdateWindow( hwndTrack );
+			EnableWindow( hwndTrackNos, FALSE );
+			UpdateWindow( hwndTrackNos );
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
@@ -1693,6 +1710,8 @@ LRESULT CALLBACK Set3ROI( HWND hDlg,
 			break;
 
 		case IDOK:
+			_IsArea = FALSE;
+			_IsROI = 5;
 			for (int i = 0; i < ROI; i++)
 			{
 #ifndef _DLL
@@ -1798,6 +1817,8 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 			break;
 
 		case IDOK:
+			_IsArea = FALSE;
+			_IsROI = 5;
 			/*
 			SetupVPB( choosen_board, 1, 5, FALSE );
 			SetupVPB( choosen_board, 2, 25, TRUE );
@@ -1864,6 +1885,8 @@ LRESULT CALLBACK FullBinning( HWND hDlg,
 			break;
 
 		case IDOK:
+			_IsArea = FALSE;
+			_IsROI = 0;
 #ifndef _DLL
 			//reset auto start in case of setting before
 			ResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
@@ -1914,6 +1937,8 @@ LRESULT CALLBACK AreaMode(HWND hDlg,
 			break;
 
 		case IDOK:
+			_IsArea = TRUE;
+			_IsROI = 0;
 #ifndef _DLL
 			//set auto start
 			SetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,

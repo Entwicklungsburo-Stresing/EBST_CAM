@@ -26,7 +26,7 @@ enum camera_system
 	camera_system_3010 = 2,
 	camera_system_3030 = 3
 };
-#define CAMERA_SYSTEM 3  // use 1 to 3 like in enum above
+#define CAMERA_SYSTEM 1  // use 1 to 3 like in enum above
 enum adc_mode
 {
 	normal = 0,
@@ -140,15 +140,17 @@ static int YSHIFT = 8;			// 16bit=8
 // camera values for calling GETCCD and InitBoard
 static	unsigned long _FKT = 1;		// -1:clearread, 0:datab=0, 1:read 5: testdata
 									//, 2:add ; not implemented in DMA is 3:sub 
-#define _FFTLINES 70 		// no of vertical lines of FFT sensors, usually 64
+#define _FFTLINES 64 		// no of vertical lines of FFT sensors, usually 64
 							// =0 if not FFT
 #define _ISPDA FALSE			//set RS after read; TRUE for HA S39xx
 #define _ISFFT TRUE		//set vclk generator; TRUE for HA S703x
-#define _ISAREA FALSE	//set AREA Mode on CAMERA
+BOOL _IsArea = FALSE; //FALSE is just the init val
+__int16 _IsROI = 0; //FALSE is just the init val
+//#define _ISAREA FALSE	//set AREA Mode on CAMERA
 //#define _HA_MODULE FALSE		//TRUE for HA module C7041 or C8061
 //vclk frequency 
 
-#define Vfreqini 30		//vclk freq for FFTs with FIFO in divider of12MHz (0..15)
+#define Vfreqini 7		//vclk freq for FFTs with FIFO in divider of12MHz (0..15)
 						//=3 for highest speed with 7030-0906
 //#define _ARRAYLINES 0		//=0 only for Andanta IR area sensor =256
 //static	unsigned long ZADR = 1;		// Adress for adressed mode
@@ -181,7 +183,7 @@ int XOFF = 1;// _PIXEL / 600;			// index offset for display
 int XStart = 0;						//start index of display
 static int	LOX = 21;				// left upper x-corner of plot
 static int	LOY = 41;				// left upper x-corner of plot
-static unsigned int XLENGTH = 2200;			// x-width of  plot
+static unsigned int XLENGTH = _PIXEL + 50;			// x-width of  plot 
 static unsigned int YLENGTH = 255;			// y-width
 //static unsigned int YLENGTH = 510;			// zoom y
 BOOL PixelOdd = FALSE;				//display offset
@@ -256,6 +258,8 @@ int Nospb = 1000;
 #define _FORCETOPLS128 TRUE	//only use payload size 128byte
 ULONG NO_TLPS = 0x12; //was 0x11-> x-offset			//0x11=17*128  = 2176 Bytes  = 1088 WORDS
 ULONG TLPSIZE = 0x20;
+
+
 
 // Prototypes 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
