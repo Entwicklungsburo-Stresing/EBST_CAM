@@ -122,4 +122,4 @@ DllAccess void DLLInitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_inp
 DllAccess void DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain );
 DllAccess void DLLBlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 );
 DllAccess UINT8 DLLSetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq );
-DllAccess UINT64 returnBigBufBase();
+DllAccess void DLLInitProDLL();

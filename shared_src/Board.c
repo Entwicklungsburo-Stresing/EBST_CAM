@@ -168,7 +168,8 @@ enum cam_messages
 
 //jungodriver specific variables
 WD_PCI_CARD_INFO deviceInfo[MAXPCIECARDS];
-WDC_DEVICE_HANDLE hDev[MAXPCIECARDS];
+WDC_DEVICE_HANDLE hDev_temp[MAXPCIECARDS];
+WDC_DEVICE_HANDLE* hDev = hDev_temp;
 ULONG DMACounter = 0;//for debugging
 //Buffer of WDC_DMAContigBufLock function = one DMA sub block - will be copied to the big pDMABigBuf later
 USHORT* pDMASubBuf[3] = { NULL, NULL, NULL };
@@ -215,6 +216,12 @@ BOOL DMAISRunning = FALSE;
 #ifndef _CCDEXAMP
 double TRMSval[4];
 #endif
+
+struct global_vars
+{
+	WDC_DEVICE_HANDLE* hDev;
+	USHORT** pDMABigBufBase;
+};
 
 // ***********     functions    ********************** 
 
@@ -4053,3 +4060,19 @@ BOOL ResetAutostartXck( UINT32 drvno )
 	success &= ResetS0Bit( 2, S0Addr_CTRLB, drvno );
 	return success;
 }
+
+//This ifndef is here to prevent a redefinition of DLLInitGlobals in ESLSCDLL_pro project. Maybe in a clean version with correct global.h and only .h included instead of .c this isn't necessary. 
+#ifndef ESLSCDLL_PRO
+/**
+\brief Initializes the pro DLL. Call this before using it. While initialization global variables are set in pro dll.
+\return void
+*/
+void InitProDLL()
+{
+	struct global_vars g;
+	g.hDev = hDev;
+	g.pDMABigBufBase = pDMABigBufBase;
+	DLLInitGlobals( g );
+	return;
+}
+#endif
