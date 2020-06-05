@@ -1177,7 +1177,7 @@ VOID DLLCALLCONV interrupt_handler2( PVOID pData ) { isr( 2, pData ); }
 Gets address of DMASubBuf from driver and copy it later to our pDMABigBuf.
 */
 BOOL SetupPCIE_DMA( UINT32 drvno, ULONG nos, ULONG nob )
-{	
+{
 	DWORD dwStatus;
 	PUSHORT tempBuf;
 	ULONG mask = 0;
@@ -1644,7 +1644,7 @@ BOOL WriteLongIOPort( UINT32 drvno, ULONG DataL, ULONG PortOff )
 		ErrorMsg( "WriteLongIOPort failed" );
 		return FALSE;
 	}//else WDC_Err("I0PortWrite /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
-	
+
 	return TRUE;
 };  // WriteLongIOPort
 
@@ -2183,11 +2183,11 @@ void ResetEC( UINT32 drvno )
 	- 3  RSMON
 	- 4  DMAO
 	- 5  INTTRIGO
-	- 6  DATO 
-	- 7  BTRIGO 
-	- 8  INTSRO 
-	- 9  OPT1(S1) 
-	- 10 OPT1(S0) 
+	- 6  DATO
+	- 7  BTRIGO
+	- 8  INTSRO
+	- 9  OPT1(S1)
+	- 10 OPT1(S0)
 	- 11 BlockOn
 	- 12 MeasureOn
 	- 13 XCKDLYON
@@ -2470,7 +2470,7 @@ int keyCheckForBlockTrigger( UINT32 board_sel )
 \brief Const burst loop with DMA initiated by hardware DREQ. Read nos lines from FIFO.
 \param exttrig Is TRUE if every single scan is triggered externally.
 \param blocktrigger Is TRUE if each block is triggered externally (by Input or btrigger generator
-\param btrig_ch 
+\param btrig_ch
 	- btrig_ch=0 -> no read of state is performed
 	- btrig_ch=1 is pci tig in
 	- btrig_ch=2 is opto1
@@ -3104,7 +3104,7 @@ LONGLONG ticksTimestamp()
 
 }//ticksTimestamp
 
-/** 
+/**
 \brief Calc delay in ticks from us. Init high resolution counter and calcs DELAYTICKS from m_belPars.m_belDelayMsec.
 */
 UINT64 ustoTicks( ULONG us )
@@ -3614,11 +3614,10 @@ void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS
 \param gain_high 1 gain on, 0 gain off
 \return void
 */
-void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, 
-					 UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high )
-
-{	Cam3010_ADC_reset(drvno);
-	Cam3010_ADC_setMode(drvno, adc_mode, custom_pattern);
+void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high )
+{
+	Cam3010_ADC_reset( drvno );
+	Cam3010_ADC_setMode( drvno, adc_mode, custom_pattern );
 	//set camera pixel register
 	SendFLCAM( drvno, maddr_cam, cam_adaddr_pixel, pixel );
 	//set gain and led
@@ -3640,8 +3639,10 @@ void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc
 \param drvno selects PCIe board
 \return void
 */
-void Cam3010_ADC_reset(UINT32 drvno) {
-	SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_reset, adc_ltc2271_msg_reset);
+void Cam3010_ADC_reset( UINT32 drvno )
+{
+	SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_reset, adc_ltc2271_msg_reset );
+	return;
 }
 
 /**
@@ -3663,21 +3664,23 @@ void Cam3010_ADC_reset(UINT32 drvno) {
 \param custom_pattern (only used when adc_mode = 2)
 \return void
 */
-void Cam3010_ADC_setMode(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern) {
-
-	switch (adc_mode) {
-		case 2:
-			SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_custompattern);
-			//Test pattern MSB regsiter A3 (TP15:TP8) Address = 03h, Data = custom (8 bit)
-			SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_msb, custom_pattern >> 8);
-			//Test pattern LSB regsiter A4 (TP7:TP0)	Address = 04h, Data = custom (8 bit)
-			SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_lsb, custom_pattern & 0x00FF);
-			break;
-		case 0:
-		default:
-			SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_normal_mode);
-			break;
+void Cam3010_ADC_setMode( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern )
+{
+	switch (adc_mode)
+	{
+	case 2:
+		SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_custompattern );
+		//Test pattern MSB regsiter A3 (TP15:TP8) Address = 03h, Data = custom (8 bit)
+		SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_msb, custom_pattern >> 8 );
+		//Test pattern LSB regsiter A4 (TP7:TP0)	Address = 04h, Data = custom (8 bit)
+		SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_lsb, custom_pattern & 0x00FF );
+		break;
+	case 0:
+	default:
+		SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_normal_mode );
+		break;
 	}
+	return;
 }
 
 /**
@@ -3689,13 +3692,14 @@ void Cam3010_ADC_setMode(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern) {
 \param gain in ADC
 \return void
 */
-void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain ) {
-
-	Cam3030_ADC_reset(drvno);
-	Cam3030_ADC_twoWireModeEN(drvno); //two wire mode output interface for pal versions P209_2 and above
-	Cam3030_ADC_SetGain(drvno, gain);
+void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain )
+{
+	Cam3030_ADC_reset( drvno );
+	Cam3030_ADC_twoWireModeEN( drvno ); //two wire mode output interface for pal versions P209_2 and above
+	Cam3030_ADC_SetGain( drvno, gain );
 	if (adc_mode)
-		Cam3030_ADC_RampOrPattern(drvno, adc_mode, custom_pattern);
+		Cam3030_ADC_RampOrPattern( drvno, adc_mode, custom_pattern );
+	return;
 }
 
 /**
@@ -3705,8 +3709,10 @@ void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 
 \param drvno selects PCIe board
 \return void
 */
-void Cam3030_ADC_reset(UINT32 drvno) {
-	SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_reset, adc_ads5294_msg_reset);
+void Cam3030_ADC_reset( UINT32 drvno )
+{
+	SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_reset, adc_ads5294_msg_reset );
+	return;
 }
 
 /**
@@ -3714,14 +3720,16 @@ void Cam3030_ADC_reset(UINT32 drvno) {
 	Enables two wire LVDS data transfer mode of ADC ADS5294.
 	Only works with PAL versions P209_2 and above.
 	Called by InitCamera3030 - comment for older versions and rebuild
-	or use on e-lab test computer desktop LabView folder lv64hs (bool switch in 3030 init tab) 
+	or use on e-lab test computer desktop LabView folder lv64hs (bool switch in 3030 init tab)
 \param drvno selects PCIe board
 \return void
 */
-void Cam3030_ADC_twoWireModeEN(UINT32 drvno) {
-	SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_2wireMode, adc_ads5294_msg_2wireMode);
-	SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_wordWiseOutput, adc_ads5294_msg_wordWiseOutput);
-	SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_ddrClkAlign, adc_ads5294_msg_ddrClkAlign);
+void Cam3030_ADC_twoWireModeEN( UINT32 drvno )
+{
+	SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_2wireMode, adc_ads5294_msg_2wireMode );
+	SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_wordWiseOutput, adc_ads5294_msg_wordWiseOutput );
+	SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_ddrClkAlign, adc_ads5294_msg_ddrClkAlign );
+	return;
 }
 
 /**
@@ -3732,8 +3740,10 @@ void Cam3030_ADC_twoWireModeEN(UINT32 drvno) {
 \param gain of ADC
 \return void
 */
-void Cam3030_ADC_SetGain(UINT32 drvno, UINT8 gain) { 
-	SetADGain(drvno, 1, gain, gain, gain, gain, gain, gain, gain, gain);
+void Cam3030_ADC_SetGain( UINT32 drvno, UINT8 gain )
+{
+	SetADGain( drvno, 1, gain, gain, gain, gain, gain, gain, gain, gain );
+	return;
 }
 
 /**
@@ -3745,22 +3755,24 @@ void Cam3030_ADC_SetGain(UINT32 drvno, UINT8 gain) {
 \param custom_pattern (only used when adc_mode = 2)
 \return void
 */
-void Cam3030_ADC_RampOrPattern(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern) {
-
-	switch(adc_mode) {
-		case 1: //ramp
-			SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_ramp);
-			break;
-		case 2: //custom pattern
-			//to activate custom pattern the following messages are necessary: d - data
-			//at addr 0x25 (mode and higher bits): 0b00000000000100dd
-			SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_custompattern | ((custom_pattern >> 12) & 0x3));
-			//at addr 0x26 (lower bits): 0bdddddddddddd0000
-			SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_custompattern, custom_pattern << 4);
-			break;
-		default:
-			break;
+void Cam3030_ADC_RampOrPattern( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern )
+{
+	switch (adc_mode)
+	{
+	case 1: //ramp
+		SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_ramp );
+		break;
+	case 2: //custom pattern
+		//to activate custom pattern the following messages are necessary: d - data
+		//at addr 0x25 (mode and higher bits): 0b00000000000100dd
+		SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_custompattern | ((custom_pattern >> 12) & 0x3) );
+		//at addr 0x26 (lower bits): 0bdddddddddddd0000
+		SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_custompattern, custom_pattern << 4 );
+		break;
+	default:
+		break;
 	}
+	return;
 }
 
 
@@ -3972,8 +3984,8 @@ void AboutGPX( UINT32 drvno )
 double CalcRamUsageInMB( UINT32 nos, UINT32 nob )
 {
 	double ramUsage = 0;
-	for (int i=0; i<NUMBER_OF_BOARDS; i++)
-		ramUsage += nos * nob * aPIXEL[i+1] * aCAMCNT[i+1] * sizeof( UINT16 );
+	for (int i = 0; i < NUMBER_OF_BOARDS; i++)
+		ramUsage += nos * nob * aPIXEL[i + 1] * aCAMCNT[i + 1] * sizeof( UINT16 );
 	ramUsage = ramUsage / 1048576;
 	WDC_Err( "ram usage: %f", ramUsage );
 	return ramUsage;
@@ -3986,7 +3998,7 @@ double CalcRamUsageInMB( UINT32 nos, UINT32 nob )
 \param exposure_time_in_ms exposure time in ms
 \return time in seconds
 */
-double CalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in_ms  )
+double CalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in_ms )
 {
 	double measureTime = (double)nos * (double)nob * exposure_time_in_ms / 1000;
 	return measureTime;
