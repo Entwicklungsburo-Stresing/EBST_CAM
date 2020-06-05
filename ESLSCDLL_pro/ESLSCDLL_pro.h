@@ -23,7 +23,7 @@ void	*Direct2dViewer = NULL;
 #endif
 
 BOOL WINAPI DLLMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved );
-DllAccess void DLLInitProDll( UINT64 ppDMABuf );
+DllAccess void DLLInitGlobals( struct global_vars g );
 //************  2d greyscale viewer
 DllAccess void DLLStart2dViewer( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos );
 DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos );

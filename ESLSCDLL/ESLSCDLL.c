@@ -890,13 +890,12 @@ DllAccess void DLLBlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 )
 }
 
 /**
-\brief Return the base address of the pixel data.
-\param drvno PCIe board identifier
-\return Address of the pixel data.
+\copydoc InitProDLL
 */
-DllAccess UINT64 returnBigBufBase()
+DllAccess void DLLInitProDLL()
 {
-	return &pDMABigBufBase;
+	InitProDLL();
+	return;
 }
 
 /**
