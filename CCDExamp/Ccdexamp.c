@@ -791,7 +791,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 		case ID_2DVIEW_SHOW:
 		{
-			DLLInitProDll(&pDMABigBufBase);
+			InitProDLL();
 			DLLStart2dViewer( DRV, cur_nob, 0, _PIXEL, Nospb );
 			break;
 		}

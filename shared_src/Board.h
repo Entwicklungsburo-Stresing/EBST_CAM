@@ -162,3 +162,4 @@ BOOL SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq );
 BOOL SetPartialBinning( UINT32 drvno, UINT16 number_of_regions );
 BOOL AutostartXckForLines( UINT32 drvno );
 BOOL ResetAutostartXck( UINT32 drvno );
+void InitProDLL();
