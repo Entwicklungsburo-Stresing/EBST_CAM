@@ -39,8 +39,8 @@ BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
 HINSTANCE hInst;   // current instance
 LPCTSTR lpszAppName = "CCDExamp";
 LPCTSTR lpszTitle = "CCDExamp";
-HWND     hwndTrack;
-HWND     hwndTrack2;
+HWND     hwndTrackNos;
+HWND     hwndTrackNob;
 DWORD cur_nospb = 0;
 DWORD cur_nob = 0;
 #if CAMERA_SYSTEM == 3
