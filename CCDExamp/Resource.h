@@ -21,6 +21,7 @@
 #define IDD_FULLBIN                     114
 #define IDD_SETGAMMA                    116
 #define IDD_SETAREA                     117
+#define IDD_SETFULLBIN                  118
 #define IDC_ADAMP                       1002
 #define IDC_M_EXPTIME                   1003
 #define IDC_TLevel                      1004
@@ -124,7 +125,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        117
+#define _APS_NEXT_RESOURCE_VALUE        119
 #define _APS_NEXT_COMMAND_VALUE         40035
 #define _APS_NEXT_CONTROL_VALUE         1032
 #define _APS_NEXT_SYMED_VALUE           103

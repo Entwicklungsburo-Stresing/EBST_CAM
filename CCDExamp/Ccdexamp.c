@@ -774,7 +774,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_SETROI_5 ), hWnd, (DLGPROC)Set5ROI );
 			break;
 		case ID_SETFULLBINNING:
-			DialogBox(hInst, MAKEINTRESOURCE(IDD_FULLBIN), hWnd, (DLGPROC)FullBinning);
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_SETFULLBIN), hWnd, (DLGPROC)FullBinning);
 			break;
 		case ID_AREAMODE:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_SETAREA), hWnd, (DLGPROC)AreaMode);
@@ -1838,11 +1838,11 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 			SetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 			ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			//int partial binning
+			//init partial binning
 			WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
 			WriteLongS0( choosen_board, 5, 0x2C ); // S0Addr_ARREG = 0x2C,
 			SetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
-			SetupVCLKReg( choosen_board, _FFTLINES, 7 );
+			SetupVCLKReg( choosen_board, _FFTLINES, Vfreqini );
 #else
 			//Set auto start
 			DLLSetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,

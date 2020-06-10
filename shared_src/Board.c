@@ -4035,7 +4035,7 @@ void BlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 )
 BOOL SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 {
 	BOOL success = SetupVCLKReg( drvno, lines, vfreq );
-	success &= SetPartialBinning( drvno, 0 );
+	success &= ResetPartialBinning( drvno );
 	return success;
 }
 
@@ -4047,7 +4047,14 @@ BOOL SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 */
 BOOL SetPartialBinning( UINT32 drvno, UINT16 number_of_regions )
 {
-	return WriteLongS0( drvno, number_of_regions, S0Addr_ARREG );
+	BOOL success = SetS0Bit( 15, S0Addr_ARREG, drvno );//this turns ARREG on and therefore partial binning too
+	success &= WriteLongS0( drvno, number_of_regions, S0Addr_ARREG );
+	return success;
+}
+
+BOOL ResetPartialBinning( UINT32 drvno )
+{
+	return ResetS0Bit( 15, S0Addr_ARREG, drvno );//this turns ARREG off and therefore partial binning too
 }
 
 /**
