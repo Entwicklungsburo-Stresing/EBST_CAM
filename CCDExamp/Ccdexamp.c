@@ -30,7 +30,12 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
 	//show allocate buffer dialog before entering main application
 	DialogBox( hInstance, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
-
+	//make init here, that CCDExamp can be used to read the act regs...
+	if (!SetBoardVars( choosen_board, aCAMCNT[choosen_board], _PIXEL, XCKDELAY ))
+	{
+		ErrorMsg( "Error in SetBoardVars" );
+		return FALSE;
+	}
 	if (!InitInstance( hInstance, nCmdShow ))
 		return FALSE;
 
@@ -1118,6 +1123,10 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 	case WM_COMMAND:
 		switch (LOWORD( wParam ))
 		{
+		case IDC_ExtTrig:
+			//grayed exptime if exttrig is set
+			SendMessage( GetDlgItem( hDlg, IDC_M_EXPTIME ), EM_SETREADONLY, IsDlgButtonChecked( hDlg, IDC_ExtTrig ), 0L );
+			break;
 		case IDC_M_REPTIME:
 			//check if the summ of all roi is larger than fftlines 
 			//and write message and deactivate the ok button
@@ -1940,17 +1949,19 @@ LRESULT CALLBACK AreaMode(HWND hDlg,
 			_IsArea = TRUE;
 			_IsROI = 0;
 #ifndef _DLL
+			//vclks
+			SetupVCLKReg( choosen_board, 1, Vfreqini );
 			//set auto start
 			SetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			ResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			/*ResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
 			ResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
 			//Triger stuff
 			ResetS0Bit(4, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
 			ResetS0Bit(5, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			*/
 			//Reset partial binning
-			WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
-			//vclks
-			SetupVCLKReg(choosen_board, 1, Vfreqini);
+			//WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
+			ResetS0Bit( 15, 0x2C, choosen_board );
 #else
 			//set auto start 
 			DLLSetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
