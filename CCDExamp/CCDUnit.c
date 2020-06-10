@@ -553,9 +553,9 @@ void startMess(void *dummy)
 	//DMA_Setup
 	// write header
 	if(cont_mode)
-		j = sprintf_s(header, 260, " Continuous mode - Cancel with ESC or space- key  ");
+		j = sprintf_s(header, 260, " Continuous mode - Cancel with ESC or space- key                   ");
 	else
-		j = sprintf_s( header, 260, " One Shot mode  " );
+		j = sprintf_s( header, 260, " One Shot mode - Cancel with ESC or space- key                    " );
 	TextOut(hMSDC, 100, LOY - 17, header, j);
 	RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
 
@@ -586,7 +586,10 @@ void startMess(void *dummy)
 	if (both_boards) IsrNumber *= 2;
 	if (CAMCNT == 2) IsrNumber *= 2;
 	while (IsrCounter < IsrNumber) {
-		j = sprintf_s(header, 260, " Online Loop - Cancel with ESC or space- key isr: %i of %i ", IsrCounter + 1, IsrNumber);//+1 cheating
+		if (cont_mode)
+			j = sprintf_s( header, 260, " Continuous mode - Cancel with ESC or space- key isr: %i of %i  ", IsrCounter + 1, IsrNumber );//+1 cheating );
+		else
+			j = sprintf_s( header, 260, " One Shot mode - Cancel with ESC or space- key isr: %i of %i  ", IsrCounter + 1, IsrNumber );//+1 cheating );
 		TextOut(hMSDC, 100, LOY - 17, header, j);
 		RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
 	}

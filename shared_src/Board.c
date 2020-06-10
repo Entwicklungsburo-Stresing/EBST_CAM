@@ -1490,12 +1490,7 @@ BOOL BufLock( UINT drvno, UINT camcnt, int nob, int nospb )
 	if (pBLOCKBUF[drvno] != 0)
 	{
 		//pDMABigBufBase = pBLOCKBUF;
-		//make init here, that CCDExamp can be used to read the act regs...
-		if (!SetBoardVars( drvno, aCAMCNT[drvno], _PIXEL, XCKDELAY ))
-		{
-			ErrorMsg( "Error in SetBoardVars" );
-			return FALSE;
-		}
+		
 		pDMABigBufBase[drvno] = pBLOCKBUF[drvno];
 
 		if (!SetupPCIE_DMA( drvno, Nospb, Nob ))  //get also buffer address
