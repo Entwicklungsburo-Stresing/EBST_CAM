@@ -70,6 +70,12 @@ struct ffloopparams
 	UINT8 btrig_ch;
 };
 
+struct global_vars
+{
+	WDC_DEVICE_HANDLE* hDev;
+	USHORT** pDMABigBufBase;
+};
+
 typedef USHORT ArrayT; //!! USHORT for linear 12/16bit word array or resort or highest speed
 typedef ArrayT* pArrayT;
 
@@ -83,7 +89,6 @@ extern USHORT** pDMABigBufBase;
 extern int Nob;
 extern int Nospb;
 extern ULONG aCAMCNT[5];	// cameras parallel
-extern WDC_DEVICE_HANDLE hDev[MAXPCIECARDS];
 extern WDC_DEVICE_HANDLE* hDev;
 extern BOOL escape_readffloop;
 extern BOOL contffloop;
@@ -94,7 +99,7 @@ extern BOOL Running;
 extern pArrayT pBLOCKBUF[3];
 extern UINT32 BOARD_SEL;
 
-
+static ULONG XCKDELAY = 3; //100ns+n*400ns, 1<n<8 Sony=7
 
 void ErrMsgBoxOn( void );
 void ErrMsgBoxOff( void ); // switch to suppress error message boxes
