@@ -182,7 +182,6 @@ volatile USHORT*   pDMABigBufIndex[3] = { NULL, NULL, NULL };
 __int64 START = 0;				// global variable for sync to systemtimer
 //USHORT* pDMABigBufBase[3] = { NULL, NULL, NULL };
 
-static ULONG XCKDELAY = 3; //100ns+n*400ns, 1<n<8 Sony=7
 
 // extern global variables
 int newDLL = 0;
@@ -198,18 +197,10 @@ BOOL escape_readffloop = FALSE;
 BOOL contffloop = FALSE;
 USHORT* temp_pDMABigBufBase[3] = { NULL, NULL, NULL };
 USHORT** pDMABigBufBase= temp_pDMABigBufBase;
-WDC_DEVICE_HANDLE hDev[MAXPCIECARDS];
 ULONG aPIXEL[5] = { 0, 0, 0, 0, 0 };	// pixel
 BOOL Running = FALSE;
 pArrayT pBLOCKBUF[3] = { NULL, NULL, NULL };
 UINT32 BOARD_SEL = 1;
-
-
-struct global_vars
-{
-	WDC_DEVICE_HANDLE* hDev;
-	USHORT** pDMABigBufBase;
-};
 
 // ***********     functions    ********************** 
 
