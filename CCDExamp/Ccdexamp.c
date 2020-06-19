@@ -29,7 +29,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		return FALSE;
 
 	//make init here, that CCDExamp can be used to read the act regs...
-	if (!SetBoardVars( choosen_board, aCAMCNT[choosen_board], _PIXEL, XCKDELAY ))
+	if (!SetBoardVars( choosen_board, aCAMCNT[choosen_board], _PIXEL ))
 	{
 		ErrorMsg( "Error in SetBoardVars" );
 		return FALSE;
@@ -93,7 +93,7 @@ BOOL InitApplication( HINSTANCE hInstance )
 		ErrorMsg( " Can't open first board " );
 		return (FALSE);
 	};
-	if (NUMBER_OF_BOARDS >= 2)
+	if (number_of_boards >= 2)
 		if (!InitBoard( 2 ))
 		{
 			ErrorMsg( " Can't open second board " );
@@ -156,7 +156,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		//Reset partial binning
 		WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
 		//vclks
-		SetupVCLKReg( choosen_board, _FFTLINES, 7 );
+		SetupVCLKReg( choosen_board, _FFTLINES, Vfreqini );
 	}
 
 	CloseShutter( choosen_board ); //set cooling  off
@@ -878,13 +878,9 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			// RE&RS enable
 		//WriteByteS0(choosen_board,0x0f,0x30);
 			break;
-		case VK_F7: //set high amp
-			HIAMP = TRUE;
-			//TODO
+		case VK_F7:
 			break;
-		case VK_F8: //set low amp
-			HIAMP = FALSE;
-			//TODO
+		case VK_F8:
 			break;
 
 			//case VK_SHIFT:
@@ -942,7 +938,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		//CleanupPCIE_DMA(choosen_board);
 		//StopRingReadThread();
 		//board 1
-		if (NUMBER_OF_BOARDS >= 2)
+		if (number_of_boards >= 2)
 		{
 			StopFFTimer( 2 );
 			SetIntFFTrig( 2 );//disables ext. Trig.
@@ -1304,8 +1300,6 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 					nDLLSetupDMA( 2, Nospb, Nob );
 			}
 #else
-				if (pBLOCKBUF[choosen_board])
-					free( pBLOCKBUF[choosen_board] );
 				FreeMemInfo( &builtinram, &freeram );
 				freeram_old = freeram;
 
@@ -1370,7 +1364,7 @@ LRESULT CALLBACK ChooseBoard( HWND hDlg,
 	{
 	case WM_INITDIALOG:
 		//if there is just one board initialized gray out board 2 option and both option
-		if (NUMBER_OF_BOARDS < 2)
+		if (number_of_boards < 2)
 		{
 			EnableWindow( GetDlgItem( hDlg, IDC_EC_RADIO2 ), FALSE );
 			EnableWindow( GetDlgItem( hDlg, IDC_EC_RADIO_BOTH ), FALSE );
@@ -1412,11 +1406,6 @@ LRESULT CALLBACK ChooseBoard( HWND hDlg,
 				BOARD_SEL = 3;
 #endif
 			EndDialog( hDlg, TRUE );
-
-			//if the second buffer is not initilized
-			if (choosen_board == 2 || both_boards)
-				if (!pBLOCKBUF[2])
-					DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
 			return (TRUE);
 			break;
 		}
@@ -1738,7 +1727,7 @@ LRESULT CALLBACK Set3ROI( HWND hDlg,
 			WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
 			WriteLongS0( choosen_board, ROI, 0x2C ); // S0Addr_ARREG = 0x2C,
 			SetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
-			SetupVCLKReg( choosen_board, _FFTLINES, 7 );
+			SetupVCLKReg( choosen_board, _FFTLINES, Vfreqini );
 #else
 			//Set auto start 
 			DLLSetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
