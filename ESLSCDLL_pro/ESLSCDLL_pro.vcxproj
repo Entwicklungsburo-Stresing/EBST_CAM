@@ -133,8 +133,10 @@
     </ResourceCompile>
     <PostBuildEvent>
       <Command>copy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)CCDExamp\"
+copy "$(TargetPath)" "$(SolutionDir)CCDExamp\$(IntermediateOutputPath)"
 copy "$(ProjectDir)Direct2dViewer_c.h" "$(SolutionDir)CCDExamp\"
-copy "$(TargetPath)" "$(SolutionDir)CCDExamp\$(IntermediateOutputPath)"</Command>
+copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"
+</Command>
       <Message>Copy $(ProjectName) to CCDExamp</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>

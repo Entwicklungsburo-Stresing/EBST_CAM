@@ -17,6 +17,7 @@
 #include "Jungo/wdc_defs.h"
 #include "wchar.h"
 #include "lscpciej_lib.h"
+#include "shared_src/ESLSCDLL_pro.h"
 //#include "kp_lscpciej.c"
 
 //#include "wd_kp.h"

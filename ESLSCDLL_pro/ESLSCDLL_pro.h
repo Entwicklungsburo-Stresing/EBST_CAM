@@ -1,15 +1,5 @@
+#pragma once
 #include <windows.h>
-#include "Direct2dViewer_c.h"
-// Make this data shared among all 
-// all applications that use this DLL.
-//....................................
-#pragma data_seg( ".GLOBALS" )
-int nProcessCount = 0;
-int nThreadCount = 0;
-
-#include "shared_src/board.h"
-
-void	*Direct2dViewer = NULL;
 
 // Microsoft C/C++ specific import/export specifier.
 // These take the place of the EXPORTS and IMPORTS
