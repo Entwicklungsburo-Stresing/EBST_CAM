@@ -1,3 +1,4 @@
+#include "CCDUnit.h"
 
 BYTE Dispcnt = 0;
 int yVal = 0;

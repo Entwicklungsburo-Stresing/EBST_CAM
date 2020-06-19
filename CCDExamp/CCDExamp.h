@@ -21,7 +21,7 @@ BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
 #include "shared_src/Board.h"
 #endif
 #include "Global.h" 
-#include "CCDUnit.c"
+#include "CCDUnit.h"
 
 
 #if defined (WIN32)

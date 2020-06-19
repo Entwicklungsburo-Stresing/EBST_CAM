@@ -1,3 +1,6 @@
+#pragma once
+#include <Windows.h>
+
 // GLOBAL.h   V1.0
 // all globals for measure loop
 // can be used for PCIE board
@@ -34,12 +37,6 @@ enum adc_mode
 #define		DRV		1	//1 if only one interface board LSCPCI1 or LSCISA1 in example
 						// could be 2..4 for multiple boards
 #define CAMCNT 1
-#if CAMCNT == 1
-BOOL DISP2 = FALSE;		//display 1 camera
-#endif
-#if CAMCNT == 2
-BOOL DISP2 = TRUE;		//display 2 cameras parallel, TRUE for double line 
-#endif
 #define _MAXDB	4					// no. of lines
 //#define Nos _MAXDB
 #define DMA_64BIT_EN FALSE
@@ -51,8 +48,8 @@ BOOL DISP2 = TRUE;		//display 2 cameras parallel, TRUE for double line
 #define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
 #define INTR_EN TRUE		// enables INTR
 #define MAXPCIECARDS 5
+#define _PIXEL 1088
 typedef USHORT ArrayT; //!! USHORT for linear 12/16bit word array or resort or highest speed
-BOOL contimess_run_once = FALSE;
 typedef ArrayT* pArrayT;
 //!! long for standard 
 //this is the read from FIFO frequency
@@ -80,8 +77,6 @@ static	unsigned long _FKT = 1;		// -1:clearread, 0:datab=0, 1:read 5: testdata
 							// =0 if not FFT
 #define _ISPDA FALSE			//set RS after read; TRUE for HA S39xx
 #define _ISFFT TRUE		//set vclk generator; TRUE for HA S703x
-BOOL _IsArea = FALSE; //FALSE is just the init val
-__int16 _IsROI = 0; //FALSE is just the init val
 //#define _ISAREA FALSE	//set AREA Mode on CAMERA
 //#define _HA_MODULE FALSE		//TRUE for HA module C7041 or C8061
 //vclk frequency 
@@ -100,62 +95,34 @@ enum trigger_mode
 	dat = 2
 };
 #define TRIGGER_MODE xck
-#if TRIGGER_MODE == 1
-BOOL EXTTRIGFLAG = TRUE;		// run with external Trigger
-#else
-BOOL EXTTRIGFLAG = FALSE;		// run with external Trigger
-#endif
-									// DELAYMS is here wait after trigger!
-int TrigMod = 0;						//pos slope
 //static BOOL HISLOPE = TRUE;			// Slope for external Trigger
 static BOOL HIAMP = FALSE;			// Amplification for switchable sensors
 //__int64 DELAY = 0;			   //also set in InitHRCounter
-__int64 TICKSDISP = 0;			//display time in ticks
 // Display data
 static BOOL PLOTFLAG = TRUE;		// TRUE for dense, FALSE for dots
-int XOFF = 1;// _PIXEL / 600;			// index offset for display	
-int XStart = 0;						//start index of display
 static int	LOX = 21;				// left upper x-corner of plot
 static int	LOY = 41;				// left upper x-corner of plot
 static unsigned int XLENGTH = _PIXEL + 50;			// x-width of  plot 
 static unsigned int YLENGTH = 255;			// y-width
 //static unsigned int YLENGTH = 510;			// zoom y
-BOOL PixelOdd = FALSE;				//display offset
 // key to stop measure loop
 #define _ScanCode_End	 57 //E=18   Space 57
 #define _ScanCode_Cancel  01 //Q=16   ESC 01
 //for ReadSoftFifo example
-int ExpTime = 1000; //in µs
-int RepTime = 1 * _MINREPTIME; //in ms for _MSHUT
-__int16 Releasems = 1; //>=1	>1 or keyboard does not work - could be exposuretime	
-ULONG Threadp = 31;  //<=15  8=default,15=highest in current process,31=time critical
-int TempLevel = 0;
 #define _COOLER FALSE
 //for 2 thread display
-BOOL GetNextScan = FALSE;
-BOOL UpdateDispl = FALSE;
 //for trms calcs
 #define TRMSpix  1 //(8-1)*150-100// _PIXEL/2	//pixel no for which the rms value is sampled
 #define NOS  300  //number of samples for trms calcs
-ULONG m_lfdTrmsNr = 0;
 double TRMSval[2];
 ULONG TRMSVals[2][NOS];
-BOOL ShowTrms = FALSE;
 //globals for cds setup
 //BOOL m_SHA = TRUE;  //TRUE for SHA, FALSE for CDS
 //UINT m_Amp =2;
 //int m_Ofs =-50;
 //UINT m_TIgain =0;
 // globals for EC control with FIFO
-ULONG	tDAT = 0; // delay after trigger
-ULONG	tXDLY = 0; // exposure control for special sensors: PDA, ILC6, TH78xx
 //ULONG   tECADJ=0; //delay adjust for EC
-BYTE	tTICNT = 0; // trigger input divider
-BYTE	tTOCNT = 0; // trigger output divider
-int m_TOmodus = 1; //trigger out plug signal
-int m_ECTrigmodus = 1;
-int m_ECmodus = 1;
-BOOL m_noPDARS = FALSE;
 // global declarations for CCDEXAMP
 HDC hMSDC;	// global stored measure DC of our window
 HWND hMSWND; // global stored measure HWND of our window
@@ -185,7 +152,33 @@ DWORD FirstPageOffset;
 //Nospb = 1000;
 #endif
 #define _FORCETOPLS128 TRUE	//only use payload size 128byte
-ULONG NO_TLPS = 0x12; //was 0x11-> x-offset			//0x11=17*128  = 2176 Bytes  = 1088 WORDS
-ULONG TLPSIZE = 0x20;
 
-
+extern int ExpTime; //in µs
+extern BOOL DISP2;
+extern BOOL contimess_run_once;
+extern BOOL _IsArea; //FALSE is just the init val
+extern __int16 _IsROI; //FALSE is just the init val
+extern BOOL EXTTRIGFLAG;		// run with external Trigger
+extern int TrigMod;						//pos slope
+extern __int64 TICKSDISP;			//display time in ticks
+extern int XOFF;// _PIXEL / 600;			// index offset for display	
+extern int XStart;						//start index of display
+extern BOOL PixelOdd;				//display offset
+extern int RepTime; //in ms for _MSHUT
+extern __int16 Releasems; //>=1	>1 or keyboard does not work - could be exposuretime	
+extern ULONG Threadp;  //<=15  8=default,15=highest in current process,31=time critical
+extern int TempLevel;
+extern BOOL GetNextScan;
+extern BOOL UpdateDispl;
+extern ULONG m_lfdTrmsNr;
+extern BOOL ShowTrms;
+extern ULONG	tDAT; // delay after trigger
+extern ULONG	tXDLY; // exposure control for special sensors: PDA, ILC6, TH78xx
+extern BYTE	tTICNT; // trigger input divider
+extern BYTE	tTOCNT; // trigger output divider
+extern int m_TOmodus; //trigger out plug signal
+extern int m_ECTrigmodus;
+extern int m_ECmodus;
+extern BOOL m_noPDARS;
+extern ULONG NO_TLPS; //was 0x11-> x-offset			//0x11=17*128  = 2176 Bytes  = 1088 WORDS
+extern ULONG TLPSIZE;
