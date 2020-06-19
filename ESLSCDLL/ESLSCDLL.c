@@ -111,7 +111,7 @@ DllAccess UINT8 nDLLCCDDrvInit( void )
 	if (CCDDrvInit())
 	{
 		WDC_Err( "finished DRVInit back in DLL\n" );
-		return NUMBER_OF_BOARDS;
+		return number_of_boards;
 	}
 	return 0;
 }
@@ -227,7 +227,7 @@ DllAccess UINT8 DLLWriteLongIOPort( UINT32 drvno, UINT32 DataL, UINT32 PortOff )
 DllAccess void DLLAboutDrv( UINT32 drvno )
 {
 	AboutDrv( drvno );
-	if (NUMBER_OF_BOARDS == 2) AboutDrv( 2 );
+	if (number_of_boards == 2) AboutDrv( 2 );
 	return;
 }
 
@@ -475,8 +475,6 @@ DllAccess void DLLSetupDMA( UINT32 drv, void* pdioden, UINT32 nos, UINT32 nob )
 	//pass mem pointer to DMA ISR via global pDMABigBuf before calling SetupPCIE_DMA!
 	//pDMABigBuf = pdioden;
 	pDMABigBufBase[drv] = pdioden;
-	UserBufInScans = nos;  //one buffer for all
-
 						   //ErrorMsg(" Camera found"); //without this message is a crash in the first call ...
 						   //must before the functionSetupPCIE_DMA or after DLLDrvInit
 						   //Sleep(1000);
@@ -564,12 +562,10 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 	else
 	{
 		ErrorMsg( "Not enough physical RAM available!" );
-		WDC_Err( "ERROR for buffer %d: available memory: %lld MB \n \tmemory needed: %lld MB\n", NUMBER_OF_BOARDS, memory_free_mb, needed_mem_mb );
+		WDC_Err( "ERROR for buffer %d: available memory: %lld MB \n \tmemory needed: %lld MB\n", number_of_boards, memory_free_mb, needed_mem_mb );
 	}
 	//pDIODEN = (pArrayT)calloc(nob, nospb * _PIXEL * sizeof(ArrayT));
 	//pDMABigBufBase[drvno] = pdioden;
-	UserBufInScans = nos;  //one buffer for all
-
 	//ErrorMsg(" Camera found"); //without this message is a crash in the first call ...
 	//must before the functionSetupPCIE_DMA or after DLLDrvInit
 	//Sleep(1000);
@@ -631,7 +627,7 @@ DllAccess void nDLLReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, U
 	_beginthreadex( 0, 0, &ReadFFLoopThread, &params, 0, 0 );//cam_thread[0] = (HANDLE)_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//threadex
 //}
 /*
-	if (NUMBER_OF_BOARDS == 2 && (cam_sel == 2 || cam_sel == 3)){
+	if (number_of_boards == 2 && (cam_sel == 2 || cam_sel == 3)){
 		//struct has to be volatile, if not readffloop is always called with drvno=1
 		params2.drvno = 2;
 		params2.exptus = exptus;
