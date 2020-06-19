@@ -4033,8 +4033,6 @@ BOOL ResetAutostartXck( UINT32 drvno )
 	return success;
 }
 
-//This ifndef is here to prevent a redefinition of DLLInitGlobals in ESLSCDLL_pro project. Maybe in a clean version with correct global.h and only .h included instead of .c this isn't necessary. 
-#ifndef ESLSCDLL_PRO
 /**
 \brief Initializes the pro DLL. Call this before using it. While initialization global variables are set in pro dll.
 \return void
@@ -4046,7 +4044,6 @@ void InitProDLL()
 	DLLInitGlobals( g );
 	return;
 }
-#endif
 
 /**
 \brief Checks if the dam routine was already called.

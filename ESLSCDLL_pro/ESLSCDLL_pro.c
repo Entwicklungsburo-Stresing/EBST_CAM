@@ -18,6 +18,17 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 */
 
 #include "ESLSCDLL_pro.h"
+#include "Direct2dViewer_c.h"
+// Make this data shared among all
+// all applications that use this DLL.
+//....................................
+#pragma data_seg( ".GLOBALS" )
+int nProcessCount = 0;
+int nThreadCount = 0;
+
+#include "shared_src/board.h"
+
+void	*Direct2dViewer = NULL;
 
 /**
 \brief DllMain entry point
