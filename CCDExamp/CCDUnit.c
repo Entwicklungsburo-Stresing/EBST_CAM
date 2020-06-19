@@ -509,6 +509,27 @@ void initMeasurement()
 	}
 #endif
 }
+/*
+unsigned int __stdcall ContDispRoutine( void *parg )//threadex
+{
+	BOOL cancel = FALSE;
+	while (!cancel)
+	{
+
+		CopytoDispbuf( 8 );
+		Display( 1, PLOTFLAG );
+
+		UpdateTxT();
+
+		if (GetAsyncKeyState( VK_ESCAPE ))
+			cancel = TRUE;
+		if (GetAsyncKeyState( VK_SPACE ))
+			cancel = TRUE;
+		Sleep( 10000 );
+	}
+
+}
+*/
 
 //former Contimess
 void startMess(void *dummy)
@@ -550,9 +571,9 @@ void startMess(void *dummy)
 	//DMA_Setup
 	// write header
 	if(cont_mode)
-		j = sprintf_s(header, 260, " Continuous mode - Cancel with ESC or space- key  ");
+		j = sprintf_s(header, 260, " Continuous mode - Cancel with ESC or space- key                   ");
 	else
-		j = sprintf_s( header, 260, " One Shot mode  " );
+		j = sprintf_s( header, 260, " One Shot mode - Cancel with ESC or space- key                    " );
 	TextOut(hMSDC, 100, LOY - 17, header, j);
 	RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
 
@@ -583,25 +604,32 @@ void startMess(void *dummy)
 	if (both_boards) IsrNumber *= 2;
 	if (CAMCNT == 2) IsrNumber *= 2;
 	while (IsrCounter < IsrNumber) {
-		j = sprintf_s(header, 260, " Online Loop - Cancel with ESC or space- key isr: %i of %i ", IsrCounter + 1, IsrNumber);//+1 cheating
+		if (cont_mode)
+			j = sprintf_s( header, 260, " Continuous mode - Cancel with ESC or space- key isr: %i of %i  ", IsrCounter + 1, IsrNumber );//+1 cheating );
+		else
+			j = sprintf_s( header, 260, " One Shot mode - Cancel with ESC or space- key isr: %i of %i  ", IsrCounter + 1, IsrNumber );//+1 cheating );
 		TextOut(hMSDC, 100, LOY - 17, header, j);
 		RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
 	}
 	//ReadFFLoop(choosen_board, ExpTime, FREQ, EXTTRIGFLAG, 0,  0);
+
 	BOOL cancel = FALSE;
 	if (cont_mode)
-		while (!cancel) {
+		//_beginthreadex( 0, 0, &ContDispRoutine, 0, 0, 0 );BOOL cancel = FALSE;
+		while (!cancel)
+		{
 
-			CopytoDispbuf(0);
-			Display(1, PLOTFLAG);
+			CopytoDispbuf( 8 );
+			Display( 1, PLOTFLAG );
 
 			UpdateTxT();
 
-			if (GetAsyncKeyState(VK_ESCAPE))
+			if (GetAsyncKeyState( VK_ESCAPE ))
 				cancel = TRUE;
-			if (GetAsyncKeyState(VK_SPACE))
+			if (GetAsyncKeyState( VK_SPACE ))
 				cancel = TRUE;
 		}
+
 	Sleep(100);//for the thread if there is just one isr 
 	//start 2nd thread for getting data in highest std priority, ring=200 lines
 #endif

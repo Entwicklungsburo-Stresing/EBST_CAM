@@ -130,7 +130,7 @@ BOOL CallWRFile( UINT32 drvno, void* pdioden, ULONG arraylength, ULONG fkt );
 BOOL CallIORead( UINT32 drvno, void* pdioden, ULONG fkt );
 BOOL ReadLongIOPort( UINT32 drvno, ULONG *DWData, ULONG PortOff );// read long from IO runreg
 BOOL ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff );	// read long from space0
-BOOL ReadLongDMA( UINT32 drvno, PULONG pDWData, ULONG PortOff );
+BOOL ReadLongDMA( UINT32 drvno, UINT32 * DWData, ULONG PortOff );
 BOOL ReadByteS0( UINT32 drvno, BYTE *data, ULONG PortOff );	// read byte from space0
 BOOL WriteLongIOPort( UINT32 drvno, ULONG DataL, ULONG PortOff );// write long to IO runreg
 BOOL WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff );// write long to space0
@@ -224,7 +224,7 @@ void SendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 fea
 void DAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output ); //set output of DAC (PCB 2189-7)
 void FreeMemInfo( UINT64 *pmemory_all, UINT64 *pmemory_free );
 void GetRmsVal( ULONG nos, ULONG *TRMSVals, double *mwf, double *trms );
-void CalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );
+void CalcTrms( UINT32 drvno, UINT32 nos, UINT16 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );
 UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block, UINT16 CAM );
 void* GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block, UINT16 CAM );
 UINT8 WaitforTelapsed( LONGLONG musec );
@@ -246,6 +246,7 @@ double CalcMeasureTimeInSeconds( UINT32 drvno, UINT32 nos, double exposure_time_
 void BlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 );
 BOOL SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq );
 BOOL SetPartialBinning( UINT32 drvno, UINT16 number_of_regions );
+BOOL ResetPartialBinning( UINT32 drvno );
 BOOL AutostartXckForLines( UINT32 drvno );
 BOOL ResetAutostartXck( UINT32 drvno );
 void InitProDLL();

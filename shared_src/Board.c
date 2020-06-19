@@ -143,8 +143,8 @@ BOOL DMAAlreadyStarted = FALSE;
 DWORD64 IsrCounter = 0;
 //DWORD64 ISRCounter[2] = { 0, 0};
 DWORD64 SubBufCounter[3] = { 0, 0, 0 };
-DWORD64 val = 0x0;
-DWORD64 DMA_bufsizeinbytes = 0;
+UINT32 val = 0x0;
+DWORD DMA_bufsizeinbytes = 0;
 WDC_PCI_SCAN_RESULT scanResult;
 // handle array for our drivers
 HANDLE ahCCDDRV[5] = { INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE };
@@ -407,7 +407,7 @@ void AboutS0( UINT32 drvno )
 	j = sprintf( fn, "S0- registers   \n" );
 
 	//Hier werden alle 6 Adressen der BARs in Hex abgefragt
-
+	//WriteLongS0( 1, 0xADDAFEED, 32 );
 	for (i = 0; i <= 31; i++)
 	{
 		ReadLongS0( drvno, &S0Data, i * 4 );
@@ -515,7 +515,7 @@ BOOL CCDDrvInit( void )
 		ErrorMsg( "driver closed.\n" );
 		return FALSE;
 	}
-	NUMBER_OF_BOARDS = scanResult.dwNumDevices;
+	NUMBER_OF_BOARDS = (UINT8) scanResult.dwNumDevices;
 
 	TPS = InitHRCounter();//for ticks function
 
@@ -1165,7 +1165,7 @@ VOID DLLCALLCONV interrupt_handler2( PVOID pData ) { isr( 2, pData ); }
 Gets address of DMASubBuf from driver and copy it later to our pDMABigBuf.
 */
 BOOL SetupPCIE_DMA( UINT32 drvno, ULONG nos, ULONG nob )
-{	
+{
 	DWORD dwStatus;
 	PUSHORT tempBuf;
 	ULONG mask = 0;
@@ -1478,12 +1478,7 @@ BOOL BufLock( UINT drvno, UINT camcnt, int nob, int nospb )
 	if (pBLOCKBUF[drvno] != 0)
 	{
 		//pDMABigBufBase = pBLOCKBUF;
-		//make init here, that CCDExamp can be used to read the act regs...
-		if (!SetBoardVars( drvno, aCAMCNT[drvno], _PIXEL, XCKDELAY ))
-		{
-			ErrorMsg( "Error in SetBoardVars" );
-			return FALSE;
-		}
+		
 		pDMABigBufBase[drvno] = pBLOCKBUF[drvno];
 
 		if (!SetupPCIE_DMA( drvno, Nospb, Nob ))  //get also buffer address
@@ -1509,14 +1504,14 @@ BOOL BufLock( UINT drvno, UINT camcnt, int nob, int nospb )
 \param PortOff offset of register (count in bytes)
 \return ==0 if error, TRUE if success
 */
-BOOL ReadLongIOPort( UINT32 drvno, ULONG *DWData, ULONG PortOff )
+BOOL ReadLongIOPort( UINT32 drvno, UINT32 *DWData, ULONG PortOff )
 {
 	volatile DWORD dwStatus = 0;
 	DWORD   ReturnedLength;
 	ULONG	PortOffset;
 
 	PortOffset = PortOff;
-	dwStatus = WDC_PciReadCfg( hDev[drvno], PortOff, DWData, sizeof( ULONG ) );
+	dwStatus = WDC_PciReadCfg( hDev[drvno], PortOff, DWData, sizeof( UINT32 ) );
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		WDC_Err( "ReadLongIOPort in address 0x%x failed\n", PortOff );
@@ -1542,7 +1537,7 @@ BOOL ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff )
 	//space0 starts at S0-Offset=0x80 in BAR0
 	PortOffset = PortOff + 0x80;
 
-	dwStatus = WDC_ReadAddrBlock( hDev[drvno], 0, PortOffset, sizeof( ULONG ), DWData, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
+	dwStatus = WDC_ReadAddrBlock( hDev[drvno], 0, PortOffset, sizeof( UINT32 ), DWData, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
@@ -1561,15 +1556,13 @@ BOOL ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff )
 \param PortOff Offset from BaseAdress - in Bytes ! 0..3= Regs of Board.
 \return TRUE (!=0) if success
 */
-BOOL ReadLongDMA( UINT32 drvno, PULONG* pDWData, ULONG PortOff )
+BOOL ReadLongDMA( UINT32 drvno, UINT32 * DWData, ULONG PortOff )
 {
 	volatile DWORD dwStatus = 0;
-	DWORD   ReturnedLength;
 	ULONG	PortOffset;
 
 	PortOffset = PortOff;
-	dwStatus = WDC_ReadAddrBlock( hDev[drvno], 0, PortOff, sizeof( ULONG ), pDWData, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
-	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
+	dwStatus = WDC_ReadAddrBlock( hDev[drvno], 0, PortOffset, sizeof( UINT32 ), DWData, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		WDC_Err( "ReadLongDMA in address 0x%x failed\n", PortOff );
@@ -1590,11 +1583,10 @@ BOOL ReadLongDMA( UINT32 drvno, PULONG* pDWData, ULONG PortOff )
 BOOL ReadByteS0( UINT32 drvno, BYTE *data, ULONG PortOff )
 {
 	volatile DWORD dwStatus = 0;
-	DWORD   ReturnedLength;
 	ULONG	PortOffset;
 
 	PortOffset = PortOff + 0x80;
-	dwStatus = WDC_ReadAddrBlock( hDev[drvno], 0, PortOffset, 1/*sizeof(BYTE)*/, data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
+	dwStatus = WDC_ReadAddrBlock( hDev[drvno], 0, PortOffset, sizeof(BYTE), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
@@ -1612,27 +1604,23 @@ BOOL ReadByteS0( UINT32 drvno, BYTE *data, ULONG PortOff )
 \param PortOff offset from base address of register (count in bytes)
 \return ==0 if error, TRUE if success
 */
-BOOL WriteLongIOPort( UINT32 drvno, ULONG DataL, ULONG PortOff )
+BOOL WriteLongIOPort( UINT32 drvno, UINT32 DataL, ULONG PortOff )
 {
-	BOOL fResult = FALSE;
-	sDLDATA WriteData;
-	ULONG	DataLength;
-	DWORD   ReturnedLength;
 	volatile DWORD dwStatus = 0;
-	PULONG data = &DataL;
+	PUINT32 data = &DataL;
 
 	//WriteData.POff	= PortOff;
 	//WriteData.Data	= DWData;
 	//DataLength		= 8; 
 
-	dwStatus = WDC_PciWriteCfg( hDev[drvno], PortOff, data, sizeof( ULONG ) );
+	dwStatus = WDC_PciWriteCfg( hDev[drvno], PortOff, data, sizeof( UINT32 ) );
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		WDC_Err( "WriteLongIOPort in address 0x%x with data: 0x%x failed\n", PortOff, DataL );
 		ErrorMsg( "WriteLongIOPort failed" );
 		return FALSE;
 	}//else WDC_Err("I0PortWrite /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
-	
+
 	return TRUE;
 };  // WriteLongIOPort
 
@@ -1647,10 +1635,11 @@ BOOL WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff )
 {
 	volatile DWORD dwStatus = 0;
 	ULONG	PortOffset;
-	PULONG data = &DWData;
+	PUINT32 data = &DWData;
+	//PULONG data = &DWData;
 
 	PortOffset = PortOff + 0x80;
-	dwStatus = WDC_WriteAddrBlock( hDev[drvno], 0, PortOffset, sizeof( ULONG ), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
+	dwStatus = WDC_WriteAddrBlock( hDev[drvno], 0, PortOffset, sizeof( UINT32 ), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
@@ -1669,14 +1658,13 @@ BOOL WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff )
 \param PortOff Register offset from BaseAdress - in bytes
 \return Returns TRUE if success.
 */
-BOOL WriteLongDMA( UINT32 drvno, ULONG DWData, ULONG PortOff )
+BOOL WriteLongDMA( UINT32 drvno, UINT32 DWData, ULONG PortOff )
 {
 	BOOL fResult = FALSE;
-	sDLDATA WriteData;
 	DWORD dwStatus = 0;
-	PULONG data = &DWData;
+	PUINT32 data = &DWData;
 
-	dwStatus = WDC_WriteAddrBlock( hDev[drvno], 0, PortOff, sizeof( ULONG ), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
+	dwStatus = WDC_WriteAddrBlock( hDev[drvno], 0, PortOff, sizeof( UINT32 ), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
@@ -1698,10 +1686,10 @@ BOOL WriteLongDMA( UINT32 drvno, ULONG DWData, ULONG PortOff )
 */
 BOOL WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff )
 {
-	BOOL fResult = FALSE;
-	sDLDATA WriteData;
-	ULONG	DataLength;
-	DWORD   ReturnedLength;
+	//BOOL fResult = FALSE;
+	//sDLDATA WriteData;
+	//ULONG	DataLength;
+	//DWORD   ReturnedLength;
 	volatile DWORD dwStatus = 0;
 	PBYTE data = &DataByte;
 	ULONG	PortOffset;
@@ -1709,7 +1697,7 @@ BOOL WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff )
 
 	PortOffset = PortOff + 0x80;
 
-	dwStatus = WDC_WriteAddrBlock( hDev[drv], 0, PortOffset, 1/*sizeof(BYTE)*/, data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
+	dwStatus = WDC_WriteAddrBlock( hDev[drv], 0, PortOffset, sizeof(BYTE), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
@@ -1719,13 +1707,14 @@ BOOL WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff )
 	}//else WDC_Err("ByteS0Write /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
 
 	//no comparison possible because some Read-Only-Register are changing when we are writing in the same register
-	BYTE checkdata;
+/*	BYTE checkdata;
 	ReadByteS0( drv, &checkdata, PortOff );
 	if (*data != checkdata)
 	{
 		WDC_Err( "\nWriteByteError in address 0x%x:\ndata to write: %x\n", PortOff, DataByte );
 		WDC_Err( "data read: %x\n", checkdata );
 	}
+	*/
 
 	return TRUE;
 };  // WriteByteS0
@@ -2171,11 +2160,11 @@ void ResetEC( UINT32 drvno )
 	- 3  RSMON
 	- 4  DMAO
 	- 5  INTTRIGO
-	- 6  DATO 
-	- 7  BTRIGO 
-	- 8  INTSRO 
-	- 9  OPT1(S1) 
-	- 10 OPT1(S0) 
+	- 6  DATO
+	- 7  BTRIGO
+	- 8  INTSRO
+	- 9  OPT1(S1)
+	- 10 OPT1(S0)
 	- 11 BlockOn
 	- 12 MeasureOn
 	- 13 XCKDLYON
@@ -2458,7 +2447,7 @@ int keyCheckForBlockTrigger( UINT32 board_sel )
 \brief Const burst loop with DMA initiated by hardware DREQ. Read nos lines from FIFO.
 \param exttrig Is TRUE if every single scan is triggered externally.
 \param blocktrigger Is TRUE if each block is triggered externally (by Input or btrigger generator
-\param btrig_ch 
+\param btrig_ch
 	- btrig_ch=0 -> no read of state is performed
 	- btrig_ch=1 is pci tig in
 	- btrig_ch=2 is opto1
@@ -3092,7 +3081,7 @@ LONGLONG ticksTimestamp()
 
 }//ticksTimestamp
 
-/** 
+/**
 \brief Calc delay in ticks from us. Init high resolution counter and calcs DELAYTICKS from m_belPars.m_belDelayMsec.
 */
 UINT64 ustoTicks( ULONG us )
@@ -3230,22 +3219,23 @@ void RS_BlockCounter( UINT32 drv )
 */
 void RS_DMAAllCounter( UINT32 drv, BOOL hwstop )
 {
-	UINT32 dwdata = 0;
+	UINT32 dwdata32 = 0;
+	BYTE dwdata8 = 0;
 	//Problem: erste scan löst INTR aus
 	//aber ohne: erste Block ist 1 zu wenig!0, -> in hardware RS to 0x1
 
-	ReadLongS0( drv, &dwdata, DmaAddr_DMAsPerIntr );
-	dwdata |= 0x80000000;
-	WriteLongS0( drv, dwdata, DmaAddr_DMAsPerIntr );
-	dwdata &= 0x7fffffff;
-	WriteLongS0( drv, dwdata, DmaAddr_DMAsPerIntr );
+	ReadLongS0( drv, &dwdata32, DmaAddr_DMAsPerIntr );
+	dwdata32 |= 0x80000000;
+	WriteLongS0( drv, dwdata32, DmaAddr_DMAsPerIntr );
+	dwdata32 &= 0x7fffffff;
+	WriteLongS0( drv, dwdata32, DmaAddr_DMAsPerIntr );
 
 	//reset the internal block counter - is not BLOCKINDEX!
-	ReadLongS0( drv, &dwdata, DmaAddr_DmaBufSizeInScans );
-	dwdata |= 0x80000000;
-	WriteLongS0( drv, dwdata, DmaAddr_DmaBufSizeInScans );
-	dwdata &= 0x7fffffff;
-	WriteLongS0( drv, dwdata, DmaAddr_DmaBufSizeInScans );
+	ReadLongS0( drv, &dwdata32, DmaAddr_DmaBufSizeInScans );
+	dwdata32 |= 0x80000000;
+	WriteLongS0( drv, dwdata32, DmaAddr_DmaBufSizeInScans );
+	dwdata32 &= 0x7fffffff;
+	WriteLongS0( drv, dwdata32, DmaAddr_DmaBufSizeInScans );
 
 	//reset the scan counter
 	RS_ScanCounter( drv );
@@ -3255,16 +3245,16 @@ void RS_DMAAllCounter( UINT32 drv, BOOL hwstop )
 	{
 		//set Block end stops timer:
 		//when SCANINDEX reaches NOS, the timer is stopped by hardware.
-		ReadByteS0( drv, &dwdata, DmaAddr_PCIEFLAGS );
-		dwdata |= 0x04; //set bit2 for 
-		WriteByteS0( drv, dwdata, DmaAddr_PCIEFLAGS );
+		ReadByteS0( drv, &dwdata8, DmaAddr_PCIEFLAGS );
+		dwdata8 |= 0x04; //set bit2 for 
+		WriteByteS0( drv, dwdata8, DmaAddr_PCIEFLAGS );
 	}
 	else
 	{
 		//stop only with write to RS_Timer Reg
-		ReadByteS0( drv, &dwdata, DmaAddr_PCIEFLAGS );
-		dwdata &= 0xFB; //bit2
-		WriteByteS0( drv, dwdata, DmaAddr_PCIEFLAGS );
+		ReadByteS0( drv, &dwdata8, DmaAddr_PCIEFLAGS );
+		dwdata8 &= 0xFB; //bit2
+		WriteByteS0( drv, dwdata8, DmaAddr_PCIEFLAGS );
 	}
 }//RS_DMAAllCounter
 
@@ -3308,7 +3298,7 @@ fkt =0 reset to db=0, fkt=1 set to g1..g8
 */
 void SetADGain( UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8 )
 {
-	DWORD data = 0;
+	UINT16 data = 0;
 	BYTE a, b, c, d, e, f, g, h;
 
 	a = 0;
@@ -3488,7 +3478,7 @@ void GetRmsVal( ULONG nos, ULONG *TRMSVals, double *mwf, double *trms )
 \param mwf pointer for mean value
 \param trms pointer for noise
  */
-void CalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
+void CalcTrms( UINT32 drvno, UINT32 nos, UINT16 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
 {
 	ULONG *TRMSVals;
 
@@ -3602,11 +3592,10 @@ void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS
 \param gain_high 1 gain on, 0 gain off
 \return void
 */
-void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, 
-					 UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high )
-
-{	Cam3010_ADC_reset(drvno);
-	Cam3010_ADC_setMode(drvno, adc_mode, custom_pattern);
+void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high )
+{
+	Cam3010_ADC_reset( drvno );
+	Cam3010_ADC_setMode( drvno, adc_mode, custom_pattern );
 	//set camera pixel register
 	SendFLCAM( drvno, maddr_cam, cam_adaddr_pixel, pixel );
 	//set gain and led
@@ -3628,8 +3617,10 @@ void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc
 \param drvno selects PCIe board
 \return void
 */
-void Cam3010_ADC_reset(UINT32 drvno) {
-	SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_reset, adc_ltc2271_msg_reset);
+void Cam3010_ADC_reset( UINT32 drvno )
+{
+	SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_reset, adc_ltc2271_msg_reset );
+	return;
 }
 
 /**
@@ -3651,21 +3642,23 @@ void Cam3010_ADC_reset(UINT32 drvno) {
 \param custom_pattern (only used when adc_mode = 2)
 \return void
 */
-void Cam3010_ADC_setMode(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern) {
-
-	switch (adc_mode) {
-		case 2:
-			SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_custompattern);
-			//Test pattern MSB regsiter A3 (TP15:TP8) Address = 03h, Data = custom (8 bit)
-			SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_msb, custom_pattern >> 8);
-			//Test pattern LSB regsiter A4 (TP7:TP0)	Address = 04h, Data = custom (8 bit)
-			SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_lsb, custom_pattern & 0x00FF);
-			break;
-		case 0:
-		default:
-			SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_normal_mode);
-			break;
+void Cam3010_ADC_setMode( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern )
+{
+	switch (adc_mode)
+	{
+	case 2:
+		SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_custompattern );
+		//Test pattern MSB regsiter A3 (TP15:TP8) Address = 03h, Data = custom (8 bit)
+		SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_msb, custom_pattern >> 8 );
+		//Test pattern LSB regsiter A4 (TP7:TP0)	Address = 04h, Data = custom (8 bit)
+		SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_lsb, custom_pattern & 0x00FF );
+		break;
+	case 0:
+	default:
+		SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_normal_mode );
+		break;
 	}
+	return;
 }
 
 /**
@@ -3677,13 +3670,14 @@ void Cam3010_ADC_setMode(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern) {
 \param gain in ADC
 \return void
 */
-void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain ) {
-
-	Cam3030_ADC_reset(drvno);
-	Cam3030_ADC_twoWireModeEN(drvno); //two wire mode output interface for pal versions P209_2 and above
-	Cam3030_ADC_SetGain(drvno, gain);
+void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain )
+{
+	Cam3030_ADC_reset( drvno );
+	Cam3030_ADC_twoWireModeEN( drvno ); //two wire mode output interface for pal versions P209_2 and above
+	Cam3030_ADC_SetGain( drvno, gain );
 	if (adc_mode)
-		Cam3030_ADC_RampOrPattern(drvno, adc_mode, custom_pattern);
+		Cam3030_ADC_RampOrPattern( drvno, adc_mode, custom_pattern );
+	return;
 }
 
 /**
@@ -3693,8 +3687,10 @@ void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 
 \param drvno selects PCIe board
 \return void
 */
-void Cam3030_ADC_reset(UINT32 drvno) {
-	SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_reset, adc_ads5294_msg_reset);
+void Cam3030_ADC_reset( UINT32 drvno )
+{
+	SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_reset, adc_ads5294_msg_reset );
+	return;
 }
 
 /**
@@ -3702,14 +3698,16 @@ void Cam3030_ADC_reset(UINT32 drvno) {
 	Enables two wire LVDS data transfer mode of ADC ADS5294.
 	Only works with PAL versions P209_2 and above.
 	Called by InitCamera3030 - comment for older versions and rebuild
-	or use on e-lab test computer desktop LabView folder lv64hs (bool switch in 3030 init tab) 
+	or use on e-lab test computer desktop LabView folder lv64hs (bool switch in 3030 init tab)
 \param drvno selects PCIe board
 \return void
 */
-void Cam3030_ADC_twoWireModeEN(UINT32 drvno) {
-	SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_2wireMode, adc_ads5294_msg_2wireMode);
-	SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_wordWiseOutput, adc_ads5294_msg_wordWiseOutput);
-	SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_ddrClkAlign, adc_ads5294_msg_ddrClkAlign);
+void Cam3030_ADC_twoWireModeEN( UINT32 drvno )
+{
+	SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_2wireMode, adc_ads5294_msg_2wireMode );
+	SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_wordWiseOutput, adc_ads5294_msg_wordWiseOutput );
+	SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_ddrClkAlign, adc_ads5294_msg_ddrClkAlign );
+	return;
 }
 
 /**
@@ -3720,8 +3718,10 @@ void Cam3030_ADC_twoWireModeEN(UINT32 drvno) {
 \param gain of ADC
 \return void
 */
-void Cam3030_ADC_SetGain(UINT32 drvno, UINT8 gain) { 
-	SetADGain(drvno, 1, gain, gain, gain, gain, gain, gain, gain, gain);
+void Cam3030_ADC_SetGain( UINT32 drvno, UINT8 gain )
+{
+	SetADGain( drvno, 1, gain, gain, gain, gain, gain, gain, gain, gain );
+	return;
 }
 
 /**
@@ -3733,22 +3733,24 @@ void Cam3030_ADC_SetGain(UINT32 drvno, UINT8 gain) {
 \param custom_pattern (only used when adc_mode = 2)
 \return void
 */
-void Cam3030_ADC_RampOrPattern(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern) {
-
-	switch(adc_mode) {
-		case 1: //ramp
-			SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_ramp);
-			break;
-		case 2: //custom pattern
-			//to activate custom pattern the following messages are necessary: d - data
-			//at addr 0x25 (mode and higher bits): 0b00000000000100dd
-			SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_custompattern | ((custom_pattern >> 12) & 0x3));
-			//at addr 0x26 (lower bits): 0bdddddddddddd0000
-			SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_custompattern, custom_pattern << 4);
-			break;
-		default:
-			break;
+void Cam3030_ADC_RampOrPattern( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern )
+{
+	switch (adc_mode)
+	{
+	case 1: //ramp
+		SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_ramp );
+		break;
+	case 2: //custom pattern
+		//to activate custom pattern the following messages are necessary: d - data
+		//at addr 0x25 (mode and higher bits): 0b00000000000100dd
+		SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_custompattern | ((custom_pattern >> 12) & 0x3) );
+		//at addr 0x26 (lower bits): 0bdddddddddddd0000
+		SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_custompattern, custom_pattern << 4 );
+		break;
+	default:
+		break;
 	}
+	return;
 }
 
 
@@ -3960,8 +3962,8 @@ void AboutGPX( UINT32 drvno )
 double CalcRamUsageInMB( UINT32 nos, UINT32 nob )
 {
 	double ramUsage = 0;
-	for (int i=0; i<NUMBER_OF_BOARDS; i++)
-		ramUsage += nos * nob * aPIXEL[i+1] * aCAMCNT[i+1] * sizeof( UINT16 );
+	for (int i = 0; i < NUMBER_OF_BOARDS; i++)
+		ramUsage += nos * nob * aPIXEL[i + 1] * aCAMCNT[i + 1] * sizeof( UINT16 );
 	ramUsage = ramUsage / 1048576;
 	WDC_Err( "ram usage: %f", ramUsage );
 	return ramUsage;
@@ -3974,7 +3976,7 @@ double CalcRamUsageInMB( UINT32 nos, UINT32 nob )
 \param exposure_time_in_ms exposure time in ms
 \return time in seconds
 */
-double CalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in_ms  )
+double CalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in_ms )
 {
 	double measureTime = (double)nos * (double)nob * exposure_time_in_ms / 1000;
 	return measureTime;
@@ -4011,7 +4013,7 @@ void BlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 )
 BOOL SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 {
 	BOOL success = SetupVCLKReg( drvno, lines, vfreq );
-	success &= SetPartialBinning( drvno, 0 );
+	success &= ResetPartialBinning( drvno );
 	return success;
 }
 
@@ -4023,7 +4025,14 @@ BOOL SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 */
 BOOL SetPartialBinning( UINT32 drvno, UINT16 number_of_regions )
 {
-	return WriteLongS0( drvno, number_of_regions, S0Addr_ARREG );
+	BOOL success = SetS0Bit( 15, S0Addr_ARREG, drvno );//this turns ARREG on and therefore partial binning too
+	success &= WriteLongS0( drvno, number_of_regions, S0Addr_ARREG );
+	return success;
+}
+
+BOOL ResetPartialBinning( UINT32 drvno )
+{
+	return ResetS0Bit( 15, S0Addr_ARREG, drvno );//this turns ARREG off and therefore partial binning too
 }
 
 /**

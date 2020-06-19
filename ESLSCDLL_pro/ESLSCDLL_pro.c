@@ -189,8 +189,10 @@ DllAccess UINT8 DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, UINT32 line
 	success &= ResetAutostartXck( drvno );
 	success &= SetupVCLKReg( drvno, lines, vfreq );
 	success &= SetPartialBinning( drvno, 0 ); //I don't know why there first is 0 written, I just copied it from Labview. - FH
+
 	success &= SetPartialBinning( drvno, number_of_regions );
-	success &= SetS0Bit( 15, S0Addr_ARREG, drvno ); //I don't know what that does, I just copied it from Labview. - FH
+	//success &= SetS0Bit( 15, S0Addr_ARREG, drvno ); //I don't know what that does, I just copied it from Labview. - FH
+		 //it is turning the partial binning mode on and off, so for full binning dont set 0 areas for partial binning, just reset that bit. I changed it already -BB
 	success &= AutostartXckForLines( drvno );
 	return success;
 }
@@ -206,6 +208,6 @@ DllAccess UINT8 DLLSetupArea( UINT32 drvno, UINT32 lines_binning, UINT8 vfreq )
 {
 	BOOL success = SetupVCLKReg( drvno, lines_binning, vfreq );
 	success &= AutostartXckForLines( drvno );
-	success &= SetPartialBinning( drvno, 0 );
+	success &= ResetPartialBinning( drvno );
 	return success;
 }
