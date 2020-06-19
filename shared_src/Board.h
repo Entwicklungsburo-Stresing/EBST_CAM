@@ -255,3 +255,4 @@ BOOL ResetPartialBinning( UINT32 drvno );
 BOOL AutostartXckForLines( UINT32 drvno );
 BOOL ResetAutostartXck( UINT32 drvno );
 void InitProDLL();
+BOOL BufLock( UINT drvno, UINT camcnt, int nob, int nospb );
