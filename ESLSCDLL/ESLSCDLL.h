@@ -42,8 +42,6 @@ int nThreadCount = 0;
 //#pragma data_seg()
 void	*dummy;
 ULONG ADRDELAY = 1000;			// -> is set in SetBoardVars
-WORD UserBufInScans;
-
 //#include "GLOBAL.H"
 #include "shared_src/board.h"
 //extern volatile PUSHORT pDMABigBufBase[3];

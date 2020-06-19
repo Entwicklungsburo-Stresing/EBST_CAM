@@ -7,9 +7,7 @@
 
 ***REMOVED***#define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
 
-//#include "stdafx.h"		// use in C++ only
-//#include "global.h"		// use in C++ only
-#include "ccdctl.h" //"ccdctrl.h"
+#include "ccdctl.h"
 #include <limits.h>
 #include <process.h>
 #include "Jungo/windrvr.h"
@@ -18,48 +16,10 @@
 #include "wchar.h"
 #include "lscpciej_lib.h"
 #include "shared_src/ESLSCDLL_pro.h"
-//#include "kp_lscpciej.c"
 
-//#include "wd_kp.h"
-//siehe beginn functions
-//#include "lscpciej_lib.h" 
-
-//Dont trust the debugger its CRAP
-
-/* Error messages display */
-#define LSCPCIEJ_ERR printf
-// use LSCPCI1 on PCI Boards
-#define	DRIVERNAME	"\\\\.\\LSCPCIE"
-
-//try different methodes - only one can be TRUE!
-#define DMA_CONTIGBUF TRUE		// use if DMABigBuf is set by driver (data must be copied afterwards to DMABigBuf)
-#define DMA_SGBUF FALSE			// use if DMABigBuf is set by application (pointer must be passed to SetupPCIE_DMA)
-
-// ExpTime is passed as global var here
-// function is not used in WCCD
-#ifndef ExpTime
-ULONG ExpTime; //in micro sec - needed only in DLL, defined in DLL.h
-#endif
-#define BoardType  "PCI"
-#define BoardVN  "2.31"
-#define MAXPCIECARDS 5
-#define Vfreqini 7			// only FIFO set in SetupVCLKReg
-							//frequence of vclks for FFTs S703x
-#define DMA_64BIT_EN FALSE
-#define _FORCETOPLS128 TRUE	//only use payload size 128byte
+#define DBGNOCAM FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
 #define DMA_BUFSIZEINSCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
 #define DMA_HW_BUFPARTS 2
-#define DMA_DMASPERINTR DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb 
-#define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
-#define INTR_EN TRUE		// enables INTR
-#define DBGNOCAM	FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
-//TRUE if you use PS2 Keyboard, FALSE else
-// on WinNT/2000/xp the function GetAsyncKeystate works only
-// if the Thread Class is not highest or 
-// if the Sleep function is used inside Contimess->Measure
-// so here a special hardware read of PS2Keyboard is used
-// to avoid interrupt dependend routines; look BOARD->WaitTrigger
-#define _PS2KEYBOARD FALSE 
 
 struct ffloopparams
 {
@@ -75,9 +35,6 @@ struct global_vars
 	USHORT** pDMABigBufBase;
 };
 
-typedef USHORT ArrayT; //!! USHORT for linear 12/16bit word array or resort or highest speed
-typedef ArrayT* pArrayT;
-
 extern int newDLL;
 extern USHORT** pDMABigBufBase;
 extern int Nob;
@@ -85,14 +42,11 @@ extern int Nospb;
 extern ULONG aCAMCNT[5];	// cameras parallel
 extern BOOL escape_readffloop;
 extern BOOL contffloop;
-extern UINT8 NUMBER_OF_BOARDS;
+extern UINT8 number_of_boards;
 extern DWORD64 IsrCounter;
 extern ULONG aPIXEL[5];	// pixel
 extern BOOL Running;
-extern pArrayT pBLOCKBUF[3];
 extern UINT32 BOARD_SEL;
-
-static ULONG XCKDELAY = 3; //100ns+n*400ns, 1<n<8 Sony=7
 
 void ErrMsgBoxOn( void );
 void ErrMsgBoxOff( void ); // switch to suppress error message boxes
@@ -123,7 +77,7 @@ void StartPCIE_DMAWrite( UINT32 drvno );
 void CleanupPCIE_DMA( UINT32 drvno );
 int GetNumofProcessors();
 void RSInterface( UINT32 drvno );		//set all registers to zero
-BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel, ULONG xckdelay );
+BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel );
 void Resort( UINT32 drvno, void* ptarget, void* psource );
 BOOL CallWRFile( UINT32 drvno, void* pdioden, ULONG arraylength, ULONG fkt );
 BOOL CallIORead( UINT32 drvno, void* pdioden, ULONG fkt );

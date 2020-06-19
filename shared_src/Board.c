@@ -131,34 +131,29 @@ enum cam_messages
 	adc_ads5294_msg_ddrClkAlign = 0x60,
 };
 
+//try different methodes - only one can be TRUE!
+#define DMA_CONTIGBUF TRUE		// use if DMABigBuf is set by driver (data must be copied afterwards to DMABigBuf)
+#define DMA_SGBUF FALSE			// use if DMABigBuf is set by application (pointer must be passed to SetupPCIE_DMA)
+#define MAXPCIECARDS 5
+#define DMA_64BIT_EN FALSE
+#define _FORCETLPS128 TRUE	//only use payload size 128byte
+#define DMA_DMASPERINTR DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb 
+#define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
+#define INTR_EN TRUE		// enables INTR
+//for jungo projects
+#define KER_MODE FALSE
+#define KERNEL_64BIT	
+
 //jungodriver specific variables
 WD_PCI_CARD_INFO deviceInfo[MAXPCIECARDS];
-WDC_DEVICE_HANDLE hDev_temp[MAXPCIECARDS];
-WDC_DEVICE_HANDLE* hDev = hDev_temp;
-ULONG DMACounter = 0;//for debugging
+WDC_DEVICE_HANDLE hDev[MAXPCIECARDS];
 //Buffer of WDC_DMAContigBufLock function = one DMA sub block - will be copied to the big pDMABigBuf later
-USHORT* pDMASubBuf[3] = { NULL, NULL, NULL };
-WD_DMA *pDMASubBufInfos[3] = { NULL, NULL, NULL }; //there will be saved the neccesary parameters for the dma buffer
-BOOL DMAAlreadyStarted = FALSE;
+USHORT* pDMASubBuf[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
+WD_DMA *pDMASubBufInfos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL }; //there will be saved the neccesary parameters for the dma buffer
 DWORD64 IsrCounter = 0;
-//DWORD64 ISRCounter[2] = { 0, 0};
-DWORD64 SubBufCounter[3] = { 0, 0, 0 };
-UINT32 val = 0x0;
+DWORD64 SubBufCounter[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 DWORD DMA_bufsizeinbytes = 0;
 WDC_PCI_SCAN_RESULT scanResult;
-// handle array for our drivers
-HANDLE ahCCDDRV[5] = { INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE, INVALID_HANDLE_VALUE };
-
-volatile UCHAR RingCtrlReg = 0; // was not volatile 22.1.2019
-volatile ULONG RingCtrlRegOfs = 0;
-ULONG VFREQ = Vfreqini;
-ULONG FFTLINES = 0;
-ULONG ErrCnt = 0; //for test purpose
-ULONG ErrVal = 0;
-//global for ANDANTA ROI function in testfunction
-#if (_TESTRUP)
-ULONG Roilines = 256;
-#endif
 //priority globals
 ULONG NEWPRICLASS = 0;
 ULONG NEWPRILEVEL = 0;
@@ -167,34 +162,25 @@ ULONG OLDTHREADLEVEL = 0;
 ULONG OLDPRICLASS = 0;
 HANDLE hPROCESS = 0;
 HANDLE hTHREAD = 0;
-__int16 RELEASETHREADms = 0;
 //general switch to suppress ErrorMsg windows , global in BOARD
 BOOL _SHOW_MSG = TRUE;
-BOOL DMAISRunning = FALSE;
-//ULONG TRMSVals[4][300];
-#ifndef _CCDEXAMP
-double TRMSval[4];
-#endif
 __int64 TPS = 0;				// ticks per second; is set in InitHRCounter
-ULONG TLPSIZE;					//with0x21: crash
 ULONG NO_TLPS;//0x12; //was 0x11-> x-offset			//0x11=17*128  = 2176 Bytes  = 1088 WORDS
-volatile USHORT*   pDMABigBufIndex[3] = { NULL, NULL, NULL };
+volatile USHORT* pDMABigBufIndex[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 __int64 START = 0;				// global variable for sync to systemtimer
-//USHORT* pDMABigBufBase[3] = { NULL, NULL, NULL };
 
 // extern global variables
 int newDLL = 0;
-UINT8 NUMBER_OF_BOARDS = 0;
+UINT8 number_of_boards = 0;
 int Nob = 10;
 int Nospb = 100;
-ULONG aCAMCNT[5] = { 1, 1, 1, 1, 1 };	// cameras parallel
+ULONG aCAMCNT[MAXPCIECARDS] = { 1, 1, 1, 1, 1 };	// cameras parallel
 BOOL escape_readffloop = FALSE;
 BOOL contffloop = FALSE;
-USHORT* temp_pDMABigBufBase[3] = { NULL, NULL, NULL };
+USHORT* temp_pDMABigBufBase[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 USHORT** pDMABigBufBase= temp_pDMABigBufBase;
-ULONG aPIXEL[5] = { 0, 0, 0, 0, 0 };	// pixel
+ULONG aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };	// pixel
 BOOL Running = FALSE;
-pArrayT pBLOCKBUF[3] = { NULL, NULL, NULL };
 UINT32 BOARD_SEL = 1;
 
 // ***********     functions    ********************** 
@@ -490,7 +476,7 @@ BOOL CCDDrvInit( void )
 		ErrorMsg( "driver closed.\n" );
 		return FALSE;
 	}
-	NUMBER_OF_BOARDS = (UINT8) scanResult.dwNumDevices;
+	number_of_boards = (UINT8) scanResult.dwNumDevices;
 
 	TPS = InitHRCounter();//for ticks function
 
@@ -516,7 +502,6 @@ void CCDDrvExit( UINT32 drvno )
 	WDC_Err( "Driver closed and PciDeviceClosed \n" );
 	//if (ahCCDDRV[drvno]!=INVALID_HANDLE_VALUE)
 	//CloseHandle(ahCCDDRV[drvno]);	   // close driver
-	ahCCDDRV[drvno] = INVALID_HANDLE_VALUE;
 };
 
 BOOL InitBoard( UINT32 drvno )
@@ -555,8 +540,7 @@ BOOL InitBoard( UINT32 drvno )
 	hDev[drvno] = LSCPCIEJ_DeviceOpen( &deviceInfo[drvno] );
 	if (!hDev[drvno])
 	{
-		LSCPCIEJ_ERR( "DeviceOpen: Failed opening a handle to the device: %s\n",
-			LSCPCIEJ_GetLastErr() );
+		printf( "DeviceOpen: Failed opening a handle to the device: %s\n", LSCPCIEJ_GetLastErr() );
 		ErrorMsg( "DeviceOpen failed\n" );
 		WDC_Err( "DeviceOpen failed %s\n", LSCPCIEJ_GetLastErr() );
 		WDC_DriverClose();
@@ -568,11 +552,6 @@ BOOL InitBoard( UINT32 drvno )
 	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
 	WDC_Err( "DRVInit hDev id % x, hDev pci slot %x, hDev pci bus %x, hDev pci function %x, hDevNumAddrSp %x \n"
 		, pDev->id, pDev->slot.dwSlot, pDev->slot.dwBus, pDev->slot.dwFunction, pDev->dwNumAddrSpaces );
-
-	//save handle in global array
-	ahCCDDRV[drvno] = hDev[drvno];//hccddrv;
-
-
 	/*
 	//for testing
 	KP_LSCPCIEJ_VERSION Data;
@@ -767,11 +746,12 @@ BOOL SetDMAAddrTlp( UINT32 drvno )
 	ULONG BitMask;
 	ULONG BData = 0;
 	int tlpmode = 0;
+	ULONG TLPSIZE;					//with0x21: crash
 
 	ReadLongIOPort( drvno, &BData, PCIeAddr_devCap );
 	tlpmode = BData & 0x7;//0xE0 ;
 	//tlpmode = tlpmode >> 5;
-	if (_FORCETOPLS128) tlpmode = 0;
+	if (_FORCETLPS128) tlpmode = 0;
 
 	BData &= 0xFFFFFF1F;//delete the old values
 	BData |= (0x2 << 12);//set maxreadrequestsize
@@ -1042,7 +1022,7 @@ void isr( UINT drvno, PVOID pData )
 
 
 	if (BOARD_SEL > 2)//! >2 oder?
-		introverall = blocks * nos * aCAMCNT[drvno] * NUMBER_OF_BOARDS / dma_subbufinscans - 2;//- 2 because intr counter starts with 0
+		introverall = blocks * nos * aCAMCNT[drvno] * number_of_boards / dma_subbufinscans - 2;//- 2 because intr counter starts with 0
 	else
 		introverall = blocks * nos * aCAMCNT[drvno] / dma_subbufinscans - 1;//- 1 because intr counter starts with 0
 	//!GS sometimes (all 10 minutes) one INTR more occurs -> just do not serve it and return
@@ -1324,17 +1304,16 @@ int GetNumofProcessors()
 /**
 \brief Initiates board registers.
 \param flag816 =1 for 16 bit (also 14 or 12bit), =2 for 8bit
-\param xckdelay set delay between XCK goes high and start of hor. clocks in reg XDLY 0x24
 \return TRUE if ok
 */
-BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel, ULONG xckdelay )
+BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel )
 {
 	BYTE data = 0;
 	UINT32 reg = 0;
 	ULONG i = 0;
 	BOOL result = FALSE;
 
-	if (ahCCDDRV[drvno] == INVALID_HANDLE_VALUE)
+	if (hDev[drvno] == INVALID_HANDLE_VALUE)
 	{
 		WDC_Err( "Handle is invalid of drvno: %i", drvno );
 		return FALSE;
@@ -1445,23 +1424,16 @@ BOOL BufLock( UINT drvno, UINT camcnt, int nob, int nospb )
 		CleanupPCIE_DMA( drvno );
 	aCAMCNT[drvno] = camcnt;
 	volatile int size = nob * nospb * aPIXEL[drvno] * sizeof( USHORT );
-
-	pBLOCKBUF[drvno] = calloc( camcnt, nob *  nospb * aPIXEL[drvno] * sizeof( USHORT ) );//B! "2 *" because the buffer is just 2/3 of the needed size 
+	USHORT* pDMABigBufBase_temp = calloc( camcnt, nob *  nospb * aPIXEL[drvno] * sizeof( USHORT ) );//B! "2 *" because the buffer is just 2/3 of the needed size 
 	//pDIODEN = (pArrayT)calloc(nob, nospb * _PIXEL * sizeof(ArrayT));
-
-	if (pBLOCKBUF[drvno] != 0)
+	if (pDMABigBufBase_temp != 0)
 	{
-		//pDMABigBufBase = pBLOCKBUF;
-		
-		pDMABigBufBase[drvno] = pBLOCKBUF[drvno];
-
+		pDMABigBufBase[drvno] = pDMABigBufBase_temp;
 		if (!SetupPCIE_DMA( drvno, Nospb, Nob ))  //get also buffer address
 		{
 			ErrorMsg( "Error in SetupPCIE_DMA" );
 			return FALSE;
 		}
-
-
 		return TRUE;
 	}
 	else
@@ -1934,17 +1906,9 @@ void WaitTrigger( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrKey )
 			if (FirstLo) { if (ReadTrigPin > 0) HiEdge = TRUE; }; // then look for hi
 		}
 		else HiEdge = TRUE;
-
-#if _PS2KEYBOARD  //with PS2 keyboard
-		ReturnKey = ReadKeyPort( drvno );
-		if (ReturnKey == _ScanCode_Cancel) Abbr = TRUE;
-		if (ReturnKey == _ScanCode_End) Space = TRUE;
-#else	//other keyboard -> do not use highest priority thread
-		// or use Sleep to serve the interrupt
 		if (GetAsyncKeyState( VK_ESCAPE ))
 			Abbr = TRUE;
 		if (GetAsyncKeyState( VK_SPACE ))  Space = TRUE;
-#endif
 	}
 	while ((!HiEdge) && (!Abbr));
 	if (Abbr) *AbrKey = TRUE;	//stops immediately
@@ -1978,17 +1942,9 @@ void WaitTriggerShort( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *Abr
 			if (ReadTrigPin > 0) HiEdge = TRUE;
 		}
 		else HiEdge = TRUE;
-
-#if _PS2KEYBOARD  //with PS2 keyboard
-		ReturnKey = ReadKeyPort( drvno );
-		if (ReturnKey == _ScanCode_Cancel) Abbr = TRUE;
-		if (ReturnKey == _ScanCode_End) Space = TRUE;
-#else	//other keyboard -> do not use highest priority thread
-		// or use Sleep to serve the interrupt
 		if (GetAsyncKeyState( VK_ESCAPE ))
 			Abbr = TRUE;
 		if (GetAsyncKeyState( VK_SPACE ))  Space = TRUE;
-#endif
 	}
 	while ((!HiEdge) && (!Abbr));
 	if (Abbr) *AbrKey = TRUE;	//stops immediately
@@ -2400,7 +2356,7 @@ int keyCheckForBlockTrigger( UINT32 board_sel )
 			//SetIntFFTrig(drv);//disable ext input
 			SetDMAReset( 1 );	//Initiator reset
 		}
-		if (NUMBER_OF_BOARDS == 2 && (board_sel == 2 || board_sel == 3))
+		if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 		{
 			StopFFTimer( 2 );
 			//SetIntFFTrig(drv);//disable ext input
@@ -2442,10 +2398,11 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 	BYTE	cnt = 0;
 	ULONG	Blocks;
 	int		i = 0;
+	UINT32 val = 0x0;
 
 	if (board_sel == 1 || board_sel == 3)
 		initReadFFLoop( 1, exptus, exttrig, &Blocks );
-	if (NUMBER_OF_BOARDS == 2 && (board_sel == 2 || board_sel == 3))
+	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 		initReadFFLoop( 2, exptus, exttrig, &Blocks );
 
 	//WDC_Err("ReadFFLoop: Block Trigger is set to%d\n", blocktrigger);
@@ -2474,7 +2431,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 						//SetIntFFTrig(drv);//disable ext input
 						SetDMAReset(1);	//Initiator reset
 					}
-					if (NUMBER_OF_BOARDS == 2 && (board_sel == 2 || board_sel == 3)) {
+					if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3)) {
 						StopFFTimer(2);
 						//SetIntFFTrig(drv);//disable ext input
 						SetDMAReset(2);	//Initiator reset
@@ -2507,7 +2464,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 			if (board_sel != 3)		//start Timer !!!
 				StartFFTimer( 1, exptus );
 		}
-		if (NUMBER_OF_BOARDS == 2 && (board_sel == 2 || board_sel == 3))
+		if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 		{
 			//make signal on trig out plug via PCIEFLAGS:D4 - needed to count Blocks
 			ReadLongS0( 2, &val, DmaAddr_PCIEFLAGS ); //set TrigStart flag for TRIGO signal to monitor the signal
@@ -2565,7 +2522,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 				}
 			}
 		}
-		if (NUMBER_OF_BOARDS == 2 && board_sel == 2)
+		if (number_of_boards == 2 && board_sel == 2)
 		{
 			while (IsTimerOn( 2 ))
 			{
@@ -2580,7 +2537,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 			}
 		}
 
-		if (NUMBER_OF_BOARDS == 2 && board_sel == 3)
+		if (number_of_boards == 2 && board_sel == 3)
 		{
 			while (IsTimerOn( 1 ) || IsTimerOn( 2 ))
 			{
@@ -2620,7 +2577,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 		Sleep( 2 ); //DMA is not ready
 		GetLastBufPart( 1 );
 	}
-	if (NUMBER_OF_BOARDS == 2 && (board_sel == 2 || board_sel == 3))
+	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 	{
 		Sleep( 2 ); //DMA is not ready
 		GetLastBufPart( 2 );
@@ -2632,7 +2589,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 		StopFFTimer( 1 );
 		SetIntFFTrig( 1 );//disable ext input
 	}
-	if (NUMBER_OF_BOARDS == 2 && (board_sel == 2 || board_sel == 3))
+	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 	{
 		SetS0Reg( 0x00, 0x20, DmaAddr_PCIEFLAGS, 2 );	//reset MeasureOn bit 
 		StopFFTimer( 2 );
@@ -2675,7 +2632,7 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 					//SetIntFFTrig(drv);//disable ext input
 					SetDMAReset( 1 );	//Initiator reset
 				}
-				if (NUMBER_OF_BOARDS == 2 && (board_sel == 2 || board_sel == 3))
+				if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 				{
 					StopFFTimer( 2 );
 					//SetIntFFTrig(drv);//disable ext input
@@ -2701,7 +2658,7 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 
 /**
 \brief Reads the binary state of an ext. trigger input.
-	Global value RingCtrlReg is updated in every loop of ringreadthread.
+	Value val is updated in every loop of ringreadthread.
 	In ringreadthread also the board drv is set.
 \param drv board number
 \param btrig_ch specify input channel
@@ -2715,23 +2672,21 @@ BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch )
 {
 	BYTE data = 0;
 	BOOL state = FALSE;
-	RingCtrlRegOfs = 0;
+	UCHAR val = 0;
+
 	switch (btrig_ch)
 	{
 	case 1:
-		RingCtrlRegOfs = 4;//CtrlA
-		ReadByteS0( drv, &RingCtrlReg, RingCtrlRegOfs );
-		if ((RingCtrlReg & 0x40) > 0) return TRUE;
+		ReadByteS0( drv, &val, S0Addr_CTRLA );
+		if ((val & 0x40) > 0) return TRUE;
 		break;
 	case 2:
-		RingCtrlRegOfs = 6;//CtrlC
-		ReadByteS0( drv, &RingCtrlReg, RingCtrlRegOfs );
-		if ((RingCtrlReg & 0x02) > 0) return TRUE;
+		ReadByteS0( drv, &val, S0Addr_CTRLC );
+		if ((val & 0x02) > 0) return TRUE;
 		break;
 	case 3:
-		RingCtrlRegOfs = 6;//CtrlC
-		ReadByteS0( drv, &RingCtrlReg, RingCtrlRegOfs );
-		if ((RingCtrlReg & 0x04) > 0) return TRUE;
+		ReadByteS0( drv, &val, S0Addr_CTRLC );
+		if ((val & 0x04) > 0) return TRUE;
 		break;
 	}
 	return FALSE;
@@ -2886,10 +2841,8 @@ void SetIntFFTrig( UINT32 drvno ) // set internal Trigger
 */
 BOOL SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq )
 {
-	FFTLINES = lines; //set global var
 	BOOL success = WriteLongS0( drvno, lines * 2, S0Addr_VCLKCTRL );// write no of vclks=2*lines
 	success &= WriteByteS0( drvno, vfreq, S0Addr_VCLKFREQ );//  write v freq
-	VFREQ = vfreq;//keep freq global
 	return success;
 }//SetupVCLKReg
 
@@ -3936,7 +3889,7 @@ void AboutGPX( UINT32 drvno )
 double CalcRamUsageInMB( UINT32 nos, UINT32 nob )
 {
 	double ramUsage = 0;
-	for (int i = 0; i < NUMBER_OF_BOARDS; i++)
+	for (int i = 0; i < number_of_boards; i++)
 		ramUsage += nos * nob * aPIXEL[i + 1] * aCAMCNT[i + 1] * sizeof( UINT16 );
 	ramUsage = ramUsage / 1048576;
 	WDC_Err( "ram usage: %f", ramUsage );

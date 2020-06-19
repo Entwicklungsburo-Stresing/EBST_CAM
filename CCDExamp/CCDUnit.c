@@ -6,6 +6,7 @@ volatile int testcnt = 0;
 UINT choosen_board = 1;
 BOOL both_boards = FALSE;
 BOOL cont_mode = FALSE;
+double TRMSval[2];
 
 /*
 void GetRmsVal(BYTE ch, ULONG nos)
@@ -340,18 +341,8 @@ void UpdateTxT(void)
 		//j=sprintf(TrmsString,"                                                           ") ;//clear old display
 		//TextOut(hMSDC,20,YLENGTH + 50,TrmsString,j);
 		j += sprintf_s(TrmsString + j, 260, " Trms of Pixel %lu CH1 is %.1f ", TRMSpix, TRMSval[0]);
-		if (_HWCH2)	j += sprintf_s(TrmsString + j, 260, " , CH2 is %.1f            ", TRMSval[1]);
 		TextOut(hMSDC, 20, YLENGTH + 50, TrmsString, j);
 	}
-
-#if (_ERRTEST)
-	if (*(pDMABuf + 1083) != 539)
-	{
-		ErrVal = *(pDMABuf + 1083);
-		ErrCnt += 1;
-	}
-	j += sprintf_s(TrmsString + j, 260, " , err=%d , val=%d", ErrCnt, ErrVal);
-#endif
 
 	/*B!if (FFOvl(choosen_board) == TRUE) 	{
 		j += sprintf_s(TrmsString + j, 260, " , overflow! "); }
@@ -563,10 +554,7 @@ void startMess(void *dummy)
 	ULONG val1 = 0;
 
 	contimess_run_once = TRUE;
-
 	initMeasurement();
-
-	UserBufInScans = Nospb;
 	//!!GS
 	//Nob = 1;
 	//DMA_Setup

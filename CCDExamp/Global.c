@@ -36,5 +36,3 @@ int m_TOmodus = 1; //trigger out plug signal
 int m_ECTrigmodus = 1;
 int m_ECmodus = 1;
 BOOL m_noPDARS = FALSE;
-ULONG NO_TLPS = 0x12; //was 0x11-> x-offset			//0x11=17*128  = 2176 Bytes  = 1088 WORDS
-ULONG TLPSIZE = 0x20;
