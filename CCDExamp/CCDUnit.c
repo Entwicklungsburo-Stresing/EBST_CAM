@@ -512,6 +512,27 @@ void initMeasurement()
 	}
 #endif
 }
+/*
+unsigned int __stdcall ContDispRoutine( void *parg )//threadex
+{
+	BOOL cancel = FALSE;
+	while (!cancel)
+	{
+
+		CopytoDispbuf( 8 );
+		Display( 1, PLOTFLAG );
+
+		UpdateTxT();
+
+		if (GetAsyncKeyState( VK_ESCAPE ))
+			cancel = TRUE;
+		if (GetAsyncKeyState( VK_SPACE ))
+			cancel = TRUE;
+		Sleep( 10000 );
+	}
+
+}
+*/
 
 //former Contimess
 void startMess(void *dummy)
@@ -594,20 +615,24 @@ void startMess(void *dummy)
 		RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
 	}
 	//ReadFFLoop(choosen_board, ExpTime, FREQ, EXTTRIGFLAG, 0,  0);
+
 	BOOL cancel = FALSE;
 	if (cont_mode)
-		while (!cancel) {
+		//_beginthreadex( 0, 0, &ContDispRoutine, 0, 0, 0 );BOOL cancel = FALSE;
+		while (!cancel)
+		{
 
-			CopytoDispbuf(0);
-			Display(1, PLOTFLAG);
+			CopytoDispbuf( 8 );
+			Display( 1, PLOTFLAG );
 
 			UpdateTxT();
 
-			if (GetAsyncKeyState(VK_ESCAPE))
+			if (GetAsyncKeyState( VK_ESCAPE ))
 				cancel = TRUE;
-			if (GetAsyncKeyState(VK_SPACE))
+			if (GetAsyncKeyState( VK_SPACE ))
 				cancel = TRUE;
 		}
+
 	Sleep(100);//for the thread if there is just one isr 
 	//start 2nd thread for getting data in highest std priority, ring=200 lines
 #endif
