@@ -182,14 +182,9 @@ volatile USHORT*   pDMABigBufIndex[3] = { NULL, NULL, NULL };
 __int64 START = 0;				// global variable for sync to systemtimer
 //USHORT* pDMABigBufBase[3] = { NULL, NULL, NULL };
 
-
 // extern global variables
 int newDLL = 0;
 UINT8 NUMBER_OF_BOARDS = 0;
-#if defined (CCDExamp)
-#else
-ULONG _PIXEL = 544;			// here as variable with defaults
-#endif
 int Nob = 10;
 int Nospb = 100;
 ULONG aCAMCNT[5] = { 1, 1, 1, 1, 1 };	// cameras parallel
@@ -336,7 +331,7 @@ void AboutTLPs( UINT32 drvno )
 	ReadLongDMA( drvno, &BData, DmaAddr_WDMATLPS );
 	j += sprintf( fn + j, "TLPS in DMAReg is: %d \n", BData );
 
-	BData = (_PIXEL - 1) / (BData * 2) + 1 + 1;
+	BData = (aPIXEL[drvno] - 1) / (BData * 2) + 1 + 1;
 	j += sprintf( fn + j, "number of TLPs should be: %d\n", BData );
 	ReadLongDMA( drvno, &BData, DmaAddr_WDMATLPC );
 	j += sprintf( fn + j, "number of TLPs is: %d \n", BData );
@@ -417,23 +412,12 @@ void AboutS0( UINT32 drvno )
 BOOL CCDDrvInit( void )
 {
 	//WDC_Err(drvno);
-	ULONG MAXDMABUFLENGTH = 0x07fff; //val look in registry driver parameters
 	//depends on os, how big a buffer can be
 	BOOL fResult = FALSE;
 	char AString[80] = "";
 	HANDLE hccddrv = INVALID_HANDLE_VALUE;
-
-
-	if ((ULONG)_PIXEL > (ULONG)(MAXDMABUFLENGTH / 4))
-	{
-		ErrorMsg( "DMA Buffer length > 0x7fff/4 -> need special driver!" );
-		return FALSE;
-	}
-
-
 	//PWDC_DEVICE pDev = (PWDC_DEVICE)hDev;
 	volatile DWORD dwStatus = 0;
-
 	PLSCPCIEJ_DEV_CTX pDevCtx = NULL;
 
 #if KER_MODE
@@ -1003,7 +987,7 @@ void GetLastBufPart( UINT32 drvno )
 	UINT32 scans_all_cams = nos * nob *camcnt;
 	UINT32 rest_overall = scans_all_cams % halfbufsize;
 	size_t rest_in_bytes;
-	rest_in_bytes = rest_overall * _PIXEL * sizeof( USHORT );
+	rest_in_bytes = rest_overall * aPIXEL[drvno] * sizeof( USHORT );
 
 	WDC_Err( "*GetLastBufPart():\n" );
 	WDC_Err( "nos: 0x%x, nob: 0x%x, spi: 0x%x, camcnt: 0x%x\n", nos, nob, spi, camcnt );
@@ -1167,7 +1151,7 @@ BOOL SetupPCIE_DMA( UINT32 drvno, ULONG nos, ULONG nob )
 	//tempBuf = (PUSHORT)pDMABigBufBase[drvno] + 500 * sizeof(USHORT);
 	//WDC_Err("setupdma: bigbuf Pixel500: %i\n", *tempBuf);
 
-	DMA_bufsizeinbytes = DMA_BUFSIZEINSCANS * _PIXEL * sizeof( USHORT );
+	DMA_bufsizeinbytes = DMA_BUFSIZEINSCANS * aPIXEL[drvno] * sizeof( USHORT );
 
 	DWORD dwOptions = DMA_FROM_DEVICE | DMA_KERNEL_BUFFER_ALLOC;// | DMA_ALLOW_64BIT_ADDRESS;// DMA_ALLOW_CACHE ;
 	if (DMA_64BIT_EN)
@@ -1190,8 +1174,7 @@ BOOL SetupPCIE_DMA( UINT32 drvno, ULONG nos, ULONG nob )
 	dwStatus = WDC_DMAContigBufLock( hDev[drvno], &pDMASubBuf[drvno], dwOptions, DMA_bufsizeinbytes, &pDMASubBufInfos[drvno] ); //size in Bytes
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		ErrLog( "Failed locking a contiguous DMA buffer. Error 0x%lx - %s\n",
-			dwStatus, Stat2Str( dwStatus ) );
+		ErrLog( "Failed locking a contiguous DMA buffer. Error 0x%lx - %s\n", dwStatus, Stat2Str( dwStatus ) );
 		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
 		ErrorMsg( "DMA buffer not sufficient" );
 		return FALSE;
@@ -1461,9 +1444,9 @@ BOOL BufLock( UINT drvno, UINT camcnt, int nob, int nospb )
 	if (WDC_IntIsEnabled( hDev[drvno] ))
 		CleanupPCIE_DMA( drvno );
 	aCAMCNT[drvno] = camcnt;
-	volatile int size = nob * nospb * _PIXEL * sizeof( USHORT );
+	volatile int size = nob * nospb * aPIXEL[drvno] * sizeof( USHORT );
 
-	pBLOCKBUF[drvno] = calloc( camcnt, nob *  nospb * _PIXEL * sizeof( USHORT ) );//B! "2 *" because the buffer is just 2/3 of the needed size 
+	pBLOCKBUF[drvno] = calloc( camcnt, nob *  nospb * aPIXEL[drvno] * sizeof( USHORT ) );//B! "2 *" because the buffer is just 2/3 of the needed size 
 	//pDIODEN = (pArrayT)calloc(nob, nospb * _PIXEL * sizeof(ArrayT));
 
 	if (pBLOCKBUF[drvno] != 0)
@@ -3500,11 +3483,11 @@ UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block,
 	//init index with base position of pixel
 	UINT32 index = pixel;
 	//position of index at CAM position
-	index += CAM * _PIXEL;
+	index += CAM * aPIXEL[drvno];
 	//position of index at sample
-	index += sample * aCAMCNT[drvno] * _PIXEL;
+	index += sample * aCAMCNT[drvno] * aPIXEL[drvno];
 	//position of index at block
-	index += block * Nospb * aCAMCNT[drvno] * _PIXEL;
+	index += block * Nospb * aCAMCNT[drvno] * aPIXEL[drvno];
 	return index;
 }
 
@@ -4058,9 +4041,18 @@ BOOL ResetAutostartXck( UINT32 drvno )
 void InitProDLL()
 {
 	struct global_vars g;
-	g.hDev = hDev;
 	g.pDMABigBufBase = pDMABigBufBase;
 	DLLInitGlobals( g );
 	return;
 }
 #endif
+
+/**
+\brief Checks if the dam routine was already called.
+\param PCIe board identifier.
+\return True when DMA is set.
+*/
+BOOL isDmaSet( UINT32 drvno )
+{
+	return WDC_IntIsEnabled( hDev[drvno] );
+}

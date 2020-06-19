@@ -71,7 +71,6 @@ struct ffloopparams
 
 struct global_vars
 {
-	WDC_DEVICE_HANDLE* hDev;
 	USHORT** pDMABigBufBase;
 };
 
@@ -79,16 +78,10 @@ typedef USHORT ArrayT; //!! USHORT for linear 12/16bit word array or resort or h
 typedef ArrayT* pArrayT;
 
 extern int newDLL;
-#if defined(CCDExamp)
-#define _PIXEL  1088				// no of pixels min 300, should be multiple of 300, max 8100
-#else
-extern ULONG _PIXEL;			// here as variable with defaults
-#endif
 extern USHORT** pDMABigBufBase;
 extern int Nob;
 extern int Nospb;
 extern ULONG aCAMCNT[5];	// cameras parallel
-extern WDC_DEVICE_HANDLE* hDev;
 extern BOOL escape_readffloop;
 extern BOOL contffloop;
 extern UINT8 NUMBER_OF_BOARDS;
@@ -255,4 +248,5 @@ BOOL ResetPartialBinning( UINT32 drvno );
 BOOL AutostartXckForLines( UINT32 drvno );
 BOOL ResetAutostartXck( UINT32 drvno );
 void InitProDLL();
+BOOL isDmaSet( UINT32 drvno );
 BOOL BufLock( UINT drvno, UINT camcnt, int nob, int nospb );

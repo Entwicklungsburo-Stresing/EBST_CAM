@@ -143,7 +143,7 @@ DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 
  // NO FIFO version: pclk not used.
 	InitBoard( drv );
 	if (!SetBoardVars( drv, camcnt, pixel, xckdelay )) return 0; //sets data for transfer
-	_PIXEL = pixel; // set globals
+	aPIXEL[drv] = pixel; // set globals
 	ADRDELAY = xckdelay;
 	// AboutS0(drvno);
 	return 1; // no error
@@ -526,7 +526,7 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 	WDC_Err( "entered nDLLSetupDMA with drv: %i nos: %i and nob: %i and camcnt: %i\n", drv, nos, nob, aCAMCNT[drv] );
 
 	//checks if the dam routine was already called
-	if (WDC_IntIsEnabled( hDev[drv] ))
+	if (isDmaSet( drv ))
 	{
 		CleanupPCIE_DMA( drv );
 	}
@@ -551,13 +551,13 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 
 	FreeMemInfo( memory_all, memory_free );
 	memory_free_mb = *memory_free / (1024 * 1024);
-	needed_mem = (INT64)aCAMCNT[drv] * (INT64)nob * (INT64)nos * (INT64)_PIXEL * (INT64)sizeof( USHORT );
+	needed_mem = (INT64)aCAMCNT[drv] * (INT64)nob * (INT64)nos * (INT64)aPIXEL[drv] * (INT64)sizeof( USHORT );
 	needed_mem_mb = needed_mem / (1024 * 1024);
 
 	//check if enough space is available in the physical ram
 	if (*memory_free > (UINT64)needed_mem)
 	{
-		pDMABigBufBase[drv] = calloc( aCAMCNT[drv] * (nos)*nob * _PIXEL, sizeof( USHORT ) );   // +1 oder *2 weil sonst absturz im continuous mode
+		pDMABigBufBase[drv] = calloc( aCAMCNT[drv] * (nos)*nob * aPIXEL[drv], sizeof( USHORT ) );   // +1 oder *2 weil sonst absturz im continuous mode
 		// sometimes it makes one ISR more, so better to allocate nos+1 thaT IN THIS CASE THE ADDRESS pDMAIndex is valid
 		WDC_Err( "available memory:%lld MB\n \tmemory needed: %lld MB\n", memory_free_mb, needed_mem_mb );
 	}

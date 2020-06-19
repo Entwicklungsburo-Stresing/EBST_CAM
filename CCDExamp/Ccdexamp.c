@@ -28,14 +28,14 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	if (!InitApplication( hInstance ))
 		return FALSE;
 
-	//show allocate buffer dialog before entering main application
-	DialogBox( hInstance, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
 	//make init here, that CCDExamp can be used to read the act regs...
 	if (!SetBoardVars( choosen_board, aCAMCNT[choosen_board], _PIXEL, XCKDELAY ))
 	{
 		ErrorMsg( "Error in SetBoardVars" );
 		return FALSE;
 	}
+	//show allocate buffer dialog before entering main application
+	DialogBox( hInstance, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
 	if (!InitInstance( hInstance, nCmdShow ))
 		return FALSE;
 
