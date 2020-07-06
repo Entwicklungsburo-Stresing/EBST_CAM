@@ -1444,7 +1444,7 @@ BOOL BufLock( UINT drvno, UINT camcnt, int nob, int nospb )
 // *********************** PCI board registers
 
 /**
-\brief Read long (32 bit) from runtime register of PCIe board. This function reads the memory mapped data , not the I/O Data.
+\brief Read long (32 bit) from runtime register of PCIe board. This function reads the memory mapped data , not the I/O Data. Reads data from PCIe conf space.
 \param drvno board number (=1 if one PCI board)
 \param DWData pointer to where data is stored
 \param PortOff offset of register (count in bytes)
@@ -1915,84 +1915,6 @@ void WaitTrigger( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrKey )
 	if (Space) *SpaceKey = TRUE;	//stops after next trigger
 };// WaitTrigger
 
-/**
-\brief Returns if trigger or key.
-
-The triginput has an optional FF to detect short pulses.
-The FF is edge triggered and must be reset via RSTrigShort after each pulse to arm it again.
-It is enabled once by EnTrigShort()
-\param drvno PCIe board identifier
-\return none
-*/
-void WaitTriggerShort( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrKey )
-{
-	BOOL FirstLo = FALSE;
-	BOOL HiEdge = FALSE;
-	BOOL Abbr = FALSE;
-	BOOL Space = FALSE;
-	UCHAR ReturnKey = 0;
-	BYTE ReadTrigPin = 0;
-
-	do
-	{
-		if (ExtTrigFlag)
-		{
-			ReadByteS0( drvno, &ReadTrigPin, S0Addr_CTRLA );
-			ReadTrigPin &= 0x040;
-			if (ReadTrigPin > 0) HiEdge = TRUE;
-		}
-		else HiEdge = TRUE;
-		if (GetAsyncKeyState( VK_ESCAPE ))
-			Abbr = TRUE;
-		if (GetAsyncKeyState( VK_SPACE ))  Space = TRUE;
-	}
-	while ((!HiEdge) && (!Abbr));
-	if (Abbr) *AbrKey = TRUE;	//stops immediately
-	if (Space) *SpaceKey = TRUE;	//stops after next trigger
-	RSTrigShort( drvno );
-};// WaitTrigger^Short
-
-/**
-\brief Use the short trig pulse FF for ext TrigIn.
-\param drvno PCIe board identifier.
-\return none
-*/
-void EnTrigShort( UINT32 drvno )
-{
-	UCHAR CtrlA;
-	ReadByteS0( drvno, &CtrlA, S0Addr_CTRLA );
-	CtrlA |= 0x080;	// set trigger path to FF
-	CtrlA |= 0x010; // enable FF
-	WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
-}; //EnTrigShort
-
-/**
-\brief Reset the short trig pulse FF.
-\param drvno PCIe board identifier.
-\return none
-*/
-void RSTrigShort( UINT32 drvno )
-{
-	UCHAR CtrlA;
-	ReadByteS0( drvno, &CtrlA, S0Addr_CTRLA );
-	CtrlA &= 0x0EF; // write CLR to FF
-	WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
-	CtrlA |= 0x010; // arm FF again
-	WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
-}; //RSTrigShort
-
-/**
-\brief use the direct input for ext TrigIn
-*/
-void DisTrigShort( UINT32 drvno )
-{
-	UCHAR CtrlA;
-	ReadByteS0( drvno, &CtrlA, S0Addr_CTRLA );
-	CtrlA &= 0x07F;	// set trigger path to FF
-	CtrlA &= 0x0EF; // clr  FF
-	WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
-}; //SetTrigShort
-
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 /**
@@ -2210,7 +2132,7 @@ void SendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data )
 	ldata |= data;
 	WriteLongS0( drvno, ldata, S0Addr_DBR );
 	ldata |= 0x4000000;		//load val
-	WriteLongS0( drvno, ldata, 0x0 );
+	WriteLongS0( drvno, ldata, S0Addr_DBR );
 	ldata = 0;		//rs load
 	WriteLongS0( drvno, ldata, S0Addr_DBR );
 	Sleep( 1 );
@@ -2847,7 +2769,7 @@ BOOL SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq )
 }//SetupVCLKReg
 
 /**
-\brief Sets partial binning in registers R10,R11 and and R12. Only for FFT sensors.
+\brief sets Vertical Partial Binning in registers R10,R11 and and R12. Only for FFT sensors.
 \param drvno PCIe board identifier
 \param range specifies R 1..5
 \param lines number of vertical clks for next read
@@ -3199,8 +3121,7 @@ BOOL FindCam( UINT32 drv )
 		ErrorMsg( "Fiber or Camera error" );
 		return FALSE;
 	}
-	dwdata = 0;
-	if ((dwdata & 0x40000000) != 0)
+	if ((dwdata & 0x40000000) == 0)
 	{
 		ErrorMsg( "Fiber connection error" );
 		return FALSE;
