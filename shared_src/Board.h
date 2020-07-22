@@ -59,7 +59,6 @@ void AboutS0( UINT32 drvno );
 BOOL CCDDrvInit( void );
 void CCDDrvExit( UINT32 drvno );	// closes the driver
 BOOL InitBoard( UINT32 drvno );	// init the board and alloc mem, call only once !
-char CntBoards( void );
 BOOL SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno );
 BOOL SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno );
 BOOL SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno );
@@ -76,18 +75,14 @@ BOOL SetupPCIE_DMA( UINT32 drvno, ULONG nos, ULONG nob );
 void StartPCIE_DMAWrite( UINT32 drvno );
 void CleanupPCIE_DMA( UINT32 drvno );
 int GetNumofProcessors();
-void RSInterface( UINT32 drvno );		//set all registers to zero
 BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel );
-void Resort( UINT32 drvno, void* ptarget, void* psource );
-BOOL CallWRFile( UINT32 drvno, void* pdioden, ULONG arraylength, ULONG fkt );
-BOOL CallIORead( UINT32 drvno, void* pdioden, ULONG fkt );
-BOOL ReadLongIOPort( UINT32 drvno, ULONG *DWData, ULONG PortOff );// read long from IO runreg
+BOOL ReadLongIOPort( UINT32 drvno, UINT32 *DWData, ULONG PortOff );// read long from IO runreg
 BOOL ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff );	// read long from space0
 BOOL ReadLongDMA( UINT32 drvno, UINT32 * DWData, ULONG PortOff );
 BOOL ReadByteS0( UINT32 drvno, BYTE *data, ULONG PortOff );	// read byte from space0
-BOOL WriteLongIOPort( UINT32 drvno, ULONG DataL, ULONG PortOff );// write long to IO runreg
+BOOL WriteLongIOPort( UINT32 drvno, UINT32 DataL, ULONG PortOff );// write long to IO runreg
 BOOL WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff );// write long to space0
-BOOL WriteLongDMA( UINT32 drvno, ULONG DWData, ULONG PortOff );
+BOOL WriteLongDMA( UINT32 drvno, UINT32 DWData, ULONG PortOff );
 BOOL WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff ); // write byte to space0
 // clear camera with reads
 void AboutDrv( UINT32 drvno );	// displays the version and board ID = test if board is there
@@ -101,18 +96,9 @@ void OutTrigHigh( UINT32 drvno );		//set output Trigger signal high
 void OutTrigPulse( UINT32 drvno, ULONG PulseWidth );	// pulses high output Trigger signal
 void WaitTrigger( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *EscapeKey );
 // waits for trigger input or Key
-void WaitTriggerShort( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *EscapeKey );
-void EnTrigShort( UINT32 drvno );
-void RSTrigShort( UINT32 drvno );
-void DisTrigShort( UINT32 drvno );
 void CloseShutter( UINT32 drvno );	// set IFC=low
 void OpenShutter( UINT32 drvno );		// set IFC=high
 BOOL GetShutterState( UINT32 drvno );	//get the actual state
-void V_On( UINT32 drvno );			// set V_On signal low (V = V_Fak)
-void V_Off( UINT32 drvno );			// set V_On signal high (V = 1)
-void SetOpto( UINT32 drvno, BYTE ch );  // set opto channel if output
-void RsetOpto( UINT32 drvno, BYTE ch ); // reset opto channel if output
-BOOL GetOpto( UINT32 drvno, BYTE ch );	//read opto channel if input
 void SetDAT( UINT32 drvno, UINT32 tin100ns ); // delay after trigger in 100ns
 void RSDAT( UINT32 drvno ); // disable delay after trigger in S0+0x20
 void SetEC( UINT32 drvno, UINT32 ecin100ns );
@@ -124,23 +110,15 @@ void SetPDAnotFFT( UINT32 drvno, BOOL set );
 void RsTOREG( UINT32 drvno );					//reset the TOREG - should be called before SetISPDA or SetISFFT
 void SendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data );
 void RSEC( UINT32 drvno );
-BOOL CheckFFTrig( UINT32 drvno );		// trigger sets FF - clear via write CtrlA 0x10
-// new Keyboard read which is not interrupt dependend
-// reads OEM scan code directly on port 0x60
 // FIFO functions
-void StartReadWithDma( UINT32 drvno );
-void StopRingReadThread( void ); //starts and ends background thread 
 void initReadFFLoop( UINT32 drv, UINT32 exptus, UINT8 exttrig, UINT32 * Blocks );
 void allBlocksOnSingleTrigger( UINT32 board_sel, UINT8 btrig_ch, BOOL* StartByTrig );
 void oneTriggerPerBlock( UINT32 board_sel, UINT8 btrig_ch );
 int  keyCheckForBlockTrigger( UINT32 board_sel );
 void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch );
 unsigned int __stdcall ReadFFLoopThread( void *parg ); //jungo dma
-ULONG GetLastMaxLines( void );
-UINT64 GetISRTime( void );
 //start<0 is in the past, stop>0 is in the future, relative to call of this function
 BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch ); //read state of trigger in signals during thread loop
-void SetExtSWTrig( BOOL ext );
 void StartFFTimer( UINT32 drvno, UINT32 exptime );	//starts 28bit timer of PCI board
 void SWTrig( UINT32 drvno );						//start a read to FIFO by software
 void StopFFTimer( UINT32 drvno );					// stop timer
@@ -152,10 +130,7 @@ void RSFifo( UINT32 drvno );						// reset FIFO and linecounter
 void SetExtFFTrig( UINT32 drvno );					// read to FIFO is triggered by external input I of PCI board
 void SetIntFFTrig( UINT32 drvno );					// read to FIFO is triggered by Timer
 BOOL SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq );//setup hardware vclk generator
-void SetupVCLKrt( ULONG vfreq );					//setup vclkfreq for rt version(noFIFO)
 BOOL SetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep);
-void SetupDELAY( UINT32 drvno, ULONG delay );		//setup DELAY for WRFIFO
-void SetupHAModule( BOOL irsingle, ULONG fftlines );//set the module C8061&C7041 inits
 BOOL ThreadToPriClass( ULONG threadp, DWORD *priclass, DWORD *prilevel );
 // Class & Thread priority functions
 BOOL SetPriority( ULONG threadp );		//set priority threadp 1..31 / 8 = normal and keep old in global variable
