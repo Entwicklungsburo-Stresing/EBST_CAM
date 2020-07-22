@@ -146,7 +146,8 @@ enum cam_messages
 
 //jungodriver specific variables
 WD_PCI_CARD_INFO deviceInfo[MAXPCIECARDS];
-WDC_DEVICE_HANDLE hDev[MAXPCIECARDS];
+WDC_DEVICE_HANDLE hDev_tmp[MAXPCIECARDS];
+WDC_DEVICE_HANDLE* hDev = &hDev_tmp;
 //Buffer of WDC_DMAContigBufLock function = one DMA sub block - will be copied to the big pDMABigBuf later
 USHORT* pDMASubBuf[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 WD_DMA *pDMASubBufInfos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL }; //there will be saved the neccesary parameters for the dma buffer
@@ -2496,12 +2497,12 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 
 	if (board_sel == 1 || board_sel == 3)
 	{
-		Sleep( 2 ); //DMA is not ready
+		//Sleep( 2 ); //DMA is not ready //removed 22.07.2020 FH
 		GetLastBufPart( 1 );
 	}
 	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 	{
-		Sleep( 2 ); //DMA is not ready
+		//Sleep( 2 ); //DMA is not ready //removed 22.07.2020 FH
 		GetLastBufPart( 2 );
 	}
 
@@ -2627,6 +2628,7 @@ void StartFFTimer( UINT32 drvno, UINT32 exptime )
 	data |= exptime & 0x0FFFFFFF;
 	data |= 0x40000000;			//set timer on
 	WriteLongS0( drvno, data, S0Addr_XCKLL );
+	return;
 }
 
 /**
@@ -2645,6 +2647,7 @@ void SWTrig( UINT32 drvno )
 	WriteByteS0( drvno, reg, S0Addr_BTRIGREG ); //set Trigger
 	reg &= 0xBF;
 	WriteByteS0( drvno, reg, S0Addr_BTRIGREG ); //reset
+	return;
 }
 
 void StopFFTimer( UINT32 drvno )
@@ -2653,10 +2656,12 @@ void StopFFTimer( UINT32 drvno )
 	ReadByteS0( drvno, &data, S0Addr_XCKMSB );
 	data &= 0xBF;
 	WriteByteS0( drvno, data, S0Addr_XCKMSB );
+	return;
 }
 
 /**
 \brief Check if timer is active.
+\param drvno board number (=1 if one PCI board)
 */
 BOOL IsTimerOn( UINT32 drvno )
 {
@@ -2665,6 +2670,7 @@ BOOL IsTimerOn( UINT32 drvno )
 	data &= 0x40;
 	if (data != 0) return TRUE;
 	else return FALSE;
+	return;
 }
 
 /**

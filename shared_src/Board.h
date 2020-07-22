@@ -33,6 +33,7 @@ struct ffloopparams
 struct global_vars
 {
 	USHORT** pDMABigBufBase;
+	WDC_DEVICE_HANDLE* hDev;
 };
 
 extern int newDLL;
@@ -47,6 +48,7 @@ extern DWORD64 IsrCounter;
 extern ULONG aPIXEL[5];	// pixel
 extern BOOL Running;
 extern UINT32 BOARD_SEL;
+extern WDC_DEVICE_HANDLE* hDev;
 
 void ErrMsgBoxOn( void );
 void ErrMsgBoxOff( void ); // switch to suppress error message boxes
