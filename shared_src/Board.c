@@ -3127,11 +3127,13 @@ BOOL FindCam( UINT32 drv )
 		ErrorMsg( "Fiber or Camera error" );
 		return FALSE;
 	}
+	/*
 	if ((dwdata & 0x40000000) == 0)
 	{
 		ErrorMsg( "Fiber connection error" );
 		return FALSE;
 	}
+	*/
 	return TRUE;
 }//FindCam
 
