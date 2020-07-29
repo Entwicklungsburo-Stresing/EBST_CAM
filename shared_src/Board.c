@@ -1641,10 +1641,7 @@ BOOL WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff )
 	volatile DWORD dwStatus = 0;
 	PBYTE data = &DataByte;
 	ULONG	PortOffset;
-
-
 	PortOffset = PortOff + 0x80;
-
 	dwStatus = WDC_WriteAddrBlock( hDev[drv], 0, PortOffset, sizeof(BYTE), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
@@ -1653,9 +1650,9 @@ BOOL WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff )
 		ErrorMsg( "WriteByteS0 failed" );
 		return FALSE;
 	}//else WDC_Err("ByteS0Write /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
-
 	//no comparison possible because some Read-Only-Register are changing when we are writing in the same register
-/*	BYTE checkdata;
+	/*
+	BYTE checkdata;
 	ReadByteS0( drv, &checkdata, PortOff );
 	if (*data != checkdata)
 	{
@@ -1663,7 +1660,6 @@ BOOL WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff )
 		WDC_Err( "data read: %x\n", checkdata );
 	}
 	*/
-
 	return TRUE;
 };  // WriteByteS0
 
@@ -3899,6 +3895,7 @@ BOOL ResetPartialBinning( UINT32 drvno )
 */
 BOOL AutostartXckForLines( UINT32 drvno )
 {
+	WDC_Err("AUTOSTART CALL");
 	return SetS0Bit( 0, S0Addr_CTRLB, drvno );
 }
 
@@ -3923,6 +3920,7 @@ void InitProDLL()
 {
 	struct global_vars g;
 	g.pDMABigBufBase = pDMABigBufBase;
+	g.hDev = hDev;
 	DLLInitGlobals( g );
 	return;
 }
