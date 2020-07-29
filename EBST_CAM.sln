@@ -16,6 +16,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ESLSCDLL", "ESLSCDLL\ESLSCD
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ESLSCDLL_pro", "ESLSCDLL_pro\ESLSCDLL_pro.vcxproj", "{1B5131DF-48DA-47FB-AAB0-2E086ED279DB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{35B0BE6D-E3DA-4070-9045-14D9B54456CA}"
+	ProjectSection(SolutionItems) = preProject
+		version.txt = version.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

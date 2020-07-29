@@ -69,19 +69,19 @@
     <_ProjectFileVersion>12.0.30501.0</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)</IncludePath>
-    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)</IncludePath>
   </PropertyGroup>
@@ -89,7 +89,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);</LibraryPath>
-    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -101,12 +101,25 @@
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <PrecompiledHeaderOutputFile>$(OutDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(OutDir)</AssemblerListingLocation>
+      <ObjectFileName>$(OutDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(OutDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <XMLDocumentationFileName>$(OutDir)</XMLDocumentationFileName>
+      <BrowseInformationFile>$(OutDir)</BrowseInformationFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <ManifestFile>$(OuttDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
     </Link>
+    <BuildLog>
+      <Path>$(OutDir)$(MSBuildProjectName).log</Path>
+    </BuildLog>
+    <ResourceCompile>
+      <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -120,16 +133,24 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <CallingConvention>StdCall</CallingConvention>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderOutputFile>$(OutDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(OutDir)</AssemblerListingLocation>
+      <ObjectFileName>$(OutDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(OutDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <XMLDocumentationFileName>$(OutDir)</XMLDocumentationFileName>
+      <BrowseInformationFile>$(OutDir)</BrowseInformationFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>$(SolutionDir)Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);windowscodecs.lib;d2d1.lib;dxguid.lib;dwrite.lib</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
+      <ManifestFile>$(OuttDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
     </Link>
     <ResourceCompile>
       <Culture>0x0407</Culture>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
     <PostBuildEvent>
       <Command>copy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)CCDExamp\"
@@ -139,6 +160,9 @@ copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"
 </Command>
       <Message>Copy $(ProjectName) to CCDExamp</Message>
     </PostBuildEvent>
+    <BuildLog>
+      <Path>$(OutDir)$(MSBuildProjectName).log</Path>
+    </BuildLog>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -153,6 +177,12 @@ copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CallingConvention>StdCall</CallingConvention>
       <CompileAs>Default</CompileAs>
+      <PrecompiledHeaderOutputFile>$(OutDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(OutDir)</AssemblerListingLocation>
+      <ObjectFileName>$(OutDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(OutDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <XMLDocumentationFileName>$(OutDir)</XMLDocumentationFileName>
+      <BrowseInformationFile>$(OutDir)</BrowseInformationFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -161,7 +191,14 @@ copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalDependencies>C:\WinDriver\lib\amd64\wdapi1200.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ManifestFile>$(OuttDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
     </Link>
+    <BuildLog>
+      <Path>$(OutDir)$(MSBuildProjectName).log</Path>
+    </BuildLog>
+    <ResourceCompile>
+      <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -178,6 +215,12 @@ copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CallingConvention>StdCall</CallingConvention>
       <CompileAs>Default</CompileAs>
+      <PrecompiledHeaderOutputFile>$(OutDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(OutDir)</AssemblerListingLocation>
+      <ObjectFileName>$(OutDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(OutDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <XMLDocumentationFileName>$(OutDir)</XMLDocumentationFileName>
+      <BrowseInformationFile>$(OutDir)</BrowseInformationFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -185,16 +228,22 @@ copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalDependencies>$(SolutionDir)Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);windowscodecs.lib;d2d1.lib;dxguid.lib;dwrite.lib</AdditionalDependencies>
+      <ManifestFile>$(OuttDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)CCDExamp\"
 copy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)ESLSCDLL\"
-copy "$(ProjectDir)Direct2dViewer_c.h" "$(SolutionDir)CCDExamp\"
-copy "$(TargetPath)" "$(SolutionDir)CCDExamp\$(IntermediateOutputPath)"</Command>
+copy "$(ProjectDir)Direct2dViewer_c.h" "$(SolutionDir)CCDExamp\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy $(ProjectName) to CCDExamp</Message>
     </PostBuildEvent>
+    <BuildLog>
+      <Path>$(OutDir)$(MSBuildProjectName).log</Path>
+    </BuildLog>
+    <ResourceCompile>
+      <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\shared_src\Board.c" />
