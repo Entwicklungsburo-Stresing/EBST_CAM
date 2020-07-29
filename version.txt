@@ -1,0 +1,2 @@
+v2.1.0
+- Fix hDev not beeing initialized in pro DLLs which led to partially not working pro DLL
