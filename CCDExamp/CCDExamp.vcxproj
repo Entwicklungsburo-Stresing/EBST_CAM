@@ -241,6 +241,9 @@
     <BuildLog>
       <Path>$(OutDir)$(MSBuildProjectName).log</Path>
     </BuildLog>
+    <Bscmake>
+      <PreserveSbr>false</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Debug|Win32'">
     <Midl>
@@ -290,6 +293,9 @@
     <BuildLog>
       <Path>$(OutDir)$(MSBuildProjectName).log</Path>
     </BuildLog>
+    <Bscmake>
+      <PreserveSbr>false</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Midl>
@@ -342,6 +348,9 @@
     <BuildLog>
       <Path>$(OutDir)$(MSBuildProjectName).log</Path>
     </BuildLog>
+    <Bscmake>
+      <PreserveSbr>false</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Debug|x64'">
     <Midl>
@@ -392,6 +401,9 @@
     <BuildLog>
       <Path>$(OutDir)$(MSBuildProjectName).log</Path>
     </BuildLog>
+    <Bscmake>
+      <PreserveSbr>false</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -439,6 +451,9 @@
     <BuildLog>
       <Path>$(OutDir)$(MSBuildProjectName).log</Path>
     </BuildLog>
+    <Bscmake>
+      <PreserveSbr>false</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|Win32'">
     <Midl>
@@ -486,6 +501,9 @@
     <BuildLog>
       <Path>$(OutDir)$(MSBuildProjectName).log</Path>
     </BuildLog>
+    <Bscmake>
+      <PreserveSbr>false</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
@@ -534,6 +552,9 @@
     <BuildLog>
       <Path>$(OutDir)$(MSBuildProjectName).log</Path>
     </BuildLog>
+    <Bscmake>
+      <PreserveSbr>false</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|x64'">
     <Midl>
@@ -582,6 +603,9 @@
     <BuildLog>
       <Path>$(OutDir)$(MSBuildProjectName).log</Path>
     </BuildLog>
+    <Bscmake>
+      <PreserveSbr>false</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='x64|x64'">
     <Link>
@@ -604,6 +628,9 @@
     <ResourceCompile>
       <ResourceOutputFileName>$(OutDir)$(TargetName).res</ResourceOutputFileName>
     </ResourceCompile>
+    <Bscmake>
+      <PreserveSbr>false</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='x64|Win32'">
     <Link>
@@ -624,6 +651,9 @@
     <ResourceCompile>
       <ResourceOutputFileName>$(OutDir)$(TargetName).res</ResourceOutputFileName>
     </ResourceCompile>
+    <Bscmake>
+      <PreserveSbr>false</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="..\probleme.txt" />
