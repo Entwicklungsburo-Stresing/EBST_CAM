@@ -120,6 +120,16 @@
     <ResourceCompile>
       <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>copy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)CCDExamp\"
+copy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)ESLSCDLL\"
+copy "$(ProjectDir)Direct2dViewer_c.h" "$(SolutionDir)CCDExamp\"
+copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"</Command>
+      <Message>Copy $(ProjectName) to CCDExamp</Message>
+    </PostBuildEvent>
+    <Bscmake>
+      <PreserveSbr>false</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -154,15 +164,17 @@
     </ResourceCompile>
     <PostBuildEvent>
       <Command>copy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)CCDExamp\"
-copy "$(TargetPath)" "$(SolutionDir)CCDExamp\$(IntermediateOutputPath)"
+copy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)ESLSCDLL\"
 copy "$(ProjectDir)Direct2dViewer_c.h" "$(SolutionDir)CCDExamp\"
-copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"
-</Command>
+copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"</Command>
       <Message>Copy $(ProjectName) to CCDExamp</Message>
     </PostBuildEvent>
     <BuildLog>
       <Path>$(OutDir)$(MSBuildProjectName).log</Path>
     </BuildLog>
+    <Bscmake>
+      <PreserveSbr>false</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -199,6 +211,16 @@ copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"
     <ResourceCompile>
       <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>copy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)CCDExamp\"
+copy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)ESLSCDLL\"
+copy "$(ProjectDir)Direct2dViewer_c.h" "$(SolutionDir)CCDExamp\"
+copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"</Command>
+      <Message>Copy $(ProjectName) to CCDExamp</Message>
+    </PostBuildEvent>
+    <Bscmake>
+      <PreserveSbr>false</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -229,11 +251,13 @@ copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalDependencies>$(SolutionDir)Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);windowscodecs.lib;d2d1.lib;dxguid.lib;dwrite.lib</AdditionalDependencies>
       <ManifestFile>$(OuttDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
+      <ShowProgress>NotSet</ShowProgress>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)CCDExamp\"
 copy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)ESLSCDLL\"
-copy "$(ProjectDir)Direct2dViewer_c.h" "$(SolutionDir)CCDExamp\"</Command>
+copy "$(ProjectDir)Direct2dViewer_c.h" "$(SolutionDir)CCDExamp\"
+copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy $(ProjectName) to CCDExamp</Message>
@@ -244,6 +268,9 @@ copy "$(ProjectDir)Direct2dViewer_c.h" "$(SolutionDir)CCDExamp\"</Command>
     <ResourceCompile>
       <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
+    <Bscmake>
+      <PreserveSbr>false</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\shared_src\Board.c" />
