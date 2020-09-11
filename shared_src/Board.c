@@ -1,6 +1,5 @@
 //   UNIT BOARD.C for all examples equal
 //	PCIE version with DMA and INTR
-//	V2.1  BB  7/2019
 //	- kopierbar für DLL und Examp mit neuem Flag CCDEXAMP , was nur in der Global vo, CCD Example gesetzt werden darf
 
 /*

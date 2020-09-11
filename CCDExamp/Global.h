@@ -1,7 +1,7 @@
 #pragma once
 #include <Windows.h>
 
-// GLOBAL.h   V1.0
+// GLOBAL.h
 // all globals for measure loop
 // can be used for PCIE board
 // for CCDExample and ESLSCDLL

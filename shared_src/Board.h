@@ -1,9 +1,6 @@
 #pragma once
-//  Board.h				PCI V2.31
+//  Board.h
 //	all functions for managing Interfaceboard
-//	with & without Fifo  
-//  new: data array ushort
-//2.31: 64 bit dma acces
 
 #define LSCPCIEJ_DEFAULT_LICENSE_STRING "872759e7d022a2499e5dcb42c25d1f889fdf524932d756df481fa728700d.WD1400_64_NL_Entwicklungsbuero_Stresing"
 #define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
