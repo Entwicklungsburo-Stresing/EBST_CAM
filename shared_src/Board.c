@@ -2561,7 +2561,7 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 				return 1;
 			}
 			ReadFFLoop( board_sel, exptus, exttrig, blocktrigger, btrig_ch );
-			Sleep( 100 );
+			//Sleep( 100 ); //removed to make continious mode faster. FH 09/2020
 		}
 		while (1);
 	}
@@ -2583,8 +2583,8 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 \param btrig_ch specify input channel
 			- btrig_ch=0 no read of state is performed
 			- btrig_ch=1 is pci trig in
-			- btrig_ch=2 is opto1
-			- btrig_ch=3 is opto2
+			- btrig_ch=2 is S1
+			- btrig_ch=3 is S2
 \return =0 when low, otherwise != 0
 */
 BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch )
