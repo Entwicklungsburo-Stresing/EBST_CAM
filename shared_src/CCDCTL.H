@@ -1,14 +1,12 @@
 #pragma once
 // CCDCTL.h    defines the Interface between the application and the driver
-//	V2.1
-//	is used for LSCISA and LSCPCI version
+// is used for LSCISA and LSCPCI version
 //
 // Define the IOCTL codes we will use.  The IOCTL code contains a command
 // identifier, plus other information about the device, the type of access
 // with which the file must have been opened, and the type of buffering.
 //
 // EB G. Stresing		10/2001
-
 
 // copied from devioctl.h
 // Macro definition for defining IOCTL and FSCTL function control codes.  Note

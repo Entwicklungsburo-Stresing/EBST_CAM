@@ -1,9 +1,6 @@
 #pragma once
-//  Board.h				PCI V2.31
+//  Board.h
 //	all functions for managing Interfaceboard
-//	with & without Fifo  
-//  new: data array ushort
-//2.31: 64 bit dma acces
 
 ***REMOVED***#define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
 
