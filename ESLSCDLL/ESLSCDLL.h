@@ -1,5 +1,3 @@
-//  DLL header    V 3.3    2/13
-
 /*   **********************************************
 	DLL for CCD Camera driver of
 	for linking to labview
@@ -7,22 +5,13 @@
   Entwicklungsbuero Stresing
   Germany
 
- Version V2.022  3/2017
-
   this DLL translates DLL calls from Labview or others
   to the unit Board.c
   the drivers must have been installed before calling !
 
-
   for using the PCI Board, copy PCIB\board.c and .h to actual folder
 	and make a rebuild all
-
-	V1: 	all declarations use stdcall (WinAPI)
-	V2.023: with block read functions
-		- new function DLLFreeMemInfo
-	V2.030 correct timer stop error in P202.2
-
-	*/
+*/
 
 #include <windows.h>
 #include <tchar.h> // for FreeMem-Function

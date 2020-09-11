@@ -12,8 +12,6 @@
 
 #include "lscpciej_lib.h"
 
-
-
 /* Validate a device handle */
 static inline BOOL IsValidDevice(PWDC_DEVICE pDev, const CHAR *sFunc)
 {
