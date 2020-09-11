@@ -1,3 +1,6 @@
+v2.2.0
+- Add DLLCopyAllData
+
 v2.1.1
 - Remove sleep(100) from ReadFFLoopThread
 

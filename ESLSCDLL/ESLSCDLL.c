@@ -603,6 +603,19 @@ DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UIN
 }
 
 /**
+\brief Copies all pixel data to pdioden
+\param drvno indentifier of PCIe card
+\param pdioden address where data is written, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( UINT16 )
+\return void
+*/
+DllAccess void DLLCopyAllData( UINT32 drv, UINT16 *pdioden )
+{
+	void* pframe = GetAddressOfPixel( drv, 0, 0, 0, 0 );
+	memcpy( pdioden, pframe, Nospb * Nob * aCAMCNT[drv] * aPIXEL[drv] * sizeof( UINT16 ) );  // length in bytes
+	return;
+}
+
+/**
 \brief Read nos lines from FIFO. Const burst loop with DMA initiated by hardware DREQ. Is called automatically for 2 boards.
 \param board_sel board number (=1 if one PCI board)
 \param exptus exposure time in micro sec. If this entry is used, freq must be set to 0
