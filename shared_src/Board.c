@@ -3371,10 +3371,10 @@ UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block,
 /**
 \brief Returns the address of a pixel located in pDMABigBufBase.
 \param drvno indentifier of PCIe card
-\param pixel position in one scan (0...1087)
-\param sample position in samples (0...nos)
-\param block position in blocks (0...nob)
-\param CAM position in camera count (0...CAMCNT)
+\param pixel position in one scan (0...(PIXEL-1))
+\param sample position in samples (0...(nos-1))
+\param block position in blocks (0...(nob-1))
+\param CAM position in camera count (0...(CAMCNT-1))
 */
 void* GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block, UINT16 CAM )
 {

@@ -581,17 +581,17 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 /**
 \brief Copies one frame of pixel data to pdioden.
 \param drvno indentifier of PCIe card
-\param curr_nos position in samples (0...nos)
-\param curr_nob position in blocks (0...nob)
-\param curr_cam position in camera count (0...CAMCNT)
-\param pdioden address where data is written, should be buffer with size length * sizeof( USHORT )
-\param length lenght of frame, typically pixel count (1088)
+\param curr_nos position in samples (0...(nos-1))
+\param curr_nob position in blocks (0...(nob-1))
+\param curr_cam position in camera count (0...(CAMCNT-1))
+\param pdioden address where data is written, should be buffer with size: length in pixel * sizeof( UINT16 )
+\param length lenght of frame in pixel, typically pixel count (1088)
 \return void
 */
 DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdioden, UINT32 length )
 {
 	void* pframe = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, curr_cam );
-	memcpy( pdioden, pframe, length * sizeof( USHORT ) );  // length in bytes
+	memcpy( pdioden, pframe, length * sizeof( UINT16 ) );  // length in bytes
 	/*
 	WDC_Err( "RETURN FRAME: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, _PIXEL: %u, length: %u\n", drvno, curr_nos, curr_nob, curr_cam, _PIXEL, length );
 	WDC_Err("FRAME2: address Buff: 0x%x \n", pDMABigBufBase[drvno]);
