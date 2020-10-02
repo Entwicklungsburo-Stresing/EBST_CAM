@@ -119,3 +119,4 @@ DllAccess void DLLBlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 );
 DllAccess UINT8 DLLSetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq );
 DllAccess void DLLInitProDLL();
 DllAccess UINT8 DLLisMeasureOn( UINT32 drvno );
+DllAccess void DLLwaitForMeasureReady( UINT32 drvno );

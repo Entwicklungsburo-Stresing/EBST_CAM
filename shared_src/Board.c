@@ -103,7 +103,6 @@ enum s0_addresses
 	S0Addr_PCI = 0x3C,
 	S0Addr_TDCCtrl = 0x60,
 	S0Addr_TDCData = 0x64
-
 };
 
 //Cam Addresses könnten später bei unterschiedlichen cam systemen vaariieren
@@ -2282,7 +2281,7 @@ void oneTriggerPerBlock( UINT32 board_sel, UINT8 btrig_ch )
 
 
 /**
-\brief Check escape key and stop measurement if pressed
+\brief Check escape key and stop measurement if pressed or start block on space
 */
 int keyCheckForBlockTrigger( UINT32 board_sel )
 { // A.M. 22.Okt.19
@@ -3911,7 +3910,7 @@ void InitProDLL()
 
 /**
 \brief Checks if the dam routine was already called.
-\param PCIe board identifier.
+\param drvno PCIe board identifier.
 \return True when DMA is set.
 */
 BOOL isDmaSet( UINT32 drvno )
@@ -3921,7 +3920,7 @@ BOOL isDmaSet( UINT32 drvno )
 
 /**
 \brief Check if measure on bit is set.
-\param PCIe board identifier.
+\param drvno PCIe board identifier.
 \return True when measureon bit is set.
 */
 BOOL isMeasureOn( UINT32 drvno )
@@ -3933,4 +3932,15 @@ BOOL isMeasureOn( UINT32 drvno )
 		return TRUE;
 	else
 		return FALSE;
+}
+
+/**
+\brief Returns when measure on bit is 0.
+\param drvno PCIe board identifier.
+\return none
+*/
+void waitForMeasureReady( UINT32 drvno )
+{
+	while (isMeasureOn( drvno ));
+	return;
 }
