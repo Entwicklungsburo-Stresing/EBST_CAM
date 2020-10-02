@@ -922,3 +922,11 @@ DllAccess UINT8 DLLisMeasureOn( UINT32 drvno )
 {
 	return isMeasureOn( drvno );
 }
+
+/**
+\copydoc waitForMeasureReady
+*/
+DllAccess void DLLwaitForMeasureReady( UINT32 drvno )
+{
+	return waitForMeasureReady( drvno );
+}
