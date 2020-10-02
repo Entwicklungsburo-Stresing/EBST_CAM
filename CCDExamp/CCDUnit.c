@@ -581,8 +581,8 @@ void startMess(void *dummy)
 	if(_MSHUT) params.exptus = RepTime*1000;
 	else  params.exptus = ExpTime;
 	params.exttrig = EXTTRIGFLAG;
-	params.blocktrigger = 0;
-	params.btrig_ch = 3;
+	params.blocktrigger = 0;   //one trigger for every block
+	params.btrig_ch = 2;
 	//_beginthread(ReadFFLoopThread, 0, &params);//thread
 	if (_MSHUT && RepTime < _MINREPTIME)//dontstart
 		;

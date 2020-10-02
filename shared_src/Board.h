@@ -115,6 +115,7 @@ void allBlocksOnSingleTrigger( UINT32 board_sel, UINT8 btrig_ch, BOOL* StartByTr
 void oneTriggerPerBlock( UINT32 board_sel, UINT8 btrig_ch );
 int  keyCheckForBlockTrigger( UINT32 board_sel );
 void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch );
+void countBlocksByHardware( UINT32 drvno );
 unsigned int __stdcall ReadFFLoopThread( void *parg ); //jungo dma
 //start<0 is in the past, stop>0 is in the future, relative to call of this function
 BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch ); //read state of trigger in signals during thread loop

@@ -2264,6 +2264,10 @@ void oneTriggerPerBlock( UINT32 board_sel, UINT8 btrig_ch )
 	}
 }
 
+
+/**
+\brief Check escape key and stop measurement if pressed
+*/
 int keyCheckForBlockTrigger( UINT32 board_sel )
 { // A.M. 22.Okt.19
 	if (GetAsyncKeyState( VK_ESCAPE ))
@@ -2294,7 +2298,7 @@ int keyCheckForBlockTrigger( UINT32 board_sel )
 /**
 \brief Const burst loop with DMA initiated by hardware DREQ. Read nos lines from FIFO.
 \param exttrig Is TRUE if every single scan is triggered externally.
-\param blocktrigger Is TRUE if each block is triggered externally (by Input or btrigger generator
+\param blocktrigger Is 0 if each block is single triggered externally, is 1 if all blocks start with one trigger
 \param btrig_ch
 	- btrig_ch=0 -> no read of state is performed
 	- btrig_ch=1 is pci tig in
@@ -2316,7 +2320,6 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 	BYTE	cnt = 0;
 	ULONG	Blocks;
 	int		i = 0;
-	UINT32 val = 0x0;
 
 	if (board_sel == 1 || board_sel == 3)
 		initReadFFLoop( 1, exptus, exttrig, &Blocks );
@@ -2328,83 +2331,36 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 	//SetThreadPriority()
 	for (int blk_cnt = 0; blk_cnt < Blocks; blk_cnt++)
 	{ //do //block read function
-
 		if (1 == blocktrigger)
 		{
 			allBlocksOnSingleTrigger( board_sel, btrig_ch, &StartByTrig ); // A.M. 22.Okt.19
 		}
-		if (2 == blocktrigger)
+		if (0 == blocktrigger)
 		{
 			oneTriggerPerBlock( board_sel, btrig_ch ); // A.M. 22.Okt.19
 		}
-		/*
-		if (blocktirgger !=0) {
-			BOOL StartByTrig = FALSE;
-			while (!StartByTrig) { // check for kill ?
-				//	Sleep(1);
-				if (GetAsyncKeyState(VK_ESCAPE))
-				{ //stop if ESC was pressed
-					if (board_sel == 1 || board_sel == 3) {
-						StopFFTimer(1);
-						//SetIntFFTrig(drv);//disable ext input
-						SetDMAReset(1);	//Initiator reset
-					}
-					if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3)) {
-						StopFFTimer(2);
-						//SetIntFFTrig(drv);//disable ext input
-						SetDMAReset(2);	//Initiator reset
-					}
-				}
-
-				if (GetAsyncKeyState(VK_SPACE))
-				{ //start if Space was pressed
-
-					while (GetAsyncKeyState(VK_SPACE) & 0x8000 == 0x8000) {}; //wait for release
-					StartbyTrig = TRUE;
-					}
-				// only look on drv=1
-				//wait for low
-				if (!BlockTrig(1, btrig_ch))	StartbyTrig = TRUE;
-			}//while !StartByTrig
-		}
-		*/
-
 		if (board_sel == 1 || board_sel == 3)
 		{
-			//make signal on trig out plug via PCIEFLAGS:D4 - needed to count Blocks
-			ReadLongS0( 1, &val, DmaAddr_PCIEFLAGS ); //set TrigStart flag for TRIGO signal to monitor the signal
-			val |= 0x10;
-			WriteLongS0( 1, val, DmaAddr_PCIEFLAGS ); //make pulse for BlockTrigger
-			val &= 0xffffffef;  //set R1(4)
-			WriteLongS0( 1, val, DmaAddr_PCIEFLAGS ); //reset signal
-			RS_ScanCounter( 1 ); //reset scan counter for next block - or timer is disabled
-
+			countBlocksByHardware( 1 );
 			if (board_sel != 3)		//start Timer !!!
 				StartFFTimer( 1, exptus );
 		}
 		if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 		{
-			//make signal on trig out plug via PCIEFLAGS:D4 - needed to count Blocks
-			ReadLongS0( 2, &val, DmaAddr_PCIEFLAGS ); //set TrigStart flag for TRIGO signal to monitor the signal
-			val |= 0x10;
-			WriteLongS0( 2, val, DmaAddr_PCIEFLAGS ); //make pulse for BlockTrigger
-			val &= 0xffffffef;  //set R1(4)
-			WriteLongS0( 2, val, DmaAddr_PCIEFLAGS ); //reset signal
-			RS_ScanCounter( 2 ); //reset scan counter for next block - or timer is disabled
-
-			if (board_sel != 3)					 //start Timer !!!
+			countBlocksByHardware( 2 );
+			if (board_sel != 3)		//start Timer !!!
 				StartFFTimer( 2, exptus );
 		}
 		//for synchronising the both cams
 		if (board_sel == 3)
 		{					 //start Timer !!!
-//StartFFTimer(1, exptus);
-//StartFFTimer(2, exptus);
+			//StartFFTimer(1, exptus);
+			//StartFFTimer(2, exptus);
 
 			UINT32 data1 = 0;
 			UINT32 data2 = 0;
 
-			ReadLongS0( 1, &data1, 0x08 ); //reset	
+			ReadLongS0( 1, &data1, S0Addr_XCKLL ); //reset	
 			data1 &= 0xF0000000;
 			data1 |= exptus & 0x0FFFFFFF;
 			data1 |= 0x40000000;			//set timer on
@@ -2419,9 +2375,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 			//faster
 			WDC_WriteAddr32( hDev[1], 0, PortOffset, data1 );
 			WDC_WriteAddr32( hDev[2], 0, PortOffset, data2 );
-
 		}
-
 		//	WDC_Err("before scan loop start\n");
 			//main read loop - wait here until nos is reached or ESC key
 			//if nos is reached the flag RegXCKMSB:b30 = TimerOn is reset by hardware if flag HWDREQ_EN is TRUE
@@ -2514,8 +2468,26 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 		SetIntFFTrig( 2 );//disable ext input
 	}
 
+	return;
+}
 
-}//ReadFFLoop
+/**
+\brief Sends signal to hardware to count blocks
+\param drvno PCIe board identifier
+\return none
+*/
+void countBlocksByHardware( UINT32 drvno )
+{
+	UINT32 val = 0x0;
+	//make signal on trig out plug via PCIEFLAGS:D4 - needed to count Blocks
+	ReadLongS0( drvno, &val, DmaAddr_PCIEFLAGS ); //set TrigStart flag for TRIGO signal to monitor the signal
+	val |= 0x10;
+	WriteLongS0( drvno, val, DmaAddr_PCIEFLAGS ); //make pulse for BlockTrigger
+	val &= 0xffffffef;  //set R1(4)
+	WriteLongS0( drvno, val, DmaAddr_PCIEFLAGS ); //reset signal
+	RS_ScanCounter( drvno ); //reset scan counter for next block - or timer is disabled
+	return;
+}
 
 /**
 \brief Const burst loop with DMA initiated by hardware DREQ.
@@ -2614,6 +2586,7 @@ BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch )
 /**
 \brief Hardware Fifo fkts
 \param exptime in microsec
+\set Bit30 of XCK-Reg
 */
 void StartFFTimer( UINT32 drvno, UINT32 exptime )
 {
@@ -2645,6 +2618,7 @@ void SWTrig( UINT32 drvno )
 	return;
 }
 
+// clear Bit30 of XCK-Reg: 0= timer off
 void StopFFTimer( UINT32 drvno )
 {
 	BYTE data = 0;
@@ -2657,6 +2631,7 @@ void StopFFTimer( UINT32 drvno )
 /**
 \brief Check if timer is active.
 \param drvno board number (=1 if one PCI board)
+\check Bit30 of XCK-Reg: 1= timer on
 */
 BOOL IsTimerOn( UINT32 drvno )
 {
