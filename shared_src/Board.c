@@ -2368,15 +2368,19 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 		{
 			countBlocksByHardware( 1 );
 			if (board_sel != 3)		//start Timer !!!
+			{
 				StartFFTimer( 1, exptus );
-			setBlockOn( 1 );
+				setBlockOn( 1 );
+			}
 		}
 		if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 		{
 			countBlocksByHardware( 2 );
 			if (board_sel != 3)		//start Timer !!!
+			{
 				StartFFTimer( 2, exptus );
-			setBlockOn( 2 );
+				setBlockOn( 2 );
+			}
 		}
 		//for synchronising the both cams
 		if (board_sel == 3)

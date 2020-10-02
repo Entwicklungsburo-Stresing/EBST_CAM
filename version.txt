@@ -1,3 +1,13 @@
+v2.3.0
+- Add function DLLisMeasureOn
+- Add function DLLwaitForMeasureReady
+- Control of BlockOn / BON will be moved to software:
+	- Add function setBlockOn
+	- Add function resetBlockOn
+- Refactoring: Clarify blocktrigger cases
+- Refactoring: Add enum PCIEFLAGS_bits
+- Refactoring: extract function countBlocksByHardware
+
 v2.2.0
 - Add DLLCopyAllData
 
