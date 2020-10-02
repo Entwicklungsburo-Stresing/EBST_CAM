@@ -180,3 +180,4 @@ BOOL ResetAutostartXck( UINT32 drvno );
 void InitProDLL();
 BOOL isDmaSet( UINT32 drvno );
 BOOL BufLock( UINT drvno, UINT camcnt, int nob, int nospb );
+BOOL isMeasureOn( UINT32 drvno );
