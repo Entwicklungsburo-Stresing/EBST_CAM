@@ -47,6 +47,22 @@ enum dma_addresses
 	DmaAddr_CAMCNT = 0x05C
 };
 
+enum PCIEFLAGS_bits
+{
+	PCIEFLAGS_bit_XCKI = 0x01,
+	PCIEFLAGS_bit_INTTRIG = 0x02,
+	PCIEFLAGS_bit_ENRSTIMERHW = 0x04,
+	PCIEFLAGS_bit_INTRSR = 0x08,
+	PCIEFLAGS_bit_BLOCKTRIG = 0x10,
+	PCIEFLAGS_bit_MEASUREON = 0x20,
+	PCIEFLAGS_bitindex_XCKI = 0,
+	PCIEFLAGS_bitindex_INTTRIG = 1,
+	PCIEFLAGS_bitindex_ENRSTIMERHW = 2,
+	PCIEFLAGS_bitindex_INTRSR = 3,
+	PCIEFLAGS_bitindex_BLOCKTRIG = 4,
+	PCIEFLAGS_bitindex_MEASUREON = 5
+};
+
 //PCIe Addresses
 enum pcie_addresses
 {
@@ -1000,7 +1016,7 @@ void isr( UINT drvno, PVOID pData )
 {
 	WDC_Err( "*isr(): 0x%x\n", IsrCounter );
 	WDC_Err( "DMA_bufsizeinbytes: 0x%x \n", DMA_bufsizeinbytes );
-	SetS0Bit( 3, DmaAddr_PCIEFLAGS, drvno );//set INTRSR flag for TRIGO
+	SetS0Bit( PCIEFLAGS_bitindex_INTRSR, DmaAddr_PCIEFLAGS, drvno );//set INTRSR flag for TRIGO
 
 	UINT32 nos = 0;
 	//ULONG nob = 0;
@@ -1035,7 +1051,7 @@ void isr( UINT drvno, PVOID pData )
 	{
 		WDC_Err( "introverall: 0x%x \n", introverall );
 		WDC_Err( "ISR Counter overflow: 0x%x \n", IsrCounter );
-		ResetS0Bit( 3, DmaAddr_PCIEFLAGS, drvno );//reset INTRSR flag for TRIGO
+		ResetS0Bit( PCIEFLAGS_bitindex_INTRSR, DmaAddr_PCIEFLAGS, drvno );//reset INTRSR flag for TRIGO
 		return;
 	}
 
@@ -1055,7 +1071,7 @@ void isr( UINT drvno, PVOID pData )
 	//ValMsg(val);
 
 	ReadLongS0( drvno, &val, DmaAddr_PCIEFLAGS ); //set INTRSR flag for TRIGO signal to monitor the signal
-	val |= 0x08;
+	val |= PCIEFLAGS_bit_INTRSR;
 	WriteLongS0( drvno, val, DmaAddr_PCIEFLAGS );
 
 	pdmasubbuf_base += SubBufCounter[drvno] * subbuflengthinbytes / sizeof( USHORT );  // cnt in USHORT
@@ -1105,7 +1121,7 @@ void isr( UINT drvno, PVOID pData )
 		pDMABigBufIndex[drvno] = pDMABigBufBase[drvno]; //wrap if error - but now all is mixed up!
 	}
 */
-	ResetS0Bit( 3, DmaAddr_PCIEFLAGS, drvno );//reset INTRSR flag for TRIGO
+	ResetS0Bit( PCIEFLAGS_bitindex_INTRSR, DmaAddr_PCIEFLAGS, drvno );//reset INTRSR flag for TRIGO
 	IsrCounter++;
 
 	//WDC_Err("ISR: pix42 of ReturnFrame: 0x%d \n", *(USHORT*)(pDMABigBufBase[drvno] + 420));
@@ -2213,8 +2229,8 @@ void initReadFFLoop( UINT32 drv, UINT32 exptus, UINT8 exttrig, UINT32 * Blocks )
 	*Blocks = val;
 
 	//set MeasureOn Bit
-	SetS0Reg( 0x20, 0x20, DmaAddr_PCIEFLAGS, drv );
-
+	SetS0Reg( PCIEFLAGS_bit_MEASUREON, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, drv );
+	return;
 }
 
 void allBlocksOnSingleTrigger( UINT32 board_sel, UINT8 btrig_ch, BOOL* StartByTrig )
@@ -2377,10 +2393,10 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 			WDC_WriteAddr32( hDev[1], 0, PortOffset, data1 );
 			WDC_WriteAddr32( hDev[2], 0, PortOffset, data2 );
 		}
-		//	WDC_Err("before scan loop start\n");
-			//main read loop - wait here until nos is reached or ESC key
-			//if nos is reached the flag RegXCKMSB:b30 = TimerOn is reset by hardware if flag HWDREQ_EN is TRUE
-	//extended stoTimer_routine for all variants of one and  two boards
+		//WDC_Err("before scan loop start\n");
+		//main read loop - wait here until nos is reached or ESC key
+		//if nos is reached the flag RegXCKMSB:b30 = TimerOn is reset by hardware if flag HWDREQ_EN is TRUE
+		//extended stoTimer_routine for all variants of one and  two boards
 		if (board_sel == 1)
 		{
 			while (IsTimerOn( 1 ))
@@ -2389,7 +2405,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 				{ //stop if ESC was pressed
 					StopFFTimer( 1 );
 					SetIntFFTrig( 1 );//disable ext input
-					SetS0Reg( 0x00, 0x20, DmaAddr_PCIEFLAGS, 1 );	//reset MeasureOn bit
+					SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 1 );	//reset MeasureOn bit
 					SetDMAReset( 1 );
 					return;
 				}
@@ -2403,13 +2419,12 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 				{ //stop if ESC was pressed
 					StopFFTimer( 2 );
 					SetIntFFTrig( 2 );//disable ext input
-					SetS0Reg( 0x00, 0x20, DmaAddr_PCIEFLAGS, 2 );	//reset MeasureOn bit
+					SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 2 );	//reset MeasureOn bit
 					SetDMAReset( 2 );
 					return;
 				}
 			}
 		}
-
 		if (number_of_boards == 2 && board_sel == 3)
 		{
 			while (IsTimerOn( 1 ) || IsTimerOn( 2 ))
@@ -2423,19 +2438,18 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 					{ //stop if ESC was pressed
 						StopFFTimer( 1 );
 						SetIntFFTrig( 1 );//disable ext input
-						SetS0Reg( 0x00, 0x20, DmaAddr_PCIEFLAGS, 1 );	//reset MeasureOn bit
+						SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 1 );	//reset MeasureOn bit
 						SetDMAReset( 1 );
 						return_flag_1 = TRUE;
 					}
 				}
-
 				if (!return_flag_2)
 				{
 					if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 2 ) | escape_readffloop) // check for kill ?
 					{ //stop if ESC was pressed
 						StopFFTimer( 2 );
 						SetIntFFTrig( 2 );//disable ext input
-						SetS0Reg( 0x00, 0x20, DmaAddr_PCIEFLAGS, 2 );	//reset MeasureOn bit
+						SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 2 );	//reset MeasureOn bit
 						SetDMAReset( 2 );
 						return_flag_2 = TRUE;
 					}
@@ -2443,8 +2457,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 				if (return_flag_1 && return_flag_2) return;
 			}
 		}
-	}//  block read function
-
+	}//block read function
 	if (board_sel == 1 || board_sel == 3)
 	{
 		//Sleep( 2 ); //DMA is not ready //removed 22.07.2020 FH
@@ -2455,20 +2468,18 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 		//Sleep( 2 ); //DMA is not ready //removed 22.07.2020 FH
 		GetLastBufPart( 2 );
 	}
-
 	if (board_sel == 1 || board_sel == 3)
 	{
-		SetS0Reg( 0x00, 0x20, DmaAddr_PCIEFLAGS, 1 );	//reset MeasureOn bit 
+		SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 1 );	//reset MeasureOn bit
 		StopFFTimer( 1 );
 		SetIntFFTrig( 1 );//disable ext input
 	}
 	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 	{
-		SetS0Reg( 0x00, 0x20, DmaAddr_PCIEFLAGS, 2 );	//reset MeasureOn bit 
+		SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 2 );	//reset MeasureOn bit
 		StopFFTimer( 2 );
 		SetIntFFTrig( 2 );//disable ext input
 	}
-
 	return;
 }
 
@@ -2482,7 +2493,7 @@ void countBlocksByHardware( UINT32 drvno )
 	UINT32 val = 0x0;
 	//make signal on trig out plug via PCIEFLAGS:D4 - needed to count Blocks
 	ReadLongS0( drvno, &val, DmaAddr_PCIEFLAGS ); //set TrigStart flag for TRIGO signal to monitor the signal
-	val |= 0x10;
+	val |= PCIEFLAGS_bit_BLOCKTRIG;
 	WriteLongS0( drvno, val, DmaAddr_PCIEFLAGS ); //make pulse for BlockTrigger
 	val &= 0xffffffef;  //set R1(4)
 	WriteLongS0( drvno, val, DmaAddr_PCIEFLAGS ); //reset signal
@@ -3072,7 +3083,7 @@ void RS_DMAAllCounter( UINT32 drv, BOOL hwstop )
 		//set Block end stops timer:
 		//when SCANINDEX reaches NOS, the timer is stopped by hardware.
 		ReadByteS0( drv, &dwdata8, DmaAddr_PCIEFLAGS );
-		dwdata8 |= 0x04; //set bit2 for 
+		dwdata8 |= PCIEFLAGS_bit_ENRSTIMERHW; //set bit2 for
 		WriteByteS0( drv, dwdata8, DmaAddr_PCIEFLAGS );
 	}
 	else
@@ -3907,4 +3918,20 @@ void InitProDLL()
 BOOL isDmaSet( UINT32 drvno )
 {
 	return WDC_IntIsEnabled( hDev[drvno] );
+}
+
+/**
+\brief Check if measure on bit is set.
+\param PCIe board identifier.
+\return True when measureon bit is set.
+*/
+BOOL isMeasureOn( UINT32 drvno )
+{
+	UINT32 data = 0;
+	BOOL success = ReadLongS0( drvno, &data, DmaAddr_PCIEFLAGS );
+	//Check for successful read and measure on bit
+	if (success && PCIEFLAGS_bit_MEASUREON & data)
+		return TRUE;
+	else
+		return FALSE;
 }
