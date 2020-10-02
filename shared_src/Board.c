@@ -55,12 +55,14 @@ enum PCIEFLAGS_bits
 	PCIEFLAGS_bit_INTRSR = 0x08,
 	PCIEFLAGS_bit_BLOCKTRIG = 0x10,
 	PCIEFLAGS_bit_MEASUREON = 0x20,
+	PCIEFLAGS_bit_BLOCKON = 0x40,
 	PCIEFLAGS_bitindex_XCKI = 0,
 	PCIEFLAGS_bitindex_INTTRIG = 1,
 	PCIEFLAGS_bitindex_ENRSTIMERHW = 2,
 	PCIEFLAGS_bitindex_INTRSR = 3,
 	PCIEFLAGS_bitindex_BLOCKTRIG = 4,
-	PCIEFLAGS_bitindex_MEASUREON = 5
+	PCIEFLAGS_bitindex_MEASUREON = 5,
+	PCIEFLAGS_bitindex_BLOCKON = 6
 };
 
 //PCIe Addresses
@@ -675,12 +677,11 @@ BOOL SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 \param bitnumber 0...31, 0 is LSB, 31 MSB
 \param Address register address
 \param drvno board number (=1 if one PCI board)
+\return TRUE when success, otherwise FALSE
 */
 BOOL ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
-
 	ULONG bitmask = 0x1 << bitnumber;
-
 	if (!SetS0Reg( 0x0, bitmask, Address, drvno ))
 	{
 		ErrLog( "WriteLong S0 Failed in SetDMAReg \n" );
@@ -688,7 +689,6 @@ BOOL ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 		return FALSE;
 	}
 	return TRUE;
-
 }
 
 BOOL SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno )
@@ -2369,12 +2369,14 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 			countBlocksByHardware( 1 );
 			if (board_sel != 3)		//start Timer !!!
 				StartFFTimer( 1, exptus );
+			setBlockOn( 1 );
 		}
 		if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 		{
 			countBlocksByHardware( 2 );
 			if (board_sel != 3)		//start Timer !!!
 				StartFFTimer( 2, exptus );
+			setBlockOn( 2 );
 		}
 		//for synchronising the both cams
 		if (board_sel == 3)
@@ -2464,6 +2466,14 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 				}
 				if (return_flag_1 && return_flag_2) return;
 			}
+		}
+		if (board_sel == 1 || board_sel == 3)
+		{
+			resetBlockOn( 1 );
+		}
+		if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
+		{
+			resetBlockOn( 2 );
 		}
 	}//block read function
 	if (board_sel == 1 || board_sel == 3)
@@ -3954,4 +3964,24 @@ void waitForMeasureReady( UINT32 drvno )
 {
 	while (isMeasureOn( drvno ));
 	return;
+}
+
+/**
+\brief Sets BlockOn bit in PCIEFLAGS.
+\param drvno PCIe board identifier.
+\return TRUE when success, otherwise FALSE
+*/
+BOOL setBlockOn( UINT32 drvno )
+{
+	return SetS0Bit( PCIEFLAGS_bitindex_BLOCKON, DmaAddr_PCIEFLAGS, drvno );
+}
+
+/**
+\brief Resets BlockOn bit in PCIEFLAGS.
+\param drvno PCIe board identifier.
+\return TRUE when success, otherwise FALSE
+*/
+BOOL resetBlockOn( UINT32 drvno )
+{
+	return ResetS0Bit( PCIEFLAGS_bitindex_BLOCKON, DmaAddr_PCIEFLAGS, drvno );
 }
