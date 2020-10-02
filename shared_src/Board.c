@@ -2313,7 +2313,10 @@ int keyCheckForBlockTrigger( UINT32 board_sel )
 /**
 \brief Const burst loop with DMA initiated by hardware DREQ. Read nos lines from FIFO.
 \param exttrig Is TRUE if every single scan is triggered externally.
-\param blocktrigger Is 0 if each block is single triggered externally, is 1 if all blocks start with one trigger
+\param blocktrigger Determines how the blocktrigger behaves.
+	- blocktrigger = 0 Start of block is not waiting for a trigger.
+	- blocktrigger = 1 One trigger starts all blocks.
+	- blocktrigger = 2 Each block is waiting for one trigger.
 \param btrig_ch
 	- btrig_ch=0 -> no read of state is performed
 	- btrig_ch=1 is pci tig in
@@ -2345,14 +2348,21 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 
 	//SetThreadPriority()
 	for (int blk_cnt = 0; blk_cnt < Blocks; blk_cnt++)
-	{ //do //block read function
-		if (1 == blocktrigger)
+	{//block read function
+		switch (blocktrigger)
 		{
+		default:
+		case 0:
+			//don't wait for block trigger
+			break;
+		case 1:
+			//wait for one trigger for all blocks
 			allBlocksOnSingleTrigger( board_sel, btrig_ch, &StartByTrig ); // A.M. 22.Okt.19
-		}
-		if (0 == blocktrigger)
-		{
+			break;
+		case 2:
+			//wait for each block for one trigger
 			oneTriggerPerBlock( board_sel, btrig_ch ); // A.M. 22.Okt.19
+			break;
 		}
 		if (board_sel == 1 || board_sel == 3)
 		{
@@ -2595,6 +2605,7 @@ BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch )
 
 /**
 \brief Hardware Fifo fkts
+\param drvno board number (=1 if one PCI board)
 \param exptime in microsec
 \set Bit30 of XCK-Reg
 */
