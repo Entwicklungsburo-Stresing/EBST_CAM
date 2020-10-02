@@ -914,3 +914,11 @@ DllAccess UINT8 DLLSetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 {
 	return SetupFullBinning( drvno, lines, vfreq );
 }
+
+/**
+\copydoc isMeasureOn
+*/
+DllAccess UINT8 DLLisMeasureOn( UINT32 drvno )
+{
+	return isMeasureOn( drvno );
+}
