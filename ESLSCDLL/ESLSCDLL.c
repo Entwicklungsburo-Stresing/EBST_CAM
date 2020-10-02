@@ -620,7 +620,10 @@ DllAccess void DLLCopyAllData( UINT32 drv, UINT16 *pdioden )
 \param board_sel board number (=1 if one PCI board)
 \param exptus exposure time in micro sec. If this entry is used, freq must be set to 0
 \param exttrig true (not 0) if external trigger for each scan, 0 else
-\param blocktrigger true (not 0) if one external trigger starts block of nos scans which run with internal timer
+\param blocktrigger Determines how the blocktrigger behaves.
+	- blocktrigger = 0 Start of block is not waiting for a trigger.
+	- blocktrigger = 1 One trigger starts all blocks.
+	- blocktrigger = 2 Each block is waiting for one trigger.
 \param btrig_ch 
 	- btrig_ch=0 -> no read of state is performed
 	- btrig_ch=1 is pci tig in
