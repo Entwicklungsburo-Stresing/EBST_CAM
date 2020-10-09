@@ -120,3 +120,5 @@ DllAccess UINT8 DLLSetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq );
 DllAccess void DLLInitProDLL();
 DllAccess UINT8 DLLisMeasureOn( UINT32 drvno );
 DllAccess void DLLwaitForMeasureReady( UINT32 drvno );
+DllAccess UINT8 DLLSetGTI( UINT32 drvno, UINT8 gti_mode );
+DllAccess UINT8 DLLSetSTI( UINT32 drvno, UINT8 sti_mode );
