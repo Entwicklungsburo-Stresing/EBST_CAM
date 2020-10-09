@@ -640,7 +640,8 @@ DllAccess void nDLLReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, U
 	params.btrig_ch = btrig_ch;
 
 	//thread wit prio 15
-	_beginthreadex( 0, 0, &ReadFFLoopThread, &params, 0, 0 );//cam_thread[0] = (HANDLE)_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//threadex
+	_beginthreadex( 0, 0, &ReadFFLoopThread, &params, 0, 0 );
+	//cam_thread[0] = (HANDLE)_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//threadex
 //}
 /*
 	if (number_of_boards == 2 && (cam_sel == 2 || cam_sel == 3)){
@@ -932,4 +933,20 @@ DllAccess UINT8 DLLisMeasureOn( UINT32 drvno )
 DllAccess void DLLwaitForMeasureReady( UINT32 drvno )
 {
 	return waitForMeasureReady( drvno );
+}
+
+/**
+\copydoc SetGTI
+*/
+DllAccess UINT8 DLLSetGTI( UINT32 drvno, UINT8 gti_mode )
+{
+	return SetGTI(drvno, gti_mode);
+}
+
+/**
+\copydoc SetSTI
+*/
+DllAccess UINT8 DLLSetSTI( UINT32 drvno, UINT8 sti_mode )
+{
+	return SetSTI( drvno, sti_mode );
 }

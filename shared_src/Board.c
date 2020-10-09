@@ -65,6 +65,22 @@ enum PCIEFLAGS_bits
 	PCIEFLAGS_bitindex_BLOCKON = 6
 };
 
+enum CTRLB_bits
+{
+	CTRLB_bit_STI0 = 0x01,
+	CTRLB_bit_STI1 = 0x02,
+	CTRLB_bit_STI2 = 0x04,
+	CTRLB_bit_SHON = 0x08,
+	CTRLB_bit_GTI0 = 0x10,
+	CTRLB_bit_GTI1 = 0x20,
+	CTRLB_bitindex_STI0 = 0,
+	CTRLB_bitindex_STI1 = 1,
+	CTRLB_bitindex_STI2 = 2,
+	CTRLB_bitindex_SHON = 3,
+	CTRLB_bitindex_GTI0 = 4,
+	CTRLB_bitindex_GTI1 = 5,
+};
+
 //PCIe Addresses
 enum pcie_addresses
 {
@@ -2247,9 +2263,17 @@ void allBlocksOnSingleTrigger( UINT32 board_sel, UINT8 btrig_ch, BOOL* StartByTr
 	}
 }
 
+/*
+\brief wait in loop until trigger occurs
+first wait for low and then for high
+check only PCIE board no 1
+*/
 void oneTriggerPerBlock( UINT32 board_sel, UINT8 btrig_ch )
-{ // A.M. 22.Okt.19
+{ // G.S. 22.Okt.20
 
+	if (btrig_ch == 0) return; //dont wait if internal trig
+
+	//now wait for lo / hi
 	if (!BlockTrig( 1, btrig_ch ))
 	{ // if trigger is Lo
 		while (!BlockTrig( 1, btrig_ch ))
@@ -2319,9 +2343,10 @@ int keyCheckForBlockTrigger( UINT32 board_sel )
 	- blocktrigger = 2 Each block is waiting for one trigger.
 \param btrig_ch
 	- btrig_ch=0 -> no read of state is performed
-	- btrig_ch=1 is pci tig in
-	- btrig_ch=2 is opto1
-	- btrig_ch=3 is opto2
+	- btrig_ch=1 is I tig in
+	- btrig_ch=2 is S1
+	- btrig_ch=3 is S2
+	- btrig_ch=4 is S1&S2
 \return none
 */
 void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch )
@@ -2354,6 +2379,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 		default:
 		case 0:
 			//don't wait for block trigger
+			oneTriggerPerBlock( board_sel, 0 ); // A.M. 22.Okt.19
 			break;
 		case 1:
 			//wait for one trigger for all blocks
@@ -2369,8 +2395,8 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 			countBlocksByHardware( 1 );
 			if (board_sel != 3)		//start Timer !!!
 			{
-				StartFFTimer( 1, exptus );
 				setBlockOn( 1 );
+				StartFFTimer( 1, exptus );
 			}
 		}
 		if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
@@ -2378,8 +2404,8 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 			countBlocksByHardware( 2 );
 			if (board_sel != 3)		//start Timer !!!
 			{
-				StartFFTimer( 2, exptus );
 				setBlockOn( 2 );
+				StartFFTimer( 2, exptus );
 			}
 		}
 		//for synchronising the both cams
@@ -2410,7 +2436,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 		//WDC_Err("before scan loop start\n");
 		//main read loop - wait here until nos is reached or ESC key
 		//if nos is reached the flag RegXCKMSB:b30 = TimerOn is reset by hardware if flag HWDREQ_EN is TRUE
-		//extended stoTimer_routine for all variants of one and  two boards
+		//extended to Timer_routine for all variants of one and  two boards
 		if (board_sel == 1)
 		{
 			while (IsTimerOn( 1 ))
@@ -2420,6 +2446,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 					StopFFTimer( 1 );
 					SetIntFFTrig( 1 );//disable ext input
 					SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 1 );	//reset MeasureOn bit
+					resetBlockOn( 1 );
 					SetDMAReset( 1 );
 					return;
 				}
@@ -2434,6 +2461,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 					StopFFTimer( 2 );
 					SetIntFFTrig( 2 );//disable ext input
 					SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 2 );	//reset MeasureOn bit
+					resetBlockOn( 2 );
 					SetDMAReset( 2 );
 					return;
 				}
@@ -2453,6 +2481,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 						StopFFTimer( 1 );
 						SetIntFFTrig( 1 );//disable ext input
 						SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 1 );	//reset MeasureOn bit
+						resetBlockOn( 1 );
 						SetDMAReset( 1 );
 						return_flag_1 = TRUE;
 					}
@@ -2464,6 +2493,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 						StopFFTimer( 2 );
 						SetIntFFTrig( 2 );//disable ext input
 						SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 2 );	//reset MeasureOn bit
+						resetBlockOn( 1 );
 						SetDMAReset( 2 );
 						return_flag_2 = TRUE;
 					}
@@ -2479,17 +2509,8 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 		{
 			resetBlockOn( 2 );
 		}
-	}//block read function
-	if (board_sel == 1 || board_sel == 3)
-	{
-		//Sleep( 2 ); //DMA is not ready //removed 22.07.2020 FH
-		GetLastBufPart( 1 );
-	}
-	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
-	{
-		//Sleep( 2 ); //DMA is not ready //removed 22.07.2020 FH
-		GetLastBufPart( 2 );
-	}
+	}//block cnt read function
+
 	if (board_sel == 1 || board_sel == 3)
 	{
 		SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 1 );	//reset MeasureOn bit
@@ -2502,6 +2523,18 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 		StopFFTimer( 2 );
 		SetIntFFTrig( 2 );//disable ext input
 	}
+
+	if (board_sel == 1 || board_sel == 3)
+	{
+		//Sleep( 2 ); //DMA is not ready //removed 22.07.2020 FH
+		GetLastBufPart( 1 );
+	}
+	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
+	{
+		//Sleep( 2 ); //DMA is not ready //removed 22.07.2020 FH
+		GetLastBufPart( 2 );
+	}
+
 	return;
 }
 
@@ -2540,7 +2573,7 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 
 	BOARD_SEL = board_sel;
 	//local declarations
-	SetPriority( READTHREADPriority );  //run in higher priority
+	SetPriority( READTHREADPriority );  //run ReadFFLoop in higher priority
 	escape_readffloop = FALSE;
 	IsrCounter = 0;
 	Running = TRUE;
@@ -2566,7 +2599,7 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 				return 1;
 			}
 			ReadFFLoop( board_sel, exptus, exttrig, blocktrigger, btrig_ch );
-			//Sleep( 100 ); //removed to make continious mode faster. FH 09/2020
+			Sleep( 1 ); // wait or next block is too early and scrambles last XCK, GST20
 		}
 		while (1);
 	}
@@ -2576,41 +2609,55 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 	}
 	Running = FALSE;
 	//_endthread();//thread
-	return 1;//endthreadex is called automatically
+	return 1;//endthreadex is called automatically when this returns
 }
 
 
 /**
 \brief Reads the binary state of an ext. trigger input.
-	Value val is updated in every loop of ringreadthread.
-	In ringreadthread also the board drv is set.
+	direct read of inputs for polling
 \param drv board number
 \param btrig_ch specify input channel
-			- btrig_ch=0 no read of state is performed
-			- btrig_ch=1 is pci trig in
+			- btrig_ch=0 not used
+			- btrig_ch=1 is pcie trig in I
 			- btrig_ch=2 is S1
 			- btrig_ch=3 is S2
+			- btrig_ch=4 is S1&S2
+			- btrig_ch=5 is TSTART (GTI - DAT - EC)
 \return =0 when low, otherwise != 0
 */
 BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch )
 {
 	BYTE data = 0;
 	BOOL state = FALSE;
-	UCHAR val = 0;
+	volatile UCHAR val = 0;
 
 	switch (btrig_ch)
 	{
-	case 1:
+	case 0: return TRUE;
+		break;
+	case 1: //I
 		ReadByteS0( drv, &val, S0Addr_CTRLA );
 		if ((val & 0x40) > 0) return TRUE;
 		break;
-	case 2:
+	case 2: //S1
 		ReadByteS0( drv, &val, S0Addr_CTRLC );
 		if ((val & 0x02) > 0) return TRUE;
 		break;
-	case 3:
+	case 3: //S2
 		ReadByteS0( drv, &val, S0Addr_CTRLC );
 		if ((val & 0x04) > 0) return TRUE;
+		break;
+	case 4: // S1&S2
+		ReadByteS0( drv, &val, S0Addr_CTRLC );
+		if ((val & 0x02) == 0) return FALSE;
+		ReadByteS0( drv, &val, S0Addr_CTRLC );
+		if ((val & 0x04) == 0) return FALSE;
+		return TRUE;
+		break;
+	case 5: // TSTART
+		ReadByteS0( drv, &val, S0Addr_CTRLA );
+		if ((val & 0x80) > 0) return TRUE;
 		break;
 	}
 	return FALSE;
@@ -2863,6 +2910,9 @@ BOOL ThreadToPriClass( ULONG threadp, DWORD *priclass, DWORD *prilevel )
 	}
 }
 
+// set thread to new priority level
+// keep old level in global OLDPRICLASS and OLDTHREADLEVEL
+// threadp 1..31 is split in class and level
 BOOL SetPriority( ULONG threadp )
 {
 	//Thread on
@@ -3422,7 +3472,7 @@ UINT8 WaitforTelapsed( LONGLONG musec )
 	Sets register in camera.
 \param drvno selects PCIe board
 \param pixel pixel count of camera
-\param trigger_input selects trigger input. 0 - XCK, 1 - EXTTRIG, 2 - DAT
+\param trigger_input for CC: selects trigger input. 0 - XCK, 1 - EXTTRIG, 2 - DAT
 \param IS_FFT =1 vclk on, =0 vclk off
 \param IS_AREA =1 area mode on, =0 area mode off
 \return void
@@ -3854,7 +3904,7 @@ The input trigger can be synchronized to S1 or S2 input. S1 or S2 is usally conn
 */
 void BlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 )
 {
-	BYTE data = 0;
+/*	BYTE data = 0;
 	BYTE mode = 0;
 	if (S1) mode |= 0b01;
 	if (S2) mode |= 0b10;
@@ -3862,6 +3912,8 @@ void BlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 )
 	data &= 0xFC;
 	data |= mode;
 	WriteByteS0( drvno, data, S0Addr_BTRIGREG );
+	*/
+
 }
 
 /**
@@ -3988,4 +4040,38 @@ BOOL setBlockOn( UINT32 drvno )
 BOOL resetBlockOn( UINT32 drvno )
 {
 	return ResetS0Bit( PCIEFLAGS_bitindex_BLOCKON, DmaAddr_PCIEFLAGS, drvno );
+}
+
+/**
+\brief Chooses trigger input for general trigger input (GTI)
+\param drvno PCIe board identifier.
+\param gti_mode Defines the input mode for GTI.
+	- 0: I
+	- 1: S1
+	- 2: S2
+	- 3: GND
+\return TRUE when success, otherwise FALSE
+*/
+BOOL SetGTI( UINT32 drvno, UINT8 gti_mode )
+{
+	return SetS0Reg( gti_mode << CTRLB_bitindex_GTI0, CTRLB_bit_GTI0 & CTRLB_bit_GTI1, S0Addr_CTRLB, drvno );
+}
+
+/**
+\brief Chooses trigger input for scan trigger input (STI)
+\param drvno PCIe board identifier.
+\param sti_mode Defines the input mode for STI.
+	- 0: TSTART
+	- 1: ASL
+	- 2: GND
+	- 3: GND
+	- 4: I
+	- 5: S1
+	- 6: S2
+	- 7: GND
+\return TRUE when success, otherwise FALSE
+*/
+BOOL SetSTI( UINT32 drvno, UINT8 sti_mode )
+{
+	return SetS0Reg( sti_mode << CTRLB_bitindex_STI0, CTRLB_bit_STI0 & CTRLB_bit_STI1 & CTRLB_bit_STI1, S0Addr_CTRLB, drvno );
 }
