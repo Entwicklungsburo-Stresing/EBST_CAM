@@ -89,7 +89,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);</LibraryPath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -254,10 +254,12 @@ copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"</Command>
       <ShowProgress>NotSet</ShowProgress>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)CCDExamp\"
-copy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)ESLSCDLL\"
-copy "$(ProjectDir)Direct2dViewer_c.h" "$(SolutionDir)CCDExamp\"
-copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"</Command>
+      <Command>xcopy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)CCDExamp\"
+xcopy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)ESLSCDLL\"
+xcopy "$(ProjectDir)Direct2dViewer_c.h" "$(SolutionDir)CCDExamp\"
+xcopy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"
+xcopy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)$(Platform)\$(Configuration)\"
+xcopy "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy $(ProjectName) to CCDExamp</Message>
