@@ -589,7 +589,7 @@ void startMess(void *dummy)
 	else
 		_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//cam_thread[0] = (HANDLE)_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//threadex
 
-	DWORD64 IsrNumber = Nob * Nospb / (DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS);
+	DWORD64 IsrNumber = Nob * (*Nospb) / (DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS);
 	if (both_boards) IsrNumber *= 2;
 	if (CAMCNT == 2) IsrNumber *= 2;
 	while (IsrCounter < IsrNumber) {

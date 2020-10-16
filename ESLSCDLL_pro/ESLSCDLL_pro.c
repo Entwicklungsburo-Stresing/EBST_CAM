@@ -84,6 +84,9 @@ DllAccess void DLLInitGlobals( struct global_vars g )
 {
 	pDMABigBufBase = g.pDMABigBufBase;
 	hDev = g.hDev;
+	aPIXEL = g.aPIXEL;
+	aCAMCNT = g.aCAMCNT;
+	Nospb = g.Nospb;
 	return;
 }
 
