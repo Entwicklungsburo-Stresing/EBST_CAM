@@ -1,6 +1,7 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by ESLSCDLL.rc
+// Used by ESLSCDLL_pro.rc
+//
 
 // Next default values for new objects
 // 
