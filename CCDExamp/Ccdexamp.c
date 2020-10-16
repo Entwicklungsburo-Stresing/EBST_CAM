@@ -603,7 +603,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 
 		//if nos or nospb becomes a higher value then 30000 the gui is not posible to deisplay it
 		//so we are checking this and dividing the displayed value. Therefore we are seeing a wrong value when we are using the trackbar
-		trackbar_nospb = Nospb;
+		trackbar_nospb = *Nospb;
 		while (trackbar_nospb > 30000)
 		{ //max for trackbar length
 			trackbar_nospb /= 10;
@@ -645,7 +645,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		cur_nob = SendMessage( hwndTrackNob, TBM_GETPOS, 0, 0 );
 		cur_nospb *= trackbar_nospb_multiplier;
 		cur_nob *= trackbar_nob_multiplier;
-		CopytoDispbuf( cur_nob*Nospb + cur_nospb );
+		CopytoDispbuf( cur_nob*(*Nospb) + cur_nospb );
 		Display( 1, PLOTFLAG );
 		UpdateTxT();
 		/*
@@ -656,7 +656,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		//Reset partial binning
 		WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
 		*/
-		DLLShowNewBitmap( DRV, cur_nob, 0, _PIXEL, Nospb );
+		DLLShowNewBitmap( DRV, cur_nob, 0, _PIXEL, *Nospb );
 		break;
 
 	case WM_COMMAND:
@@ -722,12 +722,12 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			contffloop = TRUE;
 			cont_mode = TRUE;
 			Nob = 1; 
-			Nospb = 10;
+			*Nospb = 10;
 			CALLING_WITH_NOS = TRUE;
 			CALLING_WITH_NOB = TRUE;
 			if (_IsArea)
 			{
-				Nospb = _FFTLINES;
+				*Nospb = _FFTLINES;
 				Nob = 3;
 				DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
 				SendMessage( hwndTrackNob, TBM_SETPOS, TRUE, 2 );
@@ -736,7 +736,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			{
 				if (_IsROI)
 				{
-					Nospb = _IsROI;
+					*Nospb = _IsROI;
 					Nob = 3;
 					DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
 					SendMessage( hwndTrackNob, TBM_SETPOS, TRUE, 2 );
@@ -750,10 +750,10 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			Sleep( 100 );
 			while (Running)
 			{
-				CopytoDispbuf( cur_nob*Nospb + cur_nospb );
+				CopytoDispbuf( cur_nob*(*Nospb) + cur_nospb );
 				Display( 1, PLOTFLAG );
 				UpdateTxT();
-				DLLShowNewBitmap( DRV, cur_nob, 0, _PIXEL, Nospb );
+				DLLShowNewBitmap( DRV, cur_nob, 0, _PIXEL, *Nospb );
 			}
 			break;
 
@@ -797,7 +797,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case ID_2DVIEW_SHOW:
 		{
 			InitProDLL();
-			DLLStart2dViewer( DRV, cur_nob, 0, _PIXEL, Nospb );
+			DLLStart2dViewer( DRV, cur_nob, 0, _PIXEL, *Nospb );
 			break;
 		}
 		case ID_2DVIEW_START:
@@ -1202,7 +1202,7 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 	{
 	case WM_INITDIALOG:
 		SetDlgItemInt( hDlg, IDC_nob, Nob, FALSE );
-		SetDlgItemInt( hDlg, IDC_nospb, Nospb, FALSE );
+		SetDlgItemInt( hDlg, IDC_nospb, *Nospb, FALSE );
 		//set Nos to readonly if #this fundtion is called by Range Of Interest fundtion
 		SendMessage( GetDlgItem( hDlg, IDC_nospb ), EM_SETREADONLY, CALLING_WITH_NOS, 0L );
 		SendMessage( GetDlgItem( hDlg, IDC_nob ), EM_SETREADONLY, CALLING_WITH_NOB, 0L );
@@ -1231,27 +1231,27 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 			if (success)
 			{
 				Nob = nob_input;
-				Nospb = nospb_input;
+				*Nospb = nospb_input;
 #ifdef _DLL
-				nDLLSetupDMA( DRV, Nospb, Nob );
+				nDLLSetupDMA( DRV, *Nospb, Nob );
 				if (both_boards)
-					nDLLSetupDMA( 2, Nospb, Nob );
+					nDLLSetupDMA( 2, *Nospb, Nob );
 #else
-				if (!BufLock( choosen_board, CAMCNT, Nob, Nospb ))
+				if (!BufLock( choosen_board, CAMCNT, Nob, *Nospb ))
 					MessageBox( hMSWND, "allocating Buffer fails", "Error", MB_OK );
 				else
 					MessageBox( hMSWND, "allocating Buffer succeeded", "Message", MB_OK );
 
 				if (both_boards)
 				{
-					if (!BufLock( 2, CAMCNT, Nob, Nospb ))
+					if (!BufLock( 2, CAMCNT, Nob, *Nospb ))
 						MessageBox( hMSWND, "allocating Buffer of second Board fails", "Error", MB_OK );
 					else
 						MessageBox( hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK );
 				}
 #endif
 			}
-			trackbar_nospb = Nospb;
+			trackbar_nospb = *Nospb;
 			while (trackbar_nospb > 30000)
 			{ //max for trackbar length
 				trackbar_nospb /= 10;
@@ -1278,9 +1278,9 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 			if (success)
 			{
 				Nob = nob_input;
-				Nospb = nospb_input;
+				*Nospb = nospb_input;
 			}
-			calcram = Nob * Nospb * _PIXEL * sizeof( USHORT ) / divMB;
+			calcram = Nob * (*Nospb) * _PIXEL * sizeof( USHORT ) / divMB;
 			if (calcram < 100000)
 				SetDlgItemInt( hDlg, IDC_CALCRAM, calcram, 0 );
 			else
@@ -1293,17 +1293,17 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 			if (success)
 			{
 				Nob = nob_input;
-				Nospb = nospb_input;
+				*Nospb = nospb_input;
 #ifdef _DLL
-				nDLLSetupDMA( DRV, Nospb, Nob );
+				nDLLSetupDMA( DRV, *Nospb, Nob );
 				if (both_boards)
-					nDLLSetupDMA( 2, Nospb, Nob );
+					nDLLSetupDMA( 2, *Nospb, Nob );
 			}
 #else
 				FreeMemInfo( &builtinram, &freeram );
 				freeram_old = freeram;
 
-				if (!BufLock( choosen_board, CAMCNT, Nob, Nospb ))
+				if (!BufLock( choosen_board, CAMCNT, Nob, *Nospb ))
 					MessageBox( hMSWND, "allocating Buffer fails", "Error", MB_OK );
 				else
 					MessageBox( hMSWND, "allocating Buffer succeeded", "Message", MB_OK );
@@ -1319,23 +1319,23 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 #endif
 			break;
 #ifdef _DLL
-			nDLLSetupDMA( DRV, Nospb, Nob );
+			nDLLSetupDMA( DRV, *Nospb, Nob );
 			if (both_boards)
-				nDLLSetupDMA( 2, Nospb, Nob );
+				nDLLSetupDMA( 2, *Nospb, Nob );
 #else
-			if (!BufLock( choosen_board, CAMCNT, Nob, Nospb ))
+			if (!BufLock( choosen_board, CAMCNT, Nob, *Nospb ))
 				MessageBox( hMSWND, "allocating Buffer fails", "Error", MB_OK );
 			else
 				MessageBox( hMSWND, "allocating Buffer succeeded", "Message", MB_OK );
 			if (both_boards)
 			{
-				if (!BufLock( 2, CAMCNT, Nob, Nospb ))
+				if (!BufLock( 2, CAMCNT, Nob, *Nospb ))
 					MessageBox( hMSWND, "allocating Buffer of second Board fails", "Error", MB_OK );
 				else
 					MessageBox( hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK );
 			}
 #endif
-			trackbar_nospb = Nospb;
+			trackbar_nospb = *Nospb;
 			trackbar_nob = Nob;
 			//update trackbars
 			SendMessage( hwndTrackNob, TBM_SETRANGE, TRUE,
@@ -1739,7 +1739,7 @@ LRESULT CALLBACK Set3ROI( HWND hDlg,
 			DLLSetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
 #endif
 				//allocate Buffer with matching NOS
-			Nospb = ROI;
+			*Nospb = ROI;
 			CALLING_WITH_NOS = TRUE;
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
 			EndDialog( hDlg, TRUE );
@@ -1852,7 +1852,7 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 			DLLSetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
 #endif
 			//allocate Buffer with matching NOS
-			Nospb = ROI;
+			*Nospb = ROI;
 			CALLING_WITH_NOS = TRUE;
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
 			EndDialog( hDlg, TRUE );
@@ -1961,7 +1961,7 @@ LRESULT CALLBACK AreaMode(HWND hDlg,
 			DLLSetupVCLK(choosen_board, _FFTLINES, 7);
 #endif
 			//allocate Buffer with matching NOS
-			Nospb = _FFTLINES;
+			*Nospb = _FFTLINES;
 			CALLING_WITH_NOS = TRUE;
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hMSWND, (DLGPROC)AllocateBuf);
 			EndDialog(hDlg, TRUE);
