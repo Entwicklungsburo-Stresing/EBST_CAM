@@ -636,6 +636,10 @@ BOOL SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno )
 	return TRUE;
 }
 
+/*
+\brief Set specified bits to 1 in register at memory address.
+
+*/
 BOOL SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno )
 {
 	UINT32 OldRegisterValues, Setbit_mask, OldRegVals_and_SetBits, Clearbit_mask, NewRegisterValues;
@@ -2244,6 +2248,8 @@ void initReadFFLoop( UINT32 drv, UINT32 exptus, UINT8 exttrig, UINT32 * Blocks )
 
 	//set MeasureOn Bit
 	SetS0Reg( PCIEFLAGS_bit_MEASUREON, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, drv );
+
+	//StartFFTimer( drv, exptus ); //GS20 if used for block trigger
 	return;
 }
 
@@ -2265,7 +2271,8 @@ void allBlocksOnSingleTrigger( UINT32 board_sel, UINT8 btrig_ch, BOOL* StartByTr
 
 /*
 \brief wait in loop until trigger occurs
-first wait for low and then for high
+if hi,return
+if lo, wait for hi
 check only PCIE board no 1
 */
 void oneTriggerPerBlock( UINT32 board_sel, UINT8 btrig_ch )
@@ -2273,7 +2280,7 @@ void oneTriggerPerBlock( UINT32 board_sel, UINT8 btrig_ch )
 
 	if (btrig_ch == 0) return; //dont wait if internal trig
 
-	//now wait for lo / hi
+	//ifr lo wait for hi
 	if (!BlockTrig( 1, btrig_ch ))
 	{ // if trigger is Lo
 		while (!BlockTrig( 1, btrig_ch ))
@@ -2284,7 +2291,9 @@ void oneTriggerPerBlock( UINT32 board_sel, UINT8 btrig_ch )
 			}
 		} // leave (and scan)
 	}
-	else
+	
+	else		// do not use lo/hi for (btrig_ch == 5)-> is now made in hardware Sheet50 (V202.14)
+	if (btrig_ch != 5) 
 	{ // if trigger is Hi
 		while (BlockTrig( 1, btrig_ch ))
 		{ // wait for Lo
@@ -2292,6 +2301,7 @@ void oneTriggerPerBlock( UINT32 board_sel, UINT8 btrig_ch )
 			{
 				return;
 			}
+			//if (btrig_ch == 5) return; //don't wait for lo if already hi
 		}
 		while (!BlockTrig( 1, btrig_ch ))
 		{ // wait for Hi
@@ -2347,6 +2357,7 @@ int keyCheckForBlockTrigger( UINT32 board_sel )
 	- btrig_ch=2 is S1
 	- btrig_ch=3 is S2
 	- btrig_ch=4 is S1&S2
+	- btrig_ch=5 is TSTART (GTI)
 \return none
 */
 void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch )
@@ -2397,6 +2408,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 			{
 				setBlockOn( 1 );
 				StartFFTimer( 1, exptus );
+				SWTrig( 1 ); //start scan for first read
 			}
 		}
 		if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
@@ -2406,6 +2418,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 			{
 				setBlockOn( 2 );
 				StartFFTimer( 2, exptus );
+				SWTrig( 2 ); //start scan for first read
 			}
 		}
 		//for synchronising the both cams
@@ -4049,12 +4062,12 @@ BOOL resetBlockOn( UINT32 drvno )
 	- 0: I
 	- 1: S1
 	- 2: S2
-	- 3: GND
+	- 3: TIMER
 \return TRUE when success, otherwise FALSE
 */
 BOOL SetGTI( UINT32 drvno, UINT8 gti_mode )
 {
-	return SetS0Reg( gti_mode << CTRLB_bitindex_GTI0, CTRLB_bit_GTI0 & CTRLB_bit_GTI1, S0Addr_CTRLB, drvno );
+	return SetS0Reg( gti_mode << CTRLB_bitindex_GTI0, CTRLB_bit_GTI0 | CTRLB_bit_GTI1, S0Addr_CTRLB, drvno );
 }
 
 /**
@@ -4073,5 +4086,6 @@ BOOL SetGTI( UINT32 drvno, UINT8 gti_mode )
 */
 BOOL SetSTI( UINT32 drvno, UINT8 sti_mode )
 {
-	return SetS0Reg( sti_mode << CTRLB_bitindex_STI0, CTRLB_bit_STI0 & CTRLB_bit_STI1 & CTRLB_bit_STI1, S0Addr_CTRLB, drvno );
+	//return SetS0Reg( sti_mode << CTRLB_bitindex_STI0, CTRLB_bit_STI0 & CTRLB_bit_STI1 & CTRLB_bit_STI1, S0Addr_CTRLB, drvno );
+	return SetS0Reg( sti_mode, CTRLB_bit_STI0 | CTRLB_bit_STI1 | CTRLB_bit_STI2, S0Addr_CTRLB, drvno );
 }
