@@ -519,7 +519,7 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 	INT64 needed_mem_mb;
 	INT64 memory_free_mb = 0;
 	Nob = nob;
-	Nospb = nos;
+	*Nospb = nos;
 
 	WDC_Err( "entered nDLLSetupDMA with drv: %i nos: %i and nob: %i and camcnt: %i\n", drv, nos, nob, aCAMCNT[drv] );
 
@@ -611,7 +611,7 @@ DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UIN
 DllAccess void DLLCopyAllData( UINT32 drv, UINT16 *pdioden )
 {
 	void* pframe = GetAddressOfPixel( drv, 0, 0, 0, 0 );
-	memcpy( pdioden, pframe, Nospb * Nob * aCAMCNT[drv] * aPIXEL[drv] * sizeof( UINT16 ) );  // length in bytes
+	memcpy( pdioden, pframe, (*Nospb) * Nob * aCAMCNT[drv] * aPIXEL[drv] * sizeof( UINT16 ) );  // length in bytes
 	return;
 }
 

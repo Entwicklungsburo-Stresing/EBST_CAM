@@ -206,13 +206,16 @@ __int64 START = 0;				// global variable for sync to systemtimer
 int newDLL = 0;
 UINT8 number_of_boards = 0;
 int Nob = 10;
-int Nospb = 100;
-ULONG aCAMCNT[MAXPCIECARDS] = { 1, 1, 1, 1, 1 };	// cameras parallel
+int tmp_Nosbp = 100;
+int* Nospb = &tmp_Nosbp;
+ULONG tmp_aCAMCNT[MAXPCIECARDS] = { 1, 1, 1, 1, 1 };	// cameras parallel
+ULONG* aCAMCNT = tmp_aCAMCNT;	// cameras parallel
 BOOL escape_readffloop = FALSE;
 BOOL contffloop = FALSE;
 USHORT* temp_pDMABigBufBase[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 USHORT** pDMABigBufBase= temp_pDMABigBufBase;
-ULONG aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };	// pixel
+ULONG tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
+ULONG* aPIXEL = tmp_aPIXEL;
 BOOL Running = FALSE;
 UINT32 BOARD_SEL = 1;
 
@@ -3423,10 +3426,10 @@ void CalcTrms( UINT32 drvno, UINT32 nos, UINT16 TRMS_pixel, UINT16 CAMpos, doubl
 /**
 \brief Returns the index of a pixel located in pDMABigBufBase.
 \param drvno indentifier of PCIe card
-\param pixel position in one scan (0...1087)
-\param sample position in samples (0...nos)
-\param block position in blocks (0...nob)
-\param CAM position in camera count (0...CAMCNT)
+\param pixel position in one scan (0...(PIXEL-1))
+\param sample position in samples (0...(nos-1))
+\param block position in blocks (0...(nob-1))
+\param CAM position in camera count (0...(CAMCNT-1)
 */
 UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block, UINT16 CAM )
 {
@@ -3437,7 +3440,7 @@ UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block,
 	//position of index at sample
 	index += sample * aCAMCNT[drvno] * aPIXEL[drvno];
 	//position of index at block
-	index += block * Nospb * aCAMCNT[drvno] * aPIXEL[drvno];
+	index += block * (*Nospb) * aCAMCNT[drvno] * aPIXEL[drvno];
 	return index;
 }
 
@@ -3994,6 +3997,9 @@ void InitProDLL()
 	struct global_vars g;
 	g.pDMABigBufBase = pDMABigBufBase;
 	g.hDev = hDev;
+	g.aPIXEL = aPIXEL;
+	g.aCAMCNT = aCAMCNT;
+	g.Nospb = Nospb;
 	DLLInitGlobals( g );
 	return;
 }

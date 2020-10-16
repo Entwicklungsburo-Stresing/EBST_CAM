@@ -31,18 +31,21 @@ struct global_vars
 {
 	USHORT** pDMABigBufBase;
 	WDC_DEVICE_HANDLE* hDev;
+	ULONG* aPIXEL;
+	ULONG* aCAMCNT;
+	int* Nospb;
 };
 
 extern int newDLL;
 extern USHORT** pDMABigBufBase;
 extern int Nob;
-extern int Nospb;
-extern ULONG aCAMCNT[5];	// cameras parallel
+extern int* Nospb;
+extern ULONG* aCAMCNT;	// cameras parallel
 extern BOOL escape_readffloop;
 extern BOOL contffloop;
 extern UINT8 number_of_boards;
 extern DWORD64 IsrCounter;
-extern ULONG aPIXEL[5];	// pixel
+extern ULONG* aPIXEL;
 extern BOOL Running;
 extern UINT32 BOARD_SEL;
 extern WDC_DEVICE_HANDLE* hDev;
