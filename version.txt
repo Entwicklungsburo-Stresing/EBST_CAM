@@ -1,3 +1,6 @@
+v2.3.1
+- Fix greyscale viewer not changing frame
+
 v2.3.0
 - Add function DLLisMeasureOn
 - Add function DLLwaitForMeasureReady
