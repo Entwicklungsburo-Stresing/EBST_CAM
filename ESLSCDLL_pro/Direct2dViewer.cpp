@@ -578,6 +578,7 @@ void Direct2dViewer::repaintWindow()
 {
 	//send message to 2d viewer window to repaint
 	SendMessage( getWindowHandler(), WM_PAINT, NULL, NULL );
+	return;
 }
 
 void Direct2dViewer::CalcCursorPos()
