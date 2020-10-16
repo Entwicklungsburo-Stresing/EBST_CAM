@@ -77,7 +77,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)</IncludePath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
@@ -142,7 +142,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(OutDir)ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);windowscodecs.lib;</AdditionalDependencies>
+      <AdditionalDependencies>ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);windowscodecs.lib</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
       <ManifestFile>$(OutDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
     </Link>
@@ -152,7 +152,9 @@
       <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>copy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)CCDExamp\"</Command>
+      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)CCDExamp\"
+xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)$(Platform)\$(Configuration)\"
+xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       <Message>copy $(ProjectName) output to CCDExamp</Message>
     </PostBuildEvent>
     <BuildLog>
@@ -231,9 +233,9 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)CCDExamp\"
-xcopy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)$(Platform)\$(Configuration)\"
-xcopy "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)CCDExamp\"
+xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)$(Platform)\$(Configuration)\"
+xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>copy $(ProjectName) output to CCDExamp</Message>

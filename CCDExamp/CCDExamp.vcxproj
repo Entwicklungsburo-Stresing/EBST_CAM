@@ -152,12 +152,13 @@
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)Jungo;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
@@ -183,10 +184,12 @@
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)Jungo;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x64|x64'">
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);C:\WinDriver\lib\amd64;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)Jungo;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='x64|Win32'">
     <IncludePath>$(SolutionDir)Jungo;$(IncludePath)</IncludePath>
@@ -351,6 +354,9 @@
     <Bscmake>
       <PreserveSbr>false</PreserveSbr>
     </Bscmake>
+    <PostBuildEvent>
+      <Command>xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Debug|x64'">
     <Midl>
@@ -404,6 +410,9 @@
     <Bscmake>
       <PreserveSbr>false</PreserveSbr>
     </Bscmake>
+    <PostBuildEvent>
+      <Command>xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -556,7 +565,7 @@
       <PreserveSbr>false</PreserveSbr>
     </Bscmake>
     <PostBuildEvent>
-      <Command>xcopy "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|x64'">
@@ -609,6 +618,9 @@
     <Bscmake>
       <PreserveSbr>false</PreserveSbr>
     </Bscmake>
+    <PostBuildEvent>
+      <Command>xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='x64|x64'">
     <Link>
@@ -634,6 +646,9 @@
     <Bscmake>
       <PreserveSbr>false</PreserveSbr>
     </Bscmake>
+    <PostBuildEvent>
+      <Command>xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='x64|Win32'">
     <Link>
