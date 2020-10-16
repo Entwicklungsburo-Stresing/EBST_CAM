@@ -77,7 +77,7 @@ BOOL WINAPI DLLMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved )
 
 /**
 \brief Call before using pro DLL.
-\param ppDMABigBufBase Address of camera data in DMA.
+\param g global_vars struct, defined in Board.h.
 \return none
 */
 DllAccess void DLLInitGlobals( struct global_vars g )
