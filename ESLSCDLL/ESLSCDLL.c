@@ -936,11 +936,11 @@ DllAccess void DLLwaitForMeasureReady( UINT32 drvno )
 }
 
 /**
-\copydoc SetGTI
+\copydoc SetBTI
 */
-DllAccess UINT8 DLLSetGTI( UINT32 drvno, UINT8 gti_mode )
+DllAccess UINT8 DLLSetBTI( UINT32 drvno, UINT8 gti_mode )
 {
-	return SetGTI(drvno, gti_mode);
+	return SetBTI(drvno, gti_mode);
 }
 
 /**
@@ -949,4 +949,12 @@ DllAccess UINT8 DLLSetGTI( UINT32 drvno, UINT8 gti_mode )
 DllAccess UINT8 DLLSetSTI( UINT32 drvno, UINT8 sti_mode )
 {
 	return SetSTI( drvno, sti_mode );
+}
+
+/**
+\copydoc ClearAllUserRegs
+*/
+DllAccess void DLLClearAllUserRegs( UINT32 drv )
+{
+	return ClearAllUserRegs( drv );
 }
