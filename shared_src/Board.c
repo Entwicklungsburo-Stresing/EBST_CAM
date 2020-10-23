@@ -1542,6 +1542,7 @@ void CloseShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 	ReadByteS0( drvno, &CtrlB, S0Addr_CTRLB );
 	CtrlB &= ~0x08; // clr bit D3 (MSHT) in CtrlB, ehemals 0x0fd;	/* $FD = 1111 1101 */
 	WriteByteS0( drvno, CtrlB, S0Addr_CTRLB );
+	return;
 }; //CloseShutter
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -1557,6 +1558,7 @@ void OpenShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 	ReadByteS0( drvno, &CtrlB, S0Addr_CTRLB );
 	CtrlB |= 0x08; // set bit D3 (MSUT) in CtrlB
 	WriteByteS0( drvno, CtrlB, S0Addr_CTRLB );
+	return;
 }; //OpenShutter
 
 BOOL GetShutterState( UINT32 drvno )
@@ -1614,6 +1616,7 @@ void SetEC( UINT32 drvno, UINT32 ecin100ns )
 void ResetEC( UINT32 drvno )
 {
 	WriteLongS0( drvno, 0, S0Addr_EC );
+	return;
 }; //ResetEC
 
 /**
@@ -1663,6 +1666,7 @@ void SetTORReg( UINT32 drvno, BYTE fkt )
 	read_val &= 0x0f; //dont disturb lower bits
 	val |= read_val;
 	WriteByteS0( drvno, val, S0Addr_TOR + 3 );
+	return;
 }//SetTORReg
 
 /**
@@ -1675,10 +1679,14 @@ void SetISPDA( UINT32 drvno, BOOL set )
 {//set bit if PDA sensor - used for EC and IFC
 	BYTE val = 0;
 	ReadByteS0( drvno, &val, S0Addr_TOR + 3 );
-	if (set != 0) { val |= 0x02; }
+	if (set)
+	{
+		val |= 0x02;
+		OpenShutter( drvno );
+	}
 	else val &= 0xfd;
 	WriteByteS0( drvno, val, S0Addr_TOR + 3 );
-	OpenShutter( drvno ); //enable output
+	return;
 }//SetISPDA
 
 /**
@@ -1689,24 +1697,37 @@ void SetISPDA( UINT32 drvno, BOOL set )
 */
 void SetISFFT( UINT32 drvno, BOOL set )
 {//set bit if FFT sensor - used for vclks and IFC
-	// also OpenShutter must be set!
 	BYTE val = 0;
 	ReadByteS0( drvno, &val, S0Addr_TOR + 3 );
-	if (set != 0) { val |= 0x01; }
+	if (set) val |= 0x01;
 	else val &= 0xfe;
 	WriteByteS0( drvno, val, S0Addr_TOR + 3 );
+	return;
 }//SetISFFT
 
 /**
 \brief Sets PDA sensor timing(set Reg TOR:D25 -> manual) or FFT.
 \param drvno board number (=1 if one PCI board)
-\param set if set is true (not 0)-> PDA, FFT else
+\param sensor_type Determines sensor type.
+	- 0: FFT
+	- 1: PDA
 \return none
 */
-void SetPDAnotFFT( UINT32 drvno, BOOL set )
+void SetSensorType( UINT32 drvno, UINT8 sensor_type )
 {
-	SetISPDA( drvno, set );
-	SetISFFT( drvno, !set );
+	switch (sensor_type)
+	{
+	default:
+	case 0:
+		SetISFFT( drvno, TRUE );
+		SetISPDA( drvno, FALSE );
+		break;
+	case 1:
+		SetISFFT( drvno, FALSE );
+		SetISPDA( drvno, TRUE );
+		break;
+	}
+	return;
 }
 
 /**
@@ -1717,41 +1738,8 @@ void SetPDAnotFFT( UINT32 drvno, BOOL set )
 void RsTOREG( UINT32 drvno )
 {// reset TOREG
 	WriteByteS0( drvno, 0, S0Addr_TOR + 3 );
-}
-
-/**
-\brief Sends data via fibre link, e.g. used for sending data to ADC (ADS5294).
-
-Send setup:
-- d0:d15 = data for AD-Reg  ADS5294
-- d16:d23 = ADR of  AD-Reg
-- d24 = ADDR0		AD=1
-- d25 = ADDR1		AD=0
-- d26 makes load pulse
-- all written to DB0 in Space0 = Long0
-- for AD set maddr=01, adaddr address of reg
-\param drvno board number (=1 if one PCI board)
-\param maddr master address for specifying device (2 for ADC)
-\param adaddr register address
-\param data data
-\return none
-*/
-void SendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data )
-{
-	UINT32 ldata = 0;
-	ldata = maddr;
-	ldata = ldata << 8;
-	ldata |= adaddr;
-	ldata = ldata << 16;
-	ldata |= data;
-	WriteLongS0( drvno, ldata, S0Addr_DBR );
-	ldata |= 0x4000000;		//load val
-	WriteLongS0( drvno, ldata, S0Addr_DBR );
-	ldata = 0;		//rs load
-	WriteLongS0( drvno, ldata, S0Addr_DBR );
-	Sleep( 1 );
 	return;
-}//SendFLCAM
+}
 
 void RSEC( UINT32 drvno )
 //reset EC register to zero (enables programming IFC via register)
@@ -1772,21 +1760,15 @@ void RSEC( UINT32 drvno )
 //  Fifo only Functions
 
 
-void initReadFFLoop( UINT32 drv, UINT32 exptus, UINT8 exttrig, UINT32 * Blocks )
+void initReadFFLoop( UINT32 drv, UINT32 * Blocks )
 {
 	UINT32 dwdata = 0;
 	UINT32 nos = 0;
 	UINT32 val = 0;
-	BOOL ExTrig = FALSE;
 
 	ReadLongS0( drv, &dwdata, 0x44 ); //NOS is in reg R1
-
 	nos = dwdata;
-
-	// ErrorMsg("jump to DLLReadFFLoop");
-
 	//WDC_Err("entered DLLReadFFLoop of PCIEcard #%i\n", drv);
-
 	if (!DBGNOCAM)
 	{
 		//Check if Camera there
@@ -1796,43 +1778,19 @@ void initReadFFLoop( UINT32 drv, UINT32 exptus, UINT8 exttrig, UINT32 * Blocks )
 			return;
 		}
 	}
-
-	if (exptus == 0)
-	{
-		ErrorMsg( " exposure time = 0 " );
-		return;
-	}
-
 	//reset the internal block counter and ScanIndex before START
 	//set to hw stop of timer hwstop=TRUE
 	RS_DMAAllCounter( drv, TRUE );
 	//reset intr copy buf function
-
 	SubBufCounter[drv] = 0;
 	pDMABigBufIndex[drv] = pDMABigBufBase[drv]; // reset buffer index to base we got from InitDMA
 	WDC_Err( "RESET BIGBUF to%x\n", pDMABigBufIndex[drv] );
 	IsrCounter = 0;
-
-
-	//ErrorMsg("in DLLReadFFLoop - start timer");
-	if (exttrig != 0)
-	{
-		ExTrig = TRUE;
-		SetExtFFTrig( drv );
-	}
-	else
-	{
-		ExTrig = FALSE;
-		SetIntFFTrig( drv );
-
-	}
+	SetExtFFTrig( drv );
 	ReadLongS0( drv, &val, DmaAddr_NOB ); //get the needed Blocks
 	*Blocks = val;
-
 	//set MeasureOn Bit
 	SetS0Reg( PCIEFLAGS_bit_MEASUREON, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, drv );
-
-	//StartFFTimer( drv, exptus ); //GS20 if used for block trigger
 	return;
 }
 
@@ -1896,7 +1854,6 @@ void oneTriggerPerBlock( UINT32 board_sel, UINT8 btrig_ch )
 	}
 }
 
-
 /**
 \brief Check escape key and stop measurement if pressed or start block on space
 */
@@ -1906,13 +1863,13 @@ int keyCheckForBlockTrigger( UINT32 board_sel )
 	{ //stop if ESC was pressed
 		if (board_sel == 1 || board_sel == 3)
 		{
-			StopFFTimer( 1 );
+			StopSTimer( 1 );
 			//SetIntFFTrig(drv);//disable ext input
 			SetDMAReset( 1 );	//Initiator reset
 		}
 		if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 		{
-			StopFFTimer( 2 );
+			StopSTimer( 2 );
 			//SetIntFFTrig(drv);//disable ext input
 			SetDMAReset( 2 );	//Initiator reset
 		}
@@ -1929,21 +1886,10 @@ int keyCheckForBlockTrigger( UINT32 board_sel )
 
 /**
 \brief Const burst loop with DMA initiated by hardware DREQ. Read nos lines from FIFO.
-\param exttrig Is TRUE if every single scan is triggered externally.
-\param blocktrigger Determines how the blocktrigger behaves.
-	- blocktrigger = 0 Start of block is not waiting for a trigger.
-	- blocktrigger = 1 One trigger starts all blocks.
-	- blocktrigger = 2 Each block is waiting for one trigger.
-\param btrig_ch
-	- btrig_ch=0 -> no read of state is performed
-	- btrig_ch=1 is I tig in
-	- btrig_ch=2 is S1
-	- btrig_ch=3 is S2
-	- btrig_ch=4 is S1&S2
-	- btrig_ch=5 is TSTART (GTI)
+\param exttrig Sets scan timer.
 \return none
 */
-void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch )
+void ReadFFLoop( UINT32 board_sel )
 {
 	//local declarations
 	char string[20] = "";
@@ -1959,48 +1905,48 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 	int		i = 0;
 
 	if (board_sel == 1 || board_sel == 3)
-		initReadFFLoop( 1, exptus, exttrig, &Blocks );
+		initReadFFLoop( 1, &Blocks );
 	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
-		initReadFFLoop( 2, exptus, exttrig, &Blocks );
+		initReadFFLoop( 2, &Blocks );
 
 	//WDC_Err("ReadFFLoop: Block Trigger is set to%d\n", blocktrigger);
-
 	//SetThreadPriority()
 	for (int blk_cnt = 0; blk_cnt < Blocks; blk_cnt++)
 	{//block read function
-		switch (blocktrigger)
-		{
-		default:
-		case 0:
-			//don't wait for block trigger
-			oneTriggerPerBlock( board_sel, 0 ); // A.M. 22.Okt.19
-			break;
-		case 1:
-			//wait for one trigger for all blocks
-			allBlocksOnSingleTrigger( board_sel, btrig_ch, &StartByTrig ); // A.M. 22.Okt.19
-			break;
-		case 2:
-			//wait for each block for one trigger
-			oneTriggerPerBlock( board_sel, btrig_ch ); // A.M. 22.Okt.19
-			break;
-		}
+		oneTriggerPerBlock( board_sel, 5 ); // new 10/2020 with PCIe 202.14: switch trigger by hardware
+		//switch (blocktrigger)
+		//{
+		//default:
+		//case 0:
+		//	//don't wait for block trigger
+		//	oneTriggerPerBlock( board_sel, 0 ); // A.M. 22.Okt.19
+		//	break;
+		//case 1:
+		//	//wait for one trigger for all blocks
+		//	allBlocksOnSingleTrigger( board_sel, btrig_ch, &StartByTrig ); // A.M. 22.Okt.19
+		//	break;
+		//case 2:
+		//	//wait for each block for one trigger
+		//	//oneTriggerPerBlock( board_sel, btrig_ch ); // A.M. 22.Okt.19
+		//	break;
+		//}
 		if (board_sel == 1 || board_sel == 3)
 		{
 			countBlocksByHardware( 1 );
-			if (board_sel != 3)		//start Timer !!!
+			if (board_sel != 3)
 			{
 				setBlockOn( 1 );
-				StartFFTimer( 1, exptus );
+				StartSTimer( 1 );
 				SWTrig( 1 ); //start scan for first read
 			}
 		}
 		if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 		{
 			countBlocksByHardware( 2 );
-			if (board_sel != 3)		//start Timer !!!
+			if (board_sel != 3)
 			{
 				setBlockOn( 2 );
-				StartFFTimer( 2, exptus );
+				StartSTimer( 2 );
 				SWTrig( 2 ); //start scan for first read
 			}
 		}
@@ -2015,12 +1961,10 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 
 			ReadLongS0( 1, &data1, S0Addr_XCKLL ); //reset	
 			data1 &= 0xF0000000;
-			data1 |= exptus & 0x0FFFFFFF;
 			data1 |= 0x40000000;			//set timer on
 
 			ReadLongS0( 2, &data2, S0Addr_XCKLL ); //reset	
 			data2 &= 0xF0000000;
-			data2 |= exptus & 0x0FFFFFFF;
 			data2 |= 0x40000000;			//set timer on
 
 			UINT32	PortOffset = S0Addr_XCKLL + 0x80;
@@ -2039,7 +1983,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 			{
 				if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 1 ) | escape_readffloop) // check for kill ?
 				{ //stop if ESC was pressed
-					StopFFTimer( 1 );
+					StopSTimer( 1 );
 					//SetIntFFTrig( 1 );//disable ext input
 					SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 1 );	//reset MeasureOn bit
 					resetBlockOn( 1 );
@@ -2054,7 +1998,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 			{
 				if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 2 ) | escape_readffloop) // check for kill ?
 				{ //stop if ESC was pressed
-					StopFFTimer( 2 );
+					StopSTimer( 2 );
 					//SetIntFFTrig( 2 );//disable ext input
 					SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 2 );	//reset MeasureOn bit
 					resetBlockOn( 2 );
@@ -2074,7 +2018,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 				{
 					if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 1 ) | escape_readffloop) // check for kill ?
 					{ //stop if ESC was pressed
-						StopFFTimer( 1 );
+						StopSTimer( 1 );
 						SetIntFFTrig( 1 );//disable ext input
 						SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 1 );	//reset MeasureOn bit
 						resetBlockOn( 1 );
@@ -2086,7 +2030,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 				{
 					if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 2 ) | escape_readffloop) // check for kill ?
 					{ //stop if ESC was pressed
-						StopFFTimer( 2 );
+						StopSTimer( 2 );
 						//SetIntFFTrig( 2 );//disable ext input
 						SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 2 );	//reset MeasureOn bit
 						resetBlockOn( 1 );
@@ -2110,13 +2054,13 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 	if (board_sel == 1 || board_sel == 3)
 	{
 		SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 1 );	//reset MeasureOn bit
-		StopFFTimer( 1 );
+		StopSTimer( 1 );
 		SetIntFFTrig( 1 );//disable ext input
 	}
 	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 	{
 		SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 2 );	//reset MeasureOn bit
-		StopFFTimer( 2 );
+		StopSTimer( 2 );
 		//SetIntFFTrig( 2 );//disable ext input
 	}
 
@@ -2162,11 +2106,6 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 	volatile struct ffloopparams *par;
 	par = parg;
 	UINT32 board_sel = par->board_sel;
-	UINT32 exptus = par->exptus;
-	UINT8 exttrig = par->exttrig;
-	UINT8 blocktrigger = par->blocktrigger;
-	UINT8 btrig_ch = par->btrig_ch;
-
 	BOARD_SEL = board_sel;
 	//local declarations
 	SetPriority( READTHREADPriority );  //run ReadFFLoop in higher priority
@@ -2181,33 +2120,32 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 			{ //stop if ESC was pressed
 				if (board_sel == 1 || board_sel == 3)
 				{
-					StopFFTimer( 1 );
+					StopSTimer( 1 );
 					//SetIntFFTrig(drv);//disable ext input
 					SetDMAReset( 1 );	//Initiator reset
 				}
 				if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 				{
-					StopFFTimer( 2 );
+					StopSTimer( 2 );
 					//SetIntFFTrig(drv);//disable ext input
 					SetDMAReset( 2 );	//Initiator reset
 				}
 				Running = FALSE;
 				return 1;
 			}
-			ReadFFLoop( board_sel, exptus, exttrig, blocktrigger, btrig_ch );
+			ReadFFLoop( board_sel );
 			Sleep( 1 ); // wait or next block is too early and scrambles last XCK, GST20
 		}
 		while (1);
 	}
 	else
 	{
-		ReadFFLoop( board_sel, exptus, exttrig, blocktrigger, btrig_ch );
+		ReadFFLoop( board_sel );
 	}
 	Running = FALSE;
 	//_endthread();//thread
 	return 1;//endthreadex is called automatically when this returns
 }
-
 
 /**
 \brief Reads the binary state of an ext. trigger input.
@@ -2263,20 +2201,42 @@ BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch )
 	return FALSE;
 }
 
-
 /**
-\brief Hardware Fifo fkts
+\brief Sets Scan Timer on.
 \param drvno board number (=1 if one PCI board)
 \param exptime in microsec
-\set Bit30 of XCK-Reg
+\return none
 */
-void StartFFTimer( UINT32 drvno, UINT32 exptime )
+void StartSTimer( UINT32 drvno )
 {
 	UINT32 data = 0;
-	ReadLongS0( drvno, &data, S0Addr_XCKLL ); //reset	
+	ReadLongS0( drvno, &data, S0Addr_XCKLL );
+	data |= 0x40000000;	//set timer on
+	WriteLongS0( drvno, data, S0Addr_XCKLL );
+	return;
+}
+
+// clear Bit30 of XCK-Reg: 0= timer off
+void StopSTimer( UINT32 drvno )
+{
+	BYTE data = 0;
+	ReadByteS0( drvno, &data, S0Addr_XCKMSB );
+	data &= 0xBF;
+	WriteByteS0( drvno, data, S0Addr_XCKMSB );
+	return;
+}
+
+/**
+\brief Sets time for scan timer.
+\param drvno board number (=1 if one PCI board)
+\param stime_in_microseconds Scan time in microseconds.
+*/
+void SetSTimer( UINT32 drvno, UINT32 stime_in_microseconds )
+{
+	UINT32 data = 0;
+	ReadLongS0( drvno, &data, S0Addr_XCKLL ); //reset
 	data &= 0xF0000000;
-	data |= exptime & 0x0FFFFFFF;
-	data |= 0x40000000;			//set timer on
+	data |= stime_in_microseconds & 0x0FFFFFFF;
 	WriteLongS0( drvno, data, S0Addr_XCKLL );
 	return;
 }
@@ -2300,16 +2260,6 @@ void SWTrig( UINT32 drvno )
 	return;
 }
 
-// clear Bit30 of XCK-Reg: 0= timer off
-void StopFFTimer( UINT32 drvno )
-{
-	BYTE data = 0;
-	ReadByteS0( drvno, &data, S0Addr_XCKMSB );
-	data &= 0xBF;
-	WriteByteS0( drvno, data, S0Addr_XCKMSB );
-	return;
-}
-
 /**
 \brief Check if timer is active.
 \param drvno board number (=1 if one PCI board)
@@ -2322,7 +2272,6 @@ BOOL IsTimerOn( UINT32 drvno )
 	data &= 0x40;
 	if (data != 0) return TRUE;
 	else return FALSE;
-	return;
 }
 
 /**
@@ -2337,7 +2286,6 @@ BOOL FFValid( UINT32 drvno )
 	ReadByteS0( drvno, &data, S0Addr_FF_FLAGS );
 	data &= 0x80;
 	if (data > 0) return TRUE;
-
 	return FALSE;
 }
 
@@ -2367,7 +2315,6 @@ BOOL FFOvl( UINT32 drvno )
 	ReadByteS0( drvno, &data, S0Addr_FF_FLAGS );
 	data &= 0x08; //0x20; if not saved
 	if (data > 0) return TRUE; //empty
-
 	return FALSE;
 }
 
@@ -2383,6 +2330,7 @@ void RSFifo( UINT32 drvno )
 	WriteByteS0( drvno, data, S0Addr_BTRIGREG );
 	data &= 0x7F;
 	WriteByteS0( drvno, data, S0Addr_BTRIGREG );
+	return;
 }
 
 /**
@@ -2396,7 +2344,7 @@ void SetExtFFTrig( UINT32 drvno )
 	ReadByteS0( drvno, &data, S0Addr_XCKMSB );
 	data |= 0x80;
 	WriteByteS0( drvno, data, S0Addr_XCKMSB );
-
+	return;
 }//SetExtFFTrig
 
 /**
@@ -3615,6 +3563,22 @@ BOOL isMeasureOn( UINT32 drvno )
 }
 
 /**
+\brief Check if blockon bit is set.
+\param drvno PCIe board identifier.
+\return True when blockon bit is set.
+*/
+BOOL isBlockOn( UINT32 drvno )
+{
+	UINT32 data = 0;
+	BOOL success = ReadLongS0( drvno, &data, DmaAddr_PCIEFLAGS );
+	//Check for successful read and measure on bit
+	if (success && PCIEFLAGS_bit_BLOCKON & data)
+		return TRUE;
+	else
+		return FALSE;
+}
+
+/**
 \brief Returns when measure on bit is 0.
 \param drvno PCIe board identifier.
 \return none
@@ -3622,6 +3586,17 @@ BOOL isMeasureOn( UINT32 drvno )
 void waitForMeasureReady( UINT32 drvno )
 {
 	while (isMeasureOn( drvno ));
+	return;
+}
+
+/**
+\brief Returns when block on bit is 0.
+\param drvno PCIe board identifier.
+\return none
+*/
+void waitForBlockReady( UINT32 drvno )
+{
+	while (isBlockOn( drvno ));
 	return;
 }
 

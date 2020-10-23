@@ -86,22 +86,23 @@ void ResetEC( UINT32 drvno );
 void SetTORReg( UINT32 drvno, BYTE fkt );
 void SetISPDA( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if PDA
 void SetISFFT( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if FFT
-void SetPDAnotFFT( UINT32 drvno, BOOL set );
+void SetSensorType( UINT32 drvno, UINT8 sensor_type );
 void RsTOREG( UINT32 drvno );					//reset the TOREG - should be called before SetISPDA or SetISFFT
 void RSEC( UINT32 drvno );
 // FIFO functions
-void initReadFFLoop( UINT32 drv, UINT32 exptus, UINT8 exttrig, UINT32 * Blocks );
+void initReadFFLoop( UINT32 drv, UINT32 * Blocks );
 void allBlocksOnSingleTrigger( UINT32 board_sel, UINT8 btrig_ch, BOOL* StartByTrig );
 void oneTriggerPerBlock( UINT32 board_sel, UINT8 btrig_ch );
 int  keyCheckForBlockTrigger( UINT32 board_sel );
-void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch );
+void ReadFFLoop( UINT32 board_sel );
 void countBlocksByHardware( UINT32 drvno );
 unsigned int __stdcall ReadFFLoopThread( void *parg ); //jungo dma
 //start<0 is in the past, stop>0 is in the future, relative to call of this function
 BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch ); //read state of trigger in signals during thread loop
-void StartFFTimer( UINT32 drvno, UINT32 exptime );	//starts 28bit timer of PCI board
+void StartSTimer( UINT32 drvno );	//starts 28bit timer of PCI board
+void StopSTimer( UINT32 drvno );					// stop timer
+void SetSTimer( UINT32 drvno, UINT32 stime_in_microseconds );
 void SWTrig( UINT32 drvno );						//start a read to FIFO by software
-void StopFFTimer( UINT32 drvno );					// stop timer
 BOOL IsTimerOn( UINT32 drvno );
 BOOL FFValid( UINT32 drvno );						// TRUE if linecounter>0
 BOOL FFFull( UINT32 drvno );
@@ -161,8 +162,11 @@ void InitProDLL();
 BOOL isDmaSet( UINT32 drvno );
 BOOL BufLock( UINT drvno, UINT camcnt, int nob, int nospb );
 BOOL isMeasureOn( UINT32 drvno );
+BOOL isBlockOn( UINT32 drvno );
 void waitForMeasureReady( UINT32 drvno );
+void waitForBlockReady( UINT32 drvno );
 BOOL setBlockOn( UINT32 drvno );
 BOOL resetBlockOn( UINT32 drvno );
 BOOL SetBTI( UINT32 drvno, UINT8 bti_mode );
+BOOL SetSTI( UINT32 drvno, UINT8 sti_mode );
 void ClearAllUserRegs( UINT32 drv );

@@ -468,7 +468,7 @@ DllAccess void DLLSetupDMA( UINT32 drv, void* pdioden, UINT32 nos, UINT32 nob )
 	}
 
 	//stop all and clear FIFO
-	StopFFTimer( drv );
+	StopSTimer( drv );
 	SetIntFFTrig( drv );
 	RSFifo( drv );
 
@@ -540,7 +540,7 @@ DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
 	}*/
 
 	//stop all and clear FIFO
-	StopFFTimer( drv );
+	StopSTimer( drv );
 	SetIntFFTrig( drv );
 	RSFifo( drv );
 
@@ -631,37 +631,11 @@ DllAccess void DLLCopyAllData( UINT32 drv, UINT16 *pdioden )
 	- btrig_ch=3 is opto2
 \return none
 */
-DllAccess void nDLLReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrigger, UINT8 btrig_ch )
+DllAccess void nDLLReadFFLoop( UINT32 board_sel )
 {
 	params.board_sel = board_sel;
-	params.exptus = exptus;
-	params.exttrig = exttrig;
-	params.blocktrigger = blocktrigger;
-	params.btrig_ch = btrig_ch;
-
 	//thread wit prio 15
 	_beginthreadex( 0, 0, &ReadFFLoopThread, &params, 0, 0 );
-	//cam_thread[0] = (HANDLE)_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//threadex
-//}
-/*
-	if (number_of_boards == 2 && (cam_sel == 2 || cam_sel == 3)){
-		//struct has to be volatile, if not readffloop is always called with drvno=1
-		params2.drvno = 2;
-		params2.exptus = exptus;
-		params2.exttrig = exttrig;
-		params2.blocktrigger = blocktrigger;
-		params2.btrig_ch = btrig_ch;
-
-		//_beginthread(ReadFFLoopThread, 0, &params2);//thread
-		_beginthreadex(0, 0, &ReadFFLoopThread, &params2, 0, 0);//cam_thread[1] = (HANDLE)_beginthreadex(0, 0, &ReadFFLoopThread , &params2, 0, 0); //threadex
-	}
-	*/
-	//Sleep(100);//thread
-	//wait until readprocess is finished
-	//WaitForMultipleObjects(2, cam_thread, TRUE, INFINITE);//threadex
-
-	//CloseHandle(cam_thread[0]);//threadex
-	//CloseHandle(cam_thread[1]);//threadex
 	return;
 }//DLLReadFFLoop
 
@@ -737,16 +711,11 @@ DllAccess void DLLSetISPDA( UINT32 drvno, UINT8 set )
 }
 
 /**
-\copydoc SetPDAnotFFT
+\copydoc SetSensorType
 */
-DllAccess void DLLSetPDAnotFFT( UINT32 drvno, UINT8 set )
+DllAccess void DLLSetSensorType( UINT32 drvno, UINT8 sensor_type )
 {
-	if (set == 0)
-	{
-		SetPDAnotFFT( drvno, FALSE );
-	}
-	else SetPDAnotFFT( drvno, TRUE );
-	return;
+	return  SetSensorType( drvno, sensor_type );
 }
 
 /**
@@ -928,11 +897,27 @@ DllAccess UINT8 DLLisMeasureOn( UINT32 drvno )
 }
 
 /**
+\copydoc isBlockOn
+*/
+DllAccess UINT8 DLLisBlockOn( UINT32 drvno )
+{
+	return isBlockOn( drvno );
+}
+
+/**
 \copydoc waitForMeasureReady
 */
 DllAccess void DLLwaitForMeasureReady( UINT32 drvno )
 {
 	return waitForMeasureReady( drvno );
+}
+
+/**
+\copydoc waitForBlockReady
+*/
+DllAccess void DLLwaitForBlockReady( UINT32 drvno )
+{
+	return waitForBlockReady( drvno );
 }
 
 /**
@@ -957,4 +942,12 @@ DllAccess UINT8 DLLSetSTI( UINT32 drvno, UINT8 sti_mode )
 DllAccess void DLLClearAllUserRegs( UINT32 drv )
 {
 	return ClearAllUserRegs( drv );
+}
+
+/**
+\copydoc SetSTimer
+*/
+DllAccess void DLLSetSTimer( UINT32 drvno, UINT32 stime_in_microseconds )
+{
+	return SetSTimer(drvno, stime_in_microseconds);
 }

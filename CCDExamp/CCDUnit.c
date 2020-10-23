@@ -486,12 +486,12 @@ void initMeasurement()
 		SetTORReg(choosen_board, 0);
 	}
 	//set TrigOut, default= XCK
-	StopFFTimer(choosen_board);
+	StopSTimer(choosen_board);
 	SetIntFFTrig(choosen_board);
 	RSFifo(choosen_board);
 	initCamera();
 	if (both_boards) {
-		StopFFTimer(2);
+		StopSTimer(2);
 		SetIntFFTrig(2);
 		RSFifo(2);
 		//setups
