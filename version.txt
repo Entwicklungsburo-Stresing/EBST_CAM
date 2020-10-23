@@ -1,3 +1,9 @@
+v3.1.0
+- Remove most parameters of ReadFFLoop
+- Seperate setting s timer on and setting the time
+- Add isBlockOn
+- Add wairForBlockReady
+
 v3.0.0
 - new registers R16-19: BTIMER, BDAT, BEC, BFLAGS 
 	- block trigger path is now completely independent from scan and got own registers
