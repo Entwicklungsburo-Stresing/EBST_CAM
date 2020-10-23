@@ -187,4 +187,5 @@ BOOL isMeasureOn( UINT32 drvno );
 void waitForMeasureReady( UINT32 drvno );
 BOOL setBlockOn( UINT32 drvno );
 BOOL resetBlockOn( UINT32 drvno );
-BOOL SetGTI( UINT32 drvno, UINT8 gti_mode );
+BOOL SetBTI( UINT32 drvno, UINT8 bti_mode );
+void ClearAllUserRegs( UINT32 drv );

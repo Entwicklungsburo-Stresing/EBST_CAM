@@ -71,14 +71,16 @@ enum CTRLB_bits
 	CTRLB_bit_STI1 = 0x02,
 	CTRLB_bit_STI2 = 0x04,
 	CTRLB_bit_SHON = 0x08,
-	CTRLB_bit_GTI0 = 0x10,
-	CTRLB_bit_GTI1 = 0x20,
+	CTRLB_bit_BTI0 = 0x10,
+	CTRLB_bit_BTI1 = 0x20,
+	CTRLB_bit_BTI2 = 0x40,
 	CTRLB_bitindex_STI0 = 0,
 	CTRLB_bitindex_STI1 = 1,
 	CTRLB_bitindex_STI2 = 2,
 	CTRLB_bitindex_SHON = 3,
-	CTRLB_bitindex_GTI0 = 4,
-	CTRLB_bitindex_GTI1 = 5,
+	CTRLB_bitindex_BTI0 = 4,
+	CTRLB_bitindex_BTI1 = 5,
+	CTRLB_bitindex_BTI2 = 6
 };
 
 //PCIe Addresses
@@ -119,6 +121,7 @@ enum s0_addresses
 	S0Addr_DELAYEC = 0x34,
 	S0Addr_IRQREG = 0x38,
 	S0Addr_PCI = 0x3C,
+	S0Addr_PCIEFLAGS =0x40,
 	S0Addr_TDCCtrl = 0x60,
 	S0Addr_TDCData = 0x64
 };
@@ -369,23 +372,24 @@ void AboutTLPs( UINT32 drvno )
 */
 void AboutS0( UINT32 drvno )
 {
+	#define entries  36		//32 
 	int i, j = 0;
 	int numberOfBars = 0;
-	char fn[1000];
+	char fn[entries*30];
 	UINT32 S0Data = 0;
 	ULONG length = 0;
 	HWND hWnd;
-	char LUTS0Reg[32][30] = {
+	char LUTS0Reg[entries][30] = {
 		"DBR \t",
 		"CTRLA \t",
 		"XCKLL \t",
 		"XCKCNTLL",
 		"PIXREG \t",
-		"FIFOCNT \t",
+		"FIFOCNT ",
 		"VCLKCTRL",
 		"'EBST' \t",
 		"DAT \t",
-		"XDLY \t",
+		"EC \t",
 		"TOR \t",
 		"ARREG \t",
 		"GIOREG \t",
@@ -400,14 +404,18 @@ void AboutS0( UINT32 drvno )
 		"R5 BLOCKS",
 		"R6 BLOCKINDEX",
 		"R7 CAMCNT",
-		"R8 \t",
-		"R9 TRIGCNT",
-		"R10 \t",
-		"R11 \t",
-		"R12 \t",
-		"R13 TIMEMEAS",
-		"R14 \t ",
-		"R15 \t"
+		"R8 GPX Ctrl",
+		"R9 GPX Data",
+		"R10 ROI 0",
+		"R11 ROI 1",
+		"R12 ROI 2",
+		"R13 XCKDLY",
+		"R14 ADSC ",
+		"R15 LDSC",
+		"R16 BTimer",
+		"R17 BDAT",
+		"R18 BEC\t",
+		"R19 BFLAGS"
 	}; //Look-Up-Table for the S0 Registers
 
 	hWnd = GetActiveWindow();
@@ -416,7 +424,7 @@ void AboutS0( UINT32 drvno )
 
 	//Hier werden alle 6 Adressen der BARs in Hex abgefragt
 	//WriteLongS0( 1, 0xADDAFEED, 32 );
-	for (i = 0; i <= 31; i++)
+	for (i = 0; i <= entries-1; i++)
 	{
 		ReadLongS0( drvno, &S0Data, i * 4 );
 		j += sprintf( fn + j, "%s \t: 0x%I32x\n", LUTS0Reg[i], S0Data );
@@ -1700,6 +1708,20 @@ BOOL WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff )
 };  // WriteByteS0
 
 /**
+\brief Clears DAT and EC.
+\param drv PCIe board identifier.
+*/
+void ClearAllUserRegs(UINT32 drv)
+{
+	WriteLongS0( drv, 0, 0x84 );// BDAT
+	WriteLongS0( drv, 0, 0x88 );// BEC
+	WriteLongS0( drv, 0, 0x20 );// SDAT
+	WriteLongS0( drv, 0, 0x24 );// SEC
+	return;
+} //ClearAllUserRegs
+
+
+/**
 \brief Return infos about the PCIe board.
 	Shows 5 info messages. Can be used to test the communication with the PCI board.
 	Is called automatically for 2 boards.
@@ -2460,7 +2482,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 				if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 1 ) | escape_readffloop) // check for kill ?
 				{ //stop if ESC was pressed
 					StopFFTimer( 1 );
-					SetIntFFTrig( 1 );//disable ext input
+					//SetIntFFTrig( 1 );//disable ext input
 					SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 1 );	//reset MeasureOn bit
 					resetBlockOn( 1 );
 					SetDMAReset( 1 );
@@ -2475,7 +2497,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 				if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 2 ) | escape_readffloop) // check for kill ?
 				{ //stop if ESC was pressed
 					StopFFTimer( 2 );
-					SetIntFFTrig( 2 );//disable ext input
+					//SetIntFFTrig( 2 );//disable ext input
 					SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 2 );	//reset MeasureOn bit
 					resetBlockOn( 2 );
 					SetDMAReset( 2 );
@@ -2507,7 +2529,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 					if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 2 ) | escape_readffloop) // check for kill ?
 					{ //stop if ESC was pressed
 						StopFFTimer( 2 );
-						SetIntFFTrig( 2 );//disable ext input
+						//SetIntFFTrig( 2 );//disable ext input
 						SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 2 );	//reset MeasureOn bit
 						resetBlockOn( 1 );
 						SetDMAReset( 2 );
@@ -2537,7 +2559,7 @@ void ReadFFLoop( UINT32 board_sel, UINT32 exptus, UINT8 exttrig, UINT8 blocktrig
 	{
 		SetS0Reg( 0x00, PCIEFLAGS_bit_MEASUREON, DmaAddr_PCIEFLAGS, 2 );	//reset MeasureOn bit
 		StopFFTimer( 2 );
-		SetIntFFTrig( 2 );//disable ext input
+		//SetIntFFTrig( 2 );//disable ext input
 	}
 
 	if (board_sel == 1 || board_sel == 3)
@@ -2647,6 +2669,7 @@ BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch )
 	BYTE data = 0;
 	BOOL state = FALSE;
 	volatile UCHAR val = 0;
+	volatile UCHAR val2 = 0;
 
 	switch (btrig_ch)
 	{
@@ -2673,6 +2696,9 @@ BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch )
 		break;
 	case 5: // TSTART
 		ReadByteS0( drv, &val, S0Addr_CTRLA );
+		//and TSTART with MeasureOn
+//		ReadByteS0( drv, &val2, S0Addr_PCIEFLAGS );
+//		if (((val & 0x80) > 0) & ((val2 & PCIEFLAGS_bit_MEASUREON) > 0)) return TRUE;
 		if ((val & 0x80) > 0) return TRUE;
 		break;
 	}
@@ -4062,25 +4088,26 @@ BOOL resetBlockOn( UINT32 drvno )
 }
 
 /**
-\brief Chooses trigger input for general trigger input (GTI)
+\brief Chooses trigger input for block trigger input (BTI)
 \param drvno PCIe board identifier.
-\param gti_mode Defines the input mode for GTI.
+\param bti_mode Defines the input mode for BTI.
 	- 0: I
 	- 1: S1
 	- 2: S2
-	- 3: TIMER
+	- 3: S1&s2
+	- 4: BTIMER
 \return TRUE when success, otherwise FALSE
 */
-BOOL SetGTI( UINT32 drvno, UINT8 gti_mode )
+BOOL SetBTI( UINT32 drvno, UINT8 bti_mode )
 {
-	return SetS0Reg( gti_mode << CTRLB_bitindex_GTI0, CTRLB_bit_GTI0 | CTRLB_bit_GTI1, S0Addr_CTRLB, drvno );
+	return SetS0Reg( bti_mode << CTRLB_bitindex_BTI0, CTRLB_bit_BTI0 | CTRLB_bit_BTI1 | CTRLB_bit_BTI2, S0Addr_CTRLB, drvno );
 }
 
 /**
 \brief Chooses trigger input for scan trigger input (STI)
 \param drvno PCIe board identifier.
 \param sti_mode Defines the input mode for STI.
-	- 0: TSTART
+	- 0: STIMER
 	- 1: ASL
 	- 2: GND
 	- 3: GND
@@ -4092,6 +4119,5 @@ BOOL SetGTI( UINT32 drvno, UINT8 gti_mode )
 */
 BOOL SetSTI( UINT32 drvno, UINT8 sti_mode )
 {
-	//return SetS0Reg( sti_mode << CTRLB_bitindex_STI0, CTRLB_bit_STI0 & CTRLB_bit_STI1 & CTRLB_bit_STI1, S0Addr_CTRLB, drvno );
 	return SetS0Reg( sti_mode, CTRLB_bit_STI0 | CTRLB_bit_STI1 | CTRLB_bit_STI2, S0Addr_CTRLB, drvno );
 }

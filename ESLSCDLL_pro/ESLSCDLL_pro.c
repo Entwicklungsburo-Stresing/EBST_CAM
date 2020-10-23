@@ -224,3 +224,5 @@ DllAccess UINT8 DLLSetupArea( UINT32 drvno, UINT32 lines_binning, UINT8 vfreq )
 	success &= ResetPartialBinning( drvno );
 	return success;
 }
+
+

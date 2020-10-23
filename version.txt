@@ -1,3 +1,10 @@
+v3.0.0
+- new registers R16-19: BTIMER, BDAT, BEC, BFLAGS 
+	- block trigger path is now completely independent from scan and got own registers
+	- the scan has now SSLOPE SDAT and SEC and the block has BSLOPE BDAT and BEC
+	- so the blocks and scans can be triggert independent.  
+- new function: ClearAllUserRegs - resets the S and B regs to zero
+
 v2.3.1
 - Fix greyscale viewer not changing frame
 
