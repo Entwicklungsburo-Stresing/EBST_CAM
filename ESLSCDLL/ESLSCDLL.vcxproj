@@ -249,11 +249,13 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\shared_src\Board.c" />
+    <ClCompile Include="..\shared_src\Board_ll.c" />
     <ClCompile Include="..\shared_src\lscpciej_lib.c" />
     <ClCompile Include="ESLSCDLL.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared_src\Board.h" />
+    <ClInclude Include="..\shared_src\Board_ll.h" />
     <ClInclude Include="..\shared_src\CCDCTL.H" />
     <ClInclude Include="..\shared_src\lscpciej_lib.h" />
     <ClInclude Include="ESLSCDLL.h" />
