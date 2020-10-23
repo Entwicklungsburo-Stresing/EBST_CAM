@@ -1,18 +1,8 @@
 #pragma once
 //  Board.h
-//	all functions for managing Interfaceboard
+//	all high level functions for managing Interfaceboard
 
-***REMOVED***#define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
-
-#include "ccdctl.h"
-#include <limits.h>
-#include <process.h>
-#include "Jungo/windrvr.h"
-#include "Jungo/wdc_lib.h"
-#include "Jungo/wdc_defs.h"
-#include "wchar.h"
-#include "lscpciej_lib.h"
-#include "shared_src/ESLSCDLL_pro.h"
+#include "Board_ll.h"
 
 #define DBGNOCAM FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
 #define DMA_BUFSIZEINSCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
@@ -48,7 +38,6 @@ extern DWORD64 IsrCounter;
 extern ULONG* aPIXEL;
 extern BOOL Running;
 extern UINT32 BOARD_SEL;
-extern WDC_DEVICE_HANDLE* hDev;
 
 void ErrMsgBoxOn( void );
 void ErrMsgBoxOff( void ); // switch to suppress error message boxes
@@ -62,9 +51,6 @@ BOOL CCDDrvInit( void );
 void CCDDrvExit( UINT32 drvno );	// closes the driver
 BOOL InitBoard( UINT32 drvno );	// init the board and alloc mem, call only once !
 BOOL SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno );
-BOOL SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno );
-BOOL SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno );
-BOOL ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno );
 BOOL SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno );
 BOOL SetDMAAddrTlp( UINT32 drvno );
 BOOL SetDMABufRegs( UINT32 drvno, ULONG nos, ULONG nob, ULONG camcnt );
@@ -78,14 +64,6 @@ void StartPCIE_DMAWrite( UINT32 drvno );
 void CleanupPCIE_DMA( UINT32 drvno );
 int GetNumofProcessors();
 BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel );
-BOOL ReadLongIOPort( UINT32 drvno, UINT32 *DWData, ULONG PortOff );// read long from IO runreg
-BOOL ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff );	// read long from space0
-BOOL ReadLongDMA( UINT32 drvno, UINT32 * DWData, ULONG PortOff );
-BOOL ReadByteS0( UINT32 drvno, BYTE *data, ULONG PortOff );	// read byte from space0
-BOOL WriteLongIOPort( UINT32 drvno, UINT32 DataL, ULONG PortOff );// write long to IO runreg
-BOOL WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff );// write long to space0
-BOOL WriteLongDMA( UINT32 drvno, UINT32 DWData, ULONG PortOff );
-BOOL WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff ); // write byte to space0
 // clear camera with reads
 void AboutDrv( UINT32 drvno );	// displays the version and board ID = test if board is there
 //	functions for managing controlbits in CtrlA register
@@ -110,7 +88,6 @@ void SetISPDA( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if P
 void SetISFFT( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if FFT
 void SetPDAnotFFT( UINT32 drvno, BOOL set );
 void RsTOREG( UINT32 drvno );					//reset the TOREG - should be called before SetISPDA or SetISFFT
-void SendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data );
 void RSEC( UINT32 drvno );
 // FIFO functions
 void initReadFFLoop( UINT32 drv, UINT32 exptus, UINT8 exttrig, UINT32 * Blocks );

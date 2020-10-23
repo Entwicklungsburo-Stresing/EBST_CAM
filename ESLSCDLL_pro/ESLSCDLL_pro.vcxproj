@@ -280,6 +280,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)CCDExamp\$(Platform)\$(Configuration)\"<
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\shared_src\Board.c" />
+    <ClCompile Include="..\shared_src\Board_ll.c" />
     <ClCompile Include="..\shared_src\lscpciej_lib.c" />
     <ClCompile Include="Direct2dViewer.cpp" />
     <ClCompile Include="Direct2dViewer_c.cpp" />
@@ -287,6 +288,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)CCDExamp\$(Platform)\$(Configuration)\"<
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared_src\Board.h" />
+    <ClInclude Include="..\shared_src\Board_ll.h" />
     <ClInclude Include="..\shared_src\lscpciej_lib.h" />
     <ClInclude Include="Direct2dViewer.h" />
     <ClInclude Include="Direct2dViewer_c.h" />
