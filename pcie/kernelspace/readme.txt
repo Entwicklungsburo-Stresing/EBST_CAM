@@ -8,6 +8,13 @@ load with
 
 $ sudo /sbin/insmod ./lscpcie.ko
 
+make the driver file accessible for normal user (will go at some point into the
+driver)
+
+$ sudo chmod 666 /dev/lscpcie0
+
+####
+
 When loading the module, the driver is registered for the vendor id of the
 camera. All corresponding boards are associated with a separate instance of the
 driver. For each instance a couple of special files are created

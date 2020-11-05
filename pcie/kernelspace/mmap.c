@@ -21,6 +21,11 @@
     - page 2: remap of dma buffer in physical ram
 */
 
+static struct vm_operations_struct mmap_register_remap_vm_ops = {
+  //.open =  mmap_register_vma_open,
+  //.close = mmap_register_vma_close,
+};
+
 int mmap_register_remap_mmap(struct file *filp, struct vm_area_struct *vma)
 {
   struct dev_struct *dev = filp->private_data;

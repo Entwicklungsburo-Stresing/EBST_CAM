@@ -1,8 +1,14 @@
+*.o
+*.cmd
 *.mod.c
+*.symvers
+*.ko
+*.order
+liblscpcie*
+.tmp_versions/
 test-mmap
 read-binary
 test-read-write
 test-register
 test-readout-polling
 camera-debug
-*.o
