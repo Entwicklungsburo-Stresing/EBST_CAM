@@ -1,0 +1,8 @@
+*.mod.c
+test-mmap
+read-binary
+test-read-write
+test-register
+test-readout-polling
+camera-debug
+*.o

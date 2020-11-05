@@ -1,0 +1,179 @@
+/*
+ * dma.c
+ *
+ * Copyright 2020 Bernhard Lang, University of Geneva
+ * Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ */
+
+
+#include "dma.h"
+#include "module-main.h"
+#include "registers.h"
+#include "device.h"
+#include "debug.h"
+#include <linux/dma-mapping.h>
+#include <linux/pci.h>
+
+void set_bits_s0(struct dev_struct *dev, u8 address, u8 bits, u8 mask)
+{
+  u8 val = ioread8(dev->mapped_pci_base + 0x80 + address);
+  iowrite8((val & ~mask) | (bits & mask), dev->mapped_pci_base + 0x80 + address);
+}
+
+int dma_init(struct dev_struct *dev) {
+  struct device *pdev = dev->status & HARDWARE_PRESENT ? &dev->pci_dev->dev : 0;
+  unsigned long dma_page_offset, dma_buffer_offset;
+  int num_dma_pages;
+  int dev_no = get_device_number(dev);
+
+  PDEBUG(D_BUFFERS, "initialising dma\n");
+
+  if (dev_no < 0) {
+    printk(KERN_ERR NAME": invalid device pointer in init_dma\n");
+    return -ENODEV;
+  }
+
+  /* get one page of ram for the control structure which is going to be
+     exported to user spcae */
+  dev->control = (lscpcie_control_t *) get_zeroed_page(GFP_KERNEL);
+  if (!dev->control) {
+    printk(KERN_ERR NAME": failed to allocate memory for control block");
+    return -ENOMEM;
+  }
+
+  /* take initial values from module parameters where present */
+  if (num_pixels[dev_no] > 0)
+    dev->control->number_of_pixels = num_pixels[dev_no];
+  else
+    dev->control->number_of_pixels = DEFAULT_NUMBER_OF_PIXELS;
+
+  if (num_cameras[dev_no] > 0)
+    dev->control->number_of_cameras = num_cameras[dev_no];
+  else
+    dev->control->number_of_cameras = DEFAULT_NUMBER_OF_CAMERAS;
+
+  if (num_scans[dev_no] > 0)
+    dev->control->number_of_scans = num_scans[dev_no];
+  else
+    dev->control->number_of_scans = DEFAULT_NUM_SCANS;
+
+  /* the size of the dma buffer is taken one page size larger than necessary
+     to ensure that the used buffer starts at a page boundary (needed for
+     mmap export to userland) */
+  dev->control->buffer_size
+    = dev->control->number_of_cameras * dev->control->number_of_pixels
+    * dev->control->number_of_scans * sizeof(u16);
+  num_dma_pages = dev->control->buffer_size >> PAGE_SHIFT;
+  if (dev->control->buffer_size > num_dma_pages << PAGE_SHIFT)
+    num_dma_pages++;
+
+  dev->dma_mem_size = num_dma_pages << PAGE_SHIFT;
+  //  * dev->control->number_of_scans * sizeof(u16) + PAGE_SIZE;
+
+  PDEBUG(D_BUFFERS, "need %d bytes for dma\n", dev->dma_mem_size);
+
+  if (dev->status & HARDWARE_PRESENT)
+    dev->dma_mem
+      = dma_alloc_coherent(pdev, dev->dma_mem_size,
+                           &dev->control->dma_physical_start, GFP_KERNEL);
+  else /* no dma features needed in debug mode */
+    dev->dma_mem = kmalloc(dev->dma_mem_size, GFP_KERNEL);
+
+  if (!dev->dma_mem) {
+    printk(KERN_ERR NAME": failed to allocate dma memory\n");
+    return -ENOMEM;
+  }
+
+#warning set pages reserved
+
+  /* get the dma buffer start to a page boundary */
+  if (dev->status & HARDWARE_PRESENT) {
+    PDEBUG(D_BUFFERS, "allocated %d bytes of dma memory\n",
+           dev->dma_mem_size);
+    dma_page_offset = dev->dma_bus_address & (PAGE_SIZE-1);
+  } else {
+    PDEBUG(D_BUFFERS,
+	   "allocated %d bytes of kernel memory for debugging purposes\n",
+	   dev->dma_mem_size);
+    dma_page_offset = virt_to_phys(dev->dma_mem) & (PAGE_SIZE-1);
+  }
+
+  if (dma_page_offset)
+    dma_buffer_offset
+      = (unsigned long) dev->dma_mem + PAGE_SIZE - dma_page_offset;
+  else
+    dma_buffer_offset = 0;
+
+  dev->dma_buffer = dev->dma_mem + dma_buffer_offset;
+  dev->control->dma_physical_start
+    = dev->dma_bus_address + dma_buffer_offset;
+
+  PDEBUG(D_BUFFERS, "got %d bytes of dma memory at %p (offset %ld)\n",
+         dev->control->buffer_size, dev->dma_mem, dma_buffer_offset);
+
+  PDEBUG(D_BUFFERS, "getting single page for info buffer\n");
+
+  PDEBUG(D_BUFFERS, "dma initialised\n");
+
+  return 0;
+}
+
+/* release dma buffer */
+void dma_finish(struct dev_struct *dev) {
+  if (dev->dma_mem) {
+    if (dev->status & HARDWARE_PRESENT)
+      dma_free_coherent(&dev->pci_dev->dev, dev->dma_mem_size, dev->dma_mem,
+                        dev->dma_bus_address);
+    else
+      kfree(dev->dma_mem);
+  }
+}
+
+/*
+int dma_start(struct dev_struct *dev) {
+  return 0;
+}
+
+int dma_end(struct dev_struct *dev) {
+  return 0;
+}
+*/
+
+/* interrupt service routine */
+void isr(struct dev_struct *dev) {
+  int old_write_pos = dev->control->write_pos;
+  u8 fifo_flags = readb(dev->mapped_pci_base + 0x80 + S0Addr_FF_FLAGS);
+
+  set_bits_s0(dev, DmaAddr_PCIEFLAGS, (1<<PCIE_INT_RSR), (1<<PCIE_INT_RSR));
+
+  if (fifo_flags & (1<<FF_FLAGS_OVFL)) dev->status |= FIFO_OVERFLOW;
+
+  // advance buffer pointer
+  dev->control->write_pos
+    = (dev->control->write_pos + dev->bytes_per_interrupt)
+    % dev->control->buffer_size;
+
+  // check for buffer overflow
+  if (old_write_pos < dev->control->write_pos) {
+    if ((dev->control->read_pos <= old_write_pos)
+        ||
+        (dev->control->read_pos > dev->control->write_pos))
+      goto end; /* r w0 w1  or w0 w1 r */
+  } else
+    if ((dev->control->read_pos <= old_write_pos)
+        &&
+        (dev->control->read_pos > dev->control->write_pos))
+      goto end; /* w1 r w0 */
+
+  dev->status |= DMA_OVERFLOW;
+
+ end:
+  set_bits_s0(dev, DmaAddr_PCIEFLAGS, 0, (1<<PCIE_INT_RSR));
+
+  wake_up_interruptible(&dev->readq);
+}
