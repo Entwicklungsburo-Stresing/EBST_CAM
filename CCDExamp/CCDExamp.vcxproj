@@ -674,8 +674,6 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="..\probleme.txt" />
-    <Text Include="2threadEx.txt" />
     <Text Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>

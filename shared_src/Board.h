@@ -101,7 +101,8 @@ unsigned int __stdcall ReadFFLoopThread( void *parg ); //jungo dma
 BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch ); //read state of trigger in signals during thread loop
 void StartSTimer( UINT32 drvno );	//starts 28bit timer of PCI board
 void StopSTimer( UINT32 drvno );					// stop timer
-void SetSTimer( UINT32 drvno, UINT32 stime_in_microseconds );
+BOOL SetSTimer( UINT32 drvno, UINT32 stime_in_microseconds );
+BOOL SetBTimer( UINT32 drvno, UINT32 btime_in_microseconds );
 void SWTrig( UINT32 drvno );						//start a read to FIFO by software
 BOOL IsTimerOn( UINT32 drvno );
 BOOL FFValid( UINT32 drvno );						// TRUE if linecounter>0
@@ -170,3 +171,4 @@ BOOL resetBlockOn( UINT32 drvno );
 BOOL SetBTI( UINT32 drvno, UINT8 bti_mode );
 BOOL SetSTI( UINT32 drvno, UINT8 sti_mode );
 void ClearAllUserRegs( UINT32 drv );
+BOOL SetBSlope( UINT32 drvno, UINT32 slope );

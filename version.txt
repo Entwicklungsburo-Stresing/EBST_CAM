@@ -1,3 +1,6 @@
+v3.2.0
+- Add functions SetBTimer, SetBSlope
+
 v3.1.0
 - Remove most parameters of ReadFFLoop
 - Seperate setting s timer on and setting the time
