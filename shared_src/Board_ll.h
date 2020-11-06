@@ -117,7 +117,11 @@ enum s0_addresses
 	S0Addr_PCI = 0x3C,
 	S0Addr_PCIEFLAGS = 0x40,
 	S0Addr_TDCCtrl = 0x60,
-	S0Addr_TDCData = 0x64
+	S0Addr_TDCData = 0x64,
+	S0Addr_BTIMER = 0x80,
+	S0Addr_BDAT = 0x84,
+	S0Addr_BEC = 0x88,
+	S0Addr_BSLOPE = 0x8C
 };
 
 //Cam Addresses könnten später bei unterschiedlichen cam systemen vaariieren

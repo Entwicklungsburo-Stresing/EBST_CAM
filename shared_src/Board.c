@@ -2231,14 +2231,41 @@ void StopSTimer( UINT32 drvno )
 \param drvno board number (=1 if one PCI board)
 \param stime_in_microseconds Scan time in microseconds.
 */
-void SetSTimer( UINT32 drvno, UINT32 stime_in_microseconds )
+BOOL SetSTimer( UINT32 drvno, UINT32 stime_in_microseconds )
 {
 	UINT32 data = 0;
 	ReadLongS0( drvno, &data, S0Addr_XCKLL ); //reset
 	data &= 0xF0000000;
 	data |= stime_in_microseconds & 0x0FFFFFFF;
-	WriteLongS0( drvno, data, S0Addr_XCKLL );
-	return;
+	return WriteLongS0( drvno, data, S0Addr_XCKLL );
+}
+
+/**
+\brief Sets time for block timer.
+\param drvno board number (=1 if one PCI board)
+\param btime_in_microseconds Block time in microseconds.
+\return ==0 if error, TRUE if success
+*/
+BOOL SetBTimer( UINT32 drvno, UINT32 btime_in_microseconds )
+{
+	if (btime_in_microseconds)
+	{
+		UINT32 data = btime_in_microseconds | 0x80000000;
+		return WriteLongS0( drvno, data, S0Addr_BTIMER );
+	}
+	else
+		return WriteLongS0( drvno, 0, S0Addr_BTIMER );
+}
+
+/**
+\brief Sets slope for block trigger.
+\param drvno board number (=1 if one PCI board)
+\param slope 1 for positive slope
+\return ==0 if error, TRUE if success
+*/
+BOOL SetBSlope( UINT32 drvno, UINT32 slope )
+{
+	return WriteLongS0( drvno, slope, S0Addr_BSLOPE );
 }
 
 /**
