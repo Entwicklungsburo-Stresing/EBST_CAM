@@ -123,4 +123,6 @@ DllAccess UINT8 DLLisBlockOn( UINT32 drvno );
 DllAccess void DLLwaitForMeasureReady( UINT32 drvno );
 DllAccess UINT8 DLLSetBTI( UINT32 drvno, UINT8 bti_mode );
 DllAccess UINT8 DLLSetSTI( UINT32 drvno, UINT8 sti_mode );
-DllAccess void DLLSetSTimer( UINT32 drvno, UINT32 stime_in_microseconds );
+DllAccess UINT8 DLLSetSTimer( UINT32 drvno, UINT32 stime_in_microseconds );
+DllAccess UINT8 DLLSetBTimer( UINT32 drvno, UINT32 btime_in_microseconds );
+DllAccess UINT8 DLLSetBSlope( UINT32 drvno, UINT32 slope );
