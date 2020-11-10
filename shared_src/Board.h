@@ -21,6 +21,7 @@ struct global_vars
 {
 	USHORT** pDMABigBufBase;
 	WDC_DEVICE_HANDLE* hDev;
+	//PWDC_DEVICE* pDev;
 	ULONG* aPIXEL;
 	ULONG* aCAMCNT;
 	int* Nospb;
@@ -153,7 +154,6 @@ void InitGPX( UINT32 drvno, UINT32 delay );
 void AboutGPX( UINT32 drvno );
 double CalcRamUsageInMB( UINT32 nos, UINT32 nob );
 double CalcMeasureTimeInSeconds( UINT32 drvno, UINT32 nos, double exposure_time_in_ms );
-void BlockSyncStart( UINT32 drvno, UINT8 S1, UINT8 S2 );
 BOOL SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq );
 BOOL SetPartialBinning( UINT32 drvno, UINT16 number_of_regions );
 BOOL ResetPartialBinning( UINT32 drvno );

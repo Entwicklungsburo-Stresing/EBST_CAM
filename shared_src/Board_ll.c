@@ -2,6 +2,8 @@
 
 WDC_DEVICE_HANDLE hDev_tmp[MAXPCIECARDS];
 WDC_DEVICE_HANDLE* hDev = &hDev_tmp;
+//PWDC_DEVICE pDev_tmp[MAXPCIECARDS];
+//PWDC_DEVICE* pDev = &pDev_tmp;
 
 /*
 \brief Set specified bits to 1 in register at memory address.
@@ -49,6 +51,8 @@ BOOL SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno )
 BOOL SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
 	//bitnumber: 0...31
+	/*
+	old:
 	ULONG bitmask = 0x1 << bitnumber;
 	if (!SetS0Reg( 0xFFFFFFFF, bitmask, Address, drvno ))
 	{
@@ -56,6 +60,11 @@ BOOL SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
 		return FALSE;
 	}
+	*/
+
+	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
+	WDC_MEM_DIRECT_ADDR( pDev->pAddrDesc );
+	BitTestAndSet( pDev->pAddrDesc->pUserDirectMemAddr + 0x80 + Address, bitnumber );
 	return TRUE;
 }
 
@@ -68,6 +77,8 @@ BOOL SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 */
 BOOL ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
+	/*
+	old:
 	ULONG bitmask = 0x1 << bitnumber;
 	if (!SetS0Reg( 0x0, bitmask, Address, drvno ))
 	{
@@ -75,6 +86,10 @@ BOOL ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
 		return FALSE;
 	}
+	*/
+	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
+	WDC_MEM_DIRECT_ADDR( pDev->pAddrDesc );
+	BitTestAndReset( pDev->pAddrDesc->pUserDirectMemAddr + 0x80 + Address, bitnumber );
 	return TRUE;
 }
 

@@ -16,6 +16,7 @@
 #include "shared_src/ESLSCDLL_pro.h"
 
 extern WDC_DEVICE_HANDLE* hDev;
+//extern PWDC_DEVICE pDev;
 
 //DMA Addresses
 enum dma_addresses
@@ -53,10 +54,15 @@ enum PCIEFLAGS_bits
 	PCIEFLAGS_bitindex_XCKI = 0,
 	PCIEFLAGS_bitindex_INTTRIG = 1,
 	PCIEFLAGS_bitindex_ENRSTIMERHW = 2,
-	PCIEFLAGS_bitindex_INTRSR = 3,
+
 	PCIEFLAGS_bitindex_BLOCKTRIG = 4,
 	PCIEFLAGS_bitindex_MEASUREON = 5,
 	PCIEFLAGS_bitindex_BLOCKON = 6
+};
+
+enum IRQFLAGS_bits
+{ 
+IRQFLAGS_bitindex_INTRSR = 31
 };
 
 enum CTRLB_bits
