@@ -1,5 +1,7 @@
 v3.2.0
+- new input scheme: BTI and STI
 - Add functions SetBTimer, SetBSlope
+- change Bit ISR_Active from PCIEREG to IRQREG
 
 v3.1.0
 - Remove most parameters of ReadFFLoop

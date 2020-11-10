@@ -2,8 +2,8 @@
 #define STRINGIZE(s) STRINGIZE2(s)
 
 #define VERSION_MAJOR               3
-#define VERSION_MINOR               2
-#define VERSION_REVISION            0
+#define VERSION_MINOR               14
+#define VERSION_REVISION            1
 
 #define VER_FILE_VERSION            VERSION_MAJOR, VERSION_MINOR, VERSION_REVISION
 #define VER_FILE_VERSION_STR        STRINGIZE(VERSION_MAJOR)        \
