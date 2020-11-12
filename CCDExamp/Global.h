@@ -69,12 +69,17 @@ HWND hMSWND; // global stored measure HWND of our window
 ULONG DisplData[2][1200 * CAMCNT];//array for display for 2 cams parallel
 
 extern int ExpTime; //in µs
+extern int RepTime; //in ms
+extern int sec, bec, sdat, bdat;
 extern BOOL DISP2;
 extern BOOL contimess_run_once;
 extern BOOL _IsArea; //FALSE is just the init val
 extern __int16 _IsROI; //FALSE is just the init val
 extern BOOL EXTTRIGFLAG;		// run with external Trigger
 extern int TrigMod;						//pos slope
+extern int TrigMod_B;						//pos slope
+extern int ItemIndex_S;						//combo box
+extern int ItemIndex_B;						//combo box
 extern __int64 TICKSDISP;			//display time in ticks
 extern int XOFF;// _PIXEL / 600;			// index offset for display	
 extern int XStart;						//start index of display

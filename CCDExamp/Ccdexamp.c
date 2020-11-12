@@ -1102,17 +1102,54 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 {
 	UINT val = 0;
 	BOOL success = FALSE;
+	TCHAR STI_inputs[5][10] =
+	{
+		TEXT( "I" ), TEXT( "S1" ), TEXT( "S2" ), TEXT( "S Timer" ),
+		TEXT( "ASL" )
+	};
+	TCHAR BTI_inputs[5][10] =
+	{
+		TEXT( "I" ), TEXT( "S1" ), TEXT( "S2" ), TEXT( "S1 & S2" ),
+		TEXT( "B Timer" )
+	};
+
+	TCHAR A[16];
+	TCHAR B[16];
+	int  k = 0;
+
 	switch (message)
 	{
 	case WM_INITDIALOG:
+		//for comboboxes:
+		memset( &A, 0, sizeof( A ) );
+		memset( &B, 0, sizeof( B ) );
+		for (k = 0; k <= 4; k += 1)
+		{
+			wcscpy_s( A, sizeof( A ) / sizeof( TCHAR ), (TCHAR*)STI_inputs[k] );
+			wcscpy_s( B, sizeof( B ) / sizeof( TCHAR ), (TCHAR*)BTI_inputs[k] );
+
+			// Add string to combobox.
+			SendMessage( GetDlgItem( hDlg, IDC_COMBO_STI ), (UINT)CB_ADDSTRING, (WPARAM)0, (LPARAM)A );
+			SendMessage( GetDlgItem( hDlg, IDC_COMBO_BTI ), (UINT)CB_ADDSTRING, (WPARAM)0, (LPARAM)B );
+		}
+		// Send the CB_SETCURSEL message to display an initial item 
+		//  in the selection field  
+		SendMessage( GetDlgItem( hDlg, IDC_COMBO_STI ), CB_SETCURSEL, (WPARAM)ItemIndex_S, (LPARAM)0 );
+		SendMessage( GetDlgItem( hDlg, IDC_COMBO_BTI ), CB_SETCURSEL, (WPARAM)ItemIndex_B, (LPARAM)0 );
 		SetDlgItemInt( hDlg, IDC_M_EXPTIME, ExpTime, FALSE );
 		SetDlgItemInt( hDlg, IDC_M_REPTIME, RepTime, FALSE );
-		CheckDlgButton( hDlg, IDC_ExtTrig, EXTTRIGFLAG );
+		SetDlgItemInt( hDlg, IDC_SDAT, sdat, FALSE );
+		SetDlgItemInt( hDlg, IDC_BDAT, bdat, FALSE );
+		SetDlgItemInt( hDlg, IDC_SEC, sec, FALSE );
+		SetDlgItemInt( hDlg, IDC_BEC, bec, FALSE );
 		if (TrigMod == 0) CheckDlgButton( hDlg, IDC_RADIO1, BST_CHECKED );
 		if (TrigMod == 1) CheckDlgButton( hDlg, IDC_RADIO2, BST_CHECKED );
 		if (TrigMod == 2) CheckDlgButton( hDlg, IDC_RADIO3, BST_CHECKED );
-		if (!_MSHUT)//disable Reptime
-			EnableWindow( GetDlgItem( hDlg, IDC_M_REPTIME ), FALSE );
+		if (TrigMod_B == 0) CheckDlgButton( hDlg, IDC_RADIO1_B, BST_CHECKED );
+		if (TrigMod_B == 1) CheckDlgButton( hDlg, IDC_RADIO2_B, BST_CHECKED );
+		if (TrigMod_B == 2) CheckDlgButton( hDlg, IDC_RADIO3_B, BST_CHECKED );
+		//if (!_MSHUT)//disable Reptime
+			//EnableWindow( GetDlgItem( hDlg, IDC_M_REPTIME ), FALSE );
 		return (TRUE);
 		break;
 
@@ -1152,22 +1189,57 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 			break;
 
 		case IDOK:
-			EXTTRIGFLAG = IsDlgButtonChecked( hDlg, IDC_ExtTrig );
-
-			//for I-Input Plug
-			ResetS0Bit(4, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			ResetS0Bit(5, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+			//setting trigger input modes
+			ItemIndex_S = SendMessage( GetDlgItem( hDlg, IDC_COMBO_STI ), (UINT)CB_GETCURSEL,
+				(WPARAM)0, (LPARAM)0 );
+			if(ItemIndex_S < 3)	SetSTI( choosen_board, ItemIndex_S);
+			else				SetSTI( choosen_board, ItemIndex_S + 1 );
+			ItemIndex_B = SendMessage( GetDlgItem( hDlg, IDC_COMBO_BTI ), (UINT)CB_GETCURSEL,
+				(WPARAM)0, (LPARAM)0 );
+			SetBTI( choosen_board, ItemIndex_B);
+			
+			//setting exp time and rep time
 			val = GetDlgItemInt( hDlg, IDC_M_EXPTIME, &success, FALSE );
 			if (success) ExpTime = val;
+			SetSTimer( choosen_board, ExpTime );
+			val = GetDlgItemInt( hDlg, IDC_M_REPTIME, &success, FALSE );
+			if (success) RepTime = val;
+			SetBTimer( choosen_board, RepTime );
+
+			//Setting DAT Registers
+			val = GetDlgItemInt( hDlg, IDC_SDAT, &success, FALSE );
+			if (success) sdat = val;
+			if (sdat) SetSDAT( choosen_board, sdat );
+			else ResetSDAT( choosen_board );
+			val = GetDlgItemInt( hDlg, IDC_BDAT, &success, FALSE );
+			if (success) bdat = val;
+			if (sdat) SetBDAT( choosen_board, bdat );
+			else ResetBDAT( choosen_board );
+
+			//Setting EC Registers
+			val = GetDlgItemInt( hDlg, IDC_SEC, &success, FALSE );
+			if (success) sec = val;
+			if (sdat) SetSEC( choosen_board, sec );
+			else ResetSEC( choosen_board );
+			val = GetDlgItemInt( hDlg, IDC_BEC, &success, FALSE );
+			if (success) bec = val;
+			if (sdat) SetBEC( choosen_board, bec );
+			else ResetBEC( choosen_board );
+
+			//setting slopes
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO1 ) == BST_CHECKED) TrigMod = 0;
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO2 ) == BST_CHECKED) TrigMod = 1;
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO3 ) == BST_CHECKED) TrigMod = 2;
 
-			// set slope for ext. trigger
+			if (IsDlgButtonChecked( hDlg, IDC_RADIO1_B ) == BST_CHECKED) TrigMod_B = 0;
+			if (IsDlgButtonChecked( hDlg, IDC_RADIO2_B ) == BST_CHECKED) TrigMod_B = 1;
+			if (IsDlgButtonChecked( hDlg, IDC_RADIO3_B ) == BST_CHECKED) TrigMod_B = 2;
+
 #ifndef _DLL
 			if (TrigMod == 0)	HighSlope( choosen_board );
 			if (TrigMod == 1)	LowSlope( choosen_board );
 			if (TrigMod == 2)	BothSlope( choosen_board );
+			SetBSlope( choosen_board, TrigMod_B );
 #else
 			if (TrigMod == 0)	DLLHighSlope( choosen_board );
 			if (TrigMod == 1)	DLLLowSlope( choosen_board );
