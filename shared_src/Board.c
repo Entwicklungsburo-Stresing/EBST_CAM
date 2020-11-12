@@ -824,7 +824,6 @@ void isr( UINT drvno, PVOID pData )
 	volatile UINT32 val,val2 = 0;
 	WDC_Err( "*isr(): 0x%x\n", IsrCounter );
 	WDC_Err( "DMA_bufsizeinbytes: 0x%x \n", DMA_bufsizeinbytes );
-	//GS new 11/2020 flag in IRQREG or isr and ReadFFLoop have racing condition with PCIEFLAGS
 	SetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//set INTRSR flag for TRIGO
 
 	UINT32 nos = 0;
