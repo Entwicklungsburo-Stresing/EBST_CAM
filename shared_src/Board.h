@@ -80,16 +80,19 @@ void WaitTrigger( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *EscapeKe
 void CloseShutter( UINT32 drvno );	// set IFC=low
 void OpenShutter( UINT32 drvno );		// set IFC=high
 BOOL GetShutterState( UINT32 drvno );	//get the actual state
-void SetDAT( UINT32 drvno, UINT32 tin100ns ); // delay after trigger in 100ns
-void RSDAT( UINT32 drvno ); // disable delay after trigger in S0+0x20
-void SetEC( UINT32 drvno, UINT32 ecin100ns );
-void ResetEC( UINT32 drvno );
+void SetSDAT( UINT32 drvno, UINT32 tin100ns ); // delay after trigger in 100ns
+void ResetSDAT( UINT32 drvno ); // disable delay after trigger in S0+0x20
+void SetSEC( UINT32 drvno, UINT32 ecin100ns );
+void ResetSEC( UINT32 drvno );
+void SetBDAT( UINT32 drvno, UINT32 tin100ns ); // delay after trigger in 100ns
+void ResetBDAT( UINT32 drvno ); // disable delay after trigger in S0+0x20
+void SetBEC( UINT32 drvno, UINT32 ecin100ns );
+void ResetBEC( UINT32 drvno );
 void SetTORReg( UINT32 drvno, BYTE fkt );
 void SetISPDA( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if PDA
 void SetISFFT( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if FFT
 void SetSensorType( UINT32 drvno, UINT8 sensor_type );
 void RsTOREG( UINT32 drvno );					//reset the TOREG - should be called before SetISPDA or SetISFFT
-void RSEC( UINT32 drvno );
 // FIFO functions
 void initReadFFLoop( UINT32 drv, UINT32 * Blocks );
 void allBlocksOnSingleTrigger( UINT32 board_sel, UINT8 btrig_ch, BOOL* StartByTrig );

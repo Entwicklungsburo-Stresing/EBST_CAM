@@ -1,6 +1,7 @@
 #include "Global.h"
 
 int ExpTime = 1000; //in µs
+int RepTime = 10; //in µs
 #if CAMCNT == 1
 BOOL DISP2 = FALSE;		//display 1 camera
 #endif
@@ -16,11 +17,13 @@ BOOL EXTTRIGFLAG = TRUE;		// run with external Trigger
 BOOL EXTTRIGFLAG = FALSE;		// run with external Trigger
 #endif
 int TrigMod = 0;						//pos slope
+int TrigMod_B = 0;						//pos slope
+int ItemIndex_S = 0;							//combobox
+int ItemIndex_B = 1;							//combobox
 __int64 TICKSDISP = 0;			//display time in ticks
 int XOFF = 1;// _PIXEL / 600;			// index offset for display	
 int XStart = 0;						//start index of display
 BOOL PixelOdd = FALSE;				//display offset
-int RepTime = 1 * _MINREPTIME; //in ms for _MSHUT
 __int16 Releasems = 1; //>=1	>1 or keyboard does not work - could be exposuretime	
 ULONG Threadp = 31;  //<=15  8=default,15=highest in current process,31=time critical
 int TempLevel = 0;
@@ -35,4 +38,5 @@ BYTE	tTOCNT = 0; // trigger output divider
 int m_TOmodus = 1; //trigger out plug signal
 int m_ECTrigmodus = 1;
 int m_ECmodus = 1;
+int sec = 0, bec = 0, sdat = 0, bdat = 0;
 BOOL m_noPDARS = FALSE;

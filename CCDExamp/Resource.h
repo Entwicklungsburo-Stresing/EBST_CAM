@@ -10,6 +10,7 @@
 #define NOBIOSERR                       101
 #define NOCCDERR                        102
 #define IDD_DIALOG1                     104
+#define IDD_EXPTIME                     104
 #define IDD_DIALOG2                     105
 #define IDD_SETTEMP                     106
 #define IDD_SETEC                       107
@@ -26,9 +27,13 @@
 #define IDC_M_EXPTIME                   1003
 #define IDC_TLevel                      1004
 #define IDC_M_REPTIME                   1004
+#define IDC_SDAT                        1005
 #define IDC_ExtTrig                     1006
+#define IDC_BDAT                        1006
 #define IDC_ADOFS                       1007
+#define IDC_SEC                         1007
 #define IDC_ADAMP2                      1008
+#define IDC_BEC                         1008
 #define IDC_TIGAIN                      1009
 #define IDC_ADSHA                       1010
 #define IDC_ECCNT_RADIO1                1013
@@ -38,9 +43,13 @@
 #define IDC_RADIO1                      1017
 #define IDC_RADIO2                      1018
 #define IDC_RADIO3                      1019
+#define IDC_RADIO1_B                    1020
 #define IDC_nob                         1021
+#define IDC_RADIO2_B                    1021
 #define IDC_nos                         1022
 #define IDC_nospb                       1022
+#define IDC_RADIO6                      1022
+#define IDC_RADIO3_B                    1022
 #define IDALLOC                         1023
 #define IDC_BUILTINRAM                  1024
 #define IDC_FREERAM                     1025
@@ -58,6 +67,8 @@
 #define IDC_GAMMA_WHITE                 1031
 #define IDC_ROI_6                       1032
 #define IDC_GAMMA_BLACK                 1032
+#define IDC_COMBO_STI                   1033
+#define IDC_COMBO_BTI                   1034
 #define IDC_EC_RADIO2                   1060
 #define IDC_EC_RADIO3                   1061
 #define IDC_EC_RADIO5                   1062
@@ -127,7 +138,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        119
 #define _APS_NEXT_COMMAND_VALUE         40035
-#define _APS_NEXT_CONTROL_VALUE         1032
+#define _APS_NEXT_CONTROL_VALUE         1034
 #define _APS_NEXT_SYMED_VALUE           103
 #endif
 #endif

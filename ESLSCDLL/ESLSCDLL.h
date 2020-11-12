@@ -93,8 +93,10 @@ DllAccess void DLLStopFFLoop( void );
 DllAccess void DLLSetContFFLoop( UINT8 activate );
 //************  Cooling
 DllAccess void DLLSetTemp( UINT32 drvno, UINT8 level );
-DllAccess void DLLSetEC( UINT32 drvno, UINT64 ecin100ns );
-DllAccess void DLLResetEC( UINT32 drvno );
+DllAccess void DLLSetSEC( UINT32 drvno, UINT64 ecin100ns );
+DllAccess void DLLResetSEC( UINT32 drvno );
+DllAccess void DLLSetBEC( UINT32 drvno, UINT64 ecin100ns );
+DllAccess void DLLResetBEC( UINT32 drvno );
 DllAccess void DLLSetTORReg( UINT32 drvno, UINT8 fkt );
 DllAccess void DLLSetISPDA( UINT32 drvno, UINT8 set );
 DllAccess void DLLSetSensorType( UINT32 drvno, UINT8 set );

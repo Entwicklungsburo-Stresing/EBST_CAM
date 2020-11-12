@@ -670,20 +670,38 @@ DllAccess void DLLSetTemp( UINT32 drvno, UINT8 level )
 }
 
 /**
-\copydoc SetEC
+\copydoc SetSEC
 */
-DllAccess void DLLSetEC( UINT32 drvno, UINT64 ecin100ns )
+DllAccess void DLLSetSEC( UINT32 drvno, UINT64 ecin100ns )
 {
-	SetEC( drvno, ecin100ns );
+	SetSEC( drvno, ecin100ns );
 	return;
 }
 
 /**
-\copydoc ResetEC
+\copydoc ResetSEC
 */
-DllAccess void DLLResetEC( UINT32 drvno )
+DllAccess void DLLResetSEC( UINT32 drvno )
 {
-	ResetEC( drvno );
+	ResetSEC( drvno );
+	return;
+}
+
+/**
+\copydoc SetBEC
+*/
+DllAccess void DLLSetBEC( UINT32 drvno, UINT64 ecin100ns )
+{
+	SetBEC( drvno, ecin100ns );
+	return;
+}
+
+/**
+\copydoc ResetBEC
+*/
+DllAccess void DLLResetBEC( UINT32 drvno )
+{
+	ResetBEC( drvno );
 	return;
 }
 

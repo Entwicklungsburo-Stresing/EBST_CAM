@@ -238,8 +238,8 @@ void AboutS0( UINT32 drvno )
 		"FIFOCNT ",
 		"VCLKCTRL",
 		"'EBST' \t",
-		"DAT \t",
-		"EC \t",
+		"SDAT \t",
+		"SEC \t",
 		"TOR \t",
 		"ARREG \t",
 		"GIOREG \t",
@@ -1570,10 +1570,10 @@ BOOL GetShutterState( UINT32 drvno )
 \param datin100ns Time in 100 ns steps.
 \return none
 */
-void SetDAT( UINT32 drvno, UINT32 datin100ns )
+void SetSDAT( UINT32 drvno, UINT32 datin100ns )
 {
 	datin100ns |= 0x80000000; // enable delay
-	WriteLongS0( drvno, datin100ns, S0Addr_DAT );
+	WriteLongS0( drvno, datin100ns, S0Addr_SDAT );
 }; //SetDAT
 
 /**
@@ -1581,9 +1581,31 @@ void SetDAT( UINT32 drvno, UINT32 datin100ns )
 \param drvno PCIe board identifier.
 \return none
 */
-void RSDAT( UINT32 drvno )
+void ResetSDAT( UINT32 drvno )
 {
-	WriteLongS0( drvno, 0, S0Addr_DAT );
+	WriteLongS0( drvno, 0, S0Addr_SDAT );
+}; //RSDAT
+
+/**
+\brief Sets delay after trigger hardware register.
+\param drvno PCIe board identifier.
+\param datin100ns Time in 100 ns steps.
+\return none
+*/
+void SetBDAT( UINT32 drvno, UINT32 datin100ns )
+{
+	datin100ns |= 0x80000000; // enable delay
+	WriteLongS0( drvno, datin100ns, S0Addr_BDAT );
+}; //SetDAT
+
+/**
+\brief Resets delay after trigger hardware register.
+\param drvno PCIe board identifier.
+\return none
+*/
+void ResetBDAT( UINT32 drvno )
+{
+	WriteLongS0( drvno, 0, S0Addr_BDAT );
 }; //RSDAT
 
 /**
@@ -1593,13 +1615,13 @@ Starts after delay after trigger (DAT) signal and is active for ecin100ns.
 \param ecin100ns Time in 100 ns steps.
 \return none
 */
-void SetEC( UINT32 drvno, UINT32 ecin100ns )
+void SetSEC( UINT32 drvno, UINT32 ecin100ns )
 {
 	//ULONG data = 0;
 	//ReadLongS0(drvno, &data, S0Addr_EC);
 	//ecin100ns |= data;
 	ecin100ns |= 0x80000000; // enable delay
-	WriteLongS0( drvno, ecin100ns, S0Addr_EC );
+	WriteLongS0( drvno, ecin100ns, S0Addr_SEC );
 }; //SetEC
 
 /**
@@ -1607,9 +1629,36 @@ void SetEC( UINT32 drvno, UINT32 ecin100ns )
 \param drvno PCIe board identifier
 \return none
 */
-void ResetEC( UINT32 drvno )
+void ResetSEC( UINT32 drvno )
 {
-	WriteLongS0( drvno, 0, S0Addr_EC );
+	WriteLongS0( drvno, 0, S0Addr_SEC );
+	return;
+}; //ResetEC
+
+/**
+\brief Exposure control (EC) signal is used for mechanical shutter or sensors with EC function.
+Starts after delay after trigger (DAT) signal and is active for ecin100ns.
+\param drvno PCIe board identifier
+\param ecin100ns Time in 100 ns steps.
+\return none
+*/
+void SetBEC( UINT32 drvno, UINT32 ecin100ns )
+{
+	//ULONG data = 0;
+	//ReadLongS0(drvno, &data, S0Addr_EC);
+	//ecin100ns |= data;
+	ecin100ns |= 0x80000000; // enable delay
+	WriteLongS0( drvno, ecin100ns, S0Addr_BEC );
+}; //SetEC
+
+/**
+\brief Resets additional delay after trigger hardware register.
+\param drvno PCIe board identifier
+\return none
+*/
+void ResetBEC( UINT32 drvno )
+{
+	WriteLongS0( drvno, 0, S0Addr_BEC );
 	return;
 }; //ResetEC
 
@@ -1733,22 +1782,6 @@ void RsTOREG( UINT32 drvno )
 {// reset TOREG
 	WriteByteS0( drvno, 0, S0Addr_TOR + 3 );
 	return;
-}
-
-void RSEC( UINT32 drvno )
-//reset EC register to zero (enables programming IFC via register)
-{
-	/*
-	ULONG reg=0;
-	ReadLongIOPort(drvno,&reg,0); //read LCR0 for check length 0xffffffco
-	reg	=  ~reg; //length is inverted
-	if (reg>0x34)
-	{
-	WriteByteS0(drvno,0,0x24);	// EC=0
-	WriteByteS0(drvno,0,0x25);	// EC=0
-	} */
-
-	WriteLongS0( drvno, 0, S0Addr_EC );
 }
 //FIFO
 //  Fifo only Functions
