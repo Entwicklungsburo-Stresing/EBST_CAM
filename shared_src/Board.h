@@ -164,7 +164,7 @@ BOOL AutostartXckForLines( UINT32 drvno );
 BOOL ResetAutostartXck( UINT32 drvno );
 void InitProDLL();
 BOOL isDmaSet( UINT32 drvno );
-BOOL BufLock( UINT drvno, UINT camcnt, int nob, int nospb );
+BOOL BufLock( UINT drvno, UINT camcnt);
 BOOL isMeasureOn( UINT32 drvno );
 BOOL isBlockOn( UINT32 drvno );
 void waitForMeasureReady( UINT32 drvno );
