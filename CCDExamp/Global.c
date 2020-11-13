@@ -1,7 +1,7 @@
 #include "Global.h"
 
 int ExpTime = 1000; //in µs
-int RepTime = 10; //in µs
+int RepTime = 200; //in µs
 #if CAMCNT == 1
 BOOL DISP2 = FALSE;		//display 1 camera
 #endif
@@ -11,15 +11,11 @@ BOOL DISP2 = TRUE;		//display 2 cameras parallel, TRUE for double line
 BOOL contimess_run_once = FALSE;
 BOOL _IsArea = FALSE; //FALSE is just the init val
 __int16 _IsROI = 0; //FALSE is just the init val
-#if TRIGGER_MODE == 1
-BOOL EXTTRIGFLAG = TRUE;		// run with external Trigger
-#else
-BOOL EXTTRIGFLAG = FALSE;		// run with external Trigger
-#endif
+
 int TrigMod = 0;						//pos slope
 int TrigMod_B = 0;						//pos slope
-int ItemIndex_S = 0;							//combobox
-int ItemIndex_B = 1;							//combobox
+int ItemIndex_S = 0;					//combobox
+int ItemIndex_B = 1;					//combobox
 __int64 TICKSDISP = 0;			//display time in ticks
 int XOFF = 1;// _PIXEL / 600;			// index offset for display	
 int XStart = 0;						//start index of display

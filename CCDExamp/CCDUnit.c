@@ -487,7 +487,7 @@ void initMeasurement()
 	}
 	//set TrigOut, default= XCK
 	StopSTimer(choosen_board);
-	SetIntFFTrig(choosen_board);
+	//SetIntFFTrig(choosen_board);
 	RSFifo(choosen_board);
 	initCamera();
 	if (both_boards) {

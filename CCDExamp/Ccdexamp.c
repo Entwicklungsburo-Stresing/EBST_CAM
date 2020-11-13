@@ -21,6 +21,7 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 */
 #include "CCDExamp.h"
 
+
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow )
 {
 	MSG      msg;
@@ -34,10 +35,14 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		ErrorMsg( "Error in SetBoardVars" );
 		return FALSE;
 	}
+
 	//show allocate buffer dialog before entering main application
-	DialogBox( hInstance, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
+	if(_ISFFT) DialogBox( hInstance, MAKEINTRESOURCE( IDD_SETFULLBIN ), hMSWND, (DLGPROC)FullBinning );
+	else DialogBox( hInstance, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
 	if (!InitInstance( hInstance, nCmdShow ))
 		return FALSE;
+	//setup exposure
+	DialogBox( hInstance, MAKEINTRESOURCE( IDD_EXPTIME ), hMSWND, (DLGPROC)SetupMeasure );
 
 	while (GetMessage( &msg, NULL, 0, 0 ))
 	{
@@ -1112,7 +1117,6 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 		TEXT( "I" ), TEXT( "S1" ), TEXT( "S2" ), TEXT( "S1 & S2" ),
 		TEXT( "B Timer" )
 	};
-
 	TCHAR A[16];
 	TCHAR B[16];
 	int  k = 0;
@@ -1125,8 +1129,8 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 		memset( &B, 0, sizeof( B ) );
 		for (k = 0; k <= 4; k += 1)
 		{
-			wcscpy_s( A, sizeof( A ) / sizeof( TCHAR ), (TCHAR*)STI_inputs[k] );
-			wcscpy_s( B, sizeof( B ) / sizeof( TCHAR ), (TCHAR*)BTI_inputs[k] );
+			strcpy_s( A, sizeof( A ) / sizeof( TCHAR ), (TCHAR*)STI_inputs[k] );
+			strcpy_s( B, sizeof( B ) / sizeof( TCHAR ), (TCHAR*)BTI_inputs[k] );
 
 			// Add string to combobox.
 			SendMessage( GetDlgItem( hDlg, IDC_COMBO_STI ), (UINT)CB_ADDSTRING, (WPARAM)0, (LPARAM)A );
@@ -1145,8 +1149,8 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 		if (TrigMod == 0) CheckDlgButton( hDlg, IDC_RADIO1, BST_CHECKED );
 		if (TrigMod == 1) CheckDlgButton( hDlg, IDC_RADIO2, BST_CHECKED );
 		if (TrigMod == 2) CheckDlgButton( hDlg, IDC_RADIO3, BST_CHECKED );
-		if (TrigMod_B == 0) CheckDlgButton( hDlg, IDC_RADIO1_B, BST_CHECKED );
-		if (TrigMod_B == 1) CheckDlgButton( hDlg, IDC_RADIO2_B, BST_CHECKED );
+		if (TrigMod_B == 1) CheckDlgButton( hDlg, IDC_RADIO1_B, BST_CHECKED );
+		if (TrigMod_B == 0) CheckDlgButton( hDlg, IDC_RADIO2_B, BST_CHECKED );
 		if (TrigMod_B == 2) CheckDlgButton( hDlg, IDC_RADIO3_B, BST_CHECKED );
 		//if (!_MSHUT)//disable Reptime
 			//EnableWindow( GetDlgItem( hDlg, IDC_M_REPTIME ), FALSE );
@@ -1189,6 +1193,7 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 			break;
 
 		case IDOK:
+			
 			//setting trigger input modes
 			ItemIndex_S = SendMessage( GetDlgItem( hDlg, IDC_COMBO_STI ), (UINT)CB_GETCURSEL,
 				(WPARAM)0, (LPARAM)0 );
@@ -1204,7 +1209,7 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 			SetSTimer( choosen_board, ExpTime );
 			val = GetDlgItemInt( hDlg, IDC_M_REPTIME, &success, FALSE );
 			if (success) RepTime = val;
-			SetBTimer( choosen_board, RepTime );
+			SetBTimer( choosen_board, RepTime * 1000 );
 
 			//Setting DAT Registers
 			val = GetDlgItemInt( hDlg, IDC_SDAT, &success, FALSE );
@@ -1225,14 +1230,14 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 			if (success) bec = val;
 			if (sdat) SetBEC( choosen_board, bec );
 			else ResetBEC( choosen_board );
-
+			
 			//setting slopes
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO1 ) == BST_CHECKED) TrigMod = 0;
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO2 ) == BST_CHECKED) TrigMod = 1;
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO3 ) == BST_CHECKED) TrigMod = 2;
 
-			if (IsDlgButtonChecked( hDlg, IDC_RADIO1_B ) == BST_CHECKED) TrigMod_B = 0;
-			if (IsDlgButtonChecked( hDlg, IDC_RADIO2_B ) == BST_CHECKED) TrigMod_B = 1;
+			if (IsDlgButtonChecked( hDlg, IDC_RADIO1_B ) == BST_CHECKED) TrigMod_B = 1;
+			if (IsDlgButtonChecked( hDlg, IDC_RADIO2_B ) == BST_CHECKED) TrigMod_B = 0;
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO3_B ) == BST_CHECKED) TrigMod_B = 2;
 
 #ifndef _DLL
@@ -1253,7 +1258,6 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 		break; //WM_COMMAND
 
 	}
-
 	return (FALSE);
 }
 
@@ -1304,19 +1308,20 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 			{
 				Nob = nob_input;
 				*Nospb = nospb_input;
+
 #ifdef _DLL
 				nDLLSetupDMA( DRV, *Nospb, Nob );
 				if (both_boards)
 					nDLLSetupDMA( 2, *Nospb, Nob );
 #else
-				if (!BufLock( choosen_board, CAMCNT, Nob, *Nospb ))
+				if (!BufLock( choosen_board, CAMCNT ))
 					MessageBox( hMSWND, "allocating Buffer fails", "Error", MB_OK );
 				else
 					MessageBox( hMSWND, "allocating Buffer succeeded", "Message", MB_OK );
 
 				if (both_boards)
 				{
-					if (!BufLock( 2, CAMCNT, Nob, *Nospb ))
+					if (!BufLock( 2, CAMCNT ))
 						MessageBox( hMSWND, "allocating Buffer of second Board fails", "Error", MB_OK );
 					else
 						MessageBox( hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK );
@@ -1375,7 +1380,7 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 				FreeMemInfo( &builtinram, &freeram );
 				freeram_old = freeram;
 
-				if (!BufLock( choosen_board, CAMCNT, Nob, *Nospb ))
+				if (!BufLock( choosen_board, CAMCNT ))
 					MessageBox( hMSWND, "allocating Buffer fails", "Error", MB_OK );
 				else
 					MessageBox( hMSWND, "allocating Buffer succeeded", "Message", MB_OK );
@@ -1395,13 +1400,13 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 			if (both_boards)
 				nDLLSetupDMA( 2, *Nospb, Nob );
 #else
-			if (!BufLock( choosen_board, CAMCNT, Nob, *Nospb ))
+			if (!BufLock( choosen_board, CAMCNT ))
 				MessageBox( hMSWND, "allocating Buffer fails", "Error", MB_OK );
 			else
 				MessageBox( hMSWND, "allocating Buffer succeeded", "Message", MB_OK );
 			if (both_boards)
 			{
-				if (!BufLock( 2, CAMCNT, Nob, *Nospb ))
+				if (!BufLock( 2, CAMCNT))
 					MessageBox( hMSWND, "allocating Buffer of second Board fails", "Error", MB_OK );
 				else
 					MessageBox( hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK );

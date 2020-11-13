@@ -888,16 +888,20 @@ void isr( UINT drvno, PVOID pData )
 		pDMABigBufIndex[drvno] = pDMABigBufBase[drvno]; //wrap if error - but now all is mixed up!
 	}
 	*/
+
+
 	//WDC_Err("pDMABigBufIndex: 0x%x \n", pDMABigBufIndex[drvno]);
 
 	START = ticksTimestamp(); //set global START for next loop
 	WaitforTelapsed( 900 );//bugfix: if not, the last scan is not in the smallbuf, 700 is too small
 	//here  the copyprocess happens
 	//! 
+
 	memcpy_s( pDMABigBufIndex[drvno], subbuflengthinbytes, pdmasubbuf_base, subbuflengthinbytes );//DMA_bufsizeinbytes/10
 	// A.M. 08.Jan.2018 subbuflengthinbytes/ aCAMCNT[drvno]
 	//memset(pDMABigBufIndex[drvno], IsrCounter, subbuflengthinbytes  ); //  0xAAAA=43690 , 0101= 257
 	WDC_Err( "pDMABigBufIndex: 0x%x \n", pDMABigBufIndex[drvno] );
+	WDC_Err( "pDMABigBuf Content: 0x%x \n", *(pDMABigBufIndex[drvno] + 200) );
 
 	SubBufCounter[drvno]++;
 	if (SubBufCounter[drvno] >= DMA_HW_BUFPARTS)		//number of ISR per dmaBuf - 1
@@ -1236,18 +1240,18 @@ BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel )
 };  // SetBoardVars
 
 #ifndef _DLL
-BOOL BufLock( UINT drvno, UINT camcnt, int nob, int nospb )
+BOOL BufLock( UINT drvno, UINT camcnt )
 {
 	if (WDC_IntIsEnabled( hDev[drvno] ))
 		CleanupPCIE_DMA( drvno );
 	aCAMCNT[drvno] = camcnt;
-	volatile int size = nob * nospb * aPIXEL[drvno] * sizeof( USHORT );
-	USHORT* pDMABigBufBase_temp = calloc( camcnt, nob *  nospb * aPIXEL[drvno] * sizeof( USHORT ) );//B! "2 *" because the buffer is just 2/3 of the needed size 
+	volatile int size = Nob * *Nospb * aPIXEL[drvno] * sizeof( USHORT );
+	USHORT* pDMABigBufBase_temp = calloc( camcnt, Nob *  *Nospb * aPIXEL[drvno] * sizeof( USHORT ) );//B! "2 *" because the buffer is just 2/3 of the needed size 
 	//pDIODEN = (pArrayT)calloc(nob, nospb * _PIXEL * sizeof(ArrayT));
 	if (pDMABigBufBase_temp != 0)
 	{
 		pDMABigBufBase[drvno] = pDMABigBufBase_temp;
-		if (!SetupPCIE_DMA( drvno, Nospb, Nob ))  //get also buffer address
+		if (!SetupPCIE_DMA( drvno, *Nospb, Nob ))  //get also buffer address
 		{
 			ErrorMsg( "Error in SetupPCIE_DMA" );
 			return FALSE;
