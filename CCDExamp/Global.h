@@ -75,7 +75,6 @@ extern BOOL DISP2;
 extern BOOL contimess_run_once;
 extern BOOL _IsArea; //FALSE is just the init val
 extern __int16 _IsROI; //FALSE is just the init val
-extern BOOL EXTTRIGFLAG;		// run with external Trigger
 extern int TrigMod;						//pos slope
 extern int TrigMod_B;						//pos slope
 extern int ItemIndex_S;						//combo box
