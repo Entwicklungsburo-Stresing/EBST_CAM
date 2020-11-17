@@ -69,6 +69,8 @@
 #define IDC_GAMMA_BLACK                 1032
 #define IDC_COMBO_STI                   1033
 #define IDC_COMBO_BTI                   1034
+#define IDC_COMBO1                      1034
+#define IDC_COMBO_TOR                   1034
 #define IDC_EC_RADIO2                   1060
 #define IDC_EC_RADIO3                   1061
 #define IDC_EC_RADIO5                   1062
@@ -138,7 +140,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        119
 #define _APS_NEXT_COMMAND_VALUE         40035
-#define _APS_NEXT_CONTROL_VALUE         1034
+#define _APS_NEXT_CONTROL_VALUE         1035
 #define _APS_NEXT_SYMED_VALUE           103
 #endif
 #endif

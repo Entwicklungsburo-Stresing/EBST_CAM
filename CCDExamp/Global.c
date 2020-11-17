@@ -31,7 +31,7 @@ ULONG	tDAT = 0; // delay after trigger
 ULONG	tXDLY = 0; // exposure control for special sensors: PDA, ILC6, TH78xx
 BYTE	tTICNT = 0; // trigger input divider
 BYTE	tTOCNT = 0; // trigger output divider
-int m_TOmodus = 1; //trigger out plug signal
+int m_TOmodus = 0; //trigger out plug signal
 int m_ECTrigmodus = 1;
 int m_ECmodus = 1;
 int sec = 0, bec = 0, sdat = 0, bdat = 0;
