@@ -1543,49 +1543,38 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 	BYTE dbyte = 0;
 	UINT32 longval = 0;
 	BOOL success = FALSE;
+	TCHAR TOR_Outputs[13][14] =
+	{
+		TEXT("XCKI"), TEXT("Register"), TEXT("TOCNTO"), TEXT("XCKDelay"),
+		TEXT("DMA Write Act"), TEXT("INTTRIGO"), TEXT("DATO"), TEXT("BTrigO"),
+		TEXT("INTSRO"), TEXT("OPT1"), TEXT("OPT2"), TEXT("BlockOn"),
+		TEXT("Measure On")
+	};
+	TCHAR A[16];
+	int  k = 0;
 
 	switch (message)
 	{
 	case WM_INITDIALOG:
+		//for comboboxes:
+		memset(&A, 0, sizeof(A));
+		for (k = 0; k <= 12; k += 1)
+		{
+			strcpy_s(A, sizeof(A) / sizeof(TCHAR), (TCHAR*)TOR_Outputs[k]);
 
-		SetDlgItemInt( hDlg, IDC_SETDAT, tDAT, FALSE );
+			// Add string to combobox.
+			SendMessage(GetDlgItem(hDlg, IDC_COMBO_TOR), (UINT)CB_ADDSTRING, (WPARAM)0, (LPARAM)A);
+		}
+		// Send the CB_SETCURSEL message to display an initial item 
+		//  in the selection field  
+		SendMessage(GetDlgItem(hDlg, IDC_COMBO_TOR), CB_SETCURSEL, (WPARAM)m_TOmodus, (LPARAM)0);
 		SetDlgItemInt( hDlg, IDC_SETXDLY, tXDLY, FALSE );
 		SetDlgItemInt( hDlg, IDC_SETTCNT, tTICNT, FALSE );
 		SetDlgItemInt( hDlg, IDC_SETTCNT2, tTOCNT, FALSE );
 		CheckDlgButton( hDlg, IDC_CHECK_NOPDARS, m_noPDARS );
-		switch (m_TOmodus)
-		{
-		case 0:		   CheckDlgButton( hDlg, IDC_EC_RADIO1, TRUE ); break; //REG
-		case 1:		   CheckDlgButton( hDlg, IDC_EC_RADIO2, TRUE ); break; //REG
-		case 2: 		   CheckDlgButton( hDlg, IDC_EC_RADIO3, TRUE ); break; //REG
-		case 3: 		   CheckDlgButton( hDlg, IDC_EC_RADIO4, TRUE ); break; //EC
-		case 4: 		   CheckDlgButton( hDlg, IDC_EC_RADIO5, TRUE ); break; //DAT
-		case 5: 		   CheckDlgButton( hDlg, IDC_EC_RADIO6, TRUE ); break; //TRIGIN
-		case 6: 		   CheckDlgButton( hDlg, IDC_EC_RADIO7, TRUE ); break; //FFXCK
-		case 7: 		   CheckDlgButton( hDlg, IDC_EC_RADIO8, TRUE ); break; //EC
-		case 8: 		   CheckDlgButton( hDlg, IDC_EC_RADIO9, TRUE ); break; //DAT
-		case 9: 		   CheckDlgButton( hDlg, IDC_EC_RADIO17, TRUE ); break; //TRIGIN
-		case 10: 	   CheckDlgButton( hDlg, IDC_EC_RADIO18, TRUE ); break; //FFXCK
-		case 11: 	   CheckDlgButton( hDlg, IDC_EC_RADIO19, TRUE ); break; //EC
-		case 12: 	   CheckDlgButton( hDlg, IDC_EC_RADIO20, TRUE ); break; //DAT
-		default:		   CheckDlgButton( hDlg, IDC_EC_RADIO1, TRUE ); // XCKI 0 or 5
-		}
+		
 
-		switch (m_ECmodus)
-		{
-		case 2: 		   CheckRadioButton( hDlg, IDC_ECCNT_RADIO1, IDC_ECCNT_RADIO4, IDC_ECCNT_RADIO2 ); break; //REG
-		case 3: 		   CheckRadioButton( hDlg, IDC_ECCNT_RADIO1, IDC_ECCNT_RADIO4, IDC_ECCNT_RADIO3 ); break; //EC
-		case 4: 		   CheckRadioButton( hDlg, IDC_ECCNT_RADIO1, IDC_ECCNT_RADIO4, IDC_ECCNT_RADIO4 ); break; //DAT
-		default: 		   CheckRadioButton( hDlg, IDC_ECCNT_RADIO1, IDC_ECCNT_RADIO4, IDC_ECCNT_RADIO1 ); // XCKI 0 or 5
-		}
-
-		switch (m_ECTrigmodus)
-		{
-		case 2: 		   CheckDlgButton( hDlg, IDC_RADIO12, TRUE ); break; //REG
-		case 3: 		   CheckDlgButton( hDlg, IDC_RADIO13, TRUE ); break; //EC
-		case 4: 		   CheckDlgButton( hDlg, IDC_RADIO14, TRUE ); break; //DAT
-		default: 		   CheckDlgButton( hDlg, IDC_RADIO11, TRUE ); // XCKI 0 or 5
-		}
+		
 		return (TRUE);
 		break;
 
@@ -1598,6 +1587,11 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 			break;
 
 		case IDOK:
+
+			//setting  outputs TOR
+			m_TOmodus = SendMessage(GetDlgItem(hDlg, IDC_COMBO_TOR), (UINT)CB_GETCURSEL,
+				(WPARAM)0, (LPARAM)0);
+
 			//			EXTTRIGFLAG= IsDlgButtonChecked(hDlg,IDC_ExtTrig);
 						//get DAT value
 			longval = GetDlgItemInt( hDlg, IDC_SETDAT, &success, FALSE );
@@ -1649,24 +1643,11 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 #else
 			DLLWriteByteS0( choosen_board, (BYTE)val, 0x2A );//TOCNT reg
 #endif
-					//				CheckRadioButton(hDlg,IDC_RADIO1,IDC_RADIO5,m_TOmodus);
-			if (IsDlgButtonChecked( hDlg, IDC_EC_RADIO1 ) == TRUE) m_TOmodus = 0;
-			if (IsDlgButtonChecked( hDlg, IDC_EC_RADIO2 ) == TRUE) m_TOmodus = 1;
-			if (IsDlgButtonChecked( hDlg, IDC_EC_RADIO3 ) == TRUE) m_TOmodus = 2;
-			if (IsDlgButtonChecked( hDlg, IDC_EC_RADIO4 ) == TRUE) m_TOmodus = 3;
-			if (IsDlgButtonChecked( hDlg, IDC_EC_RADIO5 ) == TRUE) m_TOmodus = 4;
-			if (IsDlgButtonChecked( hDlg, IDC_EC_RADIO6 ) == TRUE) m_TOmodus = 5;
-			if (IsDlgButtonChecked( hDlg, IDC_EC_RADIO7 ) == TRUE) m_TOmodus = 6;
-			if (IsDlgButtonChecked( hDlg, IDC_EC_RADIO8 ) == TRUE) m_TOmodus = 7;
-			if (IsDlgButtonChecked( hDlg, IDC_EC_RADIO9 ) == TRUE) m_TOmodus = 8;
-			if (IsDlgButtonChecked( hDlg, IDC_EC_RADIO17 ) == TRUE) m_TOmodus = 9;
-			if (IsDlgButtonChecked( hDlg, IDC_EC_RADIO18 ) == TRUE) m_TOmodus = 10;
-			if (IsDlgButtonChecked( hDlg, IDC_EC_RADIO19 ) == TRUE) m_TOmodus = 11;
-			if (IsDlgButtonChecked( hDlg, IDC_EC_RADIO20 ) == TRUE) m_TOmodus = 12;
+					
 
 #ifndef _DLL
 			RsTOREG( choosen_board );
-			//SetTORReg( choosen_board, m_TOmodus );
+			SetTORReg( choosen_board, m_TOmodus );
 #else
 			DLLRsTOREG( choosen_board );
 			DLLSetTORReg( choosen_board, m_TOmodus );
