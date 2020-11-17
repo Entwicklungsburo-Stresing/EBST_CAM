@@ -13,7 +13,7 @@ BOOL _IsArea = FALSE; //FALSE is just the init val
 __int16 _IsROI = 0; //FALSE is just the init val
 
 int TrigMod = 0;						//pos slope
-int TrigMod_B = 0;						//pos slope
+int TrigMod_B = 1;						//pos slope
 int ItemIndex_S = 0;					//combobox
 int ItemIndex_B = 1;					//combobox
 __int64 TICKSDISP = 0;			//display time in ticks
