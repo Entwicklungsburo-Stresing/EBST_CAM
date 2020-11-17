@@ -1945,6 +1945,7 @@ void ReadFFLoop( UINT32 board_sel )
 	//SetThreadPriority()
 	for (int blk_cnt = 0; blk_cnt < Blocks; blk_cnt++)
 	{//block read function
+		//just checking Esc for Escape in Cont mode
 		oneTriggerPerBlock( board_sel, 5 ); // new 10/2020 with PCIe 202.14: switch trigger by hardware
 		//switch (blocktrigger)
 		//{

@@ -593,6 +593,9 @@ void startMess(void *dummy)
 			j = sprintf_s( header, 260, " One Shot mode - Cancel with ESC or space- key isr: %i of %i  ", IsrCounter + 1, IsrNumber );//+1 cheating );
 		TextOut(hMSDC, 100, LOY - 17, header, j);
 		RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
+
+
+		if (GetAsyncKeyState( VK_ESCAPE )) break;
 	}
 	//ReadFFLoop(choosen_board, ExpTime, FREQ, EXTTRIGFLAG, 0,  0);
 
@@ -612,8 +615,7 @@ void startMess(void *dummy)
 			if (GetAsyncKeyState( VK_SPACE ))
 				cancel = TRUE;
 		}
-
-	Sleep(100);//for the thread if there is just one isr 
+//for the thread if there is just one isr 
 	//start 2nd thread for getting data in highest std priority, ring=200 lines
 #endif
 	/*
