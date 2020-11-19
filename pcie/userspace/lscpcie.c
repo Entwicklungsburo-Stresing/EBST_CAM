@@ -176,7 +176,8 @@ int lscpcie_open(uint dev, uint16_t options) {
   if (hardware_present) {
     // map io registers to user space memory
     dev_descr[dev].dma_reg
-      = mmap(NULL, 0x100, PROT_READ | PROT_WRITE, MAP_SHARED, handle, 0);
+      = mmap(NULL, dev_descr[dev].control->io_size, PROT_READ | PROT_WRITE,
+             MAP_SHARED, handle, 0);
 
     if (dev_descr[dev].dma_reg == MAP_FAILED) {
       error_message("mmap on io memory failed\n");

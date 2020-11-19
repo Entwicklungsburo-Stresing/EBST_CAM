@@ -23,7 +23,6 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
   struct dev_struct *dev;
   int result, i;
   u16 word;
-  unsigned int address_size;
 
   if ((result = pci_enable_device(pci_dev)) < 0) return result;
 
@@ -60,8 +59,9 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
   assert(word == SUBSYSTEM_DEVICE_ID, "wrong subsystem id", -1);
 
   dev->physical_pci_base = pci_resource_start(pci_dev, 2);
-  address_size = pci_resource_len(pci_dev, 2);
-  dev->mapped_pci_base = ioremap_nocache(dev->physical_pci_base, address_size);
+  dev->control->io_size = pci_resource_len(pci_dev, 2);
+  dev->mapped_pci_base
+    = ioremap_nocache(dev->physical_pci_base, dev->control->io_size);
   assert(dev->mapped_pci_base != 0, "ioremap of address space failed", -1);
   printk(KERN_WARNING NAME": mapped address space 2 to %p\n",
          dev->mapped_pci_base);

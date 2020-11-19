@@ -24,6 +24,8 @@
 static struct vm_operations_struct mmap_register_remap_vm_ops = {
   //.open =  mmap_register_vma_open,
   //.close = mmap_register_vma_close,
+  .open =  NULL,
+  .close = NULL
 };
 
 int mmap_register_remap_mmap(struct file *filp, struct vm_area_struct *vma)
@@ -37,7 +39,7 @@ int mmap_register_remap_mmap(struct file *filp, struct vm_area_struct *vma)
 
     if (io_remap_pfn_range(vma, vma->vm_start,
                            ((u64) dev->physical_pci_base)>>PAGE_SHIFT,
-                           0x100, vma->vm_page_prot))
+                           vma->vm_end - vma->vm_start, vma->vm_page_prot))
       return -EAGAIN;
     break;
 
