@@ -4,9 +4,9 @@
 //
 #define IDS_STRING1                     1
 #define IDOK2                           3
-#define IDOK1                           3
-#define IDCANCEL2                       3
-#define IDDEFAULT                       3
+#define IDOK1                           4
+#define IDCANCEL2                       5
+#define IDDEFAULT                       6
 #define NOBIOSERR                       101
 #define NOCCDERR                        102
 #define IDD_DIALOG1                     104
@@ -69,8 +69,8 @@
 #define IDC_GAMMA_BLACK                 1032
 #define IDC_COMBO_STI                   1033
 #define IDC_COMBO_BTI                   1034
-#define IDC_COMBO1                      1034
-#define IDC_COMBO_TOR                   1034
+#define IDC_COMBO1                      1035
+#define IDC_COMBO_TOR                   1036
 #define IDC_EC_RADIO2                   1060
 #define IDC_EC_RADIO3                   1061
 #define IDC_EC_RADIO5                   1062

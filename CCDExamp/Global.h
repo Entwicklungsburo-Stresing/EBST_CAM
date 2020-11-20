@@ -33,7 +33,7 @@ enum adc_mode
 #define _MINREPTIME 20
 #define	DRV	1	//1 if only one interface board LSCPCI1 or LSCISA1 in example
 						// could be 2..4 for multiple boards
-#define CAMCNT 1
+#define CAMCNT 2
 #define _PIXEL 1088
 //settings for 8 Bit cameras
 //static	unsigned long FLAG816 = 2;  // 2=8Bit, 1=12/16Bit
@@ -47,7 +47,7 @@ static int YSHIFT = 8;			// 16bit=8
 #define _ISPDA FALSE			//set RS after read; TRUE for HA S39xx
 #define _ISFFT TRUE		//set vclk generator; TRUE for HA S703x
 #define Vfreqini 7		//vclk freq for FFTs with FIFO in divider of12MHz (0..15)
-						//=3 for highest speed with 7030-0906
+						//=4 for highest speed with 7030-0906
 enum trigger_mode
 {
 	xck = 0,
@@ -62,7 +62,7 @@ static int	LOY = 41;				// left upper x-corner of plot
 static unsigned int XLENGTH = _PIXEL + 50;			// x-width of  plot 
 static unsigned int YLENGTH = 255;			// y-width
 //for trms calcs
-#define TRMSpix  1 //(8-1)*150-100// _PIXEL/2	//pixel no for which the rms value is sampled
+#define TRMSpix  500 //(8-1)*150-100// _PIXEL/2	//pixel no for which the rms value is sampled
 // global declarations for CCDEXAMP
 HDC hMSDC;	// global stored measure DC of our window
 HWND hMSWND; // global stored measure HWND of our window
@@ -92,10 +92,11 @@ extern BOOL UpdateDispl;
 extern ULONG m_lfdTrmsNr;
 extern BOOL ShowTrms;
 extern ULONG tDAT; // delay after trigger
-extern ULONG tXDLY; // exposure control for special sensors: PDA, ILC6, TH78xx
+extern ULONG tXDLY; //  delay for integrators INT before start reading
 extern BYTE	tTICNT; // trigger input divider
 extern BYTE	tTOCNT; // trigger output divider
 extern int m_TOmodus; //trigger out plug signal
 extern int m_ECTrigmodus;
 extern int m_ECmodus;
 extern BOOL m_noPDARS;
+extern double TRMSval[2];

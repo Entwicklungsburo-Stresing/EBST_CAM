@@ -1,7 +1,11 @@
-v3.2.0
+v3.14.0
 - new input scheme: BTI and STI
-- Add functions SetBTimer, SetBSlope
 - change Bit ISR_Active from PCIEREG to IRQREG
+- AboutS0 shows 4 memory slots more (TR - test register)
+- changed Sets0Bit and ResetS0Bit to use BitTestAndSet/BitTestAndReset and get more speed(old = 15microsec; new 3,5(+/-3)microsec)
+
+v3.2.0
+- Add functions SetBTimer, SetBSlope
 
 v3.1.0
 - Remove most parameters of ReadFFLoop

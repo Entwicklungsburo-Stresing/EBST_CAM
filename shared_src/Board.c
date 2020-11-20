@@ -222,7 +222,7 @@ void AboutTLPs( UINT32 drvno )
 */
 void AboutS0( UINT32 drvno )
 {
-	#define entries  36		//32 
+	#define entries  41		//32 
 	int i, j = 0;
 	int numberOfBars = 0;
 	char fn[entries*30];
@@ -235,7 +235,7 @@ void AboutS0( UINT32 drvno )
 		"XCKLL \t",
 		"XCKCNTLL",
 		"PIXREG \t",
-		"FIFOCNT ",
+		"FIFOCNT \t",
 		"VCLKCTRL",
 		"'EBST' \t",
 		"SDAT \t",
@@ -256,16 +256,21 @@ void AboutS0( UINT32 drvno )
 		"R7 CAMCNT",
 		"R8 GPX Ctrl",
 		"R9 GPX Data",
-		"R10 ROI 0",
-		"R11 ROI 1",
-		"R12 ROI 2",
+		"R10 ROI 0 \t",
+		"R11 ROI 1 \t",
+		"R12 ROI 2\t",
 		"R13 XCKDLY",
 		"R14 ADSC ",
-		"R15 LDSC",
+		"R15 LDSC\t",
 		"R16 BTimer",
-		"R17 BDAT",
+		"R17 BDAT\t",
 		"R18 BEC\t",
-		"R19 BFLAGS"
+		"R19 BFLAGS",
+		"R20 TR1\t",
+		"R21 TR2\t",
+		"R22 TR3\t",
+		"R23 TR4\t",
+		"R24 TR5\t"
 	}; //Look-Up-Table for the S0 Registers
 
 	hWnd = GetActiveWindow();
@@ -1672,20 +1677,20 @@ void ResetBEC( UINT32 drvno )
 \param fkt select output signal
 	- 0  XCK
 	- 1  REG -> OutTrig
-	- 2  TO_CNT
-	- 3  RSMON
-	- 4  DMAO
-	- 5  INTTRIGO
-	- 6  DATO
-	- 7  BTRIGO
-	- 8  INTSRO
-	- 9  OPT1(S1)
-	- 10 OPT1(S0)
-	- 11 BlockOn
-	- 12 MeasureOn
-	- 13 XCKDLYON
-	- 14 VON
-	- 15 MSHUT
+	- 2  VON
+	- 3  DMA_ACT
+	- 4  ASLS
+	- 5  STIMER
+	- 6  BTIMER
+	- 7  ISR_ACT
+	- 8  S1
+	- 9  S2
+	- 10 BON
+	- 11 MEASUREON
+	- 12 SDAT
+	- 13 BDAT
+	- 14 SSHUT
+	- 15 BSHUT
 \return none
 */
 void SetTORReg( UINT32 drvno, BYTE fkt )
@@ -1694,20 +1699,20 @@ void SetTORReg( UINT32 drvno, BYTE fkt )
 	BYTE read_val = 0;
 	if (fkt == 0) val = 0x00; // set to XCK
 	if (fkt == 1) val = 0x10; // set to REG -> OutTrig
-	if (fkt == 2) val = 0x20; // set to TO_CNT
-	if (fkt == 3) val = 0x30; // set to RSMON
-	if (fkt == 4) val = 0x40; // set to DMAO
-	if (fkt == 5) val = 0x50; // set to INTTRIGO
-	if (fkt == 6) val = 0x60; // set to DATO 
-	if (fkt == 7) val = 0x70; // set to BTRIGO 
-	if (fkt == 8) val = 0x80; // set to INTSRO 
-	if (fkt == 9) val = 0x90; // set to OPT1(S1) 
-	if (fkt == 10) val = 0xa0; // set to OPT1(S2) 
-	if (fkt == 11) val = 0xb0; // set to BlockOn
-	if (fkt == 12) val = 0xc0; // set to MeasureOn
-	if (fkt == 13) val = 0xd0; // set to XCKDLYON
-	if (fkt == 14) val = 0xe0; // set to VON
-	if (fkt == 15) val = 0xf0; // set to MSHUT
+	if (fkt == 2) val = 0x20; // set to VON
+	if (fkt == 3) val = 0x30; // set to DMA_ACT
+	if (fkt == 4) val = 0x40; // set to ASLS
+	if (fkt == 5) val = 0x50; // set to STIMER
+	if (fkt == 6) val = 0x60; // set to BTIMER 
+	if (fkt == 7) val = 0x70; // set to ISR_ACT 
+	if (fkt == 8) val = 0x80; // set to S1 
+	if (fkt == 9) val = 0x90; // set to S2 
+	if (fkt == 10) val = 0xa0; // set to BON 
+	if (fkt == 11) val = 0xb0; // set to MEASUREON
+	if (fkt == 12) val = 0xc0; // set to SDAT
+	if (fkt == 13) val = 0xd0; // set to BDAT
+	if (fkt == 14) val = 0xe0; // set to SSHUT
+	if (fkt == 15) val = 0xf0; // set to BSHUT
 
 	ReadByteS0( drvno, &read_val, S0Addr_TOR + 3 );
 	read_val &= 0x0f; //dont disturb lower bits
@@ -2976,48 +2981,52 @@ void GetRmsVal( ULONG nos, ULONG *TRMSVals, double *mwf, double *trms )
 	double sumvar = 0.0;
 	unsigned int i = 0;
 
-	for (i = 10; i < nos; i++)
+	for (i = 0; i < nos; i++)
 	{//get mean val
 		*mwf += TRMSVals[i];//for C-Noobs: this is the same like *(TRMSVals+1)
 	}
-	*mwf /= (nos - 10);
-	for (i = 10; i < nos; i++)
+	*mwf /= nos;
+	for (i = 0; i < nos; i++)
 	{// get varianz
 		*trms = TRMSVals[i];
 		*trms = *trms - *mwf;
 		*trms *= *trms;
 		sumvar += *trms;
 	}
-	*trms = sumvar / (nos - 10 + 1);
+	*trms = sumvar / (nos + 1);
 	*trms = sqrt( *trms );
 	return;
 }//GetRmsVal
 
 /**
-\brief Online calc TRMS noise val of pix.
+\brief Online calc TRMS noise val of pix. First 10 scans are omitted. May break when nos is smaller than 10.
 \param drvno indentifier of PCIe card
 \param nos number of samples
 \param TRMS_pixel pixel for calculating noise (0...1087)
 \param CAMpos index for camcount (0...CAMCNT)
 \param mwf pointer for mean value
 \param trms pointer for noise
+\return none
  */
 void CalcTrms( UINT32 drvno, UINT32 nos, UINT16 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
 {
 	ULONG *TRMSVals;
+	const int offset = 10;
 
-	TRMSVals = calloc( nos, sizeof( ULONG ) );
+	TRMSVals = calloc( nos - offset, sizeof( ULONG ) );
 
 	//storing the values of one pix for the rms analysis
-	for (int scan = 10; scan < nos; scan++)
+	for (int scan = 0; scan < nos-offset; scan++)
 	{
-		int TRMSpix_of_current_scan = GetIndexOfPixel( drvno, TRMS_pixel, scan, 0, CAMpos );
+		int TRMSpix_of_current_scan = GetIndexOfPixel( drvno, TRMS_pixel, scan+offset, 0, CAMpos );
 		TRMSVals[scan] = pDMABigBufBase[drvno][TRMSpix_of_current_scan];
 	}
 
 	//rms analysis
-	GetRmsVal( nos, TRMSVals, mwf, trms );
+	GetRmsVal( nos-offset, TRMSVals, mwf, trms );
 
+	ValMsg(*mwf);
+	return;
 }//CalcTrms
 
 /**

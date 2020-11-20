@@ -2,13 +2,13 @@
 #define STRINGIZE(s) STRINGIZE2(s)
 
 #define VERSION_MAJOR               3
-#define VERSION_MINOR               14
-#define VERSION_REVISION            1
+#define VERSION_PCIE_BOARD_VERSION  14
+#define VERSION_MINOR				0
 
-#define VER_FILE_VERSION            VERSION_MAJOR, VERSION_MINOR, VERSION_REVISION
+#define VER_FILE_VERSION            VERSION_MAJOR, VERSION_PCIE_BOARD_VERSION, VERSION_MINOR
 #define VER_FILE_VERSION_STR        STRINGIZE(VERSION_MAJOR)        \
-                                    "." STRINGIZE(VERSION_MINOR)    \
-                                    "." STRINGIZE(VERSION_REVISION) \
+                                    "." STRINGIZE(VERSION_PCIE_BOARD_VERSION)    \
+                                    "." STRINGIZE(VERSION_MINOR) \
 
 #define VER_PRODUCT_VERSION         VER_FILE_VERSION
 #define VER_PRODUCT_VERSION_STR     VER_FILE_VERSION_STR
