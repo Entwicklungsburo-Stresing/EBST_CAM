@@ -173,6 +173,7 @@ int lscpcie_open(uint dev, uint16_t options) {
 
   dev_descr[dev].number_of_tlps = no_tlps;
 
+  printf("found io spce of size 0x%08x\n", dev_descr[dev].control->io_size);
   if (hardware_present) {
     // map io registers to user space memory
     dev_descr[dev].dma_reg

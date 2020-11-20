@@ -175,7 +175,7 @@ int main(int argc, char **argv) {
     printf("mmap returned for io memory %p\n", io_ptr);
     */
 
-    for (int i = 0; i < 256; i++) {
+    for (int i = 0; i < 512; i++) {
       if (!(i % 8)) {
 	if (i) printf("\n");
 	printf("0x%02x: ", i);
