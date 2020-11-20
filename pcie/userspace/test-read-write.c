@@ -19,10 +19,10 @@ void out_hex(uint8_t x) {
 }
 
 int main(void) {
-  int handle = open("/dev/lscpcie", O_RDWR), i, j, result;
+  int handle = open("/dev/lscpcie0", O_RDWR), i, j, result;
 
   if (handle < 0) {
-    fprintf(stderr, "error on opening '/dev/lscpcie'\n");
+    fprintf(stderr, "error on opening '/dev/lscpcie0'\n");
     perror(0);
   }
 

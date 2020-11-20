@@ -47,14 +47,21 @@ typedef enum {
   S0Addr_VCLKCTRL   = 0x18,
   S0Addr_VCLKFREQ   = 0x1b,
   S0Addr_EBST       = 0x1C,
-  S0Addr_DAT        = 0x20,
-  S0Addr_EC         = 0x24,
+  S0Addr_SDAT       = 0x20,
+  S0Addr_SEC        = 0x24,
   S0Addr_TOR        = 0x28,
   S0Addr_ARREG      = 0x2C,
   S0Addr_GIOREG     = 0x30,
   S0Addr_DELAYEC    = 0x34,
   S0Addr_IRQREG     = 0x38,
   S0Addr_PCI        = 0x3C,
+  S0Addr_PCIEFLAGS  = 0x40,
+  S0Addr_TDCCtrl    = 0x60,
+  S0Addr_TDCData    = 0x64,
+  S0Addr_BTIMER     = 0x80,
+  S0Addr_BDAT       = 0x84,
+  S0Addr_BEC        = 0x88,
+  S0Addr_BSLOPE     = 0x8C
 } s0_addresses_t;
 
 #define S0_REG_SIZE sizeof(s0_t)
@@ -274,10 +281,14 @@ typedef struct {
     } bytes;
   } XCK;
   uint32_t XCKCNT;
-  uint8_t PIXREGlow;
-  uint8_t PIXREGhigh;
-  uint8_t BTRIGREG;
-  uint8_t FF_FLAGS;
+  union {
+    uint32_t dword;
+    struct {
+      uint16_t PIXREG;
+      uint8_t BTRIGREG;
+      uint8_t FF_FLAGS;
+    } bytes;
+  } PIXREG;
   uint32_t FIFOCNT;
   uint32_t VCLKCTRL;
   uint32_t EBST;
@@ -308,11 +319,13 @@ typedef struct {
   uint32_t ROI0;
   uint32_t ROI1;
   uint32_t ROI2;
-  uint32_t TRIG_CNT; // ADSC;
-  uint32_t XDLY;     // LDSC; inconsistency manual p 57 <-> p 60
-  uint32_t dummy1;
-  uint32_t dummy2;
-  uint32_t dummy3;
+  uint32_t XCKDLY;
+  uint32_t ADSC;
+  uint32_t LDSC;
+  uint32_t BTIMER;
+  uint32_t BDAT;
+  uint32_t BEC;
+  uint32_t BFLAGS;
 } s0_t;
 
 typedef struct {
