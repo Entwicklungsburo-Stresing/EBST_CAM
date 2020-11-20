@@ -615,7 +615,8 @@ int lscpcie_set_bits_reg32(uint dev, uint16_t address, uint32_t bits,
 int lscpcie_dump_s0(uint dev) {
   int i;
   uint32_t data = 0;
-  char register_names[41][30] = {
+  enum N { number_of_registers = 41 };
+  char register_names[number_of_registers][30] = {
     "DBR \t\t",
     "CTRLA \t\t",
     "XCKLL \t\t",
@@ -661,7 +662,7 @@ int lscpcie_dump_s0(uint dev) {
 
   printf("S0- registers   \n" );
 
-  for (i = 0; i <= 40; i++) {
+  for (i = 0; i < number_of_registers; i++) {
     lscpcie_read_s0_32(dev, i * 4, &data);
     printf("%s \t: 0x%08x\n", register_names[i], data);
   }
@@ -671,8 +672,33 @@ int lscpcie_dump_s0(uint dev) {
 }
 
 int lscpcie_dump_dma(uint dev) {
-  printf("not yet implemented\n");
-
+  uint32_t data = 0;
+  enum N { number_of_registers = 18 };
+	char register_names[number_of_registers][20] = {
+		"DCSR\t",
+		"DDMACR\t",
+		"WDMATLPA",
+		"WDMATLPS",
+		"WDMATLPC",
+		"WDMATLPP",
+		"RDMATLPP",
+		"RDMATLPA",
+		"RDMATLPS",
+		"RDMATLPC",
+		"WDMAPERF",
+		"RDMAPERF",
+		"RDMASTAT",
+		"NRDCOMP\t",
+		"RCOMPDSIZW",
+		"DLWSTAT\t",
+		"DLTRSSTAT",
+		"DMISCCONT"
+	}; //Look-Up-Table for the DMA Registers
+  printf("DMA registers\n");
+  for (int i = 0; i < number_of_registers; i++) {
+    lscpcie_read_dma_32(dev, i * 4, &data);
+    printf("%s \t: 0x%08x\n", register_names[i], data);
+  }
   return 0;
 }
 

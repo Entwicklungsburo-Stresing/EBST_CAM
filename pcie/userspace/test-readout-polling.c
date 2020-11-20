@@ -83,9 +83,8 @@ int main(void) {
     goto finish;
   }
 
-  device_descriptor->s0->CTRLB = 0x04;
-  device_descriptor->s0->BTIMER = 0;
-  lscpcie_write_s0_32(0, S0Addr_BTIMER, 1);
+  device_descriptor->s0->CTRLB = 0x44;
+  device_descriptor->s0->BTIMER = 0x8000c350;
   device_descriptor->s0->PCIEFLAGS |= 0x20;
   device_descriptor->s0->BDAT = 123;
   device_descriptor->s0->BEC = 0x1;
@@ -99,6 +98,7 @@ int main(void) {
 
   device_descriptor->dma_reg->DDMACR |= (1<<DDMACR_START_DMA_WRT);
   lscpcie_dump_s0(0);
+  lscpcie_dump_dma(0);
 
   do
     result = device_descriptor->s0->XCK.dword & (1<<XCK_RS);
