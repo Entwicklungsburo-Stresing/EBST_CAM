@@ -3024,8 +3024,6 @@ void CalcTrms( UINT32 drvno, UINT32 nos, UINT16 TRMS_pixel, UINT16 CAMpos, doubl
 
 	//rms analysis
 	GetRmsVal( nos-offset, TRMSVals, mwf, trms );
-
-	ValMsg(*mwf);
 	return;
 }//CalcTrms
 
