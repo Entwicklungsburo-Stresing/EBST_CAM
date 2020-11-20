@@ -22,7 +22,7 @@
 
 typedef struct {
   uint32_t value;
-  uint8_t address;
+  uint16_t address;
 } reg_info_t;
 
 /* camera operations */

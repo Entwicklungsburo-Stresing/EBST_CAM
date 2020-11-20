@@ -67,18 +67,19 @@ int lscpcie_send_fiber(uint dev, uint8_t master_address,
                        uint8_t register_address, uint16_t data);
 
 // register access through ioctl
-int lscpcie_read_config32(uint dev, uint8_t address, uint32_t *val);
-int lscpcie_write_config32(uint dev, uint8_t address, uint32_t val);
-int lscpcie_read_reg8(uint dev, uint8_t address, uint8_t *val);
-int lscpcie_read_reg16(uint dev, uint8_t address, uint16_t *val);
-int lscpcie_read_reg32(uint dev, uint8_t address, uint32_t *val);
-int lscpcie_write_reg8(uint dev, uint8_t address, uint8_t val);
-int lscpcie_write_reg16(uint dev, uint8_t address, uint16_t val);
-int lscpcie_write_reg32(uint dev, uint8_t address, uint32_t val);
-int lscpcie_set_bits_reg8(uint dev, uint8_t address, uint8_t bits, uint8_t mask);
-int lscpcie_set_bits_reg16(uint dev, uint8_t address, uint16_t bits,
+int lscpcie_read_config32(uint dev, uint16_t address, uint32_t *val);
+int lscpcie_write_config32(uint dev, uint16_t address, uint32_t val);
+int lscpcie_read_reg8(uint dev, uint16_t address, uint8_t *val);
+int lscpcie_read_reg16(uint dev, uint16_t address, uint16_t *val);
+int lscpcie_read_reg32(uint dev, uint16_t address, uint32_t *val);
+int lscpcie_write_reg8(uint dev, uint16_t address, uint8_t val);
+int lscpcie_write_reg16(uint dev, uint16_t address, uint16_t val);
+int lscpcie_write_reg32(uint dev, uint16_t address, uint32_t val);
+int lscpcie_set_bits_reg8(uint dev, uint16_t address, uint8_t bits,
+			  uint8_t mask);
+int lscpcie_set_bits_reg16(uint dev, uint16_t address, uint16_t bits,
                            uint32_t mask);
-int lscpcie_set_bits_reg32(uint dev, uint8_t address, uint32_t bits,
+int lscpcie_set_bits_reg32(uint dev, uint16_t address, uint32_t bits,
                            uint32_t mask);
 dev_descr_t *lscpcie_get_descriptor(uint dev);
 

@@ -61,6 +61,7 @@ int main(int argc, char **argv) {
   }
   */
 
+  /*
   result = lscpcie_set_debug(device_number, 0xFFFF, 0xFFFF);
   if (result < 0) {
     fprintf(stderr, "error %d on setting debug flags\n", result);
@@ -68,6 +69,7 @@ int main(int argc, char **argv) {
   }
 
   printf("debug mode set to 0x%04x\n", result);
+  */
 
   /*
   control_ptr
@@ -163,25 +165,23 @@ int main(int argc, char **argv) {
     if (i == 600)
       printf("successfully read back 1200 data bytes via memory mapping\n");
   } else {
-    /*
-    io_ptr = mmap(NULL, 0x100, PROT_READ | PROT_WRITE, MAP_SHARED, handle, 0);
+    //for (int i = 0; i < 512; i++)
+    //  ((uint8_t*)device_descriptor->dma_reg)[i] = 0x00;
 
-    if (io_ptr == MAP_FAILED) {
-      fprintf(stderr, "mmap on io memory failed\n");
-      perror(0);
-      goto finish;
-    }
-
-    printf("mmap returned for io memory %p\n", io_ptr);
-    */
-
-    for (int i = 0; i < 512; i++) {
-      if (!(i % 8)) {
-	if (i) printf("\n");
-	printf("0x%02x: ", i);
+    uint8_t val;
+    for (int i = 0; i < 512; i += 8) {
+      printf("0x%02x: ", i);
+      for (int j = 0; j < 8; j++) {
+        out_hex(((uint8_t*)device_descriptor->dma_reg)[i+j]);
+        putchar(' ');
       }
-      out_hex(((uint8_t*)device_descriptor->dma_reg)[i]);//io_ptr[i]);
-      putchar(' ');
+      printf("   ");
+      for (int j = 0; j < 8; j++) {
+        lscpcie_read_reg8(0, i+j, &val);
+        out_hex(val);
+        putchar(' ');
+      }
+     printf("\n");
     }
     printf("\n");
   }
