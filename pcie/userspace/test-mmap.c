@@ -186,6 +186,21 @@ int main(int argc, char **argv) {
     printf("\n");
   }
 
+  printf("XDLY = 0x%08x\n", device_descriptor->s0->XDLY);
+  printf("dummy1 = 0x%08x\n", device_descriptor->s0->dummy1);
+  printf("dummy2 = 0x%08x\n", device_descriptor->s0->dummy2);
+  printf("dummy3 = 0x%08x\n", device_descriptor->s0->dummy3);
+  device_descriptor->s0->XDLY = 1;
+  device_descriptor->s0->dummy1 = 2;
+  device_descriptor->s0->dummy2 = 3;
+  device_descriptor->s0->dummy3 = 4;
+  printf("XDLY = 0x%08x\n", device_descriptor->s0->XDLY);
+  printf("dummy1 = 0x%08x\n", device_descriptor->s0->dummy1);
+  printf("dummy2 = 0x%08x\n", device_descriptor->s0->dummy2);
+  printf("dummy3 = 0x%08x\n", device_descriptor->s0->dummy3);
+  device_descriptor->s0->XDLY = 0;
+  device_descriptor->s0->dummy1 = 0;
+
  finish:
   /*
   if (io_ptr != MAP_FAILED) munmap(io_ptr, 0x100);

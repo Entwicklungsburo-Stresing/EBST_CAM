@@ -280,14 +280,13 @@ typedef struct {
   uint8_t FF_FLAGS;
   uint32_t FIFOCNT;
   uint32_t VCLKCTRL;
-  uint32_t VCLKFREQ;
   uint32_t EBST;
   uint32_t DAT;
   uint32_t EC;
   uint32_t TOR;
   uint32_t ARREG;
   uint32_t GIOREG;
-  uint32_t DELAYEC;
+  uint32_t DELAYEC; // EC fine adjust
   union {
     uint32_t IRQREG;
     struct {
@@ -295,7 +294,7 @@ typedef struct {
       uint16_t IRQ_CNT;
     } dwords;
   } IRQ;
-  uint32_t PCI;
+  uint32_t PCIE_VERS;
   uint32_t PCIEFLAGS;
   uint32_t NUMBER_OF_SCANS;
   uint32_t SCAN_INDEX;
@@ -311,6 +310,9 @@ typedef struct {
   uint32_t ROI2;
   uint32_t TRIG_CNT; // ADSC;
   uint32_t XDLY;     // LDSC; inconsistency manual p 57 <-> p 60
+  uint32_t dummy1;
+  uint32_t dummy2;
+  uint32_t dummy3;
 } s0_t;
 
 typedef struct {
