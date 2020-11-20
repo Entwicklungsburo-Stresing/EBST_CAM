@@ -186,20 +186,20 @@ int main(int argc, char **argv) {
     printf("\n");
   }
 
-  printf("XDLY = 0x%08x\n", device_descriptor->s0->XDLY);
-  printf("dummy1 = 0x%08x\n", device_descriptor->s0->dummy1);
-  printf("dummy2 = 0x%08x\n", device_descriptor->s0->dummy2);
-  printf("dummy3 = 0x%08x\n", device_descriptor->s0->dummy3);
-  device_descriptor->s0->XDLY = 1;
-  device_descriptor->s0->dummy1 = 2;
-  device_descriptor->s0->dummy2 = 3;
-  device_descriptor->s0->dummy3 = 4;
-  printf("XDLY = 0x%08x\n", device_descriptor->s0->XDLY);
-  printf("dummy1 = 0x%08x\n", device_descriptor->s0->dummy1);
-  printf("dummy2 = 0x%08x\n", device_descriptor->s0->dummy2);
-  printf("dummy3 = 0x%08x\n", device_descriptor->s0->dummy3);
-  device_descriptor->s0->XDLY = 0;
-  device_descriptor->s0->dummy1 = 0;
+  printf("XCKDLY = 0x%08x\n", device_descriptor->s0->XCKDLY);
+  printf("ADSC = 0x%08x\n", device_descriptor->s0->ADSC);
+  printf("LDSC = 0x%08x\n", device_descriptor->s0->LDSC);
+  printf("BTIMER = 0x%08x\n", device_descriptor->s0->BTIMER);
+  device_descriptor->s0->XCKDLY = 1;
+  device_descriptor->s0->ADSC = 2;
+  device_descriptor->s0->LDSC = 3;
+  device_descriptor->s0->BTIMER = 4;
+  printf("XDLY = 0x%08x\n", device_descriptor->s0->XCKDLY);
+  printf("ADSC = 0x%08x\n", device_descriptor->s0->ADSC);
+  printf("LDSC = 0x%08x\n", device_descriptor->s0->LDSC);
+  printf("BTIMER = 0x%08x\n", device_descriptor->s0->BTIMER);
+  device_descriptor->s0->XCKDLY = 0;
+  device_descriptor->s0->ADSC = 0;
 
  finish:
   /*
