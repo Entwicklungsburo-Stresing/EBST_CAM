@@ -33,7 +33,7 @@ enum adc_mode
 #define _MINREPTIME 20
 #define	DRV	1	//1 if only one interface board LSCPCI1 or LSCISA1 in example
 						// could be 2..4 for multiple boards
-#define CAMCNT 2
+#define CAMCNT 1
 #define _PIXEL 1088
 //settings for 8 Bit cameras
 //static	unsigned long FLAG816 = 2;  // 2=8Bit, 1=12/16Bit
