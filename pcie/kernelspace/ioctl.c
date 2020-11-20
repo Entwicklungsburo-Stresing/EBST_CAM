@@ -94,6 +94,7 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
   case LSCPCIE_IOCTL_GET_REG8:
     PDEBUG(D_IOCTL, "ioctl get register 8\n");
     result = get_user(reg_info.address, &((reg_info_t __user*)arg)->address);
+    if (result) result = -EFAULT;
     val32 = readb(dev->mapped_pci_base + reg_info.address);
     result = put_user(val32, &((reg_info_t __user *)arg)->value);
     if (result) result = -EFAULT;
@@ -102,6 +103,7 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
   case LSCPCIE_IOCTL_GET_REG16:
     PDEBUG(D_IOCTL, "ioctl get register 16\n");
     result = get_user(reg_info.address, &((reg_info_t __user*)arg)->address);
+    if (result) result = -EFAULT;
     val32 = readw(dev->mapped_pci_base + reg_info.address);
     result = put_user(val32, &((reg_info_t __user *)arg)->value);
     if (result) result = -EFAULT;
@@ -110,6 +112,7 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
   case LSCPCIE_IOCTL_GET_REG32:
     PDEBUG(D_IOCTL, "ioctl get register 32\n");
     result = get_user(reg_info.address, &((reg_info_t __user*)arg)->address);
+    if (result) result = -EFAULT;
     val32 = readl(dev->mapped_pci_base + reg_info.address);
     result = put_user(val32, &((reg_info_t __user *)arg)->value);
     if (result) result = -EFAULT;
@@ -121,6 +124,8 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
       = copy_from_user(&reg_info, (reg_info_t __user*)arg, sizeof(reg_info_t));
     if (result) result = -EFAULT;
     else iowrite8(reg_info.value, dev->mapped_pci_base + reg_info.address);
+    PDEBUG(D_IOCTL, "at address 0x%p\n",
+	   dev->mapped_pci_base + reg_info.address);
     break;
 
   case LSCPCIE_IOCTL_SET_REG16:

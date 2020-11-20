@@ -499,7 +499,7 @@ void start_pcie_dma_write(uint dev) {
 /*                              register access                                */
 /*******************************************************************************/
 
-int lscpcie_read_config32(uint dev, uint8_t address, uint32_t *val) {
+int lscpcie_read_config32(uint dev, uint16_t address, uint32_t *val) {
   int result;
   reg_info_t reg = { .address = address };
 
@@ -511,7 +511,7 @@ int lscpcie_read_config32(uint dev, uint8_t address, uint32_t *val) {
   return 0;
 }
 
-int lscpcie_write_config32(uint dev, uint8_t address, uint32_t val) {
+int lscpcie_write_config32(uint dev, uint16_t address, uint32_t val) {
   reg_info_t reg = { .address = address, .value = val };
 
   if (dev >= number_of_pcie_boards) return -ENODEV;
@@ -519,7 +519,7 @@ int lscpcie_write_config32(uint dev, uint8_t address, uint32_t val) {
   return ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_SET_CONF, &reg);
 }
 
-int lscpcie_read_reg8(uint dev, uint8_t address, uint8_t *val) {
+int lscpcie_read_reg8(uint dev, uint16_t address, uint8_t *val) {
   int result;
   reg_info_t reg = { .address = address };
 
@@ -531,7 +531,7 @@ int lscpcie_read_reg8(uint dev, uint8_t address, uint8_t *val) {
   return 0;
 }
 
-int lscpcie_read_reg16(uint dev, uint8_t address, uint16_t *val) {
+int lscpcie_read_reg16(uint dev, uint16_t address, uint16_t *val) {
   int result;
   reg_info_t reg = { .address = address };
 
@@ -543,7 +543,7 @@ int lscpcie_read_reg16(uint dev, uint8_t address, uint16_t *val) {
   return 0;
 }
 
-int lscpcie_read_reg32(uint dev, uint8_t address, uint32_t *val) {
+int lscpcie_read_reg32(uint dev, uint16_t address, uint32_t *val) {
   int result;
   reg_info_t reg = { .address = address };
 
@@ -555,7 +555,7 @@ int lscpcie_read_reg32(uint dev, uint8_t address, uint32_t *val) {
   return 0;
 }
 
-int lscpcie_write_reg8(uint dev, uint8_t address, uint8_t val) {
+int lscpcie_write_reg8(uint dev, uint16_t address, uint8_t val) {
   reg_info_t reg = { .address = address, .value = val };
 
   if (dev >= number_of_pcie_boards) return -ENODEV;
@@ -563,7 +563,7 @@ int lscpcie_write_reg8(uint dev, uint8_t address, uint8_t val) {
   return ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_SET_REG8, &reg);
 }
 
-int lscpcie_write_reg16(uint dev, uint8_t address, uint16_t val) {
+int lscpcie_write_reg16(uint dev, uint16_t address, uint16_t val) {
   reg_info_t reg = { .address = address, .value = val };
 
   if (dev >= number_of_pcie_boards) return -ENODEV;
@@ -571,7 +571,7 @@ int lscpcie_write_reg16(uint dev, uint8_t address, uint16_t val) {
   return ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_SET_REG16, &reg);
 }
 
-int lscpcie_write_reg32(uint dev, uint8_t address, uint32_t val) {
+int lscpcie_write_reg32(uint dev, uint16_t address, uint32_t val) {
   reg_info_t reg = { .address = address, .value = val };
 
   if (dev >= number_of_pcie_boards) return -ENODEV;
@@ -579,7 +579,7 @@ int lscpcie_write_reg32(uint dev, uint8_t address, uint32_t val) {
   return ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_SET_REG32, &reg);
 }
 
-int lscpcie_set_bits_reg8(uint dev, uint8_t address, uint8_t bits,
+int lscpcie_set_bits_reg8(uint dev, uint16_t address, uint8_t bits,
                           uint8_t mask) {
   int result;
   uint8_t value;
@@ -589,7 +589,7 @@ int lscpcie_set_bits_reg8(uint dev, uint8_t address, uint8_t bits,
   return lscpcie_write_reg8(dev, address, (value & ~mask) | (bits & mask));
 }
 
-int lscpcie_set_bits_reg16(uint dev, uint8_t address, uint16_t bits,
+int lscpcie_set_bits_reg16(uint dev, uint16_t address, uint16_t bits,
                            uint32_t mask) {
   int result;
   uint16_t value;
@@ -598,7 +598,7 @@ int lscpcie_set_bits_reg16(uint dev, uint8_t address, uint16_t bits,
   return lscpcie_write_reg16(dev, address, (value & ~mask) | (bits & mask));
 }
 
-int lscpcie_set_bits_reg32(uint dev, uint8_t address, uint32_t bits,
+int lscpcie_set_bits_reg32(uint dev, uint16_t address, uint32_t bits,
                            uint32_t mask) {
   int result;
   uint32_t value;
