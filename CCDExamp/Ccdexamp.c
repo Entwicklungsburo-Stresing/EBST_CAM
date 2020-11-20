@@ -595,6 +595,8 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 	int j = 0;
 	int xPos = GetCursorPosition();
 	int yVal = DisplData[0][xPos];// YVal(1, xPos);
+	double mwf = 0.0;
+	double trms = 0.0;
 
 	switch (uMsg)
 	{
@@ -719,15 +721,17 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 #endif
 		case IDM_START:
+
+
 			contffloop = FALSE;
 			cont_mode = FALSE;
 			if (!Running) startMess( &dummy );
+			CalcTrms(DRV, *Nospb, TRMSpix, 1, &mwf, &TRMSval[0]);
 			break;
 		case ID_START_STARTCONTINUOUSLY:
 			contffloop = TRUE;
 			cont_mode = TRUE;
-			Nob = 1; 
-			*Nospb = 10;
+
 			CALLING_WITH_NOS = TRUE;
 			CALLING_WITH_NOB = TRUE;
 			if (_IsArea)
@@ -752,7 +756,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 				}
 			}
 			if (!Running) startMess( &dummy );
-			Sleep( 100 );
+			Sleep( 10 );
 			while (Running)
 			{
 				CopytoDispbuf( cur_nob*(*Nospb) + cur_nospb );
@@ -1158,77 +1162,78 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 		break;
 
 	case WM_COMMAND:
-		switch (LOWORD( wParam ))
+		switch (LOWORD(wParam))
 		{
 		case IDC_ExtTrig:
 			//grayed exptime if exttrig is set
-			SendMessage( GetDlgItem( hDlg, IDC_M_EXPTIME ), EM_SETREADONLY, IsDlgButtonChecked( hDlg, IDC_ExtTrig ), 0L );
+			SendMessage(GetDlgItem(hDlg, IDC_M_EXPTIME), EM_SETREADONLY, IsDlgButtonChecked(hDlg, IDC_ExtTrig), 0L);
 			break;
 		case IDC_M_REPTIME:
 			//check if the summ of all roi is larger than fftlines 
 			//and write message and deactivate the ok button
 			if (_MSHUT)
 			{
-				val = GetDlgItemInt( hDlg, IDC_M_REPTIME, &success, FALSE );
+				val = GetDlgItemInt(hDlg, IDC_M_REPTIME, &success, FALSE);
 				if (success) RepTime = val;
 				if (RepTime < _MINREPTIME)
 				{
 					//write message
-					SetWindowText( GetDlgItem( hDlg, REP_ERR_MESS ), "The Reptime limit is reached.\n Please increase Rep Time or change _MINREPTIME in the code!" );
+					SetWindowText(GetDlgItem(hDlg, REP_ERR_MESS), "The Reptime limit is reached.\n Please increase Rep Time or change _MINREPTIME in the code!");
 					//disable ok button
 					//EnableWindow(GetDlgItem(hDlg, IDOK), FALSE);
 				}
 				else
 				{
 					//unshow message
-					SetWindowText( GetDlgItem( hDlg, REP_ERR_MESS ), "" );
+					SetWindowText(GetDlgItem(hDlg, REP_ERR_MESS), "");
 					//enable ok button
 					//EnableWindow(GetDlgItem(hDlg, IDOK), TRUE);
 				}
 			}
 			break;
 		case IDCANCEL:
-			EndDialog( hDlg, TRUE );
+			EndDialog(hDlg, TRUE);
 			return (TRUE);
 			break;
 
 		case IDOK:
-			
+
 			//setting trigger input modes
-			ItemIndex_S = SendMessage( GetDlgItem( hDlg, IDC_COMBO_STI ), (UINT)CB_GETCURSEL,
-				(WPARAM)0, (LPARAM)0 );
-			if(ItemIndex_S < 3)	SetSTI( choosen_board, ItemIndex_S);
-			else				SetSTI( choosen_board, ItemIndex_S + 1 );
-			ItemIndex_B = SendMessage( GetDlgItem( hDlg, IDC_COMBO_BTI ), (UINT)CB_GETCURSEL,
-				(WPARAM)0, (LPARAM)0 );
-			SetBTI( choosen_board, ItemIndex_B);
-			
+			ItemIndex_S = SendMessage(GetDlgItem(hDlg, IDC_COMBO_STI), (UINT)CB_GETCURSEL,
+				(WPARAM)0, (LPARAM)0);
+			if (ItemIndex_S < 3)	SetSTI(choosen_board, ItemIndex_S);
+			else				SetSTI(choosen_board, ItemIndex_S + 1);
+			ItemIndex_B = SendMessage(GetDlgItem(hDlg, IDC_COMBO_BTI), (UINT)CB_GETCURSEL,
+				(WPARAM)0, (LPARAM)0);
+			SetBTI(choosen_board, ItemIndex_B);
+
 			//setting exp time and rep time
-			val = GetDlgItemInt( hDlg, IDC_M_EXPTIME, &success, FALSE );
+			val = GetDlgItemInt(hDlg, IDC_M_EXPTIME, &success, FALSE);
 			if (success) ExpTime = val;
-			SetSTimer( choosen_board, ExpTime );
-			val = GetDlgItemInt( hDlg, IDC_M_REPTIME, &success, FALSE );
+			SetSTimer(choosen_board, ExpTime);
+			val = GetDlgItemInt(hDlg, IDC_M_REPTIME, &success, FALSE);
 			if (success) RepTime = val;
-			SetBTimer( choosen_board, RepTime * 1000 );
+			SetBTimer(choosen_board, RepTime * 1000);
 
 			//Setting DAT Registers
-			val = GetDlgItemInt( hDlg, IDC_SDAT, &success, FALSE );
+			val = GetDlgItemInt(hDlg, IDC_SDAT, &success, FALSE);
 			if (success) sdat = val;
-			if (sdat) SetSDAT( choosen_board, sdat );
-			else ResetSDAT( choosen_board );
-			val = GetDlgItemInt( hDlg, IDC_BDAT, &success, FALSE );
+			if (sdat) SetSDAT(choosen_board, sdat);
+			else ResetSDAT(choosen_board);
+			val = GetDlgItemInt(hDlg, IDC_BDAT, &success, FALSE);
 			if (success) bdat = val;
-			if (sdat) SetBDAT( choosen_board, bdat );
-			else ResetBDAT( choosen_board );
+			if (bdat) SetBDAT(choosen_board, bdat);
+			else ResetBDAT(choosen_board);
 
 			//Setting EC Registers
-			val = GetDlgItemInt( hDlg, IDC_SEC, &success, FALSE );
+			val = GetDlgItemInt(hDlg, IDC_SEC, &success, FALSE);
 			if (success) sec = val;
-			if (sdat) SetSEC( choosen_board, sec );
+			if (sec){ SetSEC(choosen_board, sec);}
 			else ResetSEC( choosen_board );
+
 			val = GetDlgItemInt( hDlg, IDC_BEC, &success, FALSE );
 			if (success) bec = val;
-			if (sdat) SetBEC( choosen_board, bec );
+			if (bec) SetBEC( choosen_board, bec );
 			else ResetBEC( choosen_board );
 			
 			//setting slopes
@@ -1543,12 +1548,12 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 	BYTE dbyte = 0;
 	UINT32 longval = 0;
 	BOOL success = FALSE;
-	TCHAR TOR_Outputs[13][14] =
+	TCHAR TOR_Outputs[16][14] =
 	{
-		TEXT("XCKI"), TEXT("Register"), TEXT("TOCNTO"), TEXT("XCKDelay"),
-		TEXT("DMA Write Act"), TEXT("INTTRIGO"), TEXT("DATO"), TEXT("BTrigO"),
-		TEXT("INTSRO"), TEXT("OPT1"), TEXT("OPT2"), TEXT("BlockOn"),
-		TEXT("Measure On")
+		TEXT("XCK"), TEXT("Register"), TEXT("VON"), TEXT("DMA_ACT"),
+		TEXT("ASLS"), TEXT("STIMER"), TEXT("BTIMER"), TEXT("ISR_ACT"),
+		TEXT("S1"), TEXT("S2"), TEXT("BLOCKON"), TEXT("MEASUREON"),
+		TEXT("SDAT"),TEXT("BDAT"),TEXT("SSHUT"),TEXT("BSHUT")
 	};
 	TCHAR A[16];
 	int  k = 0;
@@ -1558,7 +1563,7 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 	case WM_INITDIALOG:
 		//for comboboxes:
 		memset(&A, 0, sizeof(A));
-		for (k = 0; k <= 12; k += 1)
+		for (k = 0; k <= 15; k += 1)
 		{
 			strcpy_s(A, sizeof(A) / sizeof(TCHAR), (TCHAR*)TOR_Outputs[k]);
 
@@ -1592,20 +1597,7 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 			m_TOmodus = SendMessage(GetDlgItem(hDlg, IDC_COMBO_TOR), (UINT)CB_GETCURSEL,
 				(WPARAM)0, (LPARAM)0);
 
-			//			EXTTRIGFLAG= IsDlgButtonChecked(hDlg,IDC_ExtTrig);
-						//get DAT value
-			longval = GetDlgItemInt( hDlg, IDC_SETDAT, &success, FALSE );
-			if (success)
-			{
-				tDAT = longval;
-				longval = tDAT;
-				if (longval != 0) longval |= 0x80000000;
-#ifndef _DLL
-				WriteLongS0( choosen_board, longval, 0x20 ); // DAT reg
-#else
-				DLLWriteLongS0( choosen_board, longval, 0x20 ); // DAT reg
-#endif
-			}
+
 			//get XCKDLY val
 			longval = GetDlgItemInt( hDlg, IDC_SETXDLY, &success, FALSE );
 			if (success)
@@ -1614,9 +1606,9 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 				longval = tXDLY;
 				if (longval != 0) longval |= 0x80000000;
 #ifndef _DLL
-				WriteLongS0( choosen_board, longval, 0x24 ); // DAT reg
+				WriteLongS0( choosen_board, longval, 0x74 ); // XDLY reg
 #else
-				DLLWriteLongS0( choosen_board, longval, 0x24 ); // DAT reg
+				DLLWriteLongS0( choosen_board, longval, 0x74 ); // XDLY reg
 #endif
 			}
 			val = GetDlgItemInt( hDlg, IDC_SETTCNT, &success, FALSE );
