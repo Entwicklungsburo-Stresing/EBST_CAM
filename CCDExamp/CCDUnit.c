@@ -6,7 +6,6 @@ volatile int testcnt = 0;
 UINT choosen_board = 1;
 BOOL both_boards = FALSE;
 BOOL cont_mode = FALSE;
-double TRMSval[2];
 
 /*
 void GetRmsVal(BYTE ch, ULONG nos)
@@ -163,6 +162,7 @@ void Display(unsigned long db, BOOL Plot)
 				SetPixelV(hMSDC, LOX + i, y2, pencolor);
 			};
 	}
+
 };
 
 void CopytoDispbuf(ULONG scan)
@@ -441,20 +441,18 @@ void initMeasurement()
 	//WDC_Err(choosen_board);
 #ifdef _DLL
 	DLLStopFFTimer(choosen_board);
-	DLLSetIntTrig(choosen_board);
 	DLLRSFifo(choosen_board);
 	gain = 6;
 	DLLSetADGain(choosen_board, 1, gain, gain, gain, gain, gain, gain, gain, gain); //set gain to values g1..g8 in Board.C
 	if (both_boards)
 	{
 		DLLStopFFTimer(2);
-		DLLSetIntTrig(2);
 		DLLRSFifo(2);
 		//setups
 		//SetupDELAY(choosen_board,DELAYini);	//init WRFIFO delay
 		DLLRsTOREG(2); // reset TOREG
 		//set TrigOut, default= XCK
-		DLLSetTORReg(2, 0);
+		DLLSetTORReg(2, m_TOmodus);
 		gain = 6;
 		DLLSetADGain(2, 1, gain, gain, gain, gain, gain, gain, gain, gain);
 	}
@@ -479,11 +477,11 @@ void initMeasurement()
 		CloseShutter(choosen_board);
 		SetSEC(choosen_board, ExpTime * 100);
 
-		SetTORReg(choosen_board, 15);
+		SetTORReg(choosen_board, 14); //use SHUT
 	}
 	else { 
 		ResetSEC(choosen_board);
-		SetTORReg(choosen_board, 0);
+		SetTORReg(choosen_board, m_TOmodus);
 	}
 	//set TrigOut, default= XCK
 	StopSTimer(choosen_board);
@@ -497,7 +495,7 @@ void initMeasurement()
 		//setups
 		//SetupDELAY(choosen_board,DELAYini);	//init WRFIFO delay
 		//set TrigOut, default= XCK
-		SetTORReg(2, 0);
+		SetTORReg(2, m_TOmodus);
 	}
 #endif
 }
