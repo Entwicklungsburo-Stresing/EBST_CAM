@@ -92,6 +92,8 @@ int main(void) {
 
   device_descriptor->dma_reg->DDMACR |= (1<<DDMACR_START_DMA_WRT);
 
+  lscpcie_dump_dma(0);
+
   do
     result = device_descriptor->s0->XCK.dword & (1<<XCK_RS);
   while (result);
