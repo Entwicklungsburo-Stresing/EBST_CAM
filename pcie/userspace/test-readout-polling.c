@@ -83,14 +83,22 @@ int main(void) {
     goto finish;
   }
 
+  device_descriptor->s0->CTRLB = 0x44;
+  device_descriptor->s0->BTIMER = 0x8000c350;
+  device_descriptor->s0->PCIEFLAGS |= 0x20;
+  device_descriptor->s0->BDAT = 123;
+  device_descriptor->s0->BEC = 0x1;
+  device_descriptor->s0->BFLAGS = 0x1;
   int exptime = 100;
-  // >>> start ff timer
+  // >>> start Stimer
   device_descriptor->s0->XCK.dword
     = (device_descriptor->s0->XCK.dword & ~XCK_EC_MASK) | (exptime & XCK_EC_MASK)
-    | (1<<XCK_RS);
-  // << start ff timer
+    | (1<<XCK_RS) | 1<<31;
+  // << start Stimer
 
   device_descriptor->dma_reg->DDMACR |= (1<<DDMACR_START_DMA_WRT);
+  lscpcie_dump_s0(0);
+  lscpcie_dump_dma(0);
 
   lscpcie_dump_dma(0);
 

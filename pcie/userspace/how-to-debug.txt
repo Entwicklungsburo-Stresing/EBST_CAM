@@ -1,0 +1,2 @@
+./camera-debug --start-stop --readout --interrupt --buffers --ioctl --module
+watch -n1 'sudo journalctl | grep lscpcie | tail -n100'

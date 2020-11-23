@@ -12,3 +12,6 @@ test-read-write
 test-register
 test-readout-polling
 camera-debug
+stop-camera
+*.so*
+.vscode/

@@ -1,4 +1,4 @@
-/* lscpci.c
+/* lscpcie.c
  *
  * Copyright 2020 Bernhard Lang, University of Geneva
  * Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
@@ -199,8 +199,7 @@ int lscpcie_open(uint dev, uint16_t options) {
     dev_descr[dev].s0->CTRLA = 0x23;
     dev_descr[dev].s0->CTRLB = 0;
     dev_descr[dev].s0->CTRLC = 0;
-    dev_descr[dev].s0->PIXREGlow
-      = dev_descr[dev].control->number_of_pixels & 0xFFFF;
+    dev_descr[dev].s0->PIXREG = dev_descr[dev].control->number_of_pixels;
     dev_descr[dev].s0->CAM_CNT = dev_descr[dev].control->number_of_cameras & 0xF;
 
     // initialise number of pixels and clock scheme
@@ -351,7 +350,7 @@ int lscpcie_send_fiber(uint dev, uint8_t master_address,
   dev_descr[dev].s0->DBR = reg_val | 0x4000000;
   memory_barrier();
   dev_descr[dev].s0->DBR = 0;
-
+  usleep(1000);
   return 0;
 }
 
@@ -615,54 +614,90 @@ int lscpcie_set_bits_reg32(uint dev, uint16_t address, uint32_t bits,
 int lscpcie_dump_s0(uint dev) {
   int i;
   uint32_t data = 0;
-  char register_names[32][30] = {
-    "DBR \t",
-    "CTRLA \t",
-    "XCKLL \t",
-    "XCKCNTLL",
-    "PIXREG \t",
+  enum N { number_of_registers = 41 };
+  char register_names[number_of_registers][30] = {
+    "DBR \t\t",
+    "CTRLA \t\t",
+    "XCKLL \t\t",
+    "XCKCNTLL\t",
+    "PIXREG \t\t",
     "FIFOCNT \t",
-    "VCLKCTRL",
-    "'EBST' \t",
-    "DAT \t",
-    "XDLY \t",
-    "TOR \t",
-    "ARREG \t",
-    "GIOREG \t",
-    "nc\t ",
-    "IRQREG \t",
+    "VCLKCTRL\t",
+    "'EBST' \t\t",
+    "DAT \t\t",
+    "EC \t\t",
+    "TOR \t\t",
+    "ARREG \t\t",
+    "GIOREG \t\t",
+    "nc\t\t",
+    "IRQREG\t\t",
     "PCI board version",
-    "R0 PCIEFLAGS",
-    "R1 NOS\t",
-    "R2 SCANINDEX",
-    "R3 DMABUFSIZE",
-    "R4 DMASPERINTR",
-    "R5 BLOCKS",
-    "R6 BLOCKINDEX",
-    "R7 CAMCNT",
-    "R8 \t",
-    "R9 TRIGCNT",
-    "R10 \t",
-    "R11 \t",
-    "R12 \t",
-    "R13 TIMEMEAS",
-    "R14 \t ",
-    "R15 \t"
-  };
+    "R0 PCIEFLAGS\t",
+    "R1 NOS\t\t",
+    "R2 SCANINDEX\t",
+    "R3 DMABUFSIZE\t",
+    "R4 DMASPERINTR\t",
+    "R5 BLOCKS\t",
+    "R6 BLOCKINDEX\t",
+    "R7 CAMCNT\t",
+    "R8 GPX Ctrl\t",
+    "R9 GPX Data\t",
+    "R10 ROI 0\t",
+    "R11 ROI 1\t",
+    "R12 ROI 2\t",
+    "R13 XCKDLY\t",
+    "R14 ADSC\t",
+    "R15 LDSC\t",
+    "R16 BTimer\t",
+    "R17 BDAT\t",
+    "R18 BEC\t\t",
+    "R19 BFLAGS\t",
+    "R20 TR1\t\t",
+    "R21 TR2\t\t",
+    "R22 TR3\t\t",
+    "R23 TR4\t\t",
+    "R24 TR5\t\t"
+	}; //Look-Up-Table for the S0 Registers
 
   printf("S0- registers   \n" );
 
-  for (i = 0; i <= 31; i++) {
+  for (i = 0; i < number_of_registers; i++) {
     lscpcie_read_s0_32(dev, i * 4, &data);
     printf("%s \t: 0x%08x\n", register_names[i], data);
   }
-
-  return lscpcie_dump_tlp(dev);
+  return 0;
+  //crashing when doing this:
+  //return lscpcie_dump_tlp(dev);
 }
 
 int lscpcie_dump_dma(uint dev) {
-  printf("not yet implemented\n");
-
+  uint32_t data = 0;
+  enum N { number_of_registers = 18 };
+	char register_names[number_of_registers][20] = {
+		"DCSR\t",
+		"DDMACR\t",
+		"WDMATLPA",
+		"WDMATLPS",
+		"WDMATLPC",
+		"WDMATLPP",
+		"RDMATLPP",
+		"RDMATLPA",
+		"RDMATLPS",
+		"RDMATLPC",
+		"WDMAPERF",
+		"RDMAPERF",
+		"RDMASTAT",
+		"NRDCOMP\t",
+		"RCOMPDSIZW",
+		"DLWSTAT\t",
+		"DLTRSSTAT",
+		"DMISCCONT"
+	}; //Look-Up-Table for the DMA Registers
+  printf("DMA registers\n");
+  for (int i = 0; i < number_of_registers; i++) {
+    lscpcie_read_dma_32(dev, i * 4, &data);
+    printf("%s \t: 0x%08x\n", register_names[i], data);
+  }
   return 0;
 }
 
