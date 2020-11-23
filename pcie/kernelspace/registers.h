@@ -281,14 +281,9 @@ typedef struct {
     } bytes;
   } XCK;
   uint32_t XCKCNT;
-  union {
-    uint32_t dword;
-    struct {
-      uint16_t PIXREG;
-      uint8_t BTRIGREG;
-      uint8_t FF_FLAGS;
-    } bytes;
-  } PIXREG;
+  uint16_t PIXREG;
+  uint8_t BTRIGREG;
+  uint8_t FF_FLAGS;
   uint32_t FIFOCNT;
   uint32_t VCLKCTRL;
   uint32_t EBST;
