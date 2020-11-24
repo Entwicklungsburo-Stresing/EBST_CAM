@@ -351,8 +351,8 @@ typedef struct {
   uconst uint32_t buffer_size;
   uconst uint64_t dma_physical_start;
   uconst uint32_t io_size;
-  volatile uint32_t write_pos;
-  uint32_t read_pos;
+  volatile int32_t write_pos;
+  int32_t read_pos;
   uint32_t number_of_blocks;
 } lscpcie_control_t;
 
