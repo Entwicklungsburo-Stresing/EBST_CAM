@@ -1,5 +1,6 @@
 #include <stdint.h> // for types, get this into types.h with kernel flag 
 #include "../kernelspace/ioctl.h"
+#include "constants.h"
 #include "types.h"
 #include <stdio.h>
 #include <stdint.h>
@@ -26,11 +27,15 @@ int main(void) {
     perror(0);
   }
 
-  result = ioctl(handle, LSCPCIE_IOCTL_SET_DEBUG, 0xFFFF);
-  if (result) {
+  /*
+  result = ioctl(handle, LSCPCIE_IOCTL_SET_DEBUG,
+                 (DEBUG_BITS<<DEBUG_MASK_SHIFT) | D_BUFFERS | D_READOUT);
+
+  if (result < 0) {
     fprintf(stderr, "error %d on ioctl call for setting debug flags\n", result);
     return result;
   }
+  */
 
   uint16_t buffer[1200];
 

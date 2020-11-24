@@ -17,10 +17,21 @@ tests: $(tests)
 
 debug: camera-debug
 
-all: library tests debug stop-camera
+all: library tests debug stop-camera links
 
 liblscpcie.so.1.0.0: lscpcie.o
 	gcc $(CFLAGS) $^ -shared -Wl,-soname,liblscpcie.so.1 -o $@
+
+links: liblscpcie.so.1.0 liblscpcie.so.1 liblscpcie.so
+
+liblscpcie.so.1.0:
+	ln -s $@.0 $@
+
+liblscpcie.so.1:
+	ln -s $@.0.0 $@
+
+liblscpcie.so:
+	ln -s $@.1.0.0 $@
 
 lscpcie.o: lscpcie.h ../kernelspace/ioctl.h
 
