@@ -48,7 +48,7 @@ typedef enum { xck = 0, exttrig = 1, dat = 2 } trigger_mode_t;
 #define CAMERA_ADDRESS_TRIGGER_IN 0x02
 #define CAMERA_ADDRESS_VCLK       0x04
 
-#define SET_BITS(var, val, mask) var = (var & ~mask) | (var & mask)
+#define SET_BITS(var, val, mask) var = (var & ~mask) | (val & mask)
 
 // camera operations
 int lscpcie_driver_init(void);

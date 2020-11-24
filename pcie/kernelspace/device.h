@@ -32,9 +32,8 @@ struct dev_struct {
   u8 status;
   u32 physical_pci_base;
   void __iomem *mapped_pci_base;
-  u8 *dma_mem, *dma_buffer;
-  dma_addr_t dma_bus_address;
-  dma_addr_t dma_bus_start;
+  dma_addr_t dma_handle;
+  void *dma_virtual_mem;
   u32 dma_mem_size;
   lscpcie_control_t *control;
   uint32_t scans_per_interrupt;
