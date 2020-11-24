@@ -57,18 +57,20 @@ int dma_init(struct dev_struct *dev) {
     dev->dma_virtual_mem
       = dma_alloc_coherent(pdev, dev->dma_mem_size, &dev->dma_handle,
 			   GFP_KERNEL);
+    dev->control->dma_physical_start = (u64) dev->dma_handle;
   } else {/* no dma features needed in debug mode */
     PDEBUG(D_BUFFERS, "allocating %d bytes of kernel memory for debugging\n",
            dev->dma_mem_size);
     dev->dma_virtual_mem = kmalloc(dev->dma_mem_size, GFP_KERNEL);
 #warning set pages reserved
-    dev->control->dma_physical_start = (u64) dev->dma_handle;
   }
 
   if (!dev->dma_virtual_mem) {
     printk(KERN_ERR NAME": failed to allocate dma memory\n");
     return -ENOMEM;
   }
+
+  dev->control->buffer_size = dev->dma_mem_size;
 
   PDEBUG(D_BUFFERS, "dma initialised\n");
 
