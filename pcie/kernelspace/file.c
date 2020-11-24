@@ -174,7 +174,7 @@ ssize_t lscpcie_write(struct file *filp, const char __user *buf, size_t len,
     size_t bytes_to_copy = dev->control->buffer_size - dev->control->write_pos;
     PDEBUG(D_READOUT, "copying %lu bytes to %d (a)\n", bytes_to_copy,
            dev->control->write_pos);
-    if (copy_from_user(dev->dma_buffer + dev->control->write_pos, buf,
+    if (copy_from_user(dev->dma_virtual_mem + dev->control->write_pos, buf,
                        bytes_to_copy)) {
       printk(KERN_ERR NAME " \"%s\" EFAULT\n", current->comm);
       up(&dev->write_sem);
@@ -192,7 +192,7 @@ ssize_t lscpcie_write(struct file *filp, const char __user *buf, size_t len,
     PDEBUG(D_READOUT, "copying %lu bytes to %d (b)\n", len,
            dev->control->write_pos);
 
-    if (copy_from_user(dev->dma_buffer + dev->control->write_pos,
+    if (copy_from_user(dev->dma_virtual_mem + dev->control->write_pos,
                        buf + copied_bytes, len)) {
       printk(KERN_ERR NAME " \"%s\" EFAULT\n", current->comm);
       up(&dev->write_sem);
@@ -213,7 +213,7 @@ ssize_t lscpcie_write(struct file *filp, const char __user *buf, size_t len,
 ssize_t read_chunk(struct dev_struct *dev, size_t len, char __user *buf)
 {
   PDEBUG(D_READOUT, "reading: copying DMA data\n");
-  if (copy_to_user(buf, dev->dma_buffer + dev->control->read_pos, len)) {
+  if (copy_to_user(buf, dev->dma_virtual_mem + dev->control->read_pos, len)) {
     printk(KERN_ERR NAME " \"%s\" EFAULT\n", current->comm);
     return -EFAULT;
   }

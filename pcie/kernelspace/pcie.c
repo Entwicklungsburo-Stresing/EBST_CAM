@@ -26,24 +26,6 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 
   if ((result = pci_enable_device(pci_dev)) < 0) return result;
 
-  for (i = 0; i < MAX_BOARDS; i++)
-    if (lscpcie_devices[i].minor < 0) break;
-  if (i == MAX_BOARDS) return -ENOMEM;
-
-  dev = &lscpcie_devices[i];
-  if ((result = device_init(dev, i)) < 0) {
-    pci_disable_device(pci_dev);
-    return result;
-  }
-
-  pci_set_drvdata(pci_dev, dev);
-
-  dev->pci_dev = pci_dev;
-  dev->status |= HARDWARE_PRESENT;
-  proc_init(dev);
-
-  PDEBUG(D_PCI, "lscpcie board found, assigned minor device number 0\n");
-
   /* check for correct vendor / device and subsystem */
   result = pci_read_config_word(pci_dev, PCI_VENDOR_ID, &word);
   assert(!result, "couldn't read pci vendor id", -1);
@@ -58,6 +40,19 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
   assert(!result, "couldn't read pci subsystem id", -1);
   assert(word == SUBSYSTEM_DEVICE_ID, "wrong subsystem id", -1);
 
+  for (i = 0; i < MAX_BOARDS; i++)
+    if (lscpcie_devices[i].minor < 0) break;
+  if (i == MAX_BOARDS) return -ENOMEM;
+  dev = &lscpcie_devices[i];
+
+  dev->status |= HARDWARE_PRESENT;
+  dev->pci_dev = pci_dev;
+
+  if ((result = device_init(dev, i)) < 0) {
+    pci_disable_device(pci_dev);
+    return result;
+  }
+
   dev->physical_pci_base = pci_resource_start(pci_dev, 2);
   dev->control->io_size = pci_resource_len(pci_dev, 2);
   dev->mapped_pci_base
@@ -65,6 +60,12 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
   assert(dev->mapped_pci_base != 0, "ioremap of address space failed", -1);
   printk(KERN_WARNING NAME": mapped address space 2 to %p\n",
          dev->mapped_pci_base);
+
+  pci_set_drvdata(pci_dev, dev);
+  proc_init(dev);
+
+  PDEBUG(D_PCI, "lscpcie board found, assigned minor device number %d\n",
+	 dev->minor);
 
   return 0;
 }

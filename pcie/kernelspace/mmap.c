@@ -57,7 +57,7 @@ int mmap_register_remap_mmap(struct file *filp, struct vm_area_struct *vma)
     PDEBUG(D_MMAP, "ram remap with 0x%08lx for dma\n", vma->vm_start);
 
     if (remap_pfn_range(vma, vma->vm_start,
-			virt_to_phys((void*)dev->dma_buffer) >> PAGE_SHIFT,
+			virt_to_phys((void*)dev->dma_virtual_mem) >> PAGE_SHIFT,
                         dev->control->buffer_size, vma->vm_page_prot))
       return -EAGAIN;
     break;

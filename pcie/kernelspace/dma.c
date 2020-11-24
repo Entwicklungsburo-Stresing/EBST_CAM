@@ -27,7 +27,6 @@ void set_bits_s0(struct dev_struct *dev, u8 address, u8 bits, u8 mask)
 
 int dma_init(struct dev_struct *dev) {
   struct device *pdev = dev->status & HARDWARE_PRESENT ? &dev->pci_dev->dev : 0;
-  unsigned long dma_page_offset, dma_buffer_offset;
   int num_dma_pages;
   int dev_no = get_device_number(dev);
 
@@ -77,46 +76,23 @@ int dma_init(struct dev_struct *dev) {
 
   PDEBUG(D_BUFFERS, "need %d bytes for dma\n", dev->dma_mem_size);
 
-  if (dev->status & HARDWARE_PRESENT)
-    dev->dma_mem
-      = dma_alloc_coherent(pdev, dev->dma_mem_size,
-                           &dev->control->dma_physical_start, GFP_KERNEL);
-  else /* no dma features needed in debug mode */
-    dev->dma_mem = kmalloc(dev->dma_mem_size, GFP_KERNEL);
+  if (dev->status & HARDWARE_PRESENT) {
+    PDEBUG(D_BUFFERS, "allocating %d bytes of dma memory\n",
+           dev->dma_mem_size);
+    dev->dma_virtual_mem
+      = dma_alloc_coherent(pdev, dev->dma_mem_size, &dev->dma_handle,
+			   GFP_KERNEL);
+  } else /* no dma features needed in debug mode */
+    dev->dma_virtual_mem = kmalloc(dev->dma_mem_size, GFP_KERNEL);
 
-  if (!dev->dma_mem) {
+  if (!dev->dma_virtual_mem) {
     printk(KERN_ERR NAME": failed to allocate dma memory\n");
     return -ENOMEM;
   }
 
 #warning set pages reserved
 
-  /* get the dma buffer start to a page boundary */
-  if (dev->status & HARDWARE_PRESENT) {
-    PDEBUG(D_BUFFERS, "allocated %d bytes of dma memory\n",
-           dev->dma_mem_size);
-    dma_page_offset = dev->dma_bus_address & (PAGE_SIZE-1);
-  } else {
-    PDEBUG(D_BUFFERS,
-	   "allocated %d bytes of kernel memory for debugging purposes\n",
-	   dev->dma_mem_size);
-    dma_page_offset = virt_to_phys(dev->dma_mem) & (PAGE_SIZE-1);
-  }
-
-  if (dma_page_offset)
-    dma_buffer_offset
-      = (unsigned long) dev->dma_mem + PAGE_SIZE - dma_page_offset;
-  else
-    dma_buffer_offset = 0;
-
-  dev->dma_buffer = dev->dma_mem + dma_buffer_offset;
-  dev->control->dma_physical_start
-    = dev->dma_bus_address + dma_buffer_offset;
-
-  PDEBUG(D_BUFFERS, "got %d bytes of dma memory at %p (offset %ld)\n",
-         dev->control->buffer_size, dev->dma_mem, dma_buffer_offset);
-
-  PDEBUG(D_BUFFERS, "getting single page for info buffer\n");
+  dev->control->dma_physical_start = (u64) dev->dma_handle;
 
   PDEBUG(D_BUFFERS, "dma initialised\n");
 
@@ -125,12 +101,15 @@ int dma_init(struct dev_struct *dev) {
 
 /* release dma buffer */
 void dma_finish(struct dev_struct *dev) {
-  if (dev->dma_mem) {
-    if (dev->status & HARDWARE_PRESENT)
-      dma_free_coherent(&dev->pci_dev->dev, dev->dma_mem_size, dev->dma_mem,
-                        dev->dma_bus_address);
-    else
-      kfree(dev->dma_mem);
+  if (dev->dma_virtual_mem) {
+    if (dev->status & HARDWARE_PRESENT) {
+      PDEBUG(D_BUFFERS, "freeing dma buffer");
+      dma_free_coherent(&dev->pci_dev->dev, dev->dma_mem_size,
+			dev->dma_virtual_mem, dev->dma_handle);
+    } else {
+      PDEBUG(D_BUFFERS, "freeing debug buffer");
+      kfree(dev->dma_virtual_mem);
+    }
   }
 }
 

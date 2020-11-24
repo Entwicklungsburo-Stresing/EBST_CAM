@@ -100,8 +100,6 @@ int main(void) {
   lscpcie_dump_s0(0);
   lscpcie_dump_dma(0);
 
-  lscpcie_dump_dma(0);
-
   do
     result = device_descriptor->s0->XCK.dword & (1<<XCK_RS);
   while (result);

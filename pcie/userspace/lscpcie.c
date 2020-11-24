@@ -406,8 +406,9 @@ int set_dma_address_in_tlp(uint dev) {
   // WDMATLPA (Reg name): write the lower part (bit 02:31) of the DMA adress
   // to the DMA controller
   SET_BITS(dev_descr[dev].dma_reg->WDMATLPA,
-           (uint64_t) dev_descr[dev].dma_physical_address,
-           0xFFFFFFFC);
+           (uint64_t) dev_descr[dev].control->dma_physical_start, 0xFFFFFFFC);
+  printf("set WDMATLPA to physical address of dma buffer 0x%016lx\n",
+         (uint64_t) dev_descr[dev].control->dma_physical_start);
 
   //WDMATLPS: write the upper part (bit 32:39) of the address  
   val64
@@ -419,8 +420,12 @@ int set_dma_address_in_tlp(uint dev) {
   if (DMA_64BIT_EN) val64 |= 1<<19;
 
   SET_BITS(dev_descr[dev].dma_reg->WDMATLPS, val64, 0xFF081FFF);
+  printf("set WDMATLPS to 0x%016lx (0x%016lx)\n", val64, val64 & 0xFF081FFF);
+
   SET_BITS(dev_descr[dev].dma_reg->WDMATLPC, dev_descr[dev].number_of_tlps,
            0x0000FFFF);
+  printf("set WDMATLPC to 0x%08x (0x%08x)\n", dev_descr[dev].number_of_tlps,
+	 dev_descr[dev].number_of_tlps & 0x0000FFFF);
 
   return 0;
 }
