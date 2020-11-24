@@ -79,6 +79,7 @@ void remove_lscpcie(struct pci_dev *pci_dev)
   if (dev->mapped_pci_base) iounmap(dev->mapped_pci_base);
 
   pci_disable_device(pci_dev);
-  dev->status &= ~HARDWARE_PRESENT;
   device_clean_up(dev);
+
+  dev->status &= ~HARDWARE_PRESENT;
 }

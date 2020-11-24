@@ -37,30 +37,6 @@ int dma_init(struct dev_struct *dev) {
     return -ENODEV;
   }
 
-  /* get one page of ram for the control structure which is going to be
-     exported to user spcae */
-  dev->control = (lscpcie_control_t *) get_zeroed_page(GFP_KERNEL);
-  if (!dev->control) {
-    printk(KERN_ERR NAME": failed to allocate memory for control block");
-    return -ENOMEM;
-  }
-
-  /* take initial values from module parameters where present */
-  if (num_pixels[dev_no] > 0)
-    dev->control->number_of_pixels = num_pixels[dev_no];
-  else
-    dev->control->number_of_pixels = DEFAULT_NUMBER_OF_PIXELS;
-
-  if (num_cameras[dev_no] > 0)
-    dev->control->number_of_cameras = num_cameras[dev_no];
-  else
-    dev->control->number_of_cameras = DEFAULT_NUMBER_OF_CAMERAS;
-
-  if (num_scans[dev_no] > 0)
-    dev->control->number_of_scans = num_scans[dev_no];
-  else
-    dev->control->number_of_scans = DEFAULT_NUM_SCANS;
-
   /* the size of the dma buffer is taken one page size larger than necessary
      to ensure that the used buffer starts at a page boundary (needed for
      mmap export to userland) */
@@ -72,7 +48,6 @@ int dma_init(struct dev_struct *dev) {
     num_dma_pages++;
 
   dev->dma_mem_size = num_dma_pages << PAGE_SHIFT;
-  //  * dev->control->number_of_scans * sizeof(u16) + PAGE_SIZE;
 
   PDEBUG(D_BUFFERS, "need %d bytes for dma\n", dev->dma_mem_size);
 
@@ -82,17 +57,18 @@ int dma_init(struct dev_struct *dev) {
     dev->dma_virtual_mem
       = dma_alloc_coherent(pdev, dev->dma_mem_size, &dev->dma_handle,
 			   GFP_KERNEL);
-  } else /* no dma features needed in debug mode */
+  } else {/* no dma features needed in debug mode */
+    PDEBUG(D_BUFFERS, "allocating %d bytes of kernel memory for debugging\n",
+           dev->dma_mem_size);
     dev->dma_virtual_mem = kmalloc(dev->dma_mem_size, GFP_KERNEL);
+#warning set pages reserved
+    dev->control->dma_physical_start = (u64) dev->dma_handle;
+  }
 
   if (!dev->dma_virtual_mem) {
     printk(KERN_ERR NAME": failed to allocate dma memory\n");
     return -ENOMEM;
   }
-
-#warning set pages reserved
-
-  dev->control->dma_physical_start = (u64) dev->dma_handle;
 
   PDEBUG(D_BUFFERS, "dma initialised\n");
 
@@ -110,6 +86,7 @@ void dma_finish(struct dev_struct *dev) {
       PDEBUG(D_BUFFERS, "freeing debug buffer");
       kfree(dev->dma_virtual_mem);
     }
+    dev->dma_virtual_mem = 0;
   }
 }
 
