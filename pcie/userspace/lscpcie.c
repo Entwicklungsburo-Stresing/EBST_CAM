@@ -670,9 +670,7 @@ int lscpcie_dump_s0(uint dev) {
     lscpcie_read_s0_32(dev, i * 4, &data);
     printf("%s \t: 0x%08x\n", register_names[i], data);
   }
-  return 0;
-  //crashing when doing this:
-  //return lscpcie_dump_tlp(dev);
+  return lscpcie_dump_tlp(dev);
 }
 
 int lscpcie_dump_dma(uint dev) {
