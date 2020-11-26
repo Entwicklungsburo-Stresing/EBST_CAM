@@ -340,7 +340,7 @@ int lscpcie_get_buffer_pointers(uint dev, uint64_t *pointers) {
 
 int lscpcie_send_fiber(uint dev, uint8_t master_address,
                        uint8_t register_address, uint16_t data) {
-  uint32_t reg_val = (master_address << 24) | (register_address < 16) | data;
+  uint32_t reg_val = (master_address << 24) | (register_address << 16) | data;
 
   if (dev >= number_of_pcie_boards) return -ENODEV;
   if (!dev_descr[dev].s0) return -ENODEV;
