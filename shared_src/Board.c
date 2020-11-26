@@ -1798,12 +1798,8 @@ void RsTOREG( UINT32 drvno )
 
 void initReadFFLoop( UINT32 drv, UINT32 * Blocks )
 {
-	UINT32 dwdata = 0;
-	UINT32 nos = 0;
 	UINT32 val = 0;
 
-	ReadLongS0( drv, &dwdata, 0x44 ); //NOS is in reg R1
-	nos = dwdata;
 	//WDC_Err("entered DLLReadFFLoop of PCIEcard #%i\n", drv);
 	if (!DBGNOCAM)
 	{
