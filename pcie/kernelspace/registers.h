@@ -101,6 +101,14 @@ typedef enum {
 #define XCKMSB_XCK25        1
 #define XCKMSB_XCK24        0
 
+#define PCIEFLAG_XCKI       0
+#define PCIEFLAG_INTTRIG    1
+#define PCIEFLAG_ENRSTIMERHW 2
+#define PCIEFLAG_NC         3
+#define PCIEFLAG_BLOCKTRIG  4
+#define PCIEFLAG_MEASUREON  5
+#define PCIEFLAG_BLOCKON    6
+
 #define XCK_EC_MASK 0x0FFFFFFF
 #define XCK_EXT_TRIGGER  31
 #define XCK_RS           30

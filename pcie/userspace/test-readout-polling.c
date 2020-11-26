@@ -69,6 +69,14 @@ int main(void) {
   
   // >> SetIntFFTrig
   device_descriptor->s0->XCK.dword &= ~(1<<XCKMSB_EXT_TRIGGER);
+  //set measure on
+  device_descriptor->s0->PCIEFLAGS |= 1<<PCIEFLAG_MEASUREON;
+  //make pulse for blockindex counter
+  device_descriptor->s0->PCIEFLAGS |= 1<<PCIEFLAG_BLOCKTRIG;
+  memory_barrier();
+  device_descriptor->s0->PCIEFLAGS &= ~(1<<PCIEFLAG_BLOCKTRIG);
+  //set block on
+  device_descriptor->s0->PCIEFLAGS |= 1<<PCIEFLAG_BLOCKON;
 
   // and what about this? not present in board.c
   result
@@ -85,15 +93,16 @@ int main(void) {
 
   device_descriptor->s0->CTRLB = 0x44;
   device_descriptor->s0->BTIMER = 0x8000c350;
-  device_descriptor->s0->PCIEFLAGS |= 0x20;
   device_descriptor->s0->BDAT = 123;
   device_descriptor->s0->BEC = 0x1;
   device_descriptor->s0->BFLAGS = 0x1;
+  device_descriptor->s0->DMAS_PER_INTERRUPT = 0x1f4;
+  lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_PIXEL, device_descriptor[0].control->number_of_pixels);
   int exptime = 100;
   // >>> start Stimer
   device_descriptor->s0->XCK.dword
     = (device_descriptor->s0->XCK.dword & ~XCK_EC_MASK) | (exptime & XCK_EC_MASK)
-    | (1<<XCK_RS) | 1<<31;
+    | (1<<XCK_RS);
   // << start Stimer
 
   device_descriptor->dma_reg->DDMACR |= (1<<DDMACR_START_DMA_WRT);
@@ -104,7 +113,12 @@ int main(void) {
     result = device_descriptor->s0->XCK.dword & (1<<XCK_RS);
   while (result);
 
-  n = device_descriptor->control->number_of_pixels;
+  //reset measure on
+  device_descriptor->s0->PCIEFLAGS &= ~(1<<PCIEFLAG_MEASUREON);
+  //reset block on
+  device_descriptor->s0->PCIEFLAGS &= ~(1<<PCIEFLAG_BLOCKON);
+
+  n = 10; //device_descriptor->control->number_of_pixels;
   for (i = 0; i < n; i++)
     printf("%d\t%d\n", i,
            ((uint16_t*)device_descriptor->mapped_buffer)[i]);
