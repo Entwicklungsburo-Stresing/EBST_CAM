@@ -40,6 +40,26 @@ int main(void) {
   memset((uint8_t*)device_descriptor->mapped_buffer, 0,
          device_descriptor->control->buffer_size);
 
+  trigger_mode_t trigger_mode = xck;
+
+  lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_PIXEL, device_descriptor[0].control->number_of_pixels);
+  // and what about this? not present in board.c
+  result = lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_TRIGGER_IN, trigger_mode);
+  if (result < 0) return result;
+  result = lscpcie_setup_dma(0, 1);
+  if (result) {
+    fprintf(stderr, "error %d when setting up dma\n", result);
+    goto finish;
+  }
+
+  device_descriptor->s0->CTRLB = 0x44;
+  device_descriptor->s0->BTIMER = 0x8000c350;
+  device_descriptor->s0->BDAT = 123;
+  device_descriptor->s0->BEC = 0x1;
+  device_descriptor->s0->BFLAGS = 0x1;
+  device_descriptor->s0->DMAS_PER_INTERRUPT = 0x1f4;
+  device_descriptor->dma_reg->DDMACR |= (1<<DDMACR_START_DMA_WRT);
+
   //// >>>> reset_dma_counters
   device_descriptor->s0->DMAS_PER_INTERRUPT |= (1<<DMA_COUNTER_RESET);
   memory_barrier();
@@ -65,58 +85,41 @@ int main(void) {
   device_descriptor->s0->PCIEFLAGS |= (1<<PCIE_EN_RS_TIMER_HW);
   ////<<<< reset all counters
 
-  trigger_mode_t trigger_mode = xck;
-  
   // >> SetIntFFTrig
   device_descriptor->s0->XCK.dword &= ~(1<<XCKMSB_EXT_TRIGGER);
   //set measure on
   device_descriptor->s0->PCIEFLAGS |= 1<<PCIEFLAG_MEASUREON;
+  lscpcie_dump_s0(0);
+  lscpcie_dump_dma(0);
+  //if you want to implement block measurement: start loop here
+  //block trigger
+  if(!(device_descriptor->s0->CTRLA & 1<<CTRLA_TSTART)) while(!(device_descriptor->s0->CTRLA & 1<<CTRLA_TSTART));
   //make pulse for blockindex counter
   device_descriptor->s0->PCIEFLAGS |= 1<<PCIEFLAG_BLOCKTRIG;
   memory_barrier();
   device_descriptor->s0->PCIEFLAGS &= ~(1<<PCIEFLAG_BLOCKTRIG);
+  //if you want to implement block measurement: reset scan counter here
   //set block on
   device_descriptor->s0->PCIEFLAGS |= 1<<PCIEFLAG_BLOCKON;
-
-  // and what about this? not present in board.c
-  result
-    = lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_TRIGGER_IN,
-                         trigger_mode);
-  if (result < 0) return result;
-  // << SetIntTrig
-
-  result = lscpcie_setup_dma(0, 1);
-  if (result) {
-    fprintf(stderr, "error %d when setting up dma\n", result);
-    goto finish;
-  }
-
-  device_descriptor->s0->CTRLB = 0x44;
-  device_descriptor->s0->BTIMER = 0x8000c350;
-  device_descriptor->s0->BDAT = 123;
-  device_descriptor->s0->BEC = 0x1;
-  device_descriptor->s0->BFLAGS = 0x1;
-  device_descriptor->s0->DMAS_PER_INTERRUPT = 0x1f4;
-  lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_PIXEL, device_descriptor[0].control->number_of_pixels);
   int exptime = 100;
-  // >>> start Stimer
-  device_descriptor->s0->XCK.dword
-    = (device_descriptor->s0->XCK.dword & ~XCK_EC_MASK) | (exptime & XCK_EC_MASK)
-    | (1<<XCK_RS);
-  // << start Stimer
-
-  device_descriptor->dma_reg->DDMACR |= (1<<DDMACR_START_DMA_WRT);
-  lscpcie_dump_s0(0);
-  lscpcie_dump_dma(0);
-
+  //start Stimer
+  device_descriptor->s0->XCK.dword = (device_descriptor->s0->XCK.dword & ~XCK_EC_MASK) | (exptime & XCK_EC_MASK) | (1<<XCK_RS);
+  //software trigger
+  device_descriptor->s0->BTRIGREG |= 1<<FREQ_REG_SW_TRIG;
+  memory_barrier();
+  device_descriptor->s0->BTRIGREG &= ~(1<<FREQ_REG_SW_TRIG);
   do
     result = device_descriptor->s0->XCK.dword & (1<<XCK_RS);
   while (result);
-
-  //reset measure on
-  device_descriptor->s0->PCIEFLAGS &= ~(1<<PCIEFLAG_MEASUREON);
   //reset block on
   device_descriptor->s0->PCIEFLAGS &= ~(1<<PCIEFLAG_BLOCKON);
+  //if you want to implement block measurement: close loop here
+  //stop stimer
+  device_descriptor->s0->XCK.dword &= ~(1<<XCK_RS);
+  //reset measure on
+  device_descriptor->s0->PCIEFLAGS &= ~(1<<PCIEFLAG_MEASUREON);
+  //TODO: What about getlastbufpart?
+
 
   n = 10; //device_descriptor->control->number_of_pixels;
   for (i = 0; i < n; i++)
