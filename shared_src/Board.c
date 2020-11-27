@@ -1923,19 +1923,7 @@ int keyCheckForBlockTrigger( UINT32 board_sel )
 */
 void ReadFFLoop( UINT32 board_sel )
 {
-	//local declarations
-	char string[20] = "";
-	void *dummy = NULL;
-
-	BOOL	Abbruch = FALSE;
-	BOOL	Space = FALSE;
-	BOOL	StartByTrig = FALSE;
-	ULONG	lcnt = 0;
-	PUSHORT pdest;
-	BYTE	cnt = 0;
 	ULONG	Blocks;
-	int		i = 0;
-	UINT    data = 0;
 
 	if (board_sel == 1 || board_sel == 3)
 		initReadFFLoop( 1, &Blocks );
