@@ -54,8 +54,6 @@ int main(void) {
 
   device_descriptor->s0->CTRLB = 0x44;
   device_descriptor->s0->BTIMER = 0x8000c350;
-  device_descriptor->s0->BDAT = 123;
-  device_descriptor->s0->BEC = 0x1;
   device_descriptor->s0->BFLAGS = 0x1;
   device_descriptor->s0->DMAS_PER_INTERRUPT = 0x1f4;
   device_descriptor->dma_reg->DDMACR |= (1<<DDMACR_START_DMA_WRT);
@@ -89,8 +87,6 @@ int main(void) {
   device_descriptor->s0->XCK.dword &= ~(1<<XCKMSB_EXT_TRIGGER);
   //set measure on
   device_descriptor->s0->PCIEFLAGS |= 1<<PCIEFLAG_MEASUREON;
-  lscpcie_dump_s0(0);
-  lscpcie_dump_dma(0);
   //if you want to implement block measurement: start loop here
   //block trigger
   if(!(device_descriptor->s0->CTRLA & 1<<CTRLA_TSTART)) while(!(device_descriptor->s0->CTRLA & 1<<CTRLA_TSTART));
@@ -126,6 +122,8 @@ int main(void) {
     printf("%d\t%d\n", i,
            ((uint16_t*)device_descriptor->mapped_buffer)[i]);
 
+  lscpcie_dump_s0(0);
+  lscpcie_dump_dma(0);
  finish:
   lscpcie_close(0);
 
