@@ -265,8 +265,7 @@ enum cam_messages {
 };
 
 typedef struct {
-  uint8_t DBR;
-  uint8_t reserved1[3];
+  uint32_t DBR;
   uint8_t CTRLA;
   uint8_t CTRLB;
   uint8_t CTRLC;
