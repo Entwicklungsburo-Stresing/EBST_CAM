@@ -138,6 +138,23 @@ typedef enum {
 #define TOR_TO_pos          28
 #define TOR_TO_msk          (0x0F<<TOR_TO_pos)
 
+#define TOR_OUT_XCK         0x00000000
+#define TOR_OUT_REGO        0x10000000
+#define TOR_OUT_VON         0x20000000
+#define TOR_OUT_DMA_ACT     0x30000000
+#define TOR_OUT_ASLS        0x40000000
+#define TOR_OUT_STIMER      0x50000000
+#define TOR_OUT_BTIMER      0x60000000
+#define TOR_OUT_ISR_ACT     0x70000000
+#define TOR_OUT_S1          0x80000000
+#define TOR_OUT_S2          0x90000000
+#define TOR_OUT_BON         0xA0000000
+#define TOR_OUT_MEASUREON   0xB0000000
+#define TOR_OUT_SDAT        0xC0000000
+#define TOR_OUT_BDAT        0xD0000000
+#define TOR_OUT_SSHUT       0xE0000000
+#define TOR_OUT_BSHUT       0xF0000000
+
 #define EC_ECFON            31
 #define EC_NOT              30
 #define EC_DIRT             29
