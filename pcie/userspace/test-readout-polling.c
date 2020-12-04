@@ -52,12 +52,21 @@ int main(void) {
     goto finish;
   }
 
+  device_descriptor->s0->TOR = TOR_OUT_XCK;
   device_descriptor->s0->CTRLB = 0x44;
   device_descriptor->s0->BTIMER = 0x8000c350;
   device_descriptor->s0->BFLAGS = 0x1;
   device_descriptor->s0->DMAS_PER_INTERRUPT = 0x1f4;
+  device_descriptor->s0->NUMBER_OF_SCANS = 0x7;
+  device_descriptor->s0->DMA_BUF_SIZE_IN_SCANS = 0x3e8;
+  device_descriptor->s0->IRQ.IRQREG |= (1<<IRQ_REG_HWDREQ_EN);
+  //reset DMA
+  device_descriptor->dma_reg->DCSR |= 1<<DCSR_RESET;
+  memory_barrier();
+  device_descriptor->dma_reg->DCSR &= ~(1<<DCSR_RESET);
+  //start DMA
   device_descriptor->dma_reg->DDMACR |= (1<<DDMACR_START_DMA_WRT);
-
+  
   //// >>>> reset_dma_counters
   device_descriptor->s0->DMAS_PER_INTERRUPT |= (1<<DMA_COUNTER_RESET);
   memory_barrier();
@@ -114,6 +123,10 @@ int main(void) {
   device_descriptor->s0->XCK.dword &= ~(1<<XCK_RS);
   //reset measure on
   device_descriptor->s0->PCIEFLAGS &= ~(1<<PCIEFLAG_MEASUREON);
+  //reset DMA
+  device_descriptor->dma_reg->DCSR |= 1<<DCSR_RESET;
+  memory_barrier();
+  device_descriptor->dma_reg->DCSR &= ~(1<<DCSR_RESET);
   //TODO: What about getlastbufpart?
 
 
@@ -123,6 +136,8 @@ int main(void) {
            ((uint16_t*)device_descriptor->mapped_buffer)[i]);
 
   lscpcie_dump_s0(0);
+  printf("mapped buffer: %p\n", device_descriptor->mapped_buffer);
+  printf("physical address: %p\n", device_descriptor->control->dma_physical_start);
   lscpcie_dump_dma(0);
  finish:
   lscpcie_close(0);
