@@ -1,3 +1,6 @@
+v3.15.1
+- reduce TLPS by 1
+
 v3.14.0
 - new version scheme: MAJOR VERSION . CORRESPONDING PCIe BOARD VERSION . MINOR VERSION
 - new input scheme: BTI and STI

@@ -2,11 +2,21 @@
 //  Board.h
 //	all high level functions for managing Interfaceboard
 
+
 #include "Board_ll.h"
 
 #define DBGNOCAM FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
 #define DMA_BUFSIZEINSCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
 #define DMA_HW_BUFPARTS 2
+// DMA
+#define DMA_CONTIGBUF TRUE		// use if DMABigBuf is set by driver (data must be copied afterwards to DMABigBuf)
+#define DMA_SGBUF FALSE			// use if DMABigBuf is set by application (pointer must be passed to SetupPCIE_DMA)
+#define DMA_64BIT_EN FALSE
+#define _FORCETLPS128 TRUE	//only use payload size 128byte
+#define LEGACY_202_14_TLPCNT FALSE
+#define DMA_DMASPERINTR DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb 
+#define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
+#define INTR_EN TRUE		// enables INTR
 
 struct ffloopparams
 {
@@ -33,7 +43,8 @@ extern int Nob;
 extern int* Nospb;
 extern ULONG* aCAMCNT;	// cameras parallel
 extern BOOL escape_readffloop;
-extern BOOL contffloop;
+extern BOOL CONTFFLOOP;
+extern UINT32 CONTPAUSE;
 extern UINT8 number_of_boards;
 extern DWORD64 IsrCounter;
 extern ULONG* aPIXEL;

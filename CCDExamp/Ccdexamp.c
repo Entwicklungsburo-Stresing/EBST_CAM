@@ -322,9 +322,13 @@ void AboutCFS( HWND hWnd )
 
 	j += sprintf( fn + j, "TLP_SIZE is: %d DWORDs = %d BYTEs\n", BData, BData * 4 );
 
-	BData = (_PIXEL - 1) / (BData * 2) + 1;
+	if (LEGACY_202_14_TLPCNT) // A.M. Dec'20
+		BData = (_PIXEL - 1) / (BData * 2) + 1;
+	else
+		BData = (_PIXEL - 1) / (BData * 2);// +1; A.M. Dec'20
+
 	j += sprintf( fn + j, "number of TLPs should be: %d\n", BData );
-	ReadLongDMA( choosen_board, &BData, 16 );
+	ReadLongDMA( choosen_board, &BData, DmaAddr_WDMATLPC );
 	j += sprintf( fn + j, "number of TLPs is: %d \n", BData );
 
 	MessageBox( hWnd, fn, "DMA transfer payloads", MB_OK );
@@ -400,9 +404,13 @@ void AboutCFS( HWND hWnd )
 
 	j += sprintf( fn + j, "TLP_SIZE is: %d DWORDs = %d BYTEs\n", BData, BData * 4 );
 
-	BData = (_PIXEL - 1) / (BData * 2) + 1;
+	if (LEGACY_202_14_TLPCNT) // A.M. Dec'20
+		BData = (_PIXEL - 1) / (BData * 2) + 1;
+	else
+		BData = (_PIXEL - 1) / (BData * 2);// +1; A.M. Dec'20
+
 	j += sprintf( fn + j, "number of TLPs should be: %d\n", BData );
-	DLLReadLongDMA( choosen_board, &BData, 16 );
+	DLLReadLongDMA( choosen_board, &BData, DmaAddr_WDMATLPC );
 	j += sprintf( fn + j, "number of TLPs is: %d \n", BData );
 
 	MessageBox( hWnd, fn, "DMA transfer payloads", MB_OK );
@@ -723,13 +731,15 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case IDM_START:
 
 
-			contffloop = FALSE;
+			CONTFFLOOP = FALSE;
+			CONTPAUSE = 1;
 			cont_mode = FALSE;
 			if (!Running) startMess( &dummy );
 			CalcTrms(DRV, *Nospb, TRMSpix, 1, &mwf, &TRMSval[0]);
 			break;
 		case ID_START_STARTCONTINUOUSLY:
-			contffloop = TRUE;
+			CONTFFLOOP = TRUE;
+			CONTPAUSE = 20;  // delay between loops
 			cont_mode = TRUE;
 
 			CALLING_WITH_NOS = TRUE;

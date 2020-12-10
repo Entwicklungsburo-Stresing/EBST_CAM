@@ -14,14 +14,14 @@ __int16 _IsROI = 0; //FALSE is just the init val
 
 int TrigMod = 0;						//pos slope
 int TrigMod_B = 1;						//pos slope
-int ItemIndex_S = 0;					//combobox
-int ItemIndex_B = 1;					//combobox
+int ItemIndex_S = 3;					//combobox
+int ItemIndex_B = 4;					//combobox
 __int64 TICKSDISP = 0;			//display time in ticks
 int XOFF = 1;// _PIXEL / 600;			// index offset for display	
 int XStart = 0;						//start index of display
 BOOL PixelOdd = FALSE;				//display offset
 __int16 Releasems = 1; //>=1	>1 or keyboard does not work - could be exposuretime	
-ULONG Threadp = 31;  //<=15  8=default,15=highest in current process,31=time critical
+ULONG Threadp = 15;  //<=15  8=default,15=highest in current process,31=time critical
 int TempLevel = 0;
 BOOL GetNextScan = FALSE;
 BOOL UpdateDispl = FALSE;
