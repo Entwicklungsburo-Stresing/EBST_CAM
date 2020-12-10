@@ -20,13 +20,7 @@ Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
 #include "Board.h"
 
 //try different methodes - only one can be TRUE!
-#define DMA_CONTIGBUF TRUE		// use if DMABigBuf is set by driver (data must be copied afterwards to DMABigBuf)
-#define DMA_SGBUF FALSE			// use if DMABigBuf is set by application (pointer must be passed to SetupPCIE_DMA)
-#define DMA_64BIT_EN FALSE
-#define _FORCETLPS128 TRUE	//only use payload size 128byte
-#define DMA_DMASPERINTR DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb 
-#define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
-#define INTR_EN TRUE		// enables INTR
+
 //for jungo projects
 #define KER_MODE FALSE
 #define KERNEL_64BIT	
@@ -52,6 +46,7 @@ HANDLE hTHREAD = 0;
 BOOL _SHOW_MSG = TRUE;
 __int64 TPS = 0;				// ticks per second; is set in InitHRCounter
 ULONG NO_TLPS;//0x12; //was 0x11-> x-offset			//0x11=17*128  = 2176 Bytes  = 1088 WORDS
+ULONG TLPSIZE = 0x20; //default = 0x20 A.M. Dec'20 //with0x21: crash
 volatile USHORT* pDMABigBufIndex[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 __int64 START = 0;				// global variable for sync to systemtimer
 
@@ -64,7 +59,8 @@ int* Nospb = &tmp_Nosbp;
 ULONG tmp_aCAMCNT[MAXPCIECARDS] = { 1, 1, 1, 1, 1 };	// cameras parallel
 ULONG* aCAMCNT = tmp_aCAMCNT;	// cameras parallel
 BOOL escape_readffloop = FALSE;
-BOOL contffloop = FALSE;
+BOOL CONTFFLOOP = FALSE;
+UINT32 CONTPAUSE = 1;  // delay between loops in continous mode
 USHORT* temp_pDMABigBufBase[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 USHORT** pDMABigBufBase= temp_pDMABigBufBase;
 ULONG tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
@@ -205,8 +201,10 @@ void AboutTLPs( UINT32 drvno )
 
 	ReadLongDMA( drvno, &BData, DmaAddr_WDMATLPS );
 	j += sprintf( fn + j, "TLPS in DMAReg is: %d \n", BData );
-
-	BData = (aPIXEL[drvno] - 1) / (BData * 2) + 1 + 1;
+	if (LEGACY_202_14_TLPCNT) // A.M. Dec'20
+		BData = (aPIXEL[drvno] - 1) / (BData * 2) + 1 + 1;
+	else
+		BData = (aPIXEL[drvno] - 1) / (BData * 2) + 1;
 	j += sprintf( fn + j, "number of TLPs should be: %d\n", BData );
 	ReadLongDMA( drvno, &BData, DmaAddr_WDMATLPC );
 	j += sprintf( fn + j, "number of TLPs is: %d \n", BData );
@@ -575,7 +573,7 @@ BOOL SetDMAAddrTlp( UINT32 drvno )
 	ULONG BitMask;
 	ULONG BData = 0;
 	int tlpmode = 0;
-	ULONG TLPSIZE;					//with0x21: crash
+
 
 	ReadLongIOPort( drvno, &BData, PCIeAddr_devCap );
 	tlpmode = BData & 0x7;//0xE0 ;
@@ -611,7 +609,7 @@ BOOL SetDMAAddrTlp( UINT32 drvno )
 
 	//write Address
 	PhysAddrDMABuf64 = (*ppDma)->Page[0].pPhysicalAddr;
-	if (!SetDMAAddrTlpRegs( PhysAddrDMABuf64, TLPSIZE, NO_TLPS, drvno ))
+	if (!SetDMAAddrTlpRegs( PhysAddrDMABuf64, TLPSIZE, NO_TLPS, drvno ))  //here the tlp counts are set by global NO_TLPS via SetBoardVars
 		return FALSE;
 	return TRUE;
 }
@@ -1198,35 +1196,42 @@ BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel )
 		...
 		82  8256
 		*/
+
+	//NO_TLPS = pixel / (TLPSIZE * 2); // A.M. Dec'20 NO_TLPS isn't updated automaticly early enough
+
 	switch (pixel)
 	{
-	case 128:
-		NO_TLPS = 0x3;//3
-		break;
-	case 192:
-		NO_TLPS = 0x4;//4
-		break;
-	case 320:
-		NO_TLPS = 0x6;//6
-		break;
-	case 576:
-		NO_TLPS = 0xa;//a
-		break;
-	case 1088:
-		NO_TLPS = 0x12;//12
-		break;
-	case 2112:
-		NO_TLPS = 0x22;//22
-		break;
-	case 4160:
-		NO_TLPS = 0x42;//42
-		break;
-	case 8256:
-		NO_TLPS = 0x82;//82
-		break;
-	default:
-		return FALSE;
+		case 128:
+			NO_TLPS = 0x2;//3
+			break;
+		case 192:
+			NO_TLPS = 0x3;//4
+			break;
+		case 320:
+			NO_TLPS = 0x5;//6
+			break;
+		case 576:
+			NO_TLPS = 0x9;//a
+			break;
+		case 1088:
+			NO_TLPS = 0x11;
+			break;
+		case 2112:
+			NO_TLPS = 0x21;//22
+			break;
+		case 4160:
+			NO_TLPS = 0x41;//42
+			break;
+		case 8256:
+			NO_TLPS = 0x81;//82
+			break;
+		default:
+			return FALSE;
 	}
+	if (LEGACY_202_14_TLPCNT) NO_TLPS = NO_TLPS + 1;
+
+
+	//NO_TLPS = 5;
 	//set global vars if driver is there
 
 	aPIXEL[drvno] = pixel;
@@ -2139,7 +2144,7 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 	escape_readffloop = FALSE;
 	IsrCounter = 0;
 	Running = TRUE;
-	if (contffloop) //run continiously
+	if (CONTFFLOOP) //run continiously
 	{
 		do
 		{
@@ -2161,7 +2166,7 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 				return 1;
 			}
 			ReadFFLoop( board_sel );
-			Sleep( 1 ); // wait or next block is too early and scrambles last XCK, GST20
+			Sleep( CONTPAUSE); // wait or next block is too early and scrambles last XCK, GST20
 		}
 		while (1);
 	}
