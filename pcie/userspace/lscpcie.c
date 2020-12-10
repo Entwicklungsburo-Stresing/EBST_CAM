@@ -84,45 +84,45 @@ int lscpcie_driver_init(void) {
   Pixelsize = TLPS * TLPC - 1*TLPS
   (TLPS TLP size = 64)
   TLPC 0x Pixelsize
-    2	64
-    3	128
-    4	192
-    5	256
-    6	320
-    7	384
-    8	448
-    9	512
-    a	576
-    b	640
-    c	704
-    d	768
-    e	832
-    f	896
-    10	960
-    11	1024
-    12	1088
-    13	1152
-    14	1216
-    15	1280
-    16	1344
-    17	1408
-    18	1472
-    19	1536
-    1a	1600
-    1b	1664
-    1c	1728
-    1d	1792
-    1e	1856
-    1f	1920
-    20	1984
-    21	2048
-    22	2112
-    23  2176
+    1   64
+    2	  128
+    3	  192
+    4	  256
+    5	  320
+    6	  384
+    7	  448
+    8	  512
+    9	  576
+    a	  640
+    b	  704
+    c	  768
+    d	  832
+    e	  896
+    f		960
+    10	1024
+    11	1088
+    12	1152
+    13	1216
+    14	1280
+    15	1344
+    16	1408
+    17	1472
+    18	1536
+    19	1600
+    1a	1664
+    1b	1728
+    1c	1792
+    1d	1856
+    1e	1920
+    1f	1984
+    20	2048
+    21	2112
+    22  2176
     ...
-    41  4096
-    42  4160
+    40  4096
+    41  4160
     ...
-    82  8256
+    81  8256
 */
 
 int lscpcie_open(uint dev, uint16_t options) {
@@ -157,20 +157,20 @@ int lscpcie_open(uint dev, uint16_t options) {
   }
 
   switch (dev_descr[dev].control->number_of_pixels) {
-  case 128:  no_tlps = 0x3;  break;
-  case 192:  no_tlps = 0x4;  break;
-  case 320:  no_tlps = 0x6;  break;
-  case 576:  no_tlps = 0xa;  break;
-  case 1088: no_tlps = 0x12; break;
-  case 2112: no_tlps = 0x22; break;
-  case 4160: no_tlps = 0x42; break;
-  case 8256: no_tlps = 0x82; break;
+  case 128:  no_tlps = 0x2;  break;
+  case 192:  no_tlps = 0x3;  break;
+  case 320:  no_tlps = 0x5;  break;
+  case 576:  no_tlps = 0x9;  break;
+  case 1088: no_tlps = 0x11; break;
+  case 2112: no_tlps = 0x21; break;
+  case 4160: no_tlps = 0x41; break;
+  case 8256: no_tlps = 0x81; break;
   default:
     error_message("invalid number of pixels %d\n",
                   dev_descr[dev].control->number_of_pixels);
     return -EINVAL;
   }
-
+  if (LEGACY_202_14_TLPCNT) no_tlps++;
   dev_descr[dev].number_of_tlps = no_tlps;
 
   printf("found io spce of size 0x%08x\n", dev_descr[dev].control->io_size);

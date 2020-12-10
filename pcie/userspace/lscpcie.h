@@ -42,6 +42,7 @@ typedef enum { xck = 0, exttrig = 1, dat = 2 } trigger_mode_t;
 // the following flags should go elsewhere, they don't need to be exposed
 #define IS_FFT  0x0001
 #define IS_AREA 0x8000
+#define LEGACY_202_14_TLPCNT 0
 
 #define MASTER_ADDRESS_CAMERA     0x00
 #define CAMERA_ADDRESS_PIXEL      0x01
