@@ -90,7 +90,7 @@ DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UIN
 DllAccess void DLLCopyAllData( UINT32 drv, UINT16 *pdioden );
 DllAccess void nDLLReadFFLoop( UINT32 board_sel );
 DllAccess void DLLStopFFLoop( void );
-DllAccess void DLLSetContFFLoop( UINT8 activate );
+DllAccess void DLLSetContFFLoop( UINT8 activate, UINT32 pause );
 //************  Cooling
 DllAccess void DLLSetTemp( UINT32 drvno, UINT8 level );
 DllAccess void DLLSetSEC( UINT32 drvno, UINT64 ecin100ns );
