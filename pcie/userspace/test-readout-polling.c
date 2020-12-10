@@ -130,7 +130,7 @@ int main(void) {
   //TODO: What about getlastbufpart?
 
 
-  n = 10; //device_descriptor->control->number_of_pixels;
+  n = device_descriptor->control->number_of_pixels;
   for (i = 0; i < n; i++)
     printf("%d\t%d\n", i,
            ((uint16_t*)device_descriptor->mapped_buffer)[i]);
