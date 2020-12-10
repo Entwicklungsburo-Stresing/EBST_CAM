@@ -35,7 +35,7 @@ struct file_operations fops = {
   .mmap           = mmap_register_remap_mmap
 };
 
-/* create device node /sev/lscpcie<n> and initialise instance variables */
+/* create device node /dev/lscpcie<n> and initialise instance variables */
 int device_init(struct dev_struct *dev, int minor)
 {
   struct device *device;
