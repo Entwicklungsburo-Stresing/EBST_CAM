@@ -79,12 +79,17 @@ typedef enum {
 #define CTRLA_IFC           1
 #define CTRLA_VONOFF        0
 
-#define CTRLB_GTI1          5
-#define CTRLB_GTI0          4
-#define CTRLB_SHON          3
-#define CTRLB_STI2          2
-#define CTRLB_STI1          1
-#define CTRLB_STI0          0
+#define CTRLB_SHON          0x1<<3
+#define CTRLB_BTI_I         0x0<<4
+#define CTRLB_BTI_S1        0x1<<4
+#define CTRLB_BTI_S2        0x2<<4
+#define CTRLB_BTI_S1_S2     0x3<<4
+#define CTRLB_BTI_TIMER     0x4<<4
+#define CTRLB_STI_I         0x0
+#define CTRLB_STI_S1        0x1
+#define CTRLB_STI_S2        0x2
+#define CTRLB_STI_TIMER     0x4
+#define CTRLB_STI_ASL       0x5
 
 #define CTRLC_EOI_CHB       5
 #define CTRLC_EOI           4
@@ -130,13 +135,8 @@ typedef enum {
 #define TOR_NO_RS           26
 #define TOR_SENDRS          25
 #define TOR_ISFFT           24
-
 #define TOR_TOCNT           16
-
 #define TOR_TICNT           0
-
-#define TOR_TO_pos          28
-#define TOR_TO_msk          (0x0F<<TOR_TO_pos)
 
 #define TOR_OUT_XCK         0x00000000
 #define TOR_OUT_REGO        0x10000000
@@ -185,6 +185,10 @@ typedef enum {
 #define BLOCK_COUNTER_RESET 31
 #define SCAN_INDEX_RESET    31
 #define BLOCK_INDEX_RESET   31
+#define BTIMER_START        31
+#define BFLAG_SW_TRIG       2
+#define BFLAG_BOTH_SLOPES   1
+#define BFLAG_BSLOPE        0
 
 /* DMA */
 
