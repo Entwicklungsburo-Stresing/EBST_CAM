@@ -38,15 +38,17 @@ static int module_status = 0;
 int num_pixels[MAX_BOARDS]  = { -1, -1, -1, -1, -1 };
 int num_cameras[MAX_BOARDS] = { -1, -1, -1, -1, -1 };
 int num_scans[MAX_BOARDS]   = { -1, -1, -1, -1, -1 };
+int num_blocks[MAX_BOARDS]  = { -1, -1, -1, -1, -1 };
 
 static int n_num_pixels  = MAX_BOARDS;
 static int n_num_cameras = MAX_BOARDS;
 static int n_num_scans   = MAX_BOARDS;
+static int n_num_blocks   = MAX_BOARDS;
 
 module_param_array(num_pixels,  int, &n_num_pixels,  S_IRUGO);
 module_param_array(num_cameras, int, &n_num_cameras, S_IRUGO);
 module_param_array(num_scans,   int, &n_num_scans,   S_IRUGO);
-
+module_param_array(num_blocks,  int, &n_num_blocks,  S_IRUGO);
 
 /* Each driver instance has its own debug flags which can be set individually
    through a ioctl calls. The global debug flag can be set at module load time

@@ -5,8 +5,6 @@
 #include "../kernelspace/registers.h"
 #include <stdio.h>
 
-#define CFG_NUMBER_OF_SCANS   5
-#define CFG_NUMBER_OF_BLOCKS  2
 #define CFG_BTIMER_IN_US      2500
 #define CFG_STIMER_IN_US      400
 
@@ -18,7 +16,7 @@
 #define memory_barrier() asm volatile ("" : : : "memory")
 
 int main(void) {
-  int result, i, n;
+  int result;
   dev_descr_t *device_descriptor;
 
   if ((result = lscpcie_driver_init()) < 0) {
@@ -51,23 +49,20 @@ int main(void) {
   // and what about this? not present in board.c
   result = lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_TRIGGER_IN, trigger_mode);
   if (result < 0) return result;
-  result = lscpcie_setup_dma(0, CFG_NUMBER_OF_BLOCKS);
+  result = lscpcie_setup_dma(0, device_descriptor->control->number_of_blocks);
   if (result) {
     fprintf(stderr, "error %d when setting up dma\n", result);
     goto finish;
   }
 
   //set output of O on PCIe card
-  device_descriptor->s0->TOR = TOR_OUT_BTIMER;
+  device_descriptor->s0->TOR = TOR_OUT_XCK;
   //set trigger mode to block timer and scan timer + shutter not on
   device_descriptor->s0->CTRLB = (CTRLB_BTI_TIMER | CTRLB_STI_TIMER) & ~(CTRLB_SHON);
   //set block timer and start block timer
   device_descriptor->s0->BTIMER = 1<<BTIMER_START | CFG_BTIMER_IN_US;
   //set slope of block trigger
   device_descriptor->s0->BFLAGS |= 1<<BFLAG_BSLOPE;
-  //set number of scans
-  device_descriptor->s0->NUMBER_OF_SCANS = CFG_NUMBER_OF_SCANS;
-
   //// >>>> reset_dma_counters
   device_descriptor->s0->DMAS_PER_INTERRUPT |= (1<<DMA_COUNTER_RESET);
   memory_barrier();
@@ -92,7 +87,7 @@ int main(void) {
   device_descriptor->s0->XCK.dword &= ~(1<<XCKMSB_EXT_TRIGGER);
   //set measure on
   device_descriptor->s0->PCIEFLAGS |= 1<<PCIEFLAG_MEASUREON;
-  for (int blk_cnt = 0; blk_cnt < CFG_NUMBER_OF_BLOCKS; blk_cnt++)
+  for (int blk_cnt = 0; blk_cnt < device_descriptor->control->number_of_blocks; blk_cnt++)
   {
     //block trigger
     if(!(device_descriptor->s0->CTRLA & 1<<CTRLA_TSTART)) while(!(device_descriptor->s0->CTRLA & 1<<CTRLA_TSTART));
@@ -126,10 +121,19 @@ int main(void) {
   //reset measure on
   device_descriptor->s0->PCIEFLAGS &= ~(1<<PCIEFLAG_MEASUREON);
 
-  n = device_descriptor->control->number_of_pixels;
-  for (i = 0; i < n; i++)
-    printf("%d\t%d\n", i,
-           ((uint16_t*)device_descriptor->mapped_buffer)[i]);
+  int n = device_descriptor->control->number_of_pixels;
+  int nob = device_descriptor->control->number_of_blocks;
+  int nos = device_descriptor->control->number_of_scans;
+  for (int cur_nob = 0; cur_nob < nob; cur_nob++)
+  {
+    printf("block %i\n", cur_nob);
+    for (int cur_nos = 0; cur_nos < nos; cur_nos++)
+    {
+    printf("scan %i\n", cur_nos);
+      for (int i = 0; i < n; i++)
+      printf("%d\t%d\n", i, ((uint16_t*)device_descriptor->mapped_buffer)[i]);
+    }
+  }
 
  finish:
   lscpcie_close(0);
