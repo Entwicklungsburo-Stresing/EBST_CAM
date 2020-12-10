@@ -652,11 +652,13 @@ DllAccess void DLLStopFFLoop( void )
 /**
 \brief Activate or deactivate continuous read.
 \param activate 0 - deactivate, 1 - activate
+\param pause - time in ms before next loop starts - should be >=1
 \return none
 */
-DllAccess void DLLSetContFFLoop( UINT8 activate )
+DllAccess void DLLSetContFFLoop( UINT8 activate , UINT32 pause)
 {
-	contffloop = activate;//0 or 1
+	CONTFFLOOP = activate;//0 or 1
+	CONTPAUSE = pause;
 	return;
 }
 
