@@ -5,7 +5,7 @@
 #include "../kernelspace/registers.h"
 #include <stdio.h>
 
-#define CFG_BTIMER_IN_US      2500
+#define CFG_BTIMER_IN_US      500000
 #define CFG_STIMER_IN_US      400
 
 #define STAT_CTRL_MASK 0x0000FFFF
@@ -130,8 +130,9 @@ int main(void) {
     for (int cur_nos = 0; cur_nos < nos; cur_nos++)
     {
     printf("scan %i\n", cur_nos);
+      int offset = cur_nos * n + cur_nob * nos * n;
       for (int i = 0; i < n; i++)
-      printf("%d\t%d\n", i, ((uint16_t*)device_descriptor->mapped_buffer)[i]);
+        printf("%d\t%d\n", i, ((uint16_t*)device_descriptor->mapped_buffer)[offset + i]);
     }
   }
 
