@@ -5,6 +5,10 @@
 #include "../kernelspace/registers.h"
 #include <stdio.h>
 
+#define CFG_NUMBER_OF_SCANS 5
+#define CFG_BTIMER_IN_US    2500
+#define CFG_STIMER_IN_US    400
+
 #define STAT_CTRL_MASK 0x0000FFFF
 #define CTRLA_RW_MASK 0x3F
 #define CTRLB_RW_MASK 0x3F
@@ -52,21 +56,17 @@ int main(void) {
     goto finish;
   }
 
-  device_descriptor->s0->TOR = TOR_OUT_XCK;
-  device_descriptor->s0->CTRLB = 0x44;
-  device_descriptor->s0->BTIMER = 0x8000c350;
-  device_descriptor->s0->BFLAGS = 0x1;
-  device_descriptor->s0->DMAS_PER_INTERRUPT = 0x1f4;
-  device_descriptor->s0->NUMBER_OF_SCANS = 0x7;
-  device_descriptor->s0->DMA_BUF_SIZE_IN_SCANS = 0x3e8;
-  device_descriptor->s0->IRQ.IRQREG |= (1<<IRQ_REG_HWDREQ_EN);
-  //reset DMA
-  device_descriptor->dma_reg->DCSR |= 1<<DCSR_RESET;
-  memory_barrier();
-  device_descriptor->dma_reg->DCSR &= ~(1<<DCSR_RESET);
-  //start DMA
-  device_descriptor->dma_reg->DDMACR |= (1<<DDMACR_START_DMA_WRT);
-  
+  //set output of O on PCIe card
+  device_descriptor->s0->TOR = TOR_OUT_BTIMER;
+  //set trigger mode to block timer and scan timer + shutter not on
+  device_descriptor->s0->CTRLB = (CTRLB_BTI_TIMER | CTRLB_STI_TIMER) & ~(CTRLB_SHON);
+  //set block timer and start block timer
+  device_descriptor->s0->BTIMER = 1<<BTIMER_START | CFG_BTIMER_IN_US;
+  //set slope of block trigger
+  device_descriptor->s0->BFLAGS |= 1<<BFLAG_BSLOPE;
+  //set number of scans
+  device_descriptor->s0->NUMBER_OF_SCANS = CFG_NUMBER_OF_SCANS;
+
   //// >>>> reset_dma_counters
   device_descriptor->s0->DMAS_PER_INTERRUPT |= (1<<DMA_COUNTER_RESET);
   memory_barrier();
@@ -106,13 +106,13 @@ int main(void) {
   //if you want to implement block measurement: reset scan counter here
   //set block on
   device_descriptor->s0->PCIEFLAGS |= 1<<PCIEFLAG_BLOCKON;
-  int exptime = 100;
   //start Stimer
-  device_descriptor->s0->XCK.dword = (device_descriptor->s0->XCK.dword & ~XCK_EC_MASK) | (exptime & XCK_EC_MASK) | (1<<XCK_RS);
+  device_descriptor->s0->XCK.dword = (device_descriptor->s0->XCK.dword & ~XCK_EC_MASK) | (CFG_STIMER_IN_US & XCK_EC_MASK) | (1<<XCK_RS);
   //software trigger
   device_descriptor->s0->BTRIGREG |= 1<<FREQ_REG_SW_TRIG;
   memory_barrier();
   device_descriptor->s0->BTRIGREG &= ~(1<<FREQ_REG_SW_TRIG);
+  //wait for end of readout
   do
     result = device_descriptor->s0->XCK.dword & (1<<XCK_RS);
   while (result);
@@ -121,24 +121,16 @@ int main(void) {
   //if you want to implement block measurement: close loop here
   //stop stimer
   device_descriptor->s0->XCK.dword &= ~(1<<XCK_RS);
+  //stop btimer
+  device_descriptor->s0->BTIMER &= ~(1<<BTIMER_START);
   //reset measure on
   device_descriptor->s0->PCIEFLAGS &= ~(1<<PCIEFLAG_MEASUREON);
-  //reset DMA
-  device_descriptor->dma_reg->DCSR |= 1<<DCSR_RESET;
-  memory_barrier();
-  device_descriptor->dma_reg->DCSR &= ~(1<<DCSR_RESET);
-  //TODO: What about getlastbufpart?
-
 
   n = device_descriptor->control->number_of_pixels;
   for (i = 0; i < n; i++)
     printf("%d\t%d\n", i,
            ((uint16_t*)device_descriptor->mapped_buffer)[i]);
 
-  lscpcie_dump_s0(0);
-  printf("mapped buffer: %p\n", device_descriptor->mapped_buffer);
-  printf("physical address: %p\n", device_descriptor->control->dma_physical_start);
-  lscpcie_dump_dma(0);
  finish:
   lscpcie_close(0);
 
