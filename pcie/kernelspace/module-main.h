@@ -24,8 +24,8 @@ extern int debug;
 
 #define DEFAULT_NUMBER_OF_PIXELS    576
 #define DEFAULT_NUMBER_OF_CAMERAS   1
-#define DEFAULT_NUM_SCANS           6
-#define DEFAULT_NUM_BLOCKS          3
+#define DEFAULT_NUM_SCANS           1000
+#define DEFAULT_NUM_BLOCKS          2
 
 extern int num_pixels[MAX_BOARDS];
 extern int num_cameras[MAX_BOARDS];
