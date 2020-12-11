@@ -36,4 +36,4 @@ int m_ECTrigmodus = 1;
 int m_ECmodus = 1;
 int sec = 0, bec = 0, sdat = 0, bdat = 0;
 BOOL m_noPDARS = FALSE;
-double TRMSval[2];
+double TRMSval_global[2];
