@@ -49,7 +49,7 @@ int main(void) {
   // and what about this? not present in board.c
   result = lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_TRIGGER_IN, trigger_mode);
   if (result < 0) return result;
-  result = lscpcie_setup_dma(0, device_descriptor->control->number_of_blocks);
+  result = lscpcie_setup_dma(0);
   if (result) {
     fprintf(stderr, "error %d when setting up dma\n", result);
     goto finish;

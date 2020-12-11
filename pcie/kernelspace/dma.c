@@ -42,7 +42,7 @@ int dma_init(struct dev_struct *dev) {
      mmap export to userland) */
   dev->control->buffer_size
     = dev->control->number_of_cameras * dev->control->number_of_pixels
-    * dev->control->number_of_scans * sizeof(u16);
+    * dev->control->number_of_scans * sizeof(u16) * dev->control->number_of_blocks;
   num_dma_pages = dev->control->buffer_size >> PAGE_SHIFT;
   if (dev->control->buffer_size > num_dma_pages << PAGE_SHIFT)
     num_dma_pages++;
