@@ -148,8 +148,8 @@ void SetADGain( UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4,
 void SendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature ); //function for sending 32 bits to DAC8568 in HS-FLCAM on PCB 2189-7(+)
 void DAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output ); //set output of DAC (PCB 2189-7)
 void FreeMemInfo( UINT64 *pmemory_all, UINT64 *pmemory_free );
-void GetRmsVal( ULONG nos, ULONG *TRMSVals, double *mwf, double *trms );
-void CalcTrms( UINT32 drvno, UINT32 nos, UINT16 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );
+void GetRmsVal( UINT32 nos, UINT16 *TRMSVals, double *mwf, double *trms );
+void CalcTrms( UINT32 drvno, UINT32 nos, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );
 UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block, UINT16 CAM );
 void* GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block, UINT16 CAM );
 UINT8 WaitforTelapsed( LONGLONG musec );

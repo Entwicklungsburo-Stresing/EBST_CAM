@@ -1,3 +1,6 @@
+v3.15.2
+- fix TRMS calculation in CCDExamp
+
 v3.15.1
 - reduce TLPS by 1
 

@@ -831,7 +831,7 @@ DllAccess void DLLErrorMsg( char ErrMsg[20] )
 /**
 \copydoc CalcTrms
 */
-DllAccess void DLLCalcTrms( UINT32 drvno, UINT32 nos, ULONG TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
+DllAccess void DLLCalcTrms( UINT32 drvno, UINT32 nos, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
 {
 	CalcTrms( drvno, nos, TRMS_pixel, CAMpos, mwf, trms );
 	return;

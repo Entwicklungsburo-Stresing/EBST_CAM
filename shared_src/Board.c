@@ -47,7 +47,7 @@ BOOL _SHOW_MSG = TRUE;
 __int64 TPS = 0;				// ticks per second; is set in InitHRCounter
 ULONG NO_TLPS;//0x12; //was 0x11-> x-offset			//0x11=17*128  = 2176 Bytes  = 1088 WORDS
 ULONG TLPSIZE = 0x20; //default = 0x20 A.M. Dec'20 //with0x21: crash
-volatile USHORT* pDMABigBufIndex[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
+volatile UINT16* pDMABigBufIndex[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 __int64 START = 0;				// global variable for sync to systemtimer
 
 // extern global variables
@@ -61,8 +61,8 @@ ULONG* aCAMCNT = tmp_aCAMCNT;	// cameras parallel
 BOOL escape_readffloop = FALSE;
 BOOL CONTFFLOOP = FALSE;
 UINT32 CONTPAUSE = 1;  // delay between loops in continous mode
-USHORT* temp_pDMABigBufBase[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
-USHORT** pDMABigBufBase= temp_pDMABigBufBase;
+UINT16* temp_pDMABigBufBase[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
+UINT16** pDMABigBufBase= temp_pDMABigBufBase;
 ULONG tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 ULONG* aPIXEL = tmp_aPIXEL;
 BOOL Running = FALSE;
@@ -2963,19 +2963,18 @@ void FreeMemInfo( UINT64 *pmemory_all, UINT64 *pmemory_free )
 	return;
 }
 
-void GetRmsVal( ULONG nos, ULONG *TRMSVals, double *mwf, double *trms )
+void GetRmsVal( UINT32 nos, UINT16 *TRMSVals, double *mwf, double *trms )
 {
 	*trms = 0.0;
 	*mwf = 0.0;
 	double sumvar = 0.0;
-	unsigned int i = 0;
 
-	for (i = 0; i < nos; i++)
+	for (UINT32 i = 0; i < nos; i++)
 	{//get mean val
 		*mwf += TRMSVals[i];//for C-Noobs: this is the same like *(TRMSVals+1)
 	}
 	*mwf /= nos;
-	for (i = 0; i < nos; i++)
+	for (UINT32 i = 0; i < nos; i++)
 	{// get varianz
 		*trms = TRMSVals[i];
 		*trms = *trms - *mwf;
@@ -2997,22 +2996,22 @@ void GetRmsVal( ULONG nos, ULONG *TRMSVals, double *mwf, double *trms )
 \param trms pointer for noise
 \return none
  */
-void CalcTrms( UINT32 drvno, UINT32 nos, UINT16 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
+void CalcTrms( UINT32 drvno, UINT32 nos, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
 {
-	ULONG *TRMSVals;
+	UINT16 *TRMS_pixels;
 	const int offset = 10;
 
-	TRMSVals = calloc( nos - offset, sizeof( ULONG ) );
+	TRMS_pixels = calloc( nos - offset, sizeof( UINT16 ) );
 
 	//storing the values of one pix for the rms analysis
 	for (int scan = 0; scan < nos-offset; scan++)
 	{
 		int TRMSpix_of_current_scan = GetIndexOfPixel( drvno, TRMS_pixel, scan+offset, 0, CAMpos );
-		TRMSVals[scan] = pDMABigBufBase[drvno][TRMSpix_of_current_scan];
+		TRMS_pixels[scan] = pDMABigBufBase[drvno][TRMSpix_of_current_scan];
 	}
 
 	//rms analysis
-	GetRmsVal( nos-offset, TRMSVals, mwf, trms );
+	GetRmsVal( nos-offset, TRMS_pixels, mwf, trms );
 	return;
 }//CalcTrms
 

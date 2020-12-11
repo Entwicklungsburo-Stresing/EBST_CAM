@@ -99,4 +99,4 @@ extern int m_TOmodus; //trigger out plug signal
 extern int m_ECTrigmodus;
 extern int m_ECmodus;
 extern BOOL m_noPDARS;
-extern double TRMSval[2];
+extern double TRMSval_global[2];

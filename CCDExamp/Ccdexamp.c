@@ -735,7 +735,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			CONTPAUSE = 1;
 			cont_mode = FALSE;
 			if (!Running) startMess( &dummy );
-			CalcTrms(DRV, *Nospb, TRMSpix, 1, &mwf, &TRMSval[0]);
+			CalcTrms(DRV, *Nospb, TRMSpix, 0, &mwf, &TRMSval_global[0]);
 			break;
 		case ID_START_STARTCONTINUOUSLY:
 			CONTFFLOOP = TRUE;

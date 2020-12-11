@@ -340,7 +340,7 @@ void UpdateTxT(void)
 	{
 		//j=sprintf(TrmsString,"                                                           ") ;//clear old display
 		//TextOut(hMSDC,20,YLENGTH + 50,TrmsString,j);
-		j += sprintf_s(TrmsString + j, 260, " Trms of Pixel %lu CH1 is %.1f ", TRMSpix, TRMSval[0]);
+		j += sprintf_s(TrmsString + j, 260, " Trms of Pixel %lu CH1 is %.1f ", TRMSpix, TRMSval_global[0]);
 		TextOut(hMSDC, 20, YLENGTH + 50, TrmsString, j);
 	}
 
