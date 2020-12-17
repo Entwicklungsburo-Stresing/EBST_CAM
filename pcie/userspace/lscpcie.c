@@ -433,7 +433,7 @@ int set_dma_address_in_tlp(uint dev) {
 int set_dma_buffer_registers(uint dev) {
   // DMABufSizeInScans - use 1 block
   dev_descr[dev].s0->DMA_BUF_SIZE_IN_SCANS
-    = dev_descr[dev].control->number_of_scans * dev_descr[dev].control->number_of_blocks;
+    = dev_descr[dev].control->number_of_scans * dev_descr[dev].control->number_of_blocks * dev_descr[dev].control->number_of_cameras;
 
   //scans per intr must be 2x per DMA_BUFSIZEINSCANS to copy hi/lo part
   //aCAMCNT: double the INTR if 2 cams
