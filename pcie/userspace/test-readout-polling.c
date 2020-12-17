@@ -124,15 +124,20 @@ int main(void) {
   int n = device_descriptor->control->number_of_pixels;
   int nob = device_descriptor->control->number_of_blocks;
   int nos = device_descriptor->control->number_of_scans;
-  for (int cur_nob = 0; cur_nob < nob; cur_nob++)
+  int camcnt = device_descriptor->control->number_of_cameras;
+  for (int cur_block = 0; cur_block < nob; cur_block++)
   {
-    printf("block %i\n", cur_nob);
-    for (int cur_nos = 0; cur_nos < nos; cur_nos++)
+    printf("block %i\n", cur_block);
+    for (int cur_sample = 0; cur_sample < nos; cur_sample++)
     {
-    printf("scan %i\n", cur_nos);
-      int offset = cur_nos * n + cur_nob * nos * n;
-      for (int i = 0; i < n; i++)
-        printf("%d\t%d\n", i, ((uint16_t*)device_descriptor->mapped_buffer)[offset + i]);
+    printf("scan %i\n", cur_sample);
+      for(int cur_cam = 0; cur_cam < camcnt; cur_cam++)
+      {
+        printf("cam %i\n", cur_cam);
+        int offset = cur_cam * n + cur_sample * camcnt * n + cur_block * nos * camcnt * n;
+        for (int i = 0; i < n; i++)
+          printf("%d\t%d\n", i, ((uint16_t*)device_descriptor->mapped_buffer)[offset + i]);
+      }
     }
   }
 
