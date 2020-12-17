@@ -107,7 +107,7 @@ void isr(struct dev_struct *dev) {
   int old_write_pos = dev->control->write_pos;
   u8 fifo_flags = readb(dev->mapped_pci_base + 0x80 + S0Addr_FF_FLAGS);
 
-  set_bits_s0(dev, DmaAddr_PCIEFLAGS, (1<<PCIE_INT_RSR), (1<<PCIE_INT_RSR));
+  set_bits_s0(dev, S0Addr_IRQREG, (1<<IRQ_REG_ISR_active), (1<<IRQ_REG_ISR_active));
 
   if (fifo_flags & (1<<FF_FLAGS_OVFL)) dev->status |= FIFO_OVERFLOW;
 
@@ -131,7 +131,7 @@ void isr(struct dev_struct *dev) {
   dev->status |= DMA_OVERFLOW;
 
  end:
-  set_bits_s0(dev, DmaAddr_PCIEFLAGS, 0, (1<<PCIE_INT_RSR));
+  set_bits_s0(dev, S0Addr_IRQREG, 0, (1<<IRQ_REG_ISR_active));
 
   wake_up_interruptible(&dev->readq);
 }

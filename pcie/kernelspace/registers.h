@@ -167,6 +167,7 @@ typedef enum {
 #define IRQ_REG_CNT_pos     16
 #define IRQ_REG_CNT_msk     (0x3FFF<<IRQ_REG_CNT_pos)
 #define IRQ_REG_HWDREQ_EN   30
+#define IRQ_REG_ISR_active  31
 
 #define PCIE_XCKI           0
 #define PCIE_IN_TRIG        1
