@@ -31,7 +31,7 @@ WD_PCI_CARD_INFO deviceInfo[MAXPCIECARDS];
 USHORT* pDMASubBuf[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 WD_DMA *pDMASubBufInfos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL }; //there will be saved the neccesary parameters for the dma buffer
 DWORD64 IsrCounter = 0;
-DWORD64 SubBufCounter[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
+BYTE SubBufCounter[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 DWORD DMA_bufsizeinbytes = 0;
 WDC_PCI_SCAN_RESULT scanResult;
 //priority globals
@@ -53,8 +53,8 @@ __int64 START = 0;				// global variable for sync to systemtimer
 // extern global variables
 int newDLL = 0;
 UINT8 number_of_boards = 0;
-int Nob = 10;
-int tmp_Nosbp = 100;
+int Nob = 1;
+int tmp_Nosbp = 1000;
 int* Nospb = &tmp_Nosbp;
 ULONG tmp_aCAMCNT[MAXPCIECARDS] = { 1, 1, 1, 1, 1 };	// cameras parallel
 ULONG* aCAMCNT = tmp_aCAMCNT;	// cameras parallel
@@ -223,11 +223,11 @@ void AboutS0( UINT32 drvno )
 	#define entries  41		//32 
 	int i, j = 0;
 	int numberOfBars = 0;
-	char fn[entries*30];
+	char fn[entries*40];
 	UINT32 S0Data = 0;
 	ULONG length = 0;
 	HWND hWnd;
-	char LUTS0Reg[entries][30] = {
+	char LUTS0Reg[entries][40] = {
 		"DBR \t",
 		"CTRLA \t",
 		"XCKLL \t",
@@ -814,20 +814,23 @@ void GetLastBufPart( UINT32 drvno )
 		//if (nos < spi)  // do not use INTR, but GetLastBufPart instead if nos is small enough
 		//	{pDMABigBufIndex[drvno] += rest_summary; } // may only be added here if no isr
 	}
-	SubBufCounter[drvno] = 0; //reset for next block
+	//GS do not reset counter before ready with isr or last block is wrong!!
+	//SubBufCounter[drvno] = 0; //reset for next block
 
 }//GetLastBufPart
 
 /**
 \brief This call comes every DMASPERINTR=500 here a DMASubBuf could be copied to the DMABigBuf.
-The INTR occurs every DMASPERINTR and copies this block of scans in sub blocks.
+the size of a drivers continous memory is limited, so we must copy it via this small buf to the big buf
+The INTR occurs every DMASPERINTR and copies this block of scans in lower/upper half blocks.
 */
 void isr( UINT drvno, PVOID pData )
 {
-	volatile UINT32 val,val2 = 0;
+	volatile UINT32 val, val2 = 0;
 	WDC_Err( "*isr(): 0x%x\n", IsrCounter );
 	WDC_Err( "DMA_bufsizeinbytes: 0x%x \n", DMA_bufsizeinbytes );
 	SetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//set INTRSR flag for TRIGO
+	//! be sure not to stop run before last isr is ready - or last part is truncated
 
 	UINT32 nos = 0;
 	//ULONG nob = 0;
@@ -840,11 +843,12 @@ void isr( UINT drvno, PVOID pData )
 
 	ULONG dma_subbufinscans = DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS; //500
 
-	ReadLongS0( drvno, &nos, DmaAddr_NOS );
-	//ReadLongS0(drvno, &nob, DmaAddr_NOB);
-	ReadLongS0( drvno, &blocks, DmaAddr_NOB );
+	ReadLongS0(drvno, &nos, DmaAddr_NOS);
+	ReadLongS0(drvno, &blocks, DmaAddr_NOB);
 
-	USHORT* pdmasubbuf_base = pDMASubBuf[drvno];
+	USHORT* pdmasubbuf_base_lo = pDMASubBuf[drvno];
+	USHORT* pdmasubbuf_base_hi = pDMASubBuf[drvno] + subbuflengthinbytes / sizeof(USHORT);
+	USHORT* pdmasubbuf_base = pdmasubbuf_base_lo;
 	ULONG introverall;
 
 
@@ -878,7 +882,11 @@ void isr( UINT drvno, PVOID pData )
 		return;
 	}*/
 
-	pdmasubbuf_base += SubBufCounter[drvno] * subbuflengthinbytes / sizeof( USHORT );  // cnt in USHORT
+	//pdmasubbuf_base += SubBufCounter[drvno] * subbuflengthinbytes / sizeof(USHORT);  // cnt in USHORT
+	if (SubBufCounter[drvno] == 0)
+		{pdmasubbuf_base = pdmasubbuf_base_lo;}
+	else
+		{ pdmasubbuf_base = pdmasubbuf_base_hi;}
 
 	/*
 	UINT64 DMAbigbufsize = nos * blocks *_PIXEL;// +subbuflengthinbytes / sizeof(USHORT);  //in USHORT
@@ -895,11 +903,7 @@ void isr( UINT drvno, PVOID pData )
 
 	//WDC_Err("pDMABigBufIndex: 0x%x \n", pDMABigBufIndex[drvno]);
 
-	START = ticksTimestamp(); //set global START for next loop
-	WaitforTelapsed( 900 );//bugfix: if not, the last scan is not in the smallbuf, 700 is too small
 	//here  the copyprocess happens
-	//! 
-
 	memcpy_s( pDMABigBufIndex[drvno], subbuflengthinbytes, pdmasubbuf_base, subbuflengthinbytes );//DMA_bufsizeinbytes/10
 	// A.M. 08.Jan.2018 subbuflengthinbytes/ aCAMCNT[drvno]
 	//memset(pDMABigBufIndex[drvno], IsrCounter, subbuflengthinbytes  ); //  0xAAAA=43690 , 0101= 257
@@ -1922,8 +1926,8 @@ int keyCheckForBlockTrigger( UINT32 board_sel )
 }
 
 /**
-\brief Const burst loop with DMA initiated by hardware DREQ. Read nos lines from FIFO.
-\param exttrig Sets scan timer.
+\brief Const burst loop with DMA initiated by hardware DREQ. Read nos lines from FIFO. this is the main loop
+\param board_sel sets interface board
 \return none
 */
 void ReadFFLoop( UINT32 board_sel )
@@ -3028,11 +3032,12 @@ UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block,
 	//init index with base position of pixel
 	UINT32 index = pixel;
 	//position of index at CAM position
-	index += CAM * aPIXEL[drvno];
+	index += CAM * (aPIXEL[drvno] + 4);  //GS! offset of 4 pixel via pipelining from CAM1 to CAM2
 	//position of index at sample
 	index += sample * aCAMCNT[drvno] * aPIXEL[drvno];
 	//position of index at block
 	index += block * (*Nospb) * aCAMCNT[drvno] * aPIXEL[drvno];
+
 	return index;
 }
 

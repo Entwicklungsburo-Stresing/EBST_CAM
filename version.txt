@@ -1,3 +1,7 @@
+v3.15.3
+- isr routine needs SubBufCounter which was reset by main loop - last DMA block not copied
+- ReturnFrame has offset of 4 pixel to next scan
+
 v3.15.2
 - fix TRMS calculation in CCDExamp
 
