@@ -33,13 +33,13 @@ enum adc_mode
 #define _MINREPTIME 20
 #define	DRV	1	//1 if only one interface board LSCPCI1 or LSCISA1 in example
 						// could be 2..4 for multiple boards
-#define CAMCNT 1
+#define CAMCNT 2
 #define _PIXEL 1088
 //settings for 8 Bit cameras
 //static	unsigned long FLAG816 = 2;  // 2=8Bit, 1=12/16Bit
 //static int YSHIFT = 0;				// 8Bit=0, 12Bit=4 or more for ddrep>1
-//static int YSHIFT = 4;				// 12Bit=4 or more for addrep>1
-static int YSHIFT = 8;			// 16bit=8
+static int YSHIFT = 4;				// 12Bit=4 or more for addrep>1
+//static int YSHIFT = 8;			// 16bit=8
 //static int YSHIFT = 6;			// 14 bit
 // camera values for calling GETCCD and InitBoard
 #define _FFTLINES 64 		// no of vertical lines of FFT sensors, usually 64
@@ -62,7 +62,7 @@ static int	LOY = 41;				// left upper x-corner of plot
 static unsigned int XLENGTH = _PIXEL + 50;			// x-width of  plot 
 static unsigned int YLENGTH = 255;			// y-width
 //for trms calcs
-#define TRMSpix  500 //(8-1)*150-100// _PIXEL/2	//pixel no for which the rms value is sampled
+#define TRMSpix  550 //(8-1)*150-100// _PIXEL/2	//pixel no for which the rms value is sampled
 // global declarations for CCDEXAMP
 HDC hMSDC;	// global stored measure DC of our window
 HWND hMSWND; // global stored measure HWND of our window
