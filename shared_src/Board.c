@@ -223,11 +223,11 @@ void AboutS0( UINT32 drvno )
 	#define entries  41		//32 
 	int i, j = 0;
 	int numberOfBars = 0;
-	char fn[entries*30];
+	char fn[entries*40];
 	UINT32 S0Data = 0;
 	ULONG length = 0;
 	HWND hWnd;
-	char LUTS0Reg[entries][30] = {
+	char LUTS0Reg[entries][40] = {
 		"DBR \t",
 		"CTRLA \t",
 		"XCKLL \t",
