@@ -2100,7 +2100,7 @@ void ReadFFLoop( UINT32 board_sel )
 	// DMAWRACT _______-----___
 	// BLOCKON ---------_______
 	// MEASUREON ---------_____
-	Sleep(1);
+	WaitforTelapsed(100);
 	if (board_sel == 1 || board_sel == 3)
 	{
 		resetMeasureOn(1);
