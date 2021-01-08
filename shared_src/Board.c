@@ -2079,38 +2079,36 @@ void ReadFFLoop( UINT32 board_sel )
 			resetBlockOn( 2 );
 		}
 	}//block cnt read function
-
 	if (board_sel == 1 || board_sel == 3)
 	{
 		StopSTimer( 1 );
-		resetMeasureOn( 1 );
-		/*
-		ReadLongS0( 1, &data, DmaAddr_PCIEFLAGS );
-		data &= 0xffffffdf;
-		WriteLongS0( 1, data, DmaAddr_PCIEFLAGS );
-		//ReadLongS0( 1, &data, DmaAddr_PCIEFLAGS );
-		//ValMsg( data );*/ 
-		//SetIntFFTrig( 1 );//disable ext input
 	}
 	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 	{
 		StopSTimer( 2 );
-		resetMeasureOn( 2 );
-		//SetIntFFTrig( 2 );//disable ext input
 	}
-
 	if (board_sel == 1 || board_sel == 3)
 	{
-		//Sleep( 2 ); //DMA is not ready //removed 22.07.2020 FH
 		GetLastBufPart( 1 );
 	}
 	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 	{
-		//Sleep( 2 ); //DMA is not ready //removed 22.07.2020 FH
 		GetLastBufPart( 2 );
 	}
-
-	//Sleep( 2 );
+	// This sleep is here to prevent the measurement beeing interrupted too early. When operating with 2 cameras the last scan could be cut off without the sleep. This is only a workaround. The problem is that the software is waiting for RSTIMER beeing reset by the hardware before setting measure on and block on to low, but the last DMA is done after RSTIMER beeing reset. BLOCKON and MEASUREON should be reset after all DMAs are done.
+	// RSTIMER --------________
+	// DMAWRACT _______-----___
+	// BLOCKON ---------_______
+	// MEASUREON ---------_____
+	Sleep(1);
+	if (board_sel == 1 || board_sel == 3)
+	{
+		resetMeasureOn(1);
+	}
+	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
+	{
+		resetMeasureOn(2);
+	}
 	return;
 }
 
