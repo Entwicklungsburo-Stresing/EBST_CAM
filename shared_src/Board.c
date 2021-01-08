@@ -223,11 +223,11 @@ void AboutS0( UINT32 drvno )
 	#define entries  41		//32 
 	int i, j = 0;
 	int numberOfBars = 0;
-	char fn[entries*40];
+	char fn[entries*30];
 	UINT32 S0Data = 0;
 	ULONG length = 0;
 	HWND hWnd;
-	char LUTS0Reg[entries][40] = {
+	char LUTS0Reg[entries][30] = {
 		"DBR \t",
 		"CTRLA \t",
 		"XCKLL \t",
@@ -2110,7 +2110,7 @@ void ReadFFLoop( UINT32 board_sel )
 		GetLastBufPart( 2 );
 	}
 
-	//Sleep( 1 );
+	//Sleep( 2 );
 	return;
 }
 

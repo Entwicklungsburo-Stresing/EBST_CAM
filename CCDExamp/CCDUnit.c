@@ -6,6 +6,7 @@ volatile int testcnt = 0;
 UINT choosen_board = 1;
 BOOL both_boards = FALSE;
 BOOL cont_mode = FALSE;
+ULONG ERRCNT = 0;
 
 /*
 void GetRmsVal(BYTE ch, ULONG nos)
@@ -336,12 +337,13 @@ void UpdateTxT(void)
 	Dispcnt += 1;
 	j += sprintf_s(TrmsString + j, 260, " x: %i y: %i ", xPos, yVal);
 
+	if (DisplData[0][1088 + 1000] != 989) ERRCNT += 1;
 	if (ShowTrms)
 	{
 		//j=sprintf(TrmsString,"                                                           ") ;//clear old display
 		//TextOut(hMSDC,20,YLENGTH + 50,TrmsString,j);
 		j += sprintf_s(TrmsString + j, 260, " Trms of Pixel %lu CH1 is %.1f ", TRMSpix, TRMSval_global[0]);
-		j += sprintf_s(TrmsString + j, 260, " -- scan: %lu,  %lu         ", DisplData[0][5],DisplData[0][1094]);
+		j += sprintf_s(TrmsString + j, 260, " -- scan: %lu, err: %lu         ", DisplData[0][5],ERRCNT);
 		TextOut(hMSDC, 20, YLENGTH + 50, TrmsString, j);
 	}
 
@@ -548,7 +550,6 @@ void startMess(void *dummy)
 	DWORD priority = 0;
 	ULONG pixel = 0;
 	ULONG maxcnt = 0;
-	ULONG errcnt = 0;
 	ULONG val[1000];
 	ULONG val1 = 0;
 
@@ -564,9 +565,6 @@ void startMess(void *dummy)
 		j = sprintf_s( header, 260, " One Shot mode - Cancel with ESC or space- key                    " );
 	TextOut(hMSDC, 100, LOY - 17, header, j);
 	RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
-
-	//GS why delay?
-	Sleep(100);
 #ifdef _DLL
 	if (both_boards)
 		DLLReadFFLoop(choosen_board, ExpTime, EXTTRIGFLAG, 0, 0, 3);//if both cams are activated
