@@ -33,7 +33,7 @@ void	*dummy;
 ULONG ADRDELAY = 1000;			// -> is set in SetBoardVars
 //#include "GLOBAL.H"
 #include "shared_src/board.h"
-//extern volatile PUSHORT pDMABigBufBase[3];
+//extern volatile PUSHORT pBigBufBase[3];
 
 #ifdef _DLL
 #define DllAccess __declspec( dllexport )

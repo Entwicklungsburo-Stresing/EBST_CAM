@@ -82,7 +82,7 @@ BOOL WINAPI DLLMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved )
 */
 DllAccess void DLLInitGlobals( struct global_vars g )
 {
-	pDMABigBufBase = g.pDMABigBufBase;
+	pBigBufBase = g.pBigBufBase;
 	hDev = g.hDev;
 	aPIXEL = g.aPIXEL;
 	aCAMCNT = g.aCAMCNT;
