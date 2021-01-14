@@ -30,7 +30,7 @@ struct ffloopparams
 
 struct global_vars
 {
-	USHORT** pDMABigBufBase;
+	USHORT** pBigBufBase;
 	WDC_DEVICE_HANDLE* hDev;
 	//PWDC_DEVICE* pDev;
 	ULONG* aPIXEL;
@@ -39,7 +39,7 @@ struct global_vars
 };
 
 extern int newDLL;
-extern USHORT** pDMABigBufBase;
+extern USHORT** pBigBufBase;
 extern int Nob;
 extern int* Nospb;
 extern ULONG* aCAMCNT;	// cameras parallel

@@ -474,7 +474,7 @@ DllAccess void DLLSetupDMA( UINT32 drv, void* pdioden, UINT32 nos, UINT32 nob )
 
 	//pass mem pointer to DMA ISR via global pDMABigBuf before calling SetupPCIE_DMA!
 	//pDMABigBuf = pdioden;
-	pDMABigBufBase[drv] = pdioden;
+	pBigBufBase[drv] = pdioden;
 						   //ErrorMsg(" Camera found"); //without this message is a crash in the first call ...
 						   //must before the functionSetupPCIE_DMA or after DLLDrvInit
 						   //Sleep(1000);
@@ -492,7 +492,7 @@ DllAccess void DLLSetupDMA( UINT32 drv, void* pdioden, UINT32 nos, UINT32 nob )
 Call this func once as it takes time to allocate the resources.
 But be aware: the buffer size and nos is set here and may not be changed later.
 If size changes: DLLClenupDMA and DLLSetupDMA must be called.
-Read nos lines from FIFO, copy to just  one very big contigous block: pDMABigBufBase.
+Read nos lines from FIFO, copy to just  one very big contigous block: pBigBufBase.
 \param drvno PCIe board identifier.
 \param nos number of samples
 \param nob number of blocks
@@ -535,7 +535,7 @@ DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UIN
 	memcpy( pdest, pframe, length * sizeof( UINT16 ) );  // length in bytes
 	/*
 	WDC_Err( "RETURN FRAME: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, _PIXEL: %u, length: %u\n", drvno, curr_nos, curr_nob, curr_cam, _PIXEL, length );
-	WDC_Err("FRAME2: address Buff: 0x%x \n", pDMABigBufBase[drvno]);
+	WDC_Err("FRAME2: address Buff: 0x%x \n", pBigBufBase[drvno]);
 	WDC_Err("FRAME2: address pdio: 0x%x \n", pdioden);
 	WDC_Err("FRAME3: pix42 of ReturnFrame: %d \n", *((USHORT*)pdioden + 420));
 	WDC_Err("FRAME3: pix43 of ReturnFrame: %d \n", *((USHORT*)pdioden + 422));
