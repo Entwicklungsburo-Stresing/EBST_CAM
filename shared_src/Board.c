@@ -47,6 +47,7 @@ BOOL _SHOW_MSG = TRUE;
 __int64 TPS = 0;				// ticks per second; is set in InitHRCounter
 ULONG NO_TLPS;//0x12; //was 0x11-> x-offset			//0x11=17*128  = 2176 Bytes  = 1088 WORDS
 ULONG TLPSIZE = 0x20; //default = 0x20 A.M. Dec'20 //with0x21: crash
+ULONG BDATA = 0;
 volatile UINT16* pDMABigBufIndex[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 __int64 START = 0;				// global variable for sync to systemtimer
 
@@ -571,47 +572,58 @@ BOOL SetDMAAddrTlp( UINT32 drvno )
 	WD_DMA **ppDma = &pDMASubBufInfos[drvno];
 	UINT64 PhysAddrDMABuf64;
 	ULONG BitMask;
-	ULONG BData = 0;
+	//ULONG BData = 0; //-> ersetzt durch globale variable BDATA
 	int tlpmode = 0;
 
 
-	ReadLongIOPort( drvno, &BData, PCIeAddr_devCap );
-	tlpmode = BData & 0x7;//0xE0 ;
+	ReadLongIOPort( drvno, &BDATA, PCIeAddr_devCap );
+	tlpmode = BDATA & 0x7;//0xE0 ;
 	//tlpmode = tlpmode >> 5;
 	if (_FORCETLPS128) tlpmode = 0;
 
-	BData &= 0xFFFFFF1F;//delete the old values
-	BData |= (0x2 << 12);//set maxreadrequestsize
+	BDATA &= 0xFFFFFF1F;//delete the old values
+	BDATA |= (0x2 << 12);//set maxreadrequestsize
 	switch (tlpmode)
 	{
 	case 0:
-		BData |= 0x00;//set to 128 bytes = 32 DWORDS 
+		BDATA |= 0x00;//set to 128 bytes = 32 DWORDS 
 		//BData |= 0x00000020;//set from 128 to 256 
-		WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
+		//WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
 		//NO_TLPS setup now in setboardvars
 		TLPSIZE = 0x20;
 		break;
 	case 1:
-		BData |= 0x20;//set to 256 bytes = 64 DWORDS 
+		BDATA |= 0x20;//set to 256 bytes = 64 DWORDS 
 		//BData |= 0x00000020;//set to 256 
-		WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
+		//WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
 		//NO_TLPS = 0x9;//x9 was before. 0x10 is calculated in aboutlp and 0x7 is working;
 		TLPSIZE = 0x40;
 		break;
 	case 2:
-		BData |= 0x40;//set to 512 bytes = 128 DWORDS 
+		BDATA |= 0x40;//set to 512 bytes = 128 DWORDS 
 		//BData |= 0x00000020;//set to 512 
-		WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
+		//WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
 		//NO_TLPS = 0x5;
 		TLPSIZE = 0x80;
 		break;
 	}
+	//ValMsg( BData ); //TESTPOINT
 
-	//write Address
+	if (MANUAL_OVERRIDE_TLP)
+		SetManualTLP_vars();
+
+	WriteLongIOPort( drvno, BDATA, PCIeAddr_devStatCtrl );
 	PhysAddrDMABuf64 = (*ppDma)->Page[0].pPhysicalAddr;
 	if (!SetDMAAddrTlpRegs( PhysAddrDMABuf64, TLPSIZE, NO_TLPS, drvno ))  //here the tlp counts are set by global NO_TLPS via SetBoardVars
 		return FALSE;
 	return TRUE;
+}
+
+void SetManualTLP_vars(void)
+{
+	BDATA |= 0x00;
+	TLPSIZE = 0x20;
+	NO_TLPS = 0x11;
 }
 
 BOOL SetDMABufRegs( UINT32 drvno, ULONG nos, ULONG nob, ULONG camcnt )
@@ -1235,7 +1247,7 @@ BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel )
 	if (LEGACY_202_14_TLPCNT) NO_TLPS = NO_TLPS + 1;
 
 
-	//NO_TLPS = 5;
+	//NO_TLPS = 0x10; //FIXME
 	//set global vars if driver is there
 
 	aPIXEL[drvno] = pixel;
