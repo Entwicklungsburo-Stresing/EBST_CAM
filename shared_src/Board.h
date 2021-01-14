@@ -14,6 +14,7 @@
 #define DMA_64BIT_EN FALSE
 #define _FORCETLPS128 TRUE	//only use payload size 128byte
 #define LEGACY_202_14_TLPCNT FALSE
+#define MANUAL_OVERRIDE_TLP TRUE // values are defined in board.c -> SetManualTLP()
 #define DMA_DMASPERINTR DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb 
 #define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
 #define INTR_EN TRUE		// enables INTR
@@ -65,6 +66,7 @@ BOOL InitBoard( UINT32 drvno );	// init the board and alloc mem, call only once 
 BOOL SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno );
 BOOL SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno );
 BOOL SetDMAAddrTlp( UINT32 drvno );
+void SetManualTLP_vars( void );
 BOOL SetDMABufRegs( UINT32 drvno, ULONG nos, ULONG nob, ULONG camcnt );
 void SetDMAReset( UINT32 drvno );
 void SetDMAStart( UINT32 drvno );
