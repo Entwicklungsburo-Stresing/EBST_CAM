@@ -14,7 +14,7 @@
 #define DMA_64BIT_EN FALSE
 #define _FORCETLPS128 TRUE	//only use payload size 128byte
 #define LEGACY_202_14_TLPCNT FALSE
-#define MANUAL_OVERRIDE_TLP TRUE // values are defined in board.c -> SetManualTLP()
+#define MANUAL_OVERRIDE_TLP FALSE // values are defined in board.c -> SetManualTLP()
 #define DMA_DMASPERINTR DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb 
 #define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
 #define INTR_EN TRUE		// enables INTR
