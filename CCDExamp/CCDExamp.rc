@@ -11,6 +11,7 @@
 #include "windows.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 #include "global.h"
+#include "version.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -333,8 +334,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,15,4,0
- PRODUCTVERSION 3,15,4,0
+ FILEVERSION VER_FILE_VERSION
+ PRODUCTVERSION VER_PRODUCT_VERSION
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -349,14 +350,14 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "EB Stresing - Berlin"
+            VALUE "CompanyName", VER_COMPANY_NAME "\0"
             VALUE "FileDescription", "CCDExamp"
-            VALUE "FileVersion", "3.15.4.0"
+            VALUE "FileVersion", VER_FILE_VERSION_STR "\0"
             VALUE "InternalName", "CCDExamp"
-            VALUE "LegalCopyright", "Copyright EB Stresing (C) 2020"
+            VALUE "LegalCopyright", VER_COPYRIGHT_STR "\0"
             VALUE "OriginalFilename", "CCDExamp.exe"
             VALUE "ProductName", "CCD Example"
-            VALUE "ProductVersion", "3.15.4.0"
+            VALUE "ProductVersion", VER_FILE_VERSION_STR "\0"
         END
     END
     BLOCK "VarFileInfo"
