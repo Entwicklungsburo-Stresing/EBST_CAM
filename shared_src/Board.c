@@ -49,7 +49,6 @@ ULONG NO_TLPS;//0x12; //was 0x11-> x-offset			//0x11=17*128  = 2176 Bytes  = 108
 ULONG TLPSIZE = 0x20; //default = 0x20 A.M. Dec'20 //with0x21: crash
 ULONG BDATA = 0;
 volatile UINT16* pDMABigBufIndex[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
-__int64 START = 0;				// global variable for sync to systemtimer
 
 // extern global variables
 int newDLL = 0;
@@ -3064,30 +3063,26 @@ void* GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block
 	return &pDMABigBufBase[drvno][GetIndexOfPixel( drvno, pixel, sample, block, CAM )];
 }
 
+/**
+\brief This functions returns after a time given in microseconds. The time is measured in CPU ticks. The function is escable by pressing ESC.
+\param musec Time to wait in microseconds.
+\return 1 when success, 0 when aborted by ESC or failure
+*/
 UINT8 WaitforTelapsed( LONGLONG musec )
 {
-	BOOL Space = FALSE;
-	BOOL Abbruch = FALSE;
-	LONGLONG expttics = musec * TPS / 1000000;//TPS
-	LONGLONG loopcnt = 0;
-
-	//SetPriority(15);		//set priority threadp 1..31 / 15 = highestnormal
-
-	START = ticksTimestamp();
-	//WDC_Err("Startzeit: %lld\n", START);
-	while ((expttics + START > ticksTimestamp()) && (!Abbruch))
-	{// wait until time elapsed
-		//WaitTrigger(1, FALSE, &Space, &Abbruch); //check for ESC key - PS2 only
-		loopcnt += 1;
+	LONGLONG ticks_to_wait = musec * TPS / 1000000;
+	LONGLONG start_timestamp = ticksTimestamp();
+	LONGLONG destination_timestamp = start_timestamp + ticks_to_wait;
+	//WDC_Err("Startzeit: %lld\n", start_timestamp);
+	// detect overflow
+	if (destination_timestamp < start_timestamp) return 0;
+	// wait until time elapsed
+	while (destination_timestamp > ticksTimestamp())
+	{
+		if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 1 ) | escape_readffloop) return 0; // check for kill ?
 	}
-
-	//START = ticksTimestamp();
-	//WDC_Err("Endzeit:  %lld\n", START);
-
-	//ResetPriority(); //set global START for next loop
-
-	if (loopcnt < 100) return 1;
-	return 0; // loop was too short - exposure time must be increased
+	//WDC_Err("Endzeit:  %lld\n", ticksTimestamp());
+	return 1;
 }//WaitforTelapsed
 
 /**
