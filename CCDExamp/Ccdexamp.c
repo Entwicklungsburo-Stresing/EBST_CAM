@@ -25,17 +25,16 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow )
 {
 	MSG      msg;
-
+	SetGlobalVariables( choosen_board, CAMCNT, _PIXEL );
 	if (!InitApplication( hInstance ))
 		return FALSE;
 
 	//make init here, that CCDExamp can be used to read the act regs...
-	if (!SetBoardVars( choosen_board, aCAMCNT[choosen_board], _PIXEL ))
+	if (!SetBoardVars( choosen_board ))
 	{
 		ErrorMsg( "Error in SetBoardVars" );
 		return FALSE;
 	}
-
 	//show allocate buffer dialog before entering main application
 	if(_ISFFT) DialogBox( hInstance, MAKEINTRESOURCE( IDD_SETFULLBIN ), hMSWND, (DLGPROC)FullBinning );
 	else DialogBox( hInstance, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
@@ -1324,18 +1323,18 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 				*Nospb = nospb_input;
 
 #ifdef _DLL
-				nDLLSetupDMA( DRV, *Nospb, Nob );
+				DLLSetupUserMem( DRV, *Nospb, Nob );
 				if (both_boards)
-					nDLLSetupDMA( 2, *Nospb, Nob );
+					DLLSetupUserMem( 2, *Nospb, Nob );
 #else
-				if (!BufLock( choosen_board, CAMCNT ))
+				if (!allocateUserMemory( choosen_board ))
 					MessageBox( hMSWND, "allocating Buffer fails", "Error", MB_OK );
 				else
 					MessageBox( hMSWND, "allocating Buffer succeeded", "Message", MB_OK );
 
 				if (both_boards)
 				{
-					if (!BufLock( 2, CAMCNT ))
+					if (!allocateUserMemory( 2 ))
 						MessageBox( hMSWND, "allocating Buffer of second Board fails", "Error", MB_OK );
 					else
 						MessageBox( hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK );
@@ -1386,15 +1385,15 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 				Nob = nob_input;
 				*Nospb = nospb_input;
 #ifdef _DLL
-				nDLLSetupDMA( DRV, *Nospb, Nob );
+				DLLSetupUserMem( DRV, *Nospb, Nob );
 				if (both_boards)
-					nDLLSetupDMA( 2, *Nospb, Nob );
+					DLLSetupUserMem( 2, *Nospb, Nob );
 			}
 #else
 				FreeMemInfo( &builtinram, &freeram );
 				freeram_old = freeram;
 
-				if (!BufLock( choosen_board, CAMCNT ))
+				if (!allocateUserMemory( choosen_board ))
 					MessageBox( hMSWND, "allocating Buffer fails", "Error", MB_OK );
 				else
 					MessageBox( hMSWND, "allocating Buffer succeeded", "Message", MB_OK );
@@ -1410,17 +1409,17 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 #endif
 			break;
 #ifdef _DLL
-			nDLLSetupDMA( DRV, *Nospb, Nob );
+			DLLSetupUserMem( DRV, *Nospb, Nob );
 			if (both_boards)
-				nDLLSetupDMA( 2, *Nospb, Nob );
+				DLLSetupUserMem( 2, *Nospb, Nob );
 #else
-			if (!BufLock( choosen_board, CAMCNT ))
+			if (!allocateUserMemory( choosen_board ))
 				MessageBox( hMSWND, "allocating Buffer fails", "Error", MB_OK );
 			else
 				MessageBox( hMSWND, "allocating Buffer succeeded", "Message", MB_OK );
 			if (both_boards)
 			{
-				if (!BufLock( 2, CAMCNT))
+				if (!allocateUserMemory( 2 ))
 					MessageBox( hMSWND, "allocating Buffer of second Board fails", "Error", MB_OK );
 				else
 					MessageBox( hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK );

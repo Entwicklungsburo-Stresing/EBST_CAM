@@ -73,11 +73,12 @@ void SetDMAStart( UINT32 drvno );
 ULONG GetScanindex( UINT32 drvno );
 void GetLastBufPart( UINT32 drvno );
 void isr( UINT drvno, PVOID pData );
-BOOL SetupPCIE_DMA( UINT32 drvno, ULONG nos, ULONG nob );
+BOOL SetupPCIE_DMA( UINT32 drvno );
 void StartPCIE_DMAWrite( UINT32 drvno );
 void CleanupPCIE_DMA( UINT32 drvno );
 int GetNumofProcessors();
-BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel );
+void SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel );
+BOOL SetBoardVars( UINT32 drvno );
 // clear camera with reads
 void AboutDrv( UINT32 drvno );	// displays the version and board ID = test if board is there
 //	functions for managing controlbits in CtrlA register
@@ -177,7 +178,7 @@ BOOL AutostartXckForLines( UINT32 drvno );
 BOOL ResetAutostartXck( UINT32 drvno );
 void InitProDLL();
 BOOL isDmaSet( UINT32 drvno );
-BOOL BufLock( UINT drvno, UINT camcnt);
+BOOL allocateUserMemory( UINT drvno );
 BOOL isMeasureOn( UINT32 drvno );
 BOOL isBlockOn( UINT32 drvno );
 void waitForMeasureReady( UINT32 drvno );
