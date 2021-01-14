@@ -77,7 +77,7 @@ BOOL SetupPCIE_DMA( UINT32 drvno );
 void StartPCIE_DMAWrite( UINT32 drvno );
 void CleanupPCIE_DMA( UINT32 drvno );
 int GetNumofProcessors();
-void SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel );
+BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel );
 BOOL SetBoardVars( UINT32 drvno );
 // clear camera with reads
 void AboutDrv( UINT32 drvno );	// displays the version and board ID = test if board is there

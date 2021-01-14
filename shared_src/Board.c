@@ -1130,9 +1130,9 @@ int GetNumofProcessors()
 \brief Set global variables camcnt, pixel and TLP size depending on pixel. Best call before doing anything else.
 \param camcnt camera count
 \param pixel pixel count
-\return none
+\return TRUE for success, otherwise FALSE
 */
-void SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel )
+BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel )
 {
 	/*Pixelsize with matching TLP Count (TLPC).
 	Pixelsize = TLPS * TLPC - 1*TLPS
@@ -1210,6 +1210,7 @@ void SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel )
 	if (LEGACY_202_14_TLPCNT) NO_TLPS = NO_TLPS + 1;
 	aPIXEL[drvno] = pixel;
 	aCAMCNT[drvno] = camcnt;
+	return TRUE;
 }
 
 /**
