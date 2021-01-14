@@ -179,7 +179,7 @@ void CopytoDispbuf(ULONG scan)
 #else
 
 	PUSHORT tempBuf;
-	tempBuf = pDMABigBufBase[choosen_board] + CAMCNT * scan * _PIXEL;
+	tempBuf = pBigBufBase[choosen_board] + CAMCNT * scan * _PIXEL;
 #endif
 	for (i = 0; i < (_PIXEL*CAMCNT - 1); i++) {
 
@@ -190,7 +190,7 @@ void CopytoDispbuf(ULONG scan)
 #ifdef _DLL
 		DLLReturnFrame(2, scan, 0, &tempBuf);
 #else
-		tempBuf = pDMABigBufBase[2] + scan * _PIXEL*CAMCNT;
+		tempBuf = pBigBufBase[2] + scan * _PIXEL*CAMCNT;
 #endif
 		for (i = 0; i < (_PIXEL*CAMCNT - 1); i++) {
 			DisplData[1][i] = *(tempBuf + i);//DIODENRingBuf[i + 0*FirstPageOffset + 0 * RAMPAGESIZE];//20: its a random number of the Ringbuffer (max 99)
