@@ -141,10 +141,10 @@ DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 
  //if (!InitBoard(drvno)) return 0; //must be called once before any other
  //if FIFO pclk=waits : read frequency; waits is set = 0 for max. FIFO read frequency
  // NO FIFO version: pclk not used.
+	SetGlobalVariables( drv, camcnt, pixel );
 	InitBoard( drv );
-	if (!SetBoardVars( drv, camcnt, pixel, xckdelay )) return 0; //sets data for transfer
-	aPIXEL[drv] = pixel; // set globals
-	ADRDELAY = xckdelay;
+	if (!SetBoardVars( drv )) return 0; //sets data for transfer
+	ADRDELAY = xckdelay; //TODO: why is this unused?
 	// AboutS0(drvno);
 	return 1; // no error
 }
@@ -487,7 +487,7 @@ DllAccess void DLLSetupDMA( UINT32 drv, void* pdioden, UINT32 nos, UINT32 nob )
 }//DLLSetupDMA
 
 /**
-\brief Setup DMA initiated by hardware DREQ.
+\brief Setup user memory.
 
 Call this func once as it takes time to allocate the resources.
 But be aware: the buffer size and nos is set here and may not be changed later.
@@ -498,85 +498,26 @@ Read nos lines from FIFO, copy to just  one very big contigous block: pDMABigBuf
 \param nob number of blocks
 \return none
 */
-DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 nob )
+DllAccess void DLLSetupUserMem( UINT32 drv, UINT32 nos, UINT32 nob )
 {
-	//local declarations
-//	char string[20] = "";
-//	void *dummy = NULL;
-	BOOL Abbruch = FALSE;
-	BOOL Space = FALSE;
-	BOOL ExTrig = FALSE;
-	ULONG  lcnt = 0;
-	PUSHORT pdest;
-	BYTE	cnt = 0;
-	int i = 0;
-	ULONG dwdata;
-	UINT64 memory_all_tmp = 0;
-	UINT64 memory_free_tmp = 0;
-	UINT64* memory_all = &memory_all_tmp;//needed to be initialized for errorfree working
-	UINT64* memory_free = &memory_free_tmp;
-	INT64 needed_mem;
-	INT64 needed_mem_mb;
-	INT64 memory_free_mb = 0;
 	Nob = nob;
 	*Nospb = nos;
-
-	WDC_Err( "entered nDLLSetupDMA with drv: %i nos: %i and nob: %i and camcnt: %i\n", drv, nos, nob, aCAMCNT[drv] );
-
-	//checks if the dam routine was already called
-	if (isDmaSet( drv ))
-	{
-		CleanupPCIE_DMA( drv );
-	}
-
-	/*if (!DBGNOCAM)
-	{
-		//Check if Camera there
-		if (!FindCam(drvno))
-		{
-			ErrorMsg("no Camera found");
-			return;
-		}
-	}*/
-
+	WDC_Err( "entered DLLSetupUserMem with drv: %i nos: %i and nob: %i and camcnt: %i\n", drv, nos, nob, aCAMCNT[drv] );
 	//stop all and clear FIFO
 	StopSTimer( drv );
 	SetIntFFTrig( drv );
 	RSFifo( drv );
-
-	//pass mem pointer to DMA ISR via global pDMABigBuf before calling SetupPCIE_DMA!
-	//pDMABigBuf = pdioden;
-
-	FreeMemInfo( memory_all, memory_free );
-	memory_free_mb = *memory_free / (1024 * 1024);
-	needed_mem = (INT64)aCAMCNT[drv] * (INT64)nob * (INT64)nos * (INT64)aPIXEL[drv] * (INT64)sizeof( USHORT );
-	needed_mem_mb = needed_mem / (1024 * 1024);
-
-	//check if enough space is available in the physical ram
-	if (*memory_free > (UINT64)needed_mem)
+	allocateUserMemory( drv );
+	//set hardware regs
+	if (!SetDMABufRegs( drv, nos, nob, aCAMCNT[drv] ))
 	{
-		pDMABigBufBase[drv] = calloc( aCAMCNT[drv] * (nos)*nob * aPIXEL[drv], sizeof( USHORT ) );   // +1 oder *2 weil sonst absturz im continuous mode
-		// sometimes it makes one ISR more, so better to allocate nos+1 thaT IN THIS CASE THE ADDRESS pDMAIndex is valid
-		WDC_Err( "available memory:%lld MB\n \tmemory needed: %lld MB\n", memory_free_mb, needed_mem_mb );
-	}
-	else
-	{
-		ErrorMsg( "Not enough physical RAM available!" );
-		WDC_Err( "ERROR for buffer %d: available memory: %lld MB \n \tmemory needed: %lld MB\n", number_of_boards, memory_free_mb, needed_mem_mb );
-	}
-	//pDIODEN = (pArrayT)calloc(nob, nospb * _PIXEL * sizeof(ArrayT));
-	//pDMABigBufBase[drvno] = pdioden;
-	//ErrorMsg(" Camera found"); //without this message is a crash in the first call ...
-	//must before the functionSetupPCIE_DMA or after DLLDrvInit
-	//Sleep(1000);
-
-	if (!SetupPCIE_DMA( drv, nos, nob ))  //get also buffer address
-	{
-		ErrorMsg( "Error in SetupPCIE_DMA" );
-		return;
+		ErrLog( "DMARegisterInit for Buffer failed \n" );
+		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
+		ErrorMsg( "DMARegisterInit for Buffer failed" );
+		return FALSE;
 	}
 	return;
-}//nDLLSetupDMA
+}//DLLSetupUserMem
 
 /**
 \brief Copies one frame of pixel data to pdest.

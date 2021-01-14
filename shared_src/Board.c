@@ -406,13 +406,8 @@ BOOL InitBoard( UINT32 drvno )
 	if ((drvno < 1) || (drvno > 2)) return FALSE;
 	//PWDC_DEVICE pDev = (PWDC_DEVICE)hDev;
 	volatile DWORD dwStatus = 0;
-
-
-
 	WDC_Err( "Info: scan result: a board found:%lx , dev=%lx, ven=%lx \n",
 		scanResult.dwNumDevices, scanResult.deviceId[drvno - 1].dwDeviceId, scanResult.deviceId[drvno - 1].dwVendorId );
-
-
 	//gives the information received from PciScanDevices to PciGetDeviceInfo
 	BZERO( deviceInfo[drvno] );
 	memcpy( &deviceInfo[drvno].pciSlot, &scanResult.deviceSlot[drvno - 1], sizeof( deviceInfo[drvno].pciSlot ) );
@@ -467,7 +462,7 @@ BOOL InitBoard( UINT32 drvno )
 	}
 	WDC_Err("KPCALL: Version: %u \n", Data.dwVer);
 	*/
-
+	if (!SetupPCIE_DMA( drvno )) ErrorMsg( "Error in SetupPCIE_DMA" );
 	return TRUE;
 
 };  // InitBoard
@@ -959,7 +954,7 @@ VOID DLLCALLCONV interrupt_handler2( PVOID pData ) { isr( 2, pData ); }
 \brief Alloc DMA buffer - should only be called once.
 Gets address of DMASubBuf from driver and copy it later to our pDMABigBuf.
 */
-BOOL SetupPCIE_DMA( UINT32 drvno, ULONG nos, ULONG nob )
+BOOL SetupPCIE_DMA( UINT32 drvno )
 {
 	DWORD dwStatus;
 	PUSHORT tempBuf;
@@ -1036,16 +1031,6 @@ BOOL SetupPCIE_DMA( UINT32 drvno, ULONG nos, ULONG nob )
 		ErrorMsg( "DMARegisterInit for TLP and Addr failed" );
 		return FALSE;
 	}
-
-	//count only whats needed - was set in nDLLSetupDMA
-	if (!SetDMABufRegs( drvno, nos, nob, aCAMCNT[drvno] ))
-	{  //set hardware regs
-		ErrLog( "DMARegisterInit for Buffer failed \n" );
-		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
-		ErrorMsg( "DMARegisterInit for Buffer failed" );
-		return FALSE;
-	}
-
 	// DREQ: every XCK h->l starts DMA by hardware
 	//set hardware start des dma  via DREQ withe data = 0x4000000
 	mask = 0x40000000;
@@ -1142,31 +1127,13 @@ int GetNumofProcessors()
 }//GetNumofProcessors
 
 /**
-\brief Initiates board registers.
-\param flag816 =1 for 16 bit (also 14 or 12bit), =2 for 8bit
-\return TRUE if ok
+\brief Set global variables camcnt, pixel and TLP size depending on pixel. Best call before doing anything else.
+\param camcnt camera count
+\param pixel pixel count
+\return none
 */
-BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel )
+void SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel )
 {
-	BYTE data = 0;
-	UINT32 reg = 0;
-	ULONG i = 0;
-	BOOL result = FALSE;
-
-	if (hDev[drvno] == INVALID_HANDLE_VALUE)
-	{
-		WDC_Err( "Handle is invalid of drvno: %i", drvno );
-		return FALSE;
-	}
-
-	//set startval for CTRLA Reg  +slope, IFC=h, VON=1 
-
-	if (!WriteByteS0( drvno, 0x23, S0Addr_CTRLA )) return FALSE;  //write CTRLA reg in S0
-	//if (_COOLER) ActCooling(drvno, FALSE); //deactivate cooler
-	if (!WriteByteS0( drvno, 0, S0Addr_CTRLB )) return FALSE;;  //write CTRLB reg in S0
-
-	if (!WriteByteS0( drvno, 0, S0Addr_CTRLC )) return FALSE;;  //write CTRLC reg in S0
-
 	/*Pixelsize with matching TLP Count (TLPC).
 	Pixelsize = TLPS * TLPC - 1*TLPS
 	(TLPS TLP size = 64)
@@ -1211,82 +1178,97 @@ BOOL SetBoardVars( UINT32 drvno, UINT32 camcnt, ULONG pixel )
 		...
 		82  8256
 		*/
-
-	//NO_TLPS = pixel / (TLPSIZE * 2); // A.M. Dec'20 NO_TLPS isn't updated automaticly early enough
-
 	switch (pixel)
 	{
-		case 128:
-			NO_TLPS = 0x2;//3
-			break;
-		case 192:
-			NO_TLPS = 0x3;//4
-			break;
-		case 320:
-			NO_TLPS = 0x5;//6
-			break;
-		case 576:
-			NO_TLPS = 0x9;//a
-			break;
-		case 1088:
-			NO_TLPS = 0x11;
-			break;
-		case 2112:
-			NO_TLPS = 0x21;//22
-			break;
-		case 4160:
-			NO_TLPS = 0x41;//42
-			break;
-		case 8256:
-			NO_TLPS = 0x81;//82
-			break;
-		default:
-			return FALSE;
+	case 128:
+		NO_TLPS = 0x2;//3
+		break;
+	case 192:
+		NO_TLPS = 0x3;//4
+		break;
+	case 320:
+		NO_TLPS = 0x5;//6
+		break;
+	case 576:
+		NO_TLPS = 0x9;//a
+		break;
+	case 1088:
+		NO_TLPS = 0x11;
+		break;
+	case 2112:
+		NO_TLPS = 0x21;//22
+		break;
+	case 4160:
+		NO_TLPS = 0x41;//42
+		break;
+	case 8256:
+		NO_TLPS = 0x81;//82
+		break;
+	default:
+		return FALSE;
 	}
 	if (LEGACY_202_14_TLPCNT) NO_TLPS = NO_TLPS + 1;
-
-
-	//NO_TLPS = 0x10; //FIXME
-	//set global vars if driver is there
-
 	aPIXEL[drvno] = pixel;
 	aCAMCNT[drvno] = camcnt;
+}
 
+/**
+\brief Initiates board registers.
+\param flag816 =1 for 16 bit (also 14 or 12bit), =2 for 8bit
+\return TRUE if success. otherwise FALSE
+*/
+BOOL SetBoardVars( UINT32 drvno )
+{
+	if (hDev[drvno] == INVALID_HANDLE_VALUE)
+	{
+		WDC_Err( "Handle is invalid of drvno: %i", drvno );
+		return FALSE;
+	}
+	//set startval for CTRLA Reg  +slope, IFC=h, VON=1 
+	if (!WriteByteS0( drvno, 0x23, S0Addr_CTRLA )) return FALSE;  //write CTRLA reg in S0
+	//if (_COOLER) ActCooling(drvno, FALSE); //deactivate cooler
+	if (!WriteByteS0( drvno, 0, S0Addr_CTRLB )) return FALSE;;  //write CTRLB reg in S0
+	if (!WriteByteS0( drvno, 0, S0Addr_CTRLC )) return FALSE;;  //write CTRLC reg in S0
 	//write pixel to PIXREG  & stop timer & int trig
-	reg = pixel;
-	if (!SetS0Reg( reg, 0xFFFF, S0Addr_PIXREGlow, drvno )) return FALSE;;
-	//if (!WriteLongS0( drvno, reg, S0Addr_PIXREGlow )) return FALSE;; //set pixelreg -> counts received FFwrites and resets XCKI
-	reg = camcnt;
-	if (!SetS0Reg( reg, 0xF, DmaAddr_CAMCNT, drvno )) return FALSE;
-
+	if (!SetS0Reg( aPIXEL[drvno], 0xFFFF, S0Addr_PIXREGlow, drvno )) return FALSE;;
+	if (!SetS0Reg( aCAMCNT[drvno], 0xF, DmaAddr_CAMCNT, drvno )) return FALSE;
 	WDC_Err( "*** SetBoardVars done.\n" );
-
 	return TRUE; //no error
 };  // SetBoardVars
 
-#ifndef _DLL
-BOOL BufLock( UINT drvno, UINT camcnt )
+BOOL allocateUserMemory( UINT drvno )
 {
-	if (WDC_IntIsEnabled( hDev[drvno] ))
-		CleanupPCIE_DMA( drvno );
-	aCAMCNT[drvno] = camcnt;
-	volatile int size = Nob * *Nospb * aPIXEL[drvno] * sizeof( USHORT );
-	USHORT* pDMABigBufBase_temp = calloc( camcnt, Nob *  *Nospb * aPIXEL[drvno] * sizeof( USHORT ) );//B! "2 *" because the buffer is just 2/3 of the needed size 
-	//pDIODEN = (pArrayT)calloc(nob, nospb * _PIXEL * sizeof(ArrayT));
-	if (pDMABigBufBase_temp != 0)
+	UINT64 memory_all = 0;
+	UINT64 memory_free = 0;
+	FreeMemInfo( &memory_all, &memory_free );
+	INT64 memory_free_mb = memory_free / (1024 * 1024);
+	INT64 needed_mem = (INT64)aCAMCNT[drvno] * (INT64)Nob * (INT64)*Nospb * (INT64)aPIXEL[drvno] * (INT64)sizeof( USHORT );
+	INT64 needed_mem_mb = needed_mem / (1024 * 1024);
+	WDC_Err( "available memory:%lld MB\n \tmemory needed: %lld MB\n", memory_free_mb, needed_mem_mb );
+	//check if enough space is available in the physical ram
+	if (memory_free > (UINT64)needed_mem)
 	{
-		pDMABigBufBase[drvno] = pDMABigBufBase_temp;
-		if (!SetupPCIE_DMA( drvno, *Nospb, Nob ))  //get also buffer address
+		// sometimes it makes one ISR more, so better to allocate nos+1 thaT IN THIS CASE THE ADDRESS pDMAIndex is valid
+		//B! "2 *" because the buffer is just 2/3 of the needed size. +1 oder *2 weil sonst absturz im continuous mode
+		USHORT* pDMABigBufBase_temp = calloc( aCAMCNT[drvno] * (*Nospb)*Nob * aPIXEL[drvno], sizeof( USHORT ) );
+		if (pDMABigBufBase_temp != 0)
 		{
-			ErrorMsg( "Error in SetupPCIE_DMA" );
+			pDMABigBufBase[drvno] = pDMABigBufBase_temp;
+			return TRUE;
+		}
+		else
+		{
+			WDC_Err( "Allocating user memory failed.\n" );
 			return FALSE;
 		}
-		return TRUE;
 	}
 	else
+	{
+		ErrorMsg( "Not enough physical RAM available!" );
+		WDC_Err( "ERROR for buffer %d: available memory: %lld MB \n \tmemory needed: %lld MB\n", number_of_boards, memory_free_mb, needed_mem_mb );
 		return FALSE;
+	}
 }
-#endif
 
 /**
 \brief Clears DAT and EC.
