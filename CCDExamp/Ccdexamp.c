@@ -603,8 +603,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 	int j = 0;
 	int xPos = GetCursorPosition();
 	int yVal = DisplData[0][xPos];// YVal(1, xPos);
-	double mwf = 0.0;
-	double trms = 0.0;
 
 	switch (uMsg)
 	{
@@ -729,13 +727,14 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 #endif
 		case IDM_START:
-
-
 			CONTFFLOOP = FALSE;
 			CONTPAUSE = 1;
 			cont_mode = FALSE;
 			if (!Running) startMess( &dummy );
-			CalcTrms(DRV, *Nospb, TRMSpix, 0, &mwf, &TRMSval_global[0]);
+			double mwf = 0.0; //unused
+			//TODO: Here is a problem. The measurement is done in an own thread. So the TRMS calculation could be started here before the measurement is finished. This is why the the value is sometimes wrong after the first measurement. Furthermore the TRMS value probably doesn't match the data currently displayed, instead some or all of the last data is used.
+			CalcTrms( DRV, *Nospb, TRMSpix, 0, &mwf, &TRMSval_global[0] );
+			if(CAMCNT > 1) CalcTrms( DRV, *Nospb, TRMSpix, 1, &mwf, &TRMSval_global[1] );
 			break;
 		case ID_START_STARTCONTINUOUSLY:
 			CONTFFLOOP = TRUE;
