@@ -85,7 +85,7 @@ DllAccess UINT8 DLLResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno );
 DllAccess UINT64 DLLTicksTimestamp( void );
 DllAccess UINT32 DLLTickstous( UINT64 tks );
 DllAccess void DLLSetupDMA( UINT32 drv, void*  pdioden, UINT32 nos, UINT32 blocks );
-DllAccess void nDLLSetupDMA( UINT32 drv, UINT32 nos, UINT32 blocks );
+DllAccess void DLLSetupUserMem( UINT32 drv, UINT32 nos, UINT32 nob );
 DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdioden, UINT32 length );
 DllAccess void DLLCopyAllData( UINT32 drv, UINT16 *pdioden );
 DllAccess void nDLLReadFFLoop( UINT32 board_sel );
