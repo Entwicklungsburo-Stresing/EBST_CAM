@@ -467,11 +467,10 @@ void initMeasurement()
 	default:
 	case PDAsensor:
 		SetSensorType( choosen_board, 0 );
-		//TODO: replace magic numbers with enums
 		//reset auto start in case of setting before
-		ResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-		ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-		ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+		ResetS0Bit( 0, S0Addr_CTRLB, choosen_board );
+		ResetS0Bit( 1, S0Addr_CTRLB, choosen_board );
+		ResetS0Bit( 2, S0Addr_CTRLB, choosen_board );
 		//Reset partial binning
 		WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
 		break;

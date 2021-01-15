@@ -1757,8 +1757,8 @@ void SetISFFT( UINT32 drvno, BOOL set )
 \brief Sets PDA sensor timing(set Reg TOR:D25 -> manual) or FFT.
 \param drvno board number (=1 if one PCI board)
 \param sensor_type Determines sensor type.
-	- 0: FFT
-	- 1: PDA
+	- 0: PDA
+	- 1: FFT
 \return none
 */
 void SetSensorType( UINT32 drvno, UINT8 sensor_type )
@@ -1767,12 +1767,12 @@ void SetSensorType( UINT32 drvno, UINT8 sensor_type )
 	{
 	default:
 	case 0:
-		SetISFFT( drvno, TRUE );
-		SetISPDA( drvno, FALSE );
-		break;
-	case 1:
 		SetISFFT( drvno, FALSE );
 		SetISPDA( drvno, TRUE );
+		break;
+	case 1:
+		SetISFFT( drvno, TRUE );
+		SetISPDA( drvno, FALSE );
 		break;
 	}
 	return;
