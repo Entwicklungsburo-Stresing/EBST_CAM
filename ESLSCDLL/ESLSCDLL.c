@@ -429,64 +429,6 @@ DllAccess UINT32 DLLTickstous( UINT64 tks )
 }
 
 /**
-\brief Setup DMA initiated by hardware DREQ
-
-Call this func once as it takes time to allocate the resources.
-But be aware: the buffer size and nos is set here and may not be changed later.
-If size changes: DLLClenupDMA and DLLSetupDMA must be called.
-Read nos lines from FIFO, copy to just just one very big contigous block: pdioden.
-\param drvno PCIe board identifier.
-\param pdioden Pointer to destination.
-\param nos number of samples
-\param nob number of blocks
-\return none
-*/
-DllAccess void DLLSetupDMA( UINT32 drv, void* pdioden, UINT32 nos, UINT32 nob )
-{
- //local declarations
- //	char string[20] = "";
- //	void *dummy = NULL;
-	BOOL Abbruch = FALSE;
-	BOOL Space = FALSE;
-	BOOL ExTrig = FALSE;
-	ULONG  lcnt = 0;
-	PUSHORT pdest;
-	BYTE	cnt = 0;
-	int i = 0;
-	ULONG dwdata;
-
-	WDC_Err( "entered DLLSetupDMA\n" );
-
-	if (!DBGNOCAM)
-	{
-		//Check if Camera there
-		if (!FindCam( drv ))
-		{
-			ErrorMsg( "no Camera found" );
-			return;
-		}
-	}
-
-	//stop all and clear FIFO
-	StopSTimer( drv );
-	SetIntFFTrig( drv );
-	RSFifo( drv );
-
-	//pass mem pointer to DMA ISR via global pDMABigBuf before calling SetupPCIE_DMA!
-	//pDMABigBuf = pdioden;
-	pBigBufBase[drv] = pdioden;
-						   //ErrorMsg(" Camera found"); //without this message is a crash in the first call ...
-						   //must before the functionSetupPCIE_DMA or after DLLDrvInit
-						   //Sleep(1000);
-	if (!SetupPCIE_DMA( drv, nos, nob ))  //get also buffer address
-	{
-		ErrorMsg( "Error in SetupPCIE_DMA" );
-		return;
-	}
-	return;
-}//DLLSetupDMA
-
-/**
 \brief Setup user memory.
 
 Call this func once as it takes time to allocate the resources.
@@ -657,39 +599,12 @@ DllAccess void DLLSetTORReg( UINT32 drvno, UINT8 fkt )
 	return;
 }
 
-
-/**
-\copydoc SetISPDA
-*/
-DllAccess void DLLSetISPDA( UINT32 drvno, UINT8 set )
-{
-	if (set == 0)
-	{
-		SetISPDA( drvno, FALSE );
-	}
-	else SetISPDA( drvno, TRUE );
-	return;
-}
-
 /**
 \copydoc SetSensorType
 */
 DllAccess void DLLSetSensorType( UINT32 drvno, UINT8 sensor_type )
 {
 	return  SetSensorType( drvno, sensor_type );
-}
-
-/**
-\copydoc SetISFFT
-*/
-DllAccess void DLLSetISFFT( UINT32 drvno, UINT8 set )
-{
-	if (set == 0)
-	{
-		SetISFFT( drvno, FALSE );
-	}
-	else SetISFFT( drvno, TRUE );
-	return;
 }
 
 /**
