@@ -462,6 +462,7 @@ BOOL InitBoard( UINT32 drvno )
 	}
 	WDC_Err("KPCALL: Version: %u \n", Data.dwVer);
 	*/
+	// allocate DMA buffer
 	if (!SetupPCIE_DMA( drvno )) ErrorMsg( "Error in SetupPCIE_DMA" );
 	return TRUE;
 
@@ -1104,20 +1105,12 @@ void CleanupPCIE_DMA( UINT32 drvno )
 	dwStatus = WDC_DMABufUnlock( pDMASubBufInfos[drvno] );
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		ErrLog( "Failed UNlocking a contiguous DMA buffer. Error 0x%lx - %s\n",
+		ErrLog( "Failed unlocking a contiguous DMA buffer. Error 0x%lx - %s\n",
 			dwStatus, Stat2Str( dwStatus ) );
 		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
 		return FALSE;
 	}
-#ifndef _CCDEXAMP
-	if (newDLL == 1)
-	{//checks if a new instance called the programm and the buffer is initialized in the dll
-		WDC_Err( "free in CleanupPCIE_DMA\n" );
-		//TODO: Why is the user buffer freeed in a functino called CleanupPCIE_DMA?
-		free( pBigBufBase[drvno] );
-	}
-#endif
-	WDC_Err( "Unlock DMABuf Succesfull\n" );
+	WDC_Err( "Unlock DMABuf Successfull\n" );
 }
 
 int GetNumofProcessors()
