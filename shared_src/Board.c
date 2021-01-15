@@ -616,9 +616,9 @@ BOOL SetDMAAddrTlp( UINT32 drvno )
 
 void SetManualTLP_vars(void)
 {
-	BDATA |= 0x00;
-	TLPSIZE = 0x20;
-	NO_TLPS = 0x11;
+	BDATA  |= 0x00; // sets max TLP size {0x00, 0x20, 0x40} <=> {128 B, 256 B, 512 B}
+	TLPSIZE = 0x20; // sets utilized TLP size in DWORDS (1 DWORD = 4 byte)
+	NO_TLPS = 0x11; // sets number of TLPs per scan/frame
 }
 
 /**
