@@ -165,6 +165,30 @@ DllAccess void DLLSetGammaValue( UINT16 white, UINT16 black )
 }
 
 /**
+\copydoc Direct2dViewer_getGammaWhite
+*/
+DllAccess UINT16 DLLGetGammaWhite()
+{
+	if (Direct2dViewer != NULL)
+	{
+		return Direct2dViewer_getGammaWhite( Direct2dViewer );
+	}
+	return NULL;
+}
+
+/**
+\copydoc Direct2dViewer_getGammaBlack
+*/
+DllAccess UINT16 DLLGetGammaBlack()
+{
+	if (Direct2dViewer != NULL)
+	{
+		return Direct2dViewer_getGammaBlack( Direct2dViewer );
+	}
+	return NULL;
+}
+
+/**
 \brief Initializes region of interest.
 \param drvno PCIe identifier
 \param number_of_regions determines how many region of interests are initialized, choose 2 to 8
