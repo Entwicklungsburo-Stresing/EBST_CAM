@@ -1271,10 +1271,10 @@ BOOL allocateUserMemory( UINT drvno )
 */
 void ClearAllUserRegs(UINT32 drv)
 {
-	WriteLongS0( drv, 0, 0x84 );// BDAT
-	WriteLongS0( drv, 0, 0x88 );// BEC
-	WriteLongS0( drv, 0, 0x20 );// SDAT
-	WriteLongS0( drv, 0, 0x24 );// SEC
+	WriteLongS0( drv, 0, S0Addr_BDAT );
+	WriteLongS0( drv, 0, S0Addr_BEC );
+	WriteLongS0( drv, 0, S0Addr_SDAT );
+	WriteLongS0( drv, 0, S0Addr_SEC );
 	return;
 } //ClearAllUserRegs
 
