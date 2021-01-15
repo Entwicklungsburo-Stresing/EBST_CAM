@@ -129,7 +129,14 @@
 #define ID_START_STARTCONTINUOUSLY      40133
 #define ranges                          40134
 #define text3                           40135
-#define text2                           40136
+#define text2                           40135
+#define white_str                       40137
+#define black_str                       40138
+#define ranges1                         40139
+#define ranges2                         40140
+#define ranges3                         40141
+#define ranges4                         40142
+#define ranges5                         40143
 #define IDC_EDIT1                       -1
 #define IDC_STATIC                      -1
 
