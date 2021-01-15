@@ -414,7 +414,7 @@ void initCamera()
 	switch (CAMERA_SYSTEM)
 	{
 	case camera_system_3001:
-		InitCamera3001(DRV, _PIXEL, TRIGGER_MODE, _ISFFT, 0 );
+		InitCamera3001(DRV, _PIXEL, TRIGGER_MODE, SENSOR_TYPE, 0 );
 		break;
 	case camera_system_3010:
 		InitCamera3010(DRV, _PIXEL, TRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
@@ -427,7 +427,7 @@ void initCamera()
 		switch (CAMERA_SYSTEM)
 		{
 		case camera_system_3001:
-			InitCamera3001(2, _PIXEL, TRIGGER_MODE, _ISFFT, _IsArea );
+			InitCamera3001(2, _PIXEL, TRIGGER_MODE, SENSOR_TYPE, _IsArea );
 			break;
 		case camera_system_3010:
 			InitCamera3010(2, _PIXEL, TRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
@@ -462,25 +462,26 @@ void initMeasurement()
 	}
 #else
 	//set PDA and FFT
-	if (_ISPDA) { SetISPDA(choosen_board, TRUE); }
-	else SetISPDA(choosen_board, FALSE);
-	if (_ISFFT) { SetISFFT(choosen_board, TRUE); }
-	else SetISFFT(choosen_board, FALSE);
-
-	if (!_ISFFT) {
+	switch(SENSOR_TYPE)
+	{
+	default:
+	case PDAsensor:
+		SetSensorType( choosen_board, 0 );
+		//TODO: replace magic numbers with enums
 		//reset auto start in case of setting before
-		ResetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-		ResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-		ResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
+		ResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+		ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+		ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 		//Reset partial binning
-		WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
+		WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
+		break;
+	case FFTsensor:
+		SetSensorType( choosen_board, 1 );
+		break;
 	}
-
-
 	if (_MSHUT) {
 		CloseShutter(choosen_board);
 		SetSEC(choosen_board, ExpTime * 100);
-
 		SetTORReg(choosen_board, 14); //use SHUT
 	}
 	else { 
@@ -496,8 +497,6 @@ void initMeasurement()
 		StopSTimer(2);
 		SetIntFFTrig(2);
 		RSFifo(2);
-		//setups
-		//SetupDELAY(choosen_board,DELAYini);	//init WRFIFO delay
 		//set TrigOut, default= XCK
 		SetTORReg(2, m_TOmodus);
 	}
@@ -525,40 +524,13 @@ unsigned int __stdcall ContDispRoutine( void *parg )//threadex
 }
 */
 
-//former Contimess
+// main read loop setup
 void startMess(void *dummy)
-{// main read loop setup
-	int i = 0;
+{
 	int j = 0;
-	int k = 0;
-	int n = 0;
-	int erri = 0;
-	int max = 0;
-	BOOL Abbruch = FALSE;
-	BOOL Space = FALSE;
-	ULONG test;
-	ULONG lwritten = 0;
-	ULONG ldata = 0;
-	char fn[3000];
 	char header[260];
-	volatile	ULONG S0Data = 0;
-	//PUSHORT pdata = pDIODEN;
-	ULONG cnt = 0;
-	BOOL FFfull = FALSE;
-	char TrmsString[2000];
-	DWORD oldpriclass = 0;
-	DWORD oldprithread = 0;
-	DWORD priority = 0;
-	ULONG pixel = 0;
-	ULONG maxcnt = 0;
-	ULONG val[1000];
-	ULONG val1 = 0;
-
 	contimess_run_once = TRUE;
 	initMeasurement();
-	//!!GS
-	//Nob = 1;
-	//DMA_Setup
 	// write header
 	if(cont_mode)
 		j = sprintf_s(header, 260, " Continuous mode - Cancel with ESC or space- key                   ");
@@ -576,11 +548,8 @@ void startMess(void *dummy)
 	struct ffloopparams params;
 	if (both_boards)	params.board_sel = 3;
 	else				params.board_sel = choosen_board;
-	
-	//_beginthread(ReadFFLoopThread, 0, &params);//thread
-	
-	_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//cam_thread[0] = (HANDLE)_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);//threadex
-
+	// start read loop
+	_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);
 	DWORD64 IsrNumber = Nob * (*Nospb) / (DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS);
 	if (both_boards) IsrNumber *= 2;
 	if (CAMCNT == 2) IsrNumber *= 2;
@@ -591,54 +560,24 @@ void startMess(void *dummy)
 			j = sprintf_s( header, 260, " One Shot mode - Cancel with ESC or space- key isr: %i of %i  ", IsrCounter + 1, IsrNumber );//+1 cheating );
 		TextOut(hMSDC, 100, LOY - 17, header, j);
 		RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
-
-
 		if (GetAsyncKeyState( VK_ESCAPE )) break;
 	}
-	//ReadFFLoop(choosen_board, ExpTime, FREQ, EXTTRIGFLAG, 0,  0);
-
 	BOOL cancel = FALSE;
 	if (cont_mode)
-		//_beginthreadex( 0, 0, &ContDispRoutine, 0, 0, 0 );BOOL cancel = FALSE;
 		while (!cancel)
 		{
-
 			CopytoDispbuf( 8 );
 			Display( 1, PLOTFLAG );
-
 			UpdateTxT();
-
 			if (GetAsyncKeyState( VK_ESCAPE ))
 				cancel = TRUE;
 			if (GetAsyncKeyState( VK_SPACE ))
 				cancel = TRUE;
 		}
-//for the thread if there is just one isr 
-	//start 2nd thread for getting data in highest std priority, ring=200 lines
 #endif
-	/*
-	if (!HWINTR_EN)
-	{
-		StartRingReadThread(choosen_board, 200, _THREADPRI, -1);
-	}
-	else
-		StartReadWithDma(choosen_board);
-		*/
-		//StartRingReadThread(choosen_board, 200, _THREADPRI, -1);
-		//while (!RingThreadOn) {}; // wait until ReadThread is running
-	/*
-		//start thread to display data
-		if(DMAAlreadyStarted)
-			_beginthread( DisplayData, 2000, &hMSDC );
-
-
-		//start hardware timer - must be the last
-		if (DMAAlreadyStarted)
-			if (EXTTRIGFLAG)
-				 {SetExtFFTrig(choosen_board); }
-			else
-				{SetIntFFTrig(choosen_board);
-				StartFFTimer(choosen_board, ExpTime); // in micro sec
-				}
-	*/
-}//Contimess
+	double mwf = 0.0; //unused
+	//TODO: Here is a problem. The measurement is done in an own thread. So the TRMS calculation could be started here before the measurement is finished. This is why the the value is sometimes wrong after the first measurement. Furthermore the TRMS value probably doesn't match the data currently displayed, instead some or all of the last data is used.
+	CalcTrms( DRV, *Nospb, TRMSpix, 0, &mwf, &TRMSval_global[0] );
+	if (CAMCNT > 1) CalcTrms( DRV, *Nospb, TRMSpix, 1, &mwf, &TRMSval_global[1] );
+	return;
+}
