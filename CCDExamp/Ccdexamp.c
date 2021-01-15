@@ -1386,6 +1386,7 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 			FreeMemInfo( &builtinram, &freeram );
 			SetDlgItemInt( hDlg, IDC_FREERAM, freeram / divMB, 0 );
 			SetDlgItemInt( hDlg, IDC_BUILTINRAM, builtinram / divMB, 0 );
+			//TODO: This calculation doesn't work. I don't know why.
 			allocram = (freeram_old - freeram) / divMB;
 			if (allocram < 100000)
 				SetDlgItemInt( hDlg, IDC_ALLOCRAM, allocram, 0 );
@@ -1995,16 +1996,12 @@ LRESULT CALLBACK SetGamma( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		//TODO: receive gamma values from pro dll to display them when opening dialog
-		//if (Direct2dViewer)
-		//{
-		//	// receive gamma from direct 2d module & write to ccdexamp gamma variables
-		//	direct2dviewer_gamma_white = Direct2dViewer_getGammaWhite( Direct2dViewer );
-		//	direct2dviewer_gamma_black = Direct2dViewer_getGammaBlack( Direct2dViewer );
-		//}
-		//// set gamma to dialog box
-		//SetDlgItemInt( hDlg, IDC_GAMMA_WHITE, direct2dviewer_gamma_white, FALSE );
-		//SetDlgItemInt( hDlg, IDC_GAMMA_BLACK, direct2dviewer_gamma_black, FALSE );
+		// receive gamma from direct 2d module & write to ccdexamp gamma variables
+		direct2dviewer_gamma_white = DLLGetGammaWhite();
+		direct2dviewer_gamma_black = DLLGetGammaBlack();
+		// set gamma to dialog box
+		SetDlgItemInt( hDlg, IDC_GAMMA_WHITE, direct2dviewer_gamma_white, FALSE );
+		SetDlgItemInt( hDlg, IDC_GAMMA_BLACK, direct2dviewer_gamma_black, FALSE );
 		return (TRUE);
 		break;
 	case WM_COMMAND:
