@@ -36,7 +36,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		return FALSE;
 	}
 	//show allocate buffer dialog before entering main application
-	if(_ISFFT) DialogBox( hInstance, MAKEINTRESOURCE( IDD_SETFULLBIN ), hMSWND, (DLGPROC)FullBinning );
+	if(SENSOR_TYPE == FFTsensor) DialogBox( hInstance, MAKEINTRESOURCE( IDD_SETFULLBIN ), hMSWND, (DLGPROC)FullBinning );
 	else DialogBox( hInstance, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
 	if (!InitInstance( hInstance, nCmdShow ))
 		return FALSE;
@@ -147,10 +147,10 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 	// init high resolution counter 	
 //	TPS = InitHRCounter();
 //	if (TPS==0) return (FALSE);
-	if (_ISFFT)
+	if (SENSOR_TYPE == FFTsensor)
 	{//set full binning as standard mode
-
-//reset auto start in case of setting before
+		//TODO: replace magic numbers with enum
+		//reset auto start in case of setting before
 		ResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 		ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
 		ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
@@ -162,9 +162,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		//vclks
 		SetupVCLKReg( choosen_board, _FFTLINES, Vfreqini );
 	}
-
 	CloseShutter( choosen_board ); //set cooling  off
-
 /*
 	if (_AD16cds)  {//resets EC reg!
 					InitCDS_AD(choosen_board, m_SHA,m_Amp,m_Ofs,m_TIgain);
@@ -607,7 +605,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 	{
 	case WM_CREATE:
 		//enable or disable fftmenu
-		if (_ISFFT) FFTMenuEnable = MF_ENABLED;
+		if (SENSOR_TYPE == FFTsensor) FFTMenuEnable = MF_ENABLED;
 		else FFTMenuEnable = MF_GRAYED;
 		EnableMenuItem( GetMenu( hWnd ), ID_SETRANGEOFINTEREST_3RANGES, FFTMenuEnable );
 		EnableMenuItem( GetMenu( hWnd ), ID_SETRANGEOFINTEREST_5RANGES, FFTMenuEnable );
@@ -730,10 +728,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			CONTPAUSE = 1;
 			cont_mode = FALSE;
 			if (!Running) startMess( &dummy );
-			double mwf = 0.0; //unused
-			//TODO: Here is a problem. The measurement is done in an own thread. So the TRMS calculation could be started here before the measurement is finished. This is why the the value is sometimes wrong after the first measurement. Furthermore the TRMS value probably doesn't match the data currently displayed, instead some or all of the last data is used.
-			CalcTrms( DRV, *Nospb, TRMSpix, 0, &mwf, &TRMSval_global[0] );
-			if(CAMCNT > 1) CalcTrms( DRV, *Nospb, TRMSpix, 1, &mwf, &TRMSval_global[1] );
 			break;
 		case ID_START_STARTCONTINUOUSLY:
 			CONTFFLOOP = TRUE;

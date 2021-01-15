@@ -44,8 +44,12 @@ static int YSHIFT = 4;				// 12Bit=4 or more for addrep>1
 // camera values for calling GETCCD and InitBoard
 #define _FFTLINES 64 		// no of vertical lines of FFT sensors, usually 64
 							// =0 if not FFT
-#define _ISPDA FALSE			//set RS after read; TRUE for HA S39xx
-#define _ISFFT TRUE		//set vclk generator; TRUE for HA S703x
+enum sensor_type
+{
+	PDAsensor = 0,		//set RS after read; for HA S39xx
+	FFTsensor = 1,		//set vclk generator; for HA S703x
+};
+#define SENSOR_TYPE FFTsensor
 #define Vfreqini 7		//vclk freq for FFTs with FIFO in divider of12MHz (0..15)
 						//=4 for highest speed with 7030-0906
 enum trigger_mode
