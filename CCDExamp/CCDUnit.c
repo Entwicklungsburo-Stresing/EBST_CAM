@@ -460,17 +460,11 @@ void initMeasurement()
 	}
 #else
 	//set PDA and FFT
-	switch(SENSOR_TYPE)
+	SetSensorType( choosen_board, SENSOR_TYPE );
+	if(SENSOR_TYPE == PDAsensor)
 	{
-	default:
-	case PDAsensor:
-		SetSensorType( choosen_board, 0 );
 		ResetAutostartXck( choosen_board );
 		ResetPartialBinning( choosen_board );
-		break;
-	case FFTsensor:
-		SetSensorType( choosen_board, 1 );
-		break;
 	}
 	if (_MSHUT) {
 		CloseShutter(choosen_board);
@@ -554,17 +548,17 @@ void startMess(void *dummy)
 		RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
 		if (GetAsyncKeyState( VK_ESCAPE )) break;
 	}
-	BOOL cancel = FALSE;
+	//TODO: This is strange. First IsrCounter counts up to ISRNumber and then the program is caught in this while loop.
 	if (cont_mode)
-		while (!cancel)
+		while (TRUE)
 		{
 			CopytoDispbuf( 8 );
 			Display( 1, PLOTFLAG );
 			UpdateTxT();
 			if (GetAsyncKeyState( VK_ESCAPE ))
-				cancel = TRUE;
+				break;
 			if (GetAsyncKeyState( VK_SPACE ))
-				cancel = TRUE;
+				break;
 		}
 #endif
 	double mwf = 0.0; //unused
