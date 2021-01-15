@@ -1393,32 +1393,6 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 				SetDlgItemText( hDlg, IDC_ALLOCRAM, "calculation error" );
 #endif
 			break;
-			//TODO: What is this following block? Is it ever run?
-#ifdef _DLL
-			DLLSetMeasurementParameters( DRV, nospb_input, nob_input );
-			if (both_boards)
-				DLLSetMeasurementParameters( 2, nospb_input, nob_input );
-#else
-			if (!SetMeasurementParameters( choosen_board, nospb_input, nob_input ))
-				MessageBox( hMSWND, "Setting measurement parameters failed", "Error", MB_OK );
-			if (both_boards)
-			{
-				if (!SetMeasurementParameters( 2, nospb_input, nob_input ))
-					MessageBox( hMSWND, "Setting measurement parameters failed", "Error", MB_OK );
-			}
-#endif
-			trackbar_nospb = *Nospb;
-			trackbar_nob = Nob;
-			//update trackbars
-			SendMessage( hwndTrackNob, TBM_SETRANGE, TRUE,
-				MAKELONG( 0/*MIN RANGE*/, trackbar_nob - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
-			SendMessage( hwndTrackNos, TBM_SETRANGE, TRUE,
-				MAKELONG( 0/*MIN RANGE*/, trackbar_nospb - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
-			EnableWindow( hwndTrackNos, FALSE );
-			UpdateWindow( hwndTrackNos );
-			EndDialog( hDlg, TRUE );
-			return (TRUE);
-			break;
 		}
 		break; //WM_COMMAND
 	}
