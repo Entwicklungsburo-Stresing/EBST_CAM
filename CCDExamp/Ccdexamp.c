@@ -1319,25 +1319,17 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 			nospb_input = GetDlgItemInt( hDlg, IDC_nospb, &success, FALSE );
 			if (success)
 			{
-				Nob = nob_input;
-				*Nospb = nospb_input;
-
 #ifdef _DLL
-				DLLSetupUserMem( DRV, *Nospb, Nob );
+				DLLSetMeasurementParameters( DRV, nospb_input, nob_input );
 				if (both_boards)
-					DLLSetupUserMem( 2, *Nospb, Nob );
+					DLLSetMeasurementParameters( 2, nospb_input, nob_input );
 #else
-				if (!allocateUserMemory( choosen_board ))
-					MessageBox( hMSWND, "allocating Buffer fails", "Error", MB_OK );
-				else
-					MessageBox( hMSWND, "allocating Buffer succeeded", "Message", MB_OK );
-
+				if (!SetMeasurementParameters( choosen_board, nospb_input, nob_input ))
+					MessageBox( hMSWND, "Setting measurement parameters failed", "Error", MB_OK );
 				if (both_boards)
 				{
-					if (!allocateUserMemory( 2 ))
-						MessageBox( hMSWND, "allocating Buffer of second Board fails", "Error", MB_OK );
-					else
-						MessageBox( hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK );
+					if (!SetMeasurementParameters( 2, nospb_input, nob_input ))
+						MessageBox( hMSWND, "Setting measurement parameters of second board failed", "Error", MB_OK );
 				}
 #endif
 			}
@@ -1367,14 +1359,12 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 			nospb_input = GetDlgItemInt( hDlg, IDC_nospb, &success, FALSE );
 			if (success)
 			{
-				Nob = nob_input;
-				*Nospb = nospb_input;
+				calcram = nob_input * nospb_input * _PIXEL * sizeof( USHORT ) / divMB;
+				if (calcram < 100000)
+					SetDlgItemInt( hDlg, IDC_CALCRAM, calcram, 0 );
+				else
+					SetDlgItemText( hDlg, IDC_CALCRAM, "calculation error" );
 			}
-			calcram = Nob * (*Nospb) * _PIXEL * sizeof( USHORT ) / divMB;
-			if (calcram < 100000)
-				SetDlgItemInt( hDlg, IDC_CALCRAM, calcram, 0 );
-			else
-				SetDlgItemText( hDlg, IDC_CALCRAM, "calculation error" );
 			break;
 
 		case IDALLOC:
@@ -1382,21 +1372,16 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 			nospb_input = GetDlgItemInt( hDlg, IDC_nospb, &success, FALSE );
 			if (success)
 			{
-				Nob = nob_input;
-				*Nospb = nospb_input;
 #ifdef _DLL
-				DLLSetupUserMem( DRV, *Nospb, Nob );
+				DLLSetMeasurementParameters( DRV, nospb_input, nob_input );
 				if (both_boards)
-					DLLSetupUserMem( 2, *Nospb, Nob );
+					DLLSetMeasurementParameters( 2, nospb_input, nob_input );
 			}
 #else
 				FreeMemInfo( &builtinram, &freeram );
 				freeram_old = freeram;
-
-				if (!allocateUserMemory( choosen_board ))
-					MessageBox( hMSWND, "allocating Buffer fails", "Error", MB_OK );
-				else
-					MessageBox( hMSWND, "allocating Buffer succeeded", "Message", MB_OK );
+				if (!SetMeasurementParameters( choosen_board, nospb_input, nob_input ))
+					MessageBox( hMSWND, "Setting measurement parameters failed", "Error", MB_OK );
 			}
 			FreeMemInfo( &builtinram, &freeram );
 			SetDlgItemInt( hDlg, IDC_FREERAM, freeram / divMB, 0 );
@@ -1408,21 +1393,18 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 				SetDlgItemText( hDlg, IDC_ALLOCRAM, "calculation error" );
 #endif
 			break;
+			//TODO: What is this following block? Is it ever run?
 #ifdef _DLL
-			DLLSetupUserMem( DRV, *Nospb, Nob );
+			DLLSetMeasurementParameters( DRV, nospb_input, nob_input );
 			if (both_boards)
-				DLLSetupUserMem( 2, *Nospb, Nob );
+				DLLSetMeasurementParameters( 2, nospb_input, nob_input );
 #else
-			if (!allocateUserMemory( choosen_board ))
-				MessageBox( hMSWND, "allocating Buffer fails", "Error", MB_OK );
-			else
-				MessageBox( hMSWND, "allocating Buffer succeeded", "Message", MB_OK );
+			if (!SetMeasurementParameters( choosen_board, nospb_input, nob_input ))
+				MessageBox( hMSWND, "Setting measurement parameters failed", "Error", MB_OK );
 			if (both_boards)
 			{
-				if (!allocateUserMemory( 2 ))
-					MessageBox( hMSWND, "allocating Buffer of second Board fails", "Error", MB_OK );
-				else
-					MessageBox( hMSWND, "allocating Buffer of second Board succeeded", "Message", MB_OK );
+				if (!SetMeasurementParameters( 2, nospb_input, nob_input ))
+					MessageBox( hMSWND, "Setting measurement parameters failed", "Error", MB_OK );
 			}
 #endif
 			trackbar_nospb = *Nospb;

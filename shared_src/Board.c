@@ -621,39 +621,35 @@ void SetManualTLP_vars(void)
 	NO_TLPS = 0x11;
 }
 
-BOOL SetDMABufRegs( UINT32 drvno, ULONG nos, ULONG nob, ULONG camcnt )
+/**
+\brief Set DMA register
+
+Sets DMA_BUFSIZEINSCANS, DMA_DMASPERINTR, NOS, NOB, CAMCNT
+\param drvno board number (=1 if one PCI board)
+\return TRUE if success, FALSE otherwise
+*/
+BOOL SetDMABufRegs( UINT32 drvno )
 {
-	//set DMA_BUFSIZEINSCANS
-	//set DMA_DMASPERINTR
-	//set NOS
-	//here: make one big buffer for nos scans
 	BOOL error = FALSE;
-
-	if (!SetS0Reg( DMA_BUFSIZEINSCANS, 0xffffffff, DmaAddr_DmaBufSizeInScans, drvno ))//DMABufSizeInScans - use 1 block
+	//DMABufSizeInScans - use 1 block
+	if (!SetS0Reg( DMA_BUFSIZEINSCANS, 0xffffffff, DmaAddr_DmaBufSizeInScans, drvno ))
 		error = TRUE;
-
 	//scans per intr must be 2x per DMA_BUFSIZEINSCANS to copy hi/lo part
 	//aCAMCNT: double the INTR if 2 cams
 	if (!SetS0Reg( DMA_DMASPERINTR, 0xffffffff, DmaAddr_DMAsPerIntr, drvno ))
 		error = TRUE;
-	WDC_Err( "spi/camcnt: %x \n", DMA_DMASPERINTR / camcnt );
-
-	if (!SetS0Reg( nos, 0xffffffff, DmaAddr_NOS, drvno ))
+	WDC_Err( "spi/camcnt: %x \n", DMA_DMASPERINTR / aCAMCNT[drvno] );
+	if (!SetS0Reg( *Nospb, 0xffffffff, DmaAddr_NOS, drvno ))
 		error = TRUE;
-
-	if (!SetS0Reg( nob, 0xffffffff, DmaAddr_NOB, drvno ))
+	if (!SetS0Reg( Nob, 0xffffffff, DmaAddr_NOB, drvno ))
 		error = TRUE;
-
-	if (!SetS0Reg( camcnt, 0xffffffff, DmaAddr_CAMCNT, drvno ))
+	if (!SetS0Reg( aCAMCNT[drvno], 0xffffffff, DmaAddr_CAMCNT, drvno ))
 		error = TRUE;
-
 	if (error)
 	{
 		ErrorMsg( "SetDMABufRegs failed" );
 		return FALSE;
 	}
-	//ReadLongS0(DRV, &reg, DmaAddr_DMAsPerIntr);
-	//WDC_Err("readreg DMASPERINTR: %x \n", reg);
 	return TRUE;
 }
 
@@ -1233,6 +1229,8 @@ BOOL SetBoardVars( UINT32 drvno )
 
 BOOL allocateUserMemory( UINT drvno )
 {
+	//free old memory before allocating new one
+	free( pBigBufBase[drvno] );
 	UINT64 memory_all = 0;
 	UINT64 memory_free = 0;
 	FreeMemInfo( &memory_all, &memory_free );
@@ -3696,4 +3694,40 @@ BOOL SetBTI( UINT32 drvno, UINT8 bti_mode )
 BOOL SetSTI( UINT32 drvno, UINT8 sti_mode )
 {
 	return SetS0Reg( sti_mode, CTRLB_bit_STI0 | CTRLB_bit_STI1 | CTRLB_bit_STI2, S0Addr_CTRLB, drvno );
+}
+
+
+/**
+\brief Setup measurement parameters. Sets registers in PCIe card and allocates resources.
+
+Call this func once as it takes time to allocate the resources.
+But be aware: the buffer size and nos is set here and may not be changed later.
+\param drvno PCIe board identifier.
+\param nos number of samples
+\param nob number of blocks
+\return TRUE when succes, FALSE otherwise
+*/
+BOOL SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob )
+{
+	Nob = nob;
+	*Nospb = nos;
+	WDC_Err( "entered SetMeasurementParameters with drv: %i nos: %i and nob: %i and camcnt: %i\n", drvno, nos, nob, aCAMCNT[drvno] );
+	//stop all and clear FIFO
+	StopSTimer( drvno );
+	SetIntFFTrig( drvno );
+	RSFifo( drvno );
+	if(!allocateUserMemory( drvno ))
+	{
+		ErrLog( "Allocating user memory failed \n" );
+		return FALSE;
+	}
+	//set hardware regs
+	if (!SetDMABufRegs( drvno ))
+	{
+		ErrLog( "DMARegisterInit for Buffer failed \n" );
+		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
+		ErrorMsg( "DMARegisterInit for Buffer failed" );
+		return FALSE;
+	}
+	return TRUE;
 }

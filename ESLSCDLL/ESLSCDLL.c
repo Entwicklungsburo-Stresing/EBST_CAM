@@ -429,37 +429,12 @@ DllAccess UINT32 DLLTickstous( UINT64 tks )
 }
 
 /**
-\brief Setup user memory.
-
-Call this func once as it takes time to allocate the resources.
-But be aware: the buffer size and nos is set here and may not be changed later.
-If size changes: DLLClenupDMA and DLLSetupDMA must be called.
-Read nos lines from FIFO, copy to just  one very big contigous block: pBigBufBase.
-\param drvno PCIe board identifier.
-\param nos number of samples
-\param nob number of blocks
-\return none
+\copydoc SetMeasurementParameters
 */
-DllAccess void DLLSetupUserMem( UINT32 drv, UINT32 nos, UINT32 nob )
+DllAccess UINT8 DLLSetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob )
 {
-	Nob = nob;
-	*Nospb = nos;
-	WDC_Err( "entered DLLSetupUserMem with drv: %i nos: %i and nob: %i and camcnt: %i\n", drv, nos, nob, aCAMCNT[drv] );
-	//stop all and clear FIFO
-	StopSTimer( drv );
-	SetIntFFTrig( drv );
-	RSFifo( drv );
-	allocateUserMemory( drv );
-	//set hardware regs
-	if (!SetDMABufRegs( drv, nos, nob, aCAMCNT[drv] ))
-	{
-		ErrLog( "DMARegisterInit for Buffer failed \n" );
-		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
-		ErrorMsg( "DMARegisterInit for Buffer failed" );
-		return FALSE;
-	}
-	return;
-}//DLLSetupUserMem
+	return SetMeasurementParameters( drvno, nos, nob );
+}
 
 /**
 \brief Copies one frame of pixel data to pdest.
