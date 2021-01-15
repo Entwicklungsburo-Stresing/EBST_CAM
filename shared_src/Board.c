@@ -1195,7 +1195,8 @@ BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel )
 		NO_TLPS = 0x81;//82
 		break;
 	default:
-		return FALSE;
+		if(!MANUAL_OVERRIDE_TLP)
+			return FALSE;
 	}
 	if (LEGACY_202_14_TLPCNT) NO_TLPS = NO_TLPS + 1;
 	aPIXEL[drvno] = pixel;
