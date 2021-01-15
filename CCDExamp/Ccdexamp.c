@@ -110,10 +110,8 @@ BOOL InitApplication( HINSTANCE hInstance )
 BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 {
 	HWND     hWnd;
-
 	// Save the application-instance handle. 
 	hInst = hInstance;
-
 	//CreateWindowA(lpClassName, lpWindowName, dwStyle, x, y, \
 	//	nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam)\
 	// Create the main application window.
@@ -128,37 +126,28 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		hInstance,
 		NULL
 	);
-
 	if (!hWnd) return(FALSE);
-
 	//RSInterface(choosen_board);
 	//	if (! InitBoard(choosen_board)) //Error message in InitBoard
 	//		return (FALSE); 
-
 	//set global handle for our window
 	// must be outside the thread
 	hMSWND = hWnd;
 	hMSDC = GetDC( hMSWND );
-
 	ShowWindow( hWnd, nCmdShow );
 	UpdateWindow( hWnd );
 	//	AboutDrv(choosen_board);		//shows driver version and Board ID
-
 	// init high resolution counter 	
-//	TPS = InitHRCounter();
-//	if (TPS==0) return (FALSE);
+	// TPS = InitHRCounter();
+	// if (TPS==0) return (FALSE);
 	if (SENSOR_TYPE == FFTsensor)
-	{//set full binning as standard mode
-		//TODO: replace magic numbers with enum
-		//reset auto start in case of setting before
-		ResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-		ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-		ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
+	{
+		//set full binning as standard mode
+		ResetAutostartXck( choosen_board );
 		//Triger stuff
-		ResetS0Bit( 4, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-		ResetS0Bit( 5, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-		//Reset partial binning
-		WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
+		ResetS0Bit( 4, S0Addr_CTRLB, choosen_board );
+		ResetS0Bit( 5, S0Addr_CTRLB, choosen_board );
+		ResetPartialBinning( choosen_board );
 		//vclks
 		SetupVCLKReg( choosen_board, _FFTLINES, Vfreqini );
 	}

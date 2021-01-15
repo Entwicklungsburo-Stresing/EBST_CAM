@@ -441,8 +441,6 @@ void initCamera()
 
 void initMeasurement()
 {
-	//stop all and clear FIFO
-	//WDC_Err(choosen_board);
 #ifdef _DLL
 	DLLStopFFTimer(choosen_board);
 	DLLRSFifo(choosen_board);
@@ -467,12 +465,8 @@ void initMeasurement()
 	default:
 	case PDAsensor:
 		SetSensorType( choosen_board, 0 );
-		//reset auto start in case of setting before
-		ResetS0Bit( 0, S0Addr_CTRLB, choosen_board );
-		ResetS0Bit( 1, S0Addr_CTRLB, choosen_board );
-		ResetS0Bit( 2, S0Addr_CTRLB, choosen_board );
-		//Reset partial binning
-		WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
+		ResetAutostartXck( choosen_board );
+		ResetPartialBinning( choosen_board );
 		break;
 	case FFTsensor:
 		SetSensorType( choosen_board, 1 );
@@ -489,7 +483,6 @@ void initMeasurement()
 	}
 	//set TrigOut, default= XCK
 	StopSTimer(choosen_board);
-	//SetIntFFTrig(choosen_board);
 	RSFifo(choosen_board);
 	initCamera();
 	if (both_boards) {
