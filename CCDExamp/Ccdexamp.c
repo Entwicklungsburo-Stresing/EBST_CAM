@@ -199,8 +199,8 @@ void AboutTiming( HWND hWnd )
 #endif
 	j = sprintf_s( fn, 260, "Timing  \n" );
 	//j+=sprintf(fn+j,"treadpix:\t\t%04d ns \n",TReadPix);
-	j += sprintf_s( fn + j, 260, "tdisplay:\t\t%06d µs \n", TDispus );
-	j += sprintf_s( fn + j, 260, "exp. time:\t\t%04d ms ", ExpTime );
+	j += sprintf_s( fn + j, 260 - j, "tdisplay:\t\t%06d micro sec \n", TDispus );
+	j += sprintf_s( fn + j, 260 - j, "exp. time:\t\t%04d ms ", ExpTime );
 	MessageBox( hWnd, fn, "time", MB_OK );
 }
 
@@ -210,21 +210,21 @@ void AboutKeys( HWND hWnd )
 #define s_size 1000
 	char fn[s_size];
 	j = sprintf_s( fn, s_size, "F- Keys  \n" );
-	j += sprintf_s( fn + j, s_size, "F1 : timing info \n" );
-	j += sprintf_s( fn + j, s_size, "F2 : activate cooling \n" );
-	j += sprintf_s( fn + j, s_size, "F3 : deactivate cooling \n" );
-	j += sprintf_s( fn + j, s_size, "F4 : check cool good? \n" );
-	//j+=sprintf_s(fn+j,s_size,"F5 : send IR Setup \n");
-	j += sprintf_s( fn + j, s_size, "F6 : start measure \n" );
-	j += sprintf_s( fn + j, s_size, "F7 : high amp on \n" );
-	j += sprintf_s( fn + j, s_size, "F8 : high amp off \n" );
-	j += sprintf_s( fn + j, s_size, "arrow up : change X-scale span\n" );
-	j += sprintf_s( fn + j, s_size, "arrow dn : change X-scale span\n" );
-	j += sprintf_s( fn + j, s_size, "arrow up : change X-scale offset\n" );
-	j += sprintf_s( fn + j, s_size, "arrow dn : change X-scale offset\n" );
-	j += sprintf_s( fn + j, s_size, "shift + arrow up : change Y-scale span\n" );
-	j += sprintf_s( fn + j, s_size, "shift + arrow dn : change Y-scale span\n" );
-	j += sprintf_s( fn + j, s_size, "\n" );
+	j += sprintf_s( fn + j, s_size-j, "F1 : timing info \n" );
+	j += sprintf_s( fn + j, s_size - j, "F2 : activate cooling \n" );
+	j += sprintf_s( fn + j, s_size - j, "F3 : deactivate cooling \n" );
+	j += sprintf_s( fn + j, s_size - j, "F4 : check cool good? \n" );
+	//j+=sprintf_s(fn+j,s_size-j,"F5 : send IR Setup \n");
+	j += sprintf_s( fn + j, s_size - j, "F6 : start measure \n" );
+	j += sprintf_s( fn + j, s_size - j, "F7 : high amp on \n" );
+	j += sprintf_s( fn + j, s_size - j, "F8 : high amp off \n" );
+	j += sprintf_s( fn + j, s_size - j, "arrow up : change X-scale span\n" );
+	j += sprintf_s( fn + j, s_size - j, "arrow dn : change X-scale span\n" );
+	j += sprintf_s( fn + j, s_size - j, "arrow up : change X-scale offset\n" );
+	j += sprintf_s( fn + j, s_size - j, "arrow dn : change X-scale offset\n" );
+	j += sprintf_s( fn + j, s_size - j, "shift + arrow up : change Y-scale span\n" );
+	j += sprintf_s( fn + j, s_size - j, "shift + arrow dn : change Y-scale span\n" );
+	j += sprintf_s( fn + j, s_size - j, "\n" );
 	MessageBox( hWnd, fn, "time", MB_OK );
 }
 
