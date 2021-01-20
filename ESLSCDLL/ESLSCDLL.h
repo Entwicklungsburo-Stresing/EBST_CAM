@@ -124,3 +124,4 @@ DllAccess UINT8 DLLSetSTI( UINT32 drvno, UINT8 sti_mode );
 DllAccess UINT8 DLLSetSTimer( UINT32 drvno, UINT32 stime_in_microseconds );
 DllAccess UINT8 DLLSetBTimer( UINT32 drvno, UINT32 btime_in_microseconds );
 DllAccess UINT8 DLLSetBSlope( UINT32 drvno, UINT32 slope );
+DllAccess int DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent );
