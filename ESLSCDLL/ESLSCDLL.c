@@ -810,3 +810,12 @@ DllAccess UINT8 DLLSetBSlope( UINT32 drvno, UINT32 slope )
 {
 	return SetBSlope( drvno, slope );
 }
+
+DllAccess int DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent )
+{
+	measureStartLVEvent = *measureStartEvent;
+	measureDoneLVEvent = *measureDoneEvent;
+	blockStartLVEvent = *blockStartEvent;
+	blockDoneLVEvent = *blockDoneEvent;
+	return;
+}

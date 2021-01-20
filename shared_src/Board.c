@@ -67,7 +67,13 @@ ULONG tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 ULONG* aPIXEL = tmp_aPIXEL;
 BOOL Running = FALSE;
 UINT32 BOARD_SEL = 1;
+#ifdef _DLL
 
+LVUserEventRef measureStartLVEvent;
+LVUserEventRef measureDoneLVEvent;
+LVUserEventRef blockStartLVEvent;
+LVUserEventRef blockDoneLVEvent;
+#endif
 // ***********     functions    ********************** 
 
 /**
@@ -1820,6 +1826,9 @@ void initReadFFLoop( UINT32 drv, UINT32 * Blocks )
 	*Blocks = val;
 	//set MeasureOn Bit
 	setMeasureOn( drv );
+#ifdef _DLL
+	PostLVUserEvent( measureStartLVEvent, NULL );
+#endif
 	return;
 }
 
@@ -1933,22 +1942,9 @@ void ReadFFLoop( UINT32 board_sel )
 	{//block read function
 		//just checking Esc for Escape in Cont mode
 		oneTriggerPerBlock( board_sel, 5 ); // new 10/2020 with PCIe 202.14: switch trigger by hardware
-		//switch (blocktrigger)
-		//{
-		//default:
-		//case 0:
-		//	//don't wait for block trigger
-		//	oneTriggerPerBlock( board_sel, 0 ); // A.M. 22.Okt.19
-		//	break;
-		//case 1:
-		//	//wait for one trigger for all blocks
-		//	allBlocksOnSingleTrigger( board_sel, btrig_ch, &StartByTrig ); // A.M. 22.Okt.19
-		//	break;
-		//case 2:
-		//	//wait for each block for one trigger
-		//	//oneTriggerPerBlock( board_sel, btrig_ch ); // A.M. 22.Okt.19
-		//	break;
-		//}
+#ifdef _DLL
+		PostLVUserEvent( blockStartLVEvent, NULL );
+#endif
 		if (board_sel == 1 || board_sel == 3)
 		{
 			countBlocksByHardware( 1 );
@@ -2066,6 +2062,9 @@ void ReadFFLoop( UINT32 board_sel )
 		{
 			resetBlockOn( 2 );
 		}
+#ifdef _DLL
+		PostLVUserEvent( blockDoneLVEvent, NULL );
+#endif
 	}//block cnt read function
 	if (board_sel == 1 || board_sel == 3)
 	{
@@ -2097,6 +2096,9 @@ void ReadFFLoop( UINT32 board_sel )
 	{
 		resetMeasureOn(2);
 	}
+#ifdef _DLL
+	PostLVUserEvent( measureDoneLVEvent, NULL );
+#endif
 	return;
 }
 
