@@ -13,6 +13,7 @@ void notifyMeasureDone( UINT32 drv )
 	double mwf = 0.0; //unused
 	CalcTrms( DRV, *Nospb, TRMSpix, 0, &mwf, &TRMSval_global[0] );
 	if (CAMCNT > 1) CalcTrms( DRV, *Nospb, TRMSpix, 1, &mwf, &TRMSval_global[1] );
+	UpdateDisplay();
 	return;
 }
 
@@ -24,5 +25,6 @@ void notifyBlockStart( UINT32 drv )
 
 void notifyBlockDone( UINT32 drv )
 {
+	UpdateDisplay();
 	return;
 }

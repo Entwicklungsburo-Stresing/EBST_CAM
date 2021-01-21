@@ -636,9 +636,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		cur_nob = SendMessage( hwndTrackNob, TBM_GETPOS, 0, 0 );
 		cur_nos *= trackbar_nospb_multiplier;
 		cur_nob *= trackbar_nob_multiplier;
-		CopytoDispbuf();
-		Display( 1, PLOTFLAG );
-		UpdateTxT();
+		UpdateDisplay();
 		/*
 		//reset auto start in case of setting before
 		ResetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
@@ -739,13 +737,10 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 				}
 			}
 			if (!Running) startMess( &dummy );
-			Sleep( 10 );
 			while (Running)
 			{
-				CopytoDispbuf();
-				Display( 1, PLOTFLAG );
-				UpdateTxT();
-				DLLShowNewBitmap( DRV, cur_nob, 0, _PIXEL, *Nospb );
+				UpdateDisplay();
+				Sleep( 10 );
 			}
 			break;
 

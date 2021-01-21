@@ -275,14 +275,21 @@ void startMess(void *dummy)
 	if (cont_mode)
 		while (TRUE)
 		{
-			CopytoDispbuf();
-			Display( 1, PLOTFLAG );
-			UpdateTxT();
+			UpdateDisplay();
 			if (GetAsyncKeyState( VK_ESCAPE ))
 				break;
 			if (GetAsyncKeyState( VK_SPACE ))
 				break;
 		}
 #endif
+	return;
+}
+
+void UpdateDisplay()
+{
+	CopytoDispbuf();
+	Display( 1, PLOTFLAG );
+	UpdateTxT();
+	DLLShowNewBitmap( DRV, cur_nob, 0, _PIXEL, *Nospb );
 	return;
 }
