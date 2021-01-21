@@ -26,7 +26,6 @@ LVUserEventRef blockStartLVEvent;
 LVUserEventRef blockDoneLVEvent;
 int nProcessCount = 0;
 int nThreadCount = 0;
-ULONG ADRDELAY = 1000;			// -> is set in SetBoardVars. No, it is not used. Why? :(
 
 /**
 \brief DllMain entry point
@@ -148,10 +147,9 @@ DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 
  //if (!InitBoard(drvno)) return 0; //must be called once before any other
  //if FIFO pclk=waits : read frequency; waits is set = 0 for max. FIFO read frequency
  // NO FIFO version: pclk not used.
-	SetGlobalVariables( drv, camcnt, pixel );
+	SetGlobalVariables( drv, camcnt, pixel, xckdelay );
 	InitBoard( drv );
 	if (!SetBoardVars( drv )) return 0; //sets data for transfer
-	ADRDELAY = xckdelay; //TODO: why is this unused?
 	// AboutS0(drvno);
 	return 1; // no error
 }

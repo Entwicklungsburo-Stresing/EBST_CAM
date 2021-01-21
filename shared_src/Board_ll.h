@@ -31,15 +31,6 @@ enum dma_addresses
 	DmaAddr_RDMATLPA = 0x01C,
 	DmaAddr_RDMATLPS = 0x020,
 	DmaAddr_RDMATLPC = 0x024,
-	//for extenden S0-Space:
-	DmaAddr_PCIEFLAGS = 0x40,
-	DmaAddr_NOS = 0x44,
-	DmaAddr_ScanIndex = 0x48,
-	DmaAddr_DmaBufSizeInScans = 0x04C,		// length in scans
-	DmaAddr_DMAsPerIntr = 0x050,
-	DmaAddr_NOB = 0x054,
-	DmaAddr_BLOCKINDEX = 0x058,
-	DmaAddr_CAMCNT = 0x05C
 };
 
 enum PCIEFLAGS_bits
@@ -122,8 +113,19 @@ enum s0_addresses
 	S0Addr_IRQREG = 0x38,
 	S0Addr_PCI = 0x3C,
 	S0Addr_PCIEFLAGS = 0x40,
+	S0Addr_NOS = 0x44,
+	S0Addr_ScanIndex = 0x48,
+	S0Addr_DmaBufSizeInScans = 0x04C,		// length in scans
+	S0Addr_DMAsPerIntr = 0x050,
+	S0Addr_NOB = 0x054,
+	S0Addr_BLOCKINDEX = 0x058,
+	S0Addr_CAMCNT = 0x05C,
 	S0Addr_TDCCtrl = 0x60,
 	S0Addr_TDCData = 0x64,
+	S0Addr_ROI0 = 0x68,
+	S0Addr_ROI1 = 0x6C,
+	S0Addr_ROI2 = 0x70,
+	S0Addr_XCKDLY = 0x74,
 	S0Addr_BTIMER = 0x80,
 	S0Addr_BDAT = 0x84,
 	S0Addr_BEC = 0x88,

@@ -58,6 +58,7 @@ int tmp_Nosbp = 1000;
 int* Nospb = &tmp_Nosbp;
 ULONG tmp_aCAMCNT[MAXPCIECARDS] = { 1, 1, 1, 1, 1 };	// cameras parallel
 ULONG* aCAMCNT = tmp_aCAMCNT;	// cameras parallel
+ULONG ADRDELAY=0;
 BOOL escape_readffloop = FALSE;
 BOOL CONTFFLOOP = FALSE;
 UINT32 CONTPAUSE = 1;  // delay between loops in continous mode
@@ -632,18 +633,18 @@ BOOL SetDMABufRegs( UINT32 drvno )
 {
 	BOOL error = FALSE;
 	//DMABufSizeInScans - use 1 block
-	if (!SetS0Reg( DMA_BUFSIZEINSCANS, 0xffffffff, DmaAddr_DmaBufSizeInScans, drvno ))
+	if (!SetS0Reg( DMA_BUFSIZEINSCANS, 0xffffffff, S0Addr_DmaBufSizeInScans, drvno ))
 		error = TRUE;
 	//scans per intr must be 2x per DMA_BUFSIZEINSCANS to copy hi/lo part
 	//aCAMCNT: double the INTR if 2 cams
-	if (!SetS0Reg( DMA_DMASPERINTR, 0xffffffff, DmaAddr_DMAsPerIntr, drvno ))
+	if (!SetS0Reg( DMA_DMASPERINTR, 0xffffffff, S0Addr_DMAsPerIntr, drvno ))
 		error = TRUE;
 	WDC_Err( "spi/camcnt: %x \n", DMA_DMASPERINTR / aCAMCNT[drvno] );
-	if (!SetS0Reg( *Nospb, 0xffffffff, DmaAddr_NOS, drvno ))
+	if (!SetS0Reg( *Nospb, 0xffffffff, S0Addr_NOS, drvno ))
 		error = TRUE;
-	if (!SetS0Reg( Nob, 0xffffffff, DmaAddr_NOB, drvno ))
+	if (!SetS0Reg( Nob, 0xffffffff, S0Addr_NOB, drvno ))
 		error = TRUE;
-	if (!SetS0Reg( aCAMCNT[drvno], 0xffffffff, DmaAddr_CAMCNT, drvno ))
+	if (!SetS0Reg( aCAMCNT[drvno], 0xffffffff, S0Addr_CAMCNT, drvno ))
 		error = TRUE;
 	if (error)
 	{
@@ -763,7 +764,7 @@ void SetDMAStart( UINT32 drvno )
 ULONG GetScanindex( UINT32 drvno )
 {
 	UINT32 ldata = 0;
-	if (!ReadLongS0( drvno, &ldata, DmaAddr_ScanIndex ))
+	if (!ReadLongS0( drvno, &ldata, S0Addr_ScanIndex ))
 	{
 		ErrorMsg( "Error GetScanindex" );
 		return 0;
@@ -786,10 +787,10 @@ void GetLastBufPart( UINT32 drvno )
 	UINT32 camcnt = 0;
 	//size_t rest_in_bytes = 0;
 
-	ReadLongS0( drvno, &nob, DmaAddr_NOB );
-	ReadLongS0( drvno, &nos, DmaAddr_NOS );
-	ReadLongS0( drvno, &spi, DmaAddr_DMAsPerIntr ); //get scans per intr
-	ReadLongS0( drvno, &camcnt, DmaAddr_CAMCNT );
+	ReadLongS0( drvno, &nob, S0Addr_NOB );
+	ReadLongS0( drvno, &nos, S0Addr_NOS );
+	ReadLongS0( drvno, &spi, S0Addr_DMAsPerIntr ); //get scans per intr
+	ReadLongS0( drvno, &camcnt, S0Addr_CAMCNT );
 	//!! aCAMCNT  löschen !
 
 	//halfbufize is 500 with default values
@@ -846,8 +847,8 @@ void isr( UINT drvno, PVOID pData )
 
 	ULONG dma_subbufinscans = DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS; //500
 
-	ReadLongS0(drvno, &nos, DmaAddr_NOS);
-	ReadLongS0(drvno, &blocks, DmaAddr_NOB);
+	ReadLongS0(drvno, &nos, S0Addr_NOS);
+	ReadLongS0(drvno, &blocks, S0Addr_NOB);
 
 	USHORT* pdmasubbuf_base_lo = pDMASubBuf[drvno];
 	USHORT* pdmasubbuf_base_hi = pDMASubBuf[drvno] + subbuflengthinbytes / sizeof(USHORT);
@@ -873,7 +874,7 @@ void isr( UINT drvno, PVOID pData )
 	}
 
 
-	ReadLongS0( drvno, &spi, DmaAddr_DMAsPerIntr ); //get scans per intr = 500
+	ReadLongS0( drvno, &spi, S0Addr_DMAsPerIntr ); //get scans per intr = 500
 	//WDC_Err("DmaAddr_DMAsPerIntr: 0x%x \n", val);
 	WDC_Err( "in isr -- nos: 0x%x, nob: 0x%x, spi: 0x%x, blocks: 0x%x\n", nos, Nob, spi, blocks );
 	//if (rest < spi) return without interrupt; // do not use INTR, but GetLastBufPart instead if rest is small enough
@@ -881,7 +882,7 @@ void isr( UINT drvno, PVOID pData )
 	{
 		WDC_Err( "must get rest: 0x%x \n", nos*blocks * aCAMCNT[drvno] % spi );
 		GetLastBufPart( drvno );
-		ResetS0Bit( 3, DmaAddr_PCIEFLAGS, drvno );//reset INTRSR flag for TRIGO
+		ResetS0Bit( 3, S0Addr_PCIEFLAGS, drvno );//reset INTRSR flag for TRIGO
 		return;
 	}*/
 
@@ -1120,9 +1121,10 @@ int GetNumofProcessors()
 \brief Set global variables camcnt, pixel and TLP size depending on pixel. Best call before doing anything else.
 \param camcnt camera count
 \param pixel pixel count
+\param
 \return TRUE for success, otherwise FALSE
 */
-BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel )
+BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay )
 {
 	/*Pixelsize with matching TLP Count (TLPC).
 	Pixelsize = TLPS * TLPC - 1*TLPS
@@ -1201,6 +1203,7 @@ BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel )
 	if (LEGACY_202_14_TLPCNT) NO_TLPS = NO_TLPS + 1;
 	aPIXEL[drvno] = pixel;
 	aCAMCNT[drvno] = camcnt;
+	ADRDELAY = xckdelay;
 	return TRUE;
 }
 
@@ -1223,7 +1226,8 @@ BOOL SetBoardVars( UINT32 drvno )
 	if (!WriteByteS0( drvno, 0, S0Addr_CTRLC )) return FALSE;;  //write CTRLC reg in S0
 	//write pixel to PIXREG  & stop timer & int trig
 	if (!SetS0Reg( aPIXEL[drvno], 0xFFFF, S0Addr_PIXREGlow, drvno )) return FALSE;;
-	if (!SetS0Reg( aCAMCNT[drvno], 0xF, DmaAddr_CAMCNT, drvno )) return FALSE;
+	if (!SetS0Reg( aCAMCNT[drvno], 0xF, S0Addr_CAMCNT, drvno )) return FALSE;
+	if (!SetS0Reg( ADRDELAY, 0xFFFF, S0Addr_XCKDLY, drvno )) return FALSE;
 	WDC_Err( "*** SetBoardVars done.\n" );
 	return TRUE; //no error
 };  // SetBoardVars
@@ -1815,7 +1819,7 @@ void initReadFFLoop( UINT32 drv, UINT32 * Blocks )
 	WDC_Err( "RESET BIGBUF to%x\n", pBigBufIndex[drv] );
 	IsrCounter = 0;
 	SetExtFFTrig( drv );
-	ReadLongS0( drv, &val, DmaAddr_NOB ); //get the needed Blocks
+	ReadLongS0( drv, &val, S0Addr_NOB ); //get the needed Blocks
 	*Blocks = val;
 	//set MeasureOn Bit
 	setMeasureOn( drv );
@@ -2099,11 +2103,11 @@ void countBlocksByHardware( UINT32 drvno )
 {
 	UINT32 val = 0x0;
 	//make signal on trig out plug via PCIEFLAGS:D4 - needed to count Blocks
-	ReadLongS0( drvno, &val, DmaAddr_PCIEFLAGS ); //set TrigStart flag for TRIGO signal to monitor the signal
+	ReadLongS0( drvno, &val, S0Addr_PCIEFLAGS ); //set TrigStart flag for TRIGO signal to monitor the signal
 	val |= PCIEFLAGS_bit_BLOCKTRIG;
-	WriteLongS0( drvno, val, DmaAddr_PCIEFLAGS ); //make pulse for BlockTrigger
+	WriteLongS0( drvno, val, S0Addr_PCIEFLAGS ); //make pulse for BlockTrigger
 	val &= 0xffffffef;  //set R1(4)
-	WriteLongS0( drvno, val, DmaAddr_PCIEFLAGS ); //reset signal
+	WriteLongS0( drvno, val, S0Addr_PCIEFLAGS ); //reset signal
 	RS_ScanCounter( drvno ); //reset scan counter for next block - or timer is disabled
 	return;
 }
@@ -2691,9 +2695,9 @@ void RS_ScanCounter( UINT32 drv )
 {
 	UINT32 dwdata = 0;
 	dwdata = 0x80000000; //set
-	WriteLongS0( drv, dwdata, DmaAddr_ScanIndex );
+	WriteLongS0( drv, dwdata, S0Addr_ScanIndex );
 	dwdata &= 0x7fffffff; //reset
-	WriteLongS0( drv, dwdata, DmaAddr_ScanIndex );
+	WriteLongS0( drv, dwdata, S0Addr_ScanIndex );
 }//RS_ScanCounter
 
 /**
@@ -2703,9 +2707,9 @@ void RS_BlockCounter( UINT32 drv )
 {
 	UINT32 dwdata = 0;
 	dwdata = 0x80000000; //set
-	WriteLongS0( drv, dwdata, DmaAddr_BLOCKINDEX );
+	WriteLongS0( drv, dwdata, S0Addr_BLOCKINDEX );
 	dwdata &= 0x7fffffff; //reset
-	WriteLongS0( drv, dwdata, DmaAddr_BLOCKINDEX );
+	WriteLongS0( drv, dwdata, S0Addr_BLOCKINDEX );
 }//RS_BlockCounter
 
 /**
@@ -2721,18 +2725,18 @@ void RS_DMAAllCounter( UINT32 drv, BOOL hwstop )
 	//Problem: erste scan löst INTR aus
 	//aber ohne: erste Block ist 1 zu wenig!0, -> in hardware RS to 0x1
 
-	ReadLongS0( drv, &dwdata32, DmaAddr_DMAsPerIntr );
+	ReadLongS0( drv, &dwdata32, S0Addr_DMAsPerIntr );
 	dwdata32 |= 0x80000000;
-	WriteLongS0( drv, dwdata32, DmaAddr_DMAsPerIntr );
+	WriteLongS0( drv, dwdata32, S0Addr_DMAsPerIntr );
 	dwdata32 &= 0x7fffffff;
-	WriteLongS0( drv, dwdata32, DmaAddr_DMAsPerIntr );
+	WriteLongS0( drv, dwdata32, S0Addr_DMAsPerIntr );
 
 	//reset the internal block counter - is not BLOCKINDEX!
-	ReadLongS0( drv, &dwdata32, DmaAddr_DmaBufSizeInScans );
+	ReadLongS0( drv, &dwdata32, S0Addr_DmaBufSizeInScans );
 	dwdata32 |= 0x80000000;
-	WriteLongS0( drv, dwdata32, DmaAddr_DmaBufSizeInScans );
+	WriteLongS0( drv, dwdata32, S0Addr_DmaBufSizeInScans );
 	dwdata32 &= 0x7fffffff;
-	WriteLongS0( drv, dwdata32, DmaAddr_DmaBufSizeInScans );
+	WriteLongS0( drv, dwdata32, S0Addr_DmaBufSizeInScans );
 
 	//reset the scan counter
 	RS_ScanCounter( drv );
@@ -2742,16 +2746,16 @@ void RS_DMAAllCounter( UINT32 drv, BOOL hwstop )
 	{
 		//set Block end stops timer:
 		//when SCANINDEX reaches NOS, the timer is stopped by hardware.
-		ReadByteS0( drv, &dwdata8, DmaAddr_PCIEFLAGS );
+		ReadByteS0( drv, &dwdata8, S0Addr_PCIEFLAGS );
 		dwdata8 |= PCIEFLAGS_bit_ENRSTIMERHW; //set bit2 for
-		WriteByteS0( drv, dwdata8, DmaAddr_PCIEFLAGS );
+		WriteByteS0( drv, dwdata8, S0Addr_PCIEFLAGS );
 	}
 	else
 	{
 		//stop only with write to RS_Timer Reg
-		ReadByteS0( drv, &dwdata8, DmaAddr_PCIEFLAGS );
+		ReadByteS0( drv, &dwdata8, S0Addr_PCIEFLAGS );
 		dwdata8 &= 0xFB; //bit2
-		WriteByteS0( drv, dwdata8, DmaAddr_PCIEFLAGS );
+		WriteByteS0( drv, dwdata8, S0Addr_PCIEFLAGS );
 	}
 }//RS_DMAAllCounter
 
@@ -3569,7 +3573,7 @@ BOOL isDmaSet( UINT32 drvno )
 BOOL isMeasureOn( UINT32 drvno )
 {
 	UINT32 data = 0;
-	BOOL success = ReadLongS0( drvno, &data, DmaAddr_PCIEFLAGS );
+	BOOL success = ReadLongS0( drvno, &data, S0Addr_PCIEFLAGS );
 	//Check for successful read and measure on bit
 	if (success && (PCIEFLAGS_bit_MEASUREON & data))
 		return TRUE;
@@ -3585,7 +3589,7 @@ BOOL isMeasureOn( UINT32 drvno )
 BOOL isBlockOn( UINT32 drvno )
 {
 	UINT32 data = 0;
-	BOOL success = ReadLongS0( drvno, &data, DmaAddr_PCIEFLAGS );
+	BOOL success = ReadLongS0( drvno, &data, S0Addr_PCIEFLAGS );
 	//Check for successful read and measure on bit
 	if (success && (PCIEFLAGS_bit_BLOCKON & data))
 		return TRUE;
@@ -3622,7 +3626,7 @@ void waitForBlockReady( UINT32 drvno )
 */
 BOOL setBlockOn( UINT32 drvno )
 {
-	return SetS0Bit( PCIEFLAGS_bitindex_BLOCKON, DmaAddr_PCIEFLAGS, drvno );
+	return SetS0Bit( PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS, drvno );
 }
 
 /**
@@ -3632,7 +3636,7 @@ BOOL setBlockOn( UINT32 drvno )
 */
 BOOL resetBlockOn( UINT32 drvno )
 {
-	return ResetS0Bit( PCIEFLAGS_bitindex_BLOCKON, DmaAddr_PCIEFLAGS, drvno );
+	return ResetS0Bit( PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS, drvno );
 }
 
 /**
@@ -3642,7 +3646,7 @@ BOOL resetBlockOn( UINT32 drvno )
 */
 BOOL setMeasureOn( UINT32 drvno )
 {
-	return SetS0Bit( PCIEFLAGS_bitindex_MEASUREON, DmaAddr_PCIEFLAGS, drvno );
+	return SetS0Bit( PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS, drvno );
 }
 
 /**
@@ -3652,7 +3656,7 @@ BOOL setMeasureOn( UINT32 drvno )
 */
 BOOL resetMeasureOn( UINT32 drvno )
 {
-	return ResetS0Bit( PCIEFLAGS_bitindex_MEASUREON, DmaAddr_PCIEFLAGS, drvno );
+	return ResetS0Bit( PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS, drvno );
 }
 
 /**

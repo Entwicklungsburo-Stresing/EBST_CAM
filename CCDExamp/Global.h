@@ -59,6 +59,7 @@ enum trigger_mode
 	dat = 2
 };
 #define TRIGGER_MODE xck
+#define XCKDELAY 0
 // Display data
 static BOOL PLOTFLAG = TRUE;		// TRUE for dense, FALSE for dots
 static int	LOX = 21;				// left upper x-corner of plot

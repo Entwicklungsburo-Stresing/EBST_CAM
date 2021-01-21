@@ -42,7 +42,7 @@ BOOL CALLING_WITH_NOS, CALLING_WITH_NOB = FALSE;
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow )
 {
 	MSG      msg;
-	SetGlobalVariables( choosen_board, CAMCNT, _PIXEL );
+	SetGlobalVariables( choosen_board, CAMCNT, _PIXEL, XCKDELAY );
 	if (!InitApplication( hInstance ))
 		return FALSE;
 
