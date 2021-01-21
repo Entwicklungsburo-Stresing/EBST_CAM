@@ -1,3 +1,6 @@
+v3.15.6
+- Add new way to communicate from DLL to Labview (PostLVUserEvent)
+
 v3.15.5
 - Lots of refactoring. Rename nDLLSetupDMA to DLLSetMEasurementParameters
 - CCDExamp: add TRMS for second camera
