@@ -34,6 +34,9 @@ BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
 #define IS_WIN95   (BOOL)(!(IS_NT) && !(IS_WIN32S)) && IS_WIN32
 #define IDT_TIMER1 1
 
+extern DWORD cur_nos;
+extern DWORD cur_nob;
+
 // function declerations
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow );
 BOOL InitApplication( HINSTANCE hInstance );
