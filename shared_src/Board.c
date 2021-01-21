@@ -3723,3 +3723,27 @@ BOOL SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob )
 	}
 	return TRUE;
 }
+
+/**
+\brief Copies one frame of pixel data to pdest.
+\param drvno indentifier of PCIe card
+\param curr_nos position in samples (0...(nos-1))
+\param curr_nob position in blocks (0...(nob-1))
+\param curr_cam position in camera count (0...(CAMCNT-1))
+\param pdioden address where data is written, should be buffer with size: length in pixel * sizeof( UINT16 )
+\param length lenght of frame in pixel, typically pixel count (1088)
+\return void
+*/
+void ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length )
+{
+	void* pframe = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, curr_cam );
+	memcpy( pdest, pframe, length * sizeof( UINT16 ) );  // length in bytes
+	/*
+	WDC_Err( "RETURN FRAME: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, _PIXEL: %u, length: %u\n", drvno, curr_nos, curr_nob, curr_cam, _PIXEL, length );
+	WDC_Err("FRAME2: address Buff: 0x%x \n", pBigBufBase[drvno]);
+	WDC_Err("FRAME2: address pdio: 0x%x \n", pdioden);
+	WDC_Err("FRAME3: pix42 of ReturnFrame: %d \n", *((USHORT*)pdioden + 420));
+	WDC_Err("FRAME3: pix43 of ReturnFrame: %d \n", *((USHORT*)pdioden + 422));
+	*/
+	return;
+}

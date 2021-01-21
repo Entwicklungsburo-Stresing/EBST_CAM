@@ -70,7 +70,7 @@ static unsigned int YLENGTH = 255;			// y-width
 // global declarations for CCDEXAMP
 HDC hMSDC;	// global stored measure DC of our window
 HWND hMSWND; // global stored measure HWND of our window
-ULONG DisplData[2][1200 * CAMCNT];//array for display for 2 cams parallel
+UINT16 DisplData[2][1200 * CAMCNT];//array for display for 2 cams parallel
 
 extern int ExpTime; //in µs
 extern int RepTime; //in ms

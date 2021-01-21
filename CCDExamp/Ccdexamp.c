@@ -27,7 +27,7 @@ LPCTSTR lpszAppName = "CCDExamp";
 LPCTSTR lpszTitle = "CCDExamp";
 HWND hwndTrackNos;
 HWND hwndTrackNob;
-DWORD cur_nospb = 0;
+DWORD cur_nos = 0;
 DWORD cur_nob = 0;
 #if CAMERA_SYSTEM == 3
 UINT16 direct2dviewer_gamma_white = 0x3FFF;
@@ -632,11 +632,11 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		break;
 	case WM_HSCROLL://ID_TRACKBAR:
 		//Define your function.
-		cur_nospb = SendMessage( hwndTrackNos, TBM_GETPOS, 0, 0 );
+		cur_nos = SendMessage( hwndTrackNos, TBM_GETPOS, 0, 0 );
 		cur_nob = SendMessage( hwndTrackNob, TBM_GETPOS, 0, 0 );
-		cur_nospb *= trackbar_nospb_multiplier;
+		cur_nos *= trackbar_nospb_multiplier;
 		cur_nob *= trackbar_nob_multiplier;
-		CopytoDispbuf( cur_nob*(*Nospb) + cur_nospb );
+		CopytoDispbuf();
 		Display( 1, PLOTFLAG );
 		UpdateTxT();
 		/*
@@ -742,7 +742,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			Sleep( 10 );
 			while (Running)
 			{
-				CopytoDispbuf( cur_nob*(*Nospb) + cur_nospb );
+				CopytoDispbuf();
 				Display( 1, PLOTFLAG );
 				UpdateTxT();
 				DLLShowNewBitmap( DRV, cur_nob, 0, _PIXEL, *Nospb );
