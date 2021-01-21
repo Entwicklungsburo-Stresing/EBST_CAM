@@ -23,7 +23,6 @@ BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
 #include "Global.h" 
 #include "CCDUnit.h"
 
-
 #if defined (WIN32)
 #define IS_WIN32 TRUE
 #else
@@ -35,30 +34,10 @@ BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
 #define IS_WIN95   (BOOL)(!(IS_NT) && !(IS_WIN32S)) && IS_WIN32
 #define IDT_TIMER1 1
 
-// global variables
-HINSTANCE hInst;   // current instance
-LPCTSTR lpszAppName = "CCDExamp";
-LPCTSTR lpszTitle = "CCDExamp";
-HWND     hwndTrackNos;
-HWND     hwndTrackNob;
-DWORD cur_nospb = 0;
-DWORD cur_nob = 0;
-#if CAMERA_SYSTEM == 3
-UINT16 direct2dviewer_gamma_white = 0x3FFF;
-#else
-UINT16 direct2dviewer_gamma_white = 0xFFFF;
-#endif
-UINT16 direct2dviewer_gamma_black = 0;
-UINT roi[6] = { 15, 42, 15, 42, 10, 6 };
-BOOL keep[5] = { FALSE, TRUE, FALSE, TRUE, FALSE };
-BOOL CALLING_WITH_NOS, CALLING_WITH_NOB = FALSE;
-
 // function declerations
-BOOL RegisterWin95( CONST WNDCLASS* lpwc );
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow );
 BOOL InitApplication( HINSTANCE hInstance );
 BOOL InitInstance( HINSTANCE hInstance, int nCmdShow );
-BOOL RegisterWin95( CONST WNDCLASS* lpwc );
 void AboutTiming( HWND hWnd );
 void AboutKeys( HWND hWnd );
 void AboutCFS( HWND hWnd );

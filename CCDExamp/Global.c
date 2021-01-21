@@ -37,3 +37,6 @@ int m_ECmodus = 1;
 int sec = 0, bec = 0, sdat = 0, bdat = 0;
 BOOL m_noPDARS = FALSE;
 double TRMSval_global[2];
+UINT choosen_board = 1;
+BOOL both_boards = FALSE;
+BOOL cont_mode = FALSE;
