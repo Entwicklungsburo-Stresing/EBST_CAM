@@ -25,6 +25,9 @@
     <ClInclude Include="..\shared_src\Board_ll.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\shared_src\UIAbstractionLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CCDExamp.rc" />
@@ -62,6 +65,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\shared_src\Board_ll.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UIAbstractionLayer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

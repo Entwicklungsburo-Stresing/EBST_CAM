@@ -253,11 +253,13 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     <ClCompile Include="..\shared_src\Board_ll.c" />
     <ClCompile Include="..\shared_src\lscpciej_lib.c" />
     <ClCompile Include="ESLSCDLL.c" />
+    <ClCompile Include="UIAbstractionLayer.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared_src\Board.h" />
     <ClInclude Include="..\shared_src\Board_ll.h" />
     <ClInclude Include="..\shared_src\CCDCTL.H" />
+    <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
     <ClInclude Include="..\shared_src\lscpciej_lib.h" />
     <ClInclude Include="ESLSCDLL.h" />
     <ClInclude Include="resource.h" />
