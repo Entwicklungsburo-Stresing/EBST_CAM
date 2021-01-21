@@ -44,6 +44,7 @@ extern USHORT** pBigBufBase;
 extern int Nob;
 extern int* Nospb;
 extern ULONG* aCAMCNT;	// cameras parallel
+extern ULONG ADRDELAY;
 extern BOOL escape_readffloop;
 extern BOOL CONTFFLOOP;
 extern UINT32 CONTPAUSE;
@@ -78,7 +79,7 @@ BOOL SetupPCIE_DMA( UINT32 drvno );
 void StartPCIE_DMAWrite( UINT32 drvno );
 void CleanupPCIE_DMA( UINT32 drvno );
 int GetNumofProcessors();
-BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel );
+BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay );
 BOOL SetBoardVars( UINT32 drvno );
 // clear camera with reads
 void AboutDrv( UINT32 drvno );	// displays the version and board ID = test if board is there
