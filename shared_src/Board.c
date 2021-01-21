@@ -1121,7 +1121,7 @@ int GetNumofProcessors()
 \brief Set global variables camcnt, pixel and TLP size depending on pixel. Best call before doing anything else.
 \param camcnt camera count
 \param pixel pixel count
-\param
+\param xckdelay XCK delay
 \return TRUE for success, otherwise FALSE
 */
 BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay )
