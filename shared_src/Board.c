@@ -67,13 +67,7 @@ ULONG tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 ULONG* aPIXEL = tmp_aPIXEL;
 BOOL Running = FALSE;
 UINT32 BOARD_SEL = 1;
-#ifdef _DLL
 
-LVUserEventRef measureStartLVEvent;
-LVUserEventRef measureDoneLVEvent;
-LVUserEventRef blockStartLVEvent;
-LVUserEventRef blockDoneLVEvent;
-#endif
 // ***********     functions    ********************** 
 
 /**
@@ -1826,9 +1820,7 @@ void initReadFFLoop( UINT32 drv, UINT32 * Blocks )
 	*Blocks = val;
 	//set MeasureOn Bit
 	setMeasureOn( drv );
-#ifdef _DLL
-	PostLVUserEvent( measureStartLVEvent, NULL );
-#endif
+	notifyMeasureStart(drv);
 	return;
 }
 
@@ -1942,9 +1934,6 @@ void ReadFFLoop( UINT32 board_sel )
 	{//block read function
 		//just checking Esc for Escape in Cont mode
 		oneTriggerPerBlock( board_sel, 5 ); // new 10/2020 with PCIe 202.14: switch trigger by hardware
-#ifdef _DLL
-		PostLVUserEvent( blockStartLVEvent, NULL );
-#endif
 		if (board_sel == 1 || board_sel == 3)
 		{
 			countBlocksByHardware( 1 );
@@ -1953,6 +1942,7 @@ void ReadFFLoop( UINT32 board_sel )
 				setBlockOn( 1 );
 				StartSTimer( 1 );
 				SWTrig( 1 ); //start scan for first read
+				notifyBlockStart( 1 );
 			}
 		}
 		if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
@@ -1963,6 +1953,7 @@ void ReadFFLoop( UINT32 board_sel )
 				setBlockOn( 2 );
 				StartSTimer( 2 );
 				SWTrig( 2 ); //start scan for first read
+				notifyBlockStart( 2 );
 			}
 		}
 		//for synchronising the both cams
@@ -2057,14 +2048,13 @@ void ReadFFLoop( UINT32 board_sel )
 		if (board_sel == 1 || board_sel == 3)
 		{
 			resetBlockOn( 1 );
+			notifyBlockDone( 1 );
 		}
 		if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 		{
 			resetBlockOn( 2 );
+			notifyBlockDone( 2 );
 		}
-#ifdef _DLL
-		PostLVUserEvent( blockDoneLVEvent, NULL );
-#endif
 	}//block cnt read function
 	if (board_sel == 1 || board_sel == 3)
 	{
@@ -2091,14 +2081,13 @@ void ReadFFLoop( UINT32 board_sel )
 	if (board_sel == 1 || board_sel == 3)
 	{
 		resetMeasureOn(1);
+		notifyMeasureDone( 1 );
 	}
 	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 	{
 		resetMeasureOn(2);
+		notifyMeasureDone( 2 );
 	}
-#ifdef _DLL
-	PostLVUserEvent( measureDoneLVEvent, NULL );
-#endif
 	return;
 }
 

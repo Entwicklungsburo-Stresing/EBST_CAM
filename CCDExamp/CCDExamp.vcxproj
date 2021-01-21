@@ -139,7 +139,7 @@
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(SolutionDir)\Jungo;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);C:\WinDriver\lib\amd64;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Program Files\National Instruments;$(SolutionDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Debug|Win32'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
@@ -151,7 +151,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Program Files\National Instruments;$(SolutionDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Debug|x64'">
@@ -683,6 +683,7 @@
     <ClCompile Include="CCDExamp.c" />
     <ClCompile Include="CCDUnit.c" />
     <ClCompile Include="Global.c" />
+    <ClCompile Include="UIAbstractionLayer.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CCDExamp.rc" />
@@ -692,6 +693,7 @@
     <ClInclude Include="..\shared_src\Board_ll.h" />
     <ClInclude Include="..\shared_src\CCDCTL.H" />
     <ClInclude Include="..\shared_src\lscpciej_lib.h" />
+    <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
     <ClInclude Include="CCDExamp.h" />
     <ClInclude Include="CCDUnit.h" />
     <ClInclude Include="Global.h" />
