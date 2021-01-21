@@ -20,6 +20,13 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 #include "ESLSCDLL.h"
 
 volatile struct ffloopparams params, params2;
+LVUserEventRef measureStartLVEvent;
+LVUserEventRef measureDoneLVEvent;
+LVUserEventRef blockStartLVEvent;
+LVUserEventRef blockDoneLVEvent;
+int nProcessCount = 0;
+int nThreadCount = 0;
+ULONG ADRDELAY = 1000;			// -> is set in SetBoardVars. No, it is not used. Why? :(
 
 /**
 \brief DllMain entry point
@@ -811,7 +818,7 @@ DllAccess UINT8 DLLSetBSlope( UINT32 drvno, UINT32 slope )
 	return SetBSlope( drvno, slope );
 }
 
-DllAccess int DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent )
+DllAccess void DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent )
 {
 	measureStartLVEvent = *measureStartEvent;
 	measureDoneLVEvent = *measureDoneEvent;

@@ -4,9 +4,7 @@
 
 
 #include "Board_ll.h"
-#ifdef _DLL
-#include "LabVIEW 2015/cintools/extcode.h"
-#endif
+#include "UIAbstractionLayer.h"
 
 #define DBGNOCAM FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
 #define DMA_BUFSIZEINSCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
@@ -54,12 +52,6 @@ extern DWORD64 IsrCounter;
 extern ULONG* aPIXEL;
 extern BOOL Running;
 extern UINT32 BOARD_SEL;
-#ifdef _DLL
-extern LVUserEventRef measureStartLVEvent;
-extern LVUserEventRef measureDoneLVEvent;
-extern LVUserEventRef blockStartLVEvent;
-extern LVUserEventRef blockDoneLVEvent;
-#endif
 
 void ErrMsgBoxOn( void );
 void ErrMsgBoxOff( void ); // switch to suppress error message boxes

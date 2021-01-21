@@ -1,3 +1,4 @@
+#pragma once
 /*   **********************************************
 	DLL for CCD Camera driver of
 	for linking to labview
@@ -21,19 +22,13 @@
 #include <stdio.h>
 #include <process.h>	// for Thread example
 #include <malloc.h>		// msize
-
-	// Make this data shared among all 
-	// all applications that use this DLL.
-	//....................................
-#pragma data_seg( ".GLOBALS" )
-int nProcessCount = 0;
-int nThreadCount = 0;
-//#pragma data_seg()
-void	*dummy;
-ULONG ADRDELAY = 1000;			// -> is set in SetBoardVars
-//#include "GLOBAL.H"
+#include "LabVIEW 2015/cintools/extcode.h"
 #include "shared_src/board.h"
-//extern volatile PUSHORT pBigBufBase[3];
+
+extern LVUserEventRef measureStartLVEvent;
+extern LVUserEventRef measureDoneLVEvent;
+extern LVUserEventRef blockStartLVEvent;
+extern LVUserEventRef blockDoneLVEvent;
 
 #ifdef _DLL
 #define DllAccess __declspec( dllexport )
@@ -124,4 +119,4 @@ DllAccess UINT8 DLLSetSTI( UINT32 drvno, UINT8 sti_mode );
 DllAccess UINT8 DLLSetSTimer( UINT32 drvno, UINT32 stime_in_microseconds );
 DllAccess UINT8 DLLSetBTimer( UINT32 drvno, UINT32 btime_in_microseconds );
 DllAccess UINT8 DLLSetBSlope( UINT32 drvno, UINT32 slope );
-DllAccess int DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent );
+DllAccess void DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent );

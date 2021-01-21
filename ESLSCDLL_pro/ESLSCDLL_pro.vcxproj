@@ -286,11 +286,13 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)CCDExamp\$(Platform)\$(Configuration)\"<
     <ClCompile Include="Direct2dViewer.cpp" />
     <ClCompile Include="Direct2dViewer_c.cpp" />
     <ClCompile Include="ESLSCDLL_pro.c" />
+    <ClCompile Include="UIAbstractionLayer.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared_src\Board.h" />
     <ClInclude Include="..\shared_src\Board_ll.h" />
     <ClInclude Include="..\shared_src\lscpciej_lib.h" />
+    <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
     <ClInclude Include="Direct2dViewer.h" />
     <ClInclude Include="Direct2dViewer_c.h" />
     <ClInclude Include="ESLSCDLL_pro.h" />
