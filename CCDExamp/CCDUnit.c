@@ -82,33 +82,25 @@ void Display(unsigned long db, BOOL Plot)
 				SetPixelV(hMSDC, LOX + i, y2, pencolor);
 			};
 	}
+	return;
 };
 
-void CopytoDispbuf(ULONG scan)
-{	//display buffer is long
-	//data array is word
-
-	int i;
-#ifdef _DLL
-	UINT16 tempBuf[1200];
-	DLLReturnFrame(choosen_board, scan, 0, &tempBuf);
-#else
-	PUSHORT tempBuf;
-	tempBuf = pBigBufBase[choosen_board] + CAMCNT * scan * _PIXEL;
-#endif
-	for (i = 0; i < (_PIXEL*CAMCNT - 1); i++) {
-		DisplData[0][i] = *(tempBuf + i);
+/**
+\brief Copy camera data from current nos and nob frame to display buffer.
+\param scan 
+\param pmemory_free how much is free
+\return none
+*/
+void CopytoDispbuf()
+{
+	ReturnFrame( choosen_board, cur_nos, cur_nob, 0, DisplData[0], _PIXEL );
+	ReturnFrame( choosen_board, cur_nos, cur_nob, 1, DisplData[0]+_PIXEL, _PIXEL );
+	if(both_boards)
+	{
+		ReturnFrame( 2, cur_nos, cur_nob, 0, DisplData[1], _PIXEL );
+		ReturnFrame( 2, cur_nos, cur_nob, 1, DisplData[1] + _PIXEL, _PIXEL );
 	}
-	if (both_boards) {
-#ifdef _DLL
-		DLLReturnFrame(2, scan, 0, &tempBuf);
-#else
-		tempBuf = pBigBufBase[2] + scan * _PIXEL*CAMCNT;
-#endif
-		for (i = 0; i < (_PIXEL*CAMCNT - 1); i++) {
-			DisplData[1][i] = *(tempBuf + i);//DIODENRingBuf[i + 0*FirstPageOffset + 0 * RAMPAGESIZE];//20: its a random number of the Ringbuffer (max 99)
-		}
-	}
+	return;
 }
 
 void UpdateTxT(void)
@@ -149,6 +141,7 @@ void UpdateTxT(void)
 	*/
 	TextOut(hMSDC, 20, YLENGTH + 50, TrmsString, j);
 	RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
+	return;
 }
 
 int GetCursorPosition()
@@ -282,7 +275,7 @@ void startMess(void *dummy)
 	if (cont_mode)
 		while (TRUE)
 		{
-			CopytoDispbuf( 8 );
+			CopytoDispbuf();
 			Display( 1, PLOTFLAG );
 			UpdateTxT();
 			if (GetAsyncKeyState( VK_ESCAPE ))
