@@ -89,7 +89,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>C:\Program Files\National Instruments;$(VC_IncludePath);$(SolutionDir);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);</LibraryPath>
+    <LibraryPath>C:\Program Files\National Instruments;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);</LibraryPath>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -226,7 +226,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);windowscodecs.lib</AdditionalDependencies>
+      <AdditionalDependencies>LabVIEW 2015/cintools/labview.lib;ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);windowscodecs.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <ManifestFile>$(OutDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
