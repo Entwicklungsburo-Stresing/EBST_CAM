@@ -21,6 +21,23 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 */
 #include "CCDExamp.h"
 
+// global variables
+HINSTANCE hInst;   // current instance
+LPCTSTR lpszAppName = "CCDExamp";
+LPCTSTR lpszTitle = "CCDExamp";
+HWND hwndTrackNos;
+HWND hwndTrackNob;
+DWORD cur_nospb = 0;
+DWORD cur_nob = 0;
+#if CAMERA_SYSTEM == 3
+UINT16 direct2dviewer_gamma_white = 0x3FFF;
+#else
+UINT16 direct2dviewer_gamma_white = 0xFFFF;
+#endif
+UINT16 direct2dviewer_gamma_black = 0;
+UINT roi[6] = { 15, 42, 15, 42, 10, 6 };
+BOOL keep[5] = { FALSE, TRUE, FALSE, TRUE, FALSE };
+BOOL CALLING_WITH_NOS, CALLING_WITH_NOB = FALSE;
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow )
 {
@@ -159,31 +176,6 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 					}
 */
 	return TRUE;
-}
-
-BOOL RegisterWin95( CONST WNDCLASS* lpwc )
-{
-	WNDCLASSEX wcex;
-
-	wcex.style = lpwc->style;
-	wcex.lpfnWndProc = lpwc->lpfnWndProc;
-	wcex.cbClsExtra = lpwc->cbClsExtra;
-	wcex.cbWndExtra = lpwc->cbWndExtra;
-	wcex.hInstance = lpwc->hInstance;
-	wcex.hIcon = lpwc->hIcon;
-	wcex.hCursor = lpwc->hCursor;
-	wcex.hbrBackground = lpwc->hbrBackground;
-	wcex.lpszMenuName = lpwc->lpszMenuName;
-	wcex.lpszClassName = lpwc->lpszClassName;
-
-	// Added elements for Windows 95.
-	//...............................
-	wcex.cbSize = sizeof( WNDCLASSEX );
-	wcex.hIconSm = LoadImage( wcex.hInstance, lpwc->lpszClassName,
-		IMAGE_ICON, 16, 16,
-		LR_DEFAULTCOLOR );
-
-	return RegisterClassEx( &wcex );
 }
 
 void AboutTiming( HWND hWnd )

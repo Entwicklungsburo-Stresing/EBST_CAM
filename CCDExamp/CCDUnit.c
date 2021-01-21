@@ -2,88 +2,7 @@
 
 BYTE Dispcnt = 0;
 int yVal = 0;
-volatile int testcnt = 0;
-UINT choosen_board = 1;
-BOOL both_boards = FALSE;
-BOOL cont_mode = FALSE;
 ULONG ERRCNT = 0;
-
-/*
-void GetRmsVal(BYTE ch, ULONG nos)
-			{
-			double trms=0.0;
-			double mwf = 0.0;
-			double sumvar =0.0;
-			unsigned int i=0;
-			for ( i=0;i<nos;i++)
-				{//get mean val
-				mwf += TRMSVals[ch][i];
-				}
-			mwf /= nos;
-			for ( i=0;i<nos;i++)
-				{// get varianz
-				trms = TRMSVals[ch][i];
-				trms = trms - mwf;
-				trms *= trms;
-				sumvar += trms;
-				}
-			trms = sumvar / (nos+1);
-			trms = sqrt (trms);
-			TRMSval[ch]=trms;
-
-			}//GetRmsVal
-
-void CalcTrms()
-{// online calc TRMS noise val of pix
-
-		ULONG nos=NOS;  //number of samples
-		ULONG pix=TRMSpix;// pixel for what the rms noise in time is calculated
-
-
-		TRMSVals[0][m_lfdTrmsNr]=DisplData[0][pix]; //DIODEN[0][pix]; //keep act val
-		TRMSVals[1][m_lfdTrmsNr]=DisplData[1][pix];//DIODEN[1][pix]; //keep act val
-		m_lfdTrmsNr++;
-		if (m_lfdTrmsNr % nos == 0)
-			{
-			GetRmsVal(0,nos);
-			GetRmsVal(1,nos);
-			m_lfdTrmsNr = 0;
-			}
-
-}//CalcTrms
-*/
-
-void Resort_to_DBs(UINT drvno, void* p1dim, void* p2dim, BYTE db1, BYTE db2)
-{// repack array word [pixel][db]  to long [db][pixel]
-	//used in CCDExamp
-/*
-ULONG i=0;
-long dat=0;
-pArrayT p1Dim = (pArrayT) p1dim;
-pArrayT p2Dim = (pArrayT) p2dim;
-for (i=0;i<	_PIXEL;i++)
-	{
-	dat = *(p1Dim+i);
-	dat = dat >> 16;
-	*(p2Dim+_PIXEL*(db2-1)+i) = dat & 0x0FFFF;
-	*(p2Dim+_PIXEL*(db1-1)+i) = p2Dim[i]&0x0FFFF;
-	}
-*/
-
-	typedef WORD w2dim[_PIXEL][2];		// different packed source
-	typedef long l2dim[4][_PIXEL];	// destination array
-	ULONG i = 0;
-
-	w2dim* ppack = (w2dim*)p2dim;
-	l2dim* pw2dim = (l2dim*)p2dim;
-
-	for (i = 0; i < _PIXEL; i++)
-	{
-		(*pw2dim)[db2 - 1][i] = (*ppack)[i][1]; //hi word
-		(*pw2dim)[db1 - 1][i] = (*ppack)[i][2]; //lo word
-	}
-
-}// Resort_to_DBs
 
 int YVal(unsigned long db, int pixeli)
 {
@@ -163,7 +82,6 @@ void Display(unsigned long db, BOOL Plot)
 				SetPixelV(hMSDC, LOX + i, y2, pencolor);
 			};
 	}
-
 };
 
 void CopytoDispbuf(ULONG scan)
@@ -174,18 +92,13 @@ void CopytoDispbuf(ULONG scan)
 #ifdef _DLL
 	UINT16 tempBuf[1200];
 	DLLReturnFrame(choosen_board, scan, 0, &tempBuf);
-
-
 #else
-
 	PUSHORT tempBuf;
 	tempBuf = pBigBufBase[choosen_board] + CAMCNT * scan * _PIXEL;
 #endif
 	for (i = 0; i < (_PIXEL*CAMCNT - 1); i++) {
-
 		DisplData[0][i] = *(tempBuf + i);
 	}
-
 	if (both_boards) {
 #ifdef _DLL
 		DLLReturnFrame(2, scan, 0, &tempBuf);
@@ -196,122 +109,7 @@ void CopytoDispbuf(ULONG scan)
 			DisplData[1][i] = *(tempBuf + i);//DIODENRingBuf[i + 0*FirstPageOffset + 0 * RAMPAGESIZE];//20: its a random number of the Ringbuffer (max 99)
 		}
 	}
-
-
-	/* was GS
-	for (i = -150; i < (_PIXEL-150); i++){
-		//pDMABuf++;
-		DisplData[0][i] = *(tempBuf  + i);//DIODENRingBuf[i + 0*FirstPageOffset + 0 * RAMPAGESIZE];//20: its a random number of the Ringbuffer (max 99)
-	}
-	*/
-	//pDMABuf -= _PIXEL;
-	//for (i = 0; i < _PIXEL; i++)
-		//	DisplData[1][i] = DIODEN[1][i];//* (pDIODEN+_PIXEL+i);
-
-		//GetNextScan = FALSE;//act vals in disp buffer
-
-
 }
-
-//****************************  FIFO functions   ********************
-/*
-void MeasureFifo(HDC aDC)
-//function reads every line from FIFO to main RAM
-//be aware of a buffer overflow if looptime and pixel exceeds FIFO size
-	{	int i = 0;
-		int j=0;
-
-	BOOL Abbruch = FALSE;
-	BOOL Space = FALSE;
-	DWORD oldpriclass=0;
-	DWORD oldprithread=0;
-	DWORD priority=0;
-	ULONG linesize = _PIXEL * sizeof(ArrayT);
-	ULONG RingFifoDepth=256; //size of ring buffer
-
-	// if thread is wanted ... - for highest speeds cams
-	#if  (_USETHREAD)
-	hPROCESS = GetCurrentProcess();
-	oldpriclass = GetPriorityClass(hPROCESS);
-	priority=REALTIME_PRIORITY_CLASS;
-	if (! SetPriorityClass(hPROCESS,priority)) ErrorMsg(" No Class set ");
-	hTHREAD = GetCurrentThread();
-	oldprithread = GetThreadPriority(hTHREAD);
-	if (! SetThreadPriority(hTHREAD,THREAD_PRIORITY_TIME_CRITICAL)) ErrorMsg(" No Thread set ");
-	#endif
-
-	//alloc ring buffer
-	pRingFifo = (pArrayT) calloc(linesize,RingFifoDepth); //allooc buffer
-	if (pRingFifo==0) {ErrorMsg("alloc RingFifo Buffer failed");
-					abort(); }
-	//alloc one more buffer for copy to display
-	pCopyDispBuf = (pArrayT) calloc(linesize,1);
-	if (pCopyDispBuf==0) {ErrorMsg("alloc pCopyDispBuf Buffer failed");
-					abort(); }
-
-//hCopyToDispBuf = CreateMutex(NULL,FALSE,NULL);
-
-	ClrRead(choosen_board, 0, 0, 16);
-	GetNextScan=FALSE;
-	MaxLineCnt=0;
-
-	//Clear FIFO and start timer
-	RSFifo(choosen_board);
-	if (EXTTRIGFLAG)
-		{StopFFTimer(choosen_board);
-		SetExtTrig(choosen_board);}
-	else
-		{SetIntTrig(choosen_board);
-		StartFFTimer(choosen_board, ExpTime*1000);} // in micro sec
-
-
-	do	{
-		i=0;
-//		ReadFifo(choosen_board,pDIODEN,0);//clear array for add
-		do  {
-			i += 1;
-
-			do	{//wait for linecounter has at least one line
-				}
-			while ((! FFValid(choosen_board)) );//&& (!Abbruch));
-			j=0;
-			do //if there are more then1 line, get them all
-				{//
-				//OutTrigHigh(choosen_board);
-				ReadFifo(choosen_board,pRingFifo+,FKT);//FKT);
-				//OutTrigLow(choosen_board);
-				j+=1;
-				}
-			while (ReadFFCounter(choosen_board)>=1);
-			if (j>MaxLineCnt) MaxLineCnt=j;
-
-			if (ShowTrms) CalcTrms();
-
-			if (GetNextScan==TRUE)
-				{
-				WaitForSingleObject(hCopyToDispBuf, INFINITE);
-				memcpy(pCopyDispBuf,pRingFifo+WrOffset*pixel , linesize);
-				CopytoDispbuf();
-				UpdateDispl=TRUE;
-				GetNextScan=FALSE;
-				ReleaseMutex(hCopyToDispBuf);
-				}
-			}
-		while((i<ADDREP) && (Running));
-	}
-	while (Running);
-	StopFFTimer(choosen_board);
-	Running=FALSE;
-	SetIntTrig(choosen_board);//stop if external trigger
-
-	CloseHandle(hCopyToDispBuf) ;
-#if (_USETHREAD)
-	// we need to reset the Class - not really: return kills thread anyway
-	if (! SetPriorityClass(hPROCESS, oldpriclass)) ErrorMsg(" No Class reset ");
-	if (! SetThreadPriority(hTHREAD, oldprithread)) ErrorMsg(" No Class reset ");
-	#endif
-};	 // MeasureFifo- readloop
-*/
 
 void UpdateTxT(void)
 {
@@ -320,11 +118,8 @@ void UpdateTxT(void)
 	int i = 0;
 	int xPos = 0;
 
-
-
 	//B!j = sprintf_s(TrmsString, 260, " , linecounter max is %u , ", GetLastMaxLines());
 	//B!j += sprintf_s(TrmsString + j, 260, " ISRTime: %u us", GetISRTime());
-
 
 	xPos = GetCursorPosition();
 	if (xPos < 0)
@@ -353,61 +148,17 @@ void UpdateTxT(void)
 	else j += sprintf_s(TrmsString + j, 260, "                      ");
 	*/
 	TextOut(hMSDC, 20, YLENGTH + 50, TrmsString, j);
-
 	RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
 }
 
 int GetCursorPosition()
 {
 	POINT CurPos;
-
 	GetCursorPos(&CurPos);
 	ScreenToClient(hMSWND, &CurPos);
-
 	int x = CurPos.x - LOX;
 	return (int)x;// CurPos.x;
 }
-
-/*
-void DisplayData()
-{
-	char header[260];
-	int j=0;
-	int i=0;
-
-// display loop in normal priority
-do
-	{
-//	if (UpdateDispl)
-		{
-		//wait for ring thread is running
-		do {} while (RingThreadIsOFF()) ;
-
-		//B! FetchLastRingLine(pDIODEN);
-		TICKSDISP = ticksTimestamp();
-
-		CopytoDispbuf(Nob*Nospb);
-		Display(1,PLOTFLAG);
-		if (ShowTrms) CalcTrms();
-		//OutTrigLow(1);
-		TICKSDISP = ticksTimestamp()-TICKSDISP;//measure displaytime
-
-//		UpdateDispl=FALSE;
-		UpdateTxT();
-		}
-
-	Sleep(20); // depends how many frames per second you can see on a screen
-	//GetNextScan = TRUE;
-	}
-while (Running);
-
-j=sprintf_s(header,260," Measurement stopped !                                                                       ");
-TextOut(hMSDC,100,LOY-17,header,j);
-RedrawWindow(hMSWND,NULL,NULL,RDW_INVALIDATE);
-
-//ActMouse(choosen_board);
-}//DisplayData
-*/
 
 void initCamera()
 {
@@ -488,27 +239,6 @@ void initMeasurement()
 	}
 #endif
 }
-/*
-unsigned int __stdcall ContDispRoutine( void *parg )//threadex
-{
-	BOOL cancel = FALSE;
-	while (!cancel)
-	{
-
-		CopytoDispbuf( 8 );
-		Display( 1, PLOTFLAG );
-
-		UpdateTxT();
-
-		if (GetAsyncKeyState( VK_ESCAPE ))
-			cancel = TRUE;
-		if (GetAsyncKeyState( VK_SPACE ))
-			cancel = TRUE;
-		Sleep( 10000 );
-	}
-
-}
-*/
 
 // main read loop setup
 void startMess(void *dummy)
@@ -561,9 +291,5 @@ void startMess(void *dummy)
 				break;
 		}
 #endif
-	double mwf = 0.0; //unused
-	//TODO: Here is a problem. The measurement is done in an own thread. So the TRMS calculation could be started here before the measurement is finished. This is why the the value is sometimes wrong after the first measurement. Furthermore the TRMS value probably doesn't match the data currently displayed, instead some or all of the last data is used.
-	CalcTrms( DRV, *Nospb, TRMSpix, 0, &mwf, &TRMSval_global[0] );
-	if (CAMCNT > 1) CalcTrms( DRV, *Nospb, TRMSpix, 1, &mwf, &TRMSval_global[1] );
 	return;
 }

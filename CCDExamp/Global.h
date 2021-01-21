@@ -104,3 +104,6 @@ extern int m_ECTrigmodus;
 extern int m_ECmodus;
 extern BOOL m_noPDARS;
 extern double TRMSval_global[2];
+extern UINT choosen_board;
+extern BOOL both_boards;
+extern BOOL cont_mode;
