@@ -818,6 +818,14 @@ DllAccess UINT8 DLLSetBSlope( UINT32 drvno, UINT32 slope )
 	return SetBSlope( drvno, slope );
 }
 
+/**
+\brief Save the user event handlers created by Labview. Call this before using the event structure.
+\param measureStartEvent Event handler for the event measure start.
+\param measureDoneEvent Event handler for the event measure done.
+\param blockStartEvent Event handler for the event block start.
+\param blockDoneEvent Event handler for the event block done.
+\return none
+*/
 DllAccess void DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent )
 {
 	measureStartLVEvent = *measureStartEvent;

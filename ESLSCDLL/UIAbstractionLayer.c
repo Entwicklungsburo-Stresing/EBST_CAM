@@ -1,4 +1,4 @@
-//UI abstraction Layer for Labview
+//UI abstraction layer for Labview
 #include "shared_src/UIAbstractionLayer.h"
 #include "ESLSCDLL.h"
 
