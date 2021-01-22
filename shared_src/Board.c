@@ -1823,7 +1823,6 @@ void initReadFFLoop( UINT32 drv, UINT32 * Blocks )
 	*Blocks = val;
 	//set MeasureOn Bit
 	setMeasureOn( drv );
-	notifyMeasureStart(drv);
 	return;
 }
 
@@ -1945,7 +1944,6 @@ void ReadFFLoop( UINT32 board_sel )
 				setBlockOn( 1 );
 				StartSTimer( 1 );
 				SWTrig( 1 ); //start scan for first read
-				notifyBlockStart( 1 );
 			}
 		}
 		if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
@@ -1956,7 +1954,6 @@ void ReadFFLoop( UINT32 board_sel )
 				setBlockOn( 2 );
 				StartSTimer( 2 );
 				SWTrig( 2 ); //start scan for first read
-				notifyBlockStart( 2 );
 			}
 		}
 		//for synchronising the both cams
@@ -1992,10 +1989,7 @@ void ReadFFLoop( UINT32 board_sel )
 			{
 				if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 1 ) | escape_readffloop) // check for kill ?
 				{ //stop if ESC was pressed
-					StopSTimer( 1 );
-					resetBlockOn( 1 );
-					resetMeasureOn( 1 );	//reset MeasureOn bit
-					SetDMAReset( 1 );
+					abortMeasurement( 1 );
 					return;
 				}
 			}
@@ -2006,11 +2000,7 @@ void ReadFFLoop( UINT32 board_sel )
 			{
 				if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 2 ) | escape_readffloop) // check for kill ?
 				{ //stop if ESC was pressed
-					StopSTimer( 2 );
-					//SetIntFFTrig( 2 );//disable ext input
-					resetBlockOn( 2 );
-					resetMeasureOn( 2 );
-					SetDMAReset( 2 );
+					abortMeasurement( 2 );
 					return;
 				}
 			}
@@ -2026,11 +2016,7 @@ void ReadFFLoop( UINT32 board_sel )
 				{
 					if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 1 ) | escape_readffloop) // check for kill ?
 					{ //stop if ESC was pressed
-						StopSTimer( 1 );
-						SetIntFFTrig( 1 );//disable ext input
-						resetBlockOn( 1 );
-						resetMeasureOn( 1 );
-						SetDMAReset( 1 );
+						abortMeasurement( 1 );
 						return_flag_1 = TRUE;
 					}
 				}
@@ -2038,10 +2024,7 @@ void ReadFFLoop( UINT32 board_sel )
 				{
 					if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 2 ) | escape_readffloop) // check for kill ?
 					{ //stop if ESC was pressed
-						StopSTimer( 2 );
-						resetBlockOn( 2 );
-						resetMeasureOn( 2 );
-						SetDMAReset( 2 );
+						abortMeasurement( 2 );
 						return_flag_2 = TRUE;
 					}
 				}
@@ -2051,12 +2034,10 @@ void ReadFFLoop( UINT32 board_sel )
 		if (board_sel == 1 || board_sel == 3)
 		{
 			resetBlockOn( 1 );
-			notifyBlockDone( 1 );
 		}
 		if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 		{
 			resetBlockOn( 2 );
-			notifyBlockDone( 2 );
 		}
 	}//block cnt read function
 	if (board_sel == 1 || board_sel == 3)
@@ -2084,12 +2065,10 @@ void ReadFFLoop( UINT32 board_sel )
 	if (board_sel == 1 || board_sel == 3)
 	{
 		resetMeasureOn(1);
-		notifyMeasureDone( 1 );
 	}
 	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 	{
 		resetMeasureOn(2);
-		notifyMeasureDone( 2 );
 	}
 	return;
 }
@@ -3620,42 +3599,46 @@ void waitForBlockReady( UINT32 drvno )
 }
 
 /**
-\brief Sets BlockOn bit in PCIEFLAGS.
+\brief Sets BlockOn bit in PCIEFLAGS and notifies UI about it.
 \param drvno PCIe board identifier.
 \return TRUE when success, otherwise FALSE
 */
 BOOL setBlockOn( UINT32 drvno )
 {
+	notifyBlockStart( drvno );
 	return SetS0Bit( PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS, drvno );
 }
 
 /**
-\brief Resets BlockOn bit in PCIEFLAGS.
+\brief Resets BlockOn bit in PCIEFLAGS and notifies UI about it.
 \param drvno PCIe board identifier.
 \return TRUE when success, otherwise FALSE
 */
 BOOL resetBlockOn( UINT32 drvno )
 {
+	notifyBlockDone( drvno );
 	return ResetS0Bit( PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS, drvno );
 }
 
 /**
-\brief Sets setMeasureOn bit in PCIEFLAGS.
+\brief Sets setMeasureOn bit in PCIEFLAGS and notifies UI about it.
 \param drvno PCIe board identifier.
 \return TRUE when success, otherwise FALSE
 */
 BOOL setMeasureOn( UINT32 drvno )
 {
+	notifyMeasureStart( drvno );
 	return SetS0Bit( PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS, drvno );
 }
 
 /**
-\brief Resets setMeasureOn bit in PCIEFLAGS.
+\brief Resets setMeasureOn bit in PCIEFLAGS and notifies UI about it.
 \param drvno PCIe board identifier.
 \return TRUE when success, otherwise FALSE
 */
 BOOL resetMeasureOn( UINT32 drvno )
 {
+	notifyMeasureDone( drvno );
 	return ResetS0Bit( PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS, drvno );
 }
 
@@ -3749,5 +3732,20 @@ void ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam,
 	WDC_Err("FRAME3: pix42 of ReturnFrame: %d \n", *((USHORT*)pdioden + 420));
 	WDC_Err("FRAME3: pix43 of ReturnFrame: %d \n", *((USHORT*)pdioden + 422));
 	*/
+	return;
+}
+
+/**
+\brief Use this function to aboirt measurement.
+\param drv PCIe board identifier
+\return none
+*/
+void abortMeasurement( UINT32 drv )
+{
+	StopSTimer( drv );
+	SetIntFFTrig( drv );//disable ext input
+	resetBlockOn( drv );
+	resetMeasureOn( drv );
+	SetDMAReset( drv );
 	return;
 }
