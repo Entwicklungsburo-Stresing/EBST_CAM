@@ -1,3 +1,9 @@
+v3.15.7
+- Add DLLCopyOneBlock
+- Fix XCKDELAY
+- Fix notifys beeing at wrong position
+- Fix block trigger
+
 v3.15.6
 - Add new way to communicate from DLL to Labview (PostLVUserEvent)
 
