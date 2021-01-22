@@ -82,6 +82,7 @@ DllAccess UINT32 DLLTickstous( UINT64 tks );
 DllAccess UINT8 DLLSetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob );
 DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdioden, UINT32 length );
 DllAccess void DLLCopyAllData( UINT32 drv, UINT16 *pdioden );
+DllAccess void DLLCopyOneBlock( UINT32 drv, UINT16 block, UINT16 *pdest );
 DllAccess void nDLLReadFFLoop( UINT32 board_sel );
 DllAccess void DLLStopFFLoop( void );
 DllAccess void DLLSetContFFLoop( UINT8 activate, UINT32 pause );

@@ -453,13 +453,26 @@ DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UIN
 /**
 \brief Copies all pixel data to pdest
 \param drvno indentifier of PCIe card
-\param pdioden address where data is written, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( UINT16 )
+\param pdest address where data is written, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( UINT16 )
 \return void
 */
 DllAccess void DLLCopyAllData( UINT32 drv, UINT16 *pdest )
 {
 	void* pframe = GetAddressOfPixel( drv, 0, 0, 0, 0 );
 	memcpy( pdest, pframe, (*Nospb) * Nob * aCAMCNT[drv] * aPIXEL[drv] * sizeof( UINT16 ) );  // length in bytes
+	return;
+}
+
+/**
+\brief Copies one block of pixel data to pdest
+\param drvno indentifier of PCIe card
+\param pdest address where data is written, should be a buffer with size: nos * camcnt * pixel * sizeof( UINT16 )
+\return void
+*/
+DllAccess void DLLCopyOneBlock( UINT32 drv, UINT16 block, UINT16 *pdest )
+{
+	void* pframe = GetAddressOfPixel( drv, 0, 0, block, 0 );
+	memcpy( pdest, pframe, (*Nospb) * aCAMCNT[drv] * aPIXEL[drv] * sizeof( UINT16 ) );  // length in bytes
 	return;
 }
 
