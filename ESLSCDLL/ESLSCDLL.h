@@ -49,7 +49,7 @@ DllAccess UINT8 DLLReadByteS0( UINT32 drvno, UINT8 *data, UINT32 PortOff );// re
 DllAccess UINT8 DLLWriteByteS0( UINT32 drv, UINT8 DataByte, UINT32 PortOff ); // writes DataByte to Port
 DllAccess UINT8 DLLReadLongS0( UINT32 drvno, UINT32 * DWData, UINT32 PortOff );	// read long from Port, PortOff Regs of Board
 DllAccess UINT8 DLLWriteLongS0( UINT32 drvno, UINT32 DWData, UINT32 PortOff ); // writes DataLong to Port
-DllAccess UINT8 DLLReadLongDMA( UINT32 drvno, UINT32* pDWData, UINT32 PortOff );	// read long from Port, PortOff Regs of Board
+DllAccess UINT8 DLLReadLongDMA( UINT32 drvno, UINT32* DWData, UINT32 PortOff );	// read long from Port, PortOff Regs of Board
 DllAccess UINT8 DLLWriteLongDMA( UINT32 drvno, UINT32 DWData, UINT32 PortOff ); // writes DataLong to Port
 DllAccess UINT8 DLLReadLongIOPort( UINT32 drvno, UINT32 * DWData, UINT32 PortOff ); // writes DataByte to Port
 DllAccess UINT8 DLLWriteLongIOPort( UINT32 drvno, UINT32 DataL, UINT32 PortOff ); // writes DataByte to Port

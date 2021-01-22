@@ -151,7 +151,7 @@ BOOL ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff )
 /**
 \brief Reads long on DMA area.
 \param drvno PCIe board identifier
-\param pDWData buffer for data
+\param DWData buffer for data
 \param PortOff Offset from BaseAdress - in Bytes ! 0..3= Regs of Board.
 \return TRUE (!=0) if success
 */
