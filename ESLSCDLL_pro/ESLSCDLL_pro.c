@@ -198,6 +198,7 @@ DllAccess UINT16 DLLGetGammaBlack()
 	When region_size[0]==0 the lines are equally distributed for all regions.
 	I don't know what happens when  region_size[0]!=0 and region_size[1]==0. Maybe don't do this.
 	The sum of all regions should equal lines.
+\param vfreq VCLK frequency
 \return True for success.
 */
 DllAccess UINT8 DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first, UINT8* region_size, UINT8 vfreq )

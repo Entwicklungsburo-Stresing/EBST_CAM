@@ -1119,6 +1119,7 @@ int GetNumofProcessors()
 
 /**
 \brief Set global variables camcnt, pixel and TLP size depending on pixel. Best call before doing anything else.
+\param drvno PCIe board identifier
 \param camcnt camera count
 \param pixel pixel count
 \param xckdelay XCK delay
@@ -1209,7 +1210,7 @@ BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckde
 
 /**
 \brief Initiates board registers.
-\param flag816 =1 for 16 bit (also 14 or 12bit), =2 for 8bit
+\param drvno PCIe board identifier
 \return TRUE if success. otherwise FALSE
 */
 BOOL SetBoardVars( UINT32 drvno )
@@ -2165,7 +2166,6 @@ BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch )
 /**
 \brief Sets Scan Timer on.
 \param drvno board number (=1 if one PCI board)
-\param exptime in microsec
 \return none
 */
 void StartSTimer( UINT32 drvno )
@@ -2249,9 +2249,9 @@ void SWTrig( UINT32 drvno )
 }
 
 /**
-\brief Check if timer is active.
+\brief Checks if timer is active (Bit30 of XCK-Reg).
 \param drvno board number (=1 if one PCI board)
-\check Bit30 of XCK-Reg: 1= timer on
+\return 1= timer on
 */
 BOOL IsTimerOn( UINT32 drvno )
 {
@@ -2730,8 +2730,7 @@ BOOL FindCam( UINT32 drv )
 
 /**
 \brief Set gain for ADS5294.
-
-fkt =0 reset to db=0, fkt=1 set to g1..g8
+\param fkt =0 reset to db=0, fkt=1 set to g1..g8
 \param drvno PCIe board identifier.
 \param g1 channel 1
 \param g2 channel 2
@@ -3679,11 +3678,11 @@ BOOL SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob )
 
 /**
 \brief Copies one frame of pixel data to pdest.
-\param drvno indentifier of PCIe card
+\param drv indentifier of PCIe card
 \param curr_nos position in samples (0...(nos-1))
 \param curr_nob position in blocks (0...(nob-1))
 \param curr_cam position in camera count (0...(CAMCNT-1))
-\param pdioden address where data is written, should be buffer with size: length in pixel * sizeof( UINT16 )
+\param pdest address where data is written, should be buffer with size: length in pixel * sizeof( UINT16 )
 \param length lenght of frame in pixel, typically pixel count (1088)
 \return void
 */

@@ -134,10 +134,9 @@ DllAccess void DLLCCDDrvExit( UINT32 drvno )
 /**
 \brief Initialize the PCIe board. Must be called once at the start.
 	Is called automatically for 2 boards.
-\param drvno board number (=1 if one PCI board)
+\param drv board number (=1 if one PCI board)
 \param camcnt amount of cameras
 \param pixel number of all pixel (active + dummy pixel)
-\param flag816 =1 if AD resolution 12 to 16 bit, =2 if 8bit
 \param pclk =0 pixelclock, not used here
 \param xckdelay =3, depends on sensor, sets a delay after xck goes high, =7 for Sony sensors
 \return true if success
@@ -193,9 +192,9 @@ DllAccess UINT8 DLLWriteLongS0( UINT32 drvno, UINT32 DWData, UINT32 PortOff )
 /**
 \copydoc ReadLongDMA
 */
-DllAccess UINT8 DLLReadLongDMA( UINT32 drvno, UINT32* pDWData, UINT32 PortOff )
+DllAccess UINT8 DLLReadLongDMA( UINT32 drvno, UINT32* DWData, UINT32 PortOff )
 {
-	if (!ReadLongDMA( drvno, pDWData, PortOff )) { return 0; }
+	if (!ReadLongDMA( drvno, DWData, PortOff )) { return 0; }
 	return 1;
 }
 
@@ -452,7 +451,7 @@ DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UIN
 
 /**
 \brief Copies all pixel data to pdest
-\param drvno indentifier of PCIe card
+\param drv indentifier of PCIe card
 \param pdest address where data is written, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( UINT16 )
 \return void
 */
@@ -465,7 +464,8 @@ DllAccess void DLLCopyAllData( UINT32 drv, UINT16 *pdest )
 
 /**
 \brief Copies one block of pixel data to pdest
-\param drvno indentifier of PCIe card
+\param drv indentifier of PCIe card
+\param block Selects which block to copy.
 \param pdest address where data is written, should be a buffer with size: nos * camcnt * pixel * sizeof( UINT16 )
 \return void
 */
@@ -479,17 +479,6 @@ DllAccess void DLLCopyOneBlock( UINT32 drv, UINT16 block, UINT16 *pdest )
 /**
 \brief Read nos lines from FIFO. Const burst loop with DMA initiated by hardware DREQ. Is called automatically for 2 boards.
 \param board_sel board number (=1 if one PCI board)
-\param exptus exposure time in micro sec. If this entry is used, freq must be set to 0
-\param exttrig true (not 0) if external trigger for each scan, 0 else
-\param blocktrigger Determines how the blocktrigger behaves.
-	- blocktrigger = 0 Start of block is not waiting for a trigger.
-	- blocktrigger = 1 One trigger starts all blocks.
-	- blocktrigger = 2 Each block is waiting for one trigger.
-\param btrig_ch 
-	- btrig_ch=0 -> no read of state is performed
-	- btrig_ch=1 is pci tig in
-	- btrig_ch=2 is opto1
-	- btrig_ch=3 is opto2
 \return none
 */
 DllAccess void nDLLReadFFLoop( UINT32 board_sel )
@@ -769,9 +758,9 @@ DllAccess void DLLwaitForBlockReady( UINT32 drvno )
 /**
 \copydoc SetBTI
 */
-DllAccess UINT8 DLLSetBTI( UINT32 drvno, UINT8 gti_mode )
+DllAccess UINT8 DLLSetBTI( UINT32 drvno, UINT8 bti_mode )
 {
-	return SetBTI(drvno, gti_mode);
+	return SetBTI(drvno, bti_mode);
 }
 
 /**
