@@ -1826,88 +1826,51 @@ void initReadFFLoop( UINT32 drv, UINT32 * Blocks )
 	return;
 }
 
-void allBlocksOnSingleTrigger( UINT32 board_sel, UINT8 btrig_ch, BOOL* StartByTrig )
-{ // A.M. 22.Okt.19
-
-	while (!(*StartByTrig))
-	{
-		if (keyCheckForBlockTrigger( board_sel ))
-		{
-			*StartByTrig = TRUE;
-		}
-		if (!BlockTrig( 1, btrig_ch ))
-		{
-			*StartByTrig = TRUE;
-		}
-	}
-}
-
 /*
-\brief wait in loop until trigger occurs
-if hi,return
-if lo, wait for hi
-check only PCIE board no 1
+\brief Wait in loop until block trigger occurs.
+If block trigger high: return
+If block trigger low: wait for hi
+Checks only PCIE board no 1
+\param board_sel Selects PCIe board. May only work for 1.
+\return
+	- 0: abortion
+	- 1: block triggered
 */
-void oneTriggerPerBlock( UINT32 board_sel, UINT8 btrig_ch )
-{ // G.S. 22.Okt.20
-
-	if (btrig_ch == 0) return; //dont wait if internal trig
-
-	//ifr lo wait for hi
-	if (!BlockTrig( 1, btrig_ch ))
-	{ // if trigger is Lo
-		while (!BlockTrig( 1, btrig_ch ))
-		{ // wait for Hi
-			if (keyCheckForBlockTrigger( board_sel ))
-			{
-				return;
-			}
-		} // leave (and scan)
-	}
-	
-	else		// do not use lo/hi for (btrig_ch == 5)-> is now made in hardware Sheet50 (V202.14)
-	if (btrig_ch != 5) 
-	{ // if trigger is Hi
-		while (BlockTrig( 1, btrig_ch ))
-		{ // wait for Lo
-			if (keyCheckForBlockTrigger( board_sel ))
-			{
-				return;
-			}
-			//if (btrig_ch == 5) return; //don't wait for lo if already hi
+int waitForBlockTrigger( UINT32 board_sel )
+{
+	//if lo wait for hi
+	while (!BlockTrig( 1, 5 ))//only btrig_ch 5 is used
+	{
+		switch (checkForPressedKeys())
+		{
+			//default and no key: stay in while and wait for block trigger
+		default:
+		case 0:
+			break;
+			//ESC: return with 0 for abortion
+		case 1:
+			return 0;
+			//Space: return with 1 for triggered
+		case 2:
+			return 1;
 		}
-		while (!BlockTrig( 1, btrig_ch ))
-		{ // wait for Hi
-			if (keyCheckForBlockTrigger( board_sel ))
-			{
-				return;
-			}
-		} // leave (and scan)
 	}
+	//return with 1 for triggered
+	return 1;
 }
 
 /**
 \brief Check escape key and stop measurement if pressed or start block on space
+\param board_sel PCIe board selector
+\return 
+	- 0: no key pressed
+	- 1: ESC pressed
+	- 2: Space pressed
 */
-int keyCheckForBlockTrigger( UINT32 board_sel )
-{ // A.M. 22.Okt.19
+int checkForPressedKeys( )
+{
 	if (GetAsyncKeyState( VK_ESCAPE ))
-	{ //stop if ESC was pressed
-		if (board_sel == 1 || board_sel == 3)
-		{
-			StopSTimer( 1 );
-			//SetIntFFTrig(drv);//disable ext input
-			SetDMAReset( 1 );	//Initiator reset
-		}
-		if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
-		{
-			StopSTimer( 2 );
-			//SetIntFFTrig(drv);//disable ext input
-			SetDMAReset( 2 );	//Initiator reset
-		}
 		return 1;
-	}
-
 	if (GetAsyncKeyState( VK_SPACE ))
 	{ //start if Space was pressed
 		while (GetAsyncKeyState( VK_SPACE ) & 0x8000 == 0x8000) {}; //wait for release
@@ -1934,8 +1897,11 @@ void ReadFFLoop( UINT32 board_sel )
 	//SetThreadPriority()
 	for (int blk_cnt = 0; blk_cnt < Blocks; blk_cnt++)
 	{//block read function
-		//just checking Esc for Escape in Cont mode
-		oneTriggerPerBlock( board_sel, 5 ); // new 10/2020 with PCIe 202.14: switch trigger by hardware
+		if (!waitForBlockTrigger( board_sel ))
+		{
+			abortMeasurement( board_sel );
+			return;
+		}
 		if (board_sel == 1 || board_sel == 3)
 		{
 			countBlocksByHardware( 1 );
@@ -1956,7 +1922,7 @@ void ReadFFLoop( UINT32 board_sel )
 				SWTrig( 2 ); //start scan for first read
 			}
 		}
-		//for synchronising the both cams
+		//for synchronising both cams
 		if (board_sel == 3)
 		{					 //start Timer !!!
 			//StartFFTimer(1, exptus);
@@ -3736,7 +3702,7 @@ void ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam,
 }
 
 /**
-\brief Use this function to aboirt measurement.
+\brief Use this function to abort measurement.
 \param drv PCIe board identifier
 \return none
 */

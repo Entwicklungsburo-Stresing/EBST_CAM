@@ -111,9 +111,8 @@ void SetSensorType( UINT32 drvno, UINT8 sensor_type );
 void RsTOREG( UINT32 drvno );					//reset the TOREG - should be called before SetISPDA or SetISFFT
 // FIFO functions
 void initReadFFLoop( UINT32 drv, UINT32 * Blocks );
-void allBlocksOnSingleTrigger( UINT32 board_sel, UINT8 btrig_ch, BOOL* StartByTrig );
-void oneTriggerPerBlock( UINT32 board_sel, UINT8 btrig_ch );
-int  keyCheckForBlockTrigger( UINT32 board_sel );
+int waitForBlockTrigger( UINT32 board_sel );
+int checkForPressedKeys();
 void ReadFFLoop( UINT32 board_sel );
 void countBlocksByHardware( UINT32 drvno );
 unsigned int __stdcall ReadFFLoopThread( void *parg ); //jungo dma
