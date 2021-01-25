@@ -1,3 +1,7 @@
+3.16.1
+- with event on MeasureOn and BlockOn
+- with delay stage counter
+
 v3.15.7
 - Add DLLCopyOneBlock
 - Fix XCKDELAY
