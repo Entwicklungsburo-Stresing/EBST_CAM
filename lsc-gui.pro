@@ -17,7 +17,8 @@ DESTDIR = build/
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 # Input
-SOURCES += lsc-gui.cpp
+SOURCES += lsc-gui.cpp \
+    mainwindow.cpp
 win32 {
     SOURCES += win/*
 }
@@ -27,4 +28,11 @@ unix {
 
 DISTFILES += \
     LscUI.qml \
-    LscUIForm.ui.qml
+    LscUIForm.ui.qml \
+    Lscui.qml
+
+FORMS += \
+    mainwindow.ui
+
+HEADERS += \
+    mainwindow.h
