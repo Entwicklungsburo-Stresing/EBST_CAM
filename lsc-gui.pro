@@ -20,10 +20,10 @@ DESTDIR = build/
 SOURCES += lsc-gui.cpp \
     mainwindow.cpp
 win32 {
-    SOURCES += win/*
+    SOURCES += win/lsc.cpp
 }
 unix {
-    SOURCES += linux/*
+    SOURCES += linux/lsc.cpp
 }
 
 DISTFILES += \
