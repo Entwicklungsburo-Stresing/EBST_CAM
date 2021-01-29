@@ -51,6 +51,7 @@ struct dev_struct {
   int minor;
   dev_t device;
   int proc_actual_register;
+  u8 irq_line;
 };
 
 
