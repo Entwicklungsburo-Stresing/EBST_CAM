@@ -19,7 +19,8 @@ DESTDIR = build/
 
 # Input
 SOURCES += lsc-gui.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    myqspinbox.cpp
 win32 {
     SOURCES += win/lsc.cpp
 }
@@ -35,4 +36,6 @@ FORMS += \
     mainwindow.ui
 
 HEADERS += \
-    mainwindow.h
+    lsc.h \
+    mainwindow.h \
+    myqspinbox.h
