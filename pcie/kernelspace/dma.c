@@ -19,10 +19,24 @@
 #include <linux/dma-mapping.h>
 #include <linux/pci.h>
 
-void set_bits_s0(struct dev_struct *dev, u8 address, u8 bits, u8 mask)
+void set_bits_s0_byte(struct dev_struct *dev, u8 address, u8 bits, u8 mask)
 {
   u8 val = ioread8(dev->mapped_pci_base + 0x80 + address);
   iowrite8((val & ~mask) | (bits & mask), dev->mapped_pci_base + 0x80 + address);
+}
+
+void set_bits_s0_word(struct dev_struct *dev, u8 address, u16 bits, u16 mask)
+{
+  u16 val = ioread16(dev->mapped_pci_base + 0x80 + address);
+  iowrite16((val & ~mask) | (bits & mask),
+            dev->mapped_pci_base + 0x80 + address);
+}
+
+void set_bits_s0_dword(struct dev_struct *dev, u8 address, u32 bits, u32 mask)
+{
+  u32 val = ioread32(dev->mapped_pci_base + 0x80 + address);
+  iowrite32((val & ~mask) | (bits & mask),
+            dev->mapped_pci_base + 0x80 + address);
 }
 
 int dma_init(struct dev_struct *dev) {
@@ -42,7 +56,8 @@ int dma_init(struct dev_struct *dev) {
      mmap export to userland) */
   dev->control->buffer_size
     = dev->control->number_of_cameras * dev->control->number_of_pixels
-    * dev->control->number_of_scans * sizeof(u16);
+    * dev->control->number_of_scans * sizeof(u16)
+    * dev->control->number_of_blocks;
   num_dma_pages = dev->control->buffer_size >> PAGE_SHIFT;
   if (dev->control->buffer_size > num_dma_pages << PAGE_SHIFT)
     num_dma_pages++;
@@ -107,7 +122,8 @@ void isr(struct dev_struct *dev) {
   int old_write_pos = dev->control->write_pos;
   u8 fifo_flags = readb(dev->mapped_pci_base + 0x80 + S0Addr_FF_FLAGS);
 
-  set_bits_s0(dev, DmaAddr_PCIEFLAGS, (1<<PCIE_INT_RSR), (1<<PCIE_INT_RSR));
+  set_bits_s0_dword(dev, S0Addr_IRQREG, (1<<IRQ_REG_ISR_active),
+                    (1<<IRQ_REG_ISR_active));
 
   if (fifo_flags & (1<<FF_FLAGS_OVFL)) dev->status |= FIFO_OVERFLOW;
 
@@ -131,7 +147,7 @@ void isr(struct dev_struct *dev) {
   dev->status |= DMA_OVERFLOW;
 
  end:
-  set_bits_s0(dev, DmaAddr_PCIEFLAGS, 0, (1<<PCIE_INT_RSR));
+  set_bits_s0_dword(dev, S0Addr_IRQREG, 0, (1<<IRQ_REG_ISR_active));
 
   wake_up_interruptible(&dev->readq);
 }

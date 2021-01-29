@@ -62,6 +62,7 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
          dev->mapped_pci_base);
 
   pci_set_drvdata(pci_dev, dev);
+  pci_set_master(pci_dev);
   proc_init(dev);
 
   PDEBUG(D_PCI, "lscpcie board found, assigned minor device number %d\n",

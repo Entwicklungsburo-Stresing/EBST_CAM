@@ -35,7 +35,7 @@ struct file_operations fops = {
   .mmap           = mmap_register_remap_mmap
 };
 
-/* create device node /sev/lscpcie<n> and initialise instance variables */
+/* create device node /dev/lscpcie<n> and initialise instance variables */
 int device_init(struct dev_struct *dev, int minor)
 {
   struct device *device;
@@ -104,6 +104,9 @@ int device_init(struct dev_struct *dev, int minor)
 
   if (num_scans[dev_no] > 0) dev->control->number_of_scans = num_scans[dev_no];
   else dev->control->number_of_scans = DEFAULT_NUM_SCANS;
+
+  if (num_blocks[dev_no] > 0) dev->control->number_of_blocks = num_blocks[dev_no];
+  else dev->control->number_of_blocks = DEFAULT_NUM_BLOCKS;
 
   result = dma_init(dev);
   if (result < 0) goto error;
