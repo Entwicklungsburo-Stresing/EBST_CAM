@@ -233,6 +233,21 @@ void initMeasurement()
 #endif
 }
 
+unsigned int __stdcall UpdateDisplayThread( void *parg )//threadex
+{
+	while (Running)
+	{
+		UpdateDisplay();
+		/*if (GetAsyncKeyState( VK_ESCAPE ))
+			break;
+		if (GetAsyncKeyState( VK_SPACE ))
+			break;*/
+		Sleep( 200 );
+	}
+
+	return 1;//endthreadex is called automatically when this returns
+}
+
 // main read loop setup
 void startMess(void *dummy)
 {
@@ -272,7 +287,7 @@ void startMess(void *dummy)
 		if (GetAsyncKeyState( VK_ESCAPE )) break;
 	}
 	//TODO: This is strange. First IsrCounter counts up to ISRNumber and then the program is caught in this while loop.
-	if (cont_mode)
+	/*if (cont_mode)
 		while (TRUE)
 		{
 			UpdateDisplay();
@@ -280,16 +295,21 @@ void startMess(void *dummy)
 				break;
 			if (GetAsyncKeyState( VK_SPACE ))
 				break;
-		}
+			Sleep( 10 );
+		}*/
+		_beginthreadex( 0, 0, &UpdateDisplayThread, 0, 0, 0 );
+		
 #endif
 	return;
 }
 
 void UpdateDisplay()
 {
+	
 	CopytoDispbuf();
 	Display( 1, PLOTFLAG );
 	UpdateTxT();
 	DLLShowNewBitmap( DRV, cur_nob, 0, _PIXEL, *Nospb );
+	
 	return;
 }
