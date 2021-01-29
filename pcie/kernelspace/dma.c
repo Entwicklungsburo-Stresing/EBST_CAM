@@ -16,6 +16,7 @@
 #include "registers.h"
 #include "device.h"
 #include "debug.h"
+#include <linux/interrupt.h>
 #include <linux/dma-mapping.h>
 #include <linux/pci.h>
 
@@ -93,7 +94,8 @@ int dma_init(struct dev_struct *dev) {
 }
 
 /* release dma buffer */
-void dma_finish(struct dev_struct *dev) {
+void dma_finish(struct dev_struct *dev)
+{
   if (dev->dma_virtual_mem) {
     if (dev->status & HARDWARE_PRESENT) {
       PDEBUG(D_BUFFERS, "freeing dma buffer");
@@ -107,18 +109,14 @@ void dma_finish(struct dev_struct *dev) {
   }
 }
 
-/*
-int dma_start(struct dev_struct *dev) {
-  return 0;
-}
-
-int dma_end(struct dev_struct *dev) {
-  return 0;
-}
-*/
-
 /* interrupt service routine */
-void isr(struct dev_struct *dev) {
+static enum irqreturn isr(int irqn, void *dev_id)
+{
+  /* >>>>> first check whether the pcie card has issued the interrupt */
+  /* if not return IRQ_NONE; */
+  /* <<<<< to be implemented */
+
+  struct dev_struct *dev = (struct dev_struct *) dev_id;
   int old_write_pos = dev->control->write_pos;
   u8 fifo_flags = readb(dev->mapped_pci_base + 0x80 + S0Addr_FF_FLAGS);
 
@@ -150,4 +148,35 @@ void isr(struct dev_struct *dev) {
   set_bits_s0_dword(dev, S0Addr_IRQREG, 0, (1<<IRQ_REG_ISR_active));
 
   wake_up_interruptible(&dev->readq);
+
+  return IRQ_HANDLED;
+}
+
+int dma_start(struct dev_struct *dev)
+{
+  int result;
+
+  unsigned long irqflags = IRQF_SHARED;
+  void *dev_id = dev;
+
+  /* >>>> any sort of dma start-up code needed before activating the interrupt
+          goes here
+     <<<< */
+
+  result = request_irq(dev->irq_line, isr, irqflags, "lscpcie", dev_id);
+  if (result) {
+    printk(KERN_ERR NAME": requesting interrupt failed with error %d\n", result);
+    return result;
+  }
+
+  return 0;
+}
+
+int dma_end(struct dev_struct *dev)
+{
+  free_irq(dev->irq_line, dev);
+  /* >>>> clean-up if necessary
+     <<<< */
+
+  return 0;
 }
