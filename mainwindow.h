@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "ui_mainwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -13,7 +14,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void setText(QString text);
+    void setChartData(QLineSeries* series);
+    void setChartData(uint16_t* data, uint16_t length);
 private:
     Ui::MainWindow *ui;
 signals:

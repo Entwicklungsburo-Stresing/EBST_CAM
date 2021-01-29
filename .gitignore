@@ -1,6 +1,6 @@
 build/
 .qmake.stash
 Makefile
-*.pro.user
+*.pro.user*
 moc_*
 ui_*
