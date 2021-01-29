@@ -84,45 +84,45 @@ int lscpcie_driver_init(void) {
   Pixelsize = TLPS * TLPC - 1*TLPS
   (TLPS TLP size = 64)
   TLPC 0x Pixelsize
-    2	64
-    3	128
-    4	192
-    5	256
-    6	320
-    7	384
-    8	448
-    9	512
-    a	576
-    b	640
-    c	704
-    d	768
-    e	832
-    f	896
-    10	960
-    11	1024
-    12	1088
-    13	1152
-    14	1216
-    15	1280
-    16	1344
-    17	1408
-    18	1472
-    19	1536
-    1a	1600
-    1b	1664
-    1c	1728
-    1d	1792
-    1e	1856
-    1f	1920
-    20	1984
-    21	2048
-    22	2112
-    23  2176
+    1   64
+    2	  128
+    3	  192
+    4	  256
+    5	  320
+    6	  384
+    7	  448
+    8	  512
+    9	  576
+    a	  640
+    b	  704
+    c	  768
+    d	  832
+    e	  896
+    f		960
+    10	1024
+    11	1088
+    12	1152
+    13	1216
+    14	1280
+    15	1344
+    16	1408
+    17	1472
+    18	1536
+    19	1600
+    1a	1664
+    1b	1728
+    1c	1792
+    1d	1856
+    1e	1920
+    1f	1984
+    20	2048
+    21	2112
+    22  2176
     ...
-    41  4096
-    42  4160
+    40  4096
+    41  4160
     ...
-    82  8256
+    81  8256
 */
 
 int lscpcie_open(uint dev, uint16_t options) {
@@ -157,20 +157,20 @@ int lscpcie_open(uint dev, uint16_t options) {
   }
 
   switch (dev_descr[dev].control->number_of_pixels) {
-  case 128:  no_tlps = 0x3;  break;
-  case 192:  no_tlps = 0x4;  break;
-  case 320:  no_tlps = 0x6;  break;
-  case 576:  no_tlps = 0xa;  break;
-  case 1088: no_tlps = 0x12; break;
-  case 2112: no_tlps = 0x22; break;
-  case 4160: no_tlps = 0x42; break;
-  case 8256: no_tlps = 0x82; break;
+  case 128:  no_tlps = 0x2;  break;
+  case 192:  no_tlps = 0x3;  break;
+  case 320:  no_tlps = 0x5;  break;
+  case 576:  no_tlps = 0x9;  break;
+  case 1088: no_tlps = 0x11; break;
+  case 2112: no_tlps = 0x21; break;
+  case 4160: no_tlps = 0x41; break;
+  case 8256: no_tlps = 0x81; break;
   default:
     error_message("invalid number of pixels %d\n",
                   dev_descr[dev].control->number_of_pixels);
     return -EINVAL;
   }
-
+  if (LEGACY_202_14_TLPCNT) no_tlps++;
   dev_descr[dev].number_of_tlps = no_tlps;
 
   printf("found io spce of size 0x%08x\n", dev_descr[dev].control->io_size);
@@ -340,7 +340,7 @@ int lscpcie_get_buffer_pointers(uint dev, uint64_t *pointers) {
 
 int lscpcie_send_fiber(uint dev, uint8_t master_address,
                        uint8_t register_address, uint16_t data) {
-  uint32_t reg_val = (master_address << 24) | (register_address < 16) | data;
+  uint32_t reg_val = (master_address << 24) | (register_address << 16) | data;
 
   if (dev >= number_of_pcie_boards) return -ENODEV;
   if (!dev_descr[dev].s0) return -ENODEV;
@@ -430,21 +430,21 @@ int set_dma_address_in_tlp(uint dev) {
   return 0;
 }
 
-int set_dma_buffer_registers(uint dev, uint number_of_blocks) {
+int set_dma_buffer_registers(uint dev) {
   // DMABufSizeInScans - use 1 block
   dev_descr[dev].s0->DMA_BUF_SIZE_IN_SCANS
-    = dev_descr[dev].control->number_of_scans;
+    = dev_descr[dev].control->number_of_scans * dev_descr[dev].control->number_of_blocks * dev_descr[dev].control->number_of_cameras;
 
   //scans per intr must be 2x per DMA_BUFSIZEINSCANS to copy hi/lo part
   //aCAMCNT: double the INTR if 2 cams
   dev_descr[dev].s0->DMAS_PER_INTERRUPT
-    = dev_descr[dev].control->number_of_scans *
+    = dev_descr[dev].control->number_of_scans * dev_descr[dev].control->number_of_blocks *
     dev_descr[dev].control->number_of_cameras
     / INTERRUPTS_PER_SCAN;
 
   //>>>> could be done in driver at module load
   dev_descr[dev].s0->NUMBER_OF_SCANS = dev_descr[dev].control->number_of_scans;
-  dev_descr[dev].s0->NUMBER_OF_BLOCKS = number_of_blocks;
+  dev_descr[dev].s0->NUMBER_OF_BLOCKS = dev_descr[dev].control->number_of_blocks;
   dev_descr[dev].s0->CAM_CNT = dev_descr[dev].control->number_of_cameras;
   //<<<< could be done in driver at module load
 
@@ -468,13 +468,13 @@ uint32_t get_scan_index(uint dev) {
   return dev_descr[dev].s0->SCAN_INDEX;
 }
 
-int lscpcie_setup_dma(uint dev, uint32_t number_of_blocks) {
+int lscpcie_setup_dma(uint dev) {
   int result;
 
   // note: the dma buffer has to be allocated in kernel space
   if ((result = set_dma_address_in_tlp(dev)) < 0) return result;
 
-  if ((result = set_dma_buffer_registers(dev, number_of_blocks)) < 0) return 0;
+  if ((result = set_dma_buffer_registers(dev)) < 0) return 0;
 
   // DREQ: every XCK h->l starts DMA by hardware
   //set hardware start des dma  via DREQ withe data = 0x4000000
@@ -670,9 +670,7 @@ int lscpcie_dump_s0(uint dev) {
     lscpcie_read_s0_32(dev, i * 4, &data);
     printf("%s \t: 0x%08x\n", register_names[i], data);
   }
-  return 0;
-  //crashing when doing this:
-  //return lscpcie_dump_tlp(dev);
+  return lscpcie_dump_tlp(dev);
 }
 
 int lscpcie_dump_dma(uint dev) {

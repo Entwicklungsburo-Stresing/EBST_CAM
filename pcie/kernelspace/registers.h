@@ -79,12 +79,17 @@ typedef enum {
 #define CTRLA_IFC           1
 #define CTRLA_VONOFF        0
 
-#define CTRLB_GTI1          5
-#define CTRLB_GTI0          4
-#define CTRLB_SHON          3
-#define CTRLB_STI2          2
-#define CTRLB_STI1          1
-#define CTRLB_STI0          0
+#define CTRLB_SHON          0x1<<3
+#define CTRLB_BTI_I         0x0<<4
+#define CTRLB_BTI_S1        0x1<<4
+#define CTRLB_BTI_S2        0x2<<4
+#define CTRLB_BTI_S1_S2     0x3<<4
+#define CTRLB_BTI_TIMER     0x4<<4
+#define CTRLB_STI_I         0x0
+#define CTRLB_STI_S1        0x1
+#define CTRLB_STI_S2        0x2
+#define CTRLB_STI_TIMER     0x4
+#define CTRLB_STI_ASL       0x5
 
 #define CTRLC_EOI_CHB       5
 #define CTRLC_EOI           4
@@ -100,6 +105,14 @@ typedef enum {
 #define XCKMSB_XCK26        2
 #define XCKMSB_XCK25        1
 #define XCKMSB_XCK24        0
+
+#define PCIEFLAG_XCKI       0
+#define PCIEFLAG_INTTRIG    1
+#define PCIEFLAG_ENRSTIMERHW 2
+#define PCIEFLAG_NC         3
+#define PCIEFLAG_BLOCKTRIG  4
+#define PCIEFLAG_MEASUREON  5
+#define PCIEFLAG_BLOCKON    6
 
 #define XCK_EC_MASK 0x0FFFFFFF
 #define XCK_EXT_TRIGGER  31
@@ -122,13 +135,25 @@ typedef enum {
 #define TOR_NO_RS           26
 #define TOR_SENDRS          25
 #define TOR_ISFFT           24
-
 #define TOR_TOCNT           16
-
 #define TOR_TICNT           0
 
-#define TOR_TO_pos          28
-#define TOR_TO_msk          (0x0F<<TOR_TO_pos)
+#define TOR_OUT_XCK         0x00000000
+#define TOR_OUT_REGO        0x10000000
+#define TOR_OUT_VON         0x20000000
+#define TOR_OUT_DMA_ACT     0x30000000
+#define TOR_OUT_ASLS        0x40000000
+#define TOR_OUT_STIMER      0x50000000
+#define TOR_OUT_BTIMER      0x60000000
+#define TOR_OUT_ISR_ACT     0x70000000
+#define TOR_OUT_S1          0x80000000
+#define TOR_OUT_S2          0x90000000
+#define TOR_OUT_BON         0xA0000000
+#define TOR_OUT_MEASUREON   0xB0000000
+#define TOR_OUT_SDAT        0xC0000000
+#define TOR_OUT_BDAT        0xD0000000
+#define TOR_OUT_SSHUT       0xE0000000
+#define TOR_OUT_BSHUT       0xF0000000
 
 #define EC_ECFON            31
 #define EC_NOT              30
@@ -142,6 +167,7 @@ typedef enum {
 #define IRQ_REG_CNT_pos     16
 #define IRQ_REG_CNT_msk     (0x3FFF<<IRQ_REG_CNT_pos)
 #define IRQ_REG_HWDREQ_EN   30
+#define IRQ_REG_ISR_active  31
 
 #define PCIE_XCKI           0
 #define PCIE_IN_TRIG        1
@@ -160,6 +186,10 @@ typedef enum {
 #define BLOCK_COUNTER_RESET 31
 #define SCAN_INDEX_RESET    31
 #define BLOCK_INDEX_RESET   31
+#define BTIMER_START        31
+#define BFLAG_SW_TRIG       2
+#define BFLAG_BOTH_SLOPES   1
+#define BFLAG_BSLOPE        0
 
 /* DMA */
 
