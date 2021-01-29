@@ -1,1 +1,0 @@
-parameter to control whether camera keeps reading when acquisition is stopped
