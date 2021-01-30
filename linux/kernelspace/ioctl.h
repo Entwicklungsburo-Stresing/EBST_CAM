@@ -17,7 +17,6 @@
 
 #include <linux/types.h>
 
-
 #define LSCPCIE_MAGIC 0xE0
 
 typedef struct {
