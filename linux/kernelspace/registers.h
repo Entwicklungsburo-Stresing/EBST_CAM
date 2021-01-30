@@ -13,7 +13,7 @@
 #define _registers_h_
 
 #ifdef __user_space__
-# include <stdint.h>
+#include <stdint.h>
 #endif
 #include <linux/types.h>
 
