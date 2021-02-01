@@ -10,6 +10,10 @@ MainWindow::MainWindow(QWidget *parent)
     chart->legend()->hide();
     chart->setTitle("Camera 1");
     ui->chartView->setRenderHint(QPainter::Antialiasing);
+
+    connect(ui->horizontalSliderSample, QOverload<int>::of(&QSlider::valueChanged), this, &MainWindow::sampleChanged);
+    connect(ui->horizontalSliderBlock, QOverload<int>::of(&QSlider::valueChanged), this, &MainWindow::blockChanged);
+    connect(ui->pushButton, QOverload<>::of(&QPushButton::pressed), this, &MainWindow::startPressed);
 }
 
 MainWindow::~MainWindow()
@@ -20,6 +24,7 @@ MainWindow::~MainWindow()
 void MainWindow::setChartData(QLineSeries* series)
 {
     QChart *chart = ui->chartView->chart();
+    chart->removeAllSeries();
     chart->addSeries(series);
     chart->createDefaultAxes();
     return;
@@ -33,5 +38,31 @@ void MainWindow::setChartData(uint16_t* data, uint16_t length)
         series->append(i, *(data+i));
     }
     this->setChartData(series);
+    return;
+}
+
+void MainWindow::sampleChanged(int sample)
+{
+    uint16_t data[576];
+    this->returnFrame(0,sample,ui->horizontalSliderBlock->value(),0,data,576);
+    this->setChartData(data,576);
+    return;
+}
+
+void MainWindow::blockChanged(int block)
+{
+    uint16_t data[576];
+    this->returnFrame(0,ui->horizontalSliderSample->value(),block,0,data,576);
+    this->setChartData(data,576);
+    return;
+}
+
+void MainWindow::startPressed()
+{
+    this->initMeasurement();
+    this->startMeasurement();
+    uint16_t data[576];
+    this->returnFrame(0,0,0,0,data,576);
+    this->setChartData(data,576);
     return;
 }
