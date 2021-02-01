@@ -1,5 +1,9 @@
 #include "mainwindow.h"
 
+/**
+ * @brief Constructor of Class MainWindow.
+ * @param parent
+ */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -16,11 +20,18 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButton, QOverload<>::of(&QPushButton::pressed), this, &MainWindow::startPressed);
 }
 
+/**
+ * @brief Destructor of class MainWindow.
+ */
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
+/**
+ * @brief Sets the data of chartView.
+ * @param series Data as QLineSeries.
+ */
 void MainWindow::setChartData(QLineSeries* series)
 {
     QChart *chart = ui->chartView->chart();
@@ -30,6 +41,11 @@ void MainWindow::setChartData(QLineSeries* series)
     return;
 }
 
+/**
+ * @brief This is an overloaded function.
+ * @param data Pointer to data.
+ * @param length Length of data.
+ */
 void MainWindow::setChartData(uint16_t* data, uint16_t length)
 {
     QLineSeries* series = new QLineSeries();
@@ -41,6 +57,10 @@ void MainWindow::setChartData(uint16_t* data, uint16_t length)
     return;
 }
 
+/**
+ * @brief Slot for the signal valueChanged of horizontalSliderSample.
+ * @param sample Current value of slider.
+ */
 void MainWindow::sampleChanged(int sample)
 {
     uint16_t data[576];
@@ -49,6 +69,11 @@ void MainWindow::sampleChanged(int sample)
     return;
 }
 
+
+/**
+ * @brief Slot for the signal valueChanged of horizontalSliderBlock.
+ * @param block Current value of slider.
+ */
 void MainWindow::blockChanged(int block)
 {
     uint16_t data[576];
@@ -57,6 +82,10 @@ void MainWindow::blockChanged(int block)
     return;
 }
 
+/**
+ * @brief Slot for the signal pressed of pushButtonStart.
+ * @return none
+ */
 void MainWindow::startPressed()
 {
     this->initMeasurement();
