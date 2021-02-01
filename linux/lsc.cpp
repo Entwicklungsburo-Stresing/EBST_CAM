@@ -97,7 +97,8 @@ void Lsc::startMeasurement()
     for (uint32_t blk_cnt = 0; blk_cnt < device_descriptor->control->number_of_blocks; blk_cnt++)
     {
         //block trigger
-        if(!(device_descriptor->s0->CTRLA & 1<<CTRLA_TSTART)) while(!(device_descriptor->s0->CTRLA & 1<<CTRLA_TSTART));
+        if(!(device_descriptor->s0->CTRLA & 1<<CTRLA_TSTART))
+            while(!(device_descriptor->s0->CTRLA & 1<<CTRLA_TSTART));
         //make pulse for blockindex counter
         device_descriptor->s0->PCIEFLAGS |= 1<<PCIEFLAG_BLOCKTRIG;
         memory_barrier();
