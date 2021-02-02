@@ -737,11 +737,12 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 				}
 			}
 			if (!Running) startMess( &dummy );
-			while (Running)
+			//_beginthreadex( 0, 0, &UpdateDisplayThread, 0, 0, 0 );
+			/*while (Running)
 			{
 				UpdateDisplay();
 				Sleep( 10 );
-			}
+			}*/
 			break;
 
 		case IDM_SETEXP:
