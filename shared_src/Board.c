@@ -777,50 +777,35 @@ ULONG GetScanindex( UINT32 drvno )
 */
 void GetLastBufPart( UINT32 drvno )
 {
-	//return;
 	//get the rest if buffer is not multiple of 500 (BUFSIZEINSCANS/2)
 	//also if nos is < BUFSIZEINSCANS/2 - here: no intr occurs
-	UINT32 nos = 0;
-	UINT32 nob = 0;
 	UINT32 spi = 0;
-	UINT32 halfbufsize = 0;
-	UINT32 camcnt = 0;
-	//size_t rest_in_bytes = 0;
-
-	ReadLongS0( drvno, &nob, S0Addr_NOB );
-	ReadLongS0( drvno, &nos, S0Addr_NOS );
 	ReadLongS0( drvno, &spi, S0Addr_DMAsPerIntr ); //get scans per intr
-	ReadLongS0( drvno, &camcnt, S0Addr_CAMCNT );
-	//!! aCAMCNT  löschen !
-
 	//halfbufize is 500 with default values
-	halfbufsize = DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS;
-	UINT32 scans_all_cams = nos * nob *camcnt;
+	UINT32 halfbufsize = DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS;
+	UINT32 scans_all_cams = (*Nospb) * Nob * aCAMCNT[drvno];
 	UINT32 rest_overall = scans_all_cams % halfbufsize;
-	size_t rest_in_bytes;
-	rest_in_bytes = rest_overall * aPIXEL[drvno] * sizeof( USHORT );
+	size_t rest_in_bytes = rest_overall * aPIXEL[drvno] * sizeof( USHORT );
 
 	WDC_Err( "*GetLastBufPart():\n" );
-	WDC_Err( "nos: 0x%x, nob: 0x%x, spi: 0x%x, camcnt: 0x%x\n", nos, nob, spi, camcnt );
+	WDC_Err( "nos: 0x%x, nob: 0x%x, spi: 0x%x, camcnt: 0x%x\n", (*Nospb), Nob, spi, aCAMCNT[drvno]);
 	WDC_Err( "scans_all_cams: 0x%x \n", scans_all_cams );
 	WDC_Err( "rest_overall: 0x%x, rest_in_bytes: 0x%x\n", rest_overall, rest_in_bytes );
 	WDC_Err( "DMA_bufsizeinbytes: 0x%x \n", DMA_bufsizeinbytes );
 
 	if (rest_overall)
-	{ // if (rest_per_block)
+	{
 		WDC_Err( "has rest_overall:\n" );
 		INT_PTR pDMASubBuf_index = pDMASubBuf[drvno];
 		pDMASubBuf_index += SubBufCounter[drvno] * DMA_bufsizeinbytes / DMA_HW_BUFPARTS;
-
 		memcpy( pBigBufIndex[drvno], pDMASubBuf_index, rest_in_bytes );
 		//memset(pBigBufIndex[drvno], 0x0101, rest_in_bytes ); //  0xAAAA=43690 , 0101= 257
-
 		//if (nos < spi)  // do not use INTR, but GetLastBufPart instead if nos is small enough
 		//	{pBigBufIndex[drvno] += rest_summary; } // may only be added here if no isr
 	}
 	//GS do not reset counter before ready with isr or last block is wrong!!
 	//SubBufCounter[drvno] = 0; //reset for next block
-
+	return;
 }//GetLastBufPart
 
 /**
@@ -830,39 +815,25 @@ The INTR occurs every DMASPERINTR and copies this block of scans in lower/upper 
 */
 void isr( UINT drvno, PVOID pData )
 {
-	volatile UINT32 val, val2 = 0;
 	WDC_Err( "*isr(): 0x%x\n", IsrCounter );
 	WDC_Err( "DMA_bufsizeinbytes: 0x%x \n", DMA_bufsizeinbytes );
 	SetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//set INTRSR flag for TRIGO
 	//! be sure not to stop run before last isr is ready - or last part is truncated
-
-	UINT32 nos = 0;
-	//ULONG nob = 0;
-	UINT32 blocks = 0;
-	UINT32 spi = 0;//scans_per_intr
 	size_t subbuflengthinbytes = DMA_bufsizeinbytes / DMA_HW_BUFPARTS; //1088000 bytes
 	//usually DMA_bufsizeinbytes = 1000scans 
 	//subbuflengthinbytes = 1000 * pixel *2 -> /2 = 500 scans = 1088000 bytes
 	// that means one 500 scan copy block has 1088000 bytes
-
 	ULONG dma_subbufinscans = DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS; //500
-
-	ReadLongS0(drvno, &nos, S0Addr_NOS);
-	ReadLongS0(drvno, &blocks, S0Addr_NOB);
-
 	USHORT* pdmasubbuf_base_lo = pDMASubBuf[drvno];
 	USHORT* pdmasubbuf_base_hi = pDMASubBuf[drvno] + subbuflengthinbytes / sizeof(USHORT);
 	USHORT* pdmasubbuf_base = pdmasubbuf_base_lo;
 	ULONG introverall;
-
-
 	if (BOARD_SEL > 2)//! >2 oder?
-		introverall = blocks * nos * aCAMCNT[drvno] * number_of_boards / dma_subbufinscans - 2;//- 2 because intr counter starts with 0
+		introverall = Nob * (*Nospb) * aCAMCNT[drvno] * number_of_boards / dma_subbufinscans - 2;//- 2 because intr counter starts with 0
 	else
-		introverall = blocks * nos * aCAMCNT[drvno] / dma_subbufinscans - 1;//- 1 because intr counter starts with 0
+		introverall = Nob * (*Nospb) * aCAMCNT[drvno] / dma_subbufinscans - 1;//- 1 because intr counter starts with 0
 	//!GS sometimes (all 10 minutes) one INTR more occurs -> just do not serve it and return
 	// Fehler wenn zu viele ISRs -> memcpy out of range
-
 	WDC_Err( "introverall: 0x%x \n", introverall );
 	WDC_Err( "ISR Counter : 0x%x \n", IsrCounter );
 	if (IsrCounter > introverall)
@@ -872,11 +843,10 @@ void isr( UINT drvno, PVOID pData )
 		ResetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//reset INTRSR flag for TRIGO
 		return;
 	}
-
-
+	UINT32 spi = 0;//scans_per_intr
 	ReadLongS0( drvno, &spi, S0Addr_DMAsPerIntr ); //get scans per intr = 500
 	//WDC_Err("DmaAddr_DMAsPerIntr: 0x%x \n", val);
-	WDC_Err( "in isr -- nos: 0x%x, nob: 0x%x, spi: 0x%x, blocks: 0x%x\n", nos, Nob, spi, blocks );
+	WDC_Err( "in isr -- nos: 0x%x, nob: 0x%x, spi: 0x%x\n", (*Nospb), Nob, spi);
 	//if (rest < spi) return without interrupt; // do not use INTR, but GetLastBufPart instead if rest is small enough
 	/*if ((nos*blocks * aCAMCNT[drvno]) < spi)
 	{
@@ -903,28 +873,19 @@ void isr( UINT drvno, PVOID pData )
 		pBigBufIndex[drvno] = pBigBufBase[drvno]; //wrap if error - but now all is mixed up!
 	}
 	*/
-
-
 	//WDC_Err("pBigBufIndex: 0x%x \n", pBigBufIndex[drvno]);
-
 	//here  the copyprocess happens
 	memcpy_s( pBigBufIndex[drvno], subbuflengthinbytes, pdmasubbuf_base, subbuflengthinbytes );//DMA_bufsizeinbytes/10
 	// A.M. 08.Jan.2018 subbuflengthinbytes/ aCAMCNT[drvno]
 	//memset(pBigBufIndex[drvno], IsrCounter, subbuflengthinbytes  ); //  0xAAAA=43690 , 0101= 257
 	WDC_Err( "pBigBufIndex: 0x%x \n", pBigBufIndex[drvno] );
 	WDC_Err( "pDMABigBuf Content: 0x%x \n", *(pBigBufIndex[drvno] + 200) );
-
 	SubBufCounter[drvno]++;
 	if (SubBufCounter[drvno] >= DMA_HW_BUFPARTS)		//number of ISR per dmaBuf - 1
 		SubBufCounter[drvno] = 0;						//SubBufCounter is 0 or 1 for buffer devided in 2 parts
-
-
-
 	pBigBufIndex[drvno] += subbuflengthinbytes / sizeof( USHORT ); //!!GS  calc for USHORT
-
 	//error prevention...not needed if counter counts correct
 	//ReadLongS0(drvno, &blocks, DmaAddr_NOB);
-
 	//!!GS  //add space for last val and reset base if error
 	//UINT64 pDMAbigbufsize = nos * blocks *_PIXEL;// +subbuflengthinbytes / sizeof(USHORT);  //in USHORT
 /*	if ((pBigBufIndex[drvno] > pBigBufBase[drvno] + pDMAbigbufsize) || (pBigBufIndex[drvno] < pBigBufBase[drvno]))
@@ -939,9 +900,8 @@ void isr( UINT drvno, PVOID pData )
 */
 	ResetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//reset INTRSR flag for TRIGO
 	IsrCounter++;
-
 	//WDC_Err("ISR: pix42 of ReturnFrame: 0x%d \n", *(USHORT*)(pBigBufBase[drvno] + 420));
-
+	return;
 }//DLLCALLCONV interrupt_handler
 
 VOID DLLCALLCONV interrupt_handler1( PVOID pData ) { isr( 1, pData ); }

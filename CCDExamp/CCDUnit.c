@@ -94,11 +94,11 @@ void Display(unsigned long db, BOOL Plot)
 void CopytoDispbuf()
 {
 	ReturnFrame( choosen_board, cur_nos, cur_nob, 0, DisplData[0], _PIXEL );
-	ReturnFrame( choosen_board, cur_nos, cur_nob, 1, DisplData[0]+_PIXEL, _PIXEL );
+	if (CAMCNT>1) ReturnFrame( choosen_board, cur_nos, cur_nob, 1, DisplData[0]+_PIXEL, _PIXEL );
 	if(both_boards)
 	{
 		ReturnFrame( 2, cur_nos, cur_nob, 0, DisplData[1], _PIXEL );
-		ReturnFrame( 2, cur_nos, cur_nob, 1, DisplData[1] + _PIXEL, _PIXEL );
+		if (CAMCNT>1) ReturnFrame( 2, cur_nos, cur_nob, 1, DisplData[1] + _PIXEL, _PIXEL );
 	}
 	return;
 }
