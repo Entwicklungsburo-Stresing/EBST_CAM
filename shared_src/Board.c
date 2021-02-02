@@ -2097,6 +2097,7 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 			}
 			ReadFFLoop( board_sel );
 			Sleep( CONTPAUSE); // wait or next block is too early and scrambles last XCK, GST20
+			IsrCounter = 0;
 		}
 		while (1);
 	}

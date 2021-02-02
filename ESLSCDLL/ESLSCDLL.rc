@@ -6,7 +6,7 @@
 /////////////////////////////////////////////////////////////////////////////
 //
 // Generated from the TEXTINCLUDE 2 resource.
-//old: afxres.h
+//
 #include "winresrc.h"
 #include "version.h"
 
@@ -14,10 +14,10 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// German (Germany) resources
+// English (United States) resources
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US//LANG_GERMAN, SUBLANG_GERMAN
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
 
 #ifdef APSTUDIO_INVOKED
@@ -84,7 +84,7 @@ BEGIN
     END
 END
 
-#endif    // German (Germany) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
