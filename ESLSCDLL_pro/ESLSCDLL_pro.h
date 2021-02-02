@@ -15,8 +15,8 @@
 BOOL WINAPI DLLMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved );
 DllAccess void DLLInitGlobals( struct global_vars g );
 //************  2d greyscale viewer
-DllAccess void DLLStart2dViewer( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos );
-DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos );
+DllAccess void DLLStart2dViewer( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos );
+DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos );
 DllAccess void DLLDeinit2dViewer();
 DllAccess void DLLSetGammaValue( UINT16 white, UINT16 black );
 DllAccess UINT16 DLLGetGammaWhite();
