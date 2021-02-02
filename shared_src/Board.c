@@ -2952,7 +2952,7 @@ void CalcTrms( UINT32 drvno, UINT32 nos, UINT32 TRMS_pixel, UINT16 CAMpos, doubl
 \param block position in blocks (0...(nob-1))
 \param CAM position in camera count (0...(CAMCNT-1)
 */
-UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block, UINT16 CAM )
+UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM )
 {
 	//init index with base position of pixel
 	UINT32 index = pixel;
@@ -2974,7 +2974,7 @@ UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block,
 \param block position in blocks (0...(nob-1))
 \param CAM position in camera count (0...(CAMCNT-1))
 */
-void* GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT16 sample, UINT16 block, UINT16 CAM )
+void* GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM )
 {
 	return &pBigBufBase[drvno][GetIndexOfPixel( drvno, pixel, sample, block, CAM )];
 }
