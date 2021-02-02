@@ -645,7 +645,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		//Reset partial binning
 		WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
 		*/
-		DLLShowNewBitmap( DRV, cur_nob, 0, _PIXEL, *Nospb );
 		break;
 
 	case WM_COMMAND:
