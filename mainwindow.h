@@ -2,14 +2,16 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSettings>
 #include "ui_mainwindow.h"
 #include "lsc.h"
+#include "dialogsettings.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow, Lsc
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
@@ -23,8 +25,13 @@ public slots:
     void startPressed();
 private:
     Ui::MainWindow *ui;
+    Lsc lsc;
+    QSettings settings;
 signals:
 
+private slots:
+    void on_actionEdit_triggered();
+    void loadSettings();
 };
 
 #endif // MAINWINDOW_H

@@ -58,6 +58,12 @@
        </item>
        <item>
         <widget class="QSlider" name="horizontalSliderSample">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>1000</number>
+         </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -67,7 +73,17 @@
         </widget>
        </item>
        <item>
-        <widget class="MyQSpinBox" name="spinBoxSample"/>
+        <widget class="MyQSpinBox" name="spinBoxSample">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>1000</number>
+         </property>
+         <property name="value">
+          <number>1</number>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -88,13 +104,26 @@
        </item>
        <item>
         <widget class="QSlider" name="horizontalSliderBlock">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>1000</number>
+         </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="MyQSpinBox" name="spinBoxBlock"/>
+        <widget class="MyQSpinBox" name="spinBoxBlock">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>1000</number>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -114,11 +143,13 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="title">
      <string>Settings</string>
     </property>
+    <addaction name="actionEdit"/>
    </widget>
    <widget class="QMenu" name="menuExtras">
     <property name="title">
@@ -136,6 +167,22 @@
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionEdit">
+   <property name="text">
+    <string>Edit</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::PreferencesRole</enum>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -161,12 +208,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>538</x>
-     <y>538</y>
+     <x>596</x>
+     <y>566</y>
     </hint>
     <hint type="destinationlabel">
-     <x>630</x>
-     <y>541</y>
+     <x>718</x>
+     <y>572</y>
     </hint>
    </hints>
   </connection>
@@ -177,12 +224,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>650</x>
-     <y>536</y>
+     <x>718</x>
+     <y>572</y>
     </hint>
     <hint type="destinationlabel">
-     <x>456</x>
-     <y>541</y>
+     <x>514</x>
+     <y>566</y>
     </hint>
    </hints>
   </connection>
@@ -193,12 +240,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>432</x>
-     <y>502</y>
+     <x>490</x>
+     <y>532</y>
     </hint>
     <hint type="destinationlabel">
-     <x>644</x>
-     <y>504</y>
+     <x>718</x>
+     <y>538</y>
     </hint>
    </hints>
   </connection>
@@ -209,12 +256,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>636</x>
-     <y>515</y>
+     <x>718</x>
+     <y>538</y>
     </hint>
     <hint type="destinationlabel">
-     <x>460</x>
-     <y>509</y>
+     <x>518</x>
+     <y>532</y>
     </hint>
    </hints>
   </connection>

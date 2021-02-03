@@ -15,9 +15,11 @@ MainWindow::MainWindow(QWidget *parent)
     chart->setTitle("Camera 1");
     ui->chartView->setRenderHint(QPainter::Antialiasing);
 
-    connect(ui->horizontalSliderSample, QOverload<int>::of(&QSlider::valueChanged), this, &MainWindow::sampleChanged);
-    connect(ui->horizontalSliderBlock, QOverload<int>::of(&QSlider::valueChanged), this, &MainWindow::blockChanged);
-    connect(ui->pushButtonStart, QOverload<>::of(&QPushButton::pressed), this, &MainWindow::startPressed);
+    connect(ui->horizontalSliderSample, SIGNAL(valueChanged(int)), this, SLOT(sampleChanged(int)));
+    connect(ui->horizontalSliderBlock, SIGNAL(valueChanged(int)), this, SLOT(blockChanged(int)));
+    connect(ui->pushButtonStart, SIGNAL(pressed()), this, SLOT(startPressed()));
+
+    this->loadSettings();
 }
 
 /**
@@ -64,7 +66,8 @@ void MainWindow::setChartData(uint16_t* data, uint16_t length)
 void MainWindow::sampleChanged(int sample)
 {
     uint16_t data[576];
-    this->returnFrame(0,sample,ui->horizontalSliderBlock->value(),0,data,576);
+    sample--;
+    this->lsc.returnFrame(0,sample,ui->horizontalSliderBlock->value(),0,data,576);
     this->setChartData(data,576);
     return;
 }
@@ -77,7 +80,8 @@ void MainWindow::sampleChanged(int sample)
 void MainWindow::blockChanged(int block)
 {
     uint16_t data[576];
-    this->returnFrame(0,ui->horizontalSliderSample->value(),block,0,data,576);
+    block--;
+    this->lsc.returnFrame(0,ui->horizontalSliderSample->value(),block,0,data,576);
     this->setChartData(data,576);
     return;
 }
@@ -88,10 +92,33 @@ void MainWindow::blockChanged(int block)
  */
 void MainWindow::startPressed()
 {
-    this->initMeasurement();
-    this->startMeasurement();
+    this->lsc.initMeasurement();
+    this->lsc.startMeasurement();
     uint16_t data[576];
-    this->returnFrame(0,ui->horizontalSliderSample->value(),ui->horizontalSliderBlock->value(),0,data,576);
+    this->lsc.returnFrame(0,ui->horizontalSliderSample->value(),ui->horizontalSliderBlock->value(),0,data,576);
     this->setChartData(data,576);
+    return;
+}
+
+/**
+ * @brief This slot opens the settings dialog.
+ * @return none
+ */
+void MainWindow::on_actionEdit_triggered()
+{
+    DialogSettings* ds = new DialogSettings(&this->settings);
+    ds->show();
+    connect(ds, SIGNAL(accepted()), this, SLOT(loadSettings()));
+    return;
+}
+
+void MainWindow::loadSettings()
+{
+    int nos = this->settings.value(SETTING_NOS,NOS_DEFAULT).toInt();
+    ui->horizontalSliderSample->setMaximum(nos);
+    ui->spinBoxSample->setMaximum(nos);
+    int nob = this->settings.value(SETTING_NOB,NOB_DEFAULT).toInt();
+    ui->horizontalSliderBlock->setMaximum(nob);
+    ui->spinBoxBlock->setMaximum(nob);
     return;
 }
