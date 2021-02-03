@@ -19,6 +19,7 @@ DESTDIR = build/
 
 # Input
 SOURCES += lsc-gui.cpp \
+    dialogsettings.cpp \
     linux/userspace/lscpcie.c \
     mainwindow.cpp \
     myqspinbox.cpp
@@ -34,9 +35,11 @@ DISTFILES += \
     LscUIForm.ui.qml
 
 FORMS += \
+    dialogsettings.ui \
     mainwindow.ui
 
 HEADERS += \
+    dialogsettings.h \
     linux/userspace/lscpcie.h \
     lsc.h \
     mainwindow.h \
