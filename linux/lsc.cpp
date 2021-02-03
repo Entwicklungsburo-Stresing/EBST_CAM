@@ -1,9 +1,9 @@
-﻿#include "../lsc.h"
+﻿#include "lsc.h"
 #include <memory.h>
 #include <stdint.h>
-#include "userspace/types.h"
-#include "userspace/lscpcie.h"
-#include "kernelspace/registers.h"
+#include "linux/userspace/types.h"
+#include "linux/userspace/lscpcie.h"
+#include "linux/kernelspace/registers.h"
 #include <stdio.h>
 
 #define memory_barrier() asm volatile ("" : : : "memory")
@@ -52,10 +52,10 @@ void Lsc::initMeasurement()
     lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_PIXEL, device_descriptor[0].control->number_of_pixels);
     trigger_mode_t trigger_mode = xck;
     int result = lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_TRIGGER_IN, trigger_mode);
-    if (result < 0)
+    //if (result < 0)
         //return result;
     result = lscpcie_setup_dma(0);
-    if (result)
+    //if (result)
         //fprintf(stderr, "error %d when setting up dma\n", result);
     //set output of O on PCIe card
     device_descriptor->s0->TOR = TOR_OUT_XCK;

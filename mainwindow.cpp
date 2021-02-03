@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->horizontalSliderSample, QOverload<int>::of(&QSlider::valueChanged), this, &MainWindow::sampleChanged);
     connect(ui->horizontalSliderBlock, QOverload<int>::of(&QSlider::valueChanged), this, &MainWindow::blockChanged);
-    connect(ui->pushButton, QOverload<>::of(&QPushButton::pressed), this, &MainWindow::startPressed);
+    connect(ui->pushButtonStart, QOverload<>::of(&QPushButton::pressed), this, &MainWindow::startPressed);
 }
 
 /**
@@ -91,7 +91,7 @@ void MainWindow::startPressed()
     this->initMeasurement();
     this->startMeasurement();
     uint16_t data[576];
-    this->returnFrame(0,0,0,0,data,576);
+    this->returnFrame(0,ui->horizontalSliderSample->value(),ui->horizontalSliderBlock->value(),0,data,576);
     this->setChartData(data,576);
     return;
 }
