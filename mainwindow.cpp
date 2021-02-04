@@ -15,11 +15,15 @@ MainWindow::MainWindow(QWidget *parent)
     chart->setTitle("Camera 1");
     ui->chartView->setRenderHint(QPainter::Antialiasing);
 
+    if(!lsc.initDriver()) showNoDriverFoundDialog();
+    if(lsc.initPcieBoard() < 0) showPcieBoardError();
+
     connect(ui->horizontalSliderSample, SIGNAL(valueChanged(int)), this, SLOT(sampleChanged(int)));
     connect(ui->horizontalSliderBlock, SIGNAL(valueChanged(int)), this, SLOT(blockChanged(int)));
     connect(ui->pushButtonStart, SIGNAL(pressed()), this, SLOT(startPressed()));
+    connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));
 
-    this->loadSettings();
+    loadSettings();
 }
 
 /**
@@ -55,7 +59,7 @@ void MainWindow::setChartData(uint16_t* data, uint16_t length)
     {
         series->append(i, *(data+i));
     }
-    this->setChartData(series);
+    setChartData(series);
     return;
 }
 
@@ -67,8 +71,9 @@ void MainWindow::sampleChanged(int sample)
 {
     uint16_t data[576];
     sample--;
-    this->lsc.returnFrame(0,sample,ui->horizontalSliderBlock->value(),0,data,576);
-    this->setChartData(data,576);
+    int block = ui->horizontalSliderBlock->value() - 1;
+    lsc.returnFrame(0,sample,block,0,data,576);
+    setChartData(data,576);
     return;
 }
 
@@ -81,8 +86,9 @@ void MainWindow::blockChanged(int block)
 {
     uint16_t data[576];
     block--;
-    this->lsc.returnFrame(0,ui->horizontalSliderSample->value(),block,0,data,576);
-    this->setChartData(data,576);
+    int sample = ui->horizontalSliderSample->value() - 1 ;
+    lsc.returnFrame(0,sample,block,0,data,576);
+    setChartData(data,576);
     return;
 }
 
@@ -92,11 +98,13 @@ void MainWindow::blockChanged(int block)
  */
 void MainWindow::startPressed()
 {
-    this->lsc.initMeasurement();
-    this->lsc.startMeasurement();
+    lsc.initMeasurement();
+    lsc.startMeasurement();
     uint16_t data[576];
-    this->lsc.returnFrame(0,ui->horizontalSliderSample->value(),ui->horizontalSliderBlock->value(),0,data,576);
-    this->setChartData(data,576);
+    int block = ui->horizontalSliderBlock->value() - 1;
+    int sample = ui->horizontalSliderSample->value() - 1 ;
+    lsc.returnFrame(0,sample,block,0,data,576);
+    setChartData(data,576);
     return;
 }
 
@@ -106,19 +114,45 @@ void MainWindow::startPressed()
  */
 void MainWindow::on_actionEdit_triggered()
 {
-    DialogSettings* ds = new DialogSettings(&this->settings);
+    DialogSettings* ds = new DialogSettings(&settings);
     ds->show();
     connect(ds, SIGNAL(accepted()), this, SLOT(loadSettings()));
     return;
 }
 
+/**
+ * @brief Load settings and apply to UI.
+ */
 void MainWindow::loadSettings()
 {
-    int nos = this->settings.value(SETTING_NOS,NOS_DEFAULT).toInt();
+    int nos = settings.value(SETTING_NOS,NOS_DEFAULT).toInt();
     ui->horizontalSliderSample->setMaximum(nos);
     ui->spinBoxSample->setMaximum(nos);
-    int nob = this->settings.value(SETTING_NOB,NOB_DEFAULT).toInt();
+    int nob = settings.value(SETTING_NOB,NOB_DEFAULT).toInt();
     ui->horizontalSliderBlock->setMaximum(nob);
     ui->spinBoxBlock->setMaximum(nob);
+    return;
+}
+
+void MainWindow::showNoDriverFoundDialog()
+{
+    QMessageBox* d = new QMessageBox;
+    d->setWindowTitle("Fatal error");
+    d->setWindowModality(Qt::ApplicationModal);
+    d->setText("Driver or PCIe board not found.");
+    d->setIcon(QMessageBox::Critical);
+    d->setDetailedText(lsc.driverInstructions);
+    d->open(this,SLOT(close()));
+    return;
+}
+
+void MainWindow::showPcieBoardError()
+{
+    QMessageBox* d = new QMessageBox;
+    d->setWindowTitle("Fatal error");
+    d->setWindowModality(Qt::ApplicationModal);
+    d->setText("Error while opening PCIe board.");
+    d->setIcon(QMessageBox::Critical);
+    d->open(this,SLOT(close()));
     return;
 }
