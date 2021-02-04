@@ -95,11 +95,11 @@ DllAccess void DLLInitGlobals( struct global_vars g )
 \param drvno board number
 \param cur_nob current number of block
 \param cam which camera to display (when camcnt is >1)
-\param pixelAmount pixels of one line
+\param pixel count of pixel of one line
 \param nos samples in one block
 \return none
 */
-DllAccess void DLLStart2dViewer( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos )
+DllAccess void DLLStart2dViewer( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos )
 {
 	if (Direct2dViewer == NULL)
 	{
@@ -108,7 +108,7 @@ DllAccess void DLLStart2dViewer( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT 
 			Direct2dViewer,
 			GetActiveWindow(),
 			GetAddressOfPixel( drvno, 0, 0, cur_nob, cam ),
-			pixelAmount,
+			pixel,
 			nos );
 	}
 	return;
@@ -119,18 +119,18 @@ DllAccess void DLLStart2dViewer( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT 
 \param drvno board number
 \param cur_nob current number of blocks
 \param cam which camera to display (when camcnt is >1)
-\param pixelAmount pixels of one line
+\param pixel count of pixel of one line
 \param nos samples in one block
 \return none
 */
-DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT16 cur_nob, UINT16 cam, UINT pixelAmount, UINT nos )
+DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos )
 {
 	if (Direct2dViewer != NULL)
 	{
 		Direct2dViewer_showNewBitmap(
 			Direct2dViewer,
 			GetAddressOfPixel( drvno, 0, 0, cur_nob, cam ),
-			pixelAmount,
+			pixel,
 			nos );
 	}
 	return;
