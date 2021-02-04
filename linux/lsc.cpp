@@ -23,7 +23,7 @@ Lsc::~Lsc()
 /**
  * @brief Inits linux PCIe board driver.
  * @return
- *      - 0: failed
+ *      - <1 failed
  *      - 1: success and one board found
  *      - 2: success and two boards found
  */

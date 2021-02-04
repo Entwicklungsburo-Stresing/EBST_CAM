@@ -15,8 +15,9 @@ MainWindow::MainWindow(QWidget *parent)
     chart->setTitle("Camera 1");
     ui->chartView->setRenderHint(QPainter::Antialiasing);
 
-    if(!lsc.initDriver()) showNoDriverFoundDialog();
-    if(lsc.initPcieBoard() < 0) showPcieBoardError();
+    if(lsc.initDriver() < 1) showNoDriverFoundDialog();
+    else
+        if(lsc.initPcieBoard() < 0) showPcieBoardError();
 
     connect(ui->horizontalSliderSample, SIGNAL(valueChanged(int)), this, SLOT(sampleChanged(int)));
     connect(ui->horizontalSliderBlock, SIGNAL(valueChanged(int)), this, SLOT(blockChanged(int)));
@@ -136,7 +137,7 @@ void MainWindow::loadSettings()
 
 void MainWindow::showNoDriverFoundDialog()
 {
-    QMessageBox* d = new QMessageBox;
+    QMessageBox* d = new QMessageBox(this);
     d->setWindowTitle("Fatal error");
     d->setWindowModality(Qt::ApplicationModal);
     d->setText("Driver or PCIe board not found.");
@@ -148,7 +149,7 @@ void MainWindow::showNoDriverFoundDialog()
 
 void MainWindow::showPcieBoardError()
 {
-    QMessageBox* d = new QMessageBox;
+    QMessageBox* d = new QMessageBox(this);
     d->setWindowTitle("Fatal error");
     d->setWindowModality(Qt::ApplicationModal);
     d->setText("Error while opening PCIe board.");
