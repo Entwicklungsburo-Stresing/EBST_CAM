@@ -13,40 +13,39 @@ dev_descr_t *device_descriptor;
 
 Lsc::Lsc()
 {
-    int result;
-    if ((result = lscpcie_driver_init()) < 0) {
-        //fprintf(stderr, "initialising driver returned %d\n", result);
-    }
-
-    switch (result)
-    {
-    case 0:
-        //printf("didn't find an lscpcie board\n");
-    case 1:
-        //printf("found one lscpcie board\n");
-        break;
-    case 2:
-        //printf("found %d lscpcie boards\n", result);
-        break;
-    }
-
-    // open /dev/lscpcie<n>
-    if ((result = lscpcie_open(0, 0)) < 0)
-    {
-        //fprintf(stderr, "opening first board returned %d\n", result);
-    }
-
-    // get memory mapped pointers etc
-    device_descriptor = lscpcie_get_descriptor(0);
-
-    // clear dma buffer to avoid reading stuff from previous debugging sessions
-    memset((uint8_t*)device_descriptor->mapped_buffer, 0, device_descriptor->control->buffer_size);
 }
 Lsc::~Lsc()
 {
-
 }
 
+/**
+ * @brief Inits linux PCIe board driver.
+ * @return
+ *      - 0: failed
+ *      - 1: success and one board found
+ *      - 2: success and two boards found
+ */
+int Lsc::initDriver()
+{
+    return lscpcie_driver_init();
+}
+
+/**
+ * @brief Inits PCIe board.
+ * @return <0 on error, success otherwise
+ */
+int Lsc::initPcieBoard()
+{
+    int result;
+    // open /dev/lscpcie<n>
+    result = lscpcie_open(0, 0);
+    if(result < 0) return result;
+    // get memory mapped pointers etc
+    device_descriptor = lscpcie_get_descriptor(0);
+    // clear dma buffer to avoid reading stuff from previous debugging sessions
+    memset((uint8_t*)device_descriptor->mapped_buffer, 0, device_descriptor->control->buffer_size);
+    return result;
+}
 void Lsc::initMeasurement()
 {
     lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_PIXEL, device_descriptor[0].control->number_of_pixels);

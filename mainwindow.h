@@ -17,21 +17,20 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void setChartData(QLineSeries* series);
-    void setChartData(uint16_t* data, uint16_t length);
-public slots:
-    void sampleChanged(int);
-    void blockChanged(int);
-    void startPressed();
 private:
     Ui::MainWindow *ui;
     Lsc lsc;
     QSettings settings;
-signals:
-
+    void setChartData(QLineSeries* series);
+    void setChartData(uint16_t* data, uint16_t length);
+    void showNoDriverFoundDialog();
+    void showPcieBoardError();
 private slots:
     void on_actionEdit_triggered();
     void loadSettings();
+    void sampleChanged(int);
+    void blockChanged(int);
+    void startPressed();
 };
 
 #endif // MAINWINDOW_H
