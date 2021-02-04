@@ -151,19 +151,14 @@
     </property>
     <addaction name="actionEdit"/>
    </widget>
-   <widget class="QMenu" name="menuExtras">
-    <property name="title">
-     <string>Extras</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionDump_board_registers"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSettings"/>
-   <addaction name="menuExtras"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -181,6 +176,11 @@
    </property>
    <property name="menuRole">
     <enum>QAction::QuitRole</enum>
+   </property>
+  </action>
+  <action name="actionDump_board_registers">
+   <property name="text">
+    <string>Dump board registers</string>
    </property>
   </action>
  </widget>

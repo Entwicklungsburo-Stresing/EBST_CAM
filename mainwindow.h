@@ -31,6 +31,7 @@ private slots:
     void sampleChanged(int);
     void blockChanged(int);
     void startPressed();
+    void on_actionDump_board_registers_triggered();
 };
 
 #endif // MAINWINDOW_H

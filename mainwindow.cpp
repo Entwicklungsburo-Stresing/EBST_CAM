@@ -141,7 +141,7 @@ void MainWindow::showNoDriverFoundDialog()
     d->setWindowModality(Qt::ApplicationModal);
     d->setText("Driver or PCIe board not found.");
     d->setIcon(QMessageBox::Critical);
-    d->setDetailedText(lsc.driverInstructions);
+    d->setDetailedText(QString::fromStdString(lsc.driverInstructions));
     d->open(this,SLOT(close()));
     return;
 }
@@ -154,5 +154,36 @@ void MainWindow::showPcieBoardError()
     d->setText("Error while opening PCIe board.");
     d->setIcon(QMessageBox::Critical);
     d->open(this,SLOT(close()));
+    return;
+}
+
+void MainWindow::on_actionDump_board_registers_triggered()
+{
+    QDialog* messageBox = new QDialog;
+    QVBoxLayout* layout = new QVBoxLayout();
+    messageBox->setLayout(layout);
+    QTabWidget* tabWidget = new QTabWidget(messageBox);
+    tabWidget->setDocumentMode(true);
+    QLabel* labelS0 = new QLabel(tabWidget);
+    labelS0->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    labelS0->setText(QString::fromStdString(lsc.dumpS0Registers()));
+    labelS0->setAlignment(Qt::AlignTop);
+    tabWidget->addTab(labelS0, "S0 registers");
+    QLabel* labelDma = new QLabel;
+    labelDma->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    labelDma->setText(QString::fromStdString(lsc.dumpDmaRegisters()));
+    labelDma->setAlignment(Qt::AlignTop);
+    tabWidget->addTab(labelDma, "DMA registers");
+    QLabel* labelTlp = new QLabel;
+    labelTlp->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    labelTlp->setText(QString::fromStdString(lsc.dumpTlp()));
+    labelTlp->setAlignment(Qt::AlignTop);
+    tabWidget->addTab(labelTlp, "TLP size");
+    layout->addWidget(tabWidget);
+    QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
+    connect(dialogButtonBox, SIGNAL(accepted()), messageBox, SLOT(accept()));
+    layout->addWidget(dialogButtonBox);
+    messageBox->setWindowTitle("Register dump");
+    messageBox->show();
     return;
 }
