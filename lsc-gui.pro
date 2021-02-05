@@ -20,14 +20,14 @@ DESTDIR = build/
 # Input
 SOURCES += lsc-gui.cpp \
     dialogsettings.cpp \
-    linux/userspace/lscpcie.c \
     mainwindow.cpp \
     myqspinbox.cpp
 win32 {
     SOURCES += win/lsc.cpp
 }
 unix {
-    SOURCES += linux/lsc.cpp
+    SOURCES += linux/lsc.cpp \
+    linux/userspace/lscpcie.c
 }
 
 DISTFILES += \
@@ -40,9 +40,11 @@ FORMS += \
 
 HEADERS += \
     dialogsettings.h \
-    linux/userspace/lscpcie.h \
     lsc.h \
     mainwindow.h \
     myqspinbox.h
+unix {
+    HEADERS += linux/userspace/lscpcie.h \
+}
 
 RESOURCES += qdarkstyle/style.qrc
