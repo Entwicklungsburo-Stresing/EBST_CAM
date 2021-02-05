@@ -6,9 +6,17 @@
 
 #define NOS_DEFAULT 1000
 #define NOB_DEFAULT 2
+#define CAMCNT_DEFAULT 1
+#define THEME_DEFAULT lighttheme
 #define SETTING_NOS "measurement/nos"
 #define SETTING_NOB "measurement/nob"
 #define SETTING_CAMCNT "camerasetup/camcnt"
+#define SETTING_THEME "appearance/theme"
+
+enum theme{
+    lighttheme = 0,
+    darktheme = 1,
+};
 
 namespace Ui {
 class DialogSettings;
@@ -21,10 +29,11 @@ class DialogSettings : public QDialog
 public:
     explicit DialogSettings(QSettings* settings, QWidget *parent = nullptr);
     ~DialogSettings();
-
+signals:
+    void settings_saved();
 private:
     Ui::DialogSettings *ui;
-    QSettings* settings;
+    QSettings* _settings;
 private slots:
     void on_accepted();
 };

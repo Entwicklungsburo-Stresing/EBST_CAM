@@ -307,11 +307,16 @@
       <item>
        <widget class="QComboBox" name="comboBoxTheme">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <item>
          <property name="text">
           <string>Light</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Dark (beta)</string>
          </property>
         </item>
        </widget>

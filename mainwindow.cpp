@@ -117,7 +117,7 @@ void MainWindow::on_actionEdit_triggered()
 {
     DialogSettings* ds = new DialogSettings(&settings);
     ds->show();
-    connect(ds, SIGNAL(accepted()), this, SLOT(loadSettings()));
+    connect(ds, SIGNAL(settings_saved()), this, SLOT(loadSettings()));
     return;
 }
 
@@ -132,6 +132,20 @@ void MainWindow::loadSettings()
     int nob = settings.value(SETTING_NOB,NOB_DEFAULT).toInt();
     ui->horizontalSliderBlock->setMaximum(nob);
     ui->spinBoxBlock->setMaximum(nob);
+    int theme = settings.value(SETTING_THEME,THEME_DEFAULT).toInt();
+    switch(theme)
+    {
+    default:
+    case 0:
+        qApp->setStyleSheet("");
+        break;
+    case 1:
+        QFile f(":qdarkstyle/style.qss");
+        f.open(QFile::ReadOnly | QFile::Text);
+        QTextStream ts(&f);
+        qApp->setStyleSheet(ts.readAll());
+        break;
+    }
     return;
 }
 
