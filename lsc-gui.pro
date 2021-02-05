@@ -44,3 +44,5 @@ HEADERS += \
     lsc.h \
     mainwindow.h \
     myqspinbox.h
+
+RESOURCES += qdarkstyle/style.qrc
