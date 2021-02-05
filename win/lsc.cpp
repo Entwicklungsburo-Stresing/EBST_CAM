@@ -2,11 +2,21 @@
 
 Lsc::Lsc()
 {
-
+    driverInstructions = "";
 }
 Lsc::~Lsc()
 {
 
+}
+
+int Lsc::initDriver()
+{
+    return 1;
+}
+
+int Lsc::initPcieBoard()
+{
+    return 0;
 }
 
 void Lsc::initMeasurement()
@@ -25,4 +35,19 @@ void Lsc::returnFrame(uint32_t board, uint32_t sample, uint32_t block, uint16_t 
 {
 
     return;
+}
+
+std::string Lsc::dumpS0Registers()
+{
+    return NULL;
+}
+
+std::string Lsc::dumpDmaRegisters()
+{
+    return NULL;
+}
+
+std::string Lsc::dumpTlp()
+{
+    return NULL;
 }
