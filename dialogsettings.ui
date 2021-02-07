@@ -263,6 +263,81 @@
             <string>XCK</string>
            </property>
           </item>
+          <item>
+           <property name="text">
+            <string>REGO</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>VON</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>DMA_ACT</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>ASLS</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>STIMER</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>BTIMER</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>ISR_ACT</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>S1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>S2</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>BON</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MEASUREON</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>SDAT</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>BDAT</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>SSHUT</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>BSHUT</string>
+           </property>
+          </item>
          </widget>
         </item>
        </layout>
