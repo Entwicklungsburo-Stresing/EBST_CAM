@@ -3,17 +3,21 @@
 
 #include <QDialog>
 #include <QSettings>
+#include "lsc.h"
 
 #define NOS_DEFAULT 1000
 #define NOB_DEFAULT 2
 #define CAMCNT_DEFAULT 1
+#define TOR_DEFAULT xck_tor
 #define THEME_DEFAULT lighttheme
 #define SETTING_NOS "measurement/nos"
 #define SETTING_NOB "measurement/nob"
 #define SETTING_CAMCNT "camerasetup/camcnt"
+#define SETTING_TOR "camerasetup/tor"
 #define SETTING_THEME "appearance/theme"
 
-enum theme{
+enum theme
+{
     lighttheme = 0,
     darktheme = 1,
 };

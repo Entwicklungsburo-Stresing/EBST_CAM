@@ -132,6 +132,8 @@ void MainWindow::loadSettings()
     int nob = settings.value(SETTING_NOB,NOB_DEFAULT).toInt();
     ui->horizontalSliderBlock->setMaximum(nob);
     ui->spinBoxBlock->setMaximum(nob);
+    int tor = settings.value(SETTING_TOR,TOR_DEFAULT).toInt();
+    lsc.setTorOut(tor);
     int theme = settings.value(SETTING_THEME,THEME_DEFAULT).toInt();
     switch(theme)
     {

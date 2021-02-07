@@ -46,6 +46,9 @@ int Lsc::initPcieBoard()
     device_descriptor = lscpcie_get_descriptor(0);
     // clear dma buffer to avoid reading stuff from previous debugging sessions
     memset((uint8_t*)device_descriptor->mapped_buffer, 0, device_descriptor->control->buffer_size);
+    result = lscpcie_setup_dma(0);
+    //if (result)
+        //fprintf(stderr, "error %d when setting up dma\n", result);
     return result;
 }
 void Lsc::initMeasurement()
@@ -55,11 +58,8 @@ void Lsc::initMeasurement()
     int result = lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_TRIGGER_IN, trigger_mode);
     //if (result < 0)
         //return result;
-    result = lscpcie_setup_dma(0);
-    //if (result)
-        //fprintf(stderr, "error %d when setting up dma\n", result);
     //set output of O on PCIe card
-    device_descriptor->s0->TOR = TOR_OUT_XCK;
+    device_descriptor->s0->TOR = _torOut << TOR_TO_pos;
     //set trigger mode to block timer and scan timer + shutter not on
     device_descriptor->s0->CTRLB = (CTRLB_BTI_TIMER | CTRLB_STI_TIMER) & ~(CTRLB_SHON);
     //set block timer and start block timer
@@ -285,4 +285,11 @@ std::string Lsc::dumpTlp()
            << std::dec << data
            << "\n";
     return stream.str();
+}
+
+void Lsc::setTorOut(uint8_t torOut)
+{
+    _torOut = torOut;
+    device_descriptor->s0->TOR = _torOut << TOR_TO_pos;
+    return;
 }
