@@ -88,6 +88,8 @@ int dma_init(struct dev_struct *dev) {
 
   dev->control->buffer_size = dev->dma_mem_size;
 
+  dma_start(dev);
+  
   PDEBUG(D_BUFFERS, "dma initialised\n");
 
   return 0;
@@ -96,6 +98,7 @@ int dma_init(struct dev_struct *dev) {
 /* release dma buffer */
 void dma_finish(struct dev_struct *dev)
 {
+  dma_end(dev);
   if (dev->dma_virtual_mem) {
     if (dev->status & HARDWARE_PRESENT) {
       PDEBUG(D_BUFFERS, "freeing dma buffer");
@@ -162,7 +165,7 @@ int dma_start(struct dev_struct *dev)
   /* >>>> any sort of dma start-up code needed before activating the interrupt
           goes here
      <<<< */
-
+  printk(KERN_ERR NAME": requesting irq line %i.",dev->irq_line);
   result = request_irq(dev->irq_line, isr, irqflags, "lscpcie", dev_id);
   if (result) {
     printk(KERN_ERR NAME": requesting interrupt failed with error %d\n", result);
@@ -174,6 +177,7 @@ int dma_start(struct dev_struct *dev)
 
 int dma_end(struct dev_struct *dev)
 {
+  printk(KERN_ERR NAME": freeing interrupt...");
   free_irq(dev->irq_line, dev);
   /* >>>> clean-up if necessary
      <<<< */
