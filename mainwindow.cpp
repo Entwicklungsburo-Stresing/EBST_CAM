@@ -15,16 +15,15 @@ MainWindow::MainWindow(QWidget *parent)
     chart->setTitle("Camera 1");
     ui->chartView->setRenderHint(QPainter::Antialiasing);
 
-    if(lsc.initDriver() < 1) showNoDriverFoundDialog();
-    else
-        if(lsc.initPcieBoard() < 0) showPcieBoardError();
-
     connect(ui->horizontalSliderSample, SIGNAL(valueChanged(int)), this, SLOT(sampleChanged(int)));
     connect(ui->horizontalSliderBlock, SIGNAL(valueChanged(int)), this, SLOT(blockChanged(int)));
     connect(ui->pushButtonStart, SIGNAL(pressed()), this, SLOT(startPressed()));
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));
 
-    loadSettings();
+    if(lsc.initDriver() < 1) showNoDriverFoundDialog();
+    else if(lsc.initPcieBoard() < 0) showPcieBoardError();
+    else
+        loadSettings();
 }
 
 /**
