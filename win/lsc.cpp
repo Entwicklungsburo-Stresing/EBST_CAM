@@ -51,3 +51,8 @@ std::string Lsc::dumpTlp()
 {
     return NULL;
 }
+
+void Lsc::setTorOut(uint8_t torOut)
+{
+    return;
+}
