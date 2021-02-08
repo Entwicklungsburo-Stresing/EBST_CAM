@@ -53,6 +53,9 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
     return result;
   }
 
+  result = pci_read_config_byte(pci_dev, PCI_INTERRUPT_LINE, &dev->irq_line);
+  assert(!result, "couldn't read pci interrupt line", -1);
+
   dev->physical_pci_base = pci_resource_start(pci_dev, 2);
   dev->control->io_size = pci_resource_len(pci_dev, 2);
   dev->mapped_pci_base
