@@ -81,6 +81,9 @@ void CleanupPCIE_DMA( UINT32 drvno );
 int GetNumofProcessors();
 BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay );
 BOOL SetBoardVars( UINT32 drvno );
+
+BOOL Use_ENFFW_protection( UINT32 drvno, BOOL USE_ENFFW_PROTECT );
+
 // clear camera with reads
 void AboutDrv( UINT32 drvno );	// displays the version and board ID = test if board is there
 //	functions for managing controlbits in CtrlA register
