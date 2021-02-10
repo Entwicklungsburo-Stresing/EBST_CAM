@@ -89,6 +89,7 @@ int main(void) {
   device_descriptor->s0->BDAT = 123;
   device_descriptor->s0->BEC = 0x1;
   device_descriptor->s0->BFLAGS = 0x1;
+
   int exptime = 100;
   // >>> start Stimer
   device_descriptor->s0->XCK.dword
