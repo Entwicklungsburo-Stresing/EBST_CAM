@@ -47,11 +47,8 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 
   dev->status |= HARDWARE_PRESENT;
   dev->pci_dev = pci_dev;
-  //Put the IRQ number retrieved from 'lscpci -v' here as workaround.
-  //The workaround is used, because pci_read_config_byte just returns 0xff as irq_line.
-  dev->irq_line = 29; //pci_dev->irq;
-  //result = pci_read_config_byte(pci_dev, PCI_INTERRUPT_LINE, &dev->irq_line);
-  //assert(!result, "couldn't read pci interrupt line", -1);
+  pci_enable_msi(pci_dev);
+  dev->irq_line = pci_dev->irq;
 
   if ((result = device_init(dev, i)) < 0) {
     pci_disable_device(pci_dev);
