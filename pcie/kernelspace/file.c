@@ -92,7 +92,7 @@ int lscpcie_release(struct inode *inode, struct file *filp)
 
 int buffer_free(struct dev_struct *dev)
 {
-  ssize_t bytes;
+  long int bytes;
 
   if (down_interruptible(&dev->size_sem)) return -ERESTARTSYS;
 
@@ -100,11 +100,12 @@ int buffer_free(struct dev_struct *dev)
          dev->control->write_pos);
 
   bytes = dev->control->write_pos - dev->control->read_pos;
+  PDEBUG(D_BUFFERS, "diff (free): %ld bytes\n", bytes);
   if (bytes <= 0) bytes += dev->control->buffer_size;
 
   up(&dev->size_sem);
 
-  PDEBUG(D_BUFFERS, "%lu free bytes\n", bytes);
+  PDEBUG(D_BUFFERS, "%ld free bytes\n", bytes);
 
   return bytes - 1;
 }
@@ -119,12 +120,14 @@ int bytes_in_buffer(struct dev_struct *dev)
   PDEBUG(D_BUFFERS, "buffer pointers: %d,%d\n", dev->control->read_pos,
          dev->control->write_pos);
 
-  bytes = dev->control->write_pos - (long int) dev->control->read_pos;
+  bytes = dev->control->write_pos - dev->control->read_pos;
+  PDEBUG(D_BUFFERS, "diff: %ld\n", bytes);
   if (bytes < 0) bytes += dev->control->buffer_size;
 
   up(&dev->size_sem);
 
-  PDEBUG(D_BUFFERS, "%ld bytes available\n", bytes);
+  PDEBUG(D_BUFFERS, "%ld bytes available (%d)\n", bytes,
+         dev->control->buffer_size);
 
   return bytes;
 }
@@ -269,9 +272,8 @@ ssize_t lscpcie_read(struct file *filp, char __user *buf, size_t len,
       return copied_bytes;
     }
     len -= copied_bytes;
-    dev->control->read_pos += copied_bytes;
-    if (dev->control->read_pos == dev->control->buffer_size)
-      dev->control->read_pos = 0;
+    dev->control->read_pos
+      = (dev->control->read_pos + copied_bytes) % dev->control->buffer_size;
   } else
     copied_bytes = 0;
 
@@ -281,10 +283,9 @@ ssize_t lscpcie_read(struct file *filp, char __user *buf, size_t len,
       up(&dev->read_sem);
       return copied_bytes;
     }
-    copied_bytes += len;
-    dev->control->read_pos += copied_bytes;
-    if (dev->control->read_pos == dev->control->buffer_size)
-      dev->control->read_pos = 0;
+    copied_bytes += n;
+    dev->control->read_pos
+      = (dev->control->read_pos + n) % dev->control->buffer_size;
   }
 
   wake_up_interruptible(&dev->writeq);
