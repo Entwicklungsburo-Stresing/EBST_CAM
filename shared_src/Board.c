@@ -2973,6 +2973,7 @@ UINT8 WaitforTelapsed( LONGLONG musec )
 */
 void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA )
 {
+	Use_ENFFW_protection( drvno, TRUE );
 	//set camera pixel register
 	SendFLCAM( drvno, maddr_cam, cam_adaddr_pixel, pixel );
 	//set trigger input
@@ -2999,6 +3000,7 @@ void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS
 */
 void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high )
 {
+	Use_ENFFW_protection( drvno, FALSE );
 	Cam3010_ADC_reset( drvno );
 	Cam3010_ADC_setMode( drvno, adc_mode, custom_pattern );
 	//set camera pixel register
@@ -3049,6 +3051,7 @@ void Cam3010_ADC_reset( UINT32 drvno )
 */
 void Cam3010_ADC_setMode( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern )
 {
+
 	switch (adc_mode)
 	{
 	case 2:
@@ -3077,6 +3080,7 @@ void Cam3010_ADC_setMode( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern )
 */
 void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain )
 {
+	Use_ENFFW_protection( drvno, FALSE );
 	Cam3030_ADC_reset( drvno );
 	Cam3030_ADC_twoWireModeEN( drvno ); //two wire mode output interface for pal versions P209_2 and above
 	Cam3030_ADC_SetGain( drvno, gain );
@@ -3084,6 +3088,7 @@ void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 
 		Cam3030_ADC_RampOrPattern( drvno, adc_mode, custom_pattern );
 	return;
 }
+
 
 /**
 \brief ADC reset routine for Camera System 3030.
@@ -3158,6 +3163,21 @@ void Cam3030_ADC_RampOrPattern( UINT32 drvno, UINT8 adc_mode, UINT16 custom_patt
 	return;
 }
 
+/**
+\brief Protects ENFFW from cool cam status transmission. Enable with cool cam, disable with HS > 50 kHz.
+	RX_VALID usually triggers ENFFW. This must be disabled when cool cams transmit their cooling status.
+	RX_VALID_EN is enabled with XCKI and disabled with ~CAMFFXCK_ALL, after all frame data is collected.
+	If RX_VALID raises again for cool status values, it doesn't effect ENFFW when RX_VALID_EN is low.
+\param drvno selects PCIe board
+\param use_EN enables or disables RX_VALID write protection
+*/
+BOOL Use_ENFFW_protection( UINT32 drvno, BOOL USE_ENFFW_PROTECT )
+{
+	if (USE_ENFFW_PROTECT)
+		return SetS0Bit( 3, S0Addr_PCIEFLAGS, drvno );
+	else
+		return ResetS0Bit( 3, S0Addr_PCIEFLAGS, drvno );
+}
 
 /**
 \brief Set GPXCtrl register.
