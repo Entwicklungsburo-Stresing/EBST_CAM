@@ -1,0 +1,65 @@
+Hallo Herr Lang,
+
+folgende Fragen haben wir zur Zeit zu dem Linuxtreiber.
+
+1) Die Anzahl an Scans die mit dem Linuxtreiber durchgeführt werden können, sind zur Zeit noch begrenzt. Dies liegt vermutlich daran, dass der DMA Speicherbereich nicht beliebig groß sein kann, da dieser kontinuierlich sein muss. Mit den Einstellungen pixel=576, cams=1, blocks=1, scans=3641 failed die Funktion dma_alloc_coherent(...). Im Windowstreiber haben wir aufgrund dieser Problematik eine Interruptroutine, die alle 500 Scans die Daten aus dem DMA Buffer herauskopiert. Ist dies hier auch nötig oder haben sie geplant das anders zu lösen? In pcie/kernelspace/dma.c scheint es schon eine ISR zu geben, daher nun zu Frage 2.
+
+Log trace für pixel=576, cams=1, blocks=1, scans=3640:
+Dez 17 13:59:15 am-00d86117b30a.intern kernel: lscpcie: initialising dma
+Dez 17 13:59:15 am-00d86117b30a.intern kernel: lscpcie: need 4194304 bytes for dma
+Dez 17 13:59:15 am-00d86117b30a.intern kernel: lscpcie: allocating 4194304 bytes of dma memory
+Dez 17 13:59:15 am-00d86117b30a.intern kernel: lscpcie: dma initialised
+
+Log trace für pixel=576, cams=1, blocks=1, scans=3641:
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: lscpcie: initialising dma
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: lscpcie: need 4198400 bytes for dma
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: lscpcie: allocating 4198400 bytes of dma memory
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: lscpcie 0000:01:00.0: swiotlb buffer is full (sz: 4198400 bytes)
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: lscpcie 0000:01:00.0: swiotlb: coherent allocation failed, size=4198400
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: CPU: 3 PID: 5091 Comm: insmod Tainted: P OE 4.19.0-13-amd64 #1 Debian 4.19.160-2
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: Hardware name: MSI MS-7978/H170A GAMING PRO (MS-7978), BIOS 2.D0 01/25/2018
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: Call Trace:
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: dump_stack+0x66/0x90
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: swiotlb_alloc+0x150/0x160
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: dma_init+0xfd/0x1a0 [lscpcie]
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: device_init+0x205/0x250 [lscpcie]
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: probe_lscpcie+0x139/0x1c0 [lscpcie]
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: local_pci_probe+0x41/0x90
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: pci_device_probe+0xff/0x1b0
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: really_probe+0x20a/0x3b0
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: driver_probe_device+0xb3/0xf0
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: __driver_attach+0xea/0x110
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: ? driver_probe_device+0xf0/0xf0
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: bus_for_each_dev+0x77/0xc0
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: ? klist_add_tail+0x3b/0x70
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: bus_add_driver+0x152/0x230
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: ? 0xffffffffc05ef000
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: driver_register+0x6b/0xb0
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: ? 0xffffffffc05ef000
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: lscpcie_module_init+0x184/0x1000 [lscpcie]
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: do_one_initcall+0x46/0x1c3
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: ? free_unref_page_commit+0x91/0x100
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: ? _cond_resched+0x15/0x30
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: ? kmem_cache_alloc_trace+0x15e/0x1e0
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: do_init_module+0x5a/0x210
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: load_module+0x2167/0x23d0
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: ? __do_sys_finit_module+0xad/0x110
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: __do_sys_finit_module+0xad/0x110
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: do_syscall_64+0x53/0x110
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: RIP: 0033:0x7f84dddecf59
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: RSP: 002b:00007ffdd0f62278 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: RAX: ffffffffffffffda RBX: 000055df799a77b0 RCX: 00007f84dddecf59
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: RDX: 0000000000000000 RSI: 000055df7989a3f0 RDI: 0000000000000003
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: RBP: 000055df7989a3f0 R08: 0000000000000000 R09: 00007f84ddeb7000
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000000000
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: R13: 000055df799a7760 R14: 0000000000000000 R15: 0000000000000000
+Dez 17 13:54:38 am-00d86117b30a.intern kernel: lscpcie: failed to allocate dma memory
+
+2) Es scheint mir als würde die Funktion isr() bisher nicht genutzt werden, da ich nirgendwo eine Referenz zu dieser Funktion gefunden habe. Ist das korrekt? Und wenn ja, wissen Sie bereits wie eine ISR korrekt angemeldet werden muss für unseren Zweck?
+
+3) Während meinen Untersuchungen zum DMA und der ISR habe ich versucht den ISR_active Ausgang an der PCIe Karte zu aktivieren. In isr() gab es dafür bereits ein set_bits_s0(...). Leider ist es mir nicht gelungen vom kernelspace aus auf die Register der PCIe Karte zuzugreifen. set_bits_s0(...) in dma.c scheint nicht zu funktionieren. Die Funktion ioread8 liefert lediglich 0xFF zurück. Haben Sie eine Idee woran das liegt und wie wir auf Register in der DMA Routine oder der ISR zugreifen können?
+
+Schöne Feiertage und viele Grüße
+Florian Hahn

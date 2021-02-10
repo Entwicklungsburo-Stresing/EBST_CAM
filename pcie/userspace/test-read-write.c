@@ -27,14 +27,15 @@ int main(void) {
     perror(0);
   }
 
-  result
-    = ioctl(handle, LSCPCIE_IOCTL_SET_DEBUG,
-	    (0xFFFF << DEBUG_MASK_SHIFT) | 0xFFFF);
+  /*
+  result = ioctl(handle, LSCPCIE_IOCTL_SET_DEBUG,
+                 (DEBUG_BITS<<DEBUG_MASK_SHIFT) | D_BUFFERS | D_READOUT);
 
   if (result < 0) {
     fprintf(stderr, "error %d on ioctl call for setting debug flags\n", result);
     return result;
   }
+  */
 
   uint16_t buffer[1200];
 
