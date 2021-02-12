@@ -93,8 +93,8 @@ void OutTrigHigh( UINT32 drvno );		//set output Trigger signal high
 void OutTrigPulse( UINT32 drvno, ULONG PulseWidth );	// pulses high output Trigger signal
 void WaitTrigger( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *EscapeKey );
 // waits for trigger input or Key
-void CloseShutter( UINT32 drvno );	// set IFC=low
-void OpenShutter( UINT32 drvno );		// set IFC=high
+BOOL CloseShutter( UINT32 drvno );	// set IFC=low
+BOOL OpenShutter( UINT32 drvno );		// set IFC=high
 BOOL GetShutterState( UINT32 drvno );	//get the actual state
 void SetSDAT( UINT32 drvno, UINT32 tin100ns ); // delay after trigger in 100ns
 void ResetSDAT( UINT32 drvno ); // disable delay after trigger in S0+0x20
