@@ -2907,7 +2907,7 @@ void CalcTrms( UINT32 drvno, UINT32 nos, UINT32 TRMS_pixel, UINT16 CAMpos, doubl
 */
 UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM )
 {
-	if (pixel > aPIXEL[drvno] || sample > *Nospb || block > Nob || CAM > aCAMCNT[drvno]) return 0;
+	if (pixel >= aPIXEL[drvno] || sample >= *Nospb || block >= Nob || CAM >= aCAMCNT[drvno]) return 0;
 	//init index with base position of pixel
 	UINT32 index = pixel;
 	//position of index at CAM position
