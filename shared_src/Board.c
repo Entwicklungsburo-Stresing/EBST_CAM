@@ -1500,9 +1500,15 @@ void WaitTrigger( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrKey )
 \param drvno board number (=1 if one PCI board)
 \return none
 */
-BOOL CloseShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
+void CloseShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 {
-	return ResetS0Bit(CTRLB_bitindex_SHON, S0Addr_CTRLB, drvno);
+	//This function does a bit set. Unfortunately the following line doesn't work. We don't know why, yet. Maybe there is a problem iin ResetS0Bit. -FH, BB
+	//ResetS0Bit(CTRLB_bitindex_SHON, S0Addr_CTRLB, drvno);
+	UCHAR CtrlB;
+	ReadByteS0(drvno, &CtrlB, S0Addr_CTRLB);
+	CtrlB &= ~0x08; // clr bit D3 (MSHT) in CtrlB, ehemals 0x0fd;	/* $FD = 1111 1101 */
+	WriteByteS0(drvno, CtrlB, S0Addr_CTRLB);
+	return;
 }; //CloseShutter
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -1512,9 +1518,15 @@ BOOL CloseShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 \param drvno board number (=1 if one PCI board)
 \return none
 */
-BOOL OpenShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
+void OpenShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 {
-	return SetS0Bit(CTRLB_bitindex_SHON, S0Addr_CTRLB, drvno);
+	//This function does a bit set. Unfortunately the following line doesn't work. We don't know why, yet. Maybe there is a problem in SetS0Bit. -FH, BB
+	//SetS0Bit(CTRLB_bitindex_SHON, S0Addr_CTRLB, drvno);
+	UCHAR CtrlB;
+	ReadByteS0(drvno, &CtrlB, S0Addr_CTRLB);
+	CtrlB |= 0x08; // set bit D3 (MSUT) in CtrlB
+	WriteByteS0(drvno, CtrlB, S0Addr_CTRLB);
+	return;
 }; //OpenShutter
 
 BOOL GetShutterState( UINT32 drvno )
