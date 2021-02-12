@@ -175,8 +175,6 @@ double CalcMeasureTimeInSeconds( UINT32 drvno, UINT32 nos, double exposure_time_
 BOOL SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq );
 BOOL SetPartialBinning( UINT32 drvno, UINT16 number_of_regions );
 BOOL ResetPartialBinning( UINT32 drvno );
-BOOL AutostartXckForLines( UINT32 drvno );
-BOOL ResetAutostartXck( UINT32 drvno );
 void InitProDLL();
 BOOL isDmaSet( UINT32 drvno );
 BOOL allocateUserMemory( UINT drvno );
