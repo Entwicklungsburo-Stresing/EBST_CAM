@@ -172,6 +172,16 @@ enum cam_messages
 	adc_ads5294_msg_ddrClkAlign = 0x60,
 };
 
+enum sti_mode
+{
+	sti_I = 0,
+	sti_S1 = 1,
+	sti_S2 = 2,
+	sti_unused = 3,
+	sti_STimer = 4,
+	sti_ASL = 5
+};
+
 BOOL SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno );
 BOOL SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno );
 BOOL ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno );

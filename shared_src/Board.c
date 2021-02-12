@@ -1500,13 +1500,9 @@ void WaitTrigger( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrKey )
 \param drvno board number (=1 if one PCI board)
 \return none
 */
-void CloseShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
+BOOL CloseShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 {
-	UCHAR CtrlB;
-	ReadByteS0( drvno, &CtrlB, S0Addr_CTRLB );
-	CtrlB &= ~0x08; // clr bit D3 (MSHT) in CtrlB, ehemals 0x0fd;	/* $FD = 1111 1101 */
-	WriteByteS0( drvno, CtrlB, S0Addr_CTRLB );
-	return;
+	return ResetS0Bit(CTRLB_bitindex_SHON, S0Addr_CTRLB, drvno);
 }; //CloseShutter
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -1516,20 +1512,16 @@ void CloseShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 \param drvno board number (=1 if one PCI board)
 \return none
 */
-void OpenShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
+BOOL OpenShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 {
-	UCHAR CtrlB;
-	ReadByteS0( drvno, &CtrlB, S0Addr_CTRLB );
-	CtrlB |= 0x08; // set bit D3 (MSUT) in CtrlB
-	WriteByteS0( drvno, CtrlB, S0Addr_CTRLB );
-	return;
+	return SetS0Bit(CTRLB_bitindex_SHON, S0Addr_CTRLB, drvno);
 }; //OpenShutter
 
 BOOL GetShutterState( UINT32 drvno )
 {
 	UCHAR CtrlB;
 	ReadByteS0( drvno, &CtrlB, S0Addr_CTRLB );
-	CtrlB &= 0x08; // read bit D3 (MSUT) in CtrlB
+	CtrlB &= CTRLB_bit_SHON; // read bit D3 (MSUT) in CtrlB
 	if (CtrlB == 0) return FALSE;
 	return TRUE;
 }
@@ -3418,30 +3410,6 @@ BOOL SetPartialBinning( UINT32 drvno, UINT16 number_of_regions )
 BOOL ResetPartialBinning( UINT32 drvno )
 {
 	return ResetS0Bit( 15, S0Addr_ARREG, drvno );//this turns ARREG off and therefore partial binning too
-}
-
-/**
-\brief Turn autostart for xck for lines on.
-\param drvno PCIe board identifier.
-\return True for success.
-*/
-BOOL AutostartXckForLines( UINT32 drvno )
-{
-	WDC_Err("AUTOSTART CALL");
-	return SetS0Bit( 0, S0Addr_CTRLB, drvno );
-}
-
-/**
-\brief Turn autostart for xck for lines on.
-\param drvno PCIe board identifier.
-\return True for success.
-*/
-BOOL ResetAutostartXck( UINT32 drvno )
-{
-	BOOL success = ResetS0Bit( 0, S0Addr_CTRLB, drvno );
-	success &= ResetS0Bit( 1, S0Addr_CTRLB, drvno );
-	success &= ResetS0Bit( 2, S0Addr_CTRLB, drvno );
-	return success;
 }
 
 /**
