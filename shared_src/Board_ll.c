@@ -65,8 +65,7 @@ BOOL SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
 	WDC_MEM_DIRECT_ADDR( pDev->pAddrDesc );
 
-	BitTestAndSet( pDev->pAddrDesc->pUserDirectMemAddr + 0x80 + Address, bitnumber );
-	return TRUE;
+	return BitTestAndSet( pDev->pAddrDesc->pUserDirectMemAddr + 0x80 + Address, bitnumber );
 }
 
 /**
@@ -91,8 +90,7 @@ BOOL ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
 	WDC_MEM_DIRECT_ADDR( pDev->pAddrDesc );
 
-	BitTestAndReset( pDev->pAddrDesc->pUserDirectMemAddr + 0x80 + Address, bitnumber );
-	return TRUE;
+	return BitTestAndReset( pDev->pAddrDesc->pUserDirectMemAddr + 0x80 + Address, bitnumber );
 }
 
 /**
