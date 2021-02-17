@@ -24,6 +24,7 @@ void DialogSettings::on_accepted()
     _settings->setValue(SETTING_CAMCNT, ui->spinBoxCamcnt->value());
     _settings->setValue(SETTING_THEME, ui->comboBoxTheme->currentIndex());
     _settings->setValue(SETTING_TOR, ui->comboBoxOutput->currentIndex());
+    _settings->setValue(SETTING_PIXEL, ui->spinBoxPixel->value());
     emit settings_saved();
     return;
 }

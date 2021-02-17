@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <string>
+#include <QObject>
 
 enum tor_out
 {
@@ -24,8 +25,9 @@ enum tor_out
     bshut = 15
 };
 
-class Lsc
+class Lsc : public QObject
 {
+    Q_OBJECT
 public:
     Lsc();
     ~Lsc();
@@ -39,6 +41,11 @@ public:
     std::string dumpDmaRegisters();
     std::string dumpTlp();
     void setTorOut(uint8_t torOut);
+signals:
+    void measureStart();
+    void measureDone();
+    void blockStart();
+    void blockDone();
 private:
     uint8_t _torOut = xck_tor;
 };

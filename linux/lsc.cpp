@@ -93,6 +93,7 @@ void Lsc::initMeasurement()
 
 void Lsc::startMeasurement()
 {
+    emit measureStart();
     //set measure on
     device_descriptor->s0->PCIEFLAGS |= 1<<PCIEFLAG_MEASUREON;
     for (uint32_t blk_cnt = 0; blk_cnt < device_descriptor->control->number_of_blocks; blk_cnt++)
@@ -100,6 +101,7 @@ void Lsc::startMeasurement()
         //block trigger
         if(!(device_descriptor->s0->CTRLA & 1<<CTRLA_TSTART))
             while(!(device_descriptor->s0->CTRLA & 1<<CTRLA_TSTART));
+        emit blockStart();
         //make pulse for blockindex counter
         device_descriptor->s0->PCIEFLAGS |= 1<<PCIEFLAG_BLOCKTRIG;
         memory_barrier();
@@ -123,6 +125,7 @@ void Lsc::startMeasurement()
         while (result);
         //reset block on
         device_descriptor->s0->PCIEFLAGS &= ~(1<<PCIEFLAG_BLOCKON);
+        emit blockDone();
     }
     //stop stimer
     device_descriptor->s0->XCK.dword &= ~(1<<XCK_RS);
@@ -130,6 +133,7 @@ void Lsc::startMeasurement()
     device_descriptor->s0->BTIMER &= ~(1<<BTIMER_START);
     //reset measure on
     device_descriptor->s0->PCIEFLAGS &= ~(1<<PCIEFLAG_MEASUREON);
+    emit measureDone();
     return;
 }
 

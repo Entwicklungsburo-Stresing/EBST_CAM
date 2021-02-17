@@ -15,10 +15,11 @@ MainWindow::MainWindow(QWidget *parent)
     chart->setTitle("Camera 1");
     ui->chartView->setRenderHint(QPainter::Antialiasing);
 
-    connect(ui->horizontalSliderSample, SIGNAL(valueChanged(int)), this, SLOT(sampleChanged(int)));
-    connect(ui->horizontalSliderBlock, SIGNAL(valueChanged(int)), this, SLOT(blockChanged(int)));
+    connect(ui->horizontalSliderSample, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
+    connect(ui->horizontalSliderBlock, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
     connect(ui->pushButtonStart, SIGNAL(pressed()), this, SLOT(startPressed()));
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));
+    connect(&lsc, SIGNAL(measureDone()), this, SLOT(loadCameraData()));
 
     if(lsc.initDriver() < 1) showNoDriverFoundDialog();
     else if(lsc.initPcieBoard() < 0) showPcieBoardError();
@@ -64,35 +65,6 @@ void MainWindow::setChartData(uint16_t* data, uint16_t length)
 }
 
 /**
- * @brief Slot for the signal valueChanged of horizontalSliderSample.
- * @param sample Current value of slider.
- */
-void MainWindow::sampleChanged(int sample)
-{
-    uint16_t data[576];
-    sample--;
-    int block = ui->horizontalSliderBlock->value() - 1;
-    lsc.returnFrame(0,sample,block,0,data,576);
-    setChartData(data,576);
-    return;
-}
-
-
-/**
- * @brief Slot for the signal valueChanged of horizontalSliderBlock.
- * @param block Current value of slider.
- */
-void MainWindow::blockChanged(int block)
-{
-    uint16_t data[576];
-    block--;
-    int sample = ui->horizontalSliderSample->value() - 1 ;
-    lsc.returnFrame(0,sample,block,0,data,576);
-    setChartData(data,576);
-    return;
-}
-
-/**
  * @brief Slot for the signal pressed of pushButtonStart.
  * @return none
  */
@@ -100,11 +72,6 @@ void MainWindow::startPressed()
 {
     lsc.initMeasurement();
     lsc.startMeasurement();
-    uint16_t data[576];
-    int block = ui->horizontalSliderBlock->value() - 1;
-    int sample = ui->horizontalSliderSample->value() - 1 ;
-    lsc.returnFrame(0,sample,block,0,data,576);
-    setChartData(data,576);
     return;
 }
 
@@ -201,5 +168,17 @@ void MainWindow::on_actionDump_board_registers_triggered()
     layout->addWidget(dialogButtonBox);
     messageBox->setWindowTitle("Register dump");
     messageBox->show();
+    return;
+}
+
+void MainWindow::loadCameraData()
+{
+    uint32_t pixel = settings.value(SETTING_PIXEL,PIXEL_DEFAULT).toInt();
+    uint16_t* data = (uint16_t*)malloc(pixel * sizeof(uint16_t));
+    int block = ui->horizontalSliderBlock->value() - 1;
+    int sample = ui->horizontalSliderSample->value() - 1;
+    lsc.returnFrame(0,sample,block,0,data,pixel);
+    setChartData(data,pixel);
+    free(data);
     return;
 }
