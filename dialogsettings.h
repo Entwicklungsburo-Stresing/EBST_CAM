@@ -10,10 +10,12 @@
 #define CAMCNT_DEFAULT 1
 #define TOR_DEFAULT xck_tor
 #define THEME_DEFAULT lighttheme
+#define PIXEL_DEFAULT 576
 #define SETTING_NOS "measurement/nos"
 #define SETTING_NOB "measurement/nob"
 #define SETTING_CAMCNT "camerasetup/camcnt"
 #define SETTING_TOR "camerasetup/tor"
+#define SETTING_PIXEL "camerasetup/pixelcnt"
 #define SETTING_THEME "appearance/theme"
 
 enum theme

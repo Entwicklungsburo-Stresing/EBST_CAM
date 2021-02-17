@@ -17,6 +17,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+public slots:
+    void loadCameraData();
 private:
     Ui::MainWindow *ui;
     Lsc lsc;
@@ -28,8 +30,6 @@ private:
 private slots:
     void on_actionEdit_triggered();
     void loadSettings();
-    void sampleChanged(int);
-    void blockChanged(int);
     void startPressed();
     void on_actionDump_board_registers_triggered();
 };
