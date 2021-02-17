@@ -157,14 +157,9 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 	// init high resolution counter 	
 	// TPS = InitHRCounter();
 	// if (TPS==0) return (FALSE);
+	ResetPartialBinning(choosen_board);
 	if (SENSOR_TYPE == FFTsensor)
 	{
-		//set full binning as standard mode
-		ResetAutostartXck( choosen_board );
-		//Triger stuff
-		ResetS0Bit( 4, S0Addr_CTRLB, choosen_board );
-		ResetS0Bit( 5, S0Addr_CTRLB, choosen_board );
-		ResetPartialBinning( choosen_board );
 		//vclks
 		SetupVCLKReg( choosen_board, _FFTLINES, Vfreqini );
 	}

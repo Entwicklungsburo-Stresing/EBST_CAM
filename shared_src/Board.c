@@ -1502,10 +1502,12 @@ void WaitTrigger( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *AbrKey )
 */
 void CloseShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 {
+	//This function does a bit set. Unfortunately the following line doesn't work. We don't know why, yet. Maybe there is a problem iin ResetS0Bit. -FH, BB
+	//ResetS0Bit(CTRLB_bitindex_SHON, S0Addr_CTRLB, drvno);
 	UCHAR CtrlB;
-	ReadByteS0( drvno, &CtrlB, S0Addr_CTRLB );
+	ReadByteS0(drvno, &CtrlB, S0Addr_CTRLB);
 	CtrlB &= ~0x08; // clr bit D3 (MSHT) in CtrlB, ehemals 0x0fd;	/* $FD = 1111 1101 */
-	WriteByteS0( drvno, CtrlB, S0Addr_CTRLB );
+	WriteByteS0(drvno, CtrlB, S0Addr_CTRLB);
 	return;
 }; //CloseShutter
 
@@ -1518,10 +1520,12 @@ void CloseShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 */
 void OpenShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 {
+	//This function does a bit set. Unfortunately the following line doesn't work. We don't know why, yet. Maybe there is a problem in SetS0Bit. -FH, BB
+	//SetS0Bit(CTRLB_bitindex_SHON, S0Addr_CTRLB, drvno);
 	UCHAR CtrlB;
-	ReadByteS0( drvno, &CtrlB, S0Addr_CTRLB );
+	ReadByteS0(drvno, &CtrlB, S0Addr_CTRLB);
 	CtrlB |= 0x08; // set bit D3 (MSUT) in CtrlB
-	WriteByteS0( drvno, CtrlB, S0Addr_CTRLB );
+	WriteByteS0(drvno, CtrlB, S0Addr_CTRLB);
 	return;
 }; //OpenShutter
 
@@ -1529,7 +1533,7 @@ BOOL GetShutterState( UINT32 drvno )
 {
 	UCHAR CtrlB;
 	ReadByteS0( drvno, &CtrlB, S0Addr_CTRLB );
-	CtrlB &= 0x08; // read bit D3 (MSUT) in CtrlB
+	CtrlB &= CTRLB_bit_SHON; // read bit D3 (MSUT) in CtrlB
 	if (CtrlB == 0) return FALSE;
 	return TRUE;
 }
@@ -2911,9 +2915,11 @@ void CalcTrms( UINT32 drvno, UINT32 nos, UINT32 TRMS_pixel, UINT16 CAMpos, doubl
 \param sample position in samples (0...(nos-1))
 \param block position in blocks (0...(nob-1))
 \param CAM position in camera count (0...(CAMCNT-1)
+\return Index of pixel. If a parameter is over its maximum the function returns 0.
 */
 UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM )
 {
+	if (pixel >= aPIXEL[drvno] || sample >= *Nospb || block >= Nob || CAM >= aCAMCNT[drvno]) return 0;
 	//init index with base position of pixel
 	UINT32 index = pixel;
 	//position of index at CAM position
@@ -3438,30 +3444,6 @@ BOOL SetPartialBinning( UINT32 drvno, UINT16 number_of_regions )
 BOOL ResetPartialBinning( UINT32 drvno )
 {
 	return ResetS0Bit( 15, S0Addr_ARREG, drvno );//this turns ARREG off and therefore partial binning too
-}
-
-/**
-\brief Turn autostart for xck for lines on.
-\param drvno PCIe board identifier.
-\return True for success.
-*/
-BOOL AutostartXckForLines( UINT32 drvno )
-{
-	WDC_Err("AUTOSTART CALL");
-	return SetS0Bit( 0, S0Addr_CTRLB, drvno );
-}
-
-/**
-\brief Turn autostart for xck for lines on.
-\param drvno PCIe board identifier.
-\return True for success.
-*/
-BOOL ResetAutostartXck( UINT32 drvno )
-{
-	BOOL success = ResetS0Bit( 0, S0Addr_CTRLB, drvno );
-	success &= ResetS0Bit( 1, S0Addr_CTRLB, drvno );
-	success &= ResetS0Bit( 2, S0Addr_CTRLB, drvno );
-	return success;
 }
 
 /**

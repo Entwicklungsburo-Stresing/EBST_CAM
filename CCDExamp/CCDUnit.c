@@ -205,11 +205,7 @@ void initMeasurement()
 #else
 	//set PDA and FFT
 	SetSensorType( choosen_board, SENSOR_TYPE );
-	if(SENSOR_TYPE == PDAsensor)
-	{
-		ResetAutostartXck( choosen_board );
-		ResetPartialBinning( choosen_board );
-	}
+
 	if (_MSHUT) {
 		CloseShutter(choosen_board);
 		SetSEC(choosen_board, ExpTime * 100);
