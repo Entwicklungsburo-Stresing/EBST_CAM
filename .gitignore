@@ -17,7 +17,7 @@ stop-camera
 .vscode/
 build/
 .qmake.stash
-Makefile
+./Makefile
 *.pro.user*
 moc_*
 ui_*
