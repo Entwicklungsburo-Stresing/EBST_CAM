@@ -1,4 +1,5 @@
 #include "../lsc.h"
+#include "shared_src/board.h"
 
 Lsc::Lsc()
 {
@@ -11,12 +12,12 @@ Lsc::~Lsc()
 
 int Lsc::initDriver()
 {
-    return 1;
+    return CCDDrvInit();
 }
 
 int Lsc::initPcieBoard()
 {
-    return 0;
+    return 1;
 }
 
 void Lsc::initMeasurement()
@@ -27,7 +28,6 @@ void Lsc::initMeasurement()
 
 void Lsc::startMeasurement()
 {
-
     return;
 }
 

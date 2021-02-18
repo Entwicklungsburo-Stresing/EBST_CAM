@@ -1,7 +1,9 @@
 #pragma once
 //  Board.h
 //	all high level functions for managing Interfaceboard
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "Board_ll.h"
 #include "UIAbstractionLayer.h"
@@ -194,3 +196,7 @@ BOOL SetBSlope( UINT32 drvno, UINT32 slope );
 BOOL SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob );
 void ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length );
 void abortMeasurement( UINT32 drv );
+
+#ifdef __cplusplus
+}
+#endif
