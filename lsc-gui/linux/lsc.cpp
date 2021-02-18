@@ -18,6 +18,7 @@ Lsc::Lsc()
 }
 Lsc::~Lsc()
 {
+    lscpcie_close(0);
 }
 
 /**

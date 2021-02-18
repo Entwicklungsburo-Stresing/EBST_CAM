@@ -56,8 +56,8 @@ module_param_array(num_blocks,  int, &n_num_blocks,  S_IRUGO);
    stored spearately in the global variable module_debug since it belongs to
    the module as a whole and not to a specific driver instance.
  */
-int debug = 0;
-int debug_module = 0;
+int debug = 0xFF;
+int debug_module = 1;
 
 module_param(debug, int, S_IRUGO);
 
