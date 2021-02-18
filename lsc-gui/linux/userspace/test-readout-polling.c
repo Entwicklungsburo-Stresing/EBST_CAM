@@ -125,20 +125,24 @@ int main(void) {
   int nob = device_descriptor->control->number_of_blocks;
   int nos = device_descriptor->control->number_of_scans;
   int camcnt = device_descriptor->control->number_of_cameras;
+  uint16_t data[1088];
+  lscpcie_readout(0,data,1);
+  for (int i = 0; i < 1088; i++)
+    printf("%d\t%d\n", i, data[i]);
   for (int cur_block = 0; cur_block < nob; cur_block++)
   {
     printf("block %i\n", cur_block);
-    for (int cur_sample = 0; cur_sample < nos; cur_sample++)
+    /*for (int cur_sample = 0; cur_sample < nos; cur_sample++)
     {
     printf("scan %i\n", cur_sample);
       for(int cur_cam = 0; cur_cam < camcnt; cur_cam++)
       {
         printf("cam %i\n", cur_cam);
         int offset = cur_cam * n + cur_sample * camcnt * n + cur_block * nos * camcnt * n;
-        for (int i = 0; i < n; i++)
-          printf("%d\t%d\n", i, ((uint16_t*)device_descriptor->mapped_buffer)[offset + i]);
+        //for (int i = 0; i < n; i++)
+          //printf("%d\t%d\n", i, ((uint16_t*)device_descriptor->mapped_buffer)[offset + i]);
       }
-    }
+    }*/
   }
 
  finish:

@@ -118,6 +118,7 @@ static enum irqreturn isr(int irqn, void *dev_id)
   /* >>>>> first check whether the pcie card has issued the interrupt */
   /* if not return IRQ_NONE; */
   /* <<<<< to be implemented */
+  printk(KERN_ERR NAME": I'm IRQ, %i, %p", irqn, dev_id);
 
   struct dev_struct *dev = (struct dev_struct *) dev_id;
   int old_write_pos = dev->control->write_pos;
@@ -138,12 +139,12 @@ static enum irqreturn isr(int irqn, void *dev_id)
     if ((dev->control->read_pos <= old_write_pos)
         ||
         (dev->control->read_pos > dev->control->write_pos))
-      goto end; /* r w0 w1  or w0 w1 r */
+      goto end; // r w0 w1  or w0 w1 r 
   } else
     if ((dev->control->read_pos <= old_write_pos)
         &&
         (dev->control->read_pos > dev->control->write_pos))
-      goto end; /* w1 r w0 */
+      goto end; // w1 r w0 
 
   dev->status |= DMA_OVERFLOW;
 
@@ -172,7 +173,7 @@ int dma_start(struct dev_struct *dev)
     return result;
   }
 
-  return 0;
+    return 0;
 }
 
 int dma_end(struct dev_struct *dev)
