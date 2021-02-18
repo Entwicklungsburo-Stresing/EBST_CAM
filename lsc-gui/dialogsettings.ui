@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DialogSettings</class>
+ <widget class="QDialog" name="DialogSettings">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>434</width>
+    <height>353</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Settings</string>
+  </property>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>20</y>
+     <width>371</width>
+     <height>311</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="measurement">
+       <attribute name="title">
+        <string>Measurement</string>
+       </attribute>
+       <widget class="QWidget" name="layoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>331</width>
+          <height>101</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayoutMeasurement">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayoutNos">
+           <item>
+            <widget class="QLabel" name="labelNos">
+             <property name="text">
+              <string>Number of sample</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacerNos">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="spinBoxNos">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="suffix">
+              <string/>
+             </property>
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>999999999</number>
+             </property>
+             <property name="value">
+              <number>1000</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayoutNob">
+           <item>
+            <widget class="QLabel" name="labelNob">
+             <property name="text">
+              <string>Number of blocks</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacerNob">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="spinBoxNob">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <number>999999999</number>
+             </property>
+             <property name="value">
+              <number>2</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="camerasetup">
+       <attribute name="title">
+        <string>Camera setup</string>
+       </attribute>
+       <widget class="QWidget" name="">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>11</y>
+          <width>329</width>
+          <height>211</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayoutCamerasetup">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayoutCameraSystem">
+           <item>
+            <widget class="QLabel" name="labelCameraSystem">
+             <property name="text">
+              <string>Camera System</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QComboBox" name="comboBoxCameraSystem">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <item>
+              <property name="text">
+               <string>3001</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayoutCamcnt">
+           <item>
+            <widget class="QLabel" name="labelCamcnt">
+             <property name="text">
+              <string>Number of cameras</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacerCamcnt">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="spinBoxCamcnt">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <number>8</number>
+             </property>
+             <property name="value">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayoutOutput">
+           <item>
+            <widget class="QLabel" name="labelOutput">
+             <property name="text">
+              <string>Ouput signal PCIe card</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacerOutput">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QComboBox" name="comboBoxOutput">
+             <item>
+              <property name="text">
+               <string>XCK</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>REGO</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>VON</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>DMA_ACT</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>ASLS</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>STIMER</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>BTIMER</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>ISR_ACT</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>S1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>S2</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>BON</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>MEASUREON</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>SDAT</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>BDAT</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>SSHUT</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>BSHUT</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QLabel" name="labelOutputPixel">
+             <property name="text">
+              <string>Number of pixel</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacerPixel">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="spinBoxPixel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>9999</number>
+             </property>
+             <property name="value">
+              <number>576</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="appearance">
+       <attribute name="title">
+        <string>Appearance</string>
+       </attribute>
+       <widget class="QWidget" name="layoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>331</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayoutTheme">
+         <item>
+          <widget class="QLabel" name="labelTheme">
+           <property name="text">
+            <string>Theme</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacerTheme">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboBoxTheme">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <item>
+            <property name="text">
+             <string>Light</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Dark (beta)</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <widget class="QDialogButtonBox" name="buttonBox">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="standardButtons">
+       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>DialogSettings</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>DialogSettings</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
