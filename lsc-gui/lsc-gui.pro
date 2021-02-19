@@ -21,6 +21,18 @@ RC_ICONS = ../shared_src/CCD.ico
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+#Application version
+VERSION_MAJOR = 3
+VERSION_MINOR = 16
+VERSION_BUILD = 3
+
+DEFINES += "VERSION_MAJOR=$$VERSION_MAJOR"\
+       "VERSION_MINOR=$$VERSION_MINOR"\
+       "VERSION_BUILD=$$VERSION_BUILD"
+
+#Target version
+VERSION = $${VERSION_MAJOR}.$${VERSION_MINOR}.$${VERSION_BUILD}
+
 # Input
 SOURCES += lsc-gui.cpp \
     dialogsettings.cpp \

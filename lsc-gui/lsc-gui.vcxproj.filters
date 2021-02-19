@@ -112,24 +112,12 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    
-    
-    
-    
-    
-    
-    
-    
     <CustomBuild Include="debug\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
     <CustomBuild Include="release\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
-    
-    
-    
-    
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="dialogsettings.ui">
@@ -780,6 +768,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="C:\Users\flori\Stresing\EBST_CAM\lsc-gui\lsc-gui_resource.rc" />
+    <ResourceCompile Include=".\lsc-gui_resource.rc" />
   </ItemGroup>
 </Project>
