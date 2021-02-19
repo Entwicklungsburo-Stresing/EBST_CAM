@@ -57,6 +57,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\shared_src\Board.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared_src\Board_ll.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UIAbstractionLayer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="dialogsettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -66,32 +75,35 @@
     <ClCompile Include="win\lsc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\shared_src\lscpciej_lib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="mainwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="myqspinbox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared_src\Board.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\shared_src\Board_ll.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\shared_src\lscpciej_lib.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UIAbstractionLayer.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\shared_src\Board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\Board_ll.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\UIAbstractionLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <QtMoc Include="dialogsettings.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="lsc.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <ClInclude Include="..\shared_src\lscpciej_lib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <QtMoc Include="mainwindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -100,12 +112,24 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
+    
+    
+    
+    
+    
+    
+    
+    
     <CustomBuild Include="debug\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
     <CustomBuild Include="release\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
+    
+    
+    
+    
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="dialogsettings.ui">
@@ -756,17 +780,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\shared_src\Board.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\shared_src\Board_ll.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\shared_src\UIAbstractionLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\shared_src\lscpciej_lib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ResourceCompile Include="C:\Users\flori\Stresing\EBST_CAM\lsc-gui\lsc-gui_resource.rc" />
   </ItemGroup>
 </Project>
