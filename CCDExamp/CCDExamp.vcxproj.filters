@@ -33,9 +33,6 @@
     <ResourceCompile Include="CCDExamp.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Myapp.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -70,5 +67,8 @@
     <ClCompile Include="UIAbstractionLayer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\shared_src\CCD.ico" />
   </ItemGroup>
 </Project>
