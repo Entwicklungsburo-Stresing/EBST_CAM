@@ -17,8 +17,8 @@ along with Foobar.If not, see < http://www.gnu.org/licenses/>.
 Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 */
 
-#include "ESLSCDLL_pro.h"
-#include "Direct2dViewer_c.h"
+#include "shared_src/ESLSCDLL_pro.h"
+#include "shared_src/Direct2dViewer_c.h"
 // Make this data shared among all
 // all applications that use this DLL.
 //....................................
