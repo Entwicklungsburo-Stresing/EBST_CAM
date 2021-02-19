@@ -7,8 +7,12 @@ QT += widgets \
 TEMPLATE = app
 TARGET = lsc-gui
 INCLUDEPATH += .
+win32 {
+	INCLUDEPATH += $(SolutionDir)
+}
 OBJECTS_DIR = build/
 DESTDIR = build/
+RC_ICONS = ../shared_src/CCD.ico
 
 # You can make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -23,7 +27,11 @@ SOURCES += lsc-gui.cpp \
     mainwindow.cpp \
     myqspinbox.cpp
 win32 {
-    SOURCES += win/lsc.cpp
+    SOURCES += win/lsc.cpp \
+	../shared_src/Board.c \
+	../shared_src/Board_ll.c \
+	../shared_src/lscpciej_lib.c \
+	UIAbstractionLayer.c
 }
 unix {
     SOURCES += linux/lsc.cpp \
@@ -46,5 +54,16 @@ HEADERS += \
 unix {
     HEADERS += linux/userspace/lscpcie.h \
 }
+win32 {
+    HEADERS += ../shared_src/Board.h \
+	../shared_src/Board_ll.h \
+	../shared_src/lscpciej_lib.h \
+	../shared_src/UIAbstractionLayer.h
+}
 
 RESOURCES += qdarkstyle/style.qrc
+
+win32 {
+    LIBS += -L $(SolutionDir)/Jungo/wdapi1400.lib
+    LIBS += -L $(SolutionDir)/shared_src/ESLSCDLL_pro.lib
+}
