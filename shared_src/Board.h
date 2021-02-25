@@ -67,6 +67,7 @@ void AboutS0( UINT32 drvno );
 BOOL CCDDrvInit( void );
 void CCDDrvExit( UINT32 drvno );	// closes the driver
 BOOL InitBoard( UINT32 drvno );	// init the board and alloc mem, call only once !
+void InitMeasurement(UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay);
 BOOL SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno );
 BOOL SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno );
 BOOL SetDMAAddrTlp( UINT32 drvno );
