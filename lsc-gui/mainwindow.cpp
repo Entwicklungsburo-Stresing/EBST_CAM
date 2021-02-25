@@ -70,7 +70,7 @@ void MainWindow::setChartData(uint16_t* data, uint16_t length)
  */
 void MainWindow::startPressed()
 {
-    lsc.initMeasurement();
+    lsc.initMeasurement(settings.value(SETTING_CAMCNT, CAMCNT_DEFAULT).toInt(), settings.value(SETTING_PIXEL, PIXEL_DEFAULT).toInt(), settings.value(SETTING_XCKDELAY, XCKDELAY_DEFAULT).toInt());
     lsc.startMeasurement();
     return;
 }

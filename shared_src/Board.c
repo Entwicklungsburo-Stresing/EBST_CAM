@@ -464,12 +464,24 @@ BOOL InitBoard( UINT32 drvno )
 	WDC_Err("KPCALL: Version: %u \n", Data.dwVer);
 	*/
 	// allocate DMA buffer
-	if (!SetupPCIE_DMA( drvno )) ErrorMsg( "Error in SetupPCIE_DMA" );
+	//if (!SetupPCIE_DMA( drvno )) ErrorMsg( "Error in SetupPCIE_DMA" );
 	return TRUE;
 
 };  // InitBoard
 
 //**************  new for PCIE   *******************************
+
+void InitMeasurement(UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay)
+{
+	SetGlobalVariables(1, camcnt, pixel, xckdelay);
+	if (WDC_IntIsEnabled(hDev[1]))
+	{
+		WDC_Err("cleanup dma\n");
+		CleanupPCIE_DMA(1);
+	}
+	SetupPCIE_DMA(1);
+	return;
+}
 
 BOOL SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno )
 {//the bitmask have "1" on the data dates like Bitmask: 1110 Data:1010 
