@@ -87,7 +87,7 @@ int dma_init(struct dev_struct *dev) {
   }
 
   dev->control->buffer_size = dev->dma_mem_size;
-
+  dev->bytes_per_interrupt = 500;
   dma_start(dev);
   
   PDEBUG(D_BUFFERS, "dma initialised\n");
