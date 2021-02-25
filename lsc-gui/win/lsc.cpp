@@ -17,12 +17,12 @@ int Lsc::initDriver()
 
 int Lsc::initPcieBoard()
 {
-    return 1;
+    return InitBoard(1);
 }
 
-void Lsc::initMeasurement()
+void Lsc::initMeasurement(uint32_t camcnt, uint32_t pixel, uint32_t xckdelay)
 {
-
+    InitMeasurement(1, camcnt, pixel, xckdelay);
     return;
 }
 
