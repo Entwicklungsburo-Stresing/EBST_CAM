@@ -85,6 +85,8 @@ int main(void) {
 
   // >> SetIntFFTrig
   device_descriptor->s0->XCK.dword &= ~(1<<XCKMSB_EXT_TRIGGER);
+  device_descriptor->control->write_pos = 0;
+  device_descriptor->control->read_pos = 0;
   //set measure on
   device_descriptor->s0->PCIEFLAGS |= 1<<PCIEFLAG_MEASUREON;
   for (int blk_cnt = 0; blk_cnt < device_descriptor->control->number_of_blocks; blk_cnt++)
@@ -125,6 +127,10 @@ int main(void) {
   int nob = device_descriptor->control->number_of_blocks;
   int nos = device_descriptor->control->number_of_scans;
   int camcnt = device_descriptor->control->number_of_cameras;
+  uint16_t data[576];
+  lscpcie_readout(0,data,576);
+  for (int i = 0; i < 576; i++)
+    printf("%d\t%d\n", i, data[i]);
   for (int cur_block = 0; cur_block < nob; cur_block++)
   {
     printf("block %i\n", cur_block);
