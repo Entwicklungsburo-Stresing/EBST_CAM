@@ -87,7 +87,7 @@ int dma_init(struct dev_struct *dev) {
   }
 
   dev->control->buffer_size = dev->dma_mem_size;
-
+  dev->bytes_per_interrupt = 500;
   dma_start(dev);
   
   PDEBUG(D_BUFFERS, "dma initialised\n");
@@ -118,7 +118,6 @@ static enum irqreturn isr(int irqn, void *dev_id)
   /* >>>>> first check whether the pcie card has issued the interrupt */
   /* if not return IRQ_NONE; */
   /* <<<<< to be implemented */
-  printk(KERN_ERR NAME": I'm IRQ, %i, %p", irqn, dev_id);
 
   struct dev_struct *dev = (struct dev_struct *) dev_id;
   int old_write_pos = dev->control->write_pos;
