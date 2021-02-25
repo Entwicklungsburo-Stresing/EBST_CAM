@@ -89,6 +89,8 @@ void Lsc::initMeasurement()
 
     // >> SetIntFFTrig
     device_descriptor->s0->XCK.dword &= ~(1<<XCKMSB_EXT_TRIGGER);
+    device_descriptor->control->write_pos = 0;
+    device_descriptor->control->read_pos = 0;
     return;
 }
 
