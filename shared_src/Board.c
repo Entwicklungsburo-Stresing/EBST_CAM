@@ -2913,10 +2913,10 @@ Calculates RMS of TRMS_pixel in the range of samples from firstSample to lastSam
  */
 void CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
 {
-	if (!(*Nospb >= lastSample > firstSample))
+	if (firstSample >= lastSample || lastSample > *Nospb)
 	{
 		//error: firstSample must be smaller than lastSample
-		WDC_Err("Calc Trms failed. lastSample must be greater than firstSample and both in bounderies of nos\n");
+		WDC_Err("Calc Trms failed. lastSample must be greater than firstSample and both in bounderies of nos, drvno: %u, firstSample: %u, lastSample: %u, TRMS_pixel: %u, CAMpos: %u, Nospb: %u\n",drvno, firstSample, lastSample, TRMS_pixel, CAMpos, *Nospb);
 		*mwf = -1;
 		*trms = -1;
 		return;
