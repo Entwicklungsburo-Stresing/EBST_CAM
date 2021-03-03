@@ -102,7 +102,7 @@ DllAccess void DLLSendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 da
 DllAccess void DLLDAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output ); //set output of DAC (PCB 2189-7)
 DllAccess void DLLFreeMemInfo( UINT64 * pmemory_all, UINT64 * pmemory_free );
 DllAccess void DLLErrorMsg( char ErrMsg[20] );
-DllAccess void DLLCalcTrms( UINT32 drvno, UINT32 nos, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );
+DllAccess void DLLCalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );
 //************  GPX
 DllAccess void DLLInitGPX( UINT32 drvno, UINT32 delay );
 DllAccess void DLLAboutGPX( UINT32 drvno );

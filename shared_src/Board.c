@@ -2899,31 +2899,39 @@ void GetRmsVal( UINT32 nos, UINT16 *TRMSVals, double *mwf, double *trms )
 }//GetRmsVal
 
 /**
-\brief Online calc TRMS noise val of pix. First 10 scans are omitted. May break when nos is smaller than 10.
+\brief Online calc TRMS noise val of pix.
+
+Calculates RMS of TRMS_pixel in the range of samples from firstSample to lastSample. Only calculates RMS from one block.
 \param drvno indentifier of PCIe card
-\param nos number of samples
-\param TRMS_pixel pixel for calculating noise (0...1087)
-\param CAMpos index for camcount (0...CAMCNT)
+\param firstSample start sample to calculate RMS. 0...(nos-2). Typical value: 10, to skip overexposed first samples
+\param lastSample last sample to calculate RMS. firstSample+1...(nos-1).
+\param TRMS_pixel pixel for calculating noise (0...(PIXEL-1))
+\param CAMpos index for camcount (0...(CAMCNT-1))
 \param mwf pointer for mean value
 \param trms pointer for noise
 \return none
  */
-void CalcTrms( UINT32 drvno, UINT32 nos, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
+void CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
 {
-	UINT16 *TRMS_pixels;
-	const int offset = 10;
-
-	TRMS_pixels = calloc( nos - offset, sizeof( UINT16 ) );
-
-	//storing the values of one pix for the rms analysis
-	for (int scan = 0; scan < nos-offset; scan++)
+	if (!(*Nospb >= lastSample > firstSample))
 	{
-		int TRMSpix_of_current_scan = GetIndexOfPixel( drvno, TRMS_pixel, scan+offset, 0, CAMpos );
+		//error: firstSample must be smaller than lastSample
+		WDC_Err("Calc Trms failed. lastSample must be greater than firstSample and both in bounderies of nos\n");
+		*mwf = -1;
+		*trms = -1;
+		return;
+	}
+	UINT32 samples = lastSample - firstSample;
+	UINT16 *TRMS_pixels;
+	TRMS_pixels = calloc( samples, sizeof( UINT16 ) );
+	//storing the values of one pix for the rms analysis
+	for (int scan = 0; scan < samples; scan++)
+	{
+		UINT32 TRMSpix_of_current_scan = GetIndexOfPixel( drvno, TRMS_pixel, scan+firstSample, 0, CAMpos );
 		TRMS_pixels[scan] = pBigBufBase[drvno][TRMSpix_of_current_scan];
 	}
-
 	//rms analysis
-	GetRmsVal( nos-offset, TRMS_pixels, mwf, trms );
+	GetRmsVal( samples, TRMS_pixels, mwf, trms );
 	return;
 }//CalcTrms
 
