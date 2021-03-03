@@ -3454,8 +3454,8 @@ BOOL SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 */
 BOOL SetPartialBinning( UINT32 drvno, UINT16 number_of_regions )
 {
-	BOOL success = SetS0Bit( 15, S0Addr_ARREG, drvno );//this turns ARREG on and therefore partial binning too
-	success &= WriteLongS0( drvno, number_of_regions, S0Addr_ARREG );
+	BOOL success = WriteLongS0( drvno, number_of_regions, S0Addr_ARREG );
+	success &= SetS0Bit( 15, S0Addr_ARREG, drvno );//this turns ARREG on and therefore partial binning too
 	return success;
 }
 
