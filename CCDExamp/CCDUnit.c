@@ -265,7 +265,6 @@ void startMess(void *dummy)
 		DLLReadFFLoop(choosen_board, ExpTime, EXTTRIGFLAG, 0, 0, choosen_board);
 #else
 	IsrCounter = 0;
-	struct ffloopparams params;
 	if (both_boards)	params.board_sel = 3;
 	else				params.board_sel = choosen_board;
 	// start read loop

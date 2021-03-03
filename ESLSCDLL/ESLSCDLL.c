@@ -19,7 +19,6 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 
 #include "ESLSCDLL.h"
 
-volatile struct ffloopparams params;
 LVUserEventRef measureStartLVEvent;
 LVUserEventRef measureDoneLVEvent;
 LVUserEventRef blockStartLVEvent;
