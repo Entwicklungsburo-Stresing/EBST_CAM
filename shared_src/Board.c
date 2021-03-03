@@ -295,6 +295,7 @@ void AboutS0( UINT32 drvno )
 */
 BOOL CCDDrvInit( void )
 {
+	WDC_Err("start driver init\n");
 	//WDC_Err(drvno);
 	//depends on os, how big a buffer can be
 	BOOL fResult = FALSE;
@@ -329,6 +330,7 @@ BOOL CCDDrvInit( void )
 	}*/
 
 	/* Set WDC library's debug options (default: level TRACE, output to Debug Monitor) */
+	WDC_Err("set debug options\n");
 #if defined(_DEBUG)		
 	dwStatus = WDC_SetDebugOptions( WDC_DBG_DEFAULT, NULL );
 #else				
@@ -347,7 +349,7 @@ BOOL CCDDrvInit( void )
 	}
 	//ErrorMsg("CCDDrvInit start of %x \n", drvno);
 	/* Open a handle to the driver and initialize the WDC library */
-
+	WDC_Err("open WDC\n");
 ***REMOVED***	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ErrLog( "Failed to initialize the WDC library. Error 0x%lx - %s\n",
@@ -362,6 +364,7 @@ BOOL CCDDrvInit( void )
 
 
 	BZERO( scanResult );
+	WDC_Err("scan PCIe devices\n");
 	dwStatus = WDC_PciScanDevices( LSCPCIEJ_DEFAULT_VENDOR_ID, LSCPCIEJ_DEFAULT_DEVICE_ID, &scanResult ); //VendorID, DeviceID
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
@@ -375,9 +378,9 @@ BOOL CCDDrvInit( void )
 		return FALSE;
 	}
 	number_of_boards = (UINT8) scanResult.dwNumDevices;
-
+	WDC_Err("init HR counter\n");
 	TPS = InitHRCounter();//for ticks function
-
+	WDC_Err("driver init done\n");
 	return TRUE;	  // no Error, driver found
 
 }; //CCDDrvInit
@@ -389,7 +392,7 @@ BOOL CCDDrvInit( void )
 */
 void CCDDrvExit( UINT32 drvno )
 {
-	WDC_Err( "drvexit\n" );
+	WDC_Err( "Driver exit, drv: %u\n", drvno);
 	if (WDC_IntIsEnabled( hDev[drvno] ))
 	{
 		WDC_Err( "cleanup dma\n" );
@@ -1087,6 +1090,7 @@ int GetNumofProcessors()
 */
 BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay )
 {
+	WDC_Err("Setting global variables: drv: %u, camcnt: %u, pixel: %u, xckdelay: %u\n", drvno, camcnt, pixel, xckdelay);
 	/*Pixelsize with matching TLP Count (TLPC).
 	Pixelsize = TLPS * TLPC - 1*TLPS
 	(TLPS TLP size = 64)
@@ -1158,8 +1162,11 @@ BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckde
 		NO_TLPS = 0x81;//82
 		break;
 	default:
-		if(!MANUAL_OVERRIDE_TLP)
+		if (!MANUAL_OVERRIDE_TLP)
+		{
+			WDC_Err("Could not choose TLP size, no valid pixel count.\n");
 			return FALSE;
+		}
 	}
 	if (LEGACY_202_14_TLPCNT) NO_TLPS = NO_TLPS + 1;
 	aPIXEL[drvno] = pixel;
@@ -1781,13 +1788,15 @@ void initReadFFLoop( UINT32 drv, UINT32 * Blocks )
 	//reset intr copy buf function
 	SubBufCounter[drv] = 0;
 	pBigBufIndex[drv] = pBigBufBase[drv]; // reset buffer index to base we got from InitDMA
-	WDC_Err( "RESET BIGBUF to%x\n", pBigBufIndex[drv] );
+	WDC_Err( "RESET BIGBUF to %x\n", pBigBufIndex[drv] );
 	IsrCounter = 0;
 	SetExtFFTrig( drv );
-	ReadLongS0( drv, &val, S0Addr_NOB ); //get the needed Blocks
+	if(!ReadLongS0( drv, &val, S0Addr_NOB ))//get the needed Blocks
+		WDC_Err("Reading blocks failed. drv: %u\n", drv);
 	*Blocks = val;
 	//set MeasureOn Bit
-	setMeasureOn( drv );
+	if(!setMeasureOn( drv ))
+		WDC_Err("Set measure on failed. drv: %u\n", drv);
 	return;
 }
 
@@ -1852,7 +1861,7 @@ int checkForPressedKeys( )
 void ReadFFLoop( UINT32 board_sel )
 {
 	ULONG	Blocks;
-
+	WDC_Err("Start ReadFFLoop with board_sel: %u\n", board_sel);
 	if (board_sel == 1 || board_sel == 3)
 		initReadFFLoop( 1, &Blocks );
 	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
@@ -1867,6 +1876,7 @@ void ReadFFLoop( UINT32 board_sel )
 			abortMeasurement( board_sel );
 			return;
 		}
+		WDC_Err("Block triggered\n");
 		if (board_sel == 1 || board_sel == 3)
 		{
 			countBlocksByHardware( 1 );
@@ -2032,6 +2042,7 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 	volatile struct ffloopparams *par;
 	par = parg;
 	UINT32 board_sel = par->board_sel;
+	WDC_Err("Start ReadFFLoopThread, board_sel: %u\n", board_sel);
 	BOARD_SEL = board_sel;
 	//local declarations
 	SetPriority( READTHREADPriority );  //run ReadFFLoop in higher priority
@@ -2071,6 +2082,7 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 	}
 	Running = FALSE;
 	//_endthread();//thread
+	WDC_Err("End ReadFFLoopThread\n");
 	return 1;//endthreadex is called automatically when this returns
 }
 
@@ -2145,10 +2157,13 @@ void StartSTimer( UINT32 drvno )
 // clear Bit30 of XCK-Reg: 0= timer off
 void StopSTimer( UINT32 drvno )
 {
+	WDC_Err("Stop S Timer, drv: %u\n", drvno);
 	BYTE data = 0;
-	ReadByteS0( drvno, &data, S0Addr_XCKMSB );
+	if (!ReadByteS0( drvno, &data, S0Addr_XCKMSB ))
+		WDC_Err("Reading S0Addr_XCKMSB failed\n");
 	data &= 0xBF;
-	WriteByteS0( drvno, data, S0Addr_XCKMSB );
+	if (!WriteByteS0( drvno, data, S0Addr_XCKMSB ))
+		WDC_Err("Writing S0Addr_XCKMSB failed\n");
 	return;
 }
 
@@ -2307,10 +2322,13 @@ void SetExtFFTrig( UINT32 drvno )
 */
 void SetIntFFTrig( UINT32 drvno ) // set internal Trigger
 {
+	WDC_Err("Set trigger to intern\n");
 	BYTE data = 0;
-	ReadByteS0( drvno, &data, S0Addr_XCKMSB );
+	if (!ReadByteS0(drvno, &data, S0Addr_XCKMSB))
+		WDC_Err("Reading S0Addr_XCKMSB failed\n");
 	data &= 0x7F;
-	WriteByteS0( drvno, data, S0Addr_XCKMSB );
+	if (!WriteByteS0(drvno, data, S0Addr_XCKMSB))
+		WDC_Err("Writing S0Addr_XCKMSB failed\n");
 }//SetIntFFTrig
 
 /**
@@ -3670,10 +3688,13 @@ void ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam,
 */
 void abortMeasurement( UINT32 drv )
 {
+	WDC_Err("Abort Measurement\n");
 	StopSTimer( drv );
 	SetIntFFTrig( drv );//disable ext input
-	resetBlockOn( drv );
-	resetMeasureOn( drv );
+	if(!resetBlockOn( drv ))
+		WDC_Err("Resetting block on failed\n");
+	if(!resetMeasureOn( drv ))
+		WDC_Err("Resetting block on failed\n");
 	SetDMAReset( drv );
 	return;
 }
