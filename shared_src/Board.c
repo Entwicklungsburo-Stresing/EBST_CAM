@@ -68,6 +68,7 @@ ULONG tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 ULONG* aPIXEL = tmp_aPIXEL;
 BOOL Running = FALSE;
 UINT32 BOARD_SEL = 1;
+struct ffloopparams params;
 
 // ***********     functions    ********************** 
 
