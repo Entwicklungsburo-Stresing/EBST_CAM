@@ -53,6 +53,7 @@ extern DWORD64 IsrCounter;
 extern ULONG* aPIXEL;
 extern BOOL Running;
 extern UINT32 BOARD_SEL;
+extern struct ffloopparams params;
 
 void ErrMsgBoxOn( void );
 void ErrMsgBoxOff( void ); // switch to suppress error message boxes
