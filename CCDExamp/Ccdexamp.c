@@ -1804,27 +1804,7 @@ LRESULT CALLBACK FullBinning( HWND hDlg,
 		case IDOK:
 			_IsArea = FALSE;
 			_IsROI = 0;
-#ifndef _DLL
-			//reset auto start in case of setting before
-			ResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			//Triger stuff
-			ResetS0Bit( 4, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			ResetS0Bit( 5, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			//Reset partial binning
-			WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
-			//vclks
-			SetupVCLKReg( choosen_board, _FFTLINES, Vfreqini);
-#else
-			//reset auto start in case of setting before
-			DLLResetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			DLLResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			DLLResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			//int partial binning
-			DLLWriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,#
-			DLLSetupVCLK( choosen_board, _FFTLINES, 7 );
-#endif
+			SetupFullBinning( choosen_board, _FFTLINES, Vfreqini);
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
