@@ -2341,6 +2341,7 @@ void SetIntFFTrig( UINT32 drvno ) // set internal Trigger
 */
 BOOL SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq )
 {
+	WDC_Err( "Setup VCLK register. drvno: %u, lines: %u, vfreq: %u\n", drvno, lines, vfreq);
 	BOOL success = WriteLongS0( drvno, lines * 2, S0Addr_VCLKCTRL );// write no of vclks=2*lines
 	success &= WriteByteS0( drvno, vfreq, S0Addr_VCLKFREQ );//  write v freq
 	return success;
