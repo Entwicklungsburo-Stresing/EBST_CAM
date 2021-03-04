@@ -35,8 +35,7 @@ UINT16 direct2dviewer_gamma_white = 0x3FFF;
 UINT16 direct2dviewer_gamma_white = 0xFFFF;
 #endif
 UINT16 direct2dviewer_gamma_black = 0;
-UINT roi[6] = { 15, 42, 15, 42, 10, 6 };
-BOOL keep[5] = { FALSE, TRUE, FALSE, TRUE, FALSE };
+UINT8 roi[6] = { 15, 42, 15, 42, 10, 6 };
 BOOL CALLING_WITH_NOS, CALLING_WITH_NOB = FALSE;
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow )
@@ -170,6 +169,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 					OpenShutter(choosen_board);	//IFC must be hi or EC would not work
 					}
 */
+	InitProDLL();
 	return TRUE;
 }
 
@@ -778,7 +778,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 		case ID_2DVIEW_SHOW:
 		{
-			InitProDLL();
 			DLLStart2dViewer( DRV, cur_nob, 0, _PIXEL, *Nospb );
 			break;
 		}
@@ -1689,36 +1688,9 @@ LRESULT CALLBACK Set3ROI( HWND hDlg,
 
 		case IDOK:
 			_IsArea = FALSE;
-			_IsROI = 5;
-			for (int i = 0; i < ROI; i++)
-			{
-#ifndef _DLL
-				SetupVPB( choosen_board, i + 1, roi[i], keep[i] );
-#else
-				DLLSetupVPB( choosen_board, i + 1, roi[i], keep[i] );
-#endif
-			}
-#ifndef _DLL
-			//Set auto start 
-			SetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			//int partial binning
-			WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
-			WriteLongS0( choosen_board, ROI, 0x2C ); // S0Addr_ARREG = 0x2C,
-			SetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
-			SetupVCLKReg( choosen_board, _FFTLINES, Vfreqini );
-#else
-			//Set auto start 
-			DLLSetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			DLLResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			DLLResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			//int partial binning
-			DLLWriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
-			DLLWriteLongS0( choosen_board, ROI, 0x2C ); // S0Addr_ARREG = 0x2C,
-			DLLSetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
-#endif
-				//allocate Buffer with matching NOS
+			_IsROI = 3;
+			DLLSetupROI( choosen_board, _IsROI, _FFTLINES, 0, roi, Vfreqini );
+			//allocate Buffer with matching NOS
 			*Nospb = ROI;
 			CALLING_WITH_NOS = TRUE;
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
@@ -1797,40 +1769,7 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 		case IDOK:
 			_IsArea = FALSE;
 			_IsROI = 5;
-			/*
-			SetupVPB( choosen_board, 1, 5, FALSE );
-			SetupVPB( choosen_board, 2, 25, TRUE );
-			SetupVPB( choosen_board, 3, 5, FALSE );
-			SetupVPB( choosen_board, 4, 25, TRUE );
-			SetupVPB( choosen_board, 5, 5, FALSE );*/
-			for (int i = 0; i < ROI; i++)
-			{
-#ifndef _DLL
-				SetupVPB( choosen_board, i + 1, roi[i], keep[i] );
-#else
-				DLLSetupVPB( choosen_board, i + 1, roi[i], keep[i] );
-#endif
-			}
-#ifndef _DLL
-			//Set auto start 
-			SetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			ResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			ResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			//init partial binning
-			WriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
-			WriteLongS0( choosen_board, 5, 0x2C ); // S0Addr_ARREG = 0x2C,
-			SetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
-			SetupVCLKReg( choosen_board, _FFTLINES, Vfreqini );
-#else
-			//Set auto start
-			DLLSetS0Bit( 0, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			DLLResetS0Bit( 1, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			DLLResetS0Bit( 2, 0x5, choosen_board ); // S0Addr_CTRLB = 0x5,
-			//int partial binning
-			DLLWriteLongS0( choosen_board, 0, 0x2C ); // S0Addr_ARREG = 0x2C,
-			DLLWriteLongS0( choosen_board, ROI, 0x2C ); // S0Addr_ARREG = 0x2C,
-			DLLSetS0Bit( 15, 0x2C, choosen_board );// S0Addr_ARREG = 0x2C,
-#endif
+			DLLSetupROI( choosen_board, _IsROI, _FFTLINES, 0, roi, Vfreqini );
 			//allocate Buffer with matching NOS
 			*Nospb = ROI;
 			CALLING_WITH_NOS = TRUE;
