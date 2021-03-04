@@ -1856,29 +1856,7 @@ LRESULT CALLBACK AreaMode(HWND hDlg,
 		case IDOK:
 			_IsArea = TRUE;
 			_IsROI = 0;
-#ifndef _DLL
-			//vclks
-			SetupVCLKReg( choosen_board, 1, Vfreqini );
-			//set auto start
-			SetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			/*ResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			ResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			//Triger stuff
-			ResetS0Bit(4, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			ResetS0Bit(5, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			*/
-			//Reset partial binning
-			//WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
-			ResetS0Bit( 15, 0x2C, choosen_board );
-#else
-			//set auto start 
-			DLLSetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			DLLResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			DLLResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-			//int partial binning
-			DLLWriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,#
-			DLLSetupVCLK(choosen_board, _FFTLINES, 7);
-#endif
+			DLLSetupArea( choosen_board, 1, Vfreqini );
 			//allocate Buffer with matching NOS
 			*Nospb = _FFTLINES;
 			CALLING_WITH_NOS = TRUE;
