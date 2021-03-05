@@ -19,7 +19,6 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 
 #include "ESLSCDLL.h"
 
-volatile struct ffloopparams params, params2;
 LVUserEventRef measureStartLVEvent;
 LVUserEventRef measureDoneLVEvent;
 LVUserEventRef blockStartLVEvent;
@@ -654,9 +653,9 @@ DllAccess void DLLErrorMsg( char ErrMsg[20] )
 /**
 \copydoc CalcTrms
 */
-DllAccess void DLLCalcTrms( UINT32 drvno, UINT32 nos, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
+DllAccess void DLLCalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
 {
-	CalcTrms( drvno, nos, TRMS_pixel, CAMpos, mwf, trms );
+	CalcTrms( drvno, firstSample, lastSample, TRMS_pixel, CAMpos, mwf, trms );
 	return;
 }
 
