@@ -4,26 +4,7 @@
 #include <stdint.h>
 #include <string>
 #include <QObject>
-
-enum tor_out
-{
-    xck_tor = 0,
-    rego = 1,
-    von = 2,
-    dma_act = 3,
-    asls = 4,
-    stimer = 5,
-    btimer = 6,
-    isr_act = 7,
-    s1 = 8,
-    s2 = 9,
-    bon = 10,
-    measureon = 11,
-    sdat = 12,
-    bdat = 13,
-    sshut = 14,
-    bshut = 15
-};
+#include "shared_src/enum.h"
 
 class Lsc : public QObject
 {
