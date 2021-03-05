@@ -475,15 +475,44 @@ BOOL InitBoard( UINT32 drvno )
 
 //**************  new for PCIE   *******************************
 
-void InitMeasurement(UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay)
+void InitMeasurement(UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay, UINT32 sensor_type, UINT32 _mshut, UINT32 ExpTime, UINT32 m_TOmodus)
 {
-	SetGlobalVariables(1, camcnt, pixel, xckdelay);
-	if (WDC_IntIsEnabled(hDev[1]))
+	//erroro handling / return type
+
+	SetBoardVars(drvno);
+
+	SetGlobalVariables(drvno, camcnt, pixel, xckdelay);
+	if (WDC_IntIsEnabled(hDev[drvno]))
 	{
 		WDC_Err("cleanup dma\n");
-		CleanupPCIE_DMA(1);
+		CleanupPCIE_DMA(drvno);
 	}
-	SetupPCIE_DMA(1);
+	SetupPCIE_DMA(drvno);
+
+	//set PDA and FFT
+	SetSensorType(drvno, sensor_type);
+	if (sensor_type == FFTsensor) {
+		//SetupFullBinning(drvno, _FFTLINES, Vfreqini);
+	}
+
+	//set mshut
+	if (_mshut) {
+		CloseShutter(drvno);
+		SetSEC(drvno, ExpTime * 100);
+		SetTORReg(drvno, 14); //use SHUT (14)
+	}
+	else {
+		ResetSEC(drvno);
+		SetTORReg(drvno, m_TOmodus);
+	}
+
+	//stop timer
+	StopSTimer(drvno);
+	RSFifo(drvno);
+
+	//init Camera
+	//initCamera();//TODO übergabeparameter und/oder wieter board.c funktion???
+
 	return;
 }
 

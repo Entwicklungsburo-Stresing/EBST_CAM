@@ -34,7 +34,7 @@ BYTE	tTOCNT = 0; // trigger output divider
 int m_TOmodus = 0; //trigger out plug signal
 int m_ECTrigmodus = 1;
 int m_ECmodus = 1;
-int sec = 0, bec = 0, sdat = 0, bdat = 0;
+int Sec = 0, Bec = 0, Sdat = 0, Bdat = 0;
 BOOL m_noPDARS = FALSE;
 double TRMSval_global[2];
 UINT choosen_board = 1;

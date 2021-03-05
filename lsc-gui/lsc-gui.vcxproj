@@ -218,6 +218,7 @@
   <ItemGroup>
     <ClInclude Include="..\shared_src\Board.h" />
     <ClInclude Include="..\shared_src\Board_ll.h" />
+    <ClInclude Include="..\shared_src\enum.h" />
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
     <QtMoc Include="dialogsettings.h">
     </QtMoc>

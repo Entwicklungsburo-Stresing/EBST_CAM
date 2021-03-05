@@ -1,5 +1,6 @@
 #pragma once
 #include <Windows.h>
+#include "shared_src/enum.h""
 
 // GLOBAL.h
 // all globals for measure loop
@@ -8,20 +9,9 @@
 
 #define IDM_EXIT           100
 
-//camera system select
-enum camera_system
-{
-	camera_system_3001 = 1,
-	camera_system_3010 = 2,
-	camera_system_3030 = 3
-};
+
 #define CAMERA_SYSTEM camera_system_3030  // use 1 to 3 like in enum above
-enum adc_mode
-{
-	normal = 0,
-	ramp = 1,
-	custom_pattern = 2
-};
+
 #define ADC_MODE normal
 #define ADC_CUSTOM_PATTERN 0xFFFF
 //options for 3010
@@ -43,22 +33,13 @@ enum adc_mode
 static int YSHIFT = 6;			// 14 bit
 // camera values for calling GETCCD and InitBoard
 
-enum sensor_type
-{
-	PDAsensor = 0,		//set RS after read; for HA S39xx
-	FFTsensor = 1,		//set vclk generator; for HA S703x
-};
+
 #define SENSOR_TYPE PDAsensor
 #define _FFTLINES 64 		// no of vertical lines of FFT sensors, usually 64
 // =0 if not FFT
 #define Vfreqini 7		//vclk freq for FFTs with FIFO in divider of12MHz (0..15)
 						//=4 for highest speed with 7030-0906
-enum trigger_mode
-{
-	xck = 0,
-	exttrig = 1,
-	dat = 2
-};
+
 #define TRIGGER_MODE xck
 #define XCKDELAY 0
 // Display data
@@ -76,7 +57,7 @@ UINT16 DisplData[2][1200 * CAMCNT];//array for display for 2 cams parallel
 
 extern int ExpTime; //in µs
 extern int RepTime; //in ms
-extern int sec, bec, sdat, bdat;
+extern int Sec, Bec, Sdat, Bdat;
 extern BOOL DISP2;
 extern BOOL contimess_run_once;
 extern BOOL _IsArea; //FALSE is just the init val
