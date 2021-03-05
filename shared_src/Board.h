@@ -55,6 +55,7 @@ extern DWORD64 IsrCounter;
 extern ULONG* aPIXEL;
 extern BOOL Running;
 extern UINT32 BOARD_SEL;
+extern struct ffloopparams params;
 
 void ErrMsgBoxOn( void );
 void ErrMsgBoxOff( void ); // switch to suppress error message boxes
@@ -159,7 +160,7 @@ void SendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 fea
 void DAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output ); //set output of DAC (PCB 2189-7)
 void FreeMemInfo( UINT64 *pmemory_all, UINT64 *pmemory_free );
 void GetRmsVal( UINT32 nos, UINT16 *TRMSVals, double *mwf, double *trms );
-void CalcTrms( UINT32 drvno, UINT32 nos, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );
+void CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );
 UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM );
 void* GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM );
 UINT8 WaitforTelapsed( LONGLONG musec );

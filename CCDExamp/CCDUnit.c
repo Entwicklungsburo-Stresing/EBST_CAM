@@ -265,7 +265,6 @@ void startMess(void *dummy)
 		DLLReadFFLoop(choosen_board, ExpTime, EXTTRIGFLAG, 0, 0, choosen_board);
 #else
 	IsrCounter = 0;
-	struct ffloopparams params;
 	if (both_boards)	params.board_sel = 3;
 	else				params.board_sel = choosen_board;
 	// start read loop
@@ -282,19 +281,6 @@ void startMess(void *dummy)
 		RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
 		if (GetAsyncKeyState( VK_ESCAPE )) break;
 	}
-	//TODO: This is strange. First IsrCounter counts up to ISRNumber and then the program is caught in this while loop.
-	/*if (cont_mode)
-		while (TRUE)
-		{
-			UpdateDisplay();
-			if (GetAsyncKeyState( VK_ESCAPE ))
-				break;
-			if (GetAsyncKeyState( VK_SPACE ))
-				break;
-			Sleep( 10 );
-		}*/
-		_beginthreadex( 0, 0, &UpdateDisplayThread, 0, 0, 0 );
-
 #endif
 	return;
 }
