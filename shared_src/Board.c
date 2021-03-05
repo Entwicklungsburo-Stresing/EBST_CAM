@@ -68,6 +68,7 @@ ULONG tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 ULONG* aPIXEL = tmp_aPIXEL;
 BOOL Running = FALSE;
 UINT32 BOARD_SEL = 1;
+struct ffloopparams params;
 
 // ***********     functions    ********************** 
 
@@ -295,6 +296,7 @@ void AboutS0( UINT32 drvno )
 */
 BOOL CCDDrvInit( void )
 {
+	WDC_Err("start driver init\n");
 	//WDC_Err(drvno);
 	//depends on os, how big a buffer can be
 	BOOL fResult = FALSE;
@@ -329,6 +331,7 @@ BOOL CCDDrvInit( void )
 	}*/
 
 	/* Set WDC library's debug options (default: level TRACE, output to Debug Monitor) */
+	WDC_Err("set debug options\n");
 #if defined(_DEBUG)		
 	dwStatus = WDC_SetDebugOptions( WDC_DBG_DEFAULT, NULL );
 #else				
@@ -347,7 +350,7 @@ BOOL CCDDrvInit( void )
 	}
 	//ErrorMsg("CCDDrvInit start of %x \n", drvno);
 	/* Open a handle to the driver and initialize the WDC library */
-
+	WDC_Err("open WDC\n");
 ***REMOVED***	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ErrLog( "Failed to initialize the WDC library. Error 0x%lx - %s\n",
@@ -362,6 +365,7 @@ BOOL CCDDrvInit( void )
 
 
 	BZERO( scanResult );
+	WDC_Err("scan PCIe devices\n");
 	dwStatus = WDC_PciScanDevices( LSCPCIEJ_DEFAULT_VENDOR_ID, LSCPCIEJ_DEFAULT_DEVICE_ID, &scanResult ); //VendorID, DeviceID
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
@@ -375,9 +379,9 @@ BOOL CCDDrvInit( void )
 		return FALSE;
 	}
 	number_of_boards = (UINT8) scanResult.dwNumDevices;
-
+	WDC_Err("init HR counter\n");
 	TPS = InitHRCounter();//for ticks function
-
+	WDC_Err("driver init done\n");
 	return TRUE;	  // no Error, driver found
 
 }; //CCDDrvInit
@@ -389,7 +393,7 @@ BOOL CCDDrvInit( void )
 */
 void CCDDrvExit( UINT32 drvno )
 {
-	WDC_Err( "drvexit\n" );
+	WDC_Err( "Driver exit, drv: %u\n", drvno);
 	if (WDC_IntIsEnabled( hDev[drvno] ))
 	{
 		WDC_Err( "cleanup dma\n" );
@@ -1099,6 +1103,7 @@ int GetNumofProcessors()
 */
 BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay )
 {
+	WDC_Err("Setting global variables: drv: %u, camcnt: %u, pixel: %u, xckdelay: %u\n", drvno, camcnt, pixel, xckdelay);
 	/*Pixelsize with matching TLP Count (TLPC).
 	Pixelsize = TLPS * TLPC - 1*TLPS
 	(TLPS TLP size = 64)
@@ -1170,8 +1175,11 @@ BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckde
 		NO_TLPS = 0x81;//82
 		break;
 	default:
-		if(!MANUAL_OVERRIDE_TLP)
+		if (!MANUAL_OVERRIDE_TLP)
+		{
+			WDC_Err("Could not choose TLP size, no valid pixel count.\n");
 			return FALSE;
+		}
 	}
 	if (LEGACY_202_14_TLPCNT) NO_TLPS = NO_TLPS + 1;
 	aPIXEL[drvno] = pixel;
@@ -1793,13 +1801,15 @@ void initReadFFLoop( UINT32 drv, UINT32 * Blocks )
 	//reset intr copy buf function
 	SubBufCounter[drv] = 0;
 	pBigBufIndex[drv] = pBigBufBase[drv]; // reset buffer index to base we got from InitDMA
-	WDC_Err( "RESET BIGBUF to%x\n", pBigBufIndex[drv] );
+	WDC_Err( "RESET BIGBUF to %x\n", pBigBufIndex[drv] );
 	IsrCounter = 0;
 	SetExtFFTrig( drv );
-	ReadLongS0( drv, &val, S0Addr_NOB ); //get the needed Blocks
+	if(!ReadLongS0( drv, &val, S0Addr_NOB ))//get the needed Blocks
+		WDC_Err("Reading blocks failed. drv: %u\n", drv);
 	*Blocks = val;
 	//set MeasureOn Bit
-	setMeasureOn( drv );
+	if(!setMeasureOn( drv ))
+		WDC_Err("Set measure on failed. drv: %u\n", drv);
 	return;
 }
 
@@ -1864,7 +1874,7 @@ int checkForPressedKeys( )
 void ReadFFLoop( UINT32 board_sel )
 {
 	ULONG	Blocks;
-
+	WDC_Err("Start ReadFFLoop with board_sel: %u\n", board_sel);
 	if (board_sel == 1 || board_sel == 3)
 		initReadFFLoop( 1, &Blocks );
 	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
@@ -1879,6 +1889,7 @@ void ReadFFLoop( UINT32 board_sel )
 			abortMeasurement( board_sel );
 			return;
 		}
+		WDC_Err("Block triggered\n");
 		if (board_sel == 1 || board_sel == 3)
 		{
 			countBlocksByHardware( 1 );
@@ -2044,6 +2055,7 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 	volatile struct ffloopparams *par;
 	par = parg;
 	UINT32 board_sel = par->board_sel;
+	WDC_Err("Start ReadFFLoopThread, board_sel: %u\n", board_sel);
 	BOARD_SEL = board_sel;
 	//local declarations
 	SetPriority( READTHREADPriority );  //run ReadFFLoop in higher priority
@@ -2083,6 +2095,7 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 	}
 	Running = FALSE;
 	//_endthread();//thread
+	WDC_Err("End ReadFFLoopThread\n");
 	return 1;//endthreadex is called automatically when this returns
 }
 
@@ -2157,10 +2170,13 @@ void StartSTimer( UINT32 drvno )
 // clear Bit30 of XCK-Reg: 0= timer off
 void StopSTimer( UINT32 drvno )
 {
+	WDC_Err("Stop S Timer, drv: %u\n", drvno);
 	BYTE data = 0;
-	ReadByteS0( drvno, &data, S0Addr_XCKMSB );
+	if (!ReadByteS0( drvno, &data, S0Addr_XCKMSB ))
+		WDC_Err("Reading S0Addr_XCKMSB failed\n");
 	data &= 0xBF;
-	WriteByteS0( drvno, data, S0Addr_XCKMSB );
+	if (!WriteByteS0( drvno, data, S0Addr_XCKMSB ))
+		WDC_Err("Writing S0Addr_XCKMSB failed\n");
 	return;
 }
 
@@ -2319,10 +2335,13 @@ void SetExtFFTrig( UINT32 drvno )
 */
 void SetIntFFTrig( UINT32 drvno ) // set internal Trigger
 {
+	WDC_Err("Set trigger to intern\n");
 	BYTE data = 0;
-	ReadByteS0( drvno, &data, S0Addr_XCKMSB );
+	if (!ReadByteS0(drvno, &data, S0Addr_XCKMSB))
+		WDC_Err("Reading S0Addr_XCKMSB failed\n");
 	data &= 0x7F;
-	WriteByteS0( drvno, data, S0Addr_XCKMSB );
+	if (!WriteByteS0(drvno, data, S0Addr_XCKMSB))
+		WDC_Err("Writing S0Addr_XCKMSB failed\n");
 }//SetIntFFTrig
 
 /**
@@ -2334,6 +2353,7 @@ void SetIntFFTrig( UINT32 drvno ) // set internal Trigger
 */
 BOOL SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq )
 {
+	WDC_Err( "Setup VCLK register. drvno: %u, lines: %u, vfreq: %u\n", drvno, lines, vfreq);
 	BOOL success = WriteLongS0( drvno, lines * 2, S0Addr_VCLKCTRL );// write no of vclks=2*lines
 	success &= WriteByteS0( drvno, vfreq, S0Addr_VCLKFREQ );//  write v freq
 	return success;
@@ -2892,31 +2912,39 @@ void GetRmsVal( UINT32 nos, UINT16 *TRMSVals, double *mwf, double *trms )
 }//GetRmsVal
 
 /**
-\brief Online calc TRMS noise val of pix. First 10 scans are omitted. May break when nos is smaller than 10.
+\brief Online calc TRMS noise val of pix.
+
+Calculates RMS of TRMS_pixel in the range of samples from firstSample to lastSample. Only calculates RMS from one block.
 \param drvno indentifier of PCIe card
-\param nos number of samples
-\param TRMS_pixel pixel for calculating noise (0...1087)
-\param CAMpos index for camcount (0...CAMCNT)
+\param firstSample start sample to calculate RMS. 0...(nos-2). Typical value: 10, to skip overexposed first samples
+\param lastSample last sample to calculate RMS. firstSample+1...(nos-1).
+\param TRMS_pixel pixel for calculating noise (0...(PIXEL-1))
+\param CAMpos index for camcount (0...(CAMCNT-1))
 \param mwf pointer for mean value
 \param trms pointer for noise
 \return none
  */
-void CalcTrms( UINT32 drvno, UINT32 nos, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
+void CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
 {
-	UINT16 *TRMS_pixels;
-	const int offset = 10;
-
-	TRMS_pixels = calloc( nos - offset, sizeof( UINT16 ) );
-
-	//storing the values of one pix for the rms analysis
-	for (int scan = 0; scan < nos-offset; scan++)
+	if (firstSample >= lastSample || lastSample > *Nospb)
 	{
-		int TRMSpix_of_current_scan = GetIndexOfPixel( drvno, TRMS_pixel, scan+offset, 0, CAMpos );
+		//error: firstSample must be smaller than lastSample
+		WDC_Err("Calc Trms failed. lastSample must be greater than firstSample and both in bounderies of nos, drvno: %u, firstSample: %u, lastSample: %u, TRMS_pixel: %u, CAMpos: %u, Nospb: %u\n",drvno, firstSample, lastSample, TRMS_pixel, CAMpos, *Nospb);
+		*mwf = -1;
+		*trms = -1;
+		return;
+	}
+	UINT32 samples = lastSample - firstSample;
+	UINT16 *TRMS_pixels;
+	TRMS_pixels = calloc( samples, sizeof( UINT16 ) );
+	//storing the values of one pix for the rms analysis
+	for (int scan = 0; scan < samples; scan++)
+	{
+		UINT32 TRMSpix_of_current_scan = GetIndexOfPixel( drvno, TRMS_pixel, scan+firstSample, 0, CAMpos );
 		TRMS_pixels[scan] = pBigBufBase[drvno][TRMSpix_of_current_scan];
 	}
-
 	//rms analysis
-	GetRmsVal( nos-offset, TRMS_pixels, mwf, trms );
+	GetRmsVal( samples, TRMS_pixels, mwf, trms );
 	return;
 }//CalcTrms
 
@@ -3448,8 +3476,8 @@ BOOL SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 */
 BOOL SetPartialBinning( UINT32 drvno, UINT16 number_of_regions )
 {
-	BOOL success = SetS0Bit( 15, S0Addr_ARREG, drvno );//this turns ARREG on and therefore partial binning too
-	success &= WriteLongS0( drvno, number_of_regions, S0Addr_ARREG );
+	BOOL success = WriteLongS0( drvno, number_of_regions, S0Addr_ARREG );
+	success &= SetS0Bit( 15, S0Addr_ARREG, drvno );//this turns ARREG on and therefore partial binning too
 	return success;
 }
 
@@ -3682,10 +3710,13 @@ void ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam,
 */
 void abortMeasurement( UINT32 drv )
 {
+	WDC_Err("Abort Measurement\n");
 	StopSTimer( drv );
 	SetIntFFTrig( drv );//disable ext input
-	resetBlockOn( drv );
-	resetMeasureOn( drv );
+	if(!resetBlockOn( drv ))
+		WDC_Err("Resetting block on failed\n");
+	if(!resetMeasureOn( drv ))
+		WDC_Err("Resetting block on failed\n");
 	SetDMAReset( drv );
 	return;
 }

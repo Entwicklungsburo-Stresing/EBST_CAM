@@ -1,3 +1,6 @@
+3.16.4
+ - Function SetPartialBinning() must call WriteLongS0() before SetS0Bit()
+
 3.16.1
 - with event on MeasureOn and BlockOn
 - with delay stage counter
