@@ -382,6 +382,7 @@ BOOL CCDDrvInit( void )
 	WDC_Err("init HR counter\n");
 	TPS = InitHRCounter();//for ticks function
 	WDC_Err("driver init done\n");
+	InitProDLL();
 	return TRUE;	  // no Error, driver found
 
 }; //CCDDrvInit
@@ -474,11 +475,28 @@ BOOL InitBoard( UINT32 drvno )
 };  // InitBoard
 
 //**************  new for PCIE   *******************************
-
-void InitMeasurement(UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay, UINT32 sensor_type, UINT32 _mshut, UINT32 ExpTime, UINT32 m_TOmodus)
+void initCamera(UINT32 drvno,  UINT8 camera_system, UINT16 pixel, UINT16 trigger_mode, UINT16 sensor_type, UINT8 ADC_Mode, UINT16 ADC_custom_pettern, UINT16 led_on, UINT16 gain_high, UINT8 gain)
 {
-	//erroro handling / return type
+	switch (camera_system)
+	{
+	case camera_system_3001:
+		InitCamera3001(drvno, pixel, trigger_mode, sensor_type, 0);
+		break;
+	case camera_system_3010:
+		InitCamera3010(drvno, pixel, trigger_mode, ADC_Mode, ADC_custom_pettern, led_on, gain_high);
+		break;
+	case camera_system_3030:
+		InitCamera3030(drvno, ADC_Mode, ADC_custom_pettern, gain);
+		//TODO use DAC...maybe extra function or sendflcam_dac
+		break;
+	}
+}
 
+void InitMeasurement(UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay, UINT32 sensor_type, UINT32 _mshut, UINT32 ExpTime, UINT32 m_TOmodus, UINT32 FFTLines, UINT8 Vfreq, UINT32 nos, UINT32 nob, UINT8 camera_system, UINT16 trigger_mode, UINT8 ADC_Mode, UINT16 ADC_custom_pettern, UINT16 led_on, UINT16 gain_high, UINT8 gain)
+{
+	//TODO: error handling / return type
+
+	ClearAllUserRegs(drvno);
 	SetBoardVars(drvno);
 
 	SetGlobalVariables(drvno, camcnt, pixel, xckdelay);
@@ -491,10 +509,26 @@ void InitMeasurement(UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay,
 
 	//set PDA and FFT
 	SetSensorType(drvno, sensor_type);
+	ResetPartialBinning(drvno);
 	if (sensor_type == FFTsensor) {
-		//SetupFullBinning(drvno, _FFTLINES, Vfreqini);
+		switch (FFTMode) {
+			case full_binning:
+				SetupFullBinning(drvno, FFTLines, Vfreq);
+				break;
+			case partial_binning:
+				DLLSetupROI( drvno,  number_of_regions,  lines,  keep_first, UINT8 * region_size,  vfreq)
+				break;
+			case area_mode:
+				DLLSetupArea( drvno,  lines_binning,  vfreq);
+				break;
+
+		}
 	}
 
+	//allocate Buffer
+	SetMeasurementParameters(drvno, nos, nob);
+
+	CloseShutter(drvno); //set cooling  off
 	//set mshut
 	if (_mshut) {
 		CloseShutter(drvno);
@@ -506,13 +540,48 @@ void InitMeasurement(UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay,
 		SetTORReg(drvno, m_TOmodus);
 	}
 
+	//start like in labview
+	if (TrigMod == 0)	HighSlope(drvno);
+	if (TrigMod == 1)	LowSlope(drvno);
+	if (TrigMod == 2)	BothSlope(drvno);
+
+	SetTORReg(drvno, TOR_fkt);
+
+	/*sti_mode enum:
+	- 0: I
+	- 1: S1
+	- 2: S2
+	- 3: unused
+	- 4: S Timer
+	- 5: ASL
+	*/
+	SetSTI(drvno, sti_mode);
+	/*bit_mode enum:
+		- 0: I
+	- 1: S1
+	- 2: S2
+	- 3: S1&s2
+	- 4: BTIMER*/
+	SetBTI(drvno, bti_mode);
+
+	SetSTimer(drvno, stime_in_microsec);
+	SetBTimer(drvno, btime_in_microsec);
+
+	if (GPX) InitGPX(drvno, gpx_offset);
+	
+
 	//stop timer
 	StopSTimer(drvno);
 	RSFifo(drvno);
 
 	//init Camera
-	//initCamera();//TODO übergabeparameter und/oder wieter board.c funktion???
+	initCamera( drvno,  camera_system,  pixel,  trigger_mode,  sensor_type,  ADC_Mode,  ADC_custom_pettern,  led_on,  gain_high,  gain);
+	//if IR-Sensor
+	SendFLCAM(drvno, maddr_cam, 0, isIRSensor);
+	//for coooled Cam
+	SetTemp(ddrvno, Temp_level);
 
+	//TODO set cont FF mode with DLL style(CONTFFLOOP = activate;//0 or 1;CONTPAUSE = pause;) or CCDExamp style(check it out)
 	return;
 }
 

@@ -23,24 +23,24 @@ extern "C" {
 #define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
 #define INTR_EN TRUE		// enables INTR
 
-	struct ffloopparams
-	{
-		UINT32 board_sel;
-		UINT32 exptus;
-		UINT8 exttrig;
-		UINT8 blocktrigger;
-		UINT8 btrig_ch;
-	};
+struct ffloopparams
+{
+	UINT32 board_sel;
+	UINT32 exptus;
+	UINT8 exttrig;
+	UINT8 blocktrigger;
+	UINT8 btrig_ch;
+};
 
-	struct global_vars
-	{
-		USHORT** pBigBufBase;
-		WDC_DEVICE_HANDLE* hDev;
-		//PWDC_DEVICE* pDev;
-		ULONG* aPIXEL;
-		ULONG* aCAMCNT;
-		int* Nospb;
-	};
+struct global_vars
+{
+	USHORT** pBigBufBase;
+	WDC_DEVICE_HANDLE* hDev;
+	//PWDC_DEVICE* pDev;
+	ULONG* aPIXEL;
+	ULONG* aCAMCNT;
+	int* Nospb;
+};
 
 extern int newDLL;
 extern USHORT** pBigBufBase;
