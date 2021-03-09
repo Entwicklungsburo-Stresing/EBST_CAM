@@ -20,25 +20,6 @@
 #include <linux/dma-mapping.h>
 #include <linux/pci.h>
 
-void set_bits_s0_byte(struct dev_struct *dev, u8 address, u8 bits, u8 mask)
-{
-  u8 val = ioread8(dev->mapped_pci_base + 0x80 + address);
-  iowrite8((val & ~mask) | (bits & mask), dev->mapped_pci_base + 0x80 + address);
-}
-
-void set_bits_s0_word(struct dev_struct *dev, u8 address, u16 bits, u16 mask)
-{
-  u16 val = ioread16(dev->mapped_pci_base + 0x80 + address);
-  iowrite16((val & ~mask) | (bits & mask),
-            dev->mapped_pci_base + 0x80 + address);
-}
-
-void set_bits_s0_dword(struct dev_struct *dev, u8 address, u32 bits, u32 mask)
-{
-  u32 val = ioread32(dev->mapped_pci_base + 0x80 + address);
-  iowrite32((val & ~mask) | (bits & mask),
-            dev->mapped_pci_base + 0x80 + address);
-}
 
 int dma_init(struct dev_struct *dev) {
   struct device *pdev = dev->status & HARDWARE_PRESENT ? &dev->pci_dev->dev : 0;
@@ -55,12 +36,11 @@ int dma_init(struct dev_struct *dev) {
   /* the size of the dma buffer is taken one page size larger than necessary
      to ensure that the used buffer starts at a page boundary (needed for
      mmap export to userland) */
-  dev->control->buffer_size
+  dev->control->dma_buf_size
     = dev->control->number_of_cameras * dev->control->number_of_pixels
-    * dev->control->number_of_scans * sizeof(u16)
-    * dev->control->number_of_blocks;
-  num_dma_pages = dev->control->buffer_size >> PAGE_SHIFT;
-  if (dev->control->buffer_size > num_dma_pages << PAGE_SHIFT)
+    * dev->control->dma_num_scans * sizeof(u16);
+  num_dma_pages = dev->control->dma_buf_size >> PAGE_SHIFT;
+  if (dev->control->dma_buf_size > num_dma_pages << PAGE_SHIFT)
     num_dma_pages++;
 
   dev->dma_mem_size = num_dma_pages << PAGE_SHIFT;
@@ -86,7 +66,7 @@ int dma_init(struct dev_struct *dev) {
     return -ENOMEM;
   }
 
-  dev->control->buffer_size = dev->dma_mem_size;
+  dev->control->dma_buf_size = dev->dma_mem_size;
   dev->bytes_per_interrupt = 500;
   dma_start(dev);
   
@@ -131,7 +111,7 @@ static enum irqreturn isr(int irqn, void *dev_id)
   // advance buffer pointer
   dev->control->write_pos
     = (dev->control->write_pos + dev->bytes_per_interrupt)
-    % dev->control->buffer_size;
+    % dev->control->dma_buf_size;
 
   // check for buffer overflow
   if (old_write_pos < dev->control->write_pos) {
@@ -162,9 +142,6 @@ int dma_start(struct dev_struct *dev)
   unsigned long irqflags = IRQF_SHARED;
   void *dev_id = dev;
 
-  /* >>>> any sort of dma start-up code needed before activating the interrupt
-          goes here
-     <<<< */
   printk(KERN_ERR NAME": requesting irq line %i.",dev->irq_line);
   result = request_irq(dev->irq_line, isr, irqflags, "lscpcie", dev_id);
   if (result) {

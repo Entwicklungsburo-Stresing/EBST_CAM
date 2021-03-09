@@ -11,6 +11,8 @@
 
 
 #include "registers.h"
+#include "device.h"
+#include <linux/io.h>
 
 
 const char reg_names[][16] = {
@@ -122,3 +124,23 @@ const char dma_reg_names[][16] = {
   "DMISCOUNT",
   ""
 };
+
+void set_bits_s0_byte(struct dev_struct *dev, u8 address, u8 bits, u8 mask)
+{
+  u8 val = ioread8(dev->mapped_pci_base + 0x80 + address);
+  iowrite8((val & ~mask) | (bits & mask), dev->mapped_pci_base + 0x80 + address);
+}
+
+void set_bits_s0_word(struct dev_struct *dev, u8 address, u16 bits, u16 mask)
+{
+  u16 val = ioread16(dev->mapped_pci_base + 0x80 + address);
+  iowrite16((val & ~mask) | (bits & mask),
+            dev->mapped_pci_base + 0x80 + address);
+}
+
+void set_bits_s0_dword(struct dev_struct *dev, u8 address, u32 bits, u32 mask)
+{
+  u32 val = ioread32(dev->mapped_pci_base + 0x80 + address);
+  iowrite32((val & ~mask) | (bits & mask),
+            dev->mapped_pci_base + 0x80 + address);
+}

@@ -24,13 +24,11 @@ extern int debug;
 
 #define DEFAULT_NUMBER_OF_PIXELS    576
 #define DEFAULT_NUMBER_OF_CAMERAS   1
-#define DEFAULT_NUM_SCANS           1000
-#define DEFAULT_NUM_BLOCKS          2
+#define DEFAULT_DMA_NUM_SCANS       500
 
 extern int num_pixels[MAX_BOARDS];
 extern int num_cameras[MAX_BOARDS];
-extern int num_scans[MAX_BOARDS];
-extern int num_blocks[MAX_BOARDS];
+extern int dma_num_scans[MAX_BOARDS];
 
 extern struct class *lscpcie_class;
 
