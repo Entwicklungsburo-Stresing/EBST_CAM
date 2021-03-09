@@ -62,13 +62,15 @@ int device_init(struct dev_struct *dev, int minor)
   PDEBUG(D_MODULE, "adding cdev for %d,%d\n", MAJOR(dev->device),
 	 MINOR(dev->device));
   result = cdev_add(&dev->cdev, dev->device, 1);
-  if (result < 0) device_clean_up(dev);
+  if (result < 0)
+    goto error;
+
   dev->status |= DEVICE_CREATED;
 
   PDEBUG(D_MODULE, "creating device %d\n", minor);
   device
     = device_create(lscpcie_class, NULL, dev->device, NULL, "%s%d", NAME, minor);
-  if (IS_ERR(device)) { //-->> no! do proper cleanup!! <<--
+  if (IS_ERR(device)) {
     printk(KERN_ERR "creation of device %s%d failed\n", NAME, minor);
     result = PTR_ERR(device);
     goto error;
@@ -88,7 +90,8 @@ int device_init(struct dev_struct *dev, int minor)
   dev->control = (lscpcie_control_t *) get_zeroed_page(GFP_KERNEL);
   if (!dev->control) {
     printk(KERN_ERR NAME": failed to allocate memory for control block");
-    return -ENOMEM;
+    result = -ENOMEM;
+    goto error;
   }
 
   /* take initial values from module parameters where present */
@@ -102,14 +105,14 @@ int device_init(struct dev_struct *dev, int minor)
   else
     dev->control->number_of_cameras = DEFAULT_NUMBER_OF_CAMERAS;
 
-  if (num_scans[dev_no] > 0) dev->control->number_of_scans = num_scans[dev_no];
-  else dev->control->number_of_scans = DEFAULT_NUM_SCANS;
-
-  if (num_blocks[dev_no] > 0) dev->control->number_of_blocks = num_blocks[dev_no];
-  else dev->control->number_of_blocks = DEFAULT_NUM_BLOCKS;
+  if (dma_num_scans[dev_no] > 0)
+    dev->control->dma_num_scans = dma_num_scans[dev_no];
+  else
+    dev->control->dma_num_scans = DEFAULT_DMA_NUM_SCANS;
 
   result = dma_init(dev);
-  if (result < 0) goto error;
+  if (result < 0)
+    goto error;
 
   return result;
 

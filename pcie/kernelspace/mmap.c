@@ -58,7 +58,7 @@ int mmap_register_remap_mmap(struct file *filp, struct vm_area_struct *vma)
 
     if (remap_pfn_range(vma, vma->vm_start,
 			virt_to_phys((void*)dev->dma_virtual_mem) >> PAGE_SHIFT,
-                        dev->control->buffer_size, vma->vm_page_prot))
+                        dev->control->dma_buf_size, vma->vm_page_prot))
       return -EAGAIN;
     break;
 

@@ -15,6 +15,7 @@
 #ifdef __user_space__
 # include <stdint.h>
 #endif
+
 #include <linux/types.h>
 
 //PCIe Addresses
@@ -376,17 +377,25 @@ typedef struct {
 typedef struct {
   uconst uint32_t number_of_pixels;
   uconst uint32_t number_of_cameras;
-  uconst uint32_t number_of_scans;
-  uconst uint32_t buffer_size;
+  uconst uint32_t dma_num_scans;
+  uconst uint32_t dma_buf_size;
   uconst uint64_t dma_physical_start;
   uconst uint32_t io_size;
   volatile int32_t write_pos;
   int32_t read_pos;
-  uint32_t number_of_blocks;
 } lscpcie_control_t;
 
 extern const char reg_names[][16];
 extern const char reg_names_long[][16];
 extern const char dma_reg_names[][16];
+
+#ifndef __user_space__
+
+struct dev_struct;
+void set_bits_s0_byte(struct dev_struct *dev, u8 address, u8 bits, u8 mask);
+void set_bits_s0_word(struct dev_struct *dev, u8 address, u16 bits, u16 mask);
+void set_bits_s0_dword(struct dev_struct *dev, u8 address, u32 bits, u32 mask);
+
+#endif /* __user_space__ */
 
 #endif /* _registers_h_ */
