@@ -36,7 +36,8 @@ int check_and_fetch_data(dev_descr_t *device_descriptor, uint8_t *camera_data,
   len = device_descriptor->control->dma_buf_size
     - device_descriptor->control->read_pos;
   memcpy(camera_data + bytes_read,
-         device_descriptor->mapped_buffer + device_descriptor->control->read_pos,
+         device_descriptor->mapped_buffer
+	 + device_descriptor->control->read_pos,
          len);
   bytes_read += len;
 
@@ -51,7 +52,7 @@ int main(int argc, char ** argv)
 {
   if (argc != 3) {
     fprintf(stderr,
-           "usage: test-readout-polling <number of scans> <number of blocks>\n");
+          "usage: test-readout-polling <number of scans> <number of blocks>\n");
     return 1;
   }
 
@@ -103,7 +104,7 @@ int main(int argc, char ** argv)
     = lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_TRIGGER_IN,
                          trigger_mode);
   if (result < 0) return result;
-  result = lscpcie_setup_dma(0);
+  result = lscpcie_setup_dma(0, n_scans, n_blocks);
   if (result) {
     fprintf(stderr, "error %d when setting up dma\n", result);
     goto finish;
