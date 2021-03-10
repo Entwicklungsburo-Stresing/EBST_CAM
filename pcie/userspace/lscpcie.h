@@ -54,7 +54,7 @@ typedef enum { xck = 0, exttrig = 1, dat = 2 } trigger_mode_t;
 // camera operations
 int lscpcie_driver_init(void);
 int lscpcie_open(uint dev, uint16_t options);
-int lscpcie_setup_dma(uint dev);
+int lscpcie_setup_dma(uint dev, uint n_scans, uint n_blocks);
 void lscpcie_close(uint dev);
 int lscpcie_start(uint dev);
 int lscpcie_stop(uint dev);

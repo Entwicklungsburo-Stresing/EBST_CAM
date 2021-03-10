@@ -218,7 +218,7 @@ int lscpcie_open(uint dev, uint16_t options) {
   }
 
   dev_descr[dev].mapped_buffer
-    = mmap(NULL, dev_descr[dev].control->buffer_size, PROT_READ | PROT_WRITE,
+    = mmap(NULL, dev_descr[dev].control->dma_buf_size, PROT_READ | PROT_WRITE,
            MAP_SHARED, handle, 2 * page_size);
   if (dev_descr[dev].mapped_buffer == MAP_FAILED) return -1;
 
@@ -374,9 +374,9 @@ int init_cam_control(uint dev, trigger_mode_t trigger_mode, uint16_t options) {
   return result;
 }
 
-/*******************************************************************************/
-/*                                    dma                                      */
-/*******************************************************************************/
+/******************************************************************************/
+/*                                   dma                                      */
+/******************************************************************************/
 
 int set_dma_address_in_tlp(uint dev) {
   int result;
@@ -430,21 +430,31 @@ int set_dma_address_in_tlp(uint dev) {
   return 0;
 }
 
-int set_dma_buffer_registers(uint dev) {
+int set_dma_buffer_registers(uint dev, uint number_of_scans,
+			     uint number_of_blocks) {
   // DMABufSizeInScans - use 1 block
+  /* was >>>>
   dev_descr[dev].s0->DMA_BUF_SIZE_IN_SCANS
-    = dev_descr[dev].control->number_of_scans * dev_descr[dev].control->number_of_blocks * dev_descr[dev].control->number_of_cameras;
-
+    = dev_descr[dev].control->number_of_scans
+    * dev_descr[dev].control->number_of_blocks
+    * dev_descr[dev].control->number_of_cameras;
+  was <<<< */
+  dev_descr[dev].s0->DMA_BUF_SIZE_IN_SCANS
+    = dev_descr[dev].control->dma_num_scans;
+  /* -> could be set at driver initialisation, is a module parameter */
+  
   //scans per intr must be 2x per DMA_BUFSIZEINSCANS to copy hi/lo part
   //aCAMCNT: double the INTR if 2 cams
-  dev_descr[dev].s0->DMAS_PER_INTERRUPT
+  dev_descr[dev].s0->DMAS_PER_INTERRUPT = 4;
+  /* was >>>>
     = dev_descr[dev].control->number_of_scans * dev_descr[dev].control->number_of_blocks *
     dev_descr[dev].control->number_of_cameras
     / INTERRUPTS_PER_SCAN;
+    was <<<< */
 
+  dev_descr[dev].s0->NUMBER_OF_SCANS = number_of_scans;
+  dev_descr[dev].s0->NUMBER_OF_BLOCKS = number_of_blocks;
   //>>>> could be done in driver at module load
-  dev_descr[dev].s0->NUMBER_OF_SCANS = dev_descr[dev].control->number_of_scans;
-  dev_descr[dev].s0->NUMBER_OF_BLOCKS = dev_descr[dev].control->number_of_blocks;
   dev_descr[dev].s0->CAM_CNT = dev_descr[dev].control->number_of_cameras;
   //<<<< could be done in driver at module load
 
@@ -468,13 +478,13 @@ uint32_t get_scan_index(uint dev) {
   return dev_descr[dev].s0->SCAN_INDEX;
 }
 
-int lscpcie_setup_dma(uint dev) {
+int lscpcie_setup_dma(uint dev, uint n_scans, uint n_blocks) {
   int result;
 
   // note: the dma buffer has to be allocated in kernel space
   if ((result = set_dma_address_in_tlp(dev)) < 0) return result;
 
-  if ((result = set_dma_buffer_registers(dev)) < 0) return 0;
+  if ((result = set_dma_buffer_registers(dev, n_scans, n_blocks)) < 0) return 0;
 
   // DREQ: every XCK h->l starts DMA by hardware
   //set hardware start des dma  via DREQ withe data = 0x4000000
@@ -499,9 +509,9 @@ void start_pcie_dma_write(uint dev) {
 // therefore no equivalent to clean-up pcie dma
 
 
-/*******************************************************************************/
-/*                              register access                                */
-/*******************************************************************************/
+/******************************************************************************/
+/*                              register access                               */
+/******************************************************************************/
 
 int lscpcie_read_config32(uint dev, uint16_t address, uint32_t *val) {
   int result;
