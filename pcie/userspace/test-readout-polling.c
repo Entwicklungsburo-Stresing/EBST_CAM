@@ -16,7 +16,39 @@
 
 #define memory_barrier() asm volatile ("" : : : "memory")
 
-int main(int argc, char ** argv) {
+int check_and_fetch_data(dev_descr_t *device_descriptor, uint8_t *camera_data,
+                         int prev_write_pos, int bytes_read)
+{
+  int actual_write_pos = device_descriptor->control->write_pos, len;
+
+  if (prev_write_pos == actual_write_pos) return 0;
+
+  if (actual_write_pos > device_descriptor->control->read_pos) {
+    len = actual_write_pos - device_descriptor->control->read_pos;
+    memcpy(camera_data + bytes_read,
+           device_descriptor->mapped_buffer
+           + device_descriptor->control->read_pos,
+           len);
+    device_descriptor->control->read_pos += len;
+    return len;
+  }
+
+  len = device_descriptor->control->dma_buf_size
+    - device_descriptor->control->read_pos;
+  memcpy(camera_data + bytes_read,
+         device_descriptor->mapped_buffer + device_descriptor->control->read_pos,
+         len);
+  bytes_read += len;
+
+  memcpy(camera_data + bytes_read, device_descriptor->mapped_buffer,
+         actual_write_pos);
+  device_descriptor->control->read_pos = actual_write_pos;
+
+  return len + actual_write_pos;
+}  
+
+int main(int argc, char ** argv)
+{
   if (argc != 3) {
     fprintf(stderr,
            "usage: test-readout-polling <number of scans> <number of blocks>\n");
@@ -25,7 +57,7 @@ int main(int argc, char ** argv) {
 
   int n_blocks = atoi(argv[1]);
   int n_scans = atoi(argv[2]);
-  int result;
+  int result, bytes_read;
   dev_descr_t *device_descriptor;
 
   if ((result = lscpcie_driver_init()) < 0) {
@@ -57,7 +89,7 @@ int main(int argc, char ** argv) {
   int n_pixel = device_descriptor->control->number_of_pixels;
   int camcnt = device_descriptor->control->number_of_cameras;
   int mem_size = n_pixel * camcnt * n_blocks * n_scans * 2;
-  uint16_t *camera_data = malloc(mem_size);
+  uint8_t *camera_data = malloc(mem_size);
   if (!camera_data) {
     fprintf(stderr, "failed to allocate %d bytes of memory\n", mem_size);
     goto finish;
@@ -114,19 +146,17 @@ int main(int argc, char ** argv) {
   device_descriptor->s0->PCIEFLAGS |= 1<<PCIEFLAG_MEASUREON;
   int prev_write_pos = 0;
   int blk_cnt = 0;
+  bytes_read = 0;
   do  {
-    #error not here
-    if (prev_write_pos != device_descriptor->control->write_pos) {
-      int actual_write_pos = device_descriptor->control->write_pos;
-      if (actual_write_pos > device_descriptor->control->read_pos) {
-        memcpy(camera_data + bytes_read,
-               device_descriptor->dma_buffer
-               + device_descriptor->control->read_pos
-               actual_write_pos - device_descriptor->control->read_pos);
-      } else {
-      }
-      device_descriptor->control->read_pos = actual_write_pos;
-      prev_write_pos = actual_write_pos;
+    result = check_and_fetch_data(device_descriptor, camera_data, prev_write_pos,
+                                  bytes_read);
+    if (result < 0)
+      goto finish;
+
+    if (result) {
+      bytes_read += result;
+      prev_write_pos
+        = (prev_write_pos + result) % device_descriptor->control->dma_buf_size;
     }
 
     // block trigger?
@@ -151,9 +181,20 @@ int main(int argc, char ** argv) {
     memory_barrier();
     device_descriptor->s0->BTRIGREG &= ~(1<<FREQ_REG_SW_TRIG);
     // wait for end of readout
-    do
+    do {
+      result
+        = check_and_fetch_data(device_descriptor, camera_data, prev_write_pos,
+                               bytes_read);
+      if (result < 0)
+        goto finish;
+
+      if (result) {
+        bytes_read += result;
+        prev_write_pos
+          = (prev_write_pos + result) % device_descriptor->control->dma_buf_size;
+      }
       result = device_descriptor->s0->XCK.dword & (1<<XCK_RS);
-    while (result);
+    } while (result);
     // reset block on
     device_descriptor->s0->PCIEFLAGS &= ~(1<<PCIEFLAG_BLOCKON);
   } while (++blk_cnt < n_blocks);
