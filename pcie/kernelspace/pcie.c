@@ -39,6 +39,7 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
   if ((result = device_init(dev, i)) < 0)
     goto error;
 
+  dev->pci_dev = pci_dev;
   dev->status |= DEV_PCI_ENABLED;
 
   /* check for correct vendor / device and subsystem */
@@ -57,11 +58,6 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
   assert(word == SUBSYSTEM_DEVICE_ID, "wrong subsystem id", goto error, -1);
 
   dev->status |= DEV_HARDWARE_PRESENT;
-  dev->pci_dev = pci_dev;
-  if (!pci_dev->msi_enabled)
-    pci_enable_msi(pci_dev);
-  dev->irq_line = pci_dev->irq;
-
   dev->physical_pci_base = pci_resource_start(pci_dev, 2);
   dev->control->io_size = pci_resource_len(pci_dev, 2);
   dev->mapped_pci_base
@@ -69,6 +65,10 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
   assert(dev->mapped_pci_base != 0, "ioremap of address space failed",
 	 goto error, -1);
   PDEBUG(D_PCI, "mapped address space 2 to %p\n", dev->mapped_pci_base);
+
+  if (!pci_dev->msi_enabled)
+    pci_enable_msi(pci_dev);
+  dev->irq_line = pci_dev->irq;
 
   pci_set_drvdata(pci_dev, dev);
   pci_set_master(pci_dev);
