@@ -37,6 +37,7 @@ UINT16 direct2dviewer_gamma_white = 0xFFFF;
 UINT16 direct2dviewer_gamma_black = 0;
 UINT8 roi[6] = { 15, 42, 15, 42, 10, 6 };
 BOOL CALLING_WITH_NOS, CALLING_WITH_NOB = FALSE;
+int trackbar_nob_multiplier = 1, trackbar_nospb_multiplier = 1;
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow )
 {
@@ -569,7 +570,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 	int i = 0;
 	int span = 0;
 
-	int trackbar_nob, trackbar_nospb, trackbar_nob_multiplier = 1, trackbar_nospb_multiplier = 1;
+	int trackbar_nob, trackbar_nospb;
 	char *s = (char*)malloc( 10 );
 
 	char TrmsString[260];
@@ -590,12 +591,14 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		//if nos or nospb becomes a higher value then 30000 the gui is not posible to deisplay it
 		//so we are checking this and dividing the displayed value. Therefore we are seeing a wrong value when we are using the trackbar
 		trackbar_nospb = *Nospb;
+		trackbar_nospb_multiplier = 1;
 		while (trackbar_nospb > 30000)
 		{ //max for trackbar length
 			trackbar_nospb /= 10;
 			trackbar_nospb_multiplier *= 10;
 		}
 		trackbar_nob = Nob;
+		trackbar_nob_multiplier = 1;
 		while (trackbar_nob > 30000)
 		{ //max for trackbar length
 			trackbar_nob /= 10;
@@ -1249,7 +1252,7 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 	BOOL success = FALSE;
 	UINT64 builtinram, freeram, freeram_old, calcram, allocram;
 	UINT divMB = 1024 * 1024;
-	int trackbar_nob, trackbar_nospb, trackbar_nob_multiplier = 1, trackbar_nospb_multiplier = 1;
+	int trackbar_nob, trackbar_nospb;
 
 	switch (message)
 	{
@@ -1298,12 +1301,14 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 #endif
 			}
 			trackbar_nospb = *Nospb;
+			trackbar_nospb_multiplier = 1;
 			while (trackbar_nospb > 30000)
 			{ //max for trackbar length
 				trackbar_nospb /= 10;
 				trackbar_nospb_multiplier *= 10;
 			}
 			trackbar_nob = Nob;
+			trackbar_nob_multiplier = 1;
 			while (trackbar_nob > 30000)
 			{ //max for trackbar length
 				trackbar_nob /= 10;
