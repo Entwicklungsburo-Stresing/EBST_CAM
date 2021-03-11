@@ -200,7 +200,8 @@ int lscpcie_open(uint dev, uint16_t options) {
     dev_descr[dev].s0->CTRLB = 0;
     dev_descr[dev].s0->CTRLC = 0;
     dev_descr[dev].s0->PIXREG = dev_descr[dev].control->number_of_pixels;
-    dev_descr[dev].s0->CAM_CNT = dev_descr[dev].control->number_of_cameras & 0xF;
+    dev_descr[dev].s0->CAM_CNT
+      = dev_descr[dev].control->number_of_cameras & 0xF;
 
     // initialise number of pixels and clock scheme
     result

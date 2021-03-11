@@ -381,12 +381,13 @@ typedef struct {
   uconst uint32_t dma_buf_size;
   uconst uint64_t dma_physical_start;
   uconst uint32_t io_size;
+  uint32_t bytes_per_interrupt;
   volatile int32_t write_pos;
   int32_t read_pos;
 } lscpcie_control_t;
 
 extern const char reg_names[][16];
-extern const char reg_names_long[][16];
+extern const char reg_names_long[][32];
 extern const char dma_reg_names[][16];
 
 #ifndef __user_space__

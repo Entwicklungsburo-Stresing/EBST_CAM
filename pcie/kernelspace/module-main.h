@@ -26,6 +26,8 @@ extern int debug;
 #define DEFAULT_NUMBER_OF_CAMERAS   2
 #define DEFAULT_DMA_NUM_SCANS       500
 
+#define MOD_PCI_REGISTERED 0x01
+
 extern int num_pixels[MAX_BOARDS];
 extern int num_cameras[MAX_BOARDS];
 extern int dma_num_scans[MAX_BOARDS];

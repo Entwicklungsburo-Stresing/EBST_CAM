@@ -141,7 +141,7 @@ ssize_t lscpcie_write(struct file *filp, const char __user *buf, size_t len,
   PDEBUG(D_READOUT, "asked for writing %lu bytes, write pos is %d\n", len,
          dev->control->write_pos);
 
-  if (dev->status & HARDWARE_PRESENT) {
+  if (dev->status & DEV_HARDWARE_PRESENT) {
     PDEBUG(D_READOUT, "have camera, no writing will be performed\n");
     return -EBUSY;
   }

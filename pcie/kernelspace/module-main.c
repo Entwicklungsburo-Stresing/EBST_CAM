@@ -134,7 +134,7 @@ static int __init lscpcie_module_init(void) {
     printk(KERN_ERR NAME " registering pci device failed with %d", result);
     goto failed;
   }
-  module_status |= PCI_REGISTERED;
+  module_status |= MOD_PCI_REGISTERED;
   PMDEBUG("registered pci driver\n");
 
   proc_init_module();
@@ -161,7 +161,10 @@ void clean_up_lscpcie_module(void) {
 
   proc_clean_up_module();
 
-  if (module_status & PCI_REGISTERED) pci_unregister_driver(&pci_driver);
+  if (module_status & MOD_PCI_REGISTERED) {
+    pci_unregister_driver(&pci_driver);
+    module_status &= ~MOD_PCI_REGISTERED;
+  }
 
   for (i = 0; i < MAX_BOARDS; i++)
     if (lscpcie_devices[i].minor >= 0) {
@@ -186,7 +189,8 @@ int get_device_number(const struct dev_struct *dev) {
   int i;
 
   for (i = 0; i < MAX_BOARDS; i++)
-    if (dev == lscpcie_devices + i) return i;
+    if (dev == lscpcie_devices + i)
+      return i;
 
   return -1;
 }
