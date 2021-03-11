@@ -54,6 +54,8 @@ int dma_init(struct dev_struct *dev)
       = dma_alloc_coherent(pdev, dev->dma_mem_size, &dev->dma_handle,
 			   GFP_KERNEL);
     dev->control->dma_physical_start = (u64) dev->dma_handle;
+    set_s0_dword(dev, S0Addr_DMA_BUF_SIZE_IN_SCANS,
+                 dev->control->dma_num_scans);
   } else {/* no dma features needed in debug mode */
     PDEBUG(D_BUFFERS, "allocating %d bytes of kernel memory for debugging\n",
            dev->dma_mem_size);

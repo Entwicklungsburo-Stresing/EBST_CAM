@@ -52,7 +52,8 @@ struct dev_struct {
   dev_t device;
   int proc_actual_register;
   int proc_actual_register_long;
-  u8 irq_line;
+  u16 irq_line;
+  u64 irq_counter;
 };
 
 

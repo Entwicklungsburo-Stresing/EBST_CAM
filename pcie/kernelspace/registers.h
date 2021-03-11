@@ -57,6 +57,13 @@ typedef enum {
   S0Addr_IRQREG     = 0x38,
   S0Addr_PCI        = 0x3C,
   S0Addr_PCIEFLAGS  = 0x40,
+  S0Addr_NOS        = 0x44,
+  S0Addr_SCAN_INDEX = 0x48,
+  S0Addr_DMA_BUF_SIZE_IN_SCANS = 0x4C,
+  S0Addr_DMAS_PER_INT = 0x50,
+  S0Addr_BLOCKS     = 0x54,
+  S0Addr_BLOCK_INDEX = 0x58,
+  S0Addr_CAMCNT     = 0x5C,
   S0Addr_TDCCtrl    = 0x60,
   S0Addr_TDCData    = 0x64,
   S0Addr_BTIMER     = 0x80,
@@ -396,6 +403,9 @@ struct dev_struct;
 void set_bits_s0_byte(struct dev_struct *dev, u8 address, u8 bits, u8 mask);
 void set_bits_s0_word(struct dev_struct *dev, u8 address, u16 bits, u16 mask);
 void set_bits_s0_dword(struct dev_struct *dev, u8 address, u32 bits, u32 mask);
+void set_s0_byte(struct dev_struct *dev, u8 address, u8 val);
+void set_s0_word(struct dev_struct *dev, u8 address, u16 val);
+void set_s0_dword(struct dev_struct *dev, u8 address, u32 val);
 
 #endif /* __user_space__ */
 

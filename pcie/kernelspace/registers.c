@@ -181,3 +181,18 @@ void set_bits_s0_dword(struct dev_struct *dev, u8 address, u32 bits, u32 mask)
   iowrite32((val & ~mask) | (bits & mask),
             dev->mapped_pci_base + 0x80 + address);
 }
+
+void set_s0_byte(struct dev_struct *dev, u8 address, u8 val)
+{
+  iowrite8(val, dev->mapped_pci_base + 0x80 + address);
+}
+
+void set_s0_word(struct dev_struct *dev, u8 address, u16 val)
+{
+  iowrite8(val, dev->mapped_pci_base + 0x80 + address);
+}
+
+void set_s0_dword(struct dev_struct *dev, u8 address, u32 val)
+{
+  iowrite8(val, dev->mapped_pci_base + 0x80 + address);
+}
