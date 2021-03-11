@@ -21,6 +21,13 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 */
 #include "CCDExamp.h"
 
+#define CONTROLS_POSITION_Y 330
+#define SAMPLE_POSITION_X 50
+#define BLOCK_POSITION_X 650
+#define SLIDER_LENGTH 400
+#define LINE_HEIGHT 20
+#define SPINBOX_LENGTH 100
+
 // global variables
 HINSTANCE hInst;   // current instance
 LPCTSTR lpszAppName = "CCDExamp";
@@ -601,28 +608,90 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			trackbar_nob_multiplier *= 10;
 		}
 
+		HWND hWndSampleLabel = CreateWindow( WC_STATICA,
+			NULL,
+			WS_CHILD | WS_VISIBLE,
+			SAMPLE_POSITION_X, CONTROLS_POSITION_Y, 50, LINE_HEIGHT,
+			hWnd,
+			NULL,
+			hInst,
+			NULL );
+		SendMessage( hWndSampleLabel, WM_SETTEXT, 0, (LPARAM)"sample" );
+
 		hwndTrackNos = CreateWindow( TRACKBAR_CLASS,
-			"NOS", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
-			TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY | WS_CAPTION,
-			300, 345,
-			400, 70,
+			"NOS", WS_BORDER | WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
+			TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY,
+			SAMPLE_POSITION_X, CONTROLS_POSITION_Y + LINE_HEIGHT,
+			SLIDER_LENGTH, LINE_HEIGHT*2,
 			hWnd, (HMENU)ID_TRACKBAR,
 			hInst,
 			NULL );
 		SendMessage( hwndTrackNos, TBM_SETRANGE, TRUE,
 			MAKELONG( 0/*MIN RANGE*/, trackbar_nospb - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
 
+		HWND hWndSpinBoxSampleBuddy = CreateWindow(WC_EDIT,
+			NULL,
+			WS_CHILDWINDOW | WS_VISIBLE | WS_BORDER | ES_NUMBER | ES_RIGHT,
+			SAMPLE_POSITION_X + SLIDER_LENGTH + 5, CONTROLS_POSITION_Y + LINE_HEIGHT,
+			100, LINE_HEIGHT,
+			hWnd,
+			NULL,
+			hInst,
+			NULL );
+
+		HWND hWndSpinBoxSample = CreateWindow( UPDOWN_CLASS,
+			NULL,
+			WS_BORDER | WS_CHILD | WS_VISIBLE | UDS_NOTHOUSANDS | UDS_AUTOBUDDY | UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_ARROWKEYS | UDS_HOTTRACK,
+			0,0,
+			0,0,
+			hWnd,
+			NULL,
+			hInst,
+			NULL );
+		SendMessage( hWndSpinBoxSample, UDM_SETRANGE32, 0, 0x7FFFFFFF );
+
+		HWND hWndBlockLabel = CreateWindow( WC_STATIC,
+			NULL,
+			WS_CHILD | WS_VISIBLE,
+			BLOCK_POSITION_X, CONTROLS_POSITION_Y, 40, LINE_HEIGHT,
+			hWnd,
+			NULL,
+			hInst,
+			NULL );
+		SendMessage( hWndBlockLabel, WM_SETTEXT, 0, (LPARAM)"block" );
+
 		hwndTrackNob = CreateWindow( TRACKBAR_CLASS,
-			"NOB", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
-			TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY | WS_CAPTION,
-			710, 345,
-			400, 70,
+			"NOB", WS_BORDER | WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
+			TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY,
+			BLOCK_POSITION_X, CONTROLS_POSITION_Y + LINE_HEIGHT,
+			SLIDER_LENGTH, LINE_HEIGHT*2,
 			hWnd, (HMENU)ID_TRACKBAR,
 			hInst,
 			NULL );
 		SendMessage( hwndTrackNob, TBM_SETRANGE, TRUE,
 			MAKELONG( 0/*MIN RANGE*/, trackbar_nob - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
-		//ShowScrollBar(scrollb, SB_BOTH, TRUE);
+
+		HWND hWndSpinBoxBlockBuddy = CreateWindow( WC_EDIT,
+			NULL,
+			WS_CHILDWINDOW | WS_VISIBLE | WS_BORDER | ES_NUMBER | ES_RIGHT,
+			BLOCK_POSITION_X + SLIDER_LENGTH + 5, CONTROLS_POSITION_Y + LINE_HEIGHT,
+			100, LINE_HEIGHT,
+			hWnd,
+			NULL,
+			hInst,
+			NULL );
+
+		HWND hWndSpinBoxBlock = CreateWindow( UPDOWN_CLASS,
+			NULL,
+			WS_BORDER | WS_CHILD | WS_VISIBLE | UDS_NOTHOUSANDS | UDS_AUTOBUDDY | UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_ARROWKEYS | UDS_HOTTRACK,
+			0, 0,
+			0, 0,
+			hWnd,
+			NULL,
+			hInst,
+			NULL );
+		SendMessage( hWndSpinBoxBlock, UDM_SETRANGE32, 0, 0x7FFFFFFF );
+
 		break;
 	case WM_HSCROLL://ID_TRACKBAR:
 		//Define your function.
@@ -792,19 +861,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		break;
 	case WM_2DVIEWER_CLOSED:
 		DLLDeinit2dViewer();
-		break;
-	case WM_TIMER:
-		cur_nob++;
-		if (cur_nob >= Nob)
-		{
-			KillTimer( hMSWND, IDT_TIMER1 );
-			cur_nob--;
-		}
-		else
-		{
-			SendMessage( hwndTrackNob, TBM_SETPOS, TRUE, cur_nob );
-			SendMessage( hMSWND, WM_HSCROLL, NULL, NULL );
-		}
 		break;
 	case WM_KEYDOWN:
 		switch (wParam)
