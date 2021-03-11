@@ -40,7 +40,6 @@ UINT16 direct2dviewer_gamma_white = DIRECT2DVIEWER_GAMMA_WHITE_DEFAULT;
 UINT16 direct2dviewer_gamma_black = 0;
 UINT8 roi[6] = { 15, 42, 15, 42, 10, 6 };
 BOOL CALLING_WITH_NOS, CALLING_WITH_NOB = FALSE;
-int trackbar_nob_multiplier = 1, trackbar_nospb_multiplier = 1;
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow )
 {
@@ -573,7 +572,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 	int i = 0;
 	int span = 0;
 
-	int trackbar_nob, trackbar_nospb;
 	char *s = (char*)malloc( 10 );
 
 	char TrmsString[260];
@@ -590,23 +588,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		EnableMenuItem( GetMenu( hWnd ), ID_SETRANGEOFINTEREST_3RANGES, FFTMenuEnable );
 		EnableMenuItem( GetMenu( hWnd ), ID_SETRANGEOFINTEREST_5RANGES, FFTMenuEnable );
 		EnableMenuItem( GetMenu( hWnd ), ID_SETFULLBINNING, FFTMenuEnable );
-
-		//if nos or nospb becomes a higher value then 30000 the gui is not posible to deisplay it
-		//so we are checking this and dividing the displayed value. Therefore we are seeing a wrong value when we are using the trackbar
-		trackbar_nospb = *Nospb;
-		trackbar_nospb_multiplier = 1;
-		while (trackbar_nospb > 30000)
-		{ //max for trackbar length
-			trackbar_nospb /= 10;
-			trackbar_nospb_multiplier *= 10;
-		}
-		trackbar_nob = Nob;
-		trackbar_nob_multiplier = 1;
-		while (trackbar_nob > 30000)
-		{ //max for trackbar length
-			trackbar_nob /= 10;
-			trackbar_nob_multiplier *= 10;
-		}
 
 		HWND hWndSampleLabel = CreateWindow( WC_STATICA,
 			NULL,
@@ -626,8 +607,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			hWnd, (HMENU)ID_TRACKBAR,
 			hInst,
 			NULL );
-		SendMessage( hwndTrackNos, TBM_SETRANGE, TRUE,
-			MAKELONG( 0/*MIN RANGE*/, trackbar_nospb - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
+		SendMessage( hwndTrackNos, TBM_SETRANGEMAX, TRUE, *Nospb - 1 );
 
 		HWND hWndSpinBoxSampleBuddy = CreateWindow(WC_EDIT,
 			NULL,
@@ -668,8 +648,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			hWnd, (HMENU)ID_TRACKBAR,
 			hInst,
 			NULL );
-		SendMessage( hwndTrackNob, TBM_SETRANGE, TRUE,
-			MAKELONG( 0/*MIN RANGE*/, trackbar_nob - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
+		SendMessage( hwndTrackNob, TBM_SETRANGEMAX, TRUE, Nob - 1 );  //Optional, Default is 0-100
 
 		HWND hWndSpinBoxBlockBuddy = CreateWindow( WC_EDIT,
 			NULL,
@@ -697,8 +676,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		//Define your function.
 		cur_nos = SendMessage( hwndTrackNos, TBM_GETPOS, 0, 0 );
 		cur_nob = SendMessage( hwndTrackNob, TBM_GETPOS, 0, 0 );
-		cur_nos *= trackbar_nospb_multiplier;
-		cur_nob *= trackbar_nob_multiplier;
 		UpdateDisplay();
 		/*
 		//reset auto start in case of setting before
@@ -1293,7 +1270,6 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 	BOOL success = FALSE;
 	UINT64 builtinram, freeram, freeram_old, calcram, allocram;
 	UINT divMB = 1024 * 1024;
-	int trackbar_nob, trackbar_nospb;
 
 	switch (message)
 	{
@@ -1341,25 +1317,9 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 				}
 #endif
 			}
-			trackbar_nospb = *Nospb;
-			trackbar_nospb_multiplier = 1;
-			while (trackbar_nospb > 30000)
-			{ //max for trackbar length
-				trackbar_nospb /= 10;
-				trackbar_nospb_multiplier *= 10;
-			}
-			trackbar_nob = Nob;
-			trackbar_nob_multiplier = 1;
-			while (trackbar_nob > 30000)
-			{ //max for trackbar length
-				trackbar_nob /= 10;
-				trackbar_nob_multiplier *= 10;
-			}
 			//update trackbars
-			SendMessage( hwndTrackNob, TBM_SETRANGE, TRUE,
-				MAKELONG( 0/*MIN RANGE*/, trackbar_nob - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
-			SendMessage( hwndTrackNos, TBM_SETRANGE, TRUE,
-				MAKELONG( 0/*MIN RANGE*/, trackbar_nospb - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
+			SendMessage( hwndTrackNos, TBM_SETRANGEMAX, TRUE, *Nospb - 1 );
+			SendMessage( hwndTrackNob, TBM_SETRANGEMAX, TRUE, Nob - 1 );
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
