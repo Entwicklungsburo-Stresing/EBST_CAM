@@ -33,6 +33,11 @@ BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
 #define IS_WIN32S  IS_WIN32 && (BOOL)(!(IS_NT) && (LOBYTE(LOWORD(GetVersion()))<4))
 #define IS_WIN95   (BOOL)(!(IS_NT) && !(IS_WIN32S)) && IS_WIN32
 #define IDT_TIMER1 1
+#if CAMERA_SYSTEM == 3
+#define DIRECT2DVIEWER_GAMMA_WHITE_DEFAULT 0x3FFF
+#else
+#define DIRECT2DVIEWER_GAMMA_WHITE_DEFAULT 0xFFFF
+#endif
 
 extern DWORD cur_nos;
 extern DWORD cur_nob;
