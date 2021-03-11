@@ -648,7 +648,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			NULL,
 			hInst,
 			NULL );
-		SendMessage( hWndSpinBoxSample, UDM_SETRANGE32, 0, 0x7FFFFFFF );
+		SendMessage( hWndSpinBoxSample, UDM_SETRANGE32, 0, *Nospb-1 );
 
 		HWND hWndBlockLabel = CreateWindow( WC_STATIC,
 			NULL,
@@ -690,7 +690,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			NULL,
 			hInst,
 			NULL );
-		SendMessage( hWndSpinBoxBlock, UDM_SETRANGE32, 0, 0x7FFFFFFF );
+		SendMessage( hWndSpinBoxBlock, UDM_SETRANGE32, 0, Nob-1 );
 
 		break;
 	case WM_HSCROLL://ID_TRACKBAR:
