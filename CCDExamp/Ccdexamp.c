@@ -1850,6 +1850,7 @@ LRESULT CALLBACK SetGamma( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 	case WM_INITDIALOG:
 		// receive gamma from direct 2d module & write to ccdexamp gamma variables
 		direct2dviewer_gamma_white = DLLGetGammaWhite();
+		if (direct2dviewer_gamma_white == 0) direct2dviewer_gamma_white = DIRECT2DVIEWER_GAMMA_WHITE_DEFAULT;
 		direct2dviewer_gamma_black = DLLGetGammaBlack();
 		// set gamma to dialog box
 		SetDlgItemInt( hDlg, IDC_GAMMA_WHITE, direct2dviewer_gamma_white, FALSE );
