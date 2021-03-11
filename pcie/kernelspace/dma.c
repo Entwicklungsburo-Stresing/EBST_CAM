@@ -1,5 +1,4 @@
-/*
- * dma.c
+/* dma.c
  *
  * Copyright 2020 Bernhard Lang, University of Geneva
  * Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
@@ -7,7 +6,6 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
- *
  */
 
 
@@ -21,8 +19,10 @@
 #include <linux/pci.h>
 
 
-int dma_init(struct dev_struct *dev) {
-  struct device *pdev = dev->status & HARDWARE_PRESENT ? &dev->pci_dev->dev : 0;
+int dma_init(struct dev_struct *dev)
+{
+  struct device *pdev
+    = dev->status & DEV_HARDWARE_PRESENT ? &dev->pci_dev->dev : 0;
   int num_dma_pages;
   int dev_no = get_device_number(dev);
 
@@ -47,7 +47,7 @@ int dma_init(struct dev_struct *dev) {
 
   PDEBUG(D_BUFFERS, "need %d bytes for dma\n", dev->dma_mem_size);
 
-  if (dev->status & HARDWARE_PRESENT) {
+  if (dev->status & DEV_HARDWARE_PRESENT) {
     PDEBUG(D_BUFFERS, "allocating %d bytes of dma memory\n",
            dev->dma_mem_size);
     dev->dma_virtual_mem
@@ -67,8 +67,9 @@ int dma_init(struct dev_struct *dev) {
   }
 
   dev->control->dma_buf_size = dev->dma_mem_size;
-  dev->bytes_per_interrupt = 500;
+
   dma_start(dev);
+#warning do some decent error handling
   
   PDEBUG(D_BUFFERS, "dma initialised\n");
 
@@ -78,9 +79,9 @@ int dma_init(struct dev_struct *dev) {
 /* release dma buffer */
 void dma_finish(struct dev_struct *dev)
 {
-  dma_end(dev);
+  //dma_end(dev); already done in unregistering pci device
   if (dev->dma_virtual_mem) {
-    if (dev->status & HARDWARE_PRESENT) {
+    if (dev->status & DEV_HARDWARE_PRESENT) {
       PDEBUG(D_BUFFERS, "freeing dma buffer");
       dma_free_coherent(&dev->pci_dev->dev, dev->dma_mem_size,
 			dev->dma_virtual_mem, dev->dma_handle);
@@ -103,14 +104,15 @@ static enum irqreturn isr(int irqn, void *dev_id)
   int old_write_pos = dev->control->write_pos;
   u8 fifo_flags = readb(dev->mapped_pci_base + 0x80 + S0Addr_FF_FLAGS);
 
+  printk(KERN_WARNING NAME": got interrupt\n");
   set_bits_s0_dword(dev, S0Addr_IRQREG, (1<<IRQ_REG_ISR_active),
                     (1<<IRQ_REG_ISR_active));
 
-  if (fifo_flags & (1<<FF_FLAGS_OVFL)) dev->status |= FIFO_OVERFLOW;
+  if (fifo_flags & (1<<FF_FLAGS_OVFL)) dev->status |= DEV_FIFO_OVERFLOW;
 
   // advance buffer pointer
   dev->control->write_pos
-    = (dev->control->write_pos + dev->bytes_per_interrupt)
+    = (dev->control->write_pos + dev->control->bytes_per_interrupt)
     % dev->control->dma_buf_size;
 
   // check for buffer overflow
@@ -125,7 +127,7 @@ static enum irqreturn isr(int irqn, void *dev_id)
         (dev->control->read_pos > dev->control->write_pos))
       goto end; /* w1 r w0 */
 
-  dev->status |= DMA_OVERFLOW;
+  dev->status |= DEV_DMA_OVERFLOW;
 
  end:
   set_bits_s0_dword(dev, S0Addr_IRQREG, 0, (1<<IRQ_REG_ISR_active));
@@ -142,14 +144,13 @@ int dma_start(struct dev_struct *dev)
   unsigned long irqflags = IRQF_SHARED;
   void *dev_id = dev;
 
-  printk(KERN_ERR NAME": requesting irq line %i.",dev->irq_line);
+  PDEBUG(D_INTERRUPT, "requesting irq line %i.", dev->irq_line);
   result = request_irq(dev->irq_line, isr, irqflags, "lscpcie", dev_id);
-  if (result) {
-    printk(KERN_ERR NAME": requesting interrupt failed with error %d\n", result);
-    return result;
-  }
+  if (result)
+    printk(KERN_ERR NAME": requesting interrupt failed with error %d\n",
+	   result);
 
-  return 0;
+  return result;
 }
 
 int dma_end(struct dev_struct *dev)
