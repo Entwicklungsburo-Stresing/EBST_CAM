@@ -58,7 +58,8 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 
   dev->status |= DEV_HARDWARE_PRESENT;
   dev->pci_dev = pci_dev;
-  pci_enable_msi(pci_dev);
+  if (!pci_dev->msi_enabled)
+    pci_enable_msi(pci_dev);
   dev->irq_line = pci_dev->irq;
 
   dev->physical_pci_base = pci_resource_start(pci_dev, 2);
