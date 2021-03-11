@@ -29,11 +29,7 @@ HWND hwndTrackNos;
 HWND hwndTrackNob;
 DWORD cur_nos = 0;
 DWORD cur_nob = 0;
-#if CAMERA_SYSTEM == 3
-UINT16 direct2dviewer_gamma_white = 0x3FFF;
-#else
-UINT16 direct2dviewer_gamma_white = 0xFFFF;
-#endif
+UINT16 direct2dviewer_gamma_white = DIRECT2DVIEWER_GAMMA_WHITE_DEFAULT;
 UINT16 direct2dviewer_gamma_black = 0;
 UINT8 roi[6] = { 15, 42, 15, 42, 10, 6 };
 BOOL CALLING_WITH_NOS, CALLING_WITH_NOB = FALSE;
@@ -1890,17 +1886,7 @@ LRESULT CALLBACK SetGamma( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 			break;
 
 		case IDDEFAULT:
-			// set gamma to dialog box
-			switch (CAMERA_SYSTEM)
-			{
-			case camera_system_3001:
-			case camera_system_3010:
-				SetDlgItemInt( hDlg, IDC_GAMMA_WHITE, 0xFFFF, FALSE );
-				break;
-			case camera_system_3030:
-				SetDlgItemInt( hDlg, IDC_GAMMA_WHITE, 0x3FFF, FALSE );
-				break;
-			}
+			SetDlgItemInt( hDlg, IDC_GAMMA_WHITE, DIRECT2DVIEWER_GAMMA_WHITE_DEFAULT, FALSE );
 			SetDlgItemInt( hDlg, IDC_GAMMA_BLACK, 0, FALSE );
 		}
 		break; //WM_COMMAND
