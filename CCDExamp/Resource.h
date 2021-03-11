@@ -117,7 +117,6 @@
 #define ID_START_CHOOSEBOARD            40023
 #define ID_CHOOSEBOARD                  40024
 #define ID_2DVIEW_SHOW                  40025
-#define ID_2DVIEW_START                 40026
 #define ID_2DVIEW_SETGAMMA              40027
 #define ID_START_SETRANGEOFINTEREST     40028
 #define ID_SETRANGEOFINTEREST_3RANGES   40029

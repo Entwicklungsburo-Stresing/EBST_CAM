@@ -780,17 +780,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			DLLStart2dViewer( DRV, cur_nob, 0, _PIXEL, *Nospb );
 			break;
 		}
-		case ID_2DVIEW_START:
-		{
-			cur_nob = 0;
-			SendMessage( hwndTrackNob, TBM_SETPOS, TRUE, cur_nob );
-			SendMessage( hMSWND, WM_HSCROLL, NULL, NULL );
-			SetTimer( hMSWND,			// handle to main window 
-				IDT_TIMER1,					// timer identifier 
-				10,
-				(TIMERPROC)NULL );		// no timer callback 
-			break;
-		}
 		case ID_2DVIEW_SETGAMMA:
 		{
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_SETGAMMA ), hWnd, (DLGPROC)SetGamma );
