@@ -24,16 +24,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ESLSCDLL_pro.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Direct2dViewer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Direct2dViewer_c.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\shared_src\Board.h">
@@ -46,6 +40,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\Direct2dViewer_c.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\ESLSCDLL_pro.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
