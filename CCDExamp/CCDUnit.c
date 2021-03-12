@@ -126,7 +126,7 @@ void UpdateTxT(void)
 	if ((Dispcnt % 10) == 0) //display only every 10th val or it's not readable
 		yVal = DisplData[0][xPos];// YVal(1, xPos);
 	Dispcnt += 1;
-	j += sprintf_s(TrmsString + j, 260, " x: %i y: %i, sample: %u, block: %u", xPos, yVal, cur_nos, cur_nob);
+	j += sprintf_s(TrmsString + j, 260, " x: %i y: %i", xPos, yVal);
 
 	if (DisplData[0][1088 + 1000] != 989) ERRCNT += 1;
 	if (ShowTrms)
