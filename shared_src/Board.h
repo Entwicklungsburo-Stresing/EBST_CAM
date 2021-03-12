@@ -7,8 +7,8 @@
 #include "UIAbstractionLayer.h"
 
 #define DBGNOCAM FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
-#define DMA_BUFSIZEINSCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
-#define DMA_HW_BUFPARTS 2
+#define DMA_BUFFER_SIZE_IN_SCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
+#define DMA_BUFFER_PARTS 2
 // DMA
 #define DMA_CONTIGBUF TRUE		// use if DMABigBuf is set by driver (data must be copied afterwards to DMABigBuf)
 #define DMA_SGBUF FALSE			// use if DMABigBuf is set by application (pointer must be passed to SetupPCIE_DMA)
@@ -16,7 +16,7 @@
 #define _FORCETLPS128 TRUE	//only use payload size 128byte
 #define LEGACY_202_14_TLPCNT FALSE
 #define MANUAL_OVERRIDE_TLP FALSE // values are defined in board.c -> SetManualTLP()
-#define DMA_DMASPERINTR DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb 
+#define DMA_DMASPERINTR DMA_BUFFER_SIZE_IN_SCANS / DMA_BUFFER_PARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb 
 #define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
 #define INTR_EN TRUE		// enables INTR
 
@@ -31,26 +31,26 @@ struct ffloopparams
 
 struct global_vars
 {
-	USHORT** pBigBufBase;
+	USHORT** userBuffer;
 	WDC_DEVICE_HANDLE* hDev;
 	//PWDC_DEVICE* pDev;
 	ULONG* aPIXEL;
 	ULONG* aCAMCNT;
-	int* Nospb;
+	UINT32* Nospb;
 };
 
 extern int newDLL;
-extern USHORT** pBigBufBase;
-extern int Nob;
-extern int* Nospb;
-extern ULONG* aCAMCNT;	// cameras parallel
-extern ULONG ADRDELAY;
+extern UINT16** userBuffer;
+extern UINT32 Nob;
+extern UINT32* Nospb;
+extern UINT32* aCAMCNT;	// cameras parallel
+extern UINT32 ADRDELAY;
 extern BOOL escape_readffloop;
 extern BOOL CONTFFLOOP;
 extern UINT32 CONTPAUSE;
 extern UINT8 number_of_boards;
 extern DWORD64 IsrCounter;
-extern ULONG* aPIXEL;
+extern UINT32* aPIXEL;
 extern BOOL Running;
 extern UINT32 BOARD_SEL;
 extern struct ffloopparams params;

@@ -271,7 +271,7 @@ void startMess(void *dummy)
 	else				params.board_sel = choosen_board;
 	// start read loop
 	_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);
-	DWORD64 IsrNumber = Nob * (*Nospb) / (DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS);
+	DWORD64 IsrNumber = Nob * (*Nospb) / (DMA_BUFFER_SIZE_IN_SCANS / DMA_BUFFER_PARTS);
 	if (both_boards) IsrNumber *= 2;
 	if (CAMCNT == 2) IsrNumber *= 2;
 	while (IsrCounter < IsrNumber) {

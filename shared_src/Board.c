@@ -28,44 +28,45 @@ Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
 //jungodriver specific variables
 WD_PCI_CARD_INFO deviceInfo[MAXPCIECARDS];
 //Buffer of WDC_DMAContigBufLock function = one DMA sub block - will be copied to the big pDMABigBuf later
-USHORT* pDMASubBuf[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
-WD_DMA *pDMASubBufInfos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL }; //there will be saved the neccesary parameters for the dma buffer
+USHORT* dmaBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
+WD_DMA *dmaBufferInfos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL }; //there will be saved the neccesary parameters for the dma buffer
 DWORD64 IsrCounter = 0;
-BYTE SubBufCounter[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
-DWORD DMA_bufsizeinbytes = 0;
+UINT8 dmaBufferPartReadPos[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
+DWORD dmaBufferSizeInBytes = 0;
 WDC_PCI_SCAN_RESULT scanResult;
 //priority globals
-ULONG NEWPRICLASS = 0;
-ULONG NEWPRILEVEL = 0;
-ULONG READTHREADPriority =  15;
-ULONG OLDTHREADLEVEL = 0;
-ULONG OLDPRICLASS = 0;
+UINT32 NEWPRICLASS = 0;
+UINT32 NEWPRILEVEL = 0;
+UINT32 READTHREADPriority =  15;
+UINT32 OLDTHREADLEVEL = 0;
+UINT32 OLDPRICLASS = 0;
 HANDLE hPROCESS = 0;
 HANDLE hTHREAD = 0;
 //general switch to suppress ErrorMsg windows , global in BOARD
 BOOL _SHOW_MSG = TRUE;
 __int64 TPS = 0;				// ticks per second; is set in InitHRCounter
-ULONG NO_TLPS;//0x12; //was 0x11-> x-offset			//0x11=17*128  = 2176 Bytes  = 1088 WORDS
-ULONG TLPSIZE = 0x20; //default = 0x20 A.M. Dec'20 //with0x21: crash
-ULONG BDATA = 0;
-volatile UINT16* pBigBufIndex[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
+UINT32 NO_TLPS;//0x12; //was 0x11-> x-offset			//0x11=17*128  = 2176 Bytes  = 1088 WORDS
+UINT32 TLPSIZE = 0x20; //default = 0x20 A.M. Dec'20 //with0x21: crash
+UINT32 BDATA = 0;
+UINT16* userBufferWritePos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
+UINT32 numberOfInterrupts;
 
 // extern global variables
 int newDLL = 0;
 UINT8 number_of_boards = 0;
-int Nob = 1;
-int tmp_Nosbp = 1000;
-int* Nospb = &tmp_Nosbp;
-ULONG tmp_aCAMCNT[MAXPCIECARDS] = { 1, 1, 1, 1, 1 };	// cameras parallel
-ULONG* aCAMCNT = tmp_aCAMCNT;	// cameras parallel
-ULONG ADRDELAY=0;
+UINT32 Nob = 1;
+UINT32 tmp_Nosbp = 1000;
+UINT32* Nospb = &tmp_Nosbp;
+UINT32 tmp_aCAMCNT[MAXPCIECARDS] = { 1, 1, 1, 1, 1 };	// cameras parallel
+UINT32* aCAMCNT = tmp_aCAMCNT;	// cameras parallel
+UINT32 ADRDELAY=0;
 BOOL escape_readffloop = FALSE;
 BOOL CONTFFLOOP = FALSE;
 UINT32 CONTPAUSE = 1;  // delay between loops in continous mode
-UINT16* temp_pBigBufBase[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
-UINT16** pBigBufBase= temp_pBigBufBase;
-ULONG tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
-ULONG* aPIXEL = tmp_aPIXEL;
+UINT16* temp_userBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
+UINT16** userBuffer= temp_userBuffer;
+UINT32 tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
+UINT32* aPIXEL = tmp_aPIXEL;
 BOOL Running = FALSE;
 UINT32 BOARD_SEL = 1;
 struct ffloopparams params;
@@ -124,7 +125,7 @@ void AboutDMARegs( UINT32 drv )
 	char fn[s_size];
 	PUCHAR pmaxaddr = NULL;
 
-	if (!pDMASubBufInfos[drv]) { j = sprintf_s( fn, s_size, " pBufInfo = 0x%p \n", pDMASubBufInfos[drv] ); }
+	if (!dmaBufferInfos[drv]) { j = sprintf_s( fn, s_size, " pBufInfo = 0x%p \n", dmaBufferInfos[drv] ); }
 	else
 	{
 		j = 0;
@@ -138,22 +139,22 @@ void AboutDMARegs( UINT32 drv )
 		}
 		for (int i = 1; i < 3; i++)
 		{
-			pmaxaddr = pDMASubBufInfos[i]->pUserAddr;// calc the upper addr
-			pmaxaddr += pDMASubBufInfos[i]->dwBytes;
-			j += sprintf_s( fn + j, s_size, " pBufInfo = 0x%p \n", pDMASubBufInfos[i] );
-			j += sprintf_s( fn + j, s_size, " hDMA = 0x%I32x \n", pDMASubBufInfos[i]->hDma );
-			j += sprintf_s( fn + j, s_size, " pUserAddr = 0x%p \n", pDMASubBufInfos[i]->pUserAddr );
+			pmaxaddr = dmaBufferInfos[i]->pUserAddr;// calc the upper addr
+			pmaxaddr += dmaBufferInfos[i]->dwBytes;
+			j += sprintf_s( fn + j, s_size, " pBufInfo = 0x%p \n", dmaBufferInfos[i] );
+			j += sprintf_s( fn + j, s_size, " hDMA = 0x%I32x \n", dmaBufferInfos[i]->hDma );
+			j += sprintf_s( fn + j, s_size, " pUserAddr = 0x%p \n", dmaBufferInfos[i]->pUserAddr );
 			j += sprintf_s( fn + j, s_size, " pMAXUserAddr = 0x%p \n", pmaxaddr );
-			j += sprintf_s( fn + j, s_size, " pKernelAddr = 0x%p \n", pDMASubBufInfos[i]->pKernelAddr );
-			j += sprintf_s( fn + j, s_size, " dwBytes = 0x%I32x = %d\n", pDMASubBufInfos[i]->dwBytes, pDMASubBufInfos[i]->dwBytes );
-			j += sprintf_s( fn + j, s_size, " dwOptions = 0x%I32x \n", pDMASubBufInfos[i]->dwOptions );
-			j += sprintf_s( fn + j, s_size, " dwPages = 0x%I32x \n", pDMASubBufInfos[i]->dwPages );
-			j += sprintf_s( fn + j, s_size, " hCard = 0x%I32x \n", pDMASubBufInfos[i]->hCard );
-			j += sprintf_s( fn + j, s_size, " physAddr(page0) = 0x%p \n", pDMASubBufInfos[i]->Page[0].pPhysicalAddr );
-			j += sprintf_s( fn + j, s_size, " MAXphysAddr(page0) = 0x%p \n", pDMASubBufInfos[i]->Page[0].pPhysicalAddr + pDMASubBufInfos[i]->dwBytes );
-			j += sprintf_s( fn + j, s_size, " pagesize(page0) = 0x%I32x \n", pDMASubBufInfos[i]->Page[0].dwBytes );
-			j += sprintf_s( fn + j, s_size, " physAddr(page1) = 0x%p \n", pDMASubBufInfos[i]->Page[1].pPhysicalAddr );
-			j += sprintf_s( fn + j, s_size, " pagesize(page1) = 0x%I32x \n", pDMASubBufInfos[i]->Page[1].dwBytes );
+			j += sprintf_s( fn + j, s_size, " pKernelAddr = 0x%p \n", dmaBufferInfos[i]->pKernelAddr );
+			j += sprintf_s( fn + j, s_size, " dwBytes = 0x%I32x = %d\n", dmaBufferInfos[i]->dwBytes, dmaBufferInfos[i]->dwBytes );
+			j += sprintf_s( fn + j, s_size, " dwOptions = 0x%I32x \n", dmaBufferInfos[i]->dwOptions );
+			j += sprintf_s( fn + j, s_size, " dwPages = 0x%I32x \n", dmaBufferInfos[i]->dwPages );
+			j += sprintf_s( fn + j, s_size, " hCard = 0x%I32x \n", dmaBufferInfos[i]->hCard );
+			j += sprintf_s( fn + j, s_size, " physAddr(page0) = 0x%p \n", dmaBufferInfos[i]->Page[0].pPhysicalAddr );
+			j += sprintf_s( fn + j, s_size, " MAXphysAddr(page0) = 0x%p \n", dmaBufferInfos[i]->Page[0].pPhysicalAddr + dmaBufferInfos[i]->dwBytes );
+			j += sprintf_s( fn + j, s_size, " pagesize(page0) = 0x%I32x \n", dmaBufferInfos[i]->Page[0].dwBytes );
+			j += sprintf_s( fn + j, s_size, " physAddr(page1) = 0x%p \n", dmaBufferInfos[i]->Page[1].pPhysicalAddr );
+			j += sprintf_s( fn + j, s_size, " pagesize(page1) = 0x%I32x \n", dmaBufferInfos[i]->Page[1].dwBytes );
 		}
 	}
 	if (MessageBox( hWnd, fn, " DMA Buf Regs ", MB_OK | MB_ICONEXCLAMATION ) == IDOK) {};
@@ -569,7 +570,7 @@ BOOL SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, U
 
 BOOL SetDMAAddrTlp( UINT32 drvno )
 {
-	WD_DMA **ppDma = &pDMASubBufInfos[drvno];
+	WD_DMA **ppDma = &dmaBufferInfos[drvno];
 	UINT64 PhysAddrDMABuf64;
 	ULONG BitMask;
 	//ULONG BData = 0; //-> ersetzt durch globale variable BDATA
@@ -629,7 +630,7 @@ void SetManualTLP_vars(void)
 /**
 \brief Set DMA register
 
-Sets DMA_BUFSIZEINSCANS, DMA_DMASPERINTR, NOS, NOB, CAMCNT
+Sets DMA_BUFFER_SIZE_IN_SCANS, DMA_DMASPERINTR, NOS, NOB, CAMCNT
 \param drvno board number (=1 if one PCI board)
 \return TRUE if success, FALSE otherwise
 */
@@ -637,13 +638,13 @@ BOOL SetDMABufRegs( UINT32 drvno )
 {
 	BOOL error = FALSE;
 	//DMABufSizeInScans - use 1 block
-	if (!SetS0Reg( DMA_BUFSIZEINSCANS, 0xffffffff, S0Addr_DmaBufSizeInScans, drvno ))
+	if (!SetS0Reg( DMA_BUFFER_SIZE_IN_SCANS, 0xffffffff, S0Addr_DmaBufSizeInScans, drvno ))
 		error = TRUE;
-	//scans per intr must be 2x per DMA_BUFSIZEINSCANS to copy hi/lo part
+	//scans per intr must be 2x per DMA_BUFFER_SIZE_IN_SCANS to copy hi/lo part
 	//aCAMCNT: double the INTR if 2 cams
 	if (!SetS0Reg( DMA_DMASPERINTR, 0xffffffff, S0Addr_DMAsPerIntr, drvno ))
 		error = TRUE;
-	WDC_Err( "spi/camcnt: %x \n", DMA_DMASPERINTR / aCAMCNT[drvno] );
+	WDC_Err( "scansPerInterrupt/camcnt: %x \n", DMA_DMASPERINTR / aCAMCNT[drvno] );
 	if (!SetS0Reg( *Nospb, 0xffffffff, S0Addr_NOS, drvno ))
 		error = TRUE;
 	if (!SetS0Reg( Nob, 0xffffffff, S0Addr_NOB, drvno ))
@@ -700,13 +701,13 @@ void SetDMAStart( UINT32 drvno )
 //	PDWORD	pdwResult = &dwResult;
 //
 //
-//	WDC_Err("WDC:  hDma %u\n", pDMASubBufInfos->hDma);
-//	WDC_Err("WDC:  pUserAddr %u\n", pDMASubBufInfos->pUserAddr);
-//	WDC_Err("WDC:  pKernelAddr %u\n", pDMASubBufInfos->pKernelAddr);
-//	WDC_Err("WDC:  dwBytes %u\n", pDMASubBufInfos->dwBytes);
-//	WDC_Err("WDC:  dwOptions %u\n", pDMASubBufInfos->dwOptions);
-//	WDC_Err("WDC:  dwPages %u\n", pDMASubBufInfos->dwPages);
-//	WDC_Err("WDC:  hCard %u\n", pDMASubBufInfos->hCard);
+//	WDC_Err("WDC:  hDma %u\n", dmaBufferInfos->hDma);
+//	WDC_Err("WDC:  pUserAddr %u\n", dmaBufferInfos->pUserAddr);
+//	WDC_Err("WDC:  pKernelAddr %u\n", dmaBufferInfos->pKernelAddr);
+//	WDC_Err("WDC:  dwBytes %u\n", dmaBufferInfos->dwBytes);
+//	WDC_Err("WDC:  dwOptions %u\n", dmaBufferInfos->dwOptions);
+//	WDC_Err("WDC:  dwPages %u\n", dmaBufferInfos->dwPages);
+//	WDC_Err("WDC:  hCard %u\n", dmaBufferInfos->hCard);
 //
 //	/*for WDK Flush
 //
@@ -719,7 +720,7 @@ void SetDMAStart( UINT32 drvno )
 //	*/
 //	//for JUNGO Flush, complete WD_DMA struct
 //	/*
-//	pData = pDMASubBufInfos;
+//	pData = dmaBufferInfos;
 //	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_WDDMA, pData, pdwResult);
 //	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
 //	{
@@ -740,7 +741,7 @@ void SetDMAStart( UINT32 drvno )
 //	*/
 //	/*
 //	//for JUNGO Flush , fragmented WD_DMA struct
-//	dwOptions = pDMASubBufInfos->dwPages; //Im using dwPages instead of dwOptions
+//	dwOptions = dmaBufferInfos->dwPages; //Im using dwPages instead of dwOptions
 //
 //	pData = &dwOptions;
 //	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_DWOPT, pData, pdwResult);
@@ -751,7 +752,7 @@ void SetDMAStart( UINT32 drvno )
 //	}
 //
 //	//send hDma of WD_DMA struct to KP
-//	hDma = pDMASubBufInfos->dwBytes;	 //Im using pUserAddr instead of hDma
+//	hDma = dmaBufferInfos->dwBytes;	 //Im using pUserAddr instead of hDma
 //	//because the structure is mixed. I think it is a bug.
 //	//Jungo says our dll or h files are mixed up
 //	pData = &hDma;
@@ -786,29 +787,22 @@ void GetLastBufPart( UINT32 drvno )
 	UINT32 spi = 0;
 	ReadLongS0( drvno, &spi, S0Addr_DMAsPerIntr ); //get scans per intr
 	//halfbufize is 500 with default values
-	UINT32 halfbufsize = DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS;
+	UINT32 dmaHalfBufferSize = DMA_BUFFER_SIZE_IN_SCANS / DMA_BUFFER_PARTS;
 	UINT32 scans_all_cams = (*Nospb) * Nob * aCAMCNT[drvno];
-	UINT32 rest_overall = scans_all_cams % halfbufsize;
+	UINT32 rest_overall = scans_all_cams % dmaHalfBufferSize;
 	size_t rest_in_bytes = rest_overall * aPIXEL[drvno] * sizeof( USHORT );
-
 	WDC_Err( "*GetLastBufPart():\n" );
-	WDC_Err( "nos: 0x%x, nob: 0x%x, spi: 0x%x, camcnt: 0x%x\n", (*Nospb), Nob, spi, aCAMCNT[drvno]);
+	WDC_Err( "nos: 0x%x, nob: 0x%x, scansPerInterrupt: 0x%x, camcnt: 0x%x\n", (*Nospb), Nob, spi, aCAMCNT[drvno]);
 	WDC_Err( "scans_all_cams: 0x%x \n", scans_all_cams );
 	WDC_Err( "rest_overall: 0x%x, rest_in_bytes: 0x%x\n", rest_overall, rest_in_bytes );
-	WDC_Err( "DMA_bufsizeinbytes: 0x%x \n", DMA_bufsizeinbytes );
-
+	WDC_Err( "dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes );
 	if (rest_overall)
 	{
 		WDC_Err( "has rest_overall:\n" );
-		INT_PTR pDMASubBuf_index = pDMASubBuf[drvno];
-		pDMASubBuf_index += SubBufCounter[drvno] * DMA_bufsizeinbytes / DMA_HW_BUFPARTS;
-		memcpy( pBigBufIndex[drvno], pDMASubBuf_index, rest_in_bytes );
-		//memset(pBigBufIndex[drvno], 0x0101, rest_in_bytes ); //  0xAAAA=43690 , 0101= 257
-		//if (nos < spi)  // do not use INTR, but GetLastBufPart instead if nos is small enough
-		//	{pBigBufIndex[drvno] += rest_summary; } // may only be added here if no isr
+		INT_PTR dmaBufferReadPos = dmaBuffer[drvno];
+		dmaBufferReadPos += dmaBufferPartReadPos[drvno] * dmaBufferSizeInBytes / DMA_BUFFER_PARTS;
+		memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes );
 	}
-	//GS do not reset counter before ready with isr or last block is wrong!!
-	//SubBufCounter[drvno] = 0; //reset for next block
 	return;
 }//GetLastBufPart
 
@@ -820,91 +814,33 @@ The INTR occurs every DMASPERINTR and copies this block of scans in lower/upper 
 void isr( UINT drvno, PVOID pData )
 {
 	WDC_Err( "*isr(): 0x%x\n", IsrCounter );
-	WDC_Err( "DMA_bufsizeinbytes: 0x%x \n", DMA_bufsizeinbytes );
 	SetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//set INTRSR flag for TRIGO
 	//! be sure not to stop run before last isr is ready - or last part is truncated
-	size_t subbuflengthinbytes = DMA_bufsizeinbytes / DMA_HW_BUFPARTS; //1088000 bytes
-	//usually DMA_bufsizeinbytes = 1000scans 
-	//subbuflengthinbytes = 1000 * pixel *2 -> /2 = 500 scans = 1088000 bytes
+	//usually dmaBufferSizeInBytes = 1000scans 
+	//dmaBufferPartSizeInBytes = 1000 * pixel *2 -> /2 = 500 scans = 1088000 bytes
 	// that means one 500 scan copy block has 1088000 bytes
-	ULONG dma_subbufinscans = DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS; //500
-	USHORT* pdmasubbuf_base_lo = pDMASubBuf[drvno];
-	USHORT* pdmasubbuf_base_hi = pDMASubBuf[drvno] + subbuflengthinbytes / sizeof(USHORT);
-	USHORT* pdmasubbuf_base = pdmasubbuf_base_lo;
-	ULONG introverall;
-	if (BOARD_SEL > 2)//! >2 oder?
-		introverall = Nob * (*Nospb) * aCAMCNT[drvno] * number_of_boards / dma_subbufinscans - 2;//- 2 because intr counter starts with 0
-	else
-		introverall = Nob * (*Nospb) * aCAMCNT[drvno] / dma_subbufinscans - 1;//- 1 because intr counter starts with 0
 	//!GS sometimes (all 10 minutes) one INTR more occurs -> just do not serve it and return
 	// Fehler wenn zu viele ISRs -> memcpy out of range
-	WDC_Err( "introverall: 0x%x \n", introverall );
 	WDC_Err( "ISR Counter : 0x%x \n", IsrCounter );
-	if (IsrCounter > introverall)
+	if (IsrCounter > numberOfInterrupts)
 	{
-		WDC_Err( "introverall: 0x%x \n", introverall );
+		WDC_Err( "numberOfInterrupts: 0x%x \n", numberOfInterrupts );
 		WDC_Err( "ISR Counter overflow: 0x%x \n", IsrCounter );
 		ResetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//reset INTRSR flag for TRIGO
 		return;
 	}
-	UINT32 spi = 0;//scans_per_intr
-	ReadLongS0( drvno, &spi, S0Addr_DMAsPerIntr ); //get scans per intr = 500
-	//WDC_Err("DmaAddr_DMAsPerIntr: 0x%x \n", val);
-	WDC_Err( "in isr -- nos: 0x%x, nob: 0x%x, spi: 0x%x\n", (*Nospb), Nob, spi);
-	//if (rest < spi) return without interrupt; // do not use INTR, but GetLastBufPart instead if rest is small enough
-	/*if ((nos*blocks * aCAMCNT[drvno]) < spi)
-	{
-		WDC_Err( "must get rest: 0x%x \n", nos*blocks * aCAMCNT[drvno] % spi );
-		GetLastBufPart( drvno );
-		ResetS0Bit( 3, S0Addr_PCIEFLAGS, drvno );//reset INTRSR flag for TRIGO
-		return;
-	}*/
-
-	//pdmasubbuf_base += SubBufCounter[drvno] * subbuflengthinbytes / sizeof(USHORT);  // cnt in USHORT
-	if (SubBufCounter[drvno] == 0)
-		{pdmasubbuf_base = pdmasubbuf_base_lo;}
-	else
-		{ pdmasubbuf_base = pdmasubbuf_base_hi;}
-
-	/*
-	UINT64 DMAbigbufsize = nos * blocks *_PIXEL;// +subbuflengthinbytes / sizeof(USHORT);  //in USHORT
-	if ((pBigBufIndex[drvno] > pBigBufBase[drvno] + DMAbigbufsize) || (pBigBufIndex[drvno] < pBigBufBase[drvno]))
-	{
-		WDC_Err("subbuflengthinbytes: 0x%x \n", subbuflengthinbytes);
-		WDC_Err("pBigBufBase: 0x%x \n", pBigBufBase[drvno]);
-		WDC_Err("DMAbigbufsize: 0x%x \n", DMAbigbufsize);
-		WDC_Err("pBigBufIndex: 0x%x \n", pBigBufIndex[drvno]);
-		pBigBufIndex[drvno] = pBigBufBase[drvno]; //wrap if error - but now all is mixed up!
-	}
-	*/
-	//WDC_Err("pBigBufIndex: 0x%x \n", pBigBufIndex[drvno]);
-	//here  the copyprocess happens
-	memcpy_s( pBigBufIndex[drvno], subbuflengthinbytes, pdmasubbuf_base, subbuflengthinbytes );//DMA_bufsizeinbytes/10
-	// A.M. 08.Jan.2018 subbuflengthinbytes/ aCAMCNT[drvno]
-	//memset(pBigBufIndex[drvno], IsrCounter, subbuflengthinbytes  ); //  0xAAAA=43690 , 0101= 257
-	WDC_Err( "pBigBufIndex: 0x%x \n", pBigBufIndex[drvno] );
-	WDC_Err( "pDMABigBuf Content: 0x%x \n", *(pBigBufIndex[drvno] + 200) );
-	SubBufCounter[drvno]++;
-	if (SubBufCounter[drvno] >= DMA_HW_BUFPARTS)		//number of ISR per dmaBuf - 1
-		SubBufCounter[drvno] = 0;						//SubBufCounter is 0 or 1 for buffer devided in 2 parts
-	pBigBufIndex[drvno] += subbuflengthinbytes / sizeof( USHORT ); //!!GS  calc for USHORT
-	//error prevention...not needed if counter counts correct
-	//ReadLongS0(drvno, &blocks, DmaAddr_NOB);
-	//!!GS  //add space for last val and reset base if error
-	//UINT64 pDMAbigbufsize = nos * blocks *_PIXEL;// +subbuflengthinbytes / sizeof(USHORT);  //in USHORT
-/*	if ((pBigBufIndex[drvno] > pBigBufBase[drvno] + pDMAbigbufsize) || (pBigBufIndex[drvno] < pBigBufBase[drvno]))
-	{
-		ErrorMsg("ISR: buffer overrun !");
-
-		WDC_Err("pBigBufBase: 0x%x \n", pBigBufBase[drvno]);
-		WDC_Err("pDMAbigbufsize: 0x%x \n", pDMAbigbufsize);
-		WDC_Err("pBigBufIndex: 0x%x \n", pBigBufIndex[drvno]);
-		pBigBufIndex[drvno] = pBigBufBase[drvno]; //wrap if error - but now all is mixed up!
-	}
-*/
+	WDC_Err("dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes);
+	size_t dmaBufferPartSizeInBytes = dmaBufferSizeInBytes / DMA_BUFFER_PARTS; //1088000 bytes
+	UINT16* dmaBufferReadPos = dmaBuffer[drvno] + dmaBufferPartReadPos[drvno] * dmaBufferPartSizeInBytes / sizeof(UINT16);
+	//here the copyprocess happens
+	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, dmaBufferPartSizeInBytes );
+	WDC_Err( "userBufferWritePos: 0x%x \n", userBufferWritePos[drvno] );
+	dmaBufferPartReadPos[drvno]++;
+	if (dmaBufferPartReadPos[drvno] >= DMA_BUFFER_PARTS)		//number of ISR per dmaBuf - 1
+		dmaBufferPartReadPos[drvno] = 0;						//dmaBufferPartReadPos is 0 or 1 for buffer devided in 2 parts
+	userBufferWritePos[drvno] += dmaBufferPartSizeInBytes / sizeof( UINT16 );
 	ResetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//reset INTRSR flag for TRIGO
 	IsrCounter++;
-	//WDC_Err("ISR: pix42 of ReturnFrame: 0x%d \n", *(USHORT*)(pBigBufBase[drvno] + 420));
 	return;
 }//DLLCALLCONV interrupt_handler
 
@@ -925,10 +861,10 @@ BOOL SetupPCIE_DMA( UINT32 drvno )
 	WDC_Err( "entered SetupPCIE_DMA\n" );
 
 
-	//tempBuf = (PUSHORT)pBigBufBase[drvno] + 500 * sizeof(USHORT);
+	//tempBuf = (PUSHORT)userBuffer[drvno] + 500 * sizeof(USHORT);
 	//WDC_Err("setupdma: bigbuf Pixel500: %i\n", *tempBuf);
 
-	DMA_bufsizeinbytes = DMA_BUFSIZEINSCANS * aPIXEL[drvno] * sizeof( USHORT );
+	dmaBufferSizeInBytes = DMA_BUFFER_SIZE_IN_SCANS * aPIXEL[drvno] * sizeof( UINT16 );
 
 	DWORD dwOptions = DMA_FROM_DEVICE | DMA_KERNEL_BUFFER_ALLOC;// | DMA_ALLOW_64BIT_ADDRESS;// DMA_ALLOW_CACHE ;
 	if (DMA_64BIT_EN)
@@ -943,12 +879,12 @@ BOOL SetupPCIE_DMA( UINT32 drvno )
 		return FALSE;
 	}
 	// pDMABigBuf is the big space which is passed to this function = input - must be global
-	dwStatus = WDC_DMASGBufLock( hDev[drvno], pDMABigBuf, dwOptions, DMA_bufsizeinbytes, &pDMASubBufInfos ); //size in Bytes
+	dwStatus = WDC_DMASGBufLock( hDev[drvno], pDMABigBuf, dwOptions, dmaBufferSizeInBytes, &dmaBufferInfos ); //size in Bytes
 #endif
 
 #if (DMA_CONTIGBUF)		//usually we use contig buf: here we get the buffer address from labview.
-	// pDMASubBuf is the space which is allocated by this function = output - must be global
-	dwStatus = WDC_DMAContigBufLock( hDev[drvno], &pDMASubBuf[drvno], dwOptions, DMA_bufsizeinbytes, &pDMASubBufInfos[drvno] ); //size in Bytes
+	// dmaBuffer is the space which is allocated by this function = output - must be global
+	dwStatus = WDC_DMAContigBufLock( hDev[drvno], &dmaBuffer[drvno], dwOptions, dmaBufferSizeInBytes, &dmaBufferInfos[drvno] ); //size in Bytes
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ErrLog( "Failed locking a contiguous DMA buffer. Error 0x%lx - %s\n", dwStatus, Stat2Str( dwStatus ) );
@@ -959,12 +895,12 @@ BOOL SetupPCIE_DMA( UINT32 drvno )
 	// data must be copied afterwards to user Buffer 
 #endif
 
-	pBigBufIndex[drvno] = pBigBufBase[drvno];	//reset destination buffer to start value
+	userBufferWritePos[drvno] = userBuffer[drvno];	//reset destination buffer to start value
 	IsrCounter = 0;
-	WD_DMA **ppDma = &pDMASubBufInfos[drvno];
+	WD_DMA **ppDma = &dmaBufferInfos[drvno];
 
 	//WDC_Err("RAM Adresses for DMA Buf: %x ,DMA Buf Size: %x\n", (*ppDma)->Page[0].pPhysicalAddr, (*ppDma)->dwBytes);
-	//WDC_Err("RAM Adresses for BigBufBase: %x ,DMA BufSizeinbytes: %x\n", pBigBufBase[drvno], DMA_bufsizeinbytes);
+	//WDC_Err("RAM Adresses for BigBufBase: %x ,DMA BufSizeinbytes: %x\n", userBuffer[drvno], dmaBufferSizeInBytes);
 
 	//	ErrorMsg("nach WDC_DMAContigBufLock");
 	//	AboutDMARegs();
@@ -1046,10 +982,10 @@ void StartPCIE_DMAWrite( UINT32 drvno )
 		SetDMAReset( drvno );
 
 		/* Flush the I/O caches (see documentation of WDC_DMASyncIo()) */
-		//WDC_DMASyncIo(pDMASubBufInfos);
+		//WDC_DMASyncIo(dmaBufferInfos);
 		/****DMA Transfer start***/
 		/* Flush the CPU caches (see documentation of WDC_DMASyncCpu()) */
-		//WDC_DMASyncCpu(pDMASubBufInfos);
+		//WDC_DMASyncCpu(dmaBufferInfos);
 
 		//SetDMADataPattern();
 		/* DDMACR: Start DMA - write to the device to initiate the DMA transfer */
@@ -1063,7 +999,7 @@ void CleanupPCIE_DMA( UINT32 drvno )
 	/* Disable DMA interrupts */
 	WDC_IntDisable( hDev[drvno] );
 	/* Unlock and free the DMA buffer */
-	dwStatus = WDC_DMABufUnlock( pDMASubBufInfos[drvno] );
+	dwStatus = WDC_DMABufUnlock( dmaBufferInfos[drvno] );
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ErrLog( "Failed unlocking a contiguous DMA buffer. Error 0x%lx - %s\n",
@@ -1204,7 +1140,7 @@ BOOL SetBoardVars( UINT32 drvno )
 BOOL allocateUserMemory( UINT drvno )
 {
 	//free old memory before allocating new one
-	free( pBigBufBase[drvno] );
+	free( userBuffer[drvno] );
 	UINT64 memory_all = 0;
 	UINT64 memory_free = 0;
 	FreeMemInfo( &memory_all, &memory_free );
@@ -1217,10 +1153,10 @@ BOOL allocateUserMemory( UINT drvno )
 	{
 		// sometimes it makes one ISR more, so better to allocate nos+1 thaT IN THIS CASE THE ADDRESS pDMAIndex is valid
 		//B! "2 *" because the buffer is just 2/3 of the needed size. +1 oder *2 weil sonst absturz im continuous mode
-		USHORT* pDMABigBufBase_temp = calloc( aCAMCNT[drvno] * (*Nospb)*Nob * aPIXEL[drvno], sizeof( USHORT ) );
-		if (pDMABigBufBase_temp != 0)
+		UINT16* userBufferTemp = calloc( (UINT64)aCAMCNT[drvno] * (UINT64)(*Nospb) * (UINT64)Nob * (UINT64)aPIXEL[drvno], sizeof( UINT16 ) );
+		if (userBufferTemp != 0)
 		{
-			pBigBufBase[drvno] = pDMABigBufBase_temp;
+			userBuffer[drvno] = userBufferTemp;
 			return TRUE;
 		}
 		else
@@ -1787,9 +1723,9 @@ void initReadFFLoop( UINT32 drv, UINT32 * Blocks )
 	//set to hw stop of timer hwstop=TRUE
 	RS_DMAAllCounter( drv, TRUE );
 	//reset intr copy buf function
-	SubBufCounter[drv] = 0;
-	pBigBufIndex[drv] = pBigBufBase[drv]; // reset buffer index to base we got from InitDMA
-	WDC_Err( "RESET BIGBUF to %x\n", pBigBufIndex[drv] );
+	dmaBufferPartReadPos[drv] = 0;
+	userBufferWritePos[drv] = userBuffer[drv]; // reset buffer index to base we got from InitDMA
+	WDC_Err( "RESET BIGBUF to %x\n", userBufferWritePos[drv] );
 	IsrCounter = 0;
 	SetExtFFTrig( drv );
 	if(!ReadLongS0( drv, &val, S0Addr_NOB ))//get the needed Blocks
@@ -2929,7 +2865,7 @@ void CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_
 	for (int scan = 0; scan < samples; scan++)
 	{
 		UINT32 TRMSpix_of_current_scan = GetIndexOfPixel( drvno, TRMS_pixel, scan+firstSample, 0, CAMpos );
-		TRMS_pixels[scan] = pBigBufBase[drvno][TRMSpix_of_current_scan];
+		TRMS_pixels[scan] = userBuffer[drvno][TRMSpix_of_current_scan];
 	}
 	//rms analysis
 	GetRmsVal( samples, TRMS_pixels, mwf, trms );
@@ -2937,7 +2873,7 @@ void CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_
 }//CalcTrms
 
 /**
-\brief Returns the index of a pixel located in pBigBufBase.
+\brief Returns the index of a pixel located in userBuffer.
 \param drvno indentifier of PCIe card
 \param pixel position in one scan (0...(PIXEL-1))
 \param sample position in samples (0...(nos-1))
@@ -2961,7 +2897,7 @@ UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block,
 }
 
 /**
-\brief Returns the address of a pixel located in pBigBufBase.
+\brief Returns the address of a pixel located in userBuffer.
 \param drvno indentifier of PCIe card
 \param pixel position in one scan (0...(PIXEL-1))
 \param sample position in samples (0...(nos-1))
@@ -2970,7 +2906,7 @@ UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block,
 */
 void* GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM )
 {
-	return &pBigBufBase[drvno][GetIndexOfPixel( drvno, pixel, sample, block, CAM )];
+	return &userBuffer[drvno][GetIndexOfPixel( drvno, pixel, sample, block, CAM )];
 }
 
 /**
@@ -3481,7 +3417,7 @@ BOOL ResetPartialBinning( UINT32 drvno )
 void InitProDLL()
 {
 	struct global_vars g;
-	g.pBigBufBase = pBigBufBase;
+	g.userBuffer = userBuffer;
 	g.hDev = hDev;
 	g.aPIXEL = aPIXEL;
 	g.aCAMCNT = aCAMCNT;
@@ -3664,6 +3600,12 @@ BOOL SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob )
 		ErrorMsg( "DMARegisterInit for Buffer failed" );
 		return FALSE;
 	}
+	ULONG dmaBufferPartSizeInScans = DMA_BUFFER_SIZE_IN_SCANS / DMA_BUFFER_PARTS; //500
+	if (BOARD_SEL > 2)
+		numberOfInterrupts = Nob * (*Nospb) * aCAMCNT[drvno] * number_of_boards / dmaBufferPartSizeInScans - 2;//- 2 because intr counter starts with 0
+	else
+		numberOfInterrupts = Nob * (*Nospb) * aCAMCNT[drvno] / dmaBufferPartSizeInScans - 1;//- 1 because intr counter starts with 0
+	WDC_Err("numberOfInterrupts: 0x%x \n", numberOfInterrupts);
 	return TRUE;
 }
 
@@ -3683,7 +3625,7 @@ void ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam,
 	memcpy( pdest, pframe, length * sizeof( UINT16 ) );  // length in bytes
 	/*
 	WDC_Err( "RETURN FRAME: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, _PIXEL: %u, length: %u\n", drvno, curr_nos, curr_nob, curr_cam, _PIXEL, length );
-	WDC_Err("FRAME2: address Buff: 0x%x \n", pBigBufBase[drvno]);
+	WDC_Err("FRAME2: address Buff: 0x%x \n", userBuffer[drvno]);
 	WDC_Err("FRAME2: address pdio: 0x%x \n", pdioden);
 	WDC_Err("FRAME3: pix42 of ReturnFrame: %d \n", *((USHORT*)pdioden + 420));
 	WDC_Err("FRAME3: pix43 of ReturnFrame: %d \n", *((USHORT*)pdioden + 422));
