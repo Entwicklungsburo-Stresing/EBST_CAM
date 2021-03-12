@@ -164,14 +164,10 @@ copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"</Command>
       <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)CCDExamp\"
-xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)ESLSCDLL\"
-xcopy /Y "$(ProjectDir)Direct2dViewer_c.h" "$(SolutionDir)CCDExamp\"
-xcopy /Y "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"
-xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)$(Platform)\$(Configuration)\"
-xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"
+      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)shared_src\" 
+xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\" 
 xcopy /Y "$(TargetPath)" "$(SolutionDir)CCDExamp\$(Platform)\$(Configuration)\"</Command>
-      <Message>Copy $(ProjectName) to CCDExamp</Message>
+      <Message>Copy $(ProjectName)</Message>
     </PostBuildEvent>
     <BuildLog>
       <Path>$(OutDir)$(MSBuildProjectName).log</Path>
@@ -291,11 +287,11 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)CCDExamp\$(Platform)\$(Configuration)\"<
   <ItemGroup>
     <ClInclude Include="..\shared_src\Board.h" />
     <ClInclude Include="..\shared_src\Board_ll.h" />
+    <ClInclude Include="..\shared_src\Direct2dViewer_c.h" />
+    <ClInclude Include="..\shared_src\ESLSCDLL_pro.h" />
     <ClInclude Include="..\shared_src\lscpciej_lib.h" />
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
     <ClInclude Include="Direct2dViewer.h" />
-    <ClInclude Include="Direct2dViewer_c.h" />
-    <ClInclude Include="ESLSCDLL_pro.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
