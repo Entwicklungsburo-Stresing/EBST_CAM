@@ -17,7 +17,7 @@ along with Foobar.If not, see < http://www.gnu.org/licenses/>.
 Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
 */
 
-#include "Direct2dViewer_c.h"
+#include "shared_src/Direct2dViewer_c.h"
 #include "Direct2dViewer.h"
 
 /**
