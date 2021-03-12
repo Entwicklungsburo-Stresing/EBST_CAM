@@ -23,7 +23,7 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 
 #define CONTROLS_POSITION_Y 330
 #define SAMPLE_POSITION_X 50
-#define BLOCK_POSITION_X 650
+#define BLOCK_POSITION_X 610
 #define SLIDER_LENGTH 400
 #define LINE_HEIGHT 20
 #define SPINBOX_LENGTH 100
@@ -589,6 +589,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		EnableMenuItem( GetMenu( hWnd ), ID_SETRANGEOFINTEREST_5RANGES, FFTMenuEnable );
 		EnableMenuItem( GetMenu( hWnd ), ID_SETFULLBINNING, FFTMenuEnable );
 
+		//create label "sample"
 		HWND hWndSampleLabel = CreateWindow( WC_STATICA,
 			NULL,
 			WS_CHILD | WS_VISIBLE,
@@ -599,6 +600,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			NULL );
 		SendMessage( hWndSampleLabel, WM_SETTEXT, 0, (LPARAM)"sample" );
 
+		//create trackbor sample
 		hwndTrackNos = CreateWindow( TRACKBAR_CLASS,
 			"NOS", WS_BORDER | WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
 			TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY,
@@ -609,6 +611,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			NULL );
 		SendMessage( hwndTrackNos, TBM_SETRANGEMAX, TRUE, *Nospb - 1 );
 
+		//create spin box sample: edit field
 		HWND hWndSpinBoxSampleBuddy = CreateWindow(WC_EDIT,
 			NULL,
 			WS_CHILDWINDOW | WS_VISIBLE | WS_BORDER | ES_NUMBER | ES_RIGHT,
@@ -619,6 +622,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			hInst,
 			NULL );
 
+		//create spin box sample: up down arrows
 		HWND hWndSpinBoxSample = CreateWindow( UPDOWN_CLASS,
 			NULL,
 			WS_BORDER | WS_CHILD | WS_VISIBLE | UDS_NOTHOUSANDS | UDS_AUTOBUDDY | UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_ARROWKEYS | UDS_HOTTRACK,
@@ -630,6 +634,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			NULL );
 		SendMessage( hWndSpinBoxSample, UDM_SETRANGE32, 0, *Nospb-1 );
 
+		//create label "block"
 		HWND hWndBlockLabel = CreateWindow( WC_STATIC,
 			NULL,
 			WS_CHILD | WS_VISIBLE,
@@ -640,6 +645,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			NULL );
 		SendMessage( hWndBlockLabel, WM_SETTEXT, 0, (LPARAM)"block" );
 
+		//create trackbar block
 		hwndTrackNob = CreateWindow( TRACKBAR_CLASS,
 			"NOB", WS_BORDER | WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
 			TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY,
@@ -648,8 +654,9 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			hWnd, (HMENU)ID_TRACKBAR,
 			hInst,
 			NULL );
-		SendMessage( hwndTrackNob, TBM_SETRANGEMAX, TRUE, Nob - 1 );  //Optional, Default is 0-100
+		SendMessage( hwndTrackNob, TBM_SETRANGEMAX, TRUE, Nob - 1 );
 
+		//create spin box block: edit field
 		HWND hWndSpinBoxBlockBuddy = CreateWindow( WC_EDIT,
 			NULL,
 			WS_CHILDWINDOW | WS_VISIBLE | WS_BORDER | ES_NUMBER | ES_RIGHT,
@@ -660,6 +667,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			hInst,
 			NULL );
 
+		//create spin box block: up down arrows
 		HWND hWndSpinBoxBlock = CreateWindow( UPDOWN_CLASS,
 			NULL,
 			WS_BORDER | WS_CHILD | WS_VISIBLE | UDS_NOTHOUSANDS | UDS_AUTOBUDDY | UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_ARROWKEYS | UDS_HOTTRACK,
@@ -776,12 +784,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 				}
 			}
 			if (!Running) startMess( &dummy );
-			//_beginthreadex( 0, 0, &UpdateDisplayThread, 0, 0, 0 );
-			/*while (Running)
-			{
-				UpdateDisplay();
-				Sleep( 10 );
-			}*/
 			break;
 
 		case IDM_SETEXP:
