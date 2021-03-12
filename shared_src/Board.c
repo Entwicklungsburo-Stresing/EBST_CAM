@@ -2864,7 +2864,7 @@ void CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_
 	//storing the values of one pix for the rms analysis
 	for (int scan = 0; scan < samples; scan++)
 	{
-		UINT32 TRMSpix_of_current_scan = GetIndexOfPixel( drvno, TRMS_pixel, scan+firstSample, 0, CAMpos );
+		UINT64 TRMSpix_of_current_scan = GetIndexOfPixel( drvno, TRMS_pixel, scan+firstSample, 0, CAMpos );
 		TRMS_pixels[scan] = userBuffer[drvno][TRMSpix_of_current_scan];
 	}
 	//rms analysis
@@ -2881,18 +2881,17 @@ void CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_
 \param CAM position in camera count (0...(CAMCNT-1)
 \return Index of pixel. If a parameter is over its maximum the function returns 0.
 */
-UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM )
+UINT64 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM )
 {
 	if (pixel >= aPIXEL[drvno] || sample >= *Nospb || block >= Nob || CAM >= aCAMCNT[drvno]) return 0;
 	//init index with base position of pixel
-	UINT32 index = pixel;
+	UINT64 index = pixel;
 	//position of index at CAM position
-	index += CAM * (aPIXEL[drvno] + 4);  //GS! offset of 4 pixel via pipelining from CAM1 to CAM2
+	index += (UINT64)CAM *((UINT64)aPIXEL[drvno] + 4);  //GS! offset of 4 pixel via pipelining from CAM1 to CAM2
 	//position of index at sample
-	index += sample * aCAMCNT[drvno] * aPIXEL[drvno];
+	index += (UINT64)sample * (UINT64)aCAMCNT[drvno] * (UINT64)aPIXEL[drvno];
 	//position of index at block
-	index += block * (*Nospb) * aCAMCNT[drvno] * aPIXEL[drvno];
-
+	index += (UINT64)block * (UINT64)(*Nospb) * (UINT64)aCAMCNT[drvno] * (UINT64)aPIXEL[drvno];
 	return index;
 }
 
