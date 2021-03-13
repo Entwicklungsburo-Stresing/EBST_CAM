@@ -7,7 +7,6 @@ extern "C" {
 
 #include "Board_ll.h"
 #include "UIAbstractionLayer.h"
-#include "enum.h"
 
 #define DBGNOCAM FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
 #define DMA_BUFSIZEINSCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans

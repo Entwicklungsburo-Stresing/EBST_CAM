@@ -20,7 +20,6 @@ along with Foobar.If not, see < http://www.gnu.org/licenses/>.
 Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 */
 #include "CCDExamp.h"
-#include "shared_src/enum.h"
 
 // global variables
 HINSTANCE hInst;   // current instance
