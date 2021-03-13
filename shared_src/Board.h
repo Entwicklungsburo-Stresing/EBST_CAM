@@ -114,7 +114,7 @@ void SetISFFT( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if F
 void SetSensorType( UINT32 drvno, UINT8 sensor_type );
 void RsTOREG( UINT32 drvno );					//reset the TOREG - should be called before SetISPDA or SetISFFT
 // FIFO functions
-void initReadFFLoop( UINT32 drv, UINT32 * Blocks );
+void initReadFFLoop( UINT32 drv );
 int waitForBlockTrigger( UINT32 board_sel );
 int checkForPressedKeys();
 void ReadFFLoop( UINT32 board_sel );

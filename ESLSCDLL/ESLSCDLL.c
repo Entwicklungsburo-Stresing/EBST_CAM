@@ -457,7 +457,7 @@ DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UIN
 DllAccess void DLLCopyAllData( UINT32 drv, UINT16 *pdest )
 {
 	void* pframe = GetAddressOfPixel( drv, 0, 0, 0, 0 );
-	memcpy( pdest, pframe, (*Nospb) * Nob * aCAMCNT[drv] * aPIXEL[drv] * sizeof( UINT16 ) );  // length in bytes
+	memcpy( pdest, pframe, (UINT64)(*Nospb) * (UINT64)Nob * (UINT64)aCAMCNT[drv] * (UINT64)aPIXEL[drv] * sizeof( UINT16 ) );  // length in bytes
 	return;
 }
 
@@ -471,7 +471,7 @@ DllAccess void DLLCopyAllData( UINT32 drv, UINT16 *pdest )
 DllAccess void DLLCopyOneBlock( UINT32 drv, UINT16 block, UINT16 *pdest )
 {
 	void* pframe = GetAddressOfPixel( drv, 0, 0, block, 0 );
-	memcpy( pdest, pframe, (*Nospb) * aCAMCNT[drv] * aPIXEL[drv] * sizeof( UINT16 ) );  // length in bytes
+	memcpy( pdest, pframe, (UINT64)(*Nospb) * (UINT64)aCAMCNT[drv] * (UINT64)aPIXEL[drv] * sizeof( UINT16 ) );  // length in bytes
 	return;
 }
 
