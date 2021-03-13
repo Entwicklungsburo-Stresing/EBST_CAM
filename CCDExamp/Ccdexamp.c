@@ -21,19 +21,24 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 */
 #include "CCDExamp.h"
 
+#define CONTROLS_POSITION_Y 330
+#define SAMPLE_POSITION_X 50
+#define BLOCK_POSITION_X 610
+#define SLIDER_LENGTH 400
+#define LINE_HEIGHT 20
+#define SPINBOX_LENGTH 100
+
 // global variables
 HINSTANCE hInst;   // current instance
 LPCTSTR lpszAppName = "CCDExamp";
 LPCTSTR lpszTitle = "CCDExamp";
-HWND hwndTrackNos;
-HWND hwndTrackNob;
+HWND	hwndTrackNos,
+		hwndTrackNob,
+		hWndSpinBoxSample,
+		hWndSpinBoxBlock;
 DWORD cur_nos = 0;
 DWORD cur_nob = 0;
-#if CAMERA_SYSTEM == 3
-UINT16 direct2dviewer_gamma_white = 0x3FFF;
-#else
-UINT16 direct2dviewer_gamma_white = 0xFFFF;
-#endif
+UINT16 direct2dviewer_gamma_white = DIRECT2DVIEWER_GAMMA_WHITE_DEFAULT;
 UINT16 direct2dviewer_gamma_black = 0;
 UINT8 roi[6] = { 15, 42, 15, 42, 10, 6 };
 BOOL CALLING_WITH_NOS, CALLING_WITH_NOB = FALSE;
@@ -569,7 +574,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 	int i = 0;
 	int span = 0;
 
-	int trackbar_nob, trackbar_nospb, trackbar_nob_multiplier = 1, trackbar_nospb_multiplier = 1;
 	char *s = (char*)malloc( 10 );
 
 	char TrmsString[260];
@@ -587,59 +591,118 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		EnableMenuItem( GetMenu( hWnd ), ID_SETRANGEOFINTEREST_5RANGES, FFTMenuEnable );
 		EnableMenuItem( GetMenu( hWnd ), ID_SETFULLBINNING, FFTMenuEnable );
 
-		//if nos or nospb becomes a higher value then 30000 the gui is not posible to deisplay it
-		//so we are checking this and dividing the displayed value. Therefore we are seeing a wrong value when we are using the trackbar
-		trackbar_nospb = *Nospb;
-		while (trackbar_nospb > 30000)
-		{ //max for trackbar length
-			trackbar_nospb /= 10;
-			trackbar_nospb_multiplier *= 10;
-		}
-		trackbar_nob = Nob;
-		while (trackbar_nob > 30000)
-		{ //max for trackbar length
-			trackbar_nob /= 10;
-			trackbar_nob_multiplier *= 10;
-		}
+		//create label "sample"
+		HWND hWndSampleLabel = CreateWindow( WC_STATICA,
+			NULL,
+			WS_CHILD | WS_VISIBLE,
+			SAMPLE_POSITION_X, CONTROLS_POSITION_Y, 50, LINE_HEIGHT,
+			hWnd,
+			NULL,
+			hInst,
+			NULL );
+		SendMessage( hWndSampleLabel, WM_SETTEXT, 0, (LPARAM)"sample" );
 
+		//create trackbor sample
 		hwndTrackNos = CreateWindow( TRACKBAR_CLASS,
-			"NOS", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
-			TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY | WS_CAPTION,
-			300, 345,
-			400, 70,
-			hWnd, (HMENU)ID_TRACKBAR,
+			"NOS",
+			WS_BORDER | WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP |
+			TBS_AUTOTICKS | TBS_HORZ | TBS_TOOLTIPS | TBS_FIXEDLENGTH | TBM_SETBUDDY,
+			SAMPLE_POSITION_X, CONTROLS_POSITION_Y + LINE_HEIGHT,
+			SLIDER_LENGTH, LINE_HEIGHT*2,
+			hWnd,
+			(HMENU)ID_TRACKBAR,
 			hInst,
 			NULL );
-		SendMessage( hwndTrackNos, TBM_SETRANGE, TRUE,
-			MAKELONG( 0/*MIN RANGE*/, trackbar_nospb - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
+		SendMessage( hwndTrackNos, TBM_SETRANGEMAX, TRUE, *Nospb - 1 );
 
-		hwndTrackNob = CreateWindow( TRACKBAR_CLASS,
-			"NOB", WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_HORZ |
-			TBS_TOOLTIPS | WS_TABSTOP | TBS_FIXEDLENGTH | TBM_SETBUDDY | WS_CAPTION,
-			710, 345,
-			400, 70,
-			hWnd, (HMENU)ID_TRACKBAR,
+		//create spin box sample: edit field
+		HWND hWndSpinBoxSampleBuddy = CreateWindow(WC_EDIT,
+			NULL,
+			WS_BORDER | WS_CHILD | WS_VISIBLE |
+			ES_NUMBER | ES_RIGHT,
+			SAMPLE_POSITION_X + SLIDER_LENGTH + 5, CONTROLS_POSITION_Y + LINE_HEIGHT,
+			100, LINE_HEIGHT,
+			hWnd,
+			NULL,
 			hInst,
 			NULL );
-		SendMessage( hwndTrackNob, TBM_SETRANGE, TRUE,
-			MAKELONG( 0/*MIN RANGE*/, trackbar_nob - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
-		//ShowScrollBar(scrollb, SB_BOTH, TRUE);
+
+		//create spin box sample: up down arrows
+		hWndSpinBoxSample = CreateWindow( UPDOWN_CLASS,
+			NULL,
+			WS_BORDER | WS_CHILD | WS_VISIBLE |
+			UDS_NOTHOUSANDS | UDS_AUTOBUDDY | UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_ARROWKEYS | UDS_HOTTRACK,
+			0,0,
+			0,0,
+			hWnd,
+			NULL,
+			hInst,
+			NULL );
+		SendMessage( hWndSpinBoxSample, UDM_SETRANGE32, 0, *Nospb-1 );
+
+		//create label "block"
+		HWND hWndBlockLabel = CreateWindow( WC_STATIC,
+			NULL,
+			WS_CHILD | WS_VISIBLE,
+			BLOCK_POSITION_X, CONTROLS_POSITION_Y, 40, LINE_HEIGHT,
+			hWnd,
+			NULL,
+			hInst,
+			NULL );
+		SendMessage( hWndBlockLabel, WM_SETTEXT, 0, (LPARAM)"block" );
+
+		//create trackbar block
+		hwndTrackNob = CreateWindow( TRACKBAR_CLASS,
+			"NOB",
+			WS_BORDER | WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP |
+			TBS_AUTOTICKS | TBS_HORZ | TBS_TOOLTIPS | TBS_FIXEDLENGTH | TBM_SETBUDDY,
+			BLOCK_POSITION_X, CONTROLS_POSITION_Y + LINE_HEIGHT,
+			SLIDER_LENGTH, LINE_HEIGHT*2,
+			hWnd,
+			(HMENU)ID_TRACKBAR,
+			hInst,
+			NULL );
+		SendMessage( hwndTrackNob, TBM_SETRANGEMAX, TRUE, Nob - 1 );
+
+		//create spin box block: edit field
+		HWND hWndSpinBoxBlockBuddy = CreateWindow( WC_EDIT,
+			NULL,
+			WS_BORDER | WS_CHILD | WS_VISIBLE | ES_NUMBER | ES_RIGHT,
+			BLOCK_POSITION_X + SLIDER_LENGTH + 5, CONTROLS_POSITION_Y + LINE_HEIGHT,
+			100, LINE_HEIGHT,
+			hWnd,
+			NULL,
+			hInst,
+			NULL );
+
+		//create spin box block: up down arrows
+		hWndSpinBoxBlock = CreateWindow( UPDOWN_CLASS,
+			NULL,
+			WS_BORDER | WS_CHILD | WS_VISIBLE |
+			UDS_NOTHOUSANDS | UDS_AUTOBUDDY | UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_ARROWKEYS | UDS_HOTTRACK,
+			0, 0,
+			0, 0,
+			hWnd,
+			NULL,
+			hInst,
+			NULL );
+		SendMessage( hWndSpinBoxBlock, UDM_SETRANGE32, 0, Nob-1 );
 		break;
-	case WM_HSCROLL://ID_TRACKBAR:
-		//Define your function.
+
+	case WM_HSCROLL:
 		cur_nos = SendMessage( hwndTrackNos, TBM_GETPOS, 0, 0 );
 		cur_nob = SendMessage( hwndTrackNob, TBM_GETPOS, 0, 0 );
-		cur_nos *= trackbar_nospb_multiplier;
-		cur_nob *= trackbar_nob_multiplier;
+		SendMessage(hWndSpinBoxSample, UDM_SETPOS32, 0, cur_nos);
+		SendMessage(hWndSpinBoxBlock, UDM_SETPOS32, 0, cur_nob);
 		UpdateDisplay();
-		/*
-		//reset auto start in case of setting before
-		ResetS0Bit(0, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-		ResetS0Bit(1, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-		ResetS0Bit(2, 0x5, choosen_board); // S0Addr_CTRLB = 0x5,
-		//Reset partial binning
-		WriteLongS0(choosen_board, 0, 0x2C); // S0Addr_ARREG = 0x2C,
-		*/
+		break;
+
+	case WM_VSCROLL:
+		cur_nos = SendMessage(hWndSpinBoxSample, UDM_GETPOS32, 0, NULL);
+		cur_nob = SendMessage(hWndSpinBoxBlock, UDM_GETPOS32, 0, NULL);
+		SendMessage(hwndTrackNos, TBM_SETPOS, TRUE, cur_nos);
+		SendMessage(hwndTrackNob, TBM_SETPOS, TRUE, cur_nob);
+		UpdateDisplay();
 		break;
 
 	case WM_COMMAND:
@@ -731,12 +794,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 				}
 			}
 			if (!Running) startMess( &dummy );
-			//_beginthreadex( 0, 0, &UpdateDisplayThread, 0, 0, 0 );
-			/*while (Running)
-			{
-				UpdateDisplay();
-				Sleep( 10 );
-			}*/
 			break;
 
 		case IDM_SETEXP:
@@ -781,17 +838,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			DLLStart2dViewer( DRV, cur_nob, 0, _PIXEL, *Nospb );
 			break;
 		}
-		case ID_2DVIEW_START:
-		{
-			cur_nob = 0;
-			SendMessage( hwndTrackNob, TBM_SETPOS, TRUE, cur_nob );
-			SendMessage( hMSWND, WM_HSCROLL, NULL, NULL );
-			SetTimer( hMSWND,			// handle to main window 
-				IDT_TIMER1,					// timer identifier 
-				10,
-				(TIMERPROC)NULL );		// no timer callback 
-			break;
-		}
 		case ID_2DVIEW_SETGAMMA:
 		{
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_SETGAMMA ), hWnd, (DLGPROC)SetGamma );
@@ -804,19 +850,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		break;
 	case WM_2DVIEWER_CLOSED:
 		DLLDeinit2dViewer();
-		break;
-	case WM_TIMER:
-		cur_nob++;
-		if (cur_nob >= Nob)
-		{
-			KillTimer( hMSWND, IDT_TIMER1 );
-			cur_nob--;
-		}
-		else
-		{
-			SendMessage( hwndTrackNob, TBM_SETPOS, TRUE, cur_nob );
-			SendMessage( hMSWND, WM_HSCROLL, NULL, NULL );
-		}
 		break;
 	case WM_KEYDOWN:
 		switch (wParam)
@@ -1249,7 +1282,6 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 	BOOL success = FALSE;
 	UINT64 builtinram, freeram, freeram_old, calcram, allocram;
 	UINT divMB = 1024 * 1024;
-	int trackbar_nob, trackbar_nospb, trackbar_nob_multiplier = 1, trackbar_nospb_multiplier = 1;
 
 	switch (message)
 	{
@@ -1297,23 +1329,11 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 				}
 #endif
 			}
-			trackbar_nospb = *Nospb;
-			while (trackbar_nospb > 30000)
-			{ //max for trackbar length
-				trackbar_nospb /= 10;
-				trackbar_nospb_multiplier *= 10;
-			}
-			trackbar_nob = Nob;
-			while (trackbar_nob > 30000)
-			{ //max for trackbar length
-				trackbar_nob /= 10;
-				trackbar_nob_multiplier *= 10;
-			}
 			//update trackbars
-			SendMessage( hwndTrackNob, TBM_SETRANGE, TRUE,
-				MAKELONG( 0/*MIN RANGE*/, trackbar_nob - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
-			SendMessage( hwndTrackNos, TBM_SETRANGE, TRUE,
-				MAKELONG( 0/*MIN RANGE*/, trackbar_nospb - 1/*MAX RANGE*/ ) );  //Optional, Default is 0-100
+			SendMessage( hwndTrackNos, TBM_SETRANGEMAX, TRUE, *Nospb - 1 );
+			SendMessage( hwndTrackNob, TBM_SETRANGEMAX, TRUE, Nob - 1 );
+			SendMessage(hWndSpinBoxSample, UDM_SETRANGE32, 0, *Nospb - 1);
+			SendMessage(hWndSpinBoxBlock, UDM_SETRANGE32, 0, Nob - 1);
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
@@ -1860,6 +1880,7 @@ LRESULT CALLBACK SetGamma( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 	case WM_INITDIALOG:
 		// receive gamma from direct 2d module & write to ccdexamp gamma variables
 		direct2dviewer_gamma_white = DLLGetGammaWhite();
+		if (direct2dviewer_gamma_white == 0) direct2dviewer_gamma_white = DIRECT2DVIEWER_GAMMA_WHITE_DEFAULT;
 		direct2dviewer_gamma_black = DLLGetGammaBlack();
 		// set gamma to dialog box
 		SetDlgItemInt( hDlg, IDC_GAMMA_WHITE, direct2dviewer_gamma_white, FALSE );
@@ -1885,17 +1906,7 @@ LRESULT CALLBACK SetGamma( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 			break;
 
 		case IDDEFAULT:
-			// set gamma to dialog box
-			switch (CAMERA_SYSTEM)
-			{
-			case camera_system_3001:
-			case camera_system_3010:
-				SetDlgItemInt( hDlg, IDC_GAMMA_WHITE, 0xFFFF, FALSE );
-				break;
-			case camera_system_3030:
-				SetDlgItemInt( hDlg, IDC_GAMMA_WHITE, 0x3FFF, FALSE );
-				break;
-			}
+			SetDlgItemInt( hDlg, IDC_GAMMA_WHITE, DIRECT2DVIEWER_GAMMA_WHITE_DEFAULT, FALSE );
 			SetDlgItemInt( hDlg, IDC_GAMMA_BLACK, 0, FALSE );
 		}
 		break; //WM_COMMAND

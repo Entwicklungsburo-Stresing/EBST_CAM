@@ -110,6 +110,10 @@ void UpdateTxT(void)
 	int i = 0;
 	int xPos = 0;
 
+	j = sprintf( TrmsString, "                                                           " );//clear old display
+	TextOut(hMSDC,20,YLENGTH + 50,TrmsString,j);
+	j = 0;
+
 	//B!j = sprintf_s(TrmsString, 260, " , linecounter max is %u , ", GetLastMaxLines());
 	//B!j += sprintf_s(TrmsString + j, 260, " ISRTime: %u us", GetISRTime());
 
@@ -122,13 +126,11 @@ void UpdateTxT(void)
 	if ((Dispcnt % 10) == 0) //display only every 10th val or it's not readable
 		yVal = DisplData[0][xPos];// YVal(1, xPos);
 	Dispcnt += 1;
-	j += sprintf_s(TrmsString + j, 260, " x: %i y: %i ", xPos, yVal);
+	j += sprintf_s(TrmsString + j, 260, " x: %i y: %i", xPos, yVal);
 
 	if (DisplData[0][1088 + 1000] != 989) ERRCNT += 1;
 	if (ShowTrms)
 	{
-		//j=sprintf(TrmsString,"                                                           ") ;//clear old display
-		//TextOut(hMSDC,20,YLENGTH + 50,TrmsString,j);
 		j += sprintf_s( TrmsString + j, 260, " Trms of Pixel %lu CH1 is %.1f ", TRMSpix, TRMSval_global[0] );
 		if (CAMCNT > 1) j += sprintf_s( TrmsString + j, 260, ", Trms of Pixel %lu CH2 is %.1f ", TRMSpix, TRMSval_global[1] );
 		j += sprintf_s(TrmsString + j, 260, " -- scan: %lu, err: %lu         ", DisplData[0][5],ERRCNT);
@@ -269,7 +271,7 @@ void startMess(void *dummy)
 	else				params.board_sel = choosen_board;
 	// start read loop
 	_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);
-	DWORD64 IsrNumber = Nob * (*Nospb) / (DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS);
+	DWORD64 IsrNumber = Nob * (*Nospb) / (DMA_BUFFER_SIZE_IN_SCANS / DMA_BUFFER_PARTS);
 	if (both_boards) IsrNumber *= 2;
 	if (CAMCNT == 2) IsrNumber *= 2;
 	while (IsrCounter < IsrNumber) {
