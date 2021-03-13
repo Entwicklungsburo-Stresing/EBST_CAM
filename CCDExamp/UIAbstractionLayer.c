@@ -25,6 +25,5 @@ void notifyBlockStart( UINT32 drv )
 
 void notifyBlockDone( UINT32 drv )
 {
-	UpdateDisplay();
 	return;
 }

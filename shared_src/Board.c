@@ -1705,10 +1705,8 @@ void RsTOREG( UINT32 drvno )
 //  Fifo only Functions
 
 
-void initReadFFLoop( UINT32 drv, UINT32 * Blocks )
+void initReadFFLoop( UINT32 drv )
 {
-	UINT32 val = 0;
-
 	//WDC_Err("entered DLLReadFFLoop of PCIEcard #%i\n", drv);
 	if (!DBGNOCAM)
 	{
@@ -1725,12 +1723,9 @@ void initReadFFLoop( UINT32 drv, UINT32 * Blocks )
 	//reset intr copy buf function
 	dmaBufferPartReadPos[drv] = 0;
 	userBufferWritePos[drv] = userBuffer[drv]; // reset buffer index to base we got from InitDMA
-	WDC_Err( "RESET BIGBUF to %x\n", userBufferWritePos[drv] );
+	WDC_Err( "RESET userBufferWritePos to %x\n", userBufferWritePos[drv] );
 	IsrCounter = 0;
 	SetExtFFTrig( drv );
-	if(!ReadLongS0( drv, &val, S0Addr_NOB ))//get the needed Blocks
-		WDC_Err("Reading blocks failed. drv: %u\n", drv);
-	*Blocks = val;
 	//set MeasureOn Bit
 	if(!setMeasureOn( drv ))
 		WDC_Err("Set measure on failed. drv: %u\n", drv);
@@ -1784,7 +1779,7 @@ int checkForPressedKeys( )
 		return 1;
 	if (GetAsyncKeyState( VK_SPACE ))
 	{ //start if Space was pressed
-		while (GetAsyncKeyState( VK_SPACE ) & 0x8000 == 0x8000) {}; //wait for release
+		while (GetAsyncKeyState( VK_SPACE ) & 0x8000) {}; //wait for release
 		return 2;
 	}
 	return 0;
@@ -1797,16 +1792,15 @@ int checkForPressedKeys( )
 */
 void ReadFFLoop( UINT32 board_sel )
 {
-	ULONG	Blocks;
 	WDC_Err("Start ReadFFLoop with board_sel: %u\n", board_sel);
 	if (board_sel == 1 || board_sel == 3)
-		initReadFFLoop( 1, &Blocks );
+		initReadFFLoop( 1 );
 	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
-		initReadFFLoop( 2, &Blocks );
+		initReadFFLoop( 2 );
 
 	//WDC_Err("ReadFFLoop: Block Trigger is set to%d\n", blocktrigger);
 	//SetThreadPriority()
-	for (int blk_cnt = 0; blk_cnt < Blocks; blk_cnt++)
+	for (UINT32 blk_cnt = 0; blk_cnt < Nob; blk_cnt++)
 	{//block read function
 		if (!waitForBlockTrigger( board_sel ))
 		{
