@@ -153,7 +153,7 @@ int GetCursorPosition()
 	return (int)x;// CurPos.x;
 }
 
-void initCamera()
+void initCamera_old()
 {
 	switch (CAMERA_SYSTEM)
 	{
@@ -218,7 +218,7 @@ void initMeasurement()
 	//set TrigOut, default= XCK
 	StopSTimer(choosen_board);
 	RSFifo(choosen_board);
-	initCamera();
+	initCamera_old();
 	if (both_boards) {
 		StopSTimer(2);
 		SetIntFFTrig(2);
