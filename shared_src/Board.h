@@ -9,8 +9,8 @@ extern "C" {
 #include "UIAbstractionLayer.h"
 
 #define DBGNOCAM FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
-#define DMA_BUFSIZEINSCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
-#define DMA_HW_BUFPARTS 2
+#define DMA_BUFFER_SIZE_IN_SCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
+#define DMA_BUFFER_PARTS 2
 // DMA
 #define DMA_CONTIGBUF TRUE		// use if DMABigBuf is set by driver (data must be copied afterwards to DMABigBuf)
 #define DMA_SGBUF FALSE			// use if DMABigBuf is set by application (pointer must be passed to SetupPCIE_DMA)
@@ -18,7 +18,7 @@ extern "C" {
 #define _FORCETLPS128 TRUE	//only use payload size 128byte
 #define LEGACY_202_14_TLPCNT FALSE
 #define MANUAL_OVERRIDE_TLP FALSE // values are defined in board.c -> SetManualTLP()
-#define DMA_DMASPERINTR DMA_BUFSIZEINSCANS / DMA_HW_BUFPARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb 
+#define DMA_DMASPERINTR DMA_BUFFER_SIZE_IN_SCANS / DMA_BUFFER_PARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb 
 #define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
 #define INTR_EN TRUE		// enables INTR
 
@@ -33,26 +33,26 @@ struct ffloopparams
 
 struct global_vars
 {
-	USHORT** pBigBufBase;
+	USHORT** userBuffer;
 	WDC_DEVICE_HANDLE* hDev;
 	//PWDC_DEVICE* pDev;
 	ULONG* aPIXEL;
 	ULONG* aCAMCNT;
-	int* Nospb;
+	UINT32* Nospb;
 };
 
 extern int newDLL;
-extern USHORT** pBigBufBase;
-extern int Nob;
-extern int* Nospb;
-extern ULONG* aCAMCNT;	// cameras parallel
-extern ULONG ADRDELAY;
+extern UINT16** userBuffer;
+extern UINT32 Nob;
+extern UINT32* Nospb;
+extern UINT32* aCAMCNT;	// cameras parallel
+extern UINT32 ADRDELAY;
 extern BOOL escape_readffloop;
 extern BOOL CONTFFLOOP;
 extern UINT32 CONTPAUSE;
 extern UINT8 number_of_boards;
 extern DWORD64 IsrCounter;
-extern ULONG* aPIXEL;
+extern UINT32* aPIXEL;
 extern BOOL Running;
 extern UINT32 BOARD_SEL;
 extern struct ffloopparams params;
@@ -117,7 +117,7 @@ void SetISFFT( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if F
 void SetSensorType( UINT32 drvno, UINT8 sensor_type );
 void RsTOREG( UINT32 drvno );					//reset the TOREG - should be called before SetISPDA or SetISFFT
 // FIFO functions
-void initReadFFLoop( UINT32 drv, UINT32 * Blocks );
+void initReadFFLoop( UINT32 drv );
 int waitForBlockTrigger( UINT32 board_sel );
 int checkForPressedKeys();
 void ReadFFLoop( UINT32 board_sel );
@@ -161,7 +161,7 @@ void DAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output ); //set output o
 void FreeMemInfo( UINT64 *pmemory_all, UINT64 *pmemory_free );
 void GetRmsVal( UINT32 nos, UINT16 *TRMSVals, double *mwf, double *trms );
 void CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );
-UINT32 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM );
+UINT64 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM );
 void* GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM );
 UINT8 WaitforTelapsed( LONGLONG musec );
 void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA );
