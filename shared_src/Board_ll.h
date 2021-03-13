@@ -14,12 +14,9 @@
 #include "wchar.h"
 #include "lscpciej_lib.h"
 #include "shared_src/ESLSCDLL_pro.h"
-#include "enum.h"
+#include "shared_src/enum.h"
 
 extern WDC_DEVICE_HANDLE* hDev;
-//extern PWDC_DEVICE pDev;
-
-
 
 BOOL SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno );
 BOOL SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno );

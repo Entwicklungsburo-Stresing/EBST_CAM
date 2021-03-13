@@ -10,6 +10,6 @@ void UpdateTxT( void );
 void UpdateDisplay();
 unsigned int __stdcall UpdateDisplayThread( void *parg );
 int GetCursorPosition();
-void initCamera();
+void initCamera_old();
 void initMeasurement();
 void startMess( void * dummy );

@@ -1,6 +1,6 @@
 #pragma once
 #include <Windows.h>
-#include "shared_src/enum.h""
+#include "shared_src/enum.h"
 
 // GLOBAL.h
 // all globals for measure loop
