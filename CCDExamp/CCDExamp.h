@@ -38,7 +38,6 @@ extern DWORD cur_nos;
 extern DWORD cur_nob;
 
 // function declerations
-int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow );
 BOOL InitApplication( HINSTANCE hInstance );
 BOOL InitInstance( HINSTANCE hInstance, int nCmdShow );
 void AboutTiming( HWND hWnd );
