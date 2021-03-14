@@ -47,7 +47,7 @@
            <item>
             <widget class="QLabel" name="labelNos">
              <property name="text">
-              <string>Number of sample</string>
+              <string>Number of samples</string>
              </property>
             </widget>
            </item>
