@@ -5,13 +5,10 @@
 // GLOBAL.h
 // all globals for measure loop
 // can be used for PCIE board
-// for CCDExample and ESLSCDLL
+// for CCDExample
 
 #define IDM_EXIT           100
-
-
-#define CAMERA_SYSTEM camera_system_3030  // use 1 to 3 like in enum above
-
+#define CAMERA_SYSTEM camera_system_3030
 #define ADC_MODE normal
 #define ADC_CUSTOM_PATTERN 0xFFFF
 //options for 3010
@@ -32,14 +29,11 @@
 //static int YSHIFT = 8;			// 16bit=8
 static int YSHIFT = 6;			// 14 bit
 // camera values for calling GETCCD and InitBoard
-
-
 #define SENSOR_TYPE PDAsensor
 #define _FFTLINES 64 		// no of vertical lines of FFT sensors, usually 64
 // =0 if not FFT
 #define Vfreqini 7		//vclk freq for FFTs with FIFO in divider of12MHz (0..15)
 						//=4 for highest speed with 7030-0906
-
 #define TRIGGER_MODE xck
 #define XCKDELAY 0
 // Display data
