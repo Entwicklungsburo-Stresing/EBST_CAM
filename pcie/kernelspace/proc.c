@@ -12,6 +12,7 @@
 #include "proc.h"
 #include "device.h"
 #include "registers.h"
+#include "debug.h"
 #include <linux/proc_fs.h>
 #include <linux/uaccess.h>
 
@@ -35,7 +36,7 @@ ssize_t lscpcie_read_proc(struct file *filp, char __user *buf, size_t count,
 
   for (i = 0; i < MAX_BOARDS; i++)
     if (lscpcie_devices[i].minor >= 0) {
-      if (lscpcie_devices[i].status & HARDWARE_PRESENT) count_boards++;
+      if (lscpcie_devices[i].status & DEV_HARDWARE_PRESENT) count_boards++;
       else count_debug++;
     }
 
@@ -123,7 +124,8 @@ void proc_init_module(void) {
 
 void proc_clean_up_module(void)
 {
-  printk(KERN_WARNING NAME" removing module proc entry\n");
+  if (debug_module)
+    printk(KERN_WARNING "lscpcie: removing module proc entry\n");
   if (proc_entry) {
     remove_proc_entry(NAME, NULL);
     proc_entry = NULL;
@@ -161,7 +163,7 @@ ssize_t lscpcie_read_registers_proc(struct file *filp, char __user *buf,
   struct dev_struct *dev = PDE_DATA(file_inode(filp));
   char line_buf[128], ascii_buffer[12];
 
-  if (!(dev->status & HARDWARE_PRESENT)) return -ENODEV;
+  if (!(dev->status & DEV_HARDWARE_PRESENT)) return -ENODEV;
 
   if ((dev->proc_actual_register > 0x80)
       &&
@@ -228,7 +230,7 @@ ssize_t lscpcie_read_io_proc(struct file *filp, char __user *buf, size_t count,
   int offset = *offp;
   struct dev_struct *dev = PDE_DATA(file_inode(filp));
 
-  if (!(dev->status & HARDWARE_PRESENT)) return -ENODEV;
+  if (!(dev->status & DEV_HARDWARE_PRESENT)) return -ENODEV;
 
   if (offset >= sizeof(dma_reg_t) + sizeof(s0_t)) return 0; /* done */
 
@@ -303,7 +305,7 @@ void proc_init(struct dev_struct *dev)
   dev->proc_actual_register = 0;
   sprintf(name, "%s%d", NAME, dev->minor);
   dev->proc_data_entry = proc_create_data(name, 0, NULL, &proc_data_fops, dev);
-  if (dev->status & HARDWARE_PRESENT) {
+  if (dev->status & DEV_HARDWARE_PRESENT) {
     sprintf(name, "%s%d_registers", NAME, dev->minor);
     dev->proc_registers_entry
       = proc_create_data(name, 0, NULL, &proc_registers_fops, dev);

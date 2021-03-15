@@ -62,18 +62,21 @@ int device_init(struct dev_struct *dev, int minor)
   PDEBUG(D_MODULE, "adding cdev for %d,%d\n", MAJOR(dev->device),
 	 MINOR(dev->device));
   result = cdev_add(&dev->cdev, dev->device, 1);
-  if (result < 0) device_clean_up(dev);
-  dev->status |= DEVICE_CREATED;
+  if (result < 0)
+    goto out_error;
 
-  PDEBUG(D_MODULE, "creating device %d\n", minor);
+  dev->status |= DEV_CDEV_CREATED;
+
+  PDEBUG(D_MODULE, "creating device class %d\n", minor);
   device
     = device_create(lscpcie_class, NULL, dev->device, NULL, "%s%d", NAME, minor);
   if (IS_ERR(device)) { //-->> no! do proper cleanup!! <<--
     printk(KERN_ERR "creation of device %s%d failed\n", NAME, minor);
     result = PTR_ERR(device);
-    goto error;
+    goto out_error;
   }
 
+  dev->status |= DEV_CLASS_CREATED;
   dev->minor = minor;
 
   /* semaphores for dma buffer reading (and writing) */
@@ -102,33 +105,32 @@ int device_init(struct dev_struct *dev, int minor)
   else
     dev->control->number_of_cameras = DEFAULT_NUMBER_OF_CAMERAS;
 
-  if (num_scans[dev_no] > 0) dev->control->number_of_scans = num_scans[dev_no];
-  else dev->control->number_of_scans = DEFAULT_NUM_SCANS;
+  if (num_scans[dev_no] > 0)
+    dev->control->number_of_scans = num_scans[dev_no];
+  else
+    dev->control->number_of_scans = DEFAULT_NUM_SCANS;
 
-  if (num_blocks[dev_no] > 0) dev->control->number_of_blocks = num_blocks[dev_no];
-  else dev->control->number_of_blocks = DEFAULT_NUM_BLOCKS;
+  if (num_blocks[dev_no] > 0)
+    dev->control->number_of_blocks = num_blocks[dev_no];
+  else
+    dev->control->number_of_blocks = DEFAULT_NUM_BLOCKS;
 
-  result = dma_init(dev);
-  if (result < 0) goto error;
+  return 0;
 
-  return result;
-
- error:
+ out_error:
   device_clean_up(dev);
   return result;
 }
 
 
 void device_clean_up(struct dev_struct *dev) {
-  PDEBUG(D_MODULE, "cleaning up proc\n");
-  proc_clean_up(dev);
-  PDEBUG(D_MODULE, "cleaning up dma\n");
-  dma_finish(dev);
-  if (dev->status & DEVICE_CREATED) {
+  if (dev->status & DEV_CLASS_CREATED) {
+    PDEBUG(D_MODULE, "destroying device class\n");
+    device_destroy(lscpcie_class, dev->device);
+  }
+  if (dev->status & DEV_CDEV_CREATED) {
     PDEBUG(D_MODULE, "removing cdev\n");
     cdev_del(&dev->cdev);
-    PDEBUG(D_MODULE, "destroying device\n");
-    device_destroy(lscpcie_class, dev->device);
   }
   PDEBUG(D_MODULE, "done cleaning up device %d\n", dev->minor);
 
