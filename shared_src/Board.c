@@ -2924,6 +2924,39 @@ UINT8 WaitforTelapsed( LONGLONG musec )
 	return 1;
 }//WaitforTelapsed
 
+
+/**
+\brief General init routine for all Camera Systems.
+	Sets register in camera.
+\param drvno selects PCIe board
+\param pixel pixel count of camera
+\param trigger_input for CC: selects trigger input. 0 - XCK, 1 - EXTTRIG, 2 - DAT
+\param IS_FFT =1 vclk on, =0 vclk off
+\param IS_AREA =1 area mode on, =0 area mode off
+\param IS_COOLED =1 disables PCIe FIFO when cool cam transmits cool status
+\param led_on 1 led on, 0 led off
+\param gain_high 1 gain on, 0 gain off
+\return void
+*/
+void InitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA, UINT16 IS_COOLED, UINT16 gain_high )
+{
+	// when TRUE: disables PCIe FIFO when cool cam transmits cool status
+	if (IS_COOLED)
+		Use_ENFFW_protection( drvno, TRUE );
+	else
+		Use_ENFFW_protection( drvno, FALSE );
+	//set camera pixel register
+	SendFLCAM( drvno, maddr_cam, cam_adaddr_pixel, pixel );
+	//set trigger input
+	SendFLCAM( drvno, maddr_cam, cam_adaddr_trig_in, trigger_input );
+	//select vclk and Area mode on
+	IS_AREA <<= 15;
+	SendFLCAM( drvno, maddr_cam, cam_adaddr_vclk, IS_FFT | IS_AREA );
+	//set gain and led
+	SendFLCAM( drvno, maddr_cam, cam_adaddr_gain_led, gain_high );
+	return;
+}
+
 /**
 \brief Init routine for Camera System 3001.
 	Sets register in camera.
