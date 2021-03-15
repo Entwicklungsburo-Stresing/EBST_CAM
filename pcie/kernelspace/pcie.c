@@ -64,8 +64,10 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 
   PDEBUG(D_INTERRUPT, "allocating interrupt vector\n");
   result = pci_alloc_irq_vectors(pci_dev, 1, 1, PCI_IRQ_MSI);
-  if (result < 0)
+  if (result < 0) {
+    printk(KERN_ERR NAME": couldn't allocate irq vector\n");
     goto out_error;
+  }
   dev->irq_line = pci_dev->irq;
   PDEBUG(D_INTERRUPT, "interrupt line is %d\n", dev->irq_line);
   dev->status |= DEV_IRQ_ALLOCATED;
@@ -108,7 +110,7 @@ void remove_lscpcie(struct pci_dev *pci_dev)
     device_clean_up(dev);
     if (dev->mapped_pci_base)
       iounmap(dev->mapped_pci_base);
-    if (dev->status &= DEV_IRQ_ALLOCATED) {
+    if (dev->status & DEV_IRQ_ALLOCATED) {
       PDEBUG(D_INTERRUPT, "freeing interrupt vector\n");
       pci_free_irq_vectors(pci_dev);
       PDEBUG(D_INTERRUPT, "interrupt vector freed\n");
