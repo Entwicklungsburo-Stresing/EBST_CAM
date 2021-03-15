@@ -40,8 +40,10 @@ void set_bits_s0_dword(struct dev_struct *dev, u8 address, u32 bits, u32 mask)
             dev->mapped_pci_base + 0x80 + address);
 }
 
-int dma_init(struct dev_struct *dev) {
-  struct device *pdev = dev->status & HARDWARE_PRESENT ? &dev->pci_dev->dev : 0;
+int dma_init(struct dev_struct *dev)
+{
+  struct device *pdev
+    = dev->status & DEV_HARDWARE_PRESENT ? &dev->pci_dev->dev : 0;
   int num_dma_pages;
   int dev_no = get_device_number(dev);
 
@@ -67,7 +69,7 @@ int dma_init(struct dev_struct *dev) {
 
   PDEBUG(D_BUFFERS, "need %d bytes for dma\n", dev->dma_mem_size);
 
-  if (dev->status & HARDWARE_PRESENT) {
+  if (dev->status & DEV_HARDWARE_PRESENT) {
     PDEBUG(D_BUFFERS, "allocating %d bytes of dma memory\n",
            dev->dma_mem_size);
     dev->dma_virtual_mem
@@ -100,7 +102,7 @@ void dma_finish(struct dev_struct *dev)
 {
   dma_end(dev);
   if (dev->dma_virtual_mem) {
-    if (dev->status & HARDWARE_PRESENT) {
+    if (dev->status & DEV_HARDWARE_PRESENT) {
       PDEBUG(D_BUFFERS, "freeing dma buffer");
       dma_free_coherent(&dev->pci_dev->dev, dev->dma_mem_size,
 			dev->dma_virtual_mem, dev->dma_handle);
@@ -126,7 +128,8 @@ static enum irqreturn isr(int irqn, void *dev_id)
   set_bits_s0_dword(dev, S0Addr_IRQREG, (1<<IRQ_REG_ISR_active),
                     (1<<IRQ_REG_ISR_active));
 
-  if (fifo_flags & (1<<FF_FLAGS_OVFL)) dev->status |= FIFO_OVERFLOW;
+  if (fifo_flags & (1<<FF_FLAGS_OVFL))
+    dev->status |= DEV_FIFO_OVERFLOW;
 
   // advance buffer pointer
   dev->control->write_pos
@@ -145,7 +148,7 @@ static enum irqreturn isr(int irqn, void *dev_id)
         (dev->control->read_pos > dev->control->write_pos))
       goto end; /* w1 r w0 */
 
-  dev->status |= DMA_OVERFLOW;
+  dev->status |= DEV_DMA_OVERFLOW;
 
  end:
   set_bits_s0_dword(dev, S0Addr_IRQREG, 0, (1<<IRQ_REG_ISR_active));

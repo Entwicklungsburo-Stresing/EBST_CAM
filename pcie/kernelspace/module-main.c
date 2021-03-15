@@ -56,7 +56,7 @@ module_param_array(num_blocks,  int, &n_num_blocks,  S_IRUGO);
    stored spearately in the global variable module_debug since it belongs to
    the module as a whole and not to a specific driver instance.
  */
-int debug = 0;
+int debug = 0xFF;
 int debug_module = 0;
 
 module_param(debug, int, S_IRUGO);
@@ -137,7 +137,7 @@ static int __init lscpcie_module_init(void) {
     printk(KERN_ERR NAME " registering pci device failed with %d", result);
     goto failed;
   }
-  module_status |= PCI_REGISTERED;
+  module_status |= DEV_PCI_REGISTERED;
   PMDEBUG("registered pci driver\n");
 
   proc_init_module();
@@ -153,18 +153,19 @@ static int __init lscpcie_module_init(void) {
 }
 
 
-static void __exit lscpcie_module_exit(void) {
+static void __exit lscpcie_module_exit(void)
+{
   clean_up_lscpcie_module();
   printk(NAME" unloaded\n");
 }
 
 /* release all kernel resources allocated at module init */
-void clean_up_lscpcie_module(void) {
+void clean_up_lscpcie_module(void)
+{
   int i;
 
-  proc_clean_up_module();
-
-  if (module_status & PCI_REGISTERED) pci_unregister_driver(&pci_driver);
+  if (module_status & DEV_PCI_REGISTERED)
+    pci_unregister_driver(&pci_driver);
 
   for (i = 0; i < MAX_BOARDS; i++)
     if (lscpcie_devices[i].minor >= 0) {
@@ -181,6 +182,8 @@ void clean_up_lscpcie_module(void) {
     PMDEBUG("destroying class\n");
     class_destroy(lscpcie_class);
   }
+
+  proc_clean_up_module();
 
   PMDEBUG("done cleaning up module\n");
 }

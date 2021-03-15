@@ -55,7 +55,7 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 
   case LSCPCIE_IOCTL_HARDWARE_PRESENT:
     PDEBUG(D_IOCTL, "ioctl get hardware present\n");
-    val = dev->status & HARDWARE_PRESENT ? 1 : 0;
+    val = dev->status & DEV_HARDWARE_PRESENT ? 1 : 0;
     result = put_user(val, (int __user *)arg);
     if (result) result = -EFAULT;
     break;
@@ -76,14 +76,14 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 
   case LSCPCIE_IOCTL_FIFO_OVERFLOW:
     PDEBUG(D_IOCTL, "ioctl get fifo overflow\n");
-    val = dev->status & FIFO_OVERFLOW ? 1 : 0;
+    val = dev->status & DEV_FIFO_OVERFLOW ? 1 : 0;
     result = put_user(val, (int __user *)arg);
     if (result) result = -EFAULT;
     break;
 
   case LSCPCIE_IOCTL_CLEAR_FIFO:
     PDEBUG(D_IOCTL, "ioctl clear fifo\n");
-    dev->status &= ~FIFO_OVERFLOW;
+    dev->status &= ~DEV_FIFO_OVERFLOW;
 #warning make sure that camera is not running
     if (down_interruptible(&dev->read_sem)) return -ERESTARTSYS;
     dev->control->read_pos = 0;
