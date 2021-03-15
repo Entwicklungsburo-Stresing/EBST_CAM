@@ -20,31 +20,11 @@
 #include <linux/dma-mapping.h>
 #include <linux/pci.h>
 
-void set_bits_s0_byte(struct dev_struct *dev, u8 address, u8 bits, u8 mask)
-{
-  u8 val = ioread8(dev->mapped_pci_base + 0x80 + address);
-  iowrite8((val & ~mask) | (bits & mask), dev->mapped_pci_base + 0x80 + address);
-}
-
-void set_bits_s0_word(struct dev_struct *dev, u8 address, u16 bits, u16 mask)
-{
-  u16 val = ioread16(dev->mapped_pci_base + 0x80 + address);
-  iowrite16((val & ~mask) | (bits & mask),
-            dev->mapped_pci_base + 0x80 + address);
-}
-
-void set_bits_s0_dword(struct dev_struct *dev, u8 address, u32 bits, u32 mask)
-{
-  u32 val = ioread32(dev->mapped_pci_base + 0x80 + address);
-  iowrite32((val & ~mask) | (bits & mask),
-            dev->mapped_pci_base + 0x80 + address);
-}
-
 int dma_init(struct dev_struct *dev)
 {
   struct device *pdev
     = dev->status & DEV_HARDWARE_PRESENT ? &dev->pci_dev->dev : 0;
-  int num_dma_pages;
+  int num_dma_pages, result;
   int dev_no = get_device_number(dev);
 
   PDEBUG(D_BUFFERS, "initialising dma\n");
@@ -57,12 +37,11 @@ int dma_init(struct dev_struct *dev)
   /* the size of the dma buffer is taken one page size larger than necessary
      to ensure that the used buffer starts at a page boundary (needed for
      mmap export to userland) */
-  dev->control->buffer_size
+  dev->control->dma_buf_size
     = dev->control->number_of_cameras * dev->control->number_of_pixels
-    * dev->control->number_of_scans * sizeof(u16)
-    * dev->control->number_of_blocks;
-  num_dma_pages = dev->control->buffer_size >> PAGE_SHIFT;
-  if (dev->control->buffer_size > num_dma_pages << PAGE_SHIFT)
+    * dev->control->dma_num_scans * sizeof(u16);
+  num_dma_pages = dev->control->dma_buf_size >> PAGE_SHIFT;
+  if (dev->control->dma_buf_size > num_dma_pages << PAGE_SHIFT)
     num_dma_pages++;
 
   dev->dma_mem_size = num_dma_pages << PAGE_SHIFT;
@@ -88,9 +67,12 @@ int dma_init(struct dev_struct *dev)
     return -ENOMEM;
   }
 
-  dev->control->buffer_size = dev->dma_mem_size;
-  dev->bytes_per_interrupt = 500;
-  dma_start(dev);
+  dev->control->dma_buf_size = dev->dma_mem_size;
+  result = dma_start(dev);
+  if (result) {
+    dma_finish(dev);
+    return result;
+  }
   
   PDEBUG(D_BUFFERS, "dma initialised\n");
 
@@ -100,7 +82,7 @@ int dma_init(struct dev_struct *dev)
 /* release dma buffer */
 void dma_finish(struct dev_struct *dev)
 {
-  dma_end(dev);
+  //dma_end(dev); already done in unregistering pci device
   if (dev->dma_virtual_mem) {
     if (dev->status & DEV_HARDWARE_PRESENT) {
       PDEBUG(D_BUFFERS, "freeing dma buffer");
@@ -117,11 +99,13 @@ void dma_finish(struct dev_struct *dev)
 /* interrupt service routine */
 static enum irqreturn isr(int irqn, void *dev_id)
 {
+  int old_write_pos;
+  u8 fifo_flags;
   struct dev_struct *dev = (struct dev_struct *) dev_id;
   PDEBUG(D_INTERRUPT, "got interrupt\n");
 
-  int old_write_pos = dev->control->write_pos;
-  u8 fifo_flags = readb(dev->mapped_pci_base + 0x80 + S0Addr_FF_FLAGS);
+  old_write_pos = dev->control->write_pos;
+  fifo_flags = readb(dev->mapped_pci_base + 0x80 + S0Addr_FF_FLAGS);
 
   set_bits_s0_dword(dev, S0Addr_IRQREG, (1<<IRQ_REG_ISR_active),
                     (1<<IRQ_REG_ISR_active));
@@ -131,8 +115,8 @@ static enum irqreturn isr(int irqn, void *dev_id)
 
   // advance buffer pointer
   dev->control->write_pos
-    = (dev->control->write_pos + dev->bytes_per_interrupt)
-    % dev->control->buffer_size;
+    = (dev->control->write_pos + dev->control->bytes_per_interrupt)
+    % dev->control->dma_buf_size;
 
   // check for buffer overflow
   if (old_write_pos < dev->control->write_pos) {
@@ -163,9 +147,6 @@ int dma_start(struct dev_struct *dev)
   unsigned long irqflags = IRQF_SHARED;
   void *dev_id = dev;
 
-  /* >>>> any sort of dma start-up code needed before activating the interrupt
-          goes here
-     <<<< */
   printk(KERN_ERR NAME": requesting irq line %i.",dev->irq_line);
   result = request_irq(dev->irq_line, isr, irqflags, "lscpcie", dev_id);
   if (result) {
@@ -180,8 +161,6 @@ int dma_end(struct dev_struct *dev)
 {
   printk(KERN_ERR NAME": freeing interrupt...");
   free_irq(dev->irq_line, dev);
-  /* >>>> clean-up if necessary
-     <<<< */
 
   return 0;
 }

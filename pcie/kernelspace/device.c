@@ -39,15 +39,7 @@ struct file_operations fops = {
 int device_init(struct dev_struct *dev, int minor)
 {
   struct device *device;
-  int result;
-  int dev_no = get_device_number(dev);
-
-  PDEBUG(D_BUFFERS, "initialising dma\n");
-
-  if (dev_no < 0) {
-    printk(KERN_ERR NAME": invalid device pointer in init_dma\n");
-    return -ENODEV;
-  }
+  int result, dev_no;
 
   dev->debug_mode |= debug;// | D_MODULE | D_MMAP | D_IOCTL;
 
@@ -91,7 +83,15 @@ int device_init(struct dev_struct *dev, int minor)
   dev->control = (lscpcie_control_t *) get_zeroed_page(GFP_KERNEL);
   if (!dev->control) {
     printk(KERN_ERR NAME": failed to allocate memory for control block");
-    return -ENOMEM;
+    result = -ENOMEM;
+    goto out_error;
+  }
+
+  dev_no = get_device_number(dev);
+  if (dev_no < 0) {
+    printk(KERN_ERR NAME": invalid device pointer in device_init\n");
+    result = -ENODEV;
+    goto out_error;
   }
 
   /* take initial values from module parameters where present */
@@ -105,15 +105,10 @@ int device_init(struct dev_struct *dev, int minor)
   else
     dev->control->number_of_cameras = DEFAULT_NUMBER_OF_CAMERAS;
 
-  if (num_scans[dev_no] > 0)
-    dev->control->number_of_scans = num_scans[dev_no];
+  if (dma_num_scans[dev_no] > 0)
+    dev->control->dma_num_scans = dma_num_scans[dev_no];
   else
-    dev->control->number_of_scans = DEFAULT_NUM_SCANS;
-
-  if (num_blocks[dev_no] > 0)
-    dev->control->number_of_blocks = num_blocks[dev_no];
-  else
-    dev->control->number_of_blocks = DEFAULT_NUM_BLOCKS;
+    dev->control->dma_num_scans = DEFAULT_DMA_NUM_SCANS;
 
   return 0;
 
@@ -124,6 +119,8 @@ int device_init(struct dev_struct *dev, int minor)
 
 
 void device_clean_up(struct dev_struct *dev) {
+  if (dev->control)
+    free_page((unsigned long) dev->control);
   if (dev->status & DEV_CLASS_CREATED) {
     PDEBUG(D_MODULE, "destroying device class\n");
     device_destroy(lscpcie_class, dev->device);

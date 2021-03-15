@@ -20,7 +20,7 @@
 
 int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 {
-  struct dev_struct *dev;
+  struct dev_struct *dev = 0;
   int result, i;
   u16 word;
 
@@ -109,8 +109,9 @@ void remove_lscpcie(struct pci_dev *pci_dev)
     if (dev->mapped_pci_base)
       iounmap(dev->mapped_pci_base);
     if (dev->status &= DEV_IRQ_ALLOCATED) {
-      PDEBUG(D_PCI, "freeing interrupt vector\n");
+      PDEBUG(D_INTERRUPT, "freeing interrupt vector\n");
       pci_free_irq_vectors(pci_dev);
+      PDEBUG(D_INTERRUPT, "interrupt vector freed\n");
     }
     dev->status &= ~DEV_IRQ_ALLOCATED;
   }
