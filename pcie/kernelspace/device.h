@@ -22,8 +22,9 @@
 #include <linux/cdev.h>
 #include <linux/semaphore.h>
 
+#define MOD_PCI_REGISTERED   0x01
+
 #define DEV_HARDWARE_PRESENT 0x01
-#define DEV_PCI_REGISTERED   0x02
 #define DEV_PCI_ENABLED      0x04
 #define DEV_CDEV_CREATED     0x08
 #define DEV_CLASS_CREATED    0x10
@@ -40,12 +41,11 @@ struct dev_struct {
   void *dma_virtual_mem;
   u32 dma_mem_size;
   lscpcie_control_t *control;
-  uint32_t scans_per_interrupt;
-  uint32_t bytes_per_interrupt;
   struct pci_dev *pci_dev;
   struct cdev cdev;
   struct proc_dir_entry *proc_data_entry;
   struct proc_dir_entry *proc_registers_entry;
+  struct proc_dir_entry *proc_registers_long_entry;
   struct proc_dir_entry *proc_io_entry;
   wait_queue_head_t readq, writeq;
   struct semaphore write_sem, read_sem, size_sem;
@@ -55,7 +55,8 @@ struct dev_struct {
   int minor;
   dev_t device;
   int proc_actual_register;
-  u8 irq_line;
+  int proc_actual_register_long;
+   u8 irq_line;
 };
 
 

@@ -25,14 +25,17 @@ static struct proc_dir_entry *proc_entry = NULL;
    number, */
 
 ssize_t lscpcie_read_proc(struct file *filp, char __user *buf, size_t count,
-                          loff_t *offp) {
+                          loff_t *offp)
+{
   int i, count_boards = 0, count_debug = 0;
   char result[3];
 
   // need at least two bytes space in buffer
-  if (count < 3) return -EAGAIN;
+  if (count < 3)
+    return -EAGAIN;
 
-  if (*offp) return 0; // second call retunrs zero to indicate end of file
+  if (*offp)
+    return 0; // second call retunrs zero to indicate end of file
 
   for (i = 0; i < MAX_BOARDS; i++)
     if (lscpcie_devices[i].minor >= 0) {
@@ -44,7 +47,9 @@ ssize_t lscpcie_read_proc(struct file *filp, char __user *buf, size_t count,
   result[1] = '0' + count_debug;
   result[2] = '\n';
 
-  if (copy_to_user((char __user *) buf, result, 3))  return -EFAULT;
+  if (copy_to_user((char __user *) buf, result, 3))
+    return -EFAULT;
+
   *offp += 3;
 
   return 3;
@@ -55,7 +60,8 @@ ssize_t lscpcie_read_proc(struct file *filp, char __user *buf, size_t count,
    with a new-ling character. */
 
 ssize_t lscpcie_write_proc(struct file *filp, const char __user *buf,
-                           size_t count, loff_t *offp) {
+                           size_t count, loff_t *offp)
+{
   int i, slot, result;
   static int n_pixels = 0;
   static int n_cameras = -1;
@@ -70,7 +76,8 @@ ssize_t lscpcie_write_proc(struct file *filp, const char __user *buf,
 	n_pixels = n_pixels * 10 + (c - '0');
 	continue;
       }
-      if (c != ':') goto reset; /* wrong character, back to square one */
+      if (c != ':')
+	goto reset; /* wrong character, back to square one */
       n_cameras = 0;
       continue;
     }
@@ -93,7 +100,8 @@ ssize_t lscpcie_write_proc(struct file *filp, const char __user *buf,
 	  proc_init(&lscpcie_devices[slot]);
 	  break;
 	}
-      if (slot == MAX_BOARDS) i = -ENOMEM; /* no free device left */
+      if (slot == MAX_BOARDS)
+	i = -ENOMEM; /* no free device left */
       goto reset;
     }
     /* is not line end, error */
@@ -163,7 +171,8 @@ ssize_t lscpcie_read_registers_proc(struct file *filp, char __user *buf,
   struct dev_struct *dev = PDE_DATA(file_inode(filp));
   char line_buf[128], ascii_buffer[12];
 
-  if (!(dev->status & DEV_HARDWARE_PRESENT)) return -ENODEV;
+  if (!(dev->status & DEV_HARDWARE_PRESENT))
+    return -ENODEV;
 
   if ((dev->proc_actual_register > 0x80)
       &&
@@ -175,9 +184,11 @@ ssize_t lscpcie_read_registers_proc(struct file *filp, char __user *buf,
 
   if (!dev->proc_actual_register) {
     /* first call */
-    if (count < 4) return 0; /* not enogh space */
+    if (count < 4)
+      return 0; /* not enogh space */
     result = copy_to_user(buf + len, "DMA\n", 4);
-    if (result) return -EFAULT;
+    if (result)
+      return -EFAULT;
     len += 4;
     dev->proc_actual_register++;
   }
@@ -189,17 +200,21 @@ ssize_t lscpcie_read_registers_proc(struct file *filp, char __user *buf,
                  dev->proc_actual_register,
 		 dma_reg_names[dev->proc_actual_register], val,
                  binary(ascii_buffer, val));
-    if (len + l >= count) return len; /* not enough space for next line */
+    if (len + l >= count)
+      return len; /* not enough space for next line */
     result = copy_to_user(buf + len, line_buf, l + 1);
-    if (result) return -EFAULT;
+    if (result)
+      return -EFAULT;
     len += l;
     dev->proc_actual_register++;
   }
 
-  if (len + 8 >= count) return len;
+  if (len + 8 >= count)
+    return len;
 
   result = copy_to_user(buf + len, "space 0\n", 8);
-  if (result) return -EFAULT;
+  if (result)
+    return -EFAULT;
   len += 8;
   dev->proc_actual_register = 0x80;
 
@@ -209,11 +224,50 @@ ssize_t lscpcie_read_registers_proc(struct file *filp, char __user *buf,
                  dev->proc_actual_register,
 		 reg_names[dev->proc_actual_register-0x80], val,
                  binary(ascii_buffer, val));
-    if (len + l >= count) return len;
+    if (len + l >= count)
+      return len;
     result = copy_to_user(buf + len, line_buf, l + 1);
-    if (result) return -EFAULT;
+    if (result)
+      return -EFAULT;
     len += l;
     dev->proc_actual_register++;
+  }
+
+  return len;
+}
+
+ssize_t lscpcie_read_registers_long_proc(struct file *filp, char __user *buf,
+                                         size_t count, loff_t *offp)
+{
+  ssize_t len = *offp, l;
+  int result;
+  u32 val;
+  struct dev_struct *dev = PDE_DATA(file_inode(filp));
+  char line_buf[128];
+
+  if (!(dev->status & DEV_HARDWARE_PRESENT))
+    return -ENODEV;
+
+  if (!reg_names_long[dev->proc_actual_register_long][0]) {
+    /* last register has been printed in previous call */
+    dev->proc_actual_register_long = 0;
+    return 0;
+  }
+
+  while (reg_names_long[dev->proc_actual_register_long][0]) {
+    val
+      = ioread32(dev->mapped_pci_base + 4 * dev->proc_actual_register_long
+                + 0x80);
+    l = snprintf(line_buf, 127, "  0x%02x (%s): 0x%08x\n",
+                 dev->proc_actual_register_long,
+                reg_names_long[dev->proc_actual_register_long], val);
+    if (len + l >= count)
+      return len;
+    result = copy_to_user(buf + len, line_buf, l + 1);
+    if (result)
+      return -EFAULT;
+    len += l;
+    dev->proc_actual_register_long++;
   }
 
   return len;
@@ -230,9 +284,11 @@ ssize_t lscpcie_read_io_proc(struct file *filp, char __user *buf, size_t count,
   int offset = *offp;
   struct dev_struct *dev = PDE_DATA(file_inode(filp));
 
-  if (!(dev->status & DEV_HARDWARE_PRESENT)) return -ENODEV;
+  if (!(dev->status & DEV_HARDWARE_PRESENT))
+    return -ENODEV;
 
-  if (offset >= sizeof(dma_reg_t) + sizeof(s0_t)) return 0; /* done */
+  if (offset >= sizeof(dma_reg_t) + sizeof(s0_t))
+    return 0; /* done */
 
   if (!offset) {
     printk(KERN_WARNING NAME": copying register contents\n");
@@ -245,12 +301,14 @@ ssize_t lscpcie_read_io_proc(struct file *filp, char __user *buf, size_t count,
   if (bytes_to_copy > 0) {
     if (bytes_to_copy > count) bytes_to_copy = count;
     result = copy_to_user(buf, ((u8 *) &dma_data) + offset, bytes_to_copy);
-    if (result) return -EFAULT;
+    if (result)
+      return -EFAULT;
     count -= bytes_to_copy;
     offset += bytes_to_copy;
     total_bytes = bytes_to_copy;
-  } else
+  } else {
     total_bytes = 0;
+  }
 
   // s0 registers
   offset -= sizeof(dma_reg_t);
@@ -260,7 +318,8 @@ ssize_t lscpcie_read_io_proc(struct file *filp, char __user *buf, size_t count,
     result
       = copy_to_user(buf + total_bytes, ((u8 *) &s0_data) + offset,
 		     bytes_to_copy);
-    if (result) return -EFAULT;
+    if (result)
+      return -EFAULT;
     total_bytes += bytes_to_copy;
   }
 
@@ -289,6 +348,11 @@ struct file_operations proc_registers_fops = {
   .read = lscpcie_read_registers_proc
 };
 
+struct file_operations proc_registers_long_fops = {
+  .owner = THIS_MODULE,
+  .read = lscpcie_read_registers_long_proc
+};
+
 struct file_operations proc_io_fops = {
   .owner = THIS_MODULE,
   .read = lscpcie_read_io_proc
@@ -309,6 +373,11 @@ void proc_init(struct dev_struct *dev)
     sprintf(name, "%s%d_registers", NAME, dev->minor);
     dev->proc_registers_entry
       = proc_create_data(name, 0, NULL, &proc_registers_fops, dev);
+
+    sprintf(name, "%s%d_registers_long", NAME, dev->minor);
+    dev->proc_registers_long_entry
+      = proc_create_data(name, 0, NULL, &proc_registers_long_fops, dev);
+
     sprintf(name, "%s%d_pci_io", NAME, dev->minor);
     dev->proc_io_entry
       = proc_create_data(name, 0, NULL, &proc_io_fops, dev);
@@ -332,6 +401,12 @@ void proc_clean_up(struct dev_struct *dev)
     sprintf(name, "%s%d_registers", NAME, dev->minor);
     remove_proc_entry(name, NULL);
     dev->proc_registers_entry = 0;
+  }
+
+  if (dev->proc_registers_long_entry) {
+    sprintf(name, "%s%d_registers_long", NAME, dev->minor);
+    remove_proc_entry(name, NULL);
+    dev->proc_registers_long_entry = 0;
   }
 
   if (dev->proc_io_entry) {

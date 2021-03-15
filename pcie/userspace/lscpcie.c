@@ -218,8 +218,8 @@ int lscpcie_open(uint dev, uint16_t options) {
   }
 
   dev_descr[dev].mapped_buffer
-    = mmap(NULL, dev_descr[dev].control->buffer_size, PROT_READ | PROT_WRITE,
-           MAP_SHARED, handle, 2 * page_size);
+    = mmap(NULL, dev_descr[dev].control->dma_buf_size,
+	   PROT_READ | PROT_WRITE, MAP_SHARED, handle, 2 * page_size);
   if (dev_descr[dev].mapped_buffer == MAP_FAILED) return -1;
 
   //if (_COOLER) ActCooling(drvno, FALSE); //deactivate cooler
@@ -433,18 +433,16 @@ int set_dma_address_in_tlp(uint dev) {
 int set_dma_buffer_registers(uint dev) {
   // DMABufSizeInScans - use 1 block
   dev_descr[dev].s0->DMA_BUF_SIZE_IN_SCANS
-    = dev_descr[dev].control->number_of_scans * dev_descr[dev].control->number_of_blocks * dev_descr[dev].control->number_of_cameras;
+    = dev_descr[dev].control->dma_num_scans;
 
   //scans per intr must be 2x per DMA_BUFSIZEINSCANS to copy hi/lo part
   //aCAMCNT: double the INTR if 2 cams
   dev_descr[dev].s0->DMAS_PER_INTERRUPT
-    = dev_descr[dev].control->number_of_scans * dev_descr[dev].control->number_of_blocks *
-    dev_descr[dev].control->number_of_cameras
-    / INTERRUPTS_PER_SCAN;
+    = dev_descr[dev].control->dma_num_scans
+    * dev_descr[dev].control->number_of_pixels;
 
   //>>>> could be done in driver at module load
-  dev_descr[dev].s0->NUMBER_OF_SCANS = dev_descr[dev].control->number_of_scans;
-  dev_descr[dev].s0->NUMBER_OF_BLOCKS = dev_descr[dev].control->number_of_blocks;
+  dev_descr[dev].s0->NUMBER_OF_SCANS = dev_descr[dev].control->dma_num_scans;
   dev_descr[dev].s0->CAM_CNT = dev_descr[dev].control->number_of_cameras;
   //<<<< could be done in driver at module load
 

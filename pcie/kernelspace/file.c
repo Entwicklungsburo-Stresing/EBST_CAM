@@ -101,7 +101,7 @@ int buffer_free(struct dev_struct *dev)
 
   bytes = dev->control->write_pos - dev->control->read_pos;
   PDEBUG(D_BUFFERS, "diff (free): %ld bytes\n", bytes);
-  if (bytes <= 0) bytes += dev->control->buffer_size;
+  if (bytes <= 0) bytes += dev->control->dma_buf_size;
 
   up(&dev->size_sem);
 
@@ -122,12 +122,12 @@ int bytes_in_buffer(struct dev_struct *dev)
 
   bytes = dev->control->write_pos - dev->control->read_pos;
   PDEBUG(D_BUFFERS, "diff: %ld\n", bytes);
-  if (bytes < 0) bytes += dev->control->buffer_size;
+  if (bytes < 0) bytes += dev->control->dma_buf_size;
 
   up(&dev->size_sem);
 
   PDEBUG(D_BUFFERS, "%ld bytes available (%d)\n", bytes,
-         dev->control->buffer_size);
+         dev->control->dma_buf_size);
 
   return bytes;
 }
@@ -173,8 +173,8 @@ ssize_t lscpcie_write(struct file *filp, const char __user *buf, size_t len,
   /* have now at least one free byte in one dma buffer */
   if (len > free_bytes) len = free_bytes;
 
-  if (dev->control->write_pos + len > dev->control->buffer_size) {
-    size_t bytes_to_copy = dev->control->buffer_size - dev->control->write_pos;
+  if (dev->control->write_pos + len > dev->control->dma_buf_size) {
+    size_t bytes_to_copy = dev->control->dma_buf_size - dev->control->write_pos;
     PDEBUG(D_READOUT, "copying %lu bytes to %d (a)\n", bytes_to_copy,
            dev->control->write_pos);
     if (copy_from_user(dev->dma_virtual_mem + dev->control->write_pos, buf,
@@ -187,7 +187,7 @@ ssize_t lscpcie_write(struct file *filp, const char __user *buf, size_t len,
     copied_bytes = bytes_to_copy;
     len -= bytes_to_copy;
     dev->control->write_pos
-      = (dev->control->write_pos + bytes_to_copy) % dev->control->buffer_size;
+      = (dev->control->write_pos + bytes_to_copy) % dev->control->dma_buf_size;
   } else
     copied_bytes = 0;
 
@@ -204,7 +204,7 @@ ssize_t lscpcie_write(struct file *filp, const char __user *buf, size_t len,
     PDEBUG(D_READOUT, "wrote %lu bytes to camera buffer\n", len);
     copied_bytes += len;
     dev->control->write_pos
-      = (dev->control->write_pos + len) % dev->control->buffer_size;
+      = (dev->control->write_pos + len) % dev->control->dma_buf_size;
   }
 
   up(&dev->write_sem);
@@ -264,8 +264,8 @@ ssize_t lscpcie_read(struct file *filp, char __user *buf, size_t len,
 
   if (len > available_bytes) len = available_bytes;
 
-  if (dev->control->read_pos + len > dev->control->buffer_size) {
-    ssize_t bytes_to_copy = dev->control->buffer_size - dev->control->read_pos;
+  if (dev->control->read_pos + len > dev->control->dma_buf_size) {
+    ssize_t bytes_to_copy = dev->control->dma_buf_size - dev->control->read_pos;
     copied_bytes = read_chunk(dev, bytes_to_copy, buf);
     if (copied_bytes < 0) {
       up(&dev->read_sem);
@@ -273,7 +273,7 @@ ssize_t lscpcie_read(struct file *filp, char __user *buf, size_t len,
     }
     len -= copied_bytes;
     dev->control->read_pos
-      = (dev->control->read_pos + copied_bytes) % dev->control->buffer_size;
+      = (dev->control->read_pos + copied_bytes) % dev->control->dma_buf_size;
   } else
     copied_bytes = 0;
 
@@ -285,7 +285,7 @@ ssize_t lscpcie_read(struct file *filp, char __user *buf, size_t len,
     }
     copied_bytes += n;
     dev->control->read_pos
-      = (dev->control->read_pos + n) % dev->control->buffer_size;
+      = (dev->control->read_pos + n) % dev->control->dma_buf_size;
   }
 
   wake_up_interruptible(&dev->writeq);
