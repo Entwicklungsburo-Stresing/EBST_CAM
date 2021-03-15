@@ -117,11 +117,9 @@ void dma_finish(struct dev_struct *dev)
 /* interrupt service routine */
 static enum irqreturn isr(int irqn, void *dev_id)
 {
-  /* >>>>> first check whether the pcie card has issued the interrupt */
-  /* if not return IRQ_NONE; */
-  /* <<<<< to be implemented */
-
   struct dev_struct *dev = (struct dev_struct *) dev_id;
+  PDEBUG(D_INTERRUPT, "got interrupt\n");
+
   int old_write_pos = dev->control->write_pos;
   u8 fifo_flags = readb(dev->mapped_pci_base + 0x80 + S0Addr_FF_FLAGS);
 

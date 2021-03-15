@@ -45,9 +45,11 @@ int main(void) {
 
   trigger_mode_t trigger_mode = xck;
 
-  lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_PIXEL, device_descriptor[0].control->number_of_pixels);
+  lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_PIXEL,
+		     device_descriptor[0].control->number_of_pixels);
   // and what about this? not present in board.c
-  result = lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_TRIGGER_IN, trigger_mode);
+  result = lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA,
+			      CAMERA_ADDRESS_TRIGGER_IN, trigger_mode);
   if (result < 0) return result;
   result = lscpcie_setup_dma(0);
   if (result) {
