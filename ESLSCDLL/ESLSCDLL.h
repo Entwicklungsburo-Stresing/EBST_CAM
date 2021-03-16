@@ -68,8 +68,8 @@ DllAccess void DLLCloseShutter( UINT32 drvno );	// set IFC=low
 //************ FIFO version functions
 DllAccess void DLLSWTrig( UINT32 drvno );						//start a read to FIFO by software
 DllAccess UINT8 DLLFFValid( UINT32 drvno );						// TRUE if linecounter>0
-DllAccess void DLLSetExtTrig( UINT32 drvno );					// read to FIFO is triggered by external input I of PCI board
-DllAccess void DLLSetIntTrig( UINT32 drvno );					// read to FIFO is triggered by Timer
+//DllAccess void DLLSetExtTrig( UINT32 drvno );					// read to FIFO is triggered by external input I of PCI board
+//DllAccess void DLLSetIntTrig( UINT32 drvno );					// read to FIFO is triggered by Timer
 DllAccess UINT8 DLLFFOvl( UINT32 drvno );					//TRUE if fifo overflow occured
 DllAccess UINT8 DLLSetupVCLK( UINT32 drvno, UINT32 lines, UINT8 vfreq );//set the VCLK regs
 DllAccess UINT8 DLLBlockTrig( UINT32 drv, UCHAR btrig_ch ); //read trigger input ->ch=1:pci in, ch=2:opto1, ch=3:opto2
@@ -107,9 +107,9 @@ DllAccess void DLLCalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample,
 DllAccess void DLLInitGPX( UINT32 drvno, UINT32 delay );
 DllAccess void DLLAboutGPX( UINT32 drvno );
 //************  Init CAM
-DllAccess void DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED, UINT8 gain_high );
+DllAccess void DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED );
 DllAccess void DLLInitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA );
-DllAccess void DLLInitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high );
+DllAccess void DLLInitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern );
 DllAccess void DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain );
 DllAccess UINT8 DLLSetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq );
 DllAccess void DLLInitProDLL();
@@ -121,5 +121,6 @@ DllAccess UINT8 DLLSetSTI( UINT32 drvno, UINT8 sti_mode );
 DllAccess UINT8 DLLSetSTimer( UINT32 drvno, UINT32 stime_in_microseconds );
 DllAccess UINT8 DLLSetBTimer( UINT32 drvno, UINT32 btime_in_microseconds );
 DllAccess UINT8 DLLSetBSlope( UINT32 drvno, UINT32 slope );
+DllAccess void DLLSetGain( UINT32 drvno, UINT16 gain_value );
 DllAccess void DLLLedOff( UINT32 drvno, UINT8 LED_OFF );
 DllAccess void DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent );
