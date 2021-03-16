@@ -20,6 +20,8 @@
 #include <linux/dma-mapping.h>
 #include <linux/pci.h>
 
+static enum irqreturn isr(int irqn, void *dev_id);
+
 int dma_init(struct dev_struct *dev)
 {
   struct device *pdev
@@ -34,6 +36,11 @@ int dma_init(struct dev_struct *dev)
     return -ENODEV;
   }
 
+  if (dma_set_mask_and_coherent(pdev, DMA_BIT_MASK(32))) {
+    printk(KERN_ERR NAME": No suitable DMA available\n");
+    return -ENOMEM;
+  }
+  
   /* the size of the dma buffer is taken one page size larger than necessary
      to ensure that the used buffer starts at a page boundary (needed for
      mmap export to userland) */
@@ -68,12 +75,14 @@ int dma_init(struct dev_struct *dev)
   }
 
   dev->control->dma_buf_size = dev->dma_mem_size;
-  result = dma_start(dev);
-  if (result) {
-    dma_finish(dev);
-    return result;
+  if (dev->status & DEV_HARDWARE_PRESENT) {
+    result = dma_start(dev);
+    if (result) {
+      dma_finish(dev);
+      return result;
+    }
   }
-  
+
   PDEBUG(D_BUFFERS, "dma initialised\n");
 
   return 0;
@@ -82,7 +91,7 @@ int dma_init(struct dev_struct *dev)
 /* release dma buffer */
 void dma_finish(struct dev_struct *dev)
 {
-  //dma_end(dev); already done in unregistering pci device
+  dma_end(dev);
   if (dev->dma_virtual_mem) {
     if (dev->status & DEV_HARDWARE_PRESENT) {
       PDEBUG(D_BUFFERS, "freeing dma buffer");
@@ -94,6 +103,33 @@ void dma_finish(struct dev_struct *dev)
     }
     dev->dma_virtual_mem = 0;
   }
+}
+
+int dma_start(struct dev_struct *dev)
+{
+  int result;
+  void *dev_id = dev;
+
+  printk(KERN_ERR NAME": requesting irq line %i.",dev->irq_line);
+  result = request_irq(dev->irq_line, isr, 0, "lscpcie", dev_id);
+  if (result) {
+    printk(KERN_ERR NAME": requesting interrupt failed with error %d\n", result);
+    return result;
+  }
+  dev->status |= DEV_IRQ_REQUESTED;
+
+  return 0;
+}
+
+int dma_end(struct dev_struct *dev)
+{
+  if (dev->status & DEV_IRQ_REQUESTED) {
+    printk(KERN_ERR NAME": freeing interrupt %d...\n", dev->irq_line);
+    free_irq(dev->irq_line, dev);
+  }
+  dev->status &= ~DEV_IRQ_REQUESTED;
+
+  return 0;
 }
 
 /* interrupt service routine */
@@ -138,29 +174,4 @@ static enum irqreturn isr(int irqn, void *dev_id)
   wake_up_interruptible(&dev->readq);
 
   return IRQ_HANDLED;
-}
-
-int dma_start(struct dev_struct *dev)
-{
-  int result;
-
-  unsigned long irqflags = IRQF_SHARED;
-  void *dev_id = dev;
-
-  printk(KERN_ERR NAME": requesting irq line %i.",dev->irq_line);
-  result = request_irq(dev->irq_line, isr, irqflags, "lscpcie", dev_id);
-  if (result) {
-    printk(KERN_ERR NAME": requesting interrupt failed with error %d\n", result);
-    return result;
-  }
-
-  return 0;
-}
-
-int dma_end(struct dev_struct *dev)
-{
-  printk(KERN_ERR NAME": freeing interrupt...");
-  free_irq(dev->irq_line, dev);
-
-  return 0;
 }
