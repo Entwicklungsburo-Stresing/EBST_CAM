@@ -165,7 +165,14 @@ enum sti_mode
 	sti_ASL = 5
 };
 
-
+enum bti_mode
+{
+	bti_I = 0,
+	bti_S1 = 1,
+	bti_S2 = 2,
+	bti_S1S2 = 3,
+	bti_BTimer = 4,
+};
 
 
 enum sensor_type
@@ -214,4 +221,24 @@ enum tor_out
 	bdat = 13,
 	sshut = 14,
 	bshut = 15
+};
+
+enum theme
+{
+	lighttheme = 0,
+	darktheme = 1,
+};
+
+enum slope
+{
+	slope_pos = 0,
+	slope_neg = 1,
+	slope_both
+};
+
+enum fft_mode
+{
+	full_binning = 0,
+	partial_binning = 1,
+	area = 3
 };
