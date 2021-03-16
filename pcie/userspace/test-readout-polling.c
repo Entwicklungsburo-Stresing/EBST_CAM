@@ -24,7 +24,8 @@ int check_and_fetch_data(dev_descr_t *device_descriptor, uint8_t *camera_data,
   if (prev_write_pos == actual_write_pos)
     return 0;
 
-  printf("%d -> %d\n", device_descriptor->control->read_pos, actual_write_pos);
+  fprintf(stderr, "%d -> %d\n", device_descriptor->control->read_pos,
+	  actual_write_pos);
   if (actual_write_pos > device_descriptor->control->read_pos) {
     len = actual_write_pos - device_descriptor->control->read_pos;
     memcpy(camera_data + bytes_read,
@@ -102,8 +103,7 @@ int main(int argc, char ** argv)
     fprintf(stderr, "failed to allocate %d bytes of memory\n", mem_size);
     goto finish;
   }
-    
-  
+
   lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_PIXEL,
                      device_descriptor->control->number_of_pixels);
   // and what about this? not present in board.c
@@ -176,6 +176,9 @@ int main(int argc, char ** argv)
 
     if (result) {
       bytes_read += result;
+      fprintf(stderr, "got %d bytes of data, having now %d of %d\n", result,
+	      bytes_read, mem_size);
+	      
       prev_write_pos
         = (prev_write_pos + result) % device_descriptor->control->dma_buf_size;
     }
@@ -212,6 +215,8 @@ int main(int argc, char ** argv)
 
       if (result) {
         bytes_read += result;
+        fprintf(stderr, "got %d bytes of data, having now %d of %d\n", result,
+                bytes_read, mem_size);
         prev_write_pos
           = (prev_write_pos + result)
 	  % device_descriptor->control->dma_buf_size;
