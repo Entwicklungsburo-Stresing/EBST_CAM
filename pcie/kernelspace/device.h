@@ -28,13 +28,14 @@
 #define DEV_PCI_ENABLED      0x04
 #define DEV_CDEV_CREATED     0x08
 #define DEV_CLASS_CREATED    0x10
-#define DEV_IRQ_ALLOCATED    0x20
+#define DEV_MSI_ENABLED      0x20
+#define DEV_IRQ_REQUESTED    0x40
 
-#define DEV_FIFO_OVERFLOW    0x40
-#define DEV_DMA_OVERFLOW     0x80
+#define DEV_FIFO_OVERFLOW    0x4000
+#define DEV_DMA_OVERFLOW     0x8000
 
 struct dev_struct {
-  u8 status;
+  u16 status;
   u32 physical_pci_base;
   void __iomem *mapped_pci_base;
   dma_addr_t dma_handle;

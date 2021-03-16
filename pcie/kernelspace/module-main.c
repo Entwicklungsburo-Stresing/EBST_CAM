@@ -74,7 +74,10 @@ const struct dev_struct lscpcie_device_init = {
   .minor = -1,
   .dma_virtual_mem = 0,
   .proc_actual_register = 0,
-  .control = 0
+  .control = 0,
+  .proc_registers_entry = 0,
+  .proc_registers_long_entry = 0,
+  .proc_io_entry = 0
 };
 
 /* pci identifier */
@@ -94,6 +97,8 @@ static struct pci_driver pci_driver = {
 };
 
 
+/* general infrastruture and pci registration, devices are initialised
+   through probe_lscpcie upon detection by the pci core */
 static int __init lscpcie_module_init(void) {
   dev_t dev;
   int i, result;
@@ -109,9 +114,8 @@ static int __init lscpcie_module_init(void) {
   }
   PMDEBUG("created device class\n");
 
-  /* Initialise parameters for each possible device instance with default
-     values. Values given by modue parameters are taken into account at device
-     initialisation (see device_init and dma_init) */
+  proc_init_module(); /* read number of devices, write adds software devices */
+
   for (i = 0; i < MAX_BOARDS; i++)
     lscpcie_devices[i] = lscpcie_device_init;
 
@@ -130,7 +134,6 @@ static int __init lscpcie_module_init(void) {
 
   PMDEBUG("got major %d\n", major);
 
-  /* note: this calls lscpcie_probe when matching hardware is found */
   if ((result = pci_register_driver(&pci_driver)) != 0) {
     printk(KERN_ERR NAME " registering pci device failed with %d", result);
     goto failed;
@@ -138,15 +141,14 @@ static int __init lscpcie_module_init(void) {
   module_status |= MOD_PCI_REGISTERED;
   PMDEBUG("registered pci driver\n");
 
-  proc_init_module();
-
   printk(KERN_WARNING NAME" ready.\n");
 
   return 0;
 
  failed:
   clean_up_lscpcie_module();
-  printk(KERN_ERR NAME": loading lscpci failed\n");
+  printk(KERN_ERR NAME": loading failed\n");
+
   return result;
 }
 
@@ -157,21 +159,30 @@ static void __exit lscpcie_module_exit(void)
   printk(NAME" unloaded\n");
 }
 
-/* release all kernel resources allocated at module init */
+/* release all kernel resources allocated at module init in reversed order */
 void clean_up_lscpcie_module(void)
 {
   int i;
 
+  for (i = 0; i < MAX_BOARDS; i++)
+    if (lscpcie_devices[i].minor >= 0) {
+      struct dev_struct *dev = &lscpcie_devices[i];
+      PMDEBUG("removing device %d\n", i);
+      proc_clean_up(dev);
+      dma_finish(dev);
+      if (dev->mapped_pci_base)
+        iounmap(dev->mapped_pci_base);
+    }
+  
   if (module_status & MOD_PCI_REGISTERED) {
     pci_unregister_driver(&pci_driver);
     module_status &= ~MOD_PCI_REGISTERED;
   }
 
   for (i = 0; i < MAX_BOARDS; i++)
-    if (lscpcie_devices[i].minor >= 0) {
-      PMDEBUG("removing device %d\n", i);
+    if (lscpcie_devices[i].minor >= 0)
       device_clean_up(&lscpcie_devices[i]);
-    }
+  proc_clean_up_module();
 
   if (major) {
     PMDEBUG("unregistering major\n");
@@ -182,8 +193,6 @@ void clean_up_lscpcie_module(void)
     PMDEBUG("destroying class\n");
     class_destroy(lscpcie_class);
   }
-
-  proc_clean_up_module();
 
   PMDEBUG("done cleaning up module\n");
 }

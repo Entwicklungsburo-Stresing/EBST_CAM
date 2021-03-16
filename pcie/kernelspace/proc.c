@@ -55,9 +55,9 @@ ssize_t lscpcie_read_proc(struct file *filp, char __user *buf, size_t count,
   return 3;
 }
 
-/* Add debug device. Two colon-separated numbers are expected, frist the number
+/* Add debug device. Two colon-separated numbers are expected, first the number
    of pixels, second the number of cameras. The input has to be terminated
-   with a new-ling character. */
+   with a new-line character. */
 
 ssize_t lscpcie_write_proc(struct file *filp, const char __user *buf,
                            size_t count, loff_t *offp)
@@ -369,22 +369,21 @@ void proc_init(struct dev_struct *dev)
   dev->proc_actual_register = 0;
   sprintf(name, "%s%d", NAME, dev->minor);
   dev->proc_data_entry = proc_create_data(name, 0, NULL, &proc_data_fops, dev);
-  if (dev->status & DEV_HARDWARE_PRESENT) {
-    sprintf(name, "%s%d_registers", NAME, dev->minor);
-    dev->proc_registers_entry
-      = proc_create_data(name, 0, NULL, &proc_registers_fops, dev);
 
-    sprintf(name, "%s%d_registers_long", NAME, dev->minor);
-    dev->proc_registers_long_entry
-      = proc_create_data(name, 0, NULL, &proc_registers_long_fops, dev);
+  if (dev->status & DEV_HARDWARE_PRESENT)
+    return;
 
-    sprintf(name, "%s%d_pci_io", NAME, dev->minor);
-    dev->proc_io_entry
-      = proc_create_data(name, 0, NULL, &proc_io_fops, dev);
-  } else {
-    dev->proc_registers_entry = NULL;
-    dev->proc_io_entry = NULL;
-  }
+  sprintf(name, "%s%d_registers", NAME, dev->minor);
+  dev->proc_registers_entry
+    = proc_create_data(name, 0, NULL, &proc_registers_fops, dev);
+
+  sprintf(name, "%s%d_registers_long", NAME, dev->minor);
+  dev->proc_registers_long_entry
+    = proc_create_data(name, 0, NULL, &proc_registers_long_fops, dev);
+
+  sprintf(name, "%s%d_pci_io", NAME, dev->minor);
+  dev->proc_io_entry
+    = proc_create_data(name, 0, NULL, &proc_io_fops, dev);
 }
 
 void proc_clean_up(struct dev_struct *dev)

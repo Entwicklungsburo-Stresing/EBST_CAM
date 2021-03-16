@@ -62,15 +62,25 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
   dev->status |= DEV_HARDWARE_PRESENT;
   dev->pci_dev = pci_dev;
 
+  /* doesn't work
   PDEBUG(D_INTERRUPT, "allocating interrupt vector\n");
   result = pci_alloc_irq_vectors(pci_dev, 1, 1, PCI_IRQ_MSI);
   if (result < 0) {
     printk(KERN_ERR NAME": couldn't allocate irq vector\n");
     goto out_error;
   }
+  */
+  if (!(dev->status & DEV_MSI_ENABLED)) {
+    PDEBUG(D_INTERRUPT, "allocating interrupt vector\n");
+    result = pci_enable_msi(pci_dev);
+    if (result < 0) {
+      printk(KERN_ERR NAME": couldn't allocate irq vector\n");
+      goto out_error;
+    }
+    dev->status |= DEV_MSI_ENABLED;
+  }
   dev->irq_line = pci_dev->irq;
   PDEBUG(D_INTERRUPT, "interrupt line is %d\n", dev->irq_line);
-  dev->status |= DEV_IRQ_ALLOCATED;
 
   dev->physical_pci_base = pci_resource_start(pci_dev, 2);
   dev->control->io_size = pci_resource_len(pci_dev, 2);
@@ -105,19 +115,19 @@ void remove_lscpcie(struct pci_dev *pci_dev)
   PDEBUG(D_PCI, "removing lscpcie\n");
 
   if (dev) {
-    proc_clean_up(dev);
-    dma_finish(dev);
-    device_clean_up(dev);
-    if (dev->mapped_pci_base)
-      iounmap(dev->mapped_pci_base);
+    if (dev->status & DEV_MSI_ENABLED)
+      pci_disable_msi(pci_dev);
+    dev->status &= ~DEV_MSI_ENABLED;
+  /* doesn't work
     if (dev->status & DEV_IRQ_ALLOCATED) {
       PDEBUG(D_INTERRUPT, "freeing interrupt vector\n");
       pci_free_irq_vectors(pci_dev);
       PDEBUG(D_INTERRUPT, "interrupt vector freed\n");
     }
-    dev->status &= ~DEV_IRQ_ALLOCATED;
+    */
   }
 
+  pci_clear_master(pci_dev);
   pci_disable_device(pci_dev);
   dev->status &= ~(DEV_HARDWARE_PRESENT | DEV_PCI_ENABLED);
 }
