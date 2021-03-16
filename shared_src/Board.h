@@ -132,8 +132,6 @@ BOOL FFValid( UINT32 drvno );						// TRUE if linecounter>0
 BOOL FFFull( UINT32 drvno );
 BOOL FFOvl( UINT32 drvno );							//TRUE if FIFO overflow since last RSFifo call
 void RSFifo( UINT32 drvno );						// reset FIFO and linecounter
-void SetExtFFTrig( UINT32 drvno );					// read to FIFO is triggered by external input I of PCI board
-void SetIntFFTrig( UINT32 drvno );					// read to FIFO is triggered by Timer
 BOOL SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq );//setup hardware vclk generator
 BOOL SetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep);
 BOOL ThreadToPriClass( ULONG threadp, DWORD *priclass, DWORD *prilevel );
@@ -161,6 +159,7 @@ void CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_
 UINT64 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM );
 void* GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM );
 UINT8 WaitforTelapsed( LONGLONG musec );
+void InitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED, UINT8 gain_high );
 void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA );
 void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high );
 void Cam3010_ADC_reset(UINT32 drvno);
@@ -193,5 +192,6 @@ BOOL SetSTI( UINT32 drvno, UINT8 sti_mode );
 void ClearAllUserRegs( UINT32 drv );
 BOOL SetBSlope( UINT32 drvno, UINT32 slope );
 BOOL SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob );
+void LedOff( UINT32 drvno, UINT8 LED_OFF );
 void ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length );
 void abortMeasurement( UINT32 drv );

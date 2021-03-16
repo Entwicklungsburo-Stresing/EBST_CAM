@@ -15,7 +15,7 @@ enum camera_system
 	camera_system_3010 = 2,
 	camera_system_3030 = 3
 };
-#define CAMERA_SYSTEM camera_system_3030  // use 1 to 3 like in enum above
+#define CAMERA_SYSTEM camera_system_3001  // use 1 to 3 like in enum above
 enum adc_mode
 {
 	normal = 0,
@@ -39,8 +39,8 @@ enum adc_mode
 //static	unsigned long FLAG816 = 2;  // 2=8Bit, 1=12/16Bit
 //static int YSHIFT = 0;				// 8Bit=0, 12Bit=4 or more for ddrep>1
 //static int YSHIFT = 4;				// 12Bit=4 or more for addrep>1
-//static int YSHIFT = 8;			// 16bit=8
-static int YSHIFT = 6;			// 14 bit
+static int YSHIFT = 8;			// 16bit=8
+//static int YSHIFT = 6;			// 14 bit
 // camera values for calling GETCCD and InitBoard
 
 enum sensor_type

@@ -928,7 +928,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			//CleanupPCIE_DMA(choosen_board);
 			//StopRingReadThread();
 			StopSTimer( choosen_board );
-			SetIntFFTrig( choosen_board );//disables ext. Trig.
+			//SetIntFFTrig( choosen_board );//disables ext. Trig.
 			UpdateTxT();
 			break;
 		}
@@ -955,11 +955,11 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		if (number_of_boards >= 2)
 		{
 			StopSTimer( 2 );
-			SetIntFFTrig( 2 );//disables ext. Trig.
+			//SetIntFFTrig( 2 );//disables ext. Trig.
 			CCDDrvExit( 2 );
 		}
 		StopSTimer( 1 );
-		SetIntFFTrig( 1 );//disables ext. Trig.
+		//SetIntFFTrig( 1 );//disables ext. Trig.
 		//WDC_DriverClose();
 		CCDDrvExit( 1 );
 		//board 2

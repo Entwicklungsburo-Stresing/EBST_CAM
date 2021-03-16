@@ -1670,8 +1670,8 @@ void SetISFFT( UINT32 drvno, BOOL set )
 \brief Sets PDA sensor timing(set Reg TOR:D25 -> manual) or FFT.
 \param drvno board number (=1 if one PCI board)
 \param sensor_type Determines sensor type.
-	- 0: PDA
-	- 1: FFT
+	- 0: PDA (line sensor)
+	- 1: FFT (area sensor)
 \return none
 */
 void SetSensorType( UINT32 drvno, UINT8 sensor_type )
@@ -1725,7 +1725,7 @@ void initReadFFLoop( UINT32 drv )
 	userBufferWritePos[drv] = userBuffer[drv]; // reset buffer index to base we got from InitDMA
 	WDC_Err( "RESET userBufferWritePos to %x\n", userBufferWritePos[drv] );
 	IsrCounter = 0;
-	SetExtFFTrig( drv );
+//	SetExtFFTrig( drv );
 	//set MeasureOn Bit
 	if(!setMeasureOn( drv ))
 		WDC_Err("Set measure on failed. drv: %u\n", drv);
@@ -2232,35 +2232,7 @@ void RSFifo( UINT32 drvno )
 	return;
 }
 
-/**
-\brief Set trigger to extern.
-\param drvno board number (=1 if one PCI board)
-\return none
-*/
-void SetExtFFTrig( UINT32 drvno )
-{
-	BYTE data = 0;
-	ReadByteS0( drvno, &data, S0Addr_XCKMSB );
-	data |= 0x80;
-	WriteByteS0( drvno, data, S0Addr_XCKMSB );
-	return;
-}//SetExtFFTrig
 
-/**
-\brief Set trigger to intern.
-\param drvno board number (=1 if one PCI board)
-\return none
-*/
-void SetIntFFTrig( UINT32 drvno ) // set internal Trigger
-{
-	WDC_Err("Set trigger to intern\n");
-	BYTE data = 0;
-	if (!ReadByteS0(drvno, &data, S0Addr_XCKMSB))
-		WDC_Err("Reading S0Addr_XCKMSB failed\n");
-	data &= 0x7F;
-	if (!WriteByteS0(drvno, data, S0Addr_XCKMSB))
-		WDC_Err("Writing S0Addr_XCKMSB failed\n");
-}//SetIntFFTrig
 
 /**
 \brief Set REG VCLKCTRL for FFT sensors.
@@ -2930,7 +2902,7 @@ UINT8 WaitforTelapsed( LONGLONG musec )
 	Sets register in camera.
 \param drvno selects PCIe board
 \param pixel pixel count of camera
-\param trigger_input for CC: selects trigger input. 0 - XCK, 1 - EXTTRIG, 2 - DAT
+\param trigger_input for Camera Control (CC): selects CC trigger input. 0 - XCK, 1 - EXTTRIG connector, 2 - DAT
 \param IS_FFT =1 vclk on, =0 vclk off
 \param IS_AREA =1 area mode on, =0 area mode off
 \param IS_COOLED =1 disables PCIe FIFO when cool cam transmits cool status
@@ -2938,7 +2910,7 @@ UINT8 WaitforTelapsed( LONGLONG musec )
 \param gain_high 1 gain on, 0 gain off
 \return void
 */
-void InitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA, UINT16 IS_COOLED, UINT16 gain_high )
+void InitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED, UINT8 gain_high )
 {
 	// when TRUE: disables PCIe FIFO when cool cam transmits cool status
 	if (IS_COOLED)
@@ -2948,12 +2920,12 @@ void InitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16
 	//set camera pixel register
 	SendFLCAM( drvno, maddr_cam, cam_adaddr_pixel, pixel );
 	//set trigger input
-	SendFLCAM( drvno, maddr_cam, cam_adaddr_trig_in, trigger_input );
+	SendFLCAM( drvno, maddr_cam, cam_adaddr_trig_in, cc_trigger_input );
 	//select vclk and Area mode on
 	IS_AREA <<= 15;
-	SendFLCAM( drvno, maddr_cam, cam_adaddr_vclk, IS_FFT | IS_AREA );
+	SendFLCAM( drvno, maddr_cam, cam_adaddr_vclk, (UINT16) (IS_FFT | IS_AREA) );
 	//set gain and led
-	SendFLCAM( drvno, maddr_cam, cam_adaddr_gain_led, gain_high );
+	SendFLCAM( drvno, maddr_cam, cam_adaddr_gain_led, (UINT16) gain_high );
 	return;
 }
 
@@ -3611,7 +3583,7 @@ BOOL SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob )
 	WDC_Err( "entered SetMeasurementParameters with drv: %i nos: %i and nob: %i and camcnt: %i\n", drvno, nos, nob, aCAMCNT[drvno] );
 	//stop all and clear FIFO
 	StopSTimer( drvno );
-	SetIntFFTrig( drvno );
+
 	RSFifo( drvno );
 	if(!allocateUserMemory( drvno ))
 	{
@@ -3633,6 +3605,19 @@ BOOL SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob )
 		numberOfInterrupts = Nob * (*Nospb) * aCAMCNT[drvno] / dmaBufferPartSizeInScans - 1;//- 1 because intr counter starts with 0
 	WDC_Err("numberOfInterrupts: 0x%x \n", numberOfInterrupts);
 	return TRUE;
+}
+
+
+/**
+\brief Disables all camera leds to suppress stray light.
+	Sets corresponding camera register: maddr = 0, adadr = 5;
+\param drvno selects PCIe board
+\param LED_OFF 1 -> leds off, 0 -> led on
+\return void
+*/
+void LedOff( UINT32 drvno, UINT8 LED_OFF )
+{
+	SendFLCAM( drvno, maddr_cam, cam_adaddr_LEDoff, (UINT16) LED_OFF );
 }
 
 /**
@@ -3668,7 +3653,7 @@ void abortMeasurement( UINT32 drv )
 {
 	WDC_Err("Abort Measurement\n");
 	StopSTimer( drv );
-	SetIntFFTrig( drv );//disable ext input
+	//SetIntFFTrig( drv );//disable ext input
 	if(!resetBlockOn( drv ))
 		WDC_Err("Resetting block on failed\n");
 	if(!resetMeasureOn( drv ))
