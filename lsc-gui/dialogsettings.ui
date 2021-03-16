@@ -2,57 +2,45 @@
 <ui version="4.0">
  <class>DialogSettings</class>
  <widget class="QDialog" name="DialogSettings">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>472</width>
-    <height>560</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
-  <widget class="QWidget" name="layoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>20</y>
-     <width>411</width>
-     <height>491</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QTabWidget" name="tabWidget">
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <widget class="QWidget" name="measurement">
-       <attribute name="title">
-        <string>Measurement</string>
-       </attribute>
-       <widget class="QWidget" name="">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>10</y>
-          <width>371</width>
-          <height>411</height>
-         </rect>
-        </property>
+  <layout class="QVBoxLayout" name="verticalLayoutD">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="measurement">
+        <attribute name="title">
+         <string>Measurement</string>
+        </attribute>
         <layout class="QVBoxLayout" name="verticalLayoutMeasurement">
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutNos">
-           <item>
-            <widget class="QLabel" name="labelNos">
-             <property name="text">
-              <string>NOS (Number of samples)</string>
-             </property>
+          <layout class="QGridLayout" name="gridLayoutMeasurement">
+           <item row="9" column="2">
+            <widget class="QComboBox" name="comboBoxBslope">
+             <item>
+              <property name="text">
+               <string>pos</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>neg</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>both</string>
+              </property>
+             </item>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerNos">
+           <item row="0" column="0">
+            <spacer name="horizontalSpacer_3">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -64,57 +52,58 @@
              </property>
             </spacer>
            </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxNos">
-             <property name="enabled">
-              <bool>true</bool>
+           <item row="12" column="1">
+            <widget class="QLabel" name="labelTriggerModeCC">
+             <property name="text">
+              <string>Trigger mode Camera Control</string>
              </property>
+            </widget>
+           </item>
+           <item row="6" column="2">
+            <widget class="QSpinBox" name="spinBoxSdat">
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
              </property>
              <property name="suffix">
-              <string/>
-             </property>
-             <property name="minimum">
-              <number>1</number>
+              <string>ns</string>
              </property>
              <property name="maximum">
               <number>999999999</number>
              </property>
-             <property name="value">
-              <number>1000</number>
+            </widget>
+           </item>
+           <item row="5" column="2">
+            <widget class="QDoubleSpinBox" name="doubleSpinBoxBTimer">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="suffix">
+              <string>ms</string>
+             </property>
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="maximum">
+              <double>999999999.000000000000000</double>
              </property>
             </widget>
            </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutNob">
-           <item>
-            <widget class="QLabel" name="labelNob">
+           <item row="11" column="1">
+            <widget class="QLabel" name="labelExpTime">
              <property name="text">
-              <string>NOB (Number of blocks)</string>
+              <string>Shutter exposure time</string>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerNob">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+           <item row="3" column="1">
+            <widget class="QLabel" name="labelBti">
+             <property name="text">
+              <string>BTI (Block Trigger Input)</string>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
+            </widget>
            </item>
-           <item>
+           <item row="1" column="2">
             <widget class="QSpinBox" name="spinBoxNob">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
              </property>
@@ -129,31 +118,169 @@
              </property>
             </widget>
            </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutSti">
-           <item>
+           <item row="8" column="1">
+            <widget class="QLabel" name="labelSslope">
+             <property name="text">
+              <string>SSlope (Scan Trigger Slope)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLabel" name="labelBTimer">
+             <property name="text">
+              <string>BTimer (Block Timer)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QComboBox" name="comboBoxBti">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <item>
+              <property name="text">
+               <string>I</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>S1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>S2</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>S1 &amp; S2</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>BTimer</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="8" column="2">
+            <widget class="QComboBox" name="comboBoxSslope">
+             <item>
+              <property name="text">
+               <string>pos</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>neg</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>both</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="2" column="1">
             <widget class="QLabel" name="labelSti">
              <property name="text">
               <string>STI (Scan Trigger Input)</string>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerSti">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+           <item row="0" column="1">
+            <widget class="QLabel" name="labelNos">
+             <property name="text">
+              <string>NOS (Number of samples)</string>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
+            </widget>
            </item>
-           <item>
+           <item row="12" column="2">
+            <widget class="QComboBox" name="comboBoxTriggerModeCC">
+             <item>
+              <property name="text">
+               <string>XCK</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>External</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>DAT</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="10" column="1">
+            <widget class="QLabel" name="labelXckdelay">
+             <property name="text">
+              <string>XCK Delay</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="labelNob">
+             <property name="text">
+              <string>NOB (Number of blocks)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QDoubleSpinBox" name="doubleSpinBoxSTimer">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="suffix">
+              <string>ms</string>
+             </property>
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="maximum">
+              <double>999999999.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLabel" name="labelSTimer">
+             <property name="text">
+              <string>STimer (Scan Timer)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLabel" name="labelBslope">
+             <property name="text">
+              <string>BSlope (Block Trigger Slope)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLabel" name="labelSdat">
+             <property name="text">
+              <string>SDAT (Scan Delay After Trigger)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="2">
+            <widget class="QSpinBox" name="spinBoxBdat">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="suffix">
+              <string>ns</string>
+             </property>
+             <property name="maximum">
+              <number>999999999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
             <widget class="QComboBox" name="comboBoxSti">
              <item>
               <property name="text">
@@ -182,352 +309,13 @@
              </item>
             </widget>
            </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutBti">
-           <item>
-            <widget class="QLabel" name="labelBti">
-             <property name="text">
-              <string>BTI (Block Trigger Input)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerBti">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QComboBox" name="comboBoxBti">
-             <item>
-              <property name="text">
-               <string>I</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>S1</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>S2</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>S1 &amp; S2</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>BTimer</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutSTimer">
-           <item>
-            <widget class="QLabel" name="labelSTimer">
-             <property name="text">
-              <string>STimer (Scan Timer) [ms]</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerSTimer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QDoubleSpinBox" name="doubleSpinBoxSTimer">
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="maximum">
-              <double>999999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutBTimer">
-           <item>
-            <widget class="QLabel" name="labelBTimer">
-             <property name="text">
-              <string>BTimer (Block Timer) [ms]</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerBTimer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QDoubleSpinBox" name="doubleSpinBoxBTimer">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="maximum">
-              <double>999999999.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutSdat">
-           <item>
-            <widget class="QLabel" name="labelSdat">
-             <property name="text">
-              <string>SDAT (Scan Delay After Trigger) [ns]</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerSdat">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxSdat">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="maximum">
-              <number>999999999</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutBdat">
-           <item>
-            <widget class="QLabel" name="labelBdat">
-             <property name="text">
-              <string>BDAT (Block Delay After Trigger) [ns]</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerBdat">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxBdat">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="maximum">
-              <number>999999999</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutSslope">
-           <item>
-            <widget class="QLabel" name="labelSslope">
-             <property name="text">
-              <string>SSlope (Scan Trigger Slope)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerSslope">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QComboBox" name="comboBoxSslope">
-             <item>
-              <property name="text">
-               <string>pos</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>neg</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>both</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutBslope">
-           <item>
-            <widget class="QLabel" name="labelBslope">
-             <property name="text">
-              <string>BSlope (Block Trigger Slope)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerBslope">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QComboBox" name="comboBoxBslope">
-             <item>
-              <property name="text">
-               <string>pos</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>neg</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>both</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutXckdelay">
-           <item>
-            <widget class="QLabel" name="labelXckdelay">
-             <property name="text">
-              <string>XCK Delay</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerXckdelay">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxXckdelay">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="maximum">
-              <number>999999999</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutExpTime">
-           <item>
-            <widget class="QLabel" name="labelExpTime">
-             <property name="text">
-              <string>Shutter exposure time [ms]</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerExpTime">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
+           <item row="11" column="2">
             <widget class="QDoubleSpinBox" name="doubleSpinBoxExpTime">
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="suffix">
+              <string>ms</string>
              </property>
              <property name="decimals">
               <number>3</number>
@@ -537,19 +325,47 @@
              </property>
             </widget>
            </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutTriggerModeCC">
-           <item>
-            <widget class="QLabel" name="labelTriggerModeCC">
-             <property name="text">
-              <string>Trigger mode Camera Control</string>
+           <item row="10" column="2">
+            <widget class="QSpinBox" name="spinBoxXckdelay">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="maximum">
+              <number>999999999</number>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerTriggerModeCC">
+           <item row="7" column="1">
+            <widget class="QLabel" name="labelBdat">
+             <property name="text">
+              <string>BDAT (Block Delay After Trigger)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QSpinBox" name="spinBoxNos">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="suffix">
+              <string/>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>999999999</number>
+             </property>
+             <property name="value">
+              <number>1000</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <spacer name="horizontalSpacer_4">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -560,97 +376,142 @@
               </size>
              </property>
             </spacer>
-           </item>
-           <item>
-            <widget class="QComboBox" name="comboBoxTriggerModeCC">
-             <item>
-              <property name="text">
-               <string>XCK</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>External</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>DAT</string>
-              </property>
-             </item>
-            </widget>
            </item>
           </layout>
          </item>
         </layout>
        </widget>
-      </widget>
-      <widget class="QWidget" name="camerasetup">
-       <attribute name="title">
-        <string>Camera setup</string>
-       </attribute>
-       <widget class="QWidget" name="">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>10</y>
-          <width>371</width>
-          <height>411</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayoutCameraSetup">
+       <widget class="QWidget" name="camerasetup">
+        <attribute name="title">
+         <string>Camera setup</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutBoardSel">
-           <item>
-            <widget class="QLabel" name="labelBoardSel">
-             <property name="text">
-              <string>PCIe Board select</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerBoardSel">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBoxBoardSel1">
-             <property name="text">
-              <string>Board 1</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBoxBoardSel2">
-             <property name="text">
-              <string>Board 2</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutSensorType">
-           <item>
+          <layout class="QGridLayout" name="gridLayoutCamerasetup">
+           <item row="1" column="1">
             <widget class="QLabel" name="labelSensorType">
              <property name="text">
               <string>Sensor type</string>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerSensorType">
+           <item row="11" column="2">
+            <widget class="QCheckBox" name="checkBoxGpx">
+             <property name="text">
+              <string>active</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="2">
+            <widget class="QCheckBox" name="checkBoxUseDac">
+             <property name="text">
+              <string>on</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="2">
+            <widget class="QCheckBox" name="checkBoxMshut">
+             <property name="text">
+              <string>active</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="2">
+            <widget class="QCheckBox" name="checkBoxLed">
+             <property name="text">
+              <string>on</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QSpinBox" name="spinBoxCamcnt">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>8</number>
+             </property>
+             <property name="value">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QComboBox" name="comboBox">
+             <item>
+              <property name="text">
+               <string>board 1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>board 2</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>both</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="12" column="1">
+            <widget class="QLabel" name="labelGpxOffset">
+             <property name="text">
+              <string>GPX offset</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="2">
+            <widget class="QSpinBox" name="spinBoxGpxOffset">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QLabel" name="labelGain3030">
+             <property name="text">
+              <string>Gain</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QLabel" name="labelGain3010">
+             <property name="text">
+              <string>Gain</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="labelBoardSel">
+             <property name="text">
+              <string>PCIe Board select</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLabel" name="labelLed">
+             <property name="text">
+              <string>LED</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLabel" name="labelCamCool">
+             <property name="text">
+              <string>Camera cooling</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <spacer name="horizontalSpacer_2">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -662,7 +523,39 @@
              </property>
             </spacer>
            </item>
-           <item>
+           <item row="4" column="2">
+            <widget class="QSpinBox" name="spinBoxPixel">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>9999</number>
+             </property>
+             <property name="value">
+              <number>576</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="2">
             <widget class="QComboBox" name="comboBoxSensorType">
              <item>
               <property name="text">
@@ -676,287 +569,21 @@
              </item>
             </widget>
            </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutCameraSystem">
-           <item>
-            <widget class="QLabel" name="labelCameraSystem">
-             <property name="text">
-              <string>Camera System</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerCameraSystem">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Expanding</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QComboBox" name="comboBoxCameraSystem">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <item>
-              <property name="text">
-               <string>3001</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>3010</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>3030</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutCamcnt">
-           <item>
+           <item row="3" column="1">
             <widget class="QLabel" name="labelCamcnt">
              <property name="text">
               <string>CAMCNT (Number of cameras)</string>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerCamcnt">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Expanding</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxCamcnt">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="minimum">
-              <number>1</number>
-             </property>
-             <property name="maximum">
-              <number>8</number>
-             </property>
-             <property name="value">
-              <number>1</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutPixel">
-           <item>
-            <widget class="QLabel" name="labelOutputPixel">
+           <item row="2" column="1">
+            <widget class="QLabel" name="labelCameraSystem">
              <property name="text">
-              <string>Number of pixel</string>
+              <string>Camera System</string>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerPixel">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxPixel">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="minimum">
-              <number>1</number>
-             </property>
-             <property name="maximum">
-              <number>9999</number>
-             </property>
-             <property name="value">
-              <number>576</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutMshut">
-           <item>
-            <widget class="QLabel" name="labelMshut">
-             <property name="text">
-              <string>MSHUT (shutter)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerMshut">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBoxMshut">
-             <property name="text">
-              <string>active</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutLed">
-           <item>
-            <widget class="QLabel" name="labelLed">
-             <property name="text">
-              <string>LED</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerLed">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBoxLed">
-             <property name="text">
-              <string>on</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutGain3010">
-           <item>
-            <widget class="QLabel" name="labelGain3010">
-             <property name="text">
-              <string>Gain</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerGain3010">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBoxGain3010">
-             <property name="text">
-              <string>on</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutGain3030">
-           <item>
-            <widget class="QLabel" name="labelGain3030">
-             <property name="text">
-              <string>Gain</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerGain3030">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxGain3030">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutCamCool">
-           <item>
-            <widget class="QLabel" name="labelCamCool">
-             <property name="text">
-              <string>Camera cooling</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerCamCool">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
+           <item row="9" column="2">
             <widget class="QComboBox" name="comboBoxCamCool">
              <item>
               <property name="text">
@@ -1010,137 +637,113 @@
              </item>
             </widget>
            </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutUseDac">
-           <item>
+           <item row="8" column="2">
+            <widget class="QSpinBox" name="spinBoxGain3030">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="1">
             <widget class="QLabel" name="labelUseDac">
              <property name="text">
               <string>DAC</string>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerUseDac">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+           <item row="4" column="1">
+            <widget class="QLabel" name="labelOutputPixel">
+             <property name="text">
+              <string>Number of pixel</string>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
+            </widget>
            </item>
-           <item>
-            <widget class="QCheckBox" name="checkBoxUseDac">
+           <item row="7" column="2">
+            <widget class="QCheckBox" name="checkBoxGain3010">
              <property name="text">
               <string>on</string>
              </property>
             </widget>
            </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutGpx">
-           <item>
+           <item row="5" column="1">
+            <widget class="QLabel" name="labelMshut">
+             <property name="text">
+              <string>MSHUT (shutter)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="1">
             <widget class="QLabel" name="labelGpx">
              <property name="text">
               <string>GPX</string>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerGpx">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+           <item row="2" column="2">
+            <widget class="QComboBox" name="comboBoxCameraSystem">
+             <property name="enabled">
+              <bool>true</bool>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBoxGpx">
-             <property name="text">
-              <string>active</string>
-             </property>
+             <item>
+              <property name="text">
+               <string>3001</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>3010</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>3030</string>
+              </property>
+             </item>
             </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutGpxOffset">
-           <item>
-            <widget class="QLabel" name="labelGpxOffset">
-             <property name="text">
-              <string>GPX offset</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerGpxOffset">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxGpxOffset"/>
            </item>
           </layout>
          </item>
         </layout>
        </widget>
-      </widget>
-      <widget class="QWidget" name="fftmode">
-       <attribute name="title">
-        <string>FFT mode</string>
-       </attribute>
-       <widget class="QWidget" name="">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>10</y>
-          <width>371</width>
-          <height>411</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayoutFftMode">
+       <widget class="QWidget" name="fftmode">
+        <attribute name="title">
+         <string>FFT mode</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutLines">
-           <item>
-            <widget class="QLabel" name="labelLines">
-             <property name="text">
-              <string>Sensor Lines</string>
+          <layout class="QGridLayout" name="gridLayoutFftmode">
+           <item row="13" column="2">
+            <widget class="QSpinBox" name="spinBoxRegion8">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="minimum">
+              <number>1</number>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerLines">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+           <item row="11" column="1">
+            <widget class="QLabel" name="labelRegion6">
+             <property name="text">
+              <string>Region size 6</string>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
+            </widget>
            </item>
-           <item>
+           <item row="10" column="1">
+            <widget class="QLabel" name="labelRegion5">
+             <property name="text">
+              <string>Region size 5</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLabel" name="labelRegion4">
+             <property name="text">
+              <string>Region size 4</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
             <widget class="QSpinBox" name="spinBoxLines">
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1153,19 +756,113 @@
              </property>
             </widget>
            </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutVfreq">
-           <item>
-            <widget class="QLabel" name="labelVfreq">
-             <property name="text">
-              <string>VFreq (Vertical Frequency)</string>
+           <item row="9" column="2">
+            <widget class="QSpinBox" name="spinBoxRegion4">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="minimum">
+              <number>1</number>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerVfreq">
+           <item row="3" column="2">
+            <widget class="QSpinBox" name="spinBoxLinesBinning">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLabel" name="labelNumberOfRegions">
+             <property name="text">
+              <string>Number of regions</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLabel" name="labelRegionsEqual">
+             <property name="text">
+              <string>Region size</string>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="1">
+            <widget class="QLabel" name="labelRegion8">
+             <property name="text">
+              <string>Region size 8</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLabel" name="labelRegion1">
+             <property name="text">
+              <string>Region size 1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QSpinBox" name="spinBoxNumberOfRegions">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>8</number>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="2">
+            <widget class="QSpinBox" name="spinBoxRegion3">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QLabel" name="labelRegion3">
+             <property name="text">
+              <string>Region size 3</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLabel" name="labelLinesBinning">
+             <property name="text">
+              <string>Area lines binning</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="2">
+            <widget class="QSpinBox" name="spinBoxRegion6">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="2">
+            <widget class="QSpinBox" name="spinBoxRegion7">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <spacer name="horizontalSpacer_5">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -1177,38 +874,86 @@
              </property>
             </spacer>
            </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxVfreq">
+           <item row="6" column="2">
+            <widget class="QSpinBox" name="spinBoxRegion1">
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
              </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
             </widget>
            </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutFftMode">
-           <item>
+           <item row="12" column="1">
+            <widget class="QLabel" name="labelRegion7">
+             <property name="text">
+              <string>Region size 7</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="2">
+            <widget class="QSpinBox" name="spinBoxRegion2">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="2">
+            <widget class="QSpinBox" name="spinBoxRegion5">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
             <widget class="QLabel" name="labelFftMode">
              <property name="text">
               <string>FFT mode</string>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerFftMode">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+           <item row="5" column="2">
+            <widget class="QCheckBox" name="checkBoxRegionsEqual">
+             <property name="text">
+              <string>automatic equal</string>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
+            </widget>
            </item>
-           <item>
+           <item row="1" column="2">
+            <widget class="QSpinBox" name="spinBoxVfreq">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="labelLines">
+             <property name="text">
+              <string>Sensor Lines</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="labelVfreq">
+             <property name="text">
+              <string>VFreq (Vertical Frequency)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QLabel" name="labelRegion2">
+             <property name="text">
+              <string>Region size 2</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
             <widget class="QComboBox" name="comboBoxFftMode">
              <item>
               <property name="text">
@@ -1227,19 +972,8 @@
              </item>
             </widget>
            </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutLinesBinning">
-           <item>
-            <widget class="QLabel" name="labelLinesBinning">
-             <property name="text">
-              <string>Area lines binning</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerLinesBinning">
+           <item row="0" column="3">
+            <spacer name="horizontalSpacer_6">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -1250,387 +984,27 @@
               </size>
              </property>
             </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxLinesBinning">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="minimum">
-              <number>1</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutNumberOfRegions">
-           <item>
-            <widget class="QLabel" name="labelNumberOfRegions">
-             <property name="text">
-              <string>Number of regions</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerNumberOfRegions">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxNumberOfRegions">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="minimum">
-              <number>1</number>
-             </property>
-             <property name="maximum">
-              <number>8</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutRegionsEqual">
-           <item>
-            <widget class="QLabel" name="labelRegionsEqual">
-             <property name="text">
-              <string>Region size</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerRegionsEqual">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBoxRegionsEqual">
-             <property name="text">
-              <string>automatic equal</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutRegion1">
-           <item>
-            <widget class="QLabel" name="labelRegion1">
-             <property name="text">
-              <string>Region size 1</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerRegion1">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxRegion1">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="minimum">
-              <number>1</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutRegion2">
-           <item>
-            <widget class="QLabel" name="labelRegion2">
-             <property name="text">
-              <string>Region size 2</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerRegion2">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxRegion2">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="minimum">
-              <number>1</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutRegion3">
-           <item>
-            <widget class="QLabel" name="labelRegion3">
-             <property name="text">
-              <string>Region size 3</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerRegion3">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxRegion3">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="minimum">
-              <number>1</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutRegion4">
-           <item>
-            <widget class="QLabel" name="labelRegion4">
-             <property name="text">
-              <string>Region size 4</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerRegion4">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxRegion4">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="minimum">
-              <number>1</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutRegion5">
-           <item>
-            <widget class="QLabel" name="labelRegion5">
-             <property name="text">
-              <string>Region size 5</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerRegion5">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxRegion5">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="minimum">
-              <number>1</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutRegion6">
-           <item>
-            <widget class="QLabel" name="labelRegion6">
-             <property name="text">
-              <string>Region size 6</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerRegion6">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxRegion6">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="minimum">
-              <number>1</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutRegion7">
-           <item>
-            <widget class="QLabel" name="labelRegion7">
-             <property name="text">
-              <string>Region size 7</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerRegion7">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxRegion7">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="minimum">
-              <number>1</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutRegion8">
-           <item>
-            <widget class="QLabel" name="labelRegion8">
-             <property name="text">
-              <string>Region size 8</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerRegion8">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxRegion8">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="minimum">
-              <number>1</number>
-             </property>
-            </widget>
            </item>
           </layout>
          </item>
         </layout>
        </widget>
-      </widget>
-      <widget class="QWidget" name="dac">
-       <attribute name="title">
-        <string>Sensor Offset</string>
-       </attribute>
-       <widget class="QWidget" name="">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>10</y>
-          <width>371</width>
-          <height>321</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayoutDac">
+       <widget class="QWidget" name="dac">
+        <attribute name="title">
+         <string>Sensor Offset</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutDacChannel1">
-           <item>
+          <layout class="QGridLayout" name="gridLayoutDac">
+           <item row="0" column="1">
             <widget class="QLabel" name="labelDacChannel1">
              <property name="text">
               <string>Channel 1</string>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerDacChannel1">
+           <item row="0" column="0">
+            <spacer name="horizontalSpacer_7">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -1642,211 +1016,35 @@
              </property>
             </spacer>
            </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxChannel1">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="maximum">
-              <number>65534</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutDacChannel2">
-           <item>
-            <widget class="QLabel" name="labelDacChannel2">
+           <item row="7" column="1">
+            <widget class="QLabel" name="labelDacChannel8">
              <property name="text">
-              <string>Channel 2</string>
+              <string>Channel 8</string>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerDacChannel2">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxChannel2">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="maximum">
-              <number>65534</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutDacChannel3">
-           <item>
-            <widget class="QLabel" name="labelDacChanne3">
+           <item row="2" column="1">
+            <widget class="QLabel" name="labelDacChannel3">
              <property name="text">
               <string>Channel 3</string>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerDacChannel3">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxChannel3">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="maximum">
-              <number>65534</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutDacChannel4">
-           <item>
-            <widget class="QLabel" name="labelDacChannel4">
-             <property name="text">
-              <string>Channel 4</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerDacChannel4">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxChannel4">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="maximum">
-              <number>65534</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutDacChannel5">
-           <item>
+           <item row="4" column="1">
             <widget class="QLabel" name="labelDacChannel5">
              <property name="text">
               <string>Channel 5</string>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerDacChannel5">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxChannel5">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="maximum">
-              <number>65534</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutDacChannel6">
-           <item>
-            <widget class="QLabel" name="labelDacChannel6">
+           <item row="1" column="1">
+            <widget class="QLabel" name="labelDacChannel2">
              <property name="text">
-              <string>Channel 6</string>
+              <string>Channel 2</string>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerDacChannel6">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="spinBoxChannel6">
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-             <property name="maximum">
-              <number>65534</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutDacChannel7">
-           <item>
-            <widget class="QLabel" name="labelDacChannel7">
-             <property name="text">
-              <string>Channel 7</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerDacChannel7">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
+           <item row="6" column="2">
             <widget class="QSpinBox" name="spinBoxChannel7">
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1856,31 +1054,78 @@
              </property>
             </widget>
            </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutDacChannel8">
-           <item>
-            <widget class="QLabel" name="labelDacChannel8">
+           <item row="3" column="1">
+            <widget class="QLabel" name="labelDacChannel4">
              <property name="text">
-              <string>Channel 8</string>
+              <string>Channel 4</string>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerDacChannel8">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+           <item row="0" column="2">
+            <widget class="QSpinBox" name="spinBoxChannel1">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
+             <property name="maximum">
+              <number>65534</number>
              </property>
-            </spacer>
+            </widget>
            </item>
-           <item>
+           <item row="2" column="2">
+            <widget class="QSpinBox" name="spinBoxChannel3">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="maximum">
+              <number>65534</number>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QSpinBox" name="spinBoxChannel4">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="maximum">
+              <number>65534</number>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLabel" name="labelDacChannel6">
+             <property name="text">
+              <string>Channel 6</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QSpinBox" name="spinBoxChannel2">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="maximum">
+              <number>65534</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QSpinBox" name="spinBoxChannel5">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="maximum">
+              <number>65534</number>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLabel" name="labelDacChannel7">
+             <property name="text">
+              <string>Channel 7</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="2">
             <widget class="QSpinBox" name="spinBoxChannel8">
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1890,41 +1135,20 @@
              </property>
             </widget>
            </item>
-          </layout>
-         </item>
-        </layout>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="debug">
-       <attribute name="title">
-        <string>Debug</string>
-       </attribute>
-       <widget class="QWidget" name="">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>9</y>
-          <width>371</width>
-          <height>121</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayoutDebug">
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutOutput">
-           <item>
-            <widget class="QLabel" name="labelOutput">
-             <property name="text">
-              <string>TOR (Ouput signal PCIe card)</string>
+           <item row="5" column="2">
+            <widget class="QSpinBox" name="spinBoxChannel6">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="maximum">
+              <number>65534</number>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="horizontalSpacerOutput">
+           <item row="0" column="3">
+            <spacer name="horizontalSpacer_8">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Expanding</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
@@ -1934,7 +1158,44 @@
              </property>
             </spacer>
            </item>
-           <item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="debug">
+        <attribute name="title">
+         <string>Debug</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_7">
+         <item>
+          <layout class="QGridLayout" name="gridLayoutDebug">
+           <item row="2" column="1">
+            <widget class="QLabel" name="labelAdcCustom">
+             <property name="text">
+              <string>ADC mode custom value</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QComboBox" name="comboBoxAdcMode">
+             <item>
+              <property name="text">
+               <string>normal</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>ramp</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>custom value</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="0" column="2">
             <widget class="QComboBox" name="comboBoxOutput">
              <item>
               <property name="text">
@@ -2018,19 +1279,8 @@
              </item>
             </widget>
            </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutAdcMode">
-           <item>
-            <widget class="QLabel" name="labelAdcMode">
-             <property name="text">
-              <string>ADC mode</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerAdcMode">
+           <item row="0" column="0">
+            <spacer name="horizontalSpacer_11">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -2042,50 +1292,7 @@
              </property>
             </spacer>
            </item>
-           <item>
-            <widget class="QComboBox" name="comboBoxAdcMode">
-             <item>
-              <property name="text">
-               <string>normal</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>ramp</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>custom value</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutAdcCustom">
-           <item>
-            <widget class="QLabel" name="labelAdcCustom">
-             <property name="text">
-              <string>ADC mode custom value</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacerAdcCustom">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
+           <item row="2" column="2">
             <widget class="QSpinBox" name="spinBoxAdcCustom">
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -2095,79 +1302,113 @@
              </property>
             </widget>
            </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="labelAdcMode">
+             <property name="text">
+              <string>ADC mode</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="labelOutput">
+             <property name="text">
+              <string>TOR (Ouput signal PCIe card)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <spacer name="horizontalSpacer_12">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="appearance">
+        <attribute name="title">
+         <string>Appearance</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_8">
+         <item>
+          <layout class="QGridLayout" name="gridLayoutAppearance">
+           <item row="0" column="2">
+            <widget class="QComboBox" name="comboBoxTheme">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <item>
+              <property name="text">
+               <string>Light</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Dark (beta)</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <spacer name="horizontalSpacer_9">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="labelTheme">
+             <property name="text">
+              <string>Theme</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <spacer name="horizontalSpacer_10">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
           </layout>
          </item>
         </layout>
        </widget>
       </widget>
-      <widget class="QWidget" name="appearance">
-       <attribute name="title">
-        <string>Appearance</string>
-       </attribute>
-       <widget class="QWidget" name="layoutWidget">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>10</y>
-          <width>371</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayoutTheme">
-         <item>
-          <widget class="QLabel" name="labelTheme">
-           <property name="text">
-            <string>Theme</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacerTheme">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QComboBox" name="comboBoxTheme">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <item>
-            <property name="text">
-             <string>Light</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Dark (beta)</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-        </layout>
-       </widget>
+     </item>
+     <item>
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+       </property>
       </widget>
-     </widget>
-    </item>
-    <item>
-     <widget class="QDialogButtonBox" name="buttonBox">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="standardButtons">
-       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections>
