@@ -23,8 +23,9 @@
 #define D_IOCTL          0x0020
 #define D_MODULE         0x0040
 #define D_MMAP           0x0080
+#define D_PROC           0x0100
 
-#define DEBUG_BITS       0x00FF
+#define DEBUG_BITS       0x01FF
 #define DEBUG_MASK_SHIFT 16
 
 

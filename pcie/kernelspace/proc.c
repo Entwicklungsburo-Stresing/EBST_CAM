@@ -124,7 +124,8 @@ struct file_operations proc_fops = {
 };
 
 void proc_init_module(void) {
-  printk(KERN_WARNING NAME" creating module proc entry\n");
+  if (debug_module)
+    printk(KERN_WARNING NAME" creating module proc entry\n");
 
   proc_entry
     = proc_create_data(NAME, S_IRUGO | S_IWUGO, NULL, &proc_fops, NULL);
@@ -364,14 +365,14 @@ void proc_init(struct dev_struct *dev)
 {
   char name[32];
 
-  printk(KERN_WARNING NAME" creating proc entries\n");
-
-  dev->proc_actual_register = 0;
+  PDEBUG(D_PROC, "creating main device proc entry");
   sprintf(name, "%s%d", NAME, dev->minor);
   dev->proc_data_entry = proc_create_data(name, 0, NULL, &proc_data_fops, dev);
 
-  if (dev->status & DEV_HARDWARE_PRESENT)
+  if (!(dev->status & DEV_HARDWARE_PRESENT)) {
+    PDEBUG(D_PROC, "no hardware present, not creating io proc entries");
     return;
+  }
 
   sprintf(name, "%s%d_registers", NAME, dev->minor);
   dev->proc_registers_entry
@@ -389,6 +390,8 @@ void proc_init(struct dev_struct *dev)
 void proc_clean_up(struct dev_struct *dev)
 {
   char name[32];
+
+  PDEBUG(D_PROC, "removing proc entries\n");
 
   if (dev->proc_data_entry) {
     sprintf(name, "%s%d", NAME, dev->minor);
@@ -413,4 +416,7 @@ void proc_clean_up(struct dev_struct *dev)
     remove_proc_entry(name, NULL);
     dev->proc_io_entry = 0;
   }
+
+  dev->proc_actual_register = 0;
+  dev->proc_actual_register_long = 0;
 }

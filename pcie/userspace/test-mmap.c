@@ -88,15 +88,14 @@ int main(int argc, char **argv) {
   printf("number of pixels %d\n", device_descriptor->control->number_of_pixels);
   printf("number of cameras %d\n",
          device_descriptor->control->number_of_cameras);
-  printf("number of scans %d\n", device_descriptor->control->number_of_scans);
+  printf("number of scans %d\n", device_descriptor->control->dma_num_scans);
   printf("buffer 0x%08lx\n",
          (unsigned long) device_descriptor->mapped_buffer);
-  printf("buffer size %d\n", device_descriptor->control->buffer_size);
+  printf("buffer size %d\n", device_descriptor->control->dma_buf_size);
   printf("dma buffer bus address %ld\n",
          device_descriptor->control->dma_physical_start);
   printf("write position %d\n", device_descriptor->control->write_pos);
   printf("read position %d\n", device_descriptor->control->read_pos);
-  printf("number of blocks %d\n", device_descriptor->control->number_of_blocks);
 
   /*
   dma_ptr
