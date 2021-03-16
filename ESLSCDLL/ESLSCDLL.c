@@ -342,22 +342,22 @@ DllAccess UINT8 DLLFFValid( UINT32 drvno )
 
 /**
 \copydoc SetExtFFTrig
-*/
+
 DllAccess void DLLSetExtTrig( UINT32 drvno )
 {
 	SetExtFFTrig( drvno );
 	return;
 }
-
+*/
 /**
 \copydoc SetIntFFTrig
-*/
+
 DllAccess void DLLSetIntTrig( UINT32 drvno )
 {
 	SetIntFFTrig( drvno );// set hw register
 	return;
 }
-
+*/
 /**
 \copydoc FFOvl
 */
@@ -677,6 +677,17 @@ DllAccess void DLLAboutGPX( UINT32 drvno )
 	return;
 }
 
+
+/**
+\copydoc InitCamera3001
+*/
+DllAccess void DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED, UINT8 gain_high )
+{
+	InitCameraGeneral( drvno, pixel, cc_trigger_input, IS_FFT, IS_AREA, IS_COOLED, gain_high );
+	return;
+}
+
+
 /**
 \copydoc InitCamera3001
 */
@@ -800,6 +811,14 @@ DllAccess UINT8 DLLSetBTimer( UINT32 drvno, UINT32 btime_in_microseconds )
 DllAccess UINT8 DLLSetBSlope( UINT32 drvno, UINT32 slope )
 {
 	return SetBSlope( drvno, slope );
+}
+
+/**
+\copydoc LedOn
+*/
+DllAccess void DLLLedOff( UINT32 drvno, UINT8 LED_OFF )
+{
+	return LedOff( drvno, LED_OFF );
 }
 
 /**

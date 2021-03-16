@@ -223,7 +223,7 @@ void initMeasurement()
 	initCamera();
 	if (both_boards) {
 		StopSTimer(2);
-		SetIntFFTrig(2);
+		//SetIntFFTrig(2);
 		RSFifo(2);
 		//set TrigOut, default= XCK
 		SetTORReg(2, m_TOmodus);
