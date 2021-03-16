@@ -2910,7 +2910,7 @@ UINT8 WaitforTelapsed( LONGLONG musec )
 \param gain_high 1 gain on, 0 gain off
 \return void
 */
-void InitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED, UINT8 gain_high )
+void InitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED )
 {
 	// when TRUE: disables PCIe FIFO when cool cam transmits cool status
 	if (IS_COOLED)
@@ -2924,8 +2924,6 @@ void InitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UIN
 	//select vclk and Area mode on
 	IS_AREA <<= 15;
 	SendFLCAM( drvno, maddr_cam, cam_adaddr_vclk, (UINT16) (IS_FFT | IS_AREA) );
-	//set gain and led
-	SendFLCAM( drvno, maddr_cam, cam_adaddr_gain_led, (UINT16) gain_high );
 	return;
 }
 
@@ -2966,17 +2964,17 @@ void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS
 \param gain_high 1 gain on, 0 gain off
 \return void
 */
-void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high )
+void InitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern )
 {
-	Use_ENFFW_protection( drvno, FALSE );
+	//Use_ENFFW_protection( drvno, FALSE );
 	Cam3010_ADC_reset( drvno );
 	Cam3010_ADC_setMode( drvno, adc_mode, custom_pattern );
 	//set camera pixel register
-	SendFLCAM( drvno, maddr_cam, cam_adaddr_pixel, pixel );
+	//SendFLCAM( drvno, maddr_cam, cam_adaddr_pixel, pixel );
 	//set gain and led
-	SendFLCAM( drvno, maddr_cam, cam_adaddr_gain_led, led_on << 4 & gain_high );
+	//SendFLCAM( drvno, maddr_cam, cam_adaddr_gain, led_on << 4 & gain_high );
 	//set trigger input
-	SendFLCAM( drvno, maddr_cam, cam_adaddr_trig_in, trigger_input );
+	//SendFLCAM( drvno, maddr_cam, cam_adaddr_trig_in, trigger_input );
 	return;
 }
 
@@ -3048,7 +3046,7 @@ void Cam3010_ADC_setMode( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern )
 */
 void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain )
 {
-	Use_ENFFW_protection( drvno, FALSE );
+	//Use_ENFFW_protection( drvno, FALSE );
 	Cam3030_ADC_reset( drvno );
 	Cam3030_ADC_twoWireModeEN( drvno ); //two wire mode output interface for pal versions P209_2 and above
 	Cam3030_ADC_SetGain( drvno, gain );
@@ -3607,6 +3605,20 @@ BOOL SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob )
 	return TRUE;
 }
 
+/**
+\brief Sets the camera gain register.
+	Sets corresponding camera register: maddr = 0, adadr = 0
+	Currently a one bit value (bit0 = 1 -> gain high), but can be used as a numerical value 0...3 in future.
+	Legacy cameras will only look for bit0.
+\param drvno selects PCIe board
+\param gain_value 1 -> gain high, 0 -> gain low
+\return void
+*/
+void SetGain( UINT32 drvno, UINT16 gain_value )
+{
+	//set gain
+	SendFLCAM( drvno, maddr_cam, cam_adaddr_gain, gain_value );
+}
 
 /**
 \brief Disables all camera leds to suppress stray light.

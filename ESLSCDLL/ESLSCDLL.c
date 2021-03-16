@@ -681,9 +681,9 @@ DllAccess void DLLAboutGPX( UINT32 drvno )
 /**
 \copydoc InitCamera3001
 */
-DllAccess void DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED, UINT8 gain_high )
+DllAccess void DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED )
 {
-	InitCameraGeneral( drvno, pixel, cc_trigger_input, IS_FFT, IS_AREA, IS_COOLED, gain_high );
+	InitCameraGeneral( drvno, pixel, cc_trigger_input, IS_FFT, IS_AREA, IS_COOLED );
 	return;
 }
 
@@ -700,9 +700,9 @@ DllAccess void DLLInitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_inp
 /**
 \copydoc InitCamera3010
 */
-DllAccess void DLLInitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high )
+DllAccess void DLLInitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern )
 {
-	InitCamera3010( drvno, pixel, trigger_input, adc_mode, custom_pattern, led_on, gain_high );
+	InitCamera3010( drvno, adc_mode, custom_pattern );
 	return;
 }
 
@@ -811,6 +811,14 @@ DllAccess UINT8 DLLSetBTimer( UINT32 drvno, UINT32 btime_in_microseconds )
 DllAccess UINT8 DLLSetBSlope( UINT32 drvno, UINT32 slope )
 {
 	return SetBSlope( drvno, slope );
+}
+
+/**
+\copydoc LedOn
+*/
+DllAccess void DLLSetGain( UINT32 drvno, UINT16 gain_value )
+{
+	return SetGain( drvno, gain_value );
 }
 
 /**

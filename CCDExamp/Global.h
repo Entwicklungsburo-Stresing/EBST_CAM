@@ -53,7 +53,7 @@ enum sensor_type
 // =0 if not FFT
 #define Vfreqini 7		//vclk freq for FFTs with FIFO in divider of12MHz (0..15)
 						//=4 for highest speed with 7030-0906
-enum trigger_mode
+enum trigger_mode // of CamControl 
 {
 	xck = 0,
 	exttrig = 1,
