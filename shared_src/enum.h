@@ -184,9 +184,9 @@ enum sensor_type
 //camera system select
 enum camera_system
 {
-	camera_system_3001 = 1,
-	camera_system_3010 = 2,
-	camera_system_3030 = 3
+	camera_system_3001 = 0,
+	camera_system_3010 = 1,
+	camera_system_3030 = 2
 };
 
 enum trigger_mode
