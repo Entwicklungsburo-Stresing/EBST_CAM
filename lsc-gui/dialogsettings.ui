@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>DialogSettings</class>
  <widget class="QDialog" name="DialogSettings">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>410</width>
+    <height>451</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
@@ -10,9 +18,6 @@
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QTabWidget" name="tabWidget">
-       <property name="currentIndex">
-        <number>0</number>
-       </property>
        <widget class="QWidget" name="measurement">
         <attribute name="title">
          <string>Measurement</string>
@@ -299,6 +304,11 @@
              </item>
              <item>
               <property name="text">
+               <string>unused</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
                <string>STimer</string>
               </property>
              </item>
@@ -443,7 +453,7 @@
             </widget>
            </item>
            <item row="0" column="2">
-            <widget class="QComboBox" name="comboBox">
+            <widget class="QComboBox" name="comboBoxBoardSel">
              <item>
               <property name="text">
                <string>board 1</string>
