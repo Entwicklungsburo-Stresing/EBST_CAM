@@ -70,7 +70,7 @@ void MainWindow::setChartData(uint16_t* data, uint16_t length)
  */
 void MainWindow::startPressed()
 {
-    lsc.initMeasurement(settings.value(SETTING_CAMCNT, CAMCNT_DEFAULT).toInt(), settings.value(SETTING_PIXEL, PIXEL_DEFAULT).toInt(), settings.value(SETTING_XCKDELAY, XCKDELAY_DEFAULT).toInt());
+    lsc.initMeasurement(settings.value(settingCamcntPath, settingCamcntDefault).toInt(), settings.value(settingPixelPath, settingPixelDefault).toInt(), settings.value(settingXckdelayPath, settingXckdelayDefault).toInt());
     lsc.startMeasurement();
     return;
 }
@@ -92,15 +92,15 @@ void MainWindow::on_actionEdit_triggered()
  */
 void MainWindow::loadSettings()
 {
-    int nos = settings.value(SETTING_NOS,NOS_DEFAULT).toInt();
+    int nos = settings.value(settingNosPath,settingNosDefault).toInt();
     ui->horizontalSliderSample->setMaximum(nos);
     ui->spinBoxSample->setMaximum(nos);
-    int nob = settings.value(SETTING_NOB,NOB_DEFAULT).toInt();
+    int nob = settings.value(settingNobPath,settingNobPath).toInt();
     ui->horizontalSliderBlock->setMaximum(nob);
     ui->spinBoxBlock->setMaximum(nob);
-    int tor = settings.value(SETTING_TOR,TOR_DEFAULT).toInt();
+    int tor = settings.value(settingTorPath,settingTorDefault).toInt();
     lsc.setTorOut(tor);
-    int theme = settings.value(SETTING_THEME,THEME_DEFAULT).toInt();
+    int theme = settings.value(settingThemePath,settingThemeDefault).toInt();
     switch(theme)
     {
     default:
@@ -173,7 +173,7 @@ void MainWindow::on_actionDump_board_registers_triggered()
 
 void MainWindow::loadCameraData()
 {
-    uint32_t pixel = settings.value(SETTING_PIXEL,PIXEL_DEFAULT).toInt();
+    uint32_t pixel = settings.value(settingPixelPath,settingPixelDefault).toInt();
     uint16_t* data = (uint16_t*)malloc(pixel * sizeof(uint16_t));
     int block = ui->horizontalSliderBlock->value() - 1;
     int sample = ui->horizontalSliderSample->value() - 1;
