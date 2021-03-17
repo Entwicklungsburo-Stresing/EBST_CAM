@@ -104,12 +104,16 @@ int main(int argc, char ** argv)
     goto finish;
   }
 
+  /* already done in lscpcie_open
   lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_PIXEL,
                      device_descriptor->control->number_of_pixels);
+  */
   // and what about this? not present in board.c
+  // should go zo lscpcie_open or similar
   result
     = lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_TRIGGER_IN,
                          trigger_mode);
+
   if (result < 0)
     return result;
   result = lscpcie_setup_dma(0);

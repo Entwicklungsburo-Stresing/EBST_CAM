@@ -369,7 +369,7 @@ int init_cam_control(uint dev, trigger_mode_t trigger_mode, uint16_t options) {
 
   result
     = lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_PIXEL,
-                         options);
+                         options); //??
 
   return result;
 }
@@ -475,7 +475,7 @@ int lscpcie_setup_dma(uint dev) {
   if ((result = set_dma_buffer_registers(dev)) < 0) return 0;
 
   // DREQ: every XCK h->l starts DMA by hardware
-  //set hardware start des dma  via DREQ withe data = 0x4000000
+  // set hardware start des dma  via DREQ withe data = 0x4000000
   SET_BITS(dev_descr[dev].s0->IRQ.IRQREG, HWDREQ_EN ? 0x40000000 : 0,
            0x40000000);
 
@@ -575,7 +575,7 @@ int lscpcie_write_reg16(uint dev, uint16_t address, uint16_t val) {
 
 int lscpcie_write_reg32(uint dev, uint16_t address, uint32_t val) {
   reg_info_t reg = { .address = address, .value = val };
-
+                                          
   if (dev >= number_of_pcie_boards) return -ENODEV;
 
   return ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_SET_REG32, &reg);
