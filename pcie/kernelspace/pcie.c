@@ -115,7 +115,7 @@ void remove_lscpcie(struct pci_dev *pci_dev)
   PDEBUG(D_PCI, "removing lscpcie\n");
 
   if (dev) {
-    if (dev->status & DEV_MSI_ENABLED)
+    if ((dev->status & DEV_MSI_ENABLED) && (pci_dev->msi_enabled))
       pci_disable_msi(pci_dev);
     dev->status &= ~DEV_MSI_ENABLED;
   /* doesn't work
