@@ -16,6 +16,13 @@ enum camera_system
 	camera_system_3030 = 3
 };
 #define CAMERA_SYSTEM camera_system_3001  // use 1 to 3 like in enum above
+
+#define	DRV	1	//1 if only one interface board 
+// could be 2..4 for multiple boards
+#define CAMCNT 1		//number of sensors in the queue 
+#define _PIXEL 1088		//discrete numbers = act pixel+64 -> 4160 - 2112 - 1088 - 576 - 320 - 192
+
+
 enum adc_mode
 {
 	normal = 0,
@@ -31,17 +38,11 @@ enum adc_mode
 #define GAIN 6
 #define _MSHUT FALSE
 #define _MINREPTIME 20
-#define	DRV	1	//1 if only one interface board LSCPCI1 or LSCISA1 in example
-						// could be 2..4 for multiple boards
-#define CAMCNT 1
-#define _PIXEL 1088		//1088 - 576 - 320 - 192
-//settings for 8 Bit cameras
-//static	unsigned long FLAG816 = 2;  // 2=8Bit, 1=12/16Bit
-//static int YSHIFT = 0;				// 8Bit=0, 12Bit=4 or more for ddrep>1
+
+//settings for Y-scale of graphic display
 //static int YSHIFT = 4;				// 12Bit=4 or more for addrep>1
-static int YSHIFT = 8;			// 16bit=8
 //static int YSHIFT = 6;			// 14 bit
-// camera values for calling GETCCD and InitBoard
+static int YSHIFT = 8;			// 16bit=8
 
 enum sensor_type
 {
@@ -49,17 +50,19 @@ enum sensor_type
 	FFTsensor = 1,		//set vclk generator; for HA S703x
 };
 #define SENSOR_TYPE PDAsensor
+
+//for FFT sensors
 #define _FFTLINES 64 		// no of vertical lines of FFT sensors, usually 64
 // =0 if not FFT
 #define Vfreqini 7		//vclk freq for FFTs with FIFO in divider of12MHz (0..15)
-						//=4 for highest speed with 7030-0906
-enum trigger_mode // of CamControl 
+						//=4 for highest speed with 7030-0906, =7 standard, =30 for S10420
+enum CCtrigger_mode // of CamControl 
 {
 	xck = 0,
 	exttrig = 1,
 	dat = 2
 };
-#define TRIGGER_MODE xck
+#define CCTRIGGER_MODE xck
 #define XCKDELAY 0
 // Display data
 static BOOL PLOTFLAG = TRUE;		// TRUE for dense, FALSE for dots
