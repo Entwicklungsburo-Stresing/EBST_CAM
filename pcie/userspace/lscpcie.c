@@ -410,7 +410,7 @@ int set_dma_address_in_tlp(uint dev) {
   printf("set WDMATLPA to physical address of dma buffer 0x%016lx\n",
          (uint64_t) dev_descr[dev].control->dma_physical_start);
 
-  //WDMATLPS: write the upper part (bit 32:39) of the address  
+  //WDMATLPS: write the upper part (bit 32:39) of the address
   val64
     = ((((uint64_t) dev_descr[dev].control->dma_physical_start) >> 8)
        & 0xFF000000)
