@@ -18,6 +18,13 @@
 
 #define memory_barrier() asm volatile ("" : : : "memory")
 
+#define pulse_bit(reg, bit_mask) do { \
+		dev->s0->reg |= bit_mask; \
+		memory_barrier(); \
+		dev->s0->reg &= ~(bit_mask);	\
+	} while (0)
+
+
 /* Performs a camera read with polling.
    After intitialising and starting the cameras, the read and write pointers
    in the control memory mapped from the driver are checked repeatedly and
@@ -44,7 +51,7 @@ int lscpcie_init_device(uint dev_no)
 	return 0;
 }
 
-int lscpcie_init_scan(dev_descr_t *dev, int trigger_mode)
+int lscpcie_init_scan(dev_descr_t *dev, int trigger_mode, int dmas_per_interrupt)
 {
 	int result;
 	uint32_t hwd_req = (1<<IRQ_REG_HWDREQ_EN);
@@ -76,10 +83,10 @@ int lscpcie_init_scan(dev_descr_t *dev, int trigger_mode)
 	// set output of O on PCIe card
 	dev->s0->TOR = TOR_OUT_XCK;
 
-	dev->s0->DMAS_PER_INTERRUPT = 2;
+	dev->s0->DMAS_PER_INTERRUPT = dmas_per_interrupt;
 	dev->control->bytes_per_interrupt
-	    = dev->s0->DMAS_PER_INTERRUPT
-	    * dev->control->number_of_pixels * 2;
+	    = dmas_per_interrupt * dev->control->number_of_pixels
+		* sizeof(pixel_t);
 
 	return result;
 }
@@ -120,104 +127,88 @@ int lscpcie_start_scan(dev_descr_t * dev)
 	return 0;
 }
 
-int lscpcie_start_block(dev_descr_t * dev)
-{
-	// make pulse for blockindex counter
-	dev->s0->PCIEFLAGS |= 1 << PCIEFLAG_BLOCKTRIG;
-	memory_barrier();
-	dev->s0->PCIEFLAGS &= ~(1 << PCIEFLAG_BLOCKTRIG);
-
-	// reset scan counter
-	dev->s0->SCAN_INDEX |= 1 << SCAN_INDEX_RESET;
-	memory_barrier();
-	dev->s0->SCAN_INDEX &= ~(1 << SCAN_INDEX_RESET);
-
-	dev->s0->PCIEFLAGS |= 1 << PCIEFLAG_BLOCKON;
-	// start Stimer -> set usecs and RS to one
-	dev->s0->XCK.dword
-	    = (dev->s0->XCK.dword & ~XCK_EC_MASK)
-	    | (CFG_STIMER_IN_US & XCK_EC_MASK) | (1 << XCK_RS);
-
-	// software trigger
-	dev->s0->BTRIGREG |= 1 << FREQ_REG_SW_TRIG;
-	memory_barrier();
-	dev->s0->BTRIGREG &= ~(1 << FREQ_REG_SW_TRIG);
-
-	return 0;
-}
-
 /* Rolls the read and write pointers in the mapped control memory and copies
    newly available bytes.
    Returns the number of copied bytes. */
 
-int fetch_data(dev_descr_t *dev, uint8_t *data, size_t max)
+int fetch_data_mapped(dev_descr_t *dev, uint8_t *data, size_t max)
 {
 	int end_read = dev->control->write_pos, len;
 
 	fprintf(stderr, "%d -> %d\n", dev->control->read_pos, end_read);
-	if (end_read > dev->control->read_pos) {
+	if (end_read > dev->control->read_pos)
 		/* new data in one chunk */
 		len = end_read - dev->control->read_pos;
-		if (len > max) len = max;
-		memcpy(data, dev->mapped_buffer + dev->control->read_pos, len);
-		dev->control->read_pos += len;
-		return len;
-	}
+	else
+		/* new data wraps around the end of the buffer */
+		len = dev->control->dma_buf_size - dev->control->read_pos;
 
-	/* new data wraps around the end of the buffer */
-	len = dev->control->dma_buf_size - dev->control->read_pos;
 	if (len > max) len = max;
 	memcpy(data, dev->mapped_buffer + dev->control->read_pos, len);
-	max -= len;
 
-	if (end_read > max) end_read = max;
-	if (end_read) {
-		memcpy(data + len, dev->mapped_buffer, end_read);
-		dev->control->read_pos = end_read;
+	if (end_read < dev->control->read_pos) {
+		/* copy from buffer start */
+		max -= len;
+		if (end_read > max) end_read = max;
+		if (end_read) {
+			memcpy(data + len, dev->mapped_buffer, end_read);
+			len += end_read;
+		}
 	}
 
-	return len + end_read;
+	dev->control->read_pos
+		= (dev->control->read_pos + len) % dev->control->dma_buf_size;
+
+	return len;
 }
 
-int lscpcie_acquire_block(dev_descr_t *dev, uint8_t *data, size_t n_scans,
-			  size_t max) {
+int lscpcie_acquire_block_poll(dev_descr_t *dev, uint8_t *data, size_t n_scans) {
 	int result, bytes_read = 0;
 	size_t block_size =
 		dev->control->number_of_pixels * dev->control->number_of_cameras
-		* 2 * n_scans;
+		* sizeof(pixel_t) * n_scans;
 
-	if (max < block_size)
-		return -ENOMEM;
-
-	result = lscpcie_start_block(dev);
-	if (result) {
-		fprintf(stderr, "error %d when starting block\n", result);
-		return result;
-	}
+	// make pulse for blockindex counter
+	pulse_bit(PCIEFLAGS, 1<<PCIEFLAG_BLOCKTRIG);
+	// reset scan counter
+	pulse_bit(SCAN_INDEX, 1<<SCAN_INDEX_RESET);
+	dev->s0->PCIEFLAGS |= 1<<PCIEFLAG_BLOCKON;
+	// start Stimer -> set usecs and RS to one
+	dev->s0->XCK.dword
+	    = (dev->s0->XCK.dword & ~XCK_EC_MASK)
+	    | (CFG_STIMER_IN_US & XCK_EC_MASK) | (1 << XCK_RS);
+	// software trigger
+	pulse_bit(BTRIGREG, 1<<FREQ_REG_SW_TRIG);
 
 	do {
+		/* poll for incoming data */
 		while (dev->s0->XCK.dword & (1 << XCK_RS))
 			if (dev->control->read_pos == dev->control->write_pos)
 				continue;
 
-		result = fetch_data(dev, data, block_size - bytes_read);
+		result = fetch_data_mapped(dev, data, block_size - bytes_read);
 		if (result < 0)
 			return result;
 
 		bytes_read += result;
 		fprintf(stderr, "got %d bytes of data, having now %d\n",
 			result, bytes_read);
-			dev->control->read_pos =
-			    (dev->control->read_pos + result)
-			    %
-			    dev->control->dma_buf_size;
 	} while (bytes_read < block_size);
 
 	// reset block on
-	dev->s0->PCIEFLAGS &=
-	    ~(1 << PCIEFLAG_BLOCKON);
+	dev->s0->PCIEFLAGS &= ~(1 << PCIEFLAG_BLOCKON);
 
 	return bytes_read;
+}
+
+int lscpcie_end_acquire(dev_descr_t *dev) {
+	dev->s0->XCK.dword &= ~(1 << XCK_RS);
+	// stop btimer
+	dev->s0->BTIMER &= ~(1 << BTIMER_START);
+	// reset measure on
+	dev->s0->PCIEFLAGS &= ~(1 << PCIEFLAG_MEASUREON);
+
+	return 0;
 }
 
 void print_data(const uint16_t *data, int n_blocks, int n_scans, int n_cams,
@@ -282,7 +273,7 @@ int main(int argc, char **argv)
 	n_pixel = dev->control->number_of_pixels;
 	camcnt = dev->control->number_of_cameras;
 
-	mem_size = n_pixel * camcnt * n_blocks * n_scans * 2;
+	mem_size = n_pixel * camcnt * n_blocks * n_scans * sizeof(pixel_t);
 	camera_data = malloc(mem_size);
 	if (!camera_data) {
 		fprintf(stderr, "failed to allocate %d bytes of memory\n",
@@ -305,7 +296,7 @@ int main(int argc, char **argv)
 
 	fprintf(stderr, "initialising registers\n");
 
-	result = lscpcie_init_scan(dev, trigger_mode);
+	result = lscpcie_init_scan(dev, trigger_mode, 2);
 	if (result) {
 		fprintf(stderr, "error %d when initialising scan\n", result);
 		goto out_error;
@@ -325,8 +316,8 @@ int main(int argc, char **argv)
 		if (dev->s0->CTRLA & (1 << CTRLA_TSTART))
 			continue;
 
-		result = lscpcie_acquire_block(dev, (uint8_t *) camera_data,
-					       mem_size - bytes_read);
+		result = lscpcie_acquire_block_poll(dev, (uint8_t *) camera_data,
+						2);
 		if (result) {
 			fprintf(stderr, "error %d when acquiring block\n",
 				result);
@@ -336,16 +327,14 @@ int main(int argc, char **argv)
 
 	fprintf(stderr, "finished measurement\n");
 
-	dev->s0->XCK.dword &= ~(1 << XCK_RS);
-	// stop btimer
-	dev->s0->BTIMER &= ~(1 << BTIMER_START);
-	// reset measure on
-	dev->s0->PCIEFLAGS &= ~(1 << PCIEFLAG_MEASUREON);
-
-	print_data(camera_data, n_blocks, n_scans, 2, n_pixel);
-
-	fprintf(stderr, "write positions: %d %d\n", prev_write_pos,
-		dev->control->write_pos);
+	result = lscpcie_end_acquire(dev);
+	if (result) {
+		fprintf(stderr, "error %d when finishing acquisition\n");
+	} else {
+		print_data(camera_data, n_blocks, n_scans, camcnt, n_pixel);
+		fprintf(stderr, "write positions: %d %d\n", prev_write_pos,
+			dev->control->write_pos);
+	}
 
       out_error:
 	if (camera_data)
