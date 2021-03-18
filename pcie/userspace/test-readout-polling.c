@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <memory.h>
+#include <errno.h>
 
 #define CFG_BTIMER_IN_US      500000
 #define CFG_STIMER_IN_US      400
@@ -30,8 +31,8 @@
 /* to be moved to lscpcie_open */
 int lscpcie_init_device(uint dev_no)
 {
-        int result;
-        dev_descr_t *dev = lscpcie_get_descriptor(dev_no);
+	int result;
+	dev_descr_t *dev = lscpcie_get_descriptor(dev_no);
 
 	result = set_dma_address_in_tlp(dev);
 	if (result < 0)
@@ -52,7 +53,7 @@ int lscpcie_init_scan(dev_descr_t *dev, int trigger_mode)
 	if (result < 0)
 		return result;
 
-	result = lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA,
+	result = lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA,
 				    CAMERA_ADDRESS_TRIGGER_IN,
 				    trigger_mode);
 	if (result < 0)
@@ -149,14 +150,15 @@ int lscpcie_start_block(dev_descr_t * dev)
    newly available bytes.
    Returns the number of copied bytes. */
 
-int fetch_data(dev_descr_t *dev, uint8_t *data)
+int fetch_data(dev_descr_t *dev, uint8_t *data, size_t max)
 {
-	int actual_write_pos = dev->control->write_pos, len;
+	int end_read = dev->control->write_pos, len;
 
-	fprintf(stderr, "%d -> %d\n", dev->control->read_pos, actual_write_pos);
-	if (actual_write_pos > dev->control->read_pos) {
+	fprintf(stderr, "%d -> %d\n", dev->control->read_pos, end_read);
+	if (end_read > dev->control->read_pos) {
 		/* new data in one chunk */
-		len = actual_write_pos - dev->control->read_pos;
+		len = end_read - dev->control->read_pos;
+		if (len > max) len = max;
 		memcpy(data, dev->mapped_buffer + dev->control->read_pos, len);
 		dev->control->read_pos += len;
 		return len;
@@ -164,16 +166,28 @@ int fetch_data(dev_descr_t *dev, uint8_t *data)
 
 	/* new data wraps around the end of the buffer */
 	len = dev->control->dma_buf_size - dev->control->read_pos;
+	if (len > max) len = max;
 	memcpy(data, dev->mapped_buffer + dev->control->read_pos, len);
+	max -= len;
 
-	memcpy(data + len, dev->mapped_buffer, actual_write_pos);
-	dev->control->read_pos = actual_write_pos;
+	if (end_read > max) end_read = max;
+	if (end_read) {
+		memcpy(data + len, dev->mapped_buffer, end_read);
+		dev->control->read_pos = end_read;
+	}
 
-	return len + actual_write_pos;
+	return len + end_read;
 }
 
-int lscpcie_acquire_block(dev_descr_t *dev, uint8_t *data) {
-	int result, bytes_read;
+int lscpcie_acquire_block(dev_descr_t *dev, uint8_t *data, size_t n_scans,
+			  size_t max) {
+	int result, bytes_read = 0;
+	size_t block_size =
+		dev->control->number_of_pixels * dev->control->number_of_cameras
+		* 2 * n_scans;
+
+	if (max < block_size)
+		return -ENOMEM;
 
 	result = lscpcie_start_block(dev);
 	if (result) {
@@ -181,10 +195,12 @@ int lscpcie_acquire_block(dev_descr_t *dev, uint8_t *data) {
 		return result;
 	}
 
-	while (dev->s0->XCK.dword & (1 << XCK_RS)) {
-		if (dev->control->read_pos == dev->control->write_pos) continue;
+	do {
+		while (dev->s0->XCK.dword & (1 << XCK_RS))
+			if (dev->control->read_pos == dev->control->write_pos)
+				continue;
 
-		result = fetch_data(dev, data);
+		result = fetch_data(dev, data, block_size - bytes_read);
 		if (result < 0)
 			return result;
 
@@ -195,12 +211,25 @@ int lscpcie_acquire_block(dev_descr_t *dev, uint8_t *data) {
 			    (dev->control->read_pos + result)
 			    %
 			    dev->control->dma_buf_size;
-	} while (result);
+	} while (bytes_read < block_size);
+
 	// reset block on
 	dev->s0->PCIEFLAGS &=
 	    ~(1 << PCIEFLAG_BLOCKON);
 
-        return bytes_read;
+	return bytes_read;
+}
+
+void print_data(const uint16_t *data, int n_blocks, int n_scans, int n_cams,
+		int n_pixel) {
+	int i = 0, block, scan, camera, pixel;
+
+	for (block = 0; block < n_blocks; block++)
+		for (scan = 0; scan < n_scans; scan++)
+			for (camera = 0; camera < n_cams; camera++)
+				for (pixel = 0; pixel < n_pixel; pixel++, i++)
+					printf("%d %d %d %d: %d\n", block, scan,
+					       camera, pixel, data[i]);
 }
 
 int main(int argc, char **argv)
@@ -213,9 +242,7 @@ int main(int argc, char **argv)
 
 	int n_blocks = atoi(argv[1]);
 	int n_scans = atoi(argv[2]);
-	int result, bytes_read, i, n_pixel, camcnt, mem_size,
-	    prev_write_pos;
-	int pixel, camera, scan, block;
+	int result, bytes_read, n_pixel, camcnt, mem_size, prev_write_pos;
 	dev_descr_t *dev;
 	uint16_t *camera_data = 0;
 	trigger_mode_t trigger_mode;
@@ -298,7 +325,8 @@ int main(int argc, char **argv)
 		if (dev->s0->CTRLA & (1 << CTRLA_TSTART))
 			continue;
 
-		result = lscpcie_acquire_block(dev, (uint8_t *) camera_data);
+		result = lscpcie_acquire_block(dev, (uint8_t *) camera_data,
+					       mem_size - bytes_read);
 		if (result) {
 			fprintf(stderr, "error %d when acquiring block\n",
 				result);
@@ -314,13 +342,7 @@ int main(int argc, char **argv)
 	// reset measure on
 	dev->s0->PCIEFLAGS &= ~(1 << PCIEFLAG_MEASUREON);
 
-	i = 0;
-	for (block = 0; block < n_blocks; block++)
-		for (scan = 0; scan < n_scans; scan++)
-			for (camera = 0; camera < 2; camera++)
-				for (pixel = 0; pixel < n_pixel; pixel++, i++)
-					printf("%d %d %d %d: %d\n", block, scan,
-						camera, pixel, camera_data[i]);
+	print_data(camera_data, n_blocks, n_scans, 2, n_pixel);
 
 	fprintf(stderr, "write positions: %d %d\n", prev_write_pos,
 		dev->control->write_pos);
