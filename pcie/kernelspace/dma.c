@@ -40,7 +40,7 @@ int dma_init(struct dev_struct *dev)
     printk(KERN_ERR NAME": No suitable DMA available\n");
     return -ENOMEM;
   }
-  
+
   /* the size of the dma buffer is taken one page size larger than necessary
      to ensure that the used buffer starts at a page boundary (needed for
      mmap export to userland) */
