@@ -1,10 +1,11 @@
-#include <stdint.h>
-#include <memory.h>
 #include "types.h"
 #include "lscpcie.h"
 #include "../kernelspace/registers.h"
+#include "local-config.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
+#include <memory.h>
 
 #define CFG_BTIMER_IN_US      500000
 #define CFG_STIMER_IN_US      400
@@ -24,7 +25,7 @@
    new block readings until the number of bytes copied from the mapped DMA
    buffer reaches the goal defined by the two command line arguments
    <number of scans> <number of blocks>.
- */
+*/
 
 /* to be moved to lscpcie_open */
 int lscpcie_init_device(uint dev_no)
@@ -58,132 +59,148 @@ int lscpcie_init_scan(dev_descr_t *dev, int trigger_mode)
 		return result;
 
 	if (HWDREQ_EN)
-		SET_BITS(dev_descr[dev].s0->IRQ.IRQREG, hwd_req, hwd_req);
+		SET_BITS(dev->s0->IRQ.IRQREG, hwd_req, hwd_req);
 	else
-		SET_BITS(dev_descr[dev].s0->IRQ.IRQREG, 0, hwd_req);
+		SET_BITS(dev->s0->IRQ.IRQREG, 0, hwd_req);
 
 	// set trigger mode to block timer and scan timer + shutter not on
-	device_descriptor->s0->CTRLB
+	dev->s0->CTRLB
 	    = (CTRLB_BTI_TIMER | CTRLB_STI_TIMER) & ~(CTRLB_SHON);
 	// set block timer and start block timer
-	device_descriptor->s0->BTIMER =
+	dev->s0->BTIMER =
 	    (1 << BTIMER_START) | CFG_BTIMER_IN_US;
 	// set slope of block trigger
-	device_descriptor->s0->BFLAGS |= 1 << BFLAG_BSLOPE;
+	dev->s0->BFLAGS |= 1 << BFLAG_BSLOPE;
 
 	// set output of O on PCIe card
-	device_descriptor->s0->TOR = TOR_OUT_XCK;
+	dev->s0->TOR = TOR_OUT_XCK;
 
-	device_descriptor->s0->DMAS_PER_INTERRUPT = 2;
-	device_descriptor->control->bytes_per_interrupt
-	    = device_descriptor->s0->DMAS_PER_INTERRUPT
-	    * device_descriptor->control->number_of_pixels * 2;
+	dev->s0->DMAS_PER_INTERRUPT = 2;
+	dev->control->bytes_per_interrupt
+	    = dev->s0->DMAS_PER_INTERRUPT
+	    * dev->control->number_of_pixels * 2;
 
 	return result;
 }
 
-int lscpcie_start_scan(dev_descr_t * device_descriptor)
+int lscpcie_start_scan(dev_descr_t * dev)
 {
-	device_descriptor->s0->DMAS_PER_INTERRUPT |=
+	dev->s0->DMAS_PER_INTERRUPT |=
 	    1 << DMA_COUNTER_RESET;
 	memory_barrier();
-	device_descriptor->s0->DMAS_PER_INTERRUPT &=
+	dev->s0->DMAS_PER_INTERRUPT &=
 	    ~(1 << DMA_COUNTER_RESET);
 
 	// reset the internal block counter - is not BLOCKINDEX!
-	device_descriptor->s0->DMA_BUF_SIZE_IN_SCANS |=
+	dev->s0->DMA_BUF_SIZE_IN_SCANS |=
 	    1 << BLOCK_COUNTER_RESET;
 	memory_barrier();
-	device_descriptor->s0->DMA_BUF_SIZE_IN_SCANS &=
+	dev->s0->DMA_BUF_SIZE_IN_SCANS &=
 	    ~(1 << BLOCK_COUNTER_RESET);
 
 	// reset block counter
-	device_descriptor->s0->BLOCK_INDEX |= 1 << BLOCK_INDEX_RESET;
+	dev->s0->BLOCK_INDEX |= 1 << BLOCK_INDEX_RESET;
 	memory_barrier();
-	device_descriptor->s0->BLOCK_INDEX &= ~(1 << BLOCK_INDEX_RESET);
+	dev->s0->BLOCK_INDEX &= ~(1 << BLOCK_INDEX_RESET);
 
 	// set Block end stops timer:
 	// when SCANINDEX reaches NOS, the timer is stopped by hardware.
-	device_descriptor->s0->PCIEFLAGS |= 1 << PCIE_EN_RS_TIMER_HW;
+	dev->s0->PCIEFLAGS |= 1 << PCIE_EN_RS_TIMER_HW;
 	////<<<< reset all counters
 
 	// >> SetIntFFTrig
-	device_descriptor->s0->XCK.dword &= ~(1 << XCKMSB_EXT_TRIGGER);
-	device_descriptor->control->write_pos = 0;
-	device_descriptor->control->read_pos = 0;
+	dev->s0->XCK.dword &= ~(1 << XCKMSB_EXT_TRIGGER);
+	dev->control->write_pos = 0;
+	dev->control->read_pos = 0;
 	// set measure on
 	fprintf(stderr, "starting measurement\n");
-	device_descriptor->s0->PCIEFLAGS |= 1 << PCIEFLAG_MEASUREON;
-	prev_write_pos = 0;
-	bytes_read = 0;
+	dev->s0->PCIEFLAGS |= 1 << PCIEFLAG_MEASUREON;
 
 	return 0;
 }
 
-int lscpcie_start_block(dev_descr_t * device_descriptor)
+int lscpcie_start_block(dev_descr_t * dev)
 {
 	// make pulse for blockindex counter
-	device_descriptor->s0->PCIEFLAGS |= 1 << PCIEFLAG_BLOCKTRIG;
+	dev->s0->PCIEFLAGS |= 1 << PCIEFLAG_BLOCKTRIG;
 	memory_barrier();
-	device_descriptor->s0->PCIEFLAGS &= ~(1 << PCIEFLAG_BLOCKTRIG);
+	dev->s0->PCIEFLAGS &= ~(1 << PCIEFLAG_BLOCKTRIG);
 
 	// reset scan counter
-	device_descriptor->s0->SCAN_INDEX |= 1 << SCAN_INDEX_RESET;
+	dev->s0->SCAN_INDEX |= 1 << SCAN_INDEX_RESET;
 	memory_barrier();
-	device_descriptor->s0->SCAN_INDEX &= ~(1 << SCAN_INDEX_RESET);
+	dev->s0->SCAN_INDEX &= ~(1 << SCAN_INDEX_RESET);
 
-	device_descriptor->s0->PCIEFLAGS |= 1 << PCIEFLAG_BLOCKON;
+	dev->s0->PCIEFLAGS |= 1 << PCIEFLAG_BLOCKON;
 	// start Stimer -> set usecs and RS to one
-	device_descriptor->s0->XCK.dword
-	    = (device_descriptor->s0->XCK.dword & ~XCK_EC_MASK)
+	dev->s0->XCK.dword
+	    = (dev->s0->XCK.dword & ~XCK_EC_MASK)
 	    | (CFG_STIMER_IN_US & XCK_EC_MASK) | (1 << XCK_RS);
 
 	// software trigger
-	device_descriptor->s0->BTRIGREG |= 1 << FREQ_REG_SW_TRIG;
+	dev->s0->BTRIGREG |= 1 << FREQ_REG_SW_TRIG;
 	memory_barrier();
-	device_descriptor->s0->BTRIGREG &= ~(1 << FREQ_REG_SW_TRIG);
+	dev->s0->BTRIGREG &= ~(1 << FREQ_REG_SW_TRIG);
+
+	return 0;
 }
 
 /* Rolls the read and write pointers in the mapped control memory and copies
    newly available bytes.
    Returns the number of copied bytes. */
 
-int check_and_fetch_data(dev_descr_t *dev,
-			 uint8_t *camera_data, int prev_write_pos,
-			 int bytes_read)
+int fetch_data(dev_descr_t *dev, uint8_t *data)
 {
-	int actual_write_pos = device_descriptor->control->write_pos, len;
+	int actual_write_pos = dev->control->write_pos, len;
 
-	if (prev_write_pos == actual_write_pos)
-		return 0;
-
-	fprintf(stderr, "%d -> %d\n", device_descriptor->control->read_pos,
-		actual_write_pos);
-	if (actual_write_pos > device_descriptor->control->read_pos) {
+	fprintf(stderr, "%d -> %d\n", dev->control->read_pos, actual_write_pos);
+	if (actual_write_pos > dev->control->read_pos) {
 		/* new data in one chunk */
-		len =
-		    actual_write_pos -
-		    device_descriptor->control->read_pos;
-		memcpy(camera_data + bytes_read,
-		       device_descriptor->mapped_buffer +
-		       device_descriptor->control->read_pos, len);
-		device_descriptor->control->read_pos += len;
+		len = actual_write_pos - dev->control->read_pos;
+		memcpy(data, dev->mapped_buffer + dev->control->read_pos, len);
+		dev->control->read_pos += len;
 		return len;
 	}
 
 	/* new data wraps around the end of the buffer */
-	len = device_descriptor->control->dma_buf_size
-	    - device_descriptor->control->read_pos;
-	memcpy(camera_data + bytes_read,
-	       device_descriptor->mapped_buffer
-	       + device_descriptor->control->read_pos, len);
-	bytes_read += len;
+	len = dev->control->dma_buf_size - dev->control->read_pos;
+	memcpy(data, dev->mapped_buffer + dev->control->read_pos, len);
 
-	memcpy(camera_data + bytes_read, device_descriptor->mapped_buffer,
-	       actual_write_pos);
-	device_descriptor->control->read_pos = actual_write_pos;
+	memcpy(data + len, dev->mapped_buffer, actual_write_pos);
+	dev->control->read_pos = actual_write_pos;
 
 	return len + actual_write_pos;
+}
+
+int lscpcie_acquire_block(dev_descr_t *dev, uint8_t *data) {
+	int result, bytes_read;
+
+	result = lscpcie_start_block(dev);
+	if (result) {
+		fprintf(stderr, "error %d when starting block\n", result);
+		return result;
+	}
+
+	while (dev->s0->XCK.dword & (1 << XCK_RS)) {
+		if (dev->control->read_pos == dev->control->write_pos) continue;
+
+		result = fetch_data(dev, data);
+		if (result < 0)
+			return result;
+
+		bytes_read += result;
+		fprintf(stderr, "got %d bytes of data, having now %d\n",
+			result, bytes_read);
+			dev->control->read_pos =
+			    (dev->control->read_pos + result)
+			    %
+			    dev->control->dma_buf_size;
+	} while (result);
+	// reset block on
+	dev->s0->PCIEFLAGS &=
+	    ~(1 << PCIEFLAG_BLOCKON);
+
+        return bytes_read;
 }
 
 int main(int argc, char **argv)
@@ -204,8 +221,7 @@ int main(int argc, char **argv)
 	trigger_mode_t trigger_mode;
 
 	if ((result = lscpcie_driver_init()) < 0) {
-		fprintf(stderr, "initialising driver returned %d\n",
-			result);
+		fprintf(stderr, "initialising driver returned %d\n", result);
 		return 1;
 	}
 
@@ -223,23 +239,21 @@ int main(int argc, char **argv)
 
 	// open /dev/lscpcie<n>
 	if ((result = lscpcie_open(0, 0)) < 0) {
-		fprintf(stderr, "opening first board returned %d\n",
-			result);
+		fprintf(stderr, "opening first board returned %d\n", result);
 		return 2;
 	}
 	// get memory mapped pointers etc
-	device_descriptor = lscpcie_get_descriptor(0);
+	dev = lscpcie_get_descriptor(0);
 
 	// clear dma buffer to avoid reading stuff from prev. debugging sessions
 	fprintf(stderr, "clearing %d bytes of dma buffer\n",
-		device_descriptor->control->dma_buf_size);
-	memset((uint8_t *) device_descriptor->mapped_buffer, 0,
-	       device_descriptor->control->dma_buf_size);
+		dev->control->dma_buf_size);
+	memset((uint8_t *) dev->mapped_buffer, 0, dev->control->dma_buf_size);
 
 	trigger_mode = xck;
 
-	n_pixel = device_descriptor->control->number_of_pixels;
-	camcnt = device_descriptor->control->number_of_cameras;
+	n_pixel = dev->control->number_of_pixels;
+	camcnt = dev->control->number_of_cameras;
 
 	mem_size = n_pixel * camcnt * n_blocks * n_scans * 2;
 	camera_data = malloc(mem_size);
@@ -251,7 +265,7 @@ int main(int argc, char **argv)
 
 	/* already done in lscpcie_open
 	   lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_PIXEL,
-	   device_descriptor->control->number_of_pixels);
+	   dev->control->number_of_pixels);
 	 */
 	// and what about this? not present in board.c
 	// should go zo lscpcie_open or similar
@@ -264,93 +278,52 @@ int main(int argc, char **argv)
 
 	fprintf(stderr, "initialising registers\n");
 
-	result = lscpcie_init_scan(device_descriptor);
+	result = lscpcie_init_scan(dev, trigger_mode);
 	if (result) {
 		fprintf(stderr, "error %d when initialising scan\n", result);
 		goto out_error;
 	}
 
-	result = lscpcie_start_scan(device_descriptor);
+	result = lscpcie_start_scan(dev);
 	if (result) {
 		fprintf(stderr, "error %d when starting scan\n", result);
 		goto out_error;
 	}
 
+	prev_write_pos = 0;
+	bytes_read = 0;
+
 	do {
 		// wait for trigger signal
-		if (device_descriptor->s0->CTRLA & (1 << CTRLA_TSTART))
+		if (dev->s0->CTRLA & (1 << CTRLA_TSTART))
 			continue;
 
-		result = lscpcie_start_block(device_descriptor);
+		result = lscpcie_acquire_block(dev, (uint8_t *) camera_data);
 		if (result) {
-			fprintf(stderr, "error %d when starting block\n",
+			fprintf(stderr, "error %d when acquiring block\n",
 				result);
 			goto out_error;
 		}
-
-		// wait for end of readout
-		do {
-			result
-			    =
-			    check_and_fetch_data(device_descriptor,
-						 (uint8_t *) camera_data,
-						 prev_write_pos,
-						 bytes_read);
-			if (result < 0)
-				goto out_error;
-
-			if (result) {
-				bytes_read += result;
-				fprintf(stderr,
-				 "got %d bytes of data, having now %d of %d\n",
-					result, bytes_read, mem_size);
-				prev_write_pos = (prev_write_pos + result)
-				    %
-				    device_descriptor->control->
-				    dma_buf_size;
-			}
-			result =
-			    device_descriptor->s0->XCK.
-			    dword & (1 << XCK_RS);
-		} while (result);
-		// reset block on
-		device_descriptor->s0->PCIEFLAGS &=
-		    ~(1 << PCIEFLAG_BLOCKON);
 	} while (bytes_read < mem_size);
 
 	fprintf(stderr, "finished measurement\n");
 
-	device_descriptor->s0->XCK.dword &= ~(1 << XCK_RS);
+	dev->s0->XCK.dword &= ~(1 << XCK_RS);
 	// stop btimer
-	device_descriptor->s0->BTIMER &= ~(1 << BTIMER_START);
+	dev->s0->BTIMER &= ~(1 << BTIMER_START);
 	// reset measure on
-	device_descriptor->s0->PCIEFLAGS &= ~(1 << PCIEFLAG_MEASUREON);
+	dev->s0->PCIEFLAGS &= ~(1 << PCIEFLAG_MEASUREON);
 
-	pixel = 0;
-	camera = 0;
-	scan = 0;
-	block = 0;
-	for (i = 0; i < mem_size / 2; i++) {
-		printf("%d %d %d %d: %d\n", block, scan, camera, pixel,
-		       camera_data[i]);
-		if (++pixel < n_pixel)
-			continue;
-		pixel = 0;
-		if (++camera < camcnt)
-			continue;
-		camera = 0;
-		if (++scan < n_scans)
-			continue;
-		scan = 0;
-		if (++block < n_blocks)
-			continue;
-		block = 0;
-		if (i > mem_size - 1)
-			fprintf(stderr, "warning: too many blocks\n");
-	}
+	i = 0;
+	for (block = 0; block < n_blocks; block++)
+		for (scan = 0; scan < n_scans; scan++)
+			for (camera = 0; camera < 2; camera++)
+				for (pixel = 0; pixel < n_pixel; pixel++, i++)
+					printf("%d %d %d %d: %d\n", block, scan,
+						camera, pixel, camera_data[i]);
 
 	fprintf(stderr, "write positions: %d %d\n", prev_write_pos,
-		device_descriptor->control->write_pos);
+		dev->control->write_pos);
 
       out_error:
 	if (camera_data)
