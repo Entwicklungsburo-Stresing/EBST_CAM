@@ -62,7 +62,7 @@ dev_descr_t *lscpcie_get_descriptor(uint dev) {
 
 int lscpcie_driver_init(void) {
   int result, handle, i;
-  
+
   handle = open("/dev/lscpcie0", O_RDWR);
   if (handle < 0) return handle; // failed to open device zero
 
@@ -125,15 +125,16 @@ int lscpcie_driver_init(void) {
     81  8256
 */
 
-int lscpcie_open(uint dev, uint16_t options) {
+int lscpcie_open(uint dev_no, uint16_t options) {
   int result = 0, handle, no_tlps, hardware_present;
   char name[16];
   int page_size = sysconf(_SC_PAGE_SIZE);
 
-  if (dev >= number_of_pcie_boards) return -ENODEV;
-  if (dev_descr[dev].handle >= 0) return -EBUSY;
+  if (dev_no >= number_of_pcie_boards) return -ENODEV;
+  if (dev_descr[dev_no].handle >= 0) return -EBUSY;
+  dev_descr_t *dev = &dev_descr[dev_no];
 
-  sprintf(name, "/dev/lscpcie%d", dev);
+  sprintf(name, "/dev/lscpcie%d", dev_no);
   handle = open(name, O_RDWR);
   if ((handle < 0) && error_reporting) {
     error_message("error on opening '%s': ", name);
@@ -141,22 +142,22 @@ int lscpcie_open(uint dev, uint16_t options) {
     return handle;
   }
 
-  dev_descr[dev].handle = handle;
+  dev->handle = handle;
   hardware_present = lscpcie_hardware_present(dev);
   if (hardware_present < 0) goto error;
 
   // dma control struct in ram
-  dev_descr[dev].control
+  dev->control
     = mmap(NULL, sizeof(lscpcie_control_t), PROT_READ | PROT_WRITE, MAP_SHARED,
            handle, page_size);
 
-  if (dev_descr[dev].control == MAP_FAILED) {
+  if (dev->control == MAP_FAILED) {
     error_message("mmap on dma control ram failed\n");
     if (error_reporting) perror(0);
     goto error;
   }
 
-  switch (dev_descr[dev].control->number_of_pixels) {
+  switch (dev->control->number_of_pixels) {
   case 128:  no_tlps = 0x2;  break;
   case 192:  no_tlps = 0x3;  break;
   case 320:  no_tlps = 0x5;  break;
@@ -167,20 +168,20 @@ int lscpcie_open(uint dev, uint16_t options) {
   case 8256: no_tlps = 0x81; break;
   default:
     error_message("invalid number of pixels %d\n",
-                  dev_descr[dev].control->number_of_pixels);
+                  dev->control->number_of_pixels);
     return -EINVAL;
   }
   if (LEGACY_202_14_TLPCNT) no_tlps++;
-  dev_descr[dev].number_of_tlps = no_tlps;
+  dev->number_of_tlps = no_tlps;
 
-  printf("found io spce of size 0x%08x\n", dev_descr[dev].control->io_size);
+  printf("found io spce of size 0x%08x\n", dev->control->io_size);
   if (hardware_present) {
     // map io registers to user space memory
-    dev_descr[dev].dma_reg
-      = mmap(NULL, dev_descr[dev].control->io_size, PROT_READ | PROT_WRITE,
+    dev->dma_reg
+      = mmap(NULL, dev->control->io_size, PROT_READ | PROT_WRITE,
              MAP_SHARED, handle, 0);
 
-    if (dev_descr[dev].dma_reg == MAP_FAILED) {
+    if (dev->dma_reg == MAP_FAILED) {
       error_message("mmap on io memory failed\n");
       if (error_reporting) perror(0);
       result = errno;
@@ -188,7 +189,7 @@ int lscpcie_open(uint dev, uint16_t options) {
     }
 
     // s0 addres space pointer
-    dev_descr[dev].s0 = (s0_t*) (((uint8_t*)dev_descr[dev].dma_reg) + 0x80);
+    dev->s0 = (s0_t*) (((uint8_t*)dev->dma_reg) + 0x80);
 
     // startval for CTRLA Reg  +slope, IFC=h, VON=1
     // clear CTRLB & CTRLC
@@ -196,16 +197,16 @@ int lscpcie_open(uint dev, uint16_t options) {
     // note: the above mmap system call tells the operating system to perform
     // a write to pci io-registers when writing to the corresponding virtual
     // pointer, pretty cool, isn't it?
-    dev_descr[dev].s0->CTRLA = 0x23;
-    dev_descr[dev].s0->CTRLB = 0;
-    dev_descr[dev].s0->CTRLC = 0;
-    dev_descr[dev].s0->PIXREG = dev_descr[dev].control->number_of_pixels;
-    dev_descr[dev].s0->CAM_CNT = dev_descr[dev].control->number_of_cameras & 0xF;
+    dev->s0->CTRLA = 0x23;
+    dev->s0->CTRLB = 0;
+    dev->s0->CTRLC = 0;
+    dev->s0->PIXREG = dev->control->number_of_pixels;
+    dev->s0->CAM_CNT = dev->control->number_of_cameras & 0xF;
 
     // initialise number of pixels and clock scheme
     result
       = lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_PIXEL,
-                           dev_descr[dev].control->number_of_pixels);
+                           dev->control->number_of_pixels);
     if (result < 0) goto error;
 
     result
@@ -213,60 +214,59 @@ int lscpcie_open(uint dev, uint16_t options) {
                            options);
     if (result < 0) goto error;
   } else {
-    dev_descr[dev].dma_reg = NULL;
-    dev_descr[dev].s0 = NULL;
+    /* no hardware found, debug mode */
+    dev->dma_reg = NULL;
+    dev->s0 = NULL;
   }
 
-  dev_descr[dev].mapped_buffer
-    = mmap(NULL, dev_descr[dev].control->dma_buf_size,
+  dev->mapped_buffer
+    = mmap(NULL, dev->control->dma_buf_size,
 	   PROT_READ | PROT_WRITE, MAP_SHARED, handle, 2 * page_size);
-  if (dev_descr[dev].mapped_buffer == MAP_FAILED) return -1;
+  if (dev->mapped_buffer == MAP_FAILED) return -1;
 
   //if (_COOLER) ActCooling(drvno, FALSE); //deactivate cooler
 
   return handle;
 
  error:
-  lscpcie_close(dev);
+  lscpcie_close(dev_no);
   return result;
 }
 
-void lscpcie_close(uint dev) {
-  if (dev >= number_of_pcie_boards) return;
+void lscpcie_close(uint dev_no) {
+	dev_descr_t *dev = lscpcie_get_descriptor(dev_no);
+	if (!dev) return;
 
-  if (dev_descr[dev].dma_reg != MAP_FAILED)
-    munmap(dev_descr[dev].dma_reg, 0x100);
+  if (dev->dma_reg != MAP_FAILED)
+    munmap(dev->dma_reg, 0x100);
 
-  if (dev_descr[dev].control != MAP_FAILED)
-    munmap(dev_descr[dev].control, sizeof(lscpcie_control_t));
+  if (dev->control != MAP_FAILED)
+    munmap(dev->control, sizeof(lscpcie_control_t));
 
-  if (dev_descr[dev].handle >= 0)
-    close(dev_descr[dev].handle);
+  if (dev->handle >= 0)
+    close(dev->handle);
 
-  dev_descr[dev] = init_dev_descr;
+  dev_descr[dev_no] = init_dev_descr;
 }
 
 // not yet implemented in driver
-int lscpcie_start(uint dev) {
-  if (dev >= number_of_pcie_boards) return -ENODEV;
+int lscpcie_start(dev_descr_t *dev) {
   //-->>set_dma_buffer_registers(dev
-  return ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_START);
+  return ioctl(dev->handle, LSCPCIE_IOCTL_START);
 }
 
 // not yet implemented in driver
-int lscpcie_stop(uint dev) {
-  if (dev >= number_of_pcie_boards) return -ENODEV;
-  return ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_STOP);
+int lscpcie_stop(dev_descr_t *dev) {
+  return ioctl(dev->handle, LSCPCIE_IOCTL_STOP);
 }
 
-ssize_t lscpcie_readout(uint dev, uint16_t *buffer, size_t items_to_read) {
+ssize_t lscpcie_readout(dev_descr_t *dev, uint16_t *buffer,
+			size_t items_to_read) {
   ssize_t result;
   size_t bytes_read = 0, bytes_to_read = items_to_read * 2;
 
-  if (dev >= number_of_pcie_boards) return -ENODEV;
-
   while (bytes_read < bytes_to_read) {
-    result = read(dev_descr[dev].handle, buffer + bytes_read / 2, bytes_to_read);
+    result = read(dev->handle, buffer + bytes_read / 2, bytes_to_read);
     if (result > 0) {
       bytes_read += result;
       bytes_to_read -= result;
@@ -281,56 +281,49 @@ ssize_t lscpcie_readout(uint dev, uint16_t *buffer, size_t items_to_read) {
   return bytes_read / 2;
 }
 
-int lscpcie_hardware_present(uint dev) {
+int lscpcie_hardware_present(dev_descr_t *dev) {
   int result, hwp;
 
-  if (dev >= number_of_pcie_boards) return -ENODEV;
-  result = ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_HARDWARE_PRESENT, &hwp);
+  result = ioctl(dev->handle, LSCPCIE_IOCTL_HARDWARE_PRESENT, &hwp);
 
   return result ? result : hwp;
 }
 
-int lscpcie_fifo_overflow(uint dev) {
+int lscpcie_fifo_overflow(dev_descr_t *dev) {
   int result, fo;
 
-  if (dev >= number_of_pcie_boards) return -ENODEV;
-  result = ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_FIFO_OVERFLOW, &fo);
+  result = ioctl(dev->handle, LSCPCIE_IOCTL_FIFO_OVERFLOW, &fo);
 
   return result ? result : fo;
 }
 
-int lscpcie_clear_fifo(uint dev) {
-  if (dev >= number_of_pcie_boards) return -ENODEV;
-  return ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_CLEAR_FIFO);
+int lscpcie_clear_fifo(dev_descr_t *dev) {
+  return ioctl(dev->handle, LSCPCIE_IOCTL_CLEAR_FIFO);
 }
 
-size_t lscpcie_bytes_free(uint dev) {
+size_t lscpcie_bytes_free(dev_descr_t *dev) {
   int result, fb;
 
-  if (dev >= number_of_pcie_boards) return -ENODEV;
-  result = ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_FREE_BYTES, &fb);
+  result = ioctl(dev->handle, LSCPCIE_IOCTL_FREE_BYTES, &fb);
 
   return result ? result : fb;
 }
 
-size_t lscpcie_bytes_available(uint dev) {
+size_t lscpcie_bytes_available(dev_descr_t *dev) {
   int result, ba;
 
-  if (dev >= number_of_pcie_boards) return -ENODEV;
-  result = ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_BYTES_AVAILABLE, &ba);
+  result = ioctl(dev->handle, LSCPCIE_IOCTL_BYTES_AVAILABLE, &ba);
 
   return result ? result : ba;
 }
 
-int lscpcie_set_debug(uint dev, int flags, int mask) {
-  if (dev >= number_of_pcie_boards) return -ENODEV;
-  return ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_SET_DEBUG,
+int lscpcie_set_debug(dev_descr_t *dev, int flags, int mask) {
+  return ioctl(dev->handle, LSCPCIE_IOCTL_SET_DEBUG,
                (mask << DEBUG_MASK_SHIFT) | flags);
 }
 
-int lscpcie_get_buffer_pointers(uint dev, uint64_t *pointers) {
-  if (dev >= number_of_pcie_boards) return -ENODEV;
-  return ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_BUFFER_POINTERS, pointers);
+int lscpcie_get_buffer_pointers(dev_descr_t *dev, uint64_t *pointers) {
+  return ioctl(dev->handle, LSCPCIE_IOCTL_BUFFER_POINTERS, pointers);
 }
 
 
@@ -338,28 +331,28 @@ int lscpcie_get_buffer_pointers(uint dev, uint64_t *pointers) {
 /*                                 fiber link                                  */
 /*******************************************************************************/
 
-int lscpcie_send_fiber(uint dev, uint8_t master_address,
+int lscpcie_send_fiber(dev_descr_t *dev, uint8_t master_address,
                        uint8_t register_address, uint16_t data) {
   uint32_t reg_val = (master_address << 24) | (register_address << 16) | data;
 
-  if (dev >= number_of_pcie_boards) return -ENODEV;
-  if (!dev_descr[dev].s0) return -ENODEV;
+  if (!dev->s0) return -ENODEV;
 
-  dev_descr[dev].s0->DBR = reg_val;
+  dev->s0->DBR = reg_val;
   memory_barrier();
-  dev_descr[dev].s0->DBR = reg_val | 0x4000000;
+  dev->s0->DBR = reg_val | 0x4000000;
   memory_barrier();
-  dev_descr[dev].s0->DBR = 0;
+  dev->s0->DBR = 0;
   usleep(1000);
+
   return 0;
 }
 
-int init_cam_control(uint dev, trigger_mode_t trigger_mode, uint16_t options) {
+int init_cam_control(dev_descr_t *dev, trigger_mode_t trigger_mode, uint16_t options) {
   int result;
 
   result
     = lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_PIXEL,
-                         dev_descr[dev].control->number_of_pixels);
+                         dev->control->number_of_pixels);
   if (result < 0) return result;
 
   result
@@ -378,7 +371,7 @@ int init_cam_control(uint dev, trigger_mode_t trigger_mode, uint16_t options) {
 /*                                    dma                                      */
 /*******************************************************************************/
 
-int set_dma_address_in_tlp(uint dev) {
+int set_dma_address_in_tlp(dev_descr_t *dev) {
   int result;
   uint64_t val64;
   uint32_t data = 0, tlp_mode;
@@ -394,79 +387,79 @@ int set_dma_address_in_tlp(uint dev) {
   data = (data & ~0xE0) | (1<<13);
 
   switch (tlp_mode) {
-  case 0: dev_descr[dev].tlp_size = 0x20; break;
-  case 1: dev_descr[dev].tlp_size = 0x40; break;
-  case 2: dev_descr[dev].tlp_size = 0x80; break;
+  case 0: dev->tlp_size = 0x20; break;
+  case 1: dev->tlp_size = 0x40; break;
+  case 2: dev->tlp_size = 0x80; break;
   }
 
-  data |= dev_descr[dev].tlp_size / 0x20;
+  data |= dev->tlp_size / 0x20;
   if ((result = lscpcie_write_config32(dev, PCIeAddr_devStatCtrl, data)) < 0)
     return result;
 
   // WDMATLPA (Reg name): write the lower part (bit 02:31) of the DMA adress
   // to the DMA controller
-  SET_BITS(dev_descr[dev].dma_reg->WDMATLPA,
-           (uint64_t) dev_descr[dev].control->dma_physical_start, 0xFFFFFFFC);
+  SET_BITS(dev->dma_reg->WDMATLPA,
+           (uint64_t) dev->control->dma_physical_start, 0xFFFFFFFC);
   printf("set WDMATLPA to physical address of dma buffer 0x%016lx\n",
-         (uint64_t) dev_descr[dev].control->dma_physical_start);
+         (uint64_t) dev->control->dma_physical_start);
 
   //WDMATLPS: write the upper part (bit 32:39) of the address
   val64
-    = ((((uint64_t) dev_descr[dev].control->dma_physical_start) >> 8)
+    = ((((uint64_t) dev->control->dma_physical_start) >> 8)
        & 0xFF000000)
-    | dev_descr[dev].tlp_size;
+    | dev->tlp_size;
 
   //64bit address enable
   if (DMA_64BIT_EN) val64 |= 1<<19;
 
-  SET_BITS(dev_descr[dev].dma_reg->WDMATLPS, val64, 0xFF081FFF);
+  SET_BITS(dev->dma_reg->WDMATLPS, val64, 0xFF081FFF);
   printf("set WDMATLPS to 0x%016lx (0x%016lx)\n", val64, val64 & 0xFF081FFF);
 
-  SET_BITS(dev_descr[dev].dma_reg->WDMATLPC, dev_descr[dev].number_of_tlps,
+  SET_BITS(dev->dma_reg->WDMATLPC, dev->number_of_tlps,
            0x0000FFFF);
-  printf("set WDMATLPC to 0x%08x (0x%08x)\n", dev_descr[dev].number_of_tlps,
-	 dev_descr[dev].number_of_tlps & 0x0000FFFF);
+  printf("set WDMATLPC to 0x%08x (0x%08x)\n", dev->number_of_tlps,
+	 dev->number_of_tlps & 0x0000FFFF);
 
   return 0;
 }
 
-int set_dma_buffer_registers(uint dev) {
+int set_dma_buffer_registers(dev_descr_t *dev) {
   // DMABufSizeInScans - use 1 block
-  dev_descr[dev].s0->DMA_BUF_SIZE_IN_SCANS
-    = dev_descr[dev].control->dma_num_scans;
+  dev->s0->DMA_BUF_SIZE_IN_SCANS
+    = dev->control->dma_num_scans;
 
   //scans per intr must be 2x per DMA_BUFSIZEINSCANS to copy hi/lo part
   //aCAMCNT: double the INTR if 2 cams
-  dev_descr[dev].s0->DMAS_PER_INTERRUPT
-    = dev_descr[dev].control->dma_num_scans
-    * dev_descr[dev].control->number_of_pixels;
+  dev->s0->DMAS_PER_INTERRUPT
+    = dev->control->dma_num_scans
+    * dev->control->number_of_pixels;
 
   //>>>> could be done in driver at module load
-  dev_descr[dev].s0->NUMBER_OF_SCANS = dev_descr[dev].control->dma_num_scans;
-  dev_descr[dev].s0->CAM_CNT = dev_descr[dev].control->number_of_cameras;
+  dev->s0->NUMBER_OF_SCANS = dev->control->dma_num_scans;
+  dev->s0->CAM_CNT = dev->control->number_of_cameras;
   //<<<< could be done in driver at module load
 
   return 0;
 }
 
-void dma_reset(uint dev) {
-  dev_descr[dev].dma_reg->DCSR |= 0x01;
+void dma_reset(dev_descr_t *dev) {
+  dev->dma_reg->DCSR |= 0x01;
   memory_barrier();
-  dev_descr[dev].dma_reg->DCSR &= ~0x01;
+  dev->dma_reg->DCSR &= ~0x01;
 }
 
 
-void dma_start(uint dev) {
-  dev_descr[dev].control->read_pos = 0;
-  dev_descr[dev].control->write_pos = 0;
-  dev_descr[dev].dma_reg->DDMACR |= 0x01;
+void dma_start(dev_descr_t *dev) {
+  dev->control->read_pos = 0;
+  dev->control->write_pos = 0;
+  dev->dma_reg->DDMACR |= 0x01;
 }
 
-uint32_t get_scan_index(uint dev) {
-  return dev_descr[dev].s0->SCAN_INDEX;
+uint32_t get_scan_index(dev_descr_t *dev) {
+  return dev->s0->SCAN_INDEX;
 }
 
-int lscpcie_setup_dma(uint dev) {
+int lscpcie_setup_dma(dev_descr_t *dev) {
   int result;
 
   // note: the dma buffer has to be allocated in kernel space
@@ -476,7 +469,7 @@ int lscpcie_setup_dma(uint dev) {
 
   // DREQ: every XCK h->l starts DMA by hardware
   // set hardware start des dma  via DREQ withe data = 0x4000000
-  SET_BITS(dev_descr[dev].s0->IRQ.IRQREG, HWDREQ_EN ? 0x40000000 : 0,
+  SET_BITS(dev->s0->IRQ.IRQREG, HWDREQ_EN ? 0x40000000 : 0,
            0x40000000);
 
   // note: enabling the interrupt is again a job for kernel code, do it in
@@ -484,7 +477,7 @@ int lscpcie_setup_dma(uint dev) {
   return 0;
 }
 
-void start_pcie_dma_write(uint dev) {
+void start_pcie_dma_write(dev_descr_t *dev) {
   if (!HWDREQ_EN) {
     dma_reset(dev);
     dma_start(dev);
@@ -501,87 +494,79 @@ void start_pcie_dma_write(uint dev) {
 /*                              register access                                */
 /*******************************************************************************/
 
-int lscpcie_read_config32(uint dev, uint16_t address, uint32_t *val) {
+int lscpcie_read_config32(dev_descr_t *dev, uint16_t address, uint32_t *val) {
   int result;
   reg_info_t reg = { .address = address };
 
-  if (dev >= number_of_pcie_boards) return -ENODEV;
-  if ((result = ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_GET_CONF, &reg)) < 0)
+  if ((result = ioctl(dev->handle, LSCPCIE_IOCTL_GET_CONF, &reg)) < 0)
     return result;
   *val = reg.value;
 
   return 0;
 }
 
-int lscpcie_write_config32(uint dev, uint16_t address, uint32_t val) {
+int lscpcie_write_config32(dev_descr_t *dev, uint16_t address, uint32_t val) {
   reg_info_t reg = { .address = address, .value = val };
 
-  if (dev >= number_of_pcie_boards) return -ENODEV;
 
-  return ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_SET_CONF, &reg);
+  return ioctl(dev->handle, LSCPCIE_IOCTL_SET_CONF, &reg);
 }
 
-int lscpcie_read_reg8(uint dev, uint16_t address, uint8_t *val) {
+int lscpcie_read_reg8(dev_descr_t *dev, uint16_t address, uint8_t *val) {
   int result;
   reg_info_t reg = { .address = address };
 
-  if (dev >= number_of_pcie_boards) return -ENODEV;
-  if ((result = ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_GET_REG8, &reg)) < 0)
+  if ((result = ioctl(dev->handle, LSCPCIE_IOCTL_GET_REG8, &reg)) < 0)
     return result;
   *val = reg.value;
 
   return 0;
 }
 
-int lscpcie_read_reg16(uint dev, uint16_t address, uint16_t *val) {
+int lscpcie_read_reg16(dev_descr_t *dev, uint16_t address, uint16_t *val) {
   int result;
   reg_info_t reg = { .address = address };
 
-  if (dev >= number_of_pcie_boards) return -ENODEV;
-  if ((result = ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_GET_REG16, &reg)) < 0)
+  if ((result = ioctl(dev->handle, LSCPCIE_IOCTL_GET_REG16, &reg)) < 0)
     return result;
   *val = reg.value;
 
   return 0;
 }
 
-int lscpcie_read_reg32(uint dev, uint16_t address, uint32_t *val) {
+int lscpcie_read_reg32(dev_descr_t *dev, uint16_t address, uint32_t *val) {
   int result;
   reg_info_t reg = { .address = address };
 
-  if (dev >= number_of_pcie_boards) return -ENODEV;
-  if ((result = ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_GET_REG32, &reg)) < 0)
+  if ((result = ioctl(dev->handle, LSCPCIE_IOCTL_GET_REG32, &reg)) < 0)
     return result;
   *val = reg.value;
 
   return 0;
 }
 
-int lscpcie_write_reg8(uint dev, uint16_t address, uint8_t val) {
+int lscpcie_write_reg8(dev_descr_t *dev, uint16_t address, uint8_t val) {
   reg_info_t reg = { .address = address, .value = val };
 
-  if (dev >= number_of_pcie_boards) return -ENODEV;
 
-  return ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_SET_REG8, &reg);
+  return ioctl(dev->handle, LSCPCIE_IOCTL_SET_REG8, &reg);
 }
 
-int lscpcie_write_reg16(uint dev, uint16_t address, uint16_t val) {
+int lscpcie_write_reg16(dev_descr_t *dev, uint16_t address, uint16_t val) {
   reg_info_t reg = { .address = address, .value = val };
 
-  if (dev >= number_of_pcie_boards) return -ENODEV;
 
-  return ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_SET_REG16, &reg);
+  return ioctl(dev->handle, LSCPCIE_IOCTL_SET_REG16, &reg);
 }
 
-int lscpcie_write_reg32(uint dev, uint16_t address, uint32_t val) {
+int lscpcie_write_reg32(dev_descr_t *dev, uint16_t address, uint32_t val) {
   reg_info_t reg = { .address = address, .value = val };
-                                          
-  if (dev >= number_of_pcie_boards) return -ENODEV;
 
-  return ioctl(dev_descr[dev].handle, LSCPCIE_IOCTL_SET_REG32, &reg);
+
+  return ioctl(dev->handle, LSCPCIE_IOCTL_SET_REG32, &reg);
 }
 
-int lscpcie_set_bits_reg8(uint dev, uint16_t address, uint8_t bits,
+int lscpcie_set_bits_reg8(dev_descr_t *dev, uint16_t address, uint8_t bits,
                           uint8_t mask) {
   int result;
   uint8_t value;
@@ -591,7 +576,7 @@ int lscpcie_set_bits_reg8(uint dev, uint16_t address, uint8_t bits,
   return lscpcie_write_reg8(dev, address, (value & ~mask) | (bits & mask));
 }
 
-int lscpcie_set_bits_reg16(uint dev, uint16_t address, uint16_t bits,
+int lscpcie_set_bits_reg16(dev_descr_t *dev, uint16_t address, uint16_t bits,
                            uint32_t mask) {
   int result;
   uint16_t value;
@@ -600,7 +585,7 @@ int lscpcie_set_bits_reg16(uint dev, uint16_t address, uint16_t bits,
   return lscpcie_write_reg16(dev, address, (value & ~mask) | (bits & mask));
 }
 
-int lscpcie_set_bits_reg32(uint dev, uint16_t address, uint32_t bits,
+int lscpcie_set_bits_reg32(dev_descr_t *dev, uint16_t address, uint32_t bits,
                            uint32_t mask) {
   int result;
   uint32_t value;
@@ -614,7 +599,7 @@ int lscpcie_set_bits_reg32(uint dev, uint16_t address, uint32_t bits,
 /*                                 debugging                                   */
 /*******************************************************************************/
 
-int lscpcie_dump_s0(uint dev) {
+int lscpcie_dump_s0(dev_descr_t *dev) {
   int i;
   uint32_t data = 0;
   enum N { number_of_registers = 41 };
@@ -671,7 +656,7 @@ int lscpcie_dump_s0(uint dev) {
   return lscpcie_dump_tlp(dev);
 }
 
-int lscpcie_dump_dma(uint dev) {
+int lscpcie_dump_dma(dev_descr_t *dev) {
   uint32_t data = 0;
   enum N { number_of_registers = 18 };
 	char register_names[number_of_registers][20] = {
@@ -702,7 +687,7 @@ int lscpcie_dump_dma(uint dev) {
   return 0;
 }
 
-int lscpcie_dump_tlp(uint dev) {
+int lscpcie_dump_tlp(dev_descr_t *dev) {
   uint32_t data, actpayload;
 
   printf("PAY_LOAD values : 0 = 128 bytes, 1 = 256 bytes, 2 = 512 bytes\n");
@@ -717,7 +702,7 @@ int lscpcie_dump_tlp(uint dev) {
   printf("MAX_READ_REQUEST_SIZE : 0x%x\n\n", (data >> 12) & 0x7);
 
 
-  printf("number of pixels: %d \n", dev_descr[dev].control->number_of_pixels);
+  printf("number of pixels: %d \n", dev->control->number_of_pixels);
 
   switch (actpayload) {
   case 0: data = 0x20;  break;
@@ -731,7 +716,7 @@ int lscpcie_dump_tlp(uint dev) {
   lscpcie_read_dma_32(dev, DmaAddr_WDMATLPS, &data);
   printf("TLPS in DMAReg is: %d \n", data);
 
-  data = (dev_descr[dev].control->number_of_pixels - 1) / (data * 2) + 1 + 1;
+  data = (dev->control->number_of_pixels - 1) / (data * 2) + 1 + 1;
   printf("number of TLPs should be: %d\n", data);
   lscpcie_read_dma_32(dev, DmaAddr_WDMATLPC, &data);
   printf("number of TLPs is: %d \n", data);
