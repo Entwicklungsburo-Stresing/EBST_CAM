@@ -5,6 +5,7 @@
 
 #include "Board_ll.h"
 #include "UIAbstractionLayer.h"
+#include "enum.h"
 
 #define DBGNOCAM FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
 #define DMA_BUFFER_SIZE_IN_SCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
@@ -20,24 +21,24 @@
 #define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
 #define INTR_EN TRUE		// enables INTR
 
-struct ffloopparams
-{
-	UINT32 board_sel;
-	UINT32 exptus;
-	UINT8 exttrig;
-	UINT8 blocktrigger;
-	UINT8 btrig_ch;
-};
+	struct ffloopparams
+	{
+		UINT32 board_sel;
+		UINT32 exptus;
+		UINT8 exttrig;
+		UINT8 blocktrigger;
+		UINT8 btrig_ch;
+	};
 
-struct global_vars
-{
-	USHORT** userBuffer;
-	WDC_DEVICE_HANDLE* hDev;
-	//PWDC_DEVICE* pDev;
-	ULONG* aPIXEL;
-	ULONG* aCAMCNT;
-	UINT32* Nospb;
-};
+	struct global_vars
+	{
+		USHORT** pBigBufBase;
+		WDC_DEVICE_HANDLE* hDev;
+		//PWDC_DEVICE* pDev;
+		ULONG* aPIXEL;
+		ULONG* aCAMCNT;
+		int* Nospb;
+	};
 
 extern int newDLL;
 extern UINT16** userBuffer;
