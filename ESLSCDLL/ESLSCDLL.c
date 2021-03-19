@@ -106,19 +106,18 @@ DllAccess  void DLLErrMsgBoxOff( void )
 }
 
 /**
-\brief Initialize the driver. Must be called before any other function.
-	Is called automatically for 2 boards.
-\return Is true (not 0) if driver was found.
-*/
-DllAccess UINT8 nDLLCCDDrvInit( void )
+ * \copydoc CCDDrvInit
+ * \param _number_of_boards Pointer for returning recognized number of PCIe boards.
+ */
+DllAccess es_status_codes DLLCCDDrvInit( UINT8* _number_of_boards )
 {
-	newDLL = 1;
-	if (CCDDrvInit())
+	es_status_codes status = CCDDrvInit();
+	if (status == es_no_error)
 	{
 		WDC_Err( "finished DRVInit back in DLL\n" );
-		return number_of_boards;
+		_number_of_boards* = number_of_boards;
 	}
-	return 0;
+	return status;
 }
 
 /**
