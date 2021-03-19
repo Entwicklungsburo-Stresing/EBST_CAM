@@ -40,7 +40,6 @@
 		int* Nospb;
 	};
 
-extern int newDLL;
 extern UINT16** userBuffer;
 extern UINT32 Nob;
 extern UINT32* Nospb;
@@ -64,7 +63,7 @@ void AboutDMARegs( UINT32 drv );
 void AboutTLPs( UINT32 drvno );
 void AboutS0( UINT32 drvno );
 //  same header file for ISA and PCI version
-BOOL CCDDrvInit( void );
+es_status_codes CCDDrvInit();
 void CCDDrvExit( UINT32 drvno );	// closes the driver
 BOOL InitBoard( UINT32 drvno );	// init the board and alloc mem, call only once !
 BOOL SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno );
