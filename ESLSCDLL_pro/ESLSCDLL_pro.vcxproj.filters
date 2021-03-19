@@ -51,6 +51,9 @@
     <ClInclude Include="..\shared_src\enum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\shared_src\struct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ESLSCDLL_pro.rc" />

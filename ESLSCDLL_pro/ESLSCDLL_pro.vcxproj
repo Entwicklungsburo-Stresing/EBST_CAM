@@ -289,6 +289,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)lsc-gui\build\"</Command>
     <ClInclude Include="..\shared_src\enum.h" />
     <ClInclude Include="..\shared_src\ESLSCDLL_pro.h" />
     <ClInclude Include="..\shared_src\lscpciej_lib.h" />
+    <ClInclude Include="..\shared_src\struct.h" />
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
     <ClInclude Include="Direct2dViewer.h" />
     <ClInclude Include="resource.h" />
