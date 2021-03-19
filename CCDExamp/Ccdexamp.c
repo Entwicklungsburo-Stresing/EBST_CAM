@@ -20,6 +20,7 @@ along with Foobar.If not, see < http://www.gnu.org/licenses/>.
 Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 */
 #include "CCDExamp.h"
+#include "shared_src/enum.h"
 
 #define CONTROLS_POSITION_Y 330
 #define SAMPLE_POSITION_X 50
@@ -1151,10 +1152,10 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 		SendMessage( GetDlgItem( hDlg, IDC_COMBO_BTI ), CB_SETCURSEL, (WPARAM)ItemIndex_B, (LPARAM)0 );
 		SetDlgItemInt( hDlg, IDC_M_EXPTIME, ExpTime, FALSE );
 		SetDlgItemInt( hDlg, IDC_M_REPTIME, RepTime, FALSE );
-		SetDlgItemInt( hDlg, IDC_SDAT, sdat, FALSE );
-		SetDlgItemInt( hDlg, IDC_BDAT, bdat, FALSE );
-		SetDlgItemInt( hDlg, IDC_SEC, sec, FALSE );
-		SetDlgItemInt( hDlg, IDC_BEC, bec, FALSE );
+		SetDlgItemInt( hDlg, IDC_SDAT, Sdat, FALSE );
+		SetDlgItemInt( hDlg, IDC_BDAT, Bdat, FALSE );
+		SetDlgItemInt( hDlg, IDC_SEC, Sec, FALSE );
+		SetDlgItemInt( hDlg, IDC_BEC, Bec, FALSE );
 		if (TrigMod == 0) CheckDlgButton( hDlg, IDC_RADIO1, BST_CHECKED );
 		if (TrigMod == 1) CheckDlgButton( hDlg, IDC_RADIO2, BST_CHECKED );
 		if (TrigMod == 2) CheckDlgButton( hDlg, IDC_RADIO3, BST_CHECKED );
@@ -1222,23 +1223,23 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 
 			//Setting DAT Registers
 			val = GetDlgItemInt(hDlg, IDC_SDAT, &success, FALSE);
-			if (success) sdat = val;
-			if (sdat) SetSDAT(choosen_board, sdat);
+			if (success) Sdat = val;
+			if (Sdat) SetSDAT(choosen_board, Sdat);
 			else ResetSDAT(choosen_board);
 			val = GetDlgItemInt(hDlg, IDC_BDAT, &success, FALSE);
-			if (success) bdat = val;
-			if (bdat) SetBDAT(choosen_board, bdat);
+			if (success) Bdat = val;
+			if (Bdat) SetBDAT(choosen_board, Bdat);
 			else ResetBDAT(choosen_board);
 
 			//Setting EC Registers
 			val = GetDlgItemInt(hDlg, IDC_SEC, &success, FALSE);
-			if (success) sec = val;
-			if (sec){ SetSEC(choosen_board, sec);}
+			if (success) Sec = val;
+			if (Sec){ SetSEC(choosen_board, Sec);}
 			else ResetSEC( choosen_board );
 
 			val = GetDlgItemInt( hDlg, IDC_BEC, &success, FALSE );
-			if (success) bec = val;
-			if (bec) SetBEC( choosen_board, bec );
+			if (success) Bec = val;
+			if (Bec) SetBEC( choosen_board, Bec );
 			else ResetBEC( choosen_board );
 			
 			//setting slopes
