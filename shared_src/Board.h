@@ -22,24 +22,6 @@ extern "C" {
 #define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
 #define INTR_EN TRUE		// enables INTR
 
-struct ffloopparams
-{
-	UINT32 board_sel;
-	UINT32 exptus;
-	UINT8 exttrig;
-	UINT8 blocktrigger;
-	UINT8 btrig_ch;
-};
-
-struct global_vars
-{
-	USHORT** userBuffer;
-	WDC_DEVICE_HANDLE* hDev;
-	//PWDC_DEVICE* pDev;
-	ULONG* aPIXEL;
-	ULONG* aCAMCNT;
-	UINT32* Nospb;
-};
 
 extern int newDLL;
 extern UINT16** userBuffer;
@@ -68,7 +50,8 @@ void AboutS0( UINT32 drvno );
 BOOL CCDDrvInit( void );
 void CCDDrvExit( UINT32 drvno );	// closes the driver
 BOOL InitBoard( UINT32 drvno );	// init the board and alloc mem, call only once !
-void InitMeasurement(UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay);
+void InitMeasurement(struct global_settings* settings);
+BOOL StartMess(UINT32 board_sel);
 BOOL SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno );
 BOOL SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno );
 BOOL SetDMAAddrTlp( UINT32 drvno );

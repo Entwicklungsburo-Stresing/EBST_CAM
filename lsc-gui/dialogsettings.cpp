@@ -12,8 +12,9 @@ DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
     ui->spinBoxNob->setValue(_settings->value(settingNobPath, settingNobDefault).toInt());
     ui->comboBoxSti->setCurrentIndex(_settings->value(settingStiPath, settingStiDefault).toInt());
     ui->comboBoxBti->setCurrentIndex(_settings->value(settingBtiPath, settingBtiDefault).toInt());
-    ui->doubleSpinBoxSTimer->setValue(_settings->value(settingStimerPath, settingStimerDefault).toDouble());
-    ui->doubleSpinBoxBTimer->setValue(_settings->value(settingBtimerPath, settingBtimerDefault).toDouble());
+    ui->doubleSpinBoxSTimer->setValue(_settings->value(settingStimerPath, settingStimerDefault).toDouble()); //TODO: in microsec
+    ui->doubleSpinBoxBTimer->setValue(_settings->value(settingBtimerPath, settingBtimerDefault).toDouble()); //TODO: in microsec
+    //TODO: von hier weiter machen mit dem mapping in mainwindow.cpp:startPressed
     ui->spinBoxSdat->setValue(_settings->value(settingSdatPath, settingSdatDefault).toInt());
     ui->spinBoxBdat->setValue(_settings->value(settingBdatPath, settingBdatDefault).toInt());
     ui->comboBoxSslope->setCurrentIndex(_settings->value(settingSslopePath, settingSslopePath).toInt());
