@@ -21,24 +21,24 @@
 #define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
 #define INTR_EN TRUE		// enables INTR
 
-	struct ffloopparams
-	{
-		UINT32 board_sel;
-		UINT32 exptus;
-		UINT8 exttrig;
-		UINT8 blocktrigger;
-		UINT8 btrig_ch;
-	};
+struct ffloopparams
+{
+	UINT32 board_sel;
+	UINT32 exptus;
+	UINT8 exttrig;
+	UINT8 blocktrigger;
+	UINT8 btrig_ch;
+};
 
-	struct global_vars
-	{
-		USHORT** pBigBufBase;
-		WDC_DEVICE_HANDLE* hDev;
-		//PWDC_DEVICE* pDev;
-		ULONG* aPIXEL;
-		ULONG* aCAMCNT;
-		int* Nospb;
-	};
+struct global_vars
+{
+	USHORT** userBuffer;
+	WDC_DEVICE_HANDLE* hDev;
+	//PWDC_DEVICE* pDev;
+	ULONG* aPIXEL;
+	ULONG* aCAMCNT;
+	int* Nospb;
+};
 
 extern UINT16** userBuffer;
 extern UINT32 Nob;
@@ -81,10 +81,8 @@ void StartPCIE_DMAWrite( UINT32 drvno );
 void CleanupPCIE_DMA( UINT32 drvno );
 int GetNumofProcessors();
 es_status_codes SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay );
-BOOL SetBoardVars( UINT32 drvno );
-
+es_status_codes SetBoardVars( UINT32 drvno );
 BOOL Use_ENFFW_protection( UINT32 drvno, BOOL USE_ENFFW_PROTECT );
-
 // clear camera with reads
 void AboutDrv( UINT32 drvno );	// displays the version and board ID = test if board is there
 //	functions for managing controlbits in CtrlA register

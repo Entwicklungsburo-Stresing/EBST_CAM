@@ -14,22 +14,19 @@
 #include "wchar.h"
 #include "lscpciej_lib.h"
 #include "shared_src/ESLSCDLL_pro.h"
-#include "enum.h"
+#include "shared_src/enum.h"
 
 extern WDC_DEVICE_HANDLE* hDev;
-//extern PWDC_DEVICE pDev;
 
-
-
-BOOL SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno );
-BOOL SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno );
-BOOL ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno );
-BOOL ReadLongIOPort( UINT32 drvno, UINT32 *DWData, ULONG PortOff );// read long from IO runreg
-BOOL ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff );	// read long from space0
-BOOL ReadLongDMA( UINT32 drvno, UINT32 * DWData, ULONG PortOff );
-BOOL ReadByteS0( UINT32 drvno, BYTE *data, ULONG PortOff );	// read byte from space0
-BOOL WriteLongIOPort( UINT32 drvno, UINT32 DataL, ULONG PortOff );// write long to IO runreg
-BOOL WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff );// write long to space0
-BOOL WriteLongDMA( UINT32 drvno, UINT32 DWData, ULONG PortOff );
-BOOL WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff ); // write byte to space0
-void SendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data );
+es_status_codes SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno );
+es_status_codes SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno );
+es_status_codes ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno );
+es_status_codes ReadLongIOPort( UINT32 drvno, UINT32 *DWData, ULONG PortOff );// read long from IO runreg
+es_status_codes ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff );	// read long from space0
+es_status_codes ReadLongDMA( UINT32 drvno, UINT32 * DWData, ULONG PortOff );
+es_status_codes ReadByteS0( UINT32 drvno, BYTE *data, ULONG PortOff );	// read byte from space0
+es_status_codes WriteLongIOPort( UINT32 drvno, UINT32 DataL, ULONG PortOff );// write long to IO runreg
+es_status_codes WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff );// write long to space0
+es_status_codes WriteLongDMA( UINT32 drvno, UINT32 DWData, ULONG PortOff );
+es_status_codes WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff ); // write byte to space0
+es_status_codes SendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data );

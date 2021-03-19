@@ -1118,7 +1118,10 @@ es_status_codes SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, U
  *
  * \param drvno PCIe board identifier
  * \return es_status_codes
-	-
+ * 	- es_no_error
+ * 	- es_invalid_driver_handle
+ * 	- es_register_write_failed
+ *	- es_register_read_failed
  */
 es_status_codes SetBoardVars( UINT32 drvno )
 {
@@ -1128,16 +1131,22 @@ es_status_codes SetBoardVars( UINT32 drvno )
 		return es_invalid_driver_handle;
 	}
 	//set startval for CTRLA Reg  +slope, IFC=h, VON=1 
-	if (!WriteByteS0( drvno, 0x23, S0Addr_CTRLA )) return FALSE;  //write CTRLA reg in S0
-	//if (_COOLER) ActCooling(drvno, FALSE); //deactivate cooler
-	if (!WriteByteS0( drvno, 0, S0Addr_CTRLB )) return FALSE;;  //write CTRLB reg in S0
-	if (!WriteByteS0( drvno, 0, S0Addr_CTRLC )) return FALSE;;  //write CTRLC reg in S0
-	//write pixel to PIXREG  & stop timer & int trig
-	if (!SetS0Reg( aPIXEL[drvno], 0xFFFF, S0Addr_PIXREGlow, drvno )) return FALSE;;
-	if (!SetS0Reg( aCAMCNT[drvno], 0xF, S0Addr_CAMCNT, drvno )) return FALSE;
-	if (!SetS0Reg( ADRDELAY, 0xFFFF, S0Addr_XCKDLY, drvno )) return FALSE;
+	es_status_codes status = WriteByteS0(drvno, 0x23, S0Addr_CTRLA);
+	if (status == es_no_error)
+		//write CTRLB reg in S0
+		status = WriteByteS0(drvno, 0, S0Addr_CTRLB);
+	if (status == es_no_error)
+		//write CTRLC reg in S0
+		status = WriteByteS0(drvno, 0, S0Addr_CTRLC);
+	if (status == es_no_error)
+		//write pixel to PIXREG  & stop timer & int trig
+		status = SetS0Reg(aPIXEL[drvno], 0xFFFF, S0Addr_PIXREGlow, drvno);
+	if (status == es_no_error)
+		status = SetS0Reg(aCAMCNT[drvno], 0xF, S0Addr_CAMCNT, drvno);
+	if (status == es_no_error)
+		status = SetS0Reg(ADRDELAY, 0xFFFF, S0Addr_XCKDLY, drvno);
 	WDC_Err( "*** SetBoardVars done.\n" );
-	return TRUE; //no error
+	return status; //no error
 };  // SetBoardVars
 
 BOOL allocateUserMemory( UINT drvno )
@@ -3534,38 +3543,43 @@ BOOL resetMeasureOn( UINT32 drvno )
 }
 
 /**
-\brief Chooses trigger input for block trigger input (BTI)
-\param drvno PCIe board identifier.
-\param bti_mode Defines the input mode for BTI.
-	- 0: I
-	- 1: S1
-	- 2: S2
-	- 3: S1&s2
-	- 4: BTIMER
-\return TRUE when success, otherwise FALSE
+* \brief Chooses trigger input for block trigger input (BTI)
+* \param drvno PCIe board identifier.
+* \param bti_mode Defines the input mode for BTI.
+* 	- 0: I
+* 	- 1: S1
+* 	- 2: S2
+* 	- 3: S1&s2
+* 	- 4: BTIMER
+* \return es_status_codes
+* 	- es_no_error
+* 	- es_register_read_failed
+* 	- es_register_write_failed
 */
-BOOL SetBTI( UINT32 drvno, UINT8 bti_mode )
+es_status_codes SetBTI( UINT32 drvno, UINT8 bti_mode )
 {
 	return SetS0Reg( bti_mode << CTRLB_bitindex_BTI0, CTRLB_bit_BTI0 | CTRLB_bit_BTI1 | CTRLB_bit_BTI2, S0Addr_CTRLB, drvno );
 }
 
 /**
-\brief Chooses trigger input for scan trigger input (STI)
-\param drvno PCIe board identifier.
-\param sti_mode Defines the input mode for STI.
-	- 0: I
-	- 1: S1
-	- 2: S2
-	- 3: unused
-	- 4: S Timer
-	- 5: ASL
-\return TRUE when success, otherwise FALSE
+* \brief Chooses trigger input for scan trigger input (STI)
+* \param drvno PCIe board identifier.
+* \param sti_mode Defines the input mode for STI.
+* 	- 0: I
+* 	- 1: S1
+* 	- 2: S2
+* 	- 3: unused
+* 	- 4: S Timer
+* 	- 5: ASL
+* \return es_status_codes
+* 	- es_no_error
+* 	- es_register_read_failed
+* 	- es_register_write_failed
 */
-BOOL SetSTI( UINT32 drvno, UINT8 sti_mode )
+es_status_codes SetSTI( UINT32 drvno, UINT8 sti_mode )
 {
 	return SetS0Reg( sti_mode, CTRLB_bit_STI0 | CTRLB_bit_STI1 | CTRLB_bit_STI2, S0Addr_CTRLB, drvno );
 }
-
 
 /**
 \brief Setup measurement parameters. Sets registers in PCIe card and allocates resources.

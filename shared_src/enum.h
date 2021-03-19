@@ -121,7 +121,7 @@ enum cam_addresses
 	maddr_cam = 0x00,
 	maddr_adc = 0x01,
 	maddr_ioctrl = 0x02,
-	cam_adaddr_gain_led = 0x00,
+	cam_adaddr_gain = 0x00,
 	cam_adaddr_pixel = 0x01,
 	cam_adaddr_trig_in = 0x02,
 	cam_adaddr_ch = 0x03,
