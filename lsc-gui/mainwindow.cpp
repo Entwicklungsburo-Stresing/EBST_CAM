@@ -70,7 +70,47 @@ void MainWindow::setChartData(uint16_t* data, uint16_t length)
  */
 void MainWindow::startPressed()
 {
-    lsc.initMeasurement(settings.value(settingCamcntPath, settingCamcntDefault).toInt(), settings.value(settingPixelPath, settingPixelDefault).toInt(), settings.value(settingXckdelayPath, settingXckdelayDefault).toInt());
+    struct global_settings settings_struct;
+
+    //settings mapping
+    settings_struct.drvno;
+    settings_struct.camcnt;
+    settings_struct.pixel;
+    settings_struct.xckdelay;
+    settings_struct.sensor_type;
+    settings_struct._mshut;
+    settings_struct.ExpTime;
+    settings_struct.m_TOmodus;
+    settings_struct.FFTMode;
+    settings_struct.FFTLines;
+    settings_struct.number_of_regions;
+    settings_struct.lines;
+    settings_struct.keep_first;
+    settings_struct.region_size;
+    settings_struct.Vfreq;
+    settings_struct.lines_binning;
+    settings_struct.nos = settings.value(settingNosPath, settingNosDefault).toInt();
+    settings_struct.nob = settings.value(settingNobPath, settingNobDefault).toInt();
+    settings_struct.camera_system;
+    settings_struct.trigger_mode;
+    settings_struct.ADC_Mode;
+    settings_struct.ADC_custom_pettern;
+    settings_struct.led_on;
+    settings_struct.gain_high;
+    settings_struct.gain;
+    settings_struct.TrigMod;
+    settings_struct.TOR_fkt;
+    settings_struct.sti_mode = settings.value(settingStiPath, settingStiDefault).toInt();
+    settings_struct.bti_mode = settings.value(settingBtiPath, settingBtiDefault).toInt();
+    settings_struct.stime_in_microsec = settings.value(settingStimerPath, settingStimerDefault).toDouble();
+    settings_struct.btime_in_microsec = settings.value(settingBtimerPath, settingBtimerDefault).toDouble();
+    settings_struct.enable_gpx;
+    settings_struct.gpx_offset;
+    settings_struct.isIRSensor;
+    settings_struct.Temp_level;
+
+
+    lsc.initMeasurement(&settings_struct);
     lsc.startMeasurement();
     return;
 }

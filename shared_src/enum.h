@@ -240,5 +240,25 @@ enum fft_mode
 {
 	full_binning = 0,
 	partial_binning = 1,
-	area = 3
+	area_mode = 3
+};
+
+enum TOR_fkt
+{
+	TOR_XCK = 0,
+	TOR_REG = 1,
+	TOR_VON = 2,
+	TOR_DMA_ACT = 3,
+	TOR_ASLS = 4,
+	TOR_STIMER = 5,
+	TOR_BTIMER = 6,
+	TOR_ISR_ACT = 7,
+	TOR_S1 = 8,
+	TOR_S2 = 9,
+	TOR_BON = 10,
+	TOR_MEASUREON = 11,
+	TOR_SDAT = 12,
+	TOR_BDAT = 13,
+	TOR_SSHUT = 14,
+	TOR_BSHUT = 15
 };

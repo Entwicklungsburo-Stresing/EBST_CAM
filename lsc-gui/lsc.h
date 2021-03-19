@@ -5,6 +5,7 @@
 #include <string>
 #include <QObject>
 #include "shared_src/enum.h"
+#include "shared_src/struct.h"
 
 class Lsc : public QObject
 {
@@ -14,7 +15,7 @@ public:
     ~Lsc();
     int initDriver();
     int initPcieBoard();
-    void initMeasurement(uint32_t camcnt, uint32_t pixel, uint32_t xckdelay);
+    void initMeasurement(struct global_settings* settings_struct);
     void startMeasurement();
     void returnFrame(uint32_t board, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length);
     std::string driverInstructions;

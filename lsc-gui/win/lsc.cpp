@@ -20,14 +20,16 @@ int Lsc::initPcieBoard()
     return InitBoard(1);
 }
 
-void Lsc::initMeasurement(uint32_t camcnt, uint32_t pixel, uint32_t xckdelay)
+void Lsc::initMeasurement(struct global_settings* settings_struct)
 {
-    InitMeasurement(1, camcnt, pixel, xckdelay);
+   //old InitMeasurement(1, camcnt, pixel, xckdelay);
+    InitMeasurement(settings_struct);
     return;
 }
 
 void Lsc::startMeasurement()
 {
+    StartMess(1);
     return;
 }
 
