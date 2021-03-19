@@ -693,6 +693,7 @@
     <ClInclude Include="..\shared_src\Board.h" />
     <ClInclude Include="..\shared_src\Board_ll.h" />
     <ClInclude Include="..\shared_src\CCDCTL.H" />
+    <ClInclude Include="..\shared_src\enum.h" />
     <ClInclude Include="..\shared_src\lscpciej_lib.h" />
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
     <ClInclude Include="CCDExamp.h" />
