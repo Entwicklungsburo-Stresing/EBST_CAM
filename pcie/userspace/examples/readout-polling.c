@@ -8,13 +8,17 @@
    After intitialising and starting the cameras, the read and write pointers
    in the control memory mapped from the driver are checked repeatedly and
    buffer contents are copied upon pointer change.
-   The block trigger flag in CRTLA is polled ẗo detect block ends and start
+   Copying of the data is done in fetch_data_mapped which uses IO remapping
+   to access the data in the DMA buffer in kernel space from user space.
+   The trigger flag in CRTLA is polled ẗo detect triggers and start
    new block readings until the number of bytes copied from the mapped DMA
    buffer reaches the goal defined by the two command line arguments
    <number of scans> <number of blocks>.
 */
 
-/* poll XCKMSB /RS for being low and data being present in the buffer */
+/* Acquire one block of data. Poll first XCKMSB /RS for being low and data
+   being present in the buffer. Loop over if less than the needed data has
+   been copied. */
 int lscpcie_acquire_block_poll(dev_descr_t *dev, uint8_t *data, size_t n_scans) {
 	int result, bytes_read = 0;
 	size_t block_size =
@@ -57,7 +61,7 @@ int main(int argc, char **argv)
 	bytes_read = 0;
 
 	do {
-		// wait for trigger signal
+		// wait for block trigger signal
 		if (info.dev->s0->CTRLA & (1 << CTRLA_TSTART))
 			continue;
 

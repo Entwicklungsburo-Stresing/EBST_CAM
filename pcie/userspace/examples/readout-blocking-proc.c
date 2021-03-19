@@ -4,16 +4,21 @@
 #include <stdio.h>
 #include <memory.h>
 
-/* Performs a camera read with polling.
-   After intitialising and starting the cameras, the read and write pointers
-   in the control memory mapped from the driver are checked repeatedly and
-   buffer contents are copied upon pointer change.
-   The block trigger flag in CRTLA is polled ẗo detect block ends and start
+/* Performs a camera read with blocking on /proc/lspcie0.
+   After intitialising and starting the cameras, a read system call on
+   /proc/lspcie0 blocks the execution until data has arrived in the buffer.
+   The corresponding wakeup is issued by the driver's interrupt routine.
+   Copying of the data is done in fetch_data_mapped which uses IO remapping
+   to access the data in the DMA buffer in kernel space from user space.
+   The trigger flag in CRTLA is polled ẗo detect triggers and start
    new block readings until the number of bytes copied from the mapped DMA
    buffer reaches the goal defined by the two command line arguments
    <number of scans> <number of blocks>.
 */
 
+/* Acquire one block of data. Poll first XCKMSB /RS for being low and then
+   got to sleep in fgetc on /proc/lscpcie0 until new data has arrived.
+   Loop over if less than the needed data has been copied. */
 int lscpcie_acquire_block_proc(dev_descr_t *dev, uint8_t *data, size_t n_scans,
 	FILE *proc_file) {
 	int result, bytes_read = 0;
@@ -26,6 +31,9 @@ int lscpcie_acquire_block_proc(dev_descr_t *dev, uint8_t *data, size_t n_scans,
 		return result;
 
 	do {
+		if (dev->s0->XCK.dword & (1 << XCK_RS))
+			continue;
+
 		if (dev->control->read_pos == dev->control->write_pos)
 			/* block until data present */
 			fgetc(proc_file);
@@ -57,7 +65,7 @@ int main(int argc, char **argv)
 	proc_file = fopen("/proc/lscpcie0", "rt");
 
 	do {
-		// wait for trigger signal
+		// wait for block trigger signal
 		if (info.dev->s0->CTRLA & (1 << CTRLA_TSTART))
 			continue;
 
