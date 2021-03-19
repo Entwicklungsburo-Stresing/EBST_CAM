@@ -1,3 +1,4 @@
+*~
 *.o
 *.cmd
 *.mod.c
@@ -11,6 +12,9 @@ read-binary
 test-read-write
 test-register
 test-readout-polling
+readout-blocking-filesystem
+readout-blocking-proc
+readout-polling
 camera-debug
 stop-camera
 *.so*
