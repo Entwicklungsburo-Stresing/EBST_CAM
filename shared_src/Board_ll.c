@@ -2,53 +2,52 @@
 
 WDC_DEVICE_HANDLE hDev_tmp[MAXPCIECARDS];
 WDC_DEVICE_HANDLE* hDev = &hDev_tmp;
-//PWDC_DEVICE pDev_tmp[MAXPCIECARDS];
-//PWDC_DEVICE* pDev = &pDev_tmp;
 
-/*
-\brief Set specified bits to 1 in register at memory address.
-
-*/
-BOOL SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno )
+/**
+ * @brief Set specified bits to 1 in register at memory address.
+ * 
+ * @param Data 
+ * @param Bitmask 
+ * @param Address 
+ * @param drvno PCIe board identifier.
+ * @return es_status_codes
+	- es_no_error
+	- es_register_read_failed
+	- es_register_write_failed
+ */
+es_status_codes SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno )
 {
-	UINT32 OldRegisterValues, Setbit_mask, OldRegVals_and_SetBits, Clearbit_mask, NewRegisterValues;
-
+	UINT32 OldRegisterValues = 0;
 	//read the old Register Values in the S0 Address Reg
-	if (!ReadLongS0( drvno, &OldRegisterValues, Address ))
+	es_status_codes status = ReadLongS0( drvno, &OldRegisterValues, Address );
+	if (status == es_no_error)
 	{
-		ErrLog( "ReadLong S0 Failed in SetDMAReg \n" );
-		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
-		return FALSE;
+		//step 0: delete not needed "1"s
+		Data &= Bitmask;
+		//step 1: save Data as setbitmask for making this part humanreadable
+		UINT32 Setbit_mask = Data;
+		//step 2: setting high bits in the Data
+		UINT32 OldRegVals_and_SetBits = OldRegisterValues | Setbit_mask;
+		//step 3: prepare to clear bits
+		UINT32 Clearbit_mask = Data | ~Bitmask;
+		//step 4: clear the low bits in the Data
+		UINT32 NewRegisterValues = OldRegVals_and_SetBits & Clearbit_mask;
+		//write the data to the S0 controller
+		status = WriteLongS0( drvno, NewRegisterValues, Address );
 	}
-	//step 0: delete not needed "1"s
-	Data &= Bitmask;
-	//step 1: save Data as setbitmask for making this part humanreadable
-	Setbit_mask = Data;
-	//step 2: setting high bits in the Data
-	OldRegVals_and_SetBits = OldRegisterValues | Setbit_mask;
-	//step 3: prepare to clear bits
-	Clearbit_mask = Data | ~Bitmask;
-	//step 4: clear the low bits in the Data
-	NewRegisterValues = OldRegVals_and_SetBits & Clearbit_mask;
-
-	//write the data to the S0 controller
-	if (!WriteLongS0( drvno, NewRegisterValues, Address ))
-	{
-		ErrLog( "WriteLong S0 Failed in SetDMAReg \n" );
-		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
-		return FALSE;
-	}
-	return TRUE;
+	return status;
 }
 
 /**
-\brief Set bit to 1 in register at memory address.
-\param bitnumber 0...31, 0 is LSB, 31 MSB
-\param Address register address
-\param drvno board number (=1 if one PCI board)
-\return =0 if write fails, otherwise != 0
-*/
-BOOL SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
+ * @brief Set bit to 1 in register at memory address.
+ *
+ * @param bitnumber 0...31, 0 is LSB, 31 MSB
+ * @param Address register address
+ * @param drvno board number (=1 if one PCI board)
+ * @return es_status_codes 
+	- es_no_error
+ */
+es_status_codes SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
 	//bitnumber: 0...31
 	/*
@@ -61,23 +60,23 @@ BOOL SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 		return FALSE;
 	}
 	*/
-
 	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
 	WDC_MEM_DIRECT_ADDR( pDev->pAddrDesc );
-
 	BitTestAndSet( pDev->pAddrDesc->pUserDirectMemAddr + 0x80 + Address, bitnumber );
-	//always returns true. BitTestAndReset doesn't give info about success.
-	return TRUE;
+	//always returns no error. BitTestAndReset doesn't give info about success.
+	return es_no_error;
 }
 
 /**
-\brief Set bit to 0 in register at memory address.
-\param bitnumber 0...31, 0 is LSB, 31 MSB
-\param Address register address
-\param drvno board number (=1 if one PCI board)
-\return TRUE when success, otherwise FALSE
-*/
-BOOL ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
+ * @brief Set bit to 0 in register at memory address.
+ *
+ * @param bitnumber 0...31, 0 is LSB, 31 MSB
+ * @param Address register address
+ * @param drvno board number (=1 if one PCI board)
+ * @return es_status_codes 
+ 	- es_no_error
+ */
+es_status_codes ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
 	/*
 	old:
@@ -91,26 +90,27 @@ BOOL ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 	*/
 	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
 	WDC_MEM_DIRECT_ADDR( pDev->pAddrDesc );
-
 	BitTestAndReset( pDev->pAddrDesc->pUserDirectMemAddr + 0x80 + Address, bitnumber );
-	//always returns true. BitTestAndReset doesn't give info about success.
-	return TRUE;
+	//always returns no error. BitTestAndReset doesn't give info about success.
+	return es_no_error;
 }
 
 /**
-\brief Read long (32 bit) from runtime register of PCIe board. This function reads the memory mapped data , not the I/O Data. Reads data from PCIe conf space.
-\param drvno board number (=1 if one PCI board)
-\param DWData pointer to where data is stored
-\param PortOff offset of register (count in bytes)
-\return ==0 if error, TRUE if success
-*/
-BOOL ReadLongIOPort( UINT32 drvno, UINT32 *DWData, ULONG PortOff )
+ * @brief Read long (32 bit) from runtime register of PCIe board.
+ 
+ * This function reads the memory mapped data , not the I/O Data. Reads data from PCIe conf space.
+ * 
+ * @param drvno board number (=1 if one PCI board)
+ * @param DWData pointer to where data is stored
+ * @param PortOff offset of register (count in bytes)
+ * @return es_status_codes
+	- 
+ */
+es_status_codes ReadLongIOPort( UINT32 drvno, UINT32 *DWData, ULONG PortOff )
 {
 	volatile DWORD dwStatus = 0;
-	DWORD   ReturnedLength;
-	ULONG	PortOffset;
 
-	PortOffset = PortOff;
+	ULONG PortOffset = PortOff;
 	dwStatus = WDC_PciReadCfg( hDev[drvno], PortOff, DWData, sizeof( UINT32 ) );
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
@@ -123,79 +123,75 @@ BOOL ReadLongIOPort( UINT32 drvno, UINT32 *DWData, ULONG PortOff )
 };  // ReadLongIOPort
 
 /**
-\brief Read long (32 bit) from register in space0 of PCIe board.
-\param drvno board number (=1 if one PCI board)
-\param DWData pointer to where data is stored
-\param PortOff offset of register from base address (count in bytes)
-\return ==0 if error, TRUE if success
-*/
-BOOL ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff )
+ * @brief Read long (32 bit) from register in space0 of PCIe board.
+ * 
+ * @param drvno board number (=1 if one PCI board)
+ * @param DWData pointer to where data is stored
+ * @param PortOff offset of register from base address (count in bytes)
+ * @return es_status_codes
+		- es_no_error
+		- es_register_read_failed
+ */
+es_status_codes ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff )
 {
-	volatile DWORD dwStatus = 0;
-	ULONG	PortOffset;
-
 	//space0 starts at S0-Offset=0x80 in BAR0
-	PortOffset = PortOff + 0x80;
-
-	dwStatus = WDC_ReadAddrBlock( hDev[drvno], 0, PortOffset, sizeof( UINT32 ), DWData, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
+	ULONG PortOffset = PortOff + 0x80;
+	volatile DWORD dwStatus  = WDC_ReadAddrBlock( hDev[drvno], 0, PortOffset, sizeof( UINT32 ), DWData, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		WDC_Err( "ReadLongS0 in address 0x%x failed\n", PortOff );
 		ErrorMsg( "Read long in space0 failed" );
-		return FALSE;
+		return es_register_read_failed;
 	}
-
-	return TRUE;
+	return es_no_error;
 };  // ReadLongS0
 
-
 /**
-\brief Reads long on DMA area.
-\param drvno PCIe board identifier
-\param DWData buffer for data
-\param PortOff Offset from BaseAdress - in Bytes ! 0..3= Regs of Board.
-\return TRUE (!=0) if success
-*/
-BOOL ReadLongDMA( UINT32 drvno, UINT32 * DWData, ULONG PortOff )
+ * @brief Reads long on DMA area.
+ * 
+ * @param drvno PCIe board identifier
+ * @param DWData buffer for data
+ * @param PortOff Offset from BaseAdress - in Bytes ! 0..3= Regs of Board.
+ * @return es_status_codes
+	- es_no_error
+	- es_register_read_failed
+ */
+es_status_codes ReadLongDMA( UINT32 drvno, UINT32 * DWData, ULONG PortOff )
 {
-	volatile DWORD dwStatus = 0;
-	ULONG	PortOffset;
-
-	PortOffset = PortOff;
-	dwStatus = WDC_ReadAddrBlock( hDev[drvno], 0, PortOffset, sizeof( UINT32 ), DWData, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
+	ULONG PortOffset = PortOff;
+	volatile DWORD  dwStatus = WDC_ReadAddrBlock( hDev[drvno], 0, PortOffset, sizeof( UINT32 ), DWData, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		WDC_Err( "ReadLongDMA in address 0x%x failed\n", PortOff );
 		ErrorMsg( "Read long in DMA failed" );
-		return FALSE;
+		return es_register_read_failed;
 	}
-
-	return TRUE;
+	return es_no_error;
 };  // ReadLongDMA
 
 /**
-\brief Read byte (8 bit) from register in space0 of PCIe board, except r10-r1f.
-\param drvno board number (=1 if one PCI board)
-\param data pointer to where data is stored
-\param PortOff offset of register from base address (count in bytes)
-\return ==0 if error, TRUE if success
-*/
-BOOL ReadByteS0( UINT32 drvno, BYTE *data, ULONG PortOff )
+ * @brief Read byte (8 bit) from register in space0 of PCIe board, except r10-r1f.
+ * 
+ * @param drvno board number (=1 if one PCI board)
+ * @param data pointer to where data is stored
+ * @param PortOff offset of register from base address (count in bytes)
+ * @return es_status_codes
+	- es_no_error
+	- es_register_read_failed
+ */
+es_status_codes ReadByteS0( UINT32 drvno, BYTE *data, ULONG PortOff )
 {
-	volatile DWORD dwStatus = 0;
-	ULONG	PortOffset;
-
-	PortOffset = PortOff + 0x80;
-	dwStatus = WDC_ReadAddrBlock( hDev[drvno], 0, PortOffset, sizeof( BYTE ), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
+	ULONG = PortOffset = PortOff + 0x80;
+	volatile DWORD dwStatus = WDC_ReadAddrBlock( hDev[drvno], 0, PortOffset, sizeof( BYTE ), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		WDC_Err( "ReadByteS0 in address 0x%x failed\n", PortOff );
 		ErrorMsg( "Read byte in space0 failed" );
-		return FALSE;
+		return es_register_read_failed;
 	}
-	return TRUE;
+	return es_no_error;
 };  // ReadByteS0
 
 /**
@@ -226,30 +222,28 @@ BOOL WriteLongIOPort( UINT32 drvno, UINT32 DataL, ULONG PortOff )
 };  // WriteLongIOPort
 
 /**
-\brief Write long (32 bit) to register in space0 of PCIe board.
-\param drvno board number (=1 if one PCI board)
-\param DWData long value to write
-\param PortOff offset of register from base address (count in bytes)
-\return ==0 if error, TRUE if success
-*/
-BOOL WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff )
+ * @brief Write long (32 bit) to register in space0 of PCIe board.
+ * 
+ * @param drvno board number (=1 if one PCI board)
+ * @param DWData long value to write
+ * @param PortOff offset of register from base address (count in bytes)
+ * @return es_status_codes 
+	- es_no_error
+	- es_register_write_failed
+ */
+es_status_codes WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff )
 {
-	volatile DWORD dwStatus = 0;
-	ULONG	PortOffset;
 	PUINT32 data = &DWData;
-	//PULONG data = &DWData;
-
-	PortOffset = PortOff + 0x80;
-	dwStatus = WDC_WriteAddrBlock( hDev[drvno], 0, PortOffset, sizeof( UINT32 ), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
+	ULONG PortOffset = PortOff + 0x80;
+	volatile DWORD dwStatus = WDC_WriteAddrBlock( hDev[drvno], 0, PortOffset, sizeof( UINT32 ), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		WDC_Err( "WriteLongS0 in address 0x%x with data: 0x%x failed\n", PortOff, DWData );
 		ErrorMsg( "WriteLongS0 failed" );
-		return FALSE;
+		return es_register_write_failed;
 	}//else WDC_Err("LongS0Write /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
-
-	return TRUE;
+	return es_no_error;
 };  // WriteLongS0
 
 /**
@@ -287,10 +281,6 @@ BOOL WriteLongDMA( UINT32 drvno, UINT32 DWData, ULONG PortOff )
 */
 BOOL WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff )
 {
-	//BOOL fResult = FALSE;
-	//sDLDATA WriteData;
-	//ULONG	DataLength;
-	//DWORD   ReturnedLength;
 	volatile DWORD dwStatus = 0;
 	PBYTE data = &DataByte;
 	ULONG	PortOffset;

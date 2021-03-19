@@ -65,7 +65,7 @@ void AboutS0( UINT32 drvno );
 //  same header file for ISA and PCI version
 es_status_codes CCDDrvInit();
 void CCDDrvExit( UINT32 drvno );	// closes the driver
-BOOL InitBoard( UINT32 drvno );	// init the board and alloc mem, call only once !
+es_status_codes InitBoard( UINT32 drvno );	// init the board and alloc mem, call only once !
 BOOL SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno );
 BOOL SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno );
 BOOL SetDMAAddrTlp( UINT32 drvno );
@@ -80,7 +80,7 @@ BOOL SetupPCIE_DMA( UINT32 drvno );
 void StartPCIE_DMAWrite( UINT32 drvno );
 void CleanupPCIE_DMA( UINT32 drvno );
 int GetNumofProcessors();
-BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay );
+es_status_codes SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay );
 BOOL SetBoardVars( UINT32 drvno );
 
 BOOL Use_ENFFW_protection( UINT32 drvno, BOOL USE_ENFFW_PROTECT );

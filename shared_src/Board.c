@@ -396,9 +396,19 @@ void CCDDrvExit( UINT32 drvno )
 	//CloseHandle(ahCCDDRV[drvno]);	   // close driver
 };
 
-BOOL InitBoard( UINT32 drvno )
+/**
+ * @brief Initializes PCIe board.
+ * 
+ * @param drvno PCIe board identifier.
+ * @return es_status_codes 
+	- es_no_error
+	- es_invalid_driver_number
+	- es_getting_device_info_failed
+	- es_open_device_failed
+ */
+es_status_codes InitBoard( UINT32 drvno )
 {
-	if ((drvno < 1) || (drvno > 2)) return FALSE;
+	if ((drvno < 1) || (drvno > 2)) return es_invalid_driver_number;
 	//PWDC_DEVICE pDev = (PWDC_DEVICE)hDev;
 	volatile DWORD dwStatus = 0;
 	WDC_Err( "Info: scan result: a board found:%lx , dev=%lx, ven=%lx \n",
@@ -418,7 +428,7 @@ BOOL InitBoard( UINT32 drvno )
 		ErrorMsg( "WDC_PciGetDeviceInfo failed" );
 		WDC_DriverClose();
 		ErrorMsg( "driver closed.\n" );
-		return FALSE;
+		return es_getting_device_info_failed;
 	}
 
 	WDC_Err( "Info: device info: bus:%lx , slot=%lx, func=%lx \n", deviceInfo[drvno].pciSlot.dwBus, deviceInfo[drvno].pciSlot.dwSlot, deviceInfo[drvno].pciSlot.dwFunction );
@@ -432,7 +442,7 @@ BOOL InitBoard( UINT32 drvno )
 		WDC_Err( "DeviceOpen failed %s\n", LSCPCIEJ_GetLastErr() );
 		WDC_DriverClose();
 		ErrorMsg( "driver closed.\n" );
-		return NULL;
+		return es_open_device_failed;
 	}
 
 
@@ -459,7 +469,7 @@ BOOL InitBoard( UINT32 drvno )
 	*/
 	// allocate DMA buffer
 	if (!SetupPCIE_DMA( drvno )) ErrorMsg( "Error in SetupPCIE_DMA" );
-	return TRUE;
+	return es_no_error;
 
 };  // InitBoard
 
@@ -1012,9 +1022,11 @@ int GetNumofProcessors()
 \param camcnt camera count
 \param pixel pixel count
 \param xckdelay XCK delay
-\return TRUE for success, otherwise FALSE
+\return es_status_codes
+	- es_no_error
+	- es_invalid_pixel_count
 */
-BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay )
+es_status_codes SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay )
 {
 	WDC_Err("Setting global variables: drv: %u, camcnt: %u, pixel: %u, xckdelay: %u\n", drvno, camcnt, pixel, xckdelay);
 	/*Pixelsize with matching TLP Count (TLPC).
@@ -1091,27 +1103,29 @@ BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckde
 		if (!MANUAL_OVERRIDE_TLP)
 		{
 			WDC_Err("Could not choose TLP size, no valid pixel count.\n");
-			return FALSE;
+			return es_invalid_pixel_count;
 		}
 	}
 	if (LEGACY_202_14_TLPCNT) NO_TLPS = NO_TLPS + 1;
 	aPIXEL[drvno] = pixel;
 	aCAMCNT[drvno] = camcnt;
 	ADRDELAY = xckdelay;
-	return TRUE;
+	return es_no_error;
 }
 
 /**
-\brief Initiates board registers.
-\param drvno PCIe board identifier
-\return TRUE if success. otherwise FALSE
-*/
-BOOL SetBoardVars( UINT32 drvno )
+ * \brief Initiates board registers.
+ *
+ * \param drvno PCIe board identifier
+ * \return es_status_codes
+	-
+ */
+es_status_codes SetBoardVars( UINT32 drvno )
 {
 	if (hDev[drvno] == INVALID_HANDLE_VALUE)
 	{
 		WDC_Err( "Handle is invalid of drvno: %i", drvno );
-		return FALSE;
+		return es_invalid_driver_handle;
 	}
 	//set startval for CTRLA Reg  +slope, IFC=h, VON=1 
 	if (!WriteByteS0( drvno, 0x23, S0Addr_CTRLA )) return FALSE;  //write CTRLA reg in S0
