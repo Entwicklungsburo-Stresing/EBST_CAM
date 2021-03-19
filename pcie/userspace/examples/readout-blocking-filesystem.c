@@ -5,15 +5,20 @@
 #include <unistd.h>
 #include <memory.h>
 
-/* Performs a camera read with polling.
-   After intitialising and starting the cameras, the read and write pointers
-   in the control memory mapped from the driver are checked repeatedly and
-   buffer contents are copied upon pointer change.
-   The block trigger flag in CRTLA is polled ẗo detect block ends and start
+/* Performs a camera read with blocking on /dev/lspcie0.
+   After intitialising and starting the cameras, a read system call on
+   /dev/lspcie0 blocks the execution until data has arrived in the buffer.
+   The corresponding wakeup is issued by the driver's interrupt routine.
+   Copying of the data is done within the read system call.
+   The trigger flag in CRTLA is polled ẗo detect triggers and start
    new block readings until the number of bytes copied from the mapped DMA
    buffer reaches the goal defined by the two command line arguments
    <number of scans> <number of blocks>.
 */
+
+/* Acquire one block of data. Poll first XCKMSB /RS for being low and then
+   call read which returns only once some new data has been copied.
+   Loop over if less than the needed data has been copied. */
 
 int lscpcie_acquire_block_fs(dev_descr_t *dev, uint8_t *data, size_t n_scans,
 			int camera_file_handle) {
@@ -29,6 +34,8 @@ int lscpcie_acquire_block_fs(dev_descr_t *dev, uint8_t *data, size_t n_scans,
 	do {
 		result = read(camera_file_handle, data + bytes_read,
 			block_size - bytes_read);
+		if (result < 0)
+			return result;
 
 		bytes_read += result;
 		fprintf(stderr, "got %d bytes of data, having now %d\n",
