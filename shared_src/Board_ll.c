@@ -182,7 +182,7 @@ es_status_codes ReadLongDMA( UINT32 drvno, UINT32 * DWData, ULONG PortOff )
  */
 es_status_codes ReadByteS0( UINT32 drvno, BYTE *data, ULONG PortOff )
 {
-	ULONG = PortOffset = PortOff + 0x80;
+	ULONG PortOffset = PortOff + 0x80;
 	volatile DWORD dwStatus = WDC_ReadAddrBlock( hDev[drvno], 0, PortOffset, sizeof( BYTE ), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
@@ -247,51 +247,51 @@ es_status_codes WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff )
 };  // WriteLongS0
 
 /**
-\brief Writes long to space0 register.
-\param drvno PCIe board identifier.
-\param DWData data to write
-\param PortOff Register offset from BaseAdress - in bytes
-\return Returns TRUE if success.
-*/
-BOOL WriteLongDMA( UINT32 drvno, UINT32 DWData, ULONG PortOff )
+ * \brief Writes long to space0 register.
+ *
+ * \param drvno PCIe board identifier.
+ * \param DWData data to write
+ * \param PortOff Register offset from BaseAdress - in bytes
+ * \return es_status_codes
+	- es_no_error
+	- es_register_write_failed
+ */
+es_status_codes WriteLongDMA( UINT32 drvno, UINT32 DWData, ULONG PortOff )
 {
-	BOOL fResult = FALSE;
-	DWORD dwStatus = 0;
 	PUINT32 data = &DWData;
-
-	dwStatus = WDC_WriteAddrBlock( hDev[drvno], 0, PortOff, sizeof( UINT32 ), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
+	DWORD dwStatus = WDC_WriteAddrBlock( hDev[drvno], 0, PortOff, sizeof( UINT32 ), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		WDC_Err( "WriteLongDMA in address 0x%x with data: 0x%x failed\n", PortOff, DWData );
 		ErrorMsg( "WriteLongDMA failed" );
-		return FALSE;
+		return es_register_write_failed;
 	}//else WDC_Err("DMAWrite /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
-
-	return TRUE;
+	return es_no_error;
 };  // WriteLongDMA
 
 
 /**
-\brief Write byte (8 bit) to register in space0 of PCIe board, except r10-r1f.
-\param drv board number (=1 if one PCI board)
-\param DataByte byte value to write
-\param PortOff Offset drom BaseAdress of register (count in bytes)
-\return ==0 if error, TRUE if success
+* \brief Write byte (8 bit) to register in space0 of PCIe board, except r10-r1f.
+* 
+* \param drv board number (=1 if one PCI board)
+* \param DataByte byte value to write
+* \param PortOff Offset drom BaseAdress of register (count in bytes)
+* \return es_status_codes
+ 	- es_no_error
+	- es_register_write_failed
 */
-BOOL WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff )
+es_status_codes WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff )
 {
-	volatile DWORD dwStatus = 0;
 	PBYTE data = &DataByte;
-	ULONG	PortOffset;
-	PortOffset = PortOff + 0x80;
-	dwStatus = WDC_WriteAddrBlock( hDev[drv], 0, PortOffset, sizeof( BYTE ), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
+	ULONG PortOffset = PortOff + 0x80;
+	volatile DWORD dwStatus = WDC_WriteAddrBlock( hDev[drv], 0, PortOffset, sizeof( BYTE ), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT );
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		WDC_Err( "WriteByteS0 in address 0x%x with data: 0x%x failed\n", PortOff, DataByte );
 		ErrorMsg( "WriteByteS0 failed" );
-		return FALSE;
+		return es_register_write_failed;
 	}//else WDC_Err("ByteS0Write /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
 	//no comparison possible because some Read-Only-Register are changing when we are writing in the same register
 	/*
@@ -303,27 +303,29 @@ BOOL WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff )
 		WDC_Err( "data read: %x\n", checkdata );
 	}
 	*/
-	return TRUE;
+	return es_no_error;
 };  // WriteByteS0
 
 /**
-\brief Sends data via fibre link, e.g. used for sending data to ADC (ADS5294).
-
-Send setup:
-- d0:d15 = data for AD-Reg  ADS5294
-- d16:d23 = ADR of  AD-Reg
-- d24 = ADDR0		AD=1
-- d25 = ADDR1		AD=0
-- d26 makes load pulse
-- all written to DB0 in Space0 = Long0
-- for AD set maddr=01, adaddr address of reg
-\param drvno board number (=1 if one PCI board)
-\param maddr master address for specifying device (2 for ADC)
-\param adaddr register address
-\param data data
-\return none
+* \brief Sends data via fibre link, e.g. used for sending data to ADC (ADS5294).
+* 
+* Send setup:
+* - d0:d15 = data for AD-Reg  ADS5294
+* - d16:d23 = ADR of  AD-Reg
+* - d24 = ADDR0		AD=1
+* - d25 = ADDR1		AD=0
+* - d26 makes load pulse
+* - all written to DB0 in Space0 = Long0
+* - for AD set maddr=01, adaddr address of reg
+* \param drvno board number (=1 if one PCI board)
+* \param maddr master address for specifying device (2 for ADC)
+* \param adaddr register address
+* \param data data
+* \return es_status_codes
+*	- es_no_error
+*	- es_register_write_failed
 */
-void SendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data )
+es_status_codes SendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data )
 {
 	UINT32 ldata = 0;
 	ldata = maddr;
@@ -331,11 +333,17 @@ void SendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data )
 	ldata |= adaddr;
 	ldata = ldata << 16;
 	ldata |= data;
-	WriteLongS0( drvno, ldata, S0Addr_DBR );
-	ldata |= 0x4000000;		//load val
-	WriteLongS0( drvno, ldata, S0Addr_DBR );
-	ldata = 0;		//rs load
-	WriteLongS0( drvno, ldata, S0Addr_DBR );
+	es_status_codes status = WriteLongS0( drvno, ldata, S0Addr_DBR );
+	if (status == es_no_error)
+	{
+		ldata |= 0x4000000;		//load val
+		status = WriteLongS0(drvno, ldata, S0Addr_DBR);
+	}
+	if (status == es_no_error)
+	{
+		ldata = 0;		//rs load
+		status = WriteLongS0(drvno, ldata, S0Addr_DBR);
+	}
 	Sleep( 1 );
-	return;
+	return status;
 }//SendFLCAM
