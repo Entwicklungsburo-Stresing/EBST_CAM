@@ -115,7 +115,7 @@ enum s0_addresses
 	S0Addr_BSLOPE = 0x8C
 };
 
-//Cam Addresses könnten später bei unterschiedlichen cam systemen vaariieren
+//Cam Addresses kï¿½nnten spï¿½ter bei unterschiedlichen cam systemen vaariieren
 enum cam_addresses
 {
 	maddr_cam = 0x00,
@@ -165,9 +165,6 @@ enum sti_mode
 	sti_ASL = 5
 };
 
-
-
-
 enum sensor_type
 {
 	PDAsensor = 0,		//set RS after read; for HA S39xx
@@ -215,3 +212,12 @@ enum tor_out
 	sshut = 14,
 	bshut = 15
 };
+
+typedef enum
+{
+	es_no_error = 0,
+	es_device_not_found,
+	es_driver_init_failed,
+	es_debug_init_failed,
+	es_setting_driver_name_failed,
+} es_status_codes;

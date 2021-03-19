@@ -52,7 +52,6 @@ UINT16* userBufferWritePos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 UINT32 numberOfInterrupts;
 
 // extern global variables
-int newDLL = 0;
 UINT8 number_of_boards = 0;
 UINT32 Nob = 1;
 UINT32 tmp_Nosbp = 1000;
@@ -293,9 +292,15 @@ void AboutS0( UINT32 drvno )
 }//AboutS0
 
 /**
-\return true if driver was found
-*/
-BOOL CCDDrvInit( void )
+ * \brief Initializes WDC driver.
+ * \return enum es_status_codes
+ 	- es_no_error
+	- es_setting_driver_name_failed
+	- es_debug_init_failed
+	- es_driver_init_failed
+	- es_device_not_found
+ */
+es_status_codes CCDDrvInit()
 {
 	WDC_Err("start driver init\n");
 	//WDC_Err(drvno);
@@ -313,24 +318,12 @@ BOOL CCDDrvInit( void )
 
 #if defined(WD_DRIVER_NAME_CHANGE)
 	/* Set the driver name */
-
 	if (!WD_DriverName( LSCPCIEJ_STRESING_DRIVER_NAME ))
 	{
 		ErrLog( "Failed to set the driver name for WDC library.\n" );
-		return WD_SYSTEM_INTERNAL_ERROR;
+		return es_setting_driver_name_failed;
 	}
-
 #endif
-
-	/* Initialize the LSCPCIEJ library
-	dwStatus = LSCPCIEJ_LibInit();
-	if (WD_STATUS_SUCCESS != dwStatus)
-	{
-	LSCPCIEJ_ERR("lscpciej_diag: Failed to initialize the LSCPCIEJ library: %s",
-	LSCPCIEJ_GetLastErr());
-	return dwStatus;
-	}*/
-
 	/* Set WDC library's debug options (default: level TRACE, output to Debug Monitor) */
 	WDC_Err("set debug options\n");
 #if defined(_DEBUG)		
@@ -347,7 +340,7 @@ BOOL CCDDrvInit( void )
 			"Error 0x%lx - %s\n", dwStatus, Stat2Str( dwStatus ) );
 		WDC_DriverClose();
 		ErrorMsg( "driver closed.\n" );
-		return FALSE;
+		return es_debug_init_failed;
 	}
 	//ErrorMsg("CCDDrvInit start of %x \n", drvno);
 	/* Open a handle to the driver and initialize the WDC library */
@@ -361,30 +354,26 @@ BOOL CCDDrvInit( void )
 		ErrorMsg( "Failed to initialize the WDC library. Maybe the driver was not unloaded correctly.\n" );
 		WDC_DriverClose();
 		ErrorMsg( "driver closed.\n" );
-		return FALSE;
+		return es_driver_init_failed;
 	}
-
-
 	BZERO( scanResult );
 	WDC_Err("scan PCIe devices\n");
 	dwStatus = WDC_PciScanDevices( LSCPCIEJ_DEFAULT_VENDOR_ID, LSCPCIEJ_DEFAULT_DEVICE_ID, &scanResult ); //VendorID, DeviceID
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-
 		ErrLog( "DeviceFind: Failed scanning the PCI bus.\n"
 			"Error: 0x%lx - %s\n", dwStatus, Stat2Str( dwStatus ) );
 		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
 		ErrorMsg( "Device not found" );
 		WDC_DriverClose();
 		ErrorMsg( "driver closed.\n" );
-		return FALSE;
+		return es_device_not_found;
 	}
 	number_of_boards = (UINT8) scanResult.dwNumDevices;
 	WDC_Err("init HR counter\n");
 	TPS = InitHRCounter();//for ticks function
 	WDC_Err("driver init done\n");
-	return TRUE;	  // no Error, driver found
-
+	return es_no_error;	  // no Error, driver found
 }; //CCDDrvInit
 
 /**

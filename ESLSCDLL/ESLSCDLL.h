@@ -42,7 +42,7 @@ DllAccess int DLLGetProcessCount();
 DllAccess int DLLGetThreadCount();
 DllAccess  void DLLErrMsgBoxOn( void );	//BOARD.C sends error messages on default
 DllAccess  void DLLErrMsgBoxOff( void );	//general deactivate of error message boxes
-DllAccess UINT8 nDLLCCDDrvInit( void );		// init the driver -> true if found
+DllAccess es_status_codes DLLCCDDrvInit( void );		// init the driver -> true if found
 DllAccess void DLLCCDDrvExit( UINT32 drvno );		// closes the driver
 DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 pclk, UINT32 xckdelay );		// init the driver -> true if found
 DllAccess UINT8 DLLReadByteS0( UINT32 drvno, UINT8 *data, UINT32 PortOff );// read byte from Port, PortOff = Regs of Board
