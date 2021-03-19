@@ -137,18 +137,21 @@ DllAccess void DLLCCDDrvExit( UINT32 drvno )
 \param pixel number of all pixel (active + dummy pixel)
 \param pclk =0 pixelclock, not used here
 \param xckdelay =3, depends on sensor, sets a delay after xck goes high, =7 for Sony sensors
-\return true if success
+\return es_status_codes
+	- es_no_error
+	- es_invalid_pixel_count
+	- es_invalid_driver_number
+	- es_getting_device_info_failed
+	- es_open_device_failed
 */
-DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 pclk, UINT32 xckdelay )
+DllAccess es_status_codes DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 pclk, UINT32 xckdelay )
 {								
- //if (!InitBoard(drvno)) return 0; //must be called once before any other
- //if FIFO pclk=waits : read frequency; waits is set = 0 for max. FIFO read frequency
- // NO FIFO version: pclk not used.
-	SetGlobalVariables( drv, camcnt, pixel, xckdelay );
-	InitBoard( drv );
-	if (!SetBoardVars( drv )) return 0; //sets data for transfer
-	// AboutS0(drvno);
-	return 1; // no error
+	es_status_codes status = SetGlobalVariables( drv, camcnt, pixel, xckdelay );
+	if (es_status_codes == es_no_error)
+		status = InitBoard( drv );
+	if (status == es_no_error)
+		status = SetBoardVars( drv ); //sets data for transfer
+	return status; // no error
 }
 
 /**
