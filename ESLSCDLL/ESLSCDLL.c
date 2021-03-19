@@ -115,7 +115,7 @@ DllAccess es_status_codes DLLCCDDrvInit( UINT8* _number_of_boards )
 	if (status == es_no_error)
 	{
 		WDC_Err( "finished DRVInit back in DLL\n" );
-		_number_of_boards* = number_of_boards;
+		*_number_of_boards = number_of_boards;
 	}
 	return status;
 }
@@ -147,7 +147,7 @@ DllAccess void DLLCCDDrvExit( UINT32 drvno )
 DllAccess es_status_codes DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 pclk, UINT32 xckdelay )
 {								
 	es_status_codes status = SetGlobalVariables( drv, camcnt, pixel, xckdelay );
-	if (es_status_codes == es_no_error)
+	if (status == es_no_error)
 		status = InitBoard( drv );
 	if (status == es_no_error)
 		status = SetBoardVars( drv ); //sets data for transfer
