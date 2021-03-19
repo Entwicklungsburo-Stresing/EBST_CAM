@@ -44,7 +44,7 @@ DllAccess  void DLLErrMsgBoxOn( void );	//BOARD.C sends error messages on defaul
 DllAccess  void DLLErrMsgBoxOff( void );	//general deactivate of error message boxes
 DllAccess es_status_codes DLLCCDDrvInit( void );		// init the driver -> true if found
 DllAccess void DLLCCDDrvExit( UINT32 drvno );		// closes the driver
-DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 pclk, UINT32 xckdelay );		// init the driver -> true if found
+DllAccess es_status_codes DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 pclk, UINT32 xckdelay );		// init the driver -> true if found
 DllAccess UINT8 DLLReadByteS0( UINT32 drvno, UINT8 *data, UINT32 PortOff );// read byte from Port, PortOff = Regs of Board
 DllAccess UINT8 DLLWriteByteS0( UINT32 drv, UINT8 DataByte, UINT32 PortOff ); // writes DataByte to Port
 DllAccess UINT8 DLLReadLongS0( UINT32 drvno, UINT32 * DWData, UINT32 PortOff );	// read long from Port, PortOff Regs of Board
