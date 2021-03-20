@@ -1,3 +1,14 @@
+/* readout-blocking-proc.c
+ *
+ * Copyright 2020 Bernhard Lang, University of Geneva
+ * Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ */
+
 #include "local-config.h"
 #include "common.h"
 #include <stdlib.h>
