@@ -106,19 +106,18 @@ DllAccess  void DLLErrMsgBoxOff( void )
 }
 
 /**
-\brief Initialize the driver. Must be called before any other function.
-	Is called automatically for 2 boards.
-\return Is true (not 0) if driver was found.
-*/
-DllAccess UINT8 nDLLCCDDrvInit( void )
+ * \copydoc CCDDrvInit
+ * \param _number_of_boards Pointer for returning recognized number of PCIe boards.
+ */
+DllAccess es_status_codes DLLCCDDrvInit( UINT8* _number_of_boards )
 {
-	newDLL = 1;
-	if (CCDDrvInit())
+	es_status_codes status = CCDDrvInit();
+	if (status == es_no_error)
 	{
 		WDC_Err( "finished DRVInit back in DLL\n" );
-		return number_of_boards;
+		*_number_of_boards = number_of_boards;
 	}
-	return 0;
+	return status;
 }
 
 /**
@@ -138,250 +137,236 @@ DllAccess void DLLCCDDrvExit( UINT32 drvno )
 \param pixel number of all pixel (active + dummy pixel)
 \param pclk =0 pixelclock, not used here
 \param xckdelay =3, depends on sensor, sets a delay after xck goes high, =7 for Sony sensors
-\return true if success
+\return es_status_codes
+	- es_no_error
+	- es_invalid_pixel_count
+	- es_invalid_driver_number
+	- es_getting_device_info_failed
+	- es_open_device_failed
 */
-DllAccess UINT8 n2DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 pclk, UINT32 xckdelay )
-{								
- //if (!InitBoard(drvno)) return 0; //must be called once before any other
- //if FIFO pclk=waits : read frequency; waits is set = 0 for max. FIFO read frequency
- // NO FIFO version: pclk not used.
-	SetGlobalVariables( drv, camcnt, pixel, xckdelay );
-	InitBoard( drv );
-	if (!SetBoardVars( drv )) return 0; //sets data for transfer
-	// AboutS0(drvno);
-	return 1; // no error
+DllAccess es_status_codes DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 pclk, UINT32 xckdelay )
+{
+	es_status_codes status = SetGlobalVariables( drv, camcnt, pixel, xckdelay );
+	if (status == es_no_error)
+		status = InitBoard( drv );
+	if (status == es_no_error)
+		status = SetBoardVars( drv ); //sets data for transfer
+	return status; // no error
 }
 
 /**
 \copydoc ReadByteS0
 */
-DllAccess UINT8 DLLReadByteS0( UINT32 drvno, UINT8 *data, UINT32 PortOff )
+DllAccess es_status_codes DLLReadByteS0( UINT32 drvno, UINT8 *data, UINT32 PortOff )
 {
-	if (!ReadByteS0( drvno, data, PortOff )) { return 0; }
-	return 1;
+	return ReadByteS0( drvno, data, PortOff );
 }
 
 /**
 \copydoc WriteByteS0
 */
-DllAccess UINT8 DLLWriteByteS0( UINT32 drv, UINT8 DataByte, UINT32 PortOff )
+DllAccess es_status_codes DLLWriteByteS0( UINT32 drv, UINT8 DataByte, UINT32 PortOff )
 {
-	if (!WriteByteS0( drv, DataByte, PortOff )) { return 0; }
-	return 1;
+	return WriteByteS0( drv, DataByte, PortOff );
 }
 
 /**
 \copydoc ReadLongS0
 */
-DllAccess UINT8 DLLReadLongS0( UINT32 drvno, UINT32 * DWData, UINT32 PortOff )
+DllAccess es_status_codes DLLReadLongS0( UINT32 drvno, UINT32 * DWData, UINT32 PortOff )
 {
-	if (!ReadLongS0( drvno, DWData, PortOff )) { return 0; }
-	return 1;
+	return ReadLongS0( drvno, DWData, PortOff );
 }
 
 /**
 \copydoc WriteLongS0
 */
-DllAccess UINT8 DLLWriteLongS0( UINT32 drvno, UINT32 DWData, UINT32 PortOff )
+DllAccess es_status_codes DLLWriteLongS0( UINT32 drvno, UINT32 DWData, UINT32 PortOff )
 {
-	if (!WriteLongS0( drvno, DWData, PortOff )) { return 0; }
-	return 1;
+	return WriteLongS0( drvno, DWData, PortOff );
 }
 
 /**
 \copydoc ReadLongDMA
 */
-DllAccess UINT8 DLLReadLongDMA( UINT32 drvno, UINT32* DWData, UINT32 PortOff )
+DllAccess es_status_codes DLLReadLongDMA( UINT32 drvno, UINT32* DWData, UINT32 PortOff )
 {
-	if (!ReadLongDMA( drvno, DWData, PortOff )) { return 0; }
-	return 1;
+	return ReadLongDMA( drvno, DWData, PortOff );
 }
 
 /**
 \copydoc WriteLongDMA
 */
-DllAccess UINT8 DLLWriteLongDMA( UINT32 drvno, UINT32 DWData, UINT32 PortOff ) 
+DllAccess es_status_codes DLLWriteLongDMA( UINT32 drvno, UINT32 DWData, UINT32 PortOff )
 {
-	if (!WriteLongDMA( drvno, DWData, PortOff )) { return 0; }
-	return 1;
+	return WriteLongDMA( drvno, DWData, PortOff );
 }
 
 /**
 \copydoc ReadLongIOPort
 */
-DllAccess UINT8 DLLReadLongIOPort( UINT32 drvno, UINT32 * DWData, UINT32 PortOff )
+DllAccess es_status_codes DLLReadLongIOPort( UINT32 drvno, UINT32 * DWData, UINT32 PortOff )
 {
-	if (!ReadLongIOPort( drvno, DWData, PortOff )) { return 0; }
-	return 1;
+	return ReadLongIOPort( drvno, DWData, PortOff );
 }
 
 /**
 \copydoc WriteLongIOPort
 */
-DllAccess UINT8 DLLWriteLongIOPort( UINT32 drvno, UINT32 DataL, UINT32 PortOff )
+DllAccess es_status_codes DLLWriteLongIOPort( UINT32 drvno, UINT32 DataL, UINT32 PortOff )
 {
-	if (!WriteLongIOPort( drvno, DataL, PortOff )) { return 0; }
-	return 1;
+	return WriteLongIOPort( drvno, DataL, PortOff );
 }
 
 /**
-\copydoc AboutDrv
-*/
-DllAccess void DLLAboutDrv( UINT32 drvno )
+ * \copydoc AboutDrv
+ */
+DllAccess es_status_codes DLLAboutDrv( UINT32 drvno )
 {
-	AboutDrv( drvno );
-	if (number_of_boards == 2) AboutDrv( 2 );
-	return;
+	es_status_codes status = AboutDrv( drvno );
+	if (status != es_no_error) return status;
+	if (number_of_boards == 2)
+		status = AboutDrv( 2 );
+	return status;
 }
 
 /**
-\copydoc CalcRamUsageInMB
-*/
+ * \copydoc CalcRamUsageInMB
+ */
 DllAccess double DLLCalcRamUsageInMB( UINT32 nos, UINT32 nob )
 {
 	return CalcRamUsageInMB( nos, nob );
 }
 
 /**
-\copydoc CalcMeasureTimeInSeconds
-*/
+ * \copydoc CalcMeasureTimeInSeconds
+ */
 DllAccess double DLLCalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in_ms )
 {
 	return CalcMeasureTimeInSeconds( nos, nob, exposure_time_in_ms );
 }
 
 /**
-\copydoc HighSlope
-*/
-DllAccess void DLLHighSlope( UINT32 drvno )
+ * \copydoc HighSlope
+ */
+DllAccess es_status_codes DLLHighSlope( UINT32 drvno )
 {
-	HighSlope( drvno );
-	return;
+	return HighSlope( drvno );
 }
 
 /**
-\copydoc LowSlope
-*/
-DllAccess void DLLLowSlope( UINT32 drvno )
+ * \copydoc LowSlope
+ */
+DllAccess es_status_codes DLLLowSlope( UINT32 drvno )
 {
-	LowSlope( drvno );
-	return;
+	return LowSlope( drvno );
 }
 
 /**
-\copydoc BothSlope
-*/
-DllAccess void DLLBothSlope( UINT32 drvno )
+ * \copydoc BothSlope
+ */
+DllAccess es_status_codes DLLBothSlope( UINT32 drvno )
 {
-	BothSlope( drvno );
-	return;
+	return BothSlope( drvno );
 }
 
 /**
-\copydoc OutTrigHigh
-*/
-DllAccess void DLLOutTrigHigh( UINT32 drvno )
+ * \copydoc OutTrigHigh
+ */
+DllAccess es_status_codes DLLOutTrigHigh( UINT32 drvno )
 {
-	OutTrigHigh( drvno );
-	return;
+	return OutTrigHigh( drvno );
 }
 
 /**
-\copydoc OutTrigLow
-*/
-DllAccess void DLLOutTrigLow( UINT32 drvno )
+ * \copydoc OutTrigLow
+ */
+DllAccess es_status_codes DLLOutTrigLow( UINT32 drvno )
 {
-	OutTrigLow( drvno );
-	return;
+	return OutTrigLow( drvno );
 }
 
 /**
-\copydoc OutTrigPulse
-*/
-DllAccess void DLLOutTrigPulse( UINT32 drvno, UINT32 PulseWidth )
+ * \copydoc OutTrigPulse
+ */
+DllAccess es_status_codes DLLOutTrigPulse( UINT32 drvno, UINT32 PulseWidth )
 {
-	OutTrigPulse( drvno, PulseWidth );
-	return;
+	return OutTrigPulse(drvno, PulseWidth);
 }
 
 /**
-\copydoc OpenShutter
-*/
-DllAccess void DLLOpenShutter( UINT32 drvno )
+ * \copydoc OpenShutter
+ */
+DllAccess es_status_codes DLLOpenShutter( UINT32 drvno )
 {
-	OpenShutter( drvno );
-	return;
+	return OpenShutter( drvno );
 }
 
 /**
-\copydoc CloseShutter
-*/
-DllAccess void DLLCloseShutter( UINT32 drvno )
+ * \copydoc CloseShutter
+ */
+DllAccess es_status_codes DLLCloseShutter( UINT32 drvno )
 {
-	CloseShutter( drvno );
-	return;
+	return CloseShutter( drvno );
 }
 
 /**
-\copydoc SWTrig
-*/
-DllAccess void DLLSWTrig( UINT32 drvno )
+ * \copydoc SWTrig
+ */
+DllAccess es_status_codes DLLSWTrig( UINT32 drvno )
 {
-	SWTrig( drvno );
-	return;
+	return SWTrig( drvno );
 }
 
 /**
-\copydoc FFValid
+\copydoc checkFifoFlags
 */
-DllAccess UINT8 DLLFFValid( UINT32 drvno )
+DllAccess es_status_codes DLLFFValid(UINT32 drvno, BOOL* valid)
 {
-	if (FFValid( drvno ) == TRUE) { return 1; }
-	else return 0;
+	return checkFifoFlags( drvno, valid );
 }
 
 /**
 \copydoc SetExtFFTrig
-*/
+
 DllAccess void DLLSetExtTrig( UINT32 drvno )
 {
 	SetExtFFTrig( drvno );
 	return;
 }
-
+*/
 /**
 \copydoc SetIntFFTrig
-*/
+
 DllAccess void DLLSetIntTrig( UINT32 drvno )
 {
 	SetIntFFTrig( drvno );// set hw register
 	return;
 }
+*/
 
 /**
-\copydoc FFOvl
-*/
-DllAccess UINT8 DLLFFOvl( UINT32 drvno )
+ * \copydoc checkFifoOverflow
+ */
+DllAccess es_status_codes DLLFFOvl(UINT32 drvno, BOOL* overflow)
 {
-	if (FFOvl( drvno ) == TRUE) { return 1; }
-	else return 0;
+	return checkFifoOverflow(drvno, overflow);
 }
 
 /**
-\copydoc SetupVCLKReg
-*/
-DllAccess UINT8 DLLSetupVCLK( UINT32 drvno, UINT32 lines, UINT8 vfreq )
+ * \copydoc SetupVCLKReg
+ */
+DllAccess es_status_codes DLLSetupVCLK( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 {
 	return SetupVCLKReg( drvno, lines, vfreq );
 }
 
 /**
-\copydoc BlockTrig
-*/
-DllAccess UINT8 DLLBlockTrig( UINT32 drv, UCHAR btrig_ch )
-{//get trigger state ext input
-	if (BlockTrig( drv, btrig_ch ) == TRUE) { return 1; }
-	else return 0;
+ * \copydoc readBlockTriggerState
+ */
+DllAccess es_status_codes DLLreadBlockTriggerState( UINT32 drv, UCHAR btrig_ch, BOOL* state )
+{
+	return readBlockTriggerState( drv, btrig_ch, state );
 }
 
 /**
@@ -397,24 +382,24 @@ void TestMsg( char testMsg1[20], char testMsg2[20] )
 }
 
 /**
-\copydoc SetS0Bit
-*/
-DllAccess UINT8 DLLSetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
+ * \copydoc SetS0Bit
+ */
+DllAccess es_status_codes DLLSetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
 	return SetS0Bit( bitnumber, Address, drvno );
 }
 
 /**
-\copydoc ResetS0Bit
-*/
-DllAccess UINT8 DLLResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
+ * \copydoc ResetS0Bit
+ */
+DllAccess es_status_codes DLLResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
 	return ResetS0Bit( bitnumber, Address, drvno );
 }
 
 /**
-\copydoc ticksTimestamp
-*/
+ * \copydoc ticksTimestamp
+ */
 DllAccess UINT64 DLLTicksTimestamp( void )
 {
 	WDC_Err( "entered tickstimestamp\n" );
@@ -422,26 +407,24 @@ DllAccess UINT64 DLLTicksTimestamp( void )
 }
 
 /**
-\brief Translate ticks to micro seconds.
-\param tks ticks of system timer
-\return micro seconds of tks
-*/
+ * \copydoc Tickstous
+ */
 DllAccess UINT32 DLLTickstous( UINT64 tks )
 {
 	return Tickstous( tks );
 }
 
 /**
-\copydoc SetMeasurementParameters
-*/
-DllAccess UINT8 DLLSetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob )
+ * \copydoc SetMeasurementParameters
+ */
+DllAccess es_status_codes DLLSetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob )
 {
 	return SetMeasurementParameters( drvno, nos, nob );
 }
 
 /**
-\copydoc ReturnFrame
-*/
+ * \copydoc ReturnFrame
+ */
 DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length )
 {
 	ReturnFrame( drv, curr_nos, curr_nob, curr_cam, pdest, length );
@@ -449,11 +432,12 @@ DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UIN
 }
 
 /**
-\brief Copies all pixel data to pdest
-\param drv indentifier of PCIe card
-\param pdest address where data is written, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( UINT16 )
-\return void
-*/
+ * \brief Copies all pixel data to pdest
+ * 
+ * \param drv indentifier of PCIe card
+ * \param pdest address where data is written, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( UINT16 )
+ * \return void
+ */
 DllAccess void DLLCopyAllData( UINT32 drv, UINT16 *pdest )
 {
 	void* pframe = GetAddressOfPixel( drv, 0, 0, 0, 0 );
@@ -462,12 +446,12 @@ DllAccess void DLLCopyAllData( UINT32 drv, UINT16 *pdest )
 }
 
 /**
-\brief Copies one block of pixel data to pdest
-\param drv indentifier of PCIe card
-\param block Selects which block to copy.
-\param pdest address where data is written, should be a buffer with size: nos * camcnt * pixel * sizeof( UINT16 )
-\return void
-*/
+ * \brief Copies one block of pixel data to pdest
+ * \param drv indentifier of PCIe card
+ * \param block Selects which block to copy.
+ * \param pdest address where data is written, should be a buffer with size: nos * camcnt * pixel * sizeof( UINT16 )
+ * \return void
+ */
 DllAccess void DLLCopyOneBlock( UINT32 drv, UINT16 block, UINT16 *pdest )
 {
 	void* pframe = GetAddressOfPixel( drv, 0, 0, block, 0 );
@@ -476,11 +460,11 @@ DllAccess void DLLCopyOneBlock( UINT32 drv, UINT16 block, UINT16 *pdest )
 }
 
 /**
-\brief Read nos lines from FIFO. Const burst loop with DMA initiated by hardware DREQ. Is called automatically for 2 boards.
-\param board_sel board number (=1 if one PCI board)
-\return none
-*/
-DllAccess void nDLLReadFFLoop( UINT32 board_sel )
+ * \brief Read nos lines from FIFO. Const burst loop with DMA initiated by hardware DREQ. Is called automatically for 2 boards.
+ * \param board_sel board number (=1 if one PCI board)
+ * \return none
+ */
+DllAccess void DLLReadFFLoop( UINT32 board_sel )
 {
 	params.board_sel = board_sel;
 	//thread wit prio 15
@@ -489,21 +473,21 @@ DllAccess void nDLLReadFFLoop( UINT32 board_sel )
 }//DLLReadFFLoop
 
 /**
-\brief Abort measurement.
-\return none
-*/
-DllAccess void DLLStopFFLoop( void )
+ * \brief Abort measurement.
+ * \return none
+ */
+DllAccess void DLLStopFFLoop()
 {
 	escape_readffloop = TRUE;
 	return;
 }
 
 /**
-\brief Activate or deactivate continuous read.
-\param activate 0 - deactivate, 1 - activate
-\param pause - time in ms before next loop starts - should be >=1
-\return none
-*/
+ * \brief Activate or deactivate continuous read.
+ * \param activate 0 - deactivate, 1 - activate
+ * \param pause - time in ms before next loop starts - should be >=1
+ * \return none
+ */
 DllAccess void DLLSetContFFLoop( UINT8 activate , UINT32 pause)
 {
 	CONTFFLOOP = activate;//0 or 1
@@ -512,129 +496,115 @@ DllAccess void DLLSetContFFLoop( UINT8 activate , UINT32 pause)
 }
 
 /**
-\copydoc SetTemp
-*/
-DllAccess void DLLSetTemp( UINT32 drvno, UINT8 level )
+ * \copydoc SetTemp
+ */
+DllAccess es_status_codes DLLSetTemp( UINT32 drvno, UINT8 level )
 {
-	SetTemp( drvno, level );
-	return;
+	return SetTemp(drvno, level);
 }
 
 /**
-\copydoc SetSEC
-*/
-DllAccess void DLLSetSEC( UINT32 drvno, UINT64 ecin100ns )
+ * \copydoc SetSEC
+ */
+DllAccess es_status_codes DLLSetSEC( UINT32 drvno, UINT64 ecin100ns )
 {
-	SetSEC( drvno, ecin100ns );
-	return;
+	return SetSEC( drvno, ecin100ns );
 }
 
 /**
-\copydoc ResetSEC
-*/
-DllAccess void DLLResetSEC( UINT32 drvno )
+ * \copydoc ResetSEC
+ */
+DllAccess es_status_codes DLLResetSEC( UINT32 drvno )
 {
-	ResetSEC( drvno );
-	return;
+	return ResetSEC(drvno);
 }
 
 /**
-\copydoc SetBEC
-*/
-DllAccess void DLLSetBEC( UINT32 drvno, UINT64 ecin100ns )
+ * \copydoc SetBEC
+ */
+DllAccess es_status_codes DLLSetBEC( UINT32 drvno, UINT64 ecin100ns )
 {
-	SetBEC( drvno, ecin100ns );
-	return;
+	return SetBEC( drvno, ecin100ns );
 }
 
 /**
-\copydoc ResetBEC
-*/
-DllAccess void DLLResetBEC( UINT32 drvno )
+ * \copydoc ResetBEC
+ */
+DllAccess es_status_codes DLLResetBEC( UINT32 drvno )
 {
-	ResetBEC( drvno );
-	return;
+	return ResetBEC( drvno );
 }
 
 /**
-\copydoc SetTORReg
-*/
-DllAccess void DLLSetTORReg( UINT32 drvno, UINT8 fkt )
+ * \copydoc SetTORReg
+ */
+DllAccess es_status_codes DLLSetTORReg( UINT32 drvno, UINT8 fkt )
 {
-	SetTORReg( drvno, fkt );
-	return;
+	return SetTORReg( drvno, fkt );
 }
 
 /**
-\copydoc SetSensorType
-*/
-DllAccess void DLLSetSensorType( UINT32 drvno, UINT8 sensor_type )
+ * \copydoc SetSensorType
+ */
+DllAccess es_status_codes DLLSetSensorType( UINT32 drvno, UINT8 sensor_type )
 {
-	return  SetSensorType( drvno, sensor_type );
+	return SetSensorType( drvno, sensor_type );
 }
 
 /**
-\copydoc RsTOREG
-*/
-DllAccess void DLLRsTOREG( UINT32 drvno )
+ * \copydoc RsTOREG
+ */
+DllAccess es_status_codes DLLRsTOREG( UINT32 drvno )
 {
-	RsTOREG( drvno );
-	return;
+	return RsTOREG( drvno );
 }
 
 /**
-\copydoc SetupVPB
-*/
-DllAccess void DLLSetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep )
+ * \copydoc SetupVPB
+ */
+DllAccess es_status_codes DLLSetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep )
 {
 	if (keep != 0)
-	{
-		SetupVPB( drvno, range, lines, TRUE );
-	}
+		return SetupVPB( drvno, range, lines, TRUE );
 	else
-		SetupVPB( drvno, range, lines, FALSE );
-	return;
+		return SetupVPB( drvno, range, lines, FALSE );
 }
 
 /**
-\copydoc AboutS0
-*/
-DllAccess void DLLAboutS0( UINT32 drvno )
+ * \copydoc AboutS0
+ */
+DllAccess es_status_codes DLLAboutS0( UINT32 drvno )
 {
-	AboutS0( drvno );
-	return;
+	return AboutS0( drvno );
 }
 
 /**
-\copydoc SendFLCAM
-*/
-DllAccess void DLLSendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data )
+ * \copydoc SendFLCAM
+ */
+DllAccess es_status_codes DLLSendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data )
 {
-	SendFLCAM( drvno, maddr, adaddr, data );
-	return;
+	return SendFLCAM( drvno, maddr, adaddr, data );
 }
 
 /**
-\copydoc SendFLCAM_DAC
-*/
-DllAccess void DLLSendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature )
+ * \copydoc SendFLCAM_DAC
+ */
+DllAccess es_status_codes DLLSendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature )
 {
-	SendFLCAM_DAC( drvno, ctrl, addr, data, feature );
-	return;
+	return SendFLCAM_DAC( drvno, ctrl, addr, data, feature );
 }
 
 /**
-\copydoc DAC_setOutput
-*/
-DllAccess void DLLDAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output )
+ * \copydoc DAC_setOutput
+ */
+DllAccess es_status_codes DLLDAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output )
 {
-	DAC_setOutput( drvno, channel, output );
-	return;
+	return DAC_setOutput( drvno, channel, output );
 }
 
 /**
-\copydoc FreeMemInfo
-*/
+ * \copydoc FreeMemInfo
+ */
 DllAccess void DLLFreeMemInfo( UINT64 * pmemory_all, UINT64 * pmemory_free )
 {
 	FreeMemInfo( pmemory_all, pmemory_free );
@@ -642,8 +612,8 @@ DllAccess void DLLFreeMemInfo( UINT64 * pmemory_all, UINT64 * pmemory_free )
 }
 
 /**
-\copydoc ErrorMsg
-*/
+ * \copydoc ErrorMsg
+ */
 DllAccess void DLLErrorMsg( char ErrMsg[20] )
 {
 	ErrorMsg( ErrMsg );
@@ -651,59 +621,60 @@ DllAccess void DLLErrorMsg( char ErrMsg[20] )
 }
 
 /**
-\copydoc CalcTrms
-*/
-DllAccess void DLLCalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
+ * \copydoc CalcTrms
+ */
+DllAccess es_status_codes DLLCalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
 {
-	CalcTrms( drvno, firstSample, lastSample, TRMS_pixel, CAMpos, mwf, trms );
-	return;
+	return CalcTrms( drvno, firstSample, lastSample, TRMS_pixel, CAMpos, mwf, trms );
 }
 
 /**
-\copydoc InitGPX
-*/
-DllAccess void DLLInitGPX( UINT32 drvno, UINT32 delay )
+ * \copydoc InitGPX
+ */
+DllAccess es_status_codes DLLInitGPX( UINT32 drvno, UINT32 delay )
 {
-	InitGPX( drvno, delay );
-	return;
+	return InitGPX( drvno, delay );
 }
 
 /**
-\copydoc AboutGPX
-*/
-DllAccess void DLLAboutGPX( UINT32 drvno )
+ * \copydoc AboutGPX
+ */
+DllAccess es_status_codes DLLAboutGPX( UINT32 drvno )
 {
-	AboutGPX( drvno );
-	return;
+	return AboutGPX( drvno );
 }
 
 /**
-\copydoc InitCamera3001
-*/
-DllAccess void DLLInitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA )
+ * \copydoc InitCamera3001
+ */
+DllAccess es_status_codes DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED )
 {
-	InitCamera3001( drvno, pixel, trigger_input, IS_FFT, IS_AREA );
-	return;
+	return InitCameraGeneral( drvno, pixel, cc_trigger_input, IS_FFT, IS_AREA, IS_COOLED );
 }
 
 /**
-\copydoc InitCamera3010
-*/
-DllAccess void DLLInitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high )
+ * \copydoc InitCamera3001
+ */
+DllAccess es_status_codes DLLInitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA )
 {
-	InitCamera3010( drvno, pixel, trigger_input, adc_mode, custom_pattern, led_on, gain_high );
-	return;
+	return InitCamera3001( drvno, pixel, trigger_input, IS_FFT, IS_AREA );
 }
 
 /**
-\copydoc InitCamera3030
-*/
-DllAccess void DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain )
+ * \copydoc InitCamera3010
+ */
+DllAccess es_status_codes DLLInitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern )
 {
-	InitCamera3030( drvno, adc_mode, custom_pattern, gain );
-	return;
+	return InitCamera3010( drvno, adc_mode, custom_pattern );
 }
 
+/**
+ * \copydoc InitCamera3030
+ */
+DllAccess es_status_codes DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain )
+{
+	return InitCamera3030( drvno, adc_mode, custom_pattern, gain );
+}
 
 /**
 \copydoc InitProDLL
@@ -715,57 +686,57 @@ DllAccess void DLLInitProDLL()
 }
 
 /**
-\copydoc SetupFullBinning
-*/
-DllAccess UINT8 DLLSetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
+ * \copydoc SetupFullBinning
+ */
+DllAccess es_status_codes DLLSetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 {
 	return SetupFullBinning( drvno, lines, vfreq );
 }
 
 /**
-\copydoc isMeasureOn
-*/
-DllAccess UINT8 DLLisMeasureOn( UINT32 drvno )
+ * \copydoc isMeasureOn
+ */
+DllAccess es_status_codes DLLisMeasureOn( UINT32 drvno, UINT8* measureOn )
 {
-	return isMeasureOn( drvno );
+	return isMeasureOn( drvno, measureOn );
 }
 
 /**
-\copydoc isBlockOn
-*/
-DllAccess UINT8 DLLisBlockOn( UINT32 drvno )
+ * \copydoc isBlockOn
+ */
+DllAccess es_status_codes DLLisBlockOn( UINT32 drvno, UINT8* blockOn )
 {
-	return isBlockOn( drvno );
+	return isBlockOn( drvno, blockOn );
 }
 
 /**
-\copydoc waitForMeasureReady
-*/
-DllAccess void DLLwaitForMeasureReady( UINT32 drvno )
+ * \copydoc waitForMeasureReady
+ */
+DllAccess es_status_codes DLLwaitForMeasureReady( UINT32 drvno )
 {
 	return waitForMeasureReady( drvno );
 }
 
 /**
-\copydoc waitForBlockReady
-*/
-DllAccess void DLLwaitForBlockReady( UINT32 drvno )
+ * \copydoc waitForBlockReady
+ */
+DllAccess es_status_codes DLLwaitForBlockReady( UINT32 drvno )
 {
 	return waitForBlockReady( drvno );
 }
 
 /**
-\copydoc SetBTI
-*/
-DllAccess UINT8 DLLSetBTI( UINT32 drvno, UINT8 bti_mode )
+ * \copydoc SetBTI
+ */
+DllAccess es_status_codes DLLSetBTI( UINT32 drvno, UINT8 bti_mode )
 {
 	return SetBTI(drvno, bti_mode);
 }
 
 /**
-\copydoc SetSTI
-*/
-DllAccess UINT8 DLLSetSTI( UINT32 drvno, UINT8 sti_mode )
+ * \copydoc SetSTI
+ */
+DllAccess es_status_codes DLLSetSTI( UINT32 drvno, UINT8 sti_mode )
 {
 	return SetSTI( drvno, sti_mode );
 }
@@ -779,37 +750,54 @@ DllAccess void DLLClearAllUserRegs( UINT32 drv )
 }
 
 /**
-\copydoc SetSTimer
-*/
-DllAccess UINT8 DLLSetSTimer( UINT32 drvno, UINT32 stime_in_microseconds )
+ * \copydoc SetSTimer
+ */
+DllAccess es_status_codes DLLSetSTimer( UINT32 drvno, UINT32 stime_in_microseconds )
 {
 	return SetSTimer(drvno, stime_in_microseconds);
 }
 
 /**
-\copydoc SetBTimer
-*/
-DllAccess UINT8 DLLSetBTimer( UINT32 drvno, UINT32 btime_in_microseconds )
+ * \copydoc SetBTimer
+ */
+DllAccess es_status_codes DLLSetBTimer( UINT32 drvno, UINT32 btime_in_microseconds )
 {
 	return SetBTimer( drvno, btime_in_microseconds );
 }
 
 /**
-\copydoc SetBSlope
-*/
-DllAccess UINT8 DLLSetBSlope( UINT32 drvno, UINT32 slope )
+ * \copydoc SetBSlope
+ */
+DllAccess es_status_codes DLLSetBSlope( UINT32 drvno, UINT32 slope )
 {
 	return SetBSlope( drvno, slope );
 }
 
 /**
-\brief Save the user event handlers created by Labview. Call this before using the event structure.
-\param measureStartEvent Event handler for the event measure start.
-\param measureDoneEvent Event handler for the event measure done.
-\param blockStartEvent Event handler for the event block start.
-\param blockDoneEvent Event handler for the event block done.
-\return none
-*/
+ * \copydoc LedOn
+ */
+DllAccess es_status_codes DLLSetGain( UINT32 drvno, UINT16 gain_value )
+{
+	return SetGain( drvno, gain_value );
+}
+
+/**
+ * \copydoc LedOn
+ */
+DllAccess es_status_codes DLLLedOff( UINT32 drvno, UINT8 LED_OFF )
+{
+	return LedOff( drvno, LED_OFF );
+}
+
+/**
+ * \brief Save the user event handlers created by Labview. Call this before using the event structure.
+ * 
+ * \param measureStartEvent Event handler for the event measure start.
+ * \param measureDoneEvent Event handler for the event measure done.
+ * \param blockStartEvent Event handler for the event block start.
+ * \param blockDoneEvent Event handler for the event block done.
+ * \return none
+ */
 DllAccess void DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent )
 {
 	measureStartLVEvent = *measureStartEvent;

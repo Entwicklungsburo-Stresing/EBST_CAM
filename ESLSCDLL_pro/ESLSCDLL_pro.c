@@ -1,20 +1,19 @@
 /*
+/*
 This file is part of ESLSCDLL.
 
-ESLSCDLL is free software : you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+ESLSCDLL_pro is not free software :
+all Code is under
+
+Copyright 2021 ©Entwicklungsbuero G. Stresing (http://www.stresing.de/)
+
+you can use it as is, but
+for further sale ask Entwicklungsbuero G. Stresing for permission
 
 ESLSCDLL is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
-GNU General Public License for more details.
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-You should have received a copy of the GNU General Public License
-along with Foobar.If not, see < http://www.gnu.org/licenses/>.
-
-Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 */
 
 #include "shared_src/ESLSCDLL_pro.h"
@@ -189,22 +188,26 @@ DllAccess UINT16 DLLGetGammaBlack()
 }
 
 /**
-\brief Initializes region of interest.
-\param drvno PCIe identifier
-\param number_of_regions determines how many region of interests are initialized, choose 2 to 8
-\param lines number of total lines in camera
-\param keep_first kept regions are alternating, determine whether first is kept
-\param region_size determines the size of each region. array of size number_of_regions.
-	When region_size[0]==0 the lines are equally distributed for all regions.
-	I don't know what happens when  region_size[0]!=0 and region_size[1]==0. Maybe don't do this.
-	The sum of all regions should equal lines.
-\param vfreq VCLK frequency
-\return True for success.
-*/
-DllAccess UINT8 DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first, UINT8* region_size, UINT8 vfreq )
+ * \brief Initializes region of interest.
+ * 
+ * \param drvno PCIe identifier
+ * \param number_of_regions determines how many region of interests are initialized, choose 2 to 8
+ * \param lines number of total lines in camera
+ * \param keep_first kept regions are alternating, determine whether first is kept
+ * \param region_size determines the size of each region. array of size number_of_regions.
+ * 	When region_size[0]==0 the lines are equally distributed for all regions.
+ * 	I don't know what happens when  region_size[0]!=0 and region_size[1]==0. Maybe don't do this.
+ * 	The sum of all regions should equal lines.
+ * \param vfreq VCLK frequency
+ * \return es_status_codes
+ * 		- es_no_error
+ * 		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
+DllAccess es_status_codes DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first, UINT8* region_size, UINT8 vfreq )
 {
-	BOOL success = TRUE;
 	BOOL keep = keep_first;
+	es_status_codes status = es_no_error;
 	// calculate how many lines are in each region when equally distributed
 	UINT32 lines_per_region = lines / number_of_regions;
 	// calculate the rest of lines when equally distributed
@@ -216,33 +219,41 @@ DllAccess UINT8 DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, UINT32 line
 		// check whether lines should be distributed equally or by custom region size
 		if (*region_size == 0)
 		{
-			if (i == number_of_regions) success &= SetupVPB( drvno, i, lines_in_last_region, keep );
-			else success &= SetupVPB( drvno, i, lines_per_region, keep );
+			if (i == number_of_regions) status = SetupVPB( drvno, i, lines_in_last_region, keep );
+			else status = SetupVPB( drvno, i, lines_per_region, keep );
 		}
 		else
 		{
-			success &= SetupVPB( drvno, i, *(region_size + (i - 1)), keep );
+			status = SetupVPB( drvno, i, *(region_size + (i - 1)), keep );
 		}
+		if (status != es_no_error) return status;
 		keep = !keep;
 	}
-	success &= SetupVCLKReg( drvno, lines, vfreq );
-	success &= SetPartialBinning( drvno, 0 ); //I don't know why there first is 0 written, I just copied it from Labview. - FH
-	success &= SetPartialBinning( drvno, number_of_regions );
-	success &= SetSTI( drvno, sti_ASL);
-	return success;
+	status = SetupVCLKReg( drvno, lines, vfreq );
+	if (status != es_no_error) return status;
+	status = SetPartialBinning( drvno, 0 ); //I don't know why there first is 0 written, I just copied it from Labview. - FH
+	if (status != es_no_error) return status;
+	status = SetPartialBinning( drvno, number_of_regions );
+	if (status != es_no_error) return status;
+	return SetSTI( drvno, sti_ASL);
 }
 
 /**
-\brief For FFTs: Setup area mode.
-\param drvno PCIe board identifier.
-\param lines_binning Determines how many lines are binned (summed) when reading camera in area mode.
-\param vfreq Frequency for vertical clock.
-\return True for success.
-*/
-DllAccess UINT8 DLLSetupArea( UINT32 drvno, UINT32 lines_binning, UINT8 vfreq )
+ * \brief For FFTs: Setup area mode.
+ * 
+ * \param drvno PCIe board identifier.
+ * \param lines_binning Determines how many lines are binned (summed) when reading camera in area mode.
+ * \param vfreq Frequency for vertical clock.
+ * \return es_status_codes
+ * 		- es_no_error
+ * 		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
+DllAccess es_status_codes DLLSetupArea( UINT32 drvno, UINT32 lines_binning, UINT8 vfreq )
 {
-	BOOL success = SetupVCLKReg( drvno, lines_binning, vfreq );
-	success &= SetSTI( drvno, sti_ASL);
-	success &= ResetPartialBinning( drvno );
-	return success;
+	es_status_codes status = SetupVCLKReg( drvno, lines_binning, vfreq );
+	if (status != es_no_error) return status;
+	status = SetSTI(drvno, sti_ASL);
+	if (status != es_no_error) return status;
+	return ResetPartialBinning( drvno );
 }
