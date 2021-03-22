@@ -10,12 +10,12 @@ Lsc::~Lsc()
 
 }
 
-int Lsc::initDriver()
+es_status_codes Lsc::initDriver()
 {
     return CCDDrvInit();
 }
 
-int Lsc::initPcieBoard()
+es_status_codes Lsc::initPcieBoard()
 {
     return InitBoard(1);
 }
