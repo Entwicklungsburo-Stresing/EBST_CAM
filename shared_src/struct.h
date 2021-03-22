@@ -1,59 +1,50 @@
 #pragma once
+#include <stdint.h>
 
 struct ffloopparams
 {
-	UINT32 board_sel;
-	UINT32 exptus;
-	UINT8 exttrig;
-	UINT8 blocktrigger;
-	UINT8 btrig_ch;
-};
-
-struct global_vars
-{
-	USHORT** userBuffer;
-	WDC_DEVICE_HANDLE* hDev;
-	//PWDC_DEVICE* pDev;
-	ULONG* aPIXEL;
-	ULONG* aCAMCNT;
-	UINT32* Nospb;
+	uint32_t board_sel;
+	uint32_t exptus;
+	uint8_t exttrig;
+	uint8_t blocktrigger;
+	uint8_t btrig_ch;
 };
 
 struct global_settings
 {
-	UINT32 drvno; 
-	UINT32 camcnt; 
-	UINT32 pixel; 
-	UINT32 xckdelay; 
-	UINT32 sensor_type; 
-	UINT32 _mshut; 
-	UINT32 ExpTime; 
-	UINT32 m_TOmodus; 
-	UINT8 FFTMode;
-	UINT32 FFTLines; 
-	UINT16 number_of_regions;
-	UINT32 lines;
-	UINT8 keep_first; 
-	UINT8* region_size;
-	UINT8 Vfreq; 
-	UINT32 lines_binning;
-	UINT32 nos; 
-	UINT32 nob; 
-	UINT8 camera_system; 
-	UINT16 trigger_mode; 
-	UINT8 ADC_Mode; 
-	UINT16 ADC_custom_pettern;
-	UINT16 led_on; 
-	UINT16 gain_high; 
-	UINT8 gain; 
-	UINT8 TrigMod; 
-	UINT8 TOR_fkt; 
-	UINT8 sti_mode; 
-	UINT8 bti_mode; 
-	UINT32 stime_in_microsec; 
-	UINT32 btime_in_microsec; 
-	UINT8 enable_gpx; 
-	UINT32 gpx_offset; 
-	UINT16 isIRSensor; 
-	UINT8 Temp_level;
+	uint32_t drvno;
+	uint32_t camcnt; 
+	uint32_t pixel; 
+	uint32_t xckdelay; 
+	uint32_t sensor_type; 
+	uint32_t _mshut; 
+	uint32_t ExpTime; 
+	uint32_t m_TOmodus; 
+	uint8_t FFTMode;
+	uint32_t FFTLines; 
+	uint16_t number_of_regions;
+	uint32_t lines;
+	uint8_t keep_first; 
+	uint8_t* region_size;
+	uint8_t Vfreq; 
+	uint32_t lines_binning;
+	uint32_t nos; 
+	uint32_t nob; 
+	uint8_t camera_system; 
+	uint16_t trigger_mode; 
+	uint8_t ADC_Mode; 
+	uint16_t ADC_custom_pettern;
+	uint16_t led_on; 
+	uint16_t gain_high; 
+	uint8_t gain; 
+	uint8_t TrigMod; 
+	uint8_t TOR_fkt; 
+	uint8_t sti_mode; 
+	uint8_t bti_mode; 
+	uint32_t stime_in_microsec; 
+	uint32_t btime_in_microsec; 
+	uint8_t enable_gpx; 
+	uint32_t gpx_offset; 
+	uint16_t isIRSensor; 
+	uint8_t Temp_level;
 };

@@ -23,6 +23,15 @@ extern "C" {
 #define HWDREQ_EN TRUE		// enables hardware start of DMA by XCK h->l slope
 #define INTR_EN TRUE		// enables INTR
 
+struct global_vars
+{
+	USHORT** userBuffer;
+	WDC_DEVICE_HANDLE* hDev;
+	//PWDC_DEVICE* pDev;
+	ULONG* aPIXEL;
+	ULONG* aCAMCNT;
+	UINT32* Nospb;
+};
 
 extern UINT16** userBuffer;
 extern UINT32 Nob;
