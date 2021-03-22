@@ -81,6 +81,7 @@ int lscpcie_start_scan(dev_descr_t * dev)
 	dev->s0->XCK.dword &= ~(1 << XCKMSB_EXT_TRIGGER);
 	dev->control->write_pos = 0;
 	dev->control->read_pos = 0;
+	dev->control->irq_count = 0;
 	// set measure on
 	fprintf(stderr, "starting measurement\n");
 	dev->s0->PCIEFLAGS |= 1 << PCIEFLAG_MEASUREON;

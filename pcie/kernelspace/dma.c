@@ -138,7 +138,8 @@ static enum irqreturn isr(int irqn, void *dev_id)
   int old_write_pos;
   u8 fifo_flags;
   struct dev_struct *dev = (struct dev_struct *) dev_id;
-  PDEBUG(D_INTERRUPT, "got interrupt\n");
+  dev->control->irq_count++;
+  PDEBUG(D_INTERRUPT, "got interrupt %d\n", dev->control->irq_count);
 
   old_write_pos = dev->control->write_pos;
   fifo_flags = readb(dev->mapped_pci_base + 0x80 + S0Addr_FF_FLAGS);
@@ -170,6 +171,8 @@ static enum irqreturn isr(int irqn, void *dev_id)
 
  end:
   set_bits_s0_dword(dev, S0Addr_IRQREG, 0, (1<<IRQ_REG_ISR_active));
+  PDEBUG(D_INTERRUPT, "pointers %d %d\n", dev->control->write_pos,
+	  dev->control->read_pos);
 
   wake_up_interruptible(&dev->readq);
 
