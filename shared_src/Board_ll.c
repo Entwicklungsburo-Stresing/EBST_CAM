@@ -307,24 +307,24 @@ es_status_codes WriteByteS0( UINT32 drv, BYTE DataByte, ULONG PortOff )
 };  // WriteByteS0
 
 /**
-* \brief Sends data via fibre link, e.g. used for sending data to ADC (ADS5294).
-* 
-* Send setup:
-* - d0:d15 = data for AD-Reg  ADS5294
-* - d16:d23 = ADR of  AD-Reg
-* - d24 = ADDR0		AD=1
-* - d25 = ADDR1		AD=0
-* - d26 makes load pulse
-* - all written to DB0 in Space0 = Long0
-* - for AD set maddr=01, adaddr address of reg
-* \param drvno board number (=1 if one PCI board)
-* \param maddr master address for specifying device (2 for ADC)
-* \param adaddr register address
-* \param data data
-* \return es_status_codes
-*	- es_no_error
-*	- es_register_write_failed
-*/
+ * \brief Sends data via fibre link, e.g. used for sending data to ADC (ADS5294).
+ * 
+ * Send setup:
+ * - d0:d15 = data for AD-Reg  ADS5294
+ * - d16:d23 = ADR of  AD-Reg
+ * - d24 = ADDR0		AD=1
+ * - d25 = ADDR1		AD=0
+ * - d26 makes load pulse
+ * - all written to DB0 in Space0 = Long0
+ * - for AD set maddr=01, adaddr address of reg
+ * \param drvno board number (=1 if one PCI board)
+ * \param maddr master address for specifying device (2 for ADC)
+ * \param adaddr register address
+ * \param data data
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ */
 es_status_codes SendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data )
 {
 	UINT32 ldata = 0;
