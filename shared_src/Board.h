@@ -130,7 +130,7 @@ es_status_codes checkFifoFlags( UINT32 drvno, BOOL* valid );						// TRUE if lin
 BOOL FFFull( UINT32 drvno );
 es_status_codes checkFifoOverflow(UINT32 drvno, BOOL* overflow);							//TRUE if FIFO overflow since last RSFifo call
 es_status_codes RSFifo( UINT32 drvno );						// reset FIFO and linecounter
-BOOL SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq );//setup hardware vclk generator
+es_status_codes SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq );//setup hardware vclk generator
 es_status_codes SetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep);
 BOOL ThreadToPriClass( ULONG threadp, DWORD *priclass, DWORD *prilevel );
 // Class & Thread priority functions

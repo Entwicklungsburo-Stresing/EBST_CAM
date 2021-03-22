@@ -291,7 +291,7 @@ DllAccess es_status_codes DLLOutTrigLow( UINT32 drvno )
  */
 DllAccess es_status_codes DLLOutTrigPulse( UINT32 drvno, UINT32 PulseWidth )
 {
-	return OutTrigPulse( drvno, PulseWidth )
+	return OutTrigPulse(drvno, PulseWidth);
 }
 
 /**

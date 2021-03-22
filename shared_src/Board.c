@@ -1832,8 +1832,11 @@ Checks only PCIE board no 1
 int waitForBlockTrigger( UINT32 board_sel )
 {
 	//if lo wait for hi
-	while (!readBlockTriggerState( 1, 5 ))//only btrig_ch 5 is used
+	BOOL triggerState = FALSE;
+	while (triggerState)
 	{
+		//only btrig_ch 5 is used
+		readBlockTriggerState(1, 5, &triggerState);
 		switch (checkForPressedKeys())
 		{
 			//default and no key: stay in while and wait for block trigger
