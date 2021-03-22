@@ -52,7 +52,8 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		return FALSE;
 
 	//make init here, that CCDExamp can be used to read the act regs...
-	if (!SetBoardVars( choosen_board ))
+	es_status_codes status = SetBoardVars(choosen_board);
+	if (status != es_no_error)
 	{
 		ErrorMsg( "Error in SetBoardVars" );
 		return FALSE;
@@ -108,23 +109,28 @@ BOOL InitApplication( HINSTANCE hInstance )
 		return (FALSE);
 	};
 #else
-	if (!CCDDrvInit())
+	es_status_codes status = CCDDrvInit();
+	if (status != es_no_error)
 	{
 		ErrorMsg( " Can't open CCD driver " );
 		return (FALSE);
 	};
 
-	if (!InitBoard( 1 ))
+	status = InitBoard(1);
+	if (status != es_no_error)
 	{
 		ErrorMsg( " Can't open first board " );
 		return (FALSE);
 	};
 	if (number_of_boards >= 2)
-		if (!InitBoard( 2 ))
+	{
+		status = InitBoard(2);
+		if (status != es_no_error)
 		{
-			ErrorMsg( " Can't open second board " );
+			ErrorMsg(" Can't open second board ");
 			return (FALSE);
 		}
+	}
 #endif
 	return TRUE;
 }
@@ -1321,11 +1327,13 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 				if (both_boards)
 					DLLSetMeasurementParameters( 2, nospb_input, nob_input );
 #else
-				if (!SetMeasurementParameters( choosen_board, nospb_input, nob_input ))
+				es_status_codes status = SetMeasurementParameters(choosen_board, nospb_input, nob_input);
+				if (status != es_no_error)
 					MessageBox( hMSWND, "Setting measurement parameters failed", "Error", MB_OK );
 				if (both_boards)
 				{
-					if (!SetMeasurementParameters( 2, nospb_input, nob_input ))
+					status = SetMeasurementParameters(2, nospb_input, nob_input);
+					if (status != es_no_error)
 						MessageBox( hMSWND, "Setting measurement parameters of second board failed", "Error", MB_OK );
 				}
 #endif
@@ -1365,7 +1373,8 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 #else
 				FreeMemInfo( &builtinram, &freeram );
 				freeram_old = freeram;
-				if (!SetMeasurementParameters( choosen_board, nospb_input, nob_input ))
+				es_status_codes status = SetMeasurementParameters(choosen_board, nospb_input, nob_input);
+				if (status != es_no_error)
 					MessageBox( hMSWND, "Setting measurement parameters failed", "Error", MB_OK );
 			}
 			FreeMemInfo( &builtinram, &freeram );
