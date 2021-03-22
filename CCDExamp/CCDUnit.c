@@ -160,10 +160,10 @@ void initCamera_old()
 	switch (CAMERA_SYSTEM)
 	{
 	case camera_system_3001:
-		InitCamera3001(DRV, _PIXEL, TRIGGER_MODE, SENSOR_TYPE, 0 );
+		InitCamera3001(DRV, _PIXEL, CCTRIGGER_MODE, SENSOR_TYPE, 0 );
 		break;
 	case camera_system_3010:
-		InitCamera3010(DRV, _PIXEL, TRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
+		InitCamera3010(DRV, _PIXEL, CCTRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
 		break;
 	case camera_system_3030:
 		InitCamera3030(DRV, ADC_MODE, ADC_CUSTOM_PATTERN, GAIN);
@@ -173,10 +173,10 @@ void initCamera_old()
 		switch (CAMERA_SYSTEM)
 		{
 		case camera_system_3001:
-			InitCamera3001(2, _PIXEL, TRIGGER_MODE, SENSOR_TYPE, _IsArea );
+			InitCamera3001(2, _PIXEL, CCTRIGGER_MODE, SENSOR_TYPE, _IsArea );
 			break;
 		case camera_system_3010:
-			InitCamera3010(2, _PIXEL, TRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
+			InitCamera3010(2, _PIXEL, CCTRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
 			break;
 		case camera_system_3030:
 			InitCamera3030(2, ADC_MODE, ADC_CUSTOM_PATTERN, GAIN);
@@ -223,7 +223,7 @@ void initMeasurement()
 	initCamera_old();
 	if (both_boards) {
 		StopSTimer(2);
-		SetIntFFTrig(2);
+		//SetIntFFTrig(2);
 		RSFifo(2);
 		//set TrigOut, default= XCK
 		SetTORReg(2, m_TOmodus);
@@ -255,9 +255,9 @@ void startMess(void *dummy)
 	initMeasurement();
 	// write header
 	if(cont_mode)
-		j = sprintf_s(header, 260, " Continuous mode - Cancel with ESC or space- key                   ");
+		j = sprintf_s(header, 260, " Continuous mode - Cancel with ESC                                 ");
 	else
-		j = sprintf_s( header, 260, " One Shot mode - Cancel with ESC or space- key                    " );
+		j = sprintf_s( header, 260, " One Shot mode - Cancel with ESC                                  " );
 	TextOut(hMSDC, 100, LOY - 17, header, j);
 	RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
 #ifdef _DLL
@@ -276,9 +276,9 @@ void startMess(void *dummy)
 	if (CAMCNT == 2) IsrNumber *= 2;
 	while (IsrCounter < IsrNumber) {
 		if (cont_mode)
-			j = sprintf_s( header, 260, " Continuous mode - Cancel with ESC or space- key isr: %i of %i  ", IsrCounter + 1, IsrNumber );//+1 cheating );
+			j = sprintf_s( header, 260, " Continuous mode - Cancel with ESC               isr: %i of %i  ", IsrCounter + 1, IsrNumber );//+1 cheating );
 		else
-			j = sprintf_s( header, 260, " One Shot mode - Cancel with ESC or space- key isr: %i of %i  ", IsrCounter + 1, IsrNumber );//+1 cheating );
+			j = sprintf_s( header, 260, " One Shot mode - Cancel with ESC               isr: %i of %i  ", IsrCounter + 1, IsrNumber );//+1 cheating );
 		TextOut(hMSDC, 100, LOY - 17, header, j);
 		RedrawWindow(hMSWND, NULL, NULL, RDW_INVALIDATE);
 		if (GetAsyncKeyState( VK_ESCAPE )) break;

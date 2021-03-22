@@ -7,6 +7,7 @@ extern "C" {
 
 #include "Board_ll.h"
 #include "UIAbstractionLayer.h"
+#include "enum.h"
 
 #define DBGNOCAM FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
 #define DMA_BUFFER_SIZE_IN_SCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
@@ -23,7 +24,6 @@ extern "C" {
 #define INTR_EN TRUE		// enables INTR
 
 
-extern int newDLL;
 extern UINT16** userBuffer;
 extern UINT32 Nob;
 extern UINT32* Nospb;
@@ -44,19 +44,19 @@ void ErrMsgBoxOff( void ); // switch to suppress error message boxes
 void ErrorMsg( char ErrMsg[100] );
 void ValMsg( UINT64 val );
 void AboutDMARegs( UINT32 drv );
-void AboutTLPs( UINT32 drvno );
-void AboutS0( UINT32 drvno );
+es_status_codes AboutTLPs( UINT32 drvno );
+es_status_codes AboutS0( UINT32 drvno );
 //  same header file for ISA and PCI version
-BOOL CCDDrvInit( void );
+es_status_codes CCDDrvInit();
 void CCDDrvExit( UINT32 drvno );	// closes the driver
-BOOL InitBoard( UINT32 drvno );	// init the board and alloc mem, call only once !
+es_status_codes InitBoard( UINT32 drvno );	// init the board and alloc mem, call only once !
 void InitMeasurement(struct global_settings* settings);
 BOOL StartMess(UINT32 board_sel);
 BOOL SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno );
 BOOL SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno );
 BOOL SetDMAAddrTlp( UINT32 drvno );
 void SetManualTLP_vars( void );
-BOOL SetDMABufRegs( UINT32 drvno );
+es_status_codes SetDMABufRegs( UINT32 drvno );
 void SetDMAReset( UINT32 drvno );
 void SetDMAStart( UINT32 drvno );
 ULONG GetScanindex( UINT32 drvno );
@@ -66,39 +66,37 @@ BOOL SetupPCIE_DMA( UINT32 drvno );
 void StartPCIE_DMAWrite( UINT32 drvno );
 void CleanupPCIE_DMA( UINT32 drvno );
 int GetNumofProcessors();
-BOOL SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay );
-BOOL SetBoardVars( UINT32 drvno );
-
-BOOL Use_ENFFW_protection( UINT32 drvno, BOOL USE_ENFFW_PROTECT );
-
+es_status_codes SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay );
+es_status_codes SetBoardVars( UINT32 drvno );
+es_status_codes Use_ENFFW_protection( UINT32 drvno, BOOL USE_ENFFW_PROTECT );
 // clear camera with reads
-void AboutDrv( UINT32 drvno );	// displays the version and board ID = test if board is there
+es_status_codes AboutDrv( UINT32 drvno );	// displays the version and board ID = test if board is there
 //	functions for managing controlbits in CtrlA register
-void LowSlope( UINT32 drvno );		//set input Trigger slope low
-void HighSlope( UINT32 drvno );		//set input Trigger slope high
-void BothSlope( UINT32 drvno );		//set trigger on both slopes 
-void NotBothSlope( UINT32 drvno );		//set trigger on both slopes off
-void OutTrigLow( UINT32 drvno );		//set output Trigger signal low
-void OutTrigHigh( UINT32 drvno );		//set output Trigger signal high
-void OutTrigPulse( UINT32 drvno, ULONG PulseWidth );	// pulses high output Trigger signal
-void WaitTrigger( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *EscapeKey );
+es_status_codes LowSlope( UINT32 drvno );		//set input Trigger slope low
+es_status_codes HighSlope( UINT32 drvno );		//set input Trigger slope high
+es_status_codes BothSlope( UINT32 drvno );		//set trigger on both slopes 
+es_status_codes NotBothSlope( UINT32 drvno );		//set trigger on both slopes off
+es_status_codes OutTrigLow( UINT32 drvno );		//set output Trigger signal low
+es_status_codes OutTrigHigh( UINT32 drvno );		//set output Trigger signal high
+es_status_codes OutTrigPulse( UINT32 drvno, ULONG PulseWidth );	// pulses high output Trigger signal
+es_status_codes WaitTrigger( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOOL *EscapeKey );
 // waits for trigger input or Key
-void CloseShutter(UINT32 drvno);	// set IFC=low
-void OpenShutter(UINT32 drvno);		// set IFC=high
+es_status_codes CloseShutter(UINT32 drvno);	// set IFC=low
+es_status_codes OpenShutter(UINT32 drvno);		// set IFC=high
 BOOL GetShutterState( UINT32 drvno );	//get the actual state
 void SetSDAT( UINT32 drvno, UINT32 tin100ns ); // delay after trigger in 100ns
 void ResetSDAT( UINT32 drvno ); // disable delay after trigger in S0+0x20
-void SetSEC( UINT32 drvno, UINT32 ecin100ns );
-void ResetSEC( UINT32 drvno );
+es_status_codes SetSEC( UINT32 drvno, UINT32 ecin100ns );
+es_status_codes ResetSEC( UINT32 drvno );
 void SetBDAT( UINT32 drvno, UINT32 tin100ns ); // delay after trigger in 100ns
 void ResetBDAT( UINT32 drvno ); // disable delay after trigger in S0+0x20
-void SetBEC( UINT32 drvno, UINT32 ecin100ns );
-void ResetBEC( UINT32 drvno );
-void SetTORReg( UINT32 drvno, BYTE fkt );
-void SetISPDA( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if PDA
-void SetISFFT( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if FFT
-void SetSensorType( UINT32 drvno, UINT8 sensor_type );
-void RsTOREG( UINT32 drvno );					//reset the TOREG - should be called before SetISPDA or SetISFFT
+es_status_codes SetBEC( UINT32 drvno, UINT32 ecin100ns );
+es_status_codes ResetBEC( UINT32 drvno );
+es_status_codes SetTORReg( UINT32 drvno, BYTE fkt );
+es_status_codes SetISPDA( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if PDA
+es_status_codes SetISFFT( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if FFT
+es_status_codes SetSensorType( UINT32 drvno, UINT8 sensor_type );
+es_status_codes RsTOREG( UINT32 drvno );					//reset the TOREG - should be called before SetISPDA or SetISFFT
 // FIFO functions
 void initReadFFLoop( UINT32 drv );
 int waitForBlockTrigger( UINT32 board_sel );
@@ -107,21 +105,19 @@ void ReadFFLoop( UINT32 board_sel );
 void countBlocksByHardware( UINT32 drvno );
 unsigned int __stdcall ReadFFLoopThread( void *parg ); //jungo dma
 //start<0 is in the past, stop>0 is in the future, relative to call of this function
-BOOL BlockTrig( UINT32 drv, UINT8 btrig_ch ); //read state of trigger in signals during thread loop
+es_status_codes readBlockTriggerState( UINT32 drv, UINT8 btrig_ch, BOOL* state); //read state of trigger in signals during thread loop
 void StartSTimer( UINT32 drvno );	//starts 28bit timer of PCI board
-void StopSTimer( UINT32 drvno );					// stop timer
-BOOL SetSTimer( UINT32 drvno, UINT32 stime_in_microseconds );
-BOOL SetBTimer( UINT32 drvno, UINT32 btime_in_microseconds );
-void SWTrig( UINT32 drvno );						//start a read to FIFO by software
+es_status_codes StopSTimer( UINT32 drvno );					// stop timer
+es_status_codes SetSTimer( UINT32 drvno, UINT32 stime_in_microseconds );
+es_status_codes SetBTimer( UINT32 drvno, UINT32 btime_in_microseconds );
+es_status_codes SWTrig( UINT32 drvno );						//start a read to FIFO by software
 BOOL IsTimerOn( UINT32 drvno );
-BOOL FFValid( UINT32 drvno );						// TRUE if linecounter>0
+es_status_codes checkFifoFlags( UINT32 drvno, BOOL* valid );						// TRUE if linecounter>0
 BOOL FFFull( UINT32 drvno );
-BOOL FFOvl( UINT32 drvno );							//TRUE if FIFO overflow since last RSFifo call
-void RSFifo( UINT32 drvno );						// reset FIFO and linecounter
-void SetExtFFTrig( UINT32 drvno );					// read to FIFO is triggered by external input I of PCI board
-void SetIntFFTrig( UINT32 drvno );					// read to FIFO is triggered by Timer
-BOOL SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq );//setup hardware vclk generator
-BOOL SetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep);
+es_status_codes checkFifoOverflow(UINT32 drvno, BOOL* overflow);							//TRUE if FIFO overflow since last RSFifo call
+es_status_codes RSFifo( UINT32 drvno );						// reset FIFO and linecounter
+es_status_codes SetupVCLKReg( UINT32 drvno, ULONG lines, UCHAR vfreq );//setup hardware vclk generator
+es_status_codes SetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, BOOL keep);
 BOOL ThreadToPriClass( ULONG threadp, DWORD *priclass, DWORD *prilevel );
 // Class & Thread priority functions
 BOOL SetPriority( ULONG threadp );		//set priority threadp 1..31 / 8 = normal and keep old in global variable
@@ -133,52 +129,55 @@ UINT64 ustoTicks( ULONG us );			//calcs microsec to ticks
 UINT32 Tickstous( UINT64 tks );			//calcs ticks to microsec
 // Cooler& special functions
 BOOL TempGood( UINT32 drvno, UINT32 ch );						//high if temperature is reached
-void SetTemp( UINT32 drvno, UINT8 level );				//set temperature - 8 levels possible
+es_status_codes SetTemp( UINT32 drvno, UINT8 level );				//set temperature - 8 levels possible
 void RS_ScanCounter( UINT32 drv );
 void RS_BlockCounter( UINT32 drv );
 void RS_DMAAllCounter( UINT32 drv, BOOL hwstop );
 BOOL FindCam( UINT32 drv );
-void SetADGain( UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8 );//B!test
-void SendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature ); //function for sending 32 bits to DAC8568 in HS-FLCAM on PCB 2189-7(+)
-void DAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output ); //set output of DAC (PCB 2189-7)
+es_status_codes SetADGain( UINT32 drvno, UINT8 fkt, UINT8 g1, UINT8 g2, UINT8 g3, UINT8 g4, UINT8 g5, UINT8 g6, UINT8 g7, UINT8 g8 );//B!test
+es_status_codes SendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature ); //function for sending 32 bits to DAC8568 in HS-FLCAM on PCB 2189-7(+)
+es_status_codes DAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output ); //set output of DAC (PCB 2189-7)
 void FreeMemInfo( UINT64 *pmemory_all, UINT64 *pmemory_free );
 void GetRmsVal( UINT32 nos, UINT16 *TRMSVals, double *mwf, double *trms );
-void CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );
+es_status_codes CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );
 UINT64 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM );
 void* GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM );
 UINT8 WaitforTelapsed( LONGLONG musec );
-void InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA );
-void InitCamera3010( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT8 adc_mode, UINT16 custom_pattern, UINT16 led_on, UINT16 gain_high );
-void Cam3010_ADC_reset(UINT32 drvno);
-void Cam3010_ADC_setMode(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern);
-void InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain );
-void Cam3030_ADC_reset(UINT32 drvno);
-void Cam3030_ADC_twoWireModeEN(UINT32 drvno);
-void Cam3030_ADC_SetGain(UINT32 drvno, UINT8 gain);
-void Cam3030_ADC_RampOrPattern( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern);
-BOOL SetGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32 GPXData );
-BOOL ReadGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32* GPXData );
-void InitGPX( UINT32 drvno, UINT32 delay );
-void AboutGPX( UINT32 drvno );
+es_status_codes InitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED );
+es_status_codes InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA );
+es_status_codes InitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern);
+es_status_codes Cam3010_ADC_reset(UINT32 drvno);
+es_status_codes Cam3010_ADC_setMode(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern);
+es_status_codes InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain );
+es_status_codes Cam3030_ADC_reset(UINT32 drvno);
+es_status_codes Cam3030_ADC_twoWireModeEN(UINT32 drvno);
+es_status_codes Cam3030_ADC_SetGain(UINT32 drvno, UINT8 gain);
+es_status_codes Cam3030_ADC_RampOrPattern( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern);
+es_status_codes SetGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32 GPXData );
+es_status_codes ReadGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32* GPXData );
+es_status_codes InitGPX( UINT32 drvno, UINT32 delay );
+es_status_codes AboutGPX( UINT32 drvno );
 double CalcRamUsageInMB( UINT32 nos, UINT32 nob );
 double CalcMeasureTimeInSeconds( UINT32 drvno, UINT32 nos, double exposure_time_in_ms );
-BOOL SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq );
+es_status_codes SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq );
 BOOL SetPartialBinning( UINT32 drvno, UINT16 number_of_regions );
-BOOL ResetPartialBinning( UINT32 drvno );
+es_status_codes ResetPartialBinning( UINT32 drvno );
 void InitProDLL();
 BOOL isDmaSet( UINT32 drvno );
-BOOL allocateUserMemory( UINT drvno );
-BOOL isMeasureOn( UINT32 drvno );
-BOOL isBlockOn( UINT32 drvno );
-void waitForMeasureReady( UINT32 drvno );
-void waitForBlockReady( UINT32 drvno );
+es_status_codes allocateUserMemory( UINT32 drvno );
+es_status_codes isMeasureOn( UINT32 drvno, BOOL* measureOn );
+es_status_codes isBlockOn( UINT32 drvno, BOOL* blockOn );
+es_status_codes waitForMeasureReady( UINT32 drvno );
+es_status_codes waitForBlockReady( UINT32 drvno );
 BOOL setBlockOn( UINT32 drvno );
 BOOL resetBlockOn( UINT32 drvno );
-BOOL SetBTI( UINT32 drvno, UINT8 bti_mode );
-BOOL SetSTI( UINT32 drvno, UINT8 sti_mode );
+es_status_codes SetBTI( UINT32 drvno, UINT8 bti_mode );
+es_status_codes SetSTI( UINT32 drvno, UINT8 sti_mode );
 void ClearAllUserRegs( UINT32 drv );
-BOOL SetBSlope( UINT32 drvno, UINT32 slope );
-BOOL SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob );
+es_status_codes SetBSlope( UINT32 drvno, UINT32 slope );
+es_status_codes SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob );
+es_status_codes SetGain( UINT32 drvno, UINT16 gain_value );
+es_status_codes LedOff( UINT32 drvno, UINT8 LED_OFF );
 void ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length );
 void abortMeasurement( UINT32 drv );
 
