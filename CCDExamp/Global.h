@@ -8,12 +8,11 @@
 // for CCDExample and ESLSCDLL
 
 #define IDM_EXIT           100
-#define CAMERA_SYSTEM camera_system_3001  // use 1 to 3 like in enum above
+#define CAMERA_SYSTEM camera_system_3030  // use 1 to 3 like in enum above
 #define	DRV	1	//1 if only one interface board 
 // could be 2..4 for multiple boards
 #define CAMCNT 1		//number of sensors in the queue 
 #define _PIXEL 1088		//discrete numbers = act pixel+64 -> 4160 - 2112 - 1088 - 576 - 320 - 192
-#define CAMERA_SYSTEM camera_system_3030  // use 1 to 3 like in enum above
 #define ADC_MODE normal
 #define ADC_CUSTOM_PATTERN 0xFFFF
 //options for 3010
