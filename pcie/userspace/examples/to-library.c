@@ -8,7 +8,7 @@
 
 /* prepare registers for individual scan */
 int lscpcie_init_scan(dev_descr_t *dev, int trigger_mode, int number_of_scans,
-                      int dmas_per_interrupt)
+		int number_of_blocks, int dmas_per_interrupt)
 {
 	int result;
 	uint32_t hwd_req = (1<<IRQ_REG_HWDREQ_EN);
@@ -45,8 +45,8 @@ int lscpcie_init_scan(dev_descr_t *dev, int trigger_mode, int number_of_scans,
 	    = dmas_per_interrupt * dev->control->number_of_pixels
 		* sizeof(pixel_t);
 
-	dev->s0->NUMBER_OF_SCANS = number_of_scans;
-	dev->s0->DMA_BUF_SIZE_IN_SCANS = number_of_scans;
+	dev->s0->NUMBER_OF_SCANS = number_of_scans * number_of_blocks;
+	dev->s0->DMA_BUF_SIZE_IN_SCANS = number_of_scans * number_of_blocks * 2;
 
 	return result;
 }
@@ -54,23 +54,16 @@ int lscpcie_init_scan(dev_descr_t *dev, int trigger_mode, int number_of_scans,
 /* reset and start counters */
 int lscpcie_start_scan(dev_descr_t * dev)
 {
-	dev->s0->DMAS_PER_INTERRUPT |=
-	    1 << DMA_COUNTER_RESET;
-	memory_barrier();
-	dev->s0->DMAS_PER_INTERRUPT &=
-	    ~(1 << DMA_COUNTER_RESET);
+	pulse_bit(DMAS_PER_INTERRUPT, 1<<DMA_COUNTER_RESET);
 
 	// reset the internal block counter - is not BLOCKINDEX!
-	dev->s0->DMA_BUF_SIZE_IN_SCANS |=
-	    1 << BLOCK_COUNTER_RESET;
-	memory_barrier();
-	dev->s0->DMA_BUF_SIZE_IN_SCANS &=
-	    ~(1 << BLOCK_COUNTER_RESET);
+	pulse_bit(DMA_BUF_SIZE_IN_SCANS, 1<<BLOCK_COUNTER_RESET);
 
 	// reset block counter
-	dev->s0->BLOCK_INDEX |= 1 << BLOCK_INDEX_RESET;
-	memory_barrier();
-	dev->s0->BLOCK_INDEX &= ~(1 << BLOCK_INDEX_RESET);
+	pulse_bit(BLOCK_INDEX, 1<<BLOCK_INDEX_RESET);
+
+	// reset scan counter
+	pulse_bit(SCAN_INDEX, 1<<SCAN_INDEX_RESET);
 
 	// set Block end stops timer:
 	// when SCANINDEX reaches NOS, the timer is stopped by hardware.

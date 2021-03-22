@@ -83,7 +83,7 @@ int readout_init(int argc, char **argv, struct camera_info_struct *info) {
 	fprintf(stderr, "initialising registers\n");
 
 	result = lscpcie_init_scan(info->dev, info->trigger_mode, info->n_scans,
-				2);
+				info->n_blocks, 2);
 	if (result) {
 		fprintf(stderr, "error %d when initialising scan\n", result);
 		return result;
@@ -120,6 +120,11 @@ int fetch_data_mapped(dev_descr_t *dev, uint8_t *data, size_t max)
 {
 	int end_read = dev->control->write_pos, len;
 
+	/*
+	int i;
+	for (i = 0; i < dev->control->dma_buf_size; i++)
+        	printf("%d %d\n", i, *(dev->mapped_buffer + i));
+	*/
 	fprintf(stderr, "%d -> %d\n", dev->control->read_pos, end_read);
 	if (end_read > dev->control->read_pos)
 		/* new data in one chunk */
