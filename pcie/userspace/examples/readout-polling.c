@@ -47,13 +47,13 @@ int lscpcie_acquire_block_poll(dev_descr_t *dev, uint8_t *data, size_t n_scans) 
 		if (dev->control->read_pos == dev->control->write_pos)
 			continue;
 
-		result = fetch_data_mapped(dev, data, block_size - bytes_read);
+		result = fetch_data_mapped(dev, data + bytes_read,
+					block_size - bytes_read);
 		if (result < 0)
 			return result;
 
 		bytes_read += result;
-		fprintf(stderr, "got %d bytes of data, having now %d\n",
-			result, bytes_read);
+		fprintf(stderr, "got %d bytes of data\n", result);
 	} while (bytes_read < block_size);
 
         result = lscpcie_end_block(dev);
@@ -73,16 +73,24 @@ int main(int argc, char **argv)
 
 	do {
 		// wait for block trigger signal
-		if (info.dev->s0->CTRLA & (1 << CTRLA_TSTART))
+		if (!(info.dev->s0->CTRLA & (1 << CTRLA_TSTART)))
 			continue;
 
 		result = lscpcie_acquire_block_poll(info.dev,
-						(uint8_t *) info.data, 2);
-		if (result) {
+						(uint8_t *) info.data
+						+ bytes_read,
+						2);
+		if (result < 0) {
 			fprintf(stderr, "error %d when acquiring block\n",
 				result);
 			goto out;
 		}
+		bytes_read += result;
+		fprintf(stderr, "have now %d bytes\n", bytes_read);
+
+		lscpcie_dump_s0(info.dev);
+		lscpcie_dump_dma(info.dev);
+		lscpcie_dump_tlp(info.dev);
 	} while (bytes_read < info.mem_size);
 
 	fprintf(stderr, "finished measurement\n");

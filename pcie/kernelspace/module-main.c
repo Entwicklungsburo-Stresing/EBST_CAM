@@ -53,7 +53,7 @@ module_param_array(dma_num_scans, int, &n_dma_num_scans, S_IRUGO);
    stored spearately in the global variable module_debug since it belongs to
    the module as a whole and not to a specific driver instance.
  */
-int debug = DEBUG_BITS;
+int debug = 0;
 int debug_module = 0;
 
 module_param(debug, int, S_IRUGO);
