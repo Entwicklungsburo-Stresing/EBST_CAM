@@ -1,17 +1,25 @@
-examples: readout-polling readout-blocking-proc readout-blocking-filesystem
+CC = gcc
+CFLAGS = -Wall -g
 
-readout-polling: readout-polling.o common.o to-library.o ../lscpcie.o
-	gcc -Wall -g -o $@ $^
+programs = readout-polling readout-blocking-proc readout-blocking-filesystem
 
-readout-blocking-proc: readout-blocking-proc.o common.o to-library.o ../lscpcie.o
-	gcc -Wall -g -o $@ $^
+examples: $(programs)
+
+readout-polling: readout-polling.o common.o to-library.o
+	$(CC) $(CFLAGS) -o $@ $^ -llscpcie -L..
+
+readout-blocking-proc: readout-blocking-proc.o common.o to-library.o
+	$(CC) $(CFLAGS) -o $@ $^ -llscpcie -L..
 
 readout-blocking-filesystem: readout-blocking-filesystem.o common.o \
-  to-library.o ../lscpcie.o
-	gcc -Wall -g -o $@ $^
+  to-library.o
+	$(CC) $(CFLAGS) -o $@ $^ -llscpcie -L..
 
 %.o: %.c
-	gcc -Wall -g -D__user_space__ -I.. -c $< -o $@
+	$(CC) $(CFLAGS) -D__user_space__ -I.. -c $< -o $@
 
 clean:
 	rm -f *~ *.o
+
+distclean: clean
+	rm -f $(programs)

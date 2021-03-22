@@ -1,34 +1,21 @@
 #include "to-library.h"
 #include <stdio.h>
 
+/* commands which do not depend on the camera type but access the hardware by
+   register reads and writes */
 
 #define memory_barrier() asm volatile ("" : : : "memory")
 
-
-int lscpcie_init_device(unsigned int dev_no)
-{
-	int result;
-	dev_descr_t *dev = lscpcie_get_descriptor(dev_no);
-
-	result = set_dma_address_in_tlp(dev);
-	if (result < 0)
-		return result;
-
-	/* HAMAMATSU 7030-0906 	VFreq | 64 lines */
-	dev->s0->VCLKCTRL = (0x700000 << 8) | 0x80;
-
-	return 0;
-}
-
+/* prepare registers for individual scan */
 int lscpcie_init_scan(dev_descr_t *dev, int trigger_mode, int number_of_scans,
-		int dmas_per_interrupt)
+                      int dmas_per_interrupt)
 {
 	int result;
 	uint32_t hwd_req = (1<<IRQ_REG_HWDREQ_EN);
 
-	result = set_dma_buffer_registers(dev);
-	if (result < 0)
-		return result;
+	//result = set_dma_buffer_registers(dev);
+	//if (result < 0)
+	//	return result;
 
 	result = lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA,
 				    CAMERA_ADDRESS_TRIGGER_IN,
@@ -64,6 +51,7 @@ int lscpcie_init_scan(dev_descr_t *dev, int trigger_mode, int number_of_scans,
 	return result;
 }
 
+/* reset and start counters */
 int lscpcie_start_scan(dev_descr_t * dev)
 {
 	dev->s0->DMAS_PER_INTERRUPT |=
@@ -100,7 +88,7 @@ int lscpcie_start_scan(dev_descr_t * dev)
 	return 0;
 }
 
-int lscpcie_start_block_soft(dev_descr_t *dev) {
+int lscpcie_start_block(dev_descr_t *dev) {
 	// make pulse for blockindex counter
 	pulse_bit(PCIEFLAGS, 1<<PCIEFLAG_BLOCKTRIG);
 	// reset scan counter
