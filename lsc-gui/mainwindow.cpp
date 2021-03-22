@@ -20,9 +20,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButtonStart, SIGNAL(pressed()), this, SLOT(startPressed()));
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));
     connect(&lsc, SIGNAL(measureDone()), this, SLOT(loadCameraData()));
-
-    if(lsc.initDriver() < 1) showNoDriverFoundDialog();
-    else if(lsc.initPcieBoard() < 0) showPcieBoardError();
+    
+    es_status_codes status = lsc.initDriver();
+    if (status != es_no_error)
+        showNoDriverFoundDialog();
+    else 
+        status = lsc.initPcieBoard();
+    if (status != es_no_error)
+        showPcieBoardError();
     else
         loadSettings();
 }
