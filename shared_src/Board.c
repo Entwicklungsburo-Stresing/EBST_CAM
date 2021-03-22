@@ -507,9 +507,6 @@ BOOL SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno )
 	return TRUE;
 }
 
-
-
-
 BOOL SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno )
 {
 	UINT64 PhysAddrDMABuf;
