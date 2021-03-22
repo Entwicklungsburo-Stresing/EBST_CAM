@@ -396,6 +396,7 @@ typedef struct {
   uint32_t bytes_per_interrupt;
   volatile int32_t write_pos;
   int32_t read_pos;
+  int32_t irq_count;
 } lscpcie_control_t;
 
 extern const char reg_names[][16];

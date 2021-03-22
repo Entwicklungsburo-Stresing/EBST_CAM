@@ -82,8 +82,8 @@ int readout_init(int argc, char **argv, struct camera_info_struct *info) {
 
 	fprintf(stderr, "initialising registers\n");
 
-	result = lscpcie_init_scan(info->dev, info->trigger_mode, 2,
-				info->n_scans);
+	result = lscpcie_init_scan(info->dev, info->trigger_mode, info->n_scans,
+				2);
 	if (result) {
 		fprintf(stderr, "error %d when initialising scan\n", result);
 		return result;
