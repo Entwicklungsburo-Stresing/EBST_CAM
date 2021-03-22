@@ -5,6 +5,22 @@
 #include <errno.h>
 
 
+int init_7030(unsigned int dev_no)
+{
+	int result;
+	dev_descr_t *dev = lscpcie_get_descriptor(dev_no);
+
+	result = set_dma_address_in_tlp(dev);
+	if (result < 0)
+		return result;
+
+	/* HAMAMATSU 7030-0906 	VFreq | 64 lines */
+	dev->s0->VCLKCTRL = (0x700000 << 8) | 0x80;
+
+	return 0;
+}
+
+/* common tasks to prepare hardware and memory for readout */
 int readout_init(int argc, char **argv, struct camera_info_struct *info) {
 	int no_acquisition = 0, result;
 
@@ -58,7 +74,7 @@ int readout_init(int argc, char **argv, struct camera_info_struct *info) {
 
 	info->trigger_mode = xck;
 
-	result = lscpcie_init_device(0);
+	result = init_7030(0);
 	if (result < 0) {
 		fprintf(stderr, "error %d when initialising device\n", result);
 		return result;

@@ -22,7 +22,7 @@
 #include <errno.h>
 #include <stdarg.h>
 
-#include "../kernelspace/local-config.h"
+#include "local-config.h"
 
 /*
 #define DMA_HW_BUFPARTS 2
@@ -347,7 +347,8 @@ int lscpcie_send_fiber(dev_descr_t *dev, uint8_t master_address,
   return 0;
 }
 
-int init_cam_control(dev_descr_t *dev, trigger_mode_t trigger_mode, uint16_t options) {
+int init_cam_control(dev_descr_t *dev, trigger_mode_t trigger_mode,
+		uint16_t options) {
   int result;
 
   result
@@ -423,6 +424,7 @@ int set_dma_address_in_tlp(dev_descr_t *dev) {
   return 0;
 }
 
+/*
 int set_dma_buffer_registers(dev_descr_t *dev) {
   // DMABufSizeInScans - use 1 block
   dev->s0->DMA_BUF_SIZE_IN_SCANS
@@ -434,14 +436,13 @@ int set_dma_buffer_registers(dev_descr_t *dev) {
     = dev->control->dma_num_scans
     * dev->control->number_of_pixels;
 
-  //>>>> could be done in driver at module load
   dev->s0->NUMBER_OF_SCANS = dev->control->dma_num_scans;
   dev->s0->CAM_CNT = dev->control->number_of_cameras;
-  //<<<< could be done in driver at module load
 
   return 0;
 }
-
+*/
+/*
 void dma_reset(dev_descr_t *dev) {
   dev->dma_reg->DCSR |= 0x01;
   memory_barrier();
@@ -454,11 +455,13 @@ void dma_start(dev_descr_t *dev) {
   dev->control->write_pos = 0;
   dev->dma_reg->DDMACR |= 0x01;
 }
+*/
 
 uint32_t get_scan_index(dev_descr_t *dev) {
   return dev->s0->SCAN_INDEX;
 }
 
+/*
 int lscpcie_setup_dma(dev_descr_t *dev) {
   int result;
 
@@ -476,14 +479,15 @@ int lscpcie_setup_dma(dev_descr_t *dev) {
   // start_camera
   return 0;
 }
-
+*/
+/*
 void start_pcie_dma_write(dev_descr_t *dev) {
   if (!HWDREQ_EN) {
     dma_reset(dev);
     dma_start(dev);
   }
 }
-
+*/
 // note: disabling interrupt is a kernel code job
 // as well as releasing the dma buffer
 // do it in stop_camera

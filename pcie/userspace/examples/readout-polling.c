@@ -36,7 +36,7 @@ int lscpcie_acquire_block_poll(dev_descr_t *dev, uint8_t *data, size_t n_scans) 
 		dev->control->number_of_pixels * dev->control->number_of_cameras
 		* sizeof(pixel_t) * n_scans;
 
-	result = lscpcie_start_block_soft(dev);
+	result = lscpcie_start_block(dev);
 	if (result < 0)
 		return result;
 
@@ -77,8 +77,7 @@ int main(int argc, char **argv)
 			continue;
 
 		result = lscpcie_acquire_block_poll(info.dev,
-						(uint8_t *) info.data,
-						2);
+						(uint8_t *) info.data, 2);
 		if (result) {
 			fprintf(stderr, "error %d when acquiring block\n",
 				result);
