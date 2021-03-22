@@ -20,6 +20,7 @@ along with Foobar.If not, see < http://www.gnu.org/licenses/>.
 Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 */
 #include "CCDExamp.h"
+#include "shared_src/enum.h"
 
 #define CONTROLS_POSITION_Y 330
 #define SAMPLE_POSITION_X 50
@@ -51,7 +52,8 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		return FALSE;
 
 	//make init here, that CCDExamp can be used to read the act regs...
-	if (!SetBoardVars( choosen_board ))
+	es_status_codes status = SetBoardVars(choosen_board);
+	if (status != es_no_error)
 	{
 		ErrorMsg( "Error in SetBoardVars" );
 		return FALSE;
@@ -107,23 +109,28 @@ BOOL InitApplication( HINSTANCE hInstance )
 		return (FALSE);
 	};
 #else
-	if (!CCDDrvInit())
+	es_status_codes status = CCDDrvInit();
+	if (status != es_no_error)
 	{
 		ErrorMsg( " Can't open CCD driver " );
 		return (FALSE);
 	};
 
-	if (!InitBoard( 1 ))
+	status = InitBoard(1);
+	if (status != es_no_error)
 	{
 		ErrorMsg( " Can't open first board " );
 		return (FALSE);
 	};
 	if (number_of_boards >= 2)
-		if (!InitBoard( 2 ))
+	{
+		status = InitBoard(2);
+		if (status != es_no_error)
 		{
-			ErrorMsg( " Can't open second board " );
+			ErrorMsg(" Can't open second board ");
 			return (FALSE);
 		}
+	}
 #endif
 	return TRUE;
 }
@@ -928,7 +935,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			//CleanupPCIE_DMA(choosen_board);
 			//StopRingReadThread();
 			StopSTimer( choosen_board );
-			SetIntFFTrig( choosen_board );//disables ext. Trig.
+			//SetIntFFTrig( choosen_board );//disables ext. Trig.
 			UpdateTxT();
 			break;
 		}
@@ -955,11 +962,11 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		if (number_of_boards >= 2)
 		{
 			StopSTimer( 2 );
-			SetIntFFTrig( 2 );//disables ext. Trig.
+			//SetIntFFTrig( 2 );//disables ext. Trig.
 			CCDDrvExit( 2 );
 		}
 		StopSTimer( 1 );
-		SetIntFFTrig( 1 );//disables ext. Trig.
+		//SetIntFFTrig( 1 );//disables ext. Trig.
 		//WDC_DriverClose();
 		CCDDrvExit( 1 );
 		//board 2
@@ -1320,11 +1327,13 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 				if (both_boards)
 					DLLSetMeasurementParameters( 2, nospb_input, nob_input );
 #else
-				if (!SetMeasurementParameters( choosen_board, nospb_input, nob_input ))
+				es_status_codes status = SetMeasurementParameters(choosen_board, nospb_input, nob_input);
+				if (status != es_no_error)
 					MessageBox( hMSWND, "Setting measurement parameters failed", "Error", MB_OK );
 				if (both_boards)
 				{
-					if (!SetMeasurementParameters( 2, nospb_input, nob_input ))
+					status = SetMeasurementParameters(2, nospb_input, nob_input);
+					if (status != es_no_error)
 						MessageBox( hMSWND, "Setting measurement parameters of second board failed", "Error", MB_OK );
 				}
 #endif
@@ -1364,7 +1373,8 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 #else
 				FreeMemInfo( &builtinram, &freeram );
 				freeram_old = freeram;
-				if (!SetMeasurementParameters( choosen_board, nospb_input, nob_input ))
+				es_status_codes status = SetMeasurementParameters(choosen_board, nospb_input, nob_input);
+				if (status != es_no_error)
 					MessageBox( hMSWND, "Setting measurement parameters failed", "Error", MB_OK );
 			}
 			FreeMemInfo( &builtinram, &freeram );

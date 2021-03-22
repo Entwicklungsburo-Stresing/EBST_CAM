@@ -1,3 +1,9 @@
+3.16.5
+ - general init routine common for all cameras replaces (InitCam3001 in labview)
+ - reduced InitCam3010 to cam specific parameters
+ - added LedOff and SetGain function inclduing vias for LabView
+ - removed old trigger config functions
+
 3.16.4
  - Function SetPartialBinning() must call WriteLongS0() before SetS0Bit()
 
