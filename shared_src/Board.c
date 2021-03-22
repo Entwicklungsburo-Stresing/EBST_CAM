@@ -485,7 +485,8 @@ BOOL SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno )
 	ULONG OldRegisterValues;
 	ULONG NewRegisterValues;
 	//read the old Register Values in the DMA Address Reg
-	if (!ReadLongDMA( drvno, &OldRegisterValues, Address ))
+	es_status_codes status = ReadLongDMA(drvno, &OldRegisterValues, Address);
+	if (status != es_no_error)
 	{
 		ErrLog( "ReadLong DMA Failed in SetDMAReg \n" );
 		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
@@ -497,7 +498,8 @@ BOOL SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno )
 
 	NewRegisterValues = Data | OldRegisterValues;
 	//write the data to the DMA controller
-	if (!WriteLongDMA( drvno, NewRegisterValues, Address ))
+	status = WriteLongDMA(drvno, NewRegisterValues, Address);
+	if (status != es_no_error)
 	{
 		ErrLog( "WriteLong DMA Failed in SetDMAReg \n" );
 		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
