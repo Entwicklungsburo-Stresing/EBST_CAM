@@ -15,6 +15,7 @@
 #include "lscpciej_lib.h"
 #include "shared_src/ESLSCDLL_pro.h"
 #include "shared_src/enum.h"
+#include "shared_src/es_status_codes.h"
 
 extern WDC_DEVICE_HANDLE* hDev;
 

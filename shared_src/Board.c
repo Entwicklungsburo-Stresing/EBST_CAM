@@ -164,7 +164,9 @@ void AboutDMARegs( UINT32 drv )
  * \brief
  * 
  * \param drvno PCIe board identifier.
- * \return 
+ * \return es_status_codes
+ * 		- es_no_error
+ *		- es_register_read_failed
  */
 es_status_codes AboutTLPs( UINT32 drvno )
 {
@@ -218,7 +220,9 @@ es_status_codes AboutTLPs( UINT32 drvno )
  * \brief Read registers of space0. Space0 are the control registers of the PCIe board.
  *
  * \param drvno PCIe board identifier
- * \return none
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_register_read_failed
  */
 es_status_codes AboutS0( UINT32 drvno )
 {
@@ -1195,16 +1199,22 @@ es_status_codes allocateUserMemory( UINT32 drvno )
 }
 
 /**
-\brief Clears DAT and EC.
-\param drv PCIe board identifier.
-*/
-void ClearAllUserRegs(UINT32 drv)
+ * \brief Clears DAT and EC.
+ * 
+ * \param drv PCIe board identifier.
+ * \return es_status_codes 
+ *		- es_no_error
+ *		- es_register_write_failed
+ */
+es_status_codes ClearAllUserRegs(UINT32 drv)
 {
-	WriteLongS0( drv, 0, S0Addr_BDAT );
-	WriteLongS0( drv, 0, S0Addr_BEC );
-	WriteLongS0( drv, 0, S0Addr_SDAT );
-	WriteLongS0( drv, 0, S0Addr_SEC );
-	return;
+	es_status_codes status = WriteLongS0( drv, 0, S0Addr_BDAT );
+	if (status != es_no_error) return status;
+	status = WriteLongS0( drv, 0, S0Addr_BEC );
+	if (status != es_no_error) return status;
+	status = WriteLongS0( drv, 0, S0Addr_SDAT );
+	if (status != es_no_error) return status;
+	return WriteLongS0( drv, 0, S0Addr_SEC );
 } //ClearAllUserRegs
 
 

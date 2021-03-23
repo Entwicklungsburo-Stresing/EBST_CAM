@@ -5,7 +5,6 @@
 
 #include "Board_ll.h"
 #include "UIAbstractionLayer.h"
-#include "enum.h"
 
 #define DBGNOCAM FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
 #define DMA_BUFFER_SIZE_IN_SCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
@@ -187,7 +186,7 @@ BOOL setBlockOn( UINT32 drvno );
 BOOL resetBlockOn( UINT32 drvno );
 es_status_codes SetBTI( UINT32 drvno, UINT8 bti_mode );
 es_status_codes SetSTI( UINT32 drvno, UINT8 sti_mode );
-void ClearAllUserRegs( UINT32 drv );
+es_status_codes ClearAllUserRegs( UINT32 drv );
 es_status_codes SetBSlope( UINT32 drvno, UINT32 slope );
 es_status_codes SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob );
 es_status_codes SetGain( UINT32 drvno, UINT16 gain_value );

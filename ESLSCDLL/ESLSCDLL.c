@@ -321,7 +321,7 @@ DllAccess es_status_codes DLLSWTrig( UINT32 drvno )
 /**
 \copydoc checkFifoFlags
 */
-DllAccess es_status_codes DLLFFValid(UINT32 drvno, BOOL* valid)
+DllAccess es_status_codes DLLFFValid(UINT32 drvno, UINT8* valid)
 {
 	return checkFifoFlags( drvno, valid );
 }
@@ -348,7 +348,7 @@ DllAccess void DLLSetIntTrig( UINT32 drvno )
 /**
  * \copydoc checkFifoOverflow
  */
-DllAccess es_status_codes DLLFFOvl(UINT32 drvno, BOOL* overflow)
+DllAccess es_status_codes DLLFFOvl(UINT32 drvno, UINT8* overflow)
 {
 	return checkFifoOverflow(drvno, overflow);
 }
@@ -744,7 +744,7 @@ DllAccess es_status_codes DLLSetSTI( UINT32 drvno, UINT8 sti_mode )
 /**
 \copydoc ClearAllUserRegs
 */
-DllAccess void DLLClearAllUserRegs( UINT32 drv )
+DllAccess es_status_codes DLLClearAllUserRegs( UINT32 drv )
 {
 	return ClearAllUserRegs( drv );
 }
@@ -805,4 +805,14 @@ DllAccess void DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEve
 	blockStartLVEvent = *blockStartEvent;
 	blockDoneLVEvent = *blockDoneEvent;
 	return;
+}
+
+DllAccess CStr DLLConvertErrorCodeToMsg(es_status_codes status)
+{
+	return ConvertErrorCodeToMsg(status);
+}
+
+DllAccess es_status_codes DLLClearAllUserRegs(UINT32 drvno)
+{
+	return ClearAllUserRegs(drvno);
 }

@@ -97,14 +97,15 @@ es_status_codes ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 
 /**
  * @brief Read long (32 bit) from runtime register of PCIe board.
- 
+ *  
  * This function reads the memory mapped data , not the I/O Data. Reads data from PCIe conf space.
  * 
  * @param drvno board number (=1 if one PCI board)
  * @param DWData pointer to where data is stored
  * @param PortOff offset of register (count in bytes)
- * @return es_status_codes
-	- 
+ * @return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
  */
 es_status_codes ReadLongIOPort( UINT32 drvno, UINT32 *DWData, ULONG PortOff )
 {
@@ -117,9 +118,9 @@ es_status_codes ReadLongIOPort( UINT32 drvno, UINT32 *DWData, ULONG PortOff )
 		WDC_Err( "ReadLongIOPort in address 0x%x failed\n", PortOff );
 		//old message...i kept it because i dont know what it does
 		ErrorMsg( "Read IORunReg failed" );
-		return FALSE;
+		return es_register_read_failed;
 	}
-	return TRUE;
+	return es_no_error;
 };  // ReadLongIOPort
 
 /**
