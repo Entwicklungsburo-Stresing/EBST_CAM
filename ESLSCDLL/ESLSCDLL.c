@@ -811,8 +811,3 @@ DllAccess CStr DLLConvertErrorCodeToMsg(es_status_codes status)
 {
 	return ConvertErrorCodeToMsg(status);
 }
-
-DllAccess es_status_codes DLLClearAllUserRegs(UINT32 drvno)
-{
-	return ClearAllUserRegs(drvno);
-}
