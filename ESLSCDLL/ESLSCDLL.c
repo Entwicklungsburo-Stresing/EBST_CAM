@@ -90,7 +90,7 @@ DllAccess int DLLGetThreadCount()
 /**
 \copydoc ErrMsgBoxOn
 */
-DllAccess  void DLLErrMsgBoxOn( void )
+DllAccess void DLLErrMsgBoxOn()
 {
 	ErrMsgBoxOn();
 	return;
@@ -99,7 +99,7 @@ DllAccess  void DLLErrMsgBoxOn( void )
 /**
 \copydoc ErrMsgBoxOff
 */
-DllAccess  void DLLErrMsgBoxOff( void )
+DllAccess void DLLErrMsgBoxOff()
 {
 	ErrMsgBoxOff();
 	return;
@@ -121,12 +121,11 @@ DllAccess es_status_codes DLLCCDDrvInit( UINT8* _number_of_boards )
 }
 
 /**
-\copydoc CCDDrvExit
-*/
-DllAccess void DLLCCDDrvExit( UINT32 drvno )
+ * \copydoc CCDDrvExit
+ */
+DllAccess es_status_codes DLLCCDDrvExit( UINT32 drvno )
 {
-	CCDDrvExit( drvno );
-	return;
+	return CCDDrvExit( drvno );
 }
 
 /**
@@ -327,25 +326,6 @@ DllAccess es_status_codes DLLFFValid(UINT32 drvno, UINT8* valid)
 }
 
 /**
-\copydoc SetExtFFTrig
-
-DllAccess void DLLSetExtTrig( UINT32 drvno )
-{
-	SetExtFFTrig( drvno );
-	return;
-}
-*/
-/**
-\copydoc SetIntFFTrig
-
-DllAccess void DLLSetIntTrig( UINT32 drvno )
-{
-	SetIntFFTrig( drvno );// set hw register
-	return;
-}
-*/
-
-/**
  * \copydoc checkFifoOverflow
  */
 DllAccess es_status_codes DLLFFOvl(UINT32 drvno, UINT8* overflow)
@@ -425,10 +405,9 @@ DllAccess es_status_codes DLLSetMeasurementParameters( UINT32 drvno, UINT32 nos,
 /**
  * \copydoc ReturnFrame
  */
-DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length )
+DllAccess es_status_codes DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length )
 {
-	ReturnFrame( drv, curr_nos, curr_nob, curr_cam, pdest, length );
-	return;
+	return ReturnFrame( drv, curr_nos, curr_nob, curr_cam, pdest, length );
 }
 
 /**
@@ -436,31 +415,41 @@ DllAccess void DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UIN
  * 
  * \param drv indentifier of PCIe card
  * \param pdest address where data is written, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( UINT16 )
- * \return void
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_parameter_out_of_range
  */
-DllAccess void DLLCopyAllData( UINT32 drv, UINT16 *pdest )
+DllAccess es_status_codes DLLCopyAllData( UINT32 drv, UINT16 *pdest )
 {
-	void* pframe = GetAddressOfPixel( drv, 0, 0, 0, 0 );
+	void* pframe;
+	es_status_codes status = GetAddressOfPixel(drv, 0, 0, 0, 0, pframe);
+	if (status != es_no_error) return status;
 	memcpy( pdest, pframe, (UINT64)(*Nospb) * (UINT64)Nob * (UINT64)aCAMCNT[drv] * (UINT64)aPIXEL[drv] * sizeof( UINT16 ) );  // length in bytes
-	return;
+	return status;
 }
 
 /**
  * \brief Copies one block of pixel data to pdest
+ * 
  * \param drv indentifier of PCIe card
  * \param block Selects which block to copy.
  * \param pdest address where data is written, should be a buffer with size: nos * camcnt * pixel * sizeof( UINT16 )
- * \return void
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_parameter_out_of_range
  */
-DllAccess void DLLCopyOneBlock( UINT32 drv, UINT16 block, UINT16 *pdest )
+DllAccess es_status_codes DLLCopyOneBlock( UINT32 drv, UINT16 block, UINT16 *pdest )
 {
-	void* pframe = GetAddressOfPixel( drv, 0, 0, block, 0 );
+	void* pframe;
+	es_status_codes status = GetAddressOfPixel( drv, 0, 0, block, 0, pframe);
+	if (status != es_no_error) return status;
 	memcpy( pdest, pframe, (UINT64)(*Nospb) * (UINT64)aCAMCNT[drv] * (UINT64)aPIXEL[drv] * sizeof( UINT16 ) );  // length in bytes
-	return;
+	return status;
 }
 
 /**
  * \brief Read nos lines from FIFO. Const burst loop with DMA initiated by hardware DREQ. Is called automatically for 2 boards.
+ * 
  * \param board_sel board number (=1 if one PCI board)
  * \return none
  */

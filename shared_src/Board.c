@@ -157,7 +157,7 @@ void AboutDMARegs( UINT32 drv )
 		}
 	}
 	if (MessageBox( hWnd, fn, " DMA Buf Regs ", MB_OK | MB_ICONEXCLAMATION ) == IDOK) {};
-
+	return;
 }
 
 /**
@@ -377,34 +377,44 @@ es_status_codes CCDDrvInit()
 }; //CCDDrvInit
 
 /**
-\brief Frees handle and memory -> exit driver.
-\param drvno board number (=1 if one PCI board)
-\return none
-*/
-void CCDDrvExit( UINT32 drvno )
+ * \brief Frees handle and memory -> exit driver.
+ * 
+ * \param drvno board number (=1 if one PCI board)
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_unlocking_dma_failed
+ */
+es_status_codes CCDDrvExit( UINT32 drvno )
 {
+	es_status_codes status = es_no_error;
 	WDC_Err( "Driver exit, drv: %u\n", drvno);
 	if (WDC_IntIsEnabled( hDev[drvno] ))
 	{
 		WDC_Err( "cleanup dma\n" );
-		CleanupPCIE_DMA( drvno );
+		status = CleanupPCIE_DMA( drvno );
+		if (status != es_no_error) return status;
 	}
 	WDC_DriverClose();
 	WDC_PciDeviceClose( hDev[drvno] );
 	WDC_Err( "Driver closed and PciDeviceClosed \n" );
 	//if (ahCCDDRV[drvno]!=INVALID_HANDLE_VALUE)
 	//CloseHandle(ahCCDDRV[drvno]);	   // close driver
+	return status;
 };
 
 /**
  * @brief Initializes PCIe board.
  * 
  * @param drvno PCIe board identifier.
- * @return es_status_codes 
-	- es_no_error
-	- es_invalid_driver_number
-	- es_getting_device_info_failed
-	- es_open_device_failed
+ * @return es_status_codes:
+ *		- es_no_error
+ * 		- es_invalid_driver_number
+ * 		- es_getting_device_info_failed
+ * 		- es_open_device_failed
+ *		- es_getting_dma_buffer_failed
+ * 		- es_register_read_failed
+ *		- es_register_write_failed
+ *		- es_enabling_interrupts_failed
  */
 es_status_codes InitBoard( UINT32 drvno )
 {
@@ -444,8 +454,6 @@ es_status_codes InitBoard( UINT32 drvno )
 		ErrorMsg( "driver closed.\n" );
 		return es_open_device_failed;
 	}
-
-
 	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
 	WDC_Err( "DRVInit hDev id % x, hDev pci slot %x, hDev pci bus %x, hDev pci function %x, hDevNumAddrSp %x \n"
 		, pDev->id, pDev->slot.dwSlot, pDev->slot.dwBus, pDev->slot.dwFunction, pDev->dwNumAddrSpaces );
@@ -468,9 +476,9 @@ es_status_codes InitBoard( UINT32 drvno )
 	WDC_Err("KPCALL: Version: %u \n", Data.dwVer);
 	*/
 	// allocate DMA buffer
-	if (!SetupPCIE_DMA( drvno )) ErrorMsg( "Error in SetupPCIE_DMA" );
-	return es_no_error;
-
+	es_status_codes status = SetupPCIE_DMA(drvno);
+	if (status != es_no_error) ErrorMsg( "Error in SetupPCIE_DMA" );
+	return status;
 };  // InitBoard
 
 //**************  new for PCIE   *******************************
@@ -482,9 +490,12 @@ es_status_codes InitBoard( UINT32 drvno )
  * \param Bitmask
  * \param Address
  * \param drvno PCIe board identifier.
- * \return 
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
  */
-BOOL SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno )
+es_status_codes SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno )
 {//the bitmask have "1" on the data dates like Bitmask: 1110 Data:1010 
 	ULONG OldRegisterValues;
 	ULONG NewRegisterValues;
@@ -492,27 +503,37 @@ BOOL SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno )
 	es_status_codes status = ReadLongDMA(drvno, &OldRegisterValues, Address);
 	if (status != es_no_error)
 	{
-		ErrLog( "ReadLong DMA Failed in SetDMAReg \n" );
-		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
-		return FALSE;
+		ErrLog("ReadLong DMA Failed in SetDMAReg \n");
+		WDC_Err("%s", LSCPCIEJ_GetLastErr());
+		return status;
 	}
 	//save the bits, which shall not changed
 	OldRegisterValues = OldRegisterValues & ~Bitmask; //delete the bits, which are "1" in the bitmask
 	Data = Data & Bitmask; //to make sure that there are no bits, where the bitmask isnt set
-
 	NewRegisterValues = Data | OldRegisterValues;
 	//write the data to the DMA controller
 	status = WriteLongDMA(drvno, NewRegisterValues, Address);
 	if (status != es_no_error)
 	{
-		ErrLog( "WriteLong DMA Failed in SetDMAReg \n" );
-		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
-		return FALSE;
+		ErrLog("WriteLong DMA Failed in SetDMAReg \n");
+		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 	}
-	return TRUE;
+	return status;
 }
 
-BOOL SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno )
+/**
+ * \brief
+ * 
+ * \param PhysAddrDMABuf64
+ * \param tlpSize
+ * \param no_tlps
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
+ */
+es_status_codes SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno )
 {
 	UINT64 PhysAddrDMABuf;
 	ULONG RegisterValues;
@@ -526,69 +547,63 @@ BOOL SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, U
 	WDC_Err("%s", LSCPCIEJ_GetLastErr());
 	return FALSE;
 	}*/
-
-
-
 	//WDMATLPA (Reg name): write the lower part (bit 02:31) of the DMA adress to the DMA controller
 	//WDC_Err("64 bit Address 0x%llx\n", PhysAddrDMABuf64);
 	RegisterValues = (ULONG)PhysAddrDMABuf64;
 	BitMask = 0xFFFFFFFC;
 	//WDC_Err("lower part of 64 bit Address 0x%x\n", RegisterValues);
-	if (!SetDMAReg( RegisterValues, BitMask, DmaAddr_WDMATLPA, drvno ))
+	es_status_codes status = SetDMAReg(RegisterValues, BitMask, DmaAddr_WDMATLPA, drvno);
+	if (status != es_no_error)
 	{
-		WDC_Err( "Set the lower part of the DMA Address failed" );
-		return FALSE;
+		WDC_Err("Set the lower part of the DMA Address failed");
+		return status;
 	}
-
-	//	ErrorMsg("vor Addr 1te SetDMAReg");  //hier gehts noch
-
 	//WDMATLPS: write the upper part (bit 32:39) of the address	
 	PhysAddrDMABuf = ((UINT64)PhysAddrDMABuf64 >> 32);
-
 	//WDC_Err("upper part of 64 bit Address 0x%x\n", PhysAddrDMABuf);
 	//PhysAddrDMABuf >> 32;	//shift to the upper part 
 	PhysAddrDMABuf = PhysAddrDMABuf << 24;		//shift to prepare for the Register
 	BitMask = 0xFF081FFF;
 	RegisterValues = (ULONG)PhysAddrDMABuf;
 	RegisterValues |= tlpSize;
-
 	//64bit address enable
 	if (DMA_64BIT_EN)
-	{
 		RegisterValues |= wr_addr_64bit_en;
-	}
-
-	if (!SetDMAReg( RegisterValues, BitMask, DmaAddr_WDMATLPS, drvno ))
+	status = SetDMAReg(RegisterValues, BitMask, DmaAddr_WDMATLPS, drvno);
+	if (status != es_no_error)
 	{
-		WDC_Err( "Set the upper part of the DMA Address and the TLPsize failed" );
-		return FALSE;
+		WDC_Err("Set the upper part of the DMA Address and the TLPsize failed");
+		return status;
 	}
-
-
 	//WDMATLPC: Set the number of DMA transfer count
 	BitMask = 0xFFFF;
-	if (!SetDMAReg( no_tlps, BitMask, DmaAddr_WDMATLPC, drvno ))
-	{
-		WDC_Err( "Set the number of DMA transfer count failed" );
-		return FALSE;
-	}
-	return TRUE;
+	status = SetDMAReg(no_tlps, BitMask, DmaAddr_WDMATLPC, drvno);
+	if (status != es_no_error)
+		WDC_Err("Set the number of DMA transfer count failed");
+	return status;
 }//SetDMAAddrTlpRegs
 
-BOOL SetDMAAddrTlp( UINT32 drvno )
+/**
+ * \brief
+ * 
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
+ */
+es_status_codes SetDMAAddrTlp( UINT32 drvno )
 {
 	WD_DMA **ppDma = &dmaBufferInfos[drvno];
 	UINT64 PhysAddrDMABuf64;
 	ULONG BitMask;
 	//ULONG BData = 0; //-> ersetzt durch globale variable BDATA
 	int tlpmode = 0;
-
-
-	ReadLongIOPort( drvno, &BDATA, PCIeAddr_devCap );
+	es_status_codes status = ReadLongIOPort( drvno, &BDATA, PCIeAddr_devCap );
+	if (status != es_no_error) return status;
 	tlpmode = BDATA & 0x7;//0xE0 ;
 	//tlpmode = tlpmode >> 5;
 	if (_FORCETLPS128) tlpmode = 0;
-
 	BDATA &= 0xFFFFFF1F;//delete the old values
 	BDATA |= (0x2 << 12);//set maxreadrequestsize
 	switch (tlpmode)
@@ -616,22 +631,20 @@ BOOL SetDMAAddrTlp( UINT32 drvno )
 		break;
 	}
 	//ValMsg( BData ); //TESTPOINT
-
 	if (MANUAL_OVERRIDE_TLP)
 		SetManualTLP_vars();
-
-	WriteLongIOPort( drvno, BDATA, PCIeAddr_devStatCtrl );
+	status = WriteLongIOPort( drvno, BDATA, PCIeAddr_devStatCtrl );
+	if (status != es_no_error) return status;
 	PhysAddrDMABuf64 = (*ppDma)->Page[0].pPhysicalAddr;
-	if (!SetDMAAddrTlpRegs( PhysAddrDMABuf64, TLPSIZE, NO_TLPS, drvno ))  //here the tlp counts are set by global NO_TLPS via SetBoardVars
-		return FALSE;
-	return TRUE;
+	return SetDMAAddrTlpRegs(PhysAddrDMABuf64, TLPSIZE, NO_TLPS, drvno);
 }
 
-void SetManualTLP_vars(void)
+void SetManualTLP_vars()
 {
 	BDATA  |= 0x00; // sets max TLP size {0x00, 0x20, 0x40} <=> {128 B, 256 B, 512 B}
 	TLPSIZE = 0x20; // sets utilized TLP size in DWORDS (1 DWORD = 4 byte)
 	NO_TLPS = 0x11; // sets number of TLPs per scan/frame
+	return;
 }
 
 /**
@@ -661,37 +674,31 @@ es_status_codes SetDMABufRegs( UINT32 drvno )
 	return SetS0Reg(aCAMCNT[drvno], 0xffffffff, S0Addr_CAMCNT, drvno);
 }
 
-void SetDMAReset( UINT32 drvno )
+es_status_codes SetDMAReset( UINT32 drvno )
 {
 	ULONG BitMask;
 	ULONG RegisterValues;
 	BitMask = 0x1;
 	RegisterValues = 0x1;
-	if (!SetDMAReg( RegisterValues, BitMask, DmaAddr_DCSR, drvno ))
+	es_status_codes status = SetDMAReg(RegisterValues, BitMask, DmaAddr_DCSR, drvno);
+	if (status != es_no_error)
 	{
-		ErrorMsg( "switch on the Initiator Reset for the DMA failed" );
-		return;
+		ErrorMsg("switch on the Initiator Reset for the DMA failed");
+		return status;
 	}
 	// DCSR: reset the Iniator Reset 
 	RegisterValues = 0x0;
-	if (!SetDMAReg( RegisterValues, BitMask, DmaAddr_DCSR, drvno ))
-	{
-		ErrorMsg( "switch off the Initiator Reset for the DMA failed" );
-		return;
-	}
+	status = SetDMAReg(RegisterValues, BitMask, DmaAddr_DCSR, drvno);
+	if (status != es_no_error)
+		ErrorMsg("switch off the Initiator Reset for the DMA failed");
+	return status;
 }
 
-void SetDMAStart( UINT32 drvno )
+es_status_codes SetDMAStart( UINT32 drvno )
 {
-	ULONG BitMask;
-	ULONG RegisterValues;
-	BitMask = 0x1;
-	RegisterValues = 0x1;
-	if (!SetDMAReg( RegisterValues, BitMask, DmaAddr_DDMACR, drvno ))
-	{
-		ErrorMsg( "Set the Start Command for th DMA failed" );
-		return;
-	}
+	ULONG BitMask = 0x1;
+	ULONG RegisterValues = 0x1;
+	return SetDMAReg(RegisterValues, BitMask, DmaAddr_DDMACR, drvno);
 }
 
 //BOOL SendDMAInfoToKP(void){
@@ -767,7 +774,6 @@ void SetDMAStart( UINT32 drvno )
 //	return TRUE;
 //}
 
-
 ULONG GetScanindex( UINT32 drvno )
 {
 	UINT32 ldata = 0;
@@ -780,14 +786,20 @@ ULONG GetScanindex( UINT32 drvno )
 }
 
 /**
-\brief For the rest part of the buffer.
-*/
-void GetLastBufPart( UINT32 drvno )
+ * \brief For the rest part of the buffer.
+ * 
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ * 		- es_no_error
+ * 		- es_register_read_failed
+ */
+es_status_codes GetLastBufPart( UINT32 drvno )
 {
 	//get the rest if buffer is not multiple of 500 (BUFSIZEINSCANS/2)
 	//also if nos is < BUFSIZEINSCANS/2 - here: no intr occurs
 	UINT32 spi = 0;
-	ReadLongS0( drvno, &spi, S0Addr_DMAsPerIntr ); //get scans per intr
+	es_status_codes status = ReadLongS0( drvno, &spi, S0Addr_DMAsPerIntr ); //get scans per intr
+	if (status != es_no_error) return status;
 	//halfbufize is 500 with default values
 	UINT32 dmaHalfBufferSize = DMA_BUFFER_SIZE_IN_SCANS / DMA_BUFFER_PARTS;
 	UINT32 scans_all_cams = (*Nospb) * Nob * aCAMCNT[drvno];
@@ -805,7 +817,7 @@ void GetLastBufPart( UINT32 drvno )
 		dmaBufferReadPos += dmaBufferPartReadPos[drvno] * dmaBufferSizeInBytes / DMA_BUFFER_PARTS;
 		memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes );
 	}
-	return;
+	return status;
 }//GetLastBufPart
 
 /**
@@ -816,7 +828,8 @@ The INTR occurs every DMASPERINTR and copies this block of scans in lower/upper 
 void isr( UINT drvno, PVOID pData )
 {
 	WDC_Err( "*isr(): 0x%x\n", IsrCounter );
-	SetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//set INTRSR flag for TRIGO
+	es_status_codes status = SetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//set INTRSR flag for TRIGO
+	if (status != es_no_error) return;
 	//! be sure not to stop run before last isr is ready - or last part is truncated
 	//usually dmaBufferSizeInBytes = 1000scans 
 	//dmaBufferPartSizeInBytes = 1000 * pixel *2 -> /2 = 500 scans = 1088000 bytes
@@ -828,7 +841,7 @@ void isr( UINT drvno, PVOID pData )
 	{
 		WDC_Err( "numberOfInterrupts: 0x%x \n", numberOfInterrupts );
 		WDC_Err( "ISR Counter overflow: 0x%x \n", IsrCounter );
-		ResetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//reset INTRSR flag for TRIGO
+		status = ResetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//reset INTRSR flag for TRIGO
 		return;
 	}
 	WDC_Err("dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes);
@@ -841,7 +854,7 @@ void isr( UINT drvno, PVOID pData )
 	if (dmaBufferPartReadPos[drvno] >= DMA_BUFFER_PARTS)		//number of ISR per dmaBuf - 1
 		dmaBufferPartReadPos[drvno] = 0;						//dmaBufferPartReadPos is 0 or 1 for buffer devided in 2 parts
 	userBufferWritePos[drvno] += dmaBufferPartSizeInBytes / sizeof( UINT16 );
-	ResetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//reset INTRSR flag for TRIGO
+	status = ResetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//reset INTRSR flag for TRIGO
 	IsrCounter++;
 	return;
 }//DLLCALLCONV interrupt_handler
@@ -851,39 +864,38 @@ VOID DLLCALLCONV interrupt_handler1( PVOID pData ) { isr( 1, pData ); }
 VOID DLLCALLCONV interrupt_handler2( PVOID pData ) { isr( 2, pData ); }
 
 /**
-\brief Alloc DMA buffer - should only be called once.
-Gets address of DMASubBuf from driver and copy it later to our pDMABigBuf.
-*/
-BOOL SetupPCIE_DMA( UINT32 drvno )
+ * \brief Alloc DMA buffer - should only be called once.
+ * 
+ * Gets address of DMASubBuf from driver and copy it later to our pDMABigBuf.
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_getting_dma_buffer_failed
+ * 		- es_register_read_failed
+ *		- es_register_write_failed
+ *		- es_enabling_interrupts_failed
+ */
+es_status_codes SetupPCIE_DMA( UINT32 drvno )
 {
 	DWORD dwStatus;
-	PUSHORT tempBuf;
-	ULONG mask = 0;
-	ULONG data = 0;// 0x40000000;
 	WDC_Err( "entered SetupPCIE_DMA\n" );
-
-
 	//tempBuf = (PUSHORT)userBuffer[drvno] + 500 * sizeof(USHORT);
 	//WDC_Err("setupdma: bigbuf Pixel500: %i\n", *tempBuf);
-
 	dmaBufferSizeInBytes = DMA_BUFFER_SIZE_IN_SCANS * aPIXEL[drvno] * sizeof( UINT16 );
-
 	DWORD dwOptions = DMA_FROM_DEVICE | DMA_KERNEL_BUFFER_ALLOC;// | DMA_ALLOW_64BIT_ADDRESS;// DMA_ALLOW_CACHE ;
 	if (DMA_64BIT_EN)
 		dwOptions |= DMA_ALLOW_64BIT_ADDRESS;
-
 #if (DMA_SGBUF)
 	if (!pDMABigBuf)
 	{
 		ErrLog( "Failed: buf pointer not valid.\n" );
 		WDC_Err( "%s", "Failed: buf pointer not valid.\n" );
 		ErrorMsg( "DMA buffer addr is not valid" );
-		return FALSE;
+		return es_getting_dma_buffer_failed;
 	}
 	// pDMABigBuf is the big space which is passed to this function = input - must be global
 	dwStatus = WDC_DMASGBufLock( hDev[drvno], pDMABigBuf, dwOptions, dmaBufferSizeInBytes, &dmaBufferInfos ); //size in Bytes
 #endif
-
 #if (DMA_CONTIGBUF)		//usually we use contig buf: here we get the buffer address from labview.
 	// dmaBuffer is the space which is allocated by this function = output - must be global
 	dwStatus = WDC_DMAContigBufLock( hDev[drvno], &dmaBuffer[drvno], dwOptions, dmaBufferSizeInBytes, &dmaBufferInfos[drvno] ); //size in Bytes
@@ -892,21 +904,17 @@ BOOL SetupPCIE_DMA( UINT32 drvno )
 		ErrLog( "Failed locking a contiguous DMA buffer. Error 0x%lx - %s\n", dwStatus, Stat2Str( dwStatus ) );
 		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
 		ErrorMsg( "DMA buffer not sufficient" );
-		return FALSE;
+		return es_getting_dma_buffer_failed;
 	}
 	// data must be copied afterwards to user Buffer 
 #endif
-
 	userBufferWritePos[drvno] = userBuffer[drvno];	//reset destination buffer to start value
 	IsrCounter = 0;
 	WD_DMA **ppDma = &dmaBufferInfos[drvno];
-
 	//WDC_Err("RAM Adresses for DMA Buf: %x ,DMA Buf Size: %x\n", (*ppDma)->Page[0].pPhysicalAddr, (*ppDma)->dwBytes);
 	//WDC_Err("RAM Adresses for BigBufBase: %x ,DMA BufSizeinbytes: %x\n", userBuffer[drvno], dmaBufferSizeInBytes);
-
 	//	ErrorMsg("nach WDC_DMAContigBufLock");
 	//	AboutDMARegs();
-
 	//for KP
 	//if (HWDREQ_EN)
 	//if(!SendDMAInfoToKP())
@@ -922,23 +930,23 @@ BOOL SetupPCIE_DMA( UINT32 drvno )
 	//WDC_Err("sendDMAInfoToKP failed");
 	//
 	//
-
 	//set Init Regs
-	if (!SetDMAAddrTlp( drvno ))
+	es_status_codes status = SetDMAAddrTlp(drvno);
+	if (status != es_no_error)
 	{
 		ErrLog( "DMARegisterInit for TLP and Addr failed \n" );
 		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
 		ErrorMsg( "DMARegisterInit for TLP and Addr failed" );
-		return FALSE;
+		return status;
 	}
 	// DREQ: every XCK h->l starts DMA by hardware
 	//set hardware start des dma  via DREQ withe data = 0x4000000
-	mask = 0x40000000;
-	data = 0;// 0x40000000;
+	ULONG mask = 0x40000000;
+	ULONG data = 0;// 0x40000000;
 	if (HWDREQ_EN)
 		data = 0x40000000;
-	SetS0Reg( data, mask, S0Addr_IRQREG, drvno );
-
+	status = SetS0Reg( data, mask, S0Addr_IRQREG, drvno );
+	if (status != es_no_error) return status;
 	// Enable DMA interrupts (if not polling)
 	// INTR should copy DMA buffer to user buf: 
 	if (INTR_EN)
@@ -952,7 +960,7 @@ BOOL SetupPCIE_DMA( UINT32 drvno )
 				WDC_Err( "Failed to enable the Interrupts1. Error 0x%lx - %s\n",
 					dwStatus, Stat2Str( dwStatus ) );
 				//(ErrorMsg("Failed to enable the Interrupts");
-				return FALSE;
+				return es_enabling_interrupts_failed;
 			}
 			break;
 
@@ -963,13 +971,13 @@ BOOL SetupPCIE_DMA( UINT32 drvno )
 				WDC_Err( "Failed to enable the Interrupts2. Error 0x%lx - %s\n",
 					dwStatus, Stat2Str( dwStatus ) );
 				//ErrorMsg("Failed to enable the Interrupts");
-				return FALSE;
+				return es_enabling_interrupts_failed;
 			}
 			break;
 		}
 	}
 	WDC_Err( "finished SetupDMA\n" );
-	return TRUE;
+	return status;
 }//SetupPCIE_DMA
 
 /**
@@ -995,21 +1003,28 @@ void StartPCIE_DMAWrite( UINT32 drvno )
 	}
 }
 
-void CleanupPCIE_DMA( UINT32 drvno )
+/**
+ * \brief
+ * 
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_unlocking_dma_failed
+ */
+es_status_codes CleanupPCIE_DMA( UINT32 drvno )
 {
-	DWORD dwStatus;
 	/* Disable DMA interrupts */
 	WDC_IntDisable( hDev[drvno] );
 	/* Unlock and free the DMA buffer */
-	dwStatus = WDC_DMABufUnlock( dmaBufferInfos[drvno] );
+	DWORD dwStatus = WDC_DMABufUnlock( dmaBufferInfos[drvno] );
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		ErrLog( "Failed unlocking a contiguous DMA buffer. Error 0x%lx - %s\n",
-			dwStatus, Stat2Str( dwStatus ) );
+		ErrLog( "Failed unlocking a contiguous DMA buffer. Error 0x%lx - %s\n", dwStatus, Stat2Str( dwStatus ) );
 		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
-		return FALSE;
+		return es_unlocking_dma_failed;
 	}
 	WDC_Err( "Unlock DMABuf Successfull\n" );
+	return es_no_error;
 }
 
 int GetNumofProcessors()
@@ -1552,47 +1567,59 @@ BOOL GetShutterState( UINT32 drvno )
 }
 
 /**
-\brief Sets delay after trigger hardware register.
-\param drvno PCIe board identifier.
-\param datin100ns Time in 100 ns steps.
-\return none
-*/
-void SetSDAT( UINT32 drvno, UINT32 datin100ns )
+ * \brief Sets delay after trigger hardware register.
+ * 
+ * \param drvno PCIe board identifier.
+ * \param datin100ns Time in 100 ns steps.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ */
+es_status_codes SetSDAT( UINT32 drvno, UINT32 datin100ns )
 {
 	datin100ns |= 0x80000000; // enable delay
-	WriteLongS0( drvno, datin100ns, S0Addr_SDAT );
+	return WriteLongS0( drvno, datin100ns, S0Addr_SDAT );
 }; //SetDAT
 
 /**
-\brief Resets delay after trigger hardware register.
-\param drvno PCIe board identifier.
-\return none
-*/
-void ResetSDAT( UINT32 drvno )
+ * \brief Resets delay after trigger hardware register.
+ * 
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ */
+es_status_codes ResetSDAT( UINT32 drvno )
 {
-	WriteLongS0( drvno, 0, S0Addr_SDAT );
+	return WriteLongS0( drvno, 0, S0Addr_SDAT );
 }; //RSDAT
 
 /**
-\brief Sets delay after trigger hardware register.
-\param drvno PCIe board identifier.
-\param datin100ns Time in 100 ns steps.
-\return none
-*/
-void SetBDAT( UINT32 drvno, UINT32 datin100ns )
+ * \brief Sets delay after trigger hardware register.
+ * 
+ * \param drvno PCIe board identifier.
+ * \param datin100ns Time in 100 ns steps.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ */
+es_status_codes SetBDAT( UINT32 drvno, UINT32 datin100ns )
 {
 	datin100ns |= 0x80000000; // enable delay
-	WriteLongS0( drvno, datin100ns, S0Addr_BDAT );
+	return WriteLongS0( drvno, datin100ns, S0Addr_BDAT );
 }; //SetDAT
 
 /**
-\brief Resets delay after trigger hardware register.
-\param drvno PCIe board identifier.
-\return none
-*/
-void ResetBDAT( UINT32 drvno )
+ * \brief Resets delay after trigger hardware register.
+ * 
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ */
+es_status_codes ResetBDAT( UINT32 drvno )
 {
-	WriteLongS0( drvno, 0, S0Addr_BDAT );
+	return WriteLongS0( drvno, 0, S0Addr_BDAT );
 }; //RSDAT
 
 /**
@@ -1801,31 +1828,41 @@ es_status_codes RsTOREG( UINT32 drvno )
 	return WriteByteS0( drvno, 0, S0Addr_TOR + 3 );
 }
 
-void initReadFFLoop( UINT32 drv )
+/**
+ * \brief
+ * 
+ * \param drv PCIe board identifier
+ * \return es_status_codes
+ *		- es_no_error
+ * 		- es_register_read_failed
+ *		- es_camera_not_found
+ *		- es_register_write_failed
+ */
+es_status_codes initReadFFLoop( UINT32 drv )
 {
+	es_status_codes status = es_no_error;
 	//WDC_Err("entered DLLReadFFLoop of PCIEcard #%i\n", drv);
 	if (!DBGNOCAM)
 	{
 		//Check if Camera there
-		if (!FindCam( drv ))
+		status = FindCam(drv);
+		if (status != es_no_error)
 		{
 			ErrorMsg( "no Camera found" );
-			return;
+			return status;
 		}
 	}
 	//reset the internal block counter and ScanIndex before START
 	//set to hw stop of timer hwstop=TRUE
-	RS_DMAAllCounter( drv, TRUE );
+	status = RS_DMAAllCounter( drv, TRUE );
+	if (status != es_no_error) return status;
 	//reset intr copy buf function
 	dmaBufferPartReadPos[drv] = 0;
 	userBufferWritePos[drv] = userBuffer[drv]; // reset buffer index to base we got from InitDMA
 	WDC_Err( "RESET userBufferWritePos to %x\n", userBufferWritePos[drv] );
 	IsrCounter = 0;
-//	SetExtFFTrig( drv );
 	//set MeasureOn Bit
-	if(!setMeasureOn( drv ))
-		WDC_Err("Set measure on failed. drv: %u\n", drv);
-	return;
+	return setMeasureOn(drv);
 }
 
 /*
@@ -1885,18 +1922,29 @@ int checkForPressedKeys( )
 }
 
 /**
-\brief Const burst loop with DMA initiated by hardware DREQ. Read nos lines from FIFO. this is the main loop
-\param board_sel sets interface board
-\return none
-*/
-void ReadFFLoop( UINT32 board_sel )
+ * \brief Const burst loop with DMA initiated by hardware DREQ. Read nos lines from FIFO. this is the main loop
+ * 
+ * \param board_sel sets interface board
+ * \return es_status_codes:
+ *		- es_no_error
+ * 		- es_register_read_failed
+ *		- es_camera_not_found
+ *		- es_register_write_failed
+ */
+es_status_codes ReadFFLoop( UINT32 board_sel )
 {
+	es_status_codes status = es_no_error;
 	WDC_Err("Start ReadFFLoop with board_sel: %u\n", board_sel);
 	if (board_sel == 1 || board_sel == 3)
-		initReadFFLoop( 1 );
+	{
+		status = initReadFFLoop(1);
+		if (status != es_no_error) return status;
+	}
 	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
-		initReadFFLoop( 2 );
-
+	{
+		status = initReadFFLoop(2);
+		if (status != es_no_error) return status;
+	}
 	//WDC_Err("ReadFFLoop: Block Trigger is set to%d\n", blocktrigger);
 	//SetThreadPriority()
 	for (UINT32 blk_cnt = 0; blk_cnt < Nob; blk_cnt++)
@@ -1958,7 +2006,7 @@ void ReadFFLoop( UINT32 board_sel )
 		{
 			while (IsTimerOn( 1 ))
 			{
-				if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 1 ) | escape_readffloop) // check for kill ?
+				if (GetAsyncKeyState( VK_ESCAPE ) | (FindCam(1) != es_no_error) | escape_readffloop) // check for kill ?
 				{ //stop if ESC was pressed
 					abortMeasurement( 1 );
 					return;
@@ -1969,7 +2017,7 @@ void ReadFFLoop( UINT32 board_sel )
 		{
 			while (IsTimerOn( 2 ))
 			{
-				if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 2 ) | escape_readffloop) // check for kill ?
+				if (GetAsyncKeyState( VK_ESCAPE ) | (FindCam(2) != es_no_error) | escape_readffloop) // check for kill ?
 				{ //stop if ESC was pressed
 					abortMeasurement( 2 );
 					return;
@@ -1985,7 +2033,7 @@ void ReadFFLoop( UINT32 board_sel )
 
 				if (!return_flag_1)
 				{
-					if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 1 ) | escape_readffloop) // check for kill ?
+					if (GetAsyncKeyState( VK_ESCAPE ) | (FindCam(1) != es_no_error) | escape_readffloop) // check for kill ?
 					{ //stop if ESC was pressed
 						abortMeasurement( 1 );
 						return_flag_1 = TRUE;
@@ -1993,7 +2041,7 @@ void ReadFFLoop( UINT32 board_sel )
 				}
 				if (!return_flag_2)
 				{
-					if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 2 ) | escape_readffloop) // check for kill ?
+					if (GetAsyncKeyState( VK_ESCAPE ) | (FindCam(2) != es_no_error) | escape_readffloop) // check for kill ?
 					{ //stop if ESC was pressed
 						abortMeasurement( 2 );
 						return_flag_2 = TRUE;
@@ -2677,89 +2725,115 @@ es_status_codes SetTemp( UINT32 drvno, UINT8 level )
 
 // *****   new HS CAM stuff
 /**
-\brief RS scan counter. Is read only - but highest bit=reset.
-*/
-void RS_ScanCounter( UINT32 drv )
+ * \brief RS scan counter. Is read only - but highest bit=reset.
+ * 
+ * \param drv PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		
+ */
+es_status_codes RS_ScanCounter( UINT32 drv )
 {
-	UINT32 dwdata = 0;
-	dwdata = 0x80000000; //set
-	WriteLongS0( drv, dwdata, S0Addr_ScanIndex );
+	UINT32 dwdata = 0x80000000; //set
+	es_status_codes status = WriteLongS0( drv, dwdata, S0Addr_ScanIndex );
+	if (status != es_no_error) return status;
 	dwdata &= 0x7fffffff; //reset
-	WriteLongS0( drv, dwdata, S0Addr_ScanIndex );
+	return WriteLongS0( drv, dwdata, S0Addr_ScanIndex );
 }//RS_ScanCounter
 
 /**
-\brief Iis read only - but highest bit=reset.
+ * \brief Iis read only - but highest bit=reset.
+ * 
+ * \param drv PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
 */
-void RS_BlockCounter( UINT32 drv )
+es_status_codes RS_BlockCounter( UINT32 drv )
 {
-	UINT32 dwdata = 0;
-	dwdata = 0x80000000; //set
-	WriteLongS0( drv, dwdata, S0Addr_BLOCKINDEX );
+	UINT32 dwdata = 0x80000000; //set
+	es_status_codes status = WriteLongS0( drv, dwdata, S0Addr_BLOCKINDEX );
+	if (status != es_no_error) return status;
 	dwdata &= 0x7fffffff; //reset
-	WriteLongS0( drv, dwdata, S0Addr_BLOCKINDEX );
+	return WriteLongS0( drv, dwdata, S0Addr_BLOCKINDEX );
 }//RS_BlockCounter
 
 /**
-\brief Reset the internal intr collect counter.
-\param drv board number
-\param hwstop timer is stopped by hardware if nos is reached
-\return none
+ * \brief Reset the internal intr collect counter.
+ * 
+ * \param drv board number
+ * \param hwstop timer is stopped by hardware if nos is reached
+ * \return es_status_codes
+ *		- es_no_error
+ * 		- es_register_read_failed
+ *		- es_register_write_failed
 */
-void RS_DMAAllCounter( UINT32 drv, BOOL hwstop )
+es_status_codes RS_DMAAllCounter( UINT32 drv, BOOL hwstop )
 {
 	UINT32 dwdata32 = 0;
 	BYTE dwdata8 = 0;
 	//Problem: erste scan löst INTR aus
 	//aber ohne: erste Block ist 1 zu wenig!0, -> in hardware RS to 0x1
-
-	ReadLongS0( drv, &dwdata32, S0Addr_DMAsPerIntr );
+	es_status_codes status = ReadLongS0( drv, &dwdata32, S0Addr_DMAsPerIntr );
+	if (status != es_no_error) return status;
 	dwdata32 |= 0x80000000;
-	WriteLongS0( drv, dwdata32, S0Addr_DMAsPerIntr );
+	status = WriteLongS0( drv, dwdata32, S0Addr_DMAsPerIntr );
+	if (status != es_no_error) return status;
 	dwdata32 &= 0x7fffffff;
-	WriteLongS0( drv, dwdata32, S0Addr_DMAsPerIntr );
-
+	status = WriteLongS0( drv, dwdata32, S0Addr_DMAsPerIntr );
+	if (status != es_no_error) return status;
 	//reset the internal block counter - is not BLOCKINDEX!
-	ReadLongS0( drv, &dwdata32, S0Addr_DmaBufSizeInScans );
+	status = ReadLongS0( drv, &dwdata32, S0Addr_DmaBufSizeInScans );
+	if (status != es_no_error) return status;
 	dwdata32 |= 0x80000000;
-	WriteLongS0( drv, dwdata32, S0Addr_DmaBufSizeInScans );
+	status = WriteLongS0( drv, dwdata32, S0Addr_DmaBufSizeInScans );
+	if (status != es_no_error) return status;
 	dwdata32 &= 0x7fffffff;
-	WriteLongS0( drv, dwdata32, S0Addr_DmaBufSizeInScans );
-
+	status = WriteLongS0( drv, dwdata32, S0Addr_DmaBufSizeInScans );
+	if (status != es_no_error) return status;
 	//reset the scan counter
-	RS_ScanCounter( drv );
-	RS_BlockCounter( drv );
-
+	status = RS_ScanCounter( drv );
+	if (status != es_no_error) return status;
+	status = RS_BlockCounter( drv );
 	if (hwstop)
 	{
 		//set Block end stops timer:
 		//when SCANINDEX reaches NOS, the timer is stopped by hardware.
-		ReadByteS0( drv, &dwdata8, S0Addr_PCIEFLAGS );
+		status = ReadByteS0( drv, &dwdata8, S0Addr_PCIEFLAGS );
+		if (status != es_no_error) return status;
 		dwdata8 |= PCIEFLAGS_bit_ENRSTIMERHW; //set bit2 for
-		WriteByteS0( drv, dwdata8, S0Addr_PCIEFLAGS );
+		status = WriteByteS0( drv, dwdata8, S0Addr_PCIEFLAGS );
 	}
 	else
 	{
 		//stop only with write to RS_Timer Reg
-		ReadByteS0( drv, &dwdata8, S0Addr_PCIEFLAGS );
+		status = ReadByteS0( drv, &dwdata8, S0Addr_PCIEFLAGS );
+		if (status != es_no_error) return status;
 		dwdata8 &= 0xFB; //bit2
-		WriteByteS0( drv, dwdata8, S0Addr_PCIEFLAGS );
+		status = WriteByteS0( drv, dwdata8, S0Addr_PCIEFLAGS );
 	}
+	return status;
 }//RS_DMAAllCounter
 
 /**
-\brief Test if SFP module is there and fiber is linked up.
-\param drv PCIe board identifier.
-\return True if cam found.
-*/
-BOOL FindCam( UINT32 drv )
+ * \brief Test if SFP module is there and fiber is linked up.
+ * 
+ * \param drv PCIe board identifier.
+ * \return es_status_codes:
+ * 		- es_no_error
+ * 		- es_register_read_failed
+ *		- es_camera_not_found
+ */
+es_status_codes FindCam( UINT32 drv )
 {
 	UINT32 dwdata = 0;
-	ReadLongS0( drv, &dwdata, 0x40 );  // read in PCIEFLAGS register
+	es_status_codes status = ReadLongS0( drv, &dwdata, 0x40 );  // read in PCIEFLAGS register
+	if (status != es_no_error) return status;
 	if ((dwdata & 0x80000000) > 0)
 	{ //SFP error
 		ErrorMsg( "Fiber or Camera error" );
-		return FALSE;
+		return es_camera_not_found;
 	}
 	/*
 	if ((dwdata & 0x40000000) == 0)
@@ -2768,7 +2842,7 @@ BOOL FindCam( UINT32 drv )
 		return FALSE;
 	}
 	*/
-	return TRUE;
+	return status;
 }//FindCam
 
 /**
@@ -2999,7 +3073,8 @@ es_status_codes CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, U
 	//storing the values of one pix for the rms analysis
 	for (int scan = 0; scan < samples; scan++)
 	{
-		UINT64 TRMSpix_of_current_scan = GetIndexOfPixel( drvno, TRMS_pixel, scan+firstSample, 0, CAMpos );
+		UINT64 TRMSpix_of_current_scan = 0;
+		GetIndexOfPixel( drvno, TRMS_pixel, scan+firstSample, 0, CAMpos, &TRMSpix_of_current_scan);
 		TRMS_pixels[scan] = userBuffer[drvno][TRMSpix_of_current_scan];
 	}
 	//rms analysis
@@ -3008,17 +3083,22 @@ es_status_codes CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, U
 }//CalcTrms
 
 /**
-\brief Returns the index of a pixel located in userBuffer.
-\param drvno indentifier of PCIe card
-\param pixel position in one scan (0...(PIXEL-1))
-\param sample position in samples (0...(nos-1))
-\param block position in blocks (0...(nob-1))
-\param CAM position in camera count (0...(CAMCNT-1)
-\return Index of pixel. If a parameter is over its maximum the function returns 0.
-*/
-UINT64 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM )
+ * \brief Returns the index of a pixel located in userBuffer.
+ * 
+ * \param drvno indentifier of PCIe card
+ * \param pixel position in one scan (0...(PIXEL-1))
+ * \param sample position in samples (0...(nos-1))
+ * \param block position in blocks (0...(nob-1))
+ * \param CAM position in camera count (0...(CAMCNT-1)
+ * \param pIndex Pointer to index of pixel.
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+es_status_codes GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM, UINT64* pIndex )
 {
-	if (pixel >= aPIXEL[drvno] || sample >= *Nospb || block >= Nob || CAM >= aCAMCNT[drvno]) return 0;
+	if (pixel >= aPIXEL[drvno] || sample >= *Nospb || block >= Nob || CAM >= aCAMCNT[drvno])
+		return es_parameter_out_of_range;
 	//init index with base position of pixel
 	UINT64 index = pixel;
 	//position of index at CAM position
@@ -3027,20 +3107,30 @@ UINT64 GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block,
 	index += (UINT64)sample * (UINT64)aCAMCNT[drvno] * (UINT64)aPIXEL[drvno];
 	//position of index at block
 	index += (UINT64)block * (UINT64)(*Nospb) * (UINT64)aCAMCNT[drvno] * (UINT64)aPIXEL[drvno];
-	return index;
+	*pIndex = index;
+	return es_no_error;
 }
 
 /**
-\brief Returns the address of a pixel located in userBuffer.
-\param drvno indentifier of PCIe card
-\param pixel position in one scan (0...(PIXEL-1))
-\param sample position in samples (0...(nos-1))
-\param block position in blocks (0...(nob-1))
-\param CAM position in camera count (0...(CAMCNT-1))
-*/
-void* GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM )
+ * \brief Returns the address of a pixel located in userBuffer.
+ * 
+ * \param drvno indentifier of PCIe card
+ * \param pixel position in one scan (0...(PIXEL-1))
+ * \param sample position in samples (0...(nos-1))
+ * \param block position in blocks (0...(nob-1))
+ * \param CAM position in camera count (0...(CAMCNT-1))
+ * \param Pointer to get address
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+es_status_codes GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM, void* address )
 {
-	return &userBuffer[drvno][GetIndexOfPixel( drvno, pixel, sample, block, CAM )];
+	UINT64 index = 0;
+	es_status_codes status = GetIndexOfPixel(drvno, pixel, sample, block, CAM, &index);
+	if (status != es_no_error) return status;
+	address = &userBuffer[drvno][index];
+	return status;
 }
 
 /**
@@ -3059,7 +3149,7 @@ UINT8 WaitforTelapsed( LONGLONG musec )
 	// wait until time elapsed
 	while (destination_timestamp > ticksTimestamp())
 	{
-		if (GetAsyncKeyState( VK_ESCAPE ) | !FindCam( 1 ) | escape_readffloop) return 0; // check for kill ?
+		if (GetAsyncKeyState( VK_ESCAPE ) | (FindCam(1) != es_no_error) | escape_readffloop) return 0; // check for kill ?
 	}
 	//WDC_Err("Endzeit:  %lld\n", ticksTimestamp());
 	return 1;
@@ -3786,11 +3876,13 @@ BOOL resetBlockOn( UINT32 drvno )
 }
 
 /**
-\brief Sets setMeasureOn bit in PCIEFLAGS and notifies UI about it.
-\param drvno PCIe board identifier.
-\return TRUE when success, otherwise FALSE
-*/
-BOOL setMeasureOn( UINT32 drvno )
+ * \brief Sets setMeasureOn bit in PCIEFLAGS and notifies UI about it.
+ * 
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ */
+es_status_codes setMeasureOn( UINT32 drvno )
 {
 	notifyMeasureStart( drvno );
 	return SetS0Bit( PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS, drvno );
@@ -3919,18 +4011,23 @@ es_status_codes LedOff( UINT32 drvno, UINT8 LED_OFF )
 }
 
 /**
-\brief Copies one frame of pixel data to pdest.
-\param drv indentifier of PCIe card
-\param curr_nos position in samples (0...(nos-1))
-\param curr_nob position in blocks (0...(nob-1))
-\param curr_cam position in camera count (0...(CAMCNT-1))
-\param pdest address where data is written, should be buffer with size: length in pixel * sizeof( UINT16 )
-\param length lenght of frame in pixel, typically pixel count (1088)
-\return void
-*/
-void ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length )
+ * \brief Copies one frame of pixel data to pdest.
+ * 
+ * \param drv indentifier of PCIe card
+ * \param curr_nos position in samples (0...(nos-1))
+ * \param curr_nob position in blocks (0...(nob-1))
+ * \param curr_cam position in camera count (0...(CAMCNT-1))
+ * \param pdest address where data is written, should be buffer with size: length in pixel * sizeof( UINT16 )
+ * \param length lenght of frame in pixel, typically pixel count (1088)
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+es_status_codes ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length )
 {
-	void* pframe = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, curr_cam );
+	void* pframe;
+	es_status_codes status = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, curr_cam, pframe);
+	if (status != es_no_error) return status;
 	memcpy( pdest, pframe, length * sizeof( UINT16 ) );  // length in bytes
 	/*
 	WDC_Err( "RETURN FRAME: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, _PIXEL: %u, length: %u\n", drvno, curr_nos, curr_nob, curr_cam, _PIXEL, length );
@@ -3939,7 +4036,7 @@ void ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam,
 	WDC_Err("FRAME3: pix42 of ReturnFrame: %d \n", *((USHORT*)pdioden + 420));
 	WDC_Err("FRAME3: pix43 of ReturnFrame: %d \n", *((USHORT*)pdioden + 422));
 	*/
-	return;
+	return status;
 }
 
 /**

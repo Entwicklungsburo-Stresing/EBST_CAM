@@ -129,9 +129,9 @@ es_status_codes ReadLongIOPort( UINT32 drvno, UINT32 *DWData, ULONG PortOff )
  * @param drvno board number (=1 if one PCI board)
  * @param DWData pointer to where data is stored
  * @param PortOff offset of register from base address (count in bytes)
- * @return es_status_codes
-		- es_no_error
-		- es_register_read_failed
+ * @return es_status_codes:
+ * 		- es_no_error
+ * 		- es_register_read_failed
  */
 es_status_codes ReadLongS0( UINT32 drvno, UINT32 * DWData, ULONG PortOff )
 {
@@ -165,6 +165,7 @@ es_status_codes ReadLongDMA( UINT32 drvno, UINT32 * DWData, ULONG PortOff )
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		WDC_Err( "ReadLongDMA in address 0x%x failed\n", PortOff );
+		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		ErrorMsg( "Read long in DMA failed" );
 		return es_register_read_failed;
 	}
@@ -196,30 +197,27 @@ es_status_codes ReadByteS0( UINT32 drvno, BYTE *data, ULONG PortOff )
 };  // ReadByteS0
 
 /**
-\brief Write long (32 bit) to register in space0 of PCIe board.
-\param drvno board number (=1 if one PCI board)
-\param DataL long value to write
-\param PortOff offset from base address of register (count in bytes)
-\return ==0 if error, TRUE if success
-*/
-BOOL WriteLongIOPort( UINT32 drvno, UINT32 DataL, ULONG PortOff )
+ * \brief Write long (32 bit) to register in space0 of PCIe board.
+ * 
+ * \param drvno board number (=1 if one PCI board)
+ * \param DataL long value to write
+ * \param PortOff offset from base address of register (count in bytes)
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ */
+es_status_codes WriteLongIOPort( UINT32 drvno, UINT32 DataL, ULONG PortOff )
 {
 	volatile DWORD dwStatus = 0;
 	PUINT32 data = &DataL;
-
-	//WriteData.POff	= PortOff;
-	//WriteData.Data	= DWData;
-	//DataLength		= 8; 
-
 	dwStatus = WDC_PciWriteCfg( hDev[drvno], PortOff, data, sizeof( UINT32 ) );
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		WDC_Err( "WriteLongIOPort in address 0x%x with data: 0x%x failed\n", PortOff, DataL );
 		ErrorMsg( "WriteLongIOPort failed" );
-		return FALSE;
+		return es_register_write_failed;
 	}//else WDC_Err("I0PortWrite /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
-
-	return TRUE;
+	return es_no_error;
 };  // WriteLongIOPort
 
 /**
@@ -228,9 +226,9 @@ BOOL WriteLongIOPort( UINT32 drvno, UINT32 DataL, ULONG PortOff )
  * @param drvno board number (=1 if one PCI board)
  * @param DWData long value to write
  * @param PortOff offset of register from base address (count in bytes)
- * @return es_status_codes 
-	- es_no_error
-	- es_register_write_failed
+ * @return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
  */
 es_status_codes WriteLongS0( UINT32 drvno, UINT32 DWData, ULONG PortOff )
 {
@@ -265,6 +263,7 @@ es_status_codes WriteLongDMA( UINT32 drvno, UINT32 DWData, ULONG PortOff )
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		WDC_Err( "WriteLongDMA in address 0x%x with data: 0x%x failed\n", PortOff, DWData );
+		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		ErrorMsg( "WriteLongDMA failed" );
 		return es_register_write_failed;
 	}//else WDC_Err("DMAWrite /t address /t0x%x /t data: /t0x%x \n", PortOff, DWData);
