@@ -22,12 +22,15 @@ struct debug_option_struct {
 };
 
 const struct debug_option_struct debug_options[] = {
+  { "pci",        D_PCI        },
   { "start-stop", D_START_STOP },
   { "readout",    D_READOUT    },
   { "interrupt",  D_INTERRUPT  },
   { "buffers",    D_BUFFERS    },
   { "ioctl",      D_IOCTL      },
   { "module",     D_MODULE     },
+  { "mmap",       D_IOCTL      },
+  { "proc",       D_MODULE     },
   { "" }
 };
 
@@ -104,7 +107,7 @@ int main(int argc, char **argv) {
     return handle;
   }
 
-  dev_descr_t *dev = lscpcie_get_descriptor(device);
+  struct dev_descr *dev = lscpcie_get_descriptor(device);
   printf("setting debug flags 0x%04x in 0x%04x\n", debug_mode, debug_mask);
 
   if ((result = lscpcie_set_debug(dev, debug_mode, debug_mask)) < 0) {
