@@ -122,10 +122,8 @@
       <Path>$(OutDir)$(MSBuildProjectName).log</Path>
     </BuildLog>
     <PostBuildEvent>
-      <Command>
-      </Command>
-      <Message>
-      </Message>
+      <Command>copy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)CCDExamp\"</Command>
+      <Message>copy $(ProjectName) output to CCDExamp</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -159,7 +157,7 @@
     <PostBuildEvent>
       <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)shared_src\" 
 xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
-      <Message>copy $(ProjectName)</Message>
+      <Message>copy $(ProjectName) output to CCDExamp</Message>
     </PostBuildEvent>
     <BuildLog>
       <Path>$(OutDir)$(MSBuildProjectName).log</Path>
@@ -201,10 +199,8 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       <Path>$(OutDir)$(MSBuildProjectName).log</Path>
     </BuildLog>
     <PostBuildEvent>
-      <Command>
-      </Command>
-      <Message>
-      </Message>
+      <Command>copy "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)CCDExamp\"</Command>
+      <Message>copy $(ProjectName) output to CCDExamp</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -231,7 +227,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>LabVIEW 2015/cintools/labview.lib;shared_src/ESLSCDLL_pro.lib;Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);windowscodecs.lib</AdditionalDependencies>
+      <AdditionalDependencies>LabVIEW 2015/cintools/labview.lib;ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);windowscodecs.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <ManifestFile>$(OutDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
@@ -239,11 +235,12 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>
+      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)CCDExamp\"
+xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)$(Platform)\$(Configuration)\"
 xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>copy $(ProjectName)</Message>
+      <Message>copy $(ProjectName) output to CCDExamp</Message>
     </PostBuildEvent>
     <ResourceCompile>
       <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
@@ -255,6 +252,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
   <ItemGroup>
     <ClCompile Include="..\shared_src\Board.c" />
     <ClCompile Include="..\shared_src\Board_ll.c" />
+    <ClCompile Include="..\shared_src\es_status_codes.c" />
     <ClCompile Include="..\shared_src\lscpciej_lib.c" />
     <ClCompile Include="ESLSCDLL.c" />
     <ClCompile Include="UIAbstractionLayer.c" />
@@ -265,6 +263,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     <ClInclude Include="..\shared_src\CCDCTL.H" />
     <ClInclude Include="..\shared_src\enum.h" />
     <ClInclude Include="..\shared_src\struct.h" />
+    <ClInclude Include="..\shared_src\es_status_codes.h" />
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
     <ClInclude Include="..\shared_src\lscpciej_lib.h" />
     <ClInclude Include="ESLSCDLL.h" />
