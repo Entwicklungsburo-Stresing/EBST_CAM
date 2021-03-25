@@ -233,7 +233,7 @@ enum slope
 {
 	slope_pos = 0,
 	slope_neg = 1,
-	slope_both
+	slope_both = 2,
 };
 
 enum fft_mode
