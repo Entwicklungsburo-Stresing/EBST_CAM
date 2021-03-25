@@ -26,6 +26,9 @@
     <ClCompile Include="UIAbstractionLayer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\shared_src\es_status_codes.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ESLSCDLL.h">
@@ -53,6 +56,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\shared_src\struct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\es_status_codes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
