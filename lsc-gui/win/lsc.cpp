@@ -17,6 +17,8 @@ es_status_codes Lsc::initDriver()
 
 es_status_codes Lsc::initPcieBoard()
 {
+
+    SetGlobalVariables(1, 1, 576, 0);
     return InitBoard(1);
 }
 
@@ -35,7 +37,7 @@ void Lsc::startMeasurement(uint8_t boardsel)
 
 void Lsc::returnFrame(uint32_t board, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length)
 {
-
+    ReturnFrame(board, sample, block, camera, pdest, length);
     return;
 }
 

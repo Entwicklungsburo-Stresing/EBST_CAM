@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     es_status_codes status = lsc.initDriver();
     if (status != es_no_error)
         showNoDriverFoundDialog();
-    else 
+    else
         status = lsc.initPcieBoard();
     if (status != es_no_error)
         showPcieBoardError();
@@ -139,12 +139,12 @@ void MainWindow::startPressed()
     settings_struct.isIRSensor = 0;//TODO
 
     uint8_t boardsel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt();
-    if (boardsel == 1)
+    if (boardsel == 0)
     {
         settings_struct.drvno = 1;
         lsc.initMeasurement(&settings_struct);
     }
-    lsc.startMeasurement(boardsel);
+    lsc.startMeasurement(boardsel+1);
     return;
 }
 
