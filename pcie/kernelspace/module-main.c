@@ -1,5 +1,4 @@
-/*
- * module-main.c
+/* module-main.c
  *
  * Copyright 2020 Bernhard Lang, University of Geneva
  * Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
@@ -7,7 +6,6 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
- *
  */
 
 
@@ -38,14 +36,17 @@ static int module_status = 0;
 int num_pixels[MAX_BOARDS]    = { -1, -1, -1, -1, -1 };
 int num_cameras[MAX_BOARDS]   = { -1, -1, -1, -1, -1 };
 int dma_num_scans[MAX_BOARDS] = { -1, -1, -1, -1, -1 };
+int blocks_in_irq[MAX_BOARDS] = { -1, -1, -1, -1, -1 };
 
 static int n_num_pixels    = MAX_BOARDS;
 static int n_num_cameras   = MAX_BOARDS;
 static int n_dma_num_scans = MAX_BOARDS;
+static int n_blocks_in_irq = MAX_BOARDS;
 
 module_param_array(num_pixels,    int, &n_num_pixels,    S_IRUGO);
 module_param_array(num_cameras,   int, &n_num_cameras,   S_IRUGO);
 module_param_array(dma_num_scans, int, &n_dma_num_scans, S_IRUGO);
+module_param_array(blocks_in_irq, int, &n_blocks_in_irq, S_IRUGO);
 
 /* Each driver instance has its own debug flags which can be set individually
    through a ioctl calls. The global debug flag can be set at module load time
@@ -66,7 +67,7 @@ module_param(debug, int, S_IRUGO);
 
 /* initial values for newly created device instance */
 const struct dev_struct lscpcie_device_init = {
-  .status = D_MODULE,
+	.status = 0,
   .physical_pci_base = 0,
   .mapped_pci_base = 0,
   .read_available = ATOMIC_INIT(1),
@@ -174,7 +175,7 @@ void clean_up_lscpcie_module(void)
       if (dev->mapped_pci_base)
         iounmap(dev->mapped_pci_base);
     }
-  
+
   if (module_status & MOD_PCI_REGISTERED) {
     pci_unregister_driver(&pci_driver);
     module_status &= ~MOD_PCI_REGISTERED;

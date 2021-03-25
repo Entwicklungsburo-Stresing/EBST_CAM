@@ -1,11 +1,11 @@
 /* camera-debug.c
  *
- * Copyright (C) 2010-2020 Bernhard Lang, University of Geneva
- * 
+ * Copyright (C) 2010-2021 Bernhard Lang, University of Geneva
+ * Copyright 2020-2021 Entwicklungsbuero Stresing (http://www.stresing.de/)
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
- *
  */
 
 #include <stdlib.h>
@@ -104,9 +104,10 @@ int main(int argc, char **argv) {
     return handle;
   }
 
+  dev_descr_t *dev = lscpcie_get_descriptor(device);
   printf("setting debug flags 0x%04x in 0x%04x\n", debug_mode, debug_mask);
 
-  if ((result = lscpcie_set_debug(device, debug_mode, debug_mask)) < 0) {
+  if ((result = lscpcie_set_debug(dev, debug_mode, debug_mask)) < 0) {
     fprintf(stderr, "setting debug resulted in error %d\n", result);
     return -4;
   }

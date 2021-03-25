@@ -1,12 +1,11 @@
 /* lscpcie.c
  *
- * Copyright 2020 Bernhard Lang, University of Geneva
- * Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
+ * Copyright 2020-2021 Bernhard Lang, University of Geneva
+ * Copyright 2020-2021 Entwicklungsbuero Stresing (http://www.stresing.de/)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
- *
  */
 
 #include "lscpcie.h"
@@ -34,13 +33,13 @@
 
 static int error_reporting = 1;
 
-static const dev_descr_t init_dev_descr = {
+static const struct dev_descr init_dev_descr = {
 	.handle = -1,
 	.number_of_tlps = 0,
 	.dma_reg = 0
 };
 
-static dev_descr_t dev_descr[MAX_PCIE_BOARDS];
+static struct dev_descr dev_descr[MAX_PCIE_BOARDS];
 static int number_of_pcie_boards = -1;
 
 
@@ -59,7 +58,7 @@ void error_message(const char *format, ...)
 	va_end(ap);
 }
 
-dev_descr_t *lscpcie_get_descriptor(uint dev)
+struct dev_descr *lscpcie_get_descriptor(uint dev)
 {
 	return dev < number_of_pcie_boards ? dev_descr + dev : NULL;
 }
@@ -89,7 +88,7 @@ int lscpcie_driver_init(void)
 }
 
 /*Pixelsize with matching TLP Count (TLPC).
-  Pixelsize = TLPS * TLPC - 1*TLPS
+  Pixelsize = TLPS *TLPC - 1*TLPS
   (TLPS TLP size = 64)
   TLPC 0x Pixelsize
     1   64
@@ -143,7 +142,7 @@ int lscpcie_open(uint dev_no, uint16_t options)
 		return -ENODEV;
 	if (dev_descr[dev_no].handle >= 0)
 		return -EBUSY;
-	dev_descr_t *dev = &dev_descr[dev_no];
+	struct dev_descr *dev = &dev_descr[dev_no];
 
 	sprintf(name, "/dev/lscpcie%d", dev_no);
 	handle = open(name, O_RDWR);
@@ -275,7 +274,7 @@ int lscpcie_open(uint dev_no, uint16_t options)
 
 void lscpcie_close(uint dev_no)
 {
-	dev_descr_t *dev = lscpcie_get_descriptor(dev_no);
+	struct dev_descr *dev = lscpcie_get_descriptor(dev_no);
 	if (!dev)
 		return;
 
@@ -292,19 +291,19 @@ void lscpcie_close(uint dev_no)
 }
 
 // not yet implemented in driver
-int lscpcie_start(dev_descr_t * dev)
+int lscpcie_start(struct dev_descr *dev)
 {
 	//-->>set_dma_buffer_registers(dev
 	return ioctl(dev->handle, LSCPCIE_IOCTL_START);
 }
 
 // not yet implemented in driver
-int lscpcie_stop(dev_descr_t * dev)
+int lscpcie_stop(struct dev_descr *dev)
 {
 	return ioctl(dev->handle, LSCPCIE_IOCTL_STOP);
 }
 
-ssize_t lscpcie_readout(dev_descr_t * dev, uint16_t * buffer,
+ssize_t lscpcie_readout(struct dev_descr *dev, uint16_t * buffer,
 			size_t items_to_read)
 {
 	ssize_t result;
@@ -328,7 +327,7 @@ ssize_t lscpcie_readout(dev_descr_t * dev, uint16_t * buffer,
 	return bytes_read / 2;
 }
 
-int lscpcie_hardware_present(dev_descr_t * dev)
+int lscpcie_hardware_present(struct dev_descr *dev)
 {
 	int result, hwp;
 
@@ -337,7 +336,7 @@ int lscpcie_hardware_present(dev_descr_t * dev)
 	return result ? result : hwp;
 }
 
-int lscpcie_fifo_overflow(dev_descr_t * dev)
+int lscpcie_fifo_overflow(struct dev_descr *dev)
 {
 	int result, fo;
 
@@ -346,12 +345,12 @@ int lscpcie_fifo_overflow(dev_descr_t * dev)
 	return result ? result : fo;
 }
 
-int lscpcie_clear_fifo(dev_descr_t * dev)
+int lscpcie_clear_fifo(struct dev_descr *dev)
 {
 	return ioctl(dev->handle, LSCPCIE_IOCTL_CLEAR_FIFO);
 }
 
-size_t lscpcie_bytes_free(dev_descr_t * dev)
+size_t lscpcie_bytes_free(struct dev_descr *dev)
 {
 	int result, fb;
 
@@ -360,7 +359,7 @@ size_t lscpcie_bytes_free(dev_descr_t * dev)
 	return result ? result : fb;
 }
 
-size_t lscpcie_bytes_available(dev_descr_t * dev)
+size_t lscpcie_bytes_available(struct dev_descr *dev)
 {
 	int result, ba;
 
@@ -369,13 +368,13 @@ size_t lscpcie_bytes_available(dev_descr_t * dev)
 	return result ? result : ba;
 }
 
-int lscpcie_set_debug(dev_descr_t * dev, int flags, int mask)
+int lscpcie_set_debug(struct dev_descr *dev, int flags, int mask)
 {
 	return ioctl(dev->handle, LSCPCIE_IOCTL_SET_DEBUG,
 		     (mask << DEBUG_MASK_SHIFT) | flags);
 }
 
-int lscpcie_get_buffer_pointers(dev_descr_t * dev, uint64_t * pointers)
+int lscpcie_get_buffer_pointers(struct dev_descr *dev, uint64_t * pointers)
 {
 	return ioctl(dev->handle, LSCPCIE_IOCTL_BUFFER_POINTERS, pointers);
 }
@@ -385,7 +384,7 @@ int lscpcie_get_buffer_pointers(dev_descr_t * dev, uint64_t * pointers)
 /*                                 fiber link                                  */
 /*******************************************************************************/
 
-int lscpcie_send_fiber(dev_descr_t * dev, uint8_t master_address,
+int lscpcie_send_fiber(struct dev_descr *dev, uint8_t master_address,
 		       uint8_t register_address, uint16_t data)
 {
 	uint32_t reg_val =
@@ -404,7 +403,7 @@ int lscpcie_send_fiber(dev_descr_t * dev, uint8_t master_address,
 	return 0;
 }
 
-int init_cam_control(dev_descr_t * dev, trigger_mode_t trigger_mode,
+int init_cam_control(struct dev_descr *dev, trigger_mode_t trigger_mode,
 		     uint16_t options)
 {
 	int result;
@@ -434,7 +433,7 @@ int init_cam_control(dev_descr_t * dev, trigger_mode_t trigger_mode,
 /*                                    dma                                      */
 /*******************************************************************************/
 
-int set_dma_address_in_tlp(dev_descr_t * dev)
+int set_dma_address_in_tlp(struct dev_descr *dev)
 {
 	int result;
 	uint64_t val64;
@@ -498,7 +497,7 @@ int set_dma_address_in_tlp(dev_descr_t * dev)
 }
 
 /*
-int set_dma_buffer_registers(dev_descr_t *dev) {
+int set_dma_buffer_registers(struct dev_descr *dev) {
   // DMABufSizeInScans - use 1 block
   dev->s0->DMA_BUF_SIZE_IN_SCANS
     = dev->control->dma_num_scans;
@@ -507,7 +506,7 @@ int set_dma_buffer_registers(dev_descr_t *dev) {
   //aCAMCNT: double the INTR if 2 cams
   dev->s0->DMAS_PER_INTERRUPT
     = dev->control->dma_num_scans
-    * dev->control->number_of_pixels;
+    *dev->control->number_of_pixels;
 
   dev->s0->NUMBER_OF_SCANS = dev->control->dma_num_scans;
   dev->s0->CAM_CNT = dev->control->number_of_cameras;
@@ -516,27 +515,27 @@ int set_dma_buffer_registers(dev_descr_t *dev) {
 }
 */
 /*
-void dma_reset(dev_descr_t *dev) {
+void dma_reset(struct dev_descr *dev) {
   dev->dma_reg->DCSR |= 0x01;
   memory_barrier();
   dev->dma_reg->DCSR &= ~0x01;
 }
 
 
-void dma_start(dev_descr_t *dev) {
+void dma_start(struct dev_descr *dev) {
   dev->control->read_pos = 0;
   dev->control->write_pos = 0;
   dev->dma_reg->DDMACR |= 0x01;
 }
 */
 
-uint32_t get_scan_index(dev_descr_t * dev)
+uint32_t get_scan_index(struct dev_descr *dev)
 {
 	return dev->s0->SCAN_INDEX;
 }
 
 /*
-int lscpcie_setup_dma(dev_descr_t *dev) {
+int lscpcie_setup_dma(struct dev_descr *dev) {
   int result;
 
   // note: the dma buffer has to be allocated in kernel space
@@ -555,7 +554,7 @@ int lscpcie_setup_dma(dev_descr_t *dev) {
 }
 */
 /*
-void start_pcie_dma_write(dev_descr_t *dev) {
+void start_pcie_dma_write(struct dev_descr *dev) {
   if (!HWDREQ_EN) {
     dma_reset(dev);
     dma_start(dev);
@@ -572,7 +571,7 @@ void start_pcie_dma_write(dev_descr_t *dev) {
 /*                              register access                                */
 /*******************************************************************************/
 
-int lscpcie_read_config32(dev_descr_t * dev, uint16_t address,
+int lscpcie_read_config32(struct dev_descr *dev, uint16_t address,
 			  uint32_t * val)
 {
 	int result;
@@ -586,7 +585,7 @@ int lscpcie_read_config32(dev_descr_t * dev, uint16_t address,
 	return 0;
 }
 
-int lscpcie_write_config32(dev_descr_t * dev, uint16_t address,
+int lscpcie_write_config32(struct dev_descr *dev, uint16_t address,
 			   uint32_t val)
 {
 	reg_info_t reg = {.address = address,.value = val };
@@ -595,7 +594,8 @@ int lscpcie_write_config32(dev_descr_t * dev, uint16_t address,
 	return ioctl(dev->handle, LSCPCIE_IOCTL_SET_CONF, &reg);
 }
 
-int lscpcie_read_reg8(dev_descr_t * dev, uint16_t address, uint8_t * val)
+int lscpcie_read_reg8(struct dev_descr *dev, uint16_t address,
+		      uint8_t * val)
 {
 	int result;
 	reg_info_t reg = {.address = address };
@@ -608,7 +608,8 @@ int lscpcie_read_reg8(dev_descr_t * dev, uint16_t address, uint8_t * val)
 	return 0;
 }
 
-int lscpcie_read_reg16(dev_descr_t * dev, uint16_t address, uint16_t * val)
+int lscpcie_read_reg16(struct dev_descr *dev, uint16_t address,
+		       uint16_t * val)
 {
 	int result;
 	reg_info_t reg = {.address = address };
@@ -621,7 +622,8 @@ int lscpcie_read_reg16(dev_descr_t * dev, uint16_t address, uint16_t * val)
 	return 0;
 }
 
-int lscpcie_read_reg32(dev_descr_t * dev, uint16_t address, uint32_t * val)
+int lscpcie_read_reg32(struct dev_descr *dev, uint16_t address,
+		       uint32_t * val)
 {
 	int result;
 	reg_info_t reg = {.address = address };
@@ -634,7 +636,8 @@ int lscpcie_read_reg32(dev_descr_t * dev, uint16_t address, uint32_t * val)
 	return 0;
 }
 
-int lscpcie_write_reg8(dev_descr_t * dev, uint16_t address, uint8_t val)
+int lscpcie_write_reg8(struct dev_descr *dev, uint16_t address,
+		       uint8_t val)
 {
 	reg_info_t reg = {.address = address,.value = val };
 
@@ -642,7 +645,8 @@ int lscpcie_write_reg8(dev_descr_t * dev, uint16_t address, uint8_t val)
 	return ioctl(dev->handle, LSCPCIE_IOCTL_SET_REG8, &reg);
 }
 
-int lscpcie_write_reg16(dev_descr_t * dev, uint16_t address, uint16_t val)
+int lscpcie_write_reg16(struct dev_descr *dev, uint16_t address,
+			uint16_t val)
 {
 	reg_info_t reg = {.address = address,.value = val };
 
@@ -650,7 +654,8 @@ int lscpcie_write_reg16(dev_descr_t * dev, uint16_t address, uint16_t val)
 	return ioctl(dev->handle, LSCPCIE_IOCTL_SET_REG16, &reg);
 }
 
-int lscpcie_write_reg32(dev_descr_t * dev, uint16_t address, uint32_t val)
+int lscpcie_write_reg32(struct dev_descr *dev, uint16_t address,
+			uint32_t val)
 {
 	reg_info_t reg = {.address = address,.value = val };
 
@@ -658,7 +663,7 @@ int lscpcie_write_reg32(dev_descr_t * dev, uint16_t address, uint32_t val)
 	return ioctl(dev->handle, LSCPCIE_IOCTL_SET_REG32, &reg);
 }
 
-int lscpcie_set_bits_reg8(dev_descr_t * dev, uint16_t address,
+int lscpcie_set_bits_reg8(struct dev_descr *dev, uint16_t address,
 			  uint8_t bits, uint8_t mask)
 {
 	int result;
@@ -671,7 +676,7 @@ int lscpcie_set_bits_reg8(dev_descr_t * dev, uint16_t address,
 				  (value & ~mask) | (bits & mask));
 }
 
-int lscpcie_set_bits_reg16(dev_descr_t * dev, uint16_t address,
+int lscpcie_set_bits_reg16(struct dev_descr *dev, uint16_t address,
 			   uint16_t bits, uint32_t mask)
 {
 	int result;
@@ -683,7 +688,7 @@ int lscpcie_set_bits_reg16(dev_descr_t * dev, uint16_t address,
 				   (value & ~mask) | (bits & mask));
 }
 
-int lscpcie_set_bits_reg32(dev_descr_t * dev, uint16_t address,
+int lscpcie_set_bits_reg32(struct dev_descr *dev, uint16_t address,
 			   uint32_t bits, uint32_t mask)
 {
 	int result;
@@ -700,7 +705,7 @@ int lscpcie_set_bits_reg32(dev_descr_t * dev, uint16_t address,
 /*                                 debugging                                   */
 /*******************************************************************************/
 
-int lscpcie_dump_s0(dev_descr_t * dev)
+int lscpcie_dump_s0(struct dev_descr *dev)
 {
 	int i;
 	uint32_t data = 0;
@@ -758,7 +763,7 @@ int lscpcie_dump_s0(dev_descr_t * dev)
 	return lscpcie_dump_tlp(dev);
 }
 
-int lscpcie_dump_dma(dev_descr_t * dev)
+int lscpcie_dump_dma(struct dev_descr *dev)
 {
 	uint32_t data = 0;
 	enum N { number_of_registers = 18 };
@@ -790,7 +795,7 @@ int lscpcie_dump_dma(dev_descr_t * dev)
 	return 0;
 }
 
-int lscpcie_dump_tlp(dev_descr_t * dev)
+int lscpcie_dump_tlp(struct dev_descr *dev)
 {
 	uint32_t data, actpayload;
 

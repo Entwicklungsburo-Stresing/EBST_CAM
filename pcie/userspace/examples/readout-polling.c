@@ -1,12 +1,11 @@
 /* readout-polling.c
  *
- * Copyright 2020 Bernhard Lang, University of Geneva
- * Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
+ * Copyright 2020-2021 Bernhard Lang, University of Geneva
+ * Copyright 2020-2021 Entwicklungsbuero Stresing (http://www.stresing.de/)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
- *
  */
 
 #include "local-config.h"
@@ -30,7 +29,8 @@
 /* Acquire one block of data. Poll first XCKMSB /RS for being low and data
    being present in the buffer. Loop over if less than the needed data has
    been copied. */
-int lscpcie_acquire_block_poll(dev_descr_t *dev, uint8_t *data, size_t n_scans) {
+int lscpcie_acquire_block_poll(struct dev_descr *dev, uint8_t *data,
+			size_t n_scans) {
 	int result, bytes_read = 0;
 	size_t block_size =
 		dev->control->number_of_pixels * dev->control->number_of_cameras
