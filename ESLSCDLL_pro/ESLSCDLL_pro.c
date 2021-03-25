@@ -103,10 +103,12 @@ DllAccess void DLLStart2dViewer( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT1
 	if (Direct2dViewer == NULL)
 	{
 		Direct2dViewer = Direct2dViewer_new();
+		void* address;
+		GetAddressOfPixel(drvno, 0, 0, cur_nob, cam, address);
 		Direct2dViewer_start2dViewer(
 			Direct2dViewer,
 			GetActiveWindow(),
-			GetAddressOfPixel( drvno, 0, 0, cur_nob, cam ),
+			address,
 			pixel,
 			nos );
 	}
@@ -126,9 +128,11 @@ DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT1
 {
 	if (Direct2dViewer != NULL)
 	{
+		void* address;
+		GetAddressOfPixel(drvno, 0, 0, cur_nob, cam, address);
 		Direct2dViewer_showNewBitmap(
 			Direct2dViewer,
-			GetAddressOfPixel( drvno, 0, 0, cur_nob, cam ),
+			address,
 			pixel,
 			nos );
 	}

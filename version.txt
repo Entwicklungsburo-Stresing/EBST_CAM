@@ -1,3 +1,6 @@
+3.16.6.
+- Introduce error handling: es_status_codes
+
 3.16.5
  - general init routine common for all cameras replaces (InitCam3001 in labview)
  - reduced InitCam3010 to cam specific parameters

@@ -680,6 +680,7 @@
   <ItemGroup>
     <ClCompile Include="..\shared_src\Board.c" />
     <ClCompile Include="..\shared_src\Board_ll.c" />
+    <ClCompile Include="..\shared_src\es_status_codes.c" />
     <ClCompile Include="..\shared_src\lscpciej_lib.c" />
     <ClCompile Include="CCDExamp.c" />
     <ClCompile Include="CCDUnit.c" />
@@ -694,6 +695,7 @@
     <ClInclude Include="..\shared_src\Board_ll.h" />
     <ClInclude Include="..\shared_src\CCDCTL.H" />
     <ClInclude Include="..\shared_src\enum.h" />
+    <ClInclude Include="..\shared_src\es_status_codes.h" />
     <ClInclude Include="..\shared_src\lscpciej_lib.h" />
     <ClInclude Include="..\shared_src\struct.h" />
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
