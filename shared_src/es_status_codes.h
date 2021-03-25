@@ -25,6 +25,4 @@ typedef enum
 	es_camera_not_found,
 } es_status_codes;
 
-char errorMsg[100][50];
-
 char* ConvertErrorCodeToMsg(es_status_codes status);
