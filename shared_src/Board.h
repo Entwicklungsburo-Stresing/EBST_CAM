@@ -149,7 +149,7 @@ void FreeMemInfo( UINT64 *pmemory_all, UINT64 *pmemory_free );
 void GetRmsVal( UINT32 nos, UINT16 *TRMSVals, double *mwf, double *trms );
 es_status_codes CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );
 es_status_codes GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM, UINT64* pIndex );
-es_status_codes GetAddressOfPixel(UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM, void* address);
+es_status_codes GetAddressOfPixel(UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM, UINT16** address);
 UINT8 WaitforTelapsed( LONGLONG musec );
 es_status_codes InitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED );
 es_status_codes InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA );

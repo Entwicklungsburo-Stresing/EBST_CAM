@@ -3250,12 +3250,12 @@ es_status_codes GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT
  *		- es_no_error
  *		- es_parameter_out_of_range
  */
-es_status_codes GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM, void* address )
+es_status_codes GetAddressOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM, UINT16** address )
 {
 	UINT64 index = 0;
 	es_status_codes status = GetIndexOfPixel(drvno, pixel, sample, block, CAM, &index);
 	if (status != es_no_error) return status;
-	address = &userBuffer[drvno][index];
+	*address = &userBuffer[drvno][index];
 	return status;
 }
 
@@ -4151,10 +4151,11 @@ es_status_codes LedOff( UINT32 drvno, UINT8 LED_OFF )
  */
 es_status_codes ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length )
 {
-	void* pframe;
+	UINT16** pframe = malloc(sizeof(UINT16*));
+	//UINT16** pframe;// = &userBuffer[1][0];
 	es_status_codes status = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, curr_cam, pframe);
 	if (status != es_no_error) return status;
-	memcpy( pdest, pframe, length * sizeof( UINT16 ) );  // length in bytes
+	memcpy( pdest, *pframe, length * sizeof( UINT16 ) );  // length in bytes
 	/*
 	WDC_Err( "RETURN FRAME: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, _PIXEL: %u, length: %u\n", drvno, curr_nos, curr_nob, curr_cam, _PIXEL, length );
 	WDC_Err("FRAME2: address Buff: 0x%x \n", userBuffer[drvno]);
