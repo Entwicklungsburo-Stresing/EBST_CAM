@@ -8,7 +8,7 @@
 int init_7030(unsigned int dev_no)
 {
 	int result;
-	dev_descr_t *dev = lscpcie_get_descriptor(dev_no);
+	struct dev_descr *dev = lscpcie_get_descriptor(dev_no);
 
 	result = set_dma_address_in_tlp(dev);
 	if (result < 0)
@@ -116,7 +116,7 @@ int readout_init(int argc, char **argv, struct camera_info_struct *info) {
 	return 0;
 }
 
-int fetch_data_mapped(dev_descr_t *dev, uint8_t *data, size_t max)
+int fetch_data_mapped(struct dev_descr *dev, uint8_t *data, size_t max)
 {
 	int end_read = dev->control->write_pos, len;
 

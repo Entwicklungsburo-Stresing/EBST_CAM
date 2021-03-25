@@ -20,16 +20,16 @@ struct camera_info_struct {
 	int n_blocks, n_scans, mem_size;
 	trigger_mode_t trigger_mode;
 	pixel_t *data;
-	dev_descr_t *dev;
+	struct dev_descr *dev;
 };
 
-int lscpcie_init_scan(dev_descr_t *dev, int trigger_mode,
+int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode,
 		int number_of_scans, int number_of_blocks,
 		int dmas_per_interrupt);
-int lscpcie_start_scan(dev_descr_t * dev);
-int lscpcie_start_block(dev_descr_t *dev);
-int lscpcie_end_block(dev_descr_t *dev);
-int lscpcie_end_acquire(dev_descr_t *dev);
+int lscpcie_start_scan(struct dev_descr * dev);
+int lscpcie_start_block(struct dev_descr *dev);
+int lscpcie_end_block(struct dev_descr *dev);
+int lscpcie_end_acquire(struct dev_descr *dev);
 
 
 #endif /* _lscpcie_to_library_h_ */

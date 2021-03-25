@@ -1,4 +1,4 @@
-# Makefile for lscpci line scan and area cameras igb stresing
+# Makefile for lscpcie line scan and area cameras igb stresing
 #
 # Copyright (C) 2020-2021 Bernhard Lang, University of Geneva
 # Copyright 2020-2021 Entwicklungsbuero Stresing (http://www.stresing.de/)
@@ -9,11 +9,11 @@
 
 CFLAGS = -Wall -g -fpic -D__user_space__
 
-tests = test-mmap test-read-write test-register
-
 version = 1
 subversion = 0
 patchlevel = 0
+
+tests = test-mmap test-read-write test-register
 
 library = liblscpcie.so.$(version).$(subversion).$(patchlevel)
 links = liblscpcie.so liblscpcie.so.$(version) \

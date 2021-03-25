@@ -1,12 +1,11 @@
 /* readout-blocking-filesystem.c
  *
- * Copyright 2020 Bernhard Lang, University of Geneva
- * Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
+ * Copyright 2020-2021 Bernhard Lang, University of Geneva
+ * Copyright 2020-2021 Entwicklungsbuero Stresing (http://www.stresing.de/)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
- *
  */
 
 #include "local-config.h"
@@ -31,8 +30,8 @@
    call read which returns only once some new data has been copied.
    Loop over if less than the needed data has been copied. */
 
-int lscpcie_acquire_block_fs(dev_descr_t *dev, uint8_t *data, size_t n_scans,
-			int camera_file_handle) {
+int lscpcie_acquire_block_fs(struct dev_descr *dev, uint8_t *data,
+			size_t n_scans, int camera_file_handle) {
 	int result, bytes_read = 0;
 	size_t block_size =
 		dev->control->number_of_pixels * dev->control->number_of_cameras
@@ -67,6 +66,9 @@ int main(int argc, char **argv)
 
 	result = readout_init(argc, argv, &info);
 	bytes_read = 0;
+
+	info.dev->control->stimer_val =
+		(CFG_STIMER_IN_US & XCK_EC_MASK) | (1<<XCK_RS);
 
 	do {
 		// wait for trigger signal
