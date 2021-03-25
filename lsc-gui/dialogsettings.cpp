@@ -14,14 +14,13 @@ DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
     ui->comboBoxBti->setCurrentIndex(_settings->value(settingBtiPath, settingBtiDefault).toInt());
     ui->doubleSpinBoxSTimer->setValue(_settings->value(settingStimerPath, settingStimerDefault).toDouble()); //TODO: in microsec
     ui->doubleSpinBoxBTimer->setValue(_settings->value(settingBtimerPath, settingBtimerDefault).toDouble()); //TODO: in microsec
-    //TODO: von hier weiter machen mit dem mapping in mainwindow.cpp:startPressed
     ui->spinBoxSdat->setValue(_settings->value(settingSdatPath, settingSdatDefault).toInt());
     ui->spinBoxBdat->setValue(_settings->value(settingBdatPath, settingBdatDefault).toInt());
     ui->comboBoxSslope->setCurrentIndex(_settings->value(settingSslopePath, settingSslopePath).toInt());
     ui->comboBoxBslope->setCurrentIndex(_settings->value(settingBslopePath, settingBslopePath).toInt());
     ui->spinBoxXckdelay->setValue(_settings->value(settingXckdelayPath, settingXckdelayDefault).toInt());
     ui->doubleSpinBoxExpTime->setValue(_settings->value(settingShutterExpTimePath, settingShutterExpTimeDefault).toDouble());
-    ui->comboBoxTriggerModeCC->setCurrentIndex(_settings->value(settingXckdelayPath, settingXckdelayDefault).toInt());
+    ui->comboBoxTriggerModeCC->setCurrentIndex(_settings->value(settingTriggerCcPath, settingTriggerCcDefault).toInt());
     ui->comboBoxBoardSel->setCurrentIndex(_settings->value(settingBoardSelPath, settingBoardSelDefault).toInt());
     ui->comboBoxSensorType->setCurrentIndex(_settings->value(settingSensorTypePath, settingSensorTypeDefault).toInt());
     ui->comboBoxCameraSystem->setCurrentIndex(_settings->value(settingCameraSystemPath, settingCameraSystemDefault).toInt());

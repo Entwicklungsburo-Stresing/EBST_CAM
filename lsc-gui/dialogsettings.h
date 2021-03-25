@@ -107,6 +107,8 @@ constexpr auto settingAdcModePath = "debug/adcMode";
 constexpr auto settingAdcModeDefault = normal;
 constexpr auto settingAdcCustomValuePath = "debug/adcCustomValue";
 constexpr auto settingAdcCustomValueDefault = 0;
+
+//GUI Settings
 constexpr auto settingThemePath = "appearance/theme";
 constexpr auto settingThemeDefault = lighttheme;
 

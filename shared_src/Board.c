@@ -482,7 +482,7 @@ es_status_codes InitBoard( UINT32 drvno )
 };  // InitBoard
 
 //**************  new for PCIE   *******************************
-void initCamera(UINT32 drvno,  UINT8 camera_system, UINT16 pixel, UINT16 trigger_mode, UINT16 sensor_type, UINT8 ADC_Mode, UINT16 ADC_custom_pettern, UINT16 led_on, UINT16 gain_high, UINT8 gain)
+void initCamera(UINT32 drvno,  UINT8 camera_system, UINT16 pixel, UINT16 trigger_mode, UINT16 sensor_type, UINT8 ADC_Mode, UINT16 ADC_custom_pettern, UINT16 led_on, UINT16 gain_3010, UINT8 gain_3030)
 {
 	switch (camera_system)
 	{
@@ -490,10 +490,10 @@ void initCamera(UINT32 drvno,  UINT8 camera_system, UINT16 pixel, UINT16 trigger
 		InitCamera3001(drvno, pixel, trigger_mode, sensor_type, 0);
 		break;
 	case camera_system_3010:
-		InitCamera3010(drvno, pixel, trigger_mode, ADC_Mode, ADC_custom_pettern, led_on, gain_high);
+		InitCamera3010(drvno, pixel, trigger_mode, ADC_Mode, ADC_custom_pettern, led_on, gain_3010);
 		break;
 	case camera_system_3030:
-		InitCamera3030(drvno, ADC_Mode, ADC_custom_pettern, gain);
+		InitCamera3030(drvno, ADC_Mode, ADC_custom_pettern, gain_3030);
 		//TODO use DAC...maybe extra function or sendflcam_dac
 		break;
 	}
@@ -523,7 +523,7 @@ void InitMeasurement(struct global_settings* settings)
 				SetupFullBinning(settings->drvno, settings->FFTLines, settings->Vfreq);
 				break;
 			case partial_binning:
-				DLLSetupROI(settings->drvno, settings->number_of_regions, settings->lines, settings->keep_first, settings->region_size, settings->Vfreq);
+				DLLSetupROI(settings->drvno, settings->number_of_regions, settings->FFTLines, settings->keep_first, settings->region_size, settings->Vfreq);
 				break;
 			case area_mode:
 				DLLSetupArea(settings->drvno, settings->lines_binning, settings->Vfreq);
@@ -537,22 +537,23 @@ void InitMeasurement(struct global_settings* settings)
 
 	CloseShutter(settings->drvno); //set cooling  off
 	//set mshut
-	if (settings->_mshut) {
+	if (settings->mshut) {
 		CloseShutter(settings->drvno);
-		SetSEC(settings->drvno, settings->ExpTime * 100);
+		SetSEC(settings->drvno, settings->ShutterExpTime * 100);
 		SetTORReg(settings->drvno, TOR_SSHUT);
 	}
 	else {
 		ResetSEC(settings->drvno);
-		SetTORReg(settings->drvno, settings->m_TOmodus);
+		SetTORReg(settings->drvno, settings->TORmodus);
 	}
 
-	//start like in labview
-	if (settings->TrigMod == 0)	HighSlope(settings->drvno);
-	if (settings->TrigMod == 1)	LowSlope(settings->drvno);
-	if (settings->TrigMod == 2)	BothSlope(settings->drvno);
+	//SSlope
+	if (settings->sslope == 0)	HighSlope(settings->drvno);
+	if (settings->sslope == 1)	LowSlope(settings->drvno);
+	if (settings->sslope == 2)	BothSlope(settings->drvno);
+	//BSlope
+	SetBSlope(settings->drvno, settings->bslope);
 
-	SetTORReg(settings->drvno, settings->TOR_fkt);
 
 	/*sti_mode enum:
 	- 0: I
@@ -575,6 +576,11 @@ void InitMeasurement(struct global_settings* settings)
 	SetBTimer(settings->drvno, settings->btime_in_microsec);
 
 	if (settings->enable_gpx) InitGPX(settings->drvno, settings->gpx_offset);
+
+	//Delay after Trigger
+	SetSDAT(settings->drvno, settings->sdat_in_100ns);
+	SetBDAT(settings->drvno, settings->bdat_in_100ns);
+
 	
 
 	//stop timer
@@ -582,11 +588,15 @@ void InitMeasurement(struct global_settings* settings)
 	RSFifo(settings->drvno);
 
 	//init Camera
-	initCamera(settings->drvno, settings->camera_system, settings->pixel, settings->trigger_mode, settings->sensor_type, settings->ADC_Mode, settings->ADC_custom_pettern, settings->led_on, settings->gain_high, settings->gain);
+	initCamera(settings->drvno, settings->camera_system, settings->pixel, settings->trigger_mode_cc, settings->sensor_type, settings->ADC_Mode, settings->ADC_custom_pettern, settings->led_on, settings->gain_3010, settings->gain_3030);
 	//if IR-Sensor
 	SendFLCAM(settings->drvno, maddr_cam, 0, settings->isIRSensor);
 	//for coooled Cam
 	SetTemp(settings->drvno, settings->Temp_level);
+	//DAC
+	if (settings->dac)
+		for (int channel = 0; channel < 8; channel++)
+			DAC_setOutput(settings->drvno, channel, settings->dac_output[channel]);
 
 	//TODO set cont FF mode with DLL style(CONTFFLOOP = activate;//0 or 1;CONTPAUSE = pause;) or CCDExamp style(check it out)
 	return;

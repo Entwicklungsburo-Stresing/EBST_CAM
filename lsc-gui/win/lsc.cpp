@@ -27,9 +27,9 @@ void Lsc::initMeasurement(struct global_settings* settings_struct)
     return;
 }
 
-void Lsc::startMeasurement()
+void Lsc::startMeasurement(uint8_t boardsel)
 {
-    StartMess(1);
+    StartMess(boardsel);
     return;
 }
 
