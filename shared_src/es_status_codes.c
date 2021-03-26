@@ -19,6 +19,10 @@ char errorMsg[100][50] =
 	"Not enough RAM",
 	"Parameter out of bounds",
 	"An unknown error occured"
+	"Enabling interrupts failed",
+	"Getting dma buffer failed",
+	"Unlocking dma failed",
+	"Camera not found",
 };
 
 char* ConvertErrorCodeToMsg(es_status_codes status)
