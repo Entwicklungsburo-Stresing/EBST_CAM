@@ -17,9 +17,10 @@
 #include "../userspace/constants.h"
 
 
-#define PDEBUG(flags, ...) do {                   \
-  if (dev->debug_mode & (flags))                  \
-    printk(KERN_WARNING "lscpcie: " __VA_ARGS__); \
+#define PDEBUG(flags, ...) do {						  \
+	if ((dev->control && (dev->control->debug_mode & (flags)))	  \
+		|| ((!dev->control) && (dev->init_debug_mode & (flags)))) \
+		printk(KERN_WARNING "lscpcie: " __VA_ARGS__);		  \
 } while (0)
 
 #define PMESSAGE(...) \

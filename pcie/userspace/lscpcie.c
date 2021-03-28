@@ -11,8 +11,8 @@
 #include "lscpcie.h"
 #include "constants.h"
 #include "types.h"
-#include "../kernelspace/ioctl.h"
 #include "../kernelspace/registers.h"
+#include "../kernelspace/ioctl.h"
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -290,19 +290,6 @@ void lscpcie_close(uint dev_no)
 	dev_descr[dev_no] = init_dev_descr;
 }
 
-// not yet implemented in driver
-int lscpcie_start(struct dev_descr *dev)
-{
-	//-->>set_dma_buffer_registers(dev
-	return ioctl(dev->handle, LSCPCIE_IOCTL_START);
-}
-
-// not yet implemented in driver
-int lscpcie_stop(struct dev_descr *dev)
-{
-	return ioctl(dev->handle, LSCPCIE_IOCTL_STOP);
-}
-
 ssize_t lscpcie_readout(struct dev_descr *dev, uint16_t * buffer,
 			size_t items_to_read)
 {
@@ -327,56 +314,9 @@ ssize_t lscpcie_readout(struct dev_descr *dev, uint16_t * buffer,
 	return bytes_read / 2;
 }
 
-int lscpcie_hardware_present(struct dev_descr *dev)
+void lscpcie_set_debug(struct dev_descr *dev, int flags, int mask)
 {
-	int result, hwp;
-
-	result = ioctl(dev->handle, LSCPCIE_IOCTL_HARDWARE_PRESENT, &hwp);
-
-	return result ? result : hwp;
-}
-
-int lscpcie_fifo_overflow(struct dev_descr *dev)
-{
-	int result, fo;
-
-	result = ioctl(dev->handle, LSCPCIE_IOCTL_FIFO_OVERFLOW, &fo);
-
-	return result ? result : fo;
-}
-
-int lscpcie_clear_fifo(struct dev_descr *dev)
-{
-	return ioctl(dev->handle, LSCPCIE_IOCTL_CLEAR_FIFO);
-}
-
-size_t lscpcie_bytes_free(struct dev_descr *dev)
-{
-	int result, fb;
-
-	result = ioctl(dev->handle, LSCPCIE_IOCTL_FREE_BYTES, &fb);
-
-	return result ? result : fb;
-}
-
-size_t lscpcie_bytes_available(struct dev_descr *dev)
-{
-	int result, ba;
-
-	result = ioctl(dev->handle, LSCPCIE_IOCTL_BYTES_AVAILABLE, &ba);
-
-	return result ? result : ba;
-}
-
-int lscpcie_set_debug(struct dev_descr *dev, int flags, int mask)
-{
-	return ioctl(dev->handle, LSCPCIE_IOCTL_SET_DEBUG,
-		     (mask << DEBUG_MASK_SHIFT) | flags);
-}
-
-int lscpcie_get_buffer_pointers(struct dev_descr *dev, uint64_t * pointers)
-{
-	return ioctl(dev->handle, LSCPCIE_IOCTL_BUFFER_POINTERS, pointers);
+	dev->control->debug_mode = (dev->control->debug_mode & ~mask) | flags;
 }
 
 
@@ -427,6 +367,10 @@ int init_cam_control(struct dev_descr *dev, trigger_mode_t trigger_mode,
 				CAMERA_ADDRESS_PIXEL, options);	//??
 
 	return result;
+}
+
+int lscpcie_hardware_present(struct dev_descr *dev) {
+	return dev->control->status & DEV_HARDWARE_PRESENT;
 }
 
 /*******************************************************************************/
@@ -594,113 +538,6 @@ int lscpcie_write_config32(struct dev_descr *dev, uint16_t address,
 	return ioctl(dev->handle, LSCPCIE_IOCTL_SET_CONF, &reg);
 }
 
-int lscpcie_read_reg8(struct dev_descr *dev, uint16_t address,
-		      uint8_t * val)
-{
-	int result;
-	reg_info_t reg = {.address = address };
-
-	if ((result =
-	     ioctl(dev->handle, LSCPCIE_IOCTL_GET_REG8, &reg)) < 0)
-		return result;
-	*val = reg.value;
-
-	return 0;
-}
-
-int lscpcie_read_reg16(struct dev_descr *dev, uint16_t address,
-		       uint16_t * val)
-{
-	int result;
-	reg_info_t reg = {.address = address };
-
-	if ((result =
-	     ioctl(dev->handle, LSCPCIE_IOCTL_GET_REG16, &reg)) < 0)
-		return result;
-	*val = reg.value;
-
-	return 0;
-}
-
-int lscpcie_read_reg32(struct dev_descr *dev, uint16_t address,
-		       uint32_t * val)
-{
-	int result;
-	reg_info_t reg = {.address = address };
-
-	if ((result =
-	     ioctl(dev->handle, LSCPCIE_IOCTL_GET_REG32, &reg)) < 0)
-		return result;
-	*val = reg.value;
-
-	return 0;
-}
-
-int lscpcie_write_reg8(struct dev_descr *dev, uint16_t address,
-		       uint8_t val)
-{
-	reg_info_t reg = {.address = address,.value = val };
-
-
-	return ioctl(dev->handle, LSCPCIE_IOCTL_SET_REG8, &reg);
-}
-
-int lscpcie_write_reg16(struct dev_descr *dev, uint16_t address,
-			uint16_t val)
-{
-	reg_info_t reg = {.address = address,.value = val };
-
-
-	return ioctl(dev->handle, LSCPCIE_IOCTL_SET_REG16, &reg);
-}
-
-int lscpcie_write_reg32(struct dev_descr *dev, uint16_t address,
-			uint32_t val)
-{
-	reg_info_t reg = {.address = address,.value = val };
-
-
-	return ioctl(dev->handle, LSCPCIE_IOCTL_SET_REG32, &reg);
-}
-
-int lscpcie_set_bits_reg8(struct dev_descr *dev, uint16_t address,
-			  uint8_t bits, uint8_t mask)
-{
-	int result;
-	uint8_t value;
-
-	if ((result = lscpcie_read_reg8(dev, address, &value)) < 0)
-		return result;
-
-	return lscpcie_write_reg8(dev, address,
-				  (value & ~mask) | (bits & mask));
-}
-
-int lscpcie_set_bits_reg16(struct dev_descr *dev, uint16_t address,
-			   uint16_t bits, uint32_t mask)
-{
-	int result;
-	uint16_t value;
-
-	if ((result = lscpcie_read_reg16(dev, address, &value)) < 0)
-		return result;
-	return lscpcie_write_reg16(dev, address,
-				   (value & ~mask) | (bits & mask));
-}
-
-int lscpcie_set_bits_reg32(struct dev_descr *dev, uint16_t address,
-			   uint32_t bits, uint32_t mask)
-{
-	int result;
-	uint32_t value;
-
-	if ((result = lscpcie_read_reg32(dev, address, &value)) < 0)
-		return result;
-	return lscpcie_write_reg32(dev, address,
-				   (value & ~mask) | (bits & mask));
-}
-
-
 /*******************************************************************************/
 /*                                 debugging                                   */
 /*******************************************************************************/
@@ -708,7 +545,6 @@ int lscpcie_set_bits_reg32(struct dev_descr *dev, uint16_t address,
 int lscpcie_dump_s0(struct dev_descr *dev)
 {
 	int i;
-	uint32_t data = 0;
 	enum N { number_of_registers = 41 };
 	char register_names[number_of_registers][30] = {
 		"DBR \t\t",
@@ -757,15 +593,14 @@ int lscpcie_dump_s0(struct dev_descr *dev)
 	printf("S0- registers   \n");
 
 	for (i = 0; i < number_of_registers; i++) {
-		lscpcie_read_s0_32(dev, i * 4, &data);
-		printf("%s \t: 0x%08x\n", register_names[i], data);
+		printf("%s \t: 0x%08x\n", register_names[i],
+			*(uint32_t*) (((const uint8_t *) dev->s0) + i * 4));
 	}
 	return lscpcie_dump_tlp(dev);
 }
 
 int lscpcie_dump_dma(struct dev_descr *dev)
 {
-	uint32_t data = 0;
 	enum N { number_of_registers = 18 };
 	char register_names[number_of_registers][20] = {
 		"DCSR\t",
@@ -789,8 +624,8 @@ int lscpcie_dump_dma(struct dev_descr *dev)
 	};			//Look-Up-Table for the DMA Registers
 	printf("DMA registers\n");
 	for (int i = 0; i < number_of_registers; i++) {
-		lscpcie_read_dma_32(dev, i * 4, &data);
-		printf("%s \t: 0x%08x\n", register_names[i], data);
+		printf("%s \t: 0x%08x\n", register_names[i],
+			*(uint32_t*) (((const uint8_t *) dev->dma_reg) + i * 4));
 	}
 	return 0;
 }
@@ -831,13 +666,11 @@ int lscpcie_dump_tlp(struct dev_descr *dev)
 
 	printf("TLP_SIZE is: %d DWORDs = %d BYTEs\n", data, data * 4);
 
-	lscpcie_read_dma_32(dev, DmaAddr_WDMATLPS, &data);
-	printf("TLPS in DMAReg is: %d \n", data);
+	printf("TLPS in DMAReg is: %d \n", dev->dma_reg->WDMATLPS);
 
 	data = (dev->control->number_of_pixels - 1) / (data * 2) + 1 + 1;
 	printf("number of TLPs should be: %d\n", data);
-	lscpcie_read_dma_32(dev, DmaAddr_WDMATLPC, &data);
-	printf("number of TLPs is: %d \n", data);
+	printf("number of TLPs is: %d \n", dev->dma_reg->WDMATLPC);
 
 	return 0;
 }

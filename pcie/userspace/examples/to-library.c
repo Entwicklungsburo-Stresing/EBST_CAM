@@ -7,7 +7,7 @@
 #define memory_barrier() asm volatile ("" : : : "memory")
 
 /* prepare registers for individual scan */
-int lscpcie_init_scan(dev_descr_t *dev, int trigger_mode, int number_of_scans,
+int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode, int number_of_scans,
 		int number_of_blocks, int dmas_per_interrupt)
 {
 	int result;
@@ -52,7 +52,7 @@ int lscpcie_init_scan(dev_descr_t *dev, int trigger_mode, int number_of_scans,
 }
 
 /* reset and start counters */
-int lscpcie_start_scan(dev_descr_t * dev)
+int lscpcie_start_scan(struct dev_descr * dev)
 {
 	pulse_bit(DMAS_PER_INTERRUPT, 1<<DMA_COUNTER_RESET);
 
@@ -82,7 +82,7 @@ int lscpcie_start_scan(dev_descr_t * dev)
 	return 0;
 }
 
-int lscpcie_start_block(dev_descr_t *dev) {
+int lscpcie_start_block(struct dev_descr *dev) {
 	// make pulse for blockindex counter
 	pulse_bit(PCIEFLAGS, 1<<PCIEFLAG_BLOCKTRIG);
 	// reset scan counter
@@ -98,14 +98,14 @@ int lscpcie_start_block(dev_descr_t *dev) {
 	return 0;
 }
 
-int lscpcie_end_block(dev_descr_t *dev) {
+int lscpcie_end_block(struct dev_descr *dev) {
 	// reset block on
 	dev->s0->PCIEFLAGS &= ~(1 << PCIEFLAG_BLOCKON);
 
 	return 0;
 }
 
-int lscpcie_end_acquire(dev_descr_t *dev) {
+int lscpcie_end_acquire(struct dev_descr *dev) {
 	dev->s0->XCK.dword &= ~(1 << XCK_RS);
 	// stop btimer
 	dev->s0->BTIMER &= ~(1 << BTIMER_START);

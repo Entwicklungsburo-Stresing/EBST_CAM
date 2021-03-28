@@ -14,7 +14,7 @@
 
 int main(void) {
   int result;
-  dev_descr_t *device_descriptor;
+  struct dev_descr *device_descriptor;
 
   if ((result = lscpcie_driver_init()) < 0) {
     fprintf(stderr, "initialising driver returned %d\n", result);

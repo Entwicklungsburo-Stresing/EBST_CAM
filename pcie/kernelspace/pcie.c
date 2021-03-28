@@ -40,7 +40,7 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 	if ((result = device_init(dev, i)) < 0)
 		goto out_error;
 
-	dev->status |= DEV_PCI_ENABLED;
+	device_set_status(dev, DEV_PCI_ENABLED, DEV_PCI_ENABLED);
 
 	/* check for correct vendor / device and subsystem */
 	result = pci_read_config_word(pci_dev, PCI_VENDOR_ID, &word);
@@ -61,7 +61,7 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 	assert(word == SUBSYSTEM_DEVICE_ID, "wrong subsystem id",
 	       goto out_error, -1);
 
-	dev->status |= DEV_HARDWARE_PRESENT;
+	device_set_status(dev, DEV_HARDWARE_PRESENT, DEV_HARDWARE_PRESENT);
 	dev->pci_dev = pci_dev;
 
 	/* doesn't work
@@ -72,7 +72,7 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 	   goto out_error;
 	   }
 	 */
-	if (!(dev->status & DEV_MSI_ENABLED)) {
+	if (!device_test_status(dev, DEV_MSI_ENABLED)) {
 		PDEBUG(D_INTERRUPT, "allocating interrupt vector\n");
 		result = pci_enable_msi(pci_dev);
 		if (result < 0) {
@@ -80,7 +80,7 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 			       ": couldn't allocate irq vector\n");
 			goto out_error;
 		}
-		dev->status |= DEV_MSI_ENABLED;
+		device_set_status(dev, DEV_MSI_ENABLED, DEV_MSI_ENABLED);
 	}
 	dev->irq_line = pci_dev->irq;
 	PDEBUG(D_INTERRUPT, "interrupt line is %d\n", dev->irq_line);
@@ -121,10 +121,10 @@ void remove_lscpcie(struct pci_dev *pci_dev)
 	PDEBUG(D_PCI, "removing lscpcie\n");
 
 	if (dev) {
-		if ((dev->status & DEV_MSI_ENABLED)
+		if (device_test_status(dev, DEV_MSI_ENABLED)
 		    && (pci_dev->msi_enabled))
 			pci_disable_msi(pci_dev);
-		dev->status &= ~DEV_MSI_ENABLED;
+		device_set_status(dev, DEV_MSI_ENABLED, 0);
 		/* doesn't work
 		   if (dev->status & DEV_IRQ_ALLOCATED) {
 		   PDEBUG(D_INTERRUPT, "freeing interrupt vector\n");
@@ -136,5 +136,5 @@ void remove_lscpcie(struct pci_dev *pci_dev)
 
 	pci_clear_master(pci_dev);
 	pci_disable_device(pci_dev);
-	dev->status &= ~(DEV_HARDWARE_PRESENT | DEV_PCI_ENABLED);
+	device_set_status(dev, DEV_HARDWARE_PRESENT | DEV_PCI_ENABLED, 0);
 }

@@ -33,18 +33,18 @@ struct class *lscpcie_class = 0;
 static int module_status = 0;
 
 /* module parameters */
-int num_pixels[MAX_BOARDS]    = { -1, -1, -1, -1, -1 };
-int num_cameras[MAX_BOARDS]   = { -1, -1, -1, -1, -1 };
+int num_pixels[MAX_BOARDS] = { -1, -1, -1, -1, -1 };
+int num_cameras[MAX_BOARDS] = { -1, -1, -1, -1, -1 };
 int dma_num_scans[MAX_BOARDS] = { -1, -1, -1, -1, -1 };
 int blocks_in_irq[MAX_BOARDS] = { -1, -1, -1, -1, -1 };
 
-static int n_num_pixels    = MAX_BOARDS;
-static int n_num_cameras   = MAX_BOARDS;
+static int n_num_pixels = MAX_BOARDS;
+static int n_num_cameras = MAX_BOARDS;
 static int n_dma_num_scans = MAX_BOARDS;
 static int n_blocks_in_irq = MAX_BOARDS;
 
-module_param_array(num_pixels,    int, &n_num_pixels,    S_IRUGO);
-module_param_array(num_cameras,   int, &n_num_cameras,   S_IRUGO);
+module_param_array(num_pixels, int, &n_num_pixels, S_IRUGO);
+module_param_array(num_cameras, int, &n_num_cameras, S_IRUGO);
 module_param_array(dma_num_scans, int, &n_dma_num_scans, S_IRUGO);
 module_param_array(blocks_in_irq, int, &n_blocks_in_irq, S_IRUGO);
 
@@ -67,147 +67,152 @@ module_param(debug, int, S_IRUGO);
 
 /* initial values for newly created device instance */
 const struct dev_struct lscpcie_device_init = {
-	.status = 0,
-  .physical_pci_base = 0,
-  .mapped_pci_base = 0,
-  .read_available = ATOMIC_INIT(1),
-  .write_available = ATOMIC_INIT(1),
-  .minor = -1,
-  .dma_virtual_mem = 0,
-  .proc_actual_register = 0,
-  .proc_actual_register_long = 0,
-  .control = 0,
-  .proc_registers_entry = 0,
-  .proc_registers_long_entry = 0,
-  .proc_io_entry = 0
+	.init_status = 0,
+	.init_debug_mode = 0,
+	.physical_pci_base = 0,
+	.mapped_pci_base = 0,
+	.read_available = ATOMIC_INIT(1),
+	.write_available = ATOMIC_INIT(1),
+	.minor = -1,
+	.dma_virtual_mem = 0,
+	.control = 0,
+	.proc_registers_entry = 0,
+	.proc_registers_long_entry = 0,
+	.proc_io_entry = 0
 };
 
 /* pci identifier */
 static struct pci_device_id ids[] = {
-  { PCI_DEVICE(VENDOR_ID, DEVICE_ID), },
-  { 0, }
+	{ PCI_DEVICE(VENDOR_ID, DEVICE_ID), },
+	{ 0, }
 };
 
 MODULE_DEVICE_TABLE(pci, ids);
 
 /* pci initialisation and removal functions */
 static struct pci_driver pci_driver = {
-  .name = NAME,
-  .id_table = ids,
-  .probe = probe_lscpcie,
-  .remove = remove_lscpcie
+	.name = NAME,
+	.id_table = ids,
+	.probe = probe_lscpcie,
+	.remove = remove_lscpcie
 };
 
 
 /* general infrastruture and pci registration, devices are initialised
    through probe_lscpcie upon detection by the pci core */
-static int __init lscpcie_module_init(void) {
-  dev_t dev;
-  int i, result;
+static int __init lscpcie_module_init(void)
+{
+	dev_t dev;
+	int i, result;
 
-  if (debug & D_MODULE) debug_module = 1;
+	if (debug & D_MODULE)
+		debug_module = 1;
 
-  printk(KERN_WARNING NAME" loading module.\n");
+	printk(KERN_WARNING NAME " loading module.\n");
 
-  lscpcie_class = class_create(THIS_MODULE, NAME);
-  if (IS_ERR(lscpcie_class)) {
-    printk(KERN_ERR "Error creating %s class \n", NAME);
-    return PTR_ERR(lscpcie_class);
-  }
-  PMDEBUG("created device class\n");
+	lscpcie_class = class_create(THIS_MODULE, NAME);
+	if (IS_ERR(lscpcie_class)) {
+		printk(KERN_ERR "Error creating %s class \n", NAME);
+		return PTR_ERR(lscpcie_class);
+	}
+	PMDEBUG("created device class\n");
 
-  proc_init_module(); /* read number of devices, write adds software devices */
+	/* read number of devices, write adds software devices */
+	proc_init_module();
 
-  for (i = 0; i < MAX_BOARDS; i++)
-    lscpcie_devices[i] = lscpcie_device_init;
+	for (i = 0; i < MAX_BOARDS; i++)
+		lscpcie_devices[i] = lscpcie_device_init;
 
-  if (major) { /* major device number given at module load */
-    dev = MKDEV(major, 0);
-    result = register_chrdev_region(dev, 1, NAME);
-  } else { /* let the kernel pick the next available major */
-    result = alloc_chrdev_region(&dev, 0, MAX_BOARDS, NAME);
-    major = MAJOR(dev);
-  }
+	if (major) {
+                /* major device number given at module load */
+		dev = MKDEV(major, 0);
+		result = register_chrdev_region(dev, 1, NAME);
+	} else {
+                /* let the kernel pick the next available major */
+		result = alloc_chrdev_region(&dev, 0, MAX_BOARDS, NAME);
+		major = MAJOR(dev);
+	}
 
-  if (result < 0) {
-    printk(KERN_WARNING NAME": can't obtain major device number %d\n", major);
-    return result;
-  }
+	if (result < 0) {
+		printk(KERN_WARNING NAME
+		       ": can't obtain major device number %d\n", major);
+		return result;
+	}
 
-  PMDEBUG("got major %d\n", major);
+	PMDEBUG("got major %d\n", major);
 
-  if ((result = pci_register_driver(&pci_driver)) != 0) {
-    printk(KERN_ERR NAME " registering pci device failed with %d", result);
-    goto failed;
-  }
-  module_status |= MOD_PCI_REGISTERED;
-  PMDEBUG("registered pci driver\n");
+	if ((result = pci_register_driver(&pci_driver)) != 0) {
+		printk(KERN_ERR NAME
+		       " registering pci device failed with %d", result);
+		goto failed;
+	}
+	module_status |= MOD_PCI_REGISTERED;
+	PMDEBUG("registered pci driver\n");
 
-  printk(KERN_WARNING NAME" ready.\n");
+	printk(KERN_WARNING NAME " ready.\n");
 
-  return 0;
+	return 0;
 
- failed:
-  clean_up_lscpcie_module();
-  printk(KERN_ERR NAME": loading failed\n");
+      failed:
+	clean_up_lscpcie_module();
+	printk(KERN_ERR NAME ": loading failed\n");
 
-  return result;
+	return result;
 }
-
 
 static void __exit lscpcie_module_exit(void)
 {
-  clean_up_lscpcie_module();
-  printk(NAME" unloaded\n");
+	clean_up_lscpcie_module();
+	printk(NAME " unloaded\n");
 }
 
 /* release all kernel resources allocated at module init in reversed order */
 void clean_up_lscpcie_module(void)
 {
-  int i;
+	int i;
 
-  for (i = 0; i < MAX_BOARDS; i++)
-    if (lscpcie_devices[i].minor >= 0) {
-      struct dev_struct *dev = &lscpcie_devices[i];
-      PMDEBUG("removing device %d\n", i);
-      proc_clean_up(dev);
-      dma_finish(dev);
-      if (dev->mapped_pci_base)
-        iounmap(dev->mapped_pci_base);
-    }
+	for (i = 0; i < MAX_BOARDS; i++)
+		if (lscpcie_devices[i].minor >= 0) {
+			struct dev_struct *dev = &lscpcie_devices[i];
+			PMDEBUG("removing device %d\n", i);
+			proc_clean_up(dev);
+			dma_finish(dev);
+			if (dev->mapped_pci_base)
+				iounmap(dev->mapped_pci_base);
+		}
 
-  if (module_status & MOD_PCI_REGISTERED) {
-    pci_unregister_driver(&pci_driver);
-    module_status &= ~MOD_PCI_REGISTERED;
-  }
+	if (module_status & MOD_PCI_REGISTERED) {
+		pci_unregister_driver(&pci_driver);
+		module_status &= ~MOD_PCI_REGISTERED;
+	}
 
-  for (i = 0; i < MAX_BOARDS; i++)
-    if (lscpcie_devices[i].minor >= 0)
-      device_clean_up(&lscpcie_devices[i]);
-  proc_clean_up_module();
+	for (i = 0; i < MAX_BOARDS; i++)
+		if (lscpcie_devices[i].minor >= 0)
+			device_clean_up(&lscpcie_devices[i]);
+	proc_clean_up_module();
 
-  if (major) {
-    PMDEBUG("unregistering major\n");
-    unregister_chrdev_region(MKDEV(major, 0), 1);
-  }
+	if (major) {
+		PMDEBUG("unregistering major\n");
+		unregister_chrdev_region(MKDEV(major, 0), 1);
+	}
 
-  if (lscpcie_class && !IS_ERR(lscpcie_class)) {
-    PMDEBUG("destroying class\n");
-    class_destroy(lscpcie_class);
-  }
+	if (lscpcie_class && !IS_ERR(lscpcie_class)) {
+		PMDEBUG("destroying class\n");
+		class_destroy(lscpcie_class);
+	}
 
-  PMDEBUG("done cleaning up module\n");
+	PMDEBUG("done cleaning up module\n");
 }
 
 int get_device_number(const struct dev_struct *dev)
 {
-  int i;
+	int i;
 
-  for (i = 0; i < MAX_BOARDS; i++)
-    if (dev == lscpcie_devices + i)
-      return i;
+	for (i = 0; i < MAX_BOARDS; i++)
+		if (dev == lscpcie_devices + i)
+			return i;
 
-  return -1;
+	return -1;
 }
 
 module_init(lscpcie_module_init);

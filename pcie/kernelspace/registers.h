@@ -16,6 +16,12 @@
 #endif
 #include <linux/types.h>
 
+/* device status bits relevant in user space */
+#define DEV_HARDWARE_PRESENT 0x2000
+#define DEV_FIFO_OVERFLOW    0x4000
+#define DEV_DMA_OVERFLOW     0x8000
+
+
 //PCIe Addresses
 typedef enum {
 	PCIeAddr_devCap = 0x5C,
@@ -398,6 +404,8 @@ typedef struct {
 	int32_t read_pos;
 	int32_t irq_count;
 	int32_t stimer_val;
+	uint16_t debug_mode;
+	uint16_t status;
 } lscpcie_control_t;
 
 extern const char reg_names[][16];
