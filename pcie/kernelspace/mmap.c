@@ -35,7 +35,7 @@ int mmap_register_remap_mmap(struct file *filp, struct vm_area_struct *vma)
 	case 0:	/* remap dev->base_address to user space, previously mapped
 		  to pci io
 		*/
-		if (!(dev->status & DEV_HARDWARE_PRESENT))
+		if (!(device_test_status(dev, DEV_HARDWARE_PRESENT)))
 			return -ENODEV;
 		PDEBUG(D_MMAP,
 		       "register remap at 0x%08lx of size 0x%08lx for io\n",

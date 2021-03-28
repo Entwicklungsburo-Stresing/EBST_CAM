@@ -22,7 +22,7 @@ void out_hex(uint8_t x) {
 
 int main(int argc, char **argv) {
   int i, result, device_number, hardware_present;
-  dev_descr_t *dev;
+  struct dev_descr *dev;
   /*
   uint8_t *io_ptr = MAP_FAILED, *dma_ptr = MAP_FAILED;
   lscpcie_control_t *control_ptr = MAP_FAILED;
@@ -172,12 +172,6 @@ int main(int argc, char **argv) {
       printf("0x%02x: ", i);
       for (int j = 0; j < 8; j++) {
         out_hex(((uint8_t*)dev->dma_reg)[i+j]);
-        putchar(' ');
-      }
-      printf("   ");
-      for (int j = 0; j < 8; j++) {
-        lscpcie_read_reg8(0, i+j, &val);
-        out_hex(val);
         putchar(' ');
       }
      printf("\n");

@@ -22,19 +22,17 @@
 
 #define MOD_PCI_REGISTERED   0x01
 
-#define DEV_HARDWARE_PRESENT 0x01
-#define DEV_PCI_ENABLED      0x04
-#define DEV_CDEV_CREATED     0x08
-#define DEV_CLASS_CREATED    0x10
-#define DEV_MSI_ENABLED      0x20
-#define DEV_IRQ_REQUESTED    0x40
-#define DEV_BLOCKS_IN_IRQ    0x80
-
-#define DEV_FIFO_OVERFLOW    0x4000
-#define DEV_DMA_OVERFLOW     0x8000
+#define DEV_PCI_ENABLED      0x0001
+#define DEV_CDEV_CREATED     0x0002
+#define DEV_CLASS_CREATED    0x0004
+#define DEV_MSI_ENABLED      0x0008
+#define DEV_IRQ_REQUESTED    0x0010
+#define DEV_CONTROL_MAPPED   0x0020
+#define DEV_BLOCKS_IN_IRQ    0x0040
 
 struct dev_struct {
-	u16 status;
+	u16 init_status;
+	u16 init_debug_mode;
 	u32 physical_pci_base;
 	void __iomem *mapped_pci_base;
 	dma_addr_t dma_handle;
@@ -49,13 +47,12 @@ struct dev_struct {
 	struct proc_dir_entry *proc_io_entry;
 	wait_queue_head_t readq, writeq;
 	struct semaphore write_sem, read_sem, size_sem;
+	wait_queue_head_t proc_readq, proc_writeq;
+	struct semaphore proc_write_sem, proc_read_sem;
 	atomic_t read_available;
 	atomic_t write_available;
-	u16 debug_mode;
 	int minor;
 	dev_t device;
-	int proc_actual_register;
-	int proc_actual_register_long;
 	u8 irq_line;
 };
 
@@ -65,6 +62,8 @@ extern struct dev_struct lscpcie_devices[MAX_BOARDS];
 int device_init(struct dev_struct *dev, int minor);
 void device_clean_up(struct dev_struct *dev);
 struct dev_struct *device_data(uint8_t devno);
+int device_test_status(struct dev_struct *dev, u16 bits);
+void device_set_status(struct dev_struct *dev, u16 mask, u16 bits);
 
 #define VENDOR_ID 0x10EE
 #define DEVICE_ID 0x0007
