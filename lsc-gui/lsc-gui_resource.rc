@@ -1,6 +1,6 @@
 #include <windows.h>
 
-IDI_ICON1	ICON	DISCARDABLE	"C:\\Users\\flori\\Stresing\\EBST_CAM\\shared_src\\CCD.ico"
+IDI_ICON1	ICON	DISCARDABLE	"C:\\ENTW\\PCIE\\EBST_CAM\\shared_src\\CCD.ico"
 
 VS_VERSION_INFO VERSIONINFO
 	FILEVERSION 3,16,3,0
