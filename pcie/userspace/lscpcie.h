@@ -50,10 +50,17 @@ typedef enum { xck = 0, exttrig = 1, dat = 2 } trigger_mode_t;
 // camera operations
 int lscpcie_driver_init(void);
 int lscpcie_open(uint dev_no, uint16_t options);
-int lscpcie_setup_dma(struct dev_descr *dev);
 void lscpcie_close(uint dev_no);
+int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode,
+		int number_of_scans, int number_of_blocks,
+		int dmas_per_interrupt);
+int lscpcie_start_scan(struct dev_descr * dev);
+int lscpcie_start_block(struct dev_descr *dev);
+int lscpcie_end_block(struct dev_descr *dev);
+int lscpcie_end_acquire(struct dev_descr *dev);
 ssize_t lscpcie_readout(struct dev_descr *dev, uint16_t * buffer,
 			size_t items_to_read);
+int lscpcie_setup_dma(struct dev_descr *dev);
 int lscpcie_hardware_present(struct dev_descr *dev);
 int lscpcie_fifo_overflow(struct dev_descr *dev);
 int lscpcie_clear_fifo(struct dev_descr *dev);
