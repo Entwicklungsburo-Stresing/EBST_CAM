@@ -3,7 +3,9 @@
 #include <stdio.h>
 #include <memory.h>
 #include <errno.h>
-
+#include <termios.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 int init_7030(unsigned int dev_no)
 {
@@ -163,4 +165,29 @@ void print_data(const struct camera_info_struct *info) {
 				for (pixel = 0; pixel < n_pixel; pixel++, i++)
 					printf("%d %d %d %d: %d\n", block, scan,
 					       camera, pixel, info->data[i]);
+}
+
+int kbhit(void)
+{
+	struct termios oldt, newt;
+	int ch;
+	int oldf;
+
+	tcgetattr(STDIN_FILENO, &oldt);
+	newt = oldt;
+	newt.c_lflag &= ~(ICANON | ECHO);
+	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+	oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+	fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+
+	ch = getchar();
+
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+	fcntl(STDIN_FILENO, F_SETFL, oldf);
+
+	if(ch == EOF)
+		return 0;
+
+	ungetc(ch, stdin);
+	return 1;
 }

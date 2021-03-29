@@ -9,6 +9,7 @@ int init_7030(unsigned int dev_no);
 int readout_init(int argc, char **argv, struct camera_info_struct *info);
 int fetch_data_mapped(struct dev_descr *dev, uint8_t *data, size_t max);
 void print_data(const struct camera_info_struct *info);
+int kbhit(void);
 
 
 #endif /* _lscpcie_examples_common_h_ */
