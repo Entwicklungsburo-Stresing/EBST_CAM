@@ -129,28 +129,11 @@ DllAccess es_status_codes DLLCCDDrvExit( UINT32 drvno )
 }
 
 /**
-\brief Initialize the PCIe board. Must be called once at the start.
-	Is called automatically for 2 boards.
-\param drv board number (=1 if one PCI board)
-\param camcnt amount of cameras
-\param pixel number of all pixel (active + dummy pixel)
-\param pclk =0 pixelclock, not used here
-\param xckdelay =3, depends on sensor, sets a delay after xck goes high, =7 for Sony sensors
-\return es_status_codes
-	- es_no_error
-	- es_invalid_pixel_count
-	- es_invalid_driver_number
-	- es_getting_device_info_failed
-	- es_open_device_failed
-*/
-DllAccess es_status_codes DLLInitBoard( UINT32 drv, UINT32 camcnt, UINT32 pixel, UINT32 pclk, UINT32 xckdelay )
+ * \copydoc InitBoard
+ */
+DllAccess es_status_codes DLLInitBoard( UINT32 drv )
 {
-	es_status_codes status = SetGlobalVariables( drv, camcnt, pixel, xckdelay );
-	if (status == es_no_error)
-		status = InitBoard( drv );
-	if (status == es_no_error)
-		status = SetBoardVars( drv ); //sets data for transfer
-	return status; // no error
+	return InitBoard(drv);
 }
 
 /**
