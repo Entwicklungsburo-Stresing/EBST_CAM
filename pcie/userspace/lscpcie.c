@@ -161,7 +161,7 @@ int lscpcie_open(uint dev_no, uint16_t options)
 	// dma control struct in ram
 	dev->control
 	    =
-	    mmap(NULL, sizeof(lscpcie_control_t), PROT_READ | PROT_WRITE,
+	    mmap(NULL, sizeof(struct control_struct), PROT_READ | PROT_WRITE,
 		 MAP_SHARED, handle, page_size);
 
 	if (dev->control == MAP_FAILED) {
@@ -221,7 +221,8 @@ int lscpcie_open(uint dev_no, uint16_t options)
 			goto error;
 		}
 		// s0 addres space pointer
-		dev->s0 = (s0_t *) (((uint8_t *) dev->dma_reg) + 0x80);
+		dev->s0 = (struct s0_reg_struct *)
+			(((uint8_t *) dev->dma_reg) + 0x80);
 
 		// startval for CTRLA Reg  +slope, IFC=h, VON=1
 		// clear CTRLB & CTRLC
@@ -282,7 +283,7 @@ void lscpcie_close(uint dev_no)
 		munmap(dev->dma_reg, 0x100);
 
 	if (dev->control != MAP_FAILED)
-		munmap(dev->control, sizeof(lscpcie_control_t));
+		munmap(dev->control, sizeof(struct control_struct));
 
 	if (dev->handle >= 0)
 		close(dev->handle);

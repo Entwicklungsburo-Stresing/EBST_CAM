@@ -70,7 +70,9 @@ const struct dev_struct lscpcie_device_init = {
 	.init_status = 0,
 	.init_debug_mode = 0,
 	.physical_pci_base = 0,
-	.mapped_pci_base = 0,
+	//.mapped_pci_base = 0,
+	.dma_reg = 0,
+	.s0_reg = 0,
 	.read_available = ATOMIC_INIT(1),
 	.write_available = ATOMIC_INIT(1),
 	.minor = -1,
@@ -177,8 +179,11 @@ void clean_up_lscpcie_module(void)
 			PMDEBUG("removing device %d\n", i);
 			proc_clean_up(dev);
 			dma_finish(dev);
-			if (dev->mapped_pci_base)
-				iounmap(dev->mapped_pci_base);
+			if (dev->dma_reg) {
+				iounmap(dev->dma_reg);
+				dev->dma_reg = 0;
+				dev->s0_reg = 0;
+			}
 		}
 
 	if (module_status & MOD_PCI_REGISTERED) {

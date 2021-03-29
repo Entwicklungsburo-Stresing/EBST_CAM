@@ -167,7 +167,6 @@ int main(int argc, char **argv) {
     //for (int i = 0; i < 512; i++)
     //  ((uint8_t*)dev->dma_reg)[i] = 0x00;
 
-    uint8_t val;
     for (int i = 0; i < 512; i += 8) {
       printf("0x%02x: ", i);
       for (int j = 0; j < 8; j++) {

@@ -164,9 +164,9 @@ static enum irqreturn isr(int irqn, void *dev_id)
 	PDEBUG(D_INTERRUPT, "got interrupt %d\n", dev->control->irq_count);
 
 	old_write_pos = dev->control->write_pos;
-	fifo_flags = readb(dev->mapped_pci_base + 0x80 + S0Addr_FF_FLAGS);
+	fifo_flags = read_s0_byte(dev, FF_FLAGS);
 
-	set_bits_s0_dword(dev, S0Addr_IRQREG, (1 << IRQ_REG_ISR_active),
+	set_bits_s0_dword(dev, IRQREG.REG32, (1 << IRQ_REG_ISR_active),
 			  (1 << IRQ_REG_ISR_active));
 
 	if (fifo_flags & (1 << FF_FLAGS_OVFL))
@@ -179,28 +179,28 @@ static enum irqreturn isr(int irqn, void *dev_id)
 
 	if (device_test_status(dev, DEV_BLOCKS_IN_IRQ)) {
 		// end block
-		set_bits_s0_dword(dev, S0Addr_PCIEFLAGS, 0, 1<<PCIEFLAG_BLOCKON);
+		set_bits_s0_dword(dev, PCIEFLAGS, 0, 1<<PCIEFLAG_BLOCKON);
 
-		if (read_s0_dword(dev, S0Addr_BLOCK_IDX)
-			< read_s0_dword(dev, S0Addr_BLOCKS)) {
+		if (read_s0_dword(dev, BLOCK_INDEX)
+			< read_s0_dword(dev, NUMBER_OF_BLOCKS)) {
 			// not yet at end
 			// make pulse for blockindex counter
-			pulse_bit(dev, S0Addr_PCIEFLAGS, 1<<PCIEFLAG_BLOCKTRIG);
+			pulse_bit(dev, PCIEFLAGS, 1<<PCIEFLAG_BLOCKTRIG);
 
 			// reset scan counter
-			pulse_bit(dev, S0Addr_SCAN_INDEX, 1<<SCAN_INDEX_RESET);
+			pulse_bit(dev, SCAN_INDEX, 1<<SCAN_INDEX_RESET);
 
-			set_bits_s0_dword(dev, S0Addr_PCIEFLAGS,
+			set_bits_s0_dword(dev, PCIEFLAGS,
 					1<<PCIEFLAG_BLOCKON,
 					1<<PCIEFLAG_BLOCKON);
 
 			// start Stimer -> set usecs and RS to one
-			set_bits_s0_dword(dev, S0Addr_XCK,
+			set_bits_s0_dword(dev, XCK,
 					dev->control->stimer_val,
 					XCK_EC_MASK);
 
 			// software trigger
-			pulse_bit(dev, S0Addr_BTRIGREG, 1<<FREQ_REG_SW_TRIG);
+			pulse_bit(dev, BTRIGREG, 1<<FREQ_REG_SW_TRIG);
 		}
 	}
 
@@ -216,7 +216,7 @@ static enum irqreturn isr(int irqn, void *dev_id)
 	device_set_status(dev, DEV_DMA_OVERFLOW, DEV_DMA_OVERFLOW);
 
       end:
-	set_bits_s0_dword(dev, S0Addr_IRQREG, 0,
+	set_bits_s0_dword(dev, IRQREG.REG32, 0,
 			  (1 << IRQ_REG_ISR_active));
 	PDEBUG(D_INTERRUPT, "pointers %d %d\n", dev->control->write_pos,
 	       dev->control->read_pos);

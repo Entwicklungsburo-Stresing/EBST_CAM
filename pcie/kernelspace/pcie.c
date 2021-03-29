@@ -87,13 +87,13 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 
 	dev->physical_pci_base = pci_resource_start(pci_dev, 2);
 	dev->control->io_size = pci_resource_len(pci_dev, 2);
-	dev->mapped_pci_base
+	dev->dma_reg
 	    =
 	    ioremap_nocache(dev->physical_pci_base, dev->control->io_size);
-	assert(dev->mapped_pci_base != 0,
+	assert(dev->dma_reg != 0,
 	       "ioremap of address space failed", goto out_error, -1);
-	PDEBUG(D_PCI, "mapped address space 2 to %p\n",
-	       dev->mapped_pci_base);
+	dev->s0_reg = (struct s0_reg_struct*) (((u8*) dev->dma_reg) + 0x80);
+	PDEBUG(D_PCI, "mapped address space 2 to %p\n", dev->dma_reg);
 
 	pci_set_master(pci_dev);
 
