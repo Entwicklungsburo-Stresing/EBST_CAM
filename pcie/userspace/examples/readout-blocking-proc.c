@@ -53,8 +53,7 @@ int lscpcie_acquire_block_proc(struct dev_descr *dev, uint8_t *data,
 			return result;
 
 		bytes_read += result;
-		fprintf(stderr, "got %d bytes of data, having now %d\n",
-			result, bytes_read);
+		fprintf(stderr, "got %d bytes of data\n", result);
 	} while (bytes_read < block_size);
 
         result = lscpcie_end_block(dev);
@@ -88,6 +87,7 @@ int main(int argc, char **argv)
 			goto out;
 		}
 		bytes_read += result;
+		fprintf(stderr, "have now %d bytes of data\n", bytes_read);
 	} while (bytes_read < info.mem_size);
 
 	fprintf(stderr, "finished measurement\n");
