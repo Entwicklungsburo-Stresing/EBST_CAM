@@ -73,28 +73,30 @@ struct ffloopparams params;
 // ***********     functions    ********************** 
 
 /**
-\brief Switch on error message boxes. Default is On.
-\return none
-*/
-void ErrMsgBoxOn( void )
+ * \brief Switch on error message boxes of our software. Default is On.
+ * 
+ * \return none.
+ */
+void ErrMsgBoxOn()
 {
 	_SHOW_MSG = TRUE;
 }
 
 /**
-\brief Disable error message boxes.
-\return none
-*/
-void ErrMsgBoxOff( void )
+ * \brief Disable error message boxes, if not needed.
+ * \return none
+ */
+void ErrMsgBoxOff()
 {
 	_SHOW_MSG = FALSE;
 }
 
 /**
-\brief Display error message.
-\param ErrMsg Message. Buffer size: 100.
-\return none
-*/
+ * \brief Display error message. If ErrMsgBoxOn is set.
+ * 
+ * \param ErrMsg Message. Buffer size: 100.
+ * \return none
+ */
 void ErrorMsg( char ErrMsg[100] )
 {
 	if (_SHOW_MSG)
@@ -103,6 +105,12 @@ void ErrorMsg( char ErrMsg[100] )
 	}
 };
 
+/**
+ * \brief Simple display of unsigned integer as error message for test purpose.
+ * 
+ * \param val unsigned integer 64 bit
+ * \return none.
+ */
 void ValMsg( UINT64 val )
 {
 	char AString[60];
