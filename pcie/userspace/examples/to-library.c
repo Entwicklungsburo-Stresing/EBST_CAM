@@ -50,6 +50,15 @@ int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode,
 	dev->s0->NUMBER_OF_SCANS = number_of_scans * number_of_blocks;
 	dev->s0->DMA_BUF_SIZE_IN_SCANS = number_of_scans * number_of_blocks * 2;
 
+	fprintf(stderr, "dmas per interrupt is %d\n",
+		dev->s0->DMAS_PER_INTERRUPT);
+	fprintf(stderr, "bytes per interrupt is %d\n",
+		dev->control->bytes_per_interrupt);
+	fprintf(stderr, "number of scans is %d\n",
+		dev->s0->NUMBER_OF_SCANS);
+	fprintf(stderr, "buf size in scans is %d\n",
+		dev->s0->DMA_BUF_SIZE_IN_SCANS);
+
 	return result;
 }
 
