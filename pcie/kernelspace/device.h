@@ -34,11 +34,13 @@ struct dev_struct {
 	u16 init_status;
 	u16 init_debug_mode;
 	u32 physical_pci_base;
-	void __iomem *mapped_pci_base;
+	//void __iomem *mapped_pci_base;
+	struct dma_reg_struct *dma_reg;
+	struct s0_reg_struct *s0_reg;
 	dma_addr_t dma_handle;
 	void *dma_virtual_mem;
 	u32 dma_mem_size;
-	lscpcie_control_t *control;
+	struct control_struct *control;
 	struct pci_dev *pci_dev;
 	struct cdev cdev;
 	struct proc_dir_entry *proc_data_entry;

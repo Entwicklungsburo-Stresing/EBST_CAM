@@ -1,4 +1,5 @@
 #include "to-library.h"
+#include "../../kernelspace/registers-common.h"
 #include <stdio.h>
 
 /* commands which do not depend on the camera type but access the hardware by
@@ -7,8 +8,9 @@
 #define memory_barrier() asm volatile ("" : : : "memory")
 
 /* prepare registers for individual scan */
-int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode, int number_of_scans,
-		int number_of_blocks, int dmas_per_interrupt)
+int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode,
+		int number_of_scans, int number_of_blocks,
+		int dmas_per_interrupt)
 {
 	int result;
 	uint32_t hwd_req = (1<<IRQ_REG_HWDREQ_EN);
@@ -24,9 +26,9 @@ int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode, int number_of_sca
 		return result;
 
 	if (HWDREQ_EN)
-		SET_BITS(dev->s0->IRQ.IRQREG, hwd_req, hwd_req);
+		SET_BITS(dev->s0->IRQREG.REG32, hwd_req, hwd_req);
 	else
-		SET_BITS(dev->s0->IRQ.IRQREG, 0, hwd_req);
+		SET_BITS(dev->s0->IRQREG.REG32, 0, hwd_req);
 
 	// set trigger mode to block timer and scan timer + shutter not on
 	dev->s0->CTRLB

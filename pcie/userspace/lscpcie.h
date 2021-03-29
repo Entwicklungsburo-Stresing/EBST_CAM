@@ -15,7 +15,7 @@
 #define uconst const
 
 #include "types.h"
-#include "../kernelspace/registers.h"
+#include "../kernelspace/registers-common.h"
 #include <sys/types.h>
 
 
@@ -24,13 +24,13 @@ extern "C" {
 #endif
 
 struct dev_descr {
-	int handle;	// file handle to /dev/lscpcie<n>
-	int number_of_tlps;	// driver-internal
-	int tlp_size;	// driver-internal
-	s0_t *s0;	// memory mapped pointer to s0 pcie registers
-	dma_reg_t *dma_reg;	// memory mapped pointer to dma pcie registers
+	int handle;	          // file handle to /dev/lscpcie<n>
+	int number_of_tlps;	  // driver-internal
+	int tlp_size;	          // driver-internal
+	struct s0_reg_struct *s0; // memory mapped pointer to s0 pcie registers
+	struct dma_reg_struct *dma_reg;	// memory mapped pointer to dma pcie registers
 	const uint8_t *mapped_buffer;	// memory mapped pointer dma buffer
-	lscpcie_control_t *control;	// memory mapped pointer to driver control area
+	struct control_struct *control;	// memory mapped pointer to driver control area
 };
 
 typedef enum { xck = 0, exttrig = 1, dat = 2 } trigger_mode_t;

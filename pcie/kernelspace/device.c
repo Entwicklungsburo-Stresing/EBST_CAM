@@ -88,7 +88,7 @@ int device_init(struct dev_struct *dev, int minor)
 
 	/* get one page of ram for the control structure which is going to be
 	   exported to user spcae */
-	dev->control = (lscpcie_control_t *) get_zeroed_page(GFP_KERNEL);
+	dev->control = (struct control_struct *) get_zeroed_page(GFP_KERNEL);
 	if (!dev->control) {
 		printk(KERN_ERR NAME
 		       ": failed to allocate memory for control block");
