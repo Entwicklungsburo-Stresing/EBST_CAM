@@ -72,18 +72,24 @@ int main(int argc, char **argv)
 */
 	do {
 		// wait for trigger signal
-		if (info.dev->s0->CTRLA & (1 << CTRLA_TSTART))
+		if (!(info.dev->s0->CTRLA & (1 << CTRLA_TSTART)))
 			continue;
 
 		result = lscpcie_acquire_block_fs(info.dev,
 						(uint8_t *) info.data, 2,
 						info.dev->handle);
-		if (result) {
+		if (result < 0) {
 			fprintf(stderr, "error %d when acquiring block\n",
 				result);
 			goto out;
 		}
-	} while ((bytes_read < info.mem_size) || kbhit());
+		bytes_read += result;
+	} while ((bytes_read < info.mem_size) &&! kbhit());
+
+	if (kbhit()) {
+		fprintf(stderr, "measurement interrupted\n");
+		return 1;
+	}
 
 	fprintf(stderr, "finished measurement\n");
 
