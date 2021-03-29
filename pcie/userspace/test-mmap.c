@@ -22,7 +22,7 @@ void out_hex(uint8_t x) {
 
 int main(int argc, char **argv) {
   int i, result, device_number, hardware_present;
-  dev_descr_t *dev;
+  struct dev_descr *dev;
   /*
   uint8_t *io_ptr = MAP_FAILED, *dma_ptr = MAP_FAILED;
   lscpcie_control_t *control_ptr = MAP_FAILED;

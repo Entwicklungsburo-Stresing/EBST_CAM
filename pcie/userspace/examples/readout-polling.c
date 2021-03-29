@@ -69,6 +69,9 @@ int main(int argc, char **argv)
 	struct camera_info_struct info;
 
 	result = readout_init(argc, argv, &info);
+	if (result < 0)
+		return result;
+
 	bytes_read = 0;
 
 	do {
