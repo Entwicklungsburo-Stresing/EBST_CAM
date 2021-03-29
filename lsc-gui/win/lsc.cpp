@@ -17,28 +17,22 @@ es_status_codes Lsc::initDriver()
 
 es_status_codes Lsc::initPcieBoard()
 {
-
-    SetGlobalVariables(1, 1, 576, 0);
     return InitBoard(1);
 }
 
-void Lsc::initMeasurement(struct global_settings* settings_struct)
+es_status_codes Lsc::initMeasurement(struct global_settings* settings_struct)
 {
-   //old InitMeasurement(1, camcnt, pixel, xckdelay);
-    InitMeasurement(settings_struct);
-    return;
+    return InitMeasurement(settings_struct);
 }
 
-void Lsc::startMeasurement(uint8_t boardsel)
+es_status_codes Lsc::startMeasurement(uint8_t boardsel)
 {
-    StartMess(boardsel);
-    return;
+    return StartMeasurement(boardsel);
 }
 
-void Lsc::returnFrame(uint32_t board, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length)
+es_status_codes Lsc::returnFrame(uint32_t board, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length)
 {
-    ReturnFrame(board, sample, block, camera, pdest, length);
-    return;
+    return ReturnFrame(board, sample, block, camera, pdest, length);
 }
 
 std::string Lsc::dumpS0Registers()

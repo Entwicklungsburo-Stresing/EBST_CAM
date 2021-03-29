@@ -47,17 +47,8 @@ BOOL CALLING_WITH_NOS, CALLING_WITH_NOB = FALSE;
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow )
 {
 	MSG      msg;
-	SetGlobalVariables( choosen_board, CAMCNT, _PIXEL, XCKDELAY );
 	if (!InitApplication( hInstance ))
 		return FALSE;
-
-	//make init here, that CCDExamp can be used to read the act regs...
-	es_status_codes status = SetBoardVars(choosen_board);
-	if (status != es_no_error)
-	{
-		ErrorMsg( "Error in SetBoardVars" );
-		return FALSE;
-	}
 	//show allocate buffer dialog before entering main application
 	if(SENSOR_TYPE == FFTsensor) DialogBox( hInstance, MAKEINTRESOURCE( IDD_SETFULLBIN ), hMSWND, (DLGPROC)FullBinning );
 	else DialogBox( hInstance, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
@@ -115,7 +106,6 @@ BOOL InitApplication( HINSTANCE hInstance )
 		ErrorMsg( " Can't open CCD driver " );
 		return (FALSE);
 	};
-
 	status = InitBoard(1);
 	if (status != es_no_error)
 	{

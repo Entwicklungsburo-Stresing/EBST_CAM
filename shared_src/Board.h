@@ -8,6 +8,7 @@ extern "C" {
 #include "Board_ll.h"
 #include "UIAbstractionLayer.h"
 
+#define MAX_PIXEL_COUNT 8256
 #define DBGNOCAM FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
 #define DMA_BUFFER_SIZE_IN_SCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
 #define DMA_BUFFER_PARTS 2
@@ -58,8 +59,8 @@ es_status_codes AboutS0( UINT32 drvno );
 es_status_codes CCDDrvInit();
 es_status_codes CCDDrvExit( UINT32 drvno );	// closes the driver
 es_status_codes InitBoard( UINT32 drvno );	// init the board and alloc mem, call only once !
-void InitMeasurement(struct global_settings* settings);
-BOOL StartMess(UINT32 board_sel);
+es_status_codes InitMeasurement(struct global_settings* settings);
+es_status_codes StartMeasurement(UINT32 board_sel);
 es_status_codes SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno );
 es_status_codes SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno );
 es_status_codes SetDMAAddrTlp( UINT32 drvno );

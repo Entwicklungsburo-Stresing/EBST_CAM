@@ -64,7 +64,7 @@ BOOL CONTFFLOOP = FALSE;
 UINT32 CONTPAUSE = 1;  // delay between loops in continous mode
 UINT16* temp_userBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 UINT16** userBuffer= temp_userBuffer;
-UINT32 tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
+UINT32 tmp_aPIXEL[MAXPCIECARDS] = { MAX_PIXEL_COUNT, MAX_PIXEL_COUNT, MAX_PIXEL_COUNT, MAX_PIXEL_COUNT, MAX_PIXEL_COUNT };
 UINT32* aPIXEL = tmp_aPIXEL;
 BOOL Running = FALSE;
 UINT32 BOARD_SEL = 1;
@@ -429,14 +429,12 @@ es_status_codes InitBoard( UINT32 drvno )
 	if ((drvno < 1) || (drvno > 2)) return es_invalid_driver_number;
 	//PWDC_DEVICE pDev = (PWDC_DEVICE)hDev;
 	volatile DWORD dwStatus = 0;
-	WDC_Err( "Info: scan result: a board found:%lx , dev=%lx, ven=%lx \n",
-		scanResult.dwNumDevices, scanResult.deviceId[drvno - 1].dwDeviceId, scanResult.deviceId[drvno - 1].dwVendorId );
+	WDC_Err( "Info: scan result: a board found:%lx , dev=%lx, ven=%lx \n", scanResult.dwNumDevices, scanResult.deviceId[drvno - 1].dwDeviceId, scanResult.deviceId[drvno - 1].dwVendorId );
 	//gives the information received from PciScanDevices to PciGetDeviceInfo
 	BZERO( deviceInfo[drvno] );
 	memcpy( &deviceInfo[drvno].pciSlot, &scanResult.deviceSlot[drvno - 1], sizeof( deviceInfo[drvno].pciSlot ) );
 
 	/* Retrieve the device's resources information */
-
 	dwStatus = WDC_PciGetDeviceInfo( &deviceInfo[drvno] );
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
@@ -451,7 +449,7 @@ es_status_codes InitBoard( UINT32 drvno )
 
 	WDC_Err( "Info: device info: bus:%lx , slot=%lx, func=%lx \n", deviceInfo[drvno].pciSlot.dwBus, deviceInfo[drvno].pciSlot.dwSlot, deviceInfo[drvno].pciSlot.dwFunction );
 	WDC_Err( "Info: device info: items:%lx , item[0]=%lx \n", deviceInfo[drvno].Card.dwItems, deviceInfo[drvno].Card.Item[0] );
-	
+
 	hDev[drvno] = LSCPCIEJ_DeviceOpen( &deviceInfo[drvno] );
 	if (!hDev[drvno])
 	{
@@ -465,32 +463,25 @@ es_status_codes InitBoard( UINT32 drvno )
 	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
 	WDC_Err( "DRVInit hDev id % x, hDev pci slot %x, hDev pci bus %x, hDev pci function %x, hDevNumAddrSp %x \n"
 		, pDev->id, pDev->slot.dwSlot, pDev->slot.dwBus, pDev->slot.dwFunction, pDev->dwNumAddrSpaces );
-	/*
-	//for testing
-	KP_LSCPCIEJ_VERSION Data;
-	KP_LSCPCIEJ_VERSION *pData;
-	pData = &Data;
-	DWORD dwResult;
-	PDWORD	pdwResult = &dwResult;
-
-	WDC_CallKerPlug(hDev, KP_LSCPCIEJ_MSG_VERSION, pData, pdwResult);
-	if (*pdwResult != KP_LSCPCIEJ_STATUS_OK)
-	{
-	ErrLog("KP_CALL failed!!!.\n"
-	"Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
-	WDC_Err("%s", LSCPCIEJ_GetLastErr());
-	return FALSE;
-	}
-	WDC_Err("KPCALL: Version: %u \n", Data.dwVer);
-	*/
 	// allocate DMA buffer
-	es_status_codes status = SetupPCIE_DMA(drvno);
-	if (status != es_no_error) ErrorMsg( "Error in SetupPCIE_DMA" );
-	return status;
+	return SetupPCIE_DMA(drvno);
 };  // InitBoard
 
-//**************  new for PCIE   *******************************
-void initCamera(UINT32 drvno,  UINT8 camera_system, UINT16 pixel, UINT16 trigger_mode, UINT16 sensor_type, UINT8 ADC_Mode, UINT16 ADC_custom_pettern, UINT16 led_on, UINT16 gain_3010, UINT8 gain_3030)
+/**
+ * \brief .
+ * 
+ * \param drvno
+ * \param camera_system
+ * \param pixel
+ * \param trigger_mode
+ * \param sensor_type
+ * \param ADC_Mode
+ * \param ADC_custom_pettern
+ * \param led_on
+ * \param gain_3010
+ * \param gain_3030
+ */
+es_status_codes initCamera(UINT32 drvno,  UINT8 camera_system, UINT16 pixel, UINT16 trigger_mode, UINT16 sensor_type, UINT8 ADC_Mode, UINT16 ADC_custom_pettern, UINT16 led_on, UINT16 gain_3010, UINT8 gain_3030)
 {
 	switch (camera_system)
 	{
@@ -507,110 +498,113 @@ void initCamera(UINT32 drvno,  UINT8 camera_system, UINT16 pixel, UINT16 trigger
 	}
 }
 
-void InitMeasurement(struct global_settings* settings) 
+/**
+ * \brief Initialize Measurement.
+ * 
+ * \param settings struct global_settings
+ * \return es_status_codes
+ *		- 
+ */
+es_status_codes InitMeasurement(struct global_settings* settings)
 {
-	//TODO: error handling / return type
-	// 
-	ClearAllUserRegs(settings->drvno);
-	SetBoardVars(settings->drvno);
-
-	SetGlobalVariables(settings->drvno, settings->camcnt, settings->pixel, settings->xckdelay);
-	if (WDC_IntIsEnabled(hDev[settings->drvno]))
-	{
-		WDC_Err("cleanup dma\n");
-		CleanupPCIE_DMA(settings->drvno);
-	}
-	SetupPCIE_DMA(settings->drvno);
-
+	es_status_codes status = ClearAllUserRegs(settings->drvno);
+	if (status != es_no_error) return status;
+	status = SetGlobalVariables(settings->drvno, settings->camcnt, settings->pixel, settings->xckdelay);
+	if (status != es_no_error) return status;
+	status = SetBoardVars( settings->drvno );
+	if (status != es_no_error) return status;
 	//set PDA and FFT
-	SetSensorType(settings->drvno, settings->sensor_type);
-	ResetPartialBinning(settings->drvno);
-	if (settings->sensor_type == FFTsensor) {
-		switch (settings->FFTMode) {
+	status = SetSensorType(settings->drvno, settings->sensor_type);
+	if (status != es_no_error) return status;
+	status = ResetPartialBinning(settings->drvno);
+	if (status != es_no_error) return status;
+	if (settings->sensor_type == FFTsensor)
+	{
+		switch (settings->FFTMode)
+		{
 			case full_binning:
-				SetupFullBinning(settings->drvno, settings->FFTLines, settings->Vfreq);
+				status = SetupFullBinning(settings->drvno, settings->FFTLines, settings->Vfreq);
+				if (status != es_no_error) return status;
 				break;
 			case partial_binning:
-				DLLSetupROI(settings->drvno, settings->number_of_regions, settings->FFTLines, settings->keep_first, settings->region_size, settings->Vfreq);
+				status = DLLSetupROI(settings->drvno, settings->number_of_regions, settings->FFTLines, settings->keep_first, settings->region_size, settings->Vfreq);
+				if (status != es_no_error) return status;
 				break;
 			case area_mode:
-				DLLSetupArea(settings->drvno, settings->lines_binning, settings->Vfreq);
+				status = DLLSetupArea(settings->drvno, settings->lines_binning, settings->Vfreq);
+				if (status != es_no_error) return status;
 				break;
-
 		}
 	}
-
 	//allocate Buffer
-	SetMeasurementParameters(settings->drvno, settings->nos, settings->nob);
-
-	CloseShutter(settings->drvno); //set cooling  off
+	status = SetMeasurementParameters(settings->drvno, settings->nos, settings->nob);
+	if (status != es_no_error) return status;
+	status = CloseShutter(settings->drvno); //set cooling  off
+	if (status != es_no_error) return status;
 	//set mshut
 	if (settings->mshut) {
-		CloseShutter(settings->drvno);
-		SetSEC(settings->drvno, settings->ShutterExpTime * 100);
-		SetTORReg(settings->drvno, TOR_SSHUT);
+		status = CloseShutter(settings->drvno);
+		if (status != es_no_error) return status;
+		status = SetSEC(settings->drvno, settings->ShutterExpTime * 100);
+		if (status != es_no_error) return status;
+		status = SetTORReg(settings->drvno, TOR_SSHUT);
+		if (status != es_no_error) return status;
 	}
 	else {
-		ResetSEC(settings->drvno);
-		SetTORReg(settings->drvno, settings->TORmodus);
+		status = ResetSEC(settings->drvno);
+		if (status != es_no_error) return status;
+		status = SetTORReg(settings->drvno, settings->TORmodus);
+		if (status != es_no_error) return status;
 	}
-
 	//SSlope
-	if (settings->sslope == 0)	HighSlope(settings->drvno);
-	if (settings->sslope == 1)	LowSlope(settings->drvno);
-	if (settings->sslope == 2)	BothSlope(settings->drvno);
+	if (settings->sslope == 0)	status = HighSlope(settings->drvno);
+	if (settings->sslope == 1)	status = LowSlope(settings->drvno);
+	if (settings->sslope == 2)	status = BothSlope(settings->drvno);
+	if (status != es_no_error) return status;
 	//BSlope
-	SetBSlope(settings->drvno, settings->bslope);
-
-
-	/*sti_mode enum:
-	- 0: I
-	- 1: S1
-	- 2: S2
-	- 3: unused
-	- 4: S Timer
-	- 5: ASL
-	*/
-	SetSTI(settings->drvno, settings->sti_mode);
-	/*bit_mode enum:
-		- 0: I
-	- 1: S1
-	- 2: S2
-	- 3: S1&s2
-	- 4: BTIMER*/
-	SetBTI(settings->drvno, settings->bti_mode);
-
-	SetSTimer(settings->drvno, settings->stime_in_microsec);
-	SetBTimer(settings->drvno, settings->btime_in_microsec);
-
-	if (settings->enable_gpx) InitGPX(settings->drvno, settings->gpx_offset);
-
+	status = SetBSlope(settings->drvno, settings->bslope);
+	if (status != es_no_error) return status;
+	status = SetSTI(settings->drvno, settings->sti_mode);
+	if (status != es_no_error) return status;
+	status = SetBTI(settings->drvno, settings->bti_mode);
+	if (status != es_no_error) return status;
+	status = SetSTimer(settings->drvno, settings->stime_in_microsec);
+	if (status != es_no_error) return status;
+	status = SetBTimer(settings->drvno, settings->btime_in_microsec);
+	if (status != es_no_error) return status;
+	if (settings->enable_gpx) status = InitGPX(settings->drvno, settings->gpx_offset);
+	if (status != es_no_error) return status;
 	//Delay after Trigger
-	SetSDAT(settings->drvno, settings->sdat_in_100ns);
-	SetBDAT(settings->drvno, settings->bdat_in_100ns);
-
-	
-
+	status = SetSDAT(settings->drvno, settings->sdat_in_100ns);
+	if (status != es_no_error) return status;
+	status = SetBDAT(settings->drvno, settings->bdat_in_100ns);
+	if (status != es_no_error) return status;
 	//stop timer
-	StopSTimer(settings->drvno);
-	RSFifo(settings->drvno);
-
+	status = StopSTimer(settings->drvno);
+	if (status != es_no_error) return status;
+	status = RSFifo(settings->drvno);
+	if (status != es_no_error) return status;
 	//init Camera
-	initCamera(settings->drvno, settings->camera_system, settings->pixel, settings->trigger_mode_cc, settings->sensor_type, settings->ADC_Mode, settings->ADC_custom_pettern, settings->led_on, settings->gain_3010, settings->gain_3030);
+	status = initCamera(settings->drvno, settings->camera_system, settings->pixel, settings->trigger_mode_cc, settings->sensor_type, settings->ADC_Mode, settings->ADC_custom_pettern, settings->led_on, settings->gain_3010, settings->gain_3030);
+	if (status != es_no_error) return status;
 	//if IR-Sensor
-	SendFLCAM(settings->drvno, maddr_cam, 0, settings->isIRSensor);
+	status = SendFLCAM(settings->drvno, maddr_cam, 0, settings->isIRSensor);
+	if (status != es_no_error) return status;
 	//for coooled Cam
-	SetTemp(settings->drvno, settings->Temp_level);
+	status = SetTemp(settings->drvno, settings->Temp_level);
+	if (status != es_no_error) return status;
 	//DAC
 	if (settings->dac)
 		for (int channel = 0; channel < 8; channel++)
-			DAC_setOutput(settings->drvno, channel, settings->dac_output[channel]);
-
+		{
+			status = DAC_setOutput( settings->drvno, channel, settings->dac_output[channel] );
+			if (status != es_no_error) return status;
+		}
 	//TODO set cont FF mode with DLL style(CONTFFLOOP = activate;//0 or 1;CONTPAUSE = pause;) or CCDExamp style(check it out)
-	return;
+	return status;
 }
 
-BOOL StartMess(UINT32 board_sel) {
+es_status_codes StartMeasurement(UINT32 board_sel) {
 	params.board_sel = board_sel;
 	//thread wit prio 15
 	_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);
@@ -1013,8 +1007,7 @@ es_status_codes SetupPCIE_DMA( UINT32 drvno )
 {
 	DWORD dwStatus;
 	WDC_Err( "entered SetupPCIE_DMA\n" );
-	//tempBuf = (PUSHORT)userBuffer[drvno] + 500 * sizeof(USHORT);
-	//WDC_Err("setupdma: bigbuf Pixel500: %i\n", *tempBuf);
+	//Because SetupPCIE_DMA is done in start up initialization, aPIXEL was not set before. Thats why aPIXEL is assumed as the maximum value MAX_PIXEL_COUNT at the initialization of aPIXEL.
 	dmaBufferSizeInBytes = DMA_BUFFER_SIZE_IN_SCANS * aPIXEL[drvno] * sizeof( UINT16 );
 	DWORD dwOptions = DMA_FROM_DEVICE | DMA_KERNEL_BUFFER_ALLOC;// | DMA_ALLOW_64BIT_ADDRESS;// DMA_ALLOW_CACHE ;
 	if (DMA_64BIT_EN)
@@ -1042,28 +1035,6 @@ es_status_codes SetupPCIE_DMA( UINT32 drvno )
 	}
 	// data must be copied afterwards to user Buffer 
 #endif
-	userBufferWritePos[drvno] = userBuffer[drvno];	//reset destination buffer to start value
-	IsrCounter = 0;
-	WD_DMA **ppDma = &dmaBufferInfos[drvno];
-	//WDC_Err("RAM Adresses for DMA Buf: %x ,DMA Buf Size: %x\n", (*ppDma)->Page[0].pPhysicalAddr, (*ppDma)->dwBytes);
-	//WDC_Err("RAM Adresses for BigBufBase: %x ,DMA BufSizeinbytes: %x\n", userBuffer[drvno], dmaBufferSizeInBytes);
-	//	ErrorMsg("nach WDC_DMAContigBufLock");
-	//	AboutDMARegs();
-	//for KP
-	//if (HWDREQ_EN)
-	//if(!SendDMAInfoToKP())
-	//WDC_Err("sendDMAInfoToKP failed");
-	//for KP
-	//if (HWDREQ_EN)
-	//if(!SendDMAInfoToKP())
-	//WDC_Err("sendDMAInfoToKP failed");
-	//
-	//for KP
-	//if (HWDREQ_EN)
-	//if(!SendDMAInfoToKP())
-	//WDC_Err("sendDMAInfoToKP failed");
-	//
-	//
 	//set Init Regs
 	es_status_codes status = SetDMAAddrTlp(drvno);
 	if (status != es_no_error)
@@ -1284,19 +1255,19 @@ es_status_codes SetBoardVars( UINT32 drvno )
 	}
 	//set startval for CTRLA Reg  +slope, IFC=h, VON=1 
 	es_status_codes status = WriteByteS0(drvno, 0x23, S0Addr_CTRLA);
-	if (status == es_no_error)
-		//write CTRLB reg in S0
-		status = WriteByteS0(drvno, 0, S0Addr_CTRLB);
-	if (status == es_no_error)
-		//write CTRLC reg in S0
-		status = WriteByteS0(drvno, 0, S0Addr_CTRLC);
-	if (status == es_no_error)
-		//write pixel to PIXREG  & stop timer & int trig
-		status = SetS0Reg(aPIXEL[drvno], 0xFFFF, S0Addr_PIXREGlow, drvno);
-	if (status == es_no_error)
-		status = SetS0Reg(aCAMCNT[drvno], 0xF, S0Addr_CAMCNT, drvno);
-	if (status == es_no_error)
-		status = SetS0Reg(ADRDELAY, 0xFFFF, S0Addr_XCKDLY, drvno);
+	if (status != es_no_error) return status;
+	//write CTRLB reg in S0
+	status = WriteByteS0(drvno, 0, S0Addr_CTRLB);
+	if (status != es_no_error) return status;
+	//write CTRLC reg in S0
+	status = WriteByteS0(drvno, 0, S0Addr_CTRLC);
+	if (status != es_no_error) return status;
+	//write pixel to PIXREG  & stop timer & int trig
+	status = SetS0Reg(aPIXEL[drvno], 0xFFFF, S0Addr_PIXREGlow, drvno);
+	if (status != es_no_error) return status;
+	status = SetS0Reg(aCAMCNT[drvno], 0xF, S0Addr_CAMCNT, drvno);
+	if (status != es_no_error) return status;
+	status = SetS0Reg(ADRDELAY, 0xFFFF, S0Addr_XCKDLY, drvno);
 	WDC_Err( "*** SetBoardVars done.\n" );
 	return status; //no error
 };  // SetBoardVars
