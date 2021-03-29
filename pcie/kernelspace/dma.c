@@ -42,20 +42,22 @@ int dma_init(struct dev_struct *dev)
 		return -ENODEV;
 	}
 
-	if (dma_set_mask_and_coherent(pdev, DMA_BIT_MASK(32))) {
-		printk(KERN_ERR NAME ": No suitable DMA available\n");
-		return -ENOMEM;
-	}
-
-	if (device_test_status(dev, DEV_HARDWARE_PRESENT))
+	if (device_test_status(dev, DEV_HARDWARE_PRESENT)) {
 		pdev = &dev->pci_dev->dev;
-	else
+		PDEBUG(D_BUFFERS, "setting dma mask\n");
+		if (dma_set_mask_and_coherent(pdev, DMA_BIT_MASK(32))) {
+			printk(KERN_ERR NAME ": No suitable DMA available\n");
+			return -ENOMEM;
+		}
+	} else {
 		pdev = 0;
+	}
 
 	/* the size of the dma buffer is taken one page size larger than
            necessary to ensure that the used buffer starts at a page boundary
            (needed for mmap export to userland)
         */
+	PDEBUG(D_BUFFERS, "calculating dma buffer size\n");
 	dev->control->dma_buf_size
 	    =
 	    dev->control->number_of_cameras *

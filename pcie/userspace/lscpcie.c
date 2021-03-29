@@ -154,9 +154,6 @@ int lscpcie_open(uint dev_no, uint16_t options)
 	}
 
 	dev->handle = handle;
-	hardware_present = lscpcie_hardware_present(dev);
-	if (hardware_present < 0)
-		goto error;
 
 	// dma control struct in ram
 	dev->control
@@ -170,6 +167,10 @@ int lscpcie_open(uint dev_no, uint16_t options)
 			perror(0);
 		goto error;
 	}
+
+	hardware_present = lscpcie_hardware_present(dev);
+	if (hardware_present < 0)
+		goto error;
 
 	switch (dev->control->number_of_pixels) {
 	case 128:
