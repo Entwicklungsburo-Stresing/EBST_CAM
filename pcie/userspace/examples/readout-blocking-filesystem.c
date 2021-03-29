@@ -66,10 +66,10 @@ int main(int argc, char **argv)
 
 	result = readout_init(argc, argv, &info);
 	bytes_read = 0;
-
+/*
 	info.dev->control->stimer_val =
 		(CFG_STIMER_IN_US & XCK_EC_MASK) | (1<<XCK_RS);
-
+*/
 	do {
 		// wait for trigger signal
 		if (info.dev->s0->CTRLA & (1 << CTRLA_TSTART))
@@ -83,7 +83,7 @@ int main(int argc, char **argv)
 				result);
 			goto out;
 		}
-	} while (bytes_read < info.mem_size);
+	} while ((bytes_read < info.mem_size) || kbhit());
 
 	fprintf(stderr, "finished measurement\n");
 
