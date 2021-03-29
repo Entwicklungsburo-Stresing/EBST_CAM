@@ -76,17 +76,18 @@ int main(int argc, char **argv)
 
 	do {
 		// wait for block trigger signal
-		if (info.dev->s0->CTRLA & (1 << CTRLA_TSTART))
+		if (!(info.dev->s0->CTRLA & (1 << CTRLA_TSTART)))
 			continue;
 
 		result = lscpcie_acquire_block_proc(info.dev,
 						(uint8_t *) info.data, 2,
 						proc_file);
-		if (result) {
+		if (result < 0) {
 			fprintf(stderr, "error %d when acquiring block\n",
 				result);
 			goto out;
 		}
+		bytes_read += result;
 	} while (bytes_read < info.mem_size);
 
 	fprintf(stderr, "finished measurement\n");
