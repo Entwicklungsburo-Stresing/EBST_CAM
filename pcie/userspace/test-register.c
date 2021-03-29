@@ -11,7 +11,7 @@
 
 int main(void) {
   int result;
-  dev_descr_t *device_descriptor;
+  struct dev_descr *device_descriptor;
   uint8_t val8;
   uint32_t val32, read_back32;
 
