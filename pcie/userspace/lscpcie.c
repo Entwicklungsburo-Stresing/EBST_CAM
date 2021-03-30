@@ -329,8 +329,13 @@ int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode,
 		* sizeof(pixel_t);
 
 	dev->s0->NUMBER_OF_SCANS = number_of_scans;
-	/*>>> somthing is wrong here, driver crash without the factor two <<<*/
-	dev->s0->DMA_BUF_SIZE_IN_SCANS = number_of_scans * number_of_blocks;
+	dev->s0->DMA_BUF_SIZE_IN_SCANS = number_of_scans * number_of_blocks * 2;
+
+	dev->control->used_dma_size = dev->s0->DMA_BUF_SIZE_IN_SCANS
+		* dev->control->number_of_pixels
+		* dev->control->number_of_cameras * sizeof(pixel_t);
+	if (dev->control->used_dma_size > dev->control->dma_buf_size)
+		dev->control->used_dma_size = dev->control->dma_buf_size;
 
 	fprintf(stderr, "dmas per interrupt is %d\n",
 		dev->s0->DMAS_PER_INTERRUPT);

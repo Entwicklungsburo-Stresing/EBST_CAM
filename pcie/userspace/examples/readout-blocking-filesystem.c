@@ -72,8 +72,9 @@ int main(int argc, char **argv)
 			continue;
 
 		result = lscpcie_acquire_block_fs(info.dev,
-						(uint8_t *) info.data, 2,
-						info.dev->handle);
+						(uint8_t *) info.data
+						+ bytes_read,
+						2, info.dev->handle);
 		if (result < 0) {
 			fprintf(stderr, "error %d when acquiring block\n",
 				result);

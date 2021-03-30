@@ -124,7 +124,7 @@ int bytes_in_buffer(struct dev_struct *dev)
 	PDEBUG(D_BUFFERS, "buffer pointers: %d,%d\n",
 	       dev->control->read_pos, dev->control->write_pos);
 
-	bytes = dev->control->write_pos - dev->control->read_pos;
+	bytes = ((int) dev->control->write_pos) - ((int)dev->control->read_pos);
 	PDEBUG(D_BUFFERS, "diff: %ld\n", bytes);
 	if (bytes < 0)
 		bytes += dev->control->dma_buf_size;
