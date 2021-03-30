@@ -61,8 +61,8 @@ ssize_t lscpcie_read_proc(struct file *filp, char __user * buf,
    of pixels, second the number of cameras. The input has to be terminated
    with a new-line character. */
 
-ssize_t lscpcie_write_proc(struct file *filp, const char __user * buf,
-			   size_t count, loff_t * offp)
+ssize_t lscpcie_write_proc(struct file *filp, const char __user *buf,
+			   size_t count, loff_t *offp)
 {
 	int i, slot, result;
 	static int n_pixels = 0;
@@ -148,12 +148,20 @@ void proc_clean_up_module(void)
 	}
 }
 
+int lscpcie_open_data_proc(struct inode *inode, struct file *filp) {
+	int minor = iminor(inode);
+	struct dev_struct *dev = device_data(minor);
+	PDEBUG(D_PROC, "got dev pointer %p", dev);
+	filp->private_data = dev;
+	return 0;
+}
+
 /* This proc entry is used to block a 'reading' process until something appears
    in the dma buffer. It returns with the value of the interrupt counter.
    The buffer's content may then directly be read via memory mapping. */
 
-ssize_t lscpcie_read_data_proc(struct file *filp, char __user * buf,
-			       size_t count, loff_t * offp)
+ssize_t lscpcie_read_data_proc(struct file *filp, char __user *buf,
+			       size_t count, loff_t *offp)
 {
 	struct dev_struct *dev = filp->private_data;
 	static u32 irq_counter;
@@ -201,6 +209,7 @@ ssize_t lscpcie_read_data_proc(struct file *filp, char __user * buf,
 
 struct file_operations proc_data_fops = {
 	.owner = THIS_MODULE,
+	.open = lscpcie_open_data_proc,
 	.read = lscpcie_read_data_proc
 };
 

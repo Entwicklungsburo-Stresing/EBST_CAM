@@ -49,8 +49,8 @@ struct dev_struct {
 	struct proc_dir_entry *proc_io_entry;
 	wait_queue_head_t readq, writeq;
 	struct semaphore write_sem, read_sem, size_sem;
-	wait_queue_head_t proc_readq, proc_writeq;
-	struct semaphore proc_write_sem, proc_read_sem;
+	wait_queue_head_t proc_readq;
+	struct semaphore proc_read_sem;
 	atomic_t read_available;
 	atomic_t write_available;
 	int minor;
