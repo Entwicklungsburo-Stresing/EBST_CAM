@@ -163,7 +163,7 @@ void print_data(const struct camera_info_struct *info) {
 		for (scan = 0; scan < info->n_scans; scan++)
 			for (camera = 0; camera < n_cams; camera++)
 				for (pixel = 0; pixel < n_pixel; pixel++, i++)
-					printf("%d %d %d %d: %d\n", block, scan,
+					printf("%d %d %d %d %d\n", block, scan,
 					       camera, pixel, info->data[i]);
 }
 

@@ -206,7 +206,7 @@ int lscpcie_open(uint dev_no, uint16_t options)
 		no_tlps++;
 	dev->number_of_tlps = no_tlps;
 
-	printf("found io spce of size 0x%08x\n", dev->control->io_size);
+	fprintf(stderr, "found io spce of size 0x%08x\n", dev->control->io_size);
 	if (hardware_present) {
 		// map io registers to user space memory
 		dev->dma_reg
@@ -300,10 +300,6 @@ int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode,
 	int result;
 	uint32_t hwd_req = (1<<IRQ_REG_HWDREQ_EN);
 
-	//result = set_dma_buffer_registers(dev);
-	//if (result < 0)
-	//	return result;
-
 	result = lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA,
 				    CAMERA_ADDRESS_TRIGGER_IN,
 				    trigger_mode);
@@ -332,8 +328,9 @@ int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode,
 	    = dmas_per_interrupt * dev->control->number_of_pixels
 		* sizeof(pixel_t);
 
-	dev->s0->NUMBER_OF_SCANS = number_of_scans * number_of_blocks;
-	dev->s0->DMA_BUF_SIZE_IN_SCANS = number_of_scans * number_of_blocks * 2;
+	dev->s0->NUMBER_OF_SCANS = number_of_scans;
+	/*>>> somthing is wrong here, driver crash without the factor two <<<*/
+	dev->s0->DMA_BUF_SIZE_IN_SCANS = number_of_scans * number_of_blocks;
 
 	fprintf(stderr, "dmas per interrupt is %d\n",
 		dev->s0->DMAS_PER_INTERRUPT);
@@ -538,8 +535,9 @@ int set_dma_address_in_tlp(struct dev_descr *dev)
 	// adress to the DMA controller
 	SET_BITS(dev->dma_reg->WDMATLPA,
 		 (uint64_t) dev->control->dma_physical_start, 0xFFFFFFFC);
-	printf("set WDMATLPA to physical address of dma buffer 0x%016lx\n",
-	       (uint64_t) dev->control->dma_physical_start);
+	fprintf(stderr,
+		"set WDMATLPA to physical address of dma buffer 0x%016lx\n",
+	        (uint64_t) dev->control->dma_physical_start);
 
 	//WDMATLPS: write the upper part (bit 32:39) of the address
 	val64 = ((((uint64_t) dev->control->dma_physical_start) >> 8)
@@ -551,12 +549,12 @@ int set_dma_address_in_tlp(struct dev_descr *dev)
 		val64 |= 1 << 19;
 
 	SET_BITS(dev->dma_reg->WDMATLPS, val64, 0xFF081FFF);
-	printf("set WDMATLPS to 0x%016lx (0x%016lx)\n", val64,
-	       val64 & 0xFF081FFF);
+	fprintf(stderr, "set WDMATLPS to 0x%016lx (0x%016lx)\n", val64,
+		val64 & 0xFF081FFF);
 
 	SET_BITS(dev->dma_reg->WDMATLPC, dev->number_of_tlps, 0x0000FFFF);
-	printf("set WDMATLPC to 0x%08x (0x%08x)\n", dev->number_of_tlps,
-	       dev->number_of_tlps & 0x0000FFFF);
+	fprintf(stderr, "set WDMATLPC to 0x%08x (0x%08x)\n", dev->number_of_tlps,
+		dev->number_of_tlps & 0x0000FFFF);
 
 	return 0;
 }
