@@ -13,7 +13,7 @@ version = 1
 subversion = 0
 patchlevel = 0
 
-tests = test-mmap test-read-write test-register
+tests = test-mmap test-read-write
 
 library = liblscpcie.so.$(version).$(subversion).$(patchlevel)
 links = liblscpcie.so liblscpcie.so.$(version) \
@@ -39,7 +39,7 @@ links: $(links)
 $(links): $(library)
 	ln -s $< $@
 
-lscpcie.o: lscpcie.h ../kernelspace/ioctl.h
+lscpcie.o: lscpcie.h
 
 %.o: %.c
 	gcc $(CFLAGS) -o $@ -c $<
@@ -48,9 +48,6 @@ test-mmap: test-mmap.o lscpcie.o
 	gcc -Wall -o $@ $^
 
 test-read-write: test-read-write.o lscpcie.o
-	gcc -Wall -o $@ $^
-
-test-register: test-register.o lscpcie.o
 	gcc -Wall -o $@ $^
 
 camera-debug: camera-debug.o lscpcie.o

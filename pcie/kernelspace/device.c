@@ -12,8 +12,8 @@
 #include "device.h"
 #include "module-main.h"
 #include "file.h"
-#include "ioctl.h"
 #include "mmap.h"
+#include "ioctl.h"
 #include "proc.h"
 #include "debug.h"
 #include <linux/fs.h>
@@ -27,7 +27,7 @@ struct file_operations fops = {
 	.llseek = 0,
 	.read = lscpcie_read,
 	.write = lscpcie_write,
-	.unlocked_ioctl = lscpcie_ioctl,
+        .unlocked_ioctl = lscpcie_ioctl,
 	.open = lscpcie_open,
 	.release = lscpcie_release,
 	.mmap = mmap_register_remap_mmap
@@ -39,7 +39,7 @@ int device_init(struct dev_struct *dev, int minor)
 	struct device *device;
 	int result, dev_no;
 
-	dev->debug_mode |= debug;
+	dev->init_debug_mode |= debug;
 
 	PDEBUG(D_MODULE, "initialising device %d with major %d\n", minor,
 	       major);
@@ -56,7 +56,7 @@ int device_init(struct dev_struct *dev, int minor)
 	if (result < 0)
 		goto out_error;
 
-	dev->status |= DEV_CDEV_CREATED;
+	dev->init_status |= DEV_CDEV_CREATED;
 
 	PDEBUG(D_MODULE, "creating device class %d\n", minor);
 	device
@@ -70,7 +70,7 @@ int device_init(struct dev_struct *dev, int minor)
 		goto out_error;
 	}
 
-	dev->status |= DEV_CLASS_CREATED;
+	dev->init_status |= DEV_CLASS_CREATED;
 	dev->minor = minor;
 
 	/* semaphores for dma buffer reading (and writing) */
@@ -80,9 +80,13 @@ int device_init(struct dev_struct *dev, int minor)
 	sema_init(&dev->read_sem, 1);
 	sema_init(&dev->size_sem, 1);
 
+	/* semaphores for proce */
+	init_waitqueue_head(&dev->proc_readq);
+	sema_init(&dev->proc_read_sem, 1);
+
 	/* get one page of ram for the control structure which is going to be
 	   exported to user spcae */
-	dev->control = (lscpcie_control_t *) get_zeroed_page(GFP_KERNEL);
+	dev->control = (struct control_struct *) get_zeroed_page(GFP_KERNEL);
 	if (!dev->control) {
 		printk(KERN_ERR NAME
 		       ": failed to allocate memory for control block");
@@ -99,6 +103,8 @@ int device_init(struct dev_struct *dev, int minor)
 	}
 
 	/* take initial values from module parameters where present */
+	dev->control->debug_mode = dev->init_debug_mode;
+	dev->control->status = dev->init_status;
 	if (num_pixels[dev_no] > 0)
 		dev->control->number_of_pixels = num_pixels[dev_no];
 	else
@@ -124,13 +130,17 @@ int device_init(struct dev_struct *dev, int minor)
 
 void device_clean_up(struct dev_struct *dev)
 {
-	if (dev->control)
+	if (dev->control) {
+		dev->init_debug_mode = dev->control->debug_mode;
+		dev->init_status = dev->control->status;
 		free_page((unsigned long) dev->control);
-	if (dev->status & DEV_CLASS_CREATED) {
+		dev->control = 0;
+	}
+	if (dev->init_status & DEV_CLASS_CREATED) {
 		PDEBUG(D_MODULE, "destroying device class\n");
 		device_destroy(lscpcie_class, dev->device);
 	}
-	if (dev->status & DEV_CDEV_CREATED) {
+	if (dev->init_status & DEV_CDEV_CREATED) {
 		PDEBUG(D_MODULE, "removing cdev\n");
 		cdev_del(&dev->cdev);
 	}
@@ -144,4 +154,19 @@ struct dev_struct *device_data(uint8_t devno)
 {
 	return (devno < MAX_BOARDS) && (lscpcie_devices[devno].minor >= 0)
 	    ? &lscpcie_devices[devno] : NULL;
+}
+
+int device_test_status(struct dev_struct *dev, u16 bits)
+{
+	if (dev->control)
+		return dev->control->status & bits;
+	return dev->init_status & bits;
+}
+
+void device_set_status(struct dev_struct *dev, u16 mask, u16 bits)
+{
+	if (dev->control)
+		dev->control->status = (dev->control->status & ~mask) | bits;
+	else
+		dev->init_status = (dev->control->status & ~mask) | bits;
 }

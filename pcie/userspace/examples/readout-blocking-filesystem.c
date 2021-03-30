@@ -48,8 +48,7 @@ int lscpcie_acquire_block_fs(struct dev_descr *dev, uint8_t *data,
 			return result;
 
 		bytes_read += result;
-		fprintf(stderr, "got %d bytes of data, having now %d\n",
-			result, bytes_read);
+		fprintf(stderr, "got %d bytes of data\n", result);
 	} while (bytes_read < block_size);
 
         result = lscpcie_end_block(dev);
@@ -67,23 +66,27 @@ int main(int argc, char **argv)
 	result = readout_init(argc, argv, &info);
 	bytes_read = 0;
 
-	info.dev->control->stimer_val =
-		(CFG_STIMER_IN_US & XCK_EC_MASK) | (1<<XCK_RS);
-
 	do {
 		// wait for trigger signal
-		if (info.dev->s0->CTRLA & (1 << CTRLA_TSTART))
+		if (!(info.dev->s0->CTRLA & (1 << CTRLA_TSTART)))
 			continue;
 
 		result = lscpcie_acquire_block_fs(info.dev,
 						(uint8_t *) info.data, 2,
 						info.dev->handle);
-		if (result) {
+		if (result < 0) {
 			fprintf(stderr, "error %d when acquiring block\n",
 				result);
 			goto out;
 		}
-	} while (bytes_read < info.mem_size);
+		bytes_read += result;
+		fprintf(stderr, "having now %d\n", bytes_read);
+	} while ((bytes_read < info.mem_size) &&! kbhit());
+
+	if (kbhit()) {
+		fprintf(stderr, "measurement interrupted\n");
+		return 1;
+	}
 
 	fprintf(stderr, "finished measurement\n");
 

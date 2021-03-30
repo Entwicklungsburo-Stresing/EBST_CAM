@@ -44,7 +44,7 @@ void help(void) {
 int debug_mode = 0, debug_mask;
 
 int main(int argc, char **argv) {
-  int arg_pos = 0, i, handle, result, device = 0, temp;
+  int arg_pos = 0, i, handle, device = 0, temp;
   char name[32], c, *end;
   while (++arg_pos < argc) {
     if (!strcmp(argv[arg_pos], "--help")) {
@@ -110,12 +110,10 @@ int main(int argc, char **argv) {
   struct dev_descr *dev = lscpcie_get_descriptor(device);
   printf("setting debug flags 0x%04x in 0x%04x\n", debug_mode, debug_mask);
 
-  if ((result = lscpcie_set_debug(dev, debug_mode, debug_mask)) < 0) {
-    fprintf(stderr, "setting debug resulted in error %d\n", result);
-    return -4;
-  }
+  lscpcie_set_debug(dev, debug_mode, debug_mask);
 
   lscpcie_close(device);
 
   return 0;
 }
+

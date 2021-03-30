@@ -167,17 +167,10 @@ int main(int argc, char **argv) {
     //for (int i = 0; i < 512; i++)
     //  ((uint8_t*)dev->dma_reg)[i] = 0x00;
 
-    uint8_t val;
     for (int i = 0; i < 512; i += 8) {
       printf("0x%02x: ", i);
       for (int j = 0; j < 8; j++) {
         out_hex(((uint8_t*)dev->dma_reg)[i+j]);
-        putchar(' ');
-      }
-      printf("   ");
-      for (int j = 0; j < 8; j++) {
-        lscpcie_read_reg8(0, i+j, &val);
-        out_hex(val);
         putchar(' ');
       }
      printf("\n");

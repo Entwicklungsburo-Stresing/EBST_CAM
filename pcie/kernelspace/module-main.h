@@ -33,4 +33,4 @@ extern struct class *lscpcie_class;
 void clean_up_lscpcie_module(void);
 int get_device_number(const struct dev_struct *);
 
-#endif /* _module_main_h_ */
+#endif 	/* _module_main_h_ */

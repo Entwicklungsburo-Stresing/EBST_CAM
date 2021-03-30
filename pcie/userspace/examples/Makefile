@@ -5,14 +5,13 @@ programs = readout-polling readout-blocking-proc readout-blocking-filesystem
 
 examples: $(programs)
 
-readout-polling: readout-polling.o common.o to-library.o
+readout-polling: readout-polling.o common.o
 	$(CC) $(CFLAGS) -o $@ $^ -llscpcie -L..
 
-readout-blocking-proc: readout-blocking-proc.o common.o to-library.o
+readout-blocking-proc: readout-blocking-proc.o common.o
 	$(CC) $(CFLAGS) -o $@ $^ -llscpcie -L..
 
-readout-blocking-filesystem: readout-blocking-filesystem.o common.o \
-  to-library.o
+readout-blocking-filesystem: readout-blocking-filesystem.o common.o
 	$(CC) $(CFLAGS) -o $@ $^ -llscpcie -L..
 
 %.o: %.c
