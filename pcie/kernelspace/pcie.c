@@ -40,7 +40,7 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 	if ((result = device_init(dev, i)) < 0)
 		goto out_error;
 
-	dev->status |= DEV_PCI_ENABLED;
+	device_set_status(dev, DEV_PCI_ENABLED, DEV_PCI_ENABLED);
 
 	/* check for correct vendor / device and subsystem */
 	result = pci_read_config_word(pci_dev, PCI_VENDOR_ID, &word);
@@ -61,7 +61,7 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 	assert(word == SUBSYSTEM_DEVICE_ID, "wrong subsystem id",
 	       goto out_error, -1);
 
-	dev->status |= DEV_HARDWARE_PRESENT;
+	device_set_status(dev, DEV_HARDWARE_PRESENT, DEV_HARDWARE_PRESENT);
 	dev->pci_dev = pci_dev;
 
 	/* doesn't work
@@ -72,7 +72,7 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 	   goto out_error;
 	   }
 	 */
-	if (!(dev->status & DEV_MSI_ENABLED)) {
+	if (!device_test_status(dev, DEV_MSI_ENABLED)) {
 		PDEBUG(D_INTERRUPT, "allocating interrupt vector\n");
 		result = pci_enable_msi(pci_dev);
 		if (result < 0) {
@@ -80,21 +80,25 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 			       ": couldn't allocate irq vector\n");
 			goto out_error;
 		}
-		dev->status |= DEV_MSI_ENABLED;
+		device_set_status(dev, DEV_MSI_ENABLED, DEV_MSI_ENABLED);
 	}
 	dev->irq_line = pci_dev->irq;
 	PDEBUG(D_INTERRUPT, "interrupt line is %d\n", dev->irq_line);
 
+	PDEBUG(D_PCI, "obtaining pci ressource2\n");
 	dev->physical_pci_base = pci_resource_start(pci_dev, 2);
 	dev->control->io_size = pci_resource_len(pci_dev, 2);
-	dev->mapped_pci_base
+	PDEBUG(D_PCI, "remapping pci ressource2\n");
+	dev->dma_reg
 	    =
 	    ioremap_nocache(dev->physical_pci_base, dev->control->io_size);
-	assert(dev->mapped_pci_base != 0,
+	assert(dev->dma_reg != 0,
 	       "ioremap of address space failed", goto out_error, -1);
-	PDEBUG(D_PCI, "mapped address space 2 to %p\n",
-	       dev->mapped_pci_base);
+	PDEBUG(D_PCI, "mapped address space 2 to %p\n", dev->dma_reg);
+	dev->s0_reg = (struct s0_reg_struct*) (((u8*) dev->dma_reg) + 0x80);
+	PDEBUG(D_PCI, "mapped s0 address space 2 to %p\n", dev->s0_reg);
 
+	PDEBUG(D_PCI, "setting PCI device as bus master\n");
 	pci_set_master(pci_dev);
 
 	result = dma_init(dev);
@@ -121,10 +125,10 @@ void remove_lscpcie(struct pci_dev *pci_dev)
 	PDEBUG(D_PCI, "removing lscpcie\n");
 
 	if (dev) {
-		if ((dev->status & DEV_MSI_ENABLED)
+		if (device_test_status(dev, DEV_MSI_ENABLED)
 		    && (pci_dev->msi_enabled))
 			pci_disable_msi(pci_dev);
-		dev->status &= ~DEV_MSI_ENABLED;
+		device_set_status(dev, DEV_MSI_ENABLED, 0);
 		/* doesn't work
 		   if (dev->status & DEV_IRQ_ALLOCATED) {
 		   PDEBUG(D_INTERRUPT, "freeing interrupt vector\n");
@@ -136,5 +140,5 @@ void remove_lscpcie(struct pci_dev *pci_dev)
 
 	pci_clear_master(pci_dev);
 	pci_disable_device(pci_dev);
-	dev->status &= ~(DEV_HARDWARE_PRESENT | DEV_PCI_ENABLED);
+	device_set_status(dev, DEV_HARDWARE_PRESENT | DEV_PCI_ENABLED, 0);
 }
