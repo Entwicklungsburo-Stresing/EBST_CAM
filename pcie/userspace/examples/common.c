@@ -118,16 +118,24 @@ int readout_init(int argc, char **argv, struct camera_info_struct *info) {
 	return 0;
 }
 
-int fetch_data_mapped(struct dev_descr *dev, uint8_t *data, size_t max)
+int fetch_mapped_data(struct dev_descr *dev, uint8_t *data, size_t max)
 {
-	int end_read = dev->control->write_pos, len;
+	int end_read, len;
 
 	/*
 	int i;
 	for (i = 0; i < dev->control->dma_buf_size; i++)
         	printf("%d %d\n", i, *(dev->mapped_buffer + i));
 	*/
+
+	/* get a local copy of the writing position in case that new data comes
+	   in meanwhile at interrupt time */
+	end_read = dev->control->write_pos;
 	fprintf(stderr, "%d -> %d\n", dev->control->read_pos, end_read);
+
+	if (end_read == dev->control->write_pos)
+		return 0;
+
 	if (end_read > dev->control->read_pos)
 		/* new data in one chunk */
 		len = end_read - dev->control->read_pos;
