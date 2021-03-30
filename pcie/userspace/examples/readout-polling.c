@@ -47,7 +47,7 @@ int lscpcie_acquire_block_poll(struct dev_descr *dev, uint8_t *data,
 		if (dev->control->read_pos == dev->control->write_pos)
 			continue;
 
-		result = fetch_data_mapped(dev, data + bytes_read,
+		result = fetch_mapped_data(dev, data + bytes_read,
 					block_size - bytes_read);
 		if (result < 0)
 			return result;
