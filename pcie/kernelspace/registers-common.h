@@ -390,9 +390,10 @@ struct control_struct {
 	uconst uint64_t dma_physical_start;
 	uconst uint32_t io_size;
 	uint32_t bytes_per_interrupt;
+	uint32_t used_dma_size;
 	volatile int32_t write_pos;
-	int32_t read_pos;
-	int32_t irq_count;
+	uint32_t read_pos;
+	uint32_t irq_count;
 	int32_t stimer_val;
 	uint16_t debug_mode;
 	uint16_t status;

@@ -177,7 +177,7 @@ static enum irqreturn isr(int irqn, void *dev_id)
 	// advance buffer pointer
 	dev->control->write_pos
 	    = (dev->control->write_pos + dev->control->bytes_per_interrupt)
-	    % dev->control->dma_buf_size;
+	    % dev->control->used_dma_size;
 
 	if (device_test_status(dev, DEV_BLOCKS_IN_IRQ)) {
 		// end block

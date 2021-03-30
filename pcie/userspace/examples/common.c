@@ -133,7 +133,7 @@ int fetch_mapped_data(struct dev_descr *dev, uint8_t *data, size_t max)
 	end_read = dev->control->write_pos;
 	fprintf(stderr, "%d -> %d\n", dev->control->read_pos, end_read);
 
-	if (end_read == dev->control->write_pos)
+	if (end_read == dev->control->read_pos)
 		return 0;
 
 	if (end_read > dev->control->read_pos)
@@ -141,7 +141,7 @@ int fetch_mapped_data(struct dev_descr *dev, uint8_t *data, size_t max)
 		len = end_read - dev->control->read_pos;
 	else
 		/* new data wraps around the end of the buffer */
-		len = dev->control->dma_buf_size - dev->control->read_pos;
+		len = dev->control->used_dma_size - dev->control->read_pos;
 
 	if (len > max) len = max;
 	memcpy(data, dev->mapped_buffer + dev->control->read_pos, len);
@@ -157,7 +157,7 @@ int fetch_mapped_data(struct dev_descr *dev, uint8_t *data, size_t max)
 	}
 
 	dev->control->read_pos
-		= (dev->control->read_pos + len) % dev->control->dma_buf_size;
+		= (dev->control->read_pos + len) % dev->control->used_dma_size;
 
 	return len;
 }

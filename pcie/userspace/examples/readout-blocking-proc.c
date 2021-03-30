@@ -48,7 +48,8 @@ int lscpcie_acquire_block_proc(struct dev_descr *dev, uint8_t *data,
 			/* block until data present */
 			fgetc(proc_file);
 
-		result = fetch_mapped_data(dev, data, block_size - bytes_read);
+		result = fetch_mapped_data(dev, data + bytes_read,
+					block_size - bytes_read);
 		if (result < 0)
 			return result;
 
@@ -79,8 +80,9 @@ int main(int argc, char **argv)
 			continue;
 
 		result = lscpcie_acquire_block_proc(info.dev,
-						(uint8_t *) info.data, 2,
-						proc_file);
+						(uint8_t *) info.data
+						+ bytes_read,
+						2, proc_file);
 		if (result < 0) {
 			fprintf(stderr, "error %d when acquiring block\n",
 				result);
