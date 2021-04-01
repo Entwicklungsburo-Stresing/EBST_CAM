@@ -111,16 +111,16 @@ es_status_codes initReadFFLoop( UINT32 drv );
 int waitForBlockTrigger( UINT32 board_sel );
 int checkForPressedKeys();
 es_status_codes ReadFFLoop( UINT32 board_sel );
-void countBlocksByHardware( UINT32 drvno );
+es_status_codes countBlocksByHardware( UINT32 drvno );
 unsigned int __stdcall ReadFFLoopThread( void *parg ); //jungo dma
 //start<0 is in the past, stop>0 is in the future, relative to call of this function
 es_status_codes readBlockTriggerState( UINT32 drv, UINT8 btrig_ch, BOOL* state); //read state of trigger in signals during thread loop
-void StartSTimer( UINT32 drvno );	//starts 28bit timer of PCI board
+es_status_codes StartSTimer( UINT32 drvno );	//starts 28bit timer of PCI board
 es_status_codes StopSTimer( UINT32 drvno );					// stop timer
 es_status_codes SetSTimer( UINT32 drvno, UINT32 stime_in_microseconds );
 es_status_codes SetBTimer( UINT32 drvno, UINT32 btime_in_microseconds );
 es_status_codes SWTrig( UINT32 drvno );						//start a read to FIFO by software
-BOOL IsTimerOn( UINT32 drvno );
+es_status_codes IsTimerOn( UINT32 drvno, BOOL* on );
 es_status_codes checkFifoFlags( UINT32 drvno, BOOL* valid );						// TRUE if linecounter>0
 BOOL FFFull( UINT32 drvno );
 es_status_codes checkFifoOverflow(UINT32 drvno, BOOL* overflow);							//TRUE if FIFO overflow since last RSFifo call
@@ -178,8 +178,10 @@ es_status_codes isMeasureOn( UINT32 drvno, BOOL* measureOn );
 es_status_codes isBlockOn( UINT32 drvno, BOOL* blockOn );
 es_status_codes waitForMeasureReady( UINT32 drvno );
 es_status_codes waitForBlockReady( UINT32 drvno );
-BOOL setBlockOn( UINT32 drvno );
-BOOL resetBlockOn( UINT32 drvno );
+es_status_codes setBlockOn( UINT32 drvno );
+es_status_codes resetBlockOn( UINT32 drvno );
+es_status_codes setMeasureOn(UINT32 drvno);
+es_status_codes resetMeasureOn(UINT32 drvno);
 es_status_codes SetBTI( UINT32 drvno, UINT8 bti_mode );
 es_status_codes SetSTI( UINT32 drvno, UINT8 sti_mode );
 es_status_codes ClearAllUserRegs( UINT32 drv );
@@ -188,7 +190,7 @@ es_status_codes SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob )
 es_status_codes SetGain( UINT32 drvno, UINT16 gain_value );
 es_status_codes LedOff( UINT32 drvno, UINT8 LED_OFF );
 es_status_codes ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length );
-void abortMeasurement( UINT32 drv );
+es_status_codes abortMeasurement( UINT32 drv );
 
 #ifdef __cplusplus
 }

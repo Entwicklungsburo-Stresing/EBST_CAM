@@ -802,12 +802,19 @@ es_status_codes SetDMABufRegs( UINT32 drvno )
 	return SetS0Reg(aCAMCNT[drvno], 0xffffffff, S0Addr_CAMCNT, drvno);
 }
 
+/**
+ * \brief 
+ * 
+ * \param drvno board number (=1 if one PCI board).
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
+ */
 es_status_codes SetDMAReset( UINT32 drvno )
 {
-	ULONG BitMask;
-	ULONG RegisterValues;
-	BitMask = 0x1;
-	RegisterValues = 0x1;
+	ULONG BitMask = 0x1;
+	ULONG RegisterValues = 0x1;
 	es_status_codes status = SetDMAReg(RegisterValues, BitMask, DmaAddr_DCSR, drvno);
 	if (status != es_no_error)
 	{
@@ -2055,29 +2062,36 @@ es_status_codes ReadFFLoop( UINT32 board_sel )
 	for (UINT32 blk_cnt = 0; blk_cnt < Nob; blk_cnt++)
 	{//block read function
 		if (!waitForBlockTrigger( board_sel ))
-		{
-			abortMeasurement( board_sel );
-			return;
-		}
+			return abortMeasurement( board_sel );
 		WDC_Err("Block triggered\n");
 		if (board_sel == 1 || board_sel == 3)
 		{
-			countBlocksByHardware( 1 );
+			status = countBlocksByHardware( 1 );
+			if (status != es_no_error) return status;
 			if (board_sel != 3)
 			{
-				setBlockOn( 1 );
-				StartSTimer( 1 );
-				SWTrig( 1 ); //start scan for first read
+				status = setBlockOn( 1 );
+				if (status != es_no_error) return status;
+				status = StartSTimer( 1 );
+				if (status != es_no_error) return status;
+				//start scan for first read
+				status = SWTrig( 1 );
+				if (status != es_no_error) return status;
 			}
 		}
 		if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 		{
-			countBlocksByHardware( 2 );
+			status = countBlocksByHardware( 2 );
+			if (status != es_no_error) return status;
 			if (board_sel != 3)
 			{
-				setBlockOn( 2 );
-				StartSTimer( 2 );
-				SWTrig( 2 ); //start scan for first read
+				status = setBlockOn( 2 );
+				if (status != es_no_error) return status;
+				status = StartSTimer( 2 );
+				if (status != es_no_error) return status;
+				//start scan for first read
+				status = SWTrig( 2 );
+				if (status != es_no_error) return status;
 			}
 		}
 		//for synchronising both cams
@@ -2089,11 +2103,13 @@ es_status_codes ReadFFLoop( UINT32 board_sel )
 			UINT32 data1 = 0;
 			UINT32 data2 = 0;
 
-			ReadLongS0( 1, &data1, S0Addr_XCKLL ); //reset	
+			status = ReadLongS0( 1, &data1, S0Addr_XCKLL ); //reset	
+			if (status != es_no_error) return status;
 			data1 &= 0xF0000000;
 			data1 |= 0x40000000;			//set timer on
 
-			ReadLongS0( 2, &data2, S0Addr_XCKLL ); //reset	
+			status = ReadLongS0( 2, &data2, S0Addr_XCKLL ); //reset	
+			if (status != es_no_error) return status;
 			data2 &= 0xF0000000;
 			data2 |= 0x40000000;			//set timer on
 
@@ -2109,76 +2125,95 @@ es_status_codes ReadFFLoop( UINT32 board_sel )
 		//extended to Timer_routine for all variants of one and  two boards
 		if (board_sel == 1)
 		{
-			while (IsTimerOn( 1 ))
+			BOOL timerOneOn = TRUE;
+			while (timerOneOn)
 			{
-				if (GetAsyncKeyState( VK_ESCAPE ) | (FindCam(1) != es_no_error) | escape_readffloop) // check for kill ?
-				{ //stop if ESC was pressed
-					abortMeasurement( 1 );
-					return;
-				}
+				//stop if ESC was pressed
+				if (GetAsyncKeyState( VK_ESCAPE ) | (FindCam(1) != es_no_error) | escape_readffloop)
+					return abortMeasurement(1);
+				status = IsTimerOn(1, &timerOneOn);
+				if (status != es_no_error) return status;
 			}
 		}
 		if (number_of_boards == 2 && board_sel == 2)
 		{
-			while (IsTimerOn( 2 ))
+			BOOL timerTwoOn = TRUE;
+			while (timerTwoOn)
 			{
-				if (GetAsyncKeyState( VK_ESCAPE ) | (FindCam(2) != es_no_error) | escape_readffloop) // check for kill ?
-				{ //stop if ESC was pressed
-					abortMeasurement( 2 );
-					return;
-				}
+				//stop if ESC was pressed
+				if (GetAsyncKeyState( VK_ESCAPE ) | (FindCam(2) != es_no_error) | escape_readffloop)
+					return abortMeasurement(2);
+				status = IsTimerOn(2, &timerTwoOn);
+				if (status != es_no_error) return status;
 			}
 		}
 		if (number_of_boards == 2 && board_sel == 3)
 		{
-			while (IsTimerOn( 1 ) || IsTimerOn( 2 ))
+			BOOL timerOneOn = TRUE,
+				timerTwoOn = TRUE;
+
+			while (timerOneOn || timerTwoOn )
 			{
 				BOOL return_flag_1 = FALSE;
 				BOOL return_flag_2 = FALSE;
 
 				if (!return_flag_1)
 				{
-					if (GetAsyncKeyState( VK_ESCAPE ) | (FindCam(1) != es_no_error) | escape_readffloop) // check for kill ?
-					{ //stop if ESC was pressed
-						abortMeasurement( 1 );
+					//stop if ESC was pressed
+					if (GetAsyncKeyState( VK_ESCAPE ) | (FindCam(1) != es_no_error) | escape_readffloop)
+					{
+						status = abortMeasurement( 1 );
+						if (status != es_no_error) return status;
 						return_flag_1 = TRUE;
 					}
 				}
 				if (!return_flag_2)
 				{
-					if (GetAsyncKeyState( VK_ESCAPE ) | (FindCam(2) != es_no_error) | escape_readffloop) // check for kill ?
-					{ //stop if ESC was pressed
-						abortMeasurement( 2 );
+					//stop if ESC was pressed
+					if (GetAsyncKeyState( VK_ESCAPE ) | (FindCam(2) != es_no_error) | escape_readffloop)
+					{
+						status = abortMeasurement( 2 );
+						if (status != es_no_error) return status;
 						return_flag_2 = TRUE;
 					}
 				}
-				if (return_flag_1 && return_flag_2) return;
+				if (return_flag_1 && return_flag_2) return status;
+				status = IsTimerOn(1, &timerOneOn);
+				if (status != es_no_error) return status;
+				status = IsTimerOn(2, &timerTwoOn);
+				if (status != es_no_error) return status;
 			}
 		}
 		if (board_sel == 1 || board_sel == 3)
 		{
-			resetBlockOn( 1 );
+			status = resetBlockOn( 1 );
+			if (status != es_no_error) return status;
 		}
 		if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 		{
-			resetBlockOn( 2 );
+			status = resetBlockOn( 2 );
+			if (status != es_no_error) return status;
 		}
 	}//block cnt read function
 	if (board_sel == 1 || board_sel == 3)
 	{
-		StopSTimer( 1 );
+		status = StopSTimer( 1 );
+		if (status != es_no_error) return status;
 	}
 	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 	{
-		StopSTimer( 2 );
+		status = StopSTimer( 2 );
+		if (status != es_no_error) return status;
 	}
 	if (board_sel == 1 || board_sel == 3)
 	{
-		GetLastBufPart( 1 );
+		status = GetLastBufPart( 1 );
+		if (status != es_no_error) return status;
 	}
 	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 	{
-		GetLastBufPart( 2 );
+		status = GetLastBufPart( 2 );
+		if (status != es_no_error) return status;
 	}
 	// This sleep is here to prevent the measurement beeing interrupted too early. When operating with 2 cameras the last scan could be cut off without the sleep. This is only a workaround. The problem is that the software is waiting for RSTIMER beeing reset by the hardware before setting measure on and block on to low, but the last DMA is done after RSTIMER beeing reset. BLOCKON and MEASUREON should be reset after all DMAs are done.
 	// RSTIMER --------________
@@ -2188,31 +2223,44 @@ es_status_codes ReadFFLoop( UINT32 board_sel )
 	WaitforTelapsed(100);
 	if (board_sel == 1 || board_sel == 3)
 	{
-		resetMeasureOn(1);
+		status = resetMeasureOn(1);
+		if (status != es_no_error) return status;
 	}
 	if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
 	{
-		resetMeasureOn(2);
+		status = resetMeasureOn(2);
+		if (status != es_no_error) return status;
 	}
-	return;
+	return status;
 }
 
 /**
-\brief Sends signal to hardware to count blocks
-\param drvno PCIe board identifier
-\return none
-*/
-void countBlocksByHardware( UINT32 drvno )
+ * \brief Sends signal to hardware to count blocks
+ * 
+ * \param drvno PCIe board identifier
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
+ */
+es_status_codes countBlocksByHardware( UINT32 drvno )
 {
 	UINT32 val = 0x0;
 	//make signal on trig out plug via PCIEFLAGS:D4 - needed to count Blocks
-	ReadLongS0( drvno, &val, S0Addr_PCIEFLAGS ); //set TrigStart flag for TRIGO signal to monitor the signal
+	//set TrigStart flag for TRIGO signal to monitor the signal
+	es_status_codes status = ReadLongS0( drvno, &val, S0Addr_PCIEFLAGS );
+	if (status != es_no_error) return status;
 	val |= PCIEFLAGS_bit_BLOCKTRIG;
-	WriteLongS0( drvno, val, S0Addr_PCIEFLAGS ); //make pulse for BlockTrigger
-	val &= 0xffffffef;  //set R1(4)
-	WriteLongS0( drvno, val, S0Addr_PCIEFLAGS ); //reset signal
-	RS_ScanCounter( drvno ); //reset scan counter for next block - or timer is disabled
-	return;
+	//make pulse for BlockTrigger
+	status = WriteLongS0( drvno, val, S0Addr_PCIEFLAGS );
+	if (status != es_no_error) return status;
+	//set R1(4)
+	val &= 0xffffffef;
+	//reset signal
+	status = WriteLongS0( drvno, val, S0Addr_PCIEFLAGS );
+	if (status != es_no_error) return status;
+	//reset scan counter for next block - or timer is disabled
+	return RS_ScanCounter( drvno );
 }
 
 /**
@@ -2333,17 +2381,21 @@ es_status_codes readBlockTriggerState( UINT32 drv, UINT8 btrig_ch, BOOL* state)
 }
 
 /**
-\brief Sets Scan Timer on.
-\param drvno board number (=1 if one PCI board)
-\return none
-*/
-void StartSTimer( UINT32 drvno )
+ * \brief Sets Scan Timer on.
+ * 
+ * \param drvno board number (=1 if one PCI board)
+ * \return es_status_codes:
+ * 		- es_no_error
+ * 		- es_register_read_failed
+ *		- es_register_write_failed
+ */
+es_status_codes StartSTimer( UINT32 drvno )
 {
 	UINT32 data = 0;
-	ReadLongS0( drvno, &data, S0Addr_XCKLL );
+	es_status_codes status = ReadLongS0( drvno, &data, S0Addr_XCKLL );
+	if (status != es_no_error) return status;
 	data |= 0x40000000;	//set timer on
-	WriteLongS0( drvno, data, S0Addr_XCKLL );
-	return;
+	return WriteLongS0( drvno, data, S0Addr_XCKLL );
 }
 
 /**
@@ -2445,17 +2497,22 @@ es_status_codes SWTrig( UINT32 drvno )
 }
 
 /**
-\brief Checks if timer is active (Bit30 of XCK-Reg).
-\param drvno board number (=1 if one PCI board)
-\return 1= timer on
-*/
-BOOL IsTimerOn( UINT32 drvno )
+ * \brief Checks if timer is active (Bit30 of XCK-Reg).
+ * 
+ * \param drvno board number (=1 if one PCI board)
+ * \return es_status_codes:
+ *		- es_no_error
+ * 		- es_register_read_failed
+ */
+es_status_codes IsTimerOn( UINT32 drvno, BOOL* on )
 {
 	BYTE data = 0;
-	ReadByteS0( drvno, &data, S0Addr_XCKMSB );
+	es_status_codes status = ReadByteS0( drvno, &data, S0Addr_XCKMSB );
+	if (status != es_no_error) return status;
 	data &= 0x40;
-	if (data != 0) return TRUE;
-	else return FALSE;
+	if (data != 0) *on = TRUE;
+	else *on = FALSE;
+	return status;
 }
 
 /**
@@ -2828,7 +2885,6 @@ es_status_codes SetTemp( UINT32 drvno, UINT8 level )
 	return SendFLCAM( drvno, maddr_cam, cam_adaddr_coolTemp, level );
 }
 
-// *****   new HS CAM stuff
 /**
  * \brief RS scan counter. Is read only - but highest bit=reset.
  * 
@@ -2836,7 +2892,6 @@ es_status_codes SetTemp( UINT32 drvno, UINT8 level )
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
- *		
  */
 es_status_codes RS_ScanCounter( UINT32 drv )
 {
@@ -3958,22 +4013,26 @@ es_status_codes waitForBlockReady( UINT32 drvno )
 }
 
 /**
-\brief Sets BlockOn bit in PCIEFLAGS and notifies UI about it.
-\param drvno PCIe board identifier.
-\return TRUE when success, otherwise FALSE
-*/
-BOOL setBlockOn( UINT32 drvno )
+ * \brief Sets BlockOn bit in PCIEFLAGS and notifies UI about it.
+ * 
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ */
+es_status_codes setBlockOn( UINT32 drvno )
 {
 	notifyBlockStart( drvno );
 	return SetS0Bit( PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS, drvno );
 }
 
 /**
-\brief Resets BlockOn bit in PCIEFLAGS and notifies UI about it.
-\param drvno PCIe board identifier.
-\return TRUE when success, otherwise FALSE
-*/
-BOOL resetBlockOn( UINT32 drvno )
+ * \brief Resets BlockOn bit in PCIEFLAGS and notifies UI about it.
+ * 
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ */
+es_status_codes resetBlockOn( UINT32 drvno )
 {
 	notifyBlockDone( drvno );
 	return ResetS0Bit( PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS, drvno );
@@ -3993,11 +4052,13 @@ es_status_codes setMeasureOn( UINT32 drvno )
 }
 
 /**
-\brief Resets setMeasureOn bit in PCIEFLAGS and notifies UI about it.
-\param drvno PCIe board identifier.
-\return TRUE when success, otherwise FALSE
-*/
-BOOL resetMeasureOn( UINT32 drvno )
+ * \brief Resets setMeasureOn bit in PCIEFLAGS and notifies UI about it.
+ * 
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ */
+es_status_codes resetMeasureOn( UINT32 drvno )
 {
 	notifyMeasureDone( drvno );
 	return ResetS0Bit( PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS, drvno );
@@ -4145,19 +4206,22 @@ es_status_codes ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT1
 }
 
 /**
-\brief Use this function to abort measurement.
-\param drv PCIe board identifier
-\return none
-*/
-void abortMeasurement( UINT32 drv )
+ * \brief Use this function to abort measurement.
+ * 
+ * \param drv PCIe board identifier.
+ * \return es_status_codes:
+ *		-es_no_error
+ *		-es_register_read_failed
+ *		-es_register_write_failed
+ */
+es_status_codes abortMeasurement( UINT32 drv )
 {
 	WDC_Err("Abort Measurement\n");
-	StopSTimer( drv );
-	//SetIntFFTrig( drv );//disable ext input
-	if(!resetBlockOn( drv ))
-		WDC_Err("Resetting block on failed\n");
-	if(!resetMeasureOn( drv ))
-		WDC_Err("Resetting block on failed\n");
-	SetDMAReset( drv );
-	return;
+	es_status_codes status = StopSTimer( drv );
+	if (status != es_no_error) return status;
+	status = resetBlockOn(drv);
+	if (status != es_no_error) return status;
+	status = resetMeasureOn(drv);
+	if (status != es_no_error) return status;
+	return SetDMAReset( drv );
 }
