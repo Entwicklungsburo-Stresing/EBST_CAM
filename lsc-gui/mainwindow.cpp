@@ -84,8 +84,8 @@ void MainWindow::startPressed()
     settings_struct.nob = settings.value(settingNobPath, settingNobDefault).toInt();
     settings_struct.sti_mode = settings.value(settingStiPath, settingStiDefault).toInt();
     settings_struct.bti_mode = settings.value(settingBtiPath, settingBtiDefault).toInt();
-    settings_struct.stime_in_microsec = settings.value(settingStimerPath, settingStimerDefault).toDouble();
-    settings_struct.btime_in_microsec = settings.value(settingBtimerPath, settingBtimerDefault).toDouble();
+    settings_struct.stime_in_microsec = settings.value(settingStimerPath, settingStimerDefault).toDouble() * 1000;
+    settings_struct.btime_in_microsec = settings.value(settingBtimerPath, settingBtimerDefault).toDouble() * 1000;
     settings_struct.sdat_in_100ns = settings.value(settingSdatPath, settingSdatDefault).toInt();
     settings_struct.bdat_in_100ns = settings.value(settingBdatPath, settingBdatDefault).toInt();
     settings_struct.sslope = settings.value(settingSslopePath, settingSslopeDefault).toInt();
@@ -144,7 +144,7 @@ void MainWindow::startPressed()
         settings_struct.drvno = 1;
         lsc.initMeasurement(&settings_struct);
     }
-    lsc.startMeasurement(boardsel+1);
+    lsc.startMeasurement(boardsel + 1);
     return;
 }
 
@@ -250,7 +250,7 @@ void MainWindow::loadCameraData()
     uint16_t* data = (uint16_t*)malloc(pixel * sizeof(uint16_t));
     int block = ui->horizontalSliderBlock->value() - 1;
     int sample = ui->horizontalSliderSample->value() - 1;
-    lsc.returnFrame(0,sample,block,0,data,pixel);
+    lsc.returnFrame(1,sample,block,0,data,pixel);
     setChartData(data,pixel);
     free(data);
     return;
