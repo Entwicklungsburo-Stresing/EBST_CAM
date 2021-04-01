@@ -3173,8 +3173,7 @@ es_status_codes CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, U
 		return es_parameter_out_of_range;
 	}
 	UINT32 samples = lastSample - firstSample;
-	UINT16 *TRMS_pixels;
-	TRMS_pixels = calloc( samples, sizeof( UINT16 ) );
+	UINT16 *TRMS_pixels = calloc(samples, sizeof(UINT16));
 	//storing the values of one pix for the rms analysis
 	for (int scan = 0; scan < samples; scan++)
 	{
