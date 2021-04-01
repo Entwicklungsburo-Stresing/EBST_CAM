@@ -417,12 +417,6 @@ es_status_codes CCDDrvExit( UINT32 drvno )
  * @return es_status_codes:
  *		- es_no_error
  * 		- es_invalid_driver_number
- * 		- es_getting_device_info_failed
- * 		- es_open_device_failed
- *		- es_getting_dma_buffer_failed
- * 		- es_register_read_failed
- *		- es_register_write_failed
- *		- es_enabling_interrupts_failed
  */
 es_status_codes InitBoard( UINT32 drvno )
 {
@@ -464,7 +458,7 @@ es_status_codes InitBoard( UINT32 drvno )
 	WDC_Err( "DRVInit hDev id % x, hDev pci slot %x, hDev pci bus %x, hDev pci function %x, hDevNumAddrSp %x \n"
 		, pDev->id, pDev->slot.dwSlot, pDev->slot.dwBus, pDev->slot.dwFunction, pDev->dwNumAddrSpaces );
 	// allocate DMA buffer
-	return SetupPCIE_DMA(drvno);
+	return es_no_error ;
 };  // InitBoard
 
 /**
@@ -564,6 +558,7 @@ es_status_codes InitMeasurement(struct global_settings* settings)
 	//BSlope
 	status = SetBSlope(settings->drvno, settings->bslope);
 	if (status != es_no_error) return status;
+	//SetTimer
 	status = SetSTI(settings->drvno, settings->sti_mode);
 	if (status != es_no_error) return status;
 	status = SetBTI(settings->drvno, settings->bti_mode);
@@ -575,10 +570,22 @@ es_status_codes InitMeasurement(struct global_settings* settings)
 	if (settings->enable_gpx) status = InitGPX(settings->drvno, settings->gpx_offset);
 	if (status != es_no_error) return status;
 	//Delay after Trigger
-	status = SetSDAT(settings->drvno, settings->sdat_in_100ns);
-	if (status != es_no_error) return status;
-	status = SetBDAT(settings->drvno, settings->bdat_in_100ns);
-	if (status != es_no_error) return status;
+	if (settings->sdat_in_100ns) {
+		status = SetSDAT(settings->drvno, settings->sdat_in_100ns);
+		if (status != es_no_error) return status;
+	}
+	else {
+		status = ResetSDAT(settings->drvno);
+		if (status != es_no_error) return status;
+	}
+	if (settings->bdat_in_100ns) {
+		status = SetBDAT(settings->drvno, settings->bdat_in_100ns);
+		if (status != es_no_error) return status;
+	}
+	else {
+		status = ResetBDAT(settings->drvno);
+		if (status != es_no_error) return status;
+	}
 	//stop timer
 	status = StopSTimer(settings->drvno);
 	if (status != es_no_error) return status;
@@ -600,6 +607,14 @@ es_status_codes InitMeasurement(struct global_settings* settings)
 			status = DAC_setOutput( settings->drvno, channel, settings->dac_output[channel] );
 			if (status != es_no_error) return status;
 		}
+	//DMA
+	if (WDC_IntIsEnabled(hDev[settings->drvno]))
+	{
+		WDC_Err("cleanup dma\n");
+		status = CleanupPCIE_DMA(settings->drvno);
+		if (status != es_no_error) return status;
+	}
+	SetupPCIE_DMA(settings->drvno);
 	//TODO set cont FF mode with DLL style(CONTFFLOOP = activate;//0 or 1;CONTPAUSE = pause;) or CCDExamp style(check it out)
 	return status;
 }
