@@ -101,7 +101,7 @@ int main(int argc, char **argv) {
     return handle;
   }
 
-  if ((handle = lscpcie_open(device, 0)) < 0) {
+  if ((handle = lscpcie_open(device, 0, 0)) < 0) {
     fprintf(stderr, "could not open camera device file\n");
     perror(0);
     return handle;

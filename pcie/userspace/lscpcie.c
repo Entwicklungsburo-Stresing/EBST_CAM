@@ -132,7 +132,7 @@ int lscpcie_driver_init(void)
     81  8256
 */
 
-int lscpcie_open(uint dev_no, uint16_t options)
+int lscpcie_open(uint dev_no, uint16_t fiber_options, uint8_t memory_options)
 {
 	int result = 0, handle, no_tlps, hardware_present;
 	char name[16];
@@ -238,32 +238,33 @@ int lscpcie_open(uint dev_no, uint16_t options)
 		dev->s0->CAM_CNT = dev->control->number_of_cameras & 0xF;
 
 		// initialise number of pixels and clock scheme
-		result
-		    =
-		    lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA,
-				       CAMERA_ADDRESS_PIXEL,
-				       dev->control->number_of_pixels);
+		result = lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA,
+					CAMERA_ADDRESS_PIXEL,
+					dev->control->number_of_pixels);
 		if (result < 0)
 			goto error;
 
-		result
-		    =
-		    lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA,
-				       CAMERA_ADDRESS_VCLK, options);
+		result = lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA,
+					CAMERA_ADDRESS_VCLK, fiber_options);
 		if (result < 0)
 			goto error;
 	} else {
 		/* no hardware found, debug mode */
 		dev->dma_reg = NULL;
 		dev->s0 = NULL;
+		dev->control->used_dma_size = dev->control->dma_buf_size;
 	}
 
-	dev->mapped_buffer
-	    = mmap(NULL, dev->control->dma_buf_size,
-		   PROT_READ | PROT_WRITE, MAP_SHARED, handle,
-		   2 * page_size);
-	if (dev->mapped_buffer == MAP_FAILED)
-		return -1;
+	if (memory_options & USE_DMA_MAPPING) {
+		dev->mapped_buffer
+			= mmap(NULL, dev->control->dma_buf_size,
+				PROT_READ | PROT_WRITE, MAP_SHARED, handle,
+				2 * page_size);
+		if (dev->mapped_buffer == MAP_FAILED)
+			return -1;
+	} else {
+		dev->mapped_buffer = 0;
+	}
 
 	//if (_COOLER) ActCooling(drvno, FALSE); //deactivate cooler
 
@@ -435,6 +436,27 @@ ssize_t lscpcie_readout(struct dev_descr *dev, uint16_t * buffer,
 	}
 
 	return bytes_read / 2;
+}
+
+size_t lscpcie_bytes_available(struct dev_descr *dev) {
+	ssize_t diff = dev->control->write_pos - dev->control->read_pos;
+	if (diff < 0) return diff += dev->control->used_dma_size;
+	return diff;
+}
+
+size_t lscpcie_bytes_free(struct dev_descr *dev) {
+	ssize_t diff = dev->control->read_pos - dev->control->write_pos;
+	if (diff <= 0)
+		diff += dev->control->used_dma_size;
+	return diff - 1;
+}
+
+int lscpcie_fifo_overflow(struct dev_descr *dev) {
+	return dev->control->status & DEV_FIFO_OVERFLOW;
+}
+
+int lscpcie_dma_overflow(struct dev_descr *dev) {
+	return dev->control->status & DEV_DMA_OVERFLOW;
 }
 
 void lscpcie_set_debug(struct dev_descr *dev, int flags, int mask)

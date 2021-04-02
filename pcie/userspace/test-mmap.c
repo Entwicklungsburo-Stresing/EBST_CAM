@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
     return result;
   }
 
-  result = lscpcie_open(device_number, 0);
+  result = lscpcie_open(device_number, 0, USE_DMA_MAPPING);
   if (result < 0) {
     fprintf(stderr, "error %d opening device %d\n", result, device_number);
     return result;

@@ -104,6 +104,11 @@ ssize_t lscpcie_write_proc(struct file *filp, const char __user *buf,
 					i = result;
 					break;
 				}
+				result = dma_init(&lscpcie_devices[slot]);
+				if (result < 0) {
+					i = result;
+					break;
+				}
 				proc_init(&lscpcie_devices[slot]);
 				break;
 			}

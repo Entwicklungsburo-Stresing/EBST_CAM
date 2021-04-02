@@ -61,7 +61,7 @@ int readout_init(int argc, char **argv, struct camera_info_struct *info) {
 	}
 
 	// open /dev/lscpcie<n>
-	if ((result = lscpcie_open(0, 0)) < 0) {
+	if ((result = lscpcie_open(0, 0, 0)) < 0) {
 		fprintf(stderr, "opening first board returned %d\n", result);
 		return 2;
 	}
