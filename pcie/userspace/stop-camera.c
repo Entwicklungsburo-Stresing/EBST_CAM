@@ -27,7 +27,7 @@ int main(void) {
   case 2: printf("found %d lscpcie boards\n", result); break;
   }
 
-  if ((result = lscpcie_open(0, 0)) < 0) {
+  if ((result = lscpcie_open(0, 0, 0)) < 0) {
     fprintf(stderr, "opening first board returned %d\n", result);
     return 2;
   }

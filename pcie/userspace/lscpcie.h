@@ -45,11 +45,13 @@ typedef enum { xck = 0, exttrig = 1, dat = 2 } trigger_mode_t;
 #define CAMERA_ADDRESS_TRIGGER_IN 0x02
 #define CAMERA_ADDRESS_VCLK       0x04
 
+#define USE_DMA_MAPPING 0x01
+
 #define SET_BITS(var, val, mask) var = (var & ~mask) | (val & mask)
 
 // camera operations
 int lscpcie_driver_init(void);
-int lscpcie_open(uint dev_no, uint16_t options);
+int lscpcie_open(uint dev_no, uint16_t fiber_options, uint8_t memory_options);
 void lscpcie_close(uint dev_no);
 int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode,
 		int number_of_scans, int number_of_blocks,
@@ -63,6 +65,7 @@ ssize_t lscpcie_readout(struct dev_descr *dev, uint16_t * buffer,
 int lscpcie_setup_dma(struct dev_descr *dev);
 int lscpcie_hardware_present(struct dev_descr *dev);
 int lscpcie_fifo_overflow(struct dev_descr *dev);
+int lscpcie_dma_overflow(struct dev_descr *dev);
 int lscpcie_clear_fifo(struct dev_descr *dev);
 size_t lscpcie_bytes_free(struct dev_descr *dev);
 size_t lscpcie_bytes_available(struct dev_descr *dev);
@@ -83,8 +86,6 @@ struct dev_descr *lscpcie_get_descriptor(uint dev_no);
 
 // debugging
 void lscpcie_set_debug(struct dev_descr *dev, int flags, int mask);
-int lscpcie_get_buffer_pointers(struct dev_descr *dev,
-				uint64_t * pointers);
 int lscpcie_dump_s0(struct dev_descr *dev);
 int lscpcie_dump_dma(struct dev_descr *dev);
 int lscpcie_dump_tlp(struct dev_descr *dev);
