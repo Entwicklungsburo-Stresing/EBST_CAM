@@ -155,82 +155,6 @@ int GetCursorPosition()
 	return (int)x;// CurPos.x;
 }
 
-void initCamera_old()
-{
-	switch (CAMERA_SYSTEM)
-	{
-	case camera_system_3001:
-		InitCamera3001(DRV, _PIXEL, CCTRIGGER_MODE, SENSOR_TYPE, 0 );
-		break;
-	case camera_system_3010:
-		InitCamera3010(DRV, _PIXEL, CCTRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
-		break;
-	case camera_system_3030:
-		InitCamera3030(DRV, ADC_MODE, ADC_CUSTOM_PATTERN, GAIN);
-		break;
-	}
-	if (both_boards) {
-		switch (CAMERA_SYSTEM)
-		{
-		case camera_system_3001:
-			InitCamera3001(2, _PIXEL, CCTRIGGER_MODE, SENSOR_TYPE, _IsArea );
-			break;
-		case camera_system_3010:
-			InitCamera3010(2, _PIXEL, CCTRIGGER_MODE, ADC_MODE, ADC_CUSTOM_PATTERN, LED_ON, GAIN_HIGH);
-			break;
-		case camera_system_3030:
-			InitCamera3030(2, ADC_MODE, ADC_CUSTOM_PATTERN, GAIN);
-			break;
-		}
-	}
-}
-
-void initMeasurement()
-{
-#ifdef _DLL
-	DLLStopFFTimer(choosen_board);
-	DLLRSFifo(choosen_board);
-	gain = 6;
-	DLLSetADGain(choosen_board, 1, gain, gain, gain, gain, gain, gain, gain, gain); //set gain to values g1..g8 in Board.C
-	if (both_boards)
-	{
-		DLLStopFFTimer(2);
-		DLLRSFifo(2);
-		//setups
-		//SetupDELAY(choosen_board,DELAYini);	//init WRFIFO delay
-		DLLRsTOREG(2); // reset TOREG
-		//set TrigOut, default= XCK
-		DLLSetTORReg(2, m_TOmodus);
-		gain = 6;
-		DLLSetADGain(2, 1, gain, gain, gain, gain, gain, gain, gain, gain);
-	}
-#else
-	//set PDA and FFT
-	SetSensorType( choosen_board, SENSOR_TYPE );
-
-	if (_MSHUT) {
-		CloseShutter(choosen_board);
-		SetSEC(choosen_board, ExpTime * 100);
-		SetTORReg(choosen_board, 14); //use SHUT
-	}
-	else { 
-		ResetSEC(choosen_board);
-		SetTORReg(choosen_board, m_TOmodus);
-	}
-	//set TrigOut, default= XCK
-	StopSTimer(choosen_board);
-	RSFifo(choosen_board);
-	initCamera_old();
-	if (both_boards) {
-		StopSTimer(2);
-		//SetIntFFTrig(2);
-		RSFifo(2);
-		//set TrigOut, default= XCK
-		SetTORReg(2, m_TOmodus);
-	}
-#endif
-}
-
 unsigned int __stdcall UpdateDisplayThread( void *parg )//threadex
 {
 	while (Running)
@@ -252,7 +176,47 @@ void startMess(void *dummy)
 	int j = 0;
 	char header[260];
 	contimess_run_once = TRUE;
-	initMeasurement();
+	struct global_settings g;
+	g.ADC_custom_pettern = ADC_CUSTOM_PATTERN;
+	g.ADC_Mode = ADC_MODE;
+	g.bdat_in_100ns = Bdat;
+	g.bslope = TrigMod_B;
+	g.btime_in_microsec = RepTime*1000;
+	g.bti_mode = ItemIndex_B;
+	g.camcnt = CAMCNT;
+	g.camera_system = CAMERA_SYSTEM;
+	g.dac = 0;
+	//g.dac_output
+	g.drvno = DRV; //TODO: oder BOARD_SEL?
+	g.enable_gpx = 0;
+	g.FFTLines = _FFTLINES;
+	g.FFTMode = fftMode;
+	g.gain_3010 = GAIN_HIGH;
+	g.gain_3030 = GAIN;
+	g.gpx_offset = 0;
+	g.isIRSensor = 0;
+	g.keep_first = 0;
+	g.led_on = LED_ON;
+	g.mshut = _MSHUT;
+	g.nob = Nob;
+	g.nos = *Nospb;
+	//g.number_of_regions = 0;
+	g.pixel = _PIXEL;
+	//g.region_size
+	g.sdat_in_100ns = Sdat;
+	g.sensor_type = SENSOR_TYPE;
+	g.ShutterExpTime = Sec;
+	//g.ShutterExpTime = Bec;
+	g.sslope = TrigMod;
+	g.stime_in_microsec = ExpTime;
+	if (ItemIndex_S < 3) g.sti_mode = ItemIndex_S;
+	else g.sti_mode = ItemIndex_S + 1;
+	g.Temp_level = TempLevel;
+	g.TORmodus = 0;
+	g.trigger_mode_cc = CCTRIGGER_MODE;
+	g.Vfreq = Vfreqini;
+	g.xckdelay = 0;
+	InitMeasurement(&g);
 	// write header
 	if(cont_mode)
 		j = sprintf_s(header, 260, " Continuous mode - Cancel with ESC                                 ");

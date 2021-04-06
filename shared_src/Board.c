@@ -457,7 +457,7 @@ es_status_codes InitBoard( UINT32 drvno )
 	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
 	WDC_Err( "DRVInit hDev id % x, hDev pci slot %x, hDev pci bus %x, hDev pci function %x, hDevNumAddrSp %x \n"
 		, pDev->id, pDev->slot.dwSlot, pDev->slot.dwBus, pDev->slot.dwFunction, pDev->dwNumAddrSpaces );
-	// allocate DMA buffer
+	InitProDLL();
 	return es_no_error ;
 };  // InitBoard
 
@@ -616,6 +616,7 @@ es_status_codes InitMeasurement(struct global_settings* settings)
 	}
 	SetupPCIE_DMA(settings->drvno);
 	//TODO set cont FF mode with DLL style(CONTFFLOOP = activate;//0 or 1;CONTPAUSE = pause;) or CCDExamp style(check it out)
+	//TODO  SetBEC( choosen_board, Bec );
 	return status;
 }
 

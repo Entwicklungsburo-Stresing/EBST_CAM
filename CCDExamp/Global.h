@@ -88,3 +88,4 @@ extern double TRMSval_global[2];
 extern UINT choosen_board;
 extern BOOL both_boards;
 extern BOOL cont_mode;
+extern int fftMode;
