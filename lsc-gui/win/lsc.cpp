@@ -1,5 +1,6 @@
 #include "../lsc.h"
 #include "shared_src/board.h"
+#include <sstream>
 
 Lsc::Lsc()
 {
