@@ -15,6 +15,12 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_3432B358C2CC40BB9BD46CE92AC40464"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_92EE14C69C5547229214F0462CB9022D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -33,7 +39,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Debug\\CCDExamp_Setup.msi"
+        "OutputFilename" = "8:Release\\CCDExamp_Setup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -56,6 +62,11 @@
                     {
                     "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
                     "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Visual.C++.14.0.x64"
+                    {
+                    "Name" = "8:Visual C++ \"14\" Runtime Libraries (x64)"
+                    "ProductCode" = "8:Microsoft.Visual.C++.14.0.x64"
                     }
                 }
             }
@@ -89,6 +100,11 @@
                     "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
                     "ProductCode" = "8:.NETFramework,Version=v4.6.1"
                     }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Visual.C++.14.0.x64"
+                    {
+                    "Name" = "8:Visual C++ \"14\" Runtime Libraries (x64)"
+                    "ProductCode" = "8:Microsoft.Visual.C++.14.0.x64"
+                    }
                 }
             }
         }
@@ -112,6 +128,26 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3432B358C2CC40BB9BD46CE92AC40464"
+            {
+            "SourcePath" = "8:..\\shared_src\\CCD.ico"
+            "TargetName" = "8:CCD.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_A1F1AB1AEA5C4300AACB65433A54E330"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -169,7 +205,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:CCDExamp"
         "ProductCode" = "8:{DCCC0BD9-2E38-49CA-988A-6CA62A61391C}"
-        "PackageCode" = "8:{071FDCD4-7904-4DB9-B5CE-429DD36674AD}"
+        "PackageCode" = "8:{13D0EB39-831C-456E-90EA-63CEB8C6DC85}"
         "UpgradeCode" = "8:{E656E723-CD9C-4179-A360-882C93DEA377}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -289,6 +325,34 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_C80891F6C6A949BB9F5D83E651374AE4"
+            {
+            "Name" = "8:CCDExamp"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_CA0286E49CEA4CAB9D325AC90424EF46"
+            "Folder" = "8:_FFB0513B52904D91B1D1B36C22C9564A"
+            "WorkingFolder" = "8:_A1F1AB1AEA5C4300AACB65433A54E330"
+            "Icon" = "8:_3432B358C2CC40BB9BD46CE92AC40464"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_E129D0E5EEB14A279531C4C4BD56EBE7"
+            {
+            "Name" = "8:CCDExamp"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_CA0286E49CEA4CAB9D325AC90424EF46"
+            "Folder" = "8:_2A9D6DB46B324DCAA2906D0CB4F9B261"
+            "WorkingFolder" = "8:_A1F1AB1AEA5C4300AACB65433A54E330"
+            "Icon" = "8:_3432B358C2CC40BB9BD46CE92AC40464"
+            "Feature" = "8:"
+            }
         }
         "UserInterface"
         {
