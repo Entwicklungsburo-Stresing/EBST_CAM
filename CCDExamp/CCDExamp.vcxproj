@@ -707,6 +707,11 @@
   <ItemGroup>
     <Image Include="..\shared_src\CCD.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ESLSCDLL_pro\ESLSCDLL_pro.vcxproj">
+      <Project>{1b5131df-48da-47fb-aab0-2e086ed279db}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
