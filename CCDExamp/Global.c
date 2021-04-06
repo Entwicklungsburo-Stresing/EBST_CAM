@@ -40,3 +40,4 @@ double TRMSval_global[2];
 UINT choosen_board = 1;
 BOOL both_boards = FALSE;
 BOOL cont_mode = FALSE;
+int fftMode = 0;

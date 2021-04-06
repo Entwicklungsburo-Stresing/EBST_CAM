@@ -145,33 +145,12 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		NULL
 	);
 	if (!hWnd) return(FALSE);
-	//RSInterface(choosen_board);
-	//	if (! InitBoard(choosen_board)) //Error message in InitBoard
-	//		return (FALSE); 
 	//set global handle for our window
 	// must be outside the thread
 	hMSWND = hWnd;
 	hMSDC = GetDC( hMSWND );
 	ShowWindow( hWnd, nCmdShow );
 	UpdateWindow( hWnd );
-	//	AboutDrv(choosen_board);		//shows driver version and Board ID
-	// init high resolution counter 	
-	// TPS = InitHRCounter();
-	// if (TPS==0) return (FALSE);
-	ResetPartialBinning(choosen_board);
-	if (SENSOR_TYPE == FFTsensor)
-	{
-		//vclks
-		SetupVCLKReg( choosen_board, _FFTLINES, Vfreqini );
-	}
-	CloseShutter( choosen_board ); //set cooling  off
-/*
-	if (_AD16cds)  {//resets EC reg!
-					InitCDS_AD(choosen_board, m_SHA,m_Amp,m_Ofs,m_TIgain);
-					OpenShutter(choosen_board);	//IFC must be hi or EC would not work
-					}
-*/
-	InitProDLL();
 	return TRUE;
 }
 
@@ -1203,16 +1182,11 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 			//setting trigger input modes
 			ItemIndex_S = SendMessage(GetDlgItem(hDlg, IDC_COMBO_STI), (UINT)CB_GETCURSEL,
 				(WPARAM)0, (LPARAM)0);
-			if (ItemIndex_S < 3)	SetSTI(choosen_board, ItemIndex_S);
-			else				SetSTI(choosen_board, ItemIndex_S + 1);
 			ItemIndex_B = SendMessage(GetDlgItem(hDlg, IDC_COMBO_BTI), (UINT)CB_GETCURSEL,
 				(WPARAM)0, (LPARAM)0);
-			SetBTI(choosen_board, ItemIndex_B);
-
 			//setting exp time and rep time
 			val = GetDlgItemInt(hDlg, IDC_M_EXPTIME, &success, FALSE);
 			if (success) ExpTime = val;
-			SetSTimer(choosen_board, ExpTime);
 			val = GetDlgItemInt(hDlg, IDC_M_REPTIME, &success, FALSE);
 			if (success) RepTime = val;
 			SetBTimer(choosen_board, RepTime * 1000);
@@ -1220,18 +1194,11 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 			//Setting DAT Registers
 			val = GetDlgItemInt(hDlg, IDC_SDAT, &success, FALSE);
 			if (success) Sdat = val;
-			if (Sdat) SetSDAT(choosen_board, Sdat);
-			else ResetSDAT(choosen_board);
 			val = GetDlgItemInt(hDlg, IDC_BDAT, &success, FALSE);
 			if (success) Bdat = val;
-			if (Bdat) SetBDAT(choosen_board, Bdat);
-			else ResetBDAT(choosen_board);
-
 			//Setting EC Registers
 			val = GetDlgItemInt(hDlg, IDC_SEC, &success, FALSE);
 			if (success) Sec = val;
-			if (Sec){ SetSEC(choosen_board, Sec);}
-			else ResetSEC( choosen_board );
 
 			val = GetDlgItemInt( hDlg, IDC_BEC, &success, FALSE );
 			if (success) Bec = val;
@@ -1246,18 +1213,6 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO1_B ) == BST_CHECKED) TrigMod_B = 1;
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO2_B ) == BST_CHECKED) TrigMod_B = 0;
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO3_B ) == BST_CHECKED) TrigMod_B = 2;
-
-#ifndef _DLL
-			if (TrigMod == 0)	HighSlope( choosen_board );
-			if (TrigMod == 1)	LowSlope( choosen_board );
-			if (TrigMod == 2)	BothSlope( choosen_board );
-			SetBSlope( choosen_board, TrigMod_B );
-#else
-			if (TrigMod == 0)	DLLHighSlope( choosen_board );
-			if (TrigMod == 1)	DLLLowSlope( choosen_board );
-			if (TrigMod == 2)	DLLBothSlope( choosen_board );
-#endif
-
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
@@ -1312,21 +1267,8 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 			nospb_input = GetDlgItemInt( hDlg, IDC_nospb, &success, FALSE );
 			if (success)
 			{
-#ifdef _DLL
-				DLLSetMeasurementParameters( DRV, nospb_input, nob_input );
-				if (both_boards)
-					DLLSetMeasurementParameters( 2, nospb_input, nob_input );
-#else
-				es_status_codes status = SetMeasurementParameters(choosen_board, nospb_input, nob_input);
-				if (status != es_no_error)
-					MessageBox( hMSWND, "Setting measurement parameters failed", "Error", MB_OK );
-				if (both_boards)
-				{
-					status = SetMeasurementParameters(2, nospb_input, nob_input);
-					if (status != es_no_error)
-						MessageBox( hMSWND, "Setting measurement parameters of second board failed", "Error", MB_OK );
-				}
-#endif
+				Nob = nob_input;
+				*Nospb = nospb_input;
 			}
 			//update trackbars
 			SendMessage( hwndTrackNos, TBM_SETRANGEMAX, TRUE, *Nospb - 1 );
@@ -1355,17 +1297,8 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 			nospb_input = GetDlgItemInt( hDlg, IDC_nospb, &success, FALSE );
 			if (success)
 			{
-#ifdef _DLL
-				DLLSetMeasurementParameters( DRV, nospb_input, nob_input );
-				if (both_boards)
-					DLLSetMeasurementParameters( 2, nospb_input, nob_input );
-			}
-#else
-				FreeMemInfo( &builtinram, &freeram );
-				freeram_old = freeram;
-				es_status_codes status = SetMeasurementParameters(choosen_board, nospb_input, nob_input);
-				if (status != es_no_error)
-					MessageBox( hMSWND, "Setting measurement parameters failed", "Error", MB_OK );
+				Nob = nob_input;
+				*Nospb = nospb_input;
 			}
 			FreeMemInfo( &builtinram, &freeram );
 			SetDlgItemInt( hDlg, IDC_FREERAM, freeram / divMB, 0 );
@@ -1376,7 +1309,6 @@ LRESULT CALLBACK AllocateBuf( HWND hDlg,
 				SetDlgItemInt( hDlg, IDC_ALLOCRAM, allocram, 0 );
 			else//if RAM is bigger than 100gb
 				SetDlgItemText( hDlg, IDC_ALLOCRAM, "calculation error" );
-#endif
 			break;
 		}
 		break; //WM_COMMAND
@@ -1470,15 +1402,7 @@ LRESULT CALLBACK SetupTLevel( HWND hDlg,
 		case IDOK:
 			val = GetDlgItemInt( hDlg, IDC_TLevel, &success, FALSE );
 			if (success)
-			{
 				TempLevel = val;
-#ifndef _DLL
-				SetTemp( choosen_board, (UCHAR)TempLevel );
-			}
-#else
-				DLLSetTemp( choosen_board, (UCHAR)TempLevel );
-		}
-#endif
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
@@ -1584,37 +1508,6 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 #else
 			DLLWriteByteS0( choosen_board, (BYTE)val, 0x2A );//TOCNT reg
 #endif
-					
-
-#ifndef _DLL
-			RsTOREG( choosen_board );
-			SetTORReg( choosen_board, m_TOmodus );
-#else
-			DLLRsTOREG( choosen_board );
-			DLLSetTORReg( choosen_board, m_TOmodus );
-#endif
-
-			/*
-			switch (m_TOmodus)
-			{	case 1: dbyte = 0x0; break; //XCK
-				case 2: dbyte = 0x80; break; //REG
-				case 3: dbyte = 0x40; break; //EC
-				case 4: dbyte = 0x08; break; //DAT
-				case 5: d
-
-
-					byte = 0x20; break; //TRIGIN
-				case 6: dbyte = 0x10; break; //FFXCK
-				case 7: dbyte |= 0x70; break; //Block Trig
-				default:  dbyte = 0x0; // XCKI
-			}
-
-			m_noPDARS = IsDlgButtonChecked(hDlg,IDC_CHECK_NOPDARS);
-			if (m_noPDARS) dbyte |= 0x04;
-
-			WriteByteS0(choosen_board, dbyte,0x2B);//TOFLAG reg
-			*/
-
 			if (IsDlgButtonChecked( hDlg, IDC_ECCNT_RADIO1 ) == TRUE) m_ECmodus = 1; //CNT
 			if (IsDlgButtonChecked( hDlg, IDC_ECCNT_RADIO2 ) == TRUE) m_ECmodus = 2;
 			if (IsDlgButtonChecked( hDlg, IDC_ECCNT_RADIO3 ) == TRUE) m_ECmodus = 3;
@@ -1710,6 +1603,7 @@ LRESULT CALLBACK Set3ROI( HWND hDlg,
 			_IsArea = FALSE;
 			_IsROI = 3;
 			DLLSetupROI( choosen_board, _IsROI, _FFTLINES, 0, roi, Vfreqini );
+			fftMode = partial_binning;
 			//allocate Buffer with matching NOS
 			*Nospb = ROI;
 			CALLING_WITH_NOS = TRUE;
@@ -1790,6 +1684,7 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 			_IsArea = FALSE;
 			_IsROI = 5;
 			DLLSetupROI( choosen_board, _IsROI, _FFTLINES, 0, roi, Vfreqini );
+			fftMode = partial_binning;
 			//allocate Buffer with matching NOS
 			*Nospb = ROI;
 			CALLING_WITH_NOS = TRUE;
@@ -1825,6 +1720,7 @@ LRESULT CALLBACK FullBinning( HWND hDlg,
 			_IsArea = FALSE;
 			_IsROI = 0;
 			SetupFullBinning( choosen_board, _FFTLINES, Vfreqini);
+			fftMode = full_binning;
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
@@ -1857,6 +1753,7 @@ LRESULT CALLBACK AreaMode(HWND hDlg,
 			_IsArea = TRUE;
 			_IsROI = 0;
 			DLLSetupArea( choosen_board, 1, Vfreqini );
+			fftMode = area_mode;
 			//allocate Buffer with matching NOS
 			*Nospb = _FFTLINES;
 			CALLING_WITH_NOS = TRUE;
