@@ -1305,7 +1305,7 @@ es_status_codes allocateUserMemory( UINT32 drvno )
 		// sometimes it makes one ISR more, so better to allocate nos+1 thaT IN THIS CASE THE ADDRESS pDMAIndex is valid
 		//B! "2 *" because the buffer is just 2/3 of the needed size. +1 oder *2 weil sonst absturz im continuous mode
 		UINT16* userBufferTemp = calloc( (UINT64)aCAMCNT[drvno] * (UINT64)(*Nospb) * (UINT64)Nob * (UINT64)aPIXEL[drvno], sizeof( UINT16 ) );
-		if (!userBufferTemp)
+		if (userBufferTemp)
 		{
 			userBuffer[drvno] = userBufferTemp;
 			return es_no_error;
