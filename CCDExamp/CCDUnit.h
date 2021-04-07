@@ -10,4 +10,4 @@ void UpdateTxT( void );
 void UpdateDisplay();
 unsigned int __stdcall UpdateDisplayThread( void *parg );
 int GetCursorPosition();
-void startMess( void * dummy );
+void startMess();

@@ -171,7 +171,7 @@ unsigned int __stdcall UpdateDisplayThread( void *parg )//threadex
 }
 
 // main read loop setup
-void startMess(void *dummy)
+void startMess()
 {
 	int j = 0;
 	char header[260];
