@@ -4171,11 +4171,11 @@ es_status_codes LedOff( UINT32 drvno, UINT8 LED_OFF )
  */
 es_status_codes ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length )
 {
-	UINT16** pframe = malloc(sizeof(UINT16*));
+	UINT16* pframe = NULL;
 	//UINT16** pframe;// = &userBuffer[1][0];
-	es_status_codes status = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, curr_cam, pframe);
+	es_status_codes status = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, curr_cam, &pframe);
 	if (status != es_no_error) return status;
-	memcpy( pdest, *pframe, length * sizeof( UINT16 ) );  // length in bytes
+	memcpy( pdest, pframe, length * sizeof( UINT16 ) );  // length in bytes
 	/*
 	WDC_Err( "RETURN FRAME: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, _PIXEL: %u, length: %u\n", drvno, curr_nos, curr_nob, curr_cam, _PIXEL, length );
 	WDC_Err("FRAME2: address Buff: 0x%x \n", userBuffer[drvno]);

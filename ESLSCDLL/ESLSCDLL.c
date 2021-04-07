@@ -404,10 +404,10 @@ DllAccess es_status_codes DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 cu
  */
 DllAccess es_status_codes DLLCopyAllData( UINT32 drv, UINT16 *pdest )
 {
-	UINT16** pframe = malloc(sizeof(UINT16*));
-	es_status_codes status = GetAddressOfPixel(drv, 0, 0, 0, 0, pframe);
+	UINT16* pframe = NULL;
+	es_status_codes status = GetAddressOfPixel(drv, 0, 0, 0, 0, &pframe);
 	if (status != es_no_error) return status;
-	memcpy( pdest, *pframe, (UINT64)(*Nospb) * (UINT64)Nob * (UINT64)aCAMCNT[drv] * (UINT64)aPIXEL[drv] * sizeof( UINT16 ) );  // length in bytes
+	memcpy( pdest, pframe, (UINT64)(*Nospb) * (UINT64)Nob * (UINT64)aCAMCNT[drv] * (UINT64)aPIXEL[drv] * sizeof( UINT16 ) );  // length in bytes
 	return status;
 }
 
@@ -423,10 +423,10 @@ DllAccess es_status_codes DLLCopyAllData( UINT32 drv, UINT16 *pdest )
  */
 DllAccess es_status_codes DLLCopyOneBlock( UINT32 drv, UINT16 block, UINT16 *pdest )
 {
-	UINT16** pframe = malloc(sizeof(UINT16*));
-	es_status_codes status = GetAddressOfPixel( drv, 0, 0, block, 0, pframe);
+	UINT16* pframe = NULL;
+	es_status_codes status = GetAddressOfPixel( drv, 0, 0, block, 0, &pframe);
 	if (status != es_no_error) return status;
-	memcpy( pdest, *pframe, (UINT64)(*Nospb) * (UINT64)aCAMCNT[drv] * (UINT64)aPIXEL[drv] * sizeof( UINT16 ) );  // length in bytes
+	memcpy( pdest, pframe, (UINT64)(*Nospb) * (UINT64)aCAMCNT[drv] * (UINT64)aPIXEL[drv] * sizeof( UINT16 ) );  // length in bytes
 	return status;
 }
 
