@@ -87,6 +87,9 @@
     <ClCompile Include="..\shared_src\es_status_codes.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UIAbstractionLayer_cpp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared_src\Board.h">
@@ -120,6 +123,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\shared_src\es_status_codes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UIAbstractionLayer_cpp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lsc-gui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -208,6 +208,7 @@
     <ClCompile Include="..\shared_src\Board.c" />
     <ClCompile Include="..\shared_src\Board_ll.c" />
     <ClCompile Include="..\shared_src\es_status_codes.c" />
+    <ClCompile Include="UIAbstractionLayer_cpp.cpp" />
     <ClCompile Include="UIAbstractionLayer.c" />
     <ClCompile Include="dialogsettings.cpp" />
     <ClCompile Include="lsc-gui.cpp" />
@@ -223,6 +224,8 @@
     <ClInclude Include="..\shared_src\es_status_codes.h" />
     <ClInclude Include="..\shared_src\struct.h" />
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
+    <ClInclude Include="lsc-gui.h" />
+    <ClInclude Include="UIAbstractionLayer_cpp.h" />
     <QtMoc Include="dialogsettings.h">
     </QtMoc>
     <QtMoc Include="lsc.h">
