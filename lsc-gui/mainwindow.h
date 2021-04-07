@@ -17,11 +17,15 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    Lsc lsc;
 public slots:
     void loadCameraData();
+    void on_measureStart();
+    void on_measureDone();
+    void on_blockStart();
+    void on_blockDone();
 private:
     Ui::MainWindow *ui;
-    Lsc lsc;
     QSettings settings;
     void setChartData(QLineSeries* series);
     void setChartData(uint16_t* data, uint16_t length);

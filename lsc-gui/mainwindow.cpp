@@ -19,8 +19,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->horizontalSliderBlock, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
     connect(ui->pushButtonStart, SIGNAL(pressed()), this, SLOT(startPressed()));
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));
-    connect(&lsc, SIGNAL(measureDone()), this, SLOT(loadCameraData()));
-    
+    connect(&lsc, SIGNAL(measureStart()), this, SLOT(on_measureStart()));
+    connect(&lsc, SIGNAL(measureDone()), this, SLOT(on_measureDone()));
+    connect(&lsc, SIGNAL(blockStart()), this, SLOT(on_blockStart()));
+    connect(&lsc, SIGNAL(blockDone()), this, SLOT(on_blockDone()));
+
     es_status_codes status = lsc.initDriver();
     if (status != es_no_error)
         showNoDriverFoundDialog();
@@ -253,5 +256,51 @@ void MainWindow::loadCameraData()
     lsc.returnFrame(1,sample,block,0,data,pixel);
     setChartData(data,pixel);
     free(data);
+    return;
+}
+
+void MainWindow::on_measureStart()
+{
+    //set measureOn lamp on
+    QPalette pal = palette();
+    pal.setColor(QPalette::Background, Qt::green);
+    ui->widgetMeasureOn->setPalette(pal);
+    //disable start button
+    ui->pushButtonStart->setDisabled(true);
+    //enable abort button
+    ui->pushButtonAbort->setEnabled(true);
+    return;
+}
+
+void MainWindow::on_measureDone()
+{
+    //set measureOn lamp off
+    QPalette pal = palette();
+    pal.setColor(QPalette::Background, Qt::darkGreen);
+    ui->widgetMeasureOn->setPalette(pal);
+    //display camera data
+    loadCameraData();
+    //enable start button
+    ui->pushButtonStart->setEnabled(true);
+    //disable abort button
+    ui->pushButtonAbort->setDisabled(true);
+    return;
+}
+
+void MainWindow::on_blockStart()
+{
+    //set blockOn lamp on
+    QPalette pal = palette();
+    pal.setColor(QPalette::Background, Qt::green);
+    ui->widgetBlockOn->setPalette(pal);
+    return;
+}
+
+void MainWindow::on_blockDone()
+{
+    //set blockOn lamp off
+    QPalette pal = palette();
+    pal.setColor(QPalette::Background, Qt::darkGreen);
+    ui->widgetBlockOn->setPalette(pal);
     return;
 }
