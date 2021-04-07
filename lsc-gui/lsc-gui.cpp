@@ -1,5 +1,7 @@
-#include "mainwindow.h"
+#include "lsc-gui.h"
 #include <QApplication>
+
+MainWindow* mainWindow;
 
 int main(int argc, char *argv[])
 {
@@ -7,7 +9,7 @@ int main(int argc, char *argv[])
   QCoreApplication::setOrganizationName("Entwicklungsbuero Stresing");
   QCoreApplication::setOrganizationDomain("stresing.de");
   QCoreApplication::setApplicationName("LSC");
-  MainWindow w;
-  w.show();
+  mainWindow = new MainWindow;
+  mainWindow->show();
   return app.exec();
 }
