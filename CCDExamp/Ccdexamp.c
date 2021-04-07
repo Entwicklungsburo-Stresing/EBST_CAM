@@ -542,20 +542,7 @@ void AboutPCI( HWND hWnd )
 
 LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-	int dummy;
-	static HWND hText = NULL;
-	static HWND hEdit = NULL;
-	static HWND hBtn = NULL;
 	UINT FFTMenuEnable;
-	int i = 0;
-	int span = 0;
-
-	char *s = (char*)malloc( 10 );
-
-	char TrmsString[260];
-	int j = 0;
-	int xPos = GetCursorPosition();
-	int yVal = DisplData[0][xPos];// YVal(1, xPos);
 
 	switch (uMsg)
 	{
@@ -739,7 +726,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			CONTFFLOOP = FALSE;
 			CONTPAUSE = 1;
 			cont_mode = FALSE;
-			if (!Running) startMess( &dummy );
+			if (!Running) startMess();
 			break;
 		case ID_START_STARTCONTINUOUSLY:
 			CONTFFLOOP = TRUE;
@@ -769,7 +756,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 					DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
 				}
 			}
-			if (!Running) startMess( &dummy );
+			if (!Running) startMess();
 			break;
 
 		case IDM_SETEXP:
@@ -834,7 +821,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			AboutTiming( hWnd );
 			break;
 		case VK_F6:
-			if (!Running) startMess( &dummy );
+			if (!Running) startMess();
 			break;
 #ifndef _DLL
 		case VK_F2:

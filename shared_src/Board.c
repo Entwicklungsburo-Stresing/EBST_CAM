@@ -1285,7 +1285,7 @@ es_status_codes SetBoardVars( UINT32 drvno )
  * \param drvno PCIe board identifier.
  * \return es_status_codes
  *		- es_no_error
- *		- es_allocating_user_memory_failed
+ *		- es_allocating_memory_failed
  *		- es_not_enough_ram
  */
 es_status_codes allocateUserMemory( UINT32 drvno )
@@ -1305,7 +1305,7 @@ es_status_codes allocateUserMemory( UINT32 drvno )
 		// sometimes it makes one ISR more, so better to allocate nos+1 thaT IN THIS CASE THE ADDRESS pDMAIndex is valid
 		//B! "2 *" because the buffer is just 2/3 of the needed size. +1 oder *2 weil sonst absturz im continuous mode
 		UINT16* userBufferTemp = calloc( (UINT64)aCAMCNT[drvno] * (UINT64)(*Nospb) * (UINT64)Nob * (UINT64)aPIXEL[drvno], sizeof( UINT16 ) );
-		if (userBufferTemp != 0)
+		if (!userBufferTemp)
 		{
 			userBuffer[drvno] = userBufferTemp;
 			return es_no_error;
@@ -1313,7 +1313,7 @@ es_status_codes allocateUserMemory( UINT32 drvno )
 		else
 		{
 			WDC_Err( "Allocating user memory failed.\n" );
-			return es_allocating_user_memory_failed;
+			return es_allocating_memory_failed;
 		}
 	}
 	else
@@ -3197,6 +3197,7 @@ void GetRmsVal( UINT32 nos, UINT16 *TRMSVals, double *mwf, double *trms )
  * \return es_status_codes
  *		- es_no_error
  *		- es_parameter_out_of_range
+ *		- es_allocating_memory_failed
  */
 es_status_codes CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms )
 {
@@ -3210,6 +3211,7 @@ es_status_codes CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, U
 	}
 	UINT32 samples = lastSample - firstSample;
 	UINT16 *TRMS_pixels = calloc(samples, sizeof(UINT16));
+	if (!TRMS_pixels) return es_allocating_memory_failed;
 	//storing the values of one pix for the rms analysis
 	for (int scan = 0; scan < samples; scan++)
 	{
@@ -3219,6 +3221,7 @@ es_status_codes CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, U
 	}
 	//rms analysis
 	GetRmsVal( samples, TRMS_pixels, mwf, trms );
+	free(TRMS_pixels);
 	return es_no_error;
 }//CalcTrms
 
@@ -4097,7 +4100,7 @@ es_status_codes SetSTI( UINT32 drvno, UINT8 sti_mode )
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
- *		- es_allocating_user_memory_failed
+ *		- es_allocating_memory_failed
  *		- es_not_enough_ram
  */
 es_status_codes SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob )

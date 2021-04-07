@@ -15,7 +15,7 @@ typedef enum
 	es_register_read_failed = 10,
 	es_register_write_failed,
 	es_no_space0,
-	es_allocating_user_memory_failed,
+	es_allocating_memory_failed,
 	es_not_enough_ram,
 	es_parameter_out_of_range = 15,
 	es_unknown_error,
