@@ -94,11 +94,9 @@ es_status_codes CloseShutter(UINT32 drvno);	// set IFC=low
 es_status_codes OpenShutter(UINT32 drvno);		// set IFC=high
 BOOL GetShutterState( UINT32 drvno );	//get the actual state
 es_status_codes SetSDAT( UINT32 drvno, UINT32 tin100ns ); // delay after trigger in 100ns
-es_status_codes ResetSDAT( UINT32 drvno ); // disable delay after trigger in S0+0x20
 es_status_codes SetSEC( UINT32 drvno, UINT32 ecin100ns );
 es_status_codes ResetSEC( UINT32 drvno );
 es_status_codes SetBDAT( UINT32 drvno, UINT32 tin100ns ); // delay after trigger in 100ns
-es_status_codes ResetBDAT( UINT32 drvno ); // disable delay after trigger in S0+0x20
 es_status_codes SetBEC( UINT32 drvno, UINT32 ecin100ns );
 es_status_codes ResetBEC( UINT32 drvno );
 es_status_codes SetTORReg( UINT32 drvno, BYTE fkt );

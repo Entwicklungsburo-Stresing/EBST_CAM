@@ -477,13 +477,14 @@ es_status_codes InitBoard( UINT32 drvno )
  */
 es_status_codes initCamera(UINT32 drvno,  UINT8 camera_system, UINT16 pixel, UINT16 trigger_mode, UINT16 sensor_type, UINT8 ADC_Mode, UINT16 ADC_custom_pettern, UINT16 led_on, UINT16 gain_3010, UINT8 gain_3030)
 {
+	InitCameraGeneral(drvno, pixel, trigger_mode, sensor_type, 0, 0);
 	switch (camera_system)
 	{
 	case camera_system_3001:
 		InitCamera3001(drvno, pixel, trigger_mode, sensor_type, 0);
 		break;
 	case camera_system_3010:
-		InitCamera3010(drvno, pixel, trigger_mode, ADC_Mode, ADC_custom_pettern, led_on, gain_3010);
+		InitCamera3010(drvno, ADC_Mode, ADC_custom_pettern);
 		break;
 	case camera_system_3030:
 		InitCamera3030(drvno, ADC_Mode, ADC_custom_pettern, gain_3030);
@@ -510,8 +511,6 @@ es_status_codes InitMeasurement(struct global_settings* settings)
 	//set PDA and FFT
 	status = SetSensorType(settings->drvno, settings->sensor_type);
 	if (status != es_no_error) return status;
-	status = ResetPartialBinning(settings->drvno);
-	if (status != es_no_error) return status;
 	if (settings->sensor_type == FFTsensor)
 	{
 		switch (settings->FFTMode)
@@ -536,15 +535,15 @@ es_status_codes InitMeasurement(struct global_settings* settings)
 	status = CloseShutter(settings->drvno); //set cooling  off
 	if (status != es_no_error) return status;
 	//set mshut
-	if (settings->mshut) {
-		status = CloseShutter(settings->drvno);
-		if (status != es_no_error) return status;
+	if (settings->mshut)
+	{
 		status = SetSEC(settings->drvno, settings->ShutterExpTime * 100);
 		if (status != es_no_error) return status;
 		status = SetTORReg(settings->drvno, TOR_SSHUT);
 		if (status != es_no_error) return status;
 	}
-	else {
+	else
+	{
 		status = ResetSEC(settings->drvno);
 		if (status != es_no_error) return status;
 		status = SetTORReg(settings->drvno, settings->TORmodus);
@@ -570,26 +569,9 @@ es_status_codes InitMeasurement(struct global_settings* settings)
 	if (settings->enable_gpx) status = InitGPX(settings->drvno, settings->gpx_offset);
 	if (status != es_no_error) return status;
 	//Delay after Trigger
-	if (settings->sdat_in_100ns) {
-		status = SetSDAT(settings->drvno, settings->sdat_in_100ns);
-		if (status != es_no_error) return status;
-	}
-	else {
-		status = ResetSDAT(settings->drvno);
-		if (status != es_no_error) return status;
-	}
-	if (settings->bdat_in_100ns) {
-		status = SetBDAT(settings->drvno, settings->bdat_in_100ns);
-		if (status != es_no_error) return status;
-	}
-	else {
-		status = ResetBDAT(settings->drvno);
-		if (status != es_no_error) return status;
-	}
-	//stop timer
-	status = StopSTimer(settings->drvno);
+	status = SetSDAT(settings->drvno, settings->sdat_in_100ns);
 	if (status != es_no_error) return status;
-	status = RSFifo(settings->drvno);
+	status = SetBDAT(settings->drvno, settings->bdat_in_100ns);
 	if (status != es_no_error) return status;
 	//init Camera
 	status = initCamera(settings->drvno, settings->camera_system, settings->pixel, settings->trigger_mode_cc, settings->sensor_type, settings->ADC_Mode, settings->ADC_custom_pettern, settings->led_on, settings->gain_3010, settings->gain_3030);
@@ -601,6 +583,7 @@ es_status_codes InitMeasurement(struct global_settings* settings)
 	status = SetTemp(settings->drvno, settings->Temp_level);
 	if (status != es_no_error) return status;
 	//DAC
+	//TODO: Move DAC to CAM 3030
 	if (settings->dac)
 		for (int channel = 0; channel < 8; channel++)
 		{
@@ -608,12 +591,6 @@ es_status_codes InitMeasurement(struct global_settings* settings)
 			if (status != es_no_error) return status;
 		}
 	//DMA
-	if (WDC_IntIsEnabled(hDev[settings->drvno]))
-	{
-		WDC_Err("cleanup dma\n");
-		status = CleanupPCIE_DMA(settings->drvno);
-		if (status != es_no_error) return status;
-	}
 	SetupPCIE_DMA(settings->drvno);
 	//TODO set cont FF mode with DLL style(CONTFFLOOP = activate;//0 or 1;CONTPAUSE = pause;) or CCDExamp style(check it out)
 	//TODO  SetBEC( choosen_board, Bec );
@@ -1030,7 +1007,13 @@ es_status_codes SetupPCIE_DMA( UINT32 drvno )
 {
 	DWORD dwStatus;
 	WDC_Err( "entered SetupPCIE_DMA\n" );
-	//Because SetupPCIE_DMA is done in start up initialization, aPIXEL was not set before. Thats why aPIXEL is assumed as the maximum value MAX_PIXEL_COUNT at the initialization of aPIXEL.
+	//If interrupt was enabled before, first cleanup DMA.
+	if (WDC_IntIsEnabled(hDev[drvno]))
+	{
+		WDC_Err("cleanup dma\n");
+		es_status_codes status = CleanupPCIE_DMA(drvno);
+		if (status != es_no_error) return status;
+	}
 	dmaBufferSizeInBytes = DMA_BUFFER_SIZE_IN_SCANS * aPIXEL[drvno] * sizeof( UINT16 );
 	DWORD dwOptions = DMA_FROM_DEVICE | DMA_KERNEL_BUFFER_ALLOC;// | DMA_ALLOW_64BIT_ADDRESS;// DMA_ALLOW_CACHE ;
 	if (DMA_64BIT_EN)
@@ -1705,22 +1688,13 @@ BOOL GetShutterState( UINT32 drvno )
  */
 es_status_codes SetSDAT( UINT32 drvno, UINT32 datin100ns )
 {
-	datin100ns |= 0x80000000; // enable delay
-	return WriteLongS0( drvno, datin100ns, S0Addr_SDAT );
+	if (datin100ns)
+	{
+		datin100ns |= 0x80000000; // enable delay
+		return WriteLongS0(drvno, datin100ns, S0Addr_SDAT);
+	}
+	else return WriteLongS0(drvno, 0, S0Addr_SDAT);
 }; //SetDAT
-
-/**
- * \brief Resets delay after trigger hardware register.
- * 
- * \param drvno PCIe board identifier.
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- */
-es_status_codes ResetSDAT( UINT32 drvno )
-{
-	return WriteLongS0( drvno, 0, S0Addr_SDAT );
-}; //RSDAT
 
 /**
  * \brief Sets delay after trigger hardware register.
@@ -1733,22 +1707,13 @@ es_status_codes ResetSDAT( UINT32 drvno )
  */
 es_status_codes SetBDAT( UINT32 drvno, UINT32 datin100ns )
 {
-	datin100ns |= 0x80000000; // enable delay
-	return WriteLongS0( drvno, datin100ns, S0Addr_BDAT );
+	if (datin100ns)
+	{
+		datin100ns |= 0x80000000; // enable delay
+		return WriteLongS0(drvno, datin100ns, S0Addr_BDAT);
+	}
+	else return WriteLongS0(drvno, 0, S0Addr_BDAT);
 }; //SetDAT
-
-/**
- * \brief Resets delay after trigger hardware register.
- * 
- * \param drvno PCIe board identifier.
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- */
-es_status_codes ResetBDAT( UINT32 drvno )
-{
-	return WriteLongS0( drvno, 0, S0Addr_BDAT );
-}; //RSDAT
 
 /**
  * \brief Exposure control (EC) signal is used for mechanical shutter or sensors with EC function.

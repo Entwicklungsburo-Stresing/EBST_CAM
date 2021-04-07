@@ -783,3 +783,43 @@ DllAccess CStr DLLConvertErrorCodeToMsg(es_status_codes status)
 {
 	return ConvertErrorCodeToMsg(status);
 }
+
+/**
+ * \copydoc SetupPCIE_DMA
+ */
+DllAccess es_status_codes DLLSetupPCIE_DMA(UINT32 drvno)
+{
+	return SetupPCIE_DMA(drvno);
+}
+
+/**
+ * \copydoc SetGlobalVariables
+ */
+DllAccess es_status_codes DLLSetGlobalVariables(UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay)
+{
+	return SetGlobalVariables(drvno, camcnt, pixel, xckdelay);
+}
+
+/**
+ * \copydoc SetBoardVars
+ */
+DllAccess es_status_codes DLLSetBoardVars(UINT32 drvno)
+{
+	return SetBoardVars(drvno);
+}
+
+/**
+ * \copydoc SetSDAT
+ */
+DllAccess es_status_codes DLLSetSDAT(UINT32 drvno, UINT32 datin100ns)
+{
+	return SetSDAT(drvno, datin100ns);
+}
+
+/**
+ * \copydoc SetBDAT
+ */
+DllAccess es_status_codes DLLSetBDAT(UINT32 drvno, UINT32 tin100ns)
+{
+	return SetBDAT(drvno, tin100ns);
+}
