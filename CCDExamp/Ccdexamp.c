@@ -41,7 +41,6 @@ DWORD cur_nos = 0;
 DWORD cur_nob = 0;
 UINT16 direct2dviewer_gamma_white = DIRECT2DVIEWER_GAMMA_WHITE_DEFAULT;
 UINT16 direct2dviewer_gamma_black = 0;
-UINT8 roi[6] = { 15, 42, 15, 42, 10, 6 };
 BOOL CALLING_WITH_NOS, CALLING_WITH_NOB = FALSE;
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow )
@@ -1589,9 +1588,8 @@ LRESULT CALLBACK Set3ROI( HWND hDlg,
 		case IDOK:
 			_IsArea = FALSE;
 			_IsROI = 3;
-			DLLSetupROI( choosen_board, _IsROI, _FFTLINES, 0, roi, Vfreqini );
 			fftMode = partial_binning;
-			//allocate Buffer with matching NOS
+			ItemIndex_S = 4;
 			*Nospb = ROI;
 			CALLING_WITH_NOS = TRUE;
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
@@ -1670,9 +1668,8 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 		case IDOK:
 			_IsArea = FALSE;
 			_IsROI = 5;
-			DLLSetupROI( choosen_board, _IsROI, _FFTLINES, 0, roi, Vfreqini );
 			fftMode = partial_binning;
-			//allocate Buffer with matching NOS
+			ItemIndex_S = 4;
 			*Nospb = ROI;
 			CALLING_WITH_NOS = TRUE;
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_ALLOCBBUF ), hMSWND, (DLGPROC)AllocateBuf );
@@ -1741,7 +1738,7 @@ LRESULT CALLBACK AreaMode(HWND hDlg,
 			_IsROI = 0;
 			DLLSetupArea( choosen_board, 1, Vfreqini );
 			fftMode = area_mode;
-			//allocate Buffer with matching NOS
+			ItemIndex_S = 4;
 			*Nospb = _FFTLINES;
 			CALLING_WITH_NOS = TRUE;
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ALLOCBBUF), hMSWND, (DLGPROC)AllocateBuf);
