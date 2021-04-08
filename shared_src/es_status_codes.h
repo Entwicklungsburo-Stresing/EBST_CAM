@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ES_STATUS_CODES_H
+#define ES_STATUS_CODES_H
 
 typedef enum
 {
@@ -26,3 +27,5 @@ typedef enum
 } es_status_codes;
 
 char* ConvertErrorCodeToMsg(es_status_codes status);
+
+#endif // ES_STATUS_CODES_H

@@ -26,13 +26,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     es_status_codes status = lsc.initDriver();
     if (status != es_no_error)
+    {
         showNoDriverFoundDialog();
+    }
     else
+    {
         status = lsc.initPcieBoard();
-    if (status != es_no_error)
-        showPcieBoardError();
-    else
-        loadSettings();
+        if (status != es_no_error)
+            showPcieBoardError();
+        else
+            loadSettings();
+    }
 }
 
 /**

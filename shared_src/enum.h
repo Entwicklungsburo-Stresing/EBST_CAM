@@ -115,7 +115,7 @@ enum s0_addresses
 	S0Addr_BSLOPE = 0x8C
 };
 
-//Cam Addresses könnten später bei unterschiedlichen cam systemen vaariieren
+//Cam Addresses kÃ¶nnten spÃ¤ter bei unterschiedlichen cam systemen vaariieren
 enum cam_addresses
 {
 	maddr_cam = 0x00,

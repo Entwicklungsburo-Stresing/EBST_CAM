@@ -43,7 +43,7 @@ int main(void) {
   memset((uint8_t*)device_descriptor->mapped_buffer, 0,
          device_descriptor->control->buffer_size);
 
-  trigger_mode_t trigger_mode = xck;
+  enum trigger_mode trigger_mode = xck;
 
   lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_PIXEL, device_descriptor[0].control->number_of_pixels);
   // and what about this? not present in board.c
