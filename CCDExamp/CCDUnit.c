@@ -197,12 +197,13 @@ void startMess()
 	g.isIRSensor = 0;
 	g.keep_first = 0;
 	g.led_on = LED_ON;
+	g.lines_binning = AREA_LINES_BINNING;
 	g.mshut = _MSHUT;
 	g.nob = Nob;
 	g.nos = *Nospb;
-	//g.number_of_regions = 0;
+	g.number_of_regions = _IsROI;
 	g.pixel = _PIXEL;
-	//g.region_size
+	memcpy(g.region_size, roi, 8);
 	g.sdat_in_100ns = Sdat;
 	g.sensor_type = SENSOR_TYPE;
 	g.ShutterExpTime = Sec;
