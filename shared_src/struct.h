@@ -1,4 +1,6 @@
-#pragma once
+#ifndef STRUCT_H
+#define STRUCT_H
+
 #include <stdint.h>
 
 struct ffloopparams
@@ -54,3 +56,5 @@ struct global_settings
 	uint16_t ADC_custom_pettern;
 	uint16_t isIRSensor; 
 };
+
+#endif // STRUCT_H

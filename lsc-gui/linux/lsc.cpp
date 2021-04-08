@@ -28,36 +28,39 @@ Lsc::~Lsc()
  *      - 1: success and one board found
  *      - 2: success and two boards found
  */
-int Lsc::initDriver()
+es_status_codes Lsc::initDriver()
 {
-    return lscpcie_driver_init();
+    if(lscpcie_driver_init() < 0) return es_driver_init_failed;
+    else return es_no_error;
 }
 
 /**
  * @brief Inits PCIe board.
  * @return <0 on error, success otherwise
  */
-int Lsc::initPcieBoard()
+es_status_codes Lsc::initPcieBoard()
 {
     int result;
     // open /dev/lscpcie<n>
     result = lscpcie_open(0, 0);
-    if(result < 0) return result;
+    if(result < 0) return es_open_device_failed;
     // get memory mapped pointers etc
     device_descriptor = lscpcie_get_descriptor(0);
     // clear dma buffer to avoid reading stuff from previous debugging sessions
     memset((uint8_t*)device_descriptor->mapped_buffer, 0, device_descriptor->control->buffer_size);
     result = lscpcie_setup_dma(0);
-    //if (result)
+    if (result)
+        return es_getting_dma_buffer_failed;
         //fprintf(stderr, "error %d when setting up dma\n", result);
-    return result;
+    return es_no_error;
 }
-void Lsc::initMeasurement()
+es_status_codes Lsc::initMeasurement(struct global_settings* settings_struct)
 {
     lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_PIXEL, device_descriptor[0].control->number_of_pixels);
-    trigger_mode_t trigger_mode = xck;
+    trigger_mode trigger_mode = xck;
     int result = lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_TRIGGER_IN, trigger_mode);
-    //if (result < 0)
+    if (result < 0)
+        return es_unknown_error;
         //return result;
     //set output of O on PCIe card
     device_descriptor->s0->TOR = _torOut << TOR_TO_pos;
@@ -91,10 +94,10 @@ void Lsc::initMeasurement()
     device_descriptor->s0->XCK.dword &= ~(1<<XCKMSB_EXT_TRIGGER);
     device_descriptor->control->write_pos = 0;
     device_descriptor->control->read_pos = 0;
-    return;
+    return es_no_error;
 }
 
-void Lsc::startMeasurement()
+es_status_codes Lsc::startMeasurement(uint8_t boardsel)
 {
     emit measureStart();
     //set measure on
@@ -137,10 +140,10 @@ void Lsc::startMeasurement()
     //reset measure on
     device_descriptor->s0->PCIEFLAGS &= ~(1<<PCIEFLAG_MEASUREON);
     emit measureDone();
-    return;
+    return es_no_error;
 }
 
-void Lsc::returnFrame(uint32_t board, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length)
+es_status_codes Lsc::returnFrame(uint32_t board, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length)
 {
     int n = device_descriptor->control->number_of_pixels;
     int nob = device_descriptor->control->number_of_blocks;
@@ -148,7 +151,7 @@ void Lsc::returnFrame(uint32_t board, uint32_t sample, uint32_t block, uint16_t 
     int camcnt = device_descriptor->control->number_of_cameras;
     int offset = camera * n + sample * camcnt * n + block * nos * camcnt * n;
     memcpy( pdest, &((uint16_t*)device_descriptor->mapped_buffer)[offset], length * sizeof( uint16_t ) );
-    return;
+    return es_no_error;
 }
 
 std::string Lsc::dumpS0Registers()

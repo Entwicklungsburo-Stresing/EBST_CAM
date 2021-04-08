@@ -37,8 +37,6 @@ typedef struct {
   lscpcie_control_t *control;   // memory mapped pointer to driver control area
 } dev_descr_t;
 
-typedef enum { xck = 0, exttrig = 1, dat = 2 } trigger_mode_t;
-
 // the following flags should go elsewhere, they don't need to be exposed
 #define IS_FFT  0x0001
 #define IS_AREA 0x8000

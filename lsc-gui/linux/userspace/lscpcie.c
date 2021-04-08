@@ -21,7 +21,7 @@
 #include <sys/mman.h>
 #include <errno.h>
 #include <stdarg.h>
-
+#include "../../../shared_src/enum.h"
 #include "../kernelspace/local-config.h"
 
 /*
@@ -354,7 +354,7 @@ int lscpcie_send_fiber(uint dev, uint8_t master_address,
   return 0;
 }
 
-int init_cam_control(uint dev, trigger_mode_t trigger_mode, uint16_t options) {
+int init_cam_control(uint dev, enum trigger_mode trigger_mode, uint16_t options) {
   int result;
 
   result
