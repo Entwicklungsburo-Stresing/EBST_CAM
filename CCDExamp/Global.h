@@ -33,6 +33,7 @@ static int YSHIFT = 6;			// 14 bit
 // =0 if not FFT
 #define Vfreqini 7		//vclk freq for FFTs with FIFO in divider of12MHz (0..15)
 						//=4 for highest speed with 7030-0906
+#define AREA_LINES_BINNING 1
 #define CCTRIGGER_MODE xck
 #define XCKDELAY 0
 // Display data
@@ -89,3 +90,4 @@ extern UINT choosen_board;
 extern BOOL both_boards;
 extern BOOL cont_mode;
 extern int fftMode;
+extern UINT8 roi[8];
