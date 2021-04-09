@@ -248,6 +248,9 @@
         </item>
         <item>
          <widget class="QSlider" name="horizontalSliderSample">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="minimum">
            <number>1</number>
           </property>
@@ -264,6 +267,9 @@
         </item>
         <item>
          <widget class="MyQSpinBox" name="spinBoxSample">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="minimum">
            <number>1</number>
           </property>
@@ -294,6 +300,9 @@
         </item>
         <item>
          <widget class="QSlider" name="horizontalSliderBlock">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="minimum">
            <number>1</number>
           </property>
@@ -307,6 +316,9 @@
         </item>
         <item>
          <widget class="MyQSpinBox" name="spinBoxBlock">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="minimum">
            <number>1</number>
           </property>
