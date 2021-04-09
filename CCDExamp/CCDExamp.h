@@ -57,3 +57,4 @@ LRESULT CALLBACK Set5ROI( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam 
 LRESULT CALLBACK FullBinning(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK AreaMode(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK SetGamma( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
+void enableAllControls();
