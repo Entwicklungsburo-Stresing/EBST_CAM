@@ -200,12 +200,12 @@ void AboutCFS( HWND hWnd )
 	int i, j = 0;
 	char fn[600];
 	ULONG S0Data = 0;
-	ULONG length = 0;
 	ULONG BData;
 	ULONG actpayload;
 
 #ifndef _DLL
-	if (!ReadLongIOPort( choosen_board, &S0Data, 0 ))
+	es_status_codes status = ReadLongIOPort(choosen_board, &S0Data, 0);
+	if (status != es_no_error)
 	{
 		ErrorMsg( " BOARD not found! " );
 		return;
