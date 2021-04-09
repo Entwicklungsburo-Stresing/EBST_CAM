@@ -13,6 +13,7 @@ void notifyMeasureDone( UINT32 drv )
 	double mwf = 0.0; //unused
 	CalcTrms( DRV, 0, *Nospb, TRMSpix, 0, &mwf, &TRMSval_global[0] );
 	if (CAMCNT > 1) CalcTrms( DRV, 0, *Nospb, TRMSpix, 1, &mwf, &TRMSval_global[1] );
+	enableAllControls();
 	UpdateDisplay();
 	return;
 }
