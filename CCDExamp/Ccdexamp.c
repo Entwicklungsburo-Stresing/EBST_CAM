@@ -564,7 +564,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			NULL );
 		SendMessage( hWndSampleLabel, WM_SETTEXT, 0, (LPARAM)"sample" );
 
-		//create trackbor sample
+		//create trackbar sample
 		hwndTrackNos = CreateWindow( TRACKBAR_CLASS,
 			"NOS",
 			WS_BORDER | WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP |
@@ -576,6 +576,8 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			hInst,
 			NULL );
 		SendMessage( hwndTrackNos, TBM_SETRANGEMAX, TRUE, *Nospb - 1 );
+		//disable hwndTrackNos at startup
+		EnableWindow(hwndTrackNos, FALSE);
 
 		//create spin box sample: edit field
 		HWND hWndSpinBoxSampleBuddy = CreateWindow(WC_EDIT,
@@ -601,6 +603,8 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			hInst,
 			NULL );
 		SendMessage( hWndSpinBoxSample, UDM_SETRANGE32, 0, *Nospb-1 );
+		//disable hWndSpinBoxSample at startup
+		EnableWindow(hWndSpinBoxSample, FALSE);
 
 		//create label "block"
 		HWND hWndBlockLabel = CreateWindow( WC_STATIC,
@@ -625,6 +629,8 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			hInst,
 			NULL );
 		SendMessage( hwndTrackNob, TBM_SETRANGEMAX, TRUE, Nob - 1 );
+		//disable hwndTrackNob at startup
+		EnableWindow(hwndTrackNob, FALSE);
 
 		//create spin box block: edit field
 		HWND hWndSpinBoxBlockBuddy = CreateWindow( WC_EDIT,
@@ -649,6 +655,8 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			hInst,
 			NULL );
 		SendMessage( hWndSpinBoxBlock, UDM_SETRANGE32, 0, Nob-1 );
+		//disable hWndSpinBoxBlock at startup
+		EnableWindow(hWndSpinBoxBlock, FALSE);
 		break;
 
 	case WM_HSCROLL:
@@ -1793,4 +1801,13 @@ LRESULT CALLBACK SetGamma( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 		break; //WM_COMMAND
 	}
 	return (FALSE);
+}
+
+void enableAllControls()
+{
+	EnableWindow(hwndTrackNos, TRUE);
+	EnableWindow(hWndSpinBoxSample, TRUE);
+	EnableWindow(hwndTrackNob, TRUE);
+	EnableWindow(hWndSpinBoxBlock, FALSE);
+	return;
 }
