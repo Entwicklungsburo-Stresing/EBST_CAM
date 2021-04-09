@@ -1972,7 +1972,7 @@ int waitForBlockTrigger( UINT32 board_sel )
 {
 	//if lo wait for hi
 	BOOL triggerState = FALSE;
-	while (triggerState)
+	while (!triggerState)
 	{
 		//only btrig_ch 5 is used
 		readBlockTriggerState(1, 5, &triggerState);
@@ -2318,6 +2318,7 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 es_status_codes readBlockTriggerState( UINT32 drv, UINT8 btrig_ch, BOOL* state)
 {
 	volatile UCHAR val = 0;
+	*state = FALSE;
 	es_status_codes status = es_no_error;
 	switch (btrig_ch)
 	{
