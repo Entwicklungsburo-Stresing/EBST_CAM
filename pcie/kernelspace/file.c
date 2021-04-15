@@ -61,7 +61,6 @@ int lscpcie_open(struct inode *inode, struct file *filp)
 	return 0;
 }
 
-
 int lscpcie_release(struct inode *inode, struct file *filp)
 {
 	//int result, minor = iminor(inode);
@@ -92,7 +91,6 @@ int lscpcie_release(struct inode *inode, struct file *filp)
 	return 0;
 }
 
-
 int buffer_free(struct dev_struct *dev)
 {
 	long int bytes;
@@ -103,7 +101,7 @@ int buffer_free(struct dev_struct *dev)
 	PDEBUG(D_BUFFERS, "buffer pointers: %d,%d\n",
 	       dev->control->read_pos, dev->control->write_pos);
 
-	bytes = dev->control->write_pos - dev->control->read_pos;
+	bytes = ((int) dev->control->read_pos) - ((int) dev->control->write_pos);
 	PDEBUG(D_BUFFERS, "diff (free): %ld bytes\n", bytes);
 	if (bytes <= 0)
 		bytes += dev->control->dma_buf_size;
@@ -114,7 +112,6 @@ int buffer_free(struct dev_struct *dev)
 
 	return bytes - 1;
 }
-
 
 int bytes_in_buffer(struct dev_struct *dev)
 {
@@ -138,7 +135,6 @@ int bytes_in_buffer(struct dev_struct *dev)
 
 	return bytes;
 }
-
 
 ssize_t lscpcie_write(struct file *filp, const char __user * buf,
 		      size_t len, loff_t * off)
@@ -229,9 +225,13 @@ ssize_t lscpcie_write(struct file *filp, const char __user * buf,
 
 	up(&dev->write_sem);
 
+	if (copied_bytes) {
+		wake_up_interruptible(&dev->readq);
+		wake_up_interruptible(&dev->proc_readq);
+	}
+
 	return copied_bytes;
 }
-
 
 ssize_t read_chunk(struct dev_struct *dev, size_t len, char __user * buf)
 {
@@ -248,7 +248,6 @@ ssize_t read_chunk(struct dev_struct *dev, size_t len, char __user * buf)
 
 	return len;
 }
-
 
 ssize_t lscpcie_read(struct file *filp, char __user * buf, size_t len,
 		     loff_t * off)
@@ -277,7 +276,6 @@ ssize_t lscpcie_read(struct file *filp, char __user * buf, size_t len,
 		}
 		PDEBUG(D_READOUT, "\"%s\" reading: woke up\n",
 		       current->comm);
-		//if (!(dev->status & CAMERA_ACQUIRING)) break;
 	}
 
 	if (available_bytes < 0) {	/* error */
@@ -298,9 +296,8 @@ ssize_t lscpcie_read(struct file *filp, char __user * buf, size_t len,
 		}
 		len -= copied_bytes;
 		dev->control->read_pos
-		    =
-		    (dev->control->read_pos +
-		     copied_bytes) % dev->control->dma_buf_size;
+		    = (dev->control->read_pos + copied_bytes)
+			% dev->control->dma_buf_size;
 	} else
 		copied_bytes = 0;
 
@@ -312,9 +309,7 @@ ssize_t lscpcie_read(struct file *filp, char __user * buf, size_t len,
 		}
 		copied_bytes += n;
 		dev->control->read_pos
-		    =
-		    (dev->control->read_pos +
-		     n) % dev->control->dma_buf_size;
+		    = (dev->control->read_pos + n) % dev->control->dma_buf_size;
 	}
 
 	wake_up_interruptible(&dev->writeq);
