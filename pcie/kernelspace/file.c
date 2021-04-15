@@ -53,6 +53,8 @@ int lscpcie_open(struct inode *inode, struct file *filp)
 
 	/* initialise private data field used in file and ioctl callbacks */
 	filp->private_data = dev;
+	dev->control->write_pos = 0;
+	dev->control->read_pos = 0;
 
 	PDEBUG(D_START_STOP, "successfully opened lscpcie\n");
 
