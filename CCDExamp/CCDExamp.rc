@@ -11,7 +11,6 @@
 #include "windows.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 #include "global.h"
-#include "version.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -61,6 +60,7 @@ BEGIN
             MENUITEM "full binning",                ID_SETFULLBINNING
             MENUITEM "area mode",                   ID_AREAMODE
         END
+        MENUITEM "Set DAC",                     ID_SETDAC
     END
     POPUP "&Help"
     BEGIN
@@ -70,6 +70,7 @@ BEGIN
         MENUITEM "Space0",                      IDM_ABOUTS0
         MENUITEM "PCI space",                   IDM_ABOUTCFS
         MENUITEM "DMA",                         40019
+        MENUITEM "DAC",                         IDM_ABOUTDAC
     END
     POPUP "2D View"
     BEGIN
@@ -297,6 +298,31 @@ BEGIN
     LTEXT           "Activate area mode?",-1,36,19,67,8
 END
 
+IDD_SETDAC DIALOGEX 0, 0, 141, 269
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Set DAC"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,76,246,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,13,246,50,14
+    LTEXT           "dac 1",ranges,15,14,18,8
+    LTEXT           "dac 2",ranges1,15,41,18,8
+    LTEXT           "dac 3",ranges2,15,68,18,8
+    EDITTEXT        IDC_DAC_0,53,12,58,14,ES_AUTOHSCROLL
+    LTEXT           "dac 5",ranges3,15,122,18,8
+    LTEXT           "dac 4",ranges4,15,95,18,8
+    LTEXT           "dac 6",ranges5,15,149,18,8
+    LTEXT           "dac 7",ranges6,15,176,18,8
+    LTEXT           "dac 8",ranges7,15,203,18,8
+    EDITTEXT        IDC_DAC_1,53,39,58,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DAC_2,53,66,58,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DAC_3,53,93,58,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DAC_4,53,120,58,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DAC_5,53,147,58,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DAC_6,53,174,58,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DAC_7,53,201,58,14,ES_AUTOHSCROLL
+END
+
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -333,8 +359,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION VER_FILE_VERSION
- PRODUCTVERSION VER_PRODUCT_VERSION
+ FILEVERSION 3,16,6,0
+ PRODUCTVERSION 3,16,6,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -349,14 +375,14 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", VER_COMPANY_NAME "\0"
+            VALUE "CompanyName", "EB Stresing - Berlin"
             VALUE "FileDescription", "CCDExamp"
-            VALUE "FileVersion", VER_FILE_VERSION_STR "\0"
+            VALUE "FileVersion", "3.16.6"
             VALUE "InternalName", "CCDExamp"
-            VALUE "LegalCopyright", VER_COPYRIGHT_STR "\0"
+            VALUE "LegalCopyright", "Copyright EB Stresing (C) 2021"
             VALUE "OriginalFilename", "CCDExamp.exe"
             VALUE "ProductName", "CCD Example"
-            VALUE "ProductVersion", VER_FILE_VERSION_STR "\0"
+            VALUE "ProductVersion", "3.16.6"
         END
     END
     BLOCK "VarFileInfo"
@@ -454,6 +480,12 @@ BEGIN
     BEGIN
         RIGHTMARGIN, 268
         BOTTOMMARGIN, 54
+    END
+
+    IDD_SETDAC, DIALOG
+    BEGIN
+        RIGHTMARGIN, 140
+        BOTTOMMARGIN, 260
     END
 END
 #endif    // APSTUDIO_INVOKED

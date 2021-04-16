@@ -584,8 +584,10 @@ es_status_codes InitMeasurement(struct global_settings* settings)
 	if (status != es_no_error) return status;
 	//DAC
 	//TODO: Move DAC to CAM 3030
+	int dac_channel_count = 8;
 	if (settings->dac)
-		for (int channel = 0; channel < 8; channel++)
+		SendFLCAM_DAC(settings->drvno, dac_channel_count, 0, 0, 1 );
+		for (int channel = 0; channel < dac_channel_count; channel++)
 		{
 			status = DAC_setOutput( settings->drvno, channel, settings->dac_output[channel] );
 			if (status != es_no_error) return status;

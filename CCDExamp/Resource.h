@@ -23,6 +23,7 @@
 #define IDD_SETGAMMA                    116
 #define IDD_SETAREA                     117
 #define IDD_SETFULLBIN                  118
+#define IDD_SETDAC                      119
 #define IDC_ADAMP                       1002
 #define IDC_M_EXPTIME                   1003
 #define IDC_TLevel                      1004
@@ -70,7 +71,15 @@
 #define IDC_COMBO_STI                   1033
 #define IDC_COMBO_BTI                   1034
 #define IDC_COMBO1                      1035
+#define IDC_DAC_0                       1035
 #define IDC_COMBO_TOR                   1036
+#define IDC_DAC_1                       1036
+#define IDC_DAC_2                       1037
+#define IDC_DAC_3                       1038
+#define IDC_DAC_4                       1039
+#define IDC_DAC_5                       1040
+#define IDC_DAC_6                       1041
+#define IDC_DAC_7                       1042
 #define IDC_EC_RADIO2                   1060
 #define IDC_EC_RADIO3                   1061
 #define IDC_EC_RADIO5                   1062
@@ -122,6 +131,10 @@
 #define ID_SETRANGEOFINTEREST_3RANGES   40029
 #define ID_SETRANGEOFINTEREST_AREAMODE  40033
 #define ID_AREAMODE                     40034
+#define ID_HELP_DAC                     40035
+#define IDM_ABOUTDAC                    40036
+#define ID_START_SETDAC                 40037
+#define ID_SETDAC                       40038
 #define ID_SETRANGEOFINTEREST_5RANGES   40130
 #define ID_SETFULLBINNING               40131
 #define ROI_ERR_MESS                    40132
@@ -136,6 +149,8 @@
 #define ranges3                         40141
 #define ranges4                         40142
 #define ranges5                         40143
+#define ranges6                         40144
+#define ranges7                         40145
 #define IDC_EDIT1                       -1
 #define IDC_STATIC                      -1
 
@@ -145,8 +160,8 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        119
-#define _APS_NEXT_COMMAND_VALUE         40035
-#define _APS_NEXT_CONTROL_VALUE         1035
+#define _APS_NEXT_COMMAND_VALUE         40039
+#define _APS_NEXT_CONTROL_VALUE         1036
 #define _APS_NEXT_SYMED_VALUE           103
 #endif
 #endif
