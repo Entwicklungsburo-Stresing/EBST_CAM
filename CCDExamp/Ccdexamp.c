@@ -514,6 +514,23 @@ void AboutDMA( HWND hWnd )
 	*/
 }//AboutDMA
 
+
+void AboutDAC(HWND hWnd)
+{
+	int i, j = 0;
+	char fn[460];
+
+	j = 0;
+	for (i = 0; i < 8; i++)
+	{
+
+		j += sprintf(fn + j, "DAC %u/1 \t : 0x%u\n", i, dac[i]);
+	}
+
+	MessageBox(hWnd, fn, "DAC values", MB_OK);
+
+}//AboutDAC
+
 void AboutPCI( HWND hWnd )
 {
 	int i, j = 0;
@@ -542,6 +559,7 @@ void AboutPCI( HWND hWnd )
 LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	UINT FFTMenuEnable;
+	UINT DACMenuEnable;
 
 	switch (uMsg)
 	{
@@ -552,6 +570,10 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		EnableMenuItem( GetMenu( hWnd ), ID_SETRANGEOFINTEREST_3RANGES, FFTMenuEnable );
 		EnableMenuItem( GetMenu( hWnd ), ID_SETRANGEOFINTEREST_5RANGES, FFTMenuEnable );
 		EnableMenuItem( GetMenu( hWnd ), ID_SETFULLBINNING, FFTMenuEnable );
+
+		if(CAMERA_SYSTEM == camera_system_3030)DACMenuEnable = MF_ENABLED;
+		else DACMenuEnable = MF_GRAYED;
+		EnableMenuItem(GetMenu(hWnd), ID_SETDAC, DACMenuEnable);
 
 		//create label "sample"
 		HWND hWndSampleLabel = CreateWindow( WC_STATICA,
@@ -697,7 +719,11 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 
 		case IDM_ABOUTDMA:
-			AboutDMA( hWnd );
+			AboutDMA(hWnd);
+			break;
+
+		case IDM_ABOUTDAC:
+			AboutDAC(hWnd);
 			break;
 
 		case IDM_ABOUTCFS:
@@ -785,7 +811,10 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			DialogBox( hInst, MAKEINTRESOURCE( IDD_SETROI_3 ), hWnd, (DLGPROC)Set3ROI );
 			break;
 		case ID_SETRANGEOFINTEREST_5RANGES:
-			DialogBox( hInst, MAKEINTRESOURCE( IDD_SETROI_5 ), hWnd, (DLGPROC)Set5ROI );
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_SETROI_5), hWnd, (DLGPROC)Set5ROI);
+			break;
+		case ID_SETDAC:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_SETDAC), hWnd, (DLGPROC)SetDAC);
 			break;
 		case ID_SETFULLBINNING:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_SETFULLBIN), hWnd, (DLGPROC)FullBinning);
@@ -1689,6 +1718,55 @@ LRESULT CALLBACK Set5ROI( HWND hDlg,
 	}
 	return (FALSE);
 }
+
+LRESULT CALLBACK SetDAC(HWND hDlg,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
+{
+	BOOL success = FALSE;
+
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		SetDlgItemInt(hDlg, IDC_DAC_7, dac[7], FALSE);
+		SetDlgItemInt(hDlg, IDC_DAC_6, dac[6], FALSE);
+		SetDlgItemInt(hDlg, IDC_DAC_5, dac[5], FALSE);
+		SetDlgItemInt(hDlg, IDC_DAC_4, dac[4], FALSE);
+		SetDlgItemInt(hDlg, IDC_DAC_3, dac[3], FALSE);
+		SetDlgItemInt(hDlg, IDC_DAC_2, dac[2], FALSE);
+		SetDlgItemInt(hDlg, IDC_DAC_1, dac[1], FALSE);
+		SetDlgItemInt(hDlg, IDC_DAC_0, dac[0], FALSE);
+		return (TRUE);
+		break;
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDCANCEL:
+			EndDialog(hDlg, TRUE);
+			return (TRUE);
+			break;
+
+		case IDOK:
+
+			GetDlgItemInt(hDlg, IDC_DAC_0, &success, FALSE);
+			if (success)dac[0] = GetDlgItemInt(hDlg, IDC_DAC_0, &success, FALSE);
+			if (success) dac[1] = GetDlgItemInt(hDlg, IDC_DAC_1, &success, FALSE);
+			if (success)dac[2] = GetDlgItemInt(hDlg, IDC_DAC_2, &success, FALSE);
+			if (success) dac[3] = GetDlgItemInt(hDlg, IDC_DAC_3, &success, FALSE);
+			if (success)dac[4] = GetDlgItemInt(hDlg, IDC_DAC_4, &success, FALSE);
+			if (success) dac[5] = GetDlgItemInt(hDlg, IDC_DAC_5, &success, FALSE);
+			if (success)dac[6] = GetDlgItemInt(hDlg, IDC_DAC_6, &success, FALSE);
+			if (success) dac[7] = GetDlgItemInt(hDlg, IDC_DAC_7, &success, FALSE);
+			EndDialog(hDlg, TRUE);
+			return (TRUE);
+			break;
+		}
+		break; //WM_COMMAND
+	}
+	return (FALSE);
+}
+
 
 LRESULT CALLBACK FullBinning( HWND hDlg,
 	UINT message,
