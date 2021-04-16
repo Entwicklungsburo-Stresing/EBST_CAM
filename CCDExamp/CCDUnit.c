@@ -185,8 +185,11 @@ void startMess()
 	g.bti_mode = ItemIndex_B;
 	g.camcnt = CAMCNT;
 	g.camera_system = CAMERA_SYSTEM;
-	g.dac = 0;
-	//g.dac_output
+	if (CAMERA_SYSTEM == camera_system_3030) g.dac = 1;
+	else g.dac = 0;
+
+	for (UINT8 channel = 0; channel < 8; channel++)
+		g.dac_output[channel] = dac[channel];
 	g.drvno = DRV; //TODO: oder BOARD_SEL?
 	g.enable_gpx = 0;
 	g.FFTLines = _FFTLINES;

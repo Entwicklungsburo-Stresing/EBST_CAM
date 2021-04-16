@@ -91,3 +91,4 @@ extern BOOL both_boards;
 extern BOOL cont_mode;
 extern int fftMode;
 extern UINT8 roi[8];
+extern UINT16 dac[8];
