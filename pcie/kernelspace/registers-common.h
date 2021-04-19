@@ -392,7 +392,7 @@ struct control_struct {
 	uint32_t bytes_per_interrupt;
 	uint32_t used_dma_size;
 	volatile int32_t write_pos;
-	uint32_t read_pos;
+	int32_t read_pos;
 	uint32_t irq_count;
 	int32_t stimer_val;
 	uint16_t debug_mode;
