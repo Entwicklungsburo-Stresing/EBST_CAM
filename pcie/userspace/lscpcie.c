@@ -69,7 +69,7 @@ int lscpcie_driver_init(void)
 
 	handle = open("/dev/lscpcie0", O_RDWR);
 	if (handle < 0)
-		return handle;	// failed to open device zero
+		return -errno;	// failed to open device zero
 
 	result =
 	    ioctl(handle, LSCPCIE_IOCTL_NUM_BOARDS,
