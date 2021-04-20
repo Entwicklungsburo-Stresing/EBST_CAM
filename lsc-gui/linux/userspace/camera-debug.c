@@ -1,11 +1,11 @@
 /* camera-debug.c
  *
- * Copyright (C) 2010-2020 Bernhard Lang, University of Geneva
- * 
+ * Copyright (C) 2010-2021 Bernhard Lang, University of Geneva
+ * Copyright 2020-2021 Entwicklungsbuero Stresing (http://www.stresing.de/)
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
- *
  */
 
 #include <stdlib.h>
@@ -22,12 +22,15 @@ struct debug_option_struct {
 };
 
 const struct debug_option_struct debug_options[] = {
+  { "pci",        D_PCI        },
   { "start-stop", D_START_STOP },
   { "readout",    D_READOUT    },
   { "interrupt",  D_INTERRUPT  },
   { "buffers",    D_BUFFERS    },
   { "ioctl",      D_IOCTL      },
   { "module",     D_MODULE     },
+  { "mmap",       D_IOCTL      },
+  { "proc",       D_MODULE     },
   { "" }
 };
 
@@ -41,7 +44,7 @@ void help(void) {
 int debug_mode = 0, debug_mask;
 
 int main(int argc, char **argv) {
-  int arg_pos = 0, i, handle, result, device = 0, temp;
+  int arg_pos = 0, i, handle, device = 0, temp;
   char name[32], c, *end;
   while (++arg_pos < argc) {
     if (!strcmp(argv[arg_pos], "--help")) {
@@ -98,20 +101,19 @@ int main(int argc, char **argv) {
     return handle;
   }
 
-  if ((handle = lscpcie_open(device, 0)) < 0) {
+  if ((handle = lscpcie_open(device, 0, 0)) < 0) {
     fprintf(stderr, "could not open camera device file\n");
     perror(0);
     return handle;
   }
 
+  struct dev_descr *dev = lscpcie_get_descriptor(device);
   printf("setting debug flags 0x%04x in 0x%04x\n", debug_mode, debug_mask);
 
-  if ((result = lscpcie_set_debug(device, debug_mode, debug_mask)) < 0) {
-    fprintf(stderr, "setting debug resulted in error %d\n", result);
-    return -4;
-  }
+  lscpcie_set_debug(dev, debug_mode, debug_mask);
 
   lscpcie_close(device);
 
   return 0;
 }
+

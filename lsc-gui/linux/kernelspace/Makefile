@@ -15,7 +15,7 @@ EXTRA_CFLAGS += -Duconst= $(DEBFLAGS) -D__plx_pci__
 
 ifneq ($(KERNELRELEASE),)
   lscpcie-objs := module-main.o device.o ioctl.o file.o proc.o mmap.o \
-    dma.o pcie.o registers.o
+    dma.o pcie.o registers-common.o
   obj-m := lscpcie.o
 else
   KERNELDIR ?= /lib/modules/$(shell uname -r)/build
