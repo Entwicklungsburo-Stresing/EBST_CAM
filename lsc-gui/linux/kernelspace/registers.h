@@ -15,13 +15,6 @@
 
 #include "registers-common.h"
 
-//PCIe Addresses
-typedef enum {
-	PCIeAddr_devCap = 0x5C,
-	PCIeAddr_devStatCtrl = 0x60
-} pcie_addresses_t;
-
-
 #define set_bits_s0_byte(dev, reg, bits, mask) do	      \
 		iowrite8((ioread8(&dev->s0_reg->reg) & ~mask) \
 			| bits, &dev->s0_reg->reg);	      \

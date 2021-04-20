@@ -20,7 +20,7 @@
 #include <sys/mman.h>
 #include <errno.h>
 #include <stdarg.h>
-
+#include "../../../shared_src/enum.h"
 #include "local-config.h"
 
 #define memory_barrier() asm volatile ("" : : : "memory")
@@ -489,7 +489,7 @@ int lscpcie_send_fiber(struct dev_descr *dev, uint8_t master_address,
 	return 0;
 }
 
-int init_cam_control(struct dev_descr *dev, trigger_mode_t trigger_mode,
+int init_cam_control(struct dev_descr *dev, enum trigger_mode trigger_mode,
 		     uint16_t options)
 {
 	int result;
