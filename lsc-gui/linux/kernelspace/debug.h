@@ -17,18 +17,20 @@
 #include "../userspace/constants.h"
 
 
-#define PDEBUG(flags, ...) do {                   \
-  if (dev->debug_mode & (flags))                  \
-    printk(KERN_WARNING "lscpcie: " __VA_ARGS__); \
+#define PDEBUG(flags, ...) do {						  \
+	if ((dev->control && (dev->control->debug_mode & (flags)))	  \
+		|| ((!dev->control) && (dev->init_debug_mode & (flags)))) \
+		printk(KERN_WARNING "lscpcie: " __VA_ARGS__);		  \
 } while (0)
 
 #define PMESSAGE(...) \
   do { printk(KERN_WARNING "lscpcie: " __VA_ARGS__); } while (0)
 
-#define assert(condition, error_message, return_code)                       \
+#define assert(condition, error_message, fail_action, return_code)          \
   do { if (!(condition)) {                                                  \
       printk(NAME ": %s\n", error_message); clean_up_lscpcie_module();      \
-      return return_code;                                                   \
+      result = return_code;                                                 \
+      do { fail_action; } while (0);                                        \
     } } while (0)
 
 #endif /* _debug_h_ */

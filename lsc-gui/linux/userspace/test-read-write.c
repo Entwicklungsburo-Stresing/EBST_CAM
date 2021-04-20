@@ -1,4 +1,4 @@
-#include <stdint.h> // for types, get this into types.h with kernel flag 
+#include <stdint.h> // for types, get this into types.h with kernel flag
 #include "../kernelspace/ioctl.h"
 #include "constants.h"
 #include "types.h"

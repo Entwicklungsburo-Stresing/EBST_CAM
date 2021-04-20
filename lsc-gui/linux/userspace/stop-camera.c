@@ -14,7 +14,7 @@
 
 int main(void) {
   int result;
-  dev_descr_t *device_descriptor;
+  struct dev_descr *device_descriptor;
 
   if ((result = lscpcie_driver_init()) < 0) {
     fprintf(stderr, "initialising driver returned %d\n", result);
@@ -27,7 +27,7 @@ int main(void) {
   case 2: printf("found %d lscpcie boards\n", result); break;
   }
 
-  if ((result = lscpcie_open(0, 0)) < 0) {
+  if ((result = lscpcie_open(0, 0, 0)) < 0) {
     fprintf(stderr, "opening first board returned %d\n", result);
     return 2;
   }
