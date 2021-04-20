@@ -15,64 +15,12 @@
 # include <stdint.h>
 #endif
 
+#include "../../../shared_src/enum.h"
+
 /* device status bits relevant in user space */
 #define DEV_HARDWARE_PRESENT 0x2000
 #define DEV_FIFO_OVERFLOW    0x4000
 #define DEV_DMA_OVERFLOW     0x8000
-
-
-// S0 Addresses
-typedef enum {
-	S0Addr_DBR = 0x00,
-	S0Addr_CTRLA = 0x04,
-	S0Addr_CTRLB = 0x05,
-	S0Addr_CTRLC = 0x06,
-	S0Addr_XCK = 0x08,
-	S0Addr_XCKLL = 0x08,
-	S0Addr_XCKLH = 0x09,
-	S0Addr_XCKHL = 0x0A,
-	S0Addr_XCKMSB = 0x0B,
-	S0Addr_XCKCNTLL = 0x0C,
-	S0Addr_XCKCNTLH = 0x0D,
-	S0Addr_XCKCNTHL = 0x0E,
-	S0Addr_XCKCNTMSB = 0x0F,
-	S0Addr_PIXREGlow = 0x10,
-	S0Addr_PIXREGhigh = 0x11,
-	S0Addr_BTRIGREG = 0x12,
-	S0Addr_FF_FLAGS = 0x13,
-	S0Addr_FIFOCNT = 0x14,
-	S0Addr_VCLKCTRL = 0x18,
-	S0Addr_VCLKFREQ = 0x1b,
-	S0Addr_EBST = 0x1C,
-	S0Addr_SDAT = 0x20,
-	S0Addr_SEC = 0x24,
-	S0Addr_TOR = 0x28,
-	S0Addr_ARREG = 0x2C,
-	S0Addr_GIOREG = 0x30,
-	S0Addr_DELAYEC = 0x34,
-	S0Addr_IRQREG = 0x38,
-	S0Addr_PCI = 0x3C,
-	S0Addr_PCIEFLAGS = 0x40,
-	S0Addr_NOS = 0x44,
-	S0Addr_SCAN_INDEX = 0x48,
-	S0Addr_DMA_BS_S = 0x4C,
-	S0Addr_DMA_P_IRQ = 0x50,
-	S0Addr_BLOCKS = 0x54,
-	S0Addr_BLOCK_IDX = 0x58,
-	S0Addr_CAM_COUNT = 0x5C,
-	S0Addr_TDCCtrl = 0x60,
-	S0Addr_TDCData = 0x64,
-	S0Addr_ROI0 = 0x68,
-	S0Addr_ROI1 = 0x6C,
-	S0Addr_ROI2 = 0x70,
-	S0Addr_TRIG_CNT = 0x74,
-	S0Addr_XDLY = 0x78,
-	S0Addr_RESERVED = 0x7C,
-	S0Addr_BTIMER = 0x80,
-	S0Addr_BDAT = 0x84,
-	S0Addr_BEC = 0x88,
-	S0Addr_BSLOPE = 0x8C
-} s0_addresses_t;
 
 /* S0 register bits */
 
@@ -200,31 +148,6 @@ typedef enum {
 #define BFLAG_BOTH_SLOPES    1
 #define BFLAG_BSLOPE         0
 
-/* DMA */
-
-// DMA Addresses
-enum dma_addresses {
-	DmaAddr_DCSR = 0x000,
-	DmaAddr_DDMACR = 0x004,
-	DmaAddr_WDMATLPA = 0x008,
-	DmaAddr_WDMATLPS = 0x00C,
-	DmaAddr_WDMATLPC = 0x010,
-	DmaAddr_WDMATLPP = 0x014,
-	DmaAddr_RDMATLPP = 0x018,
-	DmaAddr_RDMATLPA = 0x01C,
-	DmaAddr_RDMATLPS = 0x020,
-	DmaAddr_RDMATLPC = 0x024,
-	//for extended S0-Space:
-	DmaAddr_PCIEFLAGS = 0x40,
-	DmaAddr_NOS = 0x44,
-	DmaAddr_ScanIndex = 0x48,
-	DmaAddr_DmaBufSizeInScans = 0x04C,	// length in scans
-	DmaAddr_DMAsPerIntr = 0x050,
-	DmaAddr_NOB = 0x054,
-	DmaAddr_BLOCKINDEX = 0x058,
-	DmaAddr_CAMCNT = 0x05C
-};
-
 #define DCSR_RESET                     0
 #define DCSR_VERS_Pos                  8
 #define DCSR_VERS_Msk                  (0xFF<<DCSR_VERS_Pos)
@@ -263,45 +186,6 @@ enum dma_addresses {
 #define DLTRSSTAT_PROG_MAX_PAYLOAD_msk (0x07<<DLTRSSTAT_PROG_MAX_PAYLOAD_pos)
 #define DLTRSSTAT_MAX_RD_REQ_pos       16
 #define DLTRSSTAT_MAX_RD_REQ_msk       (0x07<<DLTRSSTAT_MAX_RD_REQ_pos)
-
-
-// Cam Addresses könnten später bei unterschiedlichen cam systemen variieren
-enum cam_addresses {
-	maddr_cam = 0x00,
-	maddr_adc = 0x01,
-	maddr_ioctrl = 0x02,
-	cam_adaddr_gain_led = 0x00,
-	cam_adaddr_pixel = 0x01,
-	cam_adaddr_trig_in = 0x02,
-	cam_adaddr_ch = 0x03,
-	cam_adaddr_vclk = 0x04,
-	cam_adaddr_LEDoff = 0x05,
-	cam_adaddr_coolTemp = 0x06,
-	adc_ltc2271_regaddr_reset = 0x00,
-	adc_ltc2271_regaddr_outmode = 0x02,
-	adc_ltc2271_regaddr_custompattern_msb = 0x03,
-	adc_ltc2271_regaddr_custompattern_lsb = 0x04,
-	adc_ads5294_regaddr_reset = 0x00,
-	adc_ads5294_regaddr_mode = 0x25,
-	adc_ads5294_regaddr_custompattern = 0x26,
-	adc_ads5294_regaddr_gain_1_to_4 = 0x2A,
-	adc_ads5294_regaddr_gain_5_to_8 = 0x2B,
-	adc_ads5294_regaddr_2wireMode = 0x46,
-	adc_ads5294_regaddr_wordWiseOutput = 0x28,
-	adc_ads5294_regaddr_ddrClkAlign = 0x42,
-};
-
-enum cam_messages {
-	adc_ltc2271_msg_reset = 0x80,
-	adc_ltc2271_msg_normal_mode = 0x01,
-	adc_ltc2271_msg_custompattern = 0x05,
-	adc_ads5294_msg_reset = 0x01,
-	adc_ads5294_msg_ramp = 0x40,
-	adc_ads5294_msg_custompattern = 0x10,
-	adc_ads5294_msg_2wireMode = 0x8401,
-	adc_ads5294_msg_wordWiseOutput = 0x80FF,
-	adc_ads5294_msg_ddrClkAlign = 0x60,
-};
 
 struct s0_reg_struct {
 	uint32_t DBR;

@@ -6,7 +6,7 @@
 
 struct camera_info_struct {
 	int n_blocks, n_scans, mem_size;
-	trigger_mode_t trigger_mode;
+	enum trigger_mode trigger_mode;
 	pixel_t *data;
 	struct dev_descr *dev;
 };
