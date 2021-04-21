@@ -23,18 +23,25 @@ Open EBST_CAM.sln with Visual Studio and press build.
 * [Qt Visual Studio Tools](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2019) + [MSVC Qt 5](https://www.qt.io/download) (optional, for Qt GUI)
 * Labview Libraries (optional, for DLL usage with Labview)
 
-## Linux GUI
+## Linux
+
+### Dependencies
+* Qt 5 (optional, for Qt GUI)
+* make
+* Linux Kernel 4.19
+
+### Linux GUI
 Two possibilities:
 1. Open lsc-gui/lsc-gui.pro with [Qt Creator](https://www.qt.io/product/development-tools) and press build.
 2. Or run in Terminal `qmake` and `make` in `lsc-gui/`.
 
-## Linux CLI
+### Linux CLI
 ```
 cd lsc-gui/linux/userspace/
 make all
 ```
 
-## Linux driver
+### Linux driver
 ```
 cd lsc-gui/linux/kernelspace/
 make
