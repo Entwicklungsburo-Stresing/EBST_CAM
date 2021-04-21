@@ -1,16 +1,19 @@
 ﻿#include "lsc.h"
 #include <memory.h>
 #include <stdint.h>
-#include "linux/userspace/types.h"
-#include "linux/userspace/lscpcie.h"
-#include "linux/kernelspace/registers.h"
 #include <stdio.h>
 #include <iomanip>
+#include <stdlib.h>
+#include "linux/userspace/lscpcie.h"
+#include "linux/kernelspace/registers.h"
+#include "linux/userspace/local-config.h"
+#include "linux/userspace/examples/common.h"
 
 #define memory_barrier() asm volatile ("" : : : "memory")
 #define CFG_BTIMER_IN_US      500000
 #define CFG_STIMER_IN_US      400
-dev_descr_t *device_descriptor;
+
+struct camera_info_struct info;
 
 Lsc::Lsc()
 {
@@ -23,10 +26,9 @@ Lsc::~Lsc()
 
 /**
  * @brief Inits linux PCIe board driver.
- * @return
- *      - <1 failed
- *      - 1: success and one board found
- *      - 2: success and two boards found
+ * @return es_status_codes:
+ *      - es_no_error
+ *      - es_driver_init_failed
  */
 es_status_codes Lsc::initDriver()
 {
@@ -36,121 +38,135 @@ es_status_codes Lsc::initDriver()
 
 /**
  * @brief Inits PCIe board.
- * @return <0 on error, success otherwise
+ * @return es_status_codes:
+ *      - es_no_error
+ *      - es_open_device_failed
+ *      - es_getting_dma_buffer_failed
+ *      - es_unknown_error
  */
 es_status_codes Lsc::initPcieBoard()
 {
     int result;
     // open /dev/lscpcie<n>
-    result = lscpcie_open(0, 0);
+    result = lscpcie_open(0, 0, 1);
     if(result < 0) return es_open_device_failed;
     // get memory mapped pointers etc
-    device_descriptor = lscpcie_get_descriptor(0);
+    info.dev = lscpcie_get_descriptor(0);
     // clear dma buffer to avoid reading stuff from previous debugging sessions
-    memset((uint8_t*)device_descriptor->mapped_buffer, 0, device_descriptor->control->buffer_size);
-    result = lscpcie_setup_dma(0);
-    if (result)
-        return es_getting_dma_buffer_failed;
+    memset((uint8_t *) info.dev->mapped_buffer, 0,	info.dev->control->dma_buf_size);
+    //result = lscpcie_setup_dma(0);
+    //if (result)
+        //return es_getting_dma_buffer_failed;
         //fprintf(stderr, "error %d when setting up dma\n", result);
     return es_no_error;
 }
+
+/**
+ * @brief Init Measurement.
+ * @param settings_struct
+ * @return
+ */
 es_status_codes Lsc::initMeasurement(struct global_settings* settings_struct)
 {
-    lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_PIXEL, device_descriptor[0].control->number_of_pixels);
-    trigger_mode trigger_mode = xck;
-    int result = lscpcie_send_fiber(0, MASTER_ADDRESS_CAMERA, CAMERA_ADDRESS_TRIGGER_IN, trigger_mode);
-    if (result < 0)
-        return es_unknown_error;
-        //return result;
-    //set output of O on PCIe card
-    device_descriptor->s0->TOR = _torOut << TOR_TO_pos;
-    //set trigger mode to block timer and scan timer + shutter not on
-    device_descriptor->s0->CTRLB = (CTRLB_BTI_TIMER | CTRLB_STI_TIMER) & ~(CTRLB_SHON);
-    //set block timer and start block timer
-    device_descriptor->s0->BTIMER = 1<<BTIMER_START | CFG_BTIMER_IN_US;
-    //set slope of block trigger
-    device_descriptor->s0->BFLAGS |= 1<<BFLAG_BSLOPE;
-    //// >>>> reset_dma_counters
-    device_descriptor->s0->DMAS_PER_INTERRUPT |= (1<<DMA_COUNTER_RESET);
-    memory_barrier();
-    device_descriptor->s0->DMAS_PER_INTERRUPT &= ~(1<<DMA_COUNTER_RESET);
-
-    //reset the internal block counter - is not BLOCKINDEX!
-    device_descriptor->s0->DMA_BUF_SIZE_IN_SCANS |= (1<<BLOCK_COUNTER_RESET);
-    memory_barrier();
-    device_descriptor->s0->DMA_BUF_SIZE_IN_SCANS &= ~(1<<BLOCK_COUNTER_RESET);
-
-    // reset block counter
-    device_descriptor->s0->BLOCK_INDEX |= (1<<BLOCK_INDEX_RESET);
-    memory_barrier();
-    device_descriptor->s0->BLOCK_INDEX &= ~(1<<BLOCK_INDEX_RESET);
-
-    //set Block end stops timer:
-    //when SCANINDEX reaches NOS, the timer is stopped by hardware.
-    device_descriptor->s0->PCIEFLAGS |= (1<<PCIE_EN_RS_TIMER_HW);
-    ////<<<< reset all counters
-
-    // >> SetIntFFTrig
-    device_descriptor->s0->XCK.dword &= ~(1<<XCKMSB_EXT_TRIGGER);
-    device_descriptor->control->write_pos = 0;
-    device_descriptor->control->read_pos = 0;
+    info.n_blocks = settings_struct->nob;
+    info.n_scans = settings_struct->nos;
+    info.trigger_mode = xck;
+    int result = init_7030(0);
+    if (result < 0) return es_unknown_error;
+    result = lscpcie_init_scan(info.dev, info.trigger_mode, info.n_scans, info.n_blocks, 2);
+    if (result) return es_unknown_error;
     return es_no_error;
+}
+
+/* Acquire one block of data. Poll first XCKMSB /RS for being low and data
+   being present in the buffer. Loop over if less than the needed data has
+   been copied. */
+int lscpcie_acquire_block_poll(struct dev_descr *dev, uint8_t *data,
+            size_t n_scans) {
+    int result, bytes_read = 0;
+    size_t block_size =
+        dev->control->number_of_pixels * dev->control->number_of_cameras
+        * sizeof(pixel_t) * n_scans;
+
+    result = lscpcie_start_block(dev);
+    if (result < 0)
+        return result;
+
+    do {
+        if (dev->s0->XCK.dword & (1 << XCK_RS))
+            continue;
+
+        if (dev->control->read_pos == dev->control->write_pos)
+            continue;
+
+        result = fetch_mapped_data(dev, data + bytes_read,
+                    block_size - bytes_read);
+        if (result < 0)
+            return result;
+
+        bytes_read += result;
+        fprintf(stderr, "got %d bytes of data (irq %d)\n", result,
+            dev->control->irq_count);
+    } while (bytes_read < block_size);
+
+        result = lscpcie_end_block(dev);
+    if (result < 0)
+        return result;
+
+    return bytes_read;
 }
 
 es_status_codes Lsc::startMeasurement(uint8_t boardsel)
 {
     emit measureStart();
     //set measure on
-    device_descriptor->s0->PCIEFLAGS |= 1<<PCIEFLAG_MEASUREON;
-    for (uint32_t blk_cnt = 0; blk_cnt < device_descriptor->control->number_of_blocks; blk_cnt++)
+    lscpcie_start_scan(info.dev);
+
+    info.mem_size = info.dev->control->number_of_pixels
+        * info.dev->control->number_of_cameras * info.n_blocks
+        * info.n_scans * sizeof(pixel_t);
+    info.data = (pixel_t*)malloc(info.mem_size);
+    if (!info.data)
     {
-        //block trigger
-        if(!(device_descriptor->s0->CTRLA & 1<<CTRLA_TSTART))
-            while(!(device_descriptor->s0->CTRLA & 1<<CTRLA_TSTART));
-        emit blockStart();
-        //make pulse for blockindex counter
-        device_descriptor->s0->PCIEFLAGS |= 1<<PCIEFLAG_BLOCKTRIG;
-        memory_barrier();
-        device_descriptor->s0->PCIEFLAGS &= ~(1<<PCIEFLAG_BLOCKTRIG);
-        // reset scan counter
-        device_descriptor->s0->SCAN_INDEX |= (1<<SCAN_INDEX_RESET);
-        memory_barrier();
-        device_descriptor->s0->SCAN_INDEX &= ~(1<<SCAN_INDEX_RESET);
-        //set block on
-        device_descriptor->s0->PCIEFLAGS |= 1<<PCIEFLAG_BLOCKON;
-        //start Stimer
-        device_descriptor->s0->XCK.dword = (device_descriptor->s0->XCK.dword & ~XCK_EC_MASK) | (CFG_STIMER_IN_US & XCK_EC_MASK) | (1<<XCK_RS);
-        //software trigger
-        device_descriptor->s0->BTRIGREG |= 1<<FREQ_REG_SW_TRIG;
-        memory_barrier();
-        device_descriptor->s0->BTRIGREG &= ~(1<<FREQ_REG_SW_TRIG);
-        //wait for end of readout
-        int result;
-        do
-            result = device_descriptor->s0->XCK.dword & (1<<XCK_RS);
-        while (result);
-        //reset block on
-        device_descriptor->s0->PCIEFLAGS &= ~(1<<PCIEFLAG_BLOCKON);
-        emit blockDone();
+        fprintf(stderr, "failed to allocate %d bytes of memory\n",
+            info.mem_size);
+        return es_allocating_memory_failed;
     }
-    //stop stimer
-    device_descriptor->s0->XCK.dword &= ~(1<<XCK_RS);
-    //stop btimer
-    device_descriptor->s0->BTIMER &= ~(1<<BTIMER_START);
-    //reset measure on
-    device_descriptor->s0->PCIEFLAGS &= ~(1<<PCIEFLAG_MEASUREON);
+    int result, bytes_read = 0;
+    do
+    {
+        // wait for block trigger signal
+        if (!(info.dev->s0->CTRLA & (1 << CTRLA_TSTART)))
+            continue;
+
+        result = lscpcie_acquire_block_poll(info.dev, (uint8_t *) info.data + bytes_read, 2);
+        if (result < 0)
+        {
+            fprintf(stderr, "error %d when acquiring block\n", result);
+            return es_unknown_error;
+        }
+        bytes_read += result;
+        fprintf(stderr, "have now %d bytes\n", bytes_read);
+    } while (bytes_read < info.mem_size);
+
+    fprintf(stderr, "finished measurement\n");
+
+    result = lscpcie_end_acquire(info.dev);
+    if (result)
+        fprintf(stderr, "error %d when finishing acquisition\n", result);
+
     emit measureDone();
     return es_no_error;
 }
 
 es_status_codes Lsc::returnFrame(uint32_t board, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length)
 {
-    int n = device_descriptor->control->number_of_pixels;
-    int nob = device_descriptor->control->number_of_blocks;
-    int nos = device_descriptor->control->number_of_scans;
-    int camcnt = device_descriptor->control->number_of_cameras;
+    int n = info.dev->control->number_of_pixels;
+    int nob = info.n_blocks;
+    int nos = info.n_scans;
+    int camcnt = info.dev->control->number_of_cameras;
     int offset = camera * n + sample * camcnt * n + block * nos * camcnt * n;
-    memcpy( pdest, &((uint16_t*)device_descriptor->mapped_buffer)[offset], length * sizeof( uint16_t ) );
+    memcpy( pdest, &((uint16_t*)info.dev->mapped_buffer)[offset], length * sizeof( uint16_t ) );
     return es_no_error;
 }
 
@@ -202,8 +218,9 @@ std::string Lsc::dumpS0Registers()
     }; //Look-Up-Table for the S0 Registers
     uint32_t data = 0;
     std::stringstream stream;
-    for (int i = 0; i < number_of_registers; i++) {
-        lscpcie_read_s0_32(0, i * 4, &data);
+    for (int i = 0; i < number_of_registers; i++)
+    {
+        data = *(uint32_t*) (((const uint8_t *) info.dev->s0) + i * 4);
         stream  << register_names[i]
                 << "0x"
                 << std::hex << data
@@ -237,8 +254,9 @@ std::string Lsc::dumpDmaRegisters()
     }; //Look-Up-Table for the DMA Registers
     uint32_t data = 0;
     std::stringstream stream;
-    for (int i = 0; i < number_of_registers; i++) {
-        lscpcie_read_dma_32(0, i * 4, &data);
+    for (int i = 0; i < number_of_registers; i++)
+    {
+        data = *(uint32_t*) (((const uint8_t *) info.dev->dma_reg) + i * 4);
         stream  << register_names[i]
                 << "0x"
                 << std::hex << data
@@ -269,7 +287,7 @@ std::string Lsc::dumpTlp()
            << std::hex << data
            << '\n'
            << "Number of pixels:\t\t"
-           << std::dec << device_descriptor[0].control->number_of_pixels
+           << std::dec << info.dev[0].control->number_of_pixels
            << "\n";
     switch (actpayload) {
     case 0: data = 0x20;  break;
@@ -282,15 +300,15 @@ std::string Lsc::dumpTlp()
            << " DWORDs\n\t\t\t="
            << std::dec << data*4
            << " BYTEs\n";
-    lscpcie_read_dma_32(0, DmaAddr_WDMATLPS, &data);
+    data = info.dev->dma_reg->WDMATLPS;
     stream << "TLPS in DMAReg is:\t\t"
            << std::dec << data
            << "\n";
-    data = (device_descriptor[0].control->number_of_pixels - 1) / (data * 2) + 1;
+    data = (info.dev[0].control->number_of_pixels - 1) / (data * 2) + 1;
     stream << "number of TLPs should be:\t"
            << std::dec << data
            << "\n";
-    lscpcie_read_dma_32(0, DmaAddr_WDMATLPC, &data);
+    data = info.dev->dma_reg->WDMATLPC;
     stream << "number of TLPs is:\t\t"
            << std::dec << data
            << "\n";
@@ -300,6 +318,6 @@ std::string Lsc::dumpTlp()
 void Lsc::setTorOut(uint8_t torOut)
 {
     _torOut = torOut;
-    device_descriptor->s0->TOR = _torOut << TOR_TO_pos;
+    info.dev->s0->TOR = _torOut << TOR_TO_pos;
     return;
 }
