@@ -3,6 +3,9 @@
 
 #include "../lscpcie.h"
 #include "../local-config.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct camera_info_struct {
 	int n_blocks, n_scans, mem_size;
@@ -17,5 +20,7 @@ int fetch_mapped_data(struct dev_descr *dev, uint8_t *data, size_t max);
 void print_data(const struct camera_info_struct *info);
 int kbhit(void);
 
-
+#ifdef __cplusplus
+}
+#endif
 #endif /* _lscpcie_examples_common_h_ */
