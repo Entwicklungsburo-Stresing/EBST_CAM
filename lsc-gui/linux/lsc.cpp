@@ -270,17 +270,17 @@ std::string Lsc::dumpTlp()
     uint32_t data = 0;
     std::stringstream stream;
     stream  << "PAY_LOAD values:\t\t0 = 128 bytes\n\t\t\t1 = 256 bytes\n\t\t\t2 = 512 bytes\n";
-    lscpcie_read_config32(0, PCIeAddr_devCap, &data);
+    lscpcie_read_config32(info.dev, PCIeAddr_devCap, &data);
     data &= 0x7;
     stream  << "PAY_LOAD Supported:\t\t0x"
             << std::hex << data
             << '\n';
-    lscpcie_read_config32(0, PCIeAddr_devStatCtrl, &data);
+    lscpcie_read_config32(info.dev, PCIeAddr_devStatCtrl, &data);
     uint32_t actpayload = (data >> 5) & 0x07;
     stream << "PAY_LOAD:\t\t\t0x"
            << std::hex << actpayload
            << '\n';
-    lscpcie_read_config32(0, PCIeAddr_devStatCtrl, &data);
+    lscpcie_read_config32(info.dev, PCIeAddr_devStatCtrl, &data);
     data >>= 12;
     data &= 0x7;
     stream << "MAX_READ_REQUEST_SIZE:\t0x"
