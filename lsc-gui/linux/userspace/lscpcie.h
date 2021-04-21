@@ -60,7 +60,7 @@ int lscpcie_end_block(struct dev_descr *dev);
 int lscpcie_end_acquire(struct dev_descr *dev);
 ssize_t lscpcie_readout(struct dev_descr *dev, uint16_t * buffer,
 			size_t items_to_read);
-int lscpcie_setup_dma(struct dev_descr *dev);
+//int lscpcie_setup_dma(struct dev_descr *dev);
 int lscpcie_hardware_present(struct dev_descr *dev);
 int lscpcie_fifo_overflow(struct dev_descr *dev);
 int lscpcie_dma_overflow(struct dev_descr *dev);
