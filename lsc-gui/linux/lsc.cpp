@@ -138,7 +138,7 @@ es_status_codes Lsc::startMeasurement()
         // wait for block trigger signal
         if (!(info.dev->s0->CTRLA & (1 << CTRLA_TSTART)))
             continue;
-
+        emit blockStart();
         result = lscpcie_acquire_block_poll(info.dev, (uint8_t *) info.data + bytes_read, 2);
         if (result < 0)
         {
@@ -147,6 +147,7 @@ es_status_codes Lsc::startMeasurement()
         }
         bytes_read += result;
         fprintf(stderr, "have now %d bytes\n", bytes_read);
+        emit blockDone();
     } while (bytes_read < info.mem_size);
 
     fprintf(stderr, "finished measurement\n");
