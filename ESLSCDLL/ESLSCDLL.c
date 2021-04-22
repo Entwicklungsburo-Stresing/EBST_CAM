@@ -438,9 +438,9 @@ DllAccess es_status_codes DLLCopyOneBlock( UINT32 drv, UINT16 block, UINT16 *pde
  */
 DllAccess void DLLReadFFLoop( UINT32 board_sel )
 {
-	params.board_sel = board_sel;
+	BOARD_SEL = board_sel;
 	//thread wit prio 15
-	_beginthreadex( 0, 0, &ReadFFLoopThread, &params, 0, 0 );
+	_beginthreadex( 0, 0, &ReadFFLoopThread, 0, 0, 0 );
 	return;
 }//DLLReadFFLoop
 
