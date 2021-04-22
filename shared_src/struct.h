@@ -3,15 +3,6 @@
 
 #include <stdint.h>
 
-struct ffloopparams
-{
-	uint32_t board_sel;
-	uint32_t exptus;
-	uint8_t exttrig;
-	uint8_t blocktrigger;
-	uint8_t btrig_ch;
-};
-
 struct global_settings
 {
 	uint32_t drvno;
@@ -30,6 +21,7 @@ struct global_settings
 	uint32_t ShutterExpTime;
 	uint16_t trigger_mode_cc;
 	//camerasetup tab
+	uint8_t board_sel;
 	uint32_t sensor_type;
 	uint8_t camera_system;
 	uint32_t camcnt;
