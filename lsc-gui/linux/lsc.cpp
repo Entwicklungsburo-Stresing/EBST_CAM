@@ -116,7 +116,7 @@ int lscpcie_acquire_block_poll(struct dev_descr *dev, uint8_t *data,
     return bytes_read;
 }
 
-es_status_codes Lsc::startMeasurement(uint8_t boardsel)
+es_status_codes Lsc::startMeasurement()
 {
     emit measureStart();
     //set measure on
