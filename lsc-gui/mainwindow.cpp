@@ -152,6 +152,7 @@ void MainWindow::startPressed()
         lsc.initMeasurement(&settings_struct);
     }
     QThread* measurementThread = new QThread;
+    lsc.moveToThread(QApplication::instance()->thread());
     lsc.moveToThread(measurementThread);
     connect(measurementThread, SIGNAL(started()), &lsc, SLOT(startMeasurement()));
     connect(&lsc, SIGNAL(measureDone()), measurementThread, SLOT(quit()));
