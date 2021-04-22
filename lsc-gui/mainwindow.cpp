@@ -151,7 +151,12 @@ void MainWindow::startPressed()
         settings_struct.drvno = 1;
         lsc.initMeasurement(&settings_struct);
     }
-    lsc.startMeasurement(boardsel + 1);
+    QThread* measurementThread = new QThread;
+    lsc.moveToThread(measurementThread);
+    connect(measurementThread, SIGNAL(started()), &lsc, SLOT(startMeasurement()));
+    connect(&lsc, SIGNAL(measureDone()), measurementThread, SLOT(quit()));
+    connect(measurementThread, SIGNAL(finished()), measurementThread, SLOT(deleteLater()));
+    measurementThread->start();
     return;
 }
 
