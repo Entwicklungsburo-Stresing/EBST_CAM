@@ -22,7 +22,7 @@ void out_hex(uint8_t x) {
 
 int main(int argc, char **argv) {
   int i, result, device_number, hardware_present;
-  dev_descr_t *device_descriptor;
+  struct dev_descr *dev;
   /*
   uint8_t *io_ptr = MAP_FAILED, *dma_ptr = MAP_FAILED;
   lscpcie_control_t *control_ptr = MAP_FAILED;
@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
     return result;
   }
 
-  result = lscpcie_open(device_number, 0);
+  result = lscpcie_open(device_number, 0, USE_DMA_MAPPING);
   if (result < 0) {
     fprintf(stderr, "error %d opening device %d\n", result, device_number);
     return result;
@@ -83,20 +83,19 @@ int main(int argc, char **argv) {
   }
   */
 
-  device_descriptor = lscpcie_get_descriptor(device_number);
+  dev = lscpcie_get_descriptor(device_number);
 
-  printf("number of pixels %d\n", device_descriptor->control->number_of_pixels);
+  printf("number of pixels %d\n", dev->control->number_of_pixels);
   printf("number of cameras %d\n",
-         device_descriptor->control->number_of_cameras);
-  printf("number of scans %d\n", device_descriptor->control->number_of_scans);
+         dev->control->number_of_cameras);
+  printf("number of scans %d\n", dev->control->dma_num_scans);
   printf("buffer 0x%08lx\n",
-         (unsigned long) device_descriptor->mapped_buffer);
-  printf("buffer size %d\n", device_descriptor->control->buffer_size);
+         (unsigned long) dev->mapped_buffer);
+  printf("buffer size %d\n", dev->control->dma_buf_size);
   printf("dma buffer bus address %ld\n",
-         device_descriptor->control->dma_physical_start);
-  printf("write position %d\n", device_descriptor->control->write_pos);
-  printf("read position %d\n", device_descriptor->control->read_pos);
-  printf("number of blocks %d\n", device_descriptor->control->number_of_blocks);
+         dev->control->dma_physical_start);
+  printf("write position %d\n", dev->control->write_pos);
+  printf("read position %d\n", dev->control->read_pos);
 
   /*
   dma_ptr
@@ -113,7 +112,7 @@ int main(int argc, char **argv) {
   */
 
   //result = ioctl(handle, LSCPCIE_IOCTL_HARDWARE_PRESENT, &hwp);
-  hardware_present = lscpcie_hardware_present(device_number);
+  hardware_present = lscpcie_hardware_present(dev);
   if (hardware_present < 0) {
     fprintf(stderr, "error %d occured when asking for hardware being present\n",
 	    hardware_present);
@@ -131,18 +130,18 @@ int main(int argc, char **argv) {
     for (i = 0; i < 1200; i++)
       buffer[i] = i;
 
-    device_descriptor->control->read_pos = 0;
-    device_descriptor->control->write_pos = 0;
-    printf("%d %d\n", device_descriptor->control->read_pos,
-	   device_descriptor->control->write_pos);
+    dev->control->read_pos = 0;
+    dev->control->write_pos = 0;
+    printf("%d %d\n", dev->control->read_pos,
+	   dev->control->write_pos);
 
-    result = write(device_descriptor->handle, buffer, 1200);
+    result = write(dev->handle, buffer, 1200);
     if (result != 1200) {
       fprintf(stderr, "error %d writing data\n", errno);
       return result;
     }
 
-    result = read(device_descriptor->handle, buffer, 1200);
+    result = read(dev->handle, buffer, 1200);
     if (result != 1200) {
       fprintf(stderr, "error %d reading back data\n", errno);
       return result;
@@ -157,28 +156,21 @@ int main(int argc, char **argv) {
       printf("successfully read back 1200 data bytes via syscall\n");
 
     for (i = 0; i < 600; i++)
-      if (((uint16_t*)device_descriptor->mapped_buffer)[i] != i) {
+      if (((uint16_t*)dev->mapped_buffer)[i] != i) {
 	fprintf(stderr, "byte %d doesn't match (%d)\n", i,
-		device_descriptor->mapped_buffer[i]);
+		dev->mapped_buffer[i]);
 	break;
       }
     if (i == 600)
       printf("successfully read back 1200 data bytes via memory mapping\n");
   } else {
     //for (int i = 0; i < 512; i++)
-    //  ((uint8_t*)device_descriptor->dma_reg)[i] = 0x00;
+    //  ((uint8_t*)dev->dma_reg)[i] = 0x00;
 
-    uint8_t val;
     for (int i = 0; i < 512; i += 8) {
       printf("0x%02x: ", i);
       for (int j = 0; j < 8; j++) {
-        out_hex(((uint8_t*)device_descriptor->dma_reg)[i+j]);
-        putchar(' ');
-      }
-      printf("   ");
-      for (int j = 0; j < 8; j++) {
-        lscpcie_read_reg8(0, i+j, &val);
-        out_hex(val);
+        out_hex(((uint8_t*)dev->dma_reg)[i+j]);
         putchar(' ');
       }
      printf("\n");
@@ -186,20 +178,20 @@ int main(int argc, char **argv) {
     printf("\n");
   }
 
-  printf("XCKDLY = 0x%08x\n", device_descriptor->s0->XCKDLY);
-  printf("ADSC = 0x%08x\n", device_descriptor->s0->ADSC);
-  printf("LDSC = 0x%08x\n", device_descriptor->s0->LDSC);
-  printf("BTIMER = 0x%08x\n", device_descriptor->s0->BTIMER);
-  device_descriptor->s0->XCKDLY = 1;
-  device_descriptor->s0->ADSC = 2;
-  device_descriptor->s0->LDSC = 3;
-  device_descriptor->s0->BTIMER = 4;
-  printf("XDLY = 0x%08x\n", device_descriptor->s0->XCKDLY);
-  printf("ADSC = 0x%08x\n", device_descriptor->s0->ADSC);
-  printf("LDSC = 0x%08x\n", device_descriptor->s0->LDSC);
-  printf("BTIMER = 0x%08x\n", device_descriptor->s0->BTIMER);
-  device_descriptor->s0->XCKDLY = 0;
-  device_descriptor->s0->ADSC = 0;
+  printf("XCKDLY = 0x%08x\n", dev->s0->XCKDLY);
+  printf("ADSC = 0x%08x\n", dev->s0->ADSC);
+  printf("LDSC = 0x%08x\n", dev->s0->LDSC);
+  printf("BTIMER = 0x%08x\n", dev->s0->BTIMER);
+  dev->s0->XCKDLY = 1;
+  dev->s0->ADSC = 2;
+  dev->s0->LDSC = 3;
+  dev->s0->BTIMER = 4;
+  printf("XDLY = 0x%08x\n", dev->s0->XCKDLY);
+  printf("ADSC = 0x%08x\n", dev->s0->ADSC);
+  printf("LDSC = 0x%08x\n", dev->s0->LDSC);
+  printf("BTIMER = 0x%08x\n", dev->s0->BTIMER);
+  dev->s0->XCKDLY = 0;
+  dev->s0->ADSC = 0;
 
  finish:
   /*

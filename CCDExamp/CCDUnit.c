@@ -220,6 +220,7 @@ void startMess()
 	g.trigger_mode_cc = CCTRIGGER_MODE;
 	g.Vfreq = Vfreqini;
 	g.xckdelay = 0;
+	g.board_sel = choosen_board;
 	InitMeasurement(&g);
 	// write header
 	if(cont_mode)
@@ -235,10 +236,10 @@ void startMess()
 		DLLReadFFLoop(choosen_board, ExpTime, EXTTRIGFLAG, 0, 0, choosen_board);
 #else
 	IsrCounter = 0;
-	if (both_boards)	params.board_sel = 3;
-	else				params.board_sel = choosen_board;
+	if (both_boards)	BOARD_SEL = 3;
+	else				BOARD_SEL = choosen_board;
 	// start read loop
-	_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);
+	_beginthreadex(0, 0, &ReadFFLoopThread, 0, 0, 0);
 	DWORD64 IsrNumber = Nob * (*Nospb) / (DMA_BUFFER_SIZE_IN_SCANS / DMA_BUFFER_PARTS);
 	if (both_boards) IsrNumber *= 2;
 	if (CAMCNT == 2) IsrNumber *= 2;
