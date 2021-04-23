@@ -706,7 +706,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\shared_src\CCD.ico" />
-    <Image Include="shared_src\CCD.ICO" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ESLSCDLL_pro\ESLSCDLL_pro.vcxproj">
