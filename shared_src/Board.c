@@ -585,13 +585,15 @@ es_status_codes InitMeasurement(struct global_settings* settings)
 	//DAC
 	//TODO: Move DAC to CAM 3030
 	int dac_channel_count = 8;
-	if (settings->dac)
-		SendFLCAM_DAC(settings->drvno, dac_channel_count, 0, 0, 1 );
-		for (int channel = 0; channel < dac_channel_count; channel++)
+	if (settings->dac) {
+		SendFLCAM_DAC(settings->drvno, dac_channel_count, 0, 0, 1);
+		int reorder_ch[8] = { 3, 4, 0, 5, 1, 6, 2, 7 };
+		for (UINT8 channel = 0; channel < dac_channel_count; channel++)
 		{
-			status = DAC_setOutput( settings->drvno, channel, settings->dac_output[channel] );
+			status = DAC_setOutput(settings->drvno, channel, settings->dac_output[reorder_ch[channel]]);
 			if (status != es_no_error) return status;
 		}
+	}
 	//DMA
 	SetupPCIE_DMA(settings->drvno);
 	//TODO set cont FF mode with DLL style(CONTFFLOOP = activate;//0 or 1;CONTPAUSE = pause;) or CCDExamp style(check it out)
@@ -3119,6 +3121,7 @@ es_status_codes SendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data
 es_status_codes DAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output )
 {
 	//ctrl 3: write and update DAC register
+	WDC_Err("DAC ch%u = %u", channel, output);
 	return SendFLCAM_DAC( drvno, 3, channel, output, 0 );
 }
 
