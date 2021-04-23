@@ -823,3 +823,17 @@ DllAccess es_status_codes DLLSetBDAT(UINT32 drvno, UINT32 tin100ns)
 {
 	return SetBDAT(drvno, tin100ns);
 }
+
+/**
+ * \brief Sets global variable useSWTrig.
+ * 
+ * The default of useSWTrig is FALSE and useSWTrig is set automatically in InitMeasurement depending on FFT mode.
+ * Use this function to differ from the default behaviour.
+ * \param on If TRUE BON starts immediately a scan. Must be TRUE for FFT in Area or ROI mode.
+ * \return none
+ */
+DllAccess void setSWTrig(BOOL on)
+{
+	useSWTrig = on;
+	return;
+}
