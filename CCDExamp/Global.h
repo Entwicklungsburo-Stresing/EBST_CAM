@@ -48,7 +48,7 @@ static unsigned int YLENGTH = 255;			// y-width
 HDC hMSDC;	// global stored measure DC of our window
 HWND hMSWND; // global stored measure HWND of our window
 UINT16 DisplData[2][1200 * CAMCNT];//array for display for 2 cams parallel
-#if CAMERA_SYSTEM == 2
+#if CAMERA_SYSTEM == camera_system_3030
 #define DIRECT2DVIEWER_GAMMA_WHITE_DEFAULT 0x3FFF
 #else
 #define DIRECT2DVIEWER_GAMMA_WHITE_DEFAULT 0xFFFF

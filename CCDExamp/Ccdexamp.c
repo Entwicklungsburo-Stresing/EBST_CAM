@@ -835,6 +835,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		case ID_2DVIEW_SHOW:
 		{
 			DLLStart2dViewer( DRV, cur_nob, 0, _PIXEL, *Nospb );
+			DLLSetGammaValue(direct2dviewer_gamma_white, direct2dviewer_gamma_black);
 			break;
 		}
 		case ID_2DVIEW_SETGAMMA:
