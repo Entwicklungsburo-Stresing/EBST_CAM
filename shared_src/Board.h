@@ -8,7 +8,6 @@ extern "C" {
 #include "Board_ll.h"
 #include "UIAbstractionLayer.h"
 
-#define MAX_PIXEL_COUNT 8256
 #define DBGNOCAM FALSE	//TRUE if debug with no camera - geht nicht ohne gegenseite: kein clk!
 #define DMA_BUFFER_SIZE_IN_SCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
 #define DMA_BUFFER_PARTS 2
