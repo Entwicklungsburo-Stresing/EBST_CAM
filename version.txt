@@ -1,22 +1,22 @@
-3.17.0
+v3.17.0
 - Introduce switch for software trigger on and off
-- Merge Qt GUI project with mainline ob EBST_CAM
+- Merge Qt GUI project with mainline of EBST_CAM
 - Add CCDExamp Setup project which creates an installer for CCDExamp
 - More small fixes
 
-3.16.6.
+v3.16.6.
 - Introduce error handling: es_status_codes
 
-3.16.5
+v3.16.5
  - general init routine common for all cameras replaces (InitCam3001 in labview)
  - reduced InitCam3010 to cam specific parameters
  - added LedOff and SetGain function inclduing vias for LabView
  - removed old trigger config functions
 
-3.16.4
+v3.16.4
  - Function SetPartialBinning() must call WriteLongS0() before SetS0Bit()
 
-3.16.1
+v3.16.1
 - with event on MeasureOn and BlockOn
 - with delay stage counter
 
