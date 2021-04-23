@@ -1,3 +1,9 @@
+3.17.0
+- Introduce switch for software trigger on and off
+- Merge Qt GUI project with mainline ob EBST_CAM
+- Add CCDExamp Setup project which creates an installer for CCDExamp
+- More small fixes
+
 3.16.6.
 - Introduce error handling: es_status_codes
 
