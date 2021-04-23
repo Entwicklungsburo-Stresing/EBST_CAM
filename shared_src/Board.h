@@ -46,6 +46,7 @@ extern DWORD64 IsrCounter;
 extern UINT32* aPIXEL;
 extern BOOL Running;
 extern UINT32 BOARD_SEL;
+extern BOOL useSWTrig;
 
 void ErrMsgBoxOn();
 void ErrMsgBoxOff(); // switch to suppress error message boxes
