@@ -1062,6 +1062,9 @@
              <property name="maximum">
               <number>65534</number>
              </property>
+             <property name="value">
+              <number>51500</number>
+             </property>
             </widget>
            </item>
            <item row="3" column="1">
@@ -1079,6 +1082,9 @@
              <property name="maximum">
               <number>65534</number>
              </property>
+             <property name="value">
+              <number>51500</number>
+             </property>
             </widget>
            </item>
            <item row="2" column="2">
@@ -1089,6 +1095,9 @@
              <property name="maximum">
               <number>65534</number>
              </property>
+             <property name="value">
+              <number>51500</number>
+             </property>
             </widget>
            </item>
            <item row="3" column="2">
@@ -1098,6 +1107,9 @@
              </property>
              <property name="maximum">
               <number>65534</number>
+             </property>
+             <property name="value">
+              <number>51500</number>
              </property>
             </widget>
            </item>
@@ -1116,6 +1128,9 @@
              <property name="maximum">
               <number>65534</number>
              </property>
+             <property name="value">
+              <number>51500</number>
+             </property>
             </widget>
            </item>
            <item row="4" column="2">
@@ -1125,6 +1140,9 @@
              </property>
              <property name="maximum">
               <number>65534</number>
+             </property>
+             <property name="value">
+              <number>51500</number>
              </property>
             </widget>
            </item>
@@ -1143,6 +1161,9 @@
              <property name="maximum">
               <number>65534</number>
              </property>
+             <property name="value">
+              <number>51500</number>
+             </property>
             </widget>
            </item>
            <item row="5" column="2">
@@ -1152,6 +1173,9 @@
              </property>
              <property name="maximum">
               <number>65534</number>
+             </property>
+             <property name="value">
+              <number>51500</number>
              </property>
             </widget>
            </item>
