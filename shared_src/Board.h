@@ -46,7 +46,6 @@ extern DWORD64 IsrCounter;
 extern UINT32* aPIXEL;
 extern BOOL Running;
 extern UINT32 BOARD_SEL;
-extern struct ffloopparams params;
 
 void ErrMsgBoxOn();
 void ErrMsgBoxOff(); // switch to suppress error message boxes
@@ -60,7 +59,7 @@ es_status_codes CCDDrvInit();
 es_status_codes CCDDrvExit( UINT32 drvno );	// closes the driver
 es_status_codes InitBoard( UINT32 drvno );	// init the board and alloc mem, call only once !
 es_status_codes InitMeasurement(struct global_settings* settings);
-es_status_codes StartMeasurement(UINT32 board_sel);
+es_status_codes StartMeasurement();
 es_status_codes SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno );
 es_status_codes SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno );
 es_status_codes SetDMAAddrTlp( UINT32 drvno );
@@ -110,7 +109,7 @@ int waitForBlockTrigger( UINT32 board_sel );
 int checkForPressedKeys();
 es_status_codes ReadFFLoop( UINT32 board_sel );
 es_status_codes countBlocksByHardware( UINT32 drvno );
-unsigned int __stdcall ReadFFLoopThread( void *parg ); //jungo dma
+unsigned int __stdcall ReadFFLoopThread(); //jungo dma
 //start<0 is in the past, stop>0 is in the future, relative to call of this function
 es_status_codes readBlockTriggerState( UINT32 drv, UINT8 btrig_ch, BOOL* state); //read state of trigger in signals during thread loop
 es_status_codes StartSTimer( UINT32 drvno );	//starts 28bit timer of PCI board

@@ -68,7 +68,6 @@ UINT32 tmp_aPIXEL[MAXPCIECARDS] = { MAX_PIXEL_COUNT, MAX_PIXEL_COUNT, MAX_PIXEL_
 UINT32* aPIXEL = tmp_aPIXEL;
 BOOL Running = FALSE;
 UINT32 BOARD_SEL = 1;
-struct ffloopparams params;
 
 // ***********     functions    ********************** 
 
@@ -598,13 +597,13 @@ es_status_codes InitMeasurement(struct global_settings* settings)
 	SetupPCIE_DMA(settings->drvno);
 	//TODO set cont FF mode with DLL style(CONTFFLOOP = activate;//0 or 1;CONTPAUSE = pause;) or CCDExamp style(check it out)
 	//TODO  SetBEC( choosen_board, Bec );
+	BOARD_SEL = settings->board_sel;
 	return status;
 }
 
-es_status_codes StartMeasurement(UINT32 board_sel) {
-	params.board_sel = board_sel;
-	//thread wit prio 15
-	_beginthreadex(0, 0, &ReadFFLoopThread, &params, 0, 0);
+es_status_codes StartMeasurement()
+{
+	ReadFFLoopThread();
 	return;
 }
 
@@ -2252,14 +2251,8 @@ es_status_codes countBlocksByHardware( UINT32 drvno )
 \brief Const burst loop with DMA initiated by hardware DREQ.
 Read nos lines from FIFO
 */
-unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
+unsigned int __stdcall ReadFFLoopThread()//threadex
 {
-	//struct has to be volatile, if not readffloop is always called with drv=1
-	volatile struct ffloopparams *par;
-	par = parg;
-	UINT32 board_sel = par->board_sel;
-	WDC_Err("Start ReadFFLoopThread, board_sel: %u\n", board_sel);
-	BOARD_SEL = board_sel;
 	//local declarations
 	SetPriority( READTHREADPriority );  //run ReadFFLoop in higher priority
 	escape_readffloop = FALSE;
@@ -2271,13 +2264,13 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 		{
 			if (GetAsyncKeyState( VK_ESCAPE ))
 			{ //stop if ESC was pressed
-				if (board_sel == 1 || board_sel == 3)
+				if (BOARD_SEL == 1 || BOARD_SEL == 3)
 				{
 					StopSTimer( 1 );
 					//SetIntFFTrig(drv);//disable ext input
 					SetDMAReset( 1 );	//Initiator reset
 				}
-				if (number_of_boards == 2 && (board_sel == 2 || board_sel == 3))
+				if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
 				{
 					StopSTimer( 2 );
 					//SetIntFFTrig(drv);//disable ext input
@@ -2286,7 +2279,7 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 				Running = FALSE;
 				return 1;
 			}
-			ReadFFLoop( board_sel );
+			ReadFFLoop(BOARD_SEL);
 			Sleep( CONTPAUSE); // wait or next block is too early and scrambles last XCK, GST20
 			IsrCounter = 0;
 		}
@@ -2294,7 +2287,7 @@ unsigned int __stdcall ReadFFLoopThread( void *parg )//threadex
 	}
 	else
 	{
-		ReadFFLoop( board_sel );
+		ReadFFLoop(BOARD_SEL);
 	}
 	Running = FALSE;
 	//_endthread();//thread

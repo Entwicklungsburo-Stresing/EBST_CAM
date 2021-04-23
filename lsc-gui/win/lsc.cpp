@@ -26,9 +26,9 @@ es_status_codes Lsc::initMeasurement(struct global_settings* settings_struct)
     return InitMeasurement(settings_struct);
 }
 
-es_status_codes Lsc::startMeasurement(uint8_t boardsel)
+es_status_codes Lsc::startMeasurement()
 {
-    return StartMeasurement(boardsel);
+    return StartMeasurement();
 }
 
 es_status_codes Lsc::returnFrame(uint32_t board, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length)

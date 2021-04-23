@@ -48,7 +48,8 @@ win32 {
 }
 unix {
     SOURCES += linux/lsc.cpp \
-    linux/userspace/lscpcie.c
+    linux/userspace/lscpcie.c \
+    linux/userspace/examples/common.c
 }
 
 DISTFILES += \
@@ -69,6 +70,7 @@ HEADERS += \
     ../shared_src/es_status_codes.h
 unix {
     HEADERS += linux/userspace/lscpcie.h \
+    linux/userspace/examples/common.h
 }
 win32 {
     HEADERS += ../shared_src/Board.h \
