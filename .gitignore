@@ -1,3 +1,4 @@
+*~
 *.o
 *.cmd
 *.mod.c
@@ -6,11 +7,15 @@
 *.order
 liblscpcie*
 .tmp_versions/
+local-config.h
 test-mmap
 read-binary
 test-read-write
 test-register
 test-readout-polling
+readout-blocking-filesystem
+readout-blocking-proc
+readout-polling
 camera-debug
 stop-camera
 *.so*
