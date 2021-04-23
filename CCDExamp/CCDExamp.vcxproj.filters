@@ -82,6 +82,5 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\shared_src\CCD.ico" />
-    <Image Include="shared_src\CCD.ICO" />
   </ItemGroup>
 </Project>
