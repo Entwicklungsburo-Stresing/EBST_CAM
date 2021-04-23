@@ -68,6 +68,7 @@ UINT32 tmp_aPIXEL[MAXPCIECARDS] = { MAX_PIXEL_COUNT, MAX_PIXEL_COUNT, MAX_PIXEL_
 UINT32* aPIXEL = tmp_aPIXEL;
 BOOL Running = FALSE;
 UINT32 BOARD_SEL = 1;
+BOOL useSWTrig = FALSE;
 
 // ***********     functions    ********************** 
 
@@ -517,17 +518,21 @@ es_status_codes InitMeasurement(struct global_settings* settings)
 			case full_binning:
 				status = SetupFullBinning(settings->drvno, settings->FFTLines, settings->Vfreq);
 				if (status != es_no_error) return status;
+				useSWTrig = FALSE;
 				break;
 			case partial_binning:
 				status = DLLSetupROI(settings->drvno, settings->number_of_regions, settings->FFTLines, settings->keep_first, settings->region_size, settings->Vfreq);
 				if (status != es_no_error) return status;
+				useSWTrig = TRUE;
 				break;
 			case area_mode:
 				status = DLLSetupArea(settings->drvno, settings->lines_binning, settings->Vfreq);
 				if (status != es_no_error) return status;
+				useSWTrig = TRUE;
 				break;
 		}
 	}
+	else useSWTrig = FALSE;
 	//allocate Buffer
 	status = SetMeasurementParameters(settings->drvno, settings->nos, settings->nob);
 	if (status != es_no_error) return status;
@@ -2059,7 +2064,7 @@ es_status_codes ReadFFLoop( UINT32 board_sel )
 				status = StartSTimer( 1 );
 				if (status != es_no_error) return status;
 				//start scan for first read
-				status = SWTrig( 1 );
+				if(useSWTrig) status = SWTrig( 1 );
 				if (status != es_no_error) return status;
 			}
 		}
@@ -2074,7 +2079,7 @@ es_status_codes ReadFFLoop( UINT32 board_sel )
 				status = StartSTimer( 2 );
 				if (status != es_no_error) return status;
 				//start scan for first read
-				status = SWTrig( 2 );
+				if (useSWTrig) status = SWTrig( 2 );
 				if (status != es_no_error) return status;
 			}
 		}

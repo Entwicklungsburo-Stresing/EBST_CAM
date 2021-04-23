@@ -130,6 +130,5 @@ DllAccess es_status_codes DLLSetupPCIE_DMA(UINT32 drvno);
 DllAccess es_status_codes DLLSetGlobalVariables(UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay);
 DllAccess es_status_codes DLLSetBoardVars(UINT32 drvno);
 DllAccess es_status_codes DLLSetSDAT(UINT32 drvno, UINT32 datin100ns);
-DllAccess es_status_codes DLLResetSDAT(UINT32 drvno);
 DllAccess es_status_codes DLLSetBDAT(UINT32 drvno, UINT32 tin100ns);
-DllAccess es_status_codes DLLResetBDAT(UINT32 drvno);
+DllAccess void setSWTrig(BOOL on);

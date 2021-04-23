@@ -5,7 +5,7 @@
 // GLOBAL.h
 // all globals for measure loop
 // can be used for PCIE board
-// for CCDExample
+// only valid for CCDExample
 
 #define IDM_EXIT           100
 #define CAMERA_SYSTEM camera_system_3030  // use 1 to 3 like in enum above
