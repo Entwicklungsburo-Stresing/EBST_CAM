@@ -837,3 +837,11 @@ DllAccess void setSWTrig(BOOL on)
 	useSWTrig = on;
 	return;
 }
+
+/**
+ * \copydoc InitMeasurement
+ */
+DllAccess es_status_codes DLLInitMeasurement(struct global_settings settings)
+{
+	InitMeasurement(settings);
+}

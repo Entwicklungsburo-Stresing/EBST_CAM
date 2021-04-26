@@ -109,6 +109,7 @@ DllAccess es_status_codes DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT
 DllAccess es_status_codes DLLInitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA );
 DllAccess es_status_codes DLLInitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern );
 DllAccess es_status_codes DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain );
+DllAccess es_status_codes DLLInitMeasurement(struct global_settings settings);
 DllAccess es_status_codes DLLSetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq );
 DllAccess void DLLInitProDLL();
 DllAccess es_status_codes DLLisMeasureOn( UINT32 drvno, UINT8* measureOn );

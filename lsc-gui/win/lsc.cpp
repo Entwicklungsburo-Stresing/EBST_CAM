@@ -21,7 +21,7 @@ es_status_codes Lsc::initPcieBoard()
     return InitBoard(1);
 }
 
-es_status_codes Lsc::initMeasurement(struct global_settings* settings_struct)
+es_status_codes Lsc::initMeasurement(struct global_settings settings_struct)
 {
     return InitMeasurement(settings_struct);
 }
