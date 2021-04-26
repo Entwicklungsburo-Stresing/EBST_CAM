@@ -216,10 +216,10 @@ void startMess()
 	if (ItemIndex_S < 3) g.sti_mode = ItemIndex_S;
 	else g.sti_mode = ItemIndex_S + 1;
 	g.Temp_level = TempLevel;
-	g.TORmodus = 0;
+	g.TORmodus = TORmodus;
 	g.trigger_mode_cc = CCTRIGGER_MODE;
 	g.Vfreq = Vfreqini;
-	g.xckdelay = 0;
+	g.xckdelay = tXDLY;
 	g.board_sel = choosen_board;
 	InitMeasurement(&g);
 	// write header

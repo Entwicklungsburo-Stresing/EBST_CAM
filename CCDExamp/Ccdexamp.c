@@ -1493,7 +1493,8 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 			//setting  outputs TOR
 			m_TOmodus = SendMessage(GetDlgItem(hDlg, IDC_COMBO_TOR), (UINT)CB_GETCURSEL,
 				(WPARAM)0, (LPARAM)0);
-
+			TORmodus = m_TOmodus;
+			SetTORReg(choosen_board, TORmodus);
 
 			//get XCKDLY val
 			longval = GetDlgItemInt( hDlg, IDC_SETXDLY, &success, FALSE );
@@ -1502,10 +1503,12 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 				tXDLY = longval;
 				longval = tXDLY;
 				if (longval != 0) longval |= 0x80000000;
+
+	
 #ifndef _DLL
-				WriteLongS0( choosen_board, longval, 0x74 ); // XDLY reg
+				WriteLongS0( choosen_board, longval, S0Addr_XCKDLY); // XDLY reg
 #else
-				DLLWriteLongS0( choosen_board, longval, 0x74 ); // XDLY reg
+				DLLWriteLongS0( choosen_board, longval, S0Addr_XCKDLY); // XDLY reg
 #endif
 			}
 			val = GetDlgItemInt( hDlg, IDC_SETTCNT, &success, FALSE );
@@ -1516,9 +1519,9 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 			if (val != 0) val |= 0x80;
 			// devider n=1 -> n /2
 #ifndef _DLL
-			WriteByteS0( choosen_board, (BYTE)val, 0x28 );//TICNT reg
+			WriteByteS0( choosen_board, (BYTE)val, S0Addr_TOR);//TICNT reg
 #else
-			DLLWriteByteS0( choosen_board, (BYTE)val, 0x28 );//TICNT reg
+			DLLWriteByteS0( choosen_board, (BYTE)val, S0Addr_TOR);//TICNT reg
 #endif
 			val = GetDlgItemInt( hDlg, IDC_SETTCNT2, &success, FALSE );
 			if (success) tTOCNT = val;
@@ -1528,9 +1531,9 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 			if (val != 0) val |= 0x80;
 			// devider n=1 -> n /2
 #ifndef _DLL
-			WriteByteS0( choosen_board, (BYTE)val, 0x2A );//TOCNT reg
+			WriteByteS0( choosen_board, (BYTE)val, S0Addr_TOR+2);//TOCNT reg
 #else
-			DLLWriteByteS0( choosen_board, (BYTE)val, 0x2A );//TOCNT reg
+			DLLWriteByteS0( choosen_board, (BYTE)val, S0Addr_TOR+2);//TOCNT reg
 #endif
 			if (IsDlgButtonChecked( hDlg, IDC_ECCNT_RADIO1 ) == TRUE) m_ECmodus = 1; //CNT
 			if (IsDlgButtonChecked( hDlg, IDC_ECCNT_RADIO2 ) == TRUE) m_ECmodus = 2;
