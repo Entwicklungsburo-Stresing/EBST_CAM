@@ -1493,8 +1493,7 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 			//setting  outputs TOR
 			m_TOmodus = SendMessage(GetDlgItem(hDlg, IDC_COMBO_TOR), (UINT)CB_GETCURSEL,
 				(WPARAM)0, (LPARAM)0);
-			TORmodus = m_TOmodus;
-			SetTORReg(choosen_board, TORmodus);
+			SetTORReg(choosen_board, m_TOmodus);
 
 			//get XCKDLY val
 			longval = GetDlgItemInt( hDlg, IDC_SETXDLY, &success, FALSE );

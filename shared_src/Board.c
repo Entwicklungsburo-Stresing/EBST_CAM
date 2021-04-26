@@ -522,7 +522,6 @@ es_status_codes InitMeasurement(struct global_settings settings)
 			case full_binning:
 				status = SetupFullBinning(settings.drvno, settings.FFTLines, (UINT8)settings.Vfreq);
 				if (status != es_no_error) return status;
-				useSWTrig = FALSE;
 				break;
 			case partial_binning:
 			{
@@ -530,13 +529,11 @@ es_status_codes InitMeasurement(struct global_settings settings)
 				for (int i = 0; i < 8; i++) regionSize[i] = settings.region_size[i];
 				status = DLLSetupROI(settings.drvno, (UINT16)settings.number_of_regions, settings.FFTLines, (UINT8)settings.keep_first, regionSize, (UINT8)settings.Vfreq);
 				if (status != es_no_error) return status;
-				useSWTrig = TRUE;
 				break;
 			}
 			case area_mode:
 				status = DLLSetupArea(settings.drvno, settings.lines_binning, (UINT8)settings.Vfreq);
 				if (status != es_no_error) return status;
-				useSWTrig = TRUE;
 				break;
 		}
 	}
@@ -2072,11 +2069,7 @@ es_status_codes ReadFFLoop( UINT32 board_sel )
 				status = StartSTimer( 1 );
 				if (status != es_no_error) return status;
 				//start scan for first read if area or ROI
-				if (useSWTrig) 
-				{
-					status = SWTrig(1);
-					ErrorMsg("I am here");
-				}
+				if (useSWTrig) status = SWTrig(1);
 				if (status != es_no_error) return status;
 			}
 		}
@@ -3872,6 +3865,7 @@ double CalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in
  */
 es_status_codes SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 {
+	useSWTrig = FALSE;
 	es_status_codes status = SetupVCLKReg( drvno, lines, vfreq );
 	if (status != es_no_error) return status;
 	return ResetPartialBinning( drvno );
