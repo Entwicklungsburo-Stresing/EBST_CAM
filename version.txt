@@ -1,3 +1,6 @@
+v3.17.1
+- Add DLLInitMeasurement
+
 v3.17.0
 - Introduce switch for software trigger on and off
 - Merge Qt GUI project with mainline of EBST_CAM
