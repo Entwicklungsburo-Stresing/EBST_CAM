@@ -58,7 +58,7 @@ es_status_codes AboutS0( UINT32 drvno );
 es_status_codes CCDDrvInit();
 es_status_codes CCDDrvExit( UINT32 drvno );	// closes the driver
 es_status_codes InitBoard( UINT32 drvno );	// init the board and alloc mem, call only once !
-es_status_codes InitMeasurement(struct global_settings* settings);
+es_status_codes InitMeasurement(struct global_settings settings);
 es_status_codes StartMeasurement();
 es_status_codes SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno );
 es_status_codes SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno );

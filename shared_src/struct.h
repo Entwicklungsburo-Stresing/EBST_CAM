@@ -9,8 +9,8 @@ struct global_settings
 	//measurement tab
 	uint32_t nos;
 	uint32_t nob;
-	uint8_t sti_mode;
-	uint8_t bti_mode;
+	uint32_t sti_mode;
+	uint32_t bti_mode;
 	uint32_t stime_in_microsec;
 	uint32_t btime_in_microsec;
 	uint32_t sdat_in_100ns;
@@ -19,34 +19,34 @@ struct global_settings
 	uint32_t bslope;
 	uint32_t xckdelay;
 	uint32_t ShutterExpTime;
-	uint16_t trigger_mode_cc;
+	uint32_t trigger_mode_cc;
 	//camerasetup tab
-	uint8_t board_sel;
+	uint32_t board_sel;
 	uint32_t sensor_type;
-	uint8_t camera_system;
+	uint32_t camera_system;
 	uint32_t camcnt;
 	uint32_t pixel;
 	uint32_t mshut;
-	uint16_t led_on;
-	uint16_t gain_3010;
-	uint8_t gain_3030;
-	uint8_t Temp_level;
-	uint8_t dac;
-	uint8_t enable_gpx;
+	uint32_t led_on;
+	uint32_t gain_3010;
+	uint32_t gain_3030;
+	uint32_t Temp_level;
+	uint32_t dac;
+	uint32_t enable_gpx;
 	uint32_t gpx_offset;
 	//fftmodes tab
 	uint32_t FFTLines;
-	uint8_t Vfreq;
-	uint8_t FFTMode;
+	uint32_t Vfreq;
+	uint32_t FFTMode;
 	uint32_t lines_binning;
-	uint16_t number_of_regions;
-	uint8_t keep_first;
-	uint8_t region_size[8];
-	uint16_t dac_output[8];
+	uint32_t number_of_regions;
+	uint32_t keep_first;
+	uint32_t region_size[8];
+	uint32_t dac_output[8];
 	uint32_t TORmodus; 
-	uint8_t ADC_Mode; 
-	uint16_t ADC_custom_pettern;
-	uint16_t isIRSensor; 
+	uint32_t ADC_Mode;
+	uint32_t ADC_custom_pettern;
+	uint32_t isIRSensor;
 };
 
 #endif // STRUCT_H
