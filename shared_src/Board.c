@@ -513,6 +513,7 @@ es_status_codes InitMeasurement(struct global_settings* settings)
 	if (status != es_no_error) return status;
 	if (settings->sensor_type == FFTsensor)
 	{
+		ErrorMsg("in initMeasurement FFT");
 		switch (settings->FFTMode)
 		{
 			case full_binning:
@@ -529,6 +530,7 @@ es_status_codes InitMeasurement(struct global_settings* settings)
 				status = DLLSetupArea(settings->drvno, settings->lines_binning, settings->Vfreq);
 				if (status != es_no_error) return status;
 				useSWTrig = TRUE;
+				ErrorMsg("in initMeasurement area");
 				break;
 		}
 	}
@@ -2063,8 +2065,12 @@ es_status_codes ReadFFLoop( UINT32 board_sel )
 				if (status != es_no_error) return status;
 				status = StartSTimer( 1 );
 				if (status != es_no_error) return status;
-				//start scan for first read
-				if(useSWTrig) status = SWTrig( 1 );
+				//start scan for first read if area or ROI
+				if (useSWTrig) 
+				{
+					status = SWTrig(1);
+					ErrorMsg("I am here");
+				}
 				if (status != es_no_error) return status;
 			}
 		}

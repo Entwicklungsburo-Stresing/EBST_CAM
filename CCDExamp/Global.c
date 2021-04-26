@@ -41,6 +41,7 @@ UINT choosen_board = 1;
 BOOL both_boards = FALSE;
 BOOL cont_mode = FALSE;
 int fftMode = 0;
+int TORmodus = 0;
 UINT8 roi[8] = { 10, 20, 10, 20, 10, 0, 0, 0 };
 UINT16 dac[8] = { 53000, 53000, 53000, 53000, 53000, 53000, 53000, 53000};
 

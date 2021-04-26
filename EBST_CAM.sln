@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31129.286
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.438
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CCDExamp", "CCDExamp\CCDExamp.vcxproj", "{33C95C68-CC58-4150-8255-CD92CD9AAE2E}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -20,13 +20,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		version.h = version.h
 		version.txt = version.txt
 	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lsc-gui", "lsc-gui\lsc-gui.vcxproj", "{4883A750-F34F-303C-8C24-F15A176128F3}"
-	ProjectSection(ProjectDependencies) = postProject
-		{1B5131DF-48DA-47FB-AAB0-2E086ED279DB} = {1B5131DF-48DA-47FB-AAB0-2E086ED279DB}
-	EndProjectSection
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CCDExamp_Setup", "CCDExamp_Setup\CCDExamp_Setup.vdproj", "{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -102,44 +95,6 @@ Global
 		{1B5131DF-48DA-47FB-AAB0-2E086ED279DB}.x64|x64.Build.0 = Debug|x64
 		{1B5131DF-48DA-47FB-AAB0-2E086ED279DB}.x64|x86.ActiveCfg = Release|Win32
 		{1B5131DF-48DA-47FB-AAB0-2E086ED279DB}.x64|x86.Build.0 = Release|Win32
-		{4883A750-F34F-303C-8C24-F15A176128F3}.Debug|x64.ActiveCfg = Debug|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.Debug|x64.Build.0 = Debug|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.Debug|x86.ActiveCfg = Debug|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.DLL_Debug|x64.ActiveCfg = Debug|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.DLL_Debug|x64.Build.0 = Debug|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.DLL_Debug|x86.ActiveCfg = Debug|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.DLL_Debug|x86.Build.0 = Debug|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.DLL_Release|x64.ActiveCfg = Release|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.DLL_Release|x64.Build.0 = Release|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.DLL_Release|x86.ActiveCfg = Debug|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.DLL_Release|x86.Build.0 = Debug|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.Release|x64.ActiveCfg = Release|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.Release|x64.Build.0 = Release|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.Release|x86.ActiveCfg = Release|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.x64|x64.ActiveCfg = Debug|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.x64|x64.Build.0 = Debug|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.x64|x86.ActiveCfg = Debug|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.x64|x86.Build.0 = Debug|x64
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.Debug|x64.ActiveCfg = Debug
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.Debug|x64.Build.0 = Debug
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.Debug|x86.ActiveCfg = Debug
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.Debug|x86.Build.0 = Debug
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.DLL_Debug|x64.ActiveCfg = Debug
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.DLL_Debug|x64.Build.0 = Debug
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.DLL_Debug|x86.ActiveCfg = Debug
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.DLL_Debug|x86.Build.0 = Debug
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.DLL_Release|x64.ActiveCfg = Release
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.DLL_Release|x64.Build.0 = Release
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.DLL_Release|x86.ActiveCfg = Release
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.DLL_Release|x86.Build.0 = Release
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.Release|x64.ActiveCfg = Release
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.Release|x64.Build.0 = Release
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.Release|x86.ActiveCfg = Release
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.Release|x86.Build.0 = Release
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.x64|x64.ActiveCfg = Debug
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.x64|x64.Build.0 = Debug
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.x64|x86.ActiveCfg = Debug
-		{65BDAD16-F6E6-40A1-988D-28681B7EFEE0}.x64|x86.Build.0 = Debug
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
