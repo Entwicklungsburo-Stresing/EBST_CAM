@@ -216,7 +216,7 @@ void startMess()
 	if (ItemIndex_S < 3) g.sti_mode = ItemIndex_S;
 	else g.sti_mode = ItemIndex_S + 1;
 	g.Temp_level = TempLevel;
-	g.TORmodus = TORmodus;
+	g.TORmodus = m_TOmodus;
 	g.trigger_mode_cc = CCTRIGGER_MODE;
 	g.Vfreq = Vfreqini;
 	g.xckdelay = tXDLY;

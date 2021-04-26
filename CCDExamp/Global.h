@@ -90,6 +90,5 @@ extern UINT choosen_board;
 extern BOOL both_boards;
 extern BOOL cont_mode;
 extern int fftMode;
-extern int TORmodus;
 extern UINT8 roi[8];
 extern UINT16 dac[8];
