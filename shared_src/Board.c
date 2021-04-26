@@ -500,111 +500,117 @@ es_status_codes initCamera(UINT32 drvno,  UINT8 camera_system, UINT16 pixel, UIN
  * \return es_status_codes
  *		- 
  */
-es_status_codes InitMeasurement(struct global_settings* settings)
+es_status_codes InitMeasurement(struct global_settings settings)
 {
-	es_status_codes status = ClearAllUserRegs(settings->drvno);
+	WDC_Err("struct global_settings: ");
+	for (int i = 0; i <= sizeof(struct global_settings); i++)
+		WDC_Err("%x ", *(&settings.drvno + i));
+	WDC_Err("\n");
+	es_status_codes status = ClearAllUserRegs(settings.drvno);
 	if (status != es_no_error) return status;
-	status = SetGlobalVariables(settings->drvno, settings->camcnt, settings->pixel, settings->xckdelay);
+	status = SetGlobalVariables(settings.drvno, settings.camcnt, settings.pixel, settings.xckdelay);
 	if (status != es_no_error) return status;
-	status = SetBoardVars( settings->drvno );
+	status = SetBoardVars( settings.drvno );
 	if (status != es_no_error) return status;
 	//set PDA and FFT
-	status = SetSensorType(settings->drvno, settings->sensor_type);
+	status = SetSensorType(settings.drvno, (UINT8)settings.sensor_type);
 	if (status != es_no_error) return status;
-	if (settings->sensor_type == FFTsensor)
+	if (settings.sensor_type == FFTsensor)
 	{
-		ErrorMsg("in initMeasurement FFT");
-		switch (settings->FFTMode)
+		switch (settings.FFTMode)
 		{
 			case full_binning:
-				status = SetupFullBinning(settings->drvno, settings->FFTLines, settings->Vfreq);
+				status = SetupFullBinning(settings.drvno, settings.FFTLines, (UINT8)settings.Vfreq);
 				if (status != es_no_error) return status;
 				useSWTrig = FALSE;
 				break;
 			case partial_binning:
-				status = DLLSetupROI(settings->drvno, settings->number_of_regions, settings->FFTLines, settings->keep_first, settings->region_size, settings->Vfreq);
+			{
+				UINT8 regionSize[8];
+				for (int i = 0; i < 8; i++) regionSize[i] = settings.region_size[i];
+				status = DLLSetupROI(settings.drvno, (UINT16)settings.number_of_regions, settings.FFTLines, (UINT8)settings.keep_first, regionSize, (UINT8)settings.Vfreq);
 				if (status != es_no_error) return status;
 				useSWTrig = TRUE;
 				break;
+			}
 			case area_mode:
-				status = DLLSetupArea(settings->drvno, settings->lines_binning, settings->Vfreq);
+				status = DLLSetupArea(settings.drvno, settings.lines_binning, (UINT8)settings.Vfreq);
 				if (status != es_no_error) return status;
 				useSWTrig = TRUE;
-				ErrorMsg("in initMeasurement area");
 				break;
 		}
 	}
 	else useSWTrig = FALSE;
 	//allocate Buffer
-	status = SetMeasurementParameters(settings->drvno, settings->nos, settings->nob);
+	status = SetMeasurementParameters(settings.drvno, settings.nos, settings.nob);
 	if (status != es_no_error) return status;
-	status = CloseShutter(settings->drvno); //set cooling  off
+	status = CloseShutter(settings.drvno); //set cooling  off
 	if (status != es_no_error) return status;
 	//set mshut
-	if (settings->mshut)
+	if (settings.mshut)
 	{
-		status = SetSEC(settings->drvno, settings->ShutterExpTime * 100);
+		status = SetSEC(settings.drvno, settings.ShutterExpTime * 100);
 		if (status != es_no_error) return status;
-		status = SetTORReg(settings->drvno, TOR_SSHUT);
+		status = SetTORReg(settings.drvno, TOR_SSHUT);
 		if (status != es_no_error) return status;
 	}
 	else
 	{
-		status = ResetSEC(settings->drvno);
+		status = ResetSEC(settings.drvno);
 		if (status != es_no_error) return status;
-		status = SetTORReg(settings->drvno, settings->TORmodus);
+		status = SetTORReg(settings.drvno, (BYTE)settings.TORmodus);
 		if (status != es_no_error) return status;
 	}
 	//SSlope
-	if (settings->sslope == 0)	status = HighSlope(settings->drvno);
-	if (settings->sslope == 1)	status = LowSlope(settings->drvno);
-	if (settings->sslope == 2)	status = BothSlope(settings->drvno);
+	if (settings.sslope == 0)	status = HighSlope(settings.drvno);
+	if (settings.sslope == 1)	status = LowSlope(settings.drvno);
+	if (settings.sslope == 2)	status = BothSlope(settings.drvno);
 	if (status != es_no_error) return status;
 	//BSlope
-	status = SetBSlope(settings->drvno, settings->bslope);
+	status = SetBSlope(settings.drvno, settings.bslope);
 	if (status != es_no_error) return status;
 	//SetTimer
-	status = SetSTI(settings->drvno, settings->sti_mode);
+	status = SetSTI(settings.drvno, (UINT8)settings.sti_mode);
 	if (status != es_no_error) return status;
-	status = SetBTI(settings->drvno, settings->bti_mode);
+	status = SetBTI(settings.drvno, (UINT8)settings.bti_mode);
 	if (status != es_no_error) return status;
-	status = SetSTimer(settings->drvno, settings->stime_in_microsec);
+	status = SetSTimer(settings.drvno, settings.stime_in_microsec);
 	if (status != es_no_error) return status;
-	status = SetBTimer(settings->drvno, settings->btime_in_microsec);
+	status = SetBTimer(settings.drvno, settings.btime_in_microsec);
 	if (status != es_no_error) return status;
-	if (settings->enable_gpx) status = InitGPX(settings->drvno, settings->gpx_offset);
+	if (settings.enable_gpx) status = InitGPX(settings.drvno, settings.gpx_offset);
 	if (status != es_no_error) return status;
 	//Delay after Trigger
-	status = SetSDAT(settings->drvno, settings->sdat_in_100ns);
+	status = SetSDAT(settings.drvno, settings.sdat_in_100ns);
 	if (status != es_no_error) return status;
-	status = SetBDAT(settings->drvno, settings->bdat_in_100ns);
+	status = SetBDAT(settings.drvno, settings.bdat_in_100ns);
 	if (status != es_no_error) return status;
 	//init Camera
-	status = initCamera(settings->drvno, settings->camera_system, settings->pixel, settings->trigger_mode_cc, settings->sensor_type, settings->ADC_Mode, settings->ADC_custom_pettern, settings->led_on, settings->gain_3010, settings->gain_3030);
+	status = initCamera(settings.drvno, (UINT8)settings.camera_system, (UINT16)settings.pixel, (UINT16)settings.trigger_mode_cc, (UINT16)settings.sensor_type, (UINT8)settings.ADC_Mode, (UINT16)settings.ADC_custom_pettern, (UINT16)settings.led_on, (UINT16)settings.gain_3010, (UINT8)settings.gain_3030);
 	if (status != es_no_error) return status;
 	//if IR-Sensor
-	status = SendFLCAM(settings->drvno, maddr_cam, 0, settings->isIRSensor);
+	status = SendFLCAM(settings.drvno, maddr_cam, 0, (UINT16)settings.isIRSensor);
 	if (status != es_no_error) return status;
 	//for coooled Cam
-	status = SetTemp(settings->drvno, settings->Temp_level);
+	status = SetTemp(settings.drvno, (UINT8)settings.Temp_level);
 	if (status != es_no_error) return status;
 	//DAC
 	//TODO: Move DAC to CAM 3030
 	int dac_channel_count = 8;
-	if (settings->dac) {
-		SendFLCAM_DAC(settings->drvno, dac_channel_count, 0, 0, 1);
+	if (settings.dac) {
+		SendFLCAM_DAC(settings.drvno, dac_channel_count, 0, 0, 1);
 		int reorder_ch[8] = { 3, 4, 0, 5, 1, 6, 2, 7 };
 		for (UINT8 channel = 0; channel < dac_channel_count; channel++)
 		{
-			status = DAC_setOutput(settings->drvno, channel, settings->dac_output[reorder_ch[channel]]);
+			status = DAC_setOutput(settings.drvno, channel, (UINT16)settings.dac_output[reorder_ch[channel]]);
 			if (status != es_no_error) return status;
 		}
 	}
 	//DMA
-	SetupPCIE_DMA(settings->drvno);
+	SetupPCIE_DMA(settings.drvno);
 	//TODO set cont FF mode with DLL style(CONTFFLOOP = activate;//0 or 1;CONTPAUSE = pause;) or CCDExamp style(check it out)
 	//TODO  SetBEC( choosen_board, Bec );
-	BOARD_SEL = settings->board_sel;
+	BOARD_SEL = settings.board_sel;
 	return status;
 }
 

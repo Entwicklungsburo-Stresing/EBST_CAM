@@ -221,7 +221,7 @@ void startMess()
 	g.Vfreq = Vfreqini;
 	g.xckdelay = tXDLY;
 	g.board_sel = choosen_board;
-	InitMeasurement(&g);
+	InitMeasurement(g);
 	// write header
 	if(cont_mode)
 		j = sprintf_s(header, 260, " Continuous mode - Cancel with ESC                                 ");

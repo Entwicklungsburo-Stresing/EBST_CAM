@@ -123,22 +123,22 @@ void MainWindow::startPressed()
     if (settings.value(settingRegionSizeEqualPath, settingRegionSizeEqualDefault).toInt() == 0)
         *(settings_struct.region_size) = 0;
     else
-        *(settings_struct.region_size)     = settings.value(settingRegionSize1Path, settingRegionSize1Default).toInt();
-    *(settings_struct.region_size + 1) = settings.value(settingRegionSize2Path, settingRegionSize2Default).toInt();
-    *(settings_struct.region_size + 2) = settings.value(settingRegionSize3Path, settingRegionSize3Default).toInt();
-    *(settings_struct.region_size + 3) = settings.value(settingRegionSize4Path, settingRegionSize4Default).toInt();
-    *(settings_struct.region_size + 4) = settings.value(settingRegionSize5Path, settingRegionSize5Default).toInt();
-    *(settings_struct.region_size + 5) = settings.value(settingRegionSize6Path, settingRegionSize6Default).toInt();
-    *(settings_struct.region_size + 6) = settings.value(settingRegionSize7Path, settingRegionSize7Default).toInt();
-    *(settings_struct.region_size + 7) = settings.value(settingRegionSize8Path, settingRegionSize8Default).toInt();
-    *(settings_struct.dac_output + 0) = settings.value(settingSensorOffsetChannel1Path, settingSensorOffsetChannel1Default).toInt();
-    *(settings_struct.dac_output + 1) = settings.value(settingSensorOffsetChannel2Path, settingSensorOffsetChannel2Default).toInt();
-    *(settings_struct.dac_output + 2) = settings.value(settingSensorOffsetChannel3Path, settingSensorOffsetChannel3Default).toInt();
-    *(settings_struct.dac_output + 3) = settings.value(settingSensorOffsetChannel4Path, settingSensorOffsetChannel4Default).toInt();
-    *(settings_struct.dac_output + 4) = settings.value(settingSensorOffsetChannel5Path, settingSensorOffsetChannel5Default).toInt();
-    *(settings_struct.dac_output + 5) = settings.value(settingSensorOffsetChannel6Path, settingSensorOffsetChannel6Default).toInt();
-    *(settings_struct.dac_output + 6) = settings.value(settingSensorOffsetChannel7Path, settingSensorOffsetChannel7Default).toInt();
-    *(settings_struct.dac_output + 7) = settings.value(settingSensorOffsetChannel8Path, settingSensorOffsetChannel8Default).toInt();
+        settings_struct.region_size[0] = settings.value(settingRegionSize1Path, settingRegionSize1Default).toInt();
+    settings_struct.region_size[1] = settings.value(settingRegionSize2Path, settingRegionSize2Default).toInt();
+    settings_struct.region_size[2] = settings.value(settingRegionSize3Path, settingRegionSize3Default).toInt();
+    settings_struct.region_size[3] = settings.value(settingRegionSize4Path, settingRegionSize4Default).toInt();
+    settings_struct.region_size[4] = settings.value(settingRegionSize5Path, settingRegionSize5Default).toInt();
+    settings_struct.region_size[5] = settings.value(settingRegionSize6Path, settingRegionSize6Default).toInt();
+    settings_struct.region_size[6] = settings.value(settingRegionSize7Path, settingRegionSize7Default).toInt();
+    settings_struct.region_size[7] = settings.value(settingRegionSize8Path, settingRegionSize8Default).toInt();
+    settings_struct.dac_output[0] = settings.value(settingSensorOffsetChannel1Path, settingSensorOffsetChannel1Default).toInt();
+    settings_struct.dac_output[1] = settings.value(settingSensorOffsetChannel2Path, settingSensorOffsetChannel2Default).toInt();
+    settings_struct.dac_output[2] = settings.value(settingSensorOffsetChannel3Path, settingSensorOffsetChannel3Default).toInt();
+    settings_struct.dac_output[3] = settings.value(settingSensorOffsetChannel4Path, settingSensorOffsetChannel4Default).toInt();
+    settings_struct.dac_output[4] = settings.value(settingSensorOffsetChannel5Path, settingSensorOffsetChannel5Default).toInt();
+    settings_struct.dac_output[5] = settings.value(settingSensorOffsetChannel6Path, settingSensorOffsetChannel6Default).toInt();
+    settings_struct.dac_output[6] = settings.value(settingSensorOffsetChannel7Path, settingSensorOffsetChannel7Default).toInt();
+    settings_struct.dac_output[7] = settings.value(settingSensorOffsetChannel8Path, settingSensorOffsetChannel8Default).toInt();
     settings_struct.TORmodus = settings.value(settingTorPath, settingTorDefault).toInt();
     settings_struct.ADC_Mode = settings.value(settingAdcModePath, settingAdcModeDefault).toInt();
     settings_struct.ADC_custom_pettern = settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toInt();
@@ -149,7 +149,7 @@ void MainWindow::startPressed()
     if (boardsel == 0)
     {
         settings_struct.drvno = 1;
-        lsc.initMeasurement(&settings_struct);
+        lsc.initMeasurement(settings_struct);
     }
     QThread* measurementThread = new QThread;
     lsc.moveToThread(QApplication::instance()->thread());
