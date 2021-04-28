@@ -152,6 +152,7 @@ void MainWindow::startPressed()
         lsc.initMeasurement(settings_struct);
     }
     QThread* measurementThread = new QThread;
+    //Before assigning lsc to measurementThread first assign lsc to main thread. This only works when it is not assigned to any thread. This is the case when initMeasurement was called before and measurementThread finished. Moving lsc to the main thread is needed because you cannot move this object from nowhere land or another thread to measurementThread.
     lsc.moveToThread(QApplication::instance()->thread());
     lsc.moveToThread(measurementThread);
     connect(measurementThread, SIGNAL(started()), &lsc, SLOT(startMeasurement()));
