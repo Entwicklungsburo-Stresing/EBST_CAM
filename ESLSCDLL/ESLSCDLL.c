@@ -834,7 +834,7 @@ DllAccess es_status_codes DLLSetBDAT(UINT32 drvno, UINT32 tin100ns)
  */
 DllAccess void setSWTrig(BOOL on)
 {
-	useSWTrig = on;
+	*useSWTrig = on;
 	return;
 }
 

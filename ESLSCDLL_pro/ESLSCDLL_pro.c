@@ -86,6 +86,7 @@ DllAccess void DLLInitGlobals( struct global_vars g )
 	aPIXEL = g.aPIXEL;
 	aCAMCNT = g.aCAMCNT;
 	Nospb = g.Nospb;
+	useSWTrig = g.useSWTrig;
 	return;
 }
 
@@ -239,7 +240,7 @@ DllAccess es_status_codes DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, U
 	if (status != es_no_error) return status;
 	status = SetPartialBinning( drvno, number_of_regions );
 	if (status != es_no_error) return status;
-	useSWTrig = TRUE;
+	*useSWTrig = TRUE;
 	return SetSTI( drvno, sti_ASL);
 }
 
@@ -260,7 +261,7 @@ DllAccess es_status_codes DLLSetupArea( UINT32 drvno, UINT32 lines_binning, UINT
 	if (status != es_no_error) return status;
 	status = SetSTI(drvno, sti_ASL);
 	if (status != es_no_error) return status;
-	useSWTrig = TRUE; //software starts 1st scan
+	*useSWTrig = TRUE; //software starts 1st scan
 	ErrorMsg("setup area");
 	return ResetPartialBinning( drvno );
 }
