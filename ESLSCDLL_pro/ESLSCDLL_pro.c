@@ -257,11 +257,11 @@ DllAccess es_status_codes DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, U
  */
 DllAccess es_status_codes DLLSetupArea( UINT32 drvno, UINT32 lines_binning, UINT8 vfreq )
 {
+	WDC_Err("Setup Area\n");
 	es_status_codes status = SetupVCLKReg( drvno, lines_binning, vfreq );
 	if (status != es_no_error) return status;
 	status = SetSTI(drvno, sti_ASL);
 	if (status != es_no_error) return status;
 	*useSWTrig = TRUE; //software starts 1st scan
-	ErrorMsg("setup area");
 	return ResetPartialBinning( drvno );
 }
