@@ -240,7 +240,7 @@ enum fft_mode
 {
 	full_binning = 0,
 	partial_binning = 1,
-	area_mode = 3
+	area_mode = 2
 };
 
 enum TOR_fkt
