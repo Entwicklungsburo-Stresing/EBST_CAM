@@ -522,23 +522,23 @@ es_status_codes InitMeasurement(struct global_settings settings)
 		{
 			case full_binning:
 				status = SetupFullBinning(settings.drvno, settings.FFTLines, (UINT8)settings.Vfreq);
-				if (status != es_no_error) return status;
 				break;
 			case partial_binning:
 			{
 				UINT8 regionSize[8];
 				for (int i = 0; i < 8; i++) regionSize[i] = settings.region_size[i];
 				status = DLLSetupROI(settings.drvno, (UINT16)settings.number_of_regions, settings.FFTLines, (UINT8)settings.keep_first, regionSize, (UINT8)settings.Vfreq);
-				if (status != es_no_error) return status;
 				break;
 			}
 			case area_mode:
 				status = DLLSetupArea(settings.drvno, settings.lines_binning, (UINT8)settings.Vfreq);
-				if (status != es_no_error) return status;
 				break;
+			default:
+				return es_parameter_out_of_range;
 		}
 	}
 	else *useSWTrig = FALSE;
+	if (status != es_no_error) return status;
 	//allocate Buffer
 	status = SetMeasurementParameters(settings.drvno, settings.nos, settings.nob);
 	if (status != es_no_error) return status;
@@ -560,9 +560,20 @@ es_status_codes InitMeasurement(struct global_settings settings)
 		if (status != es_no_error) return status;
 	}
 	//SSlope
-	if (settings.sslope == 0)	status = HighSlope(settings.drvno);
-	if (settings.sslope == 1)	status = LowSlope(settings.drvno);
-	if (settings.sslope == 2)	status = BothSlope(settings.drvno);
+	switch (settings.sslope)
+	{
+	case 0:
+		status = HighSlope(settings.drvno);
+		break;
+	case 1:
+		status = LowSlope(settings.drvno);
+		break;
+	case 2:
+		status = BothSlope(settings.drvno);
+		break;
+	default:
+		return es_parameter_out_of_range;
+	}
 	if (status != es_no_error) return status;
 	//BSlope
 	status = SetBSlope(settings.drvno, settings.bslope);
@@ -605,7 +616,7 @@ es_status_codes InitMeasurement(struct global_settings settings)
 		}
 	}
 	//DMA
-	SetupPCIE_DMA(settings.drvno);
+	status = SetupPCIE_DMA(settings.drvno);
 	//TODO set cont FF mode with DLL style(CONTFFLOOP = activate;//0 or 1;CONTPAUSE = pause;) or CCDExamp style(check it out)
 	//TODO  SetBEC( choosen_board, Bec );
 	BOARD_SEL = settings.board_sel;
@@ -3867,6 +3878,7 @@ double CalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in
  */
 es_status_codes SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 {
+	WDC_Err("Setup full binning\n");
 	*useSWTrig = FALSE;
 	es_status_codes status = SetupVCLKReg( drvno, lines, vfreq );
 	if (status != es_no_error) return status;
