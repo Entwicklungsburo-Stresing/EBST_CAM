@@ -68,7 +68,8 @@ UINT32 tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 UINT32* aPIXEL = tmp_aPIXEL;
 BOOL Running = FALSE;
 UINT32 BOARD_SEL = 1;
-BOOL useSWTrig = FALSE;
+BOOL useSWTrig_temp = FALSE;
+BOOL* useSWTrig = &useSWTrig_temp;
 
 // ***********     functions    ********************** 
 
@@ -537,7 +538,7 @@ es_status_codes InitMeasurement(struct global_settings settings)
 				break;
 		}
 	}
-	else useSWTrig = FALSE;
+	else *useSWTrig = FALSE;
 	//allocate Buffer
 	status = SetMeasurementParameters(settings.drvno, settings.nos, settings.nob);
 	if (status != es_no_error) return status;
@@ -2069,7 +2070,7 @@ es_status_codes ReadFFLoop( UINT32 board_sel )
 				status = StartSTimer( 1 );
 				if (status != es_no_error) return status;
 				//start scan for first read if area or ROI
-				if (useSWTrig) status = SWTrig(1);
+				if (*useSWTrig) status = SWTrig(1);
 				if (status != es_no_error) return status;
 			}
 		}
@@ -2084,7 +2085,7 @@ es_status_codes ReadFFLoop( UINT32 board_sel )
 				status = StartSTimer( 2 );
 				if (status != es_no_error) return status;
 				//start scan for first read
-				if (useSWTrig) status = SWTrig( 2 );
+				if (*useSWTrig) status = SWTrig( 2 );
 				if (status != es_no_error) return status;
 			}
 		}
@@ -2472,6 +2473,7 @@ es_status_codes SetBSlope( UINT32 drvno, UINT32 slope )
  */
 es_status_codes SWTrig( UINT32 drvno )
 {
+	WDC_Err("Doing software trigger.\n");
 	UCHAR reg = 0;
 	//	ReadByteS0(drvno,&reg,11);  //enable timer
 	//	reg |= 0x40;  
@@ -3865,7 +3867,7 @@ double CalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in
  */
 es_status_codes SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 {
-	useSWTrig = FALSE;
+	*useSWTrig = FALSE;
 	es_status_codes status = SetupVCLKReg( drvno, lines, vfreq );
 	if (status != es_no_error) return status;
 	return ResetPartialBinning( drvno );
@@ -3908,6 +3910,7 @@ void InitProDLL()
 	g.aPIXEL = aPIXEL;
 	g.aCAMCNT = aCAMCNT;
 	g.Nospb = Nospb;
+	g.useSWTrig = useSWTrig;
 	DLLInitGlobals( g );
 	return;
 }

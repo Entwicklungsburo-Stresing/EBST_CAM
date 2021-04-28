@@ -30,6 +30,7 @@ struct global_vars
 	ULONG* aPIXEL;
 	ULONG* aCAMCNT;
 	UINT32* Nospb;
+	BOOL* useSWTrig;
 };
 
 extern UINT16** userBuffer;
@@ -45,7 +46,7 @@ extern DWORD64 IsrCounter;
 extern UINT32* aPIXEL;
 extern BOOL Running;
 extern UINT32 BOARD_SEL;
-extern BOOL useSWTrig;
+extern BOOL* useSWTrig;
 
 void ErrMsgBoxOn();
 void ErrMsgBoxOff(); // switch to suppress error message boxes
