@@ -66,10 +66,10 @@ es_status_codes Lsc::initPcieBoard()
  * @param settings_struct
  * @return
  */
-es_status_codes Lsc::initMeasurement(struct global_settings* settings_struct)
+es_status_codes Lsc::initMeasurement(struct global_settings settings_struct)
 {
-    info.n_blocks = settings_struct->nob;
-    info.n_scans = settings_struct->nos;
+    info.n_blocks = settings_struct.nob;
+    info.n_scans = settings_struct.nos;
     info.trigger_mode = xck;
     int result = init_7030(0);
     if (result < 0) return es_unknown_error;
