@@ -15,6 +15,7 @@
 
 
 #include <linux/types.h>
+#include <linux/poll.h>
 
 
 struct inode;
@@ -30,6 +31,7 @@ ssize_t lscpcie_write(struct file *filp, const char __user * buf,
 		      size_t len, loff_t * off);
 ssize_t lscpcie_read(struct file *filp, char __user * buf, size_t len,
 		     loff_t * off);
+unsigned int lscpcie_poll(struct file *filp, poll_table *wait);
 
 
 #endif				/* _file_h_ */
