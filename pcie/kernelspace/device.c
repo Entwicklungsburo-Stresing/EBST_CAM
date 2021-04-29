@@ -30,7 +30,8 @@ struct file_operations fops = {
         .unlocked_ioctl = lscpcie_ioctl,
 	.open = lscpcie_open,
 	.release = lscpcie_release,
-	.mmap = mmap_register_remap_mmap
+	.mmap = mmap_register_remap_mmap,
+	.poll = lscpcie_poll
 };
 
 /* create device node /dev/lscpcie<n> and initialise instance variables */
