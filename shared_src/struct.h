@@ -47,6 +47,7 @@ struct global_settings
 	uint32_t ADC_Mode;
 	uint32_t ADC_custom_pettern;
 	uint32_t isIRSensor;
+	uint32_t bec;
 };
 
 #endif // STRUCT_H
