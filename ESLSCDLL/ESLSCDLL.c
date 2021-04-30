@@ -505,14 +505,6 @@ DllAccess es_status_codes DLLSetSensorType( UINT32 drvno, UINT8 sensor_type )
 }
 
 /**
- * \copydoc RsTOREG
- */
-DllAccess es_status_codes DLLRsTOREG( UINT32 drvno )
-{
-	return RsTOREG( drvno );
-}
-
-/**
  * \copydoc SetupVPB
  */
 DllAccess es_status_codes DLLSetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep )
