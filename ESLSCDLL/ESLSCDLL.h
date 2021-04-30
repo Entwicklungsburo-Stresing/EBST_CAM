@@ -87,12 +87,9 @@ DllAccess void DLLSetContFFLoop( UINT8 activate, UINT32 pause );
 //************  Cooling
 DllAccess es_status_codes DLLSetTemp( UINT32 drvno, UINT8 level );
 DllAccess es_status_codes DLLSetSEC( UINT32 drvno, UINT64 ecin100ns );
-DllAccess es_status_codes DLLResetSEC( UINT32 drvno );
 DllAccess es_status_codes DLLSetBEC( UINT32 drvno, UINT64 ecin100ns );
-DllAccess es_status_codes DLLResetBEC( UINT32 drvno );
 DllAccess es_status_codes DLLSetTORReg( UINT32 drvno, UINT8 fkt );
 DllAccess es_status_codes DLLSetSensorType( UINT32 drvno, UINT8 set );
-DllAccess es_status_codes DLLRsTOREG( UINT32 drvno );
 DllAccess es_status_codes DLLSetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep);
 DllAccess es_status_codes DLLAboutS0( UINT32 drvno );
 DllAccess es_status_codes DLLSendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data );
