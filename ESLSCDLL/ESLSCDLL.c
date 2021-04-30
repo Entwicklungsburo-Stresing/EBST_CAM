@@ -113,10 +113,7 @@ DllAccess es_status_codes DLLCCDDrvInit( UINT8* _number_of_boards )
 {
 	es_status_codes status = CCDDrvInit();
 	if (status == es_no_error)
-	{
-		WDC_Err( "finished DRVInit back in DLL\n" );
 		*_number_of_boards = number_of_boards;
-	}
 	return status;
 }
 
