@@ -481,27 +481,11 @@ DllAccess es_status_codes DLLSetSEC( UINT32 drvno, UINT64 ecin100ns )
 }
 
 /**
- * \copydoc ResetSEC
- */
-DllAccess es_status_codes DLLResetSEC( UINT32 drvno )
-{
-	return ResetSEC(drvno);
-}
-
-/**
  * \copydoc SetBEC
  */
 DllAccess es_status_codes DLLSetBEC( UINT32 drvno, UINT64 ecin100ns )
 {
 	return SetBEC( drvno, ecin100ns );
-}
-
-/**
- * \copydoc ResetBEC
- */
-DllAccess es_status_codes DLLResetBEC( UINT32 drvno )
-{
-	return ResetBEC( drvno );
 }
 
 /**
