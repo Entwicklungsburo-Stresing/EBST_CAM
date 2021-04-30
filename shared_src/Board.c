@@ -311,8 +311,6 @@ es_status_codes AboutS0( UINT32 drvno )
  */
 es_status_codes CCDDrvInit()
 {
-	WDC_Err("start driver init\n");
-	//WDC_Err(drvno);
 	//depends on os, how big a buffer can be
 	BOOL fResult = FALSE;
 	char AString[80] = "";
@@ -354,7 +352,9 @@ es_status_codes CCDDrvInit()
 	//ErrorMsg("CCDDrvInit start of %x \n", drvno);
 	/* Open a handle to the driver and initialize the WDC library */
 	WDC_Err("open WDC\n");
+	//No WDC Err messages can be sent to debug monitor before WDC_DriverOpen call
 	dwStatus = WDC_DriverOpen( WDC_DRV_OPEN_DEFAULT, LSCPCIEJ_DEFAULT_LICENSE_STRING );// WDC_DRV_OPEN_REG_LIC, LSCPCIEJ_DEFAULT_LICENSE_STRING);
+	WDC_Err("\n*** Init driver ***\n");
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ErrLog( "Failed to initialize the WDC library. Error 0x%lx - %s\n",
@@ -367,7 +367,7 @@ es_status_codes CCDDrvInit()
 		return es_driver_init_failed;
 	}
 	BZERO( scanResult );
-	WDC_Err("scan PCIe devices\n");
+	WDC_Err("Scan PCIe devices\n");
 	dwStatus = WDC_PciScanDevices( LSCPCIEJ_DEFAULT_VENDOR_ID, LSCPCIEJ_DEFAULT_DEVICE_ID, &scanResult ); //VendorID, DeviceID
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
@@ -380,9 +380,9 @@ es_status_codes CCDDrvInit()
 		return es_device_not_found;
 	}
 	number_of_boards = (UINT8) scanResult.dwNumDevices;
-	WDC_Err("init HR counter\n");
+	WDC_Err("Init HR counter\n");
 	TPS = InitHRCounter();//for ticks function
-	WDC_Err("driver init done\n");
+	WDC_Err("*** Init driver done ***\n\n");
 	return es_no_error;	  // no Error, driver found
 }; //CCDDrvInit
 
@@ -422,6 +422,7 @@ es_status_codes CCDDrvExit( UINT32 drvno )
  */
 es_status_codes InitBoard( UINT32 drvno )
 {
+	WDC_Err("\n*** Init board ***\n");
 	if ((drvno < 1) || (drvno > 2)) return es_invalid_driver_number;
 	//PWDC_DEVICE pDev = (PWDC_DEVICE)hDev;
 	volatile DWORD dwStatus = 0;
@@ -460,6 +461,7 @@ es_status_codes InitBoard( UINT32 drvno )
 	WDC_Err( "DRVInit hDev id % x, hDev pci slot %x, hDev pci bus %x, hDev pci function %x, hDevNumAddrSp %x \n"
 		, pDev->id, pDev->slot.dwSlot, pDev->slot.dwBus, pDev->slot.dwFunction, pDev->dwNumAddrSpaces );
 	InitProDLL();
+	WDC_Err("*** Init board done***\n\n");
 	return es_no_error ;
 };  // InitBoard
 
@@ -504,8 +506,9 @@ es_status_codes initCamera(UINT32 drvno,  UINT8 camera_system, UINT16 pixel, UIN
  */
 es_status_codes InitMeasurement(struct global_settings settings)
 {
+	WDC_Err("\n*** Init Measurement ***\n");
 	WDC_Err("struct global_settings: ");
-	for (int i = 0; i <= sizeof(struct global_settings); i++)
+	for (int i = 0; i <= 41; i++)
 		WDC_Err("%x ", *(&settings.drvno + i));
 	WDC_Err("\n");
 	es_status_codes status = ClearAllUserRegs(settings.drvno);
@@ -621,6 +624,7 @@ es_status_codes InitMeasurement(struct global_settings settings)
 	//TODO set cont FF mode with DLL style(CONTFFLOOP = activate;//0 or 1;CONTPAUSE = pause;) or CCDExamp style(check it out)
 	//TODO  SetBEC( choosen_board, Bec );
 	BOARD_SEL = settings.board_sel;
+	WDC_Err("*** Init Measurement done ***\n\n");
 	return status;
 }
 
@@ -806,6 +810,7 @@ void SetManualTLP_vars()
  */
 es_status_codes SetDMABufRegs( UINT32 drvno )
 {
+	WDC_Err("Set DMA buffer registers, ");
 	//DMABufSizeInScans - use 1 block
 	es_status_codes status = SetS0Reg(DMA_BUFFER_SIZE_IN_SCANS, 0xffffffff, S0Addr_DmaBufSizeInScans, drvno);
 	if (status != es_no_error) return status;
@@ -1032,11 +1037,11 @@ VOID DLLCALLCONV interrupt_handler2( PVOID pData ) { isr( 2, pData ); }
 es_status_codes SetupPCIE_DMA( UINT32 drvno )
 {
 	DWORD dwStatus;
-	WDC_Err( "entered SetupPCIE_DMA\n" );
+	WDC_Err( "Setup DMA\n" );
 	//If interrupt was enabled before, first cleanup DMA.
 	if (WDC_IntIsEnabled(hDev[drvno]))
 	{
-		WDC_Err("cleanup dma\n");
+		WDC_Err("Cleanup DMA\n");
 		es_status_codes status = CleanupPCIE_DMA(drvno);
 		if (status != es_no_error) return status;
 	}
@@ -1113,7 +1118,6 @@ es_status_codes SetupPCIE_DMA( UINT32 drvno )
 			break;
 		}
 	}
-	WDC_Err( "finished SetupDMA\n" );
 	return status;
 }//SetupPCIE_DMA
 
@@ -1280,6 +1284,7 @@ es_status_codes SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, U
  */
 es_status_codes SetBoardVars( UINT32 drvno )
 {
+	WDC_Err("Setting board variables\n");
 	if (hDev[drvno] == INVALID_HANDLE_VALUE)
 	{
 		WDC_Err( "Handle is invalid of drvno: %i", drvno );
@@ -1300,7 +1305,6 @@ es_status_codes SetBoardVars( UINT32 drvno )
 	status = SetS0Reg(aCAMCNT[drvno], 0xF, S0Addr_CAMCNT, drvno);
 	if (status != es_no_error) return status;
 	status = SetS0Reg(ADRDELAY, 0xFFFF, S0Addr_XCKDLY, drvno);
-	WDC_Err( "*** SetBoardVars done.\n" );
 	return status; //no error
 };  // SetBoardVars
 
@@ -1324,7 +1328,7 @@ es_status_codes allocateUserMemory( UINT32 drvno )
 	INT64 memory_free_mb = memory_free / (1024 * 1024);
 	INT64 needed_mem = (INT64)aCAMCNT[drvno] * (INT64)Nob * (INT64)*Nospb * (INT64)aPIXEL[drvno] * (INT64)sizeof( USHORT );
 	INT64 needed_mem_mb = needed_mem / (1024 * 1024);
-	WDC_Err( "available memory:%lld MB\n \tmemory needed: %lld MB\n", memory_free_mb, needed_mem_mb );
+	WDC_Err( "Allocate user memory, available memory:%lld MB, memory needed: %lld MB\n", memory_free_mb, needed_mem_mb );
 	//check if enough space is available in the physical ram
 	if (memory_free > (UINT64)needed_mem)
 	{
@@ -1360,6 +1364,7 @@ es_status_codes allocateUserMemory( UINT32 drvno )
  */
 es_status_codes ClearAllUserRegs(UINT32 drv)
 {
+	WDC_Err("Clear all user registers.\n");
 	es_status_codes status = WriteLongS0( drv, 0, S0Addr_BDAT );
 	if (status != es_no_error) return status;
 	status = WriteLongS0( drv, 0, S0Addr_BEC );
@@ -1465,6 +1470,7 @@ D6, D7 have only read function
  */
 es_status_codes LowSlope( UINT32 drvno )
 {// clear bit D5
+	WDC_Err("Set low slope\n");
 	BYTE CtrlA = 0;
 	es_status_codes status = NotBothSlope( drvno );
 	if (status != es_no_error) return status;
@@ -1485,6 +1491,7 @@ es_status_codes LowSlope( UINT32 drvno )
  */
 es_status_codes HighSlope( UINT32 drvno )
 {// set bit D5
+	WDC_Err("Set high slope\n");
 	BYTE CtrlA = 0;
 	NotBothSlope( drvno );
 	es_status_codes status = ReadByteS0( drvno, &CtrlA, S0Addr_CTRLA );
@@ -1504,6 +1511,7 @@ es_status_codes HighSlope( UINT32 drvno )
  */
 es_status_codes BothSlope( UINT32 drvno )
 {// set bit D4
+	WDC_Err("Set both slope\n");
 	BYTE CtrlA = 0;
 	es_status_codes status = HighSlope( drvno );
 	if (status != es_no_error) return status;
@@ -1663,6 +1671,7 @@ es_status_codes WaitTrigger( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOO
  */
 es_status_codes CloseShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 {
+	WDC_Err("Close shutter\n");
 	//This function does a bit set. Unfortunately the following line doesn't work. We don't know why, yet. Maybe there is a problem iin ResetS0Bit. -FH, BB
 	//ResetS0Bit(CTRLB_bitindex_SHON, S0Addr_CTRLB, drvno);
 	UCHAR CtrlB = 0;
@@ -1714,6 +1723,7 @@ BOOL GetShutterState( UINT32 drvno )
  */
 es_status_codes SetSDAT( UINT32 drvno, UINT32 datin100ns )
 {
+	WDC_Err("Set SDAT in 100ns: %u\n", datin100ns);
 	if (datin100ns)
 	{
 		datin100ns |= 0x80000000; // enable delay
@@ -1733,6 +1743,7 @@ es_status_codes SetSDAT( UINT32 drvno, UINT32 datin100ns )
  */
 es_status_codes SetBDAT( UINT32 drvno, UINT32 datin100ns )
 {
+	WDC_Err("Set BDAT in 100ns: %u\n", datin100ns);
 	if (datin100ns)
 	{
 		datin100ns |= 0x80000000; // enable delay
@@ -1753,6 +1764,7 @@ es_status_codes SetBDAT( UINT32 drvno, UINT32 datin100ns )
  */
 es_status_codes SetSEC( UINT32 drvno, UINT32 ecin100ns )
 {
+	WDC_Err("Set SEC. EC in 100 ns: %u\n", ecin100ns);
 	//ULONG data = 0;
 	//ReadLongS0(drvno, &data, S0Addr_EC);
 	//ecin100ns |= data;
@@ -1770,6 +1782,7 @@ es_status_codes SetSEC( UINT32 drvno, UINT32 ecin100ns )
  */
 es_status_codes ResetSEC( UINT32 drvno )
 {
+	WDC_Err("Reset SEC\n");
 	return WriteLongS0( drvno, 0, S0Addr_SEC );
 }; //ResetEC
 
@@ -1833,6 +1846,7 @@ es_status_codes ResetBEC( UINT32 drvno )
  */
 es_status_codes SetTORReg( UINT32 drvno, BYTE fkt )
 {
+	WDC_Err("Set TOR: %u\n", fkt);
 	BYTE val = 0; //defaut XCK= high during read
 	BYTE read_val = 0;
 	if (fkt == 0) val = 0x00; // set to XCK
@@ -1918,6 +1932,7 @@ es_status_codes SetISFFT( UINT32 drvno, BOOL set )
  */
 es_status_codes SetSensorType( UINT32 drvno, UINT8 sensor_type )
 {
+	WDC_Err("Setting sensor type: %u\n", sensor_type);
 	es_status_codes status = es_no_error;
 	switch (sensor_type)
 	{
@@ -2238,6 +2253,7 @@ es_status_codes ReadFFLoop( UINT32 board_sel )
 		status = resetMeasureOn(2);
 		if (status != es_no_error) return status;
 	}
+	WDC_Err("ReadFFLoop done\n", board_sel);
 	return status;
 }
 
@@ -2276,6 +2292,7 @@ Read nos lines from FIFO
 */
 unsigned int __stdcall ReadFFLoopThread()//threadex
 {
+	WDC_Err("\n*** Start Measurement ***\n");
 	//local declarations
 	SetPriority( READTHREADPriority );  //run ReadFFLoop in higher priority
 	escape_readffloop = FALSE;
@@ -2314,7 +2331,7 @@ unsigned int __stdcall ReadFFLoopThread()//threadex
 	}
 	Running = FALSE;
 	//_endthread();//thread
-	WDC_Err("End ReadFFLoopThread\n");
+	WDC_Err("*** Measurement done ***\n\n");
 	return 1;//endthreadex is called automatically when this returns
 }
 
@@ -2432,6 +2449,7 @@ es_status_codes StopSTimer( UINT32 drvno )
  */
 es_status_codes SetSTimer( UINT32 drvno, UINT32 stime_in_microseconds )
 {
+	WDC_Err("Set stime in microseconds: %u\n", stime_in_microseconds);
 	UINT32 data = 0;
 	es_status_codes status = ReadLongS0( drvno, &data, S0Addr_XCKLL ); //reset
 	if (status != es_no_error) return status;
@@ -2451,6 +2469,7 @@ es_status_codes SetSTimer( UINT32 drvno, UINT32 stime_in_microseconds )
  */
 es_status_codes SetBTimer( UINT32 drvno, UINT32 btime_in_microseconds )
 {
+	WDC_Err("Set btime in microseconds: %u\n", btime_in_microseconds);
 	if (btime_in_microseconds)
 	{
 		UINT32 data = btime_in_microseconds | 0x80000000;
@@ -2471,6 +2490,7 @@ es_status_codes SetBTimer( UINT32 drvno, UINT32 btime_in_microseconds )
  */
 es_status_codes SetBSlope( UINT32 drvno, UINT32 slope )
 {
+	WDC_Err("Set BSlope: %u\n", slope);
 	return WriteLongS0( drvno, slope, S0Addr_BSLOPE );
 }
 
@@ -2885,6 +2905,7 @@ BOOL TempGood( UINT32 drvno, UINT32 ch )
 es_status_codes SetTemp( UINT32 drvno, UINT8 level )
 {
 	if (level >= 8) level = 0;
+	WDC_Err("Set temperature level: %u\n", level);
 	return SendFLCAM( drvno, maddr_cam, cam_adaddr_coolTemp, level );
 }
 
@@ -3138,7 +3159,7 @@ es_status_codes SendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data
 es_status_codes DAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output )
 {
 	//ctrl 3: write and update DAC register
-	WDC_Err("DAC ch%u = %u", channel, output);
+	WDC_Err("Set DAC output ch%u = %u\n", channel, output);
 	return SendFLCAM_DAC( drvno, 3, channel, output, 0 );
 }
 
@@ -3340,6 +3361,7 @@ UINT8 WaitforTelapsed( LONGLONG musec )
  */
 es_status_codes InitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED )
 {
+	WDC_Err("Init camera general, pixel: %u, cc_trigger: %u, fft: %u, area: %u, cooled: %u\n", pixel, cc_trigger_input, IS_FFT, IS_AREA, IS_COOLED);
 	es_status_codes status = es_no_error;
 	// when TRUE: disables PCIe FIFO when cool cam transmits cool status
 	if (IS_COOLED)
@@ -3374,6 +3396,7 @@ es_status_codes InitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger
  */
 es_status_codes InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA )
 {
+	WDC_Err("Init camera 3001, pixel: %u, cc_trigger: %u, fft: %u, area: %u\n", pixel, trigger_input, IS_FFT, IS_AREA);
 	es_status_codes status = Use_ENFFW_protection( drvno, TRUE );
 	if (status != es_no_error) return status;
 	//set camera pixel register
@@ -3404,6 +3427,7 @@ es_status_codes InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input
  */
 es_status_codes InitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern )
 {
+	WDC_Err("Init camera 3010, adc_mode: %u, custom_pattern: %u\n", adc_mode, custom_pattern);
 	//Use_ENFFW_protection( drvno, FALSE );
 	es_status_codes status = Cam3010_ADC_reset( drvno );
 	if (status != es_no_error) return status;
@@ -3496,6 +3520,7 @@ es_status_codes Cam3010_ADC_setMode( UINT32 drvno, UINT8 adc_mode, UINT16 custom
  */
 es_status_codes InitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain )
 {
+	WDC_Err("Init camera 3030, adc_mode: %u, custom_pattern: %u, gain: %u\n", adc_mode, custom_pattern, gain);
 	//Use_ENFFW_protection( drvno, FALSE );
 	es_status_codes status = Cam3030_ADC_reset( drvno );
 	if (status != es_no_error) return status;
@@ -3688,6 +3713,7 @@ es_status_codes ReadGPXCtrl( UINT32 drvno, UINT8 GPXAddress, UINT32* GPXData )
  */
 es_status_codes InitGPX( UINT32 drvno, UINT32 delay )
 {
+	WDC_Err("Init GPX, delay: %u\n", delay);
 	UINT32 regData, err_cnt = 0;
 	UINT32 mask = 0x3FFFF;
 	delay &= mask;
@@ -3844,11 +3870,12 @@ es_status_codes AboutGPX( UINT32 drvno )
  */
 double CalcRamUsageInMB( UINT32 nos, UINT32 nob )
 {
+	WDC_Err("Calc ram usage in MB, nos: %u:, nob: %u\n", nos, nob);
 	double ramUsage = 0;
 	for (int i = 0; i < number_of_boards; i++)
 		ramUsage += (UINT64)nos * (UINT64)nob * (UINT64)aPIXEL[i + 1] * (UINT64)aCAMCNT[i + 1] * sizeof( UINT16 );
 	ramUsage = ramUsage / 1048576;
-	WDC_Err( "ram usage: %f", ramUsage );
+	WDC_Err( "Ram usage: %f\n", ramUsage );
 	return ramUsage;
 }
 
@@ -4090,6 +4117,7 @@ es_status_codes resetMeasureOn( UINT32 drvno )
 */
 es_status_codes SetBTI( UINT32 drvno, UINT8 bti_mode )
 {
+	WDC_Err("Set BTI: %u\n", bti_mode);
 	return SetS0Reg( bti_mode << CTRLB_bitindex_BTI0, CTRLB_bit_BTI0 | CTRLB_bit_BTI1 | CTRLB_bit_BTI2, S0Addr_CTRLB, drvno );
 }
 
@@ -4110,6 +4138,7 @@ es_status_codes SetBTI( UINT32 drvno, UINT8 bti_mode )
 */
 es_status_codes SetSTI( UINT32 drvno, UINT8 sti_mode )
 {
+	WDC_Err("Set STI: %u\n", sti_mode);
 	return SetS0Reg( sti_mode, CTRLB_bit_STI0 | CTRLB_bit_STI1 | CTRLB_bit_STI2, S0Addr_CTRLB, drvno );
 }
 
@@ -4133,7 +4162,7 @@ es_status_codes SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob )
 {
 	Nob = nob;
 	*Nospb = nos;
-	WDC_Err( "entered SetMeasurementParameters with drv: %i nos: %i and nob: %i and camcnt: %i\n", drvno, nos, nob, aCAMCNT[drvno] );
+	WDC_Err( "Set measurement parameters: drv: %i nos: %i and nob: %i and camcnt: %i\n", drvno, nos, nob, aCAMCNT[drvno] );
 	//stop all and clear FIFO
 	es_status_codes status = StopSTimer( drvno );
 	if (status != es_no_error) return status;
@@ -4149,7 +4178,7 @@ es_status_codes SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob )
 		numberOfInterrupts = Nob * (*Nospb) * aCAMCNT[drvno] * number_of_boards / dmaBufferPartSizeInScans - 2;//- 2 because intr counter starts with 0
 	else
 		numberOfInterrupts = Nob * (*Nospb) * aCAMCNT[drvno] / dmaBufferPartSizeInScans - 1;//- 1 because intr counter starts with 0
-	WDC_Err("numberOfInterrupts: 0x%x \n", numberOfInterrupts);
+	WDC_Err("Number of interrupts: 0x%x \n", numberOfInterrupts);
 	return status;
 }
 
