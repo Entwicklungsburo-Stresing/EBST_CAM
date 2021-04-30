@@ -58,7 +58,6 @@ UINT32 tmp_Nosbp = 1000;
 UINT32* Nospb = &tmp_Nosbp;
 UINT32 tmp_aCAMCNT[MAXPCIECARDS] = { 1, 1, 1, 1, 1 };	// cameras parallel
 UINT32* aCAMCNT = tmp_aCAMCNT;	// cameras parallel
-UINT32 ADRDELAY=0;
 BOOL escape_readffloop = FALSE;
 BOOL CONTFFLOOP = FALSE;
 UINT32 CONTPAUSE = 1;  // delay between loops in continous mode
@@ -512,7 +511,7 @@ es_status_codes InitMeasurement(struct global_settings settings)
 	WDC_Err("\n");
 	es_status_codes status = ClearAllUserRegs(settings.drvno);
 	if (status != es_no_error) return status;
-	status = SetGlobalVariables(settings.drvno, settings.camcnt, settings.pixel, settings.xckdelay);
+	status = SetGlobalVariables(settings.drvno, settings.camcnt, settings.pixel);
 	if (status != es_no_error) return status;
 	status = SetBoardVars( settings.drvno );
 	if (status != es_no_error) return status;
@@ -557,7 +556,7 @@ es_status_codes InitMeasurement(struct global_settings settings)
 	}
 	else
 	{
-		status = ResetSEC(settings.drvno);
+		status = SetSEC(settings.drvno, 0);
 		if (status != es_no_error) return status;
 		status = SetTORReg(settings.drvno, (BYTE)settings.TORmodus);
 		if (status != es_no_error) return status;
@@ -620,8 +619,11 @@ es_status_codes InitMeasurement(struct global_settings settings)
 	}
 	//DMA
 	status = SetupPCIE_DMA(settings.drvno);
+	if (status != es_no_error) return status;
 	//TODO set cont FF mode with DLL style(CONTFFLOOP = activate;//0 or 1;CONTPAUSE = pause;) or CCDExamp style(check it out)
-	//TODO  SetBEC( choosen_board, Bec );
+	status = SetBEC( settings.drvno, settings.bec );
+	if (status != es_no_error) return status;
+	status = SetXckdelay(settings.drvno, settings.xckdelay);
 	BOARD_SEL = settings.board_sel;
 	WDC_Err("*** Init Measurement done ***\n\n");
 	return status;
@@ -1184,9 +1186,9 @@ int GetNumofProcessors()
 	- es_no_error
 	- es_invalid_pixel_count
 */
-es_status_codes SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay )
+es_status_codes SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel )
 {
-	WDC_Err("Setting global variables: drv: %u, camcnt: %u, pixel: %u, xckdelay: %u\n", drvno, camcnt, pixel, xckdelay);
+	WDC_Err("Setting global variables: drv: %u, camcnt: %u, pixel: %u\n", drvno, camcnt, pixel);
 	/*Pixelsize with matching TLP Count (TLPC).
 	Pixelsize = TLPS * TLPC - 1*TLPS
 	(TLPS TLP size = 64)
@@ -1267,7 +1269,6 @@ es_status_codes SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel, U
 	if (LEGACY_202_14_TLPCNT) NO_TLPS = NO_TLPS + 1;
 	aPIXEL[drvno] = pixel;
 	aCAMCNT[drvno] = camcnt;
-	ADRDELAY = xckdelay;
 	return es_no_error;
 }
 
@@ -1302,8 +1303,6 @@ es_status_codes SetBoardVars( UINT32 drvno )
 	status = SetS0Reg(aPIXEL[drvno], 0xFFFF, S0Addr_PIXREGlow, drvno);
 	if (status != es_no_error) return status;
 	status = SetS0Reg(aCAMCNT[drvno], 0xF, S0Addr_CAMCNT, drvno);
-	if (status != es_no_error) return status;
-	status = SetS0Reg(ADRDELAY, 0xFFFF, S0Addr_XCKDLY, drvno);
 	return status; //no error
 };  // SetBoardVars
 
@@ -1755,6 +1754,7 @@ es_status_codes SetBDAT( UINT32 drvno, UINT32 datin100ns )
  * \brief Exposure control (EC) signal is used for mechanical shutter or sensors with EC function.
  * 
  * Starts after delay after trigger (DAT) signal and is active for ecin100ns.
+ * Resets additional delay after trigger with ecin100ns = 0.
  * \param drvno PCIe board identifier
  * \param ecin100ns Time in 100 ns steps.
  * \return es_status_codes:
@@ -1764,31 +1764,22 @@ es_status_codes SetBDAT( UINT32 drvno, UINT32 datin100ns )
 es_status_codes SetSEC( UINT32 drvno, UINT32 ecin100ns )
 {
 	WDC_Err("Set SEC. EC in 100 ns: %u\n", ecin100ns);
-	//ULONG data = 0;
-	//ReadLongS0(drvno, &data, S0Addr_EC);
-	//ecin100ns |= data;
-	ecin100ns |= 0x80000000; // enable delay
-	return WriteLongS0( drvno, ecin100ns, S0Addr_SEC );
+	es_status_codes status = es_no_error;
+	if (ecin100ns <= 1)
+		status = WriteLongS0(drvno, 0, S0Addr_SEC);
+	else
+	{
+		ecin100ns |= 0x80000000; // enable delay
+		status = WriteLongS0(drvno, ecin100ns, S0Addr_SEC);
+	}
+	return status;
 }; //SetEC
-
-/**
- * \brief Resets additional delay after trigger hardware register.
- * 
- * \param drvno PCIe board identifier
- * \return es_status_codes:
- *		- es_no_error
- * 		- es_register_write_failed
- */
-es_status_codes ResetSEC( UINT32 drvno )
-{
-	WDC_Err("Reset SEC\n");
-	return WriteLongS0( drvno, 0, S0Addr_SEC );
-}; //ResetEC
 
 /**
  * \brief Exposure control (EC) signal is used for mechanical shutter or sensors with EC function.
  * 
  * Starts after delay after trigger (DAT) signal and is active for ecin100ns.
+ * Resets additional delay after trigger with ecin100ns = 0.
  * \param drvno PCIe board identifier
  * \param ecin100ns Time in 100 ns steps.
  * \return es_status_codes:
@@ -1797,25 +1788,17 @@ es_status_codes ResetSEC( UINT32 drvno )
  */
 es_status_codes SetBEC( UINT32 drvno, UINT32 ecin100ns )
 {
-	//ULONG data = 0;
-	//ReadLongS0(drvno, &data, S0Addr_EC);
-	//ecin100ns |= data;
-	ecin100ns |= 0x80000000; // enable delay
-	return WriteLongS0( drvno, ecin100ns, S0Addr_BEC );
+	WDC_Err("Set BEC in 100 ns: %u\n", ecin100ns);
+	es_status_codes status = es_no_error;
+	if (ecin100ns)
+	{
+		ecin100ns |= 0x80000000; // enable delay
+		status = WriteLongS0(drvno, ecin100ns, S0Addr_BEC);
+	}
+	else
+		status = WriteLongS0(drvno, 0, S0Addr_BEC);
+	return status;
 }; //SetEC
-
-/**
- * \brief Resets additional delay after trigger hardware register.
- * 
- * \param drvno PCIe board identifier
- * \return es_status_codes:
- *		- es_no_error
- * 		- es_register_write_failed
- */
-es_status_codes ResetBEC( UINT32 drvno )
-{
-	return WriteLongS0( drvno, 0, S0Addr_BEC );
-}; //ResetEC
 
 /**
  * \brief Set signal of output port of PCIe card.
@@ -4262,4 +4245,25 @@ es_status_codes abortMeasurement( UINT32 drv )
 	status = resetMeasureOn(drv);
 	if (status != es_no_error) return status;
 	return SetDMAReset( drv );
+}
+
+/**
+ * \brief Set XCK delay.
+ * 
+ * \param drvno PCIe board identifier.
+ * \param xckdelay XCK delay
+ * \return 
+ */
+es_status_codes SetXckdelay(UINT32 drvno, UINT32 xckdelay)
+{
+	WDC_Err("Set XCK delay: %u\n", xckdelay);
+	es_status_codes status = es_no_error;
+	if (xckdelay)
+	{
+		xckdelay |= 0x80000000;
+		status = WriteLongS0(drvno, xckdelay, S0Addr_XCKDLY);
+	}
+	else
+		status = WriteLongS0(drvno, 0, S0Addr_XCKDLY);
+	return status;
 }

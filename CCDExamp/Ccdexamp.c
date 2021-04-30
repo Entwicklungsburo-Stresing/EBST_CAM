@@ -1223,11 +1223,8 @@ LRESULT CALLBACK SetupMeasure( HWND hDlg,
 			//Setting EC Registers
 			val = GetDlgItemInt(hDlg, IDC_SEC, &success, FALSE);
 			if (success) Sec = val;
-
 			val = GetDlgItemInt( hDlg, IDC_BEC, &success, FALSE );
 			if (success) Bec = val;
-			if (Bec) SetBEC( choosen_board, Bec );
-			else ResetBEC( choosen_board );
 			
 			//setting slopes
 			if (IsDlgButtonChecked( hDlg, IDC_RADIO1 ) == BST_CHECKED) TrigMod = 0;
@@ -1500,15 +1497,7 @@ LRESULT CALLBACK SetupEC( HWND hDlg,
 			if (success)
 			{
 				tXDLY = longval;
-				longval = tXDLY;
-				if (longval != 0) longval |= 0x80000000;
-
-	
-#ifndef _DLL
-				WriteLongS0( choosen_board, longval, S0Addr_XCKDLY); // XDLY reg
-#else
-				DLLWriteLongS0( choosen_board, longval, S0Addr_XCKDLY); // XDLY reg
-#endif
+				SetXckdelay(choosen_board, tXDLY);
 			}
 			val = GetDlgItemInt( hDlg, IDC_SETTCNT, &success, FALSE );
 			if (success) tTICNT = val;

@@ -210,7 +210,6 @@ void startMess()
 	g.sdat_in_100ns = Sdat;
 	g.sensor_type = SENSOR_TYPE;
 	g.ShutterExpTime = Sec;
-	//g.ShutterExpTime = Bec;
 	g.sslope = TrigMod;
 	g.stime_in_microsec = ExpTime;
 	if (ItemIndex_S < 3) g.sti_mode = ItemIndex_S;
@@ -221,6 +220,7 @@ void startMess()
 	g.Vfreq = Vfreqini;
 	g.xckdelay = tXDLY;
 	g.board_sel = choosen_board;
+	g.bec = Bec;
 	InitMeasurement(g);
 	// write header
 	if(cont_mode)

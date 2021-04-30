@@ -144,6 +144,7 @@ void MainWindow::startPressed()
     settings_struct.ADC_custom_pettern = settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toInt();
     settings_struct.gpx_offset = 0;//TODO
     settings_struct.isIRSensor = 0;//TODO
+	settings_struct.bec = 0; //TODO
     settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt() + 1;
     uint8_t boardsel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt();
     if (boardsel == 0)
