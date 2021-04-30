@@ -1934,17 +1934,6 @@ es_status_codes SetSensorType( UINT32 drvno, UINT8 sensor_type )
 }
 
 /**
- * \brief Reset TOR register. Is used to set the signal of the O-plug of interface board) -> manual.
- * 
- * \param drvno board number (=1 if one PCI board)
- * \return none
- */
-es_status_codes RsTOREG( UINT32 drvno )
-{// reset TOREG
-	return WriteByteS0( drvno, 0, S0Addr_TOR + 3 );
-}
-
-/**
  * \brief
  * 
  * \param drv PCIe board identifier

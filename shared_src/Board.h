@@ -100,7 +100,6 @@ es_status_codes SetTORReg( UINT32 drvno, BYTE fkt );
 es_status_codes SetISPDA( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if PDA
 es_status_codes SetISFFT( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if FFT
 es_status_codes SetSensorType( UINT32 drvno, UINT8 sensor_type );
-es_status_codes RsTOREG( UINT32 drvno );					//reset the TOREG - should be called before SetISPDA or SetISFFT
 // FIFO functions
 es_status_codes initReadFFLoop( UINT32 drv );
 int waitForBlockTrigger( UINT32 board_sel );
