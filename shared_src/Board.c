@@ -507,7 +507,7 @@ es_status_codes InitMeasurement(struct global_settings settings)
 {
 	WDC_Err("\n*** Init Measurement ***\n");
 	WDC_Err("struct global_settings: ");
-	for (int i = 0; i <= 41; i++)
+	for (int i = 0; i < sizeof(settings)/4; i++)
 		WDC_Err("%x ", *(&settings.drvno + i));
 	WDC_Err("\n");
 	es_status_codes status = ClearAllUserRegs(settings.drvno);
