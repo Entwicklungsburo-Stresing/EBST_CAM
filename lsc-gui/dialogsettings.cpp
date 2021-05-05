@@ -60,6 +60,7 @@ DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
     ui->comboBoxAdcMode->setCurrentIndex(_settings->value(settingAdcModePath, settingAdcModeDefault).toInt());
     ui->spinBoxAdcCustom->setValue(_settings->value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toInt());
     ui->comboBoxTheme->setCurrentIndex(_settings->value(settingThemePath, settingThemeDefault).toInt());
+    setWindowModality(Qt::ApplicationModal);
 }
 
 DialogSettings::~DialogSettings()
