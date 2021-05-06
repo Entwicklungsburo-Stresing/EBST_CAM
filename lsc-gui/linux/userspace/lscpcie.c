@@ -330,7 +330,7 @@ int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode,
 		* sizeof(pixel_t);
 
 	dev->s0->NUMBER_OF_SCANS = number_of_scans;
-	dev->s0->DMA_BUF_SIZE_IN_SCANS = number_of_scans * number_of_blocks * 2;
+	dev->s0->DMA_BUF_SIZE_IN_SCANS = 1000;
 	dev->s0->NUMBER_OF_BLOCKS = number_of_blocks;
 
 	dev->control->used_dma_size = dev->s0->DMA_BUF_SIZE_IN_SCANS
