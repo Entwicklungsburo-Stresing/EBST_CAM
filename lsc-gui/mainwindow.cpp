@@ -169,7 +169,7 @@ void MainWindow::startPressed()
  */
 void MainWindow::on_actionEdit_triggered()
 {
-    DialogSettings* ds = new DialogSettings(&settings);
+    DialogSettings* ds = new DialogSettings(&settings, this);
     ds->show();
     connect(ds, SIGNAL(settings_saved()), this, SLOT(loadSettings()));
     return;
