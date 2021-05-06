@@ -74,7 +74,7 @@ es_status_codes Lsc::initMeasurement(struct global_settings settings_struct)
     info.trigger_mode = xck;
     int result = init_7030(0);
     if (result < 0) return es_unknown_error;
-    result = lscpcie_init_scan(info.dev, info.trigger_mode, info.n_scans, info.n_blocks, 2);
+    result = lscpcie_init_scan(info.dev, info.trigger_mode, info.n_scans, info.n_blocks, 500);
     if (result) return es_unknown_error;
     return es_no_error;
 }
