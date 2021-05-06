@@ -167,7 +167,7 @@ es_status_codes Lsc::returnFrame(uint32_t board, uint32_t sample, uint32_t block
     int nos = info.n_scans;
     int camcnt = info.dev->control->number_of_cameras;
     int offset = camera * n + sample * camcnt * n + block * nos * camcnt * n;
-    memcpy( pdest, &((uint16_t*)info.dev->mapped_buffer)[offset], length * sizeof( uint16_t ) );
+    memcpy( pdest, &((uint16_t*)info.data)[offset], length * sizeof( uint16_t ) );
     return es_no_error;
 }
 
