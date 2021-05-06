@@ -57,6 +57,11 @@ enum CTRLB_bits
 	CTRLB_bitindex_BTI2 = 6
 };
 
+enum XCKMSB_bits
+{
+	XCKMSB_stimer_on = 30
+};
+
 //PCIe Addresses
 enum pcie_addresses
 {
