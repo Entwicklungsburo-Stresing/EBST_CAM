@@ -230,7 +230,7 @@ void MainWindow::showPcieBoardError()
 
 void MainWindow::on_actionDump_board_registers_triggered()
 {
-    QDialog* messageBox = new QDialog;
+    QDialog* messageBox = new QDialog(this);
     QVBoxLayout* layout = new QVBoxLayout();
     messageBox->setLayout(layout);
     QTabWidget* tabWidget = new QTabWidget(messageBox);
