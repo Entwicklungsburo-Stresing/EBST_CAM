@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->horizontalSliderSample, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
     connect(ui->horizontalSliderBlock, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
     connect(ui->pushButtonStart, SIGNAL(pressed()), this, SLOT(startPressed()));
+    connect(ui->pushButtonAbort, SIGNAL(pressed()), this, SLOT(abortPressed()));
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));
     connect(&lsc, SIGNAL(measureStart()), this, SLOT(on_measureStart()));
     connect(&lsc, SIGNAL(measureDone()), this, SLOT(on_measureDone()));
@@ -319,5 +320,11 @@ void MainWindow::on_blockDone()
     QPalette pal = palette();
     pal.setColor(QPalette::Background, Qt::darkGreen);
     ui->widgetBlockOn->setPalette(pal);
+    return;
+}
+
+void MainWindow::abortPressed()
+{
+    lsc._abortMeasurement();
     return;
 }
