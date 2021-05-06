@@ -26,7 +26,9 @@ typedef struct {
 #define LSCPCIE_IOCTL_NUM_BOARDS _IOR(LSCPCIE_MAGIC, 1, int *)
 #define LSCPCIE_IOCTL_GET_CONF	 _IOR(LSCPCIE_MAGIC, 2, reg_info_t *)
 #define LSCPCIE_IOCTL_SET_CONF	 _IOW(LSCPCIE_MAGIC, 3, reg_info_t *)
-#define LSCPCIE_IOCTL_MAX 4
+#define LSCPCIE_IOCTL_GET_REG32  _IOWR(LSCPCIE_MAGIC, 4, reg_info_t *)
+#define LSCPCIE_IOCTL_SET_REG32  _IOWR(LSCPCIE_MAGIC, 5, reg_info_t *)
+#define LSCPCIE_IOCTL_MAX 6
 
 
 struct file;
