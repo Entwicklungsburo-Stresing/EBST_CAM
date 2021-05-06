@@ -188,3 +188,9 @@ void Lsc::setTorOut(uint8_t torOut)
 {
     return;
 }
+
+es_status_codes Lsc::_abortMeasurement()
+{
+    //TODO: implement me
+    return es_no_error;
+}

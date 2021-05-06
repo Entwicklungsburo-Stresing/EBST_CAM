@@ -18,6 +18,7 @@ public:
     es_status_codes initPcieBoard();
 	es_status_codes initMeasurement(struct global_settings settings_struct);
     es_status_codes returnFrame(uint32_t board, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length);
+    es_status_codes _abortMeasurement();
     std::string driverInstructions;
     std::string dumpS0Registers();
     std::string dumpDmaRegisters();

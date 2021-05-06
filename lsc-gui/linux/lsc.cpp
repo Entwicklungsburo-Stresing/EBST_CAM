@@ -8,6 +8,7 @@
 #include "linux/kernelspace/registers.h"
 #include "linux/userspace/local-config.h"
 #include "linux/userspace/examples/common.h"
+#include "../shared_src/crossPlattformBoard.h"
 
 #define memory_barrier() asm volatile ("" : : : "memory")
 #define CFG_BTIMER_IN_US      500000
@@ -321,4 +322,12 @@ void Lsc::setTorOut(uint8_t torOut)
     _torOut = torOut;
     info.dev->s0->TOR = _torOut << TOR_TO_pos;
     return;
+}
+
+es_status_codes Lsc::_abortMeasurement()
+{
+    //lscpcie_end_block(info.dev);
+    emit blockDone();
+    emit measureDone();
+    return abortMeasurement( 0 );
 }
