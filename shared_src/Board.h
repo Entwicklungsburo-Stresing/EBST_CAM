@@ -146,9 +146,9 @@ es_status_codes CalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, U
 es_status_codes GetIndexOfPixel( UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM, UINT64* pIndex );
 es_status_codes GetAddressOfPixel(UINT32 drvno, UINT16 pixel, UINT32 sample, UINT32 block, UINT16 CAM, UINT16** address);
 UINT8 WaitforTelapsed( LONGLONG musec );
-es_status_codes initCamera(UINT32 drvno, UINT8 camera_system, UINT16 pixel, UINT16 trigger_mode, UINT16 sensor_type, UINT8 ADC_Mode, UINT16 ADC_custom_pettern, UINT16 led_on, UINT16 gain_3010, UINT8 gain_3030);
+es_status_codes initCamera(UINT32 drvno, UINT8 camera_system, UINT16 pixel, UINT16 trigger_mode, UINT16 sensor_type, UINT8 ADC_Mode, UINT16 ADC_custom_pettern, UINT16 led_off, UINT16 gain_switch, UINT8 gain_3030);
 es_status_codes InitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED );
-es_status_codes InitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA );
+es_status_codes InitCamera3001( UINT32 drvno, UINT8 gain_switch);
 es_status_codes InitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern);
 es_status_codes Cam3010_ADC_reset(UINT32 drvno);
 es_status_codes Cam3010_ADC_setMode(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern);
