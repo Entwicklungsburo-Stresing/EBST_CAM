@@ -106,8 +106,8 @@ void MainWindow::startPressed()
     settings_struct.camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toInt();
     settings_struct.pixel = settings.value(settingPixelPath, settingPixelDefault).toInt();
     settings_struct.mshut = settings.value(settingMshutPath, settingMshutDefault).toInt();
-    settings_struct.led_on = settings.value(settingLedPath, settingLedDefault).toBool();
-    settings_struct.gain_3010 = settings.value(settingGain3010Path, settingGain3010Default).toBool();
+    settings_struct.led_off = settings.value(settingLedPath, settingLedDefault).toBool();
+    settings_struct.gain_switch = settings.value(settingGain3010Path, settingGain3010Default).toBool();
     settings_struct.gain_3030 = settings.value(settingGain3030Path, settingGain3030Default).toInt();
     settings_struct.Temp_level = settings.value(settingCoolingPath, settingCoolingDefault).toInt();
     settings_struct.dac = settings.value(settingDacPath, settingDacDefault).toInt();
@@ -141,7 +141,7 @@ void MainWindow::startPressed()
     settings_struct.dac_output[7] = settings.value(settingSensorOffsetChannel8Path, settingSensorOffsetChannel8Default).toInt();
     settings_struct.TORmodus = settings.value(settingTorPath, settingTorDefault).toInt();
     settings_struct.ADC_Mode = settings.value(settingAdcModePath, settingAdcModeDefault).toInt();
-    settings_struct.ADC_custom_pettern = settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toInt();
+    settings_struct.ADC_custom_pattern = settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toInt();
     settings_struct.gpx_offset = 0;//TODO
     settings_struct.isIRSensor = 0;//TODO
 	settings_struct.bec = 0; //TODO
