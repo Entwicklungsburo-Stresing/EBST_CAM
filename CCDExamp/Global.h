@@ -16,7 +16,7 @@
 #define ADC_MODE normal
 #define ADC_CUSTOM_PATTERN 0xFFFF
 //options for 3010
-#define LED_ON FALSE
+#define LED_OFF FALSE
 #define GAIN_HIGH FALSE
 //options for 3030
 #define GAIN 6
@@ -27,7 +27,7 @@
 static int YSHIFT = 8;			// 16bit=8
 //static int YSHIFT = 6;			// 14 bit
 // camera values for calling GETCCD and InitBoard
-#define SENSOR_TYPE FFTsensor
+#define SENSOR_TYPE PDAsensor
 //for FFT sensors
 #define _FFTLINES 64 		// no of vertical lines of FFT sensors, usually 64
 // =0 if not FFT
