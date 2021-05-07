@@ -177,7 +177,7 @@ void startMess()
 	char header[260];
 	contimess_run_once = TRUE;
 	struct global_settings g;
-	g.ADC_custom_pettern = ADC_CUSTOM_PATTERN;
+	g.ADC_custom_pattern = ADC_CUSTOM_PATTERN;
 	g.ADC_Mode = ADC_MODE;
 	g.bdat_in_100ns = Bdat;
 	g.bslope = TrigMod_B;
@@ -194,12 +194,11 @@ void startMess()
 	g.enable_gpx = 0;
 	g.FFTLines = _FFTLINES;
 	g.FFTMode = fftMode;
-	g.gain_3010 = GAIN_HIGH;
+	g.gain_switch = GAIN_HIGH;
 	g.gain_3030 = GAIN;
 	g.gpx_offset = 0;
-	g.isIRSensor = 0;
 	g.keep_first = 0;
-	g.led_on = LED_ON;
+	g.led_off = LED_OFF;
 	g.lines_binning = AREA_LINES_BINNING;
 	g.mshut = _MSHUT;
 	g.nob = Nob;
@@ -215,6 +214,7 @@ void startMess()
 	if (ItemIndex_S < 3) g.sti_mode = ItemIndex_S;
 	else g.sti_mode = ItemIndex_S + 1;
 	g.Temp_level = TempLevel;
+	ValMsg(TempLevel);
 	g.TORmodus = m_TOmodus;
 	g.trigger_mode_cc = CCTRIGGER_MODE;
 	g.Vfreq = Vfreqini;
