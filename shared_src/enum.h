@@ -92,7 +92,8 @@ enum TOR_MSB_bits
 
 enum XCKMSB_bits
 {
-	XCKMSB_stimer_on = 30
+	XCKMSB_bit_stimer_on = 0x40,
+	XCKMSB_bitindex_stimer_on = 30
 };
 
 //PCIe Addresses
@@ -100,6 +101,14 @@ enum pcie_addresses
 {
 	PCIeAddr_devCap = 0x5C,
 	PCIeAddr_devStatCtrl = 0x60
+};
+
+enum BTRIGREG_bits
+{
+	BTRIGREG_bit_SWTRIG = 0x40,
+	BTRIGREG_bit_RSFIFO = 0x80,
+	BTRIGREG_bitindex_SWTRIG = 6,
+	BTRIGREG_bitindex_RSFIFO = 7
 };
 
 //S0 Addresses
