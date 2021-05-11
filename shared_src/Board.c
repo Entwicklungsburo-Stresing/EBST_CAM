@@ -512,8 +512,6 @@ es_status_codes InitMeasurement(struct global_settings settings)
 	if (status != es_no_error) return status;
 	status = ClearAllUserRegs(settings.drvno);
 	if (status != es_no_error) return status;
-	status = WriteByteS0(settings.drvno, 0x23, S0Addr_CTRLA);
-	if (status != es_no_error) return status;
 	status = SetPixelCount(settings.drvno, settings.pixel);
 	if (status != es_no_error) return status;
 	status = SetCamCount(settings.drvno, settings.camcnt);
@@ -3739,16 +3737,20 @@ es_status_codes SetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
 }
 
 /**
-\brief Turn partial binning on or off.
-\param drvno PCIe board identifier.
-\param number_of_regions =0 to turn partial binning off. !=0 to turn on.
-\return True for success.
-*/
+ * \brief Turn partial binning on.
+ * 
+ * \param drvno  PCIe board identifier.
+ * \param number_of_regions number of regions for partial binning
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
 BOOL SetPartialBinning( UINT32 drvno, UINT16 number_of_regions )
 {
-	BOOL success = WriteLongS0( drvno, number_of_regions, S0Addr_ARREG );
-	success &= SetS0Bit( 15, S0Addr_ARREG, drvno );//this turns ARREG on and therefore partial binning too
-	return success;
+	es_status_codes status = WriteLongS0( drvno, number_of_regions, S0Addr_ARREG );
+	if (status != es_no_error) return status;
+	return SetS0Bit( 15, S0Addr_ARREG, drvno );//this turns ARREG on and therefore partial binning too
 }
 
 /**
@@ -3757,6 +3759,8 @@ BOOL SetPartialBinning( UINT32 drvno, UINT16 number_of_regions )
  * \param drvno PCIe board identifier.
  * \return es_status_codes
  *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
  */
 es_status_codes ResetPartialBinning( UINT32 drvno )
 {
