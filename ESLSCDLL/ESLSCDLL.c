@@ -750,19 +750,11 @@ DllAccess es_status_codes DLLSetupPCIE_DMA(UINT32 drvno)
 }
 
 /**
- * \copydoc SetGlobalVariables
+ * \copydoc SetTLPS
  */
-DllAccess es_status_codes DLLSetGlobalVariables(UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay)
+DllAccess es_status_codes DLLSetTLPS(UINT32 drvno, UINT32 pixel)
 {
-	return SetGlobalVariables(drvno, camcnt, pixel, xckdelay);
-}
-
-/**
- * \copydoc SetBoardVars
- */
-DllAccess es_status_codes DLLSetBoardVars(UINT32 drvno)
-{
-	return SetBoardVars(drvno);
+	return SetTLPS(drvno, pixel);
 }
 
 /**

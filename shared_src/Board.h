@@ -67,8 +67,6 @@ es_status_codes AboutS0( UINT32 drvno );
 //  same header file for ISA and PCI version
 es_status_codes SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno );
 es_status_codes SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno );
-es_status_codes SetDMAAddrTlp( UINT32 drvno );
-void SetManualTLP_vars();
 es_status_codes SetDMABufRegs( UINT32 drvno );
 es_status_codes SetDMAReset( UINT32 drvno );
 es_status_codes SetDMAStart( UINT32 drvno );
@@ -79,8 +77,7 @@ es_status_codes SetupPCIE_DMA( UINT32 drvno );
 void StartPCIE_DMAWrite( UINT32 drvno );
 es_status_codes CleanupPCIE_DMA( UINT32 drvno );
 int GetNumofProcessors();
-es_status_codes SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel );
-es_status_codes SetBoardVars( UINT32 drvno );
+es_status_codes SetTLPS( UINT32 drvno, UINT32 pixel );
 es_status_codes SetPixelCount(UINT32 drvno, UINT16 pixelcount);
 es_status_codes SetCamCount(UINT32 drvno, UINT16 camcount);
 es_status_codes Use_ENFFW_protection(UINT32 drvno, BOOL USE_ENFFW_PROTECT);
