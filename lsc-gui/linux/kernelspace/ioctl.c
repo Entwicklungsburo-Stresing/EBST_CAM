@@ -93,7 +93,7 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 					&((reg_info_t __user *) arg)->address);
 			if (result)
 				result = -EFAULT;
-			val32 = readl(dev->mapped_pci_base + reg_info.address);
+			val32 = readl(dev->physical_pci_base + reg_info.address);
 			result =
 				put_user(val32, &((reg_info_t __user *) arg)->value);
 			if (result)
@@ -110,7 +110,7 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 				result = -EFAULT;
 			else
 				writel(reg_info.value,
-					dev->mapped_pci_base + reg_info.address);
+					dev->physical_pci_base + reg_info.address);
 			break;
 
 	default:
