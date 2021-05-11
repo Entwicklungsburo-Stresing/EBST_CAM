@@ -97,8 +97,6 @@ es_status_codes SetSEC( UINT32 drvno, UINT32 ecin100ns );
 es_status_codes SetBDAT( UINT32 drvno, UINT32 tin100ns ); // delay after trigger in 100ns
 es_status_codes SetBEC( UINT32 drvno, UINT32 ecin100ns );
 es_status_codes SetTORReg( UINT32 drvno, BYTE fkt );
-es_status_codes SetISPDA( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if PDA
-es_status_codes SetISFFT( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if FFT
 es_status_codes SetSensorType( UINT32 drvno, UINT8 sensor_type );
 // FIFO functions
 es_status_codes initReadFFLoop( UINT32 drv );
@@ -186,6 +184,7 @@ es_status_codes SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob )
 es_status_codes SetGain( UINT32 drvno, UINT16 gain_value );
 es_status_codes LedOff( UINT32 drvno, UINT8 LED_OFF );
 es_status_codes SetXckdelay(UINT32 drvno, UINT32 xckdelay);
+es_status_codes checkDriverHandle(UINT32 drvno);
 
 #ifdef __cplusplus
 }
