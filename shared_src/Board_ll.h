@@ -20,6 +20,7 @@
 
 extern WDC_DEVICE_HANDLE* hDev;
 
+//Low level API
 es_status_codes SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno );
 es_status_codes SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno );
 es_status_codes ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno );
