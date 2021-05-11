@@ -1293,19 +1293,40 @@ es_status_codes SetBoardVars( UINT32 drvno )
 	//set startval for CTRLA Reg  +slope, IFC=h, VON=1 
 	es_status_codes status = WriteByteS0(drvno, 0x23, S0Addr_CTRLA);
 	if (status != es_no_error) return status;
-	//write CTRLB reg in S0
-	status = WriteByteS0(drvno, 0, S0Addr_CTRLB);
+	status = SetPixelCount(drvno, aPIXEL[drvno]);
 	if (status != es_no_error) return status;
-	//write CTRLC reg in S0
-	status = WriteByteS0(drvno, 0, S0Addr_CTRLC);
-	if (status != es_no_error) return status;
-	//write pixel to PIXREG  & stop timer & int trig
-	status = SetS0Reg(aPIXEL[drvno], 0xFFFF, S0Addr_PIXREGlow, drvno);
-	if (status != es_no_error) return status;
-	status = SetS0Reg(aCAMCNT[drvno], 0xF, S0Addr_CAMCNT, drvno);
-	return status; //no error
+	return SetCamCount(drvno, aCAMCNT[drvno]);
 };  // SetBoardVars
 
+/**
+ * \brief Set pixel count
+ *
+ * \param drvno PCIe board identifier
+ * \return es_status_codes:
+ *		- es_no_error
+ * 		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
+es_status_codes SetPixelCount(UINT32 drvno, UINT16 pixelcount)
+{
+	WDC_Err("Set pixel count\n");
+	return SetS0Reg(pixelcount, 0xFFFF, S0Addr_PIXREGlow, drvno);
+};
+
+/**
+ * \brief Set cam count
+ *
+ * \param drvno PCIe board identifier
+ * \return es_status_codes:
+ *		- es_no_error
+ * 		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
+es_status_codes SetCamCount(UINT32 drvno, UINT16 camcount)
+{
+	WDC_Err("Set cam count\n");
+	return SetS0Reg(camcount, 0xF, S0Addr_CAMCNT, drvno);
+};
 
 /**
  * Allocate user memory.
