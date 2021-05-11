@@ -1593,14 +1593,8 @@ es_status_codes WaitTrigger( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOO
 es_status_codes CloseShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 {
 	WDC_Err("Close shutter\n");
-	//This function does a bit set. Unfortunately the following line doesn't work. We don't know why, yet. Maybe there is a problem iin ResetS0Bit. -FH, BB
-	//ResetS0Bit(CTRLB_bitindex_SHON, S0Addr_CTRLB, drvno);
-	UCHAR CtrlB = 0;
-	es_status_codes status = ReadByteS0(drvno, &CtrlB, S0Addr_CTRLB);
-	if (status != es_no_error) return status;
-	CtrlB &= ~0x08; // clr bit D3 (MSHT) in CtrlB, ehemals 0x0fd;	/* $FD = 1111 1101 */
-	return WriteByteS0(drvno, CtrlB, S0Addr_CTRLB);
-}; //CloseShutter
+	return ResetS0Bit(CTRLB_bitindex_SHON, S0Addr_CTRLB, drvno);
+};
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
@@ -1615,14 +1609,9 @@ es_status_codes CloseShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
  */
 es_status_codes OpenShutter( UINT32 drvno )   // ehemals IFC = low, in CTRLA
 {
-	//This function does a bit set. Unfortunately the following line doesn't work. We don't know why, yet. Maybe there is a problem in SetS0Bit. -FH, BB
-	//SetS0Bit(CTRLB_bitindex_SHON, S0Addr_CTRLB, drvno);
-	UCHAR CtrlB = 0;
-	es_status_codes status = ReadByteS0(drvno, &CtrlB, S0Addr_CTRLB);
-	if (status != es_no_error) return status;
-	CtrlB |= 0x08; // set bit D3 (MSUT) in CtrlB
-	return WriteByteS0(drvno, CtrlB, S0Addr_CTRLB);
-}; //OpenShutter
+	WDC_Err("Open shutter\n");
+	return SetS0Bit(CTRLB_bitindex_SHON, S0Addr_CTRLB, drvno);
+};
 
 BOOL GetShutterState( UINT32 drvno )
 {
@@ -2266,11 +2255,7 @@ es_status_codes StartSTimer( UINT32 drvno )
 es_status_codes StopSTimer( UINT32 drvno )
 {
 	WDC_Err("Stop S Timer, drv: %u\n", drvno);
-	BYTE data = 0;
-	es_status_codes status = ReadByteS0(drvno, &data, S0Addr_XCKMSB);
-	if (status != es_no_error) return status;
-	data &= 0xBF;
-	return WriteByteS0(drvno, data, S0Addr_XCKMSB);
+	return ResetS0Bit(XCKMSB_bitindex_stimer_on, S0Addr_XCKMSB, drvno);
 }
 
 /**
@@ -2342,17 +2327,9 @@ es_status_codes SetBSlope( UINT32 drvno, UINT32 slope )
 es_status_codes SWTrig( UINT32 drvno )
 {
 	WDC_Err("Doing software trigger.\n");
-	UCHAR reg = 0;
-	//	ReadByteS0(drvno,&reg,11);  //enable timer
-	//	reg |= 0x40;  
-	//	WriteByteS0(drvno,reg,11);	
-	es_status_codes status = ReadByteS0( drvno, &reg, S0Addr_BTRIGREG );
+	es_status_codes status = SetS0Bit(BTRIGREG_bitindex_SWTRIG, S0Addr_BTRIGREG, drvno);
 	if (status != es_no_error) return status;
-	reg |= 0x40;
-	status = WriteByteS0( drvno, reg, S0Addr_BTRIGREG ); //set Trigger
-	if (status != es_no_error) return status;
-	reg &= 0xBF;
-	return WriteByteS0( drvno, reg, S0Addr_BTRIGREG ); //reset
+	return ResetS0Bit(BTRIGREG_bitindex_SWTRIG, S0Addr_BTRIGREG, drvno);
 }
 
 /**
@@ -2439,14 +2416,10 @@ es_status_codes checkFifoOverflow( UINT32 drvno, BOOL* overflow )
  */
 es_status_codes RSFifo( UINT32 drvno )
 {
-	BYTE data = 0;
-	es_status_codes status = ReadByteS0( drvno, &data, S0Addr_BTRIGREG );
+	WDC_Err("Reset Fifo\n");
+	es_status_codes status = SetS0Bit(BTRIGREG_bitindex_RSFIFO, S0Addr_BTRIGREG, drvno);
 	if (status != es_no_error) return status;
-	data |= 0x80;
-	status = WriteByteS0( drvno, data, S0Addr_BTRIGREG );
-	if (status != es_no_error) return status;
-	data &= 0x7F;
-	return WriteByteS0( drvno, data, S0Addr_BTRIGREG );
+	return ResetS0Bit(BTRIGREG_bitindex_RSFIFO, S0Addr_BTRIGREG, drvno);
 }
 
 /**
@@ -2817,22 +2790,12 @@ es_status_codes RS_DMAAllCounter( UINT32 drv, BOOL hwstop )
 	if (status != es_no_error) return status;
 	status = RS_BlockCounter( drv );
 	if (hwstop)
-	{
 		//set Block end stops timer:
 		//when SCANINDEX reaches NOS, the timer is stopped by hardware.
-		status = ReadByteS0( drv, &dwdata8, S0Addr_PCIEFLAGS );
-		if (status != es_no_error) return status;
-		dwdata8 |= PCIEFLAGS_bit_ENRSTIMERHW; //set bit2 for
-		status = WriteByteS0( drv, dwdata8, S0Addr_PCIEFLAGS );
-	}
+		SetS0Bit(PCIEFLAGS_bitindex_ENRSTIMERHW, S0Addr_PCIEFLAGS, drv);
 	else
-	{
 		//stop only with write to RS_Timer Reg
-		status = ReadByteS0( drv, &dwdata8, S0Addr_PCIEFLAGS );
-		if (status != es_no_error) return status;
-		dwdata8 &= 0xFB; //bit2
-		status = WriteByteS0( drv, dwdata8, S0Addr_PCIEFLAGS );
-	}
+		ResetS0Bit(PCIEFLAGS_bitindex_ENRSTIMERHW, S0Addr_PCIEFLAGS, drv);
 	return status;
 }//RS_DMAAllCounter
 
