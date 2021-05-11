@@ -512,7 +512,7 @@ es_status_codes InitMeasurement(struct global_settings settings)
 	if (status != es_no_error) return status;
 	status = ClearAllUserRegs(settings.drvno);
 	if (status != es_no_error) return status;
-	status = SetTLPS(settings.drvno, settings.pixel);
+	status = WriteByteS0(settings.drvno, 0x23, S0Addr_CTRLA);
 	if (status != es_no_error) return status;
 	status = SetPixelCount(settings.drvno, settings.pixel);
 	if (status != es_no_error) return status;
@@ -609,6 +609,8 @@ es_status_codes InitMeasurement(struct global_settings settings)
 	}
 	//DMA
 	status = SetupPCIE_DMA(settings.drvno);
+	if (status != es_no_error) return status;
+	status = SetTLPS(settings.drvno, settings.pixel);
 	if (status != es_no_error) return status;
 	//TODO set cont FF mode with DLL style(CONTFFLOOP = activate;//0 or 1;CONTPAUSE = pause;) or CCDExamp style(check it out)
 	status = SetBEC( settings.drvno, settings.bec );
