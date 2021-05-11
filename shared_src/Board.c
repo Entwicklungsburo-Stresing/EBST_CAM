@@ -392,7 +392,8 @@ es_status_codes CCDDrvInit()
  */
 es_status_codes CCDDrvExit( UINT32 drvno )
 {
-	es_status_codes status = es_no_error;
+	es_status_codes status = checkDriverHandle(drvno);
+	if (status != es_no_error) return status;
 	WDC_Err( "Driver exit, drv: %u\n", drvno);
 	if (WDC_IntIsEnabled( hDev[drvno] ))
 	{
@@ -507,12 +508,9 @@ es_status_codes InitMeasurement(struct global_settings settings)
 	for (int i = 0; i < sizeof(settings)/4; i++)
 		WDC_Err("%x ", *(&settings.drvno + i));
 	WDC_Err("\n");
-	if (hDev[settings.drvno] == INVALID_HANDLE_VALUE)
-	{
-		WDC_Err("Handle is invalid of drvno: %i", settings.drvno);
-		return es_invalid_driver_handle;
-	}
-	es_status_codes status = ClearAllUserRegs(settings.drvno);
+	es_status_codes status = checkDriverHandle(settings.drvno);
+	if (status != es_no_error) return status;
+	status = ClearAllUserRegs(settings.drvno);
 	if (status != es_no_error) return status;
 	status = SetTLPS(settings.drvno, settings.pixel);
 	if (status != es_no_error) return status;
@@ -619,6 +617,28 @@ es_status_codes InitMeasurement(struct global_settings settings)
 	BOARD_SEL = settings.board_sel;
 	WDC_Err("*** Init Measurement done ***\n\n");
 	return status;
+}
+
+/**
+ * Check drvno for beeing legit
+ * 
+ * \param drvno driver number
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ */
+es_status_codes checkDriverHandle(UINT32 drvno)
+{
+	if ((drvno < 1) || (drvno > 2))
+		return es_invalid_driver_number;
+	else if (hDev[drvno] == INVALID_HANDLE_VALUE)
+	{
+		WDC_Err("Handle is invalid of drvno: %i", drvno);
+		return es_invalid_driver_handle;
+	}
+	else
+		return es_no_error;
 }
 
 es_status_codes StartMeasurement()
@@ -1732,88 +1752,27 @@ es_status_codes SetBEC( UINT32 drvno, UINT32 ecin100ns )
 es_status_codes SetTORReg( UINT32 drvno, BYTE fkt )
 {
 	WDC_Err("Set TOR: %u\n", fkt);
-	BYTE val = 0; //defaut XCK= high during read
 	BYTE read_val = 0;
-	if (fkt == 0) val = 0x00; // set to XCK
-	if (fkt == 1) val = 0x10; // set to REG -> OutTrig
-	if (fkt == 2) val = 0x20; // set to VON
-	if (fkt == 3) val = 0x30; // set to DMA_ACT
-	if (fkt == 4) val = 0x40; // set to ASLS
-	if (fkt == 5) val = 0x50; // set to STIMER
-	if (fkt == 6) val = 0x60; // set to BTIMER 
-	if (fkt == 7) val = 0x70; // set to ISR_ACT 
-	if (fkt == 8) val = 0x80; // set to S1 
-	if (fkt == 9) val = 0x90; // set to S2 
-	if (fkt == 10) val = 0xa0; // set to BON 
-	if (fkt == 11) val = 0xb0; // set to MEASUREON
-	if (fkt == 12) val = 0xc0; // set to SDAT
-	if (fkt == 13) val = 0xd0; // set to BDAT
-	if (fkt == 14) val = 0xe0; // set to SSHUT
-	if (fkt == 15) val = 0xf0; // set to BSHUT
-
-	es_status_codes status = ReadByteS0( drvno, &read_val, S0Addr_TOR + 3 );
+	es_status_codes status = ReadByteS0( drvno, &read_val, S0Addr_TOR_MSB);
 	if (status != es_no_error) return status;
 	read_val &= 0x0f; //dont disturb lower bits
-	val |= read_val;
-	return WriteByteS0( drvno, val, S0Addr_TOR + 3 );
+	fkt = fkt << 4;
+	fkt |= read_val;
+	return WriteByteS0( drvno, fkt, S0Addr_TOR_MSB);
 }//SetTORReg
 
 /**
- * \brief Set/reset bit for PDA sensor timing(set Reg TOR:D25 -> manual).
- * 
- * \param drvno board number (=1 if one PCI board)
- * \param set if set is true (not 0)-> bit is set, reset else
- * \return es_status_codes
- *		- es_no_error
- *		- es_register_read_failed
- *		- es_register_write_failed
- */
-es_status_codes SetISPDA( UINT32 drvno, BOOL set )
-{//set bit if PDA sensor - used for EC and IFC
-	BYTE val = 0;
-	es_status_codes status = ReadByteS0( drvno, &val, S0Addr_TOR + 3 );
-	if (status != es_no_error) return status;
-	if (set)
-	{
-		val |= 0x02;
-		status = OpenShutter( drvno );
-		if (status != es_no_error) return status;
-	}
-	else val &= 0xfd;
-	return WriteByteS0( drvno, val, S0Addr_TOR + 3 );
-}//SetISPDA
-
-/**
- * \brief Set/reset bit for FFT sensor timing(set Reg TOR:D24 -> manual).
- * 
- * \param drvno board number (=1 if one PCI board)
- * \param set if set is true (not 0)-> bit is set, reset else
- * \return es_status_codes
- *		- es_no_error
- *		- es_register_read_failed
- *		- es_register_write_failed
- */
-es_status_codes SetISFFT( UINT32 drvno, BOOL set )
-{//set bit if FFT sensor - used for vclks and IFC
-	BYTE val = 0;
-	es_status_codes status = ReadByteS0( drvno, &val, S0Addr_TOR + 3 );
-	if (status != es_no_error) return status;
-	if (set) val |= 0x01;
-	else val &= 0xfe;
-	return WriteByteS0( drvno, val, S0Addr_TOR + 3 );
-}//SetISFFT
-
-/**
- * \brief Sets PDA sensor timing(set Reg TOR:D25 -> manual) or FFT.
+ * \brief Sets sensor type (Reg TOR:D25 -> manual).
  * 
  * \param drvno board number (=1 if one PCI board)
  * \param sensor_type Determines sensor type.
- * 	- 0: PDA (line sensor)
- * 	- 1: FFT (area sensor)
- * \return es_status_codes
+ * 		- 0: PDA (line sensor)
+ * 		- 1: FFT (area sensor)
+ * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
+ *		- es_parameter_out_of_range
  */
 es_status_codes SetSensorType( UINT32 drvno, UINT8 sensor_type )
 {
@@ -1821,17 +1780,20 @@ es_status_codes SetSensorType( UINT32 drvno, UINT8 sensor_type )
 	es_status_codes status = es_no_error;
 	switch (sensor_type)
 	{
-	default:
 	case 0:
-		status = SetISFFT( drvno, FALSE );
+		status = ResetS0Bit(TOR_MSB_bitindex_ISFFT, S0Addr_TOR_MSB, drvno);
 		if (status != es_no_error) return status;
-		status = SetISPDA( drvno, TRUE );
+		status = SetS0Bit(TOR_MSB_bitindex_SENDRS, S0Addr_TOR_MSB, drvno);
+		if (status != es_no_error) return status;
+		status = OpenShutter(drvno);
 		break;
 	case 1:
-		status = SetISFFT( drvno, TRUE );
+		status = SetS0Bit(TOR_MSB_bitindex_ISFFT, S0Addr_TOR_MSB, drvno);
 		if (status != es_no_error) return status;
-		status = SetISPDA( drvno, FALSE );
+		status = ResetS0Bit(TOR_MSB_bitindex_SENDRS, S0Addr_TOR_MSB, drvno);
 		break;
+	default:
+		return es_parameter_out_of_range;
 	}
 	return status;
 }
@@ -4090,9 +4052,11 @@ es_status_codes LedOff( UINT32 drvno, UINT8 LED_OFF )
  */
 es_status_codes ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length )
 {
+	es_status_codes status = checkDriverHandle(drv);
+	if (status != es_no_error) return status;
 	UINT16* pframe = NULL;
 	//UINT16** pframe;// = &userBuffer[1][0];
-	es_status_codes status = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, curr_cam, &pframe);
+	status = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, curr_cam, &pframe);
 	if (status != es_no_error) return status;
 	memcpy( pdest, pframe, length * sizeof( UINT16 ) );  // length in bytes
 	/*
@@ -4117,7 +4081,9 @@ es_status_codes ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT1
 es_status_codes abortMeasurement( UINT32 drv )
 {
 	WDC_Err("Abort Measurement\n");
-	es_status_codes status = StopSTimer( drv );
+	es_status_codes status = checkDriverHandle(drv);
+	if (status != es_no_error) return status;
+	status = StopSTimer( drv );
 	if (status != es_no_error) return status;
 	status = resetBlockOn(drv);
 	if (status != es_no_error) return status;

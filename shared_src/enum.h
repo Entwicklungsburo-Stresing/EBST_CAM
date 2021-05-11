@@ -77,6 +77,19 @@ enum CTRLA_bits
 	CTRLA_bitindex_TSTART = 7
 };
 
+enum TOR_MSB_bits
+{
+	TOR_MSB_bit_ISFFT = 0x01,
+	TOR_MSB_bit_SENDRS = 0x02,
+	TOR_MSB_bit_no_RS = 0x04,
+	TOR_MSB_bit_RSLEVEL = 0x08,
+	TOR_MSB_bitindex_ISFFT = 0,
+	TOR_MSB_bitindex_SENDRS = 1,
+	TOR_MSB_bitindex_no_RS = 2,
+	TOR_MSB_bitindex_RSLEVEL = 3
+
+};
+
 enum XCKMSB_bits
 {
 	XCKMSB_stimer_on = 30
@@ -115,6 +128,7 @@ enum s0_addresses
 	S0Addr_SDAT = 0x20,
 	S0Addr_SEC = 0x24,
 	S0Addr_TOR = 0x28,
+	S0Addr_TOR_MSB = 0x2B,
 	S0Addr_ARREG = 0x2C,
 	S0Addr_GIOREG = 0x30,
 	S0Addr_DELAYEC = 0x34,
