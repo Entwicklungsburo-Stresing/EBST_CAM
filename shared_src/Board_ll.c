@@ -11,9 +11,9 @@ WDC_DEVICE_HANDLE* hDev = &hDev_tmp;
  * @param Address 
  * @param drvno PCIe board identifier.
  * @return es_status_codes
-	- es_no_error
-	- es_register_read_failed
-	- es_register_write_failed
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
  */
 es_status_codes SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno )
 {
@@ -44,8 +44,10 @@ es_status_codes SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno 
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
  * @param Address register address
  * @param drvno board number (=1 if one PCI board)
- * @return es_status_codes 
-	- es_no_error
+ * @return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
  */
 es_status_codes SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
@@ -75,8 +77,10 @@ es_status_codes SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
  * @param Address register address
  * @param drvno board number (=1 if one PCI board)
- * @return es_status_codes 
- 	- es_no_error
+ * @return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
  */
 es_status_codes ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
