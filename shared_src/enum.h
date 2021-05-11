@@ -57,6 +57,26 @@ enum CTRLB_bits
 	CTRLB_bitindex_BTI2 = 6
 };
 
+enum CTRLA_bits
+{
+	CTRLA_bit_VONOFF = 0x01,
+	CTRLA_bit_IFC = 0x02,
+	CTRLA_bit_XCK = 0x04,
+	CTRLA_bit_TRIG_OUT = 0x08,
+	CTRLA_bit_BOTH_SLOPE = 0x10,
+	CTRLA_bit_SLOPE = 0x20,
+	CTRLA_bit_DIR_TRIGIN = 0x40,
+	CTRLA_bit_TSTART = 0x80,
+	CTRLA_bitindex_VONOFF = 0,
+	CTRLA_bitindex_IFC = 1,
+	CTRLA_bitindex_XCK = 2,
+	CTRLA_bitindex_TRIG_OUT = 3,
+	CTRLA_bitindex_BOTH_SLOPE = 4,
+	CTRLA_bitindex_SLOPE = 5,
+	CTRLA_bitindex_DIR_TRIGIN = 6,
+	CTRLA_bitindex_TSTART = 7
+};
+
 enum XCKMSB_bits
 {
 	XCKMSB_stimer_on = 30

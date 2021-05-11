@@ -562,20 +562,7 @@ es_status_codes InitMeasurement(struct global_settings settings)
 		if (status != es_no_error) return status;
 	}
 	//SSlope
-	switch (settings.sslope)
-	{
-	case 0:
-		status = HighSlope(settings.drvno);
-		break;
-	case 1:
-		status = LowSlope(settings.drvno);
-		break;
-	case 2:
-		status = BothSlope(settings.drvno);
-		break;
-	default:
-		return es_parameter_out_of_range;
-	}
+	SetSSlope(settings.drvno, settings.sslope);
 	if (status != es_no_error) return status;
 	//BSlope
 	status = SetBSlope(settings.drvno, settings.bslope);
@@ -1479,84 +1466,47 @@ D6, D7 have only read function
 */
 
 /**
- * \brief Set the external trigger slope to low (PCI Reg CrtlA:D5 -> manual).
- * 
+ * \brief Set the external trigger slope for scan trigger (PCI Reg CrtlA:D5 -> manual).
+ *
  * \param drvno board number (=1 if one PCI board)
+ * \param sslope Choose slope:
+ *		- 0: high slope
+ *		- 1: low slope
+ *		- 2: both slope
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes LowSlope( UINT32 drvno )
-{// clear bit D5
-	WDC_Err("Set low slope\n");
-	BYTE CtrlA = 0;
-	es_status_codes status = NotBothSlope( drvno );
-	if (status != es_no_error) return status;
-	status = ReadByteS0( drvno, &CtrlA, S0Addr_CTRLA );
-	if (status != es_no_error) return status;
-	CtrlA &= 0x0df;
-	return WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
-}; //LowSlope
-
-/**
- * \brief Functions for managing controlbits in CtrlA register. Set input Trigger slope high.
- * 
- * \param drvno board number (=1 if one PCI board)
- * \return es_status_codes
- *		- es_no_error
- *		- es_register_read_failed
- * 		- es_register_write_failed
- */
-es_status_codes HighSlope( UINT32 drvno )
-{// set bit D5
-	WDC_Err("Set high slope\n");
-	BYTE CtrlA = 0;
-	NotBothSlope( drvno );
-	es_status_codes status = ReadByteS0( drvno, &CtrlA, S0Addr_CTRLA );
-	if (status != es_no_error) return status;
-	CtrlA |= 0x20;
-	return WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
-}; //HighSlope
-
-/**
- * \brief Set trigger input to pos. & neg. slope.
- * 
- * \param drvno board number (=1 if one PCI board)
- * \return es_status_codes
- *		- es_no_error
- *		- es_register_read_failed
- * 		- es_register_write_failed
- */
-es_status_codes BothSlope( UINT32 drvno )
-{// set bit D4
-	WDC_Err("Set both slope\n");
-	BYTE CtrlA = 0;
-	es_status_codes status = HighSlope( drvno );
-	if (status != es_no_error) return status;
-	status = ReadByteS0( drvno, &CtrlA, S0Addr_CTRLA );
-	if (status != es_no_error) return status;
-	CtrlA |= 0x10;
-	return WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
-}; //BothSlope
-
-/**
- * \brief Reset both slopes.
- * 
- * \param drvno PCIe board identifier.
- * \return es_status_codes
- *		- es_no_error
- *		- es_register_read_failed
- *		- es_register_write_failed
- */
-es_status_codes NotBothSlope( UINT32 drvno )
-{// set bit D4
-	BYTE CtrlA = 0;
-	es_status_codes status = ReadByteS0( drvno, &CtrlA, S0Addr_CTRLA );
-	if (status != es_no_error) return status;
-	CtrlA &= 0xEF;
-	return WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
-}; //NotBothSlope
+es_status_codes SetSSlope(UINT32 drvno, UINT32 sslope)
+{
+	WDC_Err("Set scan slope\n");
+	es_status_codes status = es_no_error;
+	switch (sslope)
+	{
+	// high slope
+	case 0:
+		status = SetS0Bit(CTRLA_bitindex_SLOPE, S0Addr_CTRLA, drvno);
+		if (status != es_no_error) return status;
+		status = ResetS0Bit(CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA, drvno);
+		break;
+	// low slope
+	case 1:
+		status = ResetS0Bit(CTRLA_bitindex_SLOPE, S0Addr_CTRLA, drvno);
+		if (status != es_no_error) return status;
+		status = ResetS0Bit(CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA, drvno);
+		break;
+	// both slope
+	case 2:
+		status = SetS0Bit(CTRLA_bitindex_SLOPE, S0Addr_CTRLA, drvno);
+		if (status != es_no_error) return status;
+		status = SetS0Bit(CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA, drvno);
+		break;
+	default:
+		return es_parameter_out_of_range;
+	}
+	return status;
+};
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /* Ausgabe eines High-Signals an Pin 17                                      */

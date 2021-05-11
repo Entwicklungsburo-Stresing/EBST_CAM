@@ -87,10 +87,6 @@ es_status_codes Use_ENFFW_protection(UINT32 drvno, BOOL USE_ENFFW_PROTECT);
 // clear camera with reads
 es_status_codes AboutDrv( UINT32 drvno );	// displays the version and board ID = test if board is there
 //	functions for managing controlbits in CtrlA register
-es_status_codes LowSlope( UINT32 drvno );		//set input Trigger slope low
-es_status_codes HighSlope( UINT32 drvno );		//set input Trigger slope high
-es_status_codes BothSlope( UINT32 drvno );		//set trigger on both slopes 
-es_status_codes NotBothSlope( UINT32 drvno );		//set trigger on both slopes off
 es_status_codes OutTrigLow( UINT32 drvno );		//set output Trigger signal low
 es_status_codes OutTrigHigh( UINT32 drvno );		//set output Trigger signal high
 es_status_codes OutTrigPulse( UINT32 drvno, ULONG PulseWidth );	// pulses high output Trigger signal
@@ -188,6 +184,7 @@ es_status_codes SetBTI( UINT32 drvno, UINT8 bti_mode );
 es_status_codes SetSTI( UINT32 drvno, UINT8 sti_mode );
 es_status_codes ClearAllUserRegs( UINT32 drv );
 es_status_codes SetBSlope( UINT32 drvno, UINT32 slope );
+es_status_codes SetSSlope(UINT32 drvno, UINT32 sslope);
 es_status_codes SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob );
 es_status_codes SetGain( UINT32 drvno, UINT16 gain_value );
 es_status_codes LedOff( UINT32 drvno, UINT8 LED_OFF );
