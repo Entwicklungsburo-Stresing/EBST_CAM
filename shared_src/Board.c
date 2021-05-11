@@ -45,8 +45,6 @@ HANDLE hTHREAD = 0;
 //general switch to suppress ErrorMsg windows , global in BOARD
 BOOL _SHOW_MSG = TRUE;
 __int64 TPS = 0;				// ticks per second; is set in InitHRCounter
-UINT32 NO_TLPS;//0x12; //was 0x11-> x-offset			//0x11=17*128  = 2176 Bytes  = 1088 WORDS
-UINT32 TLPSIZE = 0x20; //default = 0x20 A.M. Dec'20 //with0x21: crash
 UINT32 BDATA = 0;
 UINT16* userBufferWritePos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 UINT32 numberOfInterrupts;
@@ -509,11 +507,18 @@ es_status_codes InitMeasurement(struct global_settings settings)
 	for (int i = 0; i < sizeof(settings)/4; i++)
 		WDC_Err("%x ", *(&settings.drvno + i));
 	WDC_Err("\n");
+	if (hDev[settings.drvno] == INVALID_HANDLE_VALUE)
+	{
+		WDC_Err("Handle is invalid of drvno: %i", settings.drvno);
+		return es_invalid_driver_handle;
+	}
 	es_status_codes status = ClearAllUserRegs(settings.drvno);
 	if (status != es_no_error) return status;
-	status = SetGlobalVariables(settings.drvno, settings.camcnt, settings.pixel);
+	status = SetTLPS(settings.drvno, settings.pixel);
 	if (status != es_no_error) return status;
-	status = SetBoardVars( settings.drvno );
+	status = SetPixelCount(settings.drvno, settings.pixel);
+	if (status != es_no_error) return status;
+	status = SetCamCount(settings.drvno, settings.camcnt);
 	if (status != es_no_error) return status;
 	//set PDA and FFT
 	status = SetSensorType(settings.drvno, (UINT8)settings.sensor_type);
@@ -721,70 +726,6 @@ es_status_codes SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG
 		WDC_Err("Set the number of DMA transfer count failed");
 	return status;
 }//SetDMAAddrTlpRegs
-
-/**
- * \brief
- * 
- * \param drvno PCIe board identifier.
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_read_failed
- *		- es_register_write_failed
- */
-es_status_codes SetDMAAddrTlp( UINT32 drvno )
-{
-	WD_DMA **ppDma = &dmaBufferInfos[drvno];
-	UINT64 PhysAddrDMABuf64;
-	ULONG BitMask;
-	//ULONG BData = 0; //-> ersetzt durch globale variable BDATA
-	int tlpmode = 0;
-	es_status_codes status = ReadLongIOPort( drvno, &BDATA, PCIeAddr_devCap );
-	if (status != es_no_error) return status;
-	tlpmode = BDATA & 0x7;//0xE0 ;
-	//tlpmode = tlpmode >> 5;
-	if (_FORCETLPS128) tlpmode = 0;
-	BDATA &= 0xFFFFFF1F;//delete the old values
-	BDATA |= (0x2 << 12);//set maxreadrequestsize
-	switch (tlpmode)
-	{
-	case 0:
-		BDATA |= 0x00;//set to 128 bytes = 32 DWORDS 
-		//BData |= 0x00000020;//set from 128 to 256 
-		//WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
-		//NO_TLPS setup now in setboardvars
-		TLPSIZE = 0x20;
-		break;
-	case 1:
-		BDATA |= 0x20;//set to 256 bytes = 64 DWORDS 
-		//BData |= 0x00000020;//set to 256 
-		//WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
-		//NO_TLPS = 0x9;//x9 was before. 0x10 is calculated in aboutlp and 0x7 is working;
-		TLPSIZE = 0x40;
-		break;
-	case 2:
-		BDATA |= 0x40;//set to 512 bytes = 128 DWORDS 
-		//BData |= 0x00000020;//set to 512 
-		//WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
-		//NO_TLPS = 0x5;
-		TLPSIZE = 0x80;
-		break;
-	}
-	//ValMsg( BData ); //TESTPOINT
-	if (MANUAL_OVERRIDE_TLP)
-		SetManualTLP_vars();
-	status = WriteLongIOPort( drvno, BDATA, PCIeAddr_devStatCtrl );
-	if (status != es_no_error) return status;
-	PhysAddrDMABuf64 = (*ppDma)->Page[0].pPhysicalAddr;
-	return SetDMAAddrTlpRegs(PhysAddrDMABuf64, TLPSIZE, NO_TLPS, drvno);
-}
-
-void SetManualTLP_vars()
-{
-	BDATA  |= 0x00; // sets max TLP size {0x00, 0x20, 0x40} <=> {128 B, 256 B, 512 B}
-	TLPSIZE = 0x20; // sets utilized TLP size in DWORDS (1 DWORD = 4 byte)
-	NO_TLPS = 0x11; // sets number of TLPs per scan/frame
-	return;
-}
 
 /**
  * \brief Set DMA register
@@ -1060,22 +1001,13 @@ es_status_codes SetupPCIE_DMA( UINT32 drvno )
 	}
 	// data must be copied afterwards to user Buffer 
 #endif
-	//set Init Regs
-	es_status_codes status = SetDMAAddrTlp(drvno);
-	if (status != es_no_error)
-	{
-		ErrLog( "DMARegisterInit for TLP and Addr failed \n" );
-		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
-		ErrorMsg( "DMARegisterInit for TLP and Addr failed" );
-		return status;
-	}
 	// DREQ: every XCK h->l starts DMA by hardware
 	//set hardware start des dma  via DREQ withe data = 0x4000000
 	ULONG mask = 0x40000000;
 	ULONG data = 0;// 0x40000000;
 	if (HWDREQ_EN)
 		data = 0x40000000;
-	status = SetS0Reg( data, mask, S0Addr_IRQREG, drvno );
+	es_status_codes status = SetS0Reg( data, mask, S0Addr_IRQREG, drvno );
 	if (status != es_no_error) return status;
 	// Enable DMA interrupts (if not polling)
 	// INTR should copy DMA buffer to user buf: 
@@ -1164,18 +1096,17 @@ int GetNumofProcessors()
 }//GetNumofProcessors
 
 /**
-\brief Set global variables camcnt, pixel and TLP size depending on pixel. Best call before doing anything else.
+\brief Set TLP size depending on pixel.
 \param drvno PCIe board identifier
-\param camcnt camera count
 \param pixel pixel count
-\param xckdelay XCK delay
 \return es_status_codes
 	- es_no_error
 	- es_invalid_pixel_count
 */
-es_status_codes SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel )
+es_status_codes SetTLPS( UINT32 drvno, UINT32 pixel )
 {
-	WDC_Err("Setting global variables: drv: %u, camcnt: %u, pixel: %u\n", drvno, camcnt, pixel);
+	UINT32 NO_TLPS = 0;
+	WDC_Err("Set TLPS: drv: %u, pixel: %u\n", drvno, pixel);
 	/*Pixelsize with matching TLP Count (TLPC).
 	Pixelsize = TLPS * TLPC - 1*TLPS
 	(TLPS TLP size = 64)
@@ -1254,36 +1185,56 @@ es_status_codes SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel )
 		}
 	}
 	if (LEGACY_202_14_TLPCNT) NO_TLPS = NO_TLPS + 1;
-	aPIXEL[drvno] = pixel;
-	aCAMCNT[drvno] = camcnt;
-	return es_no_error;
-}
-
-/**
- * \brief Initiates board registers.
- *
- * \param drvno PCIe board identifier
- * \return es_status_codes
- * 	- es_no_error
- * 	- es_invalid_driver_handle
- * 	- es_register_write_failed
- *	- es_register_read_failed
- */
-es_status_codes SetBoardVars( UINT32 drvno )
-{
-	WDC_Err("Setting board variables\n");
-	if (hDev[drvno] == INVALID_HANDLE_VALUE)
+	es_status_codes status = ReadLongIOPort(drvno, &BDATA, PCIeAddr_devCap);
+	if (status != es_no_error) return status;
+	int tlpmode = BDATA & 0x7;//0xE0 ;
+	if (_FORCETLPS128) tlpmode = 0;
+	BDATA &= 0xFFFFFF1F;//delete the old values
+	BDATA |= (0x2 << 12);//set maxreadrequestsize
+	UINT32 TLPSIZE = 0x20; //default = 0x20 A.M. Dec'20 //with0x21: crash
+	switch (tlpmode)
 	{
-		WDC_Err( "Handle is invalid of drvno: %i", drvno );
-		return es_invalid_driver_handle;
+	case 0:
+		BDATA |= 0x00;//set to 128 bytes = 32 DWORDS 
+		//BData |= 0x00000020;//set from 128 to 256 
+		//WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
+		//NO_TLPS setup now in setboardvars
+		TLPSIZE = 0x20;
+		break;
+	case 1:
+		BDATA |= 0x20;//set to 256 bytes = 64 DWORDS 
+		//BData |= 0x00000020;//set to 256 
+		//WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
+		//NO_TLPS = 0x9;//x9 was before. 0x10 is calculated in aboutlp and 0x7 is working;
+		TLPSIZE = 0x40;
+		break;
+	case 2:
+		BDATA |= 0x40;//set to 512 bytes = 128 DWORDS 
+		//BData |= 0x00000020;//set to 512 
+		//WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
+		//NO_TLPS = 0x5;
+		TLPSIZE = 0x80;
+		break;
 	}
-	//set startval for CTRLA Reg  +slope, IFC=h, VON=1 
-	es_status_codes status = WriteByteS0(drvno, 0x23, S0Addr_CTRLA);
+	//ValMsg( BData ); //TESTPOINT
+	if (MANUAL_OVERRIDE_TLP)
+	{
+		BDATA |= 0x00; // sets max TLP size {0x00, 0x20, 0x40} <=> {128 B, 256 B, 512 B}
+		TLPSIZE = 0x20; // sets utilized TLP size in DWORDS (1 DWORD = 4 byte)
+		NO_TLPS = 0x11; // sets number of TLPs per scan/frame
+	}
+	status = WriteLongIOPort(drvno, BDATA, PCIeAddr_devStatCtrl);
 	if (status != es_no_error) return status;
-	status = SetPixelCount(drvno, aPIXEL[drvno]);
-	if (status != es_no_error) return status;
-	return SetCamCount(drvno, aCAMCNT[drvno]);
-};  // SetBoardVars
+	WD_DMA** ppDma = &dmaBufferInfos[drvno];
+	UINT64 PhysAddrDMABuf64 = (*ppDma)->Page[0].pPhysicalAddr;
+	status = SetDMAAddrTlpRegs(PhysAddrDMABuf64, TLPSIZE, NO_TLPS, drvno);
+	if (status != es_no_error)
+	{
+		ErrLog("DMARegisterInit for TLP and Addr failed \n");
+		WDC_Err("%s", LSCPCIEJ_GetLastErr());
+	}
+	return status;
+}
 
 /**
  * \brief Set pixel count
@@ -1297,6 +1248,7 @@ es_status_codes SetBoardVars( UINT32 drvno )
 es_status_codes SetPixelCount(UINT32 drvno, UINT16 pixelcount)
 {
 	WDC_Err("Set pixel count\n");
+	aPIXEL[drvno] = pixelcount;
 	return SetS0Reg(pixelcount, 0xFFFF, S0Addr_PIXREGlow, drvno);
 };
 
@@ -1312,6 +1264,7 @@ es_status_codes SetPixelCount(UINT32 drvno, UINT16 pixelcount)
 es_status_codes SetCamCount(UINT32 drvno, UINT16 camcount)
 {
 	WDC_Err("Set cam count\n");
+	aCAMCNT[drvno] = camcount;
 	return SetS0Reg(camcount, 0xF, S0Addr_CAMCNT, drvno);
 };
 
@@ -1451,20 +1404,6 @@ es_status_codes AboutDrv( UINT32 drvno )
 	return es_no_error;
 };
 
-/* functions for managing controlbits in CtrlA register
-
-the bits of CtrlA register have these functions:
-
-DB5		DB4		  DB3			DB2		DB1		DB0
-Slope	BothSlope TrigOut		XCK		IFC		V_ON
-1: pos	1: on     1: high		1: high	1: high	1: high	V=1
-0: neg	0: off    0: low		0: low	0: low	0: low	V=VFAK
-
-D6, D7 have only read function
-
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-*/
-
 /**
  * \brief Set the external trigger slope for scan trigger (PCI Reg CrtlA:D5 -> manual).
  *
@@ -1518,19 +1457,13 @@ es_status_codes SetSSlope(UINT32 drvno, UINT32 sslope)
  * The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual.
  * Functions is not optimized for 2 cams.
  * \param drvno board number (=1 if one PCI board)
- * \return es_status_codes
- *		- es_no_error
- *		- es_register_read_failed
- *		- es_register_write_failed
+ * \return es_status_codes:
+ * 		- es_no_error
  */
 es_status_codes OutTrigLow( UINT32 drvno )
 {
-	BYTE CtrlA;
-	es_status_codes status = ReadByteS0( drvno, &CtrlA, S0Addr_CTRLA );
-	if (status != es_no_error) return status;
-	CtrlA &= 0xf7;
-	return WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
-};						//OutTrigLow
+	return ResetS0Bit(CTRLA_bitindex_TRIG_OUT, S0Addr_CTRLA, drvno);
+};
 
 /*---------------------------------------------------------------------------*/
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -1550,11 +1483,7 @@ es_status_codes OutTrigLow( UINT32 drvno )
  */
 es_status_codes OutTrigHigh( UINT32 drvno )
 {
-	BYTE CtrlA = 0;
-	es_status_codes status = ReadByteS0( drvno, &CtrlA, S0Addr_CTRLA );
-	if (status != es_no_error) return status;
-	CtrlA |= 0x08;
-	return WriteByteS0( drvno, CtrlA, S0Addr_CTRLA );
+	return SetS0Bit(CTRLA_bitindex_TRIG_OUT, S0Addr_CTRLA, drvno);
 }; //OutTrigHigh
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -1612,9 +1541,12 @@ es_status_codes WaitTrigger( UINT32 drvno, BOOL ExtTrigFlag, BOOL *SpaceKey, BOO
 		{
 			status = ReadByteS0( drvno, &ReadTrigPin, S0Addr_CTRLA );
 			if (status != es_no_error) return status;
-			ReadTrigPin &= 0x040;
+			ReadTrigPin &= CTRLA_bit_DIR_TRIGIN;
 			if (ReadTrigPin == 0) FirstLo = TRUE; //first look for lo
-			if (FirstLo) { if (ReadTrigPin > 0) HiEdge = TRUE; }; // then look for hi
+			if (FirstLo)
+			{ 
+				if (ReadTrigPin > 0) HiEdge = TRUE;
+			}; // then look for hi
 		}
 		else HiEdge = TRUE;
 		if (GetAsyncKeyState( VK_ESCAPE ))
@@ -2308,7 +2240,7 @@ es_status_codes readBlockTriggerState( UINT32 drv, UINT8 btrig_ch, BOOL* state)
 	case 1: //I
 		status = ReadByteS0( drv, &val, S0Addr_CTRLA );
 		if (status != es_no_error) return status;
-		if ((val & 0x40) > 0) *state = TRUE;
+		if ((val & CTRLA_bit_DIR_TRIGIN) > 0) *state = TRUE;
 		break;
 	case 2: //S1
 		status = ReadByteS0( drv, &val, S0Addr_CTRLC );
@@ -2335,7 +2267,7 @@ es_status_codes readBlockTriggerState( UINT32 drv, UINT8 btrig_ch, BOOL* state)
 		//and TSTART with MeasureOn
 //		ReadByteS0( drv, &val2, S0Addr_PCIEFLAGS );
 //		if (((val & 0x80) > 0) & ((val2 & PCIEFLAGS_bit_MEASUREON) > 0)) return TRUE;
-		if ((val & 0x80) > 0) *state = TRUE;
+		if ((val & CTRLA_bit_TSTART) > 0) *state = TRUE;
 		break;
 	}
 	return status;
