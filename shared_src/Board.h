@@ -47,6 +47,16 @@ extern BOOL Running;
 extern UINT32 BOARD_SEL;
 extern BOOL* useSWTrig;
 
+//High level API
+es_status_codes InitBoard(UINT32 drvno);	// init the board and alloc mem, call only once !
+es_status_codes CCDDrvInit();
+es_status_codes CCDDrvExit(UINT32 drvno);	// closes the driver
+es_status_codes InitMeasurement(struct global_settings settings);
+es_status_codes StartMeasurement();
+es_status_codes abortMeasurement(UINT32 drv);
+es_status_codes ReturnFrame(UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16* pdest, UINT32 length);
+
+//Mid level API
 void ErrMsgBoxOn();
 void ErrMsgBoxOff(); // switch to suppress error message boxes
 void ErrorMsg( char ErrMsg[100] );
@@ -55,11 +65,6 @@ void AboutDMARegs( UINT32 drv );
 es_status_codes AboutTLPs( UINT32 drvno );
 es_status_codes AboutS0( UINT32 drvno );
 //  same header file for ISA and PCI version
-es_status_codes CCDDrvInit();
-es_status_codes CCDDrvExit( UINT32 drvno );	// closes the driver
-es_status_codes InitBoard( UINT32 drvno );	// init the board and alloc mem, call only once !
-es_status_codes InitMeasurement(struct global_settings settings);
-es_status_codes StartMeasurement();
 es_status_codes SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno );
 es_status_codes SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno );
 es_status_codes SetDMAAddrTlp( UINT32 drvno );
@@ -186,8 +191,6 @@ es_status_codes SetBSlope( UINT32 drvno, UINT32 slope );
 es_status_codes SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob );
 es_status_codes SetGain( UINT32 drvno, UINT16 gain_value );
 es_status_codes LedOff( UINT32 drvno, UINT8 LED_OFF );
-es_status_codes ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length );
-es_status_codes abortMeasurement( UINT32 drv );
 es_status_codes SetXckdelay(UINT32 drvno, UINT32 xckdelay);
 
 #ifdef __cplusplus
