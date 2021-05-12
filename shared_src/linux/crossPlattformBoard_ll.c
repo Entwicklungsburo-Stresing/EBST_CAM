@@ -3,7 +3,7 @@
 
 es_status_codes readRegister_32( uint32_t drvno, uint32_t* data, uint16_t address )
 {
-    struct dev_descr *dev = lscpcie_get_descriptor(drvno);
+    struct dev_descr *dev = lscpcie_get_descriptor(drvno-1);
     if(lscpcie_read_reg32(dev, address, data))
         return es_register_write_failed;
     else
@@ -12,7 +12,7 @@ es_status_codes readRegister_32( uint32_t drvno, uint32_t* data, uint16_t addres
 
 es_status_codes readRegister_16( uint32_t drvno, uint16_t* data, uint16_t address )
 {
-    struct dev_descr *dev = lscpcie_get_descriptor(drvno);
+    struct dev_descr *dev = lscpcie_get_descriptor(drvno-1);
     if(lscpcie_read_reg16(dev, address, data))
         return es_register_write_failed;
     else
@@ -21,7 +21,7 @@ es_status_codes readRegister_16( uint32_t drvno, uint16_t* data, uint16_t addres
 
 es_status_codes readRegister_8( uint32_t drvno, uint8_t* data, uint16_t address )
 {
-    struct dev_descr *dev = lscpcie_get_descriptor(drvno);
+    struct dev_descr *dev = lscpcie_get_descriptor(drvno-1);
     if(lscpcie_read_reg8(dev, address, data))
         return es_register_write_failed;
     else
@@ -30,7 +30,7 @@ es_status_codes readRegister_8( uint32_t drvno, uint8_t* data, uint16_t address 
 
 es_status_codes writeRegister_32( uint32_t drvno, uint32_t data, uint16_t address )
 {
-    struct dev_descr *dev = lscpcie_get_descriptor(drvno);
+    struct dev_descr *dev = lscpcie_get_descriptor(drvno-1);
     if(lscpcie_write_reg32(dev, address, data))
         return es_register_write_failed;
     else
@@ -39,7 +39,7 @@ es_status_codes writeRegister_32( uint32_t drvno, uint32_t data, uint16_t addres
 
 es_status_codes writeRegister_16( uint32_t drvno, uint16_t data, uint16_t address )
 {
-    struct dev_descr *dev = lscpcie_get_descriptor(drvno);
+    struct dev_descr *dev = lscpcie_get_descriptor(drvno-1);
     if(lscpcie_write_reg16(dev, address, data))
         return es_register_write_failed;
     else
@@ -48,7 +48,7 @@ es_status_codes writeRegister_16( uint32_t drvno, uint16_t data, uint16_t addres
 
 es_status_codes writeRegister_8( uint32_t drvno, uint8_t data, uint16_t address )
 {
-    struct dev_descr *dev = lscpcie_get_descriptor(drvno);
+    struct dev_descr *dev = lscpcie_get_descriptor(drvno-1);
     if(lscpcie_write_reg8(dev, address, data))
         return es_register_write_failed;
     else
