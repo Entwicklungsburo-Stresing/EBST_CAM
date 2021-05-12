@@ -3679,7 +3679,6 @@ double CalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in
 	return measureTime;
 }
 
-
 /**
  * \brief For FFTs: Setup full binning.
  * 
