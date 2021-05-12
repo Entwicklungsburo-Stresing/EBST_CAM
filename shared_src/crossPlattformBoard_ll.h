@@ -13,6 +13,8 @@
 #define ES_LOG(...) fprintf(stderr, __VA_ARGS__);
 #endif
 
+#define MAXPCIECARDS 5
+
 // Low level API
 // platform specific implementation
 

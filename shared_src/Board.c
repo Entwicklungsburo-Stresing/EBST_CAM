@@ -50,23 +50,10 @@ UINT16* userBufferWritePos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 UINT32 numberOfInterrupts;
 
 // extern global variables
-UINT8 number_of_boards = 0;
-UINT32 Nob = 1;
-UINT32 tmp_Nosbp = 1000;
-UINT32* Nospb = &tmp_Nosbp;
-UINT32 tmp_aCAMCNT[MAXPCIECARDS] = { 1, 1, 1, 1, 1 };	// cameras parallel
-UINT32* aCAMCNT = tmp_aCAMCNT;	// cameras parallel
 BOOL escape_readffloop = FALSE;
 BOOL CONTFFLOOP = FALSE;
 UINT32 CONTPAUSE = 1;  // delay between loops in continous mode
-UINT16* temp_userBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
-UINT16** userBuffer= temp_userBuffer;
-UINT32 tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
-UINT32* aPIXEL = tmp_aPIXEL;
 BOOL Running = FALSE;
-UINT32 BOARD_SEL = 1;
-BOOL useSWTrig_temp = FALSE;
-BOOL* useSWTrig = &useSWTrig_temp;
 
 // ***********     functions    ********************** 
 
@@ -1769,6 +1756,7 @@ es_status_codes SetSensorType( UINT32 drvno, UINT8 sensor_type )
 	es_status_codes status = es_no_error;
 	switch (sensor_type)
 	{
+	// PDA
 	case 0:
 		status = ResetS0Bit(TOR_MSB_bitindex_ISFFT, S0Addr_TOR_MSB, drvno);
 		if (status != es_no_error) return status;
@@ -1776,6 +1764,7 @@ es_status_codes SetSensorType( UINT32 drvno, UINT8 sensor_type )
 		if (status != es_no_error) return status;
 		status = OpenShutter(drvno);
 		break;
+	// FFT
 	case 1:
 		status = SetS0Bit(TOR_MSB_bitindex_ISFFT, S0Addr_TOR_MSB, drvno);
 		if (status != es_no_error) return status;
