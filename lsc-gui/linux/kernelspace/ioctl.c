@@ -93,7 +93,7 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 					&((reg_info_t __user *) arg)->address);
 			if (result)
 				result = -EFAULT;
-			val32 = readb(dev->mapped_pci_base + reg_info.address);
+			val32 = readb(dev->dma_reg + reg_info.address);
 			result =
 				put_user(val32, &((reg_info_t __user *) arg)->value);
 			if (result)
@@ -107,7 +107,7 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 					&((reg_info_t __user *) arg)->address);
 			if (result)
 				result = -EFAULT;
-			val32 = readw(dev->mapped_pci_base + reg_info.address);
+			val32 = readw(dev->dma_reg + reg_info.address);
 			result =
 				put_user(val32, &((reg_info_t __user *) arg)->value);
 			if (result)
@@ -121,7 +121,7 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 					&((reg_info_t __user *) arg)->address);
 			if (result)
 				result = -EFAULT;
-			val32 = readl(dev->mapped_pci_base + reg_info.address);
+			val32 = readl(dev->dma_reg + reg_info.address);
 			result =
 				put_user(val32, &((reg_info_t __user *) arg)->value);
 			if (result)
@@ -138,9 +138,9 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 				result = -EFAULT;
 			else
 				iowrite8(reg_info.value,
-					dev->mapped_pci_base + reg_info.address);
+					dev->dma_reg + reg_info.address);
 			PDEBUG(D_IOCTL, "at address 0x%p\n",
-				dev->mapped_pci_base + reg_info.address);
+				dev->dma_reg + reg_info.address);
 			break;
 
 		case LSCPCIE_IOCTL_SET_REG16:
@@ -153,7 +153,7 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 				result = -EFAULT;
 			else
 				writew(reg_info.value,
-					dev->mapped_pci_base + reg_info.address);
+					dev->dma_reg + reg_info.address);
 			break;
 
 		case LSCPCIE_IOCTL_SET_REG32:
@@ -162,11 +162,12 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 				=
 				copy_from_user(&reg_info, (reg_info_t __user *) arg,
 					sizeof(reg_info_t));
+			PDEBUG(D_IOCTL, "copy from user done, result: %i, dev->dma_reg: %p, reg_info.value: %u, reg_info.address: %x\n", result, dev->dma_reg, reg_info.value, reg_info.address);
 			if (result)
 				result = -EFAULT;
 			else
 				writel(reg_info.value,
-					dev->mapped_pci_base + reg_info.address);
+					dev->dma_reg + reg_info.address);
 			break;
 
 	default:
