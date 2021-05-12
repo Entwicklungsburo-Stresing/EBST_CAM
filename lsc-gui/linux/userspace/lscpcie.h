@@ -77,28 +77,20 @@ int lscpcie_read_config32(struct dev_descr *dev, uint16_t address,
 			  uint32_t * val);
 int lscpcie_write_config32(struct dev_descr *dev, uint16_t address,
 			   uint32_t val);
+int lscpcie_read_reg8(struct dev_descr *dev, uint16_t address,
+		      uint8_t * val);
+int lscpcie_read_reg16(struct dev_descr *dev, uint16_t address,
+		       uint16_t * val);
 int lscpcie_read_reg32(struct dev_descr *dev, uint16_t address,
-               uint32_t * val);
+		       uint32_t * val);
+int lscpcie_write_reg8(struct dev_descr *dev, uint16_t address,
+		       uint8_t val);
+int lscpcie_write_reg16(struct dev_descr *dev, uint16_t address,
+			uint16_t val);
 int lscpcie_write_reg32(struct dev_descr *dev, uint16_t address,
-            uint32_t val);
-int lscpcie_set_bits_reg32(struct dev_descr *dev, uint16_t address,
-               uint32_t bits, uint32_t mask);
+			uint32_t val);
+
 struct dev_descr *lscpcie_get_descriptor(uint dev_no);
-
-#define lscpcie_read_s0_32(dev, address, val) \
-  lscpcie_read_reg32(dev, address + 0x80, val)
-#define lscpcie_write_s0_32(dev, address, val) \
-  lscpcie_write_reg32(dev, address + 0x80, val)
-#define lscpcie_set_bits_s0_32(dev, address, bits, mask) \
-  lscpcie_set_bits_reg32(dev, address + 0x80, bits, mask)
-
-#define lscpcie_read_dma_32     lscpcie_read_reg32
-#define lscpcie_write_dma_32    lscpcie_write_reg32
-#define lscpcie_set_bits_dma_32 lscpcie_set_bits_reg32
-#define lscpcie_set_s0_bit(dev, address, bit_number) \
-  lscpcie_set_bits_reg32(dev, address, 1<<bit_number, 1<<bit_number)
-#define lscpcie_reset_s0_bit(dev, address, bit_number) \
-  lscpcie_set_bits_reg32(dev, address, 0, 1<<bit_number)
 
 
 // debugging
