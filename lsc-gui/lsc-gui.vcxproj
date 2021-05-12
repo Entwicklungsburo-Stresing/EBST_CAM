@@ -207,7 +207,9 @@
   <ItemGroup>
     <ClCompile Include="..\shared_src\Board.c" />
     <ClCompile Include="..\shared_src\Board_ll.c" />
+    <ClCompile Include="..\shared_src\crossPlattformBoard.c" />
     <ClCompile Include="..\shared_src\es_status_codes.c" />
+    <ClCompile Include="..\shared_src\win\crossPlattformBoard_ll.c" />
     <ClCompile Include="UIAbstractionLayer_cpp.cpp" />
     <ClCompile Include="UIAbstractionLayer.c" />
     <ClCompile Include="dialogsettings.cpp" />
@@ -220,6 +222,8 @@
   <ItemGroup>
     <ClInclude Include="..\shared_src\Board.h" />
     <ClInclude Include="..\shared_src\Board_ll.h" />
+    <ClInclude Include="..\shared_src\crossPlattformBoard.h" />
+    <ClInclude Include="..\shared_src\crossPlattformBoard_ll.h" />
     <ClInclude Include="..\shared_src\enum.h" />
     <ClInclude Include="..\shared_src\es_status_codes.h" />
     <ClInclude Include="..\shared_src\struct.h" />

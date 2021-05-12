@@ -33,19 +33,11 @@ struct global_vars
 	BOOL* useSWTrig;
 };
 
-extern UINT16** userBuffer;
-extern UINT32 Nob;
-extern UINT32* Nospb;
-extern UINT32* aCAMCNT;	// cameras parallel
 extern BOOL escape_readffloop;
 extern BOOL CONTFFLOOP;
 extern UINT32 CONTPAUSE;
-extern UINT8 number_of_boards;
 extern DWORD64 IsrCounter;
-extern UINT32* aPIXEL;
 extern BOOL Running;
-extern UINT32 BOARD_SEL;
-extern BOOL* useSWTrig;
 
 //High level API
 es_status_codes InitBoard(UINT32 drvno);	// init the board and alloc mem, call only once !
