@@ -7,6 +7,7 @@
 #include "../shared_src/enum.h"
 #include "../shared_src/struct.h"
 #include "../shared_src/es_status_codes.h"
+#include "../shared_src/crossPlattformBoard.h"
 
 class Lsc : public QObject
 {
