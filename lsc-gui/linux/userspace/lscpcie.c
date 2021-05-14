@@ -821,7 +821,7 @@ int lscpcie_dump_tlp(struct dev_descr *dev)
 
 	return 0;
 }
-
+/*
 int lscpcie_read_reg8(struct dev_descr *dev, uint16_t address,
 		      uint8_t * val)
 {
@@ -882,11 +882,11 @@ int lscpcie_write_reg16(struct dev_descr *dev, uint16_t address,
 	return ioctl(dev->handle, LSCPCIE_IOCTL_SET_REG16, &reg);
 }
 
-int lscpcie_write_reg32(struct dev_descr *dev, uint16_t address,
+/*int lscpcie_write_reg32(struct dev_descr *dev, uint16_t address,
 			uint32_t val)
 {
 	reg_info_t reg = {.address = address,.value = val };
 
 
 	return ioctl(dev->handle, LSCPCIE_IOCTL_SET_REG32, &reg);
-}
+}*/
