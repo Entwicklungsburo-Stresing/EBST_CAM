@@ -90,11 +90,7 @@ int lscpcie_write_config32(struct dev_descr *dev, uint16_t address,
 #define lscpcie_write_reg32(dev, addr, data) \
   do *(uint32_t*) (((uint8_t *)dev->dma_reg) + addr) = data; while (0)
 
-
-
-
 struct dev_descr *lscpcie_get_descriptor(uint dev_no);
-
 
 // debugging
 void lscpcie_set_debug(struct dev_descr *dev, int flags, int mask);
