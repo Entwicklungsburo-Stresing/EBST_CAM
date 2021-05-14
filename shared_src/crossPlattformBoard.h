@@ -69,7 +69,7 @@ es_status_codes InitGPX( uint32_t drvno, uint32_t delay );
 es_status_codes SetSDAT( uint32_t drvno, uint32_t datin100ns );
 es_status_codes SetBDAT( uint32_t drvno, uint32_t datin100ns );
 es_status_codes Use_ENFFW_protection( uint32_t drvno, bool USE_ENFFW_PROTECT );
-es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_trigger_input, uint8_t IS_FFT, uint8_t IS_AREA, uint8_t IS_COOLED, uint16_t led_off);
+es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_trigger_input, uint8_t is_fft, uint8_t is_area, uint8_t IS_COOLED, uint16_t led_off);
 es_status_codes InitCamera3001( uint32_t drvno, uint8_t gain_switch );
 es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint16_t gain_switch );
 es_status_codes Cam3010_ADC_reset( uint32_t drvno );
@@ -87,7 +87,7 @@ es_status_codes SetXckdelay(uint32_t drvno, uint32_t xckdelay);
 es_status_codes ResetPartialBinning( uint32_t drvno );
 
 // read and write functions
-es_status_codes writeBitsS0_32( uint32_t Data, uint32_t Bitmask, uint16_t Address, uint32_t drvno );
+es_status_codes writeBitsS0_32( uint32_t drvno, uint32_t Data, uint32_t Bitmask, uint16_t Address);
 es_status_codes setBitS0(uint32_t drvno, uint32_t bitnumber, uint16_t address);
 es_status_codes resetBitS0(uint32_t drvno, uint32_t bitnumber, uint16_t address);
 es_status_codes readRegisterS0_32( uint32_t drvno, uint32_t* data, uint16_t address );
