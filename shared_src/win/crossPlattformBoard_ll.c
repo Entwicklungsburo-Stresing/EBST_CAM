@@ -120,3 +120,10 @@ es_status_codes checkDriverHandle(uint32_t drvno)
 	else
 		return es_no_error;
 }
+
+uint64_t getDmaAddress( uint32_t drvno)
+{
+    WD_DMA** ppDma = &dmaBufferInfos[drvno];
+	return (*ppDma)->Page[0].pPhysicalAddr;
+}
+	

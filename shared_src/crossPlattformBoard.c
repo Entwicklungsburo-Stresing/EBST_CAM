@@ -152,7 +152,7 @@ es_status_codes InitMeasurement(struct global_settings settings)
 	//DMA
 	status = SetupPCIE_DMA(settings.drvno);
 	if (status != es_no_error) return status;
-	status = SetTLPS(settings.drvno, settings.pixel);
+	status = SetDmaRegister(settings.drvno, settings.pixel);
 	if (status != es_no_error) return status;
 	//TODO set cont FF mode with DLL style(CONTFFLOOP = activate;//0 or 1;CONTPAUSE = pause;) or CCDExamp style(check it out)
 	status = SetBEC( settings.drvno, settings.bec );
@@ -197,104 +197,6 @@ es_status_codes ClearAllUserRegs(uint32_t drvno)
 	status = writeRegisterS0_32( drvno, 0, S0Addr_SDAT );
 	if (status != es_no_error) return status;
 	return writeRegisterS0_32( drvno, 0, S0Addr_SEC );
-}
-
-/**
-\brief Set global variables camcnt, pixel and TLP size depending on pixel. Best call before doing anything else.
-\param drvno PCIe board identifier
-\param camcnt camera count
-\param pixel pixel count
-\param xckdelay XCK delay
-\return es_status_codes
-	- es_no_error
-	- es_invalid_pixel_count
-*/
-es_status_codes SetGlobalVariables( uint32_t drvno, uint32_t camcnt, uint32_t pixel )
-{
-	ES_LOG("WARNING: Setting global variables not implemented\n");
-	//ES_LOG("Setting global variables: drv: %u, camcnt: %u, pixel: %u\n", drvno, camcnt, pixel);
-	/*Pixelsize with matching TLP Count (TLPC).
-	Pixelsize = TLPS * TLPC - 1*TLPS
-	(TLPS TLP size = 64)
-	TLPC 0x Pixelsize
-		2	64
-		3	128
-		4	192
-		5	256
-		6	320
-		7	384
-		8	448
-		9	512
-		a	576
-		b	640
-		c	704
-		d	768
-		e	832
-		f	896
-		10	960
-		11	1024
-		12	1088
-		13	1152
-		14	1216
-		15	1280
-		16	1344
-		17	1408
-		18	1472
-		19	1536
-		1a	1600
-		1b	1664
-		1c	1728
-		1d	1792
-		1e	1856
-		1f	1920
-		20	1984
-		21	2048
-		22	2112
-		23  2176
-		...
-		41  4096
-		42  4160
-		...
-		82  8256
-		*/
-		/*
-	switch (pixel)
-	{
-	case 128:
-		NO_TLPS = 0x2;//3
-		break;
-	case 192:
-		NO_TLPS = 0x3;//4
-		break;
-	case 320:
-		NO_TLPS = 0x5;//6
-		break;
-	case 576:
-		NO_TLPS = 0x9;//a
-		break;
-	case 1088:
-		NO_TLPS = 0x11;
-		break;
-	case 2112:
-		NO_TLPS = 0x21;//22
-		break;
-	case 4160:
-		NO_TLPS = 0x41;//42
-		break;
-	case 8256:
-		NO_TLPS = 0x81;//82
-		break;
-	default:
-		if (!MANUAL_OVERRIDE_TLP)
-		{
-			WDC_Err("Could not choose TLP size, no valid pixel count.\n");
-			return es_invalid_pixel_count;
-		}
-	}
-	if (LEGACY_202_14_TLPCNT) NO_TLPS = NO_TLPS + 1;
-	aPIXEL[drvno] = pixel;
-	aCAMCNT[drvno] = camcnt;*/
-	return es_no_error;
 }
 
 /**
@@ -429,7 +331,7 @@ es_status_codes SetSensorType( uint32_t drvno, uint8_t sensor_type )
 }
 
 /**
- * @brief Set specified bits to 1 in register at memory address.
+ * @brief Set specified bits to 1 in S0 register at memory address.
  * 
  * @param Data 
  * @param Bitmask 
@@ -440,24 +342,9 @@ es_status_codes SetSensorType( uint32_t drvno, uint8_t sensor_type )
  *		- es_register_read_failed
  * 		- es_register_write_failed
  */
-es_status_codes writeBitsS0_32( uint32_t drvno, uint32_t Data, uint32_t Bitmask, uint16_t Address  )
+es_status_codes writeBitsS0_32( uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address  )
 {
-	uint32_t OldRegisterValues = 0;
-	//read the old Register Values in the S0 Address Reg
-	es_status_codes status = readRegisterS0_32( drvno, &OldRegisterValues, Address );
-	if (status != es_no_error) return status;
-    //step 0: delete not needed "1"s
-    Data &= Bitmask;
-    //step 1: save Data as setbitmask for making this part humanreadable
-    uint32_t Setbit_mask = Data;
-    //step 2: setting high bits in the Data
-    uint32_t OldRegVals_and_SetBits = OldRegisterValues | Setbit_mask;
-    //step 3: prepare to clear bits
-    uint32_t Clearbit_mask = Data | ~Bitmask;
-    //step 4: clear the low bits in the Data
-    uint32_t NewRegisterValues = OldRegVals_and_SetBits & Clearbit_mask;
-    //write the data to the S0 controller
-    return writeRegisterS0_32( drvno, NewRegisterValues, Address );
+	return writeBitsDma_32(drvno, data, bitmask, address + S0_SPACE_OFFSET);
 }
 
 /**
@@ -496,32 +383,32 @@ es_status_codes resetBitS0(uint32_t drvno, uint32_t bitnumber, uint16_t address)
 
 es_status_codes writeRegisterS0_32( uint32_t drvno, uint32_t data, uint16_t address )
 {
-    return writeRegister_32(drvno, data, address + 0x80);
+    return writeRegister_32(drvno, data, address + S0_SPACE_OFFSET);
 }
 
 es_status_codes writeRegisterS0_16( uint32_t drvno, uint16_t data, uint16_t address )
 {
-    return writeRegister_16(drvno, data, address + 0x80);
+    return writeRegister_16(drvno, data, address + S0_SPACE_OFFSET);
 }
 
 es_status_codes writeRegisterS0_8( uint32_t drvno, uint8_t data, uint16_t address )
 {
-    return writeRegister_8(drvno, data, address + 0x80);
+    return writeRegister_8(drvno, data, address + S0_SPACE_OFFSET);
 }
 
 es_status_codes readRegisterS0_32( uint32_t drvno, uint32_t* data, uint16_t address )
 {
-	return readRegister_32(drvno, data, address + 0x80);
+	return readRegister_32(drvno, data, address + S0_SPACE_OFFSET);
 }
 
 es_status_codes readRegisterS0_16( uint32_t drvno, uint16_t* data, uint16_t address )
 {
-	return readRegister_16(drvno, data, address + 0x80);
+	return readRegister_16(drvno, data, address + S0_SPACE_OFFSET);
 }
 
 es_status_codes readRegisterS0_8( uint32_t drvno, uint8_t* data, uint16_t address )
 {
-	return readRegister_8(drvno, data, address + 0x80);
+	return readRegister_8(drvno, data, address + S0_SPACE_OFFSET);
 }
 
 /**
@@ -1574,4 +1461,188 @@ es_status_codes SetXckdelay(uint32_t drvno, uint32_t xckdelay)
 	else
 		status = writeRegister_32(drvno, 0, S0Addr_XCKDLY);
 	return status;
+}
+
+es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
+{		
+	ES_LOG("Set TLPS: drv: %u, pixel: %u\n", drvno, pixel);
+	/*Pixelsize with matching TLP Count (TLPC).
+	Pixelsize = TLPS * TLPC - 1*TLPS
+	(TLPS TLP size = 64)
+	TLPC 0x Pixelsize
+		2	64
+		3	128
+		4	192
+		5	256
+		6	320
+		7	384
+		8	448
+		9	512
+		a	576
+		b	640
+		c	704
+		d	768
+		e	832
+		f	896
+		10	960
+		11	1024
+		12	1088
+		13	1152
+		14	1216
+		15	1280
+		16	1344
+		17	1408
+		18	1472
+		19	1536
+		1a	1600
+		1b	1664
+		1c	1728
+		1d	1792
+		1e	1856
+		1f	1920
+		20	1984
+		21	2048
+		22	2112
+		23  2176
+		...
+		41  4096
+		42  4160
+		...
+		82  8256
+		*/
+	uint32_t no_tlps = 0;
+	switch (pixel)
+	{
+	case 128:
+		no_tlps = 0x2;//3
+		break;
+	case 192:
+		no_tlps = 0x3;//4
+		break;
+	case 320:
+		no_tlps = 0x5;//6
+		break;
+	case 576:
+		no_tlps = 0x9;//a
+		break;
+	case 1088:
+		no_tlps = 0x11;
+		break;
+	case 2112:
+		no_tlps = 0x21;//22
+		break;
+	case 4160:
+		no_tlps = 0x41;//42
+		break;
+	case 8256:
+		no_tlps = 0x81;//82
+		break;
+	default:
+		if (!MANUAL_OVERRIDE_TLP)
+		{
+			ES_LOG("Could not choose TLP size, no valid pixel count.\n");
+			return es_invalid_pixel_count;
+		}
+	}
+	if (LEGACY_202_14_TLPCNT) no_tlps = no_tlps + 1;
+	uint32_t data = 0;
+	es_status_codes status = readConfig_32(drvno, &data, PCIeAddr_devCap);
+	if (status != es_no_error) return status;
+	int tlpmode = data & 0x7;//0xE0 ;
+	if (_FORCETLPS128) tlpmode = 0;
+	//delete the old values
+	data &= 0xFFFFFF1F;
+	//set maxreadrequestsize
+	data |= (0x2 << 12);
+	//default = 0x20 A.M. Dec'20 //with0x21: crash
+	uint32_t tlp_size = 0x20;
+	switch (tlpmode)
+	{
+	case 0:
+		data |= 0x00;//set to 128 bytes = 32 DWORDS 
+		//BData |= 0x00000020;//set from 128 to 256 
+		//WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
+		//NO_TLPS setup now in setboardvars
+		tlp_size = 0x20;
+		break;
+	case 1:
+		data |= 0x20;//set to 256 bytes = 64 DWORDS 
+		//BData |= 0x00000020;//set to 256 
+		//WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
+		//NO_TLPS = 0x9;//x9 was before. 0x10 is calculated in aboutlp and 0x7 is working;
+		tlp_size = 0x40;
+		break;
+	case 2:
+		data |= 0x40;//set to 512 bytes = 128 DWORDS 
+		//BData |= 0x00000020;//set to 512 
+		//WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
+		//NO_TLPS = 0x5;
+		tlp_size = 0x80;
+		break;
+	}
+	if (MANUAL_OVERRIDE_TLP)
+	{
+		data |= 0x00; // sets max TLP size {0x00, 0x20, 0x40} <=> {128 B, 256 B, 512 B}
+		tlp_size = 0x20; // sets utilized TLP size in DWORDS (1 DWORD = 4 byte)
+		no_tlps = 0x11; // sets number of TLPs per scan/frame
+	}
+	//TODO: dev->tlp_size = TLPSIZE
+	status = writeConfig_32(drvno, data, PCIeAddr_devStatCtrl);
+	if (status != es_no_error) return status;
+	uint64_t dma_physical_address = getDmaAddress(drvno);
+	// WDMATLPA (Reg name): write the lower part (bit 02:31) of the DMA adress to the DMA controller
+	ES_LOG("Set WDMATLPA to physical address of dma buffer 0x%016lx\n", dma_physical_address)
+	status = writeBitsDma_32(drvno, dma_physical_address, 0xFFFFFFFC, DmaAddr_WDMATLPA);
+	if (status != es_no_error) return status;
+	//WDMATLPS: write the upper part (bit 32:39) of the address
+	data = ((dma_physical_address >> 8) & 0xFF000000) | tlp_size;
+	//64bit address enable
+	if (DMA_64BIT_EN)
+		data |= 1 << 19;
+	ES_LOG("Set WDMATLPS to 0x%016x (0x%016x)\n", data, data & 0xFF081FFF);
+	status = writeBitsDma_32(drvno, data, 0xFF081FFF, DmaAddr_WDMATLPS);
+	if (status != es_no_error) return status;
+	ES_LOG("set WDMATLPC to 0x%08x (0x%08x)\n", no_tlps, no_tlps & 0x0000FFFF);
+	return writeBitsDma_32(drvno, no_tlps, 0xFFFF, DmaAddr_WDMATLPC);
+}
+
+/**
+ * @brief Set specified bits to 1 in DMA register at memory address.
+ * 
+ * @param Data 
+ * @param Bitmask 
+ * @param Address 
+ * @param drvno PCIe board identifier.
+ * @return es_status_codes
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
+es_status_codes writeBitsDma_32( uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address  )
+{
+	uint32_t OldRegisterValues = 0;
+	//read the old Register Values in the S0 Address Reg
+	es_status_codes status = readRegisterDma_32( drvno, &OldRegisterValues, address );
+	if (status != es_no_error) return status;
+    //step 0: delete not needed "1"s
+    data &= bitmask;
+    //step 1: save Data as setbitmask for making this part humanreadable
+    uint32_t Setbit_mask = data;
+    //step 2: setting high bits in the Data
+    uint32_t OldRegVals_and_SetBits = OldRegisterValues | Setbit_mask;
+    //step 3: prepare to clear bits
+    uint32_t Clearbit_mask = data | ~bitmask;
+    //step 4: clear the low bits in the Data
+    uint32_t NewRegisterValues = OldRegVals_and_SetBits & Clearbit_mask;
+    //write the data to the S0 controller
+    return writeRegisterDma_32( drvno, NewRegisterValues, address );
+}
+
+es_status_codes writeRegisterDma_32( uint32_t drvno, uint32_t data, uint16_t address )
+{
+    return writeRegister_32(drvno, data, address);
+}
+es_status_codes readRegisterDma_32( uint32_t drvno, uint32_t* data, uint16_t address )
+{
+	return readRegister_32(drvno, data, address);
 }

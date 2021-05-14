@@ -14,6 +14,11 @@ extern "C" {
 #define DMA_BUFFER_SIZE_IN_SCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
 #define DMA_BUFFER_PARTS 2
 #define DMA_DMASPERINTR DMA_BUFFER_SIZE_IN_SCANS / DMA_BUFFER_PARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb 
+#define MANUAL_OVERRIDE_TLP false
+#define LEGACY_202_14_TLPCNT false
+#define _FORCETLPS128 true	//only use payload size 128byte
+#define DMA_64BIT_EN false
+#define S0_SPACE_OFFSET 0x80
 
 extern uint32_t* aPIXEL;
 extern uint32_t* aCAMCNT;
@@ -41,7 +46,6 @@ es_status_codes resetBlockOn( uint32_t drvno );
 es_status_codes resetMeasureOn( uint32_t drvno );
 es_status_codes SetDMAReset( uint32_t drvno );
 es_status_codes ClearAllUserRegs( uint32_t drvno );
-es_status_codes SetGlobalVariables( uint32_t drvno, uint32_t camcnt, uint32_t pixel );
 es_status_codes SetBoardVars( uint32_t drvno );
 es_status_codes SetPixelCount(uint32_t drvno, uint16_t pixelcount);
 es_status_codes OpenShutter( uint32_t drvno );
@@ -85,9 +89,10 @@ es_status_codes DAC_setOutput( uint32_t drvno, uint8_t channel, uint16_t output 
 es_status_codes SetBEC( uint32_t drvno, uint32_t ecin100ns );
 es_status_codes SetXckdelay(uint32_t drvno, uint32_t xckdelay);
 es_status_codes ResetPartialBinning( uint32_t drvno );
+es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel );
 
 // read and write functions
-es_status_codes writeBitsS0_32( uint32_t drvno, uint32_t Data, uint32_t Bitmask, uint16_t Address);
+es_status_codes writeBitsS0_32( uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address);
 es_status_codes setBitS0(uint32_t drvno, uint32_t bitnumber, uint16_t address);
 es_status_codes resetBitS0(uint32_t drvno, uint32_t bitnumber, uint16_t address);
 es_status_codes readRegisterS0_32( uint32_t drvno, uint32_t* data, uint16_t address );
@@ -97,6 +102,9 @@ es_status_codes writeRegisterS0_32( uint32_t drvno, uint32_t data, uint16_t addr
 es_status_codes writeRegisterS0_16( uint32_t drvno, uint16_t data, uint16_t address );
 es_status_codes writeRegisterS0_8( uint32_t drv, uint8_t data, uint16_t address );
 es_status_codes SendFLCAM( uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16_t data );
+es_status_codes writeRegisterDma_32( uint32_t drvno, uint32_t data, uint16_t address );
+es_status_codes readRegisterDma_32( uint32_t drvno, uint32_t* data, uint16_t address );
+es_status_codes writeBitsDma_32( uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address);
 
 #ifdef __cplusplus
 }
