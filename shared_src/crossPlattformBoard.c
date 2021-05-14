@@ -174,7 +174,7 @@ es_status_codes InitMeasurement(struct global_settings settings)
  */
 es_status_codes SetPixelCount(uint32_t drvno, uint16_t pixelcount)
 {
-	ES_LOG("Set pixel count\n");
+    ES_LOG("Set pixel count: %u\n", pixelcount);
 	aPIXEL[drvno] = pixelcount;
     return writeBitsS0_32(drvno, pixelcount, 0xFFFF, S0Addr_PIXREGlow);
 };
@@ -386,7 +386,7 @@ es_status_codes SetDMAReset( uint32_t drvno )
  */
 es_status_codes SetCamCount(uint32_t drvno, uint16_t camcount)
 {
-	ES_LOG("Set cam count\n");
+    ES_LOG("Set cam count: %u\n", camcount);
 	aCAMCNT[drvno] = camcount;
     return writeBitsS0_32(drvno, camcount, 0xF, S0Addr_CAMCNT);
 };
@@ -611,7 +611,7 @@ es_status_codes SetMeasurementParameters( uint32_t drvno, uint32_t nos, uint32_t
 {
 	Nob = nob;
 	*Nospb = nos;
-	ES_LOG( "Set measurement parameters: drv: %i nos: %i and nob: %i and camcnt: %i\n", drvno, nos, nob, aCAMCNT[drvno] );
+    ES_LOG( "Set measurement parameters: drv: %i nos: %i and nob: %i\n", drvno, nos, nob );
 	//stop all and clear FIFO
 	es_status_codes status = StopSTimer( drvno );
 	if (status != es_no_error) return status;
@@ -728,7 +728,7 @@ es_status_codes SetDMABufRegs( uint32_t drvno )
 	//aCAMCNT: double the INTR if 2 cams
     status = writeBitsS0_32(drvno, DMA_DMASPERINTR, 0xffffffff, S0Addr_DMAsPerIntr);
 	if (status != es_no_error) return status;
-	ES_LOG( "scansPerInterrupt/camcnt: %x \n", DMA_DMASPERINTR / aCAMCNT[drvno] );
+    ES_LOG( "scansPerInterrupt/camcnt: 0x%x \n", DMA_DMASPERINTR / aCAMCNT[drvno] );
     status = writeBitsS0_32(drvno, *Nospb, 0xffffffff, S0Addr_NOS);
 	if (status != es_no_error) return status;
     status = writeBitsS0_32(drvno, Nob, 0xffffffff, S0Addr_NOB);
@@ -830,7 +830,7 @@ es_status_codes SetTORReg( uint32_t drvno, uint8_t tor )
  */
 es_status_codes SetSSlope(uint32_t drvno, uint32_t sslope)
 {
-	ES_LOG("Set scan slope\n");
+    ES_LOG("Set scan slope, %u\n", sslope);
 	es_status_codes status = es_no_error;
 	switch (sslope)
 	{
