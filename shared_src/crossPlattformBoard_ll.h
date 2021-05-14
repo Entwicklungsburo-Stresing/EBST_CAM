@@ -25,8 +25,10 @@ es_status_codes readRegister_8( uint32_t drvno, uint8_t* data, uint16_t address 
 es_status_codes writeRegister_32( uint32_t drvno, uint32_t data, uint16_t address );
 es_status_codes writeRegister_16( uint32_t drvno, uint16_t data, uint16_t address );
 es_status_codes writeRegister_8( uint32_t drvno, uint8_t data, uint16_t address );
+es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address );
+es_status_codes writeConfig_32( uint32_t drvno, uint32_t data, uint16_t address );
 void FreeMemInfo( uint64_t *pmemory_all, uint64_t *pmemory_free );
 es_status_codes SetupPCIE_DMA( uint32_t drvno );
-es_status_codes SetTLPS( uint32_t drvno, uint32_t pixel );
+uint64_t getDmaAddress( uint32_t drvno);
 
 #endif // CROSSPLATTFORMBOARDLL_H
