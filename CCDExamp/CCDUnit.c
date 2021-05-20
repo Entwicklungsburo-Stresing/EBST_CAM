@@ -24,16 +24,13 @@ void Display(unsigned long db, BOOL Plot)
 	int xlength = XLENGTH;
 	unsigned long pencolor = 0x0000ff;   //0=sw, 00bbggrr
 
-/*
-	if (_PIXEL<=600)
+	if (_PIXEL<=1088)
 		{xlength =_PIXEL;
 		XOFF = 1;}
 	else
-		{xlength = 600;
-		/*XOFF = _PIXEL / 600;}
-*/
-//!!!
-//XOFF = 1;
+		{xlength = 2112/2;
+	XOFF = 2; // _PIXEL / 600;
+	}
 
 	Rectangle(hMSDC, LOX - 1, LOY - 1, LOX + xlength + 1, LOY + YLENGTH + 2);		// Clear
 /*
@@ -214,7 +211,6 @@ void startMess()
 	if (ItemIndex_S < 3) g.sti_mode = ItemIndex_S;
 	else g.sti_mode = ItemIndex_S + 1;
 	g.Temp_level = TempLevel;
-	ValMsg(TempLevel);
 	g.TORmodus = m_TOmodus;
 	g.trigger_mode_cc = CCTRIGGER_MODE;
 	g.Vfreq = Vfreqini;
