@@ -219,13 +219,6 @@ es_status_codes SetupDma( UINT32 drvno )
 	// pDMABigBuf is the big space which is passed to this function = input - must be global
 	dwStatus = WDC_DMASGBufLock( hDev[drvno], pDMABigBuf, dwOptions, dmaBufferSizeInBytes, &dmaBufferInfos ); //size in Bytes
 #endif
-	// DREQ: every XCK h->l starts DMA by hardware
-	//set hardware start des dma  via DREQ withe data = 0x4000000
-	ULONG mask = 0x40000000;
-	ULONG data = 0;// 0x40000000;
-	if (HWDREQ_EN)
-		data = 0x40000000;
-	return SetS0Reg( data, mask, S0Addr_IRQREG, drvno );
 }
 
 es_status_codes enableInterrupt( uint32_t drvno )
