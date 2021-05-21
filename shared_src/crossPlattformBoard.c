@@ -230,7 +230,7 @@ es_status_codes abortMeasurement( uint32_t drv )
 es_status_codes resetBlockOn( uint32_t drvno )
 {
 	//notifyBlockDone( drvno );
-    return resetBitS0( drvno, PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS );
+    return resetBitS0_32( drvno, PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS );
 }
 
 /**
@@ -243,7 +243,7 @@ es_status_codes resetBlockOn( uint32_t drvno )
 es_status_codes resetMeasureOn( uint32_t drvno )
 {
 	//notifyMeasureDone( drvno );
-    return resetBitS0( drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS );
+    return resetBitS0_32( drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS );
 }
 
 /**
@@ -313,16 +313,16 @@ es_status_codes SetSensorType( uint32_t drvno, uint8_t sensor_type )
 	switch (sensor_type)
 	{
 	case 0:
-        status = resetBitS0(drvno, TOR_MSB_bitindex_ISFFT, S0Addr_TOR_MSB);
+        status = resetBitS0_8(drvno, TOR_MSB_bitindex_ISFFT, S0Addr_TOR_MSB);
 		if (status != es_no_error) return status;
-        status = setBitS0(drvno, TOR_MSB_bitindex_SENDRS, S0Addr_TOR_MSB);
+        status = setBitS0_8(drvno, TOR_MSB_bitindex_SENDRS, S0Addr_TOR_MSB);
 		if (status != es_no_error) return status;
 		status = OpenShutter(drvno);
 		break;
 	case 1:
-        status = setBitS0(drvno, TOR_MSB_bitindex_ISFFT, S0Addr_TOR_MSB);
+        status = setBitS0_8(drvno, TOR_MSB_bitindex_ISFFT, S0Addr_TOR_MSB);
 		if (status != es_no_error) return status;
-        status = resetBitS0(drvno, TOR_MSB_bitindex_SENDRS, S0Addr_TOR_MSB);
+        status = resetBitS0_8(drvno, TOR_MSB_bitindex_SENDRS, S0Addr_TOR_MSB);
 		break;
 	default:
 		return es_parameter_out_of_range;
@@ -348,20 +348,54 @@ es_status_codes writeBitsS0_32( uint32_t drvno, uint32_t data, uint32_t bitmask,
 }
 
 /**
+ * @brief Set specified bits to 1 in S0 register at memory address.
+ * 
+ * @param Data 
+ * @param Bitmask 
+ * @param Address 
+ * @param drvno PCIe board identifier.
+ * @return es_status_codes
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
+es_status_codes writeBitsS0_8( uint32_t drvno, uint8_t data, uint8_t bitmask, uint16_t address  )
+{
+	return writeBitsDma_8(drvno, data, bitmask, address + S0_SPACE_OFFSET);
+}
+
+/**
  * @brief Set bit to 1 in S0 register at memory address.
  *
  * @param drvno board number (=1 if one PCI board)
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
- * @param address register address
+ * @param address register address. Only 4 byte steps are valid.
  * @return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
  * 		- es_register_write_failed
  */
-es_status_codes setBitS0(uint32_t drvno, uint32_t bitnumber, uint16_t address)
+es_status_codes setBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address)
 {
 	uint32_t bitmask = 0x1 << bitnumber;
     return writeBitsS0_32(drvno, 0xFFFFFFFF, bitmask, address);
+}
+
+/**
+ * @brief Set bit to 1 in S0 register at memory address.
+ *
+ * @param drvno board number (=1 if one PCI board)
+ * @param bitnumber 0...7, 0 is LSB, 7 MSB
+ * @param address register address. 1 byte steps are valid.
+ * @return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
+es_status_codes setBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address)
+{
+	uint32_t bitmask = 0x1 << bitnumber;
+    return writeBitsS0_8(drvno, 0xFF, bitmask, address);
 }
 
 /**
@@ -369,16 +403,33 @@ es_status_codes setBitS0(uint32_t drvno, uint32_t bitnumber, uint16_t address)
  *
  * @param drvno board number (=1 if one PCI board)
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
- * @param address register address
+ * @param address register address. Only 4 byte steps are valid.
  * @return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
  * 		- es_register_write_failed
  */
-es_status_codes resetBitS0(uint32_t drvno, uint32_t bitnumber, uint16_t address)
+es_status_codes resetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address)
 {
 	uint32_t bitmask = 0x1 << bitnumber;
     return writeBitsS0_32(drvno, 0x0, bitmask, address);
+}
+
+/**
+ * @brief Set bit to 0 in register at memory address.
+ *
+ * @param drvno board number (=1 if one PCI board)
+ * @param bitnumber 0...7, 0 is LSB, 7 MSB
+ * @param address register address. 1 byte steps are valid.
+ * @return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
+es_status_codes resetBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address)
+{
+	uint32_t bitmask = 0x1 << bitnumber;
+    return writeBitsS0_8(drvno, 0x0, bitmask, address);
 }
 
 es_status_codes writeRegisterS0_32( uint32_t drvno, uint32_t data, uint16_t address )
@@ -423,7 +474,7 @@ es_status_codes readRegisterS0_8( uint32_t drvno, uint8_t* data, uint16_t addres
 es_status_codes OpenShutter( uint32_t drvno )
 {
 	ES_LOG("Open shutter\n");
-    return setBitS0(drvno, CTRLB_bitindex_SHON, S0Addr_CTRLB);
+    return setBitS0_8(drvno, CTRLB_bitindex_SHON, S0Addr_CTRLB);
 };
 
 /**
@@ -475,7 +526,7 @@ es_status_codes SetupVCLKReg( uint32_t drvno, uint32_t lines, uint8_t vfreq )
 es_status_codes ResetPartialBinning( uint32_t drvno )
 {
 	ES_LOG("Reset partial binning\n");
-    return resetBitS0(drvno, 15, S0Addr_ARREG );
+    return resetBitS0_32(drvno, 15, S0Addr_ARREG );
 }
 
 /**
@@ -531,7 +582,7 @@ es_status_codes SetMeasurementParameters( uint32_t drvno, uint32_t nos, uint32_t
 es_status_codes StopSTimer( uint32_t drvno )
 {
 	ES_LOG("Stop S Timer, drv: %u\n", drvno);
-    return resetBitS0(drvno, XCKMSB_bitindex_stimer_on, S0Addr_XCKMSB);
+    return resetBitS0_8(drvno, XCKMSB_bitindex_stimer_on, S0Addr_XCKMSB);
 }
 
 /**
@@ -546,9 +597,9 @@ es_status_codes StopSTimer( uint32_t drvno )
 es_status_codes RSFifo( uint32_t drvno )
 {
 	ES_LOG("Reset Fifo\n");
-    es_status_codes status = setBitS0(drvno, BTRIGREG_bitindex_RSFIFO, S0Addr_BTRIGREG);
+    es_status_codes status = setBitS0_8(drvno, BTRIGREG_bitindex_RSFIFO, S0Addr_BTRIGREG);
 	if (status != es_no_error) return status;
-    return resetBitS0(drvno, BTRIGREG_bitindex_RSFIFO, S0Addr_BTRIGREG);
+    return resetBitS0_8(drvno, BTRIGREG_bitindex_RSFIFO, S0Addr_BTRIGREG);
 }
 
 /**
@@ -635,7 +686,7 @@ es_status_codes SetDMABufRegs( uint32_t drvno )
 es_status_codes CloseShutter( uint32_t drvno )
 {
 	ES_LOG("Close shutter\n");
-    return resetBitS0(drvno, CTRLB_bitindex_SHON, S0Addr_CTRLB);
+    return resetBitS0_8(drvno, CTRLB_bitindex_SHON, S0Addr_CTRLB);
 };
 
 /**
@@ -723,21 +774,21 @@ es_status_codes SetSSlope(uint32_t drvno, uint32_t sslope)
 	{
 	// high slope
 	case 0:
-        status = setBitS0(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
+        status = setBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
 		if (status != es_no_error) return status;
-        status = resetBitS0(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
+        status = resetBitS0_32(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
 		break;
 	// low slope
 	case 1:
-        status = resetBitS0(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
+        status = resetBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
 		if (status != es_no_error) return status;
-        status = resetBitS0(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
+        status = resetBitS0_32(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
 		break;
 	// both slope
 	case 2:
-        status = setBitS0(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
+        status = setBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
 		if (status != es_no_error) return status;
-        status = setBitS0(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
+        status = setBitS0_32(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
 		break;
 	default:
 		return es_parameter_out_of_range;
@@ -778,7 +829,7 @@ es_status_codes SetBSlope( uint32_t drvno, uint32_t slope )
 es_status_codes SetSTI( uint32_t drvno, uint8_t sti_mode )
 {
 	ES_LOG("Set STI: %u\n", sti_mode);
-    return writeBitsS0_32( drvno, sti_mode, CTRLB_bit_STI0 | CTRLB_bit_STI1 | CTRLB_bit_STI2, S0Addr_CTRLB );
+    return writeBitsS0_8( drvno, sti_mode, CTRLB_bit_STI0 | CTRLB_bit_STI1 | CTRLB_bit_STI2, S0Addr_CTRLB );
 }
 
 /**
@@ -798,7 +849,7 @@ es_status_codes SetSTI( uint32_t drvno, uint8_t sti_mode )
 es_status_codes SetBTI( uint32_t drvno, uint8_t bti_mode )
 {
 	ES_LOG("Set BTI: %u\n", bti_mode);
-    return writeBitsS0_32( drvno, bti_mode << CTRLB_bitindex_BTI0, CTRLB_bit_BTI0 | CTRLB_bit_BTI1 | CTRLB_bit_BTI2, S0Addr_CTRLB );
+    return writeBitsS0_8( drvno, bti_mode << CTRLB_bitindex_BTI0, CTRLB_bit_BTI0 | CTRLB_bit_BTI1 | CTRLB_bit_BTI2, S0Addr_CTRLB );
 }
 
 /**
@@ -1055,9 +1106,9 @@ es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_t
 es_status_codes Use_ENFFW_protection( uint32_t drvno, bool USE_ENFFW_PROTECT )
 {
 	if (USE_ENFFW_PROTECT)
-        return setBitS0( drvno, 3, S0Addr_PCIEFLAGS );
+        return setBitS0_32( drvno, 3, S0Addr_PCIEFLAGS );
 	else
-        return resetBitS0( drvno, 3, S0Addr_PCIEFLAGS );
+        return resetBitS0_32( drvno, 3, S0Addr_PCIEFLAGS );
 }
 
 /**
@@ -1638,11 +1689,70 @@ es_status_codes writeBitsDma_32( uint32_t drvno, uint32_t data, uint32_t bitmask
     return writeRegisterDma_32( drvno, NewRegisterValues, address );
 }
 
+/**
+ * @brief Set specified bits to 1 in DMA register at memory address.
+ * 
+ * @param Data 
+ * @param Bitmask 
+ * @param Address 
+ * @param drvno PCIe board identifier.
+ * @return es_status_codes
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
+es_status_codes writeBitsDma_8( uint32_t drvno, uint8_t data, uint8_t bitmask, uint16_t address  )
+{
+	uint8_t OldRegisterValues = 0;
+	//read the old Register Values in the S0 Address Reg
+	es_status_codes status = readRegisterDma_8( drvno, &OldRegisterValues, address );
+	if (status != es_no_error) return status;
+    //step 0: delete not needed "1"s
+    data &= bitmask;
+    //step 1: save Data as setbitmask for making this part humanreadable
+    uint8_t Setbit_mask = data;
+    //step 2: setting high bits in the Data
+    uint8_t OldRegVals_and_SetBits = OldRegisterValues | Setbit_mask;
+    //step 3: prepare to clear bits
+    uint8_t Clearbit_mask = data | ~bitmask;
+    //step 4: clear the low bits in the Data
+    uint8_t NewRegisterValues = OldRegVals_and_SetBits & Clearbit_mask;
+    //write the data to the S0 controller
+    return writeRegisterDma_8( drvno, NewRegisterValues, address );
+}
+
 es_status_codes writeRegisterDma_32( uint32_t drvno, uint32_t data, uint16_t address )
 {
     return writeRegister_32(drvno, data, address);
 }
+
+es_status_codes writeRegisterDma_8( uint32_t drvno, uint8_t data, uint16_t address )
+{
+    return writeRegister_8(drvno, data, address);
+}
+
 es_status_codes readRegisterDma_32( uint32_t drvno, uint32_t* data, uint16_t address )
 {
 	return readRegister_32(drvno, data, address);
+}
+
+es_status_codes readRegisterDma_8( uint32_t drvno, uint8_t* data, uint16_t address )
+{
+	return readRegister_8(drvno, data, address);
+}
+
+/**
+ * @brief Set Dma Start Mode 
+ * 
+ * @param drvno PCIe board identifier
+ * @param start_by_hardware true: every XCK h->l starts DMA by hardware, false: by software
+ * @return es_status_codes 
+ */
+es_status_codes SetDmaStartMode( uint32_t drvno, bool start_by_hardware)
+{
+	ES_LOG("Set DMA start mode: %u\n", start_by_hardware);
+	uint32_t data = 0;
+	if (start_by_hardware)
+		data = 0x40000000;
+	return writeBitsS0_8( drvno, data, 0x40000000, S0Addr_IRQREG );
 }
