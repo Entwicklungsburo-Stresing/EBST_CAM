@@ -11,14 +11,13 @@ extern "C" {
 #include "struct.h"
 #include <stdbool.h>
 
-#define DMA_BUFFER_SIZE_IN_SCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
-#define DMA_BUFFER_PARTS 2
-#define DMA_DMASPERINTR DMA_BUFFER_SIZE_IN_SCANS / DMA_BUFFER_PARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb 
 #define MANUAL_OVERRIDE_TLP false
 #define LEGACY_202_14_TLPCNT false
 #define _FORCETLPS128 true	//only use payload size 128byte
 #define DMA_64BIT_EN false
 #define S0_SPACE_OFFSET 0x80
+#define INTR_EN true
+#define HWDREQ_EN true // enables hardware start of DMA by XCK h->l slope
 
 extern uint32_t* aPIXEL;
 extern uint32_t* aCAMCNT;
