@@ -247,3 +247,23 @@ es_status_codes enableInterrupt( uint32_t drvno )
 	}
 	return;
 }
+
+void ResetBufferWritePos(uint32_t drvno)
+{
+    dmaBufferPartReadPos[drvno] = 0;
+	// reset buffer index to base we got from InitDMA
+	userBufferWritePos[drvno] = userBuffer[drvno];
+	ES_LOG( "RESET userBufferWritePos to %x\n", userBufferWritePos[drvno] );
+	IsrCounter = 0;
+    return;
+}
+
+	void copyRestData(size_t rest_in_bytes)
+	{
+		ES_LOG( "Copy rest data:\n" );
+		ES_LOG( "dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes );
+		INT_PTR dmaBufferReadPos = dmaBuffer[drvno];
+		dmaBufferReadPos += dmaBufferPartReadPos[drvno] * dmaBufferSizeInBytes / DMA_BUFFER_PARTS;
+		memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes );
+		return;
+	}

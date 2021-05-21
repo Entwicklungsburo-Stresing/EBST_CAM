@@ -43,7 +43,9 @@ es_status_codes ReturnFrame(uint32_t drv, uint32_t curr_nos, uint32_t curr_nob, 
 // Mid level API
 // plattform independet implementation
 // hardware abstraction
+es_status_codes setBlockOn( uint32_t drvno );
 es_status_codes resetBlockOn( uint32_t drvno );
+es_status_codes setMeasureOn( uint32_t drvno );
 es_status_codes resetMeasureOn( uint32_t drvno );
 es_status_codes SetDMAReset( uint32_t drvno );
 es_status_codes ClearAllUserRegs( uint32_t drvno );
@@ -92,6 +94,15 @@ es_status_codes SetXckdelay(uint32_t drvno, uint32_t xckdelay);
 es_status_codes ResetPartialBinning( uint32_t drvno );
 es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel );
 es_status_codes SetDmaStartMode( uint32_t drvno, bool start_by_hardware);
+es_status_codes FindCam( uint32_t drvno );
+es_status_codes SetHardwareTimerStopMode( uint32_t drvno, bool stop_by_hardware );
+es_status_codes ResetHardwareCounter( uint32_t drvno );
+es_status_codes waitForBlockTrigger(uint32_t drvno);
+es_status_codes countBlocksByHardware( uint32_t drvno );
+es_status_codes StartSTimer( uint32_t drvno );
+es_status_codes DoSoftwareTrigger( uint32_t drvno );
+es_status_codes IsTimerOn( uint32_t drvno, bool* on );
+es_status_codes GetLastBufPart( uint32_t drvno );
 
 // read and write functions
 es_status_codes writeBitsS0_32( uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address);
@@ -113,6 +124,8 @@ es_status_codes readRegisterDma_32( uint32_t drvno, uint32_t* data, uint16_t add
 es_status_codes readRegisterDma_8( uint32_t drvno, uint8_t* data, uint16_t address );
 es_status_codes writeBitsDma_32( uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address);
 es_status_codes writeBitsDma_8( uint32_t drvno, uint8_t data, uint8_t bitmask, uint16_t address);
+es_status_codes pulseBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address);
+es_status_codes pulseBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address);
 
 #ifdef __cplusplus
 }

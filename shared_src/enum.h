@@ -93,7 +93,7 @@ enum TOR_MSB_bits
 enum XCKMSB_bits
 {
 	XCKMSB_bit_stimer_on = 0x40,
-	XCKMSB_bitindex_stimer_on = 30
+	XCKMSB_bitindex_stimer_on = 6
 };
 
 //PCIe Addresses
@@ -161,6 +161,30 @@ enum s0_addresses
 	S0Addr_BDAT = 0x84,
 	S0Addr_BEC = 0x88,
 	S0Addr_BSLOPE = 0x8C
+};
+
+enum ScanIndex_bits
+{
+	ScanIndex_bitindex_counter_reset = 31,
+	ScanIndex_bit_counter_reset = 0x80
+};
+
+enum BLOCKINDEX_bits
+{
+	BLOCKINDEX_bitindex_counter_reset = 31,
+	BLOCKINDEX_bit_counter_reset = 0x80
+};
+
+enum DmaBufSizeInScans_bits
+{
+	DmaBufSizeInScans_bitindex_counter_reset = 31,
+	DmaBufSizeInScans_bit_counter_reset = 0x80
+};
+
+enum DMAsPerIntr_bits
+{
+	DMAsPerIntr_bitindex_counter_reset = 31,
+	DMAsPerIntr_bit_counter_reset = 0x80
 };
 
 //Cam Addresses könnten später bei unterschiedlichen cam systemen vaariieren

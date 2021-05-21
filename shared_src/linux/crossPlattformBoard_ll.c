@@ -127,3 +127,17 @@ es_status_codes enableInterrupt( uint32_t drvno )
 {
     return es_no_error;
 }
+
+void ResetBufferWritePos(uint32_t drvno)
+{
+    struct dev_descr *dev = lscpcie_get_descriptor(drvno-1);
+	dev->control->write_pos = 0;
+	dev->control->read_pos = 0;
+	dev->control->irq_count = 0;
+    return;
+}
+
+void copyRestData(size_t rest_in_bytes)
+{
+    return;
+}
