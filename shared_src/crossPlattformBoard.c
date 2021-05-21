@@ -1758,5 +1758,5 @@ es_status_codes SetDmaStartMode( uint32_t drvno, bool start_by_hardware)
 	uint32_t data = 0;
 	if (start_by_hardware)
 		data = 0x40000000;
-	return writeBitsS0_8( drvno, data, 0x40000000, S0Addr_IRQREG );
+	return writeBitsS0_32( drvno, data, 0x40000000, S0Addr_IRQREG );
 }
