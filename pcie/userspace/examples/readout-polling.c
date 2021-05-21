@@ -83,7 +83,7 @@ int main(int argc, char **argv)
 		result = lscpcie_acquire_block_poll(info.dev,
 						(uint8_t *) info.data
 						+ bytes_read,
-						2);
+						info.n_scans);
 		if (result < 0) {
 			fprintf(stderr, "error %d when acquiring block\n",
 				result);

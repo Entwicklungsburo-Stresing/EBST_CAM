@@ -325,6 +325,8 @@ int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode,
 	dev->s0->TOR = TOR_OUT_XCK;
 
 	dev->s0->DMAS_PER_INTERRUPT = dmas_per_interrupt;
+	fprintf(stderr, "dmas per interrupt is %d (%d)\n",
+		dev->s0->DMAS_PER_INTERRUPT, dmas_per_interrupt);
 	dev->control->bytes_per_interrupt
 	    = dmas_per_interrupt * dev->control->number_of_pixels
 		* sizeof(pixel_t);
