@@ -8,6 +8,52 @@
 
 WDC_DEVICE_HANDLE hDev_tmp[MAXPCIECARDS];
 WDC_DEVICE_HANDLE* hDev = &hDev_tmp;
+DWORD dmaBufferSizeInBytes = 0;
+
+#define interrupt_handler1(drvno, data) isr()
+
+/**
+\brief This call comes every DMASPERINTR=500 here a DMASubBuf could be copied to the DMABigBuf.
+the size of a drivers continous memory is limited, so we must copy it via this small buf to the big buf
+The INTR occurs every DMASPERINTR and copies this block of scans in lower/upper half blocks.
+*/
+void isr( UINT drvno, PVOID pData )
+{
+	WDC_Err( "*isr(): 0x%x\n", IsrCounter );
+	es_status_codes status = SetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//set INTRSR flag for TRIGO
+	if (status != es_no_error) return;
+	//! be sure not to stop run before last isr is ready - or last part is truncated
+	//usually dmaBufferSizeInBytes = 1000scans 
+	//dmaBufferPartSizeInBytes = 1000 * pixel *2 -> /2 = 500 scans = 1088000 bytes
+	// that means one 500 scan copy block has 1088000 bytes
+	//!GS sometimes (all 10 minutes) one INTR more occurs -> just do not serve it and return
+	// Fehler wenn zu viele ISRs -> memcpy out of range
+	WDC_Err( "ISR Counter : 0x%x \n", IsrCounter );
+	if (IsrCounter > numberOfInterrupts)
+	{
+		WDC_Err( "numberOfInterrupts: 0x%x \n", numberOfInterrupts );
+		WDC_Err( "ISR Counter overflow: 0x%x \n", IsrCounter );
+		status = ResetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//reset INTRSR flag for TRIGO
+		return;
+	}
+	WDC_Err("dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes);
+	size_t dmaBufferPartSizeInBytes = dmaBufferSizeInBytes / DMA_BUFFER_PARTS; //1088000 bytes
+	UINT16* dmaBufferReadPos = dmaBuffer[drvno] + dmaBufferPartReadPos[drvno] * dmaBufferPartSizeInBytes / sizeof(UINT16);
+	//here the copyprocess happens
+	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, dmaBufferPartSizeInBytes );
+	WDC_Err( "userBufferWritePos: 0x%x \n", userBufferWritePos[drvno] );
+	dmaBufferPartReadPos[drvno]++;
+	if (dmaBufferPartReadPos[drvno] >= DMA_BUFFER_PARTS)		//number of ISR per dmaBuf - 1
+		dmaBufferPartReadPos[drvno] = 0;						//dmaBufferPartReadPos is 0 or 1 for buffer devided in 2 parts
+	userBufferWritePos[drvno] += dmaBufferPartSizeInBytes / sizeof( UINT16 );
+	status = ResetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//reset INTRSR flag for TRIGO
+	IsrCounter++;
+	return;
+}//DLLCALLCONV interrupt_handler
+
+//TODO is this neceserry?
+VOID DLLCALLCONV interrupt_handler1( PVOID pData ) { isr( 1, pData ); }
+VOID DLLCALLCONV interrupt_handler2( PVOID pData ) { isr( 2, pData ); }
 
 /**
  * @brief Reads long on DMA area.
@@ -126,4 +172,85 @@ uint64_t getDmaAddress( uint32_t drvno)
     WD_DMA** ppDma = &dmaBufferInfos[drvno];
 	return (*ppDma)->Page[0].pPhysicalAddr;
 }
-	
+
+/**
+ * \brief Alloc DMA buffer - should only be called once.
+ * 
+ * Gets address of DMASubBuf from driver and copy it later to our pDMABigBuf.
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_getting_dma_buffer_failed
+ * 		- es_register_read_failed
+ *		- es_register_write_failed
+ *		- es_enabling_interrupts_failed
+ */
+es_status_codes SetupDma( UINT32 drvno )
+{
+	DWORD dwStatus;
+	ES_LOG( "Setup DMA\n" );
+	//If interrupt was enabled before, first cleanup DMA.
+	if (WDC_IntIsEnabled(hDev[drvno]))
+	{
+		ES_LOG("Cleanup DMA\n");
+		es_status_codes status = CleanupPCIE_DMA(drvno);
+		if (status != es_no_error) return status;
+	}
+	dmaBufferSizeInBytes = DMA_BUFFER_SIZE_IN_SCANS * aPIXEL[drvno] * sizeof( UINT16 );
+	DWORD dwOptions = DMA_FROM_DEVICE | DMA_KERNEL_BUFFER_ALLOC;// | DMA_ALLOW_64BIT_ADDRESS;// DMA_ALLOW_CACHE ;
+	if (DMA_64BIT_EN)
+		dwOptions |= DMA_ALLOW_64BIT_ADDRESS;
+//usually we use contig buf: here we get the buffer address from labview.
+#if DMA_CONTIGBUF
+	// dmaBuffer is the space which is allocated by this function = output - must be global
+	dwStatus = WDC_DMAContigBufLock( hDev[drvno], &dmaBuffer[drvno], dwOptions, dmaBufferSizeInBytes, &dmaBufferInfos[drvno] ); //size in Bytes
+	if (WD_STATUS_SUCCESS != dwStatus)
+	{
+		ES_LOG( "Failed locking a contiguous DMA buffer. Error 0x%lx - %s\n", dwStatus, Stat2Str( dwStatus ) );
+		return es_getting_dma_buffer_failed;
+	}
+	// data must be copied afterwards to user Buffer 
+#else
+	if (!pDMABigBuf)
+	{
+		ES_LOG( "Failed: buf pointer not valid.\n" );
+		return es_getting_dma_buffer_failed;
+	}
+	// pDMABigBuf is the big space which is passed to this function = input - must be global
+	dwStatus = WDC_DMASGBufLock( hDev[drvno], pDMABigBuf, dwOptions, dmaBufferSizeInBytes, &dmaBufferInfos ); //size in Bytes
+#endif
+	// DREQ: every XCK h->l starts DMA by hardware
+	//set hardware start des dma  via DREQ withe data = 0x4000000
+	ULONG mask = 0x40000000;
+	ULONG data = 0;// 0x40000000;
+	if (HWDREQ_EN)
+		data = 0x40000000;
+	return SetS0Reg( data, mask, S0Addr_IRQREG, drvno );
+}
+
+es_status_codes enableInterrupt( uint32_t drvno )
+{
+	switch (drvno)
+	{
+	case 1:
+		dwStatus = LSCPCIEJ_IntEnable( hDev[drvno], interrupt_handler1 );
+		if (WD_STATUS_SUCCESS != dwStatus)
+		{
+			ES_LOG( "Failed to enable the Interrupts1. Error 0x%lx - %s\n",	dwStatus, Stat2Str( dwStatus ) );
+			return es_enabling_interrupts_failed;
+		}
+		break;
+
+	case 2:
+		dwStatus = LSCPCIEJ_IntEnable( hDev[drvno], interrupt_handler2 );
+		if (WD_STATUS_SUCCESS != dwStatus)
+		{
+			ES_LOG( "Failed to enable the Interrupts2. Error 0x%lx - %s\n", dwStatus, Stat2Str( dwStatus ) );
+			return es_enabling_interrupts_failed;
+		}
+		break;
+	default:
+		return es_parameter_out_of_range;
+	}
+	return;
+}

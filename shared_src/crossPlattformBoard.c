@@ -150,7 +150,11 @@ es_status_codes InitMeasurement(struct global_settings settings)
 		}
 	}
 	//DMA
-	status = SetupPCIE_DMA(settings.drvno);
+	status = SetupDma(settings.drvno);
+	if (status != es_no_error) return status;
+	status = SetDmaStartMode(settings.drvno, HWDREQ_EN);
+	if (status != es_no_error) return status;
+	if(INTR_EN) status = enableInterrupt(settings.drvno);
 	if (status != es_no_error) return status;
 	status = SetDmaRegister(settings.drvno, settings.pixel);
 	if (status != es_no_error) return status;
@@ -1516,7 +1520,7 @@ es_status_codes SetXckdelay(uint32_t drvno, uint32_t xckdelay)
 
 es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
 {		
-	ES_LOG("Set TLPS: drv: %u, pixel: %u\n", drvno, pixel);
+	ES_LOG("Set DMA register: drv: %u, pixel: %u\n", drvno, pixel);
 	/*Pixelsize with matching TLP Count (TLPC).
 	Pixelsize = TLPS * TLPC - 1*TLPS
 	(TLPS TLP size = 64)

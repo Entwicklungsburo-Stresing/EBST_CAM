@@ -96,9 +96,18 @@ void FreeMemInfo( uint64_t *pmemory_all, uint64_t *pmemory_free )
     return;
 }
 
-es_status_codes SetupPCIE_DMA( uint32_t drvno )
+es_status_codes SetupDma( uint32_t drvno )
 {
-    // TODO implement me
+    ES_LOG( "Setup DMA\n" );
+    struct dev_descr *dev = lscpcie_get_descriptor(drvno-1);
+    dev->control->bytes_per_interrupt = DMA_DMASPERINTR * dev->control->number_of_pixels * sizeof(uint16_t);
+    dev->control->used_dma_size = dev->s0->DMA_BUF_SIZE_IN_SCANS * dev->control->number_of_pixels * dev->control->number_of_cameras * sizeof(uint16_t);
+	if (dev->control->used_dma_size > dev->control->dma_buf_size)
+		dev->control->used_dma_size = dev->control->dma_buf_size;
+    ES_LOG("dmas per interrupt is %d\n", dev->s0->DMAS_PER_INTERRUPT);
+	ES_LOG("bytes per interrupt is %d\n", dev->control->bytes_per_interrupt);
+	ES_LOG("number of scans is %d\n", dev->s0->NUMBER_OF_SCANS);
+	ES_LOG("buf size in scans is %d\n", dev->s0->DMA_BUF_SIZE_IN_SCANS);
     return es_no_error;
 }
 
@@ -106,4 +115,9 @@ uint64_t getDmaAddress( uint32_t drvno)
 {
     struct dev_descr *dev = lscpcie_get_descriptor(drvno-1);
     return (uint64_t) dev->control->dma_physical_start;
+}
+
+es_status_codes enableInterrupt( uint32_t drvno )
+{
+    return es_no_error;
 }
