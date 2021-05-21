@@ -114,31 +114,31 @@ enum BTRIGREG_bits
 //S0 Addresses
 enum s0_addresses
 {
-	S0Addr_DBR = 0x0,
-	S0Addr_CTRLA = 0x4,
+	S0Addr_DBR = 0x0, //0x00
+	S0Addr_CTRLA = 0x4, //0x04
 	S0Addr_CTRLB = 0x5,
 	S0Addr_CTRLC = 0x6,
-	S0Addr_XCKLL = 0x8,
+	S0Addr_XCKLL = 0x8, //0x08
 	S0Addr_XCKLH = 0x9,
 	S0Addr_XCKHL = 0xa,
 	S0Addr_XCKMSB = 0xb,
-	S0Addr_XCKCNTLL = 0xc,
+	S0Addr_XCKCNTLL = 0xc, //0x0c
 	S0Addr_XCKCNTLH = 0xd,
 	S0Addr_XCKCNTHL = 0xe,
 	S0Addr_XCKCNTMSB = 0xf,
-	S0Addr_PIXREGlow = 0x10,
+	S0Addr_PIXREGlow = 0x10, //0x10
 	S0Addr_PIXREGhigh = 0x11,
 	S0Addr_BTRIGREG = 0x12,
 	S0Addr_FF_FLAGS = 0x13,
-	S0Addr_FIFOCNT = 0x14,
+	S0Addr_FIFOCNT = 0x14, //0x14
 	S0Addr_VCLKCTRL = 0x18,
 	S0Addr_VCLKFREQ = 0x1b,
-	S0Addr_EBST = 0x1C,
-	S0Addr_SDAT = 0x20,
-	S0Addr_SEC = 0x24,
-	S0Addr_TOR = 0x28,
+	S0Addr_EBST = 0x1C, //0x1c
+	S0Addr_SDAT = 0x20, //0x20
+	S0Addr_SEC = 0x24, //0x24
+	S0Addr_TOR = 0x28, //0x28
 	S0Addr_TOR_MSB = 0x2B,
-	S0Addr_ARREG = 0x2C,
+	S0Addr_ARREG = 0x2C, //0x2c
 	S0Addr_GIOREG = 0x30,
 	S0Addr_DELAYEC = 0x34,
 	S0Addr_IRQREG = 0x38,
