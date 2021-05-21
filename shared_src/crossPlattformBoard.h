@@ -90,11 +90,15 @@ es_status_codes SetBEC( uint32_t drvno, uint32_t ecin100ns );
 es_status_codes SetXckdelay(uint32_t drvno, uint32_t xckdelay);
 es_status_codes ResetPartialBinning( uint32_t drvno );
 es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel );
+es_status_codes SetDmaStartMode( uint32_t drvno, bool start_by_hardware);
 
 // read and write functions
 es_status_codes writeBitsS0_32( uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address);
-es_status_codes setBitS0(uint32_t drvno, uint32_t bitnumber, uint16_t address);
-es_status_codes resetBitS0(uint32_t drvno, uint32_t bitnumber, uint16_t address);
+es_status_codes writeBitsS0_8( uint32_t drvno, uint8_t data, uint8_t bitmask, uint16_t address);
+es_status_codes setBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address);
+es_status_codes setBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address);
+es_status_codes resetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address);
+es_status_codes resetBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address);
 es_status_codes readRegisterS0_32( uint32_t drvno, uint32_t* data, uint16_t address );
 es_status_codes readRegisterS0_16( uint32_t drvno, uint16_t* data, uint16_t address );
 es_status_codes readRegisterS0_8( uint32_t drvno, uint8_t* data, uint16_t address );
@@ -103,8 +107,11 @@ es_status_codes writeRegisterS0_16( uint32_t drvno, uint16_t data, uint16_t addr
 es_status_codes writeRegisterS0_8( uint32_t drv, uint8_t data, uint16_t address );
 es_status_codes SendFLCAM( uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16_t data );
 es_status_codes writeRegisterDma_32( uint32_t drvno, uint32_t data, uint16_t address );
+es_status_codes writeRegisterDma_8( uint32_t drvno, uint8_t data, uint16_t address );
 es_status_codes readRegisterDma_32( uint32_t drvno, uint32_t* data, uint16_t address );
+es_status_codes readRegisterDma_8( uint32_t drvno, uint8_t* data, uint16_t address );
 es_status_codes writeBitsDma_32( uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address);
+es_status_codes writeBitsDma_8( uint32_t drvno, uint8_t data, uint8_t bitmask, uint16_t address);
 
 #ifdef __cplusplus
 }
