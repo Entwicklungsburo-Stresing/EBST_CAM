@@ -78,11 +78,11 @@ int lscpcie_read_config32(struct dev_descr *dev, uint16_t address,
 int lscpcie_write_config32(struct dev_descr *dev, uint16_t address,
 			   uint32_t val);
 #define lscpcie_read_reg8(dev, addr, data) \
-  *data = *(uint8_t*)(((uint8_t *)dev->dma_reg) + addr)
+  do *data = *(uint8_t*)(((uint8_t *)dev->dma_reg) + addr); while (0)
 #define lscpcie_read_reg16(dev, addr, data) \
-  *data = *(uint16_t*)(((uint8_t *)dev->dma_reg) + addr)
+  do *data = *(uint16_t*)(((uint8_t *)dev->dma_reg) + addr); while(0)
 #define lscpcie_read_reg32(dev, addr, data) \
-  *data = *(uint32_t*)(((uint8_t *)dev->dma_reg) + addr)
+  do *data = *(uint32_t*)(((uint8_t *)dev->dma_reg) + addr); while(0)
 #define lscpcie_write_reg8(dev, addr, data) \
   do *(uint8_t*) (((uint8_t *)dev->dma_reg) + addr) = data; while (0)
 #define lscpcie_write_reg16(dev, addr, data) \
