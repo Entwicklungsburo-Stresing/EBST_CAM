@@ -41,5 +41,7 @@ void FreeMemInfo( uint64_t *pmemory_all, uint64_t *pmemory_free );
 es_status_codes SetupDma( uint32_t drvno );
 es_status_codes enableInterrupt( uint32_t drvno );
 uint64_t getDmaAddress( uint32_t drvno);
+void ResetBufferWritePos(uint32_t drvno);
+void copyRestData(size_t rest_in_bytes);
 
 #endif // CROSSPLATTFORMBOARDLL_H
