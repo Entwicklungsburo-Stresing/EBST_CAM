@@ -145,7 +145,7 @@ es_status_codes Lsc::startMeasurement()
         bytes_read += result;
         fprintf(stderr, "have now %d bytes\n", bytes_read);
         emit blockDone();
-    } while (bytes_read < info.mem_size);
+    } while (bytes_read < info.mem_size && ! abortMeasurementFlag);
 
     fprintf(stderr, "finished measurement\n");
 
@@ -325,5 +325,5 @@ es_status_codes Lsc::_abortMeasurement()
     //lscpcie_end_block(info.dev);
     emit blockDone();
     emit measureDone();
-    return abortMeasurement( 0 );
+    return abortMeasurement( 1 );
 }
