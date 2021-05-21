@@ -81,13 +81,11 @@ es_status_codes checkDriverHandle(uint32_t drvno)
 {
 	if ((drvno < 1) || (drvno > 2))
 		return es_invalid_driver_number;
-	/*else if (hDev[drvno] == INVALID_HANDLE_VALUE)
-	{
-		WDC_Err("Handle is invalid of drvno: %i", drvno);
-		return es_invalid_driver_handle;
-	}*/
+    struct dev_descr *dev = lscpcie_get_descriptor(drvno-1);
+    if (!dev)
+        return es_invalid_driver_handle;
 	else
-		return es_no_error;
+        return es_no_error;
 }
 
 /**
