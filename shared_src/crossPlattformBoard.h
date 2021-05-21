@@ -27,6 +27,8 @@ extern uint32_t BOARD_SEL;
 extern uint8_t number_of_boards;
 extern uint32_t Nob;
 extern uint32_t* Nospb;
+extern bool abortMeasurementFlag;
+
 
 // High level API
 // plattform independet implementation

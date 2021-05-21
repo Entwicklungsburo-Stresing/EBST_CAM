@@ -17,6 +17,7 @@ uint8_t number_of_boards = 0;
 uint32_t Nob = 1;
 uint32_t tmp_Nosbp = 1000;
 uint32_t* Nospb = &tmp_Nosbp;
+bool abortMeasurementFlag = false;
 
 /**
  * \brief Initialize Measurement.
@@ -28,6 +29,7 @@ uint32_t* Nospb = &tmp_Nosbp;
 es_status_codes InitMeasurement(struct global_settings settings)
 {
 	ES_LOG("\n*** Init Measurement ***\n");
+	abortMeasurementFlag = false;
 	ES_LOG("struct global_settings: ");
 	for (int i = 0; i < sizeof(settings)/4; i++)
 		ES_LOG("%x ", *(&settings.drvno + i));
@@ -215,6 +217,7 @@ es_status_codes ClearAllUserRegs(uint32_t drvno)
 es_status_codes abortMeasurement( uint32_t drv )
 {
 	ES_LOG("Abort Measurement\n");
+	abortMeasurementFlag = true;
 	es_status_codes status = StopSTimer( drv );
 	if (status != es_no_error) return status;
 	status = resetBlockOn(drv);
