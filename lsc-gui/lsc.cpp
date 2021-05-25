@@ -61,7 +61,7 @@ es_status_codes Lsc::startMeasurement()
     //set measure on
     //lscpcie_start_scan(info.dev);
     //TODO: use crossPlattformBoard StartMeasurment
-
+    /*
     info.mem_size = info.dev->control->number_of_pixels
         * info.dev->control->number_of_cameras * info.n_blocks
         * info.n_scans * sizeof(pixel_t);
@@ -98,6 +98,7 @@ es_status_codes Lsc::startMeasurement()
 
     emit measureDone();
     return es_no_error;
+    */
 }
 
 es_status_codes Lsc::returnFrame(uint32_t board, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length)
@@ -158,7 +159,7 @@ std::string Lsc::dumpS0Registers(uint32_t drvno)
         es_status_codes status = readRegisterS0_32(drvno, &data, i*4);
         if(status != es_no_error)
         {
-            stream << "\nerror while reading register\n"
+            stream << "\nerror while reading register\n";
             return stream.str();
         }
         stream  << register_names[i]
@@ -199,7 +200,7 @@ std::string Lsc::dumpDmaRegisters(uint32_t drvno)
         es_status_codes status = readRegisterDma_32(drvno, &data, i*4);
         if(status != es_no_error)
         {
-            stream << "\nerror while reading register\n"
+            stream << "\nerror while reading register\n";
             return stream.str();
         }
         stream  << register_names[i]
@@ -215,20 +216,20 @@ std::string Lsc::dumpTlp(uint32_t drvno)
     uint32_t data = 0;
     std::stringstream stream;
     stream  << "PAY_LOAD values:\t\t0 = 128 bytes\n\t\t\t1 = 256 bytes\n\t\t\t2 = 512 bytes\n";
-    es_status_codes status = readConfig_32(drvno, data, PCIeAddr_devCap);
+    es_status_codes status = readConfig_32(drvno, &data, PCIeAddr_devCap);
     if(status != es_no_error)
     {
-        stream << "\nerror while reading register\n"
+        stream << "\nerror while reading register\n";
         return stream.str();
     }
     data &= 0x7;
     stream  << "PAY_LOAD Supported:\t\t0x"
             << std::hex << data
             << '\n';
-    status = readConfig_32(drvno, data, PCIeAddr_devCap);
+    status = readConfig_32(drvno, &data, PCIeAddr_devCap);
     if(status != es_no_error)
     {
-        stream << "\nerror while reading register\n"
+        stream << "\nerror while reading register\n";
         return stream.str();
     }
     uint32_t actpayload = (data >> 5) & 0x07;
@@ -254,23 +255,23 @@ std::string Lsc::dumpTlp(uint32_t drvno)
            << " DWORDs\n\t\t\t="
            << std::dec << data*4
            << " BYTEs\n";
-    status = readRegisterDma_32(drvno, data, DmaAddr_WDMATLPS);
+    status = readRegisterDma_32(drvno, &data, DmaAddr_WDMATLPS);
     if(status != es_no_error)
     {
-        stream << "\nerror while reading register\n"
+        stream << "\nerror while reading register\n";
         return stream.str();
     }
     stream << "TLPS in DMAReg is:\t\t"
            << std::dec << data
            << "\n";
-    data = (aPIXEL[drv] - 1) / (data * 2) + 1;
+    data = (aPIXEL[drvno] - 1) / (data * 2) + 1;
     stream << "number of TLPs should be:\t"
            << std::dec << data
            << "\n";
-    status = readRegisterDma_32(drvno, data, DmaAddr_WDMATLPC);
+    status = readRegisterDma_32(drvno, &data, DmaAddr_WDMATLPC);
     if(status != es_no_error)
     {
-        stream << "\nerror while reading register\n"
+        stream << "\nerror while reading register\n";
         return stream.str();
     }
     stream << "number of TLPs is:\t\t"
