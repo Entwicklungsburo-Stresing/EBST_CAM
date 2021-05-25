@@ -3,6 +3,7 @@
 #include "es_status_codes.h"
 #include <stdlib.h>
 #include <string.h>
+#include "../shared_src/UIAbstractionLayer.h"
 
 uint32_t tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 uint32_t* aPIXEL = tmp_aPIXEL;
@@ -54,8 +55,7 @@ es_status_codes InitMeasurement(struct global_settings settings)
 		case full_binning:
 			status = SetupFullBinning(settings.drvno, settings.FFTLines, (uint8_t)settings.Vfreq);
 			break;
-		// TODO: implement partial binning and area
-		/*
+#ifdef WIN32
 		case partial_binning:
 		{
 			UINT8 regionSize[8];
@@ -66,7 +66,7 @@ es_status_codes InitMeasurement(struct global_settings settings)
 		case area_mode:
 			status = DLLSetupArea(settings.drvno, settings.lines_binning, (UINT8)settings.Vfreq);
 			break;
-		*/
+#endif
 		default:
 			return es_parameter_out_of_range;
 		}
@@ -246,8 +246,7 @@ es_status_codes AbortMeasurement( uint32_t drv )
  */
 es_status_codes setBlockOn( uint32_t drvno )
 {
-	//TODO
-	//notifyBlockStart( drvno );
+	notifyBlockStart( drvno );
 	return setBitS0_32( drvno, PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS );
 }
 
@@ -260,8 +259,7 @@ es_status_codes setBlockOn( uint32_t drvno )
  */
 es_status_codes setMeasureOn( uint32_t drvno )
 {
-	//TODO
-	//notifyMeasureStart( drvno );
+	notifyMeasureStart( drvno );
 	return setBitS0_32( drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS );
 }
 
@@ -274,8 +272,7 @@ es_status_codes setMeasureOn( uint32_t drvno )
  */
 es_status_codes resetBlockOn( uint32_t drvno )
 {
-	//TODO
-	//notifyBlockDone( drvno );
+	notifyBlockDone( drvno );
     return resetBitS0_32( drvno, PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS );
 }
 
@@ -288,8 +285,7 @@ es_status_codes resetBlockOn( uint32_t drvno )
  */
 es_status_codes resetMeasureOn( uint32_t drvno )
 {
-	//TODO
-	//notifyMeasureDone( drvno );
+	notifyMeasureDone( drvno );
     return resetBitS0_32( drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS );
 }
 

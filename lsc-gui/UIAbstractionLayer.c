@@ -1,26 +1,26 @@
 //UI abstraction layer for CCDExample
-#include "shared_src/UIAbstractionLayer.h"
+#include "../shared_src/UIAbstractionLayer.h"
 #include "UIAbstractionLayer_cpp.h"
 
-void notifyMeasureStart( UINT32 drv )
+void notifyMeasureStart( uint32_t drv )
 {
 	notifyMeasureStartCpp(drv);
 	return;
 }
 
-void notifyMeasureDone( UINT32 drv )
+void notifyMeasureDone( uint32_t drv )
 {
 	notifyMeasureDoneCpp(drv);
 	return;
 }
 
-void notifyBlockStart( UINT32 drv )
+void notifyBlockStart( uint32_t drv )
 {
 	notifyBlockStartCpp(drv);
 	return;
 }
 
-void notifyBlockDone( UINT32 drv )
+void notifyBlockDone( uint32_t drv )
 {
 	notifyBlockDoneCpp(drv);
 	return;
