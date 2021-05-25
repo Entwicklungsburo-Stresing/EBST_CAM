@@ -215,12 +215,22 @@ std::string Lsc::dumpTlp(uint32_t drvno)
     uint32_t data = 0;
     std::stringstream stream;
     stream  << "PAY_LOAD values:\t\t0 = 128 bytes\n\t\t\t1 = 256 bytes\n\t\t\t2 = 512 bytes\n";
-    readConfig_32(drvno, data, PCIeAddr_devCap);
+    es_status_codes status = readConfig_32(drvno, data, PCIeAddr_devCap);
+    if(status != es_no_error)
+    {
+        stream << "\nerror while reading register\n"
+        return stream.str();
+    }
     data &= 0x7;
     stream  << "PAY_LOAD Supported:\t\t0x"
             << std::hex << data
             << '\n';
-    readConfig_32(drvno, data, PCIeAddr_devCap);
+    status = readConfig_32(drvno, data, PCIeAddr_devCap);
+    if(status != es_no_error)
+    {
+        stream << "\nerror while reading register\n"
+        return stream.str();
+    }
     uint32_t actpayload = (data >> 5) & 0x07;
     stream << "PAY_LOAD:\t\t\t0x"
            << std::hex << actpayload
@@ -244,7 +254,12 @@ std::string Lsc::dumpTlp(uint32_t drvno)
            << " DWORDs\n\t\t\t="
            << std::dec << data*4
            << " BYTEs\n";
-    readRegisterDma_32(drvno, data, DmaAddr_WDMATLPS);
+    status = readRegisterDma_32(drvno, data, DmaAddr_WDMATLPS);
+    if(status != es_no_error)
+    {
+        stream << "\nerror while reading register\n"
+        return stream.str();
+    }
     stream << "TLPS in DMAReg is:\t\t"
            << std::dec << data
            << "\n";
@@ -252,7 +267,12 @@ std::string Lsc::dumpTlp(uint32_t drvno)
     stream << "number of TLPs should be:\t"
            << std::dec << data
            << "\n";
-    readRegisterDma_32(drvno, data, DmaAddr_WDMATLPC);
+    status = readRegisterDma_32(drvno, data, DmaAddr_WDMATLPC);
+    if(status != es_no_error)
+    {
+        stream << "\nerror while reading register\n"
+        return stream.str();
+    }
     stream << "number of TLPs is:\t\t"
            << std::dec << data
            << "\n";
