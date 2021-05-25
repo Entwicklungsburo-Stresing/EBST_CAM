@@ -179,32 +179,6 @@ static enum irqreturn isr(int irqn, void *dev_id)
 	    = (dev->control->write_pos + dev->control->bytes_per_interrupt)
 	    % dev->control->used_dma_size;
 
-	if (device_test_status(dev, DEV_BLOCKS_IN_IRQ)) {
-		// end block
-		set_bits_s0_dword(dev, PCIEFLAGS, 0, 1<<PCIEFLAG_BLOCKON);
-
-		if (read_s0_dword(dev, BLOCK_INDEX)
-			< read_s0_dword(dev, NUMBER_OF_BLOCKS)) {
-			// not yet at end
-			// make pulse for blockindex counter
-			pulse_bit(dev, PCIEFLAGS, 1<<PCIEFLAG_BLOCKTRIG);
-
-			// reset scan counter
-			pulse_bit(dev, SCAN_INDEX, 1<<SCAN_INDEX_RESET);
-
-			set_bits_s0_dword(dev, PCIEFLAGS,
-					1<<PCIEFLAG_BLOCKON,
-					1<<PCIEFLAG_BLOCKON);
-
-			// start Stimer -> set usecs and RS to one
-			set_bits_s0_dword(dev, XCK,
-					dev->control->stimer_val,
-					XCK_EC_MASK);
-
-			// software trigger
-			pulse_bit(dev, BTRIGREG, 1<<FREQ_REG_SW_TRIG);
-		}
-	}
 
 	// check for buffer overflow
 	if (old_write_pos < dev->control->write_pos) {
