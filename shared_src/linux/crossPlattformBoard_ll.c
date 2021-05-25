@@ -1,8 +1,59 @@
 #include "../crossPlattformBoard_ll.h"
-#include "../../lsc-gui/linux/userspace/lscpcie.h"
-#include "../../lsc-gui/linux/userspace/examples/common.h"
+#include <memory.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <iomanip>
+#include <stdlib.h>
+#include "../linux-driver/userspace/lscpcie.h"
+#include "../linux-driver/kernelspace/registers.h"
+#include "../linux-driver/userspace/local-config.h"
+#include "../linux-driver/userspace/examples/common.h"
+
+#define memory_barrier() asm volatile ("" : : : "memory")
+#define CFG_BTIMER_IN_US      500000
+#define CFG_STIMER_IN_US      400
 
 struct camera_info_struct info;
+
+
+/* Acquire one block of data. Poll first XCKMSB /RS for being low and data
+   being present in the buffer. Loop over if less than the needed data has
+   been copied. */
+int lscpcie_acquire_block_poll(struct dev_descr *dev, uint8_t *data,
+            size_t n_scans) {
+    int result, bytes_read = 0;
+    size_t block_size =
+        dev->control->number_of_pixels * dev->control->number_of_cameras
+        * sizeof(pixel_t) * n_scans;
+
+    result = lscpcie_start_block(dev);
+    if (result < 0)
+        return result;
+
+    do {
+        if (dev->s0->XCK.dword & (1 << XCK_RS))
+            continue;
+
+        if (dev->control->read_pos == dev->control->write_pos)
+            continue;
+
+        result = fetch_mapped_data(dev, data + bytes_read,
+                    block_size - bytes_read);
+        if (result < 0)
+            return result;
+
+        bytes_read += result;
+        fprintf(stderr, "got %d bytes of data (irq %d)\n", result,
+            dev->control->irq_count);
+    } while (bytes_read < block_size);
+
+        result = lscpcie_end_block(dev);
+    if (result < 0)
+        return result;
+
+    return bytes_read;
+}
+
 
 es_status_codes readRegister_32( uint32_t drvno, uint32_t* data, uint16_t address )
 {
@@ -64,6 +115,18 @@ es_status_codes writeRegister_8( uint32_t drvno, uint8_t data, uint16_t address 
     return es_no_error;
 }
 
+/**
+ * @brief Read long (32 bit) from runtime register of PCIe board.
+ *  
+ * This function reads the memory mapped data , not the I/O Data. Reads data from PCIe conf space.
+ * 
+ * @param drvno board number (=1 if one PCI board)
+ * @param data pointer to where data is stored
+ * @param address offset of register (count in bytes)
+ * @return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
 es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address )
 {
     //on linux: driver numbers are 0 and 1, on windows 1 and 2
@@ -75,6 +138,7 @@ es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address 
     else
         return es_no_error;
 }
+
 es_status_codes writeConfig_32( uint32_t drvno, uint32_t data, uint16_t address )
 {
     //on linux: driver numbers are 0 and 1, on windows 1 and 2

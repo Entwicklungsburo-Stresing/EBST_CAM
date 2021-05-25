@@ -1,4 +1,5 @@
 #include "../crossPlattformBoard_ll.h"
+#include <cstdint>
 #include <stdint.h>
 
 ***REMOVED***#define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
@@ -440,5 +441,30 @@ es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample
 	//position of index at block
 	index += (uint64_t)block * (uint64_t)(*Nospb) * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno];
 	*pIndex = index;
+	return es_no_error;
+}
+
+/**
+ * @brief Read long (32 bit) from runtime register of PCIe board.
+ *  
+ * This function reads the memory mapped data , not the I/O Data. Reads data from PCIe conf space.
+ * 
+ * @param drvno board number (=1 if one PCI board)
+ * @param data pointer to where data is stored
+ * @param address offset of register (count in bytes)
+ * @return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address )
+{
+	uint8_t dwStatus = WDC_PciReadCfg( hDev[drvno], address, data, sizeof( uint32_t ) );
+	if (WD_STATUS_SUCCESS != dwStatus)
+	{
+		WDC_Err( "ReadLongIOPort in address 0x%x failed\n", address );
+		//old message...i kept it because i dont know what it does
+		ErrorMsg( "Read IORunReg failed" );
+		return es_register_read_failed;
+	}
 	return es_no_error;
 }
