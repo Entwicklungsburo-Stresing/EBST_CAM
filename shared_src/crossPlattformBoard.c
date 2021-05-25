@@ -2244,7 +2244,7 @@ es_status_codes InitDriver()
 {
 	ES_LOG("\n*** Init driver ***\n");
 	es_status_codes status = _InitDriver();
-	ES_LOG("*** Init driver ddone***\n\n");
+    ES_LOG("*** Init driver done***\n\n");
 	return status;
 }
 

@@ -15,7 +15,7 @@
 # include <stdint.h>
 #endif
 
-#include "../../../shared_src/enum.h"
+#include "../../shared_src/enum.h"
 
 /* device status bits relevant in user space */
 #define DEV_HARDWARE_PRESENT 0x2000
