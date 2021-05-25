@@ -18,11 +18,11 @@ struct camera_info_struct info;
 
 Lsc::Lsc()
 {
-    driverInstructions = "Run 'sudo insmod lscpcie.ko' and 'sudo chmod 666 /dev/lscpcie0' before running this application";
+    driverInstructions = "On Linux: Run 'sudo insmod lscpcie.ko' and 'sudo chmod 666 /dev/lscpcie0' before running this application";
 }
 Lsc::~Lsc()
 {
-    lscpcie_close(0);
+    ExitDriver(0);
 }
 
 /**
@@ -33,8 +33,7 @@ Lsc::~Lsc()
  */
 es_status_codes Lsc::initDriver()
 {
-    if(lscpcie_driver_init() < 0) return es_driver_init_failed;
-    else return es_no_error;
+    return InitDriver();
 }
 
 /**
@@ -47,19 +46,7 @@ es_status_codes Lsc::initDriver()
  */
 es_status_codes Lsc::initPcieBoard()
 {
-    int result;
-    // open /dev/lscpcie<n>
-    result = lscpcie_open(0, 0, 1);
-    if(result < 0) return es_open_device_failed;
-    // get memory mapped pointers etc
-    info.dev = lscpcie_get_descriptor(0);
-    // clear dma buffer to avoid reading stuff from previous debugging sessions
-    memset((uint8_t *) info.dev->mapped_buffer, 0,	info.dev->control->dma_buf_size);
-    //result = lscpcie_setup_dma(0);
-    //if (result)
-        //return es_getting_dma_buffer_failed;
-        //fprintf(stderr, "error %d when setting up dma\n", result);
-    return es_no_error;
+    return InitBoard(0);
 }
 
 /**
