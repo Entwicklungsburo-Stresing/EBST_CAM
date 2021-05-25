@@ -43,5 +43,9 @@ es_status_codes enableInterrupt( uint32_t drvno );
 uint64_t getDmaAddress( uint32_t drvno);
 void ResetBufferWritePos(uint32_t drvno);
 void copyRestData(size_t rest_in_bytes);
-
+es_status_codes _InitBoard(uint32_t drvno);
+es_status_codes _InitDriver();
+es_status_codes _ExitDriver(uint32_t drvno);
+es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint16_t** address );
+es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint64_t* pIndex );
 #endif // CROSSPLATTFORMBOARDLL_H

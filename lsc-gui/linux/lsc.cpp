@@ -117,7 +117,8 @@ es_status_codes Lsc::startMeasurement()
 {
     emit measureStart();
     //set measure on
-    lscpcie_start_scan(info.dev);
+    //lscpcie_start_scan(info.dev);
+    //TODO: use crossPlattformBoard StartMeasurment
 
     info.mem_size = info.dev->control->number_of_pixels
         * info.dev->control->number_of_cameras * info.n_blocks
@@ -325,5 +326,5 @@ es_status_codes Lsc::_abortMeasurement()
     //lscpcie_end_block(info.dev);
     emit blockDone();
     emit measureDone();
-    return abortMeasurement( 1 );
+    return AbortMeasurement( 1 );
 }

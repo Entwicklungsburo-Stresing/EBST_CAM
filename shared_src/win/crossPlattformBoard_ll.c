@@ -1,4 +1,5 @@
 #include "../crossPlattformBoard_ll.h"
+#include <stdint.h>
 
 ***REMOVED***#define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
 
@@ -267,3 +268,178 @@ void ResetBufferWritePos(uint32_t drvno)
 		memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes );
 		return;
 	}
+
+es_status_codes _InitBoard(uint32_t drvno)
+{
+	if ((drvno < 1) || (drvno > 2)) return es_invalid_driver_number;
+	//PWDC_DEVICE pDev = (PWDC_DEVICE)hDev;
+	volatile DWORD dwStatus = 0;
+	ES_LOG( "Info: scan result: a board found:%lx , dev=%lx, ven=%lx \n", scanResult.dwNumDevices, scanResult.deviceId[drvno - 1].dwDeviceId, scanResult.deviceId[drvno - 1].dwVendorId );
+	//gives the information received from PciScanDevices to PciGetDeviceInfo
+	BZERO( deviceInfo[drvno] );
+	memcpy( &deviceInfo[drvno].pciSlot, &scanResult.deviceSlot[drvno - 1], sizeof( deviceInfo[drvno].pciSlot ) );
+
+	/* Retrieve the device's resources information */
+	dwStatus = WDC_PciGetDeviceInfo( &deviceInfo[drvno] );
+	if (WD_STATUS_SUCCESS != dwStatus)
+	{
+		ES_LOG( "DeviceOpen: Failed retrieving the device's resources information.\n"
+			"Error 0x%lx - %s\n", dwStatus, Stat2Str( dwStatus ) );
+		WDC_DriverClose();
+		return es_getting_device_info_failed;
+	}
+
+	ES_LOG( "Info: device info: bus:%lx , slot=%lx, func=%lx \n", deviceInfo[drvno].pciSlot.dwBus, deviceInfo[drvno].pciSlot.dwSlot, deviceInfo[drvno].pciSlot.dwFunction );
+	ES_LOG( "Info: device info: items:%lx , item[0]=%lx \n", deviceInfo[drvno].Card.dwItems, deviceInfo[drvno].Card.Item[0] );
+
+	hDev[drvno] = LSCPCIEJ_DeviceOpen( &deviceInfo[drvno] );
+	if (!hDev[drvno])
+	{
+		ES_LOG( "DeviceOpen: Failed opening a handle to the device: %s\n", LSCPCIEJ_GetLastErr() );
+		WDC_DriverClose();
+		return es_open_device_failed;
+	}
+	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
+	ES_LOG( "DRVInit hDev id % x, hDev pci slot %x, hDev pci bus %x, hDev pci function %x, hDevNumAddrSp %x \n"	, pDev->id, pDev->slot.dwSlot, pDev->slot.dwBus, pDev->slot.dwFunction, pDev->dwNumAddrSpaces );
+	InitProDLL();
+	return es_no_error ;
+}
+
+es_status_codes _InitDriver()
+{
+	//depends on os, how big a buffer can be
+	bool fResult = false;
+	char AString[80] = "";
+	HANDLE hccddrv = INVALID_HANDLE_VALUE;
+	//PWDC_DEVICE pDev = (PWDC_DEVICE)hDev;
+	volatile DWORD dwStatus = 0;
+	PLSCPCIEJ_DEV_CTX pDevCtx = NULL;
+
+#if KER_MODE
+	LSCPCIEJ_DEV_ADDR_DESC devAddrDesc;
+#endif
+
+#if defined(WD_DRIVER_NAME_CHANGE)
+	/* Set the driver name */
+	if (!WD_DriverName( LSCPCIEJ_STRESING_DRIVER_NAME ))
+	{
+		ErrLog( "Failed to set the driver name for WDC library.\n" );
+		return es_setting_driver_name_failed;
+	}
+#endif
+	/* Set WDC library's debug options (default: level TRACE, output to Debug Monitor) */
+	ES_LOG("set debug options\n");
+#if defined(_DEBUG)
+	dwStatus = WDC_SetDebugOptions( WDC_DBG_DEFAULT, NULL );
+#else
+	dwStatus = WDC_SetDebugOptions( WDC_DBG_NONE, NULL );
+#endif
+	if (WD_STATUS_SUCCESS != dwStatus)
+	{
+		ES_LOG( "Failed to initialize debug options for WDC library.\n"
+			"Error 0x%lx - %s\n", dwStatus, Stat2Str( dwStatus ) );
+		WDC_DriverClose();
+		return es_debug_init_failed;
+	}
+	/* Open a handle to the driver and initialize the WDC library */
+	ES_LOG("open WDC\n");
+	//No WDC Err messages can be sent to debug monitor before WDC_DriverOpen call
+***REMOVED***	ES_LOG("\n*** Init driver ***\n");
+	if (WD_STATUS_SUCCESS != dwStatus)
+	{
+		ErrLog( "Failed to initialize the WDC library. Error 0x%lx - %s\n",
+			dwStatus, Stat2Str( dwStatus ) );
+		//doesnt work at this moment before debugsetup
+		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
+		ErrorMsg( "Failed to initialize the WDC library. Maybe the driver was not unloaded correctly.\n" );
+		WDC_DriverClose();
+		return es_driver_init_failed;
+	}
+	BZERO( scanResult );
+	WDC_Err("Scan PCIe devices\n");
+	dwStatus = WDC_PciScanDevices( LSCPCIEJ_DEFAULT_VENDOR_ID, LSCPCIEJ_DEFAULT_DEVICE_ID, &scanResult ); //VendorID, DeviceID
+	if (WD_STATUS_SUCCESS != dwStatus)
+	{
+		ErrLog( "DeviceFind: Failed scanning the PCI bus.\n"
+			"Error: 0x%lx - %s\n", dwStatus, Stat2Str( dwStatus ) );
+		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
+		ErrorMsg( "Device not found" );
+		WDC_DriverClose();
+		ErrorMsg( "driver closed.\n" );
+		return es_device_not_found;
+	}
+	number_of_boards = (UINT8) scanResult.dwNumDevices;
+	WDC_Err("Init HR counter\n");
+	TPS = InitHRCounter();//for ticks function
+	return es_no_error;	  // no Error, driver found
+}
+
+es_status_codes _ExitDriver(uint32_t drvno)
+{
+	es_status_codes status = checkDriverHandle(drvno);
+	if (status != es_no_error) return status;
+	ES_LOG( "Driver exit, drv: %u\n", drvno);
+	if (WDC_IntIsEnabled( hDev[drvno] ))
+	{
+		ES_LOG( "cleanup dma\n" );
+		status = CleanupPCIE_DMA( drvno );
+		if (status != es_no_error) return status;
+	}
+	WDC_DriverClose();
+	WDC_PciDeviceClose( hDev[drvno] );
+	ES_LOG( "Driver closed and PciDeviceClosed \n" );
+	//if (ahCCDDRV[drvno]!=INVALID_HANDLE_VALUE)
+	//CloseHandle(ahCCDDRV[drvno]);	   // close driver
+	return status;
+}
+
+/**
+ * \brief Returns the address of a pixel located in userBuffer.
+ * 
+ * \param drvno indentifier of PCIe card
+ * \param pixel position in one scan (0...(PIXEL-1))
+ * \param sample position in samples (0...(nos-1))
+ * \param block position in blocks (0...(nob-1))
+ * \param CAM position in camera count (0...(CAMCNT-1))
+ * \param Pointer to get address
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint16_t** address )
+{
+	uint64_t index = 0;
+	es_status_codes status = GetIndexOfPixel(drvno, pixel, sample, block, CAM, &index);
+	if (status != es_no_error) return status;
+	*address = &userBuffer[drvno][index];
+	return status;
+}
+
+/**
+ * \brief Returns the index of a pixel located in userBuffer.
+ * 
+ * \param drvno indentifier of PCIe card
+ * \param pixel position in one scan (0...(PIXEL-1))
+ * \param sample position in samples (0...(nos-1))
+ * \param block position in blocks (0...(nob-1))
+ * \param CAM position in camera count (0...(CAMCNT-1)
+ * \param pIndex Pointer to index of pixel.
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint64_t* pIndex )
+{
+	if (pixel >= aPIXEL[drvno] || sample >= *Nospb || block >= Nob || CAM >= aCAMCNT[drvno])
+		return es_parameter_out_of_range;
+	//init index with base position of pixel
+	uint64_t index = pixel;
+	//position of index at CAM position
+	index += (uint64_t)CAM *((uint64_t)aPIXEL[drvno] + 4);  //GS! offset of 4 pixel via pipelining from CAM1 to CAM2
+	//position of index at sample
+	index += (uint64_t)sample * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno];
+	//position of index at block
+	index += (uint64_t)block * (uint64_t)(*Nospb) * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno];
+	*pIndex = index;
+	return es_no_error;
+}

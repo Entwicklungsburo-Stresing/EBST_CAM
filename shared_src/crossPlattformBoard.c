@@ -2,6 +2,7 @@
 #include "enum.h"
 #include "es_status_codes.h"
 #include <stdlib.h>
+#include <string.h>
 
 uint32_t tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 uint32_t* aPIXEL = tmp_aPIXEL;
@@ -223,7 +224,7 @@ es_status_codes ClearAllUserRegs(uint32_t drvno)
  *		-es_register_read_failed
  *		-es_register_write_failed
  */
-es_status_codes abortMeasurement( uint32_t drv )
+es_status_codes AbortMeasurement( uint32_t drv )
 {
 	ES_LOG("Abort Measurement\n");
 	abortMeasurementFlag = true;
@@ -1834,7 +1835,7 @@ es_status_codes StartMeasurement()
 	{
 		waitForBlockTrigger(1);
 		if (status == es_abortion)
-			return abortMeasurement( BOARD_SEL );
+			return AbortMeasurement( BOARD_SEL );
 		else if (status != es_no_error) return status;
 		ES_LOG("Block triggered\n");
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
@@ -1901,7 +1902,7 @@ es_status_codes StartMeasurement()
 			while (timerOneOn)
 			{
 				if ((FindCam(1) != es_no_error) | abortMeasurementFlag)
-					return abortMeasurement(1);
+					return AbortMeasurement(1);
 				status = IsTimerOn(1, &timerOneOn);
 				if (status != es_no_error) return status;
 			}
@@ -1912,7 +1913,7 @@ es_status_codes StartMeasurement()
 			while (timerTwoOn)
 			{
 				if ((FindCam(2) != es_no_error) | abortMeasurementFlag)
-					return abortMeasurement(2);
+					return AbortMeasurement(2);
 				status = IsTimerOn(2, &timerTwoOn);
 				if (status != es_no_error) return status;
 			}
@@ -1931,7 +1932,7 @@ es_status_codes StartMeasurement()
 				{
 					if ((FindCam(1) != es_no_error) | abortMeasurementFlag)
 					{
-						status = abortMeasurement( 1 );
+						status = AbortMeasurement( 1 );
 						if (status != es_no_error) return status;
 						return_flag_1 = false;
 					}
@@ -1941,7 +1942,7 @@ es_status_codes StartMeasurement()
 					//stop if ESC was pressed
 					if ((FindCam(2) != es_no_error) | abortMeasurementFlag)
 					{
-						status = abortMeasurement( 2 );
+						status = AbortMeasurement( 2 );
 						if (status != es_no_error) return status;
 						return_flag_2 = true;
 					}
@@ -2228,5 +2229,47 @@ es_status_codes GetLastBufPart( uint32_t drvno )
 	ES_LOG( "rest_overall: 0x%x, rest_in_bytes: 0x%zx\n", rest_overall, rest_in_bytes );
 	if (rest_overall)
 		copyRestData(rest_in_bytes);
+	return status;
+}
+
+es_status_codes InitBoard(uint32_t drvno)
+{
+	ES_LOG("\n*** Init board ***\n");
+	es_status_codes status = _InitBoard(drvno);
+	ES_LOG("*** Init board done***\n\n");
+	return status;
+}
+
+es_status_codes InitDriver()
+{
+	ES_LOG("\n*** Init driver ***\n");
+	es_status_codes status = _InitDriver();
+	ES_LOG("*** Init driver ddone***\n\n");
+	return status;
+}
+
+es_status_codes ExitDriver(uint32_t drvno)
+{
+	ES_LOG("\n*** Exit driver ***\n");
+	es_status_codes status = _ExitDriver();
+	ES_LOG("*** Exit driver ddone***\n\n");
+	return status;
+}
+
+es_status_codes ReturnFrame(uint32_t drv, uint32_t curr_nos, uint32_t curr_nob, uint16_t curr_cam, uint16_t* pdest, uint32_t length)
+{
+	es_status_codes status = checkDriverHandle(drv);
+	if (status != es_no_error) return status;
+	uint16_t* pframe = NULL;
+	status = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, curr_cam, &pframe);
+	if (status != es_no_error) return status;
+	memcpy( pdest, pframe, length * sizeof( uint16_t ) );
+	/*
+	ES_LOG( "RETURN FRAME: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, _PIXEL: %u, length: %u\n", drvno, curr_nos, curr_nob, curr_cam, _PIXEL, length );
+	ES_LOG("FRAME2: address Buff: 0x%x \n", userBuffer[drvno]);
+	ES_LOG("FRAME2: address pdio: 0x%x \n", pdioden);
+	ES_LOG("FRAME3: pix42 of ReturnFrame: %d \n", *((USHORT*)pdioden + 420));
+	ES_LOG("FRAME3: pix43 of ReturnFrame: %d \n", *((USHORT*)pdioden + 422));
+	*/
 	return status;
 }

@@ -141,3 +141,18 @@ void copyRestData(size_t rest_in_bytes)
 {
     return;
 }
+
+es_status_codes _InitBoard(uint32_t drvno)
+{
+    return;
+}
+
+es_status_codes _InitDriver()
+{
+    return;
+}
+
+es_status_codes _ExitDriver(uint32_t drvno)
+{
+    return;
+}
