@@ -3,10 +3,6 @@
 #include <sstream>
 #include "../shared_src/crossPlattformBoard.h"
 
-#define memory_barrier() asm volatile ("" : : : "memory")
-#define CFG_BTIMER_IN_US      500000
-#define CFG_STIMER_IN_US      400
-
 Lsc::Lsc()
 {
     driverInstructions = "On Linux: Run 'sudo insmod lscpcie.ko' and 'sudo chmod 666 /dev/lscpcie0' before running this application";
@@ -47,52 +43,20 @@ es_status_codes Lsc::initPcieBoard(uint32_t drvno)
  */
 es_status_codes Lsc::initMeasurement(struct global_settings settings_struct)
 {
+    /*
+    TODO
     info.n_blocks = settings_struct.nob;
     info.n_scans = settings_struct.nos;
     info.trigger_mode = xck;
+    */
     return InitMeasurement(settings_struct);
-}
-
-/* Acquire one block of data. Poll first XCKMSB /RS for being low and data
-   being present in the buffer. Loop over if less than the needed data has
-   been copied. */
-int lscpcie_acquire_block_poll(struct dev_descr *dev, uint8_t *data,
-            size_t n_scans) {
-    int result, bytes_read = 0;
-    size_t block_size =
-        dev->control->number_of_pixels * dev->control->number_of_cameras
-        * sizeof(pixel_t) * n_scans;
-
-    result = lscpcie_start_block(dev);
-    if (result < 0)
-        return result;
-
-    do {
-        if (dev->s0->XCK.dword & (1 << XCK_RS))
-            continue;
-
-        if (dev->control->read_pos == dev->control->write_pos)
-            continue;
-
-        result = fetch_mapped_data(dev, data + bytes_read,
-                    block_size - bytes_read);
-        if (result < 0)
-            return result;
-
-        bytes_read += result;
-        fprintf(stderr, "got %d bytes of data (irq %d)\n", result,
-            dev->control->irq_count);
-    } while (bytes_read < block_size);
-
-        result = lscpcie_end_block(dev);
-    if (result < 0)
-        return result;
-
-    return bytes_read;
 }
 
 es_status_codes Lsc::startMeasurement()
 {
+    return StartMeasurement();
+
+
     emit measureStart();
     //set measure on
     //lscpcie_start_scan(info.dev);
@@ -138,16 +102,10 @@ es_status_codes Lsc::startMeasurement()
 
 es_status_codes Lsc::returnFrame(uint32_t board, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length)
 {
-    int n = info.dev->control->number_of_pixels;
-    int nob = info.n_blocks;
-    int nos = info.n_scans;
-    int camcnt = info.dev->control->number_of_cameras;
-    int offset = camera * n + sample * camcnt * n + block * nos * camcnt * n;
-    memcpy( pdest, &((uint16_t*)info.data)[offset], length * sizeof( uint16_t ) );
-    return es_no_error;
+    return ReturnFrame(board, sample, block, camera, pdest, length);
 }
 
-std::string Lsc::dumpS0Registers()
+std::string Lsc::dumpS0Registers(uint32_t drvno)
 {
     enum N { number_of_registers = 41 };
     std::string register_names[number_of_registers] = {
@@ -197,7 +155,12 @@ std::string Lsc::dumpS0Registers()
     std::stringstream stream;
     for (int i = 0; i < number_of_registers; i++)
     {
-        data = *(uint32_t*) (((const uint8_t *) info.dev->s0) + i * 4);
+        es_status_codes status = readRegisterS0_32(drvno, &data, i*4);
+        if(status != es_no_error)
+        {
+            stream << "\nerror while reading register\n"
+            return stream.str();
+        }
         stream  << register_names[i]
                 << "0x"
                 << std::hex << data
@@ -206,7 +169,7 @@ std::string Lsc::dumpS0Registers()
     return stream.str();
 }
 
-std::string Lsc::dumpDmaRegisters()
+std::string Lsc::dumpDmaRegisters(uint32_t drvno)
 {
     enum N { number_of_registers = 18 };
     std::string register_names[number_of_registers] = {
@@ -233,7 +196,12 @@ std::string Lsc::dumpDmaRegisters()
     std::stringstream stream;
     for (int i = 0; i < number_of_registers; i++)
     {
-        data = *(uint32_t*) (((const uint8_t *) info.dev->dma_reg) + i * 4);
+        es_status_codes status = readRegisterDma_32(drvno, &data, i*4);
+        if(status != es_no_error)
+        {
+            stream << "\nerror while reading register\n"
+            return stream.str();
+        }
         stream  << register_names[i]
                 << "0x"
                 << std::hex << data
@@ -242,29 +210,28 @@ std::string Lsc::dumpDmaRegisters()
     return stream.str();
 }
 
-std::string Lsc::dumpTlp()
+std::string Lsc::dumpTlp(uint32_t drvno)
 {
     uint32_t data = 0;
     std::stringstream stream;
     stream  << "PAY_LOAD values:\t\t0 = 128 bytes\n\t\t\t1 = 256 bytes\n\t\t\t2 = 512 bytes\n";
-    lscpcie_read_config32(info.dev, PCIeAddr_devCap, &data);
+    readConfig_32(drvno, data, PCIeAddr_devCap);
     data &= 0x7;
     stream  << "PAY_LOAD Supported:\t\t0x"
             << std::hex << data
             << '\n';
-    lscpcie_read_config32(info.dev, PCIeAddr_devStatCtrl, &data);
+    readConfig_32(drvno, data, PCIeAddr_devCap);
     uint32_t actpayload = (data >> 5) & 0x07;
     stream << "PAY_LOAD:\t\t\t0x"
            << std::hex << actpayload
            << '\n';
-    lscpcie_read_config32(info.dev, PCIeAddr_devStatCtrl, &data);
     data >>= 12;
     data &= 0x7;
     stream << "MAX_READ_REQUEST_SIZE:\t0x"
            << std::hex << data
            << '\n'
            << "Number of pixels:\t\t"
-           << std::dec << info.dev[0].control->number_of_pixels
+           << std::dec << aPIXEL[drvno]
            << "\n";
     switch (actpayload) {
     case 0: data = 0x20;  break;
@@ -277,32 +244,33 @@ std::string Lsc::dumpTlp()
            << " DWORDs\n\t\t\t="
            << std::dec << data*4
            << " BYTEs\n";
-    data = info.dev->dma_reg->WDMATLPS;
+    readRegisterDma_32(drvno, data, DmaAddr_WDMATLPS);
     stream << "TLPS in DMAReg is:\t\t"
            << std::dec << data
            << "\n";
-    data = (info.dev[0].control->number_of_pixels - 1) / (data * 2) + 1;
+    data = (aPIXEL[drv] - 1) / (data * 2) + 1;
     stream << "number of TLPs should be:\t"
            << std::dec << data
            << "\n";
-    data = info.dev->dma_reg->WDMATLPC;
+    readRegisterDma_32(drvno, data, DmaAddr_WDMATLPC);
     stream << "number of TLPs is:\t\t"
            << std::dec << data
            << "\n";
     return stream.str();
 }
 
-void Lsc::setTorOut(uint8_t torOut)
+void Lsc::setTorOut(uint32_t drvno, uint8_t torOut)
 {
-    _torOut = torOut;
-    info.dev->s0->TOR = _torOut << TOR_TO_pos;
+    //TODO
+    //_torOut = torOut;
+    //info.dev->s0->TOR = _torOut << TOR_TO_pos;
     return;
 }
 
-es_status_codes Lsc::_abortMeasurement()
+es_status_codes Lsc::_abortMeasurement(uint32_t drvno)
 {
     //lscpcie_end_block(info.dev);
     emit blockDone();
     emit measureDone();
-    return AbortMeasurement( 1 );
+    return AbortMeasurement( drvno );
 }
