@@ -39,18 +39,17 @@ SOURCES += lsc-gui.cpp \
     mainwindow.cpp \
     myqspinbox.cpp \
     ../shared_src/es_status_codes.c \
-    ../shared_src/crossPlattformBoard.c
+    ../shared_src/crossPlattformBoard.c \
+    lsc.cpp
 win32 {
-    SOURCES += win/lsc.cpp \
-	../shared_src/Board.c \
+    SOURCES += ../shared_src/Board.c \
 	../shared_src/Board_ll.c \
 	../shared_src/lscpciej_lib.c \
         UIAbstractionLayer.c
 }
 unix {
-    SOURCES += linux/lsc.cpp \
-    linux/userspace/lscpcie.c \
-    linux/userspace/examples/common.c \
+    SOURCES += ../linux-driver/userspace/lscpcie.c \
+    ../linux-driver/userspace/examples/common.c \
     ../shared_src/linux/crossPlattformBoard_ll.c
 }
 
@@ -73,8 +72,8 @@ HEADERS += \
     ../shared_src/crossPlattformBoard.h \
     ../shared_src/crossPlattformBoard_ll.h
 unix {
-    HEADERS += linux/userspace/lscpcie.h \
-    linux/userspace/examples/common.h
+    HEADERS += ./linux-driver/userspace/lscpcie.h \
+    ./linux-driver/userspace/examples/common.h
 }
 win32 {
     HEADERS += ../shared_src/Board.h \
