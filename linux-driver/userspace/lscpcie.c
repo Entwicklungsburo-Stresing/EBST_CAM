@@ -20,7 +20,7 @@
 #include <sys/mman.h>
 #include <errno.h>
 #include <stdarg.h>
-#include "../../../shared_src/enum.h"
+#include "../../shared_src/enum.h"
 #include "local-config.h"
 
 #define memory_barrier() asm volatile ("" : : : "memory")
