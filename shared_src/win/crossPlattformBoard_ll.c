@@ -10,15 +10,14 @@
 WDC_DEVICE_HANDLE hDev_tmp[MAXPCIECARDS];
 WDC_DEVICE_HANDLE* hDev = &hDev_tmp;
 DWORD dmaBufferSizeInBytes = 0;
-
-#define interrupt_handler1(drvno, data) isr()
+uint16_t* dmaBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 
 /**
 \brief This call comes every DMASPERINTR=500 here a DMASubBuf could be copied to the DMABigBuf.
 the size of a drivers continous memory is limited, so we must copy it via this small buf to the big buf
 The INTR occurs every DMASPERINTR and copies this block of scans in lower/upper half blocks.
 */
-void isr( UINT drvno, PVOID pData )
+void isr( uint32_t drvno, void* pData )
 {
 	WDC_Err( "*isr(): 0x%x\n", IsrCounter );
 	es_status_codes status = SetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//set INTRSR flag for TRIGO
@@ -50,11 +49,11 @@ void isr( UINT drvno, PVOID pData )
 	status = ResetS0Bit( IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG, drvno );//reset INTRSR flag for TRIGO
 	IsrCounter++;
 	return;
-}//DLLCALLCONV interrupt_handler
+}
 
 //TODO is this neceserry?
-VOID DLLCALLCONV interrupt_handler1( PVOID pData ) { isr( 1, pData ); }
-VOID DLLCALLCONV interrupt_handler2( PVOID pData ) { isr( 2, pData ); }
+void DLLCALLCONV interrupt_handler1( void* pData ) { isr( 1, pData ); }
+void DLLCALLCONV interrupt_handler2( void* pData ) { isr( 2, pData ); }
 
 /**
  * @brief Reads long on DMA area.
@@ -186,7 +185,7 @@ uint64_t getDmaAddress( uint32_t drvno)
  *		- es_register_write_failed
  *		- es_enabling_interrupts_failed
  */
-es_status_codes SetupDma( UINT32 drvno )
+es_status_codes SetupDma( uint32_t drvno )
 {
 	DWORD dwStatus;
 	ES_LOG( "Setup DMA\n" );
@@ -259,15 +258,15 @@ void ResetBufferWritePos(uint32_t drvno)
     return;
 }
 
-	void copyRestData(size_t rest_in_bytes)
-	{
-		ES_LOG( "Copy rest data:\n" );
-		ES_LOG( "dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes );
-		INT_PTR dmaBufferReadPos = dmaBuffer[drvno];
-		dmaBufferReadPos += dmaBufferPartReadPos[drvno] * dmaBufferSizeInBytes / DMA_BUFFER_PARTS;
-		memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes );
-		return;
-	}
+void copyRestData(size_t rest_in_bytes)
+{
+	ES_LOG( "Copy rest data:\n" );
+	ES_LOG( "dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes );
+	INT_PTR dmaBufferReadPos = dmaBuffer[drvno];
+	dmaBufferReadPos += dmaBufferPartReadPos[drvno] * dmaBufferSizeInBytes / DMA_BUFFER_PARTS;
+	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes );
+	return;
+}
 
 es_status_codes _InitBoard(uint32_t drvno)
 {
