@@ -56,7 +56,7 @@ es_status_codes Lsc::startMeasurement()
     return StartMeasurement();
 
 
-    emit measureStart();
+    //emit measureStart();
     //set measure on
     //lscpcie_start_scan(info.dev);
     //TODO: use crossPlattformBoard StartMeasurment

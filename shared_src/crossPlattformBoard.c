@@ -910,7 +910,7 @@ es_status_codes SetSTimer( uint32_t drvno, uint32_t stime_in_microseconds )
 {
 	ES_LOG("Set stime in microseconds: %u\n", stime_in_microseconds);
 	uint32_t data = 0;
-	es_status_codes status = readRegisterS0_32( drvno, &data, S0Addr_XCKLL ); //reset
+	es_status_codes status = readRegisterS0_32( drvno, &data, S0Addr_XCKLL );
 	if (status != es_no_error) return status;
 	data &= 0xF0000000;
 	data |= stime_in_microseconds & 0x0FFFFFFF;
@@ -1528,10 +1528,10 @@ es_status_codes SetBEC( uint32_t drvno, uint32_t ecin100ns )
 	if (ecin100ns)
 	{
 		ecin100ns |= 0x80000000; // enable delay
-		status = writeRegister_32(drvno, ecin100ns, S0Addr_BEC);
+        status = writeRegisterS0_32(drvno, ecin100ns, S0Addr_BEC);
 	}
 	else
-		status = writeRegister_32(drvno, 0, S0Addr_BEC);
+        status = writeRegisterS0_32(drvno, 0, S0Addr_BEC);
 	return status;
 };
 
@@ -1551,10 +1551,10 @@ es_status_codes SetXckdelay(uint32_t drvno, uint32_t xckdelay)
 	if (xckdelay)
 	{
 		xckdelay |= 0x80000000;
-		status = writeRegister_32(drvno, xckdelay, S0Addr_XCKDLY);
+		status = writeRegisterS0_32(drvno, xckdelay, S0Addr_XCKDLY);
 	}
 	else
-		status = writeRegister_32(drvno, 0, S0Addr_XCKDLY);
+		status = writeRegisterS0_32(drvno, 0, S0Addr_XCKDLY);
 	return status;
 }
 
@@ -1998,8 +1998,8 @@ es_status_codes StartMeasurement()
 		status = resetMeasureOn(2);
 		if (status != es_no_error) return status;
 	}
-	return status;	
 	ES_LOG("*** Measurement done ***\n\n");
+    return status;
 }
 
 /**
@@ -2144,6 +2144,7 @@ es_status_codes waitForBlockTrigger(uint32_t drvno)
 es_status_codes countBlocksByHardware( uint32_t drvno )
 {
 	es_status_codes status =  pulseBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCKTRIG, S0Addr_PCIEFLAGS);
+    if (status != es_no_error) return status;
 	//reset scan counter
 	return pulseBitS0_32(drvno, ScanIndex_bitindex_counter_reset, S0Addr_ScanIndex);
 }
