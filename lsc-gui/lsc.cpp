@@ -1,5 +1,4 @@
 ﻿#include "lsc.h"
-#include <cstdint>
 #include <sstream>
 #include "../shared_src/crossPlattformBoard.h"
 

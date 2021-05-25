@@ -2,13 +2,13 @@
 #include "shared_src/UIAbstractionLayer.h"
 #include "CCDExamp.h"
 
-void notifyMeasureStart( UINT32 drv )
+void notifyMeasureStart( uint32_t drv )
 {
 
 	return;
 }
 
-void notifyMeasureDone( UINT32 drv )
+void notifyMeasureDone( uint32_t drv )
 {
 	double mwf = 0.0; //unused
 	CalcTrms( DRV, 0, *Nospb, TRMSpix, 0, &mwf, &TRMSval_global[0] );
@@ -18,13 +18,13 @@ void notifyMeasureDone( UINT32 drv )
 	return;
 }
 
-void notifyBlockStart( UINT32 drv )
+void notifyBlockStart( uint32_t drv )
 {
 
 	return;
 }
 
-void notifyBlockDone( UINT32 drv )
+void notifyBlockDone( uint32_t drv )
 {
 	return;
 }

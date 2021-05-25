@@ -3,10 +3,10 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../linux-driver/userspace/lscpcie.h"
-#include "../linux-driver/kernelspace/registers.h"
-#include "../linux-driver/userspace/local-config.h"
-#include "../linux-driver/userspace/examples/common.h"
+#include "../../linux-driver/userspace/lscpcie.h"
+#include "../../linux-driver/kernelspace/registers.h"
+#include "../../linux-driver/userspace/local-config.h"
+#include "../../linux-driver/userspace/examples/common.h"
 
 #define memory_barrier() asm volatile ("" : : : "memory")
 #define CFG_BTIMER_IN_US      500000

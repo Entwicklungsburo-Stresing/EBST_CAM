@@ -2,25 +2,25 @@
 #include "shared_src/UIAbstractionLayer.h"
 #include "ESLSCDLL.h"
 
-void notifyMeasureStart( UINT32 drv )
+void notifyMeasureStart( uint32_t drv )
 {
 	PostLVUserEvent( measureStartLVEvent, NULL );
 	return;
 }
 
-void notifyMeasureDone( UINT32 drv )
+void notifyMeasureDone( uint32_t drv )
 {
 	PostLVUserEvent( measureDoneLVEvent, NULL );
 	return;
 }
 
-void notifyBlockStart( UINT32 drv )
+void notifyBlockStart( uint32_t drv )
 {
 	PostLVUserEvent( blockStartLVEvent, NULL );
 	return;
 }
 
-void notifyBlockDone( UINT32 drv )
+void notifyBlockDone( uint32_t drv )
 {
 	PostLVUserEvent( blockDoneLVEvent, NULL );
 	return;
