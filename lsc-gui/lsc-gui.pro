@@ -40,12 +40,13 @@ SOURCES += lsc-gui.cpp \
     myqspinbox.cpp \
     ../shared_src/es_status_codes.c \
     ../shared_src/crossPlattformBoard.c \
-    lsc.cpp
+    lsc.cpp \
+    UIAbstractionLayer.c \
+    UIAbstractionLayer_cpp.cpp
 win32 {
     SOURCES += ../shared_src/Board.c \
 	../shared_src/Board_ll.c \
-	../shared_src/lscpciej_lib.c \
-        UIAbstractionLayer.c
+        ../shared_src/lscpciej_lib.c
 }
 unix {
     SOURCES += ../linux-driver/userspace/lscpcie.c \
@@ -70,7 +71,9 @@ HEADERS += \
     ../shared_src/struct.h \
     ../shared_src/es_status_codes.h \
     ../shared_src/crossPlattformBoard.h \
-    ../shared_src/crossPlattformBoard_ll.h
+    ../shared_src/crossPlattformBoard_ll.h \
+    ../shared_src/UIAbstractionLayer.h \
+    UIAbstractionLayer_cpp.h
 unix {
     HEADERS += ./linux-driver/userspace/lscpcie.h \
     ./linux-driver/userspace/examples/common.h
