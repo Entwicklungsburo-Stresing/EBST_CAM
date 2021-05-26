@@ -234,7 +234,7 @@ es_status_codes AbortMeasurement( uint32_t drv )
 	if (status != es_no_error) return status;
 	status = resetMeasureOn(drv);
 	if (status != es_no_error) return status;
-	return SetDMAReset( drv );
+	return ResetDma( drv );
 }
 
 /**
@@ -298,26 +298,23 @@ es_status_codes resetMeasureOn( uint32_t drvno )
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes SetDMAReset( uint32_t drvno )
+es_status_codes ResetDma( uint32_t drvno )
 {
-	//TODO
-	/*
-	ULONG BitMask = 0x1;
-	ULONG RegisterValues = 0x1;
-	es_status_codes status = SetDMAReg(RegisterValues, BitMask, DmaAddr_DCSR, drvno);
+	ES_LOG("Reset DMA\n");
+	uint32_t BitMask = 0x1;
+	uint32_t RegisterValues = 0x1;
+	es_status_codes status = writeBitsDma_32(drvno, RegisterValues, BitMask, DmaAddr_DCSR);
 	if (status != es_no_error)
 	{
-		ErrorMsg("switch on the Initiator Reset for the DMA failed");
+		ES_LOG("switch on the Initiator Reset for the DMA failed\n");
 		return status;
 	}
 	// DCSR: reset the Iniator Reset 
 	RegisterValues = 0x0;
-	status = SetDMAReg(RegisterValues, BitMask, DmaAddr_DCSR, drvno);
+	status = writeBitsDma_32(drvno, RegisterValues, BitMask, DmaAddr_DCSR);
 	if (status != es_no_error)
-		ErrorMsg("switch off the Initiator Reset for the DMA failed");
+		ES_LOG("switch off the Initiator Reset for the DMA failed\n");
 	return status;
-	*/
-	return es_no_error;
 }
 
 /**
@@ -1801,7 +1798,6 @@ es_status_codes SetDmaStartMode( uint32_t drvno, bool start_by_hardware)
 	return writeBitsS0_32( drvno, data, 0x40000000, S0Addr_IRQREG );
 }
 
-
 /**
  * \brief Const burst loop with DMA initiated by hardware DREQ. Read nos lines from FIFO. this is the main loop
  * 
@@ -2269,4 +2265,34 @@ es_status_codes ReturnFrame(uint32_t drv, uint32_t curr_nos, uint32_t curr_nob, 
 	ES_LOG("FRAME3: pix43 of ReturnFrame: %d \n", *((USHORT*)pdioden + 422));
 	*/
 	return status;
+}
+
+
+/**
+ * \brief Returns the index of a pixel located in userBuffer.
+ * 
+ * \param drvno indentifier of PCIe card
+ * \param pixel position in one scan (0...(PIXEL-1))
+ * \param sample position in samples (0...(nos-1))
+ * \param block position in blocks (0...(nob-1))
+ * \param CAM position in camera count (0...(CAMCNT-1)
+ * \param pIndex Pointer to index of pixel.
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint64_t* pIndex )
+{
+	if (pixel >= aPIXEL[drvno] || sample >= *Nospb || block >= Nob || CAM >= aCAMCNT[drvno])
+		return es_parameter_out_of_range;
+	//init index with base position of pixel
+	uint64_t index = pixel;
+	//position of index at CAM position
+	index += (uint64_t)CAM *((uint64_t)aPIXEL[drvno] + 4);  //GS! offset of 4 pixel via pipelining from CAM1 to CAM2
+	//position of index at sample
+	index += (uint64_t)sample * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno];
+	//position of index at block
+	index += (uint64_t)block * (uint64_t)(*Nospb) * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno];
+	*pIndex = index;
+	return es_no_error;
 }

@@ -42,62 +42,12 @@ es_status_codes Lsc::initPcieBoard(uint32_t drvno)
  */
 es_status_codes Lsc::initMeasurement(struct global_settings settings_struct)
 {
-    /*
-    TODO
-    info.n_blocks = settings_struct.nob;
-    info.n_scans = settings_struct.nos;
-    info.trigger_mode = xck;
-    */
     return InitMeasurement(settings_struct);
 }
 
 es_status_codes Lsc::startMeasurement()
 {
     return StartMeasurement();
-
-
-    //emit measureStart();
-    //set measure on
-    //lscpcie_start_scan(info.dev);
-    //TODO: use crossPlattformBoard StartMeasurment
-    /*
-    info.mem_size = info.dev->control->number_of_pixels
-        * info.dev->control->number_of_cameras * info.n_blocks
-        * info.n_scans * sizeof(pixel_t);
-    info.data = (pixel_t*)malloc(info.mem_size);
-    if (!info.data)
-    {
-        fprintf(stderr, "failed to allocate %d bytes of memory\n",
-            info.mem_size);
-        return es_allocating_memory_failed;
-    }
-    int result, bytes_read = 0;
-    do
-    {
-        // wait for block trigger signal
-        if (!(info.dev->s0->CTRLA & (1 << CTRLA_TSTART)))
-            continue;
-        emit blockStart();
-        result = lscpcie_acquire_block_poll(info.dev, (uint8_t *) info.data + bytes_read, info.n_scans);
-        if (result < 0)
-        {
-            fprintf(stderr, "error %d when acquiring block\n", result);
-            return es_unknown_error;
-        }
-        bytes_read += result;
-        fprintf(stderr, "have now %d bytes\n", bytes_read);
-        emit blockDone();
-    } while (bytes_read < info.mem_size && ! abortMeasurementFlag);
-
-    fprintf(stderr, "finished measurement\n");
-
-    result = lscpcie_end_acquire(info.dev);
-    if (result)
-        fprintf(stderr, "error %d when finishing acquisition\n", result);
-
-    emit measureDone();
-    return es_no_error;
-    */
 }
 
 es_status_codes Lsc::returnFrame(uint32_t board, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length)
@@ -239,11 +189,15 @@ std::string Lsc::dumpTlp(uint32_t drvno)
     data &= 0x7;
     stream << "MAX_READ_REQUEST_SIZE:\t0x"
            << std::hex << data
-           << '\n'
-           << "Number of pixels:\t\t"
-           << std::dec << aPIXEL[drvno]
+           << '\n';
+    uint32_t pixel = 0;
+    status = readRegisterS0_32(drvno, &pixel, S0Addr_PIXREGlow);
+    pixel &= 0xFFFF;
+    stream << "Number of pixels:\t\t"
+           << std::dec << pixel
            << "\n";
-    switch (actpayload) {
+    switch (actpayload)
+    {
     case 0: data = 0x20;  break;
     case 1: data = 0x40;  break;
     case 2: data = 0x80;  break;
@@ -263,7 +217,7 @@ std::string Lsc::dumpTlp(uint32_t drvno)
     stream << "TLPS in DMAReg is:\t\t"
            << std::dec << data
            << "\n";
-    data = (aPIXEL[drvno] - 1) / (data * 2) + 1;
+    data = (pixel - 1) / (data * 2) + 1;
     stream << "number of TLPs should be:\t"
            << std::dec << data
            << "\n";
@@ -279,17 +233,13 @@ std::string Lsc::dumpTlp(uint32_t drvno)
     return stream.str();
 }
 
-void Lsc::setTorOut(uint32_t drvno, uint8_t torOut)
+es_status_codes Lsc::setTorOut(uint32_t drvno, uint8_t torOut)
 {
-    //TODO
-    //_torOut = torOut;
-    //info.dev->s0->TOR = _torOut << TOR_TO_pos;
-    return;
+    return SetTORReg(drvno, torOut);
 }
 
-es_status_codes Lsc::_abortMeasurement(uint32_t drvno)
+es_status_codes Lsc::abortMeasurement(uint32_t drvno)
 {
-    //lscpcie_end_block(info.dev);
     emit blockDone();
     emit measureDone();
     return AbortMeasurement( drvno );

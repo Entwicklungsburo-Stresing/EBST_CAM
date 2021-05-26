@@ -52,7 +52,6 @@ void isr( uint32_t drvno, void* pData )
 	return;
 }
 
-//TODO is this neceserry?
 void DLLCALLCONV interrupt_handler1( void* pData ) { isr( 1, pData ); }
 void DLLCALLCONV interrupt_handler2( void* pData ) { isr( 2, pData ); }
 
@@ -413,35 +412,6 @@ es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t samp
 	if (status != es_no_error) return status;
 	*address = &userBuffer[drvno][index];
 	return status;
-}
-
-/**
- * \brief Returns the index of a pixel located in userBuffer.
- * 
- * \param drvno indentifier of PCIe card
- * \param pixel position in one scan (0...(PIXEL-1))
- * \param sample position in samples (0...(nos-1))
- * \param block position in blocks (0...(nob-1))
- * \param CAM position in camera count (0...(CAMCNT-1)
- * \param pIndex Pointer to index of pixel.
- * \return es_status_codes
- *		- es_no_error
- *		- es_parameter_out_of_range
- */
-es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint64_t* pIndex )
-{
-	if (pixel >= aPIXEL[drvno] || sample >= *Nospb || block >= Nob || CAM >= aCAMCNT[drvno])
-		return es_parameter_out_of_range;
-	//init index with base position of pixel
-	uint64_t index = pixel;
-	//position of index at CAM position
-	index += (uint64_t)CAM *((uint64_t)aPIXEL[drvno] + 4);  //GS! offset of 4 pixel via pipelining from CAM1 to CAM2
-	//position of index at sample
-	index += (uint64_t)sample * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno];
-	//position of index at block
-	index += (uint64_t)block * (uint64_t)(*Nospb) * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno];
-	*pIndex = index;
-	return es_no_error;
 }
 
 /**

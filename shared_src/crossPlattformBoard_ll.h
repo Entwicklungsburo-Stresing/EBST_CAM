@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 #include "es_status_codes.h"
+#include "crossPlattformBoard.h"
+#include "globals.h"
 
 #ifdef WIN32
 #define ES_LOG(...) WDC_Err(__VA_ARGS__);
@@ -13,10 +15,6 @@
 #define ES_LOG(...) fprintf(stderr, __VA_ARGS__);
 #endif
 
-#define MAXPCIECARDS 5
-#define DMA_BUFFER_SIZE_IN_SCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
-#define DMA_BUFFER_PARTS 2
-#define DMA_DMASPERINTR DMA_BUFFER_SIZE_IN_SCANS / DMA_BUFFER_PARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb 
 /**
  * @brief DMA_CONTIGBUF: DMA buffer type switch.
  * 
@@ -47,5 +45,4 @@ es_status_codes _InitBoard(uint32_t drvno);
 es_status_codes _InitDriver();
 es_status_codes _ExitDriver(uint32_t drvno);
 es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint16_t** address );
-es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint64_t* pIndex );
 #endif // CROSSPLATTFORMBOARDLL_H

@@ -50,7 +50,6 @@ win32 {
 }
 unix {
     SOURCES += ../linux-driver/userspace/lscpcie.c \
-    ../linux-driver/userspace/examples/common.c \
     ../shared_src/linux/crossPlattformBoard_ll.c
 }
 
@@ -75,8 +74,7 @@ HEADERS += \
     ../shared_src/UIAbstractionLayer.h \
     UIAbstractionLayer_cpp.h
 unix {
-    HEADERS += ./linux-driver/userspace/lscpcie.h \
-    ./linux-driver/userspace/examples/common.h
+    HEADERS += ./linux-driver/userspace/lscpcie.h
 }
 win32 {
     HEADERS += ../shared_src/Board.h \

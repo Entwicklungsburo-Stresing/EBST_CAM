@@ -325,6 +325,6 @@ void MainWindow::on_blockDone()
 
 void MainWindow::abortPressed()
 {
-    lsc._abortMeasurement(1);
+    lsc.abortMeasurement(1);
     return;
 }
