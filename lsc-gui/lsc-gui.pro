@@ -44,8 +44,7 @@ SOURCES += lsc-gui.cpp \
     UIAbstractionLayer.c \
     UIAbstractionLayer_cpp.cpp
 win32 {
-    SOURCES += ../shared_src/Board.c \
-	../shared_src/Board_ll.c \
+    SOURCES += ../shared_src/crossPlattformBoard_ll.c \
         ../shared_src/lscpciej_lib.c
 }
 unix {
@@ -77,10 +76,7 @@ unix {
     HEADERS += ./linux-driver/userspace/lscpcie.h
 }
 win32 {
-    HEADERS += ../shared_src/Board.h \
-	../shared_src/Board_ll.h \
-	../shared_src/lscpciej_lib.h \
-	../shared_src/UIAbstractionLayer.h
+    HEADERS += 	../shared_src/lscpciej_lib.h
 }
 
 RESOURCES += qdarkstyle/style.qrc
