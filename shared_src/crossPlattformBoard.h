@@ -10,25 +10,7 @@ extern "C" {
 #include "enum.h"
 #include "struct.h"
 #include <stdbool.h>
-
-#define MANUAL_OVERRIDE_TLP false
-#define LEGACY_202_14_TLPCNT false
-#define _FORCETLPS128 true	//only use payload size 128byte
-#define DMA_64BIT_EN false
-#define S0_SPACE_OFFSET 0x80
-#define INTR_EN true
-#define HWDREQ_EN true // enables hardware start of DMA by XCK h->l slope
-
-extern uint32_t* aPIXEL;
-extern uint32_t* aCAMCNT;
-extern bool* useSWTrig;
-extern uint16_t** userBuffer;
-extern uint32_t BOARD_SEL;
-extern uint8_t number_of_boards;
-extern uint32_t Nob;
-extern uint32_t* Nospb;
-extern bool abortMeasurementFlag;
-
+#include "globals.h"
 
 // High level API
 // plattform independet implementation
@@ -47,7 +29,7 @@ es_status_codes setBlockOn( uint32_t drvno );
 es_status_codes resetBlockOn( uint32_t drvno );
 es_status_codes setMeasureOn( uint32_t drvno );
 es_status_codes resetMeasureOn( uint32_t drvno );
-es_status_codes SetDMAReset( uint32_t drvno );
+es_status_codes ResetDma( uint32_t drvno );
 es_status_codes ClearAllUserRegs( uint32_t drvno );
 es_status_codes SetBoardVars( uint32_t drvno );
 es_status_codes SetPixelCount(uint32_t drvno, uint16_t pixelcount);
@@ -103,6 +85,7 @@ es_status_codes StartSTimer( uint32_t drvno );
 es_status_codes DoSoftwareTrigger( uint32_t drvno );
 es_status_codes IsTimerOn( uint32_t drvno, bool* on );
 es_status_codes GetLastBufPart( uint32_t drvno );
+es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint64_t* pIndex );
 
 // read and write functions
 es_status_codes writeBitsS0_32( uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address);

@@ -6,18 +6,11 @@
 #include "../../linux-driver/userspace/lscpcie.h"
 #include "../../linux-driver/kernelspace/registers.h"
 #include "../../linux-driver/userspace/local-config.h"
-#include "../../linux-driver/userspace/examples/common.h"
-
-#define memory_barrier() asm volatile ("" : : : "memory")
-#define CFG_BTIMER_IN_US      500000
-#define CFG_STIMER_IN_US      400
-
-struct camera_info_struct info;
-
 
 /* Acquire one block of data. Poll first XCKMSB /RS for being low and data
    being present in the buffer. Loop over if less than the needed data has
    been copied. */
+   /*
 int lscpcie_acquire_block_poll(struct dev_descr *dev, uint8_t *data,
             size_t n_scans) {
     int result, bytes_read = 0;
@@ -52,7 +45,7 @@ int lscpcie_acquire_block_poll(struct dev_descr *dev, uint8_t *data,
 
     return bytes_read;
 }
-
+*/
 
 es_status_codes readRegister_32( uint32_t drvno, uint32_t* data, uint16_t address )
 {
@@ -239,8 +232,6 @@ es_status_codes _InitBoard(uint32_t drvno)
     // open /dev/lscpcie<n>
     int result = lscpcie_open(drvno, 0, 1);
     if(result < 0) return es_open_device_failed;
-    // get memory mapped pointers etc
-    info.dev = lscpcie_get_descriptor(drvno);
     return es_no_error;
 }
 
@@ -256,43 +247,6 @@ es_status_codes _ExitDriver(uint32_t drvno)
     drvno--;
     lscpcie_close(drvno);
     return es_no_error;
-}
-
-
-/**
- * \brief Returns the index of a pixel located in userBuffer.
- * 
- * \param drvno indentifier of PCIe card
- * \param pixel position in one scan (0...(PIXEL-1))
- * \param sample position in samples (0...(nos-1))
- * \param block position in blocks (0...(nob-1))
- * \param CAM position in camera count (0...(CAMCNT-1)
- * \param pIndex Pointer to index of pixel.
- * \return es_status_codes
- *		- es_no_error
- *		- es_parameter_out_of_range
- */
-es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint64_t* pIndex )
-{
-        //on linux: driver numbers are 0 and 1, on windows 1 and 2
-    drvno--;
-    struct dev_descr *dev = lscpcie_get_descriptor(drvno);
-    uint16_t n = info.dev->control->number_of_pixels;
-    uint32_t nob = info.n_blocks;
-    uint32_t nos = info.n_scans;
-    uint16_t camcnt = info.dev->control->number_of_cameras;
-	if (pixel >= n || sample >= nos || block >= nob || CAM >= camcnt)
-		return es_parameter_out_of_range;
-	//init index with base position of pixel
-	uint64_t index = pixel;
-	//position of index at CAM position
-	index += (uint64_t)CAM *((uint64_t)n + 4);  //GS! offset of 4 pixel via pipelining from CAM1 to CAM2
-	//position of index at sample
-	index += (uint64_t)sample * (uint64_t)camcnt * (uint64_t)n;
-	//position of index at block
-	index += (uint64_t)block * (uint64_t)nos * (uint64_t)camcnt * (uint64_t)n;
-	*pIndex = index;
-	return es_no_error;
 }
 
 /**
@@ -312,6 +266,8 @@ es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t samp
 {
 	uint64_t index = 0;
 	es_status_codes status = GetIndexOfPixel(drvno, pixel, sample, block, CAM, &index);
+    drvno--;
+    struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (status != es_no_error) return status;
 	*address = &((uint16_t*)info.data)[index];
 	return status;
