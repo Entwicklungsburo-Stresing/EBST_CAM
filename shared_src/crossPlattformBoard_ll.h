@@ -15,14 +15,6 @@
 #define ES_LOG(...) fprintf(stderr, __VA_ARGS__);
 #endif
 
-/**
- * @brief DMA_CONTIGBUF: DMA buffer type switch.
- * 
- * true: DMA buffer is set by driver (data must be copied afterwards to user space).
- * false: DMA buffer is set by application (pointer must be passed to SetupPCIE_DMA).
- */
-#define DMA_CONTIGBUF true
-
 // Low level API
 // platform specific implementation
 

@@ -185,7 +185,7 @@ es_status_codes SetupDma( uint32_t drvno )
     drvno--;
     ES_LOG( "Setup DMA\n" );
     struct dev_descr *dev = lscpcie_get_descriptor(drvno);
-    dev->control->bytes_per_interrupt = DMA_DMASPERINTR * dev->control->number_of_pixels * sizeof(uint16_t);
+    dev->control->bytes_per_interrupt = DMA_DMASPERINTR * dev->control->number_of_pixels * dev->control->number_of_cameras * sizeof(uint16_t);
     dev->control->used_dma_size = dev->s0->DMA_BUF_SIZE_IN_SCANS * dev->control->number_of_pixels * dev->control->number_of_cameras * sizeof(uint16_t);
 	if (dev->control->used_dma_size > dev->control->dma_buf_size)
 		dev->control->used_dma_size = dev->control->dma_buf_size;
@@ -212,9 +212,10 @@ es_status_codes enableInterrupt( uint32_t drvno )
 void ResetBufferWritePos(uint32_t drvno)
 {
     //on linux: driver numbers are 0 and 1, on windows 1 and 2
-    drvno--;
-    struct dev_descr *dev = lscpcie_get_descriptor(drvno);
+    struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
 	dev->control->write_pos = 0;
+    dev->control->user_buffer_write_pos = userBuffer[drvno];
+    ES_LOG("user_buffer_write_pos %p\n", dev->control->user_buffer_write_pos);
 	dev->control->read_pos = 0;
 	dev->control->irq_count = 0;
     return;
@@ -269,6 +270,6 @@ es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t samp
     drvno--;
     struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (status != es_no_error) return status;
-	*address = &((uint16_t*)info.data)[index];
+	*address = &((uint16_t*)dev->mapped_buffer)[index];
 	return status;
 }
