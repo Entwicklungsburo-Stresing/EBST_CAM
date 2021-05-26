@@ -281,6 +281,7 @@ struct control_struct {
 	int32_t stimer_val;
 	uint16_t debug_mode;
 	uint16_t status;
+	uint16_t* user_buffer_write_pos;
 };
 
 extern const char reg_names[][16];

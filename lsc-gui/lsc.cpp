@@ -217,7 +217,8 @@ std::string Lsc::dumpTlp(uint32_t drvno)
     stream << "TLPS in DMAReg is:\t\t"
            << std::dec << data
            << "\n";
-    data = (pixel - 1) / (data * 2) + 1;
+    if(data)
+        data = (pixel - 1) / (data * 2) + 1;
     stream << "number of TLPs should be:\t"
            << std::dec << data
            << "\n";

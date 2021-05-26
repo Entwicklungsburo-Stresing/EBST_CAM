@@ -18,7 +18,14 @@ extern "C" {
 #define MAXPCIECARDS 5
 #define DMA_BUFFER_SIZE_IN_SCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
 #define DMA_BUFFER_PARTS 2
-#define DMA_DMASPERINTR DMA_BUFFER_SIZE_IN_SCANS / DMA_BUFFER_PARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb 
+#define DMA_DMASPERINTR DMA_BUFFER_SIZE_IN_SCANS / DMA_BUFFER_PARTS  // alle halben buffer ein intr um hi/lo part zu kopieren deshalb
+/**
+ * @brief DMA_CONTIGBUF: DMA buffer type switch.
+ * 
+ * true: DMA buffer is set by driver (data must be copied afterwards to user space).
+ * false: DMA buffer is set by application (pointer must be passed to SetupPCIE_DMA).
+ */
+#define DMA_CONTIGBUF true
 
 extern uint32_t* aPIXEL;
 extern uint32_t* aCAMCNT;
