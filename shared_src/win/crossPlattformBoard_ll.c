@@ -1,5 +1,4 @@
 #include "../crossPlattformBoard_ll.h"
-#include <cstdint>
 #include <stdint.h>
 
 ***REMOVED***#define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
