@@ -221,7 +221,7 @@ void ResetBufferWritePos(uint32_t drvno)
     return;
 }
 
-void copyRestData(size_t rest_in_bytes)
+void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 {
     return;
 }
