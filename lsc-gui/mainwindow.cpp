@@ -232,7 +232,8 @@ void MainWindow::showPcieBoardError()
 void MainWindow::on_actionDump_board_registers_triggered()
 {
     QDialog* messageBox = new QDialog(this);
-    QVBoxLayout* layout = new QVBoxLayout();
+    messageBox->setAttribute(Qt::WA_DeleteOnClose);
+    QVBoxLayout* layout = new QVBoxLayout(messageBox);
     messageBox->setLayout(layout);
     QTabWidget* tabWidget = new QTabWidget(messageBox);
     tabWidget->setDocumentMode(true);
@@ -241,18 +242,18 @@ void MainWindow::on_actionDump_board_registers_triggered()
     labelS0->setText(QString::fromStdString(lsc.dumpS0Registers(1)));
     labelS0->setAlignment(Qt::AlignTop);
     tabWidget->addTab(labelS0, "S0 registers");
-    QLabel* labelDma = new QLabel;
+    QLabel* labelDma = new QLabel(tabWidget);
     labelDma->setTextInteractionFlags(Qt::TextSelectableByMouse);
     labelDma->setText(QString::fromStdString(lsc.dumpDmaRegisters(1)));
     labelDma->setAlignment(Qt::AlignTop);
     tabWidget->addTab(labelDma, "DMA registers");
-    QLabel* labelTlp = new QLabel;
+    QLabel* labelTlp = new QLabel(tabWidget);
     labelTlp->setTextInteractionFlags(Qt::TextSelectableByMouse);
     labelTlp->setText(QString::fromStdString(lsc.dumpTlp(1)));
     labelTlp->setAlignment(Qt::AlignTop);
     tabWidget->addTab(labelTlp, "TLP size");
     layout->addWidget(tabWidget);
-    QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
+    QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, tabWidget);
     connect(dialogButtonBox, SIGNAL(accepted()), messageBox, SLOT(accept()));
     layout->addWidget(dialogButtonBox);
     messageBox->setWindowTitle("Register dump");
