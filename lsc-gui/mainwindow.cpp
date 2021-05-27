@@ -68,7 +68,7 @@ void MainWindow::setChartData(QLineSeries* series)
  */
 void MainWindow::setChartData(uint16_t* data, uint16_t length)
 {
-    QLineSeries* series = new QLineSeries();
+    QLineSeries* series = new QLineSeries(this);
     for(uint16_t i=0; i<length; i++)
     {
         series->append(i, *(data+i));
@@ -171,6 +171,7 @@ void MainWindow::startPressed()
 void MainWindow::on_actionEdit_triggered()
 {
     DialogSettings* ds = new DialogSettings(&settings, this);
+    ds->setAttribute(Qt::WA_DeleteOnClose);
     ds->show();
     connect(ds, SIGNAL(settings_saved()), this, SLOT(loadSettings()));
     return;
