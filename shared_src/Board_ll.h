@@ -21,8 +21,15 @@
 extern WDC_DEVICE_HANDLE* hDev;
 
 //Low level API
-
-es_status_codes ReadLongIOPort( UINT32 drvno, UINT32 *DWData, ULONG PortOff );// read long from IO runreg
-
-es_status_codes WriteLongIOPort( UINT32 drvno, UINT32 DataL, ULONG PortOff );// write long to IO runreg
-
+es_status_codes SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno);
+es_status_codes SetS0Bit(ULONG bitnumber, CHAR Address, UINT32 drvno);
+es_status_codes ResetS0Bit(ULONG bitnumber, CHAR Address, UINT32 drvno);
+es_status_codes ReadLongIOPort(UINT32 drvno, UINT32* DWData, ULONG PortOff);// read long from IO runreg
+es_status_codes ReadLongS0(UINT32 drvno, UINT32* DWData, ULONG PortOff);	// read long from space0
+es_status_codes ReadLongDMA(UINT32 drvno, UINT32* DWData, ULONG PortOff);
+es_status_codes ReadByteS0(UINT32 drvno, BYTE* data, ULONG PortOff);	// read byte from space0
+es_status_codes WriteLongIOPort(UINT32 drvno, UINT32 DataL, ULONG PortOff);// write long to IO runreg
+es_status_codes WriteLongS0(UINT32 drvno, UINT32 DWData, ULONG PortOff);// write long to space0
+es_status_codes WriteLongDMA(UINT32 drvno, UINT32 DWData, ULONG PortOff);
+es_status_codes WriteByteS0(UINT32 drv, BYTE DataByte, ULONG PortOff); // write byte to space0
+es_status_codes SendFLCAM(UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data);
