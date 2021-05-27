@@ -393,7 +393,7 @@ int lscpcie_start_block(struct dev_descr *dev) {
 	    = (dev->s0->XCK.dword & ~XCK_EC_MASK)
 	    | (CFG_STIMER_IN_US & XCK_EC_MASK) | (1 << XCK_RS);
 	// software trigger
-	pulse_bit(BTRIGREG, 1<<FREQ_REG_SW_TRIG);
+	//pulse_bit(BTRIGREG, 1<<FREQ_REG_SW_TRIG);
 
 	return 0;
 }

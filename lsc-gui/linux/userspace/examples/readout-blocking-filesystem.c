@@ -60,10 +60,13 @@ int lscpcie_acquire_block_fs(struct dev_descr *dev, uint8_t *data,
 
 int main(int argc, char **argv)
 {
-	int result, bytes_read;
+  int result, bytes_read, block_count = 0;
 	struct camera_info_struct info;
 
 	result = readout_init(argc, argv, &info);
+	if (result)
+		return result;
+
 	bytes_read = 0;
 
 	do {
@@ -74,14 +77,16 @@ int main(int argc, char **argv)
 		result = lscpcie_acquire_block_fs(info.dev,
 						(uint8_t *) info.data
 						+ bytes_read,
-						2, info.dev->handle);
+						info.n_scans, info.dev->handle);
 		if (result < 0) {
 			fprintf(stderr, "error %d when acquiring block\n",
 				result);
 			goto out;
 		}
 		bytes_read += result;
-		fprintf(stderr, "having now %d\n", bytes_read);
+		fprintf(stderr, "having now %d (%d blocks)\n", bytes_read,
+			++block_count);
+		
 	} while ((bytes_read < info.mem_size) &&! kbhit());
 
 	if (kbhit()) {
