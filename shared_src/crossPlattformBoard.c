@@ -5,22 +5,6 @@
 #include <string.h>
 #include "../shared_src/UIAbstractionLayer.h"
 
-uint32_t tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
-uint32_t* aPIXEL = tmp_aPIXEL;
-uint32_t tmp_aCAMCNT[MAXPCIECARDS] = { 1, 1, 1, 1, 1 };	// cameras parallel
-uint32_t* aCAMCNT = tmp_aCAMCNT;	// cameras parallel
-bool useSWTrig_temp = false;
-bool* useSWTrig = &useSWTrig_temp;
-uint16_t* temp_userBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
-uint16_t** userBuffer= temp_userBuffer;
-uint32_t BOARD_SEL = 1;
-uint32_t numberOfInterrupts = 0;
-uint8_t number_of_boards = 0;
-uint32_t Nob = 1;
-uint32_t tmp_Nosbp = 1000;
-uint32_t* Nospb = &tmp_Nosbp;
-bool abortMeasurementFlag = false;
-
 /**
  * \brief Initialize Measurement.
  * 
@@ -58,13 +42,13 @@ es_status_codes InitMeasurement(struct global_settings settings)
 #ifdef WIN32
 		case partial_binning:
 		{
-			UINT8 regionSize[8];
+			uint8_t regionSize[8];
 			for (int i = 0; i < 8; i++) regionSize[i] = settings.region_size[i];
-			status = DLLSetupROI(settings.drvno, (UINT16)settings.number_of_regions, settings.FFTLines, (UINT8)settings.keep_first, regionSize, (UINT8)settings.Vfreq);
+			status = DLLSetupROI(settings.drvno, (uint16_t)settings.number_of_regions, settings.FFTLines, (uint8_t)settings.keep_first, regionSize, (uint8_t)settings.Vfreq);
 			break;
 		}
 		case area_mode:
-			status = DLLSetupArea(settings.drvno, settings.lines_binning, (UINT8)settings.Vfreq);
+			status = DLLSetupArea(settings.drvno, settings.lines_binning, (uint8_t)settings.Vfreq);
 			break;
 #endif
 		default:
@@ -2221,7 +2205,7 @@ es_status_codes GetLastBufPart( uint32_t drvno )
 	ES_LOG( "scans_all_cams: 0x%x \n", scans_all_cams );
 	ES_LOG( "rest_overall: 0x%x, rest_in_bytes: 0x%zx\n", rest_overall, rest_in_bytes );
 	if (rest_overall)
-		copyRestData(rest_in_bytes);
+		copyRestData(drvno, rest_in_bytes);
 	return status;
 }
 
