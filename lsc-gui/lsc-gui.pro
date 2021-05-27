@@ -42,9 +42,10 @@ SOURCES += lsc-gui.cpp \
     ../shared_src/crossPlattformBoard.c \
     lsc.cpp \
     UIAbstractionLayer.c \
-    UIAbstractionLayer_cpp.cpp
+    UIAbstractionLayer_cpp.cpp \
+    ../shared_src/globals.c
 win32 {
-    SOURCES += ../shared_src/crossPlattformBoard_ll.c \
+    SOURCES += ../shared_src/win/crossPlattformBoard_ll.c \
         ../shared_src/lscpciej_lib.c
 }
 unix {
@@ -71,7 +72,8 @@ HEADERS += \
     ../shared_src/crossPlattformBoard.h \
     ../shared_src/crossPlattformBoard_ll.h \
     ../shared_src/UIAbstractionLayer.h \
-    UIAbstractionLayer_cpp.h
+    UIAbstractionLayer_cpp.h \
+    ../shared_src/globals.h
 unix {
     HEADERS += ./linux-driver/userspace/lscpcie.h
 }
