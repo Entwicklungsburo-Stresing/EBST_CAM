@@ -36,6 +36,7 @@ extern uint8_t number_of_boards;
 extern uint32_t Nob;
 extern uint32_t* Nospb;
 extern bool abortMeasurementFlag;
+extern uint32_t numberOfInterrupts;
 
 #ifdef __cplusplus
 }
