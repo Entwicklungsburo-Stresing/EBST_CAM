@@ -61,4 +61,4 @@ clean:
 	rm -f *~ *.o
 
 distclean: clean
-	rm -f $(programs)
+	rm -f lsc-cli
