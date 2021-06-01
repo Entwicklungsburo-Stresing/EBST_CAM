@@ -311,9 +311,8 @@ int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode,
 	else
 		SET_BITS(dev->s0->IRQREG.REG32, 0, hwd_req);
 
-	// set trigger mode to block timer and scan timer + shutter not on
 	dev->s0->CTRLB
-	    = (CTRLB_BTI_TIMER | CTRLB_STI_TIMER) & ~(CTRLB_SHON);
+	    = (CTRLB_GTI_I | CTRLB_STI_TSTART) & ~(CTRLB_SHON);
 	// set block timer and start block timer
 	dev->s0->BTIMER =
 	    (1 << BTIMER_START) | CFG_BTIMER_IN_US;
@@ -324,12 +323,15 @@ int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode,
 	dev->s0->TOR = TOR_OUT_XCK;
 
 	dev->s0->DMAS_PER_INTERRUPT = dmas_per_interrupt;
+	fprintf(stderr, "dmas per interrupt is %d (%d)\n",
+		dev->s0->DMAS_PER_INTERRUPT, dmas_per_interrupt);
 	dev->control->bytes_per_interrupt
 	    = dmas_per_interrupt * dev->control->number_of_pixels
 		* sizeof(pixel_t);
 
 	dev->s0->NUMBER_OF_SCANS = number_of_scans;
 	dev->s0->DMA_BUF_SIZE_IN_SCANS = number_of_scans * number_of_blocks * 2;
+	dev->s0->NUMBER_OF_BLOCKS = number_of_blocks;
 
 	dev->control->used_dma_size = dev->s0->DMA_BUF_SIZE_IN_SCANS
 		* dev->control->number_of_pixels
@@ -369,7 +371,7 @@ int lscpcie_start_scan(struct dev_descr * dev)
 	////<<<< reset all counters
 
 	// >> SetIntFFTrig
-	dev->s0->XCK.dword &= ~(1 << XCKMSB_EXT_TRIGGER);
+	dev->s0->XCK.dword |= (1 << XCKMSB_EXT_TRIGGER);
 	dev->control->write_pos = 0;
 	dev->control->read_pos = 0;
 	dev->control->irq_count = 0;
@@ -391,7 +393,7 @@ int lscpcie_start_block(struct dev_descr *dev) {
 	    = (dev->s0->XCK.dword & ~XCK_EC_MASK)
 	    | (CFG_STIMER_IN_US & XCK_EC_MASK) | (1 << XCK_RS);
 	// software trigger
-	pulse_bit(BTRIGREG, 1<<FREQ_REG_SW_TRIG);
+	//pulse_bit(BTRIGREG, 1<<FREQ_REG_SW_TRIG);
 
 	return 0;
 }
