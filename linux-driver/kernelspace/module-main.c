@@ -151,7 +151,7 @@ static int __init lscpcie_module_init(void)
 	module_status |= MOD_PCI_REGISTERED;
 	PMDEBUG("registered pci driver\n");
 
-	printk(KERN_WARNING NAME " ready.\n");
+	printk(KERN_WARNING NAME " module ready.\n");
 
 	return 0;
 
@@ -172,19 +172,6 @@ static void __exit lscpcie_module_exit(void)
 void clean_up_lscpcie_module(void)
 {
 	int i;
-
-	for (i = 0; i < MAX_BOARDS; i++)
-		if (lscpcie_devices[i].minor >= 0) {
-			struct dev_struct *dev = &lscpcie_devices[i];
-			PMDEBUG("removing device %d\n", i);
-			proc_clean_up(dev);
-			dma_finish(dev);
-			if (dev->dma_reg) {
-				iounmap(dev->dma_reg);
-				dev->dma_reg = 0;
-				dev->s0_reg = 0;
-			}
-		}
 
 	if (module_status & MOD_PCI_REGISTERED) {
 		pci_unregister_driver(&pci_driver);
