@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -g
 
 programs = readout-polling readout-blocking-proc readout-blocking-filesystem \
-  readout-blocking-filesystem
+  readout-blocking-filesystem-trigger
 
 examples: $(programs)
 
