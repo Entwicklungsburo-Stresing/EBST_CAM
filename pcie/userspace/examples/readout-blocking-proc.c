@@ -82,7 +82,7 @@ int main(int argc, char **argv)
 		result = lscpcie_acquire_block_proc(info.dev,
 						(uint8_t *) info.data
 						+ bytes_read,
-						2, proc_file);
+						info.n_scans, proc_file);
 		if (result < 0) {
 			fprintf(stderr, "error %d when acquiring block\n",
 				result);
