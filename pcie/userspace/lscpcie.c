@@ -206,7 +206,6 @@ int lscpcie_open(uint dev_no, uint16_t fiber_options, uint8_t memory_options)
 		no_tlps++;
 	dev->number_of_tlps = no_tlps;
 
-	fprintf(stderr, "found io spce of size 0x%08x\n", dev->control->io_size);
 	if (hardware_present) {
 		// map io registers to user space memory
 		dev->dma_reg
