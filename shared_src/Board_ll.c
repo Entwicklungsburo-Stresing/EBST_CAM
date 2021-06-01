@@ -11,9 +11,9 @@ WDC_DEVICE_HANDLE* hDev = &hDev_tmp;
  * @param Address 
  * @param drvno PCIe board identifier.
  * @return es_status_codes
-	- es_no_error
-	- es_register_read_failed
-	- es_register_write_failed
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
  */
 es_status_codes SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno )
 {
@@ -44,27 +44,31 @@ es_status_codes SetS0Reg( ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno 
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
  * @param Address register address
  * @param drvno board number (=1 if one PCI board)
- * @return es_status_codes 
-	- es_no_error
+ * @return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
  */
 es_status_codes SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
-	//bitnumber: 0...31
-	/*
-	old:
 	ULONG bitmask = 0x1 << bitnumber;
-	if (!SetS0Reg( 0xFFFFFFFF, bitmask, Address, drvno ))
+	es_status_codes status = SetS0Reg(0xFFFFFFFF, bitmask, Address, drvno);
+	if (status != es_no_error)
 	{
-		ErrLog( "WriteLong S0 Failed in SetDMAReg \n" );
-		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
-		return FALSE;
+		ErrLog("WriteLong S0 Failed in SetDMAReg \n");
+		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 	}
-	*/
+	return status;
+
+	// BitTestAndSet doesn't work
+	/*
 	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
 	WDC_MEM_DIRECT_ADDR( pDev->pAddrDesc );
 	BitTestAndSet( pDev->pAddrDesc->pUserDirectMemAddr + 0x80 + Address, bitnumber );
-	//always returns no error. BitTestAndReset doesn't give info about success.
+	//always returns no error. BitTestAndReset doesn't 
+	give info about success.
 	return es_no_error;
+	*/
 }
 
 /**
@@ -73,26 +77,30 @@ es_status_codes SetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
  * @param Address register address
  * @param drvno board number (=1 if one PCI board)
- * @return es_status_codes 
- 	- es_no_error
+ * @return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
  */
 es_status_codes ResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
-	/*
-	old:
 	ULONG bitmask = 0x1 << bitnumber;
-	if (!SetS0Reg( 0x0, bitmask, Address, drvno ))
+	es_status_codes status = SetS0Reg(0x0, bitmask, Address, drvno);
+	if (status != es_no_error)
 	{
 		ErrLog( "WriteLong S0 Failed in SetDMAReg \n" );
 		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
-		return FALSE;
 	}
-	*/
+	return status;
+
+	// BitTestAndSet doesn't work
+	/*
 	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
 	WDC_MEM_DIRECT_ADDR( pDev->pAddrDesc );
 	BitTestAndReset( pDev->pAddrDesc->pUserDirectMemAddr + 0x80 + Address, bitnumber );
 	//always returns no error. BitTestAndReset doesn't give info about success.
 	return es_no_error;
+	*/
 }
 
 /**

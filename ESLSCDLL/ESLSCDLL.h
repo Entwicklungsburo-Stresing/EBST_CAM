@@ -57,9 +57,6 @@ DllAccess es_status_codes DLLAboutDrv( UINT32 drvno );	// displays the version a
 DllAccess double DLLCalcRamUsageInMB( UINT32 nos, UINT32 nob );
 DllAccess double DLLCalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exposure_time_in_ms );
 //************	functions for managing controlbits in CtrlA register
-DllAccess es_status_codes DLLHighSlope( UINT32 drvno );		//set input Trigger slope high
-DllAccess es_status_codes DLLLowSlope( UINT32 drvno );		//set input Trigger slope low
-DllAccess es_status_codes DLLBothSlope( UINT32 drvno );	//trigger on each slope
 DllAccess es_status_codes DLLOutTrigHigh( UINT32 drvno );		//set output Trigger signal high
 DllAccess es_status_codes DLLOutTrigLow( UINT32 drvno );		//set output Trigger signal low
 DllAccess es_status_codes DLLOutTrigPulse( UINT32 drvno, UINT32 PulseWidth );	// pulses high output Trigger signal
@@ -117,6 +114,7 @@ DllAccess es_status_codes DLLSetBTI( UINT32 drvno, UINT8 bti_mode );
 DllAccess es_status_codes DLLSetSTI( UINT32 drvno, UINT8 sti_mode );
 DllAccess es_status_codes DLLSetSTimer( UINT32 drvno, UINT32 stime_in_microseconds );
 DllAccess es_status_codes DLLSetBTimer( UINT32 drvno, UINT32 btime_in_microseconds );
+DllAccess es_status_codes DLLSetSSlope(UINT32 drvno, UINT32 sslope);
 DllAccess es_status_codes DLLSetBSlope( UINT32 drvno, UINT32 slope );
 DllAccess es_status_codes DLLSetGain( UINT32 drvno, UINT16 gain_value );
 DllAccess es_status_codes DLLLedOff( UINT32 drvno, UINT8 LED_OFF );
@@ -125,8 +123,7 @@ DllAccess CStr DLLConvertErrorCodeToMsg(es_status_codes status);
 DllAccess es_status_codes DLLClearAllUserRegs(UINT32 drvno);
 DllAccess es_status_codes DLLFFOvl(UINT32 drvno, UINT8* overflow);
 DllAccess es_status_codes DLLSetupPCIE_DMA(UINT32 drvno);
-DllAccess es_status_codes DLLSetGlobalVariables(UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay);
-DllAccess es_status_codes DLLSetBoardVars(UINT32 drvno);
+DllAccess es_status_codes DLLSetTLPS(UINT32 drvno, UINT32 pixel);
 DllAccess es_status_codes DLLSetSDAT(UINT32 drvno, UINT32 datin100ns);
 DllAccess es_status_codes DLLSetBDAT(UINT32 drvno, UINT32 tin100ns);
 DllAccess void setSWTrig(BOOL on);
