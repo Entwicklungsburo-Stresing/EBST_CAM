@@ -83,7 +83,7 @@ int lscpcie_driver_init(void)
 
 int lscpcie_open(uint dev_no, uint16_t fiber_options, uint8_t memory_options)
 {
-	int result = 0, handle, no_tlps, hardware_present;
+	int result = 0, handle, hardware_present;
 	char name[16];
 	int page_size = sysconf(_SC_PAGE_SIZE);
 
