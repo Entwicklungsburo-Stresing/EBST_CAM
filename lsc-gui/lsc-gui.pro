@@ -7,6 +7,7 @@ QT += widgets \
 TEMPLATE = app
 TARGET = lsc-gui
 INCLUDEPATH += .
+CONFIG += debug
 win32 {
 	INCLUDEPATH += $(SolutionDir)
 }
