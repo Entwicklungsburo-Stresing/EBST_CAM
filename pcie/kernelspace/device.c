@@ -80,7 +80,7 @@ int device_init(struct dev_struct *dev, int minor)
 	sema_init(&dev->read_sem, 1);
 	sema_init(&dev->size_sem, 1);
 
-	/* semaphores for proce */
+	/* semaphores for proc */
 	init_waitqueue_head(&dev->proc_readq);
 	sema_init(&dev->proc_read_sem, 1);
 
