@@ -16,6 +16,7 @@ test-readout-polling
 readout-blocking-filesystem
 readout-blocking-proc
 readout-polling
+readout-blocking-filesystem-trigger
 camera-debug
 stop-camera
 *.so*
