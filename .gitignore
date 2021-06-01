@@ -18,6 +18,7 @@ readout-blocking-proc
 readout-polling
 camera-debug
 stop-camera
+lsc-cli
 *.so*
 .vscode/
 build/
