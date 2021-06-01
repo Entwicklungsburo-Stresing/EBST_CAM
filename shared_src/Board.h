@@ -47,6 +47,16 @@ extern BOOL Running;
 extern UINT32 BOARD_SEL;
 extern BOOL* useSWTrig;
 
+//High level API
+es_status_codes InitBoard(UINT32 drvno);	// init the board and alloc mem, call only once !
+es_status_codes CCDDrvInit();
+es_status_codes CCDDrvExit(UINT32 drvno);	// closes the driver
+es_status_codes InitMeasurement(struct global_settings settings);
+es_status_codes StartMeasurement();
+es_status_codes abortMeasurement(UINT32 drv);
+es_status_codes ReturnFrame(UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16* pdest, UINT32 length);
+
+//Mid level API
 void ErrMsgBoxOn();
 void ErrMsgBoxOff(); // switch to suppress error message boxes
 void ErrorMsg( char ErrMsg[100] );
@@ -55,15 +65,8 @@ void AboutDMARegs( UINT32 drv );
 es_status_codes AboutTLPs( UINT32 drvno );
 es_status_codes AboutS0( UINT32 drvno );
 //  same header file for ISA and PCI version
-es_status_codes CCDDrvInit();
-es_status_codes CCDDrvExit( UINT32 drvno );	// closes the driver
-es_status_codes InitBoard( UINT32 drvno );	// init the board and alloc mem, call only once !
-es_status_codes InitMeasurement(struct global_settings settings);
-es_status_codes StartMeasurement();
 es_status_codes SetDMAReg( ULONG Data, ULONG Bitmask, ULONG Address, UINT32 drvno );
 es_status_codes SetDMAAddrTlpRegs( UINT64 PhysAddrDMABuf64, ULONG tlpSize, ULONG no_tlps, UINT32 drvno );
-es_status_codes SetDMAAddrTlp( UINT32 drvno );
-void SetManualTLP_vars();
 es_status_codes SetDMABufRegs( UINT32 drvno );
 es_status_codes SetDMAReset( UINT32 drvno );
 es_status_codes SetDMAStart( UINT32 drvno );
@@ -74,16 +77,13 @@ es_status_codes SetupPCIE_DMA( UINT32 drvno );
 void StartPCIE_DMAWrite( UINT32 drvno );
 es_status_codes CleanupPCIE_DMA( UINT32 drvno );
 int GetNumofProcessors();
-es_status_codes SetGlobalVariables( UINT32 drvno, UINT32 camcnt, UINT32 pixel );
-es_status_codes SetBoardVars( UINT32 drvno );
-es_status_codes Use_ENFFW_protection( UINT32 drvno, BOOL USE_ENFFW_PROTECT );
+es_status_codes SetTLPS( UINT32 drvno, UINT32 pixel );
+es_status_codes SetPixelCount(UINT32 drvno, UINT16 pixelcount);
+es_status_codes SetCamCount(UINT32 drvno, UINT16 camcount);
+es_status_codes Use_ENFFW_protection(UINT32 drvno, BOOL USE_ENFFW_PROTECT);
 // clear camera with reads
 es_status_codes AboutDrv( UINT32 drvno );	// displays the version and board ID = test if board is there
 //	functions for managing controlbits in CtrlA register
-es_status_codes LowSlope( UINT32 drvno );		//set input Trigger slope low
-es_status_codes HighSlope( UINT32 drvno );		//set input Trigger slope high
-es_status_codes BothSlope( UINT32 drvno );		//set trigger on both slopes 
-es_status_codes NotBothSlope( UINT32 drvno );		//set trigger on both slopes off
 es_status_codes OutTrigLow( UINT32 drvno );		//set output Trigger signal low
 es_status_codes OutTrigHigh( UINT32 drvno );		//set output Trigger signal high
 es_status_codes OutTrigPulse( UINT32 drvno, ULONG PulseWidth );	// pulses high output Trigger signal
@@ -97,8 +97,6 @@ es_status_codes SetSEC( UINT32 drvno, UINT32 ecin100ns );
 es_status_codes SetBDAT( UINT32 drvno, UINT32 tin100ns ); // delay after trigger in 100ns
 es_status_codes SetBEC( UINT32 drvno, UINT32 ecin100ns );
 es_status_codes SetTORReg( UINT32 drvno, BYTE fkt );
-es_status_codes SetISPDA( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if PDA
-es_status_codes SetISFFT( UINT32 drvno, BOOL set );		//hardware switch for IFC and VON if FFT
 es_status_codes SetSensorType( UINT32 drvno, UINT8 sensor_type );
 // FIFO functions
 es_status_codes initReadFFLoop( UINT32 drv );
@@ -181,12 +179,12 @@ es_status_codes SetBTI( UINT32 drvno, UINT8 bti_mode );
 es_status_codes SetSTI( UINT32 drvno, UINT8 sti_mode );
 es_status_codes ClearAllUserRegs( UINT32 drv );
 es_status_codes SetBSlope( UINT32 drvno, UINT32 slope );
+es_status_codes SetSSlope(UINT32 drvno, UINT32 sslope);
 es_status_codes SetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob );
 es_status_codes SetGain( UINT32 drvno, UINT16 gain_value );
 es_status_codes LedOff( UINT32 drvno, UINT8 LED_OFF );
-es_status_codes ReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length );
-es_status_codes abortMeasurement( UINT32 drv );
 es_status_codes SetXckdelay(UINT32 drvno, UINT32 xckdelay);
+es_status_codes checkDriverHandle(UINT32 drvno);
 
 #ifdef __cplusplus
 }

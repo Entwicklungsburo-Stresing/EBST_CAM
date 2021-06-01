@@ -85,7 +85,6 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		   pci_write_config_dword(dev->pci_dev, reg_info.address,
 					  reg_info.value);
 	       break;
-
 	default:
 		PDEBUG(D_IOCTL, ": ioctl unknown\n");
 		return -ENOTTY;
