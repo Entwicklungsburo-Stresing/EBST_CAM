@@ -24,8 +24,9 @@
 #define D_MODULE         0x0040
 #define D_MMAP           0x0080
 #define D_PROC           0x0100
+#define D_STATUS         0x0200
 
-#define DEBUG_BITS       0x01FF
+#define DEBUG_BITS       0x03FF
 #define DEBUG_MASK_SHIFT 16
 
 
