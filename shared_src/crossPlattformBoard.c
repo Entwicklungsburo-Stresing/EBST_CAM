@@ -2229,7 +2229,7 @@ es_status_codes ExitDriver(uint32_t drvno)
 {
 	ES_LOG("\n*** Exit driver ***\n");
     es_status_codes status = _ExitDriver(drvno);
-	ES_LOG("*** Exit driver ddone***\n\n");
+	ES_LOG("*** Exit driver done***\n\n");
 	return status;
 }
 
