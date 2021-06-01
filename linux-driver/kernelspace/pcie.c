@@ -64,23 +64,14 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 	device_set_status(dev, DEV_HARDWARE_PRESENT, DEV_HARDWARE_PRESENT);
 	dev->pci_dev = pci_dev;
 
-	/* doesn't work
-	   PDEBUG(D_INTERRUPT, "allocating interrupt vector\n");
-	   result = pci_alloc_irq_vectors(pci_dev, 1, 1, PCI_IRQ_MSI);
-	   if (result < 0) {
-	   printk(KERN_ERR NAME": couldn't allocate irq vector\n");
-	   goto out_error;
-	   }
-	 */
-	if (!device_test_status(dev, DEV_MSI_ENABLED)) {
+	if (!device_test_status(dev, DEV_IRQ_ALLOCATED)) {
 		PDEBUG(D_INTERRUPT, "allocating interrupt vector\n");
-		result = pci_enable_msi(pci_dev);
+		result = pci_alloc_irq_vectors(pci_dev, 1, 1, PCI_IRQ_MSI);
 		if (result < 0) {
-			printk(KERN_ERR NAME
-			       ": couldn't allocate irq vector\n");
+			printk(KERN_ERR NAME": couldn't allocate irq vector\n");
 			goto out_error;
 		}
-		device_set_status(dev, DEV_MSI_ENABLED, DEV_MSI_ENABLED);
+		device_set_status(dev, DEV_IRQ_ALLOCATED, DEV_IRQ_ALLOCATED);
 	}
 	dev->irq_line = pci_dev->irq;
 	PDEBUG(D_INTERRUPT, "interrupt line is %d\n", dev->irq_line);
@@ -113,6 +104,8 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 	return 0;
 
       out_error:
+	printk(KERN_ERR NAME": registering pci device failed, error %d\n",
+	       result);
 	remove_lscpcie(pci_dev);
 	return result;
 }
@@ -120,24 +113,37 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 void remove_lscpcie(struct pci_dev *pci_dev)
 {
 	struct dev_struct *dev = pci_get_drvdata(pci_dev);
+	int dev_no = dev - lscpcie_devices;
 
 	PDEBUG(D_PCI, "removing lscpcie\n");
 
 	if (dev) {
-		if (device_test_status(dev, DEV_MSI_ENABLED)
-		    && (pci_dev->msi_enabled))
-			pci_disable_msi(pci_dev);
-		device_set_status(dev, DEV_MSI_ENABLED, 0);
-		/* doesn't work
-		   if (dev->status & DEV_IRQ_ALLOCATED) {
-		   PDEBUG(D_INTERRUPT, "freeing interrupt vector\n");
-		   pci_free_irq_vectors(pci_dev);
-		   PDEBUG(D_INTERRUPT, "interrupt vector freed\n");
-		   }
-		 */
+		if (device_test_status(dev, DEV_IRQ_REQUESTED)) {
+			PDEBUG(D_INTERRUPT, ": freeing interrupt line %d\n",
+				dev->irq_line);
+			free_irq(dev->irq_line, dev);
+			device_set_status(dev, DEV_IRQ_REQUESTED, 0);
+		}
+
+		if (device_test_status(dev, DEV_IRQ_ALLOCATED)) {
+			pci_free_irq_vectors(pci_dev);
+			PDEBUG(D_INTERRUPT, "interrupt vectors freed\n");
+			device_set_status(dev, DEV_IRQ_ALLOCATED, 0);
+		}
+		PDEBUG(D_MODULE, "removing device %d\n", dev_no);
+		proc_clean_up(dev);
+		dma_finish(dev);
+		if (dev->dma_reg) {
+			iounmap(dev->dma_reg);
+			dev->dma_reg = 0;
+			dev->s0_reg = 0;
+		}
 	}
 
 	pci_clear_master(pci_dev);
 	pci_disable_device(pci_dev);
-	device_set_status(dev, DEV_HARDWARE_PRESENT | DEV_PCI_ENABLED, 0);
+	if (dev) {
+		device_set_status(dev, DEV_HARDWARE_PRESENT|DEV_PCI_ENABLED, 0);
+		device_clean_up(dev);
+	}
 }
