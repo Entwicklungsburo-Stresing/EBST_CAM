@@ -63,23 +63,7 @@ int lscpcie_open(struct inode *inode, struct file *filp)
 
 int lscpcie_release(struct inode *inode, struct file *filp)
 {
-	//int result, minor = iminor(inode);
 	struct dev_struct *dev = filp->private_data;
-
-	//PDEBUG(D_START_STOP, "camera releasing\n");
-
-	/*
-	   if (dev->status & CAMERA_ACQUIRING) {
-	   if (dev->hardware_present && ((result = camera_finish(dev))))
-	   return result;
-	   dev->status &= ~(CAMERA_ACQUIRING | CAMERA_STOP | CAMERA_DMA_ACTIVE);
-	   }
-
-	   if (dev->have_irq) {
-	   free_irq(dev->pci_dev->irq, dev);
-	   dev->have_irq = 0;
-	   }
-	 */
 
 	if (filp->f_mode & FMODE_READ)
 		atomic_inc(&dev->read_available);
