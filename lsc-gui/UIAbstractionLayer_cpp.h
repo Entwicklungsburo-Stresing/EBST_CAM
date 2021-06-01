@@ -3,12 +3,12 @@
 extern "C" {
 #endif
 
-#include <Windows.h>
+#include <stdint.h>
 
-void notifyMeasureStartCpp(UINT32 drv);
-void notifyMeasureDoneCpp(UINT32 drv);
-void notifyBlockStartCpp(UINT32 drv);
-void notifyBlockDoneCpp(UINT32 drv);
+void notifyMeasureStartCpp(uint32_t drv);
+void notifyMeasureDoneCpp(uint32_t drv);
+void notifyBlockStartCpp(uint32_t drv);
+void notifyBlockDoneCpp(uint32_t drv);
 
 #ifdef __cplusplus
 }

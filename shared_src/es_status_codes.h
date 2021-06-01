@@ -24,6 +24,7 @@ typedef enum
 	es_getting_dma_buffer_failed,
 	es_unlocking_dma_failed,
 	es_camera_not_found,
+	es_abortion
 } es_status_codes;
 
 char* ConvertErrorCodeToMsg(es_status_codes status);

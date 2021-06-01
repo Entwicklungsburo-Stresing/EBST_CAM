@@ -36,6 +36,7 @@ private slots:
     void loadSettings();
     void startPressed();
     void on_actionDump_board_registers_triggered();
+    void abortPressed();
 };
 
 #endif // MAINWINDOW_H

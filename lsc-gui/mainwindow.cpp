@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->horizontalSliderSample, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
     connect(ui->horizontalSliderBlock, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
     connect(ui->pushButtonStart, SIGNAL(pressed()), this, SLOT(startPressed()));
+    connect(ui->pushButtonAbort, SIGNAL(pressed()), this, SLOT(abortPressed()));
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));
     connect(&lsc, SIGNAL(measureStart()), this, SLOT(on_measureStart()));
     connect(&lsc, SIGNAL(measureDone()), this, SLOT(on_measureDone()));
@@ -31,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
     else
     {
-        status = lsc.initPcieBoard();
+        status = lsc.initPcieBoard(1);
         if (status != es_no_error)
             showPcieBoardError();
         else
@@ -187,7 +188,7 @@ void MainWindow::loadSettings()
     ui->horizontalSliderBlock->setMaximum(nob);
     ui->spinBoxBlock->setMaximum(nob);
     int tor = settings.value(settingTorPath,settingTorDefault).toInt();
-    lsc.setTorOut(tor);
+    lsc.setTorOut(1, tor);
     int theme = settings.value(settingThemePath,settingThemeDefault).toInt();
     switch(theme)
     {
@@ -237,17 +238,17 @@ void MainWindow::on_actionDump_board_registers_triggered()
     tabWidget->setDocumentMode(true);
     QLabel* labelS0 = new QLabel(tabWidget);
     labelS0->setTextInteractionFlags(Qt::TextSelectableByMouse);
-    labelS0->setText(QString::fromStdString(lsc.dumpS0Registers()));
+    labelS0->setText(QString::fromStdString(lsc.dumpS0Registers(1)));
     labelS0->setAlignment(Qt::AlignTop);
     tabWidget->addTab(labelS0, "S0 registers");
     QLabel* labelDma = new QLabel;
     labelDma->setTextInteractionFlags(Qt::TextSelectableByMouse);
-    labelDma->setText(QString::fromStdString(lsc.dumpDmaRegisters()));
+    labelDma->setText(QString::fromStdString(lsc.dumpDmaRegisters(1)));
     labelDma->setAlignment(Qt::AlignTop);
     tabWidget->addTab(labelDma, "DMA registers");
     QLabel* labelTlp = new QLabel;
     labelTlp->setTextInteractionFlags(Qt::TextSelectableByMouse);
-    labelTlp->setText(QString::fromStdString(lsc.dumpTlp()));
+    labelTlp->setText(QString::fromStdString(lsc.dumpTlp(1)));
     labelTlp->setAlignment(Qt::AlignTop);
     tabWidget->addTab(labelTlp, "TLP size");
     layout->addWidget(tabWidget);
@@ -319,5 +320,11 @@ void MainWindow::on_blockDone()
     QPalette pal = palette();
     pal.setColor(QPalette::Background, Qt::darkGreen);
     ui->widgetBlockOn->setPalette(pal);
+    return;
+}
+
+void MainWindow::abortPressed()
+{
+    lsc.abortMeasurement(1);
     return;
 }
