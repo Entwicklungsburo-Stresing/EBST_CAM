@@ -1,4 +1,4 @@
-/* readout-blocking-filesystem.c
+/* readout-blocking-filesystem-trigger.c
  *
  * Copyright 2020-2021 Bernhard Lang, University of Geneva
  * Copyright 2020-2021 Entwicklungsbuero Stresing (http://www.stresing.de/)
@@ -38,6 +38,7 @@ int lscpcie_acquire_block_fs(struct dev_descr *dev, uint8_t *data,
 		* sizeof(pixel_t) * n_scans;
 
 	result = lscpcie_start_block(dev);
+	lscpcie_dump_s0(dev);
 	if (result < 0)
 		return result;
 
@@ -67,7 +68,11 @@ int main(int argc, char **argv)
 	if (result)
 		return result;
 
+	info.dev->s0->XCK.bytes.MSB &= 0xBF; // stop S Timer
+	info.dev->s0->EC = 0; // reset SEC
+
 	bytes_read = 0;
+	info.dev->s0->XCK.bytes.MSB |= (1<<XCKMSB_EXT_TRIGGER);
 
 	do {
 		// wait for trigger signal
