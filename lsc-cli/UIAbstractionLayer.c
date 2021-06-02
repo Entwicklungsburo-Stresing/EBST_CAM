@@ -1,4 +1,4 @@
-//UI abstraction layer for CCDExample
+//UI abstraction layer for lsc-cli
 #include "../shared_src/UIAbstractionLayer.h"
 
 void notifyMeasureStart( uint32_t drv )
