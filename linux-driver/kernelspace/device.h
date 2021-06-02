@@ -22,13 +22,16 @@
 
 #define MOD_PCI_REGISTERED   0x01
 
-#define DEV_PCI_ENABLED      0x0001
-#define DEV_CDEV_CREATED     0x0002
-#define DEV_CLASS_CREATED    0x0004
-#define DEV_IRQ_ALLOCATED    0x0008
-#define DEV_IRQ_REQUESTED    0x0010
-#define DEV_CONTROL_MAPPED   0x0020
-#define DEV_BLOCKS_IN_IRQ    0x0040
+#define DEV_PCI_ENABLED       0x0001
+#define DEV_CDEV_CREATED      0x0002
+#define DEV_CLASS_CREATED     0x0004
+#define DEV_DMA_MEM_ALLOCATED 0x0008
+#define DEV_DMA_DEBUG_MEM     0x0010
+#define DEV_IRQ_ALLOCATED     0x0020
+#define DEV_IRQ_REQUESTED     0x0040
+#define DEV_CONTROL_MAPPED    0x0080
+#define DEV_BLOCKS_IN_IRQ     0x0100
+/* bits 0xE000 in registers-common */
 
 struct dev_struct {
 	u16 init_status;
