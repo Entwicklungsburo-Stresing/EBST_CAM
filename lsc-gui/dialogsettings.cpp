@@ -32,6 +32,7 @@ DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
     ui->spinBoxCamcnt->setValue(_settings->value(settingCamcntPath, settingCamcntDefault).toInt());
     ui->spinBoxPixel->setValue(_settings->value(settingPixelPath, settingPixelDefault).toInt());
     ui->checkBoxMshut->setChecked(_settings->value(settingMshutPath, settingMshutDefault).toBool());
+    ui->checkBoxMshut->stateChanged(_settings->value(settingMshutPath, settingMshutDefault).toBool());
     ui->checkBoxLed->setChecked(_settings->value(settingLedPath, settingLedDefault).toBool());
     ui->checkBoxGain3010->setChecked(_settings->value(settingGain3010Path, settingGain3010Default).toBool());
     ui->spinBoxGain3030->setValue(_settings->value(settingGain3030Path, settingGain3030Default).toInt());
@@ -76,6 +77,7 @@ DialogSettings::~DialogSettings()
 
 void DialogSettings::on_accepted()
 {
+    //Here the settings on the UI are saved to the system
     _settings->setValue(settingNosPath, ui->spinBoxNos->value());
     _settings->setValue(settingNobPath, ui->spinBoxNob->value());
     _settings->setValue(settingStiPath, ui->comboBoxSti->currentIndex());
@@ -208,5 +210,17 @@ void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
         ui->comboBoxAdcMode->setEnabled(true);
         ui->spinBoxAdcCustom->setEnabled(true);
         break;
+    }
+}
+
+void DialogSettings::on_checkBoxMshut_stateChanged(int arg1)
+{
+    switch(arg1)
+    {
+    case 0:
+        ui->doubleSpinBoxExpTime->setEnabled(false);
+        break;
+    default:
+        ui->doubleSpinBoxExpTime->setEnabled(true);
     }
 }
