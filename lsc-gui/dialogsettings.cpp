@@ -8,6 +8,9 @@ DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
     ui->setupUi(this);
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(on_accepted()));
     _settings = settings;
+
+    // Here the saved settings on the system are applied to the UI.
+    // For some settings there are two calls, to trigger the according slot for greying out options. I don't know why this is nesceserry, but without it the slots are not triggered.
     ui->spinBoxNos->setValue(_settings->value(settingNosPath, settingNosDefault).toInt());
     ui->spinBoxNob->setValue(_settings->value(settingNobPath, settingNobDefault).toInt());
     ui->comboBoxSti->setCurrentIndex(_settings->value(settingStiPath, settingStiDefault).toInt());
@@ -23,7 +26,9 @@ DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
     ui->comboBoxTriggerModeCC->setCurrentIndex(_settings->value(settingTriggerCcPath, settingTriggerCcDefault).toInt());
     ui->comboBoxBoardSel->setCurrentIndex(_settings->value(settingBoardSelPath, settingBoardSelDefault).toInt());
     ui->comboBoxSensorType->setCurrentIndex(_settings->value(settingSensorTypePath, settingSensorTypeDefault).toInt());
+    ui->comboBoxSensorType->currentIndexChanged(_settings->value(settingSensorTypePath, settingSensorTypeDefault).toInt());
     ui->comboBoxCameraSystem->setCurrentIndex(_settings->value(settingCameraSystemPath, settingCameraSystemDefault).toInt());
+    ui->comboBoxCameraSystem->currentIndexChanged(_settings->value(settingCameraSystemPath, settingCameraSystemDefault).toInt());
     ui->spinBoxCamcnt->setValue(_settings->value(settingCamcntPath, settingCamcntDefault).toInt());
     ui->spinBoxPixel->setValue(_settings->value(settingPixelPath, settingPixelDefault).toInt());
     ui->checkBoxMshut->setChecked(_settings->value(settingMshutPath, settingMshutDefault).toBool());
@@ -32,6 +37,7 @@ DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
     ui->spinBoxGain3030->setValue(_settings->value(settingGain3030Path, settingGain3030Default).toInt());
     ui->comboBoxCamCool->setCurrentIndex(_settings->value(settingCoolingPath, settingCoolingDefault).toInt());
     ui->checkBoxUseDac->setChecked(_settings->value(settingDacPath, settingDacDefault).toBool());
+    ui->checkBoxUseDac->stateChanged(_settings->value(settingDacPath, settingDacDefault).toBool());
     ui->checkBoxGpx->setChecked(_settings->value(settingGpxPath, settingGpxDefault).toBool());
     ui->spinBoxGpxOffset->setValue(_settings->value(settingGpxOffsetPath, settingGpxOffsetDefault).toInt());
     ui->spinBoxLines->setValue(_settings->value(settingLinesPath, settingLinesDefault).toInt());
@@ -124,4 +130,83 @@ void DialogSettings::on_accepted()
     _settings->setValue(settingThemePath, ui->comboBoxTheme->currentIndex());
     emit settings_saved();
     return;
+}
+
+void DialogSettings::on_comboBoxSti_currentIndexChanged(int index)
+{
+    switch(index)
+    {
+    case 4:
+        ui->doubleSpinBoxSTimer->setEnabled(true);
+        break;
+    default:
+        ui->doubleSpinBoxSTimer->setEnabled(false);
+    }
+}
+
+void DialogSettings::on_comboBoxBti_currentIndexChanged(int index)
+{
+    switch(index)
+    {
+    case 4:
+        ui->doubleSpinBoxBTimer->setEnabled(true);
+        break;
+    default:
+        ui->doubleSpinBoxBTimer->setEnabled(false);
+    }
+}
+
+void DialogSettings::on_comboBoxSensorType_currentIndexChanged(int index)
+{
+    switch(index)
+    {
+    case 0:
+        ui->fftmode->setEnabled(false);
+        break;
+    default:
+        ui->fftmode->setEnabled(true);
+    }
+}
+
+void DialogSettings::on_checkBoxUseDac_stateChanged(int arg1)
+{
+    switch(arg1)
+    {
+    case 0:
+        ui->dac->setEnabled(false);
+        break;
+    default:
+        ui->dac->setEnabled(true);
+    }
+}
+
+void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
+{
+    switch(index)
+    {
+    case 0:
+        ui->checkBoxGain3010->setEnabled(true);
+        ui->spinBoxGain3030->setEnabled(false);
+        ui->checkBoxUseDac->setEnabled(false);
+        ui->dac->setEnabled(false);
+        ui->comboBoxAdcMode->setEnabled(false);
+        ui->spinBoxAdcCustom->setEnabled(false);
+        break;
+    case 1:
+        ui->checkBoxGain3010->setEnabled(true);
+        ui->spinBoxGain3030->setEnabled(false);
+        ui->checkBoxUseDac->setEnabled(false);
+        ui->dac->setEnabled(false);
+        ui->comboBoxAdcMode->setEnabled(true);
+        ui->spinBoxAdcCustom->setEnabled(true);
+        break;
+    case 2:
+        ui->checkBoxGain3010->setEnabled(false);
+        ui->spinBoxGain3030->setEnabled(true);
+        ui->checkBoxUseDac->setEnabled(true);
+        ui->dac->setEnabled(true);
+        ui->comboBoxAdcMode->setEnabled(true);
+        ui->spinBoxAdcCustom->setEnabled(true);
+        break;
+    }
 }

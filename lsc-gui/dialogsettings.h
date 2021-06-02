@@ -131,6 +131,11 @@ private:
     QSettings* _settings;
 private slots:
     void on_accepted();
+    void on_comboBoxSti_currentIndexChanged(int index);
+    void on_comboBoxBti_currentIndexChanged(int index);
+    void on_comboBoxSensorType_currentIndexChanged(int index);
+    void on_checkBoxUseDac_stateChanged(int arg1);
+    void on_comboBoxCameraSystem_currentIndexChanged(int index);
 };
 
 #endif // DIALOGSETTINGS_H
