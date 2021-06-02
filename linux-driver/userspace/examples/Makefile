@@ -1,7 +1,8 @@
 CC = gcc
 CFLAGS = -Wall -g
 
-programs = readout-polling readout-blocking-proc readout-blocking-filesystem
+programs = readout-polling readout-blocking-proc readout-blocking-filesystem \
+  readout-blocking-filesystem-trigger
 
 examples: $(programs)
 
@@ -12,6 +13,10 @@ readout-blocking-proc: readout-blocking-proc.o common.o
 	$(CC) $(CFLAGS) -o $@ $^ -llscpcie -L..
 
 readout-blocking-filesystem: readout-blocking-filesystem.o common.o
+	$(CC) $(CFLAGS) -o $@ $^ -llscpcie -L..
+
+readout-blocking-filesystem-trigger: readout-blocking-filesystem-trigger.o \
+  common.o
 	$(CC) $(CFLAGS) -o $@ $^ -llscpcie -L..
 
 %.o: %.c

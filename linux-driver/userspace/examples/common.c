@@ -40,8 +40,8 @@ int readout_init(int argc, char **argv, struct camera_info_struct *info) {
 		no_acquisition = 1;
 	}
 
-	info->n_blocks = atoi(argv[1]);
-	info->n_scans = atoi(argv[2]);
+	info->n_scans = atoi(argv[1]);
+	info->n_blocks = atoi(argv[2]);
 
 	if ((result = lscpcie_driver_init()) < 0) {
 		fprintf(stderr, "initialising driver returned %d\n", result);
@@ -61,7 +61,7 @@ int readout_init(int argc, char **argv, struct camera_info_struct *info) {
 	}
 
 	// open /dev/lscpcie<n>
-	if ((result = lscpcie_open(0, 0, 1)) < 0) {
+	if ((result = lscpcie_open(0, 0, USE_DMA_MAPPING)) < 0) {
 		fprintf(stderr, "opening first board returned %d\n", result);
 		return 2;
 	}

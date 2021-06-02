@@ -34,19 +34,18 @@
 #define CTRLA_VONOFF         0
 
 #define CTRLB_SHON           (0x1<<3)
-#define CTRLB_BTI_Pos        4
-#define CTRLB_BTI_Mask       (0x07<<CTRLB_BTI_Pos)
-#define CTRLB_BTI_I          (0x00<<CTRLB_BTI_Pos)
-#define CTRLB_BTI_S1         (0x01<<CTRLB_BTI_Pos)
-#define CTRLB_BTI_S2         (0x02<<CTRLB_BTI_Pos)
-#define CTRLB_BTI_S1_S2      (0x03<<CTRLB_BTI_Pos)
-#define CTRLB_BTI_TIMER      (0x04<<CTRLB_BTI_Pos)
+#define CTRLB_GTI_Pos        4
+#define CTRLB_GTI_Mask       (0x03<<CTRLB_GTI_Pos)
+#define CTRLB_GTI_I          (0x00<<CTRLB_GTI_Pos)
+#define CTRLB_GTI_S1         (0x01<<CTRLB_GTI_Pos)
+#define CTRLB_GTI_S2         (0x02<<CTRLB_GTI_Pos)
+#define CTRLB_GTI_STOP       (0x03<<CTRLB_GTI_Pos)
 #define CTRLB_STI_Mask       0x07
-#define CTRLB_STI_I          0x00
-#define CTRLB_STI_S1         0x01
-#define CTRLB_STI_S2         0x02
-#define CTRLB_STI_TIMER      0x04
-#define CTRLB_STI_ASL        0x05
+#define CTRLB_STI_TSTART     0x00
+#define CTRLB_STI_AUTO_LINE  0x01
+#define CTRLB_STI_I          0x04
+#define CTRLB_STI_S1         0x05
+#define CTRLB_STI_S2         0x06
 
 #define CTRLC_EOI_CHB        5
 #define CTRLC_EOI            4
