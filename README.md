@@ -10,7 +10,8 @@ ESLSCDLL_pro | DLL for specialized functions
 Jungo | Windows driver
 doc | Documentation with [Doxygen](https://www.doxygen.nl/) of DLLs interface and more
 lsc-gui | crossplattform Qt GUI written in C++, for Windows and Linux
-linux-driver/ | Linux driver
+lsc-cli | CLI in C for Linux
+linux-driver | Linux driver
 
 # Compiling
 
@@ -37,8 +38,8 @@ Two possibilities:
 
 ### Linux CLI
 ```
-cd linux-driver/userspace/
-make all
+cd lsc-cli
+make
 ```
 
 ### Linux driver
