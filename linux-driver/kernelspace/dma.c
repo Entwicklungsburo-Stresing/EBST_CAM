@@ -85,6 +85,7 @@ int dma_init(struct dev_struct *dev)
 		       dev->dma_mem_size);
 		dev->dma_virtual_mem =
 		    kmalloc(dev->dma_mem_size, GFP_KERNEL);
+	device_set_status(dev, DEV_DMA_DEBUG_MEM, DEV_DMA_DEBUG_MEM);
 #warning set pages reserved
 	}
 
@@ -92,6 +93,8 @@ int dma_init(struct dev_struct *dev)
 		printk(KERN_ERR NAME ": failed to allocate dma memory\n");
 		return -ENOMEM;
 	}
+
+	device_set_status(dev, DEV_DMA_MEM_ALLOCATED, DEV_DMA_MEM_ALLOCATED);
 
 	dev->control->dma_buf_size = dev->dma_mem_size;
 	if (device_test_status(dev, DEV_HARDWARE_PRESENT)) {
@@ -111,18 +114,20 @@ int dma_init(struct dev_struct *dev)
 void dma_finish(struct dev_struct *dev)
 {
 	dma_end(dev);
-	if (dev->dma_virtual_mem) {
-		if (device_test_status(dev, DEV_HARDWARE_PRESENT)) {
+	if (device_test_status(dev, DEV_DMA_MEM_ALLOCATED)) {
+		if (device_test_status(dev, DEV_DMA_DEBUG_MEM)) {
+			PDEBUG(D_BUFFERS, "freeing debug buffer");
+			kfree(dev->dma_virtual_mem);
+		} else {
 			PDEBUG(D_BUFFERS, "freeing dma buffer");
 			dma_free_coherent(&dev->pci_dev->dev,
 					  dev->dma_mem_size,
 					  dev->dma_virtual_mem,
 					  dev->dma_handle);
-		} else {
-			PDEBUG(D_BUFFERS, "freeing debug buffer");
-			kfree(dev->dma_virtual_mem);
 		}
 		dev->dma_virtual_mem = 0;
+		device_set_status(dev,
+				  DEV_DMA_MEM_ALLOCATED | DEV_DMA_DEBUG_MEM, 0);
 	}
 }
 

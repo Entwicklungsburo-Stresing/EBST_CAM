@@ -131,7 +131,7 @@ int device_init(struct dev_struct *dev, int minor)
 
 void device_clean_up(struct dev_struct *dev)
 {
-	PDEBUG(D_MODULE, "removing device %d\n", dev - lscpcie_devices);
+	PDEBUG(D_MODULE, "removing device %ld\n", dev - lscpcie_devices);
 	proc_clean_up(dev);
 	dma_finish(dev);
 	if (dev->dma_reg) {
