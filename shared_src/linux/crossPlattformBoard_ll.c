@@ -238,7 +238,8 @@ es_status_codes _InitBoard(uint32_t drvno)
 
 es_status_codes _InitDriver()
 {
-    if(lscpcie_driver_init() < 0) return es_driver_init_failed;
+    number_of_boards = lscpcie_driver_init();
+    if(number_of_boards < 0) return es_driver_init_failed;
     else return es_no_error;
 }
 
