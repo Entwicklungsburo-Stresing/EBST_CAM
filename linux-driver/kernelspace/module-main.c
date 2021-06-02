@@ -175,15 +175,6 @@ void clean_up_lscpcie_module(void)
 
 	for (i = 0; i < MAX_BOARDS; i++)
 		if (lscpcie_devices[i].minor >= 0) {
-			struct dev_struct *dev = &lscpcie_devices[i];
-			PMDEBUG("removing device %d\n", i);
-			proc_clean_up(dev);
-			dma_finish(dev);
-			if (dev->dma_reg) {
-				iounmap(dev->dma_reg);
-				dev->dma_reg = 0;
-				dev->s0_reg = 0;
-			}
 		}
 
 	if (module_status & MOD_PCI_REGISTERED) {
