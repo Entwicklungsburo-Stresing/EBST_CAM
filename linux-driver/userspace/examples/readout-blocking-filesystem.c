@@ -86,7 +86,6 @@ int main(int argc, char **argv)
 		bytes_read += result;
 		fprintf(stderr, "having now %d (%d blocks)\n", bytes_read,
 			++block_count);
-		
 	} while ((bytes_read < info.mem_size) &&! kbhit());
 
 	if (kbhit()) {

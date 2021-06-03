@@ -22,6 +22,9 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 	int result, i;
 	u16 word;
 
+	if (debug_module)
+		printk(KERN_WARNING NAME": enabling pci device\n");
+
 	result = pci_enable_device(pci_dev);
 	if (result < 0)
 		return result;
@@ -29,6 +32,7 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 	for (i = 0; i < MAX_BOARDS; i++)
 		if (lscpcie_devices[i].minor < 0)
 			break;
+
 	if (i == MAX_BOARDS) {
 		result = -ENOMEM;
 		pci_set_drvdata(pci_dev, NULL);
@@ -36,6 +40,7 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 	}
 
 	dev = &lscpcie_devices[i];
+	PDEBUG(D_PCI, "setting pci device data\n");
 	pci_set_drvdata(pci_dev, dev);
 	if ((result = device_init(dev, i)) < 0)
 		goto out_error;
@@ -64,15 +69,13 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 	device_set_status(dev, DEV_HARDWARE_PRESENT, DEV_HARDWARE_PRESENT);
 	dev->pci_dev = pci_dev;
 
-	if (!device_test_status(dev, DEV_IRQ_ALLOCATED)) {
-		PDEBUG(D_INTERRUPT, "allocating interrupt vector\n");
-		result = pci_alloc_irq_vectors(pci_dev, 1, 1, PCI_IRQ_MSI);
-		if (result < 0) {
-			printk(KERN_ERR NAME": couldn't allocate irq vector\n");
-			goto out_error;
-		}
-		device_set_status(dev, DEV_IRQ_ALLOCATED, DEV_IRQ_ALLOCATED);
+	PDEBUG(D_INTERRUPT, "allocating interrupt vector\n");
+	result = pci_alloc_irq_vectors(pci_dev, 1, 1, PCI_IRQ_MSI);
+	if (result < 0) {
+		printk(KERN_ERR NAME": couldn't allocate irq vector\n");
+		goto out_error;
 	}
+	device_set_status(dev, DEV_IRQ_ALLOCATED, DEV_IRQ_ALLOCATED);
 	dev->irq_line = pci_dev->irq;
 	PDEBUG(D_INTERRUPT, "interrupt line is %d\n", dev->irq_line);
 
@@ -118,6 +121,7 @@ void remove_lscpcie(struct pci_dev *pci_dev)
 	PDEBUG(D_PCI, "removing lscpcie\n");
 
 	if (dev) {
+<<<<<<< HEAD
 		if (device_test_status(dev, DEV_IRQ_REQUESTED)) {
 			PDEBUG(D_INTERRUPT, ": freeing interrupt line %d\n",
 				dev->irq_line);
@@ -137,13 +141,25 @@ void remove_lscpcie(struct pci_dev *pci_dev)
 			iounmap(dev->dma_reg);
 			dev->dma_reg = 0;
 			dev->s0_reg = 0;
+=======
+		dma_end(dev);
+		if (device_test_status(dev, DEV_IRQ_ALLOCATED)) {
+			PDEBUG(D_INTERRUPT, "freeing interrupt vector\n");
+			pci_free_irq_vectors(pci_dev);
+>>>>>>> fix-interrupt-disabling
 		}
 	}
 
+	device_set_status(dev, DEV_HARDWARE_PRESENT | DEV_PCI_ENABLED, 0);
+	PDEBUG(D_PCI, "disabling pci device\n");
 	pci_clear_master(pci_dev);
 	pci_disable_device(pci_dev);
+<<<<<<< HEAD
 	if (dev) {
 		device_set_status(dev, DEV_HARDWARE_PRESENT|DEV_PCI_ENABLED, 0);
 		device_clean_up(dev);
 	}
+=======
+	PDEBUG(D_PCI, "done removing pci device\n");
+>>>>>>> fix-interrupt-disabling
 }

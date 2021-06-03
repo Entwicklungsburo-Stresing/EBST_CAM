@@ -88,7 +88,7 @@ int buffer_free(struct dev_struct *dev)
 	bytes = ((int) dev->control->read_pos) - ((int) dev->control->write_pos);
 	PDEBUG(D_BUFFERS, "diff (free): %ld bytes\n", bytes);
 	if (bytes <= 0)
-		bytes += dev->control->dma_buf_size;
+		bytes += dev->control->used_dma_size;
 
 	up(&dev->size_sem);
 
@@ -110,12 +110,12 @@ int bytes_in_buffer(struct dev_struct *dev)
 	bytes = ((int) dev->control->write_pos) - ((int)dev->control->read_pos);
 	PDEBUG(D_BUFFERS, "diff: %ld\n", bytes);
 	if (bytes < 0)
-		bytes += dev->control->dma_buf_size;
+		bytes += dev->control->used_dma_size;
 
 	up(&dev->size_sem);
 
 	PDEBUG(D_BUFFERS, "%ld bytes available (%d)\n", bytes,
-	       dev->control->dma_buf_size);
+	       dev->control->used_dma_size);
 
 	return bytes;
 }
@@ -136,6 +136,11 @@ ssize_t lscpcie_write(struct file *filp, const char __user * buf,
 
 	if (down_interruptible(&dev->write_sem))
 		return -ERESTARTSYS;
+
+	/* correct mem size in case user space code should have tinkered with
+           it */
+	if (dev->control->used_dma_size > dev->control->dma_buf_size)
+		dev->control->used_dma_size = dev->control->dma_buf_size;
 
 	PDEBUG(D_READOUT, "waiting for free space in buffer\n");
 
@@ -162,9 +167,9 @@ ssize_t lscpcie_write(struct file *filp, const char __user * buf,
 	if (len > free_bytes)
 		len = free_bytes;
 
-	if (dev->control->write_pos + len > dev->control->dma_buf_size) {
+	if (dev->control->write_pos + len > dev->control->used_dma_size) {
 		size_t bytes_to_copy =
-		    dev->control->dma_buf_size - dev->control->write_pos;
+		    dev->control->used_dma_size - dev->control->write_pos;
 		PDEBUG(D_READOUT, "copying %lu bytes to %d (a)\n",
 		       bytes_to_copy, dev->control->write_pos);
 		if (copy_from_user
@@ -180,9 +185,8 @@ ssize_t lscpcie_write(struct file *filp, const char __user * buf,
 		copied_bytes = bytes_to_copy;
 		len -= bytes_to_copy;
 		dev->control->write_pos
-		    =
-		    (dev->control->write_pos +
-		     bytes_to_copy) % dev->control->dma_buf_size;
+		    = (dev->control->write_pos + bytes_to_copy)
+			% dev->control->used_dma_size;
 	} else
 		copied_bytes = 0;
 
@@ -202,9 +206,8 @@ ssize_t lscpcie_write(struct file *filp, const char __user * buf,
 		       len);
 		copied_bytes += len;
 		dev->control->write_pos
-		    =
-		    (dev->control->write_pos +
-		     len) % dev->control->dma_buf_size;
+		    = (dev->control->write_pos + len)
+			% dev->control->used_dma_size;
 	}
 
 	up(&dev->write_sem);
@@ -244,6 +247,11 @@ ssize_t lscpcie_read(struct file *filp, char __user * buf, size_t len,
 
 	PDEBUG(D_READOUT, "asked for reading %lu bytes (r: %d w: %d)\n",
 	       len, dev->control->read_pos, dev->control->write_pos);
+
+	/* correct mem size in case user space code should have tinkered with
+           it */
+	if (dev->control->used_dma_size > dev->control->dma_buf_size)
+		dev->control->used_dma_size = dev->control->dma_buf_size;
 
 	/* wait for bytes in ringbuffer */
 	PDEBUG(D_READOUT, "reading: waiting for %lu data bytes\n", len);
@@ -301,4 +309,26 @@ ssize_t lscpcie_read(struct file *filp, char __user * buf, size_t len,
 	up(&dev->read_sem);
 
 	return copied_bytes;
+}
+
+unsigned int lscpcie_poll(struct file *filp, poll_table *wait) {
+	struct dev_struct *dev = filp->private_data;
+	unsigned int mask = 0;
+
+	down(&dev->write_sem);
+	down(&dev->read_sem);
+
+	poll_wait(filp, &dev->readq, wait);
+	poll_wait(filp, &dev->writeq, wait);
+
+	if (dev->control->read_pos != dev->control->write_pos)
+		mask |= POLLIN | POLLRDNORM;
+	if (((dev->control->write_pos + 1) % dev->control->used_dma_size)
+		!= dev->control->read_pos)
+		mask |= POLLOUT | POLLWRNORM;
+
+	up(&dev->read_sem);
+	up(&dev->write_sem);
+
+	return mask;
 }

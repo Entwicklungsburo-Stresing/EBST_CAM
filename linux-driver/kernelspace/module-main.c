@@ -164,6 +164,7 @@ static int __init lscpcie_module_init(void)
 
 static void __exit lscpcie_module_exit(void)
 {
+	PMDEBUG("unloading module\n");
 	clean_up_lscpcie_module();
 	printk(NAME " unloaded\n");
 }
@@ -174,6 +175,7 @@ void clean_up_lscpcie_module(void)
 	int i;
 
 	if (module_status & MOD_PCI_REGISTERED) {
+		PMDEBUG("unregistering pci driver\n");
 		pci_unregister_driver(&pci_driver);
 		module_status &= ~MOD_PCI_REGISTERED;
 	}

@@ -76,7 +76,7 @@ HEADERS += \
     UIAbstractionLayer_cpp.h \
     ../shared_src/globals.h
 unix {
-    HEADERS += ./linux-driver/userspace/lscpcie.h
+    HEADERS += ../linux-driver/userspace/lscpcie.h
 }
 win32 {
     HEADERS += 	../shared_src/lscpciej_lib.h
