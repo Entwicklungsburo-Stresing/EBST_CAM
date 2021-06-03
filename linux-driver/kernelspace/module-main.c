@@ -164,6 +164,7 @@ static int __init lscpcie_module_init(void)
 
 static void __exit lscpcie_module_exit(void)
 {
+	PMDEBUG("unloading module\n");
 	clean_up_lscpcie_module();
 	printk(NAME " unloaded\n");
 }
@@ -173,20 +174,8 @@ void clean_up_lscpcie_module(void)
 {
 	int i;
 
-	for (i = 0; i < MAX_BOARDS; i++)
-		if (lscpcie_devices[i].minor >= 0) {
-			struct dev_struct *dev = &lscpcie_devices[i];
-			PMDEBUG("removing device %d\n", i);
-			proc_clean_up(dev);
-			dma_finish(dev);
-			if (dev->dma_reg) {
-				iounmap(dev->dma_reg);
-				dev->dma_reg = 0;
-				dev->s0_reg = 0;
-			}
-		}
-
 	if (module_status & MOD_PCI_REGISTERED) {
+		PMDEBUG("unregistering pci driver\n");
 		pci_unregister_driver(&pci_driver);
 		module_status &= ~MOD_PCI_REGISTERED;
 	}
