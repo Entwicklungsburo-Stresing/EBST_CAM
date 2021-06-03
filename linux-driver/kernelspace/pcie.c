@@ -121,13 +121,7 @@ void remove_lscpcie(struct pci_dev *pci_dev)
 	PDEBUG(D_PCI, "removing lscpcie\n");
 
 	if (dev) {
-<<<<<<< HEAD
-		if (device_test_status(dev, DEV_IRQ_REQUESTED)) {
-			PDEBUG(D_INTERRUPT, ": freeing interrupt line %d\n",
-				dev->irq_line);
-			free_irq(dev->irq_line, dev);
-			device_set_status(dev, DEV_IRQ_REQUESTED, 0);
-		}
+		dma_end(dev);
 
 		if (device_test_status(dev, DEV_IRQ_ALLOCATED)) {
 			pci_free_irq_vectors(pci_dev);
@@ -135,18 +129,10 @@ void remove_lscpcie(struct pci_dev *pci_dev)
 			device_set_status(dev, DEV_IRQ_ALLOCATED, 0);
 		}
 		PDEBUG(D_MODULE, "removing device %d\n", dev_no);
-		proc_clean_up(dev);
-		dma_finish(dev);
 		if (dev->dma_reg) {
 			iounmap(dev->dma_reg);
 			dev->dma_reg = 0;
 			dev->s0_reg = 0;
-=======
-		dma_end(dev);
-		if (device_test_status(dev, DEV_IRQ_ALLOCATED)) {
-			PDEBUG(D_INTERRUPT, "freeing interrupt vector\n");
-			pci_free_irq_vectors(pci_dev);
->>>>>>> fix-interrupt-disabling
 		}
 	}
 
@@ -154,12 +140,9 @@ void remove_lscpcie(struct pci_dev *pci_dev)
 	PDEBUG(D_PCI, "disabling pci device\n");
 	pci_clear_master(pci_dev);
 	pci_disable_device(pci_dev);
-<<<<<<< HEAD
 	if (dev) {
 		device_set_status(dev, DEV_HARDWARE_PRESENT|DEV_PCI_ENABLED, 0);
 		device_clean_up(dev);
 	}
-=======
 	PDEBUG(D_PCI, "done removing pci device\n");
->>>>>>> fix-interrupt-disabling
 }
