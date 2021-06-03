@@ -1798,6 +1798,16 @@ es_status_codes StartMeasurement()
 	es_status_codes status = es_no_error;
 	if (BOARD_SEL == 1 || BOARD_SEL == 3)
 	{
+		status = StartCopyDataToUserBufferThread(1);
+		if (status != es_no_error) return status;
+	}
+	if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+	{
+		status = StartCopyDataToUserBufferThread(2);
+		if (status != es_no_error) return status;
+	}
+	if (BOARD_SEL == 1 || BOARD_SEL == 3)
+	{
 		status = setMeasureOn(1);
 		if (status != es_no_error) return status;
 	}
@@ -2279,4 +2289,26 @@ es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample
 	index += (uint64_t)block * (uint64_t)(*Nospb) * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno];
 	*pIndex = index;
 	return es_no_error;
+}
+
+/**
+ * \brief Returns the address of a pixel located in userBuffer.
+ * 
+ * \param drvno indentifier of PCIe card
+ * \param pixel position in one scan (0...(PIXEL-1))
+ * \param sample position in samples (0...(nos-1))
+ * \param block position in blocks (0...(nob-1))
+ * \param CAM position in camera count (0...(CAMCNT-1))
+ * \param Pointer to get address
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint16_t** address )
+{
+	uint64_t index = 0;
+	es_status_codes status = GetIndexOfPixel(drvno, pixel, sample, block, CAM, &index);
+	if (status != es_no_error) return status;
+	*address = &userBuffer[drvno][index];
+	return status;
 }

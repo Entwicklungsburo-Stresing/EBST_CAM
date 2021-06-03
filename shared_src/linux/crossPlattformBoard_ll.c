@@ -3,49 +3,11 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <pthread.h>
 #include "../../linux-driver/userspace/lscpcie.h"
 #include "../../linux-driver/kernelspace/registers.h"
 #include "../../linux-driver/userspace/local-config.h"
-
-/* Acquire one block of data. Poll first XCKMSB /RS for being low and data
-   being present in the buffer. Loop over if less than the needed data has
-   been copied. */
-   /*
-int lscpcie_acquire_block_poll(struct dev_descr *dev, uint8_t *data,
-            size_t n_scans) {
-    int result, bytes_read = 0;
-    size_t block_size =
-        dev->control->number_of_pixels * dev->control->number_of_cameras
-        * sizeof(pixel_t) * n_scans;
-
-    result = lscpcie_start_block(dev);
-    if (result < 0)
-        return result;
-
-    do {
-        if (dev->s0->XCK.dword & (1 << XCK_RS))
-            continue;
-
-        if (dev->control->read_pos == dev->control->write_pos)
-            continue;
-
-        result = fetch_mapped_data(dev, data + bytes_read,
-                    block_size - bytes_read);
-        if (result < 0)
-            return result;
-
-        bytes_read += result;
-        fprintf(stderr, "got %d bytes of data (irq %d)\n", result,
-            dev->control->irq_count);
-    } while (bytes_read < block_size);
-
-        result = lscpcie_end_block(dev);
-    if (result < 0)
-        return result;
-
-    return bytes_read;
-}
-*/
 
 es_status_codes readRegister_32( uint32_t drvno, uint32_t* data, uint16_t address )
 {
@@ -251,26 +213,38 @@ es_status_codes _ExitDriver(uint32_t drvno)
     return es_no_error;
 }
 
-/**
- * \brief Returns the address of a pixel located in userBuffer.
- * 
- * \param drvno indentifier of PCIe card
- * \param pixel position in one scan (0...(PIXEL-1))
- * \param sample position in samples (0...(nos-1))
- * \param block position in blocks (0...(nob-1))
- * \param CAM position in camera count (0...(CAMCNT-1))
- * \param Pointer to get address
- * \return es_status_codes
- *		- es_no_error
- *		- es_parameter_out_of_range
- */
-es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint16_t** address )
+void* CopyDataToUserBuffer(void* param_drvno)
 {
-	uint64_t index = 0;
-	es_status_codes status = GetIndexOfPixel(drvno, pixel, sample, block, CAM, &index);
-    drvno--;
-    struct dev_descr *dev = lscpcie_get_descriptor(drvno);
-	if (status != es_no_error) return status;
-	*address = &((uint16_t*)dev->mapped_buffer)[index];
-	return status;
+    //TODO: DIRTY HACK. setting drvno to param_drvno didn't work
+    //uint32_t drvno = *((uint32_t*)param_drvno;
+    uint32_t drvno = 1;
+    ES_LOG("Copy data to user buffer started, user buffer: %p\n", userBuffer[drvno]);
+    ssize_t bytes_to_read = sizeof(uint16_t) * aCAMCNT[drvno] * *Nospb * aPIXEL[drvno] * Nob;
+    ES_LOG("bytes to read: %zd\n", bytes_to_read);
+    ssize_t bytes_read = 0;
+    ssize_t result;
+    struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
+    do
+    {
+        result = read(dev->handle, ((uint8_t *)userBuffer[drvno]) + bytes_read, bytes_to_read);
+        if (result < 0)
+            return NULL;
+        bytes_to_read -= result;
+        bytes_read += result;
+    } while (bytes_to_read);
+    ES_LOG("Copy to user buffer done\n");
+    return NULL;
 }
+
+es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
+{
+    ES_LOG("Start copy data to user buffer thread\n");
+    pthread_t tid;
+    int err = pthread_create(&tid, NULL, &CopyDataToUserBuffer, (void*)&drvno);
+    if(err)
+        return es_creating_thread_failed;
+    else
+        return es_no_error;
+}
+
+

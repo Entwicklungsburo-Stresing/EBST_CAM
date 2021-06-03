@@ -86,6 +86,7 @@ es_status_codes DoSoftwareTrigger( uint32_t drvno );
 es_status_codes IsTimerOn( uint32_t drvno, bool* on );
 es_status_codes GetLastBufPart( uint32_t drvno );
 es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint64_t* pIndex );
+es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint16_t** address );
 
 // read and write functions
 es_status_codes writeBitsS0_32( uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address);

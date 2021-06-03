@@ -531,28 +531,6 @@ es_status_codes _ExitDriver(uint32_t drvno)
 }
 
 /**
- * \brief Returns the address of a pixel located in userBuffer.
- * 
- * \param drvno indentifier of PCIe card
- * \param pixel position in one scan (0...(PIXEL-1))
- * \param sample position in samples (0...(nos-1))
- * \param block position in blocks (0...(nob-1))
- * \param CAM position in camera count (0...(CAMCNT-1))
- * \param Pointer to get address
- * \return es_status_codes
- *		- es_no_error
- *		- es_parameter_out_of_range
- */
-es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint16_t** address )
-{
-	uint64_t index = 0;
-	es_status_codes status = GetIndexOfPixel(drvno, pixel, sample, block, CAM, &index);
-	if (status != es_no_error) return status;
-	*address = &userBuffer[drvno][index];
-	return status;
-}
-
-/**
  * @brief Read long (32 bit) from runtime register of PCIe board.
  *  
  * This function reads the memory mapped data , not the I/O Data. Reads data from PCIe conf space.
@@ -636,4 +614,10 @@ void FreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 	//_tprintf(TEXT("There are %*I64d free  KB of extended memory.\n"),
 	//	WIDTH, statex.ullAvailExtendedVirtual / DIV);
 	return;
+}
+
+es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
+{
+	//On Windows the copy process is done in ISR
+	return es_no_error;
 }
