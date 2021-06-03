@@ -152,7 +152,7 @@ int dma_start(struct dev_struct *dev)
 int dma_end(struct dev_struct *dev)
 {
 	if (device_test_status(dev, DEV_IRQ_REQUESTED)) {
-		printk(KERN_ERR NAME ": freeing interrupt %d...\n",
+		printk(KERN_ERR NAME ": freeing interrupt line %d\n",
 		       dev->irq_line);
 		free_irq(dev->irq_line, dev);
 	}
@@ -184,32 +184,16 @@ static enum irqreturn isr(int irqn, void *dev_id)
 	    = (dev->control->write_pos + dev->control->bytes_per_interrupt)
 	    % dev->control->used_dma_size;
 
+	// check for buffer overflow (see below)
+	if (((dev->control->read_pos <= dev->control->write_pos + 1)
+	     &&
+	     (dev->control->write_pos < old_write_pos))
+	    ||
+	    ((old_write_pos < dev->control->read_pos)
+	     &&
+	     (dev->control->read_pos <= dev->control->write_pos + 1)))
+		device_set_status(dev, DEV_DMA_OVERFLOW, DEV_DMA_OVERFLOW);
 
-	// check for buffer overflow
-	if (old_write_pos < dev->control->write_pos) {
-		if ((dev->control->read_pos <= old_write_pos)
-		    || (dev->control->read_pos > dev->control->write_pos))
-			goto end;	/* r w0 w1  or w0 w1 r */
-	} else if ((dev->control->read_pos <= old_write_pos)
-		   && (dev->control->read_pos > dev->control->write_pos))
-		goto end;	/* w1 r w0 */
-
-	device_set_status(dev, DEV_DMA_OVERFLOW, DEV_DMA_OVERFLOW);
-
-	/*
-	PDEBUG(D_INTERRUPT, "dma size %u\n", dev->control->used_dma_size);
-	PDEBUG(D_INTERRUPT, "bytes_per_interrupt %u\n", dev->control->bytes_per_interrupt);
-	uint16_t* dmaBufferReadPos = dev->control->dma_physical_start + dev->control->read_pos * dev->control->bytes_per_interrupt / sizeof(uint16_t);
-	//here the copyprocess happens
-	memcpy( dev->control->user_buffer_write_pos, dmaBufferReadPos, dev->control->bytes_per_interrupt );
-	PDEBUG(D_INTERRUPT, "userBufferWritePos: 0x%x\n",  dev->control->user_buffer_write_pos);
-	dev->control->read_pos++;
-	if (dev->control->read_pos >= DMA_BUFFER_PARTS)		//number of ISR per dmaBuf - 1
-		dev->control->read_pos = 0;						//dmaBufferPartReadPos is 0 or 1 for buffer devided in 2 parts
-	dev->control->user_buffer_write_pos += dev->control->bytes_per_interrupt / sizeof( uint16_t );
-	*/
-
-      end:
 	set_bits_s0_dword(dev, IRQREG.REG32, 0,
 			  (1 << IRQ_REG_ISR_active));
 	PDEBUG(D_INTERRUPT, "pointers %d %d\n", dev->control->write_pos,
@@ -220,3 +204,27 @@ static enum irqreturn isr(int irqn, void *dev_id)
 
 	return IRQ_HANDLED;
 }
+
+
+/* overflow check
++-----------------------------+
+|   xxxxxxxxxxxxxxxxxxx       |
++-----------------------------+
+    ^                  ^
+    read               old write   
++-----------------------------+
+|xxxXXXXxxxxxxxxxxxxxxxxxxxxxx|
++-----------------------------+
+        ^
+        new write
++-----------------------------+
+|xxxxxxxxxxx            xxxxxx|
++-----------------------------+
+            ^           ^
+            old write   read
++-----------------------------+
+|xxxxxxxxxxxxxxxxxxxxxxxXXXxxx|
++-----------------------------+
+                           ^
+                           new write
+*/
