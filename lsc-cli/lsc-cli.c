@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../shared_src/crossPlattformBoard.h"
+#include <unistd.h>
 
 #define DRVNO 1
 #define PIXEL 576
@@ -32,6 +33,8 @@ int main(int argc, char **argv)
 	status = InitMeasurement(settings_struct);
 	if(status != es_no_error) return status;
 	status = StartMeasurement();
+	//wait for copy to user buffer done
+	sleep(3);
 	//print first 20 pixel
 	uint16_t* pdest = malloc(PIXEL * sizeof(uint16_t));
 	status = ReturnFrame(DRVNO, 0, 0, 0, pdest, PIXEL);
