@@ -8,9 +8,10 @@ OBJECTS   = lsc-cli.o \
 			lscpcie.o \
 			crossPlattformBoard_ll.o
 TARGET    = lsc-cli
+LIBS      = -lpthread
 
 lsc-cli: $(OBJECTS)  
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS)
 
 lsc-cli.o: lsc-cli.c
 	$(CC) -c $(CFLAGS) -o lsc-cli.o lsc-cli.c
