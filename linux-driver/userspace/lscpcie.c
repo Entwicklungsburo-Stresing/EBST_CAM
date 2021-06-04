@@ -287,8 +287,7 @@ void lscpcie_close(uint dev_no)
 		return;
 
 	if (dev->mapped_buffer)
-		munmap((uint8_t *) dev->mapped_buffer,
-		       dev->control->dma_buf_size);
+	  munmap((uint8_t *) dev->mapped_buffer, dev->control->dma_buf_size);
 
 	if (dev->dma_reg != MAP_FAILED)
 		munmap(dev->dma_reg, 0x100);
