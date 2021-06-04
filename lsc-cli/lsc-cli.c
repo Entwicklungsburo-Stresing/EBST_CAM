@@ -6,6 +6,7 @@
 
 #define DRVNO 1
 #define PIXEL 576
+#define COPY_TO_DISPLAY_BUFFER false
 
 int main(int argc, char **argv)
 {
@@ -36,8 +37,15 @@ int main(int argc, char **argv)
 	//wait for copy to user buffer done
 	sleep(3);
 	//print first 20 pixel
+#if COPY_TO_DISPLAY_BUFFER
+	//this method copies the data to a new buffer
 	uint16_t* pdest = malloc(PIXEL * sizeof(uint16_t));
 	status = ReturnFrame(DRVNO, 0, 0, 0, pdest, PIXEL);
+#else
+	//this method is directly accessing the user buffer
+	uint16_t* pdest;
+	status = GetAddressOfPixel(DRVNO, 0, 0, 0, 0, &pdest);
+#endif
 	if(status != es_no_error) return status;
 	for (int i=0; i<20; i++)
 		ES_LOG("Pixel %i: %u\n", i, pdest[i]);
