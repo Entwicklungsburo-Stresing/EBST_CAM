@@ -106,6 +106,12 @@ int camera_init() {
 		return 2;
 	}
 
+	result = init_7030(0);
+	if (result < 0) {
+		fprintf(stderr, "error %d when initialising device\n", result);
+		return result;
+	}
+
 	return 0;
 }
 
@@ -128,12 +134,6 @@ int readout_init(struct camera_info_struct *info) {
 		info->dev->control->dma_buf_size);
 
 	info->trigger_mode = xck;
-
-	result = init_7030(0);
-	if (result < 0) {
-		fprintf(stderr, "error %d when initialising device\n", result);
-		return result;
-	}
 
 	fprintf(stderr, "initialising registers\n");
 
@@ -158,10 +158,6 @@ int readout_init(struct camera_info_struct *info) {
 		exit(0);
 	}
 
-	info->mem_size = info->dev->control->number_of_pixels
-		* info->dev->control->number_of_cameras * info->n_blocks
-		* info->n_scans * sizeof(pixel_t);
-	info->data = malloc(info->mem_size);
 	if (!info->data) {
 		fprintf(stderr, "failed to allocate %d bytes of memory\n",
 			info->mem_size);
@@ -230,6 +226,11 @@ int read_single_block(struct camera_info_struct *info) {
 
 	bytes_read = 0;
 	info->dev->s0->XCK.bytes.MSB |= (1<<XCKMSB_EXT_TRIGGER);
+
+	info->mem_size = info->dev->control->number_of_pixels
+		* info->dev->control->number_of_cameras * info->n_blocks
+		* info->n_scans * sizeof(pixel_t);
+	info->data = malloc(info->mem_size);
 
 	do {
 		// wait for trigger signal
