@@ -259,8 +259,10 @@ int lscpcie_open(uint dev_no, uint16_t fiber_options, uint8_t memory_options)
 			= mmap(NULL, dev->control->dma_buf_size,
 				PROT_READ | PROT_WRITE, MAP_SHARED, handle,
 				2 * page_size);
-		if (dev->mapped_buffer == MAP_FAILED)
+		if (dev->mapped_buffer == MAP_FAILED) {
+			dev->mapped_buffer = 0;
 			return -1;
+		}
 	} else {
 		dev->mapped_buffer = 0;
 	}
@@ -279,6 +281,10 @@ void lscpcie_close(uint dev_no)
 	struct dev_descr *dev = lscpcie_get_descriptor(dev_no);
 	if (!dev)
 		return;
+
+	if (dev->mapped_buffer)
+		munmap((uint8_t *) dev->mapped_buffer,
+		       dev->control->dma_buf_size);
 
 	if (dev->dma_reg != MAP_FAILED)
 		munmap(dev->dma_reg, 0x100);
