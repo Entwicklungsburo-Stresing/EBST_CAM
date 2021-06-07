@@ -19,7 +19,7 @@ readout-blocking-filesystem-trigger: readout-blocking-filesystem-trigger.o \
   common.o
 	$(CC) $(CFLAGS) -o $@ $^ -llscpcie -L..
 
-readout-loop: readout-loop.o common.o
+readout-loop: readout-loop.o
 	$(CC) $(CFLAGS) -o $@ $^ -llscpcie -L..
 
 %.o: %.c
