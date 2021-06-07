@@ -9,11 +9,13 @@
  */
 
 #include "local-config.h"
-#include "common.h"
+#include "lscpcie.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <memory.h>
+#include <errno.h>
+
 
 /* Performs a camera read with blocking on /dev/lspcie0.
    After intitialising and starting the cameras, a read system call on
@@ -25,6 +27,150 @@
    buffer reaches the goal defined by the two command line arguments
    <number of scans> <number of blocks>.
 */
+
+
+int no_acquisition = 0;
+
+struct camera_info_struct {
+	int n_blocks, n_scans, mem_size;
+	enum trigger_mode trigger_mode;
+	pixel_t *data;
+	struct dev_descr *dev;
+};
+
+
+int init_7030(unsigned int dev_no) {
+	int result;
+	struct dev_descr *dev = lscpcie_get_descriptor(dev_no);
+
+	result = set_dma_address_in_tlp(dev);
+	if (result < 0)
+		return result;
+
+	/* HAMAMATSU 7030-0906 	VFreq | 64 lines */
+	dev->s0->VCLKCTRL = (0x700000 << 8) | 0x80;
+
+	return 0;
+}
+
+int scan_command_line(int argc, char **argv, struct camera_info_struct *info) {
+	int arg_pos = 0;
+
+	while (++arg_pos < argc) {
+		if (!strcmp(argv[1], "-n")) {
+			no_acquisition = 1;
+			continue;
+		}
+		if (!strcmp(argv[1], "--no-acquisition")) {
+			no_acquisition = 1;
+			continue;
+		}
+		break;
+	}
+
+	if (arg_pos > argc - 2) {
+		fprintf(stderr,
+	   "usage: test-readout-polling <number of scans> <number of blocks>\n");
+		return -1;
+	}
+
+	info->n_scans = atoi(argv[arg_pos++]);
+	info->n_blocks = atoi(argv[arg_pos++]);
+
+	return arg_pos;
+}
+
+int camera_init() {
+	int result;
+
+	if ((result = lscpcie_driver_init()) < 0) {
+		fprintf(stderr, "initialising driver returned %d\n", result);
+		return result;
+	}
+
+	switch (result) {
+	case 0:
+		fprintf(stderr, "didn't find an lscpcie board\n");
+		return 0;
+	case 1:
+		fprintf(stderr, "found one lscpcie board\n");
+		break;
+	case 2:
+		fprintf(stderr, "found %d lscpcie boards\n", result);
+		break;
+	}
+
+	// open /dev/lscpcie<n>
+	if ((result = lscpcie_open(0, 0, USE_DMA_MAPPING)) < 0) {
+		fprintf(stderr, "opening first board returned %d\n", result);
+		return 2;
+	}
+
+	return 0;
+}
+
+int camera_release() {
+	lscpcie_close(0);
+	return 0;
+}
+
+/* common tasks to prepare hardware and memory for readout */
+int readout_init(struct camera_info_struct *info) {
+	int result;
+
+	// get memory mapped pointers etc
+	info->dev = lscpcie_get_descriptor(0);
+
+	// clear dma buffer to avoid reading stuff from prev. debugging sessions
+	fprintf(stderr, "clearing %d bytes of dma buffer\n",
+		info->dev->control->dma_buf_size);
+	memset((uint8_t *) info->dev->mapped_buffer, 0,
+		info->dev->control->dma_buf_size);
+
+	info->trigger_mode = xck;
+
+	result = init_7030(0);
+	if (result < 0) {
+		fprintf(stderr, "error %d when initialising device\n", result);
+		return result;
+	}
+
+	fprintf(stderr, "initialising registers\n");
+
+	result = lscpcie_init_scan(info->dev, info->trigger_mode, info->n_scans,
+				info->n_blocks, 2);
+	if (result) {
+		fprintf(stderr, "error %d when initialising scan\n", result);
+		return result;
+	}
+
+	result = lscpcie_start_scan(info->dev);
+	if (result) {
+		fprintf(stderr, "error %d when starting scan\n", result);
+		return result;
+	}
+
+	if (no_acquisition) {
+		lscpcie_dump_s0(info->dev);
+		lscpcie_dump_dma(info->dev);
+		lscpcie_dump_tlp(info->dev);
+		lscpcie_close(0);
+		exit(0);
+	}
+
+	info->mem_size = info->dev->control->number_of_pixels
+		* info->dev->control->number_of_cameras * info->n_blocks
+		* info->n_scans * sizeof(pixel_t);
+	info->data = malloc(info->mem_size);
+	if (!info->data) {
+		fprintf(stderr, "failed to allocate %d bytes of memory\n",
+			info->mem_size);
+		return -ENOMEM;
+	}
+
+	return 0;
+}
+
 
 /* Acquire one block of data. Poll first XCKMSB /RS for being low and then
    call read which returns only once some new data has been copied.
@@ -59,29 +205,42 @@ int lscpcie_acquire_block_fs(struct dev_descr *dev, uint8_t *data,
 	return bytes_read;
 }
 
-int read_single_block(int argc, char **argv) {
-	int result, bytes_read, block_count = 0;
-	struct camera_info_struct info;
+void print_data(const struct camera_info_struct *info) {
+	int i = 0, block, scan, camera, pixel;
+	int n_cams = info->dev->control->number_of_cameras;
+	int n_pixel = info->dev->control->number_of_pixels;
 
-	result = readout_init(argc, argv, &info);
+	for (block = 0; block < info->n_blocks; block++)
+		for (scan = 0; scan < info->n_scans; scan++)
+			for (camera = 0; camera < n_cams; camera++)
+				for (pixel = 0; pixel < n_pixel; pixel++, i++)
+					printf("%d %d %d %d %d\n", block, scan,
+					       camera, pixel, info->data[i]);
+}
+
+int read_single_block(struct camera_info_struct *info) {
+	int result, bytes_read, block_count = 0;
+
+	result = readout_init(info);
 	if (result < 0)
 		return result;
 
-	info.dev->s0->XCK.bytes.MSB &= 0xBF; // stop S Timer
-	info.dev->s0->EC = 0; // reset SEC
+	info->dev->s0->XCK.bytes.MSB &= 0xBF; // stop S Timer
+	info->dev->s0->EC = 0; // reset SEC
 
 	bytes_read = 0;
-	info.dev->s0->XCK.bytes.MSB |= (1<<XCKMSB_EXT_TRIGGER);
+	info->dev->s0->XCK.bytes.MSB |= (1<<XCKMSB_EXT_TRIGGER);
 
 	do {
 		// wait for trigger signal
-		if (!(info.dev->s0->CTRLA & (1 << CTRLA_TSTART)))
+		if (!(info->dev->s0->CTRLA & (1 << CTRLA_TSTART)))
 			continue;
 
-		result = lscpcie_acquire_block_fs(info.dev,
-						(uint8_t *) info.data
+		result = lscpcie_acquire_block_fs(info->dev,
+						(uint8_t *) info->data
 						+ bytes_read,
-						info.n_scans, info.dev->handle);
+						info->n_scans,
+						info->dev->handle);
 		if (result < 0) {
 			fprintf(stderr, "error %d when acquiring block\n",
 				result);
@@ -90,34 +249,37 @@ int read_single_block(int argc, char **argv) {
 		bytes_read += result;
 		fprintf(stderr, "having now %d (%d blocks)\n", bytes_read,
 			++block_count);
-	} while ((bytes_read < info.mem_size) &&! kbhit());
-
-	if (kbhit()) {
-		fprintf(stderr, "measurement interrupted\n");
-		return 1;
-	}
+	} while (bytes_read < info->mem_size);
 
 	fprintf(stderr, "finished measurement\n");
 
-	result = lscpcie_end_acquire(info.dev);
+	result = lscpcie_end_acquire(info->dev);
 	if (result)
 		fprintf(stderr, "error %d when finishing acquisition\n", result);
 	else
-		print_data(&info);
+		print_data(info);
 
       out:
-	if (info.data)
-		free(info.data);
-	lscpcie_close(0);
+	if (info->data)
+		free(info->data);
 
 	return result;
 }
 
 int main(int argc, char **argv) {
-	int i, n = atoi(argv[3]);
+	int i, n = atoi(argv[3]), result;
+	struct camera_info_struct info;
+
+        result = scan_command_line(argc, argv, &info);
+	if (result < 0)
+		return result;
+
+	result = camera_init();
+	if (result < 0)
+		return result;
 
 	for (i = 0; i < n; i++)
-		read_single_block(argc, argv);
+		read_single_block(&info);
 
-	return 0;
+	return camera_release();
 }
