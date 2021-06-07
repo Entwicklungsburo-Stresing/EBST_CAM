@@ -24,24 +24,28 @@ int init_7030(unsigned int dev_no)
 
 /* common tasks to prepare hardware and memory for readout */
 int readout_init(int argc, char **argv, struct camera_info_struct *info) {
-	int no_acquisition = 0, result;
+	int no_acquisition = 0, arg_pos = 0, result;
 
-	if (argc != 3) {
-		if ((argc != 4)
-			||
-			(strcmp(argv[1], "-n")
-				&&
-				strcmp(argv[1], "--no-acquisition"))) {
-			fprintf(stderr,
-	   "usage: test-readout-polling <number of scans> <number of blocks>\n");
-			return 1;
+	while (++arg_pos < argc) {
+		if (!strcmp(argv[1], "-n")) {
+			no_acquisition = 1;
+			continue;
 		}
-
-		no_acquisition = 1;
+		if (!strcmp(argv[1], "--no-acquisition")) {
+			no_acquisition = 1;
+			continue;
+		}
+		break;
 	}
 
-	info->n_scans = atoi(argv[1]);
-	info->n_blocks = atoi(argv[2]);
+	if (arg_pos > argc - 2) {
+		fprintf(stderr,
+	   "usage: test-readout-polling <number of scans> <number of blocks>\n");
+		return 1;
+	}
+
+	info->n_scans = atoi(argv[++arg_pos]);
+	info->n_blocks = atoi(argv[++arg_pos]);
 
 	if ((result = lscpcie_driver_init()) < 0) {
 		fprintf(stderr, "initialising driver returned %d\n", result);
@@ -115,7 +119,7 @@ int readout_init(int argc, char **argv, struct camera_info_struct *info) {
 		return -ENOMEM;
 	}
 
-	return 0;
+	return arg_pos;
 }
 
 int fetch_mapped_data(struct dev_descr *dev, uint8_t *data, size_t max)

@@ -33,6 +33,7 @@ int lscpcie_open(struct inode *inode, struct file *filp)
 	    && !atomic_dec_and_test(&dev->write_available)) {
 		atomic_inc(&dev->write_available);
 
+		PDEBUG(D_START_STOP, "not opening because no write available\n");
 		printk(KERN_ERR NAME
 		       ": not opening because no write available\n");
 
@@ -65,12 +66,14 @@ int lscpcie_release(struct inode *inode, struct file *filp)
 {
 	struct dev_struct *dev = filp->private_data;
 
+	PDEBUG(D_START_STOP, "releasing camera\n");
+
 	if (filp->f_mode & FMODE_READ)
 		atomic_inc(&dev->read_available);
 	if (filp->f_mode & FMODE_WRITE)
 		atomic_inc(&dev->write_available);
 
-	//PDEBUG(D_START_STOP, "camera released\n");
+	PDEBUG(D_START_STOP, "camera released\n");
 
 	return 0;
 }
@@ -127,7 +130,7 @@ ssize_t lscpcie_write(struct file *filp, const char __user * buf,
 	struct dev_struct *dev = filp->private_data;
 
 	PDEBUG(D_READOUT, "asked for writing %lu bytes, write pos is %d\n",
-		len, dev->control->write_pos);
+	       len, dev->control->write_pos);
 
 	if (device_test_status(dev, DEV_HARDWARE_PRESENT)) {
 		PDEBUG(D_READOUT, "have camera, no writing will be performed\n");
