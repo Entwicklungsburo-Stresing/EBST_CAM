@@ -247,6 +247,10 @@ int main(int argc, char **argv) {
 	if (result < 0)
 		return result;
 
+	result = readout_init(&info);
+	if (result < 0)
+		return result;
+
 	info.mem_size = info.dev->control->number_of_pixels
 		* info.dev->control->number_of_cameras * info.n_blocks
 		* info.n_scans * sizeof(pixel_t);
@@ -257,10 +261,6 @@ int main(int argc, char **argv) {
 			info.mem_size);
 		return -ENOMEM;
 	}
-
-	result = readout_init(&info);
-	if (result < 0)
-		return result;
 
 	for (i = 0; i < n; i++)
 		read_single_block(&info);
