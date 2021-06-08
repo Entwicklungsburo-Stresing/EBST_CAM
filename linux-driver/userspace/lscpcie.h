@@ -73,6 +73,8 @@ int lscpcie_send_fiber(struct dev_descr *device_descriptor,
 		       uint8_t master_address,
 		       uint8_t register_address, uint16_t data);
 
+int lscpcie_init_7030(unsigned int dev_no);
+
 // register access through ioctl
 int lscpcie_read_config32(struct dev_descr *dev, uint16_t address,
 			  uint32_t * val);

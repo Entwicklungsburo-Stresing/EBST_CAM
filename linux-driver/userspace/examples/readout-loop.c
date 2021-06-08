@@ -39,46 +39,7 @@ struct camera_info_struct {
 };
 
 
-int init_7030(unsigned int dev_no) {
-	int result;
-	struct dev_descr *dev = lscpcie_get_descriptor(dev_no);
-
-	result = set_dma_address_in_tlp(dev);
-	if (result < 0)
-		return result;
-
-	/* HAMAMATSU 7030-0906 	VFreq | 64 lines */
-	dev->s0->VCLKCTRL = (0x700000 << 8) | 0x80;
-
-	return 0;
-}
-
-int scan_command_line(int argc, char **argv, struct camera_info_struct *info) {
-	int arg_pos = 0;
-
-	while (++arg_pos < argc) {
-		if (!strcmp(argv[1], "-n")) {
-			no_acquisition = 1;
-			continue;
-		}
-		if (!strcmp(argv[1], "--no-acquisition")) {
-			no_acquisition = 1;
-			continue;
-		}
-		break;
-	}
-
-	if (arg_pos > argc - 2) {
-		fprintf(stderr,
-	   "usage: test-readout-polling <number of scans> <number of blocks>\n");
-		return -1;
-	}
-
-	info->n_scans = atoi(argv[arg_pos++]);
-	info->n_blocks = atoi(argv[arg_pos++]);
-
-	return arg_pos;
-}
+void print_data(const struct camera_info_struct *info);
 
 int camera_init() {
 	int result;
@@ -106,7 +67,7 @@ int camera_init() {
 		return 2;
 	}
 
-	result = init_7030(0);
+	result = lscpcie_init_7030(0);
 	if (result < 0) {
 		fprintf(stderr, "error %d when initialising device\n", result);
 		return result;
@@ -158,12 +119,6 @@ int readout_init(struct camera_info_struct *info) {
 		exit(0);
 	}
 
-	if (!info->data) {
-		fprintf(stderr, "failed to allocate %d bytes of memory\n",
-			info->mem_size);
-		return -ENOMEM;
-	}
-
 	return 0;
 }
 
@@ -201,19 +156,6 @@ int lscpcie_acquire_block_fs(struct dev_descr *dev, uint8_t *data,
 	return bytes_read;
 }
 
-void print_data(const struct camera_info_struct *info) {
-	int i = 0, block, scan, camera, pixel;
-	int n_cams = info->dev->control->number_of_cameras;
-	int n_pixel = info->dev->control->number_of_pixels;
-
-	for (block = 0; block < info->n_blocks; block++)
-		for (scan = 0; scan < info->n_scans; scan++)
-			for (camera = 0; camera < n_cams; camera++)
-				for (pixel = 0; pixel < n_pixel; pixel++, i++)
-					printf("%d %d %d %d %d\n", block, scan,
-					       camera, pixel, info->data[i]);
-}
-
 int read_single_block(struct camera_info_struct *info) {
 	int result, bytes_read, block_count = 0;
 
@@ -231,6 +173,12 @@ int read_single_block(struct camera_info_struct *info) {
 		* info->dev->control->number_of_cameras * info->n_blocks
 		* info->n_scans * sizeof(pixel_t);
 	info->data = malloc(info->mem_size);
+
+	if (!info->data) {
+		fprintf(stderr, "failed to allocate %d bytes of memory\n",
+			info->mem_size);
+		return -ENOMEM;
+	}
 
 	do {
 		// wait for trigger signal
@@ -265,6 +213,48 @@ int read_single_block(struct camera_info_struct *info) {
 		free(info->data);
 
 	return result;
+}
+
+/** convenience stuff **/
+
+int scan_command_line(int argc, char **argv, struct camera_info_struct *info) {
+	int arg_pos = 0;
+
+	while (++arg_pos < argc) {
+		if (!strcmp(argv[1], "-n")) {
+			no_acquisition = 1;
+			continue;
+		}
+		if (!strcmp(argv[1], "--no-acquisition")) {
+			no_acquisition = 1;
+			continue;
+		}
+		break;
+	}
+
+	if (arg_pos > argc - 2) {
+		fprintf(stderr,
+	   "usage: test-readout-polling <number of scans> <number of blocks>\n");
+		return -1;
+	}
+
+	info->n_scans = atoi(argv[arg_pos++]);
+	info->n_blocks = atoi(argv[arg_pos++]);
+
+	return arg_pos;
+}
+
+void print_data(const struct camera_info_struct *info) {
+	int i = 0, block, scan, camera, pixel;
+	int n_cams = info->dev->control->number_of_cameras;
+	int n_pixel = info->dev->control->number_of_pixels;
+
+	for (block = 0; block < info->n_blocks; block++)
+		for (scan = 0; scan < info->n_scans; scan++)
+			for (camera = 0; camera < n_cams; camera++)
+				for (pixel = 0; pixel < n_pixel; pixel++, i++)
+					printf("%d %d %d %d %d\n", block, scan,
+					       camera, pixel, info->data[i]);
 }
 
 int main(int argc, char **argv) {
