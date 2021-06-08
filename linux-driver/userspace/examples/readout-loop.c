@@ -105,20 +105,6 @@ int readout_init(struct camera_info_struct *info) {
 		return result;
 	}
 
-	result = lscpcie_start_scan(info->dev);
-	if (result) {
-		fprintf(stderr, "error %d when starting scan\n", result);
-		return result;
-	}
-
-	if (no_acquisition) {
-		lscpcie_dump_s0(info->dev);
-		lscpcie_dump_dma(info->dev);
-		lscpcie_dump_tlp(info->dev);
-		lscpcie_close(0);
-		exit(0);
-	}
-
 	return 0;
 }
 
@@ -164,6 +150,20 @@ int read_single_block(struct camera_info_struct *info) {
 
 	bytes_read = 0;
 	info->dev->s0->XCK.bytes.MSB |= (1<<XCKMSB_EXT_TRIGGER);
+
+	result = lscpcie_start_scan(info->dev);
+	if (result) {
+		fprintf(stderr, "error %d when starting scan\n", result);
+		return result;
+	}
+
+	if (no_acquisition) {
+		lscpcie_dump_s0(info->dev);
+		lscpcie_dump_dma(info->dev);
+		lscpcie_dump_tlp(info->dev);
+		lscpcie_close(0);
+		exit(0);
+	}
 
 	do {
 		// wait for trigger signal
