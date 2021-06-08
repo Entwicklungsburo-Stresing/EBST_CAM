@@ -159,26 +159,11 @@ int lscpcie_acquire_block_fs(struct dev_descr *dev, uint8_t *data,
 int read_single_block(struct camera_info_struct *info) {
 	int result, bytes_read, block_count = 0;
 
-	result = readout_init(info);
-	if (result < 0)
-		return result;
-
 	info->dev->s0->XCK.bytes.MSB &= 0xBF; // stop S Timer
 	info->dev->s0->EC = 0; // reset SEC
 
 	bytes_read = 0;
 	info->dev->s0->XCK.bytes.MSB |= (1<<XCKMSB_EXT_TRIGGER);
-
-	info->mem_size = info->dev->control->number_of_pixels
-		* info->dev->control->number_of_cameras * info->n_blocks
-		* info->n_scans * sizeof(pixel_t);
-	info->data = malloc(info->mem_size);
-
-	if (!info->data) {
-		fprintf(stderr, "failed to allocate %d bytes of memory\n",
-			info->mem_size);
-		return -ENOMEM;
-	}
 
 	do {
 		// wait for trigger signal
@@ -202,16 +187,9 @@ int read_single_block(struct camera_info_struct *info) {
 
 	fprintf(stderr, "finished measurement\n");
 
-	result = lscpcie_end_acquire(info->dev);
-	if (result)
-		fprintf(stderr, "error %d when finishing acquisition\n", result);
-	else
-		print_data(info);
+	print_data(info);
 
       out:
-	if (info->data)
-		free(info->data);
-
 	return result;
 }
 
@@ -269,8 +247,30 @@ int main(int argc, char **argv) {
 	if (result < 0)
 		return result;
 
+	info.mem_size = info.dev->control->number_of_pixels
+		* info.dev->control->number_of_cameras * info.n_blocks
+		* info.n_scans * sizeof(pixel_t);
+	info.data = malloc(info.mem_size);
+
+	if (!info.data) {
+		fprintf(stderr, "failed to allocate %d bytes of memory\n",
+			info.mem_size);
+		return -ENOMEM;
+	}
+
+	result = readout_init(&info);
+	if (result < 0)
+		return result;
+
 	for (i = 0; i < n; i++)
 		read_single_block(&info);
+
+	result = lscpcie_end_acquire(info.dev);
+	if (result)
+		fprintf(stderr, "error %d when finishing acquisition\n", result);
+
+	if (info.data)
+		free(info.data);
 
 	return camera_release();
 }
