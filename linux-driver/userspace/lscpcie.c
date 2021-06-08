@@ -631,6 +631,20 @@ uint32_t get_scan_index(struct dev_descr *dev)
 	return dev->s0->SCAN_INDEX;
 }
 
+int lscpcie_init_7030(unsigned int dev_no) {
+	int result;
+	struct dev_descr *dev = lscpcie_get_descriptor(dev_no);
+
+	result = set_dma_address_in_tlp(dev);
+	if (result < 0)
+		return result;
+
+	/* HAMAMATSU 7030-0906 	VFreq | 64 lines */
+	dev->s0->VCLKCTRL = (0x700000 << 8) | 0x80;
+
+	return 0;
+}
+
 /*
 int lscpcie_setup_dma(struct dev_descr *dev) {
   int result;
