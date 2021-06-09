@@ -223,12 +223,22 @@ void print_data(const struct camera_info_struct *info) {
 	int n_cams = info->dev->control->number_of_cameras;
 	int n_pixel = info->dev->control->number_of_pixels;
 
+        /*
 	for (block = 0; block < info->n_blocks; block++)
 		for (scan = 0; scan < info->n_scans; scan++)
 			for (camera = 0; camera < n_cams; camera++)
 				for (pixel = 0; pixel < n_pixel; pixel++, i++)
 					printf("%d %d %d %d %d\n", block, scan,
 					       camera, pixel, info->data[i]);
+        */
+	for (pixel = 0, i = 0; pixel < n_pixel; pixel++) {
+		printf("%d", pixel);
+		for (block = 0; block < info->n_blocks; block++)
+			for (scan = 0; scan < info->n_scans; scan++)
+				for (camera = 0; camera < n_cams; camera++, i++)
+					printf("\t%hd", *(info->data + i));
+		printf("\n");
+	}
 }
 
 int main(int argc, char **argv) {
