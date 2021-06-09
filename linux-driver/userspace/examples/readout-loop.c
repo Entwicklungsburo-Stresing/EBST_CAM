@@ -32,7 +32,7 @@
 int no_acquisition = 0;
 
 struct camera_info_struct {
-	int n_blocks, n_scans, mem_size;
+	int n_blocks, n_scans, mem_size, block_size_in_bytes;
 	enum trigger_mode trigger_mode;
 	pixel_t *data;
 	struct dev_descr *dev;
@@ -143,12 +143,11 @@ int lscpcie_acquire_block_fs(struct dev_descr *dev, uint8_t *data,
 }
 
 int read_single_block(struct camera_info_struct *info) {
-	int result, bytes_read, block_count = 0;
+	int result, i;
 
 	info->dev->s0->XCK.bytes.MSB &= 0xBF; // stop S Timer
 	info->dev->s0->EC = 0; // reset SEC
 
-	bytes_read = 0;
 	info->dev->s0->XCK.bytes.MSB |= (1<<XCKMSB_EXT_TRIGGER);
 
 	result = lscpcie_start_scan(info->dev);
@@ -165,14 +164,14 @@ int read_single_block(struct camera_info_struct *info) {
 		exit(0);
 	}
 
-	do {
+        for (i = 0; i < info->n_blocks; i++) {
 		// wait for trigger signal
 		if (!(info->dev->s0->CTRLA & (1 << CTRLA_TSTART)))
 			continue;
 
 		result = lscpcie_acquire_block_fs(info->dev,
 						(uint8_t *) info->data
-						+ bytes_read,
+						+ i * info->block_size_in_bytes,
 						info->n_scans,
 						info->dev->handle);
 		if (result < 0) {
@@ -180,10 +179,7 @@ int read_single_block(struct camera_info_struct *info) {
 				result);
 			goto out;
 		}
-		bytes_read += result;
-		fprintf(stderr, "having now %d (%d blocks)\n", bytes_read,
-			++block_count);
-	} while (bytes_read < info->mem_size);
+	}
 
 	fprintf(stderr, "finished measurement\n");
 
@@ -251,9 +247,12 @@ int main(int argc, char **argv) {
 	if (result < 0)
 		return result;
 
-	info.mem_size = info.dev->control->number_of_pixels
-		* info.dev->control->number_of_cameras * info.n_blocks
-		* info.n_scans * sizeof(pixel_t);
+	info.block_size_in_bytes
+          = sizeof(pixel_t) * info.dev->control->number_of_pixels
+          * info.dev->control->number_of_cameras * info.n_scans;
+
+	info.mem_size = info.block_size_in_bytes * info.n_blocks;
+
 	info.data = malloc(info.mem_size);
 
 	if (!info.data) {
