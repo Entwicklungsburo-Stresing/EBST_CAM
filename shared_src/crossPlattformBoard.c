@@ -2027,7 +2027,7 @@ es_status_codes FindCam( uint32_t drvno )
 */
 es_status_codes ResetHardwareCounter( uint32_t drvno )
 {
-	ES_LOG( "Reset hardware couter\n" );
+	ES_LOG( "Reset hardware counter\n" );
 	es_status_codes status = pulseBitS0_32(drvno, DMAsPerIntr_bitindex_counter_reset, S0Addr_DMAsPerIntr);
 	if (status != es_no_error) return status;
 	status = pulseBitS0_32(drvno, DmaBufSizeInScans_bitindex_counter_reset, S0Addr_DmaBufSizeInScans);
