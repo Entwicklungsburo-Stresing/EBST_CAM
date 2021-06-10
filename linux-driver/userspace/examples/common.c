@@ -41,7 +41,7 @@ int readout_init(int argc, char **argv, struct camera_info_struct *info) {
 	if (arg_pos > argc - 2) {
 		fprintf(stderr,
 	   "usage: test-readout-polling <number of scans> <number of blocks>\n");
-		return 1;
+		return -1;
 	}
 
 	info->n_scans = atoi(argv[++arg_pos]);
@@ -67,7 +67,7 @@ int readout_init(int argc, char **argv, struct camera_info_struct *info) {
 	// open /dev/lscpcie<n>
 	if ((result = lscpcie_open(0, 0, USE_DMA_MAPPING)) < 0) {
 		fprintf(stderr, "opening first board returned %d\n", result);
-		return 2;
+		return -2;
 	}
 	// get memory mapped pointers etc
 	info->dev = lscpcie_get_descriptor(0);
@@ -90,13 +90,13 @@ int readout_init(int argc, char **argv, struct camera_info_struct *info) {
 
 	result = lscpcie_init_scan(info->dev, info->trigger_mode, info->n_scans,
 				info->n_blocks, 2);
-	if (result) {
+	if (result < 0) {
 		fprintf(stderr, "error %d when initialising scan\n", result);
 		return result;
 	}
 
 	result = lscpcie_start_scan(info->dev);
-	if (result) {
+	if (result < 0) {
 		fprintf(stderr, "error %d when starting scan\n", result);
 		return result;
 	}
@@ -171,6 +171,8 @@ void print_data(const struct camera_info_struct *info) {
 	int n_cams = info->dev->control->number_of_cameras;
 	int n_pixel = info->dev->control->number_of_pixels;
 
+fprintf(stderr, "printing data %d %d %d %d\n", info->n_blocks, info->n_scans,
+        n_cams, n_pixel);
 	for (block = 0; block < info->n_blocks; block++)
 		for (scan = 0; scan < info->n_scans; scan++)
 			for (camera = 0; camera < n_cams; camera++)
