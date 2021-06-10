@@ -174,9 +174,9 @@ es_status_codes InitMeasurement(struct global_settings settings)
  */
 es_status_codes SetPixelCount(uint32_t drvno, uint16_t pixelcount)
 {
-    ES_LOG("Set pixel count: %u\n", pixelcount);
+	ES_LOG("Set pixel count: %u\n", pixelcount);
 	aPIXEL[drvno] = pixelcount;
-    return writeBitsS0_32(drvno, pixelcount, 0xFFFF, S0Addr_PIXREGlow);
+	return writeBitsS0_32(drvno, pixelcount, 0xFFFF, S0Addr_PIXREGlow);
 };
 
 /**
@@ -257,7 +257,7 @@ es_status_codes setMeasureOn( uint32_t drvno )
 es_status_codes resetBlockOn( uint32_t drvno )
 {
 	notifyBlockDone( drvno );
-    return resetBitS0_32( drvno, PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS );
+	return resetBitS0_32( drvno, PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS );
 }
 
 /**
@@ -270,7 +270,7 @@ es_status_codes resetBlockOn( uint32_t drvno )
 es_status_codes resetMeasureOn( uint32_t drvno )
 {
 	notifyMeasureDone( drvno );
-    return resetBitS0_32( drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS );
+	return resetBitS0_32( drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS );
 }
 
 /**
@@ -313,9 +313,9 @@ es_status_codes ResetDma( uint32_t drvno )
  */
 es_status_codes SetCamCount(uint32_t drvno, uint16_t camcount)
 {
-    ES_LOG("Set cam count: %u\n", camcount);
+	ES_LOG("Set cam count: %u\n", camcount);
 	aCAMCNT[drvno] = camcount;
-    return writeBitsS0_32(drvno, camcount, 0xF, S0Addr_CAMCNT);
+	return writeBitsS0_32(drvno, camcount, 0xF, S0Addr_CAMCNT);
 };
 
 /**
@@ -338,16 +338,16 @@ es_status_codes SetSensorType( uint32_t drvno, uint8_t sensor_type )
 	switch (sensor_type)
 	{
 	case 0:
-        status = resetBitS0_8(drvno, TOR_MSB_bitindex_ISFFT, S0Addr_TOR_MSB);
+		status = resetBitS0_8(drvno, TOR_MSB_bitindex_ISFFT, S0Addr_TOR_MSB);
 		if (status != es_no_error) return status;
-        status = setBitS0_8(drvno, TOR_MSB_bitindex_SENDRS, S0Addr_TOR_MSB);
+		status = setBitS0_8(drvno, TOR_MSB_bitindex_SENDRS, S0Addr_TOR_MSB);
 		if (status != es_no_error) return status;
 		status = OpenShutter(drvno);
 		break;
 	case 1:
-        status = setBitS0_8(drvno, TOR_MSB_bitindex_ISFFT, S0Addr_TOR_MSB);
+		status = setBitS0_8(drvno, TOR_MSB_bitindex_ISFFT, S0Addr_TOR_MSB);
 		if (status != es_no_error) return status;
-        status = resetBitS0_8(drvno, TOR_MSB_bitindex_SENDRS, S0Addr_TOR_MSB);
+		status = resetBitS0_8(drvno, TOR_MSB_bitindex_SENDRS, S0Addr_TOR_MSB);
 		break;
 	default:
 		return es_parameter_out_of_range;
@@ -403,7 +403,7 @@ es_status_codes writeBitsS0_8( uint32_t drvno, uint8_t data, uint8_t bitmask, ui
 es_status_codes setBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address)
 {
 	uint32_t bitmask = 0x1 << bitnumber;
-    return writeBitsS0_32(drvno, 0xFFFFFFFF, bitmask, address);
+	return writeBitsS0_32(drvno, 0xFFFFFFFF, bitmask, address);
 }
 
 /**
@@ -420,7 +420,7 @@ es_status_codes setBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address
 es_status_codes setBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address)
 {
 	uint32_t bitmask = 0x1 << bitnumber;
-    return writeBitsS0_8(drvno, 0xFF, bitmask, address);
+	return writeBitsS0_8(drvno, 0xFF, bitmask, address);
 }
 
 /**
@@ -437,7 +437,7 @@ es_status_codes setBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address)
 es_status_codes resetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address)
 {
 	uint32_t bitmask = 0x1 << bitnumber;
-    return writeBitsS0_32(drvno, 0x0, bitmask, address);
+	return writeBitsS0_32(drvno, 0x0, bitmask, address);
 }
 
 /**
@@ -454,22 +454,22 @@ es_status_codes resetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t addre
 es_status_codes resetBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address)
 {
 	uint32_t bitmask = 0x1 << bitnumber;
-    return writeBitsS0_8(drvno, 0x0, bitmask, address);
+	return writeBitsS0_8(drvno, 0x0, bitmask, address);
 }
 
 es_status_codes writeRegisterS0_32( uint32_t drvno, uint32_t data, uint16_t address )
 {
-    return writeRegister_32(drvno, data, address + S0_SPACE_OFFSET);
+	return writeRegister_32(drvno, data, address + S0_SPACE_OFFSET);
 }
 
 es_status_codes writeRegisterS0_16( uint32_t drvno, uint16_t data, uint16_t address )
 {
-    return writeRegister_16(drvno, data, address + S0_SPACE_OFFSET);
+	return writeRegister_16(drvno, data, address + S0_SPACE_OFFSET);
 }
 
 es_status_codes writeRegisterS0_8( uint32_t drvno, uint8_t data, uint16_t address )
 {
-    return writeRegister_8(drvno, data, address + S0_SPACE_OFFSET);
+	return writeRegister_8(drvno, data, address + S0_SPACE_OFFSET);
 }
 
 es_status_codes readRegisterS0_32( uint32_t drvno, uint32_t* data, uint16_t address )
@@ -499,7 +499,7 @@ es_status_codes readRegisterS0_8( uint32_t drvno, uint8_t* data, uint16_t addres
 es_status_codes OpenShutter( uint32_t drvno )
 {
 	ES_LOG("Open shutter\n");
-    return setBitS0_8(drvno, CTRLB_bitindex_SHON, S0Addr_CTRLB);
+	return setBitS0_8(drvno, CTRLB_bitindex_SHON, S0Addr_CTRLB);
 };
 
 /**
@@ -551,7 +551,7 @@ es_status_codes SetupVCLKReg( uint32_t drvno, uint32_t lines, uint8_t vfreq )
 es_status_codes ResetPartialBinning( uint32_t drvno )
 {
 	ES_LOG("Reset partial binning\n");
-    return resetBitS0_32(drvno, 15, S0Addr_ARREG );
+	return resetBitS0_32(drvno, 15, S0Addr_ARREG );
 }
 
 /**
@@ -574,7 +574,7 @@ es_status_codes SetMeasurementParameters( uint32_t drvno, uint32_t nos, uint32_t
 {
 	Nob = nob;
 	*Nospb = nos;
-    ES_LOG( "Set measurement parameters: drv: %i nos: %i and nob: %i\n", drvno, nos, nob );
+	ES_LOG( "Set measurement parameters: drv: %i nos: %i and nob: %i\n", drvno, nos, nob );
 	//stop all and clear FIFO
 	es_status_codes status = StopSTimer( drvno );
 	if (status != es_no_error) return status;
@@ -607,7 +607,7 @@ es_status_codes SetMeasurementParameters( uint32_t drvno, uint32_t nos, uint32_t
 es_status_codes StopSTimer( uint32_t drvno )
 {
 	ES_LOG("Stop S Timer\n");
-    return resetBitS0_8(drvno, XCKMSB_bitindex_stimer_on, S0Addr_XCKMSB);
+	return resetBitS0_8(drvno, XCKMSB_bitindex_stimer_on, S0Addr_XCKMSB);
 }
 
 /**
@@ -622,9 +622,9 @@ es_status_codes StopSTimer( uint32_t drvno )
 es_status_codes RSFifo( uint32_t drvno )
 {
 	ES_LOG("Reset Fifo\n");
-    es_status_codes status = setBitS0_8(drvno, BTRIGREG_bitindex_RSFIFO, S0Addr_BTRIGREG);
+	es_status_codes status = setBitS0_8(drvno, BTRIGREG_bitindex_RSFIFO, S0Addr_BTRIGREG);
 	if (status != es_no_error) return status;
-    return resetBitS0_8(drvno, BTRIGREG_bitindex_RSFIFO, S0Addr_BTRIGREG);
+	return resetBitS0_8(drvno, BTRIGREG_bitindex_RSFIFO, S0Addr_BTRIGREG);
 }
 
 /**
@@ -644,7 +644,7 @@ es_status_codes allocateUserMemory( uint32_t drvno )
 	uint64_t memory_free = 0;
 	FreeMemInfo( &memory_all, &memory_free );
 	int64_t memory_free_mb = memory_free / (1024 * 1024);
-    int64_t needed_mem = (int64_t)aCAMCNT[drvno] * (int64_t)Nob * (int64_t)(*Nospb) * (int64_t)aPIXEL[drvno] * (int64_t)sizeof( uint16_t );
+	int64_t needed_mem = (int64_t)aCAMCNT[drvno] * (int64_t)Nob * (int64_t)(*Nospb) * (int64_t)aPIXEL[drvno] * (int64_t)sizeof( uint16_t );
 	int64_t needed_mem_mb = needed_mem / (1024 * 1024);
 	ES_LOG( "Allocate user memory, available memory:%ld MB, memory needed: %ld MB\n", memory_free_mb, needed_mem_mb );
 	//check if enough space is available in the physical ram
@@ -652,8 +652,8 @@ es_status_codes allocateUserMemory( uint32_t drvno )
 	{
 		// sometimes it makes one ISR more, so better to allocate nos+1 thaT IN THIS CASE THE ADDRESS pDMAIndex is valid
 		//B! "2 *" because the buffer is just 2/3 of the needed size. +1 oder *2 weil sonst absturz im continuous mode
-        uint16_t* userBufferTemp = (uint16_t*) calloc( (uint64_t)aCAMCNT[drvno] * (uint64_t)(*Nospb) * (uint64_t)Nob * (uint64_t)aPIXEL[drvno], sizeof( uint16_t ) );
-        if (userBufferTemp)
+		uint16_t* userBufferTemp = (uint16_t*) calloc( (uint64_t)aCAMCNT[drvno] * (uint64_t)(*Nospb) * (uint64_t)Nob * (uint64_t)aPIXEL[drvno], sizeof( uint16_t ) );
+		if (userBufferTemp)
 		{
 			userBuffer[drvno] = userBufferTemp;
 			return es_no_error;
@@ -685,18 +685,18 @@ es_status_codes SetDMABufRegs( uint32_t drvno )
 {
 	ES_LOG("Set DMA buffer registers, ");
 	//DMABufSizeInScans - use 1 block
-    es_status_codes status = writeBitsS0_32(drvno, DMA_BUFFER_SIZE_IN_SCANS, 0xffffffff, S0Addr_DmaBufSizeInScans);
+	es_status_codes status = writeBitsS0_32(drvno, DMA_BUFFER_SIZE_IN_SCANS, 0xffffffff, S0Addr_DmaBufSizeInScans);
 	if (status != es_no_error) return status;
 	//scans per intr must be 2x per DMA_BUFFER_SIZE_IN_SCANS to copy hi/lo part
 	//aCAMCNT: double the INTR if 2 cams
-    status = writeBitsS0_32(drvno, DMA_DMASPERINTR, 0xffffffff, S0Addr_DMAsPerIntr);
+	status = writeBitsS0_32(drvno, DMA_DMASPERINTR, 0xffffffff, S0Addr_DMAsPerIntr);
 	if (status != es_no_error) return status;
-    ES_LOG( "scansPerInterrupt/camcnt: 0x%x \n", DMA_DMASPERINTR / aCAMCNT[drvno] );
-    status = writeBitsS0_32(drvno, *Nospb, 0xffffffff, S0Addr_NOS);
+	ES_LOG( "scansPerInterrupt/camcnt: 0x%x \n", DMA_DMASPERINTR / aCAMCNT[drvno] );
+	status = writeBitsS0_32(drvno, *Nospb, 0xffffffff, S0Addr_NOS);
 	if (status != es_no_error) return status;
-    status = writeBitsS0_32(drvno, Nob, 0xffffffff, S0Addr_NOB);
+	status = writeBitsS0_32(drvno, Nob, 0xffffffff, S0Addr_NOB);
 	if (status != es_no_error) return status;
-    return writeBitsS0_32(drvno, aCAMCNT[drvno], 0xffffffff, S0Addr_CAMCNT);
+	return writeBitsS0_32(drvno, aCAMCNT[drvno], 0xffffffff, S0Addr_CAMCNT);
 }
 
 /**
@@ -711,7 +711,7 @@ es_status_codes SetDMABufRegs( uint32_t drvno )
 es_status_codes CloseShutter( uint32_t drvno )
 {
 	ES_LOG("Close shutter\n");
-    return resetBitS0_8(drvno, CTRLB_bitindex_SHON, S0Addr_CTRLB);
+	return resetBitS0_8(drvno, CTRLB_bitindex_SHON, S0Addr_CTRLB);
 };
 
 /**
@@ -793,27 +793,27 @@ es_status_codes SetTORReg( uint32_t drvno, uint8_t tor )
  */
 es_status_codes SetSSlope(uint32_t drvno, uint32_t sslope)
 {
-    ES_LOG("Set scan slope, %u\n", sslope);
+	ES_LOG("Set scan slope, %u\n", sslope);
 	es_status_codes status = es_no_error;
 	switch (sslope)
 	{
 	// high slope
 	case 0:
-        status = setBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
+		status = setBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
 		if (status != es_no_error) return status;
-        status = resetBitS0_32(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
+		status = resetBitS0_32(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
 		break;
 	// low slope
 	case 1:
-        status = resetBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
+		status = resetBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
 		if (status != es_no_error) return status;
-        status = resetBitS0_32(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
+		status = resetBitS0_32(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
 		break;
 	// both slope
 	case 2:
-        status = setBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
+		status = setBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
 		if (status != es_no_error) return status;
-        status = setBitS0_32(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
+		status = setBitS0_32(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
 		break;
 	default:
 		return es_parameter_out_of_range;
@@ -854,7 +854,7 @@ es_status_codes SetBSlope( uint32_t drvno, uint32_t slope )
 es_status_codes SetSTI( uint32_t drvno, uint8_t sti_mode )
 {
 	ES_LOG("Set STI: %u\n", sti_mode);
-    return writeBitsS0_8( drvno, sti_mode, CTRLB_bit_STI0 | CTRLB_bit_STI1 | CTRLB_bit_STI2, S0Addr_CTRLB );
+	return writeBitsS0_8( drvno, sti_mode, CTRLB_bit_STI0 | CTRLB_bit_STI1 | CTRLB_bit_STI2, S0Addr_CTRLB );
 }
 
 /**
@@ -874,7 +874,7 @@ es_status_codes SetSTI( uint32_t drvno, uint8_t sti_mode )
 es_status_codes SetBTI( uint32_t drvno, uint8_t bti_mode )
 {
 	ES_LOG("Set BTI: %u\n", bti_mode);
-    return writeBitsS0_8( drvno, bti_mode << CTRLB_bitindex_BTI0, CTRLB_bit_BTI0 | CTRLB_bit_BTI1 | CTRLB_bit_BTI2, S0Addr_CTRLB );
+	return writeBitsS0_8( drvno, bti_mode << CTRLB_bitindex_BTI0, CTRLB_bit_BTI0 | CTRLB_bit_BTI1 | CTRLB_bit_BTI2, S0Addr_CTRLB );
 }
 
 /**
@@ -1095,7 +1095,7 @@ es_status_codes SetBDAT( uint32_t drvno, uint32_t datin100ns )
  */
 es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_trigger_input, uint8_t is_fft, uint8_t is_area, uint8_t IS_COOLED, uint16_t led_off)
 {
-    ES_LOG("Init camera general, pixel: %u, cc_trigger: %u, fft: %u, area: %u, cooled: %u\n", pixel, cc_trigger_input, is_fft, is_area, IS_COOLED);
+	ES_LOG("Init camera general, pixel: %u, cc_trigger: %u, fft: %u, area: %u, cooled: %u\n", pixel, cc_trigger_input, is_fft, is_area, IS_COOLED);
 	es_status_codes status = es_no_error;
 	// when TRUE: disables PCIe FIFO when cool cam transmits cool status
 	if (IS_COOLED)
@@ -1112,9 +1112,9 @@ es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_t
 	//set led off
 	SendFLCAM(drvno, maddr_cam, cam_adaddr_LEDoff, led_off );
 	//select vclk and Area mode on
-    if (is_area>0)	{	is_area = (uint8_t)0x8000; }
-    else { is_area = 0x0000; }
-    return SendFLCAM( drvno, maddr_cam, cam_adaddr_vclk, (uint16_t) (is_fft | is_area) );
+	if (is_area>0)	{	is_area = (uint8_t)0x8000; }
+	else { is_area = 0x0000; }
+	return SendFLCAM( drvno, maddr_cam, cam_adaddr_vclk, (uint16_t) (is_fft | is_area) );
 }
 
 /**
@@ -1131,9 +1131,9 @@ es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_t
 es_status_codes Use_ENFFW_protection( uint32_t drvno, bool USE_ENFFW_PROTECT )
 {
 	if (USE_ENFFW_PROTECT)
-        return setBitS0_32( drvno, 3, S0Addr_PCIEFLAGS );
+		return setBitS0_32( drvno, 3, S0Addr_PCIEFLAGS );
 	else
-        return resetBitS0_32( drvno, 3, S0Addr_PCIEFLAGS );
+		return resetBitS0_32( drvno, 3, S0Addr_PCIEFLAGS );
 }
 
 /**
@@ -1509,10 +1509,10 @@ es_status_codes SetBEC( uint32_t drvno, uint32_t ecin100ns )
 	if (ecin100ns)
 	{
 		ecin100ns |= 0x80000000; // enable delay
-        status = writeRegisterS0_32(drvno, ecin100ns, S0Addr_BEC);
+		status = writeRegisterS0_32(drvno, ecin100ns, S0Addr_BEC);
 	}
 	else
-        status = writeRegisterS0_32(drvno, 0, S0Addr_BEC);
+		status = writeRegisterS0_32(drvno, 0, S0Addr_BEC);
 	return status;
 };
 
@@ -1700,18 +1700,18 @@ es_status_codes writeBitsDma_32( uint32_t drvno, uint32_t data, uint32_t bitmask
 	//read the old Register Values in the S0 Address Reg
 	es_status_codes status = readRegisterDma_32( drvno, &OldRegisterValues, address );
 	if (status != es_no_error) return status;
-    //step 0: delete not needed "1"s
-    data &= bitmask;
-    //step 1: save Data as setbitmask for making this part humanreadable
-    uint32_t Setbit_mask = data;
-    //step 2: setting high bits in the Data
-    uint32_t OldRegVals_and_SetBits = OldRegisterValues | Setbit_mask;
-    //step 3: prepare to clear bits
-    uint32_t Clearbit_mask = data | ~bitmask;
-    //step 4: clear the low bits in the Data
-    uint32_t NewRegisterValues = OldRegVals_and_SetBits & Clearbit_mask;
-    //write the data to the S0 controller
-    return writeRegisterDma_32( drvno, NewRegisterValues, address );
+	//step 0: delete not needed "1"s
+	data &= bitmask;
+	//step 1: save Data as setbitmask for making this part humanreadable
+	uint32_t Setbit_mask = data;
+	//step 2: setting high bits in the Data
+	uint32_t OldRegVals_and_SetBits = OldRegisterValues | Setbit_mask;
+	//step 3: prepare to clear bits
+	uint32_t Clearbit_mask = data | ~bitmask;
+	//step 4: clear the low bits in the Data
+	uint32_t NewRegisterValues = OldRegVals_and_SetBits & Clearbit_mask;
+	//write the data to the S0 controller
+	return writeRegisterDma_32( drvno, NewRegisterValues, address );
 }
 
 /**
@@ -1732,28 +1732,28 @@ es_status_codes writeBitsDma_8( uint32_t drvno, uint8_t data, uint8_t bitmask, u
 	//read the old Register Values in the S0 Address Reg
 	es_status_codes status = readRegisterDma_8( drvno, &OldRegisterValues, address );
 	if (status != es_no_error) return status;
-    //step 0: delete not needed "1"s
-    data &= bitmask;
-    //step 1: save Data as setbitmask for making this part humanreadable
-    uint8_t Setbit_mask = data;
-    //step 2: setting high bits in the Data
-    uint8_t OldRegVals_and_SetBits = OldRegisterValues | Setbit_mask;
-    //step 3: prepare to clear bits
-    uint8_t Clearbit_mask = data | ~bitmask;
-    //step 4: clear the low bits in the Data
-    uint8_t NewRegisterValues = OldRegVals_and_SetBits & Clearbit_mask;
-    //write the data to the S0 controller
-    return writeRegisterDma_8( drvno, NewRegisterValues, address );
+	//step 0: delete not needed "1"s
+	data &= bitmask;
+	//step 1: save Data as setbitmask for making this part humanreadable
+	uint8_t Setbit_mask = data;
+	//step 2: setting high bits in the Data
+	uint8_t OldRegVals_and_SetBits = OldRegisterValues | Setbit_mask;
+	//step 3: prepare to clear bits
+	uint8_t Clearbit_mask = data | ~bitmask;
+	//step 4: clear the low bits in the Data
+	uint8_t NewRegisterValues = OldRegVals_and_SetBits & Clearbit_mask;
+	//write the data to the S0 controller
+	return writeRegisterDma_8( drvno, NewRegisterValues, address );
 }
 
 es_status_codes writeRegisterDma_32( uint32_t drvno, uint32_t data, uint16_t address )
 {
-    return writeRegister_32(drvno, data, address);
+	return writeRegister_32(drvno, data, address);
 }
 
 es_status_codes writeRegisterDma_8( uint32_t drvno, uint8_t data, uint16_t address )
 {
-    return writeRegister_8(drvno, data, address);
+	return writeRegister_8(drvno, data, address);
 }
 
 es_status_codes readRegisterDma_32( uint32_t drvno, uint32_t* data, uint16_t address )
@@ -1823,7 +1823,7 @@ es_status_codes StartMeasurement()
 		if (status == es_abortion)
 			return AbortMeasurement( BOARD_SEL );
 		else if (status != es_no_error) return status;
-        ES_LOG("Block %u triggered\n", blk_cnt);
+		ES_LOG("Block %u triggered\n", blk_cnt);
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
 			status = countBlocksByHardware( 1 );
@@ -1989,7 +1989,7 @@ es_status_codes StartMeasurement()
 		if (status != es_no_error) return status;
 	}
 	ES_LOG("*** Measurement done ***\n\n");
-    return status;
+	return status;
 }
 
 /**
@@ -2134,7 +2134,7 @@ es_status_codes waitForBlockTrigger(uint32_t drvno)
 es_status_codes countBlocksByHardware( uint32_t drvno )
 {
 	es_status_codes status =  pulseBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCKTRIG, S0Addr_PCIEFLAGS);
-    if (status != es_no_error) return status;
+	if (status != es_no_error) return status;
 	//reset scan counter
 	return pulseBitS0_32(drvno, ScanIndex_bitindex_counter_reset, S0Addr_ScanIndex);
 }
@@ -2150,8 +2150,8 @@ es_status_codes countBlocksByHardware( uint32_t drvno )
  */
 es_status_codes StartSTimer( uint32_t drvno )
 {
-    ES_LOG("Start S Timer\n");
-    return setBitS0_8(drvno, XCKMSB_bitindex_stimer_on, S0Addr_XCKMSB);
+	ES_LOG("Start S Timer\n");
+	return setBitS0_8(drvno, XCKMSB_bitindex_stimer_on, S0Addr_XCKMSB);
 }
 
 /**
@@ -2165,7 +2165,7 @@ es_status_codes StartSTimer( uint32_t drvno )
  */
 es_status_codes DoSoftwareTrigger( uint32_t drvno )
 {
-    ES_LOG("Do software trigger\n");
+	ES_LOG("Do software trigger\n");
 	es_status_codes status = setBitS0_8(drvno, BTRIGREG_bitindex_SWTRIG, S0Addr_BTRIGREG);
 	if (status != es_no_error) return status;
 	return resetBitS0_8(drvno, BTRIGREG_bitindex_SWTRIG, S0Addr_BTRIGREG);
@@ -2200,7 +2200,7 @@ es_status_codes IsTimerOn( uint32_t drvno, bool* on )
  */
 es_status_codes GetLastBufPart( uint32_t drvno )
 {
-    ES_LOG( "Get the last buffer part\n" );
+	ES_LOG( "Get the last buffer part\n" );
 	//get the rest if buffer is not multiple of 500 (BUFSIZEINSCANS/2)
 	//also if nos is < BUFSIZEINSCANS/2 - here: no intr occurs
 	uint32_t spi = 0;
@@ -2231,29 +2231,29 @@ es_status_codes InitDriver()
 {
 	ES_LOG("\n*** Init driver ***\n");
 	es_status_codes status = _InitDriver();
-    ES_LOG("*** Init driver done***\n\n");
+	ES_LOG("*** Init driver done***\n\n");
 	return status;
 }
 
 es_status_codes ExitDriver(uint32_t drvno)
 {
 	ES_LOG("\n*** Exit driver ***\n");
-    es_status_codes status = _ExitDriver(drvno);
+	es_status_codes status = _ExitDriver(drvno);
 	ES_LOG("*** Exit driver done***\n\n");
 	return status;
 }
 
 es_status_codes ReturnFrame(uint32_t drv, uint32_t curr_nos, uint32_t curr_nob, uint16_t curr_cam, uint16_t* pdest, uint32_t length)
 {
-    //ES_LOG( "Return frame: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, pdest %p, length: %u\n", drv, curr_nos, curr_nob, curr_cam, pdest, length );
+	//ES_LOG( "Return frame: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, pdest %p, length: %u\n", drv, curr_nos, curr_nob, curr_cam, pdest, length );
 	es_status_codes status = checkDriverHandle(drv);
 	if (status != es_no_error) return status;
 	uint16_t* pframe = NULL;
 	status = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, curr_cam, &pframe);
 	if (status != es_no_error) return status;
-    //ES_LOG("pframe %p\n", pframe);
-    //ES_LOG("userBuffer %p\n", userBuffer[drv]);
-    memcpy( pdest, pframe, length * sizeof( uint16_t ) );
+	//ES_LOG("pframe %p\n", pframe);
+	//ES_LOG("userBuffer %p\n", userBuffer[drv]);
+	memcpy( pdest, pframe, length * sizeof( uint16_t ) );
 	return status;
 }
 
