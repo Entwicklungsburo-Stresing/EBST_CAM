@@ -239,10 +239,11 @@ void* CopyDataToUserBuffer(void* param_drvno)
 	ssize_t bytes_read = 0;
 	ssize_t result;
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
-	while (bytes_to_read && (bytes_to_read >= dev->control->bytes_per_interrupt))
+	ES_LOG("bytes per interrupt: %u\n", dev->control->bytes_per_interrupt);
+	while (bytes_to_read)
 	{
-		result = read(dev->handle, userBufferWritePos[drvno], bytes_to_read);
-		ES_LOG("Copy to user buffer intterupt %u done\n", dev->control->irq_count);
+		result = read(dev->handle, ((uint8_t *)userBuffer[drvno]) + bytes_read , bytes_to_read);
+		ES_LOG("Copy to user buffer intterupt %u done, result: %zd\n", dev->control->irq_count, result);
 		if (result < 0)
 			return NULL;
 		bytes_to_read -= result;
