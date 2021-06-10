@@ -156,12 +156,11 @@ void FreeMemInfo( uint64_t *pmemory_all, uint64_t *pmemory_free )
 
 es_status_codes SetupDma( uint32_t drvno )
 {
-	//on linux: driver numbers are 0 and 1, on windows 1 and 2
-	drvno--;
 	ES_LOG( "Setup DMA\n" );
-	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
-	dev->control->bytes_per_interrupt = DMA_DMASPERINTR * dev->control->number_of_pixels * dev->control->number_of_cameras * sizeof(uint16_t);
-	dev->control->used_dma_size = dev->s0->DMA_BUF_SIZE_IN_SCANS * dev->control->number_of_pixels * dev->control->number_of_cameras * sizeof(uint16_t);
+	//on linux: driver numbers are 0 and 1, on windows 1 and 2
+	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
+	dev->control->bytes_per_interrupt = DMA_DMASPERINTR * aPIXEL[drvno] * aCAMCNT[drvno] * sizeof(uint16_t);
+	dev->control->used_dma_size = dev->s0->DMA_BUF_SIZE_IN_SCANS * aPIXEL[drvno] * aCAMCNT[drvno] * sizeof(uint16_t);
 	if (dev->control->used_dma_size > dev->control->dma_buf_size)
 		dev->control->used_dma_size = dev->control->dma_buf_size;
 	ES_LOG("dmas per interrupt is %d\n", dev->s0->DMAS_PER_INTERRUPT);
