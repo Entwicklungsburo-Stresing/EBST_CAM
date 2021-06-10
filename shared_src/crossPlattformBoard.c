@@ -644,7 +644,7 @@ es_status_codes allocateUserMemory( uint32_t drvno )
 	uint64_t memory_free = 0;
 	FreeMemInfo( &memory_all, &memory_free );
 	int64_t memory_free_mb = memory_free / (1024 * 1024);
-	int64_t needed_mem = (int64_t)aCAMCNT[drvno] * (int64_t)Nob * (int64_t)*Nospb * (int64_t)aPIXEL[drvno] * (int64_t)sizeof( uint16_t );
+    int64_t needed_mem = (int64_t)aCAMCNT[drvno] * (int64_t)Nob * (int64_t)(*Nospb) * (int64_t)aPIXEL[drvno] * (int64_t)sizeof( uint16_t );
 	int64_t needed_mem_mb = needed_mem / (1024 * 1024);
 	ES_LOG( "Allocate user memory, available memory:%ld MB, memory needed: %ld MB\n", memory_free_mb, needed_mem_mb );
 	//check if enough space is available in the physical ram
@@ -652,8 +652,8 @@ es_status_codes allocateUserMemory( uint32_t drvno )
 	{
 		// sometimes it makes one ISR more, so better to allocate nos+1 thaT IN THIS CASE THE ADDRESS pDMAIndex is valid
 		//B! "2 *" because the buffer is just 2/3 of the needed size. +1 oder *2 weil sonst absturz im continuous mode
-		uint16_t* userBufferTemp = calloc( (uint64_t)aCAMCNT[drvno] * (uint64_t)(*Nospb) * (uint64_t)Nob * (uint64_t)aPIXEL[drvno], sizeof( uint16_t ) );
-		if (userBufferTemp)
+        uint16_t* userBufferTemp = (uint16_t*) calloc( (uint64_t)aCAMCNT[drvno] * (uint64_t)(*Nospb) * (uint64_t)Nob * (uint64_t)aPIXEL[drvno], sizeof( uint16_t ) );
+        if (userBufferTemp)
 		{
 			userBuffer[drvno] = userBufferTemp;
 			return es_no_error;
@@ -2245,19 +2245,15 @@ es_status_codes ExitDriver(uint32_t drvno)
 
 es_status_codes ReturnFrame(uint32_t drv, uint32_t curr_nos, uint32_t curr_nob, uint16_t curr_cam, uint16_t* pdest, uint32_t length)
 {
+    //ES_LOG( "Return frame: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, pdest %p, length: %u\n", drv, curr_nos, curr_nob, curr_cam, pdest, length );
 	es_status_codes status = checkDriverHandle(drv);
 	if (status != es_no_error) return status;
 	uint16_t* pframe = NULL;
 	status = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, curr_cam, &pframe);
 	if (status != es_no_error) return status;
-	memcpy( pdest, pframe, length * sizeof( uint16_t ) );
-	/*
-	ES_LOG( "RETURN FRAME: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, _PIXEL: %u, length: %u\n", drvno, curr_nos, curr_nob, curr_cam, _PIXEL, length );
-	ES_LOG("FRAME2: address Buff: 0x%x \n", userBuffer[drvno]);
-	ES_LOG("FRAME2: address pdio: 0x%x \n", pdioden);
-	ES_LOG("FRAME3: pix42 of ReturnFrame: %d \n", *((USHORT*)pdioden + 420));
-	ES_LOG("FRAME3: pix43 of ReturnFrame: %d \n", *((USHORT*)pdioden + 422));
-	*/
+    //ES_LOG("pframe %p\n", pframe);
+    //ES_LOG("userBuffer %p\n", userBuffer[drv]);
+    memcpy( pdest, pframe, length * sizeof( uint16_t ) );
 	return status;
 }
 
