@@ -196,19 +196,6 @@ static enum irqreturn isr(int irqn, void *dev_id)
 
 	device_set_status(dev, DEV_DMA_OVERFLOW, DEV_DMA_OVERFLOW);
 
-	/*
-	PDEBUG(D_INTERRUPT, "dma size %u\n", dev->control->used_dma_size);
-	PDEBUG(D_INTERRUPT, "bytes_per_interrupt %u\n", dev->control->bytes_per_interrupt);
-	uint16_t* dmaBufferReadPos = dev->control->dma_physical_start + dev->control->read_pos * dev->control->bytes_per_interrupt / sizeof(uint16_t);
-	//here the copyprocess happens
-	memcpy( dev->control->user_buffer_write_pos, dmaBufferReadPos, dev->control->bytes_per_interrupt );
-	PDEBUG(D_INTERRUPT, "userBufferWritePos: 0x%x\n",  dev->control->user_buffer_write_pos);
-	dev->control->read_pos++;
-	if (dev->control->read_pos >= DMA_BUFFER_PARTS)		//number of ISR per dmaBuf - 1
-		dev->control->read_pos = 0;						//dmaBufferPartReadPos is 0 or 1 for buffer devided in 2 parts
-	dev->control->user_buffer_write_pos += dev->control->bytes_per_interrupt / sizeof( uint16_t );
-	*/
-
       end:
 	set_bits_s0_dword(dev, IRQREG.REG32, 0,
 			  (1 << IRQ_REG_ISR_active));
