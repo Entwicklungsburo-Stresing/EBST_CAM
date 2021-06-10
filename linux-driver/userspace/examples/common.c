@@ -24,24 +24,28 @@ int init_7030(unsigned int dev_no)
 
 /* common tasks to prepare hardware and memory for readout */
 int readout_init(int argc, char **argv, struct camera_info_struct *info) {
-	int no_acquisition = 0, result;
+	int no_acquisition = 0, arg_pos = 0, result;
 
-	if (argc != 3) {
-		if ((argc != 4)
-			||
-			(strcmp(argv[1], "-n")
-				&&
-				strcmp(argv[1], "--no-acquisition"))) {
-			fprintf(stderr,
-	   "usage: test-readout-polling <number of scans> <number of blocks>\n");
-			return 1;
+	while (++arg_pos < argc) {
+		if (!strcmp(argv[1], "-n")) {
+			no_acquisition = 1;
+			continue;
 		}
-
-		no_acquisition = 1;
+		if (!strcmp(argv[1], "--no-acquisition")) {
+			no_acquisition = 1;
+			continue;
+		}
+		break;
 	}
 
-	info->n_scans = atoi(argv[1]);
-	info->n_blocks = atoi(argv[2]);
+	if (arg_pos > argc - 2) {
+		fprintf(stderr,
+	   "usage: test-readout-polling <number of scans> <number of blocks>\n");
+		return -1;
+	}
+
+	info->n_scans = atoi(argv[++arg_pos]);
+	info->n_blocks = atoi(argv[++arg_pos]);
 
 	if ((result = lscpcie_driver_init()) < 0) {
 		fprintf(stderr, "initialising driver returned %d\n", result);
@@ -63,7 +67,7 @@ int readout_init(int argc, char **argv, struct camera_info_struct *info) {
 	// open /dev/lscpcie<n>
 	if ((result = lscpcie_open(0, 0, USE_DMA_MAPPING)) < 0) {
 		fprintf(stderr, "opening first board returned %d\n", result);
-		return 2;
+		return -2;
 	}
 	// get memory mapped pointers etc
 	info->dev = lscpcie_get_descriptor(0);
@@ -86,13 +90,13 @@ int readout_init(int argc, char **argv, struct camera_info_struct *info) {
 
 	result = lscpcie_init_scan(info->dev, info->trigger_mode, info->n_scans,
 				info->n_blocks, 2);
-	if (result) {
+	if (result < 0) {
 		fprintf(stderr, "error %d when initialising scan\n", result);
 		return result;
 	}
 
 	result = lscpcie_start_scan(info->dev);
-	if (result) {
+	if (result < 0) {
 		fprintf(stderr, "error %d when starting scan\n", result);
 		return result;
 	}
@@ -115,7 +119,7 @@ int readout_init(int argc, char **argv, struct camera_info_struct *info) {
 		return -ENOMEM;
 	}
 
-	return 0;
+	return arg_pos;
 }
 
 int fetch_mapped_data(struct dev_descr *dev, uint8_t *data, size_t max)
@@ -167,6 +171,8 @@ void print_data(const struct camera_info_struct *info) {
 	int n_cams = info->dev->control->number_of_cameras;
 	int n_pixel = info->dev->control->number_of_pixels;
 
+fprintf(stderr, "printing data %d %d %d %d\n", info->n_blocks, info->n_scans,
+        n_cams, n_pixel);
 	for (block = 0; block < info->n_blocks; block++)
 		for (scan = 0; scan < info->n_scans; scan++)
 			for (camera = 0; camera < n_cams; camera++)

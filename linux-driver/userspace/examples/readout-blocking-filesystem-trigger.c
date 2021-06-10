@@ -65,7 +65,7 @@ int main(int argc, char **argv)
 	struct camera_info_struct info;
 
 	result = readout_init(argc, argv, &info);
-	if (result)
+	if (result < 0)
 		return result;
 
 	info.dev->s0->XCK.bytes.MSB &= 0xBF; // stop S Timer

@@ -16,7 +16,6 @@
 
 #include "types.h"
 #include "../kernelspace/registers-common.h"
-#include "../kernelspace/ioctl.h"
 #include <sys/types.h>
 
 
@@ -34,47 +33,69 @@ struct dev_descr {
 	struct control_struct *control;	// memory mapped pointer to driver control area
 };
 
+typedef enum { trig_xck = 0, trig_ext = 1, trig_dat = 2 } trigger_mode_t;
+
+// the following flags should go elsewhere, they don't need to be exposed
+#define IS_FFT  0x0001
+#define IS_AREA 0x8000
+#define LEGACY_202_14_TLPCNT 0
+
+#define MASTER_ADDRESS_CAMERA     0x00
+#define CAMERA_ADDRESS_PIXEL      0x01
+#define CAMERA_ADDRESS_TRIGGER_IN 0x02
+#define CAMERA_ADDRESS_VCLK       0x04
+
 #define USE_DMA_MAPPING 0x01
+
 #define SET_BITS(var, val, mask) var = (var & ~mask) | (val & mask)
 
 // camera operations
 int lscpcie_driver_init(void);
 int lscpcie_open(uint dev_no, uint16_t fiber_options, uint8_t memory_options);
 void lscpcie_close(uint dev_no);
+int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode,
+		int number_of_scans, int number_of_blocks,
+		int dmas_per_interrupt);
+int lscpcie_start_scan(struct dev_descr * dev);
+int lscpcie_start_block(struct dev_descr *dev);
+int lscpcie_end_block(struct dev_descr *dev);
+int lscpcie_end_acquire(struct dev_descr *dev);
 ssize_t lscpcie_readout(struct dev_descr *dev, uint16_t * buffer,
 			size_t items_to_read);
+int lscpcie_setup_dma(struct dev_descr *dev);
 int lscpcie_hardware_present(struct dev_descr *dev);
 int lscpcie_fifo_overflow(struct dev_descr *dev);
 int lscpcie_dma_overflow(struct dev_descr *dev);
 int lscpcie_clear_fifo(struct dev_descr *dev);
 size_t lscpcie_bytes_free(struct dev_descr *dev);
 size_t lscpcie_bytes_available(struct dev_descr *dev);
+int lscpcie_send_fiber(struct dev_descr *device_descriptor,
+		       uint8_t master_address,
+		       uint8_t register_address, uint16_t data);
+
+int lscpcie_init_7030(unsigned int dev_no);
 
 // register access through ioctl
 int lscpcie_read_config32(struct dev_descr *dev, uint16_t address,
 			  uint32_t * val);
 int lscpcie_write_config32(struct dev_descr *dev, uint16_t address,
 			   uint32_t val);
-#define lscpcie_read_reg8(dev, addr, data) \
-  do *data = *(uint8_t*)(((uint8_t *)dev->dma_reg) + addr); while (0)
-#define lscpcie_read_reg16(dev, addr, data) \
-  do *data = *(uint16_t*)(((uint8_t *)dev->dma_reg) + addr); while(0)
-#define lscpcie_read_reg32(dev, addr, data) \
-  do *data = *(uint32_t*)(((uint8_t *)dev->dma_reg) + addr); while(0)
-#define lscpcie_write_reg8(dev, addr, data) \
-  do *(uint8_t*) (((uint8_t *)dev->dma_reg) + addr) = data; while (0)
-#define lscpcie_write_reg16(dev, addr, data) \
-  do *(uint16_t*) (((uint8_t *)dev->dma_reg) + addr) = data; while (0)
-#define lscpcie_write_reg32(dev, addr, data) \
-  do *(uint32_t*) (((uint8_t *)dev->dma_reg) + addr) = data; while (0)
-
 struct dev_descr *lscpcie_get_descriptor(uint dev_no);
+
+#define lscpcie_set_s0_bit(dev, address, bit_number, set) \
+  lscpcie_set_bits_reg32(dev, address, set ? mask : 0, mask)
+
 
 // debugging
 void lscpcie_set_debug(struct dev_descr *dev, int flags, int mask);
 int lscpcie_dump_s0(struct dev_descr *dev);
 int lscpcie_dump_dma(struct dev_descr *dev);
 int lscpcie_dump_tlp(struct dev_descr *dev);
+
+
+// additional
+int set_dma_address_in_tlp(struct dev_descr *dev);
+int set_dma_buffer_registers(struct dev_descr *dev);
 
 #ifdef __cplusplus
 }
