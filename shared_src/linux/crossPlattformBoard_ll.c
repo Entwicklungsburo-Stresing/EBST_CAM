@@ -185,6 +185,8 @@ void ResetBufferWritePos(uint32_t drvno)
 
 void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 {
+    struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
+    memcpy(userBufferWritePos[drvno], dev->mapped_buffer + dev->control->read_pos, rest_in_bytes);
     return;
 }
 
@@ -224,7 +226,7 @@ void* CopyDataToUserBuffer(void* param_drvno)
     ssize_t bytes_read = 0;
     ssize_t result;
     struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
-    do
+    while (bytes_to_read && (bytes_to_read >= dev->control->bytes_per_interrupt))
     {
         result = read(dev->handle, userBufferWritePos[drvno], bytes_to_read);
         if (result < 0)
@@ -232,7 +234,7 @@ void* CopyDataToUserBuffer(void* param_drvno)
         bytes_to_read -= result;
         bytes_read += result;
         userBufferWritePos[drvno] = (uint16_t*)(((uint8_t *)userBufferWritePos[drvno]) + bytes_read);
-    } while (bytes_to_read && (bytes_to_read >= dev->control->bytes_per_interrupt));
+    }
     ES_LOG("Copy to user buffer done\n");
     return NULL;
 }
