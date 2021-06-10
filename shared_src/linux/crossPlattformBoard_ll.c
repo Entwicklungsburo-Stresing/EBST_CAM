@@ -176,8 +176,8 @@ void ResetBufferWritePos(uint32_t drvno)
     //on linux: driver numbers are 0 and 1, on windows 1 and 2
     struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
 	dev->control->write_pos = 0;
-    dev->control->user_buffer_write_pos = userBuffer[drvno];
-    ES_LOG("user_buffer_write_pos %p\n", dev->control->user_buffer_write_pos);
+    userBufferWritePos[drvno] = userBuffer[drvno];
+    ES_LOG("user_buffer_write_pos %p\n", userBufferWritePos[drvno]);
 	dev->control->read_pos = 0;
 	dev->control->irq_count = 0;
     return;
