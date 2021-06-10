@@ -20,10 +20,16 @@
 #include <sys/mman.h>
 #include <errno.h>
 #include <stdarg.h>
-#include "../../shared_src/enum.h"
+
 #include "local-config.h"
 
 #define memory_barrier() asm volatile ("" : : : "memory")
+
+#define pulse_bit(reg, bit_mask) do { \
+		dev->s0->reg |= bit_mask; \
+		memory_barrier(); \
+		dev->s0->reg &= ~(bit_mask);	\
+	} while (0)
 
 static int error_reporting = 1;
 
@@ -81,9 +87,54 @@ int lscpcie_driver_init(void)
 	return number_of_pcie_boards;
 }
 
+/*Pixelsize with matching TLP Count (TLPC).
+  Pixelsize = TLPS *TLPC - 1*TLPS
+  (TLPS TLP size = 64)
+  TLPC 0x Pixelsize
+    1   64
+    2	  128
+    3	  192
+    4	  256
+    5	  320
+    6	  384
+    7	  448
+    8	  512
+    9	  576
+    a	  640
+    b	  704
+    c	  768
+    d	  832
+    e	  896
+    f		960
+    10	1024
+    11	1088
+    12	1152
+    13	1216
+    14	1280
+    15	1344
+    16	1408
+    17	1472
+    18	1536
+    19	1600
+    1a	1664
+    1b	1728
+    1c	1792
+    1d	1856
+    1e	1920
+    1f	1984
+    20	2048
+    21	2112
+    22  2176
+    ...
+    40  4096
+    41  4160
+    ...
+    81  8256
+*/
+
 int lscpcie_open(uint dev_no, uint16_t fiber_options, uint8_t memory_options)
 {
-	int result = 0, handle, hardware_present;
+	int result = 0, handle, no_tlps, hardware_present;
 	char name[16];
 	int page_size = sysconf(_SC_PAGE_SIZE);
 
@@ -121,9 +172,41 @@ int lscpcie_open(uint dev_no, uint16_t fiber_options, uint8_t memory_options)
 	if (hardware_present < 0)
 		goto error;
 
-	fprintf(stderr, "found io spce of size 0x%08x\n", dev->control->io_size);
-	if (hardware_present)
-	{
+	switch (dev->control->number_of_pixels) {
+	case 128:
+		no_tlps = 0x2;
+		break;
+	case 192:
+		no_tlps = 0x3;
+		break;
+	case 320:
+		no_tlps = 0x5;
+		break;
+	case 576:
+		no_tlps = 0x9;
+		break;
+	case 1088:
+		no_tlps = 0x11;
+		break;
+	case 2112:
+		no_tlps = 0x21;
+		break;
+	case 4160:
+		no_tlps = 0x41;
+		break;
+	case 8256:
+		no_tlps = 0x81;
+		break;
+	default:
+		error_message("invalid number of pixels %d\n",
+			      dev->control->number_of_pixels);
+		return -EINVAL;
+	}
+	if (LEGACY_202_14_TLPCNT)
+		no_tlps++;
+	dev->number_of_tlps = no_tlps;
+
+	if (hardware_present) {
 		// map io registers to user space memory
 		dev->dma_reg
 		    =
@@ -140,24 +223,52 @@ int lscpcie_open(uint dev_no, uint16_t fiber_options, uint8_t memory_options)
 		// s0 addres space pointer
 		dev->s0 = (struct s0_reg_struct *)
 			(((uint8_t *) dev->dma_reg) + 0x80);
-	}
-	else
-	{
+
+		// startval for CTRLA Reg  +slope, IFC=h, VON=1
+		// clear CTRLB & CTRLC
+
+		// note: the above mmap system call tells the operating system
+		// to perform a write to pci io-registers when writing to the
+		// corresponding virtual pointer, pretty cool, isn't it?
+		dev->s0->CTRLA = 0x23;
+		dev->s0->CTRLB = 0;
+		dev->s0->CTRLC = 0;
+		dev->s0->PIXREG = dev->control->number_of_pixels;
+		dev->s0->CAM_CNT = dev->control->number_of_cameras & 0xF;
+
+		// initialise number of pixels and clock scheme
+		result = lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA,
+					CAMERA_ADDRESS_PIXEL,
+					dev->control->number_of_pixels);
+		if (result < 0)
+			goto error;
+
+		result = lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA,
+					CAMERA_ADDRESS_VCLK, fiber_options);
+		if (result < 0)
+			goto error;
+	} else {
 		/* no hardware found, debug mode */
 		dev->dma_reg = NULL;
 		dev->s0 = NULL;
 		dev->control->used_dma_size = dev->control->dma_buf_size;
 	}
+
 	if (memory_options & USE_DMA_MAPPING) {
 		dev->mapped_buffer
 			= mmap(NULL, dev->control->dma_buf_size,
 				PROT_READ | PROT_WRITE, MAP_SHARED, handle,
 				2 * page_size);
-		if (dev->mapped_buffer == MAP_FAILED)
+		if (dev->mapped_buffer == MAP_FAILED) {
+			dev->mapped_buffer = 0;
 			return -1;
+		}
 	} else {
 		dev->mapped_buffer = 0;
 	}
+
+	//if (_COOLER) ActCooling(drvno, FALSE); //deactivate cooler
+
 	return handle;
 
       error:
@@ -171,6 +282,10 @@ void lscpcie_close(uint dev_no)
 	if (!dev)
 		return;
 
+	if (dev->mapped_buffer)
+		munmap((uint8_t *) dev->mapped_buffer,
+		       dev->control->dma_buf_size);
+
 	if (dev->dma_reg != MAP_FAILED)
 		munmap(dev->dma_reg, 0x100);
 
@@ -181,6 +296,129 @@ void lscpcie_close(uint dev_no)
 		close(dev->handle);
 
 	dev_descr[dev_no] = init_dev_descr;
+}
+
+/* prepare registers for individual scan */
+int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode,
+		int number_of_scans, int number_of_blocks,
+		int dmas_per_interrupt)
+{
+	int result;
+	uint32_t hwd_req = (1<<IRQ_REG_HWDREQ_EN);
+
+	result = lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA,
+				    CAMERA_ADDRESS_TRIGGER_IN,
+				    trigger_mode);
+	if (result < 0)
+		return result;
+
+	if (HWDREQ_EN)
+		SET_BITS(dev->s0->IRQREG.REG32, hwd_req, hwd_req);
+	else
+		SET_BITS(dev->s0->IRQREG.REG32, 0, hwd_req);
+
+	dev->s0->CTRLB
+	    = (CTRLB_GTI_I | CTRLB_STI_TSTART) & ~(CTRLB_SHON);
+	// set block timer and start block timer
+	dev->s0->BTIMER =
+	    (1 << BTIMER_START) | CFG_BTIMER_IN_US;
+	// set slope of block trigger
+	dev->s0->BFLAGS |= 1 << BFLAG_BSLOPE;
+
+	// set output of O on PCIe card
+	dev->s0->TOR = TOR_OUT_XCK;
+
+	dev->s0->DMAS_PER_INTERRUPT = dmas_per_interrupt;
+	fprintf(stderr, "dmas per interrupt is %d (%d)\n",
+		dev->s0->DMAS_PER_INTERRUPT, dmas_per_interrupt);
+	dev->control->bytes_per_interrupt
+	    = dmas_per_interrupt * dev->control->number_of_pixels
+		* sizeof(pixel_t);
+
+	dev->s0->NUMBER_OF_SCANS = number_of_scans;
+	dev->s0->DMA_BUF_SIZE_IN_SCANS = number_of_scans * number_of_blocks * 2;
+	dev->s0->NUMBER_OF_BLOCKS = number_of_blocks;
+
+	dev->control->used_dma_size = dev->s0->DMA_BUF_SIZE_IN_SCANS
+		* dev->control->number_of_pixels
+		* dev->control->number_of_cameras * sizeof(pixel_t);
+	if (dev->control->used_dma_size > dev->control->dma_buf_size)
+		dev->control->used_dma_size = dev->control->dma_buf_size;
+
+	fprintf(stderr, "dmas per interrupt is %d\n",
+		dev->s0->DMAS_PER_INTERRUPT);
+	fprintf(stderr, "bytes per interrupt is %d\n",
+		dev->control->bytes_per_interrupt);
+	fprintf(stderr, "number of scans is %d\n",
+		dev->s0->NUMBER_OF_SCANS);
+	fprintf(stderr, "buf size in scans is %d\n",
+		dev->s0->DMA_BUF_SIZE_IN_SCANS);
+
+	return result;
+}
+
+/* reset and start counters */
+int lscpcie_start_scan(struct dev_descr * dev)
+{
+	pulse_bit(DMAS_PER_INTERRUPT, 1<<DMA_COUNTER_RESET);
+
+	// reset the internal block counter - is not BLOCKINDEX!
+	pulse_bit(DMA_BUF_SIZE_IN_SCANS, 1<<BLOCK_COUNTER_RESET);
+
+	// reset block counter
+	pulse_bit(BLOCK_INDEX, 1<<BLOCK_INDEX_RESET);
+
+	// reset scan counter
+	pulse_bit(SCAN_INDEX, 1<<SCAN_INDEX_RESET);
+
+	// set Block end stops timer:
+	// when SCANINDEX reaches NOS, the timer is stopped by hardware.
+	dev->s0->PCIEFLAGS |= 1 << PCIE_EN_RS_TIMER_HW;
+	////<<<< reset all counters
+
+	// >> SetIntFFTrig
+	dev->s0->XCK.dword |= (1 << XCKMSB_EXT_TRIGGER);
+	dev->control->write_pos = 0;
+	dev->control->read_pos = 0;
+	dev->control->irq_count = 0;
+	// set measure on
+	fprintf(stderr, "starting measurement\n");
+	dev->s0->PCIEFLAGS |= 1 << PCIEFLAG_MEASUREON;
+
+	return 0;
+}
+
+int lscpcie_start_block(struct dev_descr *dev) {
+	// make pulse for blockindex counter
+	pulse_bit(PCIEFLAGS, 1<<PCIEFLAG_BLOCKTRIG);
+	// reset scan counter
+	pulse_bit(SCAN_INDEX, 1<<SCAN_INDEX_RESET);
+	dev->s0->PCIEFLAGS |= 1<<PCIEFLAG_BLOCKON;
+	// start Stimer -> set usecs and RS to one
+	dev->s0->XCK.dword
+	    = (dev->s0->XCK.dword & ~XCK_EC_MASK)
+	    | (CFG_STIMER_IN_US & XCK_EC_MASK) | (1 << XCK_RS);
+	// software trigger
+	//pulse_bit(BTRIGREG, 1<<FREQ_REG_SW_TRIG);
+
+	return 0;
+}
+
+int lscpcie_end_block(struct dev_descr *dev) {
+	// reset block on
+	dev->s0->PCIEFLAGS &= ~(1 << PCIEFLAG_BLOCKON);
+
+	return 0;
+}
+
+int lscpcie_end_acquire(struct dev_descr *dev) {
+	dev->s0->XCK.dword &= ~(1 << XCK_RS);
+	// stop btimer
+	dev->s0->BTIMER &= ~(1 << BTIMER_START);
+	// reset measure on
+	dev->s0->PCIEFLAGS &= ~(1 << PCIEFLAG_MEASUREON);
+
+	return 0;
 }
 
 ssize_t lscpcie_readout(struct dev_descr *dev, uint16_t * buffer,
@@ -238,14 +476,207 @@ void lscpcie_set_debug(struct dev_descr *dev, int flags, int mask)
 /*                                 fiber link                                  */
 /*******************************************************************************/
 
+int lscpcie_send_fiber(struct dev_descr *dev, uint8_t master_address,
+		       uint8_t register_address, uint16_t data)
+{
+	uint32_t reg_val =
+	    (master_address << 24) | (register_address << 16) | data;
+
+	if (!dev->s0)
+		return -ENODEV;
+
+	dev->s0->DBR = reg_val;
+	memory_barrier();
+	dev->s0->DBR = reg_val | 0x4000000;
+	memory_barrier();
+	dev->s0->DBR = 0;
+	usleep(1000);
+
+	return 0;
+}
+
+int init_cam_control(struct dev_descr *dev, trigger_mode_t trigger_mode,
+		     uint16_t options)
+{
+	int result;
+
+	result
+	    =
+	    lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA,
+			       CAMERA_ADDRESS_PIXEL,
+			       dev->control->number_of_pixels);
+	if (result < 0)
+		return result;
+
+	result
+	    =
+	    lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA,
+			       CAMERA_ADDRESS_TRIGGER_IN, trigger_mode);
+	if (result < 0)
+		return result;
+
+	result = lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA,
+				CAMERA_ADDRESS_PIXEL, options);	//??
+
+	return result;
+}
+
 int lscpcie_hardware_present(struct dev_descr *dev) {
 	return dev->control->status & DEV_HARDWARE_PRESENT;
 }
+
+/*******************************************************************************/
+/*                                    dma                                      */
+/*******************************************************************************/
+
+int set_dma_address_in_tlp(struct dev_descr *dev)
+{
+	int result;
+	uint64_t val64;
+	uint32_t data = 0, tlp_mode;
+
+	if (_FORCETLPS128)
+		tlp_mode = 0;
+	else {
+		if ((result =
+		     lscpcie_read_config32(dev, PCIeAddr_devCap,
+					   &data)) < 0)
+			return result;
+
+		tlp_mode = data & 0x7;
+	}
+
+	data = (data & ~0xE0) | (1 << 13);
+
+	switch (tlp_mode) {
+	case 0:
+		dev->tlp_size = 0x20;
+		break;
+	case 1:
+		dev->tlp_size = 0x40;
+		break;
+	case 2:
+		dev->tlp_size = 0x80;
+		break;
+	}
+
+	data |= dev->tlp_size / 0x20;
+	if ((result =
+	     lscpcie_write_config32(dev, PCIeAddr_devStatCtrl, data)) < 0)
+		return result;
+
+	// WDMATLPA (Reg name): write the lower part (bit 02:31) of the DMA
+	// adress to the DMA controller
+	SET_BITS(dev->dma_reg->WDMATLPA,
+		 (uint64_t) dev->control->dma_physical_start, 0xFFFFFFFC);
+	fprintf(stderr,
+		"set WDMATLPA to physical address of dma buffer 0x%016lx\n",
+	        (uint64_t) dev->control->dma_physical_start);
+
+	//WDMATLPS: write the upper part (bit 32:39) of the address
+	val64 = ((((uint64_t) dev->control->dma_physical_start) >> 8)
+		 & 0xFF000000)
+	    | dev->tlp_size;
+
+	//64bit address enable
+	if (DMA_64BIT_EN)
+		val64 |= 1 << 19;
+
+	SET_BITS(dev->dma_reg->WDMATLPS, val64, 0xFF081FFF);
+	fprintf(stderr, "set WDMATLPS to 0x%016lx (0x%016lx)\n", val64,
+		val64 & 0xFF081FFF);
+
+	SET_BITS(dev->dma_reg->WDMATLPC, dev->number_of_tlps, 0x0000FFFF);
+	fprintf(stderr, "set WDMATLPC to 0x%08x (0x%08x)\n", dev->number_of_tlps,
+		dev->number_of_tlps & 0x0000FFFF);
+
+	return 0;
+}
+
+/*
+int set_dma_buffer_registers(struct dev_descr *dev) {
+  // DMABufSizeInScans - use 1 block
+  dev->s0->DMA_BUF_SIZE_IN_SCANS
+    = dev->control->dma_num_scans;
+
+  //scans per intr must be 2x per DMA_BUFSIZEINSCANS to copy hi/lo part
+  //aCAMCNT: double the INTR if 2 cams
+  dev->s0->DMAS_PER_INTERRUPT
+    = dev->control->dma_num_scans
+    *dev->control->number_of_pixels;
+
+  dev->s0->NUMBER_OF_SCANS = dev->control->dma_num_scans;
+  dev->s0->CAM_CNT = dev->control->number_of_cameras;
+
+  return 0;
+}
+*/
+/*
+void dma_reset(struct dev_descr *dev) {
+  dev->dma_reg->DCSR |= 0x01;
+  memory_barrier();
+  dev->dma_reg->DCSR &= ~0x01;
+}
+
+
+void dma_start(struct dev_descr *dev) {
+  dev->control->read_pos = 0;
+  dev->control->write_pos = 0;
+  dev->dma_reg->DDMACR |= 0x01;
+}
+*/
 
 uint32_t get_scan_index(struct dev_descr *dev)
 {
 	return dev->s0->SCAN_INDEX;
 }
+
+int lscpcie_init_7030(unsigned int dev_no) {
+	int result;
+	struct dev_descr *dev = lscpcie_get_descriptor(dev_no);
+
+	result = set_dma_address_in_tlp(dev);
+	if (result < 0)
+		return result;
+
+	/* HAMAMATSU 7030-0906 	VFreq | 64 lines */
+	dev->s0->VCLKCTRL = (0x700000 << 8) | 0x80;
+
+	return 0;
+}
+
+/*
+int lscpcie_setup_dma(struct dev_descr *dev) {
+  int result;
+
+  // note: the dma buffer has to be allocated in kernel space
+  if ((result = set_dma_address_in_tlp(dev)) < 0) return result;
+
+  if ((result = set_dma_buffer_registers(dev)) < 0) return 0;
+
+  // DREQ: every XCK h->l starts DMA by hardware
+  // set hardware start des dma  via DREQ withe data = 0x4000000
+  SET_BITS(dev->s0->IRQ.IRQREG, HWDREQ_EN ? 0x40000000 : 0,
+           0x40000000);
+
+  // note: enabling the interrupt is again a job for kernel code, do it in
+  // start_camera
+  return 0;
+}
+*/
+/*
+void start_pcie_dma_write(struct dev_descr *dev) {
+  if (!HWDREQ_EN) {
+    dma_reset(dev);
+    dma_start(dev);
+  }
+}
+*/
+// note: disabling interrupt is a kernel code job
+// as well as releasing the dma buffer
+// do it in stop_camera
+// therefore no equivalent to clean-up pcie dma
+
 
 /*******************************************************************************/
 /*                              register access                                */

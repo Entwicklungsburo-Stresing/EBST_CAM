@@ -151,7 +151,7 @@ static int __init lscpcie_module_init(void)
 	module_status |= MOD_PCI_REGISTERED;
 	PMDEBUG("registered pci driver\n");
 
-	printk(KERN_WARNING NAME " ready.\n");
+	printk(KERN_WARNING NAME " module ready.\n");
 
 	return 0;
 
