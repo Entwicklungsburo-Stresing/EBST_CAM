@@ -27,7 +27,7 @@ struct file_operations fops = {
 	.llseek = 0,
 	.read = lscpcie_read,
 	.write = lscpcie_write,
-    .unlocked_ioctl = lscpcie_ioctl,
+	.unlocked_ioctl = lscpcie_ioctl,
 	.open = lscpcie_open,
 	.release = lscpcie_release,
 	.mmap = mmap_register_remap_mmap,
@@ -174,6 +174,7 @@ int device_test_status(struct dev_struct *dev, u16 bits)
 
 void device_set_status(struct dev_struct *dev, u16 mask, u16 bits)
 {
+	PDEBUG(D_STATUS, "setting bits 0x%04x to 0x%04x\n", mask, bits);
 	if (dev->control)
 		dev->control->status = (dev->control->status & ~mask) | bits;
 	else
