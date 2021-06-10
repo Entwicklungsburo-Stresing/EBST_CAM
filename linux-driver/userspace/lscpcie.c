@@ -31,6 +31,10 @@
 		dev->s0->reg &= ~(bit_mask);	\
 	} while (0)
 
+#define HWDREQ_EN 1 // enables hardware start of DMA by XCK h->l slope
+#define _FORCETLPS128 1	//only use payload size 128byte
+#define DMA_64BIT_EN 0
+
 static int error_reporting = 1;
 
 static const struct dev_descr init_dev_descr = {
