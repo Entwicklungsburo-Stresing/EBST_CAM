@@ -650,9 +650,8 @@ es_status_codes allocateUserMemory( uint32_t drvno )
 	//check if enough space is available in the physical ram
 	if (memory_free > (uint64_t)needed_mem)
 	{
-		// sometimes it makes one ISR more, so better to allocate nos+1 thaT IN THIS CASE THE ADDRESS pDMAIndex is valid
-		//B! "2 *" because the buffer is just 2/3 of the needed size. +1 oder *2 weil sonst absturz im continuous mode
-		uint16_t* userBufferTemp = (uint16_t*) calloc( (uint64_t)aCAMCNT[drvno] * (uint64_t)(*Nospb) * (uint64_t)Nob * (uint64_t)aPIXEL[drvno], sizeof( uint16_t ) );
+		// correct required size is multiplicated by 2 to avoid errors
+		uint16_t* userBufferTemp = (uint16_t*) calloc( (uint64_t)aCAMCNT[drvno] * (uint64_t)(*Nospb) * (uint64_t)Nob * (uint64_t)aPIXEL[drvno] * 2, sizeof( uint16_t ) );
 		if (userBufferTemp)
 		{
 			userBuffer[drvno] = userBufferTemp;
