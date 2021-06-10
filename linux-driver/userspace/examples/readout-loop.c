@@ -231,6 +231,7 @@ void print_data(const struct camera_info_struct *info) {
 					printf("%d %d %d %d %d\n", block, scan,
 					       camera, pixel, info->data[i]);
         */
+        /*
 	for (pixel = 0, i = 0; pixel < n_pixel; pixel++) {
 		printf("%d", pixel);
 		for (block = 0; block < info->n_blocks; block++)
@@ -239,6 +240,10 @@ void print_data(const struct camera_info_struct *info) {
 					printf("\t%hd", *(info->data + i));
 		printf("\n");
 	}
+        */
+        int n = n_pixel * n_cams * info->n_scans * info->n_blocks;
+        for (i = 0; i < n; i++)
+          printf("%d\t%hu\n", info->data + i)
 }
 
 int main(int argc, char **argv) {

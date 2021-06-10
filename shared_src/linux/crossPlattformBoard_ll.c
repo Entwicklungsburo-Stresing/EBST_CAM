@@ -7,6 +7,20 @@
 #include "../../linux-driver/kernelspace/registers.h"
 #include "../../linux-driver/userspace/local-config.h"
 
+#define lscpcie_read_reg8(dev, address, p_data) \
+  do *p_data = *((uint8_t*) dev->s0) + address; while (0)
+#define lscpcie_read_reg16(dev, address, p_data) \
+  do *p_data = *((uint16_t*) ((uint8_t*) dev->s0) + address); while (0)
+#define lscpcie_read_reg32(dev, address, p_data) \
+  do *p_data = *((uint32_t*) ((uint8_t*) dev->s0) + address); while (0)
+
+#define lscpcie_write_reg8(dev, address, data) \
+  do *(((uint8_t*) dev->s0) + address) = data; while (0)
+#define lscpcie_write_reg16(dev, address, data) \
+  do *((uint16_t*) ((uint8_t*) dev->s0) + address) = data; while (0)
+#define lscpcie_write_reg32(dev, address, data) \
+  do *((uint32_t*) ((uint8_t*) dev->s0) + address) = data; while (0)
+
 /* Acquire one block of data. Poll first XCKMSB /RS for being low and data
    being present in the buffer. Loop over if less than the needed data has
    been copied. */
