@@ -1823,7 +1823,7 @@ es_status_codes StartMeasurement()
 		if (status == es_abortion)
 			return AbortMeasurement( BOARD_SEL );
 		else if (status != es_no_error) return status;
-		ES_LOG("Block triggered\n");
+        ES_LOG("Block %u triggered\n", blk_cnt);
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
 			status = countBlocksByHardware( 1 );

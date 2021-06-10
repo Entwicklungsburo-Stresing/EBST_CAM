@@ -229,13 +229,14 @@ void* CopyDataToUserBuffer(void* param_drvno)
     while (bytes_to_read && (bytes_to_read >= dev->control->bytes_per_interrupt))
     {
         result = read(dev->handle, userBufferWritePos[drvno], bytes_to_read);
+        ES_LOG("Copy to user buffer intterupt %u done\n", dev->control->irq_count);
         if (result < 0)
             return NULL;
         bytes_to_read -= result;
         bytes_read += result;
         userBufferWritePos[drvno] = (uint16_t*)(((uint8_t *)userBufferWritePos[drvno]) + bytes_read);
     }
-    ES_LOG("Copy to user buffer done\n");
+    ES_LOG("All copy to user buffer interrupts done\n");
     return NULL;
 }
 
