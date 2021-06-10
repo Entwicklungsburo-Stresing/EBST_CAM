@@ -2200,6 +2200,7 @@ es_status_codes IsTimerOn( uint32_t drvno, bool* on )
  */
 es_status_codes GetLastBufPart( uint32_t drvno )
 {
+    ES_LOG( "Get the last buffer part\n" );
 	//get the rest if buffer is not multiple of 500 (BUFSIZEINSCANS/2)
 	//also if nos is < BUFSIZEINSCANS/2 - here: no intr occurs
 	uint32_t spi = 0;
@@ -2210,7 +2211,6 @@ es_status_codes GetLastBufPart( uint32_t drvno )
 	uint32_t scans_all_cams = (*Nospb) * Nob * aCAMCNT[drvno];
 	uint32_t rest_overall = scans_all_cams % dmaHalfBufferSize;
 	size_t rest_in_bytes = rest_overall * aPIXEL[drvno] * sizeof( uint16_t );
-	ES_LOG( "*GetLastBufPart():\n" );
 	ES_LOG( "nos: 0x%x, nob: 0x%x, scansPerInterrupt: 0x%x, camcnt: 0x%x\n", (*Nospb), Nob, spi, aCAMCNT[drvno]);
 	ES_LOG( "scans_all_cams: 0x%x \n", scans_all_cams );
 	ES_LOG( "rest_overall: 0x%x, rest_in_bytes: 0x%zx\n", rest_overall, rest_in_bytes );

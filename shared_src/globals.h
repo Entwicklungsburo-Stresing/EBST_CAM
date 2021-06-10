@@ -31,6 +31,7 @@ extern uint32_t* aPIXEL;
 extern uint32_t* aCAMCNT;
 extern bool* useSWTrig;
 extern uint16_t** userBuffer;
+extern uint16_t** userBufferWritePos;
 extern uint32_t BOARD_SEL;
 extern uint8_t number_of_boards;
 extern uint32_t Nob;
