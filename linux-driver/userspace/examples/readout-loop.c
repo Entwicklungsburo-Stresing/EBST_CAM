@@ -121,7 +121,7 @@ int lscpcie_acquire_block_fs(struct dev_descr *dev, uint8_t *data,
 		* sizeof(pixel_t) * n_scans;
 
 	result = lscpcie_start_block(dev);
-	lscpcie_dump_s0(dev);
+	//lscpcie_dump_s0(dev);
 	if (result < 0)
 		return result;
 
@@ -231,14 +231,20 @@ void print_data(const struct camera_info_struct *info) {
 					printf("%d %d %d %d %d\n", block, scan,
 					       camera, pixel, info->data[i]);
         */
+	/*
 	for (pixel = 0, i = 0; pixel < n_pixel; pixel++) {
 		printf("%d", pixel);
 		for (block = 0; block < info->n_blocks; block++)
 			for (scan = 0; scan < info->n_scans; scan++)
 				for (camera = 0; camera < n_cams; camera++, i++)
-					printf("\t%hd", *(info->data + i));
+					printf("\t%hu", *(info->data + i));
 		printf("\n");
 	}
+	printf("\n");
+	*/
+	int n = n_pixel * n_cams * info->n_scans * info->n_blocks;
+	for (i = 0; i < n; i++)
+		printf("%d\t%hu\n", i, info->data + i);
 }
 
 int main(int argc, char **argv) {
