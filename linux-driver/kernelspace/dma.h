@@ -19,5 +19,7 @@ int dma_init(struct dev_struct *dev);
 void dma_finish(struct dev_struct *dev);
 int dma_start(struct dev_struct *dev);
 int dma_end(struct dev_struct *dev);
+void reset_dma(struct dev_struct *dev);
+void abort_measurement(struct dev_struct *dev);
 
 #endif /* _dma_h_ */
