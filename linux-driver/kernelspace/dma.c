@@ -220,3 +220,19 @@ static enum irqreturn isr(int irqn, void *dev_id)
 
 	return IRQ_HANDLED;
 }
+
+void reset_dma(struct dev_struct *dev) {
+	dev->dma_reg->DCSR |= (1<<DCSR_RESET);
+	memory_barrier();
+	dev->dma_reg->DCSR &= ~(1<<DCSR_RESET);
+}
+
+void abort_measurement(struct dev_struct *dev) {
+	// reset s timer
+	dev->s0_reg->XCK.bytes.MSB &= ~(1<<XCKMSB_RS);
+	// reset block on
+	dev->s0_reg->PCIEFLAGS &= ~(1<<PCIEFLAG_BLOCKON);
+	// reset measure on
+	dev->s0_reg->PCIEFLAGS &= ~(1<<PCIEFLAG_MEASUREON);
+	reset_dma(dev);
+}

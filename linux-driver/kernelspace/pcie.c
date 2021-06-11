@@ -118,6 +118,7 @@ void remove_lscpcie(struct pci_dev *pci_dev)
 	PDEBUG(D_PCI, "removing lscpcie\n");
 
 	if (dev) {
+		abort_measurement(dev);
 		dma_end(dev);
 		if (device_test_status(dev, DEV_IRQ_ALLOCATED)) {
 			PDEBUG(D_INTERRUPT, "freeing interrupt vector\n");
