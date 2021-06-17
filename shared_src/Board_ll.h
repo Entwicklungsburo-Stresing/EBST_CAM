@@ -1,13 +1,16 @@
-#ifndef CROSSPLATTFORMBOARDLL_H
-#define CROSSPLATTFORMBOARDLL_H
+#ifndef BOARDLL_H
+#define BOARDLL_H
 
 #include <stdint.h>
 #include "es_status_codes.h"
-#include "Board.h"
 #include "globals.h"
+#include "Board.h"
 
 #ifdef WIN32
 #define ES_LOG(...) WDC_Err(__VA_ARGS__);
+#include "Jungo/wdc_lib.h"
+extern WDC_DEVICE_HANDLE* hDev;
+extern bool _SHOW_MSG;
 #endif
 
 #ifdef __linux__
@@ -37,5 +40,15 @@ es_status_codes _InitBoard(uint32_t drvno);
 es_status_codes _InitDriver();
 es_status_codes _ExitDriver(uint32_t drvno);
 es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno);
+es_status_codes AboutDrv(uint32_t drvno);
+es_status_codes AboutGPX(uint32_t drvno);
+es_status_codes AboutS0(uint32_t drvno);
+es_status_codes AboutTLPs(uint32_t drvno);
+void ErrMsgBoxOn();
+void ErrMsgBoxOff(); // switch to suppress error message boxes
+void ErrorMsg(char ErrMsg[100]);
+LONGLONG ticksTimestamp();
+es_status_codes WaitTrigger(uint32_t drvno, bool ExtTrigFlag, bool *SpaceKey, bool *AbrKey);
+uint32_t Tickstous(uint64_t tks);
 
-#endif // CROSSPLATTFORMBOARDLL_H
+#endif // BOARDLL_H
