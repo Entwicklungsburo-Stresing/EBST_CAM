@@ -13,16 +13,10 @@
     <ClInclude Include="..\shared_src\lscpciej_lib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\shared_src\Board.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CCDUnit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\shared_src\Board_ll.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h">
@@ -35,6 +29,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\shared_src\es_status_codes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\Board_ll_old.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\Board_old.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -61,22 +61,22 @@
     <ClCompile Include="..\shared_src\lscpciej_lib.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared_src\Board.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CCDUnit.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Global.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared_src\Board_ll.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="UIAbstractionLayer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\shared_src\es_status_codes.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared_src\Board_ll_old.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared_src\Board_old.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

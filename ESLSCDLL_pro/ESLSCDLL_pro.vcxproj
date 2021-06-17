@@ -275,9 +275,9 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)lsc-gui\build\"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\shared_src\Board.c" />
-    <ClCompile Include="..\shared_src\Board_ll.c" />
     <ClCompile Include="..\shared_src\es_status_codes.c" />
     <ClCompile Include="..\shared_src\lscpciej_lib.c" />
+    <ClCompile Include="..\shared_src\win\Board_ll.c" />
     <ClCompile Include="Direct2dViewer.cpp" />
     <ClCompile Include="Direct2dViewer_c.cpp" />
     <ClCompile Include="ESLSCDLL_pro.c" />

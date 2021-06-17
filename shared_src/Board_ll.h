@@ -1,35 +1,41 @@
-#pragma once
-//  Board_ll.h
-//	all low level functions for managing Interfaceboard
+#ifndef CROSSPLATTFORMBOARDLL_H
+#define CROSSPLATTFORMBOARDLL_H
 
-***REMOVED***#define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
-#define MAXPCIECARDS 5
+#include <stdint.h>
+#include "es_status_codes.h"
+#include "Board.h"
+#include "globals.h"
 
-#include "ccdctl.h"
-#include <limits.h>
-#include <process.h>
-#include "Jungo/windrvr.h"
-#include "Jungo/wdc_lib.h"
-#include "Jungo/wdc_defs.h"
-#include "wchar.h"
-#include "lscpciej_lib.h"
-#include "shared_src/ESLSCDLL_pro.h"
-#include "shared_src/enum.h"
-#include "shared_src/struct.h"
-#include "shared_src/es_status_codes.h"
+#ifdef WIN32
+#define ES_LOG(...) WDC_Err(__VA_ARGS__);
+#endif
 
-extern WDC_DEVICE_HANDLE* hDev;
+#ifdef __linux__
+#include <stdio.h>
+#define ES_LOG(...) fprintf(stderr, __VA_ARGS__);
+#endif
 
-//Low level API
-es_status_codes SetS0Reg(ULONG Data, ULONG Bitmask, CHAR Address, UINT32 drvno);
-es_status_codes SetS0Bit(ULONG bitnumber, CHAR Address, UINT32 drvno);
-es_status_codes ResetS0Bit(ULONG bitnumber, CHAR Address, UINT32 drvno);
-es_status_codes ReadLongIOPort(UINT32 drvno, UINT32* DWData, ULONG PortOff);// read long from IO runreg
-es_status_codes ReadLongS0(UINT32 drvno, UINT32* DWData, ULONG PortOff);	// read long from space0
-es_status_codes ReadLongDMA(UINT32 drvno, UINT32* DWData, ULONG PortOff);
-es_status_codes ReadByteS0(UINT32 drvno, BYTE* data, ULONG PortOff);	// read byte from space0
-es_status_codes WriteLongIOPort(UINT32 drvno, UINT32 DataL, ULONG PortOff);// write long to IO runreg
-es_status_codes WriteLongS0(UINT32 drvno, UINT32 DWData, ULONG PortOff);// write long to space0
-es_status_codes WriteLongDMA(UINT32 drvno, UINT32 DWData, ULONG PortOff);
-es_status_codes WriteByteS0(UINT32 drv, BYTE DataByte, ULONG PortOff); // write byte to space0
-es_status_codes SendFLCAM(UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data);
+// Low level API
+// platform specific implementation
+
+es_status_codes checkDriverHandle(uint32_t drvno);
+es_status_codes readRegister_32( uint32_t drvno, uint32_t* data, uint16_t address );
+es_status_codes readRegister_16( uint32_t drvno, uint16_t* data, uint16_t address );
+es_status_codes readRegister_8( uint32_t drvno, uint8_t* data, uint16_t address );
+es_status_codes writeRegister_32( uint32_t drvno, uint32_t data, uint16_t address );
+es_status_codes writeRegister_16( uint32_t drvno, uint16_t data, uint16_t address );
+es_status_codes writeRegister_8( uint32_t drvno, uint8_t data, uint16_t address );
+es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address );
+es_status_codes writeConfig_32( uint32_t drvno, uint32_t data, uint16_t address );
+void FreeMemInfo( uint64_t *pmemory_all, uint64_t *pmemory_free );
+es_status_codes SetupDma( uint32_t drvno );
+es_status_codes enableInterrupt( uint32_t drvno );
+uint64_t getDmaAddress( uint32_t drvno);
+void ResetBufferWritePos(uint32_t drvno);
+void copyRestData(uint32_t drvno, size_t rest_in_bytes);
+es_status_codes _InitBoard(uint32_t drvno);
+es_status_codes _InitDriver();
+es_status_codes _ExitDriver(uint32_t drvno);
+es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno);
+
+#endif // CROSSPLATTFORMBOARDLL_H
