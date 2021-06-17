@@ -18,7 +18,7 @@ ULONG aPIXEL[5] = { 0, 0, 0, 0, 0 };	// pixel
 ULONG aXCKDelay[5] = { 1000, 1000, 1000, 1000, 1000 };	// sensor specific delay
 BOOL aINIT[5] = { FALSE, FALSE, FALSE, FALSE, FALSE };
 #else
-#include "shared_src/Board.h"
+#include "shared_src/Board_old.h"
 #endif
 #include "Global.h" 
 #include "CCDUnit.h"

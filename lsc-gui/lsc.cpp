@@ -1,6 +1,6 @@
 ﻿#include "lsc.h"
 #include <sstream>
-#include "../shared_src/crossPlattformBoard.h"
+#include "../shared_src/Board.h"
 
 Lsc::Lsc()
 {

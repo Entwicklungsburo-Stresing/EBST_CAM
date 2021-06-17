@@ -678,8 +678,8 @@
     <Text Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\shared_src\Board.c" />
-    <ClCompile Include="..\shared_src\Board_ll.c" />
+    <ClCompile Include="..\shared_src\Board_ll_old.c" />
+    <ClCompile Include="..\shared_src\Board_old.c" />
     <ClCompile Include="..\shared_src\es_status_codes.c" />
     <ClCompile Include="..\shared_src\lscpciej_lib.c" />
     <ClCompile Include="CCDExamp.c" />
@@ -691,10 +691,11 @@
     <ResourceCompile Include="CCDExamp.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\shared_src\Board.h" />
-    <ClInclude Include="..\shared_src\Board_ll.h" />
+    <ClInclude Include="..\shared_src\Board_ll_old.h" />
+    <ClInclude Include="..\shared_src\Board_old.h" />
     <ClInclude Include="..\shared_src\CCDCTL.H" />
     <ClInclude Include="..\shared_src\enum.h" />
+    <ClInclude Include="..\shared_src\ESLSCDLL_pro.h" />
     <ClInclude Include="..\shared_src\es_status_codes.h" />
     <ClInclude Include="..\shared_src\lscpciej_lib.h" />
     <ClInclude Include="..\shared_src\struct.h" />

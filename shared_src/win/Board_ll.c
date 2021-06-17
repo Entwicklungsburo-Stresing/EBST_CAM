@@ -1,10 +1,9 @@
-#include "../crossPlattformBoard_ll.h"
+#include "../Board_ll.h"
 #include <stdint.h>
 
 ***REMOVED***#define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
 
 #include "Jungo/windrvr.h"
-#include "Jungo/wdc_lib.h"
 #include "Jungo/wdc_defs.h"
 #include "shared_src/lscpciej_lib.h"
 #include "shared_src/ESLSCDLL_pro.h"
@@ -19,17 +18,18 @@ WD_DMA* dmaBufferInfos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL }; //there
 WDC_PCI_SCAN_RESULT scanResult;
 WD_PCI_CARD_INFO deviceInfo[MAXPCIECARDS];
 __int64 TPS = 0;
+bool _SHOW_MSG = TRUE;
 
-struct global_vars
-{
-	USHORT** userBuffer;
-	WDC_DEVICE_HANDLE* hDev;
-	//PWDC_DEVICE* pDev;
-	ULONG* aPIXEL;
-	ULONG* aCAMCNT;
-	UINT32* Nospb;
-	BOOL* useSWTrig;
-};
+
+//struct global_vars
+//{
+//	USHORT** userBuffer;
+//	WDC_DEVICE_HANDLE* hDev;
+//	ULONG* aPIXEL;
+//	ULONG* aCAMCNT;
+//	UINT32* Nospb;
+//	BOOL* useSWTrig;
+//};
 
 /**
 \brief Initializes the pro DLL. Call this before using it. While initialization global variables are set in pro dll.
@@ -620,3 +620,406 @@ es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 	//On Windows the copy process is done in ISR
 	return es_no_error;
 }
+
+/**
+* \brief Return infos about the PCIe board.
+* 	Shows 5 info messages. Can be used to test the communication with the PCI board.
+* 	Is called automatically for 2 boards.
+*
+* - win1 : version of driver
+* - win2 : ID = 53xx
+* - win3 : length of space0 BAR =0x3f
+* - win4 : vendor ID = EBST
+* - win5 : PCI board version (same as label on PCI board)
+* \param drvno board number (=1 if one PCI board)
+* \return es_status_codes
+* 	- es_no_error
+* 	- es_register_read_failed
+*	- es_no_space0
+*/
+es_status_codes AboutDrv(uint32_t drvno)
+{
+	char pstring[80] = "";
+	HWND hWnd = GetActiveWindow();
+	HDC aDC = GetDC(hWnd);
+	// read ISA Id from S0Base+7
+	UINT32 S0Data = 0;
+	es_status_codes status = readRegisterS0_32(drvno, &S0Data, S0Addr_CTRLA); // Board ID =5053
+	if (status != es_no_error) return status;
+	S0Data = S0Data >> 16;
+	sprintf_s(pstring, 80, " Board #%i    ID = 0x%I32x", drvno, S0Data);
+	if (MessageBox(hWnd, pstring, " Board ID=53 ", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+	//The following lines doesn't make sense. S0Data is never 0.
+	S0Data = 0x07FF;
+	if (S0Data == 0)
+	{
+		ErrorMsg("Board #%i  no Space0!", drvno);
+		return es_no_space0;
+	}
+	sprintf_s(pstring, 80, "Board #%i     length = 0x%I32x", drvno, S0Data);
+	if (MessageBox(hWnd, pstring, "  PCI space0 length=", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+	UCHAR udata1 = 0,
+		udata2 = 0,
+		udata3 = 0,
+		udata4 = 0;
+	if (S0Data >= 0x1F)
+	{//if WE -> has space 0x20
+		status = readRegisterS0_8(drvno, &udata1, 0x1C);
+		if (status != es_no_error) return status;
+		status = readRegisterS0_8(drvno, &udata2, 0x1D);
+		if (status != es_no_error) return status;
+		status = readRegisterS0_8(drvno, &udata3, 0x1E);
+		if (status != es_no_error) return status;
+		status = readRegisterS0_8(drvno, &udata4, 0x1F);
+		if (status != es_no_error) return status;
+		sprintf_s(pstring, 80, "Board #%i  ven ID = %c%c%c%c", drvno, udata1, udata2, udata3, udata4);
+		if (MessageBox(hWnd, pstring, " Board vendor=EBST ", MB_OK | MB_ICONEXCLAMATION) == IDOK);
+	}
+	if (S0Data >= 0x3F)
+	{//if 9056 -> has space 0x40
+		status = readRegisterS0_32(drvno, &S0Data, S0Addr_PCI);
+		if (status != es_no_error) return status;
+		sprintf_s(pstring, 80, "Board #%i   board version = 0x%I32x", drvno, S0Data);
+		if (MessageBox(hWnd, pstring, "Board version ", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+	}
+	ReleaseDC(hWnd, aDC);
+	return es_no_error;
+};
+
+/**
+ * \brief Reads registers 0 to 12 of TDC-GPX chip. Time delay counter option.
+ *
+ * \param drvno PCIe board identifier
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
+ */
+es_status_codes AboutGPX(uint32_t drvno)
+{
+	HWND hWnd;
+	char pstring[80] = "";
+	int i, j = 0;
+	char fn[1000];
+	ULONG regData, regNumber, tempData;
+	BOOL space, abbr, irf, empty;
+	char LUTS0Reg[16][30] = {
+		"Reg0 \t",
+		"Reg1 \t",
+		"Reg2\t",
+		"Reg3\t",
+		"Reg4 \t",
+		"Reg5\t",
+		"Reg6 \t",
+		"Reg7\t",
+		"Reg8\t",
+		"Reg9 \t",
+		"Reg10\t",
+		"Reg11 \t",
+		"Reg12 \t",
+		"Reg13\t ",
+		"Reg14 \t",
+		"Reg15\t"
+	}; //Look-Up-Table for the S0 Registers
+
+	hWnd = GetActiveWindow();
+
+	j = sprintf(fn, "GPX- registers   \n");
+	es_status_codes status = es_no_error;
+	for (i = 0; i < 8; i++)
+	{
+		status = ReadGPXCtrl(drvno, i, &regData);
+		if (status != es_no_error) return status;
+		j += sprintf(fn + j, "%s \t: 0x%I32x\n", LUTS0Reg[i], regData);
+	}
+
+	for (i = 11; i < 13; i++)
+	{
+		status = ReadGPXCtrl(drvno, i, &regData);
+		if (status != es_no_error) return status;
+		j += sprintf(fn + j, "%s \t: 0x%I32x\n", LUTS0Reg[i], regData);
+	}
+	MessageBox(hWnd, fn, "GPX regs", MB_OK);
+	j = sprintf(fn, "delay- registers   \n");
+	i = 0;
+	abbr = FALSE;
+	empty = FALSE;
+	while (!abbr)
+	{
+		status = WaitTrigger(1, FALSE, &space, &abbr);
+		if (status != es_no_error) return status;
+		irf = FALSE;
+		i = 0;
+		j = sprintf(fn, "read- regs   \n");
+		i += 1;
+		status = ReadGPXCtrl(drvno, 8, &regData); //lege addr 8 an bus !!!!
+		if (status != es_no_error) return status;
+		j += sprintf(fn + j, "%d \t: 0x%I32x\n", i, regData);
+		i += 1;
+		status = ReadGPXCtrl(drvno, 9, &regData); //lege addr 9 an bus !!!!
+		if (status != es_no_error) return status;
+		j += sprintf(fn + j, "%d \t: 0x%I32x\n", i, regData);
+		MessageBox(hWnd, fn, "GPX regs", MB_OK);
+	}
+	status = ReadGPXCtrl(drvno, 11, &regData);
+	if (status != es_no_error) return status;
+	j += sprintf(fn + j, "%s \t: 0x%I32x\n", " stop hits", regData);
+	status = ReadGPXCtrl(drvno, 12, &regData);
+	if (status != es_no_error) return status;
+	j += sprintf(fn + j, "%s \t: 0x%I32x\n", " flags", regData);
+	MessageBox(hWnd, fn, "GPX regs", MB_OK);
+	return ReadGPXCtrl(drvno, 8, &regData); //read access follows                 set addr 8 to bus !!!!
+}
+
+/**
+ * \brief Read registers of space0. Space0 are the control registers of the PCIe board.
+ *
+ * \param drvno PCIe board identifier
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes AboutS0(uint32_t drvno)
+{
+#define entries  41		//32 
+	int i, j = 0;
+	int numberOfBars = 0;
+	char fn[entries * 40];
+	UINT32 S0Data = 0;
+	ULONG length = 0;
+	HWND hWnd;
+	char LUTS0Reg[entries][40] = {
+		"DBR \t",
+		"CTRLA \t",
+		"XCKLL \t",
+		"XCKCNTLL",
+		"PIXREG \t",
+		"FIFOCNT \t",
+		"VCLKCTRL",
+		"'EBST' \t",
+		"SDAT \t",
+		"SEC \t",
+		"TOR \t",
+		"ARREG \t",
+		"GIOREG \t",
+		"nc\t ",
+		"IRQREG \t",
+		"PCI board version",
+		"R0 PCIEFLAGS",
+		"R1 NOS\t",
+		"R2 SCANINDEX",
+		"R3 DMABUFSIZE",
+		"R4 DMASPERINTR",
+		"R5 BLOCKS",
+		"R6 BLOCKINDEX",
+		"R7 CAMCNT",
+		"R8 GPX Ctrl",
+		"R9 GPX Data",
+		"R10 ROI 0 \t",
+		"R11 ROI 1 \t",
+		"R12 ROI 2\t",
+		"R13 XCKDLY",
+		"R14 ADSC ",
+		"R15 LDSC\t",
+		"R16 BTimer",
+		"R17 BDAT\t",
+		"R18 BEC\t",
+		"R19 BFLAGS",
+		"R20 TR1\t",
+		"R21 TR2\t",
+		"R22 TR3\t",
+		"R23 TR4\t",
+		"R24 TR5\t"
+	}; //Look-Up-Table for the S0 Registers
+	hWnd = GetActiveWindow();
+	j = sprintf(fn, "S0- registers   \n");
+	//Hier werden alle 6 Adressen der BARs in Hex abgefragt
+	//WriteLongS0( 1, 0xADDAFEED, 32 );
+	es_status_codes status = es_no_error;
+	for (i = 0; i <= entries - 1; i++)
+	{
+		status = readRegisterS0_32(drvno, &S0Data, i * 4);
+		if (status != es_no_error) return status;
+		j += sprintf(fn + j, "%s \t: 0x%I32x\n", LUTS0Reg[i], S0Data);
+	}
+	MessageBox(hWnd, fn, "S0 regs", MB_OK);
+	return AboutTLPs(drvno);
+}//AboutS0
+
+/**
+ * \brief
+ *
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes
+ * 		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes AboutTLPs(uint32_t drvno)
+{
+	uint32_t BData = 0;
+	uint32_t j = 0;
+	char fn[600];
+	uint32_t actpayload = 0;
+	j += sprintf(fn + j, "PAY_LOAD values : 0 = 128 bytes, 1 = 256 bytes, 2 = 512 bytes\n");
+	es_status_codes status = readConfig_32(drvno, &BData, PCIeAddr_devCap);//0x4c
+	if (status != es_no_error) return status;
+	j += sprintf(fn + j, "PAY_LOAD Supported : 0x%x\n", BData & 0x7);
+	//		WriteLongIOPort(DRV,0x2840,0x60);  not working  !! destroys PC? !!
+	status = readConfig_32(drvno, &BData, PCIeAddr_devStatCtrl);
+	if (status != es_no_error) return status;
+	actpayload = (BData >> 5) & 0x7;
+	j += sprintf(fn + j, "PAY_LOAD : 0x%x\n", actpayload);
+	status = readConfig_32(drvno, &BData, PCIeAddr_devStatCtrl);
+	if (status != es_no_error) return status;
+	j += sprintf(fn + j, "MAX_READ_REQUEST_SIZE : 0x%x\n\n", (BData >> 12) & 0x7);
+	//BData &= 0xFFFF8FFF;//set from 256 to 128 max read request size
+	//BData |= 0x00001000;//set from 128 to 256 
+	//WriteLongIOPort(DRV, BData, PCIeAddr_devStatCtrl);
+	//readConfig_32(DRV, &BData, PCIeAddr_devStatCtrl);
+	//j += sprintf(fn + j, "MAX_READ_REQUEST_SIZE after : 0x%x\n\n", (BData >> 12) & 0x7);
+	BData = aPIXEL[drvno];
+	j += sprintf(fn + j, "pixel: %d \n", BData);
+	switch (actpayload)
+	{
+	case 0: BData = 0x20;		break;
+	case 1: BData = 0x40;		break;
+	case 2: BData = 0x80;		break;
+	case 3: BData = 0x100;		break;
+	}
+	j += sprintf(fn + j, "TLP_SIZE is: %d DWORDs = %d BYTEs\n", BData, BData * 4);
+	status = readRegisterDma_32(drvno, &BData, DmaAddr_WDMATLPS);
+	if (status != es_no_error) return status;
+	j += sprintf(fn + j, "TLPS in DMAReg is: %d \n", BData);
+	if (LEGACY_202_14_TLPCNT) // A.M. Dec'20
+		BData = (aPIXEL[drvno] - 1) / (BData * 2) + 1 + 1;
+	else
+		BData = (aPIXEL[drvno] - 1) / (BData * 2) + 1;
+	j += sprintf(fn + j, "number of TLPs should be: %d\n", BData);
+	status = readRegisterDma_32(drvno, &BData, DmaAddr_WDMATLPC);
+	if (status != es_no_error) return status;
+	j += sprintf(fn + j, "number of TLPs is: %d \n", BData);
+	MessageBox(GetActiveWindow(), fn, "DMA transfer payloads", MB_OK | MB_DEFBUTTON2);
+	return status;
+}//AboutTLPs
+
+/**
+ * \brief Switch on error message boxes of our software. Default is On.
+ *
+ * \return none.
+ */
+void ErrMsgBoxOn()
+{
+	_SHOW_MSG = TRUE;
+}
+
+/**
+ * \brief Disable error message boxes, if not needed.
+ * \return none
+ */
+void ErrMsgBoxOff()
+{
+	_SHOW_MSG = FALSE;
+}
+
+/**
+ * \brief Display error message. If ErrMsgBoxOn is set.
+ *
+ * \param ErrMsg Message. Buffer size: 100.
+ * \return none
+ */
+void ErrorMsg(char ErrMsg[100])
+{
+	if (_SHOW_MSG)
+	{
+		if (MessageBox(GetActiveWindow(), ErrMsg, "ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+	}
+};
+
+/**
+* \brief Reads system timer.
+*
+* Read 2x ticks and calculate the difference between the calls in microsec with DLLTickstous, init timer by calling DLLInitSysTimer before use.
+* \return act ticks
+*/
+long long ticksTimestamp()
+{
+	LARGE_INTEGER PERFORMANCECOUNTERVAL = { 0, 0 };
+
+	QueryPerformanceCounter(&PERFORMANCECOUNTERVAL);
+	return PERFORMANCECOUNTERVAL.QuadPart;
+
+}//ticksTimestamp
+
+/**
+ * \brief Returns if trigger or key.
+ *
+ * Wait for raising edge of Pin #17 SubD = D6 in CtrlA register
+ * ReturnKey is 0 if trigger, else keycode (except space )
+ * if keycode is space, the loop is not canceled
+ *
+ * D6 depends on Slope (D5)
+ * HighSlope = TRUE  : pos. edge
+ * HighSlope = FALSE : neg. edge
+ *
+ * \param drvno PCIe board identifier
+ * \param ExtTrigFlag =FALSE: this function is used to get the keyboard input
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes WaitTrigger(uint32_t drvno, bool ExtTrigFlag, bool *SpaceKey, bool *AbrKey)
+{
+	bool FirstLo = FALSE;
+	bool HiEdge = FALSE;
+	bool Abbr = FALSE;
+	bool Space = FALSE;
+	UCHAR ReturnKey = 0;
+	BYTE ReadTrigPin = 0;
+	es_status_codes status = es_no_error;
+	do
+	{
+		if (ExtTrigFlag)
+		{
+			status = readRegisterS0_8(drvno, &ReadTrigPin, S0Addr_CTRLA);
+			if (status != es_no_error) return status;
+			ReadTrigPin &= CTRLA_bit_DIR_TRIGIN;
+			if (ReadTrigPin == 0) FirstLo = TRUE; //first look for lo
+			if (FirstLo)
+			{
+				if (ReadTrigPin > 0) HiEdge = TRUE;
+			}; // then look for hi
+		}
+		else HiEdge = TRUE;
+		if (GetAsyncKeyState(VK_ESCAPE))
+			Abbr = TRUE;
+		if (GetAsyncKeyState(VK_SPACE))  Space = TRUE;
+	} while ((!HiEdge) && (!Abbr));
+	if (Abbr) *AbrKey = TRUE;	//stops immediately
+	if (Space) *SpaceKey = TRUE;	//stops after next trigger
+	return status;
+};// WaitTrigger
+
+/**
+ * \brief Translate ticks to micro seconds.
+ * \param tks ticks of system timer
+ * \return micro seconds of tks
+*/
+uint32_t Tickstous(uint64_t tks)
+{
+	BOOL ifcounter;
+	UINT64 delay = 0;
+	UINT64 tps = 0; //ticks per second
+	LARGE_INTEGER freq;
+	freq.LowPart = 0;
+	freq.HighPart = 0;
+
+	//get tps: ticks per second
+	ifcounter = QueryPerformanceFrequency(&freq);
+	tps = LargeToInt(freq); //ticks per second
+
+	if (tps == 0) return 0; // no counter available
+
+	delay = tks * 1000000;
+	delay = delay / tps;
+	return (UINT32)delay;
+} // Tickstous

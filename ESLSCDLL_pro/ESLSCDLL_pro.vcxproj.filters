@@ -16,13 +16,16 @@
     <ClCompile Include="..\shared_src\lscpciej_lib.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared_src\Board_ll.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="UIAbstractionLayer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\shared_src\es_status_codes.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared_src\win\Board_ll.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared_src\globals.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -58,6 +61,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\shared_src\es_status_codes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
