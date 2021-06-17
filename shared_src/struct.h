@@ -28,7 +28,6 @@ struct global_settings
 	uint32_t pixel;
 	uint32_t mshut;
 	uint32_t led_off;
-	uint32_t led_off;
 	uint32_t gain_3030;
 	uint32_t gain_switch;
 	uint32_t Temp_level;
