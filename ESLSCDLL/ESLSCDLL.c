@@ -576,9 +576,9 @@ DllAccess es_status_codes DLLAboutGPX( UINT32 drvno )
 /**
  * \copydoc InitCamera3001
  */
-DllAccess es_status_codes DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED )
+DllAccess es_status_codes DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED, UINT16 led_off )
 {
-	return InitCameraGeneral( drvno, pixel, cc_trigger_input, IS_FFT, IS_AREA, IS_COOLED );
+	return InitCameraGeneral( drvno, pixel, cc_trigger_input, IS_FFT, IS_AREA, IS_COOLED, led_off );
 }
 
 /**
@@ -592,9 +592,9 @@ DllAccess es_status_codes DLLInitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 
 /**
  * \copydoc InitCamera3010
  */
-DllAccess es_status_codes DLLInitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern )
+DllAccess es_status_codes DLLInitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT16 gain_switch )
 {
-	return InitCamera3010( drvno, adc_mode, custom_pattern );
+	return InitCamera3010( drvno, adc_mode, custom_pattern, gain_switch );
 }
 
 /**
