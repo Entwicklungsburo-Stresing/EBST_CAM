@@ -794,4 +794,7 @@
   <ItemGroup>
     <ResourceCompile Include=".\lsc-gui_resource.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\shared_src\CCD.ico" />
+  </ItemGroup>
 </Project>
