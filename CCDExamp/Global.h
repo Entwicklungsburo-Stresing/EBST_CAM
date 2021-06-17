@@ -29,9 +29,9 @@ static int YSHIFT = 8;			// 16bit=8
 // camera values for calling GETCCD and InitBoard
 #define SENSOR_TYPE PDAsensor
 //for FFT sensors
-#define _FFTLINES 64 		// no of vertical lines of FFT sensors, usually 64
+#define _FFTLINES 70 		// no of vertical lines of FFT sensors, usually 64
 // =0 if not FFT
-#define Vfreqini 7		//vclk freq for FFTs with FIFO in divider of12MHz (0..15)
+#define Vfreqini 4		//vclk freq for FFTs with FIFO in divider of12MHz (0..15)
 						//=4 for highest speed with 7030-0906
 #define AREA_LINES_BINNING 1
 #define CCTRIGGER_MODE xck

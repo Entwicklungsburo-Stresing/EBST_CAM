@@ -475,6 +475,8 @@ es_status_codes InitBoard( UINT32 drvno )
  * \param ADC_custom_pettern
  * \param led_off
  * \param gain_switch - for IR sensors
+ * \param led_off
+ * \param gain_switch - for IR sensors
  * \param gain_3030
  */
 es_status_codes initCamera(UINT32 drvno,  UINT8 camera_system, UINT16 pixel, UINT16 trigger_mode, UINT16 sensor_type, UINT8 ADC_Mode, UINT16 ADC_custom_pattern, UINT16 led_off, UINT16 gain_switch, UINT8 gain_3030)
@@ -3345,6 +3347,8 @@ es_status_codes InitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger
 	//set trigger input of CamControl
 	status = SendFLCAM( drvno, maddr_cam, cam_adaddr_trig_in, cc_trigger_input );
 	if (status != es_no_error) return status;
+	//set led off
+	SendFLCAM(drvno, maddr_cam, cam_adaddr_LEDoff, led_off );
 	//set led off
 	SendFLCAM(drvno, maddr_cam, cam_adaddr_LEDoff, led_off );
 	//select vclk and Area mode on

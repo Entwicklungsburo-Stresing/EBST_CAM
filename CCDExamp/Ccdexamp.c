@@ -132,7 +132,11 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 	//CreateWindowA(lpClassName, lpWindowName, dwStyle, x, y, \
 	//	nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam)\
 	// Create the main application window.
+	int xlength = XLENGTH;
 	//....................................
+
+	if (_PIXEL > 1088) { XLENGTH = 1088; } // too big
+
 	hWnd = CreateWindow( lpszAppName,
 		lpszTitle,
 		WS_OVERLAPPEDWINDOW,
@@ -1423,8 +1427,11 @@ LRESULT CALLBACK SetupTLevel( HWND hDlg,
 
 		case IDOK:
 			val = GetDlgItemInt( hDlg, IDC_TLevel, &success, FALSE );
-			if (success)
+			if (success) {
 				TempLevel = val;
+				SetTemp(choosen_board,TempLevel);
+			}
+
 			EndDialog( hDlg, TRUE );
 			return (TRUE);
 			break;
