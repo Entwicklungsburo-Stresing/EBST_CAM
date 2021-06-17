@@ -1728,7 +1728,7 @@ es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
 	if (status != es_no_error) return status;
 	uint64_t dma_physical_address = getDmaAddress(drvno);
 	// WDMATLPA (Reg name): write the lower part (bit 02:31) of the DMA adress to the DMA controller
-	ES_LOG("Set WDMATLPA to physical address of dma buffer 0x%016lx\n", dma_physical_address)
+	ES_LOG("Set WDMATLPA to physical address of dma buffer 0x%016lx\n", dma_physical_address);
 	status = writeBitsDma_32(drvno, dma_physical_address, 0xFFFFFFFC, DmaAddr_WDMATLPA);
 	if (status != es_no_error) return status;
 	//WDMATLPS: write the upper part (bit 32:39) of the address
@@ -2561,7 +2561,7 @@ es_status_codes isBlockOn(uint32_t drvno, bool* blockOn)
  */
 es_status_codes isMeasureOn(uint32_t drvno, bool* measureOn)
 {
-	UINT32 data = 0;
+	uint32_t data = 0;
 	es_status_codes status = readRegisterS0_32(drvno, &data, S0Addr_PCIEFLAGS);
 	if (status != es_no_error) return status;
 	//Check for measure on bit
@@ -2724,7 +2724,7 @@ es_status_codes SetGain(uint32_t drvno, uint16_t gain_value)
  */
 es_status_codes waitForBlockReady(uint32_t drvno)
 {
-	bool blockOn = TRUE;
+	bool blockOn = true;
 	es_status_codes status = es_no_error;
 	while (blockOn)
 	{
@@ -2744,7 +2744,7 @@ es_status_codes waitForBlockReady(uint32_t drvno)
  */
 es_status_codes waitForMeasureReady(uint32_t drvno)
 {
-	bool measureOn = TRUE;
+	bool measureOn = true;
 	es_status_codes status = es_no_error;
 	while (measureOn)
 	{

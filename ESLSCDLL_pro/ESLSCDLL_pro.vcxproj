@@ -227,7 +227,7 @@ copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"</Command>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WINNT;NDEBUG;_WINDOWS;_USRDLL;ESLSCDLL_EXPORTS;KERNEL_64BIT;%(PreprocessorDefinitions);WD_DRIVER_NAME_CHANGE;ESLSCDLL_PRO</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WINNT;NDEBUG;_WINDOWS;_USRDLL;ESLSCDLL_EXPORTS;KERNEL_64BIT;%(PreprocessorDefinitions);WD_DRIVER_NAME_CHANGE;ESLSCDLL_PRO;WIN32</PreprocessorDefinitions>
       <ExceptionHandling>
       </ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>

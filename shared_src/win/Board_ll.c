@@ -941,7 +941,7 @@ void ErrorMsg(char ErrMsg[100])
 * Read 2x ticks and calculate the difference between the calls in microsec with DLLTickstous, init timer by calling DLLInitSysTimer before use.
 * \return act ticks
 */
-LONGLONG ticksTimestamp()
+long long ticksTimestamp()
 {
 	LARGE_INTEGER PERFORMANCECOUNTERVAL = { 0, 0 };
 

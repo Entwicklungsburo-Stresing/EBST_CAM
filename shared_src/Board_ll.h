@@ -47,7 +47,7 @@ es_status_codes AboutTLPs(uint32_t drvno);
 void ErrMsgBoxOn();
 void ErrMsgBoxOff(); // switch to suppress error message boxes
 void ErrorMsg(char ErrMsg[100]);
-LONGLONG ticksTimestamp();
+long long ticksTimestamp();
 es_status_codes WaitTrigger(uint32_t drvno, bool ExtTrigFlag, bool *SpaceKey, bool *AbrKey);
 uint32_t Tickstous(uint64_t tks);
 
