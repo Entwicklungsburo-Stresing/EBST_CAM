@@ -16,8 +16,11 @@ test-readout-polling
 readout-blocking-filesystem
 readout-blocking-proc
 readout-polling
+readout-blocking-filesystem-trigger
+readout-loop
 camera-debug
 stop-camera
+lsc-cli
 *.so*
 .vscode/
 build/

@@ -1,16 +1,17 @@
 # EBST_CAM
 Software package for the line scan cameras of [Entwicklungsbüro Stresing](http://stresing.de). This package contains multiple projects for different plattforms.
 
-project | description
-:--- | :---
-CCDExamp | Native Windows GUI written in C
-CCDExamp_Setup | Installer for CCDExamp
-ESLSCDLL | DLL for usage with Labview. See repository [lv64](https://github.com/Entwicklungsburo-Stresing/lv64)
-ESLSCDLL_pro | DLL for specialized functions
-Jungo | Windows driver
-doc | Documentation with [Doxygen](https://www.doxygen.nl/) of DLLs interface and more
-lsc-gui | crossplattform Qt GUI written in C++, for Windows and Linux
-lsc-gui/linux/ | Linux driver
+project         | description                           | plattform
+:---            | :---                                  | :---
+CCDExamp        | Native Windows GUI written in C       | Windows
+CCDExamp_Setup  | Installer for CCDExamp                | Windows
+ESLSCDLL        | DLL for usage with Labview. See repository [lv64](https://github.com/Entwicklungsburo-Stresing/lv64) | Windows
+ESLSCDLL_pro    | DLL for specialized functions         | Windows
+Jungo           | Windows driver                        | Windows
+doc             | Documentation with [Doxygen](https://www.doxygen.nl/) of DLLs interface and more  | Windows, Linux
+lsc-gui         | crossplattform Qt GUI written in C++  | Windows, Linux
+lsc-cli         | CLI in C                              | Linux
+linux-driver    | Linux driver                          | Linux
 
 # Compiling
 
@@ -37,12 +38,12 @@ Two possibilities:
 
 ### Linux CLI
 ```
-cd lsc-gui/linux/userspace/
-make all
+cd lsc-cli
+make
 ```
 
 ### Linux driver
 ```
-cd lsc-gui/linux/kernelspace/
+cd linux-driver/kernelspace/
 make
 ```

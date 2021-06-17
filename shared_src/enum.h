@@ -57,6 +57,45 @@ enum CTRLB_bits
 	CTRLB_bitindex_BTI2 = 6
 };
 
+enum CTRLA_bits
+{
+	CTRLA_bit_VONOFF = 0x01,
+	CTRLA_bit_IFC = 0x02,
+	CTRLA_bit_XCK = 0x04,
+	CTRLA_bit_TRIG_OUT = 0x08,
+	CTRLA_bit_BOTH_SLOPE = 0x10,
+	CTRLA_bit_SLOPE = 0x20,
+	CTRLA_bit_DIR_TRIGIN = 0x40,
+	CTRLA_bit_TSTART = 0x80,
+	CTRLA_bitindex_VONOFF = 0,
+	CTRLA_bitindex_IFC = 1,
+	CTRLA_bitindex_XCK = 2,
+	CTRLA_bitindex_TRIG_OUT = 3,
+	CTRLA_bitindex_BOTH_SLOPE = 4,
+	CTRLA_bitindex_SLOPE = 5,
+	CTRLA_bitindex_DIR_TRIGIN = 6,
+	CTRLA_bitindex_TSTART = 7
+};
+
+enum TOR_MSB_bits
+{
+	TOR_MSB_bit_ISFFT = 0x01,
+	TOR_MSB_bit_SENDRS = 0x02,
+	TOR_MSB_bit_no_RS = 0x04,
+	TOR_MSB_bit_RSLEVEL = 0x08,
+	TOR_MSB_bitindex_ISFFT = 0,
+	TOR_MSB_bitindex_SENDRS = 1,
+	TOR_MSB_bitindex_no_RS = 2,
+	TOR_MSB_bitindex_RSLEVEL = 3
+
+};
+
+enum XCKMSB_bits
+{
+	XCKMSB_bit_stimer_on = 0x40,
+	XCKMSB_bitindex_stimer_on = 6
+};
+
 //PCIe Addresses
 enum pcie_addresses
 {
@@ -64,33 +103,42 @@ enum pcie_addresses
 	PCIeAddr_devStatCtrl = 0x60
 };
 
+enum BTRIGREG_bits
+{
+	BTRIGREG_bit_SWTRIG = 0x40,
+	BTRIGREG_bit_RSFIFO = 0x80,
+	BTRIGREG_bitindex_SWTRIG = 6,
+	BTRIGREG_bitindex_RSFIFO = 7
+};
+
 //S0 Addresses
 enum s0_addresses
 {
-	S0Addr_DBR = 0x0,
-	S0Addr_CTRLA = 0x4,
+	S0Addr_DBR = 0x0, //0x00
+	S0Addr_CTRLA = 0x4, //0x04
 	S0Addr_CTRLB = 0x5,
 	S0Addr_CTRLC = 0x6,
-	S0Addr_XCKLL = 0x8,
+	S0Addr_XCKLL = 0x8, //0x08
 	S0Addr_XCKLH = 0x9,
 	S0Addr_XCKHL = 0xa,
 	S0Addr_XCKMSB = 0xb,
-	S0Addr_XCKCNTLL = 0xc,
+	S0Addr_XCKCNTLL = 0xc, //0x0c
 	S0Addr_XCKCNTLH = 0xd,
 	S0Addr_XCKCNTHL = 0xe,
 	S0Addr_XCKCNTMSB = 0xf,
-	S0Addr_PIXREGlow = 0x10,
+	S0Addr_PIXREGlow = 0x10, //0x10
 	S0Addr_PIXREGhigh = 0x11,
 	S0Addr_BTRIGREG = 0x12,
 	S0Addr_FF_FLAGS = 0x13,
-	S0Addr_FIFOCNT = 0x14,
+	S0Addr_FIFOCNT = 0x14, //0x14
 	S0Addr_VCLKCTRL = 0x18,
 	S0Addr_VCLKFREQ = 0x1b,
-	S0Addr_EBST = 0x1C,
-	S0Addr_SDAT = 0x20,
-	S0Addr_SEC = 0x24,
-	S0Addr_TOR = 0x28,
-	S0Addr_ARREG = 0x2C,
+	S0Addr_EBST = 0x1C, //0x1c
+	S0Addr_SDAT = 0x20, //0x20
+	S0Addr_SEC = 0x24, //0x24
+	S0Addr_TOR = 0x28, //0x28
+	S0Addr_TOR_MSB = 0x2B,
+	S0Addr_ARREG = 0x2C, //0x2c
 	S0Addr_GIOREG = 0x30,
 	S0Addr_DELAYEC = 0x34,
 	S0Addr_IRQREG = 0x38,
@@ -114,6 +162,30 @@ enum s0_addresses
 	S0Addr_BEC = 0x88,
 	S0Addr_BSLOPE = 0x8C,
 	S0Addr_DSC = 0x90
+};
+
+enum ScanIndex_bits
+{
+	ScanIndex_bitindex_counter_reset = 31,
+	ScanIndex_bit_counter_reset = 0x80
+};
+
+enum BLOCKINDEX_bits
+{
+	BLOCKINDEX_bitindex_counter_reset = 31,
+	BLOCKINDEX_bit_counter_reset = 0x80
+};
+
+enum DmaBufSizeInScans_bits
+{
+	DmaBufSizeInScans_bitindex_counter_reset = 31,
+	DmaBufSizeInScans_bit_counter_reset = 0x80
+};
+
+enum DMAsPerIntr_bits
+{
+	DMAsPerIntr_bitindex_counter_reset = 31,
+	DMAsPerIntr_bit_counter_reset = 0x80
 };
 
 //Cam Addresses könnten später bei unterschiedlichen cam systemen vaariieren
