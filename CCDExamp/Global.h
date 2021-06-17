@@ -19,15 +19,15 @@
 #define LED_OFF FALSE
 #define GAIN_HIGH FALSE
 //options for 3030
-#define GAIN 6
+#define GAIN 2
 #define _MSHUT FALSE
 #define _MINREPTIME 20
 //settings for Y-scale of graphic display
 //static int YSHIFT = 4;				// 12Bit=4 or more for addrep>1
-static int YSHIFT = 8;			// 16bit=8
-//static int YSHIFT = 6;			// 14 bit
+//static int YSHIFT = 8;			// 16bit=8
+static int YSHIFT = 6;			// 14 bit
 // camera values for calling GETCCD and InitBoard
-#define SENSOR_TYPE PDAsensor
+#define SENSOR_TYPE FFTsensor
 //for FFT sensors
 #define _FFTLINES 70 		// no of vertical lines of FFT sensors, usually 64
 // =0 if not FFT
