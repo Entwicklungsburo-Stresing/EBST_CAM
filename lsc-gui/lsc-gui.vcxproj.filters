@@ -63,9 +63,6 @@
     <ClCompile Include="UIAbstractionLayer_cpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared_src\crossPlattformBoard.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="dialogsettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -87,10 +84,13 @@
     <ClCompile Include="myqspinbox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared_src\win\crossPlattformBoard_ll.c">
+    <ClCompile Include="..\shared_src\globals.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared_src\globals.c">
+    <ClCompile Include="..\shared_src\Board.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared_src\win\Board_ll.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -99,12 +99,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UIAbstractionLayer_cpp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\shared_src\crossPlattformBoard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\shared_src\crossPlattformBoard_ll.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <QtMoc Include="dialogsettings.h">
@@ -132,6 +126,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\shared_src\globals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\Board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\Board_ll.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

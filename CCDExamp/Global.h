@@ -8,7 +8,7 @@
 // only valid for CCDExample
 
 #define IDM_EXIT           100
-#define CAMERA_SYSTEM camera_system_3001  // use 1 to 3 like in enum above
+#define CAMERA_SYSTEM camera_system_3030  // use 1 to 3 like in enum above
 #define	DRV	1	//1 if only one interface board 
 // could be 2..4 for multiple boards
 #define CAMCNT 1		//number of sensors in the queue 
@@ -19,13 +19,13 @@
 #define LED_OFF FALSE
 #define GAIN_HIGH FALSE
 //options for 3030
-#define GAIN 6
+#define GAIN 2
 #define _MSHUT FALSE
 #define _MINREPTIME 20
 //settings for Y-scale of graphic display
 //static int YSHIFT = 4;				// 12Bit=4 or more for addrep>1
-static int YSHIFT = 8;			// 16bit=8
-//static int YSHIFT = 6;			// 14 bit
+//static int YSHIFT = 8;			// 16bit=8
+static int YSHIFT = 6;			// 14 bit
 // camera values for calling GETCCD and InitBoard
 #define SENSOR_TYPE PDAsensor
 //for FFT sensors

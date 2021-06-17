@@ -251,9 +251,9 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\shared_src\Board.c" />
-    <ClCompile Include="..\shared_src\Board_ll.c" />
     <ClCompile Include="..\shared_src\es_status_codes.c" />
     <ClCompile Include="..\shared_src\lscpciej_lib.c" />
+    <ClCompile Include="..\shared_src\win\Board_ll.c" />
     <ClCompile Include="ESLSCDLL.c" />
     <ClCompile Include="UIAbstractionLayer.c" />
   </ItemGroup>
