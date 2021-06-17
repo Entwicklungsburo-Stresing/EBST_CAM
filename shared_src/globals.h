@@ -27,6 +27,16 @@ extern "C" {
  */
 #define DMA_CONTIGBUF true
 
+struct global_vars
+{
+	uint16_t** userBuffer;
+	void* hDev;
+	uint32_t* aPIXEL;
+	uint32_t* aCAMCNT;
+	uint32_t* Nospb;
+	bool* useSWTrig;
+};
+
 extern uint32_t* aPIXEL;
 extern uint32_t* aCAMCNT;
 extern bool* useSWTrig;
@@ -38,6 +48,8 @@ extern uint32_t Nob;
 extern uint32_t* Nospb;
 extern bool abortMeasurementFlag;
 extern uint32_t numberOfInterrupts;
+extern bool continiousMeasurementFlag;
+extern uint32_t continiousPause;
 
 #ifdef __cplusplus
 }

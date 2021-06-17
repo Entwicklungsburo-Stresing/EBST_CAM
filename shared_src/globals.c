@@ -17,3 +17,5 @@ uint32_t Nob = 1;
 uint32_t tmp_Nosbp = 1000;
 uint32_t* Nospb = &tmp_Nosbp;
 bool abortMeasurementFlag = false;
+bool continiousMeasurementFlag = false;
+uint32_t continiousPause = 0;
