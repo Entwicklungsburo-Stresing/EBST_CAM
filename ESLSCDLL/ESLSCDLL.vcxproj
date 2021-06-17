@@ -252,6 +252,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
   <ItemGroup>
     <ClCompile Include="..\shared_src\Board.c" />
     <ClCompile Include="..\shared_src\es_status_codes.c" />
+    <ClCompile Include="..\shared_src\globals.c" />
     <ClCompile Include="..\shared_src\lscpciej_lib.c" />
     <ClCompile Include="..\shared_src\win\Board_ll.c" />
     <ClCompile Include="ESLSCDLL.c" />
@@ -262,6 +263,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     <ClInclude Include="..\shared_src\Board_ll.h" />
     <ClInclude Include="..\shared_src\CCDCTL.H" />
     <ClInclude Include="..\shared_src\enum.h" />
+    <ClInclude Include="..\shared_src\globals.h" />
     <ClInclude Include="..\shared_src\struct.h" />
     <ClInclude Include="..\shared_src\es_status_codes.h" />
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />

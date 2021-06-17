@@ -111,7 +111,7 @@ DllAccess void DLLErrMsgBoxOff()
  */
 DllAccess es_status_codes DLLCCDDrvInit( UINT8* _number_of_boards )
 {
-	es_status_codes status = CCDDrvInit();
+	es_status_codes status = InitDriver();
 	if (status == es_no_error)
 		*_number_of_boards = number_of_boards;
 	return status;
@@ -122,7 +122,7 @@ DllAccess es_status_codes DLLCCDDrvInit( UINT8* _number_of_boards )
  */
 DllAccess es_status_codes DLLCCDDrvExit( UINT32 drvno )
 {
-	return CCDDrvExit( drvno );
+	return ExitDriver( drvno );
 }
 
 /**
@@ -138,7 +138,7 @@ DllAccess es_status_codes DLLInitBoard( UINT32 drv )
 */
 DllAccess es_status_codes DLLReadByteS0( UINT32 drvno, UINT8 *data, UINT32 PortOff )
 {
-	return ReadByteS0( drvno, data, PortOff );
+	return readRegisterS0_8( drvno, data, PortOff );
 }
 
 /**
@@ -146,7 +146,7 @@ DllAccess es_status_codes DLLReadByteS0( UINT32 drvno, UINT8 *data, UINT32 PortO
 */
 DllAccess es_status_codes DLLWriteByteS0( UINT32 drv, UINT8 DataByte, UINT32 PortOff )
 {
-	return WriteByteS0( drv, DataByte, PortOff );
+	return writeRegisterS0_8( drv, DataByte, PortOff );
 }
 
 /**
@@ -154,7 +154,7 @@ DllAccess es_status_codes DLLWriteByteS0( UINT32 drv, UINT8 DataByte, UINT32 Por
 */
 DllAccess es_status_codes DLLReadLongS0( UINT32 drvno, UINT32 * DWData, UINT32 PortOff )
 {
-	return ReadLongS0( drvno, DWData, PortOff );
+	return readRegisterS0_32( drvno, DWData, PortOff );
 }
 
 /**
@@ -162,7 +162,7 @@ DllAccess es_status_codes DLLReadLongS0( UINT32 drvno, UINT32 * DWData, UINT32 P
 */
 DllAccess es_status_codes DLLWriteLongS0( UINT32 drvno, UINT32 DWData, UINT32 PortOff )
 {
-	return WriteLongS0( drvno, DWData, PortOff );
+	return writeRegisterS0_32( drvno, DWData, PortOff );
 }
 
 /**
@@ -170,7 +170,7 @@ DllAccess es_status_codes DLLWriteLongS0( UINT32 drvno, UINT32 DWData, UINT32 Po
 */
 DllAccess es_status_codes DLLReadLongDMA( UINT32 drvno, UINT32* DWData, UINT32 PortOff )
 {
-	return ReadLongDMA( drvno, DWData, PortOff );
+	return readRegisterDma_32( drvno, DWData, PortOff );
 }
 
 /**
@@ -178,7 +178,7 @@ DllAccess es_status_codes DLLReadLongDMA( UINT32 drvno, UINT32* DWData, UINT32 P
 */
 DllAccess es_status_codes DLLWriteLongDMA( UINT32 drvno, UINT32 DWData, UINT32 PortOff )
 {
-	return WriteLongDMA( drvno, DWData, PortOff );
+	return writeRegisterDma_32( drvno, DWData, PortOff );
 }
 
 /**
@@ -186,7 +186,7 @@ DllAccess es_status_codes DLLWriteLongDMA( UINT32 drvno, UINT32 DWData, UINT32 P
 */
 DllAccess es_status_codes DLLReadLongIOPort( UINT32 drvno, UINT32 * DWData, UINT32 PortOff )
 {
-	return ReadLongIOPort( drvno, DWData, PortOff );
+	return readConfig_32( drvno, DWData, PortOff );
 }
 
 /**
@@ -194,7 +194,7 @@ DllAccess es_status_codes DLLReadLongIOPort( UINT32 drvno, UINT32 * DWData, UINT
 */
 DllAccess es_status_codes DLLWriteLongIOPort( UINT32 drvno, UINT32 DataL, UINT32 PortOff )
 {
-	return WriteLongIOPort( drvno, DataL, PortOff );
+	return writeConfig_32( drvno, DataL, PortOff );
 }
 
 /**
@@ -278,7 +278,7 @@ DllAccess es_status_codes DLLCloseShutter( UINT32 drvno )
  */
 DllAccess es_status_codes DLLSWTrig( UINT32 drvno )
 {
-	return SWTrig( drvno );
+	return DoSoftwareTrigger( drvno );
 }
 
 /**
@@ -330,7 +330,7 @@ void TestMsg( char testMsg1[20], char testMsg2[20] )
  */
 DllAccess es_status_codes DLLSetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
-	return SetS0Bit( bitnumber, Address, drvno );
+	return setBitS0_32( bitnumber, Address, drvno );
 }
 
 /**
@@ -338,7 +338,7 @@ DllAccess es_status_codes DLLSetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drv
  */
 DllAccess es_status_codes DLLResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
 {
-	return ResetS0Bit( bitnumber, Address, drvno );
+	return resetBitS0_32( bitnumber, Address, drvno );
 }
 
 /**
@@ -421,7 +421,7 @@ DllAccess void DLLReadFFLoop( UINT32 board_sel )
 {
 	BOARD_SEL = board_sel;
 	//thread wit prio 15
-	_beginthreadex( 0, 0, &ReadFFLoopThread, 0, 0, 0 );
+	_beginthreadex( 0, 0, &StartMeasurement, 0, 0, 0 );
 	return;
 }//DLLReadFFLoop
 
@@ -431,7 +431,7 @@ DllAccess void DLLReadFFLoop( UINT32 board_sel )
  */
 DllAccess void DLLStopFFLoop()
 {
-	escape_readffloop = TRUE;
+	abortMeasurementFlag = TRUE;
 	return;
 }
 
@@ -443,8 +443,8 @@ DllAccess void DLLStopFFLoop()
  */
 DllAccess void DLLSetContFFLoop( UINT8 activate , UINT32 pause)
 {
-	CONTFFLOOP = activate;//0 or 1
-	CONTPAUSE = pause;
+	continiousMeasurementFlag = activate;//0 or 1
+	continiousPause = pause;
 	return;
 }
 
@@ -746,7 +746,7 @@ DllAccess CStr DLLConvertErrorCodeToMsg(es_status_codes status)
  */
 DllAccess es_status_codes DLLSetupPCIE_DMA(UINT32 drvno)
 {
-	return SetupPCIE_DMA(drvno);
+	return SetupDma(drvno);
 }
 
 /**
@@ -754,7 +754,7 @@ DllAccess es_status_codes DLLSetupPCIE_DMA(UINT32 drvno)
  */
 DllAccess es_status_codes DLLSetTLPS(UINT32 drvno, UINT32 pixel)
 {
-	return SetTLPS(drvno, pixel);
+	return SetDmaRegister(drvno, pixel);
 }
 
 /**

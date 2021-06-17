@@ -1,6 +1,6 @@
 #pragma once
 
-#include "shared_src/Board.h"
+#include "shared_src/Board_old.h"
 #include "CCDexamp.h"
 
 int YVal( unsigned long db, int pixeli );

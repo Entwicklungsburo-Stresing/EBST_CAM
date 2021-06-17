@@ -8,7 +8,7 @@
 // only valid for CCDExample
 
 #define IDM_EXIT           100
-#define CAMERA_SYSTEM camera_system_3030  // use 1 to 3 like in enum above
+#define CAMERA_SYSTEM camera_system_3001  // use 1 to 3 like in enum above
 #define	DRV	1	//1 if only one interface board 
 // could be 2..4 for multiple boards
 #define CAMCNT 1		//number of sensors in the queue 
@@ -27,7 +27,7 @@
 //static int YSHIFT = 8;			// 16bit=8
 static int YSHIFT = 6;			// 14 bit
 // camera values for calling GETCCD and InitBoard
-#define SENSOR_TYPE PDAsensor
+#define SENSOR_TYPE FFTsensor
 //for FFT sensors
 #define _FFTLINES 70 		// no of vertical lines of FFT sensors, usually 64
 // =0 if not FFT

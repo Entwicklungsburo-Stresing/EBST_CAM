@@ -23,7 +23,7 @@
 #include <process.h>	// for Thread example
 #include <malloc.h>		// msize
 #include "LabVIEW 2015/cintools/extcode.h"
-#include "shared_src/board.h"
+#include "shared_src/Board.h"
 
 extern LVUserEventRef measureStartLVEvent;
 extern LVUserEventRef measureDoneLVEvent;
