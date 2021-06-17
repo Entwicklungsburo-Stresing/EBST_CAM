@@ -17,7 +17,8 @@ int TrigMod_B = 1;						//pos slope
 int ItemIndex_S = 3;					//combobox
 int ItemIndex_B = 4;					//combobox
 __int64 TICKSDISP = 0;			//display time in ticks
-int XOFF = 1;// _PIXEL / 600;			// index offset for display	
+int XOFF = 1;// _PIXEL / 1200;			// index offset for display	1
+
 int XStart = 0;						//start index of display
 BOOL PixelOdd = FALSE;				//display offset
 __int16 Releasems = 1; //>=1	>1 or keyboard does not work - could be exposuretime	
