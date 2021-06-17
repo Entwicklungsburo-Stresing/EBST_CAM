@@ -4243,3 +4243,25 @@ es_status_codes SetXckdelay(UINT32 drvno, UINT32 xckdelay)
 		status = WriteLongS0(drvno, 0, S0Addr_XCKDLY);
 	return status;
 }
+
+
+
+/**
+ * \brief ReSet DSC (delay stage counter).
+ *
+ * \param drvno PCIe board identifier.
+ * \param counter 1,2 or 3
+ * \return
+ */
+es_status_codes RsDSC(UINT32 drvno, UINT32 counter)
+{
+	WDC_Err("RS DSC: %u\n", counter);
+	es_status_codes status = es_register_write_failed;
+	if (counter>0 & counter<4)
+	{
+		status = WriteLongS0(drvno, 1, S0Addr_DSC+ counter*4); // make pulse
+		status = WriteLongS0(drvno, 0, S0Addr_DSC + counter*4);
+	}
+
+	return status;
+}

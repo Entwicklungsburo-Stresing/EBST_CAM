@@ -112,7 +112,8 @@ enum s0_addresses
 	S0Addr_BTIMER = 0x80,
 	S0Addr_BDAT = 0x84,
 	S0Addr_BEC = 0x88,
-	S0Addr_BSLOPE = 0x8C
+	S0Addr_BSLOPE = 0x8C,
+	S0Addr_DSC = 0x90
 };
 
 //Cam Addresses könnten später bei unterschiedlichen cam systemen vaariieren
