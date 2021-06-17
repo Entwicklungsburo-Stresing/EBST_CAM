@@ -1,25 +1,25 @@
 #include "UIAbstractionLayer_cpp.h"
 #include "lsc-gui.h"
 
-void notifyMeasureStartCpp(UINT32 drv)
+void notifyMeasureStartCpp(uint32_t drv)
 {
 	emit mainWindow->lsc.measureStart();
 	return;
 }
 
-void notifyMeasureDoneCpp(UINT32 drv)
+void notifyMeasureDoneCpp(uint32_t drv)
 {
 	emit mainWindow->lsc.measureDone();
 	return;
 }
 
-void notifyBlockStartCpp(UINT32 drv)
+void notifyBlockStartCpp(uint32_t drv)
 {
 	emit mainWindow->lsc.blockStart();
 	return;
 }
 
-void notifyBlockDoneCpp(UINT32 drv)
+void notifyBlockDoneCpp(uint32_t drv)
 {
 	emit mainWindow->lsc.blockDone();
 	return;

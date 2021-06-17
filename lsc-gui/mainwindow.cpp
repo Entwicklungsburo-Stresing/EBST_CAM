@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->horizontalSliderSample, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
     connect(ui->horizontalSliderBlock, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
     connect(ui->pushButtonStart, SIGNAL(pressed()), this, SLOT(startPressed()));
+    connect(ui->pushButtonAbort, SIGNAL(pressed()), this, SLOT(abortPressed()));
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));
     connect(&lsc, SIGNAL(measureStart()), this, SLOT(on_measureStart()));
     connect(&lsc, SIGNAL(measureDone()), this, SLOT(on_measureDone()));
@@ -31,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
     else
     {
-        status = lsc.initPcieBoard();
+        status = lsc.initPcieBoard(1);
         if (status != es_no_error)
             showPcieBoardError();
         else
@@ -67,7 +68,7 @@ void MainWindow::setChartData(QLineSeries* series)
  */
 void MainWindow::setChartData(uint16_t* data, uint16_t length)
 {
-    QLineSeries* series = new QLineSeries();
+    QLineSeries* series = new QLineSeries(this);
     for(uint16_t i=0; i<length; i++)
     {
         series->append(i, *(data+i));
@@ -170,6 +171,7 @@ void MainWindow::startPressed()
 void MainWindow::on_actionEdit_triggered()
 {
     DialogSettings* ds = new DialogSettings(&settings, this);
+    ds->setAttribute(Qt::WA_DeleteOnClose);
     ds->show();
     connect(ds, SIGNAL(settings_saved()), this, SLOT(loadSettings()));
     return;
@@ -187,7 +189,7 @@ void MainWindow::loadSettings()
     ui->horizontalSliderBlock->setMaximum(nob);
     ui->spinBoxBlock->setMaximum(nob);
     int tor = settings.value(settingTorPath,settingTorDefault).toInt();
-    lsc.setTorOut(tor);
+    lsc.setTorOut(1, tor);
     int theme = settings.value(settingThemePath,settingThemeDefault).toInt();
     switch(theme)
     {
@@ -231,27 +233,28 @@ void MainWindow::showPcieBoardError()
 void MainWindow::on_actionDump_board_registers_triggered()
 {
     QDialog* messageBox = new QDialog(this);
-    QVBoxLayout* layout = new QVBoxLayout();
+    messageBox->setAttribute(Qt::WA_DeleteOnClose);
+    QVBoxLayout* layout = new QVBoxLayout(messageBox);
     messageBox->setLayout(layout);
     QTabWidget* tabWidget = new QTabWidget(messageBox);
     tabWidget->setDocumentMode(true);
     QLabel* labelS0 = new QLabel(tabWidget);
     labelS0->setTextInteractionFlags(Qt::TextSelectableByMouse);
-    labelS0->setText(QString::fromStdString(lsc.dumpS0Registers()));
+    labelS0->setText(QString::fromStdString(lsc.dumpS0Registers(1)));
     labelS0->setAlignment(Qt::AlignTop);
     tabWidget->addTab(labelS0, "S0 registers");
-    QLabel* labelDma = new QLabel;
+    QLabel* labelDma = new QLabel(tabWidget);
     labelDma->setTextInteractionFlags(Qt::TextSelectableByMouse);
-    labelDma->setText(QString::fromStdString(lsc.dumpDmaRegisters()));
+    labelDma->setText(QString::fromStdString(lsc.dumpDmaRegisters(1)));
     labelDma->setAlignment(Qt::AlignTop);
     tabWidget->addTab(labelDma, "DMA registers");
-    QLabel* labelTlp = new QLabel;
+    QLabel* labelTlp = new QLabel(tabWidget);
     labelTlp->setTextInteractionFlags(Qt::TextSelectableByMouse);
-    labelTlp->setText(QString::fromStdString(lsc.dumpTlp()));
+    labelTlp->setText(QString::fromStdString(lsc.dumpTlp(1)));
     labelTlp->setAlignment(Qt::AlignTop);
     tabWidget->addTab(labelTlp, "TLP size");
     layout->addWidget(tabWidget);
-    QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
+    QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, tabWidget);
     connect(dialogButtonBox, SIGNAL(accepted()), messageBox, SLOT(accept()));
     layout->addWidget(dialogButtonBox);
     messageBox->setWindowTitle("Register dump");
@@ -319,5 +322,11 @@ void MainWindow::on_blockDone()
     QPalette pal = palette();
     pal.setColor(QPalette::Background, Qt::darkGreen);
     ui->widgetBlockOn->setPalette(pal);
+    return;
+}
+
+void MainWindow::abortPressed()
+{
+    lsc.abortMeasurement(1);
     return;
 }

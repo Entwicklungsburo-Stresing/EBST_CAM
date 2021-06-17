@@ -57,22 +57,25 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\shared_src\Board.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\shared_src\Board_ll.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="UIAbstractionLayer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UIAbstractionLayer_cpp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared_src\crossPlattformBoard.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dialogsettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\shared_src\es_status_codes.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="lsc-gui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="win\lsc.cpp">
+    <ClCompile Include="lsc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\shared_src\lscpciej_lib.c">
@@ -84,26 +87,35 @@
     <ClCompile Include="myqspinbox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared_src\es_status_codes.c">
+    <ClCompile Include="..\shared_src\win\crossPlattformBoard_ll.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UIAbstractionLayer_cpp.cpp">
+    <ClCompile Include="..\shared_src\globals.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\shared_src\Board.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\shared_src\Board_ll.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UIAbstractionLayer_cpp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\crossPlattformBoard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\crossPlattformBoard_ll.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <QtMoc Include="dialogsettings.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <ClInclude Include="..\shared_src\enum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\es_status_codes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <QtMoc Include="lsc.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -116,19 +128,10 @@
     <QtMoc Include="myqspinbox.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClInclude Include="..\shared_src\enum.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\shared_src\struct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\shared_src\es_status_codes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UIAbstractionLayer_cpp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lsc-gui.h">
+    <ClInclude Include="..\shared_src\globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
