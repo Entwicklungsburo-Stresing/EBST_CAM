@@ -37,6 +37,9 @@
     <ClInclude Include="..\shared_src\Board_old.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\shared_src\ESLSCDLL_pro.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CCDExamp.rc" />

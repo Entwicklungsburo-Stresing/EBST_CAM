@@ -73,7 +73,9 @@ es_status_codes SendFLCAM_DAC( uint32_t drvno, uint8_t ctrl, uint8_t addr, uint1
 es_status_codes DAC_setOutput( uint32_t drvno, uint8_t channel, uint16_t output );
 es_status_codes SetBEC( uint32_t drvno, uint32_t ecin100ns );
 es_status_codes SetXckdelay(uint32_t drvno, uint32_t xckdelay);
+es_status_codes SetPartialBinning(uint32_t drvno, uint16_t number_of_regions);
 es_status_codes ResetPartialBinning( uint32_t drvno );
+es_status_codes SetupVPB(uint32_t drvno, uint32_t range, uint32_t lines, bool keep);
 es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel );
 es_status_codes SetDmaStartMode( uint32_t drvno, bool start_by_hardware);
 es_status_codes FindCam( uint32_t drvno );
@@ -87,6 +89,25 @@ es_status_codes IsTimerOn( uint32_t drvno, bool* on );
 es_status_codes GetLastBufPart( uint32_t drvno );
 es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint64_t* pIndex );
 es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint16_t** address );
+es_status_codes checkFifoFlags(uint32_t drvno, bool* valid);
+es_status_codes checkFifoOverflow(uint32_t drvno, bool* overflow);
+es_status_codes isBlockOn(uint32_t drvno, bool* blockOn);
+es_status_codes isMeasureOn(uint32_t drvno, bool* measureOn);
+es_status_codes LedOff(uint32_t drvno, uint8_t LED_OFF);
+es_status_codes OutTrigLow(uint32_t drvno);
+es_status_codes OutTrigHigh(uint32_t drvno);
+es_status_codes OutTrigPulse(uint32_t drvno, uint32_t PulseWidth);
+es_status_codes readBlockTriggerState(uint32_t drv, uint8_t btrig_ch, bool* state);
+es_status_codes SetGain(uint32_t drvno, uint16_t gain_value);
+es_status_codes waitForBlockReady(uint32_t drvno);
+es_status_codes waitForMeasureReady(uint32_t drvno);
+
+
+// helper functions
+double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);
+double CalcRamUsageInMB(uint32_t nos, uint32_t nob);
+es_status_codes CalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double *mwf, double *trms);
+void GetRmsVal(uint32_t nos, uint16_t *TRMSVals, double *mwf, double *trms);
 
 // read and write functions
 es_status_codes writeBitsS0_32( uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address);
