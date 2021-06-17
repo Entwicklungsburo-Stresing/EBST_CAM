@@ -57,7 +57,7 @@ es_status_codes Lsc::returnFrame(uint32_t board, uint32_t sample, uint32_t block
 
 std::string Lsc::dumpS0Registers(uint32_t drvno)
 {
-    enum N { number_of_registers = 41 };
+    enum N { number_of_registers = 43 };
     std::string register_names[number_of_registers] = {
         "DBR \t\t",
         "CTRLA \t\t",
@@ -75,31 +75,33 @@ std::string Lsc::dumpS0Registers(uint32_t drvno)
         "nc\t\t",
         "IRQREG\t\t",
         "PCI board version\t",
-        "R0 PCIEFLAGS\t",
+        "R0 PCIEFLAGS\t\t",
         "R1 NOS\t\t",
-        "R2 SCANINDEX\t",
-        "R3 DMABUFSIZE\t",
+        "R2 SCANINDEX\t\t",
+        "R3 DMABUFSIZE\t\t",
         "R4 DMASPERINTR\t",
         "R5 BLOCKS\t\t",
-        "R6 BLOCKINDEX\t",
-        "R7 CAMCNT\t",
+        "R6 BLOCKINDEX\t\t",
+        "R7 CAMCNT\t\t",
         "R8 GPX Ctrl\t\t",
-        "R9 GPX Data\t",
+        "R9 GPX Data\t\t",
         "R10 ROI 0\t\t",
         "R11 ROI 1\t\t",
         "R12 ROI 2\t\t",
-        "R13 XCKDLY\t",
-        "R14 ADSC\t\t",
-        "R15 LDSC\t\t",
+        "R13 XCKDLY\t\t",
+        "R14 nc\t\t",
+        "R15 nc\t\t",
         "R16 BTimer\t\t",
         "R17 BDAT\t\t",
         "R18 BEC\t\t",
-        "R19 BFLAGS\t",
-        "R20 TR1\t\t",
-        "R21 TR2\t\t",
-        "R22 TR3\t\t",
-        "R23 TR4\t\t",
-        "R24 TR5\t\t"
+        "R19 BFLAGS\t\t",
+        "R20 ADSC1\t\t",
+        "R21 LDSC1\t\t",
+        "R22 ADSC2\t\t",
+        "R23 LDSC2\t\t",
+		"R24 ADSC3\t\t",
+		"R25 LDSC3\t\t",
+        "R26 DSCCTRL\t\t"
     }; //Look-Up-Table for the S0 Registers
     uint32_t data = 0;
     std::stringstream stream;
