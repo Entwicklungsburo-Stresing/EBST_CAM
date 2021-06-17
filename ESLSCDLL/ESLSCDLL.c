@@ -226,27 +226,11 @@ DllAccess double DLLCalcMeasureTimeInSeconds( UINT32 nos, UINT32 nob, double exp
 }
 
 /**
- * \copydoc HighSlope
+ * \copydoc SetSSlope
  */
-DllAccess es_status_codes DLLHighSlope( UINT32 drvno )
+DllAccess es_status_codes DLLSetSSlope( UINT32 drvno, UINT32 sslope )
 {
-	return HighSlope( drvno );
-}
-
-/**
- * \copydoc LowSlope
- */
-DllAccess es_status_codes DLLLowSlope( UINT32 drvno )
-{
-	return LowSlope( drvno );
-}
-
-/**
- * \copydoc BothSlope
- */
-DllAccess es_status_codes DLLBothSlope( UINT32 drvno )
-{
-	return BothSlope( drvno );
+	return SetSSlope( drvno, sslope );
 }
 
 /**
@@ -766,19 +750,11 @@ DllAccess es_status_codes DLLSetupPCIE_DMA(UINT32 drvno)
 }
 
 /**
- * \copydoc SetGlobalVariables
+ * \copydoc SetTLPS
  */
-DllAccess es_status_codes DLLSetGlobalVariables(UINT32 drvno, UINT32 camcnt, UINT32 pixel, UINT32 xckdelay)
+DllAccess es_status_codes DLLSetTLPS(UINT32 drvno, UINT32 pixel)
 {
-	return SetGlobalVariables(drvno, camcnt, pixel, xckdelay);
-}
-
-/**
- * \copydoc SetBoardVars
- */
-DllAccess es_status_codes DLLSetBoardVars(UINT32 drvno)
-{
-	return SetBoardVars(drvno);
+	return SetTLPS(drvno, pixel);
 }
 
 /**
