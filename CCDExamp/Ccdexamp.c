@@ -862,6 +862,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 			break;
 #ifndef _DLL
 		case VK_F2:
+			RsDSC(choosen_board, 1);
 			break;
 		case VK_F3:
 			break;
