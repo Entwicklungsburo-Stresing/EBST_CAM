@@ -52,11 +52,12 @@ MainWindow::~MainWindow()
  * @brief Sets the data of chartView.
  * @param series Data as QLineSeries.
  */
-void MainWindow::setChartData(QLineSeries* series)
+void MainWindow::setChartData(QLineSeries** series, uint16_t numberOfSets)
 {
     QChart *chart = ui->chartView->chart();
     chart->removeAllSeries();
-    chart->addSeries(series);
+    for(uint16_t set=0; set<numberOfSets; set++)
+        chart->addSeries(series[set]);
     chart->createDefaultAxes();
     return;
 }
@@ -66,14 +67,18 @@ void MainWindow::setChartData(QLineSeries* series)
  * @param data Pointer to data.
  * @param length Length of data.
  */
-void MainWindow::setChartData(uint16_t* data, uint16_t length)
+void MainWindow::setChartData(uint16_t* data, uint16_t length, uint16_t numberOfSets)
 {
-    QLineSeries* series = new QLineSeries(this);
-    for(uint16_t i=0; i<length; i++)
+    QLineSeries** series = (QLineSeries**)calloc(numberOfSets, sizeof(QLineSeries*));
+    for(uint16_t set=0; set<numberOfSets; set++)
     {
-        series->append(i, *(data+i));
+        series[set] = new QLineSeries(this);
+        for(uint16_t i=0; i<length; i++)
+        {
+            series[set]->append(i, *(data + i + (length * set)));
+        }
     }
-    setChartData(series);
+    setChartData(series, numberOfSets);
     return;
 }
 
@@ -265,11 +270,13 @@ void MainWindow::on_actionDump_board_registers_triggered()
 void MainWindow::loadCameraData()
 {
     uint32_t pixel = settings.value(settingPixelPath,settingPixelDefault).toInt();
-    uint16_t* data = (uint16_t*)malloc(pixel * sizeof(uint16_t));
+    uint32_t camcnt = settings.value(settingCamcntPath,settingCamcntDefault).toInt();
+    uint16_t* data = (uint16_t*)malloc(pixel * camcnt * sizeof(uint16_t));
     int block = ui->horizontalSliderBlock->value() - 1;
     int sample = ui->horizontalSliderSample->value() - 1;
-    lsc.returnFrame(1,sample,block,0,data,pixel);
-    setChartData(data,pixel);
+    for(uint16_t cam=0; cam<camcnt; cam++)
+        lsc.returnFrame(1, sample, block, cam, data + cam * pixel, pixel);
+    setChartData(data, pixel, camcnt);
     free(data);
     return;
 }
