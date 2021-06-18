@@ -291,6 +291,11 @@ void MainWindow::on_measureStart()
     ui->pushButtonStart->setDisabled(true);
     //enable abort button
     ui->pushButtonAbort->setEnabled(true);
+    //enable controls
+    ui->spinBoxBlock->setEnabled(true);
+    ui->spinBoxSample->setEnabled(true);
+    ui->horizontalSliderBlock->setEnabled(true);
+    ui->horizontalSliderSample->setEnabled(true);
     return;
 }
 
@@ -306,11 +311,6 @@ void MainWindow::on_measureDone()
     ui->pushButtonStart->setEnabled(true);
     //disable abort button
     ui->pushButtonAbort->setDisabled(true);
-    //enable controls
-    ui->spinBoxBlock->setEnabled(true);
-    ui->spinBoxSample->setEnabled(true);
-    ui->horizontalSliderBlock->setEnabled(true);
-    ui->horizontalSliderSample->setEnabled(true);
     return;
 }
 
