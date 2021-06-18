@@ -137,6 +137,7 @@ private slots:
     void on_checkBoxUseDac_stateChanged(int arg1);
     void on_comboBoxCameraSystem_currentIndexChanged(int index);
     void on_checkBoxMshut_stateChanged(int arg1);
+    void on_checkBoxRegionsEqual_stateChanged(int arg1);
 };
 
 #endif // DIALOGSETTINGS_H
