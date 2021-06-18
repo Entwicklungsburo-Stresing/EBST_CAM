@@ -712,7 +712,6 @@ es_status_codes allocateUserMemory( uint32_t drvno )
 	//check if enough space is available in the physical ram
 	if (memory_free > (uint64_t)needed_mem)
 	{
-		// correct required size is multiplicated by 2 to avoid errors
 		uint16_t* userBufferTemp = (uint16_t*) malloc( needed_mem );
 		ES_LOG( "user buffer space: %p - %p\n", userBufferTemp, userBufferTemp + needed_mem );
 		if (userBufferTemp)
