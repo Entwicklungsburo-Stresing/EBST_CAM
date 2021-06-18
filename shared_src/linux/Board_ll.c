@@ -159,7 +159,7 @@ es_status_codes SetupDma( uint32_t drvno )
 	ES_LOG( "Setup DMA\n" );
 	//on linux: driver numbers are 0 and 1, on windows 1 and 2
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
-	dev->control->bytes_per_interrupt = DMA_DMASPERINTR * aPIXEL[drvno] * aCAMCNT[drvno] * sizeof(uint16_t);
+	dev->control->bytes_per_interrupt = DMA_DMASPERINTR * aPIXEL[drvno] * sizeof(uint16_t);
 	dev->control->used_dma_size = dev->s0->DMA_BUF_SIZE_IN_SCANS * aPIXEL[drvno] * aCAMCNT[drvno] * sizeof(uint16_t);
 	if (dev->control->used_dma_size > dev->control->dma_buf_size)
 		dev->control->used_dma_size = dev->control->dma_buf_size;
