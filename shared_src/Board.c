@@ -172,7 +172,7 @@ es_status_codes SetPixelCount(uint32_t drvno, uint16_t pixelcount)
 	ES_LOG("Set pixel count: %u\n", pixelcount);
 	aPIXEL[drvno] = pixelcount;
 	return writeBitsS0_32(drvno, pixelcount, 0xFFFF, S0Addr_PIXREGlow);
-};
+}
 
 /**
  * \brief Clears DAT and EC.
@@ -708,12 +708,13 @@ es_status_codes allocateUserMemory( uint32_t drvno )
 	int64_t memory_free_mb = memory_free / (1024 * 1024);
 	int64_t needed_mem = (int64_t)aCAMCNT[drvno] * (int64_t)Nob * (int64_t)(*Nospb) * (int64_t)aPIXEL[drvno] * (int64_t)sizeof( uint16_t );
 	int64_t needed_mem_mb = needed_mem / (1024 * 1024);
-	ES_LOG( "Allocate user memory, available memory:%ld MB, memory needed: %ld MB\n", memory_free_mb, needed_mem_mb );
+	ES_LOG( "Allocate user memory, available memory:%ld MB, memory needed: %ld MB (%ld)\n", memory_free_mb, needed_mem_mb, needed_mem );
 	//check if enough space is available in the physical ram
 	if (memory_free > (uint64_t)needed_mem)
 	{
 		// correct required size is multiplicated by 2 to avoid errors
-		uint16_t* userBufferTemp = (uint16_t*) calloc( (uint64_t)aCAMCNT[drvno] * (uint64_t)(*Nospb) * (uint64_t)Nob * (uint64_t)aPIXEL[drvno] * 2, sizeof( uint16_t ) );
+		uint16_t* userBufferTemp = (uint16_t*) malloc( needed_mem );
+		ES_LOG( "user buffer space: %p - %p\n", userBufferTemp, userBufferTemp + needed_mem );
 		if (userBufferTemp)
 		{
 			userBuffer[drvno] = userBufferTemp;
@@ -773,7 +774,7 @@ es_status_codes CloseShutter( uint32_t drvno )
 {
 	ES_LOG("Close shutter\n");
 	return resetBitS0_8(drvno, CTRLB_bitindex_SHON, S0Addr_CTRLB);
-};
+}
 
 /**
  * \brief Exposure control (EC) signal is used for mechanical shutter or sensors with EC function.
@@ -2615,7 +2616,7 @@ es_status_codes OutTrigLow(uint32_t drvno)
 es_status_codes OutTrigHigh(uint32_t drvno)
 {
 	return setBitS0_32(drvno, CTRLA_bitindex_TRIG_OUT, S0Addr_CTRLA);
-}; //OutTrigHigh
+} //OutTrigHigh
 
 /**
  * \brief Pulses trigger out(Reg CtrlA:D3) of PCI board. Can be used to control timing issues in software.
@@ -2632,9 +2633,10 @@ es_status_codes OutTrigPulse(uint32_t drvno, uint32_t PulseWidth)
 {
 	es_status_codes status = OutTrigHigh(drvno);
 	if (status != es_no_error) return status;
-	Sleep(PulseWidth);
+    //TODO
+    //Sleep(PulseWidth);
 	return OutTrigLow(drvno);
-};
+}
 
 /**
  * \brief Reads the binary state of an ext. trigger input.
