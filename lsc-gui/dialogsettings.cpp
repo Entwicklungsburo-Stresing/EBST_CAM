@@ -172,14 +172,7 @@ void DialogSettings::on_comboBoxSensorType_currentIndexChanged(int index)
 
 void DialogSettings::on_checkBoxUseDac_stateChanged(int arg1)
 {
-    switch(arg1)
-    {
-    case 0:
-        ui->dac->setEnabled(false);
-        break;
-    default:
-        ui->dac->setEnabled(true);
-    }
+    ui->dac->setEnabled(arg1);
 }
 
 void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
@@ -215,12 +208,17 @@ void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
 
 void DialogSettings::on_checkBoxMshut_stateChanged(int arg1)
 {
-    switch(arg1)
-    {
-    case 0:
-        ui->doubleSpinBoxExpTime->setEnabled(false);
-        break;
-    default:
-        ui->doubleSpinBoxExpTime->setEnabled(true);
-    }
+    ui->doubleSpinBoxExpTime->setEnabled(arg1);
+}
+
+void DialogSettings::on_checkBoxRegionsEqual_stateChanged(int arg1)
+{
+    ui->spinBoxRegion1->setEnabled(!arg1);
+    ui->spinBoxRegion2->setEnabled(!arg1);
+    ui->spinBoxRegion3->setEnabled(!arg1);
+    ui->spinBoxRegion4->setEnabled(!arg1);
+    ui->spinBoxRegion5->setEnabled(!arg1);
+    ui->spinBoxRegion6->setEnabled(!arg1);
+    ui->spinBoxRegion7->setEnabled(!arg1);
+    ui->spinBoxRegion8->setEnabled(!arg1);
 }
