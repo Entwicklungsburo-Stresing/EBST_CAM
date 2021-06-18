@@ -27,8 +27,8 @@ public slots:
 private:
     Ui::MainWindow *ui;
     QSettings settings;
-    void setChartData(QLineSeries* series);
-    void setChartData(uint16_t* data, uint16_t length);
+    void setChartData(QLineSeries** series, uint16_t numberOfSets);
+    void setChartData(uint16_t* data, uint16_t length, uint16_t numberOfSets);
     void showNoDriverFoundDialog();
     void showPcieBoardError();
 private slots:
