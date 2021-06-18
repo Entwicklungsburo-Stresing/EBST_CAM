@@ -281,9 +281,9 @@ ssize_t lscpcie_read(struct file *filp, char __user * buf, size_t len,
 	if (len > available_bytes)
 		len = available_bytes;
 
-	if (dev->control->read_pos + len > dev->control->dma_buf_size) {
+	if (dev->control->read_pos + len > dev->control->used_dma_size) {
 		ssize_t bytes_to_copy =
-		    dev->control->dma_buf_size - dev->control->read_pos;
+		    dev->control->used_dma_size - dev->control->read_pos;
 		copied_bytes = read_chunk(dev, bytes_to_copy, buf);
 		if (copied_bytes < 0) {
 			up(&dev->read_sem);
@@ -292,7 +292,7 @@ ssize_t lscpcie_read(struct file *filp, char __user * buf, size_t len,
 		len -= copied_bytes;
 		dev->control->read_pos
 		    = (dev->control->read_pos + copied_bytes)
-			% dev->control->dma_buf_size;
+			% dev->control->used_dma_size;
 	} else
 		copied_bytes = 0;
 
@@ -304,7 +304,7 @@ ssize_t lscpcie_read(struct file *filp, char __user * buf, size_t len,
 		}
 		copied_bytes += n;
 		dev->control->read_pos
-		    = (dev->control->read_pos + n) % dev->control->dma_buf_size;
+		    = (dev->control->read_pos + n) % dev->control->used_dma_size;
 	}
 
 	wake_up_interruptible(&dev->writeq);
