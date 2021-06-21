@@ -8,7 +8,7 @@ OBJECTS   = lsc-cli-readout-file.o \
 			lscpcie.o \
 			Board_ll.o
 TARGET    = lsc-cli-readout-file
-LIBS      = -lpthread
+LIBS      = -lpthread -lm
 
 lsc-cli-readout-file: $(OBJECTS)  
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS)

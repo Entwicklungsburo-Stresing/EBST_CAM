@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../shared_src/UIAbstractionLayer.h"
+#include <math.h>
 
 /**
  * \brief Initialize Measurement.
