@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../shared_src/crossPlattformBoard.h"
+#include "../shared_src/Board.h"
 #include <unistd.h>
 
 #include <errno.h>
