@@ -60,7 +60,6 @@ int dma_init(struct dev_struct *dev)
 	PDEBUG(D_BUFFERS, "calculating dma buffer size\n");
 	dev->control->dma_buf_size
 	    =
-	    dev->control->number_of_cameras *
 	    dev->control->number_of_pixels * dev->control->dma_num_scans *
 	    sizeof(u16);
 	num_dma_pages = dev->control->dma_buf_size >> PAGE_SHIFT;
