@@ -8,7 +8,7 @@ OBJECTS   = lsc-cli.o \
 			lscpcie.o \
 			Board_ll.o
 TARGET    = lsc-cli
-LIBS      = -lpthread
+LIBS      = -lpthread -lm
 
 lsc-cli: $(OBJECTS)  
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS)
