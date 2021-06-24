@@ -85,8 +85,7 @@ enum TOR_MSB_bits
 	TOR_MSB_bit_RSLEVEL = 0x08,
 	TOR_MSB_bitindex_ISFFT = 0,
 	TOR_MSB_bitindex_SENDRS = 1,
-	TOR_MSB_bitindex_no_RS = 2,
-	TOR_MSB_bitindex_RSLEVEL = 3
+	TOR_MSB_bitindex_SHORTRS = 2
 
 };
 
