@@ -236,6 +236,57 @@ std::string Lsc::dumpTlp(uint32_t drvno)
     return stream.str();
 }
 
+std::string Lsc::dumpGlobalSettings()
+{
+    std::stringstream stream;
+    stream  << "drvno\t\t"                  << std::dec << settings_struct.drvno                << "\n"
+            << "nos\t\t"                    << std::dec << settings_struct.nos                  << "\n"
+            << "nob\t\t"                    << std::dec << settings_struct.nob                  << "\n"
+            << "sti_mode\t\t"               << std::dec << settings_struct.sti_mode             << "\n"
+            << "bti_mode\t\t"               << std::dec << settings_struct.bti_mode             << "\n"
+            << "stime in microseconds\t"    << std::dec << settings_struct.stime_in_microsec    << "\n"
+            << "btime in microseconds\t"    << std::dec << settings_struct.btime_in_microsec    << "\n"
+            << "sdat in 100 ns\t"           << std::dec << settings_struct.sdat_in_100ns        << "\n"
+            << "bdat in 100 ns\t"           << std::dec << settings_struct.bdat_in_100ns        << "\n"
+            << "sslope\t\t"                 << std::dec << settings_struct.sslope               << "\n"
+            << "bslope\t\t"                 << std::dec << settings_struct.bslope               << "\n"
+            << "xckdelay\t\t"               << std::dec << settings_struct.xckdelay             << "\n"
+            << "shutterExpTime\t"           << std::dec << settings_struct.ShutterExpTime       << "\n"
+            << "trigger mode cc\t"          << std::dec << settings_struct.trigger_mode_cc      << "\n"
+            << "board sel\t\t"              << std::dec << settings_struct.board_sel            << "\n"
+            << "sensor type\t\t"            << std::dec << settings_struct.sensor_type          << "\n"
+            << "camera system\t"            << std::dec << settings_struct.camera_system        << "\n"
+            << "camcnt\t\t"                 << std::dec << settings_struct.camcnt               << "\n"
+            << "pixel\t\t"                  << std::dec << settings_struct.pixel                << "\n"
+            << "mshut\t\t"                  << std::dec << settings_struct.mshut                << "\n"
+            << "led off\t\t"                << std::dec << settings_struct.led_off              << "\n"
+            << "gain switch\t\t"            << std::dec << settings_struct.gain_switch          << "\n"
+            << "gain 3030\t\t"              << std::dec << settings_struct.gain_3030            << "\n"
+            << "temp level\t\t"             << std::dec << settings_struct.Temp_level           << "\n"
+            << "dac\t\t"                    << std::dec << settings_struct.dac                  << "\n"
+            << "enable gpx\t\t"             << std::dec << settings_struct.enable_gpx           << "\n"
+            << "gpx offset\t\t"             << std::dec << settings_struct.gpx_offset           << "\n"
+            << "fftlines\t\t"               << std::dec << settings_struct.FFTLines             << "\n"
+            << "vfreq\t\t"                  << std::dec << settings_struct.Vfreq                << "\n"
+            << "ffmode\t\t"                 << std::dec << settings_struct.FFTMode              << "\n"
+            << "lines binning\t"            << std::dec << settings_struct.lines_binning        << "\n"
+            << "number of regions\t"        << std::dec << settings_struct.number_of_regions    << "\n"
+            << "keep first\t\t"             << std::dec << settings_struct.keep_first           << "\n"
+            << "region size\t\t";
+    for (int i=0; i<8; i++)
+        stream << settings_struct.region_size[i] << " ";
+    stream  << "\n"
+            << "dac output\t\t";
+    for (int i=0; i<8; i++)
+        stream << settings_struct.dac_output[i] << " ";
+    stream  << "\n"
+            << "tor modus\t\t"              << std::dec << settings_struct.TORmodus             << "\n"
+            << "adc mode\t\t"               << std::dec << settings_struct.ADC_Mode             << "\n"
+            << "adc custom pattern\t"       << std::dec << settings_struct.ADC_custom_pattern   << "\n"
+            << "bec\t\t"                    << std::dec << settings_struct.bec                  << "\n";
+    return stream.str();
+}
+
 es_status_codes Lsc::setTorOut(uint32_t drvno, uint8_t torOut)
 {
     return SetTORReg(drvno, torOut);

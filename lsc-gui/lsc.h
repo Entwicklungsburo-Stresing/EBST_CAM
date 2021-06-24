@@ -24,6 +24,7 @@ public:
     std::string dumpS0Registers(uint32_t drvno);
     std::string dumpDmaRegisters(uint32_t drvno);
     std::string dumpTlp(uint32_t drvno);
+    std::string dumpGlobalSettings();
     es_status_codes setTorOut(uint32_t drvno, uint8_t torOut);
 public slots:
     es_status_codes startMeasurement();

@@ -255,6 +255,11 @@ void MainWindow::on_actionDump_board_registers_triggered()
     labelTlp->setText(QString::fromStdString(lsc.dumpTlp(1)));
     labelTlp->setAlignment(Qt::AlignTop);
     tabWidget->addTab(labelTlp, "TLP size");
+    QLabel* labelSettings = new QLabel(tabWidget);
+    labelSettings->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    labelSettings->setText(QString::fromStdString(lsc.dumpGlobalSettings()));
+    labelSettings->setAlignment(Qt::AlignTop);
+    tabWidget->addTab(labelSettings, "Settings");
     layout->addWidget(tabWidget);
     QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, tabWidget);
     connect(dialogButtonBox, SIGNAL(accepted()), messageBox, SLOT(accept()));
