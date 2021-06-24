@@ -1,4 +1,6 @@
 #include "globals.h"
+#include "enum.h"
+#include "default_settings.h"
 
 uint32_t tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 uint32_t* aPIXEL = tmp_aPIXEL;
@@ -19,3 +21,58 @@ uint32_t* Nospb = &tmp_Nosbp;
 bool abortMeasurementFlag = false;
 bool continiousMeasurementFlag = false;
 uint32_t continiousPause = 0;
+struct global_settings settings_struct =
+{
+    .nos                = settingNosDefault,
+    .nob                = settingNobDefault,
+    .sti_mode           = settingStiDefault,
+    .bti_mode           = settingBtiDefault,
+    .stime_in_microsec  = settingStimerDefault,
+    .btime_in_microsec  = settingBtimerDefault,
+    .sdat_in_100ns      = settingSdatDefault,
+    .bdat_in_100ns      = settingBdatDefault,
+    .sslope             = settingSslopeDefault,
+    .bslope             = settingBslopeDefault,
+    .xckdelay           = settingXckdelayDefault,
+    .ShutterExpTime     = settingShutterExpTimeDefault,
+    .trigger_mode_cc    = settingTriggerCcDefault,
+    .board_sel          = settingBoardSelDefault,
+    .sensor_type        = settingSensorTypeDefault,
+    .camera_system      = settingCameraSystemDefault,
+    .camcnt             = settingCamcntDefault,
+    .pixel              = settingPixelDefault,
+    .mshut              = settingMshutDefault,
+    .led_off            = settingLedDefault,
+    .gain_switch        = settingGain3010Default,
+    .gain_3030          = settingGain3030Default,
+    .Temp_level         = settingCoolingDefault,
+    .dac                = settingDacDefault,
+    .enable_gpx         = settingGpxDefault,
+    .gpx_offset         = settingGpxOffsetDefault,
+    .FFTLines           = settingLinesDefault,
+    .Vfreq              = settingVfreqDefault,
+    .FFTMode            = settingFftModeDefault,
+    .lines_binning      = settingLinesBinningDefault,
+    .number_of_regions  = settingNumberOfRegionsDefault,
+    .keep_first         = settingKeepFirstDefault,
+    .region_size[0]     = settingRegionSize1Default,
+    .region_size[1]     = settingRegionSize2Default,
+    .region_size[2]     = settingRegionSize3Default,
+    .region_size[3]     = settingRegionSize4Default,
+    .region_size[4]     = settingRegionSize5Default,
+    .region_size[5]     = settingRegionSize6Default,
+    .region_size[6]     = settingRegionSize7Default,
+    .region_size[7]     = settingRegionSize8Default,
+    .dac_output[0]      = settingSensorOffsetChannel1Default,
+    .dac_output[1]      = settingSensorOffsetChannel2Default,
+    .dac_output[2]      = settingSensorOffsetChannel3Default,
+    .dac_output[3]      = settingSensorOffsetChannel4Default,
+    .dac_output[4]      = settingSensorOffsetChannel5Default,
+    .dac_output[5]      = settingSensorOffsetChannel6Default,
+    .dac_output[6]      = settingSensorOffsetChannel7Default,
+    .dac_output[7]      = settingSensorOffsetChannel8Default,
+    .TORmodus           = settingTorDefault,
+    .ADC_Mode           = settingAdcModeDefault,
+    .ADC_custom_pattern = settingAdcCustomValueDefault,
+    .bec                = settingBecDefault
+};

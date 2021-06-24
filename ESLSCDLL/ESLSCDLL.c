@@ -790,7 +790,15 @@ DllAccess void setSWTrig(BOOL on)
 /**
  * \copydoc InitMeasurement
  */
-DllAccess es_status_codes DLLInitMeasurement(struct global_settings settings)
+DllAccess es_status_codes DLLSetGlobalSettings(struct global_settings settings)
 {
-	InitMeasurement(settings);
+	SetGlobalSettings(settings);
+}
+
+/**
+ * \copydoc InitMeasurement
+ */
+DllAccess es_status_codes DLLInitMeasurement()
+{
+	InitMeasurement();
 }

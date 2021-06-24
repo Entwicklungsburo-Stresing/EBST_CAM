@@ -17,7 +17,8 @@ extern "C" {
 es_status_codes InitBoard(uint32_t drvno);
 es_status_codes InitDriver();
 es_status_codes ExitDriver(uint32_t drvno);
-es_status_codes InitMeasurement(struct global_settings settings);
+void SetGlobalSettings(struct global_settings settings);
+es_status_codes InitMeasurement();
 es_status_codes StartMeasurement();
 es_status_codes AbortMeasurement(uint32_t drv);
 es_status_codes ReturnFrame(uint32_t drv, uint32_t curr_nos, uint32_t curr_nob, uint16_t curr_cam, uint16_t* pdest, uint32_t length);
