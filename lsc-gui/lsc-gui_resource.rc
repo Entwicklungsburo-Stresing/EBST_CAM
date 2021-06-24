@@ -1,10 +1,11 @@
 #include <windows.h>
+#include "version.h"
 
 IDI_ICON1	ICON	DISCARDABLE	"shared_src\\CCD.ico"
 
 VS_VERSION_INFO VERSIONINFO
-	FILEVERSION 3,16,3,0
-	PRODUCTVERSION 3,16,3,0
+	FILEVERSION VER_FILE_VERSION
+	PRODUCTVERSION VER_PRODUCT_VERSION
 	FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
 	FILEFLAGS VS_FF_DEBUG
@@ -19,13 +20,13 @@ VS_VERSION_INFO VERSIONINFO
 		BEGIN
 			BLOCK "040904b0"
 			BEGIN
-				VALUE "CompanyName", "\0"
-				VALUE "FileDescription", "\0"
-				VALUE "FileVersion", "3.16.3.0\0"
-				VALUE "LegalCopyright", "\0"
+				VALUE "CompanyName", VER_COMPANY_NAME "\0"
+				VALUE "FileDescription", "lsc gui"
+				VALUE "FileVersion", VER_FILE_VERSION_STR "\0"
+				VALUE "LegalCopyright", VER_COPYRIGHT_STR "\0"
 				VALUE "OriginalFilename", "lsc-gui.exe\0"
 				VALUE "ProductName", "lsc-gui\0"
-				VALUE "ProductVersion", "3.16.3.0\0"
+				VALUE "ProductVersion", VER_FILE_VERSION_STR "\0"
 			END
 		END
 		BLOCK "VarFileInfo"
