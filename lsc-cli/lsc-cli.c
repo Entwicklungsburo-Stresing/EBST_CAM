@@ -15,8 +15,6 @@ int main(int argc, char **argv)
 	status = InitBoard(DRVNO);
 	if(status != es_no_error) return status;
 
-	struct global_settings settings_struct;
-	memset(&settings_struct, 0, sizeof(settings_struct));
 	settings_struct.drvno = DRVNO;
 	settings_struct.board_sel = DRVNO;
 	settings_struct.bti_mode = bti_BTimer;
@@ -31,7 +29,7 @@ int main(int argc, char **argv)
 	settings_struct.FFTLines = 64;
 	settings_struct.Vfreq = 7;
 
-	status = InitMeasurement(settings_struct);
+	status = InitMeasurement();
 	if(status != es_no_error) return status;
 	status = StartMeasurement();
 	//wait for copy to user buffer done
