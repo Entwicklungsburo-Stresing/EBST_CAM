@@ -802,3 +802,11 @@ DllAccess es_status_codes DLLInitMeasurement()
 {
 	InitMeasurement();
 }
+
+/**
+ * \copydoc AbortMeasurement
+ */
+DllAccess es_status_codes DLLAbortMeasurement(UINT32 drv)
+{
+	return AbortMeasurement(drv);
+}
