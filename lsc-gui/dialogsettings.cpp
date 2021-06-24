@@ -1,5 +1,6 @@
 #include "dialogsettings.h"
 #include "ui_dialogsettings.h"
+#include <QMessageBox>
 
 DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
     QDialog(parent),
@@ -19,8 +20,8 @@ DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
     ui->doubleSpinBoxBTimer->setValue(_settings->value(settingBtimerPath, settingBtimerDefault).toDouble()); //TODO: in microsec
     ui->spinBoxSdat->setValue(_settings->value(settingSdatPath, settingSdatDefault).toInt());
     ui->spinBoxBdat->setValue(_settings->value(settingBdatPath, settingBdatDefault).toInt());
-    ui->comboBoxSslope->setCurrentIndex(_settings->value(settingSslopePath, settingSslopePath).toInt());
-    ui->comboBoxBslope->setCurrentIndex(_settings->value(settingBslopePath, settingBslopePath).toInt());
+    ui->comboBoxSslope->setCurrentIndex(_settings->value(settingSslopePath, settingSslopeDefault).toInt());
+    ui->comboBoxBslope->setCurrentIndex(_settings->value(settingBslopePath, settingBslopeDefault).toInt());
     ui->spinBoxXckdelay->setValue(_settings->value(settingXckdelayPath, settingXckdelayDefault).toInt());
     ui->doubleSpinBoxExpTime->setValue(_settings->value(settingShutterExpTimePath, settingShutterExpTimeDefault).toDouble());
     ui->comboBoxTriggerModeCC->setCurrentIndex(_settings->value(settingTriggerCcPath, settingTriggerCcDefault).toInt());
@@ -221,4 +222,73 @@ void DialogSettings::on_checkBoxRegionsEqual_stateChanged(int arg1)
     ui->spinBoxRegion6->setEnabled(!arg1);
     ui->spinBoxRegion7->setEnabled(!arg1);
     ui->spinBoxRegion8->setEnabled(!arg1);
+}
+
+void DialogSettings::on_pushButtonDefault_clicked()
+{
+    QMessageBox::StandardButton reply = QMessageBox::question(this, "Warning", "All settings are going to be replaced by its default values. Are you sure?", QMessageBox::Yes|QMessageBox::No);
+    if (reply == QMessageBox::Yes)
+        loadDefaults();
+    return;
+}
+
+void DialogSettings::loadDefaults()
+{
+    ui->spinBoxNos->setValue(settingNosDefault);
+    ui->spinBoxNob->setValue(settingNobDefault);
+    ui->comboBoxSti->setCurrentIndex(settingStiDefault);
+    ui->comboBoxBti->setCurrentIndex(settingBtiDefault);
+    ui->doubleSpinBoxSTimer->setValue(settingStimerDefault); //TODO: in microsec
+    ui->doubleSpinBoxBTimer->setValue(settingBtimerDefault); //TODO: in microsec
+    ui->spinBoxSdat->setValue(settingSdatDefault);
+    ui->spinBoxBdat->setValue(settingBdatDefault);
+    ui->comboBoxSslope->setCurrentIndex(settingSslopeDefault);
+    ui->comboBoxBslope->setCurrentIndex(settingBslopeDefault);
+    ui->spinBoxXckdelay->setValue(settingXckdelayDefault);
+    ui->doubleSpinBoxExpTime->setValue(settingShutterExpTimeDefault);
+    ui->comboBoxTriggerModeCC->setCurrentIndex(settingTriggerCcDefault);
+    ui->comboBoxBoardSel->setCurrentIndex(settingBoardSelDefault);
+    ui->comboBoxSensorType->setCurrentIndex(settingSensorTypeDefault);
+    ui->comboBoxSensorType->currentIndexChanged(settingSensorTypeDefault);
+    ui->comboBoxCameraSystem->setCurrentIndex(settingCameraSystemDefault);
+    ui->comboBoxCameraSystem->currentIndexChanged(settingCameraSystemDefault);
+    ui->spinBoxCamcnt->setValue(settingCamcntDefault);
+    ui->spinBoxPixel->setValue(settingPixelDefault);
+    ui->checkBoxMshut->setChecked(settingMshutDefault);
+    ui->checkBoxMshut->stateChanged(settingMshutDefault);
+    ui->checkBoxLed->setChecked(settingLedDefault);
+    ui->checkBoxGain3010->setChecked(settingGain3010Default);
+    ui->spinBoxGain3030->setValue(settingGain3030Default);
+    ui->comboBoxCamCool->setCurrentIndex(settingCoolingDefault);
+    ui->checkBoxUseDac->setChecked(settingDacDefault);
+    ui->checkBoxUseDac->stateChanged(settingDacDefault);
+    ui->checkBoxGpx->setChecked(settingGpxDefault);
+    ui->spinBoxGpxOffset->setValue(settingGpxOffsetDefault);
+    ui->spinBoxLines->setValue(settingLinesDefault);
+    ui->spinBoxVfreq->setValue(settingVfreqDefault);
+    ui->comboBoxFftMode->setCurrentIndex(settingFftModeDefault);
+    ui->spinBoxLinesBinning->setValue(settingLinesBinningDefault);
+    ui->spinBoxNumberOfRegions->setValue(settingNumberOfRegionsDefault);
+    ui->checkBoxRegionsEqual->setChecked(settingRegionSizeEqualDefault);
+    ui->spinBoxRegion1->setValue(settingRegionSize1Default);
+    ui->spinBoxRegion2->setValue(settingRegionSize2Default);
+    ui->spinBoxRegion3->setValue(settingRegionSize3Default);
+    ui->spinBoxRegion4->setValue(settingRegionSize4Default);
+    ui->spinBoxRegion5->setValue(settingRegionSize5Default);
+    ui->spinBoxRegion6->setValue(settingRegionSize6Default);
+    ui->spinBoxRegion7->setValue(settingRegionSize7Default);
+    ui->spinBoxRegion8->setValue(settingRegionSize8Default);
+    ui->spinBoxChannel1->setValue(settingSensorOffsetChannel1Default);
+    ui->spinBoxChannel2->setValue(settingSensorOffsetChannel2Default);
+    ui->spinBoxChannel3->setValue(settingSensorOffsetChannel3Default);
+    ui->spinBoxChannel4->setValue(settingSensorOffsetChannel4Default);
+    ui->spinBoxChannel5->setValue(settingSensorOffsetChannel5Default);
+    ui->spinBoxChannel6->setValue(settingSensorOffsetChannel6Default);
+    ui->spinBoxChannel7->setValue(settingSensorOffsetChannel7Default);
+    ui->spinBoxChannel8->setValue(settingSensorOffsetChannel8Default);
+    ui->comboBoxOutput->setCurrentIndex(settingTorDefault);
+    ui->comboBoxAdcMode->setCurrentIndex(settingAdcModeDefault);
+    ui->spinBoxAdcCustom->setValue(settingAdcCustomValueDefault);
+    ui->comboBoxTheme->setCurrentIndex(settingThemeDefault);
+    return;
 }
