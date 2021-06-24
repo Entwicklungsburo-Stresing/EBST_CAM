@@ -7,6 +7,7 @@
 #include "../shared_src/enum.h"
 #include "../shared_src/struct.h"
 #include "../shared_src/es_status_codes.h"
+#include "../shared_src/globals.h"
 
 class Lsc : public QObject
 {
@@ -16,7 +17,7 @@ public:
     ~Lsc();
     es_status_codes initDriver();
     es_status_codes initPcieBoard(uint32_t drvno);
-	es_status_codes initMeasurement(struct global_settings settings_struct);
+	es_status_codes initMeasurement();
     es_status_codes returnFrame(uint32_t board, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length);
     es_status_codes abortMeasurement(uint32_t drvno);
     std::string driverInstructions;

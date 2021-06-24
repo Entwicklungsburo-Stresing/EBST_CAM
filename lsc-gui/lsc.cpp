@@ -40,9 +40,9 @@ es_status_codes Lsc::initPcieBoard(uint32_t drvno)
  * @param settings_struct
  * @return
  */
-es_status_codes Lsc::initMeasurement(struct global_settings settings_struct)
+es_status_codes Lsc::initMeasurement()
 {
-    return InitMeasurement(settings_struct);
+    return InitMeasurement();
 }
 
 es_status_codes Lsc::startMeasurement()

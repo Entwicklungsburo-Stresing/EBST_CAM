@@ -7,49 +7,58 @@
 #include <math.h>
 
 /**
- * \brief Initialize Measurement.
+ * \brief Set global settings struct.
  * 
  * \param settings struct global_settings
+ */
+void SetGlobalSettings(struct global_settings settings)
+{
+	settings_struct = settings;
+}
+
+/**
+ * \brief Initialize Measurement.
+ * 
  * \return es_status_codes
  *		- 
  */
-es_status_codes InitMeasurement(struct global_settings settings)
+es_status_codes InitMeasurement()
 {
 	ES_LOG("\n*** Init Measurement ***\n");
 	abortMeasurementFlag = false;
 	ES_LOG("struct global_settings: ");
-	for (int i = 0; i < sizeof(settings)/4; i++)
-		ES_LOG("%x ", *(&settings.drvno + i));
+	for (int i = 0; i < sizeof(settings_struct)/4; i++)
+		ES_LOG("%x ", *(&settings_struct.drvno + i));
 	ES_LOG("\n");
-	es_status_codes status = checkDriverHandle(settings.drvno);
+	es_status_codes status = checkDriverHandle(settings_struct.drvno);
 	if (status != es_no_error) return status;
-	BOARD_SEL = settings.board_sel;
-	status = ClearAllUserRegs(settings.drvno);
+	BOARD_SEL = settings_struct.board_sel;
+	status = ClearAllUserRegs(settings_struct.drvno);
 	if (status != es_no_error) return status;
-	status = SetPixelCount(settings.drvno, settings.pixel);
+	status = SetPixelCount(settings_struct.drvno, settings_struct.pixel);
 	if (status != es_no_error) return status;
-	status = SetCamCount(settings.drvno, settings.camcnt);
+	status = SetCamCount(settings_struct.drvno, settings_struct.camcnt);
 	if (status != es_no_error) return status;
 	//set PDA and FFT
-	status = SetSensorType(settings.drvno, (uint8_t)settings.sensor_type);
+	status = SetSensorType(settings_struct.drvno, (uint8_t)settings_struct.sensor_type);
 	if (status != es_no_error) return status;
-	if (settings.sensor_type == FFTsensor)
+	if (settings_struct.sensor_type == FFTsensor)
 	{
-		switch (settings.FFTMode)
+		switch (settings_struct.FFTMode)
 		{
 		case full_binning:
-			status = SetupFullBinning(settings.drvno, settings.FFTLines, (uint8_t)settings.Vfreq);
+			status = SetupFullBinning(settings_struct.drvno, settings_struct.FFTLines, (uint8_t)settings_struct.Vfreq);
 			break;
 #ifdef WIN32
 		case partial_binning:
 		{
 			uint8_t regionSize[8];
-			for (int i = 0; i < 8; i++) regionSize[i] = settings.region_size[i];
-			status = DLLSetupROI(settings.drvno, (uint16_t)settings.number_of_regions, settings.FFTLines, (uint8_t)settings.keep_first, regionSize, (uint8_t)settings.Vfreq);
+			for (int i = 0; i < 8; i++) regionSize[i] = settings_struct.region_size[i];
+			status = DLLSetupROI(settings_struct.drvno, (uint16_t)settings_struct.number_of_regions, settings_struct.FFTLines, (uint8_t)settings_struct.keep_first, regionSize, (uint8_t)settings_struct.Vfreq);
 			break;
 		}
 		case area_mode:
-			status = DLLSetupArea(settings.drvno, settings.lines_binning, (uint8_t)settings.Vfreq);
+			status = DLLSetupArea(settings_struct.drvno, settings_struct.lines_binning, (uint8_t)settings_struct.Vfreq);
 			break;
 #endif
 		default:
@@ -59,60 +68,60 @@ es_status_codes InitMeasurement(struct global_settings settings)
 	else *useSWTrig = false;
 	if (status != es_no_error) return status;
 	//allocate Buffer
-	status = SetMeasurementParameters(settings.drvno, settings.nos, settings.nob);
+	status = SetMeasurementParameters(settings_struct.drvno, settings_struct.nos, settings_struct.nob);
 	if (status != es_no_error) return status;
-	status = CloseShutter(settings.drvno); //set cooling  off
+	status = CloseShutter(settings_struct.drvno); //set cooling  off
 	if (status != es_no_error) return status;
 	//set mshut
-	if (settings.mshut)
+	if (settings_struct.mshut)
 	{
-		status = SetSEC(settings.drvno, settings.ShutterExpTime * 100);
+		status = SetSEC(settings_struct.drvno, settings_struct.ShutterExpTime * 100);
 		if (status != es_no_error) return status;
-		status = SetTORReg(settings.drvno, TOR_SSHUT);
+		status = SetTORReg(settings_struct.drvno, TOR_SSHUT);
 		if (status != es_no_error) return status;
 	}
 	else
 	{
-		status = SetSEC(settings.drvno, 0);
+		status = SetSEC(settings_struct.drvno, 0);
 		if (status != es_no_error) return status;
-		status = SetTORReg(settings.drvno, (uint8_t)settings.TORmodus);
+		status = SetTORReg(settings_struct.drvno, (uint8_t)settings_struct.TORmodus);
 		if (status != es_no_error) return status;
 	}
 	//SSlope
-	SetSSlope(settings.drvno, settings.sslope);
+	SetSSlope(settings_struct.drvno, settings_struct.sslope);
 	if (status != es_no_error) return status;
 	//BSlope
-	status = SetBSlope(settings.drvno, settings.bslope);
+	status = SetBSlope(settings_struct.drvno, settings_struct.bslope);
 	if (status != es_no_error) return status;
 	//SetTimer
-	status = SetSTI(settings.drvno, (uint8_t)settings.sti_mode);
+	status = SetSTI(settings_struct.drvno, (uint8_t)settings_struct.sti_mode);
 	if (status != es_no_error) return status;
-	status = SetBTI(settings.drvno, (uint8_t)settings.bti_mode);
+	status = SetBTI(settings_struct.drvno, (uint8_t)settings_struct.bti_mode);
 	if (status != es_no_error) return status;
-	status = SetSTimer(settings.drvno, settings.stime_in_microsec);
+	status = SetSTimer(settings_struct.drvno, settings_struct.stime_in_microsec);
 	if (status != es_no_error) return status;
-	status = SetBTimer(settings.drvno, settings.btime_in_microsec);
+	status = SetBTimer(settings_struct.drvno, settings_struct.btime_in_microsec);
 	if (status != es_no_error) return status;
-	if (settings.enable_gpx) status = InitGPX(settings.drvno, settings.gpx_offset);
+	if (settings_struct.enable_gpx) status = InitGPX(settings_struct.drvno, settings_struct.gpx_offset);
 	if (status != es_no_error) return status;
 	//Delay after Trigger
-	status = SetSDAT(settings.drvno, settings.sdat_in_100ns);
+	status = SetSDAT(settings_struct.drvno, settings_struct.sdat_in_100ns);
 	if (status != es_no_error) return status;
-	status = SetBDAT(settings.drvno, settings.bdat_in_100ns);
+	status = SetBDAT(settings_struct.drvno, settings_struct.bdat_in_100ns);
 	if (status != es_no_error) return status;
 	//init Camera
-	status = InitCameraGeneral(settings.drvno, settings.pixel, settings.trigger_mode_cc, settings.sensor_type, 0, 0, settings.led_off);
+	status = InitCameraGeneral(settings_struct.drvno, settings_struct.pixel, settings_struct.trigger_mode_cc, settings_struct.sensor_type, 0, 0, settings_struct.led_off);
 	if (status != es_no_error) return status;
-	switch (settings.camera_system)
+	switch (settings_struct.camera_system)
 	{
 	case camera_system_3001:
-		InitCamera3001(settings.drvno, settings.gain_switch);
+		InitCamera3001(settings_struct.drvno, settings_struct.gain_switch);
 		break;
 	case camera_system_3010:
-		InitCamera3010(settings.drvno, settings.ADC_Mode, settings.ADC_custom_pattern, settings.gain_switch);
+		InitCamera3010(settings_struct.drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern, settings_struct.gain_switch);
 		break;
 	case camera_system_3030:
-		InitCamera3030(settings.drvno, settings.ADC_Mode, settings.ADC_custom_pattern, settings.gain_3030);
+		InitCamera3030(settings_struct.drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern, settings_struct.gain_3030);
 		//TODO use DAC...maybe extra function or sendflcam_dac
 		break;
 	default:
@@ -120,40 +129,40 @@ es_status_codes InitMeasurement(struct global_settings settings)
 	}
 	if (status != es_no_error) return status;
 	//set gain switch
-	status = SendFLCAM(settings.drvno, maddr_cam, 0, (uint16_t)settings.gain_switch);
+	status = SendFLCAM(settings_struct.drvno, maddr_cam, 0, (uint16_t)settings_struct.gain_switch);
 	if (status != es_no_error) return status;
 	//for cooled Cam
-	status = SetTemp(settings.drvno, (uint8_t)settings.Temp_level);
+	status = SetTemp(settings_struct.drvno, (uint8_t)settings_struct.Temp_level);
 	if (status != es_no_error) return status;
 	//DAC
 	//TODO: Move DAC to CAM 3030
 	int dac_channel_count = 8;
-	if (settings.dac) {
-		SendFLCAM_DAC(settings.drvno, dac_channel_count, 0, 0, 1);
+	if (settings_struct.dac) {
+		SendFLCAM_DAC(settings_struct.drvno, dac_channel_count, 0, 0, 1);
 		int reorder_ch[8] = { 3, 4, 0, 5, 1, 6, 2, 7 };
 		for (uint8_t channel = 0; channel < dac_channel_count; channel++)
 		{
-			status = DAC_setOutput(settings.drvno, channel, (uint16_t)settings.dac_output[reorder_ch[channel]]);
+			status = DAC_setOutput(settings_struct.drvno, channel, (uint16_t)settings_struct.dac_output[reorder_ch[channel]]);
 			if (status != es_no_error) return status;
 		}
 	}
 	//DMA
-	status = SetupDma(settings.drvno);
+	status = SetupDma(settings_struct.drvno);
 	if (status != es_no_error) return status;
-	status = SetDmaStartMode(settings.drvno, HWDREQ_EN);
+	status = SetDmaStartMode(settings_struct.drvno, HWDREQ_EN);
 	if (status != es_no_error) return status;
-	if(INTR_EN) status = enableInterrupt(settings.drvno);
+	if(INTR_EN) status = enableInterrupt(settings_struct.drvno);
 	if (status != es_no_error) return status;
-	status = SetDmaRegister(settings.drvno, settings.pixel);
+	status = SetDmaRegister(settings_struct.drvno, settings_struct.pixel);
 	if (status != es_no_error) return status;
 	//TODO set cont FF mode with DLL style(continiousMeasurementFlag = activate;//0 or 1;continiousPause = pause;) or CCDExamp style(check it out)
-	status = SetBEC( settings.drvno, settings.bec );
+	status = SetBEC( settings_struct.drvno, settings_struct.bec );
 	if (status != es_no_error) return status;
-	status = SetXckdelay(settings.drvno, settings.xckdelay);
+	status = SetXckdelay(settings_struct.drvno, settings_struct.xckdelay);
 	if (status != es_no_error) return status;
-	status = FindCam(settings.drvno);
+	status = FindCam(settings_struct.drvno);
 	if (status != es_no_error) return status;
-	status = SetHardwareTimerStopMode(settings.drvno, true);
+	status = SetHardwareTimerStopMode(settings_struct.drvno, true);
 	ES_LOG("*** Init Measurement done ***\n\n");
 	return status;
 }
