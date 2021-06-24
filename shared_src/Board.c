@@ -28,7 +28,7 @@ es_status_codes InitMeasurement()
 	abortMeasurementFlag = false;
 	ES_LOG("struct global_settings: ");
 	for (int i = 0; i < sizeof(settings_struct)/4; i++)
-		ES_LOG("%x ", *(&settings_struct.drvno + i));
+        ES_LOG("%u ", *(&settings_struct.drvno + i));
 	ES_LOG("\n");
 	es_status_codes status = checkDriverHandle(settings_struct.drvno);
 	if (status != es_no_error) return status;
