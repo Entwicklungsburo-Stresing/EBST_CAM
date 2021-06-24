@@ -342,14 +342,16 @@ es_status_codes SetSensorType( uint32_t drvno, uint8_t sensor_type )
 	es_status_codes status = es_no_error;
 	switch (sensor_type)
 	{
-	case 0:
+	case 0: //PDA
 		status = resetBitS0_8(drvno, TOR_MSB_bitindex_ISFFT, S0Addr_TOR_MSB);
 		if (status != es_no_error) return status;
 		status = setBitS0_8(drvno, TOR_MSB_bitindex_SENDRS, S0Addr_TOR_MSB);
 		if (status != es_no_error) return status;
+		status = setBitS0_8(drvno, TOR_MSB_bitindex_SHORTRS, S0Addr_TOR_MSB); //if 3030
+		if (status != es_no_error) return status;
 		status = OpenShutter(drvno);
 		break;
-	case 1:
+	case 1: //FFT
 		status = setBitS0_8(drvno, TOR_MSB_bitindex_ISFFT, S0Addr_TOR_MSB);
 		if (status != es_no_error) return status;
 		status = resetBitS0_8(drvno, TOR_MSB_bitindex_SENDRS, S0Addr_TOR_MSB);
