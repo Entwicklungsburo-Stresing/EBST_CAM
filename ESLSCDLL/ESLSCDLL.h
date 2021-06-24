@@ -128,3 +128,4 @@ DllAccess es_status_codes DLLSetTLPS(UINT32 drvno, UINT32 pixel);
 DllAccess es_status_codes DLLSetSDAT(UINT32 drvno, UINT32 datin100ns);
 DllAccess es_status_codes DLLSetBDAT(UINT32 drvno, UINT32 tin100ns);
 DllAccess void setSWTrig(BOOL on);
+DllAccess es_status_codes DLLAbortMeasurement(UINT32 drv);
