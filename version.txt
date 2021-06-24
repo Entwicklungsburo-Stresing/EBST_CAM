@@ -1,3 +1,13 @@
+v3.19.0
+- This version introduces complete crossplattform support (Linux + Windows)
+- New project structure: one crossplattform Board.c is now used in ESLSCDLL, ESLSCDLL_pro and lsc-gui. CCDExamp is still using the deprecated Board_old
+- Improve logging
+- Add RsDSC
+- lsc-gui: 
+	- Add Tab in dump board registers for settings struct
+	- Add some intelligence to settings dialog
+	- Add feature for multiple cameras
+
 v3.17.1
 - Add DLLInitMeasurement
 
