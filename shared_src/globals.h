@@ -7,6 +7,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "struct.h"
 
 #define MANUAL_OVERRIDE_TLP false
 #define LEGACY_202_14_TLPCNT false
@@ -50,6 +51,7 @@ extern bool abortMeasurementFlag;
 extern uint32_t numberOfInterrupts;
 extern bool continiousMeasurementFlag;
 extern uint32_t continiousPause;
+extern struct global_settings settings_struct;
 
 #ifdef __cplusplus
 }

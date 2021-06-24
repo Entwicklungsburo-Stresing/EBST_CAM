@@ -88,10 +88,6 @@ void MainWindow::setChartData(uint16_t* data, uint16_t length, uint16_t numberOf
  */
 void MainWindow::startPressed()
 {
-    struct global_settings settings_struct;
-
-    //settings mapping
-    
     //measurement tab
     settings_struct.nos = settings.value(settingNosPath, settingNosDefault).toInt();
     settings_struct.nob = settings.value(settingNobPath, settingNobDefault).toInt();
@@ -152,11 +148,13 @@ void MainWindow::startPressed()
 	settings_struct.bec = 0; //TODO
     settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt() + 1;
     uint8_t boardsel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt();
+    es_status_codes status = es_no_error;
     if (boardsel == 0)
     {
         settings_struct.drvno = 1;
-        lsc.initMeasurement(settings_struct);
+        status = lsc.initMeasurement();
     }
+    if(status != es_no_error) return;
     QThread* measurementThread = new QThread;
     //Before assigning lsc to measurementThread first assign lsc to main thread. This only works when it is not assigned to any thread. This is the case when initMeasurement was called before and measurementThread finished. Moving lsc to the main thread is needed because you cannot move this object from nowhere land or another thread to measurementThread.
     lsc.moveToThread(QApplication::instance()->thread());
