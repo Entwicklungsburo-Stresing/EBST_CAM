@@ -46,7 +46,6 @@ struct global_settings
 	uint32_t TORmodus; 
 	uint32_t ADC_Mode;
 	uint32_t ADC_custom_pattern;
-	uint32_t isIRSensor;
 	uint32_t bec;
 };
 
