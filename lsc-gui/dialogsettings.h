@@ -78,6 +78,7 @@ private:
     Ui::DialogSettings *ui;
     QSettings* _settings;
 private slots:
+    void loadDefaults();
     void on_accepted();
     void on_comboBoxSti_currentIndexChanged(int index);
     void on_comboBoxBti_currentIndexChanged(int index);
@@ -86,6 +87,7 @@ private slots:
     void on_comboBoxCameraSystem_currentIndexChanged(int index);
     void on_checkBoxMshut_stateChanged(int arg1);
     void on_checkBoxRegionsEqual_stateChanged(int arg1);
+    void on_pushButtonDefault_clicked();
 };
 
 #endif // DIALOGSETTINGS_H
