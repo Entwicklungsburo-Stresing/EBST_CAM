@@ -17,7 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->horizontalSliderSample, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
     connect(ui->horizontalSliderBlock, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
-    connect(ui->pushButtonStart, SIGNAL(pressed()), this, SLOT(startPressed()));
+	connect(ui->pushButtonStart, SIGNAL(pressed()), this, SLOT(startPressed()));
+	connect(ui->pushButtonStartCont, SIGNAL(pressed()), this, SLOT(startContPressed()));
     connect(ui->pushButtonAbort, SIGNAL(pressed()), this, SLOT(abortPressed()));
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));
     connect(&lsc, SIGNAL(measureStart()), this, SLOT(on_measureStart()));
@@ -88,88 +89,103 @@ void MainWindow::setChartData(uint16_t* data, uint16_t length, uint16_t numberOf
  */
 void MainWindow::startPressed()
 {
-    //measurement tab
-    settings_struct.nos = settings.value(settingNosPath, settingNosDefault).toInt();
-    settings_struct.nob = settings.value(settingNobPath, settingNobDefault).toInt();
-    settings_struct.sti_mode = settings.value(settingStiPath, settingStiDefault).toInt();
-    settings_struct.bti_mode = settings.value(settingBtiPath, settingBtiDefault).toInt();
-    settings_struct.stime_in_microsec = settings.value(settingStimerPath, settingStimerDefault).toDouble() * 1000;
-    settings_struct.btime_in_microsec = settings.value(settingBtimerPath, settingBtimerDefault).toDouble() * 1000;
-    settings_struct.sdat_in_100ns = settings.value(settingSdatPath, settingSdatDefault).toInt();
-    settings_struct.bdat_in_100ns = settings.value(settingBdatPath, settingBdatDefault).toInt();
-    settings_struct.sslope = settings.value(settingSslopePath, settingSslopeDefault).toInt();
-    settings_struct.bslope = settings.value(settingBslopePath, settingBslopeDefault).toInt();
-    settings_struct.xckdelay = settings.value(settingXckdelayPath, settingXckdelayDefault).toInt();
-    settings_struct.ShutterExpTime = settings.value(settingShutterExpTimePath, settingShutterExpTimeDefault).toInt();
-    settings_struct.trigger_mode_cc = settings.value(settingTriggerCcPath, settingTriggerCcDefault).toInt();
-    //camerasetup tab
-    settings_struct.sensor_type = settings.value(settingSensorTypePath, settingSensorTypeDefault).toInt();
-    settings_struct.camera_system = settings.value(settingCameraSystemPath, settingCameraSystemDefault).toInt();
-    settings_struct.camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toInt();
-    settings_struct.pixel = settings.value(settingPixelPath, settingPixelDefault).toInt();
-    settings_struct.mshut = settings.value(settingMshutPath, settingMshutDefault).toInt();
-    settings_struct.led_off = settings.value(settingLedPath, settingLedDefault).toBool();
-    settings_struct.gain_switch = settings.value(settingGain3010Path, settingGain3010Default).toBool();
-    settings_struct.gain_3030 = settings.value(settingGain3030Path, settingGain3030Default).toInt();
-    settings_struct.Temp_level = settings.value(settingCoolingPath, settingCoolingDefault).toInt();
-    settings_struct.dac = settings.value(settingDacPath, settingDacDefault).toInt();
-    settings_struct.enable_gpx = settings.value(settingGpxPath, settingGpxDefault).toBool();
-    settings_struct.gpx_offset = settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toInt();
-    //fftmodes tab
-    settings_struct.FFTLines = settings.value(settingLinesPath, settingLinesDefault).toInt();
-    settings_struct.Vfreq = settings.value(settingVfreqPath, settingVfreqDefault).toInt();
-    settings_struct.FFTMode = settings.value(settingFftModePath, settingFftModeDefault).toInt();
-    settings_struct.lines_binning = settings.value(settingLinesBinningPath, settingLinesBinningDefault).toInt();
-    settings_struct.number_of_regions = settings.value(settingNumberOfRegionsPath, settingNumberOfRegionsDefault).toInt();
-    settings_struct.keep_first = 0;//TODO implement in gui
-    if (settings.value(settingRegionSizeEqualPath, settingRegionSizeEqualDefault).toInt() == 0)
-        *(settings_struct.region_size) = 0;
-    else
-        settings_struct.region_size[0] = settings.value(settingRegionSize1Path, settingRegionSize1Default).toInt();
-    settings_struct.region_size[1] = settings.value(settingRegionSize2Path, settingRegionSize2Default).toInt();
-    settings_struct.region_size[2] = settings.value(settingRegionSize3Path, settingRegionSize3Default).toInt();
-    settings_struct.region_size[3] = settings.value(settingRegionSize4Path, settingRegionSize4Default).toInt();
-    settings_struct.region_size[4] = settings.value(settingRegionSize5Path, settingRegionSize5Default).toInt();
-    settings_struct.region_size[5] = settings.value(settingRegionSize6Path, settingRegionSize6Default).toInt();
-    settings_struct.region_size[6] = settings.value(settingRegionSize7Path, settingRegionSize7Default).toInt();
-    settings_struct.region_size[7] = settings.value(settingRegionSize8Path, settingRegionSize8Default).toInt();
-    settings_struct.dac_output[0] = settings.value(settingSensorOffsetChannel1Path, settingSensorOffsetChannel1Default).toInt();
-    settings_struct.dac_output[1] = settings.value(settingSensorOffsetChannel2Path, settingSensorOffsetChannel2Default).toInt();
-    settings_struct.dac_output[2] = settings.value(settingSensorOffsetChannel3Path, settingSensorOffsetChannel3Default).toInt();
-    settings_struct.dac_output[3] = settings.value(settingSensorOffsetChannel4Path, settingSensorOffsetChannel4Default).toInt();
-    settings_struct.dac_output[4] = settings.value(settingSensorOffsetChannel5Path, settingSensorOffsetChannel5Default).toInt();
-    settings_struct.dac_output[5] = settings.value(settingSensorOffsetChannel6Path, settingSensorOffsetChannel6Default).toInt();
-    settings_struct.dac_output[6] = settings.value(settingSensorOffsetChannel7Path, settingSensorOffsetChannel7Default).toInt();
-    settings_struct.dac_output[7] = settings.value(settingSensorOffsetChannel8Path, settingSensorOffsetChannel8Default).toInt();
-    settings_struct.TORmodus = settings.value(settingTorPath, settingTorDefault).toInt();
-    settings_struct.ADC_Mode = settings.value(settingAdcModePath, settingAdcModeDefault).toInt();
-    settings_struct.ADC_custom_pattern = settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toInt();
-    settings_struct.gpx_offset = 0;//TODO
+	//measurement tab
+	settings_struct.nos = settings.value(settingNosPath, settingNosDefault).toInt();
+	settings_struct.nob = settings.value(settingNobPath, settingNobDefault).toInt();
+	settings_struct.sti_mode = settings.value(settingStiPath, settingStiDefault).toInt();
+	settings_struct.bti_mode = settings.value(settingBtiPath, settingBtiDefault).toInt();
+	settings_struct.stime_in_microsec = settings.value(settingStimerPath, settingStimerDefault).toDouble() * 1000;
+	settings_struct.btime_in_microsec = settings.value(settingBtimerPath, settingBtimerDefault).toDouble() * 1000;
+	settings_struct.sdat_in_100ns = settings.value(settingSdatPath, settingSdatDefault).toInt();
+	settings_struct.bdat_in_100ns = settings.value(settingBdatPath, settingBdatDefault).toInt();
+	settings_struct.sslope = settings.value(settingSslopePath, settingSslopeDefault).toInt();
+	settings_struct.bslope = settings.value(settingBslopePath, settingBslopeDefault).toInt();
+	settings_struct.xckdelay = settings.value(settingXckdelayPath, settingXckdelayDefault).toInt();
+	settings_struct.ShutterExpTime = settings.value(settingShutterExpTimePath, settingShutterExpTimeDefault).toInt();
+	settings_struct.trigger_mode_cc = settings.value(settingTriggerCcPath, settingTriggerCcDefault).toInt();
+	//camerasetup tab
+	settings_struct.sensor_type = settings.value(settingSensorTypePath, settingSensorTypeDefault).toInt();
+	settings_struct.camera_system = settings.value(settingCameraSystemPath, settingCameraSystemDefault).toInt();
+	settings_struct.camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toInt();
+	settings_struct.pixel = settings.value(settingPixelPath, settingPixelDefault).toInt();
+	settings_struct.mshut = settings.value(settingMshutPath, settingMshutDefault).toInt();
+	settings_struct.led_off = settings.value(settingLedPath, settingLedDefault).toBool();
+	settings_struct.gain_switch = settings.value(settingGain3010Path, settingGain3010Default).toBool();
+	settings_struct.gain_3030 = settings.value(settingGain3030Path, settingGain3030Default).toInt();
+	settings_struct.Temp_level = settings.value(settingCoolingPath, settingCoolingDefault).toInt();
+	settings_struct.dac = settings.value(settingDacPath, settingDacDefault).toInt();
+	settings_struct.enable_gpx = settings.value(settingGpxPath, settingGpxDefault).toBool();
+	settings_struct.gpx_offset = settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toInt();
+	//fftmodes tab
+	settings_struct.FFTLines = settings.value(settingLinesPath, settingLinesDefault).toInt();
+	settings_struct.Vfreq = settings.value(settingVfreqPath, settingVfreqDefault).toInt();
+	settings_struct.FFTMode = settings.value(settingFftModePath, settingFftModeDefault).toInt();
+	settings_struct.lines_binning = settings.value(settingLinesBinningPath, settingLinesBinningDefault).toInt();
+	settings_struct.number_of_regions = settings.value(settingNumberOfRegionsPath, settingNumberOfRegionsDefault).toInt();
+	settings_struct.keep_first = 0;//TODO implement in gui
+	if (settings.value(settingRegionSizeEqualPath, settingRegionSizeEqualDefault).toInt() == 0)
+		*(settings_struct.region_size) = 0;
+	else
+		settings_struct.region_size[0] = settings.value(settingRegionSize1Path, settingRegionSize1Default).toInt();
+	settings_struct.region_size[1] = settings.value(settingRegionSize2Path, settingRegionSize2Default).toInt();
+	settings_struct.region_size[2] = settings.value(settingRegionSize3Path, settingRegionSize3Default).toInt();
+	settings_struct.region_size[3] = settings.value(settingRegionSize4Path, settingRegionSize4Default).toInt();
+	settings_struct.region_size[4] = settings.value(settingRegionSize5Path, settingRegionSize5Default).toInt();
+	settings_struct.region_size[5] = settings.value(settingRegionSize6Path, settingRegionSize6Default).toInt();
+	settings_struct.region_size[6] = settings.value(settingRegionSize7Path, settingRegionSize7Default).toInt();
+	settings_struct.region_size[7] = settings.value(settingRegionSize8Path, settingRegionSize8Default).toInt();
+	settings_struct.dac_output[0] = settings.value(settingSensorOffsetChannel1Path, settingSensorOffsetChannel1Default).toInt();
+	settings_struct.dac_output[1] = settings.value(settingSensorOffsetChannel2Path, settingSensorOffsetChannel2Default).toInt();
+	settings_struct.dac_output[2] = settings.value(settingSensorOffsetChannel3Path, settingSensorOffsetChannel3Default).toInt();
+	settings_struct.dac_output[3] = settings.value(settingSensorOffsetChannel4Path, settingSensorOffsetChannel4Default).toInt();
+	settings_struct.dac_output[4] = settings.value(settingSensorOffsetChannel5Path, settingSensorOffsetChannel5Default).toInt();
+	settings_struct.dac_output[5] = settings.value(settingSensorOffsetChannel6Path, settingSensorOffsetChannel6Default).toInt();
+	settings_struct.dac_output[6] = settings.value(settingSensorOffsetChannel7Path, settingSensorOffsetChannel7Default).toInt();
+	settings_struct.dac_output[7] = settings.value(settingSensorOffsetChannel8Path, settingSensorOffsetChannel8Default).toInt();
+	settings_struct.TORmodus = settings.value(settingTorPath, settingTorDefault).toInt();
+	settings_struct.ADC_Mode = settings.value(settingAdcModePath, settingAdcModeDefault).toInt();
+	settings_struct.ADC_custom_pattern = settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toInt();
+	settings_struct.gpx_offset = 0;//TODO
 	settings_struct.bec = 0; //TODO
-    settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt() + 1;
-    uint8_t boardsel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt();
-    es_status_codes status = es_no_error;
-    if (boardsel == 0)
-    {
-        settings_struct.drvno = 1;
-        status = lsc.initMeasurement();
-    }
-	if (status != es_no_error) { 
+	//settings_struct.cont_pause = settings.value(settingContPause, settingAdcCustomValueDefault).toInt();
+	//settings_struct.cont_activate = settings.value(settingContActivate, settingAdcCustomValueDefault).toBool();
+
+	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt() + 1;
+	uint8_t boardsel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt();
+	es_status_codes status = es_no_error;
+	if (boardsel == 0)
+	{
+		settings_struct.drvno = 1;
+		status = lsc.initMeasurement();
+	}
+	if (status != es_no_error) {
 		QErrorMessage* d = new QErrorMessage(this);
 		d->setWindowTitle("Error");
 		d->setWindowModality(Qt::ApplicationModal);
 		d->showMessage(tr((char*)ConvertErrorCodeToMsg(status)));
-		return; 
+		return;
 	}
-    QThread* measurementThread = new QThread;
-    //Before assigning lsc to measurementThread first assign lsc to main thread. This only works when it is not assigned to any thread. This is the case when initMeasurement was called before and measurementThread finished. Moving lsc to the main thread is needed because you cannot move this object from nowhere land or another thread to measurementThread.
-    lsc.moveToThread(QApplication::instance()->thread());
-    lsc.moveToThread(measurementThread);
-    connect(measurementThread, SIGNAL(started()), &lsc, SLOT(startMeasurement()));
-    connect(&lsc, SIGNAL(measureDone()), measurementThread, SLOT(quit()));
-    connect(measurementThread, SIGNAL(finished()), measurementThread, SLOT(deleteLater()));
-    measurementThread->start();
-    return;
+	QThread* measurementThread = new QThread;
+	//Before assigning lsc to measurementThread first assign lsc to main thread. This only works when it is not assigned to any thread. This is the case when initMeasurement was called before and measurementThread finished. Moving lsc to the main thread is needed because you cannot move this object from nowhere land or another thread to measurementThread.
+	lsc.moveToThread(QApplication::instance()->thread());
+	lsc.moveToThread(measurementThread);
+	connect(measurementThread, SIGNAL(started()), &lsc, SLOT(startMeasurement()));
+	connect(&lsc, SIGNAL(measureDone()), measurementThread, SLOT(quit()));
+	connect(measurementThread, SIGNAL(finished()), measurementThread, SLOT(deleteLater()));
+	measurementThread->start();
+	return;
+}
+/**
+ * @brief Slot for the signal pressed of pushButtonStartCont.
+ * @return none
+ */
+void MainWindow::startContPressed()
+{
+
+	settings_struct.cont_pause = 1;// settings.value(settingContPause, settingAdcCustomValueDefault).toInt();
+	settings_struct.cont_activate = true;//settings.value(settingContActivate, settingAdcCustomValueDefault).toBool();
+	startPressed();
+	return;
 }
 
 /**
