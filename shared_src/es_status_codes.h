@@ -1,6 +1,9 @@
 #ifndef ES_STATUS_CODES_H
 #define ES_STATUS_CODES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef enum
 {
 	es_no_error = 0,
@@ -29,5 +32,7 @@ typedef enum
 } es_status_codes;
 
 char* ConvertErrorCodeToMsg(es_status_codes status);
-
+#ifdef __cplusplus
+}
+#endif
 #endif // ES_STATUS_CODES_H
