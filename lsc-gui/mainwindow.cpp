@@ -93,14 +93,14 @@ void MainWindow::startPressed()
     settings_struct.nob = settings.value(settingNobPath, settingNobDefault).toInt();
     settings_struct.sti_mode = settings.value(settingStiPath, settingStiDefault).toInt();
     settings_struct.bti_mode = settings.value(settingBtiPath, settingBtiDefault).toInt();
-    settings_struct.stime_in_microsec = settings.value(settingStimerPath, settingStimerDefault).toDouble() * 1000;
-    settings_struct.btime_in_microsec = settings.value(settingBtimerPath, settingBtimerDefault).toDouble() * 1000;
-    settings_struct.sdat_in_100ns = settings.value(settingSdatPath, settingSdatDefault).toInt();
-    settings_struct.bdat_in_100ns = settings.value(settingBdatPath, settingBdatDefault).toInt();
+    settings_struct.stime_in_microsec = settings.value(settingStime_in_microseconds_Path, settingStime_in_microseconds_Default).toDouble();
+    settings_struct.btime_in_microsec = settings.value(settingBtime_in_microseconds_Path, settingBtime_in_microseconds_Default).toDouble();
+    settings_struct.sdat_in_100ns = settings.value(settingSdat_in_100nsPath, settingSdat_in_100nsDefault).toInt();
+    settings_struct.bdat_in_100ns = settings.value(settingBdat_in_100nsPath, settingSdat_in_100nsDefault).toInt();
     settings_struct.sslope = settings.value(settingSslopePath, settingSslopeDefault).toInt();
     settings_struct.bslope = settings.value(settingBslopePath, settingBslopeDefault).toInt();
     settings_struct.xckdelay = settings.value(settingXckdelayPath, settingXckdelayDefault).toInt();
-    settings_struct.ShutterExpTime = settings.value(settingShutterExpTimePath, settingShutterExpTimeDefault).toInt();
+    settings_struct.ShutterExpTimeIn100ns = settings.value(settingShutterExpTimeIn100nsPath, settingShutterExpTimeIn100nsDefault).toInt();
     settings_struct.trigger_mode_cc = settings.value(settingTriggerCcPath, settingTriggerCcDefault).toInt();
     //camerasetup tab
     settings_struct.sensor_type = settings.value(settingSensorTypePath, settingSensorTypeDefault).toInt();
