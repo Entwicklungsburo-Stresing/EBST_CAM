@@ -1447,6 +1447,25 @@
       </widget>
      </item>
      <item>
+      <widget class="QComboBox" name="comboBoxSettingsLevel">
+       <item>
+        <property name="text">
+         <string>basic</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>advanced</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>expert</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
       <widget class="QDialogButtonBox" name="buttonBox">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
