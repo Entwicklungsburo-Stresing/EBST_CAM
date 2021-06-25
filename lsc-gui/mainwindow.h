@@ -34,7 +34,8 @@ private:
 private slots:
     void on_actionEdit_triggered();
     void loadSettings();
-    void startPressed();
+	void startPressed();
+	void startContPressed();
     void on_actionDump_board_registers_triggered();
     void abortPressed();
 };

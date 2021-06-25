@@ -47,6 +47,9 @@ struct global_settings
 	uint32_t ADC_Mode;
 	uint32_t ADC_custom_pattern;
 	uint32_t bec;
+	//cont mode
+	bool cont_activate;
+	uint32_t cont_pause;
 };
 
 #endif // STRUCT_H

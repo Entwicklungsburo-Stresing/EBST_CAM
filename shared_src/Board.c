@@ -156,6 +156,8 @@ es_status_codes InitMeasurement()
 	status = SetDmaRegister(settings_struct.drvno, settings_struct.pixel);
 	if (status != es_no_error) return status;
 	//TODO set cont FF mode with DLL style(continiousMeasurementFlag = activate;//0 or 1;continiousPause = pause;) or CCDExamp style(check it out)
+	continiousMeasurementFlag = settings_struct.cont_activate;//0 or 1
+	continiousPause = settings_struct.cont_pause;
 	status = SetBEC( settings_struct.drvno, settings_struct.bec );
 	if (status != es_no_error) return status;
 	status = SetXckdelay(settings_struct.drvno, settings_struct.xckdelay);
@@ -163,6 +165,7 @@ es_status_codes InitMeasurement()
 	status = FindCam(settings_struct.drvno);
 	if (status != es_no_error) return status;
 	status = SetHardwareTimerStopMode(settings_struct.drvno, true);
+
 	ES_LOG("*** Init Measurement done ***\n\n");
 	return status;
 }
