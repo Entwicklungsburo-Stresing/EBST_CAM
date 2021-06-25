@@ -292,3 +292,14 @@ void DialogSettings::loadDefaults()
     ui->comboBoxTheme->setCurrentIndex(settingThemeDefault);
     return;
 }
+
+// only allow values n * 64
+void DialogSettings::on_spinBoxPixel_valueChanged(int arg1)
+{
+	int newPixelValue = 0;
+	if(arg1 % 64 > 32)
+		newPixelValue = arg1 + 64 - arg1 % 64;
+	else
+		newPixelValue = arg1 - arg1 % 64;
+	ui->spinBoxPixel->setValue(newPixelValue);
+}
