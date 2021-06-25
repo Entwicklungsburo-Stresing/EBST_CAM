@@ -552,7 +552,7 @@ es_status_codes InitMeasurement(struct global_settings settings)
 	//set mshut
 	if (settings.mshut)
 	{
-		status = SetSEC(settings.drvno, settings.ShutterExpTime * 100);
+		status = SetSEC(settings.drvno, settings.ShutterExpTimeIn100ns * 100);
 		if (status != es_no_error) return status;
 		status = SetTORReg(settings.drvno, TOR_SSHUT);
 		if (status != es_no_error) return status;

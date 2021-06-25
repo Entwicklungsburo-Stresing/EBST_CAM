@@ -75,7 +75,7 @@ es_status_codes InitMeasurement()
 	//set mshut
 	if (settings_struct.mshut)
 	{
-		status = SetSEC(settings_struct.drvno, settings_struct.ShutterExpTime * 100);
+		status = SetSEC(settings_struct.drvno, settings_struct.ShutterExpTimeIn100ns * 100);
 		if (status != es_no_error) return status;
 		status = SetTORReg(settings_struct.drvno, TOR_SSHUT);
 		if (status != es_no_error) return status;
