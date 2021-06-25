@@ -60,6 +60,7 @@ constexpr auto settingAdcCustomValuePath = "debug/adcCustomValue";
 
 //GUI Settings
 constexpr auto settingThemePath = "appearance/theme";
+constexpr auto settingSettingsLevelPath = "appearance/settingsLevel";
 
 namespace Ui {
 class DialogSettings;
@@ -89,6 +90,8 @@ private slots:
     void on_checkBoxRegionsEqual_stateChanged(int arg1);
     void on_pushButtonDefault_clicked();
 	void on_spinBoxPixel_valueChanged(int arg1);
+	void on_comboBoxSettingsLevel_currentIndexChanged(int index);
+	void on_comboBoxFftMode_currentIndexChanged(int index);
 };
 
 #endif // DIALOGSETTINGS_H

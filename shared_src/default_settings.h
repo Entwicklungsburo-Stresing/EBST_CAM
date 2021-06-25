@@ -56,6 +56,7 @@
 #define settingAdcModeDefault               normal
 #define settingAdcCustomValueDefault        0
 #define settingThemeDefault                 lighttheme
+#define settingSettingsLevelDefault			0
 #define settingBecDefault                   0
 
 #endif // DEFAULT_SETTINGS_H
