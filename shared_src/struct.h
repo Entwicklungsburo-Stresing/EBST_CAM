@@ -18,7 +18,7 @@ struct global_settings
 	uint32_t sslope;
 	uint32_t bslope;
 	uint32_t xckdelay;
-	uint32_t ShutterExpTime;
+	uint32_t ShutterExpTimeIn100ns;
 	uint32_t trigger_mode_cc;
 	//camerasetup tab
 	uint32_t board_sel;
