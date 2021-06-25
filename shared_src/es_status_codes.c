@@ -18,7 +18,7 @@ char errorMsg[100][50] =
 	"Allocating user memory failed",
 	"Not enough RAM",
 	"Parameter out of bounds",
-	"An unknown error occured"
+	"An unknown error occured",
 	"Enabling interrupts failed",
 	"Getting dma buffer failed",
 	"Unlocking dma failed",
