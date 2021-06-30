@@ -63,6 +63,8 @@ es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_t
 es_status_codes InitCamera3001( uint32_t drvno, uint8_t gain_switch );
 es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint16_t gain_switch );
 es_status_codes Cam3010_ADC_reset( uint32_t drvno );
+es_status_codes Cam3010_ADC_setOutputMode(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern);
+es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_pattern);
 es_status_codes InitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t gain );
 es_status_codes Cam3030_ADC_reset( uint32_t drvno );
 es_status_codes Cam3030_ADC_twoWireModeEN( uint32_t drvno );

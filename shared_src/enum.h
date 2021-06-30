@@ -193,6 +193,7 @@ enum cam_addresses
 	maddr_cam = 0x00,
 	maddr_adc = 0x01,
 	maddr_ioctrl = 0x02,
+
 	cam_adaddr_gain = 0x00,
 	cam_adaddr_pixel = 0x01,
 	cam_adaddr_trig_in = 0x02,
@@ -200,10 +201,12 @@ enum cam_addresses
 	cam_adaddr_vclk = 0x04,
 	cam_adaddr_LEDoff = 0x05,
 	cam_adaddr_coolTemp = 0x06,
+
 	adc_ltc2271_regaddr_reset = 0x00,
 	adc_ltc2271_regaddr_outmode = 0x02,
 	adc_ltc2271_regaddr_custompattern_msb = 0x03,
 	adc_ltc2271_regaddr_custompattern_lsb = 0x04,
+
 	adc_ads5294_regaddr_reset = 0x00,
 	adc_ads5294_regaddr_mode = 0x25,
 	adc_ads5294_regaddr_custompattern = 0x26,
@@ -219,6 +222,7 @@ enum cam_messages
 	adc_ltc2271_msg_reset = 0x80,
 	adc_ltc2271_msg_normal_mode = 0x01,
 	adc_ltc2271_msg_custompattern = 0x05,
+
 	adc_ads5294_msg_reset = 0x01,
 	adc_ads5294_msg_ramp = 0x40,
 	adc_ads5294_msg_custompattern = 0x10,
