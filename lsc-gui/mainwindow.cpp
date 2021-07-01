@@ -312,8 +312,9 @@ void MainWindow::on_measureStart()
     pal.setColor(QPalette::Background, Qt::green);
     ui->widgetMeasureOn->setPalette(pal);
     //disable start button
-    ui->pushButtonStart->setDisabled(true);
-    //enable abort button
+	ui->pushButtonStart->setDisabled(true);
+	ui->pushButtonStartCont->setDisabled(true);
+	//enable abort button
     ui->pushButtonAbort->setEnabled(true);
     //enable controls
     ui->spinBoxBlock->setEnabled(true);
@@ -333,6 +334,7 @@ void MainWindow::on_measureDone()
     loadCameraData();
     //enable start button
     ui->pushButtonStart->setEnabled(true);
+	ui->pushButtonStartCont->setEnabled(true);
     //disable abort button
     ui->pushButtonAbort->setDisabled(true);
     return;
