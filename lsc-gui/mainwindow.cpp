@@ -220,12 +220,14 @@ void MainWindow::loadSettings()
     default:
     case 0:
         qApp->setStyleSheet("");
+		ui->chartView->chart()->setTheme(QChart::ChartThemeLight);
         break;
     case 1:
         QFile f(":qdarkstyle/style.qss");
         f.open(QFile::ReadOnly | QFile::Text);
         QTextStream ts(&f);
         qApp->setStyleSheet(ts.readAll());
+		ui->chartView->chart()->setTheme(QChart::ChartThemeDark);
         break;
     }
     return;
