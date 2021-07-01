@@ -17,7 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->horizontalSliderSample, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
     connect(ui->horizontalSliderBlock, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
-    connect(ui->pushButtonStart, SIGNAL(pressed()), this, SLOT(startPressed()));
+	connect(ui->pushButtonStart, SIGNAL(pressed()), this, SLOT(startPressed()));
+	connect(ui->pushButtonStartCont, SIGNAL(pressed()), this, SLOT(startContPressed()));
     connect(ui->pushButtonAbort, SIGNAL(pressed()), this, SLOT(abortPressed()));
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));
     connect(&lsc, SIGNAL(measureStart()), this, SLOT(on_measureStart()));
@@ -146,30 +147,45 @@ void MainWindow::startPressed()
     settings_struct.ADC_custom_pattern = settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toInt();
     settings_struct.gpx_offset = 0;//TODO
 	settings_struct.bec = 0; //TODO
-    settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt() + 1;
-    uint8_t boardsel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt();
-    es_status_codes status = es_no_error;
-    if (boardsel == 0)
-    {
-        settings_struct.drvno = 1;
-        status = lsc.initMeasurement();
-    }
-	if (status != es_no_error) { 
+	//settings_struct.cont_pause = settings.value(settingContPause, settingAdcCustomValueDefault).toInt();
+	//settings_struct.cont_activate = settings.value(settingContActivate, settingAdcCustomValueDefault).toBool();
+
+	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt() + 1;
+	uint8_t boardsel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt();
+	es_status_codes status = es_no_error;
+	if (boardsel == 0)
+	{
+		settings_struct.drvno = 1;
+		status = lsc.initMeasurement();
+	}
+	if (status != es_no_error) {
 		QErrorMessage* d = new QErrorMessage(this);
 		d->setWindowTitle("Error");
 		d->setWindowModality(Qt::ApplicationModal);
 		d->showMessage(tr((char*)ConvertErrorCodeToMsg(status)));
-		return; 
+		return;
 	}
-    QThread* measurementThread = new QThread;
-    //Before assigning lsc to measurementThread first assign lsc to main thread. This only works when it is not assigned to any thread. This is the case when initMeasurement was called before and measurementThread finished. Moving lsc to the main thread is needed because you cannot move this object from nowhere land or another thread to measurementThread.
-    lsc.moveToThread(QApplication::instance()->thread());
-    lsc.moveToThread(measurementThread);
-    connect(measurementThread, SIGNAL(started()), &lsc, SLOT(startMeasurement()));
-    connect(&lsc, SIGNAL(measureDone()), measurementThread, SLOT(quit()));
-    connect(measurementThread, SIGNAL(finished()), measurementThread, SLOT(deleteLater()));
-    measurementThread->start();
-    return;
+	QThread* measurementThread = new QThread;
+	//Before assigning lsc to measurementThread first assign lsc to main thread. This only works when it is not assigned to any thread. This is the case when initMeasurement was called before and measurementThread finished. Moving lsc to the main thread is needed because you cannot move this object from nowhere land or another thread to measurementThread.
+	lsc.moveToThread(QApplication::instance()->thread());
+	lsc.moveToThread(measurementThread);
+	connect(measurementThread, SIGNAL(started()), &lsc, SLOT(startMeasurement()));
+	connect(&lsc, SIGNAL(measureDone()), measurementThread, SLOT(quit()));
+	connect(measurementThread, SIGNAL(finished()), measurementThread, SLOT(deleteLater()));
+	measurementThread->start();
+	return;
+}
+/**
+ * @brief Slot for the signal pressed of pushButtonStartCont.
+ * @return none
+ */
+void MainWindow::startContPressed()
+{
+
+	settings_struct.cont_pause = 1;// settings.value(settingContPause, settingAdcCustomValueDefault).toInt();
+	settings_struct.cont_activate = true;//settings.value(settingContActivate, settingAdcCustomValueDefault).toBool();
+	startPressed();
+	return;
 }
 
 /**
