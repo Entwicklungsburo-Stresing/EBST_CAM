@@ -10,11 +10,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    QChart *chart = ui->chartView->chart();
-    chart->legend()->hide();
-    chart->setTitle("Camera 1");
-    ui->chartView->setRenderHint(QPainter::Antialiasing);
-
     connect(ui->horizontalSliderSample, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
     connect(ui->horizontalSliderBlock, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
 	connect(ui->pushButtonStart, SIGNAL(pressed()), this, SLOT(startPressed()));
@@ -25,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&lsc, SIGNAL(measureDone()), this, SLOT(on_measureDone()));
     connect(&lsc, SIGNAL(blockStart()), this, SLOT(on_blockStart()));
     connect(&lsc, SIGNAL(blockDone()), this, SLOT(on_blockDone()));
+	connect(ui->chartView, SIGNAL(rubberBandChanged()),this, SLOT(on_mychartView_rubberBandChanged()));
 
     es_status_codes status = lsc.initDriver();
     if (status != es_no_error)
@@ -60,6 +56,13 @@ void MainWindow::setChartData(QLineSeries** series, uint16_t numberOfSets)
     for(uint16_t set=0; set<numberOfSets; set++)
         chart->addSeries(series[set]);
     chart->createDefaultAxes();
+	QList<QAbstractAxis *> axes = ui->chartView->chart()->axes();
+	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
+	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
+	axis0->setMax(ui->chartView->curr_xmax);
+	axis0->setMin(ui->chartView->curr_xmin);
+	axis1->setMax(ui->chartView->curr_ymax);
+	axis1->setMin(ui->chartView->curr_ymin);
     return;
 }
 
@@ -364,4 +367,38 @@ void MainWindow::abortPressed()
 {
     lsc.abortMeasurement(1);
     return;
+}
+
+void MainWindow::on_mychartView_rubberBandChanged()
+{
+	// retrieve axis pointer
+	QList<QAbstractAxis *> axes = ui->chartView->chart()->axes();
+	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
+	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
+	// save current axis configuration
+	ui->chartView->curr_xmax = axis0->max();
+	ui->chartView->curr_xmin = axis0->min();
+	ui->chartView->curr_ymax = axis1->max();
+	ui->chartView->curr_ymin = axis1->min();
+	// apply bounderies on axes
+	if(axis0->max() > settings.value(settingPixelPath, settingPixelDefault).toInt())
+	{
+		ui->chartView->curr_xmax = settings.value(settingPixelPath, settingPixelDefault).toInt();
+		axis0->setMax(ui->chartView->curr_xmax);
+	}
+	if(axis0->min() < 0)
+	{
+		ui->chartView->curr_xmin = 0;
+		axis0->setMin(0);
+	}
+	if(axis1->max() > 0xFFFF)
+	{
+		ui->chartView->curr_ymax = 0xFFFF;
+		axis1->setMax(0xFFFF);
+	}
+	if(axis1->min() < 0)
+	{
+		ui->chartView->curr_ymin = 0;
+		axis1->setMin(0);
+	}
 }

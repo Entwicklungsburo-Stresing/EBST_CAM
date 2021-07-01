@@ -38,6 +38,7 @@ VERSION = $${VERSION_MAJOR}.$${VERSION_MINOR}.$${VERSION_BUILD}
 SOURCES += lsc-gui.cpp \
     dialogsettings.cpp \
     mainwindow.cpp \
+    myqchartview.cpp \
     myqspinbox.cpp \
     ../shared_src/es_status_codes.c \
     ../shared_src/Board.c \
@@ -66,6 +67,7 @@ HEADERS += \
     dialogsettings.h \
     lsc.h \
     mainwindow.h \
+    myqchartview.h \
     myqspinbox.h \
     ../shared_src/enum.h \
     ../shared_src/struct.h \
