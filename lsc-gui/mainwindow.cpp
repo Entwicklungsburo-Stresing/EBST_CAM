@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "dialogaxes.h"
+#include "version.h"
 
 /**
  * @brief Constructor of Class MainWindow.
@@ -240,6 +241,26 @@ void MainWindow::on_actionReset_axes_triggered()
 	axis0->setMin(0);
 	axis1->setMax(0xFFFF);
 	axis1->setMin(0);
+	return;
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+	QString aboutText = "This is line scan camera version ";
+	aboutText.append(VER_FILE_VERSION_STR);
+	aboutText.append("\n");
+	aboutText.append(VER_COPYRIGHT_STR);
+	aboutText.append("\n");
+	aboutText.append(VER_COMPANY_NAME);
+	aboutText.append("\n");
+	aboutText.append("stresing.de");
+	QMessageBox::about(this, "About", aboutText);
+	return;
+}
+
+void MainWindow::on_actionAbout_Qt_triggered()
+{
+	QMessageBox::aboutQt(this, "About Qt");
 	return;
 }
 
