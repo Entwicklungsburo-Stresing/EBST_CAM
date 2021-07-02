@@ -37,6 +37,7 @@ VERSION = $${VERSION_MAJOR}.$${VERSION_MINOR}.$${VERSION_BUILD}
 # Input
 SOURCES += lsc-gui.cpp \
     dialogsettings.cpp \
+    dialogtdc.cpp \
     mainwindow.cpp \
     myqchartview.cpp \
     myqspinbox.cpp \
@@ -61,10 +62,12 @@ DISTFILES += \
 
 FORMS += \
     dialogsettings.ui \
+    dialogtdc.ui \
     mainwindow.ui
 
 HEADERS += \
     dialogsettings.h \
+    dialogtdc.h \
     lsc.h \
     mainwindow.h \
     myqchartview.h \
