@@ -1311,20 +1311,20 @@ es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custo
 es_status_codes Cam3010_ADC_reset( uint32_t drvno )
 {
 	ES_LOG("Camera 3010 ADC reset\n");
-	return SendFLCAM( drvno, maddr_adc, adc_ltc2271_regaddr_reset, adc_ltc2271_msg_reset );
+	return SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_reset, adc_ltc2271_msg_reset );
 }
 
 es_status_codes Cam3010_ADC_setOutputMode(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern) {
 
 	if (2 == adc_mode) {
 		ES_LOG("Camera 3010 ADC set output mode to 4-lane mode and test pattern\n");
-		es_status_codes status = SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_custompattern); //output mode reg, 4 lane mode and enable test pattern
+		es_status_codes status = SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_custompattern);
 		if (status != es_no_error) return status;
 		return Cam3010_ADC_sendTestPattern(drvno, custom_pattern);
 	}
 	else {
-		ES_LOG("Camera 3010 ADC set output mode to 4-lane mode normal operation\n");
-		return SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_normal_mode); //output mode reg, 4 lane mode and no test pattern
+		ES_LOG("Camera 3010 ADC set output mode to 4-lane mode and normal operation\n");
+		return SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_normal_mode);
 	}
 }
 
@@ -1334,9 +1334,9 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
 	uint8_t  highByte = custom_pattern >> 8;
 	uint8_t  lowByte = custom_pattern & 0x00FF;
 	
-	status = SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_msb, highByte); //testpattern MSB reg, MSB test pattern
+	status = SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_msb, highByte);
 	if (status != es_no_error) return status;
-	status = SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_lsb, lowByte);  //testpattern LSB reg, LSB test pattern
+	status = SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_lsb, lowByte);
 
 	ES_LOG("Camera 3010, ADC test pattern MSB: %u, LSB: %u\n", highByte, lowByte);
 	return status;
