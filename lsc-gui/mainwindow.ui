@@ -376,8 +376,17 @@
     </property>
     <addaction name="actionDump_board_registers"/>
    </widget>
+   <widget class="QMenu" name="menuWindow">
+    <property name="title">
+     <string>Window</string>
+    </property>
+    <addaction name="actionTDC"/>
+    <addaction name="actionRMS"/>
+    <addaction name="actionDSC"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSettings"/>
+   <addaction name="menuWindow"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -400,6 +409,26 @@
   <action name="actionDump_board_registers">
    <property name="text">
     <string>Dump board registers</string>
+   </property>
+  </action>
+  <action name="actionTDC">
+   <property name="text">
+    <string>TDC</string>
+   </property>
+  </action>
+  <action name="actionRMS">
+   <property name="text">
+    <string>RMS</string>
+   </property>
+  </action>
+  <action name="actionGPX">
+   <property name="text">
+    <string>DSC</string>
+   </property>
+  </action>
+  <action name="actionDSC">
+   <property name="text">
+    <string>DSC</string>
    </property>
   </action>
  </widget>

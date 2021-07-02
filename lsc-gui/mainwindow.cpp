@@ -197,11 +197,23 @@ void MainWindow::startContPressed()
  */
 void MainWindow::on_actionEdit_triggered()
 {
-    DialogSettings* ds = new DialogSettings(&settings, this);
-    ds->setAttribute(Qt::WA_DeleteOnClose);
-    ds->show();
-    connect(ds, SIGNAL(settings_saved()), this, SLOT(loadSettings()));
-    return;
+	DialogSettings* ds = new DialogSettings( &settings, this );
+	ds->setAttribute( Qt::WA_DeleteOnClose );
+	ds->show();
+	connect( ds, SIGNAL( settings_saved() ), this, SLOT( loadSettings() ) );
+	return;
+}
+/**
+ * @brief This slot opens the TDC dialog.
+ * @return none
+ */
+void MainWindow::on_actionTDC_triggered()
+{
+	DialogTDC* ds = new DialogTDC( this );
+	ds->setAttribute( Qt::WA_DeleteOnClose );
+	ds->show();
+	connect( &lsc, SIGNAL( measureDone() ), ds, SLOT( updateTDC() ) );
+	return;
 }
 
 /**

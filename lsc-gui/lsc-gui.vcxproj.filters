@@ -96,6 +96,9 @@
     <ClCompile Include="myqchartview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dialogtdc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h">
@@ -154,6 +157,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="mainwindow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogtdc.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -805,6 +811,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="myqchartview.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="dialogtdc.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
