@@ -226,6 +226,23 @@ void MainWindow::on_actionCameras_triggered()
 	return;
 }
 
+void MainWindow::on_actionReset_axes_triggered()
+{
+	// retrieve axis pointer
+	QList<QAbstractAxis *> axes = ui->chartView->chart()->axes();
+	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
+	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
+	ui->chartView->curr_xmax = settings.value(settingPixelPath, settingPixelDefault).toReal();
+	ui->chartView->curr_xmin = 0;
+	ui->chartView->curr_ymax = 0xFFFF;
+	ui->chartView->curr_ymin = 0;
+	axis0->setMax(settings.value(settingPixelPath, settingPixelDefault).toReal());
+	axis0->setMin(0);
+	axis1->setMax(0xFFFF);
+	axis1->setMin(0);
+	return;
+}
+
 /**
  * @brief Load settings and apply to UI.
  */
