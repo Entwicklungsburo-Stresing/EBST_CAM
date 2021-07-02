@@ -93,6 +93,9 @@
     <ClCompile Include="..\shared_src\win\Board_ll.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="myqchartview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h">
@@ -796,5 +799,10 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\shared_src\CCD.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="myqchartview.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>
