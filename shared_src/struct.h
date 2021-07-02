@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+// All settings are uin32_t to ensure the correct memory layout. This is important for the communication with labview.
 struct global_settings
 {
 	uint32_t drvno;
@@ -13,12 +14,12 @@ struct global_settings
 	uint32_t bti_mode;
 	uint32_t stime_in_microsec;
 	uint32_t btime_in_microsec;
-	uint32_t sdat_in_100ns;
-	uint32_t bdat_in_100ns;
+	uint32_t sdat_in_10ns;
+	uint32_t bdat_in_10ns;
 	uint32_t sslope;
 	uint32_t bslope;
-	uint32_t xckdelay;
-	uint32_t ShutterExpTimeIn100ns;
+	uint32_t xckdelay_in_10ns;
+	uint32_t ShutterExpTimeIn10ns;
 	uint32_t trigger_mode_cc;
 	//camerasetup tab
 	uint32_t board_sel;
@@ -46,9 +47,9 @@ struct global_settings
 	uint32_t TORmodus; 
 	uint32_t ADC_Mode;
 	uint32_t ADC_custom_pattern;
-	uint32_t bec;
+	uint32_t bec_in_10ns;
 	//cont mode
-	bool cont_activate;
+	uint32_t cont_activate;
 	uint32_t cont_pause;
 };
 

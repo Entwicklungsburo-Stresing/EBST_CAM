@@ -7,14 +7,14 @@
 #define settingNobDefault                   2
 #define settingStiDefault                   sti_STimer
 #define settingBtiDefault                   bti_BTimer
-#define settingStime_in_microseconds_Default                1
-#define settingBtime_in_microseconds_Default                1000
-#define settingSdat_in_100nsDefault                  0
-#define settingSdat_in_100nsDefault                  0
+#define settingStime_in_microseconds_Default 1
+#define settingBtime_in_microseconds_Default 1000
+#define settingSdat_in_10nsDefault          0
+#define settingBdat_in_10nsDefault          0
 #define settingSslopeDefault                slope_pos
 #define settingBslopeDefault                slope_pos
-#define settingXckdelayDefault              0
-#define settingShutterExpTimeIn100nsDefault 1
+#define settingXckdelayIn10nsDefault        0
+#define settingShutterExpTimeIn10nsDefault  1
 #define settingTriggerCcDefault             xck
 #define settingBoardSelDefault              0
 #define settingSensorTypeDefault            PDAsensor
@@ -57,6 +57,6 @@
 #define settingAdcCustomValueDefault        0
 #define settingThemeDefault                 lighttheme
 #define settingSettingsLevelDefault			0
-#define settingBecDefault                   0
+#define settingBecIn10nsDefault             0
 
 #endif // DEFAULT_SETTINGS_H
