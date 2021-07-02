@@ -63,12 +63,12 @@
           </widget>
          </item>
          <item row="6" column="2">
-          <widget class="QSpinBox" name="spinBoxSdat">
+          <widget class="QSpinBox" name="spinBoxSdatIn100ns">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
            <property name="suffix">
-            <string>ns</string>
+            <string>00ns</string>
            </property>
            <property name="maximum">
             <number>999999999</number>
@@ -76,7 +76,7 @@
           </widget>
          </item>
          <item row="5" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxBTimer">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxBTimer_in_ms">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -234,7 +234,7 @@
           </widget>
          </item>
          <item row="4" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxSTimer">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxSTime_in_ms">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -271,12 +271,12 @@
           </widget>
          </item>
          <item row="7" column="2">
-          <widget class="QSpinBox" name="spinBoxBdat">
+          <widget class="QSpinBox" name="spinBoxBdatIn100ns">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
            <property name="suffix">
-            <string>ns</string>
+            <string>00ns</string>
            </property>
            <property name="maximum">
             <number>999999999</number>
@@ -318,18 +318,24 @@
           </widget>
          </item>
          <item row="11" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxExpTime">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxExpTimeIn100ns">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
+           <property name="correctionMode">
+            <enum>QAbstractSpinBox::CorrectToPreviousValue</enum>
+           </property>
            <property name="suffix">
-            <string>ms</string>
+            <string>00ns</string>
            </property>
            <property name="decimals">
-            <number>3</number>
+            <number>0</number>
            </property>
            <property name="maximum">
-            <double>9999999.990000000223517</double>
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>1.000000000000000</double>
            </property>
           </widget>
          </item>
@@ -540,10 +546,13 @@
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
            <property name="minimum">
-            <number>1</number>
+            <number>64</number>
            </property>
            <property name="maximum">
             <number>9999</number>
+           </property>
+           <property name="singleStep">
+            <number>64</number>
            </property>
            <property name="value">
             <number>576</number>
@@ -1435,6 +1444,25 @@
        <property name="text">
         <string>Default</string>
        </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxSettingsLevel">
+       <item>
+        <property name="text">
+         <string>basic</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>advanced</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>expert</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>

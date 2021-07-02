@@ -10,14 +10,14 @@ constexpr auto settingNosPath = "measurement/nos";
 constexpr auto settingNobPath = "measurement/nob";
 constexpr auto settingStiPath = "measurement/sti";
 constexpr auto settingBtiPath = "measurement/bti";
-constexpr auto settingStimerPath = "measurement/stimer";
-constexpr auto settingBtimerPath = "measurement/btimer";
-constexpr auto settingSdatPath = "measurement/sdat";
-constexpr auto settingBdatPath = "measurement/bdat";
+constexpr auto settingStime_in_microseconds_Path = "measurement/stimer";
+constexpr auto settingBtime_in_microseconds_Path = "measurement/btimer";
+constexpr auto settingSdat_in_100nsPath = "measurement/sdat";
+constexpr auto settingBdat_in_100nsPath = "measurement/bdat";
 constexpr auto settingSslopePath = "measurement/sslope";
 constexpr auto settingBslopePath = "measurement/bslope";
 constexpr auto settingXckdelayPath = "measurement/xckdelay";
-constexpr auto settingShutterExpTimePath = "measurement/shutterExpTime";
+constexpr auto settingShutterExpTimeIn100nsPath = "measurement/shutterExpTimeIn100ns";
 constexpr auto settingTriggerCcPath = "measurement/triggerCc";
 constexpr auto settingBoardSelPath = "camerasetup/boardsel";
 constexpr auto settingSensorTypePath = "camerasetup/sensorType";
@@ -62,6 +62,7 @@ constexpr auto settingContPause = "measurement/contPause";
 
 //GUI Settings
 constexpr auto settingThemePath = "appearance/theme";
+constexpr auto settingSettingsLevelPath = "appearance/settingsLevel";
 
 namespace Ui {
 class DialogSettings;
@@ -90,6 +91,9 @@ private slots:
     void on_checkBoxMshut_stateChanged(int arg1);
     void on_checkBoxRegionsEqual_stateChanged(int arg1);
     void on_pushButtonDefault_clicked();
+	void on_spinBoxPixel_valueChanged(int arg1);
+	void on_comboBoxSettingsLevel_currentIndexChanged(int index);
+	void on_comboBoxFftMode_currentIndexChanged(int index);
 };
 
 #endif // DIALOGSETTINGS_H
