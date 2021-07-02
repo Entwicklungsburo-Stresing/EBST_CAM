@@ -552,7 +552,7 @@ es_status_codes InitMeasurement(struct global_settings settings)
 	//set mshut
 	if (settings.mshut)
 	{
-		status = SetSEC(settings.drvno, settings.ShutterExpTimeIn100ns * 100);
+		status = SetSEC(settings.drvno, settings.ShutterExpTimeIn10ns);
 		if (status != es_no_error) return status;
 		status = SetTORReg(settings.drvno, TOR_SSHUT);
 		if (status != es_no_error) return status;
@@ -582,9 +582,9 @@ es_status_codes InitMeasurement(struct global_settings settings)
 	if (settings.enable_gpx) status = InitGPX(settings.drvno, settings.gpx_offset);
 	if (status != es_no_error) return status;
 	//Delay after Trigger
-	status = SetSDAT(settings.drvno, settings.sdat_in_100ns);
+	status = SetSDAT(settings.drvno, settings.sdat_in_10ns);
 	if (status != es_no_error) return status;
-	status = SetBDAT(settings.drvno, settings.bdat_in_100ns);
+	status = SetBDAT(settings.drvno, settings.bdat_in_10ns);
 	if (status != es_no_error) return status;
 	//init Camera
 	status = initCamera(settings.drvno, (UINT8)settings.camera_system, (UINT16)settings.pixel, (UINT16)settings.trigger_mode_cc, (UINT16)settings.sensor_type, (UINT8)settings.ADC_Mode, (UINT16)settings.ADC_custom_pattern, (UINT16)settings.led_off, (UINT16)settings.gain_switch, (UINT8)settings.gain_3030);
@@ -613,9 +613,9 @@ es_status_codes InitMeasurement(struct global_settings settings)
 	status = SetTLPS(settings.drvno, settings.pixel);
 	if (status != es_no_error) return status;
 	//TODO set cont FF mode with DLL style(CONTFFLOOP = activate;//0 or 1;CONTPAUSE = pause;) or CCDExamp style(check it out)
-	status = SetBEC( settings.drvno, settings.bec );
+	status = SetBEC( settings.drvno, settings.bec_in_10ns );
 	if (status != es_no_error) return status;
-	status = SetXckdelay(settings.drvno, settings.xckdelay);
+	status = SetXckdelay(settings.drvno, settings.xckdelay_in_10ns);
 	BOARD_SEL = settings.board_sel;
 	WDC_Err("*** Init Measurement done ***\n\n");
 	return status;
@@ -1628,18 +1628,18 @@ BOOL GetShutterState( UINT32 drvno )
  * \brief Sets delay after trigger hardware register.
  * 
  * \param drvno PCIe board identifier.
- * \param datin100ns Time in 100 ns steps.
+ * \param datin10ns Time in 10 ns steps.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes SetSDAT( UINT32 drvno, UINT32 datin100ns )
+es_status_codes SetSDAT( UINT32 drvno, UINT32 datin10ns )
 {
-	WDC_Err("Set SDAT in 100ns: %u\n", datin100ns);
-	if (datin100ns)
+	WDC_Err("Set SDAT in 10ns: %u\n", datin10ns);
+	if (datin10ns)
 	{
-		datin100ns |= 0x80000000; // enable delay
-		return WriteLongS0(drvno, datin100ns, S0Addr_SDAT);
+		datin10ns |= 0x80000000; // enable delay
+		return WriteLongS0(drvno, datin10ns, S0Addr_SDAT);
 	}
 	else return WriteLongS0(drvno, 0, S0Addr_SDAT);
 }; //SetDAT
@@ -1648,18 +1648,18 @@ es_status_codes SetSDAT( UINT32 drvno, UINT32 datin100ns )
  * \brief Sets delay after trigger hardware register.
  * 
  * \param drvno PCIe board identifier.
- * \param datin100ns Time in 100 ns steps.
+ * \param datin10ns Time in 10 ns steps.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes SetBDAT( UINT32 drvno, UINT32 datin100ns )
+es_status_codes SetBDAT( UINT32 drvno, UINT32 datin10ns )
 {
-	WDC_Err("Set BDAT in 100ns: %u\n", datin100ns);
-	if (datin100ns)
+	WDC_Err("Set BDAT in 10ns: %u\n", datin10ns);
+	if (datin10ns)
 	{
-		datin100ns |= 0x80000000; // enable delay
-		return WriteLongS0(drvno, datin100ns, S0Addr_BDAT);
+		datin10ns |= 0x80000000; // enable delay
+		return WriteLongS0(drvno, datin10ns, S0Addr_BDAT);
 	}
 	else return WriteLongS0(drvno, 0, S0Addr_BDAT);
 }; //SetDAT
@@ -1667,24 +1667,24 @@ es_status_codes SetBDAT( UINT32 drvno, UINT32 datin100ns )
 /**
  * \brief Exposure control (EC) signal is used for mechanical shutter or sensors with EC function.
  * 
- * Starts after delay after trigger (DAT) signal and is active for ecin100ns.
- * Resets additional delay after trigger with ecin100ns = 0.
+ * Starts after delay after trigger (DAT) signal and is active for ecin10ns.
+ * Resets additional delay after trigger with ecin10ns = 0.
  * \param drvno PCIe board identifier
- * \param ecin100ns Time in 100 ns steps.
+ * \param ecin10ns Time in 10 ns steps.
  * \return es_status_codes:
  *		- es_no_error
  * 		- es_register_write_failed
  */
-es_status_codes SetSEC( UINT32 drvno, UINT32 ecin100ns )
+es_status_codes SetSEC( UINT32 drvno, UINT32 ecin10ns )
 {
-	WDC_Err("Set SEC. EC in 100 ns: %u\n", ecin100ns);
+	WDC_Err("Set SEC. EC in 10 ns: %u\n", ecin10ns);
 	es_status_codes status = es_no_error;
-	if (ecin100ns <= 1)
+	if (ecin10ns <= 1)
 		status = WriteLongS0(drvno, 0, S0Addr_SEC);
 	else
 	{
-		ecin100ns |= 0x80000000; // enable delay
-		status = WriteLongS0(drvno, ecin100ns, S0Addr_SEC);
+		ecin10ns |= 0x80000000; // enable delay
+		status = WriteLongS0(drvno, ecin10ns, S0Addr_SEC);
 	}
 	return status;
 }; //SetEC
@@ -1692,22 +1692,22 @@ es_status_codes SetSEC( UINT32 drvno, UINT32 ecin100ns )
 /**
  * \brief Exposure control (EC) signal is used for mechanical shutter or sensors with EC function.
  * 
- * Starts after delay after trigger (DAT) signal and is active for ecin100ns.
- * Resets additional delay after trigger with ecin100ns = 0.
+ * Starts after delay after trigger (DAT) signal and is active for ecin10ns.
+ * Resets additional delay after trigger with ecin10ns = 0.
  * \param drvno PCIe board identifier
- * \param ecin100ns Time in 100 ns steps.
+ * \param ecin10ns Time in 10 ns steps.
  * \return es_status_codes:
  *		- es_no_error
  * 		- es_register_write_failed
  */
-es_status_codes SetBEC( UINT32 drvno, UINT32 ecin100ns )
+es_status_codes SetBEC( UINT32 drvno, UINT32 ecin10ns )
 {
-	WDC_Err("Set BEC in 100 ns: %u\n", ecin100ns);
+	WDC_Err("Set BEC in 10 ns: %u\n", ecin10ns);
 	es_status_codes status = es_no_error;
-	if (ecin100ns)
+	if (ecin10ns)
 	{
-		ecin100ns |= 0x80000000; // enable delay
-		status = WriteLongS0(drvno, ecin100ns, S0Addr_BEC);
+		ecin10ns |= 0x80000000; // enable delay
+		status = WriteLongS0(drvno, ecin10ns, S0Addr_BEC);
 	}
 	else
 		status = WriteLongS0(drvno, 0, S0Addr_BEC);
@@ -4070,17 +4070,17 @@ es_status_codes abortMeasurement( UINT32 drv )
  * \brief Set XCK delay.
  * 
  * \param drvno PCIe board identifier.
- * \param xckdelay XCK delay
+ * \param xckdelay_in_10ns XCK delay
  * \return 
  */
-es_status_codes SetXckdelay(UINT32 drvno, UINT32 xckdelay)
+es_status_codes SetXckdelay(UINT32 drvno, UINT32 xckdelay_in_10ns)
 {
-	WDC_Err("Set XCK delay: %u\n", xckdelay);
+	WDC_Err("Set XCK delay: %u\n", xckdelay_in_10ns);
 	es_status_codes status = es_no_error;
-	if (xckdelay)
+	if (xckdelay_in_10ns)
 	{
-		xckdelay |= 0x80000000;
-		status = WriteLongS0(drvno, xckdelay, S0Addr_XCKDLY);
+		xckdelay_in_10ns |= 0x80000000;
+		status = WriteLongS0(drvno, xckdelay_in_10ns, S0Addr_XCKDLY);
 	}
 	else
 		status = WriteLongS0(drvno, 0, S0Addr_XCKDLY);

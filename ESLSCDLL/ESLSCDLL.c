@@ -459,17 +459,17 @@ DllAccess es_status_codes DLLSetTemp( UINT32 drvno, UINT8 level )
 /**
  * \copydoc SetSEC
  */
-DllAccess es_status_codes DLLSetSEC( UINT32 drvno, UINT64 ecin100ns )
+DllAccess es_status_codes DLLSetSEC( UINT32 drvno, UINT64 ecin10ns )
 {
-	return SetSEC( drvno, ecin100ns );
+	return SetSEC( drvno, ecin10ns );
 }
 
 /**
  * \copydoc SetBEC
  */
-DllAccess es_status_codes DLLSetBEC( UINT32 drvno, UINT64 ecin100ns )
+DllAccess es_status_codes DLLSetBEC( UINT32 drvno, UINT64 ecin10ns )
 {
-	return SetBEC( drvno, ecin100ns );
+	return SetBEC( drvno, ecin10ns );
 }
 
 /**
@@ -760,17 +760,17 @@ DllAccess es_status_codes DLLSetTLPS(UINT32 drvno, UINT32 pixel)
 /**
  * \copydoc SetSDAT
  */
-DllAccess es_status_codes DLLSetSDAT(UINT32 drvno, UINT32 datin100ns)
+DllAccess es_status_codes DLLSetSDAT(UINT32 drvno, UINT32 datin10ns)
 {
-	return SetSDAT(drvno, datin100ns);
+	return SetSDAT(drvno, datin10ns);
 }
 
 /**
  * \copydoc SetBDAT
  */
-DllAccess es_status_codes DLLSetBDAT(UINT32 drvno, UINT32 tin100ns)
+DllAccess es_status_codes DLLSetBDAT(UINT32 drvno, UINT32 tin10ns)
 {
-	return SetBDAT(drvno, tin100ns);
+	return SetBDAT(drvno, tin10ns);
 }
 
 /**

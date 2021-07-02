@@ -99,12 +99,12 @@ void MainWindow::startPressed()
     settings_struct.bti_mode = settings.value(settingBtiPath, settingBtiDefault).toInt();
     settings_struct.stime_in_microsec = settings.value(settingStime_in_microseconds_Path, settingStime_in_microseconds_Default).toDouble();
     settings_struct.btime_in_microsec = settings.value(settingBtime_in_microseconds_Path, settingBtime_in_microseconds_Default).toDouble();
-    settings_struct.sdat_in_100ns = settings.value(settingSdat_in_100nsPath, settingSdat_in_100nsDefault).toInt();
-    settings_struct.bdat_in_100ns = settings.value(settingBdat_in_100nsPath, settingSdat_in_100nsDefault).toInt();
+    settings_struct.sdat_in_10ns = settings.value(settingSdat_in_10nsPath, settingSdat_in_10nsDefault).toInt();
+    settings_struct.bdat_in_10ns = settings.value(settingBdat_in_10nsPath, settingSdat_in_10nsDefault).toInt();
     settings_struct.sslope = settings.value(settingSslopePath, settingSslopeDefault).toInt();
     settings_struct.bslope = settings.value(settingBslopePath, settingBslopeDefault).toInt();
-    settings_struct.xckdelay = settings.value(settingXckdelayPath, settingXckdelayDefault).toInt();
-    settings_struct.ShutterExpTimeIn100ns = settings.value(settingShutterExpTimeIn100nsPath, settingShutterExpTimeIn100nsDefault).toInt();
+    settings_struct.xckdelay_in_10ns = settings.value(settingXckdelayIn10nsPath, settingXckdelayIn10nsDefault).toInt();
+    settings_struct.ShutterExpTimeIn10ns = settings.value(settingShutterExpTimeIn10nsPath, settingShutterExpTimeIn10nsDefault).toInt();
     settings_struct.trigger_mode_cc = settings.value(settingTriggerCcPath, settingTriggerCcDefault).toInt();
     //camerasetup tab
     settings_struct.sensor_type = settings.value(settingSensorTypePath, settingSensorTypeDefault).toInt();
@@ -149,7 +149,7 @@ void MainWindow::startPressed()
     settings_struct.ADC_Mode = settings.value(settingAdcModePath, settingAdcModeDefault).toInt();
     settings_struct.ADC_custom_pattern = settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toInt();
     settings_struct.gpx_offset = 0;//TODO
-	settings_struct.bec = 0; //TODO
+	settings_struct.bec_in_10ns = 0; //TODO
 	//settings_struct.cont_pause = settings.value(settingContPause, settingAdcCustomValueDefault).toInt();
 	//settings_struct.cont_activate = settings.value(settingContActivate, settingAdcCustomValueDefault).toBool();
 

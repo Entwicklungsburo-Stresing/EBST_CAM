@@ -176,7 +176,7 @@ void startMess()
 	struct global_settings g;
 	g.ADC_custom_pattern = ADC_CUSTOM_PATTERN;
 	g.ADC_Mode = ADC_MODE;
-	g.bdat_in_100ns = Bdat;
+	g.bdat_in_10ns = Bdat;
 	g.bslope = TrigMod_B;
 	g.btime_in_microsec = RepTime*1000;
 	g.bti_mode = ItemIndex_B;
@@ -203,9 +203,9 @@ void startMess()
 	g.number_of_regions = _IsROI;
 	g.pixel = _PIXEL;
 	memcpy(g.region_size, roi, 8);
-	g.sdat_in_100ns = Sdat;
+	g.sdat_in_10ns = Sdat;
 	g.sensor_type = SENSOR_TYPE;
-	g.ShutterExpTimeIn100ns = Sec;
+	g.ShutterExpTimeIn10ns = Sec;
 	g.sslope = TrigMod;
 	g.stime_in_microsec = ExpTime;
 	if (ItemIndex_S < 3) g.sti_mode = ItemIndex_S;
@@ -215,9 +215,9 @@ void startMess()
 	g.TORmodus = m_TOmodus;
 	g.trigger_mode_cc = CCTRIGGER_MODE;
 	g.Vfreq = Vfreqini;
-	g.xckdelay = tXDLY;
+	g.xckdelay_in_10ns = tXDLY;
 	g.board_sel = choosen_board;
-	g.bec = Bec;
+	g.bec_in_10ns = Bec;
 	InitMeasurement(g);
 	// write header
 	if(cont_mode)
