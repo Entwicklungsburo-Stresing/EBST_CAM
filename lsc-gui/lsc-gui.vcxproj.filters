@@ -97,6 +97,8 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dialogtdc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="dialogaxes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -167,6 +169,8 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogtdc.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
     <QtUic Include="dialogaxes.ui">
       <Filter>Form Files</Filter>
     </QtUic>
@@ -822,6 +826,8 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="dialogtdc.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <QtMoc Include="dialogaxes.h">
       <Filter>Header Files</Filter>
     </QtMoc>
