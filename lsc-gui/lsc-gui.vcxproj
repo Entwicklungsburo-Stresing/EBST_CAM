@@ -208,6 +208,7 @@
     <ClCompile Include="..\shared_src\Board.c" />
     <ClCompile Include="..\shared_src\globals.c" />
     <ClCompile Include="..\shared_src\win\Board_ll.c" />
+    <ClCompile Include="myqchartview.cpp" />
     <ClCompile Include="UIAbstractionLayer.c" />
     <ClCompile Include="UIAbstractionLayer_cpp.cpp" />
     <ClCompile Include="dialogsettings.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="..\shared_src\Board_ll.h" />
     <ClInclude Include="..\shared_src\globals.h" />
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
+    <QtMoc Include="myqchartview.h" />
     <ClInclude Include="UIAbstractionLayer_cpp.h" />
     <QtMoc Include="dialogsettings.h">
     </QtMoc>
