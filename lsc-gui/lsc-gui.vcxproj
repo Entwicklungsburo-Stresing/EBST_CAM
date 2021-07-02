@@ -228,6 +228,7 @@
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
     <QtMoc Include="myqchartview.h" />
     <QtMoc Include="dialogaxes.h" />
+    <ClInclude Include="..\version.h" />
     <ClInclude Include="lsc-gui.h" />
     <ClInclude Include="UIAbstractionLayer_cpp.h" />
     <QtMoc Include="dialogsettings.h">
