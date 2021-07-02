@@ -205,7 +205,7 @@ void startMess()
 	memcpy(g.region_size, roi, 8);
 	g.sdat_in_100ns = Sdat;
 	g.sensor_type = SENSOR_TYPE;
-	g.ShutterExpTime = Sec;
+	g.ShutterExpTimeIn100ns = Sec;
 	g.sslope = TrigMod;
 	g.stime_in_microsec = ExpTime;
 	if (ItemIndex_S < 3) g.sti_mode = ItemIndex_S;

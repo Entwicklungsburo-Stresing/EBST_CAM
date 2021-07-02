@@ -38,6 +38,7 @@ private slots:
 	void startContPressed();
     void on_actionDump_board_registers_triggered();
     void abortPressed();
+	void on_mychartView_rubberBandChanged();
 };
 
 #endif // MAINWINDOW_H

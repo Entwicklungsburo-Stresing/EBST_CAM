@@ -27,7 +27,7 @@ es_status_codes InitMeasurement()
 	ES_LOG("\n*** Init Measurement ***\n");
 	abortMeasurementFlag = false;
 	ES_LOG("struct global_settings: ");
-	for (int i = 0; i < sizeof(settings_struct)/4; i++)
+	for (uint32_t i = 0; i < sizeof(settings_struct)/4; i++)
         ES_LOG("%u ", *(&settings_struct.drvno + i));
 	ES_LOG("\n");
 	es_status_codes status = checkDriverHandle(settings_struct.drvno);
@@ -75,7 +75,7 @@ es_status_codes InitMeasurement()
 	//set mshut
 	if (settings_struct.mshut)
 	{
-		status = SetSEC(settings_struct.drvno, settings_struct.ShutterExpTime * 100);
+		status = SetSEC(settings_struct.drvno, settings_struct.ShutterExpTimeIn100ns * 100);
 		if (status != es_no_error) return status;
 		status = SetTORReg(settings_struct.drvno, TOR_SSHUT);
 		if (status != es_no_error) return status;
@@ -2498,7 +2498,7 @@ es_status_codes CalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSamp
 	uint16_t *TRMS_pixels = calloc(samples, sizeof(uint16_t));
 	if (!TRMS_pixels) return es_allocating_memory_failed;
 	//storing the values of one pix for the rms analysis
-	for (int scan = 0; scan < samples; scan++)
+	for (uint32_t scan = 0; scan < samples; scan++)
 	{
 		uint64_t TRMSpix_of_current_scan = 0;
 		es_status_codes status = GetIndexOfPixel(drvno, TRMS_pixel, scan + firstSample, 0, CAMpos, &TRMSpix_of_current_scan);
@@ -2703,7 +2703,7 @@ es_status_codes OutTrigPulse(uint32_t drvno, uint32_t PulseWidth)
  */
 es_status_codes readBlockTriggerState(uint32_t drv, uint8_t btrig_ch, bool* state)
 {
-	volatile uint8_t val = 0;
+	uint8_t val = 0;
 	*state = false;
 	es_status_codes status = es_no_error;
 	switch (btrig_ch)
