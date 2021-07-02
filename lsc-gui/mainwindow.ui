@@ -375,6 +375,19 @@
      <string>Help</string>
     </property>
     <addaction name="actionDump_board_registers"/>
+    <addaction name="actionAbout"/>
+    <addaction name="actionAbout_Qt"/>
+   </widget>
+   <widget class="QMenu" name="menuChart">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="title">
+     <string>Chart</string>
+    </property>
+    <addaction name="actionCameras"/>
+    <addaction name="actionAxes"/>
+    <addaction name="actionReset_axes"/>
    </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="title">
@@ -387,6 +400,7 @@
    <addaction name="menuFile"/>
    <addaction name="menuSettings"/>
    <addaction name="menuWindow"/>
+   <addaction name="menuChart"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -409,6 +423,49 @@
   <action name="actionDump_board_registers">
    <property name="text">
     <string>Dump board registers</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::ApplicationSpecificRole</enum>
+   </property>
+  </action>
+  <action name="actionCameras">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Cameras...</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::PreferencesRole</enum>
+   </property>
+  </action>
+  <action name="actionAxes">
+   <property name="text">
+    <string>Axes...</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::PreferencesRole</enum>
+   </property>
+  </action>
+  <action name="actionReset_axes">
+   <property name="text">
+    <string>Reset axes</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutRole</enum>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutQtRole</enum>
    </property>
   </action>
   <action name="actionTDC">

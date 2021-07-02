@@ -19,6 +19,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     Lsc lsc;
+	Ui::MainWindow *ui;
 public slots:
     void loadCameraData();
     void on_measureStart();
@@ -26,7 +27,6 @@ public slots:
     void on_blockStart();
     void on_blockDone();
 private:
-    Ui::MainWindow *ui;
     QSettings settings;
     void setChartData(QLineSeries** series, uint16_t numberOfSets);
     void setChartData(uint16_t* data, uint16_t length, uint16_t numberOfSets);
@@ -35,7 +35,12 @@ private:
 private slots:
 	void on_actionEdit_triggered();
 	void on_actionTDC_triggered();
-    void loadSettings();
+	void on_actionAxes_triggered();
+	void on_actionCameras_triggered();
+	void on_actionReset_axes_triggered();
+	void on_actionAbout_triggered();
+	void on_actionAbout_Qt_triggered();
+	void loadSettings();
 	void startPressed();
 	void startContPressed();
     void on_actionDump_board_registers_triggered();
