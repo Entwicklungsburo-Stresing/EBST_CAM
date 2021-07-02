@@ -36,6 +36,7 @@ VERSION = $${VERSION_MAJOR}.$${VERSION_MINOR}.$${VERSION_BUILD}
 
 # Input
 SOURCES += lsc-gui.cpp \
+    dialogaxes.cpp \
     dialogsettings.cpp \
     mainwindow.cpp \
     myqchartview.cpp \
@@ -60,10 +61,12 @@ DISTFILES += \
     LscUIForm.ui.qml
 
 FORMS += \
+    dialogaxes.ui \
     dialogsettings.ui \
     mainwindow.ui
 
 HEADERS += \
+    dialogaxes.h \
     dialogsettings.h \
     lsc.h \
     mainwindow.h \
