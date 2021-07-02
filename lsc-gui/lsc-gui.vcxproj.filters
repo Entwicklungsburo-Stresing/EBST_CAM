@@ -146,6 +146,9 @@
     <ClInclude Include="lsc-gui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
