@@ -35,6 +35,7 @@ private slots:
 	void on_actionEdit_triggered();
 	void on_actionAxes_triggered();
 	void on_actionCameras_triggered();
+	void on_actionReset_axes_triggered();
 	void loadSettings();
 	void startPressed();
 	void startContPressed();
