@@ -246,12 +246,12 @@ std::string Lsc::dumpGlobalSettings()
             << "bti_mode\t\t"               << std::dec << settings_struct.bti_mode             << "\n"
             << "stime in microseconds\t"    << std::dec << settings_struct.stime_in_microsec    << "\n"
             << "btime in microseconds\t"    << std::dec << settings_struct.btime_in_microsec    << "\n"
-            << "sdat in 100 ns\t"           << std::dec << settings_struct.sdat_in_100ns        << "\n"
-            << "bdat in 100 ns\t"           << std::dec << settings_struct.bdat_in_100ns        << "\n"
+            << "sdat in 10 ns\t"            << std::dec << settings_struct.sdat_in_10ns         << "\n"
+            << "bdat in 10 ns\t"            << std::dec << settings_struct.bdat_in_10ns         << "\n"
             << "sslope\t\t"                 << std::dec << settings_struct.sslope               << "\n"
             << "bslope\t\t"                 << std::dec << settings_struct.bslope               << "\n"
-            << "xckdelay\t\t"               << std::dec << settings_struct.xckdelay             << "\n"
-            << "shutterExpTimeIn100ns\t"    << std::dec << settings_struct.ShutterExpTimeIn100ns<< "\n"
+            << "xckdelay_in_10ns\t\t"       << std::dec << settings_struct.xckdelay_in_10ns     << "\n"
+            << "shutterExpTimeIn10ns\t"     << std::dec << settings_struct.ShutterExpTimeIn10ns << "\n"
             << "trigger mode cc\t"          << std::dec << settings_struct.trigger_mode_cc      << "\n"
             << "board sel\t\t"              << std::dec << settings_struct.board_sel            << "\n"
             << "sensor type\t\t"            << std::dec << settings_struct.sensor_type          << "\n"
@@ -283,7 +283,7 @@ std::string Lsc::dumpGlobalSettings()
             << "tor modus\t\t"              << std::dec << settings_struct.TORmodus             << "\n"
             << "adc mode\t\t"               << std::dec << settings_struct.ADC_Mode             << "\n"
             << "adc custom pattern\t"       << std::dec << settings_struct.ADC_custom_pattern   << "\n"
-            << "bec\t\t"                    << std::dec << settings_struct.bec                  << "\n";
+            << "bec_in_10ns\t\t"            << std::dec << settings_struct.bec_in_10ns			<< "\n";
     return stream.str();
 }
 

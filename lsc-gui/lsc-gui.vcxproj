@@ -222,6 +222,7 @@
   <ItemGroup>
     <ClInclude Include="..\shared_src\Board.h" />
     <ClInclude Include="..\shared_src\Board_ll.h" />
+    <ClInclude Include="..\shared_src\default_settings.h" />
     <ClInclude Include="..\shared_src\globals.h" />
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
     <QtMoc Include="myqchartview.h" />
