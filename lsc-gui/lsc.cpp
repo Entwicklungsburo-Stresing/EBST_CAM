@@ -251,7 +251,7 @@ std::string Lsc::dumpGlobalSettings()
             << "sslope\t\t"                 << std::dec << settings_struct.sslope               << "\n"
             << "bslope\t\t"                 << std::dec << settings_struct.bslope               << "\n"
             << "xckdelay\t\t"               << std::dec << settings_struct.xckdelay             << "\n"
-            << "shutterExpTime\t"           << std::dec << settings_struct.ShutterExpTime       << "\n"
+            << "shutterExpTimeIn100ns\t"    << std::dec << settings_struct.ShutterExpTimeIn100ns<< "\n"
             << "trigger mode cc\t"          << std::dec << settings_struct.trigger_mode_cc      << "\n"
             << "board sel\t\t"              << std::dec << settings_struct.board_sel            << "\n"
             << "sensor type\t\t"            << std::dec << settings_struct.sensor_type          << "\n"
