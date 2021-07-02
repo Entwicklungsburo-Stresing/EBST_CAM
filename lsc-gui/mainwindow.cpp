@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "dialogaxes.h"
 
 /**
  * @brief Constructor of Class MainWindow.
@@ -205,6 +206,27 @@ void MainWindow::on_actionEdit_triggered()
 }
 
 /**
+ * @brief This slot opens the settings dialog for the charts axes.
+ * @return none
+ */
+void MainWindow::on_actionAxes_triggered()
+{
+	DialogAxes* messageBox = new DialogAxes(this);
+	messageBox->show();
+	return;
+}
+
+/**
+ * @brief This slot opens the settings dialog for selecting the cameras to be displayed on the chart.
+ * @return none
+ */
+void MainWindow::on_actionCameras_triggered()
+{
+
+	return;
+}
+
+/**
  * @brief Load settings and apply to UI.
  */
 void MainWindow::loadSettings()
@@ -326,6 +348,8 @@ void MainWindow::on_measureStart()
     ui->spinBoxSample->setEnabled(true);
     ui->horizontalSliderBlock->setEnabled(true);
     ui->horizontalSliderSample->setEnabled(true);
+	//enable chart menu
+	ui->menuChart->setEnabled(true);
     return;
 }
 
