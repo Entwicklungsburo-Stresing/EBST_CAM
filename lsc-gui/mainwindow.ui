@@ -385,6 +385,7 @@
     </property>
     <addaction name="actionCameras"/>
     <addaction name="actionAxes"/>
+    <addaction name="actionReset_axes"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSettings"/>
@@ -433,6 +434,11 @@
    </property>
    <property name="menuRole">
     <enum>QAction::PreferencesRole</enum>
+   </property>
+  </action>
+  <action name="actionReset_axes">
+   <property name="text">
+    <string>Reset axes</string>
    </property>
   </action>
  </widget>
