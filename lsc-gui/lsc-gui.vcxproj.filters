@@ -97,6 +97,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dialogtdc.cpp">
+    <ClCompile Include="dialogaxes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -143,6 +144,12 @@
     <ClInclude Include="..\shared_src\default_settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="lsc-gui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -160,6 +167,7 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogtdc.ui">
+    <QtUic Include="dialogaxes.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -814,6 +822,7 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="dialogtdc.h">
+    <QtMoc Include="dialogaxes.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

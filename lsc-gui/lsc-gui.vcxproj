@@ -209,6 +209,7 @@
     <ClCompile Include="..\shared_src\globals.c" />
     <ClCompile Include="..\shared_src\win\Board_ll.c" />
     <ClCompile Include="dialogtdc.cpp" />
+    <ClCompile Include="dialogaxes.cpp" />
     <ClCompile Include="myqchartview.cpp" />
     <ClCompile Include="UIAbstractionLayer.c" />
     <ClCompile Include="UIAbstractionLayer_cpp.cpp" />
@@ -228,6 +229,9 @@
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
     <QtMoc Include="myqchartview.h" />
     <QtMoc Include="dialogtdc.h" />
+    <QtMoc Include="dialogaxes.h" />
+    <ClInclude Include="..\version.h" />
+    <ClInclude Include="lsc-gui.h" />
     <ClInclude Include="UIAbstractionLayer_cpp.h" />
     <QtMoc Include="dialogsettings.h">
     </QtMoc>
@@ -261,6 +265,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="dialogaxes.ui" />
     <QtUic Include="dialogsettings.ui">
     </QtUic>
     <QtUic Include="dialogtdc.ui" />
