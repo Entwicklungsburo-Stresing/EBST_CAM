@@ -6,6 +6,7 @@
 #include "ui_mainwindow.h"
 #include "lsc.h"
 #include "dialogsettings.h"
+#include "dialogtdc.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,7 +33,8 @@ private:
     void showNoDriverFoundDialog();
     void showPcieBoardError();
 private slots:
-    void on_actionEdit_triggered();
+	void on_actionEdit_triggered();
+	void on_actionTDC_triggered();
     void loadSettings();
 	void startPressed();
 	void startContPressed();
