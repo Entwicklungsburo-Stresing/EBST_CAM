@@ -27,7 +27,7 @@ Open EBST_CAM.sln with Visual Studio and press build.
 ## Linux
 
 ### Dependencies
-* Qt 5 (optional, for Qt GUI)
+* Qt 5.15 (optional, for Qt GUI)
 * make
 * Linux Kernel 4.19
 
