@@ -235,8 +235,22 @@ void MainWindow::on_actionAxes_triggered()
  */
 void MainWindow::on_actionCameras_triggered()
 {
-
-	return;
+    QDialog* messageBox = new QDialog(this);
+    messageBox->setAttribute(Qt::WA_DeleteOnClose);
+    QVBoxLayout* layout = new QVBoxLayout(messageBox);
+    messageBox->setLayout(layout);
+    for (int i = 0; i < settings.value(settingCamcntPath, settingCamcntDefault).toInt(); i++)
+    {
+        QCheckBox* checkbox = new QCheckBox(messageBox);
+        checkbox->setText("Camera "+QString::number(i+1));
+        layout->addWidget(checkbox);
+    }
+    QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, messageBox);
+    connect(dialogButtonBox, SIGNAL(accepted()), messageBox, SLOT(accept()));
+    layout->addWidget(dialogButtonBox);
+    messageBox->setWindowTitle("Cameras");
+    messageBox->show();
+    return;
 }
 
 void MainWindow::on_actionReset_axes_triggered()
