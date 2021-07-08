@@ -63,6 +63,7 @@ constexpr auto settingContPause = "measurement/contPause";
 //GUI Settings
 constexpr auto settingThemePath = "appearance/theme";
 constexpr auto settingSettingsLevelPath = "appearance/settingsLevel";
+constexpr auto settingShowCameraBaseDir = "appearance/showcamera";
 
 namespace Ui {
 class DialogSettings;
