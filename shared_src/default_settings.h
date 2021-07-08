@@ -58,5 +58,6 @@
 #define settingThemeDefault                 lighttheme
 #define settingSettingsLevelDefault			0
 #define settingBecIn10nsDefault             0
+#define settingShowCameraDefault			1
 
 #endif // DEFAULT_SETTINGS_H

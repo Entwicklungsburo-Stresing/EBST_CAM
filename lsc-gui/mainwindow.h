@@ -46,6 +46,7 @@ private slots:
     void on_actionDump_board_registers_triggered();
     void abortPressed();
 	void on_mychartView_rubberBandChanged();
+    void on_checkBoxShowCamera_stateChanged(int state, int camera);
 };
 
 #endif // MAINWINDOW_H

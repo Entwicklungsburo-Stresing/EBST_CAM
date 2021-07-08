@@ -243,13 +243,21 @@ void MainWindow::on_actionCameras_triggered()
     {
         QCheckBox* checkbox = new QCheckBox(messageBox);
         checkbox->setText("Camera "+QString::number(i+1));
+        checkbox->setChecked(settings.value(settingShowCameraBaseDir + QString::number(i), settingShowCameraDefault).toBool());
         layout->addWidget(checkbox);
+        connect(checkbox, &QCheckBox::stateChanged, this, [checkbox, this, i] {on_checkBoxShowCamera_stateChanged(checkbox->isChecked(), i); loadCameraData(); });
     }
     QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, messageBox);
     connect(dialogButtonBox, SIGNAL(accepted()), messageBox, SLOT(accept()));
     layout->addWidget(dialogButtonBox);
     messageBox->setWindowTitle("Cameras");
     messageBox->show();
+    return;
+}
+
+void MainWindow::on_checkBoxShowCamera_stateChanged(int state, int camera)
+{
+    settings.setValue(settingShowCameraBaseDir + QString::number(camera), state);
     return;
 }
 
@@ -386,12 +394,21 @@ void MainWindow::loadCameraData()
 {
     uint32_t pixel = settings.value(settingPixelPath,settingPixelDefault).toInt();
     uint32_t camcnt = settings.value(settingCamcntPath,settingCamcntDefault).toInt();
-    uint16_t* data = (uint16_t*)malloc(pixel * camcnt * sizeof(uint16_t));
+    uint32_t showCamcnt = 0;
+    for (uint16_t cam = 0; cam < camcnt; cam++)
+        if (settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toInt())
+            showCamcnt++;
+    uint16_t* data = (uint16_t*)malloc(pixel * showCamcnt * sizeof(uint16_t));
     int block = ui->horizontalSliderBlock->value() - 1;
     int sample = ui->horizontalSliderSample->value() - 1;
+    uint32_t showedCam = 0;
     for(uint16_t cam=0; cam<camcnt; cam++)
-        lsc.returnFrame(1, sample, block, cam, data + cam * pixel, pixel);
-    setChartData(data, pixel, camcnt);
+        if (settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toInt())
+        {
+            lsc.returnFrame(1, sample, block, cam, data + showedCam * pixel, pixel);
+            showedCam++;
+        }
+    setChartData(data, pixel, showCamcnt);
     free(data);
     return;
 }
