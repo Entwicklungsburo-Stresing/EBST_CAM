@@ -55,7 +55,7 @@ void MainWindow::setChartData(QLineSeries** series, uint16_t numberOfSets)
 {
     QChart *chart = ui->chartView->chart();
     chart->removeAllSeries();
-    for(uint16_t set=0; set<numberOfSets; set++)
+    for (uint16_t set = 0; set < numberOfSets; set++)
         chart->addSeries(series[set]);
     chart->createDefaultAxes();
 	QList<QAbstractAxis *> axes = ui->chartView->chart()->axes();
