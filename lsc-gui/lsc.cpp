@@ -57,68 +57,71 @@ es_status_codes Lsc::returnFrame(uint32_t board, uint32_t sample, uint32_t block
 
 std::string Lsc::dumpS0Registers(uint32_t drvno)
 {
-    enum N { number_of_registers = 43 };
-    std::string register_names[number_of_registers] = {
-        "DBR \t\t",
-        "CTRLA \t\t",
-        "XCKLL \t\t",
-        "XCKCNTLL\t\t",
-        "PIXREG \t\t",
-        "FIFOCNT \t\t",
-        "VCLKCTRL\t\t",
-        "'EBST' \t\t",
-        "DAT \t\t",
-        "EC \t\t",
-        "TOR \t\t",
-        "ARREG \t\t",
-        "GIOREG \t\t",
-        "nc\t\t",
-        "IRQREG\t\t",
-        "PCI board version\t",
-        "R0 PCIEFLAGS\t\t",
-        "R1 NOS\t\t",
-        "R2 SCANINDEX\t\t",
-        "R3 DMABUFSIZE\t\t",
-        "R4 DMASPERINTR\t",
-        "R5 BLOCKS\t\t",
-        "R6 BLOCKINDEX\t\t",
-        "R7 CAMCNT\t\t",
-        "R8 GPX Ctrl\t\t",
-        "R9 GPX Data\t\t",
-        "R10 ROI 0\t\t",
-        "R11 ROI 1\t\t",
-        "R12 ROI 2\t\t",
-        "R13 XCKDLY\t\t",
-        "R14 nc\t\t",
-        "R15 nc\t\t",
-        "R16 BTimer\t\t",
-        "R17 BDAT\t\t",
-        "R18 BEC\t\t",
-        "R19 BFLAGS\t\t",
-        "R20 ADSC1\t\t",
-        "R21 LDSC1\t\t",
-        "R22 ADSC2\t\t",
-        "R23 LDSC2\t\t",
-		"R24 ADSC3\t\t",
-		"R25 LDSC3\t\t",
-        "R26 DSCCTRL\t\t"
-    }; //Look-Up-Table for the S0 Registers
-    uint32_t data = 0;
-    std::stringstream stream;
-    for (int i = 0; i < number_of_registers; i++)
-    {
-        es_status_codes status = readRegisterS0_32(drvno, &data, i*4);
-        if(status != es_no_error)
-        {
-            stream << "\nerror while reading register\n";
-            return stream.str();
-        }
-        stream  << register_names[i]
-                << "0x"
-                << std::hex << data
-                << '\n';
-    }
-    return stream.str();
+  //  enum N { number_of_registers = 43 };
+  //  std::string register_names[number_of_registers] = {
+  //      "DBR \t\t",
+  //      "CTRLA \t\t",
+  //      "XCKLL \t\t",
+  //      "XCKCNTLL\t\t",
+  //      "PIXREG \t\t",
+  //      "FIFOCNT \t\t",
+  //      "VCLKCTRL\t\t",
+  //      "'EBST' \t\t",
+  //      "DAT \t\t",
+  //      "EC \t\t",
+  //      "TOR \t\t",
+  //      "ARREG \t\t",
+  //      "GIOREG \t\t",
+  //      "nc\t\t",
+  //      "IRQREG\t\t",
+  //      "PCI board version\t",
+  //      "R0 PCIEFLAGS\t\t",
+  //      "R1 NOS\t\t",
+  //      "R2 SCANINDEX\t\t",
+  //      "R3 DMABUFSIZE\t\t",
+  //      "R4 DMASPERINTR\t",
+  //      "R5 BLOCKS\t\t",
+  //      "R6 BLOCKINDEX\t\t",
+  //      "R7 CAMCNT\t\t",
+  //      "R8 GPX Ctrl\t\t",
+  //      "R9 GPX Data\t\t",
+  //      "R10 ROI 0\t\t",
+  //      "R11 ROI 1\t\t",
+  //      "R12 ROI 2\t\t",
+  //      "R13 XCKDLY\t\t",
+  //      "R14 nc\t\t",
+  //      "R15 nc\t\t",
+  //      "R16 BTimer\t\t",
+  //      "R17 BDAT\t\t",
+  //      "R18 BEC\t\t",
+  //      "R19 BFLAGS\t\t",
+  //      "R20 ADSC1\t\t",
+  //      "R21 LDSC1\t\t",
+  //      "R22 ADSC2\t\t",
+  //      "R23 LDSC2\t\t",
+		//"R24 ADSC3\t\t",
+		//"R25 LDSC3\t\t",
+  //      "R26 DSCCTRL\t\t"
+  //  }; //Look-Up-Table for the S0 Registers
+  //  uint32_t data = 0;
+  //  std::stringstream stream;
+  //  for (int i = 0; i < number_of_registers; i++)
+  //  {
+  //      es_status_codes status = readRegisterS0_32(drvno, &data, i*4);
+  //      if(status != es_no_error)
+  //      {
+  //          stream << "\nerror while reading register\n";
+  //          return stream.str();
+  //      }
+  //      stream  << register_names[i]
+  //              << "0x"
+  //              << std::hex << data
+  //              << '\n';
+  //  }
+    char* cstring;
+    _dumpS0Registers(drvno, &cstring);
+    std::string cppstring = cstring;
+    return cppstring;
 }
 
 std::string Lsc::dumpDmaRegisters(uint32_t drvno)
