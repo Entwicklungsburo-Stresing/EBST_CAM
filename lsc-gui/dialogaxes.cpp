@@ -28,6 +28,7 @@ DialogAxes::~DialogAxes()
 void DialogAxes::on_buttonBox_rejected()
 {
 	QList<QAbstractAxis *> axes = mainWindow->ui->chartView->chart()->axes();
+	if (axes.isEmpty()) return;
 	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
 	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
 	axis0->setMax(xmax_old);
@@ -43,6 +44,7 @@ void DialogAxes::on_buttonBox_rejected()
 void DialogAxes::on_spinBoxXmin_valueChanged(int arg1)
 {
 	QList<QAbstractAxis *> axes = mainWindow->ui->chartView->chart()->axes();
+	if (axes.isEmpty()) return;
 	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
 	axis0->setMin(arg1);
 	mainWindow->ui->chartView->curr_xmin = arg1;
@@ -51,6 +53,7 @@ void DialogAxes::on_spinBoxXmin_valueChanged(int arg1)
 void DialogAxes::on_spinBoxXmax_valueChanged(int arg1)
 {
 	QList<QAbstractAxis *> axes = mainWindow->ui->chartView->chart()->axes();
+	if (axes.isEmpty()) return;
 	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
 	axis0->setMax(arg1);
 	mainWindow->ui->chartView->curr_xmax = arg1;
@@ -59,6 +62,7 @@ void DialogAxes::on_spinBoxXmax_valueChanged(int arg1)
 void DialogAxes::on_spinBoxYmin_valueChanged(int arg1)
 {
 	QList<QAbstractAxis *> axes = mainWindow->ui->chartView->chart()->axes();
+	if (axes.isEmpty()) return;
 	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
 	axis1->setMin(arg1);
 	mainWindow->ui->chartView->curr_ymin = arg1;
@@ -67,6 +71,7 @@ void DialogAxes::on_spinBoxYmin_valueChanged(int arg1)
 void DialogAxes::on_spinBoxYmax_valueChanged(int arg1)
 {
 	QList<QAbstractAxis *> axes = mainWindow->ui->chartView->chart()->axes();
+	if (axes.isEmpty()) return;
 	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
 	axis1->setMax(arg1);
 	mainWindow->ui->chartView->curr_ymax = arg1;
