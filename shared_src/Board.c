@@ -3,6 +3,7 @@
 #include "es_status_codes.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "../shared_src/UIAbstractionLayer.h"
 #include <math.h>
 
@@ -2800,4 +2801,76 @@ es_status_codes waitForMeasureReady(uint32_t drvno)
 		if (status != es_no_error) return status;
 	}
 	return status;
+}
+
+es_status_codes _dumpS0Registers(uint32_t drvno, char** stringPtr)
+{
+	enum N
+	{ 
+		number_of_registers = 43,
+		bufferLength = 40
+	};
+	char register_names[number_of_registers][bufferLength] = {
+		"DBR \t\t",
+		"CTRLA \t\t",
+		"XCKLL \t\t",
+		"XCKCNTLL\t\t",
+		"PIXREG \t\t",
+		"FIFOCNT \t\t",
+		"VCLKCTRL\t\t",
+		"'EBST' \t\t",
+		"DAT \t\t",
+		"EC \t\t",
+		"TOR \t\t",
+		"ARREG \t\t",
+		"GIOREG \t\t",
+		"nc\t\t",
+		"IRQREG\t\t",
+		"PCI board version\t",
+		"R0 PCIEFLAGS\t\t",
+		"R1 NOS\t\t",
+		"R2 SCANINDEX\t\t",
+		"R3 DMABUFSIZE\t\t",
+		"R4 DMASPERINTR\t",
+		"R5 BLOCKS\t\t",
+		"R6 BLOCKINDEX\t\t",
+		"R7 CAMCNT\t\t",
+		"R8 GPX Ctrl\t\t",
+		"R9 GPX Data\t\t",
+		"R10 ROI 0\t\t",
+		"R11 ROI 1\t\t",
+		"R12 ROI 2\t\t",
+		"R13 XCKDLY\t\t",
+		"R14 nc\t\t",
+		"R15 nc\t\t",
+		"R16 BTimer\t\t",
+		"R17 BDAT\t\t",
+		"R18 BEC\t\t",
+		"R19 BFLAGS\t\t",
+		"R20 ADSC1\t\t",
+		"R21 LDSC1\t\t",
+		"R22 ADSC2\t\t",
+		"R23 LDSC2\t\t",
+		"R24 ADSC3\t\t",
+		"R25 LDSC3\t\t",
+		"R26 DSCCTRL\t\t"
+	}; //Look-Up-Table for the S0 Registers
+	uint32_t data = 0;
+
+	*stringPtr = (char*) calloc(number_of_registers * bufferLength, sizeof(char));
+	memset(*stringPtr, ' ', number_of_registers* bufferLength-1);
+	sprintf(*stringPtr, "hallo\n                                       ");
+	sprintf(*stringPtr + bufferLength, "asd");
+	/*es_status_codes status = es_no_error;
+	for (int i = 0; i <= number_of_registers - 1; i++)
+	{
+		status = readRegisterS0_32(drvno, &data, i * 4);
+		if (status != es_no_error)
+		{
+			sprintf(stringPtr[i], "\nerror while reading register %s", register_names[i]);
+			return status;
+		}
+		sprintf(stringPtr + i*bufferLength, "%s\t0x%x\n", register_names[i], data);
+	}*/
+	return es_no_error;
 }
