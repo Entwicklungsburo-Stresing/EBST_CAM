@@ -59,6 +59,7 @@ void MainWindow::setChartData(QLineSeries** series, uint16_t numberOfSets)
         chart->addSeries(series[set]);
     chart->createDefaultAxes();
 	QList<QAbstractAxis *> axes = ui->chartView->chart()->axes();
+    if (axes.isEmpty()) return;
 	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
 	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
 	axis0->setMax(ui->chartView->curr_xmax);
@@ -265,6 +266,7 @@ void MainWindow::on_actionReset_axes_triggered()
 {
 	// retrieve axis pointer
 	QList<QAbstractAxis *> axes = ui->chartView->chart()->axes();
+    if (axes.isEmpty()) return;
 	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
 	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
 	ui->chartView->curr_xmax = settings.value(settingPixelPath, settingPixelDefault).toReal();
@@ -478,6 +480,7 @@ void MainWindow::on_mychartView_rubberBandChanged()
 {
 	// retrieve axis pointer
 	QList<QAbstractAxis *> axes = ui->chartView->chart()->axes();
+    if (axes.isEmpty()) return;
 	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
 	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
 	// save current axis configuration
