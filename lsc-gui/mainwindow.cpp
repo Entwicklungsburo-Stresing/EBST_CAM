@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "dialogaxes.h"
-#include "version.h"
+#include "../version.h"
 
 /**
  * @brief Constructor of Class MainWindow.

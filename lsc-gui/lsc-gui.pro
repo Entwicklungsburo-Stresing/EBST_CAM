@@ -83,7 +83,8 @@ HEADERS += \
     ../shared_src/UIAbstractionLayer.h \
     UIAbstractionLayer_cpp.h \
     ../shared_src/globals.h \
-    ../shared_src/default_settings.h
+    ../shared_src/default_settings.h \
+    ../version.h
 unix {
     HEADERS += ../linux-driver/userspace/lscpcie.h
 }
