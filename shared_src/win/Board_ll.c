@@ -781,68 +781,10 @@ es_status_codes AboutGPX(uint32_t drvno)
  */
 es_status_codes AboutS0(uint32_t drvno)
 {
-#define entries  41		//32 
-	int i, j = 0;
-	int numberOfBars = 0;
-	char fn[entries * 40];
-	UINT32 S0Data = 0;
-	ULONG length = 0;
-	HWND hWnd;
-	char LUTS0Reg[entries][40] = {
-		"DBR \t",
-		"CTRLA \t",
-		"XCKLL \t",
-		"XCKCNTLL",
-		"PIXREG \t",
-		"FIFOCNT \t",
-		"VCLKCTRL",
-		"'EBST' \t",
-		"SDAT \t",
-		"SEC \t",
-		"TOR \t",
-		"ARREG \t",
-		"GIOREG \t",
-		"nc\t ",
-		"IRQREG \t",
-		"PCI board version",
-		"R0 PCIEFLAGS",
-		"R1 NOS\t",
-		"R2 SCANINDEX",
-		"R3 DMABUFSIZE",
-		"R4 DMASPERINTR",
-		"R5 BLOCKS",
-		"R6 BLOCKINDEX",
-		"R7 CAMCNT",
-		"R8 GPX Ctrl",
-		"R9 GPX Data",
-		"R10 ROI 0 \t",
-		"R11 ROI 1 \t",
-		"R12 ROI 2\t",
-		"R13 XCKDLY",
-		"R14 ADSC ",
-		"R15 LDSC\t",
-		"R16 BTimer",
-		"R17 BDAT\t",
-		"R18 BEC\t",
-		"R19 BFLAGS",
-		"R20 TR1\t",
-		"R21 TR2\t",
-		"R22 TR3\t",
-		"R23 TR4\t",
-		"R24 TR5\t"
-	}; //Look-Up-Table for the S0 Registers
-	hWnd = GetActiveWindow();
-	j = sprintf(fn, "S0- registers   \n");
-	//Hier werden alle 6 Adressen der BARs in Hex abgefragt
-	//WriteLongS0( 1, 0xADDAFEED, 32 );
-	es_status_codes status = es_no_error;
-	for (i = 0; i <= entries - 1; i++)
-	{
-		status = readRegisterS0_32(drvno, &S0Data, i * 4);
-		if (status != es_no_error) return status;
-		j += sprintf(fn + j, "%s \t: 0x%I32x\n", LUTS0Reg[i], S0Data);
-	}
-	MessageBox(hWnd, fn, "S0 regs", MB_OK);
+	char* cstring;
+	es_status_codes status = dumpS0Registers(drvno, &cstring);
+	if (status != es_no_error) return status;
+	MessageBox(GetActiveWindow(), cstring, "S0 regs", MB_OK);
 	return AboutTLPs(drvno);
 }//AboutS0
 
@@ -856,49 +798,9 @@ es_status_codes AboutS0(uint32_t drvno)
  */
 es_status_codes AboutTLPs(uint32_t drvno)
 {
-	uint32_t BData = 0;
-	uint32_t j = 0;
-	char fn[600];
-	uint32_t actpayload = 0;
-	j += sprintf(fn + j, "PAY_LOAD values : 0 = 128 bytes, 1 = 256 bytes, 2 = 512 bytes\n");
-	es_status_codes status = readConfig_32(drvno, &BData, PCIeAddr_devCap);//0x4c
-	if (status != es_no_error) return status;
-	j += sprintf(fn + j, "PAY_LOAD Supported : 0x%x\n", BData & 0x7);
-	//		WriteLongIOPort(DRV,0x2840,0x60);  not working  !! destroys PC? !!
-	status = readConfig_32(drvno, &BData, PCIeAddr_devStatCtrl);
-	if (status != es_no_error) return status;
-	actpayload = (BData >> 5) & 0x7;
-	j += sprintf(fn + j, "PAY_LOAD : 0x%x\n", actpayload);
-	status = readConfig_32(drvno, &BData, PCIeAddr_devStatCtrl);
-	if (status != es_no_error) return status;
-	j += sprintf(fn + j, "MAX_READ_REQUEST_SIZE : 0x%x\n\n", (BData >> 12) & 0x7);
-	//BData &= 0xFFFF8FFF;//set from 256 to 128 max read request size
-	//BData |= 0x00001000;//set from 128 to 256 
-	//WriteLongIOPort(DRV, BData, PCIeAddr_devStatCtrl);
-	//readConfig_32(DRV, &BData, PCIeAddr_devStatCtrl);
-	//j += sprintf(fn + j, "MAX_READ_REQUEST_SIZE after : 0x%x\n\n", (BData >> 12) & 0x7);
-	BData = aPIXEL[drvno];
-	j += sprintf(fn + j, "pixel: %d \n", BData);
-	switch (actpayload)
-	{
-	case 0: BData = 0x20;		break;
-	case 1: BData = 0x40;		break;
-	case 2: BData = 0x80;		break;
-	case 3: BData = 0x100;		break;
-	}
-	j += sprintf(fn + j, "TLP_SIZE is: %d DWORDs = %d BYTEs\n", BData, BData * 4);
-	status = readRegisterDma_32(drvno, &BData, DmaAddr_WDMATLPS);
-	if (status != es_no_error) return status;
-	j += sprintf(fn + j, "TLPS in DMAReg is: %d \n", BData);
-	if (LEGACY_202_14_TLPCNT) // A.M. Dec'20
-		BData = (aPIXEL[drvno] - 1) / (BData * 2) + 1 + 1;
-	else
-		BData = (aPIXEL[drvno] - 1) / (BData * 2) + 1;
-	j += sprintf(fn + j, "number of TLPs should be: %d\n", BData);
-	status = readRegisterDma_32(drvno, &BData, DmaAddr_WDMATLPC);
-	if (status != es_no_error) return status;
-	j += sprintf(fn + j, "number of TLPs is: %d \n", BData);
-	MessageBox(GetActiveWindow(), fn, "DMA transfer payloads", MB_OK | MB_DEFBUTTON2);
+	char* cstring;
+	es_status_codes status = dumpTlpRegisters(drvno, &cstring);
+	MessageBox(GetActiveWindow(), cstring, "DMA transfer payloads", MB_OK | MB_DEFBUTTON2);
 	return status;
 }//AboutTLPs
 
