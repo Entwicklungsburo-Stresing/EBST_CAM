@@ -2987,7 +2987,7 @@ es_status_codes dumpSettings(char** stringPtr)
 	uint32_t data = 0;
 	unsigned int len = 0;
 	//allocate string buffer buffer
-	*stringPtr = (char*)calloc(500, sizeof(char));
+	*stringPtr = (char*)calloc(1000, sizeof(char));
 	len += sprintf(*stringPtr + len,
 		"drvno\t%u\n"
 		"nos\t%u\n"
