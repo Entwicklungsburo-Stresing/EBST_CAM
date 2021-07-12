@@ -60,6 +60,7 @@ std::string Lsc::_dumpS0Registers(uint32_t drvno)
     char* cstring;
     es_status_codes status = dumpS0Registers(drvno, &cstring);
     std::string cppstring = cstring;
+    parseTextToHtml(&cppstring);
     return cppstring;
 }
 
@@ -68,6 +69,7 @@ std::string Lsc::_dumpDmaRegisters(uint32_t drvno)
     char* cstring;
     es_status_codes status = dumpDmaRegisters(drvno, &cstring);
     std::string cppstring = cstring;
+    parseTextToHtml(&cppstring);
     return cppstring;
 }
 
@@ -76,6 +78,7 @@ std::string Lsc::_dumpTlp(uint32_t drvno)
     char* cstring;
     es_status_codes status = dumpTlpRegisters(drvno, &cstring);
     std::string cppstring = cstring;
+    parseTextToHtml(&cppstring);
     return cppstring;
 }
 
@@ -84,6 +87,7 @@ std::string Lsc::_dumpGlobalSettings()
     char* cstring;
     es_status_codes status = dumpSettings(&cstring);
     std::string cppstring = cstring;
+    parseTextToHtml(&cppstring);
     return cppstring;
 }
 
@@ -95,4 +99,26 @@ es_status_codes Lsc::setTorOut(uint32_t drvno, uint8_t torOut)
 es_status_codes Lsc::abortMeasurement(uint32_t drvno)
 {
     return AbortMeasurement( drvno );
+}
+
+void Lsc::parseTextToHtml(std::string* str)
+{
+    str->insert(0, "<table><tr><td>");
+    size_t start_pos = 0;
+    std::string from = "\t";
+    std::string to = "</td><td>";
+    while ((start_pos = str->find(from, start_pos)) != std::string::npos)
+    {
+        str->replace(start_pos, from.length(), to);
+        start_pos += to.length();
+    }
+    start_pos = 0;
+    from = "\n";
+    to = "</td></tr><tr><td>";
+    while ((start_pos = str->find(from, start_pos)) != std::string::npos)
+    {
+        str->replace(start_pos, from.length(), to);
+        start_pos += to.length();
+    }
+    str->append("</td></tr></table>");
 }
