@@ -2803,7 +2803,7 @@ es_status_codes waitForMeasureReady(uint32_t drvno)
 	return status;
 }
 
-es_status_codes _dumpS0Registers(uint32_t drvno, char** stringPtr)
+es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 {
 	enum N
 	{ 
@@ -2811,66 +2811,264 @@ es_status_codes _dumpS0Registers(uint32_t drvno, char** stringPtr)
 		bufferLength = 40
 	};
 	char register_names[number_of_registers][bufferLength] = {
-		"DBR \t\t",
-		"CTRLA \t\t",
-		"XCKLL \t\t",
-		"XCKCNTLL\t\t",
-		"PIXREG \t\t",
-		"FIFOCNT \t\t",
-		"VCLKCTRL\t\t",
-		"'EBST' \t\t",
-		"DAT \t\t",
-		"EC \t\t",
-		"TOR \t\t",
-		"ARREG \t\t",
-		"GIOREG \t\t",
-		"nc\t\t",
-		"IRQREG\t\t",
-		"PCI board version\t",
-		"R0 PCIEFLAGS\t\t",
-		"R1 NOS\t\t",
-		"R2 SCANINDEX\t\t",
-		"R3 DMABUFSIZE\t\t",
-		"R4 DMASPERINTR\t",
-		"R5 BLOCKS\t\t",
-		"R6 BLOCKINDEX\t\t",
-		"R7 CAMCNT\t\t",
-		"R8 GPX Ctrl\t\t",
-		"R9 GPX Data\t\t",
-		"R10 ROI 0\t\t",
-		"R11 ROI 1\t\t",
-		"R12 ROI 2\t\t",
-		"R13 XCKDLY\t\t",
-		"R14 nc\t\t",
-		"R15 nc\t\t",
-		"R16 BTimer\t\t",
-		"R17 BDAT\t\t",
-		"R18 BEC\t\t",
-		"R19 BFLAGS\t\t",
-		"R20 ADSC1\t\t",
-		"R21 LDSC1\t\t",
-		"R22 ADSC2\t\t",
-		"R23 LDSC2\t\t",
-		"R24 ADSC3\t\t",
-		"R25 LDSC3\t\t",
-		"R26 DSCCTRL\t\t"
+		"DBR",
+		"CTRLA",
+		"XCKLL",
+		"XCKCNTLL",
+		"PIXREG",
+		"FIFOCNT",
+		"VCLKCTRL",
+		"'EBST'",
+		"DAT",
+		"EC",
+		"TOR",
+		"ARREG",
+		"GIOREG",
+		"nc",
+		"IRQREG",
+		"PCI board version",
+		"R0 PCIEFLAGS",
+		"R1 NOS",
+		"R2 SCANINDEX",
+		"R3 DMABUFSIZE",
+		"R4 DMASPERINTR",
+		"R5 BLOCKS",
+		"R6 BLOCKINDEX",
+		"R7 CAMCNT",
+		"R8 GPX Ctrl",
+		"R9 GPX Data",
+		"R10 ROI 0",
+		"R11 ROI 1",
+		"R12 ROI 2",
+		"R13 XCKDLY",
+		"R14 nc",
+		"R15 nc",
+		"R16 BTimer",
+		"R17 BDAT",
+		"R18 BEC",
+		"R19 BFLAGS",
+		"R20 ADSC1",
+		"R21 LDSC1",
+		"R22 ADSC2",
+		"R23 LDSC2",
+		"R24 ADSC3",
+		"R25 LDSC3",
+		"R26 DSCCTRL"
 	}; //Look-Up-Table for the S0 Registers
 	uint32_t data = 0;
-
+	//allocate string buffer buffer
 	*stringPtr = (char*) calloc(number_of_registers * bufferLength, sizeof(char));
-	memset(*stringPtr, ' ', number_of_registers* bufferLength-1);
-	sprintf(*stringPtr, "hallo\n                                       ");
-	sprintf(*stringPtr + bufferLength, "asd");
-	/*es_status_codes status = es_no_error;
+	unsigned int len = 0; 
+	es_status_codes status = es_no_error;
 	for (int i = 0; i <= number_of_registers - 1; i++)
 	{
+		//read register
 		status = readRegisterS0_32(drvno, &data, i * 4);
 		if (status != es_no_error)
 		{
-			sprintf(stringPtr[i], "\nerror while reading register %s", register_names[i]);
+			//write error to buffer
+			len += sprintf(*stringPtr + len, "\nerror while reading register %s", register_names[i]);
 			return status;
 		}
-		sprintf(stringPtr + i*bufferLength, "%s\t0x%x\n", register_names[i], data);
-	}*/
+		//write register name and value to buffer
+		len += sprintf(*stringPtr + len, "%s\t0x%x\n", register_names[i], data);
+	}
+	return status;
+}
+
+es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr)
+{
+	enum N
+	{
+		number_of_registers = 18,
+		bufferLength = 40
+	};
+
+	char register_names[number_of_registers][bufferLength] = {
+		"DCSR",
+		"DDMACR",
+		"WDMATLPA",
+		"WDMATLPS",
+		"WDMATLPC",
+		"WDMATLPP",
+		"RDMATLPP",
+		"RDMATLPA",
+		"RDMATLPS",
+		"RDMATLPC",
+		"WDMAPERF",
+		"RDMAPERF",
+		"RDMASTAT",
+		"NRDCOMP",
+		"RCOMPDSIZW",
+		"DLWSTAT",
+		"DLTRSSTAT",
+		"DMISCCONT"
+	}; //Look-Up-Table for the DMA Registers
+	uint32_t data = 0;
+	//allocate string buffer buffer
+	*stringPtr = (char*)calloc(number_of_registers * bufferLength, sizeof(char));
+	unsigned int len = 0;
+	es_status_codes status = es_no_error;
+	for (int i = 0; i < number_of_registers; i++)
+	{
+		es_status_codes status = readRegisterDma_32(drvno, &data, i * 4);
+		if (status != es_no_error)
+		{
+			//write error to buffer
+			len += sprintf(*stringPtr + len, "\nerror while reading register %s", register_names[i]);
+			return status;
+		}
+		//write register name and value to buffer
+		len += sprintf(*stringPtr + len, "%s\t0x%x\n", register_names[i], data);
+	}
+	return status;
+}
+
+es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
+{
+	uint32_t data = 0;
+	unsigned int len = 0;
+	//allocate string buffer buffer
+	*stringPtr = (char*)calloc(500, sizeof(char));
+	len += sprintf(*stringPtr + len, "PAY_LOAD values:\t\t0 = 128 bytes\n\t\t\t1 = 256 bytes\n\t\t\t2 = 512 bytes\n");
+	es_status_codes status = readConfig_32(drvno, &data, PCIeAddr_devCap);
+	if (status != es_no_error)
+	{
+		len += sprintf(*stringPtr + len, "\nerror while reading register\n");
+		return status;
+	}
+	data &= 0x7;
+	len += sprintf(*stringPtr + len, "PAY_LOAD Supported:\t\t0x%x\n", data);
+	status = readConfig_32(drvno, &data, PCIeAddr_devCap);
+	if (status != es_no_error)
+	{
+		len += sprintf(*stringPtr + len, "\nerror while reading register\n");
+		return status;
+	}
+	uint32_t actpayload = (data >> 5) & 0x07;
+	len += sprintf(*stringPtr + len, "PAY_LOAD:\t\t\t0x%x\n", actpayload);
+	data >>= 12;
+	data &= 0x7;
+	len += sprintf(*stringPtr + len, "MAX_READ_REQUEST_SIZE:\t0x%x\n", data);
+	uint32_t pixel = 0;
+	status = readRegisterS0_32(drvno, &pixel, S0Addr_PIXREGlow);
+	pixel &= 0xFFFF;
+	len += sprintf(*stringPtr + len, "Number of pixels:\t\t%u\n", pixel);
+	switch (actpayload)
+	{
+	case 0: data = 0x20;  break;
+	case 1: data = 0x40;  break;
+	case 2: data = 0x80;  break;
+	case 3: data = 0x100; break;
+	}
+	len += sprintf(*stringPtr + len, "TLP_SIZE is:\t\t%u DWORDs\n\t\t\t=%u BYTEs\n", data, data*4);
+	status = readRegisterDma_32(drvno, &data, DmaAddr_WDMATLPS);
+	if (status != es_no_error)
+	{
+		len += sprintf(*stringPtr + len, "\nerror while reading register\n");
+		return status;
+	}
+	len += sprintf(*stringPtr + len, "TLPS in DMAReg is:\t\t%u\n", data);
+	if (data)
+		data = (pixel - 1) / (data * 2) + 1;
+	len += sprintf(*stringPtr + len, "number of TLPs should be:\t%u\n", data);
+	status = readRegisterDma_32(drvno, &data, DmaAddr_WDMATLPC);
+	if (status != es_no_error)
+	{
+		len += sprintf(*stringPtr + len, "\nerror while reading register\n");
+		return status;
+	}
+	len += sprintf(*stringPtr + len, "number of TLPs is:\t\t%u\n", data);
+	return status;
+}
+
+es_status_codes dumpSettings(char** stringPtr)
+{
+	uint32_t data = 0;
+	unsigned int len = 0;
+	//allocate string buffer buffer
+	*stringPtr = (char*)calloc(500, sizeof(char));
+	len += sprintf(*stringPtr + len,
+		"drvno\t%u\n"
+		"nos\t%u\n"
+		"nob\t%u\n"
+		"sti_mode\t%u\n"
+		"bti_mode\t%u\n"
+		"stime in microseconds\t%u\n"
+		"btime in microseconds\t%u\n"
+		"sdat in 10 ns\t%u\n"
+		"bdat in 10 ns\t%u\n"
+		"sslope\t%u\n"
+		"bslope\t%u\n"
+		"xckdelay_in_10ns\t%u\n"
+		"shutterExpTimeIn10ns\t%u\n"
+		"trigger mode cc\t%u\n"
+		"board sel\t%u\n"
+		"sensor type\t%u\n"
+		"camera system\t%u\n"
+		"camcnt\t%u\n"
+		"pixel\t%u\n"
+		"mshut\t%u\n"
+		"led off\t%u\n"
+		"gain switch\t%u\n"
+		"gain 3030\t%u\n"
+		"temp level\t%u\n"
+		"dac\t%u\n"
+		"enable gpx\t%u\n"
+		"gpx offset\t%u\n"
+		"fftlines\t%u\n"
+		"vfreq\t%u\n"
+		"ffmode\t%u\n"
+		"lines binning\t%u\n"
+		"number of regions\t%u\n"
+		"keep first\t%u\n",
+		settings_struct.drvno,
+		settings_struct.nos,
+		settings_struct.nob,
+		settings_struct.sti_mode,
+		settings_struct.bti_mode,
+		settings_struct.stime_in_microsec,
+		settings_struct.btime_in_microsec,
+		settings_struct.sdat_in_10ns,
+		settings_struct.bdat_in_10ns,
+		settings_struct.sslope,
+		settings_struct.bslope,
+		settings_struct.xckdelay_in_10ns,
+		settings_struct.ShutterExpTimeIn10ns,
+		settings_struct.trigger_mode_cc,
+		settings_struct.board_sel,
+		settings_struct.sensor_type,
+		settings_struct.camera_system,
+		settings_struct.camcnt,
+		settings_struct.pixel,
+		settings_struct.mshut,
+		settings_struct.led_off,
+		settings_struct.gain_switch,
+		settings_struct.gain_3030,
+		settings_struct.Temp_level,
+		settings_struct.dac,
+		settings_struct.enable_gpx,
+		settings_struct.gpx_offset,
+		settings_struct.FFTLines,
+		settings_struct.Vfreq,
+		settings_struct.FFTMode,
+		settings_struct.lines_binning,
+		settings_struct.number_of_regions,
+		settings_struct.keep_first);
+	len += sprintf(*stringPtr + len, "region size\t");
+	for (int i = 0; i < 8; i++)
+		len += sprintf(*stringPtr + len, "%u ", settings_struct.region_size[i]);
+	len += sprintf(*stringPtr + len, "\ndac output\t ");
+	for (int i = 0; i < 8; i++)
+		len += sprintf(*stringPtr + len, "%u ", settings_struct.dac_output[i]);
+	len += sprintf(*stringPtr + len,
+		"\ntor modus\t%u\n"
+		"adc mode\t%u\n"
+		"adc custom pattern\t%u\n"
+		"bec_in_10ns\t%u\n",
+		settings_struct.TORmodus,
+		settings_struct.ADC_Mode,
+		settings_struct.ADC_custom_pattern,
+		settings_struct.bec_in_10ns);
 	return es_no_error;
 }
