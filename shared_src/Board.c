@@ -2930,7 +2930,7 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 	unsigned int len = 0;
 	//allocate string buffer buffer
 	*stringPtr = (char*)calloc(500, sizeof(char));
-	len += sprintf(*stringPtr + len, "PAY_LOAD values:\t\t0 = 128 bytes\n\t\t\t1 = 256 bytes\n\t\t\t2 = 512 bytes\n");
+	len += sprintf(*stringPtr + len, "PAY_LOAD values:\t0 = 128 bytes\n\t1 = 256 bytes\n\t2 = 512 bytes\n");
 	es_status_codes status = readConfig_32(drvno, &data, PCIeAddr_devCap);
 	if (status != es_no_error)
 	{
@@ -2938,7 +2938,7 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 		return status;
 	}
 	data &= 0x7;
-	len += sprintf(*stringPtr + len, "PAY_LOAD Supported:\t\t0x%x\n", data);
+	len += sprintf(*stringPtr + len, "PAY_LOAD Supported:\t0x%x\n", data);
 	status = readConfig_32(drvno, &data, PCIeAddr_devCap);
 	if (status != es_no_error)
 	{
@@ -2946,14 +2946,14 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 		return status;
 	}
 	uint32_t actpayload = (data >> 5) & 0x07;
-	len += sprintf(*stringPtr + len, "PAY_LOAD:\t\t\t0x%x\n", actpayload);
+	len += sprintf(*stringPtr + len, "PAY_LOAD:\t0x%x\n", actpayload);
 	data >>= 12;
 	data &= 0x7;
 	len += sprintf(*stringPtr + len, "MAX_READ_REQUEST_SIZE:\t0x%x\n", data);
 	uint32_t pixel = 0;
 	status = readRegisterS0_32(drvno, &pixel, S0Addr_PIXREGlow);
 	pixel &= 0xFFFF;
-	len += sprintf(*stringPtr + len, "Number of pixels:\t\t%u\n", pixel);
+	len += sprintf(*stringPtr + len, "Number of pixels:\t%u\n", pixel);
 	switch (actpayload)
 	{
 	case 0: data = 0x20;  break;
@@ -2961,14 +2961,14 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 	case 2: data = 0x80;  break;
 	case 3: data = 0x100; break;
 	}
-	len += sprintf(*stringPtr + len, "TLP_SIZE is:\t\t%u DWORDs\n\t\t\t=%u BYTEs\n", data, data*4);
+	len += sprintf(*stringPtr + len, "TLP_SIZE is:\t%u DWORDs\n\t=%u BYTEs\n", data, data*4);
 	status = readRegisterDma_32(drvno, &data, DmaAddr_WDMATLPS);
 	if (status != es_no_error)
 	{
 		len += sprintf(*stringPtr + len, "\nerror while reading register\n");
 		return status;
 	}
-	len += sprintf(*stringPtr + len, "TLPS in DMAReg is:\t\t%u\n", data);
+	len += sprintf(*stringPtr + len, "TLPS in DMAReg is:\t%u\n", data);
 	if (data)
 		data = (pixel - 1) / (data * 2) + 1;
 	len += sprintf(*stringPtr + len, "number of TLPs should be:\t%u\n", data);
@@ -2978,7 +2978,7 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 		len += sprintf(*stringPtr + len, "\nerror while reading register\n");
 		return status;
 	}
-	len += sprintf(*stringPtr + len, "number of TLPs is:\t\t%u\n", data);
+	len += sprintf(*stringPtr + len, "number of TLPs is:\t%u\n", data);
 	return status;
 }
 
