@@ -21,10 +21,10 @@ public:
     es_status_codes returnFrame(uint32_t board, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length);
     es_status_codes abortMeasurement(uint32_t drvno);
     std::string driverInstructions;
-    std::string dumpS0Registers(uint32_t drvno);
-    std::string dumpDmaRegisters(uint32_t drvno);
-    std::string dumpTlp(uint32_t drvno);
-    std::string dumpGlobalSettings();
+    std::string _dumpS0Registers(uint32_t drvno);
+    std::string _dumpDmaRegisters(uint32_t drvno);
+    std::string _dumpTlp(uint32_t drvno);
+    std::string _dumpGlobalSettings();
     es_status_codes setTorOut(uint32_t drvno, uint8_t torOut);
 public slots:
     es_status_codes startMeasurement();
