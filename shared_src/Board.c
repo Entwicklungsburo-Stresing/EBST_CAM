@@ -2105,6 +2105,12 @@ es_status_codes StartMeasurement()
 		// MEASUREON ---------_____
 		//TODO
 		//WaitforTelapsed(100);
+#ifdef __linux__
+		pthread_mutex_lock(&mutex);
+		pthread_mutex_unlock(&mutex);
+		pthread_mutexattr_destroy(&attr);
+		pthread_mutex_destroy(&mutex);
+#endif
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
 			status = resetMeasureOn(1);
