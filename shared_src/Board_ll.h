@@ -15,7 +15,10 @@ extern bool _SHOW_MSG;
 
 #ifdef __linux__
 #include <stdio.h>
+#include <pthread.h>
 #define ES_LOG(...) fprintf(stderr, __VA_ARGS__);
+extern pthread_mutexattr_t attr;
+extern pthread_mutex_t mutex;
 #endif
 
 // Low level API
