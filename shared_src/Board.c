@@ -1982,8 +1982,7 @@ es_status_codes StartMeasurement()
 				}
 			}
 			//for synchronising both cams
-			//TODO
-			/*
+#ifdef WIN32
 			if (BOARD_SEL == 3)
 			{
 				UINT32 data1 = 0;
@@ -2005,7 +2004,7 @@ es_status_codes StartMeasurement()
 				WDC_WriteAddr32( hDev[1], 0, PortOffset, data1 );
 				WDC_WriteAddr32( hDev[2], 0, PortOffset, data2 );
 			}
-			*/
+#endif
 			//main read loop - wait here until nos is reached or ESC key
 			//if nos is reached the flag RegXCKMSB:b30 = TimerOn is reset by hardware if flag HWDREQ_EN is TRUE
 			//extended to Timer_routine for all variants of one and  two boards
@@ -2103,8 +2102,9 @@ es_status_codes StartMeasurement()
 		// DMAWRACT _______-----___
 		// BLOCKON ---------_______
 		// MEASUREON ---------_____
-		//TODO
-		//WaitforTelapsed(100);
+#ifdef WIN32
+		WaitforTelapsed(100);
+#endif
 #ifdef __linux__
 		pthread_mutex_lock(&mutex);
 		pthread_mutex_unlock(&mutex);
@@ -2686,8 +2686,9 @@ es_status_codes OutTrigPulse(uint32_t drvno, uint32_t PulseWidth)
 {
 	es_status_codes status = OutTrigHigh(drvno);
 	if (status != es_no_error) return status;
-    //TODO
-    //Sleep(PulseWidth);
+#ifdef WIN32
+    Sleep(PulseWidth);
+#endif
 	return OutTrigLow(drvno);
 }
 
