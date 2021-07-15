@@ -1,3 +1,17 @@
+v3.19.2
+Lsc-gui:
+- Make chart zoomable
+- Add continuous mode
+- Add settings level
+- Add error messages for user
+- Add dialog: cameras
+- Add dialog: about
+- Add dialog: about Qt
+- Add dialog: axes
+- Improve register dump dialog
+- Improve dark mode
+- Improve settings dialog
+
 v3.19.0
 - This version introduces complete crossplattform support (Linux + Windows)
 - New project structure: one crossplattform Board.c is now used in ESLSCDLL, ESLSCDLL_pro and lsc-gui. CCDExamp is still using the deprecated Board_old
