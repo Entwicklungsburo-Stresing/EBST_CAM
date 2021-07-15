@@ -925,3 +925,25 @@ uint32_t Tickstous(uint64_t tks)
 	delay = delay / tps;
 	return (UINT32)delay;
 } // Tickstous
+
+/**
+\brief This functions returns after a time given in microseconds. The time is measured in CPU ticks. The function is escable by pressing ESC.
+\param musec Time to wait in microseconds.
+\return 1 when success, 0 when aborted by ESC or failure
+*/
+uint8_t WaitforTelapsed(long long musec)
+{
+	LONGLONG ticks_to_wait = musec * TPS / 1000000;
+	LONGLONG start_timestamp = ticksTimestamp();
+	LONGLONG destination_timestamp = start_timestamp + ticks_to_wait;
+	//WDC_Err("Startzeit: %lld\n", start_timestamp);
+	// detect overflow
+	if (destination_timestamp < start_timestamp) return 0;
+	// wait until time elapsed
+	while (destination_timestamp > ticksTimestamp())
+	{
+		if (GetAsyncKeyState(VK_ESCAPE) | (FindCam(1) != es_no_error) | abortMeasurementFlag) return 0; // check for kill ?
+	}
+	//WDC_Err("Endzeit:  %lld\n", ticksTimestamp());
+	return 1;
+}

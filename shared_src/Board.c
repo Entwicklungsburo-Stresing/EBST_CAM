@@ -1988,12 +1988,12 @@ es_status_codes StartMeasurement()
 				UINT32 data1 = 0;
 				UINT32 data2 = 0;
 
-				status = ReadLongS0( 1, &data1, S0Addr_XCKLL ); //reset
+				status = readRegister_32( 1, &data1, S0Addr_XCKLL ); //reset
 				if (status != es_no_error) return status;
 				data1 &= 0xF0000000;
 				data1 |= 0x40000000;			//set timer on
 
-				status = ReadLongS0( 2, &data2, S0Addr_XCKLL ); //reset
+				status = readRegister_32( 2, &data2, S0Addr_XCKLL ); //reset
 				if (status != es_no_error) return status;
 				data2 &= 0xF0000000;
 				data2 |= 0x40000000;			//set timer on
