@@ -32,7 +32,6 @@ es_status_codes setMeasureOn( uint32_t drvno );
 es_status_codes resetMeasureOn( uint32_t drvno );
 es_status_codes ResetDma( uint32_t drvno );
 es_status_codes ClearAllUserRegs( uint32_t drvno );
-es_status_codes SetBoardVars( uint32_t drvno );
 es_status_codes SetPixelCount(uint32_t drvno, uint16_t pixelcount);
 es_status_codes OpenShutter( uint32_t drvno );
 es_status_codes SetCamCount(uint32_t drvno, uint16_t camcount);
