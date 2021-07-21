@@ -1,5 +1,6 @@
 #include "../Board_ll.h"
 #include <stdint.h>
+#include "../Board.h"
 
 ***REMOVED***#define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
 

@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include "es_status_codes.h"
 #include "globals.h"
-#include "Board.h"
 
 #ifdef WIN32
 #define ES_LOG(...) WDC_Err(__VA_ARGS__);
