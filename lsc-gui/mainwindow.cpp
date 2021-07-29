@@ -114,12 +114,12 @@ void MainWindow::startPressed()
     settings_struct.camera_system = settings.value(settingCameraSystemPath, settingCameraSystemDefault).toInt();
     settings_struct.camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toInt();
     settings_struct.pixel = settings.value(settingPixelPath, settingPixelDefault).toInt();
-    settings_struct.mshut = settings.value(settingMshutPath, settingMshutDefault).toInt();
+    settings_struct.mshut = settings.value(settingMshutPath, settingMshutDefault).toBool();
     settings_struct.led_off = settings.value(settingLedPath, settingLedDefault).toBool();
     settings_struct.gain_switch = settings.value(settingGain3010Path, settingGain3010Default).toBool();
     settings_struct.gain_3030 = settings.value(settingGain3030Path, settingGain3030Default).toInt();
     settings_struct.Temp_level = settings.value(settingCoolingPath, settingCoolingDefault).toInt();
-    settings_struct.dac = settings.value(settingDacPath, settingDacDefault).toInt();
+    settings_struct.dac = settings.value(settingDacPath, settingDacDefault).toBool();
     settings_struct.enable_gpx = settings.value(settingGpxPath, settingGpxDefault).toBool();
     settings_struct.gpx_offset = settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toInt();
     //fftmodes tab
@@ -129,7 +129,7 @@ void MainWindow::startPressed()
     settings_struct.lines_binning = settings.value(settingLinesBinningPath, settingLinesBinningDefault).toInt();
     settings_struct.number_of_regions = settings.value(settingNumberOfRegionsPath, settingNumberOfRegionsDefault).toInt();
     settings_struct.keep_first = 0;//TODO implement in gui
-    if (settings.value(settingRegionSizeEqualPath, settingRegionSizeEqualDefault).toInt() == 0)
+    if (settings.value(settingRegionSizeEqualPath, settingRegionSizeEqualDefault).toBool() == 0)
         *(settings_struct.region_size) = 0;
     else
         settings_struct.region_size[0] = settings.value(settingRegionSize1Path, settingRegionSize1Default).toInt();

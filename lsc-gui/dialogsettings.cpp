@@ -34,7 +34,7 @@ DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
 	sp_retain.setRetainSizeWhenHidden(true);
 	ui->doubleSpinBoxSTime_in_ms->setSizePolicy(sp_retain);
 	ui->doubleSpinBoxBTimer_in_ms->setSizePolicy(sp_retain);
-	ui->doubleSpinBoxExpTimeIn10ns->setSizePolicy(sp_retain);
+	ui->spinBoxExpTimeIn10ns->setSizePolicy(sp_retain);
 	sp_retain = ui->checkBoxGain3010->sizePolicy();
 	sp_retain.setRetainSizeWhenHidden(true);
 	ui->checkBoxGain3010->setSizePolicy(sp_retain);
@@ -69,7 +69,7 @@ DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
     ui->comboBoxSslope->setCurrentIndex(_settings->value(settingSslopePath, settingSslopeDefault).toInt());
     ui->comboBoxBslope->setCurrentIndex(_settings->value(settingBslopePath, settingBslopeDefault).toInt());
     ui->spinBoxXckdelayIn10ns->setValue(_settings->value(settingXckdelayIn10nsPath, settingXckdelayIn10nsDefault).toInt());
-    ui->doubleSpinBoxExpTimeIn10ns->setValue(_settings->value(settingShutterExpTimeIn10nsPath, settingShutterExpTimeIn10nsDefault).toDouble());
+    ui->spinBoxExpTimeIn10ns->setValue(_settings->value(settingShutterExpTimeIn10nsPath, settingShutterExpTimeIn10nsDefault).toInt());
     ui->comboBoxTriggerModeCC->setCurrentIndex(_settings->value(settingTriggerCcPath, settingTriggerCcDefault).toInt());
     ui->comboBoxBoardSel->setCurrentIndex(_settings->value(settingBoardSelPath, settingBoardSelDefault).toInt());
     ui->comboBoxSensorType->setCurrentIndex(_settings->value(settingSensorTypePath, settingSensorTypeDefault).toInt());
@@ -138,7 +138,7 @@ void DialogSettings::on_accepted()
     _settings->setValue(settingSslopePath, ui->comboBoxSslope->currentIndex());
     _settings->setValue(settingBslopePath, ui->comboBoxBslope->currentIndex());
     _settings->setValue(settingXckdelayIn10nsPath, ui->spinBoxXckdelayIn10ns->value());
-    _settings->setValue(settingShutterExpTimeIn10nsPath , ui->doubleSpinBoxExpTimeIn10ns->value());
+    _settings->setValue(settingShutterExpTimeIn10nsPath , ui->spinBoxExpTimeIn10ns->value());
     _settings->setValue(settingTriggerCcPath, ui->comboBoxTriggerModeCC->currentIndex());
     _settings->setValue(settingBoardSelPath, ui->comboBoxBoardSel->currentIndex());
     _settings->setValue(settingSensorTypePath, ui->comboBoxSensorType->currentIndex());
@@ -409,8 +409,8 @@ void DialogSettings::on_checkBoxMshut_stateChanged(int arg1)
 		visible = true;
 		break;
 	}
-	ui->doubleSpinBoxExpTimeIn10ns->setEnabled(enabled);
-	ui->doubleSpinBoxExpTimeIn10ns->setVisible(visible);
+	ui->spinBoxExpTimeIn10ns->setEnabled(enabled);
+	ui->spinBoxExpTimeIn10ns->setVisible(visible);
 	ui->labelExpTime->setVisible(visible);
 }
 
@@ -483,7 +483,7 @@ void DialogSettings::loadDefaults()
     ui->comboBoxSslope->setCurrentIndex(settingSslopeDefault);
     ui->comboBoxBslope->setCurrentIndex(settingBslopeDefault);
     ui->spinBoxXckdelayIn10ns->setValue(settingXckdelayIn10nsDefault);
-    ui->doubleSpinBoxExpTimeIn10ns->setValue(settingShutterExpTimeIn10nsDefault);
+    ui->spinBoxExpTimeIn10ns->setValue(settingShutterExpTimeIn10nsDefault);
     ui->comboBoxTriggerModeCC->setCurrentIndex(settingTriggerCcDefault);
     ui->comboBoxBoardSel->setCurrentIndex(settingBoardSelDefault);
     ui->comboBoxSensorType->setCurrentIndex(settingSensorTypeDefault);
