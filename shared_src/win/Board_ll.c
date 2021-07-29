@@ -839,6 +839,22 @@ void ErrorMsg(char ErrMsg[100])
 };
 
 /**
+ * \brief Simple display of unsigned integer as error message for test purpose.
+ *
+ * \param val unsigned integer 64 bit
+ * \return none.
+ */
+void ValMsg(uint64_t val)
+{
+	char AString[60];
+	if (_SHOW_MSG)
+	{
+		sprintf_s(AString, 60, "%s%d 0x%I64x", "val= ", val, val);
+		if (MessageBox(GetActiveWindow(), AString, "ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+	}
+};
+
+/**
 * \brief Reads system timer.
 *
 * Read 2x ticks and calculate the difference between the calls in microsec with DLLTickstous, init timer by calling DLLInitSysTimer before use.
