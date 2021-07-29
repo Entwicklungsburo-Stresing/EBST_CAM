@@ -34,12 +34,11 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 
 	/* check read write */
 	if (_IOC_DIR(cmd) & _IOC_READ
-	    & !access_ok(VERIFY_WRITE, (void __user *) arg,
-			 _IOC_SIZE(cmd)))
+	    & !access_ok((void __user *) arg, _IOC_SIZE(cmd)))
 		return -EFAULT;
 
 	if (_IOC_DIR(cmd) & _IOC_WRITE
-	    & !access_ok(VERIFY_READ, (void __user *) arg, _IOC_SIZE(cmd)))
+	    & !access_ok((void __user *) arg, _IOC_SIZE(cmd)))
 		return -EFAULT;
 
 	switch (cmd) {
@@ -80,6 +79,8 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 				  sizeof(reg_info_t));
 	       if (result)
 		       result = -EFAULT;
+	       PDEBUG(D_IOCTL, "register 0x%08x <- 0x%08x\n",
+		      reg_info.address, reg_info.value);
 	       result
 		   =
 		   pci_write_config_dword(dev->pci_dev, reg_info.address,
