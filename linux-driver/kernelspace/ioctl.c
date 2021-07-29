@@ -20,6 +20,29 @@
 #include <linux/pci.h>
 
 
+#include <linux/version.h>
+
+/*
+ * Kernel 5.0 removed VERIFY_READ and VERIFY_WRITE and removed the first
+ * parameter of access_ok() which was set to VERIFY_READ or VERIFY_WRITE.
+ *
+ * Get rid of the first parameter and always pass VERIFY_WRITE for kernels
+ * prior to 5.0.  This will fail for old 386 processors on pre-2.5.70
+ * kernels if the memory region is not in fact writeable.
+ */
+#ifdef VERIFY_WRITE
+/* Pre 5.0 kernel. */
+static inline int _kcompat_access_ok(unsigned long addr, size_t size)
+{
+    /* Always use VERIFY_WRITE.  Most architectures ignore it. */
+    return access_ok(VERIFY_WRITE, addr, size);
+}
+/* Redefine access_ok() to remove first parameter. */
+#undef access_ok
+#define access_ok(addr, size) _kcompat_access_ok((unsigned long)(addr), (size))
+#endif
+
+
 long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {
 	int result = 0, val, i;
