@@ -86,6 +86,7 @@ void MainWindow::setChartData(uint16_t* data, uint16_t length, uint16_t numberOf
         }
     }
     setChartData(series, numberOfSets);
+	free(series);
     return;
 }
 
