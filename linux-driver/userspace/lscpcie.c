@@ -344,7 +344,7 @@ int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode,
 
 	dev->control->used_dma_size = dev->s0->DMA_BUF_SIZE_IN_SCANS
 		* dev->control->number_of_pixels
-		* dev->control->number_of_cameras * sizeof(pixel_t) / 2;
+		* sizeof(pixel_t);
 	if (dev->control->used_dma_size > dev->control->dma_buf_size)
 		dev->control->used_dma_size = dev->control->dma_buf_size;
 
