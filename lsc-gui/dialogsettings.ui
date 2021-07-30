@@ -399,90 +399,17 @@
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
         <layout class="QGridLayout" name="gridLayoutCamerasetup">
-         <item row="1" column="1">
-          <widget class="QLabel" name="labelSensorType">
-           <property name="text">
-            <string>Sensor type</string>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="2">
-          <widget class="QCheckBox" name="checkBoxGpx">
-           <property name="text">
-            <string>active</string>
-           </property>
-          </widget>
-         </item>
-         <item row="10" column="2">
-          <widget class="QCheckBox" name="checkBoxUseDac">
-           <property name="text">
-            <string>on</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="2">
-          <widget class="QCheckBox" name="checkBoxMshut">
-           <property name="text">
-            <string>active</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="2">
-          <widget class="QCheckBox" name="checkBoxLed">
-           <property name="text">
-            <string>on</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="2">
-          <widget class="QSpinBox" name="spinBoxCamcnt">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
+         <item row="8" column="2">
+          <widget class="QSpinBox" name="spinBoxGain3030">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>8</number>
-           </property>
-           <property name="value">
-            <number>1</number>
-           </property>
           </widget>
          </item>
-         <item row="0" column="2">
-          <widget class="QComboBox" name="comboBoxBoardSel">
-           <item>
-            <property name="text">
-             <string>board 1</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>board 2</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>both</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="12" column="1">
-          <widget class="QLabel" name="labelGpxOffset">
+         <item row="10" column="1">
+          <widget class="QLabel" name="labelUseDac">
            <property name="text">
-            <string>GPX offset</string>
-           </property>
-          </widget>
-         </item>
-         <item row="12" column="2">
-          <widget class="QSpinBox" name="spinBoxGpxOffset">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <string>DAC</string>
            </property>
           </widget>
          </item>
@@ -493,46 +420,19 @@
            </property>
           </widget>
          </item>
-         <item row="7" column="1">
-          <widget class="QLabel" name="labelGain3010">
+         <item row="3" column="1">
+          <widget class="QLabel" name="labelCamcnt">
            <property name="text">
-            <string>Gain</string>
+            <string>CAMCNT (Number of cameras)</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="labelBoardSel">
+         <item row="7" column="2">
+          <widget class="QCheckBox" name="checkBoxGain3010">
            <property name="text">
-            <string>PCIe Board select</string>
+            <string>on</string>
            </property>
           </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLabel" name="labelLed">
-           <property name="text">
-            <string>LED</string>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="1">
-          <widget class="QLabel" name="labelCamCool">
-           <property name="text">
-            <string>Camera cooling</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="3">
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
          <item row="4" column="2">
           <widget class="QSpinBox" name="spinBoxPixel">
@@ -556,18 +456,33 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="0">
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+         <item row="0" column="1">
+          <widget class="QLabel" name="labelBoardSel">
+           <property name="text">
+            <string>PCIe Board select</string>
            </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
+          </widget>
+         </item>
+         <item row="6" column="2">
+          <widget class="QCheckBox" name="checkBoxLed">
+           <property name="text">
+            <string>on</string>
            </property>
-          </spacer>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QLabel" name="labelGain3010">
+           <property name="text">
+            <string>Gain</string>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="2">
+          <widget class="QCheckBox" name="checkBoxUseDac">
+           <property name="text">
+            <string>on</string>
+           </property>
+          </widget>
          </item>
          <item row="1" column="2">
           <widget class="QComboBox" name="comboBoxSensorType">
@@ -583,10 +498,17 @@
            </item>
           </widget>
          </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="labelCamcnt">
+         <item row="6" column="1">
+          <widget class="QLabel" name="labelLed">
            <property name="text">
-            <string>CAMCNT (Number of cameras)</string>
+            <string>LED</string>
+           </property>
+          </widget>
+         </item>
+         <item row="12" column="1">
+          <widget class="QLabel" name="labelGpxOffset">
+           <property name="text">
+            <string>GPX offset</string>
            </property>
           </widget>
          </item>
@@ -594,6 +516,47 @@
           <widget class="QLabel" name="labelCameraSystem">
            <property name="text">
             <string>Camera System</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="12" column="2">
+          <widget class="QSpinBox" name="spinBoxGpxOffset">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="labelSensorType">
+           <property name="text">
+            <string>Sensor type</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLabel" name="labelMshut">
+           <property name="text">
+            <string>MSHUT (shutter)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLabel" name="labelOutputPixel">
+           <property name="text">
+            <string>Number of pixel</string>
            </property>
           </widget>
          </item>
@@ -651,45 +614,30 @@
            </item>
           </widget>
          </item>
-         <item row="8" column="2">
-          <widget class="QSpinBox" name="spinBoxGain3030">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <item row="0" column="3">
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="5" column="2">
+          <widget class="QCheckBox" name="checkBoxMshut">
+           <property name="text">
+            <string>active</string>
            </property>
           </widget>
          </item>
-         <item row="10" column="1">
-          <widget class="QLabel" name="labelUseDac">
+         <item row="11" column="2">
+          <widget class="QCheckBox" name="checkBoxGpx">
            <property name="text">
-            <string>DAC</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLabel" name="labelOutputPixel">
-           <property name="text">
-            <string>Number of pixel</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="2">
-          <widget class="QCheckBox" name="checkBoxGain3010">
-           <property name="text">
-            <string>on</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1">
-          <widget class="QLabel" name="labelMshut">
-           <property name="text">
-            <string>MSHUT (shutter)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="1">
-          <widget class="QLabel" name="labelGpx">
-           <property name="text">
-            <string>GPX</string>
+            <string>active</string>
            </property>
           </widget>
          </item>
@@ -713,6 +661,72 @@
              <string>3030</string>
             </property>
            </item>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QSpinBox" name="spinBoxCamcnt">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>8</number>
+           </property>
+           <property name="value">
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QComboBox" name="comboBoxBoardSel">
+           <item>
+            <property name="text">
+             <string>board 1</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>board 2</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>both</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="9" column="1">
+          <widget class="QLabel" name="labelCamCool">
+           <property name="text">
+            <string>Camera cooling</string>
+           </property>
+          </widget>
+         </item>
+         <item row="11" column="1">
+          <widget class="QLabel" name="labelGpx">
+           <property name="text">
+            <string>GPX</string>
+           </property>
+          </widget>
+         </item>
+         <item row="13" column="2">
+          <widget class="QCheckBox" name="checkBoxIr">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="13" column="1">
+          <widget class="QLabel" name="labelIr">
+           <property name="text">
+            <string>Infrared sensor</string>
+           </property>
           </widget>
          </item>
         </layout>
