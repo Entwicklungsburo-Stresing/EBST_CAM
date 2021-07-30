@@ -74,5 +74,6 @@ struct global_settings settings_struct =
     .TORmodus               = settingTorDefault,
     .ADC_Mode               = settingAdcModeDefault,
     .ADC_custom_pattern     = settingAdcCustomValueDefault,
-    .bec_in_10ns            = settingBecIn10nsDefault
+    .bec_in_10ns            = settingBecIn10nsDefault,
+	.isIr					= settingIsIrDefault
 };

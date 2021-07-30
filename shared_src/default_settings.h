@@ -59,5 +59,6 @@
 #define settingSettingsLevelDefault			0
 #define settingBecIn10nsDefault             0
 #define settingShowCameraDefault			1
+#define settingIsIrDefault					0
 
 #endif // DEFAULT_SETTINGS_H

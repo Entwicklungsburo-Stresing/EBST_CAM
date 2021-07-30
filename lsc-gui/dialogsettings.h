@@ -6,6 +6,7 @@
 #include "lsc.h"
 #include "../shared_src/default_settings.h"
 
+//measurement
 constexpr auto settingNosPath = "measurement/nos";
 constexpr auto settingNobPath = "measurement/nob";
 constexpr auto settingStiPath = "measurement/sti";
@@ -19,6 +20,8 @@ constexpr auto settingBslopePath = "measurement/bslope";
 constexpr auto settingXckdelayIn10nsPath = "measurement/xckdelay_in_10ns";
 constexpr auto settingShutterExpTimeIn10nsPath = "measurement/shutterExpTimeIn10ns";
 constexpr auto settingTriggerCcPath = "measurement/triggerCc";
+constexpr auto settingContPause = "measurement/contPause";
+//camera setup
 constexpr auto settingBoardSelPath = "camerasetup/boardsel";
 constexpr auto settingSensorTypePath = "camerasetup/sensorType";
 constexpr auto settingCameraSystemPath = "camerasetup/cameraSystem";
@@ -32,6 +35,8 @@ constexpr auto settingCoolingPath = "camerasetup/cooling";
 constexpr auto settingDacPath = "camerasetup/dac";
 constexpr auto settingGpxPath = "camerasetup/gpx";
 constexpr auto settingGpxOffsetPath = "camerasetup/gpxOffset";
+constexpr auto settingIsIrPath = "camerasetup/isIr";
+//fft mode
 constexpr auto settingLinesPath = "fftmode/lines";
 constexpr auto settingVfreqPath = "fftmode/vfreq";
 constexpr auto settingFftModePath = "fftmode/fftmode";
@@ -46,6 +51,7 @@ constexpr auto settingRegionSize5Path = "fftmode/regionSize5";
 constexpr auto settingRegionSize6Path = "fftmode/regionSize6";
 constexpr auto settingRegionSize7Path = "fftmode/regionSize7";
 constexpr auto settingRegionSize8Path = "fftmode/regionSize8";
+//sensor offset
 constexpr auto settingSensorOffsetChannel1Path = "sensorOffset/channel1";
 constexpr auto settingSensorOffsetChannel2Path = "sensorOffset/channel2";
 constexpr auto settingSensorOffsetChannel3Path = "sensorOffset/channel3";
@@ -54,12 +60,11 @@ constexpr auto settingSensorOffsetChannel5Path = "sensorOffset/channel5";
 constexpr auto settingSensorOffsetChannel6Path = "sensorOffset/channel6";
 constexpr auto settingSensorOffsetChannel7Path = "sensorOffset/channel7";
 constexpr auto settingSensorOffsetChannel8Path = "sensorOffset/channel8";
+//debug
 constexpr auto settingTorPath = "debug/tor";
 constexpr auto settingAdcModePath = "debug/adcMode";
 constexpr auto settingAdcCustomValuePath = "debug/adcCustomValue";
-constexpr auto settingContPause = "measurement/contPause";
-
-//GUI Settings
+//appearance
 constexpr auto settingThemePath = "appearance/theme";
 constexpr auto settingSettingsLevelPath = "appearance/settingsLevel";
 constexpr auto settingShowCameraBaseDir = "appearance/showcamera";
