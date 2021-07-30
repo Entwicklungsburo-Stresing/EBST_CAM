@@ -92,6 +92,7 @@ DllAccess es_status_codes DLLAboutS0( UINT32 drvno );
 DllAccess es_status_codes DLLSendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data );
 DllAccess es_status_codes DLLSendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature );
 DllAccess es_status_codes DLLDAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output ); //set output of DAC (PCB 2189-7)
+DllAccess es_status_codes DLLDAC_setAllOutputs(UINT32 drvno, UINT32* outputs, UINT8 isIr); //set output of DAC (PCB 2189-7)
 DllAccess void DLLFreeMemInfo( UINT64 * pmemory_all, UINT64 * pmemory_free );
 DllAccess void DLLErrorMsg( char ErrMsg[20] );
 DllAccess es_status_codes DLLCalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 lastSample, UINT32 TRMS_pixel, UINT16 CAMpos, double *mwf, double *trms );
