@@ -2151,6 +2151,7 @@ es_status_codes StartMeasurement()
 		}
 		if (checkSpaceKeyState())
 			continiousMeasurementFlag = false;
+		abortMeasurementFlag = checkEscapeKeyState();
 	} while (continiousMeasurementFlag && !abortMeasurementFlag);
 	ES_LOG("*** Measurement done ***\n\n");
 	return status;
