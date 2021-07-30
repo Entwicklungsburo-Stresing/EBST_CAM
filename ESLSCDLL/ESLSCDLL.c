@@ -532,6 +532,14 @@ DllAccess es_status_codes DLLDAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 
 }
 
 /**
+ * \copydoc DAC_setAllOutputs
+ */
+DllAccess es_status_codes DLLDAC_setAllOutputs(UINT32 drvno, UINT32* outputs, UINT8 isIr)
+{
+	return DAC_setAllOutputs(drvno, outputs, isIr);
+}
+
+/**
  * \copydoc FreeMemInfo
  */
 DllAccess void DLLFreeMemInfo( UINT64 * pmemory_all, UINT64 * pmemory_free )
