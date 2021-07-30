@@ -14,9 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->horizontalSliderSample, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
     connect(ui->horizontalSliderBlock, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
-	connect(ui->pushButtonStart, SIGNAL(pressed()), this, SLOT(startPressed()));
-	connect(ui->pushButtonStartCont, SIGNAL(pressed()), this, SLOT(startContPressed()));
-    connect(ui->pushButtonAbort, SIGNAL(pressed()), this, SLOT(abortPressed()));
+	connect(ui->pushButtonStartCont, &QPushButton::toggled, this, &MainWindow::startContPressed);
+	connect(ui->pushButtonAbort, SIGNAL(pressed()), this, SLOT(abortPressed()));
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));
     connect(&lsc, SIGNAL(measureStart()), this, SLOT(on_measureStart()));
     connect(&lsc, SIGNAL(measureDone()), this, SLOT(on_measureDone()));
@@ -94,6 +93,17 @@ void MainWindow::setChartData(uint16_t* data, uint16_t length, uint16_t numberOf
  * @brief Slot for the signal pressed of pushButtonStart.
  * @return none
  */
+void MainWindow::on_pushButtonStart_pressed()
+{
+	ui->pushButtonStartCont->setDisabled(true);
+	startPressed();
+	return;
+}
+
+/**
+ * @brief Slot to start measurement. Called by on_pushButtonStart_pressed and startContPressed.
+ * @return none
+ */
 void MainWindow::startPressed()
 {
     //measurement tab
@@ -155,7 +165,6 @@ void MainWindow::startPressed()
     settings_struct.gpx_offset = 0;//TODO
 	settings_struct.bec_in_10ns = 0; //TODO
 	//settings_struct.cont_pause = settings.value(settingContPause, settingAdcCustomValueDefault).toInt();
-	//settings_struct.cont_activate = settings.value(settingContActivate, settingAdcCustomValueDefault).toBool();
 
 	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt() + 1;
 	uint8_t boardsel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt();
@@ -186,12 +195,20 @@ void MainWindow::startPressed()
  * @brief Slot for the signal pressed of pushButtonStartCont.
  * @return none
  */
-void MainWindow::startContPressed()
+void MainWindow::startContPressed(bool checked)
 {
-
-	settings_struct.cont_pause = 1;// settings.value(settingContPause, settingAdcCustomValueDefault).toInt();
-	settings_struct.cont_activate = true;//settings.value(settingContActivate, settingAdcCustomValueDefault).toBool();
-	startPressed();
+	if (checked)
+	{
+		settings_struct.cont_pause = 1;// settings.value(settingContPause, settingAdcCustomValueDefault).toInt();
+		continiousMeasurementFlag = true;
+		ui->pushButtonStartCont->setText("Stop continuous");
+		startPressed();
+	}
+	else
+	{
+		continiousMeasurementFlag = false;
+		ui->pushButtonStartCont->setText("Start continuous");
+	}
 	return;
 }
 
@@ -428,7 +445,6 @@ void MainWindow::on_measureStart()
     ui->widgetMeasureOn->setPalette(pal);
     //disable start button
 	ui->pushButtonStart->setDisabled(true);
-	ui->pushButtonStartCont->setDisabled(true);
 	//enable abort button
     ui->pushButtonAbort->setEnabled(true);
     //enable controls

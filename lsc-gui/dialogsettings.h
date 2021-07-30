@@ -57,7 +57,6 @@ constexpr auto settingSensorOffsetChannel8Path = "sensorOffset/channel8";
 constexpr auto settingTorPath = "debug/tor";
 constexpr auto settingAdcModePath = "debug/adcMode";
 constexpr auto settingAdcCustomValuePath = "debug/adcCustomValue";
-constexpr auto settingContActivate = "measurement/contActivate";
 constexpr auto settingContPause = "measurement/contPause";
 
 //GUI Settings
