@@ -122,8 +122,7 @@ es_status_codes InitMeasurement()
 		InitCamera3010(settings_struct.drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern, settings_struct.gain_switch);
 		break;
 	case camera_system_3030:
-		InitCamera3030(settings_struct.drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern, settings_struct.gain_3030);
-		//TODO use DAC...maybe extra function or sendflcam_dac
+		InitCamera3030(settings_struct.drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern, settings_struct.gain_3030, settings_struct.dac, settings_struct.dac_output, settings_struct.isIr);
 		break;
 	default:
 		return es_parameter_out_of_range;
@@ -135,18 +134,6 @@ es_status_codes InitMeasurement()
 	//for cooled Cam
 	status = SetTemp(settings_struct.drvno, (uint8_t)settings_struct.Temp_level);
 	if (status != es_no_error) return status;
-	//DAC
-	//TODO: Move DAC to CAM 3030
-	int dac_channel_count = 8;
-	if (settings_struct.dac) {
-		SendFLCAM_DAC(settings_struct.drvno, dac_channel_count, 0, 0, 1);
-		int reorder_ch[8] = { 3, 4, 0, 5, 1, 6, 2, 7 };
-		for (uint8_t channel = 0; channel < dac_channel_count; channel++)
-		{
-			status = DAC_setOutput(settings_struct.drvno, channel, (uint16_t)settings_struct.dac_output[reorder_ch[channel]]);
-			if (status != es_no_error) return status;
-		}
-	}
 	//DMA
 	status = SetupDma(settings_struct.drvno);
 	if (status != es_no_error) return status;
@@ -1353,9 +1340,9 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes InitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t gain )
+es_status_codes InitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t gain, bool useDac, uint16_t* dac_output, bool isIr )
 {
-	ES_LOG("Init camera 3030, adc_mode: %u, custom_pattern: %u, gain: %u\n", adc_mode, custom_pattern, gain);
+	ES_LOG("Init camera 3030, adc_mode: %u, custom_pattern: %u, gain: %u, use dac: %u, isIr: %u\n", adc_mode, custom_pattern, gain, useDac, isIr);
 	es_status_codes status = Cam3030_ADC_reset( drvno );
 	if (status != es_no_error) return status;
 	//two wire mode output interface for pal versions P209_2 and above
@@ -1365,6 +1352,13 @@ es_status_codes InitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custo
 	if (status != es_no_error) return status;
 	if (adc_mode)
 		status = Cam3030_ADC_RampOrPattern( drvno, adc_mode, custom_pattern );
+	//DAC
+	int dac_channel_count = 8;
+	if (useDac)
+	{
+		SendFLCAM_DAC(drvno, dac_channel_count, 0, 0, 1);
+		DAC_setAllOutputs(drvno, dac_output, isIr);
+	}
 	return status;
 }
 
@@ -1577,6 +1571,39 @@ es_status_codes SendFLCAM_DAC( uint32_t drvno, uint8_t ctrl, uint8_t addr, uint1
 	es_status_codes status = SendFLCAM( drvno, maddr_DAC, hi_byte_addr, hi_bytes );
 	if (status != es_no_error) return status;
 	return SendFLCAM( drvno, maddr_DAC, lo_byte_addr, lo_bytes );
+}
+
+/**
+ * \brief Sets all outputs of the DAC8568 on PCB 2189-7.
+ * 
+ * Use this function to set the outputs, because it is resorting the channel numeration correctly.
+ * \param drvno pcie board identifier
+ * \param output all output values that will be converted to analog voltage (0 ... 0xFFFF)
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_parameter_out_of_range
+ */
+es_status_codes DAC_setAllOutputs(uint32_t drvno, uint16_t* output, bool isIR)
+{
+	es_status_codes status = es_no_error;
+	int* reorder_ch;
+	if (isIR)
+	{
+		int tmp[8] = { 2, 4, 6, 0, 1, 3, 5, 7 }; //IR
+		reorder_ch = tmp;
+	}
+	else
+	{
+		int tmp[8] = { 3, 4, 0, 5, 1, 6, 2, 7 }; //vis
+		reorder_ch = tmp;
+	}
+	for (uint8_t channel = 0; channel < 8; channel++)
+	{
+		status = DAC_setOutput(drvno, channel, output[reorder_ch[channel]]);
+		if (status != es_no_error) return status;
+	}
+	return status;
 }
 
 /**
@@ -3070,10 +3097,12 @@ es_status_codes dumpSettings(char** stringPtr)
 		"\ntor modus\t%u\n"
 		"adc mode\t%u\n"
 		"adc custom pattern\t%u\n"
-		"bec_in_10ns\t%u\n",
+		"bec_in_10ns\t%u\n"
+		"isIr\t%u\n",
 		settings_struct.TORmodus,
 		settings_struct.ADC_Mode,
 		settings_struct.ADC_custom_pattern,
-		settings_struct.bec_in_10ns);
+		settings_struct.bec_in_10ns,
+		settings_struct.isIr);
 	return es_no_error;
 }

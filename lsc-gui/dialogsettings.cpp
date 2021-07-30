@@ -58,6 +58,7 @@ DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
 
 	// Here the saved settings on the system are applied to the UI.
     // For some settings there are two calls, to trigger the according slot for greying out options. I don't know why this is nesceserry, but without it the slots are not triggered.
+	//Measurement
     ui->spinBoxNos->setValue(_settings->value(settingNosPath, settingNosDefault).toInt());
     ui->spinBoxNob->setValue(_settings->value(settingNobPath, settingNobDefault).toInt());
     ui->comboBoxSti->setCurrentIndex(_settings->value(settingStiPath, settingStiDefault).toInt());
@@ -71,6 +72,7 @@ DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
     ui->spinBoxXckdelayIn10ns->setValue(_settings->value(settingXckdelayIn10nsPath, settingXckdelayIn10nsDefault).toInt());
     ui->spinBoxExpTimeIn10ns->setValue(_settings->value(settingShutterExpTimeIn10nsPath, settingShutterExpTimeIn10nsDefault).toInt());
     ui->comboBoxTriggerModeCC->setCurrentIndex(_settings->value(settingTriggerCcPath, settingTriggerCcDefault).toInt());
+	//Camera setup
     ui->comboBoxBoardSel->setCurrentIndex(_settings->value(settingBoardSelPath, settingBoardSelDefault).toInt());
     ui->comboBoxSensorType->setCurrentIndex(_settings->value(settingSensorTypePath, settingSensorTypeDefault).toInt());
     ui->comboBoxSensorType->currentIndexChanged(_settings->value(settingSensorTypePath, settingSensorTypeDefault).toInt());
@@ -88,6 +90,8 @@ DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
     ui->checkBoxUseDac->stateChanged(_settings->value(settingDacPath, settingDacDefault).toBool());
     ui->checkBoxGpx->setChecked(_settings->value(settingGpxPath, settingGpxDefault).toBool());
     ui->spinBoxGpxOffset->setValue(_settings->value(settingGpxOffsetPath, settingGpxOffsetDefault).toInt());
+	ui->checkBoxIr->setChecked(_settings->value(settingIsIrPath, settingIsIrDefault).toBool());
+	//FFT mode
     ui->spinBoxLines->setValue(_settings->value(settingLinesPath, settingLinesDefault).toInt());
     ui->spinBoxVfreq->setValue(_settings->value(settingVfreqPath, settingVfreqDefault).toInt());
     ui->comboBoxFftMode->setCurrentIndex(_settings->value(settingFftModePath, settingFftModeDefault).toInt());
@@ -127,6 +131,7 @@ DialogSettings::~DialogSettings()
 void DialogSettings::on_accepted()
 {
     //Here the settings on the UI are saved to the system
+	//Measurement
     _settings->setValue(settingNosPath, ui->spinBoxNos->value());
     _settings->setValue(settingNobPath, ui->spinBoxNob->value());
     _settings->setValue(settingStiPath, ui->comboBoxSti->currentIndex());
@@ -140,6 +145,7 @@ void DialogSettings::on_accepted()
     _settings->setValue(settingXckdelayIn10nsPath, ui->spinBoxXckdelayIn10ns->value());
     _settings->setValue(settingShutterExpTimeIn10nsPath , ui->spinBoxExpTimeIn10ns->value());
     _settings->setValue(settingTriggerCcPath, ui->comboBoxTriggerModeCC->currentIndex());
+	//Camera setup
     _settings->setValue(settingBoardSelPath, ui->comboBoxBoardSel->currentIndex());
     _settings->setValue(settingSensorTypePath, ui->comboBoxSensorType->currentIndex());
     _settings->setValue(settingCameraSystemPath, ui->comboBoxCameraSystem->currentIndex());
@@ -153,6 +159,8 @@ void DialogSettings::on_accepted()
     _settings->setValue(settingDacPath, ui->checkBoxUseDac->isChecked());
     _settings->setValue(settingGpxPath, ui->checkBoxGpx->isChecked());
     _settings->setValue(settingGpxOffsetPath, ui->spinBoxGpxOffset->value());
+	_settings->setValue(settingIsIrPath, ui->checkBoxIr->isChecked());
+	//Fft mode
     _settings->setValue(settingLinesPath, ui->spinBoxLines->value());
     _settings->setValue(settingVfreqPath, ui->spinBoxVfreq->value());
     _settings->setValue(settingFftModePath, ui->comboBoxFftMode->currentIndex());
@@ -167,6 +175,7 @@ void DialogSettings::on_accepted()
     _settings->setValue(settingRegionSize6Path, ui->spinBoxRegion6->value());
     _settings->setValue(settingRegionSize7Path, ui->spinBoxRegion7->value());
     _settings->setValue(settingRegionSize8Path, ui->spinBoxRegion8->value());
+	//Sensor Offset
     _settings->setValue(settingSensorOffsetChannel1Path, ui->spinBoxChannel1->value());
     _settings->setValue(settingSensorOffsetChannel2Path, ui->spinBoxChannel2->value());
     _settings->setValue(settingSensorOffsetChannel3Path, ui->spinBoxChannel3->value());
@@ -175,9 +184,11 @@ void DialogSettings::on_accepted()
     _settings->setValue(settingSensorOffsetChannel6Path, ui->spinBoxChannel6->value());
     _settings->setValue(settingSensorOffsetChannel7Path, ui->spinBoxChannel7->value());
     _settings->setValue(settingSensorOffsetChannel8Path, ui->spinBoxChannel8->value());
+	//Debug
     _settings->setValue(settingTorPath, ui->comboBoxOutput->currentIndex());
     _settings->setValue(settingAdcModePath, ui->comboBoxAdcMode->currentIndex());
     _settings->setValue(settingAdcCustomValuePath, ui->spinBoxAdcCustom->value());
+	//Appearance
 	_settings->setValue(settingThemePath, ui->comboBoxTheme->currentIndex());
 	_settings->setValue(settingSettingsLevelPath, ui->comboBoxSettingsLevel->currentIndex());
 	emit settings_saved();
@@ -472,6 +483,7 @@ void DialogSettings::on_pushButtonDefault_clicked()
 
 void DialogSettings::loadDefaults()
 {
+	//measurement
     ui->spinBoxNos->setValue(settingNosDefault);
     ui->spinBoxNob->setValue(settingNobDefault);
     ui->comboBoxSti->setCurrentIndex(settingStiDefault);
@@ -485,6 +497,7 @@ void DialogSettings::loadDefaults()
     ui->spinBoxXckdelayIn10ns->setValue(settingXckdelayIn10nsDefault);
     ui->spinBoxExpTimeIn10ns->setValue(settingShutterExpTimeIn10nsDefault);
     ui->comboBoxTriggerModeCC->setCurrentIndex(settingTriggerCcDefault);
+	//camera setup
     ui->comboBoxBoardSel->setCurrentIndex(settingBoardSelDefault);
     ui->comboBoxSensorType->setCurrentIndex(settingSensorTypeDefault);
     ui->comboBoxSensorType->currentIndexChanged(settingSensorTypeDefault);
@@ -502,6 +515,8 @@ void DialogSettings::loadDefaults()
     ui->checkBoxUseDac->stateChanged(settingDacDefault);
     ui->checkBoxGpx->setChecked(settingGpxDefault);
     ui->spinBoxGpxOffset->setValue(settingGpxOffsetDefault);
+	ui->checkBoxRegionsEqual->setChecked(settingIsIrDefault);
+	//fft mode
     ui->spinBoxLines->setValue(settingLinesDefault);
     ui->spinBoxVfreq->setValue(settingVfreqDefault);
     ui->comboBoxFftMode->setCurrentIndex(settingFftModeDefault);
@@ -516,6 +531,7 @@ void DialogSettings::loadDefaults()
     ui->spinBoxRegion6->setValue(settingRegionSize6Default);
     ui->spinBoxRegion7->setValue(settingRegionSize7Default);
     ui->spinBoxRegion8->setValue(settingRegionSize8Default);
+	//sensor offset
     ui->spinBoxChannel1->setValue(settingSensorOffsetChannel1Default);
     ui->spinBoxChannel2->setValue(settingSensorOffsetChannel2Default);
     ui->spinBoxChannel3->setValue(settingSensorOffsetChannel3Default);
@@ -524,9 +540,11 @@ void DialogSettings::loadDefaults()
     ui->spinBoxChannel6->setValue(settingSensorOffsetChannel6Default);
     ui->spinBoxChannel7->setValue(settingSensorOffsetChannel7Default);
     ui->spinBoxChannel8->setValue(settingSensorOffsetChannel8Default);
+	//debug
     ui->comboBoxOutput->setCurrentIndex(settingTorDefault);
     ui->comboBoxAdcMode->setCurrentIndex(settingAdcModeDefault);
     ui->spinBoxAdcCustom->setValue(settingAdcCustomValueDefault);
+	//appearance
     ui->comboBoxTheme->setCurrentIndex(settingThemeDefault);
 	ui->comboBoxSettingsLevel->setCurrentIndex(settingSettingsLevelDefault);
     return;

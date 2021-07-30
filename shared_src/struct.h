@@ -50,6 +50,7 @@ struct global_settings
 	uint32_t bec_in_10ns;
 	//cont mode
 	uint32_t cont_pause;
+	uint32_t isIr;
 };
 
 #endif // STRUCT_H

@@ -600,9 +600,9 @@ DllAccess es_status_codes DLLInitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT1
 /**
  * \copydoc InitCamera3030
  */
-DllAccess es_status_codes DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain )
+DllAccess es_status_codes DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain, BOOL useDac, UINT16* dac_output, BOOL isIR )
 {
-	return InitCamera3030( drvno, adc_mode, custom_pattern, gain );
+	return InitCamera3030( drvno, adc_mode, custom_pattern, gain, useDac, dac_output, isIR);
 }
 
 /**
