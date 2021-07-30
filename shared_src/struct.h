@@ -49,7 +49,6 @@ struct global_settings
 	uint32_t ADC_custom_pattern;
 	uint32_t bec_in_10ns;
 	//cont mode
-	uint32_t cont_activate;
 	uint32_t cont_pause;
 };
 

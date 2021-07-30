@@ -156,8 +156,6 @@ es_status_codes InitMeasurement()
 	if (status != es_no_error) return status;
 	status = SetDmaRegister(settings_struct.drvno, settings_struct.pixel);
 	if (status != es_no_error) return status;
-	//TODO set cont FF mode with DLL style(continiousMeasurementFlag = activate;//0 or 1;continiousPause = pause;) or CCDExamp style(check it out)
-	continiousMeasurementFlag = settings_struct.cont_activate;//0 or 1
 	continiousPause = settings_struct.cont_pause;
 	status = SetBEC( settings_struct.drvno, settings_struct.bec_in_10ns );
 	if (status != es_no_error) return status;
