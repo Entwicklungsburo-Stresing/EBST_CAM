@@ -64,7 +64,7 @@ es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custo
 es_status_codes Cam3010_ADC_reset( uint32_t drvno );
 es_status_codes Cam3010_ADC_setOutputMode(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern);
 es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_pattern);
-es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t gain, bool useDac, uint16_t* dac_output, bool isIr);
+es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t gain, bool useDac, uint32_t* dac_output, bool isIr);
 es_status_codes Cam3030_ADC_reset( uint32_t drvno );
 es_status_codes Cam3030_ADC_twoWireModeEN( uint32_t drvno );
 es_status_codes Cam3030_ADC_SetGain( uint32_t drvno, uint8_t gain );
@@ -73,7 +73,7 @@ es_status_codes Cam3030_ADC_RampOrPattern( uint32_t drvno, uint8_t adc_mode, uin
 es_status_codes SetTemp( uint32_t drvno, uint8_t level );
 es_status_codes SendFLCAM_DAC( uint32_t drvno, uint8_t ctrl, uint8_t addr, uint16_t data, uint8_t feature );
 es_status_codes DAC_setOutput( uint32_t drvno, uint8_t channel, uint16_t output );
-es_status_codes DAC_setAllOutputs(uint32_t drvno, uint16_t* output, bool isIR);
+es_status_codes DAC_setAllOutputs(uint32_t drvno, uint32_t* output, bool isIR);
 es_status_codes SetBEC( uint32_t drvno, uint32_t ecin10ns );
 es_status_codes SetXckdelay(uint32_t drvno, uint32_t xckdelay_in_10ns);
 es_status_codes SetPartialBinning(uint32_t drvno, uint16_t number_of_regions);

@@ -1340,7 +1340,7 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes InitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t gain, bool useDac, uint16_t* dac_output, bool isIr )
+es_status_codes InitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t gain, bool useDac, uint32_t* dac_output, bool isIr )
 {
 	ES_LOG("Init camera 3030, adc_mode: %u, custom_pattern: %u, gain: %u, use dac: %u, isIr: %u\n", adc_mode, custom_pattern, gain, useDac, isIr);
 	es_status_codes status = Cam3030_ADC_reset( drvno );
@@ -1584,7 +1584,7 @@ es_status_codes SendFLCAM_DAC( uint32_t drvno, uint8_t ctrl, uint8_t addr, uint1
  *		- es_register_write_failed
  *		- es_parameter_out_of_range
  */
-es_status_codes DAC_setAllOutputs(uint32_t drvno, uint16_t* output, bool isIR)
+es_status_codes DAC_setAllOutputs(uint32_t drvno, uint32_t* output, bool isIR)
 {
 	es_status_codes status = es_no_error;
 	int* reorder_ch;
