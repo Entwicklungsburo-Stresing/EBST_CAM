@@ -1,3 +1,13 @@
+v3.19.3
+- Readd check for keys:
+	- Esc for abortion
+	- Space for stop continuous
+- Add DAC_setAllOutputs
+- Add ValMsg
+- Make Qt GUI compatible with Qt versions lower than 5.15
+- Linux Kernel module is now probably compatible with kernel version >= 5
+- Add setting isIR
+
 v3.19.2
 Lsc-gui:
 - Make chart zoomable
