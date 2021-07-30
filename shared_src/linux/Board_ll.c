@@ -274,4 +274,14 @@ es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 		return es_no_error;
 }
 
+uint16_t checkEscapeKeyState()
+{
+	//TODO: implement me
+	return 0;
+}
 
+uint16_t checkSpaceKeyState()
+{
+	//TODO: implement me
+	return 0;
+}
