@@ -2040,6 +2040,7 @@ es_status_codes StartMeasurement()
 				{
 					if ((FindCam(1) != es_no_error) | abortMeasurementFlag)
 						return AbortMeasurement(1);
+					abortMeasurementFlag = checkEscapeKeyState();
 					status = IsTimerOn(1, &timerOneOn);
 					if (status != es_no_error) return status;
 				}
@@ -2051,6 +2052,7 @@ es_status_codes StartMeasurement()
 				{
 					if ((FindCam(2) != es_no_error) | abortMeasurementFlag)
 						return AbortMeasurement(2);
+					abortMeasurementFlag = checkEscapeKeyState();
 					status = IsTimerOn(2, &timerTwoOn);
 					if (status != es_no_error) return status;
 				}
@@ -2089,6 +2091,7 @@ es_status_codes StartMeasurement()
 					if (status != es_no_error) return status;
 					status = IsTimerOn(2, &timerTwoOn);
 					if (status != es_no_error) return status;
+					abortMeasurementFlag = checkEscapeKeyState();
 				}
 			}
 			if (BOARD_SEL == 1 || BOARD_SEL == 3)
@@ -2146,6 +2149,8 @@ es_status_codes StartMeasurement()
 			status = resetMeasureOn(2);
 			if (status != es_no_error) return status;
 		}
+		if (checkSpaceKeyState())
+			continiousMeasurementFlag = false;
 	} while (continiousMeasurementFlag && !abortMeasurementFlag);
 	ES_LOG("*** Measurement done ***\n\n");
 	return status;
@@ -2273,6 +2278,7 @@ es_status_codes waitForBlockTrigger(uint32_t drvno)
 	es_status_codes status;
 	while (!abortMeasurementFlag)
 	{
+		abortMeasurementFlag = checkEscapeKeyState();
 		status = readRegisterS0_8( drvno, &data, S0Addr_CTRLA );
 		if (status != es_no_error) return status;
 		if ((data & CTRLA_bit_TSTART) > 0)
