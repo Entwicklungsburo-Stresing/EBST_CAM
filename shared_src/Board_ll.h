@@ -42,6 +42,10 @@ es_status_codes _InitBoard(uint32_t drvno);
 es_status_codes _InitDriver();
 es_status_codes _ExitDriver(uint32_t drvno);
 es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno);
+uint16_t checkEscapeKeyState();
+uint16_t checkSpaceKeyState();
+
+#ifdef WIN32
 es_status_codes AboutDrv(uint32_t drvno);
 es_status_codes AboutGPX(uint32_t drvno);
 es_status_codes AboutS0(uint32_t drvno);
@@ -54,5 +58,6 @@ long long ticksTimestamp();
 es_status_codes WaitTrigger(uint32_t drvno, bool ExtTrigFlag, bool *SpaceKey, bool *AbrKey);
 uint32_t Tickstous(uint64_t tks);
 uint8_t WaitforTelapsed(long long musec);
+#endif
 
 #endif // BOARDLL_H

@@ -964,3 +964,13 @@ uint8_t WaitforTelapsed(long long musec)
 	//WDC_Err("Endzeit:  %lld\n", ticksTimestamp());
 	return 1;
 }
+
+uint16_t checkEscapeKeyState()
+{
+	return GetAsyncKeyState(VK_ESCAPE);
+}
+
+uint16_t checkSpaceKeyState()
+{
+	return GetAsyncKeyState(VK_SPACE);
+}
