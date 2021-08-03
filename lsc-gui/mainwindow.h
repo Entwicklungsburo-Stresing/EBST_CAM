@@ -8,6 +8,7 @@
 #include "dialogsettings.h"
 #include "dialogtdc.h"
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -32,6 +33,7 @@ private:
     void setChartData(uint16_t* data, uint16_t length, uint16_t numberOfSets);
     void showNoDriverFoundDialog();
     void showPcieBoardError();
+	DialogTDC* ds = new DialogTDC(this);
 private slots:
 	void on_actionEdit_triggered();
 	void on_actionTDC_triggered();

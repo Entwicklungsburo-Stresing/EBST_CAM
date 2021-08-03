@@ -42,38 +42,6 @@
     <string>TDC 1</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="viewTDC1">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>60</y>
-     <width>61</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="readOnly">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="viewTDC2">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>60</y>
-     <width>61</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="readOnly">
-    <bool>true</bool>
-   </property>
-  </widget>
   <widget class="QLabel" name="labelTDC2">
    <property name="geometry">
     <rect>
@@ -85,6 +53,32 @@
    </property>
    <property name="text">
     <string>TDC 2</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="viewTDC1">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>60</y>
+     <width>47</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>42</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="viewTDC2">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>60</y>
+     <width>47</width>
+     <height>14</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>42</string>
    </property>
   </widget>
  </widget>
