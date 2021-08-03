@@ -79,6 +79,7 @@ void MainWindow::setChartData(uint16_t* data, uint16_t length, uint16_t numberOf
     for(uint16_t set=0; set<numberOfSets; set++)
     {
         series[set] = new QLineSeries(this);
+		//@flo bitte kommentieren
         for(uint16_t i=0; i<length; i++)
         {
             series[set]->append(i, *(data + i + (length * set)));
@@ -231,10 +232,9 @@ void MainWindow::on_actionEdit_triggered()
  */
 void MainWindow::on_actionTDC_triggered()
 {
-	DialogTDC* ds = new DialogTDC( this );
-	ds->setAttribute( Qt::WA_DeleteOnClose );
+	//ds->setAttribute( Qt::WA_DeleteOnClose );
 	ds->show();
-	connect( &lsc, SIGNAL( measureDone() ), ds, SLOT( updateTDC() ) );
+	//connect( &lsc, SIGNAL( measureDone() ), ds, SLOT( updateTDC() ) );
 	return;
 }
 
@@ -428,12 +428,16 @@ void MainWindow::loadCameraData()
     int sample = ui->horizontalSliderSample->value() - 1;
     uint32_t showedCam = 0;
     for(uint16_t cam=0; cam<camcnt; cam++)
+		//was bedeutet diese if-Anweisung @flo bitte sowas kommentieren
         if (settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toInt())
         {
             lsc.returnFrame(1, sample, block, cam, data + showedCam * pixel, pixel);
             showedCam++;
         }
     setChartData(data, pixel, showCamcnt);
+	//send pxel 6 and 7 to the tdc window
+	//pixel 6low/7high of tdc1 and 8low/9high of tdc2 to tdc view
+	ds->updateTDC(*(uint32_t*)(data + 6), *(uint32_t*)(data + 8));
     free(data);
     return;
 }
