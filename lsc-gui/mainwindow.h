@@ -7,6 +7,8 @@
 #include "lsc.h"
 #include "dialogsettings.h"
 #include "dialogtdc.h"
+#include "dialogrms.h"
+#include "dialogdsc.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -33,10 +35,12 @@ private:
     void setChartData(uint16_t* data, uint16_t length, uint16_t numberOfSets);
     void showNoDriverFoundDialog();
     void showPcieBoardError();
-	DialogTDC* ds = new DialogTDC(this);
+	DialogTDC* ds_tdc = new DialogTDC(this);
 private slots:
 	void on_actionEdit_triggered();
 	void on_actionTDC_triggered();
+	void on_actionRMS_triggered();
+	void on_actionDSC_triggered();
 	void on_actionAxes_triggered();
 	void on_actionCameras_triggered();
 	void on_actionReset_axes_triggered();
