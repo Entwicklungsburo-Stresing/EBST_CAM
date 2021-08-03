@@ -102,6 +102,12 @@
     <ClCompile Include="dialogaxes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dialogrms.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dialogdsc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h">
@@ -172,6 +178,12 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogaxes.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogrms.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogdsc.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -829,6 +841,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="dialogaxes.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="dialogrms.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="dialogdsc.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

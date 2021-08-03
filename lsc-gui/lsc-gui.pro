@@ -37,6 +37,8 @@ VERSION = $${VERSION_MAJOR}.$${VERSION_MINOR}.$${VERSION_BUILD}
 # Input
 SOURCES += lsc-gui.cpp \
     dialogaxes.cpp \
+    dialogdsc.cpp \
+    dialogrms.cpp \
     dialogsettings.cpp \
     dialogtdc.cpp \
     mainwindow.cpp \
@@ -63,12 +65,16 @@ DISTFILES += \
 
 FORMS += \
     dialogaxes.ui \
+    dialogdsc.ui \
+    dialogrms.ui \
     dialogsettings.ui \
     dialogtdc.ui \
     mainwindow.ui
 
 HEADERS += \
     dialogaxes.h \
+    dialogdsc.h \
+    dialogrms.h \
     dialogsettings.h \
     dialogtdc.h \
     lsc.h \

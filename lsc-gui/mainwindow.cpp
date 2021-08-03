@@ -233,8 +233,34 @@ void MainWindow::on_actionEdit_triggered()
 void MainWindow::on_actionTDC_triggered()
 {
 	//ds->setAttribute( Qt::WA_DeleteOnClose );
-	ds->show();
+	ds_tdc->show();
 	//connect( &lsc, SIGNAL( measureDone() ), ds, SLOT( updateTDC() ) );
+	return;
+}
+
+/**
+ * @brief This slot opens the RMS dialog.
+ * @return none
+ */
+void MainWindow::on_actionRMS_triggered()
+{
+	DialogRMS* ds = new DialogSettings(this);
+	ds->setAttribute(Qt::WA_DeleteOnClose);
+	ds->show();
+	connect(ds, SIGNAL(settings_saved()), this, SLOT(loadSettings()));
+	return;
+}
+
+/**
+ * @brief This slot opens the DSC dialog.
+ * @return none
+ */
+void MainWindow::on_actionDSC_triggered()
+{
+	DialogDSC* ds = new DialogSettings(this);
+	ds->setAttribute(Qt::WA_DeleteOnClose);
+	ds->show();
+	connect(ds, SIGNAL(settings_saved()), this, SLOT(loadSettings()));
 	return;
 }
 
@@ -437,7 +463,7 @@ void MainWindow::loadCameraData()
     setChartData(data, pixel, showCamcnt);
 	//send pxel 6 and 7 to the tdc window
 	//pixel 6low/7high of tdc1 and 8low/9high of tdc2 to tdc view
-	ds->updateTDC(*(uint32_t*)(data + 6), *(uint32_t*)(data + 8));
+	ds_tdc->updateTDC(*(uint32_t*)(data + 6), *(uint32_t*)(data + 8));
     free(data);
     return;
 }
