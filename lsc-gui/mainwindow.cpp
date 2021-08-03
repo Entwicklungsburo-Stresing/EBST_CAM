@@ -244,10 +244,11 @@ void MainWindow::on_actionTDC_triggered()
  */
 void MainWindow::on_actionRMS_triggered()
 {
-	DialogRMS* ds = new DialogSettings(this);
+	DialogRMS* ds = new DialogRMS(this);
 	ds->setAttribute(Qt::WA_DeleteOnClose);
 	ds->show();
-	connect(ds, SIGNAL(settings_saved()), this, SLOT(loadSettings()));
+	//TODO
+	//connect(ds, SIGNAL(settings_saved()), this, SLOT(loadSettings()));
 	return;
 }
 
@@ -257,10 +258,11 @@ void MainWindow::on_actionRMS_triggered()
  */
 void MainWindow::on_actionDSC_triggered()
 {
-	DialogDSC* ds = new DialogSettings(this);
+	DialogDSC* ds = new DialogDSC(this);
 	ds->setAttribute(Qt::WA_DeleteOnClose);
 	ds->show();
-	connect(ds, SIGNAL(settings_saved()), this, SLOT(loadSettings()));
+	//TODO
+	//connect(ds, SIGNAL(settings_saved()), this, SLOT(loadSettings()));
 	return;
 }
 
