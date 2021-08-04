@@ -6,7 +6,7 @@
 // All settings are uin32_t to ensure the correct memory layout. This is important for the communication with labview.
 struct global_settings
 {
-	uint32_t drvno;
+	uint32_t unused;
 	//measurement tab
 	uint32_t nos;
 	uint32_t nob;

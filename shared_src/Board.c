@@ -18,48 +18,98 @@ void SetGlobalSettings(struct global_settings settings)
 }
 
 /**
- * \brief Initialize Measurement.
+ * \brief Initialize Measurement (using board select).
  * 
- * \return es_status_codes
- *		- 
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_parameter_out_of_range
+ *		- es_allocating_memory_failed
+ *		- es_not_enough_ram
+ *		- es_getting_dma_buffer_failed
+ *		- es_enabling_interrupts_failed
+ *		- es_camera_not_found
  */
 es_status_codes InitMeasurement()
 {
 	ES_LOG("\n*** Init Measurement ***\n");
-	abortMeasurementFlag = false;
 	ES_LOG("struct global_settings: ");
 	for (uint32_t i = 0; i < sizeof(settings_struct)/4; i++)
-        ES_LOG("%u ", *(&settings_struct.drvno + i));
+        ES_LOG("%u ", *(&settings_struct.unused + i));
 	ES_LOG("\n");
-	es_status_codes status = checkDriverHandle(settings_struct.drvno);
+	es_status_codes status = es_no_error;
+	switch (settings_struct.board_sel)
+	{
+	case 1:
+		status = _InitMeasurement(1);
+		break;
+	case 2:
+		status = _InitMeasurement(2);
+		break;
+	case 3:
+		status = _InitMeasurement(1);
+		if (status != es_no_error) return status;
+		status = _InitMeasurement(2);
+		break;
+	default:
+		return es_parameter_out_of_range;
+	}
+	ES_LOG("*** Init Measurement done ***\n\n");
+	return status;
+}
+
+/**
+ * \brief Initialize Measurement (using drvno).
+ *
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_parameter_out_of_range
+ *		- es_allocating_memory_failed
+ *		- es_not_enough_ram
+ *		- es_getting_dma_buffer_failed
+ *		- es_enabling_interrupts_failed
+ *		- es_camera_not_found
+ */
+es_status_codes _InitMeasurement(uint32_t drvno)
+{
+	ES_LOG("\nInit board %u\n", drvno);
+	abortMeasurementFlag = false;
+	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
 	BOARD_SEL = settings_struct.board_sel;
-	status = ClearAllUserRegs(settings_struct.drvno);
+	status = ClearAllUserRegs(drvno);
 	if (status != es_no_error) return status;
-	status = SetPixelCount(settings_struct.drvno, settings_struct.pixel);
+	status = SetPixelCount(drvno, settings_struct.pixel);
 	if (status != es_no_error) return status;
-	status = SetCamCount(settings_struct.drvno, settings_struct.camcnt);
+	status = SetCamCount(drvno, settings_struct.camcnt);
 	if (status != es_no_error) return status;
 	//set PDA and FFT
-	status = SetSensorType(settings_struct.drvno, (uint8_t)settings_struct.sensor_type);
+	status = SetSensorType(drvno, (uint8_t)settings_struct.sensor_type);
 	if (status != es_no_error) return status;
 	if (settings_struct.sensor_type == FFTsensor)
 	{
 		switch (settings_struct.FFTMode)
 		{
 		case full_binning:
-			status = SetupFullBinning(settings_struct.drvno, settings_struct.FFTLines, (uint8_t)settings_struct.Vfreq);
+			status = SetupFullBinning(drvno, settings_struct.FFTLines, (uint8_t)settings_struct.Vfreq);
 			break;
 #ifdef WIN32
 		case partial_binning:
 		{
 			uint8_t regionSize[8];
 			for (int i = 0; i < 8; i++) regionSize[i] = settings_struct.region_size[i];
-			status = DLLSetupROI(settings_struct.drvno, (uint16_t)settings_struct.number_of_regions, settings_struct.FFTLines, (uint8_t)settings_struct.keep_first, regionSize, (uint8_t)settings_struct.Vfreq);
+			status = DLLSetupROI(drvno, (uint16_t)settings_struct.number_of_regions, settings_struct.FFTLines, (uint8_t)settings_struct.keep_first, regionSize, (uint8_t)settings_struct.Vfreq);
 			break;
 		}
 		case area_mode:
-			status = DLLSetupArea(settings_struct.drvno, settings_struct.lines_binning, (uint8_t)settings_struct.Vfreq);
+			status = DLLSetupArea(drvno, settings_struct.lines_binning, (uint8_t)settings_struct.Vfreq);
 			break;
 #endif
 		default:
@@ -69,90 +119,88 @@ es_status_codes InitMeasurement()
 	else *useSWTrig = false;
 	if (status != es_no_error) return status;
 	//allocate Buffer
-	status = SetMeasurementParameters(settings_struct.drvno, settings_struct.nos, settings_struct.nob);
+	status = SetMeasurementParameters(drvno, settings_struct.nos, settings_struct.nob);
 	if (status != es_no_error) return status;
-	status = CloseShutter(settings_struct.drvno); //set cooling  off
+	status = CloseShutter(drvno); //set cooling  off
 	if (status != es_no_error) return status;
 	//set mshut
 	if (settings_struct.mshut)
 	{
-		status = SetSEC(settings_struct.drvno, settings_struct.ShutterExpTimeIn10ns);
+		status = SetSEC(drvno, settings_struct.ShutterExpTimeIn10ns);
 		if (status != es_no_error) return status;
-		status = SetTORReg(settings_struct.drvno, TOR_SSHUT);
+		status = SetTORReg(drvno, TOR_SSHUT);
 		if (status != es_no_error) return status;
 	}
 	else
 	{
-		status = SetSEC(settings_struct.drvno, 0);
+		status = SetSEC(drvno, 0);
 		if (status != es_no_error) return status;
-		status = SetTORReg(settings_struct.drvno, (uint8_t)settings_struct.TORmodus);
+		status = SetTORReg(drvno, (uint8_t)settings_struct.TORmodus);
 		if (status != es_no_error) return status;
 	}
 	//SSlope
-	SetSSlope(settings_struct.drvno, settings_struct.sslope);
+	SetSSlope(drvno, settings_struct.sslope);
 	if (status != es_no_error) return status;
 	//BSlope
-	status = SetBSlope(settings_struct.drvno, settings_struct.bslope);
+	status = SetBSlope(drvno, settings_struct.bslope);
 	if (status != es_no_error) return status;
 	//SetTimer
-	status = SetSTI(settings_struct.drvno, (uint8_t)settings_struct.sti_mode);
+	status = SetSTI(drvno, (uint8_t)settings_struct.sti_mode);
 	if (status != es_no_error) return status;
-	status = SetBTI(settings_struct.drvno, (uint8_t)settings_struct.bti_mode);
+	status = SetBTI(drvno, (uint8_t)settings_struct.bti_mode);
 	if (status != es_no_error) return status;
-	status = SetSTimer(settings_struct.drvno, settings_struct.stime_in_microsec);
+	status = SetSTimer(drvno, settings_struct.stime_in_microsec);
 	if (status != es_no_error) return status;
-	status = SetBTimer(settings_struct.drvno, settings_struct.btime_in_microsec);
+	status = SetBTimer(drvno, settings_struct.btime_in_microsec);
 	if (status != es_no_error) return status;
-	if (settings_struct.enable_gpx) status = InitGPX(settings_struct.drvno, settings_struct.gpx_offset);
+	if (settings_struct.enable_gpx) status = InitGPX(drvno, settings_struct.gpx_offset);
 	if (status != es_no_error) return status;
 	//Delay after Trigger
-	status = SetSDAT(settings_struct.drvno, settings_struct.sdat_in_10ns);
+	status = SetSDAT(drvno, settings_struct.sdat_in_10ns);
 	if (status != es_no_error) return status;
-	status = SetBDAT(settings_struct.drvno, settings_struct.bdat_in_10ns);
+	status = SetBDAT(drvno, settings_struct.bdat_in_10ns);
 	if (status != es_no_error) return status;
 	//init Camera
-	status = InitCameraGeneral(settings_struct.drvno, settings_struct.pixel, settings_struct.trigger_mode_cc, settings_struct.sensor_type, 0, 0, settings_struct.led_off);
+	status = InitCameraGeneral(drvno, settings_struct.pixel, settings_struct.trigger_mode_cc, settings_struct.sensor_type, 0, 0, settings_struct.led_off);
 	if (status != es_no_error) return status;
 	switch (settings_struct.camera_system)
 	{
 	case camera_system_3001:
-		InitCamera3001(settings_struct.drvno, settings_struct.gain_switch);
+		InitCamera3001(drvno, settings_struct.gain_switch);
 		break;
 	case camera_system_3010:
-		InitCamera3010(settings_struct.drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern, settings_struct.gain_switch);
+		InitCamera3010(drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern, settings_struct.gain_switch);
 		break;
 	case camera_system_3030:
-		InitCamera3030(settings_struct.drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern, settings_struct.gain_3030, settings_struct.dac, settings_struct.dac_output, settings_struct.isIr);
+		InitCamera3030(drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern, settings_struct.gain_3030, settings_struct.dac, settings_struct.dac_output, settings_struct.isIr);
 		break;
 	default:
 		return es_parameter_out_of_range;
 	}
 	if (status != es_no_error) return status;
 	//set gain switch
-	status = SendFLCAM(settings_struct.drvno, maddr_cam, 0, (uint16_t)settings_struct.gain_switch);
+	status = SendFLCAM(drvno, maddr_cam, 0, (uint16_t)settings_struct.gain_switch);
 	if (status != es_no_error) return status;
 	//for cooled Cam
-	status = SetTemp(settings_struct.drvno, (uint8_t)settings_struct.Temp_level);
+	status = SetTemp(drvno, (uint8_t)settings_struct.Temp_level);
 	if (status != es_no_error) return status;
 	//DMA
-	status = SetupDma(settings_struct.drvno);
+	status = SetupDma(drvno);
 	if (status != es_no_error) return status;
-	status = SetDmaStartMode(settings_struct.drvno, HWDREQ_EN);
+	status = SetDmaStartMode(drvno, HWDREQ_EN);
 	if (status != es_no_error) return status;
-	if(INTR_EN) status = enableInterrupt(settings_struct.drvno);
+	if (INTR_EN) status = enableInterrupt(drvno);
 	if (status != es_no_error) return status;
-	status = SetDmaRegister(settings_struct.drvno, settings_struct.pixel);
+	status = SetDmaRegister(drvno, settings_struct.pixel);
 	if (status != es_no_error) return status;
 	continiousPause = settings_struct.cont_pause;
-	status = SetBEC( settings_struct.drvno, settings_struct.bec_in_10ns );
+	status = SetBEC(drvno, settings_struct.bec_in_10ns);
 	if (status != es_no_error) return status;
-	status = SetXckdelay(settings_struct.drvno, settings_struct.xckdelay_in_10ns);
+	status = SetXckdelay(drvno, settings_struct.xckdelay_in_10ns);
 	if (status != es_no_error) return status;
-	status = FindCam(settings_struct.drvno);
+	status = FindCam(drvno);
 	if (status != es_no_error) return status;
-	status = SetHardwareTimerStopMode(settings_struct.drvno, true);
-
-	ES_LOG("*** Init Measurement done ***\n\n");
+	status = SetHardwareTimerStopMode(drvno, true);
 	return status;
 }
 
@@ -2385,10 +2433,28 @@ es_status_codes GetLastBufPart( uint32_t drvno )
 	return status;
 }
 
-es_status_codes InitBoard(uint32_t drvno)
+/**
+ * \brief Initializes PCIe board.
+ * 
+ * \param board_sel Select PCIe boards.
+ *		- 1: board one
+ *		- 2: board two
+ *		- 3: both boards
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_invalid_driver_number
+ *		- es_getting_device_info_failed
+ *		- es_open_device_failed
+ */
+es_status_codes InitBoard()
 {
 	ES_LOG("\n*** Init board ***\n");
-	es_status_codes status = _InitBoard(drvno);
+	ES_LOG("Number of boards: %u\n", number_of_boards);
+	if (number_of_boards < 1) return es_open_device_failed;
+	es_status_codes status = _InitBoard(1);
+	if (status != es_no_error) return status;
+	if (number_of_boards > 1)
+		status = _InitBoard(2);
 	ES_LOG("*** Init board done***\n\n");
 	return status;
 }
@@ -2401,10 +2467,41 @@ es_status_codes InitDriver()
 	return status;
 }
 
-es_status_codes ExitDriver(uint32_t drvno)
+/**
+ * \brief Exit driver.
+ * 
+ * \param board_sel:
+ *		- 1: board one
+ *		- 2: board two
+ *		- 3: both boards
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_unlocking_dma_failed
+ *		- es_parameter_out_of_range
+ */
+es_status_codes ExitDriver(uint32_t board_sel)
 {
 	ES_LOG("\n*** Exit driver ***\n");
-	es_status_codes status = _ExitDriver(drvno);
+	es_status_codes status = es_no_error;
+	switch (board_sel)
+	{
+	case 1:
+		status = _ExitDriver(1);
+		break;
+	case 2:
+		status = _ExitDriver(2);
+		break;
+	case 3:
+		status = _ExitDriver(1);
+		if (status != es_no_error) return status;
+		status = _ExitDriver(2);
+		break;
+	default:
+		return es_parameter_out_of_range;
+	}
+
 	ES_LOG("*** Exit driver done***\n\n");
 	return status;
 }
@@ -3061,7 +3158,7 @@ es_status_codes dumpSettings(char** stringPtr)
 		"lines binning\t%u\n"
 		"number of regions\t%u\n"
 		"keep first\t%u\n",
-		settings_struct.drvno,
+		settings_struct.unused,
 		settings_struct.nos,
 		settings_struct.nob,
 		settings_struct.sti_mode,
