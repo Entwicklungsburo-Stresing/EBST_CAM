@@ -30,7 +30,7 @@ public slots:
     void on_blockStart();
     void on_blockDone();
 private:
-    QSettings settings;
+	QSettings settings;
     void setChartData(QLineSeries** series, uint16_t numberOfSets);
     void setChartData(uint16_t* data, uint16_t length, uint16_t numberOfSets);
     void showNoDriverFoundDialog();
@@ -46,6 +46,7 @@ private slots:
 	void on_actionReset_axes_triggered();
 	void on_actionAbout_triggered();
 	void on_actionAbout_Qt_triggered();
+	void on_actionDAC_triggered();
 	void loadSettings();
 	void startPressed();
 	void startContPressed(bool checked);
