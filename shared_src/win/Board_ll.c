@@ -409,6 +409,16 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 	return;
 }
 
+/**
+ * \brief Initializes PCIe board on a platform specific way.
+ * 
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_invalid_driver_number
+ *		- es_getting_device_info_failed
+ *		- es_open_device_failed
+ */
 es_status_codes _InitBoard(uint32_t drvno)
 {
 	if ((drvno < 1) || (drvno > 2)) return es_invalid_driver_number;
@@ -512,6 +522,16 @@ es_status_codes _InitDriver()
 	return es_no_error;	  // no Error, driver found
 }
 
+/**
+ * \brief Exit driver.
+ * 
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_unlocking_dma_failed
+ */
 es_status_codes _ExitDriver(uint32_t drvno)
 {
 	es_status_codes status = checkDriverHandle(drvno);

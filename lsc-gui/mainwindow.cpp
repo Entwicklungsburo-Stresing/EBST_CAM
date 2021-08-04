@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
     else
     {
-        status = lsc.initPcieBoard(1);
+        status = lsc.initPcieBoard();
         if (status != es_no_error)
             showPcieBoardError();
         else
@@ -168,15 +168,8 @@ void MainWindow::startPressed()
 	settings_struct.bec_in_10ns = 0; //TODO
 	settings_struct.isIr = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
 	//settings_struct.cont_pause = settings.value(settingContPause, settingAdcCustomValueDefault).toInt();
-
 	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt() + 1;
-	uint8_t boardsel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt();
-	es_status_codes status = es_no_error;
-	if (boardsel == 0)
-	{
-		settings_struct.drvno = 1;
-		status = lsc.initMeasurement();
-	}
+	es_status_codes status = lsc.initMeasurement();
 	if (status != es_no_error) {
 		QErrorMessage* d = new QErrorMessage(this);
 		d->setWindowTitle("Error");

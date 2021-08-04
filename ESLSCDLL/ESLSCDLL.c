@@ -128,9 +128,9 @@ DllAccess es_status_codes DLLCCDDrvExit( UINT32 drvno )
 /**
  * \copydoc InitBoard
  */
-DllAccess es_status_codes DLLInitBoard( UINT32 drv )
+DllAccess es_status_codes DLLInitBoard()
 {
-	return InitBoard(drv);
+	return InitBoard();
 }
 
 /**
@@ -420,6 +420,7 @@ DllAccess es_status_codes DLLCopyOneBlock( UINT32 drv, UINT16 block, UINT16 *pde
 DllAccess void DLLReadFFLoop( UINT32 board_sel )
 {
 	BOARD_SEL = board_sel;
+	settings_struct.board_sel = board_sel;
 	//thread wit prio 15
 	_beginthreadex( 0, 0, &StartMeasurement, 0, 0, 0 );
 	return;
