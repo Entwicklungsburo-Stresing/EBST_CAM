@@ -55,7 +55,7 @@ void DialogDac::spinBoxChannelX_valueChanged()
 		ui->spinBoxChannel7->value(),
 		ui->spinBoxChannel8->value()
 	};
-	uint32_t drvno = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt();
+	uint32_t drvno = 1;
 	bool isIr = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
 	mainWindow->lsc.dac_setAllOutputs(drvno, output, isIr);
 	return;
@@ -64,7 +64,7 @@ void DialogDac::spinBoxChannelX_valueChanged()
 void DialogDac::on_buttonBox_rejected()
 {
 	// Send old values to DAC
-	uint32_t drvno = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt();
+	uint32_t drvno = 1;
 	bool isIr = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
 	mainWindow->lsc.dac_setAllOutputs(drvno, output_old, isIr);
 	return;
