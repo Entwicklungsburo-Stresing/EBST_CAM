@@ -446,22 +446,31 @@ void MainWindow::on_actionDump_board_registers_triggered()
 void MainWindow::loadCameraData()
 {
     uint32_t pixel = settings.value(settingPixelPath,settingPixelDefault).toInt();
+	// camcnt is the count of all cameras
     uint32_t camcnt = settings.value(settingCamcntPath,settingCamcntDefault).toInt();
+	// showCamcnt is the count of all cameras to be shown on the chart
+	// = sum of all true settingShowCameraBaseDir settings
     uint32_t showCamcnt = 0;
-    for (uint16_t cam = 0; cam < camcnt; cam++)
-        if (settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toInt())
-            showCamcnt++;
+	for (uint16_t cam = 0; cam < camcnt; cam++)
+	{
+		bool showCurrentCam = settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toBool();
+		if (showCurrentCam)
+			showCamcnt++;
+	}
     uint16_t* data = (uint16_t*)malloc(pixel * showCamcnt * sizeof(uint16_t));
     int block = ui->horizontalSliderBlock->value() - 1;
     int sample = ui->horizontalSliderSample->value() - 1;
+	// showedCam counts the number of cameras which are shown on the chart
     uint32_t showedCam = 0;
-    for(uint16_t cam=0; cam<camcnt; cam++)
-		//was bedeutet diese if-Anweisung @flo bitte sowas kommentieren
-        if (settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toInt())
-        {
-            lsc.returnFrame(1, sample, block, cam, data + showedCam * pixel, pixel);
-            showedCam++;
-        }
+	for (uint16_t cam = 0; cam < camcnt; cam++)
+	{
+		bool showCurrentCam = settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toBool();
+		if (showCurrentCam)
+		{
+			lsc.returnFrame(1, sample, block, cam, data + showedCam * pixel, pixel);
+			showedCam++;
+		}
+	}
     setChartData(data, pixel, showCamcnt);
 	//send pxel 6 and 7 to the tdc window
 	//pixel 6low/7high of tdc1 and 8low/9high of tdc2 to tdc view
