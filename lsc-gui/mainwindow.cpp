@@ -303,7 +303,7 @@ void MainWindow::on_actionCameras_triggered()
     return;
 }
 
-void MainWindow::on_checkBoxShowCamera_stateChanged(int state, int camera)
+void MainWindow::on_checkBoxShowCamera_stateChanged(bool state, int camera)
 {
     settings.setValue(settingShowCameraBaseDir + QString::number(camera), state);
     return;
