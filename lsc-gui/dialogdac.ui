@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DialogDac</class>
+ <widget class="QDialog" name="DialogDac">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>257</width>
+    <height>253</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>DAC</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayoutDac">
+     <item row="2" column="1">
+      <widget class="QLabel" name="labelDacChannel3">
+       <property name="text">
+        <string>Channel 3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLabel" name="labelDacChannel4">
+       <property name="text">
+        <string>Channel 4</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="2">
+      <widget class="QSpinBox" name="spinBoxChannel7">
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="maximum">
+        <number>65534</number>
+       </property>
+       <property name="value">
+        <number>51500</number>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QSpinBox" name="spinBoxChannel4">
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="maximum">
+        <number>65534</number>
+       </property>
+       <property name="value">
+        <number>51500</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="labelDacChannel1">
+       <property name="text">
+        <string>Channel 1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QSpinBox" name="spinBoxChannel1">
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="maximum">
+        <number>65534</number>
+       </property>
+       <property name="value">
+        <number>51500</number>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QSpinBox" name="spinBoxChannel3">
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="maximum">
+        <number>65534</number>
+       </property>
+       <property name="value">
+        <number>51500</number>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLabel" name="labelDacChannel8">
+       <property name="text">
+        <string>Channel 8</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QSpinBox" name="spinBoxChannel2">
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="maximum">
+        <number>65534</number>
+       </property>
+       <property name="value">
+        <number>51500</number>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QSpinBox" name="spinBoxChannel5">
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="maximum">
+        <number>65534</number>
+       </property>
+       <property name="value">
+        <number>51500</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <spacer name="horizontalSpacer_7">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="0" column="3">
+      <spacer name="horizontalSpacer_8">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLabel" name="labelDacChannel7">
+       <property name="text">
+        <string>Channel 7</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLabel" name="labelDacChannel5">
+       <property name="text">
+        <string>Channel 5</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="labelDacChannel2">
+       <property name="text">
+        <string>Channel 2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="2">
+      <widget class="QSpinBox" name="spinBoxChannel6">
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="maximum">
+        <number>65534</number>
+       </property>
+       <property name="value">
+        <number>51500</number>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLabel" name="labelDacChannel6">
+       <property name="text">
+        <string>Channel 6</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="2">
+      <widget class="QSpinBox" name="spinBoxChannel8">
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="maximum">
+        <number>65534</number>
+       </property>
+       <property name="value">
+        <number>51500</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="pushButtonDefault">
+       <property name="text">
+        <string>Default</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>DialogDac</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>136</x>
+     <y>231</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>141</x>
+     <y>259</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>DialogDac</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>225</x>
+     <y>231</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>245</x>
+     <y>256</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

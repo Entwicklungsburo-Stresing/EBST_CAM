@@ -17,13 +17,9 @@ public:
 
 private slots:
     void on_buttonBox_rejected();
-
     void on_spinBoxXmin_valueChanged(int arg1);
-
     void on_spinBoxXmax_valueChanged(int arg1);
-
     void on_spinBoxYmin_valueChanged(int arg1);
-
     void on_spinBoxYmax_valueChanged(int arg1);
 
 private:

@@ -399,6 +399,7 @@
     <addaction name="actionTDC"/>
     <addaction name="actionRMS"/>
     <addaction name="actionDSC"/>
+    <addaction name="actionDAC"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSettings"/>
@@ -489,6 +490,11 @@
   <action name="actionDSC">
    <property name="text">
     <string>DSC</string>
+   </property>
+  </action>
+  <action name="actionDAC">
+   <property name="text">
+    <string>DAC</string>
    </property>
   </action>
  </widget>

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "dialogaxes.h"
 #include "../version.h"
+#include "dialogdac.h"
 
 /**
  * @brief Constructor of Class MainWindow.
@@ -273,6 +274,7 @@ void MainWindow::on_actionDSC_triggered()
 void MainWindow::on_actionAxes_triggered()
 {
 	DialogAxes* messageBox = new DialogAxes(this);
+	messageBox->setAttribute(Qt::WA_DeleteOnClose);
 	messageBox->show();
 	return;
 }
@@ -346,6 +348,15 @@ void MainWindow::on_actionAbout_Qt_triggered()
 	QMessageBox::aboutQt(this, "About Qt");
 	return;
 }
+
+void MainWindow::on_actionDAC_triggered()
+{
+	DialogDac* dialogDac = new DialogDac(this);
+	dialogDac->setAttribute(Qt::WA_DeleteOnClose);
+	dialogDac->show();
+	return;
+}
+
 
 /**
  * @brief Load settings and apply to UI.

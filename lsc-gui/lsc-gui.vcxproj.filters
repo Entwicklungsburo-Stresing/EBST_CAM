@@ -108,6 +108,9 @@
     <ClCompile Include="dialogdsc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dialogdac.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h">
@@ -184,6 +187,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogdsc.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogdac.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -847,6 +853,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="dialogdsc.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="dialogdac.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
