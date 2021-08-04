@@ -29,16 +29,30 @@ es_status_codes Lsc::initDriver()
  *      - es_open_device_failed
  *      - es_getting_dma_buffer_failed
  *      - es_unknown_error
+ *		- es_parameter_out_of_range
+ *		- es_invalid_driver_number
+ *		- es_getting_device_info_failed
  */
-es_status_codes Lsc::initPcieBoard(uint32_t drvno)
+es_status_codes Lsc::initPcieBoard()
 {
-    return InitBoard(drvno);
+    return InitBoard();
 }
 
 /**
  * @brief Init Measurement.
- * @param settings_struct
- * @return
+ * 
+ * @return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_parameter_out_of_range
+ *		- es_allocating_memory_failed
+ *		- es_not_enough_ram
+ *		- es_getting_dma_buffer_failed
+ *		- es_enabling_interrupts_failed
+ *		- es_camera_not_found
  */
 es_status_codes Lsc::initMeasurement()
 {
