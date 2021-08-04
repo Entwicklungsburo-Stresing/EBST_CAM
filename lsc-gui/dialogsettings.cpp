@@ -2,6 +2,7 @@
 #include "ui_dialogsettings.h"
 #include <QMessageBox>
 #include <QtGlobal>
+#include "lsc-gui.h"
 
 DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
     QDialog(parent),
@@ -300,11 +301,8 @@ void DialogSettings::on_checkBoxUseDac_stateChanged(int arg1)
 		visible = true;
 		break;
 	}
-	//TODO
-	//ui->tabWidget->setTabEnabled(3, enabled);
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-    //ui->tabWidget->setTabVisible(3, visible);
-#endif
+	mainWindow->ui->actionDAC->setEnabled(enabled);
+	mainWindow->ui->actionDAC->setVisible(visible);
 }
 
 void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
@@ -338,10 +336,8 @@ void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
 		ui->spinBoxGain3030->setVisible(false || visible);
 		ui->checkBoxUseDac->setEnabled(false || enabled);
 		ui->checkBoxUseDac->setVisible(false || visible);
-		//ui->tabWidget->setTabEnabled(3, (false || enabled));
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-        //ui->tabWidget->setTabVisible(3, (false || visible));
-#endif
+		mainWindow->ui->actionDAC->setEnabled(false || enabled);
+		mainWindow->ui->actionDAC->setVisible(false || visible);
 		ui->comboBoxAdcMode->setEnabled(false || enabled);
 		ui->comboBoxAdcMode->setVisible(false || visible);
 		ui->spinBoxAdcCustom->setEnabled(false || enabled);
@@ -354,10 +350,8 @@ void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
 		ui->spinBoxGain3030->setVisible(false || visible);
 		ui->checkBoxUseDac->setEnabled(false || enabled);
 		ui->checkBoxUseDac->setVisible(false || visible);
-		//ui->tabWidget->setTabEnabled(3, (false || enabled));
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-       // ui->tabWidget->setTabVisible(3, (false || visible));
-#endif
+		mainWindow->ui->actionDAC->setEnabled(false || enabled);
+		mainWindow->ui->actionDAC->setVisible(false || visible);
 		ui->comboBoxAdcMode->setEnabled(true || enabled);
 		ui->comboBoxAdcMode->setVisible(true || visible);
 		ui->spinBoxAdcCustom->setEnabled(true || enabled);
@@ -370,10 +364,8 @@ void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
 		ui->spinBoxGain3030->setVisible(true || visible);
 		ui->checkBoxUseDac->setEnabled(true || enabled);
 		ui->checkBoxUseDac->setVisible(true || visible);
-		//ui->tabWidget->setTabEnabled(3, (ui->checkBoxUseDac->checkState() || enabled));
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-        //ui->tabWidget->setTabVisible(3, (ui->checkBoxUseDac->checkState() || visible));
-#endif
+		mainWindow->ui->actionDAC->setEnabled(ui->checkBoxUseDac->checkState() || enabled);
+		mainWindow->ui->actionDAC->setVisible(ui->checkBoxUseDac->checkState() || visible);
 		ui->comboBoxAdcMode->setEnabled(true || enabled);
 		ui->comboBoxAdcMode->setVisible(true || visible);
 		ui->spinBoxAdcCustom->setEnabled(true || enabled);
