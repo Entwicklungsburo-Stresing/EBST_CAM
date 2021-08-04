@@ -300,9 +300,10 @@ void DialogSettings::on_checkBoxUseDac_stateChanged(int arg1)
 		visible = true;
 		break;
 	}
-	ui->tabWidget->setTabEnabled(3, enabled);
+	//TODO
+	//ui->tabWidget->setTabEnabled(3, enabled);
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-    ui->tabWidget->setTabVisible(3, visible);
+    //ui->tabWidget->setTabVisible(3, visible);
 #endif
 }
 
@@ -337,9 +338,9 @@ void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
 		ui->spinBoxGain3030->setVisible(false || visible);
 		ui->checkBoxUseDac->setEnabled(false || enabled);
 		ui->checkBoxUseDac->setVisible(false || visible);
-		ui->tabWidget->setTabEnabled(3, (false || enabled));
+		//ui->tabWidget->setTabEnabled(3, (false || enabled));
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-        ui->tabWidget->setTabVisible(3, (false || visible));
+        //ui->tabWidget->setTabVisible(3, (false || visible));
 #endif
 		ui->comboBoxAdcMode->setEnabled(false || enabled);
 		ui->comboBoxAdcMode->setVisible(false || visible);
@@ -353,9 +354,9 @@ void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
 		ui->spinBoxGain3030->setVisible(false || visible);
 		ui->checkBoxUseDac->setEnabled(false || enabled);
 		ui->checkBoxUseDac->setVisible(false || visible);
-		ui->tabWidget->setTabEnabled(3, (false || enabled));
+		//ui->tabWidget->setTabEnabled(3, (false || enabled));
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-        ui->tabWidget->setTabVisible(3, (false || visible));
+       // ui->tabWidget->setTabVisible(3, (false || visible));
 #endif
 		ui->comboBoxAdcMode->setEnabled(true || enabled);
 		ui->comboBoxAdcMode->setVisible(true || visible);
@@ -369,9 +370,9 @@ void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
 		ui->spinBoxGain3030->setVisible(true || visible);
 		ui->checkBoxUseDac->setEnabled(true || enabled);
 		ui->checkBoxUseDac->setVisible(true || visible);
-		ui->tabWidget->setTabEnabled(3, (ui->checkBoxUseDac->checkState() || enabled));
+		//ui->tabWidget->setTabEnabled(3, (ui->checkBoxUseDac->checkState() || enabled));
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-        ui->tabWidget->setTabVisible(3, (ui->checkBoxUseDac->checkState() || visible));
+        //ui->tabWidget->setTabVisible(3, (ui->checkBoxUseDac->checkState() || visible));
 #endif
 		ui->comboBoxAdcMode->setEnabled(true || enabled);
 		ui->comboBoxAdcMode->setVisible(true || visible);
@@ -542,10 +543,10 @@ void DialogSettings::on_comboBoxSettingsLevel_currentIndexChanged(int index)
 	case 0:
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
         ui->tabWidget->setTabVisible(1, false);
-        ui->tabWidget->setTabVisible(4, false);
+        ui->tabWidget->setTabVisible(3, false);
 #endif
 		ui->tabWidget->setTabEnabled(1, false);
-		ui->tabWidget->setTabEnabled(4, false);
+		ui->tabWidget->setTabEnabled(3, false);
 		ui->labelLines->setVisible(false);
 		ui->spinBoxLines->setVisible(false);
 		ui->spinBoxLines->setEnabled(false);
@@ -553,21 +554,21 @@ void DialogSettings::on_comboBoxSettingsLevel_currentIndexChanged(int index)
 	case 1:
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
         ui->tabWidget->setTabVisible(1, true);
-        ui->tabWidget->setTabVisible(4, true);
+        ui->tabWidget->setTabVisible(3, true);
 #endif
 		ui->tabWidget->setTabEnabled(1, true);
-		ui->tabWidget->setTabEnabled(4, true);
+		ui->tabWidget->setTabEnabled(3, true);
 		ui->labelLines->setVisible(true);
 		ui->spinBoxLines->setVisible(true);
 		ui->spinBoxLines->setEnabled(true);
 		break;
 	case 2:
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-        ui->tabWidget->setTabVisible(4, true);
+        ui->tabWidget->setTabVisible(3, true);
         ui->tabWidget->setTabVisible(1, true);
 #endif
 		ui->tabWidget->setTabEnabled(1, true);
-		ui->tabWidget->setTabEnabled(4, true);
+		ui->tabWidget->setTabEnabled(3, true);
 		ui->labelLines->setVisible(true);
 		ui->spinBoxLines->setVisible(true);
 		ui->spinBoxLines->setEnabled(true);
