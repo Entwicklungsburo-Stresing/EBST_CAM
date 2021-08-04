@@ -43,8 +43,8 @@ DllAccess int DLLGetThreadCount();
 DllAccess void DLLErrMsgBoxOn();	//BOARD.C sends error messages on default
 DllAccess void DLLErrMsgBoxOff();	//general deactivate of error message boxes
 DllAccess es_status_codes DLLCCDDrvInit(UINT8* _number_of_boards);		// init the driver -> true if found
-DllAccess es_status_codes DLLCCDDrvExit( UINT32 drvno );		// closes the driver
-DllAccess es_status_codes DLLInitBoard( UINT32 drv );
+DllAccess es_status_codes DLLCCDDrvExit( UINT32 boad_sel );		// closes the driver
+DllAccess es_status_codes DLLInitBoard();
 DllAccess es_status_codes DLLReadByteS0( UINT32 drvno, UINT8 *data, UINT32 PortOff );// read byte from Port, PortOff = Regs of Board
 DllAccess es_status_codes DLLWriteByteS0( UINT32 drv, UINT8 DataByte, UINT32 PortOff ); // writes DataByte to Port
 DllAccess es_status_codes DLLReadLongS0( UINT32 drvno, UINT32 * DWData, UINT32 PortOff );	// read long from Port, PortOff Regs of Board
