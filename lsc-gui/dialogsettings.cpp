@@ -106,14 +106,6 @@ DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
     ui->spinBoxRegion6->setValue(_settings->value(settingRegionSize6Path, settingRegionSize6Default).toInt());
     ui->spinBoxRegion7->setValue(_settings->value(settingRegionSize7Path, settingRegionSize7Default).toInt());
     ui->spinBoxRegion8->setValue(_settings->value(settingRegionSize8Path, settingRegionSize8Default).toInt());
-    ui->spinBoxChannel1->setValue(_settings->value(settingSensorOffsetChannel1Path, settingSensorOffsetChannel1Default).toInt());
-    ui->spinBoxChannel2->setValue(_settings->value(settingSensorOffsetChannel2Path, settingSensorOffsetChannel2Default).toInt());
-    ui->spinBoxChannel3->setValue(_settings->value(settingSensorOffsetChannel3Path, settingSensorOffsetChannel3Default).toInt());
-    ui->spinBoxChannel4->setValue(_settings->value(settingSensorOffsetChannel4Path, settingSensorOffsetChannel4Default).toInt());
-    ui->spinBoxChannel5->setValue(_settings->value(settingSensorOffsetChannel5Path, settingSensorOffsetChannel5Default).toInt());
-    ui->spinBoxChannel6->setValue(_settings->value(settingSensorOffsetChannel6Path, settingSensorOffsetChannel6Default).toInt());
-    ui->spinBoxChannel7->setValue(_settings->value(settingSensorOffsetChannel7Path, settingSensorOffsetChannel7Default).toInt());
-    ui->spinBoxChannel8->setValue(_settings->value(settingSensorOffsetChannel8Path, settingSensorOffsetChannel8Default).toInt());
     ui->comboBoxOutput->setCurrentIndex(_settings->value(settingTorPath, settingTorDefault).toInt());
     ui->comboBoxAdcMode->setCurrentIndex(_settings->value(settingAdcModePath, settingAdcModeDefault).toInt());
     ui->spinBoxAdcCustom->setValue(_settings->value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toInt());
@@ -175,15 +167,6 @@ void DialogSettings::on_accepted()
     _settings->setValue(settingRegionSize6Path, ui->spinBoxRegion6->value());
     _settings->setValue(settingRegionSize7Path, ui->spinBoxRegion7->value());
     _settings->setValue(settingRegionSize8Path, ui->spinBoxRegion8->value());
-	//Sensor Offset
-    _settings->setValue(settingSensorOffsetChannel1Path, ui->spinBoxChannel1->value());
-    _settings->setValue(settingSensorOffsetChannel2Path, ui->spinBoxChannel2->value());
-    _settings->setValue(settingSensorOffsetChannel3Path, ui->spinBoxChannel3->value());
-    _settings->setValue(settingSensorOffsetChannel4Path, ui->spinBoxChannel4->value());
-    _settings->setValue(settingSensorOffsetChannel5Path, ui->spinBoxChannel5->value());
-    _settings->setValue(settingSensorOffsetChannel6Path, ui->spinBoxChannel6->value());
-    _settings->setValue(settingSensorOffsetChannel7Path, ui->spinBoxChannel7->value());
-    _settings->setValue(settingSensorOffsetChannel8Path, ui->spinBoxChannel8->value());
 	//Debug
     _settings->setValue(settingTorPath, ui->comboBoxOutput->currentIndex());
     _settings->setValue(settingAdcModePath, ui->comboBoxAdcMode->currentIndex());
@@ -531,15 +514,6 @@ void DialogSettings::loadDefaults()
     ui->spinBoxRegion6->setValue(settingRegionSize6Default);
     ui->spinBoxRegion7->setValue(settingRegionSize7Default);
     ui->spinBoxRegion8->setValue(settingRegionSize8Default);
-	//sensor offset
-    ui->spinBoxChannel1->setValue(settingSensorOffsetChannel1Default);
-    ui->spinBoxChannel2->setValue(settingSensorOffsetChannel2Default);
-    ui->spinBoxChannel3->setValue(settingSensorOffsetChannel3Default);
-    ui->spinBoxChannel4->setValue(settingSensorOffsetChannel4Default);
-    ui->spinBoxChannel5->setValue(settingSensorOffsetChannel5Default);
-    ui->spinBoxChannel6->setValue(settingSensorOffsetChannel6Default);
-    ui->spinBoxChannel7->setValue(settingSensorOffsetChannel7Default);
-    ui->spinBoxChannel8->setValue(settingSensorOffsetChannel8Default);
 	//debug
     ui->comboBoxOutput->setCurrentIndex(settingTorDefault);
     ui->comboBoxAdcMode->setCurrentIndex(settingAdcModeDefault);

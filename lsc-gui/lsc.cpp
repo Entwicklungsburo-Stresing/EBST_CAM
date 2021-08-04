@@ -122,3 +122,8 @@ void Lsc::parseTextToHtml(std::string* str)
     }
     str->append("</td></tr></table>");
 }
+
+es_status_codes Lsc::dac_setAllOutputs(uint32_t drvno, uint32_t* output, bool isIr)
+{
+	return DAC_setAllOutputs(drvno, output, isIr);
+}

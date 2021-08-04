@@ -26,6 +26,7 @@ public:
     std::string _dumpTlp(uint32_t drvno);
     std::string _dumpGlobalSettings();
     es_status_codes setTorOut(uint32_t drvno, uint8_t torOut);
+	es_status_codes dac_setAllOutputs(uint32_t drvno, uint32_t* output, bool isIr);
 public slots:
     es_status_codes startMeasurement();
 signals:
