@@ -120,9 +120,9 @@ DllAccess es_status_codes DLLCCDDrvInit( UINT8* _number_of_boards )
 /**
  * \copydoc CCDDrvExit
  */
-DllAccess es_status_codes DLLCCDDrvExit( UINT32 drvno )
+DllAccess es_status_codes DLLCCDDrvExit( UINT32 board_sel )
 {
-	return ExitDriver( drvno );
+	return ExitDriver(board_sel);
 }
 
 /**
