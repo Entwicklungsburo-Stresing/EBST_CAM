@@ -253,8 +253,8 @@ void MainWindow::on_actionRMS_triggered()
 void MainWindow::on_actionDSC_triggered()
 {
 	//DialogDSC* ds = new DialogDSC(this);
-	ds_dsc->setAttribute(Qt::WA_DeleteOnClose);
-	//ds->show();
+	//ds_dsc->setAttribute(Qt::WA_DeleteOnClose);
+	ds_dsc->show();
 	//TODO
 	//connect(ds, SIGNAL(settings_saved()), this, SLOT(loadSettings()));
 	return;
