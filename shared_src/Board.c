@@ -3311,7 +3311,7 @@ es_status_codes DoSoftwareTriggerTwoBoards()
  * @param DSCNumber 1: DSC 1; 2: DSC 2; 3: DSC 3
  * @return es_status_codes
  */
-es_status_codes resetDSC( uint32_t drvno, uint8_t DSCNumber )
+es_status_codes ResetDSC( uint32_t drvno, uint8_t DSCNumber )
 {
 	es_status_codes status;
 	ES_LOG( "Reset DSC %u\n", DSCNumber );
@@ -3336,7 +3336,7 @@ es_status_codes resetDSC( uint32_t drvno, uint8_t DSCNumber )
  * @param dir true: up; false: down
  * @return es_status_codes
  */
-es_status_codes setDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir )
+es_status_codes SetDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir )
 {
 	ES_LOG( "set DSC %u in direction %u\n", DSCNumber, dir );
 	uint32_t data = 0;
@@ -3363,7 +3363,7 @@ es_status_codes setDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir )
  * @param LDSC last DSC
  * @return es_status_codes
  */
-es_status_codes getDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC )
+es_status_codes GetDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC )
 {
 	es_status_codes status;
 	ES_LOG( "get DSC %u\n", DSCNumber );
