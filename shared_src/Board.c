@@ -3119,7 +3119,6 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 
 es_status_codes dumpSettings(char** stringPtr)
 {
-	uint32_t data = 0;
 	unsigned int len = 0;
 	//allocate string buffer buffer
 	*stringPtr = (char*)calloc(1000, sizeof(char));
@@ -3277,8 +3276,8 @@ es_status_codes DoSoftwareTriggerTwoBoards()
 {
 	ES_LOG("Do software trigger\n");
 
-	uint32_t data1 = 0;
-	uint32_t data2 = 0;
+	uint8_t data1 = 0;
+	uint8_t data2 = 0;
 
 	es_status_codes status = readRegisterS0_8(1, &data1, S0Addr_BTRIGREG);
 	if (status != es_no_error) return status;
