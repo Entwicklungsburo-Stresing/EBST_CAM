@@ -6,6 +6,9 @@
 #include <stdio.h>
 #include "../shared_src/UIAbstractionLayer.h"
 #include <math.h>
+#ifdef __linux__
+#include <unistd.h>
+#endif
 
 /**
  * \brief Set global settings struct.
@@ -285,7 +288,7 @@ es_status_codes setBlockOn( uint32_t drvno )
  */
 es_status_codes setMeasureOn( uint32_t drvno )
 {
-	ES_LOG("Set measure on");
+	ES_LOG("Set measure on\n");
 	notifyMeasureStart();
 	return setBitS0_32( drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS );
 }
@@ -312,7 +315,7 @@ es_status_codes resetBlockOn( uint32_t drvno )
  */
 es_status_codes resetMeasureOn( uint32_t drvno )
 {
-	ES_LOG("Reset measure on");
+	ES_LOG("Reset measure on\n");
 	notifyMeasureDone();
 	return resetBitS0_32( drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS );
 }
@@ -1287,10 +1290,16 @@ es_status_codes SendFLCAM( uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16
 	ldata |= data;
 	es_status_codes status = writeRegisterS0_32( drvno, ldata, S0Addr_DBR );
 	if (status != es_no_error) return status;
+#ifdef __linux__
+    usleep(500);
+#endif
 	//load val
 	ldata |= 0x4000000;
 	status = writeRegisterS0_32(drvno, ldata, S0Addr_DBR);
 	if (status != es_no_error) return status;
+#ifdef __linux__
+    usleep(500);
+#endif
 	//rs load
 	ldata = 0;
 	return writeRegisterS0_32(drvno, ldata, S0Addr_DBR);

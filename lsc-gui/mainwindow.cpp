@@ -282,7 +282,7 @@ void MainWindow::on_actionCameras_triggered()
     messageBox->setAttribute(Qt::WA_DeleteOnClose);
     QVBoxLayout* layout = new QVBoxLayout(messageBox);
     messageBox->setLayout(layout);
-    for (int i = 0; i < settings.value(settingCamcntPath, settingCamcntDefault).toInt() * number_of_boards; i++)
+    for (int i = 0; i < settings.value(settingCamcntPath, settingCamcntDefault).toInt() * used_number_of_boards; i++)
     {
         QCheckBox* checkbox = new QCheckBox(messageBox);
         checkbox->setText("Camera "+QString::number(i+1));
@@ -365,6 +365,11 @@ void MainWindow::loadSettings()
     int tor = settings.value(settingTorPath,settingTorDefault).toInt();
 	for(uint32_t drvno=1; drvno<=number_of_boards; drvno++)
 		lsc.setTorOut(drvno, tor);
+    int board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt();
+    if(board_sel == 2)
+        used_number_of_boards = 2;
+    else
+        used_number_of_boards = 1;
     int theme = settings.value(settingThemePath,settingThemeDefault).toInt();
     switch(theme)
     {
@@ -459,7 +464,7 @@ void MainWindow::loadCameraData()
 	// showCamcnt is the count of all cameras to be shown on the chart
 	// = sum of all true settingShowCameraBaseDir settings
     uint32_t showCamcnt = 0;
-	for (uint16_t cam = 0; cam < camcnt * number_of_boards; cam++)
+	for (uint16_t cam = 0; cam < camcnt * used_number_of_boards; cam++)
 	{
 		bool showCurrentCam = settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toBool();
 		if (showCurrentCam)
@@ -470,12 +475,12 @@ void MainWindow::loadCameraData()
     int sample = ui->horizontalSliderSample->value() - 1;
 	// showedCam counts the number of cameras which are shown on the chart
     uint32_t showedCam = 0;
-	for (uint16_t cam = 0; cam < camcnt * number_of_boards; cam++)
+	for (uint16_t cam = 0; cam < camcnt * used_number_of_boards; cam++)
 	{
 		bool showCurrentCam = settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toBool();
 		if (showCurrentCam)
 		{
-			uint32_t currBoard = (cam % number_of_boards) + 1;
+			uint32_t currBoard = (cam % used_number_of_boards) + 1;
 			uint32_t currCam = cam % camcnt;
 			lsc.returnFrame(currBoard, sample, block, currCam, data + showedCam * pixel, pixel);
 			showedCam++;
