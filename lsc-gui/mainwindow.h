@@ -37,6 +37,7 @@ private:
     void showPcieBoardError();
 	DialogTDC* ds_tdc = new DialogTDC( this );
 	DialogDSC* ds_dsc = new DialogDSC( this );
+	DialogRMS* ds_rms = new DialogRMS( this );
 	int used_number_of_boards;
 private slots:
 	void on_actionEdit_triggered();

@@ -23,6 +23,7 @@ public:
 	es_status_codes resetDSC( uint32_t drvno, uint8_t DSCNumber );
 	es_status_codes setDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir );
 	es_status_codes getDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC );
+	es_status_codes calcTRMS( uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double *mwf, double *trms );
     std::string driverInstructions;
     std::string _dumpS0Registers(uint32_t drvno);
     std::string _dumpDmaRegisters(uint32_t drvno);
