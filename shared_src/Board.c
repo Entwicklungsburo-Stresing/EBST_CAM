@@ -1659,7 +1659,7 @@ es_status_codes DAC_setAllOutputs(uint32_t drvno, uint32_t* output, bool isIR)
 	int* reorder_ch;
 	if (isIR)
 	{
-		int tmp[8] = { 0, 1, 2, 3, 4, 5, 6, 7 }; //IR
+		int tmp[8] = { 0,1,2,3,4,5,6,7 }; //IR
 		reorder_ch = tmp;
 	}
 	else

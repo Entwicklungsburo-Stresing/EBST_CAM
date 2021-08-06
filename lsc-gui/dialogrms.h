@@ -17,6 +17,12 @@ public:
 
 private:
     Ui::DialogRMS *ui;
+
+private slots:
+	void on_pushButton_update_clicked();
+
+public slots:
+	void updateRMS();
 };
 
 #endif // DIALOGRMS_H
