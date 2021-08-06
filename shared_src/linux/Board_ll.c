@@ -275,10 +275,9 @@ es_status_codes _ExitDriver(uint32_t drvno)
 
 void* CopyDataToUserBuffer(void* param_drvno)
 {
-	//TODO: DIRTY HACK. setting drvno to param_drvno didn't work
-	//uint32_t drvno = *((uint32_t*)param_drvno;
-	uint32_t drvno = 1;
-	ES_LOG("Copy data to user buffer started, user buffer: %p\n", userBuffer[drvno]);
+    uint32_t drvno = *((uint32_t*)param_drvno);
+    if(checkDriverHandle(drvno) != es_no_error) return NULL;
+    ES_LOG("Copy data to user buffer started, drvno %u, user buffer: %p\n", drvno, userBuffer[drvno]);
 	pthread_mutex_lock(&mutex);
 	ssize_t bytes_to_read = sizeof(uint16_t) * aCAMCNT[drvno] * *Nospb * aPIXEL[drvno] * Nob;
 	ES_LOG("bytes to read: %zd\n", bytes_to_read);
