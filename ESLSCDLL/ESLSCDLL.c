@@ -417,10 +417,8 @@ DllAccess es_status_codes DLLCopyOneBlock( UINT32 drv, UINT16 block, UINT16 *pde
  * \param board_sel board number (=1 if one PCI board)
  * \return none
  */
-DllAccess void DLLReadFFLoop( UINT32 board_sel )
+DllAccess void DLLReadFFLoop()
 {
-	BOARD_SEL = board_sel;
-	settings_struct.board_sel = board_sel;
 	//thread wit prio 15
 	_beginthreadex( 0, 0, &StartMeasurement, 0, 0, 0 );
 	return;
