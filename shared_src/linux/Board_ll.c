@@ -65,6 +65,27 @@ es_status_codes writeRegister_32( uint32_t drvno, uint32_t data, uint16_t addres
 	return es_no_error;
 }
 
+/**
+ * \brief Writes 32 bits (4 bytes) to register. Two boards sync version.
+ *
+ * \param data1 data to write board 1
+ * \param data2 data to write board 2
+ * \param address Register offset from BaseAdress - in bytes
+ * \return es_status_codes:
+	- es_no_error
+	- es_register_write_failed
+ */
+es_status_codes writeRegister_32twoBoards(uint32_t data1, uint32_t data2, uint16_t address)
+{
+	struct dev_descr *dev = lscpcie_get_descriptor(0);
+	if (!dev) return es_register_write_failed;
+	lscpcie_write_reg32(dev, address, data1);
+	dev = lscpcie_get_descriptor(1);
+	if (!dev) return es_register_write_failed;
+	lscpcie_write_reg32(dev, address, data2);
+	return es_no_error;
+};
+
 es_status_codes writeRegister_16( uint32_t drvno, uint16_t data, uint16_t address )
 {
 	//on linux: driver numbers are 0 and 1, on windows 1 and 2
@@ -84,6 +105,27 @@ es_status_codes writeRegister_8( uint32_t drvno, uint8_t data, uint16_t address 
 	lscpcie_write_reg8(dev, address, data);
 	return es_no_error;
 }
+
+/**
+ * \brief Writes 8 bits (1 bytes) to register. Two boards sync version.
+ *
+ * \param data1 data to write board 1
+ * \param data2 data to write board 2
+ * \param address Register offset from BaseAdress - in bytes
+ * \return es_status_codes:
+	- es_no_error
+	- es_register_write_failed
+ */
+es_status_codes writeRegister_8twoBoards(uint8_t data1, uint8_t data2, uint16_t address)
+{
+	struct dev_descr *dev = lscpcie_get_descriptor(0);
+	if (!dev) return es_register_write_failed;
+	lscpcie_write_reg8(dev, address, data1);
+	dev = lscpcie_get_descriptor(1);
+	if (!dev) return es_register_write_failed;
+	lscpcie_write_reg8(dev, address, data2);
+	return es_no_error;
+};
 
 /**
  * @brief Read long (32 bit) from runtime register of PCIe board.
