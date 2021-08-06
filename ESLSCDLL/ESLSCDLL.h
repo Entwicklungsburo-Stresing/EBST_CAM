@@ -78,7 +78,7 @@ DllAccess es_status_codes DLLSetMeasurementParameters( UINT32 drvno, UINT32 nos,
 DllAccess es_status_codes DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdioden, UINT32 length );
 DllAccess es_status_codes DLLCopyAllData( UINT32 drv, UINT16 *pdioden );
 DllAccess es_status_codes DLLCopyOneBlock( UINT32 drv, UINT16 block, UINT16 *pdest );
-DllAccess void DLLReadFFLoop( UINT32 board_sel );
+DllAccess void DLLReadFFLoop();
 DllAccess void DLLStopFFLoop();
 DllAccess void DLLSetContFFLoop( UINT8 activate, UINT32 pause );
 //************  Cooling
@@ -103,7 +103,7 @@ DllAccess es_status_codes DLLAboutGPX( UINT32 drvno );
 DllAccess es_status_codes DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED, UINT16 led_off );
 DllAccess es_status_codes DLLInitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA );
 DllAccess es_status_codes DLLInitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT16 gain_switch);
-DllAccess es_status_codes DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain );
+DllAccess es_status_codes DLLInitCamera3030(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain, BOOL useDac, UINT16* dac_output, BOOL isIR);
 DllAccess es_status_codes DLLSetGlobalSettings(struct global_settings settings);
 DllAccess es_status_codes DLLInitMeasurement();
 DllAccess es_status_codes DLLSetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq );
