@@ -19,7 +19,10 @@ public:
     es_status_codes initPcieBoard();
 	es_status_codes initMeasurement();
     es_status_codes returnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length);
-    es_status_codes abortMeasurement(uint32_t drvno);
+	es_status_codes abortMeasurement( uint32_t drvno );
+	es_status_codes resetDSC( uint32_t drvno, uint8_t DSCNumber );
+	es_status_codes setDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir );
+	es_status_codes getDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC );
     std::string driverInstructions;
     std::string _dumpS0Registers(uint32_t drvno);
     std::string _dumpDmaRegisters(uint32_t drvno);
