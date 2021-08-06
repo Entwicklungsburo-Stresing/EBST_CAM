@@ -15,7 +15,6 @@ int main(int argc, char **argv)
 	status = InitBoard(DRVNO);
 	if(status != es_no_error) return status;
 
-	settings_struct.drvno = DRVNO;
 	settings_struct.board_sel = DRVNO;
 	settings_struct.bti_mode = bti_BTimer;
 	settings_struct.sti_mode = sti_I;
