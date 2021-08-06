@@ -35,7 +35,8 @@ private:
     void setChartData(uint16_t* data, uint16_t length, uint16_t numberOfSets);
     void showNoDriverFoundDialog();
     void showPcieBoardError();
-	DialogTDC* ds_tdc = new DialogTDC(this);
+	DialogTDC* ds_tdc = new DialogTDC( this );
+	DialogDSC* ds_dsc = new DialogDSC( this );
 	int used_number_of_boards;
 private slots:
 	void on_actionEdit_triggered();
