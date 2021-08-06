@@ -238,9 +238,9 @@ void MainWindow::on_actionTDC_triggered()
  */
 void MainWindow::on_actionRMS_triggered()
 {
-	DialogRMS* ds = new DialogRMS(this);
-	ds->setAttribute(Qt::WA_DeleteOnClose);
-	ds->show();
+	//DialogRMS* ds = new DialogRMS(this);
+	//ds->setAttribute(Qt::WA_DeleteOnClose);
+	ds_rms->show();
 	//TODO
 	//connect(ds, SIGNAL(settings_saved()), this, SLOT(loadSettings()));
 	return;
@@ -491,6 +491,7 @@ void MainWindow::loadCameraData()
 	//pixel 6low/7high of tdc1 and 8low/9high of tdc2 to tdc view
 	ds_tdc->updateTDC( *(uint32_t*)(data + 6), *(uint32_t*)(data + 8) );
 	ds_dsc->updateDSC();
+	ds_rms->updateRMS();
 
     free(data);
     return;
