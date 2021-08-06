@@ -363,7 +363,8 @@ void MainWindow::loadSettings()
     ui->horizontalSliderBlock->setMaximum(nob);
     ui->spinBoxBlock->setMaximum(nob);
     int tor = settings.value(settingTorPath,settingTorDefault).toInt();
-    lsc.setTorOut(1, tor);
+	for(uint32_t drvno=1; drvno<=number_of_boards; drvno++)
+		lsc.setTorOut(drvno, tor);
     int theme = settings.value(settingThemePath,settingThemeDefault).toInt();
     switch(theme)
     {
@@ -542,7 +543,8 @@ void MainWindow::on_blockDone()
 
 void MainWindow::abortPressed()
 {
-    lsc.abortMeasurement(1);
+	for(uint32_t drvno=1; drvno<=number_of_boards; drvno++)
+		lsc.abortMeasurement(drvno);
     return;
 }
 

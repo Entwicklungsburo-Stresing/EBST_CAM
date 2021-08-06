@@ -64,9 +64,9 @@ es_status_codes Lsc::startMeasurement()
     return StartMeasurement();
 }
 
-es_status_codes Lsc::returnFrame(uint32_t board, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length)
+es_status_codes Lsc::returnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length)
 {
-    return ReturnFrame(board, sample, block, camera, pdest, length);
+    return ReturnFrame(drvno, sample, block, camera, pdest, length);
 }
 
 std::string Lsc::_dumpS0Registers(uint32_t drvno)
