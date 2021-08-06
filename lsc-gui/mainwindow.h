@@ -36,6 +36,7 @@ private:
     void showNoDriverFoundDialog();
     void showPcieBoardError();
 	DialogTDC* ds_tdc = new DialogTDC(this);
+	int used_number_of_boards;
 private slots:
 	void on_actionEdit_triggered();
 	void on_actionTDC_triggered();
