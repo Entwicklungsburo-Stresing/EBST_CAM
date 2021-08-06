@@ -3125,7 +3125,7 @@ es_status_codes dumpSettings(char** stringPtr)
 	//allocate string buffer buffer
 	*stringPtr = (char*)calloc(1000, sizeof(char));
 	len += sprintf(*stringPtr + len,
-		"drvno\t%u\n"
+		"unused\t%u\n"
 		"nos\t%u\n"
 		"nob\t%u\n"
 		"sti_mode\t%u\n"
