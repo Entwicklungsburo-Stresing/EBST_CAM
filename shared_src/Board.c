@@ -272,7 +272,7 @@ es_status_codes AbortMeasurement( uint32_t drv )
  */
 es_status_codes setBlockOn( uint32_t drvno )
 {
-	notifyBlockStart( drvno );
+	notifyBlockStart();
 	return setBitS0_32( drvno, PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS );
 }
 
@@ -285,7 +285,8 @@ es_status_codes setBlockOn( uint32_t drvno )
  */
 es_status_codes setMeasureOn( uint32_t drvno )
 {
-	notifyMeasureStart( drvno );
+	ES_LOG("Set measure on");
+	notifyMeasureStart();
 	return setBitS0_32( drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS );
 }
 
@@ -298,7 +299,7 @@ es_status_codes setMeasureOn( uint32_t drvno )
  */
 es_status_codes resetBlockOn( uint32_t drvno )
 {
-	notifyBlockDone( drvno );
+	notifyBlockDone();
 	return resetBitS0_32( drvno, PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS );
 }
 
@@ -311,7 +312,8 @@ es_status_codes resetBlockOn( uint32_t drvno )
  */
 es_status_codes resetMeasureOn( uint32_t drvno )
 {
-	notifyMeasureDone( drvno );
+	ES_LOG("Reset measure on");
+	notifyMeasureDone();
 	return resetBitS0_32( drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS );
 }
 
@@ -506,6 +508,11 @@ es_status_codes writeRegisterS0_32( uint32_t drvno, uint32_t data, uint16_t addr
 	return writeRegister_32(drvno, data, address + S0_SPACE_OFFSET);
 }
 
+es_status_codes writeRegisterS0_32twoBoards(uint32_t data1, uint32_t data2, uint16_t address)
+{
+	return writeRegister_32twoBoards(data1, data2, address + S0_SPACE_OFFSET);
+}
+
 es_status_codes writeRegisterS0_16( uint32_t drvno, uint16_t data, uint16_t address )
 {
 	return writeRegister_16(drvno, data, address + S0_SPACE_OFFSET);
@@ -514,6 +521,11 @@ es_status_codes writeRegisterS0_16( uint32_t drvno, uint16_t data, uint16_t addr
 es_status_codes writeRegisterS0_8( uint32_t drvno, uint8_t data, uint16_t address )
 {
 	return writeRegister_8(drvno, data, address + S0_SPACE_OFFSET);
+}
+
+es_status_codes writeRegisterS0_8twoBoards(uint8_t data1, uint8_t data2, uint16_t address)
+{
+	return writeRegister_8twoBoards(data1, data2, address + S0_SPACE_OFFSET);
 }
 
 es_status_codes readRegisterS0_32( uint32_t drvno, uint32_t* data, uint16_t address )
@@ -2055,29 +2067,16 @@ es_status_codes StartMeasurement()
 				}
 			}
 			//for synchronising both cams
-#ifdef WIN32
 			if (BOARD_SEL == 3)
 			{
-				UINT32 data1 = 0;
-				UINT32 data2 = 0;
-
-				status = readRegister_32( 1, &data1, S0Addr_XCKLL ); //reset
+				status = setBlockOnTwoBoards();
 				if (status != es_no_error) return status;
-				data1 &= 0xF0000000;
-				data1 |= 0x40000000;			//set timer on
-
-				status = readRegister_32( 2, &data2, S0Addr_XCKLL ); //reset
+				status = StartSTimerTwoBoards();
 				if (status != es_no_error) return status;
-				data2 &= 0xF0000000;
-				data2 |= 0x40000000;			//set timer on
-
-				UINT32	PortOffset = S0Addr_XCKLL + 0x80;
-
-				//faster
-				WDC_WriteAddr32( hDev[1], 0, PortOffset, data1 );
-				WDC_WriteAddr32( hDev[2], 0, PortOffset, data2 );
+				//start scan for first read
+				if (*useSWTrig) status = DoSoftwareTriggerTwoBoards();
+				if (status != es_no_error) return status;
 			}
-#endif
 			//main read loop - wait here until nos is reached or ESC key
 			//if nos is reached the flag RegXCKMSB:b30 = TimerOn is reset by hardware if flag HWDREQ_EN is TRUE
 			//extended to Timer_routine for all variants of one and  two boards
@@ -3209,4 +3208,89 @@ es_status_codes dumpSettings(char** stringPtr)
 		settings_struct.bec_in_10ns,
 		settings_struct.isIr);
 	return es_no_error;
+}
+
+/**
+ * \brief Sets BlockOn bit in PCIEFLAGS and notifies UI about it. Two board sync version
+ *
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ * 		- es_register_read_failed
+ *		- es_register_write_failed
+ */
+es_status_codes setBlockOnTwoBoards()
+{
+	notifyBlockStart();
+
+	uint32_t data1 = 0;
+	uint32_t data2 = 0;
+
+	es_status_codes status = readRegisterS0_32(1, &data1, S0Addr_PCIEFLAGS);
+	if (status != es_no_error) return status;
+	data1 |= PCIEFLAGS_bit_BLOCKON;
+
+	status = readRegisterS0_32(2, &data2, S0Addr_PCIEFLAGS);
+	if (status != es_no_error) return status;
+	data2 |= PCIEFLAGS_bit_BLOCKON;
+
+	return writeRegisterS0_32twoBoards(data1, data2, S0Addr_PCIEFLAGS);
+}
+
+/**
+ * \brief Sets Scan Timer on. Two board sync version.
+ *
+ * \param drvno board number (=1 if one PCI board)
+ * \return es_status_codes:
+ * 		- es_no_error
+ * 		- es_register_read_failed
+ *		- es_register_write_failed
+ */
+es_status_codes StartSTimerTwoBoards()
+{
+	ES_LOG("Start S Timer\n");
+
+	uint8_t data1 = 0;
+	uint8_t data2 = 0;
+
+	es_status_codes status = readRegisterS0_8(1, &data1, S0Addr_XCKMSB);
+	if (status != es_no_error) return status;
+	data1 |= XCKMSB_bit_stimer_on;
+
+	status = readRegisterS0_8(2, &data2, S0Addr_XCKMSB);
+	if (status != es_no_error) return status;
+	data2 |= XCKMSB_bit_stimer_on;
+
+	return writeRegisterS0_8twoBoards(data1, data2, S0Addr_XCKMSB);
+}
+
+/**
+ * \brief Triggers one camera read by calling this function.
+ *
+ * \param drvno board number (=1 if one PCI board)
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
+ */
+es_status_codes DoSoftwareTriggerTwoBoards()
+{
+	ES_LOG("Do software trigger\n");
+
+	uint32_t data1 = 0;
+	uint32_t data2 = 0;
+
+	es_status_codes status = readRegisterS0_8(1, &data1, S0Addr_BTRIGREG);
+	if (status != es_no_error) return status;
+	data1 |= BTRIGREG_bit_SWTRIG;
+
+	status = readRegisterS0_8(2, &data2, S0Addr_BTRIGREG);
+	if (status != es_no_error) return status;
+	data2 |= BTRIGREG_bit_SWTRIG;
+
+	status = writeRegisterS0_8twoBoards(data1, data2, S0Addr_BTRIGREG);
+	if (status != es_no_error) return status;
+	data1 &= ~BTRIGREG_bit_SWTRIG;
+	data2 &= ~BTRIGREG_bit_SWTRIG;
+	return writeRegisterS0_8twoBoards(data1, data2, S0Addr_BTRIGREG);
 }

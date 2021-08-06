@@ -2,26 +2,26 @@
 #include "../shared_src/UIAbstractionLayer.h"
 #include "UIAbstractionLayer_cpp.h"
 
-void notifyMeasureStart( uint32_t drv )
+void notifyMeasureStart()
 {
-	notifyMeasureStartCpp(drv);
+	notifyMeasureStartCpp();
 	return;
 }
 
-void notifyMeasureDone( uint32_t drv )
+void notifyMeasureDone()
 {
-	notifyMeasureDoneCpp(drv);
+	notifyMeasureDoneCpp();
 	return;
 }
 
-void notifyBlockStart( uint32_t drv )
+void notifyBlockStart()
 {
-	notifyBlockStartCpp(drv);
+	notifyBlockStartCpp();
 	return;
 }
 
-void notifyBlockDone( uint32_t drv )
+void notifyBlockDone()
 {
-	notifyBlockDoneCpp(drv);
+	notifyBlockDoneCpp();
 	return;
 }

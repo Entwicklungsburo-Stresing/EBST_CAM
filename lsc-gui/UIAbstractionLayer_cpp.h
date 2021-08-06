@@ -5,10 +5,10 @@ extern "C" {
 
 #include <stdint.h>
 
-void notifyMeasureStartCpp(uint32_t drv);
-void notifyMeasureDoneCpp(uint32_t drv);
-void notifyBlockStartCpp(uint32_t drv);
-void notifyBlockDoneCpp(uint32_t drv);
+void notifyMeasureStartCpp();
+void notifyMeasureDoneCpp();
+void notifyBlockStartCpp();
+void notifyBlockDoneCpp();
 
 #ifdef __cplusplus
 }
