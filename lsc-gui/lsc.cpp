@@ -105,9 +105,25 @@ std::string Lsc::_dumpGlobalSettings()
     return cppstring;
 }
 
-es_status_codes Lsc::setTorOut(uint32_t drvno, uint8_t torOut)
+es_status_codes Lsc::setTorOut( uint32_t drvno, uint8_t torOut )
 {
-    return SetTORReg(drvno, torOut);
+	return SetTORReg( drvno, torOut );
+}
+
+es_status_codes Lsc::resetDSC( uint32_t drvno, uint8_t DSCNumber )
+{
+	return resetDSC( drvno, DSCNumber );
+}
+
+es_status_codes Lsc::setDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir )
+{
+	return setDIRDSC( drvno, DSCNumber, dir );
+}
+
+
+es_status_codes Lsc::getDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC )
+{
+	return getDSC( drvno, DSCNumber, ADSC, LDSC);
 }
 
 es_status_codes Lsc::abortMeasurement(uint32_t drvno)

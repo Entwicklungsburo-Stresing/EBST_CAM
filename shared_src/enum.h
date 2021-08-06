@@ -160,7 +160,13 @@ enum s0_addresses
 	S0Addr_BDAT = 0x84,
 	S0Addr_BEC = 0x88,
 	S0Addr_BSLOPE = 0x8C,
-	S0Addr_DSC = 0x90
+	S0Addr_A1DSC = 0x90,
+	S0Addr_L1DSC = 0x94,
+	S0Addr_A2DSC = 0x98,
+	S0Addr_L2DSC = 0x9C,
+	S0Addr_A3DSC = 0xA0,
+	S0Addr_L3DSC = 0xA4,
+	S0Addr_DSCCtrl = 0xA8
 };
 
 enum ScanIndex_bits
