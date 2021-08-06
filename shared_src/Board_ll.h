@@ -28,8 +28,10 @@ es_status_codes readRegister_32( uint32_t drvno, uint32_t* data, uint16_t addres
 es_status_codes readRegister_16( uint32_t drvno, uint16_t* data, uint16_t address );
 es_status_codes readRegister_8( uint32_t drvno, uint8_t* data, uint16_t address );
 es_status_codes writeRegister_32( uint32_t drvno, uint32_t data, uint16_t address );
+es_status_codes writeRegister_32twoBoards(uint32_t data1, uint32_t data2, uint16_t address);
 es_status_codes writeRegister_16( uint32_t drvno, uint16_t data, uint16_t address );
 es_status_codes writeRegister_8( uint32_t drvno, uint8_t data, uint16_t address );
+es_status_codes writeRegister_8twoBoards(uint8_t data1, uint8_t data2, uint16_t address);
 es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address );
 es_status_codes writeConfig_32( uint32_t drvno, uint32_t data, uint16_t address );
 void FreeMemInfo( uint64_t *pmemory_all, uint64_t *pmemory_free );
