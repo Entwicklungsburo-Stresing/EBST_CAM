@@ -285,7 +285,7 @@ es_status_codes setBlockOn( uint32_t drvno )
  */
 es_status_codes setMeasureOn( uint32_t drvno )
 {
-	ES_LOG("Set measure on");
+	ES_LOG("Set measure on\n");
 	notifyMeasureStart();
 	return setBitS0_32( drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS );
 }
@@ -312,7 +312,7 @@ es_status_codes resetBlockOn( uint32_t drvno )
  */
 es_status_codes resetMeasureOn( uint32_t drvno )
 {
-	ES_LOG("Reset measure on");
+	ES_LOG("Reset measure on\n");
 	notifyMeasureDone();
 	return resetBitS0_32( drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS );
 }
