@@ -3293,3 +3293,81 @@ es_status_codes DoSoftwareTriggerTwoBoards()
 	data2 &= ~BTRIGREG_bit_SWTRIG;
 	return writeRegisterS0_8twoBoards(data1, data2, S0Addr_BTRIGREG);
 }
+
+
+/**
+ * @brief reset Delay Stage Counter
+ *
+ * @param drvno PCIe board identifier
+ * @param DSCNumber 1: DSC 1; 2: DSC 2; 3: DSC 3
+ * @return es_status_codes
+ */
+es_status_codes resetDSC( uint32_t drvno, uint8_t DSCNumber )
+{
+	es_status_codes status;
+	ES_LOG( "Reset DSC %u\n", DSCNumber );
+	uint32_t data = 0;
+	switch (DSCNumber)
+	{
+	case 1: data = 0x1; break;
+	case 2: data = 0x100; break;
+	case 3: data = 0x10000; break;
+	}
+	//for reset you have to set a 1 to the reg and then a zero to allw a new start again
+	status = writeBitsS0_32( drvno, data, data, S0Addr_DSCCtrl );
+	if (status != es_no_error) return status;
+	return writeBitsS0_32( drvno, 0, data, S0Addr_DSCCtrl );
+}
+
+/**
+ * @brief set direction of Delay Stage Counter
+ *
+ * @param drvno PCIe board identifier
+ * @param DSCNumber 1: DSC 1; 2: DSC 2; 3: DSC 3
+ * @param dir true: up; false: down
+ * @return es_status_codes
+ */
+es_status_codes setDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir )
+{
+	ES_LOG( "set DSC %u in direction %u\n", DSCNumber, dir );
+	uint32_t data = 0;
+	switch (DSCNumber)
+	{
+	case 1: data = 0x2; break;
+	case 2: data = 0x200; break;
+	case 3: data = 0x20000; break;
+	}
+
+	if (dir)
+		return writeBitsS0_32( drvno, data, data, S0Addr_DSCCtrl );
+	else
+		return writeBitsS0_32( drvno, 0, data, S0Addr_DSCCtrl );
+
+}
+
+/**
+ * @brief return all values of Delay Stage Counter
+ *
+ * @param drvno PCIe board identifier
+ * @param DSCNumber 1: DSC 1; 2: DSC 2; 3: DSC 3
+ * @param ADSC actual DSC
+ * @param LDSC last DSC
+ * @return es_status_codes
+ */
+es_status_codes getDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC )
+{
+	es_status_codes status;
+	ES_LOG( "get DSC %u\n", DSCNumber );
+	uint16_t addrADSC, addrLDSC;
+	switch (DSCNumber)
+	{
+	case 1: addrADSC = S0Addr_A1DSC; addrLDSC = S0Addr_L1DSC; break;
+	case 2: addrADSC = S0Addr_A2DSC; addrLDSC = S0Addr_L2DSC; break;
+	case 3: addrADSC = S0Addr_A3DSC; addrLDSC = S0Addr_L3DSC; break;
+	}
+
+	status = readRegisterS0_32( drvno, ADSC, addrADSC );
+	if (status != es_no_error) return status;
+	return readRegisterS0_32( drvno, LDSC, addrLDSC );
+
+}

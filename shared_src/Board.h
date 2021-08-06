@@ -144,6 +144,11 @@ es_status_codes writeBitsDma_8( uint32_t drvno, uint8_t data, uint8_t bitmask, u
 es_status_codes pulseBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address);
 es_status_codes pulseBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address);
 
+
+es_status_codes resetDSC( uint32_t drvno, uint8_t DSCNumber );
+es_status_codes setDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir );
+es_status_codes getDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC );
+
 #ifdef __cplusplus
 }
 #endif
