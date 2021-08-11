@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define MAXPCIECARDS 5
+
 // All settings are uin32_t to ensure the correct memory layout. This is important for the communication with labview.
 struct global_settings
 {
@@ -43,7 +45,7 @@ struct global_settings
 	uint32_t number_of_regions;
 	uint32_t keep_first;
 	uint32_t region_size[8];
-	uint32_t dac_output[8];
+	uint32_t dac_output[MAXPCIECARDS][8];
 	uint32_t TORmodus; 
 	uint32_t ADC_Mode;
 	uint32_t ADC_custom_pattern;

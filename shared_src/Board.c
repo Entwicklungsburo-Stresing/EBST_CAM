@@ -175,7 +175,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 		InitCamera3010(drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern, settings_struct.gain_switch);
 		break;
 	case camera_system_3030:
-		InitCamera3030(drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern, settings_struct.gain_3030, settings_struct.dac, settings_struct.dac_output, settings_struct.isIr);
+		InitCamera3030(drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern, settings_struct.gain_3030, settings_struct.dac, settings_struct.dac_output[drvno], settings_struct.isIr);
 		break;
 	default:
 		return es_parameter_out_of_range;
@@ -3201,9 +3201,12 @@ es_status_codes dumpSettings(char** stringPtr)
 	len += sprintf(*stringPtr + len, "region size\t");
 	for (int i = 0; i < 8; i++)
 		len += sprintf(*stringPtr + len, "%u ", settings_struct.region_size[i]);
-	len += sprintf(*stringPtr + len, "\ndac output\t ");
-	for (int i = 0; i < 8; i++)
-		len += sprintf(*stringPtr + len, "%u ", settings_struct.dac_output[i]);
+	for (int drvno = 0; drvno < MAXPCIECARDS; drvno++)
+	{
+		len += sprintf(*stringPtr + len, "\ndac output board %i\t ", drvno);
+		for (int i = 0; i < 8; i++)
+			len += sprintf(*stringPtr + len, "%u ", settings_struct.dac_output[drvno][i]);
+	}
 	len += sprintf(*stringPtr + len,
 		"\ntor modus\t%u\n"
 		"adc mode\t%u\n"
