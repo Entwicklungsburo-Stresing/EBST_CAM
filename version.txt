@@ -1,3 +1,12 @@
+v3.19.5
+- Add DSC functions
+- Remove CCDExamp
+- Fix board sel functionality
+- Allow different values for DACs on different boards
+lsc-gui:
+- Add DSC window
+- Add RMS window
+
 v3.19.4
 - Fix two board functionality
 - Change high level board functions from using drvno to using board_sel
