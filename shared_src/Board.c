@@ -2040,7 +2040,10 @@ es_status_codes StartMeasurement()
 		//block read function
 		for (uint32_t blk_cnt = 0; blk_cnt < Nob; blk_cnt++)
 		{
-			waitForBlockTrigger(1);
+			if(BOARD_SEL == 2)
+				waitForBlockTrigger(2);
+			else
+				waitForBlockTrigger(1);
 			if (status == es_abortion)
 				return AbortMeasurement(BOARD_SEL);
 			else if (status != es_no_error) return status;
