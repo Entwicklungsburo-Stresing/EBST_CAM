@@ -4,7 +4,7 @@
 #include <QtGlobal>
 #include "lsc-gui.h"
 
-DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
+DialogSettings::DialogSettings(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DialogSettings)
 {
@@ -17,10 +17,9 @@ DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
 		ui->comboBoxBoardSel->setCurrentIndex(0);
 		ui->labelBoardSel->setVisible(false);
 		ui->comboBoxBoardSel->setVisible(false);
-		_settings->setValue(settingBoardSelPath, 0);
+		settings.setValue(settingBoardSelPath, 0);
 	}
 
-    _settings = settings;
 	//don't rearrange widgets when hiding other widgets
 	QSizePolicy sp_retain = ui->labelSTimer->sizePolicy();
 	sp_retain.setRetainSizeWhenHidden(true);
@@ -70,58 +69,58 @@ DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
 	// Here the saved settings on the system are applied to the UI.
     // For some settings there are two calls, to trigger the according slot for greying out options. I don't know why this is nesceserry, but without it the slots are not triggered.
 	//Measurement
-    ui->spinBoxNos->setValue(_settings->value(settingNosPath, settingNosDefault).toInt());
-    ui->spinBoxNob->setValue(_settings->value(settingNobPath, settingNobDefault).toInt());
-    ui->comboBoxSti->setCurrentIndex(_settings->value(settingStiPath, settingStiDefault).toInt());
-    ui->comboBoxBti->setCurrentIndex(_settings->value(settingBtiPath, settingBtiDefault).toInt());
-    ui->doubleSpinBoxSTime_in_ms->setValue(_settings->value(settingStime_in_microseconds_Path, settingStime_in_microseconds_Default).toDouble() / 1000);
-    ui->doubleSpinBoxBTimer_in_ms->setValue(_settings->value(settingBtime_in_microseconds_Path, settingBtime_in_microseconds_Default).toDouble() / 1000);
-    ui->spinBoxSdatIn10ns->setValue(_settings->value(settingSdat_in_10nsPath, settingSdat_in_10nsDefault).toInt());
-    ui->spinBoxBdatIn10ns->setValue(_settings->value(settingBdat_in_10nsPath, settingSdat_in_10nsDefault).toInt());
-    ui->comboBoxSslope->setCurrentIndex(_settings->value(settingSslopePath, settingSslopeDefault).toInt());
-    ui->comboBoxBslope->setCurrentIndex(_settings->value(settingBslopePath, settingBslopeDefault).toInt());
-    ui->spinBoxXckdelayIn10ns->setValue(_settings->value(settingXckdelayIn10nsPath, settingXckdelayIn10nsDefault).toInt());
-    ui->spinBoxExpTimeIn10ns->setValue(_settings->value(settingShutterExpTimeIn10nsPath, settingShutterExpTimeIn10nsDefault).toInt());
-    ui->comboBoxTriggerModeCC->setCurrentIndex(_settings->value(settingTriggerCcPath, settingTriggerCcDefault).toInt());
+    ui->spinBoxNos->setValue(settings.value(settingNosPath, settingNosDefault).toInt());
+    ui->spinBoxNob->setValue(settings.value(settingNobPath, settingNobDefault).toInt());
+    ui->comboBoxSti->setCurrentIndex(settings.value(settingStiPath, settingStiDefault).toInt());
+    ui->comboBoxBti->setCurrentIndex(settings.value(settingBtiPath, settingBtiDefault).toInt());
+    ui->doubleSpinBoxSTime_in_ms->setValue(settings.value(settingStime_in_microseconds_Path, settingStime_in_microseconds_Default).toDouble() / 1000);
+    ui->doubleSpinBoxBTimer_in_ms->setValue(settings.value(settingBtime_in_microseconds_Path, settingBtime_in_microseconds_Default).toDouble() / 1000);
+    ui->spinBoxSdatIn10ns->setValue(settings.value(settingSdat_in_10nsPath, settingSdat_in_10nsDefault).toInt());
+    ui->spinBoxBdatIn10ns->setValue(settings.value(settingBdat_in_10nsPath, settingSdat_in_10nsDefault).toInt());
+    ui->comboBoxSslope->setCurrentIndex(settings.value(settingSslopePath, settingSslopeDefault).toInt());
+    ui->comboBoxBslope->setCurrentIndex(settings.value(settingBslopePath, settingBslopeDefault).toInt());
+    ui->spinBoxXckdelayIn10ns->setValue(settings.value(settingXckdelayIn10nsPath, settingXckdelayIn10nsDefault).toInt());
+    ui->spinBoxExpTimeIn10ns->setValue(settings.value(settingShutterExpTimeIn10nsPath, settingShutterExpTimeIn10nsDefault).toInt());
+    ui->comboBoxTriggerModeCC->setCurrentIndex(settings.value(settingTriggerCcPath, settingTriggerCcDefault).toInt());
 	//Camera setup
-    ui->comboBoxBoardSel->setCurrentIndex(_settings->value(settingBoardSelPath, settingBoardSelDefault).toInt());
-    ui->comboBoxSensorType->setCurrentIndex(_settings->value(settingSensorTypePath, settingSensorTypeDefault).toInt());
-    ui->comboBoxSensorType->currentIndexChanged(_settings->value(settingSensorTypePath, settingSensorTypeDefault).toInt());
-    ui->comboBoxCameraSystem->setCurrentIndex(_settings->value(settingCameraSystemPath, settingCameraSystemDefault).toInt());
-    ui->comboBoxCameraSystem->currentIndexChanged(_settings->value(settingCameraSystemPath, settingCameraSystemDefault).toInt());
-    ui->spinBoxCamcnt->setValue(_settings->value(settingCamcntPath, settingCamcntDefault).toInt());
-    ui->spinBoxPixel->setValue(_settings->value(settingPixelPath, settingPixelDefault).toInt());
-    ui->checkBoxMshut->setChecked(_settings->value(settingMshutPath, settingMshutDefault).toBool());
-    ui->checkBoxMshut->stateChanged(_settings->value(settingMshutPath, settingMshutDefault).toBool());
-    ui->checkBoxLed->setChecked(_settings->value(settingLedPath, settingLedDefault).toBool());
-    ui->checkBoxGain3010->setChecked(_settings->value(settingGain3010Path, settingGain3010Default).toBool());
-    ui->spinBoxGain3030->setValue(_settings->value(settingGain3030Path, settingGain3030Default).toInt());
-    ui->comboBoxCamCool->setCurrentIndex(_settings->value(settingCoolingPath, settingCoolingDefault).toInt());
-    ui->checkBoxUseDac->setChecked(_settings->value(settingDacPath, settingDacDefault).toBool());
-    ui->checkBoxUseDac->stateChanged(_settings->value(settingDacPath, settingDacDefault).toBool());
-    ui->checkBoxGpx->setChecked(_settings->value(settingGpxPath, settingGpxDefault).toBool());
-    ui->spinBoxGpxOffset->setValue(_settings->value(settingGpxOffsetPath, settingGpxOffsetDefault).toInt());
-	ui->checkBoxIr->setChecked(_settings->value(settingIsIrPath, settingIsIrDefault).toBool());
+    ui->comboBoxBoardSel->setCurrentIndex(settings.value(settingBoardSelPath, settingBoardSelDefault).toInt());
+    ui->comboBoxSensorType->setCurrentIndex(settings.value(settingSensorTypePath, settingSensorTypeDefault).toInt());
+    ui->comboBoxSensorType->currentIndexChanged(settings.value(settingSensorTypePath, settingSensorTypeDefault).toInt());
+    ui->comboBoxCameraSystem->setCurrentIndex(settings.value(settingCameraSystemPath, settingCameraSystemDefault).toInt());
+    ui->comboBoxCameraSystem->currentIndexChanged(settings.value(settingCameraSystemPath, settingCameraSystemDefault).toInt());
+    ui->spinBoxCamcnt->setValue(settings.value(settingCamcntPath, settingCamcntDefault).toInt());
+    ui->spinBoxPixel->setValue(settings.value(settingPixelPath, settingPixelDefault).toInt());
+    ui->checkBoxMshut->setChecked(settings.value(settingMshutPath, settingMshutDefault).toBool());
+    ui->checkBoxMshut->stateChanged(settings.value(settingMshutPath, settingMshutDefault).toBool());
+    ui->checkBoxLed->setChecked(settings.value(settingLedPath, settingLedDefault).toBool());
+    ui->checkBoxGain3010->setChecked(settings.value(settingGain3010Path, settingGain3010Default).toBool());
+    ui->spinBoxGain3030->setValue(settings.value(settingGain3030Path, settingGain3030Default).toInt());
+    ui->comboBoxCamCool->setCurrentIndex(settings.value(settingCoolingPath, settingCoolingDefault).toInt());
+    ui->checkBoxUseDac->setChecked(settings.value(settingDacPath, settingDacDefault).toBool());
+    ui->checkBoxUseDac->stateChanged(settings.value(settingDacPath, settingDacDefault).toBool());
+    ui->checkBoxGpx->setChecked(settings.value(settingGpxPath, settingGpxDefault).toBool());
+    ui->spinBoxGpxOffset->setValue(settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toInt());
+	ui->checkBoxIr->setChecked(settings.value(settingIsIrPath, settingIsIrDefault).toBool());
 	//FFT mode
-    ui->spinBoxLines->setValue(_settings->value(settingLinesPath, settingLinesDefault).toInt());
-    ui->spinBoxVfreq->setValue(_settings->value(settingVfreqPath, settingVfreqDefault).toInt());
-    ui->comboBoxFftMode->setCurrentIndex(_settings->value(settingFftModePath, settingFftModeDefault).toInt());
-    ui->spinBoxLinesBinning->setValue(_settings->value(settingLinesBinningPath, settingLinesBinningDefault).toInt());
-    ui->spinBoxNumberOfRegions->setValue(_settings->value(settingNumberOfRegionsPath, settingNumberOfRegionsDefault).toInt());
-    ui->checkBoxRegionsEqual->setChecked(_settings->value(settingRegionSizeEqualPath, settingRegionSizeEqualDefault).toBool());
-    ui->spinBoxRegion1->setValue(_settings->value(settingRegionSize1Path, settingRegionSize1Default).toInt());
-    ui->spinBoxRegion2->setValue(_settings->value(settingRegionSize2Path, settingRegionSize2Default).toInt());
-    ui->spinBoxRegion3->setValue(_settings->value(settingRegionSize3Path, settingRegionSize3Default).toInt());
-    ui->spinBoxRegion4->setValue(_settings->value(settingRegionSize4Path, settingRegionSize4Default).toInt());
-    ui->spinBoxRegion5->setValue(_settings->value(settingRegionSize5Path, settingRegionSize5Default).toInt());
-    ui->spinBoxRegion6->setValue(_settings->value(settingRegionSize6Path, settingRegionSize6Default).toInt());
-    ui->spinBoxRegion7->setValue(_settings->value(settingRegionSize7Path, settingRegionSize7Default).toInt());
-    ui->spinBoxRegion8->setValue(_settings->value(settingRegionSize8Path, settingRegionSize8Default).toInt());
-    ui->comboBoxOutput->setCurrentIndex(_settings->value(settingTorPath, settingTorDefault).toInt());
-    ui->comboBoxAdcMode->setCurrentIndex(_settings->value(settingAdcModePath, settingAdcModeDefault).toInt());
-    ui->spinBoxAdcCustom->setValue(_settings->value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toInt());
-	ui->comboBoxTheme->setCurrentIndex(_settings->value(settingThemePath, settingThemeDefault).toInt());
-	ui->comboBoxSettingsLevel->setCurrentIndex(_settings->value(settingSettingsLevelPath, settingSettingsLevelDefault).toInt());
+    ui->spinBoxLines->setValue(settings.value(settingLinesPath, settingLinesDefault).toInt());
+    ui->spinBoxVfreq->setValue(settings.value(settingVfreqPath, settingVfreqDefault).toInt());
+    ui->comboBoxFftMode->setCurrentIndex(settings.value(settingFftModePath, settingFftModeDefault).toInt());
+    ui->spinBoxLinesBinning->setValue(settings.value(settingLinesBinningPath, settingLinesBinningDefault).toInt());
+    ui->spinBoxNumberOfRegions->setValue(settings.value(settingNumberOfRegionsPath, settingNumberOfRegionsDefault).toInt());
+    ui->checkBoxRegionsEqual->setChecked(settings.value(settingRegionSizeEqualPath, settingRegionSizeEqualDefault).toBool());
+    ui->spinBoxRegion1->setValue(settings.value(settingRegionSize1Path, settingRegionSize1Default).toInt());
+    ui->spinBoxRegion2->setValue(settings.value(settingRegionSize2Path, settingRegionSize2Default).toInt());
+    ui->spinBoxRegion3->setValue(settings.value(settingRegionSize3Path, settingRegionSize3Default).toInt());
+    ui->spinBoxRegion4->setValue(settings.value(settingRegionSize4Path, settingRegionSize4Default).toInt());
+    ui->spinBoxRegion5->setValue(settings.value(settingRegionSize5Path, settingRegionSize5Default).toInt());
+    ui->spinBoxRegion6->setValue(settings.value(settingRegionSize6Path, settingRegionSize6Default).toInt());
+    ui->spinBoxRegion7->setValue(settings.value(settingRegionSize7Path, settingRegionSize7Default).toInt());
+    ui->spinBoxRegion8->setValue(settings.value(settingRegionSize8Path, settingRegionSize8Default).toInt());
+    ui->comboBoxOutput->setCurrentIndex(settings.value(settingTorPath, settingTorDefault).toInt());
+    ui->comboBoxAdcMode->setCurrentIndex(settings.value(settingAdcModePath, settingAdcModeDefault).toInt());
+    ui->spinBoxAdcCustom->setValue(settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toInt());
+	ui->comboBoxTheme->setCurrentIndex(settings.value(settingThemePath, settingThemeDefault).toInt());
+	ui->comboBoxSettingsLevel->setCurrentIndex(settings.value(settingSettingsLevelPath, settingSettingsLevelDefault).toInt());
 	ui->comboBoxSettingsLevel->currentIndexChanged(ui->comboBoxSettingsLevel->currentIndex());
     setWindowModality(Qt::ApplicationModal);
 }
@@ -135,56 +134,56 @@ void DialogSettings::on_accepted()
 {
     //Here the settings on the UI are saved to the system
 	//Measurement
-    _settings->setValue(settingNosPath, ui->spinBoxNos->value());
-    _settings->setValue(settingNobPath, ui->spinBoxNob->value());
-    _settings->setValue(settingStiPath, ui->comboBoxSti->currentIndex());
-    _settings->setValue(settingBtiPath, ui->comboBoxBti->currentIndex());
-    _settings->setValue(settingStime_in_microseconds_Path, ui->doubleSpinBoxSTime_in_ms->value() * 1000);
-    _settings->setValue(settingBtime_in_microseconds_Path, ui->doubleSpinBoxBTimer_in_ms->value() * 1000);
-    _settings->setValue(settingSdat_in_10nsPath, ui->spinBoxSdatIn10ns->value());
-    _settings->setValue(settingBdat_in_10nsPath, ui->spinBoxBdatIn10ns->value());
-    _settings->setValue(settingSslopePath, ui->comboBoxSslope->currentIndex());
-    _settings->setValue(settingBslopePath, ui->comboBoxBslope->currentIndex());
-    _settings->setValue(settingXckdelayIn10nsPath, ui->spinBoxXckdelayIn10ns->value());
-    _settings->setValue(settingShutterExpTimeIn10nsPath , ui->spinBoxExpTimeIn10ns->value());
-    _settings->setValue(settingTriggerCcPath, ui->comboBoxTriggerModeCC->currentIndex());
+    settings.setValue(settingNosPath, ui->spinBoxNos->value());
+    settings.setValue(settingNobPath, ui->spinBoxNob->value());
+    settings.setValue(settingStiPath, ui->comboBoxSti->currentIndex());
+    settings.setValue(settingBtiPath, ui->comboBoxBti->currentIndex());
+    settings.setValue(settingStime_in_microseconds_Path, ui->doubleSpinBoxSTime_in_ms->value() * 1000);
+    settings.setValue(settingBtime_in_microseconds_Path, ui->doubleSpinBoxBTimer_in_ms->value() * 1000);
+    settings.setValue(settingSdat_in_10nsPath, ui->spinBoxSdatIn10ns->value());
+    settings.setValue(settingBdat_in_10nsPath, ui->spinBoxBdatIn10ns->value());
+    settings.setValue(settingSslopePath, ui->comboBoxSslope->currentIndex());
+    settings.setValue(settingBslopePath, ui->comboBoxBslope->currentIndex());
+    settings.setValue(settingXckdelayIn10nsPath, ui->spinBoxXckdelayIn10ns->value());
+    settings.setValue(settingShutterExpTimeIn10nsPath , ui->spinBoxExpTimeIn10ns->value());
+    settings.setValue(settingTriggerCcPath, ui->comboBoxTriggerModeCC->currentIndex());
 	//Camera setup
-    _settings->setValue(settingBoardSelPath, ui->comboBoxBoardSel->currentIndex());
-    _settings->setValue(settingSensorTypePath, ui->comboBoxSensorType->currentIndex());
-    _settings->setValue(settingCameraSystemPath, ui->comboBoxCameraSystem->currentIndex());
-    _settings->setValue(settingCamcntPath, ui->spinBoxCamcnt->value());
-    _settings->setValue(settingPixelPath, ui->spinBoxPixel->value());
-    _settings->setValue(settingMshutPath, ui->checkBoxMshut->isChecked());
-    _settings->setValue(settingLedPath, ui->checkBoxLed->isChecked());
-    _settings->setValue(settingGain3010Path, ui->checkBoxGain3010->isChecked());
-    _settings->setValue(settingGain3030Path, ui->spinBoxGain3030->value());
-    _settings->setValue(settingCoolingPath, ui->comboBoxCamCool->currentIndex());
-    _settings->setValue(settingDacPath, ui->checkBoxUseDac->isChecked());
-    _settings->setValue(settingGpxPath, ui->checkBoxGpx->isChecked());
-    _settings->setValue(settingGpxOffsetPath, ui->spinBoxGpxOffset->value());
-	_settings->setValue(settingIsIrPath, ui->checkBoxIr->isChecked());
+    settings.setValue(settingBoardSelPath, ui->comboBoxBoardSel->currentIndex());
+    settings.setValue(settingSensorTypePath, ui->comboBoxSensorType->currentIndex());
+    settings.setValue(settingCameraSystemPath, ui->comboBoxCameraSystem->currentIndex());
+    settings.setValue(settingCamcntPath, ui->spinBoxCamcnt->value());
+    settings.setValue(settingPixelPath, ui->spinBoxPixel->value());
+    settings.setValue(settingMshutPath, ui->checkBoxMshut->isChecked());
+    settings.setValue(settingLedPath, ui->checkBoxLed->isChecked());
+    settings.setValue(settingGain3010Path, ui->checkBoxGain3010->isChecked());
+    settings.setValue(settingGain3030Path, ui->spinBoxGain3030->value());
+    settings.setValue(settingCoolingPath, ui->comboBoxCamCool->currentIndex());
+    settings.setValue(settingDacPath, ui->checkBoxUseDac->isChecked());
+    settings.setValue(settingGpxPath, ui->checkBoxGpx->isChecked());
+    settings.setValue(settingGpxOffsetPath, ui->spinBoxGpxOffset->value());
+	settings.setValue(settingIsIrPath, ui->checkBoxIr->isChecked());
 	//Fft mode
-    _settings->setValue(settingLinesPath, ui->spinBoxLines->value());
-    _settings->setValue(settingVfreqPath, ui->spinBoxVfreq->value());
-    _settings->setValue(settingFftModePath, ui->comboBoxFftMode->currentIndex());
-    _settings->setValue(settingLinesBinningPath, ui->spinBoxLinesBinning->value());
-    _settings->setValue(settingNumberOfRegionsPath, ui->spinBoxNumberOfRegions->value());
-    _settings->setValue(settingRegionSizeEqualPath, ui->checkBoxRegionsEqual->isChecked());
-    _settings->setValue(settingRegionSize1Path, ui->spinBoxRegion1->value());
-    _settings->setValue(settingRegionSize2Path, ui->spinBoxRegion2->value());
-    _settings->setValue(settingRegionSize3Path, ui->spinBoxRegion3->value());
-    _settings->setValue(settingRegionSize4Path, ui->spinBoxRegion4->value());
-    _settings->setValue(settingRegionSize5Path, ui->spinBoxRegion5->value());
-    _settings->setValue(settingRegionSize6Path, ui->spinBoxRegion6->value());
-    _settings->setValue(settingRegionSize7Path, ui->spinBoxRegion7->value());
-    _settings->setValue(settingRegionSize8Path, ui->spinBoxRegion8->value());
+    settings.setValue(settingLinesPath, ui->spinBoxLines->value());
+    settings.setValue(settingVfreqPath, ui->spinBoxVfreq->value());
+    settings.setValue(settingFftModePath, ui->comboBoxFftMode->currentIndex());
+    settings.setValue(settingLinesBinningPath, ui->spinBoxLinesBinning->value());
+    settings.setValue(settingNumberOfRegionsPath, ui->spinBoxNumberOfRegions->value());
+    settings.setValue(settingRegionSizeEqualPath, ui->checkBoxRegionsEqual->isChecked());
+    settings.setValue(settingRegionSize1Path, ui->spinBoxRegion1->value());
+    settings.setValue(settingRegionSize2Path, ui->spinBoxRegion2->value());
+    settings.setValue(settingRegionSize3Path, ui->spinBoxRegion3->value());
+    settings.setValue(settingRegionSize4Path, ui->spinBoxRegion4->value());
+    settings.setValue(settingRegionSize5Path, ui->spinBoxRegion5->value());
+    settings.setValue(settingRegionSize6Path, ui->spinBoxRegion6->value());
+    settings.setValue(settingRegionSize7Path, ui->spinBoxRegion7->value());
+    settings.setValue(settingRegionSize8Path, ui->spinBoxRegion8->value());
 	//Debug
-    _settings->setValue(settingTorPath, ui->comboBoxOutput->currentIndex());
-    _settings->setValue(settingAdcModePath, ui->comboBoxAdcMode->currentIndex());
-    _settings->setValue(settingAdcCustomValuePath, ui->spinBoxAdcCustom->value());
+    settings.setValue(settingTorPath, ui->comboBoxOutput->currentIndex());
+    settings.setValue(settingAdcModePath, ui->comboBoxAdcMode->currentIndex());
+    settings.setValue(settingAdcCustomValuePath, ui->spinBoxAdcCustom->value());
 	//Appearance
-	_settings->setValue(settingThemePath, ui->comboBoxTheme->currentIndex());
-	_settings->setValue(settingSettingsLevelPath, ui->comboBoxSettingsLevel->currentIndex());
+	settings.setValue(settingThemePath, ui->comboBoxTheme->currentIndex());
+	settings.setValue(settingSettingsLevelPath, ui->comboBoxSettingsLevel->currentIndex());
 	emit settings_saved();
     return;
 }

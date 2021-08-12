@@ -86,13 +86,13 @@ class DialogSettings : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogSettings(QSettings* settings, QWidget *parent = nullptr);
+    explicit DialogSettings(QWidget *parent = nullptr);
     ~DialogSettings();
 signals:
     void settings_saved();
 private:
     Ui::DialogSettings *ui;
-    QSettings* _settings;
+    QSettings settings;
 private slots:
     void loadDefaults();
     void on_accepted();
