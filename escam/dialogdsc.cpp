@@ -43,10 +43,10 @@ void DialogDSC::on_pushButton_RS_DSC_3_clicked()
 		mainWindow->lsc.resetDSC( 2, DSCNumber );
 }
 
-void DialogDSC::on_comboBox_DIR_DSC_1_currentIndexChanged()
+void DialogDSC::on_comboBox_DIR_DSC_1_currentIndexChanged(int index)
 {
 	uint8_t DSCNumber = 1;
-	bool dir = ui->comboBox_DIR_DSC_1->currentIndex();
+    bool dir = index;
 
 	mainWindow->lsc.setDIRDSC( 1, DSCNumber, dir);
 	//for two boards
@@ -54,10 +54,10 @@ void DialogDSC::on_comboBox_DIR_DSC_1_currentIndexChanged()
 		mainWindow->lsc.setDIRDSC(2, DSCNumber, dir );
 }
 
-void DialogDSC::on_comboBox_DIR_DSC_2_currentIndexChanged()
+void DialogDSC::on_comboBox_DIR_DSC_2_currentIndexChanged(int index)
 {
 	uint8_t DSCNumber = 2;
-	bool dir = ui->comboBox_DIR_DSC_2->currentIndex();
+    bool dir = index;
 
 	mainWindow->lsc.setDIRDSC( 1, DSCNumber, dir );
 	//for two boards
@@ -65,10 +65,10 @@ void DialogDSC::on_comboBox_DIR_DSC_2_currentIndexChanged()
 		mainWindow->lsc.setDIRDSC( 2, DSCNumber, dir );
 }
 
-void DialogDSC::on_comboBox_DIR_DSC_3_currentIndexChanged()
+void DialogDSC::on_comboBox_DIR_DSC_3_currentIndexChanged(int index)
 {
 	uint8_t DSCNumber = 3;
-	bool dir = ui->comboBox_DIR_DSC_3->currentIndex();
+    bool dir = index;
 
 	mainWindow->lsc.setDIRDSC( 1, DSCNumber, dir );
 	//for two boards
