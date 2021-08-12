@@ -16,8 +16,8 @@ extern bool _SHOW_MSG;
 #include <stdio.h>
 #include <pthread.h>
 #define ES_LOG(...) fprintf(stderr, __VA_ARGS__);
-extern pthread_mutexattr_t attr;
-extern pthread_mutex_t mutex;
+extern pthread_mutexattr_t attr[MAXPCIECARDS];
+extern pthread_mutex_t mutex[MAXPCIECARDS];
 #endif
 
 // Low level API
