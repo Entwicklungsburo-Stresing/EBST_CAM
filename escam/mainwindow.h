@@ -39,6 +39,7 @@ private:
 	DialogDSC* ds_dsc = new DialogDSC( this );
 	DialogRMS* ds_rms = new DialogRMS( this );
 	int used_number_of_boards;
+    QThread measurementThread;
 private slots:
 	void on_actionEdit_triggered();
 	void on_actionTDC_triggered();
