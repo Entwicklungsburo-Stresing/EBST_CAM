@@ -222,7 +222,7 @@ void MainWindow::startContPressed(bool checked)
  */
 void MainWindow::on_actionEdit_triggered()
 {
-	DialogSettings* ds = new DialogSettings( &settings, this );
+	DialogSettings* ds = new DialogSettings( this );
 	ds->setAttribute( Qt::WA_DeleteOnClose );
 	ds->show();
 	connect( ds, SIGNAL( settings_saved() ), this, SLOT( loadSettings() ) );
