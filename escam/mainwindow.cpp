@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&lsc, SIGNAL(measureDone()), this, SLOT(on_measureDone()));
     connect(&lsc, SIGNAL(blockStart()), this, SLOT(on_blockStart()));
     connect(&lsc, SIGNAL(blockDone()), this, SLOT(on_blockDone()));
-	connect(ui->chartView, SIGNAL(rubberBandChanged()),this, SLOT(on_mychartView_rubberBandChanged()));
+    connect(ui->chartView, &MyQChartView::rubberBandChanged, this, &MainWindow::on_rubberBandChanged);
 
     es_status_codes status = lsc.initDriver();
     if (status != es_no_error)
@@ -296,7 +296,7 @@ void MainWindow::on_actionCameras_triggered()
         checkbox->setText("Camera "+QString::number(i+1));
         checkbox->setChecked(settings.value(settingShowCameraBaseDir + QString::number(i), settingShowCameraDefault).toBool());
         layout->addWidget(checkbox);
-        connect(checkbox, &QCheckBox::stateChanged, this, [checkbox, this, i] {on_checkBoxShowCamera_stateChanged(checkbox->isChecked(), i); loadCameraData(); });
+        connect(checkbox, &QCheckBox::stateChanged, this, [checkbox, this, i] {on_checkBoxShowCamera(checkbox->isChecked(), i); loadCameraData(); });
     }
     QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, messageBox);
     connect(dialogButtonBox, SIGNAL(accepted()), messageBox, SLOT(accept()));
@@ -306,7 +306,7 @@ void MainWindow::on_actionCameras_triggered()
     return;
 }
 
-void MainWindow::on_checkBoxShowCamera_stateChanged(bool state, int camera)
+void MainWindow::on_checkBoxShowCamera(bool state, int camera)
 {
     settings.setValue(settingShowCameraBaseDir + QString::number(camera), state);
     return;
@@ -575,7 +575,7 @@ void MainWindow::abortPressed()
     return;
 }
 
-void MainWindow::on_mychartView_rubberBandChanged()
+void MainWindow::on_rubberBandChanged()
 {
 	// retrieve axis pointer
 	QList<QAbstractAxis *> axes = ui->chartView->chart()->axes();

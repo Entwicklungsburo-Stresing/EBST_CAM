@@ -55,8 +55,8 @@ private slots:
 	void startContPressed(bool checked);
     void on_actionDump_board_registers_triggered();
 	void abortPressed();
-	void on_mychartView_rubberBandChanged();
-    void on_checkBoxShowCamera_stateChanged(bool state, int camera);
+	void on_rubberBandChanged();
+    void on_checkBoxShowCamera(bool state, int camera);
 	void on_pushButtonStart_pressed();
 };
 
