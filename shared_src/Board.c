@@ -2193,10 +2193,20 @@ es_status_codes StartMeasurement()
 		WaitforTelapsed(100);
 #endif
 #ifdef __linux__
-		pthread_mutex_lock(&mutex);
-		pthread_mutex_unlock(&mutex);
-		pthread_mutexattr_destroy(&attr);
-		pthread_mutex_destroy(&mutex);
+        if (BOARD_SEL == 1 || BOARD_SEL == 3)
+        {
+            pthread_mutex_lock(&mutex[0]);
+            pthread_mutex_unlock(&mutex[0]);
+            pthread_mutexattr_destroy(&attr[0]);
+            pthread_mutex_destroy(&mutex[0]);
+        }
+        if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+        {
+            pthread_mutex_lock(&mutex[1]);
+            pthread_mutex_unlock(&mutex[1]);
+            pthread_mutexattr_destroy(&attr[1]);
+            pthread_mutex_destroy(&mutex[1]);
+        }
 #endif
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
