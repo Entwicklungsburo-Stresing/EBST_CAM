@@ -22,7 +22,6 @@
 #define lscpcie_write_reg32(dev, addr, data) \
   do *(uint32_t*) (((uint8_t *)dev->dma_reg) + addr) = data; while (0)
 
-pthread_mutexattr_t attr[MAXPCIECARDS];
 pthread_mutex_t mutex[MAXPCIECARDS];
 
 es_status_codes readRegister_32( uint32_t drvno, uint32_t* data, uint16_t address )
@@ -278,7 +277,7 @@ void* CopyDataToUserBuffer(void* param_drvno)
     uint32_t drvno = *((uint32_t*)param_drvno);
     if(checkDriverHandle(drvno) != es_no_error) return NULL;
     ES_LOG("Copy data to user buffer started, drvno %u, user buffer: %p\n", drvno, userBuffer[drvno]);
-    pthread_mutex_lock(&mutex[drvno]);
+    pthread_mutex_lock(&mutex[drvno-1]);
 	ssize_t bytes_to_read = sizeof(uint16_t) * aCAMCNT[drvno] * *Nospb * aPIXEL[drvno] * Nob;
 	ES_LOG("bytes to read: %zd\n", bytes_to_read);
 	ssize_t bytes_read = 0;
@@ -295,7 +294,7 @@ void* CopyDataToUserBuffer(void* param_drvno)
 		bytes_read += result;
 		userBufferWritePos[drvno] = (uint16_t*)(((uint8_t *)userBufferWritePos[drvno]) + result);
 	}
-    pthread_mutex_unlock(&mutex[drvno]);
+    pthread_mutex_unlock(&mutex[drvno-1]);
 	ES_LOG("All copy to user buffer interrupts done\n");
 	return NULL;
 }
@@ -303,16 +302,22 @@ void* CopyDataToUserBuffer(void* param_drvno)
 es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 {
 	ES_LOG("Start copy data to user buffer thread\n");
-    if (pthread_mutexattr_init(&attr[drvno]) == -1)
-		return es_creating_thread_failed;
-    if (pthread_mutex_init(&mutex[drvno], &attr[drvno]) == -1)
-		return es_creating_thread_failed;
 	pthread_t tid;
 	int err = pthread_create(&tid, NULL, &CopyDataToUserBuffer, (void*)&drvno);
 	if(err)
 		return es_creating_thread_failed;
 	else
 		return es_no_error;
+}
+
+es_status_codes InitMutex(uint32_t drvno)
+{
+    pthread_mutexattr_t attr;
+    if (pthread_mutexattr_init(&attr) == -1)
+        return es_creating_thread_failed;
+    if (pthread_mutex_init(&mutex[drvno-1], &attr) == -1)
+        return es_creating_thread_failed;
+    return es_no_error;
 }
 
 uint16_t checkEscapeKeyState()
