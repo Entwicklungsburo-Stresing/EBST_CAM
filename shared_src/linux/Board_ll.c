@@ -289,7 +289,10 @@ void* CopyDataToUserBuffer(void* param_drvno)
 		result = read(dev->handle, ((uint8_t *)userBuffer[drvno]) + bytes_read , bytes_to_read);
 		ES_LOG("Copy to user buffer intterupt %u done, result: %zd\n", dev->control->irq_count, result);
 		if (result < 0)
+        {
+            pthread_mutex_unlock(&mutex[drvno-1]);
 			return NULL;
+        }
 		bytes_to_read -= result;
 		bytes_read += result;
 		userBufferWritePos[drvno] = (uint16_t*)(((uint8_t *)userBufferWritePos[drvno]) + result);
