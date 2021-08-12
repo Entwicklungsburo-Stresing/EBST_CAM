@@ -52,6 +52,14 @@
 #define settingSensorOffsetChannel6Default  40000
 #define settingSensorOffsetChannel7Default  40000
 #define settingSensorOffsetChannel8Default  40000
+#define settingSensorOffsetBoard2Channel1Default  40000
+#define settingSensorOffsetBoard2Channel2Default  40000
+#define settingSensorOffsetBoard2Channel3Default  40000
+#define settingSensorOffsetBoard2Channel4Default  40000
+#define settingSensorOffsetBoard2Channel5Default  40000
+#define settingSensorOffsetBoard2Channel6Default  40000
+#define settingSensorOffsetBoard2Channel7Default  40000
+#define settingSensorOffsetBoard2Channel8Default  40000
 #define settingTorDefault                   xck_tor
 #define settingAdcModeDefault               normal
 #define settingAdcCustomValueDefault        0

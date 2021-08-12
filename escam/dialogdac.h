@@ -24,7 +24,7 @@ private slots:
 private:
 	Ui::DialogDac *ui;
 	QSettings settings;
-	uint32_t output_old[8];
+	uint32_t output_old[2][8];
 };
 
 #endif // DIALOGDAC_H

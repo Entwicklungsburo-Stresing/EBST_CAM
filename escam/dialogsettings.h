@@ -60,6 +60,14 @@ constexpr auto settingSensorOffsetChannel5Path = "sensorOffset/channel5";
 constexpr auto settingSensorOffsetChannel6Path = "sensorOffset/channel6";
 constexpr auto settingSensorOffsetChannel7Path = "sensorOffset/channel7";
 constexpr auto settingSensorOffsetChannel8Path = "sensorOffset/channel8";
+constexpr auto settingSensorOffsetBoard2Channel1Path = "sensorOffset/board2Channel1";
+constexpr auto settingSensorOffsetBoard2Channel2Path = "sensorOffset/board2Channel2";
+constexpr auto settingSensorOffsetBoard2Channel3Path = "sensorOffset/board2Channel3";
+constexpr auto settingSensorOffsetBoard2Channel4Path = "sensorOffset/board2Channel4";
+constexpr auto settingSensorOffsetBoard2Channel5Path = "sensorOffset/board2Channel5";
+constexpr auto settingSensorOffsetBoard2Channel6Path = "sensorOffset/board2Channel6";
+constexpr auto settingSensorOffsetBoard2Channel7Path = "sensorOffset/board2Channel7";
+constexpr auto settingSensorOffsetBoard2Channel8Path = "sensorOffset/board2Channel8";
 //debug
 constexpr auto settingTorPath = "debug/tor";
 constexpr auto settingAdcModePath = "debug/adcMode";
