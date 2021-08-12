@@ -5,7 +5,7 @@ CONFIG += qt warn_on debug console
 QT += widgets \
     charts
 TEMPLATE = app
-TARGET = lsc-gui
+TARGET = escam
 INCLUDEPATH += .
 CONFIG += debug
 win32 {
