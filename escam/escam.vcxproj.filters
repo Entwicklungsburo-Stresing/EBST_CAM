@@ -834,9 +834,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include=".\lsc-gui_resource.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="..\shared_src\CCD.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -858,5 +855,8 @@
     <QtMoc Include="dialogdac.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="escam_resource.rc" />
   </ItemGroup>
 </Project>
