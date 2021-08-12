@@ -16,7 +16,6 @@ extern bool _SHOW_MSG;
 #include <stdio.h>
 #include <pthread.h>
 #define ES_LOG(...) fprintf(stderr, __VA_ARGS__);
-extern pthread_mutexattr_t attr[MAXPCIECARDS];
 extern pthread_mutex_t mutex[MAXPCIECARDS];
 #endif
 
@@ -46,6 +45,7 @@ es_status_codes _ExitDriver(uint32_t drvno);
 es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno);
 uint16_t checkEscapeKeyState();
 uint16_t checkSpaceKeyState();
+es_status_codes InitMutex(uint32_t drvno);
 
 #ifdef WIN32
 es_status_codes AboutDrv(uint32_t drvno);

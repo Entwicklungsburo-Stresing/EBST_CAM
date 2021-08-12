@@ -689,6 +689,12 @@ es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 	return es_no_error;
 }
 
+es_status_codes InitMutex(uint32_t drvno)
+{
+    //no mutex on windows
+    return es_no_error;
+}
+
 /**
 * \brief Return infos about the PCIe board.
 * 	Shows 5 info messages. Can be used to test the communication with the PCI board.
