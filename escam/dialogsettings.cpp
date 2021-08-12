@@ -10,6 +10,16 @@ DialogSettings::DialogSettings(QSettings* settings, QWidget *parent) :
 {
     ui->setupUi(this);
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(on_accepted()));
+
+	// hide board select, when there is only one board
+	if (number_of_boards == 1)
+	{
+		ui->comboBoxBoardSel->setCurrentIndex(0);
+		ui->labelBoardSel->setVisible(false);
+		ui->comboBoxBoardSel->setVisible(false);
+		_settings->setValue(settingBoardSelPath, 0);
+	}
+
     _settings = settings;
 	//don't rearrange widgets when hiding other widgets
 	QSizePolicy sp_retain = ui->labelSTimer->sizePolicy();
