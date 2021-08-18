@@ -203,7 +203,7 @@ void MainWindow::startContPressed(bool checked)
 {
 	if (checked)
 	{
-		settings_struct.cont_pause = 1;// settings.value(settingContPause, settingAdcCustomValueDefault).toInt();
+		settings_struct.cont_pause = 1;// TODO: settings.value(settingContPause, settingAdcCustomValueDefault).toInt();
 		continiousMeasurementFlag = true;
 		ui->pushButtonStartCont->setText("Stop continuous");
 		startPressed();
@@ -234,9 +234,7 @@ void MainWindow::on_actionEdit_triggered()
  */
 void MainWindow::on_actionTDC_triggered()
 {
-	//ds->setAttribute( Qt::WA_DeleteOnClose );
 	ds_tdc->show();
-	//connect( &lsc, SIGNAL( measureDone() ), ds, SLOT( updateTDC() ) );
 	return;
 }
 
@@ -246,11 +244,7 @@ void MainWindow::on_actionTDC_triggered()
  */
 void MainWindow::on_actionRMS_triggered()
 {
-	//DialogRMS* ds = new DialogRMS(this);
-	//ds->setAttribute(Qt::WA_DeleteOnClose);
 	ds_rms->show();
-	//TODO
-	//connect(ds, SIGNAL(settings_saved()), this, SLOT(loadSettings()));
 	return;
 }
 
@@ -260,11 +254,7 @@ void MainWindow::on_actionRMS_triggered()
  */
 void MainWindow::on_actionDSC_triggered()
 {
-	//DialogDSC* ds = new DialogDSC(this);
-	//ds_dsc->setAttribute(Qt::WA_DeleteOnClose);
 	ds_dsc->show();
-	//TODO
-	//connect(ds, SIGNAL(settings_saved()), this, SLOT(loadSettings()));
 	return;
 }
 
