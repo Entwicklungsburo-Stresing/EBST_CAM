@@ -244,6 +244,7 @@ void MainWindow::on_actionTDC_triggered()
  */
 void MainWindow::on_actionRMS_triggered()
 {
+	ds_rms->initDialogRMS();
 	ds_rms->show();
 	return;
 }
