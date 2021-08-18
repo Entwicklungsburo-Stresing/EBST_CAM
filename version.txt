@@ -1,3 +1,12 @@
+v3.19.6
+- Rename lsc-gui to escam
+DLL:
+- Insert correct tabbing for register dump
+escam:
+- Make DAC compatible with two cams
+- Hide board select when there is only one cam
+- Improve dialogRMS: add board select and campos
+
 v3.19.5
 - Add DSC functions
 - Remove CCDExamp
