@@ -11,15 +11,6 @@ DialogSettings::DialogSettings(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(on_accepted()));
 
-	// hide board select, when there is only one board
-	if (number_of_boards == 1)
-	{
-		ui->comboBoxBoardSel->setCurrentIndex(0);
-		ui->labelBoardSel->setVisible(false);
-		ui->comboBoxBoardSel->setVisible(false);
-		settings.setValue(settingBoardSelPath, 0);
-	}
-
 	//don't rearrange widgets when hiding other widgets
 	QSizePolicy sp_retain = ui->labelSTimer->sizePolicy();
 	sp_retain.setRetainSizeWhenHidden(true);
@@ -40,17 +31,22 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->labelLinesBinning->setSizePolicy(sp_retain);
 	ui->labelNumberOfRegions->setSizePolicy(sp_retain);
 	ui->labelRegionsEqual->setSizePolicy(sp_retain);
+	ui->labelSslope->setSizePolicy(sp_retain);
+	ui->labelBslope->setSizePolicy(sp_retain);
+	ui->labelBoardSel->setSizePolicy(sp_retain);
+
 	sp_retain = ui->doubleSpinBoxSTime_in_ms->sizePolicy();
 	sp_retain.setRetainSizeWhenHidden(true);
 	ui->doubleSpinBoxSTime_in_ms->setSizePolicy(sp_retain);
 	ui->doubleSpinBoxBTimer_in_ms->setSizePolicy(sp_retain);
-	ui->spinBoxExpTimeIn10ns->setSizePolicy(sp_retain);
+
 	sp_retain = ui->checkBoxGain3010->sizePolicy();
 	sp_retain.setRetainSizeWhenHidden(true);
 	ui->checkBoxGain3010->setSizePolicy(sp_retain);
 	ui->checkBoxUseDac->setSizePolicy(sp_retain);
 	ui->checkBoxUseDac->setSizePolicy(sp_retain);
 	ui->checkBoxRegionsEqual->setSizePolicy(sp_retain);
+
 	sp_retain = ui->spinBoxGain3030->sizePolicy();
 	sp_retain.setRetainSizeWhenHidden(true);
 	ui->spinBoxGain3030->setSizePolicy(sp_retain);
@@ -65,6 +61,13 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->spinBoxRegion8->setSizePolicy(sp_retain);
 	ui->spinBoxLinesBinning->setSizePolicy(sp_retain);
 	ui->spinBoxNumberOfRegions->setSizePolicy(sp_retain);
+	ui->spinBoxExpTimeIn10ns->setSizePolicy(sp_retain);
+
+	sp_retain = ui->comboBoxSslope->sizePolicy();
+	sp_retain.setRetainSizeWhenHidden(true);
+	ui->comboBoxSslope->setSizePolicy(sp_retain);
+	ui->comboBoxBslope->setSizePolicy(sp_retain);
+	ui->comboBoxBoardSel->setSizePolicy(sp_retain);
 
 	// Here the saved settings on the system are applied to the UI.
     // For some settings there are two calls, to trigger the according slot for greying out options. I don't know why this is nesceserry, but without it the slots are not triggered.
@@ -122,6 +125,16 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->comboBoxTheme->setCurrentIndex(settings.value(settingThemePath, settingThemeDefault).toInt());
 	ui->comboBoxSettingsLevel->setCurrentIndex(settings.value(settingSettingsLevelPath, settingSettingsLevelDefault).toInt());
 	ui->comboBoxSettingsLevel->currentIndexChanged(ui->comboBoxSettingsLevel->currentIndex());
+
+	// hide board select, when there is only one board
+	if (number_of_boards == 1)
+	{
+		ui->comboBoxBoardSel->setCurrentIndex(0);
+		ui->labelBoardSel->setVisible(false);
+		ui->comboBoxBoardSel->setVisible(false);
+		settings.setValue(settingBoardSelPath, 0);
+	}
+
     setWindowModality(Qt::ApplicationModal);
 }
 
@@ -222,6 +235,20 @@ void DialogSettings::on_comboBoxSti_currentIndexChanged(int index)
 		ui->doubleSpinBoxSTime_in_ms->setVisible(false || visible);
 		ui->labelSTimer->setVisible(false || visible);
 	}
+	switch (index)
+	{
+	case 0:
+	case 1:
+	case 2:
+		ui->comboBoxSslope->setEnabled(true || enabled);
+		ui->comboBoxSslope->setVisible(true || visible);
+		ui->labelSslope->setVisible(true || visible);
+		break;
+	default:
+		ui->comboBoxSslope->setEnabled(false || enabled);
+		ui->comboBoxSslope->setVisible(false || visible);
+		ui->labelSslope->setVisible(false || visible);
+	}
 }
 
 void DialogSettings::on_comboBoxBti_currentIndexChanged(int index)
@@ -252,12 +279,19 @@ void DialogSettings::on_comboBoxBti_currentIndexChanged(int index)
 		ui->doubleSpinBoxBTimer_in_ms->setEnabled(true || enabled);
 		ui->doubleSpinBoxBTimer_in_ms->setVisible(true || visible);
 		ui->labelBTimer->setVisible(true || visible);
+		ui->comboBoxBslope->setEnabled(false || enabled);
+		ui->comboBoxBslope->setVisible(false || visible);
+		ui->labelBslope->setVisible(false || visible);
 		break;
     default:
 		ui->doubleSpinBoxBTimer_in_ms->setEnabled(false || enabled);
 		ui->doubleSpinBoxBTimer_in_ms->setVisible(false || visible);
 		ui->labelBTimer->setVisible(false || visible);
+		ui->comboBoxBslope->setEnabled(true || enabled);
+		ui->comboBoxBslope->setVisible(true || visible);
+		ui->labelBslope->setVisible(true || visible);
 	}
+
 }
 
 void DialogSettings::on_comboBoxSensorType_currentIndexChanged(int index)
