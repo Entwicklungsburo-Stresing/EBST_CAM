@@ -91,7 +91,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <ObjectFileName>build\</ObjectFileName>
       <Optimization>MaxSpeed</Optimization>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;VERSION_MAJOR=3;VERSION_MINOR=17;VERSION_BUILD=1;NDEBUG;QT_NO_DEBUG;%(PreprocessorDefinitions);WD_DRIVER_NAME_CHANGE</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;NDEBUG;QT_NO_DEBUG;%(PreprocessorDefinitions);WD_DRIVER_NAME_CHANGE</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <ProgramDataBaseFileName>
       </ProgramDataBaseFileName>
@@ -156,7 +156,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <ObjectFileName>build\</ObjectFileName>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;VERSION_MAJOR=3;VERSION_MINOR=17;VERSION_BUILD=1;%(PreprocessorDefinitions);WD_DRIVER_NAME_CHANGE</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;%(PreprocessorDefinitions);WD_DRIVER_NAME_CHANGE</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SuppressStartupBanner>true</SuppressStartupBanner>
