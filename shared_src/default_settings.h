@@ -11,8 +11,8 @@
 #define settingBtime_in_microseconds_Default 1000
 #define settingSdat_in_10nsDefault          0
 #define settingBdat_in_10nsDefault          0
-#define settingSslopeDefault                slope_pos
-#define settingBslopeDefault                slope_pos
+#define settingSslopeDefault                sslope_pos
+#define settingBslopeDefault                bslope_pos
 #define settingXckdelayIn10nsDefault        0
 #define settingShutterExpTimeIn10nsDefault  1
 #define settingTriggerCcDefault             xck

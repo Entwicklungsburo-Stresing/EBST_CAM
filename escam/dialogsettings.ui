@@ -27,12 +27,12 @@
           <widget class="QComboBox" name="comboBoxBslope">
            <item>
             <property name="text">
-             <string>pos</string>
+             <string>neg</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>neg</string>
+             <string>pos</string>
             </property>
            </item>
            <item>

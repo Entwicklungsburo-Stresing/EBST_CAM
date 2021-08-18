@@ -311,11 +311,18 @@ enum theme
 	darktheme = 1,
 };
 
-enum slope
+enum sslope
 {
-	slope_pos = 0,
-	slope_neg = 1,
-	slope_both = 2,
+	sslope_pos = 0,
+	sslope_neg = 1,
+	sslope_both = 2,
+};
+
+enum bslope
+{
+	bslope_neg = 0,
+	bslope_pos = 1,
+	bslope_both = 2,
 };
 
 enum fft_mode
