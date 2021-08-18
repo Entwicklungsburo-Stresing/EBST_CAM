@@ -139,7 +139,9 @@ es_status_codes Lsc::abortMeasurement(uint32_t drvno)
 
 void Lsc::parseTextToHtml(std::string* str)
 {
+	// insert <table><tr><td> at the beginning
     str->insert(0, "<table><tr><td>");
+	// replace all \t characters with </td><td>
     size_t start_pos = 0;
     std::string from = "\t";
     std::string to = "</td><td>";
@@ -148,6 +150,7 @@ void Lsc::parseTextToHtml(std::string* str)
         str->replace(start_pos, from.length(), to);
         start_pos += to.length();
     }
+	// replace all \n characters with </td></tr><tr><td>
     start_pos = 0;
     from = "\n";
     to = "</td></tr><tr><td>";
@@ -156,6 +159,7 @@ void Lsc::parseTextToHtml(std::string* str)
         str->replace(start_pos, from.length(), to);
         start_pos += to.length();
     }
+	// insert </td></tr></table> at the end
     str->append("</td></tr></table>");
 }
 
