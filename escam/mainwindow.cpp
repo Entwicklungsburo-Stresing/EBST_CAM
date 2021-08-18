@@ -312,11 +312,17 @@ void MainWindow::on_actionReset_axes_triggered()
 	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
 	ui->chartView->curr_xmax = settings.value(settingPixelPath, settingPixelDefault).toReal();
 	ui->chartView->curr_xmin = 0;
-	ui->chartView->curr_ymax = 0xFFFF;
+	if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toInt() == 2)
+		ui->chartView->curr_ymax = 0x3FFF;
+	else
+		ui->chartView->curr_ymax = 0xFFFF;
 	ui->chartView->curr_ymin = 0;
 	axis0->setMax(settings.value(settingPixelPath, settingPixelDefault).toReal());
 	axis0->setMin(0);
-	axis1->setMax(0xFFFF);
+	if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toInt() == 2)
+		axis1->setMax(0x3FFF);
+	else
+		axis1->setMax(0xFFFF);
 	axis1->setMin(0);
 	return;
 }
@@ -587,10 +593,15 @@ void MainWindow::on_rubberBandChanged()
 		ui->chartView->curr_xmin = 0;
 		axis0->setMin(0);
 	}
-	if(axis1->max() > 0xFFFF)
+	qreal ymax = 0;
+	if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toInt() == 2)
+		ymax = 0x3FFF;
+	else
+		ymax = 0xFFFF;
+	if(axis1->max() > ymax)
 	{
-		ui->chartView->curr_ymax = 0xFFFF;
-		axis1->setMax(0xFFFF);
+		ui->chartView->curr_ymax = ymax;
+		axis1->setMax(ymax);
 	}
 	if(axis1->min() < 0)
 	{
