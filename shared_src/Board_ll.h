@@ -7,6 +7,7 @@
 
 #ifdef WIN32
 #define ES_LOG(...) WDC_Err(__VA_ARGS__);
+#define ES_TRACE(...) WDC_Trace(__VA_ARGS__);
 #include "Jungo/wdc_lib.h"
 extern WDC_DEVICE_HANDLE* hDev;
 extern bool _SHOW_MSG;
@@ -16,6 +17,7 @@ extern bool _SHOW_MSG;
 #include <stdio.h>
 #include <pthread.h>
 #define ES_LOG(...) fprintf(stderr, __VA_ARGS__);
+#define ES_TRACE(...) fprintf(stderr, __VA_ARGS__);
 extern pthread_mutex_t mutex[MAXPCIECARDS];
 #endif
 
