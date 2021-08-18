@@ -166,8 +166,7 @@ copy "$(ProjectDir)ESLSCDLL_pro.h" "$(SolutionDir)shared_src\"</Command>
     <PostBuildEvent>
       <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)shared_src\" 
 xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\" 
-xcopy /Y "$(TargetPath)" "$(SolutionDir)CCDExamp\$(Platform)\$(Configuration)\"
-xcopy /Y "$(TargetPath)" "$(SolutionDir)lsc-gui\build\"</Command>
+xcopy /Y "$(TargetPath)" "$(SolutionDir)escam\build\"</Command>
       <Message>Copy $(ProjectName)</Message>
     </PostBuildEvent>
     <BuildLog>
