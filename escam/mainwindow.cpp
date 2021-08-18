@@ -42,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent)
     lsc.moveToThread(&measurementThread);
     connect(&measurementThread, &QThread::started, &lsc, &Lsc::startMeasurement);
     connect(&lsc, &Lsc::measureDone, &measurementThread, &QThread::quit);
+	connect(&lsc, &Lsc::measureDone, ds_dsc, &DialogDSC::updateDSC);
+	connect(&lsc, &Lsc::measureDone, ds_rms, &DialogRMS::updateRMS);
 }
 
 /**
@@ -505,8 +507,6 @@ void MainWindow::loadCameraData()
 	//send pxel 6 and 7 to the tdc window
 	//pixel 6low/7high of tdc1 and 8low/9high of tdc2 to tdc view
 	ds_tdc->updateTDC( *(uint32_t*)(data + 6), *(uint32_t*)(data + 8) );
-	ds_dsc->updateDSC();
-	ds_rms->updateRMS();
 
     free(data);
     return;
