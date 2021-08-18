@@ -2,6 +2,7 @@
 #define DIALOGRMS_H
 
 #include <QDialog>
+#include "dialogsettings.h"
 
 namespace Ui {
 class DialogRMS;
@@ -14,15 +15,18 @@ class DialogRMS : public QDialog
 public:
     explicit DialogRMS(QWidget *parent = nullptr);
     ~DialogRMS();
-
-private:
-    Ui::DialogRMS *ui;
-
-private slots:
-	void on_pushButton_update_clicked();
+	void initDialogRMS();
 
 public slots:
 	void updateRMS();
+
+private:
+    Ui::DialogRMS *ui;
+	QSettings settings;
+
+private slots:
+	void on_spinBox_firstsample_valueChanged(int value);
+	void on_spinBox_lastsample_valueChanged(int value);
 };
 
 #endif // DIALOGRMS_H
