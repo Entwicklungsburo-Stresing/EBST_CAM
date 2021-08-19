@@ -1614,9 +1614,6 @@ es_status_codes SendFLCAM_DAC( uint32_t drvno, uint8_t ctrl, uint8_t addr, uint1
 {
 	uint16_t	hi_bytes = 0,
 		lo_bytes = 0;
-	uint8_t	maddr_DAC = 0b11,
-		hi_byte_addr = 0x01,
-		lo_byte_addr = 0x02;
 
 	if (ctrl & 0x10) //4 ctrl bits => only lower 4 bits allowed
 	{
@@ -1643,9 +1640,9 @@ es_status_codes SendFLCAM_DAC( uint32_t drvno, uint8_t ctrl, uint8_t addr, uint1
 	lo_bytes |= data & 0x0FFF; //12 data bits (lower 12 bits of 16 bit data)
 	lo_bytes <<= 4;
 	lo_bytes |= feature;	//4 feature bits
-	es_status_codes status = SendFLCAM( drvno, maddr_DAC, hi_byte_addr, hi_bytes );
+	es_status_codes status = SendFLCAM( drvno, maddr_dac, dac_hi_byte_addr, hi_bytes );
 	if (status != es_no_error) return status;
-	return SendFLCAM( drvno, maddr_DAC, lo_byte_addr, lo_bytes );
+	return SendFLCAM( drvno, maddr_dac, dac_lo_byte_addr, lo_bytes );
 }
 
 /**
