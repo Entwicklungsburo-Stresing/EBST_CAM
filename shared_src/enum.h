@@ -199,6 +199,10 @@ enum cam_addresses
 	maddr_cam = 0x00,
 	maddr_adc = 0x01,
 	maddr_ioctrl = 0x02,
+	maddr_dac = 0x03,
+
+	dac_hi_byte_addr = 0x01,
+	dac_lo_byte_addr = 0x02,
 
 	cam_adaddr_gain = 0x00,
 	cam_adaddr_pixel = 0x01,
