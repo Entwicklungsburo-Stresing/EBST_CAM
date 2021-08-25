@@ -956,7 +956,10 @@ es_status_codes SetSSlope(uint32_t drvno, uint32_t sslope)
  * \brief Sets slope for block trigger.
  * 
  * \param drvno board number (=1 if one PCI board)
- * \param slope 1 for positive slope
+ * \param slope:
+ *		- 0: negative slope
+ *		- 1: positive slope
+ *		- 2: both
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
@@ -1807,7 +1810,7 @@ es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
 		no_tlps = 0x9;//a
 		break;
 	case 1088:
-		no_tlps = 0x11;
+		no_tlps = 0x11;  //GS was 0x11 with 0x10 -> 102 kHz
 		break;
 	case 2112:
 		no_tlps = 0x21;//22
