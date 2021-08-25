@@ -36,6 +36,7 @@ constexpr auto settingDacPath = "camerasetup/dac";
 constexpr auto settingGpxPath = "camerasetup/gpx";
 constexpr auto settingGpxOffsetPath = "camerasetup/gpxOffset";
 constexpr auto settingIsIrPath = "camerasetup/isIr";
+constexpr auto settingIOCtrlImpactStartPixelPath = "camerasetup/IOCtrlImpactStartPixel";
 //fft mode
 constexpr auto settingLinesPath = "fftmode/lines";
 constexpr auto settingVfreqPath = "fftmode/vfreq";

@@ -104,6 +104,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
     ui->checkBoxGpx->setChecked(settings.value(settingGpxPath, settingGpxDefault).toBool());
     ui->spinBoxGpxOffset->setValue(settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toInt());
 	ui->checkBoxIr->setChecked(settings.value(settingIsIrPath, settingIsIrDefault).toBool());
+	ui->spinBoxIOCtrlImpactStartPixel->setValue(settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toInt());
 	//FFT mode
     ui->spinBoxLines->setValue(settings.value(settingLinesPath, settingLinesDefault).toInt());
     ui->spinBoxVfreq->setValue(settings.value(settingVfreqPath, settingVfreqDefault).toInt());
@@ -175,6 +176,7 @@ void DialogSettings::on_accepted()
     settings.setValue(settingGpxPath, ui->checkBoxGpx->isChecked());
     settings.setValue(settingGpxOffsetPath, ui->spinBoxGpxOffset->value());
 	settings.setValue(settingIsIrPath, ui->checkBoxIr->isChecked());
+	settings.setValue(settingIOCtrlImpactStartPixelPath, ui->spinBoxIOCtrlImpactStartPixel->value());
 	//Fft mode
     settings.setValue(settingLinesPath, ui->spinBoxLines->value());
     settings.setValue(settingVfreqPath, ui->spinBoxVfreq->value());
@@ -535,6 +537,7 @@ void DialogSettings::loadDefaults()
     ui->checkBoxGpx->setChecked(settingGpxDefault);
     ui->spinBoxGpxOffset->setValue(settingGpxOffsetDefault);
 	ui->checkBoxRegionsEqual->setChecked(settingIsIrDefault);
+	ui->spinBoxIOCtrlImpactStartPixel->setValue(settingIOCtrlImpactStartPixelDefault);
 	//fft mode
     ui->spinBoxLines->setValue(settingLinesDefault);
     ui->spinBoxVfreq->setValue(settingVfreqDefault);

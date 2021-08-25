@@ -210,6 +210,8 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	status = FindCam(drvno);
 	if (status != es_no_error) return status;
 	status = SetHardwareTimerStopMode(drvno, true);
+	if (status != es_no_error) return status;
+	status = IOCtrl_setImpactStartPixel(drvno, settings_struct.IOCtrl_impact_start_pixel);
 	return status;
 }
 
@@ -3398,5 +3400,18 @@ es_status_codes GetDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint3
 	status = readRegisterS0_32( drvno, ADSC, addrADSC );
 	if (status != es_no_error) return status;
 	return readRegisterS0_32( drvno, LDSC, addrLDSC );
+}
 
+/**
+ * \brief Set the pixel where IOCtrl starts inserting its data.
+ * 
+ * \param drvno PCIe board identifier.
+ * \param startPixel Position of IOCtrl data in pixel
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ */
+es_status_codes IOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixel)
+{
+	return SendFLCAM(drvno, maddr_ioctrl, ioctrl_impact_start_pixel, startPixel);
 }
