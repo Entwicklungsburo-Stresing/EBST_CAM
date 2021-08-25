@@ -53,6 +53,7 @@ struct global_settings
 	//cont mode
 	uint32_t cont_pause;
 	uint32_t isIr;
+	uint32_t IOCtrl_impact_start_pixel;
 };
 
 #endif // STRUCT_H

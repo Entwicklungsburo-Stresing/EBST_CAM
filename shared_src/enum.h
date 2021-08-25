@@ -225,6 +225,8 @@ enum cam_addresses
 	adc_ads5294_regaddr_2wireMode = 0x46,
 	adc_ads5294_regaddr_wordWiseOutput = 0x28,
 	adc_ads5294_regaddr_ddrClkAlign = 0x42,
+
+	ioctrl_impact_start_pixel = 0x00,
 };
 
 enum cam_messages

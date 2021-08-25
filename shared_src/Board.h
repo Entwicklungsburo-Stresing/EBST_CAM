@@ -112,6 +112,7 @@ es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr);
 es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr);
 es_status_codes dumpSettings(char** stringPtr);
 es_status_codes _InitMeasurement(uint32_t drvno);
+es_status_codes IOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixel);
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);

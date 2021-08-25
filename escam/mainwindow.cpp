@@ -184,6 +184,7 @@ void MainWindow::startPressed()
 	settings_struct.isIr = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
 	//settings_struct.cont_pause = settings.value(settingContPause, settingAdcCustomValueDefault).toInt();
 	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt() + 1;
+	settings_struct.IOCtrl_impact_start_pixel = settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toInt();
 	es_status_codes status = lsc.initMeasurement();
 	if (status != es_no_error) {
 		QErrorMessage* d = new QErrorMessage(this);
