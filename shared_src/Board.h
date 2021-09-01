@@ -113,6 +113,8 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr);
 es_status_codes dumpSettings(char** stringPtr);
 es_status_codes _InitMeasurement(uint32_t drvno);
 es_status_codes IOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixel);
+es_status_codes IOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width, uint16_t delay);
+es_status_codes IOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns);
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);
