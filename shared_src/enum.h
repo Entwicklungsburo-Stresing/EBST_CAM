@@ -227,6 +227,22 @@ enum cam_addresses
 	adc_ads5294_regaddr_ddrClkAlign = 0x42,
 
 	ioctrl_impact_start_pixel = 0x00,
+	ioctrl_t0l = 0x01,
+	ioctrl_t0h = 0x02,
+	ioctrl_t1 = 0x03,
+	ioctrl_d1 = 0x04,
+	ioctrl_t2 = 0x05,
+	ioctrl_d2 = 0x06,
+	ioctrl_t3 = 0x07,
+	ioctrl_d3 = 0x08,
+	ioctrl_t4 = 0x09,
+	ioctrl_d4 = 0x0A,
+	ioctrl_t5 = 0x0B,
+	ioctrl_d5 = 0x0C,
+	ioctrl_t6 = 0x0D,
+	ioctrl_d6 = 0x0E,
+	ioctrl_t7 = 0x0F,
+	ioctrl_d7 = 0x10,
 };
 
 enum cam_messages

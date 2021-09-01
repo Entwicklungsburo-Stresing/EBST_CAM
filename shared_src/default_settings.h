@@ -69,5 +69,20 @@
 #define settingShowCameraDefault					1
 #define settingIsIrDefault							0
 #define settingIOCtrlImpactStartPixelDefault		1078
+#define settingIOCtrlOutput1WidthIn5nsDefault		100
+#define settingIOCtrlOutput2WidthIn5nsDefault		100
+#define settingIOCtrlOutput3WidthIn5nsDefault		100
+#define settingIOCtrlOutput4WidthIn5nsDefault		100
+#define settingIOCtrlOutput5WidthIn5nsDefault		100
+#define settingIOCtrlOutput6WidthIn5nsDefault		100
+#define settingIOCtrlOutput7WidthIn5nsDefault		100
+#define settingIOCtrlOutput1DelayIn5nsDefault		0
+#define settingIOCtrlOutput2DelayIn5nsDefault		100
+#define settingIOCtrlOutput3DelayIn5nsDefault		200
+#define settingIOCtrlOutput4DelayIn5nsDefault		300
+#define settingIOCtrlOutput5DelayIn5nsDefault		400
+#define settingIOCtrlOutput6DelayIn5nsDefault		500
+#define settingIOCtrlOutput7DelayIn5nsDefault		600
+#define settingIOCtrlT0PeriodIn10nsDefault			100
 
 #endif // DEFAULT_SETTINGS_H
