@@ -400,6 +400,7 @@
     <addaction name="actionRMS"/>
     <addaction name="actionDSC"/>
     <addaction name="actionDAC"/>
+    <addaction name="actionIO_Control"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSettings"/>
@@ -495,6 +496,11 @@
   <action name="actionDAC">
    <property name="text">
     <string>DAC</string>
+   </property>
+  </action>
+  <action name="actionIO_Control">
+   <property name="text">
+    <string>IO Control</string>
    </property>
   </action>
  </widget>

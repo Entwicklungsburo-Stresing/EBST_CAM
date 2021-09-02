@@ -42,6 +42,7 @@ SOURCES += lsc-gui.cpp \
     dialogrms.cpp \
     dialogsettings.cpp \
     dialogtdc.cpp \
+	dialogioctrl.cpp
     mainwindow.cpp \
     myqchartview.cpp \
     myqspinbox.cpp \
@@ -71,6 +72,7 @@ FORMS += \
     dialogrms.ui \
     dialogsettings.ui \
     dialogtdc.ui \
+	dialogioctrl.ui \
     mainwindow.ui
 
 HEADERS += \
@@ -80,6 +82,7 @@ HEADERS += \
     dialogrms.h \
     dialogsettings.h \
     dialogtdc.h \
+	dialogioctrl.h \
     lsc.h \
     mainwindow.h \
     myqchartview.h \

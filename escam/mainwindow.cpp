@@ -2,6 +2,7 @@
 #include "dialogaxes.h"
 #include "../version.h"
 #include "dialogdac.h"
+#include "dialogioctrl.h"
 
 /**
  * @brief Constructor of Class MainWindow.
@@ -185,6 +186,22 @@ void MainWindow::startPressed()
 	//settings_struct.cont_pause = settings.value(settingContPause, settingAdcCustomValueDefault).toInt();
 	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt() + 1;
 	settings_struct.IOCtrl_impact_start_pixel = settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toInt();
+	settings_struct.IOCtrl_output_delay_in_5ns[0] = settings.value(settingIOCtrlOutput1DelayIn5nsPath, settingIOCtrlOutput1DelayIn5nsDefault).toInt();
+	settings_struct.IOCtrl_output_delay_in_5ns[1] = settings.value(settingIOCtrlOutput2DelayIn5nsPath, settingIOCtrlOutput2DelayIn5nsDefault).toInt();
+	settings_struct.IOCtrl_output_delay_in_5ns[2] = settings.value(settingIOCtrlOutput3DelayIn5nsPath, settingIOCtrlOutput3DelayIn5nsDefault).toInt();
+	settings_struct.IOCtrl_output_delay_in_5ns[3] = settings.value(settingIOCtrlOutput4DelayIn5nsPath, settingIOCtrlOutput4DelayIn5nsDefault).toInt();
+	settings_struct.IOCtrl_output_delay_in_5ns[4] = settings.value(settingIOCtrlOutput5DelayIn5nsPath, settingIOCtrlOutput5DelayIn5nsDefault).toInt();
+	settings_struct.IOCtrl_output_delay_in_5ns[5] = settings.value(settingIOCtrlOutput6DelayIn5nsPath, settingIOCtrlOutput6DelayIn5nsDefault).toInt();
+	settings_struct.IOCtrl_output_delay_in_5ns[6] = settings.value(settingIOCtrlOutput7DelayIn5nsPath, settingIOCtrlOutput7DelayIn5nsDefault).toInt();
+	settings_struct.IOCtrl_output_width_in_5ns[0] = settings.value(settingIOCtrlOutput1WidthIn5nsPath, settingIOCtrlOutput1WidthIn5nsDefault).toInt();
+	settings_struct.IOCtrl_output_width_in_5ns[1] = settings.value(settingIOCtrlOutput2WidthIn5nsPath, settingIOCtrlOutput2WidthIn5nsDefault).toInt();
+	settings_struct.IOCtrl_output_width_in_5ns[2] = settings.value(settingIOCtrlOutput3WidthIn5nsPath, settingIOCtrlOutput3WidthIn5nsDefault).toInt();
+	settings_struct.IOCtrl_output_width_in_5ns[3] = settings.value(settingIOCtrlOutput4WidthIn5nsPath, settingIOCtrlOutput4WidthIn5nsDefault).toInt();
+	settings_struct.IOCtrl_output_width_in_5ns[4] = settings.value(settingIOCtrlOutput5WidthIn5nsPath, settingIOCtrlOutput5WidthIn5nsDefault).toInt();
+	settings_struct.IOCtrl_output_width_in_5ns[5] = settings.value(settingIOCtrlOutput6WidthIn5nsPath, settingIOCtrlOutput6WidthIn5nsDefault).toInt();
+	settings_struct.IOCtrl_output_width_in_5ns[6] = settings.value(settingIOCtrlOutput7WidthIn5nsPath, settingIOCtrlOutput7WidthIn5nsDefault).toInt();
+	settings_struct.IOCtrl_T0_period_in_10ns = settings.value(settingIOCtrlT0PeriodIn10nsPath, settingIOCtrlT0PeriodIn10nsDefault).toInt();
+
 	es_status_codes status = lsc.initMeasurement();
 	if (status != es_no_error) {
 		QErrorMessage* d = new QErrorMessage(this);
@@ -288,6 +305,7 @@ void MainWindow::on_actionCameras_triggered()
         checkbox->setText("Camera "+QString::number(i+1));
         checkbox->setChecked(settings.value(settingShowCameraBaseDir + QString::number(i), settingShowCameraDefault).toBool());
         layout->addWidget(checkbox);
+		// Lambda syntax is used to pass additional argument i
         connect(checkbox, &QCheckBox::stateChanged, this, [checkbox, this, i] {on_checkBoxShowCamera(checkbox->isChecked(), i); loadCameraData(); });
     }
     QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, messageBox);
@@ -609,4 +627,16 @@ void MainWindow::on_rubberBandChanged()
 		ui->chartView->curr_ymin = 0;
 		axis1->setMin(0);
 	}
+}
+
+/**
+ * @brief This slot opens the IO Control dialog.
+ * @return none
+ */
+void MainWindow::on_actionIO_Control_triggered()
+{
+	DialogIoctrl* dialogIoctrl = new DialogIoctrl(this);
+	dialogIoctrl->setAttribute(Qt::WA_DeleteOnClose);
+	dialogIoctrl->show();
+	return;
 }
