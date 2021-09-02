@@ -157,7 +157,7 @@
     <PostBuildEvent>
       <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)shared_src\" 
 xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
-      <Message>copy $(ProjectName) output to CCDExamp</Message>
+      <Message>copy $(ProjectName)</Message>
     </PostBuildEvent>
     <BuildLog>
       <Path>$(OutDir)$(MSBuildProjectName).log</Path>
@@ -239,7 +239,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
 xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>copy $(ProjectName) output to CCDExamp</Message>
+      <Message>copy $(ProjectName)</Message>
     </PostBuildEvent>
     <ResourceCompile>
       <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
