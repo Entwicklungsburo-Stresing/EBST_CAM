@@ -35,7 +35,7 @@ Two possibilities:
 
 ### Linux CLI
 ```
-cd escam
+cd lsc-cli
 make
 ```
 
