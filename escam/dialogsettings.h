@@ -77,6 +77,22 @@ constexpr auto settingAdcCustomValuePath = "debug/adcCustomValue";
 constexpr auto settingThemePath = "appearance/theme";
 constexpr auto settingSettingsLevelPath = "appearance/settingsLevel";
 constexpr auto settingShowCameraBaseDir = "appearance/showcamera";
+//io control
+constexpr auto settingIOCtrlOutput1DelayIn5nsPath = "IOCtrl/Output1DelayIn5ns";
+constexpr auto settingIOCtrlOutput1WidthIn5nsPath = "IOCtrl/Output1WidthIn5ns";
+constexpr auto settingIOCtrlOutput2DelayIn5nsPath = "IOCtrl/Output2DelayIn5ns";
+constexpr auto settingIOCtrlOutput2WidthIn5nsPath = "IOCtrl/Output2WidthIn5ns";
+constexpr auto settingIOCtrlOutput3DelayIn5nsPath = "IOCtrl/Output3DelayIn5ns";
+constexpr auto settingIOCtrlOutput3WidthIn5nsPath = "IOCtrl/Output3WidthIn5ns";
+constexpr auto settingIOCtrlOutput4DelayIn5nsPath = "IOCtrl/Output4DelayIn5ns";
+constexpr auto settingIOCtrlOutput4WidthIn5nsPath = "IOCtrl/Output4WidthIn5ns";
+constexpr auto settingIOCtrlOutput5DelayIn5nsPath = "IOCtrl/Output5DelayIn5ns";
+constexpr auto settingIOCtrlOutput5WidthIn5nsPath = "IOCtrl/Output5WidthIn5ns";
+constexpr auto settingIOCtrlOutput6DelayIn5nsPath = "IOCtrl/Output6DelayIn5ns";
+constexpr auto settingIOCtrlOutput6WidthIn5nsPath = "IOCtrl/Output6WidthIn5ns";
+constexpr auto settingIOCtrlOutput7WidthIn5nsPath = "IOCtrl/Output7DelayIn5ns";
+constexpr auto settingIOCtrlOutput7DelayIn5nsPath = "IOCtrl/Output7WidthIn5ns";
+constexpr auto settingIOCtrlT0PeriodIn10nsPath = "IOCtrl/T0PeriodIn10ns";
 
 namespace Ui {
 class DialogSettings;

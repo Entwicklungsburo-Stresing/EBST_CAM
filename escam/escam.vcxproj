@@ -212,6 +212,7 @@
     <ClCompile Include="..\shared_src\win\Board_ll.c" />
     <ClCompile Include="dialogdac.cpp" />
     <ClCompile Include="dialogdsc.cpp" />
+    <ClCompile Include="dialogioctrl.cpp" />
     <ClCompile Include="dialogrms.cpp" />
     <ClCompile Include="dialogtdc.cpp" />
     <ClCompile Include="dialogaxes.cpp" />
@@ -239,6 +240,7 @@
     <QtMoc Include="dialogrms.h" />
     <QtMoc Include="dialogdsc.h" />
     <QtMoc Include="dialogdac.h" />
+    <QtMoc Include="dialogioctrl.h" />
     <ClInclude Include="lsc-gui.h" />
     <ClInclude Include="UIAbstractionLayer_cpp.h" />
     <QtMoc Include="dialogsettings.h">
@@ -276,6 +278,7 @@
     <QtUic Include="dialogaxes.ui" />
     <QtUic Include="dialogdac.ui" />
     <QtUic Include="dialogdsc.ui" />
+    <QtUic Include="dialogioctrl.ui" />
     <QtUic Include="dialogrms.ui" />
     <QtUic Include="dialogsettings.ui">
     </QtUic>

@@ -3489,7 +3489,7 @@ es_status_codes IOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width
 es_status_codes IOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 {
 	uint16_t period_in_10ns_L = (uint16_t) period_in_10ns;
-	uint16_t period_in_10ns_H = (uint16_t) period_in_10ns >> 16;
+	uint16_t period_in_10ns_H = (uint16_t) (period_in_10ns >> 16);
 	es_status_codes status = SendFLCAM(drvno, maddr_ioctrl, ioctrl_t0h, period_in_10ns_H);
 	if (status != es_no_error) return status;
 	return SendFLCAM(drvno, maddr_ioctrl, ioctrl_t0l, period_in_10ns_L);

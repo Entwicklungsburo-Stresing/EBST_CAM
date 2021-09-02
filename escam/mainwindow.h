@@ -10,7 +10,6 @@
 #include "dialogrms.h"
 #include "dialogdsc.h"
 
-
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -51,6 +50,7 @@ private slots:
 	void on_actionAbout_triggered();
 	void on_actionAbout_Qt_triggered();
 	void on_actionDAC_triggered();
+	void on_actionIO_Control_triggered();
 	void loadSettings();
 	void startPressed();
 	void startContPressed(bool checked);
