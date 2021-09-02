@@ -290,14 +290,6 @@ DllAccess es_status_codes DLLFFValid(UINT32 drvno, UINT8* valid)
 }
 
 /**
- * \copydoc checkFifoOverflow
- */
-DllAccess es_status_codes DLLFFOvl(UINT32 drvno, UINT8* overflow)
-{
-	return checkFifoOverflow(drvno, overflow);
-}
-
-/**
  * \copydoc SetupVCLKReg
  */
 DllAccess es_status_codes DLLSetupVCLK( UINT32 drvno, UINT32 lines, UINT8 vfreq )
