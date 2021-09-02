@@ -3148,7 +3148,7 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 		len += sprintf(*stringPtr + len, "\nerror while reading register\n");
 		return status;
 	}
-	len += sprintf(*stringPtr + len, "number of TLPs is:\t"DLLTAB"%u\n", data);
+	len += sprintf(*stringPtr + len, "number of TLPs is:\t"DLLTAB"%u", data);
 	return status;
 }
 
@@ -3238,12 +3238,23 @@ es_status_codes dumpSettings(char** stringPtr)
 		"adc mode\t%u\n"
 		"adc custom pattern\t%u\n"
 		"bec_in_10ns\t%u\n"
-		"isIr\t%u\n",
+		"isIr\t%u\n"
+		"IOCtrl_impact_start_pixel\t%u\n",
 		settings_struct.TORmodus,
 		settings_struct.ADC_Mode,
 		settings_struct.ADC_custom_pattern,
 		settings_struct.bec_in_10ns,
-		settings_struct.isIr);
+		settings_struct.isIr,
+		settings_struct.IOCtrl_impact_start_pixel);
+	len += sprintf(*stringPtr + len, "IOCtrl_output_width_in_5ns\t");
+	for (int i = 0; i < 7; i++)
+		len += sprintf(*stringPtr + len, "%u ", settings_struct.IOCtrl_output_width_in_5ns[i]);
+	len += sprintf(*stringPtr + len, "\nIOCtrl_output_delay_in_5ns\t");
+	for (int i = 0; i < 7; i++)
+		len += sprintf(*stringPtr + len, "%u ", settings_struct.IOCtrl_output_delay_in_5ns[i]);
+	len += sprintf(*stringPtr + len,
+		"\nIOCtrl_T0_period_in_10ns\t%u",
+		settings_struct.IOCtrl_T0_period_in_10ns);
 	return es_no_error;
 }
 
