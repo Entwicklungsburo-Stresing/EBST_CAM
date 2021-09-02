@@ -1,3 +1,13 @@
+v3.19.7
+- Add time check in UIAbstractionLayer to prevent too many notifies
+- Add function IOCtrl_setImpactStartPixel
+- Add function IOCtrl_setOutput
+- Add function IOCtrl_setT0
+escam:
+- Set ymax depending on camera system
+- Fix bslope
+- Fix dac_output board2
+
 v3.19.6
 - Rename lsc-gui to escam
 DLL:
