@@ -1759,84 +1759,13 @@ es_status_codes SetXckdelay(uint32_t drvno, uint32_t xckdelay_in_10ns)
 es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
 {		
 	ES_LOG("Set DMA register: drv: %u, pixel: %u\n", drvno, pixel);
-	/*Pixelsize with matching TLP Count (TLPC).
-	Pixelsize = TLPS * TLPC - 1*TLPS
-	(TLPS TLP size = 64)
-	TLPC 0x Pixelsize
-		2	64
-		3	128
-		4	192
-		5	256
-		6	320
-		7	384
-		8	448
-		9	512
-		a	576
-		b	640
-		c	704
-		d	768
-		e	832
-		f	896
-		10	960
-		11	1024
-		12	1088
-		13	1152
-		14	1216
-		15	1280
-		16	1344
-		17	1408
-		18	1472
-		19	1536
-		1a	1600
-		1b	1664
-		1c	1728
-		1d	1792
-		1e	1856
-		1f	1920
-		20	1984
-		21	2048
-		22	2112
-		23  2176
-		...
-		41  4096
-		42  4160
-		...
-		82  8256
-		*/
-	uint32_t no_tlps = 0;
-	switch (pixel)
+	if (pixel % 64 != 0 && !MANUAL_OVERRIDE_TLP)
 	{
-	case 128:
-		no_tlps = 0x2;//3
-		break;
-	case 192:
-		no_tlps = 0x3;//4
-		break;
-	case 320:
-		no_tlps = 0x5;//6
-		break;
-	case 576:
-		no_tlps = 0x9;//a
-		break;
-	case 1088:
-		no_tlps = 0x11;  //GS was 0x11 with 0x10 -> 102 kHz
-		break;
-	case 2112:
-		no_tlps = 0x21;//22
-		break;
-	case 4160:
-		no_tlps = 0x41;//42
-		break;
-	case 8256:
-		no_tlps = 0x81;//82
-		break;
-	default:
-		if (!MANUAL_OVERRIDE_TLP)
-		{
-			ES_LOG("Could not choose TLP size, no valid pixel count.\n");
-			return es_invalid_pixel_count;
-		}
+		ES_LOG("Could not choose TLP size, no valid pixel count.\n");
+		return es_invalid_pixel_count;
 	}
+	// Pixelsize = TLPS * TLPC - 1*TLPS
+	uint32_t no_tlps = pixel / 64;
 	if (LEGACY_202_14_TLPCNT) no_tlps = no_tlps + 1;
 	uint32_t data = 0;
 	es_status_codes status = readConfig_32(drvno, &data, PCIeAddr_devCap);
@@ -1879,7 +1808,6 @@ es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
 		tlp_size = 0x20; // sets utilized TLP size in DWORDS (1 DWORD = 4 byte)
 		no_tlps = 0x11; // sets number of TLPs per scan/frame
 	}
-	//TODO: dev->tlp_size = TLPSIZE
 	status = writeConfig_32(drvno, data, PCIeAddr_devStatCtrl);
 	if (status != es_no_error) return status;
 	uint64_t dma_physical_address = getDmaAddress(drvno);
