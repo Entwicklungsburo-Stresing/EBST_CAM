@@ -115,6 +115,8 @@ DllAccess es_status_codes DLLDAC_setAllOutputs(UINT32 drvno, UINT32* outputs, UI
 DllAccess es_status_codes DLLSetMeasurementParameters(UINT32 drvno, UINT32 nos, UINT32 nob);
 DllAccess es_status_codes DLLSetupVCLK(UINT32 drvno, UINT32 lines, UINT8 vfreq);//set the VCLK regs
 DllAccess es_status_codes DLLInitGPX(UINT32 drvno, UINT32 delay);
+DllAccess es_status_codes DLLIOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns);
+DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns);
 //************ read and write functions
 DllAccess es_status_codes DLLReadByteS0(UINT32 drvno, UINT8 *data, UINT32 PortOff);// read byte from Port, PortOff = Regs of Board
 DllAccess es_status_codes DLLWriteByteS0(UINT32 drv, UINT8 DataByte, UINT32 PortOff); // writes DataByte to Port

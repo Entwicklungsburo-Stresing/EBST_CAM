@@ -809,3 +809,19 @@ DllAccess es_status_codes DLLAbortMeasurement(UINT32 drv)
 {
 	return AbortMeasurement(drv);
 }
+
+/**
+ * \copydoc IOCtrl_setOutput
+ */
+DllAccess es_status_codes DLLIOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns)
+{
+	return IOCtrl_setOutput(drvno, number, width_in_5ns, delay_in_5ns);
+}
+
+/**
+ * \copydoc IOCtrl_setT0
+ */
+DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
+{
+	return IOCtrl_setT0(drvno, period_in_10ns);
+}
