@@ -114,6 +114,7 @@ es_status_codes dumpSettings(char** stringPtr);
 es_status_codes _InitMeasurement(uint32_t drvno);
 es_status_codes IOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixel);
 es_status_codes IOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns);
+es_status_codes IOCtrl_setAllOutputs(uint32_t drvno, uint32_t* width_in_5ns, uint32_t* delay_in_5ns);
 es_status_codes IOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns);
 
 // helper functions

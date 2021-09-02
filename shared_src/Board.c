@@ -3431,6 +3431,7 @@ es_status_codes GetDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint3
  */
 es_status_codes IOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixel)
 {
+	ES_LOG("Set IOCtrl impact start pixel: %u\n", startPixel);
 	return SendFLCAM(drvno, maddr_ioctrl, ioctrl_impact_start_pixel, startPixel);
 }
 
@@ -3448,6 +3449,7 @@ es_status_codes IOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixel)
  */
 es_status_codes IOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns)
 {
+	ES_LOG("Set IOCtrl output %u, width %u, delay %u\n", number, width_in_5ns, delay_in_5ns);
 	uint8_t addrWidth = 0;
 	uint8_t addrDelay = 0;
 	switch (number)
@@ -3489,6 +3491,28 @@ es_status_codes IOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width
 }
 
 /**
+ * \brief Set paramters of all pulses output of IOCTRL.
+ *
+ * \param drvno PCIe board identifier.
+ * \param width_in_5ns Set width of pulse in 5ns steps. Array with 7 entries.
+ * \param delay_in_5ns Set delay of pulse in 5ns steps. Array with 7 entries.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_parameter_out_of_range
+ */
+es_status_codes IOCtrl_setAllOutputs(uint32_t drvno, uint32_t* width_in_5ns, uint32_t* delay_in_5ns)
+{
+	es_status_codes status = es_no_error;
+	for (uint8_t i = 0; i <= 6; i++)
+	{
+		status = IOCtrl_setOutput(drvno, i + 1, width_in_5ns[i], delay_in_5ns[i]);
+		if (status != es_no_error) return status;
+	}
+	return status;
+}
+
+/**
  * \brief Set period of IOCtrl pulse outputs base frequency T0.
  * 
  * \param drvno PCIe board identifier.
@@ -3499,6 +3523,7 @@ es_status_codes IOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width
  */
 es_status_codes IOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 {
+	ES_LOG("Set IOCtrl T0 period %u\n", period_in_10ns);
 	uint16_t period_in_10ns_L = (uint16_t) period_in_10ns;
 	uint16_t period_in_10ns_H = (uint16_t) (period_in_10ns >> 16);
 	es_status_codes status = SendFLCAM(drvno, maddr_ioctrl, ioctrl_t0h, period_in_10ns_H);

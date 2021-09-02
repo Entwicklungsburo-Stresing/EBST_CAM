@@ -51,8 +51,8 @@ struct global_settings
 	uint32_t cont_pause;
 	uint32_t isIr;
 	uint32_t IOCtrl_impact_start_pixel;
-	uint32_t IOCtrl_output_width_in_5ns[7];
-	uint32_t IOCtrl_output_delay_in_5ns[7];
+	uint32_t IOCtrl_output_width_in_5ns[8];
+	uint32_t IOCtrl_output_delay_in_5ns[8];
 	uint32_t IOCtrl_T0_period_in_10ns;
 };
 
