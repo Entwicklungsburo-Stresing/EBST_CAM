@@ -825,3 +825,11 @@ DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10n
 {
 	return IOCtrl_setT0(drvno, period_in_10ns);
 }
+
+/**
+ * \copydoc IOCtrl_setAllOutputs
+ */
+DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t drvno, uint16_t* width_in_5ns, uint16_t* delay_in_5ns)
+{
+	return IOCtrl_setAllOutputs(drvno, width_in_5ns, delay_in_5ns);
+}
