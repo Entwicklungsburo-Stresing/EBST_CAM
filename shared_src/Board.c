@@ -1970,6 +1970,8 @@ es_status_codes StartMeasurement()
 			status = StartCopyDataToUserBufferThread(2);
 			if (status != es_no_error) return status;
 		}
+		status = SetPriority(31);
+		if (status != es_no_error) return status;
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
 			status = setMeasureOn(1);
@@ -1983,8 +1985,6 @@ es_status_codes StartMeasurement()
 		//block read function
 		for (uint32_t blk_cnt = 0; blk_cnt < Nob; blk_cnt++)
 		{
-			status = SetPriority(31);
-			if (status != es_no_error) return status;
 			if(BOARD_SEL == 2)
 				status = waitForBlockTrigger(2);
 			else
@@ -1993,35 +1993,25 @@ es_status_codes StartMeasurement()
 				return AbortMeasurement(BOARD_SEL);
 			else if (status != es_no_error) return status;
 			ES_LOG("Block %u triggered\n", blk_cnt);
-			if (BOARD_SEL == 1 || BOARD_SEL == 3)
+			if (BOARD_SEL == 1)
 			{
-				status = countBlocksByHardware(1);
+				status = setBlockOn(1);
 				if (status != es_no_error) return status;
-				if (BOARD_SEL != 3)
-				{
-					status = setBlockOn(1);
-					if (status != es_no_error) return status;
-					status = StartSTimer(1);
-					if (status != es_no_error) return status;
-					//start scan for first read if area or ROI
-					if (*useSWTrig) status = DoSoftwareTrigger(1);
-					if (status != es_no_error) return status;
-				}
+				status = StartSTimer(1);
+				if (status != es_no_error) return status;
+				//start scan for first read if area or ROI
+				if (*useSWTrig) status = DoSoftwareTrigger(1);
+				if (status != es_no_error) return status;
 			}
-			if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+			if (number_of_boards == 2 && (BOARD_SEL == 2 ))
 			{
-				status = countBlocksByHardware(2);
+				status = setBlockOn(2);
 				if (status != es_no_error) return status;
-				if (BOARD_SEL != 3)
-				{
-					status = setBlockOn(2);
-					if (status != es_no_error) return status;
-					status = StartSTimer(2);
-					if (status != es_no_error) return status;
-					//start scan for first read
-					if (*useSWTrig) status = DoSoftwareTrigger(2);
-					if (status != es_no_error) return status;
-				}
+				status = StartSTimer(2);
+				if (status != es_no_error) return status;
+				//start scan for first read
+				if (*useSWTrig) status = DoSoftwareTrigger(2);
+				if (status != es_no_error) return status;
 			}
 			//for synchronising both cams
 			if (BOARD_SEL == 3)
@@ -2034,8 +2024,16 @@ es_status_codes StartMeasurement()
 				if (*useSWTrig) status = DoSoftwareTriggerTwoBoards();
 				if (status != es_no_error) return status;
 			}
-			status = ResetPriority();
-			if (status != es_no_error) return status;
+			if (BOARD_SEL == 1 || BOARD_SEL == 3)
+			{
+				status = countBlocksByHardware(1);
+				if (status != es_no_error) return status;
+			}
+			if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+			{
+				status = countBlocksByHardware(2);
+				if (status != es_no_error) return status;
+			}
 			//main read loop - wait here until nos is reached or ESC key
 			//if nos is reached the flag RegXCKMSB:b30 = TimerOn is reset by hardware if flag HWDREQ_EN is TRUE
 			//extended to Timer_routine for all variants of one and  two boards
@@ -2111,6 +2109,8 @@ es_status_codes StartMeasurement()
 				if (status != es_no_error) return status;
 			}
 		}//block cnt read function
+		status = ResetPriority();
+		if (status != es_no_error) return status;
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
 			status = StopSTimer(1);
