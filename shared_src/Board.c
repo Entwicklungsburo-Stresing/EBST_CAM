@@ -1983,10 +1983,12 @@ es_status_codes StartMeasurement()
 		//block read function
 		for (uint32_t blk_cnt = 0; blk_cnt < Nob; blk_cnt++)
 		{
+			status = SetPriority(31);
+			if (status != es_no_error) return status;
 			if(BOARD_SEL == 2)
-				waitForBlockTrigger(2);
+				status = waitForBlockTrigger(2);
 			else
-				waitForBlockTrigger(1);
+				status = waitForBlockTrigger(1);
 			if (status == es_abortion)
 				return AbortMeasurement(BOARD_SEL);
 			else if (status != es_no_error) return status;
@@ -2032,6 +2034,8 @@ es_status_codes StartMeasurement()
 				if (*useSWTrig) status = DoSoftwareTriggerTwoBoards();
 				if (status != es_no_error) return status;
 			}
+			status = ResetPriority();
+			if (status != es_no_error) return status;
 			//main read loop - wait here until nos is reached or ESC key
 			//if nos is reached the flag RegXCKMSB:b30 = TimerOn is reset by hardware if flag HWDREQ_EN is TRUE
 			//extended to Timer_routine for all variants of one and  two boards
