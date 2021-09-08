@@ -48,6 +48,8 @@ es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno);
 uint16_t checkEscapeKeyState();
 uint16_t checkSpaceKeyState();
 es_status_codes InitMutex(uint32_t drvno);
+es_status_codes SetPriority(ULONG threadp);
+es_status_codes ResetPriority();
 
 #ifdef WIN32
 es_status_codes AboutDrv(uint32_t drvno);
