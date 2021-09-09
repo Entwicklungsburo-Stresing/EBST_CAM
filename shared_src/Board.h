@@ -116,6 +116,9 @@ es_status_codes IOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixel);
 es_status_codes IOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns);
 es_status_codes IOCtrl_setAllOutputs(uint32_t drvno, uint32_t* width_in_5ns, uint32_t* delay_in_5ns);
 es_status_codes IOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns);
+es_status_codes ResetDSC(uint32_t drvno, uint8_t DSCNumber);
+es_status_codes SetDIRDSC(uint32_t drvno, uint8_t DSCNumber, bool dir);
+es_status_codes GetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC);
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);
@@ -147,12 +150,6 @@ es_status_codes writeBitsDma_32( uint32_t drvno, uint32_t data, uint32_t bitmask
 es_status_codes writeBitsDma_8( uint32_t drvno, uint8_t data, uint8_t bitmask, uint16_t address);
 es_status_codes pulseBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address);
 es_status_codes pulseBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address);
-
-
-es_status_codes ResetDSC( uint32_t drvno, uint8_t DSCNumber );
-es_status_codes SetDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir );
-es_status_codes GetDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC );
-
 #ifdef __cplusplus
 }
 #endif
