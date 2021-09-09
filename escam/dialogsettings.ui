@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>336</width>
-    <height>463</height>
+    <height>470</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="measurement">
       <attribute name="title">
@@ -1446,6 +1446,57 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>spinBoxNos</tabstop>
+  <tabstop>spinBoxNob</tabstop>
+  <tabstop>comboBoxSti</tabstop>
+  <tabstop>comboBoxBti</tabstop>
+  <tabstop>doubleSpinBoxSTime_in_ms</tabstop>
+  <tabstop>doubleSpinBoxBTimer_in_ms</tabstop>
+  <tabstop>spinBoxSdatIn10ns</tabstop>
+  <tabstop>spinBoxBdatIn10ns</tabstop>
+  <tabstop>comboBoxSslope</tabstop>
+  <tabstop>comboBoxBslope</tabstop>
+  <tabstop>spinBoxXckdelayIn10ns</tabstop>
+  <tabstop>spinBoxExpTimeIn10ns</tabstop>
+  <tabstop>comboBoxTriggerModeCC</tabstop>
+  <tabstop>pushButtonDefault</tabstop>
+  <tabstop>comboBoxSettingsLevel</tabstop>
+  <tabstop>comboBoxBoardSel</tabstop>
+  <tabstop>comboBoxSensorType</tabstop>
+  <tabstop>comboBoxCameraSystem</tabstop>
+  <tabstop>spinBoxCamcnt</tabstop>
+  <tabstop>spinBoxPixel</tabstop>
+  <tabstop>checkBoxMshut</tabstop>
+  <tabstop>checkBoxLed</tabstop>
+  <tabstop>checkBoxGain3010</tabstop>
+  <tabstop>spinBoxGain3030</tabstop>
+  <tabstop>comboBoxCamCool</tabstop>
+  <tabstop>checkBoxUseDac</tabstop>
+  <tabstop>checkBoxGpx</tabstop>
+  <tabstop>spinBoxGpxOffset</tabstop>
+  <tabstop>checkBoxIr</tabstop>
+  <tabstop>spinBoxIOCtrlImpactStartPixel</tabstop>
+  <tabstop>spinBoxLines</tabstop>
+  <tabstop>spinBoxVfreq</tabstop>
+  <tabstop>comboBoxFftMode</tabstop>
+  <tabstop>spinBoxLinesBinning</tabstop>
+  <tabstop>spinBoxNumberOfRegions</tabstop>
+  <tabstop>checkBoxRegionsEqual</tabstop>
+  <tabstop>spinBoxRegion1</tabstop>
+  <tabstop>spinBoxRegion2</tabstop>
+  <tabstop>spinBoxRegion3</tabstop>
+  <tabstop>spinBoxRegion4</tabstop>
+  <tabstop>spinBoxRegion5</tabstop>
+  <tabstop>spinBoxRegion6</tabstop>
+  <tabstop>spinBoxRegion7</tabstop>
+  <tabstop>spinBoxRegion8</tabstop>
+  <tabstop>comboBoxOutput</tabstop>
+  <tabstop>comboBoxAdcMode</tabstop>
+  <tabstop>spinBoxAdcCustom</tabstop>
+  <tabstop>comboBoxTheme</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -1455,8 +1506,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>249</x>
-     <y>389</y>
+     <x>325</x>
+     <y>459</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -1471,8 +1522,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>317</x>
-     <y>389</y>
+     <x>325</x>
+     <y>459</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
