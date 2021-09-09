@@ -247,6 +247,15 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>pushButton_RS_DSC_1</tabstop>
+  <tabstop>comboBox_DIR_DSC_1</tabstop>
+  <tabstop>pushButton_RS_DSC_2</tabstop>
+  <tabstop>comboBox_DIR_DSC_2</tabstop>
+  <tabstop>pushButton_RS_DSC_3</tabstop>
+  <tabstop>comboBox_DIR_DSC_3</tabstop>
+  <tabstop>pushButton_update_act</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

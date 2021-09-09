@@ -321,6 +321,25 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>spinBoxChannel1</tabstop>
+  <tabstop>spinBoxBoard2Channel1</tabstop>
+  <tabstop>spinBoxChannel2</tabstop>
+  <tabstop>spinBoxBoard2Channel2</tabstop>
+  <tabstop>spinBoxChannel3</tabstop>
+  <tabstop>spinBoxBoard2Channel3</tabstop>
+  <tabstop>spinBoxChannel4</tabstop>
+  <tabstop>spinBoxBoard2Channel4</tabstop>
+  <tabstop>spinBoxChannel5</tabstop>
+  <tabstop>spinBoxBoard2Channel5</tabstop>
+  <tabstop>spinBoxChannel6</tabstop>
+  <tabstop>spinBoxBoard2Channel6</tabstop>
+  <tabstop>spinBoxChannel7</tabstop>
+  <tabstop>spinBoxBoard2Channel7</tabstop>
+  <tabstop>spinBoxChannel8</tabstop>
+  <tabstop>spinBoxBoard2Channel8</tabstop>
+  <tabstop>pushButtonDefault</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

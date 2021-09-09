@@ -202,6 +202,13 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>comboBoxDrvno</tabstop>
+  <tabstop>spinBoxCampos</tabstop>
+  <tabstop>spinBox_firstsample</tabstop>
+  <tabstop>spinBox_lastsample</tabstop>
+  <tabstop>spinBox_pixel</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

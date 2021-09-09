@@ -350,6 +350,24 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>doubleSpinBoxT0</tabstop>
+  <tabstop>spinBoxO1D</tabstop>
+  <tabstop>spinBoxO1W</tabstop>
+  <tabstop>spinBoxO2D</tabstop>
+  <tabstop>spinBoxO2W</tabstop>
+  <tabstop>spinBoxO3D</tabstop>
+  <tabstop>spinBoxO3W</tabstop>
+  <tabstop>spinBoxO4D</tabstop>
+  <tabstop>spinBoxO4W</tabstop>
+  <tabstop>spinBoxO5D</tabstop>
+  <tabstop>spinBoxO5W</tabstop>
+  <tabstop>spinBoxO6D</tabstop>
+  <tabstop>spinBoxO6W</tabstop>
+  <tabstop>spinBoxO7D</tabstop>
+  <tabstop>spinBoxO7W</tabstop>
+  <tabstop>pushButtonDefault</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
