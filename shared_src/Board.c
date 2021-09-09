@@ -1928,9 +1928,10 @@ es_status_codes SetDmaStartMode( uint32_t drvno, bool start_by_hardware)
 }
 
 /**
- * \brief Const burst loop with DMA initiated by hardware DREQ. Read nos lines from FIFO. this is the main loop
+ * \brief Const burst loop with DMA initiated by hardware DREQ. Read nos lines from FIFO. this is the main loop.
  * 
- * \param board_sel sets interface board
+ * It is a good idea to create a new thread for calling this function, because this is a blocking call.
+ * 
  * \return es_status_codes:
  *		- es_no_error
  * 		- es_register_read_failed
@@ -1944,8 +1945,7 @@ es_status_codes StartMeasurement()
 	es_status_codes status = es_no_error;
 	do
 	{
-		//reset the internal block counter and ScanIndex before START
-		//set to hw stop of timer hwstop=TRUE
+		// Reset the hardware block counter and scan counter.
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
 			status = ResetHardwareCounter(1);
@@ -1956,10 +1956,14 @@ es_status_codes StartMeasurement()
 			status = ResetHardwareCounter(2);
 			if (status != es_no_error) return status;
 		}
+		// Reset the buffer write pointers and software ISR counter.
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 			ResetBufferWritePos(1);
 		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
 			ResetBufferWritePos(2);
+		// Only on linux: Because on linux it is not possible to copy data in the ISR,
+		// a new thread is started here that copies the data from the DMA buffer to
+		// the user buffer. The ISR is giving a signal to this thread when to copy data.
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
 			status = StartCopyDataToUserBufferThread(1);
@@ -1970,8 +1974,12 @@ es_status_codes StartMeasurement()
 			status = StartCopyDataToUserBufferThread(2);
 			if (status != es_no_error) return status;
 		}
+		// Increase the priority of the measurement thread to maximum.
+		// This is done to decrease latency while doing handshakes between software and hardware.
+		// The priority is resetted to the old value when the block for loop is finished.
 		status = SetPriority(31);
 		if (status != es_no_error) return status;
+		// Set the measure on hardware bit
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
 			status = setMeasureOn(1);
@@ -1982,48 +1990,11 @@ es_status_codes StartMeasurement()
 			status = setMeasureOn(2);
 			if (status != es_no_error) return status;
 		}
-		//block read function
+		// Block read for loop.
 		for (uint32_t blk_cnt = 0; blk_cnt < Nob; blk_cnt++)
 		{
-			if(BOARD_SEL == 2)
-				status = waitForBlockTrigger(2);
-			else
-				status = waitForBlockTrigger(1);
-			if (status == es_abortion)
-				return AbortMeasurement(BOARD_SEL);
-			else if (status != es_no_error) return status;
-			ES_LOG("Block %u triggered\n", blk_cnt);
-			if (BOARD_SEL == 1)
-			{
-				status = setBlockOn(1);
-				if (status != es_no_error) return status;
-				status = StartSTimer(1);
-				if (status != es_no_error) return status;
-				//start scan for first read if area or ROI
-				if (*useSWTrig) status = DoSoftwareTrigger(1);
-				if (status != es_no_error) return status;
-			}
-			if (number_of_boards == 2 && (BOARD_SEL == 2 ))
-			{
-				status = setBlockOn(2);
-				if (status != es_no_error) return status;
-				status = StartSTimer(2);
-				if (status != es_no_error) return status;
-				//start scan for first read
-				if (*useSWTrig) status = DoSoftwareTrigger(2);
-				if (status != es_no_error) return status;
-			}
-			//for synchronising both cams
-			if (BOARD_SEL == 3)
-			{
-				status = setBlockOnTwoBoards();
-				if (status != es_no_error) return status;
-				status = StartSTimerTwoBoards();
-				if (status != es_no_error) return status;
-				//start scan for first read
-				if (*useSWTrig) status = DoSoftwareTriggerTwoBoards();
-				if (status != es_no_error) return status;
-			}
+			// Increase the block count hardware register.
+			// This must be done, before the block starts, so doing this first is a good idea.
 			if (BOARD_SEL == 1 || BOARD_SEL == 3)
 			{
 				status = countBlocksByHardware(1);
@@ -2034,9 +2005,55 @@ es_status_codes StartMeasurement()
 				status = countBlocksByHardware(2);
 				if (status != es_no_error) return status;
 			}
-			//main read loop - wait here until nos is reached or ESC key
-			//if nos is reached the flag RegXCKMSB:b30 = TimerOn is reset by hardware if flag HWDREQ_EN is TRUE
-			//extended to Timer_routine for all variants of one and  two boards
+			// The software polls the block trigger hardware register in a loop,
+			// so the software is trapped here, until the hardware gives the signal
+			// via this register. Pressing ESC can cancel this loop.
+			if(BOARD_SEL == 2)
+				status = waitForBlockTrigger(2);
+			else
+				status = waitForBlockTrigger(1);
+			if (status == es_abortion)
+				return AbortMeasurement(BOARD_SEL);
+			else if (status != es_no_error) return status;
+			ES_LOG("Block %u triggered\n", blk_cnt);
+			// setBlockOn, StartSTimer and DoSoftwareTrigger are starting the measurement.
+			// Starting the measurement BOARD_SEL = 1
+			if (BOARD_SEL == 1)
+			{
+				status = setBlockOn(1);
+				if (status != es_no_error) return status;
+				status = StartSTimer(1);
+				if (status != es_no_error) return status;
+				//start scan for first read if area or ROI
+				if (*useSWTrig) status = DoSoftwareTrigger(1);
+				if (status != es_no_error) return status;
+			}
+			// Starting the measurement BOARD_SEL = 2
+			if (number_of_boards == 2 && (BOARD_SEL == 2 ))
+			{
+				status = setBlockOn(2);
+				if (status != es_no_error) return status;
+				status = StartSTimer(2);
+				if (status != es_no_error) return status;
+				//start scan for first read
+				if (*useSWTrig) status = DoSoftwareTrigger(2);
+				if (status != es_no_error) return status;
+			}
+			// Starting the measurement BOARD_SEL = 3
+			if (BOARD_SEL == 3)
+			{
+				status = setBlockOnTwoBoards();
+				if (status != es_no_error) return status;
+				status = StartSTimerTwoBoards();
+				if (status != es_no_error) return status;
+				//start scan for first read
+				if (*useSWTrig) status = DoSoftwareTriggerTwoBoards();
+				if (status != es_no_error) return status;
+			}
+			// Main read loop. The software waits here until the flag RegXCKMSB:b30 = TimerOn is resetted by hardware,
+			// if flag HWDREQ_EN is TRUE.
+			// This is done when nos scans are counted by hardware. Pressing ESC can cancel this loop.
+			// Waiting for end of measurement BOARD_SEL = 1
 			if (BOARD_SEL == 1)
 			{
 				bool timerOneOn = true;
@@ -2049,6 +2066,7 @@ es_status_codes StartMeasurement()
 					if (status != es_no_error) return status;
 				}
 			}
+			// Waiting for end of measurement BOARD_SEL = 2
 			if (number_of_boards == 2 && BOARD_SEL == 2)
 			{
 				bool timerTwoOn = true;
@@ -2061,6 +2079,7 @@ es_status_codes StartMeasurement()
 					if (status != es_no_error) return status;
 				}
 			}
+			// Waiting for end of measurement BOARD_SEL = 3
 			if (number_of_boards == 2 && BOARD_SEL == 3)
 			{
 				bool timerOneOn = true,
@@ -2082,7 +2101,6 @@ es_status_codes StartMeasurement()
 					}
 					if (!return_flag_2)
 					{
-						//stop if ESC was pressed
 						if ((FindCam(2) != es_no_error) | abortMeasurementFlag)
 						{
 							status = AbortMeasurement(2);
@@ -2098,6 +2116,8 @@ es_status_codes StartMeasurement()
 					abortMeasurementFlag = checkEscapeKeyState();
 				}
 			}
+			// When the software reaches this point, all scans for the current block are done.
+			// So blockOn is resetted here.
 			if (BOARD_SEL == 1 || BOARD_SEL == 3)
 			{
 				status = resetBlockOn(1);
@@ -2108,9 +2128,12 @@ es_status_codes StartMeasurement()
 				status = resetBlockOn(2);
 				if (status != es_no_error) return status;
 			}
-		}//block cnt read function
+		// This is the end of the block for loop. Until nob is reached this loop is repeated.
+		}
+		// Reset the thread priority to the previous value.
 		status = ResetPriority();
 		if (status != es_no_error) return status;
+		// Stop the STimer.
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
 			status = StopSTimer(1);
@@ -2121,6 +2144,8 @@ es_status_codes StartMeasurement()
 			status = StopSTimer(2);
 			if (status != es_no_error) return status;
 		}
+		// When the number of scans is not a integer multiple of 500 there will be data in the DMA buffer
+		// left, which is not copied to the user buffer. The copy process for these scans is done here.
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
 			status = GetLastBufPart(1);
@@ -2151,6 +2176,7 @@ es_status_codes StartMeasurement()
             pthread_mutex_unlock(&mutex[1]);
         }
 #endif
+		// Reset the hardware bit measure on.
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
 			status = resetMeasureOn(1);
@@ -2161,6 +2187,7 @@ es_status_codes StartMeasurement()
 			status = resetMeasureOn(2);
 			if (status != es_no_error) return status;
 		}
+		// When space key or ESC key was pressed, continious measurement stops.
 		if (checkSpaceKeyState())
 			continiousMeasurementFlag = false;
 		abortMeasurementFlag = checkEscapeKeyState();
@@ -2193,10 +2220,9 @@ es_status_codes FindCam( uint32_t drvno )
 }
 
 /**
- * \brief Reset the internal intr collect counter.
+ * \brief Reset the hardware block counter and scan counter.
  * 
- * \param drv board number
- * \param hwstop timer is stopped by hardware if nos is reached
+ * \param drvno board number
  * \return es_status_codes
  *		- es_no_error
  * 		- es_register_read_failed
@@ -2217,8 +2243,8 @@ es_status_codes ResetHardwareCounter( uint32_t drvno )
 /**
  * \brief Reset the internal intr collect counter.
  * 
- * \param drv board number
- * \param reset_by_hardware true: timer is stopped by hardware if nos is reached
+ * \param drvno board number
+ * \param stop_by_hardware true: timer is stopped by hardware if nos is reached
  * \return es_status_codes
  *		- es_no_error
  * 		- es_register_read_failed

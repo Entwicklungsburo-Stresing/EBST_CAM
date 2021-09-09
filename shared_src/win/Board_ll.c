@@ -440,6 +440,11 @@ es_status_codes enableInterrupt( uint32_t drvno )
 	return;
 }
 
+/**
+ * \brief Reset the buffer write pointers and software ISR counter.
+ * 
+ * \param drvno PCIe board identifier.
+ */
 void ResetBufferWritePos(uint32_t drvno)
 {
 	dmaBufferPartReadPos[drvno] = 0;
