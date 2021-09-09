@@ -2116,6 +2116,17 @@ es_status_codes StartMeasurement()
 					abortMeasurementFlag = checkEscapeKeyState();
 				}
 			}
+			// Stop the STimer.
+			if (BOARD_SEL == 1 || BOARD_SEL == 3)
+			{
+				status = StopSTimer(1);
+				if (status != es_no_error) return status;
+			}
+			if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+			{
+				status = StopSTimer(2);
+				if (status != es_no_error) return status;
+			}
 			// When the software reaches this point, all scans for the current block are done.
 			// So blockOn is resetted here.
 			if (BOARD_SEL == 1 || BOARD_SEL == 3)
@@ -2133,17 +2144,6 @@ es_status_codes StartMeasurement()
 		// Reset the thread priority to the previous value.
 		status = ResetPriority();
 		if (status != es_no_error) return status;
-		// Stop the STimer.
-		if (BOARD_SEL == 1 || BOARD_SEL == 3)
-		{
-			status = StopSTimer(1);
-			if (status != es_no_error) return status;
-		}
-		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
-		{
-			status = StopSTimer(2);
-			if (status != es_no_error) return status;
-		}
 		// When the number of scans is not a integer multiple of 500 there will be data in the DMA buffer
 		// left, which is not copied to the user buffer. The copy process for these scans is done here.
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
