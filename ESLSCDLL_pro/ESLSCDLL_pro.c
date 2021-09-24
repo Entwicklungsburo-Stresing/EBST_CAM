@@ -198,7 +198,7 @@ DllAccess UINT16 DLLGetGammaBlack()
  * \param drvno PCIe identifier
  * \param number_of_regions determines how many region of interests are initialized, choose 2 to 8
  * \param lines number of total lines in camera
- * \param keep_first kept regions are alternating, determine whether first is kept
+ * \param keep kept regions are alternating, determine whether first is kept
  * \param region_size determines the size of each region. array of size number_of_regions.
  * 	When region_size[0]==0 the lines are equally distributed for all regions.
  * 	I don't know what happens when  region_size[0]!=0 and region_size[1]==0. Maybe don't do this.
@@ -209,9 +209,9 @@ DllAccess UINT16 DLLGetGammaBlack()
  * 		- es_register_read_failed
  * 		- es_register_write_failed
  */
-DllAccess es_status_codes DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first, UINT8* region_size, UINT8 vfreq )
+DllAccess es_status_codes DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep, UINT8* region_size, UINT8 vfreq )
 {
-	BOOL keep = keep_first;
+	BOOL keep_temp;
 	es_status_codes status = es_no_error;
 	// calculate how many lines are in each region when equally distributed
 	UINT32 lines_per_region = lines / number_of_regions;
@@ -222,17 +222,18 @@ DllAccess es_status_codes DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, U
 	for (int i = 1; i <= number_of_regions; i++)
 	{
 		// check whether lines should be distributed equally or by custom region size
+		keep_temp = keep & 0b1;//make the last bit bool, because this bit indicates the current range to keep or not
 		if (*region_size == 0)
 		{
-			if (i == number_of_regions) status = SetupVPB( drvno, i, lines_in_last_region, keep );
-			else status = SetupVPB( drvno, i, lines_per_region, keep );
+			if (i == number_of_regions) status = SetupVPB( drvno, i, lines_in_last_region, keep_temp );
+			else status = SetupVPB( drvno, i, lines_per_region, keep_temp );
 		}
 		else
 		{
-			status = SetupVPB( drvno, i, *(region_size + (i - 1)), keep );
+			status = SetupVPB( drvno, i, *(region_size + (i - 1)), keep_temp );
 		}
 		if (status != es_no_error) return status;
-		keep = !keep;
+		keep >>= 1;//bitshift right to got the next keep for the next range
 	}
 	status = SetupVCLKReg( drvno, lines, vfreq );
 	if (status != es_no_error) return status;
