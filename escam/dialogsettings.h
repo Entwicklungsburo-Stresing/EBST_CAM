@@ -45,6 +45,7 @@ constexpr auto settingFftModePath = "fftmode/fftmode";
 constexpr auto settingLinesBinningPath = "fftmode/linesbinning";
 constexpr auto settingNumberOfRegionsPath = "fftmode/numberOfRegions";
 constexpr auto settingRegionSizeEqualPath = "fftmode/regionSizeEqual";
+constexpr auto settingKeepPath = "fftmode/keep";
 constexpr auto settingRegionSize1Path = "fftmode/regionSize1";
 constexpr auto settingRegionSize2Path = "fftmode/regionSize2";
 constexpr auto settingRegionSize3Path = "fftmode/regionSize3";
