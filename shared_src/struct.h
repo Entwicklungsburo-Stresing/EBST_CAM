@@ -41,7 +41,7 @@ struct global_settings
 	uint32_t FFTMode;
 	uint32_t lines_binning;
 	uint32_t number_of_regions;
-	uint32_t keep_first;
+	uint32_t keep;
 	uint32_t region_size[8];
 	uint32_t dac_output[MAXPCIECARDS][8];
 	uint32_t TORmodus; 

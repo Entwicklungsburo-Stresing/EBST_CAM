@@ -16,6 +16,17 @@
 #define DLLTAB
 #endif
 
+#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
+#define BYTE_TO_BINARY(byte)  \
+  (byte & 0x80 ? '1' : '0'), \
+  (byte & 0x40 ? '1' : '0'), \
+  (byte & 0x20 ? '1' : '0'), \
+  (byte & 0x10 ? '1' : '0'), \
+  (byte & 0x08 ? '1' : '0'), \
+  (byte & 0x04 ? '1' : '0'), \
+  (byte & 0x02 ? '1' : '0'), \
+  (byte & 0x01 ? '1' : '0')
+
 /**
  * \brief Set global settings struct.
  * 
@@ -114,7 +125,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 		{
 			uint8_t regionSize[8];
 			for (int i = 0; i < 8; i++) regionSize[i] = settings_struct.region_size[i];
-			status = DLLSetupROI(drvno, (uint16_t)settings_struct.number_of_regions, settings_struct.FFTLines, (uint8_t)settings_struct.keep_first, regionSize, (uint8_t)settings_struct.Vfreq);
+			status = DLLSetupROI(drvno, (uint16_t)settings_struct.number_of_regions, settings_struct.FFTLines, (uint8_t)settings_struct.keep, regionSize, (uint8_t)settings_struct.Vfreq);
 			break;
 		}
 		case area_mode:
@@ -3148,7 +3159,7 @@ es_status_codes dumpSettings(char** stringPtr)
 		"ffmode\t%u\n"
 		"lines binning\t%u\n"
 		"number of regions\t%u\n"
-		"keep first\t%u\n",
+		"keep\t"BYTE_TO_BINARY_PATTERN"\n",
 		settings_struct.unused,
 		settings_struct.nos,
 		settings_struct.nob,
@@ -3181,7 +3192,7 @@ es_status_codes dumpSettings(char** stringPtr)
 		settings_struct.FFTMode,
 		settings_struct.lines_binning,
 		settings_struct.number_of_regions,
-		settings_struct.keep_first);
+		BYTE_TO_BINARY(settings_struct.keep));
 	len += sprintf(*stringPtr + len, "region size\t");
 	for (int i = 0; i < 8; i++)
 		len += sprintf(*stringPtr + len, "%u ", settings_struct.region_size[i]);

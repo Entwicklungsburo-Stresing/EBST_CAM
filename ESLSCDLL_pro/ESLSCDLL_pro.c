@@ -198,7 +198,7 @@ DllAccess UINT16 DLLGetGammaBlack()
  * \param drvno PCIe identifier
  * \param number_of_regions determines how many region of interests are initialized, choose 2 to 8
  * \param lines number of total lines in camera
- * \param keep kept regions are alternating, determine whether first is kept
+ * \param keep kept regions are determined by bits of keep
  * \param region_size determines the size of each region. array of size number_of_regions.
  * 	When region_size[0]==0 the lines are equally distributed for all regions.
  * 	I don't know what happens when  region_size[0]!=0 and region_size[1]==0. Maybe don't do this.
