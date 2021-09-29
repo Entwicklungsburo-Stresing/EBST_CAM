@@ -18,7 +18,8 @@ constexpr auto settingBdat_in_10nsPath = "measurement/bdat";
 constexpr auto settingSslopePath = "measurement/sslope";
 constexpr auto settingBslopePath = "measurement/bslope";
 constexpr auto settingXckdelayIn10nsPath = "measurement/xckdelay_in_10ns";
-constexpr auto settingShutterExpTimeIn10nsPath = "measurement/shutterExpTimeIn10ns";
+constexpr auto settingShutterSecIn10nsPath = "measurement/shutterSecIn10ns";
+constexpr auto settingShutterBecIn10nsPath = "measurement/shutterBecIn10ns";
 constexpr auto settingTriggerCcPath = "measurement/triggerCc";
 constexpr auto settingContPause = "measurement/contPause";
 //camera setup

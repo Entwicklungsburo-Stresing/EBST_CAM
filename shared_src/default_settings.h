@@ -14,7 +14,8 @@
 #define settingSslopeDefault						sslope_pos
 #define settingBslopeDefault						bslope_pos
 #define settingXckdelayIn10nsDefault				0
-#define settingShutterExpTimeIn10nsDefault			1
+#define settingShutterSecIn10nsDefault				1
+#define settingShutterBecIn10nsDefault				1
 #define settingTriggerCcDefault						xck
 #define settingBoardSelDefault						0
 #define settingSensorTypeDefault					PDAsensor
