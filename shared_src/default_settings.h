@@ -35,7 +35,7 @@
 #define settingFftModeDefault						full_binning
 #define settingLinesBinningDefault					1
 #define settingNumberOfRegionsDefault				3
-#define settingKeepDefault							false
+#define settingKeepDefault							0xAA
 #define settingRegionSizeEqualDefault				true
 #define settingRegionSize1Default					10
 #define settingRegionSize2Default					44
