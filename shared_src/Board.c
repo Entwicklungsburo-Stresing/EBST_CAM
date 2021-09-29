@@ -3159,7 +3159,7 @@ es_status_codes dumpSettings(char** stringPtr)
 		"ffmode\t%u\n"
 		"lines binning\t%u\n"
 		"number of regions\t%u\n"
-		"keep\t"BYTE_TO_BINARY_PATTERN"\n",
+		"keep\t0b"BYTE_TO_BINARY_PATTERN"\n",
 		settings_struct.unused,
 		settings_struct.nos,
 		settings_struct.nob,
