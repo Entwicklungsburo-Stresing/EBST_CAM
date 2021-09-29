@@ -146,7 +146,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	//set mshut
 	if (settings_struct.mshut)
 	{
-		status = SetSEC(drvno, settings_struct.ShutterExpTimeIn10ns);
+		status = SetSEC(drvno, settings_struct.sec_in_10ns);
 		if (status != es_no_error) return status;
 		status = SetTORReg(drvno, TOR_SSHUT);
 		if (status != es_no_error) return status;
@@ -3172,7 +3172,7 @@ es_status_codes dumpSettings(char** stringPtr)
 		settings_struct.sslope,
 		settings_struct.bslope,
 		settings_struct.xckdelay_in_10ns,
-		settings_struct.ShutterExpTimeIn10ns,
+		settings_struct.sec_in_10ns,
 		settings_struct.trigger_mode_cc,
 		settings_struct.board_sel,
 		settings_struct.sensor_type,
