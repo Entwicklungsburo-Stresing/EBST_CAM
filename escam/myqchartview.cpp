@@ -6,7 +6,7 @@ MyQChartView::MyQChartView(QWidget *parent) : QtCharts::QChartView(parent)
 	setRubberBand(QChartView::RectangleRubberBand);
 	QSettings settings;
 	curr_xmax = settings.value(settingPixelPath, settingPixelDefault).toReal();
-	if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toInt() == 2)
+	if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toUInt() == 2)
 		curr_ymax = 0x3FFF;
 	else
 		curr_ymax = 0xFFFF;
