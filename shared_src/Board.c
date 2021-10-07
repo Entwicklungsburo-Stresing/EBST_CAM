@@ -1020,6 +1020,9 @@ es_status_codes SetSTI( uint32_t drvno, uint8_t sti_mode )
 * 	- 2: S2
 * 	- 3: S1&s2
 * 	- 4: BTIMER
+*	- 5: S1 chopper
+*	- 6: S2 chopper
+*	- 7: S1&S2 chopper
 * \return es_status_codes
 * 	- es_no_error
 * 	- es_register_read_failed
