@@ -231,6 +231,21 @@
              <string>BTimer</string>
             </property>
            </item>
+           <item>
+            <property name="text">
+             <string>S1 chopper</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>S2 chopper</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>S1 &amp; S2 chopper</string>
+            </property>
+           </item>
           </widget>
          </item>
          <item row="1" column="0">
