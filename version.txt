@@ -1,4 +1,4 @@
-v3.20.7
+v3.20.0
 - Increase required PCIe board version: 202.20
 - Add DLLIOCtrl_setOutput and DLLIOCtrl_setT0
 - Add IOCtrl_setAllOutputs
