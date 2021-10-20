@@ -86,6 +86,7 @@ DllAccess void DLLInitGlobals( struct global_vars g )
 	aPIXEL = g.aPIXEL;
 	aCAMCNT = g.aCAMCNT;
 	Nospb = g.Nospb;
+	Nob = g.Nob;
 	useSWTrig = g.useSWTrig;
 	return;
 }
@@ -101,18 +102,19 @@ DllAccess void DLLInitGlobals( struct global_vars g )
 */
 DllAccess void DLLStart2dViewer( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos )
 {
-	if (Direct2dViewer == NULL)
+	if (Direct2dViewer != NULL)
 	{
-		Direct2dViewer = Direct2dViewer_new();
-		UINT16* address = NULL;
-		GetAddressOfPixel(drvno, 0, 0, cur_nob, cam, &address);
-		Direct2dViewer_start2dViewer(
-			Direct2dViewer,
-			GetActiveWindow(),
-			address,
-			pixel,
-			nos );
+		DLLDeinit2dViewer();
 	}
+	Direct2dViewer = Direct2dViewer_new();
+	UINT16* address = NULL;
+	GetAddressOfPixel(drvno, 0, 0, cur_nob, cam, &address);
+	Direct2dViewer_start2dViewer(
+		Direct2dViewer,
+		GetActiveWindow(),
+		address,
+		pixel,
+		nos );
 	return;
 }
 

@@ -402,10 +402,18 @@
     <addaction name="actionDAC"/>
     <addaction name="actionIO_Control"/>
    </widget>
+   <widget class="QMenu" name="menuGreyscale_Viewer">
+    <property name="title">
+     <string>Greyscale Viewer</string>
+    </property>
+    <addaction name="actionShow"/>
+    <addaction name="actionGamma"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSettings"/>
    <addaction name="menuWindow"/>
    <addaction name="menuChart"/>
+   <addaction name="menuGreyscale_Viewer"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -501,6 +509,24 @@
   <action name="actionIO_Control">
    <property name="text">
     <string>IO Control</string>
+   </property>
+  </action>
+  <action name="actionGreyscale_viewer">
+   <property name="text">
+    <string>Greyscale viewer</string>
+   </property>
+  </action>
+  <action name="actionShow">
+   <property name="text">
+    <string>Show</string>
+   </property>
+  </action>
+  <action name="actionGamma">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Gamma...</string>
    </property>
   </action>
  </widget>

@@ -721,7 +721,7 @@ es_status_codes ResetPartialBinning( uint32_t drvno )
  */
 es_status_codes SetMeasurementParameters( uint32_t drvno, uint32_t nos, uint32_t nob )
 {
-	Nob = nob;
+	*Nob = nob;
 	*Nospb = nos;
 	ES_LOG( "Set measurement parameters: drv: %i nos: %i and nob: %i\n", drvno, nos, nob );
 	//stop all and clear FIFO
@@ -736,9 +736,9 @@ es_status_codes SetMeasurementParameters( uint32_t drvno, uint32_t nos, uint32_t
 	if (status != es_no_error) return status;
 	uint32_t dmaBufferPartSizeInScans = DMA_BUFFER_SIZE_IN_SCANS / DMA_BUFFER_PARTS; //500
 	if (BOARD_SEL > 2)
-		numberOfInterrupts = Nob * (*Nospb) * aCAMCNT[drvno] * number_of_boards / dmaBufferPartSizeInScans - 2;//- 2 because intr counter starts with 0
+		numberOfInterrupts = *Nob * (*Nospb) * aCAMCNT[drvno] * number_of_boards / dmaBufferPartSizeInScans - 2;//- 2 because intr counter starts with 0
 	else
-		numberOfInterrupts = Nob * (*Nospb) * aCAMCNT[drvno] / dmaBufferPartSizeInScans - 1;//- 1 because intr counter starts with 0
+		numberOfInterrupts = *Nob * (*Nospb) * aCAMCNT[drvno] / dmaBufferPartSizeInScans - 1;//- 1 because intr counter starts with 0
 	ES_LOG("Number of interrupts: 0x%x \n", numberOfInterrupts);
 	return status;
 }
@@ -793,7 +793,7 @@ es_status_codes allocateUserMemory( uint32_t drvno )
 	uint64_t memory_free = 0;
 	FreeMemInfo( &memory_all, &memory_free );
 	int64_t memory_free_mb = memory_free / (1024 * 1024);
-	int64_t needed_mem = (int64_t)aCAMCNT[drvno] * (int64_t)Nob * (int64_t)(*Nospb) * (int64_t)aPIXEL[drvno] * (int64_t)sizeof( uint16_t );
+	int64_t needed_mem = (int64_t)aCAMCNT[drvno] * (int64_t)(*Nob) * (int64_t)(*Nospb) * (int64_t)aPIXEL[drvno] * (int64_t)sizeof( uint16_t );
 	int64_t needed_mem_mb = needed_mem / (1024 * 1024);
 	ES_LOG( "Allocate user memory, available memory:%ld MB, memory needed: %ld MB (%ld)\n", memory_free_mb, needed_mem_mb, needed_mem );
 	//check if enough space is available in the physical ram
@@ -842,7 +842,7 @@ es_status_codes SetDMABufRegs( uint32_t drvno )
 	ES_LOG( "scansPerInterrupt/camcnt: 0x%x \n", DMA_DMASPERINTR / aCAMCNT[drvno] );
 	status = writeBitsS0_32(drvno, *Nospb, 0xffffffff, S0Addr_NOS);
 	if (status != es_no_error) return status;
-	status = writeBitsS0_32(drvno, Nob, 0xffffffff, S0Addr_NOB);
+	status = writeBitsS0_32(drvno, *Nob, 0xffffffff, S0Addr_NOB);
 	if (status != es_no_error) return status;
 	return writeBitsS0_32(drvno, aCAMCNT[drvno], 0xffffffff, S0Addr_CAMCNT);
 }
@@ -2005,7 +2005,7 @@ es_status_codes StartMeasurement()
 			if (status != es_no_error) return status;
 		}
 		// Block read for loop.
-		for (uint32_t blk_cnt = 0; blk_cnt < Nob; blk_cnt++)
+		for (uint32_t blk_cnt = 0; blk_cnt < *Nob; blk_cnt++)
 		{
 			// Increase the block count hardware register.
 			// This must be done, before the block starts, so doing this first is a good idea.
@@ -2426,10 +2426,10 @@ es_status_codes GetLastBufPart( uint32_t drvno )
 	if (status != es_no_error) return status;
 	//halfbufize is 500 with default values
 	uint32_t dmaHalfBufferSize = DMA_BUFFER_SIZE_IN_SCANS / DMA_BUFFER_PARTS;
-	uint32_t scans_all_cams = (*Nospb) * Nob * aCAMCNT[drvno];
+	uint32_t scans_all_cams = (*Nospb) * (*Nob) * aCAMCNT[drvno];
 	uint32_t rest_overall = scans_all_cams % dmaHalfBufferSize;
 	size_t rest_in_bytes = rest_overall * aPIXEL[drvno] * sizeof( uint16_t );
-	ES_LOG( "nos: 0x%x, nob: 0x%x, scansPerInterrupt: 0x%x, camcnt: 0x%x\n", (*Nospb), Nob, spi, aCAMCNT[drvno]);
+	ES_LOG( "nos: 0x%x, nob: 0x%x, scansPerInterrupt: 0x%x, camcnt: 0x%x\n", (*Nospb), *Nob, spi, aCAMCNT[drvno]);
 	ES_LOG( "scans_all_cams: 0x%x \n", scans_all_cams );
 	ES_LOG( "rest_overall: 0x%x, rest_in_bytes: 0x%zx\n", rest_overall, rest_in_bytes );
 	if (rest_overall)
@@ -2542,7 +2542,7 @@ es_status_codes ReturnFrame(uint32_t drv, uint32_t curr_nos, uint32_t curr_nob, 
  */
 es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint64_t* pIndex )
 {
-	if (pixel >= aPIXEL[drvno] || sample >= *Nospb || block >= Nob || CAM >= aCAMCNT[drvno])
+	if (pixel >= aPIXEL[drvno] || sample >= *Nospb || block >= *Nob || CAM >= aCAMCNT[drvno])
 		return es_parameter_out_of_range;
 	//init index with base position of pixel
 	uint64_t index = pixel;
