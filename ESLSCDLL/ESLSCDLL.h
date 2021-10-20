@@ -90,7 +90,7 @@ DllAccess es_status_codes DLLLedOff(UINT32 drvno, UINT8 LED_OFF);
 DllAccess es_status_codes DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED, UINT16 led_off, UINT16 sensor_gain );
 DllAccess es_status_codes DLLInitCamera3001( UINT32 drvno );
 DllAccess es_status_codes DLLInitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern);
-DllAccess es_status_codes DLLInitCamera3030(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain, BOOL useDac, UINT16* dac_output, BOOL isIR);
+DllAccess es_status_codes DLLInitCamera3030(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 adc_gain, UINT8 useDac, UINT32* dac_output, UINT8 isIR);
 DllAccess es_status_codes DLLSetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq );
 DllAccess es_status_codes DLLSetBTI( UINT32 drvno, UINT8 bti_mode );
 DllAccess es_status_codes DLLSetSTI( UINT32 drvno, UINT8 sti_mode );
