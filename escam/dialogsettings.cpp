@@ -41,16 +41,14 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->doubleSpinBoxSTime_in_ms->setSizePolicy(sp_retain);
 	ui->doubleSpinBoxBTimer_in_ms->setSizePolicy(sp_retain);
 
-	sp_retain = ui->checkBoxGain3010->sizePolicy();
+	sp_retain = ui->checkBoxUseDac->sizePolicy();
 	sp_retain.setRetainSizeWhenHidden(true);
-	ui->checkBoxGain3010->setSizePolicy(sp_retain);
-	ui->checkBoxUseDac->setSizePolicy(sp_retain);
 	ui->checkBoxUseDac->setSizePolicy(sp_retain);
 	ui->checkBoxRegionsEqual->setSizePolicy(sp_retain);
 
-	sp_retain = ui->spinBoxGain3030->sizePolicy();
+	sp_retain = ui->spinBoxAdcGain->sizePolicy();
 	sp_retain.setRetainSizeWhenHidden(true);
-	ui->spinBoxGain3030->setSizePolicy(sp_retain);
+	ui->spinBoxAdcGain->setSizePolicy(sp_retain);
 	ui->spinBoxLines->setSizePolicy(sp_retain);
 	ui->spinBoxRegion1->setSizePolicy(sp_retain);
 	ui->spinBoxRegion2->setSizePolicy(sp_retain);
@@ -98,8 +96,8 @@ DialogSettings::DialogSettings(QWidget *parent) :
     ui->checkBoxMshut->setChecked(settings.value(settingMshutPath, settingMshutDefault).toBool());
     ui->checkBoxMshut->stateChanged(settings.value(settingMshutPath, settingMshutDefault).toBool());
     ui->checkBoxLed->setChecked(settings.value(settingLedPath, settingLedDefault).toBool());
-    ui->checkBoxGain3010->setChecked(settings.value(settingGain3010Path, settingGain3010Default).toBool());
-    ui->spinBoxGain3030->setValue(settings.value(settingGain3030Path, settingGain3030Default).toUInt());
+    ui->spinBoxSensorGain->setValue(settings.value(settingSensorGainPath, settingSensorGainDefault).toUInt());
+    ui->spinBoxAdcGain->setValue(settings.value(settingAdcGainPath, settingAdcGainDefault).toUInt());
     ui->comboBoxCamCool->setCurrentIndex(settings.value(settingCoolingPath, settingCoolingDefault).toUInt());
     ui->checkBoxUseDac->setChecked(settings.value(settingDacPath, settingDacDefault).toBool());
     ui->checkBoxUseDac->stateChanged(settings.value(settingDacPath, settingDacDefault).toBool());
@@ -188,8 +186,8 @@ void DialogSettings::on_accepted()
     settings.setValue(settingPixelPath, ui->spinBoxPixel->value());
     settings.setValue(settingMshutPath, ui->checkBoxMshut->isChecked());
     settings.setValue(settingLedPath, ui->checkBoxLed->isChecked());
-    settings.setValue(settingGain3010Path, ui->checkBoxGain3010->isChecked());
-    settings.setValue(settingGain3030Path, ui->spinBoxGain3030->value());
+    settings.setValue(settingSensorGainPath, ui->spinBoxSensorGain->value());
+    settings.setValue(settingAdcGainPath, ui->spinBoxAdcGain->value());
     settings.setValue(settingCoolingPath, ui->comboBoxCamCool->currentIndex());
     settings.setValue(settingDacPath, ui->checkBoxUseDac->isChecked());
     settings.setValue(settingGpxPath, ui->checkBoxGpx->isChecked());
@@ -403,10 +401,8 @@ void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
     switch(index)
     {
     case 0:
-		ui->checkBoxGain3010->setEnabled(true || enabled);
-		ui->checkBoxGain3010->setVisible(true || visible);
-		ui->spinBoxGain3030->setEnabled(false || enabled);
-		ui->spinBoxGain3030->setVisible(false || visible);
+		ui->spinBoxAdcGain->setEnabled(false || enabled);
+		ui->spinBoxAdcGain->setVisible(false || visible);
 		ui->checkBoxUseDac->setEnabled(false || enabled);
 		ui->checkBoxUseDac->setVisible(false || visible);
 		mainWindow->ui->actionDAC->setEnabled(false || enabled);
@@ -417,10 +413,8 @@ void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
 		ui->spinBoxAdcCustom->setVisible(false || visible);
 		break;
     case 1:
-		ui->checkBoxGain3010->setEnabled(true || enabled);
-		ui->checkBoxGain3010->setVisible(true || visible);
-		ui->spinBoxGain3030->setEnabled(false || enabled);
-		ui->spinBoxGain3030->setVisible(false || visible);
+		ui->spinBoxAdcGain->setEnabled(false || enabled);
+		ui->spinBoxAdcGain->setVisible(false || visible);
 		ui->checkBoxUseDac->setEnabled(false || enabled);
 		ui->checkBoxUseDac->setVisible(false || visible);
 		mainWindow->ui->actionDAC->setEnabled(false || enabled);
@@ -431,10 +425,8 @@ void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
 		ui->spinBoxAdcCustom->setVisible(true || visible);
         break;
     case 2:
-		ui->checkBoxGain3010->setEnabled(false || enabled);
-		ui->checkBoxGain3010->setVisible(false || visible);
-		ui->spinBoxGain3030->setEnabled(true || enabled);
-		ui->spinBoxGain3030->setVisible(true || visible);
+		ui->spinBoxAdcGain->setEnabled(true || enabled);
+		ui->spinBoxAdcGain->setVisible(true || visible);
 		ui->checkBoxUseDac->setEnabled(true || enabled);
 		ui->checkBoxUseDac->setVisible(true || visible);
 		mainWindow->ui->actionDAC->setEnabled(ui->checkBoxUseDac->checkState() || enabled);
@@ -558,8 +550,8 @@ void DialogSettings::loadDefaults()
     ui->checkBoxMshut->setChecked(settingMshutDefault);
     ui->checkBoxMshut->stateChanged(settingMshutDefault);
     ui->checkBoxLed->setChecked(settingLedDefault);
-    ui->checkBoxGain3010->setChecked(settingGain3010Default);
-    ui->spinBoxGain3030->setValue(settingGain3030Default);
+    ui->spinBoxSensorGain->setValue(settingSensorGainDefault);
+    ui->spinBoxAdcGain->setValue(settingAdcGainDefault);
     ui->comboBoxCamCool->setCurrentIndex(settingCoolingDefault);
     ui->checkBoxUseDac->setChecked(settingDacDefault);
     ui->checkBoxUseDac->stateChanged(settingDacDefault);

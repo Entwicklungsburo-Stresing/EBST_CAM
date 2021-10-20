@@ -503,13 +503,6 @@
            </property>
           </spacer>
          </item>
-         <item row="8" column="2">
-          <widget class="QCheckBox" name="checkBoxGain3010">
-           <property name="text">
-            <string>on</string>
-           </property>
-          </widget>
-         </item>
          <item row="12" column="2">
           <widget class="QCheckBox" name="checkBoxGpx">
            <property name="text">
@@ -595,12 +588,12 @@
          <item row="8" column="1">
           <widget class="QLabel" name="labelGain3010">
            <property name="text">
-            <string>Gain</string>
+            <string>Sensor gain</string>
            </property>
           </widget>
          </item>
          <item row="9" column="2">
-          <widget class="QSpinBox" name="spinBoxGain3030">
+          <widget class="QSpinBox" name="spinBoxAdcGain">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -651,7 +644,7 @@
          <item row="9" column="1">
           <widget class="QLabel" name="labelGain3030">
            <property name="text">
-            <string>Gain</string>
+            <string>ADC Gain</string>
            </property>
           </widget>
          </item>
@@ -845,6 +838,13 @@
            </property>
            <property name="value">
             <number>1078</number>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="2">
+          <widget class="QSpinBox" name="spinBoxSensorGain">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
@@ -1623,8 +1623,7 @@
   <tabstop>spinBoxPixel</tabstop>
   <tabstop>checkBoxMshut</tabstop>
   <tabstop>checkBoxLed</tabstop>
-  <tabstop>checkBoxGain3010</tabstop>
-  <tabstop>spinBoxGain3030</tabstop>
+  <tabstop>spinBoxAdcGain</tabstop>
   <tabstop>comboBoxCamCool</tabstop>
   <tabstop>checkBoxUseDac</tabstop>
   <tabstop>checkBoxGpx</tabstop>

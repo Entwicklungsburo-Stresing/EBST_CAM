@@ -137,8 +137,8 @@ void MainWindow::startPressed()
     settings_struct.pixel = settings.value(settingPixelPath, settingPixelDefault).toUInt();
     settings_struct.mshut = settings.value(settingMshutPath, settingMshutDefault).toBool();
     settings_struct.led_off = settings.value(settingLedPath, settingLedDefault).toBool();
-    settings_struct.gain_switch = settings.value(settingGain3010Path, settingGain3010Default).toBool();
-    settings_struct.gain_3030 = settings.value(settingGain3030Path, settingGain3030Default).toUInt();
+	settings_struct.sensor_gain = settings.value(settingSensorGainPath, settingSensorGainDefault).toUInt();
+    settings_struct.adc_gain = settings.value(settingAdcGainPath, settingAdcGainDefault).toUInt();
     settings_struct.Temp_level = settings.value(settingCoolingPath, settingCoolingDefault).toUInt();
     settings_struct.dac = settings.value(settingDacPath, settingDacDefault).toBool();
     settings_struct.enable_gpx = settings.value(settingGpxPath, settingGpxDefault).toBool();

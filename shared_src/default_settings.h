@@ -24,8 +24,8 @@
 #define settingPixelDefault							576
 #define settingMshutDefault							false
 #define settingLedDefault							false
-#define settingGain3010Default						false
-#define settingGain3030Default						0
+#define settingSensorGainDefault					0
+#define settingAdcGainDefault						0
 #define settingCoolingDefault						0
 #define settingDacDefault							false
 #define settingGpxDefault							false

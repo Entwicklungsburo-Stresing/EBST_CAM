@@ -575,33 +575,33 @@ DllAccess es_status_codes DLLAboutGPX( UINT32 drvno )
 /**
  * \copydoc InitCamera3001
  */
-DllAccess es_status_codes DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED, UINT16 led_off )
+DllAccess es_status_codes DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED, UINT16 led_off, UINT16 sensor_gain)
 {
-	return InitCameraGeneral( drvno, pixel, cc_trigger_input, IS_FFT, IS_AREA, IS_COOLED, led_off );
+	return InitCameraGeneral( drvno, pixel, cc_trigger_input, IS_FFT, IS_AREA, IS_COOLED, led_off, sensor_gain );
 }
 
 /**
  * \copydoc InitCamera3001
  */
-DllAccess es_status_codes DLLInitCamera3001( UINT32 drvno, UINT16 pixel, UINT16 trigger_input, UINT16 IS_FFT, UINT16 IS_AREA )
+DllAccess es_status_codes DLLInitCamera3001( UINT32 drvno )
 {
-	return InitCamera3001( drvno, pixel, trigger_input, IS_FFT, IS_AREA );
+	return InitCamera3001( drvno );
 }
 
 /**
  * \copydoc InitCamera3010
  */
-DllAccess es_status_codes DLLInitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT16 gain_switch )
+DllAccess es_status_codes DLLInitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern )
 {
-	return InitCamera3010( drvno, adc_mode, custom_pattern, gain_switch );
+	return InitCamera3010( drvno, adc_mode, custom_pattern );
 }
 
 /**
  * \copydoc InitCamera3030
  */
-DllAccess es_status_codes DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 gain, BOOL useDac, UINT16* dac_output, BOOL isIR )
+DllAccess es_status_codes DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 adc_gain, BOOL useDac, UINT16* dac_output, BOOL isIR )
 {
-	return InitCamera3030( drvno, adc_mode, custom_pattern, gain, useDac, dac_output, isIR);
+	return InitCamera3030( drvno, adc_mode, custom_pattern, adc_gain, useDac, dac_output, isIR);
 }
 
 /**
