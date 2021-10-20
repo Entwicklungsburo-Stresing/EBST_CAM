@@ -181,25 +181,22 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	status = SetBDAT(drvno, settings_struct.bdat_in_10ns);
 	if (status != es_no_error) return status;
 	//init Camera
-	status = InitCameraGeneral(drvno, settings_struct.pixel, settings_struct.trigger_mode_cc, settings_struct.sensor_type, 0, 0, settings_struct.led_off);
+	status = InitCameraGeneral(drvno, settings_struct.pixel, settings_struct.trigger_mode_cc, settings_struct.sensor_type, 0, 0, settings_struct.led_off, settings_struct.sensor_gain);
 	if (status != es_no_error) return status;
 	switch (settings_struct.camera_system)
 	{
 	case camera_system_3001:
-		InitCamera3001(drvno, settings_struct.gain_switch);
+		InitCamera3001(drvno);
 		break;
 	case camera_system_3010:
-		InitCamera3010(drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern, settings_struct.gain_switch);
+		InitCamera3010(drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern);
 		break;
 	case camera_system_3030:
-		InitCamera3030(drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern, settings_struct.gain_3030, settings_struct.dac, settings_struct.dac_output[drvno-1], settings_struct.isIr);
+		InitCamera3030(drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern, settings_struct.adc_gain, settings_struct.dac, settings_struct.dac_output[drvno-1], settings_struct.isIr);
 		break;
 	default:
 		return es_parameter_out_of_range;
 	}
-	if (status != es_no_error) return status;
-	//set gain switch
-	status = SendFLCAM(drvno, maddr_cam, 0, (uint16_t)settings_struct.gain_switch);
 	if (status != es_no_error) return status;
 	//for cooled Cam
 	status = SetTemp(drvno, (uint8_t)settings_struct.Temp_level);
@@ -1246,13 +1243,16 @@ es_status_codes SetBDAT( uint32_t drvno, uint32_t datin10ns )
  * \param is_area =1 area mode on, =0 area mode off
  * \param IS_COOLED =1 disables PCIe FIFO when cool cam transmits cool status
  * \param led_off 1 led off, 0 led on
+ * \param sensor_gain For IR sensors. 0 is the lowest gain.
+ *		- 3001/3010: 0 to 1
+ *		- 3030: 0 to 3
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_trigger_input, uint8_t is_fft, uint8_t is_area, uint8_t IS_COOLED, uint16_t led_off)
+es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_trigger_input, uint8_t is_fft, uint8_t is_area, uint8_t IS_COOLED, uint16_t led_off, uint16_t sensor_gain )
 {
-	ES_LOG("Init camera general, pixel: %u, cc_trigger: %u, fft: %u, area: %u, cooled: %u\n", pixel, cc_trigger_input, is_fft, is_area, IS_COOLED);
+	ES_LOG("Init camera general, pixel: %u, cc_trigger: %u, fft: %u, area: %u, cooled: %u, led_off: %u, sensor_gain: %u\n", pixel, cc_trigger_input, is_fft, is_area, IS_COOLED, led_off, sensor_gain);
 	es_status_codes status = es_no_error;
 	// when TRUE: disables PCIe FIFO when cool cam transmits cool status
 	if (IS_COOLED)
@@ -1267,7 +1267,11 @@ es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_t
 	status = SendFLCAM( drvno, maddr_cam, cam_adaddr_trig_in, cc_trigger_input );
 	if (status != es_no_error) return status;
 	//set led off
-	SendFLCAM(drvno, maddr_cam, cam_adaddr_LEDoff, led_off );
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_LEDoff, led_off );
+	if (status != es_no_error) return status;
+	//set gain switch (mostly for IR sensors)
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, sensor_gain);
+	if (status != es_no_error) return status;
 	//select vclk and Area mode on
 	if (is_area>0)	{	is_area = (uint8_t)0x8000; }
 	else { is_area = 0x0000; }
@@ -1342,18 +1346,14 @@ es_status_codes SendFLCAM( uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16
  * 
  * 	Sets register in camera.
  * \param drvno selects PCIe board
- * \param gain_switch 1 gain hi, 0 gain lo (for IR sensors)
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes InitCamera3001( uint32_t drvno, uint8_t gain_switch )
+es_status_codes InitCamera3001( uint32_t drvno  )
 {
-	ES_LOG("Init camera 3001, gain switch: %u\n", gain_switch);
-	es_status_codes status = Use_ENFFW_protection( drvno, true );
-	if (status != es_no_error) return status;
-	//set gain switch (mostly for IR sensors)
-	return SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, gain_switch);
+	ES_LOG("Init camera 3001\n");
+	return Use_ENFFW_protection( drvno, true );
 }
 
 /**
@@ -1366,18 +1366,16 @@ es_status_codes InitCamera3001( uint32_t drvno, uint8_t gain_switch )
  * \param pixel pixel amount of camera
  * \param adc_mode 0: normal mode, 2: custom pattern
  * \param custom_pattern fixed output for testmode, ignored when testmode FALSE
- * \param gain_switch 1 gain hi, 0 gain lo (for IR sensors)
- * \return void
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
  */
-es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint16_t gain_switch )
+es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern )
 {
 	ES_LOG("Init camera 3010, adc_mode: %u, custom_pattern: %u\n", adc_mode, custom_pattern);
 	es_status_codes status = Cam3010_ADC_reset( drvno );
 	if (status != es_no_error) return status;
-	status = Cam3010_ADC_setOutputMode(drvno, adc_mode, custom_pattern);
-	if (status != es_no_error) return status;
-	//set gain switch (mostly for IR sensors)
-	return SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, gain_switch);
+	return Cam3010_ADC_setOutputMode(drvno, adc_mode, custom_pattern);
 }
 
 /**
@@ -1436,29 +1434,31 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
  * \param drvno selects PCIe board
  * \param adc_mode 0: normal mode, 1: ramp, 2: custom pattern
  * \param custom_pattern only used when adc_mode = 2, lower 14 bits are used as output of ADC
- * \param gain in ADC
+ * \param adc_gain gain of ADC
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes InitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t gain, bool useDac, uint32_t* dac_output, bool isIr )
+es_status_codes InitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t adc_gain, bool useDac, uint32_t* dac_output, bool isIr )
 {
-	ES_LOG("Init camera 3030, adc_mode: %u, custom_pattern: %u, gain: %u, use dac: %u, isIr: %u\n", adc_mode, custom_pattern, gain, useDac, isIr);
+	ES_LOG("Init camera 3030, adc_mode: %u, custom_pattern: %u, adc_gain: %u, use dac: %u, isIr: %u\n", adc_mode, custom_pattern, adc_gain, useDac, isIr);
 	es_status_codes status = Cam3030_ADC_reset( drvno );
 	if (status != es_no_error) return status;
 	//two wire mode output interface for pal versions P209_2 and above
 	status = Cam3030_ADC_twoWireModeEN( drvno );
 	if (status != es_no_error) return status;
-	status = Cam3030_ADC_SetGain( drvno, gain );
+	status = Cam3030_ADC_SetGain( drvno, adc_gain );
 	if (status != es_no_error) return status;
 	if (adc_mode)
 		status = Cam3030_ADC_RampOrPattern( drvno, adc_mode, custom_pattern );
+	if (status != es_no_error) return status;
 	//DAC
 	int dac_channel_count = 8;
 	if (useDac)
 	{
-		SendFLCAM_DAC(drvno, dac_channel_count, 0, 0, 1);
-		DAC_setAllOutputs(drvno, dac_output, isIr);
+		status = SendFLCAM_DAC(drvno, dac_channel_count, 0, 0, 1);
+		if (status != es_no_error) return status;
+		status = DAC_setAllOutputs(drvno, dac_output, isIr);
 	}
 	return status;
 }
@@ -3184,8 +3184,8 @@ es_status_codes dumpSettings(char** stringPtr)
 		settings_struct.pixel,
 		settings_struct.mshut,
 		settings_struct.led_off,
-		settings_struct.gain_switch,
-		settings_struct.gain_3030,
+		settings_struct.sensor_gain,
+		settings_struct.adc_gain,
 		settings_struct.Temp_level,
 		settings_struct.dac,
 		settings_struct.enable_gpx,
