@@ -380,7 +380,7 @@ DllAccess es_status_codes DLLCopyAllData( UINT32 drv, UINT16 *pdest )
 	UINT16* pframe = NULL;
 	es_status_codes status = GetAddressOfPixel(drv, 0, 0, 0, 0, &pframe);
 	if (status != es_no_error) return status;
-	memcpy( pdest, pframe, (UINT64)(*Nospb) * (UINT64)Nob * (UINT64)aCAMCNT[drv] * (UINT64)aPIXEL[drv] * sizeof( UINT16 ) );  // length in bytes
+	memcpy( pdest, pframe, (UINT64)(*Nospb) * (UINT64)(*Nob) * (UINT64)aCAMCNT[drv] * (UINT64)aPIXEL[drv] * sizeof( UINT16 ) );  // length in bytes
 	return status;
 }
 

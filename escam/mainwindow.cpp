@@ -3,6 +3,9 @@
 #include "../version.h"
 #include "dialogdac.h"
 #include "dialogioctrl.h"
+#ifdef WIN32
+#include "shared_src/ESLSCDLL_pro.h"
+#endif
 
 /**
  * @brief Constructor of Class MainWindow.
@@ -246,6 +249,7 @@ void MainWindow::on_actionEdit_triggered()
 	connect( ds, SIGNAL( settings_saved() ), this, SLOT( loadSettings() ) );
 	return;
 }
+
 /**
  * @brief This slot opens the TDC dialog.
  * @return none
@@ -638,5 +642,59 @@ void MainWindow::on_actionIO_Control_triggered()
 	DialogIoctrl* dialogIoctrl = new DialogIoctrl(this);
 	dialogIoctrl->setAttribute(Qt::WA_DeleteOnClose);
 	dialogIoctrl->show();
+	return;
+}
+
+/**
+ * @brief This slot opens the greyscale viewer. Only on windows.
+ * @return none
+ */
+void MainWindow::on_actionShow_triggered()
+{
+#ifdef WIN32
+	uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
+	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
+	uint32_t block = ui->horizontalSliderBlock->value() - 1;
+	uint32_t drvno;
+	switch (settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt())
+	{
+	default:
+	case 0:
+	case 2:
+		drvno = 1;
+		break;
+	case 1:
+		drvno = 2;
+		break;
+	}
+	DLLStart2dViewer(drvno, 0, block, pixelcount, nos);
+#endif
+	return;
+}
+
+/**
+ * @brief This slot sends the new block to greyscale viewer.
+ * @return none
+ */
+void MainWindow::on_horizontalSliderBlock_valueChanged()
+{
+#ifdef WIN32
+	uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
+	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
+	uint32_t block = ui->horizontalSliderBlock->value() - 1;
+	uint32_t drvno;
+	switch (settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt())
+	{
+	default:
+	case 0:
+	case 2:
+		drvno = 1;
+		break;
+	case 1:
+		drvno = 2;
+		break;
+	}
+	DLLShowNewBitmap(drvno, block, 0, pixelcount, nos);
+#endif
 	return;
 }
