@@ -38,6 +38,7 @@ void InitProDLL()
 	g.aPIXEL = aPIXEL;
 	g.aCAMCNT = aCAMCNT;
 	g.Nospb = Nospb;
+	g.Nob = Nob;
 	g.useSWTrig = useSWTrig;
 	DLLInitGlobals(g);
 	return;

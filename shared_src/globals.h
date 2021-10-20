@@ -34,6 +34,7 @@ struct global_vars
 	uint32_t* aPIXEL;
 	uint32_t* aCAMCNT;
 	uint32_t* Nospb;
+	uint32_t* Nob;
 	bool* useSWTrig;
 };
 
@@ -44,7 +45,7 @@ extern uint16_t** userBuffer;
 extern uint16_t** userBufferWritePos;
 extern uint32_t BOARD_SEL;
 extern uint8_t number_of_boards;
-extern uint32_t Nob;
+extern uint32_t* Nob;
 extern uint32_t* Nospb;
 extern bool abortMeasurementFlag;
 extern uint32_t numberOfInterrupts;

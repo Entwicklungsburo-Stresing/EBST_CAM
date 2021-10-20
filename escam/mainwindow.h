@@ -51,6 +51,7 @@ private slots:
 	void on_actionAbout_Qt_triggered();
 	void on_actionDAC_triggered();
 	void on_actionIO_Control_triggered();
+	void on_actionShow_triggered();
 	void loadSettings();
 	void startPressed();
 	void startContPressed(bool checked);
@@ -59,6 +60,7 @@ private slots:
 	void on_rubberBandChanged();
     void on_checkBoxShowCamera(bool state, int camera);
 	void on_pushButtonStart_pressed();
+	void on_horizontalSliderBlock_valueChanged();
 };
 
 #endif // MAINWINDOW_H
