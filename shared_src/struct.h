@@ -30,8 +30,8 @@ struct global_settings
 	uint32_t pixel;
 	uint32_t mshut;
 	uint32_t led_off;
-	uint32_t gain_switch;
-	uint32_t gain_3030;
+	uint32_t sensor_gain;
+	uint32_t adc_gain;
 	uint32_t Temp_level;
 	uint32_t dac;
 	uint32_t enable_gpx;
