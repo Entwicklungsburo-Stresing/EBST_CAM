@@ -700,7 +700,7 @@ void MainWindow::on_horizontalSliderBlock_valueChanged()
 }
 
 /**
- * @brief This slot opens an save file dialog to export the settings.
+ * @brief This slot opens a save file dialog to export the settings.
  * @return none
  */
 void MainWindow::on_actionExport_triggered()
@@ -712,7 +712,7 @@ void MainWindow::on_actionExport_triggered()
 }
 
 /**
- * @brief This slot opens an load file dialog to import the settings.
+ * @brief This slot opens a load file dialog to import the settings.
  * @return none
  */
 void MainWindow::on_actionImport_triggered()
