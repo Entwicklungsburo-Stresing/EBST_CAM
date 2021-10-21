@@ -64,6 +64,7 @@ private slots:
 	void on_horizontalSliderBlock_valueChanged();
 	void on_actionExport_triggered();
 	void on_actionImport_triggered();
+	void on_actionGamma_triggered();
 };
 
 #endif // MAINWINDOW_H

@@ -524,9 +524,6 @@
    </property>
   </action>
   <action name="actionGamma">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="text">
     <string>Gamma...</string>
    </property>

@@ -3,6 +3,7 @@
 #include "../version.h"
 #include "dialogdac.h"
 #include "dialogioctrl.h"
+#include "dialoggamma.h"
 #ifdef WIN32
 #include "shared_src/ESLSCDLL_pro.h"
 #endif
@@ -736,4 +737,16 @@ void MainWindow::copySettings(QSettings &dst, QSettings &src)
 	{
 		dst.setValue(*i, src.value(*i));
 	}
+}
+
+/**
+ * @brief This slot opens the gamma dialog.
+ * @return none
+ */
+void MainWindow::on_actionGamma_triggered()
+{
+	DialogGamma* dialogGamma = new DialogGamma(this);
+	dialogGamma->setAttribute(Qt::WA_DeleteOnClose);
+	dialogGamma->show();
+	return;
 }
