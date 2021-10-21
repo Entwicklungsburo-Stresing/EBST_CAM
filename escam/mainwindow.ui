@@ -372,6 +372,8 @@
      <string>Settings</string>
     </property>
     <addaction name="actionEdit"/>
+    <addaction name="actionExport"/>
+    <addaction name="actionImport"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -527,6 +529,16 @@
    </property>
    <property name="text">
     <string>Gamma...</string>
+   </property>
+  </action>
+  <action name="actionExport">
+   <property name="text">
+    <string>Export</string>
+   </property>
+  </action>
+  <action name="actionImport">
+   <property name="text">
+    <string>Import</string>
    </property>
   </action>
  </widget>
