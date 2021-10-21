@@ -13,4 +13,7 @@ public:
 
 private:
 	Ui::DialogGamma *ui;
+private slots:
+	void on_spinBoxWhite_valueChanged(int value);
+	void on_spinBoxBlack_valueChanged(int value);
 };
