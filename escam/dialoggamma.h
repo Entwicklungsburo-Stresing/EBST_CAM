@@ -13,7 +13,10 @@ public:
 
 private:
 	Ui::DialogGamma *ui;
+	uint16_t white_old;
+	uint16_t black_old;
 private slots:
 	void on_spinBoxWhite_valueChanged(int value);
 	void on_spinBoxBlack_valueChanged(int value);
+	void on_buttonBox_rejected();
 };
