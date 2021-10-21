@@ -698,3 +698,42 @@ void MainWindow::on_horizontalSliderBlock_valueChanged()
 #endif
 	return;
 }
+
+/**
+ * @brief This slot opens an save file dialog to export the settings.
+ * @return none
+ */
+void MainWindow::on_actionExport_triggered()
+{
+	QString fileName = QFileDialog::getSaveFileName(this, "Export Settings", "config.ini", tr("config files (*.ini)"));
+	QSettings destSettings(fileName, QSettings::IniFormat);
+	copySettings(destSettings, settings);
+	return;
+}
+
+/**
+ * @brief This slot opens an load file dialog to import the settings.
+ * @return none
+ */
+void MainWindow::on_actionImport_triggered()
+{
+	QString fileName = QFileDialog::getOpenFileName(this, "Import Settings", nullptr, tr("config files (*.ini);;all files (*)"));
+	QSettings srcSettings(fileName, QSettings::IniFormat);
+	copySettings(settings, srcSettings);
+	return;
+}
+
+/**
+ * \brief This is a helper function to copy settings.
+ * 
+ * \param dst
+ * \param src
+ */
+void MainWindow::copySettings(QSettings &dst, QSettings &src)
+{
+	QStringList keys = src.allKeys();
+	for (QStringList::iterator i = keys.begin(); i != keys.end(); i++)
+	{
+		dst.setValue(*i, src.value(*i));
+	}
+}
