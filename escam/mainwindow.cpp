@@ -153,7 +153,7 @@ void MainWindow::startPressed()
     settings_struct.FFTMode = settings.value(settingFftModePath, settingFftModeDefault).toUInt();
     settings_struct.lines_binning = settings.value(settingLinesBinningPath, settingLinesBinningDefault).toUInt();
     settings_struct.number_of_regions = settings.value(settingNumberOfRegionsPath, settingNumberOfRegionsDefault).toUInt();
-    settings_struct.keep = settings.value(settingKeepPath, settingKeepDefault).toUInt();
+    settings_struct.keep = settingKeepDefault;
     if (settings.value(settingRegionSizeEqualPath, settingRegionSizeEqualDefault).toBool() == 0)
         *(settings_struct.region_size) = 0;
     else
