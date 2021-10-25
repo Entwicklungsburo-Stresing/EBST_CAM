@@ -114,6 +114,9 @@
     <ClCompile Include="dialogioctrl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dialoggamma.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h">
@@ -196,6 +199,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogioctrl.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialoggamma.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -862,6 +868,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="dialogioctrl.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="dialoggamma.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
