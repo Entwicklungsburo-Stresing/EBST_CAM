@@ -14,7 +14,8 @@
 #define settingSslopeDefault						sslope_pos
 #define settingBslopeDefault						bslope_pos
 #define settingXckdelayIn10nsDefault				0
-#define settingShutterExpTimeIn10nsDefault			1
+#define settingShutterSecIn10nsDefault				1
+#define settingShutterBecIn10nsDefault				1
 #define settingTriggerCcDefault						xck
 #define settingBoardSelDefault						0
 #define settingSensorTypeDefault					PDAsensor
@@ -23,8 +24,8 @@
 #define settingPixelDefault							576
 #define settingMshutDefault							false
 #define settingLedDefault							false
-#define settingGain3010Default						false
-#define settingGain3030Default						0
+#define settingSensorGainDefault					0
+#define settingAdcGainDefault						0
 #define settingCoolingDefault						0
 #define settingDacDefault							false
 #define settingGpxDefault							false
@@ -34,7 +35,7 @@
 #define settingFftModeDefault						full_binning
 #define settingLinesBinningDefault					1
 #define settingNumberOfRegionsDefault				3
-#define settingKeepFirstDefault						false
+#define settingKeepDefault							0xFF
 #define settingRegionSizeEqualDefault				true
 #define settingRegionSize1Default					10
 #define settingRegionSize2Default					44

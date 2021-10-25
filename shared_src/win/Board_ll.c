@@ -37,6 +37,7 @@ void InitProDLL()
 	g.aPIXEL = aPIXEL;
 	g.aCAMCNT = aCAMCNT;
 	g.Nospb = Nospb;
+	g.Nob = Nob;
 	g.useSWTrig = useSWTrig;
 	DLLInitGlobals(g);
 	return;
@@ -408,6 +409,7 @@ es_status_codes SetupDma( uint32_t drvno )
 	// pDMABigBuf is the big space which is passed to this function = input - must be global
 	dwStatus = WDC_DMASGBufLock( hDev[drvno], pDMABigBuf, dwOptions, dmaBufferSizeInBytes, &dmaBufferInfos ); //size in Bytes
 #endif
+	return es_no_error;
 }
 
 es_status_codes enableInterrupt( uint32_t drvno )
@@ -437,7 +439,7 @@ es_status_codes enableInterrupt( uint32_t drvno )
 	default:
 		return es_parameter_out_of_range;
 	}
-	return;
+	return es_no_error;
 }
 
 /**
@@ -974,7 +976,6 @@ es_status_codes WaitTrigger(uint32_t drvno, bool ExtTrigFlag, bool *SpaceKey, bo
 	bool HiEdge = FALSE;
 	bool Abbr = FALSE;
 	bool Space = FALSE;
-	UCHAR ReturnKey = 0;
 	BYTE ReadTrigPin = 0;
 	es_status_codes status = es_no_error;
 	do

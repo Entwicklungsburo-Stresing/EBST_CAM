@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>336</width>
-    <height>470</height>
+    <width>333</width>
+    <height>471</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="measurement">
       <attribute name="title">
@@ -26,20 +26,50 @@
       <layout class="QVBoxLayout" name="verticalLayoutMeasurement">
        <item>
         <layout class="QGridLayout" name="gridLayoutMeasurement">
-         <item row="12" column="2">
-          <widget class="QSpinBox" name="spinBoxExpTimeIn10ns">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <item row="14" column="1">
+          <widget class="QLabel" name="labelTriggerModeCC">
+           <property name="text">
+            <string>Trigger mode Camera Control</string>
            </property>
-           <property name="correctionMode">
-            <enum>QAbstractSpinBox::CorrectToPreviousValue</enum>
+          </widget>
+         </item>
+         <item row="11" column="1">
+          <widget class="QLabel" name="labelXckdelayIn10ns">
+           <property name="text">
+            <string>XCK Delay</string>
            </property>
-           <property name="suffix">
-            <string>0ns</string>
+          </widget>
+         </item>
+         <item row="15" column="1">
+          <spacer name="verticalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
            </property>
-           <property name="maximum">
-            <number>999999999</number>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
            </property>
+          </spacer>
+         </item>
+         <item row="10" column="2">
+          <widget class="QComboBox" name="comboBoxBslope">
+           <item>
+            <property name="text">
+             <string>neg</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>pos</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>both</string>
+            </property>
+           </item>
           </widget>
          </item>
          <item row="9" column="2">
@@ -61,6 +91,39 @@
            </item>
           </widget>
          </item>
+         <item row="6" column="1">
+          <widget class="QLabel" name="labelBTimer">
+           <property name="text">
+            <string>BTimer (Block Timer)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1">
+          <widget class="QLabel" name="labelBdat">
+           <property name="text">
+            <string>BDAT (Block Delay After Trigger)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="2">
+          <widget class="QComboBox" name="comboBoxTriggerModeCC">
+           <item>
+            <property name="text">
+             <string>XCK</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>External</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>DAT</string>
+            </property>
+           </item>
+          </widget>
+         </item>
          <item row="5" column="2">
           <widget class="QDoubleSpinBox" name="doubleSpinBoxSTime_in_ms">
            <property name="alignment">
@@ -73,7 +136,172 @@
             <number>3</number>
            </property>
            <property name="maximum">
-            <double>999999999.000000000000000</double>
+            <double>4294967.294999999925494</double>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="labelNos">
+           <property name="text">
+            <string>NOS (Number of samples)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <spacer name="verticalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="labelNob">
+           <property name="text">
+            <string>NOB (Number of blocks)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="12" column="1">
+          <widget class="QLabel" name="labelSec">
+           <property name="text">
+            <string>SEC</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLabel" name="labelSti">
+           <property name="text">
+            <string>STI (Scan Trigger Input)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLabel" name="labelSTimer">
+           <property name="text">
+            <string>STimer (Scan Timer)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <spacer name="horizontalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="4" column="2">
+          <widget class="QComboBox" name="comboBoxBti">
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
+           </property>
+           <item>
+            <property name="text">
+             <string>I</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>S1</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>S2</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>S1 &amp; S2</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>BTimer</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>S1 chopper</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>S2 chopper</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>S1 &amp; S2 chopper</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLabel" name="labelBti">
+           <property name="text">
+            <string>BTI (Block Trigger Input)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="2">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxBTimer_in_ms">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="suffix">
+            <string>ms</string>
+           </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="maximum">
+            <double>4294967.294999999925494</double>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="1">
+          <widget class="QLabel" name="labelSslope">
+           <property name="text">
+            <string>SSlope (Scan Trigger Slope)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="1">
+          <widget class="QLabel" name="labelBslope">
+           <property name="text">
+            <string>BSlope (Block Trigger Slope)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QLabel" name="labelSdat">
+           <property name="text">
+            <string>SDAT (Scan Delay After Trigger)</string>
            </property>
           </widget>
          </item>
@@ -111,311 +339,124 @@
            </item>
           </widget>
          </item>
-         <item row="5" column="1">
-          <widget class="QLabel" name="labelSTimer">
+         <item row="13" column="1">
+          <widget class="QLabel" name="labelBec">
            <property name="text">
-            <string>STimer (Scan Timer)</string>
+            <string>BEC</string>
            </property>
           </widget>
          </item>
-         <item row="8" column="1">
-          <widget class="QLabel" name="labelBdat">
-           <property name="text">
-            <string>BDAT (Block Delay After Trigger)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="3">
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="7" column="2">
-          <widget class="QSpinBox" name="spinBoxSdatIn10ns">
+         <item row="13" column="2">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxBecIn10ns">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
            <property name="suffix">
             <string>0ns</string>
            </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
            <property name="maximum">
-            <number>999999999</number>
+            <double>4294967295.000000000000000</double>
            </property>
           </widget>
          </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="labelSti">
-           <property name="text">
-            <string>STI (Scan Trigger Input)</string>
+         <item row="12" column="2">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxSecIn10ns">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="correctionMode">
+            <enum>QAbstractSpinBox::CorrectToPreviousValue</enum>
+           </property>
+           <property name="suffix">
+            <string>0ns</string>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <double>4294967295.000000000000000</double>
            </property>
           </widget>
          </item>
-         <item row="6" column="1">
-          <widget class="QLabel" name="labelBTimer">
-           <property name="text">
-            <string>BTimer (Block Timer)</string>
+         <item row="11" column="2">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxXckdelayIn10ns">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="suffix">
+            <string>0ns</string>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <double>4294967295.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="2">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxBdatIn10ns">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="suffix">
+            <string>0ns</string>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <double>4294967295.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="2">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxSdatIn10ns">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="suffix">
+            <string>0ns</string>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <double>4294967295.000000000000000</double>
            </property>
           </widget>
          </item>
          <item row="2" column="2">
-          <widget class="QSpinBox" name="spinBoxNob">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxNob">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="minimum">
-            <number>1</number>
+           <property name="decimals">
+            <number>0</number>
            </property>
            <property name="maximum">
-            <number>999999999</number>
-           </property>
-           <property name="value">
-            <number>2</number>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLabel" name="labelBti">
-           <property name="text">
-            <string>BTI (Block Trigger Input)</string>
+            <double>4294967295.000000000000000</double>
            </property>
           </widget>
          </item>
          <item row="1" column="2">
-          <widget class="QSpinBox" name="spinBoxNos">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxNos">
            <property name="enabled">
             <bool>true</bool>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="suffix">
-            <string/>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>999999999</number>
-           </property>
-           <property name="value">
-            <number>1000</number>
-           </property>
-          </widget>
-         </item>
-         <item row="13" column="1">
-          <widget class="QLabel" name="labelTriggerModeCC">
-           <property name="text">
-            <string>Trigger mode Camera Control</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="2">
-          <widget class="QSpinBox" name="spinBoxBdatIn10ns">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="suffix">
-            <string>0ns</string>
-           </property>
-           <property name="maximum">
-            <number>999999999</number>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <spacer name="horizontalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="6" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxBTimer_in_ms">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="suffix">
-            <string>ms</string>
-           </property>
            <property name="decimals">
-            <number>3</number>
+            <number>0</number>
            </property>
            <property name="maximum">
-            <double>999999999.000000000000000</double>
+            <double>4294967295.000000000000000</double>
            </property>
           </widget>
-         </item>
-         <item row="4" column="2">
-          <widget class="QComboBox" name="comboBoxBti">
-           <property name="layoutDirection">
-            <enum>Qt::LeftToRight</enum>
-           </property>
-           <item>
-            <property name="text">
-             <string>I</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>S1</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>S2</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>S1 &amp; S2</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>BTimer</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="7" column="1">
-          <widget class="QLabel" name="labelSdat">
-           <property name="text">
-            <string>SDAT (Scan Delay After Trigger)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="2">
-          <widget class="QSpinBox" name="spinBoxXckdelayIn10ns">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="suffix">
-            <string>0ns</string>
-           </property>
-           <property name="maximum">
-            <number>999999999</number>
-           </property>
-          </widget>
-         </item>
-         <item row="10" column="2">
-          <widget class="QComboBox" name="comboBoxBslope">
-           <item>
-            <property name="text">
-             <string>neg</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>pos</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>both</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="12" column="1">
-          <widget class="QLabel" name="labelExpTime">
-           <property name="text">
-            <string>Shutter exposure time</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="labelNob">
-           <property name="text">
-            <string>NOB (Number of blocks)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="13" column="2">
-          <widget class="QComboBox" name="comboBoxTriggerModeCC">
-           <item>
-            <property name="text">
-             <string>XCK</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>External</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>DAT</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="labelNos">
-           <property name="text">
-            <string>NOS (Number of samples)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="1">
-          <widget class="QLabel" name="labelXckdelayIn10ns">
-           <property name="text">
-            <string>XCK Delay</string>
-           </property>
-          </widget>
-         </item>
-         <item row="10" column="1">
-          <widget class="QLabel" name="labelBslope">
-           <property name="text">
-            <string>BSlope (Block Trigger Slope)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="1">
-          <spacer name="verticalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="9" column="1">
-          <widget class="QLabel" name="labelSslope">
-           <property name="text">
-            <string>SSlope (Scan Trigger Slope)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <spacer name="verticalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -461,13 +502,6 @@
             </size>
            </property>
           </spacer>
-         </item>
-         <item row="8" column="2">
-          <widget class="QCheckBox" name="checkBoxGain3010">
-           <property name="text">
-            <string>on</string>
-           </property>
-          </widget>
          </item>
          <item row="12" column="2">
           <widget class="QCheckBox" name="checkBoxGpx">
@@ -554,12 +588,12 @@
          <item row="8" column="1">
           <widget class="QLabel" name="labelGain3010">
            <property name="text">
-            <string>Gain</string>
+            <string>Sensor gain</string>
            </property>
           </widget>
          </item>
          <item row="9" column="2">
-          <widget class="QSpinBox" name="spinBoxGain3030">
+          <widget class="QSpinBox" name="spinBoxAdcGain">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -610,7 +644,7 @@
          <item row="9" column="1">
           <widget class="QLabel" name="labelGain3030">
            <property name="text">
-            <string>Gain</string>
+            <string>ADC Gain</string>
            </property>
           </widget>
          </item>
@@ -776,6 +810,9 @@
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
+           <property name="maximum">
+            <number>268435455</number>
+           </property>
           </widget>
          </item>
          <item row="0" column="1">
@@ -797,10 +834,17 @@
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
            <property name="maximum">
-            <number>9999999</number>
+            <number>268435455</number>
            </property>
            <property name="value">
             <number>1078</number>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="2">
+          <widget class="QSpinBox" name="spinBoxSensorGain">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
@@ -815,29 +859,177 @@
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
         <layout class="QGridLayout" name="gridLayoutFftmode">
-         <item row="9" column="1">
-          <widget class="QLabel" name="labelRegion3">
-           <property name="text">
-            <string>Region size 3</string>
+         <item row="12" column="2">
+          <widget class="QSpinBox" name="spinBoxRegion5">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>9999</number>
            </property>
           </widget>
          </item>
-         <item row="10" column="1">
+         <item row="6" column="1">
+          <widget class="QLabel" name="labelRegionsEqual">
+           <property name="text">
+            <string>Region size</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="1">
+          <widget class="QLabel" name="labelRegion2">
+           <property name="text">
+            <string>Region size 2</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="2">
+          <widget class="QCheckBox" name="checkBoxRegionsEqual">
+           <property name="text">
+            <string>automatic equal</string>
+           </property>
+          </widget>
+         </item>
+         <item row="11" column="2">
+          <widget class="QSpinBox" name="spinBoxRegion4">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>9999</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <spacer name="horizontalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="labelVfreq">
+           <property name="text">
+            <string>VFreq (Vertical Frequency)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="13" column="1">
+          <widget class="QLabel" name="labelRegion6">
+           <property name="text">
+            <string>Region size 6</string>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="2">
+          <widget class="QSpinBox" name="spinBoxRegion7">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>9999</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="labelLines">
+           <property name="text">
+            <string>Sensor Lines</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="11" column="1">
           <widget class="QLabel" name="labelRegion4">
            <property name="text">
             <string>Region size 4</string>
            </property>
           </widget>
          </item>
-         <item row="5" column="1">
-          <widget class="QLabel" name="labelNumberOfRegions">
+         <item row="15" column="1">
+          <widget class="QLabel" name="labelRegion8">
            <property name="text">
-            <string>Number of regions</string>
+            <string>Region size 8</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <spacer name="verticalSpacer_5">
+         <item row="2" column="2">
+          <widget class="QSpinBox" name="spinBoxVfreq">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="1">
+          <widget class="QLabel" name="labelRegion3">
+           <property name="text">
+            <string>Region size 3</string>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="1">
+          <widget class="QLabel" name="labelRegion7">
+           <property name="text">
+            <string>Region size 7</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="2">
+          <widget class="QSpinBox" name="spinBoxNumberOfRegions">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>8</number>
+           </property>
+          </widget>
+         </item>
+         <item row="13" column="2">
+          <widget class="QSpinBox" name="spinBoxRegion6">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>9999</number>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLabel" name="labelFftMode">
+           <property name="text">
+            <string>FFT mode</string>
+           </property>
+          </widget>
+         </item>
+         <item row="16" column="1">
+          <spacer name="verticalSpacer_6">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -849,30 +1041,36 @@
            </property>
           </spacer>
          </item>
-         <item row="12" column="2">
-          <widget class="QSpinBox" name="spinBoxRegion6">
+         <item row="15" column="2">
+          <widget class="QSpinBox" name="spinBoxRegion8">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
            <property name="minimum">
             <number>1</number>
            </property>
-          </widget>
-         </item>
-         <item row="9" column="2">
-          <widget class="QSpinBox" name="spinBoxRegion3">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>1</number>
+           <property name="maximum">
+            <number>9999</number>
            </property>
           </widget>
          </item>
-         <item row="12" column="1">
-          <widget class="QLabel" name="labelRegion6">
+         <item row="4" column="1">
+          <widget class="QLabel" name="labelLinesBinning">
            <property name="text">
-            <string>Region size 6</string>
+            <string>Area lines binning</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="2">
+          <widget class="QSpinBox" name="spinBoxRegion1">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>9999</number>
            </property>
           </widget>
          </item>
@@ -889,25 +1087,28 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="labelVfreq">
+         <item row="0" column="1">
+          <spacer name="verticalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="8" column="1">
+          <widget class="QLabel" name="labelRegion1">
            <property name="text">
-            <string>VFreq (Vertical Frequency)</string>
+            <string>Region size 1</string>
            </property>
           </widget>
          </item>
-         <item row="11" column="2">
-          <widget class="QSpinBox" name="spinBoxRegion5">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="2">
-          <widget class="QSpinBox" name="spinBoxNumberOfRegions">
+         <item row="10" column="2">
+          <widget class="QSpinBox" name="spinBoxRegion3">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -915,7 +1116,53 @@
             <number>1</number>
            </property>
            <property name="maximum">
-            <number>8</number>
+            <number>9999</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <spacer name="horizontalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="4" column="2">
+          <widget class="QSpinBox" name="spinBoxLinesBinning">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>9999</number>
+           </property>
+          </widget>
+         </item>
+         <item row="12" column="1">
+          <widget class="QLabel" name="labelRegion5">
+           <property name="text">
+            <string>Region size 5</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="2">
+          <widget class="QSpinBox" name="spinBoxRegion2">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>9999</number>
            </property>
           </widget>
          </item>
@@ -938,181 +1185,12 @@
            </item>
           </widget>
          </item>
-         <item row="1" column="3">
-          <spacer name="horizontalSpacer_6">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="10" column="2">
-          <widget class="QSpinBox" name="spinBoxRegion4">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="1">
-          <widget class="QLabel" name="labelRegion5">
+         <item row="5" column="1">
+          <widget class="QLabel" name="labelNumberOfRegions">
            <property name="text">
-            <string>Region size 5</string>
+            <string>Number of regions</string>
            </property>
           </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLabel" name="labelLinesBinning">
-           <property name="text">
-            <string>Area lines binning</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="1">
-          <widget class="QLabel" name="labelRegion1">
-           <property name="text">
-            <string>Region size 1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="2">
-          <widget class="QSpinBox" name="spinBoxLinesBinning">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-          </widget>
-         </item>
-         <item row="13" column="2">
-          <widget class="QSpinBox" name="spinBoxRegion7">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <spacer name="horizontalSpacer_5">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="13" column="1">
-          <widget class="QLabel" name="labelRegion7">
-           <property name="text">
-            <string>Region size 7</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLabel" name="labelRegionsEqual">
-           <property name="text">
-            <string>Region size</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="2">
-          <widget class="QSpinBox" name="spinBoxRegion2">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="1">
-          <widget class="QLabel" name="labelRegion8">
-           <property name="text">
-            <string>Region size 8</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="2">
-          <widget class="QSpinBox" name="spinBoxRegion1">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="labelFftMode">
-           <property name="text">
-            <string>FFT mode</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="labelLines">
-           <property name="text">
-            <string>Sensor Lines</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1">
-          <widget class="QLabel" name="labelRegion2">
-           <property name="text">
-            <string>Region size 2</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="2">
-          <widget class="QCheckBox" name="checkBoxRegionsEqual">
-           <property name="text">
-            <string>automatic equal</string>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="2">
-          <widget class="QSpinBox" name="spinBoxRegion8">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QSpinBox" name="spinBoxVfreq">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="15" column="1">
-          <spacer name="verticalSpacer_6">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </item>
@@ -1448,18 +1526,18 @@
  </widget>
  <tabstops>
   <tabstop>tabWidget</tabstop>
-  <tabstop>spinBoxNos</tabstop>
-  <tabstop>spinBoxNob</tabstop>
+  <tabstop>doubleSpinBoxNos</tabstop>
+  <tabstop>doubleSpinBoxNob</tabstop>
   <tabstop>comboBoxSti</tabstop>
   <tabstop>comboBoxBti</tabstop>
   <tabstop>doubleSpinBoxSTime_in_ms</tabstop>
   <tabstop>doubleSpinBoxBTimer_in_ms</tabstop>
-  <tabstop>spinBoxSdatIn10ns</tabstop>
-  <tabstop>spinBoxBdatIn10ns</tabstop>
+  <tabstop>doubleSpinBoxSdatIn10ns</tabstop>
+  <tabstop>doubleSpinBoxBdatIn10ns</tabstop>
   <tabstop>comboBoxSslope</tabstop>
   <tabstop>comboBoxBslope</tabstop>
-  <tabstop>spinBoxXckdelayIn10ns</tabstop>
-  <tabstop>spinBoxExpTimeIn10ns</tabstop>
+  <tabstop>doubleSpinBoxXckdelayIn10ns</tabstop>
+  <tabstop>doubleSpinBoxSecIn10ns</tabstop>
   <tabstop>comboBoxTriggerModeCC</tabstop>
   <tabstop>pushButtonDefault</tabstop>
   <tabstop>comboBoxSettingsLevel</tabstop>
@@ -1470,8 +1548,7 @@
   <tabstop>spinBoxPixel</tabstop>
   <tabstop>checkBoxMshut</tabstop>
   <tabstop>checkBoxLed</tabstop>
-  <tabstop>checkBoxGain3010</tabstop>
-  <tabstop>spinBoxGain3030</tabstop>
+  <tabstop>spinBoxAdcGain</tabstop>
   <tabstop>comboBoxCamCool</tabstop>
   <tabstop>checkBoxUseDac</tabstop>
   <tabstop>checkBoxGpx</tabstop>

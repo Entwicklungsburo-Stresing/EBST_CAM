@@ -13,6 +13,10 @@
 #define DllAccess __declspec( dllimport )
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 BOOL WINAPI DLLMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved );
 DllAccess void DLLInitGlobals( struct global_vars g );
 //************  2d greyscale viewer
@@ -23,5 +27,9 @@ DllAccess void DLLSetGammaValue( UINT16 white, UINT16 black );
 DllAccess UINT16 DLLGetGammaWhite();
 DllAccess UINT16 DLLGetGammaBlack();
 //************  Area and Region of Interest
-DllAccess es_status_codes DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep_first, UINT8* region_size, UINT8 vfreq );
+DllAccess es_status_codes DLLSetupROI( UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep, UINT8* region_size, UINT8 vfreq );
 DllAccess es_status_codes DLLSetupArea( UINT32 drvno, UINT32 lines_binning, UINT8 vfreq );
+
+#ifdef __cplusplus
+}
+#endif
