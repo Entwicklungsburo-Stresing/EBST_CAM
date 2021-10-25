@@ -39,6 +39,7 @@ private:
 	DialogRMS* ds_rms = new DialogRMS( this );
 	int used_number_of_boards;
     QThread measurementThread;
+	void copySettings(QSettings &dst, QSettings &src);
 private slots:
 	void on_actionEdit_triggered();
 	void on_actionTDC_triggered();
@@ -51,6 +52,7 @@ private slots:
 	void on_actionAbout_Qt_triggered();
 	void on_actionDAC_triggered();
 	void on_actionIO_Control_triggered();
+	void on_actionShow_triggered();
 	void loadSettings();
 	void startPressed();
 	void startContPressed(bool checked);
@@ -59,6 +61,10 @@ private slots:
 	void on_rubberBandChanged();
     void on_checkBoxShowCamera(bool state, int camera);
 	void on_pushButtonStart_pressed();
+	void on_horizontalSliderBlock_valueChanged();
+	void on_actionExport_triggered();
+	void on_actionImport_triggered();
+	void on_actionGamma_triggered();
 };
 
 #endif // MAINWINDOW_H

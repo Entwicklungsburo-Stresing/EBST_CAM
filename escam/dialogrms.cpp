@@ -49,13 +49,13 @@ void DialogRMS::initDialogRMS()
 		ui->comboBoxDrvno->setDisabled(true);
 		ui->comboBoxDrvno->setCurrentIndex(0);
 	}
-	int camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toInt();
+	int camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
 	ui->spinBoxCampos->setMaximum(camcnt);
 	if (camcnt == 1)
 		ui->spinBoxCampos->setDisabled(true);
-	int pixel = settings.value(settingPixelPath, settingPixelDefault).toInt();
+	int pixel = settings.value(settingPixelPath, settingPixelDefault).toUInt();
 	ui->spinBox_pixel->setMaximum(pixel - 1);
-	int nos = settings.value(settingNosPath, settingNosDefault).toInt();
+	int nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 	ui->spinBox_lastsample->setMaximum(nos);
 	ui->spinBox_firstsample->setMaximum(nos - 1);
 	return;

@@ -21,7 +21,7 @@ struct global_settings
 	uint32_t sslope;
 	uint32_t bslope;
 	uint32_t xckdelay_in_10ns;
-	uint32_t ShutterExpTimeIn10ns;
+	uint32_t sec_in_10ns;
 	uint32_t trigger_mode_cc;
 	uint32_t board_sel;
 	uint32_t sensor_type;
@@ -30,8 +30,8 @@ struct global_settings
 	uint32_t pixel;
 	uint32_t mshut;
 	uint32_t led_off;
-	uint32_t gain_switch;
-	uint32_t gain_3030;
+	uint32_t sensor_gain;
+	uint32_t adc_gain;
 	uint32_t Temp_level;
 	uint32_t dac;
 	uint32_t enable_gpx;
@@ -41,7 +41,7 @@ struct global_settings
 	uint32_t FFTMode;
 	uint32_t lines_binning;
 	uint32_t number_of_regions;
-	uint32_t keep_first;
+	uint32_t keep;
 	uint32_t region_size[8];
 	uint32_t dac_output[MAXPCIECARDS][8];
 	uint32_t TORmodus; 
