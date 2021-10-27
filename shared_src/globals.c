@@ -22,6 +22,7 @@ uint32_t* Nospb = &tmp_Nosbp;
 bool abortMeasurementFlag = false;
 bool continiousMeasurementFlag = false;
 uint32_t continiousPauseInMicroseconds = 0;
+bool isRunning = false;
 struct global_settings settings_struct =
 {
 	//unused

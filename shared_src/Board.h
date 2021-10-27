@@ -125,6 +125,7 @@ double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time
 double CalcRamUsageInMB(uint32_t nos, uint32_t nob);
 es_status_codes CalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double *mwf, double *trms);
 void GetRmsVal(uint32_t nos, uint16_t *TRMSVals, double *mwf, double *trms);
+es_status_codes ReturnStartMeasurement(es_status_codes status);
 
 // read and write functions
 es_status_codes writeBitsS0_32( uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address);

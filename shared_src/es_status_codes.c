@@ -25,7 +25,8 @@ char errorMsg[100][50] =
 	"Camera not found",
 	"Measurement aborted",
 	"Creating thread failed",
-	"Setting thread priority failed"
+	"Setting thread priority failed",
+	"Measurement is already running"
 };
 
 char* ConvertErrorCodeToMsg(es_status_codes status)
