@@ -1999,8 +1999,6 @@ es_status_codes StartMeasurement()
 		{
 			status = setMeasureOn(1);
 			if (status != es_no_error) return status;
-			//status = StartSTimer(1);
-			//if (status != es_no_error) return status;
 		}
 		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
 		{
@@ -2042,7 +2040,6 @@ es_status_codes StartMeasurement()
 				if (status != es_no_error) return status;
 				status = setBlockOn(1);
 				if (status != es_no_error) return status;
-
 				//start scan for first read if area or ROI
 				if (*useSWTrig) status = DoSoftwareTrigger(1);
 				if (status != es_no_error) return status;
@@ -2050,9 +2047,9 @@ es_status_codes StartMeasurement()
 			// Starting the measurement BOARD_SEL = 2
 			if (number_of_boards == 2 && (BOARD_SEL == 2 ))
 			{
-				status = setBlockOn(2);
-				if (status != es_no_error) return status;
 				status = StartSTimer(2);
+				if (status != es_no_error) return status;
+				status = setBlockOn(2);
 				if (status != es_no_error) return status;
 				//start scan for first read
 				if (*useSWTrig) status = DoSoftwareTrigger(2);
@@ -2061,9 +2058,9 @@ es_status_codes StartMeasurement()
 			// Starting the measurement BOARD_SEL = 3
 			if (BOARD_SEL == 3)
 			{
-				status = setBlockOnTwoBoards();
-				if (status != es_no_error) return status;
 				status = StartSTimerTwoBoards();
+				if (status != es_no_error) return status;
+				status = setBlockOnTwoBoards();
 				if (status != es_no_error) return status;
 				//start scan for first read
 				if (*useSWTrig) status = DoSoftwareTriggerTwoBoards();
@@ -2135,27 +2132,20 @@ es_status_codes StartMeasurement()
 					abortMeasurementFlag = checkEscapeKeyState();
 				}
 			}
-			// Stop the STimer.
+			// When the software reaches this point, all scans for the current block are done.
 			// So blockOn is resetted here.
 			if (BOARD_SEL == 1 || BOARD_SEL == 3)
 			{
-				//status = StopSTimer(1);
-				//if (status != es_no_error) return status;
 				status = resetBlockOn(1);
 				if (status != es_no_error) return status;
 			}
 			if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
 			{
-				status = StopSTimer(2);
-				if (status != es_no_error) return status;
 				status = resetBlockOn(2);
 				if (status != es_no_error) return status;
 			}
-
 		// This is the end of the block for loop. Until nob is reached this loop is repeated.
 		}
-
-
 		// Reset the thread priority to the previous value.
 		status = ResetPriority();
 		if (status != es_no_error) return status;
@@ -2170,6 +2160,8 @@ es_status_codes StartMeasurement()
 		}
 		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
 		{
+			status = StopSTimer(2);
+			if (status != es_no_error) return status;
 			status = GetLastBufPart(2);
 			if (status != es_no_error) return status;
 		}
