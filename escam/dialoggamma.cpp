@@ -7,8 +7,10 @@ DialogGamma::DialogGamma(QWidget *parent)
 {
 	ui = new Ui::DialogGamma();
 	ui->setupUi(this);
-	ui->spinBoxWhite->setValue( DLLGetGammaWhite() );
-	ui->spinBoxBlack->setValue( DLLGetGammaBlack() );
+	white_old = DLLGetGammaWhite();
+	black_old = DLLGetGammaBlack();
+	ui->spinBoxWhite->setValue( white_old );
+	ui->spinBoxBlack->setValue( black_old );
 }
 
 DialogGamma::~DialogGamma()
@@ -33,5 +35,11 @@ void DialogGamma::on_spinBoxWhite_valueChanged(int value)
 void DialogGamma::on_spinBoxBlack_valueChanged(int value)
 {
 	DLLSetGammaValue( DLLGetGammaWhite(), value );
+	return;
+}
+
+void DialogGamma::on_buttonBox_rejected()
+{
+	DLLSetGammaValue( white_old, black_old );
 	return;
 }
