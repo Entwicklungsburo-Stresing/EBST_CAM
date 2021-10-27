@@ -436,6 +436,7 @@ DllAccess void DLLSetContFFLoop( UINT8 activate , UINT32 pause_in_microseconds)
 {
 	continiousMeasurementFlag = activate;//0 or 1
 	continiousPauseInMicroseconds = pause_in_microseconds;
+	ES_LOG("Setting continuous pause to %u\n", continiousPauseInMicroseconds);
 	return;
 }
 

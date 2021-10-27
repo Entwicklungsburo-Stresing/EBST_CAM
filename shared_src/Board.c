@@ -211,6 +211,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	status = SetDmaRegister(drvno, settings_struct.pixel);
 	if (status != es_no_error) return status;
 	continiousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
+	ES_LOG("Setting continuous pause to %u\n", continiousPauseInMicroseconds);
 	status = SetBEC(drvno, settings_struct.bec_in_10ns);
 	if (status != es_no_error) return status;
 	status = SetXckdelay(drvno, settings_struct.xckdelay_in_10ns);
