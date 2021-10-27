@@ -7,8 +7,8 @@
 #define settingNobDefault							2
 #define settingStiDefault							sti_STimer
 #define settingBtiDefault							bti_BTimer
-#define settingStime_in_microseconds_Default		1
-#define settingBtime_in_microseconds_Default		1000
+#define settingStime_in_microseconds_Default		1000
+#define settingBtime_in_microseconds_Default		1000000
 #define settingSdat_in_10nsDefault					0
 #define settingBdat_in_10nsDefault					0
 #define settingSslopeDefault						sslope_pos
@@ -85,5 +85,6 @@
 #define settingIOCtrlOutput6DelayIn5nsDefault		500
 #define settingIOCtrlOutput7DelayIn5nsDefault		600
 #define settingIOCtrlT0PeriodIn10nsDefault			1000
+#define settingContiniousPausInMicrosecondsDefault	1000
 
 #endif // DEFAULT_SETTINGS_H

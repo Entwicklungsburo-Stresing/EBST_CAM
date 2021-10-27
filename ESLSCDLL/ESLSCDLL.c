@@ -429,13 +429,13 @@ DllAccess void DLLStopFFLoop()
 /**
  * \brief Activate or deactivate continuous read.
  * \param activate 0 - deactivate, 1 - activate
- * \param pause - time in ms before next loop starts - should be >=1
+ * \param pause_in_microseconds - time in microseconds before next loop starts - should be >=1
  * \return none
  */
-DllAccess void DLLSetContFFLoop( UINT8 activate , UINT32 pause)
+DllAccess void DLLSetContFFLoop( UINT8 activate , UINT32 pause_in_microseconds)
 {
 	continiousMeasurementFlag = activate;//0 or 1
-	continiousPause = pause;
+	continiousPauseInMicroseconds = pause_in_microseconds;
 	return;
 }
 
