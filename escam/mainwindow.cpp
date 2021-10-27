@@ -470,6 +470,12 @@ void MainWindow::on_actionDump_board_registers_triggered()
 		labelTlp->setText(QString::fromStdString(lsc._dumpTlp(drvno)));
 		labelTlp->setAlignment(Qt::AlignTop);
 		tabWidget->addTab(labelTlp, "TLP size board" + QString::number(drvno));
+		QLabel* labelPci = new QLabel(tabWidget);
+		labelPci->setTextInteractionFlags(Qt::TextSelectableByMouse);
+		labelPci->setTextFormat(Qt::RichText);
+		labelPci->setText(QString::fromStdString(lsc._dumpPciRegisters(drvno)));
+		labelPci->setAlignment(Qt::AlignTop);
+		tabWidget->addTab(labelPci, "PCI registers board" + QString::number(drvno));
 	}
     QLabel* labelSettings = new QLabel(tabWidget);
     labelSettings->setTextInteractionFlags(Qt::TextSelectableByMouse);
