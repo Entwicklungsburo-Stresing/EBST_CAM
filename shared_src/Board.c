@@ -1999,6 +1999,8 @@ es_status_codes StartMeasurement()
 		{
 			status = setMeasureOn(1);
 			if (status != es_no_error) return status;
+			//status = StartSTimer(1);
+			//if (status != es_no_error) return status;
 		}
 		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
 		{
@@ -2032,13 +2034,15 @@ es_status_codes StartMeasurement()
 			else if (status != es_no_error) return status;
 			ES_LOG("Block %u triggered\n", blk_cnt);
 			// setBlockOn, StartSTimer and DoSoftwareTrigger are starting the measurement.
+			// timer must be started in each block as the scan counter stops it by hardware at end of block
 			// Starting the measurement BOARD_SEL = 1
 			if (BOARD_SEL == 1)
 			{
-				status = setBlockOn(1);
-				if (status != es_no_error) return status;
 				status = StartSTimer(1);
 				if (status != es_no_error) return status;
+				status = setBlockOn(1);
+				if (status != es_no_error) return status;
+
 				//start scan for first read if area or ROI
 				if (*useSWTrig) status = DoSoftwareTrigger(1);
 				if (status != es_no_error) return status;
@@ -2132,30 +2136,26 @@ es_status_codes StartMeasurement()
 				}
 			}
 			// Stop the STimer.
+			// So blockOn is resetted here.
 			if (BOARD_SEL == 1 || BOARD_SEL == 3)
 			{
-				status = StopSTimer(1);
+				//status = StopSTimer(1);
+				//if (status != es_no_error) return status;
+				status = resetBlockOn(1);
 				if (status != es_no_error) return status;
 			}
 			if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
 			{
 				status = StopSTimer(2);
 				if (status != es_no_error) return status;
-			}
-			// When the software reaches this point, all scans for the current block are done.
-			// So blockOn is resetted here.
-			if (BOARD_SEL == 1 || BOARD_SEL == 3)
-			{
-				status = resetBlockOn(1);
-				if (status != es_no_error) return status;
-			}
-			if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
-			{
 				status = resetBlockOn(2);
 				if (status != es_no_error) return status;
 			}
+
 		// This is the end of the block for loop. Until nob is reached this loop is repeated.
 		}
+
+
 		// Reset the thread priority to the previous value.
 		status = ResetPriority();
 		if (status != es_no_error) return status;
@@ -2163,6 +2163,8 @@ es_status_codes StartMeasurement()
 		// left, which is not copied to the user buffer. The copy process for these scans is done here.
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
+			status = StopSTimer(1);
+			if (status != es_no_error) return status;
 			status = GetLastBufPart(1);
 			if (status != es_no_error) return status;
 		}
