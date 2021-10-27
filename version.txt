@@ -1,3 +1,13 @@
+v3.20.2
+- Fix greyscale viewer (by fixing pro dlls global variables)
+- Remove keep
+- Improve dump tlp
+- Improve order of StartStimer in startMeasurement
+- Add continiousPauseInMicroseconds
+escam:
+- Add greyscale viewer
+- Add setting import / export function
+
 v3.20.1
 - Refactor gain and gain to sensor_gain and adc_gain
 The new sensor_gain is the old boolean gain. Sensor_gain is now an
