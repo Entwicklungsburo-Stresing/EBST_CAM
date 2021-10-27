@@ -567,6 +567,24 @@ void MainWindow::on_measureDone()
 	ui->pushButtonStartCont->setEnabled(true);
     //disable abort button
     ui->pushButtonAbort->setDisabled(true);
+#ifdef WIN32
+	uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
+	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
+	uint32_t block = ui->horizontalSliderBlock->value() - 1;
+	uint32_t drvno;
+	switch (settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt())
+	{
+	default:
+	case 0:
+	case 2:
+		drvno = 1;
+		break;
+	case 1:
+		drvno = 2;
+		break;
+	}
+	DLLShowNewBitmap(drvno, block, 0, pixelcount, nos);
+#endif
     return;
 }
 
