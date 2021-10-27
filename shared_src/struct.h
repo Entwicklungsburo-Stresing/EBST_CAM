@@ -5,7 +5,7 @@
 
 #define MAXPCIECARDS 5
 
-// All settings are uin32_t to ensure the correct memory layout. This is important for the communication with labview.
+// All settings are uint32_t to ensure the correct memory layout. This is important for the communication with labview.
 // Don't change the order or you will have to change it for LabVIEW in InitMeasurement.vi.
 struct global_settings
 {
@@ -48,7 +48,7 @@ struct global_settings
 	uint32_t ADC_Mode;
 	uint32_t ADC_custom_pattern;
 	uint32_t bec_in_10ns;
-	uint32_t cont_pause;
+	uint32_t cont_pause_in_microseconds;
 	uint32_t isIr;
 	uint32_t IOCtrl_impact_start_pixel;
 	uint32_t IOCtrl_output_width_in_5ns[8];
