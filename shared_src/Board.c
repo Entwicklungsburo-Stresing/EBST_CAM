@@ -3271,6 +3271,42 @@ es_status_codes dumpSettings(char** stringPtr)
 }
 
 /**
+ * \brief
+ * 
+ * \param drvno
+ * \param stringPtr
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes dumpPciRegisters(uint32_t drvno, char** stringPtr)
+{
+	int i = 0;
+	uint32_t data = 0;
+	uint32_t length = 0;
+	es_status_codes status = es_no_error;
+	enum N
+	{
+		number_of_registers = 0x30,
+		bufferSize = 100,
+	};
+	*stringPtr = (char*)calloc(number_of_registers * bufferSize, sizeof(char));
+	//00-0f
+	for (i = 0; i < number_of_registers; i++)
+	{
+		status = readConfig_32(drvno, &data, i * 4);
+		if (status != es_no_error)
+		{
+			//write error to buffer
+			length += sprintf(*stringPtr + length, "\nerror while reading register %i", i*4);
+			return status;
+		}
+		length += sprintf_s(*stringPtr + length, bufferSize, "0x%x\t = 0x%x\n", i * 4, data);
+	}
+	return status;
+}
+
+/**
  * \brief Sets BlockOn bit in PCIEFLAGS and notifies UI about it. Two board sync version
  *
  * \param drvno PCIe board identifier.
