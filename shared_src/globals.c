@@ -21,9 +21,10 @@ uint32_t tmp_Nosbp = 1000;
 uint32_t* Nospb = &tmp_Nosbp;
 bool abortMeasurementFlag = false;
 bool continiousMeasurementFlag = false;
-uint32_t continiousPause = 0;
+uint32_t continiousPauseInMicroseconds = 0;
 struct global_settings settings_struct =
 {
+	//unused
     .nos							= settingNosDefault,
     .nob							= settingNobDefault,
     .sti_mode						= settingStiDefault,
@@ -84,6 +85,7 @@ struct global_settings settings_struct =
     .ADC_Mode						= settingAdcModeDefault,
     .ADC_custom_pattern				= settingAdcCustomValueDefault,
     .bec_in_10ns					= settingBecIn10nsDefault,
+	.cont_pause_in_microseconds		= settingContiniousPausInMicrosecondsDefault,
 	.isIr							= settingIsIrDefault,
 	.IOCtrl_impact_start_pixel		= settingIOCtrlImpactStartPixelDefault,
 	.IOCtrl_output_width_in_5ns[0]	= settingIOCtrlOutput1WidthIn5nsDefault,

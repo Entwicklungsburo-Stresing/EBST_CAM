@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>336</width>
-    <height>482</height>
+    <width>398</width>
+    <height>495</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,6 +26,38 @@
       <layout class="QVBoxLayout" name="verticalLayoutMeasurement">
        <item>
         <layout class="QGridLayout" name="gridLayoutMeasurement">
+         <item row="6" column="3">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxBTimer_in_ms">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="suffix">
+            <string>ms</string>
+           </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="maximum">
+            <double>4294967.294999999925494</double>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="3">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxBdatIn10ns">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="suffix">
+            <string>0ns</string>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <double>4294967295.000000000000000</double>
+           </property>
+          </widget>
+         </item>
          <item row="14" column="1">
           <widget class="QLabel" name="labelTriggerModeCC">
            <property name="text">
@@ -33,79 +65,23 @@
            </property>
           </widget>
          </item>
-         <item row="11" column="1">
-          <widget class="QLabel" name="labelXckdelayIn10ns">
-           <property name="text">
-            <string>XCK Delay</string>
+         <item row="1" column="3">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxNos">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <double>4294967295.000000000000000</double>
            </property>
           </widget>
          </item>
-         <item row="15" column="1">
-          <spacer name="verticalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="10" column="2">
-          <widget class="QComboBox" name="comboBoxBslope">
-           <item>
-            <property name="text">
-             <string>neg</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>pos</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>both</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="9" column="2">
-          <widget class="QComboBox" name="comboBoxSslope">
-           <item>
-            <property name="text">
-             <string>pos</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>neg</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>both</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLabel" name="labelBTimer">
-           <property name="text">
-            <string>BTimer (Block Timer)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1">
-          <widget class="QLabel" name="labelBdat">
-           <property name="text">
-            <string>BDAT (Block Delay After Trigger)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="2">
+         <item row="14" column="3">
           <widget class="QComboBox" name="comboBoxTriggerModeCC">
            <item>
             <property name="text">
@@ -124,27 +100,50 @@
            </item>
           </widget>
          </item>
-         <item row="5" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxSTime_in_ms">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <item row="1" column="0">
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
            </property>
-           <property name="suffix">
-            <string>ms</string>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
            </property>
-           <property name="decimals">
-            <number>3</number>
-           </property>
-           <property name="maximum">
-            <double>4294967.294999999925494</double>
+          </spacer>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLabel" name="labelBTimer">
+           <property name="text">
+            <string>BTimer (Block Timer)</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="labelNos">
+         <item row="2" column="1">
+          <widget class="QLabel" name="labelNob">
            <property name="text">
-            <string>NOS (Number of samples)</string>
+            <string>NOB (Number of blocks)</string>
            </property>
+          </widget>
+         </item>
+         <item row="10" column="3">
+          <widget class="QComboBox" name="comboBoxBslope">
+           <item>
+            <property name="text">
+             <string>neg</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>pos</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>both</string>
+            </property>
+           </item>
           </widget>
          </item>
          <item row="0" column="1">
@@ -160,48 +159,7 @@
            </property>
           </spacer>
          </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="labelNob">
-           <property name="text">
-            <string>NOB (Number of blocks)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="12" column="1">
-          <widget class="QLabel" name="labelSec">
-           <property name="text">
-            <string>SEC</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="labelSti">
-           <property name="text">
-            <string>STI (Scan Trigger Input)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1">
-          <widget class="QLabel" name="labelSTimer">
-           <property name="text">
-            <string>STimer (Scan Timer)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="3">
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="4" column="2">
+         <item row="4" column="3">
           <widget class="QComboBox" name="comboBoxBti">
            <property name="layoutDirection">
             <enum>Qt::LeftToRight</enum>
@@ -248,18 +206,75 @@
            </item>
           </widget>
          </item>
-         <item row="1" column="0">
-          <spacer name="horizontalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+         <item row="3" column="1">
+          <widget class="QLabel" name="labelSti">
+           <property name="text">
+            <string>STI (Scan Trigger Input)</string>
            </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
+          </widget>
+         </item>
+         <item row="10" column="1">
+          <widget class="QLabel" name="labelBslope">
+           <property name="text">
+            <string>BSlope (Block Trigger Slope)</string>
            </property>
-          </spacer>
+          </widget>
+         </item>
+         <item row="12" column="3">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxSecIn10ns">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="correctionMode">
+            <enum>QAbstractSpinBox::CorrectToPreviousValue</enum>
+           </property>
+           <property name="suffix">
+            <string>0ns</string>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <double>4294967295.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="1">
+          <widget class="QLabel" name="labelSslope">
+           <property name="text">
+            <string>SSlope (Scan Trigger Slope)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="3">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxSdatIn10ns">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="suffix">
+            <string>0ns</string>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <double>4294967295.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="12" column="1">
+          <widget class="QLabel" name="labelSec">
+           <property name="text">
+            <string>SEC</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLabel" name="labelSTimer">
+           <property name="text">
+            <string>STimer (Scan Timer)</string>
+           </property>
+          </widget>
          </item>
          <item row="4" column="1">
           <widget class="QLabel" name="labelBti">
@@ -268,8 +283,47 @@
            </property>
           </widget>
          </item>
-         <item row="6" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxBTimer_in_ms">
+         <item row="1" column="1">
+          <widget class="QLabel" name="labelNos">
+           <property name="text">
+            <string>NOS (Number of samples)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="16" column="1">
+          <spacer name="verticalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="9" column="3">
+          <widget class="QComboBox" name="comboBoxSslope">
+           <item>
+            <property name="text">
+             <string>pos</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>neg</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>both</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="5" column="3">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxSTime_in_ms">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -284,19 +338,68 @@
            </property>
           </widget>
          </item>
-         <item row="9" column="1">
-          <widget class="QLabel" name="labelSslope">
+         <item row="8" column="1">
+          <widget class="QLabel" name="labelBdat">
            <property name="text">
-            <string>SSlope (Scan Trigger Slope)</string>
+            <string>BDAT (Block Delay After Trigger)</string>
            </property>
           </widget>
          </item>
-         <item row="10" column="1">
-          <widget class="QLabel" name="labelBslope">
-           <property name="text">
-            <string>BSlope (Block Trigger Slope)</string>
+         <item row="2" column="3">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxNob">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <double>4294967295.000000000000000</double>
            </property>
           </widget>
+         </item>
+         <item row="15" column="1">
+          <widget class="QLabel" name="labelContiniousPause">
+           <property name="text">
+            <string>Continious pause</string>
+           </property>
+          </widget>
+         </item>
+         <item row="15" column="3">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxContiniousPause_in_ms">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="suffix">
+            <string>ms</string>
+           </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="maximum">
+            <double>4294967.294999999925494</double>
+           </property>
+          </widget>
+         </item>
+         <item row="11" column="1">
+          <widget class="QLabel" name="labelXckdelayIn10ns">
+           <property name="text">
+            <string>XCK Delay</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="4">
+          <spacer name="horizontalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
          </item>
          <item row="7" column="1">
           <widget class="QLabel" name="labelSdat">
@@ -305,7 +408,14 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="2">
+         <item row="13" column="1">
+          <widget class="QLabel" name="labelBec">
+           <property name="text">
+            <string>BEC</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="3">
           <widget class="QComboBox" name="comboBoxSti">
            <item>
             <property name="text">
@@ -339,49 +449,7 @@
            </item>
           </widget>
          </item>
-         <item row="13" column="1">
-          <widget class="QLabel" name="labelBec">
-           <property name="text">
-            <string>BEC</string>
-           </property>
-          </widget>
-         </item>
-         <item row="13" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxBecIn10ns">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="suffix">
-            <string>0ns</string>
-           </property>
-           <property name="decimals">
-            <number>0</number>
-           </property>
-           <property name="maximum">
-            <double>4294967295.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="12" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxSecIn10ns">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="correctionMode">
-            <enum>QAbstractSpinBox::CorrectToPreviousValue</enum>
-           </property>
-           <property name="suffix">
-            <string>0ns</string>
-           </property>
-           <property name="decimals">
-            <number>0</number>
-           </property>
-           <property name="maximum">
-            <double>4294967295.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="2">
+         <item row="11" column="3">
           <widget class="QDoubleSpinBox" name="doubleSpinBoxXckdelayIn10ns">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -397,8 +465,8 @@
            </property>
           </widget>
          </item>
-         <item row="8" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxBdatIn10ns">
+         <item row="13" column="3">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxBecIn10ns">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -413,48 +481,10 @@
            </property>
           </widget>
          </item>
-         <item row="7" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxSdatIn10ns">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="suffix">
-            <string>0ns</string>
-           </property>
-           <property name="decimals">
-            <number>0</number>
-           </property>
-           <property name="maximum">
-            <double>4294967295.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxNob">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="decimals">
-            <number>0</number>
-           </property>
-           <property name="maximum">
-            <double>4294967295.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxNos">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="decimals">
-            <number>0</number>
-           </property>
-           <property name="maximum">
-            <double>4294967295.000000000000000</double>
+         <item row="15" column="4">
+          <widget class="QPushButton" name="pushButtonCopyBtimer">
+           <property name="text">
+            <string>Copy BTimer</string>
            </property>
           </widget>
          </item>

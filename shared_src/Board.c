@@ -210,7 +210,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetDmaRegister(drvno, settings_struct.pixel);
 	if (status != es_no_error) return status;
-	continiousPause = settings_struct.cont_pause;
+	continiousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
 	status = SetBEC(drvno, settings_struct.bec_in_10ns);
 	if (status != es_no_error) return status;
 	status = SetXckdelay(drvno, settings_struct.xckdelay_in_10ns);
@@ -2197,9 +2197,11 @@ es_status_codes StartMeasurement()
 			if (status != es_no_error) return status;
 		}
 		// When space key or ESC key was pressed, continious measurement stops.
-		if (checkSpaceKeyState())
-			continiousMeasurementFlag = false;
+		continiousMeasurementFlag = !checkSpaceKeyState();
 		abortMeasurementFlag = checkEscapeKeyState();
+#ifdef WIN32
+		WaitforTelapsed(continiousPauseInMicroseconds);
+#endif
 	} while (continiousMeasurementFlag && !abortMeasurementFlag);
 	ES_LOG("*** Measurement done ***\n\n");
 	return status;

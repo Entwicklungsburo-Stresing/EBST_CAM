@@ -21,7 +21,7 @@ constexpr auto settingXckdelayIn10nsPath = "measurement/xckdelay_in_10ns";
 constexpr auto settingShutterSecIn10nsPath = "measurement/shutterSecIn10ns";
 constexpr auto settingShutterBecIn10nsPath = "measurement/shutterBecIn10ns";
 constexpr auto settingTriggerCcPath = "measurement/triggerCc";
-constexpr auto settingContPause = "measurement/contPause";
+constexpr auto settingContiniousPauseInMicrosecondsPath = "measurement/contPauseInMicroseconds";
 //camera setup
 constexpr auto settingBoardSelPath = "camerasetup/boardsel";
 constexpr auto settingSensorTypePath = "camerasetup/sensorType";
@@ -126,6 +126,7 @@ private slots:
 	void on_spinBoxPixel_valueChanged(int arg1);
 	void on_comboBoxSettingsLevel_currentIndexChanged(int index);
 	void on_comboBoxFftMode_currentIndexChanged(int index);
+	void on_pushButtonCopyBtimer_clicked();
 };
 
 #endif // DIALOGSETTINGS_H

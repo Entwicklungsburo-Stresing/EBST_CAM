@@ -187,7 +187,7 @@ void MainWindow::startPressed()
     settings_struct.gpx_offset = 0;//TODO
 	settings_struct.bec_in_10ns = settings.value(settingShutterBecIn10nsPath, settingShutterBecIn10nsDefault).toUInt();
 	settings_struct.isIr = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
-	//settings_struct.cont_pause = settings.value(settingContPause, settingAdcCustomValueDefault).toUInt();
+	settings_struct.cont_pause_in_microseconds = settings.value(settingContiniousPauseInMicrosecondsPath, settingContiniousPausInMicrosecondsDefault).toUInt();
 	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt() + 1;
 	settings_struct.IOCtrl_impact_start_pixel = settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toUInt();
 	settings_struct.IOCtrl_output_delay_in_5ns[0] = settings.value(settingIOCtrlOutput1DelayIn5nsPath, settingIOCtrlOutput1DelayIn5nsDefault).toUInt();
@@ -225,7 +225,6 @@ void MainWindow::startContPressed(bool checked)
 {
 	if (checked)
 	{
-		settings_struct.cont_pause = 1;// TODO: settings.value(settingContPause, settingAdcCustomValueDefault).toUInt();
 		continiousMeasurementFlag = true;
 		ui->pushButtonStartCont->setText("Stop continuous");
 		startPressed();

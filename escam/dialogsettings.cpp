@@ -84,6 +84,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
     ui->doubleSpinBoxSecIn10ns->setValue(settings.value(settingShutterSecIn10nsPath, settingShutterSecIn10nsDefault).toDouble());
     ui->doubleSpinBoxBecIn10ns->setValue(settings.value(settingShutterBecIn10nsPath, settingShutterBecIn10nsDefault).toDouble());
     ui->comboBoxTriggerModeCC->setCurrentIndex(settings.value(settingTriggerCcPath, settingTriggerCcDefault).toUInt());
+	ui->doubleSpinBoxContiniousPause_in_ms->setValue(settings.value(settingContiniousPauseInMicrosecondsPath, settingContiniousPausInMicrosecondsDefault).toDouble() / 1000);
 	//Camera setup
     ui->comboBoxBoardSel->setCurrentIndex(settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt());
     ui->comboBoxSensorType->setCurrentIndex(settings.value(settingSensorTypePath, settingSensorTypeDefault).toUInt());
@@ -161,6 +162,7 @@ void DialogSettings::on_accepted()
     settings.setValue(settingShutterSecIn10nsPath , ui->doubleSpinBoxSecIn10ns->value());
     settings.setValue(settingShutterBecIn10nsPath , ui->doubleSpinBoxBecIn10ns->value());
     settings.setValue(settingTriggerCcPath, ui->comboBoxTriggerModeCC->currentIndex());
+	settings.setValue(settingContiniousPauseInMicrosecondsPath, ui->doubleSpinBoxContiniousPause_in_ms->value() * 1000);
 	//Camera setup
     settings.setValue(settingBoardSelPath, ui->comboBoxBoardSel->currentIndex());
     settings.setValue(settingSensorTypePath, ui->comboBoxSensorType->currentIndex());
@@ -503,8 +505,8 @@ void DialogSettings::loadDefaults()
     ui->doubleSpinBoxNob->setValue(settingNobDefault);
     ui->comboBoxSti->setCurrentIndex(settingStiDefault);
     ui->comboBoxBti->setCurrentIndex(settingBtiDefault);
-    ui->doubleSpinBoxSTime_in_ms->setValue(settingStime_in_microseconds_Default);
-    ui->doubleSpinBoxBTimer_in_ms->setValue(settingBtime_in_microseconds_Default);
+    ui->doubleSpinBoxSTime_in_ms->setValue(settingStime_in_microseconds_Default / 1000);
+    ui->doubleSpinBoxBTimer_in_ms->setValue(settingBtime_in_microseconds_Default / 1000);
     ui->doubleSpinBoxSdatIn10ns->setValue(settingSdat_in_10nsDefault);
     ui->doubleSpinBoxBdatIn10ns->setValue(settingBdat_in_10nsDefault);
     ui->comboBoxSslope->setCurrentIndex(settingSslopeDefault);
@@ -513,6 +515,7 @@ void DialogSettings::loadDefaults()
     ui->doubleSpinBoxSecIn10ns->setValue(settingShutterSecIn10nsDefault);
     ui->doubleSpinBoxBecIn10ns->setValue(settingShutterBecIn10nsDefault);
     ui->comboBoxTriggerModeCC->setCurrentIndex(settingTriggerCcDefault);
+	ui->doubleSpinBoxContiniousPause_in_ms->setValue(settingContiniousPausInMicrosecondsDefault / 1000);
 	//camera setup
     ui->comboBoxBoardSel->setCurrentIndex(settingBoardSelDefault);
     ui->comboBoxSensorType->setCurrentIndex(settingSensorTypeDefault);
@@ -749,3 +752,10 @@ void DialogSettings::on_comboBoxFftMode_currentIndexChanged(int index)
 		break;
 	}
 }
+
+void DialogSettings::on_pushButtonCopyBtimer_clicked()
+{
+	ui->doubleSpinBoxContiniousPause_in_ms->setValue(ui->doubleSpinBoxBTimer_in_ms->value());
+	return;
+}
+

@@ -79,7 +79,7 @@ DllAccess es_status_codes DLLisMeasureOn(UINT32 drvno, UINT8* measureOn);
 DllAccess es_status_codes DLLisBlockOn(UINT32 drvno, UINT8* blockOn);
 //************  Control CAM
 DllAccess void setSWTrig(BOOL on);
-DllAccess void DLLSetContFFLoop(UINT8 activate, UINT32 pause);
+DllAccess void DLLSetContFFLoop(UINT8 activate, UINT32 pause_in_microseconds);
 DllAccess es_status_codes DLLSWTrig(UINT32 drvno);	//start a read to FIFO by software
 DllAccess es_status_codes DLLOutTrigHigh(UINT32 drvno);	//set output Trigger signal high
 DllAccess es_status_codes DLLOutTrigLow(UINT32 drvno);	//set output Trigger signal low

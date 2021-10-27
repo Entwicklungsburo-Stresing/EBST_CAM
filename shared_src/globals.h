@@ -50,7 +50,7 @@ extern uint32_t* Nospb;
 extern bool abortMeasurementFlag;
 extern uint32_t numberOfInterrupts;
 extern bool continiousMeasurementFlag;
-extern uint32_t continiousPause;
+extern uint32_t continiousPauseInMicroseconds;
 extern struct global_settings settings_struct;
 
 #ifdef __cplusplus
