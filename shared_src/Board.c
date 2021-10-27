@@ -2197,7 +2197,8 @@ es_status_codes StartMeasurement()
 			if (status != es_no_error) return status;
 		}
 		// When space key or ESC key was pressed, continious measurement stops.
-		continiousMeasurementFlag = !checkSpaceKeyState();
+		if (checkSpaceKeyState())
+			continiousMeasurementFlag = false;
 		abortMeasurementFlag = checkEscapeKeyState();
 #ifdef WIN32
 		WaitforTelapsed(continiousPauseInMicroseconds);

@@ -154,17 +154,19 @@ void MainWindow::startPressed()
     settings_struct.lines_binning = settings.value(settingLinesBinningPath, settingLinesBinningDefault).toUInt();
     settings_struct.number_of_regions = settings.value(settingNumberOfRegionsPath, settingNumberOfRegionsDefault).toUInt();
     settings_struct.keep = settingKeepDefault;
-    if (settings.value(settingRegionSizeEqualPath, settingRegionSizeEqualDefault).toBool() == 0)
+    if (settings.value(settingRegionSizeEqualPath, settingRegionSizeEqualDefault).toBool() == true )
         *(settings_struct.region_size) = 0;
-    else
-        settings_struct.region_size[0] = settings.value(settingRegionSize1Path, settingRegionSize1Default).toUInt();
-    settings_struct.region_size[1] = settings.value(settingRegionSize2Path, settingRegionSize2Default).toUInt();
-    settings_struct.region_size[2] = settings.value(settingRegionSize3Path, settingRegionSize3Default).toUInt();
-    settings_struct.region_size[3] = settings.value(settingRegionSize4Path, settingRegionSize4Default).toUInt();
-    settings_struct.region_size[4] = settings.value(settingRegionSize5Path, settingRegionSize5Default).toUInt();
-    settings_struct.region_size[5] = settings.value(settingRegionSize6Path, settingRegionSize6Default).toUInt();
-    settings_struct.region_size[6] = settings.value(settingRegionSize7Path, settingRegionSize7Default).toUInt();
-    settings_struct.region_size[7] = settings.value(settingRegionSize8Path, settingRegionSize8Default).toUInt();
+	else
+	{
+		settings_struct.region_size[0] = settings.value(settingRegionSize1Path, settingRegionSize1Default).toUInt();
+		settings_struct.region_size[1] = settings.value(settingRegionSize2Path, settingRegionSize2Default).toUInt();
+		settings_struct.region_size[2] = settings.value(settingRegionSize3Path, settingRegionSize3Default).toUInt();
+		settings_struct.region_size[3] = settings.value(settingRegionSize4Path, settingRegionSize4Default).toUInt();
+		settings_struct.region_size[4] = settings.value(settingRegionSize5Path, settingRegionSize5Default).toUInt();
+		settings_struct.region_size[5] = settings.value(settingRegionSize6Path, settingRegionSize6Default).toUInt();
+		settings_struct.region_size[6] = settings.value(settingRegionSize7Path, settingRegionSize7Default).toUInt();
+		settings_struct.region_size[7] = settings.value(settingRegionSize8Path, settingRegionSize8Default).toUInt();
+	}
     settings_struct.dac_output[0][0] = settings.value(settingSensorOffsetChannel1Path, settingSensorOffsetChannel1Default).toUInt();
     settings_struct.dac_output[0][1] = settings.value(settingSensorOffsetChannel2Path, settingSensorOffsetChannel2Default).toUInt();
     settings_struct.dac_output[0][2] = settings.value(settingSensorOffsetChannel3Path, settingSensorOffsetChannel3Default).toUInt();
