@@ -44,8 +44,8 @@ int readout_init(int argc, char **argv, struct camera_info_struct *info) {
 		return -1;
 	}
 
-	info->n_scans = atoi(argv[++arg_pos]);
-	info->n_blocks = atoi(argv[++arg_pos]);
+	info->n_scans = atoi(argv[arg_pos++]);
+	info->n_blocks = atoi(argv[arg_pos++]);
 
 	if ((result = lscpcie_driver_init()) < 0) {
 		fprintf(stderr, "initialising driver returned %d\n", result);
