@@ -689,7 +689,8 @@ es_status_codes SetPartialBinning( uint32_t drvno, uint16_t number_of_regions )
 }
 
 /**
- * \brief Turns ARREG off and therefore partial binning too.
+ * \brief Turns 
+ * ARREG off and therefore partial binning too.
  * 
  * \param drvno PCIe board identifier.
  * \return es_status_codes
@@ -3102,6 +3103,10 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 	case 1: data = 0x40;  break;
 	case 2: data = 0x80;  break;
 	case 3: data = 0x100; break;
+	case 4: data = 0x200;  break;
+	case 5: data = 0x400;  break;
+	case 6: data = 0x800;  break;
+	case 7: data = 0x1600; break;
 	}
 	len += sprintf(*stringPtr + len, "TLP_SIZE is:\t"DLLTAB"%u DWORDs\n\t"DLLTAB DLLTAB"=%u BYTEs\n", data, data*4);
 	status = readRegisterDma_32(drvno, &data, DmaAddr_WDMATLPS);
