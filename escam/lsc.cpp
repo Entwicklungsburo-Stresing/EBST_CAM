@@ -87,6 +87,15 @@ std::string Lsc::_dumpGlobalSettings()
     return cppstring;
 }
 
+std::string Lsc::_dumpPciRegisters(uint32_t drvno)
+{
+	char* cstring;
+	es_status_codes status = dumpPciRegisters(drvno, &cstring);
+	std::string cppstring = cstring;
+	parseTextToHtml(&cppstring);
+	return cppstring;
+}
+
 /**
  * \copydoc SetTORReg
  */

@@ -890,6 +890,22 @@ es_status_codes AboutTLPs(uint32_t drvno)
 }//AboutTLPs
 
 /**
+ * \brief
+ * 
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes AboutPCI(uint32_t drvno)
+{
+	char* cstring;
+	es_status_codes status = dumpPciRegisters(drvno, &cstring);
+	MessageBox(GetActiveWindow(), cstring, "PCI regs", MB_OK);
+	return status;
+}//AboutPCI
+
+/**
  * \brief Switch on error message boxes of our software. Default is On.
  *
  * \return none.
