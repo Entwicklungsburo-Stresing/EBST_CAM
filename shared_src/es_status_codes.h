@@ -26,10 +26,11 @@ typedef enum
 	es_enabling_interrupts_failed,
 	es_getting_dma_buffer_failed,
 	es_unlocking_dma_failed,
-	es_camera_not_found,
+	es_camera_not_found = 20,
 	es_abortion,
 	es_creating_thread_failed,
-	es_setting_thread_priority_failed
+	es_setting_thread_priority_failed,
+	es_already_running
 } es_status_codes;
 
 char* ConvertErrorCodeToMsg(es_status_codes status);

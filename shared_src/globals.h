@@ -52,6 +52,7 @@ extern uint32_t numberOfInterrupts;
 extern bool continiousMeasurementFlag;
 extern uint32_t continiousPauseInMicroseconds;
 extern struct global_settings settings_struct;
+extern bool isRunning;
 
 #ifdef __cplusplus
 }
