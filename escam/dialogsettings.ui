@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>333</width>
-    <height>471</height>
+    <width>336</width>
+    <height>482</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="measurement">
       <attribute name="title">
@@ -801,7 +801,7 @@
          <item row="14" column="1">
           <widget class="QLabel" name="labelIr">
            <property name="text">
-            <string>Infrared sensor</string>
+            <string>Infrared HS sensor</string>
            </property>
           </widget>
          </item>
