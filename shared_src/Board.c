@@ -150,11 +150,11 @@ es_status_codes InitMeasurement()
 	//DMA
 	status = SetupDma(settings_struct.drvno);
 	if (status != es_no_error) return status;
+	status = SetDmaRegister(settings_struct.drvno, settings_struct.pixel);
+	if (status != es_no_error) return status;
 	status = SetDmaStartMode(settings_struct.drvno, HWDREQ_EN);
 	if (status != es_no_error) return status;
 	if(INTR_EN) status = enableInterrupt(settings_struct.drvno);
-	if (status != es_no_error) return status;
-	status = SetDmaRegister(settings_struct.drvno, settings_struct.pixel);
 	if (status != es_no_error) return status;
 	//TODO set cont FF mode with DLL style(continiousMeasurementFlag = activate;//0 or 1;continiousPause = pause;) or CCDExamp style(check it out)
 	continiousMeasurementFlag = settings_struct.cont_activate;//0 or 1
