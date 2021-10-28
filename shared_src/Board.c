@@ -3250,39 +3250,39 @@ es_status_codes dumpSettings(char** stringPtr)
 	//allocate string buffer buffer
 	*stringPtr = (char*)calloc(1000, sizeof(char));
 	len += sprintf(*stringPtr + len,
-		"unused\t%u\n"
-		"nos\t%u\n"
-		"nob\t%u\n"
-		"sti_mode\t%u\n"
-		"bti_mode\t%u\n"
+		"unused\t"DLLTAB DLLTAB"%u\n"
+		"nos\t" DLLTAB DLLTAB"%u\n"
+		"nob\t"DLLTAB DLLTAB"%u\n"
+		"sti_mode\t"DLLTAB DLLTAB"%u\n"
+		"bti_mode\t"DLLTAB"%u\n"
 		"stime in microseconds\t%u\n"
 		"btime in microseconds\t%u\n"
-		"sdat in 10 ns\t%u\n"
-		"bdat in 10 ns\t%u\n"
-		"sslope\t%u\n"
-		"bslope\t%u\n"
-		"xckdelay_in_10ns\t%u\n"
+		"sdat in 10 ns\t"DLLTAB"%u\n"
+		"bdat in 10 ns\t"DLLTAB"%u\n"
+		"sslope\t"DLLTAB DLLTAB"%u\n"
+		"bslope\t"DLLTAB DLLTAB"%u\n"
+		"xckdelay_in_10ns\t"DLLTAB"%u\n"
 		"shutterExpTimeIn10ns\t%u\n"
-		"trigger mode cc\t%u\n"
-		"board sel\t%u\n"
-		"sensor type\t%u\n"
-		"camera system\t%u\n"
-		"camcnt\t%u\n"
-		"pixel\t%u\n"
-		"mshut\t%u\n"
-		"led off\t%u\n"
-		"gain switch\t%u\n"
-		"gain 3030\t%u\n"
-		"temp level\t%u\n"
-		"dac\t%u\n"
-		"enable gpx\t%u\n"
-		"gpx offset\t%u\n"
-		"fftlines\t%u\n"
-		"vfreq\t%u\n"
-		"ffmode\t%u\n"
-		"lines binning\t%u\n"
+		"trigger mode cc\t"DLLTAB"%u\n"
+		"board sel\t"DLLTAB"%u\n"
+		"sensor type\t"DLLTAB"%u\n"
+		"camera system\t"DLLTAB"%u\n"
+		"camcnt\t"DLLTAB DLLTAB"%u\n"
+		"pixel\t"DLLTAB DLLTAB"%u\n"
+		"mshut\t"DLLTAB DLLTAB"%u\n"
+		"led off\t"DLLTAB DLLTAB"%u\n"
+		"gain switch\t"DLLTAB"%u\n"
+		"gain 3030\t"DLLTAB"%u\n"
+		"temp level\t"DLLTAB"%u\n"
+		"dac\t"DLLTAB DLLTAB"%u\n"
+		"enable gpx\t"DLLTAB"%u\n"
+		"gpx offset\t"DLLTAB"%u\n"
+		"fftlines\t"DLLTAB DLLTAB"%u\n"
+		"vfreq\t"DLLTAB DLLTAB"%u\n"
+		"ffmode\t"DLLTAB DLLTAB"%u\n"
+		"lines binning\t"DLLTAB"%u\n"
 		"number of regions\t%u\n"
-		"keep\t0b"BYTE_TO_BINARY_PATTERN"\n",
+		"keep\t"DLLTAB DLLTAB"0b"BYTE_TO_BINARY_PATTERN"\n",
 		settings_struct.unused,
 		settings_struct.nos,
 		settings_struct.nob,
@@ -3316,21 +3316,21 @@ es_status_codes dumpSettings(char** stringPtr)
 		settings_struct.lines_binning,
 		settings_struct.number_of_regions,
 		BYTE_TO_BINARY(settings_struct.keep));
-	len += sprintf(*stringPtr + len, "region size\t");
+	len += sprintf(*stringPtr + len, "region size\t"DLLTAB);
 	for (int i = 0; i < 8; i++)
 		len += sprintf(*stringPtr + len, "%u ", settings_struct.region_size[i]);
 	for (int drvno = 0; drvno < MAXPCIECARDS; drvno++)
 	{
-		len += sprintf(*stringPtr + len, "\ndac output board %i\t ", drvno);
+		len += sprintf(*stringPtr + len, "\ndac output board %i\t", drvno);
 		for (int i = 0; i < 8; i++)
 			len += sprintf(*stringPtr + len, "%u ", settings_struct.dac_output[drvno][i]);
 	}
 	len += sprintf(*stringPtr + len,
-		"\ntor modus\t%u\n"
-		"adc mode\t%u\n"
+		"\ntor mode\t"DLLTAB DLLTAB"%u\n"
+		"adc mode\t"DLLTAB"%u\n"
 		"adc custom pattern\t%u\n"
-		"bec_in_10ns\t%u\n"
-		"isIr\t%u\n"
+		"bec_in_10ns\t"DLLTAB"%u\n"
+		"isIr\t"DLLTAB DLLTAB"%u\n"
 		"IOCtrl_impact_start_pixel\t%u\n",
 		settings_struct.TORmodus,
 		settings_struct.ADC_Mode,
