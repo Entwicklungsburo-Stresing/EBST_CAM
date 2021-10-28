@@ -278,7 +278,7 @@ void* CopyDataToUserBuffer(void* param_drvno)
     if(checkDriverHandle(drvno) != es_no_error) return NULL;
     ES_LOG("Copy data to user buffer started, drvno %u, user buffer: %p\n", drvno, userBuffer[drvno]);
     pthread_mutex_lock(&mutex[drvno-1]);
-	ssize_t bytes_to_read = sizeof(uint16_t) * aCAMCNT[drvno] * *Nospb * aPIXEL[drvno] * Nob;
+    ssize_t bytes_to_read = sizeof(uint16_t) * aCAMCNT[drvno] * *Nospb * aPIXEL[drvno] * *Nob;
 	ES_LOG("bytes to read: %zd\n", bytes_to_read);
 	ssize_t bytes_read = 0;
 	ssize_t result;
@@ -333,4 +333,16 @@ uint16_t checkSpaceKeyState()
 {
 	//TODO: implement me
 	return 0;
+}
+
+es_status_codes SetPriority(uint32_t threadp)
+{
+    //TODO: implement me
+    return es_no_error;
+}
+
+es_status_codes ResetPriority()
+{
+    //TODO: implement me
+    return es_no_error;
 }

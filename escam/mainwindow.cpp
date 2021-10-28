@@ -3,8 +3,8 @@
 #include "../version.h"
 #include "dialogdac.h"
 #include "dialogioctrl.h"
-#include "dialoggamma.h"
 #ifdef WIN32
+#include "dialoggamma.h"
 #include "shared_src/ESLSCDLL_pro.h"
 #endif
 
@@ -782,8 +782,10 @@ void MainWindow::copySettings(QSettings &dst, QSettings &src)
  */
 void MainWindow::on_actionGamma_triggered()
 {
+#ifdef WIN32
 	DialogGamma* dialogGamma = new DialogGamma(this);
 	dialogGamma->setAttribute(Qt::WA_DeleteOnClose);
 	dialogGamma->show();
+#endif
 	return;
 }
