@@ -49,6 +49,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&lsc, &Lsc::measureDone, &measurementThread, &QThread::quit);
 	connect(&lsc, &Lsc::measureDone, ds_dsc, &DialogDSC::updateDSC);
 	connect(&lsc, &Lsc::measureDone, ds_rms, &DialogRMS::updateRMS);
+#ifdef __linux__
+    // disable greyscale menu on linux
+    ui->menuGreyscale_Viewer->setEnabled(false);
+#endif
 }
 
 /**
@@ -567,8 +571,6 @@ void MainWindow::on_measureStart()
     ui->spinBoxSample->setEnabled(true);
     ui->horizontalSliderBlock->setEnabled(true);
     ui->horizontalSliderSample->setEnabled(true);
-	//enable chart menu
-	ui->menuChart->setEnabled(true);
     return;
 }
 
