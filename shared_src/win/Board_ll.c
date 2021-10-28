@@ -716,7 +716,9 @@ es_status_codes About(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = AboutTLPs(drvno);
 	if (status != es_no_error) return status;
-	return AboutPCI(drvno);
+	status = AboutPCI(drvno);
+	if (status != es_no_error) return status;
+	return AboutSettings();
 }
 
 /**
@@ -805,6 +807,14 @@ es_status_codes AboutPCI(uint32_t drvno)
 	MessageBox(GetActiveWindow(), cstring, "PCI regs", MB_OK);
 	return status;
 }//AboutPCI
+
+es_status_codes AboutSettings()
+{
+	char* cstring;
+	es_status_codes status = dumpSettings(&cstring);
+	MessageBox(GetActiveWindow(), cstring, "Settings", MB_OK);
+	return status;
+}
 
 /**
  * \brief Switch on error message boxes of our software. Default is On.
