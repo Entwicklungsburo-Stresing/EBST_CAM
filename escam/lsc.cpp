@@ -96,6 +96,24 @@ std::string Lsc::_dumpPciRegisters(uint32_t drvno)
 	return cppstring;
 }
 
+std::string Lsc::__AboutDrv(uint32_t drvno)
+{
+	char* cstring;
+	es_status_codes status = _AboutDrv(drvno, &cstring);
+	std::string cppstring = cstring;
+	parseTextToHtml(&cppstring);
+	return cppstring;
+}
+
+std::string Lsc::__AboutGPX(uint32_t drvno)
+{
+	char* cstring;
+	es_status_codes status = _AboutGPX(drvno, &cstring);
+	std::string cppstring = cstring;
+	parseTextToHtml(&cppstring);
+	return cppstring;
+}
+
 /**
  * \copydoc SetTORReg
  */

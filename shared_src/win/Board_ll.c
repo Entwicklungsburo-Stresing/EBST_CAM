@@ -706,16 +706,27 @@ es_status_codes InitMutex(uint32_t drvno)
     return es_no_error;
 }
 
+es_status_codes About(uint32_t drvno)
+{
+	es_status_codes status = AboutDrv(drvno);
+	if (status != es_no_error) return status;
+	//status = AboutGPX(drvno);
+	//if (status != es_no_error) return status;
+	status = AboutS0(drvno);
+	if (status != es_no_error) return status;
+	status = AboutTLPs(drvno);
+	if (status != es_no_error) return status;
+	return AboutPCI(drvno);
+}
+
 /**
-* \brief Return infos about the PCIe board.
-* 	Shows 5 info messages. Can be used to test the communication with the PCI board.
-* 	Is called automatically for 2 boards.
+* \brief Shows window with infos about the PCIe board.
 *
-* - win1 : version of driver
-* - win2 : ID = 53xx
-* - win3 : length of space0 BAR =0x3f
-* - win4 : vendor ID = EBST
-* - win5 : PCI board version (same as label on PCI board)
+* - version of driver
+* - ID = 53xx
+* - length of space0 BAR =0x3f
+* - vendor ID = EBST
+* - PCI board version (same as label on PCI board)
 * \param drvno board number (=1 if one PCI board)
 * \return es_status_codes
 * 	- es_no_error
@@ -724,51 +735,10 @@ es_status_codes InitMutex(uint32_t drvno)
 */
 es_status_codes AboutDrv(uint32_t drvno)
 {
-	char pstring[80] = "";
-	HWND hWnd = GetActiveWindow();
-	HDC aDC = GetDC(hWnd);
-	// read ISA Id from S0Base+7
-	UINT32 S0Data = 0;
-	es_status_codes status = readRegisterS0_32(drvno, &S0Data, S0Addr_CTRLA); // Board ID =5053
-	if (status != es_no_error) return status;
-	S0Data = S0Data >> 16;
-	sprintf_s(pstring, 80, " Board #%i    ID = 0x%I32x", drvno, S0Data);
-	if (MessageBox(hWnd, pstring, " Board ID=53 ", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
-	//The following lines doesn't make sense. S0Data is never 0.
-	S0Data = 0x07FF;
-	if (S0Data == 0)
-	{
-		ErrorMsg("Board #%i  no Space0!", drvno);
-		return es_no_space0;
-	}
-	sprintf_s(pstring, 80, "Board #%i     length = 0x%I32x", drvno, S0Data);
-	if (MessageBox(hWnd, pstring, "  PCI space0 length=", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
-	UCHAR udata1 = 0,
-		udata2 = 0,
-		udata3 = 0,
-		udata4 = 0;
-	if (S0Data >= 0x1F)
-	{//if WE -> has space 0x20
-		status = readRegisterS0_8(drvno, &udata1, 0x1C);
-		if (status != es_no_error) return status;
-		status = readRegisterS0_8(drvno, &udata2, 0x1D);
-		if (status != es_no_error) return status;
-		status = readRegisterS0_8(drvno, &udata3, 0x1E);
-		if (status != es_no_error) return status;
-		status = readRegisterS0_8(drvno, &udata4, 0x1F);
-		if (status != es_no_error) return status;
-		sprintf_s(pstring, 80, "Board #%i  ven ID = %c%c%c%c", drvno, udata1, udata2, udata3, udata4);
-		if (MessageBox(hWnd, pstring, " Board vendor=EBST ", MB_OK | MB_ICONEXCLAMATION) == IDOK);
-	}
-	if (S0Data >= 0x3F)
-	{//if 9056 -> has space 0x40
-		status = readRegisterS0_32(drvno, &S0Data, S0Addr_PCI);
-		if (status != es_no_error) return status;
-		sprintf_s(pstring, 80, "Board #%i   board version = 0x%I32x", drvno, S0Data);
-		if (MessageBox(hWnd, pstring, "Board version ", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
-	}
-	ReleaseDC(hWnd, aDC);
-	return es_no_error;
+	char* cstring;
+	es_status_codes status = _AboutDrv(drvno, &cstring);
+	MessageBox(GetActiveWindow(), cstring, "About driver", MB_OK);
+	return status;
 };
 
 /**
@@ -782,78 +752,10 @@ es_status_codes AboutDrv(uint32_t drvno)
  */
 es_status_codes AboutGPX(uint32_t drvno)
 {
-	HWND hWnd;
-	char pstring[80] = "";
-	int i, j = 0;
-	char fn[1000];
-	ULONG regData, regNumber, tempData;
-	BOOL space, abbr, irf, empty;
-	char LUTS0Reg[16][30] = {
-		"Reg0 \t",
-		"Reg1 \t",
-		"Reg2\t",
-		"Reg3\t",
-		"Reg4 \t",
-		"Reg5\t",
-		"Reg6 \t",
-		"Reg7\t",
-		"Reg8\t",
-		"Reg9 \t",
-		"Reg10\t",
-		"Reg11 \t",
-		"Reg12 \t",
-		"Reg13\t ",
-		"Reg14 \t",
-		"Reg15\t"
-	}; //Look-Up-Table for the S0 Registers
-
-	hWnd = GetActiveWindow();
-
-	j = sprintf(fn, "GPX- registers   \n");
-	es_status_codes status = es_no_error;
-	for (i = 0; i < 8; i++)
-	{
-		status = ReadGPXCtrl(drvno, i, &regData);
-		if (status != es_no_error) return status;
-		j += sprintf(fn + j, "%s \t: 0x%I32x\n", LUTS0Reg[i], regData);
-	}
-
-	for (i = 11; i < 13; i++)
-	{
-		status = ReadGPXCtrl(drvno, i, &regData);
-		if (status != es_no_error) return status;
-		j += sprintf(fn + j, "%s \t: 0x%I32x\n", LUTS0Reg[i], regData);
-	}
-	MessageBox(hWnd, fn, "GPX regs", MB_OK);
-	j = sprintf(fn, "delay- registers   \n");
-	i = 0;
-	abbr = FALSE;
-	empty = FALSE;
-	while (!abbr)
-	{
-		status = WaitTrigger(1, FALSE, &space, &abbr);
-		if (status != es_no_error) return status;
-		irf = FALSE;
-		i = 0;
-		j = sprintf(fn, "read- regs   \n");
-		i += 1;
-		status = ReadGPXCtrl(drvno, 8, &regData); //lege addr 8 an bus !!!!
-		if (status != es_no_error) return status;
-		j += sprintf(fn + j, "%d \t: 0x%I32x\n", i, regData);
-		i += 1;
-		status = ReadGPXCtrl(drvno, 9, &regData); //lege addr 9 an bus !!!!
-		if (status != es_no_error) return status;
-		j += sprintf(fn + j, "%d \t: 0x%I32x\n", i, regData);
-		MessageBox(hWnd, fn, "GPX regs", MB_OK);
-	}
-	status = ReadGPXCtrl(drvno, 11, &regData);
-	if (status != es_no_error) return status;
-	j += sprintf(fn + j, "%s \t: 0x%I32x\n", " stop hits", regData);
-	status = ReadGPXCtrl(drvno, 12, &regData);
-	if (status != es_no_error) return status;
-	j += sprintf(fn + j, "%s \t: 0x%I32x\n", " flags", regData);
-	MessageBox(hWnd, fn, "GPX regs", MB_OK);
-	return ReadGPXCtrl(drvno, 8, &regData); //read access follows                 set addr 8 to bus !!!!
+	char* cstring;
+	es_status_codes status = _AboutGPX(drvno, &cstring);
+	MessageBox(GetActiveWindow(), cstring, "GPX regs", MB_OK);
+	return status;
 }
 
 /**
@@ -868,9 +770,8 @@ es_status_codes AboutS0(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = dumpS0Registers(drvno, &cstring);
-	if (status != es_no_error) return status;
 	MessageBox(GetActiveWindow(), cstring, "S0 regs", MB_OK);
-	return AboutTLPs(drvno);
+	return status;
 }//AboutS0
 
 /**

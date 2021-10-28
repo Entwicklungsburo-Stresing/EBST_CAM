@@ -3045,11 +3045,11 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 		if (status != es_no_error)
 		{
 			//write error to buffer
-			len += sprintf(*stringPtr + len, "\nerror while reading register %s", register_names[i]);
+			len += sprintf(*stringPtr + len, "\nerror while reading register 0x%x %s", i*4, register_names[i]);
 			return status;
 		}
 		//write register name and value to buffer
-		len += sprintf(*stringPtr + len, "%s\t0x%x\n", register_names[i], data);
+		len += sprintf(*stringPtr + len, "0x%x  \t%s\t0x%x\n", i*4, register_names[i], data);
 	}
 	return status;
 }
@@ -3093,11 +3093,11 @@ es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr)
 		if (status != es_no_error)
 		{
 			//write error to buffer
-			len += sprintf(*stringPtr + len, "\nerror while reading register %s", register_names[i]);
+			len += sprintf(*stringPtr + len, "\nerror while reading register 0x%x %s", i*4, register_names[i]);
 			return status;
 		}
 		//write register name and value to buffer
-		len += sprintf(*stringPtr + len, "%s\t0x%x\n", register_names[i], data);
+		len += sprintf(*stringPtr + len, "0x%x  \t%s\t0x%x\n", i*4, register_names[i], data);
 	}
 	return status;
 }
@@ -3162,6 +3162,86 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 	}
 	len += sprintf(*stringPtr + len, "number of TLPs is:\t"DLLTAB"%u", data);
 	return status;
+}
+
+/**
+ * \brief Reads registers 0 to 12 of TDC-GPX chip. Time delay counter option.
+ *
+ * \param drvno PCIe board identifier
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
+ */
+es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
+{
+	*stringPtr = (char*)calloc(500, sizeof(char));
+	es_status_codes status = es_no_error;
+	enum N
+	{
+		number_of_registers = 0x30,
+		bufferSize = 100,
+	};
+	uint32_t len = 0;
+
+	uint32_t regData, regNumber, tempData;
+	bool space, abbr, irf, empty;
+	char LUTS0Reg[number_of_registers][bufferSize] = {
+		"Reg0",
+		"Reg1",
+		"Reg2",
+		"Reg3",
+		"Reg4",
+		"Reg5",
+		"Reg6",
+		"Reg7",
+		"Reg8",
+		"Reg9",
+		"Reg10",
+		"Reg11",
+		"Reg12",
+		"Reg13",
+		"Reg14",
+		"Reg15"
+	};
+	for (int i = 0; i < 8; i++)
+	{
+		status = ReadGPXCtrl(drvno, i, &regData);
+		if (status != es_no_error) return status;
+		len += sprintf(*stringPtr + len, "%s \t: 0x%I32x\n", LUTS0Reg[i], regData);
+	}
+	for (int i = 11; i < 13; i++)
+	{
+		status = ReadGPXCtrl(drvno, i, &regData);
+		if (status != es_no_error) return status;
+		len += sprintf(*stringPtr + len, "%s \t: 0x%I32x\n", LUTS0Reg[i], regData);
+	}
+	abbr = FALSE;
+	empty = FALSE;
+	int i = 0;
+	while (!abbr)
+	{
+		status = WaitTrigger(1, FALSE, &space, &abbr);
+		if (status != es_no_error) return status;
+		irf = FALSE;
+		i = 0;
+		len = sprintf(*stringPtr + len, "read- regs   \n");
+		i += 1;
+		status = ReadGPXCtrl(drvno, 8, &regData); //lege addr 8 an bus !!!!
+		if (status != es_no_error) return status;
+		len += sprintf(*stringPtr + len, "%d \t: 0x%I32x\n", i, regData);
+		i += 1;
+		status = ReadGPXCtrl(drvno, 9, &regData); //lege addr 9 an bus !!!!
+		if (status != es_no_error) return status;
+		len += sprintf(*stringPtr + len, "%d \t: 0x%I32x\n", i, regData);
+	}
+	status = ReadGPXCtrl(drvno, 11, &regData);
+	if (status != es_no_error) return status;
+	len += sprintf(*stringPtr + len, "%s \t: 0x%I32x\n", " stop hits", regData);
+	status = ReadGPXCtrl(drvno, 12, &regData);
+	if (status != es_no_error) return status;
+	len += sprintf(*stringPtr + len, "%s \t: 0x%I32x\n", " flags", regData);
+	return ReadGPXCtrl(drvno, 8, &regData); //read access follows                 set addr 8 to bus !!!!
 }
 
 es_status_codes dumpSettings(char** stringPtr)
@@ -3290,21 +3370,121 @@ es_status_codes dumpPciRegisters(uint32_t drvno, char** stringPtr)
 		number_of_registers = 0x30,
 		bufferSize = 100,
 	};
+	char register_names[number_of_registers][bufferSize] = {
+	"Device ID, Vendor ID"DLLTAB DLLTAB,
+	"Status, Command"DLLTAB DLLTAB DLLTAB,
+	"Class Code, Revision ID"DLLTAB DLLTAB,
+	"BIST, Header Type, Lat. Timer, Cache Line S."DLLTAB,
+	"Base Address 0 mem 32 bit"DLLTAB DLLTAB,
+	"Base Address 1 io"DLLTAB DLLTAB DLLTAB,
+	"Base Address 2 mem 32 bit"DLLTAB DLLTAB,
+	"Base Address 3"DLLTAB DLLTAB DLLTAB,
+	"Base Address 4"DLLTAB DLLTAB DLLTAB,
+	"Base Address 5"DLLTAB DLLTAB DLLTAB,
+	"Cardbus CIS Pointer"DLLTAB DLLTAB,
+	"Subsystem ID, Subsystem Vendor ID"DLLTAB,
+	"Expansion ROM Base Address"DLLTAB,
+	"Reserved, Cap. Pointer"DLLTAB DLLTAB,
+	"Reserved"DLLTAB DLLTAB DLLTAB DLLTAB,
+	"Max Lat., Min Gnt., Interrupt Pin, Intterupt Line",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific",
+	"device specific"
+	};
 	*stringPtr = (char*)calloc(number_of_registers * bufferSize, sizeof(char));
-	//00-0f
 	for (i = 0; i < number_of_registers; i++)
 	{
 		status = readConfig_32(drvno, &data, i * 4);
 		if (status != es_no_error)
 		{
 			//write error to buffer
-			length += sprintf(*stringPtr + length, "\nerror while reading register %i", i*4);
+			length += sprintf(*stringPtr + length, "\nerror while reading register %i %s", i*4, register_names[i]);
 			return status;
 		}
-		length += sprintf_s(*stringPtr + length, bufferSize, "0x%x\t = 0x%x\n", i * 4, data);
+		length += sprintf_s(*stringPtr + length, bufferSize, "0x%x  \t%s\t0x%x\n", i * 4, register_names[i], data);
 	}
 	return status;
 }
+
+/**
+* \brief Return infos about the PCIe board.
+*
+* - win1 : version of driver
+* - win2 : ID = 53xx
+* - win3 : length of space0 BAR =0x3f
+* - win4 : vendor ID = EBST
+* - win5 : PCI board version (same as label on PCI board)
+* \param drvno board number (=1 if one PCI board)
+* \return es_status_codes
+* 	- es_no_error
+* 	- es_register_read_failed
+*	- es_no_space0
+*/
+es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
+{
+	*stringPtr = (char*)calloc(500, sizeof(char));
+	uint32_t len = 0;
+	uint32_t data = 0;
+	// read ISA Id from S0Base+7
+	es_status_codes status = readRegisterS0_32(drvno, &data, S0Addr_CTRLA); // Board ID =5053
+	if (status != es_no_error) return status;
+	data = data >> 16;
+	len += sprintf_s(*stringPtr + len, 80, " Board #%i    ID \t= 0x%I32x\n", drvno, data);
+	data = 0x07FF;
+	len += sprintf_s(*stringPtr + len, 80, "Board #%i     length \t= 0x%I32x\n", drvno, data);
+	UCHAR udata1 = 0,
+		udata2 = 0,
+		udata3 = 0,
+		udata4 = 0;
+	if (data >= 0x1F)
+	{//if WE -> has space 0x20
+		status = readRegisterS0_8(drvno, &udata1, 0x1C);
+		if (status != es_no_error) return status;
+		status = readRegisterS0_8(drvno, &udata2, 0x1D);
+		if (status != es_no_error) return status;
+		status = readRegisterS0_8(drvno, &udata3, 0x1E);
+		if (status != es_no_error) return status;
+		status = readRegisterS0_8(drvno, &udata4, 0x1F);
+		if (status != es_no_error) return status;
+		len += sprintf_s(*stringPtr + len, 80, "Board #%i  ven ID \t= %c%c%c%c\n", drvno, udata1, udata2, udata3, udata4);
+	}
+	if (data >= 0x3F)
+	{//if 9056 -> has space 0x40
+		status = readRegisterS0_32(drvno, &data, S0Addr_PCI);
+		if (status != es_no_error) return status;
+		len += sprintf_s(*stringPtr + len, 80, "Board #%i   board version \t= 0x%I32x\n", drvno, data);
+	}
+	return es_no_error;
+};
 
 /**
  * \brief Sets BlockOn bit in PCIEFLAGS and notifies UI about it. Two board sync version

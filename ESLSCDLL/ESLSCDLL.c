@@ -198,14 +198,14 @@ DllAccess es_status_codes DLLWriteLongIOPort( UINT32 drvno, UINT32 DataL, UINT32
 }
 
 /**
- * \copydoc AboutDrv
+ * \copydoc About
  */
-DllAccess es_status_codes DLLAboutDrv( UINT32 drvno )
+DllAccess es_status_codes DLLAbout( UINT32 drvno )
 {
-	es_status_codes status = AboutDrv( drvno );
+	es_status_codes status = About( drvno );
 	if (status != es_no_error) return status;
 	if (number_of_boards == 2)
-		status = AboutDrv( 2 );
+		status = About( 2 );
 	return status;
 }
 
