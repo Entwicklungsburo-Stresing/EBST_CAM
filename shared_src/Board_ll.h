@@ -52,6 +52,7 @@ es_status_codes SetPriority(ULONG threadp);
 es_status_codes ResetPriority();
 
 #ifdef WIN32
+es_status_codes About(uint32_t drvno);
 es_status_codes AboutDrv(uint32_t drvno);
 es_status_codes AboutGPX(uint32_t drvno);
 es_status_codes AboutS0(uint32_t drvno);

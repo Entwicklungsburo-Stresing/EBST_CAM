@@ -452,6 +452,18 @@ void MainWindow::on_actionDump_board_registers_triggered()
     tabWidget->setDocumentMode(true);
 	for (uint32_t drvno = 1; drvno <= number_of_boards; drvno++)
 	{
+		QLabel* labelDrv = new QLabel(tabWidget);
+		labelDrv->setTextInteractionFlags(Qt::TextSelectableByMouse);
+		labelDrv->setTextFormat(Qt::RichText);
+		labelDrv->setText(QString::fromStdString(lsc.__AboutDrv(drvno)));
+		labelDrv->setAlignment(Qt::AlignTop);
+		tabWidget->addTab(labelDrv, "About driver board " + QString::number(drvno));
+		//QLabel* labelGPX = new QLabel(tabWidget);
+		//labelGPX->setTextInteractionFlags(Qt::TextSelectableByMouse);
+		//labelGPX->setTextFormat(Qt::RichText);
+		//labelGPX->setText(QString::fromStdString(lsc.__AboutGPX(drvno)));
+		//labelGPX->setAlignment(Qt::AlignTop);
+		//tabWidget->addTab(labelGPX, "About GPX board " + QString::number(drvno));
 		QLabel* labelS0 = new QLabel(tabWidget);
 		labelS0->setTextInteractionFlags(Qt::TextSelectableByMouse);
 		labelS0->setTextFormat(Qt::RichText);

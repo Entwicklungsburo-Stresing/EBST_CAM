@@ -68,7 +68,7 @@ DllAccess void DLLInitProDLL();
 DllAccess void DLLRegisterLVEvents(LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent);
 DllAccess CStr DLLConvertErrorCodeToMsg(es_status_codes status);
 //************ Cam infos
-DllAccess es_status_codes DLLAboutDrv(UINT32 drvno);	// displays the version and board ID = test if board is there
+DllAccess es_status_codes DLLAbout(UINT32 drvno);
 DllAccess es_status_codes DLLAboutS0( UINT32 drvno );
 DllAccess es_status_codes DLLFFValid(UINT32 drvno, UINT8* valid);						// TRUE if linecounter>0
 DllAccess es_status_codes DLLreadBlockTriggerState(UINT32 drv, UCHAR btrig_ch, BOOL* state); //read trigger input ->ch=1:pci in, ch=2:opto1, ch=3:opto2
