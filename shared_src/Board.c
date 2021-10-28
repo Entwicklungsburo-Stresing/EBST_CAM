@@ -692,6 +692,7 @@ es_status_codes SetupVPB(uint32_t drvno, uint32_t range, uint32_t lines, bool ke
  */
 es_status_codes SetPartialBinning( uint32_t drvno, uint16_t number_of_regions )
 {
+	ES_LOG("Set partial binning\n");
 	es_status_codes status = writeRegisterS0_32(drvno, number_of_regions, S0Addr_ARREG);
 	if (status != es_no_error) return status;
 	return setBitS0_32(drvno, 15, S0Addr_ARREG);//this turns ARREG on and therefore partial binning too
