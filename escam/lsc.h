@@ -30,6 +30,8 @@ public:
     std::string _dumpTlp(uint32_t drvno);
     std::string _dumpGlobalSettings();
 	std::string _dumpPciRegisters(uint32_t drvno);
+	std::string __AboutDrv(uint32_t drvno);
+	std::string __AboutGPX(uint32_t drvno);
     es_status_codes setTorOut(uint32_t drvno, uint8_t torOut);
 	es_status_codes dac_setAllOutputs(uint32_t drvno, uint32_t* output, bool isIr);
 	es_status_codes ioctrl_setT0(uint32_t drvno, uint32_t period_in_10ns);
