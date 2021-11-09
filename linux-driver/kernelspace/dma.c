@@ -61,7 +61,7 @@ int dma_init(struct dev_struct *dev)
 	dev->control->dma_buf_size
 	    =
 	    dev->control->number_of_pixels * dev->control->dma_num_scans *
-	    sizeof(u16);
+	    dev->control->number_of_cameras * sizeof(u16);
 	num_dma_pages = dev->control->dma_buf_size >> PAGE_SHIFT;
 	if (dev->control->dma_buf_size > num_dma_pages << PAGE_SHIFT)
 		num_dma_pages++;

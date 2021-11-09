@@ -204,11 +204,11 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	//DMA
 	status = SetupDma(drvno);
 	if (status != es_no_error) return status;
-	status = SetDmaStartMode(drvno, HWDREQ_EN);
+	status = SetDmaRegister(settings_struct.drvno, settings_struct.pixel);
+	if (status != es_no_error) return status;
+	status = SetDmaStartMode(settings_struct.drvno, HWDREQ_EN);
 	if (status != es_no_error) return status;
 	if (INTR_EN) status = enableInterrupt(drvno);
-	if (status != es_no_error) return status;
-	status = SetDmaRegister(drvno, settings_struct.pixel);
 	if (status != es_no_error) return status;
 	continiousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
 	ES_LOG("Setting continuous pause to %u\n", continiousPauseInMicroseconds);
