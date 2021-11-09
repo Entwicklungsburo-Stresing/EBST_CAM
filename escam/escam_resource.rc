@@ -21,11 +21,11 @@ VS_VERSION_INFO VERSIONINFO
 			BLOCK "040904b0"
 			BEGIN
 				VALUE "CompanyName", VER_COMPANY_NAME "\0"
-				VALUE "FileDescription", "lsc gui"
+				VALUE "FileDescription", "escam"
 				VALUE "FileVersion", VER_FILE_VERSION_STR "\0"
 				VALUE "LegalCopyright", VER_COPYRIGHT_STR "\0"
-				VALUE "OriginalFilename", "lsc-gui.exe\0"
-				VALUE "ProductName", "lsc-gui\0"
+				VALUE "OriginalFilename", "escam.exe\0"
+				VALUE "ProductName", "escam\0"
 				VALUE "ProductVersion", VER_FILE_VERSION_STR "\0"
 			END
 		END
