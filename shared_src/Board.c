@@ -2175,8 +2175,21 @@ es_status_codes StartMeasurement()
 		// Reset the thread priority to the previous value.
 		status = ResetPriority();
 		if (status != es_no_error) return ReturnStartMeasurement(status);
+        // Only on linux: The following mutex prevents ending the measurement before all data has been copied from dma buffer to user buffer.
+#ifdef __linux__
+        if (BOARD_SEL == 1 || BOARD_SEL == 3)
+        {
+            pthread_mutex_lock(&mutex[0]);
+            pthread_mutex_unlock(&mutex[0]);
+        }
+        if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+        {
+            pthread_mutex_lock(&mutex[1]);
+            pthread_mutex_unlock(&mutex[1]);
+        }
+#endif
 		// When the number of scans is not a integer multiple of 500 there will be data in the DMA buffer
-		// left, which is not copied to the user buffer. The copy process for these scans is done here.
+        // left, which is not copied to the user buffer. The copy process for these scans is done here.
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
 			status = StopSTimer(1);
@@ -2198,18 +2211,6 @@ es_status_codes StartMeasurement()
 		// MEASUREON ---------_____
 #ifdef WIN32
 		WaitforTelapsed(100);
-#endif
-#ifdef __linux__
-        if (BOARD_SEL == 1 || BOARD_SEL == 3)
-        {
-            pthread_mutex_lock(&mutex[0]);
-            pthread_mutex_unlock(&mutex[0]);
-        }
-        if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
-        {
-            pthread_mutex_lock(&mutex[1]);
-            pthread_mutex_unlock(&mutex[1]);
-        }
 #endif
 		// Reset the hardware bit measure on.
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
