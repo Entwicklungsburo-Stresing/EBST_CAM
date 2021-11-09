@@ -114,7 +114,7 @@
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <SubSystem>Windows</SubSystem>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <Version>3.17</Version>
+      <Version>3.20</Version>
     </Link>
     <Midl>
       <DefaultCharType>Unsigned</DefaultCharType>
@@ -175,7 +175,7 @@
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <SubSystem>Windows</SubSystem>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <Version>3.17</Version>
+      <Version>3.20</Version>
     </Link>
     <Midl>
       <DefaultCharType>Unsigned</DefaultCharType>
