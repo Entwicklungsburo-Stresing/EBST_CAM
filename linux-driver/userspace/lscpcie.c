@@ -242,13 +242,13 @@ int lscpcie_open(uint dev_no, uint16_t fiber_options, uint8_t memory_options)
 
 		// initialise number of pixels and clock scheme
 		result = lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA,
-					CAMERA_ADDRESS_PIXEL,
-					dev->control->number_of_pixels);
+					    CAMERA_ADDRESS_PIXEL,
+					    dev->control->number_of_pixels);
 		if (result < 0)
 			goto error;
 
 		result = lscpcie_send_fiber(dev, MASTER_ADDRESS_CAMERA,
-					CAMERA_ADDRESS_VCLK, fiber_options);
+					    CAMERA_ADDRESS_VCLK, fiber_options);
 		if (result < 0)
 			goto error;
 	} else {
@@ -342,11 +342,22 @@ int lscpcie_init_scan(struct dev_descr *dev, int trigger_mode,
 	dev->s0->DMA_BUF_SIZE_IN_SCANS = number_of_scans * number_of_blocks * 2;
 	dev->s0->NUMBER_OF_BLOCKS = number_of_blocks;
 
+	fprintf(stderr, "buf size in scans %d\n",
+		dev->s0->DMA_BUF_SIZE_IN_SCANS);
+	fprintf(stderr, "number of pixels %d\n",
+		dev->control->number_of_pixels);
+	fprintf(stderr, "number of cameras %d\n",
+		dev->control->number_of_cameras);
 	dev->control->used_dma_size = dev->s0->DMA_BUF_SIZE_IN_SCANS
 		* dev->control->number_of_pixels
-		* sizeof(pixel_t);
-	if (dev->control->used_dma_size > dev->control->dma_buf_size)
+		* dev->control->number_of_cameras * sizeof(pixel_t) / 2;
+	fprintf(stderr, "=> used dma size %d\n",
+		dev->control->used_dma_size);
+	if (dev->control->used_dma_size > dev->control->dma_buf_size) {
 		dev->control->used_dma_size = dev->control->dma_buf_size;
+		fprintf(stderr, "... changed to %d\n",
+		dev->control->used_dma_size);
+	}
 
 	fprintf(stderr, "dmas per interrupt is %d\n",
 		dev->s0->DMAS_PER_INTERRUPT);

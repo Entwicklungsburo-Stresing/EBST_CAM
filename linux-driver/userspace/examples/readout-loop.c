@@ -244,7 +244,7 @@ void print_data(const struct camera_info_struct *info) {
 	*/
 	int n = n_pixel * n_cams * info->n_scans * info->n_blocks;
 	for (i = 0; i < n; i++)
-		printf("%d\t%hu\n", i, info->data + i);
+	  printf("%d\t%hu\n", i, *(info->data + i));
 }
 
 int main(int argc, char **argv) {

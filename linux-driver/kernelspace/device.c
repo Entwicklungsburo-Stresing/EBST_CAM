@@ -114,8 +114,7 @@ int device_init(struct dev_struct *dev, int minor)
 	if (num_cameras[dev_no] > 0)
 		dev->control->number_of_cameras = num_cameras[dev_no];
 	else
-		dev->control->number_of_cameras =
-		    DEFAULT_NUMBER_OF_CAMERAS;
+		dev->control->number_of_cameras = DEFAULT_NUMBER_OF_CAMERAS;
 
 	if (dma_num_scans[dev_no] > 0)
 		dev->control->dma_num_scans = dma_num_scans[dev_no];
