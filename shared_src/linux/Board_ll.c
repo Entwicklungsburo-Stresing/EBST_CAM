@@ -274,7 +274,8 @@ es_status_codes _ExitDriver(uint32_t drvno)
 
 void* CopyDataToUserBuffer(void* param_drvno)
 {
-    uint32_t drvno = *((uint32_t*)param_drvno);
+    uint32_t* drvno_ptr = param_drvno;
+    uint32_t drvno = *drvno_ptr;
     if(checkDriverHandle(drvno) != es_no_error) return NULL;
     ES_LOG("Copy data to user buffer started, drvno %u, user buffer: %p\n", drvno, userBuffer[drvno]);
     pthread_mutex_lock(&mutex[drvno-1]);
@@ -299,6 +300,7 @@ void* CopyDataToUserBuffer(void* param_drvno)
 	}
     pthread_mutex_unlock(&mutex[drvno-1]);
 	ES_LOG("All copy to user buffer interrupts done\n");
+    free(drvno_ptr);
 	return NULL;
 }
 
@@ -306,7 +308,9 @@ es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 {
 	ES_LOG("Start copy data to user buffer thread\n");
 	pthread_t tid;
-	int err = pthread_create(&tid, NULL, &CopyDataToUserBuffer, (void*)&drvno);
+    uint32_t* drvno_ptr = malloc(sizeof(uint32_t));
+    *drvno_ptr = drvno;
+    int err = pthread_create(&tid, NULL, &CopyDataToUserBuffer, (void*)drvno_ptr);
 	if(err)
 		return es_creating_thread_failed;
 	else
