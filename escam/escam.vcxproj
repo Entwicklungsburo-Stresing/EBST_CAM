@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4883A750-F34F-303C-8C24-F15A176128F3}</ProjectGuid>
-    <RootNamespace>lsc-gui</RootNamespace>
+    <RootNamespace>escam</RootNamespace>
     <Keyword>QtVS_v303</Keyword>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.18362.0</WindowsTargetPlatformMinVersion>
