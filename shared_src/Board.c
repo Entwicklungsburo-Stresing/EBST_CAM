@@ -204,9 +204,9 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	//DMA
 	status = SetupDma(drvno);
 	if (status != es_no_error) return status;
-	status = SetDmaRegister(settings_struct.drvno, settings_struct.pixel);
+	status = SetDmaRegister(drvno, settings_struct.pixel);
 	if (status != es_no_error) return status;
-	status = SetDmaStartMode(settings_struct.drvno, HWDREQ_EN);
+	status = SetDmaStartMode(drvno, HWDREQ_EN);
 	if (status != es_no_error) return status;
 	if (INTR_EN) status = enableInterrupt(drvno);
 	if (status != es_no_error) return status;
