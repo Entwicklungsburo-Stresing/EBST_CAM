@@ -11,7 +11,6 @@
 #include "ioctl.h"
 #include "module-main.h"
 #include "registers.h"
-#include "../userspace/constants.h"
 #include "device.h"
 #include "file.h"
 #include "debug.h"
