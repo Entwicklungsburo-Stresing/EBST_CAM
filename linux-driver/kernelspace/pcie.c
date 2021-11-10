@@ -13,7 +13,6 @@
 #include "device.h"
 #include "proc.h"
 #include "debug.h"
-#include "../userspace/constants.h"
 
 
 int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)

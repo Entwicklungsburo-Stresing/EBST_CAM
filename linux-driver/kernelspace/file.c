@@ -13,7 +13,6 @@
 #include "device.h"
 #include "registers.h"
 #include "debug.h"
-#include "../userspace/constants.h"
 #include <linux/fs.h>
 #include <linux/uaccess.h>
 
