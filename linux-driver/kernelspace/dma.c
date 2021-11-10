@@ -62,13 +62,14 @@ int dma_init(struct dev_struct *dev)
 	    =
 	    dev->control->number_of_pixels * dev->control->dma_num_scans *
 	    dev->control->number_of_cameras * sizeof(u16);
+	PDEBUG(D_BUFFERS, "dma_buf_size: %d \n", dev->control->dma_buf_size);
 	num_dma_pages = dev->control->dma_buf_size >> PAGE_SHIFT;
 	if (dev->control->dma_buf_size > num_dma_pages << PAGE_SHIFT)
 		num_dma_pages++;
+	PDEBUG(D_BUFFERS, "num_dma_pages: %d \n", num_dma_pages);
 
 	dev->dma_mem_size = num_dma_pages << PAGE_SHIFT;
-
-	PDEBUG(D_BUFFERS, "need %d bytes for dma\n", dev->dma_mem_size);
+	PDEBUG(D_BUFFERS, "need %d bytes for dma (dma_mem_size)\n", dev->dma_mem_size);
 
 	if (device_test_status(dev, DEV_HARDWARE_PRESENT)) {
 		PDEBUG(D_BUFFERS, "allocating %d bytes of dma memory\n",
@@ -96,6 +97,7 @@ int dma_init(struct dev_struct *dev)
 	device_set_status(dev, DEV_DMA_MEM_ALLOCATED, DEV_DMA_MEM_ALLOCATED);
 
 	dev->control->dma_buf_size = dev->dma_mem_size;
+	PDEBUG(D_BUFFERS, "dma_buf_size: %d \n", dev->control->dma_buf_size);
 	if (device_test_status(dev, DEV_HARDWARE_PRESENT)) {
 		result = dma_start(dev);
 		if (result) {
