@@ -23,7 +23,7 @@ extern int debug;
 //#define DEFAULT_NUMBER_OF_PIXELS    576
 #define DEFAULT_NUMBER_OF_PIXELS    1088
 #define DEFAULT_NUMBER_OF_CAMERAS   2
-#define DEFAULT_DMA_NUM_SCANS       500
+#define DEFAULT_DMA_NUM_SCANS       1000
 #define DMA_BUFFER_PARTS            2
 
 extern int num_pixels[MAX_BOARDS];
