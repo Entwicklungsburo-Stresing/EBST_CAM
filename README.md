@@ -51,11 +51,20 @@ make
 Use `escam-setup/build/escam_setup.msi`.
 If Microsoft Visual C++ Redistributable is not installed automatically, [install](https://aka.ms/vs/16/release/vc_redist.x64.exe) it.
 
-## load driver on linux
+## escam & driver on linux
 ```
-insmod linux-driver/kernelspace//lscpcie.ko
-chmod 666 /dev/lscpcie*
+# instsall dkms
+sudo apt install dkms
+
+# create .deb
+cd escam_deb
+./create_escam_deb.sh
+
+# install e.g. for version 3.20.3
+sudo apt install ./escam_3.20-3.deb
+
+# install kernel module
+sudo dkms build -m lscpcie -v 3.20-3
+sudo dkms install -m lscpcie -v 3.20-3
 ```
 
-## escam on linux
-No installer available yet.
