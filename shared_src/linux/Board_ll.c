@@ -211,6 +211,8 @@ es_status_codes SetupDma( uint32_t drvno )
 	ES_LOG("bytes per interrupt is %d\n", dev->control->bytes_per_interrupt);
 	ES_LOG("number of scans is %d\n", dev->s0->NUMBER_OF_SCANS);
 	ES_LOG("buf size in scans is %d\n", dev->s0->DMA_BUF_SIZE_IN_SCANS);
+	ES_LOG("used_dma_size %d\n", dev->control->used_dma_size);
+	ES_LOG("dma_buf_size %d\n", dev->control->dma_buf_size);
 	return es_no_error;
 }
 
