@@ -15,7 +15,6 @@
 #include "file.h"
 #include "device.h"
 #include "debug.h"
-#include "../userspace/constants.h"
 
 #include <linux/module.h>
 #include <linux/proc_fs.h>
