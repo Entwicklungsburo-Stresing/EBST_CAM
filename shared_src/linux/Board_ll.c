@@ -285,18 +285,22 @@ void* CopyDataToUserBuffer(void* param_drvno)
 	ssize_t result;
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
 	ES_LOG("bytes per interrupt: %u\n", dev->control->bytes_per_interrupt);
+    ES_LOG("bytes_to_read %u , bytes_read: %u\n", bytes_to_read, bytes_read);
 	while (bytes_to_read && bytes_to_read >= dev->control->bytes_per_interrupt && !abortMeasurementFlag)
 	{
-		result = read(dev->handle, ((uint8_t *)userBuffer[drvno]) + bytes_read , bytes_to_read);
-		ES_LOG("Copy to user buffer intterupt %u done, result: %zd\n", dev->control->irq_count, result);
+        result = read(dev->handle, ((uint8_t *)userBuffer[drvno]) + bytes_read , bytes_to_read);
+        ES_LOG("Copy to user buffer intterupt %u done, result: %zd\n", dev->control->irq_count, result);
 		if (result < 0)
         {
             pthread_mutex_unlock(&mutex[drvno-1]);
 			return NULL;
         }
 		bytes_to_read -= result;
-		bytes_read += result;
+        bytes_read += result;
+        ES_TRACE("bytes_to_read %u , bytes_read: %u\n", bytes_to_read, bytes_read);
 		userBufferWritePos[drvno] = (uint16_t*)(((uint8_t *)userBufferWritePos[drvno]) + result);
+        ES_TRACE("userBufferWritePos %p\n", userBufferWritePos[drvno]);
+
 	}
     pthread_mutex_unlock(&mutex[drvno-1]);
 	ES_LOG("All copy to user buffer interrupts done\n");
