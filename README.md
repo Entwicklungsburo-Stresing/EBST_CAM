@@ -53,7 +53,7 @@ If Microsoft Visual C++ Redistributable is not installed automatically, [install
 
 ## escam & driver on linux
 ```
-# instsall dkms
+# install dkms
 sudo apt install dkms
 
 # create .deb
