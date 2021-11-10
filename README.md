@@ -44,3 +44,18 @@ make
 cd linux-driver/kernelspace/
 make
 ```
+
+# Installing
+
+## escam on Windows
+Use `escam-setup/build/escam_setup.msi`.
+If Microsoft Visual C++ Redistributable is not installed automatically, [install](https://aka.ms/vs/16/release/vc_redist.x64.exe) it.
+
+## load driver on linux
+```
+insmod linux-driver/kernelspace//lscpcie.ko
+chmod 666 /dev/lscpcie*
+```
+
+## escam on linux
+No installer available yet.
