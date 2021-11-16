@@ -14,6 +14,10 @@
 	and make a rebuild all
 */
 
+// Set COMPILE_FOR_LABVIEW to TRUE if you want to enable communication between the DLL and Labview.
+// Set COMPILE_FOR_LABVIEW to FALSE if you want to compile the DLL for the use with other software.
+#define COMPILE_FOR_LABVIEW TRUE
+
 #include <windows.h>
 #include <tchar.h> // for FreeMem-Function
 #include <stdlib.h> 
@@ -22,13 +26,17 @@
 #include <stdio.h>
 #include <process.h>	// for Thread example
 #include <malloc.h>		// msize
+#if COMPILE_FOR_LABVIEW
 #include "LabVIEW 2015/cintools/extcode.h"
+#endif
 #include "shared_src/Board.h"
 
+#if COMPILE_FOR_LABVIEW
 extern LVUserEventRef measureStartLVEvent;
 extern LVUserEventRef measureDoneLVEvent;
 extern LVUserEventRef blockStartLVEvent;
 extern LVUserEventRef blockDoneLVEvent;
+#endif
 
 #ifdef _DLL
 #define DllAccess __declspec( dllexport )
@@ -65,8 +73,10 @@ DllAccess void DLLErrMsgBoxOff();	//general deactivate of error message boxes
 DllAccess double DLLCalcRamUsageInMB(UINT32 nos, UINT32 nob);
 DllAccess double DLLCalcMeasureTimeInSeconds(UINT32 nos, UINT32 nob, double exposure_time_in_ms);
 DllAccess void DLLInitProDLL();
+#if COMPILE_FOR_LABVIEW
 DllAccess void DLLRegisterLVEvents(LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent);
 DllAccess CStr DLLConvertErrorCodeToMsg(es_status_codes status);
+#endif
 //************ Cam infos
 DllAccess es_status_codes DLLAbout(UINT32 drvno);
 DllAccess es_status_codes DLLAboutS0( UINT32 drvno );
