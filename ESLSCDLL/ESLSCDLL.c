@@ -19,10 +19,13 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 
 #include "ESLSCDLL.h"
 
+#if COMPILE_FOR_LABVIEW
 LVUserEventRef measureStartLVEvent;
 LVUserEventRef measureDoneLVEvent;
 LVUserEventRef blockStartLVEvent;
 LVUserEventRef blockDoneLVEvent;
+#endif
+
 int nProcessCount = 0;
 int nThreadCount = 0;
 
@@ -727,6 +730,7 @@ DllAccess es_status_codes DLLLedOff( UINT32 drvno, UINT8 LED_OFF )
  * \param blockDoneEvent Event handler for the event block done.
  * \return none
  */
+#if COMPILE_FOR_LABVIEW
 DllAccess void DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent )
 {
 	measureStartLVEvent = *measureStartEvent;
@@ -740,6 +744,7 @@ DllAccess CStr DLLConvertErrorCodeToMsg(es_status_codes status)
 {
 	return ConvertErrorCodeToMsg(status);
 }
+#endif
 
 /**
  * \copydoc SetupPCIE_DMA
