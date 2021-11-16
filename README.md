@@ -14,7 +14,7 @@ linux-driver    | Linux driver                          | Linux
 # Windows
 
 ### Build Dependencies
-* [Visual Studio](https://visualstudio.microsoft.com/) with C++ Toolbox.
+* [Visual Studio](https://visualstudio.microsoft.com/) with C++ Toolbox (Plattform Toolset: v141, Windows SDK Version: 10.0.17763.0).
 * [Qt Visual Studio Tools](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2019) + [MSVC Qt 5](https://www.qt.io/download) (optional, for Qt GUI)
 * Labview Libraries (optional, for DLL usage with Labview)
 
