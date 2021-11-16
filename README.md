@@ -28,7 +28,7 @@ Open `EBST_CAM.sln` with Visual Studio and press build.
 Run `install_run_as_admin.bat` from `Stresing14.00_Driver_Distribution_Package` as admin. 
 
 ### Installing escam
-Compile solution first and use `escam-setup/build/setup.exe` or download `setup.zip` file from [releases](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases), extract and execute `setup.exe`. If Microsoft Visual C++ Redistributable is missing, this setup should install it automatically.
+Compile solution first and use `escam_setup/build/setup.exe` or download `setup.zip` file from [releases](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases), extract and execute `setup.exe`. If Microsoft Visual C++ Redistributable is missing, this setup should install it automatically.
 
 ### Using ESLSCDLL.dll and ESLSCDLL_pro.dll
 For the use of `ESLSCDLL.dll` and `ESLSCDLL_pro.dll` [Microsoft Visual C++ Redistributable](https://aka.ms/vs/16/release/vc_redist.x64.exe) must be installed.
