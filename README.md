@@ -19,7 +19,7 @@ linux-driver    | Linux driver                          | Linux
 * Labview Libraries (optional, for DLL usage with Labview)
 
 ### Compile
-Open EBST_CAM.sln with Visual Studio and press build.
+Open `EBST_CAM.sln` with Visual Studio and press build.
 
 ### Installing Windows driver
 Run `install_run_as_admin.bat` from `Stresing14.00_Driver_Distribution_Package` as admin. 
