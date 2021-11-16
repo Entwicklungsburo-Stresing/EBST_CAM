@@ -22,7 +22,7 @@ linux-driver    | Linux driver                          | Linux
 Open EBST_CAM.sln with Visual Studio and press build.
 
 ## Installing escam
-Compile solution first and use `escam-setup/build/setup.exe` or use setup.exe file from [releases](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases).
+Compile solution first and use `escam-setup/build/setup.exe` or download setup.zip file from [releases](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases), extract and execute setup.exe.
 If Microsoft Visual C++ Redistributable is not installed automatically, [install](https://aka.ms/vs/16/release/vc_redist.x64.exe) it.
 
 # Linux
