@@ -8,8 +8,10 @@ ESLSCDLL_pro    | DLL for specialized functions         | Windows
 Jungo           | Windows driver                        | Windows
 doc             | Documentation with [Doxygen](https://www.doxygen.nl/) of DLLs interface and more  | Windows, Linux
 escam           | crossplattform Qt GUI written in C++  | Windows, Linux
-lsc-cli         | CLI in C                              | Linux
+escam_deb       | script to create .deb package         | Linux
+escam_setup     | [Microsoft Visual Studio Installer Project](https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2017InstallerProjects) to create setup for escam | Windows
 linux-driver    | Linux driver                          | Linux
+lsc-cli         | CLI in C                              | Linux
 
 # Windows
 
@@ -17,6 +19,7 @@ linux-driver    | Linux driver                          | Linux
 * [Visual Studio](https://visualstudio.microsoft.com/) with C++ Toolbox (Plattform Toolset: v141, Windows SDK Version: 10.0.17763.0).
 * [Qt Visual Studio Tools](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2019) + [MSVC Qt 5](https://www.qt.io/download) (optional, for Qt GUI)
 * Labview Libraries (optional, for DLL usage with Labview)
+* [Microsoft Visual Studio Installer Project](https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2017InstallerProjects) (optional, for creating setup.exe for escam)
 
 ### Compile
 Open `EBST_CAM.sln` with Visual Studio and press build.
