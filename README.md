@@ -26,7 +26,9 @@ Run `install_run_as_admin.bat` from `Stresing14.00_Driver_Distribution_Package` 
 
 ### Installing escam
 Compile solution first and use `escam-setup/build/setup.exe` or download `setup.zip` file from [releases](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases), extract and execute `setup.exe`.
-If Microsoft Visual C++ Redistributable is not installed automatically, [install](https://aka.ms/vs/16/release/vc_redist.x64.exe) it.
+
+### Troubleshooting
+If `MSVCP140.dll` and `VCRUNTIME140.dll` are missing Microsoft Visual C++ Redistributable are not installed. [Install](https://aka.ms/vs/16/release/vc_redist.x64.exe) it.
 
 # Linux
 
