@@ -17,9 +17,9 @@ lsc-cli         | CLI in C                              | Linux
 
 ### Build Dependencies
 * [Visual Studio](https://visualstudio.microsoft.com/) with C++ Toolbox (Plattform Toolset: v141, Windows SDK Version: 10.0.17763.0).
-* [Qt Visual Studio Tools](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2019) + [MSVC Qt 5](https://www.qt.io/download) (optional, for Qt GUI)
+* Visual Studio Extention: [Qt Visual Studio Tools](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2019) + [MSVC Qt 5](https://www.qt.io/download) (both needed for Escam)
 * Labview Libraries: Optional, for DLL usage with Labview. If you want to compile the DLL for usage with other software than Labview, set `COMPILE_FOR_LABVIEW` in `ESLSCDLL/ESLSCDLL.h` to `FALSE`.
-* [Microsoft Visual Studio Installer Project](https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2017InstallerProjects) (optional, for creating setup.exe for escam)
+* Visual Studio Extention: [Microsoft Visual Studio Installer Project](https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2017InstallerProjects) (optional, for creating setup.exe for escam)
 
 ### Compile
 Open `EBST_CAM.sln` with Visual Studio and press build.
