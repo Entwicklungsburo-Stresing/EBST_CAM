@@ -55,7 +55,7 @@ make
 # install dkms
 sudo apt install dkms
 ```
-Use .deb from [releases](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases) or create your own. First compile escam and kernel module then:
+Use .deb from [releases](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases) or create your own. First compile escam then:
 ```
 cd escam_deb
 ./create_escam_deb.sh
