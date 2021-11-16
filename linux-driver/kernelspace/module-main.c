@@ -98,6 +98,17 @@ static struct pci_driver pci_driver = {
 	.remove = remove_lscpcie
 };
 
+// This is here to change the default permissions of /dev/lscpcie0 to 666
+// Inspired by: https://stackoverflow.com/questions/11846594/how-can-i-programmatically-set-permissions-on-my-char-device
+static char *lscpcie_devnode(struct device *dev, umode_t *mode)
+{
+        if (!mode)
+                return NULL;
+        if (dev->devt == MKDEV(major, 0) ||
+            dev->devt == MKDEV(major, 2))
+                *mode = 0666;
+        return NULL;
+}
 
 /* general infrastruture and pci registration, devices are initialised
    through probe_lscpcie upon detection by the pci core */
@@ -116,6 +127,7 @@ static int __init lscpcie_module_init(void)
 		printk(KERN_ERR "Error creating %s class \n", NAME);
 		return PTR_ERR(lscpcie_class);
 	}
+	lscpcie_class->devnode = lscpcie_devnode;
 	PMDEBUG("created device class\n");
 
 	/* read number of devices, write adds software devices */
