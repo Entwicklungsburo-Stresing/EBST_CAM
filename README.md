@@ -11,52 +11,52 @@ escam           | crossplattform Qt GUI written in C++  | Windows, Linux
 lsc-cli         | CLI in C                              | Linux
 linux-driver    | Linux driver                          | Linux
 
-# Compiling
-
-## Windows
-Open EBST_CAM.sln with Visual Studio and press build.
+# Windows
 
 ### Dependencies
 * Windows SDK
 * [Qt Visual Studio Tools](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2019) + [MSVC Qt 5](https://www.qt.io/download) (optional, for Qt GUI)
 * Labview Libraries (optional, for DLL usage with Labview)
 
-## Linux
+### Compile
+Open EBST_CAM.sln with Visual Studio and press build.
+
+## Installing escam
+Compile solution first and use `escam-setup/build/escam_setup.msi` or use .msi file from [releases](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases).
+If Microsoft Visual C++ Redistributable is not installed automatically, [install](https://aka.ms/vs/16/release/vc_redist.x64.exe) it.
+
+# Linux
 
 ### Dependencies
 * Qt 5.15 (optional, for Qt GUI)
 * make
 * Linux Kernel 4.19
 
-### Linux GUI
+### Compile Escam
 Two possibilities:
 1. Open escam.pro with [Qt Creator](https://www.qt.io/product/development-tools) and press build.
 2. Or run in Terminal `qmake` and `make` in `escam/`.
 
-### Linux CLI
+### Compile lsc-cli
 ```
 cd lsc-cli
 make
 ```
 
-### Linux driver
+### Compile kernel module
 ```
 cd linux-driver/kernelspace/
 make
 ```
 
-# Installing
+### Installing
 
-## escam on Windows
-Use `escam-setup/build/escam_setup.msi`.
-If Microsoft Visual C++ Redistributable is not installed automatically, [install](https://aka.ms/vs/16/release/vc_redist.x64.exe) it.
-
-## escam & driver on linux
 ```
 # install dkms
 sudo apt install dkms
-
-# create .deb
+```
+Use .deb from [releases](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases) or create your own. First compile escam and kernel module then:
+```
 cd escam_deb
 ./create_escam_deb.sh
 
