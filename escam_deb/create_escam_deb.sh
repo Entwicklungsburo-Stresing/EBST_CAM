@@ -13,7 +13,17 @@ rm -r escam_*
 
 # bin file
 mkdir -p ${PKG_DIR}/usr/bin
-cp ../build-escam-Desktop-Release/build/escam ${PKG_DIR}/usr/bin
+if [ -f ../build-escam-Desktop-Release/build/escam ]
+then
+    cp ../build-escam-Desktop-Release/build/escam ${PKG_DIR}/usr/bin
+elif [ -f ../escam/build/escam ]
+then
+    cp ../escam/build/escam ${PKG_DIR}/usr/bin
+else
+    echo "Escam binary not found. Please compile escam before running this script."
+    return
+fi
+
 
 # kernel module
 mkdir -p ${PKG_DIR}/usr/lib/modules-load.d
