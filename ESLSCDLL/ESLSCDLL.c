@@ -721,16 +721,16 @@ DllAccess es_status_codes DLLLedOff( UINT32 drvno, UINT8 LED_OFF )
 	return LedOff( drvno, LED_OFF );
 }
 
+#if COMPILE_FOR_LABVIEW
 /**
  * \brief Save the user event handlers created by Labview. Call this before using the event structure.
- * 
+ *
  * \param measureStartEvent Event handler for the event measure start.
  * \param measureDoneEvent Event handler for the event measure done.
  * \param blockStartEvent Event handler for the event block start.
  * \param blockDoneEvent Event handler for the event block done.
  * \return none
  */
-#if COMPILE_FOR_LABVIEW
 DllAccess void DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent )
 {
 	measureStartLVEvent = *measureStartEvent;
