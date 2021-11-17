@@ -9,15 +9,16 @@ PKG_DIR=${PACKAGENAME}_${VERSION_STR}
 MODULENAME=lscpcie
 
 # clean up
-rm -r escam_*
+rm -rf escam_*
 
 # bin file
-mkdir -p ${PKG_DIR}/usr/bin
 if [ -f ../build-escam-Desktop-Release/build/escam ]
 then
+    mkdir -p ${PKG_DIR}/usr/bin
     cp ../build-escam-Desktop-Release/build/escam ${PKG_DIR}/usr/bin
 elif [ -f ../escam/build/escam ]
 then
+    mkdir -p ${PKG_DIR}/usr/bin
     cp ../escam/build/escam ${PKG_DIR}/usr/bin
 else
     echo "Escam binary not found. Please compile escam before running this script."
