@@ -38,10 +38,21 @@ If `MSVCP140.dll` and `VCRUNTIME140.dll` are missing, Microsoft Visual C++ Redis
 
 # Linux
 
-### Dependencies
-* Qt 5.15 (optional, for Qt GUI)
+### Build Dependencies
+* Qt 5 (for escam Qt GUI)
 * make
+* C++ compiler g++
+* libqt5charts5-dev
 * Linux Kernel 4.19
+```
+sudo apt install qt5-default qt5-qmake g++ libqt5charts5-dev make
+```
+
+### Run Dependencies
+* libqt5charts5
+```
+sudo apt install libqt5charts
+```
 
 ### Compile Escam
 Two possibilities:
