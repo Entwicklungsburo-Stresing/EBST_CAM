@@ -60,7 +60,7 @@ cd linux-driver/kernelspace/
 make
 ```
 
-### Installing
+### Installing driver and escam
 
 ```
 # install dkms
