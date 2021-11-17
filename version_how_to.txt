@@ -21,3 +21,12 @@ escam_deb/create_escam_deb.sh
 escam_setup/escam_setup.vdproj
 
 To change the version number in escam_setup.vdproj click in the "Solution Explorer" (right top) in Visual Studio on the project escam_setup. Then change "version" in the properties (right bottom). A window appears. Press yes to accept to change the product code.
+
+
+Optional:
+After you committed the verion number change (best practice is to do this in an own commit), tag the commit with its version number e.g.:
+git tag v3.20.3
+
+Push the tag to the remote repositories:
+git push --tags
+git push --tags github
