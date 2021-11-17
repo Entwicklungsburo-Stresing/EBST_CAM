@@ -1,3 +1,11 @@
+v3.20.4
+- Add script for building .deb packages
+- Improve README.md
+- Fix DMA to user buffer copy process on linux
+- Make Makefile of linux kernel module compatible with DKMS
+- Change default file permissions of /dev/lscpcie0 to 666
+- Add software flag COMPILE_FOR_LABVIEW
+
 v3.20.3
 - Add escam_setup
 - Add dumpPciRegisters
