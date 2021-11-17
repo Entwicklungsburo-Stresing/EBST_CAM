@@ -1,0 +1,23 @@
+How to release a new version number
+
+version pattern:  "Major Version"."PCIE Board Version"."Minor Version"
+
+
+How to new version number:
+Increase major version only when there are very big changes in software and / or hardware.
+Increase PCIe board version when the PAL version has increased.
+Set minor version to 0 when major or PCIe board version have increased.
+Increase minor version in every other case when you want to release a new version number.
+
+
+Describe your changes:
+Put a new version chapter in version.txt at the beginning of the file e.g. v3.20.3. Descripe all changes since the last version number there.
+
+
+Places where the version number has to be changed:
+version.h
+escam/escam.pro
+escam_deb/create_escam_deb.sh
+escam_setup/escam_setup.vdproj
+
+To change the version number in escam_setup.vdproj click in the "Solution Explorer" (right top) in Visual Studio on the project escam_setup. Then change "version" in the properties (right bottom). A window appears. Press yes to accept to change the product code.
