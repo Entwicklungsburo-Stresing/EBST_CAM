@@ -122,6 +122,7 @@ es_status_codes IOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns);
 es_status_codes ResetDSC(uint32_t drvno, uint8_t DSCNumber);
 es_status_codes SetDIRDSC(uint32_t drvno, uint8_t DSCNumber, bool dir);
 es_status_codes GetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC);
+void PollDmaBufferToUserBuffer(uint32_t* drvno_p);
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);

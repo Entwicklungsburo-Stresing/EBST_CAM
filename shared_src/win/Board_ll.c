@@ -130,7 +130,7 @@ void isr( uint32_t drvno, void* pData )
 	size_t dmaBufferPartSizeInBytes = dmaBufferSizeInBytes / DMA_BUFFER_PARTS; //1088000 bytes
 	UINT16* dmaBufferReadPos = dmaBuffer[drvno] + dmaBufferPartReadPos[drvno] * dmaBufferPartSizeInBytes / sizeof(UINT16);
 	//here the copyprocess happens
-	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, dmaBufferPartSizeInBytes );
+	//memcpy( userBufferWritePos[drvno], dmaBufferReadPos, dmaBufferPartSizeInBytes );
 	ES_LOG( "userBufferWritePos: 0x%x \n", userBufferWritePos[drvno] );
 	dmaBufferPartReadPos[drvno]++;
 	if (dmaBufferPartReadPos[drvno] >= DMA_BUFFER_PARTS)		//number of ISR per dmaBuf - 1
@@ -696,7 +696,9 @@ void FreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 
 es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 {
-	//On Windows the copy process is done in ISR
+	uint32_t* param = (uint32_t*)malloc(sizeof(uint32_t));
+	*param = drvno;
+	_beginthreadex(0, 0, &PollDmaBufferToUserBuffer, param, 0, 0);
 	return es_no_error;
 }
 
@@ -1032,7 +1034,7 @@ es_status_codes ThreadToPriClass(ULONG threadp, DWORD *priclass, DWORD *prilevel
  *		- es_parameter_out_of_range
  *		- es_setting_thread_priority_failed
  */
-es_status_codes SetPriority(ULONG threadp)
+es_status_codes SetPriority(uint32_t threadp)
 {
 	ULONG priClass = 0;
 	ULONG priLevel = 0;
@@ -1063,4 +1065,14 @@ es_status_codes ResetPriority()
 	if (!SetThreadPriority(hThread, oldThreadLevel))
 		return es_setting_thread_priority_failed;
 	return es_no_error;
+}
+
+uint16_t* getDmaBufferAddress(uint32_t drvno)
+{
+	return dmaBuffer[drvno];
+}
+
+uint32_t getDmaBufferSizeInBytes()
+{
+	return dmaBufferSizeInBytes;
 }
