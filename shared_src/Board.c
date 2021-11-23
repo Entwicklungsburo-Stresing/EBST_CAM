@@ -810,7 +810,7 @@ es_status_codes allocateUserMemory( uint32_t drvno )
 	//check if enough space is available in the physical ram
 	if (memory_free > (uint64_t)needed_mem)
 	{
-		uint16_t* userBufferTemp = (uint16_t*) malloc( needed_mem );
+		uint16_t* userBufferTemp = (uint16_t*) calloc( needed_mem, 1 );
 		ES_LOG( "user buffer space: %p - %p\n", userBufferTemp, userBufferTemp + needed_mem );
 		if (userBufferTemp)
 		{
@@ -2194,15 +2194,15 @@ es_status_codes StartMeasurement()
 		{
 			status = StopSTimer(1);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
-			status = GetLastBufPart(1);
-			if (status != es_no_error) return ReturnStartMeasurement(status);
+			//status = GetLastBufPart(1);
+			//if (status != es_no_error) return ReturnStartMeasurement(status);
 		}
 		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
 		{
 			status = StopSTimer(2);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
-			status = GetLastBufPart(2);
-			if (status != es_no_error) return ReturnStartMeasurement(status);
+			//status = GetLastBufPart(2);
+			//if (status != es_no_error) return ReturnStartMeasurement(status);
 		}
 		// This sleep is here to prevent the measurement beeing interrupted too early. When operating with 2 cameras the last scan could be cut off without the sleep. This is only a workaround. The problem is that the software is waiting for RSTIMER beeing reset by the hardware before setting measure on and block on to low, but the last DMA is done after RSTIMER beeing reset. BLOCKON and MEASUREON should be reset after all DMAs are done.
 		// RSTIMER --------________
@@ -3763,3 +3763,77 @@ es_status_codes IOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 	return SendFLCAM(drvno, maddr_ioctrl, ioctrl_t0l, period_in_10ns_L);
 }
 
+void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
+{
+	uint32_t drvno = *drvno_p;
+	free(drvno_p);
+	ES_LOG("Poll dma buffer to user buffer started.\n");
+	// If the dma buffer is read to early the first scans are crap. This sleep is here as a workaround.
+	Sleep(2000);
+	// Get the pointer to DMA buffer.
+	uint16_t* dmaBuffer = getDmaBufferAddress(drvno);
+	ES_TRACE("Dma buffer address: %p\n", dmaBuffer);
+	// Set dmaBufferReadPos pointer to base address of DMA buffer. dmaBufferReadPos indicates the current read position in the DMA buffer.
+	uint16_t* dmaBufferReadPos = dmaBuffer;
+	// Calculate pointer to the end of the DMA buffer.
+	uint16_t* dmaBufferEnd = dmaBufferReadPos + getDmaBufferSizeInBytes() / sizeof(uint16_t);
+	ES_TRACE("Dma buffer end: %p\n", dmaBufferEnd);
+	// Calculate the size of the complete measurement in bytes.
+	uint32_t dataToCopyInBytes = aPIXEL[drvno] * aCAMCNT[drvno] * (*Nospb) * (*Nob) * sizeof(uint16_t);
+	ES_TRACE("Data to copy in bytes: %u\n", dataToCopyInBytes);
+	// Calculate the size of one scan.
+	uint32_t sizeOfOneScanInBytes = aPIXEL[drvno] * sizeof(uint16_t);
+	ES_TRACE("Size of one scan in bytes: %u\n", sizeOfOneScanInBytes);
+	// Set userBufferWritePos_polling to the base address of userBuffer_polling. userBufferWritePos_polling indicates the current write position in the user buffer.
+	uint16_t* userBufferWritePos_pol = userBuffer[drvno];
+	ES_TRACE("Address of user buffer: %p\n", userBuffer[drvno]);
+	bool allDataCopied = false;
+	uint32_t nodataFoundCounter = 0;
+	uint32_t scanCounter = 0;
+	while (!allDataCopied)
+	{
+		// Check if there is data in the first pixels of the next sample.
+		int sum = 0;
+		for (int i = 0; i < 10; i++)
+		{
+			sum += dmaBufferReadPos[i];
+		}
+		if (sum)
+		{
+			//ES_TRACE("DMA buffer read position: %p\n", dmaBufferReadPos);
+			//ES_TRACE("User buffer write position: %p\n", userBufferWritePos_pol);
+			// Copy the data.
+			memcpy(userBufferWritePos_pol, dmaBufferReadPos, sizeOfOneScanInBytes);
+			// Set the memory of the copied data to 0 in the dma buffer.
+			memset(dmaBufferReadPos, 0, sizeOfOneScanInBytes);
+			// Advance the pointers and counters.
+			dmaBufferReadPos += sizeOfOneScanInBytes / sizeof(uint16_t);
+			userBufferWritePos_pol += sizeOfOneScanInBytes / sizeof(uint16_t);
+			dataToCopyInBytes -= sizeOfOneScanInBytes;
+			nodataFoundCounter = 0;
+			scanCounter++;
+			//ES_TRACE("Scan: %u\n", scanCounter);
+			// check if dmaBufferReadPos exceeds dmaBuffer
+			if (dmaBufferReadPos >= dmaBufferEnd || dmaBufferReadPos < dmaBuffer)
+			{
+				// reset the read pointer to the base address of the dma buffer
+				dmaBufferReadPos = dmaBuffer;
+				//ES_TRACE("Reset dmaBufferReadPos to: %p\n", dmaBuffer);
+			}
+			ES_TRACE("Data to copy: %u\n", dataToCopyInBytes);
+			if (dataToCopyInBytes == 0) allDataCopied = true;
+		}
+		else
+		{
+			Sleep(100);
+			nodataFoundCounter++;
+		}
+		// End the while loop if there was no data found many times
+		if (nodataFoundCounter >= 10000)
+		{
+			ES_LOG("PollDmaBufferToUserBuffer aborted. noDataFoundCounter exceeded 10000\n");
+			break;
+		}
+	}
+	return;
+}
