@@ -54,8 +54,6 @@ void InitProDLL()
 es_status_codes CleanupDma(uint32_t drvno)
 {
 	ES_LOG("Cleanup DMA\n");
-	/* Disable DMA interrupts */
-	WDC_IntDisable(hDev[drvno]);
 	/* Unlock and free the DMA buffer */
 	DWORD dwStatus = WDC_DMABufUnlock(dmaBufferInfos[drvno]);
 	if (WD_STATUS_SUCCESS != dwStatus)
@@ -65,6 +63,7 @@ es_status_codes CleanupDma(uint32_t drvno)
 		return es_unlocking_dma_failed;
 	}
 	WDC_Err("Unlock DMABuf Successfull\n");
+	dmaBuffer[drvno] = NULL;
 	return es_no_error;
 }
 
@@ -130,7 +129,7 @@ void isr( uint32_t drvno, void* pData )
 	size_t dmaBufferPartSizeInBytes = dmaBufferSizeInBytes / DMA_BUFFER_PARTS; //1088000 bytes
 	UINT16* dmaBufferReadPos = dmaBuffer[drvno] + dmaBufferPartReadPos[drvno] * dmaBufferPartSizeInBytes / sizeof(UINT16);
 	//here the copyprocess happens
-	//memcpy( userBufferWritePos[drvno], dmaBufferReadPos, dmaBufferPartSizeInBytes );
+	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, dmaBufferPartSizeInBytes );
 	ES_LOG( "userBufferWritePos: 0x%x \n", userBufferWritePos[drvno] );
 	dmaBufferPartReadPos[drvno]++;
 	if (dmaBufferPartReadPos[drvno] >= DMA_BUFFER_PARTS)		//number of ISR per dmaBuf - 1
@@ -358,7 +357,7 @@ es_status_codes checkDriverHandle(uint32_t drvno)
 		return es_no_error;
 }
 
-uint64_t getDmaAddress( uint32_t drvno)
+uint64_t getPhysicalDmaAddress( uint32_t drvno)
 {
 	WD_DMA** ppDma = &dmaBufferInfos[drvno];
 	return (*ppDma)->Page[0].pPhysicalAddr;
@@ -380,8 +379,8 @@ es_status_codes SetupDma( uint32_t drvno )
 {
 	DWORD dwStatus;
 	ES_LOG( "Setup DMA\n" );
-	//If interrupt was enabled before, first cleanup DMA.
-	if (WDC_IntIsEnabled(hDev[drvno]))
+	//If dma is already set up, clean it before
+	if (dmaBuffer[drvno])
 	{
 		es_status_codes status = CleanupDma(drvno);
 		if (status != es_no_error) return status;
@@ -438,6 +437,18 @@ es_status_codes enableInterrupt( uint32_t drvno )
 	}
 	default:
 		return es_parameter_out_of_range;
+	}
+	return es_no_error;
+}
+
+es_status_codes disableInterrupt(uint32_t drvno)
+{
+	DWORD dwStatus = WDC_IntDisable(hDev[drvno]);
+	if (WD_STATUS_SUCCESS != dwStatus)
+	{
+		ES_LOG("Failed disabling interrupt. Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
+		ES_LOG("%s", LSCPCIEJ_GetLastErr());
+		return es_disabling_interrupt_failed;
 	}
 	return es_no_error;
 }
@@ -595,16 +606,21 @@ es_status_codes _ExitDriver(uint32_t drvno)
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
 	ES_LOG( "Driver exit, drv: %u\n", drvno);
+#if !(USE_SOFTWARE_POLLING)
 	if (WDC_IntIsEnabled( hDev[drvno] ))
 	{
-		status = CleanupDma( drvno );
+		status = disableInterrupt( drvno );
+		if (status != es_no_error) return status;
+	}
+#endif
+	if (dmaBuffer[drvno])
+	{
+		status = CleanupDma(drvno);
 		if (status != es_no_error) return status;
 	}
 	WDC_DriverClose();
 	WDC_PciDeviceClose( hDev[drvno] );
 	ES_LOG( "Driver closed and PciDeviceClosed \n" );
-	//if (ahCCDDRV[drvno]!=INVALID_HANDLE_VALUE)
-	//CloseHandle(ahCCDDRV[drvno]);	   // close driver
 	return status;
 }
 
@@ -696,9 +712,11 @@ void FreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 
 es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 {
+#if USE_SOFTWARE_POLLING
 	uint32_t* param = (uint32_t*)malloc(sizeof(uint32_t));
 	*param = drvno;
 	_beginthreadex(0, 0, &PollDmaBufferToUserBuffer, param, 0, 0);
+#endif
 	return es_no_error;
 }
 
@@ -1067,7 +1085,7 @@ es_status_codes ResetPriority()
 	return es_no_error;
 }
 
-uint16_t* getDmaBufferAddress(uint32_t drvno)
+uint16_t* getVirtualDmaAddress(uint32_t drvno)
 {
 	return dmaBuffer[drvno];
 }

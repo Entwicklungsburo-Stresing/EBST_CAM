@@ -26,7 +26,8 @@ char errorMsg[100][50] =
 	"Measurement aborted",
 	"Creating thread failed",
 	"Setting thread priority failed",
-	"Measurement is already running"
+	"Measurement is already running",
+	"Disabling interrupt failed"
 };
 
 char* ConvertErrorCodeToMsg(es_status_codes status)

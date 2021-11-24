@@ -26,6 +26,13 @@ extern "C" {
  * false: DMA buffer is set by application (pointer must be passed to SetupPCIE_DMA).
  */
 #define DMA_CONTIGBUF true
+/**
+ * \brief Determines which method is used to copy data from DMA to user buffer.
+ * 
+ * true: Use Software Polling. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer.
+ * false: Use Interrupt. Every 500th scan the interrupt starts a copy process, which copies 500 scans to the user buffer.
+ */
+#define USE_SOFTWARE_POLLING false
 
 struct global_vars
 {

@@ -27,6 +27,8 @@
   (byte & 0x02 ? '1' : '0'), \
   (byte & 0x01 ? '1' : '0')
 
+uint32_t scanCounter = 0;
+
 /**
  * \brief Set global settings struct.
  * 
@@ -208,8 +210,10 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetDmaStartMode(drvno, HWDREQ_EN);
 	if (status != es_no_error) return status;
+#if !(USE_SOFTWARE_POLLING)
 	if (INTR_EN) status = enableInterrupt(drvno);
 	if (status != es_no_error) return status;
+#endif
 	continiousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
 	ES_LOG("Setting continuous pause to %u\n", continiousPauseInMicroseconds);
 	status = SetBEC(drvno, settings_struct.bec_in_10ns);
@@ -1835,7 +1839,7 @@ es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
 	}
 	status = writeConfig_32(drvno, data, PCIeAddr_devStatCtrl);
 	if (status != es_no_error) return status;
-	uint64_t dma_physical_address = getDmaAddress(drvno);
+	uint64_t dma_physical_address = getPhysicalDmaAddress(drvno);
 	// WDMATLPA (Reg name): write the lower part (bit 02:31) of the DMA adress to the DMA controller
 	ES_LOG("Set WDMATLPA to physical address of dma buffer 0x%016lx\n", dma_physical_address);
 	status = writeBitsDma_32(drvno, dma_physical_address, 0xFFFFFFFC, DmaAddr_WDMATLPA);
@@ -2194,15 +2198,19 @@ es_status_codes StartMeasurement()
 		{
 			status = StopSTimer(1);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
-			//status = GetLastBufPart(1);
-			//if (status != es_no_error) return ReturnStartMeasurement(status);
+#if !(USE_SOFTWARE_POLLING)
+			status = GetLastBufPart(1);
+			if (status != es_no_error) return ReturnStartMeasurement(status);
+#endif
 		}
 		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
 		{
 			status = StopSTimer(2);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
-			//status = GetLastBufPart(2);
-			//if (status != es_no_error) return ReturnStartMeasurement(status);
+#if !(USE_SOFTWARE_POLLING)
+			status = GetLastBufPart(2);
+			if (status != es_no_error) return ReturnStartMeasurement(status);
+#endif
 		}
 		// This sleep is here to prevent the measurement beeing interrupted too early. When operating with 2 cameras the last scan could be cut off without the sleep. This is only a workaround. The problem is that the software is waiting for RSTIMER beeing reset by the hardware before setting measure on and block on to low, but the last DMA is done after RSTIMER beeing reset. BLOCKON and MEASUREON should be reset after all DMAs are done.
 		// RSTIMER --------________
@@ -3769,9 +3777,9 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	free(drvno_p);
 	ES_LOG("Poll dma buffer to user buffer started.\n");
 	// If the dma buffer is read to early the first scans are crap. This sleep is here as a workaround.
-	Sleep(2000);
+	//Sleep(2000);
 	// Get the pointer to DMA buffer.
-	uint16_t* dmaBuffer = getDmaBufferAddress(drvno);
+	uint16_t* dmaBuffer = getVirtualDmaAddress(drvno);
 	ES_TRACE("Dma buffer address: %p\n", dmaBuffer);
 	// Set dmaBufferReadPos pointer to base address of DMA buffer. dmaBufferReadPos indicates the current read position in the DMA buffer.
 	uint16_t* dmaBufferReadPos = dmaBuffer;
@@ -3789,7 +3797,7 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	ES_TRACE("Address of user buffer: %p\n", userBuffer[drvno]);
 	bool allDataCopied = false;
 	uint32_t nodataFoundCounter = 0;
-	uint32_t scanCounter = 0;
+	scanCounter = 0;
 	while (!allDataCopied)
 	{
 		// Check if there is data in the first pixels of the next sample.
@@ -3829,11 +3837,18 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 			nodataFoundCounter++;
 		}
 		// End the while loop if there was no data found many times
-		if (nodataFoundCounter >= 10000)
+		if (nodataFoundCounter >= 100)
 		{
-			ES_LOG("PollDmaBufferToUserBuffer aborted. noDataFoundCounter exceeded 10000\n");
+			ES_LOG("PollDmaBufferToUserBuffer aborted. noDataFoundCounter exceeded 100\n");
 			break;
 		}
+		// Escape while loop when ESC was pressed
+		if (checkEscapeKeyState()) break;
 	}
 	return;
+}
+
+uint32_t GetCurrentScanNumber()
+{
+	return scanCounter;
 }
