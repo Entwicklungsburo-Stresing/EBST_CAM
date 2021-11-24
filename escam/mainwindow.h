@@ -40,6 +40,7 @@ private:
 	int used_number_of_boards;
     QThread measurementThread;
 	void copySettings(QSettings &dst, QSettings &src);
+	QTimer* displayTimer = new QTimer(this);
 private slots:
 	void on_actionEdit_triggered();
 	void on_actionTDC_triggered();
@@ -65,6 +66,7 @@ private slots:
 	void on_actionExport_triggered();
 	void on_actionImport_triggered();
 	void on_actionGamma_triggered();
+	void showCurrentScan();
 };
 
 #endif // MAINWINDOW_H

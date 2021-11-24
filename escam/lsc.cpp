@@ -220,3 +220,9 @@ es_status_codes Lsc::ioctrl_setOutput(uint32_t drvno, uint32_t number, uint16_t 
 {
 	return IOCtrl_setOutput(drvno, number, width_in_5ns, delay_in_5ns);
 }
+
+
+void Lsc::getCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block)
+{
+    return GetCurrentScanNumber(drvno, scan, block);
+}
