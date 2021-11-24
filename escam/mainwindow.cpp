@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&lsc, SIGNAL(blockStart()), this, SLOT(on_blockStart()));
     connect(&lsc, SIGNAL(blockDone()), this, SLOT(on_blockDone()));
     connect(ui->chartView, &MyQChartView::rubberBandChanged, this, &MainWindow::on_rubberBandChanged);
+	connect(displayTimer, &QTimer::timeout, this, &MainWindow::showCurrentScan);
 
     es_status_codes status = lsc.initDriver();
     if (status != es_no_error)
@@ -566,11 +567,24 @@ void MainWindow::on_measureStart()
 	ui->pushButtonStart->setDisabled(true);
 	//enable abort button
     ui->pushButtonAbort->setEnabled(true);
-    //enable controls
-    ui->spinBoxBlock->setEnabled(true);
-    ui->spinBoxSample->setEnabled(true);
-    ui->horizontalSliderBlock->setEnabled(true);
-    ui->horizontalSliderSample->setEnabled(true);
+	if (ui->checkBoxLiveView->isChecked())
+	{
+		//disable controls
+		ui->spinBoxBlock->setEnabled(false);
+		ui->spinBoxSample->setEnabled(false);
+		ui->horizontalSliderBlock->setEnabled(false);
+		ui->horizontalSliderSample->setEnabled(false);
+		displayTimer->start(100);
+	}
+	else
+	{
+		//enable controls
+		ui->spinBoxBlock->setEnabled(true);
+		ui->spinBoxSample->setEnabled(true);
+		ui->horizontalSliderBlock->setEnabled(true);
+		ui->horizontalSliderSample->setEnabled(true);
+	}
+	ui->checkBoxLiveView->setEnabled(false);
     return;
 }
 
@@ -605,6 +619,13 @@ void MainWindow::on_measureDone()
 	}
 	DLLShowNewBitmap(drvno, block, 0, pixelcount, nos);
 #endif
+	displayTimer->stop();
+	//enable controls
+	ui->spinBoxBlock->setEnabled(true);
+	ui->spinBoxSample->setEnabled(true);
+	ui->horizontalSliderBlock->setEnabled(true);
+	ui->horizontalSliderSample->setEnabled(true);
+	ui->checkBoxLiveView->setEnabled(true);
     return;
 }
 
@@ -789,5 +810,25 @@ void MainWindow::on_actionGamma_triggered()
 	dialogGamma->setAttribute(Qt::WA_DeleteOnClose);
 	dialogGamma->show();
 #endif
+	return;
+}
+
+void MainWindow::showCurrentScan()
+{
+	int64_t sample = 0;
+	int64_t block = 0;
+	switch (settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt())
+	{
+	default:
+	case 0:
+	case 2:
+		lsc.getCurrentScanNumber(1, &sample, &block);
+		break;
+	case 1:
+		lsc.getCurrentScanNumber(2, &sample, &block);
+		break;
+	}
+	ui->horizontalSliderSample->setValue(sample+1);
+	ui->horizontalSliderBlock->setValue(block+1);
 	return;
 }

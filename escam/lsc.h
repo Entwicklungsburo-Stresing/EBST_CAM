@@ -36,6 +36,7 @@ public:
 	es_status_codes dac_setAllOutputs(uint32_t drvno, uint32_t* output, bool isIr);
 	es_status_codes ioctrl_setT0(uint32_t drvno, uint32_t period_in_10ns);
 	es_status_codes ioctrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns);
+    void getCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block);
 public slots:
     es_status_codes startMeasurement();
 signals:

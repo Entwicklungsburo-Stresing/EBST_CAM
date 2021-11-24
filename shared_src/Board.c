@@ -27,7 +27,7 @@
   (byte & 0x02 ? '1' : '0'), \
   (byte & 0x01 ? '1' : '0')
 
-uint32_t scanCounter = 0;
+int64_t scanCounter = 0;
 
 /**
  * \brief Set global settings struct.
@@ -3828,7 +3828,7 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 				dmaBufferReadPos = dmaBuffer;
 				//ES_TRACE("Reset dmaBufferReadPos to: %p\n", dmaBuffer);
 			}
-			ES_TRACE("Data to copy: %u\n", dataToCopyInBytes);
+			//ES_TRACE("Data to copy: %u\n", dataToCopyInBytes);
 			if (dataToCopyInBytes == 0) allDataCopied = true;
 		}
 		else
@@ -3843,12 +3843,28 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 			break;
 		}
 		// Escape while loop when ESC was pressed
-		if (checkEscapeKeyState()) break;
+		if (checkEscapeKeyState() || abortMeasurementFlag)
+		{
+			ES_LOG("Aborted. Exit PollDmaBufferToUserBuffer\n");
+			break;
+		}
 	}
 	return;
 }
 
-uint32_t GetCurrentScanNumber()
+void GetCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block)
 {
-	return scanCounter;
+#if USE_SOFTWARE_POLLING
+	ES_TRACE("scan counter %i, Nospb %u, camcnt %u\n", scanCounter, *Nospb, aCAMCNT[drvno]);
+	*block = (scanCounter - 1) / (*Nospb * aCAMCNT[drvno]);
+	*scan = (scanCounter - 1) / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno];
+	ES_TRACE("block %u, scan %i\n", *block, *scan);
+#else
+	uint64_t interruptCounter = getCurrentInterruptCounter();
+	ES_TRACE("interruptCounter %i, Nospb %u, camcnt %u\n", interruptCounter, *Nospb, aCAMCNT[drvno]);
+	*block = interruptCounter * DMA_DMASPERINTR / (*Nospb * aCAMCNT[drvno]);
+	*scan = (interruptCounter * DMA_DMASPERINTR / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno]) - 1;
+	ES_TRACE("block %u, scan %i\n", *block, *scan);
+#endif
+	return;
 }
