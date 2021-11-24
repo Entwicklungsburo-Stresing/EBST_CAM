@@ -4,11 +4,20 @@
 
 Lsc::Lsc()
 {
-    driverInstructions = "On Linux: Run 'sudo insmod lscpcie.ko' and 'sudo chmod 666 /dev/lscpcie0' before running this application";
+    driverInstructions = "Check if driver is loaded correctly.";
 }
 Lsc::~Lsc()
 {
-    ExitDriver(1);
+    switch (number_of_boards)
+    {
+    default:
+    case 1:
+        ExitDriver(1);
+        break;
+    case 2:
+        ExitDriver(3);
+        break;
+    }
 }
 
 /**
