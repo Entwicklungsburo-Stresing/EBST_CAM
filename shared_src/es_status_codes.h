@@ -30,7 +30,8 @@ typedef enum
 	es_abortion,
 	es_creating_thread_failed,
 	es_setting_thread_priority_failed,
-	es_already_running
+	es_already_running,
+	es_disabling_interrupt_failed
 } es_status_codes;
 
 char* ConvertErrorCodeToMsg(es_status_codes status);

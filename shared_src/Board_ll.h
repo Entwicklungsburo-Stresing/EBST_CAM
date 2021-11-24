@@ -38,7 +38,7 @@ es_status_codes writeConfig_32( uint32_t drvno, uint32_t data, uint16_t address 
 void FreeMemInfo( uint64_t *pmemory_all, uint64_t *pmemory_free );
 es_status_codes SetupDma( uint32_t drvno );
 es_status_codes enableInterrupt( uint32_t drvno );
-uint64_t getDmaAddress( uint32_t drvno);
+uint64_t getPhysicalDmaAddress( uint32_t drvno);
 void ResetBufferWritePos(uint32_t drvno);
 void copyRestData(uint32_t drvno, size_t rest_in_bytes);
 es_status_codes _InitBoard(uint32_t drvno);
@@ -50,7 +50,7 @@ uint16_t checkSpaceKeyState();
 es_status_codes InitMutex(uint32_t drvno);
 es_status_codes SetPriority(uint32_t threadp);
 es_status_codes ResetPriority();
-uint16_t* getDmaBufferAddress(uint32_t drvno);
+uint16_t* getVirtualDmaAddress(uint32_t drvno);
 uint32_t getDmaBufferSizeInBytes();
 
 #ifdef WIN32
