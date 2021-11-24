@@ -257,6 +257,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QCheckBox" name="checkBoxLiveView">
+        <property name="text">
+         <string>live view</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <layout class="QHBoxLayout" name="horizontalLayoutSample">
         <item>
          <widget class="QLabel" name="labelSample">
@@ -358,7 +365,7 @@
      <x>0</x>
      <y>0</y>
      <width>543</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

@@ -1094,3 +1094,8 @@ uint32_t getDmaBufferSizeInBytes()
 {
 	return dmaBufferSizeInBytes;
 }
+
+uint64_t getCurrentInterruptCounter()
+{
+	return IsrCounter;
+}
