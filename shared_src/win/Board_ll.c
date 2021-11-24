@@ -417,21 +417,27 @@ es_status_codes enableInterrupt( uint32_t drvno )
 	{
 	case 1:
 	{
-		DWORD dwStatus = LSCPCIEJ_IntEnable(hDev[drvno], interrupt_handler1);
-		if (WD_STATUS_SUCCESS != dwStatus)
+		if (!WDC_IntIsEnabled(hDev[drvno]))
 		{
-			ES_LOG("Failed to enable the Interrupts1. Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
-			return es_enabling_interrupts_failed;
+			DWORD dwStatus = LSCPCIEJ_IntEnable(hDev[drvno], interrupt_handler1);
+			if (WD_STATUS_SUCCESS != dwStatus)
+			{
+				ES_LOG("Failed to enable the Interrupts1. Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
+				return es_enabling_interrupts_failed;
+			}
 		}
 		break;
 	}
 	case 2:
 	{
-		DWORD dwStatus = LSCPCIEJ_IntEnable(hDev[drvno], interrupt_handler2);
-		if (WD_STATUS_SUCCESS != dwStatus)
+		if (!WDC_IntIsEnabled(hDev[drvno]))
 		{
-			ES_LOG("Failed to enable the Interrupts2. Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
-			return es_enabling_interrupts_failed;
+			DWORD dwStatus = LSCPCIEJ_IntEnable(hDev[drvno], interrupt_handler2);
+			if (WD_STATUS_SUCCESS != dwStatus)
+			{
+				ES_LOG("Failed to enable the Interrupts2. Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
+				return es_enabling_interrupts_failed;
+			}
 		}
 		break;
 	}
