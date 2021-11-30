@@ -733,12 +733,14 @@ es_status_codes ResetPartialBinning( uint32_t drvno )
  *		- es_register_write_failed
  *		- es_allocating_memory_failed
  *		- es_not_enough_ram
+ *		- es_parameter_out_of_range
  */
 es_status_codes SetMeasurementParameters( uint32_t drvno, uint32_t nos, uint32_t nob )
 {
+	ES_LOG("Set measurement parameters: drv: %i nos: %i and nob: %i\n", drvno, nos, nob);
+	if (nos < 2 || nob < 1) return es_parameter_out_of_range;
 	*Nob = nob;
 	*Nospb = nos;
-	ES_LOG( "Set measurement parameters: drv: %i nos: %i and nob: %i\n", drvno, nos, nob );
 	//stop all and clear FIFO
 	es_status_codes status = StopSTimer( drvno );
 	if (status != es_no_error) return status;
