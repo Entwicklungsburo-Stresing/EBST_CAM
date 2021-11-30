@@ -3773,13 +3773,20 @@ es_status_codes IOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 	return SendFLCAM(drvno, maddr_ioctrl, ioctrl_t0l, period_in_10ns_L);
 }
 
+/**
+ * \brief This function copies valid data from dma buffer to user buffer.
+ * 
+ * This function tracks the dma buffer and every time there is new data available, it is copied to the user buffer.
+ * The memory of the dma buffer which was copied is then set to 0. Create a new thread for this function. This function 
+ * should run parallel to the measurement. This function is only used when USE_SOFTWARE_POLLING is true.
+ * 
+ * \param drvno_p Pointer to PCIe board identifier.
+ */
 void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 {
 	uint32_t drvno = *drvno_p;
 	free(drvno_p);
 	ES_LOG("Poll dma buffer to user buffer started.\n");
-	// If the dma buffer is read to early the first scans are crap. This sleep is here as a workaround.
-	//Sleep(2000);
 	// Get the pointer to DMA buffer.
 	uint16_t* dmaBuffer = getVirtualDmaAddress(drvno);
 	ES_TRACE("Dma buffer address: %p\n", dmaBuffer);
@@ -3840,6 +3847,7 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 			if (dataToCopyInBytes == 0) allDataCopied = true;
 		}
 		else
+			// When there is no valid data in the DMA buffer, the next check happens in 100ms.
 			Sleep(100);
 		// Escape while loop when ESC was pressed
 		if (checkEscapeKeyState() || abortMeasurementFlag)
