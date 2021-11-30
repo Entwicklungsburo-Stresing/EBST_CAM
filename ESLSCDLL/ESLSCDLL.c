@@ -839,3 +839,12 @@ DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t drvno, uint16_t* widt
 {
 	return IOCtrl_setAllOutputs(drvno, width_in_5ns, delay_in_5ns);
 }
+
+/**
+ * \copydoc GetCurrentScanNumber
+ */
+DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block)
+{
+	GetCurrentScanNumber(drvno, sample, block);
+	return;
+}
