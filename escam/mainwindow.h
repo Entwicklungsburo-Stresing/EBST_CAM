@@ -41,6 +41,7 @@ private:
     QThread measurementThread;
 	void copySettings(QSettings &dst, QSettings &src);
 	QTimer* displayTimer = new QTimer(this);
+	bool measureOn = false;
 private slots:
 	void on_actionEdit_triggered();
 	void on_actionTDC_triggered();
@@ -67,6 +68,7 @@ private slots:
 	void on_actionImport_triggered();
 	void on_actionGamma_triggered();
 	void showCurrentScan();
+	void on_checkBoxLiveView_stateChanged(int checked);
 };
 
 #endif // MAINWINDOW_H
