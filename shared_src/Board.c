@@ -3798,7 +3798,6 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	uint16_t* userBufferWritePos_pol = userBuffer[drvno];
 	ES_TRACE("Address of user buffer: %p\n", userBuffer[drvno]);
 	bool allDataCopied = false;
-	uint32_t nodataFoundCounter = 0;
 	scanCounterTotal = 0;
 	uint32_t* scanCounterHardwareMirror = 1;
 	uint32_t* blockCounterHardwareMirror = 1;
@@ -3824,7 +3823,6 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 			dmaBufferReadPos += sizeOfOneScanInBytes / sizeof(uint16_t);
 			userBufferWritePos_pol += sizeOfOneScanInBytes / sizeof(uint16_t);
 			dataToCopyInBytes -= sizeOfOneScanInBytes;
-			nodataFoundCounter = 0;
 			scanCounterTotal++;
 			int64_t scan, block;
 			GetNextScanNumber(drvno, &scan, &block);
@@ -3842,16 +3840,7 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 			if (dataToCopyInBytes == 0) allDataCopied = true;
 		}
 		else
-		{
 			Sleep(100);
-			nodataFoundCounter++;
-		}
-		// End the while loop if there was no data found many times
-		if (nodataFoundCounter >= 100)
-		{
-			ES_LOG("PollDmaBufferToUserBuffer aborted. noDataFoundCounter exceeded 100\n");
-			break;
-		}
 		// Escape while loop when ESC was pressed
 		if (checkEscapeKeyState() || abortMeasurementFlag)
 		{
