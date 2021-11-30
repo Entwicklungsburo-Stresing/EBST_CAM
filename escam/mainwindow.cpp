@@ -559,6 +559,7 @@ void MainWindow::loadCameraData()
 
 void MainWindow::on_measureStart()
 {
+	measureOn = true;
     //set measureOn lamp on
     QPalette pal = palette();
     pal.setColor(QPalette::Background, Qt::green);
@@ -584,12 +585,12 @@ void MainWindow::on_measureStart()
 		ui->horizontalSliderBlock->setEnabled(true);
 		ui->horizontalSliderSample->setEnabled(true);
 	}
-	ui->checkBoxLiveView->setEnabled(false);
     return;
 }
 
 void MainWindow::on_measureDone()
 {
+	measureOn = false;
     //set measureOn lamp off
     QPalette pal = palette();
     pal.setColor(QPalette::Background, Qt::darkGreen);
@@ -625,7 +626,6 @@ void MainWindow::on_measureDone()
 	ui->spinBoxSample->setEnabled(true);
 	ui->horizontalSliderBlock->setEnabled(true);
 	ui->horizontalSliderSample->setEnabled(true);
-	ui->checkBoxLiveView->setEnabled(true);
     return;
 }
 
@@ -830,5 +830,28 @@ void MainWindow::showCurrentScan()
 	}
 	ui->horizontalSliderSample->setValue(sample+1);
 	ui->horizontalSliderBlock->setValue(block+1);
+	return;
+}
+
+void MainWindow::on_checkBoxLiveView_stateChanged(int checked)
+{
+	if (measureOn && checked)
+	{
+		//disable controls
+		ui->spinBoxBlock->setEnabled(false);
+		ui->spinBoxSample->setEnabled(false);
+		ui->horizontalSliderBlock->setEnabled(false);
+		ui->horizontalSliderSample->setEnabled(false);
+		displayTimer->start(100);
+	}
+	else if (measureOn && !checked)
+	{
+		//enable controls
+		ui->spinBoxBlock->setEnabled(true);
+		ui->spinBoxSample->setEnabled(true);
+		ui->horizontalSliderBlock->setEnabled(true);
+		ui->horizontalSliderSample->setEnabled(true);
+		displayTimer->stop();
+	}
 	return;
 }
