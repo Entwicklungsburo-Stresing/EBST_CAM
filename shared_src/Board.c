@@ -27,7 +27,7 @@
   (byte & 0x02 ? '1' : '0'), \
   (byte & 0x01 ? '1' : '0')
 
-int64_t scanCounter = 0;
+int64_t scanCounterTotal = 0;
 
 /**
  * \brief Set global settings struct.
@@ -3799,16 +3799,20 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	ES_TRACE("Address of user buffer: %p\n", userBuffer[drvno]);
 	bool allDataCopied = false;
 	uint32_t nodataFoundCounter = 0;
-	scanCounter = 0;
+	scanCounterTotal = 0;
+	uint32_t* scanCounterHardwareMirror = 1;
+	uint32_t* blockCounterHardwareMirror = 1;
+	uint32_t scanCounterHardware;
+	uint32_t blockCounterHardware;
 	while (!allDataCopied)
 	{
-		// Check if there is data in the first pixels of the next sample.
-		int sum = 0;
-		for (int i = 0; i < 10; i++)
-		{
-			sum += dmaBufferReadPos[i];
-		}
-		if (sum)
+		// scan counter pixel are 4 and 5
+		scanCounterHardware = dmaBufferReadPos[4] << 16 | dmaBufferReadPos[5];
+		// block counter pixel are 2 and 3
+		blockCounterHardware = dmaBufferReadPos[2] << 16 | dmaBufferReadPos[3];
+		//ES_TRACE("scan: %u, scanmirror: %u, block: %u, blockmirror: %u\n", scanCounterHardware, scanCounterHardwareMirror, blockCounterHardware, blockCounterHardwareMirror);
+		// Check if scan and block counter in DMA buffer are equal to their mirrors
+		if (scanCounterHardwareMirror == scanCounterHardware && blockCounterHardwareMirror == blockCounterHardware)
 		{
 			//ES_TRACE("DMA buffer read position: %p\n", dmaBufferReadPos);
 			//ES_TRACE("User buffer write position: %p\n", userBufferWritePos_pol);
@@ -3821,8 +3825,12 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 			userBufferWritePos_pol += sizeOfOneScanInBytes / sizeof(uint16_t);
 			dataToCopyInBytes -= sizeOfOneScanInBytes;
 			nodataFoundCounter = 0;
-			scanCounter++;
-			//ES_TRACE("Scan: %u\n", scanCounter);
+			scanCounterTotal++;
+			int64_t scan, block;
+			GetNextScanNumber(drvno, &scan, &block);
+			scanCounterHardwareMirror = scan + 1;
+			blockCounterHardwareMirror = block + 1;
+			//ES_TRACE("Scan: %u\n", scanCounterTotal);
 			// check if dmaBufferReadPos exceeds dmaBuffer
 			if (dmaBufferReadPos >= dmaBufferEnd || dmaBufferReadPos < dmaBuffer)
 			{
@@ -3854,15 +3862,52 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	return;
 }
 
+/**
+ * \brief Gives scan and block number of the last scan written to userBuffer.
+ * 
+ * When USE_SOFTWARE_POLLING is true this function converts scanCounterTotal to scan and block.
+ * This is neceserry, because scanCounterTotal is just counting each scan not regarding camcnt and blocks.
+ * When USE_SOFTWARE_POLLING is false the scan and block number of the last interrupt is given.
+ * 
+ * \param drvno PCIe board identifier.
+ * \param scan Scan number of the last scan in userBuffer. -1 when no scan has been written yet, otherwise 0...(nos-1)
+ * \param block Block number of the last scan in userBuffer. -1 when no scans has been written yet, otherwise 0...(nob-1)
+ */
 void GetCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block)
 {
 #if USE_SOFTWARE_POLLING
-	ES_TRACE("scan counter %i, Nospb %u, camcnt %u\n", scanCounter, *Nospb, aCAMCNT[drvno]);
-	*block = (scanCounter - 1) / (*Nospb * aCAMCNT[drvno]);
-	*scan = (scanCounter - 1) / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno];
+	ES_TRACE("scan counter %i, Nospb %u, camcnt %u\n", scanCounterTotal, *Nospb, aCAMCNT[drvno]);
+	*block = (scanCounterTotal - 1) / (*Nospb * aCAMCNT[drvno]);
+	*scan = (scanCounterTotal - 1) / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno];
 	ES_TRACE("block %u, scan %i\n", *block, *scan);
 #else
 	uint64_t interruptCounter = getCurrentInterruptCounter();
+	ES_TRACE("interruptCounter %i, Nospb %u, camcnt %u\n", interruptCounter, *Nospb, aCAMCNT[drvno]);
+	*block = interruptCounter * DMA_DMASPERINTR / (*Nospb * aCAMCNT[drvno]);
+	*scan = (interruptCounter * DMA_DMASPERINTR / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno]) - 1;
+	ES_TRACE("block %u, scan %i\n", *block, *scan);
+#endif
+	return;
+}
+
+/**
+ * \brief Gives scan and block number of the next scan that will be written to userBuffer.
+ *
+ * The same like GetCurrentScanNumber, but for the next scan.
+ *
+ * \param drvno PCIe board identifier.
+ * \param scan Scan number of the next scan in userBuffer.  0...(nos)
+ * \param block Block number of the next scan in userBuffer. 0...(nob)
+ */
+void GetNextScanNumber(uint32_t drvno, int64_t* scan, int64_t* block)
+{
+#if USE_SOFTWARE_POLLING
+	ES_TRACE("scan counter next scan %i, Nospb %u, camcnt %u\n", (scanCounterTotal + 1), *Nospb, aCAMCNT[drvno]);
+	*block = (scanCounterTotal) / (*Nospb * aCAMCNT[drvno]);
+	*scan = (scanCounterTotal) / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno];
+	ES_TRACE("block %u, scan %i\n", *block, *scan);
+#else
+	uint64_t interruptCounter = getCurrentInterruptCounter() + 1;
 	ES_TRACE("interruptCounter %i, Nospb %u, camcnt %u\n", interruptCounter, *Nospb, aCAMCNT[drvno]);
 	*block = interruptCounter * DMA_DMASPERINTR / (*Nospb * aCAMCNT[drvno]);
 	*scan = (interruptCounter * DMA_DMASPERINTR / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno]) - 1;
