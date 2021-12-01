@@ -1,3 +1,7 @@
+v3.20.5
+- Add software polling option
+- Add live view
+
 v3.20.4
 - Add script for building .deb packages
 - Improve README.md
