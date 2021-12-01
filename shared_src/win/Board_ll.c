@@ -612,13 +612,14 @@ es_status_codes _ExitDriver(uint32_t drvno)
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
 	ES_LOG( "Driver exit, drv: %u\n", drvno);
-#if !(USE_SOFTWARE_POLLING)
-	if (WDC_IntIsEnabled( hDev[drvno] ))
+	if (!settings_struct.useSoftwarePolling)
 	{
-		status = disableInterrupt( drvno );
-		if (status != es_no_error) return status;
+		if (WDC_IntIsEnabled(hDev[drvno]))
+		{
+			status = disableInterrupt(drvno);
+			if (status != es_no_error) return status;
+		}
 	}
-#endif
 	if (dmaBuffer[drvno])
 	{
 		status = CleanupDma(drvno);
@@ -718,11 +719,12 @@ void FreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 
 es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 {
-#if USE_SOFTWARE_POLLING
-	uint32_t* param = (uint32_t*)malloc(sizeof(uint32_t));
-	*param = drvno;
-	_beginthreadex(0, 0, &PollDmaBufferToUserBuffer, param, 0, 0);
-#endif
+	if (settings_struct.useSoftwarePolling)
+	{
+		uint32_t* param = (uint32_t*)malloc(sizeof(uint32_t));
+		*param = drvno;
+		_beginthreadex(0, 0, &PollDmaBufferToUserBuffer, param, 0, 0);
+	}
 	return es_no_error;
 }
 

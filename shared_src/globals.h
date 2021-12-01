@@ -14,7 +14,6 @@ extern "C" {
 #define _FORCETLPS128 true	//only use payload size 128byte
 #define DMA_64BIT_EN false
 #define S0_SPACE_OFFSET 0x80
-#define INTR_EN true
 #define HWDREQ_EN true // enables hardware start of DMA by XCK h->l slope
 #define DMA_BUFFER_SIZE_IN_SCANS 1000//60 is also working with highspeed (expt=0,02ms) //30 could be with one wrong scan every 10000 scans
 #define DMA_BUFFER_PARTS 2
@@ -26,13 +25,6 @@ extern "C" {
  * false: DMA buffer is set by application (pointer must be passed to SetupPCIE_DMA).
  */
 #define DMA_CONTIGBUF true
-/**
- * \brief Determines which method is used to copy data from DMA to user buffer.
- * 
- * true: Use Software Polling. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. This method is reliable up to about 3kHz.
- * false: Use Interrupt. Every 500th scan the interrupt starts a copy process, which copies 500 scans to the user buffer.
- */
-#define USE_SOFTWARE_POLLING true
 
 struct global_vars
 {

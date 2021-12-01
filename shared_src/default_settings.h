@@ -3,6 +3,7 @@
 
 #include "../shared_src/enum.h"
 
+#define settingsUseSoftwarePollingDefault			false
 #define settingNosDefault							1000
 #define settingNobDefault							2
 #define settingStiDefault							sti_STimer
