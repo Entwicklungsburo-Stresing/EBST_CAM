@@ -60,7 +60,7 @@ es_status_codes InitMeasurement()
 	ES_LOG("\n*** Init Measurement ***\n");
 	ES_LOG("struct global_settings: ");
 	for (uint32_t i = 0; i < sizeof(settings_struct)/4; i++)
-        ES_LOG("%u ", *(&settings_struct.unused + i));
+        ES_LOG("%u ", *(&settings_struct.useSoftwarePolling + i));
 	ES_LOG("\n");
 	es_status_codes status = es_no_error;
 	switch (settings_struct.board_sel)
@@ -210,10 +210,11 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetDmaStartMode(drvno, HWDREQ_EN);
 	if (status != es_no_error) return status;
-#if !(USE_SOFTWARE_POLLING)
-	if (INTR_EN) status = enableInterrupt(drvno);
-	if (status != es_no_error) return status;
-#endif
+	if (!settings_struct.useSoftwarePolling)
+	{
+		status = enableInterrupt(drvno);
+		if (status != es_no_error) return status;
+	}
 	continiousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
 	ES_LOG("Setting continuous pause to %u\n", continiousPauseInMicroseconds);
 	status = SetBEC(drvno, settings_struct.bec_in_10ns);
@@ -2200,19 +2201,21 @@ es_status_codes StartMeasurement()
 		{
 			status = StopSTimer(1);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
-#if !(USE_SOFTWARE_POLLING)
-			status = GetLastBufPart(1);
-			if (status != es_no_error) return ReturnStartMeasurement(status);
-#endif
+			if (!settings_struct.useSoftwarePolling)
+			{
+				status = GetLastBufPart(1);
+				if (status != es_no_error) return ReturnStartMeasurement(status);
+			}
 		}
 		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
 		{
 			status = StopSTimer(2);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
-#if !(USE_SOFTWARE_POLLING)
-			status = GetLastBufPart(2);
-			if (status != es_no_error) return ReturnStartMeasurement(status);
-#endif
+			if (!settings_struct.useSoftwarePolling)
+			{
+				status = GetLastBufPart(2);
+				if (status != es_no_error) return ReturnStartMeasurement(status);
+			}
 		}
 		// This sleep is here to prevent the measurement beeing interrupted too early. When operating with 2 cameras the last scan could be cut off without the sleep. This is only a workaround. The problem is that the software is waiting for RSTIMER beeing reset by the hardware before setting measure on and block on to low, but the last DMA is done after RSTIMER beeing reset. BLOCKON and MEASUREON should be reset after all DMAs are done.
 		// RSTIMER --------________
@@ -3264,7 +3267,7 @@ es_status_codes dumpSettings(char** stringPtr)
 	//allocate string buffer buffer
 	*stringPtr = (char*)calloc(1000, sizeof(char));
 	len += sprintf(*stringPtr + len,
-		"unused\t"DLLTAB DLLTAB"%u\n"
+		"useSoftwarePolling\t"DLLTAB DLLTAB"%u\n"
 		"nos\t" DLLTAB DLLTAB"%u\n"
 		"nob\t"DLLTAB DLLTAB"%u\n"
 		"sti_mode\t"DLLTAB DLLTAB"%u\n"
@@ -3297,7 +3300,7 @@ es_status_codes dumpSettings(char** stringPtr)
 		"lines binning\t"DLLTAB"%u\n"
 		"number of regions\t%u\n"
 		"keep\t"DLLTAB DLLTAB"0b"BYTE_TO_BINARY_PATTERN"\n",
-		settings_struct.unused,
+		settings_struct.useSoftwarePolling,
 		settings_struct.nos,
 		settings_struct.nob,
 		settings_struct.sti_mode,
@@ -3872,18 +3875,21 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
  */
 void GetCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block)
 {
-#if USE_SOFTWARE_POLLING
-	ES_TRACE("scan counter %i, Nospb %u, camcnt %u\n", scanCounterTotal, *Nospb, aCAMCNT[drvno]);
-	*block = (scanCounterTotal - 1) / (*Nospb * aCAMCNT[drvno]);
-	*scan = (scanCounterTotal - 1) / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno];
-	ES_TRACE("block %u, scan %i\n", *block, *scan);
-#else
-	uint64_t interruptCounter = getCurrentInterruptCounter();
-	ES_TRACE("interruptCounter %i, Nospb %u, camcnt %u\n", interruptCounter, *Nospb, aCAMCNT[drvno]);
-	*block = interruptCounter * DMA_DMASPERINTR / (*Nospb * aCAMCNT[drvno]);
-	*scan = (interruptCounter * DMA_DMASPERINTR / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno]) - 1;
-	ES_TRACE("block %u, scan %i\n", *block, *scan);
-#endif
+	if (settings_struct.useSoftwarePolling)
+	{
+		ES_TRACE("scan counter %i, Nospb %u, camcnt %u\n", scanCounterTotal, *Nospb, aCAMCNT[drvno]);
+		*block = (scanCounterTotal - 1) / (*Nospb * aCAMCNT[drvno]);
+		*scan = (scanCounterTotal - 1) / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno];
+		ES_TRACE("block %u, scan %i\n", *block, *scan);
+	}
+	else
+	{
+		uint64_t interruptCounter = getCurrentInterruptCounter();
+		ES_TRACE("interruptCounter %i, Nospb %u, camcnt %u\n", interruptCounter, *Nospb, aCAMCNT[drvno]);
+		*block = interruptCounter * DMA_DMASPERINTR / (*Nospb * aCAMCNT[drvno]);
+		*scan = (interruptCounter * DMA_DMASPERINTR / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno]) - 1;
+		ES_TRACE("block %u, scan %i\n", *block, *scan);
+	}
 	return;
 }
 
@@ -3898,17 +3904,20 @@ void GetCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block)
  */
 void GetNextScanNumber(uint32_t drvno, int64_t* scan, int64_t* block)
 {
-#if USE_SOFTWARE_POLLING
-	ES_TRACE("scan counter next scan %i, Nospb %u, camcnt %u\n", (scanCounterTotal + 1), *Nospb, aCAMCNT[drvno]);
-	*block = (scanCounterTotal) / (*Nospb * aCAMCNT[drvno]);
-	*scan = (scanCounterTotal) / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno];
-	ES_TRACE("block %u, scan %i\n", *block, *scan);
-#else
-	uint64_t interruptCounter = getCurrentInterruptCounter() + 1;
-	ES_TRACE("interruptCounter %i, Nospb %u, camcnt %u\n", interruptCounter, *Nospb, aCAMCNT[drvno]);
-	*block = interruptCounter * DMA_DMASPERINTR / (*Nospb * aCAMCNT[drvno]);
-	*scan = (interruptCounter * DMA_DMASPERINTR / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno]) - 1;
-	ES_TRACE("block %u, scan %i\n", *block, *scan);
-#endif
+	if (settings_struct.useSoftwarePolling)
+	{
+		ES_TRACE("scan counter next scan %i, Nospb %u, camcnt %u\n", (scanCounterTotal + 1), *Nospb, aCAMCNT[drvno]);
+		*block = (scanCounterTotal) / (*Nospb * aCAMCNT[drvno]);
+		*scan = (scanCounterTotal) / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno];
+		ES_TRACE("block %u, scan %i\n", *block, *scan);
+	}
+	else
+	{
+		uint64_t interruptCounter = getCurrentInterruptCounter() + 1;
+		ES_TRACE("interruptCounter %i, Nospb %u, camcnt %u\n", interruptCounter, *Nospb, aCAMCNT[drvno]);
+		*block = interruptCounter * DMA_DMASPERINTR / (*Nospb * aCAMCNT[drvno]);
+		*scan = (interruptCounter * DMA_DMASPERINTR / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno]) - 1;
+		ES_TRACE("block %u, scan %i\n", *block, *scan);
+	}
 	return;
 }

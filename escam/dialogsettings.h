@@ -95,6 +95,8 @@ constexpr auto settingIOCtrlOutput6WidthIn5nsPath = "IOCtrl/Output6WidthIn5ns";
 constexpr auto settingIOCtrlOutput7WidthIn5nsPath = "IOCtrl/Output7DelayIn5ns";
 constexpr auto settingIOCtrlOutput7DelayIn5nsPath = "IOCtrl/Output7WidthIn5ns";
 constexpr auto settingIOCtrlT0PeriodIn10nsPath = "IOCtrl/T0PeriodIn10ns";
+//software
+constexpr auto settingsUseSoftwarePollingPath = "software/useSoftwarePolling";
 
 namespace Ui {
 class DialogSettings;

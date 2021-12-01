@@ -25,7 +25,7 @@ uint32_t continiousPauseInMicroseconds = 0;
 bool isRunning = false;
 struct global_settings settings_struct =
 {
-	//unused
+	.useSoftwarePolling				= settingsUseSoftwarePollingDefault,
     .nos							= settingNosDefault,
     .nob							= settingNobDefault,
     .sti_mode						= settingStiDefault,
