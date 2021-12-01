@@ -3847,8 +3847,8 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 			if (dataToCopyInBytes == 0) allDataCopied = true;
 		}
 		else
-			// When there is no valid data in the DMA buffer, the next check happens in 100ms.
-			Sleep(100);
+			// When there is no valid data in the DMA buffer, the next check happens in 1ms.
+			Sleep(1);
 		// Escape while loop when ESC was pressed
 		if (checkEscapeKeyState() || abortMeasurementFlag)
 		{
