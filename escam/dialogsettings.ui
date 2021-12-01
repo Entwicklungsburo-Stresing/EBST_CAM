@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>404</width>
-    <height>495</height>
+    <height>496</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,9 +16,6 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
-     <property name="currentIndex">
-      <number>1</number>
-     </property>
      <widget class="QWidget" name="measurement">
       <attribute name="title">
        <string>Measurement</string>
