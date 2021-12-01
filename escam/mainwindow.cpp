@@ -152,6 +152,7 @@ void MainWindow::startPressed()
     settings_struct.dac = settings.value(settingDacPath, settingDacDefault).toBool();
     settings_struct.enable_gpx = settings.value(settingGpxPath, settingGpxDefault).toBool();
     settings_struct.gpx_offset = settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toUInt();
+	settings_struct.useSoftwarePolling = settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool();
     //fftmodes tab
     settings_struct.FFTLines = settings.value(settingLinesPath, settingLinesDefault).toUInt();
     settings_struct.Vfreq = settings.value(settingVfreqPath, settingVfreqDefault).toUInt();
