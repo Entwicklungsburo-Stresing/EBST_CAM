@@ -16,27 +16,101 @@ struct global_settings
 	 * false: Use Interrupt. Every 500th scan the interrupt starts a copy process, which copies 500 scans to the user buffer.
 	 */
 	uint32_t useSoftwarePolling;
+	/**
+	 * Number of samples
+	 */
 	uint32_t nos;
+	/**
+	 * Number of blocks
+	 */
 	uint32_t nob;
+	/**
+	 * Scan trigger input mode
+	 */
 	uint32_t sti_mode;
+	/**
+	 * Block trigger input mode
+	 */
 	uint32_t bti_mode;
+	/**
+	 * Scan timer in microseconds.
+	 */
 	uint32_t stime_in_microsec;
+	/**
+	 * Block timer in microseconds.
+	 */
 	uint32_t btime_in_microsec;
+	/**
+	 * Scan delay after trigger in 10 ns steps.
+	 */
 	uint32_t sdat_in_10ns;
+	/**
+	 * Block delay after trigger in 10 ns steps.
+	 */
 	uint32_t bdat_in_10ns;
+	/**
+	 * Scan trigger slope.
+	 */
 	uint32_t sslope;
+	/**
+	 * Block trigger slope.
+	 */
 	uint32_t bslope;
+	/**
+	 * XCK delay in 10 ns steps.
+	 */
 	uint32_t xckdelay_in_10ns;
+	/**
+	 * SEC in 10 ns steps.
+	 */
 	uint32_t sec_in_10ns;
+	/**
+	 * Trigger mode of camera control.
+	 */
 	uint32_t trigger_mode_cc;
+	/**
+	 * Board sel.
+	 * 0: board 1
+	 * 1: board 2
+	 * 2: both boards
+	 */
 	uint32_t board_sel;
+	/**
+	 * Sensor type.
+	 * 0: PDA (line sensor)
+	 * 1: FFT (area sensor)
+	 */
 	uint32_t sensor_type;
+	/**
+	 * Camera system
+	 * 0: 3001
+	 * 1: 3010
+	 * 2: 3030
+	 */
 	uint32_t camera_system;
+	/**
+	 * Camera count
+	 */
 	uint32_t camcnt;
+	/**
+	 * Pixel count
+	 */
 	uint32_t pixel;
+	/**
+	 * Mechanical shutter
+	 */
 	uint32_t mshut;
+	/**
+	 * Turn leds off
+	 */
 	uint32_t led_off;
+	/**
+	 * Sensor gain
+	 */
 	uint32_t sensor_gain;
+	/**
+	 * ADC gain
+	 */
 	uint32_t adc_gain;
 	uint32_t Temp_level;
 	uint32_t dac;
