@@ -306,6 +306,7 @@ es_status_codes AbortMeasurement( uint32_t drv )
  */
 es_status_codes setBlockOn( uint32_t drvno )
 {
+	ES_LOG("Set block on\n");
 	notifyBlockStart();
 	return setBitS0_32( drvno, PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS );
 }
@@ -337,6 +338,7 @@ es_status_codes setMeasureOn( uint32_t drvno )
  */
 es_status_codes resetBlockOn( uint32_t drvno )
 {
+	ES_LOG("Reset block on\n");
 	notifyBlockDone();
 	return resetBitS0_32( drvno, PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS );
 }
@@ -2402,6 +2404,7 @@ es_status_codes waitForBlockTrigger(uint32_t drvno)
  */
 es_status_codes countBlocksByHardware( uint32_t drvno )
 {
+	ES_LOG("Increase hardware block counter\n");
 	es_status_codes status =  pulseBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCKTRIG, S0Addr_PCIEFLAGS);
 	if (status != es_no_error) return status;
 	//reset scan counter
@@ -3514,6 +3517,7 @@ es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
  */
 es_status_codes setBlockOnTwoBoards()
 {
+	ES_LOG("Set block on\n");
 	notifyBlockStart();
 
 	uint32_t data1 = 0;
@@ -3789,7 +3793,7 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 {
 	uint32_t drvno = *drvno_p;
 	free(drvno_p);
-	ES_LOG("Poll dma buffer to user buffer started.\n");
+	ES_LOG("Poll dma buffer to user buffer started. drvno: %u\n", drvno);
 	// Get the pointer to DMA buffer.
 	uint16_t* dmaBuffer = getVirtualDmaAddress(drvno);
 	ES_TRACE("Dma buffer address: %p\n", dmaBuffer);
@@ -3816,6 +3820,7 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	uint32_t blockCounterHardware;
 	while (!allDataCopied)
 	{
+		//ES_TRACE("dmaBufferReadPosNextScan: %p ", dmaBufferReadPosNextScan);
 		// scan counter pixel are 4 and 5
 		scanCounterHardware = dmaBufferReadPosNextScan[4] << 16 | dmaBufferReadPosNextScan[5];
 		// block counter pixel are 2 and 3
@@ -3824,8 +3829,8 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 		// Check if scan and block counter in DMA buffer are equal to their mirrors
 		if (scanCounterHardwareMirror == scanCounterHardware && blockCounterHardwareMirror == blockCounterHardware)
 		{
-			//ES_TRACE("DMA buffer read position: %p\n", dmaBufferReadPos);
-			//ES_TRACE("User buffer write position: %p\n", userBufferWritePos_polling);
+			ES_TRACE("DMA buffer read position: %p\n", dmaBufferReadPos);
+			ES_TRACE("User buffer write position: %p\n", userBufferWritePos_polling);
 			// Copy the data.
 			memcpy(userBufferWritePos_polling, dmaBufferReadPos, sizeOfOneScanInBytes);
 			// Set the memory of the copied data to 0 in the dma buffer.
@@ -3847,21 +3852,21 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 				memcpy(userBufferWritePos_polling, dmaBufferReadPos, sizeOfOneScanInBytes);
 				dataToCopyInBytes -= sizeOfOneScanInBytes;
 			}
-			//ES_TRACE("Scan: %u\n", scanCounterTotal);
+			ES_TRACE("Scan: %u\n", scanCounterTotal);
 			// check if dmaBufferReadPos exceeds dmaBuffer
 			if (dmaBufferReadPos >= dmaBufferEnd || dmaBufferReadPos < dmaBuffer)
 			{
 				// reset the read pointer to the base address of the dma buffer
 				dmaBufferReadPos = dmaBuffer;
-				//ES_TRACE("Reset dmaBufferReadPos to: %p\n", dmaBuffer);
+				ES_TRACE("Reset dmaBufferReadPos to: %p\n", dmaBuffer);
 			}
 			if (dmaBufferReadPosNextScan >= dmaBufferEnd || dmaBufferReadPosNextScan < dmaBuffer)
 			{
 				// reset the read pointer to the base address of the dma buffer
 				dmaBufferReadPosNextScan = dmaBuffer;
-				//ES_TRACE("Reset dmaBufferReadPos to: %p\n", dmaBuffer);
+				ES_TRACE("Reset dmaBufferReadPos to: %p\n", dmaBuffer);
 			}
-			//ES_TRACE("Data to copy: %u\n", dataToCopyInBytes);
+			ES_TRACE("Data to copy: %u\n", dataToCopyInBytes);
 			if (dataToCopyInBytes == 0) allDataCopied = true;
 		}
 		// Escape while loop when ESC was pressed
