@@ -3902,20 +3902,14 @@ void GetCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block)
  */
 void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* scan, int64_t* block)
 {
+	uint64_t scanCount = 0;
 	if (settings_struct.useSoftwarePolling)
-	{
-		ES_TRACE("scan counter %i, Nospb %u, camcnt %u\n", scanCounterTotal + offset, *Nospb, aCAMCNT[drvno]);
-		*block = (scanCounterTotal - 1 + offset) / (*Nospb * aCAMCNT[drvno]);
-		*scan = (scanCounterTotal - 1 + offset) / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno];
-		ES_TRACE("block %u, scan %i\n", *block, *scan);
-	}
+		scanCount = scanCounterTotal;
 	else
-	{
-		uint64_t interruptCounter = getCurrentInterruptCounter();
-		ES_TRACE("interruptCounter %i, Nospb %u, camcnt %u\n", interruptCounter + offset, *Nospb, aCAMCNT[drvno]);
-		*block = interruptCounter + offset * DMA_DMASPERINTR / (*Nospb * aCAMCNT[drvno]);
-		*scan = (interruptCounter + offset * DMA_DMASPERINTR / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno]) - 1;
-		ES_TRACE("block %u, scan %i\n", *block, *scan);
-	}
+		scanCount = getCurrentInterruptCounter() * DMA_DMASPERINTR;
+	ES_TRACE("scan counter %i, Nospb %u, camcnt %u\n", scanCount + offset, *Nospb, aCAMCNT[drvno]);
+	*block = (scanCount - 1 + offset) / (*Nospb * aCAMCNT[drvno]);
+	*scan = (scanCount - 1 + offset) / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno];
+	ES_TRACE("block %u, scan %i\n", *block, *scan);
 	return;
 }
