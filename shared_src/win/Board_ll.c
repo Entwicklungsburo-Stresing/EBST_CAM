@@ -719,11 +719,12 @@ void FreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 
 es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 {
+	ES_LOG("Start copy data to user buffer thread.\n");
 	if (settings_struct.useSoftwarePolling)
 	{
 		uint32_t* param = (uint32_t*)malloc(sizeof(uint32_t));
 		*param = drvno;
-		_beginthreadex(0, 0, &PollDmaBufferToUserBuffer, param, 0, 0);
+		_beginthreadex(NULL, 0, &PollDmaBufferToUserBuffer, param, 0, NULL);
 	}
 	return es_no_error;
 }
@@ -957,9 +958,9 @@ es_status_codes WaitTrigger(uint32_t drvno, bool ExtTrigFlag, bool *SpaceKey, bo
 };// WaitTrigger
 
 /**
- * \brief Translate ticks to micro seconds.
+ * \brief Translate ticks to microseconds.
  * \param tks ticks of system timer
- * \return micro seconds of tks
+ * \return microseconds of tks
 */
 uint32_t Tickstous(uint64_t tks)
 {
@@ -988,6 +989,7 @@ uint32_t Tickstous(uint64_t tks)
 */
 uint8_t WaitforTelapsed(long long musec)
 {
+	ES_LOG("Wait for %u microseconds\n", musec);
 	LONGLONG ticks_to_wait = musec * TPS / 1000000;
 	LONGLONG start_timestamp = ticksTimestamp();
 	LONGLONG destination_timestamp = start_timestamp + ticks_to_wait;
@@ -1062,6 +1064,7 @@ es_status_codes ThreadToPriClass(ULONG threadp, DWORD *priclass, DWORD *prilevel
  */
 es_status_codes SetPriority(uint32_t threadp)
 {
+	ES_LOG("Set priority to %u\n", threadp)
 	ULONG priClass = 0;
 	ULONG priLevel = 0;
 	es_status_codes status = ThreadToPriClass(threadp, &priClass, &priLevel);
@@ -1086,6 +1089,7 @@ es_status_codes SetPriority(uint32_t threadp)
  */
 es_status_codes ResetPriority()
 {
+	ES_LOG("Reset priority\n");
 	if (!SetPriorityClass(hProcess, oldPriClass))
 		return es_setting_thread_priority_failed;
 	if (!SetThreadPriority(hThread, oldThreadLevel))

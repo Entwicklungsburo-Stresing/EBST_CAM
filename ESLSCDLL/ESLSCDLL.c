@@ -415,7 +415,7 @@ DllAccess es_status_codes DLLCopyOneBlock( UINT32 drv, UINT16 block, UINT16 *pde
 DllAccess void DLLReadFFLoop()
 {
 	//thread wit prio 15
-	_beginthreadex( 0, 0, &StartMeasurement, 0, 0, 0 );
+	_beginthreadex( NULL, 0, &StartMeasurement, NULL, 0, NULL );
 	return;
 }//DLLReadFFLoop
 
