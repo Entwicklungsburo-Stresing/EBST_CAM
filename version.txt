@@ -1,3 +1,8 @@
+v3.20.6
+- Improve software polling
+- Improve escam settings dialog
+- Add live view options to escam
+
 v3.20.5
 - Add software polling option
 - Add live view
