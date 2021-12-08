@@ -3845,10 +3845,12 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 			GetScanNumber(drvno, 2, &scan, &block);
 			scanCounterHardwareMirror = scan + 1;
 			blockCounterHardwareMirror = block + 1;
-			//last scan
+			// get the last scan
 			GetScanNumber(drvno, 1, &scan, &block);
 			if (scan == *Nospb-1 && block == *Nob-1)
 			{
+				// wait 1 microsecond, to ensure that the last scan is written completly
+				WaitforTelapsed(1);
 				memcpy(userBufferWritePos_polling, dmaBufferReadPos, sizeOfOneScanInBytes);
 				dataToCopyInBytes -= sizeOfOneScanInBytes;
 			}
