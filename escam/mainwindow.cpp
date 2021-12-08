@@ -18,15 +18,15 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 	this->setAttribute(Qt::WA_DeleteOnClose);
-    connect(ui->horizontalSliderSample, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
-    connect(ui->horizontalSliderBlock, SIGNAL(valueChanged(int)), this, SLOT(loadCameraData()));
+    connect(ui->horizontalSliderSample, &QSlider::valueChanged, this, &MainWindow::loadCameraData);
+    connect(ui->horizontalSliderBlock, &QSlider::valueChanged, this, &MainWindow::loadCameraData);
 	connect(ui->pushButtonStartCont, &QPushButton::toggled, this, &MainWindow::startContPressed);
-	connect(ui->pushButtonAbort, SIGNAL(pressed()), this, SLOT(abortPressed()));
-    connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));
-    connect(&lsc, SIGNAL(measureStart()), this, SLOT(on_measureStart()));
-    connect(&lsc, SIGNAL(measureDone()), this, SLOT(on_measureDone()));
-    connect(&lsc, SIGNAL(blockStart()), this, SLOT(on_blockStart()));
-    connect(&lsc, SIGNAL(blockDone()), this, SLOT(on_blockDone()));
+	connect(ui->pushButtonAbort, &QPushButton::pressed, this, &MainWindow::abortPressed);
+    connect(ui->actionExit, &QAction::triggered, this, &MainWindow::close);
+    connect(&lsc, &Lsc::measureStart, this, &MainWindow::on_measureStart);
+    connect(&lsc, &Lsc::measureDone, this, &MainWindow::on_measureDone);
+    connect(&lsc, &Lsc::blockStart, this, &MainWindow::on_blockStart);
+    connect(&lsc, &Lsc::blockDone, this, &MainWindow::on_blockDone);
     connect(ui->chartView, &MyQChartView::rubberBandChanged, this, &MainWindow::on_rubberBandChanged);
 	connect(displayTimer, &QTimer::timeout, this, &MainWindow::showCurrentScan);
 
@@ -254,7 +254,7 @@ void MainWindow::on_actionEdit_triggered()
 	DialogSettings* ds = new DialogSettings( this );
 	ds->setAttribute( Qt::WA_DeleteOnClose );
 	ds->show();
-	connect( ds, SIGNAL( settings_saved() ), this, SLOT( loadSettings() ) );
+	connect( ds, &DialogSettings::settings_saved, this, &MainWindow::loadSettings );
 	return;
 }
 
@@ -321,7 +321,7 @@ void MainWindow::on_actionCameras_triggered()
         connect(checkbox, &QCheckBox::stateChanged, this, [checkbox, this, i] {on_checkBoxShowCamera(checkbox->isChecked(), i); loadCameraData(); });
     }
     QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, messageBox);
-    connect(dialogButtonBox, SIGNAL(accepted()), messageBox, SLOT(accept()));
+    connect(dialogButtonBox, &QDialogButtonBox::accepted, messageBox, &QDialog::accept);
     layout->addWidget(dialogButtonBox);
     messageBox->setWindowTitle("Cameras");
     messageBox->show();
@@ -433,7 +433,7 @@ void MainWindow::showNoDriverFoundDialog()
     d->setText("Driver or PCIe board not found.");
     d->setIcon(QMessageBox::Critical);
     d->setDetailedText(QString::fromStdString(lsc.driverInstructions));
-    d->open(this,SLOT(close()));
+    d->open(this, SLOT(close()));
     return;
 }
 
@@ -444,7 +444,7 @@ void MainWindow::showPcieBoardError()
     d->setWindowModality(Qt::ApplicationModal);
     d->setText("Error while opening PCIe board.");
     d->setIcon(QMessageBox::Critical);
-    d->open(this,SLOT(close()));
+    d->open(this, SLOT(close()));
     return;
 }
 
@@ -503,7 +503,7 @@ void MainWindow::on_actionDump_board_registers_triggered()
     tabWidget->addTab(labelSettings, "Settings");
     layout->addWidget(tabWidget);
     QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, tabWidget);
-    connect(dialogButtonBox, SIGNAL(accepted()), messageBox, SLOT(accept()));
+    connect(dialogButtonBox, &QDialogButtonBox::accepted, messageBox, &QDialog::accept);
     layout->addWidget(dialogButtonBox);
     messageBox->setWindowTitle("Register dump");
     messageBox->show();

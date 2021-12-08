@@ -9,7 +9,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
     ui(new Ui::DialogSettings)
 {
     ui->setupUi(this);
-    connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(on_accepted()));
+    connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &DialogSettings::on_accepted);
 
 	//don't rearrange widgets when hiding other widgets
 	QSizePolicy sp_retain = ui->labelSTimer->sizePolicy();
