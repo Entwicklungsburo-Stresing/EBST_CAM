@@ -68,7 +68,7 @@ private slots:
 	void on_actionImport_triggered();
 	void on_actionGamma_triggered();
 	void showCurrentScan();
-	void on_checkBoxLiveView_stateChanged(int checked);
+	void adjustLiveView();
 };
 
 #endif // MAINWINDOW_H

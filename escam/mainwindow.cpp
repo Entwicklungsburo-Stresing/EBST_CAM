@@ -29,6 +29,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&lsc, &Lsc::blockDone, this, &MainWindow::on_blockDone);
     connect(ui->chartView, &MyQChartView::rubberBandChanged, this, &MainWindow::on_rubberBandChanged);
 	connect(displayTimer, &QTimer::timeout, this, &MainWindow::showCurrentScan);
+	connect(ui->radioButtonLiveViewFixedSample, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
+	connect(ui->radioButtonLiveViewOff, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
+	connect(ui->radioButtonLiveViewOffNewestSample, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
+
 
     es_status_codes status = lsc.initDriver();
     if (status != es_no_error)
@@ -569,23 +573,7 @@ void MainWindow::on_measureStart()
 	ui->pushButtonStart->setDisabled(true);
 	//enable abort button
     ui->pushButtonAbort->setEnabled(true);
-	if (ui->checkBoxLiveView->isChecked())
-	{
-		//disable controls
-		ui->spinBoxBlock->setEnabled(false);
-		ui->spinBoxSample->setEnabled(false);
-		ui->horizontalSliderBlock->setEnabled(false);
-		ui->horizontalSliderSample->setEnabled(false);
-		displayTimer->start(100);
-	}
-	else
-	{
-		//enable controls
-		ui->spinBoxBlock->setEnabled(true);
-		ui->spinBoxSample->setEnabled(true);
-		ui->horizontalSliderBlock->setEnabled(true);
-		ui->horizontalSliderSample->setEnabled(true);
-	}
+	adjustLiveView();
     return;
 }
 
@@ -829,30 +817,55 @@ void MainWindow::showCurrentScan()
 		lsc.getCurrentScanNumber(2, &sample, &block);
 		break;
 	}
-	ui->horizontalSliderSample->setValue(sample+1);
-	ui->horizontalSliderBlock->setValue(block+1);
+	int radioState = 0;
+	if (ui->radioButtonLiveViewOff->isChecked()) radioState = 0;
+	else if (ui->radioButtonLiveViewFixedSample->isChecked()) radioState = 1;
+	else if (ui->radioButtonLiveViewOffNewestSample->isChecked()) radioState = 2;
+	switch (radioState)
+	{
+	case 2:
+		ui->horizontalSliderSample->setValue(sample + 1);
+	case 1:
+		ui->horizontalSliderBlock->setValue(block + 1);
+	}
 	return;
 }
 
-void MainWindow::on_checkBoxLiveView_stateChanged(int checked)
+void MainWindow::adjustLiveView()
 {
-	if (measureOn && checked)
+	int radioState = 0;
+	if (ui->radioButtonLiveViewOff->isChecked()) radioState = 0;
+	else if (ui->radioButtonLiveViewFixedSample->isChecked()) radioState = 1;
+	else if (ui->radioButtonLiveViewOffNewestSample->isChecked()) radioState = 2;
+	if (measureOn)
 	{
-		//disable controls
-		ui->spinBoxBlock->setEnabled(false);
-		ui->spinBoxSample->setEnabled(false);
-		ui->horizontalSliderBlock->setEnabled(false);
-		ui->horizontalSliderSample->setEnabled(false);
-		displayTimer->start(100);
-	}
-	else if (measureOn && !checked)
-	{
-		//enable controls
-		ui->spinBoxBlock->setEnabled(true);
-		ui->spinBoxSample->setEnabled(true);
-		ui->horizontalSliderBlock->setEnabled(true);
-		ui->horizontalSliderSample->setEnabled(true);
-		displayTimer->stop();
+		switch (radioState)
+		{
+		case 0:
+			//enable controls
+			ui->spinBoxBlock->setEnabled(true);
+			ui->spinBoxSample->setEnabled(true);
+			ui->horizontalSliderBlock->setEnabled(true);
+			ui->horizontalSliderSample->setEnabled(true);
+			displayTimer->stop();
+			break;
+		case 1:
+			//disable only block slider
+			ui->spinBoxBlock->setEnabled(false);
+			ui->spinBoxSample->setEnabled(true);
+			ui->horizontalSliderBlock->setEnabled(false);
+			ui->horizontalSliderSample->setEnabled(true);
+			displayTimer->start(100);
+			break;
+		case 2:
+			//disable controls
+			ui->spinBoxBlock->setEnabled(false);
+			ui->spinBoxSample->setEnabled(false);
+			ui->horizontalSliderBlock->setEnabled(false);
+			ui->horizontalSliderSample->setEnabled(false);
+			displayTimer->start(100);
+			break;
+		}
 	}
 	return;
 }
