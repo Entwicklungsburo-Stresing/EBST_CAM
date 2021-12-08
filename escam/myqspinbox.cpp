@@ -8,7 +8,7 @@
 MyQSpinBox::MyQSpinBox(QWidget* parent)
         : QSpinBox(parent)
 {
-    connect(this,SIGNAL(valueChanged(int)),this,SLOT(On_valueChanged(int)));
+    connect(this, qOverload<int>(&MyQSpinBox::valueChanged), this, &MyQSpinBox::On_valueChanged);
 }
 
 /**
