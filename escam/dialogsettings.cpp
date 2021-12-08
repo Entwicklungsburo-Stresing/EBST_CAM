@@ -648,6 +648,7 @@ void DialogSettings::on_comboBoxFftMode_currentIndexChanged(int index)
 	}
 	switch(index)
 	{
+	//full binning
 	case 0:
 		ui->labelLinesBinning->setVisible(false || visible);
 		ui->spinBoxLinesBinning->setEnabled(false || enabled);
@@ -682,7 +683,9 @@ void DialogSettings::on_comboBoxFftMode_currentIndexChanged(int index)
 		ui->spinBoxRegion6->setEnabled(false || enabled);
 		ui->spinBoxRegion7->setEnabled(false || enabled);
 		ui->spinBoxRegion8->setEnabled(false || enabled);
+		ui->doubleSpinBoxNos->setEnabled(true || enabled);
 		break;
+	//range of interest
 	case 1:
 		ui->labelLinesBinning->setVisible(false || visible);
 		ui->spinBoxLinesBinning->setEnabled(false || enabled);
@@ -717,7 +720,10 @@ void DialogSettings::on_comboBoxFftMode_currentIndexChanged(int index)
 		ui->spinBoxRegion6->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
 		ui->spinBoxRegion7->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
 		ui->spinBoxRegion8->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
+		ui->doubleSpinBoxNos->setEnabled(false || enabled);
+		ui->doubleSpinBoxNos->setValue(ui->spinBoxNumberOfRegions->value());
 		break;
+	//area
 	case 2:
 		ui->labelLinesBinning->setVisible(true || visible);
 		ui->spinBoxLinesBinning->setEnabled(true || enabled);
@@ -752,6 +758,8 @@ void DialogSettings::on_comboBoxFftMode_currentIndexChanged(int index)
 		ui->spinBoxRegion6->setEnabled(false || enabled);
 		ui->spinBoxRegion7->setEnabled(false || enabled);
 		ui->spinBoxRegion8->setEnabled(false || enabled);
+		ui->doubleSpinBoxNos->setEnabled(false || enabled);
+		ui->doubleSpinBoxNos->setValue(ui->spinBoxLines->value() / ui->spinBoxLinesBinning->value());
 		break;
 	}
 }
@@ -760,5 +768,29 @@ void DialogSettings::on_pushButtonCopyBtimer_clicked()
 {
 	ui->doubleSpinBoxContiniousPause_in_ms->setValue(ui->doubleSpinBoxBTimer_in_ms->value());
 	return;
+}
+
+void DialogSettings::on_spinBoxLines_valueChanged(int value)
+{
+	if (ui->comboBoxFftMode->currentIndex() == area_mode)
+	{
+		ui->doubleSpinBoxNos->setValue(value / ui->spinBoxLinesBinning->value());
+	}
+}
+
+void DialogSettings::on_spinBoxLinesBinning_valueChanged(int value)
+{
+	if (ui->comboBoxFftMode->currentIndex() == area_mode)
+	{
+		ui->doubleSpinBoxNos->setValue(ui->spinBoxLines->value() / value);
+	}
+}
+
+void DialogSettings::on_spinBoxNumberOfRegions_valueChanged(int value)
+{
+	if (ui->comboBoxFftMode->currentIndex() == partial_binning)
+	{
+		ui->doubleSpinBoxNos->setValue(value);
+	}
 }
 
