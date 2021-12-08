@@ -129,6 +129,9 @@ private slots:
 	void on_comboBoxSettingsLevel_currentIndexChanged(int index);
 	void on_comboBoxFftMode_currentIndexChanged(int index);
 	void on_pushButtonCopyBtimer_clicked();
+	void on_spinBoxLines_valueChanged(int value);
+	void on_spinBoxLinesBinning_valueChanged(int value);
+	void on_spinBoxNumberOfRegions_valueChanged(int value);
 };
 
 #endif // DIALOGSETTINGS_H
