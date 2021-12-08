@@ -385,7 +385,7 @@ es_status_codes SetupDma( uint32_t drvno )
 		es_status_codes status = CleanupDma(drvno);
 		if (status != es_no_error) return status;
 	}
-	dmaBufferSizeInBytes = DMA_BUFFER_SIZE_IN_SCANS * aPIXEL[drvno] * sizeof( UINT16 );
+	dmaBufferSizeInBytes = settings_struct.dma_buffer_size_in_scans * aPIXEL[drvno] * sizeof( UINT16 );
 	DWORD dwOptions = DMA_FROM_DEVICE | DMA_KERNEL_BUFFER_ALLOC;// | DMA_ALLOW_64BIT_ADDRESS;// DMA_ALLOW_CACHE ;
 	if (DMA_64BIT_EN)
 		dwOptions |= DMA_ALLOW_64BIT_ADDRESS;

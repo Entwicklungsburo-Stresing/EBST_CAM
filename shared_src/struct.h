@@ -112,17 +112,55 @@ struct global_settings
 	 * ADC gain
 	 */
 	uint32_t adc_gain;
+	/**
+	 * Temperatur level
+	 */
 	uint32_t Temp_level;
+	/**
+	 * Turn digital analog converter on / off
+	 * - 0: off
+	 * - >0: on
+	 */
 	uint32_t dac;
+	/**
+	 * Enable GPX
+	 */
 	uint32_t enable_gpx;
+	/**
+	 * GPX offset
+	 */
 	uint32_t gpx_offset;
+	/**
+	 * Count of lines for FFT sensors
+	 */
 	uint32_t FFTLines;
+	/**
+	 * Vertical frequency for FFT sensors
+	 */
 	uint32_t Vfreq;
+	/**
+	 * Mode for FFT sensors
+	 */
 	uint32_t FFTMode;
+	/**
+	 * Count of lines which are binned in area mode for FFT sensors
+	 */
 	uint32_t lines_binning;
+	/**
+	 * Number of regions for fft mode range of interest
+	 */
 	uint32_t number_of_regions;
+	/**
+	 * Deprecated: Keep. Was a parameter to determine whether a region for region of interest mode is filled with real or dummy data.
+	 */
 	uint32_t keep;
+	/**
+	 * Size for each region for region of interest mode for FFT sensors. When the first region is set to 0, all regions are automatically same sized.
+	 */
 	uint32_t region_size[8];
+	/**
+	 * Array for output levels of each digital to analog converter
+	 */
 	uint32_t dac_output[MAXPCIECARDS][8];
 	uint32_t TORmodus; 
 	uint32_t ADC_Mode;
@@ -134,6 +172,10 @@ struct global_settings
 	uint32_t IOCtrl_output_width_in_5ns[8];
 	uint32_t IOCtrl_output_delay_in_5ns[8];
 	uint32_t IOCtrl_T0_period_in_10ns;
+	/**
+	 * Size of DMA buffer in scans. 1000 is our default. 60 is also working with highspeed (expt=0,02ms). 30 could be with one wrong scan every 10000 scans.
+	 */
+	uint32_t dma_buffer_size_in_scans;
 };
 
 #endif // STRUCT_H

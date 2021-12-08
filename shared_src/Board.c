@@ -754,7 +754,7 @@ es_status_codes SetMeasurementParameters( uint32_t drvno, uint32_t nos, uint32_t
 	//set hardware regs
 	status = SetDMABufRegs(drvno);
 	if (status != es_no_error) return status;
-	uint32_t dmaBufferPartSizeInScans = DMA_BUFFER_SIZE_IN_SCANS / DMA_BUFFER_PARTS; //500
+	uint32_t dmaBufferPartSizeInScans = settings_struct.dma_buffer_size_in_scans / DMA_BUFFER_PARTS; //500
 	if (BOARD_SEL > 2)
 		numberOfInterrupts = *Nob * (*Nospb) * aCAMCNT[drvno] * number_of_boards / dmaBufferPartSizeInScans - 2;//- 2 because intr counter starts with 0
 	else
@@ -853,13 +853,14 @@ es_status_codes SetDMABufRegs( uint32_t drvno )
 {
 	ES_LOG("Set DMA buffer registers, ");
 	//DMABufSizeInScans - use 1 block
-	es_status_codes status = writeBitsS0_32(drvno, DMA_BUFFER_SIZE_IN_SCANS, 0xffffffff, S0Addr_DmaBufSizeInScans);
+	es_status_codes status = writeBitsS0_32(drvno, settings_struct.dma_buffer_size_in_scans, 0xffffffff, S0Addr_DmaBufSizeInScans);
 	if (status != es_no_error) return status;
 	//scans per intr must be 2x per DMA_BUFFER_SIZE_IN_SCANS to copy hi/lo part
 	//aCAMCNT: double the INTR if 2 cams
-	status = writeBitsS0_32(drvno, DMA_DMASPERINTR, 0xffffffff, S0Addr_DMAsPerIntr);
+	uint32_t dmasPerInterrupt = settings_struct.dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
+	status = writeBitsS0_32(drvno, dmasPerInterrupt, 0xffffffff, S0Addr_DMAsPerIntr);
 	if (status != es_no_error) return status;
-	ES_LOG( "scansPerInterrupt/camcnt: 0x%x \n", DMA_DMASPERINTR / aCAMCNT[drvno] );
+	ES_LOG( "scansPerInterrupt/camcnt: 0x%x \n", dmasPerInterrupt / aCAMCNT[drvno] );
 	status = writeBitsS0_32(drvno, *Nospb, 0xffffffff, S0Addr_NOS);
 	if (status != es_no_error) return status;
 	status = writeBitsS0_32(drvno, *Nob, 0xffffffff, S0Addr_NOB);
@@ -2479,7 +2480,7 @@ es_status_codes GetLastBufPart( uint32_t drvno )
 	es_status_codes status = readRegisterS0_32( drvno, &spi, S0Addr_DMAsPerIntr ); //get scans per intr
 	if (status != es_no_error) return status;
 	//halfbufize is 500 with default values
-	uint32_t dmaHalfBufferSize = DMA_BUFFER_SIZE_IN_SCANS / DMA_BUFFER_PARTS;
+	uint32_t dmaHalfBufferSize = settings_struct.dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
 	uint32_t scans_all_cams = (*Nospb) * (*Nob) * aCAMCNT[drvno];
 	uint32_t rest_overall = scans_all_cams % dmaHalfBufferSize;
 	size_t rest_in_bytes = rest_overall * aPIXEL[drvno] * sizeof( uint16_t );
@@ -3905,10 +3906,11 @@ void GetCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block)
 void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* scan, int64_t* block)
 {
 	uint64_t scanCount = 0;
+	uint32_t dmasPerInterrupt = settings_struct.dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
 	if (settings_struct.useSoftwarePolling)
 		scanCount = scanCounterTotal;
 	else
-		scanCount = getCurrentInterruptCounter() * DMA_DMASPERINTR;
+		scanCount = getCurrentInterruptCounter() * dmasPerInterrupt;
 	ES_TRACE("scan counter %i, Nospb %u, camcnt %u\n", scanCount + offset, *Nospb, aCAMCNT[drvno]);
 	*block = (scanCount - 1 + offset) / (*Nospb * aCAMCNT[drvno]);
 	*scan = (scanCount - 1 + offset) / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno];

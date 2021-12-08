@@ -87,5 +87,6 @@
 #define settingIOCtrlOutput7DelayIn5nsDefault		600
 #define settingIOCtrlT0PeriodIn10nsDefault			1000
 #define settingContiniousPausInMicrosecondsDefault	1000
+#define settingDmaBufferSizeInScansDefault			1000
 
 #endif // DEFAULT_SETTINGS_H
