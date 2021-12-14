@@ -3800,7 +3800,6 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	ES_TRACE("Dma buffer address: %p\n", dmaBuffer);
 	// Set dmaBufferReadPos pointer to base address of DMA buffer. dmaBufferReadPos indicates the current read position in the DMA buffer.
 	uint16_t* dmaBufferReadPos = dmaBuffer;
-	uint16_t* dmaBufferReadPosNextScan = dmaBuffer + aPIXEL[drvno];
 	// Calculate pointer to the end of the DMA buffer.
 	uint16_t* dmaBufferEnd = dmaBufferReadPos + getDmaBufferSizeInBytes() / sizeof(uint16_t);
 	ES_TRACE("Dma buffer end: %p\n", dmaBufferEnd);
@@ -3815,17 +3814,17 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	ES_TRACE("Address of user buffer: %p\n", userBuffer[drvno]);
 	bool allDataCopied = false;
 	scanCounterTotal = 0;
-	uint32_t* scanCounterHardwareMirror = 2;
+	uint32_t* scanCounterHardwareMirror = 1;
 	uint32_t* blockCounterHardwareMirror = 1;
 	uint32_t scanCounterHardware;
 	uint32_t blockCounterHardware;
 	while (!allDataCopied)
 	{
 		//ES_TRACE("dmaBufferReadPosNextScan: %p ", dmaBufferReadPosNextScan);
-		// scan counter pixel are 4 and 5
-		scanCounterHardware = dmaBufferReadPosNextScan[4] << 16 | dmaBufferReadPosNextScan[5];
+		// scan counter pixel are 4 and 5 and since P202_21 at the last pixel
+		scanCounterHardware = dmaBufferReadPos[4] << 16 | *(dmaBufferReadPos + aPIXEL[drvno] - 1);
 		// block counter pixel are 2 and 3
-		blockCounterHardware = dmaBufferReadPosNextScan[2] << 16 | dmaBufferReadPosNextScan[3];
+		blockCounterHardware = dmaBufferReadPos[2] << 16 | dmaBufferReadPos[3];
 		//ES_TRACE("scan: %u, scanmirror: %u, block: %u, blockmirror: %u\n", scanCounterHardware, scanCounterHardwareMirror, blockCounterHardware, blockCounterHardwareMirror);
 		// Check if scan and block counter in DMA buffer are equal to their mirrors
 		if (scanCounterHardwareMirror == scanCounterHardware && blockCounterHardwareMirror == blockCounterHardware)
@@ -3838,35 +3837,20 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 			memset(dmaBufferReadPos, 0, sizeOfOneScanInBytes);
 			// Advance the pointers and counters.
 			dmaBufferReadPos += sizeOfOneScanInBytes / sizeof(uint16_t);
-			dmaBufferReadPosNextScan += sizeOfOneScanInBytes / sizeof(uint16_t);
 			userBufferWritePos_polling += sizeOfOneScanInBytes / sizeof(uint16_t);
 			dataToCopyInBytes -= sizeOfOneScanInBytes;
 			scanCounterTotal++;
+			// get scan and block number for the next scan
 			int64_t scan, block;
-			GetScanNumber(drvno, 2, &scan, &block);
+			GetScanNumber(drvno, 1, &scan, &block);
 			scanCounterHardwareMirror = scan + 1;
 			blockCounterHardwareMirror = block + 1;
-			// get the last scan
-			GetScanNumber(drvno, 1, &scan, &block);
-			if (scan == *Nospb-1 && block == *Nob-1)
-			{
-				// wait 1 microsecond, to ensure that the last scan is written completly
-				WaitforTelapsed(1);
-				memcpy(userBufferWritePos_polling, dmaBufferReadPos, sizeOfOneScanInBytes);
-				dataToCopyInBytes -= sizeOfOneScanInBytes;
-			}
 			ES_TRACE("Scan: %u\n", scanCounterTotal);
 			// check if dmaBufferReadPos exceeds dmaBuffer
 			if (dmaBufferReadPos >= dmaBufferEnd || dmaBufferReadPos < dmaBuffer)
 			{
 				// reset the read pointer to the base address of the dma buffer
 				dmaBufferReadPos = dmaBuffer;
-				ES_TRACE("Reset dmaBufferReadPos to: %p\n", dmaBuffer);
-			}
-			if (dmaBufferReadPosNextScan >= dmaBufferEnd || dmaBufferReadPosNextScan < dmaBuffer)
-			{
-				// reset the read pointer to the base address of the dma buffer
-				dmaBufferReadPosNextScan = dmaBuffer;
 				ES_TRACE("Reset dmaBufferReadPos to: %p\n", dmaBuffer);
 			}
 			ES_TRACE("Data to copy: %u\n", dataToCopyInBytes);
