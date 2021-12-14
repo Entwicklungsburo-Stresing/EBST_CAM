@@ -109,7 +109,7 @@ DllAccess void DLLErrMsgBoxOff()
 }
 
 /**
- * \copydoc CCDDrvInit
+ * \copydoc InitDriver
  * \param _number_of_boards Pointer for returning recognized number of PCIe boards.
  */
 DllAccess es_status_codes DLLCCDDrvInit( UINT8* _number_of_boards )
@@ -121,7 +121,7 @@ DllAccess es_status_codes DLLCCDDrvInit( UINT8* _number_of_boards )
 }
 
 /**
- * \copydoc CCDDrvExit
+ * \copydoc ExitDriver
  */
 DllAccess es_status_codes DLLCCDDrvExit( UINT32 board_sel )
 {
@@ -137,67 +137,67 @@ DllAccess es_status_codes DLLInitBoard()
 }
 
 /**
-\copydoc ReadByteS0
+\copydoc readRegisterS0_8
 */
-DllAccess es_status_codes DLLReadByteS0( UINT32 drvno, UINT8 *data, UINT32 PortOff )
+DllAccess es_status_codes DLLReadByteS0( UINT32 drvno, UINT8 *data, UINT32 address)
 {
-	return readRegisterS0_8( drvno, data, PortOff );
+	return readRegisterS0_8( drvno, data, address);
 }
 
 /**
-\copydoc WriteByteS0
+\copydoc writeRegisterS0_8
 */
-DllAccess es_status_codes DLLWriteByteS0( UINT32 drv, UINT8 DataByte, UINT32 PortOff )
+DllAccess es_status_codes DLLWriteByteS0( UINT32 drvno, UINT8 data, UINT32 address)
 {
-	return writeRegisterS0_8( drv, DataByte, PortOff );
+	return writeRegisterS0_8(drvno, data, address);
 }
 
 /**
-\copydoc ReadLongS0
+\copydoc readRegisterS0_32
 */
-DllAccess es_status_codes DLLReadLongS0( UINT32 drvno, UINT32 * DWData, UINT32 PortOff )
+DllAccess es_status_codes DLLReadLongS0( UINT32 drvno, UINT32 * data, UINT32 address)
 {
-	return readRegisterS0_32( drvno, DWData, PortOff );
+	return readRegisterS0_32( drvno, data, address);
 }
 
 /**
-\copydoc WriteLongS0
+\copydoc writeRegisterS0_32
 */
-DllAccess es_status_codes DLLWriteLongS0( UINT32 drvno, UINT32 DWData, UINT32 PortOff )
+DllAccess es_status_codes DLLWriteLongS0( UINT32 drvno, UINT32 data, UINT32 address)
 {
-	return writeRegisterS0_32( drvno, DWData, PortOff );
+	return writeRegisterS0_32( drvno, data, address);
 }
 
 /**
-\copydoc ReadLongDMA
+\copydoc readRegisterDma_32
 */
-DllAccess es_status_codes DLLReadLongDMA( UINT32 drvno, UINT32* DWData, UINT32 PortOff )
+DllAccess es_status_codes DLLReadLongDMA( UINT32 drvno, UINT32* data, UINT32 address)
 {
-	return readRegisterDma_32( drvno, DWData, PortOff );
+	return readRegisterDma_32( drvno, data, address);
 }
 
 /**
-\copydoc WriteLongDMA
+\copydoc writeRegisterDma_32
 */
-DllAccess es_status_codes DLLWriteLongDMA( UINT32 drvno, UINT32 DWData, UINT32 PortOff )
+DllAccess es_status_codes DLLWriteLongDMA( UINT32 drvno, UINT32 data, UINT32 address)
 {
-	return writeRegisterDma_32( drvno, DWData, PortOff );
+	return writeRegisterDma_32( drvno, data, address);
 }
 
 /**
-\copydoc ReadLongIOPort
+\copydoc readConfig_32
 */
-DllAccess es_status_codes DLLReadLongIOPort( UINT32 drvno, UINT32 * DWData, UINT32 PortOff )
+DllAccess es_status_codes DLLReadLongIOPort( UINT32 drvno, UINT32 * data, UINT32 address)
 {
-	return readConfig_32( drvno, DWData, PortOff );
+	return readConfig_32( drvno, data, address);
 }
 
 /**
-\copydoc WriteLongIOPort
+\copydoc writeConfig_32
 */
-DllAccess es_status_codes DLLWriteLongIOPort( UINT32 drvno, UINT32 DataL, UINT32 PortOff )
+DllAccess es_status_codes DLLWriteLongIOPort( UINT32 drvno, UINT32 data, UINT32 address)
 {
-	return writeConfig_32( drvno, DataL, PortOff );
+	return writeConfig_32( drvno, data, address);
 }
 
 /**
@@ -277,7 +277,7 @@ DllAccess es_status_codes DLLCloseShutter( UINT32 drvno )
 }
 
 /**
- * \copydoc SWTrig
+ * \copydoc DoSoftwareTrigger
  */
 DllAccess es_status_codes DLLSWTrig( UINT32 drvno )
 {
@@ -321,19 +321,19 @@ void TestMsg( char testMsg1[20], char testMsg2[20] )
 }
 
 /**
- * \copydoc SetS0Bit
+ * \copydoc setBitS0_32
  */
-DllAccess es_status_codes DLLSetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
+DllAccess es_status_codes DLLSetS0Bit( ULONG bitnumber, CHAR address, UINT32 drvno )
 {
-	return setBitS0_32( bitnumber, Address, drvno );
+	return setBitS0_32( bitnumber, address, drvno );
 }
 
 /**
- * \copydoc ResetS0Bit
+ * \copydoc resetBitS0_32
  */
-DllAccess es_status_codes DLLResetS0Bit( ULONG bitnumber, CHAR Address, UINT32 drvno )
+DllAccess es_status_codes DLLResetS0Bit( ULONG bitnumber, CHAR address, UINT32 drvno )
 {
-	return resetBitS0_32( bitnumber, Address, drvno );
+	return resetBitS0_32( bitnumber, address, drvno );
 }
 
 /**
@@ -470,9 +470,9 @@ DllAccess es_status_codes DLLSetBEC( UINT32 drvno, UINT64 ecin10ns )
 /**
  * \copydoc SetTORReg
  */
-DllAccess es_status_codes DLLSetTORReg( UINT32 drvno, UINT8 fkt )
+DllAccess es_status_codes DLLSetTORReg( UINT32 drvno, UINT8 tor)
 {
-	return SetTORReg( drvno, fkt );
+	return SetTORReg( drvno, tor);
 }
 
 /**
@@ -529,9 +529,9 @@ DllAccess es_status_codes DLLDAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 
 /**
  * \copydoc DAC_setAllOutputs
  */
-DllAccess es_status_codes DLLDAC_setAllOutputs(UINT32 drvno, UINT32* outputs, UINT8 isIr)
+DllAccess es_status_codes DLLDAC_setAllOutputs(UINT32 drvno, UINT32* output, UINT8 isIR)
 {
-	return DAC_setAllOutputs(drvno, outputs, isIr);
+	return DAC_setAllOutputs(drvno, output, isIR);
 }
 
 /**
@@ -577,11 +577,11 @@ DllAccess es_status_codes DLLAboutGPX( UINT32 drvno )
 }
 
 /**
- * \copydoc InitCamera3001
+ * \copydoc InitCameraGeneral
  */
-DllAccess es_status_codes DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED, UINT16 led_off, UINT16 sensor_gain)
+DllAccess es_status_codes DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 is_fft, UINT8 is_area, UINT8 IS_COOLED, UINT16 led_off, UINT16 sensor_gain)
 {
-	return InitCameraGeneral( drvno, pixel, cc_trigger_input, IS_FFT, IS_AREA, IS_COOLED, led_off, sensor_gain );
+	return InitCameraGeneral( drvno, pixel, cc_trigger_input, is_fft, is_area, IS_COOLED, led_off, sensor_gain );
 }
 
 /**
@@ -603,9 +603,9 @@ DllAccess es_status_codes DLLInitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT1
 /**
  * \copydoc InitCamera3030
  */
-DllAccess es_status_codes DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 adc_gain, BOOL useDac, UINT32* dac_output, BOOL isIR )
+DllAccess es_status_codes DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 adc_gain, UINT8 useDac, UINT32* dac_output, BOOL isIr )
 {
-	return InitCamera3030( drvno, adc_mode, custom_pattern, adc_gain, useDac, dac_output, isIR);
+	return InitCamera3030( drvno, adc_mode, custom_pattern, adc_gain, useDac, dac_output, isIr);
 }
 
 /**
@@ -676,9 +676,9 @@ DllAccess es_status_codes DLLSetSTI( UINT32 drvno, UINT8 sti_mode )
 /**
 \copydoc ClearAllUserRegs
 */
-DllAccess es_status_codes DLLClearAllUserRegs( UINT32 drv )
+DllAccess es_status_codes DLLClearAllUserRegs( UINT32 drvno)
 {
-	return ClearAllUserRegs( drv );
+	return ClearAllUserRegs(drvno);
 }
 
 /**
@@ -706,7 +706,7 @@ DllAccess es_status_codes DLLSetBSlope( UINT32 drvno, UINT32 slope )
 }
 
 /**
- * \copydoc LedOn
+ * \copydoc SetGain
  */
 DllAccess es_status_codes DLLSetGain( UINT32 drvno, UINT16 gain_value )
 {
@@ -714,7 +714,7 @@ DllAccess es_status_codes DLLSetGain( UINT32 drvno, UINT16 gain_value )
 }
 
 /**
- * \copydoc LedOn
+ * \copydoc LedOff
  */
 DllAccess es_status_codes DLLLedOff( UINT32 drvno, UINT8 LED_OFF )
 {
@@ -747,7 +747,7 @@ DllAccess CStr DLLConvertErrorCodeToMsg(es_status_codes status)
 #endif
 
 /**
- * \copydoc SetupPCIE_DMA
+ * \copydoc SetupDma
  */
 DllAccess es_status_codes DLLSetupPCIE_DMA(UINT32 drvno)
 {
@@ -755,7 +755,7 @@ DllAccess es_status_codes DLLSetupPCIE_DMA(UINT32 drvno)
 }
 
 /**
- * \copydoc SetTLPS
+ * \copydoc SetDmaRegister
  */
 DllAccess es_status_codes DLLSetTLPS(UINT32 drvno, UINT32 pixel)
 {
@@ -773,9 +773,9 @@ DllAccess es_status_codes DLLSetSDAT(UINT32 drvno, UINT32 datin10ns)
 /**
  * \copydoc SetBDAT
  */
-DllAccess es_status_codes DLLSetBDAT(UINT32 drvno, UINT32 tin10ns)
+DllAccess es_status_codes DLLSetBDAT(UINT32 drvno, UINT32 datin10ns)
 {
-	return SetBDAT(drvno, tin10ns);
+	return SetBDAT(drvno, datin10ns);
 }
 
 /**

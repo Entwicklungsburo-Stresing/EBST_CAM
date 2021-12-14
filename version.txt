@@ -1,6 +1,7 @@
 v3.21.0
 - Increase PCIe board version to P202_21
 - There is an additional scan counter at the last pixel now. This is used in PollDmaBufferToUserBuffer.
+- Measured: Software polling is possible up to 33 kHz. Measured with 3030, 1088 pixel
 
 v3.20.6
 - Improve software polling

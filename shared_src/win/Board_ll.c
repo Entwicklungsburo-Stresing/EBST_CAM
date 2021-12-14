@@ -188,12 +188,12 @@ es_status_codes readRegister_16(uint32_t drvno, uint16_t* data, uint16_t address
 };
 
 /**
- * @brief Read byte (8 bit) from register in space0 of PCIe board, except r10-r1f.
+ * @brief Read byte (8 bit) from register of PCIe board, except r10-r1f.
  *
  * @param drvno board number (=1 if one PCI board)
  * @param data pointer to where data is stored
  * @param address offset of register from base address (count in bytes)
- * @return es_status_codes
+ * @return es_status_codes:
 	- es_no_error
 	- es_register_read_failed
  */
@@ -531,6 +531,16 @@ es_status_codes _InitBoard(uint32_t drvno)
 	return es_no_error ;
 }
 
+/**
+ *  \brief Windows specific function for intializing driver.
+ * 
+ * \return es_status_codes:
+ *		- es_setting_driver_name_failed
+ *		- es_debug_init_failed
+ *		- es_driver_init_failed
+ *		- es_device_not_found
+ *		- es_no_error
+ */
 es_status_codes _InitDriver()
 {
 	//depends on os, how big a buffer can be
@@ -922,6 +932,8 @@ long long ticksTimestamp()
  *
  * \param drvno PCIe board identifier
  * \param ExtTrigFlag =FALSE: this function is used to get the keyboard input
+ * \param SpaceKey
+ * \param AbrKey
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed

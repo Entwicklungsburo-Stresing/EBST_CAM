@@ -1,5 +1,4 @@
 /*
-/*
 This file is part of ESLSCDLL.
 
 ESLSCDLL_pro is not free software :
