@@ -98,10 +98,10 @@ DllAccess es_status_codes DLLOutTrigPulse(UINT32 drvno, UINT32 PulseWidth);	// p
 DllAccess es_status_codes DLLOpenShutter(UINT32 drvno);	// set IFC=high
 DllAccess es_status_codes DLLCloseShutter(UINT32 drvno);	// set IFC=low
 DllAccess es_status_codes DLLLedOff(UINT32 drvno, UINT8 LED_OFF);
-DllAccess es_status_codes DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 IS_FFT, UINT8 IS_AREA, UINT8 IS_COOLED, UINT16 led_off, UINT16 sensor_gain );
+DllAccess es_status_codes DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 is_fft, UINT8 is_area, UINT8 IS_COOLED, UINT16 led_off, UINT16 sensor_gain );
 DllAccess es_status_codes DLLInitCamera3001( UINT32 drvno );
 DllAccess es_status_codes DLLInitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern);
-DllAccess es_status_codes DLLInitCamera3030(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 adc_gain, UINT8 useDac, UINT32* dac_output, UINT8 isIR);
+DllAccess es_status_codes DLLInitCamera3030(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 adc_gain, UINT8 useDac, UINT32* dac_output, UINT8 isIr);
 DllAccess es_status_codes DLLSetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq );
 DllAccess es_status_codes DLLSetBTI( UINT32 drvno, UINT8 bti_mode );
 DllAccess es_status_codes DLLSetSTI( UINT32 drvno, UINT8 sti_mode );
@@ -114,15 +114,15 @@ DllAccess es_status_codes DLLClearAllUserRegs(UINT32 drvno);
 DllAccess es_status_codes DLLSetupPCIE_DMA(UINT32 drvno);
 DllAccess es_status_codes DLLSetTLPS(UINT32 drvno, UINT32 pixel);
 DllAccess es_status_codes DLLSetSDAT(UINT32 drvno, UINT32 datin10ns);
-DllAccess es_status_codes DLLSetBDAT(UINT32 drvno, UINT32 tin10ns);
+DllAccess es_status_codes DLLSetBDAT(UINT32 drvno, UINT32 datin10ns);
 DllAccess es_status_codes DLLSetTemp(UINT32 drvno, UINT8 level);
 DllAccess es_status_codes DLLSetSEC(UINT32 drvno, UINT64 ecin10ns);
 DllAccess es_status_codes DLLSetBEC(UINT32 drvno, UINT64 ecin10ns);
-DllAccess es_status_codes DLLSetTORReg(UINT32 drvno, UINT8 fkt);
+DllAccess es_status_codes DLLSetTORReg(UINT32 drvno, UINT8 tor);
 DllAccess es_status_codes DLLSetSensorType(UINT32 drvno, UINT8 set);
 DllAccess es_status_codes DLLSetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep);
 DllAccess es_status_codes DLLDAC_setOutput(UINT32 drvno, UINT8 channel, UINT16 output); //set output of DAC (PCB 2189-7)
-DllAccess es_status_codes DLLDAC_setAllOutputs(UINT32 drvno, UINT32* outputs, UINT8 isIr); //set output of DAC (PCB 2189-7)
+DllAccess es_status_codes DLLDAC_setAllOutputs(UINT32 drvno, UINT32* output, UINT8 isIR); //set output of DAC (PCB 2189-7)
 DllAccess es_status_codes DLLSetMeasurementParameters(UINT32 drvno, UINT32 nos, UINT32 nob);
 DllAccess es_status_codes DLLSetupVCLK(UINT32 drvno, UINT32 lines, UINT8 vfreq);//set the VCLK regs
 DllAccess es_status_codes DLLInitGPX(UINT32 drvno, UINT32 delay);
@@ -130,15 +130,15 @@ DllAccess es_status_codes DLLIOCtrl_setOutput(uint32_t drvno, uint32_t number, u
 DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t drvno, uint16_t* width_in_5ns, uint16_t* delay_in_5ns);
 DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns);
 //************ read and write functions
-DllAccess es_status_codes DLLReadByteS0(UINT32 drvno, UINT8 *data, UINT32 PortOff);// read byte from Port, PortOff = Regs of Board
-DllAccess es_status_codes DLLWriteByteS0(UINT32 drv, UINT8 DataByte, UINT32 PortOff); // writes DataByte to Port
-DllAccess es_status_codes DLLReadLongS0(UINT32 drvno, UINT32 * DWData, UINT32 PortOff);	// read long from Port, PortOff Regs of Board
-DllAccess es_status_codes DLLWriteLongS0(UINT32 drvno, UINT32 DWData, UINT32 PortOff); // writes DataLong to Port
-DllAccess es_status_codes DLLReadLongDMA(UINT32 drvno, UINT32* DWData, UINT32 PortOff);	// read long from Port, PortOff Regs of Board
-DllAccess es_status_codes DLLWriteLongDMA(UINT32 drvno, UINT32 DWData, UINT32 PortOff); // writes DataLong to Port
-DllAccess es_status_codes DLLReadLongIOPort(UINT32 drvno, UINT32 * DWData, UINT32 PortOff); // writes DataByte to Port
-DllAccess es_status_codes DLLWriteLongIOPort(UINT32 drvno, UINT32 DataL, UINT32 PortOff); // writes DataByte to Port
-DllAccess es_status_codes DLLSetS0Bit(ULONG bitnumber, CHAR Address, UINT32 drvno);
-DllAccess es_status_codes DLLResetS0Bit(ULONG bitnumber, CHAR Address, UINT32 drvno);
+DllAccess es_status_codes DLLReadByteS0(UINT32 drvno, UINT8 *data, UINT32 address);
+DllAccess es_status_codes DLLWriteByteS0(UINT32 drvno, UINT8 data, UINT32 address);
+DllAccess es_status_codes DLLReadLongS0(UINT32 drvno, UINT32 * data, UINT32 address);
+DllAccess es_status_codes DLLWriteLongS0(UINT32 drvno, UINT32 data, UINT32 address);
+DllAccess es_status_codes DLLReadLongDMA(UINT32 drvno, UINT32* data, UINT32 address);
+DllAccess es_status_codes DLLWriteLongDMA(UINT32 drvno, UINT32 data, UINT32 address);
+DllAccess es_status_codes DLLReadLongIOPort(UINT32 drvno, UINT32 * data, UINT32 address);
+DllAccess es_status_codes DLLWriteLongIOPort(UINT32 drvno, UINT32 data, UINT32 address);
+DllAccess es_status_codes DLLSetS0Bit(ULONG bitnumber, CHAR address, UINT32 drvno);
+DllAccess es_status_codes DLLResetS0Bit(ULONG bitnumber, CHAR address, UINT32 drvno);
 DllAccess es_status_codes DLLSendFLCAM(UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data);
 DllAccess es_status_codes DLLSendFLCAM_DAC(UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature);
