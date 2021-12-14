@@ -1,3 +1,7 @@
+v3.21.0
+- Increase PCIe board version to P202_21
+- There is an additional scan counter at the last pixel now. This is used in PollDmaBufferToUserBuffer.
+
 v3.20.6
 - Improve software polling
 - Improve escam settings dialog
