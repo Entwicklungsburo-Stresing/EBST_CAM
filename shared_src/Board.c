@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include "../shared_src/UIAbstractionLayer.h"
 #include <math.h>
+#include <sys/types.h>
+#include <sys/timeb.h>
 #ifdef __linux__
 #include <unistd.h>
 #endif
@@ -3818,6 +3820,9 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	uint32_t* blockCounterHardwareMirror = 1;
 	uint32_t scanCounterHardware;
 	uint32_t blockCounterHardware;
+	bool measurementStopped = false;
+	struct timeb timebuffer_measurementStopped;
+	struct timeb timebuffer_now;
 	while (!allDataCopied)
 	{
 		//ES_TRACE("dmaBufferReadPosNextScan: %p ", dmaBufferReadPosNextScan);
@@ -3856,11 +3861,22 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 			ES_TRACE("Data to copy: %u\n", dataToCopyInBytes);
 			if (dataToCopyInBytes == 0) allDataCopied = true;
 		}
-		// Escape while loop when ESC was pressed
-		if (checkEscapeKeyState() || abortMeasurementFlag)
+		// Escape while loop after 100ms when Measurement stopped.
+		if (!isRunning && !measurementStopped)
 		{
-			ES_LOG("Aborted. Exit PollDmaBufferToUserBuffer\n");
-			break;
+			ES_LOG("Measurement aborted. Starting countdown for PollDmaBufferToUserBuffer\n");
+			measurementStopped = true;
+			ftime(&timebuffer_measurementStopped);
+		}
+		if (measurementStopped)
+		{
+			ftime(&timebuffer_now);
+			int64_t diff_in_ms = (int64_t)(1000.0 * (timebuffer_now.time - timebuffer_measurementStopped.time) + (timebuffer_now.millitm - timebuffer_measurementStopped.millitm));
+			if (diff_in_ms > 100)
+			{
+				ES_LOG("Aborted. Exit PollDmaBufferToUserBuffer\n");
+				break;
+			}
 		}
 	}
 	return;
