@@ -205,11 +205,7 @@ DllAccess es_status_codes DLLWriteLongIOPort( UINT32 drvno, UINT32 data, UINT32 
  */
 DllAccess es_status_codes DLLAbout( UINT32 drvno )
 {
-	es_status_codes status = About( drvno );
-	if (status != es_no_error) return status;
-	if (number_of_boards == 2)
-		status = About( 2 );
-	return status;
+	return About(drvno);
 }
 
 /**
