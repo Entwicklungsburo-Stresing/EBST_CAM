@@ -203,8 +203,9 @@ es_status_codes SetupDma( uint32_t drvno )
 	ES_LOG( "Setup DMA\n" );
 	//on linux: driver numbers are 0 and 1, on windows 1 and 2
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
-	dev->control->bytes_per_interrupt = DMA_DMASPERINTR * aPIXEL[drvno] * sizeof(uint16_t);
-	dev->control->used_dma_size = DMA_BUFFER_SIZE_IN_SCANS * aPIXEL[drvno] * sizeof(uint16_t);
+    uint32_t dmasPerInterrupt = settings_struct.dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
+    dev->control->bytes_per_interrupt = dmasPerInterrupt * aPIXEL[drvno] * sizeof(uint16_t);
+    dev->control->used_dma_size = settings_struct.dma_buffer_size_in_scans * aPIXEL[drvno] * sizeof(uint16_t);
 	if (dev->control->used_dma_size > dev->control->dma_buf_size)
 		dev->control->used_dma_size = dev->control->dma_buf_size;
 	ES_LOG("dmas per interrupt is %d\n", dev->s0->DMAS_PER_INTERRUPT);
@@ -216,7 +217,7 @@ es_status_codes SetupDma( uint32_t drvno )
 	return es_no_error;
 }
 
-uint64_t getDmaAddress( uint32_t drvno)
+uint64_t getPhysicalDmaAddress( uint32_t drvno)
 {
 	//on linux: driver numbers are 0 and 1, on windows 1 and 2
 	drvno--;
@@ -355,4 +356,22 @@ es_status_codes ResetPriority()
 {
     //TODO: implement me
     return es_no_error;
+}
+
+uint16_t* getVirtualDmaAddress(uint32_t drvno)
+{
+    struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
+    return (uint16_t*) dev->mapped_buffer;
+}
+
+uint32_t getDmaBufferSizeInBytes(uint32_t drvno)
+{
+    struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
+    return dev->control->used_dma_size;
+}
+
+uint64_t getCurrentInterruptCounter()
+{
+    //TODO: implement me
+    return 0;
 }

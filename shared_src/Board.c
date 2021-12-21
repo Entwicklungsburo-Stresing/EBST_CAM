@@ -3927,7 +3927,7 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	// Set dmaBufferReadPos pointer to base address of DMA buffer. dmaBufferReadPos indicates the current read position in the DMA buffer.
 	uint16_t* dmaBufferReadPos = dmaBuffer;
 	// Calculate pointer to the end of the DMA buffer.
-	uint16_t* dmaBufferEnd = dmaBufferReadPos + getDmaBufferSizeInBytes() / sizeof(uint16_t);
+    uint16_t* dmaBufferEnd = dmaBufferReadPos + getDmaBufferSizeInBytes(drvno) / sizeof(uint16_t);
 	ES_TRACE("Dma buffer end: %p\n", dmaBufferEnd);
 	// Calculate the size of the complete measurement in bytes.
 	uint32_t dataToCopyInBytes = aPIXEL[drvno] * aCAMCNT[drvno] * (*Nospb) * (*Nob) * sizeof(uint16_t);
