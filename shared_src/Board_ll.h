@@ -51,7 +51,7 @@ es_status_codes InitMutex(uint32_t drvno);
 es_status_codes SetPriority(uint32_t threadp);
 es_status_codes ResetPriority();
 uint16_t* getVirtualDmaAddress(uint32_t drvno);
-uint32_t getDmaBufferSizeInBytes();
+uint32_t getDmaBufferSizeInBytes(uint32_t drvno);
 uint64_t getCurrentInterruptCounter();
 
 #ifdef WIN32
