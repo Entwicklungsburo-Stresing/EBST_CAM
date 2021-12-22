@@ -100,7 +100,7 @@ void MainWindow::setChartData(QLineSeries** series, uint16_t numberOfSets)
  */
 void MainWindow::setChartData(uint16_t* data, uint16_t length, uint16_t numberOfSets)
 {
-    QLineSeries** series = (QLineSeries**)calloc(numberOfSets, sizeof(QLineSeries*));
+    QLineSeries** series = static_cast<QLineSeries**>(calloc(numberOfSets, sizeof(QLineSeries*)));
     for(uint16_t set=0; set<numberOfSets; set++)
     {
         series[set] = new QLineSeries(this);
@@ -226,7 +226,7 @@ void MainWindow::startPressed()
 		QErrorMessage* d = new QErrorMessage(this);
 		d->setWindowTitle("Error");
 		d->setWindowModality(Qt::ApplicationModal);
-		d->showMessage(tr((char*)ConvertErrorCodeToMsg(status)));
+        d->showMessage(tr(ConvertErrorCodeToMsg(status)));
 		return;
 	}
     measurementThread.start();
@@ -399,21 +399,21 @@ void MainWindow::on_actionDAC_triggered()
  */
 void MainWindow::loadSettings()
 {
-    int nos = settings.value(settingNosPath,settingNosDefault).toUInt();
+    int nos = settings.value(settingNosPath,settingNosDefault).toInt();
     ui->horizontalSliderSample->setMaximum(nos);
     ui->spinBoxSample->setMaximum(nos);
-    int nob = settings.value(settingNobPath,settingNobPath).toUInt();
+    int nob = settings.value(settingNobPath,settingNobPath).toInt();
     ui->horizontalSliderBlock->setMaximum(nob);
     ui->spinBoxBlock->setMaximum(nob);
-    int tor = settings.value(settingTorPath,settingTorDefault).toUInt();
+    uint8_t tor = static_cast<uint8_t>(settings.value(settingTorPath,settingTorDefault).toUInt());
 	for(uint32_t drvno=1; drvno<=number_of_boards; drvno++)
 		lsc.setTorOut(drvno, tor);
-    int board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
+    int board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt();
     if(board_sel == 2)
         used_number_of_boards = 2;
     else
         used_number_of_boards = 1;
-    int theme = settings.value(settingThemePath,settingThemeDefault).toUInt();
+    int theme = settings.value(settingThemePath,settingThemeDefault).toInt();
     switch(theme)
     {
     default:
@@ -528,26 +528,26 @@ void MainWindow::loadCameraData()
     uint32_t showCamcnt = 0;
 	for (uint32_t drvno = 1; drvno <= number_of_boards; drvno++)
 	{
-		if((board_sel == 1 || board_sel == 3) && drvno == 1 || (board_sel == 2 || board_sel == 3) && drvno == 2)
+        if(((board_sel == 1 || board_sel == 3) && drvno == 1) || ((board_sel == 2 || board_sel == 3) && drvno == 2))
 			for (uint16_t cam = 0; cam < camcnt; cam++)
 			{
-				int currCam = cam + ((drvno - 1) * camcnt);
+                uint32_t currCam = cam + ((drvno - 1) * camcnt);
 				bool showCurrentCam = settings.value(settingShowCameraBaseDir + QString::number(currCam), settingShowCameraDefault).toBool();
 					if (showCurrentCam)
 						showCamcnt++;
 			}
 	}
-    uint16_t* data = (uint16_t*)malloc(pixel * showCamcnt * sizeof(uint16_t));
-    int block = ui->horizontalSliderBlock->value() - 1;
-    int sample = ui->horizontalSliderSample->value() - 1;
+    uint16_t* data = static_cast<uint16_t*>(malloc(pixel * showCamcnt * sizeof(uint16_t)));
+    uint32_t block = static_cast<uint32_t>(ui->horizontalSliderBlock->value() - 1);
+    uint32_t sample = static_cast<uint32_t>(ui->horizontalSliderSample->value() - 1);
 	// showedCam counts the number of cameras which are shown on the chart
     uint32_t showedCam = 0;
 	for (uint32_t drvno = 1; drvno <= number_of_boards; drvno++)
 	{
-		if ((board_sel == 1 || board_sel == 3) && drvno == 1 || (board_sel == 2 || board_sel == 3) && drvno == 2)
+        if (((board_sel == 1 || board_sel == 3) && drvno == 1) || ((board_sel == 2 || board_sel == 3) && drvno == 2))
 			for (uint16_t cam = 0; cam < camcnt; cam++)
 			{
-				int currCam = cam + ((drvno - 1) * camcnt);
+                uint32_t currCam = cam + ((drvno - 1) * camcnt);
 				bool showCurrentCam = settings.value(settingShowCameraBaseDir + QString::number(currCam), settingShowCameraDefault).toBool();
 				if (showCurrentCam)
 				{
@@ -556,10 +556,10 @@ void MainWindow::loadCameraData()
 				}
 			}
 	}
-    setChartData(data, pixel, showCamcnt);
+    setChartData(data, static_cast<uint16_t>(pixel), static_cast<uint16_t>(showCamcnt));
 	//send pxel 6 and 7 to the tdc window
 	//pixel 6low/7high of tdc1 and 8low/9high of tdc2 to tdc view
-	ds_tdc->updateTDC( *(uint32_t*)(data + 6), *(uint32_t*)(data + 8) );
+    ds_tdc->updateTDC( static_cast<uint32_t>(*(data + 6)), static_cast<uint32_t>(*(data + 8)) );
 
     free(data);
     return;
@@ -807,8 +807,8 @@ void MainWindow::on_actionGamma_triggered()
 
 void MainWindow::showCurrentScan()
 {
-	int64_t sample = 0;
-	int64_t block = 0;
+    int64_t sample = 0;
+    int64_t block = 0;
 	switch (settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt())
 	{
 	default:
@@ -819,7 +819,7 @@ void MainWindow::showCurrentScan()
 	case 1:
 		lsc.getCurrentScanNumber(2, &sample, &block);
 		break;
-	}
+    }
 	int radioState = 0;
 	if (ui->radioButtonLiveViewOff->isChecked()) radioState = 0;
 	else if (ui->radioButtonLiveViewFixedSample->isChecked()) radioState = 1;
@@ -827,9 +827,10 @@ void MainWindow::showCurrentScan()
 	switch (radioState)
 	{
 	case 2:
-		ui->horizontalSliderSample->setValue(sample + 1);
-	case 1:
-		ui->horizontalSliderBlock->setValue(block + 1);
+        ui->horizontalSliderSample->setValue(static_cast<int32_t>(sample + 1));
+    [[clang::fallthrough]];
+    case 1:
+        ui->horizontalSliderBlock->setValue(static_cast<int32_t>(block + 1));
 	}
 	return;
 }

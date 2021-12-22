@@ -83,7 +83,7 @@ es_status_codes writeRegister_32twoBoards(uint32_t data1, uint32_t data2, uint16
 	if (!dev) return es_register_write_failed;
 	lscpcie_write_reg32(dev, address, data2);
 	return es_no_error;
-};
+}
 
 es_status_codes writeRegister_16( uint32_t drvno, uint16_t data, uint16_t address )
 {
@@ -124,7 +124,7 @@ es_status_codes writeRegister_8twoBoards(uint8_t data1, uint8_t data2, uint16_t 
 	if (!dev) return es_register_write_failed;
 	lscpcie_write_reg8(dev, address, data2);
 	return es_no_error;
-};
+}
 
 /**
  * @brief Read long (32 bit) from runtime register of PCIe board.
@@ -193,8 +193,8 @@ es_status_codes checkDriverHandle(uint32_t drvno)
 void FreeMemInfo( uint64_t *pmemory_all, uint64_t *pmemory_free )
 {
 	//TODO implement me
-	*pmemory_all = -1;
-	*pmemory_free = -1;
+    *pmemory_all = (uint64_t) -1;
+    *pmemory_free = (uint64_t) -1;
 	return;
 }
 
@@ -227,6 +227,8 @@ uint64_t getPhysicalDmaAddress( uint32_t drvno)
 
 es_status_codes enableInterrupt( uint32_t drvno )
 {
+    // enbaleInterrupt is only used on Windows
+    (void)drvno;
 	return es_no_error;
 }
 
@@ -236,7 +238,7 @@ void ResetBufferWritePos(uint32_t drvno)
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
 	dev->control->write_pos = 0;
 	userBufferWritePos[drvno] = userBuffer[drvno];
-	ES_LOG("user_buffer_write_pos %p\n", userBufferWritePos[drvno]);
+    ES_LOG("user_buffer_write_pos %p\n", (void*)userBufferWritePos[drvno]);
 	dev->control->read_pos = 0;
 	dev->control->irq_count = 0;
 	return;
@@ -263,7 +265,7 @@ es_status_codes _InitDriver()
 {
 	int result = lscpcie_driver_init();
 	if(result < 0) return es_driver_init_failed;
-	number_of_boards = result;
+    number_of_boards = (uint8_t)result;
 	return es_no_error;
 }
 
@@ -280,7 +282,7 @@ void* CopyDataToUserBuffer(void* param_drvno)
     uint32_t* drvno_ptr = param_drvno;
     uint32_t drvno = *drvno_ptr;
     if(checkDriverHandle(drvno) != es_no_error) return NULL;
-    ES_LOG("Copy data to user buffer started, drvno %u, user buffer: %p\n", drvno, userBuffer[drvno]);
+    ES_LOG("Copy data to user buffer started, drvno %u, user buffer: %p\n", drvno, (void*)userBuffer[drvno]);
     pthread_mutex_lock(&mutex[drvno-1]);
     ssize_t bytes_to_read = sizeof(uint16_t) * aCAMCNT[drvno] * *Nospb * aPIXEL[drvno] * *Nob;
 	ES_LOG("bytes to read: %zd\n", bytes_to_read);
@@ -288,10 +290,10 @@ void* CopyDataToUserBuffer(void* param_drvno)
 	ssize_t result;
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
 	ES_LOG("bytes per interrupt: %u\n", dev->control->bytes_per_interrupt);
-    ES_LOG("bytes_to_read %u , bytes_read: %u\n", bytes_to_read, bytes_read);
+    ES_LOG("bytes_to_read %zd , bytes_read: %zd\n", bytes_to_read, bytes_read);
 	while (bytes_to_read && bytes_to_read >= dev->control->bytes_per_interrupt && !abortMeasurementFlag)
 	{
-        result = read(dev->handle, ((uint8_t *)userBuffer[drvno]) + bytes_read , bytes_to_read);
+        result = read(dev->handle, ((uint8_t *)userBuffer[drvno]) + bytes_read , (size_t)bytes_to_read);
         ES_LOG("Copy to user buffer intterupt %u done, result: %zd\n", dev->control->irq_count, result);
 		if (result < 0)
         {
@@ -300,9 +302,9 @@ void* CopyDataToUserBuffer(void* param_drvno)
         }
 		bytes_to_read -= result;
         bytes_read += result;
-        ES_TRACE("bytes_to_read %u , bytes_read: %u\n", bytes_to_read, bytes_read);
+        ES_TRACE("bytes_to_read %zd , bytes_read: %zd\n", bytes_to_read, bytes_read);
 		userBufferWritePos[drvno] = (uint16_t*)(((uint8_t *)userBufferWritePos[drvno]) + result);
-        ES_TRACE("userBufferWritePos %p\n", userBufferWritePos[drvno]);
+        ES_TRACE("userBufferWritePos %p\n", (void*)userBufferWritePos[drvno]);
 
 	}
     pthread_mutex_unlock(&mutex[drvno-1]);
@@ -349,6 +351,7 @@ uint16_t checkSpaceKeyState()
 es_status_codes SetPriority(uint32_t threadp)
 {
     //TODO: implement me
+    (void)threadp;
     return es_no_error;
 }
 
@@ -370,7 +373,7 @@ uint32_t getDmaBufferSizeInBytes(uint32_t drvno)
     return dev->control->used_dma_size;
 }
 
-uint64_t getCurrentInterruptCounter()
+int64_t getCurrentInterruptCounter()
 {
     //TODO: implement me
     return 0;

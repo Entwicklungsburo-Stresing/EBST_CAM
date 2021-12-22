@@ -23,6 +23,7 @@ bool abortMeasurementFlag = false;
 bool continiousMeasurementFlag = false;
 uint32_t continiousPauseInMicroseconds = 0;
 bool isRunning = false;
+int64_t scanCounterTotal = 0;
 struct global_settings settings_struct =
 {
 	.useSoftwarePolling				= settingsUseSoftwarePollingDefault,

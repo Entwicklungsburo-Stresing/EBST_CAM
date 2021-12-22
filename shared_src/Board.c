@@ -29,8 +29,6 @@
   (byte & 0x02 ? '1' : '0'), \
   (byte & 0x01 ? '1' : '0')
 
-int64_t scanCounterTotal = 0;
-
 /**
  * \brief Set global settings struct.
  * 
@@ -110,9 +108,9 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	BOARD_SEL = settings_struct.board_sel;
 	status = ClearAllUserRegs(drvno);
 	if (status != es_no_error) return status;
-	status = SetPixelCount(drvno, settings_struct.pixel);
+    status = SetPixelCount(drvno, (uint16_t)settings_struct.pixel);
 	if (status != es_no_error) return status;
-	status = SetCamCount(drvno, settings_struct.camcnt);
+    status = SetCamCount(drvno, (uint16_t)settings_struct.camcnt);
 	if (status != es_no_error) return status;
 	//set PDA and FFT
 	status = SetSensorType(drvno, (uint8_t)settings_struct.sensor_type);
@@ -185,7 +183,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	status = SetBDAT(drvno, settings_struct.bdat_in_10ns);
 	if (status != es_no_error) return status;
 	//init Camera
-	status = InitCameraGeneral(drvno, settings_struct.pixel, settings_struct.trigger_mode_cc, settings_struct.sensor_type, 0, 0, settings_struct.led_off, settings_struct.sensor_gain);
+    status = InitCameraGeneral(drvno, (uint16_t)settings_struct.pixel, (uint16_t)settings_struct.trigger_mode_cc, (uint8_t)settings_struct.sensor_type, 0, 0, (uint16_t)settings_struct.led_off, (uint16_t)settings_struct.sensor_gain);
 	if (status != es_no_error) return status;
 	switch (settings_struct.camera_system)
 	{
@@ -193,10 +191,10 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 		InitCamera3001(drvno);
 		break;
 	case camera_system_3010:
-		InitCamera3010(drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern);
+        InitCamera3010(drvno, (uint8_t)settings_struct.ADC_Mode, (uint16_t)settings_struct.ADC_custom_pattern);
 		break;
 	case camera_system_3030:
-		InitCamera3030(drvno, settings_struct.ADC_Mode, settings_struct.ADC_custom_pattern, settings_struct.adc_gain, settings_struct.dac, settings_struct.dac_output[drvno-1], settings_struct.isIr);
+        InitCamera3030(drvno, (uint8_t)settings_struct.ADC_Mode, (uint16_t)settings_struct.ADC_custom_pattern, (uint8_t)settings_struct.adc_gain, settings_struct.dac, settings_struct.dac_output[drvno-1], settings_struct.isIr);
 		break;
 	default:
 		return es_parameter_out_of_range;
@@ -227,11 +225,11 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetHardwareTimerStopMode(drvno, true);
 	if (status != es_no_error) return status;
-	status = IOCtrl_setImpactStartPixel(drvno, settings_struct.IOCtrl_impact_start_pixel);
+    status = IOCtrl_setImpactStartPixel(drvno, (uint16_t)settings_struct.IOCtrl_impact_start_pixel);
 	if (status != es_no_error) return status;
 	for (uint8_t i = 1; i <= 7; i++)
 	{
-		status = IOCtrl_setOutput(drvno, i, settings_struct.IOCtrl_output_width_in_5ns[i-1], settings_struct.IOCtrl_output_delay_in_5ns[i-1]);
+        status = IOCtrl_setOutput(drvno, i, (uint16_t)settings_struct.IOCtrl_output_width_in_5ns[i-1], (uint16_t)settings_struct.IOCtrl_output_delay_in_5ns[i-1]);
 		if (status != es_no_error) return status;
 	}
 	status = IOCtrl_setT0(drvno, settings_struct.IOCtrl_T0_period_in_10ns);
@@ -404,7 +402,7 @@ es_status_codes SetCamCount(uint32_t drvno, uint16_t camcount)
 	ES_LOG("Set cam count: %u\n", camcount);
 	aCAMCNT[drvno] = camcount;
 	return writeBitsS0_32(drvno, camcount, 0xF, S0Addr_CAMCNT);
-};
+}
 
 /**
  * \brief Sets sensor type (Reg TOR:D25 -> manual).
@@ -509,7 +507,7 @@ es_status_codes setBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address
  */
 es_status_codes setBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address)
 {
-	uint32_t bitmask = 0x1 << bitnumber;
+    uint8_t bitmask = (uint8_t)(0x1 << bitnumber);
 	return writeBitsS0_8(drvno, 0xFF, bitmask, address);
 }
 
@@ -543,7 +541,7 @@ es_status_codes resetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t addre
  */
 es_status_codes resetBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address)
 {
-	uint32_t bitmask = 0x1 << bitnumber;
+    uint8_t bitmask = (uint8_t)(0x1 << bitnumber);
 	return writeBitsS0_8(drvno, 0x0, bitmask, address);
 }
 
@@ -660,7 +658,7 @@ es_status_codes OpenShutter( uint32_t drvno )
 {
 	ES_LOG("Open shutter\n");
 	return setBitS0_8(drvno, CTRLB_bitindex_SHON, S0Addr_CTRLB);
-};
+}
 
 /**
  * \brief For FFTs: Setup full binning.
@@ -713,7 +711,7 @@ es_status_codes SetupVCLKReg( uint32_t drvno, uint32_t lines, uint8_t vfreq )
 es_status_codes SetupVPB(uint32_t drvno, uint32_t range, uint32_t lines, bool keep)
 {
 	ES_LOG("SetupVPB, range: 0x%x, lines: 0x%x, keep: %x\n", range, lines, keep);
-	uint32_t adr = 0;
+    uint16_t adr = 0;
 	lines *= 2; //vclks=lines*2
 	switch (range)
 	{
@@ -874,15 +872,15 @@ es_status_codes allocateUserMemory( uint32_t drvno )
 	uint64_t memory_all = 0;
 	uint64_t memory_free = 0;
 	FreeMemInfo( &memory_all, &memory_free );
-	int64_t memory_free_mb = memory_free / (1024 * 1024);
-	int64_t needed_mem = (int64_t)aCAMCNT[drvno] * (int64_t)(*Nob) * (int64_t)(*Nospb) * (int64_t)aPIXEL[drvno] * (int64_t)sizeof( uint16_t );
-	int64_t needed_mem_mb = needed_mem / (1024 * 1024);
+    uint64_t memory_free_mb = memory_free / (1024 * 1024);
+    uint64_t needed_mem = (uint64_t)aCAMCNT[drvno] * (uint64_t)(*Nob) * (uint64_t)(*Nospb) * (uint64_t)aPIXEL[drvno] * (uint64_t)sizeof( uint16_t );
+    uint64_t needed_mem_mb = needed_mem / (1024 * 1024);
 	ES_LOG( "Allocate user memory, available memory:%ld MB, memory needed: %ld MB (%ld)\n", memory_free_mb, needed_mem_mb, needed_mem );
 	//check if enough space is available in the physical ram
-	if (memory_free > (uint64_t)needed_mem)
+    if (memory_free > (uint64_t)needed_mem)
 	{
 		uint16_t* userBufferTemp = (uint16_t*) calloc( needed_mem, 1 );
-		ES_LOG( "user buffer space: %p - %p\n", userBufferTemp, userBufferTemp + needed_mem );
+        ES_LOG( "user buffer space: %p - %p\n", (void*)userBufferTemp, (void*)(userBufferTemp + needed_mem) );
 		if (userBufferTemp)
 		{
 			userBuffer[drvno] = userBufferTemp;
@@ -968,7 +966,7 @@ es_status_codes SetSEC( uint32_t drvno, uint32_t ecin10ns )
 		status = writeRegisterS0_32(drvno, ecin10ns, S0Addr_SEC);
 	}
 	return status;
-};
+}
 
 /**
  * \brief Set signal of output port of PCIe card.
@@ -1003,7 +1001,7 @@ es_status_codes SetTORReg( uint32_t drvno, uint8_t tor )
 	es_status_codes status = readRegisterS0_8( drvno, &read_val, S0Addr_TOR_MSB);
 	if (status != es_no_error) return status;
 	read_val &= 0x0f; //dont disturb lower bits
-	tor = tor << 4;
+    tor = (uint8_t)(tor << 4);
 	tor |= read_val;
 	return writeRegisterS0_8( drvno, tor, S0Addr_TOR_MSB);
 }
@@ -1050,7 +1048,7 @@ es_status_codes SetSSlope(uint32_t drvno, uint32_t sslope)
 		return es_parameter_out_of_range;
 	}
 	return status;
-};
+}
 
 /**
  * \brief Sets slope for block trigger.
@@ -1111,7 +1109,7 @@ es_status_codes SetSTI( uint32_t drvno, uint8_t sti_mode )
 es_status_codes SetBTI( uint32_t drvno, uint8_t bti_mode )
 {
 	ES_LOG("Set BTI: %u\n", bti_mode);
-	return writeBitsS0_8( drvno, bti_mode << CTRLB_bitindex_BTI0, CTRLB_bit_BTI0 | CTRLB_bit_BTI1 | CTRLB_bit_BTI2, S0Addr_CTRLB );
+    return writeBitsS0_8( drvno, (uint8_t)(bti_mode << CTRLB_bitindex_BTI0), CTRLB_bit_BTI0 | CTRLB_bit_BTI1 | CTRLB_bit_BTI2, S0Addr_CTRLB );
 }
 
 /**
@@ -1203,9 +1201,9 @@ es_status_codes InitGPX( uint32_t drvno, uint32_t delay )
 	if (status != es_no_error) return status;
 	for (int write_reg = 0; write_reg < 12; write_reg++)
 	{
-		status = SetGPXCtrl( drvno, RegData[write_reg][0], RegData[write_reg][1] );//write
+        status = SetGPXCtrl( drvno, (uint8_t)RegData[write_reg][0], RegData[write_reg][1] );//write
 		if (status != es_no_error) return status;
-		status = ReadGPXCtrl( drvno, RegData[write_reg][0], &regData );//read
+        status = ReadGPXCtrl( drvno, (uint8_t)RegData[write_reg][0], &regData );//read
 		if (RegData[write_reg][1] != regData) err_cnt++;//compare write data with readdata
 	}
 	return status;
@@ -1230,7 +1228,7 @@ es_status_codes SetGPXCtrl( uint32_t drvno, uint8_t GPXAddress, uint32_t GPXData
 	es_status_codes status = readRegisterS0_32(drvno, &regData, S0Addr_TDCCtrl);
 	if (status != es_no_error) return status;
 	//shift gpx addr to the right place for the gpx ctrl reg
-	tempData = GPXAddress << 28;
+    tempData = (uint32_t)(GPXAddress << 28);
 	//set CSexpand bit: reset CS Bit
 	tempData &= 0xF0000000;
 	//hold the other bits of the ctrl gpx reg
@@ -1262,7 +1260,7 @@ es_status_codes ReadGPXCtrl( uint32_t drvno, uint8_t GPXAddress, uint32_t* GPXDa
 	es_status_codes status = readRegisterS0_32( drvno, &regData, S0Addr_TDCCtrl );
 	if (status != es_no_error) return status;
 	//shift gpx addr to the right place for the gpx ctrl reg
-	tempData = GPXAddress << 28;
+    tempData = (uint32_t)GPXAddress << 28;
 	//set CSexpand bit set CS Bit
 	tempData |= 0x08000000;
 	//hold the other bits of the ctrl gpx reg
@@ -1293,7 +1291,7 @@ es_status_codes SetSDAT( uint32_t drvno, uint32_t datin10ns )
 		return writeRegisterS0_32(drvno, datin10ns, S0Addr_SDAT);
 	}
 	else return writeRegisterS0_32(drvno, 0, S0Addr_SDAT);
-};
+}
 
 /**
  * \brief Sets delay after trigger hardware register.
@@ -1313,7 +1311,7 @@ es_status_codes SetBDAT( uint32_t drvno, uint32_t datin10ns )
 		return writeRegisterS0_32(drvno, datin10ns, S0Addr_BDAT);
 	}
 	else return writeRegisterS0_32(drvno, 0, S0Addr_BDAT);
-};
+}
 
 /**
  * \brief General init routine for all Camera Systems.
@@ -1538,7 +1536,7 @@ es_status_codes InitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custo
 		status = Cam3030_ADC_RampOrPattern( drvno, adc_mode, custom_pattern );
 	if (status != es_no_error) return status;
 	//DAC
-	int dac_channel_count = 8;
+    uint8_t dac_channel_count = 8;
 	if (useDac)
 	{
 		status = SendFLCAM_DAC(drvno, dac_channel_count, 0, 0, 1);
@@ -1641,21 +1639,21 @@ es_status_codes SetADGain( uint32_t drvno, uint8_t fkt, uint8_t g1, uint8_t g2, 
 		h = g8;
 	}
 	data = a;
-	data = data << 4;
+    data = (uint16_t)(data << 4);
 	data |= e;
-	data = data << 4;
+    data = (uint16_t)(data << 4);
 	data |= b;
-	data = data << 4;
+    data = (uint16_t)(data << 4);
 	data |= f;
 	es_status_codes status = SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_gain_1_to_4, data );	//gain1..4
 	if (status != es_no_error) return status;
 	data = h;
-	data = data << 4;
+    data = (uint16_t)(data << 4);
 	data |= d;
-	data = data << 4;
+    data = (uint16_t)(data << 4);
 	data |= g;
-	data = data << 4;
-	data |= c;
+    data = (uint16_t)(data << 4);
+    data |= c;
 	return SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_gain_5_to_8, data );	//gain7..8
 }
 
@@ -1684,12 +1682,12 @@ es_status_codes Cam3030_ADC_RampOrPattern( uint32_t drvno, uint8_t adc_mode, uin
 		//at addr 0x25 (mode and higher bits): 0b00000000000100dd
 		status = SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_custompattern | ((custom_pattern >> 12) & 0x3) );
 		//at addr 0x26 (lower bits): 0bdddddddddddd0000
-		status = SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_custompattern, custom_pattern << 4 );
+        status = SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_custompattern, (uint16_t)(custom_pattern << 4) );
 		break;
 	default:
 		break;
 	}
-	return status;
+    return status;
 }
 
 /**
@@ -1784,7 +1782,7 @@ es_status_codes DAC_setAllOutputs(uint32_t drvno, uint32_t* output, bool isIR)
 	}
 	for (uint8_t channel = 0; channel < 8; channel++)
 	{
-		status = DAC_setOutput(drvno, channel, output[reorder_ch[channel]]);
+        status = DAC_setOutput(drvno, channel, (uint16_t)output[reorder_ch[channel]]);
 		if (status != es_no_error) return status;
 	}
 	return status;
@@ -1831,7 +1829,7 @@ es_status_codes SetBEC( uint32_t drvno, uint32_t ecin10ns )
 	else
 		status = writeRegisterS0_32(drvno, 0, S0Addr_BEC);
 	return status;
-};
+}
 
 /**
  * \brief Set XCK delay.
@@ -1878,7 +1876,7 @@ es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
 	es_status_codes status = readConfig_32(drvno, &data, PCIeAddr_devCap);
 	if (status != es_no_error) return status;
 	int tlpmode = data & 0x7;//0xE0 ;
-	if (_FORCETLPS128) tlpmode = 0;
+	if (FORCETLPS128) tlpmode = 0;
 	//delete the old values
 	data &= 0xFFFFFF1F;
 	//set maxreadrequestsize
@@ -1920,7 +1918,7 @@ es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
 	uint64_t dma_physical_address = getPhysicalDmaAddress(drvno);
 	// WDMATLPA (Reg name): write the lower part (bit 02:31) of the DMA adress to the DMA controller
 	ES_LOG("Set WDMATLPA to physical address of dma buffer 0x%016lx\n", dma_physical_address);
-	status = writeBitsDma_32(drvno, dma_physical_address, 0xFFFFFFFC, DmaAddr_WDMATLPA);
+    status = writeBitsDma_32(drvno, (uint32_t)dma_physical_address, 0xFFFFFFFC, DmaAddr_WDMATLPA);
 	if (status != es_no_error) return status;
 	//WDMATLPS: write the upper part (bit 32:39) of the address
 	data = ((dma_physical_address >> 8) & 0xFF000000) | tlp_size;
@@ -2821,7 +2819,7 @@ es_status_codes CalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSamp
 	for (uint32_t scan = 0; scan < samples; scan++)
 	{
 		uint64_t TRMSpix_of_current_scan = 0;
-		es_status_codes status = GetIndexOfPixel(drvno, TRMS_pixel, scan + firstSample, 0, CAMpos, &TRMSpix_of_current_scan);
+        es_status_codes status = GetIndexOfPixel(drvno, (uint16_t)TRMS_pixel, scan + firstSample, 0, CAMpos, &TRMSpix_of_current_scan);
 		if (status != es_no_error) return status;
 		TRMS_pixels[scan] = userBuffer[drvno][TRMSpix_of_current_scan];
 	}
@@ -2967,7 +2965,7 @@ es_status_codes LedOff(uint32_t drvno, uint8_t LED_OFF)
 es_status_codes OutTrigLow(uint32_t drvno)
 {
 	return resetBitS0_32(drvno, CTRLA_bitindex_TRIG_OUT, S0Addr_CTRLA);
-};
+}
 
 /**
  * \brief Set trigger out(Reg CtrlA:D3) of PCIe board. Can be used to control timing issues in software.
@@ -3002,6 +3000,9 @@ es_status_codes OutTrigPulse(uint32_t drvno, uint32_t PulseWidth)
 	if (status != es_no_error) return status;
 #ifdef WIN32
     Sleep(PulseWidth);
+#endif
+#ifdef __linux__
+    usleep(PulseWidth * 1000);
 #endif
 	return OutTrigLow(drvno);
 }
@@ -3179,20 +3180,20 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 	uint32_t data = 0;
 	//allocate string buffer buffer
 	*stringPtr = (char*) calloc(number_of_registers * bufferLength, sizeof(char));
-	unsigned int len = 0; 
+    int len = 0;
 	es_status_codes status = es_no_error;
-	for (int i = 0; i <= number_of_registers - 1; i++)
+    for (uint16_t i = 0; i <= number_of_registers - 1; i++)
 	{
 		//read register
 		status = readRegisterS0_32(drvno, &data, i * 4);
 		if (status != es_no_error)
 		{
 			//write error to buffer
-			len += sprintf(*stringPtr + len, "\nerror while reading register 0x%x %s", i*4, register_names[i]);
+            len += sprintf(*stringPtr + len, "\nerror while reading register 0x%x %s", i*4, register_names[i]);
 			return status;
 		}
 		//write register name and value to buffer
-		len += sprintf(*stringPtr + len, "0x%x  \t%s\t0x%x\n", i*4, register_names[i], data);
+        len += sprintf(*stringPtr + len, "0x%x  \t%s\t0x%x\n", i*4, register_names[i], data);
 	}
 	return status;
 }
@@ -3228,19 +3229,19 @@ es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr)
 	uint32_t data = 0;
 	//allocate string buffer buffer
 	*stringPtr = (char*)calloc(number_of_registers * bufferLength, sizeof(char));
-	unsigned int len = 0;
+    int len = 0;
 	es_status_codes status = es_no_error;
-	for (int i = 0; i < number_of_registers; i++)
+    for (uint16_t i = 0; i < number_of_registers; i++)
 	{
 		es_status_codes status = readRegisterDma_32(drvno, &data, i * 4);
 		if (status != es_no_error)
 		{
 			//write error to buffer
-			len += sprintf(*stringPtr + len, "\nerror while reading register 0x%x %s", i*4, register_names[i]);
+            len += sprintf(*stringPtr + len, "\nerror while reading register 0x%x %s", i*4, register_names[i]);
 			return status;
 		}
 		//write register name and value to buffer
-		len += sprintf(*stringPtr + len, "0x%x  \t%s\t0x%x\n", i*4, register_names[i], data);
+        len += sprintf(*stringPtr + len, "0x%x  \t%s\t0x%x\n", i*4, register_names[i], data);
 	}
 	return status;
 }
@@ -3248,7 +3249,7 @@ es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr)
 es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 {
 	uint32_t data = 0;
-	unsigned int len = 0;
+    int len = 0;
 	//allocate string buffer buffer
 	*stringPtr = (char*)calloc(500, sizeof(char));
 	len += sprintf(*stringPtr + len, "PAY_LOAD values:\t"DLLTAB"0 = 128 bytes\n\t"DLLTAB DLLTAB"1 = 256 bytes\n\t"DLLTAB DLLTAB"2 = 512 bytes\n");
@@ -3326,10 +3327,9 @@ es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
 		number_of_registers = 0x30,
 		bufferSize = 100,
 	};
-	uint32_t len = 0;
+    int len = 0;
 
-	uint32_t regData, regNumber, tempData;
-	bool space, abbr, irf, empty;
+    uint32_t regData;
 	char LUTS0Reg[number_of_registers][bufferSize] = {
 		"Reg0",
 		"Reg1",
@@ -3348,20 +3348,19 @@ es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
 		"Reg14",
 		"Reg15"
 	};
-	for (int i = 0; i < 8; i++)
+    for (uint8_t i = 0; i < 8; i++)
 	{
 		status = ReadGPXCtrl(drvno, i, &regData);
 		if (status != es_no_error) return status;
-		len += sprintf(*stringPtr + len, "%s \t: 0x%I32x\n", LUTS0Reg[i], regData);
+        len += sprintf(*stringPtr + len, "%s \t: 0x%x\n", LUTS0Reg[i], regData);
 	}
-	for (int i = 11; i < 13; i++)
+    for (uint8_t i = 11; i < 13; i++)
 	{
 		status = ReadGPXCtrl(drvno, i, &regData);
 		if (status != es_no_error) return status;
-		len += sprintf(*stringPtr + len, "%s \t: 0x%I32x\n", LUTS0Reg[i], regData);
+        len += sprintf(*stringPtr + len, "%s \t: 0x%x\n", LUTS0Reg[i], regData);
 	}
-    abbr = false;
-    empty = false;
+    bool abbr = false;
 	int i = 0;
 	while (!abbr)
 	{
@@ -3369,30 +3368,29 @@ es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
         status = WaitTrigger(1, false, &space, &abbr);
 		if (status != es_no_error) return status;
 #endif
-        irf = false;
 		i = 0;
 		len = sprintf(*stringPtr + len, "read- regs   \n");
 		i += 1;
 		status = ReadGPXCtrl(drvno, 8, &regData); //lege addr 8 an bus !!!!
 		if (status != es_no_error) return status;
-		len += sprintf(*stringPtr + len, "%d \t: 0x%I32x\n", i, regData);
+        len += sprintf(*stringPtr + len, "%d \t: 0x%x\n", i, regData);
 		i += 1;
 		status = ReadGPXCtrl(drvno, 9, &regData); //lege addr 9 an bus !!!!
 		if (status != es_no_error) return status;
-		len += sprintf(*stringPtr + len, "%d \t: 0x%I32x\n", i, regData);
+        len += sprintf(*stringPtr + len, "%d \t: 0x%x\n", i, regData);
 	}
 	status = ReadGPXCtrl(drvno, 11, &regData);
 	if (status != es_no_error) return status;
-	len += sprintf(*stringPtr + len, "%s \t: 0x%I32x\n", " stop hits", regData);
+    len += sprintf(*stringPtr + len, "%s \t: 0x%x\n", " stop hits", regData);
 	status = ReadGPXCtrl(drvno, 12, &regData);
 	if (status != es_no_error) return status;
-	len += sprintf(*stringPtr + len, "%s \t: 0x%I32x\n", " flags", regData);
+    len += sprintf(*stringPtr + len, "%s \t: 0x%x\n", " flags", regData);
 	return ReadGPXCtrl(drvno, 8, &regData); //read access follows                 set addr 8 to bus !!!!
 }
 
 es_status_codes dumpSettings(char** stringPtr)
 {
-	unsigned int len = 0;
+    int len = 0;
 	//allocate string buffer buffer
 	*stringPtr = (char*)calloc(1000, sizeof(char));
 	len += sprintf(*stringPtr + len,
@@ -3507,9 +3505,8 @@ es_status_codes dumpSettings(char** stringPtr)
  */
 es_status_codes dumpPciRegisters(uint32_t drvno, char** stringPtr)
 {
-	int i = 0;
 	uint32_t data = 0;
-	uint32_t length = 0;
+    int length = 0;
 	es_status_codes status = es_no_error;
 	enum N
 	{
@@ -3567,7 +3564,7 @@ es_status_codes dumpPciRegisters(uint32_t drvno, char** stringPtr)
 	"device specific"
 	};
 	*stringPtr = (char*)calloc(number_of_registers * bufferSize, sizeof(char));
-	for (i = 0; i < number_of_registers; i++)
+    for (uint16_t i = 0; i < number_of_registers; i++)
 	{
 		status = readConfig_32(drvno, &data, i * 4);
 		if (status != es_no_error)
@@ -3599,15 +3596,15 @@ es_status_codes dumpPciRegisters(uint32_t drvno, char** stringPtr)
 es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
 {
 	*stringPtr = (char*)calloc(500, sizeof(char));
-	uint32_t len = 0;
+    int len = 0;
 	uint32_t data = 0;
 	// read ISA Id from S0Base+7
 	es_status_codes status = readRegisterS0_32(drvno, &data, S0Addr_CTRLA); // Board ID =5053
 	if (status != es_no_error) return status;
 	data = data >> 16;
-    len += sprintf(*stringPtr + len, " Board #%i    ID \t= 0x%I32x\n", drvno, data);
+    len += sprintf(*stringPtr + len, " Board #%i    ID \t= 0x%x\n", drvno, data);
 	data = 0x07FF;
-    len += sprintf(*stringPtr + len, "Board #%i     length \t= 0x%I32x\n", drvno, data);
+    len += sprintf(*stringPtr + len, "Board #%i     length \t= 0x%x\n", drvno, data);
     uint8_t udata1 = 0,
 		udata2 = 0,
 		udata3 = 0,
@@ -3628,10 +3625,10 @@ es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
 	{//if 9056 -> has space 0x40
 		status = readRegisterS0_32(drvno, &data, S0Addr_PCI);
 		if (status != es_no_error) return status;
-        len += sprintf(*stringPtr + len, "Board #%i   board version \t= 0x%I32x\n", drvno, data);
+        len += sprintf(*stringPtr + len, "Board #%i   board version \t= 0x%x\n", drvno, data);
 	}
 	return es_no_error;
-};
+}
 
 /**
  * \brief Sets BlockOn bit in PCIEFLAGS and notifies UI about it. Two board sync version
@@ -3882,7 +3879,7 @@ es_status_codes IOCtrl_setAllOutputs(uint32_t drvno, uint32_t* width_in_5ns, uin
 	es_status_codes status = es_no_error;
 	for (uint8_t i = 0; i <= 6; i++)
 	{
-		status = IOCtrl_setOutput(drvno, i + 1, width_in_5ns[i], delay_in_5ns[i]);
+        status = IOCtrl_setOutput(drvno, i + 1, (uint16_t)width_in_5ns[i], (uint16_t)delay_in_5ns[i]);
 		if (status != es_no_error) return status;
 	}
 	return status;
@@ -3923,12 +3920,12 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	ES_LOG("Poll dma buffer to user buffer started. drvno: %u\n", drvno);
 	// Get the pointer to DMA buffer.
 	uint16_t* dmaBuffer = getVirtualDmaAddress(drvno);
-	ES_TRACE("Dma buffer address: %p\n", dmaBuffer);
+    ES_TRACE("Dma buffer address: %p\n", (void*)dmaBuffer);
 	// Set dmaBufferReadPos pointer to base address of DMA buffer. dmaBufferReadPos indicates the current read position in the DMA buffer.
 	uint16_t* dmaBufferReadPos = dmaBuffer;
 	// Calculate pointer to the end of the DMA buffer.
     uint16_t* dmaBufferEnd = dmaBufferReadPos + getDmaBufferSizeInBytes(drvno) / sizeof(uint16_t);
-	ES_TRACE("Dma buffer end: %p\n", dmaBufferEnd);
+    ES_TRACE("Dma buffer end: %p\n", (void*)dmaBufferEnd);
 	// Calculate the size of the complete measurement in bytes.
 	uint32_t dataToCopyInBytes = aPIXEL[drvno] * aCAMCNT[drvno] * (*Nospb) * (*Nob) * sizeof(uint16_t);
 	ES_TRACE("Data to copy in bytes: %u\n", dataToCopyInBytes);
@@ -3937,11 +3934,11 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	ES_TRACE("Size of one scan in bytes: %u\n", sizeOfOneScanInBytes);
 	// Set userBufferWritePos_polling to the base address of userBuffer_polling. userBufferWritePos_polling indicates the current write position in the user buffer.
 	uint16_t* userBufferWritePos_polling = userBuffer[drvno];
-	ES_TRACE("Address of user buffer: %p\n", userBuffer[drvno]);
+    ES_TRACE("Address of user buffer: %p\n", (void*)userBuffer[drvno]);
 	bool allDataCopied = false;
 	scanCounterTotal = 0;
-	uint32_t* scanCounterHardwareMirror = 1;
-	uint32_t* blockCounterHardwareMirror = 1;
+    uint32_t scanCounterHardwareMirror = 1;
+    uint32_t blockCounterHardwareMirror = 1;
 	uint32_t scanCounterHardware;
 	uint32_t blockCounterHardware;
 	bool measurementStopped = false;
@@ -3951,15 +3948,15 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	{
 		//ES_TRACE("dmaBufferReadPosNextScan: %p ", dmaBufferReadPosNextScan);
 		// scan counter pixel are 4 and 5 and since P202_21 at the last pixel
-		scanCounterHardware = dmaBufferReadPos[4] << 16 | *(dmaBufferReadPos + aPIXEL[drvno] - 1);
+        scanCounterHardware = (uint32_t)(dmaBufferReadPos[4] << 16) | *(dmaBufferReadPos + aPIXEL[drvno] - 1);
 		// block counter pixel are 2 and 3
-		blockCounterHardware = dmaBufferReadPos[2] << 16 | dmaBufferReadPos[3];
+        blockCounterHardware = (uint32_t)(dmaBufferReadPos[2] << 16) | dmaBufferReadPos[3];
 		//ES_TRACE("scan: %u, scanmirror: %u, block: %u, blockmirror: %u\n", scanCounterHardware, scanCounterHardwareMirror, blockCounterHardware, blockCounterHardwareMirror);
 		// Check if scan and block counter in DMA buffer are equal to their mirrors
 		if (scanCounterHardwareMirror == scanCounterHardware && blockCounterHardwareMirror == blockCounterHardware)
 		{
-			ES_TRACE("DMA buffer read position: %p\n", dmaBufferReadPos);
-			ES_TRACE("User buffer write position: %p\n", userBufferWritePos_polling);
+            ES_TRACE("DMA buffer read position: %p\n", (void*)dmaBufferReadPos);
+            ES_TRACE("User buffer write position: %p\n", (void*)userBufferWritePos_polling);
 			// Copy the data.
 			memcpy(userBufferWritePos_polling, dmaBufferReadPos, sizeOfOneScanInBytes);
 			// Set the memory of the copied data to 0 in the dma buffer.
@@ -3972,15 +3969,15 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 			// get scan and block number for the next scan
 			int64_t scan, block;
 			GetScanNumber(drvno, 1, &scan, &block);
-			scanCounterHardwareMirror = scan + 1;
-			blockCounterHardwareMirror = block + 1;
-			ES_TRACE("Scan: %u\n", scanCounterTotal);
+            scanCounterHardwareMirror = (uint32_t)(scan + 1);
+            blockCounterHardwareMirror = (uint32_t)(block + 1);
+            ES_TRACE("Scan: %li\n", scanCounterTotal);
 			// check if dmaBufferReadPos exceeds dmaBuffer
 			if (dmaBufferReadPos >= dmaBufferEnd || dmaBufferReadPos < dmaBuffer)
 			{
 				// reset the read pointer to the base address of the dma buffer
 				dmaBufferReadPos = dmaBuffer;
-				ES_TRACE("Reset dmaBufferReadPos to: %p\n", dmaBuffer);
+                ES_TRACE("Reset dmaBufferReadPos to: %p\n", (void*)dmaBuffer);
 			}
 			ES_TRACE("Data to copy: %u\n", dataToCopyInBytes);
 			if (dataToCopyInBytes == 0) allDataCopied = true;
@@ -4029,15 +4026,15 @@ void GetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block)
  */
 void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* block)
 {
-	uint64_t scanCount = 0;
+    int64_t scanCount = 0;
 	uint32_t dmasPerInterrupt = settings_struct.dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
 	if (settings_struct.useSoftwarePolling)
 		scanCount = scanCounterTotal;
 	else
 		scanCount = getCurrentInterruptCounter() * dmasPerInterrupt;
-	ES_TRACE("scan counter %i, Nospb %u, camcnt %u\n", scanCount + offset, *Nospb, aCAMCNT[drvno]);
+    ES_TRACE("scan counter %lu, Nospb %u, camcnt %u\n", scanCount + offset, *Nospb, aCAMCNT[drvno]);
 	*block = (scanCount - 1 + offset) / (*Nospb * aCAMCNT[drvno]);
 	*sample = (scanCount - 1 + offset) / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno];
-	ES_TRACE("block %u, scan %i\n", *block, *sample);
+    ES_TRACE("block %li, scan %li\n", *block, *sample);
 	return;
 }

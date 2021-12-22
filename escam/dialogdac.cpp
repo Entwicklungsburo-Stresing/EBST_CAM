@@ -24,22 +24,22 @@ DialogDac::DialogDac(QWidget *parent)
 	output_old[1][6] = settings.value(settingSensorOffsetBoard2Channel7Path, settingSensorOffsetBoard2Channel7Default).toUInt();
 	output_old[1][7] = settings.value(settingSensorOffsetBoard2Channel8Path, settingSensorOffsetBoard2Channel8Default).toUInt();
 	// Write the old values to UI
-	ui->spinBoxChannel1->setValue(output_old[0][0]);
-	ui->spinBoxChannel2->setValue(output_old[0][1]);
-	ui->spinBoxChannel3->setValue(output_old[0][2]);
-	ui->spinBoxChannel4->setValue(output_old[0][3]);
-	ui->spinBoxChannel5->setValue(output_old[0][4]);
-	ui->spinBoxChannel6->setValue(output_old[0][5]);
-	ui->spinBoxChannel7->setValue(output_old[0][6]);
-	ui->spinBoxChannel8->setValue(output_old[0][7]);
-	ui->spinBoxBoard2Channel1->setValue(output_old[1][0]);
-	ui->spinBoxBoard2Channel2->setValue(output_old[1][1]);
-	ui->spinBoxBoard2Channel3->setValue(output_old[1][2]);
-	ui->spinBoxBoard2Channel4->setValue(output_old[1][3]);
-	ui->spinBoxBoard2Channel5->setValue(output_old[1][4]);
-	ui->spinBoxBoard2Channel6->setValue(output_old[1][5]);
-	ui->spinBoxBoard2Channel7->setValue(output_old[1][6]);
-	ui->spinBoxBoard2Channel8->setValue(output_old[1][7]);
+    ui->spinBoxChannel1->setValue(static_cast<int>(output_old[0][0]));
+    ui->spinBoxChannel2->setValue(static_cast<int>(output_old[0][1]));
+    ui->spinBoxChannel3->setValue(static_cast<int>(output_old[0][2]));
+    ui->spinBoxChannel4->setValue(static_cast<int>(output_old[0][3]));
+    ui->spinBoxChannel5->setValue(static_cast<int>(output_old[0][4]));
+    ui->spinBoxChannel6->setValue(static_cast<int>(output_old[0][5]));
+    ui->spinBoxChannel7->setValue(static_cast<int>(output_old[0][6]));
+    ui->spinBoxChannel8->setValue(static_cast<int>(output_old[0][7]));
+    ui->spinBoxBoard2Channel1->setValue(static_cast<int>(output_old[1][0]));
+    ui->spinBoxBoard2Channel2->setValue(static_cast<int>(output_old[1][1]));
+    ui->spinBoxBoard2Channel3->setValue(static_cast<int>(output_old[1][2]));
+    ui->spinBoxBoard2Channel4->setValue(static_cast<int>(output_old[1][3]));
+    ui->spinBoxBoard2Channel5->setValue(static_cast<int>(output_old[1][4]));
+    ui->spinBoxBoard2Channel6->setValue(static_cast<int>(output_old[1][5]));
+    ui->spinBoxBoard2Channel7->setValue(static_cast<int>(output_old[1][6]));
+    ui->spinBoxBoard2Channel8->setValue(static_cast<int>(output_old[1][7]));
 	// Connect all spin boxes (valueChanged) to the same slot
 	connect(ui->spinBoxChannel1, qOverload<int>(&QSpinBox::valueChanged), this, &DialogDac::spinBoxChannelX_valueChanged);
 	connect(ui->spinBoxChannel2, qOverload<int>(&QSpinBox::valueChanged), this, &DialogDac::spinBoxChannelX_valueChanged);
@@ -111,22 +111,26 @@ void DialogDac::spinBoxChannelX_valueChanged()
 {
 	uint32_t output[2][8] =
 	{
-		ui->spinBoxChannel1->value(),
-		ui->spinBoxChannel2->value(),
-		ui->spinBoxChannel3->value(),
-		ui->spinBoxChannel4->value(),
-		ui->spinBoxChannel5->value(),
-		ui->spinBoxChannel6->value(),
-		ui->spinBoxChannel7->value(),
-		ui->spinBoxChannel8->value(),
-		ui->spinBoxBoard2Channel1->value(),
-		ui->spinBoxBoard2Channel2->value(),
-		ui->spinBoxBoard2Channel3->value(),
-		ui->spinBoxBoard2Channel4->value(),
-		ui->spinBoxBoard2Channel5->value(),
-		ui->spinBoxBoard2Channel6->value(),
-		ui->spinBoxBoard2Channel7->value(),
-		ui->spinBoxBoard2Channel8->value()
+        {
+            static_cast<uint32_t>(ui->spinBoxChannel1->value()),
+            static_cast<uint32_t>(ui->spinBoxChannel2->value()),
+            static_cast<uint32_t>(ui->spinBoxChannel3->value()),
+            static_cast<uint32_t>(ui->spinBoxChannel4->value()),
+            static_cast<uint32_t>(ui->spinBoxChannel5->value()),
+            static_cast<uint32_t>(ui->spinBoxChannel6->value()),
+            static_cast<uint32_t>(ui->spinBoxChannel7->value()),
+            static_cast<uint32_t>(ui->spinBoxChannel8->value())
+        },
+        {
+            static_cast<uint32_t>(ui->spinBoxBoard2Channel1->value()),
+            static_cast<uint32_t>(ui->spinBoxBoard2Channel2->value()),
+            static_cast<uint32_t>(ui->spinBoxBoard2Channel3->value()),
+            static_cast<uint32_t>(ui->spinBoxBoard2Channel4->value()),
+            static_cast<uint32_t>(ui->spinBoxBoard2Channel5->value()),
+            static_cast<uint32_t>(ui->spinBoxBoard2Channel6->value()),
+            static_cast<uint32_t>(ui->spinBoxBoard2Channel7->value()),
+            static_cast<uint32_t>(ui->spinBoxBoard2Channel8->value())
+        }
 	};
 	bool isIr = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
 	for(uint32_t drvno=1; drvno<=number_of_boards; drvno++)

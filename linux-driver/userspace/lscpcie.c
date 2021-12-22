@@ -33,7 +33,7 @@
 	} while (0)
 
 #define HWDREQ_EN 1 // enables hardware start of DMA by XCK h->l slope
-#define _FORCETLPS128 1	//only use payload size 128byte
+#define FORCETLPS128 1	//only use payload size 128byte
 #define DMA_64BIT_EN 0
 
 static int error_reporting = 1;
@@ -550,7 +550,7 @@ int set_dma_address_in_tlp(struct dev_descr *dev)
 	uint64_t val64;
 	uint32_t data = 0, tlp_mode;
 
-	if (_FORCETLPS128)
+	if (FORCETLPS128)
 		tlp_mode = 0;
 	else {
 		if ((result =

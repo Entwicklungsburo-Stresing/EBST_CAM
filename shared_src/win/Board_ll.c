@@ -1119,7 +1119,7 @@ uint32_t getDmaBufferSizeInBytes(uint32_t drvno)
 	return dmaBufferSizeInBytes;
 }
 
-uint64_t getCurrentInterruptCounter()
+int64_t getCurrentInterruptCounter()
 {
 	return IsrCounter;
 }

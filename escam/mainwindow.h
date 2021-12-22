@@ -37,7 +37,7 @@ private:
 	DialogTDC* ds_tdc = new DialogTDC( this );
 	DialogDSC* ds_dsc = new DialogDSC( this );
 	DialogRMS* ds_rms = new DialogRMS( this );
-	int used_number_of_boards;
+    uint32_t used_number_of_boards;
     QThread measurementThread;
 	void copySettings(QSettings &dst, QSettings &src);
 	QTimer* displayTimer = new QTimer(this);
