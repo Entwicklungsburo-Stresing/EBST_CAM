@@ -72,60 +72,60 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	//Measurement
     ui->doubleSpinBoxNos->setValue(settings.value(settingNosPath, settingNosDefault).toDouble());
     ui->doubleSpinBoxNob->setValue(settings.value(settingNobPath, settingNobDefault).toDouble());
-    ui->comboBoxSti->setCurrentIndex(settings.value(settingStiPath, settingStiDefault).toUInt());
-    ui->comboBoxBti->setCurrentIndex(settings.value(settingBtiPath, settingBtiDefault).toUInt());
+    ui->comboBoxSti->setCurrentIndex(settings.value(settingStiPath, settingStiDefault).toInt());
+    ui->comboBoxBti->setCurrentIndex(settings.value(settingBtiPath, settingBtiDefault).toInt());
     ui->doubleSpinBoxSTime_in_ms->setValue(settings.value(settingStime_in_microseconds_Path, settingStime_in_microseconds_Default).toDouble() / 1000);
     ui->doubleSpinBoxBTimer_in_ms->setValue(settings.value(settingBtime_in_microseconds_Path, settingBtime_in_microseconds_Default).toDouble() / 1000);
     ui->doubleSpinBoxSdatIn10ns->setValue(settings.value(settingSdat_in_10nsPath, settingSdat_in_10nsDefault).toDouble());
     ui->doubleSpinBoxBdatIn10ns->setValue(settings.value(settingBdat_in_10nsPath, settingSdat_in_10nsDefault).toDouble());
-    ui->comboBoxSslope->setCurrentIndex(settings.value(settingSslopePath, settingSslopeDefault).toUInt());
-    ui->comboBoxBslope->setCurrentIndex(settings.value(settingBslopePath, settingBslopeDefault).toUInt());
+    ui->comboBoxSslope->setCurrentIndex(settings.value(settingSslopePath, settingSslopeDefault).toInt());
+    ui->comboBoxBslope->setCurrentIndex(settings.value(settingBslopePath, settingBslopeDefault).toInt());
     ui->doubleSpinBoxXckdelayIn10ns->setValue(settings.value(settingXckdelayIn10nsPath, settingXckdelayIn10nsDefault).toDouble());
     ui->doubleSpinBoxSecIn10ns->setValue(settings.value(settingShutterSecIn10nsPath, settingShutterSecIn10nsDefault).toDouble());
     ui->doubleSpinBoxBecIn10ns->setValue(settings.value(settingShutterBecIn10nsPath, settingShutterBecIn10nsDefault).toDouble());
-    ui->comboBoxTriggerModeCC->setCurrentIndex(settings.value(settingTriggerCcPath, settingTriggerCcDefault).toUInt());
+    ui->comboBoxTriggerModeCC->setCurrentIndex(settings.value(settingTriggerCcPath, settingTriggerCcDefault).toInt());
 	ui->doubleSpinBoxContiniousPause_in_ms->setValue(settings.value(settingContiniousPauseInMicrosecondsPath, settingContiniousPausInMicrosecondsDefault).toDouble() / 1000);
 	//Camera setup
-    ui->comboBoxBoardSel->setCurrentIndex(settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt());
-    ui->comboBoxSensorType->setCurrentIndex(settings.value(settingSensorTypePath, settingSensorTypeDefault).toUInt());
-    ui->comboBoxSensorType->currentIndexChanged(settings.value(settingSensorTypePath, settingSensorTypeDefault).toUInt());
-    ui->comboBoxCameraSystem->setCurrentIndex(settings.value(settingCameraSystemPath, settingCameraSystemDefault).toUInt());
-    ui->comboBoxCameraSystem->currentIndexChanged(settings.value(settingCameraSystemPath, settingCameraSystemDefault).toUInt());
+    ui->comboBoxBoardSel->setCurrentIndex(settings.value(settingBoardSelPath, settingBoardSelDefault).toInt());
+    ui->comboBoxSensorType->setCurrentIndex(settings.value(settingSensorTypePath, settingSensorTypeDefault).toInt());
+    ui->comboBoxSensorType->currentIndexChanged(settings.value(settingSensorTypePath, settingSensorTypeDefault).toInt());
+    ui->comboBoxCameraSystem->setCurrentIndex(settings.value(settingCameraSystemPath, settingCameraSystemDefault).toInt());
+    ui->comboBoxCameraSystem->currentIndexChanged(settings.value(settingCameraSystemPath, settingCameraSystemDefault).toInt());
     ui->spinBoxCamcnt->setValue(settings.value(settingCamcntPath, settingCamcntDefault).toInt());
-    ui->spinBoxPixel->setValue(settings.value(settingPixelPath, settingPixelDefault).toUInt());
+    ui->spinBoxPixel->setValue(settings.value(settingPixelPath, settingPixelDefault).toInt());
     ui->checkBoxMshut->setChecked(settings.value(settingMshutPath, settingMshutDefault).toBool());
     ui->checkBoxMshut->stateChanged(settings.value(settingMshutPath, settingMshutDefault).toBool());
     ui->checkBoxLed->setChecked(settings.value(settingLedPath, settingLedDefault).toBool());
-    ui->spinBoxSensorGain->setValue(settings.value(settingSensorGainPath, settingSensorGainDefault).toUInt());
-    ui->spinBoxAdcGain->setValue(settings.value(settingAdcGainPath, settingAdcGainDefault).toUInt());
-    ui->comboBoxCamCool->setCurrentIndex(settings.value(settingCoolingPath, settingCoolingDefault).toUInt());
+    ui->spinBoxSensorGain->setValue(settings.value(settingSensorGainPath, settingSensorGainDefault).toInt());
+    ui->spinBoxAdcGain->setValue(settings.value(settingAdcGainPath, settingAdcGainDefault).toInt());
+    ui->comboBoxCamCool->setCurrentIndex(settings.value(settingCoolingPath, settingCoolingDefault).toInt());
     ui->checkBoxUseDac->setChecked(settings.value(settingDacPath, settingDacDefault).toBool());
     ui->checkBoxUseDac->stateChanged(settings.value(settingDacPath, settingDacDefault).toBool());
     ui->checkBoxGpx->setChecked(settings.value(settingGpxPath, settingGpxDefault).toBool());
-    ui->spinBoxGpxOffset->setValue(settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toUInt());
+    ui->spinBoxGpxOffset->setValue(settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toInt());
 	ui->checkBoxIr->setChecked(settings.value(settingIsIrPath, settingIsIrDefault).toBool());
-	ui->spinBoxIOCtrlImpactStartPixel->setValue(settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toUInt());
+    ui->spinBoxIOCtrlImpactStartPixel->setValue(settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toInt());
 	ui->checkBoxUseSoftwarePolling->setChecked(settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool());
 	//FFT mode
-    ui->spinBoxLines->setValue(settings.value(settingLinesPath, settingLinesDefault).toUInt());
-    ui->spinBoxVfreq->setValue(settings.value(settingVfreqPath, settingVfreqDefault).toUInt());
-    ui->comboBoxFftMode->setCurrentIndex(settings.value(settingFftModePath, settingFftModeDefault).toUInt());
-    ui->spinBoxLinesBinning->setValue(settings.value(settingLinesBinningPath, settingLinesBinningDefault).toUInt());
-    ui->spinBoxNumberOfRegions->setValue(settings.value(settingNumberOfRegionsPath, settingNumberOfRegionsDefault).toUInt());
+    ui->spinBoxLines->setValue(settings.value(settingLinesPath, settingLinesDefault).toInt());
+    ui->spinBoxVfreq->setValue(settings.value(settingVfreqPath, settingVfreqDefault).toInt());
+    ui->comboBoxFftMode->setCurrentIndex(settings.value(settingFftModePath, settingFftModeDefault).toInt());
+    ui->spinBoxLinesBinning->setValue(settings.value(settingLinesBinningPath, settingLinesBinningDefault).toInt());
+    ui->spinBoxNumberOfRegions->setValue(settings.value(settingNumberOfRegionsPath, settingNumberOfRegionsDefault).toInt());
     ui->checkBoxRegionsEqual->setChecked(settings.value(settingRegionSizeEqualPath, settingRegionSizeEqualDefault).toBool());
-    ui->spinBoxRegion1->setValue(settings.value(settingRegionSize1Path, settingRegionSize1Default).toUInt());
-    ui->spinBoxRegion2->setValue(settings.value(settingRegionSize2Path, settingRegionSize2Default).toUInt());
-    ui->spinBoxRegion3->setValue(settings.value(settingRegionSize3Path, settingRegionSize3Default).toUInt());
-    ui->spinBoxRegion4->setValue(settings.value(settingRegionSize4Path, settingRegionSize4Default).toUInt());
-    ui->spinBoxRegion5->setValue(settings.value(settingRegionSize5Path, settingRegionSize5Default).toUInt());
-    ui->spinBoxRegion6->setValue(settings.value(settingRegionSize6Path, settingRegionSize6Default).toUInt());
-    ui->spinBoxRegion7->setValue(settings.value(settingRegionSize7Path, settingRegionSize7Default).toUInt());
-    ui->spinBoxRegion8->setValue(settings.value(settingRegionSize8Path, settingRegionSize8Default).toUInt());
-    ui->comboBoxOutput->setCurrentIndex(settings.value(settingTorPath, settingTorDefault).toUInt());
-    ui->comboBoxAdcMode->setCurrentIndex(settings.value(settingAdcModePath, settingAdcModeDefault).toUInt());
-    ui->spinBoxAdcCustom->setValue(settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toUInt());
-	ui->comboBoxTheme->setCurrentIndex(settings.value(settingThemePath, settingThemeDefault).toUInt());
-	ui->comboBoxSettingsLevel->setCurrentIndex(settings.value(settingSettingsLevelPath, settingSettingsLevelDefault).toUInt());
+    ui->spinBoxRegion1->setValue(settings.value(settingRegionSize1Path, settingRegionSize1Default).toInt());
+    ui->spinBoxRegion2->setValue(settings.value(settingRegionSize2Path, settingRegionSize2Default).toInt());
+    ui->spinBoxRegion3->setValue(settings.value(settingRegionSize3Path, settingRegionSize3Default).toInt());
+    ui->spinBoxRegion4->setValue(settings.value(settingRegionSize4Path, settingRegionSize4Default).toInt());
+    ui->spinBoxRegion5->setValue(settings.value(settingRegionSize5Path, settingRegionSize5Default).toInt());
+    ui->spinBoxRegion6->setValue(settings.value(settingRegionSize6Path, settingRegionSize6Default).toInt());
+    ui->spinBoxRegion7->setValue(settings.value(settingRegionSize7Path, settingRegionSize7Default).toInt());
+    ui->spinBoxRegion8->setValue(settings.value(settingRegionSize8Path, settingRegionSize8Default).toInt());
+    ui->comboBoxOutput->setCurrentIndex(settings.value(settingTorPath, settingTorDefault).toInt());
+    ui->comboBoxAdcMode->setCurrentIndex(settings.value(settingAdcModePath, settingAdcModeDefault).toInt());
+    ui->spinBoxAdcCustom->setValue(settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toInt());
+    ui->comboBoxTheme->setCurrentIndex(settings.value(settingThemePath, settingThemeDefault).toInt());
+    ui->comboBoxSettingsLevel->setCurrentIndex(settings.value(settingSettingsLevelPath, settingSettingsLevelDefault).toInt());
 	ui->comboBoxSettingsLevel->currentIndexChanged(ui->comboBoxSettingsLevel->currentIndex());
 
 	// hide board select, when there is only one board
@@ -238,28 +238,28 @@ void DialogSettings::on_comboBoxSti_currentIndexChanged(int index)
     switch(index)
     {
     case 4:
-		ui->doubleSpinBoxSTime_in_ms->setEnabled(true || enabled);
-		ui->doubleSpinBoxSTime_in_ms->setVisible(true || visible);
-		ui->labelSTimer->setVisible(true || visible);
+        ui->doubleSpinBoxSTime_in_ms->setEnabled(true);
+        ui->doubleSpinBoxSTime_in_ms->setVisible(true);
+        ui->labelSTimer->setVisible(true);
 		break;
     default:
-		ui->doubleSpinBoxSTime_in_ms->setEnabled(false || enabled);
-		ui->doubleSpinBoxSTime_in_ms->setVisible(false || visible);
-		ui->labelSTimer->setVisible(false || visible);
+        ui->doubleSpinBoxSTime_in_ms->setEnabled(enabled);
+        ui->doubleSpinBoxSTime_in_ms->setVisible(visible);
+        ui->labelSTimer->setVisible(visible);
 	}
 	switch (index)
 	{
 	case 0:
 	case 1:
 	case 2:
-		ui->comboBoxSslope->setEnabled(true || enabled);
-		ui->comboBoxSslope->setVisible(true || visible);
-		ui->labelSslope->setVisible(true || visible);
+        ui->comboBoxSslope->setEnabled(true);
+        ui->comboBoxSslope->setVisible(true);
+        ui->labelSslope->setVisible(true);
 		break;
 	default:
-		ui->comboBoxSslope->setEnabled(false || enabled);
-		ui->comboBoxSslope->setVisible(false || visible);
-		ui->labelSslope->setVisible(false || visible);
+        ui->comboBoxSslope->setEnabled(enabled);
+        ui->comboBoxSslope->setVisible(visible);
+        ui->labelSslope->setVisible(visible);
 	}
 }
 
@@ -288,20 +288,20 @@ void DialogSettings::on_comboBoxBti_currentIndexChanged(int index)
     switch(index)
     {
     case 4:
-		ui->doubleSpinBoxBTimer_in_ms->setEnabled(true || enabled);
-		ui->doubleSpinBoxBTimer_in_ms->setVisible(true || visible);
-		ui->labelBTimer->setVisible(true || visible);
-		ui->comboBoxBslope->setEnabled(false || enabled);
-		ui->comboBoxBslope->setVisible(false || visible);
-		ui->labelBslope->setVisible(false || visible);
+        ui->doubleSpinBoxBTimer_in_ms->setEnabled(true);
+        ui->doubleSpinBoxBTimer_in_ms->setVisible(true);
+        ui->labelBTimer->setVisible(true);
+        ui->comboBoxBslope->setEnabled(enabled);
+        ui->comboBoxBslope->setVisible(visible);
+        ui->labelBslope->setVisible(visible);
 		break;
     default:
-		ui->doubleSpinBoxBTimer_in_ms->setEnabled(false || enabled);
-		ui->doubleSpinBoxBTimer_in_ms->setVisible(false || visible);
-		ui->labelBTimer->setVisible(false || visible);
-		ui->comboBoxBslope->setEnabled(true || enabled);
-		ui->comboBoxBslope->setVisible(true || visible);
-		ui->labelBslope->setVisible(true || visible);
+        ui->doubleSpinBoxBTimer_in_ms->setEnabled(enabled);
+        ui->doubleSpinBoxBTimer_in_ms->setVisible(visible);
+        ui->labelBTimer->setVisible(visible);
+        ui->comboBoxBslope->setEnabled(true);
+        ui->comboBoxBslope->setVisible(true);
+        ui->labelBslope->setVisible(true);
 	}
 
 }
@@ -331,6 +331,8 @@ void DialogSettings::on_comboBoxSensorType_currentIndexChanged(int index)
 	ui->tabWidget->setTabEnabled(2, enabled);
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
     ui->tabWidget->setTabVisible(2, visible);
+#else
+    (void)visible;
 #endif
 }
 
@@ -385,40 +387,40 @@ void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
     switch(index)
     {
     case 0:
-		ui->spinBoxAdcGain->setEnabled(false || enabled);
-		ui->spinBoxAdcGain->setVisible(false || visible);
-		ui->checkBoxUseDac->setEnabled(false || enabled);
-		ui->checkBoxUseDac->setVisible(false || visible);
-		mainWindow->ui->actionDAC->setEnabled(false || enabled);
-		mainWindow->ui->actionDAC->setVisible(false || visible);
-		ui->comboBoxAdcMode->setEnabled(false || enabled);
-		ui->comboBoxAdcMode->setVisible(false || visible);
-		ui->spinBoxAdcCustom->setEnabled(false || enabled);
-		ui->spinBoxAdcCustom->setVisible(false || visible);
+        ui->spinBoxAdcGain->setEnabled(enabled);
+        ui->spinBoxAdcGain->setVisible(visible);
+        ui->checkBoxUseDac->setEnabled(enabled);
+        ui->checkBoxUseDac->setVisible(visible);
+        mainWindow->ui->actionDAC->setEnabled(enabled);
+        mainWindow->ui->actionDAC->setVisible(visible);
+        ui->comboBoxAdcMode->setEnabled(enabled);
+        ui->comboBoxAdcMode->setVisible(visible);
+        ui->spinBoxAdcCustom->setEnabled(enabled);
+        ui->spinBoxAdcCustom->setVisible(visible);
 		break;
     case 1:
-		ui->spinBoxAdcGain->setEnabled(false || enabled);
-		ui->spinBoxAdcGain->setVisible(false || visible);
-		ui->checkBoxUseDac->setEnabled(false || enabled);
-		ui->checkBoxUseDac->setVisible(false || visible);
-		mainWindow->ui->actionDAC->setEnabled(false || enabled);
-		mainWindow->ui->actionDAC->setVisible(false || visible);
-		ui->comboBoxAdcMode->setEnabled(true || enabled);
-		ui->comboBoxAdcMode->setVisible(true || visible);
-		ui->spinBoxAdcCustom->setEnabled(true || enabled);
-		ui->spinBoxAdcCustom->setVisible(true || visible);
+        ui->spinBoxAdcGain->setEnabled(enabled);
+        ui->spinBoxAdcGain->setVisible(visible);
+        ui->checkBoxUseDac->setEnabled(enabled);
+        ui->checkBoxUseDac->setVisible(visible);
+        mainWindow->ui->actionDAC->setEnabled(enabled);
+        mainWindow->ui->actionDAC->setVisible(visible);
+        ui->comboBoxAdcMode->setEnabled(true);
+        ui->comboBoxAdcMode->setVisible(true);
+        ui->spinBoxAdcCustom->setEnabled(true);
+        ui->spinBoxAdcCustom->setVisible(true);
         break;
     case 2:
-		ui->spinBoxAdcGain->setEnabled(true || enabled);
-		ui->spinBoxAdcGain->setVisible(true || visible);
-		ui->checkBoxUseDac->setEnabled(true || enabled);
-		ui->checkBoxUseDac->setVisible(true || visible);
+        ui->spinBoxAdcGain->setEnabled(true);
+        ui->spinBoxAdcGain->setVisible(true);
+        ui->checkBoxUseDac->setEnabled(true);
+        ui->checkBoxUseDac->setVisible(true);
 		mainWindow->ui->actionDAC->setEnabled(ui->checkBoxUseDac->checkState() || enabled);
 		mainWindow->ui->actionDAC->setVisible(ui->checkBoxUseDac->checkState() || visible);
-		ui->comboBoxAdcMode->setEnabled(true || enabled);
-		ui->comboBoxAdcMode->setVisible(true || visible);
-		ui->spinBoxAdcCustom->setEnabled(true || enabled);
-		ui->spinBoxAdcCustom->setVisible(true || visible);
+        ui->comboBoxAdcMode->setEnabled(true);
+        ui->comboBoxAdcMode->setVisible(true);
+        ui->spinBoxAdcCustom->setEnabled(true);
+        ui->spinBoxAdcCustom->setVisible(true);
         break;
     }
 }
@@ -656,60 +658,60 @@ void DialogSettings::on_comboBoxFftMode_currentIndexChanged(int index)
 	{
 	//full binning
 	case 0:
-		ui->labelLinesBinning->setVisible(false || visible);
-		ui->spinBoxLinesBinning->setEnabled(false || enabled);
-		ui->spinBoxLinesBinning->setVisible(false || visible);
-		ui->labelNumberOfRegions->setVisible(false || visible);
-		ui->spinBoxNumberOfRegions->setEnabled(false || enabled);
-		ui->spinBoxNumberOfRegions->setVisible(false || visible);
-		ui->labelRegionsEqual->setVisible(false || visible);
-		ui->checkBoxRegionsEqual->setVisible(false || visible);
-		ui->checkBoxRegionsEqual->setEnabled(false || enabled);
-		ui->labelRegion1->setVisible(false || visible);
-		ui->labelRegion2->setVisible(false || visible);
-		ui->labelRegion3->setVisible(false || visible);
-		ui->labelRegion4->setVisible(false || visible);
-		ui->labelRegion5->setVisible(false || visible);
-		ui->labelRegion6->setVisible(false || visible);
-		ui->labelRegion7->setVisible(false || visible);
-		ui->labelRegion8->setVisible(false || visible);
-		ui->spinBoxRegion1->setVisible(false || visible);
-		ui->spinBoxRegion2->setVisible(false || visible);
-		ui->spinBoxRegion3->setVisible(false || visible);
-		ui->spinBoxRegion4->setVisible(false || visible);
-		ui->spinBoxRegion5->setVisible(false || visible);
-		ui->spinBoxRegion6->setVisible(false || visible);
-		ui->spinBoxRegion7->setVisible(false || visible);
-		ui->spinBoxRegion8->setVisible(false || visible);
-		ui->spinBoxRegion1->setEnabled(false || enabled);
-		ui->spinBoxRegion2->setEnabled(false || enabled);
-		ui->spinBoxRegion3->setEnabled(false || enabled);
-		ui->spinBoxRegion4->setEnabled(false || enabled);
-		ui->spinBoxRegion5->setEnabled(false || enabled);
-		ui->spinBoxRegion6->setEnabled(false || enabled);
-		ui->spinBoxRegion7->setEnabled(false || enabled);
-		ui->spinBoxRegion8->setEnabled(false || enabled);
-		ui->doubleSpinBoxNos->setEnabled(true || enabled);
+        ui->labelLinesBinning->setVisible(visible);
+        ui->spinBoxLinesBinning->setEnabled(enabled);
+        ui->spinBoxLinesBinning->setVisible(visible);
+        ui->labelNumberOfRegions->setVisible(visible);
+        ui->spinBoxNumberOfRegions->setEnabled(enabled);
+        ui->spinBoxNumberOfRegions->setVisible(visible);
+        ui->labelRegionsEqual->setVisible(visible);
+        ui->checkBoxRegionsEqual->setVisible(visible);
+        ui->checkBoxRegionsEqual->setEnabled(enabled);
+        ui->labelRegion1->setVisible(visible);
+        ui->labelRegion2->setVisible(visible);
+        ui->labelRegion3->setVisible(visible);
+        ui->labelRegion4->setVisible(visible);
+        ui->labelRegion5->setVisible(visible);
+        ui->labelRegion6->setVisible(visible);
+        ui->labelRegion7->setVisible(visible);
+        ui->labelRegion8->setVisible(visible);
+        ui->spinBoxRegion1->setVisible(visible);
+        ui->spinBoxRegion2->setVisible(visible);
+        ui->spinBoxRegion3->setVisible(visible);
+        ui->spinBoxRegion4->setVisible(visible);
+        ui->spinBoxRegion5->setVisible(visible);
+        ui->spinBoxRegion6->setVisible(visible);
+        ui->spinBoxRegion7->setVisible(visible);
+        ui->spinBoxRegion8->setVisible(visible);
+        ui->spinBoxRegion1->setEnabled(enabled);
+        ui->spinBoxRegion2->setEnabled(enabled);
+        ui->spinBoxRegion3->setEnabled(enabled);
+        ui->spinBoxRegion4->setEnabled(enabled);
+        ui->spinBoxRegion5->setEnabled(enabled);
+        ui->spinBoxRegion6->setEnabled(enabled);
+        ui->spinBoxRegion7->setEnabled(enabled);
+        ui->spinBoxRegion8->setEnabled(enabled);
+        ui->doubleSpinBoxNos->setEnabled(enabled);
 		break;
 	//range of interest
 	case 1:
-		ui->labelLinesBinning->setVisible(false || visible);
-		ui->spinBoxLinesBinning->setEnabled(false || enabled);
-		ui->spinBoxLinesBinning->setVisible(false || visible);
-		ui->labelNumberOfRegions->setVisible(true || visible);
-		ui->spinBoxNumberOfRegions->setEnabled(true || enabled);
-		ui->spinBoxNumberOfRegions->setVisible(true || visible);
-		ui->labelRegionsEqual->setVisible(true || visible);
-		ui->checkBoxRegionsEqual->setVisible(true || visible);
-		ui->checkBoxRegionsEqual->setEnabled(true || enabled);
-		ui->labelRegion1->setVisible(true || visible);
-		ui->labelRegion2->setVisible(true || visible);
-		ui->labelRegion3->setVisible(true || visible);
-		ui->labelRegion4->setVisible(true || visible);
-		ui->labelRegion5->setVisible(true || visible);
-		ui->labelRegion6->setVisible(true || visible);
-		ui->labelRegion7->setVisible(true || visible);
-		ui->labelRegion8->setVisible(true || visible);
+        ui->labelLinesBinning->setVisible(visible);
+        ui->spinBoxLinesBinning->setEnabled(enabled);
+        ui->spinBoxLinesBinning->setVisible(visible);
+        ui->labelNumberOfRegions->setVisible(visible);
+        ui->spinBoxNumberOfRegions->setEnabled(enabled);
+        ui->spinBoxNumberOfRegions->setVisible(visible);
+        ui->labelRegionsEqual->setVisible(visible);
+        ui->checkBoxRegionsEqual->setVisible(visible);
+        ui->checkBoxRegionsEqual->setEnabled(enabled);
+        ui->labelRegion1->setVisible(visible);
+        ui->labelRegion2->setVisible(visible);
+        ui->labelRegion3->setVisible(visible);
+        ui->labelRegion4->setVisible(visible);
+        ui->labelRegion5->setVisible(visible);
+        ui->labelRegion6->setVisible(visible);
+        ui->labelRegion7->setVisible(visible);
+        ui->labelRegion8->setVisible(visible);
 		ui->spinBoxRegion1->setVisible(!ui->checkBoxRegionsEqual->checkState() || visible);
 		ui->spinBoxRegion2->setVisible(!ui->checkBoxRegionsEqual->checkState() || visible);
 		ui->spinBoxRegion3->setVisible(!ui->checkBoxRegionsEqual->checkState() || visible);
@@ -718,53 +720,53 @@ void DialogSettings::on_comboBoxFftMode_currentIndexChanged(int index)
 		ui->spinBoxRegion6->setVisible(!ui->checkBoxRegionsEqual->checkState() || visible);
 		ui->spinBoxRegion7->setVisible(!ui->checkBoxRegionsEqual->checkState() || visible);
 		ui->spinBoxRegion8->setVisible(!ui->checkBoxRegionsEqual->checkState() || visible);
-		ui->spinBoxRegion1->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
-		ui->spinBoxRegion2->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
-		ui->spinBoxRegion3->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
-		ui->spinBoxRegion4->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
-		ui->spinBoxRegion5->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
-		ui->spinBoxRegion6->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
-		ui->spinBoxRegion7->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
-		ui->spinBoxRegion8->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
-		ui->doubleSpinBoxNos->setEnabled(false || enabled);
+        ui->spinBoxRegion1->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
+        ui->spinBoxRegion2->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
+        ui->spinBoxRegion3->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
+        ui->spinBoxRegion4->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
+        ui->spinBoxRegion5->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
+        ui->spinBoxRegion6->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
+        ui->spinBoxRegion7->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
+        ui->spinBoxRegion8->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
+        ui->doubleSpinBoxNos->setEnabled(enabled);
 		ui->doubleSpinBoxNos->setValue(ui->spinBoxNumberOfRegions->value());
 		break;
 	//area
 	case 2:
-		ui->labelLinesBinning->setVisible(true || visible);
-		ui->spinBoxLinesBinning->setEnabled(true || enabled);
-		ui->spinBoxLinesBinning->setVisible(true || visible);
-		ui->labelNumberOfRegions->setVisible(false || visible);
-		ui->spinBoxNumberOfRegions->setEnabled(false || enabled);
-		ui->spinBoxNumberOfRegions->setVisible(false || visible);
-		ui->labelRegionsEqual->setVisible(false || visible);
-		ui->checkBoxRegionsEqual->setVisible(false || visible);
-		ui->checkBoxRegionsEqual->setEnabled(false || enabled);
-		ui->labelRegion1->setVisible(false || visible);
-		ui->labelRegion2->setVisible(false || visible);
-		ui->labelRegion3->setVisible(false || visible);
-		ui->labelRegion4->setVisible(false || visible);
-		ui->labelRegion5->setVisible(false || visible);
-		ui->labelRegion6->setVisible(false || visible);
-		ui->labelRegion7->setVisible(false || visible);
-		ui->labelRegion8->setVisible(false || visible);
-		ui->spinBoxRegion1->setVisible(false || visible);
-		ui->spinBoxRegion2->setVisible(false || visible);
-		ui->spinBoxRegion3->setVisible(false || visible);
-		ui->spinBoxRegion4->setVisible(false || visible);
-		ui->spinBoxRegion5->setVisible(false || visible);
-		ui->spinBoxRegion6->setVisible(false || visible);
-		ui->spinBoxRegion7->setVisible(false || visible);
-		ui->spinBoxRegion8->setVisible(false || visible);
-		ui->spinBoxRegion1->setEnabled(false || enabled);
-		ui->spinBoxRegion2->setEnabled(false || enabled);
-		ui->spinBoxRegion3->setEnabled(false || enabled);
-		ui->spinBoxRegion4->setEnabled(false || enabled);
-		ui->spinBoxRegion5->setEnabled(false || enabled);
-		ui->spinBoxRegion6->setEnabled(false || enabled);
-		ui->spinBoxRegion7->setEnabled(false || enabled);
-		ui->spinBoxRegion8->setEnabled(false || enabled);
-		ui->doubleSpinBoxNos->setEnabled(false || enabled);
+        ui->labelLinesBinning->setVisible(visible);
+        ui->spinBoxLinesBinning->setEnabled(enabled);
+        ui->spinBoxLinesBinning->setVisible(visible);
+        ui->labelNumberOfRegions->setVisible(visible);
+        ui->spinBoxNumberOfRegions->setEnabled(enabled);
+        ui->spinBoxNumberOfRegions->setVisible(visible);
+        ui->labelRegionsEqual->setVisible(visible);
+        ui->checkBoxRegionsEqual->setVisible(visible);
+        ui->checkBoxRegionsEqual->setEnabled(enabled);
+        ui->labelRegion1->setVisible(visible);
+        ui->labelRegion2->setVisible(visible);
+        ui->labelRegion3->setVisible(visible);
+        ui->labelRegion4->setVisible(visible);
+        ui->labelRegion5->setVisible(visible);
+        ui->labelRegion6->setVisible(visible);
+        ui->labelRegion7->setVisible(visible);
+        ui->labelRegion8->setVisible(visible);
+        ui->spinBoxRegion1->setVisible(visible);
+        ui->spinBoxRegion2->setVisible(visible);
+        ui->spinBoxRegion3->setVisible(visible);
+        ui->spinBoxRegion4->setVisible(visible);
+        ui->spinBoxRegion5->setVisible(visible);
+        ui->spinBoxRegion6->setVisible(visible);
+        ui->spinBoxRegion7->setVisible(visible);
+        ui->spinBoxRegion8->setVisible(visible);
+        ui->spinBoxRegion1->setEnabled(enabled);
+        ui->spinBoxRegion2->setEnabled(enabled);
+        ui->spinBoxRegion3->setEnabled(enabled);
+        ui->spinBoxRegion4->setEnabled(enabled);
+        ui->spinBoxRegion5->setEnabled(enabled);
+        ui->spinBoxRegion6->setEnabled(enabled);
+        ui->spinBoxRegion7->setEnabled(enabled);
+        ui->spinBoxRegion8->setEnabled(enabled);
+        ui->doubleSpinBoxNos->setEnabled(enabled);
 		ui->doubleSpinBoxNos->setValue(ui->spinBoxLines->value() / ui->spinBoxLinesBinning->value());
 		break;
 	}

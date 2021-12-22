@@ -11,7 +11,7 @@ extern "C" {
 
 #define MANUAL_OVERRIDE_TLP false
 #define LEGACY_202_14_TLPCNT false
-#define _FORCETLPS128 true	//only use payload size 128byte
+#define FORCETLPS128 true	//only use payload size 128byte
 #define DMA_64BIT_EN false
 #define S0_SPACE_OFFSET 0x80
 #define HWDREQ_EN true // enables hardware start of DMA by XCK h->l slope
@@ -50,6 +50,8 @@ extern bool continiousMeasurementFlag;
 extern uint32_t continiousPauseInMicroseconds;
 extern struct global_settings settings_struct;
 extern bool isRunning;
+extern int64_t scanCounterTotal;
+
 
 #ifdef __cplusplus
 }
