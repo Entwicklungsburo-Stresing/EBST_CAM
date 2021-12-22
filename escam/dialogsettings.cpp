@@ -137,6 +137,12 @@ DialogSettings::DialogSettings(QWidget *parent) :
 		settings.setValue(settingBoardSelPath, 0);
 	}
 
+#if __linux__
+    // disable option software polling on linux
+    ui->checkBoxUseSoftwarePolling->setChecked(false);
+    ui->checkBoxUseSoftwarePolling->setEnabled(false);
+#endif
+
     setWindowModality(Qt::ApplicationModal);
 }
 
