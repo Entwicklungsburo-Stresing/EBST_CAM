@@ -207,7 +207,7 @@ int lscpcie_open(uint dev_no, uint16_t fiber_options, uint8_t memory_options)
 			      dev->control->number_of_pixels);
 		return -EINVAL;
 	}
-	if (LEGACY_202_14_TLPCNT)
+	if (LEGACY_202_14_TLPCNT_LSC)
 		no_tlps++;
 	dev->number_of_tlps = no_tlps;
 
