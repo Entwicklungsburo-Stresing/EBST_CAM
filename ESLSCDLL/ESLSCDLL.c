@@ -299,9 +299,9 @@ DllAccess es_status_codes DLLSetupVCLK( UINT32 drvno, UINT32 lines, UINT8 vfreq 
 /**
  * \copydoc readBlockTriggerState
  */
-DllAccess es_status_codes DLLreadBlockTriggerState( UINT32 drv, UCHAR btrig_ch, BOOL* state )
+DllAccess es_status_codes DLLreadBlockTriggerState( UINT32 drv, UCHAR btrig_ch, UINT8* state )
 {
-	return readBlockTriggerState( drv, btrig_ch, state );
+	return readBlockTriggerState( drv, btrig_ch, (bool*)state );
 }
 
 /**
@@ -450,7 +450,7 @@ DllAccess es_status_codes DLLSetTemp( UINT32 drvno, UINT8 level )
 /**
  * \copydoc SetSEC
  */
-DllAccess es_status_codes DLLSetSEC( UINT32 drvno, UINT64 ecin10ns )
+DllAccess es_status_codes DLLSetSEC( UINT32 drvno, UINT32 ecin10ns )
 {
 	return SetSEC( drvno, ecin10ns );
 }
@@ -458,7 +458,7 @@ DllAccess es_status_codes DLLSetSEC( UINT32 drvno, UINT64 ecin10ns )
 /**
  * \copydoc SetBEC
  */
-DllAccess es_status_codes DLLSetBEC( UINT32 drvno, UINT64 ecin10ns )
+DllAccess es_status_codes DLLSetBEC( UINT32 drvno, UINT32 ecin10ns )
 {
 	return SetBEC( drvno, ecin10ns );
 }
@@ -599,9 +599,9 @@ DllAccess es_status_codes DLLInitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT1
 /**
  * \copydoc InitCamera3030
  */
-DllAccess es_status_codes DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 adc_gain, UINT8 useDac, UINT32* dac_output, BOOL isIr )
+DllAccess es_status_codes DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 adc_gain, UINT8 useDac, UINT32* dac_output, UINT8 isIr )
 {
-	return InitCamera3030( drvno, adc_mode, custom_pattern, adc_gain, useDac, dac_output, isIr);
+	return InitCamera3030( drvno, adc_mode, custom_pattern, adc_gain, useDac, dac_output, (bool)isIr);
 }
 
 /**
@@ -782,7 +782,7 @@ DllAccess es_status_codes DLLSetBDAT(UINT32 drvno, UINT32 datin10ns)
  * \param on If TRUE BON starts immediately a scan. Must be TRUE for FFT in Area or ROI mode.
  * \return none
  */
-DllAccess void setSWTrig(BOOL on)
+DllAccess void setSWTrig(UINT8 on)
 {
 	*useSWTrig = on;
 	return;
@@ -794,6 +794,7 @@ DllAccess void setSWTrig(BOOL on)
 DllAccess es_status_codes DLLSetGlobalSettings(struct global_settings settings)
 {
 	SetGlobalSettings(settings);
+	return es_no_error;
 }
 
 /**
@@ -801,7 +802,7 @@ DllAccess es_status_codes DLLSetGlobalSettings(struct global_settings settings)
  */
 DllAccess es_status_codes DLLInitMeasurement()
 {
-	InitMeasurement();
+	return InitMeasurement();
 }
 
 /**
@@ -833,7 +834,7 @@ DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10n
  */
 DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t drvno, uint16_t* width_in_5ns, uint16_t* delay_in_5ns)
 {
-	return IOCtrl_setAllOutputs(drvno, width_in_5ns, delay_in_5ns);
+	return IOCtrl_setAllOutputs(drvno, (uint32_t*)width_in_5ns, (uint32_t*)delay_in_5ns);
 }
 
 /**

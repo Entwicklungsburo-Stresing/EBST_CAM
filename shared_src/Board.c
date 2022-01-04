@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "../shared_src/UIAbstractionLayer.h"
+#include "../shared_src/ESLSCDLL_pro.h"
 #include <math.h>
 #include <sys/types.h>
 #include <sys/timeb.h>
@@ -3360,13 +3361,16 @@ es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
 		if (status != es_no_error) return status;
         len += sprintf(*stringPtr + len, "%s \t: 0x%x\n", LUTS0Reg[i], regData);
 	}
-    bool abbr = false;
+    bool abbr = false, space = false;
 	int i = 0;
 	while (!abbr)
 	{
 #ifdef WIN32
         status = WaitTrigger(1, false, &space, &abbr);
 		if (status != es_no_error) return status;
+#else
+		// surpress unused warning
+		(void)space;
 #endif
 		i = 0;
 		len = sprintf(*stringPtr + len, "read- regs   \n");

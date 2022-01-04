@@ -149,7 +149,7 @@ DllAccess void DLLDeinit2dViewer()
 {
 	if (Direct2dViewer != NULL)
 	{
-		SendMessage( Direct2dViewer_getWindowHandler( Direct2dViewer ), WM_CLOSE, NULL, NULL );
+		SendMessage( Direct2dViewer_getWindowHandler( Direct2dViewer ), WM_CLOSE, 0, 0 );
 		Direct2dViewer_delete( Direct2dViewer );
 		Direct2dViewer = NULL;
 	}
@@ -178,7 +178,7 @@ DllAccess UINT16 DLLGetGammaWhite()
 	{
 		return Direct2dViewer_getGammaWhite( Direct2dViewer );
 	}
-	return NULL;
+	return 0;
 }
 
 /**
@@ -190,7 +190,7 @@ DllAccess UINT16 DLLGetGammaBlack()
 	{
 		return Direct2dViewer_getGammaBlack( Direct2dViewer );
 	}
-	return NULL;
+	return 0;
 }
 
 /**

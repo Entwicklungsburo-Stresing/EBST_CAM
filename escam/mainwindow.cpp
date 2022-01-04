@@ -72,8 +72,9 @@ MainWindow::~MainWindow()
 }
 
 /**
- * @brief Sets the data of chartView.
- * @param series Data as QLineSeries.
+ * @brief Sets the data of chartView. This function takes the data in the Qt format QLineSeries.
+ * @param series Data as an array of QLineSeries.
+ * @param numberOfSets Number of data sets which are given in the array series.
  */
 void MainWindow::setChartData(QLineSeries** series, uint16_t numberOfSets)
 {
@@ -94,20 +95,25 @@ void MainWindow::setChartData(QLineSeries** series, uint16_t numberOfSets)
 }
 
 /**
- * @brief This is an overloaded function.
+ * @brief This overloaded function takes data with a C pointer and a length, converts it into QLineSeries and passes it to setChartData.
  * @param data Pointer to data.
  * @param length Length of data.
+ * @param numberOfSets Number of data sets which are stored in data pointer.
  */
 void MainWindow::setChartData(uint16_t* data, uint16_t length, uint16_t numberOfSets)
 {
+	// Allocate memory for the pointer array to the QlineSeries.
     QLineSeries** series = static_cast<QLineSeries**>(calloc(numberOfSets, sizeof(QLineSeries*)));
+	// Iterate through all data sets.
     for(uint16_t set=0; set<numberOfSets; set++)
     {
+		// Set the current data set to a new empty QLineSeries.
         series[set] = new QLineSeries(this);
-		//@flo bitte kommentieren
+		// Iterate through all data points for the current data set.
         for(uint16_t i=0; i<length; i++)
         {
-            series[set]->append(i, *(data + i + (length * set)));
+			// Append the current data point to the current data set.
+            series[set]->append(i, *(data + i + ((uint64_t)length * (uint64_t)set)));
         }
     }
     setChartData(series, numberOfSets);
@@ -828,7 +834,7 @@ void MainWindow::showCurrentScan()
 	{
 	case 2:
         ui->horizontalSliderSample->setValue(static_cast<int32_t>(sample + 1));
-    [[clang::fallthrough]];
+	[[clang::fallthrough]];
     case 1:
         ui->horizontalSliderBlock->setValue(static_cast<int32_t>(block + 1));
 	}

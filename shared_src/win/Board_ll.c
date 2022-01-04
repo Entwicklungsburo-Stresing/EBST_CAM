@@ -10,7 +10,7 @@
 #include "shared_src/ESLSCDLL_pro.h"
 
 WDC_DEVICE_HANDLE hDev_tmp[MAXPCIECARDS];
-WDC_DEVICE_HANDLE* hDev = &hDev_tmp;
+WDC_DEVICE_HANDLE* hDev = (WDC_DEVICE_HANDLE *)&hDev_tmp;
 DWORD dmaBufferSizeInBytes = 0;
 uint16_t* dmaBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 DWORD64 IsrCounter = 0;
@@ -106,7 +106,7 @@ int64_t InitHRCounter()
 the size of a drivers continous memory is limited, so we must copy it via this small buf to the big buf
 The INTR occurs every DMASPERINTR and copies this block of scans in lower/upper half blocks.
 */
-void isr( uint32_t drvno, void* pData )
+void isr( uint32_t drvno )
 {
 	ES_LOG( "*isr(): 0x%x\n", IsrCounter );
 	es_status_codes status = setBitS0_32(drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );//set INTRSR flag for TRIGO
@@ -140,8 +140,8 @@ void isr( uint32_t drvno, void* pData )
 	return;
 }
 
-void DLLCALLCONV interrupt_handler1( void* pData ) { isr( 1, pData ); }
-void DLLCALLCONV interrupt_handler2( void* pData ) { isr( 2, pData ); }
+void DLLCALLCONV interrupt_handler1() { isr( 1 ); }
+void DLLCALLCONV interrupt_handler2() { isr( 2 ); }
 
 /**
  * @brief Reads long on DMA area.
@@ -419,7 +419,7 @@ es_status_codes enableInterrupt( uint32_t drvno )
 	{
 		if (!WDC_IntIsEnabled(hDev[drvno]))
 		{
-			DWORD dwStatus = LSCPCIEJ_IntEnable(hDev[drvno], interrupt_handler1);
+			DWORD dwStatus = LSCPCIEJ_IntEnable(hDev[drvno], (LSCPCIEJ_INT_HANDLER)interrupt_handler1);
 			if (WD_STATUS_SUCCESS != dwStatus)
 			{
 				ES_LOG("Failed to enable the Interrupts1. Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
@@ -432,7 +432,7 @@ es_status_codes enableInterrupt( uint32_t drvno )
 	{
 		if (!WDC_IntIsEnabled(hDev[drvno]))
 		{
-			DWORD dwStatus = LSCPCIEJ_IntEnable(hDev[drvno], interrupt_handler2);
+			DWORD dwStatus = LSCPCIEJ_IntEnable(hDev[drvno], (LSCPCIEJ_INT_HANDLER)interrupt_handler2);
 			if (WD_STATUS_SUCCESS != dwStatus)
 			{
 				ES_LOG("Failed to enable the Interrupts2. Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
@@ -478,7 +478,7 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 {
 	ES_LOG( "Copy rest data:\n" );
 	ES_LOG( "dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes );
-	INT_PTR dmaBufferReadPos = dmaBuffer[drvno];
+	uint16_t* dmaBufferReadPos = dmaBuffer[drvno];
 	dmaBufferReadPos += dmaBufferPartReadPos[drvno] * dmaBufferSizeInBytes / DMA_BUFFER_PARTS;
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes );
 	return;
@@ -543,14 +543,7 @@ es_status_codes _InitBoard(uint32_t drvno)
  */
 es_status_codes _InitDriver()
 {
-	//depends on os, how big a buffer can be
-	bool fResult = false;
-	char AString[80] = "";
-	HANDLE hccddrv = INVALID_HANDLE_VALUE;
-	//PWDC_DEVICE pDev = (PWDC_DEVICE)hDev;
 	volatile DWORD dwStatus = 0;
-	PLSCPCIEJ_DEV_CTX pDevCtx = NULL;
-
 #if KER_MODE
 	LSCPCIEJ_DEV_ADDR_DESC devAddrDesc;
 #endif
@@ -655,7 +648,7 @@ es_status_codes _ExitDriver(uint32_t drvno)
  */
 es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address )
 {
-	uint8_t dwStatus = WDC_PciReadCfg( hDev[drvno], address, data, sizeof( uint32_t ) );
+	DWORD dwStatus = WDC_PciReadCfg( hDev[drvno], address, data, sizeof( uint32_t ) );
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		WDC_Err( "ReadLongIOPort in address 0x%x failed\n", address );
@@ -742,6 +735,7 @@ es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 es_status_codes InitMutex(uint32_t drvno)
 {
     //no mutex on windows
+	(void)drvno;
     return es_no_error;
 }
 
@@ -778,7 +772,7 @@ es_status_codes AboutDrv(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = _AboutDrv(drvno, &cstring);
-	MessageBox(GetActiveWindow(), cstring, "About driver", MB_OK);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"About driver", MB_OK);
 	return status;
 };
 
@@ -795,7 +789,7 @@ es_status_codes AboutGPX(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = _AboutGPX(drvno, &cstring);
-	MessageBox(GetActiveWindow(), cstring, "GPX regs", MB_OK);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"GPX regs", MB_OK);
 	return status;
 }
 
@@ -811,7 +805,7 @@ es_status_codes AboutS0(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = dumpS0Registers(drvno, &cstring);
-	MessageBox(GetActiveWindow(), cstring, "S0 regs", MB_OK);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"S0 regs", MB_OK);
 	return status;
 }//AboutS0
 
@@ -827,7 +821,7 @@ es_status_codes AboutTLPs(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = dumpTlpRegisters(drvno, &cstring);
-	MessageBox(GetActiveWindow(), cstring, "DMA transfer payloads", MB_OK | MB_DEFBUTTON2);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"DMA transfer payloads", MB_OK | MB_DEFBUTTON2);
 	return status;
 }//AboutTLPs
 
@@ -843,7 +837,7 @@ es_status_codes AboutPCI(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = dumpPciRegisters(drvno, &cstring);
-	MessageBox(GetActiveWindow(), cstring, "PCI regs", MB_OK);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"PCI regs", MB_OK);
 	return status;
 }//AboutPCI
 
@@ -851,7 +845,7 @@ es_status_codes AboutSettings()
 {
 	char* cstring;
 	es_status_codes status = dumpSettings(&cstring);
-	MessageBox(GetActiveWindow(), cstring, "Settings", MB_OK);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"Settings", MB_OK);
 	return status;
 }
 
@@ -884,7 +878,7 @@ void ErrorMsg(char ErrMsg[100])
 {
 	if (_SHOW_MSG)
 	{
-		if (MessageBox(GetActiveWindow(), ErrMsg, "ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+		if (MessageBox(GetActiveWindow(), (LPCTSTR)ErrMsg, (LPCTSTR)"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 	}
 };
 
@@ -900,7 +894,7 @@ void ValMsg(uint64_t val)
 	if (_SHOW_MSG)
 	{
 		sprintf_s(AString, 60, "%s%d 0x%I64x", "val= ", val, val);
-		if (MessageBox(GetActiveWindow(), AString, "ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+		if (MessageBox(GetActiveWindow(), (LPCTSTR)AString, (LPCTSTR)"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 	}
 };
 
@@ -1116,6 +1110,7 @@ uint16_t* getVirtualDmaAddress(uint32_t drvno)
 
 uint32_t getDmaBufferSizeInBytes(uint32_t drvno)
 {
+	(void)drvno;
 	return dmaBufferSizeInBytes;
 }
 
