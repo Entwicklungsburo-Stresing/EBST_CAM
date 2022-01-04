@@ -81,7 +81,7 @@ DllAccess CStr DLLConvertErrorCodeToMsg(es_status_codes status);
 DllAccess es_status_codes DLLAbout(UINT32 drvno);
 DllAccess es_status_codes DLLAboutS0( UINT32 drvno );
 DllAccess es_status_codes DLLFFValid(UINT32 drvno, UINT8* valid);						// TRUE if linecounter>0
-DllAccess es_status_codes DLLreadBlockTriggerState(UINT32 drv, UCHAR btrig_ch, BOOL* state); //read trigger input ->ch=1:pci in, ch=2:opto1, ch=3:opto2
+DllAccess es_status_codes DLLreadBlockTriggerState(UINT32 drv, UCHAR btrig_ch, UINT8* state); //read trigger input ->ch=1:pci in, ch=2:opto1, ch=3:opto2
 DllAccess es_status_codes DLLAboutGPX(UINT32 drvno);
 DllAccess es_status_codes DLLwaitForMeasureReady(UINT32 drvno);
 DllAccess es_status_codes DLLwaitForBlockReady(UINT32 drvno);
@@ -89,7 +89,7 @@ DllAccess es_status_codes DLLisMeasureOn(UINT32 drvno, UINT8* measureOn);
 DllAccess es_status_codes DLLisBlockOn(UINT32 drvno, UINT8* blockOn);
 DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block);
 //************  Control CAM
-DllAccess void setSWTrig(BOOL on);
+DllAccess void setSWTrig(UINT8 on);
 DllAccess void DLLSetContFFLoop(UINT8 activate, UINT32 pause_in_microseconds);
 DllAccess es_status_codes DLLSWTrig(UINT32 drvno);	//start a read to FIFO by software
 DllAccess es_status_codes DLLOutTrigHigh(UINT32 drvno);	//set output Trigger signal high
@@ -116,8 +116,8 @@ DllAccess es_status_codes DLLSetTLPS(UINT32 drvno, UINT32 pixel);
 DllAccess es_status_codes DLLSetSDAT(UINT32 drvno, UINT32 datin10ns);
 DllAccess es_status_codes DLLSetBDAT(UINT32 drvno, UINT32 datin10ns);
 DllAccess es_status_codes DLLSetTemp(UINT32 drvno, UINT8 level);
-DllAccess es_status_codes DLLSetSEC(UINT32 drvno, UINT64 ecin10ns);
-DllAccess es_status_codes DLLSetBEC(UINT32 drvno, UINT64 ecin10ns);
+DllAccess es_status_codes DLLSetSEC(UINT32 drvno, UINT32 ecin10ns);
+DllAccess es_status_codes DLLSetBEC(UINT32 drvno, UINT32 ecin10ns);
 DllAccess es_status_codes DLLSetTORReg(UINT32 drvno, UINT8 tor);
 DllAccess es_status_codes DLLSetSensorType(UINT32 drvno, UINT8 set);
 DllAccess es_status_codes DLLSetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep);
