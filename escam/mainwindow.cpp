@@ -12,55 +12,57 @@
  * @brief Constructor of Class MainWindow.
  * @param parent
  */
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget* parent)
+	: QMainWindow(parent)
+	, ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+	ui->setupUi(this);
 	this->setAttribute(Qt::WA_DeleteOnClose);
-    connect(ui->horizontalSliderSample, &QSlider::valueChanged, this, &MainWindow::loadCameraData);
-    connect(ui->horizontalSliderBlock, &QSlider::valueChanged, this, &MainWindow::loadCameraData);
+	connect(ui->horizontalSliderSample, &QSlider::valueChanged, this, &MainWindow::loadCameraData);
+	connect(ui->horizontalSliderBlock, &QSlider::valueChanged, this, &MainWindow::loadCameraData);
 	connect(ui->pushButtonStartCont, &QPushButton::toggled, this, &MainWindow::startContPressed);
 	connect(ui->pushButtonAbort, &QPushButton::pressed, this, &MainWindow::abortPressed);
-    connect(ui->actionExit, &QAction::triggered, this, &MainWindow::close);
-    connect(&lsc, &Lsc::measureStart, this, &MainWindow::on_measureStart);
-    connect(&lsc, &Lsc::measureDone, this, &MainWindow::on_measureDone);
-    connect(&lsc, &Lsc::blockStart, this, &MainWindow::on_blockStart);
-    connect(&lsc, &Lsc::blockDone, this, &MainWindow::on_blockDone);
-    connect(ui->chartView, &MyQChartView::rubberBandChanged, this, &MainWindow::on_rubberBandChanged);
+	connect(ui->actionExit, &QAction::triggered, this, &MainWindow::close);
+	connect(&lsc, &Lsc::measureStart, this, &MainWindow::on_measureStart);
+	connect(&lsc, &Lsc::measureDone, this, &MainWindow::on_measureDone);
+	connect(&lsc, &Lsc::blockStart, this, &MainWindow::on_blockStart);
+	connect(&lsc, &Lsc::blockDone, this, &MainWindow::on_blockDone);
+	connect(ui->chartView, &MyQChartView::rubberBandChanged, this, &MainWindow::on_rubberBandChanged);
 	connect(displayTimer, &QTimer::timeout, this, &MainWindow::showCurrentScan);
 	connect(ui->radioButtonLiveViewFixedSample, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
 	connect(ui->radioButtonLiveViewOff, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
 	connect(ui->radioButtonLiveViewOffNewestSample, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
 
 
-    es_status_codes status = lsc.initDriver();
-    if (status != es_no_error)
-    {
-        showNoDriverFoundDialog();
-    }
-    else
-    {
-        status = lsc.initPcieBoard();
-        if (status != es_no_error)
-            showPcieBoardError();
-        else
-            loadSettings();
-    }
+	es_status_codes status = lsc.initDriver();
+	if (status != es_no_error)
+	{
+		showNoDriverFoundDialog();
+	}
+	else
+	{
+		status = lsc.initPcieBoard();
+		if (status != es_no_error)
+			showPcieBoardError();
+		else
+			loadSettings();
+	}
 
-    // move lsc to its own thread
-    lsc.moveToThread(&measurementThread);
-    connect(&measurementThread, &QThread::started, &lsc, &Lsc::startMeasurement);
-    connect(&lsc, &Lsc::measureDone, &measurementThread, &QThread::quit);
+	// move lsc to its own thread
+	lsc.moveToThread(&measurementThread);
+	connect(&measurementThread, &QThread::started, &lsc, &Lsc::startMeasurement);
+	connect(&lsc, &Lsc::measureDone, &measurementThread, &QThread::quit);
 	connect(&lsc, &Lsc::measureDone, ds_dsc, &DialogDSC::updateDSC);
 	connect(&lsc, &Lsc::measureDone, ds_rms, &DialogRMS::updateRMS);
 #ifdef __linux__
-    // disable greyscale menu on linux
-    ui->menuGreyscale_Viewer->setEnabled(false);
-    // disable live view on linux
-    ui->radioButtonLiveViewOff->setChecked(true);
-    ui->groupBoxLiveView->setEnabled(false);
+	// disable greyscale menu on linux
+	ui->menuGreyscale_Viewer->setEnabled(false);
+	// disable live view on linux
+	ui->radioButtonLiveViewOff->setChecked(true);
+	ui->groupBoxLiveView->setEnabled(false);
 #endif
+	// disable axes menu until first finish of measurement to avoid crash
+	ui->actionAxes->setEnabled(false);
 }
 
 /**
@@ -624,6 +626,7 @@ void MainWindow::on_measureDone()
 	ui->spinBoxSample->setEnabled(true);
 	ui->horizontalSliderBlock->setEnabled(true);
 	ui->horizontalSliderSample->setEnabled(true);
+	ui->actionAxes->setEnabled(true);
     return;
 }
 
