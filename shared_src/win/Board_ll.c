@@ -413,6 +413,7 @@ es_status_codes SetupDma( uint32_t drvno )
 
 es_status_codes enableInterrupt( uint32_t drvno )
 {
+	ES_LOG("Enable interrupt\n");
 	switch (drvno)
 	{
 	case 1:
@@ -449,12 +450,16 @@ es_status_codes enableInterrupt( uint32_t drvno )
 
 es_status_codes disableInterrupt(uint32_t drvno)
 {
-	DWORD dwStatus = WDC_IntDisable(hDev[drvno]);
-	if (WD_STATUS_SUCCESS != dwStatus)
+	ES_LOG("Disable interrupt\n");
+	if (WDC_IntIsEnabled(hDev[drvno]))
 	{
-		ES_LOG("Failed disabling interrupt. Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
-		ES_LOG("%s", LSCPCIEJ_GetLastErr());
-		return es_disabling_interrupt_failed;
+		DWORD dwStatus = WDC_IntDisable(hDev[drvno]);
+		if (WD_STATUS_SUCCESS != dwStatus)
+		{
+			ES_LOG("Failed disabling interrupt. Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
+			ES_LOG("%s", LSCPCIEJ_GetLastErr());
+			return es_disabling_interrupt_failed;
+		}
 	}
 	return es_no_error;
 }
@@ -615,14 +620,8 @@ es_status_codes _ExitDriver(uint32_t drvno)
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
 	ES_LOG( "Driver exit, drv: %u\n", drvno);
-	if (!settings_struct.useSoftwarePolling)
-	{
-		if (WDC_IntIsEnabled(hDev[drvno]))
-		{
-			status = disableInterrupt(drvno);
-			if (status != es_no_error) return status;
-		}
-	}
+	status = disableInterrupt(drvno);
+	if (status != es_no_error) return status;
 	if (dmaBuffer[drvno])
 	{
 		status = CleanupDma(drvno);

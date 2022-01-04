@@ -211,7 +211,12 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetDmaStartMode(drvno, HWDREQ_EN);
 	if (status != es_no_error) return status;
-	if (!settings_struct.useSoftwarePolling)
+	if (settings_struct.useSoftwarePolling)
+	{
+		status = disableInterrupt(drvno);
+		if (status != es_no_error) return status;
+	}
+	else
 	{
 		status = enableInterrupt(drvno);
 		if (status != es_no_error) return status;
