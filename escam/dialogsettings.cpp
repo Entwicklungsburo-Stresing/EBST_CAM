@@ -691,27 +691,27 @@ void DialogSettings::on_comboBoxFftMode_currentIndexChanged(int index)
         ui->spinBoxRegion6->setEnabled(enabled);
         ui->spinBoxRegion7->setEnabled(enabled);
         ui->spinBoxRegion8->setEnabled(enabled);
-        ui->doubleSpinBoxNos->setEnabled(enabled);
+        ui->doubleSpinBoxNos->setEnabled(true);
 		break;
 	//range of interest
 	case 1:
         ui->labelLinesBinning->setVisible(visible);
         ui->spinBoxLinesBinning->setEnabled(enabled);
         ui->spinBoxLinesBinning->setVisible(visible);
-        ui->labelNumberOfRegions->setVisible(visible);
-        ui->spinBoxNumberOfRegions->setEnabled(enabled);
-        ui->spinBoxNumberOfRegions->setVisible(visible);
-        ui->labelRegionsEqual->setVisible(visible);
-        ui->checkBoxRegionsEqual->setVisible(visible);
-        ui->checkBoxRegionsEqual->setEnabled(enabled);
-        ui->labelRegion1->setVisible(visible);
-        ui->labelRegion2->setVisible(visible);
-        ui->labelRegion3->setVisible(visible);
-        ui->labelRegion4->setVisible(visible);
-        ui->labelRegion5->setVisible(visible);
-        ui->labelRegion6->setVisible(visible);
-        ui->labelRegion7->setVisible(visible);
-        ui->labelRegion8->setVisible(visible);
+        ui->labelNumberOfRegions->setVisible(true);
+        ui->spinBoxNumberOfRegions->setEnabled(true);
+        ui->spinBoxNumberOfRegions->setVisible(true);
+        ui->labelRegionsEqual->setVisible(true);
+        ui->checkBoxRegionsEqual->setVisible(true);
+        ui->checkBoxRegionsEqual->setEnabled(true);
+        ui->labelRegion1->setVisible(!ui->checkBoxRegionsEqual->checkState() || visible);
+        ui->labelRegion2->setVisible(!ui->checkBoxRegionsEqual->checkState() || visible);
+        ui->labelRegion3->setVisible(!ui->checkBoxRegionsEqual->checkState() || visible);
+        ui->labelRegion4->setVisible(!ui->checkBoxRegionsEqual->checkState() || visible);
+        ui->labelRegion5->setVisible(!ui->checkBoxRegionsEqual->checkState() || visible);
+        ui->labelRegion6->setVisible(!ui->checkBoxRegionsEqual->checkState() || visible);
+        ui->labelRegion7->setVisible(!ui->checkBoxRegionsEqual->checkState() || visible);
+        ui->labelRegion8->setVisible(!ui->checkBoxRegionsEqual->checkState() || visible);
 		ui->spinBoxRegion1->setVisible(!ui->checkBoxRegionsEqual->checkState() || visible);
 		ui->spinBoxRegion2->setVisible(!ui->checkBoxRegionsEqual->checkState() || visible);
 		ui->spinBoxRegion3->setVisible(!ui->checkBoxRegionsEqual->checkState() || visible);
@@ -733,9 +733,9 @@ void DialogSettings::on_comboBoxFftMode_currentIndexChanged(int index)
 		break;
 	//area
 	case 2:
-        ui->labelLinesBinning->setVisible(visible);
-        ui->spinBoxLinesBinning->setEnabled(enabled);
-        ui->spinBoxLinesBinning->setVisible(visible);
+        ui->labelLinesBinning->setVisible(true);
+        ui->spinBoxLinesBinning->setEnabled(true);
+        ui->spinBoxLinesBinning->setVisible(true);
         ui->labelNumberOfRegions->setVisible(visible);
         ui->spinBoxNumberOfRegions->setEnabled(enabled);
         ui->spinBoxNumberOfRegions->setVisible(visible);
