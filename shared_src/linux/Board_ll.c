@@ -232,6 +232,13 @@ es_status_codes enableInterrupt( uint32_t drvno )
 	return es_no_error;
 }
 
+es_status_codes disableInterrupt( uint32_t drvno )
+{
+    // disableInterrupt is only used on Windows
+    (void)drvno;
+    return es_no_error;
+}
+
 void ResetBufferWritePos(uint32_t drvno)
 {
 	//on linux: driver numbers are 0 and 1, on windows 1 and 2
