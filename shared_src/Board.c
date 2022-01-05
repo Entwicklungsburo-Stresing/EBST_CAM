@@ -3384,7 +3384,7 @@ es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
         status = WaitTrigger(1, false, &space, &abbr);
 		if (status != es_no_error) return status;
 #else
-		// surpress unused warning
+        // suppress unused warning
 		(void)space;
 #endif
 		i = 0;
@@ -4061,7 +4061,7 @@ void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* blo
 	if (settings_struct.useSoftwarePolling)
 		scanCount = scanCounterTotal;
 	else
-		scanCount = getCurrentInterruptCounter() * dmasPerInterrupt;
+        scanCount = getCurrentInterruptCounter(drvno) * dmasPerInterrupt;
     ES_TRACE("scan counter %lu, Nospb %u, camcnt %u\n", scanCount + offset, *Nospb, aCAMCNT[drvno]);
 	*block = (scanCount - 1 + offset) / (*Nospb * aCAMCNT[drvno]);
 	*sample = (scanCount - 1 + offset) / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno];

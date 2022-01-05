@@ -57,9 +57,6 @@ MainWindow::MainWindow(QWidget* parent)
 #ifdef __linux__
 	// disable greyscale menu on linux
 	ui->menuGreyscale_Viewer->setEnabled(false);
-	// disable live view on linux
-	ui->radioButtonLiveViewOff->setChecked(true);
-	ui->groupBoxLiveView->setEnabled(false);
 #endif
 	// disable axes menu until first finish of measurement to avoid crash
 	ui->actionAxes->setEnabled(false);

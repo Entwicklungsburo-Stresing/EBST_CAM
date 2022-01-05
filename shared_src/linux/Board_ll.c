@@ -380,8 +380,8 @@ uint32_t getDmaBufferSizeInBytes(uint32_t drvno)
     return dev->control->used_dma_size;
 }
 
-int64_t getCurrentInterruptCounter()
+int64_t getCurrentInterruptCounter(uint32_t drvno)
 {
-    //TODO: implement me
-    return 0;
+    struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
+    return (int64_t)dev->control->irq_count;
 }

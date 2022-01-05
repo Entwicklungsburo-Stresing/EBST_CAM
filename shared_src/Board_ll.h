@@ -53,7 +53,7 @@ es_status_codes SetPriority(uint32_t threadp);
 es_status_codes ResetPriority();
 uint16_t* getVirtualDmaAddress(uint32_t drvno);
 uint32_t getDmaBufferSizeInBytes(uint32_t drvno);
-int64_t getCurrentInterruptCounter();
+int64_t getCurrentInterruptCounter(uint32_t drvno);
 
 #ifdef WIN32
 es_status_codes About(uint32_t drvno);
