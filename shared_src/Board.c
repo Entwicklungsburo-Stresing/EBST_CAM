@@ -5,12 +5,15 @@
 #include <string.h>
 #include <stdio.h>
 #include "../shared_src/UIAbstractionLayer.h"
-#include "../shared_src/ESLSCDLL_pro.h"
 #include <math.h>
 #include <sys/types.h>
 #include <sys/timeb.h>
 #ifdef __linux__
 #include <unistd.h>
+#define sprintf_s snprintf
+#endif
+#ifdef WIN32
+#include "../shared_src/ESLSCDLL_pro.h"
 #endif
 
 #ifdef _USRDLL
@@ -3196,11 +3199,11 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 		if (status != es_no_error)
 		{
 			//write error to buffer
-            len += sprintf_s(*stringPtr + len, bufferSize - len, "\nerror while reading register 0x%x %s", i*4, register_names[i]);
+            len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nerror while reading register 0x%x %s", i*4, register_names[i]);
 			return status;
 		}
 		//write register name and value to buffer
-        len += sprintf_s(*stringPtr + len, bufferSize - len, "0x%x  \t%s\t0x%x\n", i*4, register_names[i], data);
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "0x%x  \t%s\t0x%x\n", i*4, register_names[i], data);
 	}
 	return status;
 }
@@ -3245,11 +3248,11 @@ es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr)
 		if (status != es_no_error)
 		{
 			//write error to buffer
-			len += sprintf_s(*stringPtr + len, bufferSize - len, "\nerror while reading register 0x%x %s", i * 4, register_names[i]);
+            len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nerror while reading register 0x%x %s", i * 4, register_names[i]);
 			return status;
 		}
 		//write register name and value to buffer
-        len += sprintf_s(*stringPtr + len, bufferSize - len, "0x%x  \t%s\t0x%x\n", i*4, register_names[i], data);
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "0x%x  \t%s\t0x%x\n", i*4, register_names[i], data);
 	}
 	return status;
 }
@@ -3265,30 +3268,30 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 	size_t bufferSize = bufferLength;
 	//allocate string buffer buffer
 	*stringPtr = (char*)calloc(bufferLength, sizeof(char));
-	len += sprintf_s(*stringPtr + len, bufferSize - len, "PAY_LOAD values:\t"DLLTAB"0 = 128 bytes\n\t"DLLTAB DLLTAB"1 = 256 bytes\n\t"DLLTAB DLLTAB"2 = 512 bytes\n");
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "PAY_LOAD values:\t"DLLTAB"0 = 128 bytes\n\t"DLLTAB DLLTAB"1 = 256 bytes\n\t"DLLTAB DLLTAB"2 = 512 bytes\n");
 	es_status_codes status = readConfig_32(drvno, &data, PCIeAddr_devCap);
 	if (status != es_no_error)
 	{
-		len += sprintf_s(*stringPtr + len, bufferSize - len, "\nerror while reading register\n");
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nerror while reading register\n");
 		return status;
 	}
 	data &= 0x7;
-	len += sprintf_s(*stringPtr + len, bufferSize - len, "PAY_LOAD Supported:\t0x%x\n", data);
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "PAY_LOAD Supported:\t0x%x\n", data);
 	status = readConfig_32(drvno, &data, PCIeAddr_devCap);
 	if (status != es_no_error)
 	{
-		len += sprintf_s(*stringPtr + len, bufferSize - len, "\nerror while reading register\n");
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nerror while reading register\n");
 		return status;
 	}
 	uint32_t actpayload = (data >> 5) & 0x07;
-	len += sprintf_s(*stringPtr + len, bufferSize - len, "PAY_LOAD:\t"DLLTAB"0x%x\n", actpayload);
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "PAY_LOAD:\t"DLLTAB"0x%x\n", actpayload);
 	data >>= 12;
 	data &= 0x7;
-	len += sprintf_s(*stringPtr + len, bufferSize - len, "MAX_READ_REQUEST_SIZE:\t0x%x\n", data);
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "MAX_READ_REQUEST_SIZE:\t0x%x\n", data);
 	uint32_t pixel = 0;
 	status = readRegisterS0_32(drvno, &pixel, S0Addr_PIXREGlow);
 	pixel &= 0xFFFF;
-	len += sprintf_s(*stringPtr + len, bufferSize - len, "Number of pixels:\t"DLLTAB"%u\n", pixel);
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Number of pixels:\t"DLLTAB"%u\n", pixel);
 	switch (actpayload)
 	{
 	case 0: data = 0x20;  break;
@@ -3300,24 +3303,24 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 	case 6: data = 0x800;  break;
 	case 7: data = 0x1600; break;
 	}
-	len += sprintf_s(*stringPtr + len, bufferSize - len, "TLP_SIZE is:\t"DLLTAB"%u DWORDs\n\t"DLLTAB DLLTAB"=%u BYTEs\n", data, data*4);
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "TLP_SIZE is:\t"DLLTAB"%u DWORDs\n\t"DLLTAB DLLTAB"=%u BYTEs\n", data, data*4);
 	status = readRegisterDma_32(drvno, &data, DmaAddr_WDMATLPS);
 	if (status != es_no_error)
 	{
-		len += sprintf_s(*stringPtr + len, bufferSize - len, "\nerror while reading register\n");
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nerror while reading register\n");
 		return status;
 	}
-	len += sprintf_s(*stringPtr + len, bufferSize - len, "TLPS in DMAReg is:\t%u\n", data);
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "TLPS in DMAReg is:\t%u\n", data);
 	if (data)
 		data = (pixel - 1) / (data * 2) + 1;
-	len += sprintf_s(*stringPtr + len, bufferSize - len, "number of TLPs should be:\t%u\n", data);
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "number of TLPs should be:\t%u\n", data);
 	status = readRegisterDma_32(drvno, &data, DmaAddr_WDMATLPC);
 	if (status != es_no_error)
 	{
-		len += sprintf_s(*stringPtr + len, bufferSize - len, "\nerror while reading register\n");
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nerror while reading register\n");
 		return status;
 	}
-	len += sprintf_s(*stringPtr + len, bufferSize - len, "number of TLPs is:\t"DLLTAB"%u", data);
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "number of TLPs is:\t"DLLTAB"%u", data);
 	return status;
 }
 
@@ -3365,13 +3368,13 @@ es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
 	{
 		status = ReadGPXCtrl(drvno, i, &regData);
 		if (status != es_no_error) return status;
-        len += sprintf_s(*stringPtr + len, bufferSize - len, "%s \t: 0x%x\n", LUTS0Reg[i], regData);
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%s \t: 0x%x\n", LUTS0Reg[i], regData);
 	}
     for (uint8_t i = 11; i < 13; i++)
 	{
 		status = ReadGPXCtrl(drvno, i, &regData);
 		if (status != es_no_error) return status;
-        len += sprintf_s(*stringPtr + len, bufferSize - len, "%s \t: 0x%x\n", LUTS0Reg[i], regData);
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%s \t: 0x%x\n", LUTS0Reg[i], regData);
 	}
     bool abbr = false, space = false;
 	int i = 0;
@@ -3385,22 +3388,22 @@ es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
 		(void)space;
 #endif
 		i = 0;
-		len = sprintf_s(*stringPtr + len, bufferSize - len, "read- regs   \n");
+        len = sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "read- regs   \n");
 		i += 1;
 		status = ReadGPXCtrl(drvno, 8, &regData); //lege addr 8 an bus !!!!
 		if (status != es_no_error) return status;
-        len += sprintf_s(*stringPtr + len, bufferSize - len, "%d \t: 0x%x\n", i, regData);
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%d \t: 0x%x\n", i, regData);
 		i += 1;
 		status = ReadGPXCtrl(drvno, 9, &regData); //lege addr 9 an bus !!!!
 		if (status != es_no_error) return status;
-        len += sprintf_s(*stringPtr + len, bufferSize - len, "%d \t: 0x%x\n", i, regData);
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%d \t: 0x%x\n", i, regData);
 	}
 	status = ReadGPXCtrl(drvno, 11, &regData);
 	if (status != es_no_error) return status;
-    len += sprintf_s(*stringPtr + len, bufferSize - len, "%s \t: 0x%x\n", " stop hits", regData);
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%s \t: 0x%x\n", " stop hits", regData);
 	status = ReadGPXCtrl(drvno, 12, &regData);
 	if (status != es_no_error) return status;
-    len += sprintf_s(*stringPtr + len, bufferSize - len, "%s \t: 0x%x\n", " flags", regData);
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%s \t: 0x%x\n", " flags", regData);
 	return ReadGPXCtrl(drvno, 8, &regData); //read access follows                 set addr 8 to bus !!!!
 }
 
@@ -3414,7 +3417,7 @@ es_status_codes dumpSettings(char** stringPtr)
 	size_t bufferSize = bufferLength;
 	//allocate string buffer buffer
 	*stringPtr = (char*)calloc(bufferLength, sizeof(char));
-	len += sprintf_s(*stringPtr + len, bufferSize - len,
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
 		"useSoftwarePolling\t"DLLTAB DLLTAB"%u\n"
 		"nos\t" DLLTAB DLLTAB"%u\n"
 		"nob\t"DLLTAB DLLTAB"%u\n"
@@ -3481,16 +3484,16 @@ es_status_codes dumpSettings(char** stringPtr)
 		settings_struct.lines_binning,
 		settings_struct.number_of_regions,
 		BYTE_TO_BINARY(settings_struct.keep));
-	len += sprintf_s(*stringPtr + len, bufferSize - len, "region size\t"DLLTAB);
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "region size\t"DLLTAB);
 	for (int i = 0; i < 8; i++)
-		len += sprintf_s(*stringPtr + len, bufferSize - len, "%u ", settings_struct.region_size[i]);
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.region_size[i]);
 	for (int drvno = 0; drvno < MAXPCIECARDS; drvno++)
 	{
-		len += sprintf_s(*stringPtr + len, bufferSize - len, "\ndac output board %i\t", drvno);
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\ndac output board %i\t", drvno);
 		for (int i = 0; i < 8; i++)
-			len += sprintf_s(*stringPtr + len, bufferSize - len, "%u ", settings_struct.dac_output[drvno][i]);
+            len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.dac_output[drvno][i]);
 	}
-	len += sprintf_s(*stringPtr + len, bufferSize - len,
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
 		"\ntor mode\t"DLLTAB DLLTAB"%u\n"
 		"adc mode\t"DLLTAB"%u\n"
 		"adc custom pattern\t%u\n"
@@ -3503,13 +3506,13 @@ es_status_codes dumpSettings(char** stringPtr)
 		settings_struct.bec_in_10ns,
 		settings_struct.isIr,
 		settings_struct.IOCtrl_impact_start_pixel);
-	len += sprintf_s(*stringPtr + len, bufferSize - len, "IOCtrl_output_width_in_5ns\t");
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "IOCtrl_output_width_in_5ns\t");
 	for (int i = 0; i < 7; i++)
-		len += sprintf_s(*stringPtr + len, bufferSize - len, "%u ", settings_struct.IOCtrl_output_width_in_5ns[i]);
-	len += sprintf_s(*stringPtr + len, bufferSize - len, "\nIOCtrl_output_delay_in_5ns\t");
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.IOCtrl_output_width_in_5ns[i]);
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nIOCtrl_output_delay_in_5ns\t");
 	for (int i = 0; i < 7; i++)
-		len += sprintf_s(*stringPtr + len, bufferSize - len, "%u ", settings_struct.IOCtrl_output_delay_in_5ns[i]);
-	len += sprintf_s(*stringPtr + len, bufferSize - len,
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.IOCtrl_output_delay_in_5ns[i]);
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
 		"\nIOCtrl_T0_period_in_10ns\t%u",
 		settings_struct.IOCtrl_T0_period_in_10ns);
 	return es_no_error;
@@ -3592,10 +3595,10 @@ es_status_codes dumpPciRegisters(uint32_t drvno, char** stringPtr)
 		if (status != es_no_error)
 		{
 			//write error to buffer
-			length += sprintf_s(*stringPtr + length, bufferSize - length, "\nerror while reading register %i %s", i*4, register_names[i]);
+            length += sprintf_s(*stringPtr + length, bufferSize - (size_t)length, "\nerror while reading register %i %s", i*4, register_names[i]);
 			return status;
 		}
-        length += sprintf_s(*stringPtr + length, bufferSize - length, "0x%x  \t%s\t0x%x\n", i * 4, register_names[i], data);
+        length += sprintf_s(*stringPtr + length, bufferSize - (size_t)length, "0x%x  \t%s\t0x%x\n", i * 4, register_names[i], data);
 	}
 	return status;
 }
@@ -3629,9 +3632,9 @@ es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
 	es_status_codes status = readRegisterS0_32(drvno, &data, S0Addr_CTRLA); // Board ID =5053
 	if (status != es_no_error) return status;
 	data = data >> 16;
-    len += sprintf_s(*stringPtr + len, bufferSize - len, " Board #%i    ID \t= 0x%x\n", drvno, data);
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, " Board #%i    ID \t= 0x%x\n", drvno, data);
 	data = 0x07FF;
-    len += sprintf_s(*stringPtr + len, bufferSize - len, "Board #%i     length \t= 0x%x\n", drvno, data);
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i     length \t= 0x%x\n", drvno, data);
     uint8_t udata1 = 0,
 		udata2 = 0,
 		udata3 = 0,
@@ -3646,13 +3649,13 @@ es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
 		if (status != es_no_error) return status;
 		status = readRegisterS0_8(drvno, &udata4, 0x1F);
 		if (status != es_no_error) return status;
-        len += sprintf_s(*stringPtr + len, bufferSize - len, "Board #%i  ven ID \t= %c%c%c%c\n", drvno, udata1, udata2, udata3, udata4);
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i  ven ID \t= %c%c%c%c\n", drvno, udata1, udata2, udata3, udata4);
 	}
 	if (data >= 0x3F)
 	{//if 9056 -> has space 0x40
 		status = readRegisterS0_32(drvno, &data, S0Addr_PCI);
 		if (status != es_no_error) return status;
-        len += sprintf_s(*stringPtr + len, bufferSize - len, "Board #%i   board version \t= 0x%x\n", drvno, data);
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i   board version \t= 0x%x\n", drvno, data);
 	}
 	return es_no_error;
 }
