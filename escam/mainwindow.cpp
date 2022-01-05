@@ -112,7 +112,7 @@ void MainWindow::setChartData(uint16_t* data, uint16_t length, uint16_t numberOf
         for(uint16_t i=0; i<length; i++)
         {
 			// Append the current data point to the current data set.
-            series[set]->append(i, *(data + i + ((uint64_t)length * (uint64_t)set)));
+            series[set]->append(i, *(data + i + (static_cast<uint64_t>(length) * static_cast<uint64_t>(set))));
         }
     }
     setChartData(series, numberOfSets);
