@@ -1109,11 +1109,14 @@ uint16_t* getVirtualDmaAddress(uint32_t drvno)
 
 uint32_t getDmaBufferSizeInBytes(uint32_t drvno)
 {
+    // drvno is only used on linux, so suppress warning here
 	(void)drvno;
 	return dmaBufferSizeInBytes;
 }
 
-int64_t getCurrentInterruptCounter()
+int64_t getCurrentInterruptCounter(uint32_t drvno)
 {
+    // drvno is only used on linux, so suppress warning here
+    (void)drvno;
 	return IsrCounter;
 }
