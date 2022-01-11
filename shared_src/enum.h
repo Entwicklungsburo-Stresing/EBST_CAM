@@ -77,6 +77,20 @@ enum CTRLA_bits
 	CTRLA_bitindex_TSTART = 7
 };
 
+enum TOR_TICNT_bits
+{
+	TOR_bits_TICNT = 0x7F,
+	TOR_bit_TICNT_EN = 0x80,
+	TOR_bitindex_TICNT_EN = 7,
+};
+
+enum TOR_TOCNT_bits
+{
+	TOR_bits_TOCNT = 0x7F,
+	TOR_bit_TOCNT_EN = 0x80,
+	TOR_bitindex_TOCNT_EN = 7,
+};
+
 enum TOR_MSB_bits
 {
 	TOR_MSB_bit_ISFFT = 0x01,
@@ -135,7 +149,8 @@ enum s0_addresses
 	S0Addr_EBST = 0x1C, //0x1c
 	S0Addr_SDAT = 0x20, //0x20
 	S0Addr_SEC = 0x24, //0x24
-	S0Addr_TOR = 0x28, //0x28
+	S0Addr_TOR_TICNT = 0x28, //0x28
+	S0Addr_TOR_TOCNT = 0x2A,
 	S0Addr_TOR_MSB = 0x2B,
 	S0Addr_ARREG = 0x2C, //0x2c
 	S0Addr_GIOREG = 0x30,

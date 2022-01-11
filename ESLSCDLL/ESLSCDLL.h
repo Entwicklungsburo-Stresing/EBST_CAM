@@ -129,6 +129,8 @@ DllAccess es_status_codes DLLInitGPX(UINT32 drvno, UINT32 delay);
 DllAccess es_status_codes DLLIOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns);
 DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t drvno, uint16_t* width_in_5ns, uint16_t* delay_in_5ns);
 DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns);
+DllAccess es_status_codes DLLSetTicnt(uint32_t drvno, uint8_t divider);
+DllAccess es_status_codes DLLSetTocnt(uint32_t drvno, uint8_t divider);
 //************ read and write functions
 DllAccess es_status_codes DLLReadByteS0(UINT32 drvno, UINT8 *data, UINT32 address);
 DllAccess es_status_codes DLLWriteByteS0(UINT32 drvno, UINT8 data, UINT32 address);
