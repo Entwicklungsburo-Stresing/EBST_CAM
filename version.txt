@@ -1,3 +1,10 @@
+v3.21.1
+- Add live view on linux
+- Add Tocnt and Ticnt
+- Fix some crashes
+Escam:
+- Improve dump registers dialog
+
 v3.21.0
 - Increase PCIe board version to P202_21
 - There is an additional scan counter at the last pixel now. This is used in PollDmaBufferToUserBuffer.
