@@ -176,6 +176,8 @@ struct global_settings
 	 * Size of DMA buffer in scans. 1000 is our default. 60 is also working with highspeed (expt=0,02ms). 30 could be with one wrong scan every 10000 scans.
 	 */
 	uint32_t dma_buffer_size_in_scans;
+	uint32_t tocnt;
+	uint32_t ticnt;
 };
 
 #endif // STRUCT_H

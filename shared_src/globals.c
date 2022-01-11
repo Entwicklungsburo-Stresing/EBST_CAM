@@ -106,4 +106,6 @@ struct global_settings settings_struct =
 	.IOCtrl_output_delay_in_5ns[6]	= settingIOCtrlOutput7DelayIn5nsDefault,
 	.IOCtrl_T0_period_in_10ns		= settingIOCtrlT0PeriodIn10nsDefault,
 	.dma_buffer_size_in_scans		= settingDmaBufferSizeInScansDefault,
+	.tocnt							= settingTocntDefault,
+	.ticnt							= settingTicntDefault,
 };
