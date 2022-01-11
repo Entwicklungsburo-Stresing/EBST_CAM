@@ -4092,10 +4092,10 @@ void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* blo
  */
 es_status_codes SetTicnt(uint32_t drvno, uint8_t divider)
 {
-	ES_LOG("Set TICNT to %u", divider);
+	ES_LOG("Set TICNT to %u\n", divider);
 	// If divider is not 0, set the enable bit to 1
 	if (divider)
-		divider &= TOR_bit_TICNT_EN;
+		divider |= TOR_bit_TICNT_EN;
 	return writeRegisterS0_8(drvno, divider, S0Addr_TOR_TICNT);
 }
 
@@ -4112,9 +4112,9 @@ es_status_codes SetTicnt(uint32_t drvno, uint8_t divider)
  */
 es_status_codes SetTocnt(uint32_t drvno, uint8_t divider)
 {
-	ES_LOG("Set TOCNT to %u", divider);
+	ES_LOG("Set TOCNT to %u\n", divider);
 	// If divider is not 0, set the enable bit to 1
 	if (divider)
-		divider &= TOR_bit_TOCNT_EN;
+		divider |= TOR_bit_TOCNT_EN;
 	return writeRegisterS0_8(drvno, divider, S0Addr_TOR_TOCNT);
 }
