@@ -125,6 +125,8 @@ es_status_codes GetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32
 void PollDmaBufferToUserBuffer(uint32_t* drvno_p);
 void GetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block);
 void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* block);
+es_status_codes SetTicnt(uint32_t drvno, uint8_t divider);
+es_status_codes SetTocnt(uint32_t drvno, uint8_t divider);
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);
