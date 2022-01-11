@@ -4068,3 +4068,41 @@ void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* blo
     ES_TRACE("block %li, scan %li\n", *block, *sample);
 	return;
 }
+
+/**
+ * \brief Set the trigger input divider
+ * 
+ * \param drvno PCIe board identifier
+ * \param divider
+ *		- 0: disable this function (every trigger is used)
+ *		- 1-7: use every n'th trigger
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes SetTicnt(uint32_t drvno, uint8_t divider)
+{
+	// If divider is not 0, set the enable bit to 1
+	if (divider)
+		divider &= TOR_bit_TICNT_EN;
+	return writeRegisterS0_8(drvno, divider, S0Addr_TOR_TICNT);
+}
+
+/**
+ * \brief Set the trigger output divider
+ *
+ * \param drvno PCIe board identifier
+ * \param divider
+ *		- 0: disable this function (every trigger is used)
+ *		- 1-7: use every n'th trigger
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes SetTocnt(uint32_t drvno, uint8_t divider)
+{
+	// If divider is not 0, set the enable bit to 1
+	if (divider)
+		divider &= TOR_bit_TOCNT_EN;
+	return writeRegisterS0_8(drvno, divider, S0Addr_TOR_TOCNT);
+}

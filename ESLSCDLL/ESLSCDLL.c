@@ -845,3 +845,19 @@ DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t*
 	GetCurrentScanNumber(drvno, sample, block);
 	return;
 }
+
+/**
+ * \copydoc SetTicnt
+ */
+DllAccess es_status_codes DLLSetTicnt(uint32_t drvno, uint8_t divider)
+{
+	return SetTicnt(drvno, divider);
+}
+
+/**
+ * \copydoc SetTocnt
+ */
+DllAccess es_status_codes DLLSetTocnt(uint32_t drvno, uint8_t divider)
+{
+	return SetTocnt(drvno, divider);
+}
