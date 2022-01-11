@@ -242,6 +242,10 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 		if (status != es_no_error) return status;
 	}
 	status = IOCtrl_setT0(drvno, settings_struct.IOCtrl_T0_period_in_10ns);
+	if (status != es_no_error) return status;
+	status = SetTicnt(drvno, settings_struct.ticnt);
+	if (status != es_no_error) return status;
+	status = SetTocnt(drvno, settings_struct.tocnt);
 	return status;
 }
 
@@ -3513,8 +3517,14 @@ es_status_codes dumpSettings(char** stringPtr)
 	for (int i = 0; i < 7; i++)
         len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.IOCtrl_output_delay_in_5ns[i]);
     len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
-		"\nIOCtrl_T0_period_in_10ns\t%u",
-		settings_struct.IOCtrl_T0_period_in_10ns);
+		"\nIOCtrl_T0_period_in_10ns\t%u"
+		"\dma_buffer_size_in_scans\t%u"
+		"\tocnt\t%u"
+		"\ticnt\t%u",
+		settings_struct.IOCtrl_T0_period_in_10ns,
+		settings_struct.dma_buffer_size_in_scans,
+		settings_struct.tocnt,
+		settings_struct.ticnt);
 	return es_no_error;
 }
 
@@ -4082,6 +4092,7 @@ void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* blo
  */
 es_status_codes SetTicnt(uint32_t drvno, uint8_t divider)
 {
+	ES_LOG("Set TICNT to %u", divider);
 	// If divider is not 0, set the enable bit to 1
 	if (divider)
 		divider &= TOR_bit_TICNT_EN;
@@ -4101,6 +4112,7 @@ es_status_codes SetTicnt(uint32_t drvno, uint8_t divider)
  */
 es_status_codes SetTocnt(uint32_t drvno, uint8_t divider)
 {
+	ES_LOG("Set TOCNT to %u", divider);
 	// If divider is not 0, set the enable bit to 1
 	if (divider)
 		divider &= TOR_bit_TOCNT_EN;
