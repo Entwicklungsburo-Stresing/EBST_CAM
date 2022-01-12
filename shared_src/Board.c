@@ -3415,7 +3415,7 @@ es_status_codes dumpSettings(char** stringPtr)
 {
 	enum N
 	{
-		bufferLength = 1000,
+		bufferLength = 2000,
 	};
     int len = 0;
 	size_t bufferSize = bufferLength;
@@ -4085,7 +4085,7 @@ void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* blo
  * \param drvno PCIe board identifier
  * \param divider
  *		- 0: disable this function (every trigger is used)
- *		- 1-7: use every n'th trigger
+ *		- 1-7: omit n trigger
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
