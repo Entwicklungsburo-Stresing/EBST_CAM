@@ -385,3 +385,9 @@ int64_t getCurrentInterruptCounter(uint32_t drvno)
     struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
     return (int64_t)dev->control->irq_count;
 }
+
+uint8_t WaitforTelapsed(long long musec)
+{
+	usleep(musec);
+	return 1;
+}

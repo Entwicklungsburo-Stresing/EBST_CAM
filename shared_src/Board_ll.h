@@ -54,6 +54,7 @@ es_status_codes ResetPriority();
 uint16_t* getVirtualDmaAddress(uint32_t drvno);
 uint32_t getDmaBufferSizeInBytes(uint32_t drvno);
 int64_t getCurrentInterruptCounter(uint32_t drvno);
+uint8_t WaitforTelapsed(long long musec);
 
 #ifdef WIN32
 es_status_codes About(uint32_t drvno);
@@ -70,7 +71,6 @@ void ValMsg(uint64_t val);
 long long ticksTimestamp();
 es_status_codes WaitTrigger(uint32_t drvno, bool ExtTrigFlag, bool *SpaceKey, bool *AbrKey);
 uint32_t Tickstous(uint64_t tks);
-uint8_t WaitforTelapsed(long long musec);
 void InitProDLL();
 #endif
 

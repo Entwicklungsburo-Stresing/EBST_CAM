@@ -9,7 +9,6 @@
 #include <sys/types.h>
 #include <sys/timeb.h>
 #ifdef __linux__
-#include <unistd.h>
 #define sprintf_s snprintf
 #endif
 #ifdef WIN32
@@ -1420,16 +1419,12 @@ es_status_codes SendFLCAM( uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16
 	ldata |= data;
 	es_status_codes status = writeRegisterS0_32( drvno, ldata, S0Addr_DBR );
 	if (status != es_no_error) return status;
-#ifdef __linux__
-    usleep(500);
-#endif
+	WaitforTelapsed(500);
 	//load val
 	ldata |= 0x4000000;
 	status = writeRegisterS0_32(drvno, ldata, S0Addr_DBR);
 	if (status != es_no_error) return status;
-#ifdef __linux__
-    usleep(500);
-#endif
+	WaitforTelapsed(500);
 	//rs load
 	ldata = 0;
 	return writeRegisterS0_32(drvno, ldata, S0Addr_DBR);
@@ -2348,9 +2343,7 @@ es_status_codes StartMeasurement()
 		// DMAWRACT _______-----___
 		// BLOCKON ---------_______
 		// MEASUREON ---------_____
-#ifdef WIN32
 		WaitforTelapsed(100);
-#endif
 		// Reset the hardware bit measure on.
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
@@ -2366,9 +2359,7 @@ es_status_codes StartMeasurement()
 		if (checkSpaceKeyState())
 			continiousMeasurementFlag = false;
 		abortMeasurementFlag = checkEscapeKeyState();
-#ifdef WIN32
 		WaitforTelapsed(continiousPauseInMicroseconds);
-#endif
 	} while (continiousMeasurementFlag && !abortMeasurementFlag);
 	ES_LOG("*** Measurement done ***\n\n");
 	return ReturnStartMeasurement(status);
@@ -3011,12 +3002,7 @@ es_status_codes OutTrigPulse(uint32_t drvno, uint32_t PulseWidth)
 {
 	es_status_codes status = OutTrigHigh(drvno);
 	if (status != es_no_error) return status;
-#ifdef WIN32
-    Sleep(PulseWidth);
-#endif
-#ifdef __linux__
-    usleep(PulseWidth * 1000);
-#endif
+	WaitforTelapsed(PulseWidth * 1000);
 	return OutTrigLow(drvno);
 }
 
