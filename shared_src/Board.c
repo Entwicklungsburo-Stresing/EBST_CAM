@@ -3517,10 +3517,10 @@ es_status_codes dumpSettings(char** stringPtr)
 	for (int i = 0; i < 7; i++)
         len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.IOCtrl_output_delay_in_5ns[i]);
     len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
-		"\nIOCtrl_T0_period_in_10ns\t%u"
-		"\dma_buffer_size_in_scans\t%u"
-		"\tocnt\t%u"
-		"\ticnt\t%u",
+		"\nIOCtrl_T0_period_in_10ns\t%u\n"
+		"dma_buffer_size_in_scans\t%u\n"
+		"tocnt\t%u\n"
+		"ticnt\t%u\n",
 		settings_struct.IOCtrl_T0_period_in_10ns,
 		settings_struct.dma_buffer_size_in_scans,
 		settings_struct.tocnt,
