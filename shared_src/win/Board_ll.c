@@ -5,9 +5,6 @@
 #define LSCPCIEJ_DEFAULT_LICENSE_STRING "872759e7d022a2499e5dcb42c25d1f889fdf524932d756df481fa728700d.WD1400_64_NL_Entwicklungsbuero_Stresing"
 #define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
 
-#include "Jungo/windrvr.h"
-#include "Jungo/wdc_defs.h"
-#include "shared_src/lscpciej_lib.h"
 #include "shared_src/ESLSCDLL_pro.h"
 
 WDC_DEVICE_HANDLE hDev_tmp[MAXPCIECARDS];

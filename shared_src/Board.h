@@ -6,11 +6,8 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include "Board_ll.h"
-#include "enum.h"
-#include "struct.h"
 #include <stdbool.h>
-#include "globals.h"
+#include "Board_ll.h"
 
 // High level API
 // plattform independet implementation

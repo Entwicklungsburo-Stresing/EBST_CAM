@@ -1,6 +1,6 @@
 #pragma once
 #include <windows.h>
-#include "shared_src/es_status_codes.h"
+#include "shared_src/board.h"
 
 // Microsoft C/C++ specific import/export specifier.
 // These take the place of the EXPORTS and IMPORTS
