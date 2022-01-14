@@ -8,6 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include "struct.h"
+#include "enum.h"
 
 #define MANUAL_OVERRIDE_TLP false
 #define LEGACY_202_14_TLPCNT false

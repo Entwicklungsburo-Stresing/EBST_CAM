@@ -19,13 +19,6 @@
 #define COMPILE_FOR_LABVIEW TRUE
 
 #include <windows.h>
-#include <tchar.h> // for FreeMem-Function
-#include <stdlib.h> 
-#include <conio.h>
-#include <string.h>
-#include <stdio.h>
-#include <process.h>	// for Thread example
-#include <malloc.h>		// msize
 #if COMPILE_FOR_LABVIEW
 #include "LabVIEW 2015/cintools/extcode.h"
 #endif

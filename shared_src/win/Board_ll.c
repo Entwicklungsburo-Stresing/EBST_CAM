@@ -4,9 +4,6 @@
 
 ***REMOVED***#define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
 
-#include "Jungo/windrvr.h"
-#include "Jungo/wdc_defs.h"
-#include "shared_src/lscpciej_lib.h"
 #include "shared_src/ESLSCDLL_pro.h"
 
 WDC_DEVICE_HANDLE hDev_tmp[MAXPCIECARDS];

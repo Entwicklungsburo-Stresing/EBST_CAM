@@ -40,9 +40,6 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\shared_src\CCDCTL.H">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\shared_src\lscpciej_lib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -65,6 +62,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\shared_src\globals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\default_settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
