@@ -1,18 +1,9 @@
 #include "Board.h"
-#include "enum.h"
-#include "es_status_codes.h"
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
 #include "../shared_src/UIAbstractionLayer.h"
-#include <math.h>
 #include <sys/types.h>
 #include <sys/timeb.h>
 #ifdef __linux__
 #define sprintf_s snprintf
-#endif
-#ifdef WIN32
-#include "../shared_src/ESLSCDLL_pro.h"
 #endif
 
 #ifdef _USRDLL

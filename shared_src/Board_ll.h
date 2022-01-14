@@ -2,13 +2,13 @@
 #define BOARDLL_H
 
 #include <stdint.h>
-#include "es_status_codes.h"
 #include "globals.h"
+#include "es_status_codes.h"
 
 #ifdef WIN32
 #define ES_LOG(...) WDC_Err(__VA_ARGS__);
 #define ES_TRACE(...) WDC_Trace(__VA_ARGS__);
-#include "Jungo/wdc_lib.h"
+#include "shared_src/lscpciej_lib.h"
 extern WDC_DEVICE_HANDLE* hDev;
 extern bool _SHOW_MSG;
 #endif

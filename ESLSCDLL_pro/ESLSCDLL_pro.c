@@ -24,7 +24,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 int nProcessCount = 0;
 int nThreadCount = 0;
 
-#include "shared_src/board.h"
 
 void	*Direct2dViewer = NULL;
 

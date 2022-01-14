@@ -1,5 +1,4 @@
 #include "globals.h"
-#include "enum.h"
 #include "default_settings.h"
 
 uint32_t tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
