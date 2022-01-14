@@ -987,17 +987,19 @@ uint32_t Tickstous(uint64_t tks)
 	return (UINT32)delay;
 } // Tickstous
 
+
 /**
-\brief This functions returns after a time given in microseconds. The time is measured in CPU ticks. The function is escable by pressing ESC.
-\param musec Time to wait in microseconds.
-\return 1 when success, 0 when aborted by ESC or failure
-*/
+ * \brief This functions returns after a time given in microseconds. The time is measured in CPU ticks. The function is escable by pressing ESC.
+ *
+ * \param musec Time to wait in microseconds.
+ * \return 1 when success, 0 when aborted by ESC or failure
+ */
 uint8_t WaitforTelapsed(long long musec)
 {
 	ES_LOG("Wait for %u microseconds\n", musec);
-	LONGLONG ticks_to_wait = musec * TPS / 1000000;
-	LONGLONG start_timestamp = ticksTimestamp();
-	LONGLONG destination_timestamp = start_timestamp + ticks_to_wait;
+	long long ticks_to_wait = musec * TPS / 1000000;
+	long long start_timestamp = ticksTimestamp();
+	long long destination_timestamp = start_timestamp + ticks_to_wait;
 	//WDC_Err("Startzeit: %lld\n", start_timestamp);
 	// detect overflow
 	if (destination_timestamp < start_timestamp) return 0;
