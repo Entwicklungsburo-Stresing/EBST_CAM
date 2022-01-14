@@ -874,7 +874,7 @@ void ErrorMsg(char ErrMsg[100])
 {
 	if (_SHOW_MSG)
 	{
-		if (MessageBox(GetActiveWindow(), (LPCTSTR)ErrMsg, (LPCTSTR)"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+		if (MessageBoxA(GetActiveWindow(), (LPCTSTR)ErrMsg, (LPCTSTR)"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 	}
 };
 
@@ -890,7 +890,7 @@ void ValMsg(uint64_t val)
 	if (_SHOW_MSG)
 	{
 		sprintf_s(AString, 60, "%s%d 0x%I64x", "val= ", val, val);
-		if (MessageBox(GetActiveWindow(), (LPCTSTR)AString, (LPCTSTR)"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+		if (MessageBoxA(GetActiveWindow(), (LPCTSTR)AString, (LPCTSTR)"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 	}
 };
 
