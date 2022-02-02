@@ -1,5 +1,5 @@
 v3.22.0
-- The previous statement, that the new scan counter at the last pixel was introduce in P202_21 was false. P202_22 does that and this version is required to use software polling.
+- The previous statement, that the new scan counter at the last pixel was introduced in P202_21 was false. P202_22 does that and this version is required to use software polling.
 - Fix ValMsg and ErrorMsg
 - Other small fixes
 
