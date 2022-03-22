@@ -2,6 +2,7 @@
 #include "../shared_src/UIAbstractionLayer.h"
 #include <sys/types.h>
 #include <sys/timeb.h>
+#include <math.h> // for sqrt()
 #ifdef __linux__
 #define sprintf_s snprintf
 #endif
