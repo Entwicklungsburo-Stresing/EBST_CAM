@@ -100,6 +100,8 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	abortMeasurementFlag = false;
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
+	status = FindCam(drvno);
+	if (status != es_no_error) return status;
 	BOARD_SEL = settings_struct.board_sel;
 	status = ClearAllUserRegs(drvno);
 	if (status != es_no_error) return status;
@@ -220,8 +222,6 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	status = SetBEC(drvno, settings_struct.bec_in_10ns);
 	if (status != es_no_error) return status;
 	status = SetXckdelay(drvno, settings_struct.xckdelay_in_10ns);
-	if (status != es_no_error) return status;
-	status = FindCam(drvno);
 	if (status != es_no_error) return status;
 	status = SetHardwareTimerStopMode(drvno, true);
 	if (status != es_no_error) return status;
