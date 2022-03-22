@@ -227,12 +227,33 @@ void MainWindow::startPressed()
 	settings_struct.IOCtrl_T0_period_in_10ns = settings.value(settingIOCtrlT0PeriodIn10nsPath, settingIOCtrlT0PeriodIn10nsDefault).toUInt();
 
 	es_status_codes status = lsc.initMeasurement();
-	if (status != es_no_error) {
+	if (status == es_camera_not_found)
+	{
+		QMessageBox* d = new QMessageBox(this);
+		d->setWindowTitle("Camera not found");
+		d->setText("No Camera found. Do you want to use dummy data?");
+		d->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+		int ret = d->exec();
+		switch (ret)
+		{
+		case QMessageBox::Yes:
+			// Yes was clicked
+			for (uint32_t drvno = 1; drvno <= number_of_boards; drvno++)
+				lsc.fillUserBufferWithDummyData(drvno);
+			break;
+		default:
+		case QMessageBox::No:
+			// No was clicked
+			// Do nothing
+			break;
+		}
+	}
+	else if (status != es_no_error)
+	{
 		QErrorMessage* d = new QErrorMessage(this);
 		d->setWindowTitle("Error");
 		d->setWindowModality(Qt::ApplicationModal);
         d->showMessage(tr(ConvertErrorCodeToMsg(status)));
-		return;
 	}
     measurementThread.start();
 	return;
