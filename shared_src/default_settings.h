@@ -32,7 +32,7 @@
 #define settingGpxDefault							false
 #define settingGpxOffsetDefault						0
 #define settingLinesDefault							64
-#define settingVfreqDefault							0
+#define settingVfreqDefault							7
 #define settingFftModeDefault						full_binning
 #define settingLinesBinningDefault					1
 #define settingNumberOfRegionsDefault				3
