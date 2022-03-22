@@ -1334,6 +1334,8 @@ es_status_codes SetBDAT( uint32_t drvno, uint32_t datin10ns )
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
  */
 es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_trigger_input, uint8_t is_fft, uint8_t is_area, uint8_t IS_COOLED, uint16_t led_off, uint16_t sensor_gain )
 {
@@ -1400,16 +1402,20 @@ es_status_codes Use_ENFFW_protection( uint32_t drvno, bool USE_ENFFW_PROTECT )
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
  */
 es_status_codes SendFLCAM( uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16_t data )
 {
+	es_status_codes status = FindCam(drvno);
+	if (status != es_no_error) return status;
 	uint32_t ldata = 0;
 	ldata = maddr;
 	ldata = ldata << 8;
 	ldata |= adaddr;
 	ldata = ldata << 16;
 	ldata |= data;
-	es_status_codes status = writeRegisterS0_32( drvno, ldata, S0Addr_DBR );
+	status = writeRegisterS0_32( drvno, ldata, S0Addr_DBR );
 	if (status != es_no_error) return status;
 	WaitforTelapsed(500);
 	//load val
@@ -1472,6 +1478,8 @@ es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custo
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
  */
 es_status_codes Cam3010_ADC_reset( uint32_t drvno )
 {
@@ -1479,6 +1487,17 @@ es_status_codes Cam3010_ADC_reset( uint32_t drvno )
 	return SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_reset, adc_ltc2271_msg_reset );
 }
 
+/**
+ * \brief 
+ * \param drvno selects PCIe board
+ * \param adc_mode
+ * \param custom_pattern
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
+ */
 es_status_codes Cam3010_ADC_setOutputMode(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern) {
 
 	if (2 == adc_mode) {
@@ -1493,6 +1512,16 @@ es_status_codes Cam3010_ADC_setOutputMode(uint32_t drvno, uint8_t adc_mode, uint
 	}
 }
 
+/**
+ * \brief
+ * \param drvno selects PCIe board
+ * \param custom_pattern
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
+ */
 es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_pattern) {
 	es_status_codes status;
 
@@ -1521,6 +1550,8 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
  */
 es_status_codes InitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t adc_gain, bool useDac, uint32_t* dac_output, bool isIr )
 {
@@ -1555,6 +1586,8 @@ es_status_codes InitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custo
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
  */
 es_status_codes Cam3030_ADC_reset( uint32_t drvno )
 {
@@ -1572,6 +1605,8 @@ es_status_codes Cam3030_ADC_reset( uint32_t drvno )
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
  */
 es_status_codes Cam3030_ADC_twoWireModeEN( uint32_t drvno )
 {
@@ -1614,6 +1649,8 @@ es_status_codes Cam3030_ADC_SetGain( uint32_t drvno, uint8_t gain )
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
  */
 es_status_codes SetADGain( uint32_t drvno, uint8_t fkt, uint8_t g1, uint8_t g2, uint8_t g3, uint8_t g4, uint8_t g5, uint8_t g6, uint8_t g7, uint8_t g8 )
 {
@@ -1668,6 +1705,8 @@ es_status_codes SetADGain( uint32_t drvno, uint8_t fkt, uint8_t g1, uint8_t g2, 
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
  */
 es_status_codes Cam3030_ADC_RampOrPattern( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern )
 {
@@ -1698,6 +1737,8 @@ es_status_codes Cam3030_ADC_RampOrPattern( uint32_t drvno, uint8_t adc_mode, uin
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
  */
 es_status_codes SetTemp( uint32_t drvno, uint8_t level )
 {
@@ -1718,6 +1759,8 @@ es_status_codes SetTemp( uint32_t drvno, uint8_t level )
  *		- es_no_error
  *		- es_register_write_failed
  *		- es_parameter_out_of_range
+ *		- es_register_read_failed
+ *		- es_camera_not_found
  */
 es_status_codes SendFLCAM_DAC( uint32_t drvno, uint8_t ctrl, uint8_t addr, uint16_t data, uint8_t feature )
 {
@@ -2943,6 +2986,8 @@ es_status_codes isMeasureOn(uint32_t drvno, bool* measureOn)
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
  */
 es_status_codes LedOff(uint32_t drvno, uint8_t LED_OFF)
 {
@@ -3070,6 +3115,8 @@ es_status_codes readBlockTriggerState(uint32_t drv, uint8_t btrig_ch, bool* stat
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
  */
 es_status_codes SetGain(uint32_t drvno, uint16_t gain_value)
 {
@@ -3819,6 +3866,8 @@ es_status_codes GetDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint3
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
  */
 es_status_codes IOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixel)
 {
@@ -3837,6 +3886,8 @@ es_status_codes IOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixel)
  *		- es_no_error
  *		- es_register_write_failed
  *		- es_parameter_out_of_range
+ *		- es_register_read_failed
+ *		- es_camera_not_found
  */
 es_status_codes IOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns)
 {
@@ -3911,6 +3962,8 @@ es_status_codes IOCtrl_setAllOutputs(uint32_t drvno, uint32_t* width_in_5ns, uin
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
  */
 es_status_codes IOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 {
