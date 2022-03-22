@@ -97,10 +97,9 @@ es_status_codes InitMeasurement()
 es_status_codes _InitMeasurement(uint32_t drvno)
 {
 	ES_LOG("\nInit board %u\n", drvno);
+	// Init software and PCIe board
 	abortMeasurementFlag = false;
 	es_status_codes status = checkDriverHandle(drvno);
-	if (status != es_no_error) return status;
-	status = FindCam(drvno);
 	if (status != es_no_error) return status;
 	BOARD_SEL = settings_struct.board_sel;
 	status = ClearAllUserRegs(drvno);
@@ -179,7 +178,38 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetBDAT(drvno, settings_struct.bdat_in_10ns);
 	if (status != es_no_error) return status;
-	//init Camera
+	continiousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
+	ES_LOG("Setting continuous pause to %u\n", continiousPauseInMicroseconds);
+	status = SetBEC(drvno, settings_struct.bec_in_10ns);
+	if (status != es_no_error) return status;
+	status = SetXckdelay(drvno, settings_struct.xckdelay_in_10ns);
+	if (status != es_no_error) return status;
+	status = SetHardwareTimerStopMode(drvno, true);
+	if (status != es_no_error) return status;
+	//DMA
+	status = SetupDma(drvno);
+	if (status != es_no_error) return status;
+	status = SetDmaRegister(drvno, settings_struct.pixel);
+	if (status != es_no_error) return status;
+	status = SetDmaStartMode(drvno, HWDREQ_EN);
+	if (status != es_no_error) return status;
+	if (settings_struct.useSoftwarePolling)
+	{
+		status = disableInterrupt(drvno);
+		if (status != es_no_error) return status;
+	}
+	else
+	{
+		status = enableInterrupt(drvno);
+		if (status != es_no_error) return status;
+	}
+	if (status != es_no_error) return status;
+	status = SetTicnt(drvno, settings_struct.ticnt);
+	if (status != es_no_error) return status;
+	status = SetTocnt(drvno, settings_struct.tocnt);
+	// Init Camera
+	status = FindCam(drvno);
+	if (status != es_no_error) return status;
     status = InitCameraGeneral(drvno, (uint16_t)settings_struct.pixel, (uint16_t)settings_struct.trigger_mode_cc, (uint8_t)settings_struct.sensor_type, 0, 0, (uint16_t)settings_struct.led_off, (uint16_t)settings_struct.sensor_gain);
 	if (status != es_no_error) return status;
 	switch (settings_struct.camera_system)
@@ -200,31 +230,6 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	//for cooled Cam
 	status = SetTemp(drvno, (uint8_t)settings_struct.Temp_level);
 	if (status != es_no_error) return status;
-	//DMA
-	status = SetupDma(drvno);
-	if (status != es_no_error) return status;
-	status = SetDmaRegister(drvno, settings_struct.pixel);
-	if (status != es_no_error) return status;
-	status = SetDmaStartMode(drvno, HWDREQ_EN);
-	if (status != es_no_error) return status;
-	if (settings_struct.useSoftwarePolling)
-	{
-		status = disableInterrupt(drvno);
-		if (status != es_no_error) return status;
-	}
-	else
-	{
-		status = enableInterrupt(drvno);
-		if (status != es_no_error) return status;
-	}
-	continiousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
-	ES_LOG("Setting continuous pause to %u\n", continiousPauseInMicroseconds);
-	status = SetBEC(drvno, settings_struct.bec_in_10ns);
-	if (status != es_no_error) return status;
-	status = SetXckdelay(drvno, settings_struct.xckdelay_in_10ns);
-	if (status != es_no_error) return status;
-	status = SetHardwareTimerStopMode(drvno, true);
-	if (status != es_no_error) return status;
     status = IOCtrl_setImpactStartPixel(drvno, (uint16_t)settings_struct.IOCtrl_impact_start_pixel);
 	if (status != es_no_error) return status;
 	for (uint8_t i = 1; i <= 7; i++)
@@ -233,10 +238,6 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 		if (status != es_no_error) return status;
 	}
 	status = IOCtrl_setT0(drvno, settings_struct.IOCtrl_T0_period_in_10ns);
-	if (status != es_no_error) return status;
-	status = SetTicnt(drvno, settings_struct.ticnt);
-	if (status != es_no_error) return status;
-	status = SetTocnt(drvno, settings_struct.tocnt);
 	return status;
 }
 
@@ -4148,4 +4149,10 @@ es_status_codes SetTocnt(uint32_t drvno, uint8_t divider)
 	if (divider)
 		divider |= TOR_bit_TOCNT_EN;
 	return writeRegisterS0_8(drvno, divider, S0Addr_TOR_TOCNT);
+}
+
+void FillUserBufferWithDummyData(uint32_t drvno)
+{
+	memset(userBuffer[drvno], 0xAAAA, aPIXEL[drvno] * (*Nospb) * (*Nob) * aCAMCNT[drvno] * sizeof(uint16_t));
+	return;
 }

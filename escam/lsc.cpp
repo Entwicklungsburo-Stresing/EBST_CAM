@@ -240,3 +240,9 @@ void Lsc::getCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block)
 {
     return GetCurrentScanNumber(drvno, scan, block);
 }
+
+void Lsc::fillUserBufferWithDummyData(uint32_t drvno)
+{
+	FillUserBufferWithDummyData(drvno);
+	return;
+}
