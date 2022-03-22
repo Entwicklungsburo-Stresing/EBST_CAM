@@ -874,7 +874,7 @@ void MainWindow::showCurrentScan()
 	{
 	case 2:
         ui->horizontalSliderSample->setValue(static_cast<int32_t>(sample + 1));
-	[[clang::fallthrough]];
+	// This fallthough from case 2 to case 1 is intended
     case 1:
         ui->horizontalSliderBlock->setValue(static_cast<int32_t>(block + 1));
 	}
