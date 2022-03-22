@@ -4151,8 +4151,21 @@ es_status_codes SetTocnt(uint32_t drvno, uint8_t divider)
 	return writeRegisterS0_8(drvno, divider, S0Addr_TOR_TOCNT);
 }
 
+/**
+ * \brief This function inserts data to user buffer for developing purpose.
+ * 
+ * This function is used in escam when no camera is connected. 
+ * 
+ * \param drvno PCIe board identifier.
+ */
 void FillUserBufferWithDummyData(uint32_t drvno)
 {
-	memset(userBuffer[drvno], 0xAAAA, aPIXEL[drvno] * (*Nospb) * (*Nob) * aCAMCNT[drvno] * sizeof(uint16_t));
+	//memset(userBuffer[drvno], 0xAAAA, aPIXEL[drvno] * (*Nospb) * (*Nob) * aCAMCNT[drvno] * sizeof(uint16_t));
+	for (int scan = 0; scan < (*Nospb) * (*Nob) * aCAMCNT[drvno]; scan++)
+	{
+		int add = scan % 3;
+		for (int pixel = 0; pixel < aPIXEL[drvno]; pixel++)
+			userBuffer[drvno][scan * aPIXEL[drvno] + pixel] = 100 + add;
+	}
 	return;
 }
