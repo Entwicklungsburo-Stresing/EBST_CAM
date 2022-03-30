@@ -45,6 +45,7 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes);
 es_status_codes _InitBoard(uint32_t drvno);
 es_status_codes _InitDriver();
 es_status_codes _ExitDriver(uint32_t drvno);
+es_status_codes CleanupDriver(uint32_t drvno);
 es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno);
 uint16_t checkEscapeKeyState();
 uint16_t checkSpaceKeyState();
