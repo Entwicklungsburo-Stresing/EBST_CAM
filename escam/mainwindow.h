@@ -42,6 +42,7 @@ private:
 	void copySettings(QSettings &dst, QSettings &src);
 	QTimer* displayTimer = new QTimer(this);
 	bool measureOn = false;
+	void closeEvent(QCloseEvent *event);
 private slots:
 	void on_actionEdit_triggered();
 	void on_actionTDC_triggered();
