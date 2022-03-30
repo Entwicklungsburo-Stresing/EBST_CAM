@@ -445,6 +445,14 @@ es_status_codes enableInterrupt( uint32_t drvno )
 	return es_no_error;
 }
 
+/**
+ * \brief Disable interrupt.
+ * 
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_disabling_interrupt_failed
+ */
 es_status_codes disableInterrupt(uint32_t drvno)
 {
 	ES_LOG("Disable interrupt\n");
@@ -603,20 +611,21 @@ es_status_codes _InitDriver()
 }
 
 /**
- * \brief Exit driver.
- * 
+ * \brief Cleanup driver. Call this before Exit driver.
+ *
  * \param drvno PCIe board identifier.
  * \return es_status_codes:
  *		- es_invalid_driver_number
  *		- es_invalid_driver_handle
  *		- es_no_error
  *		- es_unlocking_dma_failed
+ *		- es_disabling_interrupt_failed
  */
-es_status_codes _ExitDriver(uint32_t drvno)
+es_status_codes CleanupDriver(uint32_t drvno)
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
-	ES_LOG( "Driver exit, drv: %u\n", drvno);
+	ES_LOG("Cleanup driver drv: %u\n", drvno);
 	status = disableInterrupt(drvno);
 	if (status != es_no_error) return status;
 	if (dmaBuffer[drvno])
@@ -624,10 +633,23 @@ es_status_codes _ExitDriver(uint32_t drvno)
 		status = CleanupDma(drvno);
 		if (status != es_no_error) return status;
 	}
-	WDC_DriverClose();
-	WDC_PciDeviceClose( hDev[drvno] );
-	ES_LOG( "Driver closed and PciDeviceClosed \n" );
+	WDC_PciDeviceClose(hDev[drvno]);
 	return status;
+}
+
+/**
+ * \brief Exit driver. Call this after Cleanup driver.
+ * 
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ */
+es_status_codes _ExitDriver(uint32_t drvno)
+{
+	ES_LOG( "Driver exit, drv: %u\n", drvno);
+	WDC_DriverClose();
+	ES_LOG( "Driver closed\n" );
+	return es_no_error;
 }
 
 /**

@@ -276,6 +276,11 @@ es_status_codes _InitDriver()
 	return es_no_error;
 }
 
+es_status_codes CleanupDriver(uint32_t drvno)
+{
+	return es_no_error;
+}
+
 es_status_codes _ExitDriver(uint32_t drvno)
 {
 	//on linux: driver numbers are 0 and 1, on windows 1 and 2

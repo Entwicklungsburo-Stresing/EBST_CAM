@@ -2710,12 +2710,20 @@ es_status_codes ExitDriver(uint32_t board_sel)
 	switch (board_sel)
 	{
 	case 1:
+		status = CleanupDriver(1);
+		if (status != es_no_error) return status;
 		status = _ExitDriver(1);
 		break;
 	case 2:
+		status = CleanupDriver(2);
+		if (status != es_no_error) return status;
 		status = _ExitDriver(2);
 		break;
 	case 3:
+		status = CleanupDriver(1);
+		if (status != es_no_error) return status;
+		status = CleanupDriver(2);
+		if (status != es_no_error) return status;
 		status = _ExitDriver(1);
 		if (status != es_no_error) return status;
 		status = _ExitDriver(2);
