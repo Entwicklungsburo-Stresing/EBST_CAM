@@ -38,6 +38,7 @@ public:
 	es_status_codes ioctrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns);
     void getCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block);
 	void fillUserBufferWithDummyData(uint32_t drvno);
+	bool IsRunning();
 public slots:
     es_status_codes startMeasurement();
 signals:
