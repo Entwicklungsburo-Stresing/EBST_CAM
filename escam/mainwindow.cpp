@@ -919,3 +919,31 @@ void MainWindow::adjustLiveView()
 	}
 	return;
 }
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+	if (lsc.IsRunning())
+	{
+		QErrorMessage* m = new QErrorMessage(this);
+		m->setWindowTitle("Error");
+		m->showMessage("Stop measurement before closing");
+		event->ignore();
+	}
+	else
+	{
+		switch (number_of_boards)
+		{
+		default:
+		case 1:
+			lsc.abortMeasurement(1);
+			ExitDriver(1);
+			break;
+		case 2:
+			lsc.abortMeasurement(1);
+			lsc.abortMeasurement(2);
+			ExitDriver(3);
+			break;
+		}
+		QMainWindow::closeEvent(event);
+	}
+}

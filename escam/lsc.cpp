@@ -8,16 +8,6 @@ Lsc::Lsc()
 }
 Lsc::~Lsc()
 {
-    switch (number_of_boards)
-    {
-    default:
-    case 1:
-        ExitDriver(1);
-        break;
-    case 2:
-        ExitDriver(3);
-        break;
-    }
 }
 
 /**
@@ -245,4 +235,9 @@ void Lsc::fillUserBufferWithDummyData(uint32_t drvno)
 {
 	FillUserBufferWithDummyData(drvno);
 	return;
+}
+
+bool Lsc::IsRunning()
+{
+	return isRunning;
 }
