@@ -1,3 +1,6 @@
+v3.22.2
+-  bugfix in return address calculation fuer labview frame return 2nd cam in board.c function GetIndexOfPixel. Removed "+ 4"
+
 v3.22.1
 - Fix crash at exit with board sel = 3
 - Add possibilty to add dummy data when no camera is found
