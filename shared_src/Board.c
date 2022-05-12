@@ -1460,6 +1460,8 @@ es_status_codes InitCamera3001( uint32_t drvno  )
 es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern )
 {
 	ES_LOG("Init camera 3010, adc_mode: %u, custom_pattern: %u\n", adc_mode, custom_pattern);
+	//es_status_codes status = Use_ENFFW_protection(drvno, true); // test andre 04.05.2022
+	//if (status != es_no_error) return status;
 	es_status_codes status = Cam3010_ADC_reset( drvno );
 	if (status != es_no_error) return status;
 	return Cam3010_ADC_setOutputMode(drvno, adc_mode, custom_pattern);
@@ -2771,7 +2773,7 @@ es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample
 	//init index with base position of pixel
 	uint64_t index = pixel;
 	//position of index at CAM position
-	index += (uint64_t)CAM *((uint64_t)aPIXEL[drvno] + 4);  //GS! offset of 4 pixel via pipelining from CAM1 to CAM2
+	index += (uint64_t)CAM *((uint64_t)aPIXEL[drvno]); // AM! hatte +4 fuer PCIe versionen vor P202_23 um scnacounter in 2ter cam nach links zu schieben
 	//position of index at sample
 	index += (uint64_t)sample * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno];
 	//position of index at block
