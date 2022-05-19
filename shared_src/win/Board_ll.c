@@ -484,13 +484,24 @@ void ResetBufferWritePos(uint32_t drvno)
 	return;
 }
 
+/**
+ * \brief DMA copies in blocks of dmaBufferSizeInWords/DMA_BUFFER_PARTS - the rest is copied here
+ *
+ * \param drvno PCIe board identifier.
+ * \param rest_in_bytes bytes which were not copied by INTR.
+ */
 void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 {
 	ES_LOG( "Copy rest data:\n" );
 	ES_LOG( "dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes );
 	uint16_t* dmaBufferReadPos = dmaBuffer[drvno];
-	dmaBufferReadPos += dmaBufferPartReadPos[drvno] * dmaBufferSizeInBytes / DMA_BUFFER_PARTS;
-	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes );
+
+	//dmaBufferPartReadPos is 0 or 1 when DMA_BUFFER_PARTS=2 -> hi/lo half
+	dmaBufferReadPos += dmaBufferPartReadPos[drvno] * dmaBufferSizeInBytes /2 / DMA_BUFFER_PARTS;
+	//					0 or 1 for lo/hi half		*  dmabuf in shorts		  /      2	
+	//rest_in_bytes = 2 x pixel x scansrest
+	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes); //GS
+	//memset(userBufferWritePos[drvno], 01, rest_in_bytes); //for testing: writes 257
 	return;
 }
 
