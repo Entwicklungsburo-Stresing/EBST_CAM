@@ -1,7 +1,8 @@
 # vX.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
 v3.23.0
--  bugfix in return address calculation fuer labview frame return 2nd cam in board.c function GetIndexOfPixel. Removed "+ 4"
+-  bugfix in function copyRestData() of adress calculation (G.S.)
+-  bugfix in return address calculation fuer labview frame return 2nd cam in board.c function GetIndexOfPixel. Removed "+ 4" (A.M.)
 
 v3.22.1
 - Fix crash at exit with board sel = 3
