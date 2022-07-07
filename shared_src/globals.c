@@ -107,4 +107,5 @@ struct global_settings settings_struct =
 	.dma_buffer_size_in_scans		= settingDmaBufferSizeInScansDefault,
 	.tocnt							= settingTocntDefault,
 	.ticnt							= settingTicntDefault,
+	.use_ec							= settingUseEcDefault,
 };
