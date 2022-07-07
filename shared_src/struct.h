@@ -178,6 +178,7 @@ struct global_settings
 	uint32_t dma_buffer_size_in_scans;
 	uint32_t tocnt;
 	uint32_t ticnt;
+	uint32_t use_ec;
 };
 
 #endif // STRUCT_H

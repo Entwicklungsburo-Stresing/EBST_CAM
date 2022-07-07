@@ -141,21 +141,9 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = CloseShutter(drvno); //set cooling  off
 	if (status != es_no_error) return status;
-	//set mshut
-	if (settings_struct.mshut)
-	{
-		status = SetSEC(drvno, settings_struct.sec_in_10ns);
-		if (status != es_no_error) return status;
-		status = SetTORReg(drvno, TOR_SSHUT);
-		if (status != es_no_error) return status;
-	}
-	else
-	{
-		status = SetSEC(drvno, 0);
-		if (status != es_no_error) return status;
-		status = SetTORReg(drvno, (uint8_t)settings_struct.TORmodus);
-		if (status != es_no_error) return status;
-	}
+	//set EC/IFC and mshut
+	status = SetExposureControl(drvno);
+	if (status != es_no_error) return status;
 	//SSlope
 	SetSSlope(drvno, settings_struct.sslope);
 	if (status != es_no_error) return status;
@@ -210,7 +198,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	// Init Camera
 	status = FindCam(drvno);
 	if (status != es_no_error) return status;
-    status = InitCameraGeneral(drvno, (uint16_t)settings_struct.pixel, (uint16_t)settings_struct.trigger_mode_cc, (uint8_t)settings_struct.sensor_type, 0, 0, (uint16_t)settings_struct.led_off, (uint16_t)settings_struct.sensor_gain);
+    status = InitCameraGeneral(drvno, (uint16_t)settings_struct.pixel, (uint16_t)settings_struct.trigger_mode_cc, (uint8_t)settings_struct.sensor_type, 0, 0, (uint16_t)settings_struct.led_off, (uint16_t)settings_struct.sensor_gain, (uint16_t)settings_struct.use_ec);
 	if (status != es_no_error) return status;
 	switch (settings_struct.camera_system)
 	{
@@ -240,6 +228,33 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	status = IOCtrl_setT0(drvno, settings_struct.IOCtrl_T0_period_in_10ns);
 	return status;
 }
+
+es_status_codes SetExposureControl(uint32_t drvno) {
+	es_status_codes status = es_no_error;
+
+	status = SetSEC(drvno, settings_struct.sec_in_10ns);
+	//set mshut
+	if (settings_struct.mshut) {
+		status = SetTORReg(drvno, TOR_SSHUT); // PCIe 'O' output is high during SEC active
+		if (status != es_no_error) return status;
+		}
+	else {
+		status = SetTORReg(drvno, (uint8_t)settings_struct.TORmodus);  // PCIe 'O' output is what ever was se80lected in LabView
+		if (status != es_no_error) return status;
+		}
+	// IFC is RS pulse (long RS or short RS) or as long as defined in EC register
+	if (settings_struct.sec_in_10ns != 0) {
+		status = resetBitS0_8(drvno, TOR_MSB_bitindex_SENDRS, S0Addr_TOR_MSB); // SEC
+		if (status != es_no_error) return status;
+		}
+	else {
+		status = setBitS0_8(drvno, TOR_MSB_bitindex_SENDRS, S0Addr_TOR_MSB); // RS
+		if (status != es_no_error) return status;
+		}
+
+	return status;
+	}
+
 
 /**
  * \brief Set pixel count
@@ -1338,9 +1353,9 @@ es_status_codes SetBDAT( uint32_t drvno, uint32_t datin10ns )
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_trigger_input, uint8_t is_fft, uint8_t is_area, uint8_t IS_COOLED, uint16_t led_off, uint16_t sensor_gain )
+es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_trigger_input, uint8_t is_fft, uint8_t is_area, uint8_t IS_COOLED, uint16_t led_off, uint16_t sensor_gain, uint16_t use_EC)
 {
-	ES_LOG("Init camera general, pixel: %u, cc_trigger: %u, fft: %u, area: %u, cooled: %u, led_off: %u, sensor_gain: %u\n", pixel, cc_trigger_input, is_fft, is_area, IS_COOLED, led_off, sensor_gain);
+	ES_LOG("Init camera general, pixel: %u, cc_trigger: %u, fft: %u, area: %u, cooled: %u, led_off: %u, sensor_gain: %u, use_EC: %u\n", pixel, cc_trigger_input, is_fft, is_area, IS_COOLED, led_off, sensor_gain, use_EC);
 	es_status_codes status = es_no_error;
 	// when TRUE: disables PCIe FIFO when cool cam transmits cool status
 	if (IS_COOLED)
@@ -1356,6 +1371,8 @@ es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_t
 	if (status != es_no_error) return status;
 	//set led off
 	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_LEDoff, led_off );
+	//set use EC
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_useEC, use_EC);
 	if (status != es_no_error) return status;
 	//set gain switch (mostly for IR sensors)
 	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, sensor_gain);
@@ -3005,6 +3022,23 @@ es_status_codes LedOff(uint32_t drvno, uint8_t LED_OFF)
 	return SendFLCAM(drvno, maddr_cam, cam_adaddr_LEDoff, (uint16_t)LED_OFF);
 }
 
+
+/**
+ * \brief CMOS_Sensor either uses not XCK or IFC signal as FST pulse.
+ *
+ * 	Sets corresponding camera register: maddr = 0, adadr = 3;
+ * \param drvno selects PCIe board
+ * \param use_EC 1 -> FST <= IFC, 0 -> FST <= not XCK
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
+ */
+es_status_codes setUseEC(uint32_t drvno, uint8_t use_EC) {
+	return SendFLCAM(drvno, maddr_cam, cam_adaddr_useEC, (uint16_t)use_EC);
+	}
+
 /**
  * \brief Reset trigger out(Reg CtrlA:D3) of PCI board. Can be used to control timing issues in software.
  *
@@ -3478,6 +3512,7 @@ es_status_codes dumpSettings(char** stringPtr)
 		"camcnt\t"DLLTAB DLLTAB"%u\n"
 		"pixel\t"DLLTAB DLLTAB"%u\n"
 		"mshut\t"DLLTAB DLLTAB"%u\n"
+		"use_ec\t"DLLTAB DLLTAB"%u\n"
 		"led off\t"DLLTAB DLLTAB"%u\n"
 		"gain switch\t"DLLTAB"%u\n"
 		"gain 3030\t"DLLTAB"%u\n"
@@ -3511,6 +3546,7 @@ es_status_codes dumpSettings(char** stringPtr)
 		settings_struct.camcnt,
 		settings_struct.pixel,
 		settings_struct.mshut,
+		settings_struct.use_ec,
 		settings_struct.led_off,
 		settings_struct.sensor_gain,
 		settings_struct.adc_gain,
