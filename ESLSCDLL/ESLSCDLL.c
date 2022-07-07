@@ -575,9 +575,9 @@ DllAccess es_status_codes DLLAboutGPX( UINT32 drvno )
 /**
  * \copydoc InitCameraGeneral
  */
-DllAccess es_status_codes DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 is_fft, UINT8 is_area, UINT8 IS_COOLED, UINT16 led_off, UINT16 sensor_gain)
+DllAccess es_status_codes DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 is_fft, UINT8 is_area, UINT8 IS_COOLED, UINT16 led_off, UINT16 sensor_gain, UINT16 use_EC)
 {
-	return InitCameraGeneral( drvno, pixel, cc_trigger_input, is_fft, is_area, IS_COOLED, led_off, sensor_gain );
+	return InitCameraGeneral( drvno, pixel, cc_trigger_input, is_fft, is_area, IS_COOLED, led_off, sensor_gain, use_EC);
 }
 
 /**
@@ -715,6 +715,11 @@ DllAccess es_status_codes DLLSetGain( UINT32 drvno, UINT16 gain_value )
 DllAccess es_status_codes DLLLedOff( UINT32 drvno, UINT8 LED_OFF )
 {
 	return LedOff( drvno, LED_OFF );
+}
+
+DllAccess es_status_codes DLLsetUseEC(UINT32 drvno, UINT8 use_EC)
+{
+	return setUseEC(drvno, use_EC);
 }
 
 #if COMPILE_FOR_LABVIEW

@@ -222,7 +222,7 @@ enum cam_addresses
 	cam_adaddr_gain = 0x00,
 	cam_adaddr_pixel = 0x01,
 	cam_adaddr_trig_in = 0x02,
-	cam_adaddr_ch = 0x03,
+	cam_adaddr_useEC = 0x03, // war cam_adaddr_ch
 	cam_adaddr_vclk = 0x04,
 	cam_adaddr_LEDoff = 0x05,
 	cam_adaddr_coolTemp = 0x06,
