@@ -19,7 +19,7 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 
 #include "ESLSCDLL.h"
 
-#if COMPILE_FOR_LABVIEW
+#ifdef COMPILE_FOR_LABVIEW
 LVUserEventRef measureStartLVEvent;
 LVUserEventRef measureDoneLVEvent;
 LVUserEventRef blockStartLVEvent;
@@ -722,7 +722,7 @@ DllAccess es_status_codes DLLsetUseEC(UINT32 drvno, UINT8 use_EC)
 	return setUseEC(drvno, use_EC);
 }
 
-#if COMPILE_FOR_LABVIEW
+#ifdef COMPILE_FOR_LABVIEW
 /**
  * \brief Save the user event handlers created by Labview. Call this before using the event structure.
  *
