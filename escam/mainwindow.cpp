@@ -602,8 +602,9 @@ void MainWindow::loadCameraData()
 			}
 	}
     setChartData(data, static_cast<uint16_t>(pixel), static_cast<uint16_t>(showCamcnt));
-	//send pxel 6 and 7 to the tdc window
-	//pixel 6low/7high of tdc1 and 8low/9high of tdc2 to tdc view
+	//send pixels 6 to 9 to the tdc window
+	//tdc 1: pixel 6 high bytes, 7 low bytes
+	//tdc 2: pixel 8 high bytes, 9 low bytes
 	uint32_t tdc1 = (static_cast<uint32_t>(*(data + 6))) << 16 | (static_cast<uint32_t>(*(data + 7)));
 	uint32_t tdc2 = (static_cast<uint32_t>(*(data + 8))) << 16 | (static_cast<uint32_t>(*(data + 9)));
     ds_tdc->updateTDC(tdc1, tdc2);
