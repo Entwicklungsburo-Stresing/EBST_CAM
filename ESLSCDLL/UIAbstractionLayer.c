@@ -12,7 +12,7 @@ const int64_t min_diff_in_ms = 50;
 
 void notifyMeasureStart()
 {
-#if COMPILE_FOR_LABVIEW
+#ifdef COMPILE_FOR_LABVIEW
 	struct _timeb timebuffer_measureStart_new;
 	ftime((struct timeb *const)&timebuffer_measureStart_new);
 	int64_t diff_in_ms = (int64_t)(1000.0 * (timebuffer_measureStart_new.time - timebuffer_measureStart.time) + (timebuffer_measureStart_new.millitm - timebuffer_measureStart.millitm));
@@ -27,7 +27,7 @@ void notifyMeasureStart()
 
 void notifyMeasureDone()
 {
-#if COMPILE_FOR_LABVIEW
+#ifdef COMPILE_FOR_LABVIEW
 	struct _timeb timebuffer_measureDone_new;
 	ftime((struct timeb* const)&timebuffer_measureDone_new);
 	int64_t diff_in_ms = (int64_t)(1000.0 * (timebuffer_measureDone_new.time - timebuffer_measureDone.time) + (timebuffer_measureDone_new.millitm - timebuffer_measureDone.millitm));
@@ -42,7 +42,7 @@ void notifyMeasureDone()
 
 void notifyBlockStart()
 {
-#if COMPILE_FOR_LABVIEW
+#ifdef COMPILE_FOR_LABVIEW
 	struct _timeb timebuffer_blockStart_new;
 	ftime((struct timeb* const)&timebuffer_blockStart_new);
 	int64_t diff_in_ms = (int64_t)(1000.0 * (timebuffer_blockStart_new.time - timebuffer_blockStart.time) + (timebuffer_blockStart_new.millitm - timebuffer_blockStart.millitm));
@@ -57,7 +57,7 @@ void notifyBlockStart()
 
 void notifyBlockDone()
 {
-#if COMPILE_FOR_LABVIEW
+#ifdef COMPILE_FOR_LABVIEW
 	struct _timeb timebuffer_blockDone_new;
 	ftime((struct timeb* const)&timebuffer_blockDone_new);
 	int64_t diff_in_ms = (int64_t)(1000.0 * (timebuffer_blockDone_new.time - timebuffer_blockDone.time) + (timebuffer_blockDone_new.millitm - timebuffer_blockDone.millitm));
