@@ -772,7 +772,7 @@ es_status_codes About(uint32_t drvno)
 {
 	es_status_codes status = AboutDrv(drvno);
 	if (status != es_no_error) return status;
-	//status = AboutGPX(drvno);
+	status = AboutGPX(drvno);
 	//if (status != es_no_error) return status;
 	status = AboutS0(drvno);
 	if (status != es_no_error) return status;

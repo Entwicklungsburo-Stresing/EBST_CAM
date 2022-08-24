@@ -1183,6 +1183,7 @@ es_status_codes SetBTimer( uint32_t drvno, uint32_t btime_in_microseconds )
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
+ * \register dump with _AboutGPX() aber mit fehler status
  */
 es_status_codes InitGPX( uint32_t drvno, uint32_t delay )
 {
@@ -3450,6 +3451,10 @@ es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
 		if (status != es_no_error) return status;
         len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%s \t: 0x%x\n", LUTS0Reg[i], regData);
 	}
+	//ErrorMsg("_AboutGPX");
+	if (status != es_no_error) return status;
+	/*
+	//kehrt nicht zurueck in diesem Teil A.M. 24.08.2022
     bool abbr = false, space = false;
 	int i = 0;
 	while (!abbr)
@@ -3479,6 +3484,7 @@ es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
 	if (status != es_no_error) return status;
     len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%s \t: 0x%x\n", " flags", regData);
 	return ReadGPXCtrl(drvno, 8, &regData); //read access follows                 set addr 8 to bus !!!!
+	*/
 }
 
 es_status_codes dumpSettings(char** stringPtr)
