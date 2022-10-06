@@ -2,6 +2,8 @@
 
 v3.23.0
 -  bugfix in function copyRestData() of adress calculation (G.S.)
+
+v3.22.2
 -  bugfix in return address calculation fuer labview frame return 2nd cam in board.c function GetIndexOfPixel. Removed "+ 4" (A.M.)
 
 v3.22.1
