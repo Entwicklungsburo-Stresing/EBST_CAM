@@ -3460,7 +3460,7 @@ es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
         len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%s \t: 0x%x\n", LUTS0Reg[i], regData);
 	}
 	//ErrorMsg("_AboutGPX");
-	if (status != es_no_error) return status;
+	return status;
 	/*
 	//kehrt nicht zurueck in diesem Teil A.M. 24.08.2022
     bool abbr = false, space = false;
@@ -4218,10 +4218,10 @@ es_status_codes SetTocnt(uint32_t drvno, uint8_t divider)
 void FillUserBufferWithDummyData(uint32_t drvno)
 {
 	//memset(userBuffer[drvno], 0xAAAA, aPIXEL[drvno] * (*Nospb) * (*Nob) * aCAMCNT[drvno] * sizeof(uint16_t));
-	for (int scan = 0; scan < (*Nospb) * (*Nob) * aCAMCNT[drvno]; scan++)
+	for (uint32_t scan = 0; scan < (*Nospb) * (*Nob) * aCAMCNT[drvno]; scan++)
 	{
 		int add = scan % 3;
-		for (int pixel = 0; pixel < aPIXEL[drvno]; pixel++)
+		for (uint32_t pixel = 0; pixel < aPIXEL[drvno]; pixel++)
 			userBuffer[drvno][scan * aPIXEL[drvno] + pixel] = 100 + add;
 	}
 	return;
