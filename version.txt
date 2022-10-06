@@ -1,5 +1,17 @@
 # vX.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+v3.24.0
+- Add Labview configurations. There are two build configurations in the visual studio solution now: Debug-Labview and Release-Labview.
+	Debug-Labview: Debug configurations and Labview libraries are included for triggering events in Labview
+	Release-Labview: Same as above, but release configurations
+	Debug: Debug configurations and no Labview libraries are included. You can use this, when you want to use the DLL for other purposes e.g. Matlab. This option is needed to successfully compile the solution, when no Labview is installed on the computer, because then the Labview libraries are missing.
+	Release: Same as above, but release configurations.
+- Add setUseEC
+- Fix TDC display
+- Activate AboutGPX and fix it
+- Remove DSC 3
+- Add check for DSC and TDC flags
+
 v3.23.0
 -  bugfix in function copyRestData() of adress calculation (G.S.)
 
