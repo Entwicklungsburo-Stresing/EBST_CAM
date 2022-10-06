@@ -60,6 +60,9 @@ MainWindow::MainWindow(QWidget* parent)
 #endif
 	// disable axes menu until first finish of measurement to avoid crash
 	ui->actionAxes->setEnabled(false);
+	// Check DSC and TDC flags
+	if (!lsc.isDsc(1)) ui->actionDSC->setEnabled(false);
+	if (!lsc.isTdc(1)) ui->actionTDC->setEnabled(false);
 }
 
 /**
