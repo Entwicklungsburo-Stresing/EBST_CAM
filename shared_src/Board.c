@@ -3847,7 +3847,7 @@ es_status_codes DoSoftwareTriggerTwoBoards()
  * @brief reset Delay Stage Counter
  *
  * @param drvno PCIe board identifier
- * @param DSCNumber 1: DSC 1; 2: DSC 2; 3: DSC 3
+ * @param DSCNumber 1: DSC 1; 2: DSC 2
  * @return es_status_codes
  */
 es_status_codes ResetDSC( uint32_t drvno, uint8_t DSCNumber )
@@ -3859,7 +3859,6 @@ es_status_codes ResetDSC( uint32_t drvno, uint8_t DSCNumber )
 	{
 	case 1: data = 0x1; break;
 	case 2: data = 0x100; break;
-	case 3: data = 0x10000; break;
 	}
 	//for reset you have to set a 1 to the reg and then a zero to allw a new start again
 	status = writeBitsS0_32( drvno, data, data, S0Addr_DSCCtrl );
@@ -3871,7 +3870,7 @@ es_status_codes ResetDSC( uint32_t drvno, uint8_t DSCNumber )
  * @brief set direction of Delay Stage Counter
  *
  * @param drvno PCIe board identifier
- * @param DSCNumber 1: DSC 1; 2: DSC 2; 3: DSC 3
+ * @param DSCNumber 1: DSC 1; 2: DSC 2
  * @param dir true: up; false: down
  * @return es_status_codes
  */
@@ -3883,7 +3882,6 @@ es_status_codes SetDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir )
 	{
 	case 1: data = 0x2; break;
 	case 2: data = 0x200; break;
-	case 3: data = 0x20000; break;
 	}
 
 	if (dir)
@@ -4227,4 +4225,48 @@ void FillUserBufferWithDummyData(uint32_t drvno)
 			userBuffer[drvno][scan * aPIXEL[drvno] + pixel] = 100 + add;
 	}
 	return;
+}
+
+/**
+ * \brief Read TDC flag in PCIEFLAGS register.
+ * 
+ * \param drvno PCIe identifier
+ * \param isTdc	TDC flag is written to this bool*. TRUE: TDC board detected, FALSE: no TDC board detected
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes GetIsTdc(uint32_t drvno, bool* isTdc)
+{
+	uint32_t data = 0;
+	es_status_codes status = readRegisterS0_32(drvno, &data, S0Addr_PCIEFLAGS);
+	if (status != es_no_error) return status;
+	// Check if TDC bit is set
+	if (PCIEFLAGS_bit_IS_TDC & data)
+		*isTdc = true;
+	else
+		*isTdc = false;
+	return status;
+}
+
+/**
+ * \brief Read DSC flag in PCIEFLAGS register.
+ *
+ * \param drvno PCIe identifier
+ * \param isDsc	DSC flag is written to this bool*. TRUE: DSC board detected, FALSE: no DSC board detected
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes GetIsDsc(uint32_t drvno, bool* isDsc)
+{
+	uint32_t data = 0;
+	es_status_codes status = readRegisterS0_32(drvno, &data, S0Addr_PCIEFLAGS);
+	if (status != es_no_error) return status;
+	// Check if DSC bit is set
+	if (PCIEFLAGS_bit_IS_DSC & data)
+		*isDsc = true;
+	else
+		*isDsc = false;
+	return status;
 }
