@@ -3889,7 +3889,7 @@ es_status_codes SetDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir )
  * @brief return all values of Delay Stage Counter
  *
  * @param drvno PCIe board identifier
- * @param DSCNumber 1: DSC 1; 2: DSC 2; 3: DSC 3
+ * @param DSCNumber 1: DSC 1; 2: DSC 2
  * @param ADSC actual DSC
  * @param LDSC last DSC
  * @return es_status_codes
@@ -3903,7 +3903,6 @@ es_status_codes GetDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint3
 	{
 	case 1: addrADSC = S0Addr_A1DSC; addrLDSC = S0Addr_L1DSC; break;
 	case 2: addrADSC = S0Addr_A2DSC; addrLDSC = S0Addr_L2DSC; break;
-	case 3: addrADSC = S0Addr_A3DSC; addrLDSC = S0Addr_L3DSC; break;
 	}
 
 	status = readRegisterS0_32( drvno, ADSC, addrADSC );

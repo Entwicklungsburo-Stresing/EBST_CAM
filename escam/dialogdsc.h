@@ -20,10 +20,8 @@ private:
 private slots:
 	void on_pushButton_RS_DSC_1_clicked();
 	void on_pushButton_RS_DSC_2_clicked();
-	void on_pushButton_RS_DSC_3_clicked();
     void on_comboBox_DIR_DSC_1_currentIndexChanged(int index);
     void on_comboBox_DIR_DSC_2_currentIndexChanged(int index);
-    void on_comboBox_DIR_DSC_3_currentIndexChanged(int index);
 	void on_pushButton_update_act_clicked();
 public slots:
 	void updateDSC();
