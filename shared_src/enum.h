@@ -179,8 +179,6 @@ enum s0_addresses
 	S0Addr_L1DSC = 0x94,
 	S0Addr_A2DSC = 0x98,
 	S0Addr_L2DSC = 0x9C,
-	S0Addr_A3DSC = 0xA0,
-	S0Addr_L3DSC = 0xA4,
 	S0Addr_DSCCtrl = 0xA8
 };
 
