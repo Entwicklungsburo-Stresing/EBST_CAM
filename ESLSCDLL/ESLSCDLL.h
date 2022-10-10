@@ -124,6 +124,9 @@ DllAccess es_status_codes DLLSetTicnt(uint32_t drvno, uint8_t divider);
 DllAccess es_status_codes DLLSetTocnt(uint32_t drvno, uint8_t divider);
 DllAccess es_status_codes DLLGetIsTdc(UINT32 drvno, UINT8* isTdc);
 DllAccess es_status_codes DLLGetIsDsc(UINT32 drvno, UINT8* isDsc);
+DllAccess es_status_codes DLLResetDSC(uint32_t drvno, uint8_t DSCNumber);
+DllAccess es_status_codes DLLSetDIRDSC(uint32_t drvno, uint8_t DSCNumber, uint8_t dir);
+DllAccess es_status_codes DLLGetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC);
 //************ read and write functions
 DllAccess es_status_codes DLLReadByteS0(UINT32 drvno, UINT8 *data, UINT32 address);
 DllAccess es_status_codes DLLWriteByteS0(UINT32 drvno, UINT8 data, UINT32 address);

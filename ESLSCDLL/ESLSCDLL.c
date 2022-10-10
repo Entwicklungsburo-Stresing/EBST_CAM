@@ -882,3 +882,27 @@ DllAccess es_status_codes DLLGetIsDsc(UINT32 drvno, UINT8* isDsc)
 {
 	return GetIsDsc(drvno, isDsc);
 }
+
+/**
+ * \copydoc ResetDSC
+ */
+DllAccess es_status_codes DLLResetDSC(uint32_t drvno, uint8_t DSCNumber)
+{
+	return ResetDSC(drvno, DSCNumber);
+}
+
+/**
+ * \copydoc SetDIRDSC
+ */
+DllAccess es_status_codes DLLSetDIRDSC(uint32_t drvno, uint8_t DSCNumber, uint8_t dir)
+{
+	return SetDIRDSC(drvno, DSCNumber, dir);
+}
+
+/**
+ * \copydoc GetDSC
+ */
+DllAccess es_status_codes DLLGetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC)
+{
+	return GetDSC(drvno, DSCNumber, ADSC, LDSC);
+}
