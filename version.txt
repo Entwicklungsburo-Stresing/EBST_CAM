@@ -1,5 +1,8 @@
 # vX.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+v3.24.1
+- Add DLLGetIsTdc and DLLGetIsDsc
+
 v3.24.0
 - Add Labview configurations. There are two build configurations in the visual studio solution now: Debug-Labview and Release-Labview.
 	Debug-Labview: Debug configurations and Labview libraries are included for triggering events in Labview
