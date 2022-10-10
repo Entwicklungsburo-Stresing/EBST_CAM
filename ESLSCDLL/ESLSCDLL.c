@@ -866,3 +866,19 @@ DllAccess es_status_codes DLLSetTocnt(uint32_t drvno, uint8_t divider)
 {
 	return SetTocnt(drvno, divider);
 }
+
+/**
+ * \copydoc GetIsTdc
+ */
+DllAccess es_status_codes DLLGetIsTdc(UINT32 drvno, UINT8* isTdc)
+{
+	return GetIsTdc(drvno, isTdc);
+}
+
+/**
+ * \copydoc GetIsDsc
+ */
+DllAccess es_status_codes DLLGetIsDsc(UINT32 drvno, UINT8* isDsc)
+{
+	return GetIsDsc(drvno, isDsc);
+}
