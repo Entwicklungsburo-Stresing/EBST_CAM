@@ -29,7 +29,7 @@ struct global_settings
 	 */
 	uint32_t sti_mode;
 	/**
-	 * Block trigger input mode
+	 * Block trigger input mode. See enum bti_mode in enum.h for options.
 	 */
 	uint32_t bti_mode;
 	/**
