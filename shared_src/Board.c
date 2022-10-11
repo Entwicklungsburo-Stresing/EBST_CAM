@@ -3756,7 +3756,6 @@ es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
 /**
  * \brief Sets BlockOn bit in PCIEFLAGS and notifies UI about it. Two board sync version
  *
- * \param drvno PCIe board identifier.
  * \return es_status_codes:
  *		- es_no_error
  * 		- es_register_read_failed
@@ -3784,7 +3783,6 @@ es_status_codes setBlockOnTwoBoards()
 /**
  * \brief Sets Scan Timer on. Two board sync version.
  *
- * \param drvno board number (=1 if one PCI board)
  * \return es_status_codes:
  * 		- es_no_error
  * 		- es_register_read_failed
@@ -3811,7 +3809,6 @@ es_status_codes StartSTimerTwoBoards()
 /**
  * \brief Triggers one camera read by calling this function.
  *
- * \param drvno board number (=1 if one PCI board)
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_read_failed

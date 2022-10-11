@@ -911,7 +911,6 @@ void ErrorMsg(char ErrMsg[100])
  * \brief Simple display of unsigned integer as error message for test purpose.
  *
  * \param val unsigned integer 64 bit
- * \return none.
  */
 void ValMsg(uint64_t val)
 {

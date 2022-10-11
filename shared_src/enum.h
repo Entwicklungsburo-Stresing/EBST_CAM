@@ -276,13 +276,34 @@ enum cam_messages
 	adc_ads5294_msg_ddrClkAlign = 0x60,
 };
 
+/**
+ * Scan trigger input mode
+ */
 enum sti_mode
 {
+	/**
+	 * External trigger on input I of PCIe board
+	 */
 	sti_I = 0,
+	/**
+	 * External trigger on input S1 of PCIe board
+	 */
 	sti_S1 = 1,
+	/**
+	 * External trigger on input S2 of PCIe board
+	 */
 	sti_S2 = 2,
+	/**
+	 * Unused
+	 */
 	sti_unused = 3,
+	/**
+	 * Trigger with internal timer
+	 */
 	sti_STimer = 4,
+	/**
+	 * Automatic internal instant trigger after last scan
+	 */
 	sti_ASL = 5
 };
 
