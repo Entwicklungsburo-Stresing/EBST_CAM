@@ -305,11 +305,11 @@ DllAccess es_status_codes DLLreadBlockTriggerState( UINT32 drv, UCHAR btrig_ch, 
 }
 
 /**
-\brief For test purposes only: output of 2 strings.
-\param testMsg1 string1
-\param testMsg2 string2
-\return none
-*/  
+ * \brief For test purposes only: output of 2 strings.
+ *
+ * \param testMsg1 string1
+ * \param testMsg2 string2
+ */
 void TestMsg( char testMsg1[20], char testMsg2[20] )
 {
 	if (MessageBox( GetActiveWindow(), testMsg1, testMsg2, MB_OK | MB_ICONEXCLAMATION ) == IDOK) {};
@@ -404,9 +404,6 @@ DllAccess es_status_codes DLLCopyOneBlock( UINT32 drv, UINT16 block, UINT16 *pde
 
 /**
  * \brief Read nos lines from FIFO. Const burst loop with DMA initiated by hardware DREQ. Is called automatically for 2 boards.
- * 
- * \param board_sel board number (=1 if one PCI board)
- * \return none
  */
 DllAccess void DLLReadFFLoop()
 {
@@ -417,7 +414,6 @@ DllAccess void DLLReadFFLoop()
 
 /**
  * \brief Abort measurement.
- * \return none
  */
 DllAccess void DLLStopFFLoop()
 {
@@ -429,7 +425,6 @@ DllAccess void DLLStopFFLoop()
  * \brief Activate or deactivate continuous read.
  * \param activate 0 - deactivate, 1 - activate
  * \param pause_in_microseconds - time in microseconds before next loop starts - should be >=1
- * \return none
  */
 DllAccess void DLLSetContFFLoop( UINT8 activate , UINT32 pause_in_microseconds)
 {
@@ -785,7 +780,6 @@ DllAccess es_status_codes DLLSetBDAT(UINT32 drvno, UINT32 datin10ns)
  * The default of useSWTrig is FALSE and useSWTrig is set automatically in InitMeasurement depending on FFT mode.
  * Use this function to differ from the default behaviour.
  * \param on If TRUE BON starts immediately a scan. Must be TRUE for FFT in Area or ROI mode.
- * \return none
  */
 DllAccess void setSWTrig(UINT8 on)
 {
