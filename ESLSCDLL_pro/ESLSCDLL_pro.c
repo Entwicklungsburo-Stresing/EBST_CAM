@@ -75,7 +75,6 @@ BOOL WINAPI DLLMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved )
 /**
 \brief Call before using pro DLL.
 \param g global_vars struct, defined in Board.h.
-\return none
 */
 DllAccess void DLLInitGlobals( struct global_vars g )
 {
@@ -96,7 +95,6 @@ DllAccess void DLLInitGlobals( struct global_vars g )
 \param cam which camera to display (when camcnt is >1)
 \param pixel count of pixel of one line
 \param nos samples in one block
-\return none
 */
 DllAccess void DLLStart2dViewer( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos )
 {
@@ -123,7 +121,6 @@ DllAccess void DLLStart2dViewer( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT1
 \param cam which camera to display (when camcnt is >1)
 \param pixel count of pixel of one line
 \param nos samples in one block
-\return none
 */
 DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos )
 {
@@ -142,7 +139,6 @@ DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT1
 
 /**
 \brief Call when closing 2d viewer or at least before opening a new 2d viewer.
-\return none
 */
 DllAccess void DLLDeinit2dViewer()
 {

@@ -1183,7 +1183,7 @@ es_status_codes SetBTimer( uint32_t drvno, uint32_t btime_in_microseconds )
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
- * \register dump with _AboutGPX() aber mit fehler status
+ * register dump with _AboutGPX() aber mit fehler status
  */
 es_status_codes InitGPX( uint32_t drvno, uint32_t delay )
 {
@@ -1348,6 +1348,7 @@ es_status_codes SetBDAT( uint32_t drvno, uint32_t datin10ns )
  * \param sensor_gain For IR sensors. 0 is the lowest gain.
  *		- 3001/3010: 0 to 1
  *		- 3030: 0 to 3
+ * \param use_EC
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_write_failed
@@ -2666,10 +2667,6 @@ es_status_codes GetLastBufPart( uint32_t drvno )
 /**
  * \brief Initializes PCIe board.
  * 
- * \param board_sel Select PCIe boards.
- *		- 1: board one
- *		- 2: board two
- *		- 3: both boards
  * \return es_status_codes:
  *		- es_no_error
  *		- es_invalid_driver_number
