@@ -1,5 +1,8 @@
 # vX.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+v3.24.3
+- Improve names and parameters of high level board/DLL calls
+
 v3.24.2
 - Add DLLResetDSC, DLLSetDIRDSC and DLLGetDSC
 
