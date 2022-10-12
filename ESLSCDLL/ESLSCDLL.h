@@ -66,11 +66,8 @@ DllAccess double DLLCalcMeasureTimeInSeconds(UINT32 nos, UINT32 nob, double expo
 DllAccess void DLLInitProDLL();
 #ifdef COMPILE_FOR_LABVIEW
 DllAccess void DLLRegisterLVEvents(LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent);
-DllAccess CStr DLLConvertErrorCodeToMsg(es_status_codes status);
-//TODO: Check if this else is needed or Labview can also handle char*
-#else
-DllAccess char* DLLConvertErrorCodeToMsg( es_status_codes status );
 #endif
+DllAccess char* DLLConvertErrorCodeToMsg( es_status_codes status );
 //************ Cam infos
 DllAccess es_status_codes DLLAbout(UINT32 drvno);
 DllAccess es_status_codes DLLAboutS0( UINT32 drvno );
