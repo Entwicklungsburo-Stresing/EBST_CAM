@@ -112,7 +112,7 @@ DllAccess void DLLErrMsgBoxOff()
  * \copydoc InitDriver
  * \param _number_of_boards Pointer for returning recognized number of PCIe boards.
  */
-DllAccess es_status_codes DLLCCDDrvInit( UINT8* _number_of_boards )
+DllAccess es_status_codes DLLInitDriver( UINT8* _number_of_boards )
 {
 	es_status_codes status = InitDriver();
 	if (status == es_no_error)
@@ -123,9 +123,9 @@ DllAccess es_status_codes DLLCCDDrvInit( UINT8* _number_of_boards )
 /**
  * \copydoc ExitDriver
  */
-DllAccess es_status_codes DLLCCDDrvExit( UINT32 board_sel )
+DllAccess es_status_codes DLLExitDriver()
 {
-	return ExitDriver(board_sel);
+	return ExitDriver();
 }
 
 /**
@@ -403,22 +403,23 @@ DllAccess es_status_codes DLLCopyOneBlock( UINT32 drv, UINT16 block, UINT16 *pde
 }
 
 /**
- * \brief Read nos lines from FIFO. Const burst loop with DMA initiated by hardware DREQ. Is called automatically for 2 boards.
+ * \brief This function is starting the measurement and returns immediately.
+ * 
+ * StartMeasurement is run a new thread. When there are two boards, both boards are starting the measurement. You can check the status of the measurement with DllisMeasureOn and DllisBlockOn or create a blocking call with DLLwaitForMeasureReady and DLLwaitForBlockReady.
  */
-DllAccess void DLLReadFFLoop()
+DllAccess void DLLStartMeasurement_nonblocking()
 {
 	//thread wit prio 15
 	_beginthreadex( NULL, 0, &StartMeasurement, NULL, 0, NULL );
 	return;
-}//DLLReadFFLoop
+}
 
 /**
- * \brief Abort measurement.
+ * \copydoc StartMeasurement
  */
-DllAccess void DLLStopFFLoop()
+DllAccess es_status_codes DLLStartMeasurement_blocking()
 {
-	abortMeasurementFlag = TRUE;
-	return;
+	return StartMeasurement();
 }
 
 /**
@@ -812,9 +813,9 @@ DllAccess es_status_codes DLLInitMeasurement()
 /**
  * \copydoc AbortMeasurement
  */
-DllAccess es_status_codes DLLAbortMeasurement(UINT32 drv)
+DllAccess es_status_codes DLLAbortMeasurement()
 {
-	return AbortMeasurement(drv);
+	return AbortMeasurement();
 }
 
 /**
