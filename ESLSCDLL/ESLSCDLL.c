@@ -736,17 +736,12 @@ DllAccess void DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEve
 	blockDoneLVEvent = *blockDoneEvent;
 	return;
 }
+#endif
 
-DllAccess CStr DLLConvertErrorCodeToMsg(es_status_codes status)
-{
-	return ConvertErrorCodeToMsg(status);
-}
-#else
 DllAccess char* DLLConvertErrorCodeToMsg( es_status_codes status )
 {
 	return ConvertErrorCodeToMsg( status );
 }
-#endif
 
 /**
  * \copydoc SetupDma
