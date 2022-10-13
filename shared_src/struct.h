@@ -10,10 +10,10 @@
 struct global_settings
 {
 	/**
-	 * \brief useSoftwarePolling determines which method is used to copy data from DMA to user buffer.
+	 * useSoftwarePolling determines which method is used to copy data from DMA to user buffer.
 	 *
-	 * true: Use Software Polling. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. This method is reliable up to about 33kHz. This was measured with a 3030 camera system with 1088 pixels, priority of the thread is not changed, 14.12.2021, FH.
-	 * false: Use Interrupt. Every dma_buffer_size_in_scans/2 scan the interrupt starts a copy process, which copies dma_buffer_size_in_scans/2 scans to the user buffer. 1000 is our default value for dma_buffer_size_in_scans, so interrupt is started every 500 scans.
+	 * - true: Use Software Polling. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. This method is reliable up to about 33kHz. This was measured with a 3030 camera system with 1088 pixels, priority of the thread is not changed, 14.12.2021, FH.
+	 * - false: Use Interrupt. Every dma_buffer_size_in_scans/2 scan the interrupt starts a copy process, which copies dma_buffer_size_in_scans/2 scans to the user buffer. 1000 is our default value for dma_buffer_size_in_scans, so interrupt is started every 500 scans.
 	 */
 	uint32_t useSoftwarePolling;
 	/**
@@ -25,11 +25,11 @@ struct global_settings
 	 */
 	uint32_t nob;
 	/**
-	 * Scan trigger input mode
+	 * Scan trigger input mode. See enum sti_mode in enum.h for options.
 	 */
 	uint32_t sti_mode;
 	/**
-	 * Block trigger input mode
+	 * Block trigger input mode. See enum bti_mode in enum.h for options.
 	 */
 	uint32_t bti_mode;
 	/**
@@ -69,23 +69,25 @@ struct global_settings
 	 */
 	uint32_t trigger_mode_cc;
 	/**
-	 * Board sel.
-	 * 0: board 1
-	 * 1: board 2
-	 * 2: both boards
+	 * Board select
+	 * 
+	 * TODO: Check if there are places where board_sel is expected as 0, 1, 2 and not 1, 2, 3.
+	 * - 1: board 1
+	 * - 2: board 2
+	 * - 3: both boards
 	 */
 	uint32_t board_sel;
 	/**
 	 * Sensor type.
-	 * 0: PDA (line sensor)
-	 * 1: FFT (area sensor)
+	 * - 0: PDA (line sensor)
+	 * - 1: FFT (area sensor)
 	 */
 	uint32_t sensor_type;
 	/**
 	 * Camera system
-	 * 0: 3001
-	 * 1: 3010
-	 * 2: 3030
+	 * - 0: 3001
+	 * - 1: 3010
+	 * - 2: 3030
 	 */
 	uint32_t camera_system;
 	/**

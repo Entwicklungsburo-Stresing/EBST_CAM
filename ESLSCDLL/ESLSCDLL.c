@@ -112,7 +112,7 @@ DllAccess void DLLErrMsgBoxOff()
  * \copydoc InitDriver
  * \param _number_of_boards Pointer for returning recognized number of PCIe boards.
  */
-DllAccess es_status_codes DLLCCDDrvInit( UINT8* _number_of_boards )
+DllAccess es_status_codes DLLInitDriver( UINT8* _number_of_boards )
 {
 	es_status_codes status = InitDriver();
 	if (status == es_no_error)
@@ -123,9 +123,9 @@ DllAccess es_status_codes DLLCCDDrvInit( UINT8* _number_of_boards )
 /**
  * \copydoc ExitDriver
  */
-DllAccess es_status_codes DLLCCDDrvExit( UINT32 board_sel )
+DllAccess es_status_codes DLLExitDriver()
 {
-	return ExitDriver(board_sel);
+	return ExitDriver();
 }
 
 /**
@@ -305,11 +305,11 @@ DllAccess es_status_codes DLLreadBlockTriggerState( UINT32 drv, UCHAR btrig_ch, 
 }
 
 /**
-\brief For test purposes only: output of 2 strings.
-\param testMsg1 string1
-\param testMsg2 string2
-\return none
-*/  
+ * \brief For test purposes only: output of 2 strings.
+ *
+ * \param testMsg1 string1
+ * \param testMsg2 string2
+ */
 void TestMsg( char testMsg1[20], char testMsg2[20] )
 {
 	if (MessageBox( GetActiveWindow(), testMsg1, testMsg2, MB_OK | MB_ICONEXCLAMATION ) == IDOK) {};
@@ -403,33 +403,29 @@ DllAccess es_status_codes DLLCopyOneBlock( UINT32 drv, UINT16 block, UINT16 *pde
 }
 
 /**
- * \brief Read nos lines from FIFO. Const burst loop with DMA initiated by hardware DREQ. Is called automatically for 2 boards.
+ * \brief This function is starting the measurement and returns immediately.
  * 
- * \param board_sel board number (=1 if one PCI board)
- * \return none
+ * StartMeasurement is run a new thread. When there are two boards, both boards are starting the measurement. You can check the status of the measurement with DllisMeasureOn and DllisBlockOn or create a blocking call with DLLwaitForMeasureReady and DLLwaitForBlockReady.
  */
-DllAccess void DLLReadFFLoop()
+DllAccess void DLLStartMeasurement_nonblocking()
 {
 	//thread wit prio 15
 	_beginthreadex( NULL, 0, &StartMeasurement, NULL, 0, NULL );
 	return;
-}//DLLReadFFLoop
+}
 
 /**
- * \brief Abort measurement.
- * \return none
+ * \copydoc StartMeasurement
  */
-DllAccess void DLLStopFFLoop()
+DllAccess es_status_codes DLLStartMeasurement_blocking()
 {
-	abortMeasurementFlag = TRUE;
-	return;
+	return StartMeasurement();
 }
 
 /**
  * \brief Activate or deactivate continuous read.
  * \param activate 0 - deactivate, 1 - activate
  * \param pause_in_microseconds - time in microseconds before next loop starts - should be >=1
- * \return none
  */
 DllAccess void DLLSetContFFLoop( UINT8 activate , UINT32 pause_in_microseconds)
 {
@@ -740,12 +736,12 @@ DllAccess void DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEve
 	blockDoneLVEvent = *blockDoneEvent;
 	return;
 }
-
-DllAccess CStr DLLConvertErrorCodeToMsg(es_status_codes status)
-{
-	return ConvertErrorCodeToMsg(status);
-}
 #endif
+
+DllAccess char* DLLConvertErrorCodeToMsg( es_status_codes status )
+{
+	return ConvertErrorCodeToMsg( status );
+}
 
 /**
  * \copydoc SetupDma
@@ -785,7 +781,6 @@ DllAccess es_status_codes DLLSetBDAT(UINT32 drvno, UINT32 datin10ns)
  * The default of useSWTrig is FALSE and useSWTrig is set automatically in InitMeasurement depending on FFT mode.
  * Use this function to differ from the default behaviour.
  * \param on If TRUE BON starts immediately a scan. Must be TRUE for FFT in Area or ROI mode.
- * \return none
  */
 DllAccess void setSWTrig(UINT8 on)
 {
@@ -813,9 +808,9 @@ DllAccess es_status_codes DLLInitMeasurement()
 /**
  * \copydoc AbortMeasurement
  */
-DllAccess es_status_codes DLLAbortMeasurement(UINT32 drv)
+DllAccess es_status_codes DLLAbortMeasurement()
 {
-	return AbortMeasurement(drv);
+	return AbortMeasurement();
 }
 
 /**
@@ -865,4 +860,44 @@ DllAccess es_status_codes DLLSetTicnt(uint32_t drvno, uint8_t divider)
 DllAccess es_status_codes DLLSetTocnt(uint32_t drvno, uint8_t divider)
 {
 	return SetTocnt(drvno, divider);
+}
+
+/**
+ * \copydoc GetIsTdc
+ */
+DllAccess es_status_codes DLLGetIsTdc(UINT32 drvno, UINT8* isTdc)
+{
+	return GetIsTdc(drvno, isTdc);
+}
+
+/**
+ * \copydoc GetIsDsc
+ */
+DllAccess es_status_codes DLLGetIsDsc(UINT32 drvno, UINT8* isDsc)
+{
+	return GetIsDsc(drvno, isDsc);
+}
+
+/**
+ * \copydoc ResetDSC
+ */
+DllAccess es_status_codes DLLResetDSC(uint32_t drvno, uint8_t DSCNumber)
+{
+	return ResetDSC(drvno, DSCNumber);
+}
+
+/**
+ * \copydoc SetDIRDSC
+ */
+DllAccess es_status_codes DLLSetDIRDSC(uint32_t drvno, uint8_t DSCNumber, uint8_t dir)
+{
+	return SetDIRDSC(drvno, DSCNumber, dir);
+}
+
+/**
+ * \copydoc GetDSC
+ */
+DllAccess es_status_codes DLLGetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC)
+{
+	return GetDSC(drvno, DSCNumber, ADSC, LDSC);
 }

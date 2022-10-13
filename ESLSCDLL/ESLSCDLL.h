@@ -39,15 +39,16 @@ BOOL WINAPI DLLMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
 
 //************ High level API
 DllAccess es_status_codes DLLInitBoard();
-DllAccess es_status_codes DLLCCDDrvInit(UINT8* _number_of_boards);		// init the driver -> true if found
-DllAccess es_status_codes DLLCCDDrvExit(UINT32 boad_sel);		// closes the driver
+DllAccess es_status_codes DLLInitDriver(UINT8* _number_of_boards);
+DllAccess es_status_codes DLLExitDriver();
 DllAccess es_status_codes DLLSetGlobalSettings(struct global_settings settings);
-DllAccess es_status_codes DLLAbortMeasurement(UINT32 drv);
-DllAccess es_status_codes DLLReturnFrame(UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdioden, UINT32 length);
+DllAccess es_status_codes DLLAbortMeasurement();
+DllAccess es_status_codes DLLReturnFrame(UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length);
 DllAccess es_status_codes DLLCopyAllData(UINT32 drv, UINT16 *pdioden);
 DllAccess es_status_codes DLLCopyOneBlock(UINT32 drv, UINT16 block, UINT16 *pdest);
 DllAccess es_status_codes DLLInitMeasurement();
-DllAccess void DLLReadFFLoop();
+DllAccess es_status_codes DLLStartMeasurement_blocking();
+DllAccess void DLLStartMeasurement_nonblocking();
 
 //************ Mid level API
 //************ system info & control
@@ -65,8 +66,8 @@ DllAccess double DLLCalcMeasureTimeInSeconds(UINT32 nos, UINT32 nob, double expo
 DllAccess void DLLInitProDLL();
 #ifdef COMPILE_FOR_LABVIEW
 DllAccess void DLLRegisterLVEvents(LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent);
-DllAccess CStr DLLConvertErrorCodeToMsg(es_status_codes status);
 #endif
+DllAccess char* DLLConvertErrorCodeToMsg( es_status_codes status );
 //************ Cam infos
 DllAccess es_status_codes DLLAbout(UINT32 drvno);
 DllAccess es_status_codes DLLAboutS0( UINT32 drvno );
@@ -122,6 +123,11 @@ DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t drvno, uint16_t* widt
 DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns);
 DllAccess es_status_codes DLLSetTicnt(uint32_t drvno, uint8_t divider);
 DllAccess es_status_codes DLLSetTocnt(uint32_t drvno, uint8_t divider);
+DllAccess es_status_codes DLLGetIsTdc(UINT32 drvno, UINT8* isTdc);
+DllAccess es_status_codes DLLGetIsDsc(UINT32 drvno, UINT8* isDsc);
+DllAccess es_status_codes DLLResetDSC(uint32_t drvno, uint8_t DSCNumber);
+DllAccess es_status_codes DLLSetDIRDSC(uint32_t drvno, uint8_t DSCNumber, uint8_t dir);
+DllAccess es_status_codes DLLGetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC);
 //************ read and write functions
 DllAccess es_status_codes DLLReadByteS0(UINT32 drvno, UINT8 *data, UINT32 address);
 DllAccess es_status_codes DLLWriteByteS0(UINT32 drvno, UINT8 data, UINT32 address);
