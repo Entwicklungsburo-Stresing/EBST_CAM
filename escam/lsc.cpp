@@ -170,9 +170,9 @@ es_status_codes Lsc::calcTRMS( uint32_t drvno, uint32_t firstSample, uint32_t la
 /**
  * \copydoc AbortMeasurement
  */
-es_status_codes Lsc::abortMeasurement(uint32_t drvno)
+es_status_codes Lsc::abortMeasurement()
 {
-    return AbortMeasurement( drvno );
+    return AbortMeasurement();
 }
 
 void Lsc::parseTextToHtml(std::string* str)
