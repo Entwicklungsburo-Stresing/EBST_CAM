@@ -693,8 +693,7 @@ void MainWindow::on_blockDone()
 
 void MainWindow::abortPressed()
 {
-	for(uint32_t drvno=1; drvno<=number_of_boards; drvno++)
-		lsc.abortMeasurement(drvno);
+	lsc.abortMeasurement();
     return;
 }
 
@@ -880,7 +879,7 @@ void MainWindow::showCurrentScan()
 	{
 	case 2:
         ui->horizontalSliderSample->setValue(static_cast<int32_t>(sample + 1));
-	// This fallthough from case 2 to case 1 is intended
+	// This fallthrough from case 2 to case 1 is intended
     case 1:
         ui->horizontalSliderBlock->setValue(static_cast<int32_t>(block + 1));
 	}
@@ -937,19 +936,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 	}
 	else
 	{
-		switch (number_of_boards)
-		{
-		default:
-		case 1:
-			lsc.abortMeasurement(1);
-			ExitDriver(1);
-			break;
-		case 2:
-			lsc.abortMeasurement(1);
-			lsc.abortMeasurement(2);
-			ExitDriver(3);
-			break;
-		}
+		lsc.abortMeasurement();
+		ExitDriver();
 		QMainWindow::closeEvent(event);
 	}
 }

@@ -276,33 +276,79 @@ enum cam_messages
 	adc_ads5294_msg_ddrClkAlign = 0x60,
 };
 
+/**
+ * Scan trigger input mode
+ */
 enum sti_mode
 {
+	/**
+	 * External trigger on input I of PCIe board
+	 */
 	sti_I = 0,
+	/**
+	 * External trigger on input S1 of PCIe board
+	 */
 	sti_S1 = 1,
+	/**
+	 * External trigger on input S2 of PCIe board
+	 */
 	sti_S2 = 2,
+	/**
+	 * Unused
+	 */
 	sti_unused = 3,
+	/**
+	 * Trigger with internal timer
+	 */
 	sti_STimer = 4,
+	/**
+	 * Automatic internal instant trigger after last scan
+	 */
 	sti_ASL = 5
 };
 
+/**
+ * Block trigger input mode
+ */
 enum bti_mode
 {
+	/**
+	 * External trigger on input I of PCIe board
+	 */
 	bti_I = 0,
+	/**
+	 * External trigger on input S1 of PCIe board
+	 */
 	bti_S1 = 1,
+	/**
+	 * External trigger on input S2 of PCIe board
+	 */
 	bti_S2 = 2,
+	/**
+	 * External trigger when inputs S1 and S2 are high
+	 */
 	bti_S1S2 = 3,
+	/**
+	 * Trigger with internal timer
+	 */
 	bti_BTimer = 4,
 };
 
-
 enum sensor_type
 {
-	PDAsensor = 0,		//set RS after read; for HA S39xx
-	FFTsensor = 1,		//set vclk generator; for HA S703x
+	/**
+	 * PDA sensor. Set RS after read; for HA S39xx
+	 */
+	PDAsensor = 0,
+	/**
+	 * FFT sensor. Set vclk generator; for HA S703x
+	 */
+	FFTsensor = 1,
 };
 
-//camera system select
+/**
+ * camera system select
+ */
 enum camera_system
 {
 	camera_system_3001 = 0,

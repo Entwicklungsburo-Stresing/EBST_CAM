@@ -13,12 +13,11 @@ extern "C" {
 // plattform independet implementation
 es_status_codes InitBoard();
 es_status_codes InitDriver();
-es_status_codes ExitDriver(uint32_t board_sel);
+es_status_codes ExitDriver();
 void SetGlobalSettings(struct global_settings settings);
 es_status_codes InitMeasurement();
-es_status_codes SetExposureControl(uint32_t drvno);
 es_status_codes StartMeasurement();
-es_status_codes AbortMeasurement(uint32_t drv);
+es_status_codes AbortMeasurement();
 es_status_codes ReturnFrame(uint32_t drv, uint32_t curr_nos, uint32_t curr_nob, uint16_t curr_cam, uint16_t* pdest, uint32_t length);
 
 // Mid level API
@@ -128,6 +127,7 @@ es_status_codes SetTicnt(uint32_t drvno, uint8_t divider);
 es_status_codes SetTocnt(uint32_t drvno, uint8_t divider);
 es_status_codes GetIsTdc(uint32_t drvno, bool* isTdc);
 es_status_codes GetIsDsc(uint32_t drvno, bool* isDsc);
+es_status_codes SetExposureControl( uint32_t drvno );
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);

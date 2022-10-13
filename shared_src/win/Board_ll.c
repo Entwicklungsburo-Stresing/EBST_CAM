@@ -23,9 +23,8 @@ HANDLE hProcess;
 HANDLE hThread;
 
 /**
-\brief Initializes the pro DLL. Call this before using it. While initialization global variables are set in pro dll.
-\return void
-*/
+ * \brief Initializes the pro DLL. Call this before using it. While initialization global variables are set in pro dll.
+ */
 void InitProDLL()
 {
 	struct global_vars g;
@@ -709,11 +708,12 @@ es_status_codes writeConfig_32(uint32_t drvno, uint32_t data, uint16_t address)
 };
 
 /**
-\brief Get the free and installed memory info.
-\param pmemory_all how much is installed
-\param pmemory_free how much is free
-\return none
-*/
+ *
+ * \brief Get the free and installed memory info.
+ * 
+ * \param pmemory_all how much is installed
+ * \param pmemory_free how much is free
+ */
 void FreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 {
 	// Use to convert bytes to KB
@@ -880,8 +880,6 @@ es_status_codes AboutSettings()
 
 /**
  * \brief Switch on error message boxes of our software. Default is On.
- *
- * \return none.
  */
 void ErrMsgBoxOn()
 {
@@ -890,7 +888,6 @@ void ErrMsgBoxOn()
 
 /**
  * \brief Disable error message boxes, if not needed.
- * \return none
  */
 void ErrMsgBoxOff()
 {
@@ -901,7 +898,6 @@ void ErrMsgBoxOff()
  * \brief Display error message. If ErrMsgBoxOn is set.
  *
  * \param ErrMsg Message. Buffer size: 100.
- * \return none
  */
 void ErrorMsg(char ErrMsg[100])
 {
@@ -915,7 +911,6 @@ void ErrorMsg(char ErrMsg[100])
  * \brief Simple display of unsigned integer as error message for test purpose.
  *
  * \param val unsigned integer 64 bit
- * \return none.
  */
 void ValMsg(uint64_t val)
 {

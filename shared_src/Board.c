@@ -229,7 +229,8 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	return status;
 }
 
-es_status_codes SetExposureControl(uint32_t drvno) {
+es_status_codes SetExposureControl(uint32_t drvno)
+{
 	es_status_codes status = es_no_error;
 
 	status = SetSEC(drvno, settings_struct.sec_in_10ns);
@@ -253,7 +254,7 @@ es_status_codes SetExposureControl(uint32_t drvno) {
 		}
 
 	return status;
-	}
+}
 
 
 /**
@@ -296,23 +297,41 @@ es_status_codes ClearAllUserRegs(uint32_t drvno)
 /**
  * \brief Use this function to abort measurement.
  * 
- * \param drv PCIe board identifier.
  * \return es_status_codes:
  *		-es_no_error
  *		-es_register_read_failed
  *		-es_register_write_failed
  */
-es_status_codes AbortMeasurement( uint32_t drv )
+es_status_codes AbortMeasurement()
 {
 	ES_LOG("Abort Measurement\n");
 	abortMeasurementFlag = true;
-	es_status_codes status = StopSTimer( drv );
-	if (status != es_no_error) return status;
-	status = resetBlockOn(drv);
-	if (status != es_no_error) return status;
-	status = resetMeasureOn(drv);
-	if (status != es_no_error) return status;
-	return ResetDma( drv );
+	es_status_codes status = es_no_error;
+	switch (number_of_boards)
+	{
+	case 2:
+		status = StopSTimer( 2 );
+		if (status != es_no_error) return status;
+		status = resetBlockOn( 2 );
+		if (status != es_no_error) return status;
+		status = resetMeasureOn( 2 );
+		if (status != es_no_error) return status;
+		status = ResetDma( 2 );
+		if (status != es_no_error) return status;
+
+	// fallthrough
+	default:
+	case 1:
+		status = StopSTimer( 1 );
+		if (status != es_no_error) return status;
+		status = resetBlockOn( 1 );
+		if (status != es_no_error) return status;
+		status = resetMeasureOn( 1 );
+		if (status != es_no_error) return status;
+		status = ResetDma( 1 );
+		if (status != es_no_error) return status;
+	}
+	return status;
 }
 
 /**
@@ -1183,7 +1202,7 @@ es_status_codes SetBTimer( uint32_t drvno, uint32_t btime_in_microseconds )
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
- * \register dump with _AboutGPX() aber mit fehler status
+ * register dump with _AboutGPX() aber mit fehler status
  */
 es_status_codes InitGPX( uint32_t drvno, uint32_t delay )
 {
@@ -1348,6 +1367,7 @@ es_status_codes SetBDAT( uint32_t drvno, uint32_t datin10ns )
  * \param sensor_gain For IR sensors. 0 is the lowest gain.
  *		- 3001/3010: 0 to 1
  *		- 3030: 0 to 3
+ * \param use_EC
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_write_failed
@@ -2137,9 +2157,9 @@ es_status_codes SetDmaStartMode( uint32_t drvno, bool start_by_hardware)
 }
 
 /**
- * \brief Const burst loop with DMA initiated by hardware DREQ. Read nos lines from FIFO. this is the main loop.
- * 
- * It is a good idea to create a new thread for calling this function, because this is a blocking call.
+ * \brief  This function is starting the measurement and returns when the measurement is done.
+ *
+ * When there are two boards, both boards are starting the measurement. It is a good idea to create a new thread for calling this function, because this is a blocking call.
  * 
  * \return es_status_codes:
  *		- es_no_error
@@ -2230,7 +2250,7 @@ es_status_codes StartMeasurement()
 				status = waitForBlockTrigger(1);
 			if (status == es_abortion)
 			{
-				status = AbortMeasurement(BOARD_SEL);
+				status = AbortMeasurement();
 				return ReturnStartMeasurement(status);
 			}
 			else if (status != es_no_error) return ReturnStartMeasurement(status);
@@ -2281,7 +2301,7 @@ es_status_codes StartMeasurement()
 				{
 					if ((FindCam(1) != es_no_error) | abortMeasurementFlag)
 					{
-						status = AbortMeasurement(1);
+						status = AbortMeasurement();
 						return ReturnStartMeasurement(status);
 					}
 					abortMeasurementFlag = checkEscapeKeyState();
@@ -2297,7 +2317,7 @@ es_status_codes StartMeasurement()
 				{
 					if ((FindCam(2) != es_no_error) | abortMeasurementFlag)
 					{
-						status = AbortMeasurement(2);
+						status = AbortMeasurement();
 						return ReturnStartMeasurement(status);
 					}
 					abortMeasurementFlag = checkEscapeKeyState();
@@ -2320,7 +2340,7 @@ es_status_codes StartMeasurement()
 					{
 						if ((FindCam(1) != es_no_error) | abortMeasurementFlag)
 						{
-							status = AbortMeasurement(1);
+							status = AbortMeasurement();
 							if (status != es_no_error) return ReturnStartMeasurement(status);
 							return_flag_1 = false;
 						}
@@ -2329,7 +2349,7 @@ es_status_codes StartMeasurement()
 					{
 						if ((FindCam(2) != es_no_error) | abortMeasurementFlag)
 						{
-							status = AbortMeasurement(2);
+							status = AbortMeasurement();
 							if (status != es_no_error) return ReturnStartMeasurement(status);
 							return_flag_2 = true;
 						}
@@ -2666,10 +2686,6 @@ es_status_codes GetLastBufPart( uint32_t drvno )
 /**
  * \brief Initializes PCIe board.
  * 
- * \param board_sel Select PCIe boards.
- *		- 1: board one
- *		- 2: board two
- *		- 3: both boards
  * \return es_status_codes:
  *		- es_no_error
  *		- es_invalid_driver_number
@@ -2712,10 +2728,6 @@ es_status_codes InitDriver()
 /**
  * \brief Exit driver.
  * 
- * \param board_sel:
- *		- 1: board one
- *		- 2: board two
- *		- 3: both boards
  * \return es_status_codes:
  *		- es_invalid_driver_number
  *		- es_invalid_driver_handle
@@ -2723,11 +2735,11 @@ es_status_codes InitDriver()
  *		- es_unlocking_dma_failed
  *		- es_parameter_out_of_range
  */
-es_status_codes ExitDriver(uint32_t board_sel)
+es_status_codes ExitDriver()
 {
 	ES_LOG("\n*** Exit driver ***\n");
 	es_status_codes status = es_no_error;
-	switch (board_sel)
+	switch (number_of_boards)
 	{
 	case 1:
 		status = CleanupDriver(1);
@@ -2735,11 +2747,6 @@ es_status_codes ExitDriver(uint32_t board_sel)
 		status = _ExitDriver(1);
 		break;
 	case 2:
-		status = CleanupDriver(2);
-		if (status != es_no_error) return status;
-		status = _ExitDriver(2);
-		break;
-	case 3:
 		status = CleanupDriver(1);
 		if (status != es_no_error) return status;
 		status = CleanupDriver(2);
@@ -2756,6 +2763,21 @@ es_status_codes ExitDriver(uint32_t board_sel)
 	return status;
 }
 
+/**
+ * \brief Get data of a single measurement.
+ * 
+ * \param drv PCIe board identifier
+ * \param curr_nos sample number ( 0...(nos - 1) )
+ * \param curr_nob block number ( 0...(nob - 1) )
+ * \param curr_cam camera number ( 0...(CAMCNT - 1) )
+ * \param pdest Pointer where frame data will be written. Make sure that the size is >= sizeof(uint16_t) * length
+ * \param length Lenght of the frame to copy. Typically = pixel
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
 es_status_codes ReturnFrame(uint32_t drv, uint32_t curr_nos, uint32_t curr_nob, uint16_t curr_cam, uint16_t* pdest, uint32_t length)
 {
 	//ES_LOG( "Return frame: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, pdest %p, length: %u\n", drv, curr_nos, curr_nob, curr_cam, pdest, length );
@@ -3759,7 +3781,6 @@ es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
 /**
  * \brief Sets BlockOn bit in PCIEFLAGS and notifies UI about it. Two board sync version
  *
- * \param drvno PCIe board identifier.
  * \return es_status_codes:
  *		- es_no_error
  * 		- es_register_read_failed
@@ -3787,7 +3808,6 @@ es_status_codes setBlockOnTwoBoards()
 /**
  * \brief Sets Scan Timer on. Two board sync version.
  *
- * \param drvno board number (=1 if one PCI board)
  * \return es_status_codes:
  * 		- es_no_error
  * 		- es_register_read_failed
@@ -3814,7 +3834,6 @@ es_status_codes StartSTimerTwoBoards()
 /**
  * \brief Triggers one camera read by calling this function.
  *
- * \param drvno board number (=1 if one PCI board)
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_read_failed
