@@ -384,22 +384,27 @@ enum adc_mode
 
 enum tor_out
 {
-	xck_tor = 0,
-	rego = 1,
-	von = 2,
-	dma_act = 3,
-	asls = 4,
-	stimer = 5,
-	btimer = 6,
-	isr_act = 7,
-	s1 = 8,
-	s2 = 9,
-	bon = 10,
-	measureon = 11,
-	sdat = 12,
-	bdat = 13,
-	sshut = 14,
-	bshut = 15
+	tor_xck = 0,
+	tor_rego = 1,
+	tor_von = 2,
+	tor_dma_act = 3,
+	tor_asls = 4,
+	tor_stimer = 5,
+	tor_btimer = 6,
+	tor_isr_act = 7,
+	tor_s1 = 8,
+	tor_s2 = 9,
+	tor_bon = 10,
+	tor_measureon = 11,
+	tor_sdat = 12,
+	tor_bdat = 13,
+	tor_sshut = 14,
+	tor_bshut = 15,
+	tor_ifc = 16,
+	tor_do_cc_i = 17,
+	tor_rs_monitor = 18,
+	tor_to_cnt_out = 19,
+	tor_secon = 20
 };
 
 enum theme
@@ -427,24 +432,4 @@ enum fft_mode
 	full_binning = 0,
 	partial_binning = 1,
 	area_mode = 2
-};
-
-enum TOR_fkt
-{
-	TOR_XCK = 0,
-	TOR_REG = 1,
-	TOR_VON = 2,
-	TOR_DMA_ACT = 3,
-	TOR_ASLS = 4,
-	TOR_STIMER = 5,
-	TOR_BTIMER = 6,
-	TOR_ISR_ACT = 7,
-	TOR_S1 = 8,
-	TOR_S2 = 9,
-	TOR_BON = 10,
-	TOR_MEASUREON = 11,
-	TOR_SDAT = 12,
-	TOR_BDAT = 13,
-	TOR_SSHUT = 14,
-	TOR_BSHUT = 15
 };
