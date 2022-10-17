@@ -160,7 +160,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	status = SetBTimer(drvno, settings_struct.btime_in_microsec);
 	if (status != es_no_error) return status;
 	bool isTdc = false;
-	status = GetIsTdc(drvno, isTdc);
+	status = GetIsTdc(drvno, &isTdc);
 	if (status != es_no_error) return status;
 	if (isTdc) status = InitGPX(drvno, settings_struct.gpx_offset);
 	if (status != es_no_error) return status;
@@ -4195,8 +4195,8 @@ void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* blo
  * 
  * \param drvno PCIe board identifier
  * \param divider
- *		- 0: disable this function (every trigger is used)
- *		- 1-7: omit n trigger
+ *		- =0: disable this function (every trigger is used)
+ *		- >0: omit n trigger
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
@@ -4214,9 +4214,9 @@ es_status_codes SetTicnt(uint32_t drvno, uint8_t divider)
  * \brief Set the trigger output divider
  *
  * \param drvno PCIe board identifier
- * \param divider
- *		- 0: disable this function (every trigger is used)
- *		- 1-7: use every n'th trigger
+ * \param divider 7 bit value
+ *		- =0: disable this function (every trigger is used)
+ *		- >0: use every n'th trigger
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
