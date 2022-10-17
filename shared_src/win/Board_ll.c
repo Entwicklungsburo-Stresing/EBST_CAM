@@ -752,7 +752,7 @@ void FreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 {
 	ES_LOG("Start copy data to user buffer thread.\n");
-	if (settings_struct.useSoftwarePolling)
+	if (settings_struct.use_software_polling)
 	{
 		uint32_t* param = (uint32_t*)malloc(sizeof(uint32_t));
 		*param = drvno;

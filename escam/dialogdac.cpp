@@ -132,18 +132,18 @@ void DialogDac::spinBoxChannelX_valueChanged()
             static_cast<uint32_t>(ui->spinBoxBoard2Channel8->value())
         }
 	};
-	bool isIr = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
+	bool is_hs_ir = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
 	for(uint32_t drvno=1; drvno<=number_of_boards; drvno++)
-		mainWindow->lsc.dac_setAllOutputs(drvno, output[drvno-1], isIr);
+		mainWindow->lsc.dac_setAllOutputs(drvno, output[drvno-1], is_hs_ir);
 	return;
 }
 
 void DialogDac::on_buttonBox_rejected()
 {
 	// Send old values to DAC
-	bool isIr = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
+	bool is_hs_ir = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
 	for (uint32_t drvno = 1; drvno <= number_of_boards; drvno++)
-		mainWindow->lsc.dac_setAllOutputs(drvno, output_old[drvno-1], isIr);
+		mainWindow->lsc.dac_setAllOutputs(drvno, output_old[drvno-1], is_hs_ir);
 	return;
 }
 

@@ -55,7 +55,7 @@ es_status_codes InitMeasurement()
 	ES_LOG("\n*** Init Measurement ***\n");
 	ES_LOG("struct global_settings: ");
 	for (uint32_t i = 0; i < sizeof(settings_struct)/4; i++)
-        ES_LOG("%u ", *(&settings_struct.useSoftwarePolling + i));
+        ES_LOG("%u ", *(&settings_struct.use_software_polling + i));
 	ES_LOG("\n");
 	es_status_codes status = es_no_error;
 	switch (settings_struct.board_sel)
@@ -113,21 +113,21 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	if (status != es_no_error) return status;
 	if (settings_struct.sensor_type == FFTsensor)
 	{
-		switch (settings_struct.FFTMode)
+		switch (settings_struct.fft_mode)
 		{
 		case full_binning:
-			status = SetupFullBinning(drvno, settings_struct.FFTLines, (uint8_t)settings_struct.Vfreq);
+			status = SetupFullBinning(drvno, settings_struct.fft_lines, (uint8_t)settings_struct.vfreq);
 			break;
 #ifdef WIN32
 		case partial_binning:
 		{
 			uint8_t regionSize[8];
 			for (int i = 0; i < 8; i++) regionSize[i] = settings_struct.region_size[i];
-			status = DLLSetupROI(drvno, (uint16_t)settings_struct.number_of_regions, settings_struct.FFTLines, (uint8_t)settings_struct.keep, regionSize, (uint8_t)settings_struct.Vfreq);
+			status = DLLSetupROI(drvno, (uint16_t)settings_struct.number_of_regions, settings_struct.fft_lines, (uint8_t)settings_struct.keep, regionSize, (uint8_t)settings_struct.vfreq);
 			break;
 		}
 		case area_mode:
-			status = DLLSetupArea(drvno, settings_struct.lines_binning, (uint8_t)settings_struct.Vfreq);
+			status = DLLSetupArea(drvno, settings_struct.lines_binning, (uint8_t)settings_struct.vfreq);
 			break;
 #endif
 		default:
@@ -184,7 +184,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetDmaStartMode(drvno, HWDREQ_EN);
 	if (status != es_no_error) return status;
-	if (settings_struct.useSoftwarePolling)
+	if (settings_struct.use_software_polling)
 	{
 		status = disableInterrupt(drvno);
 		if (status != es_no_error) return status;
@@ -209,26 +209,26 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 		InitCamera3001(drvno);
 		break;
 	case camera_system_3010:
-        InitCamera3010(drvno, (uint8_t)settings_struct.ADC_Mode, (uint16_t)settings_struct.ADC_custom_pattern);
+        InitCamera3010(drvno, (uint8_t)settings_struct.adc_mode, (uint16_t)settings_struct.adc_custom_pattern);
 		break;
 	case camera_system_3030:
-        InitCamera3030(drvno, (uint8_t)settings_struct.ADC_Mode, (uint16_t)settings_struct.ADC_custom_pattern, (uint8_t)settings_struct.adc_gain, settings_struct.dac, settings_struct.dac_output[drvno-1], settings_struct.isIr);
+        InitCamera3030(drvno, (uint8_t)settings_struct.adc_mode, (uint16_t)settings_struct.adc_custom_pattern, (uint8_t)settings_struct.adc_gain, settings_struct.dac, settings_struct.dac_output[drvno-1], settings_struct.is_hs_ir);
 		break;
 	default:
 		return es_parameter_out_of_range;
 	}
 	if (status != es_no_error) return status;
 	//for cooled Cam
-	status = SetTemp(drvno, (uint8_t)settings_struct.Temp_level);
+	status = SetTemp(drvno, (uint8_t)settings_struct.temp_level);
 	if (status != es_no_error) return status;
-    status = IOCtrl_setImpactStartPixel(drvno, (uint16_t)settings_struct.IOCtrl_impact_start_pixel);
+    status = IOCtrl_setImpactStartPixel(drvno, (uint16_t)settings_struct.ioctrl_impact_start_pixel);
 	if (status != es_no_error) return status;
 	for (uint8_t i = 1; i <= 7; i++)
 	{
-        status = IOCtrl_setOutput(drvno, i, (uint16_t)settings_struct.IOCtrl_output_width_in_5ns[i-1], (uint16_t)settings_struct.IOCtrl_output_delay_in_5ns[i-1]);
+        status = IOCtrl_setOutput(drvno, i, (uint16_t)settings_struct.ioctrl_output_width_in_5ns[i-1], (uint16_t)settings_struct.ioctrl_output_delay_in_5ns[i-1]);
 		if (status != es_no_error) return status;
 	}
-	status = IOCtrl_setT0(drvno, settings_struct.IOCtrl_T0_period_in_10ns);
+	status = IOCtrl_setT0(drvno, settings_struct.ioctrl_T0_period_in_10ns);
 	return status;
 }
 
@@ -243,7 +243,7 @@ es_status_codes SetExposureControl(uint32_t drvno)
 		if (status != es_no_error) return status;
 		}
 	else {
-		status = SetTORReg(drvno, (uint8_t)settings_struct.TORmodus);  // PCIe 'O' output is what ever was se80lected in LabView
+		status = SetTORReg(drvno, (uint8_t)settings_struct.tor);  // PCIe 'O' output is what ever was se80lected in LabView
 		if (status != es_no_error) return status;
 		}
 	// IFC is RS pulse (long RS or short RS) or as long as defined in EC register
@@ -1590,16 +1590,16 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
  * \param adc_gain gain of ADC
  * \param useDac
  * \param dac_output
- * \param isIr
+ * \param is_hs_ir
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes InitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t adc_gain, bool useDac, uint32_t* dac_output, bool isIr )
+es_status_codes InitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t adc_gain, bool useDac, uint32_t* dac_output, bool is_hs_ir )
 {
-	ES_LOG("Init camera 3030, adc_mode: %u, custom_pattern: %u, adc_gain: %u, use dac: %u, isIr: %u\n", adc_mode, custom_pattern, adc_gain, useDac, isIr);
+	ES_LOG("Init camera 3030, adc_mode: %u, custom_pattern: %u, adc_gain: %u, use dac: %u, is_hs_ir: %u\n", adc_mode, custom_pattern, adc_gain, useDac, is_hs_ir);
 	es_status_codes status = Cam3030_ADC_reset( drvno );
 	if (status != es_no_error) return status;
 	//two wire mode output interface for pal versions P209_2 and above
@@ -1616,7 +1616,7 @@ es_status_codes InitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custo
 	{
 		status = SendFLCAM_DAC(drvno, dac_channel_count, 0, 0, 1);
 		if (status != es_no_error) return status;
-		status = DAC_setAllOutputs(drvno, dac_output, isIr);
+		status = DAC_setAllOutputs(drvno, dac_output, is_hs_ir);
 	}
 	return status;
 }
@@ -2401,7 +2401,7 @@ es_status_codes StartMeasurement()
 		{
 			status = StopSTimer(1);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
-			if (!settings_struct.useSoftwarePolling)
+			if (!settings_struct.use_software_polling)
 			{
 				status = GetLastBufPart(1);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
@@ -2411,7 +2411,7 @@ es_status_codes StartMeasurement()
 		{
 			status = StopSTimer(2);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
-			if (!settings_struct.useSoftwarePolling)
+			if (!settings_struct.use_software_polling)
 			{
 				status = GetLastBufPart(2);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
@@ -3531,7 +3531,7 @@ es_status_codes dumpSettings(char** stringPtr)
 	//allocate string buffer buffer
 	*stringPtr = (char*)calloc(bufferLength, sizeof(char));
     len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
-		"useSoftwarePolling\t"DLLTAB DLLTAB"%u\n"
+		"use_software_polling\t"DLLTAB DLLTAB"%u\n"
 		"nos\t" DLLTAB DLLTAB"%u\n"
 		"nob\t"DLLTAB DLLTAB"%u\n"
 		"sti_mode\t"DLLTAB DLLTAB"%u\n"
@@ -3565,7 +3565,7 @@ es_status_codes dumpSettings(char** stringPtr)
 		"lines binning\t"DLLTAB"%u\n"
 		"number of regions\t%u\n"
 		"keep\t"DLLTAB DLLTAB"0b"BYTE_TO_BINARY_PATTERN"\n",
-		settings_struct.useSoftwarePolling,
+		settings_struct.use_software_polling,
 		settings_struct.nos,
 		settings_struct.nob,
 		settings_struct.sti_mode,
@@ -3589,13 +3589,13 @@ es_status_codes dumpSettings(char** stringPtr)
 		settings_struct.led_off,
 		settings_struct.sensor_gain,
 		settings_struct.adc_gain,
-		settings_struct.Temp_level,
+		settings_struct.temp_level,
 		settings_struct.dac,
 		settings_struct.unused,
 		settings_struct.gpx_offset,
-		settings_struct.FFTLines,
-		settings_struct.Vfreq,
-		settings_struct.FFTMode,
+		settings_struct.fft_lines,
+		settings_struct.vfreq,
+		settings_struct.fft_mode,
 		settings_struct.lines_binning,
 		settings_struct.number_of_regions,
 		BYTE_TO_BINARY(settings_struct.keep));
@@ -3613,26 +3613,26 @@ es_status_codes dumpSettings(char** stringPtr)
 		"adc mode\t"DLLTAB"%u\n"
 		"adc custom pattern\t%u\n"
 		"bec_in_10ns\t"DLLTAB"%u\n"
-		"isIr\t"DLLTAB DLLTAB"%u\n"
-		"IOCtrl_impact_start_pixel\t%u\n",
-		settings_struct.TORmodus,
-		settings_struct.ADC_Mode,
-		settings_struct.ADC_custom_pattern,
+		"is_hs_ir\t"DLLTAB DLLTAB"%u\n"
+		"ioctrl_impact_start_pixel\t%u\n",
+		settings_struct.tor,
+		settings_struct.adc_mode,
+		settings_struct.adc_custom_pattern,
 		settings_struct.bec_in_10ns,
-		settings_struct.isIr,
-		settings_struct.IOCtrl_impact_start_pixel);
-    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "IOCtrl_output_width_in_5ns\t");
+		settings_struct.is_hs_ir,
+		settings_struct.ioctrl_impact_start_pixel);
+    len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "ioctrl_output_width_in_5ns\t");
 	for (int i = 0; i < 7; i++)
-        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.IOCtrl_output_width_in_5ns[i]);
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.ioctrl_output_width_in_5ns[i]);
     len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nIOCtrl_output_delay_in_5ns\t");
 	for (int i = 0; i < 7; i++)
-        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.IOCtrl_output_delay_in_5ns[i]);
+        len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.ioctrl_output_delay_in_5ns[i]);
     len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
 		"\nIOCtrl_T0_period_in_10ns\t%u\n"
 		"dma_buffer_size_in_scans\t%u\n"
 		"tocnt\t%u\n"
 		"ticnt\t%u\n",
-		settings_struct.IOCtrl_T0_period_in_10ns,
+		settings_struct.ioctrl_T0_period_in_10ns,
 		settings_struct.dma_buffer_size_in_scans,
 		settings_struct.tocnt,
 		settings_struct.ticnt);
@@ -4179,7 +4179,7 @@ void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* blo
 {
     int64_t scanCount = 0;
 	uint32_t dmasPerInterrupt = settings_struct.dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
-	if (settings_struct.useSoftwarePolling)
+	if (settings_struct.use_software_polling)
 		scanCount = scanCounterTotal;
 	else
         scanCount = getCurrentInterruptCounter(drvno) * dmasPerInterrupt;

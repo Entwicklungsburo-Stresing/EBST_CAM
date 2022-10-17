@@ -204,9 +204,9 @@ void Lsc::parseTextToHtml(std::string* str)
 /**
  * \copydoc DAC_setAllOutputs
  */
-es_status_codes Lsc::dac_setAllOutputs(uint32_t drvno, uint32_t* output, bool isIr)
+es_status_codes Lsc::dac_setAllOutputs(uint32_t drvno, uint32_t* output, bool is_hs_ir)
 {
-	return DAC_setAllOutputs(drvno, output, isIr);
+	return DAC_setAllOutputs(drvno, output, is_hs_ir);
 }
 
 /**
