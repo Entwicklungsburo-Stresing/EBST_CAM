@@ -239,7 +239,7 @@ es_status_codes SetExposureControl(uint32_t drvno)
 	status = SetSEC(drvno, settings_struct.sec_in_10ns);
 	//set mshut
 	if (settings_struct.mshut) {
-		status = SetTORReg(drvno, TOR_SSHUT); // PCIe 'O' output is high during SEC active
+		status = SetTORReg(drvno, tor_sshut); // PCIe 'O' output is high during SEC active
 		if (status != es_no_error) return status;
 		}
 	else {
@@ -1014,23 +1014,7 @@ es_status_codes SetSEC( uint32_t drvno, uint32_t ecin10ns )
  * \brief Set signal of output port of PCIe card.
  * 
  * \param drvno PCIe board identifier
- * \param tor select output signal
- * 	- 0  XCK
- * 	- 1  REG -> OutTrig
- * 	- 2  VON
- * 	- 3  DMA_ACT
- * 	- 4  ASLS
- * 	- 5  STIMER
- * 	- 6  BTIMER
- * 	- 7  ISR_ACT
- * 	- 8  S1
- * 	- 9  S2
- * 	- 10 BON
- * 	- 11 MEASUREON
- * 	- 12 SDAT
- * 	- 13 BDAT
- * 	- 14 SSHUT
- * 	- 15 BSHUT
+ * \param tor select output signal. See enum tor_out in enum.h for options.
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_read_failed
