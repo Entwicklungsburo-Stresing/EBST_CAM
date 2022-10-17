@@ -49,7 +49,7 @@ signals:
     void blockStart();
     void blockDone();
 private:
-    uint8_t _torOut = xck_tor;
+    uint8_t _torOut = tor_xck;
     void parseTextToHtml(std::string* str);
 };
 

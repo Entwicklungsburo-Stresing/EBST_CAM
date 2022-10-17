@@ -61,7 +61,7 @@
 #define settingSensorOffsetBoard2Channel6Default	40000
 #define settingSensorOffsetBoard2Channel7Default	40000
 #define settingSensorOffsetBoard2Channel8Default	40000
-#define settingTorDefault							xck_tor
+#define settingTorDefault							tor_xck
 #define settingAdcModeDefault						normal
 #define settingAdcCustomValueDefault				0
 #define settingThemeDefault							lighttheme

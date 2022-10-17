@@ -1314,6 +1314,31 @@
              <string>BSHUT</string>
             </property>
            </item>
+           <item>
+            <property name="text">
+             <string>IFC</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>DO_CC_I</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>RS_MONITOR</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>TO_CNT_OUT</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>SECON</string>
+            </property>
+           </item>
           </widget>
          </item>
          <item row="1" column="1">
