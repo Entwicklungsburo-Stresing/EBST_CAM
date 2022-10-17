@@ -356,10 +356,22 @@ enum camera_system
 	camera_system_3030 = 2
 };
 
+/**
+ * Trigger mode for camera control.
+ */
 enum trigger_mode
 {
+	/**
+	 * Trigger with the start signal of the PCIe board.
+	 */
 	xck = 0,
+	/**
+	 * Use the input of camera control as trigger.
+	 */
 	exttrig = 1,
+	/**
+	 * Delay after trigger: Trigger with the start signal of the PCIe board, but with an additional delay after XCK.
+	 */
 	dat = 2
 };
 
