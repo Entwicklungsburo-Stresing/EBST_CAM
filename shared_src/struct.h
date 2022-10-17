@@ -125,9 +125,9 @@ struct global_settings
 	 */
 	uint32_t dac;
 	/**
-	 * Enable GPX
+	 * unused
 	 */
-	uint32_t enable_gpx;
+	uint32_t unused;
 	/**
 	 * GPX offset
 	 */

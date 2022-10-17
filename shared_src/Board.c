@@ -159,7 +159,10 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetBTimer(drvno, settings_struct.btime_in_microsec);
 	if (status != es_no_error) return status;
-	if (settings_struct.enable_gpx) status = InitGPX(drvno, settings_struct.gpx_offset);
+	bool isTdc = false;
+	status = GetIsTdc(drvno, isTdc);
+	if (status != es_no_error) return status;
+	if (isTdc) status = InitGPX(drvno, settings_struct.gpx_offset);
 	if (status != es_no_error) return status;
 	//Delay after Trigger
 	status = SetSDAT(drvno, settings_struct.sdat_in_10ns);
@@ -3588,7 +3591,7 @@ es_status_codes dumpSettings(char** stringPtr)
 		settings_struct.adc_gain,
 		settings_struct.Temp_level,
 		settings_struct.dac,
-		settings_struct.enable_gpx,
+		settings_struct.unused,
 		settings_struct.gpx_offset,
 		settings_struct.FFTLines,
 		settings_struct.Vfreq,
