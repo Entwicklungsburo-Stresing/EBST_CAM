@@ -34,7 +34,6 @@ constexpr auto settingSensorGainPath = "camerasetup/sensorGain";
 constexpr auto settingAdcGainPath = "camerasetup/adcGain";
 constexpr auto settingCoolingPath = "camerasetup/cooling";
 constexpr auto settingDacPath = "camerasetup/dac";
-constexpr auto settingGpxPath = "camerasetup/gpx";
 constexpr auto settingGpxOffsetPath = "camerasetup/gpxOffset";
 constexpr auto settingIsIrPath = "camerasetup/isIr";
 constexpr auto settingIOCtrlImpactStartPixelPath = "camerasetup/IOCtrlImpactStartPixel";

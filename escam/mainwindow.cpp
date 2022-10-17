@@ -165,7 +165,6 @@ void MainWindow::startPressed()
     settings_struct.adc_gain = settings.value(settingAdcGainPath, settingAdcGainDefault).toUInt();
     settings_struct.Temp_level = settings.value(settingCoolingPath, settingCoolingDefault).toUInt();
     settings_struct.dac = settings.value(settingDacPath, settingDacDefault).toBool();
-    settings_struct.enable_gpx = settings.value(settingGpxPath, settingGpxDefault).toBool();
     settings_struct.gpx_offset = settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toUInt();
 	settings_struct.useSoftwarePolling = settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool();
     //fftmodes tab
