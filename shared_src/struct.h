@@ -10,12 +10,12 @@
 struct global_settings
 {
 	/**
-	 * useSoftwarePolling determines which method is used to copy data from DMA to user buffer.
+	 * use_software_polling determines which method is used to copy data from DMA to user buffer.
 	 *
 	 * - true: Use Software Polling. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. This method is reliable up to about 33kHz. This was measured with a 3030 camera system with 1088 pixels, priority of the thread is not changed, 14.12.2021, FH.
 	 * - false: Use Interrupt. Every dma_buffer_size_in_scans/2 scan the interrupt starts a copy process, which copies dma_buffer_size_in_scans/2 scans to the user buffer. 1000 is our default value for dma_buffer_size_in_scans, so interrupt is started every 500 scans.
 	 */
-	uint32_t useSoftwarePolling;
+	uint32_t use_software_polling;
 	/**
 	 * Number of samples
 	 */
@@ -117,7 +117,7 @@ struct global_settings
 	/**
 	 * Temperatur level
 	 */
-	uint32_t Temp_level;
+	uint32_t temp_level;
 	/**
 	 * Turn digital analog converter on / off
 	 * - 0: off
@@ -135,15 +135,15 @@ struct global_settings
 	/**
 	 * Count of lines for FFT sensors
 	 */
-	uint32_t FFTLines;
+	uint32_t fft_lines;
 	/**
 	 * Vertical frequency for FFT sensors
 	 */
-	uint32_t Vfreq;
+	uint32_t vfreq;
 	/**
 	 * Mode for FFT sensors
 	 */
-	uint32_t FFTMode;
+	uint32_t fft_mode;
 	/**
 	 * Count of lines which are binned in area mode for FFT sensors
 	 */
@@ -164,16 +164,16 @@ struct global_settings
 	 * Array for output levels of each digital to analog converter
 	 */
 	uint32_t dac_output[MAXPCIECARDS][8];
-	uint32_t TORmodus; 
-	uint32_t ADC_Mode;
-	uint32_t ADC_custom_pattern;
+	uint32_t tor;
+	uint32_t adc_mode;
+	uint32_t adc_custom_pattern;
 	uint32_t bec_in_10ns;
 	uint32_t cont_pause_in_microseconds;
-	uint32_t isIr;
-	uint32_t IOCtrl_impact_start_pixel;
-	uint32_t IOCtrl_output_width_in_5ns[8];
-	uint32_t IOCtrl_output_delay_in_5ns[8];
-	uint32_t IOCtrl_T0_period_in_10ns;
+	uint32_t is_hs_ir;
+	uint32_t ioctrl_impact_start_pixel;
+	uint32_t ioctrl_output_width_in_5ns[8];
+	uint32_t ioctrl_output_delay_in_5ns[8];
+	uint32_t ioctrl_T0_period_in_10ns;
 	/**
 	 * Size of DMA buffer in scans. 1000 is our default. 60 is also working with highspeed (expt=0,02ms). 30 could be with one wrong scan every 10000 scans.
 	 */
