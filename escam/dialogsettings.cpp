@@ -101,7 +101,6 @@ DialogSettings::DialogSettings(QWidget *parent) :
     ui->comboBoxCamCool->setCurrentIndex(settings.value(settingCoolingPath, settingCoolingDefault).toInt());
     ui->checkBoxUseDac->setChecked(settings.value(settingDacPath, settingDacDefault).toBool());
     ui->checkBoxUseDac->stateChanged(settings.value(settingDacPath, settingDacDefault).toBool());
-    ui->checkBoxGpx->setChecked(settings.value(settingGpxPath, settingGpxDefault).toBool());
     ui->spinBoxGpxOffset->setValue(settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toInt());
 	ui->checkBoxIr->setChecked(settings.value(settingIsIrPath, settingIsIrDefault).toBool());
     ui->spinBoxIOCtrlImpactStartPixel->setValue(settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toInt());
@@ -182,7 +181,6 @@ void DialogSettings::on_accepted()
     settings.setValue(settingAdcGainPath, ui->spinBoxAdcGain->value());
     settings.setValue(settingCoolingPath, ui->comboBoxCamCool->currentIndex());
     settings.setValue(settingDacPath, ui->checkBoxUseDac->isChecked());
-    settings.setValue(settingGpxPath, ui->checkBoxGpx->isChecked());
     settings.setValue(settingGpxOffsetPath, ui->spinBoxGpxOffset->value());
 	settings.setValue(settingIsIrPath, ui->checkBoxIr->isChecked());
 	settings.setValue(settingIOCtrlImpactStartPixelPath, ui->spinBoxIOCtrlImpactStartPixel->value());
@@ -542,7 +540,6 @@ void DialogSettings::loadDefaults()
     ui->comboBoxCamCool->setCurrentIndex(settingCoolingDefault);
     ui->checkBoxUseDac->setChecked(settingDacDefault);
     ui->checkBoxUseDac->stateChanged(settingDacDefault);
-    ui->checkBoxGpx->setChecked(settingGpxDefault);
     ui->spinBoxGpxOffset->setValue(settingGpxOffsetDefault);
 	ui->checkBoxRegionsEqual->setChecked(settingIsIrDefault);
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settingIOCtrlImpactStartPixelDefault);

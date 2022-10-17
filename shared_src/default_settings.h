@@ -29,7 +29,6 @@
 #define settingAdcGainDefault						0
 #define settingCoolingDefault						0
 #define settingDacDefault							false
-#define settingGpxDefault							false
 #define settingGpxOffsetDefault						0
 #define settingLinesDefault							64
 #define settingVfreqDefault							7
