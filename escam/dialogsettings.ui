@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="measurement">
       <attribute name="title">
@@ -127,7 +127,7 @@
          <item row="12" column="1">
           <widget class="QLabel" name="labelSec">
            <property name="text">
-            <string>SEC</string>
+            <string>sec</string>
            </property>
           </widget>
          </item>
@@ -153,7 +153,7 @@
          <item row="15" column="1">
           <widget class="QLabel" name="labelContiniousPause">
            <property name="text">
-            <string>Continious pause</string>
+            <string>continious pause</string>
            </property>
           </widget>
          </item>
@@ -176,14 +176,14 @@
          <item row="7" column="1">
           <widget class="QLabel" name="labelSdat">
            <property name="text">
-            <string>SDAT (Scan Delay After Trigger)</string>
+            <string>sdat (scan delay after trigger)</string>
            </property>
           </widget>
          </item>
          <item row="10" column="1">
           <widget class="QLabel" name="labelBslope">
            <property name="text">
-            <string>BSlope (Block Trigger Slope)</string>
+            <string>bslope (block trigger slope)</string>
            </property>
           </widget>
          </item>
@@ -238,28 +238,28 @@
          <item row="5" column="1">
           <widget class="QLabel" name="labelSTimer">
            <property name="text">
-            <string>STimer (Scan Timer)</string>
+            <string>stimer (scan timer)</string>
            </property>
           </widget>
          </item>
          <item row="4" column="1">
           <widget class="QLabel" name="labelBti">
            <property name="text">
-            <string>BTI (Block Trigger Input)</string>
+            <string>bti (block trigger input)</string>
            </property>
           </widget>
          </item>
          <item row="8" column="1">
           <widget class="QLabel" name="labelBdat">
            <property name="text">
-            <string>BDAT (Block Delay After Trigger)</string>
+            <string>bdat (block delay after trigger)</string>
            </property>
           </widget>
          </item>
          <item row="13" column="1">
           <widget class="QLabel" name="labelBec">
            <property name="text">
-            <string>BEC</string>
+            <string>bec</string>
            </property>
           </widget>
          </item>
@@ -307,7 +307,7 @@
          <item row="11" column="1">
           <widget class="QLabel" name="labelXckdelayIn10ns">
            <property name="text">
-            <string>XCK Delay</string>
+            <string>xck delay</string>
            </property>
           </widget>
          </item>
@@ -333,21 +333,21 @@
          <item row="9" column="1">
           <widget class="QLabel" name="labelSslope">
            <property name="text">
-            <string>SSlope (Scan Trigger Slope)</string>
+            <string>sslope (scan trigger slope)</string>
            </property>
           </widget>
          </item>
          <item row="2" column="1">
           <widget class="QLabel" name="labelNob">
            <property name="text">
-            <string>NOB (Number of blocks)</string>
+            <string>nob (number of blocks)</string>
            </property>
           </widget>
          </item>
          <item row="3" column="1">
           <widget class="QLabel" name="labelSti">
            <property name="text">
-            <string>STI (Scan Trigger Input)</string>
+            <string>sti (scan trigger input)</string>
            </property>
           </widget>
          </item>
@@ -405,7 +405,7 @@
          <item row="6" column="1">
           <widget class="QLabel" name="labelBTimer">
            <property name="text">
-            <string>BTimer (Block Timer)</string>
+            <string>btimer (block timer)</string>
            </property>
           </widget>
          </item>
@@ -441,7 +441,7 @@
          <item row="14" column="1">
           <widget class="QLabel" name="labelTriggerModeCC">
            <property name="text">
-            <string>Trigger mode Camera Control</string>
+            <string>trigger mode camera control</string>
            </property>
           </widget>
          </item>
@@ -461,7 +461,7 @@
          <item row="1" column="1">
           <widget class="QLabel" name="labelNos">
            <property name="text">
-            <string>NOS (Number of samples)</string>
+            <string>nos (number of samples)</string>
            </property>
           </widget>
          </item>
@@ -515,7 +515,7 @@
          <item row="6" column="1">
           <widget class="QLabel" name="labelMshut">
            <property name="text">
-            <string>MSHUT (shutter)</string>
+            <string>mshut (shutter)</string>
            </property>
           </widget>
          </item>
@@ -575,14 +575,14 @@
          <item row="4" column="1">
           <widget class="QLabel" name="labelCamcnt">
            <property name="text">
-            <string>CAMCNT (Number of cameras)</string>
+            <string>CAMCNT (number of cameras)</string>
            </property>
           </widget>
          </item>
          <item row="9" column="1">
           <widget class="QLabel" name="labelGain3030">
            <property name="text">
-            <string>ADC Gain</string>
+            <string>adc gain</string>
            </property>
           </widget>
          </item>
@@ -596,21 +596,21 @@
          <item row="15" column="1">
           <widget class="QLabel" name="labelUseSoftwarePolling">
            <property name="text">
-            <string>Software polling</string>
+            <string>software polling</string>
            </property>
           </widget>
          </item>
          <item row="10" column="1">
           <widget class="QLabel" name="labelCamCool">
            <property name="text">
-            <string>Camera cooling</string>
+            <string>camera cooling</string>
            </property>
           </widget>
          </item>
          <item row="14" column="1">
           <widget class="QLabel" name="labelIOCtrlImpactStartPixel">
            <property name="text">
-            <string>IOCtrl impact start pixel</string>
+            <string>ioctrl impact start pixel</string>
            </property>
           </widget>
          </item>
@@ -631,14 +631,14 @@
          <item row="7" column="1">
           <widget class="QLabel" name="labelLed">
            <property name="text">
-            <string>LED</string>
+            <string>led</string>
            </property>
           </widget>
          </item>
          <item row="2" column="1">
           <widget class="QLabel" name="labelSensorType">
            <property name="text">
-            <string>Sensor type</string>
+            <string>SENSOR TYPE</string>
            </property>
           </widget>
          </item>
@@ -658,7 +658,7 @@
          <item row="8" column="1">
           <widget class="QLabel" name="labelGain3010">
            <property name="text">
-            <string>Sensor gain</string>
+            <string>sensor gain</string>
            </property>
           </widget>
          </item>
@@ -771,7 +771,7 @@
          <item row="13" column="1">
           <widget class="QLabel" name="labelIr">
            <property name="text">
-            <string>Infrared HS sensor</string>
+            <string>IS HS IR (infrared high speed sensor)</string>
            </property>
           </widget>
          </item>
@@ -797,7 +797,7 @@
          <item row="12" column="1">
           <widget class="QLabel" name="labelGpxOffset">
            <property name="text">
-            <string>GPX offset</string>
+            <string>gpx offset</string>
            </property>
           </widget>
          </item>
@@ -846,14 +846,14 @@
          <item row="3" column="1">
           <widget class="QLabel" name="labelCameraSystem">
            <property name="text">
-            <string>Camera System</string>
+            <string>CAMERA SYSTEM</string>
            </property>
           </widget>
          </item>
          <item row="5" column="1">
           <widget class="QLabel" name="labelOutputPixel">
            <property name="text">
-            <string>Number of pixel</string>
+            <string>PIXEL (number of pixel)</string>
            </property>
           </widget>
          </item>
@@ -989,7 +989,7 @@
          <item row="7" column="1">
           <widget class="QLabel" name="labelRegion1">
            <property name="text">
-            <string>Region size 1</string>
+            <string>region size 1</string>
            </property>
           </widget>
          </item>
@@ -1015,14 +1015,14 @@
          <item row="5" column="1">
           <widget class="QLabel" name="labelNumberOfRegions">
            <property name="text">
-            <string>Number of regions</string>
+            <string>number of regions</string>
            </property>
           </widget>
          </item>
          <item row="13" column="1">
           <widget class="QLabel" name="labelRegion7">
            <property name="text">
-            <string>Region size 7</string>
+            <string>region size 7</string>
            </property>
           </widget>
          </item>
@@ -1042,14 +1042,14 @@
          <item row="1" column="1">
           <widget class="QLabel" name="labelLines">
            <property name="text">
-            <string>Sensor Lines</string>
+            <string>FFT LINES (sensor lines)</string>
            </property>
           </widget>
          </item>
          <item row="3" column="1">
           <widget class="QLabel" name="labelFftMode">
            <property name="text">
-            <string>FFT mode</string>
+            <string>fft mode</string>
            </property>
           </widget>
          </item>
@@ -1082,21 +1082,21 @@
          <item row="4" column="1">
           <widget class="QLabel" name="labelLinesBinning">
            <property name="text">
-            <string>Area lines binning</string>
+            <string>area lines binning</string>
            </property>
           </widget>
          </item>
          <item row="14" column="1">
           <widget class="QLabel" name="labelRegion8">
            <property name="text">
-            <string>Region size 8</string>
+            <string>region size 8</string>
            </property>
           </widget>
          </item>
          <item row="12" column="1">
           <widget class="QLabel" name="labelRegion6">
            <property name="text">
-            <string>Region size 6</string>
+            <string>region size 6</string>
            </property>
           </widget>
          </item>
@@ -1110,7 +1110,7 @@
          <item row="9" column="1">
           <widget class="QLabel" name="labelRegion3">
            <property name="text">
-            <string>Region size 3</string>
+            <string>region size 3</string>
            </property>
           </widget>
          </item>
@@ -1156,14 +1156,14 @@
          <item row="8" column="1">
           <widget class="QLabel" name="labelRegion2">
            <property name="text">
-            <string>Region size 2</string>
+            <string>region size 2</string>
            </property>
           </widget>
          </item>
          <item row="6" column="1">
           <widget class="QLabel" name="labelRegionsEqual">
            <property name="text">
-            <string>Region size</string>
+            <string>region size</string>
            </property>
           </widget>
          </item>
@@ -1177,14 +1177,14 @@
          <item row="2" column="1">
           <widget class="QLabel" name="labelVfreq">
            <property name="text">
-            <string>VFreq (Vertical Frequency)</string>
+            <string>VFREQ (vertical frequency)</string>
            </property>
           </widget>
          </item>
          <item row="11" column="1">
           <widget class="QLabel" name="labelRegion5">
            <property name="text">
-            <string>Region size 5</string>
+            <string>region size 5</string>
            </property>
           </widget>
          </item>
@@ -1217,7 +1217,7 @@
          <item row="10" column="1">
           <widget class="QLabel" name="labelRegion4">
            <property name="text">
-            <string>Region size 4</string>
+            <string>region size 4</string>
            </property>
           </widget>
          </item>
@@ -1319,14 +1319,14 @@
          <item row="1" column="1">
           <widget class="QLabel" name="labelOutput">
            <property name="text">
-            <string>TOR (Ouput signal PCIe card)</string>
+            <string>tor (ouput signal PCIe card)</string>
            </property>
           </widget>
          </item>
          <item row="3" column="1">
           <widget class="QLabel" name="labelAdcCustom">
            <property name="text">
-            <string>ADC mode custom value</string>
+            <string>adc mode custom value</string>
            </property>
           </widget>
          </item>
@@ -1372,7 +1372,7 @@
          <item row="2" column="1">
           <widget class="QLabel" name="labelAdcMode">
            <property name="text">
-            <string>ADC mode</string>
+            <string>adc mode</string>
            </property>
           </widget>
          </item>
@@ -1445,7 +1445,7 @@
          <item row="1" column="1">
           <widget class="QLabel" name="labelTheme">
            <property name="text">
-            <string>Theme</string>
+            <string>theme</string>
            </property>
           </widget>
          </item>
