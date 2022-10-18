@@ -1023,13 +1023,21 @@ es_status_codes SetSEC( uint32_t drvno, uint32_t ecin10ns )
 es_status_codes SetTORReg( uint32_t drvno, uint8_t tor )
 {
 	ES_LOG("Set TOR: %u\n", tor);
+	// TOR register layout:
+	// bit		31	30	29	28	27		26		25		24
+	// meaning	TO3	TO2	TO1	TO0	TOSELG	SHORTRS	SENDRS	ISFFT
+	// use lower 4 bits of input tor for the upper nibble TO0 - TO3
+	uint8_t tor_upper_nibble = tor << 4;
+	// use bit 5 of input tor for bit 27 TOSELG
+	uint8_t toselg = tor & 0x10;
+	toselg = toselg >> 1;
 	uint8_t read_val = 0;
 	es_status_codes status = readRegisterS0_8( drvno, &read_val, S0Addr_TOR_MSB);
 	if (status != es_no_error) return status;
-	read_val &= 0x0f; //dont disturb lower bits
-    tor = (uint8_t)(tor << 4);
-	tor |= read_val;
-	return writeRegisterS0_8( drvno, tor, S0Addr_TOR_MSB);
+	// keep bits 24, 25, 26 as they are, set others to 0
+	read_val &= 0x07;
+	uint8_t write_val = tor_upper_nibble | toselg | read_val;
+	return writeRegisterS0_8( drvno, write_val, S0Addr_TOR_MSB);
 }
 
 /**
