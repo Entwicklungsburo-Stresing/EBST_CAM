@@ -1,5 +1,10 @@
 # vX.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+v3.24.4
+- Remove settings parameter useGPX and decide initialization of GPX by TDC bit
+- Improve capitalzation of settings
+- Extend TOR outputs
+
 v3.24.3
 - Improve names and parameters of high level board/DLL calls
 
