@@ -45,12 +45,12 @@ Global
 		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Release-Labview|x64.Build.0 = Release-Labview|x64
 		{1B5131DF-48DA-47FB-AAB0-2E086ED279DB}.Debug|x64.ActiveCfg = Debug|x64
 		{1B5131DF-48DA-47FB-AAB0-2E086ED279DB}.Debug|x64.Build.0 = Debug|x64
-		{1B5131DF-48DA-47FB-AAB0-2E086ED279DB}.Debug-Labview|x64.ActiveCfg = Debug|x64
-		{1B5131DF-48DA-47FB-AAB0-2E086ED279DB}.Debug-Labview|x64.Build.0 = Debug|x64
+		{1B5131DF-48DA-47FB-AAB0-2E086ED279DB}.Debug-Labview|x64.ActiveCfg = Debug-Labview|x64
+		{1B5131DF-48DA-47FB-AAB0-2E086ED279DB}.Debug-Labview|x64.Build.0 = Debug-Labview|x64
 		{1B5131DF-48DA-47FB-AAB0-2E086ED279DB}.Release|x64.ActiveCfg = Release|x64
 		{1B5131DF-48DA-47FB-AAB0-2E086ED279DB}.Release|x64.Build.0 = Release|x64
-		{1B5131DF-48DA-47FB-AAB0-2E086ED279DB}.Release-Labview|x64.ActiveCfg = Release|x64
-		{1B5131DF-48DA-47FB-AAB0-2E086ED279DB}.Release-Labview|x64.Build.0 = Release|x64
+		{1B5131DF-48DA-47FB-AAB0-2E086ED279DB}.Release-Labview|x64.ActiveCfg = Release-Labview|x64
+		{1B5131DF-48DA-47FB-AAB0-2E086ED279DB}.Release-Labview|x64.Build.0 = Release-Labview|x64
 		{4883A750-F34F-303C-8C24-F15A176128F3}.Debug|x64.ActiveCfg = Debug|x64
 		{4883A750-F34F-303C-8C24-F15A176128F3}.Debug|x64.Build.0 = Debug|x64
 		{4883A750-F34F-303C-8C24-F15A176128F3}.Debug-Labview|x64.ActiveCfg = Debug|x64
