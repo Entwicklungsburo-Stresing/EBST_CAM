@@ -212,13 +212,11 @@ struct global_settings
 	 */
 	uint32_t dma_buffer_size_in_scans;
 	/**
-	 * TODO: Check this option and how it works. Determines how many trigger output signals are omitted. Only the lowest 7 bits are used for this setting.
+	 * Trigger output counter determines how many TO_CNT_OUT are skipped. Use tor_to_cnt_out for setting tor to see TO_CNT_OUT at the output of the PCIe board. Every tocnt+1 TO_CNT_OUT is equal with XCK. Only the lowest 7 bits are used for this setting.
 	 */
 	uint32_t tocnt;
 	/**
-	 * Trigger input counter determines how many trigger inputs are skipped before the next measurement is triggered. Only the lowest 7 bits are used for this setting.
-	 *	- =0 use every trigger
-	 *	- >0 skip n trigger befrore the next start
+	 * Trigger output counter determines how many trigger inputs are skipped before the next measurement is triggered. Every ticnt+1 trigger input the measurement is triggered according to sti_mode. Only the lowest 7 bits are used for this setting.
 	 */
 	uint32_t ticnt;
 	/**
