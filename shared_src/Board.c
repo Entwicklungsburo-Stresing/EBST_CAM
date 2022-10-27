@@ -1733,8 +1733,8 @@ es_status_codes SetADGain( uint32_t drvno, uint8_t fkt, uint8_t g1, uint8_t g2, 
 /**
  * \brief ADC debug mode for Camera System 3030.
  * 
- * 	Lets ADC send a ramp or a custom pattern (value) instead of ADC sample data.
- * 	Called by InitCamera3030 when adc_mode > 0.
+ * Lets ADC send a ramp or a custom pattern (value) instead of ADC sample data.
+ * Called by InitCamera3030 when adc_mode > 0.
  * \param drvno selects PCIe board
  * \param adc_mode 1: ramp, 2: custom pattern
  * \param custom_pattern (only used when adc_mode = 2)
@@ -1763,6 +1763,75 @@ es_status_codes Cam3030_ADC_RampOrPattern( uint32_t drvno, uint8_t adc_mode, uin
 		break;
 	}
     return status;
+}
+
+/**
+ * \brief Enable or disable filters for all 8 channels
+ *
+ * Global enable must be set to true, if you want to use at least one filter. Filters can be enabled / disabled seperately by Cam3030_ADC_SetFilter(). When the global filter enable is true, all channels are either passed through the filter or through a dummy delay so that the overall latency of all channels is 20 clock cycles.
+ * \param drvno selects PCIe board
+ * \param enable true: 
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
+ */
+es_status_codes Cam3030_ADC_Global_En_Filter(uint32_t drvno, bool enable)
+{
+	uint16_t payload = 0;
+	// the global_en_filter bit is on bit 1 of register 0x29
+	if (enable) payload = 1 << 1;
+	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_global_en_filter, payload);
+}
+
+/**
+ * \brief Set all parameters for one filter determined by channel.
+ *
+ * To use a filter, the global enable must be set to true by Cam3030_ADC_Global_En_Filter().
+ * \param drvno selects PCIe board
+ * \param channel Channel to which the filter parameters should be applied. 1...8
+ * \param coeff_set Select stored coefficient set.
+ * \param decimation_factor Set decimation factor.
+ * \param odd_tap Use odd tap filter.
+ * \param use_filter 1: enable filter, 0: disable filter
+ * \param hpf_corner high pass filter corner in values k from 2 to 10
+ * \param en_hpf 1: high pass filter enabled, 0: disabled
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
+ *		- es_parameter_out_of_range
+ */
+es_status_codes Cam3030_ADC_SetFilterSettings(uint32_t drvno, uint8_t channel, uint8_t coeff_set, uint8_t decimation_factor, uint8_t odd_tap, uint8_t use_filter, uint8_t hpf_corner, uint8_t en_hpf)
+{
+	 uint16_t payload = (use_filter & 1) | (odd_tap & 1) << 2 | (decimation_factor & 7) << 4 | (coeff_set & 7) << 7 | (hpf_corner & 7) << 10 | (en_hpf & 1) << 14;
+	if (channel > 8 || channel < 1) return es_parameter_out_of_range;
+	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_filter1 + channel - 1 , payload);
+}
+
+/**
+ * .
+ * 
+ * \param drvno selects PCIe board
+ * \param channel 1...8
+ * \param coefficient_number 0...11
+ * \param enable
+ * \param coefficient 12 bit signed value
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
+ *		- es_parameter_out_of_range
+ */
+es_status_codes Cam3030_ADC_SetFilterCustomCoefficient(uint32_t drvno, uint8_t channel, uint8_t coefficient_number, uint8_t enable, uint16_t coefficient)
+{
+	uint16_t payload = (coefficient & 0xFFF) | (enable & 1) << 15;
+	if (channel > 8 || channel < 1 || coefficient > 11) return es_parameter_out_of_range;
+	uint8_t address = adc_ads5294_regaddr_coeff1_filter1 + coefficient_number + (channel - 1) * 12;
+	return SendFLCAM(drvno, maddr_adc, address, payload);
 }
 
 /**
