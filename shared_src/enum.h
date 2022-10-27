@@ -237,11 +237,42 @@ enum cam_addresses
 	adc_ads5294_regaddr_reset = 0x00,
 	adc_ads5294_regaddr_mode = 0x25,
 	adc_ads5294_regaddr_custompattern = 0x26,
+	adc_ads5294_regaddr_wordWiseOutput = 0x28,
+	/**
+	 * - D0: en_channel_avg 1: Enabled channel averaging mode, 0: disable
+	 * - D1: global_en_filter 1: enables filter blocks globally, 0: disable
+	 */
+	adc_ads5294_regaddr_global_en_filter = 0x29,
 	adc_ads5294_regaddr_gain_1_to_4 = 0x2A,
 	adc_ads5294_regaddr_gain_5_to_8 = 0x2B,
-	adc_ads5294_regaddr_2wireMode = 0x46,
-	adc_ads5294_regaddr_wordWiseOutput = 0x28,
+	/**
+	 * - D0: use_filter 1: enable filter, 0: disable
+	 * - D2: odd_tap 1: Use odd tap filter, 0: disable
+	 * - D4...D6: filter_rate: set decimation factor
+	 * - D7...D9: filter_coeff_set: select stored coefficient set
+	 * - D10...D13 hpf_corner: HPF corner values k from 2 to 10
+	 * - D14 hpd_en: 1: hpf enable, 0: disable
+	 */
+	adc_ads5294_regaddr_filter1 = 0x2E,
+	adc_ads5294_regaddr_filter2 = 0x2F,
+	adc_ads5294_regaddr_filter3 = 0x30,
+	adc_ads5294_regaddr_filter4 = 0x31,
+	adc_ads5294_regaddr_filter5 = 0x32,
+	adc_ads5294_regaddr_filter6 = 0x33,
+	adc_ads5294_regaddr_filter7 = 0x34,
+	adc_ads5294_regaddr_filter8 = 0x35,
 	adc_ads5294_regaddr_ddrClkAlign = 0x42,
+	adc_ads5294_regaddr_2wireMode = 0x46,
+	/**
+	 * - D0...D11: 12 bit long coefficient
+	 * - D15: en_custom_filt, 1: enable custom coefficient, 0: use preset coefficient, programmed by filter_coeff_set
+	 */
+	adc_ads5294_regaddr_coeff0_filter1 = 0x5A,
+	adc_ads5294_regaddr_coeff1_filter1 = 0x5B,
+	adc_ads5294_regaddr_coeff11_filter1 = 0x65,
+	adc_ads5294_regaddr_coeff0_filter2 = 0x66,
+	adc_ads5294_regaddr_coeff0_filter3 = 0x72,
+	adc_ads5294_regaddr_coeff11_filter8 = 0xB9,
 
 	ioctrl_impact_start_pixel = 0x00,
 	ioctrl_t0l = 0x01,
