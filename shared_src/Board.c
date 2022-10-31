@@ -1779,6 +1779,7 @@ es_status_codes Cam3030_ADC_RampOrPattern( uint32_t drvno, uint8_t adc_mode, uin
  */
 es_status_codes Cam3030_ADC_Global_En_Filter(uint32_t drvno, bool enable)
 {
+	ES_LOG("Cam3030_ADC_Global_En_Filter: %u", enable);
 	uint16_t payload = 0;
 	// the global_en_filter bit is on bit 1 of register 0x29
 	if (enable) payload = 1 << 1;
@@ -1793,7 +1794,10 @@ es_status_codes Cam3030_ADC_Global_En_Filter(uint32_t drvno, bool enable)
  * \param channel Channel to which the filter parameters should be applied. 1...8
  * \param coeff_set Select stored coefficient set.
  * \param decimation_factor Set decimation factor.
- * \param odd_tap Use odd tap filter.
+ *		- 0x00 decimate by 2
+ *		- 0x01 decimate by 4
+ *		- 0x04 decimate by 8
+ * \param odd_tap 1: Use odd tap filter. 0: even tap
  * \param use_filter 1: enable filter, 0: disable filter
  * \param hpf_corner high pass filter corner in values k from 2 to 10
  * \param en_hpf 1: high pass filter enabled, 0: disabled
@@ -1817,7 +1821,7 @@ es_status_codes Cam3030_ADC_SetFilterSettings(uint32_t drvno, uint8_t channel, u
  * \param drvno selects PCIe board
  * \param channel 1...8
  * \param coefficient_number 0...11
- * \param enable
+ * \param enable 0: disable, 1: enable
  * \param coefficient 12 bit signed value
  * \return es_status_codes:
  *		- es_no_error
