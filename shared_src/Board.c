@@ -1610,7 +1610,8 @@ es_status_codes InitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custo
 		if (status != es_no_error) return status;
 		status = DAC_setAllOutputs(drvno, dac_output, is_hs_ir);
 	}
-	return status;
+	if (status != es_no_error) return status;
+	return Cam3030_ADC_SetMultipleSampling(drvno, 0);
 }
 
 /**
@@ -1756,13 +1757,14 @@ es_status_codes Cam3030_ADC_RampOrPattern( uint32_t drvno, uint8_t adc_mode, uin
 		//to activate custom pattern the following messages are necessary: d - data
 		//at addr 0x25 (mode and higher bits): 0b00000000000100dd
 		status = SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_custompattern | ((custom_pattern >> 12) & 0x3) );
+		if (status != es_no_error) return status;
 		//at addr 0x26 (lower bits): 0bdddddddddddd0000
-        status = SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_custompattern, (uint16_t)(custom_pattern << 4) );
+		status = SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_custompattern, (uint16_t)(custom_pattern << 4) );
 		break;
 	default:
 		break;
 	}
-    return status;
+	return status;
 }
 
 /**
@@ -1793,7 +1795,7 @@ es_status_codes Cam3030_ADC_Global_En_Filter(uint32_t drvno, bool enable)
  * \param drvno selects PCIe board
  * \param channel Channel to which the filter parameters should be applied. 1...8
  * \param coeff_set Select stored coefficient set.
- * \param decimation_factor Set decimation factor.
+ * \param decimation_factor Set decimation factor aka FILTER_RATE.
  *		- 0x00 decimate by 2
  *		- 0x01 decimate by 4
  *		- 0x04 decimate by 8
@@ -1810,7 +1812,7 @@ es_status_codes Cam3030_ADC_Global_En_Filter(uint32_t drvno, bool enable)
  */
 es_status_codes Cam3030_ADC_SetFilterSettings(uint32_t drvno, uint8_t channel, uint8_t coeff_set, uint8_t decimation_factor, uint8_t odd_tap, uint8_t use_filter, uint8_t hpf_corner, uint8_t en_hpf)
 {
-	 uint16_t payload = (use_filter & 1) | (odd_tap & 1) << 2 | (decimation_factor & 7) << 4 | (coeff_set & 7) << 7 | (hpf_corner & 7) << 10 | (en_hpf & 1) << 14;
+	uint16_t payload = (use_filter & 1) | (odd_tap & 1) << 2 | (decimation_factor & 7) << 4 | (coeff_set & 7) << 7 | (hpf_corner & 7) << 10 | (en_hpf & 1) << 14;
 	if (channel > 8 || channel < 1) return es_parameter_out_of_range;
 	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_filter1 + channel - 1 , payload);
 }
@@ -1836,6 +1838,104 @@ es_status_codes Cam3030_ADC_SetFilterCustomCoefficient(uint32_t drvno, uint8_t c
 	if (channel > 8 || channel < 1 || coefficient > 11) return es_parameter_out_of_range;
 	uint8_t address = adc_ads5294_regaddr_coeff1_filter1 + coefficient_number + (channel - 1) * 12;
 	return SendFLCAM(drvno, maddr_adc, address, payload);
+}
+
+/**
+ * \brief Set the data rate of the ADC output.
+ *
+ * Data rate specifies the ratio between ADC sampling rate and how many digital output values are generated.
+ * \param drvno selects PCIe board
+ * \param data_rate
+ *		- 0: All converted values at the ADC sampling rate are shown on the digital output
+ *		- 1: 1/2 of ADC sampling rate
+ *		- 2: 1/4 of ADC sampling rate
+ *		- 3: 1/8 of ADC sampling rate
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
+ */
+es_status_codes Cam3030_ADC_SetDataRate(uint32_t drvno, uint8_t data_rate)
+{
+	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_data_rate, data_rate & 0x3);
+}
+
+/**
+ * \brief Set over how many samples of one pixel the ADC averages.
+ *
+ * \param drvno selects PCIe board
+ * \param sample_mode:
+ *		- 0: 1 sample per pixel (default)
+ *		- 1: 2 samples per pixel (not implemented in FPGA, 11/2022)
+ *		- 2: 4 samples per pixel (not implemented in FPGA, 11/2022)
+ *		- 3: 8 samples per pixel (not implemented in FPGA, 11/2022)
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
+ */
+es_status_codes Cam3030_ADC_SetMultipleSampling(uint32_t drvno, uint8_t sample_mode)
+{
+	es_status_codes status = Cam3030_ADC_SetDataRate(drvno, sample_mode);
+	if (sample_mode == 0)
+	{
+		status = Cam3030_ADC_Global_En_Filter(drvno, 0);
+		if (status != es_no_error) return status;
+	}
+	else
+	{
+		status = Cam3030_ADC_Global_En_Filter(drvno, 1);
+		if (status != es_no_error) return status;
+		uint8_t number_of_adc_channels = 8;
+		// unused, because only custom coefficients are used
+		uint8_t coeff_set = 0;
+		uint8_t decimation_factor = 0;
+		// only even number of samples are used: 2, 4, 8
+		uint8_t odd_tap = 0;
+		// Always enable filters and coefficients. Disabling is done with Cam3030_ADC_Global_En_Filter.
+		uint8_t enable = 1;
+		// high pass filter is not used
+		uint8_t hpf_corner = 0;
+		uint8_t en_hpf = 0;
+		uint8_t number_of_coefficients = 12;
+		uint8_t active_coefficients;
+		// coefficient_value * active_coefficients * 2 must equal 2048 to achieve averaging
+		// see equation 1 on page 41 of ADS5294 datasheet for reference
+		uint16_t coefficient_value;
+		switch (sample_mode)
+		{
+		case 1:
+			active_coefficients = 1;
+			coefficient_value = 1024;
+			break;
+		case 2:
+			active_coefficients = 2;
+			coefficient_value = 512;
+			break;
+		case 3:
+			active_coefficients = 4;
+			coefficient_value = 256;
+			break;
+		default:
+			return es_parameter_out_of_range;
+		}
+		for (uint8_t channel = 1; channel <= number_of_adc_channels; channel++)
+		{
+			status = Cam3030_ADC_SetFilterSettings(drvno, channel, coeff_set, decimation_factor, odd_tap, enable, hpf_corner, en_hpf);
+			if (status != es_no_error) return status;
+			for (uint8_t coefficient = 0; coefficient < number_of_coefficients; coefficient++)
+			{
+				if(coefficient >= number_of_coefficients - active_coefficients)
+					status = Cam3030_ADC_SetFilterCustomCoefficient(drvno, channel, coefficient, enable, coefficient_value);
+				else
+					status = Cam3030_ADC_SetFilterCustomCoefficient(drvno, channel, coefficient, enable, 0);
+				if (status != es_no_error) return status;
+			}
+		}
+	}
+	return status;
 }
 
 /**

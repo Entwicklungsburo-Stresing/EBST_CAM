@@ -261,6 +261,14 @@ enum cam_addresses
 	adc_ads5294_regaddr_filter6 = 0x33,
 	adc_ads5294_regaddr_filter7 = 0x34,
 	adc_ads5294_regaddr_filter8 = 0x35,
+	/**
+	 * D0...D1: data_rate:
+	 *		- 0: All converted values at the ADC sampling rate are shown on the digital output
+	 *		- 1: 1/2 of ADC sampling rate
+	 *		- 2: 1/4 of ADC sampling rate
+	 *		- 3: 1/8 of ADC sampling rate
+	 */
+	adc_ads5294_regaddr_data_rate = 0x38,
 	adc_ads5294_regaddr_ddrClkAlign = 0x42,
 	adc_ads5294_regaddr_2wireMode = 0x46,
 	/**
