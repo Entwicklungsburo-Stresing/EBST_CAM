@@ -228,6 +228,7 @@ enum cam_addresses
 	cam_adaddr_vclk = 0x04,
 	cam_adaddr_LEDoff = 0x05,
 	cam_adaddr_coolTemp = 0x06,
+	cam_adaddr_sample_mode = 0x07,
 
 	adc_ltc2271_regaddr_reset = 0x00,
 	adc_ltc2271_regaddr_outmode = 0x02,

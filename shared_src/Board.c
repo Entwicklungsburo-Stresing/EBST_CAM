@@ -1879,17 +1879,46 @@ es_status_codes Cam3030_ADC_SetDataRate(uint32_t drvno, uint8_t data_rate)
  */
 es_status_codes Cam3030_ADC_SetMultipleSampling(uint32_t drvno, uint8_t sample_mode)
 {
-	es_status_codes status = Cam3030_ADC_SetDataRate(drvno, sample_mode);
+	ES_LOG("Cam3030_ADC_SetMultipleSampling(), setting sample mode to %u\n", sample_mode);
+	// send the sample mode to the camera
+	es_status_codes status = SendFLCAM(drvno, maddr_cam, cam_adaddr_sample_mode, sample_mode);
+	// When sample mode is 0, the camera should work the same like before this feature was implemented.
 	if (sample_mode == 0)
 	{
 		status = Cam3030_ADC_Global_En_Filter(drvno, 0);
 		if (status != es_no_error) return status;
+		status = Cam3030_ADC_SetDataRate(drvno, 0);
 	}
+	// When sample mode is not 0, more complicated stuff is done here. Filters in the ADC are acitvated and set.
 	else
 	{
 		status = Cam3030_ADC_Global_En_Filter(drvno, 1);
 		if (status != es_no_error) return status;
-		uint8_t number_of_adc_channels = 8;
+		uint8_t active_coefficients;
+		// coefficient_value * active_coefficients * 2 must equal 2048 to achieve averaging
+		// see equation 1 on page 41 of ADS5294 datasheet for reference
+		uint16_t coefficient_value;
+		switch (sample_mode)
+		{
+		case 1:
+			active_coefficients = 1;
+			coefficient_value = 1024;
+			status = Cam3030_ADC_SetDataRate(drvno, 2);
+			break;
+			// More cases are possible, but not implemented yet.
+			//case 2:
+			//	active_coefficients = 2;
+			//	coefficient_value = 512;
+			//	break;
+			//case 3:
+			//	active_coefficients = 4;
+			//	coefficient_value = 256;
+			//	break;
+		default:
+			return es_parameter_out_of_range;
+		}
+		uint8_t number_of_adc_channels = 4;
+		uint8_t number_of_coefficients = 12;
 		// unused, because only custom coefficients are used
 		uint8_t coeff_set = 0;
 		uint8_t decimation_factor = 0;
@@ -1900,28 +1929,7 @@ es_status_codes Cam3030_ADC_SetMultipleSampling(uint32_t drvno, uint8_t sample_m
 		// high pass filter is not used
 		uint8_t hpf_corner = 0;
 		uint8_t en_hpf = 0;
-		uint8_t number_of_coefficients = 12;
-		uint8_t active_coefficients;
-		// coefficient_value * active_coefficients * 2 must equal 2048 to achieve averaging
-		// see equation 1 on page 41 of ADS5294 datasheet for reference
-		uint16_t coefficient_value;
-		switch (sample_mode)
-		{
-		case 1:
-			active_coefficients = 1;
-			coefficient_value = 1024;
-			break;
-		case 2:
-			active_coefficients = 2;
-			coefficient_value = 512;
-			break;
-		case 3:
-			active_coefficients = 4;
-			coefficient_value = 256;
-			break;
-		default:
-			return es_parameter_out_of_range;
-		}
+
 		for (uint8_t channel = 1; channel <= number_of_adc_channels; channel++)
 		{
 			status = Cam3030_ADC_SetFilterSettings(drvno, channel, coeff_set, decimation_factor, odd_tap, enable, hpf_corner, en_hpf);
