@@ -1834,8 +1834,9 @@ es_status_codes Cam3030_ADC_SetFilterSettings(uint32_t drvno, uint8_t channel, u
  */
 es_status_codes Cam3030_ADC_SetFilterCustomCoefficient(uint32_t drvno, uint8_t channel, uint8_t coefficient_number, uint8_t enable, uint16_t coefficient)
 {
+	ES_TRACE("Cam3030_ADC_SetFilterCustomCoefficient(), setting channel %u, coefficient %u to %u\n", channel, coefficient_number, coefficient);
 	uint16_t payload = (coefficient & 0xFFF) | (enable & 1) << 15;
-	if (channel > 8 || channel < 1 || coefficient > 11) return es_parameter_out_of_range;
+	if (channel > 8 || channel < 1 || coefficient_number > 11) return es_parameter_out_of_range;
 	uint8_t address = adc_ads5294_regaddr_coeff1_filter1 + coefficient_number + (channel - 1) * 12;
 	return SendFLCAM(drvno, maddr_adc, address, payload);
 }
