@@ -1394,8 +1394,8 @@ es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_t
 	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, sensor_gain);
 	if (status != es_no_error) return status;
 	//select vclk and Area mode on
-	if (is_area>0)	{	is_area = (uint8_t)0x8000; }
-	else { is_area = 0x0000; }
+	if (is_area>0) is_area = (uint8_t)0x8000;
+	else is_area = 0x0000;
 	return SendFLCAM( drvno, maddr_cam, cam_adaddr_vclk, (uint16_t) (is_fft | is_area) );
 }
 
@@ -1812,6 +1812,7 @@ es_status_codes Cam3030_ADC_Global_En_Filter(uint32_t drvno, bool enable)
  */
 es_status_codes Cam3030_ADC_SetFilterSettings(uint32_t drvno, uint8_t channel, uint8_t coeff_set, uint8_t decimation_factor, uint8_t odd_tap, uint8_t use_filter, uint8_t hpf_corner, uint8_t en_hpf)
 {
+	ES_TRACE("Cam3030_ADC_SetFilterSettings(), setting channel %u, coeff_set %u, decimation_factor %u, odd_tap %u, use_filter %u, hpf_corner %u, en_hpf %u\n", channel, coeff_set, decimation_factor, odd_tap, use_filter, hpf_corner, en_hpf);
 	uint16_t payload = (use_filter & 1) | (odd_tap & 1) << 2 | (decimation_factor & 7) << 4 | (coeff_set & 7) << 7 | (hpf_corner & 7) << 10 | (en_hpf & 1) << 14;
 	if (channel > 8 || channel < 1) return es_parameter_out_of_range;
 	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_filter1 + channel - 1 , payload);
@@ -1859,6 +1860,7 @@ es_status_codes Cam3030_ADC_SetFilterCustomCoefficient(uint32_t drvno, uint8_t c
  */
 es_status_codes Cam3030_ADC_SetDataRate(uint32_t drvno, uint8_t data_rate)
 {
+	ES_TRACE("Cam3030_ADC_SetDataRate(), setting data rate to %u\n", data_rate);
 	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_data_rate, data_rate & 0x3);
 }
 
@@ -1867,10 +1869,8 @@ es_status_codes Cam3030_ADC_SetDataRate(uint32_t drvno, uint8_t data_rate)
  *
  * \param drvno selects PCIe board
  * \param sample_mode:
- *		- 0: 1 sample per pixel (default)
- *		- 1: 2 samples per pixel (not implemented in FPGA, 11/2022)
- *		- 2: 4 samples per pixel (not implemented in FPGA, 11/2022)
- *		- 3: 8 samples per pixel (not implemented in FPGA, 11/2022)
+ *		- 0: 1 sample per pixel (default), adc clk = sen clk = adc data rate = 25MHz
+ *		- 1: average over 2 samples per pixel, adc clk = 50MHz,  sen clk = adc data rate = 12,5Mhz. Notice here: 4 samples are taken during 1 pixel, but the first two samples are thrown away, because the video signal has not reached it's high during sampling time. The "throwing away" is done with the ADC filters.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
