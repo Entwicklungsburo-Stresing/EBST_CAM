@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include "../Board.h"
 
-***REMOVED***#define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
+#define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
 
 #include "shared_src/ESLSCDLL_pro.h"
 
