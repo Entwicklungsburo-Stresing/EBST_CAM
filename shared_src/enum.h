@@ -228,6 +228,12 @@ enum cam_addresses
 	cam_adaddr_vclk = 0x04,
 	cam_adaddr_LEDoff = 0x05,
 	cam_adaddr_coolTemp = 0x06,
+	/**
+	 * 3030: Sample mode is setting the ADC clock and the sensor clock.
+	 * - 0: ADC clock = sensor clock = 25 MHz with duty cycle 50%
+	 * - 1: ADC clock = 50 MHz, duty cycle 50%, sensor clock = 12,5 MHz, duty cycle 20%
+	 * - 2: ADC clock = 25 MHz, duty cycle 50%, sensor clock = 12,5 MHz duty cycle 20%
+	 */
 	cam_adaddr_sample_mode = 0x07,
 
 	adc_ltc2271_regaddr_reset = 0x00,
@@ -236,6 +242,11 @@ enum cam_addresses
 	adc_ltc2271_regaddr_custompattern_lsb = 0x04,
 
 	adc_ads5294_regaddr_reset = 0x00,
+	/**
+	 * Low frequency noise suppression mode
+	 * - D0...D7: LFNSM for each channel 1...8
+	 */
+	adc_ads5294_regaddr_LFNSM = 0x14,
 	adc_ads5294_regaddr_mode = 0x25,
 	adc_ads5294_regaddr_custompattern = 0x26,
 	adc_ads5294_regaddr_wordWiseOutput = 0x28,

@@ -1867,12 +1867,37 @@ es_status_codes Cam3030_ADC_SetDataRate(uint32_t drvno, uint8_t data_rate)
 }
 
 /**
+ * \brief Enables or disables low frequency noise suppression mode.
+ *
+ * \param drvno selects PCIe board
+ * \param enable
+ *		- true: enable noise suppression mode
+ *		- false: disable noise suppresson mode
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
+ */
+es_status_codes Cam3030_ADC_SetLFNS(uint32_t drvno, bool enable)
+{
+	ES_TRACE("Cam3030_ADC_SetLFNS(), Enable %u\n", enable);
+	uint16_t payload;
+	if (enable)
+		payload = 0xFF;
+	else
+		payload = 0;
+	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_LFNSM, payload);
+}
+
+/**
  * \brief Set over how many samples of one pixel the ADC averages.
  *
  * \param drvno selects PCIe board
  * \param sample_mode:
  *		- 0: 1 sample per pixel (default), adc clk = sen clk = adc data rate = 25MHz
  *		- 1: average over 2 samples per pixel, adc clk = 50MHz,  sen clk = adc data rate = 12,5Mhz. Notice here: 4 samples are taken during 1 pixel, but the first two samples are thrown away, because the video signal has not reached it's high during sampling time. The "throwing away" is done with the ADC filters.
+ *		- 2: 1 sample per pixel, adc clk = 25 MHz, 12,5 MHz. 2 samples are taken during 1 pixel, but one is thrown away.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed

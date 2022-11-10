@@ -72,6 +72,7 @@ es_status_codes Cam3030_ADC_Global_En_Filter(uint32_t drvno, bool enable);
 es_status_codes Cam3030_ADC_SetFilterSettings(uint32_t drvno, uint8_t channel, uint8_t coeff_set, uint8_t decimation_factor, uint8_t odd_tap, uint8_t use_filter, uint8_t hpf_corner, uint8_t en_hpf);
 es_status_codes Cam3030_ADC_SetFilterCustomCoefficient(uint32_t drvno, uint8_t channel, uint8_t coefficient_number, uint8_t enable, uint16_t coefficient);
 es_status_codes Cam3030_ADC_SetDataRate(uint32_t drvno, uint8_t data_rate);
+es_status_codes Cam3030_ADC_SetLFNS(uint32_t drvno, bool enable);
 es_status_codes Cam3030_ADC_SetMultipleSampling(uint32_t drvno, uint8_t sample_mode);
 es_status_codes SetTemp( uint32_t drvno, uint8_t level );
 es_status_codes SendFLCAM_DAC( uint32_t drvno, uint8_t ctrl, uint8_t addr, uint16_t data, uint8_t feature );
