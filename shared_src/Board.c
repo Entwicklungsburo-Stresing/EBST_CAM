@@ -1441,6 +1441,7 @@ es_status_codes Use_ENFFW_protection( uint32_t drvno, bool USE_ENFFW_PROTECT )
  */
 es_status_codes SendFLCAM( uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16_t data )
 {
+	ES_TRACE("SendFLCAM(): maddr 0x%x, adaddr: 0x%x, data 0x%x (%u)\n", maddr, adaddr, data, data);
 	es_status_codes status = FindCam(drvno);
 	if (status != es_no_error) return status;
 	uint32_t ldata = 0;
@@ -1589,21 +1590,21 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes InitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t adc_gain, bool useDac, uint32_t* dac_output, bool is_hs_ir )
+es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t adc_gain, bool useDac, uint32_t* dac_output, bool is_hs_ir)
 {
 	ES_LOG("Init camera 3030, adc_mode: %u, custom_pattern: %u, adc_gain: %u, use dac: %u, is_hs_ir: %u\n", adc_mode, custom_pattern, adc_gain, useDac, is_hs_ir);
-	es_status_codes status = Cam3030_ADC_reset( drvno );
+	es_status_codes status = Cam3030_ADC_reset(drvno);
 	if (status != es_no_error) return status;
 	//two wire mode output interface for pal versions P209_2 and above
-	status = Cam3030_ADC_twoWireModeEN( drvno );
+	status = Cam3030_ADC_twoWireModeEN(drvno);
 	if (status != es_no_error) return status;
-	status = Cam3030_ADC_SetGain( drvno, adc_gain );
+	status = Cam3030_ADC_SetGain(drvno, adc_gain);
 	if (status != es_no_error) return status;
 	if (adc_mode)
-		status = Cam3030_ADC_RampOrPattern( drvno, adc_mode, custom_pattern );
+		status = Cam3030_ADC_RampOrPattern(drvno, adc_mode, custom_pattern);
 	if (status != es_no_error) return status;
 	//DAC
-    uint8_t dac_channel_count = 8;
+	uint8_t dac_channel_count = 8;
 	if (useDac)
 	{
 		status = SendFLCAM_DAC(drvno, dac_channel_count, 0, 0, 1);
@@ -1611,7 +1612,8 @@ es_status_codes InitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custo
 		status = DAC_setAllOutputs(drvno, dac_output, is_hs_ir);
 	}
 	if (status != es_no_error) return status;
-	return Cam3030_ADC_SetMultipleSampling(drvno, 0);
+	status = Cam3030_ADC_SetMultipleSampling(drvno, 0);
+	return status;
 }
 
 /**
@@ -1781,7 +1783,7 @@ es_status_codes Cam3030_ADC_RampOrPattern( uint32_t drvno, uint8_t adc_mode, uin
  */
 es_status_codes Cam3030_ADC_Global_En_Filter(uint32_t drvno, bool enable)
 {
-	ES_LOG("Cam3030_ADC_Global_En_Filter: %u", enable);
+	ES_LOG("Cam3030_ADC_Global_En_Filter: %u\n", enable);
 	uint16_t payload = 0;
 	// the global_en_filter bit is on bit 1 of register 0x29
 	if (enable) payload = 1 << 1;
@@ -1898,32 +1900,40 @@ es_status_codes Cam3030_ADC_SetMultipleSampling(uint32_t drvno, uint8_t sample_m
 		// coefficient_value * active_coefficients * 2 must equal 2048 to achieve averaging
 		// see equation 1 on page 41 of ADS5294 datasheet for reference
 		uint16_t coefficient_value;
+		// when active_coefficients is even, set odd_tap to 0, when active_coefficients is odd, set odd_tap to 1
+		uint8_t odd_tap;
 		switch (sample_mode)
 		{
 		case 1:
 			active_coefficients = 1;
+			odd_tap = 0;
 			coefficient_value = 1024;
 			status = Cam3030_ADC_SetDataRate(drvno, 2);
 			break;
+		case 2:
+			active_coefficients = 1;
+			odd_tap = 1;
+			coefficient_value = 2048;
+			status = Cam3030_ADC_SetDataRate(drvno, 1);
+			break;
 			// More cases are possible, but not implemented yet.
-			//case 2:
+			//case ?:
 			//	active_coefficients = 2;
 			//	coefficient_value = 512;
 			//	break;
-			//case 3:
+			//case ?:
 			//	active_coefficients = 4;
 			//	coefficient_value = 256;
 			//	break;
 		default:
 			return es_parameter_out_of_range;
 		}
-		uint8_t number_of_adc_channels = 4;
+		if (status != es_no_error) return status;
+		uint8_t number_of_adc_channels = 6;
 		uint8_t number_of_coefficients = 12;
 		// unused, because only custom coefficients are used
 		uint8_t coeff_set = 0;
 		uint8_t decimation_factor = 0;
-		// only even number of samples are used: 2, 4, 8
-		uint8_t odd_tap = 0;
 		// Always enable filters and coefficients. Disabling is done with Cam3030_ADC_Global_En_Filter.
 		uint8_t enable = 1;
 		// high pass filter is not used

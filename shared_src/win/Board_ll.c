@@ -1021,7 +1021,7 @@ uint32_t Tickstous(uint64_t tks)
  */
 uint8_t WaitforTelapsed(long long musec)
 {
-	ES_TRACE("Wait for %u microseconds\n", musec);
+	//ES_TRACE("Wait for %u microseconds\n", musec);
 	long long ticks_to_wait = musec * TPS / 1000000;
 	long long start_timestamp = ticksTimestamp();
 	long long destination_timestamp = start_timestamp + ticks_to_wait;
