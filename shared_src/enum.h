@@ -292,6 +292,8 @@ enum cam_addresses
 	adc_ads5294_regaddr_coeff11_filter1 = 0x65,
 	adc_ads5294_regaddr_coeff0_filter2 = 0x66,
 	adc_ads5294_regaddr_coeff0_filter3 = 0x72,
+	// This is the 7 bit border. With the current implementation in the FPGA, only 7 bit addresses are accessible.
+	adc_ads5294_regaddr_coeff1_filter4 = 0x7F,
 	adc_ads5294_regaddr_coeff11_filter8 = 0xB9,
 
 	ioctrl_impact_start_pixel = 0x00,
