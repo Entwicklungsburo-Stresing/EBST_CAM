@@ -1612,7 +1612,7 @@ es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom
 		status = DAC_setAllOutputs(drvno, dac_output, is_hs_ir);
 	}
 	if (status != es_no_error) return status;
-	status = Cam3030_ADC_SetMultipleSampling(drvno, 0);
+	status = Cam3030_ADC_SetSampleMode(drvno, 0);
 	return status;
 }
 
@@ -1904,9 +1904,9 @@ es_status_codes Cam3030_ADC_SetLFNS(uint32_t drvno, bool enable)
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes Cam3030_ADC_SetMultipleSampling(uint32_t drvno, uint8_t sample_mode)
+es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 {
-	ES_LOG("Cam3030_ADC_SetMultipleSampling(), setting sample mode to %u\n", sample_mode);
+	ES_LOG("Cam3030_ADC_SetSampleMode(), setting sample mode to %u\n", sample_mode);
 	// send the sample mode to the camera
 	es_status_codes status = SendFLCAM(drvno, maddr_cam, cam_adaddr_sample_mode, sample_mode);
 	// When sample mode is 0, the camera should work the same like before this feature was implemented.
