@@ -1956,8 +1956,10 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 			return es_parameter_out_of_range;
 		}
 		if (status != es_no_error) return status;
-		// Only 3 filter channels are usable, because of the current address implementation in the FPGA. Actually there are 8 ADC channels, which would also be the correct number for this variable.
-		uint8_t number_of_adc_channels = 3;
+		// The number of ADC channels are given by the ADC and cannot be changed.
+		uint8_t number_of_adc_channels = 8;
+		// Only 3 filter channels are usable, because of the current address implementation in the FPGA. This could be deleted, when the implementation in the FPGA would be correct.
+		uint8_t unusable_adc_channels = 5;
 		// The number of coefficients is given by the ADC internals and cannot be changed.
 		uint8_t number_of_coefficients = 12;
 		// Coefficient sets are unused, because only custom coefficients are used.
@@ -1970,7 +1972,7 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 		uint8_t hpf_corner = 0;
 		uint8_t en_hpf = 0;
 
-		for (uint8_t channel = 1; channel <= number_of_adc_channels; channel++)
+		for (uint8_t channel = 1; channel <= number_of_adc_channels - unusable_adc_channels; channel++)
 		{
 			status = Cam3030_ADC_SetFilterSettings(drvno, channel, coeff_set, decimation_factor, odd_tap, enable, hpf_corner, en_hpf);
 			if (status != es_no_error) return status;
@@ -1983,6 +1985,11 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 				if (status != es_no_error) return status;
 			}
 		}
+
+		// Disable filters of unusable channels.
+		enable = 0;
+		for (uint8_t channel = number_of_adc_channels - unusable_adc_channels + 1; channel <= number_of_adc_channels; channel++)
+			status = Cam3030_ADC_SetFilterSettings(drvno, channel, coeff_set, decimation_factor, odd_tap, enable, hpf_corner, en_hpf);
 	}
 	return status;
 }
