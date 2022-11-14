@@ -1919,8 +1919,6 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 	// When sample mode is not 0, more complicated stuff is done here. Filters in the ADC are acitvated and set.
 	else
 	{
-		status = Cam3030_ADC_Global_En_Filter(drvno, 1);
-		if (status != es_no_error) return status;
 		uint8_t active_coefficients;
 		// coefficient_value * active_coefficients * 2 must equal 2048 to achieve averaging
 		// see equation 1 on page 41 of ADS5294 datasheet for reference
@@ -1930,16 +1928,20 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 		switch (sample_mode)
 		{
 		case 1:
+			status = Cam3030_ADC_Global_En_Filter(drvno, 1);
+			if (status != es_no_error) return status;
 			active_coefficients = 1;
 			odd_tap = 0;
 			coefficient_value = 1024;
 			status = Cam3030_ADC_SetDataRate(drvno, 2);
 			break;
 		case 2:
-			active_coefficients = 1;
-			odd_tap = 1;
-			coefficient_value = 2048;
+			// disable filter, because only one sample is used in sample mode 2
+			status = Cam3030_ADC_Global_En_Filter(drvno, 0);
+			if (status != es_no_error) return status;
 			status = Cam3030_ADC_SetDataRate(drvno, 1);
+			// Return this function here, because the whole coefficient setting thing is not needed for this case. This is not good code style though.
+			return status;
 			break;
 			// More cases are possible, but not implemented yet.
 			//case ?:
