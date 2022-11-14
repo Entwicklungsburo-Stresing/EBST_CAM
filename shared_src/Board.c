@@ -1956,10 +1956,13 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 			return es_parameter_out_of_range;
 		}
 		if (status != es_no_error) return status;
-		uint8_t number_of_adc_channels = 6;
+		// Only 3 filter channels are usable, because of the current address implementation in the FPGA. Actually there are 8 ADC channels, which would also be the correct number for this variable.
+		uint8_t number_of_adc_channels = 3;
+		// The number of coefficients is given by the ADC internals and cannot be changed.
 		uint8_t number_of_coefficients = 12;
-		// unused, because only custom coefficients are used
+		// Coefficient sets are unused, because only custom coefficients are used.
 		uint8_t coeff_set = 0;
+		// The decimation factor reduces the output of data per channel. This function is unsed and instead the global reduction per Cam3030_ADC_SetDataRate is used.
 		uint8_t decimation_factor = 0;
 		// Always enable filters and coefficients. Disabling is done with Cam3030_ADC_Global_En_Filter.
 		uint8_t enable = 1;
