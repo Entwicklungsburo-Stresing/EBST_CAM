@@ -423,33 +423,6 @@ void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
     }
 }
 
-void DialogSettings::on_checkBoxMshut_stateChanged(int arg1)
-{
-	bool enabled = true,
-		 visible = true;
-	switch(ui->comboBoxSettingsLevel->currentIndex())
-	{
-	//basic
-	case 0:
-		enabled = arg1;
-		visible = arg1;
-		break;
-	//advanced
-	case 1:
-		enabled = arg1;
-		visible = true;
-		break;
-	//expert
-	case 2:
-		enabled = true;
-		visible = true;
-		break;
-	}
-	ui->doubleSpinBoxSecIn10ns->setEnabled(enabled);
-	ui->doubleSpinBoxSecIn10ns->setVisible(visible);
-	ui->labelSec->setVisible(visible);
-}
-
 void DialogSettings::on_checkBoxRegionsEqual_stateChanged(int arg1)
 {
 	bool enabled = true,
@@ -624,7 +597,6 @@ void DialogSettings::on_comboBoxSettingsLevel_currentIndexChanged(int index)
 	on_comboBoxSensorType_currentIndexChanged(ui->comboBoxSensorType->currentIndex());
 	on_checkBoxUseDac_stateChanged(ui->checkBoxUseDac->checkState());
 	on_comboBoxCameraSystem_currentIndexChanged(ui->comboBoxCameraSystem->currentIndex());
-	on_checkBoxMshut_stateChanged(ui->checkBoxMshut->checkState());
 	on_checkBoxRegionsEqual_stateChanged(ui->checkBoxRegionsEqual->checkState());
 	on_comboBoxFftMode_currentIndexChanged(ui->comboBoxFftMode->currentIndex());
 }
