@@ -133,7 +133,9 @@ es_status_codes SetTicnt(uint32_t drvno, uint8_t divider);
 es_status_codes SetTocnt(uint32_t drvno, uint8_t divider);
 es_status_codes GetIsTdc(uint32_t drvno, bool* isTdc);
 es_status_codes GetIsDsc(uint32_t drvno, bool* isDsc);
-es_status_codes SetExposureControl( uint32_t drvno );
+es_status_codes SetMshut( uint32_t drvno, bool mshut );
+es_status_codes SetSensorReset(uint32_t drvno, bool enable);
+es_status_codes SetSensorResetLength(uint32_t drvno, bool enable_short);
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);

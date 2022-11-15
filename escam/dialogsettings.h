@@ -121,7 +121,6 @@ private slots:
     void on_comboBoxSensorType_currentIndexChanged(int index);
     void on_checkBoxUseDac_stateChanged(int arg1);
     void on_comboBoxCameraSystem_currentIndexChanged(int index);
-    void on_checkBoxMshut_stateChanged(int arg1);
     void on_checkBoxRegionsEqual_stateChanged(int arg1);
     void on_pushButtonDefault_clicked();
 	void on_spinBoxPixel_valueChanged(int arg1);
