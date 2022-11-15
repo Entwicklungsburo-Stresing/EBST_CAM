@@ -95,16 +95,36 @@ enum TOR_TOCNT_bits
 	TOR_bitindex_TOCNT_EN = 7,
 };
 
+/**
+ * TOR MSB 8 bits at 0x2B
+ */
 enum TOR_MSB_bits
 {
+	/**
+	 * Set to 1 if FFT sensor (sets IFC and VON to generate vclks and ENV)
+	 */
 	TOR_MSB_bit_ISFFT = 0x01,
+	/**
+	 * Set to 1 if sensor needs a clear after read (800ns) is done (PDA and S11490)
+	 */
 	TOR_MSB_bit_SENDRS = 0x02,
-	TOR_MSB_bit_no_RS = 0x04,
-	TOR_MSB_bit_RSLEVEL = 0x08,
+	/**
+	 * Reset pulse is 100ns when SENDRS is 1
+	 */
+	TOR_MSB_bit_SHORTRS = 0x04,
+	TOR_MSB_bit_TOSEL = 0x08,
+	TOR_MSB_bit_TO0 = 0x10,
+	TOR_MSB_bit_TO1 = 0x20,
+	TOR_MSB_bit_TO2 = 0x40,
+	TOR_MSB_bit_TO3 = 0x80,
 	TOR_MSB_bitindex_ISFFT = 0,
 	TOR_MSB_bitindex_SENDRS = 1,
-	TOR_MSB_bitindex_SHORTRS = 2
-
+	TOR_MSB_bitindex_SHORTRS = 2,
+	TOR_MSB_bitindex_TOSEL = 3,
+	TOR_MSB_bitindex_TO0 = 4,
+	TOR_MSB_bitindex_TO1 = 5,
+	TOR_MSB_bitindex_TO2 = 6,
+	TOR_MSB_bitindex_TO3 = 7
 };
 
 enum XCKMSB_bits
@@ -457,7 +477,10 @@ enum tor_out
 	tor_do_cc_i = 17,
 	tor_rs_monitor = 18,
 	tor_to_cnt_out = 19,
-	tor_secon = 20
+	tor_secon = 20,
+	tor_enffr = 29,
+	tor_enffw = 30,
+	tor_enffwrprot = 31
 };
 
 enum theme
