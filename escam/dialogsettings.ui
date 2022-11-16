@@ -1326,7 +1326,7 @@
            </item>
            <item>
             <property name="text">
-             <string>RS_MONITOR</string>
+             <string>EXPOSURE_WINDOW</string>
             </property>
            </item>
            <item>
@@ -1337,6 +1337,61 @@
            <item>
             <property name="text">
              <string>SECON</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>unused</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>unused</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>unused</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>unused</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>unused</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>unused</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>unused</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>unused</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ENFFR</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ENFFW</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ENFFWRPROT</string>
             </property>
            </item>
           </widget>
