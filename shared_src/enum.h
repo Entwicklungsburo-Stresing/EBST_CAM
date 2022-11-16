@@ -475,7 +475,7 @@ enum tor_out
 	tor_bshut = 15,
 	tor_ifc = 16,
 	tor_do_cc_i = 17,
-	tor_rs_monitor = 18,
+	tor_exposure_window = 18,
 	tor_to_cnt_out = 19,
 	tor_secon = 20,
 	tor_enffr = 29,
