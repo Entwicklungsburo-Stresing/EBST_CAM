@@ -258,7 +258,7 @@ es_status_codes SetMshut(uint32_t drvno, bool mshut)
  * 
  * This setting only has an effect, when sensor type is PDA and no SEC is used.
  * When these two conditions are met, this function controls, whether a reset signal
- * is sent or not. The length of the reset signal is controled by SetSensorResetLength()
+ * is sent or not. The length of the reset signal is controled by SetSensorResetShort()
  * \param drvno PCIe board identifier
  * \param enable
  *		- true: send sensor reset signal
@@ -268,7 +268,7 @@ es_status_codes SetMshut(uint32_t drvno, bool mshut)
  *		- es_register_read_failed
  * 		- es_register_write_failed
  */
-es_status_codes SetSensorReset(uint32_t drvno, bool enable)
+es_status_codes SetSensorResetEnable(uint32_t drvno, bool enable)
 {
 	es_status_codes status = es_no_error;
 	if(enable)
@@ -281,7 +281,7 @@ es_status_codes SetSensorReset(uint32_t drvno, bool enable)
 /**
  * \brief Controls whether the reset sensor signal is short (100 ns) or long (800 ns).
  *
- * This setting only has an effect, when sensor type is PDA, no SEC is used and SetSensorReset is set to true.
+ * This setting only has an effect, when sensor type is PDA, no SEC is used and SetSensorResetEnable is set to true.
  * When these conditions are met, this function controls, whether the reset signal
  * is short or long.
  * \param drvno PCIe board identifier.
@@ -293,13 +293,39 @@ es_status_codes SetSensorReset(uint32_t drvno, bool enable)
  *		- es_register_read_failed
  * 		- es_register_write_failed
  */
-es_status_codes SetSensorResetLength(uint32_t drvno, bool enable_short)
+es_status_codes SetSensorResetShort(uint32_t drvno, bool enable_short)
 {
 	es_status_codes status = es_no_error;
 	if (enable_short)
 		status = setBitS0_8(drvno, TOR_MSB_bitindex_SHORTRS, S0Addr_TOR_MSB);
 	else
 		status = resetBitS0_8(drvno, TOR_MSB_bitindex_SHORTRS, S0Addr_TOR_MSB);
+	return status;
+}
+
+/**
+ * \brief Controls whether the reset sensor signal is during XCK or after.
+ *
+ * This setting only has an effect, when sensor type is PDA, no SEC is used and SetSensorResetEnable is set to true.
+ * When these conditions are met, this function controls, whether the reset signal is done during XCK or after.
+ * The exact time when the reset is done for the early case, is determined by a counter in the PCIe board. The reset
+ * pulse is beeing aimed to be after the TG pulse of 3030.
+ * \param drvno PCIe board identifier.
+ * \param enable_short:
+ *		- true: 100ns
+ *		- false: 800ns
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
+es_status_codes SetSensorResetEarly(uint32_t drvno, bool enable_early)
+{
+	es_status_codes status = es_no_error;
+	if (enable_early)
+		status = setBitS0_8(drvno, CTRLC_bitindex_early_reset, S0Addr_CTRLC);
+	else
+		status = resetBitS0_8(drvno, CTRLC_bitindex_early_reset, S0Addr_CTRLC);
 	return status;
 }
 
@@ -1513,10 +1539,12 @@ es_status_codes InitCamera3001( uint32_t drvno  )
 {
 	ES_LOG("Init camera 3001\n");
 	// use sensor reset
-	es_status_codes status = SetSensorReset(drvno, true);
+	es_status_codes status = SetSensorResetEnable(drvno, true);
 	if (status != es_no_error) return status;
 	// use long sensor reset
-	status = SetSensorResetLength(drvno, false);
+	status = SetSensorResetShort(drvno, false);
+	if (status != es_no_error) return status;
+	status = SetSensorResetEarly(drvno, false);
 	if (status != es_no_error) return status;
 	// or use sec
 	status = SetSEC(drvno, settings_struct.sec_in_10ns);
@@ -1545,7 +1573,7 @@ es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custo
 	es_status_codes status = Cam3010_ADC_reset( drvno );
 	if (status != es_no_error) return status;
 	// don't use sensor reset
-	status = SetSensorReset(drvno, false);
+	status = SetSensorResetEnable(drvno, false);
 	if (status != es_no_error) return status;
 	// also set SEC to 0, to disable sensor reset signal
 	status = SetSEC(drvno, 0);
@@ -1666,10 +1694,12 @@ es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom
 	if (status != es_no_error) return status;
 	status = Cam3030_ADC_SetSampleMode(drvno, 0);
 	// use sensor reset
-	status = SetSensorReset(drvno, true);
+	status = SetSensorResetEnable(drvno, true);
 	if (status != es_no_error) return status;
 	// use short sensor reset
-	status = SetSensorResetLength(drvno, true);
+	status = SetSensorResetShort(drvno, true);
+	if (status != es_no_error) return status;
+	status = SetSensorResetEarly(drvno, true);
 	if (status != es_no_error) return status;
 	// or use sec
 	status = SetSEC(drvno, settings_struct.sec_in_10ns);
