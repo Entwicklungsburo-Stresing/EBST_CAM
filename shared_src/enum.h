@@ -81,6 +81,20 @@ enum CTRLA_bits
 	CTRLA_bitindex_TSTART = 7
 };
 
+enum CTRLC_bits
+{
+	CTRLC_bit_S1 = 0x02,
+	CTRLC_bit_S2 = 0x04,
+	CTRLC_bit_early_reset = 0x08,
+	CTRLC_bit_eoi = 0x10,
+	CTRLC_bit_eoi_chb = 0x20,
+	CTRLC_bitindex_S1 = 1,
+	CTRLC_bitindex_S2 = 2,
+	CTRLC_bitindex_early_reset = 3,
+	CTRLC_bitindex_eoi = 4,
+	CTRLC_bitindex_eoi_chb = 5
+};
+
 enum TOR_TICNT_bits
 {
 	TOR_bits_TICNT = 0x7F,
