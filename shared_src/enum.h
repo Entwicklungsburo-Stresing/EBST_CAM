@@ -492,6 +492,7 @@ enum tor_out
 	tor_exposure_window = 18,
 	tor_to_cnt_out = 19,
 	tor_secon = 20,
+	tor_i = 21,
 	tor_enffr = 29,
 	tor_enffw = 30,
 	tor_enffwrprot = 31
