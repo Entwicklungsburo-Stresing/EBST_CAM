@@ -126,9 +126,11 @@ struct global_settings
 	 */
 	uint32_t dac;
 	/**
-	 * unused
+	 * Shortrs controls the sensor reset length.
+	 *	- =0: long reset
+	 *	- >0: short reset
 	 */
-	uint32_t unused;
+	uint32_t shortrs;
 	/**
 	 * GPX offset
 	 */

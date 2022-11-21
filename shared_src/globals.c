@@ -50,6 +50,7 @@ struct global_settings settings_struct =
 	.adc_gain						= settingAdcGainDefault,
 	.temp_level						= settingCoolingDefault,
 	.dac							= settingDacDefault,
+	.shortrs						= settingShortrsDefault,
 	.gpx_offset						= settingGpxOffsetDefault,
 	.fft_lines						= settingLinesDefault,
 	.vfreq							= settingVfreqDefault,
