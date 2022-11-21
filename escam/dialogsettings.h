@@ -97,32 +97,33 @@ constexpr auto settingIOCtrlT0PeriodIn10nsPath = "IOCtrl/T0PeriodIn10ns";
 //software
 constexpr auto settingsUseSoftwarePollingPath = "software/use_software_polling";
 
-namespace Ui {
-class DialogSettings;
+namespace Ui
+{
+	class DialogSettings;
 }
 
 class DialogSettings : public QDialog
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit DialogSettings(QWidget *parent = nullptr);
-    ~DialogSettings();
+	explicit DialogSettings(QWidget *parent = nullptr);
+	~DialogSettings();
 signals:
-    void settings_saved();
+	void settings_saved();
 private:
-    Ui::DialogSettings *ui;
-    QSettings settings;
+	Ui::DialogSettings *ui;
+	QSettings settings;
 private slots:
-    void loadDefaults();
-    void on_accepted();
-    void on_comboBoxSti_currentIndexChanged(int index);
-    void on_comboBoxBti_currentIndexChanged(int index);
-    void on_comboBoxSensorType_currentIndexChanged(int index);
-    void on_checkBoxUseDac_stateChanged(int arg1);
-    void on_comboBoxCameraSystem_currentIndexChanged(int index);
-    void on_checkBoxRegionsEqual_stateChanged(int arg1);
-    void on_pushButtonDefault_clicked();
+	void loadDefaults();
+	void on_accepted();
+	void on_comboBoxSti_currentIndexChanged(int index);
+	void on_comboBoxBti_currentIndexChanged(int index);
+	void on_comboBoxSensorType_currentIndexChanged(int index);
+	void on_checkBoxUseDac_stateChanged(int arg1);
+	void on_comboBoxCameraSystem_currentIndexChanged(int index);
+	void on_checkBoxRegionsEqual_stateChanged(int arg1);
+	void on_pushButtonDefault_clicked();
 	void on_spinBoxPixel_valueChanged(int arg1);
 	void on_comboBoxSettingsLevel_currentIndexChanged(int index);
 	void on_comboBoxFftMode_currentIndexChanged(int index);
