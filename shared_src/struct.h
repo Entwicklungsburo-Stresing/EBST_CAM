@@ -127,8 +127,8 @@ struct global_settings
 	uint32_t dac;
 	/**
 	 * Shortrs controls the sensor reset length.
-	 *	- =0: long reset
-	 *	- >0: short reset
+	 *	- =0: long reset 800ns
+	 *	- >0: short reset 380ns
 	 */
 	uint32_t shortrs;
 	/**
