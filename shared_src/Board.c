@@ -288,12 +288,12 @@ es_status_codes SetSensorResetEnable(uint32_t drvno, bool enable)
  * is short or long.
  * \param drvno PCIe board identifier.
  * \param enable_short:
- *		- true: 100ns
+ *		- true: 380ns
  *		- false: 800ns
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
- * 		- es_register_write_failed
+ *		- es_register_write_failed
  */
 es_status_codes SetSensorResetShort(uint32_t drvno, bool enable_short)
 {
