@@ -313,9 +313,9 @@ es_status_codes SetSensorResetShort(uint32_t drvno, bool enable_short)
  * The exact time when the reset is done for the early case, is determined by a counter in the PCIe board. The reset
  * pulse is beeing aimed to be after the TG pulse of 3030.
  * \param drvno PCIe board identifier.
- * \param enable_short:
- *		- true: 100ns
- *		- false: 800ns
+ * \param enable_early:
+ *		- true: during XCK
+ *		- false: after XCK
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
