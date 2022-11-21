@@ -1,5 +1,10 @@
 # vX.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+v3.26.1
+- Add SetSensorResetEarly
+- Add I to tor out
+- Add shortrs to settings dialog
+
 v3.26.0
 - Add sample mode and filter functions for ADC
 - Improve control of sensor reset signal (IFC)
