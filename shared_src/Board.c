@@ -3865,7 +3865,7 @@ es_status_codes dumpSettings(char** stringPtr)
 		"gain 3030\t"DLLTAB"%u\n"
 		"temp level\t"DLLTAB"%u\n"
 		"dac\t"DLLTAB DLLTAB"%u\n"
-		"enable gpx\t"DLLTAB"%u\n"
+		"shortrs\t"DLLTAB"%u\n"
 		"gpx offset\t"DLLTAB"%u\n"
 		"fftlines\t"DLLTAB DLLTAB"%u\n"
 		"vfreq\t"DLLTAB DLLTAB"%u\n"
@@ -3899,7 +3899,7 @@ es_status_codes dumpSettings(char** stringPtr)
 		settings_struct.adc_gain,
 		settings_struct.temp_level,
 		settings_struct.dac,
-		settings_struct.unused,
+		settings_struct.shortrs,
 		settings_struct.gpx_offset,
 		settings_struct.fft_lines,
 		settings_struct.vfreq,
