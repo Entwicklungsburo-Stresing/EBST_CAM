@@ -105,6 +105,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->checkBoxIr->setChecked(settings.value(settingIsIrPath, settingIsIrDefault).toBool());
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toInt());
 	ui->checkBoxUseSoftwarePolling->setChecked(settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool());
+	ui->checkBoxShortrs->setChecked(settings.value(settingShortrsPath, settingShortrsDefault).toBool());
 	//FFT mode
 	ui->spinBoxLines->setValue(settings.value(settingLinesPath, settingLinesDefault).toInt());
 	ui->spinBoxVfreq->setValue(settings.value(settingVfreqPath, settingVfreqDefault).toInt());
@@ -185,6 +186,7 @@ void DialogSettings::on_accepted()
 	settings.setValue(settingIsIrPath, ui->checkBoxIr->isChecked());
 	settings.setValue(settingIOCtrlImpactStartPixelPath, ui->spinBoxIOCtrlImpactStartPixel->value());
 	settings.setValue(settingsUseSoftwarePollingPath, ui->checkBoxUseSoftwarePolling->isChecked());
+	settings.setValue(settingShortrsPath, ui->checkBoxShortrs->isChecked());
 	//Fft mode
 	settings.setValue(settingLinesPath, ui->spinBoxLines->value());
 	settings.setValue(settingVfreqPath, ui->spinBoxVfreq->value());
@@ -517,6 +519,7 @@ void DialogSettings::loadDefaults()
 	ui->checkBoxRegionsEqual->setChecked(settingIsIrDefault);
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settingIOCtrlImpactStartPixelDefault);
 	ui->checkBoxUseSoftwarePolling->setChecked(settingsUseSoftwarePollingDefault);
+	ui->checkBoxShortrs->setChecked(settingShortrsDefault);
 	//fft mode
 	ui->spinBoxLines->setValue(settingLinesDefault);
 	ui->spinBoxVfreq->setValue(settingVfreqDefault);
