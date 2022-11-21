@@ -224,10 +224,12 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	if (status != es_no_error) return status;
 	for (uint8_t i = 1; i <= 7; i++)
 	{
-        status = IOCtrl_setOutput(drvno, i, (uint16_t)settings_struct.ioctrl_output_width_in_5ns[i-1], (uint16_t)settings_struct.ioctrl_output_delay_in_5ns[i-1]);
+		status = IOCtrl_setOutput(drvno, i, (uint16_t)settings_struct.ioctrl_output_width_in_5ns[i-1], (uint16_t)settings_struct.ioctrl_output_delay_in_5ns[i-1]);
 		if (status != es_no_error) return status;
 	}
 	status = IOCtrl_setT0(drvno, settings_struct.ioctrl_T0_period_in_10ns);
+	if (status != es_no_error) return status;
+	status = SetSensorResetShort(drvno, settings_struct.shortrs);
 	return status;
 }
 
@@ -1541,9 +1543,6 @@ es_status_codes InitCamera3001( uint32_t drvno  )
 	// use sensor reset
 	es_status_codes status = SetSensorResetEnable(drvno, true);
 	if (status != es_no_error) return status;
-	// use long sensor reset
-	status = SetSensorResetShort(drvno, false);
-	if (status != es_no_error) return status;
 	status = SetSensorResetEarly(drvno, false);
 	if (status != es_no_error) return status;
 	// or use sec
@@ -1695,9 +1694,6 @@ es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom
 	status = Cam3030_ADC_SetSampleMode(drvno, 0);
 	// use sensor reset
 	status = SetSensorResetEnable(drvno, true);
-	if (status != es_no_error) return status;
-	// use short sensor reset
-	status = SetSensorResetShort(drvno, true);
 	if (status != es_no_error) return status;
 	status = SetSensorResetEarly(drvno, true);
 	if (status != es_no_error) return status;
