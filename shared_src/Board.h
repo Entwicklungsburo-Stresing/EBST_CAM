@@ -74,6 +74,7 @@ es_status_codes Cam3030_ADC_SetFilterCustomCoefficient(uint32_t drvno, uint8_t c
 es_status_codes Cam3030_ADC_SetDataRate(uint32_t drvno, uint8_t data_rate);
 es_status_codes Cam3030_ADC_SetLFNS(uint32_t drvno, bool enable);
 es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode);
+es_status_codes Cam3030_ADC_SetIfcMode(uint32_t drvno, uint16_t ifc_mode);
 es_status_codes SetTemp( uint32_t drvno, uint8_t level );
 es_status_codes SendFLCAM_DAC( uint32_t drvno, uint8_t ctrl, uint8_t addr, uint16_t data, uint8_t feature );
 es_status_codes DAC_setOutput( uint32_t drvno, uint8_t channel, uint16_t output );
