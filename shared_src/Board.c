@@ -1700,6 +1700,7 @@ es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom
 	// or use sec
 	status = SetSEC(drvno, settings_struct.sec_in_10ns);
 	if (status != es_no_error) return status;
+	status = Cam3030_ADC_SetIfcMode(drvno, 1);
 	return status;
 }
 
@@ -2079,6 +2080,24 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 			status = Cam3030_ADC_SetFilterSettings(drvno, channel, coeff_set, decimation_factor, odd_tap, enable, hpf_corner, en_hpf);
 	}
 	return status;
+}
+
+/**
+ * \brief Set the IFC mode of camera 3030.
+ * 
+ * \param drvno PCIe board identifier.
+ * \param ifc_mode See cam_adaddr_ifc_mode of enum cam_addresses in enum.h for details.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
+ */
+es_status_codes Cam3030_ADC_SetIfcMode(uint32_t drvno, uint16_t ifc_mode)
+{
+	ES_LOG("Cam3030_ADC_SetIfcMode(), setting ifc mode to %u\n", ifc_mode);
+	// send the sample mode to the camera
+	return SendFLCAM(drvno, maddr_cam, cam_adaddr_ifc_mode, ifc_mode);
 }
 
 /**

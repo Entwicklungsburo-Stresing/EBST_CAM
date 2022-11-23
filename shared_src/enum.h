@@ -269,6 +269,13 @@ enum cam_addresses
 	 * - 2: ADC clock = 25 MHz, duty cycle 50%, sensor clock = 12,5 MHz duty cycle 20%
 	 */
 	cam_adaddr_sample_mode = 0x07,
+	/**
+	 * 3030: IFC mode controls, whether the IFC signal from the PCIe card is used or the camera uses its own IFC signal.
+	 * - 0: use PCIe card IFC
+	 * - 1: do a short (280ns) IFC between TG and horizontal clocks
+	 * - 2: do a long (800ns) IFC between TG and horiontal clocks
+	 */
+	cam_adaddr_ifc_mode = 0x08,
 
 	adc_ltc2271_regaddr_reset = 0x00,
 	adc_ltc2271_regaddr_outmode = 0x02,
