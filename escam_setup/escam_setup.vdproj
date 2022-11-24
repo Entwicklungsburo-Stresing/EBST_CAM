@@ -1403,15 +1403,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Escam"
-        "ProductCode" = "8:{4F1EE43D-F8DD-46D0-9585-E3E75108573B}"
-        "PackageCode" = "8:{99596A59-FB01-4D7D-A1CE-F7B1BE25145F}"
+        "ProductCode" = "8:{CBEC56B4-EC1D-4F41-9C93-919D748E1804}"
+        "PackageCode" = "8:{40B631CE-7A9E-4AB9-B0F4-F0E8EE4169E6}"
         "UpgradeCode" = "8:{E656E723-CD9C-4179-A360-882C93DEA377}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:3.26.1"
+        "ProductVersion" = "8:3.26.2"
         "Manufacturer" = "8:Stresing"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -2009,7 +2009,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_92EE14C69C5547229214F0462CB9022D"
             {
-            "SourcePath" = "8:..\\ESLSCDLL_pro\\x64\\Release\\ESLSCDLL_pro.dll"
+            "SourcePath" = "8:..\\ESLSCDLL_pro\\x64\\Release-Labview\\ESLSCDLL_pro.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_A1F1AB1AEA5C4300AACB65433A54E330"
