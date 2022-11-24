@@ -272,7 +272,7 @@ enum cam_addresses
 	/**
 	 * 3030: IFC mode controls, whether the IFC signal from the PCIe card is used or the camera uses its own IFC signal.
 	 * - 0: use PCIe card IFC
-	 * - 1: do a short (280ns) IFC between TG and horizontal clocks
+	 * - 1: do a short (240ns) IFC between TG and horizontal clocks
 	 * - 2: do a long (800ns) IFC between TG and horiontal clocks
 	 */
 	cam_adaddr_ifc_mode = 0x08,
