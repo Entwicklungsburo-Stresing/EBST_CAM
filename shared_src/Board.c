@@ -281,7 +281,7 @@ es_status_codes SetSensorResetEnable(uint32_t drvno, bool enable)
 }
 
 /**
- * \brief Controls whether the reset sensor signal is short (100 ns) or long (800 ns).
+ * \brief Controls whether the reset sensor signal is short (380 ns) or long (800 ns).
  *
  * This setting only has an effect, when sensor type is PDA, no SEC is used and SetSensorResetEnable is set to true.
  * When these conditions are met, this function controls, whether the reset signal
@@ -1691,16 +1691,26 @@ es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom
 		status = DAC_setAllOutputs(drvno, dac_output, is_hs_ir);
 	}
 	if (status != es_no_error) return status;
+	// Sample mode is currently not in use. 11/22, P209_8
 	status = Cam3030_ADC_SetSampleMode(drvno, 0);
+	if (status != es_no_error) return status;
 	// use sensor reset
 	status = SetSensorResetEnable(drvno, true);
 	if (status != es_no_error) return status;
+	// in 3030, the sensor reset is done early during XCK to expand the exposure window
 	status = SetSensorResetEarly(drvno, true);
 	if (status != es_no_error) return status;
 	// or use sec
 	status = SetSEC(drvno, settings_struct.sec_in_10ns);
 	if (status != es_no_error) return status;
-	status = Cam3030_ADC_SetIfcMode(drvno, 1);
+	// When sec is used, use ifc signal from PCIe card
+	if (settings_struct.sec_in_10ns)
+		status = Cam3030_ADC_SetIfcMode(drvno, 0);
+	// in other cases use ifc signal from camera, short or long
+	else if(settings_struct.shortrs)
+		status = Cam3030_ADC_SetIfcMode(drvno, 1);
+	else
+		status = Cam3030_ADC_SetIfcMode(drvno, 2);
 	return status;
 }
 
@@ -1979,7 +1989,7 @@ es_status_codes Cam3030_ADC_SetLFNS(uint32_t drvno, bool enable)
 }
 
 /**
- * \brief Set over how many samples of one pixel the ADC averages.
+ * \brief Currently not in use. 11/22, P209_8. Set over how many samples of one pixel the ADC averages.
  *
  * \param drvno selects PCIe board
  * \param sample_mode:
