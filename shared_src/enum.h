@@ -265,7 +265,7 @@ enum cam_addresses
 	cam_adaddr_LEDoff = 0x05,
 	cam_adaddr_coolTemp = 0x06,
 	/**
-	 * 3030: Sample mode is setting the ADC clock and the sensor clock.
+	 * 3030: Currently not in use. Sample mode is setting the ADC clock and the sensor clock.
 	 * - 0: ADC clock = sensor clock = 25 MHz with duty cycle 50%
 	 * - 1: ADC clock = 50 MHz, duty cycle 50%, sensor clock = 12,5 MHz, duty cycle 20%
 	 * - 2: ADC clock = 25 MHz, duty cycle 50%, sensor clock = 12,5 MHz duty cycle 20%
