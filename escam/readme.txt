@@ -1,0 +1,1 @@
+To load the settings suitable to your camera, click on Settings -> Import during your first use of escam and then load your given config.ini.
