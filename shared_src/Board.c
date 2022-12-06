@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <sys/timeb.h>
 #include <math.h> // for sqrt()
+#include <stdio.h>
 #ifdef __linux__
 #define sprintf_s snprintf
 #endif
@@ -2714,6 +2715,7 @@ es_status_codes StartMeasurement()
 				status = resetBlockOn(2);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
 			}
+			startWriteBlockToDiscThread(1, blk_cnt);
 		// This is the end of the block for loop. Until nob is reached this loop is repeated.
 		}
 		// Reset the thread priority to the previous value.
@@ -4628,4 +4630,33 @@ es_status_codes GetIsDsc(uint32_t drvno, bool* isDsc)
 	else
 		*isDsc = false;
 	return status;
+}
+
+void startWriteBlockToDiscThread(uint32_t drvno, uint32_t block)
+{
+	ES_LOG("Start write block to disc thread.\n");
+	uint32_t* param = (uint32_t*)malloc(sizeof(uint32_t)*2);
+	param[0] = drvno;
+	param[1] = block;
+	_beginthread(&writeBlockToDisc, 0, param);
+	return;
+}
+
+void writeBlockToDisc(uint32_t* param)
+{
+	uint32_t drvno = param[0];
+	uint32_t block = param[1];
+	ES_LOG("Writing block %u to disc\n", block);
+	FILE* stream;
+	errno_t err = fopen_s(&stream, "data.dat", "a");
+	if (stream)
+	{
+		UINT16* pframe = NULL;
+		es_status_codes status = GetAddressOfPixel(drvno, 0, 0, block, 0, &pframe);
+		if (status != es_no_error) return status;
+		fwrite(pframe, 2, *Nospb * aCAMCNT[drvno] * aPIXEL[drvno], stream);
+		fclose(stream);
+	}
+	ES_LOG("Writing block %u to disc done\n", block);
+	return;
 }
