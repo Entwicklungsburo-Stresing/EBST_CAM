@@ -104,7 +104,7 @@ The INTR occurs every DMASPERINTR and copies this block of scans in lower/upper 
 */
 void isr( uint32_t drvno )
 {
-	ES_LOG( "*isr(): 0x%x\n", IsrCounter );
+	ES_TRACE( "*isr(): 0x%x\n", IsrCounter );
 	es_status_codes status = setBitS0_32(drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );//set INTRSR flag for TRIGO
 	if (status != es_no_error) return;
 	//! be sure not to stop run before last isr is ready - or last part is truncated
@@ -113,7 +113,7 @@ void isr( uint32_t drvno )
 	// that means one 500 scan copy block has 1088000 bytes
 	//!GS sometimes (all 10 minutes) one INTR more occurs -> just do not serve it and return
 	// Fehler wenn zu viele ISRs -> memcpy out of range
-	ES_LOG( "ISR Counter : 0x%x \n", IsrCounter );
+	ES_TRACE( "ISR Counter : 0x%x \n", IsrCounter );
 	if (IsrCounter > numberOfInterrupts)
 	{
 		ES_LOG( "numberOfInterrupts: 0x%x \n", numberOfInterrupts );
@@ -121,12 +121,12 @@ void isr( uint32_t drvno )
 		status = resetBitS0_32( drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );//reset INTRSR flag for TRIGO
 		return;
 	}
-	ES_LOG("dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes);
+	ES_TRACE("dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes);
 	size_t dmaBufferPartSizeInBytes = dmaBufferSizeInBytes / DMA_BUFFER_PARTS; //1088000 bytes
 	UINT16* dmaBufferReadPos = dmaBuffer[drvno] + dmaBufferPartReadPos[drvno] * dmaBufferPartSizeInBytes / sizeof(UINT16);
 	//here the copyprocess happens
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, dmaBufferPartSizeInBytes );
-	ES_LOG( "userBufferWritePos: 0x%x \n", userBufferWritePos[drvno] );
+	ES_TRACE( "userBufferWritePos: 0x%x \n", userBufferWritePos[drvno] );
 	dmaBufferPartReadPos[drvno]++;
 	if (dmaBufferPartReadPos[drvno] >= DMA_BUFFER_PARTS)		//number of ISR per dmaBuf - 1
 		dmaBufferPartReadPos[drvno] = 0;						//dmaBufferPartReadPos is 0 or 1 for buffer devided in 2 parts
