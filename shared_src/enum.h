@@ -219,7 +219,15 @@ enum s0_addresses
 	S0Addr_L1DSC = 0x94,
 	S0Addr_A2DSC = 0x98,
 	S0Addr_L2DSC = 0x9C,
-	S0Addr_DSCCtrl = 0xA8
+	S0Addr_DSCCtrl = 0xA8,
+	S0Addr_DAC0 = 0xAC,
+	S0Addr_DAC1 = 0xB0,
+	S0Addr_DAC2 = 0xB4,
+	S0Addr_DAC3 = 0xB8,
+	S0Addr_DAC4 = 0xBC,
+	S0Addr_DAC5 = 0xC0,
+	S0Addr_DAC6 = 0xC4,
+	S0Addr_DAC7 = 0xC8
 };
 
 enum ScanIndex_bits
