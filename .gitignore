@@ -235,3 +235,4 @@ doc/html/
 linux-driver/kernelspace/.cache.mk
 linux-driver/kernelspace/dma.o.ur-safe
 escam/Makefile
+*.dat
