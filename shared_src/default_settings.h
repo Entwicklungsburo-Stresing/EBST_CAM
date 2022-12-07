@@ -91,5 +91,8 @@
 #define settingTicntDefault							0
 #define settingTocntDefault							0
 #define settingUseEcDefault							0
+#define settingWriteToDiscDefault					0
+#define settingFilePathDefault						""
+#define settingFileSplitModeDefault					0
 
 #endif // DEFAULT_SETTINGS_H
