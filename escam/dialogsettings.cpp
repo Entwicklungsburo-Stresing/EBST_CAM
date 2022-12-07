@@ -34,6 +34,8 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->labelSslope->setSizePolicy(sp_retain);
 	ui->labelBslope->setSizePolicy(sp_retain);
 	ui->labelBoardSel->setSizePolicy(sp_retain);
+	ui->labelSplitMode->setSizePolicy(sp_retain);
+	ui->labelFilePath->setSizePolicy(sp_retain);
 
 	sp_retain = ui->doubleSpinBoxSTime_in_ms->sizePolicy();
 	sp_retain.setRetainSizeWhenHidden(true);
@@ -66,6 +68,15 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->comboBoxSslope->setSizePolicy(sp_retain);
 	ui->comboBoxBslope->setSizePolicy(sp_retain);
 	ui->comboBoxBoardSel->setSizePolicy(sp_retain);
+	ui->comboBoxSplitMode->setSizePolicy(sp_retain);
+
+	sp_retain = ui->plainTextEditFilePath->sizePolicy();
+	sp_retain.setRetainSizeWhenHidden(true);
+	ui->plainTextEditFilePath->setSizePolicy(sp_retain);
+
+	sp_retain = ui->pushButtonFilePath->sizePolicy();
+	sp_retain.setRetainSizeWhenHidden(true);
+	ui->pushButtonFilePath->setSizePolicy(sp_retain);
 
 	// Here the saved settings on the system are applied to the UI.
 	// For some settings there are two calls, to trigger the according slot for greying out options. I don't know why this is nesceserry, but without it the slots are not triggered.
@@ -121,10 +132,17 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->spinBoxRegion6->setValue(settings.value(settingRegionSize6Path, settingRegionSize6Default).toInt());
 	ui->spinBoxRegion7->setValue(settings.value(settingRegionSize7Path, settingRegionSize7Default).toInt());
 	ui->spinBoxRegion8->setValue(settings.value(settingRegionSize8Path, settingRegionSize8Default).toInt());
+	//Export data
+	ui->checkBoxWriteDataToDisc->setChecked(settings.value(settingWriteDataToDiscPath, settingWriteToDiscDefault).toBool());
+	ui->comboBoxSplitMode->setCurrentIndex(settings.value(settingSplitModePath, settingFileSplitModeDefault).toInt());
+	ui->plainTextEditFilePath->setPlainText(settings.value(settingFilePathPath, QDir::currentPath()).toString());
+	//Debug
 	ui->comboBoxOutput->setCurrentIndex(settings.value(settingTorPath, settingTorDefault).toInt());
 	ui->comboBoxAdcMode->setCurrentIndex(settings.value(settingAdcModePath, settingAdcModeDefault).toInt());
 	ui->spinBoxAdcCustom->setValue(settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toInt());
+	//Appearance
 	ui->comboBoxTheme->setCurrentIndex(settings.value(settingThemePath, settingThemeDefault).toInt());
+	//Misc
 	ui->comboBoxSettingsLevel->setCurrentIndex(settings.value(settingSettingsLevelPath, settingSettingsLevelDefault).toInt());
 	ui->comboBoxSettingsLevel->currentIndexChanged(ui->comboBoxSettingsLevel->currentIndex());
 
@@ -202,6 +220,10 @@ void DialogSettings::on_accepted()
 	settings.setValue(settingRegionSize6Path, ui->spinBoxRegion6->value());
 	settings.setValue(settingRegionSize7Path, ui->spinBoxRegion7->value());
 	settings.setValue(settingRegionSize8Path, ui->spinBoxRegion8->value());
+	//Export data
+	settings.setValue(settingWriteDataToDiscPath, ui->checkBoxWriteDataToDisc->isChecked());
+	settings.setValue(settingSplitModePath, ui->comboBoxSplitMode->currentIndex());
+	settings.setValue(settingFilePathPath, ui->plainTextEditFilePath->toPlainText());
 	//Debug
 	settings.setValue(settingTorPath, ui->comboBoxOutput->currentIndex());
 	settings.setValue(settingAdcModePath, ui->comboBoxAdcMode->currentIndex());
@@ -535,6 +557,10 @@ void DialogSettings::loadDefaults()
 	ui->spinBoxRegion6->setValue(settingRegionSize6Default);
 	ui->spinBoxRegion7->setValue(settingRegionSize7Default);
 	ui->spinBoxRegion8->setValue(settingRegionSize8Default);
+	//Export data
+	ui->checkBoxWriteDataToDisc->setChecked(settingWriteToDiscDefault);
+	ui->comboBoxSplitMode->setCurrentIndex(settingFileSplitModeDefault);
+	ui->plainTextEditFilePath->setPlainText(QDir::currentPath());
 	//debug
 	ui->comboBoxOutput->setCurrentIndex(settingTorDefault);
 	ui->comboBoxAdcMode->setCurrentIndex(settingAdcModeDefault);
@@ -563,10 +589,10 @@ void DialogSettings::on_comboBoxSettingsLevel_currentIndexChanged(int index)
 	case 0:
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
 		ui->tabWidget->setTabVisible(1, false);
-		ui->tabWidget->setTabVisible(3, false);
+		ui->tabWidget->setTabVisible(4, false);
 #endif
 		ui->tabWidget->setTabEnabled(1, false);
-		ui->tabWidget->setTabEnabled(3, false);
+		ui->tabWidget->setTabEnabled(4, false);
 		ui->labelLines->setVisible(false);
 		ui->spinBoxLines->setVisible(false);
 		ui->spinBoxLines->setEnabled(false);
@@ -574,21 +600,21 @@ void DialogSettings::on_comboBoxSettingsLevel_currentIndexChanged(int index)
 	case 1:
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
 		ui->tabWidget->setTabVisible(1, true);
-		ui->tabWidget->setTabVisible(3, true);
+		ui->tabWidget->setTabVisible(4, true);
 #endif
 		ui->tabWidget->setTabEnabled(1, true);
-		ui->tabWidget->setTabEnabled(3, true);
+		ui->tabWidget->setTabEnabled(4, true);
 		ui->labelLines->setVisible(true);
 		ui->spinBoxLines->setVisible(true);
 		ui->spinBoxLines->setEnabled(true);
 		break;
 	case 2:
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-		ui->tabWidget->setTabVisible(3, true);
+		ui->tabWidget->setTabVisible(4, true);
 		ui->tabWidget->setTabVisible(1, true);
 #endif
 		ui->tabWidget->setTabEnabled(1, true);
-		ui->tabWidget->setTabEnabled(3, true);
+		ui->tabWidget->setTabEnabled(4, true);
 		ui->labelLines->setVisible(true);
 		ui->spinBoxLines->setVisible(true);
 		ui->spinBoxLines->setEnabled(true);
@@ -602,6 +628,7 @@ void DialogSettings::on_comboBoxSettingsLevel_currentIndexChanged(int index)
 	on_comboBoxCameraSystem_currentIndexChanged(ui->comboBoxCameraSystem->currentIndex());
 	on_checkBoxRegionsEqual_stateChanged(ui->checkBoxRegionsEqual->checkState());
 	on_comboBoxFftMode_currentIndexChanged(ui->comboBoxFftMode->currentIndex());
+	on_checkBoxWriteDataToDisc_stateChanged(ui->checkBoxWriteDataToDisc->checkState());
 }
 
 void DialogSettings::on_comboBoxFftMode_currentIndexChanged(int index)
@@ -750,6 +777,13 @@ void DialogSettings::on_pushButtonCopyBtimer_clicked()
 	return;
 }
 
+void DialogSettings::on_pushButtonFilePath_clicked()
+{
+	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), nullptr, QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+	if(!dir.isEmpty()) ui->plainTextEditFilePath->setPlainText(dir);
+	return;
+}
+
 void DialogSettings::on_spinBoxLines_valueChanged(int value)
 {
 	if (ui->comboBoxFftMode->currentIndex() == area_mode)
@@ -774,3 +808,35 @@ void DialogSettings::on_spinBoxNumberOfRegions_valueChanged(int value)
 	}
 }
 
+void DialogSettings::on_checkBoxWriteDataToDisc_stateChanged(int arg1)
+{
+	bool enabled = true,
+		visible = true;
+	switch (ui->comboBoxSettingsLevel->currentIndex())
+	{
+		//basic
+	case 0:
+		enabled = arg1;
+		visible = arg1;
+		break;
+		//advanced
+	case 1:
+		enabled = arg1;
+		visible = true;
+		break;
+		//expert
+	case 2:
+		enabled = true;
+		visible = true;
+		break;
+	}
+	ui->comboBoxSplitMode->setEnabled(enabled);
+	ui->plainTextEditFilePath->setEnabled(enabled);
+	ui->pushButtonFilePath->setEnabled(enabled);
+	ui->comboBoxSplitMode->setVisible(visible);
+	ui->plainTextEditFilePath->setVisible(visible);
+	ui->pushButtonFilePath->setVisible(visible);
+	ui->labelSplitMode->setVisible(visible);
+	ui->labelFilePath->setVisible(visible);
+	return;
+}

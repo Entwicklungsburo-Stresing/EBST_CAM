@@ -153,8 +153,11 @@ void MainWindow::startPressed()
 	settings_struct.bslope = settings.value(settingBslopePath, settingBslopeDefault).toUInt();
 	settings_struct.xckdelay_in_10ns = settings.value(settingXckdelayIn10nsPath, settingXckdelayIn10nsDefault).toUInt();
 	settings_struct.sec_in_10ns = settings.value(settingShutterSecIn10nsPath, settingShutterSecIn10nsDefault).toUInt();
+	settings_struct.bec_in_10ns = settings.value(settingShutterBecIn10nsPath, settingShutterBecIn10nsDefault).toUInt();
 	settings_struct.trigger_mode_cc = settings.value(settingTriggerCcPath, settingTriggerCcDefault).toUInt();
+	settings_struct.cont_pause_in_microseconds = settings.value(settingContiniousPauseInMicrosecondsPath, settingContiniousPausInMicrosecondsDefault).toUInt();
 	//camerasetup tab
+	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt() + 1;
 	settings_struct.sensor_type = settings.value(settingSensorTypePath, settingSensorTypeDefault).toUInt();
 	settings_struct.camera_system = settings.value(settingCameraSystemPath, settingCameraSystemDefault).toUInt();
 	settings_struct.camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
@@ -166,6 +169,8 @@ void MainWindow::startPressed()
 	settings_struct.temp_level = settings.value(settingCoolingPath, settingCoolingDefault).toUInt();
 	settings_struct.dac = settings.value(settingDacPath, settingDacDefault).toBool();
 	settings_struct.gpx_offset = settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toUInt();
+	settings_struct.is_hs_ir = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
+	settings_struct.ioctrl_impact_start_pixel = settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toUInt();
 	settings_struct.use_software_polling = settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool();
 	settings_struct.shortrs = settings.value(settingShortrsPath, settingShortrsDefault).toBool();
 	//fftmodes tab
@@ -188,6 +193,12 @@ void MainWindow::startPressed()
 		settings_struct.region_size[6] = settings.value(settingRegionSize7Path, settingRegionSize7Default).toUInt();
 		settings_struct.region_size[7] = settings.value(settingRegionSize8Path, settingRegionSize8Default).toUInt();
 	}
+	//export data tab
+	settings_struct.write_to_disc = settings.value(settingWriteDataToDiscPath, settingWriteToDiscDefault).toBool();
+	settings_struct.file_split_mode = settings.value(settingSplitModePath, settingFileSplitModeDefault).toUInt();
+	QByteArray array = settings.value(settingFilePathPath, QDir::currentPath()).toString().toLocal8Bit();
+	strcpy(settings_struct.file_path, array.data());
+	//dac
 	settings_struct.dac_output[0][0] = settings.value(settingSensorOffsetChannel1Path, settingSensorOffsetChannel1Default).toUInt();
 	settings_struct.dac_output[0][1] = settings.value(settingSensorOffsetChannel2Path, settingSensorOffsetChannel2Default).toUInt();
 	settings_struct.dac_output[0][2] = settings.value(settingSensorOffsetChannel3Path, settingSensorOffsetChannel3Default).toUInt();
@@ -204,15 +215,12 @@ void MainWindow::startPressed()
 	settings_struct.dac_output[1][5] = settings.value(settingSensorOffsetBoard2Channel6Path, settingSensorOffsetBoard2Channel6Default).toUInt();
 	settings_struct.dac_output[1][6] = settings.value(settingSensorOffsetBoard2Channel7Path, settingSensorOffsetBoard2Channel7Default).toUInt();
 	settings_struct.dac_output[1][7] = settings.value(settingSensorOffsetBoard2Channel8Path, settingSensorOffsetBoard2Channel8Default).toUInt();
+	//debug
 	settings_struct.tor = settings.value(settingTorPath, settingTorDefault).toUInt();
 	settings_struct.adc_mode = settings.value(settingAdcModePath, settingAdcModeDefault).toUInt();
 	settings_struct.adc_custom_pattern = settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toUInt();
 	settings_struct.gpx_offset = 0;//TODO
-	settings_struct.bec_in_10ns = settings.value(settingShutterBecIn10nsPath, settingShutterBecIn10nsDefault).toUInt();
-	settings_struct.is_hs_ir = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
-	settings_struct.cont_pause_in_microseconds = settings.value(settingContiniousPauseInMicrosecondsPath, settingContiniousPausInMicrosecondsDefault).toUInt();
-	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt() + 1;
-	settings_struct.ioctrl_impact_start_pixel = settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toUInt();
+
 	settings_struct.ioctrl_output_delay_in_5ns[0] = settings.value(settingIOCtrlOutput1DelayIn5nsPath, settingIOCtrlOutput1DelayIn5nsDefault).toUInt();
 	settings_struct.ioctrl_output_delay_in_5ns[1] = settings.value(settingIOCtrlOutput2DelayIn5nsPath, settingIOCtrlOutput2DelayIn5nsDefault).toUInt();
 	settings_struct.ioctrl_output_delay_in_5ns[2] = settings.value(settingIOCtrlOutput3DelayIn5nsPath, settingIOCtrlOutput3DelayIn5nsDefault).toUInt();
