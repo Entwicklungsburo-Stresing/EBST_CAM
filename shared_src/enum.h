@@ -541,3 +541,10 @@ enum fft_mode
 	partial_binning = 1,
 	area_mode = 2
 };
+
+enum split_mode
+{
+	no_split = 0,
+	measurement_wise = 1,
+	block_wise = 2
+};
