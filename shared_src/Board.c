@@ -2714,13 +2714,13 @@ es_status_codes StartMeasurement()
 			{
 				status = resetBlockOn(1);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
-				startWriteBlockToDiscThread(1, blk_cnt, measurement_cnt, "", 0, start_timestamp);
+				if(settings_struct.write_to_disc) startWriteBlockToDiscThread(1, blk_cnt, measurement_cnt, settings_struct.file_path, settings_struct.file_split_mode, start_timestamp);
 			}
 			if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
 			{
 				status = resetBlockOn(2);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
-				startWriteBlockToDiscThread(2, blk_cnt, measurement_cnt, "", 0, start_timestamp);
+				if (settings_struct.write_to_disc) startWriteBlockToDiscThread(2, blk_cnt, measurement_cnt, settings_struct.file_path, settings_struct.file_split_mode, start_timestamp);
 			}
 		// This is the end of the block for loop. Until nob is reached this loop is repeated.
 		}

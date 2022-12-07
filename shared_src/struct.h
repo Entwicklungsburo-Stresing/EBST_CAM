@@ -225,6 +225,19 @@ struct global_settings
 	 * 
 	 */
 	uint32_t use_ec;
+	/**
+	 * - =0: Don't write measurement data to disc.
+	 * - >0: Write measurement data to disc.
+	 */
+	uint32_t write_to_disc;
+	/**
+	 * File path is specifying the path where the measurement data is saved.
+	 */
+	char file_path[50];
+	/**
+	 * Specifies how to split files when writing measurement data to disc. See enum split_mode in enum.h for modes. 
+	 */
+	uint32_t file_split_mode;
 };
 
 #endif // STRUCT_H
