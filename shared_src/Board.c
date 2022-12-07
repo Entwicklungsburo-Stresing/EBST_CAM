@@ -4662,13 +4662,13 @@ void writeBlockToDisc(struct file_specs* f)
 	{
 	default:
 	case no_split:
-		sprintf_s(filename, 100, "%s%s_board-%u.dat", f->path, f->timestamp, f->drvno);
+		sprintf_s(filename, 100, "%s/%s_board-%u.dat", f->path, f->timestamp, f->drvno);
 		break;
 	case measurement_wise:
-		sprintf_s(filename, 100, "%s%s_board-%u_measurement-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt);
+		sprintf_s(filename, 100, "%s/%s_board-%u_measurement-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt);
 		break;
 	case block_wise:
-		sprintf_s(filename, 100, "%s%s_board-%u_measurement-%u_block-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt, f->block_cnt);
+		sprintf_s(filename, 100, "%s/%s_board-%u_measurement-%u_block-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt, f->block_cnt);
 		break;
 	}
 	FILE* stream;
