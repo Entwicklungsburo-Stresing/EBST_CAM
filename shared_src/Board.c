@@ -2520,6 +2520,11 @@ es_status_codes StartMeasurement()
 		isRunning = true;
 	abortMeasurementFlag = false;
 	es_status_codes status = es_no_error;
+	uint64_t measurement_cnt = 0;
+	SYSTEMTIME t;
+	GetLocalTime(&t);
+	char start_timestamp[50];
+	sprintf_s(start_timestamp, 50, "%04d-%02d-%02d-%02d-%02d-%02d", t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
 	do
 	{
 		// Reset the hardware block counter and scan counter.
@@ -2709,13 +2714,14 @@ es_status_codes StartMeasurement()
 			{
 				status = resetBlockOn(1);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
+				startWriteBlockToDiscThread(1, blk_cnt, measurement_cnt, "", 0, start_timestamp);
 			}
 			if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
 			{
 				status = resetBlockOn(2);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
+				startWriteBlockToDiscThread(2, blk_cnt, measurement_cnt, "", 0, start_timestamp);
 			}
-			startWriteBlockToDiscThread(1, blk_cnt);
 		// This is the end of the block for loop. Until nob is reached this loop is repeated.
 		}
 		// Reset the thread priority to the previous value.
@@ -2778,6 +2784,7 @@ es_status_codes StartMeasurement()
 			continiousMeasurementFlag = false;
 		abortMeasurementFlag = checkEscapeKeyState();
 		WaitforTelapsed(continiousPauseInMicroseconds);
+		measurement_cnt++;
 	} while (continiousMeasurementFlag && !abortMeasurementFlag);
 	ES_LOG("*** Measurement done ***\n\n");
 	return ReturnStartMeasurement(status);
@@ -4632,31 +4639,49 @@ es_status_codes GetIsDsc(uint32_t drvno, bool* isDsc)
 	return status;
 }
 
-void startWriteBlockToDiscThread(uint32_t drvno, uint32_t block)
+void startWriteBlockToDiscThread(uint32_t drvno, uint32_t block, uint32_t measurement_cnt, char* path, uint32_t split_mode, char* timestamp)
 {
 	ES_LOG("Start write block to disc thread.\n");
-	uint32_t* param = (uint32_t*)malloc(sizeof(uint32_t)*2);
-	param[0] = drvno;
-	param[1] = block;
-	_beginthread(&writeBlockToDisc, 0, param);
+	struct file_specs* f = malloc(sizeof(struct file_specs));
+	f->drvno = drvno;
+	f->measurement_cnt = measurement_cnt;
+	f->block_cnt = block;
+	f->path = path;
+	f->split_mode = split_mode;
+	f->timestamp = timestamp;
+	_beginthread(&writeBlockToDisc, 0, f);
 	return;
 }
 
-void writeBlockToDisc(uint32_t* param)
+void writeBlockToDisc(struct file_specs* f)
 {
-	uint32_t drvno = param[0];
-	uint32_t block = param[1];
-	ES_LOG("Writing block %u to disc\n", block);
+	ES_LOG("Writing block %u to disc\n", f->block_cnt);
+
+	char filename[100];
+	switch (f->split_mode)
+	{
+	default:
+	case no_split:
+		sprintf_s(filename, 100, "%s%s_board-%u.dat", f->path, f->timestamp, f->drvno);
+		break;
+	case measurement_wise:
+		sprintf_s(filename, 100, "%s%s_board-%u_measurement-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt);
+		break;
+	case block_wise:
+		sprintf_s(filename, 100, "%s%s_board-%u_measurement-%u_block-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt, f->block_cnt);
+		break;
+	}
 	FILE* stream;
-	errno_t err = fopen_s(&stream, "data.dat", "a");
+	errno_t err = fopen_s(&stream, filename, "a");
 	if (stream)
 	{
 		UINT16* pframe = NULL;
-		es_status_codes status = GetAddressOfPixel(drvno, 0, 0, block, 0, &pframe);
+		es_status_codes status = GetAddressOfPixel(f->drvno, 0, 0, f->block_cnt, 0, &pframe);
 		if (status != es_no_error) return status;
-		fwrite(pframe, 2, *Nospb * aCAMCNT[drvno] * aPIXEL[drvno], stream);
+		fwrite(pframe, 2, *Nospb * aCAMCNT[f->drvno] * aPIXEL[f->drvno], stream);
 		fclose(stream);
 	}
-	ES_LOG("Writing block %u to disc done\n", block);
+	ES_LOG("Writing block %u to disc done\n", f->block_cnt);
+	free(f);
 	return;
 }
