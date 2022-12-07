@@ -108,4 +108,7 @@ struct global_settings settings_struct =
 	.tocnt							= settingTocntDefault,
 	.ticnt							= settingTicntDefault,
 	.use_ec							= settingUseEcDefault,
+	.write_to_disc					= settingWriteToDiscDefault,
+	.file_path						= settingFilePathDefault,
+	.file_split_mode				= settingFileSplitModeDefault
 };
