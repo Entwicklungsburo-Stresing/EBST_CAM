@@ -93,6 +93,6 @@
 #define settingUseEcDefault							0
 #define settingWriteToDiscDefault					0
 #define settingFilePathDefault						""
-#define settingFileSplitModeDefault					0
+#define settingFileSplitModeDefault					no_split
 
 #endif // DEFAULT_SETTINGS_H
