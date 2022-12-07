@@ -36,6 +36,16 @@ struct global_vars
 	bool* useSWTrig;
 };
 
+struct file_specs
+{
+	uint32_t drvno;
+	uint32_t measurement_cnt;
+	uint32_t block_cnt;
+	char* path;
+	uint32_t split_mode;
+	char* timestamp;
+};
+
 extern uint32_t* aPIXEL;
 extern uint32_t* aCAMCNT;
 extern bool* useSWTrig;
