@@ -16,29 +16,29 @@ QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-    Lsc lsc;
+	MainWindow(QWidget *parent = nullptr);
+	~MainWindow();
+	Lsc lsc;
 	Ui::MainWindow *ui;
 public slots:
-    void loadCameraData();
-    void on_measureStart();
-    void on_measureDone();
-    void on_blockStart();
-    void on_blockDone();
+	void loadCameraData();
+	void on_measureStart();
+	void on_measureDone();
+	void on_blockStart();
+	void on_blockDone();
 private:
 	QSettings settings;
-    void setChartData(QLineSeries** series, uint16_t numberOfSets);
-    void setChartData(uint16_t* data, uint16_t length, uint16_t numberOfSets);
-    void showNoDriverFoundDialog();
-    void showPcieBoardError();
+	void setChartData(QLineSeries** series, uint16_t numberOfSets);
+	void setChartData(uint16_t* data, uint16_t length, uint16_t numberOfSets);
+	void showNoDriverFoundDialog();
+	void showPcieBoardError();
 	DialogTDC* ds_tdc = new DialogTDC( this );
 	DialogDSC* ds_dsc = new DialogDSC( this );
 	DialogRMS* ds_rms = new DialogRMS( this );
-    uint32_t used_number_of_boards;
-    QThread measurementThread;
+	uint32_t used_number_of_boards;
+	QThread measurementThread;
 	void copySettings(QSettings &dst, QSettings &src);
 	QTimer* displayTimer = new QTimer(this);
 	bool measureOn = false;
@@ -59,10 +59,10 @@ private slots:
 	void loadSettings();
 	void startPressed();
 	void startContPressed(bool checked);
-    void on_actionDump_board_registers_triggered();
+	void on_actionDump_board_registers_triggered();
 	void abortPressed();
 	void on_rubberBandChanged();
-    void on_checkBoxShowCamera(bool state, int camera);
+	void on_checkBoxShowCamera(bool state, int camera);
 	void on_pushButtonStart_pressed();
 	void on_horizontalSliderBlock_valueChanged();
 	void on_actionExport_triggered();
