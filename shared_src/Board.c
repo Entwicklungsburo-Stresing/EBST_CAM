@@ -4655,7 +4655,6 @@ void startWriteBlockToDiscThread(uint32_t drvno, uint32_t block, uint32_t measur
 
 void writeBlockToDisc(struct file_specs* f)
 {
-	ES_LOG("Writing block %u to disc\n", f->block_cnt);
 	char last_char = f->path[strlen(f->path)-1];
 	if (last_char != '/' && last_char != '\\')
 		f->path[strlen(f->path)] = '/';
@@ -4674,6 +4673,7 @@ void writeBlockToDisc(struct file_specs* f)
 		break;
 	}
 	FILE* stream;
+	ES_LOG("Writing block %u to disc at %s\n", f->block_cnt, filename);
 	errno_t err = fopen_s(&stream, filename, "a");
 	if (stream)
 	{
