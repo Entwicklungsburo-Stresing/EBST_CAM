@@ -41,9 +41,9 @@ struct file_specs
 	uint32_t drvno;
 	uint32_t measurement_cnt;
 	uint32_t block_cnt;
-	char* path;
+	char path[50];
 	uint32_t split_mode;
-	char* timestamp;
+	char timestamp[50];
 };
 
 extern uint32_t* aPIXEL;
