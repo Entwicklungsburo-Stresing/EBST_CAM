@@ -4646,9 +4646,9 @@ void startWriteBlockToDiscThread(uint32_t drvno, uint32_t block, uint32_t measur
 	f->drvno = drvno;
 	f->measurement_cnt = measurement_cnt;
 	f->block_cnt = block;
-	f->path = path;
+	strcpy(f->path, path);
 	f->split_mode = split_mode;
-	f->timestamp = timestamp;
+	strcpy(f->timestamp, timestamp);
 	_beginthread(&writeBlockToDisc, 0, f);
 	return;
 }
@@ -4656,19 +4656,21 @@ void startWriteBlockToDiscThread(uint32_t drvno, uint32_t block, uint32_t measur
 void writeBlockToDisc(struct file_specs* f)
 {
 	ES_LOG("Writing block %u to disc\n", f->block_cnt);
-
+	char last_char = f->path[strlen(f->path)-1];
+	if (last_char != '/' && last_char != '\\')
+		f->path[strlen(f->path)] = '/';
 	char filename[100];
 	switch (f->split_mode)
 	{
 	default:
 	case no_split:
-		sprintf_s(filename, 100, "%s/%s_board-%u.dat", f->path, f->timestamp, f->drvno);
+		sprintf_s(filename, 100, "%s%s_board-%u.dat", f->path, f->timestamp, f->drvno);
 		break;
 	case measurement_wise:
-		sprintf_s(filename, 100, "%s/%s_board-%u_measurement-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt);
+		sprintf_s(filename, 100, "%s%s_board-%u_measurement-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt);
 		break;
 	case block_wise:
-		sprintf_s(filename, 100, "%s/%s_board-%u_measurement-%u_block-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt, f->block_cnt);
+		sprintf_s(filename, 100, "%s%s_board-%u_measurement-%u_block-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt, f->block_cnt);
 		break;
 	}
 	FILE* stream;
