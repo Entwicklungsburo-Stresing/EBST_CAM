@@ -1,5 +1,8 @@
 # vX.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+v3.26.3
+- Add write data to disc
+
 v3.26.2
 - Add Cam3030_ADC_SetIfcMode
 
