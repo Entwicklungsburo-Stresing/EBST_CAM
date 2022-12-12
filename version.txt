@@ -1,5 +1,8 @@
 # vX.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+v3.26.4
+- Add setting parameter is_cooled_cam
+
 v3.26.3
 - Add write data to disc
 
