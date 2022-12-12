@@ -201,7 +201,9 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	// Init Camera
 	status = FindCam(drvno);
 	if (status != es_no_error) return status;
-	status = InitCameraGeneral(drvno, (uint16_t)settings_struct.pixel, (uint16_t)settings_struct.trigger_mode_cc, (uint8_t)settings_struct.sensor_type, 0, 0, (uint16_t)settings_struct.led_off, (uint16_t)settings_struct.sensor_gain, (uint16_t)settings_struct.use_ec);
+	uint8_t is_area_mode = 0;
+	if (settings_struct.fft_mode == area_mode) is_area_mode = 1;
+	status = InitCameraGeneral(drvno, (uint16_t)settings_struct.pixel, (uint16_t)settings_struct.trigger_mode_cc, (uint8_t)settings_struct.sensor_type, is_area_mode, (uint8_t)settings_struct.is_cooled_cam, (uint16_t)settings_struct.led_off, (uint16_t)settings_struct.sensor_gain, (uint16_t)settings_struct.use_ec);
 	if (status != es_no_error) return status;
 	switch (settings_struct.camera_system)
 	{

@@ -94,5 +94,6 @@
 #define settingWriteToDiscDefault					0
 #define settingFilePathDefault						""
 #define settingFileSplitModeDefault					no_split
+#define settingIsCooledCamDefault					false
 
 #endif // DEFAULT_SETTINGS_H
