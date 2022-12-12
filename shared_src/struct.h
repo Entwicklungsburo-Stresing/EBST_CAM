@@ -238,6 +238,11 @@ struct global_settings
 	 * Specifies how to split files when writing measurement data to disc. See enum split_mode in enum.h for modes. 
 	 */
 	uint32_t file_split_mode;
+	/**
+	 * - =0 camera is not cooled
+	 * - >0 Camera is cooled. This option is setting a bit in the PCIe board to react correctly to the cooled status messages from the camera.
+	 */
+	uint32_t is_cooled_cam;
 };
 
 #endif // STRUCT_H

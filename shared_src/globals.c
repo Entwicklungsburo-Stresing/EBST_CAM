@@ -110,5 +110,6 @@ struct global_settings settings_struct =
 	.use_ec							= settingUseEcDefault,
 	.write_to_disc					= settingWriteToDiscDefault,
 	.file_path						= settingFilePathDefault,
-	.file_split_mode				= settingFileSplitModeDefault
+	.file_split_mode				= settingFileSplitModeDefault,
+	.is_cooled_cam					= settingIsCooledCamDefault
 };
