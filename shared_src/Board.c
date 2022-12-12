@@ -4699,3 +4699,13 @@ void writeBlockToDisc(struct file_specs* f)
 	free(f);
 	return;
 }
+
+void verifyData(char* file_path)
+{
+	FILE* stream;
+	errno_t err = fopen_s(&stream, file_path, "rb");
+	wchar_t data_buffer[2000];
+	fgetws(data_buffer, 2000, stream);
+	fgetws(data_buffer, 2000, stream);
+	return;
+}
