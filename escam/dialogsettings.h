@@ -38,6 +38,7 @@ constexpr auto settingGpxOffsetPath = "camerasetup/gpxOffset";
 constexpr auto settingIsIrPath = "camerasetup/isIr";
 constexpr auto settingIOCtrlImpactStartPixelPath = "camerasetup/IOCtrlImpactStartPixel";
 constexpr auto settingShortrsPath = "camerasetup/shortrs";
+constexpr auto settingIsCooledCamPath = "camerasetup/isCooledCam";
 //fft mode
 constexpr auto settingLinesPath = "fftmode/lines";
 constexpr auto settingVfreqPath = "fftmode/vfreq";
@@ -138,6 +139,7 @@ private slots:
 	void on_spinBoxLinesBinning_valueChanged(int value);
 	void on_spinBoxNumberOfRegions_valueChanged(int value);
 	void on_checkBoxWriteDataToDisc_stateChanged(int arg1);
+	void on_checkBoxIsCooledCam_stateChanged(int arg1);
 };
 
 #endif // DIALOGSETTINGS_H

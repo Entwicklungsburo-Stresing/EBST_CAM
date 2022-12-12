@@ -12,6 +12,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &DialogSettings::on_accepted);
 
 	//don't rearrange widgets when hiding other widgets
+	// QSizePolicy is retrieved for every different type of widgets separately, because I don't know whether the size policies differ between the widgets. This makes sure, that only the parameter setReainSizeWhenHidden is changed.
 	QSizePolicy sp_retain = ui->labelSTimer->sizePolicy();
 	sp_retain.setRetainSizeWhenHidden(true);
 	ui->labelRegion1->setSizePolicy(sp_retain);
@@ -36,6 +37,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->labelBoardSel->setSizePolicy(sp_retain);
 	ui->labelSplitMode->setSizePolicy(sp_retain);
 	ui->labelFilePath->setSizePolicy(sp_retain);
+	ui->labelCamCool->setSizePolicy(sp_retain);
 
 	sp_retain = ui->doubleSpinBoxSTime_in_ms->sizePolicy();
 	sp_retain.setRetainSizeWhenHidden(true);
@@ -69,6 +71,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->comboBoxBslope->setSizePolicy(sp_retain);
 	ui->comboBoxBoardSel->setSizePolicy(sp_retain);
 	ui->comboBoxSplitMode->setSizePolicy(sp_retain);
+	ui->comboBoxCamCool->setSizePolicy(sp_retain);
 
 	sp_retain = ui->plainTextEditFilePath->sizePolicy();
 	sp_retain.setRetainSizeWhenHidden(true);
@@ -117,6 +120,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toInt());
 	ui->checkBoxUseSoftwarePolling->setChecked(settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool());
 	ui->checkBoxShortrs->setChecked(settings.value(settingShortrsPath, settingShortrsDefault).toBool());
+	ui->checkBoxIsCooledCam->setChecked(settings.value(settingIsCooledCamPath, settingIsCooledCamDefault).toBool());
 	//FFT mode
 	ui->spinBoxLines->setValue(settings.value(settingLinesPath, settingLinesDefault).toInt());
 	ui->spinBoxVfreq->setValue(settings.value(settingVfreqPath, settingVfreqDefault).toInt());
@@ -205,6 +209,7 @@ void DialogSettings::on_accepted()
 	settings.setValue(settingIOCtrlImpactStartPixelPath, ui->spinBoxIOCtrlImpactStartPixel->value());
 	settings.setValue(settingsUseSoftwarePollingPath, ui->checkBoxUseSoftwarePolling->isChecked());
 	settings.setValue(settingShortrsPath, ui->checkBoxShortrs->isChecked());
+	settings.setValue(settingIsCooledCamPath, ui->checkBoxIsCooledCam->isChecked());
 	//Fft mode
 	settings.setValue(settingLinesPath, ui->spinBoxLines->value());
 	settings.setValue(settingVfreqPath, ui->spinBoxVfreq->value());
@@ -542,6 +547,7 @@ void DialogSettings::loadDefaults()
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settingIOCtrlImpactStartPixelDefault);
 	ui->checkBoxUseSoftwarePolling->setChecked(settingsUseSoftwarePollingDefault);
 	ui->checkBoxShortrs->setChecked(settingShortrsDefault);
+	ui->checkBoxIsCooledCam->setChecked(settingIsCooledCamDefault);
 	//fft mode
 	ui->spinBoxLines->setValue(settingLinesDefault);
 	ui->spinBoxVfreq->setValue(settingVfreqDefault);
@@ -629,6 +635,7 @@ void DialogSettings::on_comboBoxSettingsLevel_currentIndexChanged(int index)
 	on_checkBoxRegionsEqual_stateChanged(ui->checkBoxRegionsEqual->checkState());
 	on_comboBoxFftMode_currentIndexChanged(ui->comboBoxFftMode->currentIndex());
 	on_checkBoxWriteDataToDisc_stateChanged(ui->checkBoxWriteDataToDisc->checkState());
+	on_checkBoxIsCooledCam_stateChanged(ui->checkBoxIsCooledCam->checkState());
 }
 
 void DialogSettings::on_comboBoxFftMode_currentIndexChanged(int index)
@@ -838,5 +845,33 @@ void DialogSettings::on_checkBoxWriteDataToDisc_stateChanged(int arg1)
 	ui->pushButtonFilePath->setVisible(visible);
 	ui->labelSplitMode->setVisible(visible);
 	ui->labelFilePath->setVisible(visible);
+	return;
+}
+
+void DialogSettings::on_checkBoxIsCooledCam_stateChanged(int arg1)
+{
+	bool enabled = true,
+		visible = true;
+	switch (ui->comboBoxSettingsLevel->currentIndex())
+	{
+		//basic
+	case 0:
+		enabled = arg1;
+		visible = arg1;
+		break;
+		//advanced
+	case 1:
+		enabled = arg1;
+		visible = true;
+		break;
+		//expert
+	case 2:
+		enabled = true;
+		visible = true;
+		break;
+	}
+	ui->comboBoxCamCool->setEnabled(enabled);
+	ui->comboBoxCamCool->setVisible(visible);
+	ui->labelCamCool->setVisible(visible);
 	return;
 }
