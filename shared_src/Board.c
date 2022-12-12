@@ -3979,11 +3979,21 @@ es_status_codes dumpSettings(char** stringPtr)
 		"\nIOCtrl_T0_period_in_10ns\t%u\n"
 		"dma_buffer_size_in_scans\t%u\n"
 		"tocnt\t%u\n"
-		"ticnt\t%u\n",
+		"ticnt\t%u\n"
+		"use ec\t%u\n"
+		"write to disc\t%u\n"
+		"file path\t%s\n"
+		"file split mode\t%u\n"
+		"is cooled cam\t%u\n",
 		settings_struct.ioctrl_T0_period_in_10ns,
 		settings_struct.dma_buffer_size_in_scans,
 		settings_struct.tocnt,
-		settings_struct.ticnt);
+		settings_struct.ticnt,
+		settings_struct.use_ec,
+		settings_struct.write_to_disc,
+		settings_struct.file_path,
+		settings_struct.file_split_mode,
+		settings_struct.is_cooled_cam);
 	return es_no_error;
 }
 
