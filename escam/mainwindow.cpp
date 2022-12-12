@@ -173,6 +173,7 @@ void MainWindow::startPressed()
 	settings_struct.ioctrl_impact_start_pixel = settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toUInt();
 	settings_struct.use_software_polling = settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool();
 	settings_struct.shortrs = settings.value(settingShortrsPath, settingShortrsDefault).toBool();
+	settings_struct.is_cooled_cam = settings.value(settingIsCooledCamPath, settingIsCooledCamDefault).toBool();
 	//fftmodes tab
 	settings_struct.fft_lines = settings.value(settingLinesPath, settingLinesDefault).toUInt();
 	settings_struct.vfreq = settings.value(settingVfreqPath, settingVfreqDefault).toUInt();
