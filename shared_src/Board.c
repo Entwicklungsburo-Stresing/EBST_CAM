@@ -2525,8 +2525,8 @@ es_status_codes StartMeasurement()
 	uint64_t measurement_cnt = 0;
 	SYSTEMTIME t;
 	GetLocalTime(&t);
-	char start_timestamp[50];
-	sprintf_s(start_timestamp, 50, "%04d-%02d-%02d-%02d-%02d-%02d", t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
+	char start_timestamp[file_timestamp_size];
+	sprintf_s(start_timestamp, file_timestamp_size, "%04d-%02d-%02d-%02d-%02d-%02d", t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
 	do
 	{
 		// Reset the hardware block counter and scan counter.
@@ -4667,26 +4667,39 @@ void startWriteBlockToDiscThread(uint32_t drvno, uint32_t block, uint32_t measur
 
 void writeBlockToDisc(struct file_specs* f)
 {
-	char last_char = f->path[strlen(f->path)-1];
-	if (last_char != '/' && last_char != '\\')
-		f->path[strlen(f->path)] = '/';
-	char filename[100];
+	size_t path_length = strlen(f->path);
+	// Check if the path is terminated with /
+	char last_char = f->path[path_length-1];
+	if (last_char != '/' && last_char != "\\")
+	{
+		// Append / to the path
+		f->path[path_length] = '/';
+		// Terminate the string with 0
+		f->path[path_length + 1] = 0;
+	}
+	char filename_full[file_filename_full_size];
 	switch (f->split_mode)
 	{
 	default:
 	case no_split:
-		sprintf_s(filename, 100, "%s%s_board-%u.dat", f->path, f->timestamp, f->drvno);
+		sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u.dat", f->path, f->timestamp, f->drvno);
 		break;
 	case measurement_wise:
-		sprintf_s(filename, 100, "%s%s_board-%u_measurement-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt);
+		sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u_measurement-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt);
 		break;
 	case block_wise:
-		sprintf_s(filename, 100, "%s%s_board-%u_measurement-%u_block-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt, f->block_cnt);
+		sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u_measurement-%u_block-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt, f->block_cnt);
 		break;
 	}
+	// Check if the file exists
+	if (_access_s(filename_full, 0) != 0)
+	{
+		ES_LOG("File doesn't exist");
+		writeFileHeaderToFile(f, filename_full);
+	}
 	FILE* stream;
-	ES_LOG("Writing block %u to disc at %s\n", f->block_cnt, filename);
-	errno_t err = fopen_s(&stream, filename, "a");
+	ES_LOG("Writing block %u to disc at %s\n", f->block_cnt, filename_full);
+	errno_t err = fopen_s(&stream, filename_full, "a");
 	if (stream)
 	{
 		UINT16* pframe = NULL;
@@ -4707,5 +4720,43 @@ void verifyData(char* file_path)
 	wchar_t data_buffer[2000];
 	fgetws(data_buffer, 2000, stream);
 	fgetws(data_buffer, 2000, stream);
+	return;
+}
+
+void writeFileHeaderToFile(struct file_specs* f, char* filename_full)
+{
+	ES_LOG("Writing file header\n");
+	struct file_header fh;
+	fh.drvno = f->drvno;
+	fh.pixel = aPIXEL[f->drvno];
+	fh.nos = *Nospb;
+	fh.nob = *Nob;
+	fh.camcnt = aCAMCNT[f->drvno];
+	fh.measurement_cnt = f->measurement_cnt;
+	fh.block_cnt = f->block_cnt;
+	strcpy(fh.timestamp, f->timestamp);
+	strcpy(fh.filename_full, filename_full);
+	fh.split_mode = f->split_mode;
+	FILE* stream;
+	errno_t err = fopen_s(&stream, filename_full, "w");
+	if (stream)
+	{
+		fwrite(&fh, 1, file_header_size, stream);
+		fclose(stream);
+	}
+	return;
+}
+
+void getFileHeaderFromFile(struct file_header* fh, char* filename_full)
+{
+	FILE* stream;
+	errno_t err = fopen_s(&stream, filename_full, "r");
+	char file_header_buffer[file_header_size];
+	if (stream)
+	{
+		fgets(file_header_buffer, file_header_size, stream);
+		fclose(stream);
+	}
+	memcpy(fh, file_header_buffer, sizeof(struct file_header));
 	return;
 }

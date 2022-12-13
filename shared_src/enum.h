@@ -548,3 +548,11 @@ enum split_mode
 	measurement_wise = 1,
 	block_wise = 2
 };
+
+enum file_specifications
+{
+	file_header_size = 200,
+	file_path_size = 50,
+	file_timestamp_size = 50,
+	file_filename_full_size = 100
+};

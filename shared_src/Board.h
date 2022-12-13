@@ -141,6 +141,8 @@ es_status_codes SetSensorResetEarly(uint32_t drvno, bool enable_early);
 void startWriteBlockToDiscThread(uint32_t drvno, uint32_t block, uint32_t measurement_cnt, char* path, uint32_t split_mode, char* timestamp);
 void writeBlockToDisc(struct file_specs* f);
 void verifyData(char* file_path);
+void writeFileHeaderToFile(struct file_specs* f, char* filename_full);
+void getFileHeaderFromFile(struct file_header* fh, char* filename_full);
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);
