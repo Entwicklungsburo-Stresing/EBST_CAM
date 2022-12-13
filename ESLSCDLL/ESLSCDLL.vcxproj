@@ -114,7 +114,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>shared_src/ESLSCDLL_pro.lib;Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);windowscodecs.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)\shared_src\ESLSCDLL_pro.lib;Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);windowscodecs.lib</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
       <ManifestFile>$(OutDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
     </Link>
@@ -199,7 +199,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);windowscodecs.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)\shared_src\ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);windowscodecs.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <ManifestFile>$(OutDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
@@ -244,7 +244,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>LabVIEW 2015/cintools/labview.lib;ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);windowscodecs.lib</AdditionalDependencies>
+      <AdditionalDependencies>LabVIEW 2015/cintools/labview.lib;$(SolutionDir)shared_src\ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);windowscodecs.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <ManifestFile>$(OutDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
