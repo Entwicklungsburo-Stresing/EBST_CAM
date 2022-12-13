@@ -41,9 +41,23 @@ struct file_specs
 	uint32_t drvno;
 	uint32_t measurement_cnt;
 	uint32_t block_cnt;
-	char path[50];
+	char path[file_path_size];
 	uint32_t split_mode;
-	char timestamp[50];
+	char timestamp[file_timestamp_size];
+};
+
+struct file_header
+{
+	uint32_t drvno;
+	uint32_t pixel;
+	uint32_t nos;
+	uint32_t nob;
+	uint32_t camcnt;
+	uint32_t measurement_cnt;
+	uint32_t block_cnt;
+	char timestamp[file_timestamp_size];
+	char filename_full[file_filename_full_size];
+	uint32_t split_mode;
 };
 
 extern uint32_t* aPIXEL;
