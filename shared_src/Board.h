@@ -138,9 +138,9 @@ es_status_codes SetMshut( uint32_t drvno, bool mshut );
 es_status_codes SetSensorResetEnable(uint32_t drvno, bool enable);
 es_status_codes SetSensorResetShort(uint32_t drvno, bool enable_short);
 es_status_codes SetSensorResetEarly(uint32_t drvno, bool enable_early);
-void startWriteBlockToDiscThread(uint32_t drvno, uint32_t block, uint32_t measurement_cnt, char* path, uint32_t split_mode, char* timestamp);
+void startWriteBlockToDiscThread(uint32_t drvno, uint32_t block, uint64_t measurement_cnt, char* path, uint32_t split_mode, char* timestamp);
 void writeBlockToDisc(struct file_specs* f);
-void verifyData(char* file_path);
+void verifyData(char* filename_full);
 void writeFileHeaderToFile(struct file_specs* f, char* filename_full);
 void getFileHeaderFromFile(struct file_header* fh, char* filename_full);
 
