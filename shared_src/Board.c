@@ -4720,10 +4720,17 @@ void verifyData(char* filename_full)
 	fopen_s(&stream, filename_full, "rb");
 	if (stream)
 	{
-		uint16_t data_buffer[2000];
+		uint16_t data_buffer[4000];
 		struct file_header fh;
 		fread_s(&fh, sizeof(struct file_header), 1, sizeof(struct file_header), stream);
-		fread_s(data_buffer, sizeof(data_buffer), 1, sizeof(data_buffer), stream);
+		uint32_t sample_cnt = 1;
+		uint32_t error_cnt = 0;
+		while (!feof(stream))
+		{
+			fread_s(data_buffer, sizeof(data_buffer), 1, fh.pixel * sizeof(uint16_t), stream);
+			if (data_buffer[file_counter_pixel_pos] != sample_cnt) error_cnt++;
+			sample_cnt++;
+		}
 		fclose(stream);
 	}
 	return;
