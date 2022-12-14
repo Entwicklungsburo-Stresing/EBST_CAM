@@ -553,5 +553,6 @@ enum file_specifications
 {
 	file_path_size = 256,
 	file_timestamp_size = 64,
-	file_filename_full_size = 256
+	file_filename_full_size = 256,
+	file_counter_pixel_pos = 5
 };
