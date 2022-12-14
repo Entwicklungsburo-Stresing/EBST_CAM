@@ -39,7 +39,7 @@ struct global_vars
 struct file_specs
 {
 	uint32_t drvno;
-	uint32_t measurement_cnt;
+	uint64_t measurement_cnt;
 	uint32_t block_cnt;
 	char path[file_path_size];
 	uint32_t split_mode;
@@ -53,7 +53,7 @@ struct file_header
 	uint32_t nos;
 	uint32_t nob;
 	uint32_t camcnt;
-	uint32_t measurement_cnt;
+	uint64_t measurement_cnt;
 	uint32_t block_cnt;
 	char timestamp[file_timestamp_size];
 	char filename_full[file_filename_full_size];

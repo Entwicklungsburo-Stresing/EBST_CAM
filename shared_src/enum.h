@@ -551,8 +551,7 @@ enum split_mode
 
 enum file_specifications
 {
-	file_header_size = 200,
-	file_path_size = 50,
-	file_timestamp_size = 50,
-	file_filename_full_size = 100
+	file_path_size = 256,
+	file_timestamp_size = 64,
+	file_filename_full_size = 256
 };
