@@ -4651,7 +4651,7 @@ es_status_codes GetIsDsc(uint32_t drvno, bool* isDsc)
 	return status;
 }
 
-void startWriteBlockToDiscThread(uint32_t drvno, uint32_t block, uint32_t measurement_cnt, char* path, uint32_t split_mode, char* timestamp)
+void startWriteBlockToDiscThread(uint32_t drvno, uint32_t block, uint64_t measurement_cnt, char* path, uint32_t split_mode, char* timestamp)
 {
 	ES_LOG("Start write block to disc thread.\n");
 	struct file_specs* f = malloc(sizeof(struct file_specs));
@@ -4678,6 +4678,7 @@ void writeBlockToDisc(struct file_specs* f)
 		f->path[path_length + 1] = 0;
 	}
 	char filename_full[file_filename_full_size];
+	memset(filename_full, 0, file_filename_full_size);
 	switch (f->split_mode)
 	{
 	default:
@@ -4685,10 +4686,10 @@ void writeBlockToDisc(struct file_specs* f)
 		sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u.dat", f->path, f->timestamp, f->drvno);
 		break;
 	case measurement_wise:
-		sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u_measurement-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt);
+		sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u_measurement-%llu.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt);
 		break;
 	case block_wise:
-		sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u_measurement-%u_block-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt, f->block_cnt);
+		sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u_measurement-%llu_block-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt, f->block_cnt);
 		break;
 	}
 	// Check if the file exists
@@ -4699,27 +4700,32 @@ void writeBlockToDisc(struct file_specs* f)
 	}
 	FILE* stream;
 	ES_LOG("Writing block %u to disc at %s\n", f->block_cnt, filename_full);
-	errno_t err = fopen_s(&stream, filename_full, "a");
+	fopen_s(&stream, filename_full, "ab");
 	if (stream)
 	{
 		UINT16* pframe = NULL;
-		es_status_codes status = GetAddressOfPixel(f->drvno, 0, 0, f->block_cnt, 0, &pframe);
-		if (status != es_no_error) return status;
+		GetAddressOfPixel(f->drvno, 0, 0, f->block_cnt, 0, &pframe);
 		fwrite(pframe, 2, *Nospb * aCAMCNT[f->drvno] * aPIXEL[f->drvno], stream);
 		fclose(stream);
 	}
 	ES_LOG("Writing block %u to disc done\n", f->block_cnt);
+	verifyData(filename_full);
 	free(f);
 	return;
 }
 
-void verifyData(char* file_path)
+void verifyData(char* filename_full)
 {
 	FILE* stream;
-	errno_t err = fopen_s(&stream, file_path, "rb");
-	wchar_t data_buffer[2000];
-	fgetws(data_buffer, 2000, stream);
-	fgetws(data_buffer, 2000, stream);
+	fopen_s(&stream, filename_full, "rb");
+	if (stream)
+	{
+		uint16_t data_buffer[2000];
+		struct file_header fh;
+		fread_s(&fh, sizeof(struct file_header), 1, sizeof(struct file_header), stream);
+		fread_s(data_buffer, sizeof(data_buffer), 1, sizeof(data_buffer), stream);
+		fclose(stream);
+	}
 	return;
 }
 
@@ -4734,14 +4740,16 @@ void writeFileHeaderToFile(struct file_specs* f, char* filename_full)
 	fh.camcnt = aCAMCNT[f->drvno];
 	fh.measurement_cnt = f->measurement_cnt;
 	fh.block_cnt = f->block_cnt;
+	memset(fh.timestamp, 0, file_timestamp_size);
 	strcpy(fh.timestamp, f->timestamp);
+	memset(fh.filename_full, 0, file_filename_full_size);
 	strcpy(fh.filename_full, filename_full);
 	fh.split_mode = f->split_mode;
 	FILE* stream;
-	errno_t err = fopen_s(&stream, filename_full, "w");
+	fopen_s(&stream, filename_full, "wb");
 	if (stream)
 	{
-		fwrite(&fh, 1, file_header_size, stream);
+		fwrite(&fh, 1, sizeof(struct file_header), stream);
 		fclose(stream);
 	}
 	return;
@@ -4750,13 +4758,11 @@ void writeFileHeaderToFile(struct file_specs* f, char* filename_full)
 void getFileHeaderFromFile(struct file_header* fh, char* filename_full)
 {
 	FILE* stream;
-	errno_t err = fopen_s(&stream, filename_full, "r");
-	char file_header_buffer[file_header_size];
+	fopen_s(&stream, filename_full, "rb");
 	if (stream)
 	{
-		fgets(file_header_buffer, file_header_size, stream);
+		fread_s(fh, sizeof(struct file_header), 1, sizeof(struct file_header), stream);
 		fclose(stream);
 	}
-	memcpy(fh, file_header_buffer, sizeof(struct file_header));
 	return;
 }
