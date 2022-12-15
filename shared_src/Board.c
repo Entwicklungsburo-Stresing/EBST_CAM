@@ -4651,9 +4651,20 @@ es_status_codes GetIsDsc(uint32_t drvno, bool* isDsc)
 	return status;
 }
 
+/**
+ * \brief Starts the function writeBlockToDisc and constructs the struct file_sepecs for the new thread.
+ * 
+ * \param drvno PCIe board identifier.
+ * \param block Determines which block is written to disc.
+ * \param measurement_cnt Counter for the measurements in continuous mode.
+ * \param path Path to the folder where the data is written to.
+ * \param split_mode Split mode selects whether the data is written to one or multiple files. See enum split_mode in enum.h for details.
+ * \param timestamp Time stamp when the current measurement was started.
+ */
 void startWriteBlockToDiscThread(uint32_t drvno, uint32_t block, uint64_t measurement_cnt, char* path, uint32_t split_mode, char* timestamp)
 {
 	ES_LOG("Start write block to disc thread.\n");
+	// Assemble the struct file_specs for the new struct.
 	struct file_specs* f = malloc(sizeof(struct file_specs));
 	f->drvno = drvno;
 	f->measurement_cnt = measurement_cnt;
@@ -4661,10 +4672,16 @@ void startWriteBlockToDiscThread(uint32_t drvno, uint32_t block, uint64_t measur
 	strcpy(f->path, path);
 	f->split_mode = split_mode;
 	strcpy(f->timestamp, timestamp);
+	// Start the new thread.
 	_beginthread(&writeBlockToDisc, 0, f);
 	return;
 }
 
+/**
+ * \brief Write the data specified in struct file_specs to the file specified in struct file_specs.
+ * 
+ * \param f struct file_specs
+ */
 void writeBlockToDisc(struct file_specs* f)
 {
 	size_t path_length = strlen(f->path);
@@ -4679,6 +4696,7 @@ void writeBlockToDisc(struct file_specs* f)
 	}
 	char filename_full[file_filename_full_size];
 	memset(filename_full, 0, file_filename_full_size);
+	// Create filenames depending on split mode. See enum split_mode in enum.h for details.
 	switch (f->split_mode)
 	{
 	default:
@@ -4696,10 +4714,12 @@ void writeBlockToDisc(struct file_specs* f)
 	if (_access_s(filename_full, 0) != 0)
 	{
 		ES_LOG("File doesn't exist");
+		// Create file and write the file header to it.
 		writeFileHeaderToFile(f, filename_full);
 	}
 	FILE* stream;
 	ES_LOG("Writing block %u to disc at %s\n", f->block_cnt, filename_full);
+	// Open the file in binary mode and append the data to the file.
 	fopen_s(&stream, filename_full, "ab");
 	if (stream)
 	{
@@ -4736,9 +4756,16 @@ void verifyData(char* filename_full)
 	return;
 }
 
+/**
+ * \brief Creates a file at filename_full and writes struct file_header to it.
+ * 
+ * \param f struct file_specs
+ * \param filename_full Path and file name to the file where the header is written.
+ */
 void writeFileHeaderToFile(struct file_specs* f, char* filename_full)
 {
 	ES_LOG("Writing file header\n");
+	// Assemble the file_header
 	struct file_header fh;
 	fh.drvno = f->drvno;
 	fh.pixel = aPIXEL[f->drvno];
@@ -4753,18 +4780,27 @@ void writeFileHeaderToFile(struct file_specs* f, char* filename_full)
 	strcpy(fh.filename_full, filename_full);
 	fh.split_mode = f->split_mode;
 	FILE* stream;
+	// Create a new file and open it in binary mode
 	fopen_s(&stream, filename_full, "wb");
 	if (stream)
 	{
+		// Write struct file_header to the file.
 		fwrite(&fh, 1, sizeof(struct file_header), stream);
 		fclose(stream);
 	}
 	return;
 }
 
+/**
+ * \brief Open the file at filename_full and write the header to fh.
+ * 
+ * \param fh struct file_header*
+ * \param filename_full Path and file name to the file.
+ */
 void getFileHeaderFromFile(struct file_header* fh, char* filename_full)
 {
 	FILE* stream;
+	// Open file in read binary mode
 	fopen_s(&stream, filename_full, "rb");
 	if (stream)
 	{
