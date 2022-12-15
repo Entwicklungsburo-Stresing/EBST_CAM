@@ -4687,7 +4687,7 @@ void writeBlockToDisc(struct file_specs* f)
 	size_t path_length = strlen(f->path);
 	// Check if the path is terminated with /
 	char last_char = f->path[path_length-1];
-	if (last_char != '/' && last_char != "\\")
+	if (last_char != '/' && last_char != '\\')
 	{
 		// Append / to the path
 		f->path[path_length] = '/';
@@ -4729,27 +4729,59 @@ void writeBlockToDisc(struct file_specs* f)
 		fclose(stream);
 	}
 	ES_LOG("Writing block %u to disc done\n", f->block_cnt);
-	verifyData(filename_full);
 	free(f);
 	return;
 }
 
-void verifyData(char* filename_full)
+/**
+ * \brief Check a file for its data consistency.
+ * 
+ * \param[in] filename_full Path and filename to the file.
+ * \param[out] sample_cnt Count of samples found in the file.
+ * \param[out] block_cnt Count of blocks found in the file.
+ * \param[out] measurement_cnt Count of measurements found in the file.
+ * \param[out] fh File header of the file.
+ * \param[out] error_cnt Counted errors, while checking the sample and block counter bits in the data. When error_cnt is 0, the data is perfectly as expected.
+ */
+void VerifyData(char* filename_full, uint32_t* sample_cnt, uint32_t* block_cnt, uint64_t* measurement_cnt, struct file_header* fh, uint32_t* error_cnt)
 {
 	FILE* stream;
+	// Read file in binary mode
 	fopen_s(&stream, filename_full, "rb");
 	if (stream)
 	{
 		uint16_t data_buffer[4000];
-		struct file_header fh;
-		fread_s(&fh, sizeof(struct file_header), 1, sizeof(struct file_header), stream);
-		uint32_t sample_cnt = 1;
-		uint32_t error_cnt = 0;
-		while (!feof(stream))
+		// Read file header and write it to fh
+		fread_s(fh, sizeof(struct file_header), 1, sizeof(struct file_header), stream);
+		// Set all counter to initial values
+		*sample_cnt = 1;
+		*block_cnt = 1;
+		*measurement_cnt = 0;
+		*error_cnt = 0;
+		// while is ended by break
+		while (true)
 		{
-			fread_s(data_buffer, sizeof(data_buffer), 1, fh.pixel * sizeof(uint16_t), stream);
-			if (data_buffer[file_counter_pixel_pos] != sample_cnt) error_cnt++;
-			sample_cnt++;
+			// Read data from file frame wise
+			fread_s(data_buffer, sizeof(data_buffer), 1, fh->pixel * sizeof(uint16_t), stream);
+			// When the end of the file is reached, break the while loop.
+			if (feof(stream)) break;
+			// Assemble the 32 bit counters from upper and lower 16 bit counter half
+			uint32_t current_sample_cnt = ((uint32_t)data_buffer[file_scan_counter_pixel_pos_msb]) << 16 | ((uint32_t)data_buffer[file_scan_counter_pixel_pos_lsb]);
+			uint32_t current_block_cnt = ((uint32_t)data_buffer[file_block_counter_pixel_pos_msb]) << 16 | ((uint32_t)data_buffer[file_block_counter_pixel_pos_lsb]);
+			// Check if the theoretical counter value is identical with the actual counter value from the file
+			if (current_sample_cnt != *sample_cnt || current_block_cnt != *block_cnt) *error_cnt++;
+			// Increment counters for the next loop
+			*sample_cnt++;
+			if (*sample_cnt > fh->nos)
+			{
+				*sample_cnt = 1;
+				*block_cnt++;
+			}
+			if (*block_cnt > fh->nob)
+			{
+				*block_cnt = 1;
+				*measurement_cnt++;
+			}
 		}
 		fclose(stream);
 	}

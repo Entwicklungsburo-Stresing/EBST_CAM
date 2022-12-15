@@ -70,6 +70,7 @@ private slots:
 	void on_actionGamma_triggered();
 	void showCurrentScan();
 	void adjustLiveView();
+	void on_actionVerify_data_file_triggered();
 };
 
 #endif // MAINWINDOW_H

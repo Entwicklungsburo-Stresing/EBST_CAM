@@ -255,3 +255,9 @@ bool Lsc::isDsc(uint32_t drvno)
 	GetIsDsc(drvno, &isDsc);
 	return isDsc;
 }
+
+void Lsc::verifyData(char* filename_full, uint32_t* sample_cnt, uint32_t* block_cnt, uint64_t* measurement_cnt, struct file_header* fh, uint32_t* error_cnt)
+{
+	VerifyData(filename_full, sample_cnt, block_cnt, measurement_cnt, fh, error_cnt);
+	return;
+}
