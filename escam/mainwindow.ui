@@ -411,6 +411,7 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionVerify_data_file"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
@@ -582,6 +583,11 @@
   <action name="actionImport">
    <property name="text">
     <string>Import</string>
+   </property>
+  </action>
+  <action name="actionVerify_data_file">
+   <property name="text">
+    <string>Verify data file</string>
    </property>
   </action>
  </widget>
