@@ -254,7 +254,6 @@ enum DMAsPerIntr_bits
 	DMAsPerIntr_bit_counter_reset = 0x80
 };
 
-//Cam Addresses könnten später bei unterschiedlichen cam systemen vaariieren
 enum cam_addresses
 {
 	maddr_cam = 0x00,
@@ -283,7 +282,7 @@ enum cam_addresses
 	 * 3030: IFC mode controls, whether the IFC signal from the PCIe card is used or the camera uses its own IFC signal.
 	 * - 0: use PCIe card IFC
 	 * - 1: do a short (240ns) IFC between TG and horizontal clocks
-	 * - 2: do a long (800ns) IFC between TG and horiontal clocks
+	 * - 2: do a long (800ns) IFC between TG and horizontal clocks
 	 */
 	cam_adaddr_ifc_mode = 0x08,
 
@@ -314,7 +313,7 @@ enum cam_addresses
 	 * - D4...D6: filter_rate: set decimation factor
 	 * - D7...D9: filter_coeff_set: select stored coefficient set
 	 * - D10...D13 hpf_corner: HPF corner values k from 2 to 10
-	 * - D14 hpd_en: 1: hpf enable, 0: disable
+	 * - D14 hpf_en: 1: hpf enable, 0: disable
 	 */
 	adc_ads5294_regaddr_filter1 = 0x2E,
 	adc_ads5294_regaddr_filter2 = 0x2F,
@@ -542,10 +541,22 @@ enum fft_mode
 	area_mode = 2
 };
 
+/**
+ * This enum is specifying the options of how the data is written to disc.
+ */
 enum split_mode
 {
+	/**
+	 * A new file is created at the begin of the measurement and all following data is written to it.
+	 */
 	no_split = 0,
+	/**
+	 * When in continuous mode a new file is created for every new measurement cycle (when all samples and blocks are done). When not in continuous this option is the same as no_split.
+	 */
 	measurement_wise = 1,
+	/**
+	 * For every new block a new file is created.
+	 */
 	block_wise = 2
 };
 
