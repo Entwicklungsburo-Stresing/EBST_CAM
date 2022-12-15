@@ -41,7 +41,7 @@ public:
 	bool IsRunning();
 	bool isTdc(uint32_t drvno);
 	bool isDsc(uint32_t drvno);
-	void verifyData(char* filename_full, uint32_t* sample_cnt, uint32_t* block_cnt, uint64_t* measurement_cnt, struct file_header* fh, uint32_t* error_cnt);
+	std::string Lsc::getVerifiedDataDialog(struct verify_data_parameter* vd);
 public slots:
     es_status_codes startMeasurement();
 signals:
