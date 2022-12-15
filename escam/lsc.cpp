@@ -256,8 +256,11 @@ bool Lsc::isDsc(uint32_t drvno)
 	return isDsc;
 }
 
-void Lsc::verifyData(char* filename_full, uint32_t* sample_cnt, uint32_t* block_cnt, uint64_t* measurement_cnt, struct file_header* fh, uint32_t* error_cnt)
+std::string Lsc::getVerifiedDataDialog(struct verify_data_parameter* vd)
 {
-	VerifyData(filename_full, sample_cnt, block_cnt, measurement_cnt, fh, error_cnt);
-	return;
+	char* cstring;
+	GetVerifiedDataDialog(vd, &cstring);
+	std::string cppstring = cstring;
+	parseTextToHtml(&cppstring);
+	return cppstring;
 }

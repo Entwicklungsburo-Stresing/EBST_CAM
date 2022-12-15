@@ -308,13 +308,25 @@ void MainWindow::on_actionEdit_triggered()
  */
 void MainWindow::on_actionVerify_data_file_triggered()
 {
-	char path[128] = "C:/Users/Gerhard/Documents/test/2022-12-15-12-49-20_board-1.dat";
-	uint32_t sample_cnt = 0;
-	uint32_t block_cnt = 0;
-	uint64_t measurement_cnt = 0;
-	uint32_t error_cnt = 0;
-	struct file_header fh;
-	lsc.verifyData(path, &sample_cnt, &block_cnt, &measurement_cnt, &fh, &error_cnt);
+	QString fileName = QFileDialog::getOpenFileName(this, "Verify data", nullptr, tr("data files (*.dat);;all files (*)"));
+	struct verify_data_parameter vd;
+	strcpy(vd.filename_full, fileName.toStdString().c_str());
+	QDialog* messageBox = new QDialog(this);
+	messageBox->setAttribute(Qt::WA_DeleteOnClose);
+	messageBox->setSizeGripEnabled(true);
+	QVBoxLayout* layout = new QVBoxLayout(messageBox);
+	messageBox->setLayout(layout);
+	QLabel* labelDrv = new QLabel(messageBox);
+	labelDrv->setTextInteractionFlags(Qt::TextSelectableByMouse);
+	labelDrv->setTextFormat(Qt::RichText);
+	labelDrv->setText(QString::fromStdString(lsc.getVerifiedDataDialog(&vd)));
+	labelDrv->setAlignment(Qt::AlignTop);
+	QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, messageBox);
+	connect(dialogButtonBox, &QDialogButtonBox::accepted, messageBox, &QDialog::accept);
+	layout->addWidget(labelDrv);
+	layout->addWidget(dialogButtonBox);
+	messageBox->setWindowTitle("Verify data");
+	messageBox->show();
 	return;
 }
 
