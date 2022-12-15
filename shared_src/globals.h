@@ -81,6 +81,45 @@ struct file_header
 	uint32_t split_mode;
 };
 
+struct verify_data_parameter
+{
+	/**
+	 * Path and filename to the file.
+	 */
+	char filename_full[file_filename_full_size];
+	/**
+	 * Count of samples found in the file.
+	 */
+	uint32_t sample_cnt;
+	/**
+	 * Count of blocks found in the file.
+	 */
+	uint32_t block_cnt;
+	/**
+	 * Count of measurements found in the file.
+	 */
+	uint64_t measurement_cnt;
+	/**
+	 * File header of the file.
+	 */
+	struct file_header fh;
+	/**
+	 * Counted errors, while checking the sample and block counter bits in the data. When error_cnt is 0, the data is perfectly as expected.
+	 */
+	uint32_t error_cnt;
+	/**
+	 * Counter of last read sample in file
+	 */
+	uint32_t last_sample;
+	/**
+	 * Counter of last read block in file
+	 */
+	uint32_t last_block;
+	uint32_t last_sample_before_error;
+	uint32_t last_block_before_error;
+	uint32_t last_measurement_before_error;
+};
+
 extern uint32_t* aPIXEL;
 extern uint32_t* aCAMCNT;
 extern bool* useSWTrig;

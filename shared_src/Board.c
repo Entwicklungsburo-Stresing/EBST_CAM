@@ -4733,54 +4733,104 @@ void writeBlockToDisc(struct file_specs* f)
 	return;
 }
 
+void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString)
+{
+	VerifyData(vd);
+	enum N
+	{
+		bufferLength = 1024
+	};
+	*resultString = (char*)calloc(bufferLength, sizeof(char));
+	uint32_t len = 0;
+	len = sprintf_s(*resultString + len, bufferLength - (size_t)len, "Checked consistency of file\t%s\n\n", vd->filename_full);
+	if(vd->error_cnt) len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "Data inconsistent, check counters below\n\n");
+	else len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "Data found as expected\n\n");
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "Data found in file header:\n");
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "drvno:\t%u\n",vd->fh.drvno);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "pixel:\t%u\n",vd->fh.pixel);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "nos:\t%u\n",vd->fh.nos);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "nob:\t%u\n",vd->fh.nob);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "camcnt:\t%u\n",vd->fh.camcnt);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "measurement cnt:\t%llu\n",vd->fh.measurement_cnt);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "block cnt:\t%u\n",vd->fh.block_cnt);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "timestamp:\t%s\n",vd->fh.timestamp);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "filename_full:\t%s\n",vd->fh.filename_full);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "split mode:\t%u\n\n",vd->fh.split_mode);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "Data found:\n");
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "samples found:\t%u\n",vd->sample_cnt);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "blocks found:\t%u\n",vd->block_cnt);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "measurements found:\t%llu\n",vd->measurement_cnt);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "error counter:\t%u\n",vd->error_cnt);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last sample in data:\t%u\n",vd->last_sample);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last block in data:\t%u\n",vd->last_block);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last sample before error:\t%u\n",vd->last_sample_before_error);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last block before error:\t%u\n",vd->last_block_before_error);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last measurement before error:\t%u\n",vd->last_measurement_before_error);
+	return;
+}
+
 /**
  * \brief Check a file for its data consistency.
  * 
- * \param[in] filename_full Path and filename to the file.
- * \param[out] sample_cnt Count of samples found in the file.
- * \param[out] block_cnt Count of blocks found in the file.
- * \param[out] measurement_cnt Count of measurements found in the file.
- * \param[out] fh File header of the file.
- * \param[out] error_cnt Counted errors, while checking the sample and block counter bits in the data. When error_cnt is 0, the data is perfectly as expected.
+ * \param vd see struct verify_data_parameter in globals.h for details
  */
-void VerifyData(char* filename_full, uint32_t* sample_cnt, uint32_t* block_cnt, uint64_t* measurement_cnt, struct file_header* fh, uint32_t* error_cnt)
+void VerifyData(struct verify_data_parameter* vd)
 {
 	FILE* stream;
 	// Read file in binary mode
-	fopen_s(&stream, filename_full, "rb");
+	fopen_s(&stream, vd->filename_full, "rb");
 	if (stream)
 	{
 		uint16_t data_buffer[4000];
 		// Read file header and write it to fh
-		fread_s(fh, sizeof(struct file_header), 1, sizeof(struct file_header), stream);
+		fread_s(&vd->fh, sizeof(struct file_header), 1, sizeof(struct file_header), stream);
 		// Set all counter to initial values
-		*sample_cnt = 1;
-		*block_cnt = 1;
-		*measurement_cnt = 0;
-		*error_cnt = 0;
+		uint32_t cur_sample_cnt = 1;
+		uint32_t cur_block_cnt = 1;
+		vd->sample_cnt = 1;
+		vd->block_cnt = 1;
+		vd->measurement_cnt = 0;
+		vd->error_cnt = 0;
+		vd->last_sample_before_error = 1;
+		vd->last_block_before_error = 1;
+		vd->last_measurement_before_error = 0;
 		// while is ended by break
 		while (true)
 		{
 			// Read data from file frame wise
-			fread_s(data_buffer, sizeof(data_buffer), 1, fh->pixel * sizeof(uint16_t), stream);
+			fread_s(data_buffer, sizeof(data_buffer), 1, vd->fh.pixel * sizeof(uint16_t), stream);
 			// When the end of the file is reached, break the while loop.
 			if (feof(stream)) break;
 			// Assemble the 32 bit counters from upper and lower 16 bit counter half
-			uint32_t current_sample_cnt = ((uint32_t)data_buffer[file_scan_counter_pixel_pos_msb]) << 16 | ((uint32_t)data_buffer[file_scan_counter_pixel_pos_lsb]);
-			uint32_t current_block_cnt = ((uint32_t)data_buffer[file_block_counter_pixel_pos_msb]) << 16 | ((uint32_t)data_buffer[file_block_counter_pixel_pos_lsb]);
+			vd->last_sample = ((uint32_t)data_buffer[file_scan_counter_pixel_pos_msb]) << 16 | ((uint32_t)data_buffer[file_scan_counter_pixel_pos_lsb]);
+			vd->last_block = ((uint32_t)data_buffer[file_block_counter_pixel_pos_msb]) << 16 | ((uint32_t)data_buffer[file_block_counter_pixel_pos_lsb]);
 			// Check if the theoretical counter value is identical with the actual counter value from the file
-			if (current_sample_cnt != *sample_cnt || current_block_cnt != *block_cnt) *error_cnt++;
-			// Increment counters for the next loop
-			*sample_cnt++;
-			if (*sample_cnt > fh->nos)
+			if (vd->last_sample != cur_sample_cnt || vd->last_block != cur_block_cnt)
 			{
-				*sample_cnt = 1;
-				*block_cnt++;
+				// Save the counter of the last valid sample, block and measurement on the first error
+				if (vd->error_cnt == 0)
+				{
+					vd->last_sample_before_error = vd->last_sample - 1;
+					vd->last_block_before_error = vd->last_block - 1;
+					vd->last_measurement_before_error = vd->measurement_cnt;
+				}
+				vd->error_cnt++;
 			}
-			if (*block_cnt > fh->nob)
+			// Set sample_cnt to the maximum found cur_sample_cnt
+			if (cur_sample_cnt > vd->sample_cnt) vd->sample_cnt = cur_sample_cnt;
+			// Set block_cnt to the maximum found cur_block_cnt
+			if (cur_block_cnt > vd->block_cnt) vd->block_cnt= cur_block_cnt;
+			// Increment counters for the next loop
+			cur_sample_cnt++;
+			if (cur_sample_cnt > vd->fh.nos)
 			{
-				*block_cnt = 1;
-				*measurement_cnt++;
+				cur_sample_cnt = 1;
+				cur_block_cnt++;
+			}
+			if (cur_block_cnt > vd->fh.nob)
+			{
+				cur_block_cnt = 1;
+				vd->measurement_cnt++;
 			}
 		}
 		fclose(stream);

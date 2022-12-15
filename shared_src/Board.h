@@ -140,7 +140,8 @@ es_status_codes SetSensorResetShort(uint32_t drvno, bool enable_short);
 es_status_codes SetSensorResetEarly(uint32_t drvno, bool enable_early);
 void startWriteBlockToDiscThread(uint32_t drvno, uint32_t block, uint64_t measurement_cnt, char* path, uint32_t split_mode, char* timestamp);
 void writeBlockToDisc(struct file_specs* f);
-void VerifyData(char* filename_full, uint32_t* sample_cnt, uint32_t* block_cnt, uint64_t* measurement_cnt, struct file_header* fh, uint32_t* error_cnt);
+void VerifyData(struct verify_data_parameter* vd);
+void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString);
 void writeFileHeaderToFile(struct file_specs* f, char* filename_full);
 void getFileHeaderFromFile(struct file_header* fh, char* filename_full);
 
