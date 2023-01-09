@@ -4713,7 +4713,7 @@ void writeBlockToDisc(struct file_specs* f)
 	// Check if the file exists
 	if (_access_s(filename_full, 0) != 0)
 	{
-		ES_LOG("File doesn't exist");
+		ES_LOG("File doesn't exist\n");
 		// Create file and write the file header to it.
 		writeFileHeaderToFile(f, filename_full);
 	}
