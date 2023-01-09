@@ -309,6 +309,7 @@ void MainWindow::on_actionEdit_triggered()
 void MainWindow::on_actionVerify_data_file_triggered()
 {
 	QString fileName = QFileDialog::getOpenFileName(this, "Verify data", nullptr, tr("data files (*.dat);;all files (*)"));
+	if (fileName.isEmpty()) return;
 	struct verify_data_parameter vd;
 	strcpy(vd.filename_full, fileName.toStdString().c_str());
 	QDialog* messageBox = new QDialog(this);
