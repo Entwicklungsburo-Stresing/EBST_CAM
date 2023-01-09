@@ -4,7 +4,7 @@
 
 Lsc::Lsc()
 {
-    driverInstructions = "Check if driver is loaded correctly.";
+	driverInstructions = "Check if driver is loaded correctly.";
 }
 Lsc::~Lsc()
 {
@@ -15,7 +15,7 @@ Lsc::~Lsc()
  */
 es_status_codes Lsc::initDriver()
 {
-    return InitDriver();
+	return InitDriver();
 }
 
 /**
@@ -23,7 +23,7 @@ es_status_codes Lsc::initDriver()
  */
 es_status_codes Lsc::initPcieBoard()
 {
-    return InitBoard();
+	return InitBoard();
 }
 
 /**
@@ -31,7 +31,7 @@ es_status_codes Lsc::initPcieBoard()
  */
 es_status_codes Lsc::initMeasurement()
 {
-    return InitMeasurement();
+	return InitMeasurement();
 }
 
 /**
@@ -39,7 +39,7 @@ es_status_codes Lsc::initMeasurement()
  */
 es_status_codes Lsc::startMeasurement()
 {
-    return StartMeasurement();
+	return StartMeasurement();
 }
 
 /**
@@ -47,59 +47,59 @@ es_status_codes Lsc::startMeasurement()
  */
 es_status_codes Lsc::returnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length)
 {
-    return ReturnFrame(drvno, sample, block, camera, pdest, length);
+	return ReturnFrame(drvno, sample, block, camera, pdest, length);
 }
 
 std::string Lsc::_dumpS0Registers(uint32_t drvno)
 {
-    char* cstring;
-    es_status_codes status = dumpS0Registers(drvno, &cstring);
-    if(status != es_no_error)
-        qCritical("dumpS0Registers failed");
-    std::string cppstring = cstring;
-    parseTextToHtml(&cppstring);
-    return cppstring;
+	char* cstring;
+	es_status_codes status = dumpS0Registers(drvno, &cstring);
+	if(status != es_no_error)
+		qCritical("dumpS0Registers failed");
+	std::string cppstring = cstring;
+	parseTextToHtml(&cppstring);
+	return cppstring;
 }
 
 std::string Lsc::_dumpDmaRegisters(uint32_t drvno)
 {
-    char* cstring;
-    es_status_codes status = dumpDmaRegisters(drvno, &cstring);
-    if(status != es_no_error)
-        qCritical("dumpDmaRegisters failed");
-    std::string cppstring = cstring;
-    parseTextToHtml(&cppstring);
-    return cppstring;
+	char* cstring;
+	es_status_codes status = dumpDmaRegisters(drvno, &cstring);
+	if(status != es_no_error)
+		qCritical("dumpDmaRegisters failed");
+	std::string cppstring = cstring;
+	parseTextToHtml(&cppstring);
+	return cppstring;
 }
 
 std::string Lsc::_dumpTlp(uint32_t drvno)
 {
-    char* cstring;
-    es_status_codes status = dumpTlpRegisters(drvno, &cstring);
-    if(status != es_no_error)
-        qCritical("dumpTlpRegisters failed");
-    std::string cppstring = cstring;
-    parseTextToHtml(&cppstring);
-    return cppstring;
+	char* cstring;
+	es_status_codes status = dumpTlpRegisters(drvno, &cstring);
+	if(status != es_no_error)
+		qCritical("dumpTlpRegisters failed");
+	std::string cppstring = cstring;
+	parseTextToHtml(&cppstring);
+	return cppstring;
 }
 
 std::string Lsc::_dumpGlobalSettings()
 {
-    char* cstring;
-    es_status_codes status = dumpSettings(&cstring);
-    if(status != es_no_error)
-        qCritical("dumpSettings failed");
-    std::string cppstring = cstring;
-    parseTextToHtml(&cppstring);
-    return cppstring;
+	char* cstring;
+	es_status_codes status = dumpSettings(&cstring);
+	if(status != es_no_error)
+		qCritical("dumpSettings failed");
+	std::string cppstring = cstring;
+	parseTextToHtml(&cppstring);
+	return cppstring;
 }
 
 std::string Lsc::_dumpPciRegisters(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = dumpPciRegisters(drvno, &cstring);
-    if(status != es_no_error)
-        qCritical("dumpPciRegisters failed");
+	if(status != es_no_error)
+		qCritical("dumpPciRegisters failed");
 	std::string cppstring = cstring;
 	parseTextToHtml(&cppstring);
 	return cppstring;
@@ -109,8 +109,8 @@ std::string Lsc::__AboutDrv(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = _AboutDrv(drvno, &cstring);
-    if(status != es_no_error)
-        qCritical("_AboutDrv failed");
+	if(status != es_no_error)
+		qCritical("_AboutDrv failed");
 	std::string cppstring = cstring;
 	parseTextToHtml(&cppstring);
 	return cppstring;
@@ -120,8 +120,8 @@ std::string Lsc::__AboutGPX(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = _AboutGPX(drvno, &cstring);
-    if(status != es_no_error)
-        qCritical("_AboutGPX failed");
+	if(status != es_no_error)
+		qCritical("_AboutGPX failed");
 	std::string cppstring = cstring;
 	parseTextToHtml(&cppstring);
 	return cppstring;
@@ -172,33 +172,33 @@ es_status_codes Lsc::calcTRMS( uint32_t drvno, uint32_t firstSample, uint32_t la
  */
 es_status_codes Lsc::abortMeasurement()
 {
-    return AbortMeasurement();
+	return AbortMeasurement();
 }
 
 void Lsc::parseTextToHtml(std::string* str)
 {
 	// insert <table><tr><td> at the beginning
-    str->insert(0, "<table><tr><td>");
+	str->insert(0, "<table><tr><td>");
 	// replace all \t characters with </td><td>
-    size_t start_pos = 0;
-    std::string from = "\t";
-    std::string to = "</td><td>";
-    while ((start_pos = str->find(from, start_pos)) != std::string::npos)
-    {
-        str->replace(start_pos, from.length(), to);
-        start_pos += to.length();
-    }
+	size_t start_pos = 0;
+	std::string from = "\t";
+	std::string to = "</td><td>";
+	while ((start_pos = str->find(from, start_pos)) != std::string::npos)
+	{
+		str->replace(start_pos, from.length(), to);
+		start_pos += to.length();
+	}
 	// replace all \n characters with </td></tr><tr><td>
-    start_pos = 0;
-    from = "\n";
-    to = "</td></tr><tr><td>";
-    while ((start_pos = str->find(from, start_pos)) != std::string::npos)
-    {
-        str->replace(start_pos, from.length(), to);
-        start_pos += to.length();
-    }
+	start_pos = 0;
+	from = "\n";
+	to = "</td></tr><tr><td>";
+	while ((start_pos = str->find(from, start_pos)) != std::string::npos)
+	{
+		str->replace(start_pos, from.length(), to);
+		start_pos += to.length();
+	}
 	// insert </td></tr></table> at the end
-    str->append("</td></tr></table>");
+	str->append("</td></tr></table>");
 }
 
 /**
@@ -228,7 +228,7 @@ es_status_codes Lsc::ioctrl_setOutput(uint32_t drvno, uint32_t number, uint16_t 
 
 void Lsc::getCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block)
 {
-    return GetCurrentScanNumber(drvno, scan, block);
+	return GetCurrentScanNumber(drvno, scan, block);
 }
 
 void Lsc::fillUserBufferWithDummyData(uint32_t drvno)
