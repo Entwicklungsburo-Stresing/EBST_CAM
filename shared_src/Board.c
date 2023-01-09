@@ -4718,6 +4718,13 @@ void writeBlockToDisc(struct file_specs* f)
 		writeFileHeaderToFile(f, filename_full);
 	}
 	FILE* stream;
+	wchar_t filename_full_wide[file_filename_full_size];
+	// convert char* to wchar*
+	mbstowcs_s(NULL, filename_full_wide, file_filename_full_size, filename_full, file_filename_full_size);
+	// Calculate the queue position for this thread to schedule the correct writing order
+	uint64_t queue_position = f->block_cnt + f->measurement_cnt * (*Nob);
+	// Get ownership of mutex
+	lockMutex(f->drvno, filename_full_wide, queue_position);
 	ES_LOG("Writing block %u to disc at %s\n", f->block_cnt, filename_full);
 	// Open the file in binary mode and append the data to the file.
 	fopen_s(&stream, filename_full, "ab");
@@ -4728,6 +4735,8 @@ void writeBlockToDisc(struct file_specs* f)
 		fwrite(pframe, 2, *Nospb * aCAMCNT[f->drvno] * aPIXEL[f->drvno], stream);
 		fclose(stream);
 	}
+	// Release ownership of mutex
+	unlockMutex(f->drvno, filename_full_wide, queue_position);
 	ES_LOG("Writing block %u to disc done\n", f->block_cnt);
 	free(f);
 	return;

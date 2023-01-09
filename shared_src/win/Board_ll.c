@@ -12,7 +12,7 @@ DWORD dmaBufferSizeInBytes = 0;
 uint16_t* dmaBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 DWORD64 IsrCounter = 0;
 UINT8 dmaBufferPartReadPos[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
-WD_DMA* dmaBufferInfos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL }; //there will be saved the neccesary parameters for the dma buffer
+WD_DMA* dmaBufferInfos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL }; //there will be saved the necessary parameters for the DMA buffer
 WDC_PCI_SCAN_RESULT scanResult;
 WD_PCI_CARD_INFO deviceInfo[MAXPCIECARDS];
 __int64 TPS = 0;
@@ -21,9 +21,11 @@ ULONG oldPriClass = 0;
 ULONG oldThreadLevel = 0;
 HANDLE hProcess;
 HANDLE hThread;
+uint64_t queue_head = 0;
+uint64_t queue_tail = 0;
 
 /**
- * \brief Initializes the pro DLL. Call this before using it. While initialization global variables are set in pro dll.
+ * \brief Initializes the pro DLL. Call this before using it. While initialization global variables are set in pro DLL.
  */
 void InitProDLL()
 {
@@ -1136,14 +1138,59 @@ uint16_t* getVirtualDmaAddress(uint32_t drvno)
 
 uint32_t getDmaBufferSizeInBytes(uint32_t drvno)
 {
-    // drvno is only used on linux, so suppress warning here
+	// drvno is only used on Linux, so suppress warning here
 	(void)drvno;
 	return dmaBufferSizeInBytes;
 }
 
 int64_t getCurrentInterruptCounter(uint32_t drvno)
 {
-    // drvno is only used on linux, so suppress warning here
-    (void)drvno;
+	// drvno is only used on Linux, so suppress warning here
+	(void)drvno;
 	return IsrCounter;
+}
+
+void lockMutex(uint32_t drvno, wchar_t* mutex_name, uint64_t queue_me)
+{
+	HANDLE ghMutex = OpenMutexW(SYNCHRONIZE, false, mutex_name);
+	if (ghMutex)
+	{
+		DWORD dwWaitResult = WaitForSingleObject(ghMutex, 0);
+		switch (dwWaitResult)
+		{
+		// The mutex was free and is now owned by this thread
+		case WAIT_OBJECT_0:
+			break;
+		// The mutex is occupied by another thread
+		case WAIT_TIMEOUT:
+			while (true)
+			{
+				WaitForSingleObject(ghMutex, INFINITE);
+				if(queue_me != queue_head)
+					ReleaseMutex(ghMutex);
+				else
+					break;
+			}
+			break;
+		// Every other case is treated as error and the function returns immediately.
+		default:
+		case WAIT_ABANDONED:
+		case WAIT_FAILED:
+			return;
+		}
+	}
+	else
+		ghMutex = CreateMutex(
+			NULL,			// default security attributes
+			TRUE,			// initially owned
+			mutex_name);	// name of the mutex
+	return;
+}
+
+void unlockMutex(uint32_t drvno, wchar_t* mutex_name, uint64_t queue_me)
+{
+	HANDLE ghMutex = OpenMutexW(SYNCHRONIZE, false, mutex_name);
+	ReleaseMutex(ghMutex);
+	queue_head = queue_me + 1;
+	return;
 }
