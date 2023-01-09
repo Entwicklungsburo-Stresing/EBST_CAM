@@ -2,7 +2,7 @@
 
 char errorMsg[100][50] =
 {
-	"No error occured",
+	"No error occurred",
 	"No PCIe board found",
 	"Driver initialization failed",
 	"Initiating WDC debugging failed",
@@ -18,10 +18,10 @@ char errorMsg[100][50] =
 	"Allocating user memory failed",
 	"Not enough RAM",
 	"Parameter out of bounds",
-	"An unknown error occured",
+	"An unknown error occurred",
 	"Enabling interrupts failed",
-	"Getting dma buffer failed",
-	"Unlocking dma failed",
+	"Getting DMA buffer failed",
+	"Unlocking DMA failed",
 	"Camera not found",
 	"Measurement aborted",
 	"Creating thread failed",
