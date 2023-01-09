@@ -6,9 +6,9 @@
  * @param parent
  */
 MyQSpinBox::MyQSpinBox(QWidget* parent)
-        : QSpinBox(parent)
+		: QSpinBox(parent)
 {
-    connect(this, qOverload<int>(&MyQSpinBox::valueChanged), this, &MyQSpinBox::On_valueChanged);
+	connect(this, qOverload<int>(&MyQSpinBox::valueChanged), this, &MyQSpinBox::On_valueChanged);
 }
 
 /**
@@ -18,9 +18,9 @@ MyQSpinBox::MyQSpinBox(QWidget* parent)
  */
 void MyQSpinBox::setValue(int val)
 {
-    valueBeingSet = true;
-    QSpinBox::setValue(val);
-    valueBeingSet = false;
+	valueBeingSet = true;
+	QSpinBox::setValue(val);
+	valueBeingSet = false;
 }
 
 /**
@@ -29,6 +29,6 @@ void MyQSpinBox::setValue(int val)
  */
 void MyQSpinBox::On_valueChanged(int val)
 {
-    if(!valueBeingSet)
-        emit valueManuallyChanged(val);
+	if(!valueBeingSet)
+		emit valueManuallyChanged(val);
 }
