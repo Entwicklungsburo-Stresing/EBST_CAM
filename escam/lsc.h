@@ -41,7 +41,7 @@ public:
 	bool IsRunning();
 	bool isTdc(uint32_t drvno);
 	bool isDsc(uint32_t drvno);
-	std::string Lsc::getVerifiedDataDialog(struct verify_data_parameter* vd);
+	std::string getVerifiedDataDialog(struct verify_data_parameter* vd);
 public slots:
 	es_status_codes startMeasurement();
 signals:
