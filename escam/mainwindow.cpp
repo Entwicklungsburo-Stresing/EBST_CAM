@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(&lsc, &Lsc::measureDone, ds_dsc, &DialogDSC::updateDSC);
 	connect(&lsc, &Lsc::measureDone, ds_rms, &DialogRMS::updateRMS);
 #ifdef __linux__
-	// disable greyscale menu on linux
+	// disable gray scale menu on Linux
 	ui->menuGreyscale_Viewer->setEnabled(false);
 #endif
 	// disable axes menu until first finish of measurement to avoid crash
@@ -746,7 +746,7 @@ void MainWindow::on_rubberBandChanged()
 	ui->chartView->curr_xmin = axis0->min();
 	ui->chartView->curr_ymax = axis1->max();
 	ui->chartView->curr_ymin = axis1->min();
-	// apply bounderies on axes
+	// apply boundaries on axes
 	if(axis0->max() > settings.value(settingPixelPath, settingPixelDefault).toUInt())
 	{
 		ui->chartView->curr_xmax = settings.value(settingPixelPath, settingPixelDefault).toUInt();
@@ -787,7 +787,7 @@ void MainWindow::on_actionIO_Control_triggered()
 }
 
 /**
- * @brief This slot opens the greyscale viewer. Only on windows.
+ * @brief This slot opens the gray scale viewer. Only on windows.
  * @return none
  */
 void MainWindow::on_actionShow_triggered()
@@ -814,7 +814,7 @@ void MainWindow::on_actionShow_triggered()
 }
 
 /**
- * @brief This slot sends the new block to greyscale viewer.
+ * @brief This slot sends the new block to gray scale viewer.
  * @return none
  */
 void MainWindow::on_horizontalSliderBlock_valueChanged()
@@ -916,7 +916,7 @@ void MainWindow::showCurrentScan()
 	{
 	case 2:
 		ui->horizontalSliderSample->setValue(static_cast<int32_t>(sample + 1));
-	// This fallthrough from case 2 to case 1 is intended
+	// This fall through from case 2 to case 1 is intended
 	case 1:
 		ui->horizontalSliderBlock->setValue(static_cast<int32_t>(block + 1));
 	}
