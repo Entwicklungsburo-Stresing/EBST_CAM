@@ -1165,10 +1165,14 @@ void lockMutex(uint32_t drvno, wchar_t* mutex_name, uint64_t queue_me)
 		case WAIT_TIMEOUT:
 			while (true)
 			{
+				// Wait until the mutex is free again
 				WaitForSingleObject(ghMutex, INFINITE);
+				// Check if the queue order of this thread is the chosen one to write next
 				if(queue_me != queue_head)
+					// Release the mutex again, because this thread is not the chosen one
 					ReleaseMutex(ghMutex);
 				else
+					// This thread is the chosen one and can be released from the loop
 					break;
 			}
 			break;
