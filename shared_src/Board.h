@@ -10,7 +10,7 @@ extern "C" {
 #include "Board_ll.h"
 
 // High level API
-// plattform independet implementation
+// platform independent implementation
 es_status_codes InitBoard();
 es_status_codes InitDriver();
 es_status_codes ExitDriver();
@@ -21,7 +21,7 @@ es_status_codes AbortMeasurement();
 es_status_codes ReturnFrame(uint32_t drv, uint32_t curr_nos, uint32_t curr_nob, uint16_t curr_cam, uint16_t* pdest, uint32_t length);
 
 // Mid level API
-// plattform independet implementation
+// platform independent implementation
 // hardware abstraction
 es_status_codes setBlockOn( uint32_t drvno );
 es_status_codes setBlockOnTwoBoards();
