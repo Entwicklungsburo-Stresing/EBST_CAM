@@ -12,7 +12,7 @@ const int64_t min_diff_in_ms = 50;
 
 void notifyMeasureStart()
 {
-    struct timeb timebuffer_measureStart_new;
+	struct timeb timebuffer_measureStart_new;
 	ftime(&timebuffer_measureStart_new);
 	int64_t diff_in_ms = (int64_t)(1000.0 * (timebuffer_measureStart_new.time - timebuffer_measureStart.time) + (timebuffer_measureStart_new.millitm - timebuffer_measureStart.millitm));
 	if (diff_in_ms > min_diff_in_ms)
@@ -25,7 +25,7 @@ void notifyMeasureStart()
 
 void notifyMeasureDone()
 {
-    struct timeb timebuffer_measureDone_new;
+	struct timeb timebuffer_measureDone_new;
 	ftime(&timebuffer_measureDone_new);
 	int64_t diff_in_ms = (int64_t)(1000.0 * (timebuffer_measureDone_new.time - timebuffer_measureDone.time) + (timebuffer_measureDone_new.millitm - timebuffer_measureDone.millitm));
 	if (diff_in_ms > min_diff_in_ms)
@@ -38,7 +38,7 @@ void notifyMeasureDone()
 
 void notifyBlockStart()
 {
-    struct timeb timebuffer_blockStart_new;
+	struct timeb timebuffer_blockStart_new;
 	ftime(&timebuffer_blockStart_new);
 	int64_t diff_in_ms = (int64_t)(1000.0 * (timebuffer_blockStart_new.time - timebuffer_blockStart.time) + (timebuffer_blockStart_new.millitm - timebuffer_blockStart.millitm));
 	if (diff_in_ms > min_diff_in_ms)
@@ -51,7 +51,7 @@ void notifyBlockStart()
 
 void notifyBlockDone()
 {
-    struct timeb timebuffer_blockDone_new;
+	struct timeb timebuffer_blockDone_new;
 	ftime(&timebuffer_blockDone_new);
 	int64_t diff_in_ms = (int64_t)(1000.0 * (timebuffer_blockDone_new.time - timebuffer_blockDone.time) + (timebuffer_blockDone_new.millitm - timebuffer_blockDone.millitm));
 	if (diff_in_ms > min_diff_in_ms)
