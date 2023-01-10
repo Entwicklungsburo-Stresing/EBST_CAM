@@ -56,8 +56,11 @@ uint16_t* getVirtualDmaAddress(uint32_t drvno);
 uint32_t getDmaBufferSizeInBytes(uint32_t drvno);
 int64_t getCurrentInterruptCounter(uint32_t drvno);
 uint8_t WaitforTelapsed(long long musec);
-void lockMutex(uint32_t drvno, wchar_t* mutex_name, uint64_t queue_me);
-void unlockMutex(uint32_t drvno, wchar_t* mutex_name, uint64_t queue_me);
+void openFile(uint32_t drvno);
+void closeFile(uint32_t drvno);
+void setTimestamp();
+void writeFileHeaderToFile(uint32_t drvno, char* filename_full);
+
 
 #ifdef WIN32
 es_status_codes About(uint32_t drvno);
