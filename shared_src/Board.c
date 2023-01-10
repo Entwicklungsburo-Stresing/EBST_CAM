@@ -3039,9 +3039,9 @@ es_status_codes GetLastBufPart( uint32_t drvno )
 	uint32_t scans_all_cams = (*Nospb) * (*Nob) * aCAMCNT[drvno];
 	uint32_t rest_overall = scans_all_cams % dmaHalfBufferSize; 
 	size_t rest_in_bytes = rest_overall * aPIXEL[drvno] * sizeof(uint16_t);
-	ES_LOG( "nos: 0x%x, nob: 0x%x, scansPerInterrupt: 0x%x, camcnt: 0x%x\n", (*Nospb), *Nob, spi, aCAMCNT[drvno]);
-	ES_LOG( "scans_all_cams: 0x%x \n", scans_all_cams );
-	ES_LOG( "rest_overall: 0x%x, rest_in_bytes: 0x%zx\n", rest_overall, rest_in_bytes );
+	ES_LOG( "nos: %u, nob: %u, scansPerInterrupt: %u, camcnt: %u\n", (*Nospb), *Nob, spi, aCAMCNT[drvno]);
+	ES_LOG( "scans_all_cams: %u \n", scans_all_cams );
+	ES_LOG( "rest_overall: %u, rest_in_bytes: %u\n", rest_overall, rest_in_bytes );
 	if (rest_overall)
 		copyRestData(drvno, rest_in_bytes); 
 	return status;

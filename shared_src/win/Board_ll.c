@@ -106,7 +106,7 @@ int64_t InitHRCounter()
  */
 void isr( uint32_t drvno )
 {
-	ES_TRACE( "ISR Counter: 0x%x\n", IsrCounter );
+	ES_TRACE( "ISR Counter: %d\n", IsrCounter );
 	// Set INTRSR flag for TRIGO
 	es_status_codes status = setBitS0_32(drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );
 	if (status != es_no_error) return;
@@ -121,7 +121,7 @@ void isr( uint32_t drvno )
 		status = resetBitS0_32( drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );//reset INTRSR flag for TRIGO
 		return;
 	}
-	ES_TRACE("dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes);
+	//ES_TRACE("dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes);
 	// dmaBufferPartSizeInBytes = 1000 * pixel *2 -> /2 = 500 scans = 1088000 bytes
 	// that means one 500 scan copy block has 1088000 bytes
 	size_t dmaBufferPartSizeInBytes = dmaBufferSizeInBytes / DMA_BUFFER_PARTS;
@@ -497,13 +497,14 @@ void ResetBufferWritePos(uint32_t drvno)
  */
 void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 {
-	ES_LOG( "Copy rest data:\n" );
-	ES_LOG( "dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes );
+	ES_LOG( "Copy rest data\n" );
 	uint16_t* dmaBufferReadPos = dmaBuffer[drvno];
 	// dmaBufferPartReadPos is 0 or 1 when DMA_BUFFER_PARTS=2 -> hi/lo half
 	dmaBufferReadPos += dmaBufferPartReadPos[drvno] * dmaBufferSizeInBytes /2 / DMA_BUFFER_PARTS;
 	//					0 or 1 for lo/hi half		*  dmabuf in shorts		  /      2	
 	// rest_in_bytes = 2 x pixel x scansrest
+	ES_LOG("dmaBufferReadPos: 0x%x \n", dmaBufferReadPos);
+	ES_LOG("userBufferWritePos: 0x%x \n", userBufferWritePos);
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes);
 	if(settings_struct.write_to_disc) fwrite(dmaBufferReadPos, 1, rest_in_bytes, file_stream[drvno]);
 	return;
@@ -1181,18 +1182,22 @@ void openFile(uint32_t drvno)
 	// Check if the file exists
 	if (_access_s(filename_full, 0) != 0)
 	{
-		ES_LOG("File doesn't exist\n");
+		ES_LOG("File doesn't exist. Creating file.\n");
 		// Create file and write the file header to it.
 		fopen_s(&file_stream[drvno], filename_full, "ab");
 		writeFileHeaderToFile(drvno, filename_full);
 	}
 	else
+	{
+		ES_LOG("File already exist. Open file.\n");
 		fopen_s(&file_stream[drvno], filename_full, "ab");
+	}
 	return;
 }
 
 void closeFile(uint32_t drvno)
 {
+	ES_LOG("Close file\n");
 	fclose(file_stream[drvno]);
 	return;
 }
