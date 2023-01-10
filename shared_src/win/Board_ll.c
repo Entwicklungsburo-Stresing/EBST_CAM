@@ -21,8 +21,7 @@ ULONG oldPriClass = 0;
 ULONG oldThreadLevel = 0;
 HANDLE hProcess;
 HANDLE hThread;
-uint64_t queue_head = 0;
-uint64_t queue_tail = 0;
+FILE* file_stream[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 
 /**
  * \brief Initializes the pro DLL. Call this before using it. While initialization global variables are set in pro DLL.
@@ -129,6 +128,7 @@ void isr( uint32_t drvno )
 	UINT16* dmaBufferReadPos = dmaBuffer[drvno] + dmaBufferPartReadPos[drvno] * dmaBufferPartSizeInBytes / sizeof(UINT16);
 	// The copy process is done here
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, dmaBufferPartSizeInBytes );
+	if(settings_struct.write_to_disc) fwrite(dmaBufferReadPos, 1, dmaBufferPartSizeInBytes, file_stream[drvno]);
 	ES_TRACE( "userBufferWritePos: 0x%x \n", userBufferWritePos[drvno] );
 	dmaBufferPartReadPos[drvno]++;
 	// number of ISR per dmaBuf - 1
@@ -505,6 +505,7 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 	//					0 or 1 for lo/hi half		*  dmabuf in shorts		  /      2	
 	// rest_in_bytes = 2 x pixel x scansrest
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes);
+	if(settings_struct.write_to_disc) fwrite(dmaBufferReadPos, 1, rest_in_bytes, file_stream[drvno]);
 	return;
 }
 
@@ -1152,51 +1153,84 @@ int64_t getCurrentInterruptCounter(uint32_t drvno)
 	return IsrCounter;
 }
 
-void lockMutex(uint32_t drvno, wchar_t* mutex_name, uint64_t queue_me)
+void openFile(uint32_t drvno)
 {
-	HANDLE ghMutex = OpenMutexW(SYNCHRONIZE, false, mutex_name);
-	if (ghMutex)
+	size_t path_length = strlen(settings_struct.file_path);
+	// Check if the path is terminated with /
+	char last_char = settings_struct.file_path[path_length - 1];
+	if (last_char != '/' && last_char != '\\')
 	{
-		DWORD dwWaitResult = WaitForSingleObject(ghMutex, 0);
-		switch (dwWaitResult)
-		{
-		// The mutex was free and is now owned by this thread
-		case WAIT_OBJECT_0:
-			break;
-		// The mutex is occupied by another thread
-		case WAIT_TIMEOUT:
-			while (true)
-			{
-				// Wait until the mutex is free again
-				WaitForSingleObject(ghMutex, INFINITE);
-				// Check if the queue order of this thread is the chosen one to write next
-				if(queue_me != queue_head)
-					// Release the mutex again, because this thread is not the chosen one
-					ReleaseMutex(ghMutex);
-				else
-					// This thread is the chosen one and can be released from the loop
-					break;
-			}
-			break;
-		// Every other case is treated as error and the function returns immediately.
-		default:
-		case WAIT_ABANDONED:
-		case WAIT_FAILED:
-			return;
-		}
+		// Append / to the path
+		settings_struct.file_path[path_length] = '/';
+		// Terminate the string with 0
+		settings_struct.file_path[path_length + 1] = 0;
+	}
+	char filename_full[file_filename_full_size];
+	memset(filename_full, 0, file_filename_full_size);
+	// Create filenames depending on split mode. See enum split_mode in enum.h for details.
+	switch (settings_struct.file_split_mode)
+	{
+	default:
+	case no_split:
+		sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u.dat", settings_struct.file_path, start_timestamp, drvno);
+		break;
+	case measurement_wise:
+		sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u_measurement-%llu.dat", settings_struct.file_path, start_timestamp, drvno, measurement_cnt);
+		break;
+	}
+	// Check if the file exists
+	if (_access_s(filename_full, 0) != 0)
+	{
+		ES_LOG("File doesn't exist\n");
+		// Create file and write the file header to it.
+		fopen_s(&file_stream[drvno], filename_full, "ab");
+		writeFileHeaderToFile(drvno, filename_full);
 	}
 	else
-		ghMutex = CreateMutex(
-			NULL,			// default security attributes
-			TRUE,			// initially owned
-			mutex_name);	// name of the mutex
+		fopen_s(&file_stream[drvno], filename_full, "ab");
 	return;
 }
 
-void unlockMutex(uint32_t drvno, wchar_t* mutex_name, uint64_t queue_me)
+void closeFile(uint32_t drvno)
 {
-	HANDLE ghMutex = OpenMutexW(SYNCHRONIZE, false, mutex_name);
-	ReleaseMutex(ghMutex);
-	queue_head = queue_me + 1;
+	fclose(file_stream[drvno]);
+	return;
+}
+
+void setTimestamp()
+{
+	SYSTEMTIME t;
+	GetLocalTime(&t);
+	sprintf_s(start_timestamp, file_timestamp_size, "%04d-%02d-%02d-%02d-%02d-%02d", t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
+	return;
+}
+
+/**
+ * \brief Creates a file at filename_full and writes struct file_header to it.
+ * 
+ * \param f struct file_specs
+ * \param filename_full Path and file name to the file where the header is written.
+ */
+void writeFileHeaderToFile(uint32_t drvno, char* filename_full)
+{
+	ES_LOG("Writing file header\n");
+	// Assemble the file_header
+	struct file_header fh;
+	fh.drvno = drvno;
+	fh.pixel = aPIXEL[drvno];
+	fh.nos = *Nospb;
+	fh.nob = *Nob;
+	fh.camcnt = aCAMCNT[drvno];
+	fh.measurement_cnt = measurement_cnt;
+	memset(fh.timestamp, 0, file_timestamp_size);
+	strcpy(fh.timestamp, start_timestamp);
+	memset(fh.filename_full, 0, file_filename_full_size);
+	strcpy(fh.filename_full, filename_full);
+	fh.split_mode = settings_struct.file_split_mode;
+	if (file_stream[drvno])
+	{
+		// Write struct file_header to the file.
+		fwrite(&fh, 1, sizeof(struct file_header), file_stream[drvno]);
+	}
 	return;
 }

@@ -554,10 +554,6 @@ enum split_mode
 	 * When in continuous mode a new file is created for every new measurement cycle (when all samples and blocks are done). When not in continuous this option is the same as no_split.
 	 */
 	measurement_wise = 1,
-	/**
-	 * For every new block a new file is created.
-	 */
-	block_wise = 2
 };
 
 enum file_specifications

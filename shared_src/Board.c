@@ -2522,13 +2522,19 @@ es_status_codes StartMeasurement()
 		isRunning = true;
 	abortMeasurementFlag = false;
 	es_status_codes status = es_no_error;
-	uint64_t measurement_cnt = 0;
-	SYSTEMTIME t;
-	GetLocalTime(&t);
-	char start_timestamp[file_timestamp_size];
-	sprintf_s(start_timestamp, file_timestamp_size, "%04d-%02d-%02d-%02d-%02d-%02d", t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
+	setTimestamp();
+	measurement_cnt = 0;
 	do
 	{
+		// Open file for writeToDisc
+		if (BOARD_SEL == 1 || BOARD_SEL == 3)
+		{
+			if (settings_struct.write_to_disc) openFile(1);
+		}
+		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+		{
+			if (settings_struct.write_to_disc) openFile(2);
+		}
 		// Reset the hardware block counter and scan counter.
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
@@ -2716,13 +2722,11 @@ es_status_codes StartMeasurement()
 			{
 				status = resetBlockOn(1);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
-				if(settings_struct.write_to_disc) startWriteBlockToDiscThread(1, blk_cnt, measurement_cnt, settings_struct.file_path, settings_struct.file_split_mode, start_timestamp);
 			}
 			if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
 			{
 				status = resetBlockOn(2);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
-				if (settings_struct.write_to_disc) startWriteBlockToDiscThread(2, blk_cnt, measurement_cnt, settings_struct.file_path, settings_struct.file_split_mode, start_timestamp);
 			}
 		// This is the end of the block for loop. Until nob is reached this loop is repeated.
 		}
@@ -2786,6 +2790,14 @@ es_status_codes StartMeasurement()
 			continiousMeasurementFlag = false;
 		abortMeasurementFlag = checkEscapeKeyState();
 		WaitforTelapsed(continiousPauseInMicroseconds);
+		if (BOARD_SEL == 1 || BOARD_SEL == 3)
+		{
+			if (settings_struct.write_to_disc) closeFile(1);
+		}
+		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+		{
+			if (settings_struct.write_to_disc) closeFile(2);
+		}
 		measurement_cnt++;
 	} while (continiousMeasurementFlag && !abortMeasurementFlag);
 	ES_LOG("*** Measurement done ***\n\n");
@@ -4652,97 +4664,6 @@ es_status_codes GetIsDsc(uint32_t drvno, bool* isDsc)
 	return status;
 }
 
-/**
- * \brief Starts the function writeBlockToDisc and constructs the struct file_sepecs for the new thread.
- * 
- * \param drvno PCIe board identifier.
- * \param block Determines which block is written to disc.
- * \param measurement_cnt Counter for the measurements in continuous mode.
- * \param path Path to the folder where the data is written to.
- * \param split_mode Split mode selects whether the data is written to one or multiple files. See enum split_mode in enum.h for details.
- * \param timestamp Time stamp when the current measurement was started.
- */
-void startWriteBlockToDiscThread(uint32_t drvno, uint32_t block, uint64_t measurement_cnt, char* path, uint32_t split_mode, char* timestamp)
-{
-	ES_LOG("Start write block to disc thread.\n");
-	// Assemble the struct file_specs for the new struct.
-	struct file_specs* f = malloc(sizeof(struct file_specs));
-	f->drvno = drvno;
-	f->measurement_cnt = measurement_cnt;
-	f->block_cnt = block;
-	strcpy(f->path, path);
-	f->split_mode = split_mode;
-	strcpy(f->timestamp, timestamp);
-	// Start the new thread.
-	_beginthread(&writeBlockToDisc, 0, f);
-	return;
-}
-
-/**
- * \brief Write the data specified in struct file_specs to the file specified in struct file_specs.
- * 
- * \param f struct file_specs
- */
-void writeBlockToDisc(struct file_specs* f)
-{
-	size_t path_length = strlen(f->path);
-	// Check if the path is terminated with /
-	char last_char = f->path[path_length-1];
-	if (last_char != '/' && last_char != '\\')
-	{
-		// Append / to the path
-		f->path[path_length] = '/';
-		// Terminate the string with 0
-		f->path[path_length + 1] = 0;
-	}
-	char filename_full[file_filename_full_size];
-	memset(filename_full, 0, file_filename_full_size);
-	// Create filenames depending on split mode. See enum split_mode in enum.h for details.
-	switch (f->split_mode)
-	{
-	default:
-	case no_split:
-		sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u.dat", f->path, f->timestamp, f->drvno);
-		break;
-	case measurement_wise:
-		sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u_measurement-%llu.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt);
-		break;
-	case block_wise:
-		sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u_measurement-%llu_block-%u.dat", f->path, f->timestamp, f->drvno, f->measurement_cnt, f->block_cnt);
-		break;
-	}
-	// Check if the file exists
-	if (_access_s(filename_full, 0) != 0)
-	{
-		ES_LOG("File doesn't exist\n");
-		// Create file and write the file header to it.
-		writeFileHeaderToFile(f, filename_full);
-	}
-	FILE* stream;
-	wchar_t filename_full_wide[file_filename_full_size];
-	// convert char* to wchar*
-	mbstowcs_s(NULL, filename_full_wide, file_filename_full_size, filename_full, file_filename_full_size);
-	// Calculate the queue position for this thread to schedule the correct writing order
-	uint64_t queue_position = f->block_cnt + f->measurement_cnt * (*Nob);
-	// Get ownership of mutex
-	lockMutex(f->drvno, filename_full_wide, queue_position);
-	ES_LOG("Writing block %u to disc at %s\n", f->block_cnt, filename_full);
-	// Open the file in binary mode and append the data to the file.
-	fopen_s(&stream, filename_full, "ab");
-	if (stream)
-	{
-		UINT16* pframe = NULL;
-		GetAddressOfPixel(f->drvno, 0, 0, f->block_cnt, 0, &pframe);
-		fwrite(pframe, 2, *Nospb * aCAMCNT[f->drvno] * aPIXEL[f->drvno], stream);
-		fclose(stream);
-	}
-	// Release ownership of mutex
-	unlockMutex(f->drvno, filename_full_wide, queue_position);
-	ES_LOG("Writing block %u to disc done\n", f->block_cnt);
-	free(f);
-	return;
-}
-
 void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString)
 {
 	VerifyData(vd);
@@ -4762,7 +4683,6 @@ void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "nob:\t%u\n",vd->fh.nob);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "camcnt:\t%u\n",vd->fh.camcnt);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "measurement cnt:\t%llu\n",vd->fh.measurement_cnt);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "block cnt:\t%u\n",vd->fh.block_cnt);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "timestamp:\t%s\n",vd->fh.timestamp);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "filename_full:\t%s\n",vd->fh.filename_full);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "split mode:\t%u\n\n",vd->fh.split_mode);
@@ -4843,41 +4763,6 @@ void VerifyData(struct verify_data_parameter* vd)
 				vd->measurement_cnt++;
 			}
 		}
-		fclose(stream);
-	}
-	return;
-}
-
-/**
- * \brief Creates a file at filename_full and writes struct file_header to it.
- * 
- * \param f struct file_specs
- * \param filename_full Path and file name to the file where the header is written.
- */
-void writeFileHeaderToFile(struct file_specs* f, char* filename_full)
-{
-	ES_LOG("Writing file header\n");
-	// Assemble the file_header
-	struct file_header fh;
-	fh.drvno = f->drvno;
-	fh.pixel = aPIXEL[f->drvno];
-	fh.nos = *Nospb;
-	fh.nob = *Nob;
-	fh.camcnt = aCAMCNT[f->drvno];
-	fh.measurement_cnt = f->measurement_cnt;
-	fh.block_cnt = f->block_cnt;
-	memset(fh.timestamp, 0, file_timestamp_size);
-	strcpy(fh.timestamp, f->timestamp);
-	memset(fh.filename_full, 0, file_filename_full_size);
-	strcpy(fh.filename_full, filename_full);
-	fh.split_mode = f->split_mode;
-	FILE* stream;
-	// Create a new file and open it in binary mode
-	fopen_s(&stream, filename_full, "wb");
-	if (stream)
-	{
-		// Write struct file_header to the file.
-		fwrite(&fh, 1, sizeof(struct file_header), stream);
 		fclose(stream);
 	}
 	return;

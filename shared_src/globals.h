@@ -36,37 +36,6 @@ struct global_vars
 	bool* useSWTrig;
 };
 
-/**
- * This struct is used to  pass parameters to a new thread when writing data to disc.
- */
-struct file_specs
-{
-	/**
-	 * PCIe board identifier.
-	 */
-	uint32_t drvno;
-	/**
-	 * Counter for the measurements in continuous mode.
-	 */
-	uint64_t measurement_cnt;
-	/**
-	 * Determines which block is written to disc..
-	 */
-	uint32_t block_cnt;
-	/**
-	 * Path to the folder where the data is written to.
-	 */
-	char path[file_path_size];
-	/**
-	 * Split mode selects whether the data is written to one or multiple files. See enum split_mode in enum.h for details.
-	 */
-	uint32_t split_mode;
-	/**
-	 * Timestamp when the current measurement was started.
-	 */
-	char timestamp[file_timestamp_size];
-};
-
 struct file_header
 {
 	uint32_t drvno;
@@ -75,7 +44,6 @@ struct file_header
 	uint32_t nob;
 	uint32_t camcnt;
 	uint64_t measurement_cnt;
-	uint32_t block_cnt;
 	char timestamp[file_timestamp_size];
 	char filename_full[file_filename_full_size];
 	uint32_t split_mode;
@@ -136,7 +104,8 @@ extern uint32_t continiousPauseInMicroseconds;
 extern struct global_settings settings_struct;
 extern bool isRunning;
 extern int64_t scanCounterTotal;
-
+extern uint64_t measurement_cnt;
+extern char start_timestamp[file_timestamp_size];
 
 #ifdef __cplusplus
 }

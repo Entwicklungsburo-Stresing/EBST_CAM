@@ -23,6 +23,8 @@ bool continiousMeasurementFlag = false;
 uint32_t continiousPauseInMicroseconds = 0;
 bool isRunning = false;
 int64_t scanCounterTotal = 0;
+uint64_t measurement_cnt = 0;
+char start_timestamp[file_timestamp_size];
 struct global_settings settings_struct =
 {
 	.use_software_polling			= settingsUseSoftwarePollingDefault,
