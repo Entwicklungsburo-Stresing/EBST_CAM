@@ -2545,7 +2545,7 @@ es_status_codes StartMeasurement()
 			ResetBufferWritePos(1);
 		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
 			ResetBufferWritePos(2);
-		// Only on linux: Because on linux it is not possible to copy data in the ISR,
+		// Only on Linux: Because on Linux it is not possible to copy data in the ISR,
 		// a new thread is started here that copies the data from the DMA buffer to
 		// the user buffer. The ISR is giving a signal to this thread when to copy data.
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
@@ -2729,7 +2729,7 @@ es_status_codes StartMeasurement()
 		// Reset the thread priority to the previous value.
 		status = ResetPriority();
 		if (status != es_no_error) return ReturnStartMeasurement(status);
-		// Only on linux: The following mutex prevents ending the measurement before all data has been copied from dma buffer to user buffer.
+		// Only on Linux: The following mutex prevents ending the measurement before all data has been copied from DMA buffer to user buffer.
 #ifdef __linux__
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
@@ -2764,7 +2764,7 @@ es_status_codes StartMeasurement()
 				if (status != es_no_error) return ReturnStartMeasurement(status);
 			}
 		}
-		// This sleep is here to prevent the measurement beeing interrupted too early. When operating with 2 cameras the last scan could be cut off without the sleep. This is only a workaround. The problem is that the software is waiting for RSTIMER beeing reset by the hardware before setting measure on and block on to low, but the last DMA is done after RSTIMER beeing reset. BLOCKON and MEASUREON should be reset after all DMAs are done.
+		// This sleep is here to prevent the measurement being interrupted too early. When operating with 2 cameras the last scan could be cut off without the sleep. This is only a workaround. The problem is that the software is waiting for RSTIMER being reset by the hardware before setting measure on and block on to low, but the last DMA is done after RSTIMER being reset. BLOCKON and MEASUREON should be reset after all DMAs are done.
 		// RSTIMER --------________
 		// DMAWRACT _______-----___
 		// BLOCKON ---------_______
@@ -2781,7 +2781,7 @@ es_status_codes StartMeasurement()
 			status = resetMeasureOn(2);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
 		}
-		// When space key or ESC key was pressed, continious measurement stops.
+		// When space key or ESC key was pressed, continuous measurement stops.
 		if (checkSpaceKeyState())
 			continiousMeasurementFlag = false;
 		abortMeasurementFlag = checkEscapeKeyState();
@@ -2796,7 +2796,7 @@ es_status_codes StartMeasurement()
  * \brief This is a helper function to return startMeasurement.
  * 
  * This function sets isRunning = false and returns the given status.
- * \param status Status that will be retured.
+ * \param status Status that will be returned.
  * \return Returns input parameter status.
  */
 es_status_codes ReturnStartMeasurement(es_status_codes status)
@@ -3016,12 +3016,13 @@ es_status_codes IsTimerOn( uint32_t drvno, bool* on )
 es_status_codes GetLastBufPart( uint32_t drvno )
 {
 	ES_LOG( "Get the last buffer part\n" );
-	//get the rest if buffer is not multiple of 500 (BUFSIZEINSCANS/2)
-	//also if nos is < BUFSIZEINSCANS/2 - here: no intr occurs
+	// Get the rest if buffer is not multiple of 500 (BUFSIZEINSCANS/2)
+	// Also if nos is < BUFSIZEINSCANS/2 there is data left in the DMA buffer, because no interrupt occurred after the last scans.
 	uint32_t spi = 0;
-	es_status_codes status = readRegisterS0_32( drvno, &spi, S0Addr_DMAsPerIntr ); //get scans per intr
+	// Get scans per interrupt
+	es_status_codes status = readRegisterS0_32( drvno, &spi, S0Addr_DMAsPerIntr ); 
 	if (status != es_no_error) return status;
-	//halfbufize is 500 with default values
+	// dmaHalfBufferSize is 500 with default values
 	uint32_t dmaHalfBufferSize = settings_struct.dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
 	uint32_t scans_all_cams = (*Nospb) * (*Nob) * aCAMCNT[drvno];
 	uint32_t rest_overall = scans_all_cams % dmaHalfBufferSize; 

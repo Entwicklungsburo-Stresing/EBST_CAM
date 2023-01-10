@@ -98,24 +98,23 @@ int64_t InitHRCounter()
 	return tps;
 }
 
-
 /**
-\brief This call comes every DMASPERINTR=500 here a DMASubBuf could be copied to the DMABigBuf.
-the size of a drivers continous memory is limited, so we must copy it via this small buf to the big buf
-The INTR occurs every DMASPERINTR and copies this block of scans in lower/upper half blocks.
-*/
+ * \brief This interrupt routine copies data from the DMA buffer to the user buffer. If write to disk is true, the data is also written to disc.
+ * 
+ * This routine is called every DMASPERINTR=500 scans. The size of a drivers contiguous memory is limited, so we must copy the data from a small buffer to a bigger buffer. The copy process is split in lower/upper half blocks.
+ * 
+ * \param drvno PCIe board identifier.
+ */
 void isr( uint32_t drvno )
 {
-	ES_TRACE( "*isr(): 0x%x\n", IsrCounter );
-	es_status_codes status = setBitS0_32(drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );//set INTRSR flag for TRIGO
+	ES_TRACE( "ISR Counter: 0x%x\n", IsrCounter );
+	// Set INTRSR flag for TRIGO
+	es_status_codes status = setBitS0_32(drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );
 	if (status != es_no_error) return;
-	//! be sure not to stop run before last isr is ready - or last part is truncated
-	//usually dmaBufferSizeInBytes = 1000scans 
-	//dmaBufferPartSizeInBytes = 1000 * pixel *2 -> /2 = 500 scans = 1088000 bytes
-	// that means one 500 scan copy block has 1088000 bytes
-	//!GS sometimes (all 10 minutes) one INTR more occurs -> just do not serve it and return
-	// Fehler wenn zu viele ISRs -> memcpy out of range
-	ES_TRACE( "ISR Counter : 0x%x \n", IsrCounter );
+	// Be sure not to stop run before last ISR is ready or last part is truncated.
+	// Usually dmaBufferSizeInBytes = 1000scans 
+	// Sometimes (all 10 minutes) one INTR more occurs -> just do not serve it and return
+	// Error when too much ISRs -> memcpy out of range
 	if (IsrCounter > numberOfInterrupts)
 	{
 		ES_LOG( "numberOfInterrupts: 0x%x \n", numberOfInterrupts );
@@ -124,16 +123,21 @@ void isr( uint32_t drvno )
 		return;
 	}
 	ES_TRACE("dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes);
-	size_t dmaBufferPartSizeInBytes = dmaBufferSizeInBytes / DMA_BUFFER_PARTS; //1088000 bytes
+	// dmaBufferPartSizeInBytes = 1000 * pixel *2 -> /2 = 500 scans = 1088000 bytes
+	// that means one 500 scan copy block has 1088000 bytes
+	size_t dmaBufferPartSizeInBytes = dmaBufferSizeInBytes / DMA_BUFFER_PARTS;
 	UINT16* dmaBufferReadPos = dmaBuffer[drvno] + dmaBufferPartReadPos[drvno] * dmaBufferPartSizeInBytes / sizeof(UINT16);
-	//here the copyprocess happens
+	// The copy process is done here
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, dmaBufferPartSizeInBytes );
 	ES_TRACE( "userBufferWritePos: 0x%x \n", userBufferWritePos[drvno] );
 	dmaBufferPartReadPos[drvno]++;
-	if (dmaBufferPartReadPos[drvno] >= DMA_BUFFER_PARTS)		//number of ISR per dmaBuf - 1
-		dmaBufferPartReadPos[drvno] = 0;						//dmaBufferPartReadPos is 0 or 1 for buffer devided in 2 parts
+	// number of ISR per dmaBuf - 1
+	if (dmaBufferPartReadPos[drvno] >= DMA_BUFFER_PARTS)
+		// dmaBufferPartReadPos is 0 or 1 for buffer divided in 2 parts
+		dmaBufferPartReadPos[drvno] = 0;
 	userBufferWritePos[drvno] += dmaBufferPartSizeInBytes / sizeof( UINT16 );
-	status = resetBitS0_32(drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );//reset INTRSR flag for TRIGO
+	// Reset INTRSR flag for TRIGO
+	status = resetBitS0_32(drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );
 	IsrCounter++;
 	return;
 }
@@ -496,13 +500,11 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 	ES_LOG( "Copy rest data:\n" );
 	ES_LOG( "dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes );
 	uint16_t* dmaBufferReadPos = dmaBuffer[drvno];
-
-	//dmaBufferPartReadPos is 0 or 1 when DMA_BUFFER_PARTS=2 -> hi/lo half
+	// dmaBufferPartReadPos is 0 or 1 when DMA_BUFFER_PARTS=2 -> hi/lo half
 	dmaBufferReadPos += dmaBufferPartReadPos[drvno] * dmaBufferSizeInBytes /2 / DMA_BUFFER_PARTS;
 	//					0 or 1 for lo/hi half		*  dmabuf in shorts		  /      2	
-	//rest_in_bytes = 2 x pixel x scansrest
-	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes); //GS
-	//memset(userBufferWritePos[drvno], 01, rest_in_bytes); //for testing: writes 257
+	// rest_in_bytes = 2 x pixel x scansrest
+	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes);
 	return;
 }
 
