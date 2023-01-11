@@ -88,6 +88,15 @@ struct verify_data_parameter
 	uint32_t last_measurement_before_error;
 };
 
+struct writeToDisc_information
+{
+	uint32_t drvno;
+	uint16_t* data_buffer_ptr;
+	size_t element_count;
+	size_t element_size;
+	uint64_t interrupt_count;
+};
+
 extern uint32_t* aPIXEL;
 extern uint32_t* aCAMCNT;
 extern bool* useSWTrig;
@@ -106,6 +115,7 @@ extern bool isRunning;
 extern int64_t scanCounterTotal;
 extern uint64_t measurement_cnt;
 extern char start_timestamp[file_timestamp_size];
+extern uint64_t queue_head;
 
 #ifdef __cplusplus
 }
