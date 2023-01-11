@@ -2524,6 +2524,7 @@ es_status_codes StartMeasurement()
 	es_status_codes status = es_no_error;
 	setTimestamp();
 	measurement_cnt = 0;
+	queue_head = 0;
 	do
 	{
 		// Open file for writeToDisc
