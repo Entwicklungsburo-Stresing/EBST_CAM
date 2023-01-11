@@ -60,7 +60,7 @@ es_status_codes CleanupDma(uint32_t drvno)
 		WDC_Err("%s", LSCPCIEJ_GetLastErr());
 		return es_unlocking_dma_failed;
 	}
-	WDC_Err("Unlock DMABuf Successfull\n");
+	WDC_Err("Unlock DMABuf successful\n");
 	dmaBuffer[drvno] = NULL;
 	return es_no_error;
 }
@@ -90,7 +90,7 @@ int64_t InitHRCounter()
 	freq.LowPart = 0;
 	freq.HighPart = 2;
 
-	//tps:: ticks per second = freq
+	//TPS:: ticks per second = freq
 	ifcounter = QueryPerformanceFrequency(&freq);
 	tps = LargeToInt(freq); //ticks per second
 	WDC_Err("TPS: %lld\n", tps);
@@ -298,7 +298,7 @@ es_status_codes writeRegister_16(uint32_t drvno, uint16_t data, uint16_t address
 *
 * \param drv board number (=1 if one PCI board)
 * \param data byte value to write
-* \param address Offset drom BaseAdress of register (count in bytes)
+* \param address Offset from BaseAdress of register (count in bytes)
 * \return es_status_codes
 	- es_no_error
 	- es_register_write_failed
@@ -345,7 +345,7 @@ es_status_codes writeRegister_8twoBoards(uint8_t data1, uint8_t data2, uint16_t 
 };
 
 /**
- * Check drvno for beeing legit
+ * Check drvno for being legit
  * 
  * \param drvno driver number
  * \return es_status_codes:
@@ -373,7 +373,7 @@ uint64_t getPhysicalDmaAddress( uint32_t drvno)
 }
 
 /**
- * \brief Alloc DMA buffer - should only be called once.
+ * \brief Allocate DMA buffer - should only be called once.
  * 
  * Gets address of DMASubBuf from driver and copy it later to our pDMABigBuf.
  * \param drvno PCIe board identifier.
@@ -388,7 +388,7 @@ es_status_codes SetupDma( uint32_t drvno )
 {
 	DWORD dwStatus;
 	ES_LOG( "Setup DMA\n" );
-	//If dma is already set up, clean it before
+	//If DMA is already set up, clean it before
 	if (dmaBuffer[drvno])
 	{
 		es_status_codes status = CleanupDma(drvno);
@@ -398,7 +398,7 @@ es_status_codes SetupDma( uint32_t drvno )
 	DWORD dwOptions = DMA_FROM_DEVICE | DMA_KERNEL_BUFFER_ALLOC;// | DMA_ALLOW_64BIT_ADDRESS;// DMA_ALLOW_CACHE ;
 	if (DMA_64BIT_EN)
 		dwOptions |= DMA_ALLOW_64BIT_ADDRESS;
-//usually we use contig buf: here we get the buffer address from labview.
+//usually we use contiguous buffer: here we get the buffer address from LabVIEW.
 #if DMA_CONTIGBUF
 	// dmaBuffer is the space which is allocated by this function = output - must be global
 	dwStatus = WDC_DMAContigBufLock( hDev[drvno], &dmaBuffer[drvno], dwOptions, dmaBufferSizeInBytes, &dmaBufferInfos[drvno] ); //size in Bytes
@@ -411,7 +411,7 @@ es_status_codes SetupDma( uint32_t drvno )
 #else
 	if (!pDMABigBuf)
 	{
-		ES_LOG( "Failed: buf pointer not valid.\n" );
+		ES_LOG( "Failed: buffer pointer not valid.\n" );
 		return es_getting_dma_buffer_failed;
 	}
 	// pDMABigBuf is the big space which is passed to this function = input - must be global
@@ -508,8 +508,8 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 	uint16_t* dmaBufferReadPos = dmaBuffer[drvno];
 	// dmaBufferPartReadPos is 0 or 1 when DMA_BUFFER_PARTS=2 -> hi/lo half
 	dmaBufferReadPos += dmaBufferPartReadPos[drvno] * dmaBufferSizeInBytes /2 / DMA_BUFFER_PARTS;
-	//					0 or 1 for lo/hi half		*  dmabuf in shorts		  /      2	
-	// rest_in_bytes = 2 x pixel x scansrest
+	//					0 or 1 for lo/hi half		*  DMA buffer in shorts		  /      2	
+	// rest_in_bytes = 2 x pixel x rest in scans
 	ES_LOG("dmaBufferReadPos: 0x%x \n", dmaBufferReadPos);
 	ES_LOG("userBufferWritePos: 0x%x \n", userBufferWritePos);
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes);
@@ -559,7 +559,7 @@ es_status_codes _InitBoard(uint32_t drvno)
 		return es_open_device_failed;
 	}
 	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
-	ES_LOG( "DRVInit hDev id % x, hDev pci slot %x, hDev pci bus %x, hDev pci function %x, hDevNumAddrSp %x \n"	, pDev->id, pDev->slot.dwSlot, pDev->slot.dwBus, pDev->slot.dwFunction, pDev->dwNumAddrSpaces );
+	ES_LOG( "DRVInit hDev id % x, hDev PCI slot %x, hDev PCI bus %x, hDev PCI function %x, hDevNumAddrSp %x \n"	, pDev->id, pDev->slot.dwSlot, pDev->slot.dwBus, pDev->slot.dwFunction, pDev->dwNumAddrSpaces );
 #ifdef WIN32
 	InitProDLL();
 #endif
@@ -567,7 +567,7 @@ es_status_codes _InitBoard(uint32_t drvno)
 }
 
 /**
- *  \brief Windows specific function for intializing driver.
+ *  \brief Windows specific function for initializing driver.
  * 
  * \return es_status_codes:
  *		- es_setting_driver_name_failed
@@ -613,7 +613,7 @@ es_status_codes _InitDriver()
 	{
 		ErrLog( "Failed to initialize the WDC library. Error 0x%lx - %s\n",
 			dwStatus, Stat2Str( dwStatus ) );
-		//doesnt work at this moment before debugsetup
+		//doesn't work at this moment before debug setup
 		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
 		WDC_DriverClose();
 		return es_driver_init_failed;
@@ -680,7 +680,7 @@ es_status_codes _ExitDriver(uint32_t drvno)
 /**
  * @brief Read long (32 bit) from runtime register of PCIe board.
  *  
- * This function reads the memory mapped data , not the I/O Data. Reads data from PCIe conf space.
+ * This function reads the memory mapped data , not the I/O Data. Reads data from PCIe config space.
  * 
  * @param drvno board number (=1 if one PCI board)
  * @param data pointer to where data is stored
@@ -940,7 +940,7 @@ void ValMsg(uint64_t val)
 /**
 * \brief Reads system timer.
 *
-* Read 2x ticks and calculate the difference between the calls in microsec with DLLTickstous, init timer by calling DLLInitSysTimer before use.
+* Read 2x ticks and calculate the difference between the calls in microseconds with DLLTickstous, init timer by calling DLLInitSysTimer before use.
 * \return act ticks
 */
 long long ticksTimestamp()
@@ -956,12 +956,12 @@ long long ticksTimestamp()
  * \brief Returns if trigger or key.
  *
  * Wait for raising edge of Pin #17 SubD = D6 in CtrlA register
- * ReturnKey is 0 if trigger, else keycode (except space )
- * if keycode is space, the loop is not canceled
+ * ReturnKey is 0 if trigger, else key code (except space )
+ * if key code is space, the loop is not canceled
  *
  * D6 depends on Slope (D5)
- * HighSlope = TRUE  : pos. edge
- * HighSlope = FALSE : neg. edge
+ * HighSlope = TRUE  : positive edge
+ * HighSlope = FALSE : negative edge
  *
  * \param drvno PCIe board identifier
  * \param ExtTrigFlag =FALSE: this function is used to get the keyboard input
@@ -1025,11 +1025,11 @@ uint32_t Tickstous(uint64_t tks)
 	delay = tks * 1000000;
 	delay = delay / tps;
 	return (UINT32)delay;
-} // Tickstous
+}
 
 
 /**
- * \brief This functions returns after a time given in microseconds. The time is measured in CPU ticks. The function is escable by pressing ESC.
+ * \brief This functions returns after a time given in microseconds. The time is measured in CPU ticks. The function is escapable by pressing ESC.
  *
  * \param musec Time to wait in microseconds.
  * \return 1 when success, 0 when aborted by ESC or failure
@@ -1040,7 +1040,7 @@ uint8_t WaitforTelapsed(long long musec)
 	long long ticks_to_wait = musec * TPS / 1000000;
 	long long start_timestamp = ticksTimestamp();
 	long long destination_timestamp = start_timestamp + ticks_to_wait;
-	//WDC_Err("Startzeit: %lld\n", start_timestamp);
+	//WDC_Err("start time: %lld\n", start_timestamp);
 	// detect overflow
 	if (destination_timestamp < start_timestamp) return 0;
 	// wait until time elapsed
@@ -1048,7 +1048,7 @@ uint8_t WaitforTelapsed(long long musec)
 	{
 		if (GetAsyncKeyState(VK_ESCAPE) | (FindCam(1) != es_no_error) | abortMeasurementFlag) return 0; // check for kill ?
 	}
-	//WDC_Err("Endzeit:  %lld\n", ticksTimestamp());
+	//WDC_Err("end time:  %lld\n", ticksTimestamp());
 	return 1;
 }
 
