@@ -10,7 +10,7 @@ WDC_DEVICE_HANDLE hDev_tmp[MAXPCIECARDS];
 WDC_DEVICE_HANDLE* hDev = (WDC_DEVICE_HANDLE *)&hDev_tmp;
 DWORD dmaBufferSizeInBytes = 0;
 uint16_t* dmaBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
-DWORD64 IsrCounter = 0;
+uint64_t IsrCounter = 0;
 UINT8 dmaBufferPartReadPos[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 WD_DMA* dmaBufferInfos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL }; //there will be saved the necessary parameters for the DMA buffer
 WDC_PCI_SCAN_RESULT scanResult;
@@ -21,6 +21,7 @@ ULONG oldPriClass = 0;
 ULONG oldThreadLevel = 0;
 HANDLE hProcess;
 HANDLE hThread;
+HANDLE ghMutex[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 FILE* file_stream[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 
 /**
@@ -128,7 +129,13 @@ void isr( uint32_t drvno )
 	UINT16* dmaBufferReadPos = dmaBuffer[drvno] + dmaBufferPartReadPos[drvno] * dmaBufferPartSizeInBytes / sizeof(UINT16);
 	// The copy process is done here
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, dmaBufferPartSizeInBytes );
-	if(settings_struct.write_to_disc) fwrite(dmaBufferReadPos, 1, dmaBufferPartSizeInBytes, file_stream[drvno]);
+	struct writeToDisc_information* w = malloc(sizeof(struct writeToDisc_information));
+	w->drvno = drvno;
+	w->data_buffer_ptr = userBufferWritePos[drvno];
+	w->element_count = dmaBufferPartSizeInBytes / sizeof(uint16_t);
+	w->element_size = sizeof(uint16_t);
+	w->interrupt_count = IsrCounter;
+	if (settings_struct.write_to_disc) _beginthread(&writeToDisc, 0, w);
 	ES_TRACE( "userBufferWritePos: 0x%x \n", userBufferWritePos[drvno] );
 	dmaBufferPartReadPos[drvno]++;
 	// number of ISR per dmaBuf - 1
@@ -506,7 +513,9 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 	ES_LOG("dmaBufferReadPos: 0x%x \n", dmaBufferReadPos);
 	ES_LOG("userBufferWritePos: 0x%x \n", userBufferWritePos);
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes);
+	lockMutex(drvno, numberOfInterrupts+1);
 	if(settings_struct.write_to_disc) fwrite(dmaBufferReadPos, 1, rest_in_bytes, file_stream[drvno]);
+	ReleaseMutex(ghMutex[drvno]);
 	return;
 }
 
@@ -1186,6 +1195,9 @@ void openFile(uint32_t drvno)
 		// Create file and write the file header to it.
 		fopen_s(&file_stream[drvno], filename_full, "ab");
 		writeFileHeaderToFile(drvno, filename_full);
+		if (ghMutex[drvno])
+			CloseHandle(ghMutex[drvno]);
+		ghMutex[drvno] = CreateMutex(NULL, FALSE, NULL);
 	}
 	else
 	{
@@ -1236,6 +1248,54 @@ void writeFileHeaderToFile(uint32_t drvno, char* filename_full)
 	{
 		// Write struct file_header to the file.
 		fwrite(&fh, 1, sizeof(struct file_header), file_stream[drvno]);
+	}
+	return;
+}
+
+void writeToDisc(struct writeToDisc_information* w)
+{
+	ES_TRACE("Start write to disc, interrupt: %u \n", w->interrupt_count);
+	lockMutex(w->drvno, w->interrupt_count);
+	fwrite(w->data_buffer_ptr, w->element_size, w->element_count, file_stream[w->drvno]);
+	queue_head = w->interrupt_count + 1;
+	ReleaseMutex(ghMutex[w->drvno]);
+	ES_TRACE("Write to disc done, interrupt: %u \n", w->interrupt_count);
+	free(w);
+	return;
+}
+
+void lockMutex(uint32_t drvno, uint64_t queue_me)
+{
+	ES_TRACE("Locking mutex, drvno %u, queue_me %u, queue_head %u\n", drvno, queue_me, queue_head);
+	if (ghMutex[drvno])
+	{
+		DWORD dwWaitResult = WaitForSingleObject(ghMutex[drvno], 0);
+		switch (dwWaitResult)
+		{
+		// The mutex was free and is now owned by this thread
+		case WAIT_OBJECT_0:
+			break;
+		// The mutex is occupied by another thread
+		case WAIT_TIMEOUT:
+			while (true)
+			{
+				// Wait until the mutex is free again
+				WaitForSingleObject(ghMutex[drvno], INFINITE);
+				// Check if the queue order of this thread is the chosen one to write next
+				if (queue_me != queue_head)
+					// Release the mutex again, because this thread is not the chosen one
+					ReleaseMutex(ghMutex[drvno]);
+				else
+					// This thread is the chosen one and can be released from the loop
+					break;
+			}
+			break;
+		// Every other case is treated as error and the function returns immediately.
+		default:
+		case WAIT_ABANDONED:
+		case WAIT_FAILED:
+			return;
+		}
 	}
 	return;
 }

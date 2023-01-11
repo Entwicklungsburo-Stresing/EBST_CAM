@@ -60,7 +60,8 @@ void openFile(uint32_t drvno);
 void closeFile(uint32_t drvno);
 void setTimestamp();
 void writeFileHeaderToFile(uint32_t drvno, char* filename_full);
-
+void writeToDisc(struct writeToDisc_information* w);
+void lockMutex(uint32_t drvno, uint64_t queue_me);
 
 #ifdef WIN32
 es_status_codes About(uint32_t drvno);

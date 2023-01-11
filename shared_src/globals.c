@@ -25,6 +25,7 @@ bool isRunning = false;
 int64_t scanCounterTotal = 0;
 uint64_t measurement_cnt = 0;
 char start_timestamp[file_timestamp_size];
+uint64_t queue_head = 0;
 struct global_settings settings_struct =
 {
 	.use_software_polling			= settingsUseSoftwarePollingDefault,
