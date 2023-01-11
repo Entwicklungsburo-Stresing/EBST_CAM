@@ -117,8 +117,8 @@ void isr( uint32_t drvno )
 	// Error when too much ISRs -> memcpy out of range
 	if (IsrCounter > numberOfInterrupts)
 	{
-		ES_LOG( "numberOfInterrupts: 0x%x \n", numberOfInterrupts );
-		ES_LOG( "ISR Counter overflow: 0x%x \n", IsrCounter );
+		ES_LOG( "numberOfInterrupts: %u \n", numberOfInterrupts );
+		ES_LOG( "ISR Counter overflow: %u \n", IsrCounter );
 		status = resetBitS0_32( drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );//reset INTRSR flag for TRIGO
 		return;
 	}
