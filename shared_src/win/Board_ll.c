@@ -1193,7 +1193,7 @@ void openFile(uint32_t drvno)
 	{
 		ES_LOG("File doesn't exist. Creating file.\n");
 		// Create file and write the file header to it.
-		fopen_s(&file_stream[drvno], filename_full, "ab");
+		fopen_s(&file_stream[drvno], filename_full, "abc");
 		writeFileHeaderToFile(drvno, filename_full);
 		if (ghMutex[drvno])
 			CloseHandle(ghMutex[drvno]);
@@ -1202,7 +1202,7 @@ void openFile(uint32_t drvno)
 	else
 	{
 		ES_LOG("File already exist. Open file.\n");
-		fopen_s(&file_stream[drvno], filename_full, "ab");
+		fopen_s(&file_stream[drvno], filename_full, "abc");
 	}
 	return;
 }
@@ -1258,6 +1258,7 @@ void writeToDisc(struct writeToDisc_information* w)
 	lockMutex(w->drvno, w->interrupt_count);
 	fwrite(w->data_buffer_ptr, w->element_size, w->element_count, file_stream[w->drvno]);
 	queue_head = w->interrupt_count + 1;
+	_flushall();
 	ReleaseMutex(ghMutex[w->drvno]);
 	ES_TRACE("Write to disc done, interrupt: %u \n", w->interrupt_count);
 	free(w);
