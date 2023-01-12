@@ -263,7 +263,7 @@ es_status_codes SetMshut(uint32_t drvno, bool mshut)
  * 
  * This setting only has an effect, when sensor type is PDA and no SEC is used.
  * When these two conditions are met, this function controls, whether a reset signal
- * is sent or not. The length of the reset signal is controled by SetSensorResetShort()
+ * is sent or not. The length of the reset signal is controlled by SetSensorResetShort()
  * \param drvno PCIe board identifier
  * \param enable
  *		- true: send sensor reset signal
@@ -314,7 +314,7 @@ es_status_codes SetSensorResetShort(uint32_t drvno, bool enable_short)
  * This setting only has an effect, when sensor type is PDA, no SEC is used and SetSensorResetEnable is set to true.
  * When these conditions are met, this function controls, whether the reset signal is done during XCK or after.
  * The exact time when the reset is done for the early case, is determined by a counter in the PCIe board. The reset
- * pulse is beeing aimed to be after the TG pulse of 3030.
+ * pulse is being aimed to be after the TG pulse of 3030.
  * \param drvno PCIe board identifier.
  * \param enable_early:
  *		- true: during XCK
@@ -396,7 +396,7 @@ es_status_codes AbortMeasurement()
 		status = ResetDma( 2 );
 		if (status != es_no_error) return status;
 
-	// fallthrough
+	// fall through
 	default:
 	case 1:
 		status = StopSTimer( 1 );
@@ -495,7 +495,7 @@ es_status_codes ResetDma( uint32_t drvno )
 		ES_LOG("switch on the Initiator Reset for the DMA failed\n");
 		return status;
 	}
-	// DCSR: reset the Iniator Reset 
+	// DCSR: reset the Initiator Reset 
 	RegisterValues = 0x0;
 	status = writeBitsDma_32(drvno, RegisterValues, BitMask, DmaAddr_DCSR);
 	if (status != es_no_error)
@@ -794,7 +794,7 @@ es_status_codes SetupFullBinning( uint32_t drvno, uint32_t lines, uint8_t vfreq 
  * 
  * \param drvno board number (=1 if one PCI board)
  * \param lines number of vertical lines
- * \param vfreq vertical clk frequency
+ * \param vfreq vertical clock frequency
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_write_failed
@@ -808,11 +808,11 @@ es_status_codes SetupVCLKReg( uint32_t drvno, uint32_t lines, uint8_t vfreq )
 }
 
 /**
- * \brief sets Vertical Partial Binning in registers R10,R11 and and R12. Only for FFT sensors.
+ * \brief sets Vertical Partial Binning in registers R10,R11 and R12. Only for FFT sensors.
  *
  * \param drvno PCIe board identifier
  * \param range specifies R 1..5
- * \param lines number of vertical clks for next read
+ * \param lines number of vertical clocks for next read
  * \param keep TRUE if scan should be written to FIFO
  * \return es_status_codes
  *		- es_no_error
@@ -926,9 +926,9 @@ es_status_codes SetMeasurementParameters( uint32_t drvno, uint32_t nos, uint32_t
 	if (status != es_no_error) return status;
 	uint32_t dmaBufferPartSizeInScans = settings_struct.dma_buffer_size_in_scans / DMA_BUFFER_PARTS; //500
 	if (BOARD_SEL > 2)
-		numberOfInterrupts = *Nob * (*Nospb) * aCAMCNT[drvno] * number_of_boards / dmaBufferPartSizeInScans - 2;//- 2 because intr counter starts with 0
+		numberOfInterrupts = *Nob * (*Nospb) * aCAMCNT[drvno] * number_of_boards / dmaBufferPartSizeInScans - 2;//- 2 because interrupt counter starts with 0
 	else
-		numberOfInterrupts = *Nob * (*Nospb) * aCAMCNT[drvno] / dmaBufferPartSizeInScans - 1;//- 1 because intr counter starts with 0
+		numberOfInterrupts = *Nob * (*Nospb) * aCAMCNT[drvno] / dmaBufferPartSizeInScans - 1;//- 1 because interrupt counter starts with 0
 	ES_LOG("Number of interrupts: 0x%x \n", numberOfInterrupts);
 	return status;
 }
@@ -960,7 +960,7 @@ es_status_codes StopSTimer( uint32_t drvno )
  */
 es_status_codes RSFifo( uint32_t drvno )
 {
-	ES_LOG("Reset Fifo\n");
+	ES_LOG("Reset FIFO\n");
 	es_status_codes status = setBitS0_8(drvno, BTRIGREG_bitindex_RSFIFO, S0Addr_BTRIGREG);
 	if (status != es_no_error) return status;
 	return resetBitS0_8(drvno, BTRIGREG_bitindex_RSFIFO, S0Addr_BTRIGREG);
@@ -1025,7 +1025,7 @@ es_status_codes SetDMABufRegs( uint32_t drvno )
 	//DMABufSizeInScans - use 1 block
 	es_status_codes status = writeBitsS0_32(drvno, settings_struct.dma_buffer_size_in_scans, 0xffffffff, S0Addr_DmaBufSizeInScans);
 	if (status != es_no_error) return status;
-	//scans per intr must be 2x per DMA_BUFFER_SIZE_IN_SCANS to copy hi/lo part
+	//scans per interrupt must be 2x per DMA_BUFFER_SIZE_IN_SCANS to copy hi/lo part
 	//aCAMCNT: double the INTR if 2 cams
 	uint32_t dmasPerInterrupt = settings_struct.dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
 	status = writeBitsS0_32(drvno, dmasPerInterrupt, 0xffffffff, S0Addr_DMAsPerIntr);
@@ -1265,7 +1265,7 @@ es_status_codes SetBTimer( uint32_t drvno, uint32_t btime_in_microseconds )
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
- * register dump with _AboutGPX() aber mit fehler status
+ * register dump with _AboutGPX() but with error status
  */
 es_status_codes InitGPX( uint32_t drvno, uint32_t delay )
 {
@@ -1278,18 +1278,18 @@ es_status_codes InitGPX( uint32_t drvno, uint32_t delay )
 		{ 0, 0x000000AB },	// write to reg0: 0x80 disable inputs
 	{ 1, 0x0620620 },	// write to reg1: 0x0620620 channel adjust
 	{ 2, 0x00062FFC },	// write to reg2: 62E04  R-mode, disable all CH
-	{ 3, 0x00000000 },	// write to reg3: 0 set to ecl
+	{ 3, 0x00000000 },	// write to reg3: 0 set to ECL
 	{ 4, 0x02000000 },	// write to reg4: 0x02000000 EF flag=on
-	{ 6, 0x08000001 },	// write to reg6: ecl + FILL=1
+	{ 6, 0x08000001 },	// write to reg6: ECL + FILL=1
 	{ 7, 0x00001FB4 },	// write to reg7: res= 27ps 
 	{ 11, 0x07ff0000 },	// write to reg11: 7ff all error flags (layout flag is not connected)
-	{ 12, 0x00000000 },	// write to reg12: no ir flags - is used anyway when 1 hit
+	{ 12, 0x00000000 },	// write to reg12: no IR flags - is used anyway when 1 hit
 	{ 14, 0x0 },
-	//scharf setzen
+	//arm
 	{ 4, 0x02400000 },	// write to reg4: master reset
-	{ 2, 0x00062004 }	// write to reg2: 62E04  R-mode, en CH0..5 (3 werte
+	{ 2, 0x00062004 }	// write to reg2: 62E04  R-mode, en CH0..5 (3 values
 	};
-	// setupo GPX chip for mode M
+	// setup GPX chip for mode M
 	//reset GPX  ´bit0 in GPXCTRL reg
 	es_status_codes status = readRegisterS0_32( drvno, &regData, S0Addr_TDCCtrl );
 	if (status != es_no_error) return status;
@@ -1307,7 +1307,7 @@ es_status_codes InitGPX( uint32_t drvno, uint32_t delay )
 		status = SetGPXCtrl( drvno, (uint8_t)RegData[write_reg][0], RegData[write_reg][1] );//write
 		if (status != es_no_error) return status;
 		status = ReadGPXCtrl( drvno, (uint8_t)RegData[write_reg][0], &regData );//read
-		if (RegData[write_reg][1] != regData) err_cnt++;//compare write data with readdata
+		if (RegData[write_reg][1] != regData) err_cnt++;//compare write data with read data
 	}
 	return status;
 }
@@ -1487,7 +1487,7 @@ es_status_codes Use_ENFFW_protection( uint32_t drvno, bool USE_ENFFW_PROTECT )
 }
 
 /**
- * \brief Sends data via fibre link, e.g. used for sending data to ADC (ADS5294).
+ * \brief Sends data via fiber link, e.g. used for sending data to ADC (ADS5294).
  * 
  * Send setup:
  * - d0:d15 = data for AD-Reg  ADS5294
@@ -1562,7 +1562,7 @@ es_status_codes InitCamera3001( uint32_t drvno  )
  * 	with frame rate 8kHz = min. 125µs exp time
  * \param drvno selects PCIe board
  * \param adc_mode 0: normal mode, 2: custom pattern
- * \param custom_pattern fixed output for testmode, ignored when testmode FALSE
+ * \param custom_pattern fixed output for test mode, ignored when test mode FALSE
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
@@ -1570,7 +1570,7 @@ es_status_codes InitCamera3001( uint32_t drvno  )
 es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern )
 {
 	ES_LOG("Init camera 3010, adc_mode: %u, custom_pattern: %u\n", adc_mode, custom_pattern);
-	//es_status_codes status = Use_ENFFW_protection(drvno, true); // test andre 04.05.2022
+	//es_status_codes status = Use_ENFFW_protection(drvno, true); // test Andre 04.05.2022
 	//if (status != es_no_error) return status;
 	es_status_codes status = Cam3010_ADC_reset( drvno );
 	if (status != es_no_error) return status;
@@ -1586,8 +1586,8 @@ es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custo
 /**
  * \brief ADC reset routine for Camera System 3010.
  * 
- * 	ADC LTC2271 neets a reset via SPI first. Bit D7
- * 	of the resetregister A0 with address 00h is set to 1.
+ * 	ADC LTC2271 needs a reset via SPI first. Bit D7
+ * 	of the reset register A0 with address 00h is set to 1.
  * 	D6:D0 are don't care. So address is 00h and data is
  * 	80h = 10000000b for e.g.
  * 	This has to be done after every startup.
@@ -1674,7 +1674,7 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
  */
 es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t adc_gain, bool useDac, uint32_t* dac_output, bool is_hs_ir)
 {
-	ES_LOG("Init camera 3030, adc_mode: %u, custom_pattern: %u, adc_gain: %u, use dac: %u, is_hs_ir: %u\n", adc_mode, custom_pattern, adc_gain, useDac, is_hs_ir);
+	ES_LOG("Init camera 3030, adc_mode: %u, custom_pattern: %u, adc_gain: %u, use DAC: %u, is_hs_ir: %u\n", adc_mode, custom_pattern, adc_gain, useDac, is_hs_ir);
 	es_status_codes status = Cam3030_ADC_reset(drvno);
 	if (status != es_no_error) return status;
 	//two wire mode output interface for pal versions P209_2 and above
@@ -1706,10 +1706,10 @@ es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom
 	// or use sec
 	status = SetSEC(drvno, settings_struct.sec_in_10ns);
 	if (status != es_no_error) return status;
-	// When sec is used, use ifc signal from PCIe card
+	// When sec is used, use IFC signal from PCIe card
 	if (settings_struct.sec_in_10ns)
 		status = Cam3030_ADC_SetIfcMode(drvno, 0);
-	// in other cases use ifc signal from camera, short or long
+	// in other cases use IFC signal from camera, short or long
 	else if(settings_struct.shortrs)
 		status = Cam3030_ADC_SetIfcMode(drvno, 1);
 	else
@@ -1760,7 +1760,7 @@ es_status_codes Cam3030_ADC_twoWireModeEN( uint32_t drvno )
 /**
  * \brief ADC gain config routine for Camera System 3030.
  * 
- * 	Sets gain of ADC ADS5294 0...15 by callig SetADGain() subroutine.
+ * 	Sets gain of ADC ADS5294 0...15 by calling SetADGain() subroutine.
  * 	Called by InitCamera3030
  * \param drvno selects PCIe board
  * \param gain of ADC
@@ -1858,10 +1858,10 @@ es_status_codes Cam3030_ADC_RampOrPattern( uint32_t drvno, uint8_t adc_mode, uin
 		break;
 	case 2: //custom pattern
 		//to activate custom pattern the following messages are necessary: d - data
-		//at addr 0x25 (mode and higher bits): 0b00000000000100dd
+		//at address 0x25 (mode and higher bits): 0b00000000000100dd
 		status = SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_custompattern | ((custom_pattern >> 12) & 0x3) );
 		if (status != es_no_error) return status;
-		//at addr 0x26 (lower bits): 0bdddddddddddd0000
+		//at address 0x26 (lower bits): 0bdddddddddddd0000
 		status = SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_custompattern, (uint16_t)(custom_pattern << 4) );
 		break;
 	default:
@@ -1873,7 +1873,7 @@ es_status_codes Cam3030_ADC_RampOrPattern( uint32_t drvno, uint8_t adc_mode, uin
 /**
  * \brief Enable or disable filters for all 8 channels
  *
- * Global enable must be set to true, if you want to use at least one filter. Filters can be enabled / disabled seperately by Cam3030_ADC_SetFilter(). When the global filter enable is true, all channels are either passed through the filter or through a dummy delay so that the overall latency of all channels is 20 clock cycles.
+ * Global enable must be set to true, if you want to use at least one filter. Filters can be enabled / disabled separately by Cam3030_ADC_SetFilter(). When the global filter enable is true, all channels are either passed through the filter or through a dummy delay so that the overall latency of all channels is 20 clock cycles.
  * \param drvno selects PCIe board
  * \param enable true: 
  * \return es_status_codes:
@@ -1973,7 +1973,7 @@ es_status_codes Cam3030_ADC_SetDataRate(uint32_t drvno, uint8_t data_rate)
  * \param drvno selects PCIe board
  * \param enable
  *		- true: enable noise suppression mode
- *		- false: disable noise suppresson mode
+ *		- false: disable noise suppression mode
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
@@ -2017,7 +2017,7 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 		if (status != es_no_error) return status;
 		status = Cam3030_ADC_SetDataRate(drvno, 0);
 	}
-	// When sample mode is not 0, more complicated stuff is done here. Filters in the ADC are acitvated and set.
+	// When sample mode is not 0, more complicated stuff is done here. Filters in the ADC are activated and set.
 	else
 	{
 		uint8_t active_coefficients;
@@ -2065,7 +2065,7 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 		uint8_t number_of_coefficients = 12;
 		// Coefficient sets are unused, because only custom coefficients are used.
 		uint8_t coeff_set = 0;
-		// The decimation factor reduces the output of data per channel. This function is unsed and instead the global reduction per Cam3030_ADC_SetDataRate is used.
+		// The decimation factor reduces the output of data per channel. This function is unused and instead the global reduction per Cam3030_ADC_SetDataRate is used.
 		uint8_t decimation_factor = 0;
 		// Always enable filters and coefficients. Disabling is done with Cam3030_ADC_Global_En_Filter.
 		uint8_t enable = 1;
@@ -2108,7 +2108,7 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
  */
 es_status_codes Cam3030_ADC_SetIfcMode(uint32_t drvno, uint16_t ifc_mode)
 {
-	ES_LOG("Cam3030_ADC_SetIfcMode(), setting ifc mode to %u\n", ifc_mode);
+	ES_LOG("Cam3030_ADC_SetIfcMode(), setting IFC mode to %u\n", ifc_mode);
 	// send the sample mode to the camera
 	return SendFLCAM(drvno, maddr_cam, cam_adaddr_ifc_mode, ifc_mode);
 }
@@ -2132,7 +2132,7 @@ es_status_codes SetTemp( uint32_t drvno, uint8_t level )
 }
 
 /**
- * \brief Sends data via fibre link to DAC8568. Mapping of bits in DAC8568: 4 prefix, 4 control, 4 address, 16 data, 4 feature.
+ * \brief Sends data via fiber link to DAC8568. Mapping of bits in DAC8568: 4 prefix, 4 control, 4 address, 16 data, 4 feature.
  * 
  * \param drvno board number (=1 if one PCI board)
  * \param ctrl 4 control bits
@@ -2185,7 +2185,7 @@ es_status_codes SendFLCAM_DAC( uint32_t drvno, uint8_t ctrl, uint8_t addr, uint1
  * \brief Sets all outputs of the DAC8568 on PCB 2189-7.
  * 
  * Use this function to set the outputs, because it is resorting the channel numeration correctly.
- * \param drvno pcie board identifier
+ * \param drvno PCIe board identifier
  * \param output all output values that will be converted to analog voltage (0 ... 0xFFFF)
  * \param isIR
  * \return es_status_codes
@@ -2218,7 +2218,7 @@ es_status_codes DAC_setAllOutputs(uint32_t drvno, uint32_t* output, bool isIR)
 /**
  * \brief Sets the output of the DAC8568 on PCB 2189-7.
  * 
- * \param drvno pcie board identifier
+ * \param drvno PCIe board identifier
  * \param channel select one of eight output channel (0 ... 7)
  * \param output output value that will be converted to analog voltage (0 ... 0xFFFF)
  * \return es_status_codes
@@ -2343,8 +2343,8 @@ es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
 	status = writeConfig_32(drvno, data, PCIeAddr_devStatCtrl);
 	if (status != es_no_error) return status;
 	uint64_t dma_physical_address = getPhysicalDmaAddress(drvno);
-	// WDMATLPA (Reg name): write the lower part (bit 02:31) of the DMA adress to the DMA controller
-	ES_LOG("Set WDMATLPA to physical address of dma buffer 0x%016lx\n", dma_physical_address);
+	// WDMATLPA (Reg name): write the lower part (bit 02:31) of the DMA address to the DMA controller
+	ES_LOG("Set WDMATLPA to physical address of DMA buffer 0x%016lx\n", dma_physical_address);
 	status = writeBitsDma_32(drvno, (uint32_t)dma_physical_address, 0xFFFFFFFC, DmaAddr_WDMATLPA);
 	if (status != es_no_error) return status;
 	//WDMATLPS: write the upper part (bit 32:39) of the address
@@ -2379,7 +2379,7 @@ es_status_codes writeBitsDma_32( uint32_t drvno, uint32_t data, uint32_t bitmask
 	if (status != es_no_error) return status;
 	//step 0: delete not needed "1"s
 	data &= bitmask;
-	//step 1: save Data as setbitmask for making this part humanreadable
+	//step 1: save Data as setbitmask for making this part human readable
 	uint32_t Setbit_mask = data;
 	//step 2: setting high bits in the Data
 	uint32_t OldRegVals_and_SetBits = OldRegisterValues | Setbit_mask;
@@ -2411,7 +2411,7 @@ es_status_codes writeBitsDma_8( uint32_t drvno, uint8_t data, uint8_t bitmask, u
 	if (status != es_no_error) return status;
 	//step 0: delete not needed "1"s
 	data &= bitmask;
-	//step 1: save Data as setbitmask for making this part humanreadable
+	//step 1: save Data as setbitmask for making this part human readable
 	uint8_t Setbit_mask = data;
 	//step 2: setting high bits in the Data
 	uint8_t OldRegVals_and_SetBits = OldRegisterValues | Setbit_mask;
@@ -2484,7 +2484,7 @@ es_status_codes readRegisterDma_8( uint32_t drvno, uint8_t* data, uint16_t addre
 }
 
 /**
- * @brief Set Dma Start Mode 
+ * @brief Set DMA Start Mode 
  * 
  * @param drvno PCIe board identifier
  * @param start_by_hardware true: every XCK h->l starts DMA by hardware, false: by software
@@ -3162,7 +3162,7 @@ es_status_codes ReturnFrame(uint32_t drv, uint32_t curr_nos, uint32_t curr_nob, 
 /**
  * \brief Returns the index of a pixel located in userBuffer.
  * 
- * \param drvno indentifier of PCIe card
+ * \param drvno identifier of PCIe card
  * \param pixel position in one scan (0...(PIXEL-1))
  * \param sample position in samples (0...(nos-1))
  * \param block position in blocks (0...(nob-1))
@@ -3179,7 +3179,7 @@ es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample
 	//init index with base position of pixel
 	uint64_t index = pixel;
 	//position of index at CAM position
-	index += (uint64_t)CAM *((uint64_t)aPIXEL[drvno]); // AM! hatte +4 fuer PCIe versionen vor P202_23 um scnacounter in 2ter cam nach links zu schieben
+	index += (uint64_t)CAM *((uint64_t)aPIXEL[drvno]); // AM! was +4 for PCIe version before P202_23 to shift scan counter in 2nd camera to the left
 	//position of index at sample
 	index += (uint64_t)sample * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno];
 	//position of index at block
@@ -3191,7 +3191,7 @@ es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample
 /**
  * \brief Returns the address of a pixel located in userBuffer.
  * 
- * \param drvno indentifier of PCIe card
+ * \param drvno identifier of PCIe card
  * \param pixel position in one scan (0...(PIXEL-1))
  * \param sample position in samples (0...(nos-1))
  * \param block position in blocks (0...(nob-1))
@@ -3233,7 +3233,7 @@ double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time
  */
 double CalcRamUsageInMB(uint32_t nos, uint32_t nob)
 {
-	ES_LOG("Calc ram usage in MB, nos: %u:, nob: %u\n", nos, nob);
+	ES_LOG("Calculate ram usage in MB, nos: %u:, nob: %u\n", nos, nob);
 	double ramUsage = 0;
 	for (int i = 0; i < number_of_boards; i++)
 		ramUsage += (uint64_t)nos * (uint64_t)nob * (uint64_t)aPIXEL[i + 1] * (uint64_t)aCAMCNT[i + 1] * sizeof(uint16_t);
@@ -3243,10 +3243,10 @@ double CalcRamUsageInMB(uint32_t nos, uint32_t nob)
 }
 
 /**
- * \brief Online calc TRMS noise val of pix.
+ * \brief Online calculate TRMS noise val of pix.
  *
  * Calculates RMS of TRMS_pixel in the range of samples from firstSample to lastSample. Only calculates RMS from one block.
- * \param drvno indentifier of PCIe card
+ * \param drvno identifier of PCIe card
  * \param firstSample start sample to calculate RMS. 0...(nos-2). Typical value: 10, to skip overexposed first samples
  * \param lastSample last sample to calculate RMS. firstSample+1...(nos-1).
  * \param TRMS_pixel pixel for calculating noise (0...(PIXEL-1))
@@ -3263,7 +3263,7 @@ es_status_codes CalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSamp
 	if (firstSample >= lastSample || lastSample > *Nospb)
 	{
 		//error: firstSample must be smaller than lastSample
-		ES_LOG("Calc Trms failed. lastSample must be greater than firstSample and both in bounderies of nos, drvno: %u, firstSample: %u, lastSample: %u, TRMS_pixel: %u, CAMpos: %u, Nospb: %u\n", drvno, firstSample, lastSample, TRMS_pixel, CAMpos, *Nospb);
+		ES_LOG("Calc Trms failed. lastSample must be greater than firstSample and both in boundaries of nos, drvno: %u, firstSample: %u, lastSample: %u, TRMS_pixel: %u, CAMpos: %u, Nospb: %u\n", drvno, firstSample, lastSample, TRMS_pixel, CAMpos, *Nospb);
 		*mwf = -1;
 		*trms = -1;
 		return es_parameter_out_of_range;
@@ -3271,7 +3271,7 @@ es_status_codes CalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSamp
 	uint32_t samples = lastSample - firstSample;
 	uint16_t *TRMS_pixels = calloc(samples, sizeof(uint16_t));
 	if (!TRMS_pixels) return es_allocating_memory_failed;
-	//storing the values of one pix for the rms analysis
+	//storing the values of one pix for the RMS analysis
 	for (uint32_t scan = 0; scan < samples; scan++)
 	{
 		uint64_t TRMSpix_of_current_scan = 0;
@@ -3279,7 +3279,7 @@ es_status_codes CalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSamp
 		if (status != es_no_error) return status;
 		TRMS_pixels[scan] = userBuffer[drvno][TRMSpix_of_current_scan];
 	}
-	//rms analysis
+	//RMS analysis
 	GetRmsVal(samples, TRMS_pixels, mwf, trms);
 	free(TRMS_pixels);
 	return es_no_error;
@@ -3293,11 +3293,11 @@ void GetRmsVal(uint32_t nos, uint16_t *TRMSVals, double *mwf, double *trms)
 
 	for (uint32_t i = 0; i < nos; i++)
 	{//get mean val
-		*mwf += TRMSVals[i];//for C-Noobs: this is the same like *(TRMSVals+1)
+		*mwf += TRMSVals[i];
 	}
 	*mwf /= nos;
 	for (uint32_t i = 0; i < nos; i++)
-	{// get varianz
+	{// get variance
 		*trms = TRMSVals[i];
 		*trms = *trms - *mwf;
 		*trms *= *trms;
@@ -3331,10 +3331,10 @@ es_status_codes checkFifoFlags(uint32_t drvno, bool* valid)
 /**
  * \brief Check ovl flag (overflow of FIFO).
  *
- * If occured stays active until a call of FFRS.
+ * If occurred stays active until a call of FFRS.
  * \param drvno board number (=1 if one PCI board)
  * \param overflow
- * \return Is true (not 0) if overflow occured (linecounter>0).
+ * \return Is true (not 0) if overflow occurred (linecounter>0).
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_read_failed
@@ -3484,7 +3484,7 @@ es_status_codes OutTrigPulse(uint32_t drvno, uint32_t PulseWidth)
  * \param drv board number
  * \param btrig_ch specify input channel
  * 			- btrig_ch=0 not used
- * 			- btrig_ch=1 is pcie trig in I
+ * 			- btrig_ch=1 is PCIe trig in I
  * 			- btrig_ch=2 is S1
  * 			- btrig_ch=3 is S2
  * 			- btrig_ch=4 is S1&S2
@@ -3708,7 +3708,7 @@ es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr)
 		"DMISCCONT"
 	}; //Look-Up-Table for the DMA Registers
 	uint32_t data = 0;
-	//allocate string buffer buffer
+	//allocate string buffer
 	*stringPtr = (char*)calloc(number_of_registers * bufferLength, sizeof(char));
 	int len = 0;
 	size_t bufferSize = number_of_registers * bufferLength;
@@ -3737,7 +3737,7 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 	uint32_t data = 0;
 	int len = 0;
 	size_t bufferSize = bufferLength;
-	//allocate string buffer buffer
+	//allocate string buffer
 	*stringPtr = (char*)calloc(bufferLength, sizeof(char));
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "PAY_LOAD values:\t"DLLTAB"0 = 128 bytes\n\t"DLLTAB DLLTAB"1 = 256 bytes\n\t"DLLTAB DLLTAB"2 = 512 bytes\n");
 	es_status_codes status = readConfig_32(drvno, &data, PCIeAddr_devCap);
@@ -3850,7 +3850,7 @@ es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
 	//ErrorMsg("_AboutGPX");
 	return status;
 	/*
-	//kehrt nicht zurueck in diesem Teil A.M. 24.08.2022
+	//doesn't return to this part A.M. 24.08.2022
 	bool abbr = false, space = false;
 	int i = 0;
 	while (!abbr)
@@ -4106,7 +4106,7 @@ es_status_codes dumpPciRegisters(uint32_t drvno, char** stringPtr)
 * - win4 : vendor ID = EBST
 * - win5 : PCI board version (same as label on PCI board)
 * \param drvno board number (=1 if one PCI board)
-* \param stringPtr string with driver informtion is given back here
+* \param stringPtr string with driver information is given back here
 * \return es_status_codes
 * 	- es_no_error
 * 	- es_register_read_failed
@@ -4255,7 +4255,7 @@ es_status_codes ResetDSC( uint32_t drvno, uint8_t DSCNumber )
 	case 1: data = 0x1; break;
 	case 2: data = 0x100; break;
 	}
-	//for reset you have to set a 1 to the reg and then a zero to allw a new start again
+	//for reset you have to set a 1 to the reg and then a zero to allow a new start again
 	status = writeBitsS0_32( drvno, data, data, S0Addr_DSCCtrl );
 	if (status != es_no_error) return status;
 	return writeBitsS0_32( drvno, 0, data, S0Addr_DSCCtrl );
@@ -4386,7 +4386,7 @@ es_status_codes IOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width
 }
 
 /**
- * \brief Set paramters of all pulses output of IOCTRL.
+ * \brief Set parameters of all pulses output of IOCTRL.
  *
  * \param drvno PCIe board identifier.
  * \param width_in_5ns Set width of pulse in 5ns steps. Array with 7 entries.
@@ -4429,10 +4429,10 @@ es_status_codes IOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 }
 
 /**
- * \brief This function copies valid data from dma buffer to user buffer.
+ * \brief This function copies valid data from DMA buffer to user buffer.
  * 
- * This function tracks the dma buffer and every time there is new data available, it is copied to the user buffer.
- * The memory of the dma buffer which was copied is then set to 0. Create a new thread for this function. This function 
+ * This function tracks the DMA buffer and every time there is new data available, it is copied to the user buffer.
+ * The memory of the DMA buffer which was copied is then set to 0. Create a new thread for this function. This function 
  * should run parallel to the measurement. This function is only used when USE_SOFTWARE_POLLING is true.
  * 
  * \param drvno_p Pointer to PCIe board identifier.
@@ -4441,15 +4441,15 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 {
 	uint32_t drvno = *drvno_p;
 	free(drvno_p);
-	ES_LOG("Poll dma buffer to user buffer started. drvno: %u\n", drvno);
+	ES_LOG("Poll DMA buffer to user buffer started. drvno: %u\n", drvno);
 	// Get the pointer to DMA buffer.
 	uint16_t* dmaBuffer = getVirtualDmaAddress(drvno);
-	ES_TRACE("Dma buffer address: %p\n", (void*)dmaBuffer);
+	ES_TRACE("DMA buffer address: %p\n", (void*)dmaBuffer);
 	// Set dmaBufferReadPos pointer to base address of DMA buffer. dmaBufferReadPos indicates the current read position in the DMA buffer.
 	uint16_t* dmaBufferReadPos = dmaBuffer;
 	// Calculate pointer to the end of the DMA buffer.
 	uint16_t* dmaBufferEnd = dmaBufferReadPos + getDmaBufferSizeInBytes(drvno) / sizeof(uint16_t);
-	ES_TRACE("Dma buffer end: %p\n", (void*)dmaBufferEnd);
+	ES_TRACE("DMA buffer end: %p\n", (void*)dmaBufferEnd);
 	// Calculate the size of the complete measurement in bytes.
 	uint32_t dataToCopyInBytes = aPIXEL[drvno] * aCAMCNT[drvno] * (*Nospb) * (*Nob) * sizeof(uint16_t);
 	ES_TRACE("Data to copy in bytes: %u\n", dataToCopyInBytes);
@@ -4483,7 +4483,7 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 			ES_TRACE("User buffer write position: %p\n", (void*)userBufferWritePos_polling);
 			// Copy the data.
 			memcpy(userBufferWritePos_polling, dmaBufferReadPos, sizeOfOneScanInBytes);
-			// Set the memory of the copied data to 0 in the dma buffer.
+			// Set the memory of the copied data to 0 in the DMA buffer.
 			memset(dmaBufferReadPos, 0, sizeOfOneScanInBytes);
 			// Advance the pointers and counters.
 			dmaBufferReadPos += sizeOfOneScanInBytes / sizeof(uint16_t);
@@ -4540,7 +4540,7 @@ void GetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block)
  * \brief Gives scan and block number of the last scan written to userBuffer.
  * 
  * When USE_SOFTWARE_POLLING is true this function converts scanCounterTotal to scan and block.
- * This is neceserry, because scanCounterTotal is just counting each scan not regarding camcnt and blocks.
+ * This is necessary, because scanCounterTotal is just counting each scan not regarding camcnt and blocks.
  * When USE_SOFTWARE_POLLING is false the scan and block number of the last interrupt is given.
  * 
  * \param drvno PCIe board identifier.
