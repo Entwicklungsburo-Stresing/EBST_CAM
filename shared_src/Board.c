@@ -2527,6 +2527,7 @@ es_status_codes StartMeasurement()
 	queue_head = 0;
 	do
 	{
+		ES_TRACE("measurement count: %u\n", measurement_cnt);
 		// Open file for writeToDisc
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
