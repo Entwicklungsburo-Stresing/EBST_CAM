@@ -1210,6 +1210,7 @@ void openFile(uint32_t drvno)
 void closeFile(uint32_t drvno)
 {
 	ES_LOG("Close file\n");
+	WaitForSingleObject(ghMutex[drvno], INFINITE);
 	fclose(file_stream[drvno]);
 	return;
 }
