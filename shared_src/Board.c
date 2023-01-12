@@ -2524,18 +2524,20 @@ es_status_codes StartMeasurement()
 	es_status_codes status = es_no_error;
 	setTimestamp();
 	measurement_cnt = 0;
-	queue_head = 0;
 	do
 	{
 		ES_TRACE("measurement count: %u\n", measurement_cnt);
-		// Open file for writeToDisc
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
-			if (settings_struct.write_to_disc) openFile(1);
+			uint32_t* drvno_tmp = malloc(sizeof(uint32_t));
+			*drvno_tmp = 1;
+			if (settings_struct.write_to_disc) _beginthread(&writeToDisc, 0, drvno_tmp);
 		}
 		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
 		{
-			if (settings_struct.write_to_disc) openFile(2);
+			uint32_t* drvno_tmp = malloc(sizeof(uint32_t));
+			*drvno_tmp = 2;
+			if (settings_struct.write_to_disc) _beginthread(&writeToDisc, 0, drvno_tmp);
 		}
 		// Reset the hardware block counter and scan counter.
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
@@ -2792,14 +2794,6 @@ es_status_codes StartMeasurement()
 			continiousMeasurementFlag = false;
 		abortMeasurementFlag = checkEscapeKeyState();
 		WaitforTelapsed(continiousPauseInMicroseconds);
-		if (BOARD_SEL == 1 || BOARD_SEL == 3)
-		{
-			if (settings_struct.write_to_disc) closeFile(1);
-		}
-		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
-		{
-			if (settings_struct.write_to_disc) closeFile(2);
-		}
 		measurement_cnt++;
 	} while (continiousMeasurementFlag && !abortMeasurementFlag);
 	ES_LOG("*** Measurement done ***\n\n");
