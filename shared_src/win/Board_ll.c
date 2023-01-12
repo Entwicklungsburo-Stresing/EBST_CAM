@@ -1268,35 +1268,22 @@ void writeToDisc(struct writeToDisc_information* w)
 
 void lockMutex(uint32_t drvno, uint64_t queue_me)
 {
-	ES_TRACE("Locking mutex, drvno %u, queue_me %u, queue_head %u\n", drvno, queue_me, queue_head);
 	if (ghMutex[drvno])
 	{
-		DWORD dwWaitResult = WaitForSingleObject(ghMutex[drvno], 0);
-		switch (dwWaitResult)
+		bool i_am_the_chosen_one = false;
+		while (!abortMeasurementFlag && !i_am_the_chosen_one)
 		{
-		// The mutex was free and is now owned by this thread
-		case WAIT_OBJECT_0:
-			break;
-		// The mutex is occupied by another thread
-		case WAIT_TIMEOUT:
-			while (true)
+			DWORD dwWaitResult = WaitForSingleObject(ghMutex[drvno], INFINITE);
+			// Check if the queue order of this thread is the chosen one to write next
+			if (queue_me != queue_head)
+				// Release the mutex again, because this thread is not the chosen one
+				ReleaseMutex(ghMutex[drvno]);
+			else
 			{
-				// Wait until the mutex is free again
-				WaitForSingleObject(ghMutex[drvno], INFINITE);
-				// Check if the queue order of this thread is the chosen one to write next
-				if (queue_me != queue_head)
-					// Release the mutex again, because this thread is not the chosen one
-					ReleaseMutex(ghMutex[drvno]);
-				else
-					// This thread is the chosen one and can be released from the loop
-					break;
+				ES_TRACE("Writing to disc, drvno %u, queue_me %u, queue_head %u\n", drvno, queue_me, queue_head);
+				// This thread is the chosen one and can be released from the loop
+				i_am_the_chosen_one = true;
 			}
-			break;
-		// Every other case is treated as error and the function returns immediately.
-		default:
-		case WAIT_ABANDONED:
-		case WAIT_FAILED:
-			return;
 		}
 	}
 	return;
