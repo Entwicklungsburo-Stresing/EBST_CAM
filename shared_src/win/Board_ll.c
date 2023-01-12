@@ -128,6 +128,7 @@ void isr( uint32_t drvno )
 	size_t dmaBufferPartSizeInBytes = dmaBufferSizeInBytes / DMA_BUFFER_PARTS;
 	UINT16* dmaBufferReadPos = dmaBuffer[drvno] + dmaBufferPartReadPos[drvno] * dmaBufferPartSizeInBytes / sizeof(UINT16);
 	// The copy process is done here
+	ES_TRACE("userBufferWritePos: 0x%x \n", userBufferWritePos[drvno]);
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, dmaBufferPartSizeInBytes );
 	struct writeToDisc_information* w = malloc(sizeof(struct writeToDisc_information));
 	w->drvno = drvno;
@@ -136,7 +137,6 @@ void isr( uint32_t drvno )
 	w->element_size = sizeof(uint16_t);
 	w->interrupt_count = IsrCounter;
 	if (settings_struct.write_to_disc) _beginthread(&writeToDisc, 0, w);
-	ES_TRACE( "userBufferWritePos: 0x%x \n", userBufferWritePos[drvno] );
 	dmaBufferPartReadPos[drvno]++;
 	// number of ISR per dmaBuf - 1
 	if (dmaBufferPartReadPos[drvno] >= DMA_BUFFER_PARTS)
@@ -1254,13 +1254,14 @@ void writeFileHeaderToFile(uint32_t drvno, char* filename_full)
 
 void writeToDisc(struct writeToDisc_information* w)
 {
-	ES_TRACE("Start write to disc, interrupt: %u \n", w->interrupt_count);
+	ES_TRACE("Start write to disc, interrupt: %u . queue head %u\n", w->interrupt_count, queue_head);
+	ES_TRACE("data ptr: 0x%x \n", w->data_buffer_ptr);
 	lockMutex(w->drvno, w->interrupt_count);
 	fwrite(w->data_buffer_ptr, w->element_size, w->element_count, file_stream[w->drvno]);
 	queue_head = w->interrupt_count + 1;
 	_flushall();
 	ReleaseMutex(ghMutex[w->drvno]);
-	ES_TRACE("Write to disc done, interrupt: %u \n", w->interrupt_count);
+	ES_TRACE("Write to disc done, interrupt: %u , queue head %u\n", w->interrupt_count, queue_head);
 	free(w);
 	return;
 }
