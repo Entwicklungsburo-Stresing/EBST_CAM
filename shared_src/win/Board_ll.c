@@ -128,21 +128,15 @@ void isr( uint32_t drvno )
 	size_t dmaBufferPartSizeInBytes = dmaBufferSizeInBytes / DMA_BUFFER_PARTS;
 	UINT16* dmaBufferReadPos = dmaBuffer[drvno] + dmaBufferPartReadPos[drvno] * dmaBufferPartSizeInBytes / sizeof(UINT16);
 	// The copy process is done here
-	ES_TRACE("userBufferWritePos: 0x%x \n", userBufferWritePos[drvno]);
+	ES_TRACE("userBufferWritePos: 0x%p \n", userBufferWritePos[drvno]);
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, dmaBufferPartSizeInBytes );
-	struct writeToDisc_information* w = malloc(sizeof(struct writeToDisc_information));
-	w->drvno = drvno;
-	w->data_buffer_ptr = userBufferWritePos[drvno];
-	w->element_count = dmaBufferPartSizeInBytes / sizeof(uint16_t);
-	w->element_size = sizeof(uint16_t);
-	w->interrupt_count = IsrCounter;
-	if (settings_struct.write_to_disc) _beginthread(&writeToDisc, 0, w);
 	dmaBufferPartReadPos[drvno]++;
 	// number of ISR per dmaBuf - 1
 	if (dmaBufferPartReadPos[drvno] >= DMA_BUFFER_PARTS)
 		// dmaBufferPartReadPos is 0 or 1 for buffer divided in 2 parts
 		dmaBufferPartReadPos[drvno] = 0;
 	userBufferWritePos[drvno] += dmaBufferPartSizeInBytes / sizeof( UINT16 );
+	data_available += dmaBufferPartSizeInBytes / sizeof(UINT16);
 	// Reset INTRSR flag for TRIGO
 	status = resetBitS0_32(drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );
 	IsrCounter++;
@@ -491,7 +485,8 @@ void ResetBufferWritePos(uint32_t drvno)
 	dmaBufferPartReadPos[drvno] = 0;
 	// reset buffer index to base we got from InitDMA
 	userBufferWritePos[drvno] = userBuffer[drvno];
-	ES_LOG( "RESET userBufferWritePos to %x\n", userBufferWritePos[drvno] );
+	userBufferWritePos_last[drvno] = userBuffer[drvno];
+	ES_LOG( "RESET userBufferWritePos to 0x%p\n", userBufferWritePos[drvno] );
 	IsrCounter = 0;
 	return;
 }
@@ -510,12 +505,11 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 	dmaBufferReadPos += dmaBufferPartReadPos[drvno] * dmaBufferSizeInBytes /2 / DMA_BUFFER_PARTS;
 	//					0 or 1 for lo/hi half		*  DMA buffer in shorts		  /      2	
 	// rest_in_bytes = 2 x pixel x rest in scans
-	ES_LOG("dmaBufferReadPos: 0x%x \n", dmaBufferReadPos);
-	ES_LOG("userBufferWritePos: 0x%x \n", userBufferWritePos);
+	ES_LOG("dmaBufferReadPos: 0x%p \n", dmaBufferReadPos);
+	ES_LOG("userBufferWritePos: 0x%p \n", userBufferWritePos[drvno]);
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes);
-	lockMutex(drvno, numberOfInterrupts+1);
-	if(settings_struct.write_to_disc) fwrite(dmaBufferReadPos, 1, rest_in_bytes, file_stream[drvno]);
-	ReleaseMutex(ghMutex[drvno]);
+	data_available += rest_in_bytes / sizeof(uint16_t);
+	ES_LOG("userBufferWritePos: 0x%p \n", userBufferWritePos[drvno]);
 	return;
 }
 
@@ -1210,7 +1204,6 @@ void openFile(uint32_t drvno)
 void closeFile(uint32_t drvno)
 {
 	ES_LOG("Close file\n");
-	WaitForSingleObject(ghMutex[drvno], INFINITE);
 	fclose(file_stream[drvno]);
 	return;
 }
@@ -1253,39 +1246,28 @@ void writeFileHeaderToFile(uint32_t drvno, char* filename_full)
 	return;
 }
 
-void writeToDisc(struct writeToDisc_information* w)
+void writeToDisc(uint32_t* drvno_ptr)
 {
-	ES_TRACE("Start write to disc, interrupt: %u . queue head %u\n", w->interrupt_count, queue_head);
-	ES_TRACE("data ptr: 0x%x \n", w->data_buffer_ptr);
-	lockMutex(w->drvno, w->interrupt_count);
-	fwrite(w->data_buffer_ptr, w->element_size, w->element_count, file_stream[w->drvno]);
-	queue_head = w->interrupt_count + 1;
-	_flushall();
-	ReleaseMutex(ghMutex[w->drvno]);
-	ES_TRACE("Write to disc done, interrupt: %u , queue head %u\n", w->interrupt_count, queue_head);
-	free(w);
-	return;
-}
-
-void lockMutex(uint32_t drvno, uint64_t queue_me)
-{
-	if (ghMutex[drvno])
+	uint32_t drvno = *drvno_ptr;
+	free(drvno_ptr);
+	ES_LOG("Start write to disc, drvno %u\n", drvno);
+	openFile(drvno);
+	size_t data_count_to_write = 0;
+	size_t data_written_all = 0;
+	size_t data_written = 0;
+	while (isRunning)
 	{
-		bool i_am_the_chosen_one = false;
-		while (!abortMeasurementFlag && !i_am_the_chosen_one)
+		data_count_to_write = data_available - data_written_all;
+		if (data_count_to_write)
 		{
-			DWORD dwWaitResult = WaitForSingleObject(ghMutex[drvno], INFINITE);
-			// Check if the queue order of this thread is the chosen one to write next
-			if (queue_me != queue_head)
-				// Release the mutex again, because this thread is not the chosen one
-				ReleaseMutex(ghMutex[drvno]);
-			else
-			{
-				ES_TRACE("Writing to disc, drvno %u, queue_me %u, queue_head %u\n", drvno, queue_me, queue_head);
-				// This thread is the chosen one and can be released from the loop
-				i_am_the_chosen_one = true;
-			}
+			ES_TRACE("Write %u bytes to disk, drvno %u, data_available %u, data_written %u\n", data_count_to_write, drvno, data_available, data_written);
+			data_written += fwrite(userBufferWritePos_last[drvno], sizeof(uint16_t), data_count_to_write, file_stream[drvno]);
+			_flushall();
+			userBufferWritePos_last[drvno] += data_written;
+			data_written_all += data_written;
 		}
 	}
+	closeFile(drvno);
+	ES_LOG("Write to disc done, drvno: %u\n", drvno);
 	return;
 }

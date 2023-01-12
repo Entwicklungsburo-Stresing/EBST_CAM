@@ -11,6 +11,8 @@ uint16_t* temp_userBuffer[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 uint16_t** userBuffer= temp_userBuffer;
 uint16_t* temp_userBufferWritePos[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 uint16_t** userBufferWritePos = temp_userBufferWritePos;
+uint16_t* temp_userBufferWritePos_last[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
+uint16_t** userBufferWritePos_last = temp_userBufferWritePos_last;
 uint32_t BOARD_SEL = 1;
 uint32_t numberOfInterrupts = 0;
 uint8_t number_of_boards = 0;
@@ -25,7 +27,7 @@ bool isRunning = false;
 int64_t scanCounterTotal = 0;
 uint64_t measurement_cnt = 0;
 char start_timestamp[file_timestamp_size];
-uint64_t queue_head = 0;
+size_t data_available = 0;
 struct global_settings settings_struct =
 {
 	.use_software_polling			= settingsUseSoftwarePollingDefault,
