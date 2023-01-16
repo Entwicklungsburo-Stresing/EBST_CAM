@@ -505,11 +505,11 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 	dmaBufferReadPos += dmaBufferPartReadPos[drvno] * dmaBufferSizeInBytes /2 / DMA_BUFFER_PARTS;
 	//					0 or 1 for lo/hi half		*  DMA buffer in shorts		  /      2	
 	// rest_in_bytes = 2 x pixel x rest in scans
-	ES_LOG("dmaBufferReadPos: 0x%p \n", dmaBufferReadPos);
-	ES_LOG("userBufferWritePos: 0x%p \n", userBufferWritePos[drvno]);
+	ES_LOG("copyRestData: dmaBufferReadPos: 0x%p \n", dmaBufferReadPos);
+	ES_LOG("copyRestData: userBufferWritePos: 0x%p \n", userBufferWritePos[drvno]);
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes);
 	data_available += rest_in_bytes / sizeof(uint16_t);
-	ES_LOG("userBufferWritePos: 0x%p \n", userBufferWritePos[drvno]);
+	ES_LOG("copyRestData: increased available data to : %u \n", data_available);
 	return;
 }
 
@@ -1260,11 +1260,15 @@ void writeToDisc(uint32_t* drvno_ptr)
 		data_count_to_write = data_available - data_written_all;
 		if (data_count_to_write)
 		{
-			ES_TRACE("Write %u bytes to disk, drvno %u, data_available %u, data_written %u\n", data_count_to_write, drvno, data_available, data_written);
-			data_written += fwrite(userBufferWritePos_last[drvno], sizeof(uint16_t), data_count_to_write, file_stream[drvno]);
+			ES_TRACE("Write %u bytes to disk, drvno %u, data_available %u, data_written_all %u\n", data_count_to_write, drvno, data_available, data_written_all);
+			ES_TRACE("userBufferWritePos_last: 0x%p \n", userBufferWritePos_last);
+			data_written = fwrite(userBufferWritePos_last[drvno], sizeof(uint16_t), data_count_to_write, file_stream[drvno]);
 			_flushall();
+			ES_TRACE("data_written: %u \n", data_written);
 			userBufferWritePos_last[drvno] += data_written;
+			ES_TRACE("userBufferWritePos_last: 0x%p \n", userBufferWritePos_last[drvno]);
 			data_written_all += data_written;
+			ES_TRACE("data_written_all: %u \n", data_written_all);
 		}
 	}
 	closeFile(drvno);
