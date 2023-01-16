@@ -85,7 +85,7 @@ struct verify_data_parameter
 	uint32_t last_block;
 	uint32_t last_sample_before_error;
 	uint32_t last_block_before_error;
-	uint32_t last_measurement_before_error;
+	uint64_t last_measurement_before_error;
 };
 
 extern uint32_t* aPIXEL;
