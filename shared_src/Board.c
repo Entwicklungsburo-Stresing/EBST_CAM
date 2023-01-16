@@ -2539,6 +2539,7 @@ es_status_codes StartMeasurement()
 	}
 	do
 	{
+		measurement_cnt++;
 		ES_TRACE("measurement count: %u\n", measurement_cnt);
 		// Reset the hardware block counter and scan counter.
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
@@ -2795,7 +2796,6 @@ es_status_codes StartMeasurement()
 			continiousMeasurementFlag = false;
 		abortMeasurementFlag = checkEscapeKeyState();
 		WaitforTelapsed(continiousPauseInMicroseconds);
-		measurement_cnt++;
 	} while (continiousMeasurementFlag && !abortMeasurementFlag);
 	ES_LOG("*** Measurement done ***\n\n");
 	return ReturnStartMeasurement(status);
