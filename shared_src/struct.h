@@ -2,6 +2,7 @@
 #define STRUCT_H
 
 #include <stdint.h>
+#include "enum.h"
 
 #define MAXPCIECARDS 5
 
@@ -233,7 +234,7 @@ struct global_settings
 	/**
 	 * File path is specifying the path where the measurement data is saved.
 	 */
-	char file_path[50];
+	char file_path[file_path_size];
 	/**
 	 * Specifies how to split files when writing measurement data to disc. See enum split_mode in enum.h for modes. 
 	 */
