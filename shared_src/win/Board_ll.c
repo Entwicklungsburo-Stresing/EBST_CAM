@@ -1255,8 +1255,22 @@ void writeToDisc(uint32_t* drvno_ptr)
 	size_t data_count_to_write = 0;
 	size_t data_written_all = 0;
 	size_t data_written = 0;
+	uint64_t measurement_cnt_old = 1;
 	while (isRunning)
 	{
+		switch (settings_struct.file_split_mode)
+		{
+		default:
+		case no_split:
+			break;
+		case measurement_wise:
+			if (measurement_cnt > 0 && measurement_cnt != measurement_cnt_old)
+			{
+				measurement_cnt_old = measurement_cnt;
+				closeFile(drvno);
+				openFile(drvno);
+			}
+		}
 		data_count_to_write = data_available - data_written_all;
 		if (data_count_to_write)
 		{
