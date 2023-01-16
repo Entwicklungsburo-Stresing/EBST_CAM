@@ -2524,21 +2524,22 @@ es_status_codes StartMeasurement()
 	es_status_codes status = es_no_error;
 	setTimestamp();
 	measurement_cnt = 0;
+	data_available = 0;
+	if (BOARD_SEL == 1 || BOARD_SEL == 3)
+	{
+		uint32_t* drvno_tmp = malloc(sizeof(uint32_t));
+		*drvno_tmp = 1;
+		if (settings_struct.write_to_disc) _beginthread(&writeToDisc, 0, drvno_tmp);
+	}
+	if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+	{
+		uint32_t* drvno_tmp = malloc(sizeof(uint32_t));
+		*drvno_tmp = 2;
+		if (settings_struct.write_to_disc) _beginthread(&writeToDisc, 0, drvno_tmp);
+	}
 	do
 	{
 		ES_TRACE("measurement count: %u\n", measurement_cnt);
-		if (BOARD_SEL == 1 || BOARD_SEL == 3)
-		{
-			uint32_t* drvno_tmp = malloc(sizeof(uint32_t));
-			*drvno_tmp = 1;
-			if (settings_struct.write_to_disc) _beginthread(&writeToDisc, 0, drvno_tmp);
-		}
-		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
-		{
-			uint32_t* drvno_tmp = malloc(sizeof(uint32_t));
-			*drvno_tmp = 2;
-			if (settings_struct.write_to_disc) _beginthread(&writeToDisc, 0, drvno_tmp);
-		}
 		// Reset the hardware block counter and scan counter.
 		if (BOARD_SEL == 1 || BOARD_SEL == 3)
 		{
