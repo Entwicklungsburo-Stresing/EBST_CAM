@@ -1,5 +1,11 @@
 # vX.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+v3.26.5
+- Fix and improve export data
+- Add verify data
+- Change size of settings struct
+- Add import settings dialog when no settings are found
+
 v3.26.4
 - Add setting parameter is_cooled_cam
 
