@@ -102,7 +102,6 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	abortMeasurementFlag = false;
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
-	BOARD_SEL = settings_struct.board_sel;
 	status = ClearAllUserRegs(drvno);
 	if (status != es_no_error) return status;
 	status = SetPixelCount(drvno, (uint16_t)settings_struct.pixel);
@@ -925,7 +924,7 @@ es_status_codes SetMeasurementParameters( uint32_t drvno, uint32_t nos, uint32_t
 	status = SetDMABufRegs(drvno);
 	if (status != es_no_error) return status;
 	uint32_t dmaBufferPartSizeInScans = settings_struct.dma_buffer_size_in_scans / DMA_BUFFER_PARTS; //500
-	if (BOARD_SEL > 2)
+	if (settings_struct.board_sel > 2)
 		numberOfInterrupts = *Nob * (*Nospb) * aCAMCNT[drvno] * number_of_boards / dmaBufferPartSizeInScans - 2;//- 2 because interrupt counter starts with 0
 	else
 		numberOfInterrupts = *Nob * (*Nospb) * aCAMCNT[drvno] / dmaBufferPartSizeInScans - 1;//- 1 because interrupt counter starts with 0
@@ -2525,13 +2524,13 @@ es_status_codes StartMeasurement()
 	setTimestamp();
 	measurement_cnt = 0;
 	data_available = 0;
-	if (BOARD_SEL == 1 || BOARD_SEL == 3)
+	if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
 	{
 		uint32_t* drvno_tmp = malloc(sizeof(uint32_t));
 		*drvno_tmp = 1;
 		if (settings_struct.write_to_disc) _beginthread(&writeToDisc, 0, drvno_tmp);
 	}
-	if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+	if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
 	{
 		uint32_t* drvno_tmp = malloc(sizeof(uint32_t));
 		*drvno_tmp = 2;
@@ -2542,30 +2541,30 @@ es_status_codes StartMeasurement()
 		measurement_cnt++;
 		ES_TRACE("measurement count: %u\n", measurement_cnt);
 		// Reset the hardware block counter and scan counter.
-		if (BOARD_SEL == 1 || BOARD_SEL == 3)
+		if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
 		{
 			status = ResetHardwareCounter(1);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
 		}
-		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+		if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
 		{
 			status = ResetHardwareCounter(2);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
 		}
 		// Reset the buffer write pointers and software ISR counter.
-		if (BOARD_SEL == 1 || BOARD_SEL == 3)
+		if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
 			ResetBufferWritePos(1);
-		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+		if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
 			ResetBufferWritePos(2);
 		// Only on Linux: Because on Linux it is not possible to copy data in the ISR,
 		// a new thread is started here that copies the data from the DMA buffer to
 		// the user buffer. The ISR is giving a signal to this thread when to copy data.
-		if (BOARD_SEL == 1 || BOARD_SEL == 3)
+		if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
 		{
 			status = StartCopyDataToUserBufferThread(1);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
 		}
-		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+		if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
 		{
 			status = StartCopyDataToUserBufferThread(2);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
@@ -2576,12 +2575,12 @@ es_status_codes StartMeasurement()
 		status = SetPriority(31);
 		if (status != es_no_error) return ReturnStartMeasurement(status);
 		// Set the measure on hardware bit
-		if (BOARD_SEL == 1 || BOARD_SEL == 3)
+		if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
 		{
 			status = setMeasureOn(1);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
 		}
-		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+		if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
 		{
 			status = setMeasureOn(2);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
@@ -2591,12 +2590,12 @@ es_status_codes StartMeasurement()
 		{
 			// Increase the block count hardware register.
 			// This must be done, before the block starts, so doing this first is a good idea.
-			if (BOARD_SEL == 1 || BOARD_SEL == 3)
+			if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
 			{
 				status = countBlocksByHardware(1);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
 			}
-			if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+			if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
 			{
 				status = countBlocksByHardware(2);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
@@ -2604,7 +2603,7 @@ es_status_codes StartMeasurement()
 			// The software polls the block trigger hardware register in a loop,
 			// so the software is trapped here, until the hardware gives the signal
 			// via this register. Pressing ESC can cancel this loop.
-			if(BOARD_SEL == 2)
+			if(settings_struct.board_sel == 2)
 				status = waitForBlockTrigger(2);
 			else
 				status = waitForBlockTrigger(1);
@@ -2617,8 +2616,8 @@ es_status_codes StartMeasurement()
 			ES_LOG("Block %u triggered\n", blk_cnt);
 			// setBlockOn, StartSTimer and DoSoftwareTrigger are starting the measurement.
 			// timer must be started in each block as the scan counter stops it by hardware at end of block
-			// Starting the measurement BOARD_SEL = 1
-			if (BOARD_SEL == 1)
+			// Starting the measurement settings_struct.board_sel = 1
+			if (settings_struct.board_sel == 1)
 			{
 				status = StartSTimer(1);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
@@ -2628,8 +2627,8 @@ es_status_codes StartMeasurement()
 				if (*useSWTrig) status = DoSoftwareTrigger(1);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
 			}
-			// Starting the measurement BOARD_SEL = 2
-			if (number_of_boards == 2 && (BOARD_SEL == 2 ))
+			// Starting the measurement settings_struct.board_sel = 2
+			if (number_of_boards == 2 && (settings_struct.board_sel == 2 ))
 			{
 				status = StartSTimer(2);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
@@ -2639,8 +2638,8 @@ es_status_codes StartMeasurement()
 				if (*useSWTrig) status = DoSoftwareTrigger(2);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
 			}
-			// Starting the measurement BOARD_SEL = 3
-			if (BOARD_SEL == 3)
+			// Starting the measurement settings_struct.board_sel = 3
+			if (settings_struct.board_sel == 3)
 			{
 				status = StartSTimerTwoBoards();
 				if (status != es_no_error) return ReturnStartMeasurement(status);
@@ -2653,8 +2652,8 @@ es_status_codes StartMeasurement()
 			// Main read loop. The software waits here until the flag RegXCKMSB:b30 = TimerOn is resetted by hardware,
 			// if flag HWDREQ_EN is TRUE.
 			// This is done when nos scans are counted by hardware. Pressing ESC can cancel this loop.
-			// Waiting for end of measurement BOARD_SEL = 1
-			if (BOARD_SEL == 1)
+			// Waiting for end of measurement settings_struct.board_sel = 1
+			if (settings_struct.board_sel == 1)
 			{
 				bool timerOneOn = true;
 				while (timerOneOn)
@@ -2669,8 +2668,8 @@ es_status_codes StartMeasurement()
 					if (status != es_no_error) return ReturnStartMeasurement(status);
 				}
 			}
-			// Waiting for end of measurement BOARD_SEL = 2
-			if (number_of_boards == 2 && BOARD_SEL == 2)
+			// Waiting for end of measurement settings_struct.board_sel = 2
+			if (number_of_boards == 2 && settings_struct.board_sel == 2)
 			{
 				bool timerTwoOn = true;
 				while (timerTwoOn)
@@ -2685,8 +2684,8 @@ es_status_codes StartMeasurement()
 					if (status != es_no_error) return ReturnStartMeasurement(status);
 				}
 			}
-			// Waiting for end of measurement BOARD_SEL = 3
-			if (number_of_boards == 2 && BOARD_SEL == 3)
+			// Waiting for end of measurement settings_struct.board_sel = 3
+			if (number_of_boards == 2 && settings_struct.board_sel == 3)
 			{
 				bool timerOneOn = true,
 					timerTwoOn = true;
@@ -2724,12 +2723,12 @@ es_status_codes StartMeasurement()
 			}
 			// When the software reaches this point, all scans for the current block are done.
 			// So blockOn is resetted here.
-			if (BOARD_SEL == 1 || BOARD_SEL == 3)
+			if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
 			{
 				status = resetBlockOn(1);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
 			}
-			if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+			if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
 			{
 				status = resetBlockOn(2);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
@@ -2741,12 +2740,12 @@ es_status_codes StartMeasurement()
 		if (status != es_no_error) return ReturnStartMeasurement(status);
 		// Only on Linux: The following mutex prevents ending the measurement before all data has been copied from DMA buffer to user buffer.
 #ifdef __linux__
-		if (BOARD_SEL == 1 || BOARD_SEL == 3)
+		if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
 		{
 			pthread_mutex_lock(&mutex[0]);
 			pthread_mutex_unlock(&mutex[0]);
 		}
-		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+		if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
 		{
 			pthread_mutex_lock(&mutex[1]);
 			pthread_mutex_unlock(&mutex[1]);
@@ -2754,7 +2753,7 @@ es_status_codes StartMeasurement()
 #endif
 		// When the number of scans is not a integer multiple of 500 there will be data in the DMA buffer
 		// left, which is not copied to the user buffer. The copy process for these scans is done here.
-		if (BOARD_SEL == 1 || BOARD_SEL == 3)
+		if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
 		{
 			status = StopSTimer(1);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
@@ -2764,7 +2763,7 @@ es_status_codes StartMeasurement()
 				if (status != es_no_error) return ReturnStartMeasurement(status);
 			}
 		}
-		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+		if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
 		{
 			status = StopSTimer(2);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
@@ -2781,12 +2780,12 @@ es_status_codes StartMeasurement()
 		// MEASUREON ---------_____
 		WaitforTelapsed(100);
 		// Reset the hardware bit measure on.
-		if (BOARD_SEL == 1 || BOARD_SEL == 3)
+		if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
 		{
 			status = resetMeasureOn(1);
 			if (status != es_no_error) return ReturnStartMeasurement(status);
 		}
-		if (number_of_boards == 2 && (BOARD_SEL == 2 || BOARD_SEL == 3))
+		if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
 		{
 			status = resetMeasureOn(2);
 			if (status != es_no_error) return ReturnStartMeasurement(status);

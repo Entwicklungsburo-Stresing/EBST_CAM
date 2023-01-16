@@ -13,7 +13,6 @@ uint16_t* temp_userBufferWritePos[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 uint16_t** userBufferWritePos = temp_userBufferWritePos;
 uint16_t* temp_userBufferWritePos_last[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 uint16_t** userBufferWritePos_last = temp_userBufferWritePos_last;
-uint32_t BOARD_SEL = 1;
 uint32_t numberOfInterrupts = 0;
 uint8_t number_of_boards = 0;
 uint32_t tmp_Nob = 1;

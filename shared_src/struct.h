@@ -72,7 +72,6 @@ struct global_settings
 	/**
 	 * Board select
 	 * 
-	 * TODO: Check if there are places where board_sel is expected as 0, 1, 2 and not 1, 2, 3.
 	 * - 1: board 1
 	 * - 2: board 2
 	 * - 3: both boards
