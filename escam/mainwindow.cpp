@@ -45,7 +45,21 @@ MainWindow::MainWindow(QWidget* parent)
 		if (status != es_no_error)
 			showPcieBoardError();
 		else
+		{
+			// Check if there are settings saved on this system
+			if (!settings.contains(settingNosPath))
+			{
+				// When no settings are found, offer to import settings
+				QMessageBox d(this);
+				d.setWindowTitle("No settings found");
+				d.setText("No application settings are found on this system. Do you want to import settings?");
+				d.setIcon(QMessageBox::Information);
+				d.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+				connect(&d, &QMessageBox::accepted, this, &MainWindow::on_actionImport_triggered);
+				d.exec();
+			}
 			loadSettings();
+		}
 	}
 
 	// move lsc to its own thread
@@ -458,7 +472,6 @@ void MainWindow::on_actionDAC_triggered()
 	dialogDac->show();
 	return;
 }
-
 
 /**
  * @brief Load settings and apply to UI.
