@@ -765,7 +765,7 @@ es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 	{
 		uint32_t* param = (uint32_t*)malloc(sizeof(uint32_t));
 		*param = drvno;
-		_beginthreadex(NULL, 0, &PollDmaBufferToUserBuffer, param, 0, NULL);
+		_beginthread(&PollDmaBufferToUserBuffer, 0, param);
 	}
 	return es_no_error;
 }
