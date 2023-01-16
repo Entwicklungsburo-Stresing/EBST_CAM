@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>399</width>
-    <height>496</height>
+    <height>519</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1309,11 +1309,6 @@
            <item>
             <property name="text">
              <string>measurement wise</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>block wise</string>
             </property>
            </item>
           </widget>
