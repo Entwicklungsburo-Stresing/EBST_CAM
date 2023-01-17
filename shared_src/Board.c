@@ -1480,7 +1480,7 @@ es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_t
 	//set led off
 	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_LEDoff, led_off );
 	//set use EC
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_useEC, use_EC);
+	status = setUseEC(drvno, use_EC);
 	if (status != es_no_error) return status;
 	//set gain switch (mostly for IR sensors)
 	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, sensor_gain);
@@ -3449,8 +3449,8 @@ es_status_codes LedOff(uint32_t drvno, uint8_t LED_OFF)
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes setUseEC(uint32_t drvno, uint8_t use_EC) {
-	return SendFLCAM(drvno, maddr_cam, cam_adaddr_useEC, (uint16_t)use_EC);
+es_status_codes setUseEC(uint32_t drvno, uint16_t use_EC) {
+	return SendFLCAM(drvno, maddr_cam, cam_adaddr_useEC, use_EC);
 	}
 
 /**
