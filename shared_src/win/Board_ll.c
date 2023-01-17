@@ -1256,7 +1256,8 @@ void writeToDisc(uint32_t* drvno_ptr)
 	size_t data_written_all = 0;
 	size_t data_written = 0;
 	uint64_t measurement_cnt_old = 1;
-	while (isRunning)
+	int errnumber = 0;
+	while (isRunning || data_count_to_write && !abortMeasurementFlag && !errnumber)
 	{
 		switch (settings_struct.file_split_mode)
 		{
@@ -1278,9 +1279,14 @@ void writeToDisc(uint32_t* drvno_ptr)
 		if (data_count_to_write)
 		{
 			ES_TRACE("Write %u bytes to disk, drvno %u, data_available %u, data_written_all %u\n", data_count_to_write, drvno, data_available, data_written_all);
-			ES_TRACE("userBufferWritePos_last: 0x%p \n", userBufferWritePos_last);
+			ES_TRACE("userBufferWritePos_last: 0x%p \n", userBufferWritePos_last[drvno]);
 			// write data to disc
 			data_written = fwrite(userBufferWritePos_last[drvno], sizeof(uint16_t), data_count_to_write, file_stream[drvno]);
+			if (!data_written)
+			{
+				_get_errno(&errnumber);
+				ES_TRACE("Error: %u\n", errnumber);
+			}
 			_flushall();
 			ES_TRACE("data_written: %u \n", data_written);
 			// advance user buffer pointer
