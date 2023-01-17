@@ -989,10 +989,11 @@ es_status_codes allocateUserMemory( uint32_t drvno )
 	if (memory_free > (uint64_t)needed_mem)
 	{
 		uint16_t* userBufferTemp = (uint16_t*) calloc( needed_mem, 1 );
-		ES_LOG( "user buffer space: %p - %p\n", (void*)userBufferTemp, (void*)(userBufferTemp + needed_mem) );
 		if (userBufferTemp)
 		{
+			userBufferEndPtr[drvno] = userBufferTemp + needed_mem;
 			userBuffer[drvno] = userBufferTemp;
+			ES_LOG("user buffer space: %p - %p\n", (void*)userBufferTemp, (void*)userBufferEndPtr);
 			return es_no_error;
 		}
 		else
