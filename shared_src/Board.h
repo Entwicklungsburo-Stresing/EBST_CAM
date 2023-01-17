@@ -43,6 +43,7 @@ es_status_codes allocateUserMemory( uint32_t drvno );
 es_status_codes SetDMABufRegs( uint32_t drvno );
 es_status_codes CloseShutter( uint32_t drvno );
 es_status_codes SetSEC( uint32_t drvno, uint32_t ecin10ns );
+es_status_codes SetEnEc3030(uint32_t drvno, bool enable);
 es_status_codes SetTORReg( uint32_t drvno, uint8_t tor );
 es_status_codes SetSSlope(uint32_t drvno, uint32_t sslope);
 es_status_codes SetBSlope( uint32_t drvno, uint32_t slope );
