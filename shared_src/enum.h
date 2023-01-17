@@ -566,3 +566,24 @@ enum file_specifications
 	file_block_counter_pixel_pos_lsb = 3,
 	file_block_counter_pixel_pos_msb = 2
 };
+
+/**
+ * This enum is describing the bits of the register SEC at address S0Addr_SEC
+ */
+enum sec_bits
+{
+	/**
+	 * The lower 30 bits are describing the length of SEC as unsigned integer in 10 nanosecond steps.
+	 */
+	sec_bits_sec_in_10ns = 0x3FFFFFFF,
+	/**
+	 * This bit changes the signal IFC to a specialized 3030 version when SEC is used.
+	 */
+	sec_bit_en_ec_3030 = 0x40000000,
+	/**
+	 * This bit must be set to 1 when you want to use SEC.
+	 */
+	sec_bit_enable = 0x80000000,
+	sec_bitindex_en_ec_3030 = 30,
+	sec_bitindex_enable = 31
+};

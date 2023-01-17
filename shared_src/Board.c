@@ -1062,19 +1062,43 @@ es_status_codes CloseShutter( uint32_t drvno )
  * \param ecin10ns Time in 10 ns steps.
  * \return es_status_codes:
  *		- es_no_error
+ *		- es_register_read_failed
  * 		- es_register_write_failed
  */
 es_status_codes SetSEC( uint32_t drvno, uint32_t ecin10ns )
 {
 	ES_LOG("Set SEC. EC in 10 ns: %u\n", ecin10ns);
+	// write to all bits except sec_bit_en_ec_3030
+	uint32_t bitmask = sec_bits_sec_in_10ns | sec_bit_enable;
 	es_status_codes status = es_no_error;
 	if (ecin10ns <= 1)
-		status = writeRegisterS0_32(drvno, 0, S0Addr_SEC);
+		status = writeBitsS0_32(drvno, ecin10ns, bitmask, S0Addr_SEC);
 	else
 	{
-		ecin10ns |= 0x80000000; // enable delay
-		status = writeRegisterS0_32(drvno, ecin10ns, S0Addr_SEC);
+		ecin10ns |= sec_bit_enable;
+		status = writeBitsS0_32(drvno, ecin10ns, bitmask, S0Addr_SEC);
 	}
+	return status;
+}
+
+/**
+ * \brief Sets the bit EN EC 3030 in register SEC.
+ * 
+ *  This bit changes the signal IFC to a specialized 3030 version when SEC is used.
+ * \param drvno PCIe board identifier.
+ * \param enable true: bit = 1, false: bit = 0
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
+es_status_codes SetEnEc3030(uint32_t drvno, bool enable)
+{
+	es_status_codes status;
+	if (enable)
+		status = setBitS0_32(drvno, sec_bitindex_en_ec_3030, S0Addr_SEC);
+	else
+		status = resetBitS0_32(drvno, sec_bitindex_en_ec_3030, S0Addr_SEC);
 	return status;
 }
 
@@ -1551,6 +1575,8 @@ es_status_codes InitCamera3001( uint32_t drvno  )
 	// or use sec
 	status = SetSEC(drvno, settings_struct.sec_in_10ns);
 	if (status != es_no_error) return status;
+	status = SetEnEc3030(drvno, false);
+	if (status != es_no_error) return status;
 	return Use_ENFFW_protection( drvno, true );
 }
 
@@ -1579,6 +1605,8 @@ es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custo
 	if (status != es_no_error) return status;
 	// also set SEC to 0, to disable sensor reset signal
 	status = SetSEC(drvno, 0);
+	if (status != es_no_error) return status;
+	status = SetEnEc3030(drvno, false);
 	if (status != es_no_error) return status;
 	return Cam3010_ADC_setOutputMode(drvno, adc_mode, custom_pattern);
 }
@@ -1714,6 +1742,8 @@ es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom
 		status = Cam3030_ADC_SetIfcMode(drvno, 1);
 	else
 		status = Cam3030_ADC_SetIfcMode(drvno, 2);
+	if (status != es_no_error) return status;
+	status = SetEnEc3030(drvno, true);
 	return status;
 }
 
