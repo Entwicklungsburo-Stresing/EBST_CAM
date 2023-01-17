@@ -105,7 +105,7 @@ es_status_codes checkFifoOverflow(uint32_t drvno, bool* overflow);
 es_status_codes isBlockOn(uint32_t drvno, bool* blockOn);
 es_status_codes isMeasureOn(uint32_t drvno, bool* measureOn);
 es_status_codes LedOff(uint32_t drvno, uint8_t LED_OFF);
-es_status_codes setUseEC(uint32_t drvno, uint8_t use_EC);
+es_status_codes setUseEC(uint32_t drvno, uint16_t use_EC);
 es_status_codes OutTrigLow(uint32_t drvno);
 es_status_codes OutTrigHigh(uint32_t drvno);
 es_status_codes OutTrigPulse(uint32_t drvno, uint32_t PulseWidth);
