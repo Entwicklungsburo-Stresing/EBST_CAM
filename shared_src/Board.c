@@ -991,9 +991,11 @@ es_status_codes allocateUserMemory( uint32_t drvno )
 		uint16_t* userBufferTemp = (uint16_t*) calloc( needed_mem, 1 );
 		if (userBufferTemp)
 		{
-			userBufferEndPtr[drvno] = userBufferTemp + needed_mem;
+			userBufferEndPtr[drvno] = userBufferTemp + needed_mem / sizeof(uint16_t);
 			userBuffer[drvno] = userBufferTemp;
-			ES_LOG("user buffer space: %p - %p\n", (void*)userBufferTemp, (void*)userBufferEndPtr);
+			userBufferWritePos[drvno] = userBufferTemp;
+			userBufferWritePos_last[drvno] = userBufferTemp;
+			ES_LOG("user buffer space: %p - %p\n", userBuffer[drvno], userBufferEndPtr[drvno]);
 			return es_no_error;
 		}
 		else
