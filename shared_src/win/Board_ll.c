@@ -128,7 +128,7 @@ void isr( uint32_t drvno )
 	size_t dmaBufferPartSizeInBytes = dmaBufferSizeInBytes / DMA_BUFFER_PARTS;
 	UINT16* dmaBufferReadPos = dmaBuffer[drvno] + dmaBufferPartReadPos[drvno] * dmaBufferPartSizeInBytes / sizeof(UINT16);
 	// The copy process is done here
-	ES_TRACE("userBufferWritePos: 0x%p \n", userBufferWritePos[drvno]);
+	ES_TRACE("copy from DMA to userBufferWritePos: 0x%p \n", userBufferWritePos[drvno]);
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, dmaBufferPartSizeInBytes );
 	dmaBufferPartReadPos[drvno]++;
 	// number of ISR per dmaBuf - 1
@@ -485,7 +485,6 @@ void ResetBufferWritePos(uint32_t drvno)
 	dmaBufferPartReadPos[drvno] = 0;
 	// reset buffer index to base we got from InitDMA
 	userBufferWritePos[drvno] = userBuffer[drvno];
-	userBufferWritePos_last[drvno] = userBuffer[drvno];
 	ES_LOG( "RESET userBufferWritePos to 0x%p\n", userBufferWritePos[drvno] );
 	IsrCounter = 0;
 	return;
@@ -1278,10 +1277,17 @@ void writeToDisc(uint32_t* drvno_ptr)
 		data_count_to_write = data_available - data_written_all;
 		if (data_count_to_write)
 		{
+			// check if data_count_to_write is in the boundaries of userBuffer
+			if ((uint16_t*)(userBufferWritePos_last[drvno] + data_count_to_write) > userBufferEndPtr[drvno])
+			{
+				data_count_to_write = userBufferEndPtr[drvno] - userBufferWritePos_last[drvno];
+				ES_TRACE("data_count_to_write is exceeding the user buffer. Write the last part of the user buffer to disc.\n");
+			}
 			ES_TRACE("Write %u bytes to disk, drvno %u, data_available %u, data_written_all %u\n", data_count_to_write, drvno, data_available, data_written_all);
-			ES_TRACE("userBufferWritePos_last: 0x%p \n", userBufferWritePos_last[drvno]);
+			ES_TRACE("write data to disc from userBufferWritePos_last: 0x%p \n", userBufferWritePos_last[drvno]);
 			// write data to disc
 			data_written = fwrite(userBufferWritePos_last[drvno], sizeof(uint16_t), data_count_to_write, file_stream[drvno]);
+			// when there were no data written, probably an error occurred
 			if (!data_written)
 			{
 				_get_errno(&errnumber);
@@ -1291,7 +1297,13 @@ void writeToDisc(uint32_t* drvno_ptr)
 			ES_TRACE("data_written: %u \n", data_written);
 			// advance user buffer pointer
 			userBufferWritePos_last[drvno] += data_written;
-			ES_TRACE("userBufferWritePos_last: 0x%p \n", userBufferWritePos_last[drvno]);
+			// check if userBufferWritePos_last reached the end of userBuffer
+			if (userBufferWritePos_last[drvno] >= userBufferEndPtr[drvno])
+			{
+				userBufferWritePos_last[drvno] = userBuffer[drvno];
+				ES_TRACE("end of user buffer reached, set userBufferWritePos_last back to user buffer start \n");
+			}
+			ES_TRACE("advanced userBufferWritePos_last to: 0x%p \n", userBufferWritePos_last[drvno]);
 			// increase the counter for overall written data
 			data_written_all += data_written;
 			ES_TRACE("data_written_all: %u \n", data_written_all);
