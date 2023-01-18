@@ -210,7 +210,6 @@ void MainWindow::startPressed()
 	}
 	//export data tab
 	settings_struct.write_to_disc = settings.value(settingWriteDataToDiscPath, settingWriteToDiscDefault).toBool();
-	settings_struct.file_split_mode = settings.value(settingSplitModePath, settingFileSplitModeDefault).toUInt();
 	QByteArray array = settings.value(settingFilePathPath, QDir::currentPath()).toString().toLocal8Bit();
 	strcpy(settings_struct.file_path, array.data());
 	//dac
