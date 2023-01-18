@@ -1,5 +1,8 @@
 # vX.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+v3.26.7
+- remove file split mode
+
 v3.26.6
 - Fix write to disc, probably working now
 - Add bit EN EC 3030 to SEC register
