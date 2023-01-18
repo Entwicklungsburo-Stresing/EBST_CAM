@@ -1,7 +1,12 @@
 # vX.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+v3.26.6
+- Fix write to disc, probably working now
+- Add bit EN EC 3030 to SEC register
+- Update Qt visual tool set to v304
+
 v3.26.5
-- Fix and improve export data
+- Fix and improve write to disc
 - Add verify data
 - Change size of settings struct
 - Add import settings dialog when no settings are found
