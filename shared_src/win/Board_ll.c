@@ -1170,17 +1170,8 @@ void openFile(uint32_t drvno)
 	}
 	char filename_full[file_filename_full_size];
 	memset(filename_full, 0, file_filename_full_size);
-	// Create filenames depending on split mode. See enum split_mode in enum.h for details.
-	switch (settings_struct.file_split_mode)
-	{
-	default:
-	case no_split:
-		sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u.dat", settings_struct.file_path, start_timestamp, drvno);
-		break;
-	case measurement_wise:
-		sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u_measurement-%llu.dat", settings_struct.file_path, start_timestamp, drvno, measurement_cnt);
-		break;
-	}
+	// Create filenames
+	sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u.dat", settings_struct.file_path, start_timestamp, drvno);
 	// Check if the file exists
 	if (_access_s(filename_full, 0) != 0)
 	{
@@ -1258,21 +1249,6 @@ void writeToDisc(uint32_t* drvno_ptr)
 	int errnumber = 0;
 	while (isRunning || data_count_to_write && !abortMeasurementFlag && !errnumber)
 	{
-		switch (settings_struct.file_split_mode)
-		{
-		default:
-		case no_split:
-			// no need to create a new file
-			break;
-		case measurement_wise:
-			// check whether measurement_cnt has increased and if so open a new file
-			if (measurement_cnt > 0 && measurement_cnt != measurement_cnt_old)
-			{
-				measurement_cnt_old = measurement_cnt;
-				closeFile(drvno);
-				openFile(drvno);
-			}
-		}
 		// check if there is new available data
 		data_count_to_write = data_available - data_written_all;
 		if (data_count_to_write)

@@ -35,7 +35,6 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->labelSslope->setSizePolicy(sp_retain);
 	ui->labelBslope->setSizePolicy(sp_retain);
 	ui->labelBoardSel->setSizePolicy(sp_retain);
-	ui->labelSplitMode->setSizePolicy(sp_retain);
 	ui->labelFilePath->setSizePolicy(sp_retain);
 	ui->labelCamCool->setSizePolicy(sp_retain);
 
@@ -70,7 +69,6 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->comboBoxSslope->setSizePolicy(sp_retain);
 	ui->comboBoxBslope->setSizePolicy(sp_retain);
 	ui->comboBoxBoardSel->setSizePolicy(sp_retain);
-	ui->comboBoxSplitMode->setSizePolicy(sp_retain);
 	ui->comboBoxCamCool->setSizePolicy(sp_retain);
 
 	sp_retain = ui->plainTextEditFilePath->sizePolicy();
@@ -138,7 +136,6 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->spinBoxRegion8->setValue(settings.value(settingRegionSize8Path, settingRegionSize8Default).toInt());
 	//Export data
 	ui->checkBoxWriteDataToDisc->setChecked(settings.value(settingWriteDataToDiscPath, settingWriteToDiscDefault).toBool());
-	ui->comboBoxSplitMode->setCurrentIndex(settings.value(settingSplitModePath, settingFileSplitModeDefault).toInt());
 	ui->plainTextEditFilePath->setPlainText(settings.value(settingFilePathPath, QDir::currentPath()).toString());
 	//Debug
 	ui->comboBoxOutput->setCurrentIndex(settings.value(settingTorPath, settingTorDefault).toInt());
@@ -227,7 +224,6 @@ void DialogSettings::on_accepted()
 	settings.setValue(settingRegionSize8Path, ui->spinBoxRegion8->value());
 	//Export data
 	settings.setValue(settingWriteDataToDiscPath, ui->checkBoxWriteDataToDisc->isChecked());
-	settings.setValue(settingSplitModePath, ui->comboBoxSplitMode->currentIndex());
 	settings.setValue(settingFilePathPath, ui->plainTextEditFilePath->toPlainText());
 	//Debug
 	settings.setValue(settingTorPath, ui->comboBoxOutput->currentIndex());
@@ -565,7 +561,6 @@ void DialogSettings::loadDefaults()
 	ui->spinBoxRegion8->setValue(settingRegionSize8Default);
 	//Export data
 	ui->checkBoxWriteDataToDisc->setChecked(settingWriteToDiscDefault);
-	ui->comboBoxSplitMode->setCurrentIndex(settingFileSplitModeDefault);
 	ui->plainTextEditFilePath->setPlainText(QDir::currentPath());
 	//debug
 	ui->comboBoxOutput->setCurrentIndex(settingTorDefault);
@@ -837,13 +832,10 @@ void DialogSettings::on_checkBoxWriteDataToDisc_stateChanged(int arg1)
 		visible = true;
 		break;
 	}
-	ui->comboBoxSplitMode->setEnabled(enabled);
 	ui->plainTextEditFilePath->setEnabled(enabled);
 	ui->pushButtonFilePath->setEnabled(enabled);
-	ui->comboBoxSplitMode->setVisible(visible);
 	ui->plainTextEditFilePath->setVisible(visible);
 	ui->pushButtonFilePath->setVisible(visible);
-	ui->labelSplitMode->setVisible(visible);
 	ui->labelFilePath->setVisible(visible);
 	return;
 }

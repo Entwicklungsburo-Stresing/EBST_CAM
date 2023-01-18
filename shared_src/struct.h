@@ -235,7 +235,7 @@ struct global_settings
 	 */
 	char file_path[file_path_size];
 	/**
-	 * Specifies how to split files when writing measurement data to disc. See enum split_mode in enum.h for modes. 
+	 * DEPRECATED: Not used, because didn't work correctly. Specifies how to split files when writing measurement data to disc. See enum split_mode in enum.h for modes. 
 	 */
 	uint32_t file_split_mode;
 	/**
