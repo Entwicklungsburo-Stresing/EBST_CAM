@@ -1570,7 +1570,7 @@ es_status_codes InitCamera3001( uint32_t drvno  )
 {
 	ES_LOG("Init camera 3001\n");
 	// use sensor reset
-	es_status_codes status = SetSensorResetEnable(drvno, true);
+	es_status_codes status = SetSensorResetEnable(drvno, false);
 	if (status != es_no_error) return status;
 	status = SetSensorResetEarly(drvno, false);
 	if (status != es_no_error) return status;
@@ -1606,7 +1606,7 @@ es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custo
 	status = SetSensorResetEnable(drvno, false);
 	if (status != es_no_error) return status;
 	// also set SEC to 0, to disable sensor reset signal
-	status = SetSEC(drvno, 0);
+	status = SetSEC(drvno, settings_struct.sec_in_10ns);
 	if (status != es_no_error) return status;
 	status = SetEnEc3030(drvno, false);
 	if (status != es_no_error) return status;
