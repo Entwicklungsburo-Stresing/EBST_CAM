@@ -1,5 +1,9 @@
 # vX.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+v3.26.8
+- Set SEC register in init 3010
+- Upgrade Windows SDK to 10.0.18362 and Platform Toolset to v142
+
 v3.26.7
 - remove file split mode
 
