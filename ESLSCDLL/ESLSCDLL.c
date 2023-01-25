@@ -521,9 +521,9 @@ DllAccess es_status_codes DLLDAC8568_setOutput( UINT32 drvno, UINT8 location, UI
 /**
  * \copydoc DAC8568_setAllOutputs
  */
-DllAccess es_status_codes DLLDAC8568_setAllOutputs(UINT32 drvno, UINT8 location, UINT32* output, UINT8 isIR)
+DllAccess es_status_codes DLLDAC8568_setAllOutputs(UINT32 drvno, UINT8 location, UINT32* output, UINT8 reorder_channel)
 {
-	return DAC8568_setAllOutputs(drvno, location, output, isIR);
+	return DAC8568_setAllOutputs(drvno, location, output, reorder_channel);
 }
 
 /**

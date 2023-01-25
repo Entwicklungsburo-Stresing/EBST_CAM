@@ -1716,7 +1716,7 @@ es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom
 	if (status != es_no_error) return status;
 	status = DAC8568_enableInternalReference(drvno, DAC8568_camera);
 	if (status != es_no_error) return status;
-	status = DAC8568_setAllOutputs(drvno, DAC8568_camera, dac_output, is_hs_ir);
+	status = DAC8568_setAllOutputs(drvno, DAC8568_camera, dac_output, !is_hs_ir);
 	if (status != es_no_error) return status;
 	// Sample mode is currently not in use. 11/22, P209_8
 	status = Cam3030_ADC_SetSampleMode(drvno, 0);
@@ -2233,24 +2233,24 @@ es_status_codes DAC8568_sendData( uint32_t drvno, uint8_t location, uint8_t ctrl
  * Use this function to set the outputs, because it is resorting the channel numeration correctly.
  * \param drvno PCIe board identifier
  * \param output all output values that will be converted to analog voltage (0 ... 0xFFFF)
- * \param isIR
+ * \param reorder_channels used to reorder DAC channels for high speed camera
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_write_failed
  *		- es_parameter_out_of_range
  */
-es_status_codes DAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint32_t* output, bool isIR)
+es_status_codes DAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint32_t* output, bool reorder_channels)
 {
 	es_status_codes status = es_no_error;
 	int* reorder_ch;
-	if (isIR)
+	if (reorder_channels)
 	{
-		int tmp[8] = { 0,1,2,3,4,5,6,7 }; //IR
+		int tmp[8] = { 3, 4, 0, 5, 1, 6, 2, 7 }; //HS VIS
 		reorder_ch = tmp;
 	}
 	else
 	{
-		int tmp[8] = { 3, 4, 0, 5, 1, 6, 2, 7 }; //vis
+		int tmp[8] = { 0, 1, 2, 3, 4, 5, 6, 7 }; //HS IR or PCIe board
 		reorder_ch = tmp;
 	}
 	for (uint8_t channel = 0; channel < 8; channel++)
