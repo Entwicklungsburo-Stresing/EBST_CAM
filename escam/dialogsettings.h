@@ -58,7 +58,7 @@ constexpr auto settingRegionSize8Path = "fftmode/regionSize8";
 constexpr auto settingWriteDataToDiscPath = "exportData/writeDataToDisc";
 constexpr auto settingSplitModePath = "exportData/splitMode";
 constexpr auto settingFilePathPath = "exportData/filePath";
-//sensor offset
+//DAC
 constexpr auto settingSensorOffsetChannel1Path = "sensorOffset/channel1";
 constexpr auto settingSensorOffsetChannel2Path = "sensorOffset/channel2";
 constexpr auto settingSensorOffsetChannel3Path = "sensorOffset/channel3";
@@ -75,6 +75,23 @@ constexpr auto settingSensorOffsetBoard2Channel5Path = "sensorOffset/board2Chann
 constexpr auto settingSensorOffsetBoard2Channel6Path = "sensorOffset/board2Channel6";
 constexpr auto settingSensorOffsetBoard2Channel7Path = "sensorOffset/board2Channel7";
 constexpr auto settingSensorOffsetBoard2Channel8Path = "sensorOffset/board2Channel8";
+constexpr auto settingDacPcieBoard1Channel1Path = "dacPcieBoard1/channel1";
+constexpr auto settingDacPcieBoard1Channel2Path = "dacPcieBoard1/channel2";
+constexpr auto settingDacPcieBoard1Channel3Path = "dacPcieBoard1/channel3";
+constexpr auto settingDacPcieBoard1Channel4Path = "dacPcieBoard1/channel4";
+constexpr auto settingDacPcieBoard1Channel5Path = "dacPcieBoard1/channel5";
+constexpr auto settingDacPcieBoard1Channel6Path = "dacPcieBoard1/channel6";
+constexpr auto settingDacPcieBoard1Channel7Path = "dacPcieBoard1/channel7";
+constexpr auto settingDacPcieBoard1Channel8Path = "dacPcieBoard1/channel8";
+constexpr auto settingDacPcieBoard2Channel1Path = "dacPcieBoard2/channel1";
+constexpr auto settingDacPcieBoard2Channel2Path = "dacPcieBoard2/channel2";
+constexpr auto settingDacPcieBoard2Channel3Path = "dacPcieBoard2/channel3";
+constexpr auto settingDacPcieBoard2Channel4Path = "dacPcieBoard2/channel4";
+constexpr auto settingDacPcieBoard2Channel5Path = "dacPcieBoard2/channel5";
+constexpr auto settingDacPcieBoard2Channel6Path = "dacPcieBoard2/channel6";
+constexpr auto settingDacPcieBoard2Channel7Path = "dacPcieBoard2/channel7";
+constexpr auto settingDacPcieBoard2Channel8Path = "dacPcieBoard2/channel8";
+
 //debug
 constexpr auto settingTorPath = "debug/tor";
 constexpr auto settingAdcModePath = "debug/adcMode";
