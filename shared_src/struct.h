@@ -120,11 +120,9 @@ struct global_settings
 	 */
 	uint32_t temp_level;
 	/**
-	 * Turn digital analog converter on / off
-	 * - =0: off
-	 * - >0: on
+	 * unused
 	 */
-	uint32_t dac;
+	uint32_t unused;
 	/**
 	 * Shortrs controls the sensor reset length.
 	 *	- =0: long reset 800ns
