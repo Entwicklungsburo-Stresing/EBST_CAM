@@ -2199,9 +2199,9 @@ es_status_codes DAC8568_sendData( uint32_t drvno, uint8_t location, uint8_t ctrl
 	data |= ctrlBits & 0x0F;	//4 control bits
 	data <<= 4;
 	data |= addrBits & 0x0F;	//4 address bits
-	data <<= 4;
-	data |= dataBits;		//16 data bits
 	data <<= 16;
+	data |= dataBits;		//16 data bits
+	data <<= 4;
 	data |= featureBits;	//4 feature bits
 	switch (location)
 	{
