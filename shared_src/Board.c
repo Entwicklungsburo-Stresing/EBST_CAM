@@ -213,7 +213,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 		status = InitCamera3010(drvno, (uint8_t)settings_struct.adc_mode, (uint16_t)settings_struct.adc_custom_pattern);
 		break;
 	case camera_system_3030:
-		status = InitCamera3030(drvno, (uint8_t)settings_struct.adc_mode, (uint16_t)settings_struct.adc_custom_pattern, (uint8_t)settings_struct.adc_gain, settings_struct.dac, settings_struct.dac_output[drvno-1], settings_struct.is_hs_ir);
+		status = InitCamera3030(drvno, (uint8_t)settings_struct.adc_mode, (uint16_t)settings_struct.adc_custom_pattern, (uint8_t)settings_struct.adc_gain, settings_struct.dac_output[drvno-1], settings_struct.is_hs_ir);
 		break;
 	default:
 		return es_parameter_out_of_range;
@@ -1693,7 +1693,6 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
  * \param adc_mode 0: normal mode, 1: ramp, 2: custom pattern
  * \param custom_pattern only used when adc_mode = 2, lower 14 bits are used as output of ADC
  * \param adc_gain gain of ADC
- * \param useDac
  * \param dac_output
  * \param is_hs_ir
  * \return es_status_codes:
@@ -1702,9 +1701,9 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t adc_gain, bool useDac, uint32_t* dac_output, bool is_hs_ir)
+es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t adc_gain, uint32_t* dac_output, bool is_hs_ir)
 {
-	ES_LOG("Init camera 3030, adc_mode: %u, custom_pattern: %u, adc_gain: %u, use DAC: %u, is_hs_ir: %u\n", adc_mode, custom_pattern, adc_gain, useDac, is_hs_ir);
+	ES_LOG("Init camera 3030, adc_mode: %u, custom_pattern: %u, adc_gain: %u, is_hs_ir: %u\n", adc_mode, custom_pattern, adc_gain, is_hs_ir);
 	es_status_codes status = Cam3030_ADC_reset(drvno);
 	if (status != es_no_error) return status;
 	//two wire mode output interface for pal versions P209_2 and above
@@ -1715,13 +1714,9 @@ es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom
 	if (adc_mode)
 		status = Cam3030_ADC_RampOrPattern(drvno, adc_mode, custom_pattern);
 	if (status != es_no_error) return status;
-	//DAC
-	if (useDac)
-	{
-		status = DAC8568_enableInternalReference(drvno, DAC8568_camera);
-		if (status != es_no_error) return status;
-		status = DAC8568_setAllOutputs(drvno, DAC8568_camera, dac_output, is_hs_ir);
-	}
+	status = DAC8568_enableInternalReference(drvno, DAC8568_camera);
+	if (status != es_no_error) return status;
+	status = DAC8568_setAllOutputs(drvno, DAC8568_camera, dac_output, is_hs_ir);
 	if (status != es_no_error) return status;
 	// Sample mode is currently not in use. 11/22, P209_8
 	status = Cam3030_ADC_SetSampleMode(drvno, 0);
@@ -3952,7 +3947,7 @@ es_status_codes dumpSettings(char** stringPtr)
 	};
 	int len = 0;
 	size_t bufferSize = bufferLength;
-	//allocate string buffer buffer
+	//allocate string buffer
 	*stringPtr = (char*)calloc(bufferLength, sizeof(char));
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
 		"use_software_polling\t"DLLTAB DLLTAB"%u\n"
@@ -3980,7 +3975,7 @@ es_status_codes dumpSettings(char** stringPtr)
 		"gain switch\t"DLLTAB"%u\n"
 		"gain 3030\t"DLLTAB"%u\n"
 		"temp level\t"DLLTAB"%u\n"
-		"dac\t"DLLTAB DLLTAB"%u\n"
+		"unused\t"DLLTAB DLLTAB"%u\n"
 		"shortrs\t"DLLTAB"%u\n"
 		"gpx offset\t"DLLTAB"%u\n"
 		"fftlines\t"DLLTAB DLLTAB"%u\n"
@@ -4014,7 +4009,7 @@ es_status_codes dumpSettings(char** stringPtr)
 		settings_struct.sensor_gain,
 		settings_struct.adc_gain,
 		settings_struct.temp_level,
-		settings_struct.dac,
+		settings_struct.unused,
 		settings_struct.shortrs,
 		settings_struct.gpx_offset,
 		settings_struct.fft_lines,
