@@ -220,14 +220,7 @@ enum s0_addresses
 	S0Addr_A2DSC = 0x98,
 	S0Addr_L2DSC = 0x9C,
 	S0Addr_DSCCtrl = 0xA8,
-	S0Addr_DAC0 = 0xAC,
-	S0Addr_DAC1 = 0xB0,
-	S0Addr_DAC2 = 0xB4,
-	S0Addr_DAC3 = 0xB8,
-	S0Addr_DAC4 = 0xBC,
-	S0Addr_DAC5 = 0xC0,
-	S0Addr_DAC6 = 0xC4,
-	S0Addr_DAC7 = 0xC8
+	S0Addr_DAC = 0xAC
 };
 
 enum ScanIndex_bits
@@ -586,4 +579,19 @@ enum sec_bits
 	sec_bit_enable = 0x80000000,
 	sec_bitindex_en_ec_3030 = 30,
 	sec_bitindex_enable = 31
+};
+
+/**
+ * This enum is describing the possible locations of the IC DAC8568.
+ */
+enum DAC8568_location
+{
+	/**
+	 * High speed camera system 3030, PCB 2189-7.
+	 */
+	DAC8568_camera = 0,
+	/**
+	 * PCIe add on board EWS, PCB 2226-3.
+	 */
+	DAC8568_pcie = 1
 };
