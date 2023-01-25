@@ -33,7 +33,6 @@ constexpr auto settingLedPath = "camerasetup/led";
 constexpr auto settingSensorGainPath = "camerasetup/sensorGain";
 constexpr auto settingAdcGainPath = "camerasetup/adcGain";
 constexpr auto settingCoolingPath = "camerasetup/cooling";
-constexpr auto settingDacPath = "camerasetup/dac";
 constexpr auto settingGpxOffsetPath = "camerasetup/gpxOffset";
 constexpr auto settingIsIrPath = "camerasetup/isIr";
 constexpr auto settingIOCtrlImpactStartPixelPath = "camerasetup/IOCtrlImpactStartPixel";
@@ -126,7 +125,6 @@ private slots:
 	void on_comboBoxSti_currentIndexChanged(int index);
 	void on_comboBoxBti_currentIndexChanged(int index);
 	void on_comboBoxSensorType_currentIndexChanged(int index);
-	void on_checkBoxUseDac_stateChanged(int arg1);
 	void on_comboBoxCameraSystem_currentIndexChanged(int index);
 	void on_checkBoxRegionsEqual_stateChanged(int arg1);
 	void on_pushButtonDefault_clicked();

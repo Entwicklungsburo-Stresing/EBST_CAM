@@ -43,9 +43,8 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->doubleSpinBoxSTime_in_ms->setSizePolicy(sp_retain);
 	ui->doubleSpinBoxBTimer_in_ms->setSizePolicy(sp_retain);
 
-	sp_retain = ui->checkBoxUseDac->sizePolicy();
+	sp_retain = ui->checkBoxRegionsEqual->sizePolicy();
 	sp_retain.setRetainSizeWhenHidden(true);
-	ui->checkBoxUseDac->setSizePolicy(sp_retain);
 	ui->checkBoxRegionsEqual->setSizePolicy(sp_retain);
 
 	sp_retain = ui->spinBoxAdcGain->sizePolicy();
@@ -111,8 +110,6 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->spinBoxSensorGain->setValue(settings.value(settingSensorGainPath, settingSensorGainDefault).toInt());
 	ui->spinBoxAdcGain->setValue(settings.value(settingAdcGainPath, settingAdcGainDefault).toInt());
 	ui->comboBoxCamCool->setCurrentIndex(settings.value(settingCoolingPath, settingCoolingDefault).toInt());
-	ui->checkBoxUseDac->setChecked(settings.value(settingDacPath, settingDacDefault).toBool());
-	ui->checkBoxUseDac->stateChanged(settings.value(settingDacPath, settingDacDefault).toBool());
 	ui->spinBoxGpxOffset->setValue(settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toInt());
 	ui->checkBoxIr->setChecked(settings.value(settingIsIrPath, settingIsIrDefault).toBool());
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toInt());
@@ -200,7 +197,6 @@ void DialogSettings::on_accepted()
 	settings.setValue(settingSensorGainPath, ui->spinBoxSensorGain->value());
 	settings.setValue(settingAdcGainPath, ui->spinBoxAdcGain->value());
 	settings.setValue(settingCoolingPath, ui->comboBoxCamCool->currentIndex());
-	settings.setValue(settingDacPath, ui->checkBoxUseDac->isChecked());
 	settings.setValue(settingGpxOffsetPath, ui->spinBoxGpxOffset->value());
 	settings.setValue(settingIsIrPath, ui->checkBoxIr->isChecked());
 	settings.setValue(settingIOCtrlImpactStartPixelPath, ui->spinBoxIOCtrlImpactStartPixel->value());
@@ -359,32 +355,6 @@ void DialogSettings::on_comboBoxSensorType_currentIndexChanged(int index)
 #endif
 }
 
-void DialogSettings::on_checkBoxUseDac_stateChanged(int arg1)
-{
-	bool enabled = true,
-		 visible = true;
-	switch(ui->comboBoxSettingsLevel->currentIndex())
-	{
-	//basic
-	case 0:
-		enabled = arg1;
-		visible = arg1;
-		break;
-	//advanced
-	case 1:
-		enabled = arg1;
-		visible = true;
-		break;
-	//expert
-	case 2:
-		enabled = true;
-		visible = true;
-		break;
-	}
-	mainWindow->ui->actionDAC->setEnabled(enabled);
-	mainWindow->ui->actionDAC->setVisible(visible);
-}
-
 void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
 {
 	bool enabled = true,
@@ -412,10 +382,6 @@ void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
 	case 0:
 		ui->spinBoxAdcGain->setEnabled(enabled);
 		ui->spinBoxAdcGain->setVisible(visible);
-		ui->checkBoxUseDac->setEnabled(enabled);
-		ui->checkBoxUseDac->setVisible(visible);
-		mainWindow->ui->actionDAC->setEnabled(enabled);
-		mainWindow->ui->actionDAC->setVisible(visible);
 		ui->comboBoxAdcMode->setEnabled(enabled);
 		ui->comboBoxAdcMode->setVisible(visible);
 		ui->spinBoxAdcCustom->setEnabled(enabled);
@@ -424,10 +390,6 @@ void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
 	case 1:
 		ui->spinBoxAdcGain->setEnabled(enabled);
 		ui->spinBoxAdcGain->setVisible(visible);
-		ui->checkBoxUseDac->setEnabled(enabled);
-		ui->checkBoxUseDac->setVisible(visible);
-		mainWindow->ui->actionDAC->setEnabled(enabled);
-		mainWindow->ui->actionDAC->setVisible(visible);
 		ui->comboBoxAdcMode->setEnabled(true);
 		ui->comboBoxAdcMode->setVisible(true);
 		ui->spinBoxAdcCustom->setEnabled(true);
@@ -436,10 +398,6 @@ void DialogSettings::on_comboBoxCameraSystem_currentIndexChanged(int index)
 	case 2:
 		ui->spinBoxAdcGain->setEnabled(true);
 		ui->spinBoxAdcGain->setVisible(true);
-		ui->checkBoxUseDac->setEnabled(true);
-		ui->checkBoxUseDac->setVisible(true);
-		mainWindow->ui->actionDAC->setEnabled(ui->checkBoxUseDac->checkState() || enabled);
-		mainWindow->ui->actionDAC->setVisible(ui->checkBoxUseDac->checkState() || visible);
 		ui->comboBoxAdcMode->setEnabled(true);
 		ui->comboBoxAdcMode->setVisible(true);
 		ui->spinBoxAdcCustom->setEnabled(true);
@@ -536,8 +494,6 @@ void DialogSettings::loadDefaults()
 	ui->spinBoxSensorGain->setValue(settingSensorGainDefault);
 	ui->spinBoxAdcGain->setValue(settingAdcGainDefault);
 	ui->comboBoxCamCool->setCurrentIndex(settingCoolingDefault);
-	ui->checkBoxUseDac->setChecked(settingDacDefault);
-	ui->checkBoxUseDac->stateChanged(settingDacDefault);
 	ui->spinBoxGpxOffset->setValue(settingGpxOffsetDefault);
 	ui->checkBoxRegionsEqual->setChecked(settingIsIrDefault);
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settingIOCtrlImpactStartPixelDefault);
@@ -625,7 +581,6 @@ void DialogSettings::on_comboBoxSettingsLevel_currentIndexChanged(int index)
 	on_comboBoxSti_currentIndexChanged(ui->comboBoxSti->currentIndex());
 	on_comboBoxBti_currentIndexChanged(ui->comboBoxBti->currentIndex());
 	on_comboBoxSensorType_currentIndexChanged(ui->comboBoxSensorType->currentIndex());
-	on_checkBoxUseDac_stateChanged(ui->checkBoxUseDac->checkState());
 	on_comboBoxCameraSystem_currentIndexChanged(ui->comboBoxCameraSystem->currentIndex());
 	on_checkBoxRegionsEqual_stateChanged(ui->checkBoxRegionsEqual->checkState());
 	on_comboBoxFftMode_currentIndexChanged(ui->comboBoxFftMode->currentIndex());
