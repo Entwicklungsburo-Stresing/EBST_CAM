@@ -113,8 +113,8 @@ DllAccess es_status_codes DLLSetBEC(UINT32 drvno, UINT32 ecin10ns);
 DllAccess es_status_codes DLLSetTORReg(UINT32 drvno, UINT8 tor);
 DllAccess es_status_codes DLLSetSensorType(UINT32 drvno, UINT8 set);
 DllAccess es_status_codes DLLSetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep);
-DllAccess es_status_codes DLLDAC_setOutput(UINT32 drvno, UINT8 channel, UINT16 output); //set output of DAC (PCB 2189-7)
-DllAccess es_status_codes DLLDAC_setAllOutputs(UINT32 drvno, UINT32* output, UINT8 isIR); //set output of DAC (PCB 2189-7)
+DllAccess es_status_codes DLLDAC8568_setOutput(UINT32 drvno, UINT8 location, UINT8 channel, UINT16 output);
+DllAccess es_status_codes DLLDAC8568_setAllOutputs(UINT32 drvno, UINT8 location, UINT32* output, UINT8 isIR);
 DllAccess es_status_codes DLLSetMeasurementParameters(UINT32 drvno, UINT32 nos, UINT32 nob);
 DllAccess es_status_codes DLLSetupVCLK(UINT32 drvno, UINT32 lines, UINT8 vfreq);//set the VCLK regs
 DllAccess es_status_codes DLLInitGPX(UINT32 drvno, UINT32 delay);
@@ -140,4 +140,4 @@ DllAccess es_status_codes DLLWriteLongIOPort(UINT32 drvno, UINT32 data, UINT32 a
 DllAccess es_status_codes DLLSetS0Bit(ULONG bitnumber, CHAR address, UINT32 drvno);
 DllAccess es_status_codes DLLResetS0Bit(ULONG bitnumber, CHAR address, UINT32 drvno);
 DllAccess es_status_codes DLLSendFLCAM(UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data);
-DllAccess es_status_codes DLLSendFLCAM_DAC(UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature);
+DllAccess es_status_codes DLLDAC8568_sendData(UINT32 drvno, UINT8 location, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature);
