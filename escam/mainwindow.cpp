@@ -181,7 +181,6 @@ void MainWindow::startPressed()
 	settings_struct.sensor_gain = settings.value(settingSensorGainPath, settingSensorGainDefault).toUInt();
 	settings_struct.adc_gain = settings.value(settingAdcGainPath, settingAdcGainDefault).toUInt();
 	settings_struct.temp_level = settings.value(settingCoolingPath, settingCoolingDefault).toUInt();
-	settings_struct.dac = settings.value(settingDacPath, settingDacDefault).toBool();
 	settings_struct.gpx_offset = settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toUInt();
 	settings_struct.is_hs_ir = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
 	settings_struct.ioctrl_impact_start_pixel = settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toUInt();
