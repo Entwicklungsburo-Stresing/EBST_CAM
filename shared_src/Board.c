@@ -1716,12 +1716,11 @@ es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom
 		status = Cam3030_ADC_RampOrPattern(drvno, adc_mode, custom_pattern);
 	if (status != es_no_error) return status;
 	//DAC
-	uint8_t dac_channel_count = 8;
 	if (useDac)
 	{
-		status = SendFLCAM_DAC(drvno, dac_channel_count, 0, 0, 1);
+		status = DAC8568_enableInternalReference(drvno, DAC8568_camera);
 		if (status != es_no_error) return status;
-		status = DAC_setAllOutputs(drvno, dac_output, is_hs_ir);
+		status = DAC8568_setAllOutputs(drvno, DAC8568_camera, dac_output, is_hs_ir);
 	}
 	if (status != es_no_error) return status;
 	// Sample mode is currently not in use. 11/22, P209_8
@@ -2164,12 +2163,15 @@ es_status_codes SetTemp( uint32_t drvno, uint8_t level )
 }
 
 /**
- * \brief Sends data via fiber link to DAC8568. Mapping of bits in DAC8568: 4 prefix, 4 control, 4 address, 16 data, 4 feature.
+ * \brief Sends data to DAC8568.
+ * 
+ * Mapping of bits in DAC8568: 4 prefix, 4 control, 4 address, 16 data, 4 feature.
  * 
  * \param drvno board number (=1 if one PCI board)
- * \param ctrl 4 control bits
- * \param addr 4 address bits
- * \param data 16 data bits
+ * \param location Switch for the different locations of DAC85689. See enum DAC8568_location in enum.h for details.
+ * \param ctrlBits 4 control bits
+ * \param addrBits 4 address bits
+ * \param dataBits 16 data bits
  * \param feature 4 feature bits
  * \return es_status_codes
  *		- es_no_error
@@ -2178,39 +2180,56 @@ es_status_codes SetTemp( uint32_t drvno, uint8_t level )
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes SendFLCAM_DAC( uint32_t drvno, uint8_t ctrl, uint8_t addr, uint16_t data, uint8_t feature )
+es_status_codes DAC8568_sendData( uint32_t drvno, uint8_t location, uint8_t ctrlBits, uint8_t addrBits, uint16_t dataBits, uint8_t featureBits )
 {
-	uint16_t	hi_bytes = 0,
-		lo_bytes = 0;
-
-	if (ctrl & 0x10) //4 ctrl bits => only lower 4 bits allowed
+	uint32_t data = 0;
+	es_status_codes status;
+	if (ctrlBits & 0x10) //4 ctrl bits => only lower 4 bits allowed
 	{
-		ES_LOG( "SendFLCAM_DAC: Only values between 0 and 15 are allowed for control bits." );
+		ES_LOG( "DAC8568_sendData: Only values between 0 and 15 are allowed for control bits." );
 		return es_parameter_out_of_range;
 	}
-	if (addr & 0x10) //4 addr bits => only lower 4 bits allowed
+	if (addrBits & 0x10) //4 addr bits => only lower 4 bits allowed
 	{
-		ES_LOG( "SendFLCAM_DAC: Only values between 0 and 15 are allowed for address bits." );
+		ES_LOG( "DAC8568_sendData: Only values between 0 and 15 are allowed for address bits." );
 		return es_parameter_out_of_range;
 	}
-	if (feature & 0x10) //4 ctrl bits => only lower 4 bits allowed
+	if (featureBits & 0x10) //4 ctrl bits => only lower 4 bits allowed
 	{
-		ES_LOG( "SendFLCAM_DAC: Only values between 0 and 15 are allowed for feature bits." );
+		ES_LOG( "DAC8568_sendData: Only values between 0 and 15 are allowed for feature bits." );
 		return es_parameter_out_of_range;
 	}
-	hi_bytes |= 0x0;	//4 prefix bits, first bit always 0 (0xxx)
-	hi_bytes <<= 4;
-	hi_bytes |= ctrl & 0x0F;	//4 control bits
-	hi_bytes <<= 4;
-	hi_bytes |= addr & 0x0F;	//4 address bits
-	hi_bytes <<= 4;
-	hi_bytes |= data >> 12; //4 data bits (upper 4 bits of 16 bits data)
-	lo_bytes |= data & 0x0FFF; //12 data bits (lower 12 bits of 16 bit data)
-	lo_bytes <<= 4;
-	lo_bytes |= feature;	//4 feature bits
-	es_status_codes status = SendFLCAM( drvno, maddr_dac, dac_hi_byte_addr, hi_bytes );
-	if (status != es_no_error) return status;
-	return SendFLCAM( drvno, maddr_dac, dac_lo_byte_addr, lo_bytes );
+	data |= 0x0;	//4 prefix bits, first bit always 0 (0xxx)
+	data <<= 4;
+	data |= ctrlBits & 0x0F;	//4 control bits
+	data <<= 4;
+	data |= addrBits & 0x0F;	//4 address bits
+	data <<= 4;
+	data |= dataBits;		//16 data bits
+	data <<= 16;
+	data |= featureBits;	//4 feature bits
+	switch (location)
+	{
+		case DAC8568_camera:
+		{
+			uint16_t hi_bytes = (uint16_t) (data >> 16);
+			uint16_t lo_bytes = (uint16_t) data;
+			status = SendFLCAM(drvno, maddr_dac, dac_hi_byte_addr, hi_bytes);
+			if (status != es_no_error) return status;
+			status = SendFLCAM(drvno, maddr_dac, dac_lo_byte_addr, lo_bytes);
+			break;
+		}
+		case DAC8568_pcie:
+			status = writeRegisterS0_32(drvno, data, S0Addr_DAC);
+			if (status != es_no_error) return status;
+			// set load bit to 1, to start SPI data transfer to DAC
+			data |= 0x80000000;
+			status = writeRegisterS0_32(drvno, data, S0Addr_DAC);
+			break;
+		default:
+			return es_parameter_out_of_range;
+	}
+	return status;
 }
 
 /**
@@ -2225,7 +2244,7 @@ es_status_codes SendFLCAM_DAC( uint32_t drvno, uint8_t ctrl, uint8_t addr, uint1
  *		- es_register_write_failed
  *		- es_parameter_out_of_range
  */
-es_status_codes DAC_setAllOutputs(uint32_t drvno, uint32_t* output, bool isIR)
+es_status_codes DAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint32_t* output, bool isIR)
 {
 	es_status_codes status = es_no_error;
 	int* reorder_ch;
@@ -2241,7 +2260,7 @@ es_status_codes DAC_setAllOutputs(uint32_t drvno, uint32_t* output, bool isIR)
 	}
 	for (uint8_t channel = 0; channel < 8; channel++)
 	{
-		status = DAC_setOutput(drvno, channel, (uint16_t)output[reorder_ch[channel]]);
+		status = DAC8568_setOutput(drvno, location, channel, (uint16_t)output[reorder_ch[channel]]);
 		if (status != es_no_error) return status;
 	}
 	return status;
@@ -2258,11 +2277,26 @@ es_status_codes DAC_setAllOutputs(uint32_t drvno, uint32_t* output, bool isIR)
  *		- es_register_write_failed
  *		- es_parameter_out_of_range
  */
-es_status_codes DAC_setOutput( uint32_t drvno, uint8_t channel, uint16_t output )
+es_status_codes DAC8568_setOutput( uint32_t drvno, uint8_t location, uint8_t channel, uint16_t output )
 {
-	//ctrl 3: write and update DAC register
-	ES_LOG("Set DAC output ch%u = %u\n", channel, output);
-	return SendFLCAM_DAC( drvno, 3, channel, output, 0 );
+	//ctrl bits 3: write and update DAC register
+	ES_LOG("Set DAC %u output ch%u = %u\n", location, channel, output);
+	return DAC8568_sendData( drvno, location, 3, channel, output, 0 );
+}
+
+/**
+ * \brief Enable the internal reference in static mode.
+ *
+ * \param drvno PCIe board identifier
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_parameter_out_of_range
+ */
+es_status_codes DAC8568_enableInternalReference(uint32_t drvno, uint8_t location)
+{
+	ES_LOG("DAC %u: enable internal reference\n", location);
+	return DAC8568_sendData(drvno, DAC8568_camera, 8, 0, 0, 1);
 }
 
 /**

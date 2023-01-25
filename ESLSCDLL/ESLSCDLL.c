@@ -503,27 +503,27 @@ DllAccess es_status_codes DLLSendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr,
 }
 
 /**
- * \copydoc SendFLCAM_DAC
+ * \copydoc DAC8568_sendData
  */
-DllAccess es_status_codes DLLSendFLCAM_DAC( UINT32 drvno, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature )
+DllAccess es_status_codes DLLDAC8568_sendData( UINT32 drvno, UINT8 location, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature )
 {
-	return SendFLCAM_DAC( drvno, ctrl, addr, data, feature );
+	return DAC8568_sendData( drvno, location, ctrl, addr, data, feature );
 }
 
 /**
- * \copydoc DAC_setOutput
+ * \copydoc DAC8568_setOutput
  */
-DllAccess es_status_codes DLLDAC_setOutput( UINT32 drvno, UINT8 channel, UINT16 output )
+DllAccess es_status_codes DLLDAC8568_setOutput( UINT32 drvno, UINT8 location, UINT8 channel, UINT16 output )
 {
-	return DAC_setOutput( drvno, channel, output );
+	return DAC8568_setOutput( drvno, location, channel, output );
 }
 
 /**
- * \copydoc DAC_setAllOutputs
+ * \copydoc DAC8568_setAllOutputs
  */
-DllAccess es_status_codes DLLDAC_setAllOutputs(UINT32 drvno, UINT32* output, UINT8 isIR)
+DllAccess es_status_codes DLLDAC8568_setAllOutputs(UINT32 drvno, UINT8 location, UINT32* output, UINT8 isIR)
 {
-	return DAC_setAllOutputs(drvno, output, isIR);
+	return DAC8568_setAllOutputs(drvno, location, output, isIR);
 }
 
 /**
