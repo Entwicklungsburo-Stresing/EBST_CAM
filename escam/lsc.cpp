@@ -204,9 +204,9 @@ void Lsc::parseTextToHtml(std::string* str)
 /**
  * \copydoc DAC8568_setAllOutputs
  */
-es_status_codes Lsc::dac_setAllOutputs(uint32_t drvno, uint32_t* output, bool is_hs_ir)
+es_status_codes Lsc::dac_setAllOutputs(uint32_t drvno, uint8_t location, uint32_t* output, bool reorder_channels)
 {
-	return DAC8568_setAllOutputs(drvno, DAC8568_camera, output, is_hs_ir);
+	return DAC8568_setAllOutputs(drvno, location, output, reorder_channels);
 }
 
 /**
