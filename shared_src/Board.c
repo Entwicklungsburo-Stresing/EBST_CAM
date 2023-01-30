@@ -2179,17 +2179,17 @@ es_status_codes DAC8568_sendData( uint32_t drvno, uint8_t location, uint8_t ctrl
 {
 	uint32_t data = 0;
 	es_status_codes status;
-	if (ctrlBits & 0x10) //4 ctrl bits => only lower 4 bits allowed
+	if (ctrlBits & 0xF0) //4 ctrl bits => only lower 4 bits allowed
 	{
 		ES_LOG( "DAC8568_sendData: Only values between 0 and 15 are allowed for control bits." );
 		return es_parameter_out_of_range;
 	}
-	if (addrBits & 0x10) //4 addr bits => only lower 4 bits allowed
+	if (addrBits & 0xF0) //4 addr bits => only lower 4 bits allowed
 	{
 		ES_LOG( "DAC8568_sendData: Only values between 0 and 15 are allowed for address bits." );
 		return es_parameter_out_of_range;
 	}
-	if (featureBits & 0x10) //4 ctrl bits => only lower 4 bits allowed
+	if (featureBits & 0xF0) //4 ctrl bits => only lower 4 bits allowed
 	{
 		ES_LOG( "DAC8568_sendData: Only values between 0 and 15 are allowed for feature bits." );
 		return es_parameter_out_of_range;
@@ -2202,7 +2202,7 @@ es_status_codes DAC8568_sendData( uint32_t drvno, uint8_t location, uint8_t ctrl
 	data <<= 16;
 	data |= dataBits;		//16 data bits
 	data <<= 4;
-	data |= featureBits;	//4 feature bits
+	data |= featureBits & 0x0F;	//4 feature bits
 	switch (location)
 	{
 		case DAC8568_camera:
