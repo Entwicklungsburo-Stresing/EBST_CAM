@@ -2232,6 +2232,7 @@ es_status_codes DAC8568_sendData( uint32_t drvno, uint8_t location, uint8_t ctrl
  * 
  * Use this function to set the outputs, because it is resorting the channel numeration correctly.
  * \param drvno PCIe board identifier
+ * \param location Switch for the different locations of DAC85689. See enum DAC8568_location in enum.h for details.
  * \param output all output values that will be converted to analog voltage (0 ... 0xFFFF)
  * \param reorder_channels used to reorder DAC channels for high speed camera
  * \return es_status_codes
@@ -2265,6 +2266,7 @@ es_status_codes DAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint32_t
  * \brief Sets the output of the DAC8568 on PCB 2189-7.
  * 
  * \param drvno PCIe board identifier
+ * \param location Switch for the different locations of DAC85689. See enum DAC8568_location in enum.h for details.
  * \param channel select one of eight output channel (0 ... 7)
  * \param output output value that will be converted to analog voltage (0 ... 0xFFFF)
  * \return es_status_codes
@@ -2283,6 +2285,7 @@ es_status_codes DAC8568_setOutput( uint32_t drvno, uint8_t location, uint8_t cha
  * \brief Enable the internal reference in static mode.
  *
  * \param drvno PCIe board identifier
+ * \param location Switch for the different locations of DAC85689. See enum DAC8568_location in enum.h for details.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
