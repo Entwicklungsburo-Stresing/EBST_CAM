@@ -2291,7 +2291,7 @@ es_status_codes DAC8568_setOutput( uint32_t drvno, uint8_t location, uint8_t cha
 es_status_codes DAC8568_enableInternalReference(uint32_t drvno, uint8_t location)
 {
 	ES_LOG("DAC %u: enable internal reference\n", location);
-	return DAC8568_sendData(drvno, DAC8568_camera, 8, 0, 0, 1);
+	return DAC8568_sendData(drvno, location, 8, 0, 0, 1);
 }
 
 /**
