@@ -144,7 +144,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	status = SetMshut(drvno, settings_struct.mshut);
 	if (status != es_no_error) return status;
 	//SSlope
-	SetSSlope(drvno, settings_struct.sslope);
+	status = SetSSlope(drvno, settings_struct.sslope);
 	if (status != es_no_error) return status;
 	//BSlope
 	status = SetBSlope(drvno, settings_struct.bslope);
