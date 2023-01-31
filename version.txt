@@ -1,6 +1,6 @@
-# vX.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
+# X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
-v4.1.0
+4.1.0
 - Update PCIe board from 202.26 to 222.1 (new PCB: 2167-7)
 - Remove setting parameter useDac
 - Add control for DAC8568 at PCIe board extension PCB 2226-3 (EWS board)
@@ -10,6 +10,7 @@ v4.1.0
 	- add function DAC8568_enableInternalReference
 	- add parameter location to all DAC8568_* functions to choose between DAC in camera or DAC at PCIe board
 	- invert logic for reordering channels in DAC8568_setAllOutputs
+- Drop 'v' in version scheme, because there is no need for it
 
 v3.26.8
 - Set SEC register in init 3010
