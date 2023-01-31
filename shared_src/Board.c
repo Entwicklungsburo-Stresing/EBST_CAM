@@ -3660,7 +3660,7 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 {
 	enum N
 	{ 
-		number_of_registers = 51,
+		number_of_registers = 44,
 		bufferLength = 40
 	};
 	char register_names[number_of_registers][bufferLength] = {
@@ -3707,17 +3707,10 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 		"R24 ATDC2",
 		"R25 LTDC2",
 		"R26 DSCCtrl",
-		"R27 DAC0",
-		"R28 DAC1",
-		"R29 DAC2",
-		"R30 DAC3",
-		"R31 DAC4",
-		"R32 DAC5",
-		"R33 DAC6",
-		"R34 DAC7"
+		"R27 DAC",
 	}; //Look-Up-Table for the S0 Registers
 	uint32_t data = 0;
-	//allocate string buffer buffer
+	//allocate string buffer
 	*stringPtr = (char*) calloc(number_of_registers * bufferLength, sizeof(char));
 	int len = 0;
 	size_t bufferSize = number_of_registers * bufferLength;
