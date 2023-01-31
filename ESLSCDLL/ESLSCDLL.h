@@ -114,7 +114,7 @@ DllAccess es_status_codes DLLSetTORReg(UINT32 drvno, UINT8 tor);
 DllAccess es_status_codes DLLSetSensorType(UINT32 drvno, UINT8 set);
 DllAccess es_status_codes DLLSetupVPB(UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep);
 DllAccess es_status_codes DLLDAC8568_setOutput(UINT32 drvno, UINT8 location, UINT8 channel, UINT16 output);
-DllAccess es_status_codes DLLDAC8568_setAllOutputs(UINT32 drvno, UINT8 location, UINT32* output, UINT8 isIR);
+DllAccess es_status_codes DLLDAC8568_setAllOutputs(UINT32 drvno, UINT8 location, UINT32* output, UINT8 reorder_channel);
 DllAccess es_status_codes DLLSetMeasurementParameters(UINT32 drvno, UINT32 nos, UINT32 nob);
 DllAccess es_status_codes DLLSetupVCLK(UINT32 drvno, UINT32 lines, UINT8 vfreq);//set the VCLK regs
 DllAccess es_status_codes DLLInitGPX(UINT32 drvno, UINT32 delay);
