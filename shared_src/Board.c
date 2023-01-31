@@ -4749,7 +4749,7 @@ void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last block in data:\t%u\n",vd->last_block);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last sample before error:\t%u\n",vd->last_sample_before_error);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last block before error:\t%u\n",vd->last_block_before_error);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last measurement before error:\t%u\n",vd->last_measurement_before_error);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last measurement before error:\t%llu\n",vd->last_measurement_before_error);
 	return;
 }
 
