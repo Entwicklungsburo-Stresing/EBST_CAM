@@ -70,11 +70,14 @@ struct global_settings
 	 */
 	uint32_t trigger_mode_cc;
 	/**
-	 * Board select
+	 * Select boards with bits. 1 for using this board, 0 for not using this board.
 	 * 
-	 * - 1: board 1
-	 * - 2: board 2
-	 * - 3: both boards
+	 * - bit 0: board 0
+	 * - bit 1: board 1
+	 * - bit 2: board 2
+	 * - bit 3: board 3
+	 * - bit 4: board 4
+	 * - bit 5: board 5
 	 */
 	uint32_t board_sel;
 	/**

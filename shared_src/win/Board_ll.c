@@ -349,7 +349,7 @@ es_status_codes writeRegister_8twoBoards(uint8_t data1, uint8_t data2, uint16_t 
  */
 es_status_codes checkDriverHandle(uint32_t drvno)
 {
-	if ((drvno < 1) || (drvno > 2))
+	if (drvno >= number_of_boards)
 		return es_invalid_driver_number;
 	else if (hDev[drvno] == INVALID_HANDLE_VALUE)
 	{
@@ -518,13 +518,12 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
  * \param drvno PCIe board identifier.
  * \return es_status_codes:
  *		- es_no_error
- *		- es_invalid_driver_number
  *		- es_getting_device_info_failed
  *		- es_open_device_failed
  */
 es_status_codes _InitBoard(uint32_t drvno)
 {
-	if ((drvno < 1) || (drvno > 2)) return es_invalid_driver_number;
+	ES_LOG("Initialize board %u\n", drvno);
 	DWORD dwStatus = 0;
 	ES_LOG( "Info: scan result: a board found:%lx , dev=%lx, ven=%lx \n", scanResult.dwNumDevices, scanResult.deviceId[drvno - 1].dwDeviceId, scanResult.deviceId[drvno - 1].dwVendorId );
 	//gives the information received from PciScanDevices to PciGetDeviceInfo
@@ -662,9 +661,9 @@ es_status_codes CleanupDriver(uint32_t drvno)
  * \return es_status_codes:
  *		- es_no_error
  */
-es_status_codes _ExitDriver(uint32_t drvno)
+es_status_codes _ExitDriver()
 {
-	ES_LOG( "Driver exit, drv: %u\n", drvno);
+	ES_LOG( "Driver exit\n");
 	WDC_DriverClose();
 	ES_LOG( "Driver closed\n" );
 	return es_no_error;
@@ -771,9 +770,9 @@ es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 
 es_status_codes InitMutex(uint32_t drvno)
 {
-    //no mutex on windows
+	//no mutex on windows
 	(void)drvno;
-    return es_no_error;
+	return es_no_error;
 }
 
 es_status_codes About(uint32_t drvno)
