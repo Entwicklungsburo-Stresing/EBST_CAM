@@ -59,21 +59,14 @@ es_status_codes InitMeasurement()
 		ES_LOG("%u ", *(&settings_struct.use_software_polling + i));
 	ES_LOG("\n");
 	es_status_codes status = es_no_error;
-	switch (settings_struct.board_sel)
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
-	case 1:
-		status = _InitMeasurement(1);
-		break;
-	case 2:
-		status = _InitMeasurement(2);
-		break;
-	case 3:
-		status = _InitMeasurement(1);
-		if (status != es_no_error) return status;
-		status = _InitMeasurement(2);
-		break;
-	default:
-		return es_parameter_out_of_range;
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = _InitMeasurement(drvno);
+			if (status != es_no_error) return status;
+		}
 	}
 	ES_LOG("*** Init Measurement done ***\n\n");
 	return status;
@@ -383,28 +376,15 @@ es_status_codes AbortMeasurement()
 	ES_LOG("Abort Measurement\n");
 	abortMeasurementFlag = true;
 	es_status_codes status = es_no_error;
-	switch (number_of_boards)
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
-	case 2:
-		status = StopSTimer( 2 );
+		status = StopSTimer(drvno);
 		if (status != es_no_error) return status;
-		status = resetBlockOn( 2 );
+		status = resetBlockOn(drvno);
 		if (status != es_no_error) return status;
-		status = resetMeasureOn( 2 );
+		status = resetMeasureOn(drvno);
 		if (status != es_no_error) return status;
-		status = ResetDma( 2 );
-		if (status != es_no_error) return status;
-
-	// fall through
-	default:
-	case 1:
-		status = StopSTimer( 1 );
-		if (status != es_no_error) return status;
-		status = resetBlockOn( 1 );
-		if (status != es_no_error) return status;
-		status = resetMeasureOn( 1 );
-		if (status != es_no_error) return status;
-		status = ResetDma( 1 );
+		status = ResetDma(drvno);
 		if (status != es_no_error) return status;
 	}
 	return status;
@@ -2589,50 +2569,48 @@ es_status_codes StartMeasurement()
 	setTimestamp();
 	measurement_cnt = 0;
 	data_available = 0;
-	if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
-		uint32_t* drvno_tmp = malloc(sizeof(uint32_t));
-		*drvno_tmp = 1;
-		if (settings_struct.write_to_disc) _beginthread(&writeToDisc, 0, drvno_tmp);
-	}
-	if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
-	{
-		uint32_t* drvno_tmp = malloc(sizeof(uint32_t));
-		*drvno_tmp = 2;
-		if (settings_struct.write_to_disc) _beginthread(&writeToDisc, 0, drvno_tmp);
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			uint32_t* drvno_tmp = malloc(sizeof(uint32_t));
+			*drvno_tmp = drvno;
+			if (settings_struct.write_to_disc) _beginthread(&writeToDisc, 0, drvno_tmp);
+		}
 	}
 	do
 	{
 		measurement_cnt++;
 		ES_TRACE("measurement count: %u\n", measurement_cnt);
 		// Reset the hardware block counter and scan counter.
-		if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
+		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		{
-			status = ResetHardwareCounter(1);
-			if (status != es_no_error) return ReturnStartMeasurement(status);
-		}
-		if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
-		{
-			status = ResetHardwareCounter(2);
-			if (status != es_no_error) return ReturnStartMeasurement(status);
+			// Check if the drvno'th bit is set
+			if ((settings_struct.board_sel >> drvno) & 1)
+			{
+				status = ResetHardwareCounter(drvno);
+				if (status != es_no_error) return ReturnStartMeasurement(status);
+			}
 		}
 		// Reset the buffer write pointers and software ISR counter.
-		if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
-			ResetBufferWritePos(1);
-		if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
-			ResetBufferWritePos(2);
+		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		{
+			// Check if the drvno'th bit is set
+			if ((settings_struct.board_sel >> drvno) & 1)
+				ResetBufferWritePos(drvno);
+		}
 		// Only on Linux: Because on Linux it is not possible to copy data in the ISR,
 		// a new thread is started here that copies the data from the DMA buffer to
 		// the user buffer. The ISR is giving a signal to this thread when to copy data.
-		if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
+		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		{
-			status = StartCopyDataToUserBufferThread(1);
-			if (status != es_no_error) return ReturnStartMeasurement(status);
-		}
-		if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
-		{
-			status = StartCopyDataToUserBufferThread(2);
-			if (status != es_no_error) return ReturnStartMeasurement(status);
+			// Check if the drvno'th bit is set
+			if ((settings_struct.board_sel >> drvno) & 1)
+			{
+				status = StartCopyDataToUserBufferThread(drvno);
+				if (status != es_no_error) return ReturnStartMeasurement(status);
+			}
 		}
 		// Increase the priority of the measurement thread to maximum.
 		// This is done to decrease latency while doing handshakes between software and hardware.
@@ -2640,44 +2618,48 @@ es_status_codes StartMeasurement()
 		status = SetPriority(31);
 		if (status != es_no_error) return ReturnStartMeasurement(status);
 		// Set the measure on hardware bit
-		if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
+		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		{
-			status = setMeasureOn(1);
-			if (status != es_no_error) return ReturnStartMeasurement(status);
-		}
-		if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
-		{
-			status = setMeasureOn(2);
-			if (status != es_no_error) return ReturnStartMeasurement(status);
+			// Check if the drvno'th bit is set
+			if ((settings_struct.board_sel >> drvno) & 1)
+			{
+				status = setMeasureOn(drvno);
+				if (status != es_no_error) return ReturnStartMeasurement(status);
+			}
 		}
 		// Block read for loop.
 		for (uint32_t blk_cnt = 0; blk_cnt < *Nob; blk_cnt++)
 		{
 			// Increase the block count hardware register.
 			// This must be done, before the block starts, so doing this first is a good idea.
-			if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
+			for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 			{
-				status = countBlocksByHardware(1);
-				if (status != es_no_error) return ReturnStartMeasurement(status);
-			}
-			if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
-			{
-				status = countBlocksByHardware(2);
-				if (status != es_no_error) return ReturnStartMeasurement(status);
+				// Check if the drvno'th bit is set
+				if ((settings_struct.board_sel >> drvno) & 1)
+				{
+					status = countBlocksByHardware(drvno);
+					if (status != es_no_error) return ReturnStartMeasurement(status);
+				}
 			}
 			// The software polls the block trigger hardware register in a loop,
 			// so the software is trapped here, until the hardware gives the signal
 			// via this register. Pressing ESC can cancel this loop.
-			if(settings_struct.board_sel == 2)
-				status = waitForBlockTrigger(2);
-			else
-				status = waitForBlockTrigger(1);
-			if (status == es_abortion)
+			for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 			{
-				status = AbortMeasurement();
-				return ReturnStartMeasurement(status);
-			}
-			else if (status != es_no_error) return ReturnStartMeasurement(status);
+				// Check if the drvno'th bit is set
+				if ((settings_struct.board_sel >> drvno) & 1)
+				{
+					status = waitForBlockTrigger(drvno);
+					if (status == es_abortion)
+					{
+						status = AbortMeasurement();
+						return ReturnStartMeasurement(status);
+					}
+					else if (status != es_no_error) return ReturnStartMeasurement(status);
+					// Only wait for the block trigger of one board
+					break;
+				}
+			
 			ES_LOG("Block %u triggered\n", blk_cnt);
 			// setBlockOn, StartSTimer and DoSoftwareTrigger are starting the measurement.
 			// timer must be started in each block as the scan counter stops it by hardware at end of block
@@ -3122,12 +3104,13 @@ es_status_codes InitBoard()
 	ES_LOG("\n*** Init board ***\n");
 	ES_LOG("Number of boards: %u\n", number_of_boards);
 	if (number_of_boards < 1) return es_open_device_failed;
-	es_status_codes status = _InitBoard(1);
-	if (status != es_no_error) return status;
-	if (number_of_boards > 1)
-		status = _InitBoard(2);
-	for(uint32_t drvno=1; drvno <= number_of_boards; drvno++)
+	es_status_codes status;
+	for (int drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		status = _InitBoard(drvno);
+		if (status != es_no_error) return status;
 		InitMutex(drvno);
+	}
 	ES_LOG("*** Init board done***\n\n");
 	return status;
 }
@@ -3164,26 +3147,13 @@ es_status_codes ExitDriver()
 {
 	ES_LOG("\n*** Exit driver ***\n");
 	es_status_codes status = es_no_error;
-	switch (number_of_boards)
+	for (int drvno = 0; drvno < number_of_boards; drvno++)
 	{
-	case 1:
-		status = CleanupDriver(1);
+		status = CleanupDriver(drvno);
 		if (status != es_no_error) return status;
-		status = _ExitDriver(1);
-		break;
-	case 2:
-		status = CleanupDriver(1);
-		if (status != es_no_error) return status;
-		status = CleanupDriver(2);
-		if (status != es_no_error) return status;
-		status = _ExitDriver(1);
-		if (status != es_no_error) return status;
-		status = _ExitDriver(2);
-		break;
-	default:
-		return es_parameter_out_of_range;
 	}
-
+	status = _ExitDriver();
+	if (status != es_no_error) return status;
 	ES_LOG("*** Exit driver done***\n\n");
 	return status;
 }
