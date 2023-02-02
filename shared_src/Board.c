@@ -2675,7 +2675,9 @@ es_status_codes StartMeasurement()
 					//start scan for first read if area or ROI
 					if (*useSWTrig) status = DoSoftwareTrigger(drvno);
 					if (status != es_no_error) return ReturnStartMeasurement(status);
+					timerOn[drvno] = true;
 				}
+				else timerOn[drvno] = false;
 			}
 			// Main read loop. The software waits here until the flag RegXCKMSB:b30 = TimerOn is resetted by hardware,
 			// if flag HWDREQ_EN is TRUE.
@@ -2943,7 +2945,6 @@ es_status_codes countBlocksByHardware( uint32_t drvno )
 es_status_codes StartSTimer( uint32_t drvno )
 {
 	ES_LOG("Start S Timer\n");
-	timerOn[drvno] = true;
 	return setBitS0_8(drvno, XCKMSB_bitindex_stimer_on, S0Addr_XCKMSB);
 }
 
