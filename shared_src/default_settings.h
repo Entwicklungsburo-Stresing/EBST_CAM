@@ -18,7 +18,12 @@
 #define settingShutterSecIn10nsDefault				1
 #define settingShutterBecIn10nsDefault				1
 #define settingTriggerCcDefault						xck
-#define settingBoardSelDefault						0
+#define settingBoardSelDefault						1
+#define settingBoard0Default						1
+#define settingBoard1Default						0
+#define settingBoard2Default						0
+#define settingBoard3Default						0
+#define settingBoard4Default						0
 #define settingSensorTypeDefault					PDAsensor
 #define settingCameraSystemDefault					camera_system_3001
 #define settingCamcntDefault						1
