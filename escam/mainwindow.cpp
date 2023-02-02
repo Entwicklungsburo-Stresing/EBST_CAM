@@ -584,7 +584,7 @@ void MainWindow::on_actionDump_board_registers_triggered()
 		labelTlp->setText(QString::fromStdString(lsc._dumpTlp(drvno)));
 		labelTlp->setAlignment(Qt::AlignTop);
 		scrollTlp->setWidget(labelTlp);
-		tabWidget->addTab(scrollTlp, "TLP size board" + QString::number(drvno));
+		tabWidget->addTab(scrollTlp, "TLP size board " + QString::number(drvno));
 		QScrollArea* scrollPci = new QScrollArea(tabWidget);
 		scrollPci->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 		QLabel* labelPci = new QLabel(scrollPci);
@@ -593,7 +593,7 @@ void MainWindow::on_actionDump_board_registers_triggered()
 		labelPci->setText(QString::fromStdString(lsc._dumpPciRegisters(drvno)));
 		labelPci->setAlignment(Qt::AlignTop);
 		scrollPci->setWidget(labelPci);
-		tabWidget->addTab(scrollPci, "PCI registers board" + QString::number(drvno));
+		tabWidget->addTab(scrollPci, "PCI registers board " + QString::number(drvno));
 	}
 	QScrollArea* scrollSettings = new QScrollArea(tabWidget);
 	scrollSettings->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
