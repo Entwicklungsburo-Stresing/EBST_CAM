@@ -206,8 +206,8 @@ void DialogDac::spinBoxCameraChannelX_valueChanged()
 		}
 	};
 	bool is_hs_ir = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
-	for(uint32_t drvno=1; drvno<=number_of_boards; drvno++)
-		mainWindow->lsc.dac_setAllOutputs(drvno, DAC8568_camera, output[drvno-1], !is_hs_ir);
+	for(uint32_t drvno=0; drvno<number_of_boards; drvno++)
+		mainWindow->lsc.dac_setAllOutputs(drvno, DAC8568_camera, output[drvno], !is_hs_ir);
 	return;
 }
 
@@ -236,8 +236,8 @@ void DialogDac::spinBoxPcieBoardChannelX_valueChanged()
 			static_cast<uint32_t>(ui->spinBoxPCIeBoard2Channel8->value())
 		}
 	};
-	for (uint32_t drvno = 1; drvno <= number_of_boards; drvno++)
-		mainWindow->lsc.dac_setAllOutputs(drvno, DAC8568_pcie, output[drvno - 1], false);
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		mainWindow->lsc.dac_setAllOutputs(drvno, DAC8568_pcie, output[drvno], false);
 	return;
 }
 
@@ -245,10 +245,10 @@ void DialogDac::on_buttonBox_rejected()
 {
 	// Send old values to DAC
 	bool is_hs_ir = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
-	for (uint32_t drvno = 1; drvno <= number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
-		mainWindow->lsc.dac_setAllOutputs(drvno, DAC8568_camera, output_old[drvno - 1], !is_hs_ir);
-		mainWindow->lsc.dac_setAllOutputs(drvno, DAC8568_pcie, output_old[2 + drvno - 1], false);
+		mainWindow->lsc.dac_setAllOutputs(drvno, DAC8568_camera, output_old[drvno], !is_hs_ir);
+		mainWindow->lsc.dac_setAllOutputs(drvno, DAC8568_pcie, output_old[2 + drvno], false);
 	}
 	return;
 }

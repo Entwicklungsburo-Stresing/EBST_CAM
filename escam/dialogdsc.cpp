@@ -19,19 +19,19 @@ DialogDSC::~DialogDSC()
 void DialogDSC::on_pushButton_RS_DSC_1_clicked()
 {
 	uint8_t DSCNumber = 1;
-	mainWindow->lsc.resetDSC( 1, DSCNumber );
+	mainWindow->lsc.resetDSC( 0, DSCNumber );
 	//for two boards
 	if(number_of_boards == 2)
-		mainWindow->lsc.resetDSC( 2, DSCNumber );
+		mainWindow->lsc.resetDSC( 1, DSCNumber );
 }
 
 void DialogDSC::on_pushButton_RS_DSC_2_clicked()
 {
 	uint8_t DSCNumber = 2;
-	mainWindow->lsc.resetDSC( 1, DSCNumber );
+	mainWindow->lsc.resetDSC( 0, DSCNumber );
 	//for two boards
 	if (number_of_boards == 2)
-		mainWindow->lsc.resetDSC( 2, DSCNumber );
+		mainWindow->lsc.resetDSC( 1, DSCNumber );
 }
 
 void DialogDSC::on_comboBox_DIR_DSC_1_currentIndexChanged(int index)
@@ -39,10 +39,10 @@ void DialogDSC::on_comboBox_DIR_DSC_1_currentIndexChanged(int index)
 	uint8_t DSCNumber = 1;
     bool dir = index;
 
-	mainWindow->lsc.setDIRDSC( 1, DSCNumber, dir);
+	mainWindow->lsc.setDIRDSC( 0, DSCNumber, dir);
 	//for two boards
 	if (number_of_boards == 2)
-		mainWindow->lsc.setDIRDSC(2, DSCNumber, dir );
+		mainWindow->lsc.setDIRDSC(1, DSCNumber, dir );
 }
 
 void DialogDSC::on_comboBox_DIR_DSC_2_currentIndexChanged(int index)
@@ -50,10 +50,10 @@ void DialogDSC::on_comboBox_DIR_DSC_2_currentIndexChanged(int index)
 	uint8_t DSCNumber = 2;
     bool dir = index;
 
-	mainWindow->lsc.setDIRDSC( 1, DSCNumber, dir );
+	mainWindow->lsc.setDIRDSC( 0, DSCNumber, dir );
 	//for two boards
 	if (number_of_boards == 2)
-		mainWindow->lsc.setDIRDSC( 2, DSCNumber, dir );
+		mainWindow->lsc.setDIRDSC( 1, DSCNumber, dir );
 }
 
 void DialogDSC::updateDSC()
@@ -63,7 +63,7 @@ void DialogDSC::updateDSC()
 	for (uint8_t DSCNumber = 1; DSCNumber <= 2; DSCNumber++)
 	{
 		//get the DSC values from the registers
-		mainWindow->lsc.getDSC( 1, DSCNumber, &ADSC, &LDSC );
+		mainWindow->lsc.getDSC( 0, DSCNumber, &ADSC, &LDSC );
 		//convert the numbers to strings
 		sADSC = QString::number( ADSC );
 		sLDSC = QString::number( LDSC );

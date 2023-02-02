@@ -75,8 +75,8 @@ MainWindow::MainWindow(QWidget* parent)
 	// disable axes menu until first finish of measurement to avoid crash
 	ui->actionAxes->setEnabled(false);
 	// Check DSC and TDC flags
-	if (!lsc.isDsc(1)) ui->actionDSC->setEnabled(false);
-	if (!lsc.isTdc(1)) ui->actionTDC->setEnabled(false);
+	if (!lsc.isDsc(0)) ui->actionDSC->setEnabled(false);
+	if (!lsc.isTdc(0)) ui->actionTDC->setEnabled(false);
 }
 
 /**
@@ -262,7 +262,7 @@ void MainWindow::startPressed()
 		{
 		case QMessageBox::Yes:
 			// Yes was clicked
-			for (uint32_t drvno = 1; drvno <= number_of_boards; drvno++)
+			for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 				lsc.fillUserBufferWithDummyData(drvno);
 			break;
 		default:
@@ -483,7 +483,7 @@ void MainWindow::loadSettings()
 	ui->horizontalSliderBlock->setMaximum(nob);
 	ui->spinBoxBlock->setMaximum(nob);
 	uint8_t tor = static_cast<uint8_t>(settings.value(settingTorPath,settingTorDefault).toUInt());
-	for(uint32_t drvno=1; drvno<=number_of_boards; drvno++)
+	for(uint32_t drvno=0; drvno<number_of_boards; drvno++)
 		lsc.setTorOut(drvno, tor);
 	int board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt();
 	if(board_sel == 2)
@@ -541,7 +541,7 @@ void MainWindow::on_actionDump_board_registers_triggered()
 	messageBox->setLayout(layout);
 	QTabWidget* tabWidget = new QTabWidget(messageBox);
 	tabWidget->setDocumentMode(true);
-	for (uint32_t drvno = 1; drvno <= number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		QScrollArea* scrollDrv = new QScrollArea(tabWidget);
 		scrollDrv->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -622,12 +622,13 @@ void MainWindow::loadCameraData()
 	// showCamcnt is the count of all cameras to be shown on the chart
 	// = sum of all true settingShowCameraBaseDir settings
 	uint32_t showCamcnt = 0;
-	for (uint32_t drvno = 1; drvno <= number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
-		if(((board_sel == 1 || board_sel == 3) && drvno == 1) || ((board_sel == 2 || board_sel == 3) && drvno == 2))
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
 			for (uint16_t cam = 0; cam < camcnt; cam++)
 			{
-				uint32_t currCam = cam + ((drvno - 1) * camcnt);
+				uint32_t currCam = cam + (drvno * camcnt);
 				bool showCurrentCam = settings.value(settingShowCameraBaseDir + QString::number(currCam), settingShowCameraDefault).toBool();
 					if (showCurrentCam)
 						showCamcnt++;
@@ -638,12 +639,14 @@ void MainWindow::loadCameraData()
 	uint32_t sample = static_cast<uint32_t>(ui->horizontalSliderSample->value() - 1);
 	// showedCam counts the number of cameras which are shown on the chart
 	uint32_t showedCam = 0;
-	for (uint32_t drvno = 1; drvno <= number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
-		if (((board_sel == 1 || board_sel == 3) && drvno == 1) || ((board_sel == 2 || board_sel == 3) && drvno == 2))
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
 			for (uint16_t cam = 0; cam < camcnt; cam++)
 			{
-				uint32_t currCam = cam + ((drvno - 1) * camcnt);
+				uint32_t currCam = cam + (drvno * camcnt);
 				bool showCurrentCam = settings.value(settingShowCameraBaseDir + QString::number(currCam), settingShowCameraDefault).toBool();
 				if (showCurrentCam)
 				{
@@ -651,6 +654,7 @@ void MainWindow::loadCameraData()
 					showedCam++;
 				}
 			}
+		}
 	}
 	setChartData(data, static_cast<uint16_t>(pixel), static_cast<uint16_t>(showCamcnt));
 	//send pixels 6 to 9 to the tdc window
@@ -913,10 +917,10 @@ void MainWindow::showCurrentScan()
 	default:
 	case 0:
 	case 2:
-		lsc.getCurrentScanNumber(1, &sample, &block);
+		lsc.getCurrentScanNumber(0, &sample, &block);
 		break;
 	case 1:
-		lsc.getCurrentScanNumber(2, &sample, &block);
+		lsc.getCurrentScanNumber(1, &sample, &block);
 		break;
 	}
 	int radioState = 0;
