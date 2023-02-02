@@ -23,7 +23,12 @@ constexpr auto settingShutterBecIn10nsPath = "measurement/shutterBecIn10ns";
 constexpr auto settingTriggerCcPath = "measurement/triggerCc";
 constexpr auto settingContiniousPauseInMicrosecondsPath = "measurement/contPauseInMicroseconds";
 //camera setup
-constexpr auto settingBoardSelPath = "camerasetup/boardsel";
+constexpr auto settingBoardSelPath = "camerasetup/boardSel";
+constexpr auto settingBoard0Path = "camerasetup/board0";
+constexpr auto settingBoard1Path = "camerasetup/board1";
+constexpr auto settingBoard2Path = "camerasetup/board2";
+constexpr auto settingBoard3Path = "camerasetup/board3";
+constexpr auto settingBoard4Path = "camerasetup/board4";
 constexpr auto settingSensorTypePath = "camerasetup/sensorType";
 constexpr auto settingCameraSystemPath = "camerasetup/cameraSystem";
 constexpr auto settingCamcntPath = "camerasetup/camcnt";
@@ -38,7 +43,7 @@ constexpr auto settingIsIrPath = "camerasetup/isIr";
 constexpr auto settingIOCtrlImpactStartPixelPath = "camerasetup/IOCtrlImpactStartPixel";
 constexpr auto settingShortrsPath = "camerasetup/shortrs";
 constexpr auto settingIsCooledCamPath = "camerasetup/isCooledCam";
-//fft mode
+//FFT mode
 constexpr auto settingLinesPath = "fftmode/lines";
 constexpr auto settingVfreqPath = "fftmode/vfreq";
 constexpr auto settingFftModePath = "fftmode/fftmode";
