@@ -28,7 +28,7 @@ void DialogRMS::updateRMS()
 	uint32_t lastSample = ui->spinBox_lastsample->value() - 1;
 	uint32_t pixel = ui->spinBox_pixel->value();
 	uint32_t campos = ui->spinBoxCampos->value() - 1;
-	uint32_t drvno = ui->comboBoxDrvno->currentIndex() + 1;
+	uint32_t drvno = ui->comboBoxDrvno->currentIndex();
 	double mwf, trms;
 	QString smwf, strms;
 

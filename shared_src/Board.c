@@ -206,7 +206,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 		status = InitCamera3010(drvno, (uint8_t)settings_struct.adc_mode, (uint16_t)settings_struct.adc_custom_pattern);
 		break;
 	case camera_system_3030:
-		status = InitCamera3030(drvno, (uint8_t)settings_struct.adc_mode, (uint16_t)settings_struct.adc_custom_pattern, (uint8_t)settings_struct.adc_gain, settings_struct.dac_output[drvno-1], settings_struct.is_hs_ir);
+		status = InitCamera3030(drvno, (uint8_t)settings_struct.adc_mode, (uint16_t)settings_struct.adc_custom_pattern, (uint8_t)settings_struct.adc_gain, settings_struct.dac_output[drvno], settings_struct.is_hs_ir);
 		break;
 	default:
 		return es_parameter_out_of_range;
@@ -2659,126 +2659,57 @@ es_status_codes StartMeasurement()
 					// Only wait for the block trigger of one board
 					break;
 				}
-			
+			}
 			ES_LOG("Block %u triggered\n", blk_cnt);
 			// setBlockOn, StartSTimer and DoSoftwareTrigger are starting the measurement.
 			// timer must be started in each block as the scan counter stops it by hardware at end of block
-			// Starting the measurement settings_struct.board_sel = 1
-			if (settings_struct.board_sel == 1)
+			for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 			{
-				status = StartSTimer(1);
-				if (status != es_no_error) return ReturnStartMeasurement(status);
-				status = setBlockOn(1);
-				if (status != es_no_error) return ReturnStartMeasurement(status);
-				//start scan for first read if area or ROI
-				if (*useSWTrig) status = DoSoftwareTrigger(1);
-				if (status != es_no_error) return ReturnStartMeasurement(status);
-			}
-			// Starting the measurement settings_struct.board_sel = 2
-			if (number_of_boards == 2 && (settings_struct.board_sel == 2 ))
-			{
-				status = StartSTimer(2);
-				if (status != es_no_error) return ReturnStartMeasurement(status);
-				status = setBlockOn(2);
-				if (status != es_no_error) return ReturnStartMeasurement(status);
-				//start scan for first read
-				if (*useSWTrig) status = DoSoftwareTrigger(2);
-				if (status != es_no_error) return ReturnStartMeasurement(status);
-			}
-			// Starting the measurement settings_struct.board_sel = 3
-			if (settings_struct.board_sel == 3)
-			{
-				status = StartSTimerTwoBoards();
-				if (status != es_no_error) return ReturnStartMeasurement(status);
-				status = setBlockOnTwoBoards();
-				if (status != es_no_error) return ReturnStartMeasurement(status);
-				//start scan for first read
-				if (*useSWTrig) status = DoSoftwareTriggerTwoBoards();
-				if (status != es_no_error) return ReturnStartMeasurement(status);
+				// Check if the drvno'th bit is set
+				if ((settings_struct.board_sel >> drvno) & 1)
+				{
+					status = StartSTimer(drvno);
+					if (status != es_no_error) return ReturnStartMeasurement(status);
+					status = setBlockOn(drvno);
+					if (status != es_no_error) return ReturnStartMeasurement(status);
+					//start scan for first read if area or ROI
+					if (*useSWTrig) status = DoSoftwareTrigger(drvno);
+					if (status != es_no_error) return ReturnStartMeasurement(status);
+				}
 			}
 			// Main read loop. The software waits here until the flag RegXCKMSB:b30 = TimerOn is resetted by hardware,
 			// if flag HWDREQ_EN is TRUE.
 			// This is done when nos scans are counted by hardware. Pressing ESC can cancel this loop.
-			// Waiting for end of measurement settings_struct.board_sel = 1
-			if (settings_struct.board_sel == 1)
-			{
-				bool timerOneOn = true;
-				while (timerOneOn)
-				{
-					if ((FindCam(1) != es_no_error) | abortMeasurementFlag)
-					{
-						status = AbortMeasurement();
-						return ReturnStartMeasurement(status);
-					}
-					abortMeasurementFlag = checkEscapeKeyState();
-					status = IsTimerOn(1, &timerOneOn);
-					if (status != es_no_error) return ReturnStartMeasurement(status);
-				}
-			}
-			// Waiting for end of measurement settings_struct.board_sel = 2
-			if (number_of_boards == 2 && settings_struct.board_sel == 2)
-			{
-				bool timerTwoOn = true;
-				while (timerTwoOn)
-				{
-					if ((FindCam(2) != es_no_error) | abortMeasurementFlag)
-					{
-						status = AbortMeasurement();
-						return ReturnStartMeasurement(status);
-					}
-					abortMeasurementFlag = checkEscapeKeyState();
-					status = IsTimerOn(2, &timerTwoOn);
-					if (status != es_no_error) return ReturnStartMeasurement(status);
-				}
-			}
-			// Waiting for end of measurement settings_struct.board_sel = 3
-			if (number_of_boards == 2 && settings_struct.board_sel == 3)
-			{
-				bool timerOneOn = true,
-					timerTwoOn = true;
+			// Waiting for end of measurement
 
-				while (timerOneOn || timerTwoOn)
+			while (timerOn[0] || timerOn[1] || timerOn[2] || timerOn[3] || timerOn[4])
+			{
+				for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 				{
-					bool return_flag_1 = false;
-					bool return_flag_2 = false;
-
-					if (!return_flag_1)
+					// Check if the drvno'th bit is set
+					if ((settings_struct.board_sel >> drvno) & 1)
 					{
-						if ((FindCam(1) != es_no_error) | abortMeasurementFlag)
+						if ((FindCam(drvno) != es_no_error) | abortMeasurementFlag)
 						{
 							status = AbortMeasurement();
-							if (status != es_no_error) return ReturnStartMeasurement(status);
-							return_flag_1 = false;
+							return ReturnStartMeasurement(status);
 						}
+						abortMeasurementFlag = checkEscapeKeyState();
+						status = IsTimerOn(drvno, &timerOn[drvno]);
+						if (status != es_no_error) return ReturnStartMeasurement(status);
 					}
-					if (!return_flag_2)
-					{
-						if ((FindCam(2) != es_no_error) | abortMeasurementFlag)
-						{
-							status = AbortMeasurement();
-							if (status != es_no_error) return ReturnStartMeasurement(status);
-							return_flag_2 = true;
-						}
-					}
-					if (return_flag_1 && return_flag_2) return ReturnStartMeasurement(status);
-					status = IsTimerOn(1, &timerOneOn);
-					if (status != es_no_error) return ReturnStartMeasurement(status);
-					status = IsTimerOn(2, &timerTwoOn);
-					if (status != es_no_error) return ReturnStartMeasurement(status);
-					abortMeasurementFlag = checkEscapeKeyState();
 				}
 			}
 			// When the software reaches this point, all scans for the current block are done.
 			// So blockOn is resetted here.
-			if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
+			for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 			{
-				status = resetBlockOn(1);
-				if (status != es_no_error) return ReturnStartMeasurement(status);
-			}
-			if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
-			{
-				status = resetBlockOn(2);
-				if (status != es_no_error) return ReturnStartMeasurement(status);
+				// Check if the drvno'th bit is set
+				if ((settings_struct.board_sel >> drvno) & 1)
+				{
+					status = resetBlockOn(drvno);
+					if (status != es_no_error) return ReturnStartMeasurement(status);
+				}
 			}
 		// This is the end of the block for loop. Until nob is reached this loop is repeated.
 		}
@@ -2787,37 +2718,30 @@ es_status_codes StartMeasurement()
 		if (status != es_no_error) return ReturnStartMeasurement(status);
 		// Only on Linux: The following mutex prevents ending the measurement before all data has been copied from DMA buffer to user buffer.
 #ifdef __linux__
-		if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
+		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		{
-			pthread_mutex_lock(&mutex[0]);
-			pthread_mutex_unlock(&mutex[0]);
-		}
-		if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
-		{
-			pthread_mutex_lock(&mutex[1]);
-			pthread_mutex_unlock(&mutex[1]);
+			// Check if the drvno'th bit is set
+			if ((settings_struct.board_sel >> drvno) & 1)
+			{
+				pthread_mutex_lock(&mutex[drvno]);
+				pthread_mutex_unlock(&mutex[drvno]);
+			}
 		}
 #endif
 		// When the number of scans is not a integer multiple of 500 there will be data in the DMA buffer
 		// left, which is not copied to the user buffer. The copy process for these scans is done here.
-		if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
+		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		{
-			status = StopSTimer(1);
-			if (status != es_no_error) return ReturnStartMeasurement(status);
-			if (!settings_struct.use_software_polling)
+			// Check if the drvno'th bit is set
+			if ((settings_struct.board_sel >> drvno) & 1)
 			{
-				status = GetLastBufPart(1);
+				status = StopSTimer(drvno);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
-			}
-		}
-		if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
-		{
-			status = StopSTimer(2);
-			if (status != es_no_error) return ReturnStartMeasurement(status);
-			if (!settings_struct.use_software_polling)
-			{
-				status = GetLastBufPart(2);
-				if (status != es_no_error) return ReturnStartMeasurement(status);
+				if (!settings_struct.use_software_polling)
+				{
+					status = GetLastBufPart(drvno);
+					if (status != es_no_error) return ReturnStartMeasurement(status);
+				}
 			}
 		}
 		// This sleep is here to prevent the measurement being interrupted too early. When operating with 2 cameras the last scan could be cut off without the sleep. This is only a workaround. The problem is that the software is waiting for RSTIMER being reset by the hardware before setting measure on and block on to low, but the last DMA is done after RSTIMER being reset. BLOCKON and MEASUREON should be reset after all DMAs are done.
@@ -2827,15 +2751,14 @@ es_status_codes StartMeasurement()
 		// MEASUREON ---------_____
 		WaitforTelapsed(100);
 		// Reset the hardware bit measure on.
-		if (settings_struct.board_sel == 1 || settings_struct.board_sel == 3)
+		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		{
-			status = resetMeasureOn(1);
-			if (status != es_no_error) return ReturnStartMeasurement(status);
-		}
-		if (number_of_boards == 2 && (settings_struct.board_sel == 2 || settings_struct.board_sel == 3))
-		{
-			status = resetMeasureOn(2);
-			if (status != es_no_error) return ReturnStartMeasurement(status);
+			// Check if the drvno'th bit is set
+			if ((settings_struct.board_sel >> drvno) & 1)
+			{
+				status = resetMeasureOn(drvno);
+				if (status != es_no_error) return ReturnStartMeasurement(status);
+			}
 		}
 		// When space key or ESC key was pressed, continuous measurement stops.
 		if (checkSpaceKeyState())
@@ -3020,6 +2943,7 @@ es_status_codes countBlocksByHardware( uint32_t drvno )
 es_status_codes StartSTimer( uint32_t drvno )
 {
 	ES_LOG("Start S Timer\n");
+	timerOn[drvno] = true;
 	return setBitS0_8(drvno, XCKMSB_bitindex_stimer_on, S0Addr_XCKMSB);
 }
 

@@ -63,14 +63,14 @@ DialogIoctrl::~DialogIoctrl()
 
 void DialogIoctrl::setOutput(uint8_t outputNumber, uint16_t width_in_5ns, uint16_t delay_in_5ns)
 {
-	for (uint32_t drvno = 1; drvno <= number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		mainWindow->lsc.ioctrl_setOutput(drvno, outputNumber, width_in_5ns, delay_in_5ns);
 	return;
 }
 
 void DialogIoctrl::setT0(uint32_t period_in_10ns)
 {
-	for (uint32_t drvno = 1; drvno <= number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		mainWindow->lsc.ioctrl_setT0(drvno, period_in_10ns);
 	return;
 }

@@ -143,8 +143,12 @@ void isr( uint32_t drvno )
 	return;
 }
 
+void DLLCALLCONV interrupt_handler0() { isr( 0 ); }
 void DLLCALLCONV interrupt_handler1() { isr( 1 ); }
 void DLLCALLCONV interrupt_handler2() { isr( 2 ); }
+void DLLCALLCONV interrupt_handler3() { isr( 3 ); }
+void DLLCALLCONV interrupt_handler4() { isr( 4 ); }
+void *interrupt_handler_array[MAXPCIECARDS] = { &interrupt_handler0, &interrupt_handler1, &interrupt_handler2, interrupt_handler3, interrupt_handler4 };
 
 /**
  * @brief Reads long on DMA area.
@@ -417,36 +421,14 @@ es_status_codes SetupDma( uint32_t drvno )
 es_status_codes enableInterrupt( uint32_t drvno )
 {
 	ES_LOG("Enable interrupt\n");
-	switch (drvno)
+	if (!WDC_IntIsEnabled(hDev[drvno]))
 	{
-	case 1:
-	{
-		if (!WDC_IntIsEnabled(hDev[drvno]))
+		DWORD dwStatus = LSCPCIEJ_IntEnable(hDev[drvno], (LSCPCIEJ_INT_HANDLER)interrupt_handler_array[drvno]);
+		if (WD_STATUS_SUCCESS != dwStatus)
 		{
-			DWORD dwStatus = LSCPCIEJ_IntEnable(hDev[drvno], (LSCPCIEJ_INT_HANDLER)interrupt_handler1);
-			if (WD_STATUS_SUCCESS != dwStatus)
-			{
-				ES_LOG("Failed to enable the Interrupts1. Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
-				return es_enabling_interrupts_failed;
-			}
+			ES_LOG("Failed to enable the Interrupts1. Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
+			return es_enabling_interrupts_failed;
 		}
-		break;
-	}
-	case 2:
-	{
-		if (!WDC_IntIsEnabled(hDev[drvno]))
-		{
-			DWORD dwStatus = LSCPCIEJ_IntEnable(hDev[drvno], (LSCPCIEJ_INT_HANDLER)interrupt_handler2);
-			if (WD_STATUS_SUCCESS != dwStatus)
-			{
-				ES_LOG("Failed to enable the Interrupts2. Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
-				return es_enabling_interrupts_failed;
-			}
-		}
-		break;
-	}
-	default:
-		return es_parameter_out_of_range;
 	}
 	return es_no_error;
 }
@@ -525,10 +507,10 @@ es_status_codes _InitBoard(uint32_t drvno)
 {
 	ES_LOG("Initialize board %u\n", drvno);
 	DWORD dwStatus = 0;
-	ES_LOG( "Info: scan result: a board found:%lx , dev=%lx, ven=%lx \n", scanResult.dwNumDevices, scanResult.deviceId[drvno - 1].dwDeviceId, scanResult.deviceId[drvno - 1].dwVendorId );
+	ES_LOG( "Info: scan result: a board found:%lx , dev=%lx, ven=%lx \n", scanResult.dwNumDevices, scanResult.deviceId[drvno].dwDeviceId, scanResult.deviceId[drvno].dwVendorId );
 	//gives the information received from PciScanDevices to PciGetDeviceInfo
 	BZERO( deviceInfo[drvno] );
-	memcpy( &deviceInfo[drvno].pciSlot, &scanResult.deviceSlot[drvno - 1], sizeof( deviceInfo[drvno].pciSlot ) );
+	memcpy( &deviceInfo[drvno].pciSlot, &scanResult.deviceSlot[drvno], sizeof( deviceInfo[drvno].pciSlot ) );
 
 	/* Retrieve the device's resources information */
 	dwStatus = WDC_PciGetDeviceInfo( &deviceInfo[drvno] );
@@ -1038,7 +1020,7 @@ uint8_t WaitforTelapsed(long long musec)
 	// wait until time elapsed
 	while (destination_timestamp > ticksTimestamp())
 	{
-		if (GetAsyncKeyState(VK_ESCAPE) | (FindCam(1) != es_no_error) | abortMeasurementFlag) return 0; // check for kill ?
+		if (GetAsyncKeyState(VK_ESCAPE) | abortMeasurementFlag) return 0;
 	}
 	//WDC_Err("end time:  %lld\n", ticksTimestamp());
 	return 1;
