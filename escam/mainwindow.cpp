@@ -171,7 +171,7 @@ void MainWindow::startPressed()
 	settings_struct.trigger_mode_cc = settings.value(settingTriggerCcPath, settingTriggerCcDefault).toUInt();
 	settings_struct.cont_pause_in_microseconds = settings.value(settingContiniousPauseInMicrosecondsPath, settingContiniousPausInMicrosecondsDefault).toUInt();
 	//camerasetup tab
-	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt() + 1;
+	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
 	settings_struct.sensor_type = settings.value(settingSensorTypePath, settingSensorTypeDefault).toUInt();
 	settings_struct.camera_system = settings.value(settingCameraSystemPath, settingCameraSystemDefault).toUInt();
 	settings_struct.camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
@@ -486,7 +486,7 @@ void MainWindow::loadSettings()
 	for(uint32_t drvno=0; drvno<number_of_boards; drvno++)
 		lsc.setTorOut(drvno, tor);
 	int board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt();
-	if(board_sel == 2)
+	if(board_sel == 3)
 		used_number_of_boards = 2;
 	else
 		used_number_of_boards = 1;
@@ -618,7 +618,7 @@ void MainWindow::loadCameraData()
 	uint32_t pixel = settings.value(settingPixelPath,settingPixelDefault).toUInt();
 	// camcnt is the count of all cameras
 	uint32_t camcnt = settings.value(settingCamcntPath,settingCamcntDefault).toUInt();
-	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt() + 1;
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
 	// showCamcnt is the count of all cameras to be shown on the chart
 	// = sum of all true settingShowCameraBaseDir settings
 	uint32_t showCamcnt = 0;
@@ -707,10 +707,10 @@ void MainWindow::on_measureDone()
 	default:
 	case 0:
 	case 2:
-		drvno = 1;
+		drvno = 0;
 		break;
 	case 1:
-		drvno = 2;
+		drvno = 1;
 		break;
 	}
 	DLLShowNewBitmap(drvno, block, 0, pixelcount, nos);
@@ -817,10 +817,10 @@ void MainWindow::on_actionShow_triggered()
 	default:
 	case 0:
 	case 2:
-		drvno = 1;
+		drvno = 0;
 		break;
 	case 1:
-		drvno = 2;
+		drvno = 1;
 		break;
 	}
 	DLLStart2dViewer(drvno, 0, block, pixelcount, nos);
@@ -844,10 +844,10 @@ void MainWindow::on_horizontalSliderBlock_valueChanged()
 	default:
 	case 0:
 	case 2:
-		drvno = 1;
+		drvno = 0;
 		break;
 	case 1:
-		drvno = 2;
+		drvno = 1;
 		break;
 	}
 	DLLShowNewBitmap(drvno, block, 0, pixelcount, nos);

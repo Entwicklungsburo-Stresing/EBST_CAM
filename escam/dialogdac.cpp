@@ -134,7 +134,7 @@ DialogDac::DialogDac(QWidget *parent)
 		switch (board_sel)
 		{
 		default:
-		case 0:
+		case 1:
 			ui->spinBoxBoard2Channel1->setEnabled(false);
 			ui->spinBoxBoard2Channel2->setEnabled(false);
 			ui->spinBoxBoard2Channel3->setEnabled(false);
@@ -152,7 +152,7 @@ DialogDac::DialogDac(QWidget *parent)
 			ui->spinBoxPCIeBoard2Channel7->setEnabled(false);
 			ui->spinBoxPCIeBoard2Channel8->setEnabled(false);
 			break;
-		case 1:
+		case 2:
 			ui->spinBoxChannel1->setEnabled(false);
 			ui->spinBoxChannel2->setEnabled(false);
 			ui->spinBoxChannel3->setEnabled(false);
@@ -170,7 +170,7 @@ DialogDac::DialogDac(QWidget *parent)
 			ui->spinBoxPCIeBoard1Channel7->setEnabled(false);
 			ui->spinBoxPCIeBoard1Channel8->setEnabled(false);
 			break;
-		case 2:
+		case 3:
 			break;
 		}
 	}

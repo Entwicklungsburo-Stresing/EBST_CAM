@@ -34,7 +34,6 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->labelRegionsEqual->setSizePolicy(sp_retain);
 	ui->labelSslope->setSizePolicy(sp_retain);
 	ui->labelBslope->setSizePolicy(sp_retain);
-	ui->labelBoardSel->setSizePolicy(sp_retain);
 	ui->labelFilePath->setSizePolicy(sp_retain);
 	ui->labelCamCool->setSizePolicy(sp_retain);
 
@@ -67,7 +66,6 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	sp_retain.setRetainSizeWhenHidden(true);
 	ui->comboBoxSslope->setSizePolicy(sp_retain);
 	ui->comboBoxBslope->setSizePolicy(sp_retain);
-	ui->comboBoxBoardSel->setSizePolicy(sp_retain);
 	ui->comboBoxCamCool->setSizePolicy(sp_retain);
 
 	sp_retain = ui->plainTextEditFilePath->sizePolicy();
@@ -79,7 +77,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->pushButtonFilePath->setSizePolicy(sp_retain);
 
 	// Here the saved settings on the system are applied to the UI.
-	// For some settings there are two calls, to trigger the according slot for greying out options. I don't know why this is nesceserry, but without it the slots are not triggered.
+	// For some settings there are two calls, to trigger the according slot for graying out options. I don't know why this is necessary, but without it the slots are not triggered.
 	//Measurement
 	ui->doubleSpinBoxNos->setValue(settings.value(settingNosPath, settingNosDefault).toDouble());
 	ui->doubleSpinBoxNob->setValue(settings.value(settingNobPath, settingNobDefault).toDouble());
@@ -97,7 +95,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->comboBoxTriggerModeCC->setCurrentIndex(settings.value(settingTriggerCcPath, settingTriggerCcDefault).toInt());
 	ui->doubleSpinBoxContiniousPause_in_ms->setValue(settings.value(settingContiniousPauseInMicrosecondsPath, settingContiniousPausInMicrosecondsDefault).toDouble() / 1000);
 	//Camera setup
-	ui->comboBoxBoardSel->setCurrentIndex(settings.value(settingBoardSelPath, settingBoardSelDefault).toInt());
+
 	ui->comboBoxSensorType->setCurrentIndex(settings.value(settingSensorTypePath, settingSensorTypeDefault).toInt());
 	ui->comboBoxSensorType->currentIndexChanged(settings.value(settingSensorTypePath, settingSensorTypeDefault).toInt());
 	ui->comboBoxCameraSystem->setCurrentIndex(settings.value(settingCameraSystemPath, settingCameraSystemDefault).toInt());
@@ -144,17 +142,42 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->comboBoxSettingsLevel->setCurrentIndex(settings.value(settingSettingsLevelPath, settingSettingsLevelDefault).toInt());
 	ui->comboBoxSettingsLevel->currentIndexChanged(ui->comboBoxSettingsLevel->currentIndex());
 
-	// hide board select, when there is only one board
-	if (number_of_boards == 1)
+	// hide all board select elements
+	ui->labelBoardSel->setVisible(false);
+	ui->checkBoxBoard0->setVisible(false);
+	ui->checkBoxBoard1->setVisible(false);
+	ui->checkBoxBoard2->setVisible(false);
+	ui->checkBoxBoard3->setVisible(false);
+	ui->checkBoxBoard4->setVisible(false);
+	ui->checkBoxBoard0->setChecked(false);
+	ui->checkBoxBoard1->setChecked(false);
+	ui->checkBoxBoard2->setChecked(false);
+	ui->checkBoxBoard3->setChecked(false);
+	ui->checkBoxBoard4->setChecked(false);
+	// show board select elements depending on number_of_boards with intended fall through
+	switch (number_of_boards)
 	{
-		ui->comboBoxBoardSel->setCurrentIndex(0);
-		ui->labelBoardSel->setVisible(false);
-		ui->comboBoxBoardSel->setVisible(false);
-		settings.setValue(settingBoardSelPath, 0);
+	case 5:
+		ui->checkBoxBoard4->setVisible(true);
+		ui->checkBoxBoard4->setChecked(settings.value(settingBoard4Path, settingBoard4Default).toBool());
+	case 4:
+		ui->checkBoxBoard3->setVisible(true);
+		ui->checkBoxBoard3->setChecked(settings.value(settingBoard3Path, settingBoard3Default).toBool());
+	case 3:
+		ui->checkBoxBoard2->setVisible(true);
+		ui->checkBoxBoard2->setChecked(settings.value(settingBoard2Path, settingBoard2Default).toBool());
+	case 2:
+		ui->checkBoxBoard1->setVisible(true);
+		ui->labelBoardSel->setVisible(true);
+		ui->checkBoxBoard1->setChecked(settings.value(settingBoard1Path, settingBoard1Default).toBool());
+	default:
+	case 1:
+		ui->checkBoxBoard0->setVisible(true);
+		ui->checkBoxBoard0->setChecked(settings.value(settingBoard0Path, settingBoard0Default).toBool());
 	}
 
 #if __linux__
-	// disable option software polling on linux
+	// disable option software polling on Linux
 	ui->checkBoxUseSoftwarePolling->setChecked(false);
 	ui->checkBoxUseSoftwarePolling->setEnabled(false);
 #endif
@@ -187,7 +210,22 @@ void DialogSettings::on_accepted()
 	settings.setValue(settingTriggerCcPath, ui->comboBoxTriggerModeCC->currentIndex());
 	settings.setValue(settingContiniousPauseInMicrosecondsPath, ui->doubleSpinBoxContiniousPause_in_ms->value() * 1000);
 	//Camera setup
-	settings.setValue(settingBoardSelPath, ui->comboBoxBoardSel->currentIndex());
+	settings.setValue(settingBoard0Path, ui->checkBoxBoard0->isChecked());
+	settings.setValue(settingBoard1Path, ui->checkBoxBoard1->isChecked());
+	settings.setValue(settingBoard2Path, ui->checkBoxBoard2->isChecked());
+	settings.setValue(settingBoard3Path, ui->checkBoxBoard3->isChecked());
+	settings.setValue(settingBoard4Path, ui->checkBoxBoard4->isChecked());
+	uint8_t board_sel = 0;
+	board_sel |= ui->checkBoxBoard4->isChecked();
+	board_sel <<= 1;
+	board_sel |= ui->checkBoxBoard3->isChecked();
+	board_sel <<= 1;
+	board_sel |= ui->checkBoxBoard2->isChecked();
+	board_sel <<= 1;
+	board_sel |= ui->checkBoxBoard1->isChecked();
+	board_sel <<= 1;
+	board_sel |= ui->checkBoxBoard0->isChecked();
+	settings.setValue(settingBoardSelPath, board_sel);
 	settings.setValue(settingSensorTypePath, ui->comboBoxSensorType->currentIndex());
 	settings.setValue(settingCameraSystemPath, ui->comboBoxCameraSystem->currentIndex());
 	settings.setValue(settingCamcntPath, ui->spinBoxCamcnt->value());
@@ -203,7 +241,7 @@ void DialogSettings::on_accepted()
 	settings.setValue(settingsUseSoftwarePollingPath, ui->checkBoxUseSoftwarePolling->isChecked());
 	settings.setValue(settingShortrsPath, ui->checkBoxShortrs->isChecked());
 	settings.setValue(settingIsCooledCamPath, ui->checkBoxIsCooledCam->isChecked());
-	//Fft mode
+	//FFT mode
 	settings.setValue(settingLinesPath, ui->spinBoxLines->value());
 	settings.setValue(settingVfreqPath, ui->spinBoxVfreq->value());
 	settings.setValue(settingFftModePath, ui->comboBoxFftMode->currentIndex());
@@ -481,7 +519,11 @@ void DialogSettings::loadDefaults()
 	ui->comboBoxTriggerModeCC->setCurrentIndex(settingTriggerCcDefault);
 	ui->doubleSpinBoxContiniousPause_in_ms->setValue(settingContiniousPausInMicrosecondsDefault / 1000);
 	//camera setup
-	ui->comboBoxBoardSel->setCurrentIndex(settingBoardSelDefault);
+	ui->checkBoxBoard0->setChecked(settingBoard0Default);
+	ui->checkBoxBoard1->setChecked(settingBoard1Default);
+	ui->checkBoxBoard2->setChecked(settingBoard2Default);
+	ui->checkBoxBoard3->setChecked(settingBoard3Default);
+	ui->checkBoxBoard4->setChecked(settingBoard4Default);
 	ui->comboBoxSensorType->setCurrentIndex(settingSensorTypeDefault);
 	ui->comboBoxSensorType->currentIndexChanged(settingSensorTypeDefault);
 	ui->comboBoxCameraSystem->setCurrentIndex(settingCameraSystemDefault);
@@ -500,7 +542,7 @@ void DialogSettings::loadDefaults()
 	ui->checkBoxUseSoftwarePolling->setChecked(settingsUseSoftwarePollingDefault);
 	ui->checkBoxShortrs->setChecked(settingShortrsDefault);
 	ui->checkBoxIsCooledCam->setChecked(settingIsCooledCamDefault);
-	//fft mode
+	//FFT mode
 	ui->spinBoxLines->setValue(settingLinesDefault);
 	ui->spinBoxVfreq->setValue(settingVfreqDefault);
 	ui->comboBoxFftMode->setCurrentIndex(settingFftModeDefault);
