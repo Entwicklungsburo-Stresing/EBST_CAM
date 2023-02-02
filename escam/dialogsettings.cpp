@@ -95,7 +95,6 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->comboBoxTriggerModeCC->setCurrentIndex(settings.value(settingTriggerCcPath, settingTriggerCcDefault).toInt());
 	ui->doubleSpinBoxContiniousPause_in_ms->setValue(settings.value(settingContiniousPauseInMicrosecondsPath, settingContiniousPausInMicrosecondsDefault).toDouble() / 1000);
 	//Camera setup
-
 	ui->comboBoxSensorType->setCurrentIndex(settings.value(settingSensorTypePath, settingSensorTypeDefault).toInt());
 	ui->comboBoxSensorType->currentIndexChanged(settings.value(settingSensorTypePath, settingSensorTypeDefault).toInt());
 	ui->comboBoxCameraSystem->setCurrentIndex(settings.value(settingCameraSystemPath, settingCameraSystemDefault).toInt());
@@ -170,10 +169,12 @@ DialogSettings::DialogSettings(QWidget *parent) :
 		ui->checkBoxBoard1->setVisible(true);
 		ui->labelBoardSel->setVisible(true);
 		ui->checkBoxBoard1->setChecked(settings.value(settingBoard1Path, settingBoard1Default).toBool());
-	default:
-	case 1:
 		ui->checkBoxBoard0->setVisible(true);
 		ui->checkBoxBoard0->setChecked(settings.value(settingBoard0Path, settingBoard0Default).toBool());
+		break;
+	default:
+	case 1:
+		ui->checkBoxBoard0->setChecked(true);
 	}
 
 #if __linux__
