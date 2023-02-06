@@ -791,7 +791,7 @@ DllAccess void setSWTrig(UINT8 on)
 /**
  * \copydoc InitMeasurement
  */
-DllAccess es_status_codes DLLSetGlobalSettings(struct global_settings settings)
+DllAccess es_status_codes DLLSetGlobalSettings(struct measurement_settings settings)
 {
 	SetGlobalSettings(settings);
 	return es_no_error;

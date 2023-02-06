@@ -14,7 +14,7 @@ extern "C" {
 es_status_codes InitBoard();
 es_status_codes InitDriver();
 es_status_codes ExitDriver();
-void SetGlobalSettings(struct global_settings settings);
+void SetGlobalSettings(struct measurement_settings settings);
 es_status_codes InitMeasurement();
 es_status_codes StartMeasurement();
 es_status_codes AbortMeasurement();
@@ -117,7 +117,8 @@ es_status_codes waitForMeasureReady(uint32_t drvno);
 es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr);
 es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr);
 es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr);
-es_status_codes dumpSettings(char** stringPtr);
+es_status_codes dumpMeasurementSettings(char** stringPtr);
+es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr);
 es_status_codes dumpPciRegisters(uint32_t drvno, char** stringPtr);
 es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr);
 es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr);

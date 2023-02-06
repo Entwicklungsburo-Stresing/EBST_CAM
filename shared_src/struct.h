@@ -8,7 +8,9 @@
 
 // All settings are uint32_t to ensure the correct memory layout. This is important for the communication with LabVIEW.
 // Don't change the order or you will have to change it for LabVIEW in InitMeasurement.vi.
-struct global_settings
+
+// Individual settings for each PCIe board
+struct camera_settings
 {
 	/**
 	 * use_software_polling determines which method is used to copy data from DMA to user buffer.
@@ -70,17 +72,6 @@ struct global_settings
 	 */
 	uint32_t trigger_mode_cc;
 	/**
-	 * Select boards with bits. 1 for using this board, 0 for not using this board.
-	 * 
-	 * - bit 0: board 0
-	 * - bit 1: board 1
-	 * - bit 2: board 2
-	 * - bit 3: board 3
-	 * - bit 4: board 4
-	 * - bit 5: board 5
-	 */
-	uint32_t board_sel;
-	/**
 	 * Sensor type. See enum sensor_type in enum.h for options.
 	 */
 	uint32_t sensor_type;
@@ -123,10 +114,6 @@ struct global_settings
 	 */
 	uint32_t temp_level;
 	/**
-	 * unused
-	 */
-	uint32_t unused;
-	/**
 	 * Shortrs controls the sensor reset length.
 	 *	- =0: long reset 800ns
 	 *	- >0: short reset 380ns
@@ -167,7 +154,7 @@ struct global_settings
 	/**
 	 * Array for output levels of each digital to analog converter
 	 */
-	uint32_t dac_output[MAXPCIECARDS][8];
+	uint32_t dac_output[8];
 	/**
 	 * Output mode for PCIe board output pin. See enum tor_out in enum.h for options.
 	 */
@@ -184,10 +171,6 @@ struct global_settings
 	 * bec in 10 ns
 	 */
 	uint32_t bec_in_10ns;
-	/**
-	 * Pause between two measurements when continuous mode is on.
-	 */
-	uint32_t cont_pause_in_microseconds;
 	/**
 	 * Determines whether the camera is a high speed infrared camera.
 	 *	- =0 no IR
@@ -244,6 +227,30 @@ struct global_settings
 	 * - >0 Camera is cooled. This option is setting a bit in the PCIe board to react correctly to the cooled status messages from the camera.
 	 */
 	uint32_t is_cooled_cam;
+};
+
+// In this struct are settings, that are the same for all PCIe boards.
+struct measurement_settings
+{
+	/**
+	 * Select boards with bits. 1 for using this board, 0 for not using this board.
+	 *
+	 * - bit 0: board 0
+	 * - bit 1: board 1
+	 * - bit 2: board 2
+	 * - bit 3: board 3
+	 * - bit 4: board 4
+	 * - bit 5: board 5
+	 */
+	uint32_t board_sel;
+	/**
+	 * Pause between two measurements when continuous mode is on.
+	 */
+	uint32_t cont_pause_in_microseconds;
+	/**
+	 * This is an array of structs for individual settings for each PCIe board.
+	 */
+	struct camera_settings camera_settings[MAXPCIECARDS];
 };
 
 #endif // STRUCT_H

@@ -392,7 +392,7 @@ es_status_codes SetupDma( uint32_t drvno )
 		es_status_codes status = CleanupDma(drvno);
 		if (status != es_no_error) return status;
 	}
-	dmaBufferSizeInBytes = settings_struct.dma_buffer_size_in_scans * aPIXEL[drvno] * sizeof( UINT16 );
+	dmaBufferSizeInBytes = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans * aPIXEL[drvno] * sizeof( UINT16 );
 	DWORD dwOptions = DMA_FROM_DEVICE | DMA_KERNEL_BUFFER_ALLOC;// | DMA_ALLOW_64BIT_ADDRESS;// DMA_ALLOW_CACHE ;
 	if (DMA_64BIT_EN)
 		dwOptions |= DMA_ALLOW_64BIT_ADDRESS;
@@ -741,7 +741,7 @@ void FreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 {
 	ES_LOG("Start copy data to user buffer thread.\n");
-	if (settings_struct.use_software_polling)
+	if (settings_struct.camera_settings[drvno].use_software_polling)
 	{
 		uint32_t* param = (uint32_t*)malloc(sizeof(uint32_t));
 		*param = drvno;
@@ -769,7 +769,9 @@ es_status_codes About(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = AboutPCI(drvno);
 	if (status != es_no_error) return status;
-	return AboutSettings();
+	status = AboutCameraSettings(drvno);
+	if (status != es_no_error) return status;
+	return AboutMeasurementSettings();
 }
 
 /**
@@ -859,11 +861,19 @@ es_status_codes AboutPCI(uint32_t drvno)
 	return status;
 }//AboutPCI
 
-es_status_codes AboutSettings()
+es_status_codes AboutMeasurementSettings()
 {
 	char* cstring;
-	es_status_codes status = dumpSettings(&cstring);
-	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"Settings", MB_OK);
+	es_status_codes status = dumpMeasurementSettings(&cstring);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"Measurement settings", MB_OK);
+	return status;
+}
+
+es_status_codes AboutCameraSettings(uint32_t drvno)
+{
+	char* cstring;
+	es_status_codes status = dumpCameraSettings(drvno, &cstring);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"Camera settings", MB_OK);
 	return status;
 }
 
@@ -1139,20 +1149,20 @@ int64_t getCurrentInterruptCounter(uint32_t drvno)
 
 void openFile(uint32_t drvno)
 {
-	size_t path_length = strlen(settings_struct.file_path);
+	size_t path_length = strlen(settings_struct.camera_settings[drvno].file_path);
 	// Check if the path is terminated with /
-	char last_char = settings_struct.file_path[path_length - 1];
+	char last_char = settings_struct.camera_settings[drvno].file_path[path_length - 1];
 	if (last_char != '/' && last_char != '\\')
 	{
 		// Append / to the path
-		settings_struct.file_path[path_length] = '/';
+		settings_struct.camera_settings[drvno].file_path[path_length] = '/';
 		// Terminate the string with 0
-		settings_struct.file_path[path_length + 1] = 0;
+		settings_struct.camera_settings[drvno].file_path[path_length + 1] = 0;
 	}
 	char filename_full[file_filename_full_size];
 	memset(filename_full, 0, file_filename_full_size);
 	// Create filenames
-	sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u.dat", settings_struct.file_path, start_timestamp, drvno);
+	sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u.dat", settings_struct.camera_settings[drvno].file_path, start_timestamp, drvno);
 	// Check if the file exists
 	if (_access_s(filename_full, 0) != 0)
 	{
@@ -1208,7 +1218,7 @@ void writeFileHeaderToFile(uint32_t drvno, char* filename_full)
 	strcpy(fh.timestamp, start_timestamp);
 	memset(fh.filename_full, 0, file_filename_full_size);
 	strcpy(fh.filename_full, filename_full);
-	fh.split_mode = settings_struct.file_split_mode;
+	fh.split_mode = settings_struct.camera_settings[drvno].file_split_mode;
 	if (file_stream[drvno])
 	{
 		// Write struct file_header to the file.

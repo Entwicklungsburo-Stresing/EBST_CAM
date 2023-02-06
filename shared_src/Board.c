@@ -30,7 +30,7 @@
  * 
  * \param settings struct global_settings
  */
-void SetGlobalSettings(struct global_settings settings)
+void SetGlobalSettings(struct measurement_settings settings)
 {
 	settings_struct = settings;
 }
@@ -56,7 +56,7 @@ es_status_codes InitMeasurement()
 	ES_LOG("\n*** Init Measurement ***\n");
 	ES_LOG("struct global_settings: ");
 	for (uint32_t i = 0; i < sizeof(settings_struct)/4; i++)
-		ES_LOG("%u ", *(&settings_struct.use_software_polling + i));
+		ES_LOG("%u ", *(&settings_struct.board_sel + i));
 	ES_LOG("\n");
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -97,30 +97,30 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = ClearAllUserRegs(drvno);
 	if (status != es_no_error) return status;
-	status = SetPixelCount(drvno, (uint16_t)settings_struct.pixel);
+	status = SetPixelCount(drvno, (uint16_t)settings_struct.camera_settings[drvno].pixel);
 	if (status != es_no_error) return status;
-	status = SetCamCount(drvno, (uint16_t)settings_struct.camcnt);
+	status = SetCamCount(drvno, (uint16_t)settings_struct.camera_settings[drvno].camcnt);
 	if (status != es_no_error) return status;
 	//set PDA and FFT
-	status = SetSensorType(drvno, (uint8_t)settings_struct.sensor_type);
+	status = SetSensorType(drvno, (uint8_t)settings_struct.camera_settings[drvno].sensor_type);
 	if (status != es_no_error) return status;
-	if (settings_struct.sensor_type == FFTsensor)
+	if (settings_struct.camera_settings[drvno].sensor_type == FFTsensor)
 	{
-		switch (settings_struct.fft_mode)
+		switch (settings_struct.camera_settings[drvno].fft_mode)
 		{
 		case full_binning:
-			status = SetupFullBinning(drvno, settings_struct.fft_lines, (uint8_t)settings_struct.vfreq);
+			status = SetupFullBinning(drvno, settings_struct.camera_settings[drvno].fft_lines, (uint8_t)settings_struct.camera_settings[drvno].vfreq);
 			break;
 #ifdef WIN32
 		case partial_binning:
 		{
 			uint8_t regionSize[8];
-			for (int i = 0; i < 8; i++) regionSize[i] = settings_struct.region_size[i];
-			status = DLLSetupROI(drvno, (uint16_t)settings_struct.number_of_regions, settings_struct.fft_lines, (uint8_t)settings_struct.keep, regionSize, (uint8_t)settings_struct.vfreq);
+			for (int i = 0; i < 8; i++) regionSize[i] = settings_struct.camera_settings[drvno].region_size[i];
+			status = DLLSetupROI(drvno, (uint16_t)settings_struct.camera_settings[drvno].number_of_regions, settings_struct.camera_settings[drvno].fft_lines, (uint8_t)settings_struct.camera_settings[drvno].keep, regionSize, (uint8_t)settings_struct.camera_settings[drvno].vfreq);
 			break;
 		}
 		case area_mode:
-			status = DLLSetupArea(drvno, settings_struct.lines_binning, (uint8_t)settings_struct.vfreq);
+			status = DLLSetupArea(drvno, settings_struct.camera_settings[drvno].lines_binning, (uint8_t)settings_struct.camera_settings[drvno].vfreq);
 			break;
 #endif
 		default:
@@ -130,53 +130,53 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	else *useSWTrig = false;
 	if (status != es_no_error) return status;
 	//allocate Buffer
-	status = SetMeasurementParameters(drvno, settings_struct.nos, settings_struct.nob);
+	status = SetMeasurementParameters(drvno, settings_struct.camera_settings[drvno].nos, settings_struct.camera_settings[drvno].nob);
 	if (status != es_no_error) return status;
 	status = CloseShutter(drvno); //set cooling  off
 	if (status != es_no_error) return status;
-	status = SetMshut(drvno, settings_struct.mshut);
+	status = SetMshut(drvno, settings_struct.camera_settings[drvno].mshut);
 	if (status != es_no_error) return status;
 	//SSlope
-	status = SetSSlope(drvno, settings_struct.sslope);
+	status = SetSSlope(drvno, settings_struct.camera_settings[drvno].sslope);
 	if (status != es_no_error) return status;
 	//BSlope
-	status = SetBSlope(drvno, settings_struct.bslope);
+	status = SetBSlope(drvno, settings_struct.camera_settings[drvno].bslope);
 	if (status != es_no_error) return status;
 	//SetTimer
-	status = SetSTI(drvno, (uint8_t)settings_struct.sti_mode);
+	status = SetSTI(drvno, (uint8_t)settings_struct.camera_settings[drvno].sti_mode);
 	if (status != es_no_error) return status;
-	status = SetBTI(drvno, (uint8_t)settings_struct.bti_mode);
+	status = SetBTI(drvno, (uint8_t)settings_struct.camera_settings[drvno].bti_mode);
 	if (status != es_no_error) return status;
-	status = SetSTimer(drvno, settings_struct.stime_in_microsec);
+	status = SetSTimer(drvno, settings_struct.camera_settings[drvno].stime_in_microsec);
 	if (status != es_no_error) return status;
-	status = SetBTimer(drvno, settings_struct.btime_in_microsec);
+	status = SetBTimer(drvno, settings_struct.camera_settings[drvno].btime_in_microsec);
 	if (status != es_no_error) return status;
 	bool isTdc = false;
 	status = GetIsTdc(drvno, &isTdc);
 	if (status != es_no_error) return status;
-	if (isTdc) status = InitGPX(drvno, settings_struct.gpx_offset);
+	if (isTdc) status = InitGPX(drvno, settings_struct.camera_settings[drvno].gpx_offset);
 	if (status != es_no_error) return status;
 	//Delay after Trigger
-	status = SetSDAT(drvno, settings_struct.sdat_in_10ns);
+	status = SetSDAT(drvno, settings_struct.camera_settings[drvno].sdat_in_10ns);
 	if (status != es_no_error) return status;
-	status = SetBDAT(drvno, settings_struct.bdat_in_10ns);
+	status = SetBDAT(drvno, settings_struct.camera_settings[drvno].bdat_in_10ns);
 	if (status != es_no_error) return status;
 	continiousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
 	ES_LOG("Setting continuous pause to %u\n", continiousPauseInMicroseconds);
-	status = SetBEC(drvno, settings_struct.bec_in_10ns);
+	status = SetBEC(drvno, settings_struct.camera_settings[drvno].bec_in_10ns);
 	if (status != es_no_error) return status;
-	status = SetXckdelay(drvno, settings_struct.xckdelay_in_10ns);
+	status = SetXckdelay(drvno, settings_struct.camera_settings[drvno].xckdelay_in_10ns);
 	if (status != es_no_error) return status;
 	status = SetHardwareTimerStopMode(drvno, true);
 	if (status != es_no_error) return status;
 	//DMA
 	status = SetupDma(drvno);
 	if (status != es_no_error) return status;
-	status = SetDmaRegister(drvno, settings_struct.pixel);
+	status = SetDmaRegister(drvno, settings_struct.camera_settings[drvno].pixel);
 	if (status != es_no_error) return status;
 	status = SetDmaStartMode(drvno, HWDREQ_EN);
 	if (status != es_no_error) return status;
-	if (settings_struct.use_software_polling)
+	if (settings_struct.camera_settings[drvno].use_software_polling)
 	{
 		status = disableInterrupt(drvno);
 		if (status != es_no_error) return status;
@@ -187,44 +187,44 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 		if (status != es_no_error) return status;
 	}
 	if (status != es_no_error) return status;
-	status = SetTicnt(drvno, settings_struct.ticnt);
+	status = SetTicnt(drvno, settings_struct.camera_settings[drvno].ticnt);
 	if (status != es_no_error) return status;
-	status = SetTocnt(drvno, settings_struct.tocnt);
+	status = SetTocnt(drvno, settings_struct.camera_settings[drvno].tocnt);
 	// Init Camera
 	status = FindCam(drvno);
 	if (status != es_no_error) return status;
 	uint8_t is_area_mode = 0;
-	if (settings_struct.fft_mode == area_mode) is_area_mode = 1;
-	status = InitCameraGeneral(drvno, (uint16_t)settings_struct.pixel, (uint16_t)settings_struct.trigger_mode_cc, (uint8_t)settings_struct.sensor_type, is_area_mode, (uint8_t)settings_struct.is_cooled_cam, (uint16_t)settings_struct.led_off, (uint16_t)settings_struct.sensor_gain, (uint16_t)settings_struct.use_ec);
+	if (settings_struct.camera_settings[drvno].fft_mode == area_mode) is_area_mode = 1;
+	status = InitCameraGeneral(drvno, (uint16_t)settings_struct.camera_settings[drvno].pixel, (uint16_t)settings_struct.camera_settings[drvno].trigger_mode_cc, (uint8_t)settings_struct.camera_settings[drvno].sensor_type, is_area_mode, (uint8_t)settings_struct.camera_settings[drvno].is_cooled_cam, (uint16_t)settings_struct.camera_settings[drvno].led_off, (uint16_t)settings_struct.camera_settings[drvno].sensor_gain, (uint16_t)settings_struct.camera_settings[drvno].use_ec);
 	if (status != es_no_error) return status;
-	switch (settings_struct.camera_system)
+	switch (settings_struct.camera_settings[drvno].camera_system)
 	{
 	case camera_system_3001:
 		status = InitCamera3001(drvno);
 		break;
 	case camera_system_3010:
-		status = InitCamera3010(drvno, (uint8_t)settings_struct.adc_mode, (uint16_t)settings_struct.adc_custom_pattern);
+		status = InitCamera3010(drvno, (uint8_t)settings_struct.camera_settings[drvno].adc_mode, (uint16_t)settings_struct.camera_settings[drvno].adc_custom_pattern);
 		break;
 	case camera_system_3030:
-		status = InitCamera3030(drvno, (uint8_t)settings_struct.adc_mode, (uint16_t)settings_struct.adc_custom_pattern, (uint8_t)settings_struct.adc_gain, settings_struct.dac_output[drvno], settings_struct.is_hs_ir);
+		status = InitCamera3030(drvno, (uint8_t)settings_struct.camera_settings[drvno].adc_mode, (uint16_t)settings_struct.camera_settings[drvno].adc_custom_pattern, (uint8_t)settings_struct.camera_settings[drvno].adc_gain, settings_struct.camera_settings[drvno].dac_output[drvno], settings_struct.camera_settings[drvno].is_hs_ir);
 		break;
 	default:
 		return es_parameter_out_of_range;
 	}
 	if (status != es_no_error) return status;
 	//for cooled Cam
-	status = SetTemp(drvno, (uint8_t)settings_struct.temp_level);
+	status = SetTemp(drvno, (uint8_t)settings_struct.camera_settings[drvno].temp_level);
 	if (status != es_no_error) return status;
-	status = IOCtrl_setImpactStartPixel(drvno, (uint16_t)settings_struct.ioctrl_impact_start_pixel);
+	status = IOCtrl_setImpactStartPixel(drvno, (uint16_t)settings_struct.camera_settings[drvno].ioctrl_impact_start_pixel);
 	if (status != es_no_error) return status;
 	for (uint8_t i = 1; i <= 7; i++)
 	{
-		status = IOCtrl_setOutput(drvno, i, (uint16_t)settings_struct.ioctrl_output_width_in_5ns[i-1], (uint16_t)settings_struct.ioctrl_output_delay_in_5ns[i-1]);
+		status = IOCtrl_setOutput(drvno, i, (uint16_t)settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[i-1], (uint16_t)settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[i-1]);
 		if (status != es_no_error) return status;
 	}
-	status = IOCtrl_setT0(drvno, settings_struct.ioctrl_T0_period_in_10ns);
+	status = IOCtrl_setT0(drvno, settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns);
 	if (status != es_no_error) return status;
-	status = SetSensorResetShort(drvno, settings_struct.shortrs);
+	status = SetSensorResetShort(drvno, settings_struct.camera_settings[drvno].shortrs);
 	return status;
 }
 
@@ -234,7 +234,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
  * \param drvno PCIe board identifier.
  * \param mshut
  *		- true: TOR is set to sshut
- *		- false: TOR is set by settings_struct.tor
+ *		- false: TOR is set by settings_struct.camera_settings[drvno].tor
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_read_failed
@@ -246,7 +246,7 @@ es_status_codes SetMshut(uint32_t drvno, bool mshut)
 	if (mshut)
 		status = SetTORReg(drvno, tor_sshut); // PCIe 'O' output is high during SEC active
 	else
-		status = SetTORReg(drvno, (uint8_t)settings_struct.tor);  // PCIe 'O' output is what ever was se80lected in LabView
+		status = SetTORReg(drvno, (uint8_t)settings_struct.camera_settings[drvno].tor);  // PCIe 'O' output is what ever was selected in LabView
 	return status;
 }
 
@@ -903,7 +903,7 @@ es_status_codes SetMeasurementParameters( uint32_t drvno, uint32_t nos, uint32_t
 	//set hardware regs
 	status = SetDMABufRegs(drvno);
 	if (status != es_no_error) return status;
-	uint32_t dmaBufferPartSizeInScans = settings_struct.dma_buffer_size_in_scans / DMA_BUFFER_PARTS; //500
+	uint32_t dmaBufferPartSizeInScans = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS; //500
 	if (settings_struct.board_sel > 2)
 		numberOfInterrupts = *Nob * (*Nospb) * aCAMCNT[drvno] * number_of_boards / dmaBufferPartSizeInScans - 2;//- 2 because interrupt counter starts with 0
 	else
@@ -1005,11 +1005,11 @@ es_status_codes SetDMABufRegs( uint32_t drvno )
 {
 	ES_LOG("Set DMA buffer registers, ");
 	//DMABufSizeInScans - use 1 block
-	es_status_codes status = writeBitsS0_32(drvno, settings_struct.dma_buffer_size_in_scans, 0xffffffff, S0Addr_DmaBufSizeInScans);
+	es_status_codes status = writeBitsS0_32(drvno, settings_struct.camera_settings[drvno].dma_buffer_size_in_scans, 0xffffffff, S0Addr_DmaBufSizeInScans);
 	if (status != es_no_error) return status;
 	//scans per interrupt must be 2x per DMA_BUFFER_SIZE_IN_SCANS to copy hi/lo part
 	//aCAMCNT: double the INTR if 2 cams
-	uint32_t dmasPerInterrupt = settings_struct.dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
+	uint32_t dmasPerInterrupt = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
 	status = writeBitsS0_32(drvno, dmasPerInterrupt, 0xffffffff, S0Addr_DMAsPerIntr);
 	if (status != es_no_error) return status;
 	ES_LOG( "scansPerInterrupt/camcnt: 0x%x \n", dmasPerInterrupt / aCAMCNT[drvno] );
@@ -1555,7 +1555,7 @@ es_status_codes InitCamera3001( uint32_t drvno  )
 	status = SetSensorResetEarly(drvno, false);
 	if (status != es_no_error) return status;
 	// or use sec
-	status = SetSEC(drvno, settings_struct.sec_in_10ns);
+	status = SetSEC(drvno, settings_struct.camera_settings[drvno].sec_in_10ns);
 	if (status != es_no_error) return status;
 	status = SetEnEc3030(drvno, false);
 	if (status != es_no_error) return status;
@@ -1586,7 +1586,7 @@ es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custo
 	status = SetSensorResetEnable(drvno, false);
 	if (status != es_no_error) return status;
 	// also set SEC to 0, to disable sensor reset signal
-	status = SetSEC(drvno, settings_struct.sec_in_10ns);
+	status = SetSEC(drvno, settings_struct.camera_settings[drvno].sec_in_10ns);
 	if (status != es_no_error) return status;
 	status = SetEnEc3030(drvno, false);
 	if (status != es_no_error) return status;
@@ -1708,13 +1708,13 @@ es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom
 	status = SetSensorResetEarly(drvno, true);
 	if (status != es_no_error) return status;
 	// or use sec
-	status = SetSEC(drvno, settings_struct.sec_in_10ns);
+	status = SetSEC(drvno, settings_struct.camera_settings[drvno].sec_in_10ns);
 	if (status != es_no_error) return status;
 	// When sec is used, use IFC signal from PCIe card
-	if (settings_struct.sec_in_10ns)
+	if (settings_struct.camera_settings[drvno].sec_in_10ns)
 		status = Cam3030_ADC_SetIfcMode(drvno, 0);
 	// in other cases use IFC signal from camera, short or long
-	else if(settings_struct.shortrs)
+	else if(settings_struct.camera_settings[drvno].shortrs)
 		status = Cam3030_ADC_SetIfcMode(drvno, 1);
 	else
 		status = Cam3030_ADC_SetIfcMode(drvno, 2);
@@ -2576,7 +2576,7 @@ es_status_codes StartMeasurement()
 		{
 			uint32_t* drvno_tmp = malloc(sizeof(uint32_t));
 			*drvno_tmp = drvno;
-			if (settings_struct.write_to_disc) _beginthread(&writeToDisc, 0, drvno_tmp);
+			if (settings_struct.camera_settings[drvno].write_to_disc) _beginthread(&writeToDisc, 0, drvno_tmp);
 		}
 	}
 	do
@@ -2739,7 +2739,7 @@ es_status_codes StartMeasurement()
 			{
 				status = StopSTimer(drvno);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
-				if (!settings_struct.use_software_polling)
+				if (!settings_struct.camera_settings[drvno].use_software_polling)
 				{
 					status = GetLastBufPart(drvno);
 					if (status != es_no_error) return ReturnStartMeasurement(status);
@@ -3003,7 +3003,7 @@ es_status_codes GetLastBufPart( uint32_t drvno )
 	es_status_codes status = readRegisterS0_32( drvno, &spi, S0Addr_DMAsPerIntr ); 
 	if (status != es_no_error) return status;
 	// dmaHalfBufferSize is 500 with default values
-	uint32_t dmaHalfBufferSize = settings_struct.dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
+	uint32_t dmaHalfBufferSize = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
 	uint32_t scans_all_cams = (*Nospb) * (*Nob) * aCAMCNT[drvno];
 	uint32_t rest_overall = scans_all_cams % dmaHalfBufferSize; 
 	size_t rest_in_bytes = rest_overall * aPIXEL[drvno] * sizeof(uint16_t);
@@ -3036,6 +3036,9 @@ es_status_codes InitBoard()
 		if (status != es_no_error) return status;
 		InitMutex(drvno);
 	}
+	// Initialize settings struct
+	for (uint32_t drvno = 0; drvno < MAXPCIECARDS; drvno++)
+		memcpy(&settings_struct.camera_settings[drvno], &camera_settings_default, sizeof(struct camera_settings));
 	ES_LOG("*** Init board done***\n\n");
 	return status;
 }
@@ -3830,7 +3833,25 @@ es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
 	*/
 }
 
-es_status_codes dumpSettings(char** stringPtr)
+es_status_codes dumpMeasurementSettings(char** stringPtr)
+{
+	enum N
+	{
+		bufferLength = 2000,
+	};
+	int len = 0;
+	size_t bufferSize = bufferLength;
+	//allocate string buffer
+	*stringPtr = (char*)calloc(bufferLength, sizeof(char));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
+		"board_sel\t"DLLTAB DLLTAB"%u\n"
+		"cont_pause_in_microseconds\t" DLLTAB DLLTAB"%u\n",
+		settings_struct.board_sel,
+		settings_struct.cont_pause_in_microseconds);
+	return es_no_error;
+}
+
+es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 {
 	enum N
 	{
@@ -3855,69 +3876,60 @@ es_status_codes dumpSettings(char** stringPtr)
 		"xckdelay_in_10ns\t"DLLTAB"%u\n"
 		"shutterExpTimeIn10ns\t%u\n"
 		"trigger mode cc\t"DLLTAB"%u\n"
-		"board sel\t"DLLTAB"%u\n"
 		"sensor type\t"DLLTAB"%u\n"
 		"camera system\t"DLLTAB"%u\n"
 		"camcnt\t"DLLTAB DLLTAB"%u\n"
 		"pixel\t"DLLTAB DLLTAB"%u\n"
 		"mshut\t"DLLTAB DLLTAB"%u\n"
-		"use_ec\t"DLLTAB DLLTAB"%u\n"
 		"led off\t"DLLTAB DLLTAB"%u\n"
-		"gain switch\t"DLLTAB"%u\n"
-		"gain 3030\t"DLLTAB"%u\n"
+		"sensor_gain\t"DLLTAB"%u\n"
+		"adc_gain\t"DLLTAB"%u\n"
 		"temp level\t"DLLTAB"%u\n"
-		"unused\t"DLLTAB DLLTAB"%u\n"
 		"shortrs\t"DLLTAB"%u\n"
 		"gpx offset\t"DLLTAB"%u\n"
-		"fftlines\t"DLLTAB DLLTAB"%u\n"
+		"fft_lines\t"DLLTAB DLLTAB"%u\n"
 		"vfreq\t"DLLTAB DLLTAB"%u\n"
 		"ffmode\t"DLLTAB DLLTAB"%u\n"
-		"lines binning\t"DLLTAB"%u\n"
+		"lines_binning\t"DLLTAB"%u\n"
 		"number of regions\t%u\n"
 		"keep\t"DLLTAB DLLTAB"0b"BYTE_TO_BINARY_PATTERN"\n",
-		settings_struct.use_software_polling,
-		settings_struct.nos,
-		settings_struct.nob,
-		settings_struct.sti_mode,
-		settings_struct.bti_mode,
-		settings_struct.stime_in_microsec,
-		settings_struct.btime_in_microsec,
-		settings_struct.sdat_in_10ns,
-		settings_struct.bdat_in_10ns,
-		settings_struct.sslope,
-		settings_struct.bslope,
-		settings_struct.xckdelay_in_10ns,
-		settings_struct.sec_in_10ns,
-		settings_struct.trigger_mode_cc,
-		settings_struct.board_sel,
-		settings_struct.sensor_type,
-		settings_struct.camera_system,
-		settings_struct.camcnt,
-		settings_struct.pixel,
-		settings_struct.mshut,
-		settings_struct.use_ec,
-		settings_struct.led_off,
-		settings_struct.sensor_gain,
-		settings_struct.adc_gain,
-		settings_struct.temp_level,
-		settings_struct.unused,
-		settings_struct.shortrs,
-		settings_struct.gpx_offset,
-		settings_struct.fft_lines,
-		settings_struct.vfreq,
-		settings_struct.fft_mode,
-		settings_struct.lines_binning,
-		settings_struct.number_of_regions,
-		BYTE_TO_BINARY(settings_struct.keep));
+		settings_struct.camera_settings[drvno].use_software_polling,
+		settings_struct.camera_settings[drvno].nos,
+		settings_struct.camera_settings[drvno].nob,
+		settings_struct.camera_settings[drvno].sti_mode,
+		settings_struct.camera_settings[drvno].bti_mode,
+		settings_struct.camera_settings[drvno].stime_in_microsec,
+		settings_struct.camera_settings[drvno].btime_in_microsec,
+		settings_struct.camera_settings[drvno].sdat_in_10ns,
+		settings_struct.camera_settings[drvno].bdat_in_10ns,
+		settings_struct.camera_settings[drvno].sslope,
+		settings_struct.camera_settings[drvno].bslope,
+		settings_struct.camera_settings[drvno].xckdelay_in_10ns,
+		settings_struct.camera_settings[drvno].sec_in_10ns,
+		settings_struct.camera_settings[drvno].trigger_mode_cc,
+		settings_struct.camera_settings[drvno].sensor_type,
+		settings_struct.camera_settings[drvno].camera_system,
+		settings_struct.camera_settings[drvno].camcnt,
+		settings_struct.camera_settings[drvno].pixel,
+		settings_struct.camera_settings[drvno].mshut,
+		settings_struct.camera_settings[drvno].led_off,
+		settings_struct.camera_settings[drvno].sensor_gain,
+		settings_struct.camera_settings[drvno].adc_gain,
+		settings_struct.camera_settings[drvno].temp_level,
+		settings_struct.camera_settings[drvno].shortrs,
+		settings_struct.camera_settings[drvno].gpx_offset,
+		settings_struct.camera_settings[drvno].fft_lines,
+		settings_struct.camera_settings[drvno].vfreq,
+		settings_struct.camera_settings[drvno].fft_mode,
+		settings_struct.camera_settings[drvno].lines_binning,
+		settings_struct.camera_settings[drvno].number_of_regions,
+		BYTE_TO_BINARY(settings_struct.camera_settings[drvno].keep));
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "region size\t"DLLTAB);
 	for (int i = 0; i < 8; i++)
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.region_size[i]);
-	for (int drvno = 0; drvno < MAXPCIECARDS; drvno++)
-	{
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\ndac output board %i\t", drvno);
-		for (int i = 0; i < 8; i++)
-			len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.dac_output[drvno][i]);
-	}
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].region_size[i]);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\ndac output board %i\t", drvno);
+	for (int i = 0; i < 8; i++)
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].dac_output[i]);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
 		"\ntor mode\t"DLLTAB DLLTAB"%u\n"
 		"adc mode\t"DLLTAB"%u\n"
@@ -3925,18 +3937,18 @@ es_status_codes dumpSettings(char** stringPtr)
 		"bec_in_10ns\t"DLLTAB"%u\n"
 		"is_hs_ir\t"DLLTAB DLLTAB"%u\n"
 		"ioctrl_impact_start_pixel\t%u\n",
-		settings_struct.tor,
-		settings_struct.adc_mode,
-		settings_struct.adc_custom_pattern,
-		settings_struct.bec_in_10ns,
-		settings_struct.is_hs_ir,
-		settings_struct.ioctrl_impact_start_pixel);
+		settings_struct.camera_settings[drvno].tor,
+		settings_struct.camera_settings[drvno].adc_mode,
+		settings_struct.camera_settings[drvno].adc_custom_pattern,
+		settings_struct.camera_settings[drvno].bec_in_10ns,
+		settings_struct.camera_settings[drvno].is_hs_ir,
+		settings_struct.camera_settings[drvno].ioctrl_impact_start_pixel);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "ioctrl_output_width_in_5ns\t");
 	for (int i = 0; i < 7; i++)
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.ioctrl_output_width_in_5ns[i]);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[i]);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nIOCtrl_output_delay_in_5ns\t");
 	for (int i = 0; i < 7; i++)
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.ioctrl_output_delay_in_5ns[i]);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[i]);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
 		"\nIOCtrl_T0_period_in_10ns\t%u\n"
 		"dma_buffer_size_in_scans\t%u\n"
@@ -3947,15 +3959,15 @@ es_status_codes dumpSettings(char** stringPtr)
 		"file path\t%s\n"
 		"file split mode\t%u\n"
 		"is cooled cam\t%u\n",
-		settings_struct.ioctrl_T0_period_in_10ns,
-		settings_struct.dma_buffer_size_in_scans,
-		settings_struct.tocnt,
-		settings_struct.ticnt,
-		settings_struct.use_ec,
-		settings_struct.write_to_disc,
-		settings_struct.file_path,
-		settings_struct.file_split_mode,
-		settings_struct.is_cooled_cam);
+		settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns,
+		settings_struct.camera_settings[drvno].dma_buffer_size_in_scans,
+		settings_struct.camera_settings[drvno].tocnt,
+		settings_struct.camera_settings[drvno].ticnt,
+		settings_struct.camera_settings[drvno].use_ec,
+		settings_struct.camera_settings[drvno].write_to_disc,
+		settings_struct.camera_settings[drvno].file_path,
+		settings_struct.camera_settings[drvno].file_split_mode,
+		settings_struct.camera_settings[drvno].is_cooled_cam);
 	return es_no_error;
 }
 
@@ -4498,8 +4510,8 @@ void GetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block)
 void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* block)
 {
 	int64_t scanCount = 0;
-	uint32_t dmasPerInterrupt = settings_struct.dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
-	if (settings_struct.use_software_polling)
+	uint32_t dmasPerInterrupt = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
+	if (settings_struct.camera_settings[drvno].use_software_polling)
 		scanCount = scanCounterTotal;
 	else
 		scanCount = getCurrentInterruptCounter(drvno) * dmasPerInterrupt;
