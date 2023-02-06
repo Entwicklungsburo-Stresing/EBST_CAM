@@ -206,7 +206,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 		status = InitCamera3010(drvno, (uint8_t)settings_struct.camera_settings[drvno].adc_mode, (uint16_t)settings_struct.camera_settings[drvno].adc_custom_pattern);
 		break;
 	case camera_system_3030:
-		status = InitCamera3030(drvno, (uint8_t)settings_struct.camera_settings[drvno].adc_mode, (uint16_t)settings_struct.camera_settings[drvno].adc_custom_pattern, (uint8_t)settings_struct.camera_settings[drvno].adc_gain, settings_struct.camera_settings[drvno].dac_output[drvno], settings_struct.camera_settings[drvno].is_hs_ir);
+		status = InitCamera3030(drvno, (uint8_t)settings_struct.camera_settings[drvno].adc_mode, (uint16_t)settings_struct.camera_settings[drvno].adc_custom_pattern, (uint8_t)settings_struct.camera_settings[drvno].adc_gain, settings_struct.camera_settings[drvno].dac_output, settings_struct.camera_settings[drvno].is_hs_ir);
 		break;
 	default:
 		return es_parameter_out_of_range;
