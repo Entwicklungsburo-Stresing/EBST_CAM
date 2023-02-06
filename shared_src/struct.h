@@ -6,7 +6,7 @@
 
 #define MAXPCIECARDS 5
 
-// All settings are uint32_t to ensure the correct memory layout. This is important for the communication with labview.
+// All settings are uint32_t to ensure the correct memory layout. This is important for the communication with LabVIEW.
 // Don't change the order or you will have to change it for LabVIEW in InitMeasurement.vi.
 struct global_settings
 {
@@ -103,9 +103,9 @@ struct global_settings
 	 */
 	uint32_t mshut;
 	/**
-	 * Turn leds off.
-	 *	=0 led on
-	 *	>0 led off
+	 * Turn LEDs off.
+	 *	=0 LED on
+	 *	>0 LED off
 	 */
 	uint32_t led_off;
 	/**
@@ -119,7 +119,7 @@ struct global_settings
 	 */
 	uint32_t adc_gain;
 	/**
-	 * Temperatur level for cooled cameras. 0...7 / 0=off, 7=min
+	 * Temperature level for cooled cameras. 0...7 / 0=off, 7=min
 	 */
 	uint32_t temp_level;
 	/**
@@ -153,7 +153,7 @@ struct global_settings
 	 */
 	uint32_t lines_binning;
 	/**
-	 * Number of regions for fft mode range of interest. Min: 1. 16 bit.
+	 * Number of regions for FFT mode range of interest. Min: 1. 16 bit.
 	 */
 	uint32_t number_of_regions;
 	/**
@@ -173,11 +173,11 @@ struct global_settings
 	 */
 	uint32_t tor;
 	/**
-	 * ADC operating mode. Only available for specific ADCs, e.g. in camera system 3030. See enum adc_mode in enum.h for opions.
+	 * ADC operating mode. Only available for specific ADCs, e.g. in camera system 3030. See enum adc_mode in enum.h for options.
 	 */
 	uint32_t adc_mode;
 	/**
-	 * Fixed value for ADC output when adc mode is custom pattern.
+	 * Fixed value for ADC output when ADC mode is custom pattern.
 	 */
 	uint32_t adc_custom_pattern;
 	/**
@@ -195,23 +195,23 @@ struct global_settings
 	 */
 	uint32_t is_hs_ir;
 	/**
-	 * Determines at which pixel number of one scan the inputs of ioctrl are written to.
+	 * Determines at which pixel number of one scan the inputs of IOCTRL are written to.
 	 */
 	uint32_t ioctrl_impact_start_pixel;
 	/**
-	 * This is an array, which sets the width of the ioctrl outputs in 5ns steps.
+	 * This is an array, which sets the width of the IOCTRL outputs in 5ns steps.
 	 */
 	uint32_t ioctrl_output_width_in_5ns[8];
 	/**
-	 * This is an array, which sets the delay of the ioctrl outputs in 5ns steps.
+	 * This is an array, which sets the delay of the IOCTRL outputs in 5ns steps.
 	 */
 	uint32_t ioctrl_output_delay_in_5ns[8];
 	/**
-	 * Determines the base frequency T0 of the ioctrl pulse generator in 10ns steps.
+	 * Determines the base frequency T0 of the IOCTRL pulse generator in 10ns steps.
 	 */
 	uint32_t ioctrl_T0_period_in_10ns;
 	/**
-	 * Size of DMA buffer in scans. 1000 is our default. 60 is also working with highspeed (expt=0,02ms). 30 could be with one wrong scan every 10000 scans.
+	 * Size of DMA buffer in scans. 1000 is our default. 60 is also working with high speed (exposure time = 0,02ms). 30 could be with one wrong scan every 10000 scans.
 	 */
 	uint32_t dma_buffer_size_in_scans;
 	/**
