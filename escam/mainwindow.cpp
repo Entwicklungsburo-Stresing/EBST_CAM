@@ -154,101 +154,96 @@ void MainWindow::on_pushButtonStart_pressed()
  */
 void MainWindow::startPressed()
 {
-	//measurement tab
-	settings_struct.nos = settings.value(settingNosPath, settingNosDefault).toUInt();
-	settings_struct.nob = settings.value(settingNobPath, settingNobDefault).toUInt();
-	settings_struct.sti_mode = settings.value(settingStiPath, settingStiDefault).toUInt();
-	settings_struct.bti_mode = settings.value(settingBtiPath, settingBtiDefault).toUInt();
-	settings_struct.stime_in_microsec = settings.value(settingStime_in_microseconds_Path, settingStime_in_microseconds_Default).toUInt();
-	settings_struct.btime_in_microsec = settings.value(settingBtime_in_microseconds_Path, settingBtime_in_microseconds_Default).toUInt();
-	settings_struct.sdat_in_10ns = settings.value(settingSdat_in_10nsPath, settingSdat_in_10nsDefault).toUInt();
-	settings_struct.bdat_in_10ns = settings.value(settingBdat_in_10nsPath, settingSdat_in_10nsDefault).toUInt();
-	settings_struct.sslope = settings.value(settingSslopePath, settingSslopeDefault).toUInt();
-	settings_struct.bslope = settings.value(settingBslopePath, settingBslopeDefault).toUInt();
-	settings_struct.xckdelay_in_10ns = settings.value(settingXckdelayIn10nsPath, settingXckdelayIn10nsDefault).toUInt();
-	settings_struct.sec_in_10ns = settings.value(settingShutterSecIn10nsPath, settingShutterSecIn10nsDefault).toUInt();
-	settings_struct.bec_in_10ns = settings.value(settingShutterBecIn10nsPath, settingShutterBecIn10nsDefault).toUInt();
-	settings_struct.trigger_mode_cc = settings.value(settingTriggerCcPath, settingTriggerCcDefault).toUInt();
+	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
 	settings_struct.cont_pause_in_microseconds = settings.value(settingContiniousPauseInMicrosecondsPath, settingContiniousPausInMicrosecondsDefault).toUInt();
 	//camerasetup tab
-	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
-	settings_struct.sensor_type = settings.value(settingSensorTypePath, settingSensorTypeDefault).toUInt();
-	settings_struct.camera_system = settings.value(settingCameraSystemPath, settingCameraSystemDefault).toUInt();
-	settings_struct.camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
-	settings_struct.pixel = settings.value(settingPixelPath, settingPixelDefault).toUInt();
-	settings_struct.mshut = settings.value(settingMshutPath, settingMshutDefault).toBool();
-	settings_struct.led_off = settings.value(settingLedPath, settingLedDefault).toBool();
-	settings_struct.sensor_gain = settings.value(settingSensorGainPath, settingSensorGainDefault).toUInt();
-	settings_struct.adc_gain = settings.value(settingAdcGainPath, settingAdcGainDefault).toUInt();
-	settings_struct.temp_level = settings.value(settingCoolingPath, settingCoolingDefault).toUInt();
-	settings_struct.gpx_offset = settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toUInt();
-	settings_struct.is_hs_ir = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
-	settings_struct.ioctrl_impact_start_pixel = settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toUInt();
-	settings_struct.use_software_polling = settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool();
-	settings_struct.shortrs = settings.value(settingShortrsPath, settingShortrsDefault).toBool();
-	settings_struct.is_cooled_cam = settings.value(settingIsCooledCamPath, settingIsCooledCamDefault).toBool();
-	//fftmodes tab
-	settings_struct.fft_lines = settings.value(settingLinesPath, settingLinesDefault).toUInt();
-	settings_struct.vfreq = settings.value(settingVfreqPath, settingVfreqDefault).toUInt();
-	settings_struct.fft_mode = settings.value(settingFftModePath, settingFftModeDefault).toUInt();
-	settings_struct.lines_binning = settings.value(settingLinesBinningPath, settingLinesBinningDefault).toUInt();
-	settings_struct.number_of_regions = settings.value(settingNumberOfRegionsPath, settingNumberOfRegionsDefault).toUInt();
-	settings_struct.keep = settingKeepDefault;
-	if (settings.value(settingRegionSizeEqualPath, settingRegionSizeEqualDefault).toBool() == true )
-		*(settings_struct.region_size) = 0;
-	else
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
-		settings_struct.region_size[0] = settings.value(settingRegionSize1Path, settingRegionSize1Default).toUInt();
-		settings_struct.region_size[1] = settings.value(settingRegionSize2Path, settingRegionSize2Default).toUInt();
-		settings_struct.region_size[2] = settings.value(settingRegionSize3Path, settingRegionSize3Default).toUInt();
-		settings_struct.region_size[3] = settings.value(settingRegionSize4Path, settingRegionSize4Default).toUInt();
-		settings_struct.region_size[4] = settings.value(settingRegionSize5Path, settingRegionSize5Default).toUInt();
-		settings_struct.region_size[5] = settings.value(settingRegionSize6Path, settingRegionSize6Default).toUInt();
-		settings_struct.region_size[6] = settings.value(settingRegionSize7Path, settingRegionSize7Default).toUInt();
-		settings_struct.region_size[7] = settings.value(settingRegionSize8Path, settingRegionSize8Default).toUInt();
-	}
-	//export data tab
-	settings_struct.write_to_disc = settings.value(settingWriteDataToDiscPath, settingWriteToDiscDefault).toBool();
-	QByteArray array = settings.value(settingFilePathPath, QDir::currentPath()).toString().toLocal8Bit();
-	strcpy(settings_struct.file_path, array.data());
-	//dac
-	settings_struct.dac_output[0][0] = settings.value(settingSensorOffsetChannel1Path, settingSensorOffsetChannel1Default).toUInt();
-	settings_struct.dac_output[0][1] = settings.value(settingSensorOffsetChannel2Path, settingSensorOffsetChannel2Default).toUInt();
-	settings_struct.dac_output[0][2] = settings.value(settingSensorOffsetChannel3Path, settingSensorOffsetChannel3Default).toUInt();
-	settings_struct.dac_output[0][3] = settings.value(settingSensorOffsetChannel4Path, settingSensorOffsetChannel4Default).toUInt();
-	settings_struct.dac_output[0][4] = settings.value(settingSensorOffsetChannel5Path, settingSensorOffsetChannel5Default).toUInt();
-	settings_struct.dac_output[0][5] = settings.value(settingSensorOffsetChannel6Path, settingSensorOffsetChannel6Default).toUInt();
-	settings_struct.dac_output[0][6] = settings.value(settingSensorOffsetChannel7Path, settingSensorOffsetChannel7Default).toUInt();
-	settings_struct.dac_output[0][7] = settings.value(settingSensorOffsetChannel8Path, settingSensorOffsetChannel8Default).toUInt();
-	settings_struct.dac_output[1][0] = settings.value(settingSensorOffsetBoard2Channel1Path, settingSensorOffsetBoard2Channel1Default).toUInt();
-	settings_struct.dac_output[1][1] = settings.value(settingSensorOffsetBoard2Channel2Path, settingSensorOffsetBoard2Channel2Default).toUInt();
-	settings_struct.dac_output[1][2] = settings.value(settingSensorOffsetBoard2Channel3Path, settingSensorOffsetBoard2Channel3Default).toUInt();
-	settings_struct.dac_output[1][3] = settings.value(settingSensorOffsetBoard2Channel4Path, settingSensorOffsetBoard2Channel4Default).toUInt();
-	settings_struct.dac_output[1][4] = settings.value(settingSensorOffsetBoard2Channel5Path, settingSensorOffsetBoard2Channel5Default).toUInt();
-	settings_struct.dac_output[1][5] = settings.value(settingSensorOffsetBoard2Channel6Path, settingSensorOffsetBoard2Channel6Default).toUInt();
-	settings_struct.dac_output[1][6] = settings.value(settingSensorOffsetBoard2Channel7Path, settingSensorOffsetBoard2Channel7Default).toUInt();
-	settings_struct.dac_output[1][7] = settings.value(settingSensorOffsetBoard2Channel8Path, settingSensorOffsetBoard2Channel8Default).toUInt();
-	//debug
-	settings_struct.tor = settings.value(settingTorPath, settingTorDefault).toUInt();
-	settings_struct.adc_mode = settings.value(settingAdcModePath, settingAdcModeDefault).toUInt();
-	settings_struct.adc_custom_pattern = settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toUInt();
-	settings_struct.gpx_offset = 0;//TODO
+		//measurement tab
+		settings_struct.camera_settings[drvno].nos = settings.value(settingNosPath, settingNosDefault).toUInt();
+		settings_struct.camera_settings[drvno].nob = settings.value(settingNobPath, settingNobDefault).toUInt();
+		settings_struct.camera_settings[drvno].sti_mode = settings.value(settingStiPath, settingStiDefault).toUInt();
+		settings_struct.camera_settings[drvno].bti_mode = settings.value(settingBtiPath, settingBtiDefault).toUInt();
+		settings_struct.camera_settings[drvno].stime_in_microsec = settings.value(settingStime_in_microseconds_Path, settingStime_in_microseconds_Default).toUInt();
+		settings_struct.camera_settings[drvno].btime_in_microsec = settings.value(settingBtime_in_microseconds_Path, settingBtime_in_microseconds_Default).toUInt();
+		settings_struct.camera_settings[drvno].sdat_in_10ns = settings.value(settingSdat_in_10nsPath, settingSdat_in_10nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].bdat_in_10ns = settings.value(settingBdat_in_10nsPath, settingSdat_in_10nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].sslope = settings.value(settingSslopePath, settingSslopeDefault).toUInt();
+		settings_struct.camera_settings[drvno].bslope = settings.value(settingBslopePath, settingBslopeDefault).toUInt();
+		settings_struct.camera_settings[drvno].xckdelay_in_10ns = settings.value(settingXckdelayIn10nsPath, settingXckdelayIn10nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].sec_in_10ns = settings.value(settingShutterSecIn10nsPath, settingShutterSecIn10nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].bec_in_10ns = settings.value(settingShutterBecIn10nsPath, settingShutterBecIn10nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].trigger_mode_cc = settings.value(settingTriggerCcPath, settingTriggerCcDefault).toUInt();
+		settings_struct.camera_settings[drvno].sensor_type = settings.value(settingSensorTypePath, settingSensorTypeDefault).toUInt();
+		settings_struct.camera_settings[drvno].camera_system = settings.value(settingCameraSystemPath, settingCameraSystemDefault).toUInt();
+		settings_struct.camera_settings[drvno].camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
+		settings_struct.camera_settings[drvno].pixel = settings.value(settingPixelPath, settingPixelDefault).toUInt();
+		settings_struct.camera_settings[drvno].mshut = settings.value(settingMshutPath, settingMshutDefault).toBool();
+		settings_struct.camera_settings[drvno].led_off = settings.value(settingLedPath, settingLedDefault).toBool();
+		settings_struct.camera_settings[drvno].sensor_gain = settings.value(settingSensorGainPath, settingSensorGainDefault).toUInt();
+		settings_struct.camera_settings[drvno].adc_gain = settings.value(settingAdcGainPath, settingAdcGainDefault).toUInt();
+		settings_struct.camera_settings[drvno].temp_level = settings.value(settingCoolingPath, settingCoolingDefault).toUInt();
+		settings_struct.camera_settings[drvno].gpx_offset = settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toUInt();
+		settings_struct.camera_settings[drvno].is_hs_ir = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
+		settings_struct.camera_settings[drvno].ioctrl_impact_start_pixel = settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toUInt();
+		settings_struct.camera_settings[drvno].use_software_polling = settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool();
+		settings_struct.camera_settings[drvno].shortrs = settings.value(settingShortrsPath, settingShortrsDefault).toBool();
+		settings_struct.camera_settings[drvno].is_cooled_cam = settings.value(settingIsCooledCamPath, settingIsCooledCamDefault).toBool();
+		//fftmodes tab
+		settings_struct.camera_settings[drvno].fft_lines = settings.value(settingLinesPath, settingLinesDefault).toUInt();
+		settings_struct.camera_settings[drvno].vfreq = settings.value(settingVfreqPath, settingVfreqDefault).toUInt();
+		settings_struct.camera_settings[drvno].fft_mode = settings.value(settingFftModePath, settingFftModeDefault).toUInt();
+		settings_struct.camera_settings[drvno].lines_binning = settings.value(settingLinesBinningPath, settingLinesBinningDefault).toUInt();
+		settings_struct.camera_settings[drvno].number_of_regions = settings.value(settingNumberOfRegionsPath, settingNumberOfRegionsDefault).toUInt();
+		settings_struct.camera_settings[drvno].keep = settingKeepDefault;
+		if (settings.value(settingRegionSizeEqualPath, settingRegionSizeEqualDefault).toBool() == true)
+			*(settings_struct.camera_settings[drvno].region_size) = 0;
+		else
+		{
+			settings_struct.camera_settings[drvno].region_size[0] = settings.value(settingRegionSize1Path, settingRegionSize1Default).toUInt();
+			settings_struct.camera_settings[drvno].region_size[1] = settings.value(settingRegionSize2Path, settingRegionSize2Default).toUInt();
+			settings_struct.camera_settings[drvno].region_size[2] = settings.value(settingRegionSize3Path, settingRegionSize3Default).toUInt();
+			settings_struct.camera_settings[drvno].region_size[3] = settings.value(settingRegionSize4Path, settingRegionSize4Default).toUInt();
+			settings_struct.camera_settings[drvno].region_size[4] = settings.value(settingRegionSize5Path, settingRegionSize5Default).toUInt();
+			settings_struct.camera_settings[drvno].region_size[5] = settings.value(settingRegionSize6Path, settingRegionSize6Default).toUInt();
+			settings_struct.camera_settings[drvno].region_size[6] = settings.value(settingRegionSize7Path, settingRegionSize7Default).toUInt();
+			settings_struct.camera_settings[drvno].region_size[7] = settings.value(settingRegionSize8Path, settingRegionSize8Default).toUInt();
+		}
+		//export data tab
+		settings_struct.camera_settings[drvno].write_to_disc = settings.value(settingWriteDataToDiscPath, settingWriteToDiscDefault).toBool();
+		QByteArray array = settings.value(settingFilePathPath, QDir::currentPath()).toString().toLocal8Bit();
+		strcpy(settings_struct.camera_settings[drvno].file_path, array.data());
+		//dac
+		settings_struct.camera_settings[drvno].dac_output[0] = settings.value(settingSensorOffsetChannel1Path, settingSensorOffsetChannel1Default).toUInt();
+		settings_struct.camera_settings[drvno].dac_output[1] = settings.value(settingSensorOffsetChannel2Path, settingSensorOffsetChannel2Default).toUInt();
+		settings_struct.camera_settings[drvno].dac_output[2] = settings.value(settingSensorOffsetChannel3Path, settingSensorOffsetChannel3Default).toUInt();
+		settings_struct.camera_settings[drvno].dac_output[3] = settings.value(settingSensorOffsetChannel4Path, settingSensorOffsetChannel4Default).toUInt();
+		settings_struct.camera_settings[drvno].dac_output[4] = settings.value(settingSensorOffsetChannel5Path, settingSensorOffsetChannel5Default).toUInt();
+		settings_struct.camera_settings[drvno].dac_output[5] = settings.value(settingSensorOffsetChannel6Path, settingSensorOffsetChannel6Default).toUInt();
+		settings_struct.camera_settings[drvno].dac_output[6] = settings.value(settingSensorOffsetChannel7Path, settingSensorOffsetChannel7Default).toUInt();
+		settings_struct.camera_settings[drvno].dac_output[7] = settings.value(settingSensorOffsetChannel8Path, settingSensorOffsetChannel8Default).toUInt();
+		//debug
+		settings_struct.camera_settings[drvno].tor = settings.value(settingTorPath, settingTorDefault).toUInt();
+		settings_struct.camera_settings[drvno].adc_mode = settings.value(settingAdcModePath, settingAdcModeDefault).toUInt();
+		settings_struct.camera_settings[drvno].adc_custom_pattern = settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toUInt();
+		settings_struct.camera_settings[drvno].gpx_offset = 0;//TODO
 
-	settings_struct.ioctrl_output_delay_in_5ns[0] = settings.value(settingIOCtrlOutput1DelayIn5nsPath, settingIOCtrlOutput1DelayIn5nsDefault).toUInt();
-	settings_struct.ioctrl_output_delay_in_5ns[1] = settings.value(settingIOCtrlOutput2DelayIn5nsPath, settingIOCtrlOutput2DelayIn5nsDefault).toUInt();
-	settings_struct.ioctrl_output_delay_in_5ns[2] = settings.value(settingIOCtrlOutput3DelayIn5nsPath, settingIOCtrlOutput3DelayIn5nsDefault).toUInt();
-	settings_struct.ioctrl_output_delay_in_5ns[3] = settings.value(settingIOCtrlOutput4DelayIn5nsPath, settingIOCtrlOutput4DelayIn5nsDefault).toUInt();
-	settings_struct.ioctrl_output_delay_in_5ns[4] = settings.value(settingIOCtrlOutput5DelayIn5nsPath, settingIOCtrlOutput5DelayIn5nsDefault).toUInt();
-	settings_struct.ioctrl_output_delay_in_5ns[5] = settings.value(settingIOCtrlOutput6DelayIn5nsPath, settingIOCtrlOutput6DelayIn5nsDefault).toUInt();
-	settings_struct.ioctrl_output_delay_in_5ns[6] = settings.value(settingIOCtrlOutput7DelayIn5nsPath, settingIOCtrlOutput7DelayIn5nsDefault).toUInt();
-	settings_struct.ioctrl_output_width_in_5ns[0] = settings.value(settingIOCtrlOutput1WidthIn5nsPath, settingIOCtrlOutput1WidthIn5nsDefault).toUInt();
-	settings_struct.ioctrl_output_width_in_5ns[1] = settings.value(settingIOCtrlOutput2WidthIn5nsPath, settingIOCtrlOutput2WidthIn5nsDefault).toUInt();
-	settings_struct.ioctrl_output_width_in_5ns[2] = settings.value(settingIOCtrlOutput3WidthIn5nsPath, settingIOCtrlOutput3WidthIn5nsDefault).toUInt();
-	settings_struct.ioctrl_output_width_in_5ns[3] = settings.value(settingIOCtrlOutput4WidthIn5nsPath, settingIOCtrlOutput4WidthIn5nsDefault).toUInt();
-	settings_struct.ioctrl_output_width_in_5ns[4] = settings.value(settingIOCtrlOutput5WidthIn5nsPath, settingIOCtrlOutput5WidthIn5nsDefault).toUInt();
-	settings_struct.ioctrl_output_width_in_5ns[5] = settings.value(settingIOCtrlOutput6WidthIn5nsPath, settingIOCtrlOutput6WidthIn5nsDefault).toUInt();
-	settings_struct.ioctrl_output_width_in_5ns[6] = settings.value(settingIOCtrlOutput7WidthIn5nsPath, settingIOCtrlOutput7WidthIn5nsDefault).toUInt();
-	settings_struct.ioctrl_T0_period_in_10ns = settings.value(settingIOCtrlT0PeriodIn10nsPath, settingIOCtrlT0PeriodIn10nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[0] = settings.value(settingIOCtrlOutput1DelayIn5nsPath, settingIOCtrlOutput1DelayIn5nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[1] = settings.value(settingIOCtrlOutput2DelayIn5nsPath, settingIOCtrlOutput2DelayIn5nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[2] = settings.value(settingIOCtrlOutput3DelayIn5nsPath, settingIOCtrlOutput3DelayIn5nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[3] = settings.value(settingIOCtrlOutput4DelayIn5nsPath, settingIOCtrlOutput4DelayIn5nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[4] = settings.value(settingIOCtrlOutput5DelayIn5nsPath, settingIOCtrlOutput5DelayIn5nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[5] = settings.value(settingIOCtrlOutput6DelayIn5nsPath, settingIOCtrlOutput6DelayIn5nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[6] = settings.value(settingIOCtrlOutput7DelayIn5nsPath, settingIOCtrlOutput7DelayIn5nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[0] = settings.value(settingIOCtrlOutput1WidthIn5nsPath, settingIOCtrlOutput1WidthIn5nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[1] = settings.value(settingIOCtrlOutput2WidthIn5nsPath, settingIOCtrlOutput2WidthIn5nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[2] = settings.value(settingIOCtrlOutput3WidthIn5nsPath, settingIOCtrlOutput3WidthIn5nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[3] = settings.value(settingIOCtrlOutput4WidthIn5nsPath, settingIOCtrlOutput4WidthIn5nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[4] = settings.value(settingIOCtrlOutput5WidthIn5nsPath, settingIOCtrlOutput5WidthIn5nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[5] = settings.value(settingIOCtrlOutput6WidthIn5nsPath, settingIOCtrlOutput6WidthIn5nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[6] = settings.value(settingIOCtrlOutput7WidthIn5nsPath, settingIOCtrlOutput7WidthIn5nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns = settings.value(settingIOCtrlT0PeriodIn10nsPath, settingIOCtrlT0PeriodIn10nsDefault).toUInt();
+	}
 
 	es_status_codes status = lsc.initMeasurement();
 	if (status == es_camera_not_found)
@@ -594,16 +589,25 @@ void MainWindow::on_actionDump_board_registers_triggered()
 		labelPci->setAlignment(Qt::AlignTop);
 		scrollPci->setWidget(labelPci);
 		tabWidget->addTab(scrollPci, "PCI registers board " + QString::number(drvno));
+		QScrollArea* scrollSettings = new QScrollArea(tabWidget);
+		scrollSettings->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+		QLabel* labelSettings = new QLabel(scrollPci);
+		labelSettings->setTextInteractionFlags(Qt::TextSelectableByMouse);
+		labelSettings->setTextFormat(Qt::RichText);
+		labelSettings->setText(QString::fromStdString(lsc._dumpCameraSettings(drvno)));
+		labelSettings->setAlignment(Qt::AlignTop);
+		scrollSettings->setWidget(labelSettings);
+		tabWidget->addTab(scrollSettings, "Camera settings board " + QString::number(drvno));
 	}
 	QScrollArea* scrollSettings = new QScrollArea(tabWidget);
 	scrollSettings->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 	QLabel* labelSettings = new QLabel(scrollSettings);
 	labelSettings->setTextInteractionFlags(Qt::TextSelectableByMouse);
 	labelSettings->setTextFormat(Qt::RichText);
-	labelSettings->setText(QString::fromStdString(lsc._dumpGlobalSettings()));
+	labelSettings->setText(QString::fromStdString(lsc._dumpMeasurementSettings()));
 	labelSettings->setAlignment(Qt::AlignTop);
 	scrollSettings->setWidget(labelSettings);
-	tabWidget->addTab(scrollSettings, "Settings");
+	tabWidget->addTab(scrollSettings, "Measurement settings");
 	layout->addWidget(tabWidget);
 	QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, tabWidget);
 	connect(dialogButtonBox, &QDialogButtonBox::accepted, messageBox, &QDialog::accept);
