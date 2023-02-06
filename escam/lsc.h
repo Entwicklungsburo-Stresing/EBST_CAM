@@ -28,7 +28,8 @@ public:
 	std::string _dumpS0Registers(uint32_t drvno);
 	std::string _dumpDmaRegisters(uint32_t drvno);
 	std::string _dumpTlp(uint32_t drvno);
-	std::string _dumpGlobalSettings();
+	std::string _dumpMeasurementSettings();
+	std::string _dumpCameraSettings(uint32_t drvno);
 	std::string _dumpPciRegisters(uint32_t drvno);
 	std::string __AboutDrv(uint32_t drvno);
 	std::string __AboutGPX(uint32_t drvno);

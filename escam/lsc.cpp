@@ -83,11 +83,22 @@ std::string Lsc::_dumpTlp(uint32_t drvno)
 	return cppstring;
 }
 
-std::string Lsc::_dumpGlobalSettings()
+std::string Lsc::_dumpMeasurementSettings()
 {
 	char* cstring;
-	es_status_codes status = dumpSettings(&cstring);
+	es_status_codes status = dumpMeasurementSettings(&cstring);
 	if(status != es_no_error)
+		qCritical("dumpSettings failed");
+	std::string cppstring = cstring;
+	parseTextToHtml(&cppstring);
+	return cppstring;
+}
+
+std::string Lsc::_dumpCameraSettings(uint32_t drvno)
+{
+	char* cstring;
+	es_status_codes status = dumpCameraSettings(drvno, &cstring);
+	if (status != es_no_error)
 		qCritical("dumpSettings failed");
 	std::string cppstring = cstring;
 	parseTextToHtml(&cppstring);
