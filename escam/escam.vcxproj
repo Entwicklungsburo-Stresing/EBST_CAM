@@ -212,6 +212,7 @@
     <ClCompile Include="..\shared_src\Board.c" />
     <ClCompile Include="..\shared_src\globals.c" />
     <ClCompile Include="..\shared_src\win\Board_ll.c" />
+    <ClCompile Include="camerasettingswidget.cpp" />
     <ClCompile Include="dialogdac.cpp" />
     <ClCompile Include="dialogdsc.cpp" />
     <ClCompile Include="dialoggamma.cpp" />
@@ -245,6 +246,7 @@
     <QtMoc Include="dialogdac.h" />
     <QtMoc Include="dialogioctrl.h" />
     <QtMoc Include="dialoggamma.h" />
+    <QtMoc Include="camerasettingswidget.h" />
     <ClInclude Include="lsc-gui.h" />
     <ClInclude Include="UIAbstractionLayer_cpp.h" />
     <QtMoc Include="dialogsettings.h">
@@ -279,6 +281,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="camerasettingswidget.ui" />
     <QtUic Include="dialogaxes.ui" />
     <QtUic Include="dialogdac.ui" />
     <QtUic Include="dialogdsc.ui" />
