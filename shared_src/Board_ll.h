@@ -69,7 +69,8 @@ es_status_codes AboutGPX(uint32_t drvno);
 es_status_codes AboutS0(uint32_t drvno);
 es_status_codes AboutTLPs(uint32_t drvno);
 es_status_codes AboutPCI(uint32_t drvno);
-es_status_codes AboutSettings();
+es_status_codes AboutMeasurementSettings();
+es_status_codes AboutCameraSettings();
 void ErrMsgBoxOn();
 void ErrMsgBoxOff(); // switch to suppress error message boxes
 void ErrorMsg(char ErrMsg[100]);
