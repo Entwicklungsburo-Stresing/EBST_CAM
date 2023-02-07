@@ -24,6 +24,7 @@ public slots:
 	void on_accepted();
 	void loadDefaults();
 	void changeSettingsLevel(int settings_level);
+	void initializeWidget();
 private:
 	Ui::CameraSettingsWidgetClass *ui;
 	QSettings settings;
