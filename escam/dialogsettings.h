@@ -144,22 +144,7 @@ private:
 private slots:
 	void loadDefaults();
 	void on_accepted();
-	void on_comboBoxSti_currentIndexChanged(int index);
-	void on_comboBoxBti_currentIndexChanged(int index);
-	void on_comboBoxSensorType_currentIndexChanged(int index);
-	void on_comboBoxCameraSystem_currentIndexChanged(int index);
-	void on_checkBoxRegionsEqual_stateChanged(int arg1);
 	void on_pushButtonDefault_clicked();
-	void on_spinBoxPixel_valueChanged(int arg1);
-	void on_comboBoxSettingsLevel_currentIndexChanged(int index);
-	void on_comboBoxFftMode_currentIndexChanged(int index);
-	void on_pushButtonCopyBtimer_clicked();
-	void on_pushButtonFilePath_clicked();
-	void on_spinBoxLines_valueChanged(int value);
-	void on_spinBoxLinesBinning_valueChanged(int value);
-	void on_spinBoxNumberOfRegions_valueChanged(int value);
-	void on_checkBoxWriteDataToDisc_stateChanged(int arg1);
-	void on_checkBoxIsCooledCam_stateChanged(int arg1);
 };
 
 #endif // DIALOGSETTINGS_H
