@@ -5,7 +5,7 @@
 
 #define settingsUseSoftwarePollingDefault			false
 #define settingNosDefault							1000
-#define settingNobDefault							2
+#define settingNobDefault							1
 #define settingStiDefault							sti_STimer
 #define settingBtiDefault							bti_BTimer
 #define settingStime_in_microseconds_Default		1000
@@ -15,8 +15,8 @@
 #define settingSslopeDefault						sslope_pos
 #define settingBslopeDefault						bslope_pos
 #define settingXckdelayIn10nsDefault				0
-#define settingShutterSecIn10nsDefault				1
-#define settingShutterBecIn10nsDefault				1
+#define settingShutterSecIn10nsDefault				0
+#define settingShutterBecIn10nsDefault				0
 #define settingTriggerCcDefault						xck
 #define settingBoardSelDefault						1
 #define settingBoard0Default						1
@@ -27,7 +27,7 @@
 #define settingSensorTypeDefault					PDAsensor
 #define settingCameraSystemDefault					camera_system_3001
 #define settingCamcntDefault						1
-#define settingPixelDefault							576
+#define settingPixelDefault							1088
 #define settingMshutDefault							false
 #define settingLedDefault							false
 #define settingSensorGainDefault					0
@@ -50,23 +50,8 @@
 #define settingRegionSize6Default					10
 #define settingRegionSize7Default					10
 #define settingRegionSize8Default					10
-#define settingSensorOffsetChannel1Default			40000
-#define settingSensorOffsetChannel2Default			40000
-#define settingSensorOffsetChannel3Default			40000
-#define settingSensorOffsetChannel4Default			40000
-#define settingSensorOffsetChannel5Default			40000
-#define settingSensorOffsetChannel6Default			40000
-#define settingSensorOffsetChannel7Default			40000
-#define settingSensorOffsetChannel8Default			40000
-#define settingSensorOffsetBoard2Channel1Default	40000
-#define settingSensorOffsetBoard2Channel2Default	40000
-#define settingSensorOffsetBoard2Channel3Default	40000
-#define settingSensorOffsetBoard2Channel4Default	40000
-#define settingSensorOffsetBoard2Channel5Default	40000
-#define settingSensorOffsetBoard2Channel6Default	40000
-#define settingSensorOffsetBoard2Channel7Default	40000
-#define settingSensorOffsetBoard2Channel8Default	40000
-#define settingDacPcieDefault						40000
+#define settingDacCameraDefault						55000
+#define settingDacPcieDefault						20000
 #define settingTorDefault							tor_xck
 #define settingAdcModeDefault						normal
 #define settingAdcCustomValueDefault				0

@@ -9,6 +9,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui(new Ui::DialogSettings)
 {
 	ui->setupUi(this);
+	// setup cameraSettingsWidgets
 	ui->cameraSettingsWidgetBoard0->drvno = 0;
 	ui->cameraSettingsWidgetBoard1->drvno = 1;
 	ui->cameraSettingsWidgetBoard2->drvno = 2;
@@ -25,12 +26,20 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	connect(ui->comboBoxSettingsLevel, QOverload<int>::of(&QComboBox::currentIndexChanged), ui->cameraSettingsWidgetBoard2, &CameraSettingsWidget::changeSettingsLevel);
 	connect(ui->comboBoxSettingsLevel, QOverload<int>::of(&QComboBox::currentIndexChanged), ui->cameraSettingsWidgetBoard3, &CameraSettingsWidget::changeSettingsLevel);
 	connect(ui->comboBoxSettingsLevel, QOverload<int>::of(&QComboBox::currentIndexChanged), ui->cameraSettingsWidgetBoard4, &CameraSettingsWidget::changeSettingsLevel);
+	connect(this, &DialogSettings::defaults_loaded, ui->cameraSettingsWidgetBoard0, &CameraSettingsWidget::loadDefaults);
+	connect(this, &DialogSettings::defaults_loaded, ui->cameraSettingsWidgetBoard1, &CameraSettingsWidget::loadDefaults);
+	connect(this, &DialogSettings::defaults_loaded, ui->cameraSettingsWidgetBoard2, &CameraSettingsWidget::loadDefaults);
+	connect(this, &DialogSettings::defaults_loaded, ui->cameraSettingsWidgetBoard3, &CameraSettingsWidget::loadDefaults);
+	connect(this, &DialogSettings::defaults_loaded, ui->cameraSettingsWidgetBoard4, &CameraSettingsWidget::loadDefaults);
+	connect(this, &DialogSettings::initializingDone, ui->cameraSettingsWidgetBoard0, &CameraSettingsWidget::initializeWidget);
+	connect(this, &DialogSettings::initializingDone, ui->cameraSettingsWidgetBoard1, &CameraSettingsWidget::initializeWidget);
+	connect(this, &DialogSettings::initializingDone, ui->cameraSettingsWidgetBoard2, &CameraSettingsWidget::initializeWidget);
+	connect(this, &DialogSettings::initializingDone, ui->cameraSettingsWidgetBoard3, &CameraSettingsWidget::initializeWidget);
+	connect(this, &DialogSettings::initializingDone, ui->cameraSettingsWidgetBoard4, &CameraSettingsWidget::initializeWidget);
 
+	// load settings and apply them to UI
 	ui->doubleSpinBoxContiniousPause_in_ms->setValue(settings.value(settingContiniousPauseInMicrosecondsPath, settingContiniousPausInMicrosecondsDefault).toDouble() / 1000);
-
-	//Appearance
 	ui->comboBoxTheme->setCurrentIndex(settings.value(settingThemePath, settingThemeDefault).toInt());
-	//Misc
 	ui->comboBoxSettingsLevel->setCurrentIndex(settings.value(settingSettingsLevelPath, settingSettingsLevelDefault).toInt());
 	ui->comboBoxSettingsLevel->currentIndexChanged(ui->comboBoxSettingsLevel->currentIndex());
 
@@ -69,7 +78,13 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	case 1:
 		ui->checkBoxBoard0->setChecked(true);
 	}
+	on_checkBoxBoard0_stateChanged(ui->checkBoxBoard0->isChecked());
+	on_checkBoxBoard1_stateChanged(ui->checkBoxBoard1->isChecked());
+	on_checkBoxBoard2_stateChanged(ui->checkBoxBoard2->isChecked());
+	on_checkBoxBoard3_stateChanged(ui->checkBoxBoard3->isChecked());
+	on_checkBoxBoard4_stateChanged(ui->checkBoxBoard4->isChecked());
 	setWindowModality(Qt::ApplicationModal);
+	emit initializingDone();
 }
 
 DialogSettings::~DialogSettings()
@@ -110,7 +125,155 @@ void DialogSettings::on_pushButtonDefault_clicked()
 {
 	QMessageBox::StandardButton reply = QMessageBox::question(this, "Warning", "All settings are going to be replaced by its default values. Are you sure?", QMessageBox::Yes|QMessageBox::No);
 	if (reply == QMessageBox::Yes)
+	{
 		loadDefaults();
+		emit defaults_loaded();
+	}
+	return;
+}
+
+void DialogSettings::on_checkBoxBoard0_stateChanged(int state)
+{
+	bool enabled = true,
+		visible = true;
+	switch (ui->comboBoxSettingsLevel->currentIndex())
+	{
+		//basic
+	case 0:
+		enabled = state;
+		visible = state;
+		break;
+		//advanced
+	case 1:
+		enabled = state;
+		visible = true;
+		break;
+		//expert
+	case 2:
+		enabled = true;
+		visible = true;
+		break;
+	}
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+	ui->cameraSettingsTabs->setTabVisible(0, visible);
+#endif
+	ui->cameraSettingsTabs->setTabEnabled(0, enabled);
+	return;
+}
+
+void DialogSettings::on_checkBoxBoard1_stateChanged(int state)
+{
+	bool enabled = true,
+		visible = true;
+	switch (ui->comboBoxSettingsLevel->currentIndex())
+	{
+		//basic
+	case 0:
+		enabled = state;
+		visible = state;
+		break;
+		//advanced
+	case 1:
+		enabled = state;
+		visible = true;
+		break;
+		//expert
+	case 2:
+		enabled = true;
+		visible = true;
+		break;
+	}
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+	ui->cameraSettingsTabs->setTabVisible(1, visible);
+#endif
+	ui->cameraSettingsTabs->setTabEnabled(1, enabled);
+	return;
+}
+
+void DialogSettings::on_checkBoxBoard2_stateChanged(int state)
+{
+	bool enabled = true,
+		visible = true;
+	switch (ui->comboBoxSettingsLevel->currentIndex())
+	{
+		//basic
+	case 0:
+		enabled = state;
+		visible = state;
+		break;
+		//advanced
+	case 1:
+		enabled = state;
+		visible = true;
+		break;
+		//expert
+	case 2:
+		enabled = true;
+		visible = true;
+		break;
+	}
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+	ui->cameraSettingsTabs->setTabVisible(2, visible);
+#endif
+	ui->cameraSettingsTabs->setTabEnabled(2, enabled);
+	return;
+}
+
+void DialogSettings::on_checkBoxBoard3_stateChanged(int state)
+{
+	bool enabled = true,
+		visible = true;
+	switch (ui->comboBoxSettingsLevel->currentIndex())
+	{
+		//basic
+	case 0:
+		enabled = state;
+		visible = state;
+		break;
+		//advanced
+	case 1:
+		enabled = state;
+		visible = true;
+		break;
+		//expert
+	case 2:
+		enabled = true;
+		visible = true;
+		break;
+	}
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+	ui->cameraSettingsTabs->setTabVisible(3, visible);
+#endif
+	ui->cameraSettingsTabs->setTabEnabled(3, enabled);
+	return;
+}
+
+void DialogSettings::on_checkBoxBoard4_stateChanged(int state)
+{
+	bool enabled = true,
+		visible = true;
+	switch (ui->comboBoxSettingsLevel->currentIndex())
+	{
+		//basic
+	case 0:
+		enabled = state;
+		visible = state;
+		break;
+		//advanced
+	case 1:
+		enabled = state;
+		visible = true;
+		break;
+		//expert
+	case 2:
+		enabled = true;
+		visible = true;
+		break;
+	}
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+	ui->cameraSettingsTabs->setTabVisible(4, visible);
+#endif
+	ui->cameraSettingsTabs->setTabEnabled(4, enabled);
 	return;
 }
 
@@ -126,5 +289,15 @@ void DialogSettings::loadDefaults()
 	//appearance
 	ui->comboBoxTheme->setCurrentIndex(settingThemeDefault);
 	ui->comboBoxSettingsLevel->setCurrentIndex(settingSettingsLevelDefault);
+	return;
+}
+
+void DialogSettings::on_comboBoxSettingsLevel_currentIndexChanged(int index)
+{
+	on_checkBoxBoard0_stateChanged(ui->checkBoxBoard0->isChecked());
+	on_checkBoxBoard1_stateChanged(ui->checkBoxBoard1->isChecked());
+	on_checkBoxBoard2_stateChanged(ui->checkBoxBoard2->isChecked());
+	on_checkBoxBoard3_stateChanged(ui->checkBoxBoard3->isChecked());
+	on_checkBoxBoard4_stateChanged(ui->checkBoxBoard4->isChecked());
 	return;
 }

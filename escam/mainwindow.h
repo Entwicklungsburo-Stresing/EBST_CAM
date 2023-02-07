@@ -37,7 +37,6 @@ private:
 	DialogTDC* ds_tdc = new DialogTDC( this );
 	DialogDSC* ds_dsc = new DialogDSC( this );
 	DialogRMS* ds_rms = new DialogRMS( this );
-	uint32_t used_number_of_boards;
 	QThread measurementThread;
 	void copySettings(QSettings &dst, QSettings &src);
 	QTimer* displayTimer = new QTimer(this);
@@ -62,7 +61,7 @@ private slots:
 	void on_actionDump_board_registers_triggered();
 	void abortPressed();
 	void on_rubberBandChanged();
-	void on_checkBoxShowCamera(bool state, int camera);
+	void on_checkBoxShowCamera(bool state, int camera, uint32_t drvno);
 	void on_pushButtonStart_pressed();
 	void on_horizontalSliderBlock_valueChanged();
 	void on_actionExport_triggered();

@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget* parent)
 		else
 		{
 			// Check if there are settings saved on this system
-			if (!settings.contains(settingNosPath))
+			if (!settings.contains(settingBoardSelPath))
 			{
 				// When no settings are found, offer to import settings
 				QMessageBox d(this);
@@ -159,6 +159,7 @@ void MainWindow::startPressed()
 	//camerasetup tab
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
+		settings.beginGroup("board" + QString::number(drvno));
 		//measurement tab
 		settings_struct.camera_settings[drvno].nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 		settings_struct.camera_settings[drvno].nob = settings.value(settingNobPath, settingNobDefault).toUInt();
@@ -214,14 +215,14 @@ void MainWindow::startPressed()
 		QByteArray array = settings.value(settingFilePathPath, QDir::currentPath()).toString().toLocal8Bit();
 		strcpy(settings_struct.camera_settings[drvno].file_path, array.data());
 		//dac
-		settings_struct.camera_settings[drvno].dac_output[0] = settings.value(settingSensorOffsetChannel1Path, settingSensorOffsetChannel1Default).toUInt();
-		settings_struct.camera_settings[drvno].dac_output[1] = settings.value(settingSensorOffsetChannel2Path, settingSensorOffsetChannel2Default).toUInt();
-		settings_struct.camera_settings[drvno].dac_output[2] = settings.value(settingSensorOffsetChannel3Path, settingSensorOffsetChannel3Default).toUInt();
-		settings_struct.camera_settings[drvno].dac_output[3] = settings.value(settingSensorOffsetChannel4Path, settingSensorOffsetChannel4Default).toUInt();
-		settings_struct.camera_settings[drvno].dac_output[4] = settings.value(settingSensorOffsetChannel5Path, settingSensorOffsetChannel5Default).toUInt();
-		settings_struct.camera_settings[drvno].dac_output[5] = settings.value(settingSensorOffsetChannel6Path, settingSensorOffsetChannel6Default).toUInt();
-		settings_struct.camera_settings[drvno].dac_output[6] = settings.value(settingSensorOffsetChannel7Path, settingSensorOffsetChannel7Default).toUInt();
-		settings_struct.camera_settings[drvno].dac_output[7] = settings.value(settingSensorOffsetChannel8Path, settingSensorOffsetChannel8Default).toUInt();
+		settings_struct.camera_settings[drvno].dac_output[0] = settings.value(settingDacCameraChannel1Path, settingDacCameraDefault).toUInt();
+		settings_struct.camera_settings[drvno].dac_output[1] = settings.value(settingDacCameraChannel2Path, settingDacCameraDefault).toUInt();
+		settings_struct.camera_settings[drvno].dac_output[2] = settings.value(settingDacCameraChannel3Path, settingDacCameraDefault).toUInt();
+		settings_struct.camera_settings[drvno].dac_output[3] = settings.value(settingDacCameraChannel4Path, settingDacCameraDefault).toUInt();
+		settings_struct.camera_settings[drvno].dac_output[4] = settings.value(settingDacCameraChannel5Path, settingDacCameraDefault).toUInt();
+		settings_struct.camera_settings[drvno].dac_output[5] = settings.value(settingDacCameraChannel6Path, settingDacCameraDefault).toUInt();
+		settings_struct.camera_settings[drvno].dac_output[6] = settings.value(settingDacCameraChannel7Path, settingDacCameraDefault).toUInt();
+		settings_struct.camera_settings[drvno].dac_output[7] = settings.value(settingDacCameraChannel8Path, settingDacCameraDefault).toUInt();
 		//debug
 		settings_struct.camera_settings[drvno].tor = settings.value(settingTorPath, settingTorDefault).toUInt();
 		settings_struct.camera_settings[drvno].adc_mode = settings.value(settingAdcModePath, settingAdcModeDefault).toUInt();
@@ -243,6 +244,7 @@ void MainWindow::startPressed()
 		settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[5] = settings.value(settingIOCtrlOutput6WidthIn5nsPath, settingIOCtrlOutput6WidthIn5nsDefault).toUInt();
 		settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[6] = settings.value(settingIOCtrlOutput7WidthIn5nsPath, settingIOCtrlOutput7WidthIn5nsDefault).toUInt();
 		settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns = settings.value(settingIOCtrlT0PeriodIn10nsPath, settingIOCtrlT0PeriodIn10nsDefault).toUInt();
+		settings.endGroup();
 	}
 
 	es_status_codes status = lsc.initMeasurement();
@@ -391,14 +393,26 @@ void MainWindow::on_actionCameras_triggered()
 	messageBox->setAttribute(Qt::WA_DeleteOnClose);
 	QVBoxLayout* layout = new QVBoxLayout(messageBox);
 	messageBox->setLayout(layout);
-	for (uint16_t i = 0; i < settings.value(settingCamcntPath, settingCamcntDefault).toUInt() * used_number_of_boards; i++)
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
+	uint32_t camcnt = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
-		QCheckBox* checkbox = new QCheckBox(messageBox);
-		checkbox->setText("Camera "+QString::number(i+1));
-		checkbox->setChecked(settings.value(settingShowCameraBaseDir + QString::number(i), settingShowCameraDefault).toBool());
-		layout->addWidget(checkbox);
-		// Lambda syntax is used to pass additional argument i
-		connect(checkbox, &QCheckBox::stateChanged, this, [checkbox, this, i] {on_checkBoxShowCamera(checkbox->isChecked(), i); loadCameraData(); });
+		settings.beginGroup("board" + QString::number(drvno));
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
+			for (uint16_t cam = 0; cam < camcnt; cam++)
+			{
+				QCheckBox* checkbox = new QCheckBox(messageBox);
+				checkbox->setText("Board " + QString::number(drvno) + ", Camera " + QString::number(cam));
+				checkbox->setChecked(settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toBool());
+				layout->addWidget(checkbox);
+				// Lambda syntax is used to pass additional argument i
+				connect(checkbox, &QCheckBox::stateChanged, this, [checkbox, this, cam, drvno] {on_checkBoxShowCamera(checkbox->isChecked(), cam, drvno); loadCameraData(); });
+			}
+		}
+		settings.endGroup();
 	}
 	QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, messageBox);
 	connect(dialogButtonBox, &QDialogButtonBox::accepted, messageBox, &QDialog::accept);
@@ -408,9 +422,11 @@ void MainWindow::on_actionCameras_triggered()
 	return;
 }
 
-void MainWindow::on_checkBoxShowCamera(bool state, int camera)
+void MainWindow::on_checkBoxShowCamera(bool state, int camera, uint32_t drvno)
 {
+	settings.beginGroup("board" + QString::number(drvno));
 	settings.setValue(settingShowCameraBaseDir + QString::number(camera), state);
+	settings.endGroup();
 	return;
 }
 
@@ -421,20 +437,31 @@ void MainWindow::on_actionReset_axes_triggered()
 	if (axes.isEmpty()) return;
 	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
 	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
-	ui->chartView->curr_xmax = settings.value(settingPixelPath, settingPixelDefault).toReal();
-	ui->chartView->curr_xmin = 0;
-	if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toUInt() == 2)
-		ui->chartView->curr_ymax = 0x3FFF;
-	else
-		ui->chartView->curr_ymax = 0xFFFF;
-	ui->chartView->curr_ymin = 0;
-	axis0->setMax(settings.value(settingPixelPath, settingPixelDefault).toReal());
-	axis0->setMin(0);
-	if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toUInt() == 2)
-		axis1->setMax(0x3FFF);
-	else
-		axis1->setMax(0xFFFF);
-	axis1->setMin(0);
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			settings.beginGroup("board" + QString::number(drvno));
+			ui->chartView->curr_xmax = settings.value(settingPixelPath, settingPixelDefault).toReal();
+			ui->chartView->curr_xmin = 0;
+			if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toUInt() == 2)
+				ui->chartView->curr_ymax = 0x3FFF;
+			else
+				ui->chartView->curr_ymax = 0xFFFF;
+			ui->chartView->curr_ymin = 0;
+			axis0->setMax(settings.value(settingPixelPath, settingPixelDefault).toReal());
+			axis0->setMin(0);
+			if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toUInt() == 2)
+				axis1->setMax(0x3FFF);
+			else
+				axis1->setMax(0xFFFF);
+			axis1->setMin(0);
+			settings.endGroup();
+
+		}
+	}
 	return;
 }
 
@@ -471,20 +498,24 @@ void MainWindow::on_actionDAC_triggered()
  */
 void MainWindow::loadSettings()
 {
-	int nos = settings.value(settingNosPath,settingNosDefault).toInt();
-	ui->horizontalSliderSample->setMaximum(nos);
-	ui->spinBoxSample->setMaximum(nos);
-	int nob = settings.value(settingNobPath,settingNobPath).toInt();
-	ui->horizontalSliderBlock->setMaximum(nob);
-	ui->spinBoxBlock->setMaximum(nob);
-	uint8_t tor = static_cast<uint8_t>(settings.value(settingTorPath,settingTorDefault).toUInt());
-	for(uint32_t drvno=0; drvno<number_of_boards; drvno++)
-		lsc.setTorOut(drvno, tor);
-	int board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toInt();
-	if(board_sel == 3)
-		used_number_of_boards = 2;
-	else
-		used_number_of_boards = 1;
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			settings.beginGroup("board" + QString::number(drvno));
+			uint8_t tor = static_cast<uint8_t>(settings.value(settingTorPath, settingTorDefault).toUInt());
+			lsc.setTorOut(drvno, tor);
+			int nos = settings.value(settingNosPath, settingNosDefault).toUInt();
+			ui->horizontalSliderSample->setMaximum(nos);
+			ui->spinBoxSample->setMaximum(nos);
+			int nob = settings.value(settingNobPath, settingNobDefault).toUInt();
+			ui->horizontalSliderBlock->setMaximum(nob);
+			ui->spinBoxBlock->setMaximum(nob);
+			settings.endGroup();
+		}
+	}
 	int theme = settings.value(settingThemePath,settingThemeDefault).toInt();
 	switch(theme)
 	{
@@ -619,9 +650,9 @@ void MainWindow::on_actionDump_board_registers_triggered()
 
 void MainWindow::loadCameraData()
 {
-	uint32_t pixel = settings.value(settingPixelPath,settingPixelDefault).toUInt();
+	uint32_t pixel = 0;
 	// camcnt is the count of all cameras
-	uint32_t camcnt = settings.value(settingCamcntPath,settingCamcntDefault).toUInt();
+	uint32_t camcnt = 0;
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
 	// showCamcnt is the count of all cameras to be shown on the chart
 	// = sum of all true settingShowCameraBaseDir settings
@@ -630,13 +661,19 @@ void MainWindow::loadCameraData()
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
+		{
+			settings.beginGroup("board" + QString::number(drvno));
+			camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
+			pixel = settings.value(settingPixelPath, settingPixelDefault).toUInt();
 			for (uint16_t cam = 0; cam < camcnt; cam++)
 			{
 				uint32_t currCam = cam + (drvno * camcnt);
 				bool showCurrentCam = settings.value(settingShowCameraBaseDir + QString::number(currCam), settingShowCameraDefault).toBool();
-					if (showCurrentCam)
-						showCamcnt++;
+				if (showCurrentCam)
+					showCamcnt++;
 			}
+			settings.endGroup();
+		}
 	}
 	uint16_t* data = static_cast<uint16_t*>(malloc(pixel * showCamcnt * sizeof(uint16_t)));
 	uint32_t block = static_cast<uint32_t>(ui->horizontalSliderBlock->value() - 1);
@@ -648,16 +685,19 @@ void MainWindow::loadCameraData()
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
 		{
+			settings.beginGroup("board" + QString::number(drvno));
+			camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
+			pixel = settings.value(settingPixelPath, settingPixelDefault).toUInt();
 			for (uint16_t cam = 0; cam < camcnt; cam++)
 			{
-				uint32_t currCam = cam + (drvno * camcnt);
-				bool showCurrentCam = settings.value(settingShowCameraBaseDir + QString::number(currCam), settingShowCameraDefault).toBool();
+				bool showCurrentCam = settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toBool();
 				if (showCurrentCam)
 				{
 					lsc.returnFrame(drvno, sample, block, cam, data + showedCam * pixel, pixel);
 					showedCam++;
 				}
 			}
+			settings.endGroup();
 		}
 	}
 	setChartData(data, static_cast<uint16_t>(pixel), static_cast<uint16_t>(showCamcnt));
@@ -702,22 +742,20 @@ void MainWindow::on_measureDone()
 	//disable abort button
 	ui->pushButtonAbort->setDisabled(true);
 #ifdef WIN32
-	uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
-	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
-	uint32_t block = ui->horizontalSliderBlock->value() - 1;
-	uint32_t drvno;
-	switch (settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt())
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
-	default:
-	case 0:
-	case 2:
-		drvno = 0;
-		break;
-	case 1:
-		drvno = 1;
-		break;
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			settings.beginGroup("board" + QString::number(drvno));
+			uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
+			uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
+			uint32_t block = ui->horizontalSliderBlock->value() - 1;
+			DLLShowNewBitmap(drvno, block, 0, pixelcount, nos);
+			settings.endGroup();
+		}
 	}
-	DLLShowNewBitmap(drvno, block, 0, pixelcount, nos);
 #endif
 	displayTimer->stop();
 	//enable controls
@@ -765,22 +803,32 @@ void MainWindow::on_rubberBandChanged()
 	ui->chartView->curr_xmin = axis0->min();
 	ui->chartView->curr_ymax = axis1->max();
 	ui->chartView->curr_ymin = axis1->min();
-	// apply boundaries on axes
-	if(axis0->max() > settings.value(settingPixelPath, settingPixelDefault).toUInt())
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
+	qreal ymax = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
-		ui->chartView->curr_xmax = settings.value(settingPixelPath, settingPixelDefault).toUInt();
-		axis0->setMax(ui->chartView->curr_xmax);
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			settings.beginGroup("board" + QString::number(drvno));
+			// apply boundaries on axes
+			if (axis0->max() > settings.value(settingPixelPath, settingPixelDefault).toUInt())
+			{
+				ui->chartView->curr_xmax = settings.value(settingPixelPath, settingPixelDefault).toUInt();
+				axis0->setMax(ui->chartView->curr_xmax);
+			}
+			if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toUInt() == 2)
+				ymax = 0x3FFF;
+			else
+				ymax = 0xFFFF;
+			settings.endGroup();
+		}
 	}
-	if(axis0->min() < 0)
+	if (axis0->min() < 0)
 	{
 		ui->chartView->curr_xmin = 0;
 		axis0->setMin(0);
 	}
-	qreal ymax = 0;
-	if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toUInt() == 2)
-		ymax = 0x3FFF;
-	else
-		ymax = 0xFFFF;
 	if(axis1->max() > ymax)
 	{
 		ui->chartView->curr_ymax = ymax;
@@ -815,19 +863,15 @@ void MainWindow::on_actionShow_triggered()
 	uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
 	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 	uint32_t block = ui->horizontalSliderBlock->value() - 1;
-	uint32_t drvno;
-	switch (settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt())
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
-	default:
-	case 0:
-	case 2:
-		drvno = 0;
-		break;
-	case 1:
-		drvno = 1;
-		break;
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			DLLStart2dViewer(drvno, 0, block, pixelcount, nos);
+		}
 	}
-	DLLStart2dViewer(drvno, 0, block, pixelcount, nos);
 #endif
 	return;
 }
@@ -839,22 +883,20 @@ void MainWindow::on_actionShow_triggered()
 void MainWindow::on_horizontalSliderBlock_valueChanged()
 {
 #ifdef WIN32
-	uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
-	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
-	uint32_t block = ui->horizontalSliderBlock->value() - 1;
-	uint32_t drvno;
-	switch (settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt())
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
-	default:
-	case 0:
-	case 2:
-		drvno = 0;
-		break;
-	case 1:
-		drvno = 1;
-		break;
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			settings.beginGroup("board" + QString::number(drvno));
+			uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
+			uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
+			uint32_t block = ui->horizontalSliderBlock->value() - 1;
+			DLLShowNewBitmap(drvno, block, 0, pixelcount, nos);
+			settings.endGroup();
+		}
 	}
-	DLLShowNewBitmap(drvno, block, 0, pixelcount, nos);
 #endif
 	return;
 }
@@ -916,16 +958,14 @@ void MainWindow::showCurrentScan()
 {
 	int64_t sample = 0;
 	int64_t block = 0;
-	switch (settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt())
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
-	default:
-	case 0:
-	case 2:
-		lsc.getCurrentScanNumber(0, &sample, &block);
-		break;
-	case 1:
-		lsc.getCurrentScanNumber(1, &sample, &block);
-		break;
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			lsc.getCurrentScanNumber(drvno, &sample, &block);
+		}
 	}
 	int radioState = 0;
 	if (ui->radioButtonLiveViewOff->isChecked()) radioState = 0;
