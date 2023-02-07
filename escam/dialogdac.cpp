@@ -1,7 +1,7 @@
 #include "dialogdac.h"
 #include "ui_dialogdac.h"
 
-DialogDac::DialogDac(QWidget *parent)
+DialogDac::DialogDac(QWidget* parent)
 	: QDialog(parent),
 	ui(new Ui::DialogDac)
 {
@@ -88,7 +88,7 @@ DialogDac::DialogDac(QWidget *parent)
 	connect(ui->spinBoxPCIeBoard2Channel6, qOverload<int>(&QSpinBox::valueChanged), this, &DialogDac::spinBoxPcieBoardChannelX_valueChanged);
 	connect(ui->spinBoxPCIeBoard2Channel7, qOverload<int>(&QSpinBox::valueChanged), this, &DialogDac::spinBoxPcieBoardChannelX_valueChanged);
 	connect(ui->spinBoxPCIeBoard2Channel8, qOverload<int>(&QSpinBox::valueChanged), this, &DialogDac::spinBoxPcieBoardChannelX_valueChanged);
-	
+
 	// cosmetics depending on number_of_boards and board_sel
 	if (number_of_boards == 1)
 	{
@@ -189,7 +189,7 @@ void DialogDac::spinBoxCameraChannelX_valueChanged()
 		}
 	};
 	bool is_hs_ir = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
-	for(uint32_t drvno=0; drvno<number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		mainWindow->lsc.dac_setAllOutputs(drvno, DAC8568_camera, output[drvno], !is_hs_ir);
 	return;
 }
