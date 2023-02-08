@@ -74,9 +74,6 @@ MainWindow::MainWindow(QWidget* parent)
 #endif
 	// disable axes menu until first finish of measurement to avoid crash
 	ui->actionAxes->setEnabled(false);
-	// Check DSC and TDC flags
-	if (!lsc.isDsc(0)) ui->actionDSC->setEnabled(false);
-	if (!lsc.isTdc(0)) ui->actionTDC->setEnabled(false);
 }
 
 /**
@@ -700,13 +697,7 @@ void MainWindow::loadCameraData()
 		}
 	}
 	setChartData(data, static_cast<uint16_t>(pixel), static_cast<uint16_t>(showCamcnt));
-	//send pixels 6 to 9 to the tdc window
-	//tdc 1: pixel 6 high bytes, 7 low bytes
-	//tdc 2: pixel 8 high bytes, 9 low bytes
-	uint32_t tdc1 = (static_cast<uint32_t>(*(data + 6))) << 16 | (static_cast<uint32_t>(*(data + 7)));
-	uint32_t tdc2 = (static_cast<uint32_t>(*(data + 8))) << 16 | (static_cast<uint32_t>(*(data + 9)));
-	ds_tdc->updateTDC(tdc1, tdc2);
-
+	ds_tdc->updateTDC();
 	free(data);
 	return;
 }
