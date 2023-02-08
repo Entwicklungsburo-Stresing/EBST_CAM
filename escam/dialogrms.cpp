@@ -46,8 +46,10 @@ void DialogRMS::initDialogRMS()
 {
 	if (number_of_boards > 1)
 		ui->spinBoxBoard->setMaximum(number_of_boards - 1);
-	else
+	{
 		ui->spinBoxBoard->setVisible(false);
+		ui->labelBoard->setVisible(false);
+	}
 	on_spinBoxBoard_valueChanged(ui->spinBoxBoard->value());
 	return;
 }
