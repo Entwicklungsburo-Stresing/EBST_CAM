@@ -6,42 +6,31 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>311</width>
-    <height>303</height>
+    <width>257</width>
+    <height>86</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>DAC</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_4">
    <item>
-    <layout class="QGridLayout" name="gridLayoutDac">
-     <item row="10" column="2">
-      <widget class="QSpinBox" name="spinBoxChannel8">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QLabel" name="labelDacChannel3">
-       <property name="text">
-        <string>Channel 3</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="4">
-      <widget class="QLabel" name="labelPcieBoard1">
-       <property name="text">
-        <string>Board 1</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="6">
-      <spacer name="horizontalSpacer_8">
+    <spacer name="verticalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <spacer name="horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -53,217 +42,71 @@
        </property>
       </spacer>
      </item>
-     <item row="6" column="2">
-      <widget class="QSpinBox" name="spinBoxChannel4">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout"/>
      </item>
-     <item row="1" column="4">
-      <widget class="QLabel" name="labelPcie">
-       <property name="text">
-        <string>PCIe board</string>
-       </property>
-      </widget>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QLabel" name="labelCamera">
+         <property name="text">
+          <string>Camera</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="DacSpinBoxes" name="dacSpinBoxesCameraBoard_0" native="true"/>
+         </item>
+         <item>
+          <widget class="DacSpinBoxes" name="dacSpinBoxesCameraBoard_1" native="true"/>
+         </item>
+         <item>
+          <widget class="DacSpinBoxes" name="dacSpinBoxesCameraBoard_2" native="true"/>
+         </item>
+         <item>
+          <widget class="DacSpinBoxes" name="dacSpinBoxesCameraBoard_3" native="true"/>
+         </item>
+         <item>
+          <widget class="DacSpinBoxes" name="dacSpinBoxesCameraBoard_4" native="true"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
      </item>
-     <item row="4" column="3">
-      <widget class="QSpinBox" name="spinBoxBoard2Channel2">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="labelPcie">
+         <property name="text">
+          <string>PCIe board</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="DacSpinBoxes" name="dacSpinBoxesPcieBoard_0" native="true"/>
+         </item>
+         <item>
+          <widget class="DacSpinBoxes" name="dacSpinBoxesPcieBoard_1" native="true"/>
+         </item>
+         <item>
+          <widget class="DacSpinBoxes" name="dacSpinBoxesPcieBoard_2" native="true"/>
+         </item>
+         <item>
+          <widget class="DacSpinBoxes" name="dacSpinBoxesPcieBoard_3" native="true"/>
+         </item>
+         <item>
+          <widget class="DacSpinBoxes" name="dacSpinBoxesPcieBoard_4" native="true"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
      </item>
-     <item row="11" column="2">
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="9" column="2">
-      <widget class="QSpinBox" name="spinBoxChannel7">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="3">
-      <widget class="QSpinBox" name="spinBoxBoard2Channel6">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="3">
-      <widget class="QSpinBox" name="spinBoxBoard2Channel8">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLabel" name="labelDacChannel1">
-       <property name="text">
-        <string>Channel 1</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="3">
-      <widget class="QSpinBox" name="spinBoxBoard2Channel5">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QLabel" name="labelBoard2">
-       <property name="text">
-        <string>Board 2</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="3">
-      <widget class="QSpinBox" name="spinBoxBoard2Channel3">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <spacer name="verticalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="6" column="1">
-      <widget class="QLabel" name="labelDacChannel4">
-       <property name="text">
-        <string>Channel 4</string>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="1">
-      <widget class="QLabel" name="labelDacChannel8">
-       <property name="text">
-        <string>Channel 8</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLabel" name="labelCamera">
-       <property name="text">
-        <string>Camera</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="1">
-      <widget class="QLabel" name="labelDacChannel5">
-       <property name="text">
-        <string>Channel 5</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLabel" name="labelBoard1">
-       <property name="text">
-        <string>Board 1</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="2">
-      <widget class="QSpinBox" name="spinBoxChannel6">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="2">
-      <widget class="QSpinBox" name="spinBoxChannel5">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="2">
-      <widget class="QSpinBox" name="spinBoxChannel2">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="1">
-      <widget class="QLabel" name="labelDacChannel7">
-       <property name="text">
-        <string>Channel 7</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="3">
-      <widget class="QSpinBox" name="spinBoxBoard2Channel1">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QSpinBox" name="spinBoxChannel1">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <spacer name="horizontalSpacer_7">
+     <item>
+      <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -274,219 +117,21 @@
         </size>
        </property>
       </spacer>
-     </item>
-     <item row="5" column="2">
-      <widget class="QSpinBox" name="spinBoxChannel3">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="1">
-      <widget class="QLabel" name="labelDacChannel6">
-       <property name="text">
-        <string>Channel 6</string>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="3">
-      <widget class="QSpinBox" name="spinBoxBoard2Channel7">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLabel" name="labelDacChannel2">
-       <property name="text">
-        <string>Channel 2</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="3">
-      <widget class="QSpinBox" name="spinBoxBoard2Channel4">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="5">
-      <widget class="QLabel" name="labelPcieBoard2">
-       <property name="text">
-        <string>Board 2</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="4">
-      <widget class="QSpinBox" name="spinBoxPCIeBoard1Channel1">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="4">
-      <widget class="QSpinBox" name="spinBoxPCIeBoard1Channel2">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="4">
-      <widget class="QSpinBox" name="spinBoxPCIeBoard1Channel3">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="4">
-      <widget class="QSpinBox" name="spinBoxPCIeBoard1Channel4">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="4">
-      <widget class="QSpinBox" name="spinBoxPCIeBoard1Channel5">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="4">
-      <widget class="QSpinBox" name="spinBoxPCIeBoard1Channel6">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="4">
-      <widget class="QSpinBox" name="spinBoxPCIeBoard1Channel7">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="4">
-      <widget class="QSpinBox" name="spinBoxPCIeBoard1Channel8">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="5">
-      <widget class="QSpinBox" name="spinBoxPCIeBoard2Channel1">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="5">
-      <widget class="QSpinBox" name="spinBoxPCIeBoard2Channel2">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="5">
-      <widget class="QSpinBox" name="spinBoxPCIeBoard2Channel3">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="5">
-      <widget class="QSpinBox" name="spinBoxPCIeBoard2Channel4">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="5">
-      <widget class="QSpinBox" name="spinBoxPCIeBoard2Channel5">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="5">
-      <widget class="QSpinBox" name="spinBoxPCIeBoard2Channel6">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="5">
-      <widget class="QSpinBox" name="spinBoxPCIeBoard2Channel7">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="5">
-      <widget class="QSpinBox" name="spinBoxPCIeBoard2Channel8">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -509,23 +154,15 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>DacSpinBoxes</class>
+   <extends>QWidget</extends>
+   <header>dacspinboxes.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <tabstops>
-  <tabstop>spinBoxChannel1</tabstop>
-  <tabstop>spinBoxBoard2Channel1</tabstop>
-  <tabstop>spinBoxChannel2</tabstop>
-  <tabstop>spinBoxBoard2Channel2</tabstop>
-  <tabstop>spinBoxChannel3</tabstop>
-  <tabstop>spinBoxBoard2Channel3</tabstop>
-  <tabstop>spinBoxChannel4</tabstop>
-  <tabstop>spinBoxBoard2Channel4</tabstop>
-  <tabstop>spinBoxChannel5</tabstop>
-  <tabstop>spinBoxBoard2Channel5</tabstop>
-  <tabstop>spinBoxChannel6</tabstop>
-  <tabstop>spinBoxBoard2Channel6</tabstop>
-  <tabstop>spinBoxChannel7</tabstop>
-  <tabstop>spinBoxBoard2Channel7</tabstop>
-  <tabstop>spinBoxChannel8</tabstop>
-  <tabstop>spinBoxBoard2Channel8</tabstop>
   <tabstop>pushButtonDefault</tabstop>
  </tabstops>
  <resources/>
