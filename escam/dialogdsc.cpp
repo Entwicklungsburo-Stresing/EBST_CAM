@@ -83,3 +83,12 @@ void DialogDSC::on_pushButton_update_cur_clicked()
 	updateDSC();
 	return;
 }
+
+void DialogDSC::initDialogDsc()
+{
+	if (number_of_boards > 1)
+		ui->spinBoxBoard->setMaximum(number_of_boards - 1);
+	else
+		ui->spinBoxBoard->setVisible(false);
+	return;
+}

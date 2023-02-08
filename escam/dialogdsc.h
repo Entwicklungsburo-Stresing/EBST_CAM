@@ -14,6 +14,7 @@ class DialogDSC : public QDialog
 public:
 	explicit DialogDSC(QWidget* parent = nullptr);
 	~DialogDSC();
+	void initDialogDsc();
 
 private:
 	Ui::DialogDSC* ui;
