@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>402</width>
-    <height>449</height>
+    <width>336</width>
+    <height>324</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,8 +26,36 @@
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="1">
-          <spacer name="verticalSpacer">
+         <item row="4" column="2">
+          <widget class="QCheckBox" name="checkBoxBoard3">
+           <property name="text">
+            <string>board 3</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLabel" name="labelNos">
+           <property name="text">
+            <string>nos (number of samples)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QCheckBox" name="checkBoxBoard0">
+           <property name="text">
+            <string>board 0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="1">
+          <widget class="QLabel" name="labelTheme">
+           <property name="text">
+            <string>theme</string>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="1">
+          <spacer name="verticalSpacer_2">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -46,13 +74,6 @@
            </property>
           </widget>
          </item>
-         <item row="4" column="2">
-          <widget class="QCheckBox" name="checkBoxBoard3">
-           <property name="text">
-            <string>board 3</string>
-           </property>
-          </widget>
-         </item>
          <item row="1" column="0">
           <spacer name="horizontalSpacer">
            <property name="orientation">
@@ -66,24 +87,33 @@
            </property>
           </spacer>
          </item>
-         <item row="7" column="1">
-          <widget class="QLabel" name="labelTheme">
+         <item row="2" column="2">
+          <widget class="QCheckBox" name="checkBoxBoard1">
            <property name="text">
-            <string>theme</string>
+            <string>board 1</string>
            </property>
           </widget>
          </item>
-         <item row="6" column="1">
+         <item row="8" column="2">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxContiniousPause_in_ms">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="suffix">
+            <string>ms</string>
+           </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="maximum">
+            <double>4294967.294999999925494</double>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1">
           <widget class="QLabel" name="labelContiniousPause">
            <property name="text">
             <string>continious pause</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QCheckBox" name="checkBoxBoard0">
-           <property name="text">
-            <string>board 0</string>
            </property>
           </widget>
          </item>
@@ -101,12 +131,18 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="2">
-          <widget class="QCheckBox" name="checkBoxBoard1">
-           <property name="text">
-            <string>board 1</string>
+         <item row="0" column="1">
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
            </property>
-          </widget>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
          </item>
          <item row="1" column="3">
           <spacer name="horizontalSpacer_2">
@@ -121,23 +157,7 @@
            </property>
           </spacer>
          </item>
-         <item row="6" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxContiniousPause_in_ms">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="suffix">
-            <string>ms</string>
-           </property>
-           <property name="decimals">
-            <number>3</number>
-           </property>
-           <property name="maximum">
-            <double>4294967.294999999925494</double>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="2">
+         <item row="9" column="2">
           <widget class="QComboBox" name="comboBoxTheme">
            <property name="enabled">
             <bool>true</bool>
@@ -154,18 +174,47 @@
            </item>
           </widget>
          </item>
-         <item row="8" column="1">
-          <spacer name="verticalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
+         <item row="7" column="1">
+          <widget class="QLabel" name="labelNob">
+           <property name="text">
+            <string>nob (number of blocks)</string>
            </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
+          </widget>
+         </item>
+         <item row="6" column="2">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxNos">
+           <property name="enabled">
+            <bool>true</bool>
            </property>
-          </spacer>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="minimum">
+            <double>2.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>4294967295.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="2">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxNob">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="minimum">
+            <double>1.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>4294967295.000000000000000</double>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -187,7 +236,7 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
-            <widget class="CameraSettingsWidget" name="cameraSettingsWidgetBoard0" native="true"/>
+            <widget class="CameraSettingsWidget" name="cameraSettingsWidgetBoard0"/>
            </item>
           </layout>
          </widget>
@@ -197,7 +246,7 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
-            <widget class="CameraSettingsWidget" name="cameraSettingsWidgetBoard1" native="true"/>
+            <widget class="CameraSettingsWidget" name="cameraSettingsWidgetBoard1"/>
            </item>
           </layout>
          </widget>
@@ -207,7 +256,7 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
-            <widget class="CameraSettingsWidget" name="cameraSettingsWidgetBoard2" native="true"/>
+            <widget class="CameraSettingsWidget" name="cameraSettingsWidgetBoard2"/>
            </item>
           </layout>
          </widget>
@@ -217,7 +266,7 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_8">
            <item>
-            <widget class="CameraSettingsWidget" name="cameraSettingsWidgetBoard3" native="true"/>
+            <widget class="CameraSettingsWidget" name="cameraSettingsWidgetBoard3"/>
            </item>
           </layout>
          </widget>
@@ -227,7 +276,7 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
-            <widget class="CameraSettingsWidget" name="cameraSettingsWidgetBoard4" native="true"/>
+            <widget class="CameraSettingsWidget" name="cameraSettingsWidgetBoard4"/>
            </item>
           </layout>
          </widget>

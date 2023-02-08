@@ -34,8 +34,6 @@ size_t data_available = 0;
 const struct camera_settings camera_settings_default =
 {
 	.use_software_polling = settingsUseSoftwarePollingDefault,
-	.nos = settingNosDefault,
-	.nob = settingNobDefault,
 	.sti_mode = settingStiDefault,
 	.bti_mode = settingBtiDefault,
 	.stime_in_microsec = settingStime_in_microseconds_Default,
@@ -114,5 +112,7 @@ const struct camera_settings camera_settings_default =
 struct measurement_settings settings_struct =
 {
 	.board_sel						= settingBoardSelDefault,
+	.nos							= settingNosDefault,
+	.nob							= settingNobDefault,
 	.cont_pause_in_microseconds		= settingContiniousPausInMicrosecondsDefault,
 };

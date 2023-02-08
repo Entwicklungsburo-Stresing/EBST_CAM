@@ -130,7 +130,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	else *useSWTrig = false;
 	if (status != es_no_error) return status;
 	//allocate Buffer
-	status = SetMeasurementParameters(drvno, settings_struct.camera_settings[drvno].nos, settings_struct.camera_settings[drvno].nob);
+	status = SetMeasurementParameters(drvno, settings_struct.nos, settings_struct.nob);
 	if (status != es_no_error) return status;
 	status = CloseShutter(drvno); //set cooling  off
 	if (status != es_no_error) return status;
@@ -3845,8 +3845,12 @@ es_status_codes dumpMeasurementSettings(char** stringPtr)
 	*stringPtr = (char*)calloc(bufferLength, sizeof(char));
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
 		"board_sel\t"DLLTAB DLLTAB"%u\n"
+		"nos\t" DLLTAB DLLTAB"%u\n"
+		"nob\t"DLLTAB DLLTAB"%u\n"
 		"cont_pause_in_microseconds\t" DLLTAB DLLTAB"%u\n",
 		settings_struct.board_sel,
+		settings_struct.nos,
+		settings_struct.nob,
 		settings_struct.cont_pause_in_microseconds);
 	return es_no_error;
 }
@@ -3863,8 +3867,6 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 	*stringPtr = (char*)calloc(bufferLength, sizeof(char));
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
 		"use_software_polling\t"DLLTAB DLLTAB"%u\n"
-		"nos\t" DLLTAB DLLTAB"%u\n"
-		"nob\t"DLLTAB DLLTAB"%u\n"
 		"sti_mode\t"DLLTAB DLLTAB"%u\n"
 		"bti_mode\t"DLLTAB"%u\n"
 		"stime in microseconds\t%u\n"
@@ -3894,8 +3896,6 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		"number of regions\t%u\n"
 		"keep\t"DLLTAB DLLTAB"0b"BYTE_TO_BINARY_PATTERN"\n",
 		settings_struct.camera_settings[drvno].use_software_polling,
-		settings_struct.camera_settings[drvno].nos,
-		settings_struct.camera_settings[drvno].nob,
 		settings_struct.camera_settings[drvno].sti_mode,
 		settings_struct.camera_settings[drvno].bti_mode,
 		settings_struct.camera_settings[drvno].stime_in_microsec,
