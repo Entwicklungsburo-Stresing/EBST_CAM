@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>257</width>
-    <height>286</height>
+    <height>312</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,8 +28,15 @@
     </spacer>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="1" column="1">
+      <widget class="QLabel" name="labelT0">
+       <property name="text">
+        <string>T0 period</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
       <spacer name="horizontalSpacer_3">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -42,14 +49,20 @@
        </property>
       </spacer>
      </item>
-     <item>
-      <widget class="QLabel" name="labelT0">
-       <property name="text">
-        <string>T0 period</string>
+     <item row="1" column="3">
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
-      </widget>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
-     <item>
+     <item row="1" column="2">
       <widget class="QDoubleSpinBox" name="doubleSpinBoxT0">
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -68,18 +81,19 @@
        </property>
       </widget>
      </item>
-     <item>
-      <spacer name="horizontalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+     <item row="0" column="1">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>board</string>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QSpinBox" name="spinBoxBoard">
+       <property name="maximum">
+        <number>4</number>
        </property>
-      </spacer>
+      </widget>
      </item>
     </layout>
    </item>
