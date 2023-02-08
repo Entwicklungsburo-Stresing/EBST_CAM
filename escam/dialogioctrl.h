@@ -22,7 +22,7 @@ private slots:
 	void on_buttonBox_rejected();
 	void on_buttonBox_accepted();
 	void on_pushButtonDefault_pressed();
-
+	void on_spinBoxBoard_valueChanged();
 private:
 	Ui::DialogIoctrl *ui;
 	QSettings settings;
