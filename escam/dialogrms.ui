@@ -43,14 +43,14 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="labelFirstSample">
        <property name="text">
         <string>first sample</string>
        </property>
       </widget>
      </item>
      <item row="4" column="1">
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="labelLastSample">
        <property name="text">
         <string>last sample</string>
        </property>
@@ -87,7 +87,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLabel" name="labelDrvno">
+      <widget class="QLabel" name="labelBoard">
        <property name="text">
         <string>Board</string>
        </property>
@@ -101,7 +101,7 @@
       </widget>
      </item>
      <item row="6" column="1">
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="labelMwf">
        <property name="text">
         <string>mwf</string>
        </property>
@@ -114,35 +114,6 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
-      <widget class="QComboBox" name="comboBoxDrvno">
-       <item>
-        <property name="text">
-         <string>board 0</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>board 1</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>board 2</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>board 3</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>board 4</string>
-        </property>
-       </item>
-      </widget>
-     </item>
      <item row="5" column="2">
       <widget class="QSpinBox" name="spinBox_pixel">
        <property name="maximum">
@@ -151,7 +122,7 @@
       </widget>
      </item>
      <item row="7" column="1">
-      <widget class="QLabel" name="label_5">
+      <widget class="QLabel" name="labelTrms">
        <property name="text">
         <string>trms</string>
        </property>
@@ -171,7 +142,7 @@
       </spacer>
      </item>
      <item row="5" column="1">
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="labelPixel">
        <property name="text">
         <string>pixel</string>
        </property>
@@ -203,6 +174,13 @@
        </property>
       </spacer>
      </item>
+     <item row="1" column="2">
+      <widget class="QSpinBox" name="spinBoxBoard">
+       <property name="maximum">
+        <number>4</number>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -218,7 +196,6 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>comboBoxDrvno</tabstop>
   <tabstop>spinBoxCampos</tabstop>
   <tabstop>spinBox_firstsample</tabstop>
   <tabstop>spinBox_lastsample</tabstop>

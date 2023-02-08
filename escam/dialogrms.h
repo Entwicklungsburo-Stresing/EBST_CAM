@@ -27,7 +27,7 @@ private:
 private slots:
 	void on_spinBox_firstsample_valueChanged(int value);
 	void on_spinBox_lastsample_valueChanged(int value);
-	void on_comboBoxDrvno_currentIndexChanged(int index);
+	void on_spinBoxBoard_valueChanged(int index);
 };
 
 #endif // DIALOGRMS_H

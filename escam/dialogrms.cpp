@@ -9,7 +9,7 @@ DialogRMS::DialogRMS(QWidget *parent) :
 	ui->setupUi(this);
 
 	// connect all UI changed signals to updateRMS slot
-	connect(ui->comboBoxDrvno, qOverload<int>(&QComboBox::currentIndexChanged), this, &DialogRMS::updateRMS);
+	connect(ui->spinBoxBoard, qOverload<int>(&QSpinBox::valueChanged), this, &DialogRMS::updateRMS);
 	connect(ui->spinBoxCampos, qOverload<int>(&QSpinBox::valueChanged), this, &DialogRMS::updateRMS);
 	connect(ui->spinBox_firstsample, qOverload<int>(&QSpinBox::valueChanged), this, &DialogRMS::updateRMS);
 	connect(ui->spinBox_lastsample, qOverload<int>(&QSpinBox::valueChanged), this, &DialogRMS::updateRMS);
@@ -28,7 +28,7 @@ void DialogRMS::updateRMS()
 	uint32_t lastSample = ui->spinBox_lastsample->value() - 1;
 	uint32_t pixel = ui->spinBox_pixel->value();
 	uint32_t campos = ui->spinBoxCampos->value() - 1;
-	uint32_t drvno = ui->comboBoxDrvno->currentIndex();
+	uint32_t drvno = ui->spinBoxBoard->value();
 	double mwf, trms;
 	QString smwf, strms;
 
@@ -44,8 +44,11 @@ void DialogRMS::updateRMS()
 
 void DialogRMS::initDialogRMS()
 {
-	ui->comboBoxDrvno->setMaxCount(number_of_boards);
-	on_comboBoxDrvno_currentIndexChanged(ui->comboBoxDrvno->currentIndex());
+	if (number_of_boards > 1)
+		ui->spinBoxBoard->setMaximum(number_of_boards - 1);
+	else
+		ui->spinBoxBoard->setVisible(false);
+	on_spinBoxBoard_valueChanged(ui->spinBoxBoard->value());
 	return;
 }
 
@@ -63,18 +66,18 @@ void DialogRMS::on_spinBox_lastsample_valueChanged(int value)
 	return;
 }
 
-void DialogRMS::on_comboBoxDrvno_currentIndexChanged(int index)
+void DialogRMS::on_spinBoxBoard_valueChanged(int index)
 {
 	settings.beginGroup("board" + QString::number(index));
 	int camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
+	int pixel = settings.value(settingPixelPath, settingPixelDefault).toUInt();
+	settings.endGroup();
+	int nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 	ui->spinBoxCampos->setMaximum(camcnt);
 	if (camcnt == 1)
 		ui->spinBoxCampos->setDisabled(true);
-	int pixel = settings.value(settingPixelPath, settingPixelDefault).toUInt();
 	ui->spinBox_pixel->setMaximum(pixel - 1);
-	int nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 	ui->spinBox_lastsample->setMaximum(nos);
 	ui->spinBox_firstsample->setMaximum(nos - 1);
-	settings.endGroup();
 	return;
 }
