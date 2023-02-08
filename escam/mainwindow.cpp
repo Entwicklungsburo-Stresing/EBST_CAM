@@ -859,15 +859,17 @@ void MainWindow::on_actionIO_Control_triggered()
 void MainWindow::on_actionShow_triggered()
 {
 #ifdef WIN32
-	uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
-	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
-	uint32_t block = ui->horizontalSliderBlock->value() - 1;
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
 		{
+			settings.beginGroup("board" + QString::number(drvno));
+			uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
+			uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
+			settings.endGroup();
+			uint32_t block = ui->horizontalSliderBlock->value() - 1;
 			DLLStart2dViewer(drvno, 0, block, pixelcount, nos);
 		}
 	}
