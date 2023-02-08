@@ -4,23 +4,22 @@
 #include <QDialog>
 
 namespace Ui {
-class DialogTDC;
+	class DialogTDC;
 }
 
 class DialogTDC : public QDialog
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit DialogTDC(QWidget *parent = nullptr);
-    ~DialogTDC();
-	
-//	Lsc lsc;
+	explicit DialogTDC(QWidget* parent = nullptr);
+	~DialogTDC();
+
 public slots:
-	void updateTDC(uint32_t tdc1, uint32_t tdc2 );
+	void updateTDC();
 
 private:
-    Ui::DialogTDC *ui;
+	Ui::DialogTDC* ui;
 };
 
 #endif // DIALOGTDC_H
