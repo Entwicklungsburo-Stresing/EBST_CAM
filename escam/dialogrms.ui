@@ -118,12 +118,27 @@
       <widget class="QComboBox" name="comboBoxDrvno">
        <item>
         <property name="text">
+         <string>board 0</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>board 1</string>
         </property>
        </item>
        <item>
         <property name="text">
          <string>board 2</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>board 3</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>board 4</string>
         </property>
        </item>
       </widget>

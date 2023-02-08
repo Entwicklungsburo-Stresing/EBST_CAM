@@ -136,7 +136,6 @@ DialogDac::DialogDac(QWidget* parent)
 			ui->dacSpinBoxesPcieBoard_0->setEnabled(true);
 		}
 	}
-
 	emit initializingDone();
 }
 
