@@ -343,6 +343,7 @@ void MainWindow::on_actionVerify_data_file_triggered()
  */
 void MainWindow::on_actionTDC_triggered()
 {
+	ds_tdc->initDialogTdc();
 	ds_tdc->show();
 	return;
 }
@@ -364,6 +365,7 @@ void MainWindow::on_actionRMS_triggered()
  */
 void MainWindow::on_actionDSC_triggered()
 {
+	ds_dsc->initDialogDsc();
 	ds_dsc->show();
 	return;
 }
