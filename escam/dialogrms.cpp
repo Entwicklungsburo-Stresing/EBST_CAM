@@ -3,12 +3,12 @@
 #include "lsc-gui.h"
 
 DialogRMS::DialogRMS(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::DialogRMS)
+	QDialog(parent),
+	ui(new Ui::DialogRMS)
 {
-    ui->setupUi(this);
+	ui->setupUi(this);
 
-	// connect all ui changed signals to updateRMS slot
+	// connect all UI changed signals to updateRMS slot
 	connect(ui->comboBoxDrvno, qOverload<int>(&QComboBox::currentIndexChanged), this, &DialogRMS::updateRMS);
 	connect(ui->spinBoxCampos, qOverload<int>(&QSpinBox::valueChanged), this, &DialogRMS::updateRMS);
 	connect(ui->spinBox_firstsample, qOverload<int>(&QSpinBox::valueChanged), this, &DialogRMS::updateRMS);
@@ -18,12 +18,12 @@ DialogRMS::DialogRMS(QWidget *parent) :
 
 DialogRMS::~DialogRMS()
 {
-    delete ui;
+	delete ui;
 }
 
 void DialogRMS::updateRMS()
 {
-	//get values from ui
+	//get values from UI
 	uint32_t firstSample = ui->spinBox_firstsample->value() - 1;
 	uint32_t lastSample = ui->spinBox_lastsample->value() - 1;
 	uint32_t pixel = ui->spinBox_pixel->value();
@@ -44,20 +44,8 @@ void DialogRMS::updateRMS()
 
 void DialogRMS::initDialogRMS()
 {
-	if (number_of_boards == 1)
-	{
-		ui->comboBoxDrvno->setDisabled(true);
-		ui->comboBoxDrvno->setCurrentIndex(0);
-	}
-	int camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
-	ui->spinBoxCampos->setMaximum(camcnt);
-	if (camcnt == 1)
-		ui->spinBoxCampos->setDisabled(true);
-	int pixel = settings.value(settingPixelPath, settingPixelDefault).toUInt();
-	ui->spinBox_pixel->setMaximum(pixel - 1);
-	int nos = settings.value(settingNosPath, settingNosDefault).toUInt();
-	ui->spinBox_lastsample->setMaximum(nos);
-	ui->spinBox_firstsample->setMaximum(nos - 1);
+	ui->comboBoxDrvno->setMaxCount(number_of_boards);
+	on_comboBoxDrvno_currentIndexChanged(ui->comboBoxDrvno->currentIndex());
 	return;
 }
 
@@ -72,5 +60,21 @@ void DialogRMS::on_spinBox_lastsample_valueChanged(int value)
 {
 	if (value <= ui->spinBox_firstsample->value())
 		ui->spinBox_firstsample->setValue(value - 1);
+	return;
+}
+
+void DialogRMS::on_comboBoxDrvno_currentIndexChanged(int index)
+{
+	settings.beginGroup("board" + QString::number(index));
+	int camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
+	ui->spinBoxCampos->setMaximum(camcnt);
+	if (camcnt == 1)
+		ui->spinBoxCampos->setDisabled(true);
+	int pixel = settings.value(settingPixelPath, settingPixelDefault).toUInt();
+	ui->spinBox_pixel->setMaximum(pixel - 1);
+	int nos = settings.value(settingNosPath, settingNosDefault).toUInt();
+	ui->spinBox_lastsample->setMaximum(nos);
+	ui->spinBox_firstsample->setMaximum(nos - 1);
+	settings.endGroup();
 	return;
 }

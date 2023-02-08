@@ -10,23 +10,24 @@ class DialogRMS;
 
 class DialogRMS : public QDialog
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit DialogRMS(QWidget *parent = nullptr);
-    ~DialogRMS();
+	explicit DialogRMS(QWidget *parent = nullptr);
+	~DialogRMS();
 	void initDialogRMS();
 
 public slots:
 	void updateRMS();
 
 private:
-    Ui::DialogRMS *ui;
+	Ui::DialogRMS *ui;
 	QSettings settings;
 
 private slots:
 	void on_spinBox_firstsample_valueChanged(int value);
 	void on_spinBox_lastsample_valueChanged(int value);
+	void on_comboBoxDrvno_currentIndexChanged(int index);
 };
 
 #endif // DIALOGRMS_H
