@@ -20,14 +20,6 @@ struct camera_settings
 	 */
 	uint32_t use_software_polling;
 	/**
-	 * Number of samples. 32 bit. Min: 2, max: max of uint32
-	 */
-	uint32_t nos;
-	/**
-	 * Number of blocks. 32 bit. Min: 1, max: max of uint32
-	 */
-	uint32_t nob;
-	/**
 	 * Scan trigger input mode. See enum sti_mode in enum.h for options.
 	 */
 	uint32_t sti_mode;
@@ -243,6 +235,14 @@ struct measurement_settings
 	 * - bit 5: board 5
 	 */
 	uint32_t board_sel;
+	/**
+	 * Number of samples. 32 bit. Min: 2, max: max of uint32
+	 */
+	uint32_t nos;
+	/**
+	 * Number of blocks. 32 bit. Min: 1, max: max of uint32
+	 */
+	uint32_t nob;
 	/**
 	 * Pause between two measurements when continuous mode is on.
 	 */

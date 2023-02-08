@@ -153,13 +153,13 @@ void MainWindow::startPressed()
 {
 	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
 	settings_struct.cont_pause_in_microseconds = settings.value(settingContiniousPauseInMicrosecondsPath, settingContiniousPausInMicrosecondsDefault).toUInt();
+	settings_struct.nos = settings.value(settingNosPath, settingNosDefault).toUInt();
+	settings_struct.nob = settings.value(settingNobPath, settingNobDefault).toUInt();
 	//camerasetup tab
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		settings.beginGroup("board" + QString::number(drvno));
 		//measurement tab
-		settings_struct.camera_settings[drvno].nos = settings.value(settingNosPath, settingNosDefault).toUInt();
-		settings_struct.camera_settings[drvno].nob = settings.value(settingNobPath, settingNobDefault).toUInt();
 		settings_struct.camera_settings[drvno].sti_mode = settings.value(settingStiPath, settingStiDefault).toUInt();
 		settings_struct.camera_settings[drvno].bti_mode = settings.value(settingBtiPath, settingBtiDefault).toUInt();
 		settings_struct.camera_settings[drvno].stime_in_microsec = settings.value(settingStime_in_microseconds_Path, settingStime_in_microseconds_Default).toUInt();
@@ -504,6 +504,7 @@ void MainWindow::loadSettings()
 		{
 			settings.beginGroup("board" + QString::number(drvno));
 			uint8_t tor = static_cast<uint8_t>(settings.value(settingTorPath, settingTorDefault).toUInt());
+			settings.endGroup();
 			lsc.setTorOut(drvno, tor);
 			int nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 			ui->horizontalSliderSample->setMaximum(nos);
@@ -511,7 +512,6 @@ void MainWindow::loadSettings()
 			int nob = settings.value(settingNobPath, settingNobDefault).toUInt();
 			ui->horizontalSliderBlock->setMaximum(nob);
 			ui->spinBoxBlock->setMaximum(nob);
-			settings.endGroup();
 		}
 	}
 	int theme = settings.value(settingThemePath,settingThemeDefault).toInt();
@@ -742,10 +742,10 @@ void MainWindow::on_measureDone()
 		{
 			settings.beginGroup("board" + QString::number(drvno));
 			uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
+			settings.endGroup();
 			uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 			uint32_t block = ui->horizontalSliderBlock->value() - 1;
 			DLLShowNewBitmap(drvno, block, 0, pixelcount, nos);
-			settings.endGroup();
 		}
 	}
 #endif
@@ -860,8 +860,8 @@ void MainWindow::on_actionShow_triggered()
 		{
 			settings.beginGroup("board" + QString::number(drvno));
 			uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
-			uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 			settings.endGroup();
+			uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 			uint32_t block = ui->horizontalSliderBlock->value() - 1;
 			DLLStart2dViewer(drvno, 0, block, pixelcount, nos);
 		}
@@ -885,10 +885,10 @@ void MainWindow::on_horizontalSliderBlock_valueChanged()
 		{
 			settings.beginGroup("board" + QString::number(drvno));
 			uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
+			settings.endGroup();
 			uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 			uint32_t block = ui->horizontalSliderBlock->value() - 1;
 			DLLShowNewBitmap(drvno, block, 0, pixelcount, nos);
-			settings.endGroup();
 		}
 	}
 #endif
