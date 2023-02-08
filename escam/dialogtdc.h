@@ -14,6 +14,7 @@ class DialogTDC : public QDialog
 public:
 	explicit DialogTDC(QWidget* parent = nullptr);
 	~DialogTDC();
+	void initDialogTdc();
 
 public slots:
 	void updateTDC();

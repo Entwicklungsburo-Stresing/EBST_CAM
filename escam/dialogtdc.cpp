@@ -36,3 +36,12 @@ void DialogTDC::updateTDC()
 	ui->viewTDC2->setText(stdc2);
 	return;
 }
+
+void DialogTDC::initDialogTdc()
+{
+	if (number_of_boards > 1)
+		ui->spinBoxBoard->setMaximum(number_of_boards - 1);
+	else
+		ui->spinBoxBoard->setVisible(false);
+	return;
+}
