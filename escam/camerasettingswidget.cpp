@@ -84,8 +84,6 @@ void CameraSettingsWidget::on_accepted()
 {
 	//Here the settings on the UI are saved to the system
 	//Measurement
-	settings.setValue(settingNosPath, ui->doubleSpinBoxNos->value());
-	settings.setValue(settingNobPath, ui->doubleSpinBoxNob->value());
 	settings.setValue(settingStiPath, ui->comboBoxSti->currentIndex());
 	settings.setValue(settingBtiPath, ui->comboBoxBti->currentIndex());
 	settings.setValue(settingStime_in_microseconds_Path, ui->doubleSpinBoxSTime_in_ms->value() * 1000);
@@ -364,8 +362,6 @@ void CameraSettingsWidget::on_checkBoxRegionsEqual_stateChanged(int arg1)
 void CameraSettingsWidget::loadDefaults()
 {
 	//measurement
-	ui->doubleSpinBoxNos->setValue(settingNosDefault);
-	ui->doubleSpinBoxNob->setValue(settingNobDefault);
 	ui->comboBoxSti->setCurrentIndex(settingStiDefault);
 	ui->comboBoxBti->setCurrentIndex(settingBtiDefault);
 	ui->doubleSpinBoxSTime_in_ms->setValue(settingStime_in_microseconds_Default / 1000);
@@ -492,7 +488,6 @@ void CameraSettingsWidget::on_comboBoxFftMode_currentIndexChanged(int index)
 		ui->spinBoxRegion6->setEnabled(enabled);
 		ui->spinBoxRegion7->setEnabled(enabled);
 		ui->spinBoxRegion8->setEnabled(enabled);
-		ui->doubleSpinBoxNos->setEnabled(true);
 		break;
 		//range of interest
 	case 1:
@@ -529,8 +524,6 @@ void CameraSettingsWidget::on_comboBoxFftMode_currentIndexChanged(int index)
 		ui->spinBoxRegion6->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
 		ui->spinBoxRegion7->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
 		ui->spinBoxRegion8->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
-		ui->doubleSpinBoxNos->setEnabled(enabled);
-		ui->doubleSpinBoxNos->setValue(ui->spinBoxNumberOfRegions->value());
 		break;
 		//area
 	case 2:
@@ -567,8 +560,6 @@ void CameraSettingsWidget::on_comboBoxFftMode_currentIndexChanged(int index)
 		ui->spinBoxRegion6->setEnabled(enabled);
 		ui->spinBoxRegion7->setEnabled(enabled);
 		ui->spinBoxRegion8->setEnabled(enabled);
-		ui->doubleSpinBoxNos->setEnabled(enabled);
-		ui->doubleSpinBoxNos->setValue(ui->spinBoxLines->value() / ui->spinBoxLinesBinning->value());
 		break;
 	}
 }
@@ -578,30 +569,6 @@ void CameraSettingsWidget::on_pushButtonFilePath_clicked()
 	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), nullptr, QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 	if (!dir.isEmpty()) ui->plainTextEditFilePath->setPlainText(dir);
 	return;
-}
-
-void CameraSettingsWidget::on_spinBoxLines_valueChanged(int value)
-{
-	if (ui->comboBoxFftMode->currentIndex() == area_mode)
-	{
-		ui->doubleSpinBoxNos->setValue(value / ui->spinBoxLinesBinning->value());
-	}
-}
-
-void CameraSettingsWidget::on_spinBoxLinesBinning_valueChanged(int value)
-{
-	if (ui->comboBoxFftMode->currentIndex() == area_mode)
-	{
-		ui->doubleSpinBoxNos->setValue(ui->spinBoxLines->value() / value);
-	}
-}
-
-void CameraSettingsWidget::on_spinBoxNumberOfRegions_valueChanged(int value)
-{
-	if (ui->comboBoxFftMode->currentIndex() == partial_binning)
-	{
-		ui->doubleSpinBoxNos->setValue(value);
-	}
 }
 
 void CameraSettingsWidget::on_checkBoxWriteDataToDisc_stateChanged(int arg1)
@@ -720,8 +687,6 @@ void CameraSettingsWidget::initializeWidget()
 	// Here the saved settings on the system are applied to the UI.
 	// For some settings there are two calls, to trigger the according slot for graying out options. I don't know why this is necessary, but without it the slots are not triggered.
 	//Measurement
-	ui->doubleSpinBoxNos->setValue(settings.value(settingNosPath, settingNosDefault).toDouble());
-	ui->doubleSpinBoxNob->setValue(settings.value(settingNobPath, settingNobDefault).toDouble());
 	ui->comboBoxSti->setCurrentIndex(settings.value(settingStiPath, settingStiDefault).toInt());
 	ui->comboBoxBti->setCurrentIndex(settings.value(settingBtiPath, settingBtiDefault).toInt());
 	ui->doubleSpinBoxSTime_in_ms->setValue(settings.value(settingStime_in_microseconds_Path, settingStime_in_microseconds_Default).toDouble() / 1000);

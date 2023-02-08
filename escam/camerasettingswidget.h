@@ -38,9 +38,6 @@ private slots:
 	void on_spinBoxPixel_valueChanged(int arg1);
 	void on_comboBoxFftMode_currentIndexChanged(int index);
 	void on_pushButtonFilePath_clicked();
-	void on_spinBoxLines_valueChanged(int value);
-	void on_spinBoxLinesBinning_valueChanged(int value);
-	void on_spinBoxNumberOfRegions_valueChanged(int value);
 	void on_checkBoxWriteDataToDisc_stateChanged(int arg1);
 	void on_checkBoxIsCooledCam_stateChanged(int arg1);
 };
