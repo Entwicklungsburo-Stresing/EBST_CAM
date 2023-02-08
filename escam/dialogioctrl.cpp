@@ -26,7 +26,10 @@ DialogIoctrl::DialogIoctrl(QWidget *parent)
 	if (number_of_boards > 1)
 		ui->spinBoxBoard->setMaximum(number_of_boards - 1);
 	else
+	{
 		ui->spinBoxBoard->setVisible(false);
+		ui->labelBoard->setVisible(false);
+	}
 	// apply saved values to UI
 	on_spinBoxBoard_valueChanged();
 }
