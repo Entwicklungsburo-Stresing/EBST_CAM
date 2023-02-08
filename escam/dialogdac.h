@@ -15,17 +15,11 @@ class DialogDac : public QDialog
 public:
 	DialogDac(QWidget *parent = Q_NULLPTR);
 	~DialogDac();
-
-private slots:
-	void spinBoxCameraChannelX_valueChanged();
-	void spinBoxPcieBoardChannelX_valueChanged();
-	void on_buttonBox_accepted();
-	void on_buttonBox_rejected();
-	void on_pushButtonDefault_pressed();
+signals:
+	void initializingDone();
 private:
 	Ui::DialogDac *ui;
 	QSettings settings;
-	uint32_t output_old[4][8];
 };
 
 #endif // DIALOGDAC_H

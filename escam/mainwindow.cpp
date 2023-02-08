@@ -459,7 +459,6 @@ void MainWindow::on_actionReset_axes_triggered()
 				axis1->setMax(0xFFFF);
 			axis1->setMin(0);
 			settings.endGroup();
-
 		}
 	}
 	return;
