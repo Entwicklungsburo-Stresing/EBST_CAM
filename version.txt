@@ -1,5 +1,16 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.1.1
+- Transform board select and drvno:
+	- drvno is now counting 0, 1, 2, 3, 4
+	- board select is used bitwise, bit 0 selects board 0, bit 1 selects board 1 ...
+	- 5 boards can now be select independently
+- Split settings struct in measurement settings and camera settings
+	- measurement settings are settings that are the same for all boards
+	- camera settings are settings that are specific for every board
+	- the camera settings struct is included 5 (MAXPCIEBOARDS) times in the measurement settings struct
+- Escam got a new settings dialog according to the changes above. Also the other dialogs changed.
+
 4.1.0
 - Update PCIe board from 202.26 to 222.1 (new PCB: 2167-7)
 - Remove setting parameter useDac
