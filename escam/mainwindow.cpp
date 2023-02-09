@@ -808,24 +808,31 @@ void MainWindow::on_rubberBandChanged()
 	ui->chartView->curr_ymin = axis1->min();
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
 	qreal ymax = 0;
+	uint max_pixel = 0;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
 		{
 			settings.beginGroup("board" + QString::number(drvno));
-			// apply boundaries on axes
-			if (axis0->max() > settings.value(settingPixelPath, settingPixelDefault).toUInt())
-			{
-				ui->chartView->curr_xmax = settings.value(settingPixelPath, settingPixelDefault).toUInt();
-				axis0->setMax(ui->chartView->curr_xmax);
-			}
+			uint cur_pixel = settings.value(settingPixelPath, settingPixelDefault).toUInt();
+			if (max_pixel < cur_pixel)
+				max_pixel = cur_pixel;
+			qreal cur_ymax;
 			if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toUInt() == 2)
-				ymax = 0x3FFF;
+				cur_ymax = 0x3FFF;
 			else
-				ymax = 0xFFFF;
+				cur_ymax = 0xFFFF;
+			if (ymax < cur_ymax)
+				ymax = cur_ymax;
 			settings.endGroup();
 		}
+	}
+	// apply boundaries on axes
+	if (axis0->max() > max_pixel)
+	{
+		ui->chartView->curr_xmax = max_pixel;
+		axis0->setMax(ui->chartView->curr_xmax);
 	}
 	if (axis0->min() < 0)
 	{
