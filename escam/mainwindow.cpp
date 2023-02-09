@@ -273,7 +273,8 @@ void MainWindow::startPressed()
 		d->setWindowModality(Qt::ApplicationModal);
 		d->showMessage(tr(ConvertErrorCodeToMsg(status)));
 	}
-	measurementThread.start();
+	else
+		measurementThread.start();
 	return;
 }
 /**
