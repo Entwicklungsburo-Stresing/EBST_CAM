@@ -113,20 +113,22 @@ void MainWindow::setChartData(QLineSeries** series, uint16_t numberOfSets)
  * @param length Length of data.
  * @param numberOfSets Number of data sets which are stored in data pointer.
  */
-void MainWindow::setChartData(uint16_t* data, uint16_t length, uint16_t numberOfSets)
+void MainWindow::setChartData(uint16_t* data, uint32_t* length, uint16_t numberOfSets)
 {
 	// Allocate memory for the pointer array to the QlineSeries.
 	QLineSeries** series = static_cast<QLineSeries**>(calloc(numberOfSets, sizeof(QLineSeries*)));
 	// Iterate through all data sets.
+	uint16_t* cur_data_ptr = data;
 	for(uint16_t set=0; set<numberOfSets; set++)
 	{
 		// Set the current data set to a new empty QLineSeries.
 		series[set] = new QLineSeries(this);
 		// Iterate through all data points for the current data set.
-		for(uint16_t i=0; i<length; i++)
+		for(uint16_t i=0; i<length[set]; i++)
 		{
 			// Append the current data point to the current data set.
-			series[set]->append(i, *(data + i + (static_cast<uint64_t>(length) * static_cast<uint64_t>(set))));
+			series[set]->append(i, *(cur_data_ptr));
+			cur_data_ptr++;
 		}
 	}
 	setChartData(series, numberOfSets);
@@ -650,12 +652,15 @@ void MainWindow::on_actionDump_board_registers_triggered()
 void MainWindow::loadCameraData()
 {
 	uint32_t pixel = 0;
+	// Save pixel values in an array for the case when there are different pixel numbers on different PCIe boards.
+	uint32_t pixel_array[MAXPCIECARDS];
 	// camcnt is the count of all cameras
 	uint32_t camcnt = 0;
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
 	// showCamcnt is the count of all cameras to be shown on the chart
 	// = sum of all true settingShowCameraBaseDir settings
 	uint32_t showCamcnt = 0;
+	size_t data_array_size = 0;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
@@ -666,15 +671,18 @@ void MainWindow::loadCameraData()
 			pixel = settings.value(settingPixelPath, settingPixelDefault).toUInt();
 			for (uint16_t cam = 0; cam < camcnt; cam++)
 			{
-				uint32_t currCam = cam + (drvno * camcnt);
-				bool showCurrentCam = settings.value(settingShowCameraBaseDir + QString::number(currCam), settingShowCameraDefault).toBool();
+				bool showCurrentCam = settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toBool();
 				if (showCurrentCam)
+				{
 					showCamcnt++;
+					data_array_size += pixel;
+				}
 			}
 			settings.endGroup();
 		}
 	}
-	uint16_t* data = static_cast<uint16_t*>(malloc(pixel * showCamcnt * sizeof(uint16_t)));
+	uint16_t* data = static_cast<uint16_t*>(malloc(data_array_size * sizeof(uint16_t)));
+	uint16_t* cur_data_ptr = data;
 	uint32_t block = static_cast<uint32_t>(ui->horizontalSliderBlock->value() - 1);
 	uint32_t sample = static_cast<uint32_t>(ui->horizontalSliderSample->value() - 1);
 	// showedCam counts the number of cameras which are shown on the chart
@@ -692,14 +700,16 @@ void MainWindow::loadCameraData()
 				bool showCurrentCam = settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toBool();
 				if (showCurrentCam)
 				{
-					lsc.returnFrame(drvno, sample, block, cam, data + showedCam * pixel, pixel);
+					lsc.returnFrame(drvno, sample, block, cam, cur_data_ptr, pixel);
+					pixel_array[showedCam] = pixel;
+					cur_data_ptr += pixel;
 					showedCam++;
 				}
 			}
 			settings.endGroup();
 		}
 	}
-	setChartData(data, static_cast<uint16_t>(pixel), static_cast<uint16_t>(showCamcnt));
+	setChartData(data, pixel_array, static_cast<uint16_t>(showCamcnt));
 	ds_tdc->updateTDC();
 	free(data);
 	return;
