@@ -272,29 +272,6 @@ DllAccess es_status_codes DLLCloseShutter( UINT32 drvno )
 	return CloseShutter( drvno );
 }
 
-/**
- * \copydoc DoSoftwareTrigger
- */
-DllAccess es_status_codes DLLSWTrig( UINT32 drvno )
-{
-	return DoSoftwareTrigger( drvno );
-}
-
-/**
-\copydoc checkFifoFlags
-*/
-DllAccess es_status_codes DLLFFValid(UINT32 drvno, UINT8* valid)
-{
-	return checkFifoFlags( drvno, valid );
-}
-
-/**
- * \copydoc SetupVCLKReg
- */
-DllAccess es_status_codes DLLSetupVCLK( UINT32 drvno, UINT32 lines, UINT8 vfreq )
-{
-	return SetupVCLKReg( drvno, lines, vfreq );
-}
 
 /**
  * \copydoc readBlockTriggerState
@@ -444,22 +421,6 @@ DllAccess es_status_codes DLLSetTemp( UINT32 drvno, UINT8 level )
 }
 
 /**
- * \copydoc SetSEC
- */
-DllAccess es_status_codes DLLSetSEC( UINT32 drvno, UINT32 ecin10ns )
-{
-	return SetSEC( drvno, ecin10ns );
-}
-
-/**
- * \copydoc SetBEC
- */
-DllAccess es_status_codes DLLSetBEC( UINT32 drvno, UINT32 ecin10ns )
-{
-	return SetBEC( drvno, ecin10ns );
-}
-
-/**
  * \copydoc SetTORReg
  */
 DllAccess es_status_codes DLLSetTORReg( UINT32 drvno, UINT8 tor)
@@ -468,46 +429,11 @@ DllAccess es_status_codes DLLSetTORReg( UINT32 drvno, UINT8 tor)
 }
 
 /**
- * \copydoc SetSensorType
- */
-DllAccess es_status_codes DLLSetSensorType( UINT32 drvno, UINT8 sensor_type )
-{
-	return SetSensorType( drvno, sensor_type );
-}
-
-/**
- * \copydoc SetupVPB
- */
-DllAccess es_status_codes DLLSetupVPB( UINT32 drvno, UINT32 range, UINT32 lines, UINT8 keep )
-{
-	if (keep != 0)
-		return SetupVPB( drvno, range, lines, TRUE );
-	else
-		return SetupVPB( drvno, range, lines, FALSE );
-}
-
-/**
  * \copydoc AboutS0
  */
 DllAccess es_status_codes DLLAboutS0( UINT32 drvno )
 {
 	return AboutS0( drvno );
-}
-
-/**
- * \copydoc SendFLCAM
- */
-DllAccess es_status_codes DLLSendFLCAM( UINT32 drvno, UINT8 maddr, UINT8 adaddr, UINT16 data )
-{
-	return SendFLCAM( drvno, maddr, adaddr, data );
-}
-
-/**
- * \copydoc DAC8568_sendData
- */
-DllAccess es_status_codes DLLDAC8568_sendData( UINT32 drvno, UINT8 location, UINT8 ctrl, UINT8 addr, UINT16 data, UINT8 feature )
-{
-	return DAC8568_sendData( drvno, location, ctrl, addr, data, feature );
 }
 
 /**
@@ -553,14 +479,6 @@ DllAccess es_status_codes DLLCalcTrms( UINT32 drvno, UINT32 firstSample, UINT32 
 }
 
 /**
- * \copydoc InitGPX
- */
-DllAccess es_status_codes DLLInitGPX( UINT32 drvno, UINT32 delay )
-{
-	return InitGPX( drvno, delay );
-}
-
-/**
  * \copydoc AboutGPX
  */
 DllAccess es_status_codes DLLAboutGPX( UINT32 drvno )
@@ -569,52 +487,11 @@ DllAccess es_status_codes DLLAboutGPX( UINT32 drvno )
 }
 
 /**
- * \copydoc InitCameraGeneral
- */
-DllAccess es_status_codes DLLInitCameraGeneral( UINT32 drvno, UINT16 pixel, UINT16 cc_trigger_input, UINT8 is_fft, UINT8 is_area, UINT8 IS_COOLED, UINT16 led_off, UINT16 sensor_gain, UINT16 use_EC)
-{
-	return InitCameraGeneral( drvno, pixel, cc_trigger_input, is_fft, is_area, IS_COOLED, led_off, sensor_gain, use_EC);
-}
-
-/**
- * \copydoc InitCamera3001
- */
-DllAccess es_status_codes DLLInitCamera3001( UINT32 drvno )
-{
-	return InitCamera3001( drvno );
-}
-
-/**
- * \copydoc InitCamera3010
- */
-DllAccess es_status_codes DLLInitCamera3010( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern )
-{
-	return InitCamera3010( drvno, adc_mode, custom_pattern );
-}
-
-/**
  * \copydoc InitCamera3030
  */
 DllAccess es_status_codes DLLInitCamera3030( UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 adc_gain, UINT32* dac_output, UINT8 is_hs_ir )
 {
 	return InitCamera3030( drvno, adc_mode, custom_pattern, adc_gain, dac_output, (bool)is_hs_ir);
-}
-
-/**
-\copydoc InitProDLL
-*/
-DllAccess void DLLInitProDLL()
-{
-	InitProDLL();
-	return;
-}
-
-/**
- * \copydoc SetupFullBinning
- */
-DllAccess es_status_codes DLLSetupFullBinning( UINT32 drvno, UINT32 lines, UINT8 vfreq )
-{
-	return SetupFullBinning( drvno, lines, vfreq );
 }
 
 /**
@@ -650,22 +527,6 @@ DllAccess es_status_codes DLLwaitForBlockReady( UINT32 drvno )
 }
 
 /**
- * \copydoc SetBTI
- */
-DllAccess es_status_codes DLLSetBTI( UINT32 drvno, UINT8 bti_mode )
-{
-	return SetBTI(drvno, bti_mode);
-}
-
-/**
- * \copydoc SetSTI
- */
-DllAccess es_status_codes DLLSetSTI( UINT32 drvno, UINT8 sti_mode )
-{
-	return SetSTI( drvno, sti_mode );
-}
-
-/**
 \copydoc ClearAllUserRegs
 */
 DllAccess es_status_codes DLLClearAllUserRegs( UINT32 drvno)
@@ -687,14 +548,6 @@ DllAccess es_status_codes DLLSetSTimer( UINT32 drvno, UINT32 stime_in_microsecon
 DllAccess es_status_codes DLLSetBTimer( UINT32 drvno, UINT32 btime_in_microseconds )
 {
 	return SetBTimer( drvno, btime_in_microseconds );
-}
-
-/**
- * \copydoc SetBSlope
- */
-DllAccess es_status_codes DLLSetBSlope( UINT32 drvno, UINT32 slope )
-{
-	return SetBSlope( drvno, slope );
 }
 
 /**
@@ -743,13 +596,6 @@ DllAccess char* DLLConvertErrorCodeToMsg( es_status_codes status )
 	return ConvertErrorCodeToMsg( status );
 }
 
-/**
- * \copydoc SetupDma
- */
-DllAccess es_status_codes DLLSetupPCIE_DMA(UINT32 drvno)
-{
-	return SetupDma(drvno);
-}
 
 /**
  * \copydoc SetDmaRegister
@@ -759,21 +605,6 @@ DllAccess es_status_codes DLLSetTLPS(UINT32 drvno, UINT32 pixel)
 	return SetDmaRegister(drvno, pixel);
 }
 
-/**
- * \copydoc SetSDAT
- */
-DllAccess es_status_codes DLLSetSDAT(UINT32 drvno, UINT32 datin10ns)
-{
-	return SetSDAT(drvno, datin10ns);
-}
-
-/**
- * \copydoc SetBDAT
- */
-DllAccess es_status_codes DLLSetBDAT(UINT32 drvno, UINT32 datin10ns)
-{
-	return SetBDAT(drvno, datin10ns);
-}
 
 /**
  * \brief Sets global variable useSWTrig.
