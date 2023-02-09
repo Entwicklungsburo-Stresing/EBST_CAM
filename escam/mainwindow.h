@@ -31,7 +31,7 @@ public slots:
 private:
 	QSettings settings;
 	void setChartData(QLineSeries** series, uint16_t numberOfSets);
-	void setChartData(uint16_t* data, uint16_t length, uint16_t numberOfSets);
+	void setChartData(uint16_t* data, uint32_t* length, uint16_t numberOfSets);
 	void showNoDriverFoundDialog();
 	void showPcieBoardError();
 	DialogTDC* ds_tdc = new DialogTDC( this );
