@@ -41,7 +41,7 @@ BOOL WINAPI DLLMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
 DllAccess es_status_codes DLLInitBoard();
 DllAccess es_status_codes DLLInitDriver(UINT8* _number_of_boards);
 DllAccess es_status_codes DLLExitDriver();
-DllAccess es_status_codes DLLSetGlobalSettings(struct global_settings settings);
+DllAccess es_status_codes DLLSetGlobalSettings(struct measurement_settings settings);
 DllAccess es_status_codes DLLAbortMeasurement();
 DllAccess es_status_codes DLLReturnFrame(UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length);
 DllAccess es_status_codes DLLCopyAllData(UINT32 drv, UINT16 *pdioden);
