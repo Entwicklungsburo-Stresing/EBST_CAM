@@ -79,7 +79,6 @@ DllAccess es_status_codes DLLisBlockOn(UINT32 drvno, UINT8* blockOn);
 DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block);
 //************  Control CAM
 DllAccess void setSWTrig(UINT8 on);
-DllAccess void DLLSetContFFLoop(UINT8 activate, UINT32 pause_in_microseconds);
 DllAccess es_status_codes DLLOutTrigHigh(UINT32 drvno);	//set output Trigger signal high
 DllAccess es_status_codes DLLOutTrigLow(UINT32 drvno);	//set output Trigger signal low
 DllAccess es_status_codes DLLOutTrigPulse(UINT32 drvno, UINT32 PulseWidth);	// pulses high output Trigger signal
