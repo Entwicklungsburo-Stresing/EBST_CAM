@@ -4594,6 +4594,7 @@ void FillUserBufferWithDummyData(uint32_t drvno)
  */
 es_status_codes GetIsTdc(uint32_t drvno, bool* isTdc)
 {
+	ES_LOG("Get is TDC, drvno %u\n", drvno);
 	uint32_t data = 0;
 	es_status_codes status = readRegisterS0_32(drvno, &data, S0Addr_PCIEFLAGS);
 	if (status != es_no_error) return status;
@@ -4616,6 +4617,7 @@ es_status_codes GetIsTdc(uint32_t drvno, bool* isTdc)
  */
 es_status_codes GetIsDsc(uint32_t drvno, bool* isDsc)
 {
+	ES_LOG("Get is DSC, drvno %u\n", drvno);
 	uint32_t data = 0;
 	es_status_codes status = readRegisterS0_32(drvno, &data, S0Addr_PCIEFLAGS);
 	if (status != es_no_error) return status;
