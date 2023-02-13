@@ -103,8 +103,8 @@ DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t drvno, uint16_t* widt
 DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns);
 DllAccess es_status_codes DLLSetTicnt(uint32_t drvno, uint8_t divider);
 DllAccess es_status_codes DLLSetTocnt(uint32_t drvno, uint8_t divider);
-DllAccess es_status_codes DLLGetIsTdc(UINT32 drvno, UINT8* isTdc);
-DllAccess es_status_codes DLLGetIsDsc(UINT32 drvno, UINT8* isDsc);
+DllAccess es_status_codes DLLGetIsTdc(uint32_t board_sel, uint8_t* isTdc0, uint8_t* isTdc1, uint8_t* isTdc2, uint8_t* isTdc3, uint8_t* isTdc4);
+DllAccess es_status_codes DLLGetIsDsc(uint32_t board_sel, uint8_t* isDsc0, uint8_t* isDsc1, uint8_t* isDsc2, uint8_t* isDsc3, uint8_t* isDsc4);
 DllAccess es_status_codes DLLResetDSC(uint32_t drvno, uint8_t DSCNumber);
 DllAccess es_status_codes DLLSetDIRDSC(uint32_t drvno, uint8_t DSCNumber, uint8_t dir);
 DllAccess es_status_codes DLLGetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC);

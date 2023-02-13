@@ -683,17 +683,39 @@ DllAccess es_status_codes DLLSetTocnt(uint32_t drvno, uint8_t divider)
 /**
  * \copydoc GetIsTdc
  */
-DllAccess es_status_codes DLLGetIsTdc(UINT32 drvno, UINT8* isTdc)
+DllAccess es_status_codes DLLGetIsTdc(uint32_t board_sel, uint8_t* isTdc0, uint8_t* isTdc1, uint8_t* isTdc2, uint8_t* isTdc3, uint8_t* isTdc4)
 {
-	return GetIsTdc(drvno, isTdc);
+	uint8_t* isTdc[MAXPCIECARDS] = { isTdc0, isTdc1, isTdc2, isTdc3, isTdc4 };
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = GetIsTdc(drvno, isTdc[drvno]);
+			if (status != es_no_error) return status;
+		}
+	}
+	return status;
 }
 
 /**
  * \copydoc GetIsDsc
  */
-DllAccess es_status_codes DLLGetIsDsc(UINT32 drvno, UINT8* isDsc)
+DllAccess es_status_codes DLLGetIsDsc(uint32_t board_sel, uint8_t* isDsc0, uint8_t* isDsc1, uint8_t* isDsc2, uint8_t* isDsc3, uint8_t* isDsc4)
 {
-	return GetIsDsc(drvno, isDsc);
+	uint8_t* isDsc[MAXPCIECARDS] = { isDsc0, isDsc1, isDsc2, isDsc3, isDsc4 };
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = GetIsDsc(drvno, isDsc[drvno]);
+			if (status != es_no_error) return status;
+		}
+	}
+	return status;
 }
 
 /**
