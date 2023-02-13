@@ -244,6 +244,12 @@ struct measurement_settings
 	 */
 	uint32_t nob;
 	/**
+	 * Continuous mode switch.
+	 *	- >0 on
+	 *	- =0 off
+	 */
+	uint32_t contiuous_measurement;
+	/**
 	 * Pause between two measurements when continuous mode is on.
 	 */
 	uint32_t cont_pause_in_microseconds;

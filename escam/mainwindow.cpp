@@ -154,7 +154,7 @@ void MainWindow::on_pushButtonStart_pressed()
 void MainWindow::startPressed()
 {
 	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
-	settings_struct.cont_pause_in_microseconds = settings.value(settingContiniousPauseInMicrosecondsPath, settingContiniousPausInMicrosecondsDefault).toUInt();
+	settings_struct.cont_pause_in_microseconds = settings.value(settingContinuousPauseInMicrosecondsPath, settingContinuousPausInMicrosecondsDefault).toUInt();
 	settings_struct.nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 	settings_struct.nob = settings.value(settingNobPath, settingNobDefault).toUInt();
 	//camerasetup tab

@@ -40,7 +40,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	// load settings and apply them to UI
 	ui->doubleSpinBoxNos->setValue(settings.value(settingNosPath, settingNosDefault).toDouble());
 	ui->doubleSpinBoxNob->setValue(settings.value(settingNobPath, settingNobDefault).toDouble());
-	ui->doubleSpinBoxContiniousPause_in_ms->setValue(settings.value(settingContiniousPauseInMicrosecondsPath, settingContiniousPausInMicrosecondsDefault).toDouble() / 1000);
+	ui->doubleSpinBoxContiniousPause_in_ms->setValue(settings.value(settingContinuousPauseInMicrosecondsPath, settingContinuousPausInMicrosecondsDefault).toDouble() / 1000);
 	ui->comboBoxTheme->setCurrentIndex(settings.value(settingThemePath, settingThemeDefault).toInt());
 	ui->comboBoxSettingsLevel->setCurrentIndex(settings.value(settingSettingsLevelPath, settingSettingsLevelDefault).toInt());
 	ui->comboBoxSettingsLevel->currentIndexChanged(ui->comboBoxSettingsLevel->currentIndex());
@@ -110,7 +110,7 @@ void DialogSettings::on_accepted()
 {
 	//Here the settings on the UI are saved to the system
 	//Measurement
-	settings.setValue(settingContiniousPauseInMicrosecondsPath, ui->doubleSpinBoxContiniousPause_in_ms->value() * 1000);
+	settings.setValue(settingContinuousPauseInMicrosecondsPath, ui->doubleSpinBoxContiniousPause_in_ms->value() * 1000);
 	//Camera setup
 	settings.setValue(settingBoard0Path, ui->checkBoxBoard0->isChecked());
 	settings.setValue(settingBoard1Path, ui->checkBoxBoard1->isChecked());
@@ -280,7 +280,7 @@ void DialogSettings::on_checkBoxBoard4_stateChanged(int state)
 
 void DialogSettings::loadDefaults()
 {
-	ui->doubleSpinBoxContiniousPause_in_ms->setValue(settingContiniousPausInMicrosecondsDefault / 1000);
+	ui->doubleSpinBoxContiniousPause_in_ms->setValue(settingContinuousPausInMicrosecondsDefault / 1000);
 	ui->doubleSpinBoxNos->setValue(settingNosDefault);
 	ui->doubleSpinBoxNob->setValue(settingNobDefault);
 	//camera setup
