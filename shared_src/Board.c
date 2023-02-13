@@ -2569,6 +2569,8 @@ es_status_codes StartMeasurement()
 	setTimestamp();
 	measurement_cnt = 0;
 	data_available = 0;
+	continiousMeasurementFlag = (bool)settings_struct.contiuous_measurement;//0 or 1
+	continiousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
