@@ -705,6 +705,46 @@ es_status_codes readRegisterS0_32( uint32_t drvno, uint32_t* data, uint16_t addr
 }
 
 /**
+ * \brief Read 4 bytes of a register in S0 space of all boards.
+ *
+ * @param board_sel select PCIe boards bitwise: bit 0 - board 0...
+ * \param data Read buffer.
+ * \param address Address of the register to read.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes readRegisterS0_32_allBoards(uint32_t board_sel, uint32_t** data, uint16_t address)
+{
+	return readRegister_32_allBoards(board_sel, data, address + S0_SPACE_OFFSET);
+}
+
+/**
+ * @brief Reads 4 bytes on DMA area of all PCIe boards.
+ *
+ * @param board_sel select PCIe boards bitwise: bit 0 - board 0...
+ * @param data buffer array for data
+ * @param address Offset from BaseAdress - in Bytes ! 0..3= Regs of Board.
+ * @return es_status_codes
+	- es_no_error
+	- es_register_read_failed
+ */
+es_status_codes readRegister_32_allBoards(uint32_t board_sel, uint32_t** data, uint16_t address)
+{
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = readRegister_32(drvno, data + drvno, address);
+			if (status != es_no_error) return status;
+		}
+	}
+	return status;
+};
+
+/**
  * \brief Read 2 bytes of a register in S0 space.
  *
  * \param drvno PCIe board identifier.
