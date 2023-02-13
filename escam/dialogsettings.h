@@ -21,7 +21,7 @@ constexpr auto settingXckdelayIn10nsPath = "xckdelay_in_10ns";
 constexpr auto settingShutterSecIn10nsPath = "shutterSecIn10ns";
 constexpr auto settingShutterBecIn10nsPath = "shutterBecIn10ns";
 constexpr auto settingTriggerCcPath = "triggerCc";
-constexpr auto settingContiniousPauseInMicrosecondsPath = "contPauseInMicroseconds";
+constexpr auto settingContinuousPauseInMicrosecondsPath = "contPauseInMicroseconds";
 //camera setup
 constexpr auto settingBoardSelPath = "boardSel";
 constexpr auto settingBoard0Path = "board0";
