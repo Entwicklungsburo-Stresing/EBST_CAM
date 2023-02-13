@@ -96,7 +96,7 @@ DllAccess void DLLInitGlobals( struct global_vars g )
 \param pixel count of pixel of one line
 \param nos samples in one block
 */
-DllAccess void DLLStart2dViewer( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos )
+DllAccess void DLLStart2dViewer_drvno( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos )
 {
 	if (Direct2dViewer != NULL)
 	{
@@ -115,6 +115,41 @@ DllAccess void DLLStart2dViewer( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT1
 }
 
 /**
+\brief Start 2d viewer.
+\param drvno board number
+\param cur_nob current number of block
+\param cam which camera to display (when camcnt is >1)
+\param pixel count of pixel of one line
+\param nos samples in one block
+*/
+DllAccess void DLLStart2dViewer(UINT32 board_sel, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos)
+{
+	if (Direct2dViewer != NULL)
+	{
+		DLLDeinit2dViewer();
+	}
+	Direct2dViewer = Direct2dViewer_new();
+	UINT16* address = NULL;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			GetAddressOfPixel(drvno, 0, 0, cur_nob, cam, &address);
+			// only use address of first found board
+			break;
+		}
+	}
+	Direct2dViewer_start2dViewer(
+		Direct2dViewer,
+		GetActiveWindow(),
+		address,
+		pixel,
+		nos);
+	return;
+}
+
+/**
 \brief Update the displayed bitmap.
 \param drvno board number
 \param cur_nob current number of blocks
@@ -122,7 +157,7 @@ DllAccess void DLLStart2dViewer( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT1
 \param pixel count of pixel of one line
 \param nos samples in one block
 */
-DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos )
+DllAccess void DLLShowNewBitmap_drvno( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos )
 {
 	if (Direct2dViewer != NULL)
 	{
@@ -133,6 +168,38 @@ DllAccess void DLLShowNewBitmap( UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT1
 			address,
 			pixel,
 			nos );
+	}
+	return;
+}
+
+/**
+\brief Update the displayed bitmap.
+\param drvno board number
+\param cur_nob current number of blocks
+\param cam which camera to display (when camcnt is >1)
+\param pixel count of pixel of one line
+\param nos samples in one block
+*/
+DllAccess void DLLShowNewBitmap(UINT32 board_sel, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos)
+{
+	if (Direct2dViewer != NULL)
+	{
+		UINT16* address = NULL;
+		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		{
+			// Check if the drvno'th bit is set
+			if ((board_sel >> drvno) & 1)
+			{
+				GetAddressOfPixel(drvno, 0, 0, cur_nob, cam, &address);
+				// only use address of first found board
+				break;
+			}
+		}
+		Direct2dViewer_showNewBitmap(
+			Direct2dViewer,
+			address,
+			pixel,
+			nos);
 	}
 	return;
 }

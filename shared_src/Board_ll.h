@@ -63,14 +63,14 @@ void writeFileHeaderToFile(uint32_t drvno, char* filename_full);
 void writeToDisc(uint32_t* drvno_ptr);
 
 #ifdef WIN32
-es_status_codes About(uint32_t drvno);
+es_status_codes About(uint32_t board_sel);
 es_status_codes AboutDrv(uint32_t drvno);
 es_status_codes AboutGPX(uint32_t drvno);
 es_status_codes AboutS0(uint32_t drvno);
 es_status_codes AboutTLPs(uint32_t drvno);
 es_status_codes AboutPCI(uint32_t drvno);
 es_status_codes AboutMeasurementSettings();
-es_status_codes AboutCameraSettings();
+es_status_codes AboutCameraSettings(uint32_t drvno);
 void ErrMsgBoxOn();
 void ErrMsgBoxOff(); // switch to suppress error message boxes
 void ErrorMsg(char ErrMsg[100]);
