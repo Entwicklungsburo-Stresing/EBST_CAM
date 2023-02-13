@@ -43,8 +43,8 @@ DllAccess es_status_codes DLLInitDriver(UINT8* _number_of_boards);
 DllAccess es_status_codes DLLExitDriver();
 DllAccess es_status_codes DLLSetGlobalSettings(struct measurement_settings settings);
 DllAccess es_status_codes DLLAbortMeasurement();
-DllAccess es_status_codes DLLReturnFrame(UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length);
-DllAccess es_status_codes DLLCopyAllData(UINT32 drv, UINT16 *pdioden);
+DllAccess es_status_codes DLLReturnFrame(uint32_t board_sel, uint32_t curr_nos, uint32_t curr_nob, uint16_t curr_cam, uint16_t* pdest0, uint16_t* pdest1, uint32_t length);
+DllAccess es_status_codes DLLCopyAllData(UINT32 drv, UINT16* pdioden);
 DllAccess es_status_codes DLLCopyOneBlock(UINT32 drv, UINT16 block, UINT16 *pdest);
 DllAccess es_status_codes DLLInitMeasurement();
 DllAccess es_status_codes DLLStartMeasurement_blocking();
@@ -68,15 +68,14 @@ DllAccess void DLLRegisterLVEvents(LVUserEventRef *measureStartEvent, LVUserEven
 #endif
 DllAccess char* DLLConvertErrorCodeToMsg( es_status_codes status );
 //************ Cam infos
-DllAccess es_status_codes DLLAbout(UINT32 drvno);
-DllAccess es_status_codes DLLAboutS0( UINT32 drvno );
+DllAccess es_status_codes DLLAbout(uint32_t board_sel);
 DllAccess es_status_codes DLLreadBlockTriggerState(UINT32 drv, UCHAR btrig_ch, UINT8* state); //read trigger input ->ch=1:pci in, ch=2:opto1, ch=3:opto2
 DllAccess es_status_codes DLLAboutGPX(UINT32 drvno);
 DllAccess es_status_codes DLLwaitForMeasureReady(UINT32 drvno);
 DllAccess es_status_codes DLLwaitForBlockReady(UINT32 drvno);
 DllAccess es_status_codes DLLisMeasureOn(UINT32 drvno, UINT8* measureOn);
 DllAccess es_status_codes DLLisBlockOn(UINT32 drvno, UINT8* blockOn);
-DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block);
+DllAccess void DLLGetCurrentScanNumber(uint32_t board_sel, int64_t* sample, int64_t* block);
 //************  Control CAM
 DllAccess void setSWTrig(UINT8 on);
 DllAccess es_status_codes DLLOutTrigHigh(UINT32 drvno);	//set output Trigger signal high
@@ -97,7 +96,6 @@ DllAccess es_status_codes DLLSetTemp(UINT32 drvno, UINT8 level);
 DllAccess es_status_codes DLLSetTORReg(UINT32 drvno, UINT8 tor);
 DllAccess es_status_codes DLLDAC8568_setOutput(UINT32 drvno, UINT8 location, UINT8 channel, UINT16 output);
 DllAccess es_status_codes DLLDAC8568_setAllOutputs(UINT32 drvno, UINT8 location, UINT32* output, UINT8 reorder_channel);
-DllAccess es_status_codes DLLSetMeasurementParameters(UINT32 drvno, UINT32 nos, UINT32 nob);
 DllAccess es_status_codes DLLIOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns);
 DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t drvno, uint16_t* width_in_5ns, uint16_t* delay_in_5ns);
 DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns);
@@ -111,7 +109,7 @@ DllAccess es_status_codes DLLGetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t*
 //************ read and write functions
 DllAccess es_status_codes DLLReadByteS0(UINT32 drvno, UINT8 *data, UINT32 address);
 DllAccess es_status_codes DLLWriteByteS0(UINT32 drvno, UINT8 data, UINT32 address);
-DllAccess es_status_codes DLLReadLongS0(UINT32 drvno, UINT32 * data, UINT32 address);
+DllAccess es_status_codes DLLreadRegisterS0_32(uint32_t board_sel, uint32_t* data, uint32_t address);
 DllAccess es_status_codes DLLWriteLongS0(UINT32 drvno, UINT32 data, UINT32 address);
 DllAccess es_status_codes DLLReadLongDMA(UINT32 drvno, UINT32* data, UINT32 address);
 DllAccess es_status_codes DLLWriteLongDMA(UINT32 drvno, UINT32 data, UINT32 address);

@@ -155,9 +155,14 @@ DllAccess es_status_codes DLLWriteByteS0( UINT32 drvno, UINT8 data, UINT32 addre
 /**
 \copydoc readRegisterS0_32
 */
-DllAccess es_status_codes DLLReadLongS0( UINT32 drvno, UINT32 * data, UINT32 address)
+DllAccess es_status_codes DLLreadRegisterS0_32( uint32_t board_sel, uint32_t* data, uint32_t address)
 {
-	return readRegisterS0_32( drvno, data, address);
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+			// this function only returns data for the first found board
+			return readRegisterS0_32(drvno, data, address);;
+	return es_parameter_out_of_range;
 }
 
 /**
@@ -203,9 +208,9 @@ DllAccess es_status_codes DLLWriteLongIOPort( UINT32 drvno, UINT32 data, UINT32 
 /**
  * \copydoc About
  */
-DllAccess es_status_codes DLLAbout( UINT32 drvno )
+DllAccess es_status_codes DLLAbout( uint32_t board_sel )
 {
-	return About(drvno);
+	return About(board_sel);
 }
 
 /**
@@ -327,19 +332,25 @@ DllAccess UINT32 DLLTickstous( UINT64 tks )
 }
 
 /**
- * \copydoc SetMeasurementParameters
- */
-DllAccess es_status_codes DLLSetMeasurementParameters( UINT32 drvno, UINT32 nos, UINT32 nob )
-{
-	return SetMeasurementParameters( drvno, nos, nob );
-}
-
-/**
  * \copydoc ReturnFrame
  */
-DllAccess es_status_codes DLLReturnFrame( UINT32 drv, UINT32 curr_nos, UINT32 curr_nob, UINT16 curr_cam, UINT16 *pdest, UINT32 length )
+DllAccess es_status_codes DLLReturnFrame(uint32_t board_sel, uint32_t curr_nos, uint32_t curr_nob, uint16_t curr_cam, uint16_t* pdest0, uint16_t* pdest1, uint32_t length)
 {
-	return ReturnFrame( drv, curr_nos, curr_nob, curr_cam, pdest, length );
+	uint16_t* pdest[2] = { pdest0, pdest1 };
+	int foundBoards = 0;
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = ReturnFrame(drvno, curr_nos, curr_nob, curr_cam, pdest[foundBoards], length);
+			if (status != es_no_error) return status;
+			foundBoards++;
+			// this function only returns data for the first two found boards
+			if (foundBoards >= 2)
+				return status;
+		}
+	return status;
 }
 
 /**
@@ -658,9 +669,16 @@ DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t drvno, uint16_t* widt
 /**
  * \copydoc GetCurrentScanNumber
  */
-DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block)
+DllAccess void DLLGetCurrentScanNumber(uint32_t board_sel, int64_t* sample, int64_t* block)
 {
-	GetCurrentScanNumber(drvno, sample, block);
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			GetCurrentScanNumber(drvno, sample, block);
+			// this function only returns the scan number for the first found board
+			return;
+		}
 	return;
 }
 

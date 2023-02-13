@@ -757,21 +757,29 @@ es_status_codes InitMutex(uint32_t drvno)
 	return es_no_error;
 }
 
-es_status_codes About(uint32_t drvno)
+es_status_codes About(uint32_t board_sel)
 {
-	es_status_codes status = AboutDrv(drvno);
-	if (status != es_no_error) return status;
-	status = AboutGPX(drvno);
-	//if (status != es_no_error) return status;
-	status = AboutS0(drvno);
-	if (status != es_no_error) return status;
-	status = AboutTLPs(drvno);
-	if (status != es_no_error) return status;
-	status = AboutPCI(drvno);
-	if (status != es_no_error) return status;
-	status = AboutCameraSettings(drvno);
-	if (status != es_no_error) return status;
-	return AboutMeasurementSettings();
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = AboutDrv(drvno);
+			if (status != es_no_error) return status;
+			status = AboutGPX(drvno);
+			//if (status != es_no_error) return status;
+			status = AboutS0(drvno);
+			if (status != es_no_error) return status;
+			status = AboutTLPs(drvno);
+			if (status != es_no_error) return status;
+			status = AboutPCI(drvno);
+			if (status != es_no_error) return status;
+			status = AboutCameraSettings(drvno);
+			if (status != es_no_error) return status;
+			status = AboutMeasurementSettings();
+			if (status != es_no_error) return status;
+		}
+	return status;
 }
 
 /**
