@@ -261,20 +261,6 @@ bool Lsc::IsRunning()
 	return isRunning;
 }
 
-bool Lsc::isTdc(uint32_t drvno)
-{
-	bool isTdc = false;
-	GetIsTdc(drvno, &isTdc);
-	return isTdc;
-}
-
-bool Lsc::isDsc(uint32_t drvno)
-{
-	bool isDsc = false;
-	GetIsDsc(drvno, &isDsc);
-	return isDsc;
-}
-
 std::string Lsc::getVerifiedDataDialog(struct verify_data_parameter* vd)
 {
 	char* cstring;
