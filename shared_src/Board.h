@@ -161,6 +161,8 @@ es_status_codes setBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address)
 es_status_codes resetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address);
 es_status_codes resetBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address);
 es_status_codes readRegisterS0_32( uint32_t drvno, uint32_t* data, uint16_t address );
+es_status_codes readRegisterS0_32_allBoards(uint32_t board_sel, uint32_t** data, uint16_t address);
+es_status_codes readRegister_32_allBoards(uint32_t board_sel, uint32_t** data, uint16_t address);
 es_status_codes readRegisterS0_16( uint32_t drvno, uint16_t* data, uint16_t address );
 es_status_codes readRegisterS0_8( uint32_t drvno, uint8_t* data, uint16_t address );
 es_status_codes writeRegisterS0_32( uint32_t drvno, uint32_t data, uint16_t address );
