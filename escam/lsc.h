@@ -41,8 +41,6 @@ public:
 	void getCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block);
 	void fillUserBufferWithDummyData(uint32_t drvno);
 	bool IsRunning();
-	bool isTdc(uint32_t drvno);
-	bool isDsc(uint32_t drvno);
 	std::string getVerifiedDataDialog(struct verify_data_parameter* vd);
 public slots:
 	es_status_codes startMeasurement();

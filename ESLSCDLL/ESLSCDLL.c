@@ -400,19 +400,6 @@ DllAccess es_status_codes DLLStartMeasurement_blocking()
 }
 
 /**
- * \brief Activate or deactivate continuous read.
- * \param activate 0 - deactivate, 1 - activate
- * \param pause_in_microseconds - time in microseconds before next loop starts - should be >=1
- */
-DllAccess void DLLSetContFFLoop( UINT8 activate , UINT32 pause_in_microseconds)
-{
-	continiousMeasurementFlag = activate;//0 or 1
-	continiousPauseInMicroseconds = pause_in_microseconds;
-	ES_LOG("Setting continuous pause to %u\n", continiousPauseInMicroseconds);
-	return;
-}
-
-/**
  * \copydoc SetTemp
  */
 DllAccess es_status_codes DLLSetTemp( UINT32 drvno, UINT8 level )
