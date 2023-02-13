@@ -690,7 +690,7 @@ es_status_codes writeRegisterS0_8twoBoards(uint8_t data1, uint8_t data2, uint16_
 }
 
 /**
- * \brief Read 4 byte of a register in S0 space.
+ * \brief Read 4 bytes of a register in S0 space.
  *
  * \param drvno PCIe board identifier.
  * \param data Read buffer.

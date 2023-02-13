@@ -114,5 +114,6 @@ struct measurement_settings settings_struct =
 	.board_sel						= settingBoardSelDefault,
 	.nos							= settingNosDefault,
 	.nob							= settingNobDefault,
-	.cont_pause_in_microseconds		= settingContiniousPausInMicrosecondsDefault,
+	.contiuous_measurement			= settingContinuousMeasurementDefault,
+	.cont_pause_in_microseconds		= settingContinuousPausInMicrosecondsDefault,
 };
