@@ -100,9 +100,9 @@ DllAccess es_status_codes DLLSetDIRDSC(uint32_t board_sel, uint8_t DSCNumber, ui
 DllAccess es_status_codes DLLGetDSC(uint32_t board_sel, uint8_t DSCNumber, uint32_t* ADSC0, uint32_t* LDSC0, uint32_t ADSC1, uint32_t* LDSC1);
 //************ read and write functions
 DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t board_sel, uint8_t* data, uint32_t address);
-DllAccess es_status_codes DLLWriteByteS0(uint32_t drvno, uint8_t data, uint32_t address);
+DllAccess es_status_codes DLLwriteRegisterS0_8(uint32_t board_sel, uint8_t data, uint32_t address);
 DllAccess es_status_codes DLLreadRegisterS0_32(uint32_t board_sel, uint32_t* data, uint32_t address);
-DllAccess es_status_codes DLLWriteLongS0(uint32_t drvno, uint32_t data, uint32_t address);
-DllAccess es_status_codes DLLSetS0Bit(uint32_t drvno, uint32_t bitnumber, uint16_t address );
-DllAccess es_status_codes DLLResetS0Bit(uint32_t drvno, uint32_t bitnumber, uint16_t address);
+DllAccess es_status_codes DLLwriteRegisterS0_32(uint32_t board_sel, uint32_t data, uint32_t address);
+DllAccess es_status_codes DLLsetBitS0_32(uint32_t board_sel, uint32_t bitnumber, uint16_t address);
+DllAccess es_status_codes DLLresetBitS0_32(uint32_t board_sel, uint32_t bitnumber, uint16_t address);
 
