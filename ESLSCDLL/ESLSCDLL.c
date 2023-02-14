@@ -564,41 +564,65 @@ DllAccess es_status_codes DLLAboutGPX( uint32_t drvno )
 /**
  * \copydoc isMeasureOn
  */
-DllAccess es_status_codes DLLisMeasureOn( uint32_t drvno, uint8_t* measureOn )
+DllAccess es_status_codes DLLisMeasureOn( uint32_t board_sel, uint8_t* measureOn0, uint8_t* measureOn1 )
 {
-	return isMeasureOn( drvno, measureOn );
+	es_status_codes status = es_no_error;
+	uint8_t* measureOn[2] = { measureOn0, measureOn1 };
+	int usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = isMeasureOn(drvno, measureOn[usedBoards]);
+			if (status != es_no_error) return status;
+			usedBoards++;
+			// this function only returns the values for the first two found boards
+			if (usedBoards >= 2)
+				return status;
+		}
+	}
+	return status;
 }
 
 /**
  * \copydoc isBlockOn
  */
-DllAccess es_status_codes DLLisBlockOn( uint32_t drvno, uint8_t* blockOn )
+DllAccess es_status_codes DLLisBlockOn( uint32_t board_sel, uint8_t* blockOn0, uint8_t* blockOn1 )
 {
-	return isBlockOn( drvno, blockOn );
+	es_status_codes status = es_no_error;
+	uint8_t* blockOn[2] = { blockOn0, blockOn1 };
+	int usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = isBlockOn(drvno, blockOn[usedBoards]);
+			if (status != es_no_error) return status;
+			usedBoards++;
+			// this function only returns the values for the first two found boards
+			if (usedBoards >= 2)
+				return status;
+		}
+	}
+	return status;
 }
 
 /**
  * \copydoc waitForMeasureReady
  */
-DllAccess es_status_codes DLLwaitForMeasureReady( uint32_t drvno )
+DllAccess es_status_codes DLLwaitForMeasureReady( uint32_t board_sel )
 {
-	return waitForMeasureReady( drvno );
+	return waitForMeasureReady( board_sel );
 }
 
 /**
  * \copydoc waitForBlockReady
  */
-DllAccess es_status_codes DLLwaitForBlockReady( uint32_t drvno )
+DllAccess es_status_codes DLLwaitForBlockReady( uint32_t board_sel )
 {
-	return waitForBlockReady( drvno );
-}
-
-/**
-\copydoc ClearAllUserRegs
-*/
-DllAccess es_status_codes DLLClearAllUserRegs( uint32_t drvno)
-{
-	return ClearAllUserRegs(drvno);
+	return waitForBlockReady(board_sel);
 }
 
 /**
