@@ -554,14 +554,6 @@ DllAccess es_status_codes DLLCalcTrms( uint32_t board_sel, uint32_t firstSample,
 }
 
 /**
- * \copydoc AboutGPX
- */
-DllAccess es_status_codes DLLAboutGPX( uint32_t drvno )
-{
-	return AboutGPX( drvno );
-}
-
-/**
  * \copydoc isMeasureOn
  */
 DllAccess es_status_codes DLLisMeasureOn( uint32_t board_sel, uint8_t* measureOn0, uint8_t* measureOn1 )
@@ -647,14 +639,6 @@ DllAccess es_status_codes DLLSetBTimer( uint32_t drvno, uint32_t btime_in_micros
 DllAccess es_status_codes DLLSetGain( uint32_t drvno, uint16_t gain_value )
 {
 	return SetGain( drvno, gain_value );
-}
-
-/**
- * \copydoc LedOff
- */
-DllAccess es_status_codes DLLLedOff( uint32_t drvno, uint8_t LED_OFF )
-{
-	return LedOff( drvno, LED_OFF );
 }
 
 DllAccess es_status_codes DLLsetUseEC(uint32_t drvno, uint8_t use_EC)
