@@ -61,6 +61,7 @@ DllAccess void DLLErrMsgBoxOn();	//BOARD.C sends error messages on default
 DllAccess void DLLErrMsgBoxOff();	//general deactivate of error message boxes
 DllAccess double DLLCalcRamUsageInMB(uint32_t nos, uint32_t nob);
 DllAccess double DLLCalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);
+DllAccess void DLLSetContinuousMeasurement(uint8_t on);
 #ifdef COMPILE_FOR_LABVIEW
 DllAccess void DLLRegisterLVEvents(LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent);
 #endif

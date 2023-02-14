@@ -822,3 +822,9 @@ DllAccess es_status_codes DLLInitGPX(uint32_t board_sel, uint32_t delay)
 	}
 	return status;
 }
+
+DllAccess void DLLSetContinuousMeasurement(uint8_t on)
+{
+	SetContinuousMeasurement(on);
+	return;
+}

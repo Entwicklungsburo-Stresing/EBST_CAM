@@ -141,6 +141,7 @@ es_status_codes SetSensorResetEarly(uint32_t drvno, bool enable_early);
 void VerifyData(struct verify_data_parameter* vd);
 void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString);
 void getFileHeaderFromFile(struct file_header* fh, char* filename_full);
+void SetContinuousMeasurement(bool on);
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);
