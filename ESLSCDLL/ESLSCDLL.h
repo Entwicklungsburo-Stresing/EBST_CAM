@@ -52,8 +52,6 @@ DllAccess void DLLStartMeasurement_nonblocking();
 
 //************ Mid level API
 //************ system info & control
-DllAccess uint64_t DLLTicksTimestamp( void );
-DllAccess uint32_t DLLTickstous( uint64_t tks );
 DllAccess void DLLFreeMemInfo(uint64_t * pmemory_all, uint64_t * pmemory_free);
 DllAccess void DLLErrorMsg(char ErrMsg[20]);
 DllAccess es_status_codes DLLCalcTrms(uint32_t board_sel, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf0, double* trms0, double* mwf1, double* trms1);
@@ -69,30 +67,22 @@ DllAccess void DLLRegisterLVEvents(LVUserEventRef *measureStartEvent, LVUserEven
 DllAccess char* DLLConvertErrorCodeToMsg( es_status_codes status );
 //************ Cam infos
 DllAccess es_status_codes DLLAbout(uint32_t board_sel);
-DllAccess es_status_codes DLLreadBlockTriggerState(uint32_t drv, uint8_t btrig_ch, uint8_t* state); //read trigger input ->ch=1:pci in, ch=2:opto1, ch=3:opto2
 DllAccess es_status_codes DLLwaitForMeasureReady(uint32_t board_sel);
 DllAccess es_status_codes DLLwaitForBlockReady(uint32_t board_sel);
 DllAccess es_status_codes DLLisMeasureOn(uint32_t board_sel, uint8_t* measureOn0, uint8_t* measureOn1);
 DllAccess es_status_codes DLLisBlockOn(uint32_t board_sel, uint8_t* blockOn0, uint8_t* blockOn1);
 DllAccess void DLLGetCurrentScanNumber(uint32_t board_sel, int64_t* sample, int64_t* block);
 //************  Control CAM
-DllAccess void setSWTrig(uint8_t on);
 DllAccess es_status_codes DLLOutTrigHigh(uint32_t board_sel);	//set output Trigger signal high
 DllAccess es_status_codes DLLOutTrigLow(uint32_t board_sel);	//set output Trigger signal low
 DllAccess es_status_codes DLLOutTrigPulse(uint32_t board_sel, uint32_t PulseWidth);	// pulses high output Trigger signal
 DllAccess es_status_codes DLLOpenShutter(uint32_t board_sel);	// set IFC=high
 DllAccess es_status_codes DLLCloseShutter(uint32_t board_sel);	// set IFC=low
-DllAccess es_status_codes DLLsetUseEC(uint32_t drvno, uint8_t use_EC);
-DllAccess es_status_codes DLLSetSSlope(uint32_t drvno, uint32_t sslope);
-DllAccess es_status_codes DLLSetGain( uint32_t drvno, uint16_t gain_value );
-DllAccess es_status_codes DLLSetTLPS(uint32_t drvno, uint32_t pixel);
 DllAccess es_status_codes DLLSetTemp(uint32_t board_sel, uint8_t level);
 DllAccess es_status_codes DLLSetTORReg(uint32_t drvno, uint8_t tor);
 DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t board_sel, uint8_t location, uint32_t* output0, uint32_t* output1, uint8_t reorder_channel);
 DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t board_sel, uint32_t* width_in_5ns, uint32_t* delay_in_5ns);
 DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t board_sel, uint32_t period_in_10ns);
-DllAccess es_status_codes DLLSetTicnt(uint32_t drvno, uint8_t divider);
-DllAccess es_status_codes DLLSetTocnt(uint32_t drvno, uint8_t divider);
 DllAccess es_status_codes DLLGetIsTdc(uint32_t board_sel, uint8_t* isTdc0, uint8_t* isTdc1, uint8_t* isTdc2, uint8_t* isTdc3, uint8_t* isTdc4);
 DllAccess es_status_codes DLLGetIsDsc(uint32_t board_sel, uint8_t* isDsc0, uint8_t* isDsc1, uint8_t* isDsc2, uint8_t* isDsc3, uint8_t* isDsc4);
 DllAccess es_status_codes DLLResetDSC(uint32_t board_sel, uint8_t DSCNumber);
