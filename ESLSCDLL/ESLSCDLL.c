@@ -139,9 +139,14 @@ DllAccess es_status_codes DLLInitBoard()
 /**
 \copydoc readRegisterS0_8
 */
-DllAccess es_status_codes DLLReadByteS0( uint32_t drvno, uint8_t *data, uint32_t address)
+DllAccess es_status_codes DLLreadRegisterS0_8( uint32_t board_sel, uint8_t *data, uint32_t address)
 {
-	return readRegisterS0_8( drvno, data, address);
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+			// this function only returns data for the first found board
+			return readRegisterS0_8(drvno, data, address);
+	return es_parameter_out_of_range;
 }
 
 /**
@@ -171,38 +176,6 @@ DllAccess es_status_codes DLLreadRegisterS0_32( uint32_t board_sel, uint32_t* da
 DllAccess es_status_codes DLLWriteLongS0( uint32_t drvno, uint32_t data, uint32_t address)
 {
 	return writeRegisterS0_32( drvno, data, address);
-}
-
-/**
-\copydoc readRegisterDma_32
-*/
-DllAccess es_status_codes DLLReadLongDMA( uint32_t drvno, uint32_t* data, uint32_t address)
-{
-	return readRegisterDma_32( drvno, data, address);
-}
-
-/**
-\copydoc writeRegisterDma_32
-*/
-DllAccess es_status_codes DLLWriteLongDMA( uint32_t drvno, uint32_t data, uint32_t address)
-{
-	return writeRegisterDma_32( drvno, data, address);
-}
-
-/**
-\copydoc readConfig_32
-*/
-DllAccess es_status_codes DLLReadLongIOPort( uint32_t drvno, uint32_t * data, uint32_t address)
-{
-	return readConfig_32( drvno, data, address);
-}
-
-/**
-\copydoc writeConfig_32
-*/
-DllAccess es_status_codes DLLWriteLongIOPort( uint32_t drvno, uint32_t data, uint32_t address)
-{
-	return writeConfig_32( drvno, data, address);
 }
 
 /**
@@ -240,41 +213,81 @@ DllAccess es_status_codes DLLSetSSlope( uint32_t drvno, uint32_t sslope )
 /**
  * \copydoc OutTrigHigh
  */
-DllAccess es_status_codes DLLOutTrigHigh( uint32_t drvno )
+DllAccess es_status_codes DLLOutTrigHigh( uint32_t board_sel )
 {
-	return OutTrigHigh( drvno );
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = OutTrigHigh(drvno);
+			if (status != es_no_error) return status;
+		}
+	return status;
 }
 
 /**
  * \copydoc OutTrigLow
  */
-DllAccess es_status_codes DLLOutTrigLow( uint32_t drvno )
+DllAccess es_status_codes DLLOutTrigLow( uint32_t board_sel )
 {
-	return OutTrigLow( drvno );
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = OutTrigLow(drvno);
+			if (status != es_no_error) return status;
+		}
+	return status;
 }
 
 /**
  * \copydoc OutTrigPulse
  */
-DllAccess es_status_codes DLLOutTrigPulse( uint32_t drvno, uint32_t PulseWidth )
+DllAccess es_status_codes DLLOutTrigPulse( uint32_t board_sel, uint32_t PulseWidth )
 {
-	return OutTrigPulse(drvno, PulseWidth);
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = OutTrigPulse(drvno, PulseWidth);
+			if (status != es_no_error) return status;
+		}
+	return status;
 }
 
 /**
  * \copydoc OpenShutter
  */
-DllAccess es_status_codes DLLOpenShutter( uint32_t drvno )
+DllAccess es_status_codes DLLOpenShutter( uint32_t board_sel )
 {
-	return OpenShutter( drvno );
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = OpenShutter(drvno);
+			if (status != es_no_error) return status;
+		}
+	return status;
 }
 
 /**
  * \copydoc CloseShutter
  */
-DllAccess es_status_codes DLLCloseShutter( uint32_t drvno )
+DllAccess es_status_codes DLLCloseShutter( uint32_t board_sel )
 {
-	return CloseShutter( drvno );
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = CloseShutter(drvno);
+			if (status != es_no_error) return status;
+		}
+	return status;
 }
 
 
@@ -337,17 +350,17 @@ DllAccess uint32_t DLLTickstous( uint64_t tks )
 DllAccess es_status_codes DLLReturnFrame(uint32_t board_sel, uint32_t curr_nos, uint32_t curr_nob, uint16_t curr_cam, uint16_t* pdest0, uint16_t* pdest1, uint32_t length)
 {
 	uint16_t* pdest[2] = { pdest0, pdest1 };
-	int foundBoards = 0;
+	int usedBoards = 0;
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
 		{
-			status = ReturnFrame(drvno, curr_nos, curr_nob, curr_cam, pdest[foundBoards], length);
+			status = ReturnFrame(drvno, curr_nos, curr_nob, curr_cam, pdest[usedBoards], length);
 			if (status != es_no_error) return status;
-			foundBoards++;
+			usedBoards++;
 			// this function only returns data for the first two found boards
-			if (foundBoards >= 2)
+			if (usedBoards >= 2)
 				return status;
 		}
 	return status;
@@ -362,12 +375,24 @@ DllAccess es_status_codes DLLReturnFrame(uint32_t board_sel, uint32_t curr_nos, 
  *		- es_no_error
  *		- es_parameter_out_of_range
  */
-DllAccess es_status_codes DLLCopyAllData( uint32_t drv, uint16_t *pdest )
+DllAccess es_status_codes DLLCopyAllData( uint32_t board_sel, uint16_t *pdest0, uint16_t *pdest1 )
 {
+	uint16_t* pdest[2] = { pdest0, pdest1 };
+	int usedBoards = 0;
 	uint16_t* pframe = NULL;
-	es_status_codes status = GetAddressOfPixel(drv, 0, 0, 0, 0, &pframe);
-	if (status != es_no_error) return status;
-	memcpy( pdest, pframe, (uint64_t)(*Nospb) * (uint64_t)(*Nob) * (uint64_t)aCAMCNT[drv] * (uint64_t)aPIXEL[drv] * sizeof( uint16_t ) );  // length in bytes
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = GetAddressOfPixel(drvno, 0, 0, 0, 0, &pframe);
+			if (status != es_no_error) return status;
+			memcpy(pdest[usedBoards], pframe, (uint64_t)(*Nospb) * (uint64_t)(*Nob) * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno] * sizeof(uint16_t));  // length in bytes
+			usedBoards++;
+			// this function only returns data for the first two found boards
+			if (usedBoards >= 2)
+				return status;
+		}
 	return status;
 }
 
@@ -381,12 +406,24 @@ DllAccess es_status_codes DLLCopyAllData( uint32_t drv, uint16_t *pdest )
  *		- es_no_error
  *		- es_parameter_out_of_range
  */
-DllAccess es_status_codes DLLCopyOneBlock( uint32_t drv, uint16_t block, uint16_t *pdest )
+DllAccess es_status_codes DLLCopyOeBlock( uint32_t board_sel, uint16_t block, uint16_t *pdest0, uint16_t *pdest1 )
 {
+	uint16_t* pdest[2] = { pdest0, pdest1 };
+	int usedBoards = 0;
 	uint16_t* pframe = NULL;
-	es_status_codes status = GetAddressOfPixel( drv, 0, 0, block, 0, &pframe);
-	if (status != es_no_error) return status;
-	memcpy( pdest, pframe, (uint64_t)(*Nospb) * (uint64_t)aCAMCNT[drv] * (uint64_t)aPIXEL[drv] * sizeof( uint16_t ) );  // length in bytes
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = GetAddressOfPixel(drvno, 0, 0, block, 0, &pframe);
+			if (status != es_no_error) return status;
+			memcpy(pdest[usedBoards], pframe, (uint64_t)(*Nospb) * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno] * sizeof(uint16_t)); // length in bytes
+			usedBoards++;
+			// this function only returns data for the first two found boards
+			if (usedBoards >= 2)
+				return status;
+		}
 	return status;
 }
 
@@ -453,9 +490,24 @@ DllAccess es_status_codes DLLDAC8568_setOutput( uint32_t drvno, uint8_t location
 /**
  * \copydoc DAC8568_setAllOutputs
  */
-DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint32_t* output, uint8_t reorder_channel)
+DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t board_sel, uint8_t location, uint32_t* output0, uint32_t* output1, uint8_t reorder_channel)
 {
-	return DAC8568_setAllOutputs(drvno, location, output, reorder_channel);
+	es_status_codes status = es_no_error;
+	double* output[2] = { output0, output1 };
+	int usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			// If there are more than 2 used boards, the output alternates between output0 and output1.
+			// The function is only intended for the use with maximum of two boards.
+			status = DAC8568_setAllOutputs(drvno, location, output[usedBoards%2], reorder_channel);
+			if (status != es_no_error) return status;
+			usedBoards++;
+		}
+	}
+	return status;
 }
 
 /**
@@ -479,9 +531,26 @@ DllAccess void DLLErrorMsg( char ErrMsg[20] )
 /**
  * \copydoc CalcTrms
  */
-DllAccess es_status_codes DLLCalcTrms( uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double *mwf, double *trms )
+DllAccess es_status_codes DLLCalcTrms( uint32_t board_sel, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double *mwf0, double *trms0, double *mwf1, double *trms1 )
 {
-	return CalcTrms( drvno, firstSample, lastSample, TRMS_pixel, CAMpos, mwf, trms );
+	es_status_codes status = es_no_error;
+	double* mwf[2] = { mwf0, mwf1 };
+	double* trms[2] = { trms0, trms1 };
+	int usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = CalcTrms(drvno, firstSample, lastSample, TRMS_pixel, CAMpos, mwf, trms);
+			if (status != es_no_error) return status;
+			usedBoards++;
+			// this function only returns the values for the first two found boards
+			if (usedBoards >= 2)
+				return status;
+		}
+	}
+	return status;
 }
 
 /**
@@ -490,14 +559,6 @@ DllAccess es_status_codes DLLCalcTrms( uint32_t drvno, uint32_t firstSample, uin
 DllAccess es_status_codes DLLAboutGPX( uint32_t drvno )
 {
 	return AboutGPX( drvno );
-}
-
-/**
- * \copydoc InitCamera3030
- */
-DllAccess es_status_codes DLLInitCamera3030( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t adc_gain, uint32_t* dac_output, uint8_t is_hs_ir )
-{
-	return InitCamera3030( drvno, adc_mode, custom_pattern, adc_gain, dac_output, (bool)is_hs_ir);
 }
 
 /**
@@ -661,17 +722,37 @@ DllAccess es_status_codes DLLIOCtrl_setOutput(uint32_t drvno, uint32_t number, u
 /**
  * \copydoc IOCtrl_setT0
  */
-DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
+DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t board_sel, uint32_t period_in_10ns)
 {
-	return IOCtrl_setT0(drvno, period_in_10ns);
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = IOCtrl_setT0(drvno, period_in_10ns);
+			if (status != es_no_error) return status;
+		}
+	}
+	return status;
 }
 
 /**
  * \copydoc IOCtrl_setAllOutputs
  */
-DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t drvno, uint16_t* width_in_5ns, uint16_t* delay_in_5ns)
+DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t board_sel, uint32_t* width_in_5ns, uint32_t* delay_in_5ns)
 {
-	return IOCtrl_setAllOutputs(drvno, (uint32_t*)width_in_5ns, (uint32_t*)delay_in_5ns);
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = IOCtrl_setAllOutputs(board_sel, width_in_5ns, delay_in_5ns);
+			if (status != es_no_error) return status;
+		}
+	}
+	return status;
 }
 
 /**
@@ -788,17 +869,17 @@ DllAccess es_status_codes DLLGetDSC(uint32_t board_sel, uint8_t DSCNumber, uint3
 	es_status_codes status = es_no_error;
 	uint32_t* ADSC[2] = { ADSC0, ADSC1 };
 	uint32_t* LDSC[2] = { LDSC0, LDSC1 };
-	int foundBoards = 0;
+	int usedBoards = 0;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
 		{
-			status = GetDSC(drvno, DSCNumber, ADSC[foundBoards], LDSC[foundBoards]);
+			status = GetDSC(drvno, DSCNumber, ADSC[usedBoards], LDSC[usedBoards]);
 			if (status != es_no_error) return status;
-			foundBoards++;
+			usedBoards++;
 			// this function only returns the values for the first two found boards
-			if (foundBoards >= 2)
+			if (usedBoards >= 2)
 				return status;
 		}
 	}
