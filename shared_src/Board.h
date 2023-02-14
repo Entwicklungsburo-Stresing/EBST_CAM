@@ -24,7 +24,6 @@ es_status_codes ReturnFrame(uint32_t drv, uint32_t curr_nos, uint32_t curr_nob, 
 // platform independent implementation
 // hardware abstraction
 es_status_codes setBlockOn( uint32_t drvno );
-es_status_codes setBlockOnTwoBoards();
 es_status_codes resetBlockOn( uint32_t drvno );
 es_status_codes setMeasureOn( uint32_t drvno );
 es_status_codes resetMeasureOn( uint32_t drvno );
@@ -94,9 +93,7 @@ es_status_codes ResetHardwareCounter( uint32_t drvno );
 es_status_codes waitForBlockTrigger(uint32_t drvno);
 es_status_codes countBlocksByHardware( uint32_t drvno );
 es_status_codes StartSTimer( uint32_t drvno );
-es_status_codes StartSTimerTwoBoards();
 es_status_codes DoSoftwareTrigger(uint32_t drvno);
-es_status_codes DoSoftwareTriggerTwoBoards();
 es_status_codes IsTimerOn( uint32_t drvno, bool* on );
 es_status_codes GetLastBufPart( uint32_t drvno );
 es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint64_t* pIndex );
@@ -166,10 +163,8 @@ es_status_codes readRegister_32_allBoards(uint32_t board_sel, uint32_t** data, u
 es_status_codes readRegisterS0_16( uint32_t drvno, uint16_t* data, uint16_t address );
 es_status_codes readRegisterS0_8( uint32_t drvno, uint8_t* data, uint16_t address );
 es_status_codes writeRegisterS0_32( uint32_t drvno, uint32_t data, uint16_t address );
-es_status_codes writeRegisterS0_32twoBoards(uint32_t data1, uint32_t data2, uint16_t address);
 es_status_codes writeRegisterS0_16( uint32_t drvno, uint16_t data, uint16_t address );
 es_status_codes writeRegisterS0_8( uint32_t drv, uint8_t data, uint16_t address );
-es_status_codes writeRegisterS0_8twoBoards(uint8_t data1, uint8_t data2, uint16_t address);
 es_status_codes SendFLCAM( uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16_t data );
 es_status_codes writeRegisterDma_32( uint32_t drvno, uint32_t data, uint16_t address );
 es_status_codes writeRegisterDma_8( uint32_t drvno, uint8_t data, uint16_t address );
