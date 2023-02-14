@@ -1,5 +1,10 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.1.2
+- Change DLL API to use board_sel instead of drvno
+- Cleanup DLL API
+- Add continuous measurement to settings struct
+
 4.1.1
 - Transform board select and drvno:
 	- drvno is now counting 0, 1, 2, 3, 4
