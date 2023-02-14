@@ -240,35 +240,6 @@ es_status_codes writeRegister_32(uint32_t drvno, uint32_t data, uint16_t address
 };
 
 /**
- * \brief Writes 32 bits (4 bytes) to register. Two boards sync version.
- *
- * \param data1 data to write board 1
- * \param data2 data to write board 2
- * \param address Register offset from BaseAdress - in bytes
- * \return es_status_codes
-	- es_no_error
-	- es_register_write_failed
- */
-es_status_codes writeRegister_32twoBoards(uint32_t data1, uint32_t data2, uint16_t address)
-{
-	DWORD dwStatus1 = WDC_WriteAddr32(hDev[1], 0, address, data1);
-	DWORD dwStatus2 = WDC_WriteAddr32(hDev[2], 0, address, data2);
-	if (WD_STATUS_SUCCESS != dwStatus1)
-	{
-		ES_LOG("writeRegister_32twoBoards in address 0x%x with data: 0x%x failed\n", address, data1);
-		ES_LOG("%s", LSCPCIEJ_GetLastErr());
-		return es_register_write_failed;
-	}//else WDC_Err("DMAWrite /t address /t0x%x /t data: /t0x%x \n", address, data);
-	if (WD_STATUS_SUCCESS != dwStatus2)
-	{
-		ES_LOG("writeRegister_32twoBoards in address 0x%x with data: 0x%x failed\n", address, data2);
-		ES_LOG("%s", LSCPCIEJ_GetLastErr());
-		return es_register_write_failed;
-	}//else WDC_Err("DMAWrite /t address /t0x%x /t data: /t0x%x \n", address, data);
-	return es_no_error;
-};
-
-/**
  * \brief Writes 16 bits (2 bytes) to register.
  *
  * \param drvno PCIe board identifier.
@@ -312,35 +283,6 @@ es_status_codes writeRegister_8(uint32_t drv, uint8_t data, uint16_t address)
 	}//else WDC_Err("ByteS0Write /t address /t0x%x /t data: /t0x%x \n", address, data);
 	return es_no_error;
 };  // WriteByteS0
-
-/**
- * \brief Writes 8 bits (1 bytes) to register. Two boards sync version.
- *
- * \param data1 data to write board 1
- * \param data2 data to write board 2
- * \param address Register offset from BaseAdress - in bytes
- * \return es_status_codes
-	- es_no_error
-	- es_register_write_failed
- */
-es_status_codes writeRegister_8twoBoards(uint8_t data1, uint8_t data2, uint16_t address)
-{
-	DWORD dwStatus1 = WDC_WriteAddr8(hDev[1], 0, address, data1);
-	DWORD dwStatus2 = WDC_WriteAddr8(hDev[2], 0, address, data2);
-	if (WD_STATUS_SUCCESS != dwStatus1)
-	{
-		ES_LOG("writeRegister_8twoBoards in address 0x%x with data: 0x%x failed\n", address, data1);
-		ES_LOG("%s", LSCPCIEJ_GetLastErr());
-		return es_register_write_failed;
-	}//else WDC_Err("DMAWrite /t address /t0x%x /t data: /t0x%x \n", address, data);
-	if (WD_STATUS_SUCCESS != dwStatus2)
-	{
-		ES_LOG("writeRegister_8twoBoards in address 0x%x with data: 0x%x failed\n", address, data2);
-		ES_LOG("%s", LSCPCIEJ_GetLastErr());
-		return es_register_write_failed;
-	}//else WDC_Err("DMAWrite /t address /t0x%x /t data: /t0x%x \n", address, data);
-	return es_no_error;
-};
 
 /**
  * Check drvno for being legit

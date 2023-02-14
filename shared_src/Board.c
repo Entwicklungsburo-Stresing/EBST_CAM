@@ -649,11 +649,6 @@ es_status_codes writeRegisterS0_32( uint32_t drvno, uint32_t data, uint16_t addr
 	return writeRegister_32(drvno, data, address + S0_SPACE_OFFSET);
 }
 
-es_status_codes writeRegisterS0_32twoBoards(uint32_t data1, uint32_t data2, uint16_t address)
-{
-	return writeRegister_32twoBoards(data1, data2, address + S0_SPACE_OFFSET);
-}
-
 /**
  * \brief Write 2 bytes of a register in S0 space.
  *
@@ -682,11 +677,6 @@ es_status_codes writeRegisterS0_16( uint32_t drvno, uint16_t data, uint16_t addr
 es_status_codes writeRegisterS0_8( uint32_t drvno, uint8_t data, uint16_t address )
 {
 	return writeRegister_8(drvno, data, address + S0_SPACE_OFFSET);
-}
-
-es_status_codes writeRegisterS0_8twoBoards(uint8_t data1, uint8_t data2, uint16_t address)
-{
-	return writeRegister_8twoBoards(data1, data2, address + S0_SPACE_OFFSET);
 }
 
 /**
