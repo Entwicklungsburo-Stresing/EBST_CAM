@@ -203,14 +203,6 @@ DllAccess double DLLCalcMeasureTimeInSeconds( uint32_t nos, uint32_t nob, double
 }
 
 /**
- * \copydoc SetSSlope
- */
-DllAccess es_status_codes DLLSetSSlope( uint32_t drvno, uint32_t sslope )
-{
-	return SetSSlope( drvno, sslope );
-}
-
-/**
  * \copydoc OutTrigHigh
  */
 DllAccess es_status_codes DLLOutTrigHigh( uint32_t board_sel )
@@ -290,15 +282,6 @@ DllAccess es_status_codes DLLCloseShutter( uint32_t board_sel )
 	return status;
 }
 
-
-/**
- * \copydoc readBlockTriggerState
- */
-DllAccess es_status_codes DLLreadBlockTriggerState( uint32_t drv, uint8_t btrig_ch, uint8_t* state )
-{
-	return readBlockTriggerState( drv, btrig_ch, (bool*)state );
-}
-
 /**
  * \brief For test purposes only: output of 2 strings.
  *
@@ -325,23 +308,6 @@ DllAccess es_status_codes DLLsetBitS0_32( uint32_t board_sel, uint32_t bitnumber
 DllAccess es_status_codes DLLresetBitS0_32( uint32_t board_sel, uint32_t bitnumber, uint16_t address )
 {
 	return resetBitS0_32_allBoards(board_sel, bitnumber, address );
-}
-
-/**
- * \copydoc ticksTimestamp
- */
-DllAccess uint64_t DLLTicksTimestamp( void )
-{
-	WDC_Err( "entered tickstimestamp\n" );
-	return ticksTimestamp();
-}
-
-/**
- * \copydoc Tickstous
- */
-DllAccess uint32_t DLLTickstous( uint64_t tks )
-{
-	return Tickstous( tks );
 }
 
 /**
@@ -633,19 +599,6 @@ DllAccess es_status_codes DLLSetBTimer( uint32_t drvno, uint32_t btime_in_micros
 	return SetBTimer( drvno, btime_in_microseconds );
 }
 
-/**
- * \copydoc SetGain
- */
-DllAccess es_status_codes DLLSetGain( uint32_t drvno, uint16_t gain_value )
-{
-	return SetGain( drvno, gain_value );
-}
-
-DllAccess es_status_codes DLLsetUseEC(uint32_t drvno, uint8_t use_EC)
-{
-	return setUseEC(drvno, use_EC);
-}
-
 #ifdef COMPILE_FOR_LABVIEW
 /**
  * \brief Save the user event handlers created by Labview. Call this before using the event structure.
@@ -669,29 +622,6 @@ DllAccess void DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEve
 DllAccess char* DLLConvertErrorCodeToMsg( es_status_codes status )
 {
 	return ConvertErrorCodeToMsg( status );
-}
-
-
-/**
- * \copydoc SetDmaRegister
- */
-DllAccess es_status_codes DLLSetTLPS(uint32_t drvno, uint32_t pixel)
-{
-	return SetDmaRegister(drvno, pixel);
-}
-
-
-/**
- * \brief Sets global variable useSWTrig.
- * 
- * The default of useSWTrig is FALSE and useSWTrig is set automatically in InitMeasurement depending on FFT mode.
- * Use this function to differ from the default behaviour.
- * \param on If TRUE BON starts immediately a scan. Must be TRUE for FFT in Area or ROI mode.
- */
-DllAccess void setSWTrig(uint8_t on)
-{
-	*useSWTrig = on;
-	return;
 }
 
 /**
@@ -777,22 +707,6 @@ DllAccess void DLLGetCurrentScanNumber(uint32_t board_sel, int64_t* sample, int6
 			return;
 		}
 	return;
-}
-
-/**
- * \copydoc SetTicnt
- */
-DllAccess es_status_codes DLLSetTicnt(uint32_t drvno, uint8_t divider)
-{
-	return SetTicnt(drvno, divider);
-}
-
-/**
- * \copydoc SetTocnt
- */
-DllAccess es_status_codes DLLSetTocnt(uint32_t drvno, uint8_t divider)
-{
-	return SetTocnt(drvno, divider);
 }
 
 /**
