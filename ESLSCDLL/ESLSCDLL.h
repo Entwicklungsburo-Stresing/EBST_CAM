@@ -86,8 +86,6 @@ DllAccess es_status_codes DLLCloseShutter(UINT32 drvno);	// set IFC=low
 DllAccess es_status_codes DLLLedOff(UINT32 drvno, UINT8 LED_OFF);
 DllAccess es_status_codes DLLsetUseEC(UINT32 drvno, UINT8 use_EC);
 DllAccess es_status_codes DLLInitCamera3030(UINT32 drvno, UINT8 adc_mode, UINT16 custom_pattern, UINT8 adc_gain, UINT32* dac_output, UINT8 is_hs_ir);
-DllAccess es_status_codes DLLSetSTimer( UINT32 drvno, UINT32 stime_in_microseconds );
-DllAccess es_status_codes DLLSetBTimer( UINT32 drvno, UINT32 btime_in_microseconds );
 DllAccess es_status_codes DLLSetSSlope(UINT32 drvno, UINT32 sslope);
 DllAccess es_status_codes DLLSetGain( UINT32 drvno, UINT16 gain_value );
 DllAccess es_status_codes DLLClearAllUserRegs(UINT32 drvno);
@@ -103,9 +101,9 @@ DllAccess es_status_codes DLLSetTicnt(uint32_t drvno, uint8_t divider);
 DllAccess es_status_codes DLLSetTocnt(uint32_t drvno, uint8_t divider);
 DllAccess es_status_codes DLLGetIsTdc(uint32_t board_sel, uint8_t* isTdc0, uint8_t* isTdc1, uint8_t* isTdc2, uint8_t* isTdc3, uint8_t* isTdc4);
 DllAccess es_status_codes DLLGetIsDsc(uint32_t board_sel, uint8_t* isDsc0, uint8_t* isDsc1, uint8_t* isDsc2, uint8_t* isDsc3, uint8_t* isDsc4);
-DllAccess es_status_codes DLLResetDSC(uint32_t drvno, uint8_t DSCNumber);
-DllAccess es_status_codes DLLSetDIRDSC(uint32_t drvno, uint8_t DSCNumber, uint8_t dir);
-DllAccess es_status_codes DLLGetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC);
+DllAccess es_status_codes DLLResetDSC(uint32_t board_sel, uint8_t DSCNumber);
+DllAccess es_status_codes DLLSetDIRDSC(uint32_t board_sel, uint8_t DSCNumber, uint8_t dir);
+DllAccess es_status_codes DLLGetDSC(uint32_t board_sel, uint8_t DSCNumber, uint32_t* ADSC0, uint32_t* LDSC0, uint32_t ADSC1, uint32_t* LDSC1);
 //************ read and write functions
 DllAccess es_status_codes DLLReadByteS0(UINT32 drvno, UINT8 *data, UINT32 address);
 DllAccess es_status_codes DLLWriteByteS0(UINT32 drvno, UINT8 data, UINT32 address);
