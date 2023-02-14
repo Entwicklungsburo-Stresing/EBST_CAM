@@ -3564,15 +3564,22 @@ es_status_codes SetGain(uint32_t drvno, uint16_t gain_value)
  *		- es_no_error
  * 		- es_register_read_failed
  */
-es_status_codes waitForBlockReady(uint32_t drvno)
+es_status_codes waitForBlockReady(uint32_t board_sel)
 {
-	bool blockOn = true;
+	bool blockOn[MAXPCIECARDS] = { false, false, false, false, false };
 	es_status_codes status = es_no_error;
-	while (blockOn)
+	do
 	{
-		status = isBlockOn(drvno, &blockOn);
-		if (status != es_no_error) return status;
-	}
+		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		{
+			// Check if the drvno'th bit is set
+			if ((board_sel >> drvno) & 1)
+			{
+				status = isBlockOn(drvno, &blockOn[drvno]);
+				if (status != es_no_error) return status;
+			}
+		}
+	} while (blockOn[0] || blockOn[1] || blockOn[2] || blockOn[3] || blockOn[4]);
 	return status;
 }
 
@@ -3584,15 +3591,22 @@ es_status_codes waitForBlockReady(uint32_t drvno)
  *		- es_no_error
  * 		- es_register_read_failed
  */
-es_status_codes waitForMeasureReady(uint32_t drvno)
+es_status_codes waitForMeasureReady(uint32_t board_sel)
 {
-	bool measureOn = true;
+	bool measureOn[MAXPCIECARDS] = { false, false, false, false, false };
 	es_status_codes status = es_no_error;
-	while (measureOn)
+	do
 	{
-		status = isMeasureOn(drvno, &measureOn);
-		if (status != es_no_error) return status;
-	}
+		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		{
+			// Check if the drvno'th bit is set
+			if ((board_sel >> drvno) & 1)
+			{
+				status = isMeasureOn(drvno, &measureOn[drvno]);
+				if (status != es_no_error) return status;
+			}
+		}
+	} while (measureOn[0] || measureOn[1] || measureOn[2] || measureOn[3] || measureOn[4]);
 	return status;
 }
 
