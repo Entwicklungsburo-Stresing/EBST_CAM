@@ -152,9 +152,9 @@ DllAccess es_status_codes DLLreadRegisterS0_8( uint32_t board_sel, uint8_t *data
 /**
 \copydoc writeRegisterS0_8
 */
-DllAccess es_status_codes DLLWriteByteS0( uint32_t drvno, uint8_t data, uint32_t address)
+DllAccess es_status_codes DLLwriteRegisterS0_8( uint32_t board_sel, uint8_t data, uint32_t address)
 {
-	return writeRegisterS0_8(drvno, data, address);
+	return writeRegisterS0_8_allBoards(board_sel, data, address);
 }
 
 /**
@@ -173,9 +173,9 @@ DllAccess es_status_codes DLLreadRegisterS0_32( uint32_t board_sel, uint32_t* da
 /**
 \copydoc writeRegisterS0_32
 */
-DllAccess es_status_codes DLLWriteLongS0( uint32_t drvno, uint32_t data, uint32_t address)
+DllAccess es_status_codes DLLwriteRegisterS0_32( uint32_t board_sel, uint32_t data, uint32_t address)
 {
-	return writeRegisterS0_32( drvno, data, address);
+	return writeRegisterS0_32_allBoards( board_sel, data, address);
 }
 
 /**
@@ -314,17 +314,17 @@ void TestMsg( char testMsg1[20], char testMsg2[20] )
 /**
  * \copydoc setBitS0_32
  */
-DllAccess es_status_codes DLLSetS0Bit( uint32_t bitnumber, uint16_t address, uint32_t drvno )
+DllAccess es_status_codes DLLsetBitS0_32( uint32_t board_sel, uint32_t bitnumber, uint16_t address )
 {
-	return setBitS0_32( bitnumber, address, drvno );
+	return setBitS0_32_allBoards( board_sel, bitnumber, address );
 }
 
 /**
  * \copydoc resetBitS0_32
  */
-DllAccess es_status_codes DLLResetS0Bit( uint32_t bitnumber, uint16_t address, uint32_t drvno )
+DllAccess es_status_codes DLLresetBitS0_32( uint32_t board_sel, uint32_t bitnumber, uint16_t address )
 {
-	return resetBitS0_32( bitnumber, address, drvno );
+	return resetBitS0_32_allBoards(board_sel, bitnumber, address );
 }
 
 /**

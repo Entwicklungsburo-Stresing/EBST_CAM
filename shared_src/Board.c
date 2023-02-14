@@ -551,6 +551,33 @@ es_status_codes writeBitsS0_32( uint32_t drvno, uint32_t data, uint32_t bitmask,
 
 /**
  * @brief Set specified bits to 1 in S0 register at memory address.
+ *
+ * @param data
+ * @param bitmask
+ * @param address
+ * @param drvno PCIe board identifier.
+ * @return es_status_codes
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
+es_status_codes writeBitsS0_32_allBoards(uint32_t board_sel, uint32_t data, uint32_t bitmask, uint16_t address)
+{
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = writeBitsDma_32(drvno, data, bitmask, address + S0_SPACE_OFFSET);
+			if (status != es_no_error) return status;
+		}
+	}
+	return status;
+}
+
+/**
+ * @brief Set specified bits to 1 in S0 register at memory address.
  * 
  * @param data 
  * @param bitmask 
@@ -581,6 +608,23 @@ es_status_codes setBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address
 {
 	uint32_t bitmask = 0x1 << bitnumber;
 	return writeBitsS0_32(drvno, 0xFFFFFFFF, bitmask, address);
+}
+
+/**
+ * @brief Set bit to 1 in S0 register at memory address.
+ *
+ * @param drvno board number (=1 if one PCI board)
+ * @param bitnumber 0...31, 0 is LSB, 31 MSB
+ * @param address register address. Only 4 byte steps are valid.
+ * @return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
+es_status_codes setBitS0_32_allBoards(uint32_t board_sel, uint32_t bitnumber, uint16_t address)
+{
+	uint32_t bitmask = 0x1 << bitnumber;
+	return writeBitsS0_32_allBoards(board_sel, 0xFFFFFFFF, bitmask, address);
 }
 
 /**
@@ -621,6 +665,23 @@ es_status_codes resetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t addre
  * @brief Set bit to 0 in register at memory address.
  *
  * @param drvno board number (=1 if one PCI board)
+ * @param bitnumber 0...31, 0 is LSB, 31 MSB
+ * @param address register address. Only 4 byte steps are valid.
+ * @return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
+es_status_codes resetBitS0_32_allBoards(uint32_t board_sel, uint32_t bitnumber, uint16_t address)
+{
+	uint32_t bitmask = 0x1 << bitnumber;
+	return writeBitsS0_32_allBoards(board_sel, 0x0, bitmask, address);
+}
+
+/**
+ * @brief Set bit to 0 in register at memory address.
+ *
+ * @param drvno board number (=1 if one PCI board)
  * @param bitnumber 0...7, 0 is LSB, 7 MSB
  * @param address register address. 1 byte steps are valid.
  * @return es_status_codes:
@@ -647,6 +708,36 @@ es_status_codes resetBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t addres
 es_status_codes writeRegisterS0_32( uint32_t drvno, uint32_t data, uint16_t address )
 {
 	return writeRegister_32(drvno, data, address + S0_SPACE_OFFSET);
+}
+
+/**
+ * \brief Write 4 byte of a register in S0 space.
+ *
+ * \param drvno PCIe board identifier.
+ * \param data Data to write.
+ * \param address Address of the register to read.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes writeRegisterS0_32_allBoards(uint32_t board_sel, uint32_t data, uint16_t address)
+{
+	return writeRegister_32_allBoards(board_sel, data, address + S0_SPACE_OFFSET);
+}
+
+es_status_codes writeRegister_32_allBoards(uint32_t board_sel, uint32_t data, uint16_t address)
+{
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = writeRegister_32(drvno, data, address);
+			if (status != es_no_error) return status;
+		}
+	}
+	return status;
 }
 
 /**
@@ -678,6 +769,36 @@ es_status_codes writeRegisterS0_8( uint32_t drvno, uint8_t data, uint16_t addres
 {
 	return writeRegister_8(drvno, data, address + S0_SPACE_OFFSET);
 }
+
+/**
+ * \brief Write the same 1 byte to a register in S0 space of all boards.
+ *
+ * \param data Data to write.
+ * \param address Address of the register to read.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes writeRegisterS0_8_allBoards(uint32_t board_sel, uint8_t data, uint16_t address)
+{
+	return writeRegister_8_allBoards(board_sel, data, address + S0_SPACE_OFFSET);
+}
+
+es_status_codes writeRegister_8_allBoards(uint32_t board_sel, uint8_t data, uint16_t address)
+{
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = writeRegister_8(drvno, data, address);
+			if (status != es_no_error) return status;
+		}
+	}
+	return status;
+}
+
 
 /**
  * \brief Read 4 bytes of a register in S0 space.
