@@ -4832,3 +4832,9 @@ void getFileHeaderFromFile(struct file_header* fh, char* filename_full)
 	}
 	return;
 }
+
+void SetContinuousMeasurement(bool on)
+{
+	continiousMeasurementFlag = on;
+	return;
+}
