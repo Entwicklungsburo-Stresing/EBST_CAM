@@ -413,8 +413,17 @@ DllAccess es_status_codes DLLStartMeasurement_blocking()
 /**
  * \copydoc SetTemp
  */
-DllAccess es_status_codes DLLSetTemp( UINT32 drvno, UINT8 level )
+DllAccess es_status_codes DLLSetTemp( uint32_t board_sel, uint8_t level )
 {
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = SetTemp(drvno, level);
+			if (status != es_no_error) return status;
+		}
+	return;
 	return SetTemp(drvno, level);
 }
 
@@ -739,23 +748,60 @@ DllAccess es_status_codes DLLGetIsDsc(uint32_t board_sel, uint8_t* isDsc0, uint8
 /**
  * \copydoc ResetDSC
  */
-DllAccess es_status_codes DLLResetDSC(uint32_t drvno, uint8_t DSCNumber)
+DllAccess es_status_codes DLLResetDSC(uint32_t board_sel, uint8_t DSCNumber)
 {
-	return ResetDSC(drvno, DSCNumber);
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = ResetDSC(drvno, DSCNumber);
+			if (status != es_no_error) return status;
+		}
+	}
+	return status;
 }
 
 /**
  * \copydoc SetDIRDSC
  */
-DllAccess es_status_codes DLLSetDIRDSC(uint32_t drvno, uint8_t DSCNumber, uint8_t dir)
+DllAccess es_status_codes DLLSetDIRDSC(uint32_t board_sel, uint8_t DSCNumber, uint8_t dir)
 {
-	return SetDIRDSC(drvno, DSCNumber, dir);
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = SetDIRDSC(drvno, DSCNumber, dir);
+			if (status != es_no_error) return status;
+		}
+	}
+	return status;
 }
 
 /**
  * \copydoc GetDSC
  */
-DllAccess es_status_codes DLLGetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC)
+DllAccess es_status_codes DLLGetDSC(uint32_t board_sel, uint8_t DSCNumber, uint32_t* ADSC0, uint32_t* LDSC0, uint32_t ADSC1, uint32_t* LDSC1)
 {
-	return GetDSC(drvno, DSCNumber, ADSC, LDSC);
+	es_status_codes status = es_no_error;
+	uint32_t* ADSC[2] = { ADSC0, ADSC1 };
+	uint32_t* LDSC[2] = { LDSC0, LDSC1 };
+	int foundBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = GetDSC(drvno, DSCNumber, ADSC[foundBoards], LDSC[foundBoards]);
+			if (status != es_no_error) return status;
+			foundBoards++;
+			// this function only returns the values for the first two found boards
+			if (foundBoards >= 2)
+				return status;
+		}
+	}
+	return status;
 }
