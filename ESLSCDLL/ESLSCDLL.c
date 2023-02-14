@@ -406,7 +406,7 @@ DllAccess es_status_codes DLLCopyAllData( uint32_t board_sel, uint16_t *pdest0, 
  *		- es_no_error
  *		- es_parameter_out_of_range
  */
-DllAccess es_status_codes DLLCopyOeBlock( uint32_t board_sel, uint16_t block, uint16_t *pdest0, uint16_t *pdest1 )
+DllAccess es_status_codes DLLCopyOneBlock( uint32_t board_sel, uint16_t block, uint16_t *pdest0, uint16_t *pdest1 )
 {
 	uint16_t* pdest[2] = { pdest0, pdest1 };
 	int usedBoards = 0;
