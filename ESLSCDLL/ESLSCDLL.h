@@ -79,7 +79,7 @@ DllAccess es_status_codes DLLOutTrigPulse(uint32_t board_sel, uint32_t PulseWidt
 DllAccess es_status_codes DLLOpenShutter(uint32_t board_sel);	// set IFC=high
 DllAccess es_status_codes DLLCloseShutter(uint32_t board_sel);	// set IFC=low
 DllAccess es_status_codes DLLSetTemp(uint32_t board_sel, uint8_t level);
-DllAccess es_status_codes DLLSetTORReg(uint32_t drvno, uint8_t tor);
+DllAccess es_status_codes DLLSetTORReg(uint32_t board_sel, uint8_t tor);
 DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t board_sel, uint8_t location, uint32_t* output0, uint32_t* output1, uint8_t reorder_channel);
 DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t board_sel, uint32_t* width_in_5ns, uint32_t* delay_in_5ns);
 DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t board_sel, uint32_t period_in_10ns);
@@ -88,6 +88,7 @@ DllAccess es_status_codes DLLGetIsDsc(uint32_t board_sel, uint8_t* isDsc0, uint8
 DllAccess es_status_codes DLLResetDSC(uint32_t board_sel, uint8_t DSCNumber);
 DllAccess es_status_codes DLLSetDIRDSC(uint32_t board_sel, uint8_t DSCNumber, uint8_t dir);
 DllAccess es_status_codes DLLGetDSC(uint32_t board_sel, uint8_t DSCNumber, uint32_t* ADSC0, uint32_t* LDSC0, uint32_t ADSC1, uint32_t* LDSC1);
+DllAccess es_status_codes DLLInitGPX(uint32_t board_sel, uint32_t delay);
 //************ read and write functions
 DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t board_sel, uint8_t* data, uint32_t address);
 DllAccess es_status_codes DLLwriteRegisterS0_8(uint32_t board_sel, uint8_t data, uint32_t address);

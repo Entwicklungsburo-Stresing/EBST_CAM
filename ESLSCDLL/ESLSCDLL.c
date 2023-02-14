@@ -432,9 +432,17 @@ DllAccess es_status_codes DLLSetTemp( uint32_t board_sel, uint8_t level )
 /**
  * \copydoc SetTORReg
  */
-DllAccess es_status_codes DLLSetTORReg( uint32_t drvno, uint8_t tor)
+DllAccess es_status_codes DLLSetTORReg( uint32_t board_sel, uint8_t tor)
 {
-	return SetTORReg( drvno, tor);
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = SetTORReg(drvno, tor);
+			if (status != es_no_error) return status;
+		}
+	return status;
 }
 
 /**
@@ -443,14 +451,6 @@ DllAccess es_status_codes DLLSetTORReg( uint32_t drvno, uint8_t tor)
 DllAccess es_status_codes DLLAboutS0( uint32_t drvno )
 {
 	return AboutS0( drvno );
-}
-
-/**
- * \copydoc DAC8568_setOutput
- */
-DllAccess es_status_codes DLLDAC8568_setOutput( uint32_t drvno, uint8_t location, uint8_t channel, uint16_t output )
-{
-	return DAC8568_setOutput( drvno, location, channel, output );
 }
 
 /**
@@ -803,6 +803,21 @@ DllAccess es_status_codes DLLGetDSC(uint32_t board_sel, uint8_t DSCNumber, uint3
 			// this function only returns the values for the first two found boards
 			if (usedBoards >= 2)
 				return status;
+		}
+	}
+	return status;
+}
+
+DllAccess es_status_codes DLLInitGPX(uint32_t board_sel, uint32_t delay)
+{
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = InitGPX(drvno, delay);
+			if (status != es_no_error) return status;
 		}
 	}
 	return status;
