@@ -504,7 +504,7 @@ DllAccess es_status_codes DLLCalcTrms( uint32_t board_sel, uint32_t firstSample,
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
 		{
-			status = CalcTrms(drvno, firstSample, lastSample, TRMS_pixel, CAMpos, mwf, trms);
+			status = CalcTrms(drvno, firstSample, lastSample, TRMS_pixel, CAMpos, mwf[usedBoards], trms[usedBoards]);
 			if (status != es_no_error) return status;
 			usedBoards++;
 			// this function only returns the values for the first two found boards
