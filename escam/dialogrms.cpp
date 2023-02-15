@@ -79,6 +79,8 @@ void DialogRMS::on_spinBoxBoard_valueChanged(int index)
 	ui->spinBoxCampos->setMaximum(camcnt);
 	if (camcnt == 1)
 		ui->spinBoxCampos->setDisabled(true);
+	else
+		ui->spinBoxCampos->setDisabled(false);
 	ui->spinBox_pixel->setMaximum(pixel - 1);
 	ui->spinBox_lastsample->setMaximum(nos);
 	ui->spinBox_firstsample->setMaximum(nos - 1);
