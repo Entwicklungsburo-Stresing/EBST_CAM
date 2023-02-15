@@ -10,7 +10,7 @@ WDC_DEVICE_HANDLE hDev_tmp[MAXPCIECARDS];
 WDC_DEVICE_HANDLE* hDev = (WDC_DEVICE_HANDLE *)&hDev_tmp;
 DWORD dmaBufferSizeInBytes = 0;
 uint16_t* dmaBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
-uint64_t IsrCounter = 0;
+uint64_t IsrCounter[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 UINT8 dmaBufferPartReadPos[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 WD_DMA* dmaBufferInfos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL }; //there will be saved the necessary parameters for the DMA buffer
 WDC_PCI_SCAN_RESULT scanResult;
@@ -107,7 +107,7 @@ int64_t InitHRCounter()
  */
 void isr( uint32_t drvno )
 {
-	ES_TRACE( "ISR Counter: %d\n", IsrCounter );
+	ES_TRACE( "ISR Counter drvno %u: %d\n", drvno, IsrCounter[drvno]);
 	// Set INTRSR flag for TRIGO
 	es_status_codes status = setBitS0_32(drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );
 	if (status != es_no_error) return;
@@ -115,10 +115,10 @@ void isr( uint32_t drvno )
 	// Usually dmaBufferSizeInBytes = 1000scans 
 	// Sometimes (all 10 minutes) one INTR more occurs -> just do not serve it and return
 	// Error when too much ISRs -> memcpy out of range
-	if (IsrCounter > numberOfInterrupts)
+	if (IsrCounter[drvno] > numberOfInterrupts[drvno])
 	{
-		ES_LOG( "numberOfInterrupts: %u \n", numberOfInterrupts );
-		ES_LOG( "ISR Counter overflow: %u \n", IsrCounter );
+		ES_LOG( "numberOfInterrupts: %u \n", numberOfInterrupts[drvno]);
+		ES_LOG( "ISR Counter overflow: %u \n", IsrCounter[drvno]);
 		status = resetBitS0_32( drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );//reset INTRSR flag for TRIGO
 		return;
 	}
@@ -139,7 +139,7 @@ void isr( uint32_t drvno )
 	data_available += dmaBufferPartSizeInBytes / sizeof(UINT16);
 	// Reset INTRSR flag for TRIGO
 	status = resetBitS0_32(drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );
-	IsrCounter++;
+	IsrCounter[drvno]++;
 	return;
 }
 
@@ -410,7 +410,7 @@ void ResetBufferWritePos(uint32_t drvno)
 	// reset buffer index to base we got from InitDMA
 	userBufferWritePos[drvno] = userBuffer[drvno];
 	ES_LOG( "RESET userBufferWritePos to 0x%p\n", userBufferWritePos[drvno] );
-	IsrCounter = 0;
+	IsrCounter[drvno] = 0;
 	return;
 }
 
@@ -1092,9 +1092,7 @@ uint32_t getDmaBufferSizeInBytes(uint32_t drvno)
 
 int64_t getCurrentInterruptCounter(uint32_t drvno)
 {
-	// drvno is only used on Linux, so suppress warning here
-	(void)drvno;
-	return IsrCounter;
+	return IsrCounter[drvno];
 }
 
 void openFile(uint32_t drvno)

@@ -1055,11 +1055,8 @@ es_status_codes SetMeasurementParameters( uint32_t drvno, uint32_t nos, uint32_t
 	status = SetDMABufRegs(drvno);
 	if (status != es_no_error) return status;
 	uint32_t dmaBufferPartSizeInScans = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS; //500
-	if (settings_struct.board_sel > 2)
-		numberOfInterrupts = *Nob * (*Nospb) * aCAMCNT[drvno] * number_of_boards / dmaBufferPartSizeInScans - 2;//- 2 because interrupt counter starts with 0
-	else
-		numberOfInterrupts = *Nob * (*Nospb) * aCAMCNT[drvno] / dmaBufferPartSizeInScans - 1;//- 1 because interrupt counter starts with 0
-	ES_LOG("Number of interrupts: 0x%x \n", numberOfInterrupts);
+	numberOfInterrupts[drvno] = *Nob * (*Nospb) * aCAMCNT[drvno] / dmaBufferPartSizeInScans - 1;
+	ES_LOG("Number of interrupts: 0x%x \n", numberOfInterrupts[drvno]);
 	return status;
 }
 
@@ -3256,7 +3253,7 @@ es_status_codes ExitDriver()
  */
 es_status_codes ReturnFrame(uint32_t drv, uint32_t curr_nos, uint32_t curr_nob, uint16_t curr_cam, uint16_t* pdest, uint32_t length)
 {
-	//ES_LOG( "Return frame: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, pdest %p, length: %u\n", drv, curr_nos, curr_nob, curr_cam, pdest, length );
+	//ES_TRACE( "Return frame: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, pdest %p, length: %u\n", drv, curr_nos, curr_nob, curr_cam, pdest, length );
 	es_status_codes status = checkDriverHandle(drv);
 	if (status != es_no_error) return status;
 	uint16_t* pframe = NULL;
@@ -4502,7 +4499,7 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	uint16_t* userBufferWritePos_polling = userBuffer[drvno];
 	ES_TRACE("Address of user buffer: %p\n", (void*)userBuffer[drvno]);
 	bool allDataCopied = false;
-	scanCounterTotal = 0;
+	scanCounterTotal[drvno] = 0;
 	uint32_t scanCounterHardwareMirror = 1;
 	uint32_t blockCounterHardwareMirror = 1;
 	uint32_t scanCounterHardware;
@@ -4531,13 +4528,13 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 			dmaBufferReadPos += sizeOfOneScanInBytes / sizeof(uint16_t);
 			userBufferWritePos_polling += sizeOfOneScanInBytes / sizeof(uint16_t);
 			dataToCopyInBytes -= sizeOfOneScanInBytes;
-			scanCounterTotal++;
+			scanCounterTotal[drvno]++;
 			// get scan and block number for the next scan
 			int64_t scan, block;
 			GetScanNumber(drvno, 1, &scan, &block);
 			scanCounterHardwareMirror = (uint32_t)(scan + 1);
 			blockCounterHardwareMirror = (uint32_t)(block + 1);
-			ES_TRACE("Scan: %li\n", scanCounterTotal);
+			ES_TRACE("Scan: %li\n", scanCounterTotal[drvno]);
 			// check if dmaBufferReadPos exceeds dmaBuffer
 			if (dmaBufferReadPos >= dmaBufferEnd || dmaBufferReadPos < dmaBuffer)
 			{
@@ -4595,7 +4592,7 @@ void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* blo
 	int64_t scanCount = 0;
 	uint32_t dmasPerInterrupt = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
 	if (settings_struct.camera_settings[drvno].use_software_polling)
-		scanCount = scanCounterTotal;
+		scanCount = scanCounterTotal[drvno];
 	else
 		scanCount = getCurrentInterruptCounter(drvno) * dmasPerInterrupt;
 	ES_TRACE("scan counter %lu, Nospb %u, camcnt %u\n", scanCount + offset, *Nospb, aCAMCNT[drvno]);
