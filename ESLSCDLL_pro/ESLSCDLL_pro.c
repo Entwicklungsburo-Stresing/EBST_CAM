@@ -130,7 +130,7 @@ DllAccess void DLLStart2dViewer(UINT32 board_sel, UINT32 cur_nob, UINT16 cam, UI
 	}
 	Direct2dViewer = Direct2dViewer_new();
 	UINT16* address = NULL;
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < MAXPCIECARDS; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
@@ -140,6 +140,7 @@ DllAccess void DLLStart2dViewer(UINT32 board_sel, UINT32 cur_nob, UINT16 cam, UI
 			break;
 		}
 	}
+	ES_LOG("start2dviewer: bitmapAddr: %p, width %u, height %u\n", address, pixel, nos);
 	Direct2dViewer_start2dViewer(
 		Direct2dViewer,
 		GetActiveWindow(),
@@ -185,7 +186,7 @@ DllAccess void DLLShowNewBitmap(UINT32 board_sel, UINT32 cur_nob, UINT16 cam, UI
 	if (Direct2dViewer != NULL)
 	{
 		UINT16* address = NULL;
-		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		for (uint32_t drvno = 0; drvno < MAXPCIECARDS; drvno++)
 		{
 			// Check if the drvno'th bit is set
 			if ((board_sel >> drvno) & 1)
