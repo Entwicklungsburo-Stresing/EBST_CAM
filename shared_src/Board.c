@@ -4596,9 +4596,12 @@ void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* blo
 	else
 		scanCount = getCurrentInterruptCounter(drvno) * dmasPerInterrupt;
 	ES_TRACE("scan counter %lu, Nospb %u, camcnt %u\n", scanCount + offset, *Nospb, aCAMCNT[drvno]);
-	*block = (scanCount - 1 + offset) / (*Nospb * aCAMCNT[drvno]);
-	*sample = (scanCount - 1 + offset) / aCAMCNT[drvno] - *block * *Nospb * aCAMCNT[drvno];
-	ES_TRACE("block %li, scan %li\n", *block, *sample);
+	int64_t samples_done_all_cams = scanCount - 1 + offset;
+	int64_t samples_done_per_cam = samples_done_all_cams / aCAMCNT[drvno];
+	*block = samples_done_per_cam / *Nospb;
+	int64_t count_of_scans_of_completed_blocks = *block * *Nospb;
+	*sample = samples_done_per_cam - count_of_scans_of_completed_blocks;
+	ES_TRACE("block %li, scan %li, samples_done_all_cams %li, samples_done_per_cam %li, count_of_scans_of_completed_blocks %li\n", *block, *sample, samples_done_all_cams, samples_done_per_cam, count_of_scans_of_completed_blocks);
 	return;
 }
 
