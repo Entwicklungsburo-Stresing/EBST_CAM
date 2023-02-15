@@ -32,7 +32,8 @@ int64_t temp_scanCounterTotal[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 int64_t* scanCounterTotal = temp_scanCounterTotal;
 uint64_t measurement_cnt = 0;
 char start_timestamp[file_timestamp_size];
-size_t data_available = 0;
+size_t temp_data_available[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
+size_t* data_available = temp_data_available;
 const struct camera_settings camera_settings_default =
 {
 	.use_software_polling = settingsUseSoftwarePollingDefault,

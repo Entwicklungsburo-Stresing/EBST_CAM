@@ -108,7 +108,7 @@ extern bool isRunning;
 extern int64_t* scanCounterTotal;
 extern uint64_t measurement_cnt;
 extern char start_timestamp[file_timestamp_size];
-extern size_t data_available;
+extern size_t* data_available;
 extern bool* timerOn;
 
 #ifdef __cplusplus

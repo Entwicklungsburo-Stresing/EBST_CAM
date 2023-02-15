@@ -136,7 +136,7 @@ void isr( uint32_t drvno )
 		// dmaBufferPartReadPos is 0 or 1 for buffer divided in 2 parts
 		dmaBufferPartReadPos[drvno] = 0;
 	userBufferWritePos[drvno] += dmaBufferPartSizeInBytes / sizeof( UINT16 );
-	data_available += dmaBufferPartSizeInBytes / sizeof(UINT16);
+	data_available[drvno] += dmaBufferPartSizeInBytes / sizeof(UINT16);
 	// Reset INTRSR flag for TRIGO
 	status = resetBitS0_32(drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );
 	IsrCounter[drvno]++;
@@ -431,8 +431,8 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 	ES_LOG("copyRestData: dmaBufferReadPos: 0x%p \n", dmaBufferReadPos);
 	ES_LOG("copyRestData: userBufferWritePos: 0x%p \n", userBufferWritePos[drvno]);
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes);
-	data_available += rest_in_bytes / sizeof(uint16_t);
-	ES_LOG("copyRestData: increased available data to : %u \n", data_available);
+	data_available[drvno] += rest_in_bytes / sizeof(uint16_t);
+	ES_LOG("copyRestData: increased available data to : %u \n", data_available[drvno]);
 	return;
 }
 
@@ -1189,7 +1189,7 @@ void writeToDisc(uint32_t* drvno_ptr)
 	while (isRunning || data_count_to_write && !abortMeasurementFlag && !errnumber)
 	{
 		// check if there is new available data
-		data_count_to_write = data_available - data_written_all;
+		data_count_to_write = data_available[drvno] - data_written_all;
 		if (data_count_to_write)
 		{
 			// check if data_count_to_write is in the boundaries of userBuffer
@@ -1198,7 +1198,7 @@ void writeToDisc(uint32_t* drvno_ptr)
 				data_count_to_write = userBufferEndPtr[drvno] - userBufferWritePos_last[drvno];
 				ES_TRACE("data_count_to_write is exceeding the user buffer. Write the last part of the user buffer to disc.\n");
 			}
-			ES_TRACE("Write %u bytes to disk, drvno %u, data_available %u, data_written_all %u\n", data_count_to_write, drvno, data_available, data_written_all);
+			ES_TRACE("Write %u bytes to disk, drvno %u, data_available %u, data_written_all %u\n", data_count_to_write, drvno, data_available[drvno], data_written_all);
 			ES_TRACE("write data to disc from userBufferWritePos_last: 0x%p \n", userBufferWritePos_last[drvno]);
 			// write data to disc
 			data_written = fwrite(userBufferWritePos_last[drvno], sizeof(uint16_t), data_count_to_write, file_stream[drvno]);
