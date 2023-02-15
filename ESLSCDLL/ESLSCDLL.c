@@ -456,21 +456,17 @@ DllAccess es_status_codes DLLAboutS0( uint32_t drvno )
 /**
  * \copydoc DAC8568_setAllOutputs
  */
-DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t board_sel, uint8_t location, uint32_t* output0, uint32_t* output1, uint8_t reorder_channel)
+DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t board_sel, uint8_t location, uint32_t* output0, uint32_t* output1, uint32_t* output2, uint32_t* output3, uint32_t* output4, uint8_t reorder_channel)
 {
 	es_status_codes status = es_no_error;
-	double* output[2] = { output0, output1 };
-	int usedBoards = 0;
+	double* output[MAXPCIECARDS] = { output0, output1, output2, output3, output4 };
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
 		{
-			// If there are more than 2 used boards, the output alternates between output0 and output1.
-			// The function is only intended for the use with maximum of two boards.
-			status = DAC8568_setAllOutputs(drvno, location, output[usedBoards%2], reorder_channel);
+			status = DAC8568_setAllOutputs(drvno, location, output[drvno], reorder_channel);
 			if (status != es_no_error) return status;
-			usedBoards++;
 		}
 	}
 	return status;
