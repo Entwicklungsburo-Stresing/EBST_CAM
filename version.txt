@@ -1,5 +1,11 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.1.4
+- Fix GetScanNumber / live view for camcnt > 1
+- Fix RMS
+- Fix 2d viewer
+- Fix writeToDisc for multiple boards
+
 4.1.3
 - Fix continuous mode in escam
 - Add all boards to DLLDAC8568_setAllOutputs
