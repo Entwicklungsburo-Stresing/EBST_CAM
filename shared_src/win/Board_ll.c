@@ -8,7 +8,7 @@
 
 WDC_DEVICE_HANDLE hDev_tmp[MAXPCIECARDS];
 WDC_DEVICE_HANDLE* hDev = (WDC_DEVICE_HANDLE *)&hDev_tmp;
-DWORD dmaBufferSizeInBytes = 0;
+DWORD dmaBufferSizeInBytes[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 uint16_t* dmaBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 uint64_t IsrCounter[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 UINT8 dmaBufferPartReadPos[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
@@ -125,7 +125,7 @@ void isr( uint32_t drvno )
 	//ES_TRACE("dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes);
 	// dmaBufferPartSizeInBytes = 1000 * pixel *2 -> /2 = 500 scans = 1088000 bytes
 	// that means one 500 scan copy block has 1088000 bytes
-	size_t dmaBufferPartSizeInBytes = dmaBufferSizeInBytes / DMA_BUFFER_PARTS;
+	size_t dmaBufferPartSizeInBytes = dmaBufferSizeInBytes[drvno] / DMA_BUFFER_PARTS;
 	UINT16* dmaBufferReadPos = dmaBuffer[drvno] + dmaBufferPartReadPos[drvno] * dmaBufferPartSizeInBytes / sizeof(UINT16);
 	// The copy process is done here
 	ES_TRACE("copy from DMA to userBufferWritePos: 0x%p \n", userBufferWritePos[drvno]);
@@ -334,14 +334,14 @@ es_status_codes SetupDma( uint32_t drvno )
 		es_status_codes status = CleanupDma(drvno);
 		if (status != es_no_error) return status;
 	}
-	dmaBufferSizeInBytes = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans * aPIXEL[drvno] * sizeof( UINT16 );
+	dmaBufferSizeInBytes[drvno] = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans * aPIXEL[drvno] * sizeof(UINT16);
 	DWORD dwOptions = DMA_FROM_DEVICE | DMA_KERNEL_BUFFER_ALLOC;// | DMA_ALLOW_64BIT_ADDRESS;// DMA_ALLOW_CACHE ;
 	if (DMA_64BIT_EN)
 		dwOptions |= DMA_ALLOW_64BIT_ADDRESS;
 //usually we use contiguous buffer: here we get the buffer address from LabVIEW.
 #if DMA_CONTIGBUF
 	// dmaBuffer is the space which is allocated by this function = output - must be global
-	dwStatus = WDC_DMAContigBufLock( hDev[drvno], &dmaBuffer[drvno], dwOptions, dmaBufferSizeInBytes, &dmaBufferInfos[drvno] ); //size in Bytes
+	dwStatus = WDC_DMAContigBufLock( hDev[drvno], &dmaBuffer[drvno], dwOptions, dmaBufferSizeInBytes[drvno], &dmaBufferInfos[drvno]); //size in Bytes
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ES_LOG( "Failed locking a contiguous DMA buffer. Error 0x%lx - %s\n", dwStatus, Stat2Str( dwStatus ) );
@@ -425,7 +425,7 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 	ES_LOG( "Copy rest data\n" );
 	uint16_t* dmaBufferReadPos = dmaBuffer[drvno];
 	// dmaBufferPartReadPos is 0 or 1 when DMA_BUFFER_PARTS=2 -> hi/lo half
-	dmaBufferReadPos += dmaBufferPartReadPos[drvno] * dmaBufferSizeInBytes /2 / DMA_BUFFER_PARTS;
+	dmaBufferReadPos += dmaBufferPartReadPos[drvno] * dmaBufferSizeInBytes[drvno] /2 / DMA_BUFFER_PARTS;
 	//					0 or 1 for lo/hi half		*  DMA buffer in shorts		  /      2	
 	// rest_in_bytes = 2 x pixel x rest in scans
 	ES_LOG("copyRestData: dmaBufferReadPos: 0x%p \n", dmaBufferReadPos);
@@ -1085,9 +1085,7 @@ uint16_t* getVirtualDmaAddress(uint32_t drvno)
 
 uint32_t getDmaBufferSizeInBytes(uint32_t drvno)
 {
-	// drvno is only used on Linux, so suppress warning here
-	(void)drvno;
-	return dmaBufferSizeInBytes;
+	return dmaBufferSizeInBytes[drvno];
 }
 
 int64_t getCurrentInterruptCounter(uint32_t drvno)
