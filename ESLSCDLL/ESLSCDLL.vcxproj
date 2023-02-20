@@ -33,8 +33,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Labview|x64'" Label="Configuration">
     <PlatformToolset>v142</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -86,7 +86,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;WINNT;WIN32;_DEBUG;_WINDOWS;_USRDLL;ESLSCDLL_EXPORTS;%(PreprocessorDefinitions);WD_DRIVER_NAME_CHANGE</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;_DEBUG</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>
@@ -116,7 +116,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Labview|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;WINNT;WIN32;_DEBUG;_WINDOWS;_USRDLL;ESLSCDLL_EXPORTS;%(PreprocessorDefinitions);WD_DRIVER_NAME_CHANGE;COMPILE_FOR_LABVIEW</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;COMPILE_FOR_LABVIEW;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>
@@ -147,7 +147,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>WINNT;NDEBUG;_WINDOWS;_USRDLL;ESLSCDLL_EXPORTS;KERNEL_64BIT;%(PreprocessorDefinitions);WD_DRIVER_NAME_CHANGE;WIN32</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
@@ -181,7 +181,6 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-Labview|x64'">
     <ClCompile>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WINNT;NDEBUG;_WINDOWS;_USRDLL;ESLSCDLL_EXPORTS;%(PreprocessorDefinitions);WD_DRIVER_NAME_CHANGE;WIN32;COMPILE_FOR_LABVIEW</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>
@@ -189,6 +188,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
+      <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;COMPILE_FOR_LABVIEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <OptimizeReferences>true</OptimizeReferences>
