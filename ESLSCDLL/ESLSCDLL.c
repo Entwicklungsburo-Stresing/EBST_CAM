@@ -459,7 +459,7 @@ DllAccess es_status_codes DLLAboutS0( uint32_t drvno )
 DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t board_sel, uint8_t location, uint32_t* output0, uint32_t* output1, uint32_t* output2, uint32_t* output3, uint32_t* output4, uint8_t reorder_channel)
 {
 	es_status_codes status = es_no_error;
-	double* output[MAXPCIECARDS] = { output0, output1, output2, output3, output4 };
+	uint32_t* output[MAXPCIECARDS] = { output0, output1, output2, output3, output4 };
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
