@@ -405,6 +405,9 @@ void MainWindow::on_actionCameras_triggered()
 		if ((board_sel >> drvno) & 1)
 		{
 			camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
+			// If camcnt is 0, treat as camcnt 1
+			if (camcnt == 0)
+				camcnt = 1;
 			for (uint16_t cam = 0; cam < camcnt; cam++)
 			{
 				QCheckBox* checkbox = new QCheckBox(messageBox);
@@ -669,6 +672,9 @@ void MainWindow::loadCameraData()
 		{
 			settings.beginGroup("board" + QString::number(drvno));
 			camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
+			// if camcnt is 0, treat as 1
+			if (camcnt == 0)
+				camcnt = 1;
 			pixel = settings.value(settingPixelPath, settingPixelDefault).toUInt();
 			for (uint16_t cam = 0; cam < camcnt; cam++)
 			{
@@ -695,6 +701,9 @@ void MainWindow::loadCameraData()
 		{
 			settings.beginGroup("board" + QString::number(drvno));
 			camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
+			// if camcnt is 0, treat as 1
+			if (camcnt == 0)
+				camcnt = 1;
 			pixel = settings.value(settingPixelPath, settingPixelDefault).toUInt();
 			for (uint16_t cam = 0; cam < camcnt; cam++)
 			{
