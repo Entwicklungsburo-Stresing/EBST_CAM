@@ -3126,12 +3126,14 @@ es_status_codes DoSoftwareTrigger( uint32_t drvno )
  */
 es_status_codes IsTimerOn( uint32_t drvno, bool* on )
 {
-	uint8_t data = 0;
+	volatile uint8_t data = 0;
 	es_status_codes status = readRegisterS0_8( drvno, &data, S0Addr_XCKMSB );
 	if (status != es_no_error) return status;
-	data &= 0x40;
-	if (data != 0) *on = true;
-	else *on = false;
+	data &= XCKMSB_bit_stimer_on;
+	if (data != 0)
+		*on = true;
+	else
+		*on = false;
 	return status;
 }
 
