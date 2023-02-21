@@ -782,7 +782,7 @@ DllAccess es_status_codes DLLSetDIRDSC(uint32_t board_sel, uint8_t DSCNumber, ui
 /**
  * \copydoc GetDSC
  */
-DllAccess es_status_codes DLLGetDSC(uint32_t board_sel, uint8_t DSCNumber, uint32_t* ADSC0, uint32_t* LDSC0, uint32_t ADSC1, uint32_t* LDSC1)
+DllAccess es_status_codes DLLGetDSC(uint32_t board_sel, uint8_t DSCNumber, uint32_t* ADSC0, uint32_t* LDSC0, uint32_t* ADSC1, uint32_t* LDSC1)
 {
 	es_status_codes status = es_no_error;
 	uint32_t* ADSC[2] = { ADSC0, ADSC1 };
