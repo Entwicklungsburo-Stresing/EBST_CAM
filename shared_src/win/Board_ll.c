@@ -8,10 +8,10 @@
 
 WDC_DEVICE_HANDLE hDev_tmp[MAXPCIECARDS];
 WDC_DEVICE_HANDLE* hDev = (WDC_DEVICE_HANDLE *)&hDev_tmp;
-DWORD dmaBufferSizeInBytes[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
-uint16_t* dmaBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
-uint64_t IsrCounter[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
-UINT8 dmaBufferPartReadPos[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
+volatile DWORD dmaBufferSizeInBytes[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
+volatile uint16_t* dmaBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
+volatile uint64_t IsrCounter[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
+volatile UINT8 dmaBufferPartReadPos[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 WD_DMA* dmaBufferInfos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL }; //there will be saved the necessary parameters for the DMA buffer
 WDC_PCI_SCAN_RESULT scanResult;
 WD_PCI_CARD_INFO deviceInfo[MAXPCIECARDS];

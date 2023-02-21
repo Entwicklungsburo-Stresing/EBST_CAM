@@ -93,14 +93,14 @@ extern uint32_t* aCAMCNT;
 extern bool* useSWTrig;
 extern uint16_t** userBuffer;
 extern uint16_t** userBufferEndPtr;
-extern uint16_t** userBufferWritePos;
+extern volatile uint16_t** userBufferWritePos;
 extern uint16_t** userBufferWritePos_last;
 extern uint8_t number_of_boards;
 extern uint32_t* Nob;
 extern uint32_t* Nospb;
 extern bool abortMeasurementFlag;
-extern uint32_t* numberOfInterrupts;
-extern bool continiousMeasurementFlag;
+extern volatile uint32_t* numberOfInterrupts;
+extern volatile bool continiousMeasurementFlag;
 extern uint32_t continiousPauseInMicroseconds;
 extern struct measurement_settings settings_struct;
 extern const struct camera_settings camera_settings_default;
@@ -108,8 +108,8 @@ extern bool isRunning;
 extern int64_t* scanCounterTotal;
 extern uint64_t measurement_cnt;
 extern char start_timestamp[file_timestamp_size];
-extern size_t* data_available;
-extern bool* timerOn;
+extern volatile size_t* data_available;
+extern volatile bool* timerOn;
 
 #ifdef __cplusplus
 }
