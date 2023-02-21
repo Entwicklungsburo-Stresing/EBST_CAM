@@ -1182,7 +1182,6 @@ void writeToDisc(uint32_t* drvno_ptr)
 	size_t data_count_to_write = 0;
 	size_t data_written_all = 0;
 	size_t data_written = 0;
-	uint64_t measurement_cnt_old = 1;
 	int errnumber = 0;
 	while (isRunning || data_count_to_write && !abortMeasurementFlag && !errnumber)
 	{

@@ -115,7 +115,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 		case partial_binning:
 		{
 			uint8_t regionSize[8];
-			for (int i = 0; i < 8; i++) regionSize[i] = settings_struct.camera_settings[drvno].region_size[i];
+			for (int i = 0; i < 8; i++) regionSize[i] = (uint8_t)settings_struct.camera_settings[drvno].region_size[i];
 			status = DLLSetupROI(drvno, (uint16_t)settings_struct.camera_settings[drvno].number_of_regions, settings_struct.camera_settings[drvno].fft_lines, (uint8_t)settings_struct.camera_settings[drvno].keep, regionSize, (uint8_t)settings_struct.camera_settings[drvno].vfreq);
 			break;
 		}
@@ -187,9 +187,9 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 		if (status != es_no_error) return status;
 	}
 	if (status != es_no_error) return status;
-	status = SetTicnt(drvno, settings_struct.camera_settings[drvno].ticnt);
+	status = SetTicnt(drvno, (uint8_t)settings_struct.camera_settings[drvno].ticnt);
 	if (status != es_no_error) return status;
-	status = SetTocnt(drvno, settings_struct.camera_settings[drvno].tocnt);
+	status = SetTocnt(drvno, (uint8_t)settings_struct.camera_settings[drvno].tocnt);
 	// Init Camera
 	status = FindCam(drvno);
 	if (status != es_no_error) return status;
@@ -848,7 +848,7 @@ es_status_codes readRegister_32_allBoards(uint32_t board_sel, uint32_t** data, u
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
 		{
-			status = readRegister_32(drvno, data + drvno, address);
+			status = readRegister_32(drvno, *(data + drvno), address);
 			if (status != es_no_error) return status;
 		}
 	}
@@ -2827,13 +2827,13 @@ es_status_codes StartMeasurement()
 					if (status != es_no_error) return ReturnStartMeasurement(status);
 					timerOn[drvno] = true;
 				}
-				else timerOn[drvno] = false;
+				else
+					timerOn[drvno] = false;
 			}
 			// Main read loop. The software waits here until the flag RegXCKMSB:b30 = TimerOn is resetted by hardware,
 			// if flag HWDREQ_EN is TRUE.
 			// This is done when nos scans are counted by hardware. Pressing ESC can cancel this loop.
 			// Waiting for end of measurement
-
 			while (timerOn[0] || timerOn[1] || timerOn[2] || timerOn[3] || timerOn[4])
 			{
 				for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -4341,8 +4341,15 @@ es_status_codes GetDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint3
 	uint16_t addrADSC, addrLDSC;
 	switch (DSCNumber)
 	{
-	case 1: addrADSC = S0Addr_A1DSC; addrLDSC = S0Addr_L1DSC; break;
-	case 2: addrADSC = S0Addr_A2DSC; addrLDSC = S0Addr_L2DSC; break;
+	default:
+	case 1:
+		addrADSC = S0Addr_A1DSC;
+		addrLDSC = S0Addr_L1DSC;
+		break;
+	case 2:
+		addrADSC = S0Addr_A2DSC;
+		addrLDSC = S0Addr_L2DSC;
+		break;
 	}
 
 	status = readRegisterS0_32( drvno, ADSC, addrADSC );
