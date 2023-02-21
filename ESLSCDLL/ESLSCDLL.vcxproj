@@ -85,21 +85,19 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;_DEBUG</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>EnableAllWarnings</WarningLevel>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <WarningLevel>Level3</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>$(SolutionDir)shared_src\ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ResourceCompile>
       <Culture>0x0407</Culture>
@@ -117,20 +115,20 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Labview|x64'">
     <ClCompile>
       <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;COMPILE_FOR_LABVIEW;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>EnableAllWarnings</WarningLevel>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <CallingConvention>StdCall</CallingConvention>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>$(SolutionDir)shared_src\ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <ResourceCompile>
       <Culture>0x0407</Culture>
@@ -151,10 +149,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>EnableAllWarnings</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <WarningLevel>Level3</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
@@ -164,7 +159,6 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       <AdditionalDependencies>$(SolutionDir)shared_src\ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)shared_src\" 
@@ -180,13 +174,10 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-Labview|x64'">
     <ClCompile>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
       <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;COMPILE_FOR_LABVIEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -196,7 +187,6 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       <AdditionalDependencies>$(SolutionDir)shared_src\ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
     </Link>
     <PostBuildEvent>
