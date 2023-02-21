@@ -148,7 +148,7 @@ void DLLCALLCONV interrupt_handler1() { isr( 1 ); }
 void DLLCALLCONV interrupt_handler2() { isr( 2 ); }
 void DLLCALLCONV interrupt_handler3() { isr( 3 ); }
 void DLLCALLCONV interrupt_handler4() { isr( 4 ); }
-void *interrupt_handler_array[MAXPCIECARDS] = { &interrupt_handler0, &interrupt_handler1, &interrupt_handler2, interrupt_handler3, interrupt_handler4 };
+void *interrupt_handler_array[MAXPCIECARDS] = { &interrupt_handler0, &interrupt_handler1, &interrupt_handler2, &interrupt_handler3, &interrupt_handler4 };
 
 /**
  * @brief Reads 4 bytes on DMA area.
