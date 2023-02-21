@@ -720,9 +720,9 @@ es_status_codes About(uint32_t board_sel)
 			if (status != es_no_error) return status;
 			status = AboutCameraSettings(drvno);
 			if (status != es_no_error) return status;
-			status = AboutMeasurementSettings();
-			if (status != es_no_error) return status;
 		}
+	status = AboutMeasurementSettings();
+	if (status != es_no_error) return status;
 	return status;
 }
 
