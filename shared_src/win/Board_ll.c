@@ -128,7 +128,7 @@ void isr( uint32_t drvno )
 	size_t dmaBufferPartSizeInBytes = dmaBufferSizeInBytes[drvno] / DMA_BUFFER_PARTS;
 	UINT16* dmaBufferReadPos = dmaBuffer[drvno] + dmaBufferPartReadPos[drvno] * dmaBufferPartSizeInBytes / sizeof(UINT16);
 	// The copy process is done here
-	ES_TRACE("copy from DMA to userBufferWritePos: 0x%p \n", userBufferWritePos[drvno]);
+	ES_TRACE("copy from DMA 0x%p to userBufferWritePos 0x%p \n", dmaBufferReadPos, userBufferWritePos[drvno]);
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, dmaBufferPartSizeInBytes );
 	dmaBufferPartReadPos[drvno]++;
 	// number of ISR per dmaBuf - 1
@@ -137,6 +137,8 @@ void isr( uint32_t drvno )
 		dmaBufferPartReadPos[drvno] = 0;
 	userBufferWritePos[drvno] += dmaBufferPartSizeInBytes / sizeof( UINT16 );
 	data_available[drvno] += dmaBufferPartSizeInBytes / sizeof(UINT16);
+	ES_TRACE("increase userBufferWritePos to 0x%p \n", userBufferWritePos[drvno]);
+	ES_TRACE("increase data_available to %u \n", data_available[drvno]);
 	// Reset INTRSR flag for TRIGO
 	status = resetBitS0_32(drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );
 	IsrCounter[drvno]++;
