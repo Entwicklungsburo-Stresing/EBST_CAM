@@ -495,7 +495,11 @@ es_status_codes ResetDma( uint32_t drvno )
 es_status_codes SetCamCount(uint32_t drvno, uint16_t camcount)
 {
 	ES_LOG("Set cam count: %u\n", camcount);
-	aCAMCNT[drvno] = camcount;
+	if (camcount)
+		aCAMCNT[drvno] = camcount;
+	else
+		// if camcnt = 0, treat as camcnt = 1, but write 0 to register
+		aCAMCNT[drvno] = 1;
 	return writeBitsS0_32(drvno, camcount, 0xF, S0Addr_CAMCNT);
 }
 
@@ -1163,9 +1167,7 @@ es_status_codes SetDMABufRegs( uint32_t drvno )
 	ES_LOG( "scansPerInterrupt/camcnt: 0x%x \n", dmasPerInterrupt / aCAMCNT[drvno] );
 	status = writeBitsS0_32(drvno, *Nospb, 0xffffffff, S0Addr_NOS);
 	if (status != es_no_error) return status;
-	status = writeBitsS0_32(drvno, *Nob, 0xffffffff, S0Addr_NOB);
-	if (status != es_no_error) return status;
-	return writeBitsS0_32(drvno, aCAMCNT[drvno], 0xffffffff, S0Addr_CAMCNT);
+	return writeBitsS0_32(drvno, *Nob, 0xffffffff, S0Addr_NOB);
 }
 
 /**
@@ -2949,7 +2951,7 @@ es_status_codes FindCam( uint32_t drvno )
 	uint32_t data = 0;
 	es_status_codes status = readRegisterS0_32( drvno, &data, S0Addr_PCIEFLAGS );
 	if (status != es_no_error) return status;
-	if ((data & 0x80000000) > 0)
+	if ((data & PCIEFLAGS_bit_error_sfp1) > 0)
 	{
 		//SFP error
 		ES_LOG( "Fiber or Camera error\n" );
