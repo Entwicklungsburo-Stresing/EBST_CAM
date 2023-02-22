@@ -16,9 +16,9 @@ lsc-cli         | CLI in C                              | Linux
 # Windows
 
 ### Build Dependencies
-* [Visual Studio](https://visualstudio.microsoft.com/) with C++ Toolbox (Plattform Toolset: v141, Windows SDK Version: 10.0.17763.0).
-* Visual Studio Extention: [Qt Visual Studio Tools](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2019) + [MSVC Qt 5](https://www.qt.io/download) (both needed for Escam)
-* Labview Libraries: Optional, for DLL usage with Labview. If you want to compile the DLL for usage with other software than Labview, set `COMPILE_FOR_LABVIEW` in `ESLSCDLL/ESLSCDLL.h` to `FALSE`.
+* [Visual Studio](https://visualstudio.microsoft.com/) with C++ Toolbox (Plattform Toolset: v142, Windows SDK Version: 10.0.18362.0).
+* Visual Studio Extention: [Qt Visual Studio Tools](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2019) + [MSVC Qt 5.15](https://www.qt.io/download) (both needed for Escam)
+* Labview Libraries: Optional, for DLL usage with Labview. If you want to compile the DLL for usage with other software than Labview, set compile options "Debug" and "Release" instead of "Debug-Labview" and "Release-Labview".
 * Visual Studio Extention: [Microsoft Visual Studio Installer Project](https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2017InstallerProjects) (optional, for creating setup.exe for escam)
 
 ### Compile
@@ -39,7 +39,7 @@ If `MSVCP140.dll` and `VCRUNTIME140.dll` are missing, Microsoft Visual C++ Redis
 # Linux
 
 ### Build Dependencies
-* Qt 5 (for escam Qt GUI)
+* Qt 5.15 (for escam Qt GUI)
 * make
 * C++ compiler g++
 * libqt5charts5-dev
