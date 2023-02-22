@@ -1,5 +1,8 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.2.0
+- Add special case CAMCNT = 0
+
 4.1.5
 - Make continiousMeasurementFlag and other variables volatile. These variables are accessed by different threads and / or ISR, hence they should be declared as volatile. The interrupt didn't work correctly without continiousMeasurementFlag beeing volatile. There are probably more variables that should be volatile.
 - Other small fixes
