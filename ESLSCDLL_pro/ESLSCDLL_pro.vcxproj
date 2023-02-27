@@ -115,7 +115,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(SolutionDir)shared_src\ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Jungo\wdapi1400.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
       <ManifestFile>$(OuttDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
     </Link>
@@ -159,7 +159,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)escam\build\"</Command>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(SolutionDir)shared_src\ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;LabVIEW 2015/cintools/labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Jungo\wdapi1400.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;LabVIEW 2015/cintools/labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
       <ManifestFile>$(OuttDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
     </Link>
@@ -208,7 +208,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)escam\build\"</Command>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>$(SolutionDir)shared_src\ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Jungo\wdapi1400.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ManifestFile>$(OuttDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
       <ShowProgress>NotSet</ShowProgress>
     </Link>
@@ -257,7 +257,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)escam\build\"</Command>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>$(SolutionDir)shared_src\ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Jungo\wdapi1400.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ManifestFile>$(OuttDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
       <ShowProgress>NotSet</ShowProgress>
     </Link>
