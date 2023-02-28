@@ -555,11 +555,7 @@ enum file_specifications
 {
 	file_path_size = 256,
 	file_timestamp_size = 64,
-	file_filename_full_size = 256,
-	file_scan_counter_pixel_pos_lsb = 5,
-	file_scan_counter_pixel_pos_msb = 4,
-	file_block_counter_pixel_pos_lsb = 3,
-	file_block_counter_pixel_pos_msb = 2
+	file_filename_full_size = 256
 };
 
 /**
@@ -596,4 +592,32 @@ enum DAC8568_location
 	 * PCIe add on board EWS, PCB 2226-3.
 	 */
 	DAC8568_pcie = 1
+};
+
+/**
+ * This enum shows the encoding of the special pixel 2. The upper two bits are encoding the binary state of S1 and S2. All other bits are representing the upper half of the block index counter.
+ */
+enum bits_of_pixel_block_index_high_S1_S2
+{
+	pixel_block_index_high_s1_s2_bit_block_index = 0x3FFF,
+	pixel_block_index_high_s1_s2_bit_s2 = 0x4000,
+	pixel_block_index_high_s1_s2_bit_s1 = 0x8000,
+	pixel_block_index_high_s1_s2_bitindex_s2 = 14,
+	pixel_block_index_high_s1_s2_bitindex_s1 = 15,
+};
+
+/**
+ * This enum show the meaning of the first special pixels. Additionally the 2 last pixels contain the information of the scan index.
+ */
+enum special_pixels
+{
+	pixel_block_index_high_s1_s2 = 2,
+	pixel_block_index_low = 3,
+	pixel_scan_index_high = 4,
+	pixel_scan_index_low = 5,
+	pixel_impact_signal_1_high = 6,
+	pixel_impact_signal_1_low = 7,
+	pixel_impact_signal_2_high = 8,
+	pixel_impact_signal_2_low = 9,
+	pixel_camera_status = 10
 };
