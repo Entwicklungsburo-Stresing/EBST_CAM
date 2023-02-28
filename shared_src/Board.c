@@ -4522,9 +4522,10 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	{
 		//ES_TRACE("dmaBufferReadPosNextScan: %p ", dmaBufferReadPosNextScan);
 		// scan counter pixel are 4 and 5 and since P202_21 at the last pixel
-		scanCounterHardware = (uint32_t)(dmaBufferReadPos[4] << 16) | *(dmaBufferReadPos + aPIXEL[drvno] - 1);
+		scanCounterHardware = (uint32_t)(dmaBufferReadPos[pixel_scan_index_high] << 16) | *(dmaBufferReadPos + aPIXEL[drvno] - 1);
 		// block counter pixel are 2 and 3
-		blockCounterHardware = (uint32_t)(dmaBufferReadPos[2] << 16) | dmaBufferReadPos[3];
+		uint16_t block_index_high = dmaBufferReadPos[pixel_block_index_high_s1_s2] & pixel_block_index_high_s1_s2_bits_block_index;
+		blockCounterHardware = (uint32_t)(block_index_high << 16) | dmaBufferReadPos[pixel_block_index_low];
 		//ES_TRACE("scan: %u, scanmirror: %u, block: %u, blockmirror: %u\n", scanCounterHardware, scanCounterHardwareMirror, blockCounterHardware, blockCounterHardwareMirror);
 		// Check if scan and block counter in DMA buffer are equal to their mirrors
 		if (scanCounterHardwareMirror == scanCounterHardware && blockCounterHardwareMirror == blockCounterHardware)
@@ -4789,8 +4790,9 @@ void VerifyData(struct verify_data_parameter* vd)
 			// When the end of the file is reached, break the while loop.
 			if (feof(stream)) break;
 			// Assemble the 32 bit counters from upper and lower 16 bit counter half
-			vd->last_sample = ((uint32_t)data_buffer[file_scan_counter_pixel_pos_msb]) << 16 | ((uint32_t)data_buffer[file_scan_counter_pixel_pos_lsb]);
-			vd->last_block = ((uint32_t)data_buffer[file_block_counter_pixel_pos_msb]) << 16 | ((uint32_t)data_buffer[file_block_counter_pixel_pos_lsb]);
+			vd->last_sample = ((uint32_t)data_buffer[pixel_scan_index_high]) << 16 | ((uint32_t)data_buffer[pixel_scan_index_low]);
+			uint16_t block_index_high = data_buffer[pixel_block_index_high_s1_s2] & pixel_block_index_high_s1_s2_bits_block_index;
+			vd->last_block = ((uint32_t)block_index_high << 16) | ((uint32_t)data_buffer[pixel_block_index_low]);
 			// Check if the theoretical counter value is identical with the actual counter value from the file
 			if (vd->last_sample != cur_sample_cnt || vd->last_block != cur_block_cnt)
 			{
@@ -4814,7 +4816,8 @@ void VerifyData(struct verify_data_parameter* vd)
 				cur_sample_cnt = 1;
 				cur_block_cnt++;
 			}
-			if (cur_block_cnt > vd->fh.nob)
+			// block counter is only 30 bits wide, so maximum is 0x3FFFFFFF
+			if (cur_block_cnt > vd->fh.nob || cur_block_cnt > 0x3FFFFFFF)
 			{
 				cur_block_cnt = 1;
 				vd->measurement_cnt++;
