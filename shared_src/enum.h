@@ -202,7 +202,7 @@ enum s0_addresses
 	S0Addr_PCIEFLAGS = 0x40,
 	S0Addr_NOS = 0x44,
 	S0Addr_ScanIndex = 0x48,
-	S0Addr_DmaBufSizeInScans = 0x04C,		// length in scans
+	S0Addr_DmaBufSizeInScans = 0x04C,
 	S0Addr_DMAsPerIntr = 0x050,
 	S0Addr_NOB = 0x054,
 	S0Addr_BLOCKINDEX = 0x058,
@@ -222,7 +222,9 @@ enum s0_addresses
 	S0Addr_A2DSC = 0x98,
 	S0Addr_L2DSC = 0x9C,
 	S0Addr_DSCCtrl = 0xA8,
-	S0Addr_DAC = 0xAC
+	S0Addr_DAC = 0xAC,
+	S0Addr_CAMSTATUS12 = 0xB0,
+	S0Addr_CAMSTATUS34 = 0xB4
 };
 
 enum ScanIndex_bits
@@ -599,25 +601,93 @@ enum DAC8568_location
  */
 enum bits_of_pixel_block_index_high_S1_S2
 {
+	/**
+	 * The lower 14 bits are representing the bits 29 to 16 from block index.
+	 */
 	pixel_block_index_high_s1_s2_bits_block_index = 0x3FFF,
+	/**
+	 * 1: Input S2 is high, 0: S2 is low.
+	 */
 	pixel_block_index_high_s1_s2_bit_s2 = 0x4000,
+	/**
+	 * 1: Input S1 is high, 0: S1 is low.
+	 */
 	pixel_block_index_high_s1_s2_bit_s1 = 0x8000,
 	pixel_block_index_high_s1_s2_bitindex_s2 = 14,
 	pixel_block_index_high_s1_s2_bitindex_s1 = 15,
 };
 
 /**
- * This enum show the meaning of the first special pixels. Additionally the 2 last pixels contain the information of the scan index.
+ * This enum shows the meaning of the first special pixels. Additionally the 2 last pixels contain the information of the scan index.
  */
 enum special_pixels
 {
+	/**
+	 * See enum bits_of_pixel_block_index_high_S1_S2 for details.
+	 */
 	pixel_block_index_high_s1_s2 = 2,
+	/**
+	 * Lower 16 bits of block index counter.
+	 */
 	pixel_block_index_low = 3,
+	/**
+	 * Higher 16 bits of scan index counter.
+	 */
 	pixel_scan_index_high = 4,
+	/**
+	 * Lower 16 bits of scan index counter.
+	 */
 	pixel_scan_index_low = 5,
+	/**
+	 * Special pixel for PCIe daughter boards. Higher 16 bits of DSC 1 / TDC 1
+	 */
 	pixel_impact_signal_1_high = 6,
+	/**
+	 * Special pixel for PCIe daughter boards. Lower 16 bits of DSC 1 / TDC 1
+	 */
 	pixel_impact_signal_1_low = 7,
+	/**
+	 * Special pixel for PCIe daughter boards. Higher 16 bits of DSC 2 / TDC 2
+	 */
 	pixel_impact_signal_2_high = 8,
+	/**
+	 * Special pixel for PCIe daughter boards. Lower 16 bits of DSC 2 / TDC 2
+	 */
 	pixel_impact_signal_2_low = 9,
+	/**
+	 * See enum pixel_camera_status_bits for details.
+	 */
 	pixel_camera_status = 10
+};
+
+/**
+ * This enum shows the meaning of the bits of the pixel camera status.
+ */
+enum pixel_camera_status_bits
+{
+	/**
+	 * Over temperature. 1: over temperature detected, 0: temperature normal
+	 */
+	pixel_camera_status_bitindex_over_temp = 0,
+	/**
+	 * Temperature good. Only for cooled cameras. 1: target cooling temperature reached, 0: target temperature not reached
+	 */
+	pixel_camera_status_bitindex_temp_good = 1,
+	/**
+	 * 1: Connected camera is system 3001.
+	 */
+	pixel_camera_status_bitindex_3001 = 11,
+	/**
+	 * 1: Connected camera is system 3010.
+	 */
+	pixel_camera_status_bitindex_3010 = 12,
+	/**
+	 * 1: Connected camera is system 3030.
+	 */
+	pixel_camera_status_bitindex_3030 = 13,
+	pixel_camera_status_bit_over_temp = 0x1,
+	pixel_camera_status_bit_temp_good = 0x2,
+	pixel_camera_status_bit_3001 = 0x0800,
+	pixel_camera_status_bit_3010 = 0x1000,
+	pixel_camera_status_bit_3030 = 0x2000,
 };
