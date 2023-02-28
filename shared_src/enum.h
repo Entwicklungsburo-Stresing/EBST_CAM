@@ -599,7 +599,7 @@ enum DAC8568_location
  */
 enum bits_of_pixel_block_index_high_S1_S2
 {
-	pixel_block_index_high_s1_s2_bit_block_index = 0x3FFF,
+	pixel_block_index_high_s1_s2_bits_block_index = 0x3FFF,
 	pixel_block_index_high_s1_s2_bit_s2 = 0x4000,
 	pixel_block_index_high_s1_s2_bit_s1 = 0x8000,
 	pixel_block_index_high_s1_s2_bitindex_s2 = 14,
