@@ -445,7 +445,6 @@
     <property name="title">
      <string>Window</string>
     </property>
-    <addaction name="actionTDC"/>
     <addaction name="actionRMS"/>
     <addaction name="actionDSC"/>
     <addaction name="actionDAC"/>

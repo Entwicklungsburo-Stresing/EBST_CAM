@@ -220,7 +220,6 @@
     <ClCompile Include="dialogioctrl.cpp" />
     <ClCompile Include="dialogrms.cpp" />
     <ClCompile Include="dialogspecialpixels.cpp" />
-    <ClCompile Include="dialogtdc.cpp" />
     <ClCompile Include="dialogaxes.cpp" />
     <ClCompile Include="myqchartview.cpp" />
     <ClCompile Include="UIAbstractionLayer.c" />
@@ -240,7 +239,6 @@
     <ClInclude Include="..\shared_src\globals.h" />
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
     <QtMoc Include="myqchartview.h" />
-    <QtMoc Include="dialogtdc.h" />
     <QtMoc Include="dialogaxes.h" />
     <ClInclude Include="..\version.h" />
     <QtMoc Include="dialogrms.h" />
@@ -296,7 +294,6 @@
     <QtUic Include="dialogsettings.ui">
     </QtUic>
     <QtUic Include="dialogspecialpixels.ui" />
-    <QtUic Include="dialogtdc.ui" />
     <QtUic Include="mainwindow.ui">
     </QtUic>
   </ItemGroup>
