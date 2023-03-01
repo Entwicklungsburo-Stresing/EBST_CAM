@@ -618,9 +618,9 @@ enum bits_of_pixel_block_index_high_S1_S2
 };
 
 /**
- * This enum shows the meaning of the first special pixels. Additionally the 2 last pixels contain the information of the scan index.
+ * This enum shows the meaning of the first special pixels.
  */
-enum special_pixels
+enum special_pixels_enum
 {
 	/**
 	 * See enum bits_of_pixel_block_index_high_S1_S2 for details.
@@ -658,6 +658,21 @@ enum special_pixels
 	 * See enum pixel_camera_status_bits for details.
 	 */
 	pixel_camera_status = 10
+};
+
+/**
+ * This enum shows the meaning of the last special pixels. 0: last pixel, 1: last pixel - 1...
+ */
+enum special_last_pixels
+{
+	/**
+	 * Higher 16 bits of scan index counter.
+	 */
+	pixel_scan_index2_high = 1,
+	/**
+	 * Lower 16 bits of scan index counter.
+	 */
+	pixel_scan_index2_low = 0,
 };
 
 /**

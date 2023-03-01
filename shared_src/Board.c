@@ -4852,3 +4852,266 @@ void SetContinuousMeasurement(bool on)
 	continiousMeasurementFlag = on;
 	return;
 }
+
+/**
+ * \brief This function returns the bit overTemp of a specific scan.
+ * 
+ * The information over temperature is given in the special pixel camera status (pixel_camera_status) in bit pixel_camera_status_bit_over_temp.
+ * 
+ * \param drvno PCIe board identifier
+ * \param sample sample number (0 ... (nos-1))
+ * \param block block number (0 ... (nob-1))
+ * \param camera_pos camera position (0 ... (CAMCNT-1))
+ * \param overTemp Pointer to a bool, where the information overTemp will be written. true - over temperature detected, false - no over temperature detected
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+es_status_codes GetCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* overTemp)
+{
+	uint16_t data[pixel_camera_status + 1];
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, pixel_camera_status + 1);
+	if (data[pixel_camera_status] & pixel_camera_status_bit_over_temp)
+		*overTemp = true;
+	else
+		*overTemp = false;
+	return status;
+}
+
+/**
+ * \brief This function returns the bit tempGood of a specific scan.
+ *
+ * The information temperature good is given in the special pixel camera status (pixel_camera_status) in bit pixel_camera_status_bit_temp_good. This bit is used only in cooled cameras.
+ *
+ * \param drvno PCIe board identifier
+ * \param sample sample number (0 ... (nos-1))
+ * \param block block number (0 ... (nob-1))
+ * \param camera_pos camera position (0 ... (CAMCNT-1))
+ * \param tempGood Pointer to a bool, where the information tempGood will be written. true - target temperature reached, false - target temperature not reached
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+es_status_codes GetCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* tempGood)
+{
+	uint16_t data[pixel_camera_status + 1];
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, pixel_camera_status + 1);
+	if (data[pixel_camera_status] & pixel_camera_status_bit_temp_good)
+		*tempGood = true;
+	else
+		*tempGood = false;
+	return status;
+}
+
+/**
+ * \brief This function returns the block index of a specific scan.
+ *
+ * The information block index is given in the special pixels pixel_block_index_low and pixel_block_index_high_s1_s2.
+ *
+ * \param drvno PCIe board identifier
+ * \param sample sample number (0 ... (nos-1))
+ * \param block block number (0 ... (nob-1))
+ * \param camera_pos camera position (0 ... (CAMCNT-1))
+ * \param blockIndex Pointer to a uint32_t, where the information block index will be written. Block index is a 30 bit counter, so the highest two bits are not used.
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+es_status_codes GetBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* blockIndex)
+{
+	uint16_t data[pixel_block_index_low + 1];
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, pixel_block_index_low + 1);
+	uint16_t blockIndexHigh = data[pixel_block_index_high_s1_s2] & pixel_block_index_high_s1_s2_bits_block_index;
+	*blockIndex = (uint32_t)blockIndexHigh << 16 | (uint32_t)data[pixel_block_index_low];
+	return status;
+}
+
+/**
+ * \brief This function returns the scan index of a specific scan.
+ *
+ * The information block index is given in the special pixels pixel_scan_index_low and pixel_scan_index_high.
+ *
+ * \param drvno PCIe board identifier
+ * \param sample sample number (0 ... (nos-1))
+ * \param block block number (0 ... (nob-1))
+ * \param camera_pos camera position (0 ... (CAMCNT-1))
+ * \param scanIndex Pointer to a uint32_t, where the information scan index will be written. Scan index is a 32 bit counter.
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+es_status_codes GetScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* scanIndex)
+{
+	uint16_t data[pixel_scan_index_low + 1];
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, pixel_scan_index_low + 1);
+	*scanIndex = (uint32_t)data[pixel_scan_index_high] << 16 | (uint32_t)data[pixel_scan_index_low];
+	return status;
+}
+
+/**
+ * \brief This function returns the bit S1 state of a specific scan.
+ *
+ * The information S1 is given in the special pixel pixel_block_index_high_s1_s2 in bit pixel_block_index_high_s1_s2_bit_s1.
+ *
+ * \param drvno PCIe board identifier
+ * \param sample sample number (0 ... (nos-1))
+ * \param block block number (0 ... (nob-1))
+ * \param camera_pos camera position (0 ... (CAMCNT-1))
+ * \param state Pointer to a bool, where the information S1 state will be written. true - S1 is high, false - S1 is low
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+es_status_codes GetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
+{
+	uint16_t data[pixel_block_index_high_s1_s2 + 1];
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, pixel_block_index_high_s1_s2 + 1);
+	if (data[pixel_block_index_high_s1_s2] & pixel_block_index_high_s1_s2_bit_s1)
+		*state = true;
+	else
+		*state = false;
+	return status;
+}
+
+/**
+ * \brief This function returns the bit S2 state of a specific scan.
+ *
+ * The information S2 is given in the special pixel pixel_block_index_high_s1_s2 in bit pixel_block_index_high_s1_s2_bit_s2.
+ *
+ * \param drvno PCIe board identifier
+ * \param sample sample number (0 ... (nos-1))
+ * \param block block number (0 ... (nob-1))
+ * \param camera_pos camera position (0 ... (CAMCNT-1))
+ * \param state Pointer to a bool, where the information S2 state will be written. true - S2 is high, false - S2 is low
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+es_status_codes GetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
+{
+	uint16_t data[pixel_block_index_high_s1_s2 + 1];
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, pixel_block_index_high_s1_s2 + 1);
+	if (data[pixel_block_index_high_s1_s2] & pixel_block_index_high_s1_s2_bit_s2)
+		*state = true;
+	else
+		*state = false;
+	return status;
+}
+
+/**
+ * \brief This function returns the impact signal 1 of a specific scan.
+ *
+ * The information impact signal 1 is given in the special pixels pixel_impact_signal_1_low and pixel_impact_signal_1_high. Impact signal 1 is either TDC 1 or DSC 1, depending on the PCIe daughter board.
+ *
+ * \param drvno PCIe board identifier
+ * \param sample sample number (0 ... (nos-1))
+ * \param block block number (0 ... (nob-1))
+ * \param camera_pos camera position (0 ... (CAMCNT-1))
+ * \param impactSignal Pointer to a uint32_t, where the information impact signal will be written.
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+es_status_codes GetImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
+{
+	uint16_t data[pixel_impact_signal_1_low + 1];
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, pixel_impact_signal_1_low + 1);
+	*impactSignal = (uint32_t)data[pixel_impact_signal_1_high] << 16 | (uint32_t)data[pixel_impact_signal_1_low];
+	return status;
+}
+
+/**
+ * \brief This function returns the impact signal 2 of a specific scan.
+ *
+ * The information impact signal 2 is given in the special pixels pixel_impact_signal_2_low and pixel_impact_signal_2_high. Impact signal 2 is either TDC 2 or DSC 2, depending on the PCIe daughter board.
+ *
+ * \param drvno PCIe board identifier
+ * \param sample sample number (0 ... (nos-1))
+ * \param block block number (0 ... (nob-1))
+ * \param camera_pos camera position (0 ... (CAMCNT-1))
+ * \param impactSignal Pointer to a uint32_t, where the information impact signal will be written.
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+es_status_codes GetImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
+{
+	uint16_t data[pixel_impact_signal_2_low + 1];
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, pixel_impact_signal_2_low + 1);
+	*impactSignal = (uint32_t)data[pixel_impact_signal_2_high] << 16 | (uint32_t)data[pixel_impact_signal_2_low];
+	return status;
+}
+
+/**
+ * \brief This function returns the all special pixel information of a specific scan.
+ *
+ * The information impact signal 2 is given in the special pixels pixel_impact_signal_2_low and pixel_impact_signal_2_high. Impact signal 2 is either TDC 2 or DSC 2, depending on the PCIe daughter board.
+ *
+ * \param drvno PCIe board identifier
+ * \param sample sample number (0 ... (nos-1))
+ * \param block block number (0 ... (nob-1))
+ * \param camera_pos camera position (0 ... (CAMCNT-1))
+ * \param struct special_pixels Pointer to struct special_pixel, where the all special pixel information will be written.
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp)
+{
+	if (aPIXEL[drvno] <= 63) return es_invalid_pixel_count;
+	uint16_t* data = (uint16_t*)malloc(aPIXEL[drvno] * sizeof(uint16_t));
+	if (!data) return es_allocating_memory_failed;
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, aPIXEL[drvno]);
+	if (status = !es_no_error) return status;
+	//overTemp
+	if (data[pixel_camera_status] & pixel_camera_status_bit_over_temp)
+		sp->overTemp = 1;
+	else
+		sp->overTemp = 0;
+	//tempGoood
+	if (data[pixel_camera_status] & pixel_camera_status_bit_temp_good)
+		sp->tempGood = 1;
+	else
+		sp->tempGood = 0;
+	//blockIndex
+	uint16_t blockIndexHigh = data[pixel_block_index_high_s1_s2] & pixel_block_index_high_s1_s2_bits_block_index;
+	sp->blockIndex = (uint32_t)blockIndexHigh << 16 | (uint32_t)data[pixel_block_index_low];
+	//scanIndex
+	sp->scanIndex = (uint32_t)data[pixel_scan_index_high] << 16 | (uint32_t)data[pixel_scan_index_low];
+	//S1
+	if (data[pixel_block_index_high_s1_s2] & pixel_block_index_high_s1_s2_bit_s1)
+		sp->s1State = 1;
+	else
+		sp->s1State = 0;
+	//S2
+	if (data[pixel_block_index_high_s1_s2] & pixel_block_index_high_s1_s2_bit_s2)
+		sp->s2State = 1;
+	else
+		sp->s2State = 0;
+	//impactSignal1
+	sp->impactSignal1 = (uint32_t)data[pixel_impact_signal_1_high] << 16 | (uint32_t)data[pixel_impact_signal_1_low];
+	//impactSignal2
+	sp->impactSignal2 = (uint32_t)data[pixel_impact_signal_2_high] << 16 | (uint32_t)data[pixel_impact_signal_2_low];
+	//scanIndex2
+	sp->scanIndex2 = (uint32_t)data[(aPIXEL[drvno] - 1) - pixel_scan_index2_high] << 16 | (uint32_t)data[(aPIXEL[drvno] - 1) - pixel_scan_index2_low];
+	free(data);
+	return status;
+}
