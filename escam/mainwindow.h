@@ -6,7 +6,6 @@
 #include "ui_mainwindow.h"
 #include "lsc.h"
 #include "dialogsettings.h"
-#include "dialogtdc.h"
 #include "dialogrms.h"
 #include "dialogdsc.h"
 
@@ -34,7 +33,6 @@ private:
 	void setChartData(uint16_t* data, uint32_t* length, uint16_t numberOfSets);
 	void showNoDriverFoundDialog();
 	void showPcieBoardError();
-	DialogTDC* ds_tdc = new DialogTDC( this );
 	DialogDSC* ds_dsc = new DialogDSC( this );
 	DialogRMS* ds_rms = new DialogRMS( this );
 	QThread measurementThread;
@@ -44,7 +42,6 @@ private:
 	void closeEvent(QCloseEvent *event);
 private slots:
 	void on_actionEdit_triggered();
-	void on_actionTDC_triggered();
 	void on_actionRMS_triggered();
 	void on_actionDSC_triggered();
 	void on_actionAxes_triggered();
