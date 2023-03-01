@@ -824,3 +824,22 @@ DllAccess void DLLSetContinuousMeasurement(uint8_t on)
 	SetContinuousMeasurement(on);
 	return;
 }
+
+DllAccess es_status_codes DLLGetAllSpecialPixelInformation(uint32_t board_sel, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp)
+{
+	es_status_codes status = es_no_error;
+	uint32_t usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = GetAllSpecialPixelInformation(drvno, sample, block, camera_pos, sp);
+			if (status != es_no_error) return status;
+			usedBoards++;
+			// this function only returns the values for the first found board
+			if (usedBoards >= 1)
+				return status;
+		}
+	}
+}
