@@ -60,7 +60,6 @@ CameraSettingsWidget::CameraSettingsWidget(QWidget *parent)
 	sp_retain.setRetainSizeWhenHidden(true);
 	ui->comboBoxSslope->setSizePolicy(sp_retain);
 	ui->comboBoxBslope->setSizePolicy(sp_retain);
-	ui->comboBoxCamCool->setSizePolicy(sp_retain);
 
 	sp_retain = ui->plainTextEditFilePath->sizePolicy();
 	sp_retain.setRetainSizeWhenHidden(true);
@@ -601,34 +600,6 @@ void CameraSettingsWidget::on_checkBoxWriteDataToDisc_stateChanged(int arg1)
 	return;
 }
 
-void CameraSettingsWidget::on_checkBoxIsCooledCam_stateChanged(int arg1)
-{
-	bool enabled = true,
-		visible = true;
-	switch (_settings_level)
-	{
-		//basic
-	case 0:
-		enabled = arg1;
-		visible = arg1;
-		break;
-		//advanced
-	case 1:
-		enabled = arg1;
-		visible = true;
-		break;
-		//expert
-	case 2:
-		enabled = true;
-		visible = true;
-		break;
-	}
-	ui->comboBoxCamCool->setEnabled(enabled);
-	ui->comboBoxCamCool->setVisible(visible);
-	ui->labelCamCool->setVisible(visible);
-	return;
-}
-
 void CameraSettingsWidget::changeSettingsLevel(int settings_level)
 {
 	_settings_level = settings_level;
@@ -676,7 +647,6 @@ void CameraSettingsWidget::changeSettingsLevel(int settings_level)
 	on_checkBoxRegionsEqual_stateChanged(ui->checkBoxRegionsEqual->checkState());
 	on_comboBoxFftMode_currentIndexChanged(ui->comboBoxFftMode->currentIndex());
 	on_checkBoxWriteDataToDisc_stateChanged(ui->checkBoxWriteDataToDisc->checkState());
-	on_checkBoxIsCooledCam_stateChanged(ui->checkBoxIsCooledCam->checkState());
 	return;
 }
 
