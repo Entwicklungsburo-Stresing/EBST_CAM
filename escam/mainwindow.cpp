@@ -3,6 +3,7 @@
 #include "../version.h"
 #include "dialogdac.h"
 #include "dialogioctrl.h"
+#include "dialogspecialpixels.h"
 #ifdef WIN32
 #include "dialoggamma.h"
 #include "shared_src/ESLSCDLL_pro.h"
@@ -868,6 +869,18 @@ void MainWindow::on_actionIO_Control_triggered()
 	DialogIoctrl* dialogIoctrl = new DialogIoctrl(this);
 	dialogIoctrl->setAttribute(Qt::WA_DeleteOnClose);
 	dialogIoctrl->show();
+	return;
+}
+
+void MainWindow::on_actionspecial_pixels_triggered()
+{
+	DialogSpecialPixels* dialogSpecialPixels = new DialogSpecialPixels(this);
+	dialogSpecialPixels->setAttribute(Qt::WA_DeleteOnClose);
+	connect(ui->horizontalSliderSample, &QSlider::valueChanged, dialogSpecialPixels, &DialogSpecialPixels::updateSample);
+	connect(ui->horizontalSliderBlock, &QSlider::valueChanged, dialogSpecialPixels, &DialogSpecialPixels::updateBlock);
+	dialogSpecialPixels->updateSample(ui->horizontalSliderSample->value());
+	dialogSpecialPixels->updateBlock(ui->horizontalSliderBlock->value());
+	dialogSpecialPixels->show();
 	return;
 }
 
