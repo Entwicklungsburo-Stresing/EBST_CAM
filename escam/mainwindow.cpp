@@ -341,17 +341,6 @@ void MainWindow::on_actionVerify_data_file_triggered()
 }
 
 /**
- * @brief This slot opens the TDC dialog.
- * @return none
- */
-void MainWindow::on_actionTDC_triggered()
-{
-	ds_tdc->initDialogTdc();
-	ds_tdc->show();
-	return;
-}
-
-/**
  * @brief This slot opens the RMS dialog.
  * @return none
  */
@@ -719,7 +708,6 @@ void MainWindow::loadCameraData()
 		}
 	}
 	setChartData(data, pixel_array, static_cast<uint16_t>(showCamcnt));
-	ds_tdc->updateTDC();
 	free(data);
 	return;
 }
