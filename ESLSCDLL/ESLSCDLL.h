@@ -90,6 +90,7 @@ DllAccess es_status_codes DLLResetDSC(uint32_t board_sel, uint8_t DSCNumber);
 DllAccess es_status_codes DLLSetDIRDSC(uint32_t board_sel, uint8_t DSCNumber, uint8_t dir);
 DllAccess es_status_codes DLLGetDSC(uint32_t board_sel, uint8_t DSCNumber, uint32_t* ADSC0, uint32_t* LDSC0, uint32_t* ADSC1, uint32_t* LDSC1);
 DllAccess es_status_codes DLLInitGPX(uint32_t board_sel, uint32_t delay);
+DllAccess es_status_codes DLLGetAllSpecialPixelInformation(uint32_t board_sel, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp);
 //************ read and write functions
 DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t board_sel, uint8_t* data, uint32_t address);
 DllAccess es_status_codes DLLwriteRegisterS0_8(uint32_t board_sel, uint8_t data, uint32_t address);
@@ -97,4 +98,3 @@ DllAccess es_status_codes DLLreadRegisterS0_32(uint32_t board_sel, uint32_t* dat
 DllAccess es_status_codes DLLwriteRegisterS0_32(uint32_t board_sel, uint32_t data, uint32_t address);
 DllAccess es_status_codes DLLsetBitS0_32(uint32_t board_sel, uint32_t bitnumber, uint16_t address);
 DllAccess es_status_codes DLLresetBitS0_32(uint32_t board_sel, uint32_t bitnumber, uint16_t address);
-
