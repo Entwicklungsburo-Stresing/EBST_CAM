@@ -88,7 +88,7 @@ DllAccess es_status_codes DLLGetIsTdc(uint32_t board_sel, uint8_t* isTdc0, uint8
 DllAccess es_status_codes DLLGetIsDsc(uint32_t board_sel, uint8_t* isDsc0, uint8_t* isDsc1, uint8_t* isDsc2, uint8_t* isDsc3, uint8_t* isDsc4);
 DllAccess es_status_codes DLLResetDSC(uint32_t board_sel, uint8_t DSCNumber);
 DllAccess es_status_codes DLLSetDIRDSC(uint32_t board_sel, uint8_t DSCNumber, uint8_t dir);
-DllAccess es_status_codes DLLGetDSC(uint32_t board_sel, uint8_t DSCNumber, uint32_t* ADSC0, uint32_t* LDSC0, uint32_t ADSC1, uint32_t* LDSC1);
+DllAccess es_status_codes DLLGetDSC(uint32_t board_sel, uint8_t DSCNumber, uint32_t* ADSC0, uint32_t* LDSC0, uint32_t* ADSC1, uint32_t* LDSC1);
 DllAccess es_status_codes DLLInitGPX(uint32_t board_sel, uint32_t delay);
 //************ read and write functions
 DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t board_sel, uint8_t* data, uint32_t address);
