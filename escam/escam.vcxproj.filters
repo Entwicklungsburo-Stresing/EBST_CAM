@@ -123,6 +123,9 @@
     <ClCompile Include="dacspinboxes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dialogspecialpixels.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h">
@@ -214,6 +217,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dacspinboxes.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogspecialpixels.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -889,6 +895,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="dacspinboxes.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="dialogspecialpixels.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

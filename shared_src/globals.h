@@ -60,6 +60,9 @@ struct special_pixels
 	uint8_t s2State;
 	uint32_t impactSignal1;
 	uint32_t impactSignal2;
+	uint8_t cameraSystem3001;
+	uint8_t cameraSystem3010;
+	uint8_t cameraSystem3030;
 };
 
 struct verify_data_parameter
