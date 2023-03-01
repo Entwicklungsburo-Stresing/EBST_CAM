@@ -404,7 +404,7 @@
      <x>0</x>
      <y>0</y>
      <width>531</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -450,6 +450,7 @@
     <addaction name="actionDSC"/>
     <addaction name="actionDAC"/>
     <addaction name="actionIO_Control"/>
+    <addaction name="actionspecial_pixels"/>
    </widget>
    <widget class="QMenu" name="menuGreyscale_Viewer">
     <property name="title">
@@ -590,6 +591,11 @@
     <string>Verify data file</string>
    </property>
   </action>
+  <action name="actionspecial_pixels">
+   <property name="text">
+    <string>special pixels</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -615,12 +621,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>596</x>
-     <y>566</y>
+     <x>468</x>
+     <y>522</y>
     </hint>
     <hint type="destinationlabel">
-     <x>718</x>
-     <y>572</y>
+     <x>519</x>
+     <y>526</y>
     </hint>
    </hints>
   </connection>
@@ -631,12 +637,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>718</x>
-     <y>572</y>
+     <x>519</x>
+     <y>526</y>
     </hint>
     <hint type="destinationlabel">
-     <x>514</x>
-     <y>566</y>
+     <x>468</x>
+     <y>522</y>
     </hint>
    </hints>
   </connection>
@@ -647,12 +653,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>490</x>
-     <y>532</y>
+     <x>468</x>
+     <y>495</y>
     </hint>
     <hint type="destinationlabel">
-     <x>718</x>
-     <y>538</y>
+     <x>519</x>
+     <y>499</y>
     </hint>
    </hints>
   </connection>
@@ -663,12 +669,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>718</x>
-     <y>538</y>
+     <x>519</x>
+     <y>499</y>
     </hint>
     <hint type="destinationlabel">
-     <x>518</x>
-     <y>532</y>
+     <x>468</x>
+     <y>495</y>
     </hint>
    </hints>
   </connection>

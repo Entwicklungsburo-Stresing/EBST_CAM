@@ -219,6 +219,7 @@
     <ClCompile Include="dialoggamma.cpp" />
     <ClCompile Include="dialogioctrl.cpp" />
     <ClCompile Include="dialogrms.cpp" />
+    <ClCompile Include="dialogspecialpixels.cpp" />
     <ClCompile Include="dialogtdc.cpp" />
     <ClCompile Include="dialogaxes.cpp" />
     <ClCompile Include="myqchartview.cpp" />
@@ -249,6 +250,7 @@
     <QtMoc Include="dialoggamma.h" />
     <QtMoc Include="camerasettingswidget.h" />
     <QtMoc Include="dacspinboxes.h" />
+    <QtMoc Include="dialogspecialpixels.h" />
     <ClInclude Include="lsc-gui.h" />
     <ClInclude Include="UIAbstractionLayer_cpp.h" />
     <QtMoc Include="dialogsettings.h">
@@ -293,6 +295,7 @@
     <QtUic Include="dialogrms.ui" />
     <QtUic Include="dialogsettings.ui">
     </QtUic>
+    <QtUic Include="dialogspecialpixels.ui" />
     <QtUic Include="dialogtdc.ui" />
     <QtUic Include="mainwindow.ui">
     </QtUic>
