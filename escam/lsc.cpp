@@ -269,3 +269,75 @@ std::string Lsc::getVerifiedDataDialog(struct verify_data_parameter* vd)
 	parseTextToHtml(&cppstring);
 	return cppstring;
 }
+
+/**
+ * \copydoc GetCameraStatusOverTemp
+ */
+es_status_codes Lsc::getCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* overTemp)
+{
+	return GetCameraStatusOverTemp(drvno, sample, block, camera_pos, overTemp);
+}
+
+/**
+ * \copydoc GetCameraStatusTempGood
+ */
+es_status_codes Lsc::getCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* tempGood)
+{
+	return GetCameraStatusTempGood(drvno, sample, block, camera_pos, tempGood);
+}
+
+/**
+ * \copydoc GetBlockIndex
+ */
+es_status_codes Lsc::getBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* blockIndex)
+{
+	return GetBlockIndex(drvno, sample, block, camera_pos, blockIndex);
+}
+
+/**
+ * \copydoc GetScanIndex
+ */
+es_status_codes Lsc::getScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* scanIndex)
+{
+	return GetScanIndex(drvno, sample, block, camera_pos, scanIndex);
+}
+
+/**
+ * \copydoc GetS1State
+ */
+es_status_codes Lsc::getS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
+{
+	return GetS1State(drvno, sample, block, camera_pos, state);
+}
+
+/**
+ * \copydoc GetS2State
+ */
+es_status_codes Lsc::getS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
+{
+	return GetS2State(drvno, sample, block, camera_pos, state);
+}
+
+/**
+ * \copydoc GetImpactSignal1
+ */
+es_status_codes Lsc::getImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
+{
+	return GetImpactSignal1(drvno, sample, block, camera_pos, impactSignal);
+}
+
+/**
+ * \copydoc GetImpactSignal2
+ */
+es_status_codes Lsc::getImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
+{
+	return GetImpactSignal2(drvno, sample, block, camera_pos, impactSignal);
+}
+
+/**
+ * \copydoc GetAllSpecialPixelInformation
+ */
+es_status_codes Lsc::getAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp)
+{
+	return GetAllSpecialPixelInformation(drvno, sample, block, camera_pos, sp);
+}
