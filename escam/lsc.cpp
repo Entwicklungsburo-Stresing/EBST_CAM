@@ -341,3 +341,11 @@ es_status_codes Lsc::getAllSpecialPixelInformation(uint32_t drvno, uint32_t samp
 {
 	return GetAllSpecialPixelInformation(drvno, sample, block, camera_pos, sp);
 }
+
+/**
+ * \copydoc SetContinuousMeasurement
+ */
+void Lsc::setContinuousMeasurement(bool on)
+{
+	return SetContinuousMeasurement(on);
+}
