@@ -21,8 +21,6 @@ MainWindow::MainWindow(QWidget* parent)
 	this->setAttribute(Qt::WA_DeleteOnClose);
 	connect(ui->horizontalSliderSample, &QSlider::valueChanged, this, &MainWindow::loadCameraData);
 	connect(ui->horizontalSliderBlock, &QSlider::valueChanged, this, &MainWindow::loadCameraData);
-	connect(ui->pushButtonStartCont, &QPushButton::toggled, this, &MainWindow::startContPressed);
-	connect(ui->pushButtonAbort, &QPushButton::pressed, this, &MainWindow::abortPressed);
 	connect(ui->actionExit, &QAction::triggered, this, &MainWindow::close);
 	connect(&lsc, &Lsc::measureStart, this, &MainWindow::on_measureStart);
 	connect(&lsc, &Lsc::measureDone, this, &MainWindow::on_measureDone);
@@ -139,25 +137,14 @@ void MainWindow::setChartData(uint16_t* data, uint32_t* length, uint16_t numberO
 }
 
 /**
- * @brief Slot for the signal pressed of pushButtonStart.
- * @return none
- */
-void MainWindow::on_pushButtonStart_pressed()
-{
-	ui->pushButtonStartCont->setDisabled(true);
-	startPressed();
-	return;
-}
-
-/**
- * @brief Slot to start measurement. Called by on_pushButtonStart_pressed and startContPressed.
+ * @brief Slot to start measurement. Called by on_pushButtonStartStop_pressed.
  * @return none
  */
 void MainWindow::startPressed()
 {
 	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
 	settings_struct.cont_pause_in_microseconds = settings.value(settingContinuousPauseInMicrosecondsPath, settingContinuousPausInMicrosecondsDefault).toUInt();
-	settings_struct.contiuous_measurement = ui->pushButtonStartCont->isChecked();
+	settings_struct.contiuous_measurement = ui->checkBoxLoopMeasurement->isChecked();
 	settings_struct.nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 	settings_struct.nob = settings.value(settingNobPath, settingNobDefault).toUInt();
 	//camerasetup tab
@@ -278,25 +265,6 @@ void MainWindow::startPressed()
 	}
 	else
 		measurementThread.start();
-	return;
-}
-/**
- * @brief Slot for the signal pressed of pushButtonStartCont.
- * @return none
- */
-void MainWindow::startContPressed(bool checked)
-{
-	if (checked)
-	{
-		continiousMeasurementFlag = true;
-		ui->pushButtonStartCont->setText("Stop continuous");
-		startPressed();
-	}
-	else
-	{
-		continiousMeasurementFlag = false;
-		ui->pushButtonStartCont->setText("Start continuous");
-	}
 	return;
 }
 
@@ -730,9 +698,7 @@ void MainWindow::on_measureStart()
 	pal.setColor(QPalette::Background, Qt::green);
 	ui->widgetMeasureOn->setPalette(pal);
 	//disable start button
-	ui->pushButtonStart->setDisabled(true);
-	//enable abort button
-	ui->pushButtonAbort->setEnabled(true);
+	ui->pushButtonStartStop->setText("Stop");
 	adjustLiveView();
 	return;
 }
@@ -747,10 +713,7 @@ void MainWindow::on_measureDone()
 	//display camera data
 	loadCameraData();
 	//enable start button
-	ui->pushButtonStart->setEnabled(true);
-	ui->pushButtonStartCont->setEnabled(true);
-	//disable abort button
-	ui->pushButtonAbort->setDisabled(true);
+	ui->pushButtonStartStop->setText("Start");
 #ifdef WIN32
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -792,12 +755,6 @@ void MainWindow::on_blockDone()
 	QPalette pal = palette();
 	pal.setColor(QPalette::Background, Qt::darkGreen);
 	ui->widgetBlockOn->setPalette(pal);
-	return;
-}
-
-void MainWindow::abortPressed()
-{
-	lsc.abortMeasurement();
 	return;
 }
 
@@ -1069,3 +1026,23 @@ void MainWindow::closeEvent(QCloseEvent *event)
 		QMainWindow::closeEvent(event);
 	}
 }
+
+/**
+ * @brief Slot for the signal pressed of pushButtonStartStop.
+ * @return none
+ */
+void MainWindow::on_pushButtonStartStop_pressed()
+{
+	if(isRunning)
+		lsc.abortMeasurement();
+	else
+		startPressed();
+	return;
+}
+
+void MainWindow::on_checkBoxLoopMeasurement_stateChanged(int state)
+{
+	lsc.setContinuousMeasurement(state);
+	return;
+}
+

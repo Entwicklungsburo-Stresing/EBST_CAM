@@ -51,6 +51,7 @@ public:
 	es_status_codes getImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal);
 	es_status_codes getImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal);
 	es_status_codes getAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp);
+	void setContinuousMeasurement(bool on);
 public slots:
 	es_status_codes startMeasurement();
 signals:
