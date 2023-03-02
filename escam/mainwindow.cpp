@@ -401,7 +401,7 @@ void MainWindow::on_actionReset_axes_triggered()
 	if (axes.isEmpty()) return;
 	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
 	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
-	axis0->setMax(ui->chartView->curr_ymax);
+	axis0->setMax(ui->chartView->curr_xmax);
 	axis0->setMin(ui->chartView->curr_xmin);
 	axis1->setMax(ui->chartView->curr_ymax);
 	axis1->setMin(ui->chartView->curr_ymin);
