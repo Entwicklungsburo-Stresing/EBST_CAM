@@ -55,12 +55,10 @@ private slots:
 	void on_actionShow_triggered();
 	void loadSettings();
 	void startPressed();
-	void startContPressed(bool checked);
 	void on_actionDump_board_registers_triggered();
-	void abortPressed();
 	void on_rubberBandChanged();
 	void on_checkBoxShowCamera(bool state, int camera, uint32_t drvno);
-	void on_pushButtonStart_pressed();
+	void on_pushButtonStartStop_pressed();
 	void on_horizontalSliderBlock_valueChanged();
 	void on_actionExport_triggered();
 	void on_actionImport_triggered();
@@ -69,6 +67,7 @@ private slots:
 	void adjustLiveView();
 	void on_actionVerify_data_file_triggered();
 	void on_actionspecial_pixels_triggered();
+	void on_checkBoxLoopMeasurement_stateChanged(int state);
 };
 
 #endif // MAINWINDOW_H
