@@ -51,18 +51,18 @@ struct file_header
 
 struct special_pixels
 {
-	uint8_t overTemp;
-	uint8_t tempGood;
+	uint32_t overTemp;
+	uint32_t tempGood;
 	uint32_t blockIndex;
 	uint32_t scanIndex;
 	uint32_t scanIndex2;
-	uint8_t s1State;
-	uint8_t s2State;
+	uint32_t s1State;
+	uint32_t s2State;
 	uint32_t impactSignal1;
 	uint32_t impactSignal2;
-	uint8_t cameraSystem3001;
-	uint8_t cameraSystem3010;
-	uint8_t cameraSystem3030;
+	uint32_t cameraSystem3001;
+	uint32_t cameraSystem3010;
+	uint32_t cameraSystem3030;
 };
 
 struct verify_data_parameter
