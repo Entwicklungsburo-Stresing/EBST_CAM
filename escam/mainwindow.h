@@ -47,6 +47,7 @@ private slots:
 	void on_actionAxes_triggered();
 	void on_actionCameras_triggered();
 	void on_actionReset_axes_triggered();
+	void setDefaultAxes();
 	void on_actionAbout_triggered();
 	void on_actionAbout_Qt_triggered();
 	void on_actionDAC_triggered();
