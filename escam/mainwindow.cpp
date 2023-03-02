@@ -62,6 +62,7 @@ MainWindow::MainWindow(QWidget* parent)
 			loadSettings();
 		}
 	}
+	setDefaultAxes();
 
 	// move lsc to its own thread
 	lsc.moveToThread(&measurementThread);
@@ -426,35 +427,44 @@ void MainWindow::on_checkBoxShowCamera(bool state, int camera, uint32_t drvno)
 
 void MainWindow::on_actionReset_axes_triggered()
 {
+	setDefaultAxes();
 	// retrieve axis pointer
 	QList<QAbstractAxis *> axes = ui->chartView->chart()->axes();
 	if (axes.isEmpty()) return;
 	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
 	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
+	axis0->setMax(ui->chartView->curr_ymax);
+	axis0->setMin(ui->chartView->curr_xmin);
+	axis1->setMax(ui->chartView->curr_ymax);
+	axis1->setMin(ui->chartView->curr_ymin);
+	return;
+}
+
+void MainWindow::setDefaultAxes()
+{
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
+	qreal xmax = 0;
+	qreal ymax = 0;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
 		{
 			settings.beginGroup("board" + QString::number(drvno));
-			ui->chartView->curr_xmax = settings.value(settingPixelPath, settingPixelDefault).toReal();
-			ui->chartView->curr_xmin = 0;
-			if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toUInt() == 2)
-				ui->chartView->curr_ymax = 0x3FFF;
+			qreal pixel = settings.value(settingPixelPath, settingPixelDefault).toReal();
+			if (pixel > xmax)
+				xmax = pixel;
+			if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toUInt() == 2 && ymax < 0x3FFF)
+				ymax = 0x3FFF;
 			else
-				ui->chartView->curr_ymax = 0xFFFF;
-			ui->chartView->curr_ymin = 0;
-			axis0->setMax(settings.value(settingPixelPath, settingPixelDefault).toReal());
-			axis0->setMin(0);
-			if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toUInt() == 2)
-				axis1->setMax(0x3FFF);
-			else
-				axis1->setMax(0xFFFF);
-			axis1->setMin(0);
+				ymax = 0xFFFF;
 			settings.endGroup();
 		}
 	}
+	ui->chartView->curr_ymax = ymax;
+	ui->chartView->curr_xmax = xmax;
+	ui->chartView->curr_xmin = 0;
+	ui->chartView->curr_ymin = 0;
 	return;
 }
 
@@ -846,6 +856,7 @@ void MainWindow::on_rubberBandChanged()
 		ui->chartView->curr_ymin = 0;
 		axis1->setMin(0);
 	}
+	return;
 }
 
 /**
