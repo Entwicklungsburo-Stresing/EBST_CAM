@@ -2731,6 +2731,16 @@ es_status_codes StartMeasurement()
 			if (settings_struct.camera_settings[drvno].write_to_disc) _beginthread(&writeToDisc, 0, drvno_tmp);
 		}
 	}
+	// Set the measure on hardware bit
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = setMeasureOn(drvno);
+			if (status != es_no_error) return ReturnStartMeasurement(status);
+		}
+	}
 	do
 	{
 		measurement_cnt++;
@@ -2769,16 +2779,6 @@ es_status_codes StartMeasurement()
 		// The priority is resetted to the old value when the block for loop is finished.
 		status = SetPriority(31);
 		if (status != es_no_error) return ReturnStartMeasurement(status);
-		// Set the measure on hardware bit
-		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
-		{
-			// Check if the drvno'th bit is set
-			if ((settings_struct.board_sel >> drvno) & 1)
-			{
-				status = setMeasureOn(drvno);
-				if (status != es_no_error) return ReturnStartMeasurement(status);
-			}
-		}
 		// Block read for loop.
 		for (uint32_t blk_cnt = 0; blk_cnt < *Nob; blk_cnt++)
 		{
@@ -2904,22 +2904,22 @@ es_status_codes StartMeasurement()
 		// BLOCKON ---------_______
 		// MEASUREON ---------_____
 		WaitforTelapsed(100);
-		// Reset the hardware bit measure on.
-		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
-		{
-			// Check if the drvno'th bit is set
-			if ((settings_struct.board_sel >> drvno) & 1)
-			{
-				status = resetMeasureOn(drvno);
-				if (status != es_no_error) return ReturnStartMeasurement(status);
-			}
-		}
 		// When space key or ESC key was pressed, continuous measurement stops.
 		if (checkSpaceKeyState())
 			continiousMeasurementFlag = false;
 		abortMeasurementFlag = checkEscapeKeyState();
 		WaitforTelapsed(continiousPauseInMicroseconds);
 	} while (continiousMeasurementFlag && !abortMeasurementFlag);
+	// Reset the hardware bit measure on.
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = resetMeasureOn(drvno);
+			if (status != es_no_error) return ReturnStartMeasurement(status);
+		}
+	}
 	ES_LOG("*** Measurement done ***\n\n");
 	return ReturnStartMeasurement(status);
 }
