@@ -1185,7 +1185,10 @@ void writeToDisc(uint32_t* drvno_ptr)
 	size_t data_written_all = 0;
 	size_t data_written = 0;
 	int errnumber = 0;
-	while (isRunning || data_count_to_write && !abortMeasurementFlag && !errnumber)
+	// wait until there is data available
+	while (!data_available[drvno]);
+	data_count_to_write = data_available[drvno];
+	while (data_count_to_write && !abortMeasurementFlag && !errnumber)
 	{
 		// check if there is new available data
 		data_count_to_write = data_available[drvno] - data_written_all;
