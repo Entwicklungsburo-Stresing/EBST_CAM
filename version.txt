@@ -1,5 +1,10 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.2.2
+- Fix axes in escam on startup
+- Improve start / stop buttons in escam
+- Improve measureOn signaling: move to outside of loop measurement
+
 4.2.1
 - Fix gpx offset in esacm
 - Fix DLL pro project settings
