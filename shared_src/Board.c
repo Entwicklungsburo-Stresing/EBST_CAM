@@ -4669,9 +4669,9 @@ void FillUserBufferWithDummyData(uint32_t drvno)
 	//memset(userBuffer[drvno], 0xAAAA, aPIXEL[drvno] * (*Nospb) * (*Nob) * aCAMCNT[drvno] * sizeof(uint16_t));
 	for (uint32_t scan = 0; scan < (*Nospb) * (*Nob) * aCAMCNT[drvno]; scan++)
 	{
-		int add = scan % 3;
+		int add = (scan % 2) * 1000;
 		for (uint32_t pixel = 0; pixel < aPIXEL[drvno]; pixel++)
-			userBuffer[drvno][scan * aPIXEL[drvno] + pixel] = 100 + add;
+			userBuffer[drvno][scan * aPIXEL[drvno] + pixel] = pixel * 10 + add;
 	}
 	return;
 }
