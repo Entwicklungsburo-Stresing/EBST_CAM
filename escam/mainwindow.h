@@ -21,6 +21,8 @@ public:
 	~MainWindow();
 	Lsc lsc;
 	Ui::MainWindow *ui;
+	uint32_t greyscale_viewer_board = 0;
+	uint32_t greyscale_viewer_camera = 0;
 public slots:
 	void loadCameraData();
 	void on_measureStart();
@@ -62,11 +64,11 @@ private slots:
 	void on_horizontalSliderBlock_valueChanged();
 	void on_actionExport_triggered();
 	void on_actionImport_triggered();
-	void on_actionGamma_triggered();
 	void showCurrentScan();
 	void adjustLiveView();
 	void on_actionVerify_data_file_triggered();
 	void on_actionspecial_pixels_triggered();
+	void on_actionGreyscaleSettings_triggered();
 	void on_checkBoxLoopMeasurement_stateChanged(int state);
 };
 

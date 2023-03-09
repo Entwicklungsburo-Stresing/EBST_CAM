@@ -4,8 +4,8 @@
 #include "dialogdac.h"
 #include "dialogioctrl.h"
 #include "dialogspecialpixels.h"
+#include "dialoggreyscalesettings.h"
 #ifdef WIN32
-#include "dialoggamma.h"
 #include "shared_src/ESLSCDLL_pro.h"
 #endif
 
@@ -263,8 +263,7 @@ void MainWindow::startPressed()
 		d->setWindowModality(Qt::ApplicationModal);
 		d->showMessage(tr(ConvertErrorCodeToMsg(status)));
 	}
-	else
-		measurementThread.start();
+	measurementThread.start();
 	return;
 }
 
@@ -726,7 +725,7 @@ void MainWindow::on_measureDone()
 			settings.endGroup();
 			uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 			uint32_t block = ui->horizontalSliderBlock->value() - 1;
-			DLLShowNewBitmap_drvno(drvno, block, 0, pixelcount, nos);
+			DLLShowNewBitmap(drvno, block, 0, pixelcount, nos);
 		}
 	}
 #endif
@@ -847,20 +846,12 @@ void MainWindow::on_actionspecial_pixels_triggered()
 void MainWindow::on_actionShow_triggered()
 {
 #ifdef WIN32
-	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
-	{
-		// Check if the drvno'th bit is set
-		if ((board_sel >> drvno) & 1)
-		{
-			settings.beginGroup("board" + QString::number(drvno));
-			uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
-			settings.endGroup();
-			uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
-			uint32_t block = ui->horizontalSliderBlock->value() - 1;
-			DLLStart2dViewer_drvno(drvno, 0, block, pixelcount, nos);
-		}
-	}
+	settings.beginGroup("board" + QString::number(greyscale_viewer_board));
+	uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
+	settings.endGroup();
+	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
+	uint32_t block = ui->horizontalSliderBlock->value() - 1;
+	DLLStart2dViewer(greyscale_viewer_board, block, greyscale_viewer_camera, pixelcount, nos);
 #endif
 	return;
 }
@@ -872,20 +863,12 @@ void MainWindow::on_actionShow_triggered()
 void MainWindow::on_horizontalSliderBlock_valueChanged()
 {
 #ifdef WIN32
-	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
-	{
-		// Check if the drvno'th bit is set
-		if ((board_sel >> drvno) & 1)
-		{
-			settings.beginGroup("board" + QString::number(drvno));
-			uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
-			settings.endGroup();
-			uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
-			uint32_t block = ui->horizontalSliderBlock->value() - 1;
-			DLLShowNewBitmap_drvno(drvno, block, 0, pixelcount, nos);
-		}
-	}
+	settings.beginGroup("board" + QString::number(greyscale_viewer_board));
+	uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
+	settings.endGroup();
+	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
+	uint32_t block = ui->horizontalSliderBlock->value() - 1;
+	DLLShowNewBitmap(greyscale_viewer_board, block, greyscale_viewer_camera, pixelcount, nos);
 #endif
 	return;
 }
@@ -927,20 +910,6 @@ void MainWindow::copySettings(QSettings &dst, QSettings &src)
 	{
 		dst.setValue(*i, src.value(*i));
 	}
-}
-
-/**
- * @brief This slot opens the gamma dialog.
- * @return none
- */
-void MainWindow::on_actionGamma_triggered()
-{
-#ifdef WIN32
-	DialogGamma* dialogGamma = new DialogGamma(this);
-	dialogGamma->setAttribute(Qt::WA_DeleteOnClose);
-	dialogGamma->show();
-#endif
-	return;
 }
 
 void MainWindow::showCurrentScan()
@@ -1046,3 +1015,10 @@ void MainWindow::on_checkBoxLoopMeasurement_stateChanged(int state)
 	return;
 }
 
+void MainWindow::on_actionGreyscaleSettings_triggered()
+{
+	DialogGreyscaleSettings* dialog = new DialogGreyscaleSettings(this);
+	dialog->setAttribute(Qt::WA_DeleteOnClose);
+	dialog->show();
+	return;
+}
