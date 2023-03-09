@@ -446,7 +446,7 @@
      <string>Greyscale Viewer</string>
     </property>
     <addaction name="actionShow"/>
-    <addaction name="actionGamma"/>
+    <addaction name="actionGreyscaleSettings"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSettings"/>
@@ -583,6 +583,11 @@
   <action name="actionspecial_pixels">
    <property name="text">
     <string>special pixels</string>
+   </property>
+  </action>
+  <action name="actionGreyscaleSettings">
+   <property name="text">
+    <string>Settings</string>
    </property>
   </action>
  </widget>

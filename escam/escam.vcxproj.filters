@@ -111,9 +111,6 @@
     <ClCompile Include="dialogioctrl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dialoggamma.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="camerasettingswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -121,6 +118,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dialogspecialpixels.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dialoggreyscalesettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -204,9 +204,6 @@
     <QtUic Include="dialogioctrl.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="dialoggamma.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="camerasettingswidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
@@ -214,6 +211,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogspecialpixels.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialoggreyscalesettings.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -879,9 +879,6 @@
     <QtMoc Include="dialogioctrl.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="dialoggamma.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="camerasettingswidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -889,6 +886,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="dialogspecialpixels.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="dialoggreyscalesettings.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

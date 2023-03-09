@@ -5130,3 +5130,25 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 	free(data);
 	return status;
 }
+
+es_status_codes GetOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t** address)
+{
+	es_status_codes status = es_no_error;
+	// allocate memory for one block of one camera
+	uint16_t* data = (uint16_t*) malloc(aPIXEL[drvno] * *Nospb * sizeof(uint16_t));
+	// iterate through all samples of the requestet block
+	for (uint32_t sample = 0; sample < *Nospb; sample++)
+	{
+		uint16_t* sample_address = NULL;
+		// get the address of the current sample
+		status = GetAddressOfPixel(drvno, 0, sample, block, camera, &sample_address);
+		if (status != es_no_error) return status;
+		// check if sample_address is not null
+		if(sample_address)
+			// copy one sample to the new memory
+			memcpy(data + sample * aPIXEL[drvno], sample_address, aPIXEL[drvno] * sizeof(uint16_t));
+	}
+	// return the address of the new allocated data
+	*address = data;
+	return status;
+}

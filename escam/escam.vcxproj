@@ -216,7 +216,7 @@
     <ClCompile Include="dacspinboxes.cpp" />
     <ClCompile Include="dialogdac.cpp" />
     <ClCompile Include="dialogdsc.cpp" />
-    <ClCompile Include="dialoggamma.cpp" />
+    <ClCompile Include="dialoggreyscalesettings.cpp" />
     <ClCompile Include="dialogioctrl.cpp" />
     <ClCompile Include="dialogrms.cpp" />
     <ClCompile Include="dialogspecialpixels.cpp" />
@@ -245,10 +245,10 @@
     <QtMoc Include="dialogdsc.h" />
     <QtMoc Include="dialogdac.h" />
     <QtMoc Include="dialogioctrl.h" />
-    <QtMoc Include="dialoggamma.h" />
     <QtMoc Include="camerasettingswidget.h" />
     <QtMoc Include="dacspinboxes.h" />
     <QtMoc Include="dialogspecialpixels.h" />
+    <QtMoc Include="dialoggreyscalesettings.h" />
     <ClInclude Include="lsc-gui.h" />
     <ClInclude Include="UIAbstractionLayer_cpp.h" />
     <QtMoc Include="dialogsettings.h">
@@ -288,7 +288,7 @@
     <QtUic Include="dialogaxes.ui" />
     <QtUic Include="dialogdac.ui" />
     <QtUic Include="dialogdsc.ui" />
-    <QtUic Include="dialoggamma.ui" />
+    <QtUic Include="dialoggreyscalesettings.ui" />
     <QtUic Include="dialogioctrl.ui" />
     <QtUic Include="dialogrms.ui" />
     <QtUic Include="dialogsettings.ui">

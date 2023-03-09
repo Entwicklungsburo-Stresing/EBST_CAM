@@ -1,30 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DialogGamma</class>
- <widget class="QDialog" name="DialogGamma">
+ <class>DialogGreyscaleSettingsClass</class>
+ <widget class="QDialog" name="DialogGreyscaleSettingsClass">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>174</width>
-    <height>107</height>
+    <width>126</width>
+    <height>159</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Greyscale Gamma</string>
+   <string>DialogGreyscaleSettings</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="2" column="2">
-      <widget class="QSpinBox" name="spinBoxWhite">
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <spacer name="horizontalSpacer">
+     <item row="3" column="3">
+      <spacer name="horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -35,13 +28,6 @@
         </size>
        </property>
       </spacer>
-     </item>
-     <item row="1" column="2">
-      <widget class="QSpinBox" name="spinBoxBlack">
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
      </item>
      <item row="0" column="1">
       <spacer name="verticalSpacer">
@@ -56,34 +42,35 @@
        </property>
       </spacer>
      </item>
-     <item row="2" column="1">
+     <item row="3" column="2">
+      <widget class="QSpinBox" name="spinBoxBlack">
+       <property name="maximum">
+        <number>65535</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="labelBoard">
+       <property name="text">
+        <string>Board</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
       <widget class="QLabel" name="labelWhite">
        <property name="text">
         <string>White</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="3" column="1">
       <widget class="QLabel" name="labelBlack">
        <property name="text">
         <string>Black</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="3">
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="3" column="1">
+     <item row="5" column="1">
       <spacer name="verticalSpacer_2">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -96,12 +83,45 @@
        </property>
       </spacer>
      </item>
+     <item row="4" column="2">
+      <widget class="QSpinBox" name="spinBoxWhite">
+       <property name="maximum">
+        <number>65535</number>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="labelCamera">
+       <property name="text">
+        <string>Camera</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QSpinBox" name="spinBoxBoard"/>
+     </item>
+     <item row="2" column="2">
+      <widget class="QSpinBox" name="spinBoxCamera"/>
+     </item>
     </layout>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
@@ -109,38 +129,5 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>DialogGamma</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>202</x>
-     <y>366</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>174</x>
-     <y>294</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>DialogGamma</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>250</x>
-     <y>353</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>244</x>
-     <y>298</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
