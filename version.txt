@@ -1,5 +1,8 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.2.3
+- Implement greyscale viewer for CAMCNT > 1
+
 4.2.2
 - Fix axes in escam on startup
 - Improve start / stop buttons in escam
