@@ -59,6 +59,9 @@ void closeFile(uint32_t drvno);
 void setTimestamp();
 void writeFileHeaderToFile(uint32_t drvno, char* filename_full);
 void writeToDisc(uint32_t* drvno_ptr);
+void startWriteToDiscThead(uint32_t drvno);
+void VerifyData(struct verify_data_parameter* vd);
+void getFileHeaderFromFile(struct file_header* fh, char* filename_full);
 
 #ifdef WIN32
 es_status_codes About(uint32_t board_sel);

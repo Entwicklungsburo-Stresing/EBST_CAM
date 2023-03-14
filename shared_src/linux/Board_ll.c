@@ -193,8 +193,8 @@ es_status_codes checkDriverHandle(uint32_t drvno)
 void FreeMemInfo( uint64_t *pmemory_all, uint64_t *pmemory_free )
 {
 	//TODO implement me
-    *pmemory_all = (uint64_t) -1;
-    *pmemory_free = (uint64_t) -1;
+	*pmemory_all = (uint64_t) -1;
+	*pmemory_free = (uint64_t) -1;
 	return;
 }
 
@@ -203,9 +203,9 @@ es_status_codes SetupDma( uint32_t drvno )
 	ES_LOG( "Setup DMA\n" );
 	//on linux: driver numbers are 0 and 1, on windows 1 and 2
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
-    uint32_t dmasPerInterrupt = settings_struct.dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
-    dev->control->bytes_per_interrupt = dmasPerInterrupt * aPIXEL[drvno] * sizeof(uint16_t);
-    dev->control->used_dma_size = settings_struct.dma_buffer_size_in_scans * aPIXEL[drvno] * sizeof(uint16_t);
+	uint32_t dmasPerInterrupt = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
+	dev->control->bytes_per_interrupt = dmasPerInterrupt * aPIXEL[drvno] * sizeof(uint16_t);
+	dev->control->used_dma_size = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans * aPIXEL[drvno] * sizeof(uint16_t);
 	if (dev->control->used_dma_size > dev->control->dma_buf_size)
 		dev->control->used_dma_size = dev->control->dma_buf_size;
 	ES_LOG("dmas per interrupt is %d\n", dev->s0->DMAS_PER_INTERRUPT);
@@ -227,16 +227,16 @@ uint64_t getPhysicalDmaAddress( uint32_t drvno)
 
 es_status_codes enableInterrupt( uint32_t drvno )
 {
-    // enbaleInterrupt is only used on Windows
-    (void)drvno;
+	// enbaleInterrupt is only used on Windows
+	(void)drvno;
 	return es_no_error;
 }
 
 es_status_codes disableInterrupt( uint32_t drvno )
 {
-    // disableInterrupt is only used on Windows
-    (void)drvno;
-    return es_no_error;
+	// disableInterrupt is only used on Windows
+	(void)drvno;
+	return es_no_error;
 }
 
 void ResetBufferWritePos(uint32_t drvno)
@@ -245,7 +245,7 @@ void ResetBufferWritePos(uint32_t drvno)
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
 	dev->control->write_pos = 0;
 	userBufferWritePos[drvno] = userBuffer[drvno];
-    ES_LOG("user_buffer_write_pos %p\n", (void*)userBufferWritePos[drvno]);
+	ES_LOG("user_buffer_write_pos %p\n", (void*)userBufferWritePos[drvno]);
 	dev->control->read_pos = 0;
 	dev->control->irq_count = 0;
 	return;
@@ -272,7 +272,7 @@ es_status_codes _InitDriver()
 {
 	int result = lscpcie_driver_init();
 	if(result < 0) return es_driver_init_failed;
-    number_of_boards = (uint8_t)result;
+	number_of_boards = (uint8_t)result;
 	return es_no_error;
 }
 
@@ -291,37 +291,37 @@ es_status_codes _ExitDriver(uint32_t drvno)
 
 void* CopyDataToUserBuffer(void* param_drvno)
 {
-    uint32_t* drvno_ptr = param_drvno;
-    uint32_t drvno = *drvno_ptr;
-    if(checkDriverHandle(drvno) != es_no_error) return NULL;
-    ES_LOG("Copy data to user buffer started, drvno %u, user buffer: %p\n", drvno, (void*)userBuffer[drvno]);
-    pthread_mutex_lock(&mutex[drvno-1]);
-    ssize_t bytes_to_read = sizeof(uint16_t) * aCAMCNT[drvno] * *Nospb * aPIXEL[drvno] * *Nob;
+	uint32_t* drvno_ptr = param_drvno;
+	uint32_t drvno = *drvno_ptr;
+	if(checkDriverHandle(drvno) != es_no_error) return NULL;
+	ES_LOG("Copy data to user buffer started, drvno %u, user buffer: %p\n", drvno, (void*)userBuffer[drvno]);
+	pthread_mutex_lock(&mutex[drvno-1]);
+	ssize_t bytes_to_read = sizeof(uint16_t) * aCAMCNT[drvno] * *Nospb * aPIXEL[drvno] * *Nob;
 	ES_LOG("bytes to read: %zd\n", bytes_to_read);
 	ssize_t bytes_read = 0;
 	ssize_t result;
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
 	ES_LOG("bytes per interrupt: %u\n", dev->control->bytes_per_interrupt);
-    ES_LOG("bytes_to_read %zd , bytes_read: %zd\n", bytes_to_read, bytes_read);
+	ES_LOG("bytes_to_read %zd , bytes_read: %zd\n", bytes_to_read, bytes_read);
 	while (bytes_to_read && bytes_to_read >= dev->control->bytes_per_interrupt && !abortMeasurementFlag)
 	{
-        result = read(dev->handle, ((uint8_t *)userBuffer[drvno]) + bytes_read , (size_t)bytes_to_read);
-        ES_LOG("Copy to user buffer intterupt %u done, result: %zd\n", dev->control->irq_count, result);
+		result = read(dev->handle, ((uint8_t *)userBuffer[drvno]) + bytes_read , (size_t)bytes_to_read);
+		ES_LOG("Copy to user buffer intterupt %u done, result: %zd\n", dev->control->irq_count, result);
 		if (result < 0)
-        {
-            pthread_mutex_unlock(&mutex[drvno-1]);
+		{
+			pthread_mutex_unlock(&mutex[drvno-1]);
 			return NULL;
-        }
+		}
 		bytes_to_read -= result;
-        bytes_read += result;
-        ES_TRACE("bytes_to_read %zd , bytes_read: %zd\n", bytes_to_read, bytes_read);
+		bytes_read += result;
+		ES_TRACE("bytes_to_read %zd , bytes_read: %zd\n", bytes_to_read, bytes_read);
 		userBufferWritePos[drvno] = (uint16_t*)(((uint8_t *)userBufferWritePos[drvno]) + result);
-        ES_TRACE("userBufferWritePos %p\n", (void*)userBufferWritePos[drvno]);
+		ES_TRACE("userBufferWritePos %p\n", (void*)userBufferWritePos[drvno]);
 
 	}
-    pthread_mutex_unlock(&mutex[drvno-1]);
+	pthread_mutex_unlock(&mutex[drvno-1]);
 	ES_LOG("All copy to user buffer interrupts done\n");
-    free(drvno_ptr);
+	free(drvno_ptr);
 	return NULL;
 }
 
@@ -329,9 +329,9 @@ es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 {
 	ES_LOG("Start copy data to user buffer thread\n");
 	pthread_t tid;
-    uint32_t* drvno_ptr = malloc(sizeof(uint32_t));
-    *drvno_ptr = drvno;
-    int err = pthread_create(&tid, NULL, &CopyDataToUserBuffer, (void*)drvno_ptr);
+	uint32_t* drvno_ptr = malloc(sizeof(uint32_t));
+	*drvno_ptr = drvno;
+	int err = pthread_create(&tid, NULL, &CopyDataToUserBuffer, (void*)drvno_ptr);
 	if(err)
 		return es_creating_thread_failed;
 	else
@@ -340,12 +340,12 @@ es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 
 es_status_codes InitMutex(uint32_t drvno)
 {
-    pthread_mutexattr_t attr;
-    if (pthread_mutexattr_init(&attr) == -1)
-        return es_creating_thread_failed;
-    if (pthread_mutex_init(&mutex[drvno-1], &attr) == -1)
-        return es_creating_thread_failed;
-    return es_no_error;
+	pthread_mutexattr_t attr;
+	if (pthread_mutexattr_init(&attr) == -1)
+		return es_creating_thread_failed;
+	if (pthread_mutex_init(&mutex[drvno-1], &attr) == -1)
+		return es_creating_thread_failed;
+	return es_no_error;
 }
 
 uint16_t checkEscapeKeyState()
@@ -362,37 +362,61 @@ uint16_t checkSpaceKeyState()
 
 es_status_codes SetPriority(uint32_t threadp)
 {
-    //TODO: implement me
-    (void)threadp;
-    return es_no_error;
+	//TODO: implement me
+	(void)threadp;
+	return es_no_error;
 }
 
 es_status_codes ResetPriority()
 {
-    //TODO: implement me
-    return es_no_error;
+	//TODO: implement me
+	return es_no_error;
 }
 
 uint16_t* getVirtualDmaAddress(uint32_t drvno)
 {
-    struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
-    return (uint16_t*) dev->mapped_buffer;
+	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
+	return (uint16_t*) dev->mapped_buffer;
 }
 
 uint32_t getDmaBufferSizeInBytes(uint32_t drvno)
 {
-    struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
-    return dev->control->used_dma_size;
+	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
+	return dev->control->used_dma_size;
 }
 
 int64_t getCurrentInterruptCounter(uint32_t drvno)
 {
-    struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
-    return (int64_t)dev->control->irq_count;
+	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
+	return (int64_t)dev->control->irq_count;
 }
 
 uint8_t WaitforTelapsed(long long musec)
 {
 	usleep(musec);
 	return 1;
+}
+
+void setTimestamp()
+{
+	//TODO
+	return;
+}
+
+void startWriteToDiscThead(uint32_t drvno)
+{
+	//TODO
+	return;
+}
+
+void VerifyData(struct verify_data_parameter* vd)
+{
+	//TODO
+	return;
+}
+
+void getFileHeaderFromFile(struct file_header* fh, char* filename_full)
+{
+	//TODO
+	return;
 }
