@@ -4,8 +4,8 @@
 #include "dialogdac.h"
 #include "dialogioctrl.h"
 #include "dialogspecialpixels.h"
-#include "dialoggreyscalesettings.h"
 #ifdef WIN32
+#include "dialoggreyscalesettings.h"\
 #include "shared_src/ESLSCDLL_pro.h"
 #endif
 
@@ -991,7 +991,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 	else
 	{
 		lsc.abortMeasurement();
-		ExitDriver();
+		lsc.exitDriver();
 		QMainWindow::closeEvent(event);
 	}
 }
@@ -1017,8 +1017,10 @@ void MainWindow::on_checkBoxLoopMeasurement_stateChanged(int state)
 
 void MainWindow::on_actionGreyscaleSettings_triggered()
 {
+#ifdef WIN32
 	DialogGreyscaleSettings* dialog = new DialogGreyscaleSettings(this);
 	dialog->setAttribute(Qt::WA_DeleteOnClose);
 	dialog->show();
 	return;
+#endif
 }

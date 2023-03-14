@@ -27,6 +27,14 @@ es_status_codes Lsc::initPcieBoard()
 }
 
 /**
+ * \copydoc ExitDriver
+ */
+es_status_codes Lsc::exitDriver()
+{
+	return ExitDriver();
+}
+
+/**
  * \copydoc InitMeasurement
  */
 es_status_codes Lsc::initMeasurement()

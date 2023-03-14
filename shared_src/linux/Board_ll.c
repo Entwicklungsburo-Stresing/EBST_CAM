@@ -26,8 +26,6 @@ pthread_mutex_t mutex[MAXPCIECARDS];
 
 es_status_codes readRegister_32( uint32_t drvno, uint32_t* data, uint16_t address )
 {
-	//on linux: driver numbers are 0 and 1, on windows 1 and 2
-	drvno--;
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (!dev) return es_register_read_failed;
 	lscpcie_read_reg32(dev, address, data);
@@ -36,8 +34,6 @@ es_status_codes readRegister_32( uint32_t drvno, uint32_t* data, uint16_t addres
 
 es_status_codes readRegister_16( uint32_t drvno, uint16_t* data, uint16_t address )
 {
-	//on linux: driver numbers are 0 and 1, on windows 1 and 2
-	drvno--;
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (!dev) return es_register_read_failed;
 	lscpcie_read_reg16(dev, address, data);
@@ -46,8 +42,6 @@ es_status_codes readRegister_16( uint32_t drvno, uint16_t* data, uint16_t addres
 
 es_status_codes readRegister_8( uint32_t drvno, uint8_t* data, uint16_t address )
 {
-	//on linux: driver numbers are 0 and 1, on windows 1 and 2
-	drvno--;
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (!dev) return es_register_read_failed;
 	lscpcie_read_reg8(dev, address, data);
@@ -56,8 +50,6 @@ es_status_codes readRegister_8( uint32_t drvno, uint8_t* data, uint16_t address 
 
 es_status_codes writeRegister_32( uint32_t drvno, uint32_t data, uint16_t address )
 {
-	//on linux: driver numbers are 0 and 1, on windows 1 and 2
-	drvno--;
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (!dev) return es_register_write_failed;
 	lscpcie_write_reg32(dev, address, data);
@@ -87,8 +79,6 @@ es_status_codes writeRegister_32twoBoards(uint32_t data1, uint32_t data2, uint16
 
 es_status_codes writeRegister_16( uint32_t drvno, uint16_t data, uint16_t address )
 {
-	//on linux: driver numbers are 0 and 1, on windows 1 and 2
-	drvno--;
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (!dev) return es_register_write_failed;
 	lscpcie_write_reg16(dev, address, data);
@@ -97,8 +87,6 @@ es_status_codes writeRegister_16( uint32_t drvno, uint16_t data, uint16_t addres
 
 es_status_codes writeRegister_8( uint32_t drvno, uint8_t data, uint16_t address )
 {
-	//on linux: driver numbers are 0 and 1, on windows 1 and 2
-	drvno--;
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (!dev) return es_register_write_failed;
 	lscpcie_write_reg8(dev, address, data);
@@ -140,8 +128,6 @@ es_status_codes writeRegister_8twoBoards(uint8_t data1, uint8_t data2, uint16_t 
  */
 es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address )
 {
-	//on linux: driver numbers are 0 and 1, on windows 1 and 2
-	drvno--;
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (!dev) return es_register_read_failed;
 	if(lscpcie_read_config32(dev, address, data))
@@ -152,8 +138,6 @@ es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address 
 
 es_status_codes writeConfig_32( uint32_t drvno, uint32_t data, uint16_t address )
 {
-	//on linux: driver numbers are 0 and 1, on windows 1 and 2
-	drvno--;
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (!dev) return es_register_write_failed;
 	if(lscpcie_write_config32(dev, address, data))
@@ -173,8 +157,6 @@ es_status_codes writeConfig_32( uint32_t drvno, uint32_t data, uint16_t address 
  */
 es_status_codes checkDriverHandle(uint32_t drvno)
 {
-	//on linux: driver numbers are 0 and 1, on windows 1 and 2
-	drvno--;
 	if (drvno > 1)
 		return es_invalid_driver_number;
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
@@ -202,7 +184,7 @@ es_status_codes SetupDma( uint32_t drvno )
 {
 	ES_LOG( "Setup DMA\n" );
 	//on linux: driver numbers are 0 and 1, on windows 1 and 2
-	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
+	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	uint32_t dmasPerInterrupt = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
 	dev->control->bytes_per_interrupt = dmasPerInterrupt * aPIXEL[drvno] * sizeof(uint16_t);
 	dev->control->used_dma_size = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans * aPIXEL[drvno] * sizeof(uint16_t);
@@ -219,8 +201,6 @@ es_status_codes SetupDma( uint32_t drvno )
 
 uint64_t getPhysicalDmaAddress( uint32_t drvno)
 {
-	//on linux: driver numbers are 0 and 1, on windows 1 and 2
-	drvno--;
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	return (uint64_t) dev->control->dma_physical_start;
 }
@@ -242,7 +222,7 @@ es_status_codes disableInterrupt( uint32_t drvno )
 void ResetBufferWritePos(uint32_t drvno)
 {
 	//on linux: driver numbers are 0 and 1, on windows 1 and 2
-	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
+	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	dev->control->write_pos = 0;
 	userBufferWritePos[drvno] = userBuffer[drvno];
 	ES_LOG("user_buffer_write_pos %p\n", (void*)userBufferWritePos[drvno]);
@@ -260,8 +240,6 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 
 es_status_codes _InitBoard(uint32_t drvno)
 {
-	//on linux: driver numbers are 0 and 1, on windows 1 and 2
-	drvno--;
 	// open /dev/lscpcie<n>
 	int result = lscpcie_open(drvno, 0, 1);
 	if(result < 0) return es_open_device_failed;
@@ -283,8 +261,6 @@ es_status_codes CleanupDriver(uint32_t drvno)
 
 es_status_codes _ExitDriver(uint32_t drvno)
 {
-	//on linux: driver numbers are 0 and 1, on windows 1 and 2
-	drvno--;
 	lscpcie_close(drvno);
 	return es_no_error;
 }
@@ -295,12 +271,12 @@ void* CopyDataToUserBuffer(void* param_drvno)
 	uint32_t drvno = *drvno_ptr;
 	if(checkDriverHandle(drvno) != es_no_error) return NULL;
 	ES_LOG("Copy data to user buffer started, drvno %u, user buffer: %p\n", drvno, (void*)userBuffer[drvno]);
-	pthread_mutex_lock(&mutex[drvno-1]);
+	pthread_mutex_lock(&mutex[drvno]);
 	ssize_t bytes_to_read = sizeof(uint16_t) * aCAMCNT[drvno] * *Nospb * aPIXEL[drvno] * *Nob;
 	ES_LOG("bytes to read: %zd\n", bytes_to_read);
 	ssize_t bytes_read = 0;
 	ssize_t result;
-	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
+	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	ES_LOG("bytes per interrupt: %u\n", dev->control->bytes_per_interrupt);
 	ES_LOG("bytes_to_read %zd , bytes_read: %zd\n", bytes_to_read, bytes_read);
 	while (bytes_to_read && bytes_to_read >= dev->control->bytes_per_interrupt && !abortMeasurementFlag)
@@ -309,7 +285,7 @@ void* CopyDataToUserBuffer(void* param_drvno)
 		ES_LOG("Copy to user buffer intterupt %u done, result: %zd\n", dev->control->irq_count, result);
 		if (result < 0)
 		{
-			pthread_mutex_unlock(&mutex[drvno-1]);
+			pthread_mutex_unlock(&mutex[drvno]);
 			return NULL;
 		}
 		bytes_to_read -= result;
@@ -319,7 +295,7 @@ void* CopyDataToUserBuffer(void* param_drvno)
 		ES_TRACE("userBufferWritePos %p\n", (void*)userBufferWritePos[drvno]);
 
 	}
-	pthread_mutex_unlock(&mutex[drvno-1]);
+	pthread_mutex_unlock(&mutex[drvno]);
 	ES_LOG("All copy to user buffer interrupts done\n");
 	free(drvno_ptr);
 	return NULL;
@@ -343,7 +319,7 @@ es_status_codes InitMutex(uint32_t drvno)
 	pthread_mutexattr_t attr;
 	if (pthread_mutexattr_init(&attr) == -1)
 		return es_creating_thread_failed;
-	if (pthread_mutex_init(&mutex[drvno-1], &attr) == -1)
+	if (pthread_mutex_init(&mutex[drvno], &attr) == -1)
 		return es_creating_thread_failed;
 	return es_no_error;
 }
@@ -375,19 +351,19 @@ es_status_codes ResetPriority()
 
 uint16_t* getVirtualDmaAddress(uint32_t drvno)
 {
-	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
+	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	return (uint16_t*) dev->mapped_buffer;
 }
 
 uint32_t getDmaBufferSizeInBytes(uint32_t drvno)
 {
-	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
+	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	return dev->control->used_dma_size;
 }
 
 int64_t getCurrentInterruptCounter(uint32_t drvno)
 {
-	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
+	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	return (int64_t)dev->control->irq_count;
 }
 

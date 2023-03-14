@@ -35,26 +35,30 @@ DEFINES += "VERSION_MAJOR=$$VERSION_MAJOR_QT"\
 VERSION = $${VERSION_MAJOR_QT}.$${VERSION_MINOR_QT}.$${VERSION_BUILD_QT}
 
 # Input
-SOURCES += lsc-gui.cpp \
+SOURCES += \
+    camerasettingswidget.cpp \
+    dacspinboxes.cpp \
     dialogaxes.cpp \
     dialogdac.cpp \
     dialogdsc.cpp \
+    dialogioctrl.cpp \
     dialogrms.cpp \
     dialogsettings.cpp \
-    dialogtdc.cpp \
-    dialogioctrl.cpp \
+    dialogspecialpixels.cpp \
+    lsc.cpp \
+    lsc-gui.cpp \
     mainwindow.cpp \
     myqchartview.cpp \
     myqspinbox.cpp \
-    ../shared_src/es_status_codes.c \
-    ../shared_src/Board.c \
-    lsc.cpp \
     UIAbstractionLayer.c \
     UIAbstractionLayer_cpp.cpp \
+    ../shared_src/es_status_codes.c \
+    ../shared_src/Board.c \
     ../shared_src/globals.c
 win32 {
     SOURCES += ../shared_src/win/Board_ll.c \
-        ../shared_src/lscpciej_lib.c
+        ../shared_src/lscpciej_lib.c \
+        dialoggreyscalesettings.cpp \
 }
 unix {
     SOURCES += ../linux-driver/userspace/lscpcie.c \
@@ -66,42 +70,54 @@ DISTFILES += \
     LscUIForm.ui.qml
 
 FORMS += \
+    camerasettingswidget.ui \
+    dacspinboxes.ui \
     dialogaxes.ui \
     dialogdac.ui \
     dialogdsc.ui \
+    dialogioctrl.ui \
     dialogrms.ui \
     dialogsettings.ui \
-    dialogtdc.ui \
-    dialogioctrl.ui \
+    dialogspecialpixels.ui \
     mainwindow.ui
+win32 {
+    FORMS += \
+    dialoggreyscalesettings.ui
+}
 
 HEADERS += \
+    camerasettingswidget.h \
+    dacspinboxes.h \
     dialogaxes.h \
     dialogdac.h \
     dialogdsc.h \
+    dialogioctrl.h \
     dialogrms.h \
     dialogsettings.h \
-    dialogtdc.h \
-    dialogioctrl.h \
+    dialogspecialpixels.h \
     lsc.h \
+    lsc-gui.h \
     mainwindow.h \
     myqchartview.h \
     myqspinbox.h \
-    ../shared_src/enum.h \
-    ../shared_src/struct.h \
+    UIAbstractionLayer_cpp.h \
     ../shared_src/es_status_codes.h \
     ../shared_src/Board.h \
+    ../shared_src/globals.h \
+    ../shared_src/enum.h \
+    ../shared_src/struct.h \
     ../shared_src/Board_ll.h \
     ../shared_src/UIAbstractionLayer.h \
     UIAbstractionLayer_cpp.h \
-    ../shared_src/globals.h \
     ../shared_src/default_settings.h \
     ../version.h
 unix {
     HEADERS += ../linux-driver/userspace/lscpcie.h
 }
 win32 {
-    HEADERS += 	../shared_src/lscpciej_lib.h
+    HEADERS += 	\
+    ../shared_src/lscpciej_lib.h \
+    dialoggreyscalesettings.h
 }
 
 RESOURCES += qdarkstyle/style.qrc
