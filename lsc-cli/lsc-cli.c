@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 #define DRVNO 1
-#define PIXEL 576
+#define PIXEL 1088
 #define COPY_TO_DISPLAY_BUFFER false
 
 int main(int argc, char **argv)
@@ -16,17 +16,15 @@ int main(int argc, char **argv)
 	if(status != es_no_error) return status;
 
 	settings_struct.board_sel = DRVNO;
-	settings_struct.bti_mode = bti_BTimer;
-	settings_struct.sti_mode = sti_I;
-	settings_struct.btime_in_microsec = 1000000;
-	settings_struct.nos = 500;
+	settings_struct.nos = 1000;
 	settings_struct.nob = 1;
-	settings_struct.camcnt = 2;
-	settings_struct.pixel = PIXEL;
-	settings_struct.FFTMode = full_binning;
-	settings_struct.sensor_type = FFTsensor;
-	settings_struct.FFTLines = 64;
-	settings_struct.Vfreq = 7;
+	settings_struct.camera_settings[DRVNO].bti_mode = bti_BTimer;
+	settings_struct.camera_settings[DRVNO].sti_mode = sti_STimer;
+	settings_struct.camera_settings[DRVNO].btime_in_microsec = 1000000;
+	settings_struct.camera_settings[DRVNO].stime_in_microsec = 2000;
+	settings_struct.camera_settings[DRVNO].camcnt = 1;
+	settings_struct.camera_settings[DRVNO].pixel = PIXEL;
+	settings_struct.camera_settings[DRVNO].sensor_type = PDAsensor;	
 
 	status = InitMeasurement();
 	if(status != es_no_error) return status;
