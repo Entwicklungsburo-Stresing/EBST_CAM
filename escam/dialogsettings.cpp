@@ -57,28 +57,36 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->checkBoxBoard2->setChecked(false);
 	ui->checkBoxBoard3->setChecked(false);
 	ui->checkBoxBoard4->setChecked(false);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
 	ui->cameraSettingsTabs->setTabVisible(0, false);
 	ui->cameraSettingsTabs->setTabVisible(1, false);
 	ui->cameraSettingsTabs->setTabVisible(2, false);
 	ui->cameraSettingsTabs->setTabVisible(3, false);
 	ui->cameraSettingsTabs->setTabVisible(4, false);
+#endif
 	// show board select elements depending on number_of_boards with intended fall through
 	switch (number_of_boards)
 	{
 	case 5:
 		ui->checkBoxBoard4->setVisible(true);
 		ui->checkBoxBoard4->setChecked(settings.value(settingBoard4Path, settingBoard4Default).toBool());
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
 		ui->cameraSettingsTabs->setTabVisible(4, true);
+#endif
 		on_checkBoxBoard4_stateChanged(ui->checkBoxBoard4->isChecked());
 	case 4:
 		ui->checkBoxBoard3->setVisible(true);
 		ui->checkBoxBoard3->setChecked(settings.value(settingBoard3Path, settingBoard3Default).toBool());
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
 		ui->cameraSettingsTabs->setTabVisible(3, true);
+#endif
 		on_checkBoxBoard3_stateChanged(ui->checkBoxBoard3->isChecked());
 	case 3:
 		ui->checkBoxBoard2->setVisible(true);
 		ui->checkBoxBoard2->setChecked(settings.value(settingBoard2Path, settingBoard2Default).toBool());
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
 		ui->cameraSettingsTabs->setTabVisible(2, true);
+#endif
 		on_checkBoxBoard2_stateChanged(ui->checkBoxBoard2->isChecked());
 	case 2:
 		ui->checkBoxBoard1->setVisible(true);
@@ -86,14 +94,18 @@ DialogSettings::DialogSettings(QWidget *parent) :
 		ui->checkBoxBoard1->setChecked(settings.value(settingBoard1Path, settingBoard1Default).toBool());
 		ui->checkBoxBoard0->setVisible(true);
 		ui->checkBoxBoard0->setChecked(settings.value(settingBoard0Path, settingBoard0Default).toBool());
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
 		ui->cameraSettingsTabs->setTabVisible(1, true);
 		ui->cameraSettingsTabs->setTabVisible(0, true);
+#endif
 		on_checkBoxBoard1_stateChanged(ui->checkBoxBoard1->isChecked());
 		on_checkBoxBoard0_stateChanged(ui->checkBoxBoard0->isChecked());
 		break;
 	default:
 	case 1:
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
 		ui->cameraSettingsTabs->setTabVisible(0, true);
+#endif
 		on_checkBoxBoard0_stateChanged(ui->checkBoxBoard0->isChecked());
 		ui->checkBoxBoard0->setChecked(true);
 	}
