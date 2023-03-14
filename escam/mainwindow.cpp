@@ -5,7 +5,7 @@
 #include "dialogioctrl.h"
 #include "dialogspecialpixels.h"
 #ifdef WIN32
-#include "dialoggreyscalesettings.h"\
+#include "dialoggreyscalesettings.h"
 #include "shared_src/ESLSCDLL_pro.h"
 #endif
 
