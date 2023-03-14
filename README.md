@@ -90,3 +90,10 @@ sudo dkms build -m lscpcie -v 3.20-3
 sudo dkms install -m lscpcie -v 3.20-3
 ```
 
+### Running escam
+
+Before running escam the driver file must be accessible for normal user (will go at some point into the driver).
+```
+sudo chmod 666 /dev/lscpcie0
+escam
+```
