@@ -1,5 +1,6 @@
 #include "dialogdac.h"
 #include "ui_dialogdac.h"
+#include "dacspinboxes.h"
 
 DialogDac::DialogDac(QWidget* parent)
 	: QDialog(parent),
