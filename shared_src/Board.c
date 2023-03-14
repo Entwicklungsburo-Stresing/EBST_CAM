@@ -2724,12 +2724,8 @@ es_status_codes StartMeasurement()
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
-		if ((settings_struct.board_sel >> drvno) & 1)
-		{
-			uint32_t* drvno_tmp = malloc(sizeof(uint32_t));
-			*drvno_tmp = drvno;
-			if (settings_struct.camera_settings[drvno].write_to_disc) _beginthread(&writeToDisc, 0, drvno_tmp);
-		}
+		if ((settings_struct.board_sel >> drvno) & 1 && settings_struct.camera_settings[drvno].write_to_disc)
+			startWriteToDiscThead(drvno);
 	}
 	// Set the measure on hardware bit
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -4754,96 +4750,6 @@ void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last sample before error:\t%u\n",vd->last_sample_before_error);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last block before error:\t%u\n",vd->last_block_before_error);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last measurement before error:\t%llu\n",vd->last_measurement_before_error);
-	return;
-}
-
-/**
- * \brief Check a file for its data consistency.
- * 
- * \param vd see struct verify_data_parameter in globals.h for details
- */
-void VerifyData(struct verify_data_parameter* vd)
-{
-	FILE* stream;
-	// Read file in binary mode
-	fopen_s(&stream, vd->filename_full, "rb");
-	if (stream)
-	{
-		uint16_t data_buffer[4000];
-		// Read file header and write it to fh
-		fread_s(&vd->fh, sizeof(struct file_header), 1, sizeof(struct file_header), stream);
-		// Set all counter to initial values
-		uint32_t cur_sample_cnt = 1;
-		uint32_t cur_block_cnt = 1;
-		vd->sample_cnt = 1;
-		vd->block_cnt = 1;
-		vd->measurement_cnt = 0;
-		vd->error_cnt = 0;
-		vd->last_sample_before_error = 1;
-		vd->last_block_before_error = 1;
-		vd->last_measurement_before_error = 0;
-		// while is ended by break
-		while (true)
-		{
-			// Read data from file frame wise
-			fread_s(data_buffer, sizeof(data_buffer), 1, vd->fh.pixel * sizeof(uint16_t), stream);
-			// When the end of the file is reached, break the while loop.
-			if (feof(stream)) break;
-			// Assemble the 32 bit counters from upper and lower 16 bit counter half
-			vd->last_sample = ((uint32_t)data_buffer[pixel_scan_index_high]) << 16 | ((uint32_t)data_buffer[pixel_scan_index_low]);
-			uint16_t block_index_high = data_buffer[pixel_block_index_high_s1_s2] & pixel_block_index_high_s1_s2_bits_block_index;
-			vd->last_block = ((uint32_t)block_index_high << 16) | ((uint32_t)data_buffer[pixel_block_index_low]);
-			// Check if the theoretical counter value is identical with the actual counter value from the file
-			if (vd->last_sample != cur_sample_cnt || vd->last_block != cur_block_cnt)
-			{
-				// Save the counter of the last valid sample, block and measurement on the first error
-				if (vd->error_cnt == 0)
-				{
-					vd->last_sample_before_error = vd->last_sample - 1;
-					vd->last_block_before_error = vd->last_block - 1;
-					vd->last_measurement_before_error = vd->measurement_cnt;
-				}
-				vd->error_cnt++;
-			}
-			// Set sample_cnt to the maximum found cur_sample_cnt
-			if (cur_sample_cnt > vd->sample_cnt) vd->sample_cnt = cur_sample_cnt;
-			// Set block_cnt to the maximum found cur_block_cnt
-			if (cur_block_cnt > vd->block_cnt) vd->block_cnt= cur_block_cnt;
-			// Increment counters for the next loop
-			cur_sample_cnt++;
-			if (cur_sample_cnt > vd->fh.nos)
-			{
-				cur_sample_cnt = 1;
-				cur_block_cnt++;
-			}
-			// block counter is only 30 bits wide, so maximum is 0x3FFFFFFF
-			if (cur_block_cnt > vd->fh.nob || cur_block_cnt > 0x3FFFFFFF)
-			{
-				cur_block_cnt = 1;
-				vd->measurement_cnt++;
-			}
-		}
-		fclose(stream);
-	}
-	return;
-}
-
-/**
- * \brief Open the file at filename_full and write the header to fh.
- * 
- * \param fh struct file_header*
- * \param filename_full Path and file name to the file.
- */
-void getFileHeaderFromFile(struct file_header* fh, char* filename_full)
-{
-	FILE* stream;
-	// Open file in read binary mode
-	fopen_s(&stream, filename_full, "rb");
-	if (stream)
-	{
-		fread_s(fh, sizeof(struct file_header), 1, sizeof(struct file_header), stream);
-		fclose(stream);
-	}
 	return;
 }
 
