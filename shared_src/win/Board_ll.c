@@ -22,6 +22,7 @@ ULONG oldThreadLevel = 0;
 HANDLE hProcess;
 HANDLE hThread;
 HANDLE ghMutex[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
+HANDLE mutexUserBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 FILE* file_stream[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 
 /**
@@ -142,6 +143,11 @@ void isr( uint32_t drvno )
 	// Reset INTRSR flag for TRIGO
 	status = resetBitS0_32(drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );
 	IsrCounter[drvno]++;
+	if (IsrCounter[drvno] > numberOfInterrupts[drvno])
+	{
+		ES_TRACE("set allInterruptsDone to true\n");
+		allInterruptsDone = true;
+	}
 	return;
 }
 
@@ -1326,5 +1332,14 @@ void getFileHeaderFromFile(struct file_header* fh, char* filename_full)
 		fread_s(fh, sizeof(struct file_header), 1, sizeof(struct file_header), stream);
 		fclose(stream);
 	}
+	return;
+}
+
+void WaitForAllInterruptsDone()
+{
+	ES_TRACE("Wait for all interrupts done\n")
+	while (!allInterruptsDone)
+		if (GetAsyncKeyState(VK_ESCAPE) | abortMeasurementFlag) return;
+	ES_TRACE("All interrupts done\n")
 	return;
 }
