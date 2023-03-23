@@ -2718,6 +2718,7 @@ es_status_codes StartMeasurement()
 	es_status_codes status = es_no_error;
 	setTimestamp();
 	measurement_cnt = 0;
+	allInterruptsDone = false;
 	memset(data_available, 0, sizeof(size_t) * MAXPCIECARDS);
 	continiousMeasurementFlag = (bool)settings_struct.contiuous_measurement;//0 or 1
 	continiousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
@@ -2878,6 +2879,7 @@ es_status_codes StartMeasurement()
 			}
 		}
 #endif
+		WaitForAllInterruptsDone();
 		// When the number of scans is not a integer multiple of 500 there will be data in the DMA buffer
 		// left, which is not copied to the user buffer. The copy process for these scans is done here.
 		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
