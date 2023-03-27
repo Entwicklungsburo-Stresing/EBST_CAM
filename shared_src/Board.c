@@ -1059,8 +1059,12 @@ es_status_codes SetMeasurementParameters( uint32_t drvno, uint32_t nos, uint32_t
 	status = SetDMABufRegs(drvno);
 	if (status != es_no_error) return status;
 	uint32_t dmaBufferPartSizeInScans = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS; //500
-	numberOfInterrupts[drvno] = *Nob * (*Nospb) * aCAMCNT[drvno] / dmaBufferPartSizeInScans - 1;
+	numberOfInterrupts[drvno] = (*Nob * (*Nospb) * aCAMCNT[drvno]) / dmaBufferPartSizeInScans;
 	ES_LOG("Number of interrupts: 0x%x \n", numberOfInterrupts[drvno]);
+	if (numberOfInterrupts[drvno] > 0)
+		allInterruptsDone = false;
+	else
+		allInterruptsDone = true;
 	return status;
 }
 
@@ -2718,7 +2722,6 @@ es_status_codes StartMeasurement()
 	es_status_codes status = es_no_error;
 	setTimestamp();
 	measurement_cnt = 0;
-	allInterruptsDone = false;
 	memset(data_available, 0, sizeof(size_t) * MAXPCIECARDS);
 	continiousMeasurementFlag = (bool)settings_struct.contiuous_measurement;//0 or 1
 	continiousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
