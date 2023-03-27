@@ -116,7 +116,7 @@ void isr( uint32_t drvno )
 	// Usually dmaBufferSizeInBytes = 1000scans 
 	// Sometimes (all 10 minutes) one INTR more occurs -> just do not serve it and return
 	// Error when too much ISRs -> memcpy out of range
-	if (IsrCounter[drvno] > numberOfInterrupts[drvno])
+	if (IsrCounter[drvno] >= numberOfInterrupts[drvno])
 	{
 		ES_LOG( "numberOfInterrupts: %u \n", numberOfInterrupts[drvno]);
 		ES_LOG( "ISR Counter overflow: %u \n", IsrCounter[drvno]);
@@ -143,7 +143,7 @@ void isr( uint32_t drvno )
 	// Reset INTRSR flag for TRIGO
 	status = resetBitS0_32(drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );
 	IsrCounter[drvno]++;
-	if (IsrCounter[drvno] > numberOfInterrupts[drvno])
+	if (IsrCounter[drvno] >= numberOfInterrupts[drvno])
 	{
 		ES_TRACE("set allInterruptsDone to true\n");
 		allInterruptsDone = true;
