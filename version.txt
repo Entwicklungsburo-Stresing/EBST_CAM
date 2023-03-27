@@ -1,7 +1,10 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.2.5
+- Fix measurement not ending for scans < 500
+
 4.2.4
-- Fix ppossible loss of data with e.g. scans = 510
+- Fix possible loss of data with e.g. scans = 510
 
 4.2.3
 - Implement greyscale viewer for CAMCNT > 1
