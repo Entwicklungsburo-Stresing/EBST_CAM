@@ -34,7 +34,7 @@ uint64_t measurement_cnt = 0;
 char start_timestamp[file_timestamp_size];
 size_t temp_data_available[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 volatile size_t* data_available = temp_data_available;
-volatile bool allInterruptsDone = false;
+volatile bool allInterruptsDone = true;
 const struct camera_settings camera_settings_default =
 {
 	.use_software_polling = settingsUseSoftwarePollingDefault,
