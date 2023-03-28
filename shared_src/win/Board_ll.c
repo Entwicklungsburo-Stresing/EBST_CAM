@@ -978,19 +978,22 @@ uint32_t Tickstous(uint64_t tks)
  */
 uint8_t WaitforTelapsed(long long musec)
 {
-	//ES_TRACE("Wait for %u microseconds\n", musec);
-	long long ticks_to_wait = musec * TPS / 1000000;
-	long long start_timestamp = ticksTimestamp();
-	long long destination_timestamp = start_timestamp + ticks_to_wait;
-	//WDC_Err("start time: %lld\n", start_timestamp);
-	// detect overflow
-	if (destination_timestamp < start_timestamp) return 0;
-	// wait until time elapsed
-	while (destination_timestamp > ticksTimestamp())
+	if (musec)
 	{
-		if (GetAsyncKeyState(VK_ESCAPE) | abortMeasurementFlag) return 0;
+		//ES_TRACE("Wait for %u microseconds\n", musec);
+		long long ticks_to_wait = musec * TPS / 1000000;
+		long long start_timestamp = ticksTimestamp();
+		long long destination_timestamp = start_timestamp + ticks_to_wait;
+		//WDC_Err("start time: %lld\n", start_timestamp);
+		// detect overflow
+		if (destination_timestamp < start_timestamp) return 0;
+		// wait until time elapsed
+		while (destination_timestamp > ticksTimestamp())
+		{
+			if (GetAsyncKeyState(VK_ESCAPE) | abortMeasurementFlag) return 0;
+		}
+		//WDC_Err("end time:  %lld\n", ticksTimestamp());
 	}
-	//WDC_Err("end time:  %lld\n", ticksTimestamp());
 	return 1;
 }
 
