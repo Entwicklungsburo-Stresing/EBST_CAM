@@ -35,31 +35,23 @@ MainWindow::MainWindow(QWidget* parent)
 
 	es_status_codes status = lsc.initDriver();
 	if (status != es_no_error)
+		showStatusCodeDialog(status);
+	status = lsc.initPcieBoard();
+	if (status != es_no_error)
+		showStatusCodeDialog(status);
+	// Check if there are settings saved on this system
+	if (!settings.contains(settingBoardSelPath))
 	{
-		showNoDriverFoundDialog();
+		// When no settings are found, offer to import settings
+		QMessageBox d(this);
+		d.setWindowTitle("No settings found");
+		d.setText("No application settings are found on this system. Do you want to import settings?");
+		d.setIcon(QMessageBox::Information);
+		d.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+		connect(&d, &QMessageBox::accepted, this, &MainWindow::on_actionImport_triggered);
+		d.exec();
 	}
-	else
-	{
-		status = lsc.initPcieBoard();
-		if (status != es_no_error)
-			showPcieBoardError();
-		else
-		{
-			// Check if there are settings saved on this system
-			if (!settings.contains(settingBoardSelPath))
-			{
-				// When no settings are found, offer to import settings
-				QMessageBox d(this);
-				d.setWindowTitle("No settings found");
-				d.setText("No application settings are found on this system. Do you want to import settings?");
-				d.setIcon(QMessageBox::Information);
-				d.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-				connect(&d, &QMessageBox::accepted, this, &MainWindow::on_actionImport_triggered);
-				d.exec();
-			}
-			loadSettings();
-		}
-	}
+	loadSettings();
 	setDefaultAxes();
 
 	// move lsc to its own thread
@@ -235,8 +227,9 @@ void MainWindow::startPressed()
 	}
 
 	es_status_codes status = lsc.initMeasurement();
-	if (status == es_camera_not_found)
+	if (status != es_no_error)
 	{
+		showStatusCodeDialog(status);
 		QMessageBox* d = new QMessageBox(this);
 		d->setWindowTitle("Camera not found");
 		d->setText("No Camera found. Do you want to use dummy data?");
@@ -256,14 +249,8 @@ void MainWindow::startPressed()
 			break;
 		}
 	}
-	else if (status != es_no_error)
-	{
-		QErrorMessage* d = new QErrorMessage(this);
-		d->setWindowTitle("Error");
-		d->setWindowModality(Qt::ApplicationModal);
-		d->showMessage(tr(ConvertErrorCodeToMsg(status)));
-	}
-	measurementThread.start();
+	else
+		measurementThread.start();
 	return;
 }
 
@@ -502,29 +489,6 @@ void MainWindow::loadSettings()
 		ui->chartView->chart()->setTheme(QChart::ChartThemeDark);
 		break;
 	}
-	return;
-}
-
-void MainWindow::showNoDriverFoundDialog()
-{
-	QMessageBox* d = new QMessageBox(this);
-	d->setWindowTitle("Fatal error");
-	d->setWindowModality(Qt::ApplicationModal);
-	d->setText("Driver or PCIe board not found.");
-	d->setIcon(QMessageBox::Critical);
-	d->setDetailedText(QString::fromStdString(lsc.driverInstructions));
-	d->open(this, SLOT(close()));
-	return;
-}
-
-void MainWindow::showPcieBoardError()
-{
-	QMessageBox* d = new QMessageBox(this);
-	d->setWindowTitle("Fatal error");
-	d->setWindowModality(Qt::ApplicationModal);
-	d->setText("Error while opening PCIe board.");
-	d->setIcon(QMessageBox::Critical);
-	d->open(this, SLOT(close()));
 	return;
 }
 
@@ -1023,4 +987,14 @@ void MainWindow::on_actionGreyscaleSettings_triggered()
 	dialog->show();
 	return;
 #endif
+}
+
+void MainWindow::showStatusCodeDialog(es_status_codes status)
+{
+	QMessageBox* d = new QMessageBox(this);
+	d->setWindowTitle("Error");
+	d->setText(ConvertErrorCodeToMsg(status));
+	d->setIcon(QMessageBox::Critical);
+	d->exec();
+	return;
 }

@@ -58,7 +58,7 @@ es_status_codes InitMeasurement()
 	for (uint32_t i = 0; i < sizeof(settings_struct)/4; i++)
 		ES_LOG("%u ", *(&settings_struct.board_sel + i));
 	ES_LOG("\n");
-	es_status_codes status = es_no_error;
+	es_status_codes status = es_camera_not_found;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set

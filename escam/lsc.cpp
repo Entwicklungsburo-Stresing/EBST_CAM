@@ -261,6 +261,10 @@ void Lsc::getCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block)
 void Lsc::fillUserBufferWithDummyData(uint32_t drvno)
 {
 	FillUserBufferWithDummyData(drvno);
+	emit measureStart();
+	emit blockStart();
+	emit blockDone();
+	emit measureDone();
 	return;
 }
 

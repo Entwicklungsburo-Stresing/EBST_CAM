@@ -33,8 +33,6 @@ private:
 	QSettings settings;
 	void setChartData(QLineSeries** series, uint16_t numberOfSets);
 	void setChartData(uint16_t* data, uint32_t* length, uint16_t numberOfSets);
-	void showNoDriverFoundDialog();
-	void showPcieBoardError();
 	DialogDSC* ds_dsc = new DialogDSC( this );
 	DialogRMS* ds_rms = new DialogRMS( this );
 	QThread measurementThread;
@@ -42,6 +40,7 @@ private:
 	QTimer* displayTimer = new QTimer(this);
 	bool measureOn = false;
 	void closeEvent(QCloseEvent *event);
+	void showStatusCodeDialog(es_status_codes status);
 private slots:
 	void on_actionEdit_triggered();
 	void on_actionRMS_triggered();
