@@ -1061,7 +1061,8 @@ es_status_codes SetMeasurementParameters( uint32_t drvno, uint32_t nos, uint32_t
 	uint32_t dmaBufferPartSizeInScans = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS; //500
 	numberOfInterrupts[drvno] = (*Nob * (*Nospb) * aCAMCNT[drvno]) / dmaBufferPartSizeInScans;
 	ES_LOG("Number of interrupts: 0x%x \n", numberOfInterrupts[drvno]);
-	if (numberOfInterrupts[drvno] > 0)
+	// Where there are expected interrupts or software polling mode is on, set allInterruptsDone to false. The measurement loop then waits at the of one measurement until allInterruptsDone is set to true by the last interrupt or by the software polling thread.
+	if (numberOfInterrupts[drvno] > 0 || settings_struct.camera_settings[drvno].use_software_polling)
 		allInterruptsDone = false;
 	else
 		allInterruptsDone = true;
@@ -2899,12 +2900,13 @@ es_status_codes StartMeasurement()
 				}
 			}
 		}
+		// Maybe this is not needed anymore because of WaitForAllInterruptsDone
 		// This sleep is here to prevent the measurement being interrupted too early. When operating with 2 cameras the last scan could be cut off without the sleep. This is only a workaround. The problem is that the software is waiting for RSTIMER being reset by the hardware before setting measure on and block on to low, but the last DMA is done after RSTIMER being reset. BLOCKON and MEASUREON should be reset after all DMAs are done.
 		// RSTIMER --------________
 		// DMAWRACT _______-----___
 		// BLOCKON ---------_______
 		// MEASUREON ---------_____
-		WaitforTelapsed(100);
+		//WaitforTelapsed(100);
 		// When space key or ESC key was pressed, continuous measurement stops.
 		if (checkSpaceKeyState())
 			continiousMeasurementFlag = false;
@@ -4575,6 +4577,8 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 				break;
 			}
 		}
+		// setting allInterruptsDone true gives the measurement loop the signal, that all data has been copied and the loop is allowed to continue
+		allInterruptsDone = true;
 	}
 	return;
 }
