@@ -170,10 +170,12 @@ void *interrupt_handler_array[MAXPCIECARDS] = { &interrupt_handler0, &interrupt_
  */
 es_status_codes readRegister_32(uint32_t drvno, uint32_t* data, uint16_t address)
 {
+	es_status_codes status = checkDriverHandle(drvno);
+	if (status != es_no_error) return status;
 	volatile DWORD dwStatus = WDC_ReadAddrBlock(hDev[drvno], 0, address, sizeof(uint32_t), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		ES_LOG("readRegister_32 in address 0x%x failed\n", address);
+		ES_LOG("\nreadRegister_32 in address 0x%x failed\n", address);
 		ES_LOG("%s", LSCPCIEJ_GetLastErr());
 		return es_register_read_failed;
 	}
@@ -192,10 +194,12 @@ es_status_codes readRegister_32(uint32_t drvno, uint32_t* data, uint16_t address
  */
 es_status_codes readRegister_16(uint32_t drvno, uint16_t* data, uint16_t address)
 {
+	es_status_codes status = checkDriverHandle(drvno);
+	if (status != es_no_error) return status;
 	volatile DWORD dwStatus = WDC_ReadAddrBlock(hDev[drvno], 0, address, sizeof(uint16_t), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		ES_LOG("readRegister_16 in address 0x%x failed\n", address);
+		ES_LOG("\nreadRegister_16 in address 0x%x failed\n", address);
 		ES_LOG("%s", LSCPCIEJ_GetLastErr());
 		return es_register_read_failed;
 	}
@@ -214,11 +218,13 @@ es_status_codes readRegister_16(uint32_t drvno, uint16_t* data, uint16_t address
  */
 es_status_codes readRegister_8(uint32_t drvno, uint8_t* data, uint16_t address)
 {
+	es_status_codes status = checkDriverHandle(drvno);
+	if (status != es_no_error) return status;
 	volatile DWORD dwStatus = WDC_ReadAddrBlock(hDev[drvno], 0, address, sizeof(uint8_t), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		ES_LOG("readRegister_8 in address 0x%x failed\n", address);
+		ES_LOG("\nreadRegister_8 in address 0x%x failed\n", address);
 		return es_register_read_failed;
 	}
 	return es_no_error;
@@ -236,11 +242,13 @@ es_status_codes readRegister_8(uint32_t drvno, uint8_t* data, uint16_t address)
  */
 es_status_codes writeRegister_32(uint32_t drvno, uint32_t data, uint16_t address)
 {
+	es_status_codes status = checkDriverHandle(drvno);
+	if (status != es_no_error) return status;
 	DWORD dwStatus = WDC_WriteAddrBlock(hDev[drvno], 0, address, sizeof(uint32_t), &data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		ES_LOG("writeRegister_32 in address 0x%x with data: 0x%x failed\n", address, data);
+		ES_LOG("\nwriteRegister_32 in address 0x%x with data: 0x%x failed\n", address, data);
 		ES_LOG("%s", LSCPCIEJ_GetLastErr());
 		return es_register_write_failed;
 	}//else WDC_Err("DMAWrite /t address /t0x%x /t data: /t0x%x \n", address, data);
@@ -259,11 +267,13 @@ es_status_codes writeRegister_32(uint32_t drvno, uint32_t data, uint16_t address
  */
 es_status_codes writeRegister_16(uint32_t drvno, uint16_t data, uint16_t address)
 {
+	es_status_codes status = checkDriverHandle(drvno);
+	if (status != es_no_error) return status;
 	DWORD dwStatus = WDC_WriteAddrBlock(hDev[drvno], 0, address, sizeof(uint16_t), &data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		ES_LOG("writeRegister_16 in address 0x%x with data: 0x%x failed\n", address, data);
+		ES_LOG("\nwriteRegister_16 in address 0x%x with data: 0x%x failed\n", address, data);
 		ES_LOG("%s", LSCPCIEJ_GetLastErr());
 		return es_register_write_failed;
 	}//else WDC_Err("DMAWrite /t address /t0x%x /t data: /t0x%x \n", address, data);
@@ -282,11 +292,13 @@ es_status_codes writeRegister_16(uint32_t drvno, uint16_t data, uint16_t address
 */
 es_status_codes writeRegister_8(uint32_t drv, uint8_t data, uint16_t address)
 {
+	es_status_codes status = checkDriverHandle(drv);
+	if (status != es_no_error) return status;
 	volatile DWORD dwStatus = WDC_WriteAddrBlock(hDev[drv], 0, address, sizeof(BYTE), &data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		ES_LOG("writeRegister_8 in address 0x%x with data: 0x%x failed\n", address, data);
+		ES_LOG("\nwriteRegister_8 in address 0x%x with data: 0x%x failed\n", address, data);
 		return es_register_write_failed;
 	}//else WDC_Err("ByteS0Write /t address /t0x%x /t data: /t0x%x \n", address, data);
 	return es_no_error;
@@ -305,9 +317,9 @@ es_status_codes checkDriverHandle(uint32_t drvno)
 {
 	if (drvno >= number_of_boards)
 		return es_invalid_driver_number;
-	else if (hDev[drvno] == INVALID_HANDLE_VALUE)
+	else if (!hDev[drvno] || hDev[drvno] == INVALID_HANDLE_VALUE)
 	{
-		ES_LOG("Handle is invalid of drvno: %i", drvno);
+		ES_LOG("Handle is invalid of drvno: %i\n", drvno);
 		return es_invalid_driver_handle;
 	}
 	else
@@ -334,12 +346,14 @@ uint64_t getPhysicalDmaAddress( uint32_t drvno)
  */
 es_status_codes SetupDma( uint32_t drvno )
 {
+	es_status_codes status = checkDriverHandle(drvno);
+	if (status != es_no_error) return status;
 	DWORD dwStatus;
 	ES_LOG( "Setup DMA\n" );
 	//If DMA is already set up, clean it before
 	if (dmaBuffer[drvno])
 	{
-		es_status_codes status = CleanupDma(drvno);
+		status = CleanupDma(drvno);
 		if (status != es_no_error) return status;
 	}
 	dmaBufferSizeInBytes[drvno] = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans * aPIXEL[drvno] * sizeof(UINT16);
@@ -370,6 +384,8 @@ es_status_codes SetupDma( uint32_t drvno )
 
 es_status_codes enableInterrupt( uint32_t drvno )
 {
+	es_status_codes status = checkDriverHandle(drvno);
+	if (status != es_no_error) return status;
 	ES_LOG("Enable interrupt\n");
 	if (!WDC_IntIsEnabled(hDev[drvno]))
 	{
@@ -394,6 +410,8 @@ es_status_codes enableInterrupt( uint32_t drvno )
 es_status_codes disableInterrupt(uint32_t drvno)
 {
 	ES_LOG("Disable interrupt\n");
+	es_status_codes status = checkDriverHandle(drvno);
+	if (status != es_no_error) return status;
 	if (WDC_IntIsEnabled(hDev[drvno]))
 	{
 		DWORD dwStatus = WDC_IntDisable(hDev[drvno]);
@@ -468,7 +486,6 @@ es_status_codes _InitBoard(uint32_t drvno)
 	{
 		ES_LOG( "DeviceOpen: Failed retrieving the device's resources information.\n"
 			"Error 0x%lx - %s\n", dwStatus, Stat2Str( dwStatus ) );
-		WDC_DriverClose();
 		return es_getting_device_info_failed;
 	}
 
@@ -479,7 +496,6 @@ es_status_codes _InitBoard(uint32_t drvno)
 	if (!hDev[drvno])
 	{
 		ES_LOG( "DeviceOpen: Failed opening a handle to the device: %s\n", LSCPCIEJ_GetLastErr() );
-		WDC_DriverClose();
 		return es_open_device_failed;
 	}
 	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
@@ -543,6 +559,8 @@ es_status_codes _InitDriver()
 		return es_driver_init_failed;
 	}
 	BZERO( scanResult );
+	WDC_Err("Init HR counter\n");
+	TPS = InitHRCounter();//for ticks function
 	WDC_Err("Scan PCIe devices\n");
 	dwStatus = WDC_PciScanDevices( LSCPCIEJ_DEFAULT_VENDOR_ID, LSCPCIEJ_DEFAULT_DEVICE_ID, &scanResult ); //VendorID, DeviceID
 	if (WD_STATUS_SUCCESS != dwStatus)
@@ -550,13 +568,13 @@ es_status_codes _InitDriver()
 		ErrLog( "DeviceFind: Failed scanning the PCI bus.\n"
 			"Error: 0x%lx - %s\n", dwStatus, Stat2Str( dwStatus ) );
 		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
-		WDC_DriverClose();
+		// set number_of_boards 1 for test mode
+		ES_LOG("No board detected. Setting number_of_boards to 1 for test mode.\n");
+		number_of_boards = 1;
 		return es_device_not_found;
 	}
 	number_of_boards = (UINT8) scanResult.dwNumDevices;
-	WDC_Err("Init HR counter\n");
-	TPS = InitHRCounter();//for ticks function
-	return es_no_error;	  // no Error, driver found
+	return es_no_error; // no Error, driver found
 }
 
 /**
@@ -615,6 +633,8 @@ es_status_codes _ExitDriver()
  */
 es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address )
 {
+	es_status_codes status = checkDriverHandle(drvno);
+	if (status != es_no_error) return status;
 	DWORD dwStatus = WDC_PciReadCfg( hDev[drvno], address, data, sizeof( uint32_t ) );
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
@@ -636,6 +656,8 @@ es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address 
  */
 es_status_codes writeConfig_32(uint32_t drvno, uint32_t data, uint16_t address)
 {
+	es_status_codes status = checkDriverHandle(drvno);
+	if (status != es_no_error) return status;
 	volatile DWORD dwStatus = 0;
 	dwStatus = WDC_PciWriteCfg(hDev[drvno], address, &data, sizeof(uint32_t));
 	if (WD_STATUS_SUCCESS != dwStatus)

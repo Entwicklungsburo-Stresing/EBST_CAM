@@ -232,7 +232,7 @@ void MainWindow::startPressed()
 		showStatusCodeDialog(status);
 		QMessageBox* d = new QMessageBox(this);
 		d->setWindowTitle("Camera not found");
-		d->setText("No Camera found. Do you want to use dummy data?");
+		d->setText("Do you want to use dummy data?");
 		d->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 		int ret = d->exec();
 		switch (ret)

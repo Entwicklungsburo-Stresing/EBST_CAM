@@ -72,34 +72,61 @@ es_status_codes InitMeasurement()
 	return status;
 }
 
-/**
- * \brief Initialize Measurement (using drvno).
- *
- * \return es_status_codes:
- *		- es_invalid_driver_number
- *		- es_invalid_driver_handle
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_parameter_out_of_range
- *		- es_allocating_memory_failed
- *		- es_not_enough_ram
- *		- es_getting_dma_buffer_failed
- *		- es_enabling_interrupts_failed
- *		- es_camera_not_found
- */
-es_status_codes _InitMeasurement(uint32_t drvno)
+void SetGlobalVariables(uint32_t drvno)
 {
-	ES_LOG("\nInit board %u\n", drvno);
-	// Init software and PCIe board
+	ES_LOG("Set global variables\n");
+	*Nob = settings_struct.nob;
+	*Nospb = settings_struct.nos;
+	aPIXEL[drvno] = settings_struct.camera_settings[drvno].pixel;
+	if (settings_struct.camera_settings[drvno].camcnt)
+		aCAMCNT[drvno] = settings_struct.camera_settings[drvno].camcnt;
+	else
+		// if camcnt = 0, treat as camcnt = 1, but write 0 to register
+		aCAMCNT[drvno] = 1;
+	return;
+}
+
+es_status_codes InitSoftware(uint32_t drvno)
+{
+	ES_LOG("\nInit software for board %u\n", drvno);
+	if (settings_struct.nos < 2 || settings_struct.nob < 1) return es_parameter_out_of_range;
+	SetGlobalVariables(drvno);
 	abortMeasurementFlag = false;
-	es_status_codes status = checkDriverHandle(drvno);
+	es_status_codes status = allocateUserMemory(drvno);
+	if (status != es_no_error) return status;
+	uint32_t dmaBufferPartSizeInScans = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS; //500
+	if(dmaBufferPartSizeInScans)
+		numberOfInterrupts[drvno] = (*Nob * (*Nospb) * aCAMCNT[drvno]) / dmaBufferPartSizeInScans;
+	ES_LOG("Number of interrupts: 0x%x \n", numberOfInterrupts[drvno]);
+	// Where there are expected interrupts or software polling mode is on, set allInterruptsDone to false. The measurement loop then waits at the of one measurement until allInterruptsDone is set to true by the last interrupt or by the software polling thread.
+	if (numberOfInterrupts[drvno] > 0 || settings_struct.camera_settings[drvno].use_software_polling)
+		allInterruptsDone = false;
+	else
+		allInterruptsDone = true;
+	if (settings_struct.camera_settings[drvno].use_software_polling)
+		status = disableInterrupt(drvno);
+	else
+		status = enableInterrupt(drvno);
+	if (status != es_no_error) return status;
+	status = SetupDma(drvno);
+	if (status != es_no_error) return status;
+	return status;
+}
+
+es_status_codes InitPcieBoard(uint32_t drvno)
+{
+	ES_LOG("\nInit hardware board %u\n", drvno);
+	es_status_codes status = StopSTimer(drvno);
+	if (status != es_no_error) return status;
+	status = RSFifo(drvno);
+	if (status != es_no_error) return status;
+	status = SetDMABufRegs(drvno);
 	if (status != es_no_error) return status;
 	status = ClearAllUserRegs(drvno);
 	if (status != es_no_error) return status;
-	status = SetPixelCount(drvno, (uint16_t)settings_struct.camera_settings[drvno].pixel);
+	status = SetPixelCountRegister(drvno);
 	if (status != es_no_error) return status;
-	status = SetCamCount(drvno, (uint16_t)settings_struct.camera_settings[drvno].camcnt);
+	status = SetCamCountRegister(drvno);
 	if (status != es_no_error) return status;
 	//set PDA and FFT
 	status = SetSensorType(drvno, (uint8_t)settings_struct.camera_settings[drvno].sensor_type);
@@ -128,9 +155,6 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 		}
 	}
 	else *useSWTrig = false;
-	if (status != es_no_error) return status;
-	//allocate Buffer
-	status = SetMeasurementParameters(drvno, settings_struct.nos, settings_struct.nob);
 	if (status != es_no_error) return status;
 	status = CloseShutter(drvno); //set cooling  off
 	if (status != es_no_error) return status;
@@ -169,29 +193,22 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetHardwareTimerStopMode(drvno, true);
 	if (status != es_no_error) return status;
-	//DMA
-	status = SetupDma(drvno);
-	if (status != es_no_error) return status;
 	status = SetDmaRegister(drvno, settings_struct.camera_settings[drvno].pixel);
 	if (status != es_no_error) return status;
 	status = SetDmaStartMode(drvno, HWDREQ_EN);
 	if (status != es_no_error) return status;
-	if (settings_struct.camera_settings[drvno].use_software_polling)
-	{
-		status = disableInterrupt(drvno);
-		if (status != es_no_error) return status;
-	}
-	else
-	{
-		status = enableInterrupt(drvno);
-		if (status != es_no_error) return status;
-	}
-	if (status != es_no_error) return status;
 	status = SetTicnt(drvno, (uint8_t)settings_struct.camera_settings[drvno].ticnt);
 	if (status != es_no_error) return status;
 	status = SetTocnt(drvno, (uint8_t)settings_struct.camera_settings[drvno].tocnt);
-	// Init Camera
-	status = FindCam(drvno);
+	if (status != es_no_error) return status;
+	status = SetSensorResetShort(drvno, settings_struct.camera_settings[drvno].shortrs);
+	return status;
+}
+
+es_status_codes InitCamera(uint32_t drvno)
+{
+	ES_LOG("\nInit camera %u\n", drvno);
+	es_status_codes status = FindCam(drvno);
 	if (status != es_no_error) return status;
 	uint8_t is_area_mode = 0;
 	if (settings_struct.camera_settings[drvno].fft_mode == area_mode) is_area_mode = 1;
@@ -219,13 +236,36 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	if (status != es_no_error) return status;
 	for (uint8_t i = 1; i <= 7; i++)
 	{
-		status = IOCtrl_setOutput(drvno, i, (uint16_t)settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[i-1], (uint16_t)settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[i-1]);
+		status = IOCtrl_setOutput(drvno, i, (uint16_t)settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[i - 1], (uint16_t)settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[i - 1]);
 		if (status != es_no_error) return status;
 	}
 	status = IOCtrl_setT0(drvno, settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns);
-	if (status != es_no_error) return status;
-	status = SetSensorResetShort(drvno, settings_struct.camera_settings[drvno].shortrs);
 	return status;
+}
+
+/**
+ * \brief Initialize Measurement (using drvno).
+ *
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_parameter_out_of_range
+ *		- es_allocating_memory_failed
+ *		- es_not_enough_ram
+ *		- es_getting_dma_buffer_failed
+ *		- es_enabling_interrupts_failed
+ *		- es_camera_not_found
+ */
+es_status_codes _InitMeasurement(uint32_t drvno)
+{
+	es_status_codes status = InitSoftware(drvno);
+	if (status != es_no_error) return status;
+	status = InitPcieBoard(drvno);
+	if (status != es_no_error) return status;
+	return InitCamera(drvno);
 }
 
 /**
@@ -246,7 +286,7 @@ es_status_codes SetMshut(uint32_t drvno, bool mshut)
 	if (mshut)
 		status = SetTORReg(drvno, tor_sshut); // PCIe 'O' output is high during SEC active
 	else
-		status = SetTORReg(drvno, (uint8_t)settings_struct.camera_settings[drvno].tor);  // PCIe 'O' output is what ever was selected in LabView
+		status = SetTORReg(drvno, (uint8_t)settings_struct.camera_settings[drvno].tor); // PCIe 'O' output is what ever was selected in LabView
 	return status;
 }
 
@@ -330,17 +370,15 @@ es_status_codes SetSensorResetEarly(uint32_t drvno, bool enable_early)
  * \brief Set pixel count
  *
  * \param drvno PCIe board identifier
- * \param pixelcount pixel count
  * \return es_status_codes:
  *		- es_no_error
  * 		- es_register_read_failed
  * 		- es_register_write_failed
  */
-es_status_codes SetPixelCount(uint32_t drvno, uint16_t pixelcount)
+es_status_codes SetPixelCountRegister(uint32_t drvno)
 {
-	ES_LOG("Set pixel count: %u\n", pixelcount);
-	aPIXEL[drvno] = pixelcount;
-	return writeBitsS0_32(drvno, pixelcount, 0xFFFF, S0Addr_PIXREGlow);
+	ES_LOG("Set pixel count: %u\n", aPIXEL[drvno]);
+	return writeBitsS0_32(drvno, aPIXEL[drvno], 0xFFFF, S0Addr_PIXREGlow);
 }
 
 /**
@@ -492,15 +530,10 @@ es_status_codes ResetDma( uint32_t drvno )
  * 		- es_register_read_failed
  * 		- es_register_write_failed
  */
-es_status_codes SetCamCount(uint32_t drvno, uint16_t camcount)
+es_status_codes SetCamCountRegister(uint32_t drvno)
 {
-	ES_LOG("Set cam count: %u\n", camcount);
-	if (camcount)
-		aCAMCNT[drvno] = camcount;
-	else
-		// if camcnt = 0, treat as camcnt = 1, but write 0 to register
-		aCAMCNT[drvno] = 1;
-	return writeBitsS0_32(drvno, camcount, 0xF, S0Addr_CAMCNT);
+	ES_LOG("Set cam count: %u\n", aCAMCNT[drvno]);
+	return writeBitsS0_32(drvno, aCAMCNT[drvno], 0xF, S0Addr_CAMCNT);
 }
 
 /**
@@ -1023,50 +1056,6 @@ es_status_codes ResetPartialBinning( uint32_t drvno )
 {
 	ES_LOG("Reset partial binning\n");
 	return resetBitS0_32(drvno, 15, S0Addr_ARREG );
-}
-
-/**
- * \brief Setup measurement parameters.
- * 
- * Sets registers in PCIe card and allocates resources.
- * Call this func once as it takes time to allocate the resources.
- * But be aware: the buffer size and nos is set here and may not be changed later.
- * \param drvno PCIe board identifier.
- * \param nos number of samples
- * \param nob number of blocks
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_read_failed
- *		- es_register_write_failed
- *		- es_allocating_memory_failed
- *		- es_not_enough_ram
- *		- es_parameter_out_of_range
- */
-es_status_codes SetMeasurementParameters( uint32_t drvno, uint32_t nos, uint32_t nob )
-{
-	ES_LOG("Set measurement parameters: drv: %i nos: %i and nob: %i\n", drvno, nos, nob);
-	if (nos < 2 || nob < 1) return es_parameter_out_of_range;
-	*Nob = nob;
-	*Nospb = nos;
-	//stop all and clear FIFO
-	es_status_codes status = StopSTimer( drvno );
-	if (status != es_no_error) return status;
-	status = RSFifo( drvno );
-	if (status != es_no_error) return status;
-	status = allocateUserMemory(drvno);
-	if (status != es_no_error) return status;
-	//set hardware regs
-	status = SetDMABufRegs(drvno);
-	if (status != es_no_error) return status;
-	uint32_t dmaBufferPartSizeInScans = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS; //500
-	numberOfInterrupts[drvno] = (*Nob * (*Nospb) * aCAMCNT[drvno]) / dmaBufferPartSizeInScans;
-	ES_LOG("Number of interrupts: 0x%x \n", numberOfInterrupts[drvno]);
-	// Where there are expected interrupts or software polling mode is on, set allInterruptsDone to false. The measurement loop then waits at the of one measurement until allInterruptsDone is set to true by the last interrupt or by the software polling thread.
-	if (numberOfInterrupts[drvno] > 0 || settings_struct.camera_settings[drvno].use_software_polling)
-		allInterruptsDone = false;
-	else
-		allInterruptsDone = true;
-	return status;
 }
 
 /**
@@ -3184,6 +3173,9 @@ es_status_codes GetLastBufPart( uint32_t drvno )
 es_status_codes InitBoard()
 {
 	ES_LOG("\n*** Init board ***\n");
+	// Initialize settings struct
+	for (uint32_t drvno = 0; drvno < MAXPCIECARDS; drvno++)
+		memcpy(&settings_struct.camera_settings[drvno], &camera_settings_default, sizeof(struct camera_settings));
 	ES_LOG("Number of boards: %u\n", number_of_boards);
 	if (number_of_boards < 1) return es_open_device_failed;
 	es_status_codes status;
@@ -3193,9 +3185,6 @@ es_status_codes InitBoard()
 		if (status != es_no_error) return status;
 		InitMutex(drvno);
 	}
-	// Initialize settings struct
-	for (uint32_t drvno = 0; drvno < MAXPCIECARDS; drvno++)
-		memcpy(&settings_struct.camera_settings[drvno], &camera_settings_default, sizeof(struct camera_settings));
 	ES_LOG("*** Init board done***\n\n");
 	return status;
 }
@@ -3235,10 +3224,8 @@ es_status_codes ExitDriver()
 	for (int drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		status = CleanupDriver(drvno);
-		if (status != es_no_error) return status;
 	}
 	status = _ExitDriver();
-	if (status != es_no_error) return status;
 	ES_LOG("*** Exit driver done***\n\n");
 	return status;
 }
