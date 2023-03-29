@@ -98,11 +98,6 @@ es_status_codes InitSoftware(uint32_t drvno)
 	if(dmaBufferPartSizeInScans)
 		numberOfInterrupts[drvno] = (*Nob * (*Nospb) * aCAMCNT[drvno]) / dmaBufferPartSizeInScans;
 	ES_LOG("Number of interrupts: 0x%x \n", numberOfInterrupts[drvno]);
-	// Where there are expected interrupts or software polling mode is on, set allInterruptsDone to false. The measurement loop then waits at the of one measurement until allInterruptsDone is set to true by the last interrupt or by the software polling thread.
-	if (numberOfInterrupts[drvno] > 0 || settings_struct.camera_settings[drvno].use_software_polling)
-		allInterruptsDone = false;
-	else
-		allInterruptsDone = true;
 	if (settings_struct.camera_settings[drvno].use_software_polling)
 		status = disableInterrupt(drvno);
 	else
@@ -2735,6 +2730,12 @@ es_status_codes StartMeasurement()
 	{
 		measurement_cnt++;
 		ES_TRACE("measurement count: %u\n", measurement_cnt);
+		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		{
+			// Check if the drvno'th bit is set
+			if ((settings_struct.board_sel >> drvno) & 1)
+				SetAllInterruptsDone(drvno);
+		}
 		// Reset the hardware block counter and scan counter.
 		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		{
@@ -5053,4 +5054,14 @@ es_status_codes GetOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t 
 	// return the address of the new allocated data
 	*address = data;
 	return status;
+}
+
+void SetAllInterruptsDone(uint32_t drvno)
+{
+	// Where there are expected interrupts or software polling mode is on, set allInterruptsDone to false. The measurement loop then waits at the of one measurement until allInterruptsDone is set to true by the last interrupt or by the software polling thread.
+	if (numberOfInterrupts[drvno] > 0 || settings_struct.camera_settings[drvno].use_software_polling)
+		allInterruptsDone = false;
+	else
+		allInterruptsDone = true;
+	return;
 }
