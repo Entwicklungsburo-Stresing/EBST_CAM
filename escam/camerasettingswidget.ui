@@ -269,18 +269,21 @@
           </spacer>
          </item>
          <item row="4" column="3">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxSTime_in_ms">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxSTime_in_us">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>true</bool>
+           </property>
            <property name="suffix">
-            <string>ms</string>
+            <string>us</string>
            </property>
            <property name="decimals">
-            <number>3</number>
+            <number>0</number>
            </property>
            <property name="maximum">
-            <double>4294967.294999999925494</double>
+            <double>4294967.000000000000000</double>
            </property>
           </widget>
          </item>
@@ -311,18 +314,21 @@
           </widget>
          </item>
          <item row="5" column="3">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxBTimer_in_ms">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxBTimer_in_us">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>true</bool>
+           </property>
            <property name="suffix">
-            <string>ms</string>
+            <string>us</string>
            </property>
            <property name="decimals">
-            <number>3</number>
+            <number>0</number>
            </property>
            <property name="maximum">
-            <double>4294967.294999999925494</double>
+            <double>2147483647.000000000000000</double>
            </property>
           </widget>
          </item>
