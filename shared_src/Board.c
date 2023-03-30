@@ -3249,10 +3249,8 @@ es_status_codes ExitDriver()
 es_status_codes ReturnFrame(uint32_t drv, uint32_t curr_nos, uint32_t curr_nob, uint16_t curr_cam, uint16_t* pdest, uint32_t length)
 {
 	//ES_TRACE( "Return frame: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, pdest %p, length: %u\n", drv, curr_nos, curr_nob, curr_cam, pdest, length );
-	es_status_codes status = checkDriverHandle(drv);
-	if (status != es_no_error) return status;
 	uint16_t* pframe = NULL;
-	status = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, curr_cam, &pframe);
+	es_status_codes status = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, curr_cam, &pframe);
 	if (status != es_no_error) return status;
 	//ES_LOG("pframe %p\n", pframe);
 	//ES_LOG("userBuffer %p\n", userBuffer[drv]);
