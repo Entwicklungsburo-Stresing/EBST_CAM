@@ -149,7 +149,7 @@ void MainWindow::startPressed()
 		settings_struct.camera_settings[drvno].stime_in_microsec = settings.value(settingStime_in_microseconds_Path, settingStime_in_microseconds_Default).toUInt();
 		settings_struct.camera_settings[drvno].btime_in_microsec = settings.value(settingBtime_in_microseconds_Path, settingBtime_in_microseconds_Default).toUInt();
 		settings_struct.camera_settings[drvno].sdat_in_10ns = settings.value(settingSdat_in_10nsPath, settingSdat_in_10nsDefault).toUInt();
-		settings_struct.camera_settings[drvno].bdat_in_10ns = settings.value(settingBdat_in_10nsPath, settingSdat_in_10nsDefault).toUInt();
+		settings_struct.camera_settings[drvno].bdat_in_10ns = settings.value(settingBdat_in_10nsPath, settingBdat_in_10nsDefault).toUInt();
 		settings_struct.camera_settings[drvno].sslope = settings.value(settingSslopePath, settingSslopeDefault).toUInt();
 		settings_struct.camera_settings[drvno].bslope = settings.value(settingBslopePath, settingBslopeDefault).toUInt();
 		settings_struct.camera_settings[drvno].xckdelay_in_10ns = settings.value(settingXckdelayIn10nsPath, settingXckdelayIn10nsDefault).toUInt();
