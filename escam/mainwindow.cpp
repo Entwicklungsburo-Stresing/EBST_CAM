@@ -673,6 +673,8 @@ void MainWindow::on_measureDone()
 	QPalette pal = palette();
 	pal.setColor(QPalette::Background, Qt::darkGreen);
 	ui->widgetMeasureOn->setPalette(pal);
+	//set blockOn lamp off
+	ui->widgetBlockOn->setPalette(pal);
 	//display camera data
 	loadCameraData();
 	//enable start button
