@@ -97,7 +97,7 @@ es_status_codes InitSoftware(uint32_t drvno)
 	uint32_t dmaBufferPartSizeInScans = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS; //500
 	if(dmaBufferPartSizeInScans)
 		numberOfInterrupts[drvno] = (*Nob * (*Nospb) * aCAMCNT[drvno]) / dmaBufferPartSizeInScans;
-	ES_LOG("Number of interrupts: 0x%x \n", numberOfInterrupts[drvno]);
+	ES_LOG("Number of interrupts: %u \n", numberOfInterrupts[drvno]);
 	if (settings_struct.camera_settings[drvno].use_software_polling)
 		status = disableInterrupt(drvno);
 	else
@@ -1153,7 +1153,7 @@ es_status_codes SetDMABufRegs( uint32_t drvno )
 	uint32_t dmasPerInterrupt = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
 	status = writeBitsS0_32(drvno, dmasPerInterrupt, 0xffffffff, S0Addr_DMAsPerIntr);
 	if (status != es_no_error) return status;
-	ES_LOG( "scansPerInterrupt/camcnt: 0x%x \n", dmasPerInterrupt / aCAMCNT[drvno] );
+	ES_LOG( "scansPerInterrupt/camcnt: %u \n", dmasPerInterrupt / aCAMCNT[drvno] );
 	status = writeBitsS0_32(drvno, *Nospb, 0xffffffff, S0Addr_NOS);
 	if (status != es_no_error) return status;
 	return writeBitsS0_32(drvno, *Nob, 0xffffffff, S0Addr_NOB);
