@@ -474,6 +474,9 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 es_status_codes _InitBoard(uint32_t drvno)
 {
 	ES_LOG("Initialize board %u\n", drvno);
+#ifdef WIN32
+	InitProDLL();
+#endif
 	DWORD dwStatus = 0;
 	ES_LOG( "Info: scan result: a board found:%lx , dev=%lx, ven=%lx \n", scanResult.dwNumDevices, scanResult.deviceId[drvno].dwDeviceId, scanResult.deviceId[drvno].dwVendorId );
 	//gives the information received from PciScanDevices to PciGetDeviceInfo
@@ -500,9 +503,6 @@ es_status_codes _InitBoard(uint32_t drvno)
 	}
 	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
 	ES_LOG( "DRVInit hDev id % x, hDev PCI slot %x, hDev PCI bus %x, hDev PCI function %x, hDevNumAddrSp %x \n"	, pDev->id, pDev->slot.dwSlot, pDev->slot.dwBus, pDev->slot.dwFunction, pDev->dwNumAddrSpaces );
-#ifdef WIN32
-	InitProDLL();
-#endif
 	return es_no_error ;
 }
 
