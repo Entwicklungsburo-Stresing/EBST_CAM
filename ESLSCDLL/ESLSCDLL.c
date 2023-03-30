@@ -843,3 +843,16 @@ DllAccess es_status_codes DLLGetAllSpecialPixelInformation(uint32_t board_sel, u
 		}
 	}
 }
+
+DllAccess void DLLFillUserBufferWithDummyData(uint32_t board_sel)
+{
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+			FillUserBufferWithDummyData(drvno);
+	}
+	return status;
+}
+
