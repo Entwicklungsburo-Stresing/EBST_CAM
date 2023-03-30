@@ -2729,7 +2729,7 @@ es_status_codes StartMeasurement()
 	do
 	{
 		measurement_cnt++;
-		ES_TRACE("measurement count: %u\n", measurement_cnt);
+		ES_LOG("measurement count: %u\n", measurement_cnt);
 		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		{
 			// Check if the drvno'th bit is set
@@ -3142,7 +3142,7 @@ es_status_codes IsTimerOn( uint32_t drvno, bool* on )
  */
 es_status_codes GetLastBufPart( uint32_t drvno )
 {
-	ES_LOG( "Get the last buffer part\n" );
+	ES_TRACE( "Get the last buffer part\n" );
 	// Get the rest if buffer is not multiple of 500 (BUFSIZEINSCANS/2)
 	// Also if nos is < BUFSIZEINSCANS/2 there is data left in the DMA buffer, because no interrupt occurred after the last scans.
 	uint32_t spi = 0;
@@ -3154,9 +3154,9 @@ es_status_codes GetLastBufPart( uint32_t drvno )
 	uint32_t scans_all_cams = (*Nospb) * (*Nob) * aCAMCNT[drvno];
 	uint32_t rest_overall = scans_all_cams % dmaHalfBufferSize; 
 	size_t rest_in_bytes = rest_overall * aPIXEL[drvno] * sizeof(uint16_t);
-	ES_LOG( "nos: %u, nob: %u, scansPerInterrupt: %u, camcnt: %u\n", (*Nospb), *Nob, spi, aCAMCNT[drvno]);
-	ES_LOG( "scans_all_cams: %u \n", scans_all_cams );
-	ES_LOG( "rest_overall: %u, rest_in_bytes: %u\n", rest_overall, rest_in_bytes );
+	ES_TRACE( "nos: %u, nob: %u, scansPerInterrupt: %u, camcnt: %u\n", (*Nospb), *Nob, spi, aCAMCNT[drvno]);
+	ES_TRACE( "scans_all_cams: %u \n", scans_all_cams );
+	ES_TRACE( "rest_overall: %u, rest_in_bytes: %u\n", rest_overall, rest_in_bytes );
 	if (rest_overall)
 		copyRestData(drvno, rest_in_bytes); 
 	return status;
