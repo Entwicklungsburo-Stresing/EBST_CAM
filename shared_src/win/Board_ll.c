@@ -146,7 +146,7 @@ void isr( uint32_t drvno )
 	if (IsrCounter[drvno] >= numberOfInterrupts[drvno])
 	{
 		ES_TRACE("set allInterruptsDone to true\n");
-		allInterruptsDone = true;
+		allInterruptsDone[drvno] = true;
 	}
 	return;
 }
@@ -1363,7 +1363,7 @@ void getFileHeaderFromFile(struct file_header* fh, char* filename_full)
 void WaitForAllInterruptsDone()
 {
 	ES_TRACE("Wait for all interrupts done\n")
-	while (!allInterruptsDone)
+	while (!(allInterruptsDone[0] && allInterruptsDone[1] && allInterruptsDone[2] && allInterruptsDone[3] && allInterruptsDone[4]))
 		if (GetAsyncKeyState(VK_ESCAPE) | abortMeasurementFlag) return;
 	ES_TRACE("All interrupts done\n")
 	return;
