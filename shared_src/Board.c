@@ -2767,7 +2767,7 @@ es_status_codes StartMeasurement()
 		}
 		// Increase the priority of the measurement thread to maximum.
 		// This is done to decrease latency while doing handshakes between software and hardware.
-		// The priority is resetted to the old value when the block for loop is finished.
+		// The priority is reset to the old value when the block for loop is finished.
 		status = SetPriority(31);
 		if (status != es_no_error) return ReturnStartMeasurement(status);
 		// Block read for loop.
@@ -2823,7 +2823,7 @@ es_status_codes StartMeasurement()
 				else
 					timerOn[drvno] = false;
 			}
-			// Main read loop. The software waits here until the flag RegXCKMSB:b30 = TimerOn is resetted by hardware,
+			// Main read loop. The software waits here until the flag RegXCKMSB:b30 = TimerOn is reset by hardware,
 			// if flag HWDREQ_EN is TRUE.
 			// This is done when nos scans are counted by hardware. Pressing ESC can cancel this loop.
 			// Waiting for end of measurement
@@ -2846,7 +2846,7 @@ es_status_codes StartMeasurement()
 				}
 			}
 			// When the software reaches this point, all scans for the current block are done.
-			// So blockOn is resetted here.
+			// So blockOn is reset here.
 			for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 			{
 				// Check if the drvno'th bit is set
