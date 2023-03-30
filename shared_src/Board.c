@@ -5058,7 +5058,7 @@ es_status_codes GetOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t 
 
 void SetAllInterruptsDone(uint32_t drvno)
 {
-	// Where there are expected interrupts or software polling mode is on, set allInterruptsDone to false. The measurement loop then waits at the of one measurement until allInterruptsDone is set to true by the last interrupt or by the software polling thread.
+	// Where there are expected interrupts or software polling mode is on, set allInterruptsDone to false. The measurement loop then waits at the end of one measurement until allInterruptsDone is set to true by the last interrupt or by the software polling thread.
 	if (numberOfInterrupts[drvno] > 0 || settings_struct.camera_settings[drvno].use_software_polling)
 		allInterruptsDone = false;
 	else
