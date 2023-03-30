@@ -435,7 +435,7 @@ void ResetBufferWritePos(uint32_t drvno)
 	dmaBufferPartReadPos[drvno] = 0;
 	// reset buffer index to base we got from InitDMA
 	userBufferWritePos[drvno] = userBuffer[drvno];
-	ES_LOG( "RESET userBufferWritePos to 0x%p\n", userBufferWritePos[drvno] );
+	ES_TRACE( "reset userBufferWritePos to 0x%p\n", userBufferWritePos[drvno] );
 	IsrCounter[drvno] = 0;
 	return;
 }
@@ -448,17 +448,17 @@ void ResetBufferWritePos(uint32_t drvno)
  */
 void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 {
-	ES_LOG( "Copy rest data\n" );
+	ES_TRACE( "Copy rest data\n" );
 	uint16_t* dmaBufferReadPos = dmaBuffer[drvno];
 	// dmaBufferPartReadPos is 0 or 1 when DMA_BUFFER_PARTS=2 -> hi/lo half
 	dmaBufferReadPos += dmaBufferPartReadPos[drvno] * dmaBufferSizeInBytes[drvno] /2 / DMA_BUFFER_PARTS;
 	//					0 or 1 for lo/hi half		*  DMA buffer in shorts		  /      2	
 	// rest_in_bytes = 2 x pixel x rest in scans
-	ES_LOG("copyRestData: dmaBufferReadPos: 0x%p \n", dmaBufferReadPos);
-	ES_LOG("copyRestData: userBufferWritePos: 0x%p \n", userBufferWritePos[drvno]);
+	ES_TRACE("copyRestData: dmaBufferReadPos: 0x%p \n", dmaBufferReadPos);
+	ES_TRACE("copyRestData: userBufferWritePos: 0x%p \n", userBufferWritePos[drvno]);
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes);
 	data_available[drvno] += rest_in_bytes / sizeof(uint16_t);
-	ES_LOG("copyRestData: increased available data to : %u \n", data_available[drvno]);
+	ES_TRACE("copyRestData: increased available data to : %u \n", data_available[drvno]);
 	return;
 }
 
@@ -712,9 +712,9 @@ void FreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 
 es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 {
-	ES_LOG("Start copy data to user buffer thread.\n");
 	if (settings_struct.camera_settings[drvno].use_software_polling)
 	{
+		ES_LOG("Start copy data to user buffer thread.\n");
 		uint32_t* param = (uint32_t*)malloc(sizeof(uint32_t));
 		*param = drvno;
 		_beginthread(&PollDmaBufferToUserBuffer, 0, param);
@@ -1078,7 +1078,7 @@ es_status_codes ThreadToPriClass(ULONG threadp, DWORD *priclass, DWORD *prilevel
  */
 es_status_codes SetPriority(uint32_t threadp)
 {
-	ES_LOG("Set priority to %u\n", threadp)
+	ES_TRACE("Set priority to %u\n", threadp)
 	ULONG priClass = 0;
 	ULONG priLevel = 0;
 	es_status_codes status = ThreadToPriClass(threadp, &priClass, &priLevel);
@@ -1103,7 +1103,7 @@ es_status_codes SetPriority(uint32_t threadp)
  */
 es_status_codes ResetPriority()
 {
-	ES_LOG("Reset priority\n");
+	ES_TRACE("Reset priority\n");
 	if (!SetPriorityClass(hProcess, oldPriClass))
 		return es_setting_thread_priority_failed;
 	if (!SetThreadPriority(hThread, oldThreadLevel))
