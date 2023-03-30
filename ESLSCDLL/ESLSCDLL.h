@@ -66,6 +66,7 @@ DllAccess void DLLSetContinuousMeasurement(uint8_t on);
 DllAccess void DLLRegisterLVEvents(LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent);
 #endif
 DllAccess char* DLLConvertErrorCodeToMsg( es_status_codes status );
+DllAccess void DLLFillUserBufferWithDummyData(uint32_t board_sel);
 //************ Cam infos
 DllAccess es_status_codes DLLAbout(uint32_t board_sel);
 DllAccess es_status_codes DLLwaitForMeasureReady(uint32_t board_sel);
