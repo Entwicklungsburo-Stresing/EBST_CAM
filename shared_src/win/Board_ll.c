@@ -4,7 +4,7 @@
 
 #define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
 
-#include "shared_src/ESLSCDLL_pro.h"
+#include "shared_src/Direct2dViewer_c.h"
 
 WDC_DEVICE_HANDLE hDev_tmp[MAXPCIECARDS];
 WDC_DEVICE_HANDLE* hDev = (WDC_DEVICE_HANDLE *)&hDev_tmp;
@@ -24,23 +24,7 @@ HANDLE hThread;
 HANDLE ghMutex[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 HANDLE mutexUserBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 FILE* file_stream[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
-
-/**
- * \brief Initializes the pro DLL. Call this before using it. While initialization global variables are set in pro DLL.
- */
-void InitProDLL()
-{
-	struct global_vars g;
-	g.userBuffer = userBuffer;
-	g.hDev = hDev;
-	g.aPIXEL = aPIXEL;
-	g.aCAMCNT = aCAMCNT;
-	g.Nospb = Nospb;
-	g.Nob = Nob;
-	g.useSWTrig = useSWTrig;
-	DLLInitGlobals(g);
-	return;
-}
+void* Direct2dViewer = NULL;
 
 /**
  * \brief
@@ -474,9 +458,6 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 es_status_codes _InitBoard(uint32_t drvno)
 {
 	ES_LOG("Initialize board %u\n", drvno);
-#ifdef WIN32
-	InitProDLL();
-#endif
 	DWORD dwStatus = 0;
 	ES_LOG( "Info: scan result: a board found:%lx , dev=%lx, ven=%lx \n", scanResult.dwNumDevices, scanResult.deviceId[drvno].dwDeviceId, scanResult.deviceId[drvno].dwVendorId );
 	//gives the information received from PciScanDevices to PciGetDeviceInfo
@@ -1367,4 +1348,185 @@ void WaitForAllInterruptsDone()
 		if (GetAsyncKeyState(VK_ESCAPE) | abortMeasurementFlag) return;
 	ES_TRACE("All interrupts done\n")
 	return;
+}
+
+/**
+\brief Start 2d viewer.
+\param drvno board number
+\param cur_nob current number of block
+\param cam which camera to display (when camcnt is >1)
+\param pixel count of pixel of one line
+\param nos samples in one block
+*/
+void Start2dViewer(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t pixel, uint32_t nos)
+{
+	if (Direct2dViewer != NULL)
+	{
+		DLLDeinit2dViewer();
+	}
+	Direct2dViewer = Direct2dViewer_new();
+	UINT16* address = NULL;
+	if (aCAMCNT[drvno] <= 1)
+		GetAddressOfPixel(drvno, 0, 0, cur_nob, cam, &address);
+	else
+		GetOneBlockOfOneCamera(drvno, cur_nob, cam, &address);
+	Direct2dViewer_start2dViewer(
+		Direct2dViewer,
+		GetActiveWindow(),
+		address,
+		pixel,
+		nos);
+	return;
+}
+
+/**
+\brief Update the displayed bitmap.
+\param drvno board number
+\param cur_nob current number of blocks
+\param cam which camera to display (when camcnt is >1)
+\param pixel count of pixel of one line
+\param nos samples in one block
+*/
+void ShowNewBitmap(UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos)
+{
+	if (Direct2dViewer != NULL)
+	{
+		UINT16* address = NULL;
+		if (aCAMCNT[drvno] <= 1)
+			GetAddressOfPixel(drvno, 0, 0, cur_nob, cam, &address);
+		else
+			GetOneBlockOfOneCamera(drvno, cur_nob, cam, &address);
+		Direct2dViewer_showNewBitmap(
+			Direct2dViewer,
+			address,
+			pixel,
+			nos);
+	}
+	return;
+}
+
+/**
+\brief Call when closing 2d viewer or at least before opening a new 2d viewer.
+*/
+void Deinit2dViewer()
+{
+	if (Direct2dViewer != NULL)
+	{
+		SendMessage(Direct2dViewer_getWindowHandler(Direct2dViewer), WM_CLOSE, 0, 0);
+		Direct2dViewer_delete(Direct2dViewer);
+		Direct2dViewer = NULL;
+	}
+	return;
+}
+
+/**
+\copydoc Direct2dViewer_setGammaValue
+*/
+void SetGammaValue(UINT16 white, UINT16 black)
+{
+	if (Direct2dViewer != NULL)
+	{
+		Direct2dViewer_setGammaValue(Direct2dViewer, white, black);
+		Direct2dViewer_repaintWindow(Direct2dViewer);
+	}
+	return;
+}
+
+/**
+\copydoc Direct2dViewer_getGammaWhite
+*/
+UINT16 GetGammaWhite()
+{
+	if (Direct2dViewer != NULL)
+	{
+		return Direct2dViewer_getGammaWhite(Direct2dViewer);
+	}
+	return 0;
+}
+
+/**
+\copydoc Direct2dViewer_getGammaBlack
+*/
+UINT16 GetGammaBlack()
+{
+	if (Direct2dViewer != NULL)
+	{
+		return Direct2dViewer_getGammaBlack(Direct2dViewer);
+	}
+	return 0;
+}
+
+/**
+ * \brief Initializes region of interest.
+ *
+ * \param drvno PCIe identifier
+ * \param number_of_regions determines how many region of interests are initialized, choose 2 to 8
+ * \param lines number of total lines in camera
+ * \param keep kept regions are determined by bits of keep
+ * \param region_size determines the size of each region. array of size number_of_regions.
+ * 	When region_size[0]==0 the lines are equally distributed for all regions.
+ * 	I don't know what happens when  region_size[0]!=0 and region_size[1]==0. Maybe don't do this.
+ * 	The sum of all regions should equal lines.
+ * \param vfreq VCLK frequency
+ * \return es_status_codes
+ * 		- es_no_error
+ * 		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
+es_status_codes SetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep, UINT8* region_size, UINT8 vfreq)
+{
+	BOOL keep_temp;
+	es_status_codes status = es_no_error;
+	// calculate how many lines are in each region when equally distributed
+	UINT32 lines_per_region = lines / number_of_regions;
+	// calculate the rest of lines when equally distributed
+	UINT32 lines_in_last_region = lines - lines_per_region * (number_of_regions - 1);
+	WDC_Err("Setup ROI: lines_per_region: %u , lines_in_last_region: %u\n", lines_per_region, lines_in_last_region);
+	// go from region 1 to number_of_regions
+	for (int i = 1; i <= number_of_regions; i++)
+	{
+		// check whether lines should be distributed equally or by custom region size
+		keep_temp = keep & 0b1;//make the last bit bool, because this bit indicates the current range to keep or not
+		if (*region_size == 0)
+		{
+			if (i == number_of_regions) status = SetupVPB(drvno, i, lines_in_last_region, keep_temp);
+			else status = SetupVPB(drvno, i, lines_per_region, keep_temp);
+		}
+		else
+		{
+			status = SetupVPB(drvno, i, *(region_size + (i - 1)), keep_temp);
+		}
+		if (status != es_no_error) return status;
+		keep >>= 1;//bitshift right to got the next keep for the next range
+	}
+	status = SetupVCLKReg(drvno, lines, vfreq);
+	if (status != es_no_error) return status;
+	status = SetPartialBinning(drvno, 0); //I don't know why there first is 0 written, I just copied it from Labview. - FH
+	if (status != es_no_error) return status;
+	status = SetPartialBinning(drvno, number_of_regions);
+	if (status != es_no_error) return status;
+	*useSWTrig = TRUE;
+	return SetSTI(drvno, sti_ASL);
+}
+
+/**
+ * \brief For FFTs: Setup area mode.
+ *
+ * \param drvno PCIe board identifier.
+ * \param lines_binning Determines how many lines are binned (summed) when reading camera in area mode.
+ * \param vfreq Frequency for vertical clock.
+ * \return es_status_codes
+ * 		- es_no_error
+ * 		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
+es_status_codes SetupArea(UINT32 drvno, UINT32 lines_binning, UINT8 vfreq)
+{
+	WDC_Err("Setup Area\n");
+	es_status_codes status = SetupVCLKReg(drvno, lines_binning, vfreq);
+	if (status != es_no_error) return status;
+	status = SetSTI(drvno, sti_ASL);
+	if (status != es_no_error) return status;
+	*useSWTrig = TRUE; //software starts 1st scan
+	return ResetPartialBinning(drvno);
 }

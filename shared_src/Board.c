@@ -138,11 +138,11 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 		{
 			uint8_t regionSize[8];
 			for (int i = 0; i < 8; i++) regionSize[i] = (uint8_t)settings_struct.camera_settings[drvno].region_size[i];
-			status = DLLSetupROI(drvno, (uint16_t)settings_struct.camera_settings[drvno].number_of_regions, settings_struct.camera_settings[drvno].fft_lines, (uint8_t)settings_struct.camera_settings[drvno].keep, regionSize, (uint8_t)settings_struct.camera_settings[drvno].vfreq);
+			status = SetupROI(drvno, (uint16_t)settings_struct.camera_settings[drvno].number_of_regions, settings_struct.camera_settings[drvno].fft_lines, (uint8_t)settings_struct.camera_settings[drvno].keep, regionSize, (uint8_t)settings_struct.camera_settings[drvno].vfreq);
 			break;
 		}
 		case area_mode:
-			status = DLLSetupArea(drvno, settings_struct.camera_settings[drvno].lines_binning, (uint8_t)settings_struct.camera_settings[drvno].vfreq);
+			status = SetupArea(drvno, settings_struct.camera_settings[drvno].lines_binning, (uint8_t)settings_struct.camera_settings[drvno].vfreq);
 			break;
 #endif
 		default:
