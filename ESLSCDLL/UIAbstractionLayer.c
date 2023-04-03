@@ -8,6 +8,7 @@ struct _timeb timebuffer_measureStart;
 struct _timeb timebuffer_measureDone;
 struct _timeb timebuffer_blockStart;
 struct _timeb timebuffer_blockDone;
+struct _timeb timebuffer_allBlocksDone;
 const int64_t min_diff_in_ms = 50;
 
 void notifyMeasureStart()
@@ -65,6 +66,21 @@ void notifyBlockDone()
 	{
 		PostLVUserEvent(blockDoneLVEvent, NULL);
 		ftime((struct timeb* const)&timebuffer_blockDone);
+	}
+#endif
+	return;
+}
+
+void notifyAllBlocksDone()
+{
+#ifdef COMPILE_FOR_LABVIEW
+	struct _timeb timebuffer_allBlocksDone_new;
+	ftime((struct timeb* const)&timebuffer_allBlocksDone_new);
+	int64_t diff_in_ms = (int64_t)(1000.0 * (timebuffer_allBlocksDone_new.time - timebuffer_allBlocksDone.time) + (timebuffer_allBlocksDone_new.millitm - timebuffer_allBlocksDone.millitm));
+	if (diff_in_ms > min_diff_in_ms)
+	{
+		PostLVUserEvent(allBlocksDoneLVEvent, NULL);
+		ftime((struct timeb* const)&timebuffer_allBlocksDone);
 	}
 #endif
 	return;

@@ -5,3 +5,4 @@ void notifyMeasureStart();
 void notifyMeasureDone();
 void notifyBlockStart();
 void notifyBlockDone();
+void notifyAllBlocksDone();

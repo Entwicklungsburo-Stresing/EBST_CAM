@@ -264,6 +264,7 @@ void Lsc::fillUserBufferWithDummyData(uint32_t drvno)
 	emit measureStart();
 	emit blockStart();
 	emit blockDone();
+	emit allBlocksDone();
 	emit measureDone();
 	return;
 }
