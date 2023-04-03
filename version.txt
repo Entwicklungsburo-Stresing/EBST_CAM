@@ -1,5 +1,10 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.2.7
+- Fix camcnt spin boxes in dialogs
+- Add notifyAllBlocksDone to trigger displaying data in measurement loop
+- Improve live view: show last scan instead of scan 1 when measuring in loop
+
 4.2.6
 - Add no board mode
 - Fix software polling mode
