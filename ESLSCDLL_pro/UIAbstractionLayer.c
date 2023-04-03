@@ -24,3 +24,9 @@ void notifyBlockDone()
 
 	return;
 }
+
+void notifyAllBlocksDone()
+{
+
+	return;
+}
