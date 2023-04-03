@@ -1,6 +1,5 @@
 #include "dialoggreyscalesettings.h"
-#include "shared_src/ESLSCDLL_pro.h"
-#include "lsc-gui.h"
+#include "lsc-gui.h
 
 DialogGreyscaleSettings::DialogGreyscaleSettings(QWidget *parent)
 	: QDialog(parent)
@@ -8,8 +7,8 @@ DialogGreyscaleSettings::DialogGreyscaleSettings(QWidget *parent)
 {
 	ui->setupUi(this);
 	// load current values to UI
-	ui->spinBoxWhite->setValue(DLLGetGammaWhite());
-	ui->spinBoxBlack->setValue(DLLGetGammaBlack());
+	ui->spinBoxWhite->setValue(GetGammaWhite());
+	ui->spinBoxBlack->setValue(GetGammaBlack());
 	ui->spinBoxBoard->setValue(mainWindow->greyscale_viewer_board);
 	ui->spinBoxCamera->setValue(mainWindow->greyscale_viewer_camera);
 	// set limits to UI
@@ -30,7 +29,7 @@ DialogGreyscaleSettings::~DialogGreyscaleSettings()
  */
 void DialogGreyscaleSettings::on_spinBoxWhite_valueChanged(int value)
 {
-	DLLSetGammaValue(value, DLLGetGammaBlack());
+	SetGammaValue(value, GetGammaBlack());
 	return;
 }
 
@@ -40,7 +39,7 @@ void DialogGreyscaleSettings::on_spinBoxWhite_valueChanged(int value)
  */
 void DialogGreyscaleSettings::on_spinBoxBlack_valueChanged(int value)
 {
-	DLLSetGammaValue(DLLGetGammaWhite(), value);
+	SetGammaValue(GetGammaWhite(), value);
 	return;
 }
 
@@ -53,7 +52,7 @@ void DialogGreyscaleSettings::on_spinBoxBoard_valueChanged(int value)
 	settings.endGroup();
 	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 	uint32_t block = mainWindow->ui->horizontalSliderBlock->value() - 1;
-	DLLShowNewBitmap(value, block, mainWindow->greyscale_viewer_camera, pixelcount, nos);
+	ShowNewBitmap(value, block, mainWindow->greyscale_viewer_camera, pixelcount, nos);
 	// set camcnt limit to UI
 	if (camcnt <= 1)
 		ui->spinBoxCamera->setEnabled(false);
@@ -69,6 +68,6 @@ void DialogGreyscaleSettings::on_spinBoxCamera_valueChanged(int value)
 	settings.endGroup();
 	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 	uint32_t block = mainWindow->ui->horizontalSliderBlock->value() - 1;
-	DLLShowNewBitmap(mainWindow->greyscale_viewer_board, block, value, pixelcount, nos);
+	ShowNewBitmap(mainWindow->greyscale_viewer_board, block, value, pixelcount, nos);
 	return;
 }

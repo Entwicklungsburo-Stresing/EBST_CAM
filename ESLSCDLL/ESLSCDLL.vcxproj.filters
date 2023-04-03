@@ -32,6 +32,12 @@
     <ClCompile Include="..\shared_src\globals.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Direct2dViewer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Direct2dViewer_c.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ESLSCDLL.h">
@@ -65,6 +71,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\shared_src\default_settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\Direct2dViewer_c.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Direct2dViewer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

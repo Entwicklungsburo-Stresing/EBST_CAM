@@ -18,6 +18,7 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 */
 
 #include "ESLSCDLL.h"
+#include "shared_src/Direct2dViewer_c.h"
 
 #ifdef COMPILE_FOR_LABVIEW
 LVUserEventRef measureStartLVEvent;
@@ -842,17 +843,83 @@ DllAccess es_status_codes DLLGetAllSpecialPixelInformation(uint32_t board_sel, u
 				return status;
 		}
 	}
+	return status;
 }
 
 DllAccess void DLLFillUserBufferWithDummyData(uint32_t board_sel)
 {
-	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
 			FillUserBufferWithDummyData(drvno);
 	}
-	return status;
+	return;
 }
 
+/**
+* \copydoc Start2dViewer
+*/
+DllAccess void DLLStart2dViewer(UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos)
+{
+	Start2dViewer(drvno, cur_nob, cam, pixel, nos);
+	return;
+}
+
+/**
+* \copydoc ShowNewBitmap
+*/
+DllAccess void DLLShowNewBitmap(UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos)
+{
+	ShowNewBitmap(drvno, cur_nob, cam, pixel, nos);
+	return;
+}
+
+/**
+* \copydoc Deinit2dViewer
+*/
+DllAccess void DLLDeinit2dViewer()
+{
+	Deinit2dViewer();
+	return;
+}
+
+/**
+* \copydoc Direct2dViewer_setGammaValue
+*/
+DllAccess void DLLSetGammaValue(UINT16 white, UINT16 black)
+{
+	SetGammaValue(white, black);
+}
+
+/**
+* \copydoc Direct2dViewer_getGammaWhite
+*/
+DllAccess UINT16 DLLGetGammaWhite()
+{
+	return GetGammaWhite();
+}
+
+/**
+* \copydoc Direct2dViewer_getGammaBlack
+*/
+DllAccess UINT16 DLLGetGammaBlack()
+{
+	return GetGammaBlack();
+}
+
+/**
+* \copydoc SetupROI
+*/
+es_status_codes DLLSetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep, UINT8* region_size, UINT8 vfreq)
+{
+	return SetupROI(drvno, number_of_regions, lines, keep, region_size, vfreq);
+}
+
+/**
+* \copydoc SetupArea
+*/
+DllAccess es_status_codes DLLSetupArea(UINT32 drvno, UINT32 lines_binning, UINT8 vfreq)
+{
+	return SetupArea(drvno, lines_binning, vfreq);
+}

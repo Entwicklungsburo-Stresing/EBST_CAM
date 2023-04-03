@@ -96,7 +96,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(SolutionDir)shared_src\ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwrite.lib;d2d1.lib;windowscodecs.lib;$(SolutionDir)Jungo\wdapi1400.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <ResourceCompile>
@@ -125,7 +125,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(SolutionDir)shared_src\ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dwrite.lib;d2d1.lib;windowscodecs.lib;$(SolutionDir)Jungo\wdapi1400.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <ResourceCompile>
@@ -154,7 +154,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>$(SolutionDir)shared_src\ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Jungo\wdapi1400.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
     </Link>
@@ -182,7 +182,7 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     <Link>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>$(SolutionDir)shared_src\ESLSCDLL_pro.lib;$(SolutionDir)Jungo\wdapi1400.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Jungo\wdapi1400.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
@@ -203,6 +203,8 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     <ClCompile Include="..\shared_src\globals.c" />
     <ClCompile Include="..\shared_src\lscpciej_lib.c" />
     <ClCompile Include="..\shared_src\win\Board_ll.c" />
+    <ClCompile Include="Direct2dViewer.cpp" />
+    <ClCompile Include="Direct2dViewer_c.cpp" />
     <ClCompile Include="ESLSCDLL.c" />
     <ClCompile Include="UIAbstractionLayer.c" />
   </ItemGroup>
@@ -210,12 +212,14 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     <ClInclude Include="..\shared_src\Board.h" />
     <ClInclude Include="..\shared_src\Board_ll.h" />
     <ClInclude Include="..\shared_src\default_settings.h" />
+    <ClInclude Include="..\shared_src\Direct2dViewer_c.h" />
     <ClInclude Include="..\shared_src\enum.h" />
     <ClInclude Include="..\shared_src\globals.h" />
     <ClInclude Include="..\shared_src\struct.h" />
     <ClInclude Include="..\shared_src\es_status_codes.h" />
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
     <ClInclude Include="..\shared_src\lscpciej_lib.h" />
+    <ClInclude Include="Direct2dViewer.h" />
     <ClInclude Include="ESLSCDLL.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
@@ -224,11 +228,6 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ESLSCDLL.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ESLSCDLL_pro\ESLSCDLL_pro.vcxproj">
-      <Project>{1b5131df-48da-47fb-aab0-2e086ed279db}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
