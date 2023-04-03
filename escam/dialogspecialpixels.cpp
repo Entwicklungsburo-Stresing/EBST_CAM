@@ -62,8 +62,11 @@ void DialogSpecialPixels::on_spinBoxBoard_valueChanged(int index)
 	settings.beginGroup("board" + QString::number(index));
 	int camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
 	settings.endGroup();
-	ui->spinBoxCamera->setMaximum(camcnt);
-	if (camcnt == 1)
+	if(camcnt)
+		ui->spinBoxCamera->setMaximum(camcnt - 1);
+	else
+		ui->spinBoxCamera->setMaximum(0);
+	if (camcnt <= 1)
 		ui->spinBoxCamera->setDisabled(true);
 	else
 		ui->spinBoxCamera->setDisabled(false);
