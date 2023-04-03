@@ -27,7 +27,7 @@ void DialogRMS::updateRMS()
 	uint32_t firstSample = ui->spinBox_firstsample->value() - 1;
 	uint32_t lastSample = ui->spinBox_lastsample->value() - 1;
 	uint32_t pixel = ui->spinBox_pixel->value();
-	uint32_t campos = ui->spinBoxCampos->value() - 1;
+	uint32_t campos = ui->spinBoxCampos->value();
 	uint32_t drvno = ui->spinBoxBoard->value();
 	double mwf, trms;
 	QString smwf, strms;
@@ -76,8 +76,12 @@ void DialogRMS::on_spinBoxBoard_valueChanged(int index)
 	int pixel = settings.value(settingPixelPath, settingPixelDefault).toUInt();
 	settings.endGroup();
 	int nos = settings.value(settingNosPath, settingNosDefault).toUInt();
-	ui->spinBoxCampos->setMaximum(camcnt);
-	if (camcnt == 1)
+	// set camcnt limit to UI
+	if (camcnt > 0)
+		ui->spinBoxCampos->setMaximum(camcnt - 1);
+	else
+		ui->spinBoxCampos->setMaximum(0);
+	if (camcnt <= 1)
 		ui->spinBoxCampos->setDisabled(true);
 	else
 		ui->spinBoxCampos->setDisabled(false);
