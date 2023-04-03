@@ -6,7 +6,6 @@
 #include "dialogspecialpixels.h"
 #ifdef WIN32
 #include "dialoggreyscalesettings.h"
-#include "shared_src/ESLSCDLL_pro.h"
 #endif
 
 /**
@@ -691,7 +690,7 @@ void MainWindow::on_measureDone()
 			settings.endGroup();
 			uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 			uint32_t block = ui->horizontalSliderBlock->value() - 1;
-			DLLShowNewBitmap(drvno, block, 0, pixelcount, nos);
+			ShowNewBitmap(drvno, block, 0, pixelcount, nos);
 		}
 	}
 #endif
@@ -817,7 +816,7 @@ void MainWindow::on_actionShow_triggered()
 	settings.endGroup();
 	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 	uint32_t block = ui->horizontalSliderBlock->value() - 1;
-	DLLStart2dViewer(greyscale_viewer_board, block, greyscale_viewer_camera, pixelcount, nos);
+	Start2dViewer(greyscale_viewer_board, block, greyscale_viewer_camera, pixelcount, nos);
 #endif
 	return;
 }
@@ -834,7 +833,7 @@ void MainWindow::on_horizontalSliderBlock_valueChanged()
 	settings.endGroup();
 	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 	uint32_t block = ui->horizontalSliderBlock->value() - 1;
-	DLLShowNewBitmap(greyscale_viewer_board, block, greyscale_viewer_camera, pixelcount, nos);
+	ShowNewBitmap(greyscale_viewer_board, block, greyscale_viewer_camera, pixelcount, nos);
 #endif
 	return;
 }
