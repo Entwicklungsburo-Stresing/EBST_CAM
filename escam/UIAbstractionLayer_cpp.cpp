@@ -24,3 +24,9 @@ void notifyBlockDoneCpp()
 	emit mainWindow->lsc.blockDone();
 	return;
 }
+
+void notifyAllBlocksDoneCpp()
+{
+	emit mainWindow->lsc.allBlocksDone();
+	return;
+}

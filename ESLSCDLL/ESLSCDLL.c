@@ -24,6 +24,7 @@ LVUserEventRef measureStartLVEvent;
 LVUserEventRef measureDoneLVEvent;
 LVUserEventRef blockStartLVEvent;
 LVUserEventRef blockDoneLVEvent;
+LVUserEventRef allBlocksDoneLVEvent;
 #endif
 
 int nProcessCount = 0;
@@ -605,12 +606,13 @@ DllAccess es_status_codes DLLSetBTimer( uint32_t drvno, uint32_t btime_in_micros
  * \param blockDoneEvent Event handler for the event block done.
  * \return none
  */
-DllAccess void DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent )
+DllAccess void DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent, LVUserEventRef* allBlocksDoneEvent)
 {
 	measureStartLVEvent = *measureStartEvent;
 	measureDoneLVEvent = *measureDoneEvent;
 	blockStartLVEvent = *blockStartEvent;
 	blockDoneLVEvent = *blockDoneEvent;
+	allBlocksDoneLVEvent = *allBlocksDoneEvent;
 	return;
 }
 #endif
