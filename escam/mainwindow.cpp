@@ -59,8 +59,8 @@ MainWindow::MainWindow(QWidget* parent)
 	lsc.moveToThread(&measurementThread);
 	connect(&measurementThread, &QThread::started, &lsc, &Lsc::startMeasurement);
 	connect(&lsc, &Lsc::measureDone, &measurementThread, &QThread::quit);
-	connect(&lsc, &Lsc::measureDone, ds_dsc, &DialogDSC::updateDSC);
-	connect(&lsc, &Lsc::measureDone, ds_rms, &DialogRMS::updateRMS);
+	connect(&lsc, &Lsc::allBlocksDone, ds_dsc, &DialogDSC::updateDSC);
+	connect(&lsc, &Lsc::allBlocksDone, ds_rms, &DialogRMS::updateRMS);
 #ifdef __linux__
 	// disable gray scale menu on Linux
 	ui->menuGreyscale_Viewer->setEnabled(false);
