@@ -29,6 +29,7 @@ public slots:
 	void on_measureDone();
 	void on_blockStart();
 	void on_blockDone();
+	void on_allBlocksDone();
 private:
 	QSettings settings;
 	void setChartData(QLineSeries** series, uint16_t numberOfSets);

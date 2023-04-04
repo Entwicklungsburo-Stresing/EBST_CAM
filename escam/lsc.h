@@ -60,6 +60,7 @@ signals:
 	void measureDone();
 	void blockStart();
 	void blockDone();
+	void allBlocksDone();
 private:
 	uint8_t _torOut = tor_xck;
 	void parseTextToHtml(std::string* str);

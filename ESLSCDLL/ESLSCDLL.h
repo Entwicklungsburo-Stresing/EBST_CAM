@@ -26,6 +26,7 @@ extern LVUserEventRef measureStartLVEvent;
 extern LVUserEventRef measureDoneLVEvent;
 extern LVUserEventRef blockStartLVEvent;
 extern LVUserEventRef blockDoneLVEvent;
+extern LVUserEventRef allBlocksDoneLVEvent;
 #endif
 
 #ifdef _DLL
@@ -67,7 +68,7 @@ DllAccess double DLLCalcRamUsageInMB(uint32_t nos, uint32_t nob);
 DllAccess double DLLCalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);
 DllAccess void DLLSetContinuousMeasurement(uint8_t on);
 #ifdef COMPILE_FOR_LABVIEW
-DllAccess void DLLRegisterLVEvents(LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent);
+DllAccess void DLLRegisterLVEvents(LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent, LVUserEventRef* allBlocksDoneEvent);
 #endif
 DllAccess char* DLLConvertErrorCodeToMsg( es_status_codes status );
 DllAccess void DLLFillUserBufferWithDummyData(uint32_t board_sel);

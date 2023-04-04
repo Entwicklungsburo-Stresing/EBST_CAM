@@ -1104,7 +1104,11 @@ uint32_t getDmaBufferSizeInBytes(uint32_t drvno)
 
 int64_t getCurrentInterruptCounter(uint32_t drvno)
 {
-	return IsrCounter[drvno];
+	// When measurement_cnt is greater than 1, that means measurement is running in a loop, return number of interrupts, because the last interrupt was the maximum number of interrupts, when the IsrCounter is 0.
+	if (measurement_cnt > 1 && IsrCounter[drvno] == 0)
+		return numberOfInterrupts[drvno];
+	else
+		return IsrCounter[drvno];
 }
 
 void openFile(uint32_t drvno)

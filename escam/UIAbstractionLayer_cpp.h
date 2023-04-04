@@ -9,6 +9,7 @@ void notifyMeasureStartCpp();
 void notifyMeasureDoneCpp();
 void notifyBlockStartCpp();
 void notifyBlockDoneCpp();
+void notifyAllBlocksDoneCpp();
 
 #ifdef __cplusplus
 }
