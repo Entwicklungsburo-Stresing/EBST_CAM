@@ -1366,7 +1366,7 @@ void Start2dViewer(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t pixe
 {
 	if (Direct2dViewer != NULL)
 	{
-		DLLDeinit2dViewer();
+		Deinit2dViewer();
 	}
 	Direct2dViewer = Direct2dViewer_new();
 	UINT16* address = NULL;

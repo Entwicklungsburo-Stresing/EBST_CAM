@@ -21,12 +21,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_0A4A8F49BC9840E7A53158178CFD6C2A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_0CB6B2C2330C4BDCB80689AF8516050D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -464,26 +458,6 @@
             "TargetName" = "8:qtga.dll"
             "Tag" = "8:"
             "Folder" = "8:_9188D91829A74B71919FC3404DA8B584"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0A4A8F49BC9840E7A53158178CFD6C2A"
-            {
-            "SourcePath" = "8:..\\x64\\Release\\ESLSCDLL_pro.dll"
-            "TargetName" = "8:ESLSCDLL_pro.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_A1F1AB1AEA5C4300AACB65433A54E330"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
