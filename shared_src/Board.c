@@ -2890,6 +2890,7 @@ es_status_codes StartMeasurement()
 				}
 			}
 		}
+		notifyAllBlocksDone();
 		// Maybe this is not needed anymore because of WaitForAllInterruptsDone
 		// This sleep is here to prevent the measurement being interrupted too early. When operating with 2 cameras the last scan could be cut off without the sleep. This is only a workaround. The problem is that the software is waiting for RSTIMER being reset by the hardware before setting measure on and block on to low, but the last DMA is done after RSTIMER being reset. BLOCKON and MEASUREON should be reset after all DMAs are done.
 		// RSTIMER --------________

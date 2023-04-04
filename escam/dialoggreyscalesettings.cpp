@@ -54,9 +54,14 @@ void DialogGreyscaleSettings::on_spinBoxBoard_valueChanged(int value)
 	uint32_t block = mainWindow->ui->horizontalSliderBlock->value() - 1;
 	ShowNewBitmap(value, block, mainWindow->greyscale_viewer_camera, pixelcount, nos);
 	// set camcnt limit to UI
+	if (camcnt > 0)
+		ui->spinBoxCamera->setMaximum(camcnt - 1);
+	else
+		ui->spinBoxCamera->setMaximum(0);
 	if (camcnt <= 1)
-		ui->spinBoxCamera->setEnabled(false);
-	ui->spinBoxCamera->setMaximum(camcnt - 1);
+		ui->spinBoxCamera->setDisabled(true);
+	else
+		ui->spinBoxCamera->setDisabled(false);
 	return;
 }
 
