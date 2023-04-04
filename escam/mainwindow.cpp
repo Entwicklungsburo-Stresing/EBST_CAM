@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(&lsc, &Lsc::measureDone, this, &MainWindow::on_measureDone);
 	connect(&lsc, &Lsc::blockStart, this, &MainWindow::on_blockStart);
 	connect(&lsc, &Lsc::blockDone, this, &MainWindow::on_blockDone);
+	connect(&lsc, &Lsc::allBlocksDone, this, &MainWindow::on_allBlocksDone);
 	connect(ui->chartView, &MyQChartView::rubberBandChanged, this, &MainWindow::on_rubberBandChanged);
 	connect(displayTimer, &QTimer::timeout, this, &MainWindow::showCurrentScan);
 	connect(ui->radioButtonLiveViewFixedSample, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
@@ -57,8 +58,8 @@ MainWindow::MainWindow(QWidget* parent)
 	lsc.moveToThread(&measurementThread);
 	connect(&measurementThread, &QThread::started, &lsc, &Lsc::startMeasurement);
 	connect(&lsc, &Lsc::measureDone, &measurementThread, &QThread::quit);
-	connect(&lsc, &Lsc::measureDone, ds_dsc, &DialogDSC::updateDSC);
-	connect(&lsc, &Lsc::measureDone, ds_rms, &DialogRMS::updateRMS);
+	connect(&lsc, &Lsc::allBlocksDone, ds_dsc, &DialogDSC::updateDSC);
+	connect(&lsc, &Lsc::allBlocksDone, ds_rms, &DialogRMS::updateRMS);
 #ifdef __linux__
 	// disable gray scale menu on Linux
 	ui->menuGreyscale_Viewer->setEnabled(false);
@@ -674,26 +675,8 @@ void MainWindow::on_measureDone()
 	ui->widgetMeasureOn->setPalette(pal);
 	//set blockOn lamp off
 	ui->widgetBlockOn->setPalette(pal);
-	//display camera data
-	loadCameraData();
 	//enable start button
 	ui->pushButtonStartStop->setText("Start");
-#ifdef WIN32
-	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
-	{
-		// Check if the drvno'th bit is set
-		if ((board_sel >> drvno) & 1)
-		{
-			settings.beginGroup("board" + QString::number(drvno));
-			uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
-			settings.endGroup();
-			uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
-			uint32_t block = ui->horizontalSliderBlock->value() - 1;
-			ShowNewBitmap(drvno, block, 0, pixelcount, nos);
-		}
-	}
-#endif
 	displayTimer->stop();
 	//enable controls
 	ui->spinBoxBlock->setEnabled(true);
@@ -719,6 +702,29 @@ void MainWindow::on_blockDone()
 	QPalette pal = palette();
 	pal.setColor(QPalette::Background, Qt::darkGreen);
 	ui->widgetBlockOn->setPalette(pal);
+	return;
+}
+
+void MainWindow::on_allBlocksDone()
+{
+	//display camera data
+	loadCameraData();
+#ifdef WIN32
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			settings.beginGroup("board" + QString::number(drvno));
+			uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
+			settings.endGroup();
+			uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
+			uint32_t block = ui->horizontalSliderBlock->value() - 1;
+			DLLShowNewBitmap(drvno, block, 0, pixelcount, nos);
+		}
+	}
+#endif
 	return;
 }
 
