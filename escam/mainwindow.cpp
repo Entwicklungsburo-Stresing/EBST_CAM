@@ -721,7 +721,7 @@ void MainWindow::on_allBlocksDone()
 			settings.endGroup();
 			uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 			uint32_t block = ui->horizontalSliderBlock->value() - 1;
-			DLLShowNewBitmap(drvno, block, 0, pixelcount, nos);
+			lsc.showNewBitmap(drvno, block, 0, pixelcount, nos);
 		}
 	}
 #endif
@@ -822,7 +822,7 @@ void MainWindow::on_actionShow_triggered()
 	settings.endGroup();
 	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 	uint32_t block = ui->horizontalSliderBlock->value() - 1;
-	Start2dViewer(greyscale_viewer_board, block, greyscale_viewer_camera, pixelcount, nos);
+	lsc.start2dViewer(greyscale_viewer_board, block, greyscale_viewer_camera, pixelcount, nos);
 #endif
 	return;
 }
@@ -839,7 +839,7 @@ void MainWindow::on_horizontalSliderBlock_valueChanged()
 	settings.endGroup();
 	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
 	uint32_t block = ui->horizontalSliderBlock->value() - 1;
-	ShowNewBitmap(greyscale_viewer_board, block, greyscale_viewer_camera, pixelcount, nos);
+	lsc.showNewBitmap(greyscale_viewer_board, block, greyscale_viewer_camera, pixelcount, nos);
 #endif
 	return;
 }

@@ -362,3 +362,44 @@ void Lsc::setContinuousMeasurement(bool on)
 {
 	return SetContinuousMeasurement(on);
 }
+
+/**
+ * \copydoc ShowNewBitmap
+ */
+void Lsc::showNewBitmap(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t pixel, uint32_t nos)
+{
+	return ShowNewBitmap(drvno, cur_nob, cam, pixel, nos);
+}
+
+/**
+ * \copydoc Start2dViewer
+ */
+void Lsc::start2dViewer(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t pixel, uint32_t nos)
+{
+	return Start2dViewer(drvno, cur_nob, cam, pixel, nos);
+}
+
+/**
+ * \copydoc SetGammaValue
+ */
+void Lsc::setGammaValue(uint16_t white, uint16_t black)
+{
+	return SetGammaValue(white, black);
+}
+
+/**
+ * \copydoc GetGammaWhite
+ */
+uint16_t Lsc::getGammaWhite()
+{
+	return GetGammaWhite();
+}
+
+/**
+ * \copydoc GetGammaBlack
+ */
+uint16_t Lsc::getGammaBlack()
+{
+	return getGammaBlack();
+}
+
