@@ -400,6 +400,6 @@ uint16_t Lsc::getGammaWhite()
  */
 uint16_t Lsc::getGammaBlack()
 {
-	return getGammaBlack();
+	return GetGammaBlack();
 }
 
