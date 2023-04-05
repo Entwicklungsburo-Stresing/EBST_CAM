@@ -34,6 +34,8 @@ es_status_codes OpenShutter( uint32_t drvno );
 es_status_codes SetCamCountRegister(uint32_t drvno);
 es_status_codes SetSensorType( uint32_t drvno, uint8_t sensor_type );
 es_status_codes SetupFullBinning( uint32_t drvno, uint32_t lines, uint8_t vfreq );
+es_status_codes SetupROI(uint32_t drvno, uint16_t number_of_regions, uint32_t lines, uint8_t keep, uint8_t* region_size, uint8_t vfreq);
+es_status_codes SetupArea(uint32_t drvno, uint32_t lines_binning, uint8_t vfreq);
 es_status_codes SetupVCLKReg( uint32_t drvno, uint32_t lines, uint8_t vfreq );
 es_status_codes StopSTimer( uint32_t drvno );
 es_status_codes RSFifo( uint32_t drvno );
