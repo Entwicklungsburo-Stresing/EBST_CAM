@@ -87,9 +87,6 @@ void Deinit2dViewer();
 void SetGammaValue(UINT16 white, UINT16 black);
 UINT16 GetGammaWhite(); 
 UINT16 GetGammaBlack();
-es_status_codes SetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep, UINT8* region_size, UINT8 vfreq);
-es_status_codes SetupArea(UINT32 drvno, UINT32 lines_binning, UINT8 vfreq);
-
 #endif
 
 #endif // BOARDLL_H
