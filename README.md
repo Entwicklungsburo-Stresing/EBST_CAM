@@ -4,7 +4,6 @@ Software package for the line scan cameras of [Entwicklungsbüro Stresing](http:
 project         | description                           | plattform
 :---            | :---                                  | :---
 ESLSCDLL        | DLL for usage with Labview. See repository [lv64](https://github.com/Entwicklungsburo-Stresing/lv64) | Windows
-ESLSCDLL_pro    | DLL for specialized functions         | Windows
 Jungo           | Windows driver                        | Windows
 doc             | Documentation with [Doxygen](https://www.doxygen.nl/) of DLLs interface and more  | Windows, Linux
 escam           | crossplattform Qt GUI written in C++  | Windows, Linux
@@ -30,8 +29,8 @@ Run `install_run_as_admin.bat` from `Stresing14.00_Driver_Distribution_Package` 
 ### Installing escam
 Compile solution first and use `escam_setup/build/setup.exe` or use given `setup.exe`. If Microsoft Visual C++ Redistributable is missing, this setup should install it automatically.
 
-### Using ESLSCDLL.dll and ESLSCDLL_pro.dll
-For the use of `ESLSCDLL.dll` and `ESLSCDLL_pro.dll` [Microsoft Visual C++ Redistributable](https://aka.ms/vs/16/release/vc_redist.x64.exe) must be installed.
+### Using ESLSCDLL.dll
+For the use of `ESLSCDLL.dll` [Microsoft Visual C++ Redistributable](https://aka.ms/vs/16/release/vc_redist.x64.exe) must be installed.
 
 ### Troubleshooting
 If `MSVCP140.dll` and `VCRUNTIME140.dll` are missing, Microsoft Visual C++ Redistributable is not installed. [Install](https://aka.ms/vs/16/release/vc_redist.x64.exe) it.
