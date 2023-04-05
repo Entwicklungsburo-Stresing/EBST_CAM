@@ -135,6 +135,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_3AA9CEEC273926EC59579BBA1A6FD29C"
+        "OwnerKey" = "8:_D01C7694801546E79B9F2A5D8141829A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_40F126C660994DAABFC07344FB29EC11"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -233,6 +239,12 @@
         {
         "MsmKey" = "8:_A1249A2FD69C48648E00067C5CF683C8"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A7D319492B02B99A905E0992724C0E56"
+        "OwnerKey" = "8:_D01C7694801546E79B9F2A5D8141829A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -852,6 +864,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3AA9CEEC273926EC59579BBA1A6FD29C"
+            {
+            "SourcePath" = "8:DWrite.dll"
+            "TargetName" = "8:DWrite.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_A1F1AB1AEA5C4300AACB65433A54E330"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_40F126C660994DAABFC07344FB29EC11"
             {
             "SourcePath" = "8:..\\escam\\build\\translations\\qt_ru.qm"
@@ -1190,6 +1222,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A7D319492B02B99A905E0992724C0E56"
+            {
+            "SourcePath" = "8:d2d1.dll"
+            "TargetName" = "8:d2d1.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_A1F1AB1AEA5C4300AACB65433A54E330"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A92FCF513DC24468AEAEBD683CF36BC1"
@@ -1683,15 +1735,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Escam"
-        "ProductCode" = "8:{A4FE6804-A252-47A8-AAE7-B77B54FD6AB7}"
-        "PackageCode" = "8:{CBDF66C4-F31E-465A-A1DB-ED21D327F0C1}"
+        "ProductCode" = "8:{88C07CD1-C6C2-441E-8B24-60A1E80AAE8F}"
+        "PackageCode" = "8:{2653149B-B0F5-42AC-A10E-97765BB45925}"
         "UpgradeCode" = "8:{E656E723-CD9C-4179-A360-882C93DEA377}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:4.2.7"
+        "ProductVersion" = "8:4.4.0"
         "Manufacturer" = "8:Stresing"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
