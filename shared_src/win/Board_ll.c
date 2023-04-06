@@ -582,6 +582,7 @@ es_status_codes CleanupDriver(uint32_t drvno)
 		if (status != es_no_error) return status;
 	}
 	WDC_PciDeviceClose(hDev[drvno]);
+	hDev[drvno] = NULL;
 	return status;
 }
 
