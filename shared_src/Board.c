@@ -3335,7 +3335,7 @@ double CalcRamUsageInMB(uint32_t nos, uint32_t nob)
 	ES_LOG("Calculate ram usage in MB, nos: %u:, nob: %u\n", nos, nob);
 	double ramUsage = 0;
 	for (int i = 0; i < number_of_boards; i++)
-		ramUsage += (uint64_t)nos * (uint64_t)nob * (uint64_t)aPIXEL[i + 1] * (uint64_t)aCAMCNT[i + 1] * sizeof(uint16_t);
+		ramUsage += (uint64_t)nos * (uint64_t)nob * (uint64_t)aPIXEL[i] * (uint64_t)aCAMCNT[i] * sizeof(uint16_t);
 	ramUsage = ramUsage / 1048576;
 	ES_LOG("Ram usage: %f\n", ramUsage);
 	return ramUsage;
