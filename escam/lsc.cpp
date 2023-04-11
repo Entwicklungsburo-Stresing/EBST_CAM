@@ -65,6 +65,7 @@ std::string Lsc::_dumpS0Registers(uint32_t drvno)
 	if(status != es_no_error)
 		qCritical("dumpS0Registers failed");
 	std::string cppstring = cstring;
+	free(cstring);
 	parseTextToHtml(&cppstring);
 	return cppstring;
 }
@@ -76,6 +77,7 @@ std::string Lsc::_dumpDmaRegisters(uint32_t drvno)
 	if(status != es_no_error)
 		qCritical("dumpDmaRegisters failed");
 	std::string cppstring = cstring;
+	free(cstring);
 	parseTextToHtml(&cppstring);
 	return cppstring;
 }
@@ -87,6 +89,7 @@ std::string Lsc::_dumpTlp(uint32_t drvno)
 	if(status != es_no_error)
 		qCritical("dumpTlpRegisters failed");
 	std::string cppstring = cstring;
+	free(cstring);
 	parseTextToHtml(&cppstring);
 	return cppstring;
 }
@@ -98,6 +101,7 @@ std::string Lsc::_dumpMeasurementSettings()
 	if(status != es_no_error)
 		qCritical("dumpSettings failed");
 	std::string cppstring = cstring;
+	free(cstring);
 	parseTextToHtml(&cppstring);
 	return cppstring;
 }
@@ -109,6 +113,7 @@ std::string Lsc::_dumpCameraSettings(uint32_t drvno)
 	if (status != es_no_error)
 		qCritical("dumpSettings failed");
 	std::string cppstring = cstring;
+	free(cstring);
 	parseTextToHtml(&cppstring);
 	return cppstring;
 }
@@ -120,6 +125,7 @@ std::string Lsc::_dumpPciRegisters(uint32_t drvno)
 	if(status != es_no_error)
 		qCritical("dumpPciRegisters failed");
 	std::string cppstring = cstring;
+	free(cstring);
 	parseTextToHtml(&cppstring);
 	return cppstring;
 }
@@ -131,6 +137,7 @@ std::string Lsc::__AboutDrv(uint32_t drvno)
 	if(status != es_no_error)
 		qCritical("_AboutDrv failed");
 	std::string cppstring = cstring;
+	free(cstring);
 	parseTextToHtml(&cppstring);
 	return cppstring;
 }
@@ -142,6 +149,7 @@ std::string Lsc::__AboutGPX(uint32_t drvno)
 	if(status != es_no_error)
 		qCritical("_AboutGPX failed");
 	std::string cppstring = cstring;
+	free(cstring);
 	parseTextToHtml(&cppstring);
 	return cppstring;
 }
