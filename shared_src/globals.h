@@ -64,6 +64,8 @@ struct special_pixels
 	uint32_t cameraSystem3001;
 	uint32_t cameraSystem3010;
 	uint32_t cameraSystem3030;
+	uint32_t fpgaVerMajor;
+	uint32_t fpgaVerMinor;
 };
 
 struct verify_data_parameter
