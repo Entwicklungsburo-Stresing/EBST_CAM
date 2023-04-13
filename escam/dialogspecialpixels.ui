@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>306</width>
-    <height>371</height>
+    <width>300</width>
+    <height>380</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,15 +29,97 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="7" column="1">
-      <widget class="QLabel" name="labelScanIndex2">
+     <item row="9" column="2">
+      <widget class="QLabel" name="labelImpact2Pos">
        <property name="text">
-        <string>scan index 2</string>
+        <string>pixel 8 &amp; pixel 9</string>
        </property>
       </widget>
      </item>
-     <item row="12" column="3">
-      <widget class="QLabel" name="labelCameraSystem3001Value">
+     <item row="6" column="3">
+      <widget class="QLabel" name="labelScanIndexValue">
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="3">
+      <widget class="QLabel" name="labelCameraSystem3010Value">
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QLabel" name="labelImpact2">
+       <property name="text">
+        <string>TDC 2 / DSC 2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="labelEmtpy">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="1">
+      <widget class="QLabel" name="labelCameraSystem3001">
+       <property name="text">
+        <string>camera system 3001</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="labelCamera">
+       <property name="text">
+        <string>camera</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="3">
+      <widget class="QLabel" name="labelImpact2Value">
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <widget class="QLabel" name="labelS1Value">
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLabel" name="labelScanIndex">
+       <property name="text">
+        <string>scan index</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QLabel" name="labelS2Pos">
+       <property name="text">
+        <string>pixel 2, bit 14</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="3">
+      <widget class="QLabel" name="labelS2Value">
        <property name="text">
         <string>0</string>
        </property>
@@ -53,252 +135,10 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="labelCamera">
-       <property name="text">
-        <string>camera</string>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="1">
-      <widget class="QLabel" name="labelImpact2">
-       <property name="text">
-        <string>TDC 2 / DSC 2</string>
-       </property>
-      </widget>
-     </item>
-     <item row="11" column="3">
-      <widget class="QLabel" name="labelTempGoodValue">
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="2">
-      <widget class="QLabel" name="labelImpact2Pos">
-       <property name="text">
-        <string>pixel 8 &amp; pixel 9</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QLabel" name="labelScanIndex">
-       <property name="text">
-        <string>scan index</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="4">
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="6" column="3">
-      <widget class="QLabel" name="labelScanIndexValue">
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="2">
-      <widget class="QLabel" name="labelScanIndex2Pos">
-       <property name="text">
-        <string>last pixel &amp; last pixel - 1</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLabel" name="labelS1">
-       <property name="text">
-        <string>S1</string>
-       </property>
-      </widget>
-     </item>
-     <item row="11" column="2">
-      <widget class="QLabel" name="labelTempGoodPos">
-       <property name="text">
-        <string>pixel 10, bit 1</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="13" column="1">
-      <widget class="QLabel" name="labelCameraSystem3010">
-       <property name="text">
-        <string>camera system 3010</string>
-       </property>
-      </widget>
-     </item>
-     <item row="13" column="3">
-      <widget class="QLabel" name="labelCameraSystem3010Value">
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="1">
-      <widget class="QLabel" name="labelOverTemp">
-       <property name="text">
-        <string>over temp</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="labelEmtpy">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="2">
-      <widget class="QLabel" name="labelScanIndexPos">
-       <property name="text">
-        <string>pixel 4 &amp; pixel 5</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="2">
-      <widget class="QLabel" name="labelS2Pos">
-       <property name="text">
-        <string>pixel 2, bit 14</string>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="3">
-      <widget class="QLabel" name="labelOverTempValue">
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="12" column="2">
-      <widget class="QLabel" name="labelCameraSystem3001Pos">
-       <property name="text">
-        <string>pixel 10, bit 11</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="3">
-      <widget class="QLabel" name="labelScanIndex2Value">
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="3">
-      <widget class="QLabel" name="labelImpact2Value">
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="3">
-      <widget class="QLabel" name="labelS2Value">
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="3">
-      <widget class="QLabel" name="labelBlockIndexValue">
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QLabel" name="labelBlockIndex">
-       <property name="text">
-        <string>block index</string>
-       </property>
-      </widget>
-     </item>
      <item row="4" column="1">
       <widget class="QLabel" name="labelS2">
        <property name="text">
         <string>S2</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="2">
-      <widget class="QLabel" name="labelBlockIndexPos">
-       <property name="text">
-        <string>pixel 2, bits 13-0 &amp; pixel 3</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="3">
-      <widget class="QLabel" name="labelS1Value">
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="13" column="2">
-      <widget class="QLabel" name="labelCameraSystem3010Pos">
-       <property name="text">
-        <string>pixel 10, bit 12</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QSpinBox" name="spinBoxBoard">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QLabel" name="labelS1Pos">
-       <property name="text">
-        <string>pixel 2, bit 15</string>
        </property>
       </widget>
      </item>
@@ -316,6 +156,129 @@
        </property>
       </widget>
      </item>
+     <item row="13" column="1">
+      <widget class="QLabel" name="labelCameraSystem3010">
+       <property name="text">
+        <string>camera system 3010</string>
+       </property>
+      </widget>
+     </item>
+     <item row="14" column="1">
+      <widget class="QLabel" name="labelCameraSystem3030">
+       <property name="text">
+        <string>camera system 3030</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="4">
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="10" column="1">
+      <widget class="QLabel" name="labelOverTemp">
+       <property name="text">
+        <string>over temp</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="2">
+      <widget class="QLabel" name="labelOverTempPos">
+       <property name="text">
+        <string>pixel 10, bit 0</string>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="2">
+      <widget class="QLabel" name="labelCameraSystem3010Pos">
+       <property name="text">
+        <string>pixel 10, bit 12</string>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="2">
+      <widget class="QLabel" name="labelCameraSystem3001Pos">
+       <property name="text">
+        <string>pixel 10, bit 11</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLabel" name="labelScanIndex2">
+       <property name="text">
+        <string>scan index 2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLabel" name="labelS1">
+       <property name="text">
+        <string>S1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="3">
+      <widget class="QLabel" name="labelOverTempValue">
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="3">
+      <widget class="QLabel" name="labelImpact1Value">
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLabel" name="labelBlockIndex">
+       <property name="text">
+        <string>block index</string>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="3">
+      <widget class="QLabel" name="labelCameraSystem3001Value">
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QLabel" name="labelS1Pos">
+       <property name="text">
+        <string>pixel 2, bit 15</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="3">
+      <widget class="QLabel" name="labelScanIndex2Value">
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
      <item row="8" column="2">
       <widget class="QLabel" name="labelImpact1Pos">
        <property name="text">
@@ -323,8 +286,28 @@
        </property>
       </widget>
      </item>
-     <item row="8" column="3">
-      <widget class="QLabel" name="labelImpact1Value">
+     <item row="5" column="0">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="5" column="2">
+      <widget class="QLabel" name="labelBlockIndexPos">
+       <property name="text">
+        <string>pixel 2, bits 13-0 &amp; pixel 3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="14" column="3">
+      <widget class="QLabel" name="labelCameraSystem3030Value">
        <property name="text">
         <string>0</string>
        </property>
@@ -340,24 +323,20 @@
        </property>
       </widget>
      </item>
-     <item row="12" column="1">
-      <widget class="QLabel" name="labelCameraSystem3001">
+     <item row="11" column="3">
+      <widget class="QLabel" name="labelTempGoodValue">
        <property name="text">
-        <string>camera system 3001</string>
+        <string>0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
-     <item row="10" column="2">
-      <widget class="QLabel" name="labelOverTempPos">
+     <item row="6" column="2">
+      <widget class="QLabel" name="labelScanIndexPos">
        <property name="text">
-        <string>pixel 10, bit 0</string>
-       </property>
-      </widget>
-     </item>
-     <item row="14" column="1">
-      <widget class="QLabel" name="labelCameraSystem3030">
-       <property name="text">
-        <string>camera system 3030</string>
+        <string>pixel 4 &amp; pixel 5</string>
        </property>
       </widget>
      </item>
@@ -368,8 +347,53 @@
        </property>
       </widget>
      </item>
-     <item row="14" column="3">
-      <widget class="QLabel" name="labelCameraSystem3030Value">
+     <item row="7" column="2">
+      <widget class="QLabel" name="labelScanIndex2Pos">
+       <property name="text">
+        <string>last pixel &amp; last pixel - 1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="3">
+      <widget class="QLabel" name="labelBlockIndexValue">
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QSpinBox" name="spinBoxBoard">
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="2">
+      <widget class="QLabel" name="labelTempGoodPos">
+       <property name="text">
+        <string>pixel 10, bit 1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="15" column="1">
+      <widget class="QLabel" name="labelFPGAVer">
+       <property name="text">
+        <string>FPGA ver</string>
+       </property>
+      </widget>
+     </item>
+     <item row="15" column="2">
+      <widget class="QLabel" name="labelFPGAVerPos">
+       <property name="text">
+        <string>pixel 11</string>
+       </property>
+      </widget>
+     </item>
+     <item row="15" column="3">
+      <widget class="QLabel" name="labelFPGAVerVal">
        <property name="text">
         <string>0</string>
        </property>
