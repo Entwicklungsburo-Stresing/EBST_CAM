@@ -1436,10 +1436,10 @@ es_status_codes InitGPX( uint32_t drvno, uint32_t delay )
 	//reset GPX  ´bit0 in GPXCTRL reg
 	es_status_codes status = readRegisterS0_32( drvno, &regData, S0Addr_TDCCtrl );
 	if (status != es_no_error) return status;
-	regData |= 0x01;
+	regData |= TDCCtrl_bit_reset;
 	status = writeRegisterS0_32( drvno, regData, S0Addr_TDCCtrl );
 	if (status != es_no_error) return status;
-	regData &= 0xFFFFFFFE;
+	regData &= ~TDCCtrl_bit_reset;
 	status = writeRegisterS0_32( drvno, regData, S0Addr_TDCCtrl ); //reset bit
 	if (status != es_no_error) return status;
 	//setup R mode -> time between start and stop
@@ -1474,7 +1474,7 @@ es_status_codes SetGPXCtrl( uint32_t drvno, uint8_t GPXAddress, uint32_t GPXData
 	es_status_codes status = readRegisterS0_32(drvno, &regData, S0Addr_TDCCtrl);
 	if (status != es_no_error) return status;
 	//shift gpx addr to the right place for the gpx ctrl reg
-	tempData = (uint32_t)(GPXAddress << 28);
+	tempData = (uint32_t)(GPXAddress << TDCCtrl_bitindex_adr0);
 	//set CSexpand bit: reset CS Bit
 	tempData &= 0xF0000000;
 	//hold the other bits of the ctrl gpx reg
@@ -1506,9 +1506,9 @@ es_status_codes ReadGPXCtrl( uint32_t drvno, uint8_t GPXAddress, uint32_t* GPXDa
 	es_status_codes status = readRegisterS0_32( drvno, &regData, S0Addr_TDCCtrl );
 	if (status != es_no_error) return status;
 	//shift gpx addr to the right place for the gpx ctrl reg
-	tempData = (uint32_t)GPXAddress << 28;
+	tempData = (uint32_t)GPXAddress << TDCCtrl_bitindex_adr0;
 	//set CSexpand bit set CS Bit
-	tempData |= 0x08000000;
+	tempData |= TDCCtrl_bit_cs;
 	//hold the other bits of the ctrl gpx reg
 	regData &= 0x07FFFFFF;
 	//combine the old ctrl bits with the new address
