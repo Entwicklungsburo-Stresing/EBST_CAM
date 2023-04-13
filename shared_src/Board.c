@@ -5027,6 +5027,10 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 		sp->cameraSystem3030 = 1;
 	else
 		sp->cameraSystem3030 = 0;
+	//fpga ver
+	sp->fpgaVerMinor = data[pixel_fpga_ver] >> pixel_fpga_ver_minor_bit;
+
+	sp->fpgaVerMajor = data[pixel_fpga_ver] & pixel_fpga_ver_major_and_bit;
 	free(data);
 	return status;
 }

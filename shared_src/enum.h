@@ -657,7 +657,11 @@ enum special_pixels_enum
 	/**
 	 * See enum pixel_camera_status_bits for details.
 	 */
-	pixel_camera_status = 10
+	pixel_camera_status = 10,
+	/**
+	 * Special pixel for fpga ver number.
+	 */
+	pixel_fpga_ver = 11
 };
 
 /**
@@ -706,6 +710,28 @@ enum pixel_camera_status_bits
 	pixel_camera_status_bit_3010 = 0x1000,
 	pixel_camera_status_bit_3030 = 0x2000,
 };
+
+/**
+ * This enum shows the starting number of the major and minor version for the fpga version number.
+ */
+enum pixel_fpga_ver
+{
+	/**
+	 * Starting Bit of Major Version Number.
+	 */
+	pixel_fpga_ver_major_bit = 0,
+
+	/**
+	 * Starting Bit of Minor Version Number.
+	 */
+	pixel_fpga_ver_minor_bit = 8,
+
+	/**
+	 * Used for correcting the pixel to only get the major version of the version number.
+	 */
+	pixel_fpga_ver_major_and_bit = 0x00FF
+};
+
 enum TDCCtrl_bits
 {
 	TDCCtrl_bitindex_reset = 0,

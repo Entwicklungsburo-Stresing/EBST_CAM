@@ -40,6 +40,7 @@ void DialogSpecialPixels::updateValues()
 	ui->labelCameraSystem3001Value->setText(QString::number(sp.cameraSystem3001));
 	ui->labelCameraSystem3010Value->setText(QString::number(sp.cameraSystem3010));
 	ui->labelCameraSystem3030Value->setText(QString::number(sp.cameraSystem3030));
+	ui->labelFPGAVerVal->setText(QString::number(sp.fpgaVerMajor) + "." + QString::number(sp.fpgaVerMinor));
 	return;
 }
 
