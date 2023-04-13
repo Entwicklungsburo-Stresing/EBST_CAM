@@ -706,3 +706,24 @@ enum pixel_camera_status_bits
 	pixel_camera_status_bit_3010 = 0x1000,
 	pixel_camera_status_bit_3030 = 0x2000,
 };
+enum TDCCtrl_bits
+{
+	TDCCtrl_bitindex_reset = 0,
+	TDCCtrl_bitindex_interrupt = 1,
+	TDCCtrl_bitindex_load_fifo = 2,
+	TDCCtrl_bitindex_empty_fifo = 3,
+	TDCCtrl_bitindex_cs = 27,
+	TDCCtrl_bitindex_adr0 = 28,
+	TDCCtrl_bitindex_adr1 = 29,
+	TDCCtrl_bitindex_adr2 = 30,
+	TDCCtrl_bitindex_adr3 = 31,
+	TDCCtrl_bit_reset = 0x1,
+	TDCCtrl_bit_interrupt = 0x2,
+	TDCCtrl_bit_load_fifo = 0x4,
+	TDCCtrl_bit_empty_fifo = 0x8,
+	TDCCtrl_bit_cs = 0x8000000,
+	TDCCtrl_bit_adr0 = 0x10000000,
+	TDCCtrl_bit_adr1 = 0x20000000,
+	TDCCtrl_bit_adr2 = 0x40000000,
+	TDCCtrl_bit_adr3 = 0x80000000,
+};
