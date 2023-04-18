@@ -47,6 +47,7 @@ DllAccess es_status_codes DLLInitBoard();
 DllAccess es_status_codes DLLInitDriver(uint8_t* _number_of_boards);
 DllAccess es_status_codes DLLExitDriver();
 DllAccess es_status_codes DLLSetGlobalSettings(struct measurement_settings settings);
+DllAccess es_status_codes DLLSetGlobalSettings_matlab(struct measurement_settings_matlab measurement_s, struct camera_settings camera_s0, struct camera_settings camera_s1, struct camera_settings camera_s2, struct camera_settings camera_s3, struct camera_settings camera_s4);
 DllAccess es_status_codes DLLAbortMeasurement();
 DllAccess es_status_codes DLLReturnFrame(uint32_t board_sel, uint32_t curr_nos, uint32_t curr_nob, uint16_t curr_cam, uint16_t* pdest0, uint16_t* pdest1, uint32_t length);
 DllAccess es_status_codes DLLCopyAllData(uint32_t board_sel, uint16_t* pdest0, uint16_t* pdest1);

@@ -632,6 +632,21 @@ DllAccess es_status_codes DLLSetGlobalSettings(struct measurement_settings setti
 	return es_no_error;
 }
 
+DllAccess es_status_codes DLLSetGlobalSettings_matlab(struct measurement_settings_matlab measurement_s, struct camera_settings camera_s0, struct camera_settings camera_s1, struct camera_settings camera_s2, struct camera_settings camera_s3, struct camera_settings camera_s4)
+{
+	struct measurement_settings settings;
+	settings.board_sel = measurement_s.board_sel;
+	settings.contiuous_measurement = measurement_s.contiuous_measurement;
+	settings.cont_pause_in_microseconds = measurement_s.cont_pause_in_microseconds;
+	settings.nob = measurement_s.nob;
+	settings.nos = measurement_s.nos;
+	struct camera_settings camera_s[MAXPCIECARDS] = { camera_s0 , camera_s1, camera_s2, camera_s3, camera_s4 };
+	for (int i = 0; i < MAXPCIECARDS; i++)
+		settings.camera_settings[i] = camera_s[i];
+	SetGlobalSettings(settings);
+	return es_no_error;
+}
+
 /**
  * \copydoc InitMeasurement
  */

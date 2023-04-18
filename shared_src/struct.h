@@ -259,4 +259,38 @@ struct measurement_settings
 	struct camera_settings camera_settings[MAXPCIECARDS];
 };
 
+// In this struct are settings, that are the same for all PCIe boards.
+struct measurement_settings_matlab
+{
+	/**
+	 * Select boards with bits. 1 for using this board, 0 for not using this board.
+	 *
+	 * - bit 0: board 0
+	 * - bit 1: board 1
+	 * - bit 2: board 2
+	 * - bit 3: board 3
+	 * - bit 4: board 4
+	 * - bit 5: board 5
+	 */
+	uint32_t board_sel;
+	/**
+	 * Number of samples. 32 bit. Min: 2, max: max of uint32
+	 */
+	uint32_t nos;
+	/**
+	 * Number of blocks. 32 bit. Min: 1, max: max of uint32
+	 */
+	uint32_t nob;
+	/**
+	 * Continuous mode switch.
+	 *	- >0 on
+	 *	- =0 off
+	 */
+	uint32_t contiuous_measurement;
+	/**
+	 * Pause between two measurements when continuous mode is on.
+	 */
+	uint32_t cont_pause_in_microseconds;
+};
+
 #endif // STRUCT_H
