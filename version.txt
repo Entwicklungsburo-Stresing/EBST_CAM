@@ -1,5 +1,11 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.4.1
+- Add FPGA Version Number in the special pixels window
+- Fix crash when ExitDriver is called twice
+- Fix CalcRamUsageInMB
+- Fix memory leakage in escam
+
 4.4.0
 - Integrate pro DLL into DLL
 
