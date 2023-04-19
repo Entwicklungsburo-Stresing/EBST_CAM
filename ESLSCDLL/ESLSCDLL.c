@@ -315,7 +315,7 @@ DllAccess es_status_codes DLLresetBitS0_32( uint32_t board_sel, uint32_t bitnumb
 /**
  * \copydoc ReturnFrame
  */
-DllAccess es_status_codes DLLReturnFrame(uint32_t board_sel, uint32_t curr_nos, uint32_t curr_nob, uint16_t curr_cam, uint16_t* pdest0, uint16_t* pdest1, uint32_t length)
+DllAccess es_status_codes DLLReturnFrame(uint32_t board_sel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest0, uint16_t* pdest1, uint32_t length)
 {
 	uint16_t* pdest[2] = { pdest0, pdest1 };
 	int usedBoards = 0;
@@ -324,7 +324,7 @@ DllAccess es_status_codes DLLReturnFrame(uint32_t board_sel, uint32_t curr_nos, 
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
 		{
-			status = ReturnFrame(drvno, curr_nos, curr_nob, curr_cam, pdest[usedBoards], length);
+			status = ReturnFrame(drvno, sample, block, camera, pdest[usedBoards], length);
 			if (status != es_no_error) return status;
 			usedBoards++;
 			// this function only returns data for the first two found boards
@@ -398,7 +398,7 @@ DllAccess es_status_codes DLLCopyOneBlock( uint32_t board_sel, uint16_t block, u
 /**
  * \brief This function is starting the measurement and returns immediately.
  * 
- * StartMeasurement is run a new thread. When there are two boards, both boards are starting the measurement. You can check the status of the measurement with DllisMeasureOn and DllisBlockOn or create a blocking call with DLLwaitForMeasureReady and DLLwaitForBlockReady.
+ * StartMeasurement is run a new thread. When there are multiple boards, all boards are starting the measurement. You can check the status of the measurement with DllisMeasureOn and DllisBlockOn or create a blocking call with DLLwaitForMeasureReady and DLLwaitForBlockReady.
  */
 DllAccess void DLLStartMeasurement_nonblocking()
 {
@@ -624,7 +624,7 @@ DllAccess char* DLLConvertErrorCodeToMsg( es_status_codes status )
 }
 
 /**
- * \copydoc InitMeasurement
+ * \copydoc SetGlobalSettings
  */
 DllAccess es_status_codes DLLSetGlobalSettings(struct measurement_settings settings)
 {
@@ -632,6 +632,17 @@ DllAccess es_status_codes DLLSetGlobalSettings(struct measurement_settings setti
 	return es_no_error;
 }
 
+/**
+ * \bief Set settings with Matlab compatible structs.
+ * 
+ * \param measurement_s Measurement settings struct without embedded camera settings struct.
+ * \param camera_s0 Camera settings for PCIe board 0
+ * \param camera_s1 Camera settings for PCIe board 1
+ * \param camera_s2 Camera settings for PCIe board 2
+ * \param camera_s3 Camera settings for PCIe board 3
+ * \param camera_s4 Camera settings for PCIe board 4
+ * \return 
+ */
 DllAccess es_status_codes DLLSetGlobalSettings_matlab(struct measurement_settings_matlab measurement_s, struct camera_settings camera_s0, struct camera_settings camera_s1, struct camera_settings camera_s2, struct camera_settings camera_s3, struct camera_settings camera_s4)
 {
 	struct measurement_settings settings;
