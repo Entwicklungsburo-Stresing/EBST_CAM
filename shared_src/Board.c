@@ -258,7 +258,9 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = InitPcieBoard(drvno);
 	if (status != es_no_error) return status;
-	return InitCamera(drvno);
+	if (settings_struct.camera_settings[drvno].camcnt > 0)
+		status = InitCamera(drvno);
+	return status;
 }
 
 /**
@@ -525,8 +527,8 @@ es_status_codes ResetDma( uint32_t drvno )
  */
 es_status_codes SetCamCountRegister(uint32_t drvno)
 {
-	ES_LOG("Set cam count: %u\n", aCAMCNT[drvno]);
-	return writeBitsS0_32(drvno, aCAMCNT[drvno], 0xF, S0Addr_CAMCNT);
+	ES_LOG("Set cam count: %u\n", settings_struct.camera_settings[drvno].camcnt);
+	return writeBitsS0_32(drvno, settings_struct.camera_settings[drvno].camcnt, 0xF, S0Addr_CAMCNT);
 }
 
 /**
@@ -2832,7 +2834,7 @@ es_status_codes StartMeasurement()
 					// Check if the drvno'th bit is set
 					if ((settings_struct.board_sel >> drvno) & 1)
 					{
-						if ((FindCam(drvno) != es_no_error) | abortMeasurementFlag)
+						if ((FindCam(drvno) != es_no_error) || abortMeasurementFlag)
 						{
 							status = AbortMeasurement();
 							return ReturnStartMeasurement(status);
@@ -2941,6 +2943,11 @@ es_status_codes ReturnStartMeasurement(es_status_codes status)
 es_status_codes FindCam( uint32_t drvno )
 {
 	uint32_t data = 0;
+	if (settings_struct.camera_settings[drvno].camcnt == 0)
+	{
+		// Camcnt is 0. FindCam is returning without error
+		return es_no_error;
+	}
 	es_status_codes status = readRegisterS0_32( drvno, &data, S0Addr_PCIEFLAGS );
 	if (status != es_no_error) return status;
 	if ((data & PCIEFLAGS_bit_error_sfp1) > 0)
