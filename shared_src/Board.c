@@ -28,7 +28,8 @@
 /**
  * \brief Set global settings struct.
  * 
- * \param settings struct global_settings
+ * Call this every time you changed settings before InitMeasurement. 
+ * \param settings struct measurement_settings
  */
 void SetGlobalSettings(struct measurement_settings settings)
 {
@@ -36,8 +37,9 @@ void SetGlobalSettings(struct measurement_settings settings)
 }
 
 /**
- * \brief Initialize Measurement (using board select).
+ * \brief Initialize measurement (using board select).
  * 
+ * Call this every time you changed settings before starting the measurement. When you didn't change any settings, you can start the next measurement without calling InitMeasurement everytime.
  * \return es_status_codes:
  *		- es_invalid_driver_number
  *		- es_invalid_driver_handle
@@ -2685,7 +2687,7 @@ es_status_codes SetDmaStartMode( uint32_t drvno, bool start_by_hardware)
 /**
  * \brief  This function is starting the measurement and returns when the measurement is done.
  *
- * When there are two boards, both boards are starting the measurement. It is a good idea to create a new thread for calling this function, because this is a blocking call.
+ * When there are multiple boards, all boards are starting the measurement. Create a new thread for calling this function, when you don't want to have a blocking call.
  * 
  * \return es_status_codes:
  *		- es_no_error
@@ -3169,8 +3171,9 @@ es_status_codes GetLastBufPart( uint32_t drvno )
 }
 
 /**
- * \brief Initializes PCIe board.
+ * \brief Initializes the PCIe board.
  * 
+ * Call this after InitDriver and before InitMeasurement. It is only needed to be called once.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_invalid_driver_number
@@ -3197,8 +3200,9 @@ es_status_codes InitBoard()
 }
 
 /**
- * \brief Initialize driver. Call this after InitBoard and before any other action.
+ * \brief Initialize the driver. 
  * 
+ * Call this before any other action. It is only needed to be called once at startup.
  * \return es_status_codes:
  *		- es_setting_driver_name_failed
  *		- es_debug_init_failed
@@ -3240,27 +3244,27 @@ es_status_codes ExitDriver()
 /**
  * \brief Get data of a single measurement.
  * 
- * \param drv PCIe board identifier
- * \param curr_nos sample number ( 0...(nos - 1) )
- * \param curr_nob block number ( 0...(nob - 1) )
- * \param curr_cam camera number ( 0...(CAMCNT - 1) )
- * \param pdest Pointer where frame data will be written. Make sure that the size is >= sizeof(uint16_t) * length
- * \param length Lenght of the frame to copy. Typically = pixel
+ * \param drvno PCIe board identifier
+ * \param sample sample number ( 0...(nos - 1) )
+ * \param block block number ( 0...(nob - 1) )
+ * \param camera camera number ( 0...(CAMCNT - 1) )
+ * \param pdest Pointer where frame data will be written. Make sure that the size is >= sizeof(uint16_t) * pixel
+ * \param pixel Lenght of the frame to copy. Typically = pixel
  * \return es_status_codes:
  *		- es_invalid_driver_number
  *		- es_invalid_driver_handle
  *		- es_no_error
  *		- es_parameter_out_of_range
  */
-es_status_codes ReturnFrame(uint32_t drv, uint32_t curr_nos, uint32_t curr_nob, uint16_t curr_cam, uint16_t* pdest, uint32_t length)
+es_status_codes ReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest, uint32_t pixel)
 {
-	//ES_TRACE( "Return frame: drvno: %u, curr_nos: %u, curr_nob: %u, curr_cam: %u, pdest %p, length: %u\n", drv, curr_nos, curr_nob, curr_cam, pdest, length );
+	//ES_TRACE( "Return frame: drvno: %u, sample: %u, block: %u, camera: %u, pdest %p, pixel: %u\n", drvno, sample, block, camera, pdest, pixel );
 	uint16_t* pframe = NULL;
-	es_status_codes status = GetAddressOfPixel( drv, 0, curr_nos, curr_nob, curr_cam, &pframe);
+	es_status_codes status = GetAddressOfPixel( drvno, 0, sample, block, camera, &pframe);
 	if (status != es_no_error) return status;
 	//ES_LOG("pframe %p\n", pframe);
-	//ES_LOG("userBuffer %p\n", userBuffer[drv]);
-	memcpy( pdest, pframe, length * sizeof( uint16_t ) );
+	//ES_LOG("userBuffer %p\n", userBuffer[drvno]);
+	memcpy( pdest, pframe, pixel * sizeof( uint16_t ) );
 	return status;
 }
 
@@ -3272,20 +3276,20 @@ es_status_codes ReturnFrame(uint32_t drv, uint32_t curr_nos, uint32_t curr_nob, 
  * \param pixel position in one scan (0...(PIXEL-1))
  * \param sample position in samples (0...(nos-1))
  * \param block position in blocks (0...(nob-1))
- * \param CAM position in camera count (0...(CAMCNT-1)
+ * \param camera position in camera count (0...(CAMCNT-1)
  * \param pIndex Pointer to index of pixel.
  * \return es_status_codes
  *		- es_no_error
  *		- es_parameter_out_of_range
  */
-es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint64_t* pIndex )
+es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint64_t* pIndex )
 {
-	if (pixel >= aPIXEL[drvno] || sample >= *Nospb || block >= *Nob || CAM >= aCAMCNT[drvno])
+	if (pixel >= aPIXEL[drvno] || sample >= *Nospb || block >= *Nob || camera >= aCAMCNT[drvno])
 		return es_parameter_out_of_range;
 	//init index with base position of pixel
 	uint64_t index = pixel;
-	//position of index at CAM position
-	index += (uint64_t)CAM *((uint64_t)aPIXEL[drvno]); // AM! was +4 for PCIe version before P202_23 to shift scan counter in 2nd camera to the left
+	//position of index at camera position
+	index += (uint64_t)camera *((uint64_t)aPIXEL[drvno]); // AM! was +4 for PCIe version before P202_23 to shift scan counter in 2nd camera to the left
 	//position of index at sample
 	index += (uint64_t)sample * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno];
 	//position of index at block
@@ -3301,16 +3305,16 @@ es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample
  * \param pixel position in one scan (0...(PIXEL-1))
  * \param sample position in samples (0...(nos-1))
  * \param block position in blocks (0...(nob-1))
- * \param CAM position in camera count (0...(CAMCNT-1))
+ * \param camera position in camera count (0...(CAMCNT-1))
  * \param address Pointer to get address
  * \return es_status_codes
  *		- es_no_error
  *		- es_parameter_out_of_range
  */
-es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint16_t** address )
+es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** address )
 {
 	uint64_t index = 0;
-	es_status_codes status = GetIndexOfPixel(drvno, pixel, sample, block, CAM, &index);
+	es_status_codes status = GetIndexOfPixel(drvno, pixel, sample, block, camera, &index);
 	if (status != es_no_error) return status;
 	*address = &userBuffer[drvno][index];
 	return status;
@@ -3587,7 +3591,7 @@ es_status_codes OutTrigPulse(uint32_t drvno, uint32_t PulseWidth)
  * \brief Reads the binary state of an ext. trigger input.
  *
  * Direct read of inputs for polling.
- * \param drv board number
+ * \param drvno board number
  * \param btrig_ch specify input channel
  * 			- btrig_ch=0 not used
  * 			- btrig_ch=1 is PCIe trig in I
@@ -3600,7 +3604,7 @@ es_status_codes OutTrigPulse(uint32_t drvno, uint32_t PulseWidth)
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes readBlockTriggerState(uint32_t drv, uint8_t btrig_ch, bool* state)
+es_status_codes readBlockTriggerState(uint32_t drvno, uint8_t btrig_ch, bool* state)
 {
 	uint8_t val = 0;
 	*state = false;
@@ -3612,31 +3616,31 @@ es_status_codes readBlockTriggerState(uint32_t drv, uint8_t btrig_ch, bool* stat
 		*state = true;
 		break;
 	case 1: //I
-		status = readRegisterS0_8(drv, &val, S0Addr_CTRLA);
+		status = readRegisterS0_8(drvno, &val, S0Addr_CTRLA);
 		if (status != es_no_error) return status;
 		if ((val & CTRLA_bit_DIR_TRIGIN) > 0) *state = true;
 		break;
 	case 2: //S1
-		status = readRegisterS0_8(drv, &val, S0Addr_CTRLC);
+		status = readRegisterS0_8(drvno, &val, S0Addr_CTRLC);
 		if (status != es_no_error) return status;
 		if ((val & 0x02) > 0) *state = true;
 		break;
 	case 3: //S2
-		status = readRegisterS0_8(drv, &val, S0Addr_CTRLC);
+		status = readRegisterS0_8(drvno, &val, S0Addr_CTRLC);
 		if (status != es_no_error) return status;
 		if ((val & 0x04) > 0) *state = true;
 		break;
 	case 4: // S1&S2
-		status = readRegisterS0_8(drv, &val, S0Addr_CTRLC);
+		status = readRegisterS0_8(drvno, &val, S0Addr_CTRLC);
 		if (status != es_no_error) return status;
 		if ((val & 0x02) == 0) *state = false;
-		status = readRegisterS0_8(drv, &val, S0Addr_CTRLC);
+		status = readRegisterS0_8(drvno, &val, S0Addr_CTRLC);
 		if (status != es_no_error) return status;
 		if ((val & 0x04) == 0) *state = false;
 		*state = true;
 		break;
 	case 5: // TSTART
-		status = readRegisterS0_8(drv, &val, S0Addr_CTRLA);
+		status = readRegisterS0_8(drvno, &val, S0Addr_CTRLA);
 		if (status != es_no_error) return status;
 		if ((val & CTRLA_bit_TSTART) > 0) *state = true;
 		break;

@@ -11,14 +11,24 @@ extern "C" {
 
 // High level API
 // platform independent implementation
-es_status_codes InitBoard();
+// Basic operation of Stresing cameras:
+// 1) Initialize the driver. Call it once at startup.
 es_status_codes InitDriver();
-es_status_codes ExitDriver();
+// 2) Initialize PCIe board. Call it once at startup.
+es_status_codes InitBoard();
+// 3) Set settings parameter according to your camera system. Call it once at startup and every time you changed settings.
 void SetGlobalSettings(struct measurement_settings settings);
+// 4) Initialize Hardware and Software for the Measurement. Call it once at startup and every time you changed settings.
 es_status_codes InitMeasurement();
+// 5) Start the measurement. Call it every time you want to measure.
 es_status_codes StartMeasurement();
+// 5b) Use this call, if you want to abort the measurement.
 es_status_codes AbortMeasurement();
-es_status_codes ReturnFrame(uint32_t drv, uint32_t curr_nos, uint32_t curr_nob, uint16_t curr_cam, uint16_t* pdest, uint32_t length);
+// 6) Get the data.
+es_status_codes ReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest, uint32_t pixel);
+// 7) Before exiting your software, use this call for cleanup.
+es_status_codes ExitDriver();
+
 
 // Mid level API
 // platform independent implementation
