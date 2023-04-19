@@ -43,18 +43,27 @@ extern "C" {
 BOOL WINAPI DLLMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
 
 //************ High level API
-DllAccess es_status_codes DLLInitBoard();
+// Basic operation of Stresing cameras:
+// 1) Initialize the driver. Call it once at startup.
 DllAccess es_status_codes DLLInitDriver(uint8_t* _number_of_boards);
-DllAccess es_status_codes DLLExitDriver();
+// 2) Initialize PCIe board. Call it once at startup.
+DllAccess es_status_codes DLLInitBoard();
+// 3) Set settings parameter according to your camera system. Call it once at startup and every time you changed settings.
 DllAccess es_status_codes DLLSetGlobalSettings(struct measurement_settings settings);
 DllAccess es_status_codes DLLSetGlobalSettings_matlab(struct measurement_settings_matlab measurement_s, struct camera_settings camera_s0, struct camera_settings camera_s1, struct camera_settings camera_s2, struct camera_settings camera_s3, struct camera_settings camera_s4);
-DllAccess es_status_codes DLLAbortMeasurement();
-DllAccess es_status_codes DLLReturnFrame(uint32_t board_sel, uint32_t curr_nos, uint32_t curr_nob, uint16_t curr_cam, uint16_t* pdest0, uint16_t* pdest1, uint32_t length);
-DllAccess es_status_codes DLLCopyAllData(uint32_t board_sel, uint16_t* pdest0, uint16_t* pdest1);
-DllAccess es_status_codes DLLCopyOneBlock(uint32_t board_sel, uint16_t block, uint16_t* pdest0, uint16_t* pdest1);
+// 4) Initialize Hardware and Software for the Measurement. Call it once at startup and every time you changed settings.
 DllAccess es_status_codes DLLInitMeasurement();
+// 5) Start the measurement. Call it every time you want to measure.
 DllAccess es_status_codes DLLStartMeasurement_blocking();
 DllAccess void DLLStartMeasurement_nonblocking();
+// 5b) Use this call, if you want to abort the measurement.
+DllAccess es_status_codes DLLAbortMeasurement();
+// 6) Get the data with one of the following 3 calls. Call it how many times you want.
+DllAccess es_status_codes DLLReturnFrame(uint32_t board_sel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest0, uint16_t* pdest1, uint32_t pixel);
+DllAccess es_status_codes DLLCopyAllData(uint32_t board_sel, uint16_t* pdest0, uint16_t* pdest1);
+DllAccess es_status_codes DLLCopyOneBlock(uint32_t board_sel, uint16_t block, uint16_t* pdest0, uint16_t* pdest1);
+// 7) Before exiting your software, use this call for cleanup.
+DllAccess es_status_codes DLLExitDriver();
 
 //************ Mid level API
 //************ system info & control
