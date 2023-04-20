@@ -1,0 +1,36 @@
+name: Push documentation to Entwicklungsburo-Stresing.github.io
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    container: pandoc/latex    # "ubuntu" is a more generic container
+                               # using "pandoc/latex" because of dependencies
+                               # used in the specific "build.sh"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Copy doc/ and source files to tmp/ using rsync
+        run:  apk add rsync && rsync -arv doc/ tmp/doc/ && rsync -arv shared_src/Board.c tmp/shared_src/ && rsync -arv ESLSCDLL/ESLSCDLL.c tmp/ESLSCDLL/ && rsync -arv shared_src/struct.h tmp/shared_src/
+      - name: Pushes to another repository
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+        with:
+          source-directory: tmp/
+          destination-github-username: 'Entwicklungsburo-Stresing'
+          destination-repository-name: 'Entwicklungsburo-Stresing.github.io'
+          user-email: florian.hahn@stresing.de
+          target-branch: main
