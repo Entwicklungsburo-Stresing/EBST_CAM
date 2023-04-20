@@ -17,21 +17,18 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    container: pandoc/latex    # "ubuntu" is a more generic container
-                               # using "pandoc/latex" because of dependencies
-                               # used in the specific "build.sh"
     steps:
       - uses: actions/checkout@v2
-      - name: Create tmp directories
-        run: mkdir -p tmp/doc && mkdir tmp/shared_src && mkdir tmp/ESLSCDLL
-      - name: Copy doc/ and source files to tmp/ using rsync
-        run:  apk add rsync && rsync -arv doc/ tmp/doc/ && rsync -arv shared_src/Board.c tmp/shared_src/ && rsync -arv ESLSCDLL/ESLSCDLL.c tmp/ESLSCDLL/ && rsync -arv shared_src/struct.h tmp/shared_src/
-      - name: Pushes to another repository
+      - name: Generate doxygen output
+      - uses: mattnotmitt/doxygen-action@edge
+        with:
+          working-directory: 'doc/'
+      - name: Push doc/html/ to repository Entwicklungsburo-Stresing.github.io
         uses: cpina/github-action-push-to-another-repository@main
         env:
           SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
         with:
-          source-directory: tmp/
+          source-directory: doc/html/
           destination-github-username: 'Entwicklungsburo-Stresing'
           destination-repository-name: 'Entwicklungsburo-Stresing.github.io'
           user-email: florian.hahn@stresing.de
