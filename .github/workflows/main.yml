@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Generate doxygen output
-      - uses: mattnotmitt/doxygen-action@edge
+        uses: mattnotmitt/doxygen-action@edge
         with:
           working-directory: 'doc/'
       - name: Push doc/html/ to repository Entwicklungsburo-Stresing.github.io
