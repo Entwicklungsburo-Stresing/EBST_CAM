@@ -232,7 +232,6 @@ struct measurement_settings
 	 * - bit 2: board 2
 	 * - bit 3: board 3
 	 * - bit 4: board 4
-	 * - bit 5: board 5
 	 */
 	uint32_t board_sel;
 	/**
