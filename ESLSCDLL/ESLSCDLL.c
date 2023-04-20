@@ -315,7 +315,7 @@ DllAccess es_status_codes DLLresetBitS0_32( uint32_t board_sel, uint32_t bitnumb
 /**
  * \copydoc ReturnFrame
  */
-DllAccess es_status_codes DLLReturnFrame(uint32_t board_sel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest0, uint16_t* pdest1, uint32_t length)
+DllAccess es_status_codes DLLReturnFrame(uint32_t board_sel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest0, uint16_t* pdest1, uint32_t pixel)
 {
 	uint16_t* pdest[2] = { pdest0, pdest1 };
 	int usedBoards = 0;
@@ -324,7 +324,7 @@ DllAccess es_status_codes DLLReturnFrame(uint32_t board_sel, uint32_t sample, ui
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
 		{
-			status = ReturnFrame(drvno, sample, block, camera, pdest[usedBoards], length);
+			status = ReturnFrame(drvno, sample, block, camera, pdest[usedBoards], pixel);
 			if (status != es_no_error) return status;
 			usedBoards++;
 			// this function only returns data for the first two found boards
@@ -913,7 +913,7 @@ DllAccess void DLLDeinit2dViewer()
 }
 
 /**
-* \copydoc Direct2dViewer_setGammaValue
+* \copydoc SetGammaValue
 */
 DllAccess void DLLSetGammaValue(UINT16 white, UINT16 black)
 {
@@ -921,7 +921,7 @@ DllAccess void DLLSetGammaValue(UINT16 white, UINT16 black)
 }
 
 /**
-* \copydoc Direct2dViewer_getGammaWhite
+* \copydoc GetGammaWhite
 */
 DllAccess UINT16 DLLGetGammaWhite()
 {
@@ -929,7 +929,7 @@ DllAccess UINT16 DLLGetGammaWhite()
 }
 
 /**
-* \copydoc Direct2dViewer_getGammaBlack
+* \copydoc GetGammaBlack
 */
 DllAccess UINT16 DLLGetGammaBlack()
 {
