@@ -402,9 +402,9 @@ es_status_codes ClearAllUserRegs(uint32_t drvno)
  * \brief Use this function to abort measurement.
  * 
  * \return es_status_codes:
- *		-es_no_error
- *		-es_register_read_failed
- *		-es_register_write_failed
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
  */
 es_status_codes AbortMeasurement()
 {
@@ -521,7 +521,6 @@ es_status_codes ResetDma( uint32_t drvno )
  * \brief Set cam count
  *
  * \param drvno PCIe board identifier
- * \param camcount camera count
  * \return es_status_codes:
  *		- es_no_error
  * 		- es_register_read_failed
@@ -569,9 +568,9 @@ es_status_codes SetSensorType( uint32_t drvno, uint8_t sensor_type )
 /**
  * @brief Set specified bits to 1 in S0 register at memory address.
  * 
- * @param data 
- * @param bitmask 
- * @param address 
+ * @param data 4 bytes (32 bits) data to write
+ * @param bitmask Bitmask to select specific bits, which should be written. 0xFFFFFFFF - all bits 32 bits are written, 0 - no bits are written.
+ * @param address Address of the register in S0 space.
  * @param drvno PCIe board identifier.
  * @return es_status_codes
  *		- es_no_error
@@ -586,10 +585,10 @@ es_status_codes writeBitsS0_32( uint32_t drvno, uint32_t data, uint32_t bitmask,
 /**
  * @brief Set specified bits to 1 in S0 register at memory address.
  *
- * @param data
- * @param bitmask
- * @param address
- * @param drvno PCIe board identifier.
+ * @param board_sel select PCIe boards bitwise: bit 0 - board 0...
+ * @param data 4 bytes (32 bits) data to write
+ * @param bitmask Bitmask to select specific bits, which should be written. 0xFFFFFFFF - all bits 32 bits are written, 0 - no bits are written.
+ * @param address Address of the register in S0 space.
  * @return es_status_codes
  *		- es_no_error
  *		- es_register_read_failed
@@ -613,9 +612,9 @@ es_status_codes writeBitsS0_32_allBoards(uint32_t board_sel, uint32_t data, uint
 /**
  * @brief Set specified bits to 1 in S0 register at memory address.
  * 
- * @param data 
- * @param bitmask 
- * @param address 
+ * @param data 1 bytes (8 bits) data to write
+ * @param bitmask Bitmask to select specific bits, which should be written. 0xFF - all bits 8 bits are written, 0 - no bits are written.
+ * @param address Address of the register in S0 space.
  * @param drvno PCIe board identifier.
  * @return es_status_codes
  *		- es_no_error
@@ -647,7 +646,7 @@ es_status_codes setBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address
 /**
  * @brief Set bit to 1 in S0 register at memory address.
  *
- * @param drvno board number (=1 if one PCI board)
+ * @param board_sel select PCIe boards bitwise: bit 0 - board 0...
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
  * @param address register address. Only 4 byte steps are valid.
  * @return es_status_codes:
@@ -698,7 +697,7 @@ es_status_codes resetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t addre
 /**
  * @brief Set bit to 0 in register at memory address.
  *
- * @param drvno board number (=1 if one PCI board)
+ * @param board_sel select PCIe boards bitwise: bit 0 - board 0...
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
  * @param address register address. Only 4 byte steps are valid.
  * @return es_status_codes:
@@ -745,9 +744,9 @@ es_status_codes writeRegisterS0_32( uint32_t drvno, uint32_t data, uint16_t addr
 }
 
 /**
- * \brief Write 4 byte of a register in S0 space.
+ * \brief Write 4 bytes of a register in S0 space.
  *
- * \param drvno PCIe board identifier.
+ * \param board_sel select PCIe boards bitwise: bit 0 - board 0...
  * \param data Data to write.
  * \param address Address of the register to read.
  * \return es_status_codes:
@@ -759,6 +758,16 @@ es_status_codes writeRegisterS0_32_allBoards(uint32_t board_sel, uint32_t data, 
 	return writeRegister_32_allBoards(board_sel, data, address + S0_SPACE_OFFSET);
 }
 
+/**
+ * \brief Write 4 bytes of a register.
+ * 
+ * \param board_sel select PCIe boards bitwise: bit 0 - board 0...
+ * \param data 4 byte of data to write.
+ * \param address Address of the register to write.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
 es_status_codes writeRegister_32_allBoards(uint32_t board_sel, uint32_t data, uint16_t address)
 {
 	es_status_codes status = es_no_error;
@@ -807,8 +816,9 @@ es_status_codes writeRegisterS0_8( uint32_t drvno, uint8_t data, uint16_t addres
 /**
  * \brief Write the same 1 byte to a register in S0 space of all boards.
  *
+ * \param board_sel select PCIe boards bitwise: bit 0 - board 0...
  * \param data Data to write.
- * \param address Address of the register to read.
+ * \param address Address of the register to write.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
@@ -818,6 +828,16 @@ es_status_codes writeRegisterS0_8_allBoards(uint32_t board_sel, uint8_t data, ui
 	return writeRegister_8_allBoards(board_sel, data, address + S0_SPACE_OFFSET);
 }
 
+/**
+ * \brief Write the same 1 byte to a register of all boards.
+ *
+ * \param board_sel select PCIe boards bitwise: bit 0 - board 0...
+ * \param data 1 byte data to write.
+ * \param address Address of the register to write.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
 es_status_codes writeRegister_8_allBoards(uint32_t board_sel, uint8_t data, uint16_t address)
 {
 	es_status_codes status = es_no_error;
@@ -832,7 +852,6 @@ es_status_codes writeRegister_8_allBoards(uint32_t board_sel, uint8_t data, uint
 	}
 	return status;
 }
-
 
 /**
  * \brief Read 4 bytes of a register in S0 space.
@@ -2288,7 +2307,7 @@ es_status_codes SetTemp( uint32_t drvno, uint8_t level )
  * \param ctrlBits 4 control bits
  * \param addrBits 4 address bits
  * \param dataBits 16 data bits
- * \param feature 4 feature bits
+ * \param featureBits 4 feature bits
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_write_failed
@@ -2547,9 +2566,9 @@ es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
 /**
  * @brief Set specified bits to 1 in DMA register at memory address.
  * 
- * @param data 
- * @param bitmask 
- * @param address 
+ * @param data 4 bytes (32 bits) data to write
+ * @param bitmask Bitmask to select specific bits, which should be written. 0xFFFFFFFF - all bits 32 bits are written, 0 - no bits are written.
+ * @param address Address of the register in DMA space.
  * @param drvno PCIe board identifier.
  * @return es_status_codes
  *		- es_no_error
@@ -2579,9 +2598,9 @@ es_status_codes writeBitsDma_32( uint32_t drvno, uint32_t data, uint32_t bitmask
 /**
  * @brief Set specified bits to 1 in DMA register at memory address.
  * 
- * @param data 
- * @param bitmask 
- * @param address 
+ * @param data 1 bytes (8 bits) data to write
+ * @param bitmask Bitmask to select specific bits, which should be written. 0xFF - all bits 8 bits are written, 0 - no bits are written.
+ * @param address Address of the register in DMA space.
  * @param drvno PCIe board identifier.
  * @return es_status_codes
  *		- es_no_error
@@ -3670,10 +3689,10 @@ es_status_codes SetGain(uint32_t drvno, uint16_t gain_value)
 /**
  * \brief Returns when block on bit is 0.
  *
- * \param drvno PCIe board identifier.
- *  \return es_status_codes:
+ * \param board_sel select PCIe boards bitwise: bit 0 - board 0...
+ * \return es_status_codes:
  *		- es_no_error
- * 		- es_register_read_failed
+ *		- es_register_read_failed
  */
 es_status_codes waitForBlockReady(uint32_t board_sel)
 {
@@ -3697,10 +3716,10 @@ es_status_codes waitForBlockReady(uint32_t board_sel)
 /**
  * \brief Returns when measure on bit is 0.
  *
- * \param drvno PCIe board identifier.
- *  \return es_status_codes:
+ * \param board_sel select PCIe boards bitwise: bit 0 - board 0...
+ * \return es_status_codes:
  *		- es_no_error
- * 		- es_register_read_failed
+ *		- es_register_read_failed
  */
 es_status_codes waitForMeasureReady(uint32_t board_sel)
 {
@@ -4978,7 +4997,7 @@ es_status_codes GetImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block
  * \param sample sample number (0 ... (nos-1))
  * \param block block number (0 ... (nob-1))
  * \param camera_pos camera position (0 ... (CAMCNT-1))
- * \param struct special_pixels Pointer to struct special_pixel, where the all special pixel information will be written.
+ * \param sp struct special_pixels Pointer to struct special_pixel, where the all special pixel information will be written.
  * \return es_status_codes:
  *		- es_invalid_driver_number
  *		- es_invalid_driver_handle

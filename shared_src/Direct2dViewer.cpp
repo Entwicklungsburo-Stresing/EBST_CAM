@@ -489,8 +489,12 @@ HRESULT Direct2dViewer::loadBitmap()
 }
 
 /**
-\brief Set information about which data is used for displaying a bitmap.
-*/
+ * \brief Set information about which data is used for displaying a bitmap.
+ * 
+ * \param addr Address where the bitmap data is located.
+ * \param width Width of the bitmap.
+ * \param height Height of the bitmap.
+ */
 void Direct2dViewer::setBitmapSource( void *addr, UINT width, UINT height )
 {
 	_bitmapSource.addr = addr;

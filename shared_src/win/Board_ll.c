@@ -589,7 +589,6 @@ es_status_codes CleanupDriver(uint32_t drvno)
 /**
  * \brief Exit driver. Call this after Cleanup driver.
  * 
- * \param drvno PCIe board identifier.
  * \return es_status_codes:
  *		- es_no_error
  */
@@ -1165,7 +1164,7 @@ void setTimestamp()
 /**
  * \brief Creates a file at filename_full and writes struct file_header to it.
  * 
- * \param f struct file_specs
+ * \param drvno PCIe board identifier.
  * \param filename_full Path and file name to the file where the header is written.
  */
 void writeFileHeaderToFile(uint32_t drvno, char* filename_full)
