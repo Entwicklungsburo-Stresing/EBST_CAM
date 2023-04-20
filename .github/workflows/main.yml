@@ -22,6 +22,8 @@ jobs:
                                # used in the specific "build.sh"
     steps:
       - uses: actions/checkout@v2
+      - name: Create tmp directories
+        run: mkdir -p tmp/doc && mkdir tmp/shared_src && mkdir tmp/ESLSCDLL
       - name: Copy doc/ and source files to tmp/ using rsync
         run:  apk add rsync && rsync -arv doc/ tmp/doc/ && rsync -arv shared_src/Board.c tmp/shared_src/ && rsync -arv ESLSCDLL/ESLSCDLL.c tmp/ESLSCDLL/ && rsync -arv shared_src/struct.h tmp/shared_src/
       - name: Pushes to another repository
