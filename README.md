@@ -1,12 +1,12 @@
 ﻿# EBST_CAM
-Software package for the line scan cameras of [Entwicklungsbüro Stresing](http://stresing.de). This package contains multiple projects for different plattforms.
+This repository contains software for operating the line scan cameras of [Entwicklungsbüro Stresing](http://stresing.de). There are multiple projects for different plattforms. This readme is giving an overview of these projects and contains instructions for compiling. If you are looking for more documentation about the software, look [here](https://entwicklungsburo-stresing.github.io/). Also refer to your given manual FLbook.pdf for more documentation.
 
 project         | description                           | plattform
 :---            | :---                                  | :---
-ESLSCDLL        | DLL for usage with Labview. See repository [lv64](https://github.com/Entwicklungsburo-Stresing/lv64) | Windows
-Jungo           | Windows driver                        | Windows
-doc             | Documentation with [Doxygen](https://www.doxygen.nl/) of DLLs interface and more  | Windows, Linux
-escam           | crossplattform Qt GUI written in C++  | Windows, Linux
+ESLSCDLL        | DLL project                           | Windows
+Jungo           | Library for using the Windows Driver  | Windows
+doc             | Documentation with [Doxygen](https://www.doxygen.nl/) of DLLs API and more  | Windows, Linux
+escam           | crossplattform [Qt](https://www.qt.io/) GUI written in C++  | Windows, Linux
 escam_deb       | script to create .deb package         | Linux
 escam_setup     | [Microsoft Visual Studio Installer Project](https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2017InstallerProjects) to create setup for escam | Windows
 linux-driver    | Linux driver                          | Linux
@@ -27,7 +27,7 @@ Open `EBST_CAM.sln` with Visual Studio and press build.
 Run `install_run_as_admin.bat` from `Stresing14.00_Driver_Distribution_Package` as admin. 
 
 ### Installing escam
-Compile solution first and use `escam_setup/build/setup.exe` or use given `setup.exe`. If Microsoft Visual C++ Redistributable is missing, this setup should install it automatically.
+Compile solution first and use `escam_setup/build/setup.exe` or use `setup.exe` from a [release](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases). If Microsoft Visual C++ Redistributable is missing, this setup should install it automatically.
 
 ### Using ESLSCDLL.dll
 For the use of `ESLSCDLL.dll` [Microsoft Visual C++ Redistributable](https://aka.ms/vs/16/release/vc_redist.x64.exe) must be installed.
