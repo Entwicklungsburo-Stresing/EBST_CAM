@@ -198,7 +198,7 @@ struct camera_settings
 	 */
 	uint32_t ticnt;
 	/**
-	 * 
+	 * 1 -> FST <= IFC, 0 -> FST <= not XCK
 	 */
 	uint32_t use_ec;
 	/**
