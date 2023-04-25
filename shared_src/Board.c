@@ -217,9 +217,29 @@ es_status_codes InitCamera(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetCameraPosition(drvno);
 	if (status != es_no_error) return status;
+	// when cooled camera: disable PCIe FIFO when cool cam transmits cool status (legacy code for old cameras)
+	if (settings_struct.camera_settings[drvno].is_cooled_cam)
+		status = Use_ENFFW_protection(drvno, true);
+	else
+		status = Use_ENFFW_protection(drvno, false);
+	//set camera pixel register
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_pixel, (uint16_t)settings_struct.camera_settings[drvno].pixel);
+	if (status != es_no_error) return status;
+	//set trigger input of CamControl
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_trig_in, (uint16_t)settings_struct.camera_settings[drvno].trigger_mode_cc);
+	if (status != es_no_error) return status;
+	//set led off
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_LEDoff, (uint16_t)settings_struct.camera_settings[drvno].led_off);
+	//set use EC
+	status = setUseEC(drvno, (uint16_t)settings_struct.camera_settings[drvno].use_ec);
+	if (status != es_no_error) return status;
+	//set gain switch (mostly for IR sensors)
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, (uint16_t)settings_struct.camera_settings[drvno].sensor_gain);
+	if (status != es_no_error) return status;
+	//select vclk and Area mode on
 	uint8_t is_area_mode = 0;
-	if (settings_struct.camera_settings[drvno].fft_mode == area_mode) is_area_mode = 1;
-	status = InitCameraGeneral(drvno, (uint16_t)settings_struct.camera_settings[drvno].pixel, (uint16_t)settings_struct.camera_settings[drvno].trigger_mode_cc, (uint8_t)settings_struct.camera_settings[drvno].sensor_type, is_area_mode, (uint8_t)settings_struct.camera_settings[drvno].is_cooled_cam, (uint16_t)settings_struct.camera_settings[drvno].led_off, (uint16_t)settings_struct.camera_settings[drvno].sensor_gain, (uint16_t)settings_struct.camera_settings[drvno].use_ec);
+	if (settings_struct.camera_settings[drvno].fft_mode == area_mode) is_area_mode = 0x8000;
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclk, (uint16_t)((uint8_t)settings_struct.camera_settings[drvno].sensor_type | is_area_mode));
 	if (status != es_no_error) return status;
 	switch (settings_struct.camera_settings[drvno].camera_system)
 	{
@@ -1592,57 +1612,6 @@ es_status_codes SetBDAT( uint32_t drvno, uint32_t datin10ns )
 		return writeRegisterS0_32(drvno, datin10ns, S0Addr_BDAT);
 	}
 	else return writeRegisterS0_32(drvno, 0, S0Addr_BDAT);
-}
-
-/**
- * \brief General init routine for all Camera Systems.
- * 
- * 	Sets register in camera.
- * \param drvno selects PCIe board
- * \param pixel pixel count of camera
- * \param cc_trigger_input for Camera Control (CC): selects CC trigger input. 0 - XCK, 1 - EXTTRIG connector, 2 - DAT
- * \param is_fft =1 vclk on, =0 vclk off
- * \param is_area =1 area mode on, =0 area mode off
- * \param IS_COOLED =1 disables PCIe FIFO when cool cam transmits cool status
- * \param led_off 1 led off, 0 led on
- * \param sensor_gain For IR sensors. 0 is the lowest gain.
- *		- 3001/3010: 0 to 1
- *		- 3030: 0 to 3
- * \param use_EC
- * \return es_status_codes
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
- */
-es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_trigger_input, uint8_t is_fft, uint8_t is_area, uint8_t IS_COOLED, uint16_t led_off, uint16_t sensor_gain, uint16_t use_EC)
-{
-	ES_LOG("Init camera general, pixel: %u, cc_trigger: %u, fft: %u, area: %u, cooled: %u, led_off: %u, sensor_gain: %u, use_EC: %u\n", pixel, cc_trigger_input, is_fft, is_area, IS_COOLED, led_off, sensor_gain, use_EC);
-	es_status_codes status = es_no_error;
-	// when TRUE: disables PCIe FIFO when cool cam transmits cool status
-	if (IS_COOLED)
-		status = Use_ENFFW_protection( drvno, true );
-	else
-		status = Use_ENFFW_protection( drvno, false );
-	if (status != es_no_error) return status;
-	//set camera pixel register
-	status = SendFLCAM( drvno, maddr_cam, cam_adaddr_pixel, pixel );
-	if (status != es_no_error) return status;
-	//set trigger input of CamControl
-	status = SendFLCAM( drvno, maddr_cam, cam_adaddr_trig_in, cc_trigger_input );
-	if (status != es_no_error) return status;
-	//set led off
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_LEDoff, led_off );
-	//set use EC
-	status = setUseEC(drvno, use_EC);
-	if (status != es_no_error) return status;
-	//set gain switch (mostly for IR sensors)
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, sensor_gain);
-	if (status != es_no_error) return status;
-	//select vclk and Area mode on
-	if (is_area>0) is_area = (uint8_t)0x8000;
-	else is_area = 0x0000;
-	return SendFLCAM( drvno, maddr_cam, cam_adaddr_vclk, (uint16_t) (is_fft | is_area) );
 }
 
 /**
