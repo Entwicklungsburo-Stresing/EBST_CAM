@@ -1,5 +1,13 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.4.3
+- Fix camcnt 0 mode
+- Improve documentation
+- Add Github action for publishing doxygen documentation
+- Change settingContinuousPausInMicrosecondsDefault to 0
+- Add SetCameraPosition
+- Send DAC values to camera position 0 and 1
+
 4.4.2
 - Add DLLSetGlobalSettings_matlab
 
