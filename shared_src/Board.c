@@ -200,6 +200,16 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	return status;
 }
 
+/**
+ * \brief Initialize camera registers.
+ * 
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found 
+ */
 es_status_codes InitCamera(uint32_t drvno)
 {
 	ES_LOG("\nInit camera %u\n", drvno);
@@ -1638,13 +1648,16 @@ es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_t
 /**
  * \brief Protects ENFFW from cool cam status transmission. Enable with cool cam, disable with HS > 50 kHz.
  * 
- * 	RX_VALID usually triggers ENFFW. This must be disabled when cool cams transmit their cooling status.
- * 	RX_VALID_EN is enabled with XCKI and disabled with ~CAMFFXCK_ALL, after all frame data is collected.
- * 	If RX_VALID raises again for cool status values, it doesn't effect ENFFW when RX_VALID_EN is low.
+ * Legacy code for old cameras.
+ * RX_VALID usually triggers ENFFW. This must be disabled when cool cams transmit their cooling status.
+ * RX_VALID_EN is enabled with XCKI and disabled with ~CAMFFXCK_ALL, after all frame data is collected.
+ * If RX_VALID raises again for cool status values, it doesn't effect ENFFW when RX_VALID_EN is low.
  * \param drvno selects PCIe board
  * \param USE_ENFFW_PROTECT enables or disables RX_VALID write protection
  * \return es_status_codes:
  *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
  */
 es_status_codes Use_ENFFW_protection( uint32_t drvno, bool USE_ENFFW_PROTECT )
 {
@@ -3555,9 +3568,10 @@ es_status_codes LedOff(uint32_t drvno, uint8_t LED_OFF)
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes setUseEC(uint32_t drvno, uint16_t use_EC) {
+es_status_codes setUseEC(uint32_t drvno, uint16_t use_EC)
+{
 	return SendFLCAM(drvno, maddr_cam, cam_adaddr_useEC, use_EC);
-	}
+}
 
 /**
  * \brief Reset trigger out(Reg CtrlA:D3) of PCI board. Can be used to control timing issues in software.
