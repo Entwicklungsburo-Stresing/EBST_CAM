@@ -205,6 +205,8 @@ es_status_codes InitCamera(uint32_t drvno)
 	ES_LOG("\nInit camera %u\n", drvno);
 	es_status_codes status = FindCam(drvno);
 	if (status != es_no_error) return status;
+	status = SetCameraPosition(drvno);
+	if (status != es_no_error) return status;
 	uint8_t is_area_mode = 0;
 	if (settings_struct.camera_settings[drvno].fft_mode == area_mode) is_area_mode = 1;
 	status = InitCameraGeneral(drvno, (uint16_t)settings_struct.camera_settings[drvno].pixel, (uint16_t)settings_struct.camera_settings[drvno].trigger_mode_cc, (uint8_t)settings_struct.camera_settings[drvno].sensor_type, is_area_mode, (uint8_t)settings_struct.camera_settings[drvno].is_cooled_cam, (uint16_t)settings_struct.camera_settings[drvno].led_off, (uint16_t)settings_struct.camera_settings[drvno].sensor_gain, (uint16_t)settings_struct.camera_settings[drvno].use_ec);
@@ -5170,4 +5172,23 @@ es_status_codes SetupArea(uint32_t drvno, uint32_t lines_binning, uint8_t vfreq)
 	if (status != es_no_error) return status;
 	*useSWTrig = TRUE; //software starts 1st scan
 	return ResetPartialBinning(drvno);
+}
+
+/**
+ * \brief This functions sets the camera position register of the first camera to 0.
+ * 
+ * When there are more cameras in line, the cameras are handing their positions one to another.
+ * 
+ * \param drvno PCIe board identifier
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
+ */
+es_status_codes SetCameraPosition(uint32_t drvno)
+{
+	ES_LOG("Set camera position of first camera in row to 1\n");
+	// 0x80 is a test value. Camera position is set to 0
+	return SendFLCAM(drvno, maddr_cam, cam_adaddr_camera_position, 0x80);
 }
