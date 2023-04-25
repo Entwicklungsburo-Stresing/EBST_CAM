@@ -5203,6 +5203,6 @@ es_status_codes SetupArea(uint32_t drvno, uint32_t lines_binning, uint8_t vfreq)
 es_status_codes SetCameraPosition(uint32_t drvno)
 {
 	ES_LOG("Set camera position of first camera in row to 1\n");
-	// 0x80 is a test value. Camera position is set to 0
-	return SendFLCAM(drvno, maddr_cam, cam_adaddr_camera_position, 0x80);
+	// 0x8000 is a test value. Camera position is set to 0
+	return SendFLCAM(drvno, maddr_cam, cam_adaddr_camera_position, 0x8000);
 }
