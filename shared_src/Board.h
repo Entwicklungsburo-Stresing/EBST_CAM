@@ -67,7 +67,6 @@ es_status_codes InitGPX( uint32_t drvno, uint32_t delay );
 es_status_codes SetSDAT( uint32_t drvno, uint32_t datin10ns );
 es_status_codes SetBDAT( uint32_t drvno, uint32_t datin10ns );
 es_status_codes Use_ENFFW_protection( uint32_t drvno, bool USE_ENFFW_PROTECT );
-es_status_codes InitCameraGeneral( uint32_t drvno, uint16_t pixel, uint16_t cc_trigger_input, uint8_t is_fft, uint8_t is_area, uint8_t IS_COOLED, uint16_t led_off, uint16_t sensor_gain, uint16_t use_ec);
 es_status_codes InitCamera3001( uint32_t drvno );
 es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern );
 es_status_codes Cam3010_ADC_reset( uint32_t drvno );
