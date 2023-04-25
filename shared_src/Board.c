@@ -2335,7 +2335,13 @@ es_status_codes DAC8568_sendData( uint32_t drvno, uint8_t location, uint8_t ctrl
 			uint16_t lo_bytes = (uint16_t) data;
 			status = SendFLCAM(drvno, maddr_dac, dac_hi_byte_addr, hi_bytes);
 			if (status != es_no_error) return status;
+			// Send hi byte with camera position address 1 as test purpose
+			status = SendFLCAM(drvno, maddr_dac, dac_hi_byte_addr | 0x100, hi_bytes);
+			if (status != es_no_error) return status;
 			status = SendFLCAM(drvno, maddr_dac, dac_lo_byte_addr, lo_bytes);
+			if (status != es_no_error) return status;
+			// Send low byte with camera position address 1 as test purpose
+			status = SendFLCAM(drvno, maddr_dac, dac_lo_byte_addr | 0x100, lo_bytes);
 			break;
 		}
 		case DAC8568_pcie:
