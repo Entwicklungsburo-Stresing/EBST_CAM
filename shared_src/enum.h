@@ -285,7 +285,7 @@ enum cam_addresses
 	/**
 	 * This is a register for the camera position for multiple cameras in line. The software always sets the first camera to 0 and the cameras are handing their positions one to another.
 	 */
-	cam_adaddr_camera_position = 0x3F,
+	cam_adaddr_camera_position = 0x7F,
 
 	adc_ltc2271_regaddr_reset = 0x00,
 	adc_ltc2271_regaddr_outmode = 0x02,
