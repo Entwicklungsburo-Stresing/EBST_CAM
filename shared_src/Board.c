@@ -1825,7 +1825,7 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t adc_gain, uint32_t* dac_output, bool is_hs_ir)
+es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t adc_gain, uint32_t** dac_output, bool is_hs_ir)
 {
 	ES_LOG("Init camera 3030, adc_mode: %u, custom_pattern: %u, adc_gain: %u, is_hs_ir: %u\n", adc_mode, custom_pattern, adc_gain, is_hs_ir);
 	es_status_codes status = Cam3030_ADC_reset(drvno);
@@ -1838,10 +1838,13 @@ es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom
 	if (adc_mode)
 		status = Cam3030_ADC_RampOrPattern(drvno, adc_mode, custom_pattern);
 	if (status != es_no_error) return status;
-	status = DAC8568_enableInternalReference(drvno, DAC8568_camera);
-	if (status != es_no_error) return status;
-	status = DAC8568_setAllOutputs(drvno, DAC8568_camera, dac_output, !is_hs_ir);
-	if (status != es_no_error) return status;
+	for (int camera = 0; camera < settings_struct.camera_settings->camcnt; camera++)
+	{
+		status = DAC8568_enableInternalReference(drvno, DAC8568_camera, camera);
+		if (status != es_no_error) return status;
+		status = DAC8568_setAllOutputs(drvno, DAC8568_camera, camera, settings_struct.camera_settings[drvno].dac_output[camera], !is_hs_ir);
+		if (status != es_no_error) return status;
+	}
 	// Sample mode is currently not in use. 11/22, P209_8
 	status = Cam3030_ADC_SetSampleMode(drvno, 0);
 	if (status != es_no_error) return status;
@@ -2288,6 +2291,7 @@ es_status_codes SetTemp( uint32_t drvno, uint8_t level )
  * 
  * \param drvno board number (=1 if one PCI board)
  * \param location Switch for the different locations of DAC85689. See enum DAC8568_location in enum.h for details.
+ * \param cameraPosition This is describing the camera position when there are mumltiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
  * \param ctrlBits 4 control bits
  * \param addrBits 4 address bits
  * \param dataBits 16 data bits
@@ -2299,7 +2303,7 @@ es_status_codes SetTemp( uint32_t drvno, uint8_t level )
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes DAC8568_sendData( uint32_t drvno, uint8_t location, uint8_t ctrlBits, uint8_t addrBits, uint16_t dataBits, uint8_t featureBits )
+es_status_codes DAC8568_sendData( uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t ctrlBits, uint8_t addrBits, uint16_t dataBits, uint8_t featureBits )
 {
 	uint32_t data = 0;
 	es_status_codes status;
@@ -2333,15 +2337,11 @@ es_status_codes DAC8568_sendData( uint32_t drvno, uint8_t location, uint8_t ctrl
 		{
 			uint16_t hi_bytes = (uint16_t) (data >> 16);
 			uint16_t lo_bytes = (uint16_t) data;
-			status = SendFLCAM(drvno, maddr_dac, dac_hi_byte_addr, hi_bytes);
+			uint8_t adaddr = dac_hi_byte_addr | cameraPosition << campos_bit_index;
+			status = SendFLCAM(drvno, maddr_dac, adaddr, hi_bytes);
 			if (status != es_no_error) return status;
-			// Send hi byte to camera at 2nd position in chain for test purpose
-			status = SendFLCAM(drvno, maddr_dac, dac_hi_byte_addr | 0x10, hi_bytes);
-			if (status != es_no_error) return status;
-			status = SendFLCAM(drvno, maddr_dac, dac_lo_byte_addr, lo_bytes);
-			if (status != es_no_error) return status;
-			// Send lo byte to camera at 2nd position in chain for test purpose
-			status = SendFLCAM(drvno, maddr_dac, dac_lo_byte_addr | 0x10, lo_bytes);
+			adaddr = dac_lo_byte_addr | cameraPosition << campos_bit_index;
+			status = SendFLCAM(drvno, maddr_dac, adaddr, lo_bytes);
 			break;
 		}
 		case DAC8568_pcie:
@@ -2363,6 +2363,7 @@ es_status_codes DAC8568_sendData( uint32_t drvno, uint8_t location, uint8_t ctrl
  * Use this function to set the outputs, because it is resorting the channel numeration correctly.
  * \param drvno PCIe board identifier
  * \param location Switch for the different locations of DAC85689. See enum DAC8568_location in enum.h for details.
+ * \param cameraPosition This is describing the camera position when there are mumltiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
  * \param output all output values that will be converted to analog voltage (0 ... 0xFFFF)
  * \param reorder_channels used to reorder DAC channels for high speed camera
  * \return es_status_codes
@@ -2370,7 +2371,7 @@ es_status_codes DAC8568_sendData( uint32_t drvno, uint8_t location, uint8_t ctrl
  *		- es_register_write_failed
  *		- es_parameter_out_of_range
  */
-es_status_codes DAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint32_t* output, bool reorder_channels)
+es_status_codes DAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint32_t* output, bool reorder_channels)
 {
 	es_status_codes status = es_no_error;
 	int* reorder_ch;
@@ -2386,7 +2387,7 @@ es_status_codes DAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint32_t
 	}
 	for (uint8_t channel = 0; channel < 8; channel++)
 	{
-		status = DAC8568_setOutput(drvno, location, channel, (uint16_t)output[reorder_ch[channel]]);
+		status = DAC8568_setOutput(drvno, location, cameraPosition, channel, (uint16_t)output[reorder_ch[channel]]);
 		if (status != es_no_error) return status;
 	}
 	return status;
@@ -2397,6 +2398,7 @@ es_status_codes DAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint32_t
  * 
  * \param drvno PCIe board identifier
  * \param location Switch for the different locations of DAC85689. See enum DAC8568_location in enum.h for details.
+ * \param cameraPosition This is describing the camera position when there are mumltiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
  * \param channel select one of eight output channel (0 ... 7)
  * \param output output value that will be converted to analog voltage (0 ... 0xFFFF)
  * \return es_status_codes
@@ -2404,11 +2406,11 @@ es_status_codes DAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint32_t
  *		- es_register_write_failed
  *		- es_parameter_out_of_range
  */
-es_status_codes DAC8568_setOutput( uint32_t drvno, uint8_t location, uint8_t channel, uint16_t output )
+es_status_codes DAC8568_setOutput( uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t channel, uint16_t output )
 {
 	//ctrl bits 3: write and update DAC register
-	ES_LOG("Set DAC %u output ch%u = %u\n", location, channel, output);
-	return DAC8568_sendData( drvno, location, 3, channel, output, 0 );
+	ES_LOG("Set DAC: board %u, location %u, cameraPosition %u, output ch%u = %u\n", drvno, location, cameraPosition, channel, output);
+	return DAC8568_sendData( drvno, location, cameraPosition, 3, channel, output, 0 );
 }
 
 /**
@@ -2416,15 +2418,16 @@ es_status_codes DAC8568_setOutput( uint32_t drvno, uint8_t location, uint8_t cha
  *
  * \param drvno PCIe board identifier
  * \param location Switch for the different locations of DAC85689. See enum DAC8568_location in enum.h for details.
+ * \param cameraPosition This is describing the camera position when there are mumltiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
  *		- es_parameter_out_of_range
  */
-es_status_codes DAC8568_enableInternalReference(uint32_t drvno, uint8_t location)
+es_status_codes DAC8568_enableInternalReference(uint32_t drvno, uint8_t location, uint8_t cameraPosition)
 {
 	ES_LOG("DAC %u: enable internal reference\n", location);
-	return DAC8568_sendData(drvno, location, 8, 0, 0, 1);
+	return DAC8568_sendData(drvno, location, cameraPosition, 8, 0, 0, 1);
 }
 
 /**
@@ -4104,9 +4107,12 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "region size\t"DLLTAB);
 	for (int i = 0; i < 8; i++)
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].region_size[i]);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\ndac output board %i\t", drvno);
-	for (int i = 0; i < 8; i++)
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].dac_output[i]);
+	for (int camera = 0; camera < MAXCAMCNT; camera++)
+	{
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\ndac output board %i, camera %i\t", drvno, camera);
+		for (int i = 0; i < 8; i++)
+			len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].dac_output[camera][i]);
+	}
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
 		"\ntor mode\t"DLLTAB DLLTAB"%u\n"
 		"adc mode\t"DLLTAB"%u\n"

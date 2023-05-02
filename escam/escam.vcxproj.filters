@@ -114,9 +114,6 @@
     <ClCompile Include="camerasettingswidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dacspinboxes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="dialogspecialpixels.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -217,9 +214,6 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="camerasettingswidget.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="dacspinboxes.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogspecialpixels.ui">
@@ -892,9 +886,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="camerasettingswidget.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="dacspinboxes.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="dialogspecialpixels.h">

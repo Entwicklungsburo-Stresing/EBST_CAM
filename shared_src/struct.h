@@ -5,6 +5,7 @@
 #include "enum.h"
 
 #define MAXPCIECARDS 5
+#define MAXCAMCNT 8
 
 // All settings are uint32_t to ensure the correct memory layout. This is important for the communication with LabVIEW.
 // Don't change the order or you will have to change it for LabVIEW in InitMeasurement.vi.
@@ -146,7 +147,7 @@ struct camera_settings
 	/**
 	 * Array for output levels of each digital to analog converter
 	 */
-	uint32_t dac_output[8];
+	uint32_t dac_output[MAXCAMCNT][8];
 	/**
 	 * Output mode for PCIe board output pin. See enum tor_out in enum.h for options.
 	 */

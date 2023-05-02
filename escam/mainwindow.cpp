@@ -196,14 +196,9 @@ void MainWindow::startPressed()
 		QByteArray array = settings.value(settingFilePathPath, QDir::currentPath()).toString().toLocal8Bit();
 		strcpy(settings_struct.camera_settings[drvno].file_path, array.data());
 		//dac
-		settings_struct.camera_settings[drvno].dac_output[0] = settings.value(settingDacCameraChannel1Path, settingDacCameraDefault).toUInt();
-		settings_struct.camera_settings[drvno].dac_output[1] = settings.value(settingDacCameraChannel2Path, settingDacCameraDefault).toUInt();
-		settings_struct.camera_settings[drvno].dac_output[2] = settings.value(settingDacCameraChannel3Path, settingDacCameraDefault).toUInt();
-		settings_struct.camera_settings[drvno].dac_output[3] = settings.value(settingDacCameraChannel4Path, settingDacCameraDefault).toUInt();
-		settings_struct.camera_settings[drvno].dac_output[4] = settings.value(settingDacCameraChannel5Path, settingDacCameraDefault).toUInt();
-		settings_struct.camera_settings[drvno].dac_output[5] = settings.value(settingDacCameraChannel6Path, settingDacCameraDefault).toUInt();
-		settings_struct.camera_settings[drvno].dac_output[6] = settings.value(settingDacCameraChannel7Path, settingDacCameraDefault).toUInt();
-		settings_struct.camera_settings[drvno].dac_output[7] = settings.value(settingDacCameraChannel8Path, settingDacCameraDefault).toUInt();
+		for(int camera=0; camera<MAXCAMCNT; camera++)
+			for(int channel=0; channel<8; channel++)
+				settings_struct.camera_settings[drvno].dac_output[camera][channel] = settings.value(settingDacCameraChannelBaseDir + QString::number(channel+1) + "Pos" + QString::number(camera), settingDacCameraDefault).toUInt();
 		//debug
 		settings_struct.camera_settings[drvno].tor = settings.value(settingTorPath, settingTorDefault).toUInt();
 		settings_struct.camera_settings[drvno].adc_mode = settings.value(settingAdcModePath, settingAdcModeDefault).toUInt();

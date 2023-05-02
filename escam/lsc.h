@@ -35,8 +35,8 @@ public:
 	std::string __AboutDrv(uint32_t drvno);
 	std::string __AboutGPX(uint32_t drvno);
 	es_status_codes setTorOut(uint32_t drvno, uint8_t torOut);
-	es_status_codes dac_setOutput(uint32_t drvno, uint8_t location, uint8_t channel, uint16_t output);
-	es_status_codes dac_setAllOutputs(uint32_t drvno, uint8_t location, uint32_t* output, bool reorder_channel);
+	es_status_codes dac_setOutput(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t channel, uint16_t output);
+	es_status_codes dac_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint32_t* output, bool reorder_channel);
 	es_status_codes ioctrl_setT0(uint32_t drvno, uint32_t period_in_10ns);
 	es_status_codes ioctrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns);
 	void getCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block);
