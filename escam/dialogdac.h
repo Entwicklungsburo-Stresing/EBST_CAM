@@ -15,9 +15,14 @@ class DialogDac : public QDialog
 public:
 	DialogDac(QWidget *parent = Q_NULLPTR);
 	~DialogDac();
-signals:
-	void initializingDone();
+
+private slots:
+	void spinBoxChannel_valueChanged();
+	void loadSettings();
+	void on_pushButtonDefault_pressed();
+
 private:
+	uint32_t output_old[8];
 	Ui::DialogDac *ui;
 	QSettings settings;
 };

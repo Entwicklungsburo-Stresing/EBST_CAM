@@ -261,6 +261,15 @@ enum cam_addresses
 	dac_hi_byte_addr = 0x01,
 	dac_lo_byte_addr = 0x02,
 
+	/**
+	 * The adaddr is structured as following:
+	 * - c: camera position
+	 * - r: register address
+	 * 0b ccc rrrr
+	 * The upper 3 bits are describing the camera position and the lower 4 bits are describing the register address. (Only 7 bits are used)
+	 */
+	campos_bit_index = 4,
+
 	cam_adaddr_gain = 0x00,
 	cam_adaddr_pixel = 0x01,
 	cam_adaddr_trig_in = 0x02,

@@ -231,17 +231,17 @@ void Lsc::parseTextToHtml(std::string* str)
 /**
  * \copydoc DAC8568_setOutput
  */
-es_status_codes Lsc::dac_setOutput(uint32_t drvno, uint8_t location, uint8_t channel, uint16_t output)
+es_status_codes Lsc::dac_setOutput(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t channel, uint16_t output)
 {
-	return DAC8568_setOutput(drvno, location, channel, output);
+	return DAC8568_setOutput(drvno, location, cameraPosition, channel, output);
 }
 
 /**
  * \copydoc DAC8568_setAllOutputs
  */
-es_status_codes Lsc::dac_setAllOutputs(uint32_t drvno, uint8_t location, uint32_t* output, bool reorder_channels)
+es_status_codes Lsc::dac_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint32_t* output, bool reorder_channels)
 {
-	return DAC8568_setAllOutputs(drvno, location, output, reorder_channels);
+	return DAC8568_setAllOutputs(drvno, location, cameraPosition, output, reorder_channels);
 }
 
 /**
