@@ -1,6 +1,6 @@
 #include "myqchartview.h"
 
-MyQChartView::MyQChartView(QWidget *parent) : QtCharts::QChartView(parent)
+MyQChartView::MyQChartView(QWidget *parent) : QChartView(parent)
 {
 	chart()->legend()->hide();
 	setRubberBand(QChartView::RectangleRubberBand);
