@@ -41,7 +41,10 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->doubleSpinBoxNos->setValue(settings.value(settingNosPath, settingNosDefault).toDouble());
 	ui->doubleSpinBoxNob->setValue(settings.value(settingNobPath, settingNobDefault).toDouble());
 	ui->doubleSpinBoxContiniousPause_in_ms->setValue(settings.value(settingContinuousPauseInMicrosecondsPath, settingContinuousPausInMicrosecondsDefault).toDouble() / 1000);
-	ui->comboBoxTheme->setCurrentIndex(settings.value(settingThemePath, settingThemeDefault).toInt());
+	QStringList styleKeys = QStyleFactory::keys();
+	ui->comboBoxTheme->addItems(styleKeys);
+	ui->comboBoxTheme->setCurrentIndex(settings.value(settingThemeIndexPath, settingThemeDefault).toInt());
+	ui->comboBoxColorScheme->setCurrentIndex(settings.value(settingColorSchemePath, settingColorSchemeDefault).toInt());
 	ui->comboBoxSettingsLevel->setCurrentIndex(settings.value(settingSettingsLevelPath, settingSettingsLevelDefault).toInt());
 	ui->comboBoxSettingsLevel->currentIndexChanged(ui->comboBoxSettingsLevel->currentIndex());
 
@@ -141,7 +144,9 @@ void DialogSettings::on_accepted()
 	board_sel |= ui->checkBoxBoard0->isChecked();
 	settings.setValue(settingBoardSelPath, board_sel);
 	//Appearance
-	settings.setValue(settingThemePath, ui->comboBoxTheme->currentIndex());
+	settings.setValue(settingThemeIndexPath, ui->comboBoxTheme->currentIndex());
+	settings.setValue(settingThemePath, ui->comboBoxTheme->currentText());
+	settings.setValue(settingColorSchemePath, ui->comboBoxColorScheme->currentIndex());
 	settings.setValue(settingSettingsLevelPath, ui->comboBoxSettingsLevel->currentIndex());
 	settings.setValue(settingNosPath, ui->doubleSpinBoxNos->value());
 	settings.setValue(settingNobPath, ui->doubleSpinBoxNob->value());
