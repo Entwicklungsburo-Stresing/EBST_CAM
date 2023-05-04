@@ -1,5 +1,8 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.4.4
+- Add cameraPosition to DAC functions for controlling multiple 3030 cameras in line
+
 4.4.3
 - Fix camcnt 0 mode
 - Improve documentation
