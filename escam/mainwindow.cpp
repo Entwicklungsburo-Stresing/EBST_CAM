@@ -468,22 +468,13 @@ void MainWindow::loadSettings()
 			ui->spinBoxBlock->setMaximum(nob);
 		}
 	}
-	int theme = settings.value(settingThemePath,settingThemeDefault).toInt();
-	switch(theme)
-	{
-	default:
-	case 0:
-		qApp->setStyleSheet("");
-		ui->chartView->chart()->setTheme(QChart::ChartThemeLight);
-		break;
-	case 1:
-		QFile f(":qdarkstyle/style.qss");
-		f.open(QFile::ReadOnly | QFile::Text);
-		QTextStream ts(&f);
-		qApp->setStyleSheet(ts.readAll());
+	QString theme = settings.value(settingThemePath,settingThemeDefault).toString();
+	QApplication::setStyle(QStyleFactory::create(theme));
+	QStyleHints* qstyle = QApplication::styleHints();
+	if(qstyle->colorScheme() == Qt::ColorScheme::Dark && theme != "windowsvista")
 		ui->chartView->chart()->setTheme(QChart::ChartThemeDark);
-		break;
-	}
+	else
+		ui->chartView->chart()->setTheme(QChart::ChartThemeLight);
 	return;
 }
 

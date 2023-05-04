@@ -120,8 +120,6 @@ win32 {
     dialoggreyscalesettings.h
 }
 
-RESOURCES += qdarkstyle/style.qrc
-
 win32 {
     LIBS += -L $(SolutionDir)/Jungo/wdapi1400.lib
     LIBS += -L $(SolutionDir)/shared_src/ESLSCDLL_pro.lib
