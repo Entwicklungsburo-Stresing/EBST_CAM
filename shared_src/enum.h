@@ -524,12 +524,6 @@ enum tor_out
 	tor_enffwrprot = 31
 };
 
-enum theme
-{
-	lighttheme = 0,
-	darktheme = 1,
-};
-
 enum sslope
 {
 	sslope_pos = 0,
