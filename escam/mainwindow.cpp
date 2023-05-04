@@ -653,7 +653,7 @@ void MainWindow::on_measureStart()
 	measureOn = true;
 	//set measureOn lamp on
 	QPalette pal = palette();
-	pal.setColor(QPalette::Background, Qt::green);
+	pal.setColor(QPalette::Window, Qt::green);
 	ui->widgetMeasureOn->setPalette(pal);
 	//disable start button
 	ui->pushButtonStartStop->setText("Stop");
@@ -666,7 +666,7 @@ void MainWindow::on_measureDone()
 	measureOn = false;
 	//set measureOn lamp off
 	QPalette pal = palette();
-	pal.setColor(QPalette::Background, Qt::darkGreen);
+	pal.setColor(QPalette::Window, Qt::darkGreen);
 	ui->widgetMeasureOn->setPalette(pal);
 	//set blockOn lamp off
 	ui->widgetBlockOn->setPalette(pal);
@@ -686,7 +686,7 @@ void MainWindow::on_blockStart()
 {
 	//set blockOn lamp on
 	QPalette pal = palette();
-	pal.setColor(QPalette::Background, Qt::green);
+	pal.setColor(QPalette::Window, Qt::green);
 	ui->widgetBlockOn->setPalette(pal);
 	return;
 }
@@ -695,7 +695,7 @@ void MainWindow::on_blockDone()
 {
 	//set blockOn lamp off
 	QPalette pal = palette();
-	pal.setColor(QPalette::Background, Qt::darkGreen);
+	pal.setColor(QPalette::Window, Qt::darkGreen);
 	ui->widgetBlockOn->setPalette(pal);
 	return;
 }
