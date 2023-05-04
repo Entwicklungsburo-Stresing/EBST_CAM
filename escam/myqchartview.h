@@ -4,7 +4,7 @@
 #include <QtCharts>
 #include <dialogsettings.h>
 
-class MyQChartView : public QtCharts::QChartView
+class MyQChartView : public QChartView
 {
 	Q_OBJECT
 public:
