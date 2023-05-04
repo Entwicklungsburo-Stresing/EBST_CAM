@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>339</width>
-    <height>376</height>
+    <height>348</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,33 +26,34 @@
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <layout class="QGridLayout" name="gridLayout">
+         <item row="7" column="1">
+          <widget class="QLabel" name="labelNob">
+           <property name="text">
+            <string>nob (number of blocks)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="2">
+          <widget class="QComboBox" name="comboBoxTheme"/>
+         </item>
+         <item row="1" column="3">
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
          <item row="3" column="2">
           <widget class="QCheckBox" name="checkBoxBoard2">
            <property name="text">
             <string>board 2</string>
            </property>
-          </widget>
-         </item>
-         <item row="10" column="2">
-          <widget class="QComboBox" name="comboBoxColorScheme">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <item>
-            <property name="text">
-             <string>System</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Light</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Dark</string>
-            </property>
-           </item>
           </widget>
          </item>
          <item row="7" column="2">
@@ -68,123 +69,6 @@
            </property>
            <property name="maximum">
             <double>4294967295.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1">
-          <widget class="QLabel" name="labelContiniousPause">
-           <property name="text">
-            <string>continious pause</string>
-           </property>
-          </widget>
-         </item>
-         <item row="10" column="1">
-          <widget class="QLabel" name="labelTheme">
-           <property name="text">
-            <string>color scheme</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="2">
-          <widget class="QCheckBox" name="checkBoxBoard4">
-           <property name="text">
-            <string>board 4 </string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QCheckBox" name="checkBoxBoard0">
-           <property name="text">
-            <string>board 0</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QCheckBox" name="checkBoxBoard1">
-           <property name="text">
-            <string>board 1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="1">
-          <widget class="QLabel" name="labelNob">
-           <property name="text">
-            <string>nob (number of blocks)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="11" column="1">
-          <spacer name="verticalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLabel" name="labelNos">
-           <property name="text">
-            <string>nos (number of samples)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="1" column="3">
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="8" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxContiniousPause_in_ms">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="suffix">
-            <string>ms</string>
-           </property>
-           <property name="decimals">
-            <number>3</number>
-           </property>
-           <property name="maximum">
-            <double>4294967.294999999925494</double>
            </property>
           </widget>
          </item>
@@ -207,10 +91,49 @@
            </property>
           </widget>
          </item>
-         <item row="4" column="2">
-          <widget class="QCheckBox" name="checkBoxBoard3">
+         <item row="1" column="0">
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="10" column="1">
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="0" column="1">
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLabel" name="labelNos">
            <property name="text">
-            <string>board 3</string>
+            <string>nos (number of samples)</string>
            </property>
           </widget>
          </item>
@@ -221,6 +144,50 @@
            </property>
           </widget>
          </item>
+         <item row="8" column="2">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxContiniousPause_in_ms">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="suffix">
+            <string>ms</string>
+           </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="maximum">
+            <double>4294967.294999999925494</double>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1">
+          <widget class="QLabel" name="labelContiniousPause">
+           <property name="text">
+            <string>continious pause</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QCheckBox" name="checkBoxBoard0">
+           <property name="text">
+            <string>board 0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QCheckBox" name="checkBoxBoard1">
+           <property name="text">
+            <string>board 1</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="2">
+          <widget class="QCheckBox" name="checkBoxBoard4">
+           <property name="text">
+            <string>board 4 </string>
+           </property>
+          </widget>
+         </item>
          <item row="9" column="1">
           <widget class="QLabel" name="label">
            <property name="text">
@@ -228,8 +195,12 @@
            </property>
           </widget>
          </item>
-         <item row="9" column="2">
-          <widget class="QComboBox" name="comboBoxTheme"/>
+         <item row="4" column="2">
+          <widget class="QCheckBox" name="checkBoxBoard3">
+           <property name="text">
+            <string>board 3</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -355,7 +326,6 @@
   <tabstop>tabWidget</tabstop>
   <tabstop>pushButtonDefault</tabstop>
   <tabstop>comboBoxSettingsLevel</tabstop>
-  <tabstop>comboBoxColorScheme</tabstop>
  </tabstops>
  <resources/>
  <connections>

@@ -44,7 +44,6 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	QStringList styleKeys = QStyleFactory::keys();
 	ui->comboBoxTheme->addItems(styleKeys);
 	ui->comboBoxTheme->setCurrentIndex(settings.value(settingThemeIndexPath, settingThemeDefault).toInt());
-	ui->comboBoxColorScheme->setCurrentIndex(settings.value(settingColorSchemePath, settingColorSchemeDefault).toInt());
 	ui->comboBoxSettingsLevel->setCurrentIndex(settings.value(settingSettingsLevelPath, settingSettingsLevelDefault).toInt());
 	ui->comboBoxSettingsLevel->currentIndexChanged(ui->comboBoxSettingsLevel->currentIndex());
 
@@ -146,7 +145,6 @@ void DialogSettings::on_accepted()
 	//Appearance
 	settings.setValue(settingThemeIndexPath, ui->comboBoxTheme->currentIndex());
 	settings.setValue(settingThemePath, ui->comboBoxTheme->currentText());
-	settings.setValue(settingColorSchemePath, ui->comboBoxColorScheme->currentIndex());
 	settings.setValue(settingSettingsLevelPath, ui->comboBoxSettingsLevel->currentIndex());
 	settings.setValue(settingNosPath, ui->doubleSpinBoxNos->value());
 	settings.setValue(settingNobPath, ui->doubleSpinBoxNob->value());
