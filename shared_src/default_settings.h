@@ -56,7 +56,6 @@
 #define settingAdcModeDefault						normal
 #define settingAdcCustomValueDefault				0
 #define settingThemeDefault							0
-#define settingColorSchemeDefault					0
 #define settingSettingsLevelDefault					0
 #define settingBecIn10nsDefault						0
 #define settingShowCameraDefault					1

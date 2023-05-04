@@ -89,7 +89,6 @@ constexpr auto settingAdcCustomValuePath = "adcCustomValue";
 //appearance
 constexpr auto settingThemePath = "theme";
 constexpr auto settingThemeIndexPath = "themeIndex";
-constexpr auto settingColorSchemePath = "colorScheme";
 constexpr auto settingSettingsLevelPath = "settingsLevel";
 constexpr auto settingShowCameraBaseDir = "showcamera";
 //io control
