@@ -277,7 +277,7 @@
             <bool>true</bool>
            </property>
            <property name="suffix">
-            <string>us</string>
+            <string>µs</string>
            </property>
            <property name="decimals">
             <number>0</number>
@@ -322,7 +322,7 @@
             <bool>true</bool>
            </property>
            <property name="suffix">
-            <string>us</string>
+            <string>µs</string>
            </property>
            <property name="decimals">
             <number>0</number>
