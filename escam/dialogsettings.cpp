@@ -130,15 +130,15 @@ void DialogSettings::on_accepted()
 	settings.setValue(settingBoard3Path, ui->checkBoxBoard3->isChecked());
 	settings.setValue(settingBoard4Path, ui->checkBoxBoard4->isChecked());
 	uint8_t board_sel = 0;
-	board_sel |= ui->checkBoxBoard4->isChecked();
+	board_sel |= (uint8_t)ui->checkBoxBoard4->isChecked();
 	board_sel <<= 1;
-	board_sel |= ui->checkBoxBoard3->isChecked();
+	board_sel |= (uint8_t)ui->checkBoxBoard3->isChecked();
 	board_sel <<= 1;
-	board_sel |= ui->checkBoxBoard2->isChecked();
+	board_sel |= (uint8_t)ui->checkBoxBoard2->isChecked();
 	board_sel <<= 1;
-	board_sel |= ui->checkBoxBoard1->isChecked();
+	board_sel |= (uint8_t)ui->checkBoxBoard1->isChecked();
 	board_sel <<= 1;
-	board_sel |= ui->checkBoxBoard0->isChecked();
+	board_sel |= (uint8_t)ui->checkBoxBoard0->isChecked();
 	settings.setValue(settingBoardSelPath, board_sel);
 	//Appearance
 	settings.setValue(settingThemePath, ui->comboBoxTheme->currentIndex());
