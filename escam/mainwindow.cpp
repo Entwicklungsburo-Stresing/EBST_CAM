@@ -668,6 +668,22 @@ void MainWindow::on_measureDone()
 	QPalette pal = palette();
 	pal.setColor(QPalette::Background, Qt::darkGreen);
 	ui->widgetMeasureOn->setPalette(pal);
+	//Set correct value for sample and block slider
+	if (ui->radioButtonLiveViewOffNewestSample->isChecked()) {
+		int64_t sample = 0;
+		int64_t block = 0;
+		uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toUInt();
+		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		{
+			// Check if the drvno'th bit is set
+			if ((board_sel >> drvno) & 1)
+			{
+				lsc.getCurrentScanNumber(drvno, &sample, &block);
+			}
+		}
+		ui->horizontalSliderSample->setValue(sample + 1);
+		ui->horizontalSliderBlock->setValue(block + 1);
+	}
 	//set blockOn lamp off
 	ui->widgetBlockOn->setPalette(pal);
 	//enable start button
