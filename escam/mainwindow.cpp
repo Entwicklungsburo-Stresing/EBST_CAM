@@ -468,7 +468,7 @@ void MainWindow::loadSettings()
 			ui->spinBoxBlock->setMaximum(nob);
 		}
 	}
-	QString theme = settings.value(settingThemePath,settingThemeDefault).toString();
+	QString theme = settings.value(settingThemePath, settingThemeDefault).toString();
 	QApplication::setStyle(QStyleFactory::create(theme));
 	QStyleHints* qstyle = QApplication::styleHints();
 	if(qstyle->colorScheme() == Qt::ColorScheme::Dark && theme != "windowsvista")
