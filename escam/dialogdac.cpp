@@ -89,6 +89,15 @@ void DialogDac::on_pushButtonDefault_pressed()
 	settings.beginGroup("board" + QString::number(ui->spinBoxPcie->value()));
 	if (ui->comboBoxLocation->currentIndex() == DAC8568_camera)
 	{
+		//Blocking signals for spin box 1 to 7
+		bool blockStateSpinBoxChannel1 = ui->spinBoxChannel1->blockSignals(true);
+		bool blockStateSpinBoxChannel2 = ui->spinBoxChannel2->blockSignals(true);
+		bool blockStateSpinBoxChannel3 = ui->spinBoxChannel3->blockSignals(true);
+		bool blockStateSpinBoxChannel4 = ui->spinBoxChannel4->blockSignals(true);
+		bool blockStateSpinBoxChannel5 = ui->spinBoxChannel5->blockSignals(true);
+		bool blockStateSpinBoxChannel6 = ui->spinBoxChannel6->blockSignals(true);
+		bool blockStateSpinBoxChannel7 = ui->spinBoxChannel7->blockSignals(true);
+
 		ui->spinBoxChannel1->setValue(settingDacCameraDefault);
 		ui->spinBoxChannel2->setValue(settingDacCameraDefault);
 		ui->spinBoxChannel3->setValue(settingDacCameraDefault);
@@ -97,9 +106,27 @@ void DialogDac::on_pushButtonDefault_pressed()
 		ui->spinBoxChannel6->setValue(settingDacCameraDefault);
 		ui->spinBoxChannel7->setValue(settingDacCameraDefault);
 		ui->spinBoxChannel8->setValue(settingDacCameraDefault);
+
+		//Unblocking signals for spin box 1 to 7
+		ui->spinBoxChannel1->blockSignals(blockStateSpinBoxChannel1);
+		ui->spinBoxChannel2->blockSignals(blockStateSpinBoxChannel2);
+		ui->spinBoxChannel3->blockSignals(blockStateSpinBoxChannel3);
+		ui->spinBoxChannel4->blockSignals(blockStateSpinBoxChannel4);
+		ui->spinBoxChannel5->blockSignals(blockStateSpinBoxChannel5);
+		ui->spinBoxChannel6->blockSignals(blockStateSpinBoxChannel6);
+		ui->spinBoxChannel7->blockSignals(blockStateSpinBoxChannel7);
 	}
 	else
 	{
+		//Blocking signals for spin box 1 to 7
+		bool blockStateSpinBoxChannel1 = ui->spinBoxChannel1->blockSignals(true);
+		bool blockStateSpinBoxChannel2 = ui->spinBoxChannel2->blockSignals(true);
+		bool blockStateSpinBoxChannel3 = ui->spinBoxChannel3->blockSignals(true);
+		bool blockStateSpinBoxChannel4 = ui->spinBoxChannel4->blockSignals(true);
+		bool blockStateSpinBoxChannel5 = ui->spinBoxChannel5->blockSignals(true);
+		bool blockStateSpinBoxChannel6 = ui->spinBoxChannel6->blockSignals(true);
+		bool blockStateSpinBoxChannel7 = ui->spinBoxChannel7->blockSignals(true);
+
 		ui->spinBoxChannel1->setValue(settingDacPcieDefault);
 		ui->spinBoxChannel2->setValue(settingDacPcieDefault);
 		ui->spinBoxChannel3->setValue(settingDacPcieDefault);
@@ -108,8 +135,18 @@ void DialogDac::on_pushButtonDefault_pressed()
 		ui->spinBoxChannel6->setValue(settingDacPcieDefault);
 		ui->spinBoxChannel7->setValue(settingDacPcieDefault);
 		ui->spinBoxChannel8->setValue(settingDacPcieDefault);
+
+		//Unblocking signals for spin box 1 to 7
+		ui->spinBoxChannel1->blockSignals(blockStateSpinBoxChannel1);
+		ui->spinBoxChannel2->blockSignals(blockStateSpinBoxChannel2);
+		ui->spinBoxChannel3->blockSignals(blockStateSpinBoxChannel3);
+		ui->spinBoxChannel4->blockSignals(blockStateSpinBoxChannel4);
+		ui->spinBoxChannel5->blockSignals(blockStateSpinBoxChannel5);
+		ui->spinBoxChannel6->blockSignals(blockStateSpinBoxChannel6);
+		ui->spinBoxChannel7->blockSignals(blockStateSpinBoxChannel7);
 	}
 	settings.endGroup();
+	spinBoxChannel_valueChanged();
 	return;
 }
 
@@ -118,6 +155,15 @@ void DialogDac::loadSettings()
 	settings.beginGroup("board" + QString::number(ui->spinBoxPcie->value()));
 	if (ui->comboBoxLocation->currentIndex() == DAC8568_camera)
 	{
+		//Blocking signals for spin box 1 to 7
+		bool blockStateSpinBoxChannel1 = ui->spinBoxChannel1->blockSignals(true);
+		bool blockStateSpinBoxChannel2 = ui->spinBoxChannel2->blockSignals(true);
+		bool blockStateSpinBoxChannel3 = ui->spinBoxChannel3->blockSignals(true);
+		bool blockStateSpinBoxChannel4 = ui->spinBoxChannel4->blockSignals(true);
+		bool blockStateSpinBoxChannel5 = ui->spinBoxChannel5->blockSignals(true);
+		bool blockStateSpinBoxChannel6 = ui->spinBoxChannel6->blockSignals(true);
+		bool blockStateSpinBoxChannel7 = ui->spinBoxChannel7->blockSignals(true);
+
 		ui->spinBoxChannel1->setValue(settings.value(settingDacCameraChannel1Path + QString::number(ui->spinBoxCamera->value()), settingDacCameraDefault).toInt());
 		ui->spinBoxChannel2->setValue(settings.value(settingDacCameraChannel2Path + QString::number(ui->spinBoxCamera->value()), settingDacCameraDefault).toInt());
 		ui->spinBoxChannel3->setValue(settings.value(settingDacCameraChannel3Path + QString::number(ui->spinBoxCamera->value()), settingDacCameraDefault).toInt());
@@ -126,9 +172,27 @@ void DialogDac::loadSettings()
 		ui->spinBoxChannel6->setValue(settings.value(settingDacCameraChannel6Path + QString::number(ui->spinBoxCamera->value()), settingDacCameraDefault).toInt());
 		ui->spinBoxChannel7->setValue(settings.value(settingDacCameraChannel7Path + QString::number(ui->spinBoxCamera->value()), settingDacCameraDefault).toInt());
 		ui->spinBoxChannel8->setValue(settings.value(settingDacCameraChannel8Path + QString::number(ui->spinBoxCamera->value()), settingDacCameraDefault).toInt());
+
+		//Unblocking signals for spin box 1 to 7
+		ui->spinBoxChannel1->blockSignals(blockStateSpinBoxChannel1);
+		ui->spinBoxChannel2->blockSignals(blockStateSpinBoxChannel2);
+		ui->spinBoxChannel3->blockSignals(blockStateSpinBoxChannel3);
+		ui->spinBoxChannel4->blockSignals(blockStateSpinBoxChannel4);
+		ui->spinBoxChannel5->blockSignals(blockStateSpinBoxChannel5);
+		ui->spinBoxChannel6->blockSignals(blockStateSpinBoxChannel6);
+		ui->spinBoxChannel7->blockSignals(blockStateSpinBoxChannel7);
 	}
 	else
 	{
+		//Blocking signals for spin box 1 to 7
+		bool blockStateSpinBoxChannel1 = ui->spinBoxChannel1->blockSignals(true);
+		bool blockStateSpinBoxChannel2 = ui->spinBoxChannel2->blockSignals(true);
+		bool blockStateSpinBoxChannel3 = ui->spinBoxChannel3->blockSignals(true);
+		bool blockStateSpinBoxChannel4 = ui->spinBoxChannel4->blockSignals(true);
+		bool blockStateSpinBoxChannel5 = ui->spinBoxChannel5->blockSignals(true);
+		bool blockStateSpinBoxChannel6 = ui->spinBoxChannel6->blockSignals(true);
+		bool blockStateSpinBoxChannel7 = ui->spinBoxChannel7->blockSignals(true);
+
 		ui->spinBoxChannel1->setValue(settings.value(settingDacPcieChannel1Path, settingDacPcieDefault).toInt());
 		ui->spinBoxChannel2->setValue(settings.value(settingDacPcieChannel2Path, settingDacPcieDefault).toInt());
 		ui->spinBoxChannel3->setValue(settings.value(settingDacPcieChannel3Path, settingDacPcieDefault).toInt());
@@ -137,6 +201,15 @@ void DialogDac::loadSettings()
 		ui->spinBoxChannel6->setValue(settings.value(settingDacPcieChannel6Path, settingDacPcieDefault).toInt());
 		ui->spinBoxChannel7->setValue(settings.value(settingDacPcieChannel7Path, settingDacPcieDefault).toInt());
 		ui->spinBoxChannel8->setValue(settings.value(settingDacPcieChannel8Path, settingDacPcieDefault).toInt());
+
+		//Unblocking signals for spin box 1 to 7
+		ui->spinBoxChannel1->blockSignals(blockStateSpinBoxChannel1);
+		ui->spinBoxChannel2->blockSignals(blockStateSpinBoxChannel2);
+		ui->spinBoxChannel3->blockSignals(blockStateSpinBoxChannel3);
+		ui->spinBoxChannel4->blockSignals(blockStateSpinBoxChannel4);
+		ui->spinBoxChannel5->blockSignals(blockStateSpinBoxChannel5);
+		ui->spinBoxChannel6->blockSignals(blockStateSpinBoxChannel6);
+		ui->spinBoxChannel7->blockSignals(blockStateSpinBoxChannel7);
 	}
 
 	int camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toInt();
