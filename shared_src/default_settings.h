@@ -55,7 +55,8 @@
 #define settingTorDefault							tor_xck
 #define settingAdcModeDefault						normal
 #define settingAdcCustomValueDefault				0
-#define settingThemeDefault							0
+#define settingThemeIndexDefault					0
+#define settingThemeDefault							"windowsvista"
 #define settingSettingsLevelDefault					0
 #define settingBecIn10nsDefault						0
 #define settingShowCameraDefault					1
