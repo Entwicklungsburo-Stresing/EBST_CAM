@@ -43,7 +43,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->doubleSpinBoxContiniousPause_in_ms->setValue(settings.value(settingContinuousPauseInMicrosecondsPath, settingContinuousPausInMicrosecondsDefault).toDouble() / 1000);
 	QStringList styleKeys = QStyleFactory::keys();
 	ui->comboBoxTheme->addItems(styleKeys);
-	ui->comboBoxTheme->setCurrentIndex(settings.value(settingThemeIndexPath, settingThemeDefault).toInt());
+	ui->comboBoxTheme->setCurrentIndex(settings.value(settingThemeIndexPath, settingThemeIndexDefault).toInt());
 	ui->comboBoxSettingsLevel->setCurrentIndex(settings.value(settingSettingsLevelPath, settingSettingsLevelDefault).toInt());
 	ui->comboBoxSettingsLevel->currentIndexChanged(ui->comboBoxSettingsLevel->currentIndex());
 
@@ -305,7 +305,7 @@ void DialogSettings::loadDefaults()
 	ui->checkBoxBoard3->setChecked(settingBoard3Default);
 	ui->checkBoxBoard4->setChecked(settingBoard4Default);
 	//appearance
-	ui->comboBoxTheme->setCurrentIndex(settingThemeDefault);
+	ui->comboBoxTheme->setCurrentIndex(settingThemeIndexDefault);
 	ui->comboBoxSettingsLevel->setCurrentIndex(settingSettingsLevelDefault);
 	return;
 }
