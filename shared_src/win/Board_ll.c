@@ -1347,7 +1347,7 @@ void getFileHeaderFromFile(struct file_header* fh, char* filename_full)
 
 void WaitForAllInterruptsDone()
 {
-	ES_TRACE("Wait for all interrupts done\n")
+	ES_TRACE("Wait for all interrupts\n")
 	while (!(allInterruptsDone[0] && allInterruptsDone[1] && allInterruptsDone[2] && allInterruptsDone[3] && allInterruptsDone[4]))
 		if (GetAsyncKeyState(VK_ESCAPE) | abortMeasurementFlag) return;
 	ES_TRACE("All interrupts done\n")
