@@ -2853,7 +2853,8 @@ es_status_codes StartMeasurement()
 							status = AbortMeasurement();
 							return ReturnStartMeasurement(status);
 						}
-						abortMeasurementFlag = checkEscapeKeyState();
+						if(!abortMeasurementFlag && checkEscapeKeyState())
+							abortMeasurementFlag = true;
 						status = IsTimerOn(drvno, &timerOn[drvno]);
 						if (status != es_no_error) return ReturnStartMeasurement(status);
 					}
@@ -2913,9 +2914,10 @@ es_status_codes StartMeasurement()
 		// MEASUREON ---------_____
 		//WaitforTelapsed(100);
 		// When space key or ESC key was pressed, continuous measurement stops.
-		if (checkSpaceKeyState())
+		if (continiousMeasurementFlag && checkSpaceKeyState())
 			continiousMeasurementFlag = false;
-		abortMeasurementFlag = checkEscapeKeyState();
+		if (!abortMeasurementFlag && checkEscapeKeyState())
+			abortMeasurementFlag = true;
 		WaitforTelapsed(continiousPauseInMicroseconds);
 	} while (continiousMeasurementFlag && !abortMeasurementFlag);
 	// Reset the hardware bit measure on.
@@ -3071,7 +3073,8 @@ es_status_codes waitForBlockTrigger(uint32_t drvno)
 	es_status_codes status;
 	while (!abortMeasurementFlag)
 	{
-		abortMeasurementFlag = checkEscapeKeyState();
+		if (!abortMeasurementFlag && checkEscapeKeyState())
+			abortMeasurementFlag = true;
 		status = readRegisterS0_8( drvno, &data, S0Addr_CTRLA );
 		if (status != es_no_error) return status;
 		if ((data & CTRLA_bit_TSTART) > 0)
