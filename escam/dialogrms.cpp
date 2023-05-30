@@ -72,8 +72,8 @@ void DialogRMS::on_spinBox_lastsample_valueChanged(int value)
 void DialogRMS::on_spinBoxBoard_valueChanged(int index)
 {
 	settings.beginGroup("board" + QString::number(index));
-	int camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
-	int pixel = settings.value(settingPixelPath, settingPixelDefault).toUInt();
+	int camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toDouble();
+	int pixel = settings.value(settingPixelPath, settingPixelDefault).toDouble();
 	settings.endGroup();
 	int nos = settings.value(settingNosPath, settingNosDefault).toDouble();
 	// set camcnt limit to UI

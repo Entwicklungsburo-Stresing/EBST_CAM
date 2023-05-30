@@ -43,8 +43,8 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->doubleSpinBoxContiniousPause_in_ms->setValue(settings.value(settingContinuousPauseInMicrosecondsPath, settingContinuousPausInMicrosecondsDefault).toDouble() / 1000);
 	QStringList styleKeys = QStyleFactory::keys();
 	ui->comboBoxTheme->addItems(styleKeys);
-	ui->comboBoxTheme->setCurrentIndex(settings.value(settingThemeIndexPath, settingThemeIndexDefault).toInt());
-	ui->comboBoxSettingsLevel->setCurrentIndex(settings.value(settingSettingsLevelPath, settingSettingsLevelDefault).toInt());
+	ui->comboBoxTheme->setCurrentIndex(settings.value(settingThemeIndexPath, settingThemeIndexDefault).toDouble());
+	ui->comboBoxSettingsLevel->setCurrentIndex(settings.value(settingSettingsLevelPath, settingSettingsLevelDefault).toDouble());
 	ui->comboBoxSettingsLevel->currentIndexChanged(ui->comboBoxSettingsLevel->currentIndex());
 
 	// hide all board select elements
