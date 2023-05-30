@@ -1,5 +1,10 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.4.5
+- Set sample and block slider to last sample when measurement stopped
+- Prevent sending DAC values from DAC dialog too often
+- Fix abort measurement
+
 4.4.4
 - Add cameraPosition to DAC functions for controlling multiple 3030 cameras in line
 
