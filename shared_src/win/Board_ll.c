@@ -993,7 +993,11 @@ uint8_t WaitforTelapsed(long long musec)
 		// wait until time elapsed
 		while (destination_timestamp > ticksTimestamp())
 		{
-			if (GetAsyncKeyState(VK_ESCAPE) | abortMeasurementFlag) return 0;
+			if (abortMeasurementFlag || checkEscapeKeyState())
+			{
+				abortMeasurementFlag = true;
+				return 0;
+			}
 		}
 		//WDC_Err("end time:  %lld\n", ticksTimestamp());
 	}
@@ -1347,9 +1351,15 @@ void getFileHeaderFromFile(struct file_header* fh, char* filename_full)
 
 void WaitForAllInterruptsDone()
 {
-	ES_TRACE("Wait for all interrupts done\n")
+	ES_TRACE("Wait for all interrupts\n")
 	while (!(allInterruptsDone[0] && allInterruptsDone[1] && allInterruptsDone[2] && allInterruptsDone[3] && allInterruptsDone[4]))
-		if (GetAsyncKeyState(VK_ESCAPE) | abortMeasurementFlag) return;
+	{
+		if (abortMeasurementFlag || checkEscapeKeyState())
+		{
+			abortMeasurementFlag = true;
+			return;
+		}
+	}
 	ES_TRACE("All interrupts done\n")
 	return;
 }
