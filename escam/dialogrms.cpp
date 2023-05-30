@@ -75,7 +75,7 @@ void DialogRMS::on_spinBoxBoard_valueChanged(int index)
 	int camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
 	int pixel = settings.value(settingPixelPath, settingPixelDefault).toUInt();
 	settings.endGroup();
-	int nos = settings.value(settingNosPath, settingNosDefault).toUInt();
+	int nos = settings.value(settingNosPath, settingNosDefault).toDouble();
 	// set camcnt limit to UI
 	if (camcnt > 0)
 		ui->spinBoxCampos->setMaximum(camcnt - 1);
