@@ -61,7 +61,7 @@ void DialogSpecialPixels::updateBlock(int block)
 void DialogSpecialPixels::on_spinBoxBoard_valueChanged(int index)
 {
 	settings.beginGroup("board" + QString::number(index));
-	int camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
+	int camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toDouble();
 	settings.endGroup();
 	// set camcnt limit to UI
 	if (camcnt > 0)
