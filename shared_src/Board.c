@@ -5043,7 +5043,7 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 	//scanIndex2
 	sp->scanIndex2 = (uint32_t)data[(aPIXEL[drvno] - 1) - pixel_scan_index2_high] << 16 | (uint32_t)data[(aPIXEL[drvno] - 1) - pixel_scan_index2_low];
 	//cameraSystem3001
-	if (data[pixel_camera_status] & pixel_camera_status_bitindex_3001)
+	if (data[pixel_camera_status] & pixel_camera_status_bit_3001)
 		sp->cameraSystem3001 = 1;
 	else
 		sp->cameraSystem3001 = 0;
@@ -5053,7 +5053,7 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 	else
 		sp->cameraSystem3010 = 0;
 	//cameraSystem3030
-	if (data[pixel_camera_status] & pixel_camera_status_bitindex_3030)
+	if (data[pixel_camera_status] & pixel_camera_status_bit_3030)
 		sp->cameraSystem3030 = 1;
 	else
 		sp->cameraSystem3030 = 0;
