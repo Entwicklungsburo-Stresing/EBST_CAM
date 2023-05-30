@@ -16,7 +16,7 @@ lsc-cli         | CLI in C                              | Linux
 
 ### Build Dependencies
 * [Visual Studio](https://visualstudio.microsoft.com/) with C++ Toolbox (Plattform Toolset: v142, Windows SDK Version: 10.0.18362.0).
-* Visual Studio Extention: [Qt Visual Studio Tools](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2019) + [MSVC Qt 5.15](https://www.qt.io/download) (both needed for Escam)
+* Visual Studio Extention: [Qt Visual Studio Tools](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2019) + [MSVC Qt 6.5](https://www.qt.io/download) (both needed for Escam)
 * Labview Libraries: Optional, for DLL usage with Labview. If you want to compile the DLL for usage with other software than Labview, set compile options "Debug" and "Release" instead of "Debug-Labview" and "Release-Labview".
 * Visual Studio Extention: [Microsoft Visual Studio Installer Project](https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2017InstallerProjects) (optional, for creating setup.exe for escam)
 
