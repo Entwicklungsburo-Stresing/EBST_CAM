@@ -50,7 +50,7 @@ void DialogGreyscaleSettings::on_spinBoxBoard_valueChanged(int value)
 	uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
 	uint camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toUInt();
 	settings.endGroup();
-	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
+	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toDouble();
 	uint32_t block = mainWindow->ui->horizontalSliderBlock->value() - 1;
 	mainWindow->lsc.showNewBitmap(value, block, mainWindow->greyscale_viewer_camera, pixelcount, nos);
 	// set camcnt limit to UI
@@ -71,7 +71,7 @@ void DialogGreyscaleSettings::on_spinBoxCamera_valueChanged(int value)
 	settings.beginGroup("board" + QString::number(mainWindow->greyscale_viewer_board));
 	uint16_t pixelcount = settings.value(settingPixelPath, settingPixelDefault).toUInt();
 	settings.endGroup();
-	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toUInt();
+	uint32_t nos = settings.value(settingNosPath, settingNosDefault).toDouble();
 	uint32_t block = mainWindow->ui->horizontalSliderBlock->value() - 1;
 	mainWindow->lsc.showNewBitmap(mainWindow->greyscale_viewer_board, block, value, pixelcount, nos);
 	return;
