@@ -3,6 +3,8 @@
 Inspired by this tutorial to call cpp methods from c: https://bytes.com/topic/c/insights/921728-calling-c-class-methods-c
 */
 
+#ifndef MINIMAL_BUILD
+
 #include <windows.h>
 //also defined in Direct2dViewer.h
 #define WM_2DVIEWER_CLOSED (WM_USER + 0x0001)
@@ -22,4 +24,6 @@ extern "C"
 	HWND Direct2dViewer_getWindowHandler( void *D2dV );
 #ifdef __cplusplus
 }
+#endif
+
 #endif

@@ -24,6 +24,7 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug-Labview|x64 = Debug-Labview|x64
+		Release_minimal|x64 = Release_minimal|x64
 		Release|x64 = Release|x64
 		Release-Labview|x64 = Release-Labview|x64
 	EndGlobalSection
@@ -32,6 +33,8 @@ Global
 		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Debug|x64.Build.0 = Debug|x64
 		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Debug-Labview|x64.ActiveCfg = Debug-Labview|x64
 		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Debug-Labview|x64.Build.0 = Debug-Labview|x64
+		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Release_minimal|x64.ActiveCfg = Release_minimal|x64
+		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Release_minimal|x64.Build.0 = Release_minimal|x64
 		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Release|x64.ActiveCfg = Release|x64
 		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Release|x64.Build.0 = Release|x64
 		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Release-Labview|x64.ActiveCfg = Release-Labview|x64
@@ -40,6 +43,8 @@ Global
 		{4883A750-F34F-303C-8C24-F15A176128F3}.Debug|x64.Build.0 = Debug|x64
 		{4883A750-F34F-303C-8C24-F15A176128F3}.Debug-Labview|x64.ActiveCfg = Debug|x64
 		{4883A750-F34F-303C-8C24-F15A176128F3}.Debug-Labview|x64.Build.0 = Debug|x64
+		{4883A750-F34F-303C-8C24-F15A176128F3}.Release_minimal|x64.ActiveCfg = Release|x64
+		{4883A750-F34F-303C-8C24-F15A176128F3}.Release_minimal|x64.Build.0 = Release|x64
 		{4883A750-F34F-303C-8C24-F15A176128F3}.Release|x64.ActiveCfg = Release|x64
 		{4883A750-F34F-303C-8C24-F15A176128F3}.Release|x64.Build.0 = Release|x64
 		{4883A750-F34F-303C-8C24-F15A176128F3}.Release-Labview|x64.ActiveCfg = Release|x64
@@ -48,6 +53,8 @@ Global
 		{69FD80D7-D739-4BC9-A0FB-B950185FABC6}.Debug|x64.Build.0 = Debug
 		{69FD80D7-D739-4BC9-A0FB-B950185FABC6}.Debug-Labview|x64.ActiveCfg = Debug
 		{69FD80D7-D739-4BC9-A0FB-B950185FABC6}.Debug-Labview|x64.Build.0 = Debug
+		{69FD80D7-D739-4BC9-A0FB-B950185FABC6}.Release_minimal|x64.ActiveCfg = Release
+		{69FD80D7-D739-4BC9-A0FB-B950185FABC6}.Release_minimal|x64.Build.0 = Release
 		{69FD80D7-D739-4BC9-A0FB-B950185FABC6}.Release|x64.ActiveCfg = Release
 		{69FD80D7-D739-4BC9-A0FB-B950185FABC6}.Release|x64.Build.0 = Release
 		{69FD80D7-D739-4BC9-A0FB-B950185FABC6}.Release-Labview|x64.ActiveCfg = Release
