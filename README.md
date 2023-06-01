@@ -21,7 +21,15 @@ lsc-cli         | CLI in C                              | Linux
 * Visual Studio Extention: [Microsoft Visual Studio Installer Project](https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2017InstallerProjects) (optional, for creating setup.exe for escam)
 
 ### Compile
-Open `EBST_CAM.sln` with Visual Studio and press build.
+Open `EBST_CAM.sln` with Visual Studio and press build. There are different compiling configurations available.
+
+configuration	| description
+:---			| :---
+Debug			| Debug build for escam and DLL.
+Debug-Labview	| Debug build for escam and DLL with Labview libriaries for communication with Labview software.
+Release			| Release build for escam and DLL. Use this for production usage for escam and for DLL usage with Python, Matlab or other usage.
+Release_minimal	| Release build for escam and DLL. Use this for production usage for escam and for DLL usage with Python, Matlab or other usage when you don't need additional functions like the greyscale viewer, math functions or other additional appearing windows.
+Release-Labview	| Release build for escam and DLL with Labview libriaries for communication with Labview software. Use this for production usage with Labview.
 
 ### Installing Windows driver
 Run `install_run_as_admin.bat` from `Stresing14.00_Driver_Distribution_Package` as admin. 
