@@ -6,8 +6,13 @@
 #include "es_status_codes.h"
 
 #ifdef WIN32
+#ifdef _DEBUG
 #define ES_LOG(...) WDC_Err(__VA_ARGS__);
 #define ES_TRACE(...) WDC_Trace(__VA_ARGS__);
+#else
+#define ES_LOG(...)
+#define ES_TRACE(...)
+#endif
 #include "shared_src/lscpciej_lib.h"
 extern WDC_DEVICE_HANDLE* hDev;
 extern bool _SHOW_MSG;
@@ -54,6 +59,7 @@ uint16_t* getVirtualDmaAddress(uint32_t drvno);
 uint32_t getDmaBufferSizeInBytes(uint32_t drvno);
 int64_t getCurrentInterruptCounter(uint32_t drvno);
 uint8_t WaitforTelapsed(long long musec);
+#ifndef MINIMAL_BUILD
 void openFile(uint32_t drvno);
 void closeFile(uint32_t drvno);
 void setTimestamp();
@@ -62,9 +68,13 @@ void writeToDisc(uint32_t* drvno_ptr);
 void startWriteToDiscThead(uint32_t drvno);
 void VerifyData(struct verify_data_parameter* vd);
 void getFileHeaderFromFile(struct file_header* fh, char* filename_full);
+#endif
 void WaitForAllInterruptsDone();
 
 #ifdef WIN32
+long long ticksTimestamp();
+es_status_codes WaitTrigger(uint32_t drvno, bool ExtTrigFlag, bool *SpaceKey, bool *AbrKey);
+uint32_t Tickstous(uint64_t tks);
 es_status_codes About(uint32_t board_sel);
 es_status_codes AboutDrv(uint32_t drvno);
 es_status_codes AboutGPX(uint32_t drvno);
@@ -77,9 +87,7 @@ void ErrMsgBoxOn();
 void ErrMsgBoxOff(); // switch to suppress error message boxes
 void ErrorMsg(char ErrMsg[100]);
 void ValMsg(uint64_t val);
-long long ticksTimestamp();
-es_status_codes WaitTrigger(uint32_t drvno, bool ExtTrigFlag, bool *SpaceKey, bool *AbrKey);
-uint32_t Tickstous(uint64_t tks);
+#ifndef MINIMAL_BUILD
 // direct 2d viewer
 void Start2dViewer(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t pixel, uint32_t nos);
 void ShowNewBitmap(UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos);
@@ -87,6 +95,7 @@ void Deinit2dViewer();
 void SetGammaValue(UINT16 white, UINT16 black);
 UINT16 GetGammaWhite(); 
 UINT16 GetGammaBlack();
+#endif
 #endif
 
 #endif // BOARDLL_H
