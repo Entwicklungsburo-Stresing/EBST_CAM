@@ -17,6 +17,8 @@ along with Foobar.If not, see < http://www.gnu.org/licenses/>.
 Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
 */
 
+#ifndef MINIMAL_BUILD
+
 #include "shared_src/Direct2dViewer_c.h"
 #include "Direct2dViewer.h"
 
@@ -113,3 +115,5 @@ UINT16 Direct2dViewer_getGammaBlack( void *D2dV )
 	Direct2dViewer *D2d = (Direct2dViewer *)D2dV;
 	return D2d->GetGammaBlack();
 }
+
+#endif

@@ -42,10 +42,10 @@ es_status_codes CleanupDma(uint32_t drvno)
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ErrLog("Failed unlocking a contiguous DMA buffer. Error 0x%lx - %s\n", dwStatus, Stat2Str(dwStatus));
-		WDC_Err("%s", LSCPCIEJ_GetLastErr());
+		ES_LOG("%s", LSCPCIEJ_GetLastErr());
 		return es_unlocking_dma_failed;
 	}
-	WDC_Err("Unlock DMABuf successful\n");
+	ES_LOG("Unlock DMABuf successful\n");
 	dmaBuffer[drvno] = NULL;
 	return es_no_error;
 }
@@ -78,8 +78,7 @@ int64_t InitHRCounter()
 	//TPS:: ticks per second = freq
 	ifcounter = QueryPerformanceFrequency(&freq);
 	tps = LargeToInt(freq); //ticks per second
-	WDC_Err("TPS: %lld\n", tps);
-
+	ES_LOG("TPS: %lld\n", tps);
 	return tps;
 }
 
@@ -235,7 +234,7 @@ es_status_codes writeRegister_32(uint32_t drvno, uint32_t data, uint16_t address
 		ES_LOG("\nwriteRegister_32 in address 0x%x with data: 0x%x failed\n", address, data);
 		ES_LOG("%s", LSCPCIEJ_GetLastErr());
 		return es_register_write_failed;
-	}//else WDC_Err("DMAWrite /t address /t0x%x /t data: /t0x%x \n", address, data);
+	}//else ES_LOG("DMAWrite /t address /t0x%x /t data: /t0x%x \n", address, data);
 	return es_no_error;
 };
 
@@ -260,7 +259,7 @@ es_status_codes writeRegister_16(uint32_t drvno, uint16_t data, uint16_t address
 		ES_LOG("\nwriteRegister_16 in address 0x%x with data: 0x%x failed\n", address, data);
 		ES_LOG("%s", LSCPCIEJ_GetLastErr());
 		return es_register_write_failed;
-	}//else WDC_Err("DMAWrite /t address /t0x%x /t data: /t0x%x \n", address, data);
+	}//else ES_LOG("DMAWrite /t address /t0x%x /t data: /t0x%x \n", address, data);
 	return es_no_error;
 };
 
@@ -284,7 +283,7 @@ es_status_codes writeRegister_8(uint32_t drv, uint8_t data, uint16_t address)
 	{
 		ES_LOG("\nwriteRegister_8 in address 0x%x with data: 0x%x failed\n", address, data);
 		return es_register_write_failed;
-	}//else WDC_Err("ByteS0Write /t address /t0x%x /t data: /t0x%x \n", address, data);
+	}//else ES_LOG("ByteS0Write /t address /t0x%x /t data: /t0x%x \n", address, data);
 	return es_no_error;
 };  // WriteByteS0
 
@@ -535,20 +534,20 @@ es_status_codes _InitDriver()
 		ErrLog( "Failed to initialize the WDC library. Error 0x%lx - %s\n",
 			dwStatus, Stat2Str( dwStatus ) );
 		//doesn't work at this moment before debug setup
-		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
+		ES_LOG( "%s", LSCPCIEJ_GetLastErr() );
 		WDC_DriverClose();
 		return es_driver_init_failed;
 	}
 	BZERO( scanResult );
-	WDC_Err("Init HR counter\n");
+	ES_LOG("Init HR counter\n");
 	TPS = InitHRCounter();//for ticks function
-	WDC_Err("Scan PCIe devices\n");
+	ES_LOG("Scan PCIe devices\n");
 	dwStatus = WDC_PciScanDevices( LSCPCIEJ_DEFAULT_VENDOR_ID, LSCPCIEJ_DEFAULT_DEVICE_ID, &scanResult ); //VendorID, DeviceID
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ErrLog( "DeviceFind: Failed scanning the PCI bus.\n"
 			"Error: 0x%lx - %s\n", dwStatus, Stat2Str( dwStatus ) );
-		WDC_Err( "%s", LSCPCIEJ_GetLastErr() );
+		ES_LOG( "%s", LSCPCIEJ_GetLastErr() );
 		// set number_of_boards 1 for test mode
 		ES_LOG("No board detected. Setting number_of_boards to 1 for test mode.\n");
 		number_of_boards = 1;
@@ -619,7 +618,7 @@ es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address 
 	DWORD dwStatus = WDC_PciReadCfg( hDev[drvno], address, data, sizeof( uint32_t ) );
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		WDC_Err( "ReadLongIOPort in address 0x%x failed\n", address );
+		ES_LOG( "ReadLongIOPort in address 0x%x failed\n", address );
 		return es_register_read_failed;
 	}
 	return es_no_error;
@@ -643,9 +642,9 @@ es_status_codes writeConfig_32(uint32_t drvno, uint32_t data, uint16_t address)
 	dwStatus = WDC_PciWriteCfg(hDev[drvno], address, &data, sizeof(uint32_t));
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
-		WDC_Err("writeConfig_32 in address 0x%x with data: 0x%x failed\n", address, data);
+		ES_LOG("writeConfig_32 in address 0x%x with data: 0x%x failed\n", address, data);
 		return es_register_write_failed;
-	}//else WDC_Err("I0PortWrite /t address /t0x%x /t data: /t0x%x \n", address, DWData);
+	}//else ES_LOG("I0PortWrite /t address /t0x%x /t data: /t0x%x \n", address, DWData);
 	return es_no_error;
 };
 
@@ -710,178 +709,6 @@ es_status_codes InitMutex(uint32_t drvno)
 	return es_no_error;
 }
 
-es_status_codes About(uint32_t board_sel)
-{
-	es_status_codes status = es_no_error;
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
-		// Check if the drvno'th bit is set
-		if ((board_sel >> drvno) & 1)
-		{
-			status = AboutDrv(drvno);
-			if (status != es_no_error) return status;
-			status = AboutGPX(drvno);
-			//if (status != es_no_error) return status;
-			status = AboutS0(drvno);
-			if (status != es_no_error) return status;
-			status = AboutTLPs(drvno);
-			if (status != es_no_error) return status;
-			status = AboutPCI(drvno);
-			if (status != es_no_error) return status;
-			status = AboutCameraSettings(drvno);
-			if (status != es_no_error) return status;
-		}
-	status = AboutMeasurementSettings();
-	if (status != es_no_error) return status;
-	return status;
-}
-
-/**
-* \brief Shows window with infos about the PCIe board.
-*
-* - version of driver
-* - ID = 53xx
-* - length of space0 BAR =0x3f
-* - vendor ID = EBST
-* - PCI board version (same as label on PCI board)
-* \param drvno board number (=1 if one PCI board)
-* \return es_status_codes
-* 	- es_no_error
-* 	- es_register_read_failed
-*	- es_no_space0
-*/
-es_status_codes AboutDrv(uint32_t drvno)
-{
-	char* cstring;
-	es_status_codes status = _AboutDrv(drvno, &cstring);
-	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"About driver", MB_OK);
-	return status;
-};
-
-/**
- * \brief Reads registers 0 to 12 of TDC-GPX chip. Time delay counter option.
- *
- * \param drvno PCIe board identifier
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_read_failed
- *		- es_register_write_failed
- */
-es_status_codes AboutGPX(uint32_t drvno)
-{
-	char* cstring;
-	es_status_codes status = _AboutGPX(drvno, &cstring);
-	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"GPX regs", MB_OK);
-	return status;
-}
-
-/**
- * \brief Read registers of space0. Space0 are the control registers of the PCIe board.
- *
- * \param drvno PCIe board identifier
- * \return es_status_codes
- *		- es_no_error
- *		- es_register_read_failed
- */
-es_status_codes AboutS0(uint32_t drvno)
-{
-	char* cstring;
-	es_status_codes status = dumpS0Registers(drvno, &cstring);
-	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"S0 regs", MB_OK);
-	return status;
-}//AboutS0
-
-/**
- * \brief
- *
- * \param drvno PCIe board identifier.
- * \return es_status_codes
- * 		- es_no_error
- *		- es_register_read_failed
- */
-es_status_codes AboutTLPs(uint32_t drvno)
-{
-	char* cstring;
-	es_status_codes status = dumpTlpRegisters(drvno, &cstring);
-	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"DMA transfer payloads", MB_OK | MB_DEFBUTTON2);
-	return status;
-}//AboutTLPs
-
-/**
- * \brief
- * 
- * \param drvno PCIe board identifier.
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_read_failed
- */
-es_status_codes AboutPCI(uint32_t drvno)
-{
-	char* cstring;
-	es_status_codes status = dumpPciRegisters(drvno, &cstring);
-	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"PCI regs", MB_OK);
-	return status;
-}//AboutPCI
-
-es_status_codes AboutMeasurementSettings()
-{
-	char* cstring;
-	es_status_codes status = dumpMeasurementSettings(&cstring);
-	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"Measurement settings", MB_OK);
-	return status;
-}
-
-es_status_codes AboutCameraSettings(uint32_t drvno)
-{
-	char* cstring;
-	es_status_codes status = dumpCameraSettings(drvno, &cstring);
-	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"Camera settings", MB_OK);
-	return status;
-}
-
-/**
- * \brief Switch on error message boxes of our software. Default is On.
- */
-void ErrMsgBoxOn()
-{
-	_SHOW_MSG = TRUE;
-}
-
-/**
- * \brief Disable error message boxes, if not needed.
- */
-void ErrMsgBoxOff()
-{
-	_SHOW_MSG = FALSE;
-}
-
-/**
- * \brief Display error message. If ErrMsgBoxOn is set.
- *
- * \param ErrMsg Message. Buffer size: 100.
- */
-void ErrorMsg(char ErrMsg[100])
-{
-	if (_SHOW_MSG)
-	{
-		if (MessageBoxA(GetActiveWindow(), (LPCTSTR)ErrMsg, (LPCTSTR)"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
-	}
-};
-
-/**
- * \brief Simple display of unsigned integer as error message for test purpose.
- *
- * \param val unsigned integer 64 bit
- */
-void ValMsg(uint64_t val)
-{
-	char AString[60];
-	if (_SHOW_MSG)
-	{
-		sprintf_s(AString, 60, "%s%d 0x%I64x", "val= ", val, val);
-		if (MessageBoxA(GetActiveWindow(), (LPCTSTR)AString, (LPCTSTR)"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
-	}
-};
-
 /**
 * \brief Reads system timer.
 *
@@ -938,9 +765,10 @@ es_status_codes WaitTrigger(uint32_t drvno, bool ExtTrigFlag, bool *SpaceKey, bo
 			}; // then look for hi
 		}
 		else HiEdge = TRUE;
-		if (GetAsyncKeyState(VK_ESCAPE))
+		if (checkEscapeKeyState())
 			Abbr = TRUE;
-		if (GetAsyncKeyState(VK_SPACE))  Space = TRUE;
+		if (checkSpaceKeyState())
+			Space = TRUE;
 	} while ((!HiEdge) && (!Abbr));
 	if (Abbr) *AbrKey = TRUE;	//stops immediately
 	if (Space) *SpaceKey = TRUE;	//stops after next trigger
@@ -987,7 +815,7 @@ uint8_t WaitforTelapsed(long long musec)
 		long long ticks_to_wait = musec * TPS / 1000000;
 		long long start_timestamp = ticksTimestamp();
 		long long destination_timestamp = start_timestamp + ticks_to_wait;
-		//WDC_Err("start time: %lld\n", start_timestamp);
+		//ES_LOG("start time: %lld\n", start_timestamp);
 		// detect overflow
 		if (destination_timestamp < start_timestamp) return 0;
 		// wait until time elapsed
@@ -999,19 +827,23 @@ uint8_t WaitforTelapsed(long long musec)
 				return 0;
 			}
 		}
-		//WDC_Err("end time:  %lld\n", ticksTimestamp());
+		//ES_LOG("end time:  %lld\n", ticksTimestamp());
 	}
 	return 1;
 }
 
 uint16_t checkEscapeKeyState()
 {
+#ifndef MINIMAL_BUILD
 	return GetAsyncKeyState(VK_ESCAPE);
+#endif
 }
 
 uint16_t checkSpaceKeyState()
 {
+#ifndef MINIMAL_BUILD
 	return GetAsyncKeyState(VK_SPACE);
+#endif
 }
 
 /**
@@ -1114,6 +946,8 @@ int64_t getCurrentInterruptCounter(uint32_t drvno)
 	else
 		return IsrCounter[drvno];
 }
+
+#ifndef MINIMAL_BUILD
 
 void openFile(uint32_t drvno)
 {
@@ -1349,6 +1183,8 @@ void getFileHeaderFromFile(struct file_header* fh, char* filename_full)
 	return;
 }
 
+#endif
+
 void WaitForAllInterruptsDone()
 {
 	ES_TRACE("Wait for all interrupts\n")
@@ -1363,6 +1199,182 @@ void WaitForAllInterruptsDone()
 	ES_TRACE("All interrupts done\n")
 	return;
 }
+
+
+es_status_codes About(uint32_t board_sel)
+{
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = AboutDrv(drvno);
+			if (status != es_no_error) return status;
+			status = AboutGPX(drvno);
+			//if (status != es_no_error) return status;
+			status = AboutS0(drvno);
+			if (status != es_no_error) return status;
+			status = AboutTLPs(drvno);
+			if (status != es_no_error) return status;
+			status = AboutPCI(drvno);
+			if (status != es_no_error) return status;
+			status = AboutCameraSettings(drvno);
+			if (status != es_no_error) return status;
+		}
+	status = AboutMeasurementSettings();
+	if (status != es_no_error) return status;
+	return status;
+}
+
+/**
+* \brief Shows window with infos about the PCIe board.
+*
+* - version of driver
+* - ID = 53xx
+* - length of space0 BAR =0x3f
+* - vendor ID = EBST
+* - PCI board version (same as label on PCI board)
+* \param drvno board number (=1 if one PCI board)
+* \return es_status_codes
+* 	- es_no_error
+* 	- es_register_read_failed
+*	- es_no_space0
+*/
+es_status_codes AboutDrv(uint32_t drvno)
+{
+	char* cstring;
+	es_status_codes status = _AboutDrv(drvno, &cstring);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"About driver", MB_OK);
+	return status;
+};
+
+/**
+ * \brief Reads registers 0 to 12 of TDC-GPX chip. Time delay counter option.
+ *
+ * \param drvno PCIe board identifier
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
+ */
+es_status_codes AboutGPX(uint32_t drvno)
+{
+	char* cstring;
+	es_status_codes status = _AboutGPX(drvno, &cstring);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"GPX regs", MB_OK);
+	return status;
+}
+
+/**
+ * \brief Read registers of space0. Space0 are the control registers of the PCIe board.
+ *
+ * \param drvno PCIe board identifier
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes AboutS0(uint32_t drvno)
+{
+	char* cstring;
+	es_status_codes status = dumpS0Registers(drvno, &cstring);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"S0 regs", MB_OK);
+	return status;
+}//AboutS0
+
+/**
+ * \brief
+ *
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes
+ * 		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes AboutTLPs(uint32_t drvno)
+{
+	char* cstring;
+	es_status_codes status = dumpTlpRegisters(drvno, &cstring);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"DMA transfer payloads", MB_OK | MB_DEFBUTTON2);
+	return status;
+}//AboutTLPs
+
+/**
+ * \brief
+ *
+ * \param drvno PCIe board identifier.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes AboutPCI(uint32_t drvno)
+{
+	char* cstring;
+	es_status_codes status = dumpPciRegisters(drvno, &cstring);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"PCI regs", MB_OK);
+	return status;
+}//AboutPCI
+
+es_status_codes AboutMeasurementSettings()
+{
+	char* cstring;
+	es_status_codes status = dumpMeasurementSettings(&cstring);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"Measurement settings", MB_OK);
+	return status;
+}
+
+es_status_codes AboutCameraSettings(uint32_t drvno)
+{
+	char* cstring;
+	es_status_codes status = dumpCameraSettings(drvno, &cstring);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"Camera settings", MB_OK);
+	return status;
+}
+
+
+/**
+ * \brief Switch on error message boxes of our software. Default is On.
+ */
+void ErrMsgBoxOn()
+{
+	_SHOW_MSG = TRUE;
+}
+
+/**
+ * \brief Disable error message boxes, if not needed.
+ */
+void ErrMsgBoxOff()
+{
+	_SHOW_MSG = FALSE;
+}
+
+/**
+ * \brief Display error message. If ErrMsgBoxOn is set.
+ *
+ * \param ErrMsg Message. Buffer size: 100.
+ */
+void ErrorMsg(char ErrMsg[100])
+{
+	if (_SHOW_MSG)
+	{
+		if (MessageBoxA(GetActiveWindow(), (LPCTSTR)ErrMsg, (LPCTSTR)"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+	}
+};
+
+/**
+ * \brief Simple display of unsigned integer as error message for test purpose.
+ *
+ * \param val unsigned integer 64 bit
+ */
+void ValMsg(uint64_t val)
+{
+	char AString[60];
+	if (_SHOW_MSG)
+	{
+		sprintf_s(AString, 60, "%s%d 0x%I64x", "val= ", val, val);
+		if (MessageBoxA(GetActiveWindow(), (LPCTSTR)AString, (LPCTSTR)"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+	}
+};
+
+#ifndef MINIMAL_BUILD
 
 /**
 \brief Start 2d viewer.
@@ -1469,3 +1481,5 @@ UINT16 GetGammaBlack()
 	}
 	return 0;
 }
+
+#endif

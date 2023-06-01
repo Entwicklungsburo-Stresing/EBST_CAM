@@ -1,6 +1,7 @@
 //UI abstraction layer for Labview
 #include "shared_src/UIAbstractionLayer.h"
 #include "ESLSCDLL.h"
+#ifdef COMPILE_FOR_LABVIEW
 #include <sys/types.h>
 #include <sys/timeb.h>
 
@@ -10,6 +11,7 @@ struct _timeb timebuffer_blockStart;
 struct _timeb timebuffer_blockDone;
 struct _timeb timebuffer_allBlocksDone;
 const int64_t min_diff_in_ms = 50;
+#endif
 
 void notifyMeasureStart()
 {

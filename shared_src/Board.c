@@ -2719,17 +2719,21 @@ es_status_codes StartMeasurement()
 		isRunning = true;
 	abortMeasurementFlag = false;
 	es_status_codes status = es_no_error;
+#ifndef MINIMAL_BUILD
 	setTimestamp();
+#endif
 	measurement_cnt = 0;
 	memset(data_available, 0, sizeof(size_t) * MAXPCIECARDS);
 	continiousMeasurementFlag = (bool)settings_struct.contiuous_measurement;//0 or 1
 	continiousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
+#ifndef MINIMAL_BUILD
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1 && settings_struct.camera_settings[drvno].write_to_disc)
 			startWriteToDiscThead(drvno);
 	}
+#endif
 	// Set the measure on hardware bit
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
@@ -4744,7 +4748,9 @@ es_status_codes GetIsDsc(uint32_t drvno, bool* isDsc)
 
 void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString)
 {
+#ifndef MINIMAL_BUILD
 	VerifyData(vd);
+#endif
 	enum N
 	{
 		bufferLength = 1024

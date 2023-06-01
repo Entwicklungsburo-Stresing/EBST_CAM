@@ -17,6 +17,8 @@ along with Foobar.If not, see < http://www.gnu.org/licenses/>.
 Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
 */
 
+#ifndef MINIMAL_BUILD
+
 #include "Direct2dViewer.h"
 
 /**
@@ -697,3 +699,5 @@ void Direct2dViewer::Scale_setSkipLines( int x, int y )
 	_scale.skip_y = y;
 	return;
 }
+
+#endif

@@ -65,16 +65,11 @@ DllAccess es_status_codes DLLCopyOneBlock(uint32_t drvno, uint16_t block, uint16
 // 7) Before exiting your software, use this call for cleanup.
 DllAccess es_status_codes DLLExitDriver();
 
-#ifndef MINIMAL_BUILD
 //************ Mid level API
 //************ system info & control
 DllAccess void DLLFreeMemInfo(uint64_t * pmemory_all, uint64_t * pmemory_free);
-DllAccess void DLLErrorMsg(char ErrMsg[20]);
-DllAccess es_status_codes DLLCalcTrms(uint32_t board_sel, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf0, double* trms0, double* mwf1, double* trms1);
 DllAccess int DLLGetProcessCount();
 DllAccess int DLLGetThreadCount();
-DllAccess void DLLErrMsgBoxOn();	//BOARD.C sends error messages on default
-DllAccess void DLLErrMsgBoxOff();	//general deactivate of error message boxes
 DllAccess double DLLCalcRamUsageInMB(uint32_t nos, uint32_t nob);
 DllAccess double DLLCalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);
 DllAccess void DLLSetContinuousMeasurement(uint8_t on);
@@ -84,18 +79,17 @@ DllAccess void DLLRegisterLVEvents(LVUserEventRef *measureStartEvent, LVUserEven
 DllAccess char* DLLConvertErrorCodeToMsg( es_status_codes status );
 DllAccess void DLLFillUserBufferWithDummyData(uint32_t board_sel);
 //************ Cam infos
-DllAccess es_status_codes DLLAbout(uint32_t board_sel);
 DllAccess es_status_codes DLLwaitForMeasureReady(uint32_t board_sel);
 DllAccess es_status_codes DLLwaitForBlockReady(uint32_t board_sel);
 DllAccess es_status_codes DLLisMeasureOn(uint32_t board_sel, uint8_t* measureOn0, uint8_t* measureOn1);
 DllAccess es_status_codes DLLisBlockOn(uint32_t board_sel, uint8_t* blockOn0, uint8_t* blockOn1);
 DllAccess void DLLGetCurrentScanNumber(uint32_t board_sel, int64_t* sample, int64_t* block);
 //************  Control CAM
-DllAccess es_status_codes DLLOutTrigHigh(uint32_t board_sel);	//set output Trigger signal high
-DllAccess es_status_codes DLLOutTrigLow(uint32_t board_sel);	//set output Trigger signal low
-DllAccess es_status_codes DLLOutTrigPulse(uint32_t board_sel, uint32_t PulseWidth);	// pulses high output Trigger signal
-DllAccess es_status_codes DLLOpenShutter(uint32_t board_sel);	// set IFC=high
-DllAccess es_status_codes DLLCloseShutter(uint32_t board_sel);	// set IFC=low
+DllAccess es_status_codes DLLOutTrigHigh(uint32_t board_sel);
+DllAccess es_status_codes DLLOutTrigLow(uint32_t board_sel);
+DllAccess es_status_codes DLLOutTrigPulse(uint32_t board_sel, uint32_t PulseWidth);
+DllAccess es_status_codes DLLOpenShutter(uint32_t board_sel);
+DllAccess es_status_codes DLLCloseShutter(uint32_t board_sel);
 DllAccess es_status_codes DLLSetTemp(uint32_t board_sel, uint8_t level);
 DllAccess es_status_codes DLLSetTORReg(uint32_t board_sel, uint8_t tor);
 DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t board_sel, uint8_t location, uint8_t cameraPosition, uint32_t* output0, uint32_t* output1, uint32_t* output2, uint32_t* output3, uint32_t* output4, uint8_t reorder_channel);
@@ -115,6 +109,12 @@ DllAccess es_status_codes DLLreadRegisterS0_32(uint32_t board_sel, uint32_t* dat
 DllAccess es_status_codes DLLwriteRegisterS0_32(uint32_t board_sel, uint32_t data, uint32_t address);
 DllAccess es_status_codes DLLsetBitS0_32(uint32_t board_sel, uint32_t bitnumber, uint16_t address);
 DllAccess es_status_codes DLLresetBitS0_32(uint32_t board_sel, uint32_t bitnumber, uint16_t address);
+#ifndef MINIMAL_BUILD
+DllAccess es_status_codes DLLCalcTrms(uint32_t board_sel, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf0, double* trms0, double* mwf1, double* trms1);
+DllAccess void DLLErrMsgBoxOn();
+DllAccess void DLLErrMsgBoxOff();
+DllAccess es_status_codes DLLAbout(uint32_t board_sel);
+DllAccess void DLLErrorMsg(char ErrMsg[20]);
 //************  2d greyscale viewer
 DllAccess void DLLStart2dViewer(UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos);
 DllAccess void DLLShowNewBitmap(UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos);
@@ -122,9 +122,6 @@ DllAccess void DLLDeinit2dViewer();
 DllAccess void DLLSetGammaValue(UINT16 white, UINT16 black);
 DllAccess UINT16 DLLGetGammaWhite();
 DllAccess UINT16 DLLGetGammaBlack();
-//************  Area and Region of Interest
-DllAccess es_status_codes DLLSetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep, UINT8* region_size, UINT8 vfreq);
-DllAccess es_status_codes DLLSetupArea(UINT32 drvno, UINT32 lines_binning, UINT8 vfreq);
 #endif
 
 #ifdef __cplusplus

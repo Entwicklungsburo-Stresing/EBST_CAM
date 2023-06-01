@@ -3,6 +3,8 @@
 // https://github.com/microsoft/Windows-classic-samples/tree/master/Samples/Win7Samples/multimedia/Direct2D/SimpleDirect2DApplication
 */
 
+#ifndef MINIMAL_BUILD
+
 // Modify the following defines if you have to target a platform prior to the ones specified below.
 // Refer to MSDN for the latest info on corresponding values for different platforms.
 #ifndef WINVER              // Allow use of features specific to Windows 7 or later.
@@ -198,5 +200,4 @@ private:
 	} _bitmapSource;
 };
 
-
-
+#endif

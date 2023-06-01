@@ -77,6 +77,151 @@ BOOL WINAPI DLLMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved )
 }
 
 /**
+ * \copydoc InitDriver
+ * \param _number_of_boards Pointer for returning recognized number of PCIe boards.
+ */
+DllAccess es_status_codes DLLInitDriver(uint8_t* _number_of_boards)
+{
+	es_status_codes status = InitDriver();
+	if (status == es_no_error)
+		*_number_of_boards = number_of_boards;
+	return status;
+}
+
+
+/**
+ * \copydoc InitBoard
+ */
+DllAccess es_status_codes DLLInitBoard()
+{
+	return InitBoard();
+}
+
+/**
+ * \copydoc SetGlobalSettings
+ */
+DllAccess es_status_codes DLLSetGlobalSettings(struct measurement_settings settings)
+{
+	SetGlobalSettings(settings);
+	return es_no_error;
+}
+
+/**
+ * \bief Set settings with Matlab compatible structs.
+ *
+ * \param measurement_s Measurement settings struct without embedded camera settings struct.
+ * \param camera_s0 Camera settings for PCIe board 0
+ * \param camera_s1 Camera settings for PCIe board 1
+ * \param camera_s2 Camera settings for PCIe board 2
+ * \param camera_s3 Camera settings for PCIe board 3
+ * \param camera_s4 Camera settings for PCIe board 4
+ * \return
+ */
+DllAccess es_status_codes DLLSetGlobalSettings_matlab(struct measurement_settings_matlab measurement_s, struct camera_settings camera_s0, struct camera_settings camera_s1, struct camera_settings camera_s2, struct camera_settings camera_s3, struct camera_settings camera_s4)
+{
+	struct measurement_settings settings;
+	settings.board_sel = measurement_s.board_sel;
+	settings.contiuous_measurement = measurement_s.contiuous_measurement;
+	settings.cont_pause_in_microseconds = measurement_s.cont_pause_in_microseconds;
+	settings.nob = measurement_s.nob;
+	settings.nos = measurement_s.nos;
+	struct camera_settings camera_s[MAXPCIECARDS] = { camera_s0 , camera_s1, camera_s2, camera_s3, camera_s4 };
+	for (int i = 0; i < MAXPCIECARDS; i++)
+		settings.camera_settings[i] = camera_s[i];
+	SetGlobalSettings(settings);
+	return es_no_error;
+}
+
+/**
+ * \copydoc InitMeasurement
+ */
+DllAccess es_status_codes DLLInitMeasurement()
+{
+	return InitMeasurement();
+}
+
+/**
+ * \copydoc StartMeasurement
+ */
+DllAccess es_status_codes DLLStartMeasurement_blocking()
+{
+	return StartMeasurement();
+}
+
+/**
+ * \brief This function is starting the measurement and returns immediately.
+ *
+ * StartMeasurement is run a new thread. When there are multiple boards, all boards are starting the measurement. You can check the status of the measurement with DllisMeasureOn and DllisBlockOn or create a blocking call with DLLwaitForMeasureReady and DLLwaitForBlockReady.
+ */
+DllAccess void DLLStartMeasurement_nonblocking()
+{
+	//thread wit prio 15
+	_beginthread(&StartMeasurement, 0, NULL);
+	return;
+}
+
+/**
+ * \copydoc AbortMeasurement
+ */
+DllAccess es_status_codes DLLAbortMeasurement()
+{
+	return AbortMeasurement();
+}
+
+/**
+ * \copydoc ReturnFrame
+ */
+DllAccess es_status_codes DLLReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest, uint32_t pixel)
+{
+	return ReturnFrame(drvno, sample, block, camera, pdest, pixel);
+}
+
+/**
+ * \brief Copies all pixel data to pdest
+ *
+ * \param drvno indentifier of PCIe card
+ * \param pdest address where data is written, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( uint16_t )
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+DllAccess es_status_codes DLLCopyAllData(uint32_t drvno, uint16_t* pdest)
+{
+	uint16_t* pframe = NULL;
+	es_status_codes	status = GetAddressOfPixel(drvno, 0, 0, 0, 0, &pframe);
+	if (status != es_no_error) return status;
+	memcpy(pdest, pframe, (uint64_t)(*Nospb) * (uint64_t)(*Nob) * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno] * sizeof(uint16_t));
+	return status;
+}
+
+/**
+ * \brief Copies one block of pixel data to pdest
+ *
+ * \param drv indentifier of PCIe card
+ * \param block Selects which block to copy.
+ * \param pdest address where data is written, should be a buffer with size: nos * camcnt * pixel * sizeof( uint16_t )
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
+DllAccess es_status_codes DLLCopyOneBlock(uint32_t drvno, uint16_t block, uint16_t* pdest)
+{
+	uint16_t* pframe = NULL;
+	es_status_codes	status = GetAddressOfPixel(drvno, 0, 0, block, 0, &pframe);
+	if (status != es_no_error) return status;
+	memcpy(pdest, pframe, (uint64_t)(*Nospb) * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno] * sizeof(uint16_t));
+	return status;
+}
+
+/**
+ * \copydoc ExitDriver
+ */
+DllAccess es_status_codes DLLExitDriver()
+{
+	return ExitDriver();
+}
+
+/**
 \brief Function for multithreading.
 */
 DllAccess int DLLGetProcessCount()
@@ -90,52 +235,6 @@ DllAccess int DLLGetProcessCount()
 DllAccess int DLLGetThreadCount()
 {
 	return(nThreadCount);
-}
-
-/**
-\copydoc ErrMsgBoxOn
-*/
-DllAccess void DLLErrMsgBoxOn()
-{
-	ErrMsgBoxOn();
-	return;
-}
-
-/**
-\copydoc ErrMsgBoxOff
-*/
-DllAccess void DLLErrMsgBoxOff()
-{
-	ErrMsgBoxOff();
-	return;
-}
-
-/**
- * \copydoc InitDriver
- * \param _number_of_boards Pointer for returning recognized number of PCIe boards.
- */
-DllAccess es_status_codes DLLInitDriver( uint8_t* _number_of_boards )
-{
-	es_status_codes status = InitDriver();
-	if (status == es_no_error)
-		*_number_of_boards = number_of_boards;
-	return status;
-}
-
-/**
- * \copydoc ExitDriver
- */
-DllAccess es_status_codes DLLExitDriver()
-{
-	return ExitDriver();
-}
-
-/**
- * \copydoc InitBoard
- */
-DllAccess es_status_codes DLLInitBoard()
-{
-	return InitBoard();
 }
 
 /**
@@ -178,14 +277,6 @@ DllAccess es_status_codes DLLreadRegisterS0_32( uint32_t board_sel, uint32_t* da
 DllAccess es_status_codes DLLwriteRegisterS0_32( uint32_t board_sel, uint32_t data, uint32_t address)
 {
 	return writeRegisterS0_32_allBoards( board_sel, data, address);
-}
-
-/**
- * \copydoc About
- */
-DllAccess es_status_codes DLLAbout( uint32_t board_sel )
-{
-	return About(board_sel);
 }
 
 /**
@@ -285,18 +376,6 @@ DllAccess es_status_codes DLLCloseShutter( uint32_t board_sel )
 }
 
 /**
- * \brief For test purposes only: output of 2 strings.
- *
- * \param testMsg1 string1
- * \param testMsg2 string2
- */
-void TestMsg( char testMsg1[20], char testMsg2[20] )
-{
-	if (MessageBox( GetActiveWindow(), testMsg1, testMsg2, MB_OK | MB_ICONEXCLAMATION ) == IDOK) {};
-	return;
-}
-
-/**
  * \copydoc setBitS0_32
  */
 DllAccess es_status_codes DLLsetBitS0_32( uint32_t board_sel, uint32_t bitnumber, uint16_t address )
@@ -310,71 +389,6 @@ DllAccess es_status_codes DLLsetBitS0_32( uint32_t board_sel, uint32_t bitnumber
 DllAccess es_status_codes DLLresetBitS0_32( uint32_t board_sel, uint32_t bitnumber, uint16_t address )
 {
 	return resetBitS0_32_allBoards(board_sel, bitnumber, address );
-}
-
-/**
- * \copydoc ReturnFrame
- */
-DllAccess es_status_codes DLLReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest, uint32_t pixel)
-{
-	return ReturnFrame(drvno, sample, block, camera, pdest, pixel);
-}
-
-/**
- * \brief Copies all pixel data to pdest
- * 
- * \param drvno indentifier of PCIe card
- * \param pdest address where data is written, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( uint16_t )
- * \return es_status_codes
- *		- es_no_error
- *		- es_parameter_out_of_range
- */
-DllAccess es_status_codes DLLCopyAllData( uint32_t drvno, uint16_t *pdest )
-{
-	uint16_t* pframe = NULL;
-	es_status_codes	status = GetAddressOfPixel(drvno, 0, 0, 0, 0, &pframe);
-	if (status != es_no_error) return status;
-	memcpy(pdest, pframe, (uint64_t)(*Nospb) * (uint64_t)(*Nob) * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno] * sizeof(uint16_t));
-	return status;
-}
-
-/**
- * \brief Copies one block of pixel data to pdest
- * 
- * \param drv indentifier of PCIe card
- * \param block Selects which block to copy.
- * \param pdest address where data is written, should be a buffer with size: nos * camcnt * pixel * sizeof( uint16_t )
- * \return es_status_codes
- *		- es_no_error
- *		- es_parameter_out_of_range
- */
-DllAccess es_status_codes DLLCopyOneBlock( uint32_t drvno, uint16_t block, uint16_t *pdest )
-{
-	uint16_t* pframe = NULL;
-	es_status_codes	status = GetAddressOfPixel(drvno, 0, 0, block, 0, &pframe);
-	if (status != es_no_error) return status;
-	memcpy(pdest, pframe, (uint64_t)(*Nospb) * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno] * sizeof(uint16_t));
-	return status;
-}
-
-/**
- * \brief This function is starting the measurement and returns immediately.
- * 
- * StartMeasurement is run a new thread. When there are multiple boards, all boards are starting the measurement. You can check the status of the measurement with DllisMeasureOn and DllisBlockOn or create a blocking call with DLLwaitForMeasureReady and DLLwaitForBlockReady.
- */
-DllAccess void DLLStartMeasurement_nonblocking()
-{
-	//thread wit prio 15
-	_beginthread( &StartMeasurement, 0, NULL );
-	return;
-}
-
-/**
- * \copydoc StartMeasurement
- */
-DllAccess es_status_codes DLLStartMeasurement_blocking()
-{
-	return StartMeasurement();
 }
 
 /**
@@ -410,14 +424,6 @@ DllAccess es_status_codes DLLSetTORReg( uint32_t board_sel, uint8_t tor)
 }
 
 /**
- * \copydoc AboutS0
- */
-DllAccess es_status_codes DLLAboutS0( uint32_t drvno )
-{
-	return AboutS0( drvno );
-}
-
-/**
  * \copydoc DAC8568_setAllOutputs
  */
 DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t board_sel, uint8_t location, uint8_t cameraPosition, uint32_t* output0, uint32_t* output1, uint32_t* output2, uint32_t* output3, uint32_t* output4, uint8_t reorder_channel)
@@ -443,40 +449,6 @@ DllAccess void DLLFreeMemInfo( uint64_t * pmemory_all, uint64_t * pmemory_free )
 {
 	FreeMemInfo( pmemory_all, pmemory_free );
 	return;
-}
-
-/**
- * \copydoc ErrorMsg
- */
-DllAccess void DLLErrorMsg( char ErrMsg[20] )
-{
-	ErrorMsg( ErrMsg );
-	return;
-}
-
-/**
- * \copydoc CalcTrms
- */
-DllAccess es_status_codes DLLCalcTrms( uint32_t board_sel, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double *mwf0, double *trms0, double *mwf1, double *trms1 )
-{
-	es_status_codes status = es_no_error;
-	double* mwf[2] = { mwf0, mwf1 };
-	double* trms[2] = { trms0, trms1 };
-	int usedBoards = 0;
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
-	{
-		// Check if the drvno'th bit is set
-		if ((board_sel >> drvno) & 1)
-		{
-			status = CalcTrms(drvno, firstSample, lastSample, TRMS_pixel, CAMpos, mwf[usedBoards], trms[usedBoards]);
-			if (status != es_no_error) return status;
-			usedBoards++;
-			// this function only returns the values for the first two found boards
-			if (usedBoards >= 2)
-				return status;
-		}
-	}
-	return status;
 }
 
 /**
@@ -583,57 +555,6 @@ DllAccess void DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEve
 DllAccess char* DLLConvertErrorCodeToMsg( es_status_codes status )
 {
 	return ConvertErrorCodeToMsg( status );
-}
-
-/**
- * \copydoc SetGlobalSettings
- */
-DllAccess es_status_codes DLLSetGlobalSettings(struct measurement_settings settings)
-{
-	SetGlobalSettings(settings);
-	return es_no_error;
-}
-
-/**
- * \bief Set settings with Matlab compatible structs.
- * 
- * \param measurement_s Measurement settings struct without embedded camera settings struct.
- * \param camera_s0 Camera settings for PCIe board 0
- * \param camera_s1 Camera settings for PCIe board 1
- * \param camera_s2 Camera settings for PCIe board 2
- * \param camera_s3 Camera settings for PCIe board 3
- * \param camera_s4 Camera settings for PCIe board 4
- * \return 
- */
-DllAccess es_status_codes DLLSetGlobalSettings_matlab(struct measurement_settings_matlab measurement_s, struct camera_settings camera_s0, struct camera_settings camera_s1, struct camera_settings camera_s2, struct camera_settings camera_s3, struct camera_settings camera_s4)
-{
-	struct measurement_settings settings;
-	settings.board_sel = measurement_s.board_sel;
-	settings.contiuous_measurement = measurement_s.contiuous_measurement;
-	settings.cont_pause_in_microseconds = measurement_s.cont_pause_in_microseconds;
-	settings.nob = measurement_s.nob;
-	settings.nos = measurement_s.nos;
-	struct camera_settings camera_s[MAXPCIECARDS] = { camera_s0 , camera_s1, camera_s2, camera_s3, camera_s4 };
-	for (int i = 0; i < MAXPCIECARDS; i++)
-		settings.camera_settings[i] = camera_s[i];
-	SetGlobalSettings(settings);
-	return es_no_error;
-}
-
-/**
- * \copydoc InitMeasurement
- */
-DllAccess es_status_codes DLLInitMeasurement()
-{
-	return InitMeasurement();
-}
-
-/**
- * \copydoc AbortMeasurement
- */
-DllAccess es_status_codes DLLAbortMeasurement()
-{
-	return AbortMeasurement();
 }
 
 /**
@@ -847,6 +768,81 @@ DllAccess void DLLFillUserBufferWithDummyData(uint32_t board_sel)
 	return;
 }
 
+#ifndef MINIMAL_BUILD
+
+/**
+ * \copydoc CalcTrms
+ */
+DllAccess es_status_codes DLLCalcTrms(uint32_t board_sel, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf0, double* trms0, double* mwf1, double* trms1)
+{
+	es_status_codes status = es_no_error;
+	double* mwf[2] = { mwf0, mwf1 };
+	double* trms[2] = { trms0, trms1 };
+	int usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			status = CalcTrms(drvno, firstSample, lastSample, TRMS_pixel, CAMpos, mwf[usedBoards], trms[usedBoards]);
+			if (status != es_no_error) return status;
+			usedBoards++;
+			// this function only returns the values for the first two found boards
+			if (usedBoards >= 2)
+				return status;
+		}
+	}
+	return status;
+}
+
+/**
+ * \brief For test purposes only: output of 2 strings.
+ *
+ * \param testMsg1 string1
+ * \param testMsg2 string2
+ */
+void TestMsg(char testMsg1[20], char testMsg2[20])
+{
+	if (MessageBox(GetActiveWindow(), testMsg1, testMsg2, MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+	return;
+}
+
+/**
+\copydoc ErrMsgBoxOn
+*/
+DllAccess void DLLErrMsgBoxOn()
+{
+	ErrMsgBoxOn();
+	return;
+}
+
+/**
+\copydoc ErrMsgBoxOff
+*/
+DllAccess void DLLErrMsgBoxOff()
+{
+	ErrMsgBoxOff();
+	return;
+}
+
+
+/**
+ * \copydoc ErrorMsg
+ */
+DllAccess void DLLErrorMsg(char ErrMsg[20])
+{
+	ErrorMsg(ErrMsg);
+	return;
+}
+
+/**
+ * \copydoc About
+ */
+DllAccess es_status_codes DLLAbout(uint32_t board_sel)
+{
+	return About(board_sel);
+}
+
 /**
 * \copydoc Start2dViewer
 */
@@ -913,3 +909,5 @@ DllAccess es_status_codes DLLSetupArea(UINT32 drvno, UINT32 lines_binning, UINT8
 {
 	return SetupArea(drvno, lines_binning, vfreq);
 }
+
+#endif
