@@ -59,12 +59,13 @@ DllAccess void DLLStartMeasurement_nonblocking();
 // 5b) Use this call, if you want to abort the measurement.
 DllAccess es_status_codes DLLAbortMeasurement();
 // 6) Get the data with one of the following 3 calls. Call it how many times you want.
-DllAccess es_status_codes DLLReturnFrame(uint32_t board_sel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest0, uint16_t* pdest1, uint32_t pixel);
-DllAccess es_status_codes DLLCopyAllData(uint32_t board_sel, uint16_t* pdest0, uint16_t* pdest1);
-DllAccess es_status_codes DLLCopyOneBlock(uint32_t board_sel, uint16_t block, uint16_t* pdest0, uint16_t* pdest1);
+DllAccess es_status_codes DLLReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest, uint32_t pixel);
+DllAccess es_status_codes DLLCopyAllData(uint32_t drvno, uint16_t* pdest);
+DllAccess es_status_codes DLLCopyOneBlock(uint32_t drvno, uint16_t block, uint16_t* pdest);
 // 7) Before exiting your software, use this call for cleanup.
 DllAccess es_status_codes DLLExitDriver();
 
+#ifndef MINIMAL_BUILD
 //************ Mid level API
 //************ system info & control
 DllAccess void DLLFreeMemInfo(uint64_t * pmemory_all, uint64_t * pmemory_free);
@@ -124,6 +125,7 @@ DllAccess UINT16 DLLGetGammaBlack();
 //************  Area and Region of Interest
 DllAccess es_status_codes DLLSetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep, UINT8* region_size, UINT8 vfreq);
 DllAccess es_status_codes DLLSetupArea(UINT32 drvno, UINT32 lines_binning, UINT8 vfreq);
+#endif
 
 #ifdef __cplusplus
 }
