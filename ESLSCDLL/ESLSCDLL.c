@@ -315,52 +315,26 @@ DllAccess es_status_codes DLLresetBitS0_32( uint32_t board_sel, uint32_t bitnumb
 /**
  * \copydoc ReturnFrame
  */
-DllAccess es_status_codes DLLReturnFrame(uint32_t board_sel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest0, uint16_t* pdest1, uint32_t pixel)
+DllAccess es_status_codes DLLReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest, uint32_t pixel)
 {
-	uint16_t* pdest[2] = { pdest0, pdest1 };
-	int usedBoards = 0;
-	es_status_codes status = es_no_error;
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
-		// Check if the drvno'th bit is set
-		if ((board_sel >> drvno) & 1)
-		{
-			status = ReturnFrame(drvno, sample, block, camera, pdest[usedBoards], pixel);
-			if (status != es_no_error) return status;
-			usedBoards++;
-			// this function only returns data for the first two found boards
-			if (usedBoards >= 2)
-				return status;
-		}
-	return status;
+	return ReturnFrame(drvno, sample, block, camera, pdest, pixel);
 }
 
 /**
  * \brief Copies all pixel data to pdest
  * 
- * \param drv indentifier of PCIe card
+ * \param drvno indentifier of PCIe card
  * \param pdest address where data is written, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( uint16_t )
  * \return es_status_codes
  *		- es_no_error
  *		- es_parameter_out_of_range
  */
-DllAccess es_status_codes DLLCopyAllData( uint32_t board_sel, uint16_t *pdest0, uint16_t *pdest1 )
+DllAccess es_status_codes DLLCopyAllData( uint32_t drvno, uint16_t *pdest )
 {
-	uint16_t* pdest[2] = { pdest0, pdest1 };
-	int usedBoards = 0;
 	uint16_t* pframe = NULL;
-	es_status_codes status = es_no_error;
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
-		// Check if the drvno'th bit is set
-		if ((board_sel >> drvno) & 1)
-		{
-			status = GetAddressOfPixel(drvno, 0, 0, 0, 0, &pframe);
-			if (status != es_no_error) return status;
-			memcpy(pdest[usedBoards], pframe, (uint64_t)(*Nospb) * (uint64_t)(*Nob) * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno] * sizeof(uint16_t));  // length in bytes
-			usedBoards++;
-			// this function only returns data for the first two found boards
-			if (usedBoards >= 2)
-				return status;
-		}
+	es_status_codes	status = GetAddressOfPixel(drvno, 0, 0, 0, 0, &pframe);
+	if (status != es_no_error) return status;
+	memcpy(pdest, pframe, (uint64_t)(*Nospb) * (uint64_t)(*Nob) * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno] * sizeof(uint16_t));
 	return status;
 }
 
@@ -374,24 +348,12 @@ DllAccess es_status_codes DLLCopyAllData( uint32_t board_sel, uint16_t *pdest0, 
  *		- es_no_error
  *		- es_parameter_out_of_range
  */
-DllAccess es_status_codes DLLCopyOneBlock( uint32_t board_sel, uint16_t block, uint16_t *pdest0, uint16_t *pdest1 )
+DllAccess es_status_codes DLLCopyOneBlock( uint32_t drvno, uint16_t block, uint16_t *pdest )
 {
-	uint16_t* pdest[2] = { pdest0, pdest1 };
-	int usedBoards = 0;
 	uint16_t* pframe = NULL;
-	es_status_codes status = es_no_error;
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
-		// Check if the drvno'th bit is set
-		if ((board_sel >> drvno) & 1)
-		{
-			status = GetAddressOfPixel(drvno, 0, 0, block, 0, &pframe);
-			if (status != es_no_error) return status;
-			memcpy(pdest[usedBoards], pframe, (uint64_t)(*Nospb) * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno] * sizeof(uint16_t)); // length in bytes
-			usedBoards++;
-			// this function only returns data for the first two found boards
-			if (usedBoards >= 2)
-				return status;
-		}
+	es_status_codes	status = GetAddressOfPixel(drvno, 0, 0, block, 0, &pframe);
+	if (status != es_no_error) return status;
+	memcpy(pdest, pframe, (uint64_t)(*Nospb) * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno] * sizeof(uint16_t));
 	return status;
 }
 
