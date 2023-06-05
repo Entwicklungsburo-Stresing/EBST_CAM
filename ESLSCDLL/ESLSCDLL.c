@@ -58,7 +58,6 @@ BOOL WINAPI DLLMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 		// DLL cleanup code goes here. Formerly this would
 		// be in the WEP function of a 16-bit DLL.
 		//................................................
-	 //	CCDDrvExit(DRV);
 		nProcessCount--;
 		break;
 	case DLL_THREAD_ATTACH:
@@ -107,7 +106,7 @@ DllAccess es_status_codes DLLSetGlobalSettings(struct measurement_settings setti
 }
 
 /**
- * \bief Set settings with Matlab compatible structs.
+ * \brief Set settings with Matlab compatible structs.
  *
  * \param measurement_s Measurement settings struct without embedded camera settings struct.
  * \param camera_s0 Camera settings for PCIe board 0
@@ -175,6 +174,25 @@ DllAccess es_status_codes DLLReturnFrame(uint32_t drvno, uint32_t sample, uint32
 	return ReturnFrame(drvno, sample, block, camera, pixel, pdest);
 }
 
+
+/**
+ * \brief Get data of a single measurement for all boards selected by settings parameter board_sel.
+ *
+ * \param sample sample number ( 0...(nos - 1) )
+ * \param block block number ( 0...(nob - 1) )
+ * \param camera camera number ( 0...(CAMCNT - 1) )
+ * \param pixel Lenght of the frame to copy. Typically = pixel
+ * \param pdest0 Pointer where frame data for board0 will be written. Make sure that the size is >= sizeof(uint16_t) * pixel
+ * \param pdest1 Pointer where frame data for board1 will be written. Make sure that the size is >= sizeof(uint16_t) * pixel
+ * \param pdest2 Pointer where frame data for board2 will be written. Make sure that the size is >= sizeof(uint16_t) * pixel
+ * \param pdest3 Pointer where frame data for board3 will be written. Make sure that the size is >= sizeof(uint16_t) * pixel
+ * \param pdest4 Pointer where frame data for board4 will be written. Make sure that the size is >= sizeof(uint16_t) * pixel
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
 DllAccess es_status_codes DLLReturnFrame_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4)
 {
 	uint16_t* pdest[MAXPCIECARDS] = { pdest0, pdest1, pdest2, pdest3, pdest4 };
@@ -192,9 +210,9 @@ DllAccess es_status_codes DLLReturnFrame_multipleBoards(uint32_t sample, uint32_
 }
 
 /**
- * \brief Copies all pixel data to pdest
+ * \brief Copies all pixel data to pdest.
  *
- * \param drvno indentifier of PCIe card
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param pdest address where data is written, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( uint16_t )
  * \return es_status_codes
  *		- es_no_error
@@ -210,11 +228,14 @@ DllAccess es_status_codes DLLCopyAllData(uint32_t drvno, uint16_t* pdest)
 }
 
 /**
- * \brief Copies all pixel data to pdest
+ * \brief Copies all pixel data to pdest for all used boards set in settings parameter board_sel.
  *
- * \param drv indentifier of PCIe card
- * \param pdest address where data is written, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( uint16_t )
- * \return es_status_codes
+ * \param pdest0 Address where data is written for board 0, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( uint16_t )
+ * \param pdest1 Address where data is written for board 1, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( uint16_t )
+ * \param pdest2 Address where data is written for board 2, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( uint16_t )
+ * \param pdest3 Address where data is written for board 3, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( uint16_t )
+ * \param pdest4 Address where data is written for board 4, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( uint16_t )
+ * \return es_status_codes:
  *		- es_no_error
  *		- es_parameter_out_of_range
  */
@@ -238,7 +259,7 @@ DllAccess es_status_codes DLLCopyAllData_multipleBoards(uint16_t* pdest0, uint16
 /**
  * \brief Copies one block of pixel data to pdest
  *
- * \param drv indentifier of PCIe card
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param block Selects which block to copy.
  * \param pdest address where data is written, should be a buffer with size: nos * camcnt * pixel * sizeof( uint16_t )
  * \return es_status_codes
@@ -255,11 +276,14 @@ DllAccess es_status_codes DLLCopyOneBlock(uint32_t drvno, uint16_t block, uint16
 }
 
 /**
- * \brief Copies one block of pixel data to pdest
+ * \brief Copies one block of pixel data of all used boards selected by settings parameter board_sel to pdest.
  *
- * \param drv indentifier of PCIe card
  * \param block Selects which block to copy.
- * \param pdest address where data is written, should be a buffer with size: nos * camcnt * pixel * sizeof( uint16_t )
+ * \param pdest0 address where data is written for board 0, should be a buffer with size: nos * camcnt * pixel * sizeof( uint16_t )
+ * \param pdest1 address where data is written for board 1, should be a buffer with size: nos * camcnt * pixel * sizeof( uint16_t )
+ * \param pdest2 address where data is written for board 2, should be a buffer with size: nos * camcnt * pixel * sizeof( uint16_t )
+ * \param pdest3 address where data is written for board 3, should be a buffer with size: nos * camcnt * pixel * sizeof( uint16_t )
+ * \param pdest4 address where data is written for board 4, should be a buffer with size: nos * camcnt * pixel * sizeof( uint16_t )
  * \return es_status_codes
  *		- es_no_error
  *		- es_parameter_out_of_range
@@ -315,8 +339,18 @@ DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t drvno, uint8_t* data, uin
 }
 
 /**
-\copydoc readRegisterS0_8
-*/
+ * \brief Read 1 byte of a register in S0 space of all boards selected by settings parameter board_sel.
+ *
+ * \param data0 Read buffer of board 0.
+ * \param data1 Read buffer of board 1.
+ * \param data2 Read buffer of board 2.
+ * \param data3 Read buffer of board 3.
+ * \param data4 Read buffer of board 4.
+ * \param address Address of the register to read.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
 DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards(uint8_t* data0, uint8_t* data1, uint8_t* data2, uint8_t* data3, uint8_t* data4, uint32_t address)
 {
 	es_status_codes status = es_no_error;
@@ -336,8 +370,14 @@ DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards(uint8_t* data0, uin
 }
 
 /**
-\copydoc writeRegisterS0_8_allBoards
-*/
+ * \brief Write the same 1 byte to a register in S0 space of all boards selected by settings parameter board_sel.
+ *
+ * \param data Data to write.
+ * \param address Address of the register to write.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
 DllAccess es_status_codes DLLwriteRegisterS0_8(uint8_t data, uint32_t address)
 {
 	return writeRegisterS0_8_allBoards(settings_struct.board_sel, data, address);
@@ -352,8 +392,18 @@ DllAccess es_status_codes DLLreadRegisterS0_32(uint32_t drvno, uint32_t* data, u
 }
 
 /**
-\copydoc readRegisterS0_32
-*/
+ * \brief Read 4 bytes of a register in S0 space of all boards selected by settings parameter board_sel.
+ *
+ * \param data0 Read buffer for board 0.
+ * \param data1 Read buffer for board 1.
+ * \param data2 Read buffer for board 2.
+ * \param data3 Read buffer for board 3.
+ * \param data4 Read buffer for board 4.
+ * \param address Address of the register to read.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
 DllAccess es_status_codes DLLreadRegisterS0_32_multipleBoards(uint32_t* data0, uint32_t* data1, uint32_t* data2, uint32_t* data3, uint32_t* data4, uint32_t address)
 {
 	es_status_codes status = es_no_error;
@@ -371,8 +421,14 @@ DllAccess es_status_codes DLLreadRegisterS0_32_multipleBoards(uint32_t* data0, u
 }
 
 /**
-\copydoc writeRegisterS0_32_allBoards
-*/
+ * \brief Write 4 bytes of a register in S0 space for all boards selected by settings parameter board_sel.
+ *
+ * \param data Data to write.
+ * \param address Address of the register to read.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
 DllAccess es_status_codes DLLwriteRegisterS0_32(uint32_t data, uint32_t address)
 {
 	return writeRegisterS0_32_allBoards(settings_struct.board_sel, data, address);
@@ -395,7 +451,13 @@ DllAccess double DLLCalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double 
 }
 
 /**
- * \copydoc OutTrigHigh
+ * \brief Set trigger out(Reg CtrlA:D3) for all boards selected by settings parameter board_sel. Can be used to control timing issues in software.
+ *
+ * The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual.
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
  */
 DllAccess es_status_codes DLLOutTrigHigh()
 {
@@ -411,7 +473,13 @@ DllAccess es_status_codes DLLOutTrigHigh()
 }
 
 /**
- * \copydoc OutTrigLow
+ * \brief Reset trigger out(Reg CtrlA:D3) for all boards selected by settings parameter board_sel. Can be used to control timing issues in software.
+ *
+ * The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
  */
 DllAccess es_status_codes DLLOutTrigLow()
 {
@@ -427,7 +495,14 @@ DllAccess es_status_codes DLLOutTrigLow()
 }
 
 /**
- * \copydoc OutTrigPulse
+ * \brief Pulses trigger out(Reg CtrlA:D3) for all boards selected by setings parameter board_sel. Can be used to control timing issues in software.
+ *
+ * The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual
+ * \param PulseWidth duration of pulse in ms
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
  */
 DllAccess es_status_codes DLLOutTrigPulse(uint32_t PulseWidth)
 {
@@ -443,7 +518,12 @@ DllAccess es_status_codes DLLOutTrigPulse(uint32_t PulseWidth)
 }
 
 /**
- * \copydoc OpenShutter
+ * \brief Open shutter for sensors with EC (exposure control) / sets IFC signal = high for all boards selected by settings parameter board_sel.
+ *
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
  */
 DllAccess es_status_codes DLLOpenShutter()
 {
@@ -459,7 +539,12 @@ DllAccess es_status_codes DLLOpenShutter()
 }
 
 /**
- * \copydoc CloseShutter
+ * \brief Sets the IFC bit of interface for sensors with shutter function for all boards set by settings parameter board_sel. IFC=low.
+ *
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
  */
 DllAccess es_status_codes DLLCloseShutter()
 {
@@ -475,7 +560,14 @@ DllAccess es_status_codes DLLCloseShutter()
 }
 
 /**
- * \copydoc setBitS0_32_allBoards
+ * @brief Set bit to 1 in S0 register at memory address for all boards selected by settings parameter board_sel.
+ *
+ * @param bitnumber 0...31, 0 is LSB, 31 MSB
+ * @param address register address. Only 4 byte steps are valid.
+ * @return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
  */
 DllAccess es_status_codes DLLsetBitS0_32(uint32_t bitnumber, uint16_t address)
 {
@@ -483,7 +575,14 @@ DllAccess es_status_codes DLLsetBitS0_32(uint32_t bitnumber, uint16_t address)
 }
 
 /**
- * \copydoc resetBitS0_32_allBoards
+ * @brief Set bit to 0 in register at memory address for all boards selected by settings parameter board_sel.
+ *
+ * @param bitnumber 0...31, 0 is LSB, 31 MSB
+ * @param address register address. Only 4 byte steps are valid.
+ * @return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
  */
 DllAccess es_status_codes DLLresetBitS0_32(uint32_t bitnumber, uint16_t address)
 {
@@ -491,7 +590,14 @@ DllAccess es_status_codes DLLresetBitS0_32(uint32_t bitnumber, uint16_t address)
 }
 
 /**
- * \copydoc SetTemp
+ * \brief Set temperature level for cooled cameras for all boards selected by settings parameter board_sel.
+ *
+ * \param level level 0..7 / 0=off, 7=min -> see cooling manual
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
  */
 DllAccess es_status_codes DLLSetTemp(uint8_t level)
 {
@@ -507,7 +613,13 @@ DllAccess es_status_codes DLLSetTemp(uint8_t level)
 }
 
 /**
- * \copydoc SetTORReg
+ * \brief Set signal of output port of PCIe card for all boards selected by settings parameter board_sel.
+ *
+ * \param tor select output signal. See enum tor_out in enum.h for options.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
  */
 DllAccess es_status_codes DLLSetTORReg(uint8_t tor)
 {
@@ -523,7 +635,21 @@ DllAccess es_status_codes DLLSetTORReg(uint8_t tor)
 }
 
 /**
- * \copydoc DAC8568_setAllOutputs
+ * \brief Sets all outputs of the DAC8568 in camera 3030 or on PCIe board for all PCIe boards.
+ *
+ * Use this function to set the outputs, because it is resorting the channel numeration correctly.
+ * \param location Switch for the different locations of DAC85689. See [enum DAC8568_location](@ref DAC8568_location) in enum.h for details.
+ * \param cameraPosition This is describing the camera position when there are mumltiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
+ * \param output0 all output values as array for board 0 that will be converted to analog voltage (0 ... 0xFFFF)
+ * \param output1 all output values as array for board 1 that will be converted to analog voltage (0 ... 0xFFFF)
+ * \param output2 all output values as array for board 2 that will be converted to analog voltage (0 ... 0xFFFF)
+ * \param output3 all output values as array for board 3 that will be converted to analog voltage (0 ... 0xFFFF)
+ * \param output4 all output values as array for board 4 that will be converted to analog voltage (0 ... 0xFFFF)
+ * \param reorder_channels used to reorder DAC channels for high speed camera
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_parameter_out_of_range
  */
 DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint8_t location, uint8_t cameraPosition, uint32_t* output0, uint32_t* output1, uint32_t* output2, uint32_t* output3, uint32_t* output4, uint8_t reorder_channel)
 {
@@ -560,7 +686,16 @@ DllAccess es_status_codes DLLisMeasureOn(uint32_t drvno, uint8_t* measureOn)
 }
 
 /**
- * \copydoc isMeasureOn
+ * \brief Check if measure on bit is set for all boards selected by settings parameter board_sel.
+ *
+ * \param measureOn0 True when measureon bit is set in board 0.
+ * \param measureOn1 True when measureon bit is set in board 1.
+ * \param measureOn2 True when measureon bit is set in board 2.
+ * \param measureOn3 True when measureon bit is set in board 3.
+ * \param measureOn4 True when measureon bit is set in board 4.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
  */
 DllAccess es_status_codes DLLisMeasureOn_multipleBoards(uint8_t* measureOn0, uint8_t* measureOn1, uint8_t* measureOn2, uint8_t* measureOn3, uint8_t* measureOn4)
 {
@@ -589,7 +724,16 @@ DllAccess es_status_codes DLLisBlockOn(uint32_t drvno, uint8_t* blockOn)
 }
 
 /**
- * \copydoc isBlockOn
+ * \brief Check if blockon bit is set for all boards selected by settings parameter board_sel.
+ *
+ * \param blockOn0 True when blockon bit is set in board 0.
+ * \param blockOn1 True when blockon bit is set in board 1.
+ * \param blockOn2 True when blockon bit is set in board 2.
+ * \param blockOn3 True when blockon bit is set in board 3.
+ * \param blockOn4 True when blockon bit is set in board 4.
+ *  \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
  */
 DllAccess es_status_codes DLLisBlockOn_multipleBoards(uint8_t* blockOn0, uint8_t* blockOn1, uint8_t* blockOn2, uint8_t* blockOn3, uint8_t* blockOn4)
 {
@@ -610,7 +754,11 @@ DllAccess es_status_codes DLLisBlockOn_multipleBoards(uint8_t* blockOn0, uint8_t
 }
 
 /**
- * \copydoc waitForMeasureReady
+ * \brief Returns when measure on bit is 0 in all boards selected by settings parameter board_sel.
+ *
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
  */
 DllAccess es_status_codes DLLwaitForMeasureReady()
 {
@@ -618,7 +766,11 @@ DllAccess es_status_codes DLLwaitForMeasureReady()
 }
 
 /**
- * \copydoc waitForBlockReady
+ * \brief Returns when block on bit is 0 in all boards selected by settings parameter board_sel.
+ *
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
  */
 DllAccess es_status_codes DLLwaitForBlockReady()
 {
@@ -662,6 +814,9 @@ DllAccess void DLLRegisterLVEvents(LVUserEventRef* measureStartEvent, LVUserEven
 }
 #endif
 
+/**
+ * \copydoc ConvertErrorCodeToMsg
+ */
 DllAccess char* DLLConvertErrorCodeToMsg(es_status_codes status)
 {
 	return ConvertErrorCodeToMsg(status);
@@ -676,7 +831,14 @@ DllAccess es_status_codes DLLIOCtrl_setOutput(uint32_t drvno, uint32_t number, u
 }
 
 /**
- * \copydoc IOCtrl_setT0
+ * \brief Set period of IOCtrl pulse outputs base frequency T0 for all boards selected by settings parameter board_sel.
+ *
+ * \param period_in_10ns Period of T0 in 10ns steps.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_register_read_failed
+ *		- es_camera_not_found
  */
 DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t period_in_10ns)
 {
@@ -694,7 +856,14 @@ DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t period_in_10ns)
 }
 
 /**
- * \copydoc IOCtrl_setAllOutputs
+ * \brief Set parameters of all pulses outputs of IOCTRL for all boards selected by settings parameter board_sel.
+ *
+ * \param width_in_5ns Set width of pulse in 5ns steps. Array with 7 entries.
+ * \param delay_in_5ns Set delay of pulse in 5ns steps. Array with 7 entries.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_write_failed
+ *		- es_parameter_out_of_range
  */
 DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t* width_in_5ns, uint32_t* delay_in_5ns)
 {
@@ -721,7 +890,22 @@ DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t*
 }
 
 /**
- * \copydoc GetCurrentScanNumber
+ * \brief Gives scan and block number of the last scan written to userBuffer for all boards selected by settings paramter board_sel.
+ *
+ * When settings parameter USE_SOFTWARE_POLLING is true this function converts scanCounterTotal to scan and block.
+ * This is necessary, because scanCounterTotal is just counting each scan not regarding camcnt and blocks.
+ * When USE_SOFTWARE_POLLING is false the scan and block number of the last interrupt is given.
+ *
+ * \param sample0 Scan number of the last scan in userBuffer of board 0. -1 when no scan has been written yet, otherwise 0...(nos-1)
+ * \param sample1 Scan number of the last scan in userBuffer of board 1. -1 when no scan has been written yet, otherwise 0...(nos-1)
+ * \param sample2 Scan number of the last scan in userBuffer of board 2. -1 when no scan has been written yet, otherwise 0...(nos-1)
+ * \param sample3 Scan number of the last scan in userBuffer of board 3. -1 when no scan has been written yet, otherwise 0...(nos-1)
+ * \param sample4 Scan number of the last scan in userBuffer of board 4. -1 when no scan has been written yet, otherwise 0...(nos-1)
+ * \param block0 Block number of the last scan in userBuffer of board 0. -1 when no scans has been written yet, otherwise 0...(nob-1)
+ * \param block1 Block number of the last scan in userBuffer of board 1. -1 when no scans has been written yet, otherwise 0...(nob-1)
+ * \param block2 Block number of the last scan in userBuffer of board 2. -1 when no scans has been written yet, otherwise 0...(nob-1)
+ * \param block3 Block number of the last scan in userBuffer of board 3. -1 when no scans has been written yet, otherwise 0...(nob-1)
+ * \param block4 Block number of the last scan in userBuffer of board 4. -1 when no scans has been written yet, otherwise 0...(nob-1)
  */
 DllAccess void DLLGetCurrentScanNumber_mutlipleBoards(int64_t* sample0, int64_t* block0, int64_t* sample1, int64_t* block1, int64_t* sample2, int64_t* block2, int64_t* sample3, int64_t* block3, int64_t* sample4, int64_t* block4)
 {
@@ -747,7 +931,16 @@ DllAccess es_status_codes DLLGetIsTdc(uint32_t drvno, uint8_t* isTdc)
 }
 
 /**
- * \copydoc GetIsTdc
+ * \brief Read TDC flag in PCIEFLAGS register of all boards selected by settings parameter board_sel.
+ *
+ * \param isTdc0 TDC flag of board 0. 1: TDC board detected, 0: no TDC board detected
+ * \param isTdc1 TDC flag of board 1. 1: TDC board detected, 0: no TDC board detected
+ * \param isTdc2 TDC flag of board 2. 1: TDC board detected, 0: no TDC board detected
+ * \param isTdc3 TDC flag of board 3. 1: TDC board detected, 0: no TDC board detected
+ * \param isTdc4 TDC flag of board 4. 1: TDC board detected, 0: no TDC board detected
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
  */
 DllAccess es_status_codes DLLGetIsTdc_multipleBoards(uint8_t* isTdc0, uint8_t* isTdc1, uint8_t* isTdc2, uint8_t* isTdc3, uint8_t* isTdc4)
 {
@@ -776,7 +969,16 @@ DllAccess es_status_codes DLLGetIsDsc(uint32_t drvno, uint8_t* isDsc)
 }
 
 /**
- * \copydoc GetIsDsc
+ * \brief Read DSC flag in PCIEFLAGS register for all boards selected by settings parameter board sel.
+ *
+ * \param isDsc0 DSC flag of board 0. 1: DSC board detected, 0: no DSC board detected
+ * \param isDsc1 DSC flag of board 1. 1: DSC board detected, 0: no DSC board detected
+ * \param isDsc2 DSC flag of board 2. 1: DSC board detected, 0: no DSC board detected
+ * \param isDsc3 DSC flag of board 3. 1: DSC board detected, 0: no DSC board detected
+ * \param isDsc4 DSC flag of board 4. 1: DSC board detected, 0: no DSC board detected
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
  */
 DllAccess es_status_codes DLLGetIsDsc_multipleBoards(uint8_t* isDsc0, uint8_t* isDsc1, uint8_t* isDsc2, uint8_t* isDsc3, uint8_t* isDsc4)
 {
@@ -797,7 +999,10 @@ DllAccess es_status_codes DLLGetIsDsc_multipleBoards(uint8_t* isDsc0, uint8_t* i
 }
 
 /**
- * \copydoc ResetDSC
+ * @brief reset Delay Stage Counter for all boards selected by settings parameter board_sel.
+ *
+ * @param DSCNumber 1: DSC 1; 2: DSC 2
+ * @return es_status_codes
  */
 DllAccess es_status_codes DLLResetDSC(uint8_t DSCNumber)
 {
@@ -815,7 +1020,11 @@ DllAccess es_status_codes DLLResetDSC(uint8_t DSCNumber)
 }
 
 /**
- * \copydoc SetDIRDSC
+ * @brief set direction of Delay Stage Counter for all boards selected by settings parameter board_sel.
+ *
+ * @param DSCNumber 1: DSC 1; 2: DSC 2
+ * @param dir true: up; false: down
+ * @return es_status_codes
  */
 DllAccess es_status_codes DLLSetDIRDSC(uint8_t DSCNumber, uint8_t dir)
 {
@@ -841,7 +1050,20 @@ DllAccess es_status_codes DLLGetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t*
 }
 
 /**
- * \copydoc GetDSC
+ * \brief return all values of Delay Stage Counter for all boards selected by settings parameter board_sel
+ *
+ * \param DSCNumber 1: DSC 1; 2: DSC 2
+ * \param ADSC0 current DSC of board 0
+ * \param ADSC1 current DSC of board 1
+ * \param ADSC2 current DSC of board 2
+ * \param ADSC3 current DSC of board 3
+ * \param ADSC4 current DSC of board 4
+ * \param LDSC0 last DSC of board 0
+ * \param LDSC1 last DSC of board 1
+ * \param LDSC2 last DSC of board 2
+ * \param LDSC3 last DSC of board 3
+ * \param LDSC4 last DSC of board 4
+ * \return es_status_codes
  */
 DllAccess es_status_codes DLLGetDSC_multipleBoards(uint8_t DSCNumber, uint32_t* ADSC0, uint32_t* LDSC0, uint32_t* ADSC1, uint32_t* LDSC1, uint32_t* ADSC2, uint32_t* LDSC2, uint32_t* ADSC3, uint32_t* LDSC3, uint32_t* ADSC4, uint32_t* LDSC4)
 {
@@ -862,6 +1084,16 @@ DllAccess es_status_codes DLLGetDSC_multipleBoards(uint8_t DSCNumber, uint32_t* 
 	return status;
 }
 
+/**
+ * \brief Initialize the TDC-GPX chip for all boards selected by settings parameter board_sel. TDC: time delay counter option.
+ *
+ * \param delay GPX offset is used to increase accuracy. A counter value can be added, usually 1000.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ *		- es_register_write_failed
+ * register dump with _AboutGPX() but with error status
+ */
 DllAccess es_status_codes DLLInitGPX(uint32_t delay)
 {
 	es_status_codes status = es_no_error;
@@ -877,17 +1109,43 @@ DllAccess es_status_codes DLLInitGPX(uint32_t delay)
 	return status;
 }
 
+/**
+ * \copydoc SetContinuousMeasurement
+ */
 DllAccess void DLLSetContinuousMeasurement(uint8_t on)
 {
 	SetContinuousMeasurement(on);
 	return;
 }
 
+/**
+ * \copydoc GetAllSpecialPixelInformation
+ */
 DllAccess es_status_codes DLLGetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp)
 {
 	return GetAllSpecialPixelInformation(drvno, sample, block, camera_pos, sp);
 }
 
+/**
+ * \brief This function returns the all special pixel information of a specific scan.
+ *
+ * The information impact signal 2 is given in the special pixels pixel_impact_signal_2_low and pixel_impact_signal_2_high. Impact signal 2 is either TDC 2 or DSC 2, depending on the PCIe daughter board.
+ *
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param sample sample number (0 ... (nos-1))
+ * \param block block number (0 ... (nob-1))
+ * \param camera_pos camera position (0 ... (CAMCNT-1))
+ * \param sp0 struct special_pixels for board 0. Pointer to struct special_pixel, where all special pixel information will be written.
+ * \param sp1 struct special_pixels for board 1. Pointer to struct special_pixel, where all special pixel information will be written.
+ * \param sp2 struct special_pixels for board 2. Pointer to struct special_pixel, where all special pixel information will be written.
+ * \param sp3 struct special_pixels for board 3. Pointer to struct special_pixel, where all special pixel information will be written.
+ * \param sp4 struct special_pixels for board 4. Pointer to struct special_pixel, where all special pixel information will be written.
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
 DllAccess es_status_codes DLLGetAllSpecialPixelInformation_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp0, struct special_pixels* sp1, struct special_pixels* sp2, struct special_pixels* sp3, struct special_pixels* sp4)
 {
 	struct special_pixels* sp[MAXPCIECARDS] = { sp0, sp1, sp2, sp3, sp4 };
@@ -906,6 +1164,9 @@ DllAccess es_status_codes DLLGetAllSpecialPixelInformation_multipleBoards(uint32
 	return status;
 }
 
+/**
+ * \brief This function inserts data to user buffer for developing purpose.
+ */
 DllAccess void DLLFillUserBufferWithDummyData()
 {
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -928,7 +1189,27 @@ DllAccess es_status_codes DLLCalcTrms(uint32_t drvno, uint32_t firstSample, uint
 }
 
 /**
- * \copydoc CalcTrms
+ * \brief Calculate TRMS noise value of one pixel for all used boards.
+ *
+ * Calculates RMS of TRMS_pixel in the range of samples from firstSample to lastSample. Only calculates RMS from one block. Boards set by settings parameter board_sel are used.
+ * \param firstSample start sample to calculate RMS. 0...(nos-2). Typical value: 10, to skip overexposed first samples
+ * \param lastSample last sample to calculate RMS. firstSample+1...(nos-1).
+ * \param TRMS_pixel pixel for calculating noise (0...(PIXEL-1))
+ * \param CAMpos index for camcount (0...(CAMCNT-1))
+ * \param mwf0 pointer for mean value for board 0
+ * \param trms0 pointer for noise for board 0
+ * \param mwf1 pointer for mean value for board 1
+ * \param trms1 pointer for noise for board 1
+ * \param mwf2 pointer for mean value for board 2
+ * \param trms2 pointer for noise for board 2
+ * \param mwf3 pointer for mean value for board 3
+ * \param trms3 pointer for noise for board 3
+ * \param mwf4 pointer for mean value for board 4
+ * \param trms4 pointer for noise for board 4
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ *		- es_allocating_memory_failed
  */
 DllAccess es_status_codes DLLCalcTrms_multipleBoards(uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf0, double* trms0, double* mwf1, double* trms1, double* mwf2, double* trms2, double* mwf3, double* trms3, double* mwf4, double* trms4)
 {
