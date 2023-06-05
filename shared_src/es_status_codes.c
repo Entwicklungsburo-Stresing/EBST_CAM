@@ -30,6 +30,12 @@ char errorMsg[100][50] =
 	"Disabling interrupt failed"
 };
 
+/**
+ * \brief Converts a es_status_codes to a human readable error message.
+ * 
+ * \param status es_status_codes
+ * \return char*
+ */
 char* ConvertErrorCodeToMsg(es_status_codes status)
 {
 	return errorMsg[status];
