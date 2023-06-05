@@ -3349,7 +3349,7 @@ es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t samp
  */
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms)
 {
-	double measureTime = (double)nos * (double)nob * exposure_time_in_ms / 1000; * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+	double measureTime = (double)nos * (double)nob * exposure_time_in_ms / 1000;
 	return measureTime;
 }
 
