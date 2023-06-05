@@ -1200,7 +1200,11 @@ void WaitForAllInterruptsDone()
 	return;
 }
 
-
+/**
+ * \brief Display information about registers and settings in pop up windows..
+ * 
+ * \return es_status_codes
+ */
 es_status_codes About(uint32_t board_sel)
 {
 	es_status_codes status = es_no_error;
