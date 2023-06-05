@@ -1447,8 +1447,8 @@ void Deinit2dViewer()
 }
 
 /**
-\copydoc Direct2dViewer_setGammaValue
-*/
+ * \copydoc Direct2dViewer::SetGammaValue
+ */
 void SetGammaValue(UINT16 white, UINT16 black)
 {
 	if (Direct2dViewer != NULL)
@@ -1460,8 +1460,8 @@ void SetGammaValue(UINT16 white, UINT16 black)
 }
 
 /**
-\copydoc Direct2dViewer_getGammaWhite
-*/
+ * \copydoc Direct2dViewer::GetGammaWhite
+ */
 UINT16 GetGammaWhite()
 {
 	if (Direct2dViewer != NULL)
@@ -1472,8 +1472,8 @@ UINT16 GetGammaWhite()
 }
 
 /**
-\copydoc Direct2dViewer_getGammaBlack
-*/
+ * \copydoc Direct2dViewer::GetGammaBlack
+ */
 UINT16 GetGammaBlack()
 {
 	if (Direct2dViewer != NULL)
