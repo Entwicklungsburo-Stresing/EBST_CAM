@@ -53,9 +53,9 @@ es_status_codes Lsc::startMeasurement()
 /**
  * \copydoc ReturnFrame
  */
-es_status_codes Lsc::returnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t *pdest, uint32_t length)
+es_status_codes Lsc::returnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t length, uint16_t* pdest)
 {
-	return ReturnFrame(drvno, sample, block, camera, pdest, length);
+	return ReturnFrame(drvno, sample, block, camera, length, pdest);
 }
 
 std::string Lsc::_dumpS0Registers(uint32_t drvno)
