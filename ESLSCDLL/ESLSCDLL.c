@@ -44,7 +44,7 @@ An optional entry point into a dynamic-link library (DLL). When the system start
 \param[in] lpvReserved If fdwReason is DLL_PROCESS_ATTACH, lpvReserved is NULL for dynamic loads and non-NULL for static loads. If fdwReason is DLL_PROCESS_DETACH, lpvReserved is NULL if FreeLibrary has been called or the DLL load failed and non-NULL if the process is terminating.
 \return When the system calls the DllMain function with the DLL_PROCESS_ATTACH value, the function returns TRUE if it succeeds or FALSE if initialization fails. If the return value is FALSE when DllMain is called because the process uses the LoadLibrary function, LoadLibrary returns NULL. (The system immediately calls your entry-point function with DLL_PROCESS_DETACH and unloads the DLL.) If the return value is FALSE when DllMain is called during process initialization, the process terminates with an error. To get extended error information, call GetLastError. When the system calls the DllMain function with any value other than DLL_PROCESS_ATTACH, the return value is ignored.
 */
-BOOL WINAPI DLLMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved )
+BOOL WINAPI DLLMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
 	switch (fdwReason)
 	{
@@ -317,10 +317,10 @@ DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t drvno, uint8_t* data, uin
 /**
 \copydoc readRegisterS0_8
 */
-DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards( uint8_t *data0, uint8_t* data1, uint8_t* data2, uint8_t* data3, uint8_t* data4, uint32_t address)
+DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards(uint8_t* data0, uint8_t* data1, uint8_t* data2, uint8_t* data3, uint8_t* data4, uint32_t address)
 {
 	es_status_codes status = es_no_error;
-	uint8_t data[MAXPCIECARDS] = {data0, data1, data2, data3, data4};
+	uint8_t data[MAXPCIECARDS] = { data0, data1, data2, data3, data4 };
 	int usedBoards = 0;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
@@ -338,7 +338,7 @@ DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards( uint8_t *data0, ui
 /**
 \copydoc writeRegisterS0_8_allBoards
 */
-DllAccess es_status_codes DLLwriteRegisterS0_8( uint8_t data, uint32_t address)
+DllAccess es_status_codes DLLwriteRegisterS0_8(uint8_t data, uint32_t address)
 {
 	return writeRegisterS0_8_allBoards(settings_struct.board_sel, data, address);
 }
@@ -354,7 +354,7 @@ DllAccess es_status_codes DLLreadRegisterS0_32(uint32_t drvno, uint32_t* data, u
 /**
 \copydoc readRegisterS0_32
 */
-DllAccess es_status_codes DLLreadRegisterS0_32_multipleBoards( uint32_t* data0, uint32_t* data1, uint32_t* data2, uint32_t* data3, uint32_t* data4, uint32_t address)
+DllAccess es_status_codes DLLreadRegisterS0_32_multipleBoards(uint32_t* data0, uint32_t* data1, uint32_t* data2, uint32_t* data3, uint32_t* data4, uint32_t address)
 {
 	es_status_codes status = es_no_error;
 	uint8_t data[MAXPCIECARDS] = { data0, data1, data2, data3, data4 };
@@ -373,7 +373,7 @@ DllAccess es_status_codes DLLreadRegisterS0_32_multipleBoards( uint32_t* data0, 
 /**
 \copydoc writeRegisterS0_32_allBoards
 */
-DllAccess es_status_codes DLLwriteRegisterS0_32( uint32_t data, uint32_t address)
+DllAccess es_status_codes DLLwriteRegisterS0_32(uint32_t data, uint32_t address)
 {
 	return writeRegisterS0_32_allBoards(settings_struct.board_sel, data, address);
 }
@@ -381,17 +381,17 @@ DllAccess es_status_codes DLLwriteRegisterS0_32( uint32_t data, uint32_t address
 /**
  * \copydoc CalcRamUsageInMB
  */
-DllAccess double DLLCalcRamUsageInMB( uint32_t nos, uint32_t nob )
+DllAccess double DLLCalcRamUsageInMB(uint32_t nos, uint32_t nob)
 {
-	return CalcRamUsageInMB( nos, nob );
+	return CalcRamUsageInMB(nos, nob);
 }
 
 /**
  * \copydoc CalcMeasureTimeInSeconds
  */
-DllAccess double DLLCalcMeasureTimeInSeconds( uint32_t nos, uint32_t nob, double exposure_time_in_ms )
+DllAccess double DLLCalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms)
 {
-	return CalcMeasureTimeInSeconds( nos, nob, exposure_time_in_ms );
+	return CalcMeasureTimeInSeconds(nos, nob, exposure_time_in_ms);
 }
 
 /**
@@ -429,7 +429,7 @@ DllAccess es_status_codes DLLOutTrigLow()
 /**
  * \copydoc OutTrigPulse
  */
-DllAccess es_status_codes DLLOutTrigPulse( uint32_t PulseWidth )
+DllAccess es_status_codes DLLOutTrigPulse(uint32_t PulseWidth)
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -477,23 +477,23 @@ DllAccess es_status_codes DLLCloseShutter()
 /**
  * \copydoc setBitS0_32_allBoards
  */
-DllAccess es_status_codes DLLsetBitS0_32(uint32_t bitnumber, uint16_t address )
+DllAccess es_status_codes DLLsetBitS0_32(uint32_t bitnumber, uint16_t address)
 {
-	return setBitS0_32_allBoards(settings_struct.board_sel, bitnumber, address );
+	return setBitS0_32_allBoards(settings_struct.board_sel, bitnumber, address);
 }
 
 /**
  * \copydoc resetBitS0_32_allBoards
  */
-DllAccess es_status_codes DLLresetBitS0_32(uint32_t bitnumber, uint16_t address )
+DllAccess es_status_codes DLLresetBitS0_32(uint32_t bitnumber, uint16_t address)
 {
-	return resetBitS0_32_allBoards(settings_struct.board_sel, bitnumber, address );
+	return resetBitS0_32_allBoards(settings_struct.board_sel, bitnumber, address);
 }
 
 /**
  * \copydoc SetTemp
  */
-DllAccess es_status_codes DLLSetTemp(uint8_t level )
+DllAccess es_status_codes DLLSetTemp(uint8_t level)
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -544,9 +544,9 @@ DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint8_t location, uint8_t cam
 /**
  * \copydoc FreeMemInfo
  */
-DllAccess void DLLFreeMemInfo( uint64_t * pmemory_all, uint64_t * pmemory_free )
+DllAccess void DLLFreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 {
-	FreeMemInfo( pmemory_all, pmemory_free );
+	FreeMemInfo(pmemory_all, pmemory_free);
 	return;
 }
 
@@ -562,7 +562,7 @@ DllAccess es_status_codes DLLisMeasureOn(uint32_t drvno, uint8_t* measureOn)
 /**
  * \copydoc isMeasureOn
  */
-DllAccess es_status_codes DLLisMeasureOn_multipleBoards( uint8_t* measureOn0, uint8_t* measureOn1, uint8_t* measureOn2, uint8_t* measureOn3, uint8_t* measureOn4 )
+DllAccess es_status_codes DLLisMeasureOn_multipleBoards(uint8_t* measureOn0, uint8_t* measureOn1, uint8_t* measureOn2, uint8_t* measureOn3, uint8_t* measureOn4)
 {
 	es_status_codes status = es_no_error;
 	uint8_t* measureOn[MAXPCIECARDS] = { measureOn0, measureOn1, measureOn2, measureOn3, measureOn4 };
@@ -591,7 +591,7 @@ DllAccess es_status_codes DLLisBlockOn(uint32_t drvno, uint8_t* blockOn)
 /**
  * \copydoc isBlockOn
  */
-DllAccess es_status_codes DLLisBlockOn_multipleBoards(uint8_t* blockOn0, uint8_t* blockOn1, uint8_t* blockOn2, uint8_t* blockOn3, uint8_t* blockOn4 )
+DllAccess es_status_codes DLLisBlockOn_multipleBoards(uint8_t* blockOn0, uint8_t* blockOn1, uint8_t* blockOn2, uint8_t* blockOn3, uint8_t* blockOn4)
 {
 	es_status_codes status = es_no_error;
 	uint8_t* blockOn[MAXPCIECARDS] = { blockOn0, blockOn1, blockOn2, blockOn3, blockOn4 };
@@ -628,7 +628,7 @@ DllAccess es_status_codes DLLwaitForBlockReady()
 /**
  * \copydoc SetSTimer
  */
-DllAccess es_status_codes DLLSetSTimer( uint32_t drvno, uint32_t stime_in_microseconds )
+DllAccess es_status_codes DLLSetSTimer(uint32_t drvno, uint32_t stime_in_microseconds)
 {
 	return SetSTimer(drvno, stime_in_microseconds);
 }
@@ -636,9 +636,9 @@ DllAccess es_status_codes DLLSetSTimer( uint32_t drvno, uint32_t stime_in_micros
 /**
  * \copydoc SetBTimer
  */
-DllAccess es_status_codes DLLSetBTimer( uint32_t drvno, uint32_t btime_in_microseconds )
+DllAccess es_status_codes DLLSetBTimer(uint32_t drvno, uint32_t btime_in_microseconds)
 {
-	return SetBTimer( drvno, btime_in_microseconds );
+	return SetBTimer(drvno, btime_in_microseconds);
 }
 
 #ifdef COMPILE_FOR_LABVIEW
@@ -651,7 +651,7 @@ DllAccess es_status_codes DLLSetBTimer( uint32_t drvno, uint32_t btime_in_micros
  * \param blockDoneEvent Event handler for the event block done.
  * \return none
  */
-DllAccess void DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent, LVUserEventRef* allBlocksDoneEvent)
+DllAccess void DLLRegisterLVEvents(LVUserEventRef* measureStartEvent, LVUserEventRef* measureDoneEvent, LVUserEventRef* blockStartEvent, LVUserEventRef* blockDoneEvent, LVUserEventRef* allBlocksDoneEvent)
 {
 	measureStartLVEvent = *measureStartEvent;
 	measureDoneLVEvent = *measureDoneEvent;
@@ -662,9 +662,9 @@ DllAccess void DLLRegisterLVEvents( LVUserEventRef *measureStartEvent, LVUserEve
 }
 #endif
 
-DllAccess char* DLLConvertErrorCodeToMsg( es_status_codes status )
+DllAccess char* DLLConvertErrorCodeToMsg(es_status_codes status)
 {
-	return ConvertErrorCodeToMsg( status );
+	return ConvertErrorCodeToMsg(status);
 }
 
 /**
