@@ -3275,7 +3275,7 @@ es_status_codes ExitDriver()
  *		- es_no_error
  *		- es_parameter_out_of_range
  */
-es_status_codes ReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest, uint32_t pixel)
+es_status_codes ReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, uint16_t* pdest)
 {
 	//ES_TRACE( "Return frame: drvno: %u, sample: %u, block: %u, camera: %u, pdest %p, pixel: %u\n", drvno, sample, block, camera, pdest, pixel );
 	uint16_t* pframe = NULL;
@@ -4808,7 +4808,7 @@ void SetContinuousMeasurement(bool on)
 es_status_codes GetCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* overTemp)
 {
 	uint16_t data[pixel_camera_status + 1];
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, pixel_camera_status + 1);
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, pixel_camera_status + 1, data);
 	if (data[pixel_camera_status] & pixel_camera_status_bit_over_temp)
 		*overTemp = true;
 	else
@@ -4835,7 +4835,7 @@ es_status_codes GetCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_
 es_status_codes GetCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* tempGood)
 {
 	uint16_t data[pixel_camera_status + 1];
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, pixel_camera_status + 1);
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, pixel_camera_status + 1, data);
 	if (data[pixel_camera_status] & pixel_camera_status_bit_temp_good)
 		*tempGood = true;
 	else
@@ -4862,7 +4862,7 @@ es_status_codes GetCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_
 es_status_codes GetBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* blockIndex)
 {
 	uint16_t data[pixel_block_index_low + 1];
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, pixel_block_index_low + 1);
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, pixel_block_index_low + 1, data);
 	uint16_t blockIndexHigh = data[pixel_block_index_high_s1_s2] & pixel_block_index_high_s1_s2_bits_block_index;
 	*blockIndex = (uint32_t)blockIndexHigh << 16 | (uint32_t)data[pixel_block_index_low];
 	return status;
@@ -4887,7 +4887,7 @@ es_status_codes GetBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, u
 es_status_codes GetScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* scanIndex)
 {
 	uint16_t data[pixel_scan_index_low + 1];
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, pixel_scan_index_low + 1);
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, pixel_scan_index_low + 1, data);
 	*scanIndex = (uint32_t)data[pixel_scan_index_high] << 16 | (uint32_t)data[pixel_scan_index_low];
 	return status;
 }
@@ -4911,7 +4911,7 @@ es_status_codes GetScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, ui
 es_status_codes GetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
 {
 	uint16_t data[pixel_block_index_high_s1_s2 + 1];
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, pixel_block_index_high_s1_s2 + 1);
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, pixel_block_index_high_s1_s2 + 1, data);
 	if (data[pixel_block_index_high_s1_s2] & pixel_block_index_high_s1_s2_bit_s1)
 		*state = true;
 	else
@@ -4938,7 +4938,7 @@ es_status_codes GetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint
 es_status_codes GetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
 {
 	uint16_t data[pixel_block_index_high_s1_s2 + 1];
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, pixel_block_index_high_s1_s2 + 1);
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, pixel_block_index_high_s1_s2 + 1, data);
 	if (data[pixel_block_index_high_s1_s2] & pixel_block_index_high_s1_s2_bit_s2)
 		*state = true;
 	else
@@ -4965,7 +4965,7 @@ es_status_codes GetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint
 es_status_codes GetImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
 	uint16_t data[pixel_impact_signal_1_low + 1];
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, pixel_impact_signal_1_low + 1);
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, pixel_impact_signal_1_low + 1, data);
 	*impactSignal = (uint32_t)data[pixel_impact_signal_1_high] << 16 | (uint32_t)data[pixel_impact_signal_1_low];
 	return status;
 }
@@ -4989,7 +4989,7 @@ es_status_codes GetImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block
 es_status_codes GetImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
 	uint16_t data[pixel_impact_signal_2_low + 1];
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, pixel_impact_signal_2_low + 1);
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, pixel_impact_signal_2_low + 1, data);
 	*impactSignal = (uint32_t)data[pixel_impact_signal_2_high] << 16 | (uint32_t)data[pixel_impact_signal_2_low];
 	return status;
 }
@@ -5015,7 +5015,7 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 	if (aPIXEL[drvno] <= 63) return es_invalid_pixel_count;
 	uint16_t* data = (uint16_t*)malloc(aPIXEL[drvno] * sizeof(uint16_t));
 	if (!data) return es_allocating_memory_failed;
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, data, aPIXEL[drvno]);
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, aPIXEL[drvno], data);
 	if (status != es_no_error) return status;
 	//overTemp
 	if (data[pixel_camera_status] & pixel_camera_status_bit_over_temp)

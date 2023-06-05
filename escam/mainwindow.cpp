@@ -625,7 +625,7 @@ void MainWindow::loadCameraData()
 				bool showCurrentCam = settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toBool();
 				if (showCurrentCam)
 				{
-					lsc.returnFrame(drvno, sample, block, cam, cur_data_ptr, pixel);
+					lsc.returnFrame(drvno, sample, block, cam, pixel, cur_data_ptr);
 					pixel_array[showedCam] = pixel;
 					cur_data_ptr += pixel;
 					showedCam++;

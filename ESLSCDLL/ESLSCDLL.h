@@ -1,17 +1,13 @@
 #pragma once
 /*   **********************************************
 	DLL for CCD Camera driver of
-	for linking to labview
 
-  Entwicklungsbuero Stresing
-  Germany
+	Entwicklungsbuero Stresing
+	Germany
 
-  this DLL translates DLL calls from Labview or others
-  to the unit Board.c
-  the drivers must have been installed before calling !
-
-  for using the PCI Board, copy PCIB\board.c and .h to actual folder
-	and make a rebuild all
+	this DLL translates DLL calls from Labview or others
+	to the unit Board.c
+	the drivers must have been installed before calling!
 */
 
 #include <windows.h>
@@ -58,16 +54,19 @@ DllAccess es_status_codes DLLStartMeasurement_blocking();
 DllAccess void DLLStartMeasurement_nonblocking();
 // 5b) Use this call, if you want to abort the measurement.
 DllAccess es_status_codes DLLAbortMeasurement();
-// 6) Get the data with one of the following 3 calls. Call it how many times you want.
-DllAccess es_status_codes DLLReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest, uint32_t pixel);
+// 6) Get the data with one of the following calls. Call it how many times you want.
+DllAccess es_status_codes DLLReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, uint16_t* pdest);
+DllAccess es_status_codes DLLReturnFrame_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4);
 DllAccess es_status_codes DLLCopyAllData(uint32_t drvno, uint16_t* pdest);
+DllAccess es_status_codes DLLCopyAllData_multipleBoards(uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4);
 DllAccess es_status_codes DLLCopyOneBlock(uint32_t drvno, uint16_t block, uint16_t* pdest);
+DllAccess es_status_codes DLLCopyOneBlock_multipleBoards(uint16_t block, uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4);
 // 7) Before exiting your software, use this call for cleanup.
 DllAccess es_status_codes DLLExitDriver();
 
 //************ Mid level API
 //************ system info & control
-DllAccess void DLLFreeMemInfo(uint64_t * pmemory_all, uint64_t * pmemory_free);
+DllAccess void DLLFreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free);
 DllAccess int DLLGetProcessCount();
 DllAccess int DLLGetThreadCount();
 DllAccess double DLLCalcRamUsageInMB(uint32_t nos, uint32_t nob);
@@ -77,43 +76,53 @@ DllAccess void DLLSetContinuousMeasurement(uint8_t on);
 DllAccess void DLLRegisterLVEvents(LVUserEventRef *measureStartEvent, LVUserEventRef *measureDoneEvent, LVUserEventRef *blockStartEvent, LVUserEventRef *blockDoneEvent, LVUserEventRef* allBlocksDoneEvent);
 #endif
 DllAccess char* DLLConvertErrorCodeToMsg( es_status_codes status );
-DllAccess void DLLFillUserBufferWithDummyData(uint32_t board_sel);
+DllAccess void DLLFillUserBufferWithDummyData();
 //************ Cam infos
-DllAccess es_status_codes DLLwaitForMeasureReady(uint32_t board_sel);
-DllAccess es_status_codes DLLwaitForBlockReady(uint32_t board_sel);
-DllAccess es_status_codes DLLisMeasureOn(uint32_t board_sel, uint8_t* measureOn0, uint8_t* measureOn1);
-DllAccess es_status_codes DLLisBlockOn(uint32_t board_sel, uint8_t* blockOn0, uint8_t* blockOn1);
-DllAccess void DLLGetCurrentScanNumber(uint32_t board_sel, int64_t* sample, int64_t* block);
+DllAccess es_status_codes DLLwaitForMeasureReady();
+DllAccess es_status_codes DLLwaitForBlockReady();
+DllAccess es_status_codes DLLisMeasureOn(uint32_t drvno, uint8_t* measureOn);
+DllAccess es_status_codes DLLisMeasureOn_multipleBoards(uint8_t* measureOn0, uint8_t* measureOn1, uint8_t* measureOn2, uint8_t* measureOn3, uint8_t* measureOn4);
+DllAccess es_status_codes DLLisBlockOn(uint32_t drvno, uint8_t* blockOn);
+DllAccess es_status_codes DLLisBlockOn_multipleBoards(uint8_t* blockOn0, uint8_t* blockOn1, uint8_t* blockOn2, uint8_t* blockOn3, uint8_t* blockOn4);
+DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block);
+DllAccess void DLLGetCurrentScanNumber_mutlipleBoards(int64_t* sample0, int64_t* block0, int64_t* sample1, int64_t* block1, int64_t* sample2, int64_t* block2, int64_t* sample3, int64_t* block3, int64_t* sample4, int64_t* block4);
 //************  Control CAM
-DllAccess es_status_codes DLLOutTrigHigh(uint32_t board_sel);
-DllAccess es_status_codes DLLOutTrigLow(uint32_t board_sel);
-DllAccess es_status_codes DLLOutTrigPulse(uint32_t board_sel, uint32_t PulseWidth);
-DllAccess es_status_codes DLLOpenShutter(uint32_t board_sel);
-DllAccess es_status_codes DLLCloseShutter(uint32_t board_sel);
-DllAccess es_status_codes DLLSetTemp(uint32_t board_sel, uint8_t level);
-DllAccess es_status_codes DLLSetTORReg(uint32_t board_sel, uint8_t tor);
-DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t board_sel, uint8_t location, uint8_t cameraPosition, uint32_t* output0, uint32_t* output1, uint32_t* output2, uint32_t* output3, uint32_t* output4, uint8_t reorder_channel);
-DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t board_sel, uint32_t* width_in_5ns, uint32_t* delay_in_5ns);
-DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t board_sel, uint32_t period_in_10ns);
-DllAccess es_status_codes DLLGetIsTdc(uint32_t board_sel, uint8_t* isTdc0, uint8_t* isTdc1, uint8_t* isTdc2, uint8_t* isTdc3, uint8_t* isTdc4);
-DllAccess es_status_codes DLLGetIsDsc(uint32_t board_sel, uint8_t* isDsc0, uint8_t* isDsc1, uint8_t* isDsc2, uint8_t* isDsc3, uint8_t* isDsc4);
-DllAccess es_status_codes DLLResetDSC(uint32_t board_sel, uint8_t DSCNumber);
-DllAccess es_status_codes DLLSetDIRDSC(uint32_t board_sel, uint8_t DSCNumber, uint8_t dir);
-DllAccess es_status_codes DLLGetDSC(uint32_t board_sel, uint8_t DSCNumber, uint32_t* ADSC0, uint32_t* LDSC0, uint32_t* ADSC1, uint32_t* LDSC1);
-DllAccess es_status_codes DLLInitGPX(uint32_t board_sel, uint32_t delay);
-DllAccess es_status_codes DLLGetAllSpecialPixelInformation(uint32_t board_sel, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp);
+DllAccess es_status_codes DLLOutTrigHigh();
+DllAccess es_status_codes DLLOutTrigLow();
+DllAccess es_status_codes DLLOutTrigPulse(uint32_t PulseWidth);
+DllAccess es_status_codes DLLOpenShutter();
+DllAccess es_status_codes DLLCloseShutter();
+DllAccess es_status_codes DLLSetTemp(uint8_t level);
+DllAccess es_status_codes DLLSetTORReg(uint8_t tor);
+DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint8_t location, uint8_t cameraPosition, uint32_t* output0, uint32_t* output1, uint32_t* output2, uint32_t* output3, uint32_t* output4, uint8_t reorder_channel);
+DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t* width_in_5ns, uint32_t* delay_in_5ns);
+DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t period_in_10ns);
+DllAccess es_status_codes DLLGetIsTdc(uint32_t drvno, uint8_t* isTdc);
+DllAccess es_status_codes DLLGetIsTdc_multipleBoards(uint8_t* isTdc0, uint8_t* isTdc1, uint8_t* isTdc2, uint8_t* isTdc3, uint8_t* isTdc4);
+DllAccess es_status_codes DLLGetIsDsc(uint32_t drvno, uint8_t* isDsc);
+DllAccess es_status_codes DLLGetIsDsc_multipleBoards(uint8_t* isDsc0, uint8_t* isDsc1, uint8_t* isDsc2, uint8_t* isDsc3, uint8_t* isDsc4);
+DllAccess es_status_codes DLLResetDSC(uint8_t DSCNumber);
+DllAccess es_status_codes DLLSetDIRDSC(uint8_t DSCNumber, uint8_t dir);
+DllAccess es_status_codes DLLGetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC);
+DllAccess es_status_codes DLLGetDSC_multipleBoards(uint8_t DSCNumber, uint32_t* ADSC0, uint32_t* LDSC0, uint32_t* ADSC1, uint32_t* LDSC1, uint32_t* ADSC2, uint32_t* LDSC2, uint32_t* ADSC3, uint32_t* LDSC3, uint32_t* ADSC4, uint32_t* LDSC4);
+DllAccess es_status_codes DLLInitGPX(uint32_t delay);
+DllAccess es_status_codes DLLGetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp);
+DllAccess es_status_codes DLLGetAllSpecialPixelInformation_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp0, struct special_pixels* sp1, struct special_pixels* sp2, struct special_pixels* sp3, struct special_pixels* sp4);
 //************ read and write functions
-DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t board_sel, uint8_t* data, uint32_t address);
-DllAccess es_status_codes DLLwriteRegisterS0_8(uint32_t board_sel, uint8_t data, uint32_t address);
-DllAccess es_status_codes DLLreadRegisterS0_32(uint32_t board_sel, uint32_t* data, uint32_t address);
-DllAccess es_status_codes DLLwriteRegisterS0_32(uint32_t board_sel, uint32_t data, uint32_t address);
-DllAccess es_status_codes DLLsetBitS0_32(uint32_t board_sel, uint32_t bitnumber, uint16_t address);
-DllAccess es_status_codes DLLresetBitS0_32(uint32_t board_sel, uint32_t bitnumber, uint16_t address);
+DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address);
+DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards(uint8_t* data0, uint8_t* data1, uint8_t* data2, uint8_t* data3, uint8_t* data4, uint32_t address);
+DllAccess es_status_codes DLLwriteRegisterS0_8(uint8_t data, uint32_t address);
+DllAccess es_status_codes DLLreadRegisterS0_32(uint32_t drvno, uint32_t* data, uint32_t address);
+DllAccess es_status_codes DLLreadRegisterS0_32_multipleBoards(uint32_t* data0, uint32_t* data1, uint32_t* data2, uint32_t* data3, uint32_t* data4, uint32_t address);
+DllAccess es_status_codes DLLwriteRegisterS0_32(uint32_t data, uint32_t address);
+DllAccess es_status_codes DLLsetBitS0_32(uint32_t bitnumber, uint16_t address);
+DllAccess es_status_codes DLLresetBitS0_32(uint32_t bitnumber, uint16_t address);
 #ifndef MINIMAL_BUILD
-DllAccess es_status_codes DLLCalcTrms(uint32_t board_sel, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf0, double* trms0, double* mwf1, double* trms1);
+DllAccess es_status_codes DLLCalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf, double* trms);
+DllAccess es_status_codes DLLCalcTrms_multipleBoards(uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf0, double* trms0, double* mwf1, double* trms1, double* mwf2, double* trms2, double* mwf3, double* trms3, double* mwf4, double* trms4);
 DllAccess void DLLErrMsgBoxOn();
 DllAccess void DLLErrMsgBoxOff();
-DllAccess es_status_codes DLLAbout(uint32_t board_sel);
+DllAccess es_status_codes DLLAbout();
 DllAccess void DLLErrorMsg(char ErrMsg[20]);
 //************  2d greyscale viewer
 DllAccess void DLLStart2dViewer(UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos);

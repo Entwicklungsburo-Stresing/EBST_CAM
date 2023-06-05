@@ -25,7 +25,7 @@ es_status_codes StartMeasurement();
 // 5b) Use this call, if you want to abort the measurement.
 es_status_codes AbortMeasurement();
 // 6) Get the data.
-es_status_codes ReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest, uint32_t pixel);
+es_status_codes ReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, uint16_t* pdest);
 // 7) Before exiting your software, use this call for cleanup.
 es_status_codes ExitDriver();
 
