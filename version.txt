@@ -1,5 +1,13 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.4.6
+- Update Qt to 6.5.1
+- Fix settings value ranges
+- Fix write to disc
+- Improve DLL API, add *_multipleBoards functions
+- Improve documentation
+- Add build configuration *_minimal
+
 4.4.5
 - Set sample and block slider to last sample when measurement stopped
 - Prevent sending DAC values from DAC dialog too often
