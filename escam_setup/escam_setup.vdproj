@@ -15,7 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_0E54705F3BE84C5490DF2386708C82A9"
+        "MsmKey" = "8:_0E10FCBB274643A4A6239D648DCDCCBD"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -27,50 +27,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_11ABA49FDF5941E786300044D980A801"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_121FD97921998470F80DD54DAE647FB2"
         "OwnerKey" = "8:_D01C7694801546E79B9F2A5D8141829A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_12E7CD3AFD094A94AC7B9E165E661F3F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_130C3A623174469EA055F6E75872611F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_1AFE57EC7CAA4825A93D07837763A0D0"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_1CC3E1E3F25B42AA84DB0B57FA8EFE93"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_21C96ED264DC59F1038B88E1D7809902"
         "OwnerKey" = "8:_D01C7694801546E79B9F2A5D8141829A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_21DC575298754C4AA0C1356ED28D54BC"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -82,12 +46,6 @@
         "Entry"
         {
         "MsmKey" = "8:_3432B358C2CC40BB9BD46CE92AC40464"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_344430E7B44743DCBAE9CD79789EEA8C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -111,73 +69,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_40F126C660994DAABFC07344FB29EC11"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4BC501B694A24918B543C81392C30327"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_50A19209A5734D8185121902AAA58A52"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5901A56166584ECB92E5E1927F9B3EAA"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5D552D2A3C9D4A0FB95C07E5E940D6C4"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_64C9B0BC421343EEA61F15024216A229"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_7408F40133734B2C9435E23BDBBD3494"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_74AB8040D862456B964A230222DF113E"
+        "MsmKey" = "8:_60C961410B8F49ABAE4BC8DC704E26E7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_7E53E19FAEA24A098593875A0B18D45B"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_81C52A1C3ACD427EA07DA4FF16180DD8"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_979B25604B264EF3A09C7248B2550C21"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9A09BFD1175941599C25799E2BFA2374"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -201,20 +99,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_A6DE8523F05F46FE8410705C14F06609"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_A7D319492B02B99A905E0992724C0E56"
         "OwnerKey" = "8:_D01C7694801546E79B9F2A5D8141829A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B789C9B631BB4BE8863088A3724A1286"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -231,25 +117,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_BFE4771DC9E44BB49CED661E2D6F28FF"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C17B108AEB6D421C84362C0F0CE5F840"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_C5119E3A2582483FAFDD326BA64078DA"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CC6B23BFC31342B38E0C88C4A92DB89A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -267,12 +135,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_D4FF2D7D6E0C4A8590149CA4A6712FAD"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_D6E566B2F72045B0B4BEEA3D1CB9D7AC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -281,24 +143,6 @@
         {
         "MsmKey" = "8:_DE4C8B4538A775092A25568613597AF3"
         "OwnerKey" = "8:_D01C7694801546E79B9F2A5D8141829A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_DF89C4251E3740608641476CEDE9126F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E08165885E314CC8BF554AF9966CA8C3"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E14F5CA6BAC04D8D814F0D480CB075F9"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -315,32 +159,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E936F1DDCC1046A0B1E820753E15B581"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_EA68C0F3D8D140D8AA0B34A78B1D3C28"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F01C8382BB4A414AA4A724C88FFCCCF2"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_F663C143A8F66C6A65948E6B0756598B"
         "OwnerKey" = "8:_D01C7694801546E79B9F2A5D8141829A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F85E029C8A354B16B818ED653A055C9A"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -440,12 +260,12 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0E54705F3BE84C5490DF2386708C82A9"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0E10FCBB274643A4A6239D648DCDCCBD"
             {
-            "SourcePath" = "8:..\\escam\\build\\imageformats\\qgif.dll"
-            "TargetName" = "8:qgif.dll"
+            "SourcePath" = "8:C:\\Windows\\System32\\msvcp140_2.dll"
+            "TargetName" = "8:msvcp140_2.dll"
             "Tag" = "8:"
-            "Folder" = "8:_9188D91829A74B71919FC3404DA8B584"
+            "Folder" = "8:_A1F1AB1AEA5C4300AACB65433A54E330"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -476,28 +296,8 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_11ABA49FDF5941E786300044D980A801"
-            {
-            "SourcePath" = "8:..\\escam\\build\\D3Dcompiler_47.dll"
-            "TargetName" = "8:D3Dcompiler_47.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_A1F1AB1AEA5C4300AACB65433A54E330"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_121FD97921998470F80DD54DAE647FB2"
@@ -516,88 +316,8 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_12E7CD3AFD094A94AC7B9E165E661F3F"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_bg.qm"
-            "TargetName" = "8:qt_bg.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_130C3A623174469EA055F6E75872611F"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_ar.qm"
-            "TargetName" = "8:qt_ar.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1AFE57EC7CAA4825A93D07837763A0D0"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_fr.qm"
-            "TargetName" = "8:qt_fr.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1CC3E1E3F25B42AA84DB0B57FA8EFE93"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_en.qm"
-            "TargetName" = "8:qt_en.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_21C96ED264DC59F1038B88E1D7809902"
@@ -620,26 +340,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_21DC575298754C4AA0C1356ED28D54BC"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_sk.qm"
-            "TargetName" = "8:qt_sk.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_28CFBB072F630317E4B856B225A06059"
             {
             "SourcePath" = "8:api-ms-win-crt-filesystem-l1-1-0.dll"
@@ -656,7 +356,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -666,26 +366,6 @@
             "TargetName" = "8:CCD.ico"
             "Tag" = "8:"
             "Folder" = "8:_A1F1AB1AEA5C4300AACB65433A54E330"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_344430E7B44743DCBAE9CD79789EEA8C"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_fi.qm"
-            "TargetName" = "8:qt_fi.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -716,7 +396,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -760,152 +440,12 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_40F126C660994DAABFC07344FB29EC11"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_60C961410B8F49ABAE4BC8DC704E26E7"
             {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_ru.qm"
-            "TargetName" = "8:qt_ru.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4BC501B694A24918B543C81392C30327"
-            {
-            "SourcePath" = "8:..\\escam\\build\\imageformats\\qsvg.dll"
-            "TargetName" = "8:qsvg.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_9188D91829A74B71919FC3404DA8B584"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_50A19209A5734D8185121902AAA58A52"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_de.qm"
-            "TargetName" = "8:qt_de.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5901A56166584ECB92E5E1927F9B3EAA"
-            {
-            "SourcePath" = "8:..\\escam\\build\\opengl32sw.dll"
-            "TargetName" = "8:opengl32sw.dll"
+            "SourcePath" = "8:C:\\Windows\\System32\\msvcp140_1.dll"
+            "TargetName" = "8:msvcp140_1.dll"
             "Tag" = "8:"
             "Folder" = "8:_A1F1AB1AEA5C4300AACB65433A54E330"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5D552D2A3C9D4A0FB95C07E5E940D6C4"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_gd.qm"
-            "TargetName" = "8:qt_gd.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_64C9B0BC421343EEA61F15024216A229"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_it.qm"
-            "TargetName" = "8:qt_it.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7408F40133734B2C9435E23BDBBD3494"
-            {
-            "SourcePath" = "8:..\\escam\\build\\Qt6Svg.dll"
-            "TargetName" = "8:Qt6Svg.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_A1F1AB1AEA5C4300AACB65433A54E330"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_74AB8040D862456B964A230222DF113E"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_cs.qm"
-            "TargetName" = "8:qt_cs.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -940,66 +480,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_81C52A1C3ACD427EA07DA4FF16180DD8"
-            {
-            "SourcePath" = "8:..\\escam\\build\\imageformats\\qico.dll"
-            "TargetName" = "8:qico.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_9188D91829A74B71919FC3404DA8B584"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_979B25604B264EF3A09C7248B2550C21"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_ca.qm"
-            "TargetName" = "8:qt_ca.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9A09BFD1175941599C25799E2BFA2374"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_ko.qm"
-            "TargetName" = "8:qt_ko.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9C3D7D382E04DC5B41D87BF6F7AFD1F2"
             {
             "SourcePath" = "8:api-ms-win-crt-math-l1-1-0.dll"
@@ -1016,7 +496,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -1036,7 +516,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -1046,26 +526,6 @@
             "TargetName" = "8:Qt6OpenGLWidgets.dll"
             "Tag" = "8:"
             "Folder" = "8:_A1F1AB1AEA5C4300AACB65433A54E330"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A6DE8523F05F46FE8410705C14F06609"
-            {
-            "SourcePath" = "8:..\\escam\\build\\imageformats\\qjpeg.dll"
-            "TargetName" = "8:qjpeg.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_9188D91829A74B71919FC3404DA8B584"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1098,26 +558,6 @@
             "Register" = "3:1"
             "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B789C9B631BB4BE8863088A3724A1286"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_he.qm"
-            "TargetName" = "8:qt_he.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BD9EAF4F8CD343C0B41C5A46ACCC7EDF"
@@ -1160,70 +600,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BFE4771DC9E44BB49CED661E2D6F28FF"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_ja.qm"
-            "TargetName" = "8:qt_ja.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C17B108AEB6D421C84362C0F0CE5F840"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_tr.qm"
-            "TargetName" = "8:qt_tr.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C5119E3A2582483FAFDD326BA64078DA"
             {
             "SourcePath" = "8:..\\escam\\build\\Qt6Gui.dll"
             "TargetName" = "8:Qt6Gui.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_A1F1AB1AEA5C4300AACB65433A54E330"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CC6B23BFC31342B38E0C88C4A92DB89A"
-            {
-            "SourcePath" = "8:..\\escam\\build\\Qt6Network.dll"
-            "TargetName" = "8:Qt6Network.dll"
             "Tag" = "8:"
             "Folder" = "8:_A1F1AB1AEA5C4300AACB65433A54E330"
             "Condition" = "8:"
@@ -1258,26 +638,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D4FF2D7D6E0C4A8590149CA4A6712FAD"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_pl.qm"
-            "TargetName" = "8:qt_pl.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D6E566B2F72045B0B4BEEA3D1CB9D7AC"
@@ -1316,68 +676,8 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DF89C4251E3740608641476CEDE9126F"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_es.qm"
-            "TargetName" = "8:qt_es.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E08165885E314CC8BF554AF9966CA8C3"
-            {
-            "SourcePath" = "8:..\\escam\\build\\iconengines\\qsvgicon.dll"
-            "TargetName" = "8:qsvgicon.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_0443A2FFCDFC44A788FF7B153A17A2B1"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E14F5CA6BAC04D8D814F0D480CB075F9"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_hu.qm"
-            "TargetName" = "8:qt_hu.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E16F86D8A9A8426BA2F5446A45F8D69F"
@@ -1420,66 +720,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E936F1DDCC1046A0B1E820753E15B581"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_lv.qm"
-            "TargetName" = "8:qt_lv.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EA68C0F3D8D140D8AA0B34A78B1D3C28"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_da.qm"
-            "TargetName" = "8:qt_da.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F01C8382BB4A414AA4A724C88FFCCCF2"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_zh_TW.qm"
-            "TargetName" = "8:qt_zh_TW.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F663C143A8F66C6A65948E6B0756598B"
             {
             "SourcePath" = "8:VCRUNTIME140.dll"
@@ -1498,26 +738,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F85E029C8A354B16B818ED653A055C9A"
-            {
-            "SourcePath" = "8:..\\escam\\build\\translations\\qt_uk.qm"
-            "TargetName" = "8:qt_uk.qm"
-            "Tag" = "8:"
-            "Folder" = "8:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
         }
@@ -1547,17 +767,6 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_0443A2FFCDFC44A788FF7B153A17A2B1"
-                    {
-                    "Name" = "8:iconengines"
-                    "AlwaysCreate" = "11:FALSE"
-                    "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
-                    "Property" = "8:_B4D028D4E9614F219632A3B801E3EAFD"
-                        "Folders"
-                        {
-                        }
-                    }
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_4423CF6778144D34BDBF0A679E392839"
                     {
                     "Name" = "8:platforms"
@@ -1576,28 +785,6 @@
                     "Condition" = "8:"
                     "Transitive" = "11:FALSE"
                     "Property" = "8:_64DA0CAC14D54A18AF54F2020E5F6E0C"
-                        "Folders"
-                        {
-                        }
-                    }
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_9188D91829A74B71919FC3404DA8B584"
-                    {
-                    "Name" = "8:imageformats"
-                    "AlwaysCreate" = "11:FALSE"
-                    "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
-                    "Property" = "8:_6726F11A15F6453BB9CB815E59F690AF"
-                        "Folders"
-                        {
-                        }
-                    }
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_D7CD5CD529F6421DBD7CB5F3C24DE112"
-                    {
-                    "Name" = "8:translations"
-                    "AlwaysCreate" = "11:FALSE"
-                    "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
-                    "Property" = "8:_08613A5CF5B047EB9FC2B8F79857C14D"
                         "Folders"
                         {
                         }
@@ -1632,7 +819,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Escam"
         "ProductCode" = "8:{022B691E-9263-4EAB-9C2F-2A5A4974F100}"
-        "PackageCode" = "8:{9B54D4B8-160D-4675-A4F8-8A0079216CDF}"
+        "PackageCode" = "8:{61185453-5B62-45FE-9098-CC75BC7664DF}"
         "UpgradeCode" = "8:{E656E723-CD9C-4179-A360-882C93DEA377}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
