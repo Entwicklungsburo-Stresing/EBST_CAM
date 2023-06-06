@@ -125,12 +125,12 @@ DllAccess void DLLErrMsgBoxOff();
 DllAccess es_status_codes DLLAbout();
 DllAccess void DLLErrorMsg(char ErrMsg[20]);
 //************  2d greyscale viewer
-DllAccess void DLLStart2dViewer(UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos);
-DllAccess void DLLShowNewBitmap(UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos);
+DllAccess void DLLStart2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos);
+DllAccess void DLLShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos);
 DllAccess void DLLDeinit2dViewer();
-DllAccess void DLLSetGammaValue(UINT16 white, UINT16 black);
-DllAccess UINT16 DLLGetGammaWhite();
-DllAccess UINT16 DLLGetGammaBlack();
+DllAccess void DLLSetGammaValue(uint16_t white, uint16_t black);
+DllAccess uint16_t DLLGetGammaWhite();
+DllAccess uint16_t DLLGetGammaBlack();
 #endif
 
 #ifdef __cplusplus
