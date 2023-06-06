@@ -354,7 +354,7 @@ DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t drvno, uint8_t* data, uin
 DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards(uint8_t* data0, uint8_t* data1, uint8_t* data2, uint8_t* data3, uint8_t* data4, uint32_t address)
 {
 	es_status_codes status = es_no_error;
-	uint8_t data[MAXPCIECARDS] = { data0, data1, data2, data3, data4 };
+	uint8_t* data[MAXPCIECARDS] = { data0, data1, data2, data3, data4 };
 	int usedBoards = 0;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
@@ -407,7 +407,7 @@ DllAccess es_status_codes DLLreadRegisterS0_32(uint32_t drvno, uint32_t* data, u
 DllAccess es_status_codes DLLreadRegisterS0_32_multipleBoards(uint32_t* data0, uint32_t* data1, uint32_t* data2, uint32_t* data3, uint32_t* data4, uint32_t address)
 {
 	es_status_codes status = es_no_error;
-	uint8_t data[MAXPCIECARDS] = { data0, data1, data2, data3, data4 };
+	uint8_t* data[MAXPCIECARDS] = { data0, data1, data2, data3, data4 };
 	int usedBoards = 0;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		// Check if the drvno'th bit is set
@@ -1281,18 +1281,18 @@ DllAccess es_status_codes DLLAbout()
 /**
 * \copydoc Start2dViewer
 */
-DllAccess void DLLStart2dViewer(UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos)
+DllAccess void DLLStart2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {
-	Start2dViewer(drvno, cur_nob, cam, pixel, nos);
+	Start2dViewer(drvno, block, camera, pixel, nos);
 	return;
 }
 
 /**
 * \copydoc ShowNewBitmap
 */
-DllAccess void DLLShowNewBitmap(UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos)
+DllAccess void DLLShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {
-	ShowNewBitmap(drvno, cur_nob, cam, pixel, nos);
+	ShowNewBitmap(drvno, block, camera, pixel, nos);
 	return;
 }
 
@@ -1308,7 +1308,7 @@ DllAccess void DLLDeinit2dViewer()
 /**
 * \copydoc SetGammaValue
 */
-DllAccess void DLLSetGammaValue(UINT16 white, UINT16 black)
+DllAccess void DLLSetGammaValue(uint16_t white, uint16_t black)
 {
 	SetGammaValue(white, black);
 }
@@ -1316,7 +1316,7 @@ DllAccess void DLLSetGammaValue(UINT16 white, UINT16 black)
 /**
 * \copydoc GetGammaWhite
 */
-DllAccess UINT16 DLLGetGammaWhite()
+DllAccess uint16_t DLLGetGammaWhite()
 {
 	return GetGammaWhite();
 }
@@ -1324,25 +1324,9 @@ DllAccess UINT16 DLLGetGammaWhite()
 /**
 * \copydoc GetGammaBlack
 */
-DllAccess UINT16 DLLGetGammaBlack()
+DllAccess uint16_t DLLGetGammaBlack()
 {
 	return GetGammaBlack();
-}
-
-/**
-* \copydoc SetupROI
-*/
-es_status_codes DLLSetupROI(UINT32 drvno, UINT16 number_of_regions, UINT32 lines, UINT8 keep, UINT8* region_size, UINT8 vfreq)
-{
-	return SetupROI(drvno, number_of_regions, lines, keep, region_size, vfreq);
-}
-
-/**
-* \copydoc SetupArea
-*/
-DllAccess es_status_codes DLLSetupArea(UINT32 drvno, UINT32 lines_binning, UINT8 vfreq)
-{
-	return SetupArea(drvno, lines_binning, vfreq);
 }
 
 #endif
