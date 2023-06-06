@@ -615,7 +615,7 @@ DllAccess es_status_codes DLLSetTemp(uint8_t level)
 /**
  * \brief Set signal of output port of PCIe card for all boards selected by settings parameter board_sel.
  *
- * \param tor select output signal. See enum tor_out in enum.h for options.
+ * \param tor select output signal. See [enum tor_out](@ref tor_out) in enum.h for options.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
