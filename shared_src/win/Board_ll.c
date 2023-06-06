@@ -110,7 +110,7 @@ void isr( uint32_t drvno )
 	// dmaBufferPartSizeInBytes = 1000 * pixel *2 -> /2 = 500 scans = 1088000 bytes
 	// that means one 500 scan copy block has 1088000 bytes
 	size_t dmaBufferPartSizeInBytes = dmaBufferSizeInBytes[drvno] / DMA_BUFFER_PARTS;
-	UINT16* dmaBufferReadPos = dmaBuffer[drvno] + dmaBufferPartReadPos[drvno] * dmaBufferPartSizeInBytes / sizeof(UINT16);
+	uint16_t* dmaBufferReadPos = dmaBuffer[drvno] + dmaBufferPartReadPos[drvno] * dmaBufferPartSizeInBytes / sizeof(uint16_t);
 	// The copy process is done here
 	ES_TRACE("copy from DMA 0x%p to userBufferWritePos 0x%p \n", dmaBufferReadPos, userBufferWritePos[drvno]);
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, dmaBufferPartSizeInBytes );
@@ -119,8 +119,8 @@ void isr( uint32_t drvno )
 	if (dmaBufferPartReadPos[drvno] >= DMA_BUFFER_PARTS)
 		// dmaBufferPartReadPos is 0 or 1 for buffer divided in 2 parts
 		dmaBufferPartReadPos[drvno] = 0;
-	userBufferWritePos[drvno] += dmaBufferPartSizeInBytes / sizeof( UINT16 );
-	data_available[drvno] += dmaBufferPartSizeInBytes / sizeof(UINT16);
+	userBufferWritePos[drvno] += dmaBufferPartSizeInBytes / sizeof( uint16_t );
+	data_available[drvno] += dmaBufferPartSizeInBytes / sizeof(uint16_t);
 	ES_TRACE("increase userBufferWritePos to 0x%p \n", userBufferWritePos[drvno]);
 	ES_TRACE("increase data_available to %u \n", data_available[drvno]);
 	// Reset INTRSR flag for TRIGO
@@ -339,7 +339,7 @@ es_status_codes SetupDma( uint32_t drvno )
 		status = CleanupDma(drvno);
 		if (status != es_no_error) return status;
 	}
-	dmaBufferSizeInBytes[drvno] = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans * aPIXEL[drvno] * sizeof(UINT16);
+	dmaBufferSizeInBytes[drvno] = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans * aPIXEL[drvno] * sizeof(uint16_t);
 	DWORD dwOptions = DMA_FROM_DEVICE | DMA_KERNEL_BUFFER_ALLOC;// | DMA_ALLOW_64BIT_ADDRESS;// DMA_ALLOW_CACHE ;
 	if (DMA_64BIT_EN)
 		dwOptions |= DMA_ALLOW_64BIT_ADDRESS;
@@ -797,7 +797,7 @@ uint32_t Tickstous(uint64_t tks)
 
 	delay = tks * 1000000;
 	delay = delay / tps;
-	return (UINT32)delay;
+	return (uint32_t)delay;
 }
 
 
@@ -1383,23 +1383,23 @@ void ValMsg(uint64_t val)
 /**
 \brief Start 2d viewer.
 \param drvno board number
-\param cur_nob current number of block
-\param cam which camera to display (when camcnt is >1)
+\param block current number of block
+\param camera which camera to display (when camcnt is >1)
 \param pixel count of pixel of one line
 \param nos samples in one block
 */
-void Start2dViewer(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t pixel, uint32_t nos)
+void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {
 	if (Direct2dViewer != NULL)
 	{
 		Deinit2dViewer();
 	}
 	Direct2dViewer = Direct2dViewer_new();
-	UINT16* address = NULL;
+	uint16_t* address = NULL;
 	if (aCAMCNT[drvno] <= 1)
-		GetAddressOfPixel(drvno, 0, 0, cur_nob, cam, &address);
+		GetAddressOfPixel(drvno, 0, 0, block, camera, &address);
 	else
-		GetOneBlockOfOneCamera(drvno, cur_nob, cam, &address);
+		GetOneBlockOfOneCamera(drvno, block, camera, &address);
 	Direct2dViewer_start2dViewer(
 		Direct2dViewer,
 		GetActiveWindow(),
@@ -1412,20 +1412,20 @@ void Start2dViewer(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t pixe
 /**
 \brief Update the displayed bitmap.
 \param drvno board number
-\param cur_nob current number of blocks
-\param cam which camera to display (when camcnt is >1)
+\param block current number of blocks
+\param camera which camera to display (when camcnt is >1)
 \param pixel count of pixel of one line
 \param nos samples in one block
 */
-void ShowNewBitmap(UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos)
+void ShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {
 	if (Direct2dViewer != NULL)
 	{
-		UINT16* address = NULL;
+		uint16_t* address = NULL;
 		if (aCAMCNT[drvno] <= 1)
-			GetAddressOfPixel(drvno, 0, 0, cur_nob, cam, &address);
+			GetAddressOfPixel(drvno, 0, 0, block, camera, &address);
 		else
-			GetOneBlockOfOneCamera(drvno, cur_nob, cam, &address);
+			GetOneBlockOfOneCamera(drvno, block, camera, &address);
 		Direct2dViewer_showNewBitmap(
 			Direct2dViewer,
 			address,
@@ -1452,7 +1452,7 @@ void Deinit2dViewer()
 /**
  * \copydoc Direct2dViewer::SetGammaValue
  */
-void SetGammaValue(UINT16 white, UINT16 black)
+void SetGammaValue(uint16_t white, uint16_t black)
 {
 	if (Direct2dViewer != NULL)
 	{
@@ -1465,7 +1465,7 @@ void SetGammaValue(UINT16 white, UINT16 black)
 /**
  * \copydoc Direct2dViewer::GetGammaWhite
  */
-UINT16 GetGammaWhite()
+uint16_t GetGammaWhite()
 {
 	if (Direct2dViewer != NULL)
 	{
@@ -1477,7 +1477,7 @@ UINT16 GetGammaWhite()
 /**
  * \copydoc Direct2dViewer::GetGammaBlack
  */
-UINT16 GetGammaBlack()
+uint16_t GetGammaBlack()
 {
 	if (Direct2dViewer != NULL)
 	{

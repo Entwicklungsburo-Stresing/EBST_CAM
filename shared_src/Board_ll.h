@@ -90,11 +90,11 @@ void ValMsg(uint64_t val);
 #ifndef MINIMAL_BUILD
 // direct 2d viewer
 void Start2dViewer(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t pixel, uint32_t nos);
-void ShowNewBitmap(UINT32 drvno, UINT32 cur_nob, UINT16 cam, UINT16 pixel, UINT32 nos);
+void ShowNewBitmap(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t pixel, uint32_t nos);
 void Deinit2dViewer();
-void SetGammaValue(UINT16 white, UINT16 black);
-UINT16 GetGammaWhite(); 
-UINT16 GetGammaBlack();
+void SetGammaValue(uint16_t white, uint16_t black);
+uint16_t GetGammaWhite(); 
+uint16_t GetGammaBlack();
 #endif
 #endif
 
