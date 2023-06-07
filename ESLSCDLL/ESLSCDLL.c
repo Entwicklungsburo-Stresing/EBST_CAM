@@ -907,7 +907,7 @@ DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t*
  * \param block3 Block number of the last scan in userBuffer of board 3. -1 when no scans has been written yet, otherwise 0...(nob-1)
  * \param block4 Block number of the last scan in userBuffer of board 4. -1 when no scans has been written yet, otherwise 0...(nob-1)
  */
-DllAccess void DLLGetCurrentScanNumber_mutlipleBoards(int64_t* sample0, int64_t* block0, int64_t* sample1, int64_t* block1, int64_t* sample2, int64_t* block2, int64_t* sample3, int64_t* block3, int64_t* sample4, int64_t* block4)
+DllAccess void DLLGetCurrentScanNumber_multipleBoards(int64_t* sample0, int64_t* block0, int64_t* sample1, int64_t* block1, int64_t* sample2, int64_t* block2, int64_t* sample3, int64_t* block3, int64_t* sample4, int64_t* block4)
 {
 	uint64_t* sample[MAXPCIECARDS] = { sample0, sample1, sample2, sample3, sample4 };
 	uint64_t* block[MAXPCIECARDS] = { block0, block1, block2, block3, block4 };
