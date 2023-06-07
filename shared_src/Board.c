@@ -5125,12 +5125,12 @@ void SetAllInterruptsDone(uint32_t drvno)
  */
 es_status_codes SetupROI(uint32_t drvno, uint16_t number_of_regions, uint32_t lines, uint8_t keep, uint8_t* region_size, uint8_t vfreq)
 {
-	BOOL keep_temp;
+	bool keep_temp;
 	es_status_codes status = es_no_error;
 	// calculate how many lines are in each region when equally distributed
-	UINT32 lines_per_region = lines / number_of_regions;
+	uint32_t lines_per_region = lines / number_of_regions;
 	// calculate the rest of lines when equally distributed
-	UINT32 lines_in_last_region = lines - lines_per_region * (number_of_regions - 1);
+	uint32_t lines_in_last_region = lines - lines_per_region * (number_of_regions - 1);
 	ES_LOG("Setup ROI: lines_per_region: %u , lines_in_last_region: %u\n", lines_per_region, lines_in_last_region);
 	// go from region 1 to number_of_regions
 	for (int i = 1; i <= number_of_regions; i++)
@@ -5155,7 +5155,7 @@ es_status_codes SetupROI(uint32_t drvno, uint16_t number_of_regions, uint32_t li
 	if (status != es_no_error) return status;
 	status = SetPartialBinning(drvno, number_of_regions);
 	if (status != es_no_error) return status;
-	*useSWTrig = TRUE;
+	*useSWTrig = true;
 	return SetSTI(drvno, sti_ASL);
 }
 
@@ -5177,15 +5177,15 @@ es_status_codes SetupArea(uint32_t drvno, uint32_t lines_binning, uint8_t vfreq)
 	if (status != es_no_error) return status;
 	status = SetSTI(drvno, sti_ASL);
 	if (status != es_no_error) return status;
-	*useSWTrig = TRUE; //software starts 1st scan
+	*useSWTrig = true; //software starts 1st scan
 	return ResetPartialBinning(drvno);
 }
 
 /**
  * \brief This functions sets the camera position register of the first camera to 0.
- * 
+ *
  * When there are more cameras in line, the cameras are handing their positions one to another.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes:
  *		- es_no_error
