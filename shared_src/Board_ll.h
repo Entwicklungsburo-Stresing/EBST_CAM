@@ -68,6 +68,13 @@ void writeToDisc(uint32_t* drvno_ptr);
 void startWriteToDiscThead(uint32_t drvno);
 void VerifyData(struct verify_data_parameter* vd);
 void getFileHeaderFromFile(struct file_header* fh, char* filename_full);
+// direct 2d viewer
+void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos);
+void ShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos);
+void Deinit2dViewer();
+void SetGammaValue(uint16_t white, uint16_t black);
+uint16_t GetGammaWhite();
+uint16_t GetGammaBlack();
 #endif
 void WaitForAllInterruptsDone();
 
@@ -87,15 +94,6 @@ void ErrMsgBoxOn();
 void ErrMsgBoxOff(); // switch to suppress error message boxes
 void ErrorMsg(char ErrMsg[100]);
 void ValMsg(uint64_t val);
-#ifndef MINIMAL_BUILD
-// direct 2d viewer
-void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos);
-void ShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos);
-void Deinit2dViewer();
-void SetGammaValue(uint16_t white, uint16_t black);
-uint16_t GetGammaWhite(); 
-uint16_t GetGammaBlack();
-#endif
 #endif
 
 #endif // BOARDLL_H

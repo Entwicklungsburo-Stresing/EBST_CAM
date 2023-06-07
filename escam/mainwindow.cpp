@@ -468,6 +468,7 @@ void MainWindow::loadSettings()
 			ui->spinBoxBlock->setMaximum(nob);
 		}
 	}
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 0))
 	QString theme = settings.value(settingThemePath, settingThemeDefault).toString();
 	QApplication::setStyle(QStyleFactory::create(theme));
 	QStyleHints* qstyle = QApplication::styleHints();
@@ -475,6 +476,7 @@ void MainWindow::loadSettings()
 		ui->chartView->chart()->setTheme(QChart::ChartThemeDark);
 	else
 		ui->chartView->chart()->setTheme(QChart::ChartThemeLight);
+#endif
 	return;
 }
 
