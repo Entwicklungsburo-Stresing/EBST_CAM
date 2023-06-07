@@ -85,7 +85,7 @@ DllAccess es_status_codes DLLisMeasureOn_multipleBoards(uint8_t* measureOn0, uin
 DllAccess es_status_codes DLLisBlockOn(uint32_t drvno, uint8_t* blockOn);
 DllAccess es_status_codes DLLisBlockOn_multipleBoards(uint8_t* blockOn0, uint8_t* blockOn1, uint8_t* blockOn2, uint8_t* blockOn3, uint8_t* blockOn4);
 DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block);
-DllAccess void DLLGetCurrentScanNumber_mutlipleBoards(int64_t* sample0, int64_t* block0, int64_t* sample1, int64_t* block1, int64_t* sample2, int64_t* block2, int64_t* sample3, int64_t* block3, int64_t* sample4, int64_t* block4);
+DllAccess void DLLGetCurrentScanNumber_multipleBoards(int64_t* sample0, int64_t* block0, int64_t* sample1, int64_t* block1, int64_t* sample2, int64_t* block2, int64_t* sample3, int64_t* block3, int64_t* sample4, int64_t* block4);
 //************  Control CAM
 DllAccess es_status_codes DLLOutTrigHigh();
 DllAccess es_status_codes DLLOutTrigLow();
