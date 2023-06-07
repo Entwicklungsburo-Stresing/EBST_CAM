@@ -1,5 +1,10 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.4.8
+- Fix DLL minimal build
+- Fix typo in DLL function name: DLLGetCurrentScanNumber_multipleBoards
+- Cleanup dependencies of escam installer
+
 4.4.7
 - Fix crash when using DLL in Labview (bug since 4.4.6)
 
