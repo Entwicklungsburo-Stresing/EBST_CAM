@@ -837,6 +837,8 @@ uint16_t checkEscapeKeyState()
 {
 #ifndef MINIMAL_BUILD
 	return GetAsyncKeyState(VK_ESCAPE);
+#else
+	return 0;
 #endif
 }
 
@@ -844,6 +846,8 @@ uint16_t checkSpaceKeyState()
 {
 #ifndef MINIMAL_BUILD
 	return GetAsyncKeyState(VK_SPACE);
+#else
+	return 0;
 #endif
 }
 
