@@ -37,7 +37,6 @@ VERSION = $${VERSION_MAJOR_QT}.$${VERSION_MINOR_QT}.$${VERSION_BUILD_QT}
 # Input
 SOURCES += \
     camerasettingswidget.cpp \
-    dacspinboxes.cpp \
     dialogaxes.cpp \
     dialogdac.cpp \
     dialogdsc.cpp \
@@ -58,7 +57,7 @@ SOURCES += \
 win32 {
     SOURCES += ../shared_src/win/Board_ll.c \
         ../shared_src/lscpciej_lib.c \
-        dialoggreyscalesettings.cpp \
+        dialoggreyscalesettings.cpp
 }
 unix {
     SOURCES += ../linux-driver/userspace/lscpcie.c \
@@ -71,7 +70,6 @@ DISTFILES += \
 
 FORMS += \
     camerasettingswidget.ui \
-    dacspinboxes.ui \
     dialogaxes.ui \
     dialogdac.ui \
     dialogdsc.ui \
@@ -87,7 +85,6 @@ win32 {
 
 HEADERS += \
     camerasettingswidget.h \
-    dacspinboxes.h \
     dialogaxes.h \
     dialogdac.h \
     dialogdsc.h \

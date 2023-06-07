@@ -396,3 +396,38 @@ void getFileHeaderFromFile(struct file_header* fh, char* filename_full)
 	//TODO
 	return;
 }
+
+void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
+{
+    return;
+}
+
+void ShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
+{
+    return;
+}
+
+void Deinit2dViewer()
+{
+    return;
+}
+
+void SetGammaValue(uint16_t white, uint16_t black)
+{
+    return;
+}
+
+uint16_t GetGammaWhite()
+{
+    return 0;
+}
+
+uint16_t GetGammaBlack()
+{
+    return 0;
+}
+
+void WaitForAllInterruptsDone()
+{
+    return;
+}
