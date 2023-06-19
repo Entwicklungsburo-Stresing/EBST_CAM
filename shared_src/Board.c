@@ -3274,6 +3274,7 @@ es_status_codes ExitDriver()
  *		- es_invalid_driver_handle
  *		- es_no_error
  *		- es_parameter_out_of_range
+ *		- es_memory_not_initialized
  */
 es_status_codes ReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, uint16_t* pdest)
 {
@@ -3297,9 +3298,10 @@ es_status_codes ReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uin
  * \param block position in blocks (0...(nob-1))
  * \param camera position in camera count (0...(CAMCNT-1)
  * \param pIndex Pointer to index of pixel.
- * \return es_status_codes
+ * \return es_status_codes:
  *		- es_no_error
  *		- es_parameter_out_of_range
+ *		- es_memory_not_initialized
  */
 es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint64_t* pIndex )
 {
@@ -3326,15 +3328,18 @@ es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample
  * \param block position in blocks (0...(nob-1))
  * \param camera position in camera count (0...(CAMCNT-1))
  * \param address Pointer to get address
- * \return es_status_codes
+ * \return es_status_codes:
  *		- es_no_error
  *		- es_parameter_out_of_range
+ *		- es_memory_not_initialized
  */
 es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** address )
 {
 	uint64_t index = 0;
 	es_status_codes status = GetIndexOfPixel(drvno, pixel, sample, block, camera, &index);
 	if (status != es_no_error) return status;
+	if (!userBuffer[drvno])
+		return es_memory_not_initialized;
 	*address = &userBuffer[drvno][index];
 	return status;
 }
@@ -3382,10 +3387,11 @@ double CalcRamUsageInMB(uint32_t nos, uint32_t nob)
  * \param CAMpos index for camcount (0...(CAMCNT-1))
  * \param mwf pointer for mean value
  * \param trms pointer for noise
- * \return es_status_codes
+ * \return es_status_codes:
  *		- es_no_error
  *		- es_parameter_out_of_range
  *		- es_allocating_memory_failed
+ *		- es_memory_not_initialized
  */
 es_status_codes CalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double *mwf, double *trms)
 {
