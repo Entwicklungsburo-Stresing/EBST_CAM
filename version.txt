@@ -1,5 +1,8 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.5.1
+- Fix DLLreadRegisterS0_32_multipleBoards
+
 4.5.0
 - Fix setting led off
 - Rename scan index 2 to scan index end
