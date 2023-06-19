@@ -411,13 +411,13 @@ DllAccess es_status_codes DLLreadRegisterS0_32(uint32_t drvno, uint32_t* data, u
 DllAccess es_status_codes DLLreadRegisterS0_32_multipleBoards(uint32_t* data0, uint32_t* data1, uint32_t* data2, uint32_t* data3, uint32_t* data4, uint32_t address)
 {
 	es_status_codes status = es_no_error;
-	uint8_t* data[MAXPCIECARDS] = { data0, data1, data2, data3, data4 };
+	uint32_t* data[MAXPCIECARDS] = { data0, data1, data2, data3, data4 };
 	int usedBoards = 0;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = readRegisterS0_32(drvno, data, address);
+			status = readRegisterS0_32(drvno, data[usedBoards], address);
 			if (status != es_no_error) return status;
 			usedBoards++;
 		}
