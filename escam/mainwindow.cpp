@@ -460,14 +460,16 @@ void MainWindow::loadSettings()
 			uint8_t tor = static_cast<uint8_t>(settings.value(settingTorPath, settingTorDefault).toDouble());
 			settings.endGroup();
 			lsc.setTorOut(drvno, tor);
-			int nos = settings.value(settingNosPath, settingNosDefault).toDouble();
-			ui->horizontalSliderSample->setMaximum(nos);
-			ui->spinBoxSample->setMaximum(nos);
-			int nob = settings.value(settingNobPath, settingNobDefault).toDouble();
-			ui->horizontalSliderBlock->setMaximum(nob);
-			ui->spinBoxBlock->setMaximum(nob);
 		}
 	}
+	int nos = settings.value(settingNosPath, settingNosDefault).toDouble();
+	ui->horizontalSliderSample->setMaximum(nos);
+	ui->spinBoxSample->setMaximum(nos);
+	int nob = settings.value(settingNobPath, settingNobDefault).toDouble();
+	ui->horizontalSliderBlock->setMaximum(nob);
+	ui->spinBoxBlock->setMaximum(nob);
+	ui->horizontalSliderSample->setValue(nos);
+	ui->horizontalSliderBlock->setValue(nob);
 	QString theme = settings.value(settingThemePath, settingThemeDefault).toString();
 	QApplication::setStyle(QStyleFactory::create(theme));
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 0))
@@ -627,7 +629,8 @@ void MainWindow::loadCameraData()
 				bool showCurrentCam = settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toBool();
 				if (showCurrentCam)
 				{
-					lsc.returnFrame(drvno, sample, block, cam, pixel, cur_data_ptr);
+					es_status_codes status = lsc.returnFrame(drvno, sample, block, cam, pixel, cur_data_ptr);
+					if (status != es_no_error) break;
 					pixel_array[showedCam] = pixel;
 					cur_data_ptr += pixel;
 					showedCam++;
@@ -636,7 +639,8 @@ void MainWindow::loadCameraData()
 			settings.endGroup();
 		}
 	}
-	setChartData(data, pixel_array, static_cast<uint16_t>(showCamcnt));
+	if(showedCam)
+		setChartData(data, pixel_array, static_cast<uint16_t>(showCamcnt));
 	free(data);
 	return;
 }
