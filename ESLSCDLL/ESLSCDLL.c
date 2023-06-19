@@ -214,9 +214,10 @@ DllAccess es_status_codes DLLReturnFrame_multipleBoards(uint32_t sample, uint32_
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param pdest address where data is written, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( uint16_t )
- * \return es_status_codes
+ * \return es_status_codes:
  *		- es_no_error
  *		- es_parameter_out_of_range
+ *		- es_memory_not_initialized
  */
 DllAccess es_status_codes DLLCopyAllData(uint32_t drvno, uint16_t* pdest)
 {
@@ -238,6 +239,7 @@ DllAccess es_status_codes DLLCopyAllData(uint32_t drvno, uint16_t* pdest)
  * \return es_status_codes:
  *		- es_no_error
  *		- es_parameter_out_of_range
+ *		- es_memory_not_initialized
  */
 DllAccess es_status_codes DLLCopyAllData_multipleBoards(uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4)
 {
@@ -262,9 +264,10 @@ DllAccess es_status_codes DLLCopyAllData_multipleBoards(uint16_t* pdest0, uint16
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param block Selects which block to copy.
  * \param pdest address where data is written, should be a buffer with size: nos * camcnt * pixel * sizeof( uint16_t )
- * \return es_status_codes
+ * \return es_status_codes:
  *		- es_no_error
  *		- es_parameter_out_of_range
+ *		- es_memory_not_initialized
  */
 DllAccess es_status_codes DLLCopyOneBlock(uint32_t drvno, uint16_t block, uint16_t* pdest)
 {
@@ -284,9 +287,10 @@ DllAccess es_status_codes DLLCopyOneBlock(uint32_t drvno, uint16_t block, uint16
  * \param pdest2 address where data is written for board 2, should be a buffer with size: nos * camcnt * pixel * sizeof( uint16_t )
  * \param pdest3 address where data is written for board 3, should be a buffer with size: nos * camcnt * pixel * sizeof( uint16_t )
  * \param pdest4 address where data is written for board 4, should be a buffer with size: nos * camcnt * pixel * sizeof( uint16_t )
- * \return es_status_codes
+ * \return es_status_codes:
  *		- es_no_error
  *		- es_parameter_out_of_range
+ *		- es_memory_not_initialized
  */
 DllAccess es_status_codes DLLCopyOneBlock_multipleBoards(uint16_t block, uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4)
 {
@@ -1210,6 +1214,7 @@ DllAccess es_status_codes DLLCalcTrms(uint32_t drvno, uint32_t firstSample, uint
  *		- es_no_error
  *		- es_parameter_out_of_range
  *		- es_allocating_memory_failed
+ *		- es_memory_not_initialized
  */
 DllAccess es_status_codes DLLCalcTrms_multipleBoards(uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf0, double* trms0, double* mwf1, double* trms1, double* mwf2, double* trms2, double* mwf3, double* trms3, double* mwf4, double* trms4)
 {
