@@ -407,9 +407,9 @@ enum sti_mode
 	 */
 	sti_S2 = 2,
 	/**
-	 * Unused
+	 * External trigger by I but enable by S2
 	 */
-	sti_unused = 3,
+	sti_S2_enable_I = 3,
 	/**
 	 * Trigger with internal timer
 	 */
