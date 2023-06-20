@@ -902,8 +902,15 @@ void MainWindow::showCurrentScan()
 		if ((board_sel >> drvno) & 1)
 		{
 			lsc.getCurrentScanNumber(drvno, &sample, &block);
+			// This break breaks the for loop after the first drvno is selected by board_sel, because the display only can show one sample at a time.
+			break;
 		}
 	}
+	// If the current scan number is one of the first 3 scans in the measurement, abort the displaying.
+	// This is here to prevent showing the first over exposed scans when in software polling mode.
+	// This also prevents showing a zero line, when no scans have been written to the user buffer yet and getCurrentScanNumber gives -1 or 0 for sample and block.
+	if (sample <= 2 && block <= 0)
+		return;
 	int radioState = 0;
 	if (ui->radioButtonLiveViewOff->isChecked()) radioState = 0;
 	else if (ui->radioButtonLiveViewFixedSample->isChecked()) radioState = 1;
