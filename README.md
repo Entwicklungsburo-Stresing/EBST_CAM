@@ -32,7 +32,7 @@ Release_minimal	| Release build for escam and DLL. Use this for production usage
 Release-Labview	| Release build for escam and DLL with Labview libriaries for communication with Labview software. Use this for production usage with Labview.
 
 ### Installing Windows driver
-Run `install_run_as_admin.bat` from [Stresing14.00_Driver_Distribution_Package](http://stresing.de/dwnl/EBSTDRV14V00.rar) as admin. 
+Run `install_run_as_admin.bat` from [Stresing14.00_Driver_Distribution_Package](http://stresing.de/dwnl/ebstdrv14v00.rar) as admin. 
 
 ### Installing escam
 Compile solution first and use `escam_setup/build/setup.exe` or use `setup.exe` from a [release](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases). If Microsoft Visual C++ Redistributable is missing, this setup should install it automatically.
