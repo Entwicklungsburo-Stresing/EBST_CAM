@@ -319,6 +319,7 @@ void MainWindow::on_actionDSC_triggered()
 void MainWindow::on_actionAxes_triggered()
 {
 	DialogAxes* messageBox = new DialogAxes(this);
+	connect(ui->chartView, &MyQChartView::rubberBandChanged, messageBox, &DialogAxes::on_rubberband_valueChanged);
 	messageBox->setAttribute(Qt::WA_DeleteOnClose);
 	messageBox->show();
 	return;
