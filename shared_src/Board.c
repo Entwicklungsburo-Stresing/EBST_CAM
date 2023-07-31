@@ -2864,6 +2864,7 @@ es_status_codes StartMeasurement()
 					}
 				}
 			}
+			//WaitforTelapsed(50);
 			// When the software reaches this point, all scans for the current block are done.
 			// So blockOn is reset here.
 			for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
