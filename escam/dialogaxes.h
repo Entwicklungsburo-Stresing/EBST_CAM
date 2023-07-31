@@ -15,6 +15,8 @@ public:
 	explicit DialogAxes(QWidget* parent = nullptr);
 	~DialogAxes();
 
+	void on_rubberband_valueChanged();
+
 private slots:
 	void on_buttonBox_rejected();
 	void on_spinBoxXmin_valueChanged(int arg1);

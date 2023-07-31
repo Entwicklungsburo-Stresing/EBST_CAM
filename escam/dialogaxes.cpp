@@ -76,3 +76,11 @@ void DialogAxes::on_spinBoxYmax_valueChanged(int arg1)
 	axis1->setMax(arg1);
 	mainWindow->ui->chartView->curr_ymax = arg1;
 }
+
+void DialogAxes::on_rubberband_valueChanged()
+{
+	ui->spinBoxXmin->setValue(mainWindow->ui->chartView->curr_xmin);
+	ui->spinBoxXmax->setValue(mainWindow->ui->chartView->curr_xmax);
+	ui->spinBoxYmin->setValue(mainWindow->ui->chartView->curr_ymin);
+	ui->spinBoxYmax->setValue(mainWindow->ui->chartView->curr_ymax);
+}
