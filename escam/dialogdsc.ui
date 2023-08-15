@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>241</width>
-    <height>202</height>
+    <width>247</width>
+    <height>214</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -199,7 +199,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="pushButton_update_act">
+      <widget class="QPushButton" name="pushButton_update_cur">
        <property name="text">
         <string>Update current</string>
        </property>
@@ -224,7 +224,7 @@
   <tabstop>comboBox_DIR_DSC_1</tabstop>
   <tabstop>pushButton_RS_DSC_2</tabstop>
   <tabstop>comboBox_DIR_DSC_2</tabstop>
-  <tabstop>pushButton_update_act</tabstop>
+  <tabstop>pushButton_update_cur</tabstop>
  </tabstops>
  <resources/>
  <connections>
