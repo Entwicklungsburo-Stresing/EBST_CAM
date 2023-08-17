@@ -159,11 +159,11 @@ DllAccess void DLLStartMeasurement_nonblocking()
 }
 
 /**
- * \copydoc AbortMeasurement
+ * \copydoc SetAbortMeasurementFlag
  */
 DllAccess es_status_codes DLLAbortMeasurement()
 {
-	return AbortMeasurement();
+	return SetAbortMeasurementFlag();
 }
 
 /**
