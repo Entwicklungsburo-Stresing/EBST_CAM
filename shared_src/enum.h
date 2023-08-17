@@ -158,12 +158,20 @@ enum pcie_addresses
 	PCIeAddr_devStatCtrl = 0x60
 };
 
-enum BTRIGREG_bits
+enum FFCTRL_bits
 {
-	BTRIGREG_bit_SWTRIG = 0x40,
-	BTRIGREG_bit_RSFIFO = 0x80,
-	BTRIGREG_bitindex_SWTRIG = 6,
-	BTRIGREG_bitindex_RSFIFO = 7
+	FFCTRL_bit_SWTRIG = 0x40,
+	FFCTRL_bit_RSFIFO = 0x80,
+	FFCTRL_bitindex_SWTRIG = 6,
+	FFCTRL_bitindex_RSFIFO = 7,
+	FFCTRL_bitindex_scan_reset = 5,
+	FFCTRL_bitindex_block_reset = 4
+};
+
+enum FF_FLAGS_bits
+{
+	FF_FLAGS_bitindex_scan_read = 2,
+	FF_FLAGS_bitindex_block_read = 1
 };
 
 //S0 Addresses
