@@ -1145,9 +1145,9 @@ es_status_codes StopSTimer( uint32_t drvno )
 es_status_codes RSFifo( uint32_t drvno )
 {
 	ES_LOG("Reset FIFO\n");
-	es_status_codes status = setBitS0_8(drvno, BTRIGREG_bitindex_RSFIFO, S0Addr_FFCTRL);
+	es_status_codes status = setBitS0_8(drvno, FFCTRL_bitindex_RSFIFO, S0Addr_FFCTRL);
 	if (status != es_no_error) return status;
-	return resetBitS0_8(drvno, BTRIGREG_bitindex_RSFIFO, S0Addr_FFCTRL);
+	return resetBitS0_8(drvno, FFCTRL_bitindex_RSFIFO, S0Addr_FFCTRL);
 }
 
 /**
@@ -3143,9 +3143,9 @@ es_status_codes StartSTimer( uint32_t drvno )
 es_status_codes DoSoftwareTrigger( uint32_t drvno )
 {
 	ES_LOG("Do software trigger\n");
-	es_status_codes status = setBitS0_8(drvno, BTRIGREG_bitindex_SWTRIG, S0Addr_FFCTRL);
+	es_status_codes status = setBitS0_8(drvno, FFCTRL_bitindex_SWTRIG, S0Addr_FFCTRL);
 	if (status != es_no_error) return status;
-	return resetBitS0_8(drvno, BTRIGREG_bitindex_SWTRIG, S0Addr_FFCTRL);
+	return resetBitS0_8(drvno, FFCTRL_bitindex_SWTRIG, S0Addr_FFCTRL);
 }
 
 /**
