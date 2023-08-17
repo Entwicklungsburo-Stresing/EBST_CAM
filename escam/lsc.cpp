@@ -195,12 +195,11 @@ es_status_codes Lsc::calcTRMS( uint32_t drvno, uint32_t firstSample, uint32_t la
 }
 
 /**
- * \copydoc AbortMeasurement
+ * \copydoc SetAbortMeasurementFlag
  */
 es_status_codes Lsc::abortMeasurement()
 {
-	abortMeasurementFlag = true;
-	return es_no_error;
+	return SetAbortMeasurementFlag();
 }
 
 void Lsc::parseTextToHtml(std::string* str)
