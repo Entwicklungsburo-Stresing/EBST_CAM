@@ -458,6 +458,17 @@ es_status_codes AbortMeasurement()
 }
 
 /**
+ * \brief Sets abortMeasurementFlag to true.
+ * 
+ * \return es_no_error
+ */
+es_status_codes SetAbortMeasurementFlag()
+{
+	abortMeasurementFlag = true;
+	return es_no_error;
+}
+
+/**
  * \brief Sets BlockOn bit in PCIEFLAGS and notifies UI about it.
  * 
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0

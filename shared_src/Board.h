@@ -165,6 +165,7 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 es_status_codes GetOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t** data);
 void SetAllInterruptsDone(uint32_t drvno);
 es_status_codes SetCameraPosition(uint32_t drvno);
+es_status_codes SetAbortMeasurementFlag();
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);
