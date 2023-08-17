@@ -183,7 +183,7 @@ enum s0_addresses
 	S0Addr_XCKCNTMSB = 0xf,
 	S0Addr_PIXREGlow = 0x10, //0x10
 	S0Addr_PIXREGhigh = 0x11,
-	S0Addr_BTRIGREG = 0x12,
+	S0Addr_FFCTRL = 0x12,
 	S0Addr_FF_FLAGS = 0x13,
 	S0Addr_FIFOCNT = 0x14, //0x14
 	S0Addr_VCLKCTRL = 0x18,
