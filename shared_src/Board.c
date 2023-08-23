@@ -234,7 +234,8 @@ es_status_codes InitCamera(uint32_t drvno)
 	status = setUseEC(drvno, (uint16_t)settings_struct.camera_settings[drvno].use_ec);
 	if (status != es_no_error) return status;
 	//set gain switch (mostly for IR sensors)
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, (uint16_t)settings_struct.camera_settings[drvno].sensor_gain);
+	status = setConfigRegister(drvno); // upgrades sen_gain to config register
+	//status = SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, (uint16_t)settings_struct.camera_settings[drvno].sensor_gain);
 	if (status != es_no_error) return status;
 	//select vclk and Area mode on
 	uint8_t is_area_mode = 0;
@@ -267,6 +268,22 @@ es_status_codes InitCamera(uint32_t drvno)
 		if (status != es_no_error) return status;
 	}
 	status = IOCtrl_setT0(drvno, settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns);
+	return status;
+}
+
+
+es_status_codes setConfigRegister(uint32_t drvno)
+{
+	es_status_codes status = es_no_error;
+
+	uint16_t sensor_gain = (uint16_t)settings_struct.camera_settings[drvno].sensor_gain;
+	uint16_t trigger_mode = (uint16_t)settings_struct.camera_settings[drvno].trigger_mode_cc;
+	uint16_t cool_level = (uint8_t)settings_struct.camera_settings[drvno].temp_level;
+	uint16_t led_off = (uint16_t)settings_struct.camera_settings[drvno].led_off;
+	uint16_t configRegister = ((led_off & 0x01) << 7 | (cool_level & 0x07) << 4 | (trigger_mode & 0x07) << 1 | (sensor_gain & 0x01));
+
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, configRegister);
+	if (status != es_no_error) return status;
 	return status;
 }
 
