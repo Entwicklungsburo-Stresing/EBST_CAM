@@ -300,6 +300,16 @@ enum cam_addresses
 	 */
 	cam_adaddr_ifc_mode = 0x08,
 	/**
+	 * stores the amount of vclks generated inside the camera. 
+	 * - cam_adaddr_vclks_amount1:    is used for full binning (fft_lines) or the first region of ROI
+	 * - cam_adaddr_vclks_amount2..5: are used for ROI mode. Must be set to zero for full binning
+	 	 */
+	cam_adaddr_vclks_amount1 = 0x9,
+	cam_adaddr_vclks_amount2 = 0xA,
+	cam_adaddr_vclks_amount3 = 0xB,
+	cam_adaddr_vclks_amount4 = 0xC,
+	cam_adaddr_vclks_amount5 = 0xD,
+	/**
 	 * This is a register for the camera position for multiple cameras in line. The software always sets the first camera to 0 and the cameras are handing their positions one to another.
 	 */
 	cam_adaddr_camera_position = 0x7F,
