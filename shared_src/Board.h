@@ -211,6 +211,10 @@ es_status_codes writeBitsDma_32( uint32_t drvno, uint32_t data, uint32_t bitmask
 es_status_codes writeBitsDma_8( uint32_t drvno, uint8_t data, uint8_t bitmask, uint16_t address);
 es_status_codes pulseBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address);
 es_status_codes pulseBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address);
+es_status_codes ReadScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh);
+es_status_codes ResetScanFrequencyBit(uint32_t drvno);
+es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh);
+es_status_codes ResetBlockFrequencyBit(uint32_t drvno);
 #ifdef __cplusplus
 }
 #endif

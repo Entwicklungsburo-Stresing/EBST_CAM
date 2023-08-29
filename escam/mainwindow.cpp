@@ -28,6 +28,10 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(&lsc, &Lsc::allBlocksDone, this, &MainWindow::on_allBlocksDone);
 	connect(ui->chartView, &MyQChartView::rubberBandChanged, this, &MainWindow::on_rubberBandChanged);
 	connect(displayTimer, &QTimer::timeout, this, &MainWindow::showCurrentScan);
+	connect(triggerFrequencyTimer, &QTimer::timeout, this, &MainWindow::readScanFrequencyBit);
+	connect(triggerFrequencyTimer, &QTimer::timeout, this, &MainWindow::readBlockFrequencyBit);
+	connect(scanFrequencyTimer, &QTimer::timeout, this, &MainWindow::on_scanFrequencyTooHigh);
+	connect(blockFrequencyTimer, &QTimer::timeout, this, &MainWindow::on_blockFrequencyTooHigh);
 	connect(ui->radioButtonLiveViewFixedSample, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
 	connect(ui->radioButtonLiveViewOff, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
 	connect(ui->radioButtonLiveViewOffNewestSample, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
@@ -53,6 +57,8 @@ MainWindow::MainWindow(QWidget* parent)
 	}
 	loadSettings();
 	setDefaultAxes();
+
+	triggerFrequencyTimer->start(100);
 
 	// move lsc to its own thread
 	lsc.moveToThread(&measurementThread);
@@ -735,6 +741,68 @@ void MainWindow::on_allBlocksDone()
 		}
 	}
 #endif
+	return;
+}
+
+void MainWindow::readScanFrequencyBit()
+{
+	bool isScanFrequencyTooHigh = false;
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			es_status_codes status = lsc.readScanFrequencyBit(drvno, &isScanFrequencyTooHigh);
+			if (isScanFrequencyTooHigh) {
+				QPalette pal = palette();
+				pal.setColor(QPalette::Window, Qt::red);
+				ui->widgetScanFreqHigh->setPalette(pal);
+				scanFrequencyTimer->start(1000);
+				lsc.resetScanFrequencyBit(drvno);
+			}
+		}
+	}
+	return;
+}
+
+void MainWindow::on_scanFrequencyTooHigh()
+{
+	scanFrequencyTimer->stop();
+	QPalette pal = palette();
+	pal.setColor(QPalette::Window, Qt::darkRed);
+	ui->widgetScanFreqHigh->setPalette(pal);
+	return;
+}
+
+void MainWindow::readBlockFrequencyBit()
+{
+	bool isBlockFrequencyTooHigh = false;
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			es_status_codes status = lsc.readBlockFrequencyBit(drvno, &isBlockFrequencyTooHigh);
+			if (isBlockFrequencyTooHigh) {
+				QPalette pal = palette();
+				pal.setColor(QPalette::Window, Qt::red);
+				ui->widgetBlockFreqHigh->setPalette(pal);
+				blockFrequencyTimer->start(1000);
+				lsc.resetBlockFrequencyBit(drvno);
+			}
+		}
+	}
+	return;
+}
+
+void MainWindow::on_blockFrequencyTooHigh()
+{
+	blockFrequencyTimer->stop();
+	QPalette pal = palette();
+	pal.setColor(QPalette::Window, Qt::darkRed);
+	ui->widgetBlockFreqHigh->setPalette(pal);
 	return;
 }
 
