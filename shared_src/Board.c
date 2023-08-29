@@ -233,13 +233,18 @@ es_status_codes InitCamera(uint32_t drvno)
 	//set use EC
 	status = setUseEC(drvno, (uint16_t)settings_struct.camera_settings[drvno].use_ec);
 	if (status != es_no_error) return status;
+
 	//set gain switch (mostly for IR sensors)
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, (uint16_t)settings_struct.camera_settings[drvno].sensor_gain);
+	status = SetConfigRegister(drvno); // upgrades sen_gain to config register
+	//status = SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, (uint16_t)settings_struct.camera_settings[drvno].sensor_gain);
 	if (status != es_no_error) return status;
-	//select vclk and Area mode on
-	uint8_t is_area_mode = 0;
-	if (settings_struct.camera_settings[drvno].fft_mode == area_mode) is_area_mode = 0x8000;
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclk, (uint16_t)((uint8_t)settings_struct.camera_settings[drvno].sensor_type | is_area_mode));
+
+	if (settings_struct.camera_settings[drvno].sensor_type == FFTsensor)
+	{
+		status = SetupFFT(drvno);
+		if (status != es_no_error) return status;
+	}
+
 	if (status != es_no_error) return status;
 	switch (settings_struct.camera_settings[drvno].camera_system)
 	{
@@ -267,6 +272,86 @@ es_status_codes InitCamera(uint32_t drvno)
 		if (status != es_no_error) return status;
 	}
 	status = IOCtrl_setT0(drvno, settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns);
+	return status;
+}
+
+
+es_status_codes SetConfigRegister(uint32_t drvno)
+{
+	es_status_codes status = es_no_error;
+
+	uint16_t sensor_gain = (uint16_t)settings_struct.camera_settings[drvno].sensor_gain;
+	uint16_t trigger_mode = (uint16_t)settings_struct.camera_settings[drvno].trigger_mode_cc;
+	uint16_t cool_level = (uint8_t)settings_struct.camera_settings[drvno].temp_level;
+	uint16_t led_off = (uint16_t)settings_struct.camera_settings[drvno].led_off;
+	uint16_t configRegister = ((led_off & 0x0001) << 7 | (cool_level & 0x0007) << 4 | (trigger_mode & 0x0007) << 1 | (sensor_gain & 0x0001));
+
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, configRegister);
+	if (status != es_no_error) return status;
+	return status;
+}
+
+es_status_codes SetupFFT(uint32_t drvno)
+{
+	es_status_codes status = es_no_error;
+	status = SetVfreqRegister(drvno); if (status != es_no_error) return status;
+
+	switch (settings_struct.camera_settings[drvno].fft_mode)
+	{
+	case full_binning:
+		status = SetupFullBinningInCamera(drvno);
+		break;
+	case partial_binning:
+	{
+		status = SetupPartialBinningInCamera(drvno);
+		break;
+	}
+	case area_mode:
+		break;
+	default:
+		return es_parameter_out_of_range;
+	}
+
+	return status;
+}
+
+/**
+ * \brief Is basically the old vclk register (cam_adaddr_vclk). Sets:
+ * - en_area	(bit 15)		- as before
+ * - vfreq		(bits 14...1)	- for cams with FFT_v2 FPGAs, that generate their own vclks inside the cam
+ * - is_fft		(bit 0)			- as before but legacy to run FFT_v1 cameras
+ */
+es_status_codes SetVfreqRegister(uint32_t drvno) // was vclk register
+{
+	es_status_codes status = es_no_error;
+	uint16_t is_area_mode = 0;
+	if (settings_struct.camera_settings[drvno].fft_mode == area_mode) is_area_mode = 0x8000;
+	uint16_t is_fft = (uint16_t)settings_struct.camera_settings[drvno].sensor_type;
+	uint16_t vfreqFPGA = (uint16_t)settings_struct.camera_settings[drvno].vfreq << 5; //multiplikation mit 32 damit FPGA vclks aehnlich lang wie die PCIe vclks sind
+	uint16_t vfreqRegsiter = (is_area_mode | (vfreqFPGA & 0x3FFF) << 1 | is_fft & 0x0001);
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclk, vfreqRegsiter);
+	return status;
+}
+
+es_status_codes SetupFullBinningInCamera(uint32_t drvno)
+{
+	es_status_codes status = es_no_error;
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount1, (uint16_t)settings_struct.camera_settings[drvno].fft_lines); if (status != es_no_error) return status;
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount2, (uint16_t)0x0000); if (status != es_no_error) return status;
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount3, (uint16_t)0x0000); if (status != es_no_error) return status;
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount4, (uint16_t)0x0000); if (status != es_no_error) return status;
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount5, (uint16_t)0x0000); if (status != es_no_error) return status;
+	return status;
+}
+
+es_status_codes SetupPartialBinningInCamera(uint32_t drvno)
+{
+	es_status_codes status = es_no_error;
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount1, (uint16_t)settings_struct.camera_settings[drvno].region_size[0]); if (status != es_no_error) return status;
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount2, (uint16_t)settings_struct.camera_settings[drvno].region_size[1]); if (status != es_no_error) return status;
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount3, (uint16_t)settings_struct.camera_settings[drvno].region_size[2]); if (status != es_no_error) return status;
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount4, (uint16_t)settings_struct.camera_settings[drvno].region_size[3]); if (status != es_no_error) return status;
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount5, (uint16_t)settings_struct.camera_settings[drvno].region_size[4]); if (status != es_no_error) return status;
 	return status;
 }
 
