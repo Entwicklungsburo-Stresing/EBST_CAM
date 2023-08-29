@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>536</width>
+    <width>531</width>
     <height>559</height>
    </rect>
   </property>
@@ -33,13 +33,6 @@
           </property>
           <property name="checkable">
            <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButtonFreqHigh">
-          <property name="text">
-           <string>FreqHigh</string>
           </property>
          </widget>
         </item>
@@ -400,8 +393,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>536</width>
-     <height>22</height>
+     <width>531</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
