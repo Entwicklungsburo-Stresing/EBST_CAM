@@ -58,6 +58,10 @@ public:
 	void setGammaValue(uint16_t white, uint16_t black);
 	uint16_t getGammaWhite();
 	uint16_t getGammaBlack();
+	es_status_codes readScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh);
+	es_status_codes resetScanFrequencyBit(uint32_t drvno);
+	es_status_codes readBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh);
+	es_status_codes resetBlockFrequencyBit(uint32_t drvno);
 public slots:
 	es_status_codes startMeasurement();
 signals:

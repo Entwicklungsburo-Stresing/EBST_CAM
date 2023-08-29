@@ -5176,7 +5176,7 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 	return status;
 }
 
-es_status_codes readScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh) 
+es_status_codes ReadScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh) 
 {
 	uint8_t data = 0;
 	es_status_codes status = readRegisterS0_8(drvno, &data, S0Addr_FF_FLAGS);
@@ -5187,12 +5187,12 @@ es_status_codes readScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh)
 	return status;
 }
 
-es_status_codes resetScanFrequencyBit(uint32_t drvno) 
+es_status_codes ResetScanFrequencyBit(uint32_t drvno) 
 {
 	return pulseBitS0_8(drvno, FFCTRL_bitindex_scan_reset, S0Addr_FFCTRL);
 }
 
-es_status_codes readBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh)
+es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh)
 {
 	uint8_t data = 0;
 	es_status_codes status = readRegisterS0_8(drvno, &data, S0Addr_FF_FLAGS);
@@ -5203,7 +5203,7 @@ es_status_codes readBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHig
 	return status;
 }
 
-es_status_codes resetBlockFrequencyBit(uint32_t drvno)
+es_status_codes ResetBlockFrequencyBit(uint32_t drvno)
 {
 	return pulseBitS0_8(drvno, FFCTRL_bitindex_block_reset, S0Addr_FFCTRL);
 }

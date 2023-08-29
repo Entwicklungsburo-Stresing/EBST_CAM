@@ -39,6 +39,9 @@ private:
 	QThread measurementThread;
 	void copySettings(QSettings &dst, QSettings &src);
 	QTimer* displayTimer = new QTimer(this);
+	QTimer* triggerFrequencyTimer = new QTimer(this);
+	QTimer* scanFrequencyTimer = new QTimer(this);
+	QTimer* blockFrequencyTimer = new QTimer(this);
 	bool measureOn = false;
 	void closeEvent(QCloseEvent *event);
 	void showStatusCodeDialog(es_status_codes status);
@@ -70,6 +73,10 @@ private slots:
 	void on_actionspecial_pixels_triggered();
 	void on_actionGreyscaleSettings_triggered();
 	void on_checkBoxLoopMeasurement_stateChanged(int state);
+	void readScanFrequencyBit();
+	void on_scanFrequencyTooHigh();
+	void readBlockFrequencyBit();
+	void on_blockFrequencyTooHigh();
 };
 
 #endif // MAINWINDOW_H

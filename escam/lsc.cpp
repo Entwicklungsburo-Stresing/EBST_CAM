@@ -413,3 +413,35 @@ uint16_t Lsc::getGammaBlack()
 	return GetGammaBlack();
 }
 
+/**
+ * \copydoc ReadScanFrequencyBit
+ */
+es_status_codes Lsc::readScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh)
+{
+	return ReadScanFrequencyBit(drvno, scanFrequencyTooHigh);
+}
+
+/**
+ * \copydoc ResetScanFrequencyBit
+ */
+es_status_codes Lsc::resetScanFrequencyBit(uint32_t drvno)
+{
+	return ResetScanFrequencyBit(drvno);
+}
+
+/**
+ * \copydoc ReadBlockFrequencyBit
+ */
+es_status_codes Lsc::readBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh)
+{
+	return ReadBlockFrequencyBit(drvno, blockFrequencyTooHigh);
+}
+
+/**
+ * \copydoc ResetBlockFrequencyBit
+ */
+es_status_codes Lsc::resetBlockFrequencyBit(uint32_t drvno)
+{
+	return ResetBlockFrequencyBit(drvno);
+}
+
