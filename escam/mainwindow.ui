@@ -419,7 +419,7 @@
              </palette>
             </property>
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Block Frequency Too High&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Block frequency too high&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="autoFillBackground">
              <bool>true</bool>
