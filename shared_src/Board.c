@@ -1065,6 +1065,48 @@ es_status_codes readRegisterS0_8( uint32_t drvno, uint8_t* data, uint16_t addres
 {
 	return readRegister_8(drvno, data, address + S0_SPACE_OFFSET);
 }
+/**
+ * \brief Read 1 bit of 1 of 4 bytes.
+ * 
+ * \param drvno identifier of PCIE card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param address Address of the register to read.
+ * \param bitnumber Address of the bit to read.
+ * \param isBitHigh Tells if bit is high or low.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes ReadBitS0_32(uint32_t drvno, uint16_t address, uint8_t bitnumber, bool* isBitHigh)
+{
+	uint32_t data = 0;
+	es_status_codes status = readRegisterS0_32(drvno, &data, address);
+	if (data & (1 << bitnumber)) *isBitHigh = true;
+	else *isBitHigh = false;
+
+	return status;
+}
+
+/**
+ * \brief	Read 1 bit of a byte.
+ * 
+ * \param drvno identifier of PCIE card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param address Address of the register to read.
+ * \param bitnumber Address of the bit to read.
+ * \param isBitHigh Tells if bit is high or low.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes ReadBitS0_8(uint32_t drvno, uint16_t address, uint8_t bitnumber, bool* isBitHigh)
+{
+	uint8_t data = 0;
+	es_status_codes status = readRegisterS0_8(drvno, &data, address);
+
+	if (data & (1 << bitnumber)) *isBitHigh = true;
+	else *isBitHigh = false;
+
+	return status;
+}
 
 /**
  * \brief Open shutter for sensors with EC (exposure control) / sets IFC signal = high.
@@ -5178,13 +5220,7 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 
 es_status_codes ReadScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh) 
 {
-	uint8_t data = 0;
-	es_status_codes status = readRegisterS0_8(drvno, &data, S0Addr_FF_FLAGS);
-
-	if (data & (1 << FF_FLAGS_bitindex_scan_read)) *scanFrequencyTooHigh = true;
-	else *scanFrequencyTooHigh = false;
-
-	return status;
+	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_scan_read, &scanFrequencyTooHigh);
 }
 
 es_status_codes ResetScanFrequencyBit(uint32_t drvno) 
@@ -5194,13 +5230,7 @@ es_status_codes ResetScanFrequencyBit(uint32_t drvno)
 
 es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh)
 {
-	uint8_t data = 0;
-	es_status_codes status = readRegisterS0_8(drvno, &data, S0Addr_FF_FLAGS);
-
-	if (data & (1 << FF_FLAGS_bitindex_block_read)) *blockFrequencyTooHigh = true;
-	else *blockFrequencyTooHigh = false;
-
-	return status;
+	return ReadBitS0_8(drvno, S0Addr_FFCTRL, FF_FLAGS_bitindex_block_read, &blockFrequencyTooHigh);
 }
 
 es_status_codes ResetBlockFrequencyBit(uint32_t drvno)

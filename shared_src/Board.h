@@ -215,6 +215,8 @@ es_status_codes ReadScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh)
 es_status_codes ResetScanFrequencyBit(uint32_t drvno);
 es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh);
 es_status_codes ResetBlockFrequencyBit(uint32_t drvno);
+es_status_codes ReadBitS0_32(uint32_t drvno, uint16_t address, uint8_t bitnumber, bool* isBitHigh);
+es_status_codes ReadBitS0_8(uint32_t drvno, uint16_t address, uint8_t bitnumber, bool* isBitHigh)
 #ifdef __cplusplus
 }
 #endif
