@@ -753,15 +753,17 @@ void MainWindow::readScanFrequencyBit()
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
 		{
-			es_status_codes status = lsc.readScanFrequencyBit(drvno, &isScanFrequencyTooHigh);
-			if (isScanFrequencyTooHigh) {
-				QPalette pal = palette();
-				pal.setColor(QPalette::Window, Qt::red);
-				ui->widgetScanFreqHigh->setPalette(pal);
-				scanFrequencyTimer->start(1000);
-				lsc.resetScanFrequencyBit(drvno);
-			}
+			bool freqTooHigh = false;
+			es_status_codes status = lsc.readScanFrequencyBit(drvno, &freqTooHigh);
+			isScanFrequencyTooHigh |= freqTooHigh;
+			if (isScanFrequencyTooHigh) lsc.resetScanFrequencyBit(drvno);
 		}
+	}
+	if (isScanFrequencyTooHigh) {
+		QPalette pal = palette();
+		pal.setColor(QPalette::Window, Qt::red);
+		ui->widgetScanFreqHigh->setPalette(pal);
+		scanFrequencyTimer->start(1000);
 	}
 	return;
 }
@@ -784,15 +786,18 @@ void MainWindow::readBlockFrequencyBit()
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
 		{
-			es_status_codes status = lsc.readBlockFrequencyBit(drvno, &isBlockFrequencyTooHigh);
-			if (isBlockFrequencyTooHigh) {
-				QPalette pal = palette();
-				pal.setColor(QPalette::Window, Qt::red);
-				ui->widgetBlockFreqHigh->setPalette(pal);
-				blockFrequencyTimer->start(1000);
-				lsc.resetBlockFrequencyBit(drvno);
-			}
+			bool freqTooHigh = false;
+			es_status_codes status = lsc.readBlockFrequencyBit(drvno, &freqTooHigh);
+			isBlockFrequencyTooHigh |= freqTooHigh;
+			if (isBlockFrequencyTooHigh) lsc.resetBlockFrequencyBit(drvno);
 		}
+
+	}
+	if (isBlockFrequencyTooHigh) {
+		QPalette pal = palette();
+		pal.setColor(QPalette::Window, Qt::red);
+		ui->widgetBlockFreqHigh->setPalette(pal);
+		blockFrequencyTimer->start(1000);
 	}
 	return;
 }
