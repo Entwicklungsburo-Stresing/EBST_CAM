@@ -275,7 +275,7 @@
                <colorrole role="Window">
                 <brush brushstyle="SolidPattern">
                  <color alpha="255">
-                  <red>109</red>
+                  <red>128</red>
                   <green>0</green>
                   <blue>0</blue>
                  </color>
@@ -304,7 +304,7 @@
                <colorrole role="Window">
                 <brush brushstyle="SolidPattern">
                  <color alpha="255">
-                  <red>109</red>
+                  <red>128</red>
                   <green>0</green>
                   <blue>0</blue>
                  </color>
@@ -324,7 +324,7 @@
                <colorrole role="Base">
                 <brush brushstyle="SolidPattern">
                  <color alpha="255">
-                  <red>109</red>
+                  <red>128</red>
                   <green>0</green>
                   <blue>0</blue>
                  </color>
@@ -333,7 +333,7 @@
                <colorrole role="Window">
                 <brush brushstyle="SolidPattern">
                  <color alpha="255">
-                  <red>109</red>
+                  <red>128</red>
                   <green>0</green>
                   <blue>0</blue>
                  </color>
@@ -343,7 +343,7 @@
              </palette>
             </property>
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Scan frequency too high&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="autoFillBackground">
              <bool>true</bool>
@@ -378,7 +378,7 @@
                <colorrole role="Window">
                 <brush brushstyle="SolidPattern">
                  <color alpha="255">
-                  <red>109</red>
+                  <red>128</red>
                   <green>0</green>
                   <blue>0</blue>
                  </color>
@@ -389,7 +389,7 @@
                <colorrole role="Window">
                 <brush brushstyle="SolidPattern">
                  <color alpha="255">
-                  <red>109</red>
+                  <red>128</red>
                   <green>0</green>
                   <blue>0</blue>
                  </color>
@@ -400,7 +400,7 @@
                <colorrole role="Base">
                 <brush brushstyle="SolidPattern">
                  <color alpha="255">
-                  <red>109</red>
+                  <red>128</red>
                   <green>0</green>
                   <blue>0</blue>
                  </color>
@@ -409,7 +409,7 @@
                <colorrole role="Window">
                 <brush brushstyle="SolidPattern">
                  <color alpha="255">
-                  <red>109</red>
+                  <red>128</red>
                   <green>0</green>
                   <blue>0</blue>
                  </color>
@@ -417,6 +417,9 @@
                </colorrole>
               </disabled>
              </palette>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Block Frequency Too High&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="autoFillBackground">
              <bool>true</bool>
