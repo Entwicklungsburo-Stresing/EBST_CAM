@@ -1661,21 +1661,11 @@ es_status_codes InitGPX( uint32_t drvno, uint32_t delay )
  */
 es_status_codes SetGPXCtrl( uint32_t drvno, uint8_t GPXAddress, uint32_t GPXData )
 {
-	uint32_t regData = 0,
-		tempData = 0;
-	//Read old data of ctrl gpx reg
-	es_status_codes status = readRegisterS0_32(drvno, &regData, S0Addr_TDCCtrl);
-	if (status != es_no_error) return status;
+	uint32_t data = 0;
 	//shift gpx addr to the right place for the gpx ctrl reg
-	tempData = (uint32_t)(GPXAddress << TDCCtrl_bitindex_adr0);
-	//set CSexpand bit: reset CS Bit
-	tempData &= 0xF0000000;
-	//hold the other bits of the ctrl gpx reg
-	regData &= 0x07FFFFFF;
-	//combine the old ctrl bits with the new address
-	regData |= tempData;
-	//write to the gpxctrl reg
-	status = writeRegisterS0_32(drvno, regData, S0Addr_TDCCtrl);
+	data = (uint32_t)(GPXAddress << TDCCtrl_bitindex_adr0);
+	uint32_t bitmask = TDCCtrl_bit_cs | TDCCtrl_bit_adr0 | TDCCtrl_bit_adr1 | TDCCtrl_bit_adr2 | TDCCtrl_bit_adr3;
+	es_status_codes status = writeBitsS0_32(drvno, data, bitmask, S0Addr_TDCCtrl);
 	if (status != es_no_error) return status;
 	return writeRegisterS0_32( drvno, GPXData, S0Addr_TDCData );
 }
@@ -1693,21 +1683,13 @@ es_status_codes SetGPXCtrl( uint32_t drvno, uint8_t GPXAddress, uint32_t GPXData
  */
 es_status_codes ReadGPXCtrl( uint32_t drvno, uint8_t GPXAddress, uint32_t* GPXData )
 {
-	uint32_t regData = 0,
-		tempData = 0;
-	//Read old data of ctrl gpx reg
-	es_status_codes status = readRegisterS0_32( drvno, &regData, S0Addr_TDCCtrl );
-	if (status != es_no_error) return status;
+	uint32_t data = 0;
 	//shift gpx addr to the right place for the gpx ctrl reg
-	tempData = (uint32_t)GPXAddress << TDCCtrl_bitindex_adr0;
+	data = (uint32_t)GPXAddress << TDCCtrl_bitindex_adr0;
 	//set CSexpand bit set CS Bit
-	tempData |= TDCCtrl_bit_cs;
-	//hold the other bits of the ctrl gpx reg
-	regData &= 0x07FFFFFF;
-	//combine the old ctrl bits with the new address
-	regData |= tempData;
-	//write to the gpxctrl reg
-	status = writeRegisterS0_32(drvno, regData, S0Addr_TDCCtrl);
+	data |= TDCCtrl_bit_cs;
+	uint32_t bitmask = TDCCtrl_bit_cs | TDCCtrl_bit_adr0 | TDCCtrl_bit_adr1 | TDCCtrl_bit_adr2 | TDCCtrl_bit_adr3;
+	es_status_codes status = writeBitsS0_32(drvno, data, bitmask, S0Addr_TDCCtrl);
 	if (status != es_no_error) return status;
 	return readRegisterS0_32( drvno, GPXData, S0Addr_TDCData );
 }
