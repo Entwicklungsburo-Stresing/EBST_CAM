@@ -791,7 +791,6 @@ void MainWindow::readBlockFrequencyBit()
 			isBlockFrequencyTooHigh |= freqTooHigh;
 			if (isBlockFrequencyTooHigh) lsc.resetBlockFrequencyBit(drvno);
 		}
-
 	}
 	if (isBlockFrequencyTooHigh) {
 		QPalette pal = palette();
