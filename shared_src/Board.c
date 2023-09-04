@@ -5230,7 +5230,7 @@ es_status_codes ResetScanFrequencyBit(uint32_t drvno)
 
 es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh)
 {
-	return ReadBitS0_8(drvno, S0Addr_FFCTRL, FF_FLAGS_bitindex_block_read, &blockFrequencyTooHigh);
+	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_block_read, blockFrequencyTooHigh);
 }
 
 es_status_codes ResetBlockFrequencyBit(uint32_t drvno)
