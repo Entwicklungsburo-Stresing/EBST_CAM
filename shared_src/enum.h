@@ -776,5 +776,5 @@ enum TDCCtrl_bits
 	TDCCtrl_bit_adr0 = 0x10000000,
 	TDCCtrl_bit_adr1 = 0x20000000,
 	TDCCtrl_bit_adr2 = 0x40000000,
-	TDCCtrl_bit_adr3 = 0x80000000,
+	TDCCtrl_bit_adr3 = 0x80000000
 };
