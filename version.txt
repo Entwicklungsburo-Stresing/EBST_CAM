@@ -1,5 +1,10 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.7.0
+- Improve Axes Dialog
+- Add Scan and Block frequency warning
+- Add functions for new camera registers structure
+
 4.5.1
 - Fix DLLreadRegisterS0_32_multipleBoards
 
