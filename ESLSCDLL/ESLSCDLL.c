@@ -439,6 +439,38 @@ DllAccess es_status_codes DLLwriteRegisterS0_32(uint32_t data, uint32_t address)
 }
 
 /**
+ * \copydoc ReadScanFrequencyBit
+ */
+DllAccess es_status_codes DLLReadScanFrequencyBit(uint32_t drvno, uint8_t* scanFrequencyTooHigh)
+{
+	return ReadScanFrequencyBit(drvno, scanFrequencyTooHigh);
+}
+
+/**
+ * \copydoc ResetScanFrequencyBit
+ */
+DllAccess es_status_codes DLLResetScanFrequencyBit(uint32_t drvno)
+{
+	return ResetScanFrequencyBit(drvno);
+}
+
+/**
+ * \copydoc ReadBlockFrequencyBit
+ */
+DllAccess es_status_codes DLLReadBlockFrequencyBit(uint32_t drvno, uint8_t* blockFrequencyTooHigh)
+{
+	return ReadScanFrequencyBit(drvno, blockFrequencyTooHigh);
+}
+
+/**
+ * \copydoc ResetBlockFrequencyBit
+ */
+DllAccess es_status_codes DLLResetBlockFrequencyBit(uint32_t drvno)
+{
+	return ResetScanFrequencyBit(drvno);
+}
+
+/**
  * \copydoc CalcRamUsageInMB
  */
 DllAccess double DLLCalcRamUsageInMB(uint32_t nos, uint32_t nob)
