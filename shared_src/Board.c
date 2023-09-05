@@ -5200,21 +5200,57 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 	return status;
 }
 
+/**
+ * \brief Reads the ScanFrequency bit and checks if its high or low.
+ * 
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param scanFrequencyTooHigh True when scanFrequency bit is set
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
 es_status_codes ReadScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh) 
 {
 	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_scan_read, scanFrequencyTooHigh);
 }
 
+/**
+ * \brief Resets the ScanFrequency bit.
+ * 
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
 es_status_codes ResetScanFrequencyBit(uint32_t drvno) 
 {
 	return pulseBitS0_8(drvno, FFCTRL_bitindex_scan_reset, S0Addr_FFCTRL);
 }
 
+/**
+ * \brief Reads the BlockFrequency bit and checks if its high or low.
+ * 
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param blockFrequencyTooHigh True when BlockFrequency bit is set.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
 es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh)
 {
 	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_block_read, blockFrequencyTooHigh);
 }
 
+/**
+ * \brief Resets the BlockFrequency bit.
+ * 
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
+ */
 es_status_codes ResetBlockFrequencyBit(uint32_t drvno)
 {
 	return pulseBitS0_8(drvno, FFCTRL_bitindex_block_reset, S0Addr_FFCTRL);
