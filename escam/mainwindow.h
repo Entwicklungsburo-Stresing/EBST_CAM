@@ -38,8 +38,8 @@ private:
 	DialogRMS* ds_rms = new DialogRMS( this );
 	QThread measurementThread;
 	void copySettings(QSettings &dst, QSettings &src);
-	QTimer* displayTimer = new QTimer(this);
-	QTimer* triggerFrequencyTimer = new QTimer(this);
+	QTimer* liveViewTimer = new QTimer(this);
+	QTimer* lampsTimer = new QTimer(this);
 	QTimer* scanFrequencyTimer = new QTimer(this);
 	QTimer* blockFrequencyTimer = new QTimer(this);
 	bool measureOn = false;
@@ -77,6 +77,7 @@ private slots:
 	void on_scanFrequencyTooHigh();
 	void readBlockFrequencyBit();
 	void on_blockFrequencyTooHigh();
+	void findCamera();
 };
 
 #endif // MAINWINDOW_H

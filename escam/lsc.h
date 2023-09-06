@@ -62,6 +62,7 @@ public:
 	es_status_codes resetScanFrequencyBit(uint32_t drvno);
 	es_status_codes readBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh);
 	es_status_codes resetBlockFrequencyBit(uint32_t drvno);
+	es_status_codes findCam(uint32_t drvno);
 public slots:
 	es_status_codes startMeasurement();
 signals:
