@@ -27,9 +27,10 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(&lsc, &Lsc::blockDone, this, &MainWindow::on_blockDone);
 	connect(&lsc, &Lsc::allBlocksDone, this, &MainWindow::on_allBlocksDone);
 	connect(ui->chartView, &MyQChartView::rubberBandChanged, this, &MainWindow::on_rubberBandChanged);
-	connect(displayTimer, &QTimer::timeout, this, &MainWindow::showCurrentScan);
-	connect(triggerFrequencyTimer, &QTimer::timeout, this, &MainWindow::readScanFrequencyBit);
-	connect(triggerFrequencyTimer, &QTimer::timeout, this, &MainWindow::readBlockFrequencyBit);
+	connect(liveViewTimer, &QTimer::timeout, this, &MainWindow::showCurrentScan);
+	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readScanFrequencyBit);
+	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readBlockFrequencyBit);
+	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::findCamera);
 	connect(scanFrequencyTimer, &QTimer::timeout, this, &MainWindow::on_scanFrequencyTooHigh);
 	connect(blockFrequencyTimer, &QTimer::timeout, this, &MainWindow::on_blockFrequencyTooHigh);
 	connect(ui->radioButtonLiveViewFixedSample, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
@@ -58,7 +59,7 @@ MainWindow::MainWindow(QWidget* parent)
 	loadSettings();
 	setDefaultAxes();
 
-	triggerFrequencyTimer->start(100);
+	lampsTimer->start(100);
 
 	// move lsc to its own thread
 	lsc.moveToThread(&measurementThread);
@@ -693,7 +694,7 @@ void MainWindow::on_measureDone()
 	ui->widgetBlockOn->setPalette(pal);
 	//enable start button
 	ui->pushButtonStartStop->setText("Start");
-	displayTimer->stop();
+	liveViewTimer->stop();
 	//enable controls
 	ui->spinBoxBlock->setEnabled(true);
 	ui->spinBoxSample->setEnabled(true);
@@ -797,6 +798,39 @@ void MainWindow::readBlockFrequencyBit()
 		pal.setColor(QPalette::Window, Qt::red);
 		ui->widgetBlockFreqHigh->setPalette(pal);
 		blockFrequencyTimer->start(1000);
+	}
+	return;
+}
+
+void MainWindow::findCamera()
+{
+	bool cameraFound = true;
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			bool cameraFoundCurrent;
+			es_status_codes status = lsc.findCam(drvno);
+			if (status != es_no_error)
+				cameraFoundCurrent = false;
+			else
+				cameraFoundCurrent = true;
+			cameraFound &= cameraFoundCurrent;
+		}
+	}
+	if (cameraFound)
+	{
+		QPalette pal = palette();
+		pal.setColor(QPalette::Window, Qt::green);
+		ui->widgetCameraFound->setPalette(pal);
+	}
+	else
+	{
+		QPalette pal = palette();
+		pal.setColor(QPalette::Window, Qt::darkGreen);
+		ui->widgetCameraFound->setPalette(pal);
 	}
 	return;
 }
@@ -1016,7 +1050,7 @@ void MainWindow::adjustLiveView()
 			ui->spinBoxSample->setEnabled(true);
 			ui->horizontalSliderBlock->setEnabled(true);
 			ui->horizontalSliderSample->setEnabled(true);
-			displayTimer->stop();
+			liveViewTimer->stop();
 			break;
 		case 1:
 			//disable only block slider
@@ -1024,7 +1058,7 @@ void MainWindow::adjustLiveView()
 			ui->spinBoxSample->setEnabled(true);
 			ui->horizontalSliderBlock->setEnabled(false);
 			ui->horizontalSliderSample->setEnabled(true);
-			displayTimer->start(100);
+			liveViewTimer->start(100);
 			break;
 		case 2:
 			//disable controls
@@ -1032,7 +1066,7 @@ void MainWindow::adjustLiveView()
 			ui->spinBoxSample->setEnabled(false);
 			ui->horizontalSliderBlock->setEnabled(false);
 			ui->horizontalSliderSample->setEnabled(false);
-			displayTimer->start(100);
+			liveViewTimer->start(100);
 			break;
 		}
 	}

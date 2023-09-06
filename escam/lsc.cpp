@@ -445,3 +445,11 @@ es_status_codes Lsc::resetBlockFrequencyBit(uint32_t drvno)
 	return ResetBlockFrequencyBit(drvno);
 }
 
+/**
+ * \copydoc FindCam
+ */
+es_status_codes Lsc::findCam(uint32_t drvno)
+{
+	return FindCam(drvno);
+}
+
