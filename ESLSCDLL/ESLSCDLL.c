@@ -459,7 +459,7 @@ DllAccess es_status_codes DLLResetScanFrequencyBit(uint32_t drvno)
  */
 DllAccess es_status_codes DLLReadBlockFrequencyBit(uint32_t drvno, uint8_t* blockFrequencyTooHigh)
 {
-	return ReadScanFrequencyBit(drvno, blockFrequencyTooHigh);
+	return ReadBlockFrequencyBit(drvno, blockFrequencyTooHigh);
 }
 
 /**
@@ -467,7 +467,7 @@ DllAccess es_status_codes DLLReadBlockFrequencyBit(uint32_t drvno, uint8_t* bloc
  */
 DllAccess es_status_codes DLLResetBlockFrequencyBit(uint32_t drvno)
 {
-	return ResetScanFrequencyBit(drvno);
+	return ResetBlockFrequencyBit(drvno);
 }
 
 /**
