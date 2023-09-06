@@ -90,6 +90,7 @@ DllAccess es_status_codes DLLReadScanFrequencyBit(uint32_t drvno, uint8_t* scanF
 DllAccess es_status_codes DLLResetScanFrequencyBit(uint32_t drvno);
 DllAccess es_status_codes DLLReadBlockFrequencyBit(uint32_t drvno, uint8_t* blockFrequencyTooHigh);
 DllAccess es_status_codes DLLResetBlockFrequencyBit(uint32_t drvno);
+DllAccess es_status_codes DLLFindCam(uint32_t drvno);
 //************  Control CAM
 DllAccess es_status_codes DLLOutTrigHigh();
 DllAccess es_status_codes DLLOutTrigLow();

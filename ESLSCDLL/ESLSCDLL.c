@@ -471,6 +471,14 @@ DllAccess es_status_codes DLLResetBlockFrequencyBit(uint32_t drvno)
 }
 
 /**
+ * \copydoc FindCam
+ */
+DllAccess es_status_codes DLLFindCam(uint32_t drvno)
+{
+	return FindCam(drvno);
+}
+
+/**
  * \copydoc CalcRamUsageInMB
  */
 DllAccess double DLLCalcRamUsageInMB(uint32_t nos, uint32_t nob)
