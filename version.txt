@@ -1,5 +1,9 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.8.1
+- Add DLLFíndCam
+- Add camera found lamp
+
 4.8.0
 - Fix DLLReadBlockFrequencyBit and DLLResetBlockFrequencyBit
 
