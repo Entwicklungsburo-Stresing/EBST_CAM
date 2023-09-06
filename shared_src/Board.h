@@ -171,6 +171,10 @@ es_status_codes GetOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t 
 void SetAllInterruptsDone(uint32_t drvno);
 es_status_codes SetCameraPosition(uint32_t drvno);
 es_status_codes SetAbortMeasurementFlag();
+es_status_codes ReadScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh);
+es_status_codes ResetScanFrequencyBit(uint32_t drvno);
+es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh);
+es_status_codes ResetBlockFrequencyBit(uint32_t drvno);
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);
@@ -211,10 +215,6 @@ es_status_codes writeBitsDma_32( uint32_t drvno, uint32_t data, uint32_t bitmask
 es_status_codes writeBitsDma_8( uint32_t drvno, uint8_t data, uint8_t bitmask, uint16_t address);
 es_status_codes pulseBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address);
 es_status_codes pulseBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address);
-es_status_codes ReadScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh);
-es_status_codes ResetScanFrequencyBit(uint32_t drvno);
-es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh);
-es_status_codes ResetBlockFrequencyBit(uint32_t drvno);
 es_status_codes ReadBitS0_32(uint32_t drvno, uint16_t address, uint8_t bitnumber, bool* isBitHigh);
 es_status_codes ReadBitS0_8(uint32_t drvno, uint16_t address, uint8_t bitnumber, bool* isBitHigh);
 #ifdef __cplusplus
