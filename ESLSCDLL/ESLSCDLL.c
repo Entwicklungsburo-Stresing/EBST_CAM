@@ -447,11 +447,45 @@ DllAccess es_status_codes DLLReadScanFrequencyBit(uint32_t drvno, uint8_t* scanF
 }
 
 /**
+ * \brief Reads the ScanFrequency bit and checks if its high or low for all boards selected by settings parameter board_sel.
+ * 
+ * \param scanFrequencyTooHigh0 True when scan frequency too high bit is set for board 0
+ * \param scanFrequencyTooHigh1 True when scan frequency too high bit is set for board 1
+ * \param scanFrequencyTooHigh2 True when scan frequency too high bit is set for board 2
+ * \param scanFrequencyTooHigh3 True when scan frequency too high bit is set for board 3
+ * \param scanFrequencyTooHigh4 True when scan frequency too high bit is set for board 4
+ * \return 
+ */
+DllAccess es_status_codes DLLReadScanFrequencyBit_multipleBoards(uint8_t* scanFrequencyTooHigh0, uint8_t* scanFrequencyTooHigh1, uint8_t* scanFrequencyTooHigh2, uint8_t* scanFrequencyTooHigh3, uint8_t* scanFrequencyTooHigh4)
+{
+	es_status_codes status = es_no_error;
+	uint8_t* scanFrequencyTooHigh[MAXPCIECARDS] = { scanFrequencyTooHigh0, scanFrequencyTooHigh1, scanFrequencyTooHigh2, scanFrequencyTooHigh3, scanFrequencyTooHigh4 };
+	int usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = ReadScanFrequencyBit(drvno, scanFrequencyTooHigh[usedBoards]);
+			if (status != es_no_error) return status;
+			usedBoards++;
+		}
+	return status;
+}
+
+/**
  * \copydoc ResetScanFrequencyBit
  */
-DllAccess es_status_codes DLLResetScanFrequencyBit(uint32_t drvno)
+DllAccess es_status_codes DLLResetScanFrequencyBit()
 {
-	return ResetScanFrequencyBit(drvno);
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = ResetScanFrequencyBit(drvno);
+			if (status != es_no_error) return status;
+		}
+	return status;
 }
 
 /**
@@ -463,11 +497,45 @@ DllAccess es_status_codes DLLReadBlockFrequencyBit(uint32_t drvno, uint8_t* bloc
 }
 
 /**
+ * \brief Reads the ScanFrequency bit and checks if its high or low for all boards selected by settings parameter board_sel.
+ *
+ * \param blockFrequencyTooHigh0 True when block frequency too high bit is set for board 0
+ * \param blockFrequencyTooHigh1 True when block frequency too high bit is set for board 1
+ * \param blockFrequencyTooHigh2 True when block frequency too high bit is set for board 2
+ * \param blockFrequencyTooHigh3 True when block frequency too high bit is set for board 3
+ * \param blockFrequencyTooHigh4 True when block frequency too high bit is set for board 4
+ * \return
+ */
+DllAccess es_status_codes DLLReadBlockFrequencyBit_multipleBoards(uint8_t* blockFrequencyTooHigh0, uint8_t* blockFrequencyTooHigh1, uint8_t* blockFrequencyTooHigh2, uint8_t* blockFrequencyTooHigh3, uint8_t* blockFrequencyTooHigh4)
+{
+	es_status_codes status = es_no_error;
+	uint8_t* blockFrequencyTooHigh[MAXPCIECARDS] = { blockFrequencyTooHigh0, blockFrequencyTooHigh1, blockFrequencyTooHigh2, blockFrequencyTooHigh3, blockFrequencyTooHigh4 };
+	int usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = ReadBlockFrequencyBit(drvno, blockFrequencyTooHigh[usedBoards]);
+			if (status != es_no_error) return status;
+			usedBoards++;
+		}
+	return status;
+}
+
+/**
  * \copydoc ResetBlockFrequencyBit
  */
-DllAccess es_status_codes DLLResetBlockFrequencyBit(uint32_t drvno)
+DllAccess es_status_codes DLLResetBlockFrequencyBit()
 {
-	return ResetBlockFrequencyBit(drvno);
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = ResetBlockFrequencyBit(drvno);
+			if (status != es_no_error) return status;
+		}
+	return status;
 }
 
 /**
@@ -476,6 +544,38 @@ DllAccess es_status_codes DLLResetBlockFrequencyBit(uint32_t drvno)
 DllAccess es_status_codes DLLFindCam(uint32_t drvno)
 {
 	return FindCam(drvno);
+}
+
+/**
+ * \brief Test if SFP module is there and fiber is linked up.
+ *
+ * \param cameraFound0 true when camera is found on board 0
+ * \param cameraFound1 true when camera is found on board 1
+ * \param cameraFound2 true when camera is found on board 2
+ * \param cameraFound3 true when camera is found on board 3
+ * \param cameraFound4 true when camera is found on board 4
+ * \return 
+ */
+DllAccess es_status_codes DLLFindCam_multipleBoards(uint8_t* cameraFound0, uint8_t* cameraFound1, uint8_t* cameraFound2, uint8_t* cameraFound3, uint8_t* cameraFound4 )
+{
+	es_status_codes status_return = es_no_error;
+	uint8_t* cameraFound[MAXPCIECARDS] = { cameraFound0, cameraFound1, cameraFound2, cameraFound3, cameraFound4 };
+	int usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			es_status_codes status = FindCam(drvno);
+			if (status == es_no_error)
+				*cameraFound[usedBoards] = true;
+			else
+			{
+				*cameraFound[usedBoards] = false;
+				status_return = status;
+			}
+			usedBoards++;
+		}
+	return status_return;
 }
 
 /**
