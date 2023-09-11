@@ -804,23 +804,27 @@ void MainWindow::readBlockFrequencyBit()
 
 void MainWindow::findCamera()
 {
-	bool cameraFound = true;
+	bool allCamerasFound;
+	if (number_of_boards)
+		allCamerasFound = true;
+	else
+		allCamerasFound = false;
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
 		{
-			bool cameraFoundCurrent;
+			bool cameraFound;
 			es_status_codes status = lsc.findCam(drvno);
 			if (status != es_no_error)
-				cameraFoundCurrent = false;
+				cameraFound = false;
 			else
-				cameraFoundCurrent = true;
-			cameraFound &= cameraFoundCurrent;
+				cameraFound = true;
+			allCamerasFound &= cameraFound;
 		}
 	}
-	if (cameraFound)
+	if (allCamerasFound)
 	{
 		QPalette pal = palette();
 		pal.setColor(QPalette::Window, Qt::green);
