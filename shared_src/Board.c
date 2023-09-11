@@ -1751,9 +1751,9 @@ es_status_codes SetBDAT( uint32_t drvno, uint32_t datin10ns )
 es_status_codes Use_ENFFW_protection( uint32_t drvno, bool USE_ENFFW_PROTECT )
 {
 	if (USE_ENFFW_PROTECT)
-		return setBitS0_32( drvno, 3, S0Addr_PCIEFLAGS );
+		return setBitS0_32( drvno, PCIEFLAGS_bitindex_USE_ENFFW_PROTECT, S0Addr_PCIEFLAGS );
 	else
-		return resetBitS0_32( drvno, 3, S0Addr_PCIEFLAGS );
+		return resetBitS0_32( drvno, PCIEFLAGS_bitindex_USE_ENFFW_PROTECT, S0Addr_PCIEFLAGS );
 }
 
 /**
@@ -3088,15 +3088,20 @@ es_status_codes FindCam( uint32_t drvno )
 		// Camcnt is 0. FindCam is returning without error
 		return es_no_error;
 	}
-	es_status_codes status = readRegisterS0_32( drvno, &data, S0Addr_PCIEFLAGS );
+	bool linkUp = false;
+	es_status_codes status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_linkup_sfp1, &linkUp);
 	if (status != es_no_error) return status;
-	if ((data & PCIEFLAGS_bit_error_sfp1) > 0)
+	bool sfpError = false;
+	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_error_sfp1, &sfpError);
+	if (status != es_no_error) return status;
+	if (linkUp && !sfpError)
+		return es_no_error;
+	else
 	{
 		//SFP error
 		ES_LOG( "Fiber or Camera error\n" );
 		return es_camera_not_found;
 	}
-	return status;
 }
 
 /**
