@@ -121,6 +121,9 @@
     <ClCompile Include="..\shared_src\Direct2dViewer_c.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dialogfifopixels.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h">
@@ -217,6 +220,12 @@
     <QtUic Include="dialoggreyscalesettings.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="dialogfifopixels1.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogfifopixels.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <None Include="LscUI.qml">
@@ -255,6 +264,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="dialoggreyscalesettings.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="dialogfifopixels.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
