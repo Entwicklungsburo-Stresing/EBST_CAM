@@ -1751,9 +1751,9 @@ es_status_codes SetBDAT( uint32_t drvno, uint32_t datin10ns )
 es_status_codes Use_ENFFW_protection( uint32_t drvno, bool USE_ENFFW_PROTECT )
 {
 	if (USE_ENFFW_PROTECT)
-		return setBitS0_32( drvno, 3, S0Addr_PCIEFLAGS );
+		return setBitS0_32( drvno, PCIEFLAGS_bitindex_USE_ENFFW_PROTECT, S0Addr_PCIEFLAGS );
 	else
-		return resetBitS0_32( drvno, 3, S0Addr_PCIEFLAGS );
+		return resetBitS0_32( drvno, PCIEFLAGS_bitindex_USE_ENFFW_PROTECT, S0Addr_PCIEFLAGS );
 }
 
 /**
