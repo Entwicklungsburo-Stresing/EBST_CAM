@@ -3572,15 +3572,10 @@ void GetRmsVal(uint32_t nos, uint16_t *TRMSVals, double *mwf, double *trms)
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes checkFifoFlags(uint32_t drvno, bool* valid)
+es_status_codes checkFifoValid(uint32_t drvno, bool* valid)
 {	// not empty & XCK = low -> true
 	ES_LOG("checkFifoFlags\n");
-	uint8_t data = 0;
-	es_status_codes status = readRegisterS0_8(drvno, &data, S0Addr_FF_FLAGS);
-	data &= 0x80;
-	if (data > 0) *valid = true;
-	else *valid = false;
-	return status;
+	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_valid, valid);
 }
 
 /**
@@ -3597,12 +3592,9 @@ es_status_codes checkFifoFlags(uint32_t drvno, bool* valid)
 es_status_codes checkFifoOverflow(uint32_t drvno, bool* overflow)
 {
 	ES_LOG("checkFifoOverflow\n");
-	uint8_t data = 0;
-	es_status_codes status = readRegisterS0_8(drvno, &data, S0Addr_FF_FLAGS);
-	data &= 0x08; //0x20; if not saved
-	if (data > 0) *overflow = true; //empty
-	else *overflow = false;
-	return status;
+	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_overflow, overflow);
+}
+
 }
 
 /**
