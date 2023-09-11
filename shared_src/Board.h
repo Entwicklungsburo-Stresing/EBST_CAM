@@ -110,6 +110,8 @@ es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample
 es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint16_t** address );
 es_status_codes checkFifoValid(uint32_t drvno, bool* valid);
 es_status_codes checkFifoOverflow(uint32_t drvno, bool* overflow);
+es_status_codes checkFifoEmpty(uint32_t drvno, bool* empty);
+es_status_codes checkFifoFull(uint32_t drvno, bool* full);
 es_status_codes isBlockOn(uint32_t drvno, bool* blockOn);
 es_status_codes isMeasureOn(uint32_t drvno, bool* measureOn);
 es_status_codes LedOff(uint32_t drvno, uint8_t LED_OFF);
