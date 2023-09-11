@@ -108,7 +108,7 @@ es_status_codes IsTimerOn( uint32_t drvno, bool* on );
 es_status_codes GetLastBufPart( uint32_t drvno );
 es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint64_t* pIndex );
 es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint16_t** address );
-es_status_codes checkFifoFlags(uint32_t drvno, bool* valid);
+es_status_codes checkFifoValid(uint32_t drvno, bool* valid);
 es_status_codes checkFifoOverflow(uint32_t drvno, bool* overflow);
 es_status_codes isBlockOn(uint32_t drvno, bool* blockOn);
 es_status_codes isMeasureOn(uint32_t drvno, bool* measureOn);
