@@ -27,6 +27,11 @@ enum PCIEFLAGS_bits
 	PCIEFLAGS_bit_BLOCKON = 0x40,
 	PCIEFLAGS_bit_IS_TDC = 0x100,
 	PCIEFLAGS_bit_IS_DSC = 0x200,
+	PCIEFLAGS_bit_linkup_sfp3 = 0x4000000,
+	PCIEFLAGS_bit_error_sfp3 = 0x8000000,
+	PCIEFLAGS_bit_linkup_sfp2 = 0x10000000,
+	PCIEFLAGS_bit_error_sfp2 = 0x20000000,
+	PCIEFLAGS_bit_linkup_sfp1 = 0x40000000,
 	PCIEFLAGS_bit_error_sfp1 = 0x80000000,
 	PCIEFLAGS_bitindex_XCKI = 0,
 	PCIEFLAGS_bitindex_INTTRIG = 1,
@@ -37,6 +42,11 @@ enum PCIEFLAGS_bits
 	PCIEFLAGS_bitindex_BLOCKON = 6,
 	PCIEFLAGS_bitindex_IS_TDC = 8,
 	PCIEFLAGS_bitindex_IS_DSC = 9,
+	PCIEFLAGS_bitindex_linkup_sfp3 = 26,
+	PCIEFLAGS_bitindex_error_sfp3 = 27,
+	PCIEFLAGS_bitindex_linkup_sfp2 = 28,
+	PCIEFLAGS_bitindex_error_sfp2 = 29,
+	PCIEFLAGS_bitindex_linkup_sfp1 = 30,
 	PCIEFLAGS_bitindex_error_sfp1 = 31
 };
 
