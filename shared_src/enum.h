@@ -180,6 +180,11 @@ enum FFCTRL_bits
 
 enum FF_FLAGS_bits
 {
+	FF_FLAGS_bit_control = 0x08,
+	FF_FLAGS_bitindex_valid = 7,
+	FF_FLAGS_bitindex_empty = 6,
+	FF_FLAGS_bitindex_full = 5,
+	FF_FLAGS_bitindex_overflow = 3,
 	FF_FLAGS_bitindex_scan_read = 2,
 	FF_FLAGS_bitindex_block_read = 1
 };
