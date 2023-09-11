@@ -62,6 +62,10 @@ public:
 	es_status_codes resetScanFrequencyBit(uint32_t drvno);
 	es_status_codes readBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh);
 	es_status_codes resetBlockFrequencyBit(uint32_t drvno);
+	es_status_codes checkFifoValid(uint32_t drvno, bool* valid);
+	es_status_codes checkFifoOverflow(uint32_t drvno, bool* overflow);
+	es_status_codes checkFifoEmpty(uint32_t drvno, bool* empty);
+	es_status_codes checkFifoFull(uint32_t drvno, bool* full);
 	es_status_codes findCam(uint32_t drvno);
 public slots:
 	es_status_codes startMeasurement();

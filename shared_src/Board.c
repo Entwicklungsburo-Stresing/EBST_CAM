@@ -3572,7 +3572,7 @@ void GetRmsVal(uint32_t nos, uint16_t *TRMSVals, double *mwf, double *trms)
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes checkFifoValid(uint32_t drvno, bool* valid)
+es_status_codes CheckFifoValid(uint32_t drvno, bool* valid)
 {	// not empty & XCK = low -> true
 	ES_LOG("checkFifoFlags\n");
 	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_valid, valid);
@@ -3589,7 +3589,7 @@ es_status_codes checkFifoValid(uint32_t drvno, bool* valid)
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes checkFifoOverflow(uint32_t drvno, bool* overflow)
+es_status_codes CheckFifoOverflow(uint32_t drvno, bool* overflow)
 {
 	ES_LOG("checkFifoOverflow\n");
 	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_overflow, overflow);
@@ -3604,7 +3604,7 @@ es_status_codes checkFifoOverflow(uint32_t drvno, bool* overflow)
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes checkFifoEmpty(uint32_t drvno, bool* empty)
+es_status_codes CheckFifoEmpty(uint32_t drvno, bool* empty)
 {
 	ES_LOG("checkFifoEmpty\n");
 	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_empty, empty);
@@ -3619,7 +3619,7 @@ es_status_codes checkFifoEmpty(uint32_t drvno, bool* empty)
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes checkFifoFull(uint32_t drvno, bool* full)
+es_status_codes CheckFifoFull(uint32_t drvno, bool* full)
 {
 	ES_LOG("checkFifoFull\n");
 	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_full, full);
