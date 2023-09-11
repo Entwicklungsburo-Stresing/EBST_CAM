@@ -446,6 +446,29 @@ es_status_codes Lsc::resetBlockFrequencyBit(uint32_t drvno)
 }
 
 /**
+ * \copydoc CheckFifoValid
+ */
+es_status_codes Lsc::checkFifoValid(uint32_t drvno, bool* valid)
+{
+	return CheckFifoValid(drvno, valid);
+}
+
+es_status_codes Lsc::checkFifoOverflow(uint32_t drvno, bool* overflow)
+{
+	return CheckFifoOverflow(drvno, overflow);
+}
+
+es_status_codes Lsc::checkFifoEmpty(uint32_t drvno, bool* empty)
+{
+	return CheckFifoEmpty(drvno, empty);
+}
+
+es_status_codes Lsc::checkFifoFull(uint32_t drvno, bool* full)
+{
+	return CheckFifoFull(drvno, full);
+}
+
+/**
  * \copydoc FindCam
  */
 es_status_codes Lsc::findCam(uint32_t drvno)

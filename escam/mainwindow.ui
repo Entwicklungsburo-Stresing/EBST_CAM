@@ -734,6 +734,7 @@
     <addaction name="actionDAC"/>
     <addaction name="actionIO_Control"/>
     <addaction name="actionspecial_pixels"/>
+    <addaction name="actionfifo_pixels"/>
    </widget>
    <widget class="QMenu" name="menuGreyscale_Viewer">
     <property name="title">
@@ -882,6 +883,11 @@
   <action name="actionGreyscaleSettings">
    <property name="text">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionfifo_pixels">
+   <property name="text">
+    <string>fifo pixels</string>
    </property>
   </action>
  </widget>
