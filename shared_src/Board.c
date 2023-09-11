@@ -3088,15 +3088,20 @@ es_status_codes FindCam( uint32_t drvno )
 		// Camcnt is 0. FindCam is returning without error
 		return es_no_error;
 	}
-	es_status_codes status = readRegisterS0_32( drvno, &data, S0Addr_PCIEFLAGS );
+	bool linkUp = false;
+	es_status_codes status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_linkup_sfp1, &linkUp);
 	if (status != es_no_error) return status;
-	if ((data & PCIEFLAGS_bit_error_sfp1) > 0)
+	bool sfpError = false;
+	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_error_sfp1, &sfpError);
+	if (status != es_no_error) return status;
+	if (linkUp && !sfpError)
+		return es_no_error;
+	else
 	{
 		//SFP error
 		ES_LOG( "Fiber or Camera error\n" );
 		return es_camera_not_found;
 	}
-	return status;
 }
 
 /**
