@@ -3595,6 +3595,34 @@ es_status_codes checkFifoOverflow(uint32_t drvno, bool* overflow)
 	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_overflow, overflow);
 }
 
+/**
+ * \brief Check empty flag (FIFO empty).
+ * 
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param empty
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes checkFifoEmpty(uint32_t drvno, bool* empty)
+{
+	ES_LOG("checkFifoEmpty\n");
+	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_empty, empty);
+}
+
+/**
+ * \brief Check full flag (FIFO full).
+ * 
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param full
+ * \return es_status_codes
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes checkFifoFull(uint32_t drvno, bool* full)
+{
+	ES_LOG("checkFifoFull\n");
+	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_full, full);
 }
 
 /**
