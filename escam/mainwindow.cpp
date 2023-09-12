@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readScanFrequencyBit);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readBlockFrequencyBit);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::findCamera);
+	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readCameraOvertemp);
 	connect(scanFrequencyTimer, &QTimer::timeout, this, &MainWindow::on_scanFrequencyTooHigh);
 	connect(blockFrequencyTimer, &QTimer::timeout, this, &MainWindow::on_blockFrequencyTooHigh);
 	connect(ui->radioButtonLiveViewFixedSample, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
