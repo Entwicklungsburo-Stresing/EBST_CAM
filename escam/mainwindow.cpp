@@ -61,6 +61,8 @@ MainWindow::MainWindow(QWidget* parent)
 	setDefaultAxes();
 
 	lampsTimer->start(100);
+	restoreGeometry(settings.value("centralwidget/geometry").toByteArray());
+	restoreState(settings.value("centralwidget/state").toByteArray());
 
 	// move lsc to its own thread
 	lsc.moveToThread(&measurementThread);
@@ -1142,6 +1144,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 	{
 		lsc.abortMeasurement();
 		lsc.exitDriver();
+		settings.setValue("centralwidget/geometry", saveGeometry());
+		settings.setValue("centralwidget/state", saveState());
 		QMainWindow::closeEvent(event);
 	}
 }
