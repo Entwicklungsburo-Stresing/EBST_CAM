@@ -857,6 +857,49 @@ void MainWindow::on_blockFrequencyTooHigh()
 	return;
 }
 
+/**
+ * @brief Checks if Cameras are overtemp and turns on lamp if so.
+ */
+void MainWindow::readCameraOvertemp()
+{
+	bool isOvertemp = false;
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
+	int64_t sample = 0;
+	int64_t block = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bis is set
+		if ((board_sel >> drvno) & 1)
+		{
+			lsc.getCurrentScanNumber(drvno, &sample, &block);
+			if (sample >= 0 && aCAMCNT[drvno] > 0)
+			{
+				bool cameraBoardOvertemp = false;
+				for (uint16_t camera_pos = 0; camera_pos < aCAMCNT[drvno]; camera_pos++)
+				{
+					bool cameraOvertemp = false;
+					es_status_codes status = lsc.getCameraStatusOverTemp(drvno, static_cast<uint32_t>(sample), static_cast<uint32_t>(block), camera_pos, &cameraOvertemp);
+					cameraBoardOvertemp |= cameraOvertemp;
+				}
+				isOvertemp |= cameraBoardOvertemp;
+			}
+		}
+	}
+	if (isOvertemp)
+	{
+		QPalette pal = palette();
+		pal.setColor(QPalette::Window, Qt::red);
+		ui->widgetOvertemp->setPalette(pal);
+	}
+	else
+	{
+		QPalette pal = palette();
+		pal.setColor(QPalette::Window, Qt::darkRed);
+		ui->widgetOvertemp->setPalette(pal);
+	}
+	return;
+}
+
 void MainWindow::on_rubberBandChanged()
 {
 	// retrieve axis pointer
