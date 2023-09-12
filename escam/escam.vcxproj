@@ -292,7 +292,6 @@
     <QtUic Include="dialogdac.ui" />
     <QtUic Include="dialogdsc.ui" />
     <QtUic Include="dialogfifopixels.ui" />
-    <QtUic Include="dialogfifopixels1.ui" />
     <QtUic Include="dialoggreyscalesettings.ui" />
     <QtUic Include="dialogioctrl.ui" />
     <QtUic Include="dialogrms.ui" />

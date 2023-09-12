@@ -220,9 +220,6 @@
     <QtUic Include="dialoggreyscalesettings.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="dialogfifopixels1.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="dialogfifopixels.ui">
       <Filter>Form Files</Filter>
     </QtUic>
