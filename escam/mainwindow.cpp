@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readBlockFrequencyBit);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::findCamera);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readCameraOvertemp);
+	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readCameraTempGood);
 	connect(scanFrequencyTimer, &QTimer::timeout, this, &MainWindow::on_scanFrequencyTooHigh);
 	connect(blockFrequencyTimer, &QTimer::timeout, this, &MainWindow::on_blockFrequencyTooHigh);
 	connect(ui->radioButtonLiveViewFixedSample, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
@@ -892,15 +893,59 @@ void MainWindow::readCameraOvertemp()
 	{
 		QPalette pal = palette();
 		pal.setColor(QPalette::Window, Qt::red);
+		ui->widgetOvertemp->setToolTip("Camera temperature too high");
 		ui->widgetOvertemp->setPalette(pal);
 	}
 	else
 	{
 		QPalette pal = palette();
-		pal.setColor(QPalette::Window, Qt::darkRed);
+		pal.setColor(QPalette::Window, Qt::darkGray);
+		ui->widgetOvertemp->setToolTip("Camera temperature ok");
 		ui->widgetOvertemp->setPalette(pal);
 	}
 	return;
+}
+
+void MainWindow::readCameraTempGood()
+{
+	bool isTempGood = false;
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();;
+	int64_t sample = 0;
+	int64_t block = 0;
+
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		if ((board_sel >> drvno) & 1)
+		{
+			lsc.getCurrentScanNumber(drvno, &sample, &block);
+			if (sample >= 0 && aCAMCNT[drvno] > 0) 
+			{
+				bool cameraBoardTempGood = false;
+				for (uint16_t camera_pos = 0; camera_pos < aCAMCNT[drvno]; camera_pos++)
+				{
+					bool cameraTempGood = false;
+					es_status_codes status = lsc.getCameraStatusTempGood(drvno, static_cast<uint32_t>(sample), static_cast<uint32_t>(block), camera_pos, &cameraTempGood);
+					cameraBoardTempGood |= cameraTempGood;
+				}
+				isTempGood |= cameraBoardTempGood;
+			}
+		}
+	}
+
+	if (isTempGood) 
+	{
+		QPalette pal = palette();
+		pal.setColor(QPalette::Window, Qt::green);
+		ui->widgetOvertemp->setToolTip("Camera temperature good");
+		ui->widgetOvertemp->setPalette(pal);
+	}
+	else
+	{
+		QPalette pal = palette();
+		pal.setColor(QPalette::Window, Qt::darkGray);
+		ui->widgetOvertemp->setToolTip("Camera temperature ok");
+		ui->widgetOvertemp->setPalette(pal);
+	}
 }
 
 void MainWindow::on_rubberBandChanged()
