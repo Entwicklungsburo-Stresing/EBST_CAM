@@ -551,7 +551,7 @@
            </palette>
           </property>
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Camera temperature too high&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Camera temperature ok&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="autoFillBackground">
            <bool>true</bool>
