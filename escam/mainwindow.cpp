@@ -1122,7 +1122,14 @@ void MainWindow::showCurrentScan()
 	// This is here to prevent showing the first over exposed scans when in software polling mode.
 	// This also prevents showing a zero line, when no scans have been written to the user buffer yet and getCurrentScanNumber gives -1 or 0 for sample and block.
 	if (sample <= 2 && block <= 0)
+	{
+		if (measurement_cnt > 1)
+		{
+			ui->horizontalSliderSample->setValue(ui->horizontalSliderSample->maximum());
+			ui->horizontalSliderBlock->setValue(ui->horizontalSliderSample->maximum());
+		}
 		return;
+	}
 	int radioState = 0;
 	if (ui->radioButtonLiveViewOff->isChecked()) radioState = 0;
 	else if (ui->radioButtonLiveViewFixedSample->isChecked()) radioState = 1;
