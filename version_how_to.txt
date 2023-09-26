@@ -25,7 +25,7 @@ To change the version number in escam_setup.vdproj click in the "Solution Explor
 
 Optional:
 After you committed the verion number change (best practice is to do this in an own commit), tag the commit with its version number e.g.:
-git tag v3.20.3
+git tag 3.20.3
 
 Push the tag to the remote repositories:
 git push --tags
