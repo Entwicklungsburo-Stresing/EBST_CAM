@@ -538,6 +538,51 @@ DllAccess es_status_codes DLLResetBlockFrequencyBit()
 	return status;
 }
 
+
+DllAccess es_status_codes DLLGetCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* overTemp)
+{
+	return GetCameraStatusOverTemp(drvno, sample, block, camera_pos, overTemp);
+}
+
+DllAccess es_status_codes DLLGetCameraStatusOverTemp_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* overTemp1, uint8_t* overTemp2, uint8_t* overTemp3, uint8_t* overTemp4, uint8_t* overTemp5)
+{
+	es_status_codes status = es_no_error;
+	uint8_t* tempArr[MAXPCIECARDS] = { overTemp1, overTemp2, overTemp3, overTemp4, overTemp5 };
+	int usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = GetCameraStatusOverTemp(drvno, sample, block, camera_pos, tempArr[usedBoards]);
+			if (status != es_no_error) return;
+			usedBoards++;
+		}
+	}
+	return status;
+}
+
+DllAccess es_status_codes DLLGetCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* tempGood)
+{
+	return DLLGetCameraStatusTempGood(drvno, sample, block, camera_pos, tempGood);
+}
+
+DllAccess es_status_codes DLLGetCameraStatusTempGood_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* tempGood1, uint8_t* tempGood2, uint8_t* tempGood3, uint8_t* tempGood4, uint8_t* tempGood5)
+{
+	es_status_codes status = es_no_error;
+	uint8_t* tempArr[MAXPCIECARDS] = { tempGood1, tempGood2, tempGood3, tempGood4, tempGood5 };
+	int usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = GetCameraStatusTempGood(drvno, sample, block, camera_pos, tempArr[usedBoards]);
+			if (status != es_no_error) return;
+			usedBoards++;
+		}
+	}
+	return status;
+}
+
 /**
  * \copydoc FindCam
  */
