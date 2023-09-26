@@ -1,5 +1,13 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.8.3
+- Add DLLGetCameraStatusOverTemp
+- Add DLLGetCameraStatusOverTemp_multipleBoards
+- Add DLLGetCameraStatusTempGood
+- Add DLLGetCameraStatusTempGood_multipleBoards
+- Add Fifo Pixles Dialog and improve functionality
+- Fix camera found lamp
+
 4.8.2
 - Add DLLReadScanFrequencyBit_multipleBoards
 - Add DLLReadBlockFrequencyBit_multipleBoards
