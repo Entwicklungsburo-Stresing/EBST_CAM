@@ -199,9 +199,9 @@ struct camera_settings
 	 */
 	uint32_t ticnt;
 	/**
-	 * unused (deprecated use ec)
+	 * This setting controls the length of the reset pulse between two camera readouts. value * 8ns = sensor reset length
 	 */
-	uint32_t unused;
+	uint32_t sensor_reset_length_in_8_ns;
 	/**
 	 * - =0: Don't write measurement data to disc.
 	 * - >0: Write measurement data to disc.

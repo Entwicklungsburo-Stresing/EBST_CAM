@@ -308,12 +308,11 @@ enum cam_addresses
 	 */
 	cam_adaddr_sample_mode = 0x07,
 	/**
-	 * 3030: IFC mode controls, whether the IFC signal from the PCIe card is used or the camera uses its own IFC signal.
-	 * - 0: use PCIe card IFC
-	 * - 1: do a short (240ns) IFC between TG and horizontal clocks
-	 * - 2: do a long (800ns) IFC between TG and horizontal clocks
+	 * Sensor reset length register.
+	 * 
+	 * 3030: This register controls the length of the ARG pulse which is done after the TG pulse.
 	 */
-	cam_adaddr_ifc_mode = 0x08,
+	cam_adaddr_sensor_reset_length_in_8_ns = 0x08,
 	/**
 	 * stores the amount of vclks generated inside the camera. 
 	 * - cam_adaddr_vclks_amount1:    is used for full binning (fft_lines) or the first region of ROI
