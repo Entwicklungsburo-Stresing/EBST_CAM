@@ -268,6 +268,8 @@ es_status_codes InitCamera(uint32_t drvno)
 		if (status != es_no_error) return status;
 	}
 	status = IOCtrl_setT0(drvno, settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns);
+	if (status != es_no_error) return status;
+	status = Cam_SetSensorResetLength(drvno, settings_struct.camera_settings[drvno].sensor_reset_length_in_8_ns);
 	return status;
 }
 
@@ -1973,15 +1975,6 @@ es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom
 	// or use sec
 	status = SetSEC(drvno, settings_struct.camera_settings[drvno].sec_in_10ns);
 	if (status != es_no_error) return status;
-	// When sec is used, use IFC signal from PCIe card
-	if (settings_struct.camera_settings[drvno].sec_in_10ns)
-		status = Cam3030_ADC_SetIfcMode(drvno, 0);
-	// in other cases use IFC signal from camera, short or long
-	else if(settings_struct.camera_settings[drvno].shortrs)
-		status = Cam3030_ADC_SetIfcMode(drvno, 1);
-	else
-		status = Cam3030_ADC_SetIfcMode(drvno, 2);
-	if (status != es_no_error) return status;
 	status = SetEnEc3030(drvno, true);
 	return status;
 }
@@ -2365,21 +2358,20 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 }
 
 /**
- * \brief Set the IFC mode of camera 3030.
+ * \brief Sets the sensor reset length register in the camera, which controls the length of the ARG pulse.
  * 
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param ifc_mode See cam_adaddr_ifc_mode of enum cam_addresses in enum.h for details.
+ * \param sensor_reset_length_in_8_ns value * 8ns = sensor reset length
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes Cam3030_ADC_SetIfcMode(uint32_t drvno, uint16_t ifc_mode)
+es_status_codes Cam_SetSensorResetLength(uint32_t drvno, uint16_t sensor_reset_length_in_8_ns)
 {
-	ES_LOG("Cam3030_ADC_SetIfcMode(), setting IFC mode to %u\n", ifc_mode);
-	// send the sample mode to the camera
-	return SendFLCAM(drvno, maddr_cam, cam_adaddr_ifc_mode, ifc_mode);
+	ES_LOG("Cam_SetSensorResetLength(), setting sensor reset length to %u (%u us)\n", sensor_reset_length_in_8_ns);
+	return SendFLCAM(drvno, maddr_cam, cam_adaddr_sensor_reset_length_in_8_ns, sensor_reset_length_in_8_ns);
 }
 
 /**
@@ -4273,7 +4265,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		"dma_buffer_size_in_scans\t%u\n"
 		"tocnt\t%u\n"
 		"ticnt\t%u\n"
-		"unused\t%u\n"
+		"sensor_reset_length_in_8_ns\t%u\n"
 		"write to disc\t%u\n"
 		"file path\t%s\n"
 		"file split mode\t%u\n"
@@ -4282,7 +4274,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].dma_buffer_size_in_scans,
 		settings_struct.camera_settings[drvno].tocnt,
 		settings_struct.camera_settings[drvno].ticnt,
-		settings_struct.camera_settings[drvno].unused,
+		settings_struct.camera_settings[drvno].sensor_reset_length_in_8_ns,
 		settings_struct.camera_settings[drvno].write_to_disc,
 		settings_struct.camera_settings[drvno].file_path,
 		settings_struct.camera_settings[drvno].file_split_mode,
