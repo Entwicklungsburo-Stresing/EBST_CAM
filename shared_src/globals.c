@@ -163,7 +163,6 @@ const struct camera_settings camera_settings_default =
 	.dma_buffer_size_in_scans = settingDmaBufferSizeInScansDefault,
 	.tocnt = settingTocntDefault,
 	.ticnt = settingTicntDefault,
-	.use_ec = settingUseEcDefault,
 	.write_to_disc = settingWriteToDiscDefault,
 	.file_path = settingFilePathDefault,
 	.file_split_mode = settingFileSplitModeDefault,

@@ -199,9 +199,9 @@ struct camera_settings
 	 */
 	uint32_t ticnt;
 	/**
-	 * 1 -> FST <= IFC, 0 -> FST <= not XCK
+	 * unused
 	 */
-	uint32_t use_ec;
+	uint32_t unused;
 	/**
 	 * - =0: Don't write measurement data to disc.
 	 * - >0: Write measurement data to disc.
