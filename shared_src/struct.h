@@ -199,7 +199,7 @@ struct camera_settings
 	 */
 	uint32_t ticnt;
 	/**
-	 * unused
+	 * unused (deprecated use ec)
 	 */
 	uint32_t unused;
 	/**
