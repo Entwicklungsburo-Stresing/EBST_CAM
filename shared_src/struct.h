@@ -57,7 +57,7 @@ struct camera_settings
 	 */
 	uint32_t xckdelay_in_10ns;
 	/**
-	 * exposure control in 10 ns steps. 31 bit.
+	 * exposure control in 10 ns steps. 32 bit.
 	 */
 	uint32_t sec_in_10ns;
 	/**
@@ -107,6 +107,7 @@ struct camera_settings
 	 */
 	uint32_t temp_level;
 	/**
+	 * DEPRECATED
 	 * Shortrs controls the sensor reset length.
 	 *	- =0: long reset 800ns
 	 *	- >0: short reset 380ns
