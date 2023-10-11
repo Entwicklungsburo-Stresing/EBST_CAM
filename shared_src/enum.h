@@ -98,13 +98,11 @@ enum CTRLC_bits
 	CTRLC_bit_I = 0x01,
 	CTRLC_bit_S1 = 0x02,
 	CTRLC_bit_S2 = 0x04,
-	CTRLC_bit_early_reset = 0x08,
 	CTRLC_bit_eoi = 0x10,
 	CTRLC_bit_eoi_chb = 0x20,
 	CTRLC_bitindex_I = 0,
 	CTRLC_bitindex_S1 = 1,
 	CTRLC_bitindex_S2 = 2,
-	CTRLC_bitindex_early_reset = 3,
 	CTRLC_bitindex_eoi = 4,
 	CTRLC_bitindex_eoi_chb = 5
 };
@@ -132,22 +130,12 @@ enum TOR_MSB_bits
 	 * Set to 1 if FFT sensor (sets IFC and VON to generate vclks and ENV)
 	 */
 	TOR_MSB_bit_ISFFT = 0x01,
-	/**
-	 * Set to 1 if sensor needs a clear after read (800ns) is done (PDA and S11490)
-	 */
-	TOR_MSB_bit_SENDRS = 0x02,
-	/**
-	 * Reset pulse is 100ns when SENDRS is 1
-	 */
-	TOR_MSB_bit_SHORTRS = 0x04,
 	TOR_MSB_bit_TOSEL = 0x08,
 	TOR_MSB_bit_TO0 = 0x10,
 	TOR_MSB_bit_TO1 = 0x20,
 	TOR_MSB_bit_TO2 = 0x40,
 	TOR_MSB_bit_TO3 = 0x80,
 	TOR_MSB_bitindex_ISFFT = 0,
-	TOR_MSB_bitindex_SENDRS = 1,
-	TOR_MSB_bitindex_SHORTRS = 2,
 	TOR_MSB_bitindex_TOSEL = 3,
 	TOR_MSB_bitindex_TO0 = 4,
 	TOR_MSB_bitindex_TO1 = 5,
@@ -597,27 +585,6 @@ enum file_specifications
 	file_path_size = 256,
 	file_timestamp_size = 64,
 	file_filename_full_size = 256
-};
-
-/**
- * This enum is describing the bits of the register SEC at address S0Addr_SEC
- */
-enum sec_bits
-{
-	/**
-	 * The lower 30 bits are describing the length of SEC as unsigned integer in 10 nanosecond steps.
-	 */
-	sec_bits_sec_in_10ns = 0x3FFFFFFF,
-	/**
-	 * This bit changes the signal IFC to a specialized 3030 version when SEC is used.
-	 */
-	sec_bit_en_ec_3030 = 0x40000000,
-	/**
-	 * This bit must be set to 1 when you want to use SEC.
-	 */
-	sec_bit_enable = 0x80000000,
-	sec_bitindex_en_ec_3030 = 30,
-	sec_bitindex_enable = 31
 };
 
 /**
