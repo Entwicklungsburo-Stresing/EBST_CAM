@@ -109,6 +109,7 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingIOCtrlImpactStartPixelPath, ui->spinBoxIOCtrlImpactStartPixel->value());
 	settings.setValue(settingsUseSoftwarePollingPath, ui->checkBoxUseSoftwarePolling->isChecked());
 	settings.setValue(settingIsCooledCamPath, ui->checkBoxIsCooledCam->isChecked());
+	settings.setValue(settingSensorResetLengthIn8nsPath, ui->spinBoxSensorResetLengthIn1ns->value() / 8);
 	//FFT mode
 	settings.setValue(settingLinesPath, ui->spinBoxLines->value());
 	settings.setValue(settingVfreqPath, ui->spinBoxVfreq->value());
@@ -390,6 +391,7 @@ void CameraSettingsWidget::loadDefaults()
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settingIOCtrlImpactStartPixelDefault);
 	ui->checkBoxUseSoftwarePolling->setChecked(settingsUseSoftwarePollingDefault);
 	ui->checkBoxIsCooledCam->setChecked(settingIsCooledCamDefault);
+	ui->spinBoxSensorResetLengthIn1ns->setValue(settingSensorResetLengthIn8nsDefault * 8);
 	//FFT mode
 	ui->spinBoxLines->setValue(settingLinesDefault);
 	ui->spinBoxVfreq->setValue(settingVfreqDefault);
@@ -424,6 +426,17 @@ void CameraSettingsWidget::on_spinBoxPixel_valueChanged(int arg1)
 	else
 		newPixelValue = arg1 - arg1 % 64;
 	ui->spinBoxPixel->setValue(newPixelValue);
+}
+
+// only allow values n * 8
+void CameraSettingsWidget::on_spinBoxSensorResetLengthIn1ns_valueChanged(int arg1)
+{
+	int newValue = 0;
+	if (arg1 % 8 > 4)
+		newValue = arg1 + 8 - arg1 % 8;
+	else
+		newValue = arg1 - arg1 % 8;
+	ui->spinBoxSensorResetLengthIn1ns->setValue(newValue);
 }
 
 void CameraSettingsWidget::on_comboBoxFftMode_currentIndexChanged(int index)
@@ -684,6 +697,7 @@ void CameraSettingsWidget::initializeWidget()
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toDouble());
 	ui->checkBoxUseSoftwarePolling->setChecked(settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool());
 	ui->checkBoxIsCooledCam->setChecked(settings.value(settingIsCooledCamPath, settingIsCooledCamDefault).toBool());
+	ui->spinBoxSensorResetLengthIn1ns->setValue(settings.value(settingSensorResetLengthIn8nsPath, settingSensorResetLengthIn8nsDefault).toDouble() * 8);
 	//FFT mode
 	ui->spinBoxLines->setValue(settings.value(settingLinesPath, settingLinesDefault).toDouble());
 	ui->spinBoxVfreq->setValue(settings.value(settingVfreqPath, settingVfreqDefault).toDouble());
