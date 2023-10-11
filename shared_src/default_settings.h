@@ -24,7 +24,7 @@
 #define settingBoard2Default						0
 #define settingBoard3Default						0
 #define settingBoard4Default						0
-#define settingSensorTypeDefault					PDAsensor
+#define settingSensorTypeDefault					sensor_type_pda
 #define settingCameraSystemDefault					camera_system_3001
 #define settingCamcntDefault						1
 #define settingPixelDefault							1088

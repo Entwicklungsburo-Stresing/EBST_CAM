@@ -125,10 +125,11 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetCamCountRegister(drvno);
 	if (status != es_no_error) return status;
-	//set PDA and FFT
-	status = SetSensorType(drvno, (uint8_t)settings_struct.camera_settings[drvno].sensor_type);
+	status = SetCameraSystem(drvno, (uint16_t)settings_struct.camera_settings[drvno].camera_system);
 	if (status != es_no_error) return status;
-	if (settings_struct.camera_settings[drvno].sensor_type == FFTsensor)
+	status = SetSensorType(drvno, (uint16_t)settings_struct.camera_settings[drvno].sensor_type);
+	if (status != es_no_error) return status;
+	if (settings_struct.camera_settings[drvno].sensor_type == sensor_type_fft)
 	{
 		switch (settings_struct.camera_settings[drvno].fft_mode)
 		{
@@ -235,7 +236,7 @@ es_status_codes InitCamera(uint32_t drvno)
 	//status = SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, (uint16_t)settings_struct.camera_settings[drvno].sensor_gain);
 	if (status != es_no_error) return status;
 
-	if (settings_struct.camera_settings[drvno].sensor_type == FFTsensor)
+	if (settings_struct.camera_settings[drvno].sensor_type == sensor_type_fft)
 	{
 		status = SetupFFT(drvno);
 		if (status != es_no_error) return status;
@@ -583,36 +584,35 @@ es_status_codes SetCamCountRegister(uint32_t drvno)
 }
 
 /**
- * \brief Sets sensor type (Reg TOR:D25 -> manual).
+ * \brief Sets sensor type bits in register camera type
  * 
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param sensor_type Determines sensor type.
- * 		- 0: PDA (line sensor)
- * 		- 1: FFT (area sensor)
+ * \param sensor_type Determines sensor type. See enum sensor_type in enum.h for options.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
  *		- es_parameter_out_of_range
  */
-es_status_codes SetSensorType( uint32_t drvno, uint8_t sensor_type )
+es_status_codes SetSensorType( uint32_t drvno, uint16_t sensor_type )
 {
 	ES_LOG("Setting sensor type: %u\n", sensor_type);
-	es_status_codes status = es_no_error;
-	switch (sensor_type)
-	{
-	case PDAsensor:
-		status = resetBitS0_8(drvno, TOR_MSB_bitindex_ISFFT, S0Addr_TOR_MSB);
-		if (status != es_no_error) return status;
-		status = OpenShutter(drvno);
-		break;
-	case FFTsensor:
-		status = setBitS0_8(drvno, TOR_MSB_bitindex_ISFFT, S0Addr_TOR_MSB);
-		break;
-	default:
-		return es_parameter_out_of_range;
-	}
-	return status;
+	uint32_t data = sensor_type << camera_type_sensor_type_bit_index;
+	return writeBitsS0_32(drvno, data, camera_type_sensor_type_bits, S0Addr_CAMERA_TYPE);
+}
+
+/**
+ * \brief Sets camera system bits in register camera type
+ *
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param camera_system Determines the camera system. See enum camera_system in enum.h for options.
+ * \return es_status_codes
+ */
+es_status_codes SetCameraSystem(uint32_t drvno, uint16_t camera_system)
+{
+	ES_LOG("Setting camera system: %u\n", camera_system);
+	uint32_t data = camera_system << camera_type_camera_system_bit_index;
+	return writeBitsS0_32(drvno, data, camera_type_camera_system_bits, S0Addr_CAMERA_TYPE);
 }
 
 /**
@@ -1701,7 +1701,7 @@ es_status_codes SendFLCAM( uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes InitCamera3001( uint32_t drvno  )
+es_status_codes InitCamera3001( uint32_t drvno )
 {
 	ES_LOG("Init camera 3001\n");
 	return Use_ENFFW_protection( drvno, true );

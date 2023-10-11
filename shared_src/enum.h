@@ -126,16 +126,11 @@ enum TOR_TOCNT_bits
  */
 enum TOR_MSB_bits
 {
-	/**
-	 * Set to 1 if FFT sensor (sets IFC and VON to generate vclks and ENV)
-	 */
-	TOR_MSB_bit_ISFFT = 0x01,
 	TOR_MSB_bit_TOSEL = 0x08,
 	TOR_MSB_bit_TO0 = 0x10,
 	TOR_MSB_bit_TO1 = 0x20,
 	TOR_MSB_bit_TO2 = 0x40,
 	TOR_MSB_bit_TO3 = 0x80,
-	TOR_MSB_bitindex_ISFFT = 0,
 	TOR_MSB_bitindex_TOSEL = 3,
 	TOR_MSB_bitindex_TO0 = 4,
 	TOR_MSB_bitindex_TO1 = 5,
@@ -235,7 +230,8 @@ enum s0_addresses
 	S0Addr_DSCCtrl = 0xA8,
 	S0Addr_DAC = 0xAC,
 	S0Addr_CAMSTATUS12 = 0xB0,
-	S0Addr_CAMSTATUS34 = 0xB4
+	S0Addr_CAMSTATUS34 = 0xB4,
+	S0Addr_CAMERA_TYPE = 0xB8,
 };
 
 enum ScanIndex_bits
@@ -470,13 +466,17 @@ enum bti_mode
 enum sensor_type
 {
 	/**
-	 * PDA sensor. Set RS after read; for HA S39xx
+	 * PDA sensor. for HA S39xx
 	 */
-	PDAsensor = 0,
+	sensor_type_pda = 0,
+	sensor_type_ir = 1,
 	/**
-	 * FFT sensor. Set vclk generator; for HA S703x
+	 * FFT sensor. for HA S703x
 	 */
-	FFTsensor = 1,
+	sensor_type_fft = 2,
+	sensor_type_cmos = 3,
+	sensor_type_hsvis = 4,
+	sensor_type_hsir = 5,
 };
 
 /**
@@ -758,4 +758,12 @@ enum TDCCtrl_bits
 	TDCCtrl_bit_adr1 = 0x20000000,
 	TDCCtrl_bit_adr2 = 0x40000000,
 	TDCCtrl_bit_adr3 = 0x80000000
+};
+
+enum camera_type_bits
+{
+	camera_type_sensor_type_bits = 0x0000FFFF,
+	camera_type_camera_system_bits = 0xFFFF0000,
+	camera_type_sensor_type_bit_index = 0,
+	camera_type_camera_system_bit_index = 16,
 };
