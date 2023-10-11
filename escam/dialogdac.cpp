@@ -43,8 +43,11 @@ void DialogDac::spinBoxChannel_valueChanged()
 		static_cast<uint32_t>(ui->spinBoxChannel8->value())
 	};
 	settings.beginGroup("board" + QString::number(ui->spinBoxPcie->value()));
-	bool is_hs_ir = settings.value(settingIsIrPath, settingIsIrDefault).toBool();
+	int sensor_type = settings.value(settingSensorTypePath, settingSensorTypeDefault).toInt();
 	settings.endGroup();
+	bool is_hs_ir = false;
+	if (sensor_type == sensor_type_hsir)
+		is_hs_ir = true;
 	bool reorder;
 	if (ui->comboBoxLocation->currentIndex() == DAC8568_camera && !is_hs_ir)
 		reorder = true;

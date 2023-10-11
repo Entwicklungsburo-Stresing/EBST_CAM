@@ -106,10 +106,8 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingAdcGainPath, ui->spinBoxAdcGain->value());
 	settings.setValue(settingCoolingPath, ui->comboBoxCamCool->currentIndex());
 	settings.setValue(settingGpxOffsetPath, ui->spinBoxGpxOffset->value());
-	settings.setValue(settingIsIrPath, ui->checkBoxIr->isChecked());
 	settings.setValue(settingIOCtrlImpactStartPixelPath, ui->spinBoxIOCtrlImpactStartPixel->value());
 	settings.setValue(settingsUseSoftwarePollingPath, ui->checkBoxUseSoftwarePolling->isChecked());
-	settings.setValue(settingShortrsPath, ui->checkBoxShortrs->isChecked());
 	settings.setValue(settingIsCooledCamPath, ui->checkBoxIsCooledCam->isChecked());
 	//FFT mode
 	settings.setValue(settingLinesPath, ui->spinBoxLines->value());
@@ -231,18 +229,20 @@ void CameraSettingsWidget::on_comboBoxBti_currentIndexChanged(int index)
 
 void CameraSettingsWidget::on_comboBoxSensorType_currentIndexChanged(int index)
 {
-	bool enabled = true,
+	bool enabled = false,
+		visible = false;
+	if (index == sensor_type_fft)
+	{
+		enabled = true;
 		visible = true;
+	}
 	switch (_settings_level)
 	{
 		//basic
 	case 0:
-		enabled = index;
-		visible = index;
 		break;
 		//advanced
 	case 1:
-		enabled = index;
 		visible = true;
 		break;
 		//expert
@@ -387,10 +387,8 @@ void CameraSettingsWidget::loadDefaults()
 	ui->spinBoxAdcGain->setValue(settingAdcGainDefault);
 	ui->comboBoxCamCool->setCurrentIndex(settingCoolingDefault);
 	ui->spinBoxGpxOffset->setValue(settingGpxOffsetDefault);
-	ui->checkBoxRegionsEqual->setChecked(settingIsIrDefault);
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settingIOCtrlImpactStartPixelDefault);
 	ui->checkBoxUseSoftwarePolling->setChecked(settingsUseSoftwarePollingDefault);
-	ui->checkBoxShortrs->setChecked(settingShortrsDefault);
 	ui->checkBoxIsCooledCam->setChecked(settingIsCooledCamDefault);
 	//FFT mode
 	ui->spinBoxLines->setValue(settingLinesDefault);
@@ -683,10 +681,8 @@ void CameraSettingsWidget::initializeWidget()
 	ui->spinBoxAdcGain->setValue(settings.value(settingAdcGainPath, settingAdcGainDefault).toDouble());
 	ui->comboBoxCamCool->setCurrentIndex(settings.value(settingCoolingPath, settingCoolingDefault).toDouble());
 	ui->spinBoxGpxOffset->setValue(settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toDouble());
-	ui->checkBoxIr->setChecked(settings.value(settingIsIrPath, settingIsIrDefault).toBool());
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toDouble());
 	ui->checkBoxUseSoftwarePolling->setChecked(settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool());
-	ui->checkBoxShortrs->setChecked(settings.value(settingShortrsPath, settingShortrsDefault).toBool());
 	ui->checkBoxIsCooledCam->setChecked(settings.value(settingIsCooledCamPath, settingIsCooledCamDefault).toBool());
 	//FFT mode
 	ui->spinBoxLines->setValue(settings.value(settingLinesPath, settingLinesDefault).toDouble());
