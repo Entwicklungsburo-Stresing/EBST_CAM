@@ -80,7 +80,7 @@
 #define settingDmaBufferSizeInScansDefault			1000
 #define settingTicntDefault							0
 #define settingTocntDefault							0
-#define settingSensor_reset_length_in_8_nsDefault	100
+#define settingSensorResetLengthIn8nsDefault		100
 #define settingWriteToDiscDefault					0
 #define settingFilePathDefault						""
 #define settingFileSplitModeDefault					no_split

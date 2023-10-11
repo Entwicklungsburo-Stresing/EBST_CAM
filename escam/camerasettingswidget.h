@@ -36,6 +36,7 @@ private slots:
 	void on_comboBoxCameraSystem_currentIndexChanged(int index);
 	void on_checkBoxRegionsEqual_stateChanged(int arg1);
 	void on_spinBoxPixel_valueChanged(int arg1);
+	void on_spinBoxSensorResetLengthIn1ns_valueChanged(int arg1);
 	void on_comboBoxFftMode_currentIndexChanged(int index);
 	void on_pushButtonFilePath_clicked();
 	void on_checkBoxWriteDataToDisc_stateChanged(int arg1);
