@@ -252,7 +252,7 @@ es_status_codes InitCamera(uint32_t drvno)
 		status = InitCamera3010(drvno, (uint8_t)settings_struct.camera_settings[drvno].adc_mode, (uint16_t)settings_struct.camera_settings[drvno].adc_custom_pattern);
 		break;
 	case camera_system_3030:
-		status = InitCamera3030(drvno, (uint8_t)settings_struct.camera_settings[drvno].adc_mode, (uint16_t)settings_struct.camera_settings[drvno].adc_custom_pattern, (uint8_t)settings_struct.camera_settings[drvno].adc_gain, settings_struct.camera_settings[drvno].dac_output, settings_struct.camera_settings[drvno].is_hs_ir);
+		status = InitCamera3030(drvno);
 		break;
 	default:
 		return es_parameter_out_of_range;
@@ -1807,34 +1807,32 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
  * 
  * 	Sets registers in ADC ADS5294.
  * \param drvno selects PCIe board
- * \param adc_mode 0: normal mode, 1: ramp, 2: custom pattern
- * \param custom_pattern only used when adc_mode = 2, lower 14 bits are used as output of ADC
- * \param adc_gain gain of ADC
- * \param dac_output
- * \param is_hs_ir
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes InitCamera3030(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern, uint8_t adc_gain, uint32_t** dac_output, bool is_hs_ir)
+es_status_codes InitCamera3030(uint32_t drvno)
 {
-	ES_LOG("Init camera 3030, adc_mode: %u, custom_pattern: %u, adc_gain: %u, is_hs_ir: %u\n", adc_mode, custom_pattern, adc_gain, is_hs_ir);
+	ES_LOG("Init camera 3030\n");
 	es_status_codes status = Cam3030_ADC_reset(drvno);
 	if (status != es_no_error) return status;
 	//two wire mode output interface for pal versions P209_2 and above
 	status = Cam3030_ADC_twoWireModeEN(drvno);
 	if (status != es_no_error) return status;
-	status = Cam3030_ADC_SetGain(drvno, adc_gain);
+	status = Cam3030_ADC_SetGain(drvno, (uint8_t)settings_struct.camera_settings[drvno].adc_gain);
 	if (status != es_no_error) return status;
-	if (adc_mode)
-		status = Cam3030_ADC_RampOrPattern(drvno, adc_mode, custom_pattern);
+	if (settings_struct.camera_settings[drvno].adc_mode)
+		status = Cam3030_ADC_RampOrPattern(drvno, (uint8_t)settings_struct.camera_settings[drvno].adc_mode, (uint16_t)settings_struct.camera_settings[drvno].adc_custom_pattern);
 	if (status != es_no_error) return status;
 	for (uint32_t camera = 0; camera < settings_struct.camera_settings->camcnt; camera++)
 	{
 		status = DAC8568_enableInternalReference(drvno, DAC8568_camera, camera);
 		if (status != es_no_error) return status;
+		bool is_hs_ir = false;
+		if (settings_struct.camera_settings[drvno].sensor_type == sensor_type_hsir)
+			is_hs_ir = true;
 		status = DAC8568_setAllOutputs(drvno, DAC8568_camera, camera, settings_struct.camera_settings[drvno].dac_output[camera], !is_hs_ir);
 		if (status != es_no_error) return status;
 	}

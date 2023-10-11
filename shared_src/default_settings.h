@@ -33,7 +33,6 @@
 #define settingSensorGainDefault					0
 #define settingAdcGainDefault						0
 #define settingCoolingDefault						0
-#define settingShortrsDefault						false
 #define settingGpxOffsetDefault						0
 #define settingLinesDefault							64
 #define settingVfreqDefault							7
@@ -60,7 +59,6 @@
 #define settingSettingsLevelDefault					0
 #define settingBecIn10nsDefault						0
 #define settingShowCameraDefault					1
-#define settingIsIrDefault							0
 #define settingIOCtrlImpactStartPixelDefault		1078
 #define settingIOCtrlOutput1WidthIn5nsDefault		50
 #define settingIOCtrlOutput2WidthIn5nsDefault		50
