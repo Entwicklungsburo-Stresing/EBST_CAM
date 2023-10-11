@@ -3726,7 +3726,7 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 {
 	enum N
 	{ 
-		number_of_registers = 44,
+		number_of_registers = 47,
 		bufferLength = 40
 	};
 	char register_names[number_of_registers][bufferLength] = {
@@ -3774,6 +3774,9 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 		"R25 LTDC2",
 		"R26 DSCCtrl",
 		"R27 DAC",
+		"R28 CAMSTATUS12",
+		"R29 CAMSTATUS34",
+		"R30 CAMERA TYPE"
 	}; //Look-Up-Table for the S0 Registers
 	uint32_t data = 0;
 	//allocate string buffer
