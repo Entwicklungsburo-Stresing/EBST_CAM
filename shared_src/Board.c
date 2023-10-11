@@ -1704,7 +1704,7 @@ es_status_codes SendFLCAM( uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16
 es_status_codes InitCamera3001( uint32_t drvno )
 {
 	ES_LOG("Init camera 3001\n");
-	return Use_ENFFW_protection( drvno, true );
+	return es_no_error;
 }
 
 /**
@@ -1723,8 +1723,6 @@ es_status_codes InitCamera3001( uint32_t drvno )
 es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern )
 {
 	ES_LOG("Init camera 3010, adc_mode: %u, custom_pattern: %u\n", adc_mode, custom_pattern);
-	//es_status_codes status = Use_ENFFW_protection(drvno, true); // test Andre 04.05.2022
-	//if (status != es_no_error) return status;
 	es_status_codes status = Cam3010_ADC_reset( drvno );
 	if (status != es_no_error) return status;
 	return Cam3010_ADC_setOutputMode(drvno, adc_mode, custom_pattern);
