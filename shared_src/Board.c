@@ -2369,28 +2369,22 @@ es_status_codes DAC8568_enableInternalReference(uint32_t drvno, uint8_t location
 }
 
 /**
- * \brief Exposure control (EC) signal is used for mechanical shutter or sensors with EC function.
+ * \brief This function sets the register BEC.
  * 
- * Starts after delay after trigger (DAT) signal and is active for ecin10ns.
- * Resets additional delay after trigger with ecin10ns = 0.
+ * The Block Exposure control (BEC) signal can be used to open and close a mechanical shutter.
+ * BEC starts after the block delay after trigger (BDAT) signal and is active for bec_in_10ns.
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param ecin10ns Time in 10 ns steps.
+ * \param bec_in_10ns:
+ *	- =0 no BEC
+ *	- >0 Time in 10 ns steps. Min: 1 * 10 ns, Max: 4294967295 * 10ns = 42949672950ns = 42,94967295s
  * \return es_status_codes:
  *		- es_no_error
  * 		- es_register_write_failed
  */
-es_status_codes SetBEC( uint32_t drvno, uint32_t ecin10ns )
+es_status_codes SetBEC( uint32_t drvno, uint32_t bec_in_10ns )
 {
-	ES_LOG("Set BEC in 10 ns: %u\n", ecin10ns);
-	es_status_codes status = es_no_error;
-	if (ecin10ns)
-	{
-		ecin10ns |= 0x80000000; // enable delay
-		status = writeRegisterS0_32(drvno, ecin10ns, S0Addr_BEC);
-	}
-	else
-		status = writeRegisterS0_32(drvno, 0, S0Addr_BEC);
-	return status;
+	ES_LOG("Set BEC in 10 ns: %u\n", bec_in_10ns);
+	return writeRegisterS0_32(drvno, bec_in_10ns, S0Addr_BEC);
 }
 
 /**
