@@ -152,17 +152,10 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	}
 	else *useSWTrig = false;
 	if (status != es_no_error) return status;
-	status = CloseShutter(drvno); //set cooling  off
-	if (status != es_no_error) return status;
-	status = SetMshut(drvno, settings_struct.camera_settings[drvno].mshut);
-	if (status != es_no_error) return status;
-	//SSlope
 	status = SetSSlope(drvno, settings_struct.camera_settings[drvno].sslope);
 	if (status != es_no_error) return status;
-	//BSlope
 	status = SetBSlope(drvno, settings_struct.camera_settings[drvno].bslope);
 	if (status != es_no_error) return status;
-	//SetTimer
 	status = SetSTI(drvno, (uint8_t)settings_struct.camera_settings[drvno].sti_mode);
 	if (status != es_no_error) return status;
 	status = SetBTI(drvno, (uint8_t)settings_struct.camera_settings[drvno].bti_mode);
@@ -176,7 +169,6 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	if (status != es_no_error) return status;
 	if (isTdc) status = InitGPX(drvno, settings_struct.camera_settings[drvno].gpx_offset);
 	if (status != es_no_error) return status;
-	//Delay after Trigger
 	status = SetSDAT(drvno, settings_struct.camera_settings[drvno].sdat_in_10ns);
 	if (status != es_no_error) return status;
 	status = SetBDAT(drvno, settings_struct.camera_settings[drvno].bdat_in_10ns);
