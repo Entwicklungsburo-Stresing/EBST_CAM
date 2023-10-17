@@ -153,7 +153,6 @@ es_status_codes SetTicnt(uint32_t drvno, uint8_t divider);
 es_status_codes SetTocnt(uint32_t drvno, uint8_t divider);
 es_status_codes GetIsTdc(uint32_t drvno, bool* isTdc);
 es_status_codes GetIsDsc(uint32_t drvno, bool* isDsc);
-es_status_codes SetMshut( uint32_t drvno, bool mshut );
 void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString);
 void SetContinuousMeasurement(bool on);
 es_status_codes GetCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* overTemp);

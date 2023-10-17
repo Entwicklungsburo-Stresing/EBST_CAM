@@ -54,7 +54,6 @@ const struct camera_settings camera_settings_default =
 	.camera_system = settingCameraSystemDefault,
 	.camcnt = settingCamcntDefault,
 	.pixel = settingPixelDefault,
-	.mshut = settingMshutDefault,
 	.led_off = settingLedDefault,
 	.sensor_gain = settingSensorGainDefault,
 	.adc_gain = settingAdcGainDefault,

@@ -33,7 +33,6 @@ constexpr auto settingSensorTypePath = "sensorType";
 constexpr auto settingCameraSystemPath = "cameraSystem";
 constexpr auto settingCamcntPath = "camcnt";
 constexpr auto settingPixelPath = "pixelcnt";
-constexpr auto settingMshutPath = "mshut";
 constexpr auto settingLedPath = "led";
 constexpr auto settingSensorGainPath = "sensorGain";
 constexpr auto settingAdcGainPath = "adcGain";

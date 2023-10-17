@@ -81,9 +81,7 @@ struct camera_settings
 	 */
 	uint32_t pixel;
 	/**
-	 * Mechanical shutter.
-	 *	- =0 don't use mechanical shutter
-	 *	- >0 use mechanical shutter
+	 * DEPRECATED
 	 */
 	uint32_t mshut;
 	/**
