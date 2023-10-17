@@ -90,7 +90,7 @@ es_status_codes DAC8568_sendData( uint32_t drvno, uint8_t location, uint8_t came
 es_status_codes DAC8568_setOutput( uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t channel, uint16_t output );
 es_status_codes DAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint32_t* output, bool reorder_channels);
 es_status_codes DAC8568_enableInternalReference(uint32_t drvno, uint8_t cameraPosition, uint8_t location);
-es_status_codes SetBEC( uint32_t drvno, uint32_t ecin10ns );
+es_status_codes SetBEC( uint32_t drvno, uint32_t bec_in_10ns);
 es_status_codes SetXckdelay(uint32_t drvno, uint32_t xckdelay_in_10ns);
 es_status_codes SetPartialBinning(uint32_t drvno, uint16_t number_of_regions);
 es_status_codes ResetPartialBinning( uint32_t drvno );
