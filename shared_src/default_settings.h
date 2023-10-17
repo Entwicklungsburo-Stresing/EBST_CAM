@@ -28,7 +28,6 @@
 #define settingCameraSystemDefault					camera_system_3001
 #define settingCamcntDefault						1
 #define settingPixelDefault							1088
-#define settingMshutDefault							false
 #define settingLedDefault							false
 #define settingSensorGainDefault					0
 #define settingAdcGainDefault						0

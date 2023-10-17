@@ -382,28 +382,6 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 }
 
 /**
- * \brief Sets TOR to sshut when mshut is true.
- * 
- * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param mshut
- *		- true: TOR is set to sshut
- *		- false: TOR is set by settings_struct.camera_settings[drvno].tor
- * \return es_status_codes
- *		- es_no_error
- *		- es_register_read_failed
- *		- es_register_write_failed
- */
-es_status_codes SetMshut(uint32_t drvno, bool mshut)
-{
-	es_status_codes status = es_no_error;
-	if (mshut)
-		status = SetTORReg(drvno, tor_sshut); // PCIe 'O' output is high during SEC active
-	else
-		status = SetTORReg(drvno, (uint8_t)settings_struct.camera_settings[drvno].tor); // PCIe 'O' output is what ever was selected in LabView
-	return status;
-}
-
-/**
  * \brief Set pixel count
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
