@@ -100,7 +100,6 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingCameraSystemPath, ui->comboBoxCameraSystem->currentIndex());
 	settings.setValue(settingCamcntPath, ui->spinBoxCamcnt->value());
 	settings.setValue(settingPixelPath, ui->spinBoxPixel->value());
-	settings.setValue(settingMshutPath, ui->checkBoxMshut->isChecked());
 	settings.setValue(settingLedPath, ui->checkBoxLed->isChecked());
 	settings.setValue(settingSensorGainPath, ui->spinBoxSensorGain->value());
 	settings.setValue(settingAdcGainPath, ui->spinBoxAdcGain->value());
@@ -381,8 +380,6 @@ void CameraSettingsWidget::loadDefaults()
 	ui->comboBoxCameraSystem->currentIndexChanged(settingCameraSystemDefault);
 	ui->spinBoxCamcnt->setValue(settingCamcntDefault);
 	ui->spinBoxPixel->setValue(settingPixelDefault);
-	ui->checkBoxMshut->setChecked(settingMshutDefault);
-	ui->checkBoxMshut->stateChanged(settingMshutDefault);
 	ui->checkBoxLed->setChecked(settingLedDefault);
 	ui->spinBoxSensorGain->setValue(settingSensorGainDefault);
 	ui->spinBoxAdcGain->setValue(settingAdcGainDefault);
@@ -687,8 +684,6 @@ void CameraSettingsWidget::initializeWidget()
 	ui->comboBoxCameraSystem->currentIndexChanged(settings.value(settingCameraSystemPath, settingCameraSystemDefault).toDouble());
 	ui->spinBoxCamcnt->setValue(settings.value(settingCamcntPath, settingCamcntDefault).toDouble());
 	ui->spinBoxPixel->setValue(settings.value(settingPixelPath, settingPixelDefault).toDouble());
-	ui->checkBoxMshut->setChecked(settings.value(settingMshutPath, settingMshutDefault).toBool());
-	ui->checkBoxMshut->stateChanged(settings.value(settingMshutPath, settingMshutDefault).toBool());
 	ui->checkBoxLed->setChecked(settings.value(settingLedPath, settingLedDefault).toBool());
 	ui->spinBoxSensorGain->setValue(settings.value(settingSensorGainPath, settingSensorGainDefault).toDouble());
 	ui->spinBoxAdcGain->setValue(settings.value(settingAdcGainPath, settingAdcGainDefault).toDouble());

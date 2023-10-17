@@ -172,7 +172,6 @@ void MainWindow::startPressed()
 		settings_struct.camera_settings[drvno].camera_system = settings.value(settingCameraSystemPath, settingCameraSystemDefault).toDouble();
 		settings_struct.camera_settings[drvno].camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toDouble();
 		settings_struct.camera_settings[drvno].pixel = settings.value(settingPixelPath, settingPixelDefault).toDouble();
-		settings_struct.camera_settings[drvno].mshut = settings.value(settingMshutPath, settingMshutDefault).toBool();
 		settings_struct.camera_settings[drvno].led_off = settings.value(settingLedPath, settingLedDefault).toBool();
 		settings_struct.camera_settings[drvno].sensor_gain = settings.value(settingSensorGainPath, settingSensorGainDefault).toDouble();
 		settings_struct.camera_settings[drvno].adc_gain = settings.value(settingAdcGainPath, settingAdcGainDefault).toDouble();
