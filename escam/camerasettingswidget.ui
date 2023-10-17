@@ -1351,12 +1351,12 @@
            </item>
            <item>
             <property name="text">
-             <string>SSHUT</string>
+             <string>SEC_MSHUT</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>BSHUT</string>
+             <string>BEC_MSHUT</string>
             </property>
            </item>
            <item>
