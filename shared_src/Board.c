@@ -2199,7 +2199,7 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
  */
 es_status_codes Cam_SetSensorResetLength(uint32_t drvno, uint16_t sensor_reset_length_in_8_ns)
 {
-	ES_LOG("Cam_SetSensorResetLength(), setting sensor reset length to %u (%u us)\n", sensor_reset_length_in_8_ns);
+	ES_LOG("Cam_SetSensorResetLength(), setting sensor reset length to %u (%u ns)\n", sensor_reset_length_in_8_ns, sensor_reset_length_in_8_ns * 8 );
 	return SendFLCAM(drvno, maddr_cam, cam_adaddr_sensor_reset_length_in_8_ns, sensor_reset_length_in_8_ns);
 }
 
