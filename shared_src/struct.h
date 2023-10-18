@@ -164,7 +164,7 @@ struct camera_settings
 	 */
 	uint32_t bec_in_10ns;
 	/**
-	 * Determines whether the camera is a high speed infrared camera.
+	 * DEPRECATED: Determines whether the camera is a high speed infrared camera.
 	 *	- =0 no IR
 	 *	- >0 IR
 	 */
