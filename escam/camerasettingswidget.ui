@@ -29,7 +29,7 @@
          <item row="11" column="1">
           <widget class="QLabel" name="labelSec">
            <property name="text">
-            <string>sec</string>
+            <string>sec (scan exposure control)</string>
            </property>
           </widget>
          </item>
@@ -62,7 +62,7 @@
          <item row="12" column="1">
           <widget class="QLabel" name="labelBec">
            <property name="text">
-            <string>bec</string>
+            <string>bec (block exposure control)</string>
            </property>
           </widget>
          </item>
@@ -1351,12 +1351,12 @@
            </item>
            <item>
             <property name="text">
-             <string>SSHUT</string>
+             <string>SEC_MSHUT</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>BSHUT</string>
+             <string>BEC_MSHUT</string>
             </property>
            </item>
            <item>
