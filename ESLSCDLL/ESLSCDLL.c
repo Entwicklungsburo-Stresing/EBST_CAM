@@ -554,7 +554,7 @@ DllAccess es_status_codes DLLGetCameraStatusOverTemp_multipleBoards(uint32_t sam
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
 			status = GetCameraStatusOverTemp(drvno, sample, block, camera_pos, tempArr[usedBoards]);
-			if (status != es_no_error) return;
+			if (status != es_no_error) return status;
 			usedBoards++;
 		}
 	}
@@ -576,7 +576,7 @@ DllAccess es_status_codes DLLGetCameraStatusTempGood_multipleBoards(uint32_t sam
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
 			status = GetCameraStatusTempGood(drvno, sample, block, camera_pos, tempArr[usedBoards]);
-			if (status != es_no_error) return;
+			if (status != es_no_error) return status;
 			usedBoards++;
 		}
 	}

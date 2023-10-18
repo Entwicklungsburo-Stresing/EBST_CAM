@@ -2900,7 +2900,6 @@ es_status_codes ReturnStartMeasurement(es_status_codes status)
  */
 es_status_codes FindCam( uint32_t drvno )
 {
-	uint32_t data = 0;
 	if (settings_struct.camera_settings[drvno].camcnt == 0)
 	{
 		// Camcnt is 0. FindCam is returning without error
