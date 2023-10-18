@@ -190,6 +190,8 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	status = SetTocnt(drvno, (uint8_t)settings_struct.camera_settings[drvno].tocnt);
 	if (status != es_no_error) return status;
 	status = SetSEC(drvno, settings_struct.camera_settings[drvno].sec_in_10ns);
+	if (status != es_no_error) return status;
+	status = SetTORReg(drvno, (uint8_t)settings_struct.camera_settings[drvno].tor);
 	return status;
 }
 
