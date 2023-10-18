@@ -126,6 +126,7 @@ enum TOR_TOCNT_bits
  */
 enum TOR_MSB_bits
 {
+	TOR_MSB_BITS_TO = 0xF8,
 	TOR_MSB_bit_TOSEL = 0x08,
 	TOR_MSB_bit_TO0 = 0x10,
 	TOR_MSB_bit_TO1 = 0x20,
