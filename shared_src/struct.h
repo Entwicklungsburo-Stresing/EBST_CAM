@@ -21,11 +21,11 @@ struct camera_settings
 	 */
 	uint32_t use_software_polling;
 	/**
-	 * Scan trigger input mode. See enum sti_mode in enum.h for options.
+	 * Scan trigger input mode. See enum \ref sti_mode_t in enum.h for options.
 	 */
 	uint32_t sti_mode;
 	/**
-	 * Block trigger input mode. See enum bti_mode in enum.h for options.
+	 * Block trigger input mode. See enum \ref bti_mode_t in enum.h for options.
 	 */
 	uint32_t bti_mode;
 	/**
@@ -45,11 +45,11 @@ struct camera_settings
 	 */
 	uint32_t bdat_in_10ns;
 	/**
-	 * Scan trigger slope. This option determines wether positive, negative or both slopes of a trigger are used. See enum sslope in enum.h for options.
+	 * Scan trigger slope. This option determines wether positive, negative or both slopes of a trigger are used. See enum \ref sslope_t in enum.h for options.
 	 */
 	uint32_t sslope;
 	/**
-	 * Block trigger slope. This option determines wether positive, negative or both slopes of a trigger are used. See enum bslope in enum.h for options.
+	 * Block trigger slope. This option determines wether positive, negative or both slopes of a trigger are used. See enum \ref bslope_t in enum.h for options.
 	 */
 	uint32_t bslope;
 	/**
@@ -61,15 +61,15 @@ struct camera_settings
 	 */
 	uint32_t sec_in_10ns;
 	/**
-	 * Trigger mode of camera control. See enum trigger_mode in enum.h for options.
+	 * Trigger mode of camera control. See enum \ref trigger_mode_t in enum.h for options.
 	 */
 	uint32_t trigger_mode_cc;
 	/**
-	 * Sensor type. See enum sensor_type in enum.h for options.
+	 * Sensor type. See enum \ref sensor_type_t in enum.h for options.
 	 */
 	uint32_t sensor_type;
 	/**
-	 * Camera system. See enum camera_system in enum.h for options.
+	 * Camera system. See enum \ref camera_system_t in enum.h for options.
 	 */
 	uint32_t camera_system;
 	/**
@@ -124,7 +124,7 @@ struct camera_settings
 	 */
 	uint32_t vfreq;
 	/**
-	 * Mode for FFT sensors. See enum fft_mode in enum.h for options.
+	 * Mode for FFT sensors. See enum \ref fft_mode_t in enum.h for options.
 	 */
 	uint32_t fft_mode;
 	/**
@@ -148,11 +148,11 @@ struct camera_settings
 	 */
 	uint32_t dac_output[MAXCAMCNT][8];
 	/**
-	 * Output mode for PCIe board output pin. See enum tor_out in enum.h for options.
+	 * Output mode for PCIe board output pin. See enum \ref tor_out_t in enum.h for options.
 	 */
 	uint32_t tor;
 	/**
-	 * ADC operating mode. Only available for specific ADCs, e.g. in camera system 3030. See enum adc_mode in enum.h for options.
+	 * ADC operating mode. Only available for specific ADCs, e.g. in camera system 3030. See enum \ref adc_mode_t in enum.h for options.
 	 */
 	uint32_t adc_mode;
 	/**
@@ -212,7 +212,7 @@ struct camera_settings
 	 */
 	char file_path[file_path_size];
 	/**
-	 * DEPRECATED: Not used, because didn't work correctly. Specifies how to split files when writing measurement data to disc. See enum split_mode in enum.h for modes. 
+	 * DEPRECATED: Not used, because didn't work correctly. Specifies how to split files when writing measurement data to disc. See enum \ref split_mode_t in enum.h for modes. 
 	 */
 	uint32_t file_split_mode;
 	/**
