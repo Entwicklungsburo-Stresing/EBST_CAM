@@ -559,7 +559,7 @@ es_status_codes SetCamCountRegister(uint32_t drvno)
  * \brief Sets sensor type bits in register camera type
  * 
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param sensor_type Determines sensor type. See enum sensor_type in enum.h for options.
+ * \param sensor_type Determines sensor type. See enum \ref sensor_type_t in enum_settings.h for options.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
@@ -577,7 +577,7 @@ es_status_codes SetSensorType( uint32_t drvno, uint16_t sensor_type )
  * \brief Sets camera system bits in register camera type
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param camera_system Determines the camera system. See enum camera_system in enum.h for options.
+ * \param camera_system Determines the camera system. See enum \ref camera_system_t in enum_settings.h for options.
  * \return es_status_codes
  */
 es_status_codes SetCameraSystem(uint32_t drvno, uint16_t camera_system)
@@ -2227,8 +2227,8 @@ es_status_codes SetTemp( uint32_t drvno, uint8_t level )
  * Mapping of bits in DAC8568: 4 prefix, 4 control, 4 address, 16 data, 4 feature.
  * 
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param location Switch for the different locations of DAC85689. See enum DAC8568_location in enum.h for details.
- * \param cameraPosition This is describing the camera position when there are mumltiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
+ * \param location Switch for the different locations of DAC85689. See enum \ref DAC8568_location_t in enum_settings.h for details.
+ * \param cameraPosition This is describing the camera position when there are multiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
  * \param ctrlBits 4 control bits
  * \param addrBits 4 address bits
  * \param dataBits 16 data bits
@@ -2299,8 +2299,8 @@ es_status_codes DAC8568_sendData( uint32_t drvno, uint8_t location, uint8_t came
  * 
  * Use this function to set the outputs, because it is resorting the channel numeration correctly.
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param location Switch for the different locations of DAC85689. See [enum DAC8568_location](@ref DAC8568_location) in enum.h for details.
- * \param cameraPosition This is describing the camera position when there are mumltiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
+ * \param location Switch for the different locations of DAC85689. See enum \ref DAC8568_location_t in enum.h for details.
+ * \param cameraPosition This is describing the camera position when there are multiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
  * \param output all output values that will be converted to analog voltage (0 ... 0xFFFF)
  * \param reorder_channels used to reorder DAC channels for high speed camera
  * \return es_status_codes
@@ -2334,8 +2334,8 @@ es_status_codes DAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t 
  * \brief Sets the output of the DAC8568 on PCB 2189-7.
  * 
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param location Switch for the different locations of DAC85689. See enum DAC8568_location in enum.h for details.
- * \param cameraPosition This is describing the camera position when there are mumltiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
+ * \param location Switch for the different locations of DAC85689. See enum \ref DAC8568_location_t in enum_settings.h for details.
+ * \param cameraPosition This is describing the camera position when there are multiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
  * \param channel select one of eight output channel (0 ... 7)
  * \param output output value that will be converted to analog voltage (0 ... 0xFFFF)
  * \return es_status_codes
@@ -2354,8 +2354,8 @@ es_status_codes DAC8568_setOutput( uint32_t drvno, uint8_t location, uint8_t cam
  * \brief Enable the internal reference in static mode.
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param location Switch for the different locations of DAC85689. See enum DAC8568_location in enum.h for details.
- * \param cameraPosition This is describing the camera position when there are mumltiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
+ * \param location Switch for the different locations of DAC85689. See enum \ref DAC8568_location_t in enum_settings.h for details.
+ * \param cameraPosition This is describing the camera position when there are multiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed

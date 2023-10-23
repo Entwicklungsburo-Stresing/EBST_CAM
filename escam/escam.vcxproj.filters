@@ -135,7 +135,7 @@
     <QtMoc Include="dialogsettings.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClInclude Include="..\shared_src\enum.h">
+    <ClInclude Include="..\shared_src\enum_hardware.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\shared_src\es_status_codes.h">
@@ -178,6 +178,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\shared_src\Direct2dViewer_c.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared_src\enum_settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

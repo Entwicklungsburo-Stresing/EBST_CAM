@@ -925,11 +925,12 @@ INPUT                  = ../shared_src/Board.c \
                          ../shared_src/Direct2dViewer.cpp \
                          ../shared_src/Direct2dViewer.h \
                          mainpage.md \
-                         ../shared_src/enum.h \
                          ../shared_src/es_status_codes.h \
                          ../shared_src/es_status_codes.c \
                          ../shared_src/globals.h \
-                         ../shared_src/globals.c
+                         ../shared_src/globals.c \
+                         ../shared_src/enum_hardware.h \
+                         ../shared_src/enum_settings.h
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses

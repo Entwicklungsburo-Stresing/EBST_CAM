@@ -101,7 +101,8 @@ HEADERS += \
     ../shared_src/es_status_codes.h \
     ../shared_src/Board.h \
     ../shared_src/globals.h \
-    ../shared_src/enum.h \
+    ../shared_src/enum_hardware.h \
+    ../shared_src/enum_settings.h \
     ../shared_src/struct.h \
     ../shared_src/Board_ll.h \
     ../shared_src/UIAbstractionLayer.h \
