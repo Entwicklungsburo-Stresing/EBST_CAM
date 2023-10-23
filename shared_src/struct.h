@@ -16,7 +16,7 @@ struct camera_settings
 	/**
 	 * use_software_polling determines which method is used to copy data from DMA to user buffer.
 	 *
-	 * - >0: Use Software Polling. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. Since P222_2 this method is reliable up to about 100kHz. It generates as expected a greater CPU load than the interrupt method.
+	 * - >0: Use Software Polling. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. Since P222_2 this method is reliable up to about 100kHz. It generates as expected a greater CPU load than the interrupt method. With this option you can get more recent scans from GetCurrentScanNumber(), especially at lower frequencies. For high frequencies > 30kHz this method is not recommended.
 	 * - =0: Use Interrupt. Every dma_buffer_size_in_scans/2 scan the interrupt starts a copy process, which copies dma_buffer_size_in_scans/2 scans to the user buffer. 1000 is our default value for dma_buffer_size_in_scans, so interrupt is started every 500 scans.
 	 */
 	uint32_t use_software_polling;
@@ -29,35 +29,35 @@ struct camera_settings
 	 */
 	uint32_t bti_mode;
 	/**
-	 * Scan timer in microseconds. Used when sti mode is stimer. 28 bit.
+	 * Scan timer in microseconds. Used when sti mode is stimer. When this is the case, stime is the time between two intern triggers starting scans. 28 bit.
 	 */
 	uint32_t stime_in_microsec;
 	/**
-	 * Block timer in microseconds. Used when bti mode is btimer. 28 bit.
+	 * Block timer in microseconds. Used when bti mode is btimer. When this is the case, btime is the time between two intern triggers starting a block. 28 bit.
 	 */
 	uint32_t btime_in_microsec;
 	/**
-	 * Scan delay after trigger in 10 ns steps. 31 bit.
+	 * Scan delay after trigger in 10 ns steps. This is the delay between the trigger starting a scan, which is determined by sti_mode and the actual start of the scan. 31 bit.
 	 */
 	uint32_t sdat_in_10ns;
 	/**
-	 * Block delay after trigger in 10 ns steps. 31 bit.
+	 * Block delay after trigger in 10 ns steps. This is the delay between the trigger starting a block, which is determined by bti_mode and the actual start of the block. 31 bit.
 	 */
 	uint32_t bdat_in_10ns;
 	/**
-	 * Scan trigger slope. See enum sslope in enum.h for options.
+	 * Scan trigger slope. This option determines wether positive, negative or both slopes of a trigger are used. See enum sslope in enum.h for options.
 	 */
 	uint32_t sslope;
 	/**
-	 * Block trigger slope. See enum bslope in enum.h for options.
+	 * Block trigger slope. This option determines wether positive, negative or both slopes of a trigger are used. See enum bslope in enum.h for options.
 	 */
 	uint32_t bslope;
 	/**
-	 * XCK delay in 10 ns steps. 31 bit.
+	 * XCK delay in 10 ns steps. XCK delay is the time between the high slope of XCK and the actual start of the camera read out. 31 bit.
 	 */
 	uint32_t xckdelay_in_10ns;
 	/**
-	 * exposure control in 10 ns steps. 32 bit.
+	 * Scan exposure control in 10 ns steps. SEC adds a time between the trigger and the start of the camera read out (start of XCK). Some sensors use this time for a electronic exposure control. Also mechanical shutters can be controlled with this setting. 32 bit.
 	 */
 	uint32_t sec_in_10ns;
 	/**
@@ -73,15 +73,15 @@ struct camera_settings
 	 */
 	uint32_t camera_system;
 	/**
-	 * Camera count. 1 ... 16. 4 bit.
+	 * Camera count. Camera count is the number of cameras which are connected to one PCIe board. 0 ... 16. 4 bit.
 	 */
 	uint32_t camcnt;
 	/**
-	 * Pixel count. Only 64*n are allowed. 16 bit.
+	 * Pixel count. Pixel count is the number of pixels in one sensor. Only 64*n are allowed. 16 bit.
 	 */
 	uint32_t pixel;
 	/**
-	 * DEPRECATED
+	 * DEPRECATED. The setting mshut has been used to turn a mechanical shutter on or off.
 	 */
 	uint32_t mshut;
 	/**
@@ -160,11 +160,11 @@ struct camera_settings
 	 */
 	uint32_t adc_custom_pattern;
 	/**
-	 * bec in 10 ns
+	 * Block exposure control in 10 ns. BEC adds a time between the block trigger and the start of the block. Mechanical shutters can be controlled with this setting. 32 bit.
 	 */
 	uint32_t bec_in_10ns;
 	/**
-	 * DEPRECATED: Determines whether the camera is a high speed infrared camera.
+	 * DEPRECATED: This should be set when the camera is a high speed infrared camera.
 	 *	- =0 no IR
 	 *	- >0 IR
 	 */
@@ -198,10 +198,11 @@ struct camera_settings
 	 */
 	uint32_t ticnt;
 	/**
-	 * This setting controls the length of the reset pulse between two camera readouts. value * 8ns = sensor reset length
+	 * This setting controls the length of the reset pulse between two camera readouts for some sensors. value * 8ns = sensor reset length
 	 */
 	uint32_t sensor_reset_length_in_8_ns;
 	/**
+	 * Experimental:
 	 * - =0: Don't write measurement data to disc.
 	 * - >0: Write measurement data to disc.
 	 */
@@ -249,7 +250,7 @@ struct measurement_settings
 	 */
 	uint32_t contiuous_measurement;
 	/**
-	 * Pause between two measurements when continuous mode is on.
+	 * Pause between two measurement cycles when continuous mode is on.
 	 */
 	uint32_t cont_pause_in_microseconds;
 	/**
@@ -286,7 +287,7 @@ struct measurement_settings_matlab
 	 */
 	uint32_t contiuous_measurement;
 	/**
-	 * Pause between two measurements when continuous mode is on.
+	 * Pause between two measurement cycles when continuous mode is on.
 	 */
 	uint32_t cont_pause_in_microseconds;
 };
