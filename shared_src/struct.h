@@ -244,13 +244,13 @@ struct measurement_settings
 	 */
 	uint32_t nob;
 	/**
-	 * Continuous mode switch.
+	 * Continuous mode switch. The continuous mode repeats automatically the measurement cycle until it is stopped. One cycle consists of number of samples * number of blocks readouts. The data is not stored permanently. Each cycle is overwriting the data from the previous cycle. The data of a specific sample/block is always at the same memory address. That means for example scan 100 in block 2 from the first measurement cycle will be overwritten by scan 100 in block 2 in the second measurement cycle. The time gap between two cycles is done softwarewise and is beeing controlled by the parameter cont_pause_in_microseconds. So the start of the next cycle is not strictly linked to your trigger, which means when triggering fast, triggers could be missed.
 	 *	- >0 on
 	 *	- =0 off
 	 */
 	uint32_t contiuous_measurement;
 	/**
-	 * Pause between two measurement cycles when continuous mode is on.
+	 * Pause between two measurement cycles when continuous mode is on. See description of the parameter contiuous_measurement for more information about the continuous mode.
 	 */
 	uint32_t cont_pause_in_microseconds;
 	/**
