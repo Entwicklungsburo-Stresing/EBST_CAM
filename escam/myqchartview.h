@@ -15,8 +15,10 @@ public:
 	qreal curr_ymin=0;
 protected:
 	void mouseReleaseEvent(QMouseEvent *event);
+	//void mouseMoveEvent(QMouseEvent* event);
 signals:
 	void rubberBandChanged();
+	//void mouseMoved(const QString& coordinates);
 };
 
 #endif // MYQCHARTVIEW_H
