@@ -28,6 +28,8 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(&lsc, &Lsc::blockDone, this, &MainWindow::on_blockDone);
 	connect(&lsc, &Lsc::allBlocksDone, this, &MainWindow::on_allBlocksDone);
 	connect(ui->chartView, &MyQChartView::rubberBandChanged, this, &MainWindow::on_rubberBandChanged);
+	//Used to display point coordinates on labelPosition - not working currently, see MyQChartView::mouseMoveEvent 
+	//connect(ui->chartView, &MyQChartView::mouseMoved, this, &MainWindow::on_mouseMoved);
 	connect(liveViewTimer, &QTimer::timeout, this, &MainWindow::showCurrentScan);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readScanFrequencyBit);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readBlockFrequencyBit);
@@ -1001,6 +1003,17 @@ void MainWindow::on_rubberBandChanged()
 		ui->chartView->curr_ymin = 0;
 		axis1->setMin(0);
 	}
+	return;
+}
+
+/**
+ * @brief This slot shows the values of the current cursor position on the chart- currently never called.
+ * @return none
+ * \param coordinates
+ */
+void MainWindow::on_mouseMoved(const QString &coordinates)
+{
+	ui->labelPosition->setText(coordinates);
 	return;
 }
 

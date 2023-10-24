@@ -63,6 +63,7 @@ private slots:
 	void startPressed();
 	void on_actionDump_board_registers_triggered();
 	void on_rubberBandChanged();
+	void on_mouseMoved(const QString &coordinates);
 	void on_checkBoxShowCamera(bool state, int camera, uint32_t drvno);
 	void on_pushButtonStartStop_pressed();
 	void on_horizontalSliderBlock_valueChanged();
