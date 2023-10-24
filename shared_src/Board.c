@@ -121,6 +121,10 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = ClearAllUserRegs(drvno);
 	if (status != es_no_error) return status;
+	status = SetNosRegister(drvno);
+	if (status != es_no_error) return status;
+	status = SetNobRegister(drvno);
+	if (status != es_no_error) return status;
 	status = SetPixelCountRegister(drvno);
 	if (status != es_no_error) return status;
 	status = SetCamCountRegister(drvno);
@@ -190,6 +194,8 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	status = SetTocnt(drvno, (uint8_t)settings_struct.camera_settings[drvno].tocnt);
 	if (status != es_no_error) return status;
 	status = SetSEC(drvno, settings_struct.camera_settings[drvno].sec_in_10ns);
+	if (status != es_no_error) return status;
+	status = SetTORReg(drvno, (uint8_t)settings_struct.camera_settings[drvno].tor);
 	return status;
 }
 
@@ -557,7 +563,7 @@ es_status_codes SetCamCountRegister(uint32_t drvno)
  * \brief Sets sensor type bits in register camera type
  * 
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param sensor_type Determines sensor type. See enum sensor_type in enum.h for options.
+ * \param sensor_type Determines sensor type. See enum \ref sensor_type_t in enum_settings.h for options.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
@@ -575,7 +581,7 @@ es_status_codes SetSensorType( uint32_t drvno, uint16_t sensor_type )
  * \brief Sets camera system bits in register camera type
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param camera_system Determines the camera system. See enum camera_system in enum.h for options.
+ * \param camera_system Determines the camera system. See enum \ref camera_system_t in enum_settings.h for options.
  * \return es_status_codes
  */
 es_status_codes SetCameraSystem(uint32_t drvno, uint16_t camera_system)
@@ -1237,8 +1243,18 @@ es_status_codes SetDMABufRegs( uint32_t drvno )
 	status = writeBitsS0_32(drvno, dmasPerInterrupt, 0xffffffff, S0Addr_DMAsPerIntr);
 	if (status != es_no_error) return status;
 	ES_LOG( "scansPerInterrupt/camcnt: %u \n", dmasPerInterrupt / aCAMCNT[drvno] );
-	status = writeBitsS0_32(drvno, *Nospb, 0xffffffff, S0Addr_NOS);
-	if (status != es_no_error) return status;
+	return status;
+}
+
+es_status_codes SetNosRegister(uint32_t drvno)
+{
+	ES_LOG("Set NOS register to %u", *Nospb);
+	return writeBitsS0_32(drvno, *Nospb, 0xffffffff, S0Addr_NOS);
+}
+
+es_status_codes SetNobRegister(uint32_t drvno)
+{
+	ES_LOG("Set NOB register to %u", *Nob);
 	return writeBitsS0_32(drvno, *Nob, 0xffffffff, S0Addr_NOB);
 }
 
@@ -1289,20 +1305,17 @@ es_status_codes SetTORReg( uint32_t drvno, uint8_t tor )
 {
 	ES_LOG("Set TOR: %u\n", tor);
 	// TOR register layout:
-	// bit		31	30	29	28	27		26		25		24
-	// meaning	TO3	TO2	TO1	TO0	TOSELG	SHORTRS	SENDRS	ISFFT
+	// bit		31	30	29	28	27
+	// meaning	TO3	TO2	TO1	TO0	TOSELG
 	// use lower 4 bits of input tor for the upper nibble TO0 - TO3
-	uint8_t tor_upper_nibble = tor << 4;
-	// use bit 5 of input tor for bit 27 TOSELG
+	uint8_t tor_upper_nibble = tor << TOR_MSB_bitindex_TO0;
+	// use bit 5 of input tor for bit TOSELG
 	uint8_t toselg = tor & 0x10;
-	toselg = toselg >> 1;
-	uint8_t read_val = 0;
-	es_status_codes status = readRegisterS0_8( drvno, &read_val, S0Addr_TOR_MSB);
-	if (status != es_no_error) return status;
-	// keep bits 24, 25, 26 as they are, set others to 0
-	read_val &= 0x07;
-	uint8_t write_val = tor_upper_nibble | toselg | read_val;
-	return writeRegisterS0_8( drvno, write_val, S0Addr_TOR_MSB);
+	toselg = toselg >> 4;
+	// shift the bit to the correct position
+	toselg = toselg << TOR_MSB_bitindex_TOSEL;
+	uint8_t data = tor_upper_nibble | toselg;
+	return writeBitsS0_8(drvno, data, TOR_MSB_BITS_TO, S0Addr_TOR_MSB);
 }
 
 /**
@@ -2200,7 +2213,7 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
  */
 es_status_codes Cam_SetSensorResetLength(uint32_t drvno, uint16_t sensor_reset_length_in_8_ns)
 {
-	ES_LOG("Cam_SetSensorResetLength(), setting sensor reset length to %u (%u us)\n", sensor_reset_length_in_8_ns);
+	ES_LOG("Cam_SetSensorResetLength(), setting sensor reset length to %u (%u ns)\n", sensor_reset_length_in_8_ns, sensor_reset_length_in_8_ns * 8 );
 	return SendFLCAM(drvno, maddr_cam, cam_adaddr_sensor_reset_length_in_8_ns, sensor_reset_length_in_8_ns);
 }
 
@@ -2228,8 +2241,8 @@ es_status_codes SetTemp( uint32_t drvno, uint8_t level )
  * Mapping of bits in DAC8568: 4 prefix, 4 control, 4 address, 16 data, 4 feature.
  * 
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param location Switch for the different locations of DAC85689. See enum DAC8568_location in enum.h for details.
- * \param cameraPosition This is describing the camera position when there are mumltiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
+ * \param location Switch for the different locations of DAC85689. See enum \ref DAC8568_location_t in enum_settings.h for details.
+ * \param cameraPosition This is describing the camera position when there are multiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
  * \param ctrlBits 4 control bits
  * \param addrBits 4 address bits
  * \param dataBits 16 data bits
@@ -2300,8 +2313,8 @@ es_status_codes DAC8568_sendData( uint32_t drvno, uint8_t location, uint8_t came
  * 
  * Use this function to set the outputs, because it is resorting the channel numeration correctly.
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param location Switch for the different locations of DAC85689. See [enum DAC8568_location](@ref DAC8568_location) in enum.h for details.
- * \param cameraPosition This is describing the camera position when there are mumltiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
+ * \param location Switch for the different locations of DAC85689. See enum \ref DAC8568_location_t in enum.h for details.
+ * \param cameraPosition This is describing the camera position when there are multiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
  * \param output all output values that will be converted to analog voltage (0 ... 0xFFFF)
  * \param reorder_channels used to reorder DAC channels for high speed camera
  * \return es_status_codes
@@ -2335,8 +2348,8 @@ es_status_codes DAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t 
  * \brief Sets the output of the DAC8568 on PCB 2189-7.
  * 
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param location Switch for the different locations of DAC85689. See enum DAC8568_location in enum.h for details.
- * \param cameraPosition This is describing the camera position when there are mumltiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
+ * \param location Switch for the different locations of DAC85689. See enum \ref DAC8568_location_t in enum_settings.h for details.
+ * \param cameraPosition This is describing the camera position when there are multiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
  * \param channel select one of eight output channel (0 ... 7)
  * \param output output value that will be converted to analog voltage (0 ... 0xFFFF)
  * \return es_status_codes
@@ -2355,8 +2368,8 @@ es_status_codes DAC8568_setOutput( uint32_t drvno, uint8_t location, uint8_t cam
  * \brief Enable the internal reference in static mode.
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param location Switch for the different locations of DAC85689. See enum DAC8568_location in enum.h for details.
- * \param cameraPosition This is describing the camera position when there are mumltiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
+ * \param location Switch for the different locations of DAC85689. See enum \ref DAC8568_location_t in enum_settings.h for details.
+ * \param cameraPosition This is describing the camera position when there are multiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
@@ -2894,7 +2907,6 @@ es_status_codes ReturnStartMeasurement(es_status_codes status)
  */
 es_status_codes FindCam( uint32_t drvno )
 {
-	uint32_t data = 0;
 	if (settings_struct.camera_settings[drvno].camcnt == 0)
 	{
 		// Camcnt is 0. FindCam is returning without error

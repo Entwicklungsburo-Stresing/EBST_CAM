@@ -554,7 +554,7 @@ DllAccess es_status_codes DLLGetCameraStatusOverTemp_multipleBoards(uint32_t sam
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
 			status = GetCameraStatusOverTemp(drvno, sample, block, camera_pos, tempArr[usedBoards]);
-			if (status != es_no_error) return;
+			if (status != es_no_error) return status;
 			usedBoards++;
 		}
 	}
@@ -576,7 +576,7 @@ DllAccess es_status_codes DLLGetCameraStatusTempGood_multipleBoards(uint32_t sam
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
 			status = GetCameraStatusTempGood(drvno, sample, block, camera_pos, tempArr[usedBoards]);
-			if (status != es_no_error) return;
+			if (status != es_no_error) return status;
 			usedBoards++;
 		}
 	}
@@ -804,7 +804,7 @@ DllAccess es_status_codes DLLSetTemp(uint8_t level)
 /**
  * \brief Set signal of output port of PCIe card for all boards selected by settings parameter board_sel.
  *
- * \param tor select output signal. See [enum tor_out](@ref tor_out) in enum.h for options.
+ * \param tor select output signal. See [enum tor_out](@ref tor_out) in enum_settings.h for options.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
@@ -827,7 +827,7 @@ DllAccess es_status_codes DLLSetTORReg(uint8_t tor)
  * \brief Sets all outputs of the DAC8568 in camera 3030 or on PCIe board for all PCIe boards.
  *
  * Use this function to set the outputs, because it is resorting the channel numeration correctly.
- * \param location Switch for the different locations of DAC85689. See [enum DAC8568_location](@ref DAC8568_location) in enum.h for details.
+ * \param location Switch for the different locations of DAC85689. See [enum DAC8568_location](@ref DAC8568_location) in enum_settings.h for details.
  * \param cameraPosition This is describing the camera position when there are mumltiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
  * \param output0 all output values as array for board 0 that will be converted to analog voltage (0 ... 0xFFFF)
  * \param output1 all output values as array for board 1 that will be converted to analog voltage (0 ... 0xFFFF)

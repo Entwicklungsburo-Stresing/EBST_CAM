@@ -139,7 +139,8 @@
     </ResourceCompile>
     <PostBuildEvent>
       <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)shared_src\" 
-xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"
+xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       <Message>copy $(ProjectName)</Message>
     </PostBuildEvent>
     <BuildLog />
@@ -168,7 +169,8 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </ResourceCompile>
     <PostBuildEvent>
       <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)shared_src\" 
-xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"
+xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       <Message>copy $(ProjectName)</Message>
     </PostBuildEvent>
     <BuildLog />
@@ -197,7 +199,8 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </ResourceCompile>
     <PostBuildEvent>
       <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)shared_src\" 
-xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"
+xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       <Message>copy $(ProjectName)</Message>
     </PostBuildEvent>
     <BuildLog />
@@ -302,7 +305,8 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     <ClInclude Include="..\shared_src\default_settings.h" />
     <ClInclude Include="..\shared_src\Direct2dViewer.h" />
     <ClInclude Include="..\shared_src\Direct2dViewer_c.h" />
-    <ClInclude Include="..\shared_src\enum.h" />
+    <ClInclude Include="..\shared_src\enum_hardware.h" />
+    <ClInclude Include="..\shared_src\enum_settings.h" />
     <ClInclude Include="..\shared_src\globals.h" />
     <ClInclude Include="..\shared_src\struct.h" />
     <ClInclude Include="..\shared_src\es_status_codes.h" />

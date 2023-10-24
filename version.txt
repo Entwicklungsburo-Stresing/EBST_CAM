@@ -1,5 +1,19 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.9.0
+- Deprecate setting use ec
+- Remove Cam3030_ADC_SetIfcMode
+- Add Cam_SetSensorResetLength
+- Add sensor_reset_length_in_8_ns setting, position of former use ec	
+- Remove early reset, sendrs, enec3030, shortrs
+- Remove en sec and en bec bits. Setting any bit is now enabling sec and bec
+- Add SetCameraSystem, extend SetSensorType
+- Remove is_hs_ir
+- Improve use of Use_ENFFW_protection
+- Remove mshut (deprecate setting)
+- Remove CloseShutter from InitPcieBoard
+- Rename SSHUT/MSHUT to SEC_MSHUT/BEC_MSHUT
+
 4.8.3
 - Add DLLGetCameraStatusOverTemp
 - Add DLLGetCameraStatusOverTemp_multipleBoards

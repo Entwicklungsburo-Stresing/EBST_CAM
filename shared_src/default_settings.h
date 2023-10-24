@@ -1,7 +1,7 @@
 #ifndef DEFAULT_SETTINGS_H
 #define DEFAULT_SETTINGS_H
 
-#include "../shared_src/enum.h"
+#include "../shared_src/enum_settings.h"
 
 #define settingsUseSoftwarePollingDefault			false
 #define settingNosDefault							1000

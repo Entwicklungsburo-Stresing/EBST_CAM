@@ -8,8 +8,17 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+
+enum file_specifications_t
+{
+	file_path_size = 256,
+	file_timestamp_size = 64,
+	file_filename_full_size = 256
+};
+
 #include "struct.h"
-#include "enum.h"
+#include "enum_settings.h"
+#include "enum_hardware.h"
 
 #define MANUAL_OVERRIDE_TLP false
 #define LEGACY_202_14_TLPCNT false

@@ -1,8 +1,7 @@
 #pragma once
 
 //LOW LEVEL ENUMS
-//DMA Addresses
-enum dma_addresses
+enum dma_addresses_t
 {
 	DmaAddr_DCSR = 0x000,
 	DmaAddr_DDMACR = 0x004,
@@ -16,7 +15,7 @@ enum dma_addresses
 	DmaAddr_RDMATLPC = 0x024,
 };
 
-enum PCIEFLAGS_bits
+enum PCIEFLAGS_bits_t
 {
 	PCIEFLAGS_bit_XCKI = 0x01,
 	PCIEFLAGS_bit_INTTRIG = 0x02,
@@ -50,12 +49,12 @@ enum PCIEFLAGS_bits
 	PCIEFLAGS_bitindex_error_sfp1 = 31
 };
 
-enum IRQFLAGS_bits
+enum IRQFLAGS_bits_t
 {
 	IRQFLAGS_bitindex_INTRSR = 31
 };
 
-enum CTRLB_bits
+enum CTRLB_bits_t
 {
 	CTRLB_bit_STI0 = 0x01,
 	CTRLB_bit_STI1 = 0x02,
@@ -73,7 +72,7 @@ enum CTRLB_bits
 	CTRLB_bitindex_BTI2 = 6
 };
 
-enum CTRLA_bits
+enum CTRLA_bits_t
 {
 	CTRLA_bit_VONOFF = 0x01,
 	CTRLA_bit_IFC = 0x02,
@@ -93,7 +92,7 @@ enum CTRLA_bits
 	CTRLA_bitindex_TSTART = 7
 };
 
-enum CTRLC_bits
+enum CTRLC_bits_t
 {
 	CTRLC_bit_I = 0x01,
 	CTRLC_bit_S1 = 0x02,
@@ -107,14 +106,14 @@ enum CTRLC_bits
 	CTRLC_bitindex_eoi_chb = 5
 };
 
-enum TOR_TICNT_bits
+enum TOR_TICNT_bits_t
 {
 	TOR_bits_TICNT = 0x7F,
 	TOR_bit_TICNT_EN = 0x80,
 	TOR_bitindex_TICNT_EN = 7,
 };
 
-enum TOR_TOCNT_bits
+enum TOR_TOCNT_bits_t
 {
 	TOR_bits_TOCNT = 0x7F,
 	TOR_bit_TOCNT_EN = 0x80,
@@ -124,8 +123,9 @@ enum TOR_TOCNT_bits
 /**
  * TOR MSB 8 bits at 0x2B
  */
-enum TOR_MSB_bits
+enum TOR_MSB_bits_t
 {
+	TOR_MSB_BITS_TO = 0xF8,
 	TOR_MSB_bit_TOSEL = 0x08,
 	TOR_MSB_bit_TO0 = 0x10,
 	TOR_MSB_bit_TO1 = 0x20,
@@ -138,20 +138,19 @@ enum TOR_MSB_bits
 	TOR_MSB_bitindex_TO3 = 7
 };
 
-enum XCKMSB_bits
+enum XCKMSB_bits_t
 {
 	XCKMSB_bit_stimer_on = 0x40,
 	XCKMSB_bitindex_stimer_on = 6
 };
 
-//PCIe Addresses
-enum pcie_addresses
+enum pcie_addresses_t
 {
 	PCIeAddr_devCap = 0x5C,
 	PCIeAddr_devStatCtrl = 0x60
 };
 
-enum FFCTRL_bits
+enum FFCTRL_bits_t
 {
 	FFCTRL_bit_SWTRIG = 0x40,
 	FFCTRL_bit_RSFIFO = 0x80,
@@ -161,7 +160,7 @@ enum FFCTRL_bits
 	FFCTRL_bitindex_block_reset = 4
 };
 
-enum FF_FLAGS_bits
+enum FF_FLAGS_bits_t
 {
 	FF_FLAGS_bit_control = 0x08,
 	FF_FLAGS_bitindex_valid = 7,
@@ -173,7 +172,7 @@ enum FF_FLAGS_bits
 };
 
 //S0 Addresses
-enum s0_addresses
+enum s0_addresses_t
 {
 	S0Addr_DBR = 0x0, //0x00
 	S0Addr_CTRLA = 0x4, //0x04
@@ -234,31 +233,31 @@ enum s0_addresses
 	S0Addr_CAMERA_TYPE = 0xB8,
 };
 
-enum ScanIndex_bits
+enum ScanIndex_bits_t
 {
 	ScanIndex_bitindex_counter_reset = 31,
 	ScanIndex_bit_counter_reset = 0x80
 };
 
-enum BLOCKINDEX_bits
+enum BLOCKINDEX_bits_t
 {
 	BLOCKINDEX_bitindex_counter_reset = 31,
 	BLOCKINDEX_bit_counter_reset = 0x80
 };
 
-enum DmaBufSizeInScans_bits
+enum DmaBufSizeInScans_bits_t
 {
 	DmaBufSizeInScans_bitindex_counter_reset = 31,
 	DmaBufSizeInScans_bit_counter_reset = 0x80
 };
 
-enum DMAsPerIntr_bits
+enum DMAsPerIntr_bits_t
 {
 	DMAsPerIntr_bitindex_counter_reset = 31,
 	DMAsPerIntr_bit_counter_reset = 0x80
 };
 
-enum cam_addresses
+enum cam_addresses_t
 {
 	maddr_cam = 0x00,
 	maddr_adc = 0x01,
@@ -391,7 +390,7 @@ enum cam_addresses
 	ioctrl_d7 = 0x10,
 };
 
-enum cam_messages
+enum cam_messages_t
 {
 	adc_ltc2271_msg_reset = 0x80,
 	adc_ltc2271_msg_normal_mode = 0x01,
@@ -406,206 +405,9 @@ enum cam_messages
 };
 
 /**
- * Scan trigger input mode
- */
-enum sti_mode
-{
-	/**
-	 * External trigger on input I of PCIe board
-	 */
-	sti_I = 0,
-	/**
-	 * External trigger on input S1 of PCIe board
-	 */
-	sti_S1 = 1,
-	/**
-	 * External trigger on input S2 of PCIe board
-	 */
-	sti_S2 = 2,
-	/**
-	 * External trigger by I but enable by S2
-	 */
-	sti_S2_enable_I = 3,
-	/**
-	 * Trigger with internal timer
-	 */
-	sti_STimer = 4,
-	/**
-	 * Automatic internal instant trigger after last scan
-	 */
-	sti_ASL = 5
-};
-
-/**
- * Block trigger input mode
- */
-enum bti_mode
-{
-	/**
-	 * External trigger on input I of PCIe board
-	 */
-	bti_I = 0,
-	/**
-	 * External trigger on input S1 of PCIe board
-	 */
-	bti_S1 = 1,
-	/**
-	 * External trigger on input S2 of PCIe board
-	 */
-	bti_S2 = 2,
-	/**
-	 * External trigger when inputs S1 and S2 are high
-	 */
-	bti_S1S2 = 3,
-	/**
-	 * Trigger with internal timer
-	 */
-	bti_BTimer = 4,
-};
-
-enum sensor_type
-{
-	/**
-	 * PDA sensor. for HA S39xx
-	 */
-	sensor_type_pda = 0,
-	sensor_type_ir = 1,
-	/**
-	 * FFT sensor. for HA S703x
-	 */
-	sensor_type_fft = 2,
-	sensor_type_cmos = 3,
-	sensor_type_hsvis = 4,
-	sensor_type_hsir = 5,
-};
-
-/**
- * camera system select
- */
-enum camera_system
-{
-	camera_system_3001 = 0,
-	camera_system_3010 = 1,
-	camera_system_3030 = 2
-};
-
-/**
- * Trigger mode for camera control.
- */
-enum trigger_mode
-{
-	/**
-	 * Trigger with the start signal of the PCIe board.
-	 */
-	xck = 0,
-	/**
-	 * Use the input of camera control as trigger.
-	 */
-	exttrig = 1,
-	/**
-	 * Delay after trigger: Trigger with the start signal of the PCIe board, but with an additional delay after XCK.
-	 */
-	dat = 2
-};
-
-enum adc_mode
-{
-	normal = 0,
-	ramp = 1,
-	custom_pattern = 2
-};
-
-enum tor_out
-{
-	tor_xck = 0,
-	tor_rego = 1,
-	tor_von = 2,
-	tor_dma_act = 3,
-	tor_asls = 4,
-	tor_stimer = 5,
-	tor_btimer = 6,
-	tor_isr_act = 7,
-	tor_s1 = 8,
-	tor_s2 = 9,
-	tor_bon = 10,
-	tor_measureon = 11,
-	tor_sdat = 12,
-	tor_bdat = 13,
-	tor_sec_mshut = 14,
-	tor_bec_mshut = 15,
-	tor_ifc = 16,
-	tor_do_cc_i = 17,
-	tor_exposure_window = 18,
-	tor_to_cnt_out = 19,
-	tor_secon = 20,
-	tor_i = 21,
-	tor_enffr = 29,
-	tor_enffw = 30,
-	tor_enffwrprot = 31
-};
-
-enum sslope
-{
-	sslope_pos = 0,
-	sslope_neg = 1,
-	sslope_both = 2,
-};
-
-enum bslope
-{
-	bslope_neg = 0,
-	bslope_pos = 1,
-	bslope_both = 2,
-};
-
-enum fft_mode
-{
-	full_binning = 0,
-	partial_binning = 1,
-	area_mode = 2
-};
-
-/**
- * This enum is specifying the options of how the data is written to disc.
- */
-enum split_mode
-{
-	/**
-	 * A new file is created at the begin of the measurement and all following data is written to it.
-	 */
-	no_split = 0,
-	/**
-	 * When in continuous mode a new file is created for every new measurement cycle (when all samples and blocks are done). When not in continuous this option is the same as no_split.
-	 */
-	measurement_wise = 1,
-};
-
-enum file_specifications
-{
-	file_path_size = 256,
-	file_timestamp_size = 64,
-	file_filename_full_size = 256
-};
-
-/**
- * This enum is describing the possible locations of the IC DAC8568.
- */
-enum DAC8568_location
-{
-	/**
-	 * High speed camera system 3030, PCB 2189-7.
-	 */
-	DAC8568_camera = 0,
-	/**
-	 * PCIe add on board EWS, PCB 2226-3.
-	 */
-	DAC8568_pcie = 1
-};
-
-/**
  * This enum shows the encoding of the special pixel 2. The upper two bits are encoding the binary state of S1 and S2. All other bits are representing the upper half of the block index counter.
  */
-enum bits_of_pixel_block_index_high_S1_S2
+enum bits_of_pixel_block_index_high_S1_S2_t
 {
 	/**
 	 * The lower 14 bits are representing the bits 29 to 16 from block index.
@@ -626,7 +428,7 @@ enum bits_of_pixel_block_index_high_S1_S2
 /**
  * This enum shows the meaning of the first special pixels.
  */
-enum special_pixels_enum
+enum special_pixels_enum_t
 {
 	/**
 	 * See enum bits_of_pixel_block_index_high_S1_S2 for details.
@@ -673,7 +475,7 @@ enum special_pixels_enum
 /**
  * This enum shows the meaning of the last special pixels. 0: last pixel, 1: last pixel - 1...
  */
-enum special_last_pixels
+enum special_last_pixels_t
 {
 	/**
 	 * Higher 16 bits of scan index counter.
@@ -688,7 +490,7 @@ enum special_last_pixels
 /**
  * This enum shows the meaning of the bits of the pixel camera status.
  */
-enum pixel_camera_status_bits
+enum pixel_camera_status_bits_t
 {
 	/**
 	 * Over temperature. 1: over temperature detected, 0: temperature normal
@@ -720,7 +522,7 @@ enum pixel_camera_status_bits
 /**
  * This enum shows the starting number of the major and minor version for the fpga version number.
  */
-enum pixel_fpga_ver
+enum pixel_fpga_ver_t
 {
 	/**
 	 * Starting Bit of Major Version Number.
@@ -738,7 +540,7 @@ enum pixel_fpga_ver
 	pixel_fpga_ver_major_and_bit = 0x00FF
 };
 
-enum TDCCtrl_bits
+enum TDCCtrl_bits_t
 {
 	TDCCtrl_bitindex_reset = 0,
 	TDCCtrl_bitindex_interrupt = 1,
@@ -760,7 +562,7 @@ enum TDCCtrl_bits
 	TDCCtrl_bit_adr3 = 0x80000000
 };
 
-enum camera_type_bits
+enum camera_type_bits_t
 {
 	camera_type_sensor_type_bits = 0x0000FFFF,
 	camera_type_camera_system_bits = 0xFFFF0000,
