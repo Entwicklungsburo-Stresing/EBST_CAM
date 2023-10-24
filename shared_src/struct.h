@@ -263,31 +263,23 @@ struct measurement_settings
 struct measurement_settings_matlab
 {
 	/**
-	 * Select boards with bits. 1 for using this board, 0 for not using this board.
-	 *
-	 * - bit 0: board 0
-	 * - bit 1: board 1
-	 * - bit 2: board 2
-	 * - bit 3: board 3
-	 * - bit 4: board 4
+	 * \copydoc measurement_settings.board_sel
 	 */
 	uint32_t board_sel;
 	/**
-	 * Number of samples. 32 bit. Min: 2, max: max of uint32
+	 * \copydoc measurement_settings.nos
 	 */
 	uint32_t nos;
 	/**
-	 * Number of blocks. 32 bit. Min: 1, max: max of uint32
+	 * \copydoc measurement_settings.nob
 	 */
 	uint32_t nob;
 	/**
-	 * Continuous mode switch.
-	 *	- >0 on
-	 *	- =0 off
+	 * \copydoc measurement_settings.contiuous_measurement
 	 */
 	uint32_t contiuous_measurement;
 	/**
-	 * Pause between two measurement cycles when continuous mode is on.
+	 * \copydoc measurement_settings.cont_pause_in_microseconds
 	 */
 	uint32_t cont_pause_in_microseconds;
 };
