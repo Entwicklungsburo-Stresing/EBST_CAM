@@ -52,6 +52,8 @@ es_status_codes StopSTimer( uint32_t drvno );
 es_status_codes RSFifo( uint32_t drvno );
 es_status_codes allocateUserMemory( uint32_t drvno );
 es_status_codes SetDMABufRegs( uint32_t drvno );
+es_status_codes SetNosRegister(uint32_t drvno);
+es_status_codes SetNobRegister(uint32_t drvno);
 es_status_codes CloseShutter( uint32_t drvno );
 es_status_codes SetSEC( uint32_t drvno, uint32_t ecin10ns );
 es_status_codes SetTORReg( uint32_t drvno, uint8_t tor );

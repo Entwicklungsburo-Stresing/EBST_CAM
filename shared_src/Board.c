@@ -121,6 +121,10 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = ClearAllUserRegs(drvno);
 	if (status != es_no_error) return status;
+	status = SetNosRegister(drvno);
+	if (status != es_no_error) return status;
+	status = SetNobRegister(drvno);
+	if (status != es_no_error) return status;
 	status = SetPixelCountRegister(drvno);
 	if (status != es_no_error) return status;
 	status = SetCamCountRegister(drvno);
@@ -1239,8 +1243,18 @@ es_status_codes SetDMABufRegs( uint32_t drvno )
 	status = writeBitsS0_32(drvno, dmasPerInterrupt, 0xffffffff, S0Addr_DMAsPerIntr);
 	if (status != es_no_error) return status;
 	ES_LOG( "scansPerInterrupt/camcnt: %u \n", dmasPerInterrupt / aCAMCNT[drvno] );
-	status = writeBitsS0_32(drvno, *Nospb, 0xffffffff, S0Addr_NOS);
-	if (status != es_no_error) return status;
+	return status;
+}
+
+es_status_codes SetNosRegister(uint32_t drvno)
+{
+	ES_LOG("Set NOS register to %u", *Nospb);
+	return writeBitsS0_32(drvno, *Nospb, 0xffffffff, S0Addr_NOS);
+}
+
+es_status_codes SetNobRegister(uint32_t drvno)
+{
+	ES_LOG("Set NOB register to %u", *Nob);
 	return writeBitsS0_32(drvno, *Nob, 0xffffffff, S0Addr_NOB);
 }
 
