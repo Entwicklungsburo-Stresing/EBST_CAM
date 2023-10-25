@@ -1206,6 +1206,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 	}
 	else
 	{
+		lampsTimer->stop();
+		liveViewTimer->stop();
 		lsc.abortMeasurement();
 		lsc.exitDriver();
 		settings.setValue("centralwidget/geometry", saveGeometry());
