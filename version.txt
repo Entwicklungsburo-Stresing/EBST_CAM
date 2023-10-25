@@ -1,5 +1,8 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.8.4
+- Fix missing function declerations: DLLIOCtrl_setOutput, DLLSetSTimer, DLLSetBTimer, TestMsg were missing in ESLSCDLL.h
+
 4.8.3
 - Add DLLGetCameraStatusOverTemp
 - Add DLLGetCameraStatusOverTemp_multipleBoards
