@@ -109,6 +109,7 @@ DllAccess es_status_codes DLLSetTORReg(uint8_t tor);
 DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint8_t location, uint8_t cameraPosition, uint32_t* output0, uint32_t* output1, uint32_t* output2, uint32_t* output3, uint32_t* output4, uint8_t reorder_channel);
 DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t* width_in_5ns, uint32_t* delay_in_5ns);
 DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t period_in_10ns);
+DllAccess es_status_codes DLLIOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns);
 DllAccess es_status_codes DLLGetIsTdc(uint32_t drvno, uint8_t* isTdc);
 DllAccess es_status_codes DLLGetIsTdc_multipleBoards(uint8_t* isTdc0, uint8_t* isTdc1, uint8_t* isTdc2, uint8_t* isTdc3, uint8_t* isTdc4);
 DllAccess es_status_codes DLLGetIsDsc(uint32_t drvno, uint8_t* isDsc);
@@ -120,6 +121,8 @@ DllAccess es_status_codes DLLGetDSC_multipleBoards(uint8_t DSCNumber, uint32_t* 
 DllAccess es_status_codes DLLInitGPX(uint32_t delay);
 DllAccess es_status_codes DLLGetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp);
 DllAccess es_status_codes DLLGetAllSpecialPixelInformation_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp0, struct special_pixels* sp1, struct special_pixels* sp2, struct special_pixels* sp3, struct special_pixels* sp4);
+DllAccess es_status_codes DLLSetSTimer(uint32_t drvno, uint32_t stime_in_microseconds);
+DllAccess es_status_codes DLLSetBTimer(uint32_t drvno, uint32_t btime_in_microseconds);
 //************ read and write functions
 DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address);
 DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards(uint8_t* data0, uint8_t* data1, uint8_t* data2, uint8_t* data3, uint8_t* data4, uint32_t address);
@@ -143,6 +146,7 @@ DllAccess void DLLDeinit2dViewer();
 DllAccess void DLLSetGammaValue(uint16_t white, uint16_t black);
 DllAccess uint16_t DLLGetGammaWhite();
 DllAccess uint16_t DLLGetGammaBlack();
+void TestMsg(char testMsg1[20], char testMsg2[20]);
 #endif
 
 #ifdef __cplusplus
