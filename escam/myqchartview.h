@@ -14,11 +14,11 @@ public:
 	qreal curr_ymax=0xFFFF;
 	qreal curr_ymin=0;
 protected:
-	void mouseReleaseEvent(QMouseEvent *event);
-	//void mouseMoveEvent(QMouseEvent* event);
+	void mouseReleaseEvent(QMouseEvent *event) override;
+	void mouseMoveEvent(QMouseEvent* event) override;
 signals:
 	void rubberBandChanged();
-	//void mouseMoved(const QString& coordinates);
+	void mouseMoved(const QPointF& point);
 };
 
 #endif // MYQCHARTVIEW_H
