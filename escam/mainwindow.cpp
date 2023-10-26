@@ -27,9 +27,8 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(&lsc, &Lsc::blockStart, this, &MainWindow::on_blockStart);
 	connect(&lsc, &Lsc::blockDone, this, &MainWindow::on_blockDone);
 	connect(&lsc, &Lsc::allBlocksDone, this, &MainWindow::on_allBlocksDone);
-	connect(ui->chartView, &MyQChartView::rubberBandChanged, this, &MainWindow::on_rubberBandChanged);
-	//Used to display point coordinates on labelPosition - not working currently, see MyQChartView::mouseMoveEvent 
-	//connect(ui->chartView, &MyQChartView::mouseMoved, this, &MainWindow::on_mouseMoved);
+	connect(ui->chartView, &MyQChartView::rubberBandChanged, this, &MainWindow::on_rubberBandChanged); 
+	connect(ui->chartView, &MyQChartView::mouseMoved, this, &MainWindow::on_mouseMoved);
 	connect(liveViewTimer, &QTimer::timeout, this, &MainWindow::showCurrentScan);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readScanFrequencyBit);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readBlockFrequencyBit);
@@ -951,7 +950,7 @@ void MainWindow::readCameraTempGood()
 void MainWindow::on_rubberBandChanged()
 {
 	// retrieve axis pointer
-	QList<QAbstractAxis *> axes = ui->chartView->chart()->axes();
+	QList<QAbstractAxis*> axes = ui->chartView->chart()->axes();
 	if (axes.isEmpty()) return;
 	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
 	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
@@ -993,12 +992,12 @@ void MainWindow::on_rubberBandChanged()
 		ui->chartView->curr_xmin = 0;
 		axis0->setMin(0);
 	}
-	if(axis1->max() > ymax)
+	if (axis1->max() > ymax)
 	{
 		ui->chartView->curr_ymax = ymax;
 		axis1->setMax(ymax);
 	}
-	if(axis1->min() < 0)
+	if (axis1->min() < 0)
 	{
 		ui->chartView->curr_ymin = 0;
 		axis1->setMin(0);
@@ -1007,12 +1006,18 @@ void MainWindow::on_rubberBandChanged()
 }
 
 /**
- * @brief This slot shows the values of the current cursor position on the chart- currently never called.
+ * @brief 
  * @return none
- * \param coordinates
+ * \param point
  */
-void MainWindow::on_mouseMoved(const QString &coordinates)
+void MainWindow::on_mouseMoved(const QPointF &point)
 {
+	QList<QAbstractSeries*> chartSeries = ui->chartView->chart()->series();
+	/*for (int i = 0; i < chartSeries.length(); i++)
+	{
+		if ()
+	}*/
+	QString coordinates = QString("X: %1, Y: %2").arg(point.x()).arg(point.y());
 	ui->labelPosition->setText(coordinates);
 	return;
 }
