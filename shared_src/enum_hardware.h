@@ -294,8 +294,9 @@ enum cam_addresses_t
 	 * Sensor reset length register.
 	 * 
 	 * 3030: This register controls the length of the ARG pulse which is done after the TG pulse.
+	 * min: 0ns, max: 0xFFFF * 4ns = 65535 * 4ns = 262140ns = 262,14us, typical value: 200 * 4ns = 800ns
 	 */
-	cam_adaddr_sensor_reset_length_in_8_ns = 0x08,
+	cam_adaddr_sensor_reset_length_in_4_ns = 0x08,
 	/**
 	 * stores the amount of vclks generated inside the camera. 
 	 * - cam_adaddr_vclks_amount1:    is used for full binning (fft_lines) or the first region of ROI
