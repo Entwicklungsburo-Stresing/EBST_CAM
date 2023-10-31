@@ -26,8 +26,28 @@ void MyQChartView::mouseReleaseEvent(QMouseEvent *event)
  void MyQChartView::mouseMoveEvent(QMouseEvent* event)
 {
 	QChartView::mouseMoveEvent(event);
-	QPointF point = chart()->mapToValue(event->pos());
-	//QString coordinates = QString("X: %1, Y: %2").arg(point.x()).arg(point.y());
-	emit mouseMoved(point);
+	QPoint pos = event->pos();
+	QPointF mappedPos = chart()->mapToValue(pos);
+	QPointF nearestPoint = findNearestPoint(mappedPos.x());
+	if (nearestPoint.isNull()) return;
+
+	QString toolTip = QString("X: %1, Y: %2").arg(nearestPoint.x()).arg(nearestPoint.y());
+	QToolTip::showText(mapToGlobal(pos), toolTip, this);
 }
+
+ QPointF MyQChartView::findNearestPoint(qreal xValue) {
+	 QPointF nearestPoint;
+	 if (chart()->series().empty()) return nearestPoint;
+	 const QLineSeries* series = static_cast<const QLineSeries*>(chart()->series().at(0));
+	 qreal minDistance = std::numeric_limits<qreal>::max();
+
+	 for (const QPointF& point : series->points()) {
+		 qreal distance = qAbs(point.x() - xValue);
+		 if (distance < minDistance) {
+			 minDistance = distance;
+			 nearestPoint = point;
+		 }
+	 }
+	 return nearestPoint;
+ }
 

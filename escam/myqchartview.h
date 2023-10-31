@@ -16,9 +16,9 @@ public:
 protected:
 	void mouseReleaseEvent(QMouseEvent *event) override;
 	void mouseMoveEvent(QMouseEvent* event) override;
+	QPointF findNearestPoint(qreal xValue);
 signals:
 	void rubberBandChanged();
-	void mouseMoved(const QPointF& point);
 };
 
 #endif // MYQCHARTVIEW_H
