@@ -28,7 +28,6 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(&lsc, &Lsc::blockDone, this, &MainWindow::on_blockDone);
 	connect(&lsc, &Lsc::allBlocksDone, this, &MainWindow::on_allBlocksDone);
 	connect(ui->chartView, &MyQChartView::rubberBandChanged, this, &MainWindow::on_rubberBandChanged); 
-	connect(ui->chartView, &MyQChartView::mouseMoved, this, &MainWindow::on_mouseMoved);
 	connect(liveViewTimer, &QTimer::timeout, this, &MainWindow::showCurrentScan);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readScanFrequencyBit);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readBlockFrequencyBit);
@@ -1005,22 +1004,6 @@ void MainWindow::on_rubberBandChanged()
 	return;
 }
 
-/**
- * @brief 
- * @return none
- * \param point
- */
-void MainWindow::on_mouseMoved(const QPointF &point)
-{
-	QList<QAbstractSeries*> chartSeries = ui->chartView->chart()->series();
-	/*for (int i = 0; i < chartSeries.length(); i++)
-	{
-		if ()
-	}*/
-	QString coordinates = QString("X: %1, Y: %2").arg(point.x()).arg(point.y());
-	ui->labelPosition->setText(coordinates);
-	return;
-}
 
 /**
  * @brief This slot opens the IO Control dialog.
