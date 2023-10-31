@@ -20,8 +20,7 @@ void MyQChartView::mouseReleaseEvent(QMouseEvent *event)
 }
 
 /**
- * Displays correct x and y value.
- * Conflicts with mouseReleaseEvent and disables rubberBanding.
+ * Displays x and y value on a tooltip in the chart when hovering over it
  */
  void MyQChartView::mouseMoveEvent(QMouseEvent* event)
 {
@@ -35,6 +34,12 @@ void MyQChartView::mouseReleaseEvent(QMouseEvent *event)
 	QToolTip::showText(mapToGlobal(pos), toolTip, this);
 }
 
+ /**
+  * Returns the nearest y value for given x value.
+  * 
+  * \param xValue
+  * \return nearestPoint
+  */
  QPointF MyQChartView::findNearestPoint(qreal xValue) {
 	 QPointF nearestPoint;
 	 if (chart()->series().empty()) return nearestPoint;
