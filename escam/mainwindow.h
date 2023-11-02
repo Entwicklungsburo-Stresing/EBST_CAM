@@ -33,7 +33,7 @@ public slots:
 private:
 	QSettings settings;
 	void setChartData(QLineSeries** series, uint16_t numberOfSets);
-	void setChartData(uint16_t* data, uint32_t* length, uint16_t numberOfSets, QList<QString> cameraNamesList);
+	void setChartData(uint16_t* data, uint32_t* length, uint16_t numberOfSets, QList<QString> lineSeriesNamesList);
 	DialogDSC* ds_dsc = new DialogDSC( this );
 	DialogRMS* ds_rms = new DialogRMS( this );
 	QThread measurementThread;
