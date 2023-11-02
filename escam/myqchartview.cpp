@@ -3,10 +3,11 @@
 MyQChartView::MyQChartView(QWidget* parent) : QChartView(parent)
 {
 	chart()->legend()->hide();
+	chart()->legend()->setAlignment(Qt::AlignBottom);
 	setRubberBand(QChartView::RectangleRubberBand);
 	setMouseTracking(true);
 	QSettings settings;
-	curr_xmax = settings.value(settingPixelPath, settingPixelDefault).toReal();
+	curr_xmax = settings.value(settingPixelPath, settingPixelDefault).toReal() - 1;
 	if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toDouble() == 2)
 		curr_ymax = 0x3FFF;
 	else
