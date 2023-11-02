@@ -1,6 +1,6 @@
 #include "myqchartview.h"
 
-MyQChartView::MyQChartView(QWidget *parent) : QChartView(parent)
+MyQChartView::MyQChartView(QWidget* parent) : QChartView(parent)
 {
 	chart()->legend()->hide();
 	setRubberBand(QChartView::RectangleRubberBand);
@@ -13,7 +13,7 @@ MyQChartView::MyQChartView(QWidget *parent) : QChartView(parent)
 		curr_ymax = 0xFFFF;
 }
 
-void MyQChartView::mouseReleaseEvent(QMouseEvent *event)
+void MyQChartView::mouseReleaseEvent(QMouseEvent* event)
 {
 	QChartView::mouseReleaseEvent(event);
 	emit rubberBandChanged();
@@ -22,37 +22,49 @@ void MyQChartView::mouseReleaseEvent(QMouseEvent *event)
 /**
  * Displays x and y value on a tooltip in the chart when hovering over it
  */
- void MyQChartView::mouseMoveEvent(QMouseEvent* event)
+void MyQChartView::mouseMoveEvent(QMouseEvent* event)
 {
 	QChartView::mouseMoveEvent(event);
 	QPoint pos = event->pos();
 	QPointF mappedPos = chart()->mapToValue(pos);
 	QPointF nearestPoint = findNearestPoint(mappedPos.x());
-	if (nearestPoint.isNull()) return;
+	if (nearestPoint.x() < 0 || nearestPoint.y() < 0) return;
 
 	QString toolTip = QString("X: %1, Y: %2").arg(nearestPoint.x()).arg(nearestPoint.y());
 	QToolTip::showText(mapToGlobal(pos), toolTip, this);
 }
 
- /**
-  * Returns the nearest y value for given x value.
-  * 
-  * \param xValue
-  * \return nearestPoint
-  */
- QPointF MyQChartView::findNearestPoint(qreal xValue) {
-	 QPointF nearestPoint;
-	 if (chart()->series().empty()) return nearestPoint;
-	 const QLineSeries* series = static_cast<const QLineSeries*>(chart()->series().at(0));
-	 qreal minDistance = std::numeric_limits<qreal>::max();
+/**
+ * Returns the nearest y value for given x value.
+ *
+ * \param xValue
+ * \return nearestPoint
+ */
+QPointF MyQChartView::findNearestPoint(qreal xValue) {
+	qreal roundedXValue = std::floor(xValue);
+	if (chart()->series().empty() || roundedXValue < 0) return QPointF(-1, -1);
+	const QLineSeries* series = static_cast<const QLineSeries*>(chart()->series().at(0));
+	if (roundedXValue > series->points().last().x()) return QPointF(-1, -1);
+	QPointF nearestPoint;
+	qreal minDistance = std::numeric_limits<qreal>::max();
 
-	 for (const QPointF& point : series->points()) {
-		 qreal distance = qAbs(point.x() - xValue);
-		 if (distance < minDistance) {
-			 minDistance = distance;
-			 nearestPoint = point;
-		 }
-	 }
-	 return nearestPoint;
- }
+
+	if (roundedXValue == series->points().first().x())
+	{
+		nearestPoint = series->points().first();
+	}
+	else
+	{
+		for (const QPointF& point : series->points())
+		{
+			qreal distance = qAbs(point.x() - roundedXValue);
+			if (distance < minDistance)
+			{
+				minDistance = distance;
+				nearestPoint = point;
+			}
+		}
+	}
+		return nearestPoint;
+	}
 
