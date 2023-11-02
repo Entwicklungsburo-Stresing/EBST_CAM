@@ -117,7 +117,7 @@ void MainWindow::setChartData(QLineSeries** series, uint16_t numberOfSets)
  * @param length Length of data.
  * @param numberOfSets Number of data sets which are stored in data pointer.
  */
-void MainWindow::setChartData(uint16_t* data, uint32_t* length, uint16_t numberOfSets)
+void MainWindow::setChartData(uint16_t* data, uint32_t* length, uint16_t numberOfSets, QList<QString> cameraNamesList)
 {
 	// Allocate memory for the pointer array to the QlineSeries.
 	QLineSeries** series = static_cast<QLineSeries**>(calloc(numberOfSets, sizeof(QLineSeries*)));
@@ -127,6 +127,7 @@ void MainWindow::setChartData(uint16_t* data, uint32_t* length, uint16_t numberO
 	{
 		// Set the current data set to a new empty QLineSeries.
 		series[set] = new QLineSeries(this);
+		series[set]->setName(cameraNamesList[set]);
 		// Iterate through all data points for the current data set.
 		for(uint16_t i=0; i<length[set]; i++)
 		{
@@ -633,6 +634,7 @@ void MainWindow::loadCameraData()
 	uint32_t sample = static_cast<uint32_t>(ui->horizontalSliderSample->value() - 1);
 	// showedCam counts the number of cameras which are shown on the chart
 	uint32_t showedCam = 0;
+	QList<QString> cameraNameList;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
@@ -654,14 +656,22 @@ void MainWindow::loadCameraData()
 					pixel_array[showedCam] = pixel;
 					cur_data_ptr += pixel;
 					showedCam++;
+					cameraNameList.append(QString("Y%1 Board: %2; Camera: %3").arg(showedCam - 1).arg(static_cast<int>(drvno)).arg(static_cast<int>(cam)));
 				}
 			}
 			settings.endGroup();
 		}
 	}
 	if(showedCam)
-		setChartData(data, pixel_array, static_cast<uint16_t>(showCamcnt));
+		setChartData(data, pixel_array, static_cast<uint16_t>(showCamcnt), cameraNameList);
 	free(data);
+	if (showedCam > 1)
+	{
+		ui->chartView->chart()->legend()->setVisible(true);
+		ui->chartView->chart()->legend()->setAlignment(Qt::AlignBottom);
+	}
+	else
+		ui->chartView->chart()->legend()->setVisible(false);
 	return;
 }
 
