@@ -1077,28 +1077,28 @@ es_status_codes SetupVPB(uint32_t drvno, uint32_t range, uint32_t lines, bool ke
 	switch (range)
 	{
 	case 1:
-		adr = 0x68;//0x40;
+		adr = S0Addr_ROI0;
 		break;
 	case 2:
-		adr = 0x6A;//0x42;
+		adr = S0Addr_ROI0 + 2;
 		break;
 	case 3:
-		adr = 0x6C;//0x44;
+		adr = S0Addr_ROI1;
 		break;
 	case 4:
-		adr = 0x6E;//0x46;
+		adr = S0Addr_ROI1 + 2;
 		break;
 	case 5:
-		adr = 0x70;//0x48;
+		adr = S0Addr_ROI2;
 		break;
 	case 6:
-		adr = 0x72;//0x4A;
+		adr = S0Addr_ROI2 + 2;
 		break;
 	case 7:
-		adr = 0x74;//0x4C;
+		adr = S0Addr_XCKDLY;
 		break;
 	case 8:
-		adr = 0x76;//0x4E;
+		adr = S0Addr_XCKDLY + 2;
 		break;
 	}
 	if (keep) { lines |= 0x8000; }
