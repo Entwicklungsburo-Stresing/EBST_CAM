@@ -25,6 +25,7 @@ public:
 	es_status_codes calcTRMS( uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double *mwf, double *trms );
 	std::string driverInstructions;
 	std::string _dumpS0Registers(uint32_t drvno);
+	std::string _dumpHumanReadableS0Registers(uint32_t drvno);
 	std::string _dumpDmaRegisters(uint32_t drvno);
 	std::string _dumpTlp(uint32_t drvno);
 	std::string _dumpMeasurementSettings();
