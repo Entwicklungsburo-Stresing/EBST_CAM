@@ -621,6 +621,9 @@
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
           <widget class="QRadioButton" name="radioButtonLiveViewOff">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display sample when measurement is done&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>off</string>
            </property>
@@ -631,6 +634,9 @@
          </item>
          <item>
           <widget class="QRadioButton" name="radioButtonLiveViewFixedSample">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display fixed sample in newest block in measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>fixed sample</string>
            </property>
@@ -638,6 +644,9 @@
          </item>
          <item>
           <widget class="QRadioButton" name="radioButtonLiveViewOffNewestSample">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display newest sample in newest block in measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>newest sample</string>
            </property>

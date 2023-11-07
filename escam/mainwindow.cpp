@@ -102,6 +102,7 @@ void MainWindow::setChartData(QLineSeries** series, uint16_t numberOfSets)
 	chart->createDefaultAxes();
 	QList<QAbstractAxis *> axes = ui->chartView->chart()->axes();
 	if (axes.isEmpty()) return;
+	if (axes.isEmpty()) return;
 	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
 	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
 	axis0->setMax(ui->chartView->curr_xmax);
@@ -665,13 +666,13 @@ void MainWindow::loadCameraData()
 	}
 	if(showedCam)
 		setChartData(data, pixel_array, static_cast<uint16_t>(showCamcnt), lineSeriesNamesList);
-	free(data);
 
-	if (showedCam > 1) {
+	if (showedCam > 1)
 		ui->chartView->chart()->legend()->setVisible(true);
-	}
 	else
 		ui->chartView->chart()->legend()->setVisible(false);
+
+	free(data);
 	return;
 }
 
