@@ -125,6 +125,7 @@ es_status_codes SetGain(uint32_t drvno, uint16_t gain_value);
 es_status_codes waitForBlockReady(uint32_t board_sel);
 es_status_codes waitForMeasureReady(uint32_t board_sel);
 es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr);
+es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr);
 es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr);
 es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr);
 es_status_codes dumpMeasurementSettings(char** stringPtr);
