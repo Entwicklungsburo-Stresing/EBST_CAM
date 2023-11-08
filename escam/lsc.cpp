@@ -70,6 +70,18 @@ std::string Lsc::_dumpS0Registers(uint32_t drvno)
 	return cppstring;
 }
 
+std::string Lsc::_dumpHumanReadableS0Registers(uint32_t drvno)
+{
+	char* cstring;
+	es_status_codes status = dumpHumanReadableS0Registers(drvno, &cstring);
+	if (status != es_no_error)
+		qCritical("dumpHumanReadable failed");
+	std::string cppstring = cstring;
+	free(cstring);
+	parseTextToHtml(&cppstring);
+	return cppstring;
+}
+
 std::string Lsc::_dumpDmaRegisters(uint32_t drvno)
 {
 	char* cstring;

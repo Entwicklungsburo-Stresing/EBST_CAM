@@ -3776,6 +3776,118 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 	return status;
 }
 
+es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
+{
+	enum N
+	{
+		bufferSize = 1000
+	};
+	char charBuffer[bufferSize];
+	int len = 0;
+	bool isBitHigh;
+	//CTRLA VON
+	es_status_codes status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_VONOFF, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "VON\t%i\n", isBitHigh);
+
+	//CTRLA D1 not described
+	//status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_IFC, &isBitHigh);
+	//len += springf_s(charBuffer + len, bufferSize - (size_t)len, "", isBitHigh)
+
+	//CTRLA XCK
+	status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_XCK, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "XCK\t%i\n", isBitHigh);
+
+	//CTRLA TRIG OUT
+	status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_TRIG_OUT, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "TRIG OUT\t%i\n", isBitHigh);
+
+	//CTRLA BOTH SLOPE
+	status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_BOTH_SLOPE, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "BOTH SLOPE\t%i\n", isBitHigh);
+
+	//CTRLA SLOPE
+	status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_SLOPE, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "SLOPE\t%i\n", isBitHigh);
+
+	//CTRLA STRIGIN
+	status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_DIR_TRIGIN, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "STRIGIN\t%i\n", isBitHigh);
+
+	/*=======================================================================*/
+	
+	//CTRLA B START
+	status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_TSTART, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "B START\t%i\n", isBitHigh);
+
+	//CTRLB STI0
+	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_STI0, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "STI0\t%i\n", isBitHigh);
+
+	//CTRLB STI1
+	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_STI1, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "STI1\t%i\n", isBitHigh);
+
+	//CTRLB STI2
+	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_STI2, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "STI2\t%i\n", isBitHigh);
+
+	//CTRLB SHON
+	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_SHON, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "SHON\t%i\n", isBitHigh);
+
+	//CTRLB BTI0
+	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI0, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "BTI0\t%i\n", isBitHigh);
+
+	//CTRLB BTI1
+	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI1, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "BTI1\t%i\n", isBitHigh);
+
+	//CTRLB BTI2
+	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI2, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "BTI2\t%i\n", isBitHigh);
+
+	//CTRLB D7 not described
+	//status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_STI1, &isBitHigh);
+	//len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "STI1\t%i\n", isBitHigh);
+
+	/*=======================================================================*/
+
+	//CTRLC I
+	status = ReadBitS0_8(drvno, S0Addr_CTRLC, CTRLC_bitindex_I, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "I\t%i\n", isBitHigh);
+
+	//CTRLC S1
+	status = ReadBitS0_8(drvno, S0Addr_CTRLC, CTRLC_bitindex_S1, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "S1\t%i\n", isBitHigh);
+
+	//CTRLC S2
+	status = ReadBitS0_8(drvno, S0Addr_CTRLC, CTRLC_bitindex_S2, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "S2\t%i\n", isBitHigh);
+
+	//CTRLC EARLY RESET no bitindex
+	//status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLC_bitindex_I, &isBitHigh);
+	//len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "SHON\t%i\n", isBitHigh);
+
+	//CTRLC EOI
+	status = ReadBitS0_8(drvno, S0Addr_CTRLC, CTRLC_bitindex_eoi, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "EOI\t%i\n", isBitHigh);
+
+	//CTRLC EOI-CHB
+	status = ReadBitS0_8(drvno, S0Addr_CTRLC, CTRLC_bitindex_eoi_chb, &isBitHigh);
+	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "EOI-CHB\t%i\n", isBitHigh);
+
+	//CTRLC 1 no bitindex
+	//status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI2, &isBitHigh);
+	//len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "BTI2\t%i\n", isBitHigh);
+
+	//CTRLB 0 no bitindex
+	//status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_STI1, &isBitHigh);
+	//len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "STI1\t%i\n", isBitHigh);
+
+	/*=======================================================================*/
+}
+
 es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr)
 {
 	enum N
