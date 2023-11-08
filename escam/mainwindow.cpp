@@ -102,6 +102,7 @@ void MainWindow::setChartData(QLineSeries** series, uint16_t numberOfSets)
 	chart->createDefaultAxes();
 	QList<QAbstractAxis *> axes = ui->chartView->chart()->axes();
 	if (axes.isEmpty()) return;
+	if (axes.isEmpty()) return;
 	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
 	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
 	axis0->setMax(ui->chartView->curr_xmax);
@@ -539,6 +540,15 @@ void MainWindow::on_actionDump_board_registers_triggered()
 		labelS0->setAlignment(Qt::AlignTop);
 		scrollS0->setWidget(labelS0);
 		tabWidget->addTab(scrollS0, "S0 registers board " + QString::number(drvno));
+		QScrollArea* scrollHRS0 = new QScrollArea(tabWidget);
+		scrollHRS0->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+		QLabel* labelHRS0 = new QLabel(scrollHRS0);
+		labelHRS0->setTextInteractionFlags(Qt::TextSelectableByMouse);
+		labelHRS0->setTextFormat(Qt::RichText);
+		labelHRS0->setText(QString::fromStdString(lsc._dumpHumanReadableS0Registers(drvno)));
+		labelHRS0->setAlignment(Qt::AlignTop);
+		scrollHRS0->setWidget(labelHRS0);
+		tabWidget->addTab(scrollHRS0, "Hum Read S0 baord " + QString::number(drvno));
 		QScrollArea* scrollDma = new QScrollArea(tabWidget);
 		scrollDma->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 		QLabel* labelDma = new QLabel(scrollDma);
@@ -665,13 +675,13 @@ void MainWindow::loadCameraData()
 	}
 	if(showedCam)
 		setChartData(data, pixel_array, static_cast<uint16_t>(showCamcnt), lineSeriesNamesList);
-	free(data);
 
-	if (showedCam > 1) {
+	if (showedCam > 1)
 		ui->chartView->chart()->legend()->setVisible(true);
-	}
 	else
 		ui->chartView->chart()->legend()->setVisible(false);
+
+	free(data);
 	return;
 }
 
