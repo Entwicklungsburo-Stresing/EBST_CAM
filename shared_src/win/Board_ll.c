@@ -56,6 +56,7 @@ es_status_codes CleanupDma(uint32_t drvno)
 */
 int64_t InitHRCounter()
 {
+	ES_LOG("Init HR counter\n");
 	int64_t ticksPerSecond = 0;
 	LARGE_INTEGER freq;
 	QueryPerformanceFrequency(&freq);
@@ -521,7 +522,6 @@ es_status_codes _InitDriver()
 		return es_driver_init_failed;
 	}
 	BZERO( scanResult );
-	ES_LOG("Init HR counter\n");
 	ticksPerSecond = InitHRCounter();//for ticks function
 	ES_LOG("Scan PCIe devices\n");
 	dwStatus = WDC_PciScanDevices( LSCPCIEJ_DEFAULT_VENDOR_ID, LSCPCIEJ_DEFAULT_DEVICE_ID, &scanResult ); //VendorID, DeviceID
