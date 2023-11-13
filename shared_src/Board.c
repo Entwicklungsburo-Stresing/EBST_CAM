@@ -2914,19 +2914,31 @@ es_status_codes FindCam( uint32_t drvno )
 		return es_no_error;
 	}
 	bool linkUp = false;
-	es_status_codes status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_linkup_sfp1, &linkUp);
-	if (status != es_no_error) return status;
 	bool sfpError = false;
-	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_error_sfp1, &sfpError);
-	if (status != es_no_error) return status;
-	if (linkUp && !sfpError)
-		return es_no_error;
-	else
+	bool firstFailure = true;
+	int64_t timestampFirstFailureInMicroseconds = GetTimestampInMicroseconds();
+	int64_t timeoutInMicroseconds = 10000;
+	es_status_codes status;
+	// Check the connection again while timout is not reached.
+	// This loop is here to prevent checking during link down spikes
+	while(GetTimestampInMicroseconds() - timestampFirstFailureInMicroseconds < timeoutInMicroseconds)
 	{
-		//SFP error
-		ES_LOG( "Fiber or Camera error\n" );
-		return es_camera_not_found;
+		status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_linkup_sfp1, &linkUp);
+		if (status != es_no_error) return status;
+		status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_error_sfp1, &sfpError);
+		if (status != es_no_error) return status;
+		// When link up and sfp error are correct, the function is allowed to return
+		if (linkUp && !sfpError)
+			return es_no_error;
+		// When a failure is detected set a timestamp on the first failure
+		else if (firstFailure)
+		{
+			timestampFirstFailureInMicroseconds = GetTimestampInMicroseconds();
+			firstFailure = false;
+		}
 	}
+	ES_LOG("Fiber or Camera error, connection timeout\n");
+	return es_camera_not_found;
 }
 
 /**
