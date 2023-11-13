@@ -58,7 +58,7 @@ es_status_codes ResetPriority();
 uint16_t* getVirtualDmaAddress(uint32_t drvno);
 uint32_t getDmaBufferSizeInBytes(uint32_t drvno);
 int64_t getCurrentInterruptCounter(uint32_t drvno);
-uint8_t WaitforTelapsed(long long musec);
+uint8_t WaitforTelapsed(int64_t microseconds);
 #ifndef MINIMAL_BUILD
 void openFile(uint32_t drvno);
 void closeFile(uint32_t drvno);
