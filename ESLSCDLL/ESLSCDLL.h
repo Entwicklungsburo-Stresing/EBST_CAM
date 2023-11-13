@@ -101,7 +101,7 @@ DllAccess es_status_codes DLLFindCam_multipleBoards(uint8_t* cameraFound0, uint8
 //************  Control CAM
 DllAccess es_status_codes DLLOutTrigHigh();
 DllAccess es_status_codes DLLOutTrigLow();
-DllAccess es_status_codes DLLOutTrigPulse(uint32_t PulseWidth);
+DllAccess es_status_codes DLLOutTrigPulse(int64_t PulseWidth);
 DllAccess es_status_codes DLLOpenShutter();
 DllAccess es_status_codes DLLCloseShutter();
 DllAccess es_status_codes DLLSetTemp(uint8_t level);
