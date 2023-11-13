@@ -2789,7 +2789,7 @@ es_status_codes StartMeasurement()
 			// Main read loop. The software waits here until the flag RegXCKMSB:b30 = TimerOn is reset by hardware,
 			// if flag HWDREQ_EN is TRUE.
 			// This is done when nos scans are counted by hardware. Pressing ESC can cancel this loop.
-			// Waiting for end of measurement
+			ES_LOG("Wait for the end of block %u.\n", blk_cnt);
 			while (timerOn[0] || timerOn[1] || timerOn[2] || timerOn[3] || timerOn[4])
 			{
 				for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -2809,6 +2809,7 @@ es_status_codes StartMeasurement()
 					}
 				}
 			}
+			ES_LOG("Block %u done.\n", blk_cnt);
 			// When the software reaches this point, all scans for the current block are done.
 			// So blockOn is reset here.
 			for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
