@@ -687,20 +687,20 @@ DllAccess es_status_codes DLLOutTrigLow()
  * \brief Pulses trigger out(Reg CtrlA:D3) for all boards selected by setings parameter board_sel. Can be used to control timing issues in software.
  *
  * The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual
- * \param PulseWidth duration of pulse in ms
+ * \param pulseWidthInMicroseconds duration of pulse in us
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-DllAccess es_status_codes DLLOutTrigPulse(uint32_t PulseWidth)
+DllAccess es_status_codes DLLOutTrigPulse(int64_t pulseWidthInMicroseconds)
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = OutTrigPulse(drvno, PulseWidth);
+			status = OutTrigPulse(drvno, pulseWidthInMicroseconds);
 			if (status != es_no_error) return status;
 		}
 	return status;
