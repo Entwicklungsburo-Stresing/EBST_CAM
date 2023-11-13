@@ -777,16 +777,16 @@ int64_t ConvertTicksToMicroseconds(int64_t ticks)
 /**
  * \brief This functions returns after a time given in microseconds. The time is measured in CPU ticks. The function is escapable by pressing ESC.
  *
- * \param musec Time to wait in microseconds.
+ * \param microseconds Time to wait in microseconds.
  * \return 1 when success, 0 when aborted by ESC or failure
  */
-uint8_t WaitforTelapsed(int64_t musec)
+uint8_t WaitforTelapsed(int64_t microseconds)
 {
-	if (musec)
+	if (microseconds)
 	{
-		//ES_TRACE("Wait for %u microseconds\n", musec);
+		//ES_TRACE("Wait for %u microseconds\n", microseconds);
 		int64_t start_timestamp = GetTimestampInMicroseconds();
-		int64_t destination_timestamp = start_timestamp + musec;
+		int64_t destination_timestamp = start_timestamp + microseconds;
 		//ES_LOG("start time: %lld\n", start_timestamp);
 		// detect overflow
 		if (destination_timestamp < start_timestamp) return 0;
