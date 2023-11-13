@@ -676,10 +676,11 @@ void MainWindow::loadCameraData()
 	if(showedCam)
 		setChartData(data, pixel_array, static_cast<uint16_t>(showCamcnt), lineSeriesNamesList);
 
-	if (showedCam > 1)
-		ui->chartView->chart()->legend()->setVisible(true);
-	else
-		ui->chartView->chart()->legend()->setVisible(false);
+	// Deactivate legend, because it is blinking. Activate it, when a solution is found
+	//if (showedCam > 1)
+	//	ui->chartView->chart()->legend()->setVisible(true);
+	//else
+	//	ui->chartView->chart()->legend()->setVisible(false);
 
 	free(data);
 	return;
