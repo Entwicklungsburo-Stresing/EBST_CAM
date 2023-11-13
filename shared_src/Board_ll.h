@@ -79,9 +79,11 @@ uint16_t GetGammaBlack();
 void WaitForAllInterruptsDone();
 
 #ifdef WIN32
-long long ticksTimestamp();
+int64_t GetTimestampInTicks();
+int64_t GetTimestampInMicroseconds();
+int64_t ConvertTicksToMicroseconds(int64_t ticks);
+uint64_t InitHRCounter();
 es_status_codes WaitTrigger(uint32_t drvno, bool ExtTrigFlag, bool *SpaceKey, bool *AbrKey);
-uint32_t Tickstous(uint64_t tks);
 es_status_codes About(uint32_t board_sel);
 es_status_codes AboutDrv(uint32_t drvno);
 es_status_codes AboutGPX(uint32_t drvno);

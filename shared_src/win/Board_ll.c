@@ -15,7 +15,7 @@ volatile UINT8 dmaBufferPartReadPos[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 WD_DMA* dmaBufferInfos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL }; //there will be saved the necessary parameters for the DMA buffer
 WDC_PCI_SCAN_RESULT scanResult;
 WD_PCI_CARD_INFO deviceInfo[MAXPCIECARDS];
-__int64 TPS = 0;
+int64_t ticksPerSecond = 0;
 bool _SHOW_MSG = TRUE;
 ULONG oldPriClass = 0;
 ULONG oldThreadLevel = 0;
@@ -50,36 +50,18 @@ es_status_codes CleanupDma(uint32_t drvno)
 	return es_no_error;
 }
 
-// System Timer in Ticks
-/**
-\brief Converts Large to Int64.
-*/
-UINT64 LargeToInt(LARGE_INTEGER li)
-{
-	UINT64 res = 0;
-	res = li.HighPart;
-	res = res << 32;
-	res = res + li.LowPart;
-	return res;
-} //LargeToInt
-
 /**
 \brief Init high resolution counter.
-\return TPS ticks per sec
+\return ticksPerSecond ticks per sec
 */
 int64_t InitHRCounter()
 {
-	BOOL ifcounter;
-	UINT64 tps = 0;
+	int64_t ticksPerSecond = 0;
 	LARGE_INTEGER freq;
-	freq.LowPart = 0;
-	freq.HighPart = 2;
-
-	//TPS:: ticks per second = freq
-	ifcounter = QueryPerformanceFrequency(&freq);
-	tps = LargeToInt(freq); //ticks per second
-	ES_LOG("TPS: %lld\n", tps);
-	return tps;
+	QueryPerformanceFrequency(&freq);
+	ticksPerSecond = freq.QuadPart; //ticks per second
+	ES_LOG("ticksPerSecond: %lld\n", ticksPerSecond);
+	return ticksPerSecond;
 }
 
 /**
@@ -540,7 +522,7 @@ es_status_codes _InitDriver()
 	}
 	BZERO( scanResult );
 	ES_LOG("Init HR counter\n");
-	TPS = InitHRCounter();//for ticks function
+	ticksPerSecond = InitHRCounter();//for ticks function
 	ES_LOG("Scan PCIe devices\n");
 	dwStatus = WDC_PciScanDevices( LSCPCIEJ_DEFAULT_VENDOR_ID, LSCPCIEJ_DEFAULT_DEVICE_ID, &scanResult ); //VendorID, DeviceID
 	if (WD_STATUS_SUCCESS != dwStatus)
@@ -715,14 +697,19 @@ es_status_codes InitMutex(uint32_t drvno)
 * Read 2x ticks and calculate the difference between the calls in microseconds with DLLTickstous, init timer by calling DLLInitSysTimer before use.
 * \return act ticks
 */
-long long ticksTimestamp()
+int64_t GetTimestampInTicks()
 {
 	LARGE_INTEGER PERFORMANCECOUNTERVAL = { 0, 0 };
-
 	QueryPerformanceCounter(&PERFORMANCECOUNTERVAL);
 	return PERFORMANCECOUNTERVAL.QuadPart;
 
-}//ticksTimestamp
+}
+
+int64_t GetTimestampInMicroseconds()
+{
+	int64_t timestampInTicks = GetTimestampInTicks();
+	return ConvertTicksToMicroseconds(timestampInTicks);
+}
 
 /**
  * \brief Returns if trigger or key.
@@ -777,27 +764,13 @@ es_status_codes WaitTrigger(uint32_t drvno, bool ExtTrigFlag, bool *SpaceKey, bo
 
 /**
  * \brief Translate ticks to microseconds.
- * \param tks ticks of system timer
- * \return microseconds of tks
+ * \param ticks ticks of system timer
+ * \return microseconds of ticks
 */
-uint32_t Tickstous(uint64_t tks)
+int64_t ConvertTicksToMicroseconds(int64_t ticks)
 {
-	BOOL ifcounter;
-	UINT64 delay = 0;
-	UINT64 tps = 0; //ticks per second
-	LARGE_INTEGER freq;
-	freq.LowPart = 0;
-	freq.HighPart = 0;
-
-	//get tps: ticks per second
-	ifcounter = QueryPerformanceFrequency(&freq);
-	tps = LargeToInt(freq); //ticks per second
-
-	if (tps == 0) return 0; // no counter available
-
-	delay = tks * 1000000;
-	delay = delay / tps;
-	return (uint32_t)delay;
+	int64_t microseconds = ticks * 1000000 / ticksPerSecond;
+	return microseconds;
 }
 
 
@@ -807,19 +780,18 @@ uint32_t Tickstous(uint64_t tks)
  * \param musec Time to wait in microseconds.
  * \return 1 when success, 0 when aborted by ESC or failure
  */
-uint8_t WaitforTelapsed(long long musec)
+uint8_t WaitforTelapsed(int64_t musec)
 {
 	if (musec)
 	{
 		//ES_TRACE("Wait for %u microseconds\n", musec);
-		long long ticks_to_wait = musec * TPS / 1000000;
-		long long start_timestamp = ticksTimestamp();
-		long long destination_timestamp = start_timestamp + ticks_to_wait;
+		int64_t start_timestamp = GetTimestampInMicroseconds();
+		int64_t destination_timestamp = start_timestamp + musec;
 		//ES_LOG("start time: %lld\n", start_timestamp);
 		// detect overflow
 		if (destination_timestamp < start_timestamp) return 0;
 		// wait until time elapsed
-		while (destination_timestamp > ticksTimestamp())
+		while (destination_timestamp > GetTimestampInMicroseconds())
 		{
 			if (abortMeasurementFlag || checkEscapeKeyState())
 			{
@@ -827,7 +799,7 @@ uint8_t WaitforTelapsed(long long musec)
 				return 0;
 			}
 		}
-		//ES_LOG("end time:  %lld\n", ticksTimestamp());
+		//ES_LOG("end time:  %lld\n", GetTimestampInMicroseconds());
 	}
 	return 1;
 }
