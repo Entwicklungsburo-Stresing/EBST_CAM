@@ -3551,17 +3551,17 @@ es_status_codes OutTrigHigh(uint32_t drvno)
  *
  * The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param PulseWidth duration of pulse in ms
+ * \param pulseWidthInMicroseconds duration of pulse in us
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes OutTrigPulse(uint32_t drvno, uint32_t PulseWidth)
+es_status_codes OutTrigPulse(uint32_t drvno, int64_t pulseWidthInMicroseconds)
 {
 	es_status_codes status = OutTrigHigh(drvno);
 	if (status != es_no_error) return status;
-	WaitforTelapsed(PulseWidth * 1000);
+	WaitforTelapsed(pulseWidthInMicroseconds);
 	return OutTrigLow(drvno);
 }
 
