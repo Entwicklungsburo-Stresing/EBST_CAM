@@ -1164,11 +1164,18 @@ void getFileHeaderFromFile(struct file_header* fh, char* filename_full)
 void WaitForAllInterruptsDone()
 {
 	ES_TRACE("Wait for all interrupts\n")
+	int64_t start_time = GetTimestampInMicroseconds();
+	int64_t timeoutInMicroseconds = 10000;
 	while (!(allInterruptsDone[0] && allInterruptsDone[1] && allInterruptsDone[2] && allInterruptsDone[3] && allInterruptsDone[4]))
 	{
 		if (abortMeasurementFlag || checkEscapeKeyState())
 		{
 			abortMeasurementFlag = true;
+			return;
+		}
+		if (GetTimestampInMicroseconds() - start_time > timeoutInMicroseconds)
+		{
+			ES_LOG("WaitForAllInterruptsDone() timeout, start time %lli, current time %lli, diff %lli\n", start_time, GetTimestampInMicroseconds(), GetTimestampInMicroseconds()- start_time);
 			return;
 		}
 	}
