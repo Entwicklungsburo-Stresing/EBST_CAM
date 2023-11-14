@@ -17,10 +17,6 @@ WDC_PCI_SCAN_RESULT scanResult;
 WD_PCI_CARD_INFO deviceInfo[MAXPCIECARDS];
 int64_t ticksPerSecond = 0;
 bool _SHOW_MSG = TRUE;
-ULONG oldPriClass = 0;
-ULONG oldThreadLevel = 0;
-HANDLE hProcess;
-HANDLE hThread;
 HANDLE ghMutex[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 HANDLE mutexUserBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 FILE* file_stream[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
@@ -823,72 +819,24 @@ uint16_t checkSpaceKeyState()
 }
 
 /**
- * \brief Converts threadp value (1..31) to process priority class and thread priority level.
- *
- * \param threadp Thread priority from 1 to 31. Is split in class and level.
- * \param priclass Priority class return value
- * \param prilevel Priority level return value
- * \return es_status_codes:
- *		- es_no_error
- *		- es_parameter_out_of_range
- */
-es_status_codes ThreadToPriClass(ULONG threadp, DWORD *priclass, DWORD *prilevel)
-{
-	DWORD propriclass[31] = { IDLE_PRIORITY_CLASS, IDLE_PRIORITY_CLASS, IDLE_PRIORITY_CLASS, IDLE_PRIORITY_CLASS, IDLE_PRIORITY_CLASS, IDLE_PRIORITY_CLASS,
-		NORMAL_PRIORITY_CLASS, NORMAL_PRIORITY_CLASS, NORMAL_PRIORITY_CLASS, NORMAL_PRIORITY_CLASS, NORMAL_PRIORITY_CLASS,
-		HIGH_PRIORITY_CLASS, HIGH_PRIORITY_CLASS, HIGH_PRIORITY_CLASS, HIGH_PRIORITY_CLASS,
-		REALTIME_PRIORITY_CLASS, REALTIME_PRIORITY_CLASS, REALTIME_PRIORITY_CLASS, REALTIME_PRIORITY_CLASS, REALTIME_PRIORITY_CLASS,
-		REALTIME_PRIORITY_CLASS, REALTIME_PRIORITY_CLASS, REALTIME_PRIORITY_CLASS, REALTIME_PRIORITY_CLASS, REALTIME_PRIORITY_CLASS,
-		REALTIME_PRIORITY_CLASS, REALTIME_PRIORITY_CLASS, REALTIME_PRIORITY_CLASS, REALTIME_PRIORITY_CLASS, REALTIME_PRIORITY_CLASS,
-		REALTIME_PRIORITY_CLASS };
-	DWORD threprilevel[31] = { THREAD_PRIORITY_IDLE, THREAD_PRIORITY_LOWEST, THREAD_PRIORITY_BELOW_NORMAL, THREAD_PRIORITY_NORMAL, THREAD_PRIORITY_ABOVE_NORMAL,
-		THREAD_PRIORITY_HIGHEST, THREAD_PRIORITY_LOWEST, THREAD_PRIORITY_BELOW_NORMAL, THREAD_PRIORITY_NORMAL, THREAD_PRIORITY_ABOVE_NORMAL,
-		THREAD_PRIORITY_HIGHEST, THREAD_PRIORITY_BELOW_NORMAL, THREAD_PRIORITY_NORMAL, THREAD_PRIORITY_ABOVE_NORMAL, THREAD_PRIORITY_HIGHEST,
-		THREAD_PRIORITY_IDLE, THREAD_PRIORITY_IDLE, THREAD_PRIORITY_IDLE, THREAD_PRIORITY_IDLE, THREAD_PRIORITY_IDLE, THREAD_PRIORITY_IDLE,
-		THREAD_PRIORITY_LOWEST, THREAD_PRIORITY_BELOW_NORMAL, THREAD_PRIORITY_NORMAL, THREAD_PRIORITY_ABOVE_NORMAL, THREAD_PRIORITY_HIGHEST,
-		THREAD_PRIORITY_HIGHEST, THREAD_PRIORITY_HIGHEST, THREAD_PRIORITY_HIGHEST, THREAD_PRIORITY_HIGHEST, THREAD_PRIORITY_TIME_CRITICAL };
-	// range check
-	if ((0 < threadp) && (threadp < 32))
-	{
-		threadp -= 1; //array index from 0..30
-		*priclass = propriclass[threadp];
-		*prilevel = threprilevel[threadp];
-		return es_no_error;
-	}
-	else
-		return es_parameter_out_of_range;
-}
-
-/**
- * \brief Set thread to new priority level.
+ * \brief Set thread to high priority level.
  * 
- * Old level is kept in global oldPriClass and oldThreadLevel.
- * \param threadp Thread priority 1..31. Is split in class and level.
  * \return es_status_codes:
  *		- es_no_error
- *		- es_parameter_out_of_range
  *		- es_setting_thread_priority_failed
  */
-es_status_codes SetPriority(uint32_t threadp)
+es_status_codes SetPriority()
 {
-	ES_TRACE("Set priority to %u\n", threadp)
-	ULONG priClass = 0;
-	ULONG priLevel = 0;
-	es_status_codes status = ThreadToPriClass(threadp, &priClass, &priLevel);
-	if (status != es_no_error) return status;
-	hProcess = GetCurrentProcess();
-	oldPriClass = GetPriorityClass(hProcess);
-	if (!SetPriorityClass(hProcess, priClass))
+	ES_TRACE("Increase priority\n");
+	if (!SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS))
 		return es_setting_thread_priority_failed;
-	hThread = GetCurrentThread();
-	oldThreadLevel = GetThreadPriority(hThread);
-	if (!SetThreadPriority(hThread, priLevel))
+	if (!SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL))
 		return es_setting_thread_priority_failed;
-	return status;
+	return es_no_error;
 }
 
 /**
- * \brief Reset thread priority to old level.
+ * \brief Reset thread priority to normal.
  * 
  * \return es_status_codes:
  *		- es_no_error
@@ -896,10 +844,10 @@ es_status_codes SetPriority(uint32_t threadp)
  */
 es_status_codes ResetPriority()
 {
-	ES_TRACE("Reset priority\n");
-	if (!SetPriorityClass(hProcess, oldPriClass))
+	ES_TRACE("Reset priority to normal\n");
+	if (!SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS))
 		return es_setting_thread_priority_failed;
-	if (!SetThreadPriority(hThread, oldThreadLevel))
+	if (!SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_NORMAL))
 		return es_setting_thread_priority_failed;
 	return es_no_error;
 }
