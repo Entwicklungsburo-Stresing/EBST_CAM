@@ -3109,16 +3109,8 @@ es_status_codes DoSoftwareTrigger( uint32_t drvno )
  * 		- es_register_read_failed
  */
 es_status_codes IsTimerOn( uint32_t drvno, bool* on )
-{
-	volatile uint8_t data = 0;
-	es_status_codes status = readRegisterS0_8( drvno, &data, S0Addr_XCKMSB );
-	if (status != es_no_error) return status;
-	data &= XCKMSB_bit_stimer_on;
-	if (data != 0)
-		*on = true;
-	else
-		*on = false;
-	return status;
+{	
+	return ReadBitS0_8(drvno, S0Addr_XCKMSB, XCKMSB_bitindex_stimer_on, on);
 }
 
 /**
@@ -3478,15 +3470,7 @@ es_status_codes CheckFifoFull(uint32_t drvno, bool* full)
  */
 es_status_codes isBlockOn(uint32_t drvno, bool* blockOn)
 {
-	uint32_t data = 0;
-	es_status_codes status = readRegisterS0_32(drvno, &data, S0Addr_PCIEFLAGS);
-	if (status != es_no_error) return status;
-	//Check for measure on bit
-	if (PCIEFLAGS_bit_BLOCKON & data)
-		*blockOn = true;
-	else
-		*blockOn = false;
-	return status;
+	return ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCKON, blockOn);
 }
 
 /**
@@ -3500,15 +3484,7 @@ es_status_codes isBlockOn(uint32_t drvno, bool* blockOn)
  */
 es_status_codes isMeasureOn(uint32_t drvno, bool* measureOn)
 {
-	uint32_t data = 0;
-	es_status_codes status = readRegisterS0_32(drvno, &data, S0Addr_PCIEFLAGS);
-	if (status != es_no_error) return status;
-	//Check for measure on bit
-	if (PCIEFLAGS_bit_MEASUREON & data)
-		*measureOn = true;
-	else
-		*measureOn = false;
-	return status;
+	return ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_MEASUREON, measureOn);
 }
 
 /**
