@@ -2731,7 +2731,7 @@ es_status_codes StartMeasurement()
 		// Increase the priority of the measurement thread to maximum.
 		// This is done to decrease latency while doing handshakes between software and hardware.
 		// The priority is reset to the old value when the block for loop is finished.
-		status = SetPriority(31);
+		status = SetPriority();
 		if (status != es_no_error) return ReturnStartMeasurement(status);
 		// Block read for loop.
 		for (uint32_t blk_cnt = 0; blk_cnt < *Nob; blk_cnt++)

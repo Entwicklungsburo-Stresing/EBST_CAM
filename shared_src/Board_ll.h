@@ -53,7 +53,7 @@ es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno);
 uint16_t checkEscapeKeyState();
 uint16_t checkSpaceKeyState();
 es_status_codes InitMutex(uint32_t drvno);
-es_status_codes SetPriority(uint32_t threadp);
+es_status_codes SetPriority();
 es_status_codes ResetPriority();
 uint16_t* getVirtualDmaAddress(uint32_t drvno);
 uint32_t getDmaBufferSizeInBytes(uint32_t drvno);
