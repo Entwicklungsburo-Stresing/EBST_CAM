@@ -367,7 +367,7 @@ int64_t getCurrentInterruptCounter(uint32_t drvno)
 	return (int64_t)dev->control->irq_count;
 }
 
-uint8_t WaitforTelapsed(long long musec)
+uint8_t WaitforTelapsed(int64_t musec)
 {
 	usleep(musec);
 	return 1;
