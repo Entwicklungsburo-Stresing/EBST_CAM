@@ -912,14 +912,14 @@ void MainWindow::readCameraOvertemp()
 	{
 		QPalette pal = palette();
 		pal.setColor(QPalette::Window, Qt::red);
-		ui->widgetOvertemp->setToolTip("Camera temperature too high");
+		ui->widgetOvertempParent->setToolTip("Camera temperature too high");
 		ui->widgetOvertemp->setPalette(pal);
 	}
 	else
 	{
 		QPalette pal = palette();
 		pal.setColor(QPalette::Window, Qt::darkGray);
-		ui->widgetOvertemp->setToolTip("Camera temperature ok");
+		ui->widgetOvertempParent->setToolTip("Camera temperature ok");
 		ui->widgetOvertemp->setPalette(pal);
 	}
 	return;
@@ -955,14 +955,14 @@ void MainWindow::readCameraTempGood()
 	{
 		QPalette pal = palette();
 		pal.setColor(QPalette::Window, Qt::green);
-		ui->widgetOvertemp->setToolTip("Camera temperature good");
+		ui->widgetOvertempParent->setToolTip("Camera temperature good");
 		ui->widgetOvertemp->setPalette(pal);
 	}
 	else
 	{
 		QPalette pal = palette();
 		pal.setColor(QPalette::Window, Qt::darkGray);
-		ui->widgetOvertemp->setToolTip("Camera temperature ok");
+		ui->widgetOvertempParent->setToolTip("Camera temperature ok");
 		ui->widgetOvertemp->setPalette(pal);
 	}
 }
