@@ -1,5 +1,16 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.9.1
+- Add missing function declerations: DLLIOCtrl_setOutput, DLLSetSTimer, DLLSetBTimer, TestMsg
+- Show cursor position on chart
+- Rename settings default button
+- Add SetNosRegister() and SetNobRegister()
+- Improve documentation
+- Add human readable register dump
+- Change OutTrigPulse to microseconds
+- Add timeout to WaitForAllInterruptsDone()
+- Add timeout to FindCam()
+
 4.9.0
 - Deprecate setting use ec
 - Remove Cam3030_ADC_SetIfcMode
