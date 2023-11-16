@@ -3775,110 +3775,245 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	{
 		bufferSize = 1000
 	};
-	char charBuffer[bufferSize];
+	char* charBuffer[bufferSize];
 	int len = 0;
+	*stringPtr = (char*)calloc(bufferSize, sizeof(char));
 	bool isBitHigh;
+
+	/*=======================================================================*/
+	//CTRLA
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "CTRLA\n");
+
 	//CTRLA VON
 	es_status_codes status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_VONOFF, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "VON\t%i\n", isBitHigh);
-
-	//CTRLA D1 not described
-	//status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_IFC, &isBitHigh);
-	//len += springf_s(charBuffer + len, bufferSize - (size_t)len, "", isBitHigh)
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tVON\t%i\n", isBitHigh);
 
 	//CTRLA XCK
 	status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_XCK, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "XCK\t%i\n", isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tXCK\t % i\n", isBitHigh);
 
 	//CTRLA TRIG OUT
 	status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_TRIG_OUT, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "TRIG OUT\t%i\n", isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tTRIG OUT\t%i\n", isBitHigh);
 
 	//CTRLA BOTH SLOPE
 	status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_BOTH_SLOPE, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "BOTH SLOPE\t%i\n", isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBOTH SLOPE\t%i\n", isBitHigh);
 
 	//CTRLA SLOPE
 	status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_SLOPE, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "SLOPE\t%i\n", isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSLOPE\t%i\n", isBitHigh);
 
 	//CTRLA STRIGIN
 	status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_DIR_TRIGIN, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "STRIGIN\t%i\n", isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTRIGIN\t%i\n", isBitHigh);
 
 	/*=======================================================================*/
-	
-	//CTRLA B START
-	status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_TSTART, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "B START\t%i\n", isBitHigh);
+	//CTRLB
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "CTRLB\n");
 
+	bool sti0High, sti1High, sti2High;
 	//CTRLB STI0
 	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_STI0, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "STI0\t%i\n", isBitHigh);
+	sti0High = isBitHigh;
 
 	//CTRLB STI1
 	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_STI1, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "STI1\t%i\n", isBitHigh);
+	sti1High = isBitHigh;
 
 	//CTRLB STI2
 	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_STI2, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "STI2\t%i\n", isBitHigh);
+	sti2High = isBitHigh;
+
+	int combinedValueSTI = (sti2High << 2) | (sti1High << 1) | sti0High;
+
+	switch (combinedValueSTI) {
+	case 0: 
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\tI\n");
+		break;
+	case 1:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\tS1\n");
+		break;
+	case 2:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\tS2\n");
+		break;
+	case 3:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\tS2ENI\n");
+		break;
+	case 4:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\tST\n");
+		break;
+	case 5:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\tASL\n");
+		break;
+	default:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\tinvalid\n");
+		break;
+
+	}
 
 	//CTRLB SHON
 	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_SHON, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "SHON\t%i\n", isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSHON\t%i\n", isBitHigh);
 
+
+	bool bti0High, bti1High, bti2High;
 	//CTRLB BTI0
 	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI0, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "BTI0\t%i\n", isBitHigh);
+	bti0High = isBitHigh;
 
 	//CTRLB BTI1
 	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI1, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "BTI1\t%i\n", isBitHigh);
+	bti1High = isBitHigh;
 
 	//CTRLB BTI2
 	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI2, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "BTI2\t%i\n", isBitHigh);
+	bti2High = isBitHigh;
 
-	//CTRLB D7 not described
-	//status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_STI1, &isBitHigh);
-	//len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "STI1\t%i\n", isBitHigh);
+	int combinedValueBTI = (bti2High << 2) | (bti1High << 1) | bti0High;
+
+	switch (combinedValueBTI) {
+	case 0:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\tI\n");
+		break;
+	case 1:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\tS1\n");
+		break;
+	case 2:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\tS2\n");
+		break;
+	case 3:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\tS1&S2\n");
+		break;
+	case 4:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\tBT\n");
+		break;
+	case 5:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\tS1 Chopper\n");
+		break;
+	case 6:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\tS2 Chopper\n");
+		break;
+	case 7:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\tS1&S2 Chopper\n");
+		break;
+	}
 
 	/*=======================================================================*/
+	//CTRLC
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "CTRLC\n");
 
 	//CTRLC I
 	status = ReadBitS0_8(drvno, S0Addr_CTRLC, CTRLC_bitindex_I, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "I\t%i\n", isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tI\t%i\n", isBitHigh);
 
 	//CTRLC S1
 	status = ReadBitS0_8(drvno, S0Addr_CTRLC, CTRLC_bitindex_S1, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "S1\t%i\n", isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tS1\t%i\n", isBitHigh);
 
 	//CTRLC S2
 	status = ReadBitS0_8(drvno, S0Addr_CTRLC, CTRLC_bitindex_S2, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "S2\t%i\n", isBitHigh);
-
-	//CTRLC EARLY RESET no bitindex
-	//status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLC_bitindex_I, &isBitHigh);
-	//len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "SHON\t%i\n", isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tS2\t%i\n", isBitHigh);
 
 	//CTRLC EOI
 	status = ReadBitS0_8(drvno, S0Addr_CTRLC, CTRLC_bitindex_eoi, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "EOI\t%i\n", isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tEOI\t%i\n", isBitHigh);
 
 	//CTRLC EOI-CHB
 	status = ReadBitS0_8(drvno, S0Addr_CTRLC, CTRLC_bitindex_eoi_chb, &isBitHigh);
-	len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "EOI-CHB\t%i\n", isBitHigh);
-
-	//CTRLC 1 no bitindex
-	//status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI2, &isBitHigh);
-	//len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "BTI2\t%i\n", isBitHigh);
-
-	//CTRLB 0 no bitindex
-	//status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_STI1, &isBitHigh);
-	//len += sprintf_s(charBuffer + len, bufferSize - (size_t)len, "STI1\t%i\n", isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tEOI-CHB\t%i\n", isBitHigh);
 
 	/*=======================================================================*/
+	//Register XCK
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Register XCK\n");
+
+	//XCK STimer
+	uint8_t data1 = 0, data2 = 0, data3 = 0, data4 = 0;
+	status = readRegisterS0_8(drvno, &data1, S0Addr_XCKLL);
+	status = readRegisterS0_8(drvno, &data2, S0Addr_XCKLH);
+	status = readRegisterS0_8(drvno, &data3, S0Addr_XCKHL);
+	status = readRegisterS0_8(drvno, &data4, S0Addr_XCKMSB);
+
+	uint32_t data = (uint32_t)(data4 & 0x0F) << 24 | (uint32_t)data3 << 16 | (uint32_t)data2 << 8 | (uint32_t)data1;
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tXCK STIMER\t0x%x\n", data);
+
+	//XCK Res_ns
+	status = ReadBitS0_8(drvno, S0Addr_XCKMSB, XCKMSB_bitindex_reset_ns, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tRes_ns\t%i\n", isBitHigh);
+
+	//XCK Res_ms
+	status = ReadBitS0_8(drvno, S0Addr_XCKMSB, XCKMSB_bitindex_reset_ms, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tRes_ms\t%i\n", isBitHigh);
+
+	//XCK RS
+	status = ReadBitS0_8(drvno, S0Addr_XCKMSB, XCKMSB_bitindex_stimer_on, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tRS\t%i\n", isBitHigh);
+
+	/*=======================================================================*/
+	//FFCTRL
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "FFCTRL\n");
+
+	//FFCTRL RSBTH
+	status = ReadBitS0_8(drvno, S0Addr_FFCTRL, FFCTRL_bitindex_block_reset, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tRSBTH\t%i\n", isBitHigh);
+
+	//FFCTRL RSSTH
+	status = ReadBitS0_8(drvno, S0Addr_FFCTRL, FFCTRL_bitindex_scan_reset, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tRSSTH\t%i\n", isBitHigh);
+
+	//FFCTRL SWTrig
+	status = ReadBitS0_8(drvno, S0Addr_FFCTRL, FFCTRL_bitindex_SWTRIG, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSWTrig\t%i\n", isBitHigh);
+
+	//FFCTRL RS_FF
+	status = ReadBitS0_8(drvno, S0Addr_FFCTRL, FFCTRL_bitindex_RSFIFO, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tRS_FF\t%i\n", isBitHigh);
+
+	/*=======================================================================*/
+	//FF_FLAGS
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "FF_FLAGS\n");
+
+	//FF_FLAGS BFTH
+	status = ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_block_read, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTFH\t%i\n", isBitHigh);
+
+	//FF_FLAGS SFTH
+	status = ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_scan_read, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTFH\t%i\n", isBitHigh);
+
+	//FF_FLAGS OVFL
+	status = ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_overflow, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOVFL\t%i\n", isBitHigh);
+	
+	//FF_FLAGS XCKI no bitindex for xcki
+	status = ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_xcki, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tXCKI\t%i\n", isBitHigh);
+	
+	//FF_FLAGS FF
+	status = ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_full, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tFF\t%i\n", isBitHigh);
+
+	//FF_FLAGS EF
+	status = ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_empty, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tEF\t%i\n", isBitHigh);
+
+	//FF_FLAGS VALID
+	status = ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_valid, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tVALID\t%i\n", isBitHigh);
+
+	/*=======================================================================*/
+
+	//FIFOCNT WRCNT0 no enums for FIFOCNT
+	//status = ReadBitS0_8(drvno, S0Addr_FIFOCNT, FF_FLAGS_bitindex_block_read, &isBitHigh);
+	//len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "BTFH\t%i\n", isBitHigh);
+
+	/*=======================================================================*/
+
+
+
+	/*=======================================================================*/
+
+	return status;
 }
 
 es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr)

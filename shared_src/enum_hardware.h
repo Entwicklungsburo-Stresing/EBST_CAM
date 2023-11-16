@@ -141,7 +141,10 @@ enum TOR_MSB_bits_t
 enum XCKMSB_bits_t
 {
 	XCKMSB_bit_stimer_on = 0x40,
-	XCKMSB_bitindex_stimer_on = 6
+	XCKMSB_bitindex_reset_ns = 4,
+	XCKMSB_bitindex_reset_ms = 5,
+	XCKMSB_bitindex_stimer_on = 6,
+	XCKMSB_bitindex_F_EXT_TRIG = 7
 };
 
 enum pcie_addresses_t
@@ -166,6 +169,7 @@ enum FF_FLAGS_bits_t
 	FF_FLAGS_bitindex_valid = 7,
 	FF_FLAGS_bitindex_empty = 6,
 	FF_FLAGS_bitindex_full = 5,
+	FF_FLAGS_bitindex_xcki = 4,
 	FF_FLAGS_bitindex_overflow = 3,
 	FF_FLAGS_bitindex_scan_read = 2,
 	FF_FLAGS_bitindex_block_read = 1
