@@ -126,11 +126,13 @@ enum TOR_TOCNT_bits_t
 enum TOR_MSB_bits_t
 {
 	TOR_MSB_BITS_TO = 0xF8,
+	TOR_MSB_bit_ISFFT_LEGACY = 0x01,
 	TOR_MSB_bit_TOSEL = 0x08,
 	TOR_MSB_bit_TO0 = 0x10,
 	TOR_MSB_bit_TO1 = 0x20,
 	TOR_MSB_bit_TO2 = 0x40,
 	TOR_MSB_bit_TO3 = 0x80,
+	TOR_MSB_bitindex_ISFFT_LEGACY = 0,
 	TOR_MSB_bitindex_TOSEL = 3,
 	TOR_MSB_bitindex_TO0 = 4,
 	TOR_MSB_bitindex_TO1 = 5,
