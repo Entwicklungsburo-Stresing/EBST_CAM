@@ -573,6 +573,12 @@ es_status_codes SetCamCountRegister(uint32_t drvno)
 es_status_codes SetSensorType( uint32_t drvno, uint16_t sensor_type )
 {
 	ES_LOG("Setting sensor type: %u\n", sensor_type);
+	es_status_codes status;
+	if (sensor_type == sensor_type_fft)
+		status = setBitS0_8(drvno, TOR_MSB_bitindex_ISFFT_LEGACY, S0Addr_TOR_MSB);
+	else
+		status = resetBitS0_8(drvno, TOR_MSB_bitindex_ISFFT_LEGACY, S0Addr_TOR_MSB);
+	if (status != es_no_error) return status;
 	uint32_t data = sensor_type << camera_type_sensor_type_bit_index;
 	return writeBitsS0_32(drvno, data, camera_type_sensor_type_bits, S0Addr_CAMERA_TYPE);
 }
