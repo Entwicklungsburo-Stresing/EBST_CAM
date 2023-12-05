@@ -323,9 +323,13 @@ es_status_codes SetVfreqRegister(uint32_t drvno) // was vclk register
 	es_status_codes status = es_no_error;
 	uint16_t is_area_mode = 0;
 	if (settings_struct.camera_settings[drvno].fft_mode == area_mode) is_area_mode = 0x8000;
-	uint16_t is_fft = (uint16_t)settings_struct.camera_settings[drvno].sensor_type;
+	uint16_t is_fft;
+	if (settings_struct.camera_settings[drvno].sensor_type == sensor_type_fft)
+		is_fft = 1;
+	else
+		is_fft = 0;
 	uint16_t vfreqFPGA = (uint16_t)settings_struct.camera_settings[drvno].vfreq << 5; //multiplikation mit 32 damit FPGA vclks aehnlich lang wie die PCIe vclks sind
-	uint16_t vfreqRegsiter = (is_area_mode | (vfreqFPGA & 0x3FFF) << 1 | is_fft & 0x0001);
+	uint16_t vfreqRegsiter = (is_area_mode | (vfreqFPGA & 0x3FFF) << 1 | is_fft );
 	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclk, vfreqRegsiter);
 	return status;
 }
