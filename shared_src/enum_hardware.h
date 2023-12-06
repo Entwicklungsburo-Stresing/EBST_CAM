@@ -232,6 +232,18 @@ enum MaxPayloadSizeSupported_encoding_t
 	maxPaxloadSize_reserved2 = 7,
 };
 
+/**
+ * See section 7.8.4, figure 7-14 of the PCI Express Base Specification.
+ * https://astralvx.com/storage/2020/11/PCI_Express_Base_4.0_Rev0.3_February19-2014.pdf
+ */
+enum DeviceControl_bits_t
+{
+	deviceControl_maxPayloadSize_bits = 0xE0,
+	deviceControl_maxReadRequestSize_bits = 0x7000,
+	deviceControl_maxPayloadSize_bitindex = 5,
+	deviceControl_maxReadRequestSize_bitindex = 12,
+};
+
 enum FFCTRL_bits_t
 {
 	FFCTRL_bit_SWTRIG = 0x40,
