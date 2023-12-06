@@ -4093,63 +4093,31 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 		return status;
 	}
 	data &= PciExpressDeviceCapabilities_MaxPayloadSizeSupported_bits;
-	int maxPayloadSizeSupported = 0;
-	switch (data)
-	{
-	case maxPaxloadSize_128bytes:
-		maxPayloadSizeSupported = 128;
-		break;
-	case maxPaxloadSize_256bytes:
-		maxPayloadSizeSupported = 256;
-		break;
-	case maxPaxloadSize_512bytes:
-		maxPayloadSizeSupported = 512;
-		break;
-	case maxPaxloadSize_1024bytes:
-		maxPayloadSizeSupported = 1024;
-		break;
-	case maxPaxloadSize_2048bytes:
-		maxPayloadSizeSupported = 2048;
-		break;
-	case maxPaxloadSize_4096bytes:
-		maxPayloadSizeSupported = 4096;
-		break;
-	}
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Max_Payload_Size Supported:\t0x%x (%i bytes)\n", data, maxPayloadSizeSupported);
-	status = readConfig_32(drvno, &data, PCIeAddr_PCIExpressDeviceCapabilities);
+	// See section 7.8.3, table 7 - 13 of the PCI Express Base Specification.
+	// https://astralvx.com/storage/2020/11/PCI_Express_Base_4.0_Rev0.3_February19-2014.pdf
+	uint32_t maxSizeEncoding[8] = { 128, 256, 512, 1024, 2048, 4096, 0, 0};
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Max_Payload_Size Supported:\t0x%x (%u bytes)\n", data, maxSizeEncoding[data]);
+	status = readConfig_32(drvno, &data, PCIeAddr_DeviceControl);
 	if (status != es_no_error)
 	{
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nerror while reading register\n");
 		return status;
 	}
-	uint32_t actpayload = (data >> 5) & 0x07;
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "PAY_LOAD:\t"DLLTAB"0x%x\n", actpayload);
-	data >>= 12;
-	data &= 0x7;
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "MAX_READ_REQUEST_SIZE:\t0x%x\n", data);
+	uint32_t maxPayloadSize = (data & deviceControl_maxPayloadSize_bits) >> deviceControl_maxPayloadSize_bitindex;
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Max_Payload_Size:\t"DLLTAB"0x%x (%u bytes)\n", maxPayloadSize, maxSizeEncoding[maxPayloadSize]);
+	uint32_t maxReadRequestSize = (data & deviceControl_maxReadRequestSize_bits) >> deviceControl_maxReadRequestSize_bitindex;
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Max_Read_Request_Size:\t0x%x (%u bytes)\n", maxReadRequestSize, maxSizeEncoding[maxReadRequestSize]);
 	uint32_t pixel = 0;
 	status = readRegisterS0_32(drvno, &pixel, S0Addr_PIXREGlow);
 	pixel &= 0xFFFF;
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Number of pixels:\t"DLLTAB"%u\n", pixel);
-	switch (actpayload)
-	{
-	case 0: data = 0x20;  break;
-	case 1: data = 0x40;  break;
-	case 2: data = 0x80;  break;
-	case 3: data = 0x100; break;
-	case 4: data = 0x200;  break;
-	case 5: data = 0x400;  break;
-	case 6: data = 0x800;  break;
-	case 7: data = 0x1600; break;
-	}
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "TLP_SIZE is:\t"DLLTAB"%u DWORDs\n\t"DLLTAB DLLTAB"=%u BYTEs\n", data, data*4);
 	status = readRegisterDma_32(drvno, &data, DmaAddr_WDMATLPS);
 	if (status != es_no_error)
 	{
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nerror while reading register\n");
 		return status;
 	}
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "TLPS in DMAReg is:\t%u\n", data);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "TLPS in DMAReg is:\t%u (%u bytes)\n", data, data*4);
 	if (data)
 		data = (pixel - 1) / (data * 2) + 1;
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "number of TLPs should be:\t%u\n", data);
