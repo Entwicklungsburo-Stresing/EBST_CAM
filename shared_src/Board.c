@@ -4118,16 +4118,17 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 		return status;
 	}
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "TLPS in DMAReg is:\t%u (%u bytes)\n", data, data*4);
+	uint32_t numberOfTlps = 0;
 	if (data)
-		data = (pixel - 1) / (data * 2) + 1;
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "number of TLPs should be:\t%u\n", data);
+		numberOfTlps = (pixel - 1) / (data * 2) + 1;
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "number of TLPs per scan should be:\t(number of pixels - 1) / (TLPS in DMAReg * 2) + 1 \n\t= %u / %u + 1\n\t=%u\n", pixel-1, data*2, numberOfTlps);
 	status = readRegisterDma_32(drvno, &data, DmaAddr_WDMATLPC);
 	if (status != es_no_error)
 	{
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nerror while reading register\n");
 		return status;
 	}
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "number of TLPs is:\t"DLLTAB"%u", data);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "number of TLPs per scan is:\t"DLLTAB"%u", data);
 	return status;
 }
 
