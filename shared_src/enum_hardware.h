@@ -149,10 +149,62 @@ enum XCKMSB_bits_t
 	XCKMSB_bitindex_F_EXT_TRIG = 7
 };
 
-enum pcie_addresses_t
+/**
+ * Addresses of PCIe configuration space. See documentation of Spartan-6 FPGA Integrated Endpoint Block for details. Table 2-2.
+ * https://docs.xilinx.com/v/u/en-US/s6_pcie_ug654
+ */
+enum pcie_configuration_space_t
 {
-	PCIeAddr_devCap = 0x5C,
-	PCIeAddr_devStatCtrl = 0x60
+	PCIeAddr_VendorID = 0x00,
+	PCIeAddr_DeviceID = 0x02,
+	PCIeAddr_Command = 0x04,
+	PCIeAddr_Status = 0x06,
+	PCIeAddr_RevID = 0x08,
+	PCIeAddr_ClassCode = 0x09,
+	PCIeAddr_CacheLn = 0x0C,
+	PCIeAddr_LatTimer = 0x0D,
+	PCIeAddr_Header = 0x0E,
+	PCIeAddr_BIST = 0x0F,
+	PCIeAddr_BaseAddressRegister0 = 0x10,
+	PCIeAddr_BaseAddressRegister1 = 0x14,
+	PCIeAddr_BaseAddressRegister2 = 0x18,
+	PCIeAddr_BaseAddressRegister3 = 0x1C,
+	PCIeAddr_BaseAddressRegister4 = 0x20,
+	PCIeAddr_BaseAddressRegister5 = 0x24,
+	PCIeAddr_CardbusCisPointer = 0x28,
+	PCIeAddr_SubsystemVendorID = 0x2C,
+	PCIeAddr_SubsystemID = 0x2E,
+	PCIeAddr_ExpansionRomBaseAddress = 0x30,
+	PCIeAddr_CapPTr = 0x34,
+	PCIeAddr_Reserved1 = 0x35,
+	PCIeAddr_Reserved2 = 0x38,
+	PCIeAddr_IntrLine = 0x3C,
+	PCIeAddr_IntrPin = 0x3D,
+	PCIeAddr_MinGnt = 0x3E,
+	PCIeAddr_Maxlat = 0x3F,
+	PCIeAddr_PMCap = 0x40,
+	PCIeAddr_NxtCap1 = 0x41,
+	PCIeAddr_PMCapability = 0x42,
+	PCIeAddr_PMCSR = 0x44,
+	PCIeAddr_BSE = 0x46,
+	PCIeAddr_Data = 0x47,
+	PCIeAddr_MSICap = 0x48,
+	PCIeAddr_NxtCap2 = 0x49,
+	PCIeAddr_MsiControl = 0x4A,
+	PCIeAddr_MessageAddressLower = 0x4C,
+	PCIeAddr_MessageAddressUpper = 0x50,
+	PCIeAddr_MessageData = 0x54,
+	PCIeAddr_Reserved3 = 0x56,
+	PCIeAddr_PeCap = 0x58,
+	PCIeAddr_NxtCap3 = 0x59,
+	PCIeAddr_PeCapabilty = 0x5A,
+	PCIeAddr_PCIExpressDeviceCapabilities = 0x5C,
+	PCIeAddr_DeviceControl = 0x60,
+	PCIeAddr_DeviceStatus = 0x62,
+	PCIeAddr_PCIExpressLinkCapabilities = 0x64,
+	PCIeAddr_LinkControl = 0x68,
+	PCIeAddr_LinkStatus = 0x6A,
+	PCIeAddr_ReservedLegacyConfigurationSpace = 0x6C
 };
 
 enum FFCTRL_bits_t
