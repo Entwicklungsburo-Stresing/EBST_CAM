@@ -2454,7 +2454,7 @@ es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
 	uint32_t data = 0;
 	es_status_codes status = readConfig_32(drvno, &data, PCIeAddr_PCIExpressDeviceCapabilities);
 	if (status != es_no_error) return status;
-	int tlpmode = data & 0x7;//0xE0 ;
+	int tlpmode = data & PciExpressDeviceCapabilities_MaxPayloadSizeSupported_bits;
 	if (FORCETLPS128) tlpmode = 0;
 	//delete the old values
 	data &= 0xFFFFFF1F;
@@ -4086,15 +4086,36 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 	size_t bufferSize = bufferLength;
 	//allocate string buffer
 	*stringPtr = (char*)calloc(bufferLength, sizeof(char));
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "PAY_LOAD values:\t"DLLTAB"0 = 128 bytes\n\t"DLLTAB DLLTAB"1 = 256 bytes\n\t"DLLTAB DLLTAB"2 = 512 bytes\n");
 	es_status_codes status = readConfig_32(drvno, &data, PCIeAddr_PCIExpressDeviceCapabilities);
 	if (status != es_no_error)
 	{
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nerror while reading register\n");
 		return status;
 	}
-	data &= 0x7;
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "PAY_LOAD Supported:\t0x%x\n", data);
+	data &= PciExpressDeviceCapabilities_MaxPayloadSizeSupported_bits;
+	int maxPayloadSizeSupported = 0;
+	switch (data)
+	{
+	case maxPaxloadSize_128bytes:
+		maxPayloadSizeSupported = 128;
+		break;
+	case maxPaxloadSize_256bytes:
+		maxPayloadSizeSupported = 256;
+		break;
+	case maxPaxloadSize_512bytes:
+		maxPayloadSizeSupported = 512;
+		break;
+	case maxPaxloadSize_1024bytes:
+		maxPayloadSizeSupported = 1024;
+		break;
+	case maxPaxloadSize_2048bytes:
+		maxPayloadSizeSupported = 2048;
+		break;
+	case maxPaxloadSize_4096bytes:
+		maxPayloadSizeSupported = 4096;
+		break;
+	}
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Max_Payload_Size Supported:\t0x%x (%i bytes)\n", data, maxPayloadSizeSupported);
 	status = readConfig_32(drvno, &data, PCIeAddr_PCIExpressDeviceCapabilities);
 	if (status != es_no_error)
 	{
