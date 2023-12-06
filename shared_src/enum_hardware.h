@@ -207,6 +207,31 @@ enum pcie_configuration_space_t
 	PCIeAddr_ReservedLegacyConfigurationSpace = 0x6C
 };
 
+/**
+ * See section 7.8.3, figure 7-13 of the PCI Express Base Specification.
+ * https://astralvx.com/storage/2020/11/PCI_Express_Base_4.0_Rev0.3_February19-2014.pdf
+ */
+enum PciExpressDeviceCapabilities_bits_t
+{
+	PciExpressDeviceCapabilities_MaxPayloadSizeSupported_bits = 0x7
+};
+
+/**
+ * See section 7.8.3, table 7-13 of the PCI Express Base Specification.
+ * https://astralvx.com/storage/2020/11/PCI_Express_Base_4.0_Rev0.3_February19-2014.pdf
+ */
+enum MaxPayloadSizeSupported_encoding_t
+{
+	maxPaxloadSize_128bytes = 0,
+	maxPaxloadSize_256bytes = 1,
+	maxPaxloadSize_512bytes = 2,
+	maxPaxloadSize_1024bytes = 3,
+	maxPaxloadSize_2048bytes = 4,
+	maxPaxloadSize_4096bytes = 5,
+	maxPaxloadSize_reserved1 = 6,
+	maxPaxloadSize_reserved2 = 7,
+};
+
 enum FFCTRL_bits_t
 {
 	FFCTRL_bit_SWTRIG = 0x40,
