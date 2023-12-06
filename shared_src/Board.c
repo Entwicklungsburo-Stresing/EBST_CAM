@@ -2452,7 +2452,7 @@ es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
 	uint32_t no_tlps = pixel / 64;
 	if (LEGACY_202_14_TLPCNT) no_tlps = no_tlps + 1;
 	uint32_t data = 0;
-	es_status_codes status = readConfig_32(drvno, &data, PCIeAddr_devCap);
+	es_status_codes status = readConfig_32(drvno, &data, PCIeAddr_PCIExpressDeviceCapabilities);
 	if (status != es_no_error) return status;
 	int tlpmode = data & 0x7;//0xE0 ;
 	if (FORCETLPS128) tlpmode = 0;
@@ -2467,21 +2467,21 @@ es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
 	case 0:
 		data |= 0x00;//set to 128 bytes = 32 DWORDS 
 		//BData |= 0x00000020;//set from 128 to 256 
-		//WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
+		//WriteLongIOPort( drvno, BData, PCIeAddr_DeviceControl );
 		//NO_TLPS setup now in setboardvars
 		tlp_size = 0x20;
 		break;
 	case 1:
 		data |= 0x20;//set to 256 bytes = 64 DWORDS 
 		//BData |= 0x00000020;//set to 256 
-		//WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
+		//WriteLongIOPort( drvno, BData, PCIeAddr_DeviceControl );
 		//NO_TLPS = 0x9;//x9 was before. 0x10 is calculated in aboutlp and 0x7 is working;
 		tlp_size = 0x40;
 		break;
 	case 2:
 		data |= 0x40;//set to 512 bytes = 128 DWORDS 
 		//BData |= 0x00000020;//set to 512 
-		//WriteLongIOPort( drvno, BData, PCIeAddr_devStatCtrl );
+		//WriteLongIOPort( drvno, BData, PCIeAddr_DeviceControl );
 		//NO_TLPS = 0x5;
 		tlp_size = 0x80;
 		break;
@@ -2492,7 +2492,7 @@ es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
 		tlp_size = 0x20; // sets utilized TLP size in DWORDS (1 DWORD = 4 byte)
 		no_tlps = 0x11; // sets number of TLPs per scan/frame
 	}
-	status = writeConfig_32(drvno, data, PCIeAddr_devStatCtrl);
+	status = writeConfig_32(drvno, data, PCIeAddr_DeviceControl);
 	if (status != es_no_error) return status;
 	uint64_t dma_physical_address = getPhysicalDmaAddress(drvno);
 	// WDMATLPA (Reg name): write the lower part (bit 02:31) of the DMA address to the DMA controller
@@ -4087,7 +4087,7 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 	//allocate string buffer
 	*stringPtr = (char*)calloc(bufferLength, sizeof(char));
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "PAY_LOAD values:\t"DLLTAB"0 = 128 bytes\n\t"DLLTAB DLLTAB"1 = 256 bytes\n\t"DLLTAB DLLTAB"2 = 512 bytes\n");
-	es_status_codes status = readConfig_32(drvno, &data, PCIeAddr_devCap);
+	es_status_codes status = readConfig_32(drvno, &data, PCIeAddr_PCIExpressDeviceCapabilities);
 	if (status != es_no_error)
 	{
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nerror while reading register\n");
@@ -4095,7 +4095,7 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 	}
 	data &= 0x7;
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "PAY_LOAD Supported:\t0x%x\n", data);
-	status = readConfig_32(drvno, &data, PCIeAddr_devCap);
+	status = readConfig_32(drvno, &data, PCIeAddr_PCIExpressDeviceCapabilities);
 	if (status != es_no_error)
 	{
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nerror while reading register\n");
@@ -4387,10 +4387,12 @@ es_status_codes dumpPciRegisters(uint32_t drvno, char** stringPtr)
 	es_status_codes status = es_no_error;
 	enum N
 	{
-		number_of_registers = 0x30,
+		number_of_registers = 28,
 		bufferLength = 100,
 	};
 	size_t bufferSize = number_of_registers * bufferLength;
+	// See table 2-2 in documentation of Spartan-6 FPGA Integrated Endpoint Block for register names
+	// https://docs.xilinx.com/v/u/en-US/s6_pcie_ug654
 	char register_names[number_of_registers][bufferLength] = {
 	"Device ID, Vendor ID"DLLTAB DLLTAB,
 	"Status, Command"DLLTAB DLLTAB DLLTAB,
@@ -4408,38 +4410,18 @@ es_status_codes dumpPciRegisters(uint32_t drvno, char** stringPtr)
 	"Reserved, Cap. Pointer"DLLTAB DLLTAB,
 	"Reserved"DLLTAB DLLTAB DLLTAB DLLTAB,
 	"Max Lat., Min Gnt., Interrupt Pin, Intterupt Line",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific",
-	"device specific"
+	"PM Capability, NxtCap, PM Cap",
+	"Data, BSE, PMCSR",
+	"MSI Control, NxtCap, MSI Cap",
+	"Message Address (Lower)",
+	"Message Address (Upper)",
+	"Reserved, Message Data",
+	"PE Capability, NxtCap, PE Cap",
+	"PCI Express Device Capabilities",
+	"Device Status, Device Control",
+	"PCI Express Link Capabilties",
+	"Link Status, Link Control",
+	"Reserved Legacy Configuration Space"
 	};
 	*stringPtr = (char*)calloc(number_of_registers * bufferSize, sizeof(char));
 	for (uint16_t i = 0; i < number_of_registers; i++)
