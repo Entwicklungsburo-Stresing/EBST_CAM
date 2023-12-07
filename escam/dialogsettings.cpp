@@ -15,12 +15,12 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->cameraSettingsWidgetBoard2->drvno = 2;
 	ui->cameraSettingsWidgetBoard3->drvno = 3;
 	ui->cameraSettingsWidgetBoard4->drvno = 4;
-	connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &DialogSettings::on_accepted);
 	connect(ui->buttonBox, &QDialogButtonBox::accepted, ui->cameraSettingsWidgetBoard0, &CameraSettingsWidget::on_accepted);
 	connect(ui->buttonBox, &QDialogButtonBox::accepted, ui->cameraSettingsWidgetBoard1, &CameraSettingsWidget::on_accepted);
 	connect(ui->buttonBox, &QDialogButtonBox::accepted, ui->cameraSettingsWidgetBoard2, &CameraSettingsWidget::on_accepted);
 	connect(ui->buttonBox, &QDialogButtonBox::accepted, ui->cameraSettingsWidgetBoard3, &CameraSettingsWidget::on_accepted);
 	connect(ui->buttonBox, &QDialogButtonBox::accepted, ui->cameraSettingsWidgetBoard4, &CameraSettingsWidget::on_accepted);
+	connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &DialogSettings::on_accepted);
 	connect(ui->comboBoxSettingsLevel, QOverload<int>::of(&QComboBox::currentIndexChanged), ui->cameraSettingsWidgetBoard0, &CameraSettingsWidget::changeSettingsLevel);
 	connect(ui->comboBoxSettingsLevel, QOverload<int>::of(&QComboBox::currentIndexChanged), ui->cameraSettingsWidgetBoard1, &CameraSettingsWidget::changeSettingsLevel);
 	connect(ui->comboBoxSettingsLevel, QOverload<int>::of(&QComboBox::currentIndexChanged), ui->cameraSettingsWidgetBoard2, &CameraSettingsWidget::changeSettingsLevel);
