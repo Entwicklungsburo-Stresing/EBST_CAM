@@ -473,6 +473,8 @@ void MainWindow::on_actionfifo_pixels_triggered()
  */
 void MainWindow::loadSettings()
 {
+	bool isCooledCam = false;
+	bool isOvertempCam = false;
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
@@ -481,9 +483,21 @@ void MainWindow::loadSettings()
 		{
 			settings.beginGroup("board" + QString::number(drvno));
 			uint8_t tor = static_cast<uint8_t>(settings.value(settingTorPath, settingTorDefault).toDouble());
+			bool isCooledCamBoard = settings.value(settingIsCooledCamPath, settingIsCooledCamDefault).toBool();
+			int cameraSystem = settings.value(settingCameraSystemPath, settingCameraSystemDefault).toDouble();
+			if (cameraSystem == 2) isOvertempCam = true;
+			isCooledCam |= isCooledCamBoard;
 			settings.endGroup();
 			lsc.setTorOut(drvno, tor);
 		}
+	}
+	if (isOvertempCam) 
+	{
+		ui->widgetOvertempParent->setVisible(true);
+	}
+	else
+	{
+		ui->widgetOvertempParent->setVisible(isCooledCam);
 	}
 	int nos = settings.value(settingNosPath, settingNosDefault).toDouble();
 	ui->horizontalSliderSample->setMaximum(nos);
