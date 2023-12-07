@@ -32,8 +32,7 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readScanFrequencyBit);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readBlockFrequencyBit);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::findCamera);
-	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readCameraOvertemp);
-	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readCameraTempGood);
+	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::on_readCameraTemp);
 	connect(scanFrequencyTimer, &QTimer::timeout, this, &MainWindow::on_scanFrequencyTooHigh);
 	connect(blockFrequencyTimer, &QTimer::timeout, this, &MainWindow::on_blockFrequencyTooHigh);
 	connect(ui->radioButtonLiveViewFixedSample, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
@@ -895,15 +894,19 @@ void MainWindow::on_blockFrequencyTooHigh()
 }
 
 /**
- * @brief Checks if Cameras are overtemp and turns on lamp if so.
+ * @brief Reads the camera overtemp and the camera temp good bit, and sets the LED to it's according color.
+ * RED if Overtemp bit is set
+ * GREEN is temp good bit is set
+ * DARK GRAY if no bit is set
  */
-void MainWindow::readCameraOvertemp()
+void MainWindow::on_readCameraTemp()
 {
 	bool isOvertemp = false;
+	bool isCooled = false;
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
 	int64_t sample = 0;
 	int64_t block = 0;
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++) 
 	{
 		// Check if the drvno'th bis is set
 		if ((board_sel >> drvno) & 1)
@@ -912,16 +915,22 @@ void MainWindow::readCameraOvertemp()
 			if (sample >= 0 && aCAMCNT[drvno] > 0)
 			{
 				bool cameraBoardOvertemp = false;
+				bool cameraBoardCooled = false;
 				for (uint16_t camera_pos = 0; camera_pos < aCAMCNT[drvno]; camera_pos++)
 				{
 					bool cameraOvertemp = false;
 					es_status_codes status = lsc.getCameraStatusOverTemp(drvno, static_cast<uint32_t>(sample), static_cast<uint32_t>(block), camera_pos, &cameraOvertemp);
 					cameraBoardOvertemp |= cameraOvertemp;
+					bool cameraCooled = false;
+					status = lsc.getCameraStatusTempGood(drvno, static_cast<uint32_t>(sample), static_cast<uint32_t>(block), camera_pos, &cameraCooled);
+					cameraBoardCooled |= cameraCooled;
 				}
 				isOvertemp |= cameraBoardOvertemp;
+				isCooled |= cameraBoardCooled;
 			}
 		}
 	}
+
 	if (isOvertemp)
 	{
 		QPalette pal = palette();
@@ -929,43 +938,7 @@ void MainWindow::readCameraOvertemp()
 		ui->widgetOvertempParent->setToolTip("Camera temperature too high");
 		ui->widgetOvertemp->setPalette(pal);
 	}
-	else
-	{
-		QPalette pal = palette();
-		pal.setColor(QPalette::Window, Qt::darkGray);
-		ui->widgetOvertempParent->setToolTip("Camera temperature ok");
-		ui->widgetOvertemp->setPalette(pal);
-	}
-	return;
-}
-
-void MainWindow::readCameraTempGood()
-{
-	bool isTempGood = false;
-	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();;
-	int64_t sample = 0;
-	int64_t block = 0;
-
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
-	{
-		if ((board_sel >> drvno) & 1)
-		{
-			lsc.getCurrentScanNumber(drvno, &sample, &block);
-			if (sample >= 0 && aCAMCNT[drvno] > 0) 
-			{
-				bool cameraBoardTempGood = false;
-				for (uint16_t camera_pos = 0; camera_pos < aCAMCNT[drvno]; camera_pos++)
-				{
-					bool cameraTempGood = false;
-					es_status_codes status = lsc.getCameraStatusTempGood(drvno, static_cast<uint32_t>(sample), static_cast<uint32_t>(block), camera_pos, &cameraTempGood);
-					cameraBoardTempGood |= cameraTempGood;
-				}
-				isTempGood |= cameraBoardTempGood;
-			}
-		}
-	}
-
-	if (isTempGood) 
+	else if (isCooled)
 	{
 		QPalette pal = palette();
 		pal.setColor(QPalette::Window, Qt::green);
@@ -979,6 +952,8 @@ void MainWindow::readCameraTempGood()
 		ui->widgetOvertempParent->setToolTip("Camera temperature ok");
 		ui->widgetOvertemp->setPalette(pal);
 	}
+	return;
+
 }
 
 void MainWindow::on_rubberBandChanged()
