@@ -484,7 +484,7 @@ void MainWindow::loadSettings()
 			uint8_t tor = static_cast<uint8_t>(settings.value(settingTorPath, settingTorDefault).toDouble());
 			bool isCooledCamBoard = settings.value(settingIsCooledCamPath, settingIsCooledCamDefault).toBool();
 			int cameraSystem = settings.value(settingCameraSystemPath, settingCameraSystemDefault).toDouble();
-			if (cameraSystem == 2) isOvertempCam = true;
+			if (cameraSystem == camera_system_3030) isOvertempCam = true;
 			isCooledCam |= isCooledCamBoard;
 			settings.endGroup();
 			lsc.setTorOut(drvno, tor);
