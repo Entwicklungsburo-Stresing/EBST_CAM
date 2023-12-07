@@ -79,8 +79,7 @@ private slots:
 	void readBlockFrequencyBit();
 	void on_blockFrequencyTooHigh();
 	void findCamera();
-	void readCameraOvertemp();
-	void readCameraTempGood();
+	void on_readCameraTemp();
 };
 
 #endif // MAINWINDOW_H
