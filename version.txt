@@ -1,5 +1,9 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.10.1
+- Hide temperature LED when not needed
+- Improve dumpTlpRegisters()
+
 4.10.0
 - Readd legacy ISFFT, which was removed in 4.9.0
 
