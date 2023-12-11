@@ -15,7 +15,6 @@ volatile UINT8 dmaBufferPartReadPos[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 WD_DMA* dmaBufferInfos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL }; //there will be saved the necessary parameters for the DMA buffer
 WDC_PCI_SCAN_RESULT scanResult;
 WD_PCI_CARD_INFO deviceInfo[MAXPCIECARDS];
-int64_t ticksPerSecond = 0;
 bool _SHOW_MSG = TRUE;
 HANDLE ghMutex[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 HANDLE mutexUserBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
@@ -44,21 +43,6 @@ es_status_codes CleanupDma(uint32_t drvno)
 	ES_LOG("Unlock DMABuf successful\n");
 	dmaBuffer[drvno] = NULL;
 	return es_no_error;
-}
-
-/**
-\brief Init high resolution counter.
-\return ticksPerSecond ticks per sec
-*/
-int64_t InitHRCounter()
-{
-	ES_LOG("Init HR counter\n");
-	int64_t ticksPerSecond = 0;
-	LARGE_INTEGER freq;
-	QueryPerformanceFrequency(&freq);
-	ticksPerSecond = freq.QuadPart; //ticks per second
-	ES_LOG("ticksPerSecond: %lld\n", ticksPerSecond);
-	return ticksPerSecond;
 }
 
 /**
@@ -518,7 +502,6 @@ es_status_codes _InitDriver()
 		return es_driver_init_failed;
 	}
 	BZERO( scanResult );
-	ticksPerSecond = InitHRCounter();//for ticks function
 	ES_LOG("Scan PCIe devices\n");
 	dwStatus = WDC_PciScanDevices( LSCPCIEJ_DEFAULT_VENDOR_ID, LSCPCIEJ_DEFAULT_DEVICE_ID, &scanResult ); //VendorID, DeviceID
 	if (WD_STATUS_SUCCESS != dwStatus)
@@ -765,10 +748,15 @@ es_status_codes WaitTrigger(uint32_t drvno, bool ExtTrigFlag, bool *SpaceKey, bo
 */
 int64_t ConvertTicksToMicroseconds(int64_t ticks)
 {
-	int64_t microseconds = ticks * 1000000 / ticksPerSecond;
+	int64_t ticksPerSecond = 0;
+	LARGE_INTEGER freq;
+	QueryPerformanceFrequency(&freq);
+	ticksPerSecond = freq.QuadPart;
+	int64_t microseconds = 0;
+	if(ticksPerSecond)
+		microseconds = ticks * 1000000 / ticksPerSecond;
 	return microseconds;
 }
-
 
 /**
  * \brief This functions returns after a time given in microseconds. The time is measured in CPU ticks. The function is escapable by pressing ESC.
