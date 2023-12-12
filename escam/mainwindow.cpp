@@ -214,6 +214,7 @@ void MainWindow::startPressed()
 		settings_struct.camera_settings[drvno].tor = settings.value(settingTorPath, settingTorDefault).toDouble();
 		settings_struct.camera_settings[drvno].adc_mode = settings.value(settingAdcModePath, settingAdcModeDefault).toDouble();
 		settings_struct.camera_settings[drvno].adc_custom_pattern = settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toDouble();
+		settings_struct.camera_settings[drvno].bnc_out = settings.value(settingBncOutPath, settingBncOutDefault).toDouble();
 		settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[0] = settings.value(settingIOCtrlOutput1DelayIn5nsPath, settingIOCtrlOutput1DelayIn5nsDefault).toDouble();
 		settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[1] = settings.value(settingIOCtrlOutput2DelayIn5nsPath, settingIOCtrlOutput2DelayIn5nsDefault).toDouble();
 		settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[2] = settings.value(settingIOCtrlOutput3DelayIn5nsPath, settingIOCtrlOutput3DelayIn5nsDefault).toDouble();

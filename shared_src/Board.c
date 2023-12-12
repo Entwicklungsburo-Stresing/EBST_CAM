@@ -281,7 +281,8 @@ es_status_codes SetConfigRegister(uint32_t drvno)
 	uint16_t trigger_mode = (uint16_t)settings_struct.camera_settings[drvno].trigger_mode_cc;
 	uint16_t cool_level = (uint8_t)settings_struct.camera_settings[drvno].temp_level;
 	uint16_t led_off = (uint16_t)settings_struct.camera_settings[drvno].led_off;
-	uint16_t configRegister = ((led_off & 0x0001) << 7 | (cool_level & 0x0007) << 4 | (trigger_mode & 0x0007) << 1 | (sensor_gain & 0x0001));
+	uint16_t bnc_out = (uint16_t)settings_struct.camera_settings[drvno].bnc_out;
+	uint16_t configRegister = ((bnc_out & 0x0003) << 8 | (led_off & 0x0001) << 7 | (cool_level & 0x0007) << 4 | (trigger_mode & 0x0007) << 1 | (sensor_gain & 0x0001));
 
 	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, configRegister);
 	if (status != es_no_error) return status;

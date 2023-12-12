@@ -51,6 +51,7 @@
 #define settingDacCameraDefault						55000
 #define settingDacPcieDefault						20000
 #define settingTorDefault							tor_xck
+#define settingBncOutDefault						bnc_out_xck
 #define settingAdcModeDefault						normal
 #define settingAdcCustomValueDefault				0
 #define settingThemeIndexDefault					0
