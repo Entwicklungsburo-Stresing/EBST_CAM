@@ -220,6 +220,10 @@ struct camera_settings
 	 * - >0 Camera is cooled. This option is setting a bit in the PCIe board to react correctly to the cooled status messages from the camera.
 	 */
 	uint32_t is_cooled_cam;
+	/**
+	 * Output mode for CC Box XCK output. See enum \ref bnc_out_t in enum_settings.h for options.
+	 */
+	uint32_t bnc_out;
 };
 
 // In this struct are settings, that are the same for all PCIe boards.

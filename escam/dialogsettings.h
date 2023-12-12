@@ -84,6 +84,8 @@ constexpr auto settingDacPcieChannel8Path = "dacPcieChannel8";
 constexpr auto settingTorPath = "tor";
 constexpr auto settingAdcModePath = "adcMode";
 constexpr auto settingAdcCustomValuePath = "adcCustomValue";
+constexpr auto settingBncOutPath = "bncOut";
+
 //appearance
 constexpr auto settingThemePath = "theme";
 constexpr auto settingThemeIndexPath = "themeIndex";
