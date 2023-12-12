@@ -254,6 +254,17 @@ enum tor_out_t
 };
 
 /**
+ * This enum shows all options for the setting \ref camera_settings.bnc_out.
+ */
+enum bnc_out_t
+{
+	bnc_out_xck = 0,
+	bnc_out_exp_win = 1,
+	bnc_out_adc_clk = 2,
+	bnc_out_null = 3
+};
+
+/**
  * This enum shows all options for the setting \ref camera_settings.sslope.
  */
 enum sslope_t
