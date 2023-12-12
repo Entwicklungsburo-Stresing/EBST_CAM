@@ -254,6 +254,7 @@ DllAccess es_status_codes DLLCopyAllData_multipleBoards(uint16_t* pdest0, uint16
 			status = GetAddressOfPixel(drvno, 0, 0, 0, 0, &pframe);
 			if (status != es_no_error) return status;
 			memcpy(pdest[usedBoards], pframe, (uint64_t)(*Nospb) * (uint64_t)(*Nob) * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno] * sizeof(uint16_t));
+			usedBoards++;
 		}
 	return status;
 }
