@@ -3792,6 +3792,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	bool isBitHigh;
 
 	/*=======================================================================*/
+	
 	//CTRLA
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "CTRLA\n");
 
@@ -3820,6 +3821,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTRIGIN\t%i\n", isBitHigh);
 
 	/*=======================================================================*/
+	
 	//CTRLB
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "CTRLB\n");
 
@@ -3911,6 +3913,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	}
 
 	/*=======================================================================*/
+	
 	//CTRLC
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "CTRLC\n");
 
@@ -3935,18 +3938,19 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tEOI-CHB\t%i\n", isBitHigh);
 
 	/*=======================================================================*/
+	
 	//Register XCK
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Register XCK\n");
 
 	//XCK STimer
-	uint8_t data1 = 0, data2 = 0, data3 = 0, data4 = 0;
-	status = readRegisterS0_8(drvno, &data1, S0Addr_XCKLL);
-	status = readRegisterS0_8(drvno, &data2, S0Addr_XCKLH);
-	status = readRegisterS0_8(drvno, &data3, S0Addr_XCKHL);
-	status = readRegisterS0_8(drvno, &data4, S0Addr_XCKMSB);
+	uint8_t dataXCK1 = 0, dataXCK2 = 0, dataXCK3 = 0, dataXCK4 = 0;
+	status = readRegisterS0_8(drvno, &dataXCK1, S0Addr_XCKLL);
+	status = readRegisterS0_8(drvno, &dataXCK2, S0Addr_XCKLH);
+	status = readRegisterS0_8(drvno, &dataXCK3, S0Addr_XCKHL);
+	status = readRegisterS0_8(drvno, &dataXCK4, S0Addr_XCKMSB);
 
-	uint32_t data = (uint32_t)(data4 & 0x0F) << 24 | (uint32_t)data3 << 16 | (uint32_t)data2 << 8 | (uint32_t)data1;
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tXCK STIMER\t0x%x\n", data);
+	uint32_t dataXCK = (uint32_t)(dataXCK4 & 0x0F) << 24 | (uint32_t)dataXCK3 << 16 | (uint32_t)dataXCK2 << 8 | (uint32_t)dataXCK1;
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tXCK STIMER\t0x%x\n", dataXCK);
 
 	//XCK Res_ns
 	status = ReadBitS0_8(drvno, S0Addr_XCKMSB, XCKMSB_bitindex_reset_ns, &isBitHigh);
@@ -3961,6 +3965,33 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tRS\t%i\n", isBitHigh);
 
 	/*=======================================================================*/
+	
+	//Register XCKCNT
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Register XCKCNT\n");
+
+	uint8_t dataXCKCNT1 = 0, dataXCKCNT2 = 0, dataXCKCNT3 = 0, dataXCKCNT4 = 0;
+	status = readRegisterS0_8(drvno, &dataXCKCNT1, S0Addr_XCKCNTLL);
+	status = readRegisterS0_8(drvno, &dataXCKCNT2, S0Addr_XCKCNTLH);
+	status = readRegisterS0_8(drvno, &dataXCKCNT3, S0Addr_XCKCNTHL);
+	status = readRegisterS0_8(drvno, &dataXCKCNT4, S0Addr_XCKCNTMSB);
+
+	uint32_t dataXCKCNT = (uint32_t)(dataXCKCNT4 & 0x0F) << 24 | (uint32_t)dataXCKCNT3 << 16 | (uint32_t)dataXCKCNT2 << 8 | (uint32_t)dataXCKCNT1;
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tXCKCNT\t0x%x\n", dataXCKCNT);
+
+	/*=======================================================================*/
+
+	//Register PIXREG
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\Register PIXREG\n");
+
+	uint8_t dataPIXREGHigh = 0, dataPIXREGLow = 0;
+	status = readRegisterS0_8(drvno, &dataPIXREGHigh, S0Addr_PIXREGhigh);
+	status = readRegisterS0_8(drvno, &dataPIXREGLow, S0Addr_PIXREGlow);
+
+	uint32_t dataPIXREG = (uint16_t)(dataPIXREGHigh & 0x0F) << 8 | (uint16_t)dataPIXREGLow;
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPIXREG\t%i\n", dataPIXREG);
+
+	/*=======================================================================*/
+	
 	//FFCTRL
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "FFCTRL\n");
 
@@ -3981,6 +4012,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tRS_FF\t%i\n", isBitHigh);
 
 	/*=======================================================================*/
+	
 	//FF_FLAGS
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "FF_FLAGS\n");
 
