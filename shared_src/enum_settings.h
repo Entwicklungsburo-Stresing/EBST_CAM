@@ -240,6 +240,34 @@ enum tor_out_t
 	 */
 	tor_i = 21,
 	/**
+	 * 22: Unused.
+	 */
+	tor_unused_22 = 22,
+	/**
+	 * 23: Unused.
+	 */
+	tor_unused_23 = 23,
+	/**
+	 * 24: Unused.
+	 */
+	tor_unused_24 = 24,
+	/**
+	 * 25: Unused.
+	 */
+	tor_unused_25 = 25,
+	/**
+	 * 26: Unused.
+	 */
+	tor_unused_26 = 26,
+	/**
+	 * 27: Unused.
+	 */
+	tor_unused_27 = 27,
+	/**
+	 * 28: Unused.
+	 */
+	tor_unused_28 = 28,
+	/**
 	 * 29:
 	 */
 	tor_enffr = 29,

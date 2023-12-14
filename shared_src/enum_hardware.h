@@ -137,9 +137,36 @@ enum TOR_MSB_bits_t
 	TOR_MSB_bitindex_TO0 = 4,
 	TOR_MSB_bitindex_TO1 = 5,
 	TOR_MSB_bitindex_TO2 = 6,
-	TOR_MSB_bitindex_TO3 = 7
+	TOR_MSB_bitindex_TO3 = 7,
+	TOR_MSB_bit_TO_control = 0xF0
 };
 
+enum ARREG_bits_t
+{
+	ARREG_bitindex_partial_binning = 15,
+	ARREG_bit_pb_control = 0x7FFF
+};
+
+enum GIOREG_bits_t
+{
+	GIOREG_bitindex_O1 = 0,
+	GIOREG_bitindex_O2 = 1,
+	GIOREG_bitindex_O3 = 2,
+	GIOREG_bitindex_O4 = 3,
+	GIOREG_bitindex_O5 = 4,
+	GIOREG_bitindex_O6 = 5,
+	GIOREG_bitindex_O7 = 6,
+	GIOREG_bitindex_O8 = 7,
+	GIOREG_bitindex_I1 = 8,
+	GIOREG_bitindex_I2 = 9,
+	GIOREG_bitindex_I3 = 10,
+	GIOREG_bitindex_I4 = 11,
+	GIOREG_bitindex_I5 = 12,
+	GIOREG_bitindex_I6 = 13,
+	GIOREG_bitindex_I7 = 14,
+	GIOREG_bitindex_I8 = 15,
+
+};
 enum XCKMSB_bits_t
 {
 	XCKMSB_bit_stimer_on = 0x40,
@@ -264,6 +291,39 @@ enum FF_FLAGS_bits_t
 	FF_FLAGS_bitindex_overflow = 3,
 	FF_FLAGS_bitindex_scan_read = 2,
 	FF_FLAGS_bitindex_block_read = 1
+};
+
+enum FIFOCNT_bits_t
+{
+	FIFOCNT_bitindex_WRCNT7 = 7,
+	FIFOCNT_bitindex_WRCNT6 = 6,
+	FIFOCNT_bitindex_WRCNT5 = 5,
+	FIFOCNT_bitindex_WRCNT4 = 4,
+	FIFOCNT_bitindex_WRCNT3 = 3,
+	FIFOCNT_bitindex_WRCNT2 = 2,
+	FIFOCNT_bitindex_WRCNT1 = 1,
+	FIFOCNT_bitindex_WRCNT0 = 0
+};
+
+enum VCLKCTRL_bits_t
+{
+	VCLKCNT_bit_control = 0x00000FFF
+
+};
+
+/**
+ * VCLKFREQ_base_value: Base frequency for the vertical clocks.
+ * VCLKFREQ_step_value: Steps on which the VCLK increases based on VCLKFREQ Value
+ */
+enum VCLKFREQ_bits_t
+{
+	VCLKFREQ_base_value = 200,
+	VCLKFREQ_step_value = 400
+};
+
+enum SDAT_bits_t
+{
+	SDAT_bit_control = 0x3FFFFFFF
 };
 
 //S0 Addresses
