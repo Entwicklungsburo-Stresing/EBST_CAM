@@ -261,7 +261,7 @@ enum bnc_out_t
 	bnc_out_xck = 0,
 	bnc_out_exp_win = 1,
 	bnc_out_adc_clk = 2,
-	bnc_out_null = 3
+	bnc_out_0V = 3
 };
 
 /**
