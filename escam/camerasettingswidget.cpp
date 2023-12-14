@@ -131,7 +131,7 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingTorPath, ui->comboBoxOutput->currentIndex());
 	settings.setValue(settingAdcModePath, ui->comboBoxAdcMode->currentIndex());
 	settings.setValue(settingAdcCustomValuePath, ui->spinBoxAdcCustom->value());
-	settings.setValue(settingBncOutPath, ui->comboBncOutOut->currentIndex());
+	settings.setValue(settingBncOutPath, ui->comboBoxBncOut->currentIndex());
 	return;
 }
 
@@ -412,7 +412,7 @@ void CameraSettingsWidget::loadDefaults()
 	ui->comboBoxOutput->setCurrentIndex(settingTorDefault);
 	ui->comboBoxAdcMode->setCurrentIndex(settingAdcModeDefault);
 	ui->spinBoxAdcCustom->setValue(settingAdcCustomValueDefault);
-	ui->comboBncOutOut->setCurrentIndex(settingBncOutDefault);
+	ui->comboBoxBncOut->setCurrentIndex(settingBncOutDefault);
 	return;
 }
 
@@ -717,6 +717,6 @@ void CameraSettingsWidget::initializeWidget()
 	ui->comboBoxOutput->setCurrentIndex(settings.value(settingTorPath, settingTorDefault).toDouble());
 	ui->comboBoxAdcMode->setCurrentIndex(settings.value(settingAdcModePath, settingAdcModeDefault).toDouble());
 	ui->spinBoxAdcCustom->setValue(settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toDouble());
-	ui->comboBncOutOut->setCurrentIndex(settings.value(settingBncOutPath, settingBncOutDefault).toDouble());
+	ui->comboBoxBncOut->setCurrentIndex(settings.value(settingBncOutPath, settingBncOutDefault).toDouble());
 	return;
 }
