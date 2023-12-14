@@ -3823,7 +3823,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 	
 	//CTRLB
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "CTRLB\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nCTRLB\n");
 
 	bool sti0High, sti1High, sti2High;
 	//CTRLB STI0
@@ -3872,20 +3872,21 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	bool bti0High, bti1High, bti2High;
 	//CTRLB BTI0
-	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI0, &isBitHigh);
-	bti0High = isBitHigh;
+	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI0, &bti0High);
+	//bti0High = isBitHigh;
 
 	//CTRLB BTI1
-	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI1, &isBitHigh);
-	bti1High = isBitHigh;
+	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI1, &bti1High);
+	//bti1High = isBitHigh;
 
 	//CTRLB BTI2
-	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI2, &isBitHigh);
-	bti2High = isBitHigh;
+	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI2, &bti2High);
+	//bti2High = isBitHigh;
 
 	int combinedValueBTI = (bti2High << 2) | (bti1High << 1) | bti0High;
 
-	switch (combinedValueBTI) {
+	switch (combinedValueBTI) 
+	{
 	case 0:
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\tI\n");
 		break;
@@ -3915,7 +3916,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 	
 	//CTRLC
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "CTRLC\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nCTRLC\n");
 
 	//CTRLC I
 	status = ReadBitS0_8(drvno, S0Addr_CTRLC, CTRLC_bitindex_I, &isBitHigh);
@@ -3940,7 +3941,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 	
 	//Register XCK
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Register XCK\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nRegister XCK\n");
 
 	//XCK STimer
 	uint8_t dataXCK1 = 0, dataXCK2 = 0, dataXCK3 = 0, dataXCK4 = 0;
@@ -3967,7 +3968,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 	
 	//Register XCKCNT
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Register XCKCNT\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nRegister XCKCNT\n");
 
 	uint8_t dataXCKCNT1 = 0, dataXCKCNT2 = 0, dataXCKCNT3 = 0, dataXCKCNT4 = 0;
 	status = readRegisterS0_8(drvno, &dataXCKCNT1, S0Addr_XCKCNTLL);
@@ -3981,7 +3982,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 
 	//Register PIXREG
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\Register PIXREG\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nRegister PIXREG\n");
 
 	uint8_t dataPIXREGHigh = 0, dataPIXREGLow = 0;
 	status = readRegisterS0_8(drvno, &dataPIXREGHigh, S0Addr_PIXREGhigh);
@@ -3993,7 +3994,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 	
 	//FFCTRL
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "FFCTRL\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nFFCTRL\n");
 
 	//FFCTRL RSBTH
 	status = ReadBitS0_8(drvno, S0Addr_FFCTRL, FFCTRL_bitindex_block_reset, &isBitHigh);
@@ -4014,7 +4015,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 	
 	//FF_FLAGS
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "FF_FLAGS\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nFF_FLAGS\n");
 
 	//FF_FLAGS BFTH
 	status = ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_block_read, &isBitHigh);
@@ -4046,16 +4047,245 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	/*=======================================================================*/
 
-	//FIFOCNT WRCNT0 no enums for FIFOCNT
-	//status = ReadBitS0_8(drvno, S0Addr_FIFOCNT, FF_FLAGS_bitindex_block_read, &isBitHigh);
-	//len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "BTFH\t%i\n", isBitHigh);
+	//FIFOCNT
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nFIFOCNT\n");
+
+	//WRCNT
+	uint8_t dataFIFOCNT = 0;
+	status = readRegisterS0_8(drvno, &dataFIFOCNT, S0Addr_FIFOCNT);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tWRCNT\t%i\n", dataFIFOCNT);
 
 	/*=======================================================================*/
 
+	//VCLKCTRL
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nVCLKCTRL\n");
 
+	//Register VCLKCNT
+	uint32_t dataVCLKCNT = 0;
+	status = readRegisterS0_32(drvno, &dataVCLKCNT, S0Addr_VCLKCTRL);
+	dataVCLKCNT &= VCLKCNT_bit_control;
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tVCLKCNT\t%i\n", dataVCLKCNT);
+
+	//Register VCLKFREQ
+	uint8_t dataVCLKFREQ = 0;
+	status = readRegisterS0_8(drvno, &dataVCLKFREQ, S0Addr_VCLKFREQ);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tVCLKFREQ\t%i\n", dataVCLKFREQ);
+	
+	int translatedVCLKFREQ = "";
+	
+	if (dataVCLKFREQ == 0) translatedVCLKFREQ = 0;
+	else translatedVCLKFREQ = VCLKFREQ_base_value + ((int)dataVCLKFREQ * VCLKFREQ_step_value);
+
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tTranslated VCLKFREQ\t%ins\n", translatedVCLKFREQ);
 
 	/*=======================================================================*/
 
+	//SDAT
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nSDAT\n");
+	uint32_t dataSDAT = 0;
+	status = readRegisterS0_32(drvno, &dataSDAT, S0Addr_SDAT);
+
+	uint32_t bitmaskSDAT = 1u << 30;
+	
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tEnabled\t%i\n", (dataSDAT & bitmaskSDAT));
+	
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tDelay\t%i\n", (dataSDAT & SDAT_bit_control));
+
+	/*=======================================================================*/
+
+	//TOR Register
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nRegister TOR\n");
+
+	//TOCOUNT
+	status = ReadBitS0_8(drvno, S0Addr_TOR_TOCNT, TOR_bitindex_TOCNT_EN, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tTOCNT enabled\t%i\n", isBitHigh);
+	uint8_t dataTOCNT = 0;
+	status = readRegisterS0_8(drvno, &dataTOCNT, S0Addr_TOR_TOCNT);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tTOCNT\t%i\n\n", (dataTOCNT & TOR_bits_TOCNT));
+
+	//TICOUNT
+	status = ReadBitS0_8(drvno, S0Addr_TOR_TICNT, TOR_bitindex_TICNT_EN, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tTICNT enabled\t%i\n", isBitHigh);
+	uint8_t dataTICNT = 0;
+	status = readRegisterS0_8(drvno, &dataTICNT, S0Addr_TOR_TICNT);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tTICNT\t%i\n\n", (dataTICNT & TOR_bits_TICNT));
+
+	//ISFFT
+	status = ReadBitS0_8(drvno, S0Addr_TOR_MSB, TOR_MSB_bitindex_ISFFT_LEGACY, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tIS FFT\t%i\n\n", isBitHigh);
+
+	//PCI Output
+	bool isTO0 = 0, isTO1 = 0, isTO2 = 0, isTO3 = 0, isTOSEL = 0;
+	status = ReadBitS0_8(drvno, S0Addr_TOR_MSB, TOR_MSB_bitindex_TO0, &isTO0);
+	status = ReadBitS0_8(drvno, S0Addr_TOR_MSB, TOR_MSB_bitindex_TO1, &isTO1);
+	status = ReadBitS0_8(drvno, S0Addr_TOR_MSB, TOR_MSB_bitindex_TO2, &isTO2);
+	status = ReadBitS0_8(drvno, S0Addr_TOR_MSB, TOR_MSB_bitindex_TO3, &isTO3);
+	status = ReadBitS0_8(drvno, S0Addr_TOR_MSB, TOR_MSB_bitindex_TOSEL, &isTOSEL);
+
+	int combinedTO = (isTOSEL << 4) | (isTO3 << 3) | (isTO2 << 2) | (isTO1 << 1) | isTO0;
+
+	switch (combinedTO)
+	{
+	case tor_xck:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tXCK\n", combinedTO);
+		break;
+	case tor_rego:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tREGO\n", combinedTO);
+		break;
+	case tor_von:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tVON\n", combinedTO);
+		break;
+	case tor_dma_act:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tDMA_ACT\n", combinedTO);
+		break;
+	case tor_asls:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tASLS\n", combinedTO);
+		break;
+	case tor_stimer:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tSTIMER\n", combinedTO);
+		break;
+	case tor_btimer:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue%i\n\t\tBTIMER\n", combinedTO);
+		break;
+	case tor_isr_act:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tISR_ACT\n", combinedTO);
+		break;
+	case tor_s1:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tS1\n", combinedTO);
+		break;
+	case tor_s2:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tS2\n", combinedTO);
+		break;
+	case tor_bon:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue%i\n\t\tBON\n", combinedTO);
+		break;
+	case tor_measureon:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tMEASUREON\n", combinedTO);
+		break;
+	case tor_sdat:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tSDAT\n", combinedTO);
+		break;
+	case tor_bdat:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tBDAT\n", combinedTO);
+		break;
+	case tor_sec_mshut:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tSSHUT\n", combinedTO);
+		break;
+	case tor_bec_mshut:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tBSHUT\n", combinedTO);
+		break;
+	case tor_exposure_window:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tEXPOSURE_WINDOW\n", combinedTO);
+		break;
+	case tor_to_cnt_out:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tTO_CNT_OUT\n", combinedTO);
+		break;
+	case tor_secon:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tSECON\n", combinedTO);
+		break;
+	case tor_i:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tI\n", combinedTO);
+		break;
+	case tor_unused_22:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tUnused\n", combinedTO);
+		break;
+	case tor_unused_23:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tUnused\n", combinedTO);
+		break;
+	case tor_unused_24:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tUnused\n", combinedTO);
+		break;
+	case tor_unused_25:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tUnused\n", combinedTO);
+		break;
+	case tor_unused_26:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tUnused\n", combinedTO);
+		break;
+	case tor_unused_27:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tUnused\n", combinedTO);
+		break;
+	case tor_unused_28:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tUnused\n", combinedTO);
+		break;
+	case tor_enffr:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tENFFR\n", combinedTO);
+		break;
+	case tor_enffw:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tENFFW\n", combinedTO);
+		break;
+	case tor_enffwrprot:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tENFFWRPROT\n", combinedTO);
+		break;
+	}
+
+	/*=======================================================================*/
+
+	//Register ARREG
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nRegister ARREG\n");
+
+	//Partial Binning enabled
+	status = ReadBitS0_32(drvno, S0Addr_ARREG, ARREG_bitindex_partial_binning, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPartial Binning\t%i\n", isBitHigh);
+
+	//ROI Ranges
+	uint16_t dataARREG = 0;
+	status = readRegisterS0_16(drvno, &dataARREG, S0Addr_ARREG);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tROI Ranges\t%i\n", (dataARREG & ARREG_bit_pb_control));
+
+	/*=======================================================================*/
+
+	//Register GIOREG
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nRegister GIOREG\n");
+
+	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O1, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 1\t%i\n", isBitHigh);
+	
+	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O2, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 2\t%i\n", isBitHigh);
+
+	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O3, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 3\t%i\n", isBitHigh);
+
+	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O4, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 4\t%i\n", isBitHigh);
+
+	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O5, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 5\t%i\n", isBitHigh);
+
+	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O6, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 6\t%i\n", isBitHigh);
+
+	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O7, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 7\t%i\n", isBitHigh);
+
+	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O8, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 8\t%i\n", isBitHigh);
+
+	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_I1, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tInput 1\t%i\n", isBitHigh);
+
+	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_I2, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tInput 2\t%i\n", isBitHigh);
+
+	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_I3, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tInput 3\t%i\n", isBitHigh);
+
+	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_I4, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tInput 4\t%i\n", isBitHigh);
+
+	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_I5, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tInput 5\t%i\n", isBitHigh);
+
+	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_I6, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tInput 6\t%i\n", isBitHigh);
+
+	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_I7, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tInput 7\t%i\n", isBitHigh);
+
+	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_I8, &isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tInput 8\t%i\n", isBitHigh);
+
+	/*=======================================================================*/
 	return status;
 }
 
