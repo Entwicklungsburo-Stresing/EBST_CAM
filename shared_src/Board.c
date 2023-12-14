@@ -3873,15 +3873,12 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	bool bti0High, bti1High, bti2High;
 	//CTRLB BTI0
 	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI0, &bti0High);
-	//bti0High = isBitHigh;
 
 	//CTRLB BTI1
 	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI1, &bti1High);
-	//bti1High = isBitHigh;
 
 	//CTRLB BTI2
 	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI2, &bti2High);
-	//bti2High = isBitHigh;
 
 	int combinedValueBTI = (bti2High << 2) | (bti1High << 1) | bti0High;
 
