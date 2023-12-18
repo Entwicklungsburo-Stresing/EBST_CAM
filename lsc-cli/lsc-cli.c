@@ -4,7 +4,7 @@
 #include "../shared_src/Board.h"
 #include <unistd.h>
 
-#define DRVNO 1
+#define DRVNO 0
 #define PIXEL 1088
 #define COPY_TO_DISPLAY_BUFFER false
 
@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 	status = InitBoard(DRVNO);
 	if(status != es_no_error) return status;
 
-	settings_struct.board_sel = DRVNO;
+	settings_struct.board_sel = 1;
 	settings_struct.nos = 1000;
 	settings_struct.nob = 1;
 	settings_struct.camera_settings[DRVNO].bti_mode = bti_BTimer;
@@ -24,7 +24,8 @@ int main(int argc, char **argv)
 	settings_struct.camera_settings[DRVNO].stime_in_microsec = 2000;
 	settings_struct.camera_settings[DRVNO].camcnt = 1;
 	settings_struct.camera_settings[DRVNO].pixel = PIXEL;
-	settings_struct.camera_settings[DRVNO].sensor_type = PDAsensor;	
+	settings_struct.camera_settings[DRVNO].sensor_type = sensor_type_hsvis;
+	settings_struct.camera_settings[DRVNO].camera_system = camera_system_3030;
 
 	status = InitMeasurement();
 	if(status != es_no_error) return status;
