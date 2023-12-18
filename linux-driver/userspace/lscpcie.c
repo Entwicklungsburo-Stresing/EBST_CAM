@@ -20,7 +20,7 @@
 #include <sys/mman.h>
 #include <errno.h>
 #include <stdarg.h>
-#include "../../shared_src/enum.h"
+#include "../../shared_src/enum_hardware.h"
 
 #include "local-config.h"
 
@@ -554,7 +554,7 @@ int set_dma_address_in_tlp(struct dev_descr *dev)
 		tlp_mode = 0;
 	else {
 		if ((result =
-		     lscpcie_read_config32(dev, PCIeAddr_devCap,
+		     lscpcie_read_config32(dev, PCIeAddr_PCIExpressDeviceCapabilities,
 					   &data)) < 0)
 			return result;
 
@@ -577,7 +577,7 @@ int set_dma_address_in_tlp(struct dev_descr *dev)
 
 	data |= dev->tlp_size / 0x20;
 	if ((result =
-	     lscpcie_write_config32(dev, PCIeAddr_devStatCtrl, data)) < 0)
+	     lscpcie_write_config32(dev, PCIeAddr_DeviceControl, data)) < 0)
 		return result;
 
 	// WDMATLPA (Reg name): write the lower part (bit 02:31) of the DMA
@@ -818,14 +818,14 @@ int lscpcie_dump_tlp(struct dev_descr *dev)
 
 	printf
 	    ("PAY_LOAD values : 0 = 128 bytes, 1 = 256 bytes, 2 = 512 bytes\n");
-	lscpcie_read_config32(dev, PCIeAddr_devCap, &data);
+	lscpcie_read_config32(dev, PCIeAddr_PCIExpressDeviceCapabilities, &data);
 	printf("PAY_LOAD Supported : 0x%x\n", data & 0x7);
 
-	lscpcie_read_config32(dev, PCIeAddr_devStatCtrl, &data);
+	lscpcie_read_config32(dev, PCIeAddr_DeviceControl, &data);
 	actpayload = (data >> 5) & 0x07;
 	printf("PAY_LOAD : 0x%x\n", actpayload);
 
-	lscpcie_read_config32(dev, PCIeAddr_devStatCtrl, &data);
+	lscpcie_read_config32(dev, PCIeAddr_DeviceControl, &data);
 	printf("MAX_READ_REQUEST_SIZE : 0x%x\n\n", (data >> 12) & 0x7);
 
 
