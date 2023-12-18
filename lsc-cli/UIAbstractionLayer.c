@@ -20,3 +20,8 @@ void notifyBlockDone( uint32_t drv )
 {
 	return;
 }
+
+void notifyAllBlocksDone( uint32_t drv )
+{
+	return;
+}

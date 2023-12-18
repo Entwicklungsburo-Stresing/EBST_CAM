@@ -23,7 +23,8 @@ Board.o: ../shared_src/Board.c ../shared_src/Board.h \
 		../shared_src/Board_ll.h \
 		../shared_src/es_status_codes.h \
 		../shared_src/globals.h \
-		../shared_src/enum.h \
+		../shared_src/enum_hardware.h \
+		../shared_src/enum_settings.h \
 		../shared_src/struct.h \
 		../shared_src/UIAbstractionLayer.h
 	$(CC) -c $(CFLAGS) -o Board.o ../shared_src/Board.c
@@ -37,7 +38,8 @@ globals.o: ../shared_src/globals.c ../shared_src/globals.h
 lscpcie.o: ../linux-driver/userspace/lscpcie.c ../linux-driver/userspace/lscpcie.h \
 		../linux-driver/userspace/types.h \
 		../linux-driver/kernelspace/registers-common.h \
-		../shared_src/enum.h \
+		../shared_src/enum_hardware.h \
+		../shared_src/enum_settings.h \
 		../linux-driver/kernelspace/ioctl.h \
 		../linux-driver/userspace/constants.h \
 		../linux-driver/kernelspace/registers.h \
@@ -47,7 +49,8 @@ lscpcie.o: ../linux-driver/userspace/lscpcie.c ../linux-driver/userspace/lscpcie
 Board_ll.o: ../shared_src/linux/Board_ll.c ../shared_src/Board_ll.h \
 		../shared_src/es_status_codes.h \
 		../shared_src/Board.h \
-		../shared_src/enum.h \
+		../shared_src/enum_hardware.h \
+		../shared_src/enum_settings.h \
 		../shared_src/struct.h \
 		../shared_src/globals.h \
 		../linux-driver/userspace/lscpcie.h \
