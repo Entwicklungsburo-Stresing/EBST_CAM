@@ -64,7 +64,8 @@ chmod +x ${PKG_DIR}/DEBIAN/postinst
 
 # .deb stuff: prerm
 echo "#! /bin/sh\n\
-dkms uninstall -m lscpcie -v ${VERSION_STR}" > ${PKG_DIR}/DEBIAN/prerm
+dkms uninstall -m lscpcie -v ${VERSION_STR}\n\
+dkms remove -m lscpcie -v ${VERSION_STR} --all" > ${PKG_DIR}/DEBIAN/prerm
 chmod +x ${PKG_DIR}/DEBIAN/prerm
 
 # udev rule
