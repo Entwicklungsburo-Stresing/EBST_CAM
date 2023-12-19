@@ -56,4 +56,8 @@ Description: Software for line scan camera of Stresing\n\
  Enticklungsbuero Stresing\n\
  stresing.de" > ${PKG_DIR}/DEBIAN/control
 
+# udev rule
+mkdir -p ${PKG_DIR}/etc/udev/rules.d
+echo "SUBSYSTEM==\"lscpcie\", MODE=\"0666\"" > ${PKG_DIR}/etc/udev/rules.d/98-stresing-lscpcie.rules
+
 dpkg-deb --build ${PKG_DIR}
