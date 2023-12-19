@@ -25,7 +25,6 @@ else
     return
 fi
 
-
 # kernel module
 mkdir -p ${PKG_DIR}/usr/lib/modules-load.d
 echo "# Load ${MODULENAME}.ko at boot\n${MODULENAME}" > ${PKG_DIR}/usr/lib/modules-load.d/${MODULENAME}.conf
@@ -43,18 +42,30 @@ AUTOINSTALL='yes'\n\
 DEST_MODULE_LOCATION=/kernel/drivers/pci\n\
 REMAKE_INITRD=yes" > ${PKG_DIR}/usr/src/${MODULENAME}-${VERSION_STR}/dkms.conf
 
-# .deb stuff
+# .deb stuff: control
 mkdir -p ${PKG_DIR}/DEBIAN
 echo "Package: ${PACKAGENAME}\n\
 Version: ${VERSION_STR}\n\
 Section: base\n\
 Priority: optional\n\
 Architecture: amd64\n\
-Depends:\n\
+Depends: dkms, linux-headers-generic\n\
+Recommends: libqt5charts5\n\
 Maintainer: Stresing <info@stresing.de>\n\
 Description: Software for line scan camera of Stresing\n\
  Enticklungsbuero Stresing\n\
  stresing.de" > ${PKG_DIR}/DEBIAN/control
+
+# .deb stuff: postinst
+echo "#! /bin/sh\n\
+dkms build -m lscpcie -v ${VERSION_STR}\n\
+dkms install -m lscpcie -v ${VERSION_STR}" > ${PKG_DIR}/DEBIAN/postinst
+chmod +x ${PKG_DIR}/DEBIAN/postinst
+
+# .deb stuff: prerm
+echo "#! /bin/sh\n\
+dkms uninstall -m lscpcie -v ${VERSION_STR}" > ${PKG_DIR}/DEBIAN/prerm
+chmod +x ${PKG_DIR}/DEBIAN/prerm
 
 # udev rule
 mkdir -p ${PKG_DIR}/etc/udev/rules.d
