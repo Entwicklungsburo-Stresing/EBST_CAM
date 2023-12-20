@@ -1,5 +1,11 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.10.3
+- Add bnc_out to SetConfigRegister() and struct camera_settings, not yet added to UI
+- Extend human readable register dump
+- Fix lsc-cli
+- Improve .deb package
+
 4.10.2
 - Fix DLLCopyAllData_multipleBoards()
 
