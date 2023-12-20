@@ -3,8 +3,11 @@
 4.10.3
 - Add bnc_out to SetConfigRegister() and struct camera_settings, not yet added to UI
 - Extend human readable register dump
-- Fix lsc-cli
+- Fix DLLGetCameraStatusTempGood()
+Linux:
 - Improve .deb package
+- Fix lsc-cli
+- Move dev permissions from kernel module to udev
 
 4.10.2
 - Fix DLLCopyAllData_multipleBoards()
