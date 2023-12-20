@@ -564,7 +564,7 @@ DllAccess es_status_codes DLLGetCameraStatusOverTemp_multipleBoards(uint32_t sam
 
 DllAccess es_status_codes DLLGetCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* tempGood)
 {
-	return DLLGetCameraStatusTempGood(drvno, sample, block, camera_pos, tempGood);
+	return GetCameraStatusTempGood(drvno, sample, block, camera_pos, tempGood);
 }
 
 DllAccess es_status_codes DLLGetCameraStatusTempGood_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* tempGood1, uint8_t* tempGood2, uint8_t* tempGood3, uint8_t* tempGood4, uint8_t* tempGood5)
