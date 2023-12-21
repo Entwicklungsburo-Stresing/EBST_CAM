@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="measurement">
       <attribute name="title">
@@ -1277,8 +1277,116 @@
       <layout class="QVBoxLayout" name="verticalLayout_7">
        <item>
         <layout class="QGridLayout" name="gridLayoutDebug">
+         <item row="2" column="2">
+          <widget class="QComboBox" name="comboBoxAdcMode">
+           <item>
+            <property name="text">
+             <string>normal</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ramp</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>custom value</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <spacer name="verticalSpacer_8">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="0">
+          <spacer name="horizontalSpacer_11">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLabel" name="labelAdcCustom">
+           <property name="text">
+            <string>adc mode custom value</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="labelOutput">
+           <property name="text">
+            <string>tor (ouput signal PCIe card)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QSpinBox" name="spinBoxAdcCustom">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="maximum">
+            <number>65534</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <spacer name="horizontalSpacer_12">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="labelAdcMode">
+           <property name="text">
+            <string>adc mode</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <spacer name="verticalSpacer_7">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
          <item row="1" column="2">
           <widget class="QComboBox" name="comboBoxOutput">
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <property name="minimumContentsLength">
+            <number>0</number>
+           </property>
            <item>
             <property name="text">
              <string>XCK</string>
@@ -1441,107 +1549,45 @@
            </item>
           </widget>
          </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="labelOutput">
-           <property name="text">
-            <string>tor (ouput signal PCIe card)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="labelAdcCustom">
-           <property name="text">
-            <string>adc mode custom value</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <spacer name="horizontalSpacer_11">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="0" column="1">
-          <spacer name="verticalSpacer_7">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="1" column="3">
-          <spacer name="horizontalSpacer_12">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="labelAdcMode">
-           <property name="text">
-            <string>adc mode</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="2">
-          <widget class="QSpinBox" name="spinBoxAdcCustom">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="maximum">
-            <number>65534</number>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QComboBox" name="comboBoxAdcMode">
-           <item>
-            <property name="text">
-             <string>normal</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>ramp</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>custom value</string>
-            </property>
-           </item>
-          </widget>
-         </item>
          <item row="4" column="1">
-          <spacer name="verticalSpacer_8">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
+          <widget class="QLabel" name="labelBncOut">
+           <property name="text">
+            <string>xck out cc</string>
            </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
+          </widget>
+         </item>
+         <item row="4" column="2">
+          <widget class="QComboBox" name="comboBoxBncOut">
+           <property name="currentText">
+            <string>XCK</string>
            </property>
-          </spacer>
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <property name="minimumContentsLength">
+            <number>0</number>
+           </property>
+           <item>
+            <property name="text">
+             <string>XCK</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>EXP_WIN</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ADC_CLK</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>0V</string>
+            </property>
+           </item>
+          </widget>
          </item>
         </layout>
        </item>
