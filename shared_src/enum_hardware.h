@@ -51,6 +51,7 @@ enum PCIEFLAGS_bits_t
 
 enum IRQFLAGS_bits_t
 {
+	IRQFLAGS_bitindex_HWDREQ_EN = 30,
 	IRQFLAGS_bitindex_INTRSR = 31
 };
 

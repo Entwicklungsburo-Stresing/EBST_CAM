@@ -4234,55 +4234,81 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	//Register GIOREG
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nRegister GIOREG\n");
 
+	//Output 1
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O1, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 1\t%i\n", isBitHigh);
 	
+	//Output 2
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O2, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 2\t%i\n", isBitHigh);
 
+	//Output 3
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O3, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 3\t%i\n", isBitHigh);
 
+	//Output 4
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O4, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 4\t%i\n", isBitHigh);
 
+	//Output 5
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O5, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 5\t%i\n", isBitHigh);
 
+	//Output 6
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O6, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 6\t%i\n", isBitHigh);
 
+	//Output 7
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O7, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 7\t%i\n", isBitHigh);
 
+	//Output 8
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O8, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 8\t%i\n", isBitHigh);
 
+	//Input 1
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_I1, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tInput 1\t%i\n", isBitHigh);
 
+	//Input 2
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_I2, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tInput 2\t%i\n", isBitHigh);
 
+	//Input 3
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_I3, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tInput 3\t%i\n", isBitHigh);
 
+	//Input 4
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_I4, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tInput 4\t%i\n", isBitHigh);
 
+	//Input 5
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_I5, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tInput 5\t%i\n", isBitHigh);
 
+	//Input 6
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_I6, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tInput 6\t%i\n", isBitHigh);
 
+	//Input 7
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_I7, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tInput 7\t%i\n", isBitHigh);
 
+	//Input 8
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_I8, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tInput 8\t%i\n", isBitHigh);
 
 	/*=======================================================================*/
+
+	//Register IRQREG
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nRegister IRQREG\n");
+
+	uint32_t dataIRQREG = 0;
+	status = readRegisterS0_32(drvno, &dataIRQREG, S0Addr_IRQREG);
+
+
+	/*=======================================================================*/
+
 	return status;
 }
 
