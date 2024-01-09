@@ -1,5 +1,12 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.11.0
+- Add register S1S2ReadDelay
+- Add setting s1s2_read_delay_in_10ns (deprecated setting keep is beeing replaced)
+- Add S1S2ReadDelay to TOR
+- Extend human readable S0 dump
+- Add BncOut to camerasettingswidget
+
 4.10.3
 - Add bnc_out to SetConfigRegister() and struct camera_settings, not yet added to UI
 - Extend human readable register dump
