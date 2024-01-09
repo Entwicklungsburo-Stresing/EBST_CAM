@@ -240,7 +240,7 @@ enum tor_out_t
 	 */
 	tor_i = 21,
 	/**
-	 * 22: Unused.
+	 * 22: Shows the delay between the trigger and the moment, when the states of S1 and S2 are read.
 	 */
 	tor_S1S2readDelay = 22,
 	/**
