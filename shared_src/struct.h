@@ -136,9 +136,9 @@ struct camera_settings
 	 */
 	uint32_t number_of_regions;
 	/**
-	 * Deprecated: Keep. Was a parameter to determine whether a region for region of interest mode is filled with real or dummy data.
+	 * This controls the delay between the trigger and the moment, when the status of the S1 and S2 inputs are read. delay time = value * 10ns. 32 bit.
 	 */
-	uint32_t keep;
+	uint32_t s1s2_read_delay_in_10ns;
 	/**
 	 * Size for each region for region of interest mode for FFT sensors. When the first region is set to 0, all regions are automatically same sized.
 	 */

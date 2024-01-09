@@ -95,6 +95,7 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingShutterSecIn10nsPath, ui->doubleSpinBoxSecIn10ns->value());
 	settings.setValue(settingShutterBecIn10nsPath, ui->doubleSpinBoxBecIn10ns->value());
 	settings.setValue(settingTriggerCcPath, ui->comboBoxTriggerModeCC->currentIndex());
+	settings.setValue(settingS1S2ReadDelayIn10nsPath, ui->doubleSpinBoxS1S2ReadDelayIn10ns->value());
 	//Camera setup
 	settings.setValue(settingSensorTypePath, ui->comboBoxSensorType->currentIndex());
 	settings.setValue(settingCameraSystemPath, ui->comboBoxCameraSystem->currentIndex());
@@ -679,6 +680,7 @@ void CameraSettingsWidget::initializeWidget()
 	ui->doubleSpinBoxSecIn10ns->setValue(settings.value(settingShutterSecIn10nsPath, settingShutterSecIn10nsDefault).toDouble());
 	ui->doubleSpinBoxBecIn10ns->setValue(settings.value(settingShutterBecIn10nsPath, settingShutterBecIn10nsDefault).toDouble());
 	ui->comboBoxTriggerModeCC->setCurrentIndex(settings.value(settingTriggerCcPath, settingTriggerCcDefault).toDouble());
+	ui->doubleSpinBoxS1S2ReadDelayIn10ns->setValue(settings.value(settingS1S2ReadDelayIn10nsPath, settingS1S2ReadDelayIn10nsDefault).toDouble());
 	//Camera setup
 	ui->comboBoxSensorType->setCurrentIndex(settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble());
 	ui->comboBoxSensorType->currentIndexChanged(settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble());

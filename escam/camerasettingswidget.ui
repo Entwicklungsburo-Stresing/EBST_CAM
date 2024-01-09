@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>347</width>
+    <width>345</width>
     <height>478</height>
    </rect>
   </property>
@@ -420,6 +420,29 @@
             </size>
            </property>
           </spacer>
+         </item>
+         <item row="14" column="1">
+          <widget class="QLabel" name="labelS1S2ReadDelayIn10ns">
+           <property name="text">
+            <string>S1 &amp; S2 read delay</string>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="3">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxS1S2ReadDelayIn10ns">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="suffix">
+            <string>0ns</string>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <double>4294967295.000000000000000</double>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
