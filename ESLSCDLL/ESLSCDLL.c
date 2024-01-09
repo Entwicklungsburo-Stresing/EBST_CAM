@@ -779,6 +779,52 @@ DllAccess es_status_codes DLLresetBitS0_32(uint32_t bitnumber, uint16_t address)
 	return resetBitS0_32_allBoards(settings_struct.board_sel, bitnumber, address);
 }
 
+DllAccess es_status_codes DLLReadBitS0_32(uint32_t drvno, uint16_t address, uint8_t bitnumber, uint8_t* isBitHigh)
+{
+	return ReadBitS0_32(drvno, address, bitnumber, isBitHigh);
+}
+
+DllAccess es_status_codes DLLReadBitS0_32_multipleBoards(uint16_t address, uint8_t bitnumber, uint8_t* isBitHigh0, uint8_t* isBitHigh1, uint8_t* isBitHigh2, uint8_t* isBitHigh3, uint8_t* isBitHigh4)
+{
+	es_status_codes status = es_no_error;
+	uint8_t* isBitHigh[MAXPCIECARDS] = { isBitHigh0, isBitHigh1, isBitHigh2, isBitHigh3, isBitHigh4 };
+	int usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = ReadBitS0_32(drvno, address, bitnumber, isBitHigh[usedBoards]);
+			if (status != es_no_error) return status;
+			usedBoards++;
+		}
+	}
+	return status;
+}
+
+DllAccess es_status_codes DLLReadBitS0_8(uint32_t drvno, uint16_t address, uint8_t bitnumber, uint8_t* isBitHigh)
+{
+	return ReadBitS0_8(drvno, address, bitnumber, isBitHigh);
+}
+
+DllAccess es_status_codes DLLReadBitS0_8_multipleBoards(uint16_t address, uint8_t bitnumber, uint8_t* isBitHigh0, uint8_t* isBitHigh1, uint8_t* isBitHigh2, uint8_t* isBitHigh3, uint8_t* isBitHigh4)
+{
+	es_status_codes status = es_no_error;
+	uint8_t* isBitHigh[MAXPCIECARDS] = { isBitHigh0, isBitHigh1, isBitHigh2, isBitHigh3, isBitHigh4 };
+	int usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = ReadBitS0_8(drvno, address, bitnumber, isBitHigh[usedBoards]);
+			if (status != es_no_error) return status;
+			usedBoards++;
+		}
+	}
+	return status;
+}
+
 /**
  * \brief Set temperature level for cooled cameras for all boards selected by settings parameter board_sel.
  *
