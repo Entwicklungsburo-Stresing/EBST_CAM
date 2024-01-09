@@ -383,6 +383,8 @@ enum s0_addresses_t
 	S0Addr_L1DSC = 0x94,
 	S0Addr_A2DSC = 0x98,
 	S0Addr_L2DSC = 0x9C,
+	S0Addr_ATDC2 = 0xA0,
+	S0Addr_LTDC2 = 0xA4,
 	S0Addr_DSCCtrl = 0xA8,
 	S0Addr_DAC = 0xAC,
 	S0Addr_CAMSTATUS12 = 0xB0,
@@ -718,6 +720,41 @@ enum TDCCtrl_bits_t
 	TDCCtrl_bit_adr1 = 0x20000000,
 	TDCCtrl_bit_adr2 = 0x40000000,
 	TDCCtrl_bit_adr3 = 0x80000000
+};
+
+enum BDAT_bits_t
+{
+	BDAT_bitindex_enabled = 31
+};
+
+enum BEC_bits_t
+{
+	BEC_bitindex_enabled = 31
+};
+
+enum BSLOPE_bits_t
+{
+	BSLOPE_bitindex_bslope = 0,
+	BSLOPE_bitindex_both_slopes = 1,
+	BSLOPE_bitindex_bswtrig = 2
+};
+
+enum DSCCtrl_bits_t
+{
+	DSCCtrl_bitindex_rs1 = 0,
+	DSCCtrl_bitindex_dir1 = 1,
+	DSCCtrl_bitindex_rs2 = 8,
+	DSCCtrl_bitindex_dir2 = 9,
+};
+
+enum CAMSTATUS12_bits_t
+{
+	CAMSTATUS12_bitindex_temp = 0
+};
+
+enum CAMSTATUS34_bits_t
+{
+	CAMSTATUS34_bitindex_temp = 0
 };
 
 enum camera_type_bits_t
