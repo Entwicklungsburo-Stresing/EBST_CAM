@@ -4186,8 +4186,8 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	case tor_i:
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tI\n", combinedTO);
 		break;
-	case tor_unused_22:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tUnused\n", combinedTO);
+	case tor_S1S2readDelay:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\S1S2readDelay\n", combinedTO);
 		break;
 	case tor_unused_23:
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tUnused\n", combinedTO);

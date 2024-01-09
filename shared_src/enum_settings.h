@@ -242,7 +242,7 @@ enum tor_out_t
 	/**
 	 * 22: Unused.
 	 */
-	tor_unused_22 = 22,
+	tor_S1S2readDelay = 22,
 	/**
 	 * 23: Unused.
 	 */
