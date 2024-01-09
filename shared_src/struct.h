@@ -136,7 +136,7 @@ struct camera_settings
 	 */
 	uint32_t number_of_regions;
 	/**
-	 * This controls the delay between the trigger and the moment, when the status of the S1 and S2 inputs are read. delay time = value * 10ns. 32 bit.
+	 * This controls the delay between the trigger and the moment, when the status of the S1 and S2 inputs are read. When the delay exceeds XCK, S1 and S2 are never read. delay time = value * 10ns. 32 bit.
 	 */
 	uint32_t s1s2_read_delay_in_10ns;
 	/**
