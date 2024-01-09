@@ -374,6 +374,7 @@ enum s0_addresses_t
 	S0Addr_ROI1 = 0x6C,
 	S0Addr_ROI2 = 0x70,
 	S0Addr_XCKDLY = 0x74,
+	S0Addr_S1S2ReadDelay = 0x78,
 	S0Addr_BTIMER = 0x80,
 	S0Addr_BDAT = 0x84,
 	S0Addr_BEC = 0x88,

@@ -175,6 +175,7 @@ es_status_codes ReadScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh)
 es_status_codes ResetScanFrequencyBit(uint32_t drvno);
 es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh);
 es_status_codes ResetBlockFrequencyBit(uint32_t drvno);
+es_status_codes SetS1S2ReadDelay(uint32_t drvno);
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);

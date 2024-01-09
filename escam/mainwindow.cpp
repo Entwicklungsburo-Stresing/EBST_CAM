@@ -188,7 +188,7 @@ void MainWindow::startPressed()
 		settings_struct.camera_settings[drvno].fft_mode = settings.value(settingFftModePath, settingFftModeDefault).toDouble();
 		settings_struct.camera_settings[drvno].lines_binning = settings.value(settingLinesBinningPath, settingLinesBinningDefault).toDouble();
 		settings_struct.camera_settings[drvno].number_of_regions = settings.value(settingNumberOfRegionsPath, settingNumberOfRegionsDefault).toDouble();
-		settings_struct.camera_settings[drvno].keep = settingKeepDefault;
+		settings_struct.camera_settings[drvno].s1s2_read_delay_in_10ns = settings.value(settingS1S2ReadDelayIn10nsPath, settingS1S2ReadDelayIn10nsDefault).toDouble();;
 		if (settings.value(settingRegionSizeEqualPath, settingRegionSizeEqualDefault).toBool() == true)
 			*(settings_struct.camera_settings[drvno].region_size) = 0;
 		else

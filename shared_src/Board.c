@@ -144,7 +144,8 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 		{
 			uint8_t regionSize[8];
 			for (int i = 0; i < 8; i++) regionSize[i] = (uint8_t)settings_struct.camera_settings[drvno].region_size[i];
-			status = SetupROI(drvno, (uint16_t)settings_struct.camera_settings[drvno].number_of_regions, settings_struct.camera_settings[drvno].fft_lines, (uint8_t)settings_struct.camera_settings[drvno].keep, regionSize, (uint8_t)settings_struct.camera_settings[drvno].vfreq);
+			// keep is a deprecated setting. all bits are set to 1
+			status = SetupROI(drvno, (uint16_t)settings_struct.camera_settings[drvno].number_of_regions, settings_struct.camera_settings[drvno].fft_lines, 0xFF, regionSize, (uint8_t)settings_struct.camera_settings[drvno].vfreq);
 			break;
 		}
 		case area_mode:
@@ -196,6 +197,8 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	status = SetSEC(drvno, settings_struct.camera_settings[drvno].sec_in_10ns);
 	if (status != es_no_error) return status;
 	status = SetTORReg(drvno, (uint8_t)settings_struct.camera_settings[drvno].tor);
+	if (status != es_no_error) return status;
+	status = SetS1S2ReadDelay(drvno);
 	return status;
 }
 
@@ -3740,7 +3743,7 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 		"R11 ROI 1",
 		"R12 ROI 2",
 		"R13 XCKDLY",
-		"R14 nc"DLLTAB,
+		"R14 S1S2 read delay",
 		"R15 nc"DLLTAB,
 		"R16 BTimer",
 		"R17 BDAT",
@@ -4819,7 +4822,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		"ffmode\t"DLLTAB DLLTAB"%u\n"
 		"lines_binning\t"DLLTAB"%u\n"
 		"number of regions\t%u\n"
-		"keep\t"DLLTAB DLLTAB"0b"BYTE_TO_BINARY_PATTERN"\n",
+		"s1s2_read_delay_in_10ns\t"DLLTAB"%u\n",
 		settings_struct.camera_settings[drvno].use_software_polling,
 		settings_struct.camera_settings[drvno].sti_mode,
 		settings_struct.camera_settings[drvno].bti_mode,
@@ -4848,7 +4851,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].fft_mode,
 		settings_struct.camera_settings[drvno].lines_binning,
 		settings_struct.camera_settings[drvno].number_of_regions,
-		BYTE_TO_BINARY(settings_struct.camera_settings[drvno].keep));
+		settings_struct.camera_settings[drvno].s1s2_read_delay_in_10ns);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "region size\t"DLLTAB);
 	for (int i = 0; i < 8; i++)
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].region_size[i]);
@@ -5974,4 +5977,16 @@ es_status_codes SetCameraPosition(uint32_t drvno)
 	ES_LOG("Set camera position of first camera in row to 1\n");
 	// 0x8000 is a test value. Camera position is set to 0
 	return SendFLCAM(drvno, maddr_cam, cam_adaddr_camera_position, 0x8000);
+}
+
+/**
+ * \brief This functions sets the register S1S2ReadDealy with the setting \ref camera_settings.s1s2_read_delay_in_10ns. 
+ * 
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \return es_status_codes
+ */
+es_status_codes SetS1S2ReadDelay(uint32_t drvno)
+{
+	ES_LOG("Set S1 & S2 read delay to %u\n", settings_struct.camera_settings[drvno].s1s2_read_delay_in_10ns);
+	return writeRegisterS0_32(drvno, settings_struct.camera_settings[drvno].s1s2_read_delay_in_10ns, S0Addr_S1S2ReadDelay);
 }
