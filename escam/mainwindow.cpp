@@ -562,7 +562,7 @@ void MainWindow::on_actionDump_board_registers_triggered()
 		labelHRS0->setText(QString::fromStdString(lsc._dumpHumanReadableS0Registers(drvno)));
 		labelHRS0->setAlignment(Qt::AlignTop);
 		scrollHRS0->setWidget(labelHRS0);
-		tabWidget->addTab(scrollHRS0, "Hum Read S0 baord " + QString::number(drvno));
+		tabWidget->addTab(scrollHRS0, "Hum Read S0 board " + QString::number(drvno));
 		QScrollArea* scrollDma = new QScrollArea(tabWidget);
 		scrollDma->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 		QLabel* labelDma = new QLabel(scrollDma);
