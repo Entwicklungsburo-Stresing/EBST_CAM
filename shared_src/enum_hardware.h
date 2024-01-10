@@ -564,6 +564,20 @@ enum cam_messages_t
 	adc_ads5294_msg_ddrClkAlign = 0x60,
 };
 
+enum cam_config_register_t
+{
+	cam_config_register_bitindex_sensor_gain = 0,
+	cam_config_register_bitindex_trigger_mode_cc = 1,
+	cam_config_register_bitindex_temp_level = 4,
+	cam_config_register_bitindex_led_off = 7,
+	cam_config_register_bitindex_bnc_out = 8,
+	cam_config_register_bits_sensor_gain = 0x0001,
+	cam_config_register_bits_trigger_mode_cc = 0x000E,
+	cam_config_register_bits_temp_level = 0x0070,
+	cam_config_register_bits_led_off = 0x0080,
+	cam_config_register_bits_bnc_out = 0x0300,
+};
+
 /**
  * This enum shows the encoding of the special pixel 2. The upper two bits are encoding the binary state of S1 and S2. All other bits are representing the upper half of the block index counter.
  */
