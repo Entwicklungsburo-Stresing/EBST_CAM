@@ -435,7 +435,7 @@ enum cam_addresses_t
 	 */
 	campos_bit_index = 4,
 
-	cam_adaddr_gain = 0x00,
+	cam_adaddr_config = 0x00,
 	cam_adaddr_pixel = 0x01,
 	cam_adaddr_trig_in = 0x02,
 	cam_adaddr_unused = 0x03,
