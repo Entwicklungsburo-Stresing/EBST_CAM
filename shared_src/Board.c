@@ -234,8 +234,7 @@ es_status_codes InitCamera(uint32_t drvno)
 	status = SetLedOff(drvno, (uint8_t)settings_struct.camera_settings[drvno].led_off);
 	if (status != es_no_error) return status;
 	//set gain switch (mostly for IR sensors)
-	status = SetConfigRegister(drvno); // upgrades sen_gain to config register
-	//status = SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, (uint16_t)settings_struct.camera_settings[drvno].sensor_gain);
+	status = SetConfigRegister(drvno);
 	if (status != es_no_error) return status;
 
 	if (settings_struct.camera_settings[drvno].sensor_type == sensor_type_fft)
@@ -288,7 +287,7 @@ es_status_codes SetConfigRegister(uint32_t drvno)
 	uint16_t bnc_out = (uint16_t)settings_struct.camera_settings[drvno].bnc_out;
 	uint16_t configRegister = ((bnc_out & 0x0003) << 8 | (led_off & 0x0001) << 7 | (cool_level & 0x0007) << 4 | (trigger_mode & 0x0007) << 1 | (sensor_gain & 0x0001));
 
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, configRegister);
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_config, configRegister);
 	if (status != es_no_error) return status;
 	return status;
 }
@@ -3631,25 +3630,6 @@ es_status_codes readBlockTriggerState(uint32_t drvno, uint8_t btrig_ch, bool* st
 		break;
 	}
 	return status;
-}
-
-/**
- * \brief Sets the camera gain register.
- *
- * 	Sets corresponding camera register: maddr = 0, adadr = 0
- * 	Currently a one bit value (bit0 = 1 -> gain high), but can be used as a numerical value 0...3 in future.
- * 	Legacy cameras will only look for bit0.
- * \param drvno selects PCIe board
- * \param gain_value 1 -> gain high, 0 -> gain low
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
- */
-es_status_codes SetGain(uint32_t drvno, uint16_t gain_value)
-{
-	return SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, gain_value);
 }
 
 /**
