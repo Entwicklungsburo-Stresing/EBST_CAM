@@ -231,7 +231,8 @@ es_status_codes InitCamera(uint32_t drvno)
 	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_trig_in, (uint16_t)settings_struct.camera_settings[drvno].trigger_mode_cc);
 	if (status != es_no_error) return status;
 	//set led off
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_LEDoff, (uint16_t)settings_struct.camera_settings[drvno].led_off);
+	status = SetLedOff(drvno, (uint8_t)settings_struct.camera_settings[drvno].led_off);
+	if (status != es_no_error) return status;
 	//set gain switch (mostly for IR sensors)
 	status = SetConfigRegister(drvno); // upgrades sen_gain to config register
 	//status = SendFLCAM(drvno, maddr_cam, cam_adaddr_gain, (uint16_t)settings_struct.camera_settings[drvno].sensor_gain);
@@ -3517,7 +3518,7 @@ es_status_codes isMeasureOn(uint32_t drvno, bool* measureOn)
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes LedOff(uint32_t drvno, uint8_t LED_OFF)
+es_status_codes SetLedOff(uint32_t drvno, uint8_t LED_OFF)
 {
 	return SendFLCAM(drvno, maddr_cam, cam_adaddr_LEDoff, (uint16_t)LED_OFF);
 }
