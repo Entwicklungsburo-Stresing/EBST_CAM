@@ -3764,6 +3764,8 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 	return status;
 }
 
+
+
 es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 {
 	enum N
@@ -4579,10 +4581,6 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	status = readRegisterS0_32(drvno, &dataBEC, S0Addr_BEC);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tExposure Control\t%i\n", (dataBEC & bitmaskBEC));
 
-	//Enabled
-	status = ReadBitS0_32(drvno, S0Addr_BEC, BEC_bitindex_enabled, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tEnabled\t%i\n", isBitHigh);
-
 	/*=======================================================================*/
 
 	//Register BFLAGS
@@ -4720,6 +4718,52 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	//Temp
 	status = ReadBitS0_32(drvno, S0Addr_CAMSTATUS34, CAMSTATUS34_bitindex_temp, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tTemp Good\t%i\n", isBitHigh);
+
+	/*=======================================================================*/
+
+	//Register Camera Type
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nCamera Type\n");
+
+	//Sensor Type
+	uint32_t dataCAMTYPE = 0;
+	status = readRegisterS0_32(drvno, &dataCAMTYPE, S0Addr_CAMERA_TYPE);
+	uint16_t lowerBitsCAMTYPE = (uint16_t)(dataCAMTYPE & 0x0000FFFF);
+	uint16_t upperBitsCAMTYPE = (uint16_t)(dataCAMTYPE >> 16) & 0x0000FFFF;
+	switch (lowerBitsCAMTYPE)
+	{
+	case 0x0000:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%s\n", "PDA");
+		break;
+	case 0x0001:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%s\n", "IR");
+		break;
+	case 0x0002:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%s\n", "FFT");
+		break;
+	case 0x0003:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%s\n", "CMOS");
+		break;
+	case 0x0004:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%s\n", "HSVIS");
+		break;
+	case 0x0005:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%s\n", "HSIR");
+		break;
+	}
+
+	//Camera System
+	switch (upperBitsCAMTYPE)
+	{
+	case 0x0000:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCamera System\t%s\n", "3001");
+		break;
+	case 0x0001:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCamera System\t%s\n", "3010");
+		break;
+	case 0x0002:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCamera System\t%s\n", "3030");
+		break;
+	}
 
 	/*=======================================================================*/
 
