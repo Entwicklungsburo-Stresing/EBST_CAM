@@ -978,7 +978,7 @@ es_status_codes readRegisterS0_8( uint32_t drvno, uint8_t* data, uint16_t addres
 	return readRegister_8(drvno, data, address + S0_SPACE_OFFSET);
 }
 /**
- * \brief Read 1 bit of 1 of 4 bytes.
+ * \brief Read 1 bit of a 4 byte s0 register.
  * 
  * \param drvno identifier of PCIE card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param address Address of the register to read.
@@ -999,7 +999,7 @@ es_status_codes ReadBitS0_32(uint32_t drvno, uint16_t address, uint8_t bitnumber
 }
 
 /**
- * \brief	Read 1 bit of a byte.
+ * \brief Read 1 bit of 1 byte of a s0 register.
  * 
  * \param drvno identifier of PCIE card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param address Address of the register to read.
