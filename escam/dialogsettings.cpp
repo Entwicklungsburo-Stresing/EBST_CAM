@@ -111,6 +111,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
 		on_checkBoxBoard0_stateChanged(ui->checkBoxBoard0->isChecked());
 		ui->checkBoxBoard0->setChecked(true);
 	}
+	ui->cameraSettingsTabs->setCurrentIndex(0);
 	setWindowModality(Qt::ApplicationModal);
 	emit initializingDone();
 }
