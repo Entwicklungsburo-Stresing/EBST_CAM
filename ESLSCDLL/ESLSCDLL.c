@@ -539,12 +539,33 @@ DllAccess es_status_codes DLLResetBlockFrequencyBit()
 	return status;
 }
 
-
+/**
+ * \copydoc GetCameraStatusOverTemp
+ */
 DllAccess es_status_codes DLLGetCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* overTemp)
 {
 	return GetCameraStatusOverTemp(drvno, sample, block, camera_pos, overTemp);
 }
 
+/**
+ * \brief This function returns the bit overTemp of a specific scan.
+ *
+ * The information over temperature is given in the special pixel camera status (pixel_camera_status) in bit pixel_camera_status_bit_over_temp.
+ *
+ * \param sample sample number (0 ... (nos-1))
+ * \param block block number (0 ... (nob-1))
+ * \param camera_pos camera position (0 ... (CAMCNT-1))
+ * \param overTemp1 board 1: Pointer to a bool, where the information overTemp will be written. true - over temperature detected, false - no over temperature detected
+ * \param overTemp2 board 2: Pointer to a bool, where the information overTemp will be written. true - over temperature detected, false - no over temperature detected
+ * \param overTemp3 board 3: Pointer to a bool, where the information overTemp will be written. true - over temperature detected, false - no over temperature detected
+ * \param overTemp4 board 4: Pointer to a bool, where the information overTemp will be written. true - over temperature detected, false - no over temperature detected
+ * \param overTemp5 board 5: Pointer to a bool, where the information overTemp will be written. true - over temperature detected, false - no over temperature detected
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
 DllAccess es_status_codes DLLGetCameraStatusOverTemp_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* overTemp1, uint8_t* overTemp2, uint8_t* overTemp3, uint8_t* overTemp4, uint8_t* overTemp5)
 {
 	es_status_codes status = es_no_error;
@@ -562,11 +583,34 @@ DllAccess es_status_codes DLLGetCameraStatusOverTemp_multipleBoards(uint32_t sam
 	return status;
 }
 
+
+/**
+ * \copydoc GetCameraStatusTempGood
+ */
 DllAccess es_status_codes DLLGetCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* tempGood)
 {
 	return GetCameraStatusTempGood(drvno, sample, block, camera_pos, tempGood);
 }
 
+/**
+ * \brief This function returns the bit tempGood of a specific scan.
+ *
+ * The information temperature good is given in the special pixel camera status (pixel_camera_status) in bit pixel_camera_status_bit_temp_good. This bit is used only in cooled cameras.
+ *
+ * \param sample sample number (0 ... (nos-1))
+ * \param block block number (0 ... (nob-1))
+ * \param camera_pos camera position (0 ... (CAMCNT-1))
+ * \param tempGood1 board 1: Pointer to a bool, where the information tempGood will be written. true - target temperature reached, false - target temperature not reached
+ * \param tempGood2 board 2: Pointer to a bool, where the information tempGood will be written. true - target temperature reached, false - target temperature not reached
+ * \param tempGood3 board 3: Pointer to a bool, where the information tempGood will be written. true - target temperature reached, false - target temperature not reached
+ * \param tempGood4 board 4: Pointer to a bool, where the information tempGood will be written. true - target temperature reached, false - target temperature not reached
+ * \param tempGood5 board 5: Pointer to a bool, where the information tempGood will be written. true - target temperature reached, false - target temperature not reached
+ * \return es_status_codes:
+ *		- es_invalid_driver_number
+ *		- es_invalid_driver_handle
+ *		- es_no_error
+ *		- es_parameter_out_of_range
+ */
 DllAccess es_status_codes DLLGetCameraStatusTempGood_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* tempGood1, uint8_t* tempGood2, uint8_t* tempGood3, uint8_t* tempGood4, uint8_t* tempGood5)
 {
 	es_status_codes status = es_no_error;
@@ -779,11 +823,28 @@ DllAccess es_status_codes DLLresetBitS0_32(uint32_t bitnumber, uint16_t address)
 	return resetBitS0_32_allBoards(settings_struct.board_sel, bitnumber, address);
 }
 
+/**
+ * \copydoc ReadBitS0_32
+ */
 DllAccess es_status_codes DLLReadBitS0_32(uint32_t drvno, uint16_t address, uint8_t bitnumber, uint8_t* isBitHigh)
 {
 	return ReadBitS0_32(drvno, address, bitnumber, isBitHigh);
 }
 
+/**
+ * \brief Read 1 bit of a 4 bytes s0 register for all boards.
+ *
+ * \param address Address of the register to read.
+ * \param bitnumber Address of the bit to read.
+ * \param isBitHigh0 board 0: Tells if bit is 1 or 0.
+ * \param isBitHigh1 board 1: Tells if bit is 1 or 0.
+ * \param isBitHigh2 board 2: Tells if bit is 1 or 0.
+ * \param isBitHigh3 board 3: Tells if bit is 1 or 0.
+ * \param isBitHigh4 board 4: Tells if bit is 1 or 0.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
 DllAccess es_status_codes DLLReadBitS0_32_multipleBoards(uint16_t address, uint8_t bitnumber, uint8_t* isBitHigh0, uint8_t* isBitHigh1, uint8_t* isBitHigh2, uint8_t* isBitHigh3, uint8_t* isBitHigh4)
 {
 	es_status_codes status = es_no_error;
@@ -802,11 +863,29 @@ DllAccess es_status_codes DLLReadBitS0_32_multipleBoards(uint16_t address, uint8
 	return status;
 }
 
+/**
+ * \copydoc ReadBitS0_8
+ */
 DllAccess es_status_codes DLLReadBitS0_8(uint32_t drvno, uint16_t address, uint8_t bitnumber, uint8_t* isBitHigh)
 {
 	return ReadBitS0_8(drvno, address, bitnumber, isBitHigh);
 }
 
+/**
+ * \brief Read 1 bit of 1 byte of a s0 register for all boards.
+ *
+ * \param drvno identifier of PCIE card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param address Address of the register to read.
+ * \param bitnumber Address of the bit to read.
+ * \param isBitHigh0 Tells if bit is high or low.
+ * \param isBitHigh1 Tells if bit is high or low.
+ * \param isBitHigh2 Tells if bit is high or low.
+ * \param isBitHigh3 Tells if bit is high or low.
+ * \param isBitHigh4 Tells if bit is high or low.
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
 DllAccess es_status_codes DLLReadBitS0_8_multipleBoards(uint16_t address, uint8_t bitnumber, uint8_t* isBitHigh0, uint8_t* isBitHigh1, uint8_t* isBitHigh2, uint8_t* isBitHigh3, uint8_t* isBitHigh4)
 {
 	es_status_codes status = es_no_error;
