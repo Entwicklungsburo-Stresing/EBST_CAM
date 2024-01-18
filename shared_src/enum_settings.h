@@ -56,6 +56,18 @@ enum bti_mode_t
 	 * 4: Trigger with internal timer
 	 */
 	bti_BTimer = 4,
+	/**
+	 * 5: S1 chopper
+	 */
+	bti_S1chopper = 5,
+	/**
+	 * 6: S2 chopper
+	 */
+	bti_S2chopper = 6,
+	/**
+	 * 7: S1&S2 chopper
+	 */
+	bti_S1S2chopper = 7
 };
 
 /**
