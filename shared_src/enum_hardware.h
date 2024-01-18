@@ -60,10 +60,12 @@ enum CTRLB_bits_t
 	CTRLB_bit_STI0 = 0x01,
 	CTRLB_bit_STI1 = 0x02,
 	CTRLB_bit_STI2 = 0x04,
+	CTRLB_bits_STI = 0x07,
 	CTRLB_bit_SHON = 0x08,
 	CTRLB_bit_BTI0 = 0x10,
 	CTRLB_bit_BTI1 = 0x20,
 	CTRLB_bit_BTI2 = 0x40,
+	CTRLB_bits_BTI = 0x70,
 	CTRLB_bitindex_STI0 = 0,
 	CTRLB_bitindex_STI1 = 1,
 	CTRLB_bitindex_STI2 = 2,
@@ -87,7 +89,13 @@ enum CTRLA_bits_t
 	CTRLA_bitindex_IFC = 1,
 	CTRLA_bitindex_XCK = 2,
 	CTRLA_bitindex_TRIG_OUT = 3,
+	/**
+	 * 0: slope selected by SLOPE, 1: both slopes
+	 */
 	CTRLA_bitindex_BOTH_SLOPE = 4,
+	/**
+	 * 0: negative slope, 1: positive slope.
+	 */
 	CTRLA_bitindex_SLOPE = 5,
 	CTRLA_bitindex_DIR_TRIGIN = 6,
 	CTRLA_bitindex_TSTART = 7
