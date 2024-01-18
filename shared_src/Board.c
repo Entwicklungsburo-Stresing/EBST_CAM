@@ -1353,19 +1353,19 @@ es_status_codes SetSSlope(uint32_t drvno, uint32_t sslope)
 	switch (sslope)
 	{
 	// high slope
-	case 0:
+	case sslope_pos:
 		status = setBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
 		if (status != es_no_error) return status;
 		status = resetBitS0_32(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
 		break;
 	// low slope
-	case 1:
+	case sslope_neg:
 		status = resetBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
 		if (status != es_no_error) return status;
 		status = resetBitS0_32(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
 		break;
 	// both slope
-	case 2:
+	case sslope_both:
 		status = setBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
 		if (status != es_no_error) return status;
 		status = setBitS0_32(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
@@ -3776,6 +3776,8 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	int len = 0;
 	*stringPtr = (char*)calloc(bufferSize, sizeof(char));
 	bool isBitHigh;
+	uint8_t data8 = 0;
+	uint32_t data32 = 0;
 
 	/*=======================================================================*/
 	
@@ -3788,7 +3790,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//CTRLA XCK
 	status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_XCK, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tXCK\t % i\n", isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tXCK\t %i\n", isBitHigh);
 
 	//CTRLA TRIG OUT
 	status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_TRIG_OUT, &isBitHigh);
@@ -3800,7 +3802,10 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//CTRLA SLOPE
 	status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_SLOPE, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSLOPE\t%i\n", isBitHigh);
+	if(isBitHigh)
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSLOPE\t%i (pos)\n", isBitHigh);
+	else
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSLOPE\t%i (neg)\n", isBitHigh);
 
 	//CTRLA STRIGIN
 	status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_DIR_TRIGIN, &isBitHigh);
@@ -3809,44 +3814,31 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 	
 	//CTRLB
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nCTRLB\n");
-
-	bool sti0High, sti1High, sti2High;
-	//CTRLB STI0
-	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_STI0, &isBitHigh);
-	sti0High = isBitHigh;
-
-	//CTRLB STI1
-	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_STI1, &isBitHigh);
-	sti1High = isBitHigh;
-
-	//CTRLB STI2
-	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_STI2, &isBitHigh);
-	sti2High = isBitHigh;
-
-	int combinedValueSTI = (sti2High << 2) | (sti1High << 1) | sti0High;
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nCTRLB\n"); 
+	status = readRegisterS0_8(drvno, &data8, S0Addr_CTRLB);
+	int combinedValueSTI = data8 & CTRLB_bits_STI;
 
 	switch (combinedValueSTI) {
-	case 0: 
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\tI\n");
+	case sti_I:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\t%u (I)\n", combinedValueSTI);
 		break;
-	case 1:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\tS1\n");
+	case sti_S1:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\t%u (S1)\n", combinedValueSTI);
 		break;
-	case 2:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\tS2\n");
+	case sti_S2:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\t%u (S2)\n", combinedValueSTI);
 		break;
-	case 3:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\tS2ENI\n");
+	case sti_S2_enable_I:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\t%u (S2ENI)\n", combinedValueSTI);
 		break;
-	case 4:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\tST\n");
+	case sti_STimer:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\t%u (stimer)\n", combinedValueSTI);
 		break;
-	case 5:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\tASL\n");
+	case sti_ASL:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\t%u (ASL)\n", combinedValueSTI);
 		break;
 	default:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\tinvalid\n");
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTI\t%u (invalid)\n", combinedValueSTI);
 		break;
 
 	}
@@ -3855,44 +3847,36 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_SHON, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSHON\t%i\n", isBitHigh);
 
-
-	bool bti0High, bti1High, bti2High;
-	//CTRLB BTI0
-	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI0, &bti0High);
-
-	//CTRLB BTI1
-	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI1, &bti1High);
-
-	//CTRLB BTI2
-	status = ReadBitS0_8(drvno, S0Addr_CTRLB, CTRLB_bitindex_BTI2, &bti2High);
-
-	int combinedValueBTI = (bti2High << 2) | (bti1High << 1) | bti0High;
+	int combinedValueBTI = (data8 & CTRLB_bits_BTI) >> CTRLB_bitindex_BTI0;
 
 	switch (combinedValueBTI) 
 	{
-	case 0:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\tI\n");
+	case bti_I:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\t%u (I)\n", combinedValueBTI);
 		break;
-	case 1:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\tS1\n");
+	case bti_S1:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\t%u (S1)\n", combinedValueBTI);
 		break;
-	case 2:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\tS2\n");
+	case bti_S2:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\t%u (S2)\n", combinedValueBTI);
 		break;
-	case 3:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\tS1&S2\n");
+	case bti_S1S2:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\t%u (S1&S2)\n", combinedValueBTI);
 		break;
-	case 4:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\tBT\n");
+	case bti_BTimer:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\t%u (btimer)\n", combinedValueBTI);
 		break;
-	case 5:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\tS1 Chopper\n");
+	case bti_S1chopper:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\t%u (S1 Chopper)\n", combinedValueBTI);
 		break;
-	case 6:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\tS2 Chopper\n");
+	case bti_S2chopper:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\t%u (S2 Chopper)\n", combinedValueBTI);
 		break;
-	case 7:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\tS1&S2 Chopper\n");
+	case bti_S1S2chopper:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\t%u (S1&S2 Chopper)\n", combinedValueBTI);
+		break;
+	default:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\t%u (invalid)\n", combinedValueSTI);
 		break;
 	}
 
@@ -3934,7 +3918,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	status = readRegisterS0_8(drvno, &dataXCK4, S0Addr_XCKMSB);
 
 	uint32_t dataXCK = (uint32_t)(dataXCK4 & 0x0F) << 24 | (uint32_t)dataXCK3 << 16 | (uint32_t)dataXCK2 << 8 | (uint32_t)dataXCK1;
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tXCK STIMER\t0x%x\n", dataXCK);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tXCK STIMER\t%u\n", dataXCK);
 
 	//XCK Res_ns
 	status = ReadBitS0_8(drvno, S0Addr_XCKMSB, XCKMSB_bitindex_reset_ns, &isBitHigh);
@@ -3953,14 +3937,8 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	//Register XCKCNT
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nRegister XCKCNT\n");
 
-	uint8_t dataXCKCNT1 = 0, dataXCKCNT2 = 0, dataXCKCNT3 = 0, dataXCKCNT4 = 0;
-	status = readRegisterS0_8(drvno, &dataXCKCNT1, S0Addr_XCKCNTLL);
-	status = readRegisterS0_8(drvno, &dataXCKCNT2, S0Addr_XCKCNTLH);
-	status = readRegisterS0_8(drvno, &dataXCKCNT3, S0Addr_XCKCNTHL);
-	status = readRegisterS0_8(drvno, &dataXCKCNT4, S0Addr_XCKCNTMSB);
-
-	uint32_t dataXCKCNT = (uint32_t)(dataXCKCNT4 & 0x0F) << 24 | (uint32_t)dataXCKCNT3 << 16 | (uint32_t)dataXCKCNT2 << 8 | (uint32_t)dataXCKCNT1;
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tXCKCNT\t0x%x\n", dataXCKCNT);
+	status = readRegisterS0_8(drvno, &data32, S0Addr_XCKCNTLL);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tXCKCNT\t%u\n", data32);
 
 	/*=======================================================================*/
 
@@ -4052,14 +4030,10 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	//Register VCLKFREQ
 	uint8_t dataVCLKFREQ = 0;
 	status = readRegisterS0_8(drvno, &dataVCLKFREQ, S0Addr_VCLKFREQ);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tVCLKFREQ\t%i\n", dataVCLKFREQ);
-	
-	int translatedVCLKFREQ = "";
-	
+	int translatedVCLKFREQ = 0;
 	if (dataVCLKFREQ == 0) translatedVCLKFREQ = 0;
 	else translatedVCLKFREQ = VCLKFREQ_base_value + ((int)dataVCLKFREQ * VCLKFREQ_step_value);
-
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tTranslated VCLKFREQ\t%ins\n", translatedVCLKFREQ);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tVCLKFREQ\t%i (%ins)\n", dataVCLKFREQ, translatedVCLKFREQ);
 
 	/*=======================================================================*/
 
@@ -4107,97 +4081,99 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	int combinedTO = (isTOSEL << 4) | (isTO3 << 3) | (isTO2 << 2) | (isTO1 << 1) | isTO0;
 
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i (", combinedTO);
+
 	switch (combinedTO)
 	{
 	case tor_xck:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tXCK\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "XCK)\n");
 		break;
 	case tor_rego:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tREGO\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "REGO)\n");
 		break;
 	case tor_von:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tVON\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "VON)\n");
 		break;
 	case tor_dma_act:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tDMA_ACT\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "DMA_ACT)\n");
 		break;
 	case tor_asls:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tASLS\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "ASLS)\n");
 		break;
 	case tor_stimer:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tSTIMER\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "STIMER)\n");
 		break;
 	case tor_btimer:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue%i\n\t\tBTIMER\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "BTIMER)\n");
 		break;
 	case tor_isr_act:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tISR_ACT\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "ISR_ACT)\n");
 		break;
 	case tor_s1:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tS1\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "S1)\n");
 		break;
 	case tor_s2:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tS2\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "S2)\n");
 		break;
 	case tor_bon:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue%i\n\t\tBON\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "BON)\n");
 		break;
 	case tor_measureon:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tMEASUREON\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "MEASUREON)\n");
 		break;
 	case tor_sdat:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tSDAT\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "SDAT)\n");
 		break;
 	case tor_bdat:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tBDAT\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "BDAT)\n");
 		break;
 	case tor_sec_mshut:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tSSHUT\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "SSHUT)\n");
 		break;
 	case tor_bec_mshut:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tBSHUT\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "BSHUT)\n");
 		break;
 	case tor_exposure_window:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tEXPOSURE_WINDOW\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "EXPOSURE_WINDOW)\n");
 		break;
 	case tor_to_cnt_out:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tTO_CNT_OUT\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "TO_CNT_OUT)\n");
 		break;
 	case tor_secon:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tSECON\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "SECON)\n");
 		break;
 	case tor_i:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tI\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "I)\n");
 		break;
 	case tor_S1S2readDelay:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\S1S2readDelay\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "S1S2readDelay)\n");
 		break;
 	case tor_unused_23:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tUnused\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Unused)\n");
 		break;
 	case tor_unused_24:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tUnused\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Unused)\n");
 		break;
 	case tor_unused_25:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tUnused\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Unused)\n");
 		break;
 	case tor_unused_26:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tUnused\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Unused)\n");
 		break;
 	case tor_unused_27:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tUnused\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Unused)\n");
 		break;
 	case tor_unused_28:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tUnused\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Unused)\n");
 		break;
 	case tor_enffr:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tENFFR\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "ENFFR)\n");
 		break;
 	case tor_enffw:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tENFFW\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "ENFFW)\n");
 		break;
 	case tor_enffwrprot:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPCI Output\n\tValue\t%i\n\t\tENFFWRPROT\n", combinedTO);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "ENFFWRPROT)\n");
 		break;
 	}
 
@@ -4535,14 +4511,10 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nXCKDLY\n");
 
 	//Delay value
-	uint32_t dataXCKDLY = 0;
 	uint32_t bitmaskXCKDLY = 0x7FFFFFFF;
-	status = readRegisterS0_32(drvno, &dataXCKDLY, S0Addr_XCKDLY);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tDelay value\t%i\n", (dataXCKDLY & bitmaskXCKDLY));
-
-	//Actual delay
-	int val = 500 + ((int)(dataXCKDLY & bitmaskXCKDLY) * 10);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tActual delay\t%ins\n", val);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_XCKDLY);
+	int val = 500 + ((int)(data32 & bitmaskXCKDLY) * 10);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tDelay value\t%i (%ins)\n", (data32 & bitmaskXCKDLY), val);
 
 	/*=======================================================================*/
 
@@ -4550,10 +4522,9 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nBTIMER\n");
 
 	//Timer
-	uint32_t dataBTIMER = 0;
 	uint32_t bitmaskBTIMER = 0x0FFFFFFF;
-	status = readRegisterS0_32(drvno, &dataBTIMER, S0Addr_BTIMER);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tTimer\t%iμs\n", (dataBTIMER & bitmaskBTIMER));
+	status = readRegisterS0_32(drvno, &data32, S0Addr_BTIMER);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tTimer\t%i (%iμs)\n", (data32 & bitmaskBTIMER), (data32 & bitmaskBTIMER));
 
 	/*=======================================================================*/
 
@@ -4561,10 +4532,9 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nBDAT\n");
 
 	//Delay After Trigger
-	uint32_t dataBDAT = 0;
 	uint32_t bitmaskBDAT = 0x7FFFFFFF;
-	status = readRegisterS0_32(drvno, &dataBDAT, S0Addr_BDAT);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tDelay After Trigger\t%i\n", (dataBDAT & bitmaskBDAT));
+	status = readRegisterS0_32(drvno, &data32, S0Addr_BDAT);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tDelay After Trigger\t%i\n", (data32 & bitmaskBDAT));
 
 	//Enabled
 	status = ReadBitS0_32(drvno, S0Addr_BDAT, BDAT_bitindex_enabled, &isBitHigh);
@@ -4727,41 +4697,47 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	//Sensor Type
 	uint32_t dataCAMTYPE = 0;
 	status = readRegisterS0_32(drvno, &dataCAMTYPE, S0Addr_CAMERA_TYPE);
-	uint16_t lowerBitsCAMTYPE = (uint16_t)(dataCAMTYPE & 0x0000FFFF);
-	uint16_t upperBitsCAMTYPE = (uint16_t)(dataCAMTYPE >> 16) & 0x0000FFFF;
+	uint16_t lowerBitsCAMTYPE = (uint16_t)(dataCAMTYPE & camera_type_sensor_type_bits);
+	uint16_t upperBitsCAMTYPE = (uint16_t)((dataCAMTYPE & camera_type_camera_system_bits) >> camera_type_camera_system_bit_index);
 	switch (lowerBitsCAMTYPE)
 	{
-	case 0x0000:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%s\n", "PDA");
+	case sensor_type_pda:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "PDA");
 		break;
-	case 0x0001:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%s\n", "IR");
+	case sensor_type_ir:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "IR");
 		break;
-	case 0x0002:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%s\n", "FFT");
+	case sensor_type_fft:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "FFT");
 		break;
-	case 0x0003:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%s\n", "CMOS");
+	case sensor_type_cmos:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "CMOS");
 		break;
-	case 0x0004:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%s\n", "HSVIS");
+	case sensor_type_hsvis:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "HSVIS");
 		break;
-	case 0x0005:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%s\n", "HSIR");
+	case sensor_type_hsir:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "HSIR");
+		break;
+	default:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "invalid");
 		break;
 	}
 
 	//Camera System
 	switch (upperBitsCAMTYPE)
 	{
-	case 0x0000:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCamera System\t%s\n", "3001");
+	case camera_system_3001:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCamera System\t%u (%s)\n", upperBitsCAMTYPE, "3001");
 		break;
-	case 0x0001:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCamera System\t%s\n", "3010");
+	case camera_system_3010:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCamera System\t%u (%s)\n", upperBitsCAMTYPE, "3010");
 		break;
-	case 0x0002:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCamera System\t%s\n", "3030");
+	case camera_system_3030:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCamera System\t%u (%s)\n", upperBitsCAMTYPE, "3030");
+		break;
+	default:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCamera System\t%u (%s)\n", upperBitsCAMTYPE, "invalid");
 		break;
 	}
 
