@@ -4,7 +4,6 @@
 #include "dialogdac.h"
 #include "dialogioctrl.h"
 #include "dialogspecialpixels.h"
-#include "dialogfifopixels.h"
 #ifdef WIN32
 #include "dialoggreyscalesettings.h"
 #endif
@@ -457,14 +456,6 @@ void MainWindow::on_actionDAC_triggered()
 	DialogDac* dialogDac = new DialogDac(this);
 	dialogDac->setAttribute(Qt::WA_DeleteOnClose);
 	dialogDac->show();
-	return;
-}
-
-void MainWindow::on_actionfifo_pixels_triggered()
-{
-	DialogFifoPixels* dialogFifoPixels = new DialogFifoPixels(this);
-	dialogFifoPixels->setAttribute(Qt::WA_DeleteOnClose);
-	dialogFifoPixels->show();
 	return;
 }
 
