@@ -512,6 +512,7 @@ void MainWindow::loadSettings()
 
 void MainWindow::on_actionDump_board_registers_triggered()
 {
+	QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 	QDialog* messageBox = new QDialog(this);
 	messageBox->setAttribute(Qt::WA_DeleteOnClose);
 	messageBox->setSizeGripEnabled(true);
@@ -606,6 +607,7 @@ void MainWindow::on_actionDump_board_registers_triggered()
 	layout->addWidget(dialogButtonBox);
 	messageBox->setWindowTitle("Register dump");
 	messageBox->show();
+	QGuiApplication::restoreOverrideCursor();
 	return;
 }
 
