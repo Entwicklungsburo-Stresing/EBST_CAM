@@ -217,7 +217,6 @@
     <ClCompile Include="camerasettingswidget.cpp" />
     <ClCompile Include="dialogdac.cpp" />
     <ClCompile Include="dialogdsc.cpp" />
-    <ClCompile Include="dialogfifopixels.cpp" />
     <ClCompile Include="dialoggreyscalesettings.cpp" />
     <ClCompile Include="dialogioctrl.cpp" />
     <ClCompile Include="dialogrms.cpp" />
@@ -253,7 +252,6 @@
     <QtMoc Include="camerasettingswidget.h" />
     <QtMoc Include="dialogspecialpixels.h" />
     <QtMoc Include="dialoggreyscalesettings.h" />
-    <QtMoc Include="dialogfifopixels.h" />
     <ClInclude Include="lsc-gui.h" />
     <ClInclude Include="UIAbstractionLayer_cpp.h" />
     <QtMoc Include="dialogsettings.h">

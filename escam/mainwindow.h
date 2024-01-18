@@ -56,7 +56,6 @@ private slots:
 	void on_actionAbout_triggered();
 	void on_actionAbout_Qt_triggered();
 	void on_actionDAC_triggered();
-	void on_actionfifo_pixels_triggered();
 	void on_actionIO_Control_triggered();
 	void on_actionShow_triggered();
 	void loadSettings();
