@@ -176,14 +176,6 @@ enum GIOREG_bits_t
 	GIOREG_bitindex_I8 = 15,
 
 };
-enum XCKMSB_bits_t
-{
-	XCKMSB_bit_stimer_on = 0x40,
-	XCKMSB_bitindex_reset_ns = 4,
-	XCKMSB_bitindex_reset_ms = 5,
-	XCKMSB_bitindex_stimer_on = 6,
-	XCKMSB_bitindex_F_EXT_TRIG = 7
-};
 
 /**
  * Addresses of PCIe configuration space. See documentation of Spartan-6 FPGA Integrated Endpoint Block for details. Table 2-2.
@@ -398,6 +390,26 @@ enum s0_addresses_t
 	S0Addr_CAMSTATUS12 = 0xB0,
 	S0Addr_CAMSTATUS34 = 0xB4,
 	S0Addr_CAMERA_TYPE = 0xB8,
+};
+
+enum XCK_bits_t
+{
+	XCK_stimer_bitindex = 0,
+	XCK_stimer_bits = 0x0FFFFFFF
+};
+
+enum XCKMSB_bits_t
+{
+	XCKMSB_bit_stimer_on = 0x40,
+	/**
+	 * select timer base resolution: 0: 1us, 1: 100ns
+	 */
+	XCKMSB_bitindex_reset_ns = 4,
+	/**
+	 * divide time base resolution by 1000: 0: 1us, 1: 1ms, or when reset_ns = 1: 0: 100ns, 1: 100us
+	 */
+	XCKMSB_bitindex_reset_ms = 5,
+	XCKMSB_bitindex_stimer_on = 6,
 };
 
 enum ScanIndex_bits_t
