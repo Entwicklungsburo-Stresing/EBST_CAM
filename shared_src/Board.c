@@ -1451,12 +1451,13 @@ es_status_codes SetBTI( uint32_t drvno, uint8_t bti_mode )
 es_status_codes SetSTimer( uint32_t drvno, uint32_t stime_in_microseconds )
 {
 	ES_LOG("Set stime in microseconds: %u\n", stime_in_microseconds);
-	uint32_t data = 0;
-	es_status_codes status = readRegisterS0_32( drvno, &data, S0Addr_XCKLL );
+	// There is an unimplemented feature for STimer to adjust the resolution of the counter. See register XCK in manual.
+	// Use the default resolution of 1 us.
+	es_status_codes status = resetBitS0_8(drvno, XCKMSB_bitindex_reset_ns, S0Addr_XCKMSB);
 	if (status != es_no_error) return status;
-	data &= 0xF0000000;
-	data |= stime_in_microseconds & 0x0FFFFFFF;
-	return writeRegisterS0_32( drvno, data, S0Addr_XCKLL );
+	status = resetBitS0_8(drvno, XCKMSB_bitindex_reset_ms, S0Addr_XCKMSB);
+	if (status != es_no_error) return status;
+	return writeBitsS0_32(drvno, stime_in_microseconds, XCK_stimer_bits, S0Addr_XCKLL);
 }
 
 /**
