@@ -582,7 +582,7 @@ es_status_codes SetSensorType( uint32_t drvno, uint16_t sensor_type )
 {
 	ES_LOG("Setting sensor type: %u\n", sensor_type);
 	es_status_codes status;
-	if (sensor_type == sensor_type_fft)
+	if (sensor_type == sensor_type_fft && settings_struct.camera_settings[drvno].is_fft_legacy)
 		status = setBitS0_8(drvno, TOR_MSB_bitindex_ISFFT_LEGACY, S0Addr_TOR_MSB);
 	else
 		status = resetBitS0_8(drvno, TOR_MSB_bitindex_ISFFT_LEGACY, S0Addr_TOR_MSB);
@@ -4990,7 +4990,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		"camera system\t"DLLTAB"%u\n"
 		"camcnt\t"DLLTAB DLLTAB"%u\n"
 		"pixel\t"DLLTAB DLLTAB"%u\n"
-		"mshut\t"DLLTAB DLLTAB"%u\n"
+		"is_fft_legacy\t"DLLTAB DLLTAB"%u\n"
 		"led off\t"DLLTAB DLLTAB"%u\n"
 		"sensor_gain\t"DLLTAB"%u\n"
 		"adc_gain\t"DLLTAB"%u\n"
@@ -5019,7 +5019,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].camera_system,
 		settings_struct.camera_settings[drvno].camcnt,
 		settings_struct.camera_settings[drvno].pixel,
-		settings_struct.camera_settings[drvno].mshut,
+		settings_struct.camera_settings[drvno].is_fft_legacy,
 		settings_struct.camera_settings[drvno].led_off,
 		settings_struct.camera_settings[drvno].sensor_gain,
 		settings_struct.camera_settings[drvno].adc_gain,

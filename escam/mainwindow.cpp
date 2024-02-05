@@ -169,6 +169,7 @@ void MainWindow::startPressed()
 		settings_struct.camera_settings[drvno].bec_in_10ns = settings.value(settingShutterBecIn10nsPath, settingShutterBecIn10nsDefault).toDouble();
 		settings_struct.camera_settings[drvno].trigger_mode_cc = settings.value(settingTriggerCcPath, settingTriggerCcDefault).toDouble();
 		settings_struct.camera_settings[drvno].sensor_type = settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble();
+		settings_struct.camera_settings[drvno].is_fft_legacy = settings.value(settingIsFftLegacyPath, settingIsFftlegacyDefault).toBool();
 		settings_struct.camera_settings[drvno].camera_system = settings.value(settingCameraSystemPath, settingCameraSystemDefault).toDouble();
 		settings_struct.camera_settings[drvno].camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toDouble();
 		settings_struct.camera_settings[drvno].pixel = settings.value(settingPixelPath, settingPixelDefault).toDouble();
