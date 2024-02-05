@@ -81,9 +81,9 @@ struct camera_settings
 	 */
 	uint32_t pixel;
 	/**
-	 * DEPRECATED. The setting mshut has been used to turn a mechanical shutter on or off.
+	 * 0: no fft legacy mode (default), 1: fft legacy mode
 	 */
-	uint32_t mshut;
+	uint32_t is_fft_legacy;
 	/**
 	 * Turn LEDs off.
 	 *	=0 LED on

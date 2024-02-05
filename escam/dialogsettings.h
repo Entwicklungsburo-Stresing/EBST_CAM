@@ -30,6 +30,7 @@ constexpr auto settingBoard2Path = "board2";
 constexpr auto settingBoard3Path = "board3";
 constexpr auto settingBoard4Path = "board4";
 constexpr auto settingSensorTypePath = "sensorType";
+constexpr auto settingIsFftLegacyPath = "isFftLegacy";
 constexpr auto settingCameraSystemPath = "cameraSystem";
 constexpr auto settingCamcntPath = "camcnt";
 constexpr auto settingPixelPath = "pixelcnt";

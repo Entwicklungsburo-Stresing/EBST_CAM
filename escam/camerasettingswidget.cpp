@@ -98,6 +98,7 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingS1S2ReadDelayIn10nsPath, ui->doubleSpinBoxS1S2ReadDelayIn10ns->value());
 	//Camera setup
 	settings.setValue(settingSensorTypePath, ui->comboBoxSensorType->currentIndex());
+	settings.setValue(settingIsFftLegacyPath, ui->checkBoxIsFftLegacy->isChecked());
 	settings.setValue(settingCameraSystemPath, ui->comboBoxCameraSystem->currentIndex());
 	settings.setValue(settingCamcntPath, ui->spinBoxCamcnt->value());
 	settings.setValue(settingPixelPath, ui->spinBoxPixel->value());
@@ -684,6 +685,7 @@ void CameraSettingsWidget::initializeWidget()
 	//Camera setup
 	ui->comboBoxSensorType->setCurrentIndex(settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble());
 	ui->comboBoxSensorType->currentIndexChanged(settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble());
+	ui->checkBoxIsFftLegacy->setChecked(settings.value(settingIsFftLegacyPath, settingIsFftlegacyDefault).toBool());
 	ui->comboBoxCameraSystem->setCurrentIndex(settings.value(settingCameraSystemPath, settingCameraSystemDefault).toDouble());
 	ui->comboBoxCameraSystem->currentIndexChanged(settings.value(settingCameraSystemPath, settingCameraSystemDefault).toDouble());
 	ui->spinBoxCamcnt->setValue(settings.value(settingCamcntPath, settingCamcntDefault).toDouble());
