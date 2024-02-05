@@ -1,5 +1,8 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.11.1
+
+
 4.11.0
 - Add register S1S2ReadDelay
 - Add setting s1s2_read_delay_in_10ns (deprecated setting keep is beeing replaced)
