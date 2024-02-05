@@ -1,7 +1,11 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
 4.11.1
-
+- Add DLLReadBitS0_32(), DLLReadBitS0_32_multipleBoards(), DLLReadBitS0_8(), DLLReadBitS0_8_multipleBoards()
+- Extend human readable S0 dump
+- Remove dialog fifo pixels
+- Set cursor to wait while dumping board registers
+- 
 
 4.11.0
 - Add register S1S2ReadDelay
