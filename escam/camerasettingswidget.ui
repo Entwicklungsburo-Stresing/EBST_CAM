@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>345</width>
+    <width>347</width>
     <height>478</height>
    </rect>
   </property>
@@ -1622,6 +1622,7 @@
            <item>
             <property name="text">
              <string>0V</string>
+             <string>Vin sample</string>
             </property>
            </item>
           </widget>
