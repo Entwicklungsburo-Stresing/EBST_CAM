@@ -20,6 +20,7 @@ private slots:
 	void spinBoxChannel_valueChanged();
 	void loadSettings();
 	void on_pushButtonDefault_pressed();
+	void on_pushButtonAutotune_pressed();
 
 private:
 	uint32_t output_old[8];

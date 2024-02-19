@@ -798,3 +798,16 @@ enum camera_type_bits_t
 	camera_type_sensor_type_bit_index = 0,
 	camera_type_camera_system_bit_index = 16,
 };
+
+enum pixel_ranges
+{
+	pixel_range_start = 11,
+	pixel_range_1 = 139,
+	pixel_range_2 = 267,
+	pixel_range_3 = 395,
+	pixel_range_4 = 523,
+	pixel_range_5 = 651,
+	pixel_range_6 = 779,
+	pixel_range_7 = 907,
+	pixel_range_8 = 1035
+};

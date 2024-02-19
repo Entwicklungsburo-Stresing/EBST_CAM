@@ -30,6 +30,7 @@ public slots:
 	void on_blockStart();
 	void on_blockDone();
 	void on_allBlocksDone();
+	void startPressed();
 private:
 	QSettings settings;
 	void setChartData(QLineSeries** series, uint16_t numberOfSets);
@@ -59,7 +60,6 @@ private slots:
 	void on_actionIO_Control_triggered();
 	void on_actionShow_triggered();
 	void loadSettings();
-	void startPressed();
 	void on_actionDump_board_registers_triggered();
 	void on_rubberBandChanged();
 	void on_checkBoxShowCamera(bool state, int camera, uint32_t drvno);

@@ -19,7 +19,7 @@ DialogDac::DialogDac(QWidget* parent)
 	connect(ui->spinBoxPcie, qOverload<int>(&QSpinBox::valueChanged), this, &DialogDac::loadSettings);
 	connect(ui->comboBoxLocation, qOverload<int>(&QComboBox::currentIndexChanged), this, &DialogDac::loadSettings);
 	connect(ui->spinBoxCamera, qOverload<int>(&QSpinBox::valueChanged), this, &DialogDac::loadSettings);
-
+	
 	ui->spinBoxPcie->setMaximum(number_of_boards - 1);
 	if (number_of_boards == 1)
 	{
@@ -226,4 +226,33 @@ void DialogDac::loadSettings()
 	}
 	settings.endGroup();
 	return;
+}
+
+void DialogDac::on_pushButtonAutotune_pressed()
+{
+	/*
+	int target = ui->spinBoxTarget->value();
+	int currentMean = 0;
+	int timeout = 2;
+
+	while ((currentMean <= target + 5 && currentMean >= target - 5) || timeout == 0)
+	{
+		mainWindow->startPressed();
+
+		uint32_t drvno = 0;
+		uint32_t sample = 9;
+		uint32_t block = 0;
+		uint16_t camera = 0;
+		uint32_t pixel = settings.value(settingPixelPath, settingPixelDefault).toDouble();
+		size_t data_array_size = 0;
+		data_array_size += pixel;
+		uint16_t* data = static_cast<uint16_t*>(malloc(data_array_size * sizeof(uint16_t)));
+		uint16_t* cur_data_ptr = data;
+
+		es_status_codes status = mainWindow->lsc.returnFrame(drvno, sample, block, camera, pixel, cur_data_ptr);
+		if (status != es_no_error) return;
+		
+		timeout--;
+	}
+	*/
 }
