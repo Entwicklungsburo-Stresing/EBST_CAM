@@ -118,7 +118,6 @@ struct verify_data_parameter
 
 extern uint32_t* aPIXEL;
 extern uint32_t* aCAMCNT;
-extern bool* useSWTrig;
 extern uint16_t** userBuffer;
 extern uint16_t** userBufferEndPtr;
 extern volatile uint16_t** userBufferWritePos;

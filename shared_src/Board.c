@@ -155,7 +155,6 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 			return es_parameter_out_of_range;
 		}
 	}
-	else *useSWTrig = false;
 	if (status != es_no_error) return status;
 	status = SetSSlope(drvno, settings_struct.camera_settings[drvno].sslope);
 	if (status != es_no_error) return status;
@@ -1048,7 +1047,6 @@ es_status_codes OpenShutter( uint32_t drvno )
 es_status_codes SetupFullBinning( uint32_t drvno, uint32_t lines, uint8_t vfreq )
 {
 	ES_LOG("Setup full binning\n");
-	*useSWTrig = false;
 	es_status_codes status = SetupVCLKReg( drvno, lines, vfreq );
 	if (status != es_no_error) return status;
 	return ResetPartialBinning( drvno );
@@ -2793,8 +2791,8 @@ es_status_codes StartMeasurement()
 					if (status != es_no_error) return ReturnStartMeasurement(status);
 					status = setBlockOn(drvno);
 					if (status != es_no_error) return ReturnStartMeasurement(status);
-					//start scan for first read if area or ROI
-					if (*useSWTrig) status = DoSoftwareTrigger(drvno);
+					//start scan for first read if STI = ASL
+					if (settings_struct.camera_settings[drvno].sti_mode == sti_ASL) status = DoSoftwareTrigger(drvno);
 					if (status != es_no_error) return ReturnStartMeasurement(status);
 					timerOn[drvno] = true;
 				}
@@ -6113,8 +6111,6 @@ es_status_codes SetupROI(uint32_t drvno, uint16_t number_of_regions, uint32_t li
 	status = SetPartialBinning(drvno, 0); //I don't know why there first is 0 written, I just copied it from Labview. - FH
 	if (status != es_no_error) return status;
 	status = SetPartialBinning(drvno, number_of_regions);
-	if (status != es_no_error) return status;
-	*useSWTrig = true;
 	return status;
 }
 
@@ -6134,7 +6130,6 @@ es_status_codes SetupArea(uint32_t drvno, uint32_t lines_binning, uint8_t vfreq)
 	ES_LOG("Setup Area\n");
 	es_status_codes status = SetupVCLKReg(drvno, lines_binning, vfreq);
 	if (status != es_no_error) return status;
-	*useSWTrig = true; //software starts 1st scan
 	return ResetPartialBinning(drvno);
 }
 
