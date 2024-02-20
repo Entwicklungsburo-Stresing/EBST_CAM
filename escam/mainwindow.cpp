@@ -1028,6 +1028,7 @@ void MainWindow::on_actionspecial_pixels_triggered()
 	dialogSpecialPixels->setAttribute(Qt::WA_DeleteOnClose);
 	connect(ui->horizontalSliderSample, &QSlider::valueChanged, dialogSpecialPixels, &DialogSpecialPixels::updateSample);
 	connect(ui->horizontalSliderBlock, &QSlider::valueChanged, dialogSpecialPixels, &DialogSpecialPixels::updateBlock);
+	connect(&lsc, &Lsc::allBlocksDone, dialogSpecialPixels, &DialogSpecialPixels::updateValues);
 	dialogSpecialPixels->updateSample(ui->horizontalSliderSample->value());
 	dialogSpecialPixels->updateBlock(ui->horizontalSliderBlock->value());
 	dialogSpecialPixels->show();
