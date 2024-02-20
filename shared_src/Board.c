@@ -6115,7 +6115,7 @@ es_status_codes SetupROI(uint32_t drvno, uint16_t number_of_regions, uint32_t li
 	status = SetPartialBinning(drvno, number_of_regions);
 	if (status != es_no_error) return status;
 	*useSWTrig = true;
-	return SetSTI(drvno, sti_ASL);
+	return status;
 }
 
 /**
@@ -6133,8 +6133,6 @@ es_status_codes SetupArea(uint32_t drvno, uint32_t lines_binning, uint8_t vfreq)
 {
 	ES_LOG("Setup Area\n");
 	es_status_codes status = SetupVCLKReg(drvno, lines_binning, vfreq);
-	if (status != es_no_error) return status;
-	status = SetSTI(drvno, sti_ASL);
 	if (status != es_no_error) return status;
 	*useSWTrig = true; //software starts 1st scan
 	return ResetPartialBinning(drvno);
