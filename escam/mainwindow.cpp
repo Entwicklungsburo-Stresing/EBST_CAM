@@ -271,6 +271,7 @@ void MainWindow::on_actionEdit_triggered()
 	ds->setAttribute( Qt::WA_DeleteOnClose );
 	ds->show();
 	connect( ds, &DialogSettings::settings_saved, this, &MainWindow::loadSettings );
+	connect( ds, &DialogSettings::settings_saved, this, &MainWindow::setDefaultAxes );
 	return;
 }
 
@@ -392,16 +393,6 @@ void MainWindow::on_checkBoxShowCamera(bool state, int camera, uint32_t drvno)
 void MainWindow::on_actionReset_axes_triggered()
 {
 	setDefaultAxes();
-	// retrieve axis pointer
-	QList<QAbstractAxis *> axes = ui->chartView->chart()->axes();
-	if (axes.isEmpty()) return;
-	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
-	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
-	axis0->setMax(ui->chartView->curr_xmax);
-	axis0->setMin(ui->chartView->curr_xmin);
-	axis1->setMax(ui->chartView->curr_ymax);
-	axis1->setMin(ui->chartView->curr_ymin);
-	return;
 }
 
 void MainWindow::setDefaultAxes()
@@ -429,6 +420,15 @@ void MainWindow::setDefaultAxes()
 	ui->chartView->curr_xmax = xmax;
 	ui->chartView->curr_xmin = 0;
 	ui->chartView->curr_ymin = 0;
+	// retrieve axis pointer
+	QList<QAbstractAxis*> axes = ui->chartView->chart()->axes();
+	if (axes.isEmpty()) return;
+	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
+	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
+	axis0->setMax(ui->chartView->curr_xmax);
+	axis0->setMin(ui->chartView->curr_xmin);
+	axis1->setMax(ui->chartView->curr_ymax);
+	axis1->setMin(ui->chartView->curr_ymin);
 	return;
 }
 
