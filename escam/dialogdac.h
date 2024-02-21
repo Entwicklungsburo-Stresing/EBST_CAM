@@ -26,6 +26,7 @@ private:
 	uint32_t output_old[8];
 	Ui::DialogDac *ui;
 	QSettings settings;
+	int calculateMean(uint16_t* data, int start, int end);
 };
 
 #endif // DIALOGDAC_H

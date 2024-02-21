@@ -23,6 +23,7 @@ public:
 	Ui::MainWindow *ui;
 	uint32_t greyscale_viewer_board = 0;
 	uint32_t greyscale_viewer_camera = 0;
+	void initSettings();
 public slots:
 	void loadCameraData();
 	void on_measureStart();
@@ -30,7 +31,6 @@ public slots:
 	void on_blockStart();
 	void on_blockDone();
 	void on_allBlocksDone();
-	void startPressed();
 private:
 	QSettings settings;
 	void setChartData(QLineSeries** series, uint16_t numberOfSets);
@@ -79,6 +79,7 @@ private slots:
 	void on_blockFrequencyTooHigh();
 	void findCamera();
 	void on_readCameraTemp();
+	void startPressed();
 };
 
 #endif // MAINWINDOW_H
