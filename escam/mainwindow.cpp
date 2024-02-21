@@ -141,10 +141,10 @@ void MainWindow::setChartData(uint16_t* data, uint32_t* length, uint16_t numberO
 }
 
 /**
- * @brief Slot to start measurement. Called by on_pushButtonStartStop_pressed.
+ * @brief Initializes Settings Struct before measurement started.
  * @return none
  */
-void MainWindow::startPressed()
+void MainWindow::initSettings()
 {
 	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
 	settings_struct.cont_pause_in_microseconds = settings.value(settingContinuousPauseInMicrosecondsPath, settingContinuousPausInMicrosecondsDefault).toDouble();
@@ -207,9 +207,9 @@ void MainWindow::startPressed()
 		QByteArray array = settings.value(settingFilePathPath, QDir::currentPath()).toString().toLocal8Bit();
 		strcpy(settings_struct.camera_settings[drvno].file_path, array.data());
 		//dac
-		for(int camera=0; camera<MAXCAMCNT; camera++)
-			for(int channel=0; channel<8; channel++)
-				settings_struct.camera_settings[drvno].dac_output[camera][channel] = settings.value(settingDacCameraChannelBaseDir + QString::number(channel+1) + "Pos" + QString::number(camera), settingDacCameraDefault).toDouble();
+		for (int camera = 0; camera < MAXCAMCNT; camera++)
+			for (int channel = 0; channel < 8; channel++)
+				settings_struct.camera_settings[drvno].dac_output[camera][channel] = settings.value(settingDacCameraChannelBaseDir + QString::number(channel + 1) + "Pos" + QString::number(camera), settingDacCameraDefault).toDouble();
 		//debug
 		settings_struct.camera_settings[drvno].tor = settings.value(settingTorPath, settingTorDefault).toDouble();
 		settings_struct.camera_settings[drvno].adc_mode = settings.value(settingAdcModePath, settingAdcModeDefault).toDouble();
@@ -232,7 +232,16 @@ void MainWindow::startPressed()
 		settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns = settings.value(settingIOCtrlT0PeriodIn10nsPath, settingIOCtrlT0PeriodIn10nsDefault).toDouble();
 		settings.endGroup();
 	}
+}
 
+
+/**
+ * @brief Slot to start measurement. Called by on_pushButtonStartStop_pressed.
+ * @return none
+ */
+void MainWindow::startPressed()
+{
+	initSettings();
 	es_status_codes status = lsc.initMeasurement();
 	if (status != es_no_error)
 	{

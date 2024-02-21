@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>257</width>
-    <height>366</height>
+    <height>404</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -268,7 +268,14 @@
       </widget>
      </item>
      <item>
-      <widget class="QSpinBox" name="spinBoxTarget"/>
+      <widget class="QSpinBox" name="spinBoxTarget">
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="maximum">
+        <number>16383</number>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="pushButtonAutotune">

@@ -801,13 +801,13 @@ enum camera_type_bits_t
 
 enum pixel_ranges
 {
-	pixel_range_start = 11,
-	pixel_range_1 = 139,
-	pixel_range_2 = 267,
-	pixel_range_3 = 395,
-	pixel_range_4 = 523,
-	pixel_range_5 = 651,
-	pixel_range_6 = 779,
-	pixel_range_7 = 907,
-	pixel_range_8 = 1035
+	pixel_range_start = 12,
+	pixel_range_1 = 140,
+	pixel_range_2 = 268,
+	pixel_range_3 = 396,
+	pixel_range_4 = 524,
+	pixel_range_5 = 652,
+	pixel_range_6 = 780,
+	pixel_range_7 = 908,
+	pixel_range_8 = 1036
 };
