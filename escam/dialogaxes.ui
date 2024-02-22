@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>254</width>
-    <height>142</height>
+    <width>263</width>
+    <height>162</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -91,6 +91,45 @@
         </widget>
        </item>
       </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayoutMirrorX">
+     <item>
+      <widget class="QLabel" name="labelMirrorX">
+       <property name="text">
+        <string>Mirror X-Axis</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkBoxMirrorX">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="tristate">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayoutMirrorY">
+     <item>
+      <widget class="QLabel" name="labelMirrorY">
+       <property name="text">
+        <string>Mirror Y-Axis</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkBoxMirrorY">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

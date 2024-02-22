@@ -84,3 +84,26 @@ void DialogAxes::on_rubberband_valueChanged()
 	ui->spinBoxYmin->setValue(mainWindow->ui->chartView->curr_ymin);
 	ui->spinBoxYmax->setValue(mainWindow->ui->chartView->curr_ymax);
 }
+
+/*
+void DialogAxes::on_checkBoxMirrorX_stateChanged()
+{
+	QList<QAbstractAxis *> axes = mainWindow->ui->chartView->chart()->axes();
+	if (axes.isEmpty()) return;
+	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
+	if(ui->checkBoxMirrorX->isChecked())
+		axis0->setRange(mainWindow->ui->chartView->curr_xmax, mainWindow->ui->chartView->curr_xmin);
+	else
+		axis0->setRange(mainWindow->ui->chartView->curr_xmin, mainWindow->ui->chartView->curr_xmax);
+}
+
+void DialogAxes::on_checkBoxMirrorY_stateChanged()
+{
+	QList<QAbstractAxis *> axes = mainWindow->ui->chartView->chart()->axes();
+	if (axes.isEmpty()) return;
+	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
+	if(ui->checkBoxMirrorY->isChecked())
+		axis1->setRange(mainWindow->ui->chartView->curr_ymax, mainWindow->ui->chartView->curr_ymin);
+	else
+		axis1->setRange(mainWindow->ui->chartView->curr_ymin, mainWindow->ui->chartView->curr_ymax);
+}*/
