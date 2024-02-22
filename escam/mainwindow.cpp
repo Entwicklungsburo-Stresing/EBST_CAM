@@ -418,7 +418,7 @@ void MainWindow::setDefaultAxes()
 			qreal pixel = settings.value(settingPixelPath, settingPixelDefault).toDouble();
 			if (pixel - 1 > xmax)
 				xmax = pixel - 1;
-			if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toDouble() == 2 && ymax < 0x3FFF)
+			if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toDouble() == camera_system_3030 && ymax != 0xFFFF)
 				ymax = 0x3FFF;
 			else
 				ymax = 0xFFFF;
