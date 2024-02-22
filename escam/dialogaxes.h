@@ -17,6 +17,9 @@ public:
 
 	void on_rubberband_valueChanged();
 
+	void on_checkBoxMirrorX_stateChanged();
+	void on_checkBoxMirrorY_stateChanged();
+
 private slots:
 	void on_buttonBox_rejected();
 	void on_spinBoxXmin_valueChanged(int arg1);
