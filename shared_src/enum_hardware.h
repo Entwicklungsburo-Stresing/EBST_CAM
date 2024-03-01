@@ -799,7 +799,7 @@ enum camera_type_bits_t
 	camera_type_camera_system_bit_index = 16,
 };
 
-enum pixel_ranges
+enum autotune_channel_ranges_t
 {
 	autotune_ch1_start = 44,
 	autotune_ch1_end = 108,
