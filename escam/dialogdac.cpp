@@ -239,6 +239,18 @@ void DialogDac::loadSettings()
 
 void DialogDac::on_pushButtonAutotune_pressed()
 {
+	if (isRunning)
+		mainWindow->lsc.abortMeasurement();
+	else
+		autotunePressed();
+	return;
+
+	
+}
+
+void DialogDac::autotunePressed()
+{
+	ui->pushButtonAutotune->setText("Stop");
 	int target = ui->spinBoxTarget->value();
 	int tolerance = 3;
 	const int timeoutCount = 50;
@@ -272,171 +284,18 @@ void DialogDac::on_pushButtonAutotune_pressed()
 		data_array_size += pixel;
 		uint16_t* data = static_cast<uint16_t*>(malloc(data_array_size * sizeof(uint16_t)));
 		//loadSettings();
-		
+
 		status = mainWindow->lsc.returnFrame(drvno, sample, block, camera, pixel, data);
 		if (status != es_no_error) return;
 
-		meanChannel1 = calculateMean(data, pixel_range_start, pixel_range_1);
-		meanArray[0][iterator] = meanChannel1;
-
-		if ((meanChannel1 <= target + tolerance) && (meanChannel1 >= target - tolerance))
-			ch1TargetReached = true;
-		else {
-			int ch1Distance = 0;
-			if (target < meanChannel1)
-			{
-				ch1Distance = meanChannel1 - target;
-				ui->spinBoxChannel1->setValue(ui->spinBoxChannel1->value() - ch1Distance / 2);
-
-			}
-			else if (target > meanChannel1)
-			{
-				ch1Distance = target - meanChannel1;
-				ui->spinBoxChannel1->setValue(ui->spinBoxChannel1->value() + ch1Distance / 2);
-			}
-			qDebug() << "Channel 1 Distance: " << ch1Distance;
-			qDebug() << "Channel 1 Value: " << ui->spinBoxChannel1->value();
-		}
-
-		meanChannel2 = calculateMean(data, pixel_range_1, pixel_range_2);
-		meanArray[1][iterator] = meanChannel2;
-
-		if((meanChannel2 <= target + tolerance) && (meanChannel2 >= target - tolerance))
-						ch2TargetReached = true;
-		else {
-			int ch2Distance = 0;
-			if (target < meanChannel2)
-			{
-				ch2Distance = meanChannel2 - target;
-				ui->spinBoxChannel2->setValue(ui->spinBoxChannel2->value() - ch2Distance / 2);
-			}
-			else if (target > meanChannel2)
-			{
-				ch2Distance = target - meanChannel2;
-				ui->spinBoxChannel2->setValue(ui->spinBoxChannel2->value() + ch2Distance / 2);
-			}
-			qDebug() << "Channel 2 Distance: " << ch2Distance;
-		}
-
-		meanChannel3 = calculateMean(data, pixel_range_2, pixel_range_3);
-		meanArray[2][iterator] = meanChannel3;
-		
-		if ((meanChannel3 <= target + tolerance) && (meanChannel3 >= target - tolerance))
-			ch3TargetReached = true;
-		else {
-			int ch3Distance = 0;
-			if (target < meanChannel3)
-			{
-				ch3Distance = meanChannel3 - target;
-				ui->spinBoxChannel3->setValue(ui->spinBoxChannel3->value() - ch3Distance / 2);
-			}
-			else if (target > meanChannel3)
-			{
-				ch3Distance = target - meanChannel3;
-				ui->spinBoxChannel3->setValue(ui->spinBoxChannel3->value() + ch3Distance / 2);
-			}
-			qDebug() << "Channel 3 Distance: " << ch3Distance;
-		}
-
-		meanChannel4 = calculateMean(data, pixel_range_3, pixel_range_4);
-		meanArray[3][iterator] = meanChannel4;
-		
-		if ((meanChannel4 <= target + tolerance) && (meanChannel4 >= target - tolerance))
-			ch4TargetReached = true;
-		else {
-			int ch4Distance = 0;
-			if (target < meanChannel4)
-			{
-				ch4Distance = meanChannel4 - target;
-				ui->spinBoxChannel4->setValue(ui->spinBoxChannel4->value() - ch4Distance / 2);
-			}
-			else if (target > meanChannel4)
-			{
-				ch4Distance = target - meanChannel4;
-				ui->spinBoxChannel4->setValue(ui->spinBoxChannel4->value() + ch4Distance / 2);
-			}
-			qDebug() << "Channel 4 Distance: " << ch4Distance;
-		}
-
-		meanChannel5 = calculateMean(data, pixel_range_4, pixel_range_5);
-		meanArray[4][iterator] = meanChannel5;
-		
-		if ((meanChannel5 <= target + tolerance) && (meanChannel5 >= target - tolerance))
-			ch5TargetReached = true;
-		else {
-			int ch5Distance = 0;
-			if (target < meanChannel5)
-			{
-				ch5Distance = meanChannel5 - target;
-				ui->spinBoxChannel5->setValue(ui->spinBoxChannel5->value() - ch5Distance / 2);
-			}
-			else if (target > meanChannel5)
-			{
-				ch5Distance = target - meanChannel5;
-				ui->spinBoxChannel5->setValue(ui->spinBoxChannel5->value() + ch5Distance / 2);
-			}
-			qDebug() << "Channel 5 Distance: " << ch5Distance;
-		}
-
-		meanChannel6 = calculateMean(data, pixel_range_5, pixel_range_6);
-		meanArray[5][iterator] = meanChannel6;
-		
-		if ((meanChannel6 <= target + tolerance) && (meanChannel6 >= target - tolerance))
-			ch6TargetReached = true;
-		else {
-			int ch6Distance = 0;
-			if (target < meanChannel6)
-			{
-				ch6Distance = meanChannel6 - target;
-				ui->spinBoxChannel6->setValue(ui->spinBoxChannel6->value() - ch6Distance / 2);
-			}
-			else if (target > meanChannel6)
-			{
-				ch6Distance = target - meanChannel6;
-				ui->spinBoxChannel6->setValue(ui->spinBoxChannel6->value() + ch6Distance / 2);
-			}
-			qDebug() << "Channel 6 Distance: " << ch6Distance;
-		}
-
-		meanChannel7 = calculateMean(data, pixel_range_6, pixel_range_7);
-		meanArray[6][iterator] = meanChannel7;
-		
-		if ((meanChannel7 <= target + tolerance) && (meanChannel7 >= target - tolerance))
-			ch7TargetReached = true;
-		else {
-			int ch7Distance = 0;
-			if (target < meanChannel7)
-			{
-				ch7Distance = meanChannel7 - target;
-				ui->spinBoxChannel7->setValue(ui->spinBoxChannel7->value() - ch7Distance / 2);
-			}
-			else if (target > meanChannel7)
-			{
-				ch7Distance = target - meanChannel7;
-				ui->spinBoxChannel7->setValue(ui->spinBoxChannel7->value() + ch7Distance / 2);
-			}
-			qDebug() << "Channel 7 Distance: " << ch7Distance;
-		}
-
-		meanChannel8 = calculateMean(data, pixel_range_7, pixel_range_8);
-		meanArray[7][iterator] = meanChannel8;
-		
-		if ((meanChannel8 <= target + tolerance) && (meanChannel8 >= target - tolerance))
-			ch8TargetReached = true;
-		else {
-			int ch8Distance = 0;
-			if (target < meanChannel8)
-			{
-				ch8Distance = meanChannel8 - target;
-				ui->spinBoxChannel8->setValue(ui->spinBoxChannel8->value() - ch8Distance / 2);
-			}
-			else if (target > meanChannel8)
-			{
-				ch8Distance = target - meanChannel8;
-				ui->spinBoxChannel8->setValue(ui->spinBoxChannel8->value() + ch8Distance / 2);
-			}
-			qDebug() << "Channel 8 Distance: " << ch8Distance;
-		}
+		ch1TargetReached = autotuneAdjust(data, autotune_ch1_start, autotune_ch1_end, ui->spinBoxChannel1);
+		ch2TargetReached = autotuneAdjust(data, autotune_ch2_start, autotune_ch2_end, ui->spinBoxChannel2);
+		ch3TargetReached = autotuneAdjust(data, autotune_ch3_start, autotune_ch3_end, ui->spinBoxChannel3);
+		ch4TargetReached = autotuneAdjust(data, autotune_ch4_start, autotune_ch4_end, ui->spinBoxChannel4);
+		ch5TargetReached = autotuneAdjust(data, autotune_ch5_start, autotune_ch5_end, ui->spinBoxChannel5);
+		ch6TargetReached = autotuneAdjust(data, autotune_ch6_start, autotune_ch6_end, ui->spinBoxChannel6);
+		ch7TargetReached = autotuneAdjust(data, autotune_ch7_start, autotune_ch7_end, ui->spinBoxChannel7);
+		ch8TargetReached = autotuneAdjust(data, autotune_ch8_start, autotune_ch8_end, ui->spinBoxChannel8);
 
 		//create a delay of 300 milliseconds
 		QTime dieTime = QTime::currentTime().addMSecs(300);
@@ -449,18 +308,7 @@ void DialogDac::on_pushButtonAutotune_pressed()
 		if (ch1TargetReached && ch2TargetReached && ch3TargetReached && ch4TargetReached && ch5TargetReached && ch6TargetReached && ch7TargetReached && ch8TargetReached)
 			targetReached = true;
 	}
-	qDebug() << "================\nIterations: " << iterator << "\n================";
-
-	for (int i = 0; i < 8; i++) {
-		qDebug() << "Mean Array Channel " << i + 1 << ": " << meanArray[i];
-		int distance = 0;
-		for (int j = 0; j < iterator; j++)
-		{
-			qDebug() << "\tValue " << j << ": " << meanArray[i][j];
-			if(j >= 1) distance = meanArray[i][j - 1] - meanArray[i][j];
-			qDebug() << "\tDistance: " << distance;
-		}
-	}
+	ui->pushButtonAutotune->setText("Autotune");
 	return;
 }
 
@@ -473,4 +321,29 @@ int DialogDac::calculateMean(uint16_t* data, int start, int end)
 	}
 	mean /= (end - start);
 	return mean;
+}
+
+bool DialogDac::autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spinBox)
+{
+	bool targetReached = false;
+	int target = ui->spinBoxTarget->value();
+	int tolerance = 3;
+	int mean = calculateMean(data, start, end);
+
+	if ((mean <= target + tolerance) && (mean >= target - tolerance)) 
+		targetReached = true;
+	else {
+				int distance = 0;
+				if (target < mean)
+				{
+			distance = mean - target;
+			spinBox->setValue(spinBox->value() - distance / 2);
+		}
+				else if (target > mean)
+				{
+			distance = target - mean;
+			spinBox->setValue(spinBox->value() + distance / 2);
+		}
+	}
+	return targetReached;
 }
