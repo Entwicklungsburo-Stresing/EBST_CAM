@@ -26,7 +26,9 @@ private:
 	uint32_t output_old[8];
 	Ui::DialogDac *ui;
 	QSettings settings;
+	void autotunePressed();
 	int calculateMean(uint16_t* data, int start, int end);
+	bool autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spinBox);
 };
 
 #endif // DIALOGDAC_H
