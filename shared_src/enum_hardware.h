@@ -801,13 +801,20 @@ enum camera_type_bits_t
 
 enum pixel_ranges
 {
-	pixel_range_start = 12,
-	pixel_range_1 = 140,
-	pixel_range_2 = 268,
-	pixel_range_3 = 396,
-	pixel_range_4 = 524,
-	pixel_range_5 = 652,
-	pixel_range_6 = 780,
-	pixel_range_7 = 908,
-	pixel_range_8 = 1036
+	autotune_ch1_start = 44,
+	autotune_ch1_end = 108,
+	autotune_ch2_start = 172,
+	autotune_ch2_end = 236,
+	autotune_ch3_start = 300,
+	autotune_ch3_end = 364,
+	autotune_ch4_start = 428,
+	autotune_ch4_end = 492,
+	autotune_ch5_start = 556,
+	autotune_ch5_end = 620,
+	autotune_ch6_start = 684,
+	autotune_ch6_end = 748,
+	autotune_ch7_start = 812,
+	autotune_ch7_end = 876,
+	autotune_ch8_start = 940,
+	autotune_ch8_end = 1004,
 };
