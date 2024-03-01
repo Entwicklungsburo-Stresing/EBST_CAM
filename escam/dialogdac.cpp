@@ -333,14 +333,14 @@ bool DialogDac::autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spi
 	if ((mean <= target + tolerance) && (mean >= target - tolerance)) 
 		targetReached = true;
 	else {
-				int distance = 0;
-				if (target < mean)
-				{
+		int distance = 0;
+		if (target < mean)
+		{
 			distance = mean - target;
 			spinBox->setValue(spinBox->value() - distance / 2);
 		}
-				else if (target > mean)
-				{
+		else if (target > mean)
+			{
 			distance = target - mean;
 			spinBox->setValue(spinBox->value() + distance / 2);
 		}
