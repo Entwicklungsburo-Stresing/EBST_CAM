@@ -50,7 +50,7 @@ If `MSVCP140.dll` and `VCRUNTIME140.dll` are missing, Microsoft Visual C++ Redis
 * make
 * C++ compiler g++
 * libqt5charts5-dev
-* Linux Kernel 4.19
+* Linux Kernel 5.4
 ```
 sudo apt install qt5-default qt5-qmake g++ libqt5charts5-dev make
 ```
