@@ -64,7 +64,12 @@ sudo apt install libqt5charts
 ### Compile Escam
 Two possibilities:
 1. Open escam.pro with [Qt Creator](https://www.qt.io/product/development-tools) and press build.
-2. Or run in Terminal `qmake` and `make` in `escam/`.
+2. Or run in Terminal:
+```
+cd escam
+qmake
+make
+```
 
 ### Compile lsc-cli
 ```
@@ -79,28 +84,16 @@ make
 ```
 
 ### Installing driver and escam
-
-```
-# install dkms
-sudo apt install dkms
-```
-Use given .deb or create your own. First compile escam then:
+Use a .deb from [release](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases) or create your own. Before running the script `create_escam_deb.sh` you need to compile escam.
 ```
 cd escam_deb
 ./create_escam_deb.sh
 
 # install e.g. for version 3.20.3
 sudo apt install ./escam_3.20-3.deb
-
-# install kernel module
-sudo dkms build -m lscpcie -v 3.20-3
-sudo dkms install -m lscpcie -v 3.20-3
 ```
 
 ### Running escam
-
-Before running escam the driver file must be accessible for normal user (will go at some point into the driver).
 ```
-sudo chmod 666 /dev/lscpcie0
 escam
 ```
