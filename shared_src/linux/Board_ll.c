@@ -8,6 +8,7 @@
 #include "../../linux-driver/userspace/lscpcie.h"
 #include "../../linux-driver/kernelspace/registers.h"
 #include "../../linux-driver/userspace/local-config.h"
+#include <poll.h>
 
 #define lscpcie_read_reg8(dev, addr, data) \
   do *data = *(uint8_t*)(((uint8_t *)dev->dma_reg) + addr); while (0)
@@ -225,7 +226,7 @@ void ResetBufferWritePos(uint32_t drvno)
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	dev->control->write_pos = 0;
 	userBufferWritePos[drvno] = userBuffer[drvno];
-	ES_LOG("user_buffer_write_pos %p\n", (void*)userBufferWritePos[drvno]);
+	ES_TRACE("user_buffer_write_pos %p\n", (void*)userBufferWritePos[drvno]);
 	dev->control->read_pos = 0;
 	dev->control->irq_count = 0;
 	return;
@@ -271,32 +272,53 @@ void* CopyDataToUserBuffer(void* param_drvno)
 	uint32_t drvno = *drvno_ptr;
 	if(checkDriverHandle(drvno) != es_no_error) return NULL;
 	ES_LOG("Copy data to user buffer started, drvno %u, user buffer: %p\n", drvno, (void*)userBuffer[drvno]);
-	pthread_mutex_lock(&mutex[drvno]);
-	ssize_t bytes_to_read = sizeof(uint16_t) * aCAMCNT[drvno] * *Nospb * aPIXEL[drvno] * *Nob;
-	ES_LOG("bytes to read: %zd\n", bytes_to_read);
-	ssize_t bytes_read = 0;
-	ssize_t result;
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
-	ES_LOG("bytes per interrupt: %u\n", dev->control->bytes_per_interrupt);
-	ES_LOG("bytes_to_read %zd , bytes_read: %zd\n", bytes_to_read, bytes_read);
+	// prepare poll
+	struct pollfd pfds;
+	pfds.fd = dev->handle;
+	pfds.events = POLLIN;
+	// calculate bytes to read
+	ssize_t bytes_to_read = sizeof(uint16_t) * aCAMCNT[drvno] * *Nospb * aPIXEL[drvno] * *Nob;
+	ES_TRACE("bytes to read: %zd\n", bytes_to_read);
+	ssize_t bytes_read = 0;
+	ssize_t result_poll, result_read;
+	ES_TRACE("bytes per interrupt: %u\n", dev->control->bytes_per_interrupt);
+	ES_TRACE("bytes_to_read %zd , bytes_read: %zd\n", bytes_to_read, bytes_read);
+	ES_TRACE("Lock mutex %u\n", drvno);
+	pthread_mutex_lock(&mutex[drvno]); //
 	while (bytes_to_read && bytes_to_read >= dev->control->bytes_per_interrupt && !abortMeasurementFlag)
 	{
-		result = read(dev->handle, ((uint8_t *)userBuffer[drvno]) + bytes_read , (size_t)bytes_to_read);
-		ES_LOG("Copy to user buffer intterupt %u done, result: %zd\n", dev->control->irq_count, result);
-		if (result < 0)
+		ES_TRACE("Starting read %u\n", drvno);
+		result_poll = poll(&pfds, 1, 1000);
+		if(result_poll == -1)
 		{
-			pthread_mutex_unlock(&mutex[drvno]);
-			return NULL;
+			ES_LOG("Exit copy data thread with error, drvno %u, errno %u\n", drvno, result_poll);
+			break;
 		}
-		bytes_to_read -= result;
-		bytes_read += result;
-		ES_TRACE("bytes_to_read %zd , bytes_read: %zd\n", bytes_to_read, bytes_read);
-		userBufferWritePos[drvno] = (uint16_t*)(((uint8_t *)userBufferWritePos[drvno]) + result);
-		ES_TRACE("userBufferWritePos %p\n", (void*)userBufferWritePos[drvno]);
-
+		else if(result_poll)
+		{
+			result_read = read(dev->handle, ((uint8_t *)userBuffer[drvno]) + bytes_read , (size_t)bytes_to_read);
+			ES_TRACE("Copy to user buffer intterupt %u done, result: %zd\n", dev->control->irq_count, result_read);
+			bytes_to_read -= result_read;
+			bytes_read += result_read;
+			ES_TRACE("bytes_to_read %zd , bytes_read: %zd\n", bytes_to_read, bytes_read);
+			userBufferWritePos[drvno] = (uint16_t*)(((uint8_t *)userBufferWritePos[drvno]) + result_read);
+			ES_TRACE("userBufferWritePos %p\n", (void*)userBufferWritePos[drvno]);
+			if (result_read < 0)
+			{
+				ES_LOG("Exit copy data thread with error, drvno %u, errno %u\n", drvno, result_read);
+				break;
+			}
+		}
+		else
+		{
+			ES_TRACE("timeout %u\n", drvno);
+		}
 	}
+	ES_TRACE("Unlock mutex %u\n", drvno);
 	pthread_mutex_unlock(&mutex[drvno]);
-	ES_LOG("All copy to user buffer interrupts done\n");
+	ES_TRACE("Unlocked mutex %u with %u\n", drvno, errno);
+	ES_LOG("All copy to user buffer interrupts done, drvno %u\n", drvno);
 	free(drvno_ptr);
 	return NULL;
 }
