@@ -2846,8 +2846,14 @@ es_status_codes StartMeasurement()
 			// Check if the drvno'th bit is set
 			if ((settings_struct.board_sel >> drvno) & 1)
 			{
-				pthread_mutex_lock(&mutex[drvno]);
-				pthread_mutex_unlock(&mutex[drvno]);
+				ES_TRACE("Wait for mutex %u\n", drvno);
+				int errno = 1;
+				while (errno != 0 && !abortMeasurementFlag)
+				{
+					errno = pthread_mutex_trylock(&mutex[drvno]);
+				}
+				if(errno == 0)
+					pthread_mutex_unlock(&mutex[drvno]);
 			}
 		}
 #endif
