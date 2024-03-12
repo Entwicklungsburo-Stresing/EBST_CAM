@@ -6,6 +6,8 @@
 #include <stdio.h>
 #ifdef __linux__
 #define sprintf_s snprintf
+#include <stdlib.h>
+#include <string.h>
 #endif
 
 #ifdef _USRDLL
@@ -1699,6 +1701,7 @@ es_status_codes SendFLCAM( uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16
  */
 es_status_codes InitCamera3001( uint32_t drvno )
 {
+	(void) drvno;
 	ES_LOG("Init camera 3001\n");
 	return es_no_error;
 }
@@ -2681,7 +2684,9 @@ es_status_codes StartMeasurement()
 	setTimestamp();
 #endif
 	measurement_cnt = 0;
+#ifdef WIN32
 	memset(data_available, 0, sizeof(size_t) * MAXPCIECARDS);
+#endif
 	continiousMeasurementFlag = (bool)settings_struct.contiuous_measurement;//0 or 1
 	continiousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
 #ifndef MINIMAL_BUILD
@@ -2705,7 +2710,7 @@ es_status_codes StartMeasurement()
 	do
 	{
 		measurement_cnt++;
-		ES_LOG("measurement count: %u\n", measurement_cnt);
+		ES_LOG("measurement count: %lu\n", measurement_cnt);
 		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		{
 			// Check if the drvno'th bit is set
@@ -2817,7 +2822,7 @@ es_status_codes StartMeasurement()
 						}
 						if(!abortMeasurementFlag && checkEscapeKeyState())
 							abortMeasurementFlag = true;
-						status = IsTimerOn(drvno, &timerOn[drvno]);
+						status = IsTimerOn(drvno, (bool*) &timerOn[drvno]);
 						if (status != es_no_error) return ReturnStartMeasurement(status);
 					}
 				}
@@ -2934,9 +2939,9 @@ es_status_codes FindCam( uint32_t drvno )
 	}
 	bool linkUp = false;
 	bool sfpError = false;
-	bool firstFailure = true;
 	es_status_codes status;
 #ifdef WIN32
+	bool firstFailure = true;
 	int64_t timestampFirstFailureInMicroseconds = GetTimestampInMicroseconds();
 	int64_t timeoutInMicroseconds = 10000;
 	// Check the connection again while timout is not reached.
@@ -3160,7 +3165,7 @@ es_status_codes GetLastBufPart( uint32_t drvno )
 	size_t rest_in_bytes = rest_overall * aPIXEL[drvno] * sizeof(uint16_t);
 	ES_TRACE( "nos: %u, nob: %u, scansPerInterrupt: %u, camcnt: %u\n", (*Nospb), *Nob, spi, aCAMCNT[drvno]);
 	ES_TRACE( "scans_all_cams: %u \n", scans_all_cams );
-	ES_TRACE( "rest_overall: %u, rest_in_bytes: %u\n", rest_overall, rest_in_bytes );
+	ES_TRACE( "rest_overall: %u, rest_in_bytes: %lu\n", rest_overall, rest_in_bytes );
 	if (rest_overall)
 		copyRestData(drvno, rest_in_bytes); 
 	return status;
@@ -3777,7 +3782,6 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	{
 		bufferSize = 3000
 	};
-	char* charBuffer[bufferSize];
 	int len = 0;
 	*stringPtr = (char*)calloc(bufferSize, sizeof(char));
 	bool isBitHigh;
@@ -3942,7 +3946,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	//Register XCKCNT
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nRegister XCKCNT\n");
 
-	status = readRegisterS0_8(drvno, &data32, S0Addr_XCKCNTLL);
+	status = readRegisterS0_8(drvno, (uint8_t*)&data32, S0Addr_XCKCNTLL);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tXCKCNT\t%u\n", data32);
 
 	/*=======================================================================*/
@@ -5671,20 +5675,20 @@ void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "nos:\t%u\n",vd->fh.nos);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "nob:\t%u\n",vd->fh.nob);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "camcnt:\t%u\n",vd->fh.camcnt);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "measurement cnt:\t%llu\n",vd->fh.measurement_cnt);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "measurement cnt:\t%lu\n",vd->fh.measurement_cnt);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "timestamp:\t%s\n",vd->fh.timestamp);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "filename_full:\t%s\n",vd->fh.filename_full);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "split mode:\t%u\n\n",vd->fh.split_mode);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "Data found:\n");
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "samples found:\t%u\n",vd->sample_cnt);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "blocks found:\t%u\n",vd->block_cnt);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "measurements found:\t%llu\n",vd->measurement_cnt);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "measurements found:\t%lu\n",vd->measurement_cnt);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "error counter:\t%u\n",vd->error_cnt);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last sample in data:\t%u\n",vd->last_sample);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last block in data:\t%u\n",vd->last_block);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last sample before error:\t%u\n",vd->last_sample_before_error);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last block before error:\t%u\n",vd->last_block_before_error);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last measurement before error:\t%llu\n",vd->last_measurement_before_error);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last measurement before error:\t%lu\n",vd->last_measurement_before_error);
 	return;
 }
 
