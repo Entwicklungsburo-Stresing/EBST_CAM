@@ -7,7 +7,6 @@
 *.order
 liblscpcie*
 .tmp_versions/
-local-config.h
 test-mmap
 read-binary
 test-read-write
