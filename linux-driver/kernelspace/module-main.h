@@ -30,11 +30,13 @@ extern int debug;
  * can now be seen as maxium values, so that the DMA buffer is always big enough.
  * Of course this means, the DMA buffer is too big most cases. In numbers:
  * pixel * dma size in scans * * sizeof(uint16_t)
- * = 4096 * 1000 * 2 b = 8192000 b = 8000 Kb = 7,8 Mb
+ * = 2048 * 1000 * 2 b = 4096000 b = 4000 kb = 3,9 Mb
  * If this leads to problems, DEFAULT_NUMBER_OF_PIXELS can safley be reduced
- * to the real number of pixlels of your camera.
+ * to the real number of pixlels of your camera. 4000 kb seems to be the
+ * maximum which the Linux kernel allows to allocate. So DEFAULT_NUMBER_OF_PIXELS
+ * cannot be higher than 2048.
 */
-#define DEFAULT_NUMBER_OF_PIXELS    4096
+#define DEFAULT_NUMBER_OF_PIXELS    2048
 #define DEFAULT_DMA_NUM_SCANS       1000
 /**
  * DEFAULT_NUMBER_OF_CAMERAS is not a critical parameter for the kernel module.
