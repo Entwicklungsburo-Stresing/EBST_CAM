@@ -18,13 +18,29 @@ extern int major;
 extern int debug_module;
 extern int debug;
 
-#define MAX_BOARDS 6
+#define MAX_BOARDS 5
 
-//#define DEFAULT_NUMBER_OF_PIXELS    576
-#define DEFAULT_NUMBER_OF_PIXELS    1088
-#define DEFAULT_NUMBER_OF_CAMERAS   1
+/**
+ * The parameter DEFAULT_NUMBER_OF_PIXELS and DEFAULT_DMA_NUM_SCANS
+ * are now used as a maximum.
+ * These values are used to the set the size of the DMA buffer.
+ * This is done when the kernel module is loaded, which happens at boot time.
+ * In general this is not a good system design, because these parameters
+ * are set in software and can change. That is the reason why these values
+ * can now be seen as maxium values, so that the DMA buffer is always big enough.
+ * Of course this means, the DMA buffer is too big most cases. In numbers:
+ * pixel * dma size in scans * * sizeof(uint16_t)
+ * = 4096 * 1000 * 2 b = 8192000 b = 8000 Kb = 7,8 Mb
+ * If this leads to problems, DEFAULT_NUMBER_OF_PIXELS can safley be reduced
+ * to the real number of pixlels of your camera.
+*/
+#define DEFAULT_NUMBER_OF_PIXELS    4096
 #define DEFAULT_DMA_NUM_SCANS       1000
-#define DMA_BUFFER_PARTS            2
+/**
+ * DEFAULT_NUMBER_OF_CAMERAS is not a critical parameter for the kernel module.
+*/
+#define DEFAULT_NUMBER_OF_CAMERAS   1
+
 
 extern int num_pixels[MAX_BOARDS];
 extern int num_cameras[MAX_BOARDS];
