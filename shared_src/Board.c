@@ -6171,6 +6171,7 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
 	return writeRegisterS0_32(drvno, settings_struct.camera_settings[drvno].s1s2_read_delay_in_10ns, S0Addr_S1S2ReadDelay);
 }
 
+
 es_status_codes ExportMeasurementHDF5()
 {
 	hid_t file_id;
@@ -6212,15 +6213,20 @@ es_status_codes ExportMeasurementHDF5()
 	hid_t dataset_id = H5Dcreate(group_id, "/measurement", H5T_NATIVE_INT, dataspace_id, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
 	uint32_t drvno = 0;
-	uint32_t sample = 10;
+	uint32_t sample = 100;
 	uint32_t block = 0;
 	uint16_t camera = 0;
-	uint16_t data[pixel_camera_status + 1];
+	uint16_t* data[1088 * sizeof(uint16_t)];
+	int32_t dataRead[1088 * sizeof(uint16_t)];
 
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera, pixel_camera_status + 1, data);
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera, 999, &data);
 	statusHDF5 = H5Dwrite(dataset_id, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
-
+	statusHDF5 = H5Dread(dataset_id, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, dataRead);
 	
+	for(int i = 0; i < 1088; i++)
+	{
+		ES_LOG("Position: %d Data: %d Actual Data: %d\n", i, dataRead[i], data[i]);
+	}
 	
 	// Close the dataset and dataspace.
 	statusHDF5 = H5Dclose(dataset_id);
