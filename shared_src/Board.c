@@ -4,6 +4,7 @@
 #include <sys/timeb.h>
 #include <math.h> // for sqrt()
 #include <stdio.h>
+#include "hdf5.h"
 #ifdef __linux__
 #define sprintf_s snprintf
 #include <stdlib.h>
@@ -6169,3 +6170,69 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
 	ES_LOG("Set S1 & S2 read delay to %u\n", settings_struct.camera_settings[drvno].s1s2_read_delay_in_10ns);
 	return writeRegisterS0_32(drvno, settings_struct.camera_settings[drvno].s1s2_read_delay_in_10ns, S0Addr_S1S2ReadDelay);
 }
+
+es_status_codes ExportMeasurementHDF5()
+{
+	hid_t file_id;
+	herr_t statusHDF5;
+	// Create a new file using default properties.
+	// The H5F_ACC_TRUNC parameter tells HDF5 to overwrite the file if it already exists.
+	// The H5P_DEFAULT parameter tells HDF5 to use the default file creation and access properties.
+
+	char currentDir[FILENAME_MAX];
+	if (getcwd(currentDir, sizeof(currentDir)) == NULL)
+	{
+		ES_LOG("Error getting current directory\n");
+		return es_no_error;
+	}
+
+	
+	const char* filename = "measurement.h5";
+	char filepath[FILENAME_MAX];
+	sprintf(filepath, "%s\\Exported_Data\\%s", currentDir, filename);
+
+	file_id = H5Fcreate(filepath, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+	if (file_id < 0)
+	{
+		ES_LOG("Error creating file\n");
+		return es_no_error;
+	}
+
+	// Create a group in the file.
+	hid_t group_id = H5Gcreate(file_id, "/sample", H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+	
+	// Create the data space for the dataset.
+	hsize_t dims[2];
+	dims[0] = 1;
+	dims[1] = 1088;
+	hid_t dataspace_id = H5Screate_simple(2, dims, NULL);
+
+	// Create a new dataset within the file using default properties.
+	// The H5T_NATIVE_INT parameter tells HDF5 to store the data as 32-bit integers.
+	hid_t dataset_id = H5Dcreate(group_id, "/measurement", H5T_NATIVE_INT, dataspace_id, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+
+	uint32_t drvno = 0;
+	uint32_t sample = 10;
+	uint32_t block = 0;
+	uint16_t camera = 0;
+	uint16_t data[pixel_camera_status + 1];
+
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera, pixel_camera_status + 1, data);
+	statusHDF5 = H5Dwrite(dataset_id, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+
+	
+	
+	// Close the dataset and dataspace.
+	statusHDF5 = H5Dclose(dataset_id);
+	statusHDF5 = H5Sclose(dataspace_id);
+
+	// Close the group.
+	statusHDF5 = H5Gclose(group_id);
+
+	// Close the file.
+	statusHDF5 = H5Fclose(file_id);
+	return es_no_error;
+}
+
+
+

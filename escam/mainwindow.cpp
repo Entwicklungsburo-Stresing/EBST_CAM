@@ -312,6 +312,46 @@ void MainWindow::on_actionVerify_data_file_triggered()
 	return;
 }
 
+void MainWindow::on_actionExport_data_triggered()
+{
+	es_status_codes status = mainWindow->lsc.exportMeasurementHDF5();
+	if (status != es_no_error)
+	{ 
+		QDialog* messageBox = new QDialog(this);
+		messageBox->setAttribute(Qt::WA_DeleteOnClose);
+		QVBoxLayout* layout = new QVBoxLayout(messageBox);
+		messageBox->setLayout(layout);
+		QLabel* labelExport = new QLabel(messageBox);
+		labelExport->setTextInteractionFlags(Qt::TextSelectableByMouse);
+		labelExport->setTextFormat(Qt::RichText);
+		labelExport->setText(QString::fromStdString("Error exporting data: " + status));
+		labelExport->setAlignment(Qt::AlignTop);
+		QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, messageBox);
+		connect(dialogButtonBox, &QDialogButtonBox::accepted, messageBox, &QDialog::accept);
+		layout->addWidget(labelExport);
+		layout->addWidget(dialogButtonBox);
+		messageBox->setWindowTitle("Export data");
+		messageBox->show();
+		return;
+	}
+	QDialog* messageBox = new QDialog(this);
+	messageBox->setAttribute(Qt::WA_DeleteOnClose);
+	QVBoxLayout* layout = new QVBoxLayout(messageBox);
+	messageBox->setLayout(layout);
+	QLabel* labelExport = new QLabel(messageBox);
+	labelExport->setTextInteractionFlags(Qt::TextSelectableByMouse);
+	labelExport->setTextFormat(Qt::RichText);
+	labelExport->setText(QString::fromStdString("Data exported successfully."));
+	labelExport->setAlignment(Qt::AlignTop);
+	QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, messageBox);
+	connect(dialogButtonBox, &QDialogButtonBox::accepted, messageBox, &QDialog::accept);
+	layout->addWidget(labelExport);
+	layout->addWidget(dialogButtonBox);
+	messageBox->setWindowTitle("Export data");
+	messageBox->show();
+	return;
+}
+
 /**
  * @brief This slot opens the RMS dialog.
  * @return none
