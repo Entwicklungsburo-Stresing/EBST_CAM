@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>508</width>
+    <width>509</width>
     <height>566</height>
    </rect>
   </property>
@@ -835,7 +835,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>508</width>
+     <width>509</width>
      <height>22</height>
     </rect>
    </property>
@@ -844,6 +844,7 @@
      <string>File</string>
     </property>
     <addaction name="actionVerify_data_file"/>
+    <addaction name="actionExport_data"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
@@ -1035,6 +1036,11 @@
   <action name="actionfifo_pixels">
    <property name="text">
     <string>fifo pixels</string>
+   </property>
+  </action>
+  <action name="actionExport_data">
+   <property name="text">
+    <string>Export data</string>
    </property>
   </action>
  </widget>

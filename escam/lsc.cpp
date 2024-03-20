@@ -488,3 +488,16 @@ es_status_codes Lsc::findCam(uint32_t drvno)
 	return FindCam(drvno);
 }
 
+/**
+ * \copydoc ExportMeasurementHDF5.
+ */
+
+es_status_codes Lsc::exportMeasurementHDF5()
+{
+	return ExportMeasurementHDF5();
+}
+
+
+
+
+
