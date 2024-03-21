@@ -6199,41 +6199,84 @@ es_status_codes ExportMeasurementHDF5()
 		return es_no_error;
 	}
 
-	// Create a group in the file.
-	hid_t group_id = H5Gcreate(file_id, "/sample", H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 	
-	// Create the data space for the dataset.
-	hsize_t dims[2];
-	dims[0] = 1;
-	dims[1] = 1088;
-	hid_t dataspace_id = H5Screate_simple(2, dims, NULL);
 
-	// Create a new dataset within the file using default properties.
-	// The H5T_NATIVE_INT parameter tells HDF5 to store the data as 32-bit integers.
-	hid_t dataset_id = H5Dcreate(group_id, "/measurement", H5T_NATIVE_INT, dataspace_id, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-
-	uint32_t drvno = 0;
-	uint32_t sample = 100;
-	uint32_t block = 0;
-	uint16_t camera = 0;
-	uint16_t* data[1088 * sizeof(uint16_t)];
-	int32_t dataRead[1088 * sizeof(uint16_t)];
-
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera, 999, &data);
-	statusHDF5 = H5Dwrite(dataset_id, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
-	statusHDF5 = H5Dread(dataset_id, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, dataRead);
 	
-	for(int i = 0; i < 1088; i++)
+
+	for (uint32_t drvno = 0; drvno < 1; drvno++)
 	{
-		ES_LOG("Position: %d Data: %d Actual Data: %d\n", i, dataRead[i], data[i]);
-	}
-	
-	// Close the dataset and dataspace.
-	statusHDF5 = H5Dclose(dataset_id);
-	statusHDF5 = H5Sclose(dataspace_id);
+		// Create a group in the file.
+		// Create a String that contains the name of the group with drvno
+		char groupBoardName[100];
+		sprintf(groupBoardName, "/board_%d", drvno);
+		hid_t group_board_id = H5Gcreate(file_id, groupBoardName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+		uint32_t cameras = settings_struct.camera_settings->camcnt;
+		for (int camera = 0; camera < cameras; camera++)
+		{
+			// Create a group in the file.
+			// Create a String that contains the name of the group with camera
+			char groupCameraName[100];
+			sprintf(groupCameraName, "/camera_%d.%d", drvno, camera);
+			hid_t group_camera_id = H5Gcreate(group_board_id, groupCameraName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
-	// Close the group.
-	statusHDF5 = H5Gclose(group_id);
+			// Get the number of samples and blocks
+			uint32_t nos = settings_struct.nos;
+			uint32_t nob = settings_struct.nob;
+			for (uint32_t block = 0; block < nob; block++)
+			{
+				// Create a group in the file.
+				// Create a String that contains the name of the group with block
+				char groupBlockName[100];
+				sprintf(groupBlockName, "/block_%d.%d", camera, block);
+				hid_t group_block_id = H5Gcreate(group_camera_id, groupBlockName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+
+				for (uint32_t sample = 0; sample < nos; sample++)
+				{
+					char groupSampleName[100];
+					sprintf(groupSampleName, "/sample_%d.%d", block, sample);
+					hid_t group_sample_id = H5Gcreate(group_block_id, groupSampleName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+
+					// Define the size of the array and create the data space for fixed size dataset.
+					hsize_t dims[1];
+					dims[0] = (int)settings_struct.camera_settings->pixel;
+					hid_t dataspace_id = H5Screate_simple(1, dims, NULL);
+
+					char datasetName[100];
+					sprintf(datasetName, "/measurement_%d.%d", block, sample);
+					hid_t dataset_id = H5Dcreate(group_sample_id, datasetName, H5T_NATIVE_INT, dataspace_id, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+					uint32_t pixel = settings_struct.camera_settings->pixel;
+					size_t arraySize = pixel * sizeof(uint16_t);
+					uint16_t data[1024];
+					int dataRead[1024];
+					int dataAsInt[1024];
+
+					es_status_codes status = ReturnFrame(drvno, sample, block, camera, pixel, data);
+					for (int i = 0; i < 1024; i++)
+					{
+						dataAsInt[i] = (int)data[i];
+					}
+
+					statusHDF5 = H5Dwrite(dataset_id, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, dataAsInt);
+					statusHDF5 = H5Dread(dataset_id, H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, dataRead);
+
+					for (int i = 0; i < (int)settings_struct.camera_settings->pixel; i++)
+					{
+						ES_LOG("Position: %d Data: %d Actual Data: %d\n", i, dataRead[i], dataAsInt[i])
+					}
+
+					// Close the dataset and dataspace.
+					statusHDF5 = H5Dclose(dataset_id);
+					statusHDF5 = H5Sclose(dataspace_id);
+
+					// Close the group.
+					statusHDF5 = H5Gclose(group_sample_id);
+				}
+				statusHDF5 = H5Gclose(group_block_id);
+			}
+			statusHDF5 = H5Gclose(group_camera_id);
+		}
+		statusHDF5 = H5Gclose(group_board_id);
+	}
 
 	// Close the file.
 	statusHDF5 = H5Fclose(file_id);
