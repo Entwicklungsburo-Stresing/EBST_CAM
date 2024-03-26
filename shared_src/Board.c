@@ -6205,6 +6205,8 @@ es_status_codes ExportMeasurementHDF5()
 
 	for (uint32_t drvno = 0; drvno < 1; drvno++)
 	{
+		ES_LOG("\n\n\n ======================\n\n\n")
+		ES_LOG("Exporting data from board %d\n", drvno);
 		// Create a group in the file.
 		// Create a String that contains the name of the group with drvno
 		char groupBoardName[100];
@@ -6213,10 +6215,11 @@ es_status_codes ExportMeasurementHDF5()
 		uint32_t cameras = settings_struct.camera_settings->camcnt;
 		for (int camera = 0; camera < cameras; camera++)
 		{
+			ES_LOG("Exporting data from camera %d\n", camera);
 			// Create a group in the file.
 			// Create a String that contains the name of the group with camera
 			char groupCameraName[100];
-			sprintf(groupCameraName, "/camera_%d.%d", drvno, camera);
+			sprintf(groupCameraName, "camera_%d.%d", drvno, camera);
 			hid_t group_camera_id = H5Gcreate(group_board_id, groupCameraName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
 			// Get the number of samples and blocks
@@ -6224,16 +6227,18 @@ es_status_codes ExportMeasurementHDF5()
 			uint32_t nob = settings_struct.nob;
 			for (uint32_t block = 0; block < nob; block++)
 			{
+				ES_LOG("Exporting data from block %d\n", block);
 				// Create a group in the file.
 				// Create a String that contains the name of the group with block
 				char groupBlockName[100];
-				sprintf(groupBlockName, "/block_%d.%d", camera, block);
+				sprintf(groupBlockName, "block_%d.%d", camera, block);
 				hid_t group_block_id = H5Gcreate(group_camera_id, groupBlockName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
 				for (uint32_t sample = 0; sample < nos; sample++)
 				{
+					ES_LOG("Exporting data from sample %d\n", sample);
 					char groupSampleName[100];
-					sprintf(groupSampleName, "/sample_%d.%d", block, sample);
+					sprintf(groupSampleName, "sample_%d.%d", block, sample);
 					hid_t group_sample_id = H5Gcreate(group_block_id, groupSampleName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
 					// Define the size of the array and create the data space for fixed size dataset.
@@ -6242,7 +6247,7 @@ es_status_codes ExportMeasurementHDF5()
 					hid_t dataspace_id = H5Screate_simple(1, dims, NULL);
 
 					char datasetName[100];
-					sprintf(datasetName, "/measurement_%d.%d", block, sample);
+					sprintf(datasetName, "measurement_%d.%d", block, sample);
 					hid_t dataset_id = H5Dcreate(group_sample_id, datasetName, H5T_NATIVE_INT, dataspace_id, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 					uint32_t pixel = settings_struct.camera_settings->pixel;
 					size_t arraySize = pixel * sizeof(uint16_t);
