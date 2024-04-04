@@ -4,7 +4,6 @@
 #include <sys/timeb.h>
 #include <math.h> // for sqrt()
 #include <stdio.h>
-#include "hdf5.h"
 #ifdef __linux__
 #define sprintf_s snprintf
 #include <stdlib.h>
@@ -6174,9 +6173,9 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
 
 es_status_codes ExportMeasurementHDF5()
 {
-	hid_t file_id, file_acpl, file_fspace, file_attr_name, file_attr_timestamp, file_attr_description, file_attr_id;
+	hid_t file_id, file_attr_name, file_attr_timestamp, file_attr_number_of_boards;
+	hid_t attr_type;
 	herr_t statusHDF5;
-	hid_t file_open, file_open_acpl;
 
 	char currentDir[FILENAME_MAX];
 	if (getcwd(currentDir, sizeof(currentDir)) == NULL)
@@ -6185,214 +6184,91 @@ es_status_codes ExportMeasurementHDF5()
 		return es_no_error;
 	}
 
-	
 	const char* filename = "measurement.h5";
 	char filepath[FILENAME_MAX];
 	sprintf(filepath, "%s\\Exported_Data\\%s", currentDir, filename);
 
-	// Create a new file using default properties.
-	// The H5F_ACC_TRUNC parameter tells HDF5 to overwrite the file if it already exists.
-	// The H5P_DEFAULT parameter tells HDF5 to use the default file creation and access properties.
-	if ((file_id = H5Fcreate(filepath, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT)) == H5I_INVALID_HID)
-	{
-		ES_LOG("Error creating file\n");
-		return es_no_error;
-	}
+	attr_type = H5Tcopy(H5T_C_S1);
+	statusHDF5 = H5Tset_size(attr_type, H5T_VARIABLE);
+	statusHDF5 = H5Tset_strpad(attr_type, H5T_STR_NULLTERM);
+	statusHDF5 = H5Tset_cset(attr_type, H5T_CSET_UTF8);
 
-	if ((file_acpl = H5Pcreate(H5P_ATTRIBUTE_CREATE)) == H5I_INVALID_HID)
-	{
-		ES_LOG("Error creating file access property list\n");
-		return es_no_error;
-	}
-
-	if (H5Pset_char_encoding(file_acpl, H5T_CSET_UTF8) < 0)
-	{
-		ES_LOG("Error setting character encoding\n");
-		return es_no_error;
-	}
-
-	if ((file_fspace = H5Screate(H5S_SCALAR)) == H5I_INVALID_HID)
-	{
-		ES_LOG("Error creating file dataspace\n");
-		return es_no_error;
-	}
-
-	if ((file_attr_name = H5Acreate2(file_id, "File Name", H5T_C_S1, file_fspace, H5P_DEFAULT, H5P_DEFAULT)) == H5I_INVALID_HID)
-	{
-		ES_LOG("Error creating file attribute\n");
-		return es_no_error;
-	}
-
-	if (H5Fopen(filename, H5F_ACC_RDWR, H5P_DEFAULT) < 0)
-	{
-		ES_LOG("Error opening file\n");
-		return es_no_error;
-	}
-
-	if (H5Aopen(file_id, "File Name", H5P_DEFAULT) < 0)
-	{
-		ES_LOG("Error opening file attribute\n");
-		return es_no_error;
-	}))
+	file_id = H5Fcreate(filepath, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
 	
-	/*
-	if ((file_acpl = H5Pcreate(H5P_ATTRIBUTE_CREATE)) == H5I_INVALID_HID)
-	{
-		ES_LOG("Error creating file access property list\n");
-		return es_no_error;
-	}
-	
-	if (H5Pset_char_encoding(file_acpl, H5T_CSET_UTF8) < 0)
-	{
-		ES_LOG("Error setting character encoding\n");
-		return es_no_error;
-	}
-	
-	if ((file_fspace = H5Screate(H5S_SCALAR)) == H5I_INVALID_HID)
-	{
-		ES_LOG("Error creating file dataspace\n");
-		return es_no_error;
-	}
-
-	if ((file_attr_name = H5Acreate2(file_id, "File Name", H5T_C_S1, file_fspace, H5P_DEFAULT, H5P_DEFAULT)) == H5I_INVALID_HID)
-	{
-		ES_LOG("Error creating file attribute\n");
-		return es_no_error;
-	}
-	
-	if (H5Awrite(file_attr_name, H5T_C_S1, filename) < 0)
-	{
-		ES_LOG("Error writing file attribute\n");
-		return es_no_error;
-	}
+	char* filenameAttr[1] = { filename };
+	file_attr_name = CreateStringAttribute(file_id, "File Name", attr_type, statusHDF5);
+	statusHDF5 = H5Awrite(file_attr_name, attr_type, filenameAttr);
 	H5Aclose(file_attr_name);
 
-	if ((file_attr_description = H5Acreate2(file_id, "Description", H5T_C_S1, file_fspace, H5P_DEFAULT, H5P_DEFAULT)) == H5I_INVALID_HID)
-	{
-		ES_LOG("Error creating file attribute\n");
-		return es_no_error;
-	}
-
-	if (H5Awrite(file_attr_description, H5T_C_S1, "Measurement Data") < 0)
-	{
-		ES_LOG("Error writing file attribute\n");
-		return es_no_error;
-	}
-	H5Aclose(file_attr_description);
-
-	
-	time_t timestamp = time(NULL);
-	char time_buffer[26];
-	strftime(time_buffer, 26, "%Y-%m-%d %H:%M:%S", localtime(&timestamp));
-	/*if ((file_attr_timestamp = H5Acreate2(file_id, "Timestamp", H5T_TIME, file_fspace, H5P_DEFAULT, H5P_DEFAULT)) == H5I_INVALID_HID)
-	{
-		ES_LOG("Error creating file attribute\n");
-		return es_no_error;
-	}
-
-	if (H5Awrite(file_attr_timestamp, H5T_STD_I32LE, &timestamp) < 0)
-	{
-		ES_LOG("Error writing file attribute\n");
-		return es_no_error;
-	}
+	char* timestamp[1] = { start_timestamp };
+	file_attr_timestamp = CreateStringAttribute(file_id, "Timestamp", attr_type, statusHDF5);
+	statusHDF5 = H5Awrite(file_attr_timestamp, attr_type, timestamp);
 	H5Aclose(file_attr_timestamp);
-	
-	if ((file_attr_id = H5Acreate2(file_id, "Unique ID", H5T_STD_I32LE, file_fspace, H5P_DEFAULT, H5P_DEFAULT)) == H5I_INVALID_HID)
-	{
-		ES_LOG("Error creating file attribute\n");
-		return es_no_error;
-	}
 
-	if (H5Awrite(file_attr_id, H5T_STD_I32LE, &(int)timestamp) < 0)
-	{
-		ES_LOG("Error writing file attribute\n");
-		return es_no_error;
-	}
-	
-	H5Aclose(file_attr_id);
-	
-	H5Sclose(file_fspace);
-	
-	H5Pclose(file_acpl);
-	*/
+	uint8_t* no_boards_list[1] = { number_of_boards };
+	file_attr_number_of_boards = CreateNumericAttribute(file_id, "Number of Boards", H5T_NATIVE_INT);
+	statusHDF5 = H5Awrite(file_attr_number_of_boards, attr_type, no_boards_list);
+	H5Aclose(file_attr_number_of_boards);
 
 	uint32_t board_sel = settings_struct.board_sel;
-
 	for (uint32_t drvno = 0; drvno < MAXPCIECARDS; drvno++)
 	{
 		if ((board_sel >> drvno) & 1)
 		{
-			ES_LOG("\n\n\n ======================\n\n\n")
-				ES_LOG("Exporting data from board %d\n", drvno);
-			// Create a group in the file.
-			// Create a String that contains the name of the group with drvno
+			hid_t group_board_id, group_board_attr_name, group_board_attr_number_of_cameras;
+
+
 			char groupBoardName[100];
-			sprintf(groupBoardName, "/board_%d", drvno);
-			hid_t group_board_id = H5Gcreate(file_id, groupBoardName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+			sprintf(groupBoardName, "/Board_%d", drvno);
+			group_board_id = H5Gcreate(file_id, groupBoardName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 			uint32_t cameras = settings_struct.camera_settings[drvno].camcnt;
 			for (int camera = 0; camera < cameras; camera++)
 			{
-				ES_LOG("Exporting data from camera %d\n", camera);
-				// Create a group in the file.
-				// Create a String that contains the name of the group with camera
+				hid_t group_camera_id, group_camera_attr_name, group_camera_attr_system, group_camera_attr_number_of_blocks;
+				
+
 				char groupCameraName[100];
-				sprintf(groupCameraName, "camera_%d.%d", drvno, camera);
-				hid_t group_camera_id = H5Gcreate(group_board_id, groupCameraName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+				sprintf(groupCameraName, "Camera_%d", camera);
+				group_camera_id = H5Gcreate(group_board_id, groupCameraName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
 				// Get the number of samples and blocks
 				uint32_t nos = settings_struct.nos;
 				uint32_t nob = settings_struct.nob;
 				for (uint32_t block = 0; block < nob; block++)
 				{
-					ES_LOG("Exporting data from block %d\n", block);
+					hid_t group_block_id, group_block_attr_name, group_block_attr_number_of_samples;
 					// Create a group in the file.
 					// Create a String that contains the name of the group with block
 					char groupBlockName[100];
-					sprintf(groupBlockName, "block_%d.%d", camera, block);
-					hid_t group_block_id = H5Gcreate(group_camera_id, groupBlockName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+					sprintf(groupBlockName, "Block_%d", block);
+					group_block_id = H5Gcreate(group_camera_id, groupBlockName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
 					for (uint32_t sample = 0; sample < nos; sample++)
 					{
-						hid_t attr_id, space_id;
-						ES_LOG("Exporting data from sample %d\n", sample);
-						char groupSampleName[100];
-						sprintf(groupSampleName, "sample_%d.%d", block, sample);
-						char description[256];
-						sprintf(description, "Sample %d of block %d", sample, block);
-						time_t timestamp = time(NULL);
-						int unique_id = (int)timestamp;
-						hid_t group_sample_id = H5Gcreate(group_block_id, groupSampleName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-
+						hid_t space_id;
 						// Define the size of the array and create the data space for fixed size dataset.
 						hsize_t dims[1];
-						dims[0] = (int)settings_struct.camera_settings->pixel;
+						dims[0] = (int)settings_struct.camera_settings[drvno].pixel;
 						hid_t dataspace_id = H5Screate_simple(1, dims, NULL);
 
 						char datasetName[100];
-						sprintf(datasetName, "measurement_%d.%d", block, sample);
-						hid_t dataset_id = H5Dcreate(group_sample_id, datasetName, H5T_NATIVE_UINT16, dataspace_id, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-						uint32_t pixel = settings_struct.camera_settings->pixel;
+						sprintf(datasetName, "Sample_%d", sample);
+						hid_t dataset_id = H5Dcreate2(group_block_id, datasetName, H5T_NATIVE_UINT16, dataspace_id, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+						uint32_t pixel = settings_struct.camera_settings[drvno].pixel;
 						size_t arraySize = pixel * sizeof(uint16_t);
 						uint16_t data[1024];
 						uint16_t dataRead[1024];
 
 						es_status_codes status = ReturnFrame(drvno, sample, block, camera, pixel, data);
-						for (int i = 0; i < 1024; i++)
+						for (int i = 0; i < pixel; i++)
 
 						statusHDF5 = H5Dwrite(dataset_id, H5T_NATIVE_UINT16, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
 						statusHDF5 = H5Dread(dataset_id, H5T_NATIVE_UINT16, H5S_ALL, H5S_ALL, H5P_DEFAULT, dataRead);
-
-						for (int i = 0; i < (int)settings_struct.camera_settings->pixel; i++)
-						{
-							ES_LOG("Position: %d Data: %d Actual Data: %d\n", i, (int)dataRead[i], (int)data[i])
-						}
 
 						// Close the dataset and dataspace.
 						statusHDF5 = H5Dclose(dataset_id);
 						statusHDF5 = H5Sclose(dataspace_id);
 
-						// Close the group.
-						statusHDF5 = H5Gclose(group_sample_id);
 					}
 					statusHDF5 = H5Gclose(group_block_id);
 				}
@@ -6401,11 +6277,25 @@ es_status_codes ExportMeasurementHDF5()
 			statusHDF5 = H5Gclose(group_board_id);
 		}
 	}
-
 	// Close the file.
 	statusHDF5 = H5Fclose(file_id);
 	return es_no_error;
 }
 
+hid_t CreateNumericAttribute(hid_t object_id, char* attr_name, hid_t attr_type)
+{
+	hid_t attr_space = H5Screate(H5S_SCALAR);
+	return H5Acreate(object_id, attr_name, attr_type, attr_space, H5P_DEFAULT, H5P_DEFAULT);
+}
 
+hid_t CreateStringAttribute(hid_t object_id, char* attr_name, hid_t attr_type, herr_t status)
+{
+	attr_type = H5Tcopy(H5T_C_S1);
+	status = H5Tset_size(attr_type, H5T_VARIABLE);
+	status = H5Tset_strpad(attr_type, H5T_STR_NULLTERM);
+	status = H5Tset_cset(attr_type, H5T_CSET_UTF8);
+
+	hid_t attr_space = H5Screate(H5S_SCALAR);
+	return H5Acreate(object_id, attr_name, attr_type, attr_space, H5P_DEFAULT, H5P_DEFAULT);
+}
 
