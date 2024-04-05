@@ -6174,7 +6174,7 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
 es_status_codes ExportMeasurementHDF5()
 {
 	hid_t file_id, file_attr_name, file_attr_timestamp, file_attr_number_of_boards;
-	hid_t attr_type;
+	hid_t dataspace_scalar = H5Screate(H5S_SCALAR);
 	herr_t statusHDF5;
 
 	char currentDir[FILENAME_MAX];
@@ -6187,28 +6187,19 @@ es_status_codes ExportMeasurementHDF5()
 	const char* filename = "measurement.h5";
 	char filepath[FILENAME_MAX];
 	sprintf(filepath, "%s\\Exported_Data\\%s", currentDir, filename);
-
-	attr_type = H5Tcopy(H5T_C_S1);
-	statusHDF5 = H5Tset_size(attr_type, H5T_VARIABLE);
-	statusHDF5 = H5Tset_strpad(attr_type, H5T_STR_NULLTERM);
-	statusHDF5 = H5Tset_cset(attr_type, H5T_CSET_UTF8);
-
 	file_id = H5Fcreate(filepath, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
 	
 	char* filenameAttr[1] = { filename };
-	file_attr_name = CreateStringAttribute(file_id, "File Name", attr_type, statusHDF5);
-	statusHDF5 = H5Awrite(file_attr_name, attr_type, filenameAttr);
+	file_attr_name = CreateStringAttribute(file_id, "File Name", dataspace_scalar, filenameAttr);
 	H5Aclose(file_attr_name);
 
-	char* timestamp[1] = { start_timestamp };
-	file_attr_timestamp = CreateStringAttribute(file_id, "Timestamp", attr_type, statusHDF5);
-	statusHDF5 = H5Awrite(file_attr_timestamp, attr_type, timestamp);
-	H5Aclose(file_attr_timestamp);
-
 	uint8_t* no_boards_list[1] = { number_of_boards };
-	file_attr_number_of_boards = CreateNumericAttribute(file_id, "Number of Boards", H5T_NATIVE_INT);
-	statusHDF5 = H5Awrite(file_attr_number_of_boards, attr_type, no_boards_list);
+	file_attr_number_of_boards = CreateNumericAttribute(file_id, "Number of Boards", H5T_NATIVE_UINT8, dataspace_scalar, no_boards_list);
 	H5Aclose(file_attr_number_of_boards);
+
+	char* timestamp[1] = { start_timestamp };
+	file_attr_timestamp = CreateStringAttribute(file_id, "Timestamp", dataspace_scalar, timestamp);
+	H5Aclose(file_attr_timestamp);
 
 	uint32_t board_sel = settings_struct.board_sel;
 	for (uint32_t drvno = 0; drvno < MAXPCIECARDS; drvno++)
@@ -6217,31 +6208,90 @@ es_status_codes ExportMeasurementHDF5()
 		{
 			hid_t group_board_id, group_board_attr_name, group_board_attr_number_of_cameras;
 
-
 			char groupBoardName[100];
 			sprintf(groupBoardName, "/Board_%d", drvno);
 			group_board_id = H5Gcreate(file_id, groupBoardName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 			uint32_t cameras = settings_struct.camera_settings[drvno].camcnt;
+
+			char* board_number[1] = {groupBoardName};
+			group_board_attr_name = CreateStringAttribute(group_board_id, "Board Number", dataspace_scalar, board_number);
+			H5Aclose(group_board_attr_name);
+			
+			uint32_t* amount_cameras[1] = {cameras};
+			group_board_attr_number_of_cameras = CreateNumericAttribute(group_board_id, "Number of Cameras", H5T_NATIVE_UINT32, dataspace_scalar, amount_cameras);
+			H5Aclose(group_board_attr_number_of_cameras);
+			
 			for (int camera = 0; camera < cameras; camera++)
 			{
 				hid_t group_camera_id, group_camera_attr_name, group_camera_attr_system, group_camera_attr_number_of_blocks;
-				
 
 				char groupCameraName[100];
 				sprintf(groupCameraName, "Camera_%d", camera);
 				group_camera_id = H5Gcreate(group_board_id, groupCameraName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
-				// Get the number of samples and blocks
 				uint32_t nos = settings_struct.nos;
 				uint32_t nob = settings_struct.nob;
+
+				char* camera_number[1] = { groupCameraName };
+				group_camera_attr_name = CreateStringAttribute(group_camera_id, "Camera Number", dataspace_scalar, camera_number);
+				H5Aclose(group_camera_attr_name);
+
+				uint32_t camera_system = settings_struct.camera_settings[drvno].camera_system;
+				char* camera_system_string;
+
+				if (camera_system == 0)
+				{
+					camera_system_string = "3001" ;
+				}
+				else if (camera_system == 1)
+				{
+					camera_system_string = "3010";
+				}
+				else if (camera_system == 2)
+				{
+					camera_system_string = "3030";
+				}
+				else
+				{
+					camera_system_string = "Unknown";
+				}
+
+				char* camera_system_attr[1] = { camera_system_string };
+				group_camera_attr_system = CreateStringAttribute(group_camera_id, "Camera System", dataspace_scalar, camera_system_attr);
+				H5Aclose(group_camera_attr_system);
+
+				uint32_t* amount_blocks[1] = { nob };
+				group_camera_attr_number_of_blocks = CreateNumericAttribute(group_camera_id, "Number of Blocks", H5T_NATIVE_UINT32, dataspace_scalar, amount_blocks);
+				H5Aclose(group_camera_attr_number_of_blocks);
+
 				for (uint32_t block = 0; block < nob; block++)
 				{
 					hid_t group_block_id, group_block_attr_name, group_block_attr_number_of_samples;
+					hid_t group_block_lcpl, group_block_gcpl; // Create Link Creation Property List and Group Creation Property List
+					/*
+					group_block_lcpl = H5Pcreate(H5P_LINK_CREATE);
+					statusHDF5 = H5Pset_create_intermediate_group(group_block_lcpl, 1);
+					statusHDF5 = H5Pset_char_encoding(group_block_lcpl, H5T_CSET_UTF8);
+					*/
+
+					group_block_gcpl = H5Pcreate(H5P_GROUP_CREATE);
+					statusHDF5 = H5Pset_link_creation_order(group_block_gcpl, (H5P_CRT_ORDER_TRACKED | H5P_CRT_ORDER_INDEXED));
+					//group_block_gcpl = H5Pcreate(H5P_GROUP_CREATE);
+
 					// Create a group in the file.
 					// Create a String that contains the name of the group with block
 					char groupBlockName[100];
 					sprintf(groupBlockName, "Block_%d", block);
-					group_block_id = H5Gcreate(group_camera_id, groupBlockName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+					group_block_id = H5Gcreate(group_camera_id, groupBlockName, H5P_DEFAULT, group_block_gcpl, H5P_DEFAULT);
+					H5Pclose(group_block_gcpl);
+
+					char* block_name[1] = { groupBlockName };
+					group_block_attr_name = CreateStringAttribute(group_block_id, "Block Name", dataspace_scalar, block_name);
+					H5Aclose(group_block_attr_name);
+
+					uint32_t* amount_samples[1] = { nos };
+					group_block_attr_number_of_samples = CreateNumericAttribute(group_block_id, "Number of Samples", H5T_NATIVE_UINT32, dataspace_scalar, amount_samples);
+					H5Aclose(group_block_attr_number_of_samples);
 
 					for (uint32_t sample = 0; sample < nos; sample++)
 					{
@@ -6270,6 +6320,15 @@ es_status_codes ExportMeasurementHDF5()
 						statusHDF5 = H5Sclose(dataspace_id);
 
 					}
+					hsize_t n_links;
+					H5Gget_num_objs(group_block_id, &n_links);
+					for (hsize_t i = 0; i < n_links; i++)
+					{
+						char link_name[100];
+						H5Lget_name_by_idx(group_block_id, ".", H5_INDEX_CRT_ORDER, H5_ITER_INC, i, link_name, 100, H5P_DEFAULT);
+						ES_LOG("Link name: %s\n", link_name);
+					}
+
 					statusHDF5 = H5Gclose(group_block_id);
 				}
 				statusHDF5 = H5Gclose(group_camera_id);
@@ -6282,20 +6341,24 @@ es_status_codes ExportMeasurementHDF5()
 	return es_no_error;
 }
 
-hid_t CreateNumericAttribute(hid_t object_id, char* attr_name, hid_t attr_type)
+hid_t CreateNumericAttribute(hid_t parent_object_id, char* attr_name, hid_t goal_type, hid_t dataspace, const void* data)
 {
-	hid_t attr_space = H5Screate(H5S_SCALAR);
-	return H5Acreate(object_id, attr_name, attr_type, attr_space, H5P_DEFAULT, H5P_DEFAULT);
+	hid_t attr_type = H5Tcopy(goal_type);
+
+	hid_t object_id = H5Acreate(parent_object_id, attr_name, attr_type, dataspace, H5P_DEFAULT, H5P_DEFAULT);
+	H5Awrite(object_id, attr_type, data);
+	return object_id;
 }
 
-hid_t CreateStringAttribute(hid_t object_id, char* attr_name, hid_t attr_type, herr_t status)
+hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t dataspace, const void* data)
 {
-	attr_type = H5Tcopy(H5T_C_S1);
-	status = H5Tset_size(attr_type, H5T_VARIABLE);
-	status = H5Tset_strpad(attr_type, H5T_STR_NULLTERM);
-	status = H5Tset_cset(attr_type, H5T_CSET_UTF8);
+	hid_t attr_type = H5Tcopy(H5T_C_S1);
+	H5Tset_size(attr_type, H5T_VARIABLE);
+	H5Tset_strpad(attr_type, H5T_STR_NULLTERM);
+	H5Tset_cset(attr_type, H5T_CSET_UTF8);
 
-	hid_t attr_space = H5Screate(H5S_SCALAR);
-	return H5Acreate(object_id, attr_name, attr_type, attr_space, H5P_DEFAULT, H5P_DEFAULT);
+	hid_t object_id = H5Acreate(parent_object_id, attr_name, attr_type, dataspace, H5P_DEFAULT, H5P_DEFAULT);
+	H5Awrite(object_id, attr_type, data);
+	return object_id;
 }
 
