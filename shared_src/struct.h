@@ -30,18 +30,28 @@ struct camera_settings
 	uint32_t bti_mode;
 	/**
 	 * Scan timer in microseconds. Used when sti mode is stimer. When this is the case, stime is the time between two intern triggers starting scans. 28 bit.
+	 *		* Min: 1 us
+	 *		* Max: 268.435.455 us = 268,435.455 s
 	 */
 	uint32_t stime_in_microsec;
 	/**
 	 * Block timer in microseconds. Used when bti mode is btimer. When this is the case, btime is the time between two intern triggers starting a block. 28 bit.
+	 *		* Min: 1 us
+	 *		* Max: 268.435.455 us = 268,435.455 s
 	 */
 	uint32_t btime_in_microsec;
 	/**
 	 * Scan delay after trigger in 10 ns steps. This is the delay between the trigger starting a scan, which is determined by sti_mode and the actual start of the scan. 31 bit.
+	 *		* disable: 0
+	 *		* min: 1 * 10 ns = 10 ns.
+	 *		* max: 2.147.483.647 * 10 ns = 21.474.836.470 ns = 21,474836470 s
 	 */
 	uint32_t sdat_in_10ns;
 	/**
 	 * Block delay after trigger in 10 ns steps. This is the delay between the trigger starting a block, which is determined by bti_mode and the actual start of the block. 31 bit.
+	 *		* disable: 0
+	 *		* min: 1 * 10 ns = 10 ns.
+	 *		* max: 2.147.483.647 * 10 ns = 21.474.836.470 ns = 21,474836470 s
 	 */
 	uint32_t bdat_in_10ns;
 	/**
@@ -53,7 +63,10 @@ struct camera_settings
 	 */
 	uint32_t bslope;
 	/**
-	 * XCK delay in 10 ns steps. XCK delay is the time between the high slope of XCK and the actual start of the camera read out. 31 bit.
+	 * XCK delay in 10 ns steps. XCK delay is the time between the high slope of XCK and the actual start of the camera read out. 31 bit. xckdelay = 500ns + xckdelay_in_10ns * 10ns
+	 *		* disable: 0
+	 *		* min 1: 500 ns + 1 * 10ns = 510 ns
+	 *		* max 2.147.483.647: 500 ns + 2.147.483.647 * 10 ns = 21.474.836.970 ns = 21,474.836.970 s
 	 */
 	uint32_t xckdelay_in_10ns;
 	/**
