@@ -1442,7 +1442,7 @@ es_status_codes SetBTI( uint32_t drvno, uint8_t bti_mode )
  * \brief Sets time for scan timer.
  * 
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param stime_in_microseconds Scan time in microseconds.
+ * \param stime_in_microseconds Scan time in microseconds, 28 bit. Min: 1 us, Max: 268.435.455 us = 268,435.455 s
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
@@ -1464,7 +1464,7 @@ es_status_codes SetSTimer( uint32_t drvno, uint32_t stime_in_microseconds )
  * \brief Sets time for block timer.
  * 
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param btime_in_microseconds Block time in microseconds.
+ * \param btime_in_microseconds Block time in microseconds, 28 bit. Min: 1 us, Max: 268.435.455 us = 268,435.455 s
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
@@ -1587,7 +1587,10 @@ es_status_codes ReadGPXCtrl( uint32_t drvno, uint8_t GPXAddress, uint32_t* GPXDa
  * \brief Sets delay after trigger hardware register.
  * 
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param datin10ns Time in 10 ns steps.
+ * \param datin10ns Time in 10 ns steps. 31 bit.
+ *		* disable: 0
+ *		* min: 1 * 10 ns = 10 ns.
+ *		* max: 2.147.483.647 * 10 ns = 21.474.836.470 ns = 21,474836470 s
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
@@ -1607,7 +1610,10 @@ es_status_codes SetSDAT( uint32_t drvno, uint32_t datin10ns )
  * \brief Sets delay after trigger hardware register.
  * 
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param datin10ns Time in 10 ns steps.
+ * \param datin10ns Time in 10 ns steps. 31 bit.
+ *		* disable: 0
+ *		* min: 1 * 10 ns = 10 ns.
+ *		* max: 2.147.483.647 * 10 ns = 21.474.836.470 ns = 21,474836470 s
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
@@ -2420,7 +2426,10 @@ es_status_codes SetBEC( uint32_t drvno, uint32_t bec_in_10ns )
  * \brief Set XCK delay.
  * 
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param xckdelay_in_10ns XCK delay
+ * \param xckdelay_in_10ns XCK delay, 31 bit. xckdelay = 500ns + xckdelay_in_10ns * 10ns
+ *		* disable: 0
+ *		* min 1: 500 ns + 1 * 10ns = 510 ns
+ *		* max 2.147.483.647: 500 ns + 2.147.483.647 * 10 ns = 21.474.836.970 ns = 21,474.836.970 s
  * \return es_status_codes:
  *		- es_no_error
  * 		- es_register_write_failed
