@@ -1621,7 +1621,6 @@
            </item>
            <item>
             <property name="text">
-             <string>0V</string>
              <string>Vin sample</string>
             </property>
            </item>
