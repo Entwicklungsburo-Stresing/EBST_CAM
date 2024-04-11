@@ -1,5 +1,15 @@
 # X.Y.Z: X zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit, Y ist PCIe version, Z minor version
 
+4.11.2
+- Fix measurements interrupting on fast computers
+- Change xck out cc Option from 0V to Vin sample
+- Fix ASL for non FFT sensors
+- Update special pixels dialog on allBlocksDone
+- Set axes to default on settings saved
+Linux: 
+- Fix aborting measurement in some cases
+- Increase DMA buffer size
+
 4.11.1
 - Add DLLReadBitS0_32(), DLLReadBitS0_32_multipleBoards(), DLLReadBitS0_8(), DLLReadBitS0_8_multipleBoards()
 - Extend human readable S0 dump
