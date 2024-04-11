@@ -145,6 +145,9 @@
       <QtUicDir>$(ProjectDir)</QtUicDir>
       <QtUicFileName>ui_%(Filename).h</QtUicFileName>
     </QtUic>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\bin\hdf5.dll" "$(ProjDir)build"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -207,6 +210,9 @@
       <QtUicDir>$(ProjectDir)</QtUicDir>
       <QtUicFileName>ui_%(Filename).h</QtUicFileName>
     </QtUic>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\bin\hdf5.dll" "$(ProjDir)build"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\shared_src\Board.c" />

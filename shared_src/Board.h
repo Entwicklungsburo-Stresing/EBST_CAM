@@ -176,7 +176,7 @@ es_status_codes ResetScanFrequencyBit(uint32_t drvno);
 es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh);
 es_status_codes ResetBlockFrequencyBit(uint32_t drvno);
 es_status_codes SetS1S2ReadDelay(uint32_t drvno);
-es_status_codes ExportMeasurementHDF5();
+es_status_codes ExportMeasurementHDF5(const char* path);
 hid_t CreateNumericAttribute(hid_t parent_object_id, char* attr_name, hid_t goal_type, hid_t dataspace, const void* data);
 hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t dataspace, const void* data);
 

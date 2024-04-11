@@ -123,6 +123,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_D474B616685CC23E3EAB6EDA68553DBB"
+        "OwnerKey" = "8:_D01C7694801546E79B9F2A5D8141829A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_D6E566B2F72045B0B4BEEA3D1CB9D7AC"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -588,6 +594,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D474B616685CC23E3EAB6EDA68553DBB"
+            {
+            "SourcePath" = "8:hdf5.dll"
+            "TargetName" = "8:hdf5.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_A1F1AB1AEA5C4300AACB65433A54E330"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D6E566B2F72045B0B4BEEA3D1CB9D7AC"
             {
             "SourcePath" = "8:..\\escam\\build\\Qt6Charts.dll"
@@ -767,7 +793,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Escam"
         "ProductCode" = "8:{25095218-98BC-45FC-A8FE-540BF0F247AC}"
-        "PackageCode" = "8:{612FFDD0-315E-4DBF-AEC9-518C5098094E}"
+        "PackageCode" = "8:{795409AE-0C61-41AB-AF9D-95A14C9794B0}"
         "UpgradeCode" = "8:{E656E723-CD9C-4179-A360-882C93DEA377}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

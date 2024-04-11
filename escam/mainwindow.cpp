@@ -314,7 +314,11 @@ void MainWindow::on_actionVerify_data_file_triggered()
 
 void MainWindow::on_actionExport_data_triggered()
 {
-	es_status_codes status = mainWindow->lsc.exportMeasurementHDF5();
+	QString path = QFileDialog::getExistingDirectory(this, "Export data", "", QFileDialog::ShowDirsOnly);
+	if (path.isEmpty()) return;
+	QByteArray ba = path.toLatin1();
+	const char* pathString = ba.data();
+	es_status_codes status = mainWindow->lsc.exportMeasurementHDF5(pathString);
 	if (status != es_no_error)
 	{ 
 		QDialog* messageBox = new QDialog(this);

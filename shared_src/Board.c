@@ -6180,22 +6180,15 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
 }
 
 
-es_status_codes ExportMeasurementHDF5()
+es_status_codes ExportMeasurementHDF5(const char* path)
 {
 	hid_t file_id, file_attr_name, file_attr_timestamp, file_attr_number_of_boards;
 	hid_t dataspace_scalar = H5Screate(H5S_SCALAR);
 	herr_t statusHDF5;
 
-	char currentDir[FILENAME_MAX];
-	if (getcwd(currentDir, sizeof(currentDir)) == NULL)
-	{
-		ES_LOG("Error getting current directory\n");
-		return es_no_error;
-	}
-
 	const char* filename = "measurement.h5";
 	char filepath[FILENAME_MAX];
-	sprintf(filepath, "%s\\Exported_Data\\%s", currentDir, filename);
+	sprintf(filepath, "%s\\%s", path, filename);
 	file_id = H5Fcreate(filepath, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
 	
 	char* filenameAttr[1] = { filename };
@@ -6218,13 +6211,9 @@ es_status_codes ExportMeasurementHDF5()
 			hid_t group_board_id, group_board_attr_name, group_board_attr_number_of_cameras;
 
 			char groupBoardName[100];
-			sprintf(groupBoardName, "/Board_%d", drvno);
+			sprintf(groupBoardName, "/Board_%d", drvno + 1);
 			group_board_id = H5Gcreate(file_id, groupBoardName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 			uint32_t cameras = settings_struct.camera_settings[drvno].camcnt;
-
-			char* board_number[1] = {groupBoardName};
-			group_board_attr_name = CreateStringAttribute(group_board_id, "Board Number", dataspace_scalar, board_number);
-			H5Aclose(group_board_attr_name);
 			
 			uint32_t* amount_cameras[1] = {cameras};
 			group_board_attr_number_of_cameras = CreateNumericAttribute(group_board_id, "Number of Cameras", H5T_NATIVE_UINT32, dataspace_scalar, amount_cameras);
@@ -6235,15 +6224,11 @@ es_status_codes ExportMeasurementHDF5()
 				hid_t group_camera_id, group_camera_attr_name, group_camera_attr_system, group_camera_attr_number_of_blocks;
 
 				char groupCameraName[100];
-				sprintf(groupCameraName, "Camera_%d", camera);
+				sprintf(groupCameraName, "Camera_%d", camera + 1);
 				group_camera_id = H5Gcreate(group_board_id, groupCameraName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
 				uint32_t nos = settings_struct.nos;
 				uint32_t nob = settings_struct.nob;
-
-				char* camera_number[1] = { groupCameraName };
-				group_camera_attr_name = CreateStringAttribute(group_camera_id, "Camera Number", dataspace_scalar, camera_number);
-				H5Aclose(group_camera_attr_name);
 
 				uint32_t camera_system = settings_struct.camera_settings[drvno].camera_system;
 				char* camera_system_string;
@@ -6276,32 +6261,21 @@ es_status_codes ExportMeasurementHDF5()
 				for (uint32_t block = 0; block < nob; block++)
 				{
 					hid_t group_block_id, group_block_attr_name, group_block_attr_number_of_samples;
-					hid_t group_block_lcpl, group_block_gcpl; // Create Link Creation Property List and Group Creation Property List
-					/*
-					group_block_lcpl = H5Pcreate(H5P_LINK_CREATE);
-					statusHDF5 = H5Pset_create_intermediate_group(group_block_lcpl, 1);
-					statusHDF5 = H5Pset_char_encoding(group_block_lcpl, H5T_CSET_UTF8);
-					*/
+					hid_t group_block_gcpl;
 
 					group_block_gcpl = H5Pcreate(H5P_GROUP_CREATE);
 					statusHDF5 = H5Pset_link_creation_order(group_block_gcpl, (H5P_CRT_ORDER_TRACKED | H5P_CRT_ORDER_INDEXED));
-					//group_block_gcpl = H5Pcreate(H5P_GROUP_CREATE);
 
 					// Create a group in the file.
 					// Create a String that contains the name of the group with block
 					char groupBlockName[100];
-					sprintf(groupBlockName, "Block_%d", block);
+					sprintf(groupBlockName, "Block_%d", block + 1);
 					group_block_id = H5Gcreate(group_camera_id, groupBlockName, H5P_DEFAULT, group_block_gcpl, H5P_DEFAULT);
 					H5Pclose(group_block_gcpl);
 
-					char* block_name[1] = { groupBlockName };
-					group_block_attr_name = CreateStringAttribute(group_block_id, "Block Name", dataspace_scalar, block_name);
-					H5Aclose(group_block_attr_name);
-
-					uint32_t* amount_samples[1] = { nos };
-					group_block_attr_number_of_samples = CreateNumericAttribute(group_block_id, "Number of Samples", H5T_NATIVE_UINT32, dataspace_scalar, amount_samples);
+					group_block_attr_number_of_samples = CreateNumericAttribute(group_block_id, "Number of Samples", H5T_NATIVE_UINT32, dataspace_scalar, &nos);
 					H5Aclose(group_block_attr_number_of_samples);
-
+					
 					for (uint32_t sample = 0; sample < nos; sample++)
 					{
 						hid_t space_id;
@@ -6311,18 +6285,62 @@ es_status_codes ExportMeasurementHDF5()
 						hid_t dataspace_id = H5Screate_simple(1, dims, NULL);
 
 						char datasetName[100];
-						sprintf(datasetName, "Sample_%d", sample);
+						sprintf(datasetName, "Sample_%d", sample + 1);
 						hid_t dataset_id = H5Dcreate2(group_block_id, datasetName, H5T_NATIVE_UINT16, dataspace_id, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-						uint32_t pixel = settings_struct.camera_settings[drvno].pixel;
-						size_t arraySize = pixel * sizeof(uint16_t);
-						uint16_t data[1024];
-						uint16_t dataRead[1024];
+						const uint32_t pixel = settings_struct.camera_settings[drvno].pixel;
+						uint16_t* data = (uint16_t*)malloc(pixel * sizeof(uint16_t));
 
 						es_status_codes status = ReturnFrame(drvno, sample, block, camera, pixel, data);
-						for (int i = 0; i < pixel; i++)
-
 						statusHDF5 = H5Dwrite(dataset_id, H5T_NATIVE_UINT16, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
-						statusHDF5 = H5Dread(dataset_id, H5T_NATIVE_UINT16, H5S_ALL, H5S_ALL, H5P_DEFAULT, dataRead);
+
+						free(data);
+
+						struct special_pixels sp;
+						status = GetAllSpecialPixelInformation(drvno, sample, block, camera, &sp);
+
+						// Create the attribute for the special pixels
+						hid_t sample_attr_s1State = CreateNumericAttribute(dataset_id, "S1 State", H5T_NATIVE_UINT32, dataspace_scalar, &sp.s1State);
+						H5Aclose(sample_attr_s1State);
+
+						hid_t sample_attr_s2State = CreateNumericAttribute(dataset_id, "S2 State", H5T_NATIVE_UINT32, dataspace_scalar, &sp.s2State);
+						H5Aclose(sample_attr_s2State);
+
+						hid_t sample_attr_blockIndex = CreateNumericAttribute(dataset_id, "Block Index", H5T_NATIVE_UINT32, dataspace_scalar, &sp.blockIndex);
+						H5Aclose(sample_attr_blockIndex);
+
+						hid_t sample_attr_scanIndex = CreateNumericAttribute(dataset_id, "Scan Index", H5T_NATIVE_UINT32, dataspace_scalar, &sp.scanIndex);
+						H5Aclose(sample_attr_scanIndex);
+
+						hid_t sample_attr_scanIndex2 = CreateNumericAttribute(dataset_id, "Scan Index 2", H5T_NATIVE_UINT32, dataspace_scalar, &sp.scanIndex2);
+						H5Aclose(sample_attr_scanIndex2);
+						
+						hid_t sample_attr_impactSignal1 = CreateNumericAttribute(dataset_id, "Impact Signal 1", H5T_NATIVE_UINT32, dataspace_scalar, &sp.impactSignal1);
+						H5Aclose(sample_attr_impactSignal1);
+
+						hid_t sample_attr_impactSignal2 = CreateNumericAttribute(dataset_id, "Impact Signal 2", H5T_NATIVE_UINT32, dataspace_scalar, &sp.impactSignal2);
+						H5Aclose(sample_attr_impactSignal2);
+
+						hid_t sample_attr_overTemp = CreateNumericAttribute(dataset_id, "Over Temperature", H5T_NATIVE_UINT32, dataspace_scalar, &sp.overTemp);
+						H5Aclose(sample_attr_overTemp);
+
+						hid_t sample_attr_tempGood = CreateNumericAttribute(dataset_id, "Temperature Good", H5T_NATIVE_UINT32, dataspace_scalar, &sp.tempGood);
+						H5Aclose(sample_attr_tempGood);
+
+						hid_t sample_attr_cameraSystem3001 = CreateNumericAttribute(dataset_id, "Camera System 3001", H5T_NATIVE_UINT32, dataspace_scalar, &sp.cameraSystem3001);
+						H5Aclose(sample_attr_cameraSystem3001);
+
+						hid_t sample_attr_cameraSystem3010 = CreateNumericAttribute(dataset_id, "Camera System 3010", H5T_NATIVE_UINT32, dataspace_scalar, &sp.cameraSystem3010);
+						H5Aclose(sample_attr_cameraSystem3010);
+
+						hid_t sample_attr_cameraSystem3030 = CreateNumericAttribute(dataset_id, "Camera System 3030", H5T_NATIVE_UINT32, dataspace_scalar, &sp.cameraSystem3030);
+						H5Aclose(sample_attr_cameraSystem3030);
+
+						char* fpgaVer[100];
+						sprintf(fpgaVer, "%d.%d", sp.fpgaVerMajor, sp.fpgaVerMinor);
+						char* special_pixel_fpgaver[1] = { fpgaVer };
+						hid_t sample_attr_fpgaVer = CreateStringAttribute(dataset_id, "FPGA Version", dataspace_scalar, special_pixel_fpgaver);
+						H5Aclose(sample_attr_fpgaVer);
+						
 
 						// Close the dataset and dataspace.
 						statusHDF5 = H5Dclose(dataset_id);
