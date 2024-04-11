@@ -17,6 +17,7 @@ WDC_PCI_SCAN_RESULT scanResult;
 WD_PCI_CARD_INFO deviceInfo[MAXPCIECARDS];
 bool _SHOW_MSG = TRUE;
 HANDLE ghMutex[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
+HANDLE registerReadWriteMutex[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 HANDLE mutexUserBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 FILE* file_stream[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 void* Direct2dViewer = NULL;
@@ -118,7 +119,9 @@ es_status_codes readRegister_32(uint32_t drvno, uint32_t* data, uint16_t address
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
+	WaitForSingleObject(registerReadWriteMutex[drvno], INFINITE);
 	volatile DWORD dwStatus = WDC_ReadAddrBlock(hDev[drvno], 0, address, sizeof(uint32_t), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
+	ReleaseMutex(registerReadWriteMutex[drvno]);
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ES_LOG("\nreadRegister_32 in address 0x%x failed\n", address);
@@ -142,6 +145,7 @@ es_status_codes readRegister_16(uint32_t drvno, uint16_t* data, uint16_t address
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
+	WaitForSingleObject(registerReadWriteMutex[drvno], INFINITE);
 	volatile DWORD dwStatus = WDC_ReadAddrBlock(hDev[drvno], 0, address, sizeof(uint16_t), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
@@ -166,8 +170,10 @@ es_status_codes readRegister_8(uint32_t drvno, uint8_t* data, uint16_t address)
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
-	volatile DWORD dwStatus = WDC_ReadAddrBlock(hDev[drvno], 0, address, sizeof(uint8_t), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
+	WaitForSingleObject(registerReadWriteMutex[drvno], INFINITE);
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
+	volatile DWORD dwStatus = WDC_ReadAddrBlock(hDev[drvno], 0, address, sizeof(uint8_t), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
+	ReleaseMutex(registerReadWriteMutex[drvno]);
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ES_LOG("\nreadRegister_8 in address 0x%x failed\n", address);
@@ -190,8 +196,10 @@ es_status_codes writeRegister_32(uint32_t drvno, uint32_t data, uint16_t address
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
-	DWORD dwStatus = WDC_WriteAddrBlock(hDev[drvno], 0, address, sizeof(uint32_t), &data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
+	WaitForSingleObject(registerReadWriteMutex[drvno], INFINITE);
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
+	DWORD dwStatus = WDC_WriteAddrBlock(hDev[drvno], 0, address, sizeof(uint32_t), &data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
+	ReleaseMutex(registerReadWriteMutex[drvno]);
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ES_LOG("\nwriteRegister_32 in address 0x%x with data: 0x%x failed\n", address, data);
@@ -215,8 +223,10 @@ es_status_codes writeRegister_16(uint32_t drvno, uint16_t data, uint16_t address
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
-	DWORD dwStatus = WDC_WriteAddrBlock(hDev[drvno], 0, address, sizeof(uint16_t), &data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
+	WaitForSingleObject(registerReadWriteMutex[drvno], INFINITE);
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
+	DWORD dwStatus = WDC_WriteAddrBlock(hDev[drvno], 0, address, sizeof(uint16_t), &data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
+	ReleaseMutex(registerReadWriteMutex[drvno]);
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ES_LOG("\nwriteRegister_16 in address 0x%x with data: 0x%x failed\n", address, data);
@@ -227,21 +237,23 @@ es_status_codes writeRegister_16(uint32_t drvno, uint16_t data, uint16_t address
 };
 
 /**
-* \brief Write byte (8 bit) to register in space0 of PCIe board, except r10-r1f.
-*
-* \param drv board number (=1 if one PCI board)
-* \param data byte value to write
-* \param address Offset from BaseAdress of register (count in bytes)
-* \return es_status_codes
-	- es_no_error
-	- es_register_write_failed
-*/
-es_status_codes writeRegister_8(uint32_t drv, uint8_t data, uint16_t address)
+ * \brief Write byte (8 bit) to register in space0 of PCIe board, except r10-r1f.
+ *
+ * \param drvno board number (=1 if one PCI board)
+ * \param data byte value to write
+ * \param address Offset from BaseAdress of register (count in bytes)
+ * \return es_status_codes
+ 	- es_no_error
+ 	- es_register_write_failed
+ */
+es_status_codes writeRegister_8(uint32_t drvno, uint8_t data, uint16_t address)
 {
-	es_status_codes status = checkDriverHandle(drv);
+	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
-	volatile DWORD dwStatus = WDC_WriteAddrBlock(hDev[drv], 0, address, sizeof(BYTE), &data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
+	WaitForSingleObject(registerReadWriteMutex[drvno], INFINITE);
 	//the second parameter gives the memory space 0:mem mapped cfg/S0-space 1:I/O cfg/S0-space 2:DMA-space
+	DWORD dwStatus = WDC_WriteAddrBlock(hDev[drvno], 0, address, sizeof(BYTE), &data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
+	ReleaseMutex(registerReadWriteMutex[drvno]);
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ES_LOG("\nwriteRegister_8 in address 0x%x with data: 0x%x failed\n", address, data);
@@ -665,8 +677,9 @@ es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 
 es_status_codes InitMutex(uint32_t drvno)
 {
-	//no mutex on windows
-	(void)drvno;
+	if (registerReadWriteMutex[drvno])
+		CloseHandle(ghMutex[drvno]);
+	registerReadWriteMutex[drvno] = CreateMutex(NULL, FALSE, NULL);
 	return es_no_error;
 }
 
