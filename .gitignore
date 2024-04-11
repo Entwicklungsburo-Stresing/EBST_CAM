@@ -39,7 +39,6 @@ escam_deb/escam_*
 *.suo
 *.user
 *.sln.docstates
-*.lib
 
 # Build results
 [Dd]ebug/
@@ -50,6 +49,7 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+shared_src/ESLSCDLL.lib
 
 # Roslyn cache directories
 *.ide/
