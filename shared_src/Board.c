@@ -6195,8 +6195,7 @@ es_status_codes ExportMeasurementHDF5(const char* path)
 	file_attr_name = CreateStringAttribute(file_id, "File Name", dataspace_scalar, filenameAttr);
 	H5Aclose(file_attr_name);
 
-	uint8_t* no_boards_list[1] = { number_of_boards };
-	file_attr_number_of_boards = CreateNumericAttribute(file_id, "Number of Boards", H5T_NATIVE_UINT8, dataspace_scalar, no_boards_list);
+	file_attr_number_of_boards = CreateNumericAttribute(file_id, "Number of Boards", H5T_NATIVE_UINT8, dataspace_scalar, &number_of_boards);
 	H5Aclose(file_attr_number_of_boards);
 
 	char* timestamp[1] = { start_timestamp };
@@ -6215,8 +6214,7 @@ es_status_codes ExportMeasurementHDF5(const char* path)
 			group_board_id = H5Gcreate(file_id, groupBoardName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 			uint32_t cameras = settings_struct.camera_settings[drvno].camcnt;
 			
-			uint32_t* amount_cameras[1] = {cameras};
-			group_board_attr_number_of_cameras = CreateNumericAttribute(group_board_id, "Number of Cameras", H5T_NATIVE_UINT32, dataspace_scalar, amount_cameras);
+			group_board_attr_number_of_cameras = CreateNumericAttribute(group_board_id, "Number of Cameras", H5T_NATIVE_UINT32, dataspace_scalar, &cameras);
 			H5Aclose(group_board_attr_number_of_cameras);
 			
 			for (int camera = 0; camera < cameras; camera++)
@@ -6254,8 +6252,7 @@ es_status_codes ExportMeasurementHDF5(const char* path)
 				group_camera_attr_system = CreateStringAttribute(group_camera_id, "Camera System", dataspace_scalar, camera_system_attr);
 				H5Aclose(group_camera_attr_system);
 
-				uint32_t* amount_blocks[1] = { nob };
-				group_camera_attr_number_of_blocks = CreateNumericAttribute(group_camera_id, "Number of Blocks", H5T_NATIVE_UINT32, dataspace_scalar, amount_blocks);
+				group_camera_attr_number_of_blocks = CreateNumericAttribute(group_camera_id, "Number of Blocks", H5T_NATIVE_UINT32, dataspace_scalar, &nob);
 				H5Aclose(group_camera_attr_number_of_blocks);
 
 				for (uint32_t block = 0; block < nob; block++)
