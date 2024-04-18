@@ -28,7 +28,10 @@ char errorMsg[100][50] =
 	"Setting thread priority failed",
 	"Measurement is already running",
 	"Disabling interrupt failed",
-	"Memory not initialized"
+	"Memory not initialized",
+	"Creating file failed",
+	"First measurement not done",
+	"Measurement is running"
 };
 
 /**
