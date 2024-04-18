@@ -239,17 +239,21 @@ void DialogDac::loadSettings()
 
 void DialogDac::on_pushButtonAutotune_pressed()
 {
-	if (isRunning)
+	if (isRunning) {
 		mainWindow->lsc.abortMeasurement();
+		ui->pushButtonAutotune->setText("Autotune");
+	}
 	else
 		autotunePressed();
 	return;
-
-	
 }
 
 void DialogDac::autotunePressed()
 {
+	if (isRunning) return;
+	if (mainWindow->ui->checkBoxLoopMeasurement->isChecked())
+		mainWindow->ui->checkBoxLoopMeasurement->setChecked(false);
+
 	ui->pushButtonAutotune->setText("Stop");
 	int target = ui->spinBoxTarget->value();
 	int tolerance = 3;
@@ -268,8 +272,8 @@ void DialogDac::autotunePressed()
 		if (status != es_no_error)
 		{
 			QMessageBox* msgBox = new QMessageBox(this);
-			msgBox->setWindowTitle("No camera found");
-			msgBox->setText("No camera found");
+			msgBox->setWindowTitle("Error initializing measurement");
+			msgBox->setText("Error initializing measurement");
 			msgBox->setStandardButtons(QMessageBox::Ok);
 			msgBox->exec();
 			return;
@@ -297,11 +301,11 @@ void DialogDac::autotunePressed()
 		ch7TargetReached = autotuneAdjust(data, autotune_ch7_start, autotune_ch7_end, ui->spinBoxChannel7);
 		ch8TargetReached = autotuneAdjust(data, autotune_ch8_start, autotune_ch8_end, ui->spinBoxChannel8);
 
-		//create a delay of 300 milliseconds
+		//Create a delay of 300 ms
 		QTime dieTime = QTime::currentTime().addMSecs(300);
 		while (QTime::currentTime() < dieTime)
 			QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-
+		
 		free(data);
 		timeout--;
 		iterator++;
@@ -347,3 +351,5 @@ bool DialogDac::autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spi
 	}
 	return targetReached;
 }
+
+
