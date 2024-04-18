@@ -26,6 +26,7 @@ volatile bool abortMeasurementFlag = false;
 volatile bool continiousMeasurementFlag = false;
 uint32_t continiousPauseInMicroseconds = 0;
 bool isRunning = false;
+bool wasRunning = false;
 int64_t temp_scanCounterTotal[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 int64_t* scanCounterTotal = temp_scanCounterTotal;
 uint64_t measurement_cnt = 0;

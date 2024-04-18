@@ -179,6 +179,7 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno);
 es_status_codes ExportMeasurementHDF5(const char* path);
 hid_t CreateNumericAttribute(hid_t parent_object_id, char* attr_name, hid_t goal_type, hid_t dataspace, const void* data);
 hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t dataspace, const void* data);
+es_status_codes CheckFirstMeasurementDone(uint32_t drvno);
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);

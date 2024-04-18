@@ -331,6 +331,10 @@ void MainWindow::on_actionVerify_data_file_triggered()
 	return;
 }
 
+/**
+ * @brief This slot exports the measurement data to HDF5.
+ * @return none
+ */
 void MainWindow::on_actionExport_data_triggered()
 {
 	QString path = QFileDialog::getExistingDirectory(this, "Export data", "", QFileDialog::ShowDirsOnly);
@@ -338,25 +342,7 @@ void MainWindow::on_actionExport_data_triggered()
 	QByteArray ba = path.toLatin1();
 	const char* pathString = ba.data();
 	es_status_codes status = mainWindow->lsc.exportMeasurementHDF5(pathString);
-	if (status != es_no_error)
-	{ 
-		QDialog* messageBox = new QDialog(this);
-		messageBox->setAttribute(Qt::WA_DeleteOnClose);
-		QVBoxLayout* layout = new QVBoxLayout(messageBox);
-		messageBox->setLayout(layout);
-		QLabel* labelExport = new QLabel(messageBox);
-		labelExport->setTextInteractionFlags(Qt::TextSelectableByMouse);
-		labelExport->setTextFormat(Qt::RichText);
-		labelExport->setText(QString::fromStdString("Error exporting data: " + status));
-		labelExport->setAlignment(Qt::AlignTop);
-		QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, messageBox);
-		connect(dialogButtonBox, &QDialogButtonBox::accepted, messageBox, &QDialog::accept);
-		layout->addWidget(labelExport);
-		layout->addWidget(dialogButtonBox);
-		messageBox->setWindowTitle("Export data");
-		messageBox->show();
-		return;
-	}
+
 	QDialog* messageBox = new QDialog(this);
 	messageBox->setAttribute(Qt::WA_DeleteOnClose);
 	QVBoxLayout* layout = new QVBoxLayout(messageBox);
@@ -364,13 +350,21 @@ void MainWindow::on_actionExport_data_triggered()
 	QLabel* labelExport = new QLabel(messageBox);
 	labelExport->setTextInteractionFlags(Qt::TextSelectableByMouse);
 	labelExport->setTextFormat(Qt::RichText);
-	labelExport->setText(QString::fromStdString("Data exported successfully."));
 	labelExport->setAlignment(Qt::AlignTop);
 	QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, messageBox);
 	connect(dialogButtonBox, &QDialogButtonBox::accepted, messageBox, &QDialog::accept);
 	layout->addWidget(labelExport);
 	layout->addWidget(dialogButtonBox);
 	messageBox->setWindowTitle("Export data");
+	if (status != es_no_error)
+	{ 
+		QString errorMsg = QString::fromStdString("Error exporting data:\n");
+		errorMsg.append(QString::fromStdString(ConvertErrorCodeToMsg(status)));
+		labelExport->setText(errorMsg);
+		messageBox->show();
+		return;
+	}
+	labelExport->setText(QString::fromStdString("Data exported successfully."));
 	messageBox->show();
 	return;
 }

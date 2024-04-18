@@ -31,8 +31,11 @@ typedef enum
 	es_creating_thread_failed,
 	es_setting_thread_priority_failed,
 	es_already_running,
-	es_disabling_interrupt_failed,
-	es_memory_not_initialized
+	es_disabling_interrupt_failed = 25,
+	es_memory_not_initialized,
+	es_create_file_failed,
+	es_first_measurement_not_done,
+	es_measurement_running
 } es_status_codes;
 
 char* ConvertErrorCodeToMsg(es_status_codes status);

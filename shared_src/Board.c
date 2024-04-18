@@ -2910,6 +2910,7 @@ es_status_codes StartMeasurement()
 		}
 	}
 	ES_LOG("*** Measurement done ***\n\n");
+	wasRunning = true;
 	return ReturnStartMeasurement(status);
 }
 
@@ -6185,11 +6186,23 @@ es_status_codes ExportMeasurementHDF5(const char* path)
 	hid_t file_id, file_attr_name, file_attr_timestamp, file_attr_number_of_boards;
 	hid_t dataspace_scalar = H5Screate(H5S_SCALAR);
 	herr_t statusHDF5;
+	es_status_codes status;
+	uint32_t board_sel = settings_struct.board_sel;
+
+	if(isRunning) return es_measurement_running;
+	for (uint32_t drvno = 0; drvno < MAXPCIECARDS; drvno++)
+	{
+		if(board_sel >> drvno & 1)
+		{
+			if((status = CheckFirstMeasurementDone(drvno)) != es_no_error) return status;
+		}
+	}
+	if(!wasRunning) return es_first_measurement_not_done;
 
 	const char* filename = "measurement.h5";
 	char filepath[FILENAME_MAX];
 	sprintf(filepath, "%s\\%s", path, filename);
-	file_id = H5Fcreate(filepath, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+	if ((file_id = H5Fcreate(filepath, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT)) == H5I_INVALID_HID) return es_create_file_failed;
 	
 	char* filenameAttr[1] = { filename };
 	file_attr_name = CreateStringAttribute(file_id, "File Name", dataspace_scalar, filenameAttr);
@@ -6202,7 +6215,7 @@ es_status_codes ExportMeasurementHDF5(const char* path)
 	file_attr_timestamp = CreateStringAttribute(file_id, "Timestamp", dataspace_scalar, timestamp);
 	H5Aclose(file_attr_timestamp);
 
-	uint32_t board_sel = settings_struct.board_sel;
+	
 	for (uint32_t drvno = 0; drvno < MAXPCIECARDS; drvno++)
 	{
 		if ((board_sel >> drvno) & 1)
@@ -6384,5 +6397,29 @@ hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t datas
 	hid_t object_id = H5Acreate(parent_object_id, attr_name, attr_type, dataspace, H5P_DEFAULT, H5P_DEFAULT);
 	H5Awrite(object_id, attr_type, data);
 	return object_id;
+}
+
+es_status_codes CheckFirstMeasurementDone(uint32_t drvno)
+{
+	uint32_t dataNOS = 0, dataScanIndex = 0, dataNOB = 0, dataBlockIndex = 0, bitmask = 0x7FFFFFFF;
+	es_status_codes status = readRegisterS0_32(drvno, &dataNOS, S0Addr_NOS);
+	if (status != es_no_error) return status;
+	status = readRegisterS0_32(drvno, &dataScanIndex, S0Addr_ScanIndex);
+	if (status != es_no_error) return status;
+	if ((dataNOS != (dataScanIndex & bitmask)) || dataNOS == 0 || dataScanIndex == 0)
+	{
+		return es_first_measurement_not_done;
+	}
+
+	status = readRegisterS0_32(drvno, &dataNOB, S0Addr_NOB);
+	if (status != es_no_error) return status;
+	status = readRegisterS0_32(drvno, &dataBlockIndex, S0Addr_BLOCKINDEX);
+	if (status != es_no_error) return status;
+	if((dataNOB != (dataBlockIndex & bitmask)) || dataNOB == 0 || dataBlockIndex == 0)
+	{
+		return es_first_measurement_not_done;
+	}
+
+	return es_no_error;
 }
 
