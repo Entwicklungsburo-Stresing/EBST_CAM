@@ -250,7 +250,6 @@ void DialogDac::on_pushButtonAutotune_pressed()
 
 void DialogDac::autotunePressed()
 {
-	if (isRunning) return;
 	if (mainWindow->ui->checkBoxLoopMeasurement->isChecked())
 		mainWindow->ui->checkBoxLoopMeasurement->setChecked(false);
 
@@ -292,14 +291,25 @@ void DialogDac::autotunePressed()
 		status = mainWindow->lsc.returnFrame(drvno, sample, block, camera, pixel, data);
 		if (status != es_no_error) return;
 
-		ch1TargetReached = autotuneAdjust(data, autotune_ch1_start, autotune_ch1_end, ui->spinBoxChannel1);
-		ch2TargetReached = autotuneAdjust(data, autotune_ch2_start, autotune_ch2_end, ui->spinBoxChannel2);
-		ch3TargetReached = autotuneAdjust(data, autotune_ch3_start, autotune_ch3_end, ui->spinBoxChannel3);
-		ch4TargetReached = autotuneAdjust(data, autotune_ch4_start, autotune_ch4_end, ui->spinBoxChannel4);
-		ch5TargetReached = autotuneAdjust(data, autotune_ch5_start, autotune_ch5_end, ui->spinBoxChannel5);
-		ch6TargetReached = autotuneAdjust(data, autotune_ch6_start, autotune_ch6_end, ui->spinBoxChannel6);
-		ch7TargetReached = autotuneAdjust(data, autotune_ch7_start, autotune_ch7_end, ui->spinBoxChannel7);
-		ch8TargetReached = autotuneAdjust(data, autotune_ch8_start, autotune_ch8_end, ui->spinBoxChannel8);
+		QSpinBox* spinBoxArray[8] = { ui->spinBoxChannel1, ui->spinBoxChannel2, ui->spinBoxChannel3, ui->spinBoxChannel4, ui->spinBoxChannel5, ui->spinBoxChannel6, ui->spinBoxChannel7, ui->spinBoxChannel8 };
+
+		ch1TargetReached = autotuneAdjust(data, autotune_ch1_start, autotune_ch1_end, spinBoxArray[0]);
+		ch2TargetReached = autotuneAdjust(data, autotune_ch2_start, autotune_ch2_end, spinBoxArray[1]);
+		ch3TargetReached = autotuneAdjust(data, autotune_ch3_start, autotune_ch3_end, spinBoxArray[2]);
+		ch4TargetReached = autotuneAdjust(data, autotune_ch4_start, autotune_ch4_end, spinBoxArray[3]);
+		ch5TargetReached = autotuneAdjust(data, autotune_ch5_start, autotune_ch5_end, spinBoxArray[4]);
+		ch6TargetReached = autotuneAdjust(data, autotune_ch6_start, autotune_ch6_end, spinBoxArray[5]);
+		ch7TargetReached = autotuneAdjust(data, autotune_ch7_start, autotune_ch7_end, spinBoxArray[6]);
+		ch8TargetReached = autotuneAdjust(data, autotune_ch8_start, autotune_ch8_end, spinBoxArray[7]);
+		int arraySize = (sizeof(spinBoxArray) / sizeof(spinBoxArray[0]));
+
+		for (int i = 0; i < arraySize; i++)
+			if (spinBoxArray[i]->value() >= 60000)
+			{
+				QMessageBox::warning(this, "Warning", "DAC value is too high. Please reduce the target value and try again.");
+				return;
+			}
+				
 
 		//Create a delay of 300 ms
 		QTime dieTime = QTime::currentTime().addMSecs(300);
