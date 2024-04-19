@@ -34,7 +34,7 @@ void MyQChartView::mouseMoveEvent(QMouseEvent* event)
 	for (int i = 0; i < nearestPointList.size(); i++) {
 		toolTip.append(QString(", Y%1: %2").arg(i).arg(nearestPointList.at(i).y()));
 	}
-	QToolTip::showText(mapToGlobal(pos), toolTip, this);
+	QToolTip::showText(mapToGlobal(pos), toolTip, this, QRect(), 1000);
 }
 
 /**
