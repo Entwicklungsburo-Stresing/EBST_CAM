@@ -2423,7 +2423,7 @@ es_status_codes SetBEC( uint32_t drvno, uint32_t bec_in_10ns )
 }
 
 /**
- * \brief Set XCK delay.
+ * \brief DEPRECATED. Set XCK delay.
  * 
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param xckdelay_in_10ns XCK delay, 31 bit. xckdelay = 500ns + xckdelay_in_10ns * 10ns
