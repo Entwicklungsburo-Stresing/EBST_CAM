@@ -161,7 +161,7 @@
          <item row="10" column="1">
           <widget class="QLabel" name="labelXckdelayIn10ns">
            <property name="text">
-            <string>xck delay</string>
+            <string>xck delay (legacy option)</string>
            </property>
           </widget>
          </item>

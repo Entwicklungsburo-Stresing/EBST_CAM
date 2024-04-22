@@ -63,7 +63,9 @@ struct camera_settings
 	 */
 	uint32_t bslope;
 	/**
-	 * XCK delay in 10 ns steps. XCK delay is the time between the high slope of XCK and the actual start of the camera read out. 31 bit. xckdelay = 500ns + xckdelay_in_10ns * 10ns
+	 * DEPRECATED
+	 * XCK delay in 10 ns steps. XCK delay is the time between the high slope of XCK and the actual start of the camera read out. This is done by delaying VON relative to XCK. Since P222_09 cameras are not designed to interact with the VON signal anymore. VCLKs are generated inside the camera and the delay between integrator and XCK can be achieved by using the analog delay of the camera control.
+	 * 31 bit. xckdelay = 500ns + xckdelay_in_10ns * 10ns
 	 *		* disable: 0
 	 *		* min 1: 500 ns + 1 * 10ns = 510 ns
 	 *		* max 2.147.483.647: 500 ns + 2.147.483.647 * 10 ns = 21.474.836.970 ns = 21,474.836.970 s
