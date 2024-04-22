@@ -17,7 +17,7 @@
 #define settingXckdelayIn10nsDefault				0
 #define settingShutterSecIn10nsDefault				0
 #define settingShutterBecIn10nsDefault				0
-#define settingTriggerCcDefault						xck
+#define settingTriggerModeIntegratorDefault			xck
 #define settingBoardSelDefault						1
 #define settingBoard0Default						1
 #define settingBoard1Default						0

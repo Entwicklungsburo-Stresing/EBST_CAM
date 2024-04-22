@@ -229,7 +229,7 @@ es_status_codes InitCamera(uint32_t drvno)
 	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_pixel, (uint16_t)settings_struct.camera_settings[drvno].pixel);
 	if (status != es_no_error) return status;
 	//set trigger input of CamControl
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_trig_in, (uint16_t)settings_struct.camera_settings[drvno].trigger_mode_cc);
+	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_trig_in, (uint16_t)settings_struct.camera_settings[drvno].trigger_mode_integrator);
 	if (status != es_no_error) return status;
 	//set led off
 	status = SetLedOff(drvno, (uint8_t)settings_struct.camera_settings[drvno].led_off);
@@ -282,7 +282,7 @@ es_status_codes SetConfigRegister(uint32_t drvno)
 	es_status_codes status = es_no_error;
 
 	uint16_t sensor_gain = ((uint16_t)settings_struct.camera_settings[drvno].sensor_gain << cam_config_register_bitindex_sensor_gain) & cam_config_register_bits_sensor_gain;
-	uint16_t trigger_mode = ((uint16_t)settings_struct.camera_settings[drvno].trigger_mode_cc << cam_config_register_bitindex_trigger_mode_cc) & cam_config_register_bits_trigger_mode_cc;
+	uint16_t trigger_mode = ((uint16_t)settings_struct.camera_settings[drvno].trigger_mode_integrator << cam_config_register_bitindex_trigger_mode_cc) & cam_config_register_bits_trigger_mode_cc;
 	uint16_t cool_level = ((uint8_t)settings_struct.camera_settings[drvno].temp_level << cam_config_register_bitindex_temp_level) & cam_config_register_bits_temp_level;
 	uint16_t led_off = ((uint16_t)settings_struct.camera_settings[drvno].led_off << cam_config_register_bitindex_led_off) & cam_config_register_bits_led_off;
 	uint16_t bnc_out = ((uint16_t)settings_struct.camera_settings[drvno].bnc_out << cam_config_register_bitindex_bnc_out) & cam_config_register_bits_bnc_out;
@@ -5028,7 +5028,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].bslope,
 		settings_struct.camera_settings[drvno].xckdelay_in_10ns,
 		settings_struct.camera_settings[drvno].sec_in_10ns,
-		settings_struct.camera_settings[drvno].trigger_mode_cc,
+		settings_struct.camera_settings[drvno].trigger_mode_integrator,
 		settings_struct.camera_settings[drvno].sensor_type,
 		settings_struct.camera_settings[drvno].camera_system,
 		settings_struct.camera_settings[drvno].camcnt,
