@@ -151,7 +151,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Gerhard\ENTW\PCIE\64bit\EBST_CAM\hdf\HDF_Group\HDF5\1.14.3\include;GeneratedFiles\$(ConfigurationName);GeneratedFiles;.;$(SolutionDir);debug;/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\include;GeneratedFiles\$(ConfigurationName);GeneratedFiles;.;$(SolutionDir);debug;/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>build\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>

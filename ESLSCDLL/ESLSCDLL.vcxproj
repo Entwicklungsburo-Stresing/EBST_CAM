@@ -118,7 +118,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;_DEBUG</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;_DEBUG;H5_BUILT_AS_DYNAMIC_LIB</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>
@@ -126,10 +126,11 @@
       <WarningLevel>Level3</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
       <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>dwrite.lib;d2d1.lib;windowscodecs.lib;$(SolutionDir)Jungo\wdapi1400.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;$(SolutionDir)Jungo\wdapi1400.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <ResourceCompile>
@@ -148,7 +149,7 @@ xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(SolutionDir)$(Platform)\$(Configur
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_minimal|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;_DEBUG;MINIMAL_BUILD</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;_DEBUG;MINIMAL_BUILD;H5_BUILT_AS_DYNAMIC_LIB</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>
@@ -156,10 +157,11 @@ xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(SolutionDir)$(Platform)\$(Configur
       <WarningLevel>Level3</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
       <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(SolutionDir)Jungo\wdapi1400.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;$(SolutionDir)Jungo\wdapi1400.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <ResourceCompile>
@@ -178,7 +180,7 @@ xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(SolutionDir)$(Platform)\$(Configur
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Labview|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;COMPILE_FOR_LABVIEW;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;COMPILE_FOR_LABVIEW;_DEBUG;H5_BUILT_AS_DYNAMIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
@@ -186,10 +188,11 @@ xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(SolutionDir)$(Platform)\$(Configur
       <Optimization>Disabled</Optimization>
       <CallingConvention>StdCall</CallingConvention>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <AdditionalIncludeDirectories>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>dwrite.lib;d2d1.lib;windowscodecs.lib;$(SolutionDir)Jungo\wdapi1400.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;$(SolutionDir)Jungo\wdapi1400.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <ResourceCompile>
@@ -237,17 +240,18 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_minimal|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;MINIMAL_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;MINIMAL_BUILD;H5_BUILT_AS_DYNAMIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
+      <AdditionalIncludeDirectories>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>$(SolutionDir)Jungo\wdapi1400.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Jungo\wdapi1400.lib;$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
     </Link>
@@ -269,12 +273,13 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
-      <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;COMPILE_FOR_LABVIEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;COMPILE_FOR_LABVIEW;H5_BUILT_AS_DYNAMIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>$(SolutionDir)Jungo\wdapi1400.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;$(SolutionDir)Jungo\wdapi1400.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
