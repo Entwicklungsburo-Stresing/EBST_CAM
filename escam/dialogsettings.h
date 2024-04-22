@@ -40,7 +40,7 @@ constexpr auto settingAdcGainPath = "adcGain";
 constexpr auto settingCoolingPath = "cooling";
 constexpr auto settingGpxOffsetPath = "gpxOffset";
 constexpr auto settingIOCtrlImpactStartPixelPath = "IOCtrlImpactStartPixel";
-constexpr auto settingIsCooledCamPath = "isCooledCam";
+constexpr auto settingIsCooledCameraLegacyModePath = "isCooledCameraLegacyMode";
 constexpr auto settingSensorResetLengthIn4nsPath = "sensorResetLength";
 //FFT mode
 constexpr auto settingLinesPath = "lines";
