@@ -220,8 +220,8 @@ es_status_codes InitCamera(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetCameraPosition(drvno);
 	if (status != es_no_error) return status;
-	// when cooled camera: disable PCIe FIFO when cool cam transmits cool status (legacy code for old cameras)
-	if (settings_struct.camera_settings[drvno].is_cooled_cam)
+	// when cooled camera legacy mode: disable PCIe FIFO when cool cam transmits cool status
+	if (settings_struct.camera_settings[drvno].is_cooled_camera_legacy_mode)
 		status = Use_ENFFW_protection(drvno, true);
 	else
 		status = Use_ENFFW_protection(drvno, false);
@@ -5083,7 +5083,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		"write to disc\t%u\n"
 		"file path\t%s\n"
 		"file split mode\t%u\n"
-		"is cooled cam\t%u\n",
+		"is cooled camera legacy mode\t%u\n",
 		settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns,
 		settings_struct.camera_settings[drvno].dma_buffer_size_in_scans,
 		settings_struct.camera_settings[drvno].tocnt,
@@ -5092,7 +5092,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].write_to_disc,
 		settings_struct.camera_settings[drvno].file_path,
 		settings_struct.camera_settings[drvno].file_split_mode,
-		settings_struct.camera_settings[drvno].is_cooled_cam);
+		settings_struct.camera_settings[drvno].is_cooled_camera_legacy_mode);
 	return es_no_error;
 }
 

@@ -164,7 +164,7 @@ const struct camera_settings camera_settings_default =
 	.write_to_disc = settingWriteToDiscDefault,
 	.file_path = settingFilePathDefault,
 	.file_split_mode = settingFileSplitModeDefault,
-	.is_cooled_cam = settingIsCooledCamDefault
+	.is_cooled_camera_legacy_mode = settingIsCooledCameraLegacyModeDefault
 };
 
 struct measurement_settings settings_struct =

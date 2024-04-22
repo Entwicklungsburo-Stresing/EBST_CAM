@@ -109,7 +109,7 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingGpxOffsetPath, ui->spinBoxGpxOffset->value());
 	settings.setValue(settingIOCtrlImpactStartPixelPath, ui->spinBoxIOCtrlImpactStartPixel->value());
 	settings.setValue(settingsUseSoftwarePollingPath, ui->checkBoxUseSoftwarePolling->isChecked());
-	settings.setValue(settingIsCooledCamPath, ui->checkBoxIsCooledCam->isChecked());
+	settings.setValue(settingIsCooledCameraLegacyModePath, ui->checkBoxIsCooledCameraLegacyMode->isChecked());
 	settings.setValue(settingSensorResetLengthIn4nsPath, ui->spinBoxSensorResetLengthIn1ns->value() / 4);
 	//FFT mode
 	settings.setValue(settingLinesPath, ui->spinBoxLines->value());
@@ -390,7 +390,7 @@ void CameraSettingsWidget::loadDefaults()
 	ui->spinBoxGpxOffset->setValue(settingGpxOffsetDefault);
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settingIOCtrlImpactStartPixelDefault);
 	ui->checkBoxUseSoftwarePolling->setChecked(settingsUseSoftwarePollingDefault);
-	ui->checkBoxIsCooledCam->setChecked(settingIsCooledCamDefault);
+	ui->checkBoxIsCooledCameraLegacyMode->setChecked(settingIsCooledCameraLegacyModeDefault);
 	ui->spinBoxSensorResetLengthIn1ns->setValue(settingSensorResetLengthIn4nsDefault * 4);
 	//FFT mode
 	ui->spinBoxLines->setValue(settingLinesDefault);
@@ -697,7 +697,7 @@ void CameraSettingsWidget::initializeWidget()
 	ui->spinBoxGpxOffset->setValue(settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toDouble());
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toDouble());
 	ui->checkBoxUseSoftwarePolling->setChecked(settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool());
-	ui->checkBoxIsCooledCam->setChecked(settings.value(settingIsCooledCamPath, settingIsCooledCamDefault).toBool());
+	ui->checkBoxIsCooledCameraLegacyMode->setChecked(settings.value(settingIsCooledCameraLegacyModePath, settingIsCooledCameraLegacyModeDefault).toBool());
 	ui->spinBoxSensorResetLengthIn1ns->setValue(settings.value(settingSensorResetLengthIn4nsPath, settingSensorResetLengthIn4nsDefault).toDouble() * 4);
 	//FFT mode
 	ui->spinBoxLines->setValue(settings.value(settingLinesPath, settingLinesDefault).toDouble());

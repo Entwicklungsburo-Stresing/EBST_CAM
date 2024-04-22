@@ -199,7 +199,7 @@ void MainWindow::initSettings()
 		settings_struct.camera_settings[drvno].gpx_offset = settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toDouble();
 		settings_struct.camera_settings[drvno].ioctrl_impact_start_pixel = settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toDouble();
 		settings_struct.camera_settings[drvno].use_software_polling = settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool();
-		settings_struct.camera_settings[drvno].is_cooled_cam = settings.value(settingIsCooledCamPath, settingIsCooledCamDefault).toBool();
+		settings_struct.camera_settings[drvno].is_cooled_camera_legacy_mode = settings.value(settingIsCooledCameraLegacyModePath, settingIsCooledCameraLegacyModeDefault).toBool();
 		settings_struct.camera_settings[drvno].sensor_reset_length_in_4_ns = settings.value(settingSensorResetLengthIn4nsPath, settingSensorResetLengthIn4nsDefault).toDouble();
 		//fftmodes tab
 		settings_struct.camera_settings[drvno].fft_lines = settings.value(settingLinesPath, settingLinesDefault).toDouble();
@@ -531,7 +531,7 @@ void MainWindow::on_actionDAC_triggered()
  */
 void MainWindow::loadSettings()
 {
-	bool isCooledCam = false;
+	bool coolingOn = false;
 	bool isOvertempCam = false;
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -541,10 +541,12 @@ void MainWindow::loadSettings()
 		{
 			settings.beginGroup("board" + QString::number(drvno));
 			uint8_t tor = static_cast<uint8_t>(settings.value(settingTorPath, settingTorDefault).toDouble());
-			bool isCooledCamBoard = settings.value(settingIsCooledCamPath, settingIsCooledCamDefault).toBool();
+			bool coolingOnBoard = false;
+			if (settings.value(settingCoolingPath, settingCoolingDefault).toDouble() > 0)
+				coolingOnBoard = true;
 			int cameraSystem = settings.value(settingCameraSystemPath, settingCameraSystemDefault).toDouble();
 			if (cameraSystem == camera_system_3030) isOvertempCam = true;
-			isCooledCam |= isCooledCamBoard;
+			coolingOn |= coolingOnBoard;
 			settings.endGroup();
 			lsc.setTorOut(drvno, tor);
 		}
@@ -555,7 +557,7 @@ void MainWindow::loadSettings()
 	}
 	else
 	{
-		ui->widgetOvertempParent->setVisible(isCooledCam);
+		ui->widgetOvertempParent->setVisible(coolingOn);
 	}
 	int nos = settings.value(settingNosPath, settingNosDefault).toDouble();
 	ui->horizontalSliderSample->setMaximum(nos);

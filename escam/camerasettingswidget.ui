@@ -586,9 +586,9 @@
           </widget>
          </item>
          <item row="10" column="1">
-          <widget class="QLabel" name="labelIsCooledCam">
+          <widget class="QLabel" name="labelIsCooledCameraLegacyMode">
            <property name="text">
-            <string>cooled camera</string>
+            <string>cooled camera legacy mode</string>
            </property>
           </widget>
          </item>
@@ -835,7 +835,7 @@
           </widget>
          </item>
          <item row="10" column="2">
-          <widget class="QCheckBox" name="checkBoxIsCooledCam">
+          <widget class="QCheckBox" name="checkBoxIsCooledCameraLegacyMode">
            <property name="text">
             <string>on</string>
            </property>
