@@ -144,6 +144,9 @@
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>true</bool>
+           </property>
            <property name="suffix">
             <string>0ns</string>
            </property>
@@ -194,6 +197,9 @@
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>true</bool>
+           </property>
            <property name="suffix">
             <string>0ns</string>
            </property>
@@ -243,6 +249,9 @@
           <widget class="QDoubleSpinBox" name="doubleSpinBoxBecIn10ns">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>true</bool>
            </property>
            <property name="suffix">
             <string>0ns</string>
@@ -344,6 +353,9 @@
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>true</bool>
+           </property>
            <property name="suffix">
             <string>0ns</string>
            </property>
@@ -397,6 +409,9 @@
            <property name="correctionMode">
             <enum>QAbstractSpinBox::CorrectToPreviousValue</enum>
            </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>true</bool>
+           </property>
            <property name="suffix">
             <string>0ns</string>
            </property>
@@ -432,6 +447,9 @@
           <widget class="QDoubleSpinBox" name="doubleSpinBoxS1S2ReadDelayIn10ns">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>true</bool>
            </property>
            <property name="suffix">
             <string>0ns</string>
