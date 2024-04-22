@@ -121,7 +121,7 @@ enum camera_system_t
 };
 
 /**
- * Trigger mode for camera control shows the options for \ref camera_settings.trigger_mode_cc.
+ * Trigger mode for camera control shows the options for \ref camera_settings.trigger_mode_integrator.
  */
 enum trigger_mode_t
 {
