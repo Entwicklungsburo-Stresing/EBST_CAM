@@ -76,9 +76,9 @@ struct camera_settings
 	 */
 	uint32_t sec_in_10ns;
 	/**
-	 * Trigger mode of camera control. See enum \ref trigger_mode_t in enum_settings.h for options.
+	 * Trigger mode of the integrator in camera control. See enum \ref trigger_mode_t in enum_settings.h for options.
 	 */
-	uint32_t trigger_mode_cc;
+	uint32_t trigger_mode_integrator;
 	/**
 	 * Sensor type. See enum \ref sensor_type_t in enum_settings.h for options.
 	 */

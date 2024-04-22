@@ -186,9 +186,9 @@
           </spacer>
          </item>
          <item row="13" column="1">
-          <widget class="QLabel" name="labelTriggerModeCC">
+          <widget class="QLabel" name="labelTriggerModeIntegrator">
            <property name="text">
-            <string>trigger mode camera control</string>
+            <string>trigger mode integrator</string>
            </property>
           </widget>
          </item>
@@ -304,7 +304,7 @@
           </widget>
          </item>
          <item row="13" column="3">
-          <widget class="QComboBox" name="comboBoxTriggerModeCC">
+          <widget class="QComboBox" name="comboBoxTriggerModeIntegrator">
            <item>
             <property name="text">
              <string>XCK</string>
