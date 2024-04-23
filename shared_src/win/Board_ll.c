@@ -147,6 +147,7 @@ es_status_codes readRegister_16(uint32_t drvno, uint16_t* data, uint16_t address
 	if (status != es_no_error) return status;
 	WaitForSingleObject(registerReadWriteMutex[drvno], INFINITE);
 	volatile DWORD dwStatus = WDC_ReadAddrBlock(hDev[drvno], 0, address, sizeof(uint16_t), data, WDC_MODE_8, WDC_ADDR_RW_DEFAULT);
+	ReleaseMutex(registerReadWriteMutex[drvno]);
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ES_LOG("\nreadRegister_16 in address 0x%x failed\n", address);
