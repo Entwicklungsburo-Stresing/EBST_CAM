@@ -679,7 +679,7 @@ es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)
 es_status_codes InitMutex(uint32_t drvno)
 {
 	if (registerReadWriteMutex[drvno])
-		CloseHandle(ghMutex[drvno]);
+		CloseHandle(registerReadWriteMutex[drvno]);
 	registerReadWriteMutex[drvno] = CreateMutex(NULL, FALSE, NULL);
 	return es_no_error;
 }
