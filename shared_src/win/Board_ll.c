@@ -1134,7 +1134,7 @@ void WaitForAllInterruptsDone()
 }
 
 /**
- * \brief Display information about registers and settings in pop up windows..
+ * \brief Display information about registers and settings in pop up windows.
  * 
  * \return es_status_codes
  */
