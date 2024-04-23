@@ -29,8 +29,8 @@
 
 /**
  * \brief Set global settings struct.
- * 
- * Call this every time you changed settings before InitMeasurement. 
+ *
+ * Call this every time you changed settings before InitMeasurement.
  * \param settings struct measurement_settings
  */
 void SetGlobalSettings(struct measurement_settings settings)
@@ -40,7 +40,7 @@ void SetGlobalSettings(struct measurement_settings settings)
 
 /**
  * \brief Initialize measurement (using board select).
- * 
+ *
  * Call this every time you changed settings before starting the measurement. When you didn't change any settings, you can start the next measurement without calling InitMeasurement everytime.
  * \return es_status_codes:
  *		- es_invalid_driver_number
@@ -59,7 +59,7 @@ es_status_codes InitMeasurement()
 {
 	ES_LOG("\n*** Init Measurement ***\n");
 	ES_LOG("struct global_settings: ");
-	for (uint32_t i = 0; i < sizeof(settings_struct)/4; i++)
+	for (uint32_t i = 0; i < sizeof(settings_struct) / 4; i++)
 		ES_LOG("%u ", *(&settings_struct.board_sel + i));
 	ES_LOG("\n");
 	es_status_codes status = es_camera_not_found;
@@ -99,7 +99,7 @@ es_status_codes InitSoftware(uint32_t drvno)
 	es_status_codes status = allocateUserMemory(drvno);
 	if (status != es_no_error) return status;
 	uint32_t dmaBufferPartSizeInScans = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS; //500
-	if(dmaBufferPartSizeInScans)
+	if (dmaBufferPartSizeInScans)
 		numberOfInterrupts[drvno] = (*Nob * (*Nospb) * aCAMCNT[drvno]) / dmaBufferPartSizeInScans;
 	ES_LOG("Number of interrupts: %u \n", numberOfInterrupts[drvno]);
 	if (settings_struct.camera_settings[drvno].use_software_polling)
@@ -205,13 +205,13 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 
 /**
  * \brief Initialize camera registers.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
  *		- es_register_read_failed
- *		- es_camera_not_found 
+ *		- es_camera_not_found
  */
 es_status_codes InitCamera(uint32_t drvno)
 {
@@ -334,7 +334,7 @@ es_status_codes SetVfreqRegister(uint32_t drvno) // was vclk register
 	else
 		is_fft = 0;
 	uint16_t vfreqFPGA = (uint16_t)settings_struct.camera_settings[drvno].vfreq << 5; //multiplikation mit 32 damit FPGA vclks aehnlich lang wie die PCIe vclks sind
-	uint16_t vfreqRegsiter = (is_area_mode | (vfreqFPGA & 0x3FFF) << 1 | is_fft );
+	uint16_t vfreqRegsiter = (is_area_mode | (vfreqFPGA & 0x3FFF) << 1 | is_fft);
 	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclk, vfreqRegsiter);
 	return status;
 }
@@ -405,27 +405,27 @@ es_status_codes SetPixelCountRegister(uint32_t drvno)
 
 /**
  * \brief Clears DAT and EC.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \return es_status_codes 
+ * \return es_status_codes
  *		- es_no_error
  *		- es_register_write_failed
  */
 es_status_codes ClearAllUserRegs(uint32_t drvno)
 {
 	ES_LOG("Clear all user registers.\n");
-	es_status_codes status = writeRegisterS0_32( drvno, 0, S0Addr_BDAT );
+	es_status_codes status = writeRegisterS0_32(drvno, 0, S0Addr_BDAT);
 	if (status != es_no_error) return status;
-	status = writeRegisterS0_32( drvno, 0, S0Addr_BEC );
+	status = writeRegisterS0_32(drvno, 0, S0Addr_BEC);
 	if (status != es_no_error) return status;
-	status = writeRegisterS0_32( drvno, 0, S0Addr_SDAT );
+	status = writeRegisterS0_32(drvno, 0, S0Addr_SDAT);
 	if (status != es_no_error) return status;
-	return writeRegisterS0_32( drvno, 0, S0Addr_SEC );
+	return writeRegisterS0_32(drvno, 0, S0Addr_SEC);
 }
 
 /**
  * \brief Use this function to abort measurement.
- * 
+ *
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
@@ -452,9 +452,9 @@ es_status_codes AbortMeasurement()
 
 /**
  * \brief Sets abortMeasurementFlag to true.
- * 
+ *
  * Use this function if the measurement is running and you want to stop it.
- * 
+ *
  * \return es_no_error
  */
 es_status_codes SetAbortMeasurementFlag()
@@ -465,78 +465,78 @@ es_status_codes SetAbortMeasurementFlag()
 
 /**
  * \brief Sets BlockOn bit in PCIEFLAGS and notifies UI about it.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes setBlockOn( uint32_t drvno )
+es_status_codes setBlockOn(uint32_t drvno)
 {
 	ES_LOG("Set block on\n");
 	notifyBlockStart();
-	return setBitS0_32( drvno, PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS );
+	return setBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS);
 }
 
 /**
  * \brief Sets setMeasureOn bit in PCIEFLAGS and notifies UI about it.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes setMeasureOn( uint32_t drvno )
+es_status_codes setMeasureOn(uint32_t drvno)
 {
 	ES_LOG("Set measure on\n");
 	notifyMeasureStart();
-	return setBitS0_32( drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS );
+	return setBitS0_32(drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS);
 }
 
 /**
  * \brief Resets BlockOn bit in PCIEFLAGS and notifies UI about it.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes resetBlockOn( uint32_t drvno )
+es_status_codes resetBlockOn(uint32_t drvno)
 {
 	ES_LOG("Reset block on\n");
 	notifyBlockDone();
-	return resetBitS0_32( drvno, PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS );
+	return resetBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS);
 }
 
 /**
  * \brief Resets setMeasureOn bit in PCIEFLAGS and notifies UI about it.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes resetMeasureOn( uint32_t drvno )
+es_status_codes resetMeasureOn(uint32_t drvno)
 {
 	ES_LOG("Reset measure on\n");
 	notifyMeasureDone();
-	return resetBitS0_32( drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS );
+	return resetBitS0_32(drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS);
 }
 
 /**
- * \brief 
- * 
+ * \brief
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0.
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes ResetDma( uint32_t drvno )
+es_status_codes ResetDma(uint32_t drvno)
 {
 	ES_LOG("Reset DMA\n");
 	uint32_t BitMask = 0x1;
@@ -572,7 +572,7 @@ es_status_codes SetCamCountRegister(uint32_t drvno)
 
 /**
  * \brief Sets sensor type bits in register camera type
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param sensor_type Determines sensor type. See enum \ref sensor_type_t in enum_settings.h for options.
  * \return es_status_codes:
@@ -581,7 +581,7 @@ es_status_codes SetCamCountRegister(uint32_t drvno)
  *		- es_register_write_failed
  *		- es_parameter_out_of_range
  */
-es_status_codes SetSensorType( uint32_t drvno, uint16_t sensor_type )
+es_status_codes SetSensorType(uint32_t drvno, uint16_t sensor_type)
 {
 	ES_LOG("Setting sensor type: %u\n", sensor_type);
 	es_status_codes status;
@@ -610,7 +610,7 @@ es_status_codes SetCameraSystem(uint32_t drvno, uint16_t camera_system)
 
 /**
  * @brief Set specified bits to 1 in S0 register at memory address.
- * 
+ *
  * @param data 4 bytes (32 bits) data to write
  * @param bitmask Bitmask to select specific bits, which should be written. 0xFFFFFFFF - all bits 32 bits are written, 0 - no bits are written.
  * @param address Address of the register in S0 space.
@@ -620,7 +620,7 @@ es_status_codes SetCameraSystem(uint32_t drvno, uint16_t camera_system)
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes writeBitsS0_32( uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address  )
+es_status_codes writeBitsS0_32(uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address)
 {
 	return writeBitsDma_32(drvno, data, bitmask, address + S0_SPACE_OFFSET);
 }
@@ -654,7 +654,7 @@ es_status_codes writeBitsS0_32_allBoards(uint32_t board_sel, uint32_t data, uint
 
 /**
  * @brief Set specified bits to 1 in S0 register at memory address.
- * 
+ *
  * @param data 1 bytes (8 bits) data to write
  * @param bitmask Bitmask to select specific bits, which should be written. 0xFF - all bits 8 bits are written, 0 - no bits are written.
  * @param address Address of the register in S0 space.
@@ -664,7 +664,7 @@ es_status_codes writeBitsS0_32_allBoards(uint32_t board_sel, uint32_t data, uint
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes writeBitsS0_8( uint32_t drvno, uint8_t data, uint8_t bitmask, uint16_t address  )
+es_status_codes writeBitsS0_8(uint32_t drvno, uint8_t data, uint8_t bitmask, uint16_t address)
 {
 	return writeBitsDma_8(drvno, data, bitmask, address + S0_SPACE_OFFSET);
 }
@@ -781,7 +781,7 @@ es_status_codes resetBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t addres
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes writeRegisterS0_32( uint32_t drvno, uint32_t data, uint16_t address )
+es_status_codes writeRegisterS0_32(uint32_t drvno, uint32_t data, uint16_t address)
 {
 	return writeRegister_32(drvno, data, address + S0_SPACE_OFFSET);
 }
@@ -803,7 +803,7 @@ es_status_codes writeRegisterS0_32_allBoards(uint32_t board_sel, uint32_t data, 
 
 /**
  * \brief Write 4 bytes of a register.
- * 
+ *
  * \param board_sel select PCIe boards bitwise: bit 0 - board 0...
  * \param data 4 byte of data to write.
  * \param address Address of the register to write.
@@ -836,7 +836,7 @@ es_status_codes writeRegister_32_allBoards(uint32_t board_sel, uint32_t data, ui
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes writeRegisterS0_16( uint32_t drvno, uint16_t data, uint16_t address )
+es_status_codes writeRegisterS0_16(uint32_t drvno, uint16_t data, uint16_t address)
 {
 	return writeRegister_16(drvno, data, address + S0_SPACE_OFFSET);
 }
@@ -851,7 +851,7 @@ es_status_codes writeRegisterS0_16( uint32_t drvno, uint16_t data, uint16_t addr
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes writeRegisterS0_8( uint32_t drvno, uint8_t data, uint16_t address )
+es_status_codes writeRegisterS0_8(uint32_t drvno, uint8_t data, uint16_t address)
 {
 	return writeRegister_8(drvno, data, address + S0_SPACE_OFFSET);
 }
@@ -906,7 +906,7 @@ es_status_codes writeRegister_8_allBoards(uint32_t board_sel, uint8_t data, uint
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes readRegisterS0_32( uint32_t drvno, uint32_t* data, uint16_t address )
+es_status_codes readRegisterS0_32(uint32_t drvno, uint32_t* data, uint16_t address)
 {
 	return readRegister_32(drvno, data, address + S0_SPACE_OFFSET);
 }
@@ -961,14 +961,14 @@ es_status_codes readRegister_32_allBoards(uint32_t board_sel, uint32_t** data, u
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes readRegisterS0_16( uint32_t drvno, uint16_t* data, uint16_t address )
+es_status_codes readRegisterS0_16(uint32_t drvno, uint16_t* data, uint16_t address)
 {
 	return readRegister_16(drvno, data, address + S0_SPACE_OFFSET);
 }
 
 /**
  * \brief Read 1 byte of a register in S0 space.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param data Read buffer.
  * \param address Address of the register to read.
@@ -976,13 +976,13 @@ es_status_codes readRegisterS0_16( uint32_t drvno, uint16_t* data, uint16_t addr
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes readRegisterS0_8( uint32_t drvno, uint8_t* data, uint16_t address )
+es_status_codes readRegisterS0_8(uint32_t drvno, uint8_t* data, uint16_t address)
 {
 	return readRegister_8(drvno, data, address + S0_SPACE_OFFSET);
 }
 /**
  * \brief Read 1 bit of a 4 byte s0 register.
- * 
+ *
  * \param drvno identifier of PCIE card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param address Address of the register to read.
  * \param bitnumber Address of the bit to read.
@@ -1003,7 +1003,7 @@ es_status_codes ReadBitS0_32(uint32_t drvno, uint16_t address, uint8_t bitnumber
 
 /**
  * \brief Read 1 bit of 1 byte of a s0 register.
- * 
+ *
  * \param drvno identifier of PCIE card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param address Address of the register to read.
  * \param bitnumber Address of the bit to read.
@@ -1025,14 +1025,14 @@ es_status_codes ReadBitS0_8(uint32_t drvno, uint16_t address, uint8_t bitnumber,
 
 /**
  * \brief Open shutter for sensors with EC (exposure control) / sets IFC signal = high.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes OpenShutter( uint32_t drvno )
+es_status_codes OpenShutter(uint32_t drvno)
 {
 	ES_LOG("Open shutter\n");
 	return setBitS0_8(drvno, CTRLB_bitindex_SHON, S0Addr_CTRLB);
@@ -1040,7 +1040,7 @@ es_status_codes OpenShutter( uint32_t drvno )
 
 /**
  * \brief For FFTs: Setup full binning.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param lines Lines in camera.
  * \param vfreq Frequency for vertical clock.
@@ -1048,17 +1048,17 @@ es_status_codes OpenShutter( uint32_t drvno )
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes SetupFullBinning( uint32_t drvno, uint32_t lines, uint8_t vfreq )
+es_status_codes SetupFullBinning(uint32_t drvno, uint32_t lines, uint8_t vfreq)
 {
 	ES_LOG("Setup full binning\n");
-	es_status_codes status = SetupVCLKReg( drvno, lines, vfreq );
+	es_status_codes status = SetupVCLKReg(drvno, lines, vfreq);
 	if (status != es_no_error) return status;
-	return ResetPartialBinning( drvno );
+	return ResetPartialBinning(drvno);
 }
 
 /**
  * \brief Set REG VCLKCTRL for FFT sensors.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param lines number of vertical lines
  * \param vfreq vertical clock frequency
@@ -1066,12 +1066,12 @@ es_status_codes SetupFullBinning( uint32_t drvno, uint32_t lines, uint8_t vfreq 
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes SetupVCLKReg( uint32_t drvno, uint32_t lines, uint8_t vfreq )
+es_status_codes SetupVCLKReg(uint32_t drvno, uint32_t lines, uint8_t vfreq)
 {
-	ES_LOG( "Setup VCLK register. drvno: %u, lines: %u, vfreq: %u\n", drvno, lines, vfreq);
-	es_status_codes status = writeRegisterS0_32( drvno, lines * 2, S0Addr_VCLKCTRL );// write no of vclks=2*lines
+	ES_LOG("Setup VCLK register. drvno: %u, lines: %u, vfreq: %u\n", drvno, lines, vfreq);
+	es_status_codes status = writeRegisterS0_32(drvno, lines * 2, S0Addr_VCLKCTRL);// write no of vclks=2*lines
 	if (status != es_no_error) return status;
-	return writeRegisterS0_8( drvno, vfreq, S0Addr_VCLKFREQ );
+	return writeRegisterS0_8(drvno, vfreq, S0Addr_VCLKFREQ);
 }
 
 /**
@@ -1134,7 +1134,7 @@ es_status_codes SetupVPB(uint32_t drvno, uint32_t range, uint32_t lines, bool ke
  *		- es_register_read_failed
  * 		- es_register_write_failed
  */
-es_status_codes SetPartialBinning( uint32_t drvno, uint16_t number_of_regions )
+es_status_codes SetPartialBinning(uint32_t drvno, uint16_t number_of_regions)
 {
 	ES_LOG("Set partial binning\n");
 	es_status_codes status = writeRegisterS0_32(drvno, number_of_regions, S0Addr_ARREG);
@@ -1143,24 +1143,24 @@ es_status_codes SetPartialBinning( uint32_t drvno, uint16_t number_of_regions )
 }
 
 /**
- * \brief Turns 
+ * \brief Turns
  * ARREG off and therefore partial binning too.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_read_failed
  * 		- es_register_write_failed
  */
-es_status_codes ResetPartialBinning( uint32_t drvno )
+es_status_codes ResetPartialBinning(uint32_t drvno)
 {
 	ES_LOG("Reset partial binning\n");
-	return resetBitS0_32(drvno, 15, S0Addr_ARREG );
+	return resetBitS0_32(drvno, 15, S0Addr_ARREG);
 }
 
 /**
  * \brief Stop S Timer.
- * 
+ *
  * Clear Bit30 of XCK-Reg: 0= timer off
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes:
@@ -1168,7 +1168,7 @@ es_status_codes ResetPartialBinning( uint32_t drvno )
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes StopSTimer( uint32_t drvno )
+es_status_codes StopSTimer(uint32_t drvno)
 {
 	ES_LOG("Stop S Timer\n");
 	return resetBitS0_8(drvno, XCKMSB_bitindex_stimer_on, S0Addr_XCKMSB);
@@ -1176,14 +1176,14 @@ es_status_codes StopSTimer( uint32_t drvno )
 
 /**
  * \brief reset FIFO and FFcounter
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes RSFifo( uint32_t drvno )
+es_status_codes RSFifo(uint32_t drvno)
 {
 	ES_LOG("Reset FIFO\n");
 	es_status_codes status = setBitS0_8(drvno, FFCTRL_bitindex_RSFIFO, S0Addr_FFCTRL);
@@ -1193,28 +1193,28 @@ es_status_codes RSFifo( uint32_t drvno )
 
 /**
  * Allocate user memory.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes
  *		- es_no_error
  *		- es_allocating_memory_failed
  *		- es_not_enough_ram
  */
-es_status_codes allocateUserMemory( uint32_t drvno )
+es_status_codes allocateUserMemory(uint32_t drvno)
 {
 	//free old memory before allocating new one
-	free( userBuffer[drvno] );
+	free(userBuffer[drvno]);
 	uint64_t memory_all = 0;
 	uint64_t memory_free = 0;
-	FreeMemInfo( &memory_all, &memory_free );
+	FreeMemInfo(&memory_all, &memory_free);
 	uint64_t memory_free_mb = memory_free / (1024 * 1024);
-	uint64_t needed_mem = (uint64_t)aCAMCNT[drvno] * (uint64_t)(*Nob) * (uint64_t)(*Nospb) * (uint64_t)aPIXEL[drvno] * (uint64_t)sizeof( uint16_t );
+	uint64_t needed_mem = (uint64_t)aCAMCNT[drvno] * (uint64_t)(*Nob) * (uint64_t)(*Nospb) * (uint64_t)aPIXEL[drvno] * (uint64_t)sizeof(uint16_t);
 	uint64_t needed_mem_mb = needed_mem / (1024 * 1024);
-	ES_LOG( "Allocate user memory, available memory:%ld MB, memory needed: %ld MB (%ld)\n", memory_free_mb, needed_mem_mb, needed_mem );
+	ES_LOG("Allocate user memory, available memory:%ld MB, memory needed: %ld MB (%ld)\n", memory_free_mb, needed_mem_mb, needed_mem);
 	//check if enough space is available in the physical ram
 	if (memory_free > (uint64_t)needed_mem)
 	{
-		uint16_t* userBufferTemp = (uint16_t*) calloc( needed_mem, 1 );
+		uint16_t* userBufferTemp = (uint16_t*)calloc(needed_mem, 1);
 		if (userBufferTemp)
 		{
 			userBufferEndPtr[drvno] = userBufferTemp + needed_mem / sizeof(uint16_t);
@@ -1226,20 +1226,20 @@ es_status_codes allocateUserMemory( uint32_t drvno )
 		}
 		else
 		{
-			ES_LOG( "Allocating user memory failed.\n" );
+			ES_LOG("Allocating user memory failed.\n");
 			return es_allocating_memory_failed;
 		}
 	}
 	else
 	{
-		ES_LOG( "ERROR for buffer %d: available memory: %ld MB \n \tmemory needed: %ld MB\n", number_of_boards, memory_free_mb, needed_mem_mb );
+		ES_LOG("ERROR for buffer %d: available memory: %ld MB \n \tmemory needed: %ld MB\n", number_of_boards, memory_free_mb, needed_mem_mb);
 		return es_not_enough_ram;
 	}
 }
 
 /**
  * \brief Set DMA register
- * 
+ *
  * Sets DMA_BUFFER_SIZE_IN_SCANS, DMA_DMASPERINTR, NOS, NOB, CAMCNT
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes
@@ -1247,7 +1247,7 @@ es_status_codes allocateUserMemory( uint32_t drvno )
  * 		- es_register_read_failed
  * 		- es_register_write_failed
  */
-es_status_codes SetDMABufRegs( uint32_t drvno )
+es_status_codes SetDMABufRegs(uint32_t drvno)
 {
 	ES_LOG("Set DMA buffer registers, ");
 	//DMABufSizeInScans - use 1 block
@@ -1258,7 +1258,7 @@ es_status_codes SetDMABufRegs( uint32_t drvno )
 	uint32_t dmasPerInterrupt = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
 	status = writeBitsS0_32(drvno, dmasPerInterrupt, 0xffffffff, S0Addr_DMAsPerIntr);
 	if (status != es_no_error) return status;
-	ES_LOG( "scansPerInterrupt/camcnt: %u \n", dmasPerInterrupt / aCAMCNT[drvno] );
+	ES_LOG("scansPerInterrupt/camcnt: %u \n", dmasPerInterrupt / aCAMCNT[drvno]);
 	return status;
 }
 
@@ -1276,14 +1276,14 @@ es_status_codes SetNobRegister(uint32_t drvno)
 
 /**
  * \brief Sets the IFC bit of interface for sensors with shutter function. IFC=low
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes CloseShutter( uint32_t drvno )
+es_status_codes CloseShutter(uint32_t drvno)
 {
 	ES_LOG("Close shutter\n");
 	return resetBitS0_8(drvno, CTRLB_bitindex_SHON, S0Addr_CTRLB);
@@ -1291,7 +1291,7 @@ es_status_codes CloseShutter( uint32_t drvno )
 
 /**
  * \brief Exposure control (EC) signal is used for mechanical shutter or sensors with EC function.
- * 
+ *
  * Starts after delay after trigger (DAT) signal and is active for ecin10ns.
  * Resets additional delay after trigger with ecin10ns = 0.
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
@@ -1301,7 +1301,7 @@ es_status_codes CloseShutter( uint32_t drvno )
  *		- es_register_read_failed
  * 		- es_register_write_failed
  */
-es_status_codes SetSEC( uint32_t drvno, uint32_t ecin10ns)
+es_status_codes SetSEC(uint32_t drvno, uint32_t ecin10ns)
 {
 	ES_LOG("Set SEC. EC in 10 ns: %u\n", ecin10ns);
 	return writeRegisterS0_32(drvno, ecin10ns, S0Addr_SEC);
@@ -1309,7 +1309,7 @@ es_status_codes SetSEC( uint32_t drvno, uint32_t ecin10ns)
 
 /**
  * \brief Set signal of output port of PCIe card.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param tor select output signal. See enum tor_out in enum.h for options.
  * \return es_status_codes:
@@ -1317,7 +1317,7 @@ es_status_codes SetSEC( uint32_t drvno, uint32_t ecin10ns)
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes SetTORReg( uint32_t drvno, uint8_t tor )
+es_status_codes SetTORReg(uint32_t drvno, uint8_t tor)
 {
 	ES_LOG("Set TOR: %u\n", tor);
 	// TOR register layout:
@@ -1354,19 +1354,19 @@ es_status_codes SetSSlope(uint32_t drvno, uint32_t sslope)
 	es_status_codes status = es_no_error;
 	switch (sslope)
 	{
-	// high slope
+		// high slope
 	case sslope_pos:
 		status = setBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
 		if (status != es_no_error) return status;
 		status = resetBitS0_32(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
 		break;
-	// low slope
+		// low slope
 	case sslope_neg:
 		status = resetBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
 		if (status != es_no_error) return status;
 		status = resetBitS0_32(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
 		break;
-	// both slope
+		// both slope
 	case sslope_both:
 		status = setBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
 		if (status != es_no_error) return status;
@@ -1380,7 +1380,7 @@ es_status_codes SetSSlope(uint32_t drvno, uint32_t sslope)
 
 /**
  * \brief Sets slope for block trigger.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param slope:
  *		- 0: negative slope
@@ -1390,10 +1390,10 @@ es_status_codes SetSSlope(uint32_t drvno, uint32_t sslope)
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes SetBSlope( uint32_t drvno, uint32_t slope )
+es_status_codes SetBSlope(uint32_t drvno, uint32_t slope)
 {
 	ES_LOG("Set BSlope: %u\n", slope);
-	return writeRegisterS0_32( drvno, slope, S0Addr_BSLOPE );
+	return writeRegisterS0_32(drvno, slope, S0Addr_BSLOPE);
 }
 
 /**
@@ -1411,10 +1411,10 @@ es_status_codes SetBSlope( uint32_t drvno, uint32_t slope )
 * 	- es_register_read_failed
 * 	- es_register_write_failed
 */
-es_status_codes SetSTI( uint32_t drvno, uint8_t sti_mode )
+es_status_codes SetSTI(uint32_t drvno, uint8_t sti_mode)
 {
 	ES_LOG("Set STI: %u\n", sti_mode);
-	return writeBitsS0_8( drvno, sti_mode, CTRLB_bit_STI0 | CTRLB_bit_STI1 | CTRLB_bit_STI2, S0Addr_CTRLB );
+	return writeBitsS0_8(drvno, sti_mode, CTRLB_bit_STI0 | CTRLB_bit_STI1 | CTRLB_bit_STI2, S0Addr_CTRLB);
 }
 
 /**
@@ -1434,15 +1434,15 @@ es_status_codes SetSTI( uint32_t drvno, uint8_t sti_mode )
 * 	- es_register_read_failed
 * 	- es_register_write_failed
 */
-es_status_codes SetBTI( uint32_t drvno, uint8_t bti_mode )
+es_status_codes SetBTI(uint32_t drvno, uint8_t bti_mode)
 {
 	ES_LOG("Set BTI: %u\n", bti_mode);
-	return writeBitsS0_8( drvno, (uint8_t)(bti_mode << CTRLB_bitindex_BTI0), CTRLB_bit_BTI0 | CTRLB_bit_BTI1 | CTRLB_bit_BTI2, S0Addr_CTRLB );
+	return writeBitsS0_8(drvno, (uint8_t)(bti_mode << CTRLB_bitindex_BTI0), CTRLB_bit_BTI0 | CTRLB_bit_BTI1 | CTRLB_bit_BTI2, S0Addr_CTRLB);
 }
 
 /**
  * \brief Sets time for scan timer.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param stime_in_microseconds Scan time in microseconds, 28 bit. Min: 1 us, Max: 268.435.455 us = 268,435.455 s
  * \return es_status_codes:
@@ -1450,7 +1450,7 @@ es_status_codes SetBTI( uint32_t drvno, uint8_t bti_mode )
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes SetSTimer( uint32_t drvno, uint32_t stime_in_microseconds )
+es_status_codes SetSTimer(uint32_t drvno, uint32_t stime_in_microseconds)
 {
 	ES_LOG("Set stime in microseconds: %u\n", stime_in_microseconds);
 	// There is an unimplemented feature for STimer to adjust the resolution of the counter. See register XCK in manual.
@@ -1464,28 +1464,28 @@ es_status_codes SetSTimer( uint32_t drvno, uint32_t stime_in_microseconds )
 
 /**
  * \brief Sets time for block timer.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param btime_in_microseconds Block time in microseconds, 28 bit. Min: 1 us, Max: 268.435.455 us = 268,435.455 s
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes SetBTimer( uint32_t drvno, uint32_t btime_in_microseconds )
+es_status_codes SetBTimer(uint32_t drvno, uint32_t btime_in_microseconds)
 {
 	ES_LOG("Set btime in microseconds: %u\n", btime_in_microseconds);
 	if (btime_in_microseconds)
 	{
 		uint32_t data = btime_in_microseconds | 0x80000000;
-		return writeRegisterS0_32( drvno, data, S0Addr_BTIMER );
+		return writeRegisterS0_32(drvno, data, S0Addr_BTIMER);
 	}
 	else
-		return writeRegisterS0_32( drvno, 0, S0Addr_BTIMER );
+		return writeRegisterS0_32(drvno, 0, S0Addr_BTIMER);
 }
 
 /**
  * \brief Initialize the TDC-GPX chip. TDC: time delay counter option.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param delay GPX offset is used to increase accuracy. A counter value can be added, usually 1000.
  * \return es_status_codes:
@@ -1494,7 +1494,7 @@ es_status_codes SetBTimer( uint32_t drvno, uint32_t btime_in_microseconds )
  *		- es_register_write_failed
  * register dump with _AboutGPX() but with error status
  */
-es_status_codes InitGPX( uint32_t drvno, uint32_t delay )
+es_status_codes InitGPX(uint32_t drvno, uint32_t delay)
 {
 	ES_LOG("Init GPX, delay: %u\n", delay);
 	uint32_t regData, err_cnt = 0;
@@ -1518,22 +1518,22 @@ es_status_codes InitGPX( uint32_t drvno, uint32_t delay )
 	};
 	// setup GPX chip for mode M
 	//reset GPX  ´bit0 in GPXCTRL reg
-	es_status_codes status = readRegisterS0_32( drvno, &regData, S0Addr_TDCCtrl );
+	es_status_codes status = readRegisterS0_32(drvno, &regData, S0Addr_TDCCtrl);
 	if (status != es_no_error) return status;
 	regData |= TDCCtrl_bit_reset;
-	status = writeRegisterS0_32( drvno, regData, S0Addr_TDCCtrl );
+	status = writeRegisterS0_32(drvno, regData, S0Addr_TDCCtrl);
 	if (status != es_no_error) return status;
 	regData &= ~TDCCtrl_bit_reset;
-	status = writeRegisterS0_32( drvno, regData, S0Addr_TDCCtrl ); //reset bit
+	status = writeRegisterS0_32(drvno, regData, S0Addr_TDCCtrl); //reset bit
 	if (status != es_no_error) return status;
 	//setup R mode -> time between start and stop
-	status = SetGPXCtrl( drvno, 5, regVal ); // write to reg5: 82000000 retrigger, disable after start-> reduce to 1 val
+	status = SetGPXCtrl(drvno, 5, regVal); // write to reg5: 82000000 retrigger, disable after start-> reduce to 1 val
 	if (status != es_no_error) return status;
 	for (int write_reg = 0; write_reg < 12; write_reg++)
 	{
-		status = SetGPXCtrl( drvno, (uint8_t)RegData[write_reg][0], RegData[write_reg][1] );//write
+		status = SetGPXCtrl(drvno, (uint8_t)RegData[write_reg][0], RegData[write_reg][1]);//write
 		if (status != es_no_error) return status;
-		status = ReadGPXCtrl( drvno, (uint8_t)RegData[write_reg][0], &regData );//read
+		status = ReadGPXCtrl(drvno, (uint8_t)RegData[write_reg][0], &regData);//read
 		if (RegData[write_reg][1] != regData) err_cnt++;//compare write data with read data
 	}
 	return status;
@@ -1541,7 +1541,7 @@ es_status_codes InitGPX( uint32_t drvno, uint32_t delay )
 
 /**
  * \brief Set GPXCtrl register.
- * 
+ *
  * \param drvno select PCIe board
  * \param GPXAddress address to access
  * \param GPXData data to write
@@ -1550,7 +1550,7 @@ es_status_codes InitGPX( uint32_t drvno, uint32_t delay )
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes SetGPXCtrl( uint32_t drvno, uint8_t GPXAddress, uint32_t GPXData )
+es_status_codes SetGPXCtrl(uint32_t drvno, uint8_t GPXAddress, uint32_t GPXData)
 {
 	uint32_t data = 0;
 	//shift gpx addr to the right place for the gpx ctrl reg
@@ -1558,12 +1558,12 @@ es_status_codes SetGPXCtrl( uint32_t drvno, uint8_t GPXAddress, uint32_t GPXData
 	uint32_t bitmask = TDCCtrl_bit_cs | TDCCtrl_bit_adr0 | TDCCtrl_bit_adr1 | TDCCtrl_bit_adr2 | TDCCtrl_bit_adr3;
 	es_status_codes status = writeBitsS0_32(drvno, data, bitmask, S0Addr_TDCCtrl);
 	if (status != es_no_error) return status;
-	return writeRegisterS0_32( drvno, GPXData, S0Addr_TDCData );
+	return writeRegisterS0_32(drvno, GPXData, S0Addr_TDCData);
 }
 
 /**
  * \brief Read GPXCtrl register.
- * 
+ *
  * \param drvno select PCIe board
  * \param GPXAddress address to access
  * \param GPXData pointer where read data is written to
@@ -1572,7 +1572,7 @@ es_status_codes SetGPXCtrl( uint32_t drvno, uint8_t GPXAddress, uint32_t GPXData
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes ReadGPXCtrl( uint32_t drvno, uint8_t GPXAddress, uint32_t* GPXData )
+es_status_codes ReadGPXCtrl(uint32_t drvno, uint8_t GPXAddress, uint32_t* GPXData)
 {
 	uint32_t data = 0;
 	//shift gpx addr to the right place for the gpx ctrl reg
@@ -1582,12 +1582,12 @@ es_status_codes ReadGPXCtrl( uint32_t drvno, uint8_t GPXAddress, uint32_t* GPXDa
 	uint32_t bitmask = TDCCtrl_bit_cs | TDCCtrl_bit_adr0 | TDCCtrl_bit_adr1 | TDCCtrl_bit_adr2 | TDCCtrl_bit_adr3;
 	es_status_codes status = writeBitsS0_32(drvno, data, bitmask, S0Addr_TDCCtrl);
 	if (status != es_no_error) return status;
-	return readRegisterS0_32( drvno, GPXData, S0Addr_TDCData );
+	return readRegisterS0_32(drvno, GPXData, S0Addr_TDCData);
 }
 
 /**
  * \brief Sets delay after trigger hardware register.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param datin10ns Time in 10 ns steps. 31 bit.
  *		* disable: 0
@@ -1597,7 +1597,7 @@ es_status_codes ReadGPXCtrl( uint32_t drvno, uint8_t GPXAddress, uint32_t* GPXDa
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes SetSDAT( uint32_t drvno, uint32_t datin10ns )
+es_status_codes SetSDAT(uint32_t drvno, uint32_t datin10ns)
 {
 	ES_LOG("Set SDAT in 10ns: %u\n", datin10ns);
 	if (datin10ns)
@@ -1610,7 +1610,7 @@ es_status_codes SetSDAT( uint32_t drvno, uint32_t datin10ns )
 
 /**
  * \brief Sets delay after trigger hardware register.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param datin10ns Time in 10 ns steps. 31 bit.
  *		* disable: 0
@@ -1620,7 +1620,7 @@ es_status_codes SetSDAT( uint32_t drvno, uint32_t datin10ns )
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes SetBDAT( uint32_t drvno, uint32_t datin10ns )
+es_status_codes SetBDAT(uint32_t drvno, uint32_t datin10ns)
 {
 	ES_LOG("Set BDAT in 10ns: %u\n", datin10ns);
 	if (datin10ns)
@@ -1633,7 +1633,7 @@ es_status_codes SetBDAT( uint32_t drvno, uint32_t datin10ns )
 
 /**
  * \brief Protects ENFFW from cool cam status transmission. Enable with cool cam, disable with HS > 50 kHz.
- * 
+ *
  * Legacy code for old cameras.
  * RX_VALID usually triggers ENFFW. This must be disabled when cool cams transmit their cooling status.
  * RX_VALID_EN is enabled with XCKI and disabled with ~CAMFFXCK_ALL, after all frame data is collected.
@@ -1645,17 +1645,17 @@ es_status_codes SetBDAT( uint32_t drvno, uint32_t datin10ns )
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes Use_ENFFW_protection( uint32_t drvno, bool USE_ENFFW_PROTECT )
+es_status_codes Use_ENFFW_protection(uint32_t drvno, bool USE_ENFFW_PROTECT)
 {
 	if (USE_ENFFW_PROTECT)
-		return setBitS0_32( drvno, PCIEFLAGS_bitindex_USE_ENFFW_PROTECT, S0Addr_PCIEFLAGS );
+		return setBitS0_32(drvno, PCIEFLAGS_bitindex_USE_ENFFW_PROTECT, S0Addr_PCIEFLAGS);
 	else
-		return resetBitS0_32( drvno, PCIEFLAGS_bitindex_USE_ENFFW_PROTECT, S0Addr_PCIEFLAGS );
+		return resetBitS0_32(drvno, PCIEFLAGS_bitindex_USE_ENFFW_PROTECT, S0Addr_PCIEFLAGS);
 }
 
 /**
  * \brief Sends data via fiber link, e.g. used for sending data to ADC (ADS5294).
- * 
+ *
  * Send setup:
  * - d0:d15 = data for AD-Reg  ADS5294
  * - d16:d23 = ADR of  AD-Reg
@@ -1674,7 +1674,7 @@ es_status_codes Use_ENFFW_protection( uint32_t drvno, bool USE_ENFFW_PROTECT )
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes SendFLCAM( uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16_t data )
+es_status_codes SendFLCAM(uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16_t data)
 {
 	ES_TRACE("SendFLCAM(): maddr 0x%x, adaddr: 0x%x, data 0x%x (%u)\n", maddr, adaddr, data, data);
 	es_status_codes status = FindCam(drvno);
@@ -1685,7 +1685,7 @@ es_status_codes SendFLCAM( uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16
 	ldata |= adaddr;
 	ldata = ldata << 16;
 	ldata |= data;
-	status = writeRegisterS0_32( drvno, ldata, S0Addr_DBR );
+	status = writeRegisterS0_32(drvno, ldata, S0Addr_DBR);
 	if (status != es_no_error) return status;
 	WaitforTelapsed(500);
 	//load val
@@ -1700,23 +1700,23 @@ es_status_codes SendFLCAM( uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16
 
 /**
  * \brief Init routine for Camera System 3001.
- * 
+ *
  * 	Sets register in camera.
  * \param drvno selects PCIe board
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes InitCamera3001( uint32_t drvno )
+es_status_codes InitCamera3001(uint32_t drvno)
 {
-	(void) drvno;
+	(void)drvno;
 	ES_LOG("Init camera 3001\n");
 	return es_no_error;
 }
 
 /**
  * \brief Init routine for Camera System 3010.
- * 
+ *
  * 	Sets registers in camera and ADC LTC2271.
  * 	FL3010 is intended for sensor S12198 !
  * 	with frame rate 8kHz = min. 125µs exp time
@@ -1727,17 +1727,17 @@ es_status_codes InitCamera3001( uint32_t drvno )
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern )
+es_status_codes InitCamera3010(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern)
 {
 	ES_LOG("Init camera 3010, adc_mode: %u, custom_pattern: %u\n", adc_mode, custom_pattern);
-	es_status_codes status = Cam3010_ADC_reset( drvno );
+	es_status_codes status = Cam3010_ADC_reset(drvno);
 	if (status != es_no_error) return status;
 	return Cam3010_ADC_setOutputMode(drvno, adc_mode, custom_pattern);
 }
 
 /**
  * \brief ADC reset routine for Camera System 3010.
- * 
+ *
  * 	ADC LTC2271 needs a reset via SPI first. Bit D7
  * 	of the reset register A0 with address 00h is set to 1.
  * 	D6:D0 are don't care. So address is 00h and data is
@@ -1752,14 +1752,14 @@ es_status_codes InitCamera3010( uint32_t drvno, uint8_t adc_mode, uint16_t custo
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes Cam3010_ADC_reset( uint32_t drvno )
+es_status_codes Cam3010_ADC_reset(uint32_t drvno)
 {
 	ES_LOG("Camera 3010 ADC reset\n");
-	return SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_reset, adc_ltc2271_msg_reset );
+	return SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_reset, adc_ltc2271_msg_reset);
 }
 
 /**
- * \brief 
+ * \brief
  * \param drvno selects PCIe board
  * \param adc_mode
  * \param custom_pattern
@@ -1798,7 +1798,7 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
 
 	uint8_t  highByte = custom_pattern >> 8;
 	uint8_t  lowByte = custom_pattern & 0x00FF;
-	
+
 	status = SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_msb, highByte);
 	if (status != es_no_error) return status;
 	status = SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_lsb, lowByte);
@@ -1809,7 +1809,7 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
 
 /**
  * \brief Init routine for Camera System 3030.
- * 
+ *
  * 	Sets registers in ADC ADS5294.
  * \param drvno selects PCIe board
  * \return es_status_codes:
@@ -1848,7 +1848,7 @@ es_status_codes InitCamera3030(uint32_t drvno)
 
 /**
  * \brief ADC reset routine for Camera System 3030.
- * 
+ *
  * 	Resets register of ADC ADS5294 to default state (output interface is 1 wire!).
  * 	Called by InitCamera3030
  * \param drvno selects PCIe board
@@ -1858,14 +1858,14 @@ es_status_codes InitCamera3030(uint32_t drvno)
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes Cam3030_ADC_reset( uint32_t drvno )
+es_status_codes Cam3030_ADC_reset(uint32_t drvno)
 {
-	return SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_reset, adc_ads5294_msg_reset );
+	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_reset, adc_ads5294_msg_reset);
 }
 
 /**
  * \brief ADC output interface config routine for Camera System 3030.
- * 
+ *
  * 	Enables two wire LVDS data transfer mode of ADC ADS5294.
  * 	Only works with PAL versions P209_2 and above.
  * 	Called by InitCamera3030 - comment for older versions and rebuild
@@ -1877,18 +1877,18 @@ es_status_codes Cam3030_ADC_reset( uint32_t drvno )
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes Cam3030_ADC_twoWireModeEN( uint32_t drvno )
+es_status_codes Cam3030_ADC_twoWireModeEN(uint32_t drvno)
 {
-	es_status_codes status = SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_2wireMode, adc_ads5294_msg_2wireMode );
+	es_status_codes status = SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_2wireMode, adc_ads5294_msg_2wireMode);
 	if (status != es_no_error) return status;
-	status = SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_wordWiseOutput, adc_ads5294_msg_wordWiseOutput );
+	status = SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_wordWiseOutput, adc_ads5294_msg_wordWiseOutput);
 	if (status != es_no_error) return status;
-	return SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_ddrClkAlign, adc_ads5294_msg_ddrClkAlign );
+	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_ddrClkAlign, adc_ads5294_msg_ddrClkAlign);
 }
 
 /**
  * \brief ADC gain config routine for Camera System 3030.
- * 
+ *
  * 	Sets gain of ADC ADS5294 0...15 by calling SetADGain() subroutine.
  * 	Called by InitCamera3030
  * \param drvno selects PCIe board
@@ -1897,14 +1897,14 @@ es_status_codes Cam3030_ADC_twoWireModeEN( uint32_t drvno )
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes Cam3030_ADC_SetGain( uint32_t drvno, uint8_t gain )
+es_status_codes Cam3030_ADC_SetGain(uint32_t drvno, uint8_t gain)
 {
-	return SetADGain( drvno, 1, gain, gain, gain, gain, gain, gain, gain, gain );
+	return SetADGain(drvno, 1, gain, gain, gain, gain, gain, gain, gain, gain);
 }
 
 /**
  * \brief Set gain for ADS5294.
- * 
+ *
  * \param fkt =0 reset to db=0, fkt=1 set to g1..g8
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param g1 channel 1
@@ -1921,7 +1921,7 @@ es_status_codes Cam3030_ADC_SetGain( uint32_t drvno, uint8_t gain )
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes SetADGain( uint32_t drvno, uint8_t fkt, uint8_t g1, uint8_t g2, uint8_t g3, uint8_t g4, uint8_t g5, uint8_t g6, uint8_t g7, uint8_t g8 )
+es_status_codes SetADGain(uint32_t drvno, uint8_t fkt, uint8_t g1, uint8_t g2, uint8_t g3, uint8_t g4, uint8_t g5, uint8_t g6, uint8_t g7, uint8_t g8)
 {
 	uint16_t data = 0;
 	uint8_t a, b, c, d, e, f, g, h;
@@ -1951,7 +1951,7 @@ es_status_codes SetADGain( uint32_t drvno, uint8_t fkt, uint8_t g1, uint8_t g2, 
 	data |= b;
 	data = (uint16_t)(data << 4);
 	data |= f;
-	es_status_codes status = SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_gain_1_to_4, data );	//gain1..4
+	es_status_codes status = SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_gain_1_to_4, data);	//gain1..4
 	if (status != es_no_error) return status;
 	data = h;
 	data = (uint16_t)(data << 4);
@@ -1960,12 +1960,12 @@ es_status_codes SetADGain( uint32_t drvno, uint8_t fkt, uint8_t g1, uint8_t g2, 
 	data |= g;
 	data = (uint16_t)(data << 4);
 	data |= c;
-	return SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_gain_5_to_8, data );	//gain7..8
+	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_gain_5_to_8, data);	//gain7..8
 }
 
 /**
  * \brief ADC debug mode for Camera System 3030.
- * 
+ *
  * Lets ADC send a ramp or a custom pattern (value) instead of ADC sample data.
  * Called by InitCamera3030 when adc_mode > 0.
  * \param drvno selects PCIe board
@@ -1977,21 +1977,21 @@ es_status_codes SetADGain( uint32_t drvno, uint8_t fkt, uint8_t g1, uint8_t g2, 
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes Cam3030_ADC_RampOrPattern( uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern )
+es_status_codes Cam3030_ADC_RampOrPattern(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern)
 {
 	es_status_codes status = es_no_error;
 	switch (adc_mode)
 	{
 	case 1: //ramp
-		status = SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_ramp );
+		status = SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_ramp);
 		break;
 	case 2: //custom pattern
 		//to activate custom pattern the following messages are necessary: d - data
 		//at address 0x25 (mode and higher bits): 0b00000000000100dd
-		status = SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_custompattern | ((custom_pattern >> 12) & 0x3) );
+		status = SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_custompattern | ((custom_pattern >> 12) & 0x3));
 		if (status != es_no_error) return status;
 		//at address 0x26 (lower bits): 0bdddddddddddd0000
-		status = SendFLCAM( drvno, maddr_adc, adc_ads5294_regaddr_custompattern, (uint16_t)(custom_pattern << 4) );
+		status = SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_custompattern, (uint16_t)(custom_pattern << 4));
 		break;
 	default:
 		break;
@@ -2004,7 +2004,7 @@ es_status_codes Cam3030_ADC_RampOrPattern( uint32_t drvno, uint8_t adc_mode, uin
  *
  * Global enable must be set to true, if you want to use at least one filter. Filters can be enabled / disabled separately by Cam3030_ADC_SetFilter(). When the global filter enable is true, all channels are either passed through the filter or through a dummy delay so that the overall latency of all channels is 20 clock cycles.
  * \param drvno selects PCIe board
- * \param enable true: 
+ * \param enable true:
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
@@ -2047,12 +2047,12 @@ es_status_codes Cam3030_ADC_SetFilterSettings(uint32_t drvno, uint8_t channel, u
 	ES_TRACE("Cam3030_ADC_SetFilterSettings(), setting channel %u, coeff_set %u, decimation_factor %u, odd_tap %u, use_filter %u, hpf_corner %u, en_hpf %u\n", channel, coeff_set, decimation_factor, odd_tap, use_filter, hpf_corner, en_hpf);
 	uint16_t payload = (use_filter & 1) | (odd_tap & 1) << 2 | (decimation_factor & 7) << 4 | (coeff_set & 7) << 7 | (hpf_corner & 7) << 10 | (en_hpf & 1) << 14;
 	if (channel > 8 || channel < 1) return es_parameter_out_of_range;
-	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_filter1 + channel - 1 , payload);
+	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_filter1 + channel - 1, payload);
 }
 
 /**
  * .
- * 
+ *
  * \param drvno selects PCIe board
  * \param channel 1...8
  * \param coefficient_number 0...11
@@ -2208,7 +2208,7 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 			if (status != es_no_error) return status;
 			for (uint8_t coefficient = 0; coefficient < number_of_coefficients; coefficient++)
 			{
-				if(coefficient >= number_of_coefficients - active_coefficients)
+				if (coefficient >= number_of_coefficients - active_coefficients)
 					status = Cam3030_ADC_SetFilterCustomCoefficient(drvno, channel, coefficient, enable, coefficient_value);
 				else
 					status = Cam3030_ADC_SetFilterCustomCoefficient(drvno, channel, coefficient, enable, 0);
@@ -2226,7 +2226,7 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 
 /**
  * \brief Sets the sensor reset length register in the camera, which controls the length of the ARG pulse.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param sensor_reset_length_in_8_ns value * 8ns = sensor reset length. range: 0ns ... 524280ns = 524.28us
  * \return es_status_codes:
@@ -2237,13 +2237,13 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
  */
 es_status_codes Cam_SetSensorResetLength(uint32_t drvno, uint16_t sensor_reset_length_in_4_ns)
 {
-	ES_LOG("Cam_SetSensorResetLength(), setting sensor reset length to %u (%u ns)\n", sensor_reset_length_in_4_ns, sensor_reset_length_in_4_ns * 4 );
+	ES_LOG("Cam_SetSensorResetLength(), setting sensor reset length to %u (%u ns)\n", sensor_reset_length_in_4_ns, sensor_reset_length_in_4_ns * 4);
 	return SendFLCAM(drvno, maddr_cam, cam_adaddr_sensor_reset_length_in_4_ns, sensor_reset_length_in_4_ns);
 }
 
 /**
  * \brief Set temperature level for cooled cameras.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param level level 0..7 / 0=off, 7=min -> see cooling manual
  * \return es_status_codes:
@@ -2252,18 +2252,18 @@ es_status_codes Cam_SetSensorResetLength(uint32_t drvno, uint16_t sensor_reset_l
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes SetTemp( uint32_t drvno, uint8_t level )
+es_status_codes SetTemp(uint32_t drvno, uint8_t level)
 {
 	if (level >= 8) level = 0;
 	ES_LOG("Set temperature level: %u\n", level);
-	return SendFLCAM( drvno, maddr_cam, cam_adaddr_coolTemp, level );
+	return SendFLCAM(drvno, maddr_cam, cam_adaddr_coolTemp, level);
 }
 
 /**
  * \brief Sends data to DAC8568.
- * 
+ *
  * Mapping of bits in DAC8568: 4 prefix, 4 control, 4 address, 16 data, 4 feature.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param location Switch for the different locations of DAC85689. See enum \ref DAC8568_location_t in enum_settings.h for details.
  * \param cameraPosition This is describing the camera position when there are multiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
@@ -2278,23 +2278,23 @@ es_status_codes SetTemp( uint32_t drvno, uint8_t level )
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes DAC8568_sendData( uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t ctrlBits, uint8_t addrBits, uint16_t dataBits, uint8_t featureBits )
+es_status_codes DAC8568_sendData(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t ctrlBits, uint8_t addrBits, uint16_t dataBits, uint8_t featureBits)
 {
 	uint32_t data = 0;
 	es_status_codes status;
 	if (ctrlBits & 0xF0) //4 ctrl bits => only lower 4 bits allowed
 	{
-		ES_LOG( "DAC8568_sendData: Only values between 0 and 15 are allowed for control bits." );
+		ES_LOG("DAC8568_sendData: Only values between 0 and 15 are allowed for control bits.");
 		return es_parameter_out_of_range;
 	}
 	if (addrBits & 0xF0) //4 addr bits => only lower 4 bits allowed
 	{
-		ES_LOG( "DAC8568_sendData: Only values between 0 and 15 are allowed for address bits." );
+		ES_LOG("DAC8568_sendData: Only values between 0 and 15 are allowed for address bits.");
 		return es_parameter_out_of_range;
 	}
 	if (featureBits & 0xF0) //4 ctrl bits => only lower 4 bits allowed
 	{
-		ES_LOG( "DAC8568_sendData: Only values between 0 and 15 are allowed for feature bits." );
+		ES_LOG("DAC8568_sendData: Only values between 0 and 15 are allowed for feature bits.");
 		return es_parameter_out_of_range;
 	}
 	data |= 0x0;	//4 prefix bits, first bit always 0 (0xxx)
@@ -2308,33 +2308,33 @@ es_status_codes DAC8568_sendData( uint32_t drvno, uint8_t location, uint8_t came
 	data |= featureBits & 0x0F;	//4 feature bits
 	switch (location)
 	{
-		case DAC8568_camera:
-		{
-			uint16_t hi_bytes = (uint16_t) (data >> 16);
-			uint16_t lo_bytes = (uint16_t) data;
-			uint8_t adaddr = dac_hi_byte_addr | cameraPosition << campos_bit_index;
-			status = SendFLCAM(drvno, maddr_dac, adaddr, hi_bytes);
-			if (status != es_no_error) return status;
-			adaddr = dac_lo_byte_addr | cameraPosition << campos_bit_index;
-			status = SendFLCAM(drvno, maddr_dac, adaddr, lo_bytes);
-			break;
-		}
-		case DAC8568_pcie:
-			status = writeRegisterS0_32(drvno, data, S0Addr_DAC);
-			if (status != es_no_error) return status;
-			// set load bit to 1, to start SPI data transfer to DAC
-			data |= 0x80000000;
-			status = writeRegisterS0_32(drvno, data, S0Addr_DAC);
-			break;
-		default:
-			return es_parameter_out_of_range;
+	case DAC8568_camera:
+	{
+		uint16_t hi_bytes = (uint16_t)(data >> 16);
+		uint16_t lo_bytes = (uint16_t)data;
+		uint8_t adaddr = dac_hi_byte_addr | cameraPosition << campos_bit_index;
+		status = SendFLCAM(drvno, maddr_dac, adaddr, hi_bytes);
+		if (status != es_no_error) return status;
+		adaddr = dac_lo_byte_addr | cameraPosition << campos_bit_index;
+		status = SendFLCAM(drvno, maddr_dac, adaddr, lo_bytes);
+		break;
+	}
+	case DAC8568_pcie:
+		status = writeRegisterS0_32(drvno, data, S0Addr_DAC);
+		if (status != es_no_error) return status;
+		// set load bit to 1, to start SPI data transfer to DAC
+		data |= 0x80000000;
+		status = writeRegisterS0_32(drvno, data, S0Addr_DAC);
+		break;
+	default:
+		return es_parameter_out_of_range;
 	}
 	return status;
 }
 
 /**
  * \brief Sets all outputs of the DAC8568 in camera 3030 or on PCIe board.
- * 
+ *
  * Use this function to set the outputs, because it is resorting the channel numeration correctly.
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param location Switch for the different locations of DAC85689. See enum \ref DAC8568_location_t in enum.h for details.
@@ -2370,7 +2370,7 @@ es_status_codes DAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t 
 
 /**
  * \brief Sets the output of the DAC8568 on PCB 2189-7.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param location Switch for the different locations of DAC85689. See enum \ref DAC8568_location_t in enum_settings.h for details.
  * \param cameraPosition This is describing the camera position when there are multiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
@@ -2381,11 +2381,11 @@ es_status_codes DAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t 
  *		- es_register_write_failed
  *		- es_parameter_out_of_range
  */
-es_status_codes DAC8568_setOutput( uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t channel, uint16_t output )
+es_status_codes DAC8568_setOutput(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t channel, uint16_t output)
 {
 	//ctrl bits 3: write and update DAC register
 	ES_LOG("Set DAC: board %u, location %u, cameraPosition %u, output ch%u = %u\n", drvno, location, cameraPosition, channel, output);
-	return DAC8568_sendData( drvno, location, cameraPosition, 3, channel, output, 0 );
+	return DAC8568_sendData(drvno, location, cameraPosition, 3, channel, output, 0);
 }
 
 /**
@@ -2407,7 +2407,7 @@ es_status_codes DAC8568_enableInternalReference(uint32_t drvno, uint8_t location
 
 /**
  * \brief This function sets the register BEC.
- * 
+ *
  * The Block Exposure control (BEC) signal can be used to open and close a mechanical shutter.
  * BEC starts after the block delay after trigger (BDAT) signal and is active for bec_in_10ns.
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
@@ -2418,7 +2418,7 @@ es_status_codes DAC8568_enableInternalReference(uint32_t drvno, uint8_t location
  *		- es_no_error
  * 		- es_register_write_failed
  */
-es_status_codes SetBEC( uint32_t drvno, uint32_t bec_in_10ns )
+es_status_codes SetBEC(uint32_t drvno, uint32_t bec_in_10ns)
 {
 	ES_LOG("Set BEC in 10 ns: %u\n", bec_in_10ns);
 	return writeRegisterS0_32(drvno, bec_in_10ns, S0Addr_BEC);
@@ -2426,7 +2426,7 @@ es_status_codes SetBEC( uint32_t drvno, uint32_t bec_in_10ns )
 
 /**
  * \brief DEPRECATED. Set XCK delay.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param xckdelay_in_10ns XCK delay, 31 bit. xckdelay = 500ns + xckdelay_in_10ns * 10ns
  *		* disable: 0
@@ -2452,13 +2452,13 @@ es_status_codes SetXckdelay(uint32_t drvno, uint32_t xckdelay_in_10ns)
 
 /**
  * \brief Set DMA related registers like TLP mode and DMA addresses.
- * 
+ *
  * \param drvno
  * \param pixel
- * \return 
+ * \return
  */
-es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
-{		
+es_status_codes SetDmaRegister(uint32_t drvno, uint32_t pixel)
+{
 	ES_LOG("Set DMA register: drv: %u, pixel: %u\n", drvno, pixel);
 	if (pixel % 64 != 0 && !MANUAL_OVERRIDE_TLP)
 	{
@@ -2530,7 +2530,7 @@ es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
 
 /**
  * @brief Set specified bits to 1 in DMA register at memory address.
- * 
+ *
  * @param data 4 bytes (32 bits) data to write
  * @param bitmask Bitmask to select specific bits, which should be written. 0xFFFFFFFF - all bits 32 bits are written, 0 - no bits are written.
  * @param address Address of the register in DMA space.
@@ -2540,11 +2540,11 @@ es_status_codes SetDmaRegister( uint32_t drvno, uint32_t pixel )
  *		- es_register_read_failed
  * 		- es_register_write_failed
  */
-es_status_codes writeBitsDma_32( uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address  )
+es_status_codes writeBitsDma_32(uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address)
 {
 	uint32_t OldRegisterValues = 0;
 	//read the old Register Values in the S0 Address Reg
-	es_status_codes status = readRegisterDma_32( drvno, &OldRegisterValues, address );
+	es_status_codes status = readRegisterDma_32(drvno, &OldRegisterValues, address);
 	if (status != es_no_error) return status;
 	//step 0: delete not needed "1"s
 	data &= bitmask;
@@ -2557,12 +2557,12 @@ es_status_codes writeBitsDma_32( uint32_t drvno, uint32_t data, uint32_t bitmask
 	//step 4: clear the low bits in the Data
 	uint32_t NewRegisterValues = OldRegVals_and_SetBits & Clearbit_mask;
 	//write the data to the S0 controller
-	return writeRegisterDma_32( drvno, NewRegisterValues, address );
+	return writeRegisterDma_32(drvno, NewRegisterValues, address);
 }
 
 /**
  * @brief Set specified bits to 1 in DMA register at memory address.
- * 
+ *
  * @param data 1 bytes (8 bits) data to write
  * @param bitmask Bitmask to select specific bits, which should be written. 0xFF - all bits 8 bits are written, 0 - no bits are written.
  * @param address Address of the register in DMA space.
@@ -2572,11 +2572,11 @@ es_status_codes writeBitsDma_32( uint32_t drvno, uint32_t data, uint32_t bitmask
  *		- es_register_read_failed
  * 		- es_register_write_failed
  */
-es_status_codes writeBitsDma_8( uint32_t drvno, uint8_t data, uint8_t bitmask, uint16_t address  )
+es_status_codes writeBitsDma_8(uint32_t drvno, uint8_t data, uint8_t bitmask, uint16_t address)
 {
 	uint8_t OldRegisterValues = 0;
 	//read the old Register Values in the S0 Address Reg
-	es_status_codes status = readRegisterDma_8( drvno, &OldRegisterValues, address );
+	es_status_codes status = readRegisterDma_8(drvno, &OldRegisterValues, address);
 	if (status != es_no_error) return status;
 	//step 0: delete not needed "1"s
 	data &= bitmask;
@@ -2589,7 +2589,7 @@ es_status_codes writeBitsDma_8( uint32_t drvno, uint8_t data, uint8_t bitmask, u
 	//step 4: clear the low bits in the Data
 	uint8_t NewRegisterValues = OldRegVals_and_SetBits & Clearbit_mask;
 	//write the data to the S0 controller
-	return writeRegisterDma_8( drvno, NewRegisterValues, address );
+	return writeRegisterDma_8(drvno, NewRegisterValues, address);
 }
 
 /**
@@ -2602,7 +2602,7 @@ es_status_codes writeBitsDma_8( uint32_t drvno, uint8_t data, uint8_t bitmask, u
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes writeRegisterDma_32( uint32_t drvno, uint32_t data, uint16_t address )
+es_status_codes writeRegisterDma_32(uint32_t drvno, uint32_t data, uint16_t address)
 {
 	return writeRegister_32(drvno, data, address);
 }
@@ -2617,7 +2617,7 @@ es_status_codes writeRegisterDma_32( uint32_t drvno, uint32_t data, uint16_t add
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes writeRegisterDma_8( uint32_t drvno, uint8_t data, uint16_t address )
+es_status_codes writeRegisterDma_8(uint32_t drvno, uint8_t data, uint16_t address)
 {
 	return writeRegister_8(drvno, data, address);
 }
@@ -2632,7 +2632,7 @@ es_status_codes writeRegisterDma_8( uint32_t drvno, uint8_t data, uint16_t addre
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes readRegisterDma_32( uint32_t drvno, uint32_t* data, uint16_t address )
+es_status_codes readRegisterDma_32(uint32_t drvno, uint32_t* data, uint16_t address)
 {
 	return readRegister_32(drvno, data, address);
 }
@@ -2647,32 +2647,32 @@ es_status_codes readRegisterDma_32( uint32_t drvno, uint32_t* data, uint16_t add
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes readRegisterDma_8( uint32_t drvno, uint8_t* data, uint16_t address )
+es_status_codes readRegisterDma_8(uint32_t drvno, uint8_t* data, uint16_t address)
 {
 	return readRegister_8(drvno, data, address);
 }
 
 /**
- * @brief Set DMA Start Mode 
- * 
+ * @brief Set DMA Start Mode
+ *
  * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param start_by_hardware true: every XCK h->l starts DMA by hardware, false: by software
- * @return es_status_codes 
+ * @return es_status_codes
  */
-es_status_codes SetDmaStartMode( uint32_t drvno, bool start_by_hardware)
+es_status_codes SetDmaStartMode(uint32_t drvno, bool start_by_hardware)
 {
 	ES_LOG("Set DMA start mode: %u\n", start_by_hardware);
 	uint32_t data = 0;
 	if (start_by_hardware)
 		data = 0x40000000;
-	return writeBitsS0_32( drvno, data, 0x40000000, S0Addr_IRQREG );
+	return writeBitsS0_32(drvno, data, 0x40000000, S0Addr_IRQREG);
 }
 
 /**
  * \brief  This function is starting the measurement and returns when the measurement is done.
  *
  * When there are multiple boards, all boards are starting the measurement. Create a new thread for calling this function, when you don't want to have a blocking call.
- * 
+ *
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
@@ -2831,9 +2831,9 @@ es_status_codes StartMeasurement()
 							status = AbortMeasurement();
 							return ReturnStartMeasurement(status);
 						}
-						if(!abortMeasurementFlag && checkEscapeKeyState())
+						if (!abortMeasurementFlag && checkEscapeKeyState())
 							abortMeasurementFlag = true;
-						status = IsTimerOn(drvno, (bool*) &timerOn[drvno]);
+						status = IsTimerOn(drvno, (bool*)&timerOn[drvno]);
 						if (status != es_no_error) return ReturnStartMeasurement(status);
 					}
 				}
@@ -2850,7 +2850,7 @@ es_status_codes StartMeasurement()
 					if (status != es_no_error) return ReturnStartMeasurement(status);
 				}
 			}
-		// This is the end of the block for loop. Until nob is reached this loop is repeated.
+			// This is the end of the block for loop. Until nob is reached this loop is repeated.
 		}
 		// Reset the thread priority to the previous value.
 		status = ResetPriority();
@@ -2918,7 +2918,7 @@ es_status_codes StartMeasurement()
 
 /**
  * \brief This is a helper function to return startMeasurement.
- * 
+ *
  * This function sets isRunning = false and returns the given status.
  * \param status Status that will be returned.
  * \return Returns input parameter status.
@@ -2931,14 +2931,14 @@ es_status_codes ReturnStartMeasurement(es_status_codes status)
 
 /**
  * \brief Test if SFP module is there and fiber is linked up.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes:
  * 		- es_no_error
  * 		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes FindCam( uint32_t drvno )
+es_status_codes FindCam(uint32_t drvno)
 {
 	if (settings_struct.camera_settings[drvno].camcnt == 0)
 	{
@@ -2954,7 +2954,7 @@ es_status_codes FindCam( uint32_t drvno )
 	int64_t timeoutInMicroseconds = 10000;
 	// Check the connection again while timout is not reached.
 	// This loop is here to prevent checking during link down spikes
-	while(GetTimestampInMicroseconds() - timestampFirstFailureInMicroseconds < timeoutInMicroseconds)
+	while (GetTimestampInMicroseconds() - timestampFirstFailureInMicroseconds < timeoutInMicroseconds)
 	{
 #endif
 		status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_linkup_sfp1, &linkUp);
@@ -2979,16 +2979,16 @@ es_status_codes FindCam( uint32_t drvno )
 
 /**
  * \brief Reset the hardware block counter and scan counter.
- * 
+ *
  * \param drvno board number
  * \return es_status_codes
  *		- es_no_error
  * 		- es_register_read_failed
  *		- es_register_write_failed
 */
-es_status_codes ResetHardwareCounter( uint32_t drvno )
+es_status_codes ResetHardwareCounter(uint32_t drvno)
 {
-	ES_LOG( "Reset hardware counter\n" );
+	ES_LOG("Reset hardware counter\n");
 	es_status_codes status = pulseBitS0_32(drvno, DMAsPerIntr_bitindex_counter_reset, S0Addr_DMAsPerIntr);
 	if (status != es_no_error) return status;
 	status = pulseBitS0_32(drvno, DmaBufSizeInScans_bitindex_counter_reset, S0Addr_DmaBufSizeInScans);
@@ -3000,7 +3000,7 @@ es_status_codes ResetHardwareCounter( uint32_t drvno )
 
 /**
  * \brief Reset the internal intr collect counter.
- * 
+ *
  * \param drvno board number
  * \param stop_by_hardware true: timer is stopped by hardware if nos is reached
  * \return es_status_codes
@@ -3008,9 +3008,9 @@ es_status_codes ResetHardwareCounter( uint32_t drvno )
  * 		- es_register_read_failed
  *		- es_register_write_failed
 */
-es_status_codes SetHardwareTimerStopMode( uint32_t drvno, bool stop_by_hardware )
+es_status_codes SetHardwareTimerStopMode(uint32_t drvno, bool stop_by_hardware)
 {
-	ES_LOG( "Set hardware timer stop mode: %u\n", stop_by_hardware);
+	ES_LOG("Set hardware timer stop mode: %u\n", stop_by_hardware);
 	es_status_codes status;
 	if (stop_by_hardware)
 		//when SCANINDEX reaches NOS, the timer is stopped by hardware.
@@ -3062,7 +3062,7 @@ es_status_codes pulseBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t addres
  * If block trigger high: return
  * If block trigger low: wait for hi
  * Checks only PCIE board no 1
- * 
+ *
  * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0. May only work for 1
  * @return es_status_codes:
  *		- es_no_error
@@ -3071,13 +3071,13 @@ es_status_codes pulseBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t addres
 es_status_codes waitForBlockTrigger(uint32_t drvno)
 {
 	ES_LOG("Wait for block trigger\n");
-	uint8_t data=0;
+	uint8_t data = 0;
 	es_status_codes status;
 	while (!abortMeasurementFlag)
 	{
 		if (!abortMeasurementFlag && checkEscapeKeyState())
 			abortMeasurementFlag = true;
-		status = readRegisterS0_8( drvno, &data, S0Addr_CTRLA );
+		status = readRegisterS0_8(drvno, &data, S0Addr_CTRLA);
 		if (status != es_no_error) return status;
 		if ((data & CTRLA_bit_TSTART) > 0)
 			return es_no_error;
@@ -3087,17 +3087,17 @@ es_status_codes waitForBlockTrigger(uint32_t drvno)
 
 /**
  * \brief Sends signal to hardware to count blocks
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes countBlocksByHardware( uint32_t drvno )
+es_status_codes countBlocksByHardware(uint32_t drvno)
 {
 	ES_LOG("Increase hardware block counter\n");
-	es_status_codes status =  pulseBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCKTRIG, S0Addr_PCIEFLAGS);
+	es_status_codes status = pulseBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCKTRIG, S0Addr_PCIEFLAGS);
 	if (status != es_no_error) return status;
 	//reset scan counter
 	return pulseBitS0_32(drvno, ScanIndex_bitindex_counter_reset, S0Addr_ScanIndex);
@@ -3105,14 +3105,14 @@ es_status_codes countBlocksByHardware( uint32_t drvno )
 
 /**
  * \brief Sets Scan Timer on.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes:
  * 		- es_no_error
  * 		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes StartSTimer( uint32_t drvno )
+es_status_codes StartSTimer(uint32_t drvno)
 {
 	ES_LOG("Start S Timer\n");
 	return setBitS0_8(drvno, XCKMSB_bitindex_stimer_on, S0Addr_XCKMSB);
@@ -3120,14 +3120,14 @@ es_status_codes StartSTimer( uint32_t drvno )
 
 /**
  * \brief Triggers one camera read by calling this function.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes DoSoftwareTrigger( uint32_t drvno )
+es_status_codes DoSoftwareTrigger(uint32_t drvno)
 {
 	ES_LOG("Do software trigger\n");
 	es_status_codes status = setBitS0_8(drvno, FFCTRL_bitindex_SWTRIG, S0Addr_FFCTRL);
@@ -3137,51 +3137,51 @@ es_status_codes DoSoftwareTrigger( uint32_t drvno )
 
 /**
  * \brief Checks if timer is active (Bit30 of XCK-Reg).
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param on
  * \return es_status_codes:
  *		- es_no_error
  * 		- es_register_read_failed
  */
-es_status_codes IsTimerOn( uint32_t drvno, bool* on )
-{	
+es_status_codes IsTimerOn(uint32_t drvno, bool* on)
+{
 	return ReadBitS0_8(drvno, S0Addr_XCKMSB, XCKMSB_bitindex_stimer_on, on);
 }
 
 /**
  * \brief For the rest part of the buffer.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes:
  * 		- es_no_error
  * 		- es_register_read_failed
  */
-es_status_codes GetLastBufPart( uint32_t drvno )
+es_status_codes GetLastBufPart(uint32_t drvno)
 {
-	ES_TRACE( "Get the last buffer part\n" );
+	ES_TRACE("Get the last buffer part\n");
 	// Get the rest if buffer is not multiple of 500 (BUFSIZEINSCANS/2)
 	// Also if nos is < BUFSIZEINSCANS/2 there is data left in the DMA buffer, because no interrupt occurred after the last scans.
 	uint32_t spi = 0;
 	// Get scans per interrupt
-	es_status_codes status = readRegisterS0_32( drvno, &spi, S0Addr_DMAsPerIntr ); 
+	es_status_codes status = readRegisterS0_32(drvno, &spi, S0Addr_DMAsPerIntr);
 	if (status != es_no_error) return status;
 	// dmaHalfBufferSize is 500 with default values
 	uint32_t dmaHalfBufferSize = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
 	uint32_t scans_all_cams = (*Nospb) * (*Nob) * aCAMCNT[drvno];
-	uint32_t rest_overall = scans_all_cams % dmaHalfBufferSize; 
+	uint32_t rest_overall = scans_all_cams % dmaHalfBufferSize;
 	size_t rest_in_bytes = rest_overall * aPIXEL[drvno] * sizeof(uint16_t);
-	ES_TRACE( "nos: %u, nob: %u, scansPerInterrupt: %u, camcnt: %u\n", (*Nospb), *Nob, spi, aCAMCNT[drvno]);
-	ES_TRACE( "scans_all_cams: %u \n", scans_all_cams );
-	ES_TRACE( "rest_overall: %u, rest_in_bytes: %lu\n", rest_overall, rest_in_bytes );
+	ES_TRACE("nos: %u, nob: %u, scansPerInterrupt: %u, camcnt: %u\n", (*Nospb), *Nob, spi, aCAMCNT[drvno]);
+	ES_TRACE("scans_all_cams: %u \n", scans_all_cams);
+	ES_TRACE("rest_overall: %u, rest_in_bytes: %lu\n", rest_overall, rest_in_bytes);
 	if (rest_overall)
-		copyRestData(drvno, rest_in_bytes); 
+		copyRestData(drvno, rest_in_bytes);
 	return status;
 }
 
 /**
  * \brief Initializes the PCIe board.
- * 
+ *
  * Call this after InitDriver and before InitMeasurement. It is only needed to be called once.
  * \return es_status_codes:
  *		- es_no_error
@@ -3209,8 +3209,8 @@ es_status_codes InitBoard()
 }
 
 /**
- * \brief Initialize the driver. 
- * 
+ * \brief Initialize the driver.
+ *
  * Call this before any other action. It is only needed to be called once at startup.
  * \return es_status_codes:
  *		- es_setting_driver_name_failed
@@ -3229,7 +3229,7 @@ es_status_codes InitDriver()
 
 /**
  * \brief Exit driver. Call this before exiting software for cleanup.
- * 
+ *
  * \return es_status_codes:
  *		- es_invalid_driver_number
  *		- es_invalid_driver_handle
@@ -3252,7 +3252,7 @@ es_status_codes ExitDriver()
 
 /**
  * \brief Get data of a single measurement.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param sample sample number ( 0...(nos - 1) )
  * \param block block number ( 0...(nob - 1) )
@@ -3270,18 +3270,18 @@ es_status_codes ReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uin
 {
 	//ES_TRACE( "Return frame: drvno: %u, sample: %u, block: %u, camera: %u, pdest %p, pixel: %u\n", drvno, sample, block, camera, pdest, pixel );
 	uint16_t* pframe = NULL;
-	es_status_codes status = GetAddressOfPixel( drvno, 0, sample, block, camera, &pframe);
+	es_status_codes status = GetAddressOfPixel(drvno, 0, sample, block, camera, &pframe);
 	if (status != es_no_error) return status;
 	//ES_LOG("pframe %p\n", pframe);
 	//ES_LOG("userBuffer %p\n", userBuffer[drvno]);
-	memcpy( pdest, pframe, pixel * sizeof( uint16_t ) );
+	memcpy(pdest, pframe, pixel * sizeof(uint16_t));
 	return status;
 }
 
 
 /**
  * \brief Returns the index of a pixel located in userBuffer.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param pixel position in one scan (0...(PIXEL-1))
  * \param sample position in samples (0...(nos-1))
@@ -3293,14 +3293,14 @@ es_status_codes ReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uin
  *		- es_parameter_out_of_range
  *		- es_memory_not_initialized
  */
-es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint64_t* pIndex )
+es_status_codes GetIndexOfPixel(uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint64_t* pIndex)
 {
 	if (pixel >= aPIXEL[drvno] || sample >= *Nospb || block >= *Nob || camera >= aCAMCNT[drvno])
 		return es_parameter_out_of_range;
 	//init index with base position of pixel
 	uint64_t index = pixel;
 	//position of index at camera position
-	index += (uint64_t)camera *((uint64_t)aPIXEL[drvno]); // AM! was +4 for PCIe version before P202_23 to shift scan counter in 2nd camera to the left
+	index += (uint64_t)camera * ((uint64_t)aPIXEL[drvno]); // AM! was +4 for PCIe version before P202_23 to shift scan counter in 2nd camera to the left
 	//position of index at sample
 	index += (uint64_t)sample * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno];
 	//position of index at block
@@ -3311,7 +3311,7 @@ es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample
 
 /**
  * \brief Returns the address of a pixel located in userBuffer.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param pixel position in one scan (0...(PIXEL-1))
  * \param sample position in samples (0...(nos-1))
@@ -3323,7 +3323,7 @@ es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample
  *		- es_parameter_out_of_range
  *		- es_memory_not_initialized
  */
-es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** address )
+es_status_codes GetAddressOfPixel(uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** address)
 {
 	uint64_t index = 0;
 	es_status_codes status = GetIndexOfPixel(drvno, pixel, sample, block, camera, &index);
@@ -3384,7 +3384,7 @@ double CalcRamUsageInMB(uint32_t nos, uint32_t nob)
  *		- es_allocating_memory_failed
  *		- es_memory_not_initialized
  */
-es_status_codes CalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double *mwf, double *trms)
+es_status_codes CalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf, double* trms)
 {
 	if (firstSample >= lastSample || lastSample > *Nospb)
 	{
@@ -3395,7 +3395,7 @@ es_status_codes CalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSamp
 		return es_parameter_out_of_range;
 	}
 	uint32_t samples = lastSample - firstSample;
-	uint16_t *TRMS_pixels = calloc(samples, sizeof(uint16_t));
+	uint16_t* TRMS_pixels = calloc(samples, sizeof(uint16_t));
 	if (!TRMS_pixels) return es_allocating_memory_failed;
 	//storing the values of one pixel for the RMS analysis
 	for (uint32_t scan = 0; scan < samples; scan++)
@@ -3411,7 +3411,7 @@ es_status_codes CalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSamp
 	return es_no_error;
 }//CalcTrms
 
-void GetRmsVal(uint32_t nos, uint16_t *TRMSVals, double *mwf, double *trms)
+void GetRmsVal(uint32_t nos, uint16_t* TRMSVals, double* mwf, double* trms)
 {
 	*trms = 0.0;
 	*mwf = 0.0;
@@ -3468,7 +3468,7 @@ es_status_codes CheckFifoOverflow(uint32_t drvno, bool* overflow)
 
 /**
  * \brief Check empty flag (FIFO empty).
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param empty
  * \return es_status_codes
@@ -3483,7 +3483,7 @@ es_status_codes CheckFifoEmpty(uint32_t drvno, bool* empty)
 
 /**
  * \brief Check full flag (FIFO full).
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param full
  * \return es_status_codes
@@ -3708,7 +3708,7 @@ es_status_codes waitForMeasureReady(uint32_t board_sel)
 es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 {
 	enum N
-	{ 
+	{
 		number_of_registers = 47,
 		bufferLength = 40
 	};
@@ -3763,7 +3763,7 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 	}; //Look-Up-Table for the S0 Registers
 	uint32_t data = 0;
 	//allocate string buffer
-	*stringPtr = (char*) calloc(number_of_registers * bufferLength, sizeof(char));
+	*stringPtr = (char*)calloc(number_of_registers * bufferLength, sizeof(char));
 	int len = 0;
 	size_t bufferSize = number_of_registers * bufferLength;
 	es_status_codes status = es_no_error;
@@ -3774,11 +3774,11 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 		if (status != es_no_error)
 		{
 			//write error to buffer
-			len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nerror while reading register 0x%x %s", i*4, register_names[i]);
+			len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nerror while reading register 0x%x %s", i * 4, register_names[i]);
 			return status;
 		}
 		//write register name and value to buffer
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "0x%x  \t%s\t0x%x\n", i*4, register_names[i], data);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "0x%x  \t%s\t0x%x\n", i * 4, register_names[i], data);
 	}
 	return status;
 }
@@ -3830,9 +3830,9 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSTRIGIN\t%i\n", isBitHigh);
 
 	/*=======================================================================*/
-	
+
 	//CTRLB
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nCTRLB\n"); 
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nCTRLB\n");
 	status = readRegisterS0_8(drvno, &data8, S0Addr_CTRLB);
 	int combinedValueSTI = data8 & CTRLB_bits_STI;
 
@@ -3867,7 +3867,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	int combinedValueBTI = (data8 & CTRLB_bits_BTI) >> CTRLB_bitindex_BTI0;
 
-	switch (combinedValueBTI) 
+	switch (combinedValueBTI)
 	{
 	case bti_I:
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBTI\t%u (I)\n", combinedValueBTI);
@@ -3899,7 +3899,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	}
 
 	/*=======================================================================*/
-	
+
 	//CTRLC
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nCTRLC\n");
 
@@ -3924,7 +3924,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tEOI-CHB\t%i\n", isBitHigh);
 
 	/*=======================================================================*/
-	
+
 	//Register XCK
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nRegister XCK\n");
 
@@ -3951,7 +3951,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tRS\t%i\n", isBitHigh);
 
 	/*=======================================================================*/
-	
+
 	//Register XCKCNT
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nRegister XCKCNT\n");
 
@@ -3971,7 +3971,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tPIXREG\t%i\n", dataPIXREG);
 
 	/*=======================================================================*/
-	
+
 	//FFCTRL
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nFFCTRL\n");
 
@@ -3992,7 +3992,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tRS_FF\t%i\n", isBitHigh);
 
 	/*=======================================================================*/
-	
+
 	//FF_FLAGS
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nFF_FLAGS\n");
 
@@ -4007,11 +4007,11 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	//FF_FLAGS OVFL
 	status = ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_overflow, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOVFL\t%i\n", isBitHigh);
-	
+
 	//FF_FLAGS XCKI no bitindex for xcki
 	status = ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_xcki, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tXCKI\t%i\n", isBitHigh);
-	
+
 	//FF_FLAGS FF
 	status = ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_full, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tFF\t%i\n", isBitHigh);
@@ -4061,9 +4061,9 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	status = readRegisterS0_32(drvno, &dataSDAT, S0Addr_SDAT);
 
 	uint32_t bitmaskSDAT = 1u << 30;
-	
+
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tEnabled\t%i\n", (dataSDAT & bitmaskSDAT));
-	
+
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tDelay\t%i\n", (dataSDAT & SDAT_bit_control));
 
 	/*=======================================================================*/
@@ -4217,7 +4217,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	//Output 1
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O1, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 1\t%i\n", isBitHigh);
-	
+
 	//Output 2
 	status = ReadBitS0_32(drvno, S0Addr_GIOREG, GIOREG_bitindex_O2, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tOutput 2\t%i\n", isBitHigh);
@@ -4337,7 +4337,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	//TDC
 	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_IS_TDC, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tTDC\t%i\n", isBitHigh);
-	
+
 	//EWS
 	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_IS_DSC, &isBitHigh);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tEWS\t%i\n", isBitHigh);
@@ -4395,7 +4395,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//Register DMABUFSIZEINSCANS
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nDMA buffer size in scans\n");
-	
+
 	//Value
 	uint32_t dataDMABUFSIZE = 0;
 	uint32_t bitmaskDMABUFSIZE = 0x7FFFFFFF;
@@ -4500,7 +4500,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//Register ROI
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nRange of interest\n");
-	
+
 	//Range 0
 	uint32_t dataRange = 0;
 	status = readRegisterS0_32(drvno, &dataRange, S0Addr_ROI0);
@@ -4630,7 +4630,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//Register ATDC2
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nATDC2\n");
-	
+
 	//TDC2
 	uint32_t dataATDC2 = 0;
 	status = readRegisterS0_32(drvno, &dataATDC2, S0Addr_ATDC2);
@@ -4808,7 +4808,7 @@ es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr)
 			return status;
 		}
 		//write register name and value to buffer
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "0x%x  \t%s\t0x%x\n", i*4, register_names[i], data);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "0x%x  \t%s\t0x%x\n", i * 4, register_names[i], data);
 	}
 	return status;
 }
@@ -4833,7 +4833,7 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 	data &= PciExpressDeviceCapabilities_MaxPayloadSizeSupported_bits;
 	// See section 7.8.3, table 7 - 13 of the PCI Express Base Specification.
 	// https://astralvx.com/storage/2020/11/PCI_Express_Base_4.0_Rev0.3_February19-2014.pdf
-	uint32_t maxSizeEncoding[8] = { 128, 256, 512, 1024, 2048, 4096, 0, 0};
+	uint32_t maxSizeEncoding[8] = { 128, 256, 512, 1024, 2048, 4096, 0, 0 };
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Max_Payload_Size Supported:\t0x%x (%u bytes)\n", data, maxSizeEncoding[data]);
 	status = readConfig_32(drvno, &data, PCIeAddr_DeviceControl);
 	if (status != es_no_error)
@@ -4855,11 +4855,11 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nerror while reading register\n");
 		return status;
 	}
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "TLPS in DMAReg is:\t%u (%u bytes)\n", data, data*4);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "TLPS in DMAReg is:\t%u (%u bytes)\n", data, data * 4);
 	uint32_t numberOfTlps = 0;
 	if (data)
 		numberOfTlps = (pixel - 1) / (data * 2) + 1;
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "number of TLPs per scan should be:\t(number of pixels - 1) / (TLPS in DMAReg * 2) + 1 \n\t= %u / %u + 1\n\t=%u\n", pixel-1, data*2, numberOfTlps);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "number of TLPs per scan should be:\t(number of pixels - 1) / (TLPS in DMAReg * 2) + 1 \n\t= %u / %u + 1\n\t=%u\n", pixel - 1, data * 2, numberOfTlps);
 	status = readRegisterDma_32(drvno, &data, DmaAddr_WDMATLPC);
 	if (status != es_no_error)
 	{
@@ -5101,7 +5101,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 
 /**
  * \brief
- * 
+ *
  * \param drvno
  * \param stringPtr
  * \return es_status_codes:
@@ -5158,7 +5158,7 @@ es_status_codes dumpPciRegisters(uint32_t drvno, char** stringPtr)
 		if (status != es_no_error)
 		{
 			//write error to buffer
-			length += sprintf_s(*stringPtr + length, bufferSize - (size_t)length, "\nerror while reading register %i %s", i*4, register_names[i]);
+			length += sprintf_s(*stringPtr + length, bufferSize - (size_t)length, "\nerror while reading register %i %s", i * 4, register_names[i]);
 			return status;
 		}
 		length += sprintf_s(*stringPtr + length, bufferSize - (size_t)length, "0x%x  \t%s\t0x%x\n", i * 4, register_names[i], data);
@@ -5230,10 +5230,10 @@ es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
  * @param DSCNumber 1: DSC 1; 2: DSC 2
  * @return es_status_codes
  */
-es_status_codes ResetDSC( uint32_t drvno, uint8_t DSCNumber )
+es_status_codes ResetDSC(uint32_t drvno, uint8_t DSCNumber)
 {
 	es_status_codes status;
-	ES_LOG( "Reset DSC %u\n", DSCNumber );
+	ES_LOG("Reset DSC %u\n", DSCNumber);
 	uint32_t data = 0;
 	switch (DSCNumber)
 	{
@@ -5241,9 +5241,9 @@ es_status_codes ResetDSC( uint32_t drvno, uint8_t DSCNumber )
 	case 2: data = 0x100; break;
 	}
 	//for reset you have to set a 1 to the reg and then a zero to allow a new start again
-	status = writeBitsS0_32( drvno, data, data, S0Addr_DSCCtrl );
+	status = writeBitsS0_32(drvno, data, data, S0Addr_DSCCtrl);
 	if (status != es_no_error) return status;
-	return writeBitsS0_32( drvno, 0, data, S0Addr_DSCCtrl );
+	return writeBitsS0_32(drvno, 0, data, S0Addr_DSCCtrl);
 }
 
 /**
@@ -5254,9 +5254,9 @@ es_status_codes ResetDSC( uint32_t drvno, uint8_t DSCNumber )
  * @param dir true: up; false: down
  * @return es_status_codes
  */
-es_status_codes SetDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir )
+es_status_codes SetDIRDSC(uint32_t drvno, uint8_t DSCNumber, bool dir)
 {
-	ES_LOG( "set DSC %u in direction %u\n", DSCNumber, dir );
+	ES_LOG("set DSC %u in direction %u\n", DSCNumber, dir);
 	uint32_t data = 0;
 	switch (DSCNumber)
 	{
@@ -5265,9 +5265,9 @@ es_status_codes SetDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir )
 	}
 
 	if (dir)
-		return writeBitsS0_32( drvno, data, data, S0Addr_DSCCtrl );
+		return writeBitsS0_32(drvno, data, data, S0Addr_DSCCtrl);
 	else
-		return writeBitsS0_32( drvno, 0, data, S0Addr_DSCCtrl );
+		return writeBitsS0_32(drvno, 0, data, S0Addr_DSCCtrl);
 
 }
 
@@ -5280,10 +5280,10 @@ es_status_codes SetDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir )
  * \param LDSC last DSC
  * \return es_status_codes
  */
-es_status_codes GetDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC )
+es_status_codes GetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC)
 {
 	es_status_codes status;
-	ES_LOG( "get DSC %u\n", DSCNumber );
+	ES_LOG("get DSC %u\n", DSCNumber);
 	uint16_t addrADSC, addrLDSC;
 	switch (DSCNumber)
 	{
@@ -5298,14 +5298,14 @@ es_status_codes GetDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint3
 		break;
 	}
 
-	status = readRegisterS0_32( drvno, ADSC, addrADSC );
+	status = readRegisterS0_32(drvno, ADSC, addrADSC);
 	if (status != es_no_error) return status;
-	return readRegisterS0_32( drvno, LDSC, addrLDSC );
+	return readRegisterS0_32(drvno, LDSC, addrLDSC);
 }
 
 /**
  * \brief Set the pixel where IOCtrl starts inserting its data.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param startPixel Position of IOCtrl data in pixel
  * \return es_status_codes:
@@ -5322,7 +5322,7 @@ es_status_codes IOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixel)
 
 /**
  * \brief Set paramters of one pulse output of IOCTRL.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param number Number of output: 1 ... 7
  * \param width_in_5ns Set width of pulse in 5ns steps.
@@ -5401,7 +5401,7 @@ es_status_codes IOCtrl_setAllOutputs(uint32_t drvno, uint32_t* width_in_5ns, uin
 
 /**
  * \brief Set period of IOCtrl pulse outputs base frequency T0.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param period_in_10ns Period of T0 in 10ns steps.
  * \return es_status_codes:
@@ -5413,8 +5413,8 @@ es_status_codes IOCtrl_setAllOutputs(uint32_t drvno, uint32_t* width_in_5ns, uin
 es_status_codes IOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 {
 	ES_LOG("Set IOCtrl T0 period %u\n", period_in_10ns);
-	uint16_t period_in_10ns_L = (uint16_t) period_in_10ns;
-	uint16_t period_in_10ns_H = (uint16_t) (period_in_10ns >> 16);
+	uint16_t period_in_10ns_L = (uint16_t)period_in_10ns;
+	uint16_t period_in_10ns_H = (uint16_t)(period_in_10ns >> 16);
 	es_status_codes status = SendFLCAM(drvno, maddr_ioctrl, ioctrl_t0h, period_in_10ns_H);
 	if (status != es_no_error) return status;
 	return SendFLCAM(drvno, maddr_ioctrl, ioctrl_t0l, period_in_10ns_L);
@@ -5422,11 +5422,11 @@ es_status_codes IOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 
 /**
  * \brief This function copies valid data from DMA buffer to user buffer.
- * 
+ *
  * This function tracks the DMA buffer and every time there is new data available, it is copied to the user buffer.
- * The memory of the DMA buffer which was copied is then set to 0. Create a new thread for this function. This function 
+ * The memory of the DMA buffer which was copied is then set to 0. Create a new thread for this function. This function
  * should run parallel to the measurement. This function is only used when USE_SOFTWARE_POLLING is true.
- * 
+ *
  * \param drvno_p Pointer to PCIe board identifier.
  */
 void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
@@ -5563,7 +5563,7 @@ void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* blo
 
 /**
  * \brief Set the trigger input divider
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param divider
  *		- =0: disable this function (every trigger is used)
@@ -5603,7 +5603,7 @@ es_status_codes SetTocnt(uint32_t drvno, uint8_t divider)
 
 /**
  * \brief This function inserts data to user buffer for developing purpose.
- *  
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  */
 void FillUserBufferWithDummyData(uint32_t drvno)
@@ -5620,7 +5620,7 @@ void FillUserBufferWithDummyData(uint32_t drvno)
 
 /**
  * \brief Read TDC flag in PCIEFLAGS register.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param isTdc	TDC flag is written to this bool*. TRUE: TDC board detected, FALSE: no TDC board detected
  * \return es_status_codes:
@@ -5676,34 +5676,34 @@ void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString
 	*resultString = (char*)calloc(bufferLength, sizeof(char));
 	uint32_t len = 0;
 	len = sprintf_s(*resultString + len, bufferLength - (size_t)len, "Checked consistency of file\t%s\n\n", vd->filename_full);
-	if(vd->error_cnt) len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "Data inconsistent, check counters below\n\n");
+	if (vd->error_cnt) len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "Data inconsistent, check counters below\n\n");
 	else len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "Data found as expected\n\n");
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "Data found in file header:\n");
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "drvno:\t%u\n",vd->fh.drvno);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "pixel:\t%u\n",vd->fh.pixel);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "nos:\t%u\n",vd->fh.nos);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "nob:\t%u\n",vd->fh.nob);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "camcnt:\t%u\n",vd->fh.camcnt);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "measurement cnt:\t%lu\n",vd->fh.measurement_cnt);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "timestamp:\t%s\n",vd->fh.timestamp);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "filename_full:\t%s\n",vd->fh.filename_full);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "split mode:\t%u\n\n",vd->fh.split_mode);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "drvno:\t%u\n", vd->fh.drvno);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "pixel:\t%u\n", vd->fh.pixel);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "nos:\t%u\n", vd->fh.nos);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "nob:\t%u\n", vd->fh.nob);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "camcnt:\t%u\n", vd->fh.camcnt);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "measurement cnt:\t%lu\n", vd->fh.measurement_cnt);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "timestamp:\t%s\n", vd->fh.timestamp);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "filename_full:\t%s\n", vd->fh.filename_full);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "split mode:\t%u\n\n", vd->fh.split_mode);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "Data found:\n");
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "samples found:\t%u\n",vd->sample_cnt);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "blocks found:\t%u\n",vd->block_cnt);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "measurements found:\t%lu\n",vd->measurement_cnt);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "error counter:\t%u\n",vd->error_cnt);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last sample in data:\t%u\n",vd->last_sample);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last block in data:\t%u\n",vd->last_block);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last sample before error:\t%u\n",vd->last_sample_before_error);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last block before error:\t%u\n",vd->last_block_before_error);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last measurement before error:\t%lu\n",vd->last_measurement_before_error);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "samples found:\t%u\n", vd->sample_cnt);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "blocks found:\t%u\n", vd->block_cnt);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "measurements found:\t%lu\n", vd->measurement_cnt);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "error counter:\t%u\n", vd->error_cnt);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last sample in data:\t%u\n", vd->last_sample);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last block in data:\t%u\n", vd->last_block);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last sample before error:\t%u\n", vd->last_sample_before_error);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last block before error:\t%u\n", vd->last_block_before_error);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last measurement before error:\t%lu\n", vd->last_measurement_before_error);
 	return;
 }
 
 /**
  * \brief Control looping the measurement.
- * 
+ *
  * \param on 1: measurement runs in a loop, 0: measurement only runs once.
  */
 void SetContinuousMeasurement(bool on)
@@ -5714,9 +5714,9 @@ void SetContinuousMeasurement(bool on)
 
 /**
  * \brief This function returns the bit overTemp of a specific scan.
- * 
+ *
  * The information over temperature is given in the special pixel camera status (pixel_camera_status) in bit pixel_camera_status_bit_over_temp.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param sample sample number (0 ... (nos-1))
  * \param block block number (0 ... (nob-1))
@@ -5996,35 +5996,35 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 
 /**
  * \brief Reads the ScanFrequency bit and checks if its high or low.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param scanFrequencyTooHigh True when scanFrequency bit is set
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes ReadScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh) 
+es_status_codes ReadScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh)
 {
 	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_scan_read, scanFrequencyTooHigh);
 }
 
 /**
  * \brief Resets the ScanFrequency bit.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
  * 		- es_register_write_failed
  */
-es_status_codes ResetScanFrequencyBit(uint32_t drvno) 
+es_status_codes ResetScanFrequencyBit(uint32_t drvno)
 {
 	return pulseBitS0_8(drvno, FFCTRL_bitindex_scan_reset, S0Addr_FFCTRL);
 }
 
 /**
  * \brief Reads the BlockFrequency bit and checks if its high or low.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param blockFrequencyTooHigh True when BlockFrequency bit is set.
  * \return es_status_codes:
@@ -6038,7 +6038,7 @@ es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHig
 
 /**
  * \brief Resets the BlockFrequency bit.
- * 
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes:
  *		- es_no_error
@@ -6054,7 +6054,7 @@ es_status_codes GetOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t 
 {
 	es_status_codes status = es_no_error;
 	// allocate memory for one block of one camera
-	uint16_t* data = (uint16_t*) malloc(aPIXEL[drvno] * *Nospb * sizeof(uint16_t));
+	uint16_t* data = (uint16_t*)malloc(aPIXEL[drvno] * *Nospb * sizeof(uint16_t));
 	// iterate through all samples of the requestet block
 	for (uint32_t sample = 0; sample < *Nospb; sample++)
 	{
@@ -6063,7 +6063,7 @@ es_status_codes GetOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t 
 		status = GetAddressOfPixel(drvno, 0, sample, block, camera, &sample_address);
 		if (status != es_no_error) return status;
 		// check if sample_address is not null
-		if(sample_address)
+		if (sample_address)
 			// copy one sample to the new memory
 			memcpy(data + sample * aPIXEL[drvno], sample_address, aPIXEL[drvno] * sizeof(uint16_t));
 	}
@@ -6172,8 +6172,8 @@ es_status_codes SetCameraPosition(uint32_t drvno)
 }
 
 /**
- * \brief This functions sets the register S1S2ReadDealy with the setting \ref camera_settings.s1s2_read_delay_in_10ns. 
- * 
+ * \brief This functions sets the register S1S2ReadDealy with the setting \ref camera_settings.s1s2_read_delay_in_10ns.
+ *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \return es_status_codes
  */
@@ -6192,21 +6192,21 @@ es_status_codes ExportMeasurementHDF5(const char* path)
 	es_status_codes status;
 	uint32_t board_sel = settings_struct.board_sel;
 
-	if(isRunning) return es_measurement_running;
+	if (isRunning) return es_measurement_running;
 	for (uint32_t drvno = 0; drvno < MAXPCIECARDS; drvno++)
 	{
-		if(board_sel >> drvno & 1)
+		if (board_sel >> drvno & 1)
 		{
-			if((status = CheckFirstMeasurementDone(drvno)) != es_no_error) return status;
+			if ((status = CheckFirstMeasurementDone(drvno)) != es_no_error) return status;
 		}
 	}
-	if(!wasRunning) return es_first_measurement_not_done;
+	if (!wasRunning) return es_first_measurement_not_done;
 
 	const char* filename = "measurement.h5";
 	char filepath[FILENAME_MAX];
 	sprintf(filepath, "%s\\%s", path, filename);
 	if ((file_id = H5Fcreate(filepath, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT)) == H5I_INVALID_HID) return es_create_file_failed;
-	
+
 	char* filenameAttr[1] = { filename };
 	file_attr_name = CreateStringAttribute(file_id, "File Name", dataspace_scalar, filenameAttr);
 	H5Aclose(file_attr_name);
@@ -6218,7 +6218,7 @@ es_status_codes ExportMeasurementHDF5(const char* path)
 	file_attr_timestamp = CreateStringAttribute(file_id, "Timestamp", dataspace_scalar, timestamp);
 	H5Aclose(file_attr_timestamp);
 
-	
+
 	for (uint32_t drvno = 0; drvno < MAXPCIECARDS; drvno++)
 	{
 		if ((board_sel >> drvno) & 1)
@@ -6229,10 +6229,10 @@ es_status_codes ExportMeasurementHDF5(const char* path)
 			sprintf(groupBoardName, "/Board_%d", drvno + 1);
 			group_board_id = H5Gcreate(file_id, groupBoardName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 			uint32_t cameras = settings_struct.camera_settings[drvno].camcnt;
-			
+
 			group_board_attr_number_of_cameras = CreateNumericAttribute(group_board_id, "Number of Cameras", H5T_NATIVE_UINT32, dataspace_scalar, &cameras);
 			H5Aclose(group_board_attr_number_of_cameras);
-			
+
 			for (int camera = 0; camera < cameras; camera++)
 			{
 				hid_t group_camera_id, group_camera_attr_name, group_camera_attr_system, group_camera_attr_number_of_blocks;
@@ -6249,7 +6249,7 @@ es_status_codes ExportMeasurementHDF5(const char* path)
 
 				if (camera_system == 0)
 				{
-					camera_system_string = "3001" ;
+					camera_system_string = "3001";
 				}
 				else if (camera_system == 1)
 				{
@@ -6288,7 +6288,7 @@ es_status_codes ExportMeasurementHDF5(const char* path)
 
 					group_block_attr_number_of_samples = CreateNumericAttribute(group_block_id, "Number of Samples", H5T_NATIVE_UINT32, dataspace_scalar, &nos);
 					H5Aclose(group_block_attr_number_of_samples);
-					
+
 					for (uint32_t sample = 0; sample < nos; sample++)
 					{
 						hid_t space_id;
@@ -6326,7 +6326,7 @@ es_status_codes ExportMeasurementHDF5(const char* path)
 
 						hid_t sample_attr_scanIndex2 = CreateNumericAttribute(dataset_id, "Scan Index 2", H5T_NATIVE_UINT32, dataspace_scalar, &sp.scanIndex2);
 						H5Aclose(sample_attr_scanIndex2);
-						
+
 						hid_t sample_attr_impactSignal1 = CreateNumericAttribute(dataset_id, "Impact Signal 1", H5T_NATIVE_UINT32, dataspace_scalar, &sp.impactSignal1);
 						H5Aclose(sample_attr_impactSignal1);
 
@@ -6353,7 +6353,7 @@ es_status_codes ExportMeasurementHDF5(const char* path)
 						char* special_pixel_fpgaver[1] = { fpgaVer };
 						hid_t sample_attr_fpgaVer = CreateStringAttribute(dataset_id, "FPGA Version", dataspace_scalar, special_pixel_fpgaver);
 						H5Aclose(sample_attr_fpgaVer);
-						
+
 
 						// Close the dataset and dataspace.
 						statusHDF5 = H5Dclose(dataset_id);
@@ -6418,7 +6418,7 @@ es_status_codes CheckFirstMeasurementDone(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = readRegisterS0_32(drvno, &dataBlockIndex, S0Addr_BLOCKINDEX);
 	if (status != es_no_error) return status;
-	if((dataNOB != (dataBlockIndex & bitmask)) || dataNOB == 0 || dataBlockIndex == 0)
+	if ((dataNOB != (dataBlockIndex & bitmask)) || dataNOB == 0 || dataBlockIndex == 0)
 	{
 		return es_first_measurement_not_done;
 	}
