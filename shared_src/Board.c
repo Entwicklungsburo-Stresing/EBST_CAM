@@ -453,6 +453,8 @@ es_status_codes AbortMeasurement()
 /**
  * \brief Sets abortMeasurementFlag to true.
  * 
+ * Use this function if the measurement is running and you want to stop it.
+ * 
  * \return es_no_error
  */
 es_status_codes SetAbortMeasurementFlag()
@@ -3335,6 +3337,7 @@ es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t samp
 /**
  * \brief Calculate the theoretical time needed for one measurement.
  *
+ * nos * nob * exposure_time_in_ms / 1000
  * \param nos number of samples
  * \param nob number of blocks
  * \param exposure_time_in_ms exposure time in ms
