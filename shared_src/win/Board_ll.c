@@ -57,7 +57,7 @@ void isr( uint32_t drvno )
 {
 	ES_TRACE( "ISR Counter drvno %u: %d\n", drvno, IsrCounter[drvno]);
 	// Set INTRSR flag for TRIGO
-	es_status_codes status = setBitS0_32(drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );
+	es_status_codes status = setBitS0_32(drvno, IRQREG_bitindex_INTRSR, S0Addr_IRQREG );
 	if (status != es_no_error) return;
 	// Be sure not to stop run before last ISR is ready or last part is truncated.
 	// Usually dmaBufferSizeInBytes = 1000scans 
@@ -67,7 +67,7 @@ void isr( uint32_t drvno )
 	{
 		ES_LOG( "numberOfInterrupts: %u \n", numberOfInterrupts[drvno]);
 		ES_LOG( "ISR Counter overflow: %u \n", IsrCounter[drvno]);
-		status = resetBitS0_32( drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );//reset INTRSR flag for TRIGO
+		status = resetBitS0_32( drvno, IRQREG_bitindex_INTRSR, S0Addr_IRQREG );//reset INTRSR flag for TRIGO
 		return;
 	}
 	//ES_TRACE("dmaBufferSizeInBytes: 0x%x \n", dmaBufferSizeInBytes);
@@ -88,7 +88,7 @@ void isr( uint32_t drvno )
 	ES_TRACE("increase userBufferWritePos to 0x%p \n", userBufferWritePos[drvno]);
 	ES_TRACE("increase data_available to %u \n", data_available[drvno]);
 	// Reset INTRSR flag for TRIGO
-	status = resetBitS0_32(drvno, IRQFLAGS_bitindex_INTRSR, S0Addr_IRQREG );
+	status = resetBitS0_32(drvno, IRQREG_bitindex_INTRSR, S0Addr_IRQREG );
 	IsrCounter[drvno]++;
 	if (IsrCounter[drvno] >= numberOfInterrupts[drvno])
 	{
@@ -737,7 +737,7 @@ es_status_codes WaitTrigger(uint32_t drvno, bool ExtTrigFlag, bool *SpaceKey, bo
 		{
 			status = readRegisterS0_8(drvno, &ReadTrigPin, S0Addr_CTRLA);
 			if (status != es_no_error) return status;
-			ReadTrigPin &= CTRLA_bit_DIR_TRIGIN;
+			ReadTrigPin &= CTRLA_bit_STRIGIN;
 			if (ReadTrigPin == 0) FirstLo = TRUE; //first look for lo
 			if (FirstLo)
 			{

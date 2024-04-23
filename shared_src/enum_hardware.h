@@ -49,10 +49,16 @@ enum PCIEFLAGS_bits_t
 	PCIEFLAGS_bitindex_error_sfp1 = 31
 };
 
-enum IRQFLAGS_bits_t
+enum IRQREG_bits_t
 {
-	IRQFLAGS_bitindex_HWDREQ_EN = 30,
-	IRQFLAGS_bitindex_INTRSR = 31
+	IRQREG_bitindex_IRQLAT = 0,
+	IRQREG_bitindex_IRQCNT = 16,
+	IRQREG_bitindex_HWDREQ_EN = 30,
+	IRQREG_bitindex_INTRSR = 31,
+	IRQREG_bits_IRQLAT = 0x0000FFFF,
+	IRQREG_bits_IRQCNT = 0x3FFF0000,
+	IRQREG_bit_HWDREQ_EN = 0x40000000,
+	IRQREG_bit_INTRSR = 0x80000000,
 };
 
 enum CTRLB_bits_t
@@ -83,8 +89,8 @@ enum CTRLA_bits_t
 	CTRLA_bit_TRIG_OUT = 0x08,
 	CTRLA_bit_BOTH_SLOPE = 0x10,
 	CTRLA_bit_SLOPE = 0x20,
-	CTRLA_bit_DIR_TRIGIN = 0x40,
-	CTRLA_bit_TSTART = 0x80,
+	CTRLA_bit_STRIGIN = 0x40,
+	CTRLA_bit_BSTART = 0x80,
 	CTRLA_bitindex_VONOFF = 0,
 	CTRLA_bitindex_IFC = 1,
 	CTRLA_bitindex_XCK = 2,
@@ -97,8 +103,8 @@ enum CTRLA_bits_t
 	 * 0: negative slope, 1: positive slope.
 	 */
 	CTRLA_bitindex_SLOPE = 5,
-	CTRLA_bitindex_DIR_TRIGIN = 6,
-	CTRLA_bitindex_TSTART = 7
+	CTRLA_bitindex_STRIGIN = 6,
+	CTRLA_bitindex_BSTART = 7
 };
 
 enum CTRLC_bits_t
@@ -119,6 +125,7 @@ enum TOR_TICNT_bits_t
 {
 	TOR_bits_TICNT = 0x7F,
 	TOR_bit_TICNT_EN = 0x80,
+	TOR_bitindex_TICNT = 0,
 	TOR_bitindex_TICNT_EN = 7,
 };
 
@@ -126,6 +133,7 @@ enum TOR_TOCNT_bits_t
 {
 	TOR_bits_TOCNT = 0x7F,
 	TOR_bit_TOCNT_EN = 0x80,
+	TOR_bitindex_TOCNT = 0,
 	TOR_bitindex_TOCNT_EN = 7,
 };
 
@@ -152,8 +160,10 @@ enum TOR_MSB_bits_t
 
 enum ARREG_bits_t
 {
+	ARREG_bitindex_pb_control = 0,
 	ARREG_bitindex_partial_binning = 15,
-	ARREG_bit_pb_control = 0x7FFF
+	ARREG_bit_pb_control = 0x7FFF,
+	ARREG_bit_partial_binning = 0x8000
 };
 
 enum GIOREG_bits_t
@@ -174,7 +184,22 @@ enum GIOREG_bits_t
 	GIOREG_bitindex_I6 = 13,
 	GIOREG_bitindex_I7 = 14,
 	GIOREG_bitindex_I8 = 15,
-
+	GIOREG_bit_O1 = 0x0001,
+	GIOREG_bit_O2 = 0x0002,
+	GIOREG_bit_O3 = 0x0004,
+	GIOREG_bit_O4 = 0x0008,
+	GIOREG_bit_O5 = 0x0010,
+	GIOREG_bit_O6 = 0x0020,
+	GIOREG_bit_O7 = 0x0040,
+	GIOREG_bit_O8 = 0x0080,
+	GIOREG_bit_I1 = 0x0100,
+	GIOREG_bit_I2 = 0x0200,
+	GIOREG_bit_I3 = 0x0400,
+	GIOREG_bit_I4 = 0x0800,
+	GIOREG_bit_I5 = 0x1000,
+	GIOREG_bit_I6 = 0x2000,
+	GIOREG_bit_I7 = 0x4000,
+	GIOREG_bit_I8 = 0x8000,
 };
 
 /**
@@ -274,24 +299,32 @@ enum DeviceControl_bits_t
 
 enum FFCTRL_bits_t
 {
+	FFCTRL_bit_block_reset = 0x10,
+	FFCTRL_bit_scan_reset = 0x20,
 	FFCTRL_bit_SWTRIG = 0x40,
 	FFCTRL_bit_RSFIFO = 0x80,
+	FFCTRL_bitindex_block_reset = 4,
+	FFCTRL_bitindex_scan_reset = 5,
 	FFCTRL_bitindex_SWTRIG = 6,
 	FFCTRL_bitindex_RSFIFO = 7,
-	FFCTRL_bitindex_scan_reset = 5,
-	FFCTRL_bitindex_block_reset = 4
 };
 
 enum FF_FLAGS_bits_t
 {
-	FF_FLAGS_bit_control = 0x08,
-	FF_FLAGS_bitindex_valid = 7,
-	FF_FLAGS_bitindex_empty = 6,
-	FF_FLAGS_bitindex_full = 5,
-	FF_FLAGS_bitindex_xcki = 4,
-	FF_FLAGS_bitindex_overflow = 3,
+	FF_FLAGS_bit_block_read = 0x02,
+	FF_FLAGS_bit_scan_read = 0x04,
+	FF_FLAGS_bit_overflow = 0x08,
+	FF_FLAGS_bit_xcki = 0x10,
+	FF_FLAGS_bit_full = 0x20,
+	FF_FLAGS_bit_empty = 0x40,
+	FF_FLAGS_bit_valid = 0x80,
+	FF_FLAGS_bitindex_block_read = 1,
 	FF_FLAGS_bitindex_scan_read = 2,
-	FF_FLAGS_bitindex_block_read = 1
+	FF_FLAGS_bitindex_overflow = 3,
+	FF_FLAGS_bitindex_xcki = 4,
+	FF_FLAGS_bitindex_full = 5,
+	FF_FLAGS_bitindex_empty = 6,
+	FF_FLAGS_bitindex_valid = 7,
 };
 
 enum FIFOCNT_bits_t
@@ -324,7 +357,10 @@ enum VCLKFREQ_bits_t
 
 enum SDAT_bits_t
 {
-	SDAT_bit_control = 0x3FFFFFFF
+	SDAT_bitindex_control = 0,
+	SDAT_bitindex_enable = 31,
+	SDAT_bit_control = 0x7FFFFFFF,
+	SDAT_bit_enable = 0x80000000,
 };
 
 //S0 Addresses
@@ -334,20 +370,13 @@ enum s0_addresses_t
 	S0Addr_CTRLA = 0x4, //0x04
 	S0Addr_CTRLB = 0x5,
 	S0Addr_CTRLC = 0x6,
-	S0Addr_XCKLL = 0x8, //0x08
-	S0Addr_XCKLH = 0x9,
-	S0Addr_XCKHL = 0xa,
-	S0Addr_XCKMSB = 0xb,
-	S0Addr_XCKCNTLL = 0xc, //0x0c
-	S0Addr_XCKCNTLH = 0xd,
-	S0Addr_XCKCNTHL = 0xe,
-	S0Addr_XCKCNTMSB = 0xf,
-	S0Addr_PIXREGlow = 0x10, //0x10
-	S0Addr_PIXREGhigh = 0x11,
+	S0Addr_XCK = 0x8, //0x08
+	S0Addr_XCKCNT = 0xc, //0x0c
+	S0Addr_PIXREG = 0x10, //0x10
 	S0Addr_FFCTRL = 0x12,
 	S0Addr_FF_FLAGS = 0x13,
 	S0Addr_FIFOCNT = 0x14, //0x14
-	S0Addr_VCLKCTRL = 0x18,
+	S0Addr_VCLKCTRL = 0x18, //0x18
 	S0Addr_VCLKFREQ = 0x1b,
 	S0Addr_EBST = 0x1C, //0x1c
 	S0Addr_SDAT = 0x20, //0x20
@@ -394,22 +423,20 @@ enum s0_addresses_t
 
 enum XCK_bits_t
 {
-	XCK_stimer_bitindex = 0,
-	XCK_stimer_bits = 0x0FFFFFFF
-};
-
-enum XCKMSB_bits_t
-{
-	XCKMSB_bit_stimer_on = 0x40,
+	XCK_bitindex_stimer = 0,
 	/**
 	 * select timer base resolution: 0: 1us, 1: 100ns
 	 */
-	XCKMSB_bitindex_reset_ns = 4,
+	XCK_bitindex_res_ns = 28,
 	/**
 	 * divide time base resolution by 1000: 0: 1us, 1: 1ms, or when reset_ns = 1: 0: 100ns, 1: 100us
 	 */
-	XCKMSB_bitindex_reset_ms = 5,
-	XCKMSB_bitindex_stimer_on = 6,
+	XCK_bitindex_res_ms = 29,
+	XCK_bitindex_stimer_on = 30,
+	XCK_bits_stimer = 0x0FFFFFFF,
+	XCK_bit_res_ns = 0x10000000,
+	XCK_bit_res_ms = 0x20000000,
+	XCK_bit_stimer_on = 0x40000000,
 };
 
 enum ScanIndex_bits_t
