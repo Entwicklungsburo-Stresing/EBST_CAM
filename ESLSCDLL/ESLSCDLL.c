@@ -1077,7 +1077,7 @@ DllAccess es_status_codes DLLisBlockOn_multipleBoards(uint8_t* blockOn0, uint8_t
  */
 DllAccess es_status_codes DLLwaitForMeasureReady()
 {
-	return waitForMeasureReady(settings_struct.board_sel);
+	return WaitForMeasureReady(settings_struct.board_sel);
 }
 
 /**
