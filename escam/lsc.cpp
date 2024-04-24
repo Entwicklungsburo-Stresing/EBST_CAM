@@ -497,6 +497,11 @@ es_status_codes Lsc::exportMeasurementHDF5(const char* path)
 	return ExportMeasurementHDF5(path);
 }
 
+es_status_codes Lsc::waitForMeasureReady(uint32_t board_sel)
+{
+	return WaitForMeasureReady(board_sel);
+}
+
 
 
 

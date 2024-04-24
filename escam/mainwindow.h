@@ -31,6 +31,7 @@ public slots:
 	void on_blockStart();
 	void on_blockDone();
 	void on_allBlocksDone();
+	void startPressed();
 private:
 	QSettings settings;
 	void setChartData(QLineSeries** series, uint16_t numberOfSets);
@@ -80,7 +81,6 @@ private slots:
 	void on_blockFrequencyTooHigh();
 	void findCamera();
 	void on_readCameraTemp();
-	void startPressed();
 };
 
 #endif // MAINWINDOW_H

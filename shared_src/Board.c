@@ -3686,7 +3686,7 @@ es_status_codes waitForBlockReady(uint32_t board_sel)
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes waitForMeasureReady(uint32_t board_sel)
+es_status_codes WaitForMeasureReady(uint32_t board_sel)
 {
 	bool measureOn[MAXPCIECARDS] = { false, false, false, false, false };
 	es_status_codes status = es_no_error;
