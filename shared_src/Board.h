@@ -123,7 +123,7 @@ es_status_codes OutTrigHigh(uint32_t drvno);
 es_status_codes OutTrigPulse(uint32_t drvno, int64_t pulseWidthInMicroseconds);
 es_status_codes readBlockTriggerState(uint32_t drv, uint8_t btrig_ch, bool* state);
 es_status_codes waitForBlockReady(uint32_t board_sel);
-es_status_codes waitForMeasureReady(uint32_t board_sel);
+es_status_codes WaitForMeasureReady(uint32_t board_sel);
 es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr);
 es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr);
 es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr);
