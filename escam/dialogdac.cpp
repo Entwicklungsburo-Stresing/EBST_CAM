@@ -19,6 +19,8 @@ DialogDac::DialogDac(QWidget* parent)
 	connect(ui->spinBoxPcie, qOverload<int>(&QSpinBox::valueChanged), this, &DialogDac::loadSettings);
 	connect(ui->comboBoxLocation, qOverload<int>(&QComboBox::currentIndexChanged), this, &DialogDac::loadSettings);
 	connect(ui->spinBoxCamera, qOverload<int>(&QSpinBox::valueChanged), this, &DialogDac::loadSettings);
+	connect(&mainWindow->lsc, &Lsc::measureStart, this, &DialogDac::on_autotuneStateChanged);
+	connect(&mainWindow->lsc, &Lsc::measureDone, this, &DialogDac::on_autotuneStateChanged);
 	
 	ui->spinBoxPcie->setMaximum(number_of_boards - 1);
 	if (number_of_boards == 1)
@@ -239,99 +241,95 @@ void DialogDac::loadSettings()
 
 void DialogDac::on_pushButtonAutotune_pressed()
 {
-	if (isRunning) {
-		mainWindow->lsc.abortMeasurement();
-		ui->pushButtonAutotune->setText("Autotune");
+	if (autotuneRunning) {
+		autotuneRunning = false;
 	}
 	else
+	{
 		autotunePressed();
+	}
 	return;
 }
 
 void DialogDac::autotunePressed()
 {
+	autotuneRunning = true;
 	if (mainWindow->ui->checkBoxLoopMeasurement->isChecked())
 		mainWindow->ui->checkBoxLoopMeasurement->setChecked(false);
 
-	ui->pushButtonAutotune->setText("Stop");
 	int target = ui->spinBoxTarget->value();
 	int tolerance = 3;
 	const int timeoutCount = 50;
 	int timeout = timeoutCount;
-	int meanChannel1 = 0, meanChannel2 = 0, meanChannel3 = 0, meanChannel4 = 0, meanChannel5 = 0, meanChannel6 = 0, meanChannel7 = 0, meanChannel8 = 0;
-
-	int meanArray[8][timeoutCount];
-	int iterator = 0;
 
 	bool targetReached = false, ch1TargetReached = false, ch2TargetReached = false, ch3Target = false, ch3TargetReached = false, ch4TargetReached = false, ch5TargetReached = false, ch6TargetReached = false, ch7TargetReached = false, ch8TargetReached = false;
-	while (!targetReached && timeout > 0)
+	while (!targetReached && timeout > 0 && autotuneRunning)
 	{
-		/*
-		mainWindow->initSettings();
-		//es_status_codes status = mainWindow->lsc.initMeasurement();
-		es_status_codes status = lsc.initMeasurement();
-		if (status != es_no_error)
-		{
-			QMessageBox* msgBox = new QMessageBox(this);
-			msgBox->setWindowTitle("Error initializing measurement");
-			msgBox->setText("Error initializing measurement");
-			msgBox->setStandardButtons(QMessageBox::Ok);
-			msgBox->exec();
-			return;
-		}
-		//mainWindow->lsc.startMeasurement();
-		autotuneThread.start();
-		*/
+
 		uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
 		mainWindow->startPressed();
-		//Create a delay of 300 ms
-		QTime dieTime = QTime::currentTime().addMSecs(1);
+		//Create a delay of 3 ms
+		QTime dieTime = QTime::currentTime().addMSecs(100);
 		while (QTime::currentTime() < dieTime)
 			QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 		mainWindow->lsc.waitForMeasureReady(board_sel);
 		uint32_t drvno = QString::number(ui->spinBoxPcie->value()).toInt();
+		settings.beginGroup("board" + QString::number(drvno));
 		uint32_t sample = 20;
 		uint32_t block = settings.value(settingNobPath, settingNobDefault).toDouble() - 1;
 		uint16_t camera = QString::number(ui->spinBoxCamera->value()).toInt();
 		uint32_t pixel = settings.value(settingPixelPath, settingPixelDefault).toDouble();
+		settings.endGroup();
 		size_t data_array_size = 0;
 		data_array_size += pixel;
 		uint16_t* data = static_cast<uint16_t*>(malloc(data_array_size * sizeof(uint16_t)));
 
 		es_status_codes status = mainWindow->lsc.returnFrame(drvno, sample, block, camera, pixel, data);
-		if (status != es_no_error) return;
+		if (status != es_no_error)
+		{
+			autotuneRunning = false;
+			on_autotuneStateChanged();
+			free(data);
+			return;
+		}
 
 		QSpinBox* spinBoxArray[8] = { ui->spinBoxChannel1, ui->spinBoxChannel2, ui->spinBoxChannel3, ui->spinBoxChannel4, ui->spinBoxChannel5, ui->spinBoxChannel6, ui->spinBoxChannel7, ui->spinBoxChannel8 };
 		int arraySize = (sizeof(spinBoxArray) / sizeof(spinBoxArray[0]));
 
-		for (int i = 0; i < arraySize; i++)
-			if (spinBoxArray[i]->value() >= 60000)
-			{
-				QMessageBox::warning(this, "Warning", "DAC value is too high. Please reduce the target value and try again.");
-				return;
-			}
+		if (!ch1TargetReached) ch1TargetReached = autotuneAdjust(data, autotune_ch1_start, autotune_ch1_end, spinBoxArray[0]);
+		if (!ch2TargetReached) ch2TargetReached = autotuneAdjust(data, autotune_ch2_start, autotune_ch2_end, spinBoxArray[1]);
+		if (!ch3TargetReached) ch3TargetReached = autotuneAdjust(data, autotune_ch3_start, autotune_ch3_end, spinBoxArray[2]);
+		if (!ch4TargetReached) ch4TargetReached = autotuneAdjust(data, autotune_ch4_start, autotune_ch4_end, spinBoxArray[3]);
+		if (!ch5TargetReached) ch5TargetReached = autotuneAdjust(data, autotune_ch5_start, autotune_ch5_end, spinBoxArray[4]);
+		if (!ch6TargetReached) ch6TargetReached = autotuneAdjust(data, autotune_ch6_start, autotune_ch6_end, spinBoxArray[5]);
+		if (!ch7TargetReached) ch7TargetReached = autotuneAdjust(data, autotune_ch7_start, autotune_ch7_end, spinBoxArray[6]);
+		if (!ch8TargetReached) ch8TargetReached = autotuneAdjust(data, autotune_ch8_start, autotune_ch8_end, spinBoxArray[7]);
 
-		ch1TargetReached = autotuneAdjust(data, autotune_ch1_start, autotune_ch1_end, spinBoxArray[0]);
-		ch2TargetReached = autotuneAdjust(data, autotune_ch2_start, autotune_ch2_end, spinBoxArray[1]);
-		ch3TargetReached = autotuneAdjust(data, autotune_ch3_start, autotune_ch3_end, spinBoxArray[2]);
-		ch4TargetReached = autotuneAdjust(data, autotune_ch4_start, autotune_ch4_end, spinBoxArray[3]);
-		ch5TargetReached = autotuneAdjust(data, autotune_ch5_start, autotune_ch5_end, spinBoxArray[4]);
-		ch6TargetReached = autotuneAdjust(data, autotune_ch6_start, autotune_ch6_end, spinBoxArray[5]);
-		ch7TargetReached = autotuneAdjust(data, autotune_ch7_start, autotune_ch7_end, spinBoxArray[6]);
-		ch8TargetReached = autotuneAdjust(data, autotune_ch8_start, autotune_ch8_end, spinBoxArray[7]);
-				
-		//Create a delay of 300 ms
-		dieTime = QTime::currentTime().addMSecs(300);
-		while (QTime::currentTime() < dieTime)
+		bool warningNeeded = false;
+		for (int i = 0; i < arraySize; i++)
+		{
+			if (spinBoxArray[i]->value() >= 60000)
+				warningNeeded = true;
+				if (spinBoxArray[i]->value() >= 65000)
+					spinBoxArray[i]->setValue(64999);
+		}
+		if (warningNeeded)
+			ui->labelAutotuneWarning->setText("Warning: DAC value is high!");
+		else 
+			ui->labelAutotuneWarning->setText("");
+		
+		// Create a delay of 1 ms
+		QTime dieTime2 = QTime::currentTime().addMSecs(100);
+		while (QTime::currentTime() < dieTime2)
 			QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 		
 		free(data);
 		timeout--;
-		iterator++;
 		if (ch1TargetReached && ch2TargetReached && ch3TargetReached && ch4TargetReached && ch5TargetReached && ch6TargetReached && ch7TargetReached && ch8TargetReached)
 			targetReached = true;
 	}
-	ui->pushButtonAutotune->setText("Autotune");
+	autotuneRunning = false;
+	on_autotuneStateChanged();
 	return;
 }
 
@@ -353,7 +351,7 @@ bool DialogDac::autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spi
 	int tolerance = 3;
 	int mean = calculateMean(data, start, end);
 
-	if ((mean <= target + tolerance) && (mean >= target - tolerance)) 
+	if (((mean <= target + tolerance) && (mean >= target - tolerance)) || spinBox->value() >= 65000)
 		targetReached = true;
 	else {
 		int distance = 0;
@@ -366,9 +364,19 @@ bool DialogDac::autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spi
 			{
 			distance = target - mean;
 			spinBox->setValue(spinBox->value() + distance / 2);
+			int newMean = calculateMean(data, start, end);
 		}
 	}
 	return targetReached;
+}
+
+void DialogDac::on_autotuneStateChanged()
+{
+	if (!autotuneRunning)
+		ui->pushButtonAutotune->setText("Autotune");
+	else 
+		ui->pushButtonAutotune->setText("Stop");
+	return;
 }
 
 
