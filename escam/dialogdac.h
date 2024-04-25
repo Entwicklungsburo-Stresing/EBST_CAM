@@ -21,11 +21,13 @@ private slots:
 	void loadSettings();
 	void on_pushButtonDefault_pressed();
 	void on_pushButtonAutotune_pressed();
+	void on_autotuneStateChanged();
 
 private:
 	uint32_t output_old[8];
 	Ui::DialogDac *ui;
 	QSettings settings;
+	bool autotuneRunning = false;
 	void autotunePressed();
 	int calculateMean(uint16_t* data, int start, int end);
 	bool autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spinBox);
