@@ -122,6 +122,8 @@ void MainWindow::setChartData(QLineSeries** series, uint16_t numberOfSets)
 	if (axes.isEmpty()) return;
 	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
 	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
+	axis0->setLabelFormat("%i");
+	axis1->setLabelFormat("%i");
 	axis0->setMax(ui->chartView->curr_xmax);
 	axis0->setMin(ui->chartView->curr_xmin);
 	axis1->setMax(ui->chartView->curr_ymax);
