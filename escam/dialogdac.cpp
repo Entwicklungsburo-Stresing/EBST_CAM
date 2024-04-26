@@ -243,6 +243,7 @@ void DialogDac::on_pushButtonAutotune_pressed()
 {
 	if (autotuneRunning) {
 		autotuneRunning = false;
+		mainWindow->ui->checkBoxLoopMeasurement->setEnabled(true);
 	}
 	else
 	{
@@ -253,23 +254,21 @@ void DialogDac::on_pushButtonAutotune_pressed()
 
 void DialogDac::autotunePressed()
 {
-	autotuneRunning = true;
 	if (mainWindow->ui->checkBoxLoopMeasurement->isChecked())
 		mainWindow->ui->checkBoxLoopMeasurement->setChecked(false);
+	mainWindow->ui->checkBoxLoopMeasurement->setEnabled(false);
+	autotuneRunning = true;
 
-	int target = ui->spinBoxTarget->value();
-	int tolerance = 3;
 	const int timeoutCount = 50;
 	int timeout = timeoutCount;
 
 	bool targetReached = false, ch1TargetReached = false, ch2TargetReached = false, ch3Target = false, ch3TargetReached = false, ch4TargetReached = false, ch5TargetReached = false, ch6TargetReached = false, ch7TargetReached = false, ch8TargetReached = false;
 	while (!targetReached && timeout > 0 && autotuneRunning)
 	{
-
 		uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
 		mainWindow->startPressed();
 		//Create a delay of 3 ms
-		QTime dieTime = QTime::currentTime().addMSecs(100);
+		QTime dieTime = QTime::currentTime().addMSecs(15);
 		while (QTime::currentTime() < dieTime)
 			QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 		mainWindow->lsc.waitForMeasureReady(board_sel);
@@ -296,6 +295,18 @@ void DialogDac::autotunePressed()
 		QSpinBox* spinBoxArray[8] = { ui->spinBoxChannel1, ui->spinBoxChannel2, ui->spinBoxChannel3, ui->spinBoxChannel4, ui->spinBoxChannel5, ui->spinBoxChannel6, ui->spinBoxChannel7, ui->spinBoxChannel8 };
 		int arraySize = (sizeof(spinBoxArray) / sizeof(spinBoxArray[0]));
 
+		bool warningNeeded = false;
+		for (int i = 0; i < arraySize; i++)
+		{
+			if (spinBoxArray[i]->value() >= 60000)
+				warningNeeded = true;
+		}
+		if (warningNeeded)
+			ui->labelAutotuneWarning->setText("Warning: DAC value is high!");
+		else
+			ui->labelAutotuneWarning->setText("");
+
+
 		if (!ch1TargetReached) ch1TargetReached = autotuneAdjust(data, autotune_ch1_start, autotune_ch1_end, spinBoxArray[0]);
 		if (!ch2TargetReached) ch2TargetReached = autotuneAdjust(data, autotune_ch2_start, autotune_ch2_end, spinBoxArray[1]);
 		if (!ch3TargetReached) ch3TargetReached = autotuneAdjust(data, autotune_ch3_start, autotune_ch3_end, spinBoxArray[2]);
@@ -305,21 +316,9 @@ void DialogDac::autotunePressed()
 		if (!ch7TargetReached) ch7TargetReached = autotuneAdjust(data, autotune_ch7_start, autotune_ch7_end, spinBoxArray[6]);
 		if (!ch8TargetReached) ch8TargetReached = autotuneAdjust(data, autotune_ch8_start, autotune_ch8_end, spinBoxArray[7]);
 
-		bool warningNeeded = false;
-		for (int i = 0; i < arraySize; i++)
-		{
-			if (spinBoxArray[i]->value() >= 60000)
-				warningNeeded = true;
-				if (spinBoxArray[i]->value() >= 65000)
-					spinBoxArray[i]->setValue(64999);
-		}
-		if (warningNeeded)
-			ui->labelAutotuneWarning->setText("Warning: DAC value is high!");
-		else 
-			ui->labelAutotuneWarning->setText("");
 		
 		// Create a delay of 1 ms
-		QTime dieTime2 = QTime::currentTime().addMSecs(100);
+		QTime dieTime2 = QTime::currentTime().addMSecs(15);
 		while (QTime::currentTime() < dieTime2)
 			QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 		
@@ -373,10 +372,26 @@ bool DialogDac::autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spi
 void DialogDac::on_autotuneStateChanged()
 {
 	if (!autotuneRunning)
+	{
 		ui->pushButtonAutotune->setText("Autotune");
-	else 
+		mainWindow->ui->checkBoxLoopMeasurement->setEnabled(true);
+	}
+	else
+	{
 		ui->pushButtonAutotune->setText("Stop");
+		mainWindow->ui->checkBoxLoopMeasurement->setEnabled(false);
+	}
 	return;
 }
 
-
+void DialogDac::reject()
+{
+	autotuneRunning = false;
+	on_autotuneStateChanged();
+	//create a delay of 1 ms
+	QTime dieTime = QTime::currentTime().addMSecs(15);
+	while (QTime::currentTime() < dieTime)
+		QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+	QDialog::reject();
+	return;
+}

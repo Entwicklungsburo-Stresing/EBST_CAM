@@ -17,15 +17,14 @@ public:
 
 	void on_rubberband_valueChanged();
 
-	void on_checkBoxMirrorX_stateChanged();
-	void on_checkBoxMirrorY_stateChanged();
-
 private slots:
 	void on_buttonBox_rejected();
 	void on_spinBoxXmin_valueChanged(int arg1);
 	void on_spinBoxXmax_valueChanged(int arg1);
 	void on_spinBoxYmin_valueChanged(int arg1);
 	void on_spinBoxYmax_valueChanged(int arg1);
+	void on_checkBoxMirrorX_stateChanged(int state);
+	void on_checkBoxMirrorY_stateChanged(int state);
 
 private:
 	Ui::DialogAxes* ui;
