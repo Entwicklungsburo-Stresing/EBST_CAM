@@ -172,6 +172,7 @@ void DialogSettings::on_checkBoxBoard0_stateChanged(int state)
 	case settings_level_guided:
 		enabled = state;
 		break;
+	default:
 	case settings_level_free:
 		enabled = true;
 		break;
@@ -188,6 +189,7 @@ void DialogSettings::on_checkBoxBoard1_stateChanged(int state)
 	case settings_level_guided:
 		enabled = state;
 		break;
+	default:
 	case settings_level_free:
 		enabled = true;
 		break;
@@ -204,6 +206,7 @@ void DialogSettings::on_checkBoxBoard2_stateChanged(int state)
 	case settings_level_guided:
 		enabled = state;
 		break;
+	default:
 	case settings_level_free:
 		enabled = true;
 		break;
@@ -220,6 +223,7 @@ void DialogSettings::on_checkBoxBoard3_stateChanged(int state)
 	case settings_level_guided:
 		enabled = state;
 		break;
+	default:
 	case settings_level_free:
 		enabled = true;
 		break;
@@ -236,6 +240,7 @@ void DialogSettings::on_checkBoxBoard4_stateChanged(int state)
 	case settings_level_guided:
 		enabled = state;
 		break;
+	default:
 	case settings_level_free:
 		enabled = true;
 		break;
