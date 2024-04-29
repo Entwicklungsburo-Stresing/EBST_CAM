@@ -57,7 +57,7 @@
 #define settingAdcCustomValueDefault				0
 #define settingThemeIndexDefault					0
 #define settingThemeDefault							"windowsvista"
-#define settingSettingsLevelDefault					0
+#define settingSettingsLevelDefault					settings_level_guided
 #define settingBecIn10nsDefault						0
 #define settingShowCameraDefault					1
 #define settingIOCtrlImpactStartPixelDefault		1078
