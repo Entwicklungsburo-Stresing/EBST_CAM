@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>347</width>
-    <height>478</height>
+    <width>345</width>
+    <height>464</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1196,61 +1196,28 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="exportdata">
+     <widget class="QWidget" name="other">
       <attribute name="title">
-       <string>Export data</string>
+       <string>Other</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="2" column="1">
+         <item row="3" column="1">
+          <widget class="QLabel" name="labelAdcMode">
+           <property name="text">
+            <string>adc mode</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
           <widget class="QLabel" name="labelFilePath">
            <property name="text">
             <string>file path</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="labelWriteDataToDisc">
-           <property name="text">
-            <string>write data to disc</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="2">
-          <spacer name="verticalSpacer_12">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="2" column="3">
-          <spacer name="horizontalSpacer_8">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="1" column="2">
-          <widget class="QCheckBox" name="checkBoxWriteDataToDisc">
-           <property name="text">
-            <string>on</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
+         <item row="6" column="2">
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
             <widget class="QPlainTextEdit" name="plainTextEditFilePath">
@@ -1295,44 +1262,7 @@
            </item>
           </layout>
          </item>
-         <item row="2" column="0">
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="0" column="2">
-          <spacer name="verticalSpacer_11">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="debug">
-      <attribute name="title">
-       <string>Debug</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_7">
-       <item>
-        <layout class="QGridLayout" name="gridLayoutDebug">
-         <item row="2" column="2">
+         <item row="3" column="2">
           <widget class="QComboBox" name="comboBoxAdcMode">
            <item>
             <property name="text">
@@ -1351,58 +1281,8 @@
            </item>
           </widget>
          </item>
-         <item row="5" column="1">
-          <spacer name="verticalSpacer_8">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="1" column="0">
-          <spacer name="horizontalSpacer_11">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="labelAdcCustom">
-           <property name="text">
-            <string>adc mode custom value</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="labelOutput">
-           <property name="text">
-            <string>tor (ouput signal PCIe card)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="2">
-          <widget class="QSpinBox" name="spinBoxAdcCustom">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="maximum">
-            <number>65534</number>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="3">
-          <spacer name="horizontalSpacer_12">
+         <item row="6" column="3">
+          <spacer name="horizontalSpacer_8">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -1415,26 +1295,13 @@
           </spacer>
          </item>
          <item row="2" column="1">
-          <widget class="QLabel" name="labelAdcMode">
+          <widget class="QLabel" name="labelOutput">
            <property name="text">
-            <string>adc mode</string>
+            <string>tor (ouput signal PCIe card)</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <spacer name="verticalSpacer_7">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="1" column="2">
+         <item row="2" column="2">
           <widget class="QComboBox" name="comboBoxOutput">
            <property name="currentIndex">
             <number>0</number>
@@ -1604,14 +1471,84 @@
            </item>
           </widget>
          </item>
+         <item row="6" column="0">
+          <spacer name="horizontalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="0" column="2">
+          <spacer name="verticalSpacer_11">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="5" column="2">
+          <widget class="QCheckBox" name="checkBoxWriteDataToDisc">
+           <property name="text">
+            <string>on</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="2">
+          <widget class="QSpinBox" name="spinBoxAdcCustom">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="maximum">
+            <number>65534</number>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLabel" name="labelWriteDataToDisc">
+           <property name="text">
+            <string>write data to disc</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="2">
+          <spacer name="verticalSpacer_12">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
          <item row="4" column="1">
+          <widget class="QLabel" name="labelAdcCustom">
+           <property name="text">
+            <string>adc mode custom value</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
           <widget class="QLabel" name="labelBncOut">
            <property name="text">
             <string>xck out cc</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="2">
+         <item row="1" column="2">
           <widget class="QComboBox" name="comboBoxBncOut">
            <property name="currentText">
             <string>XCK</string>
