@@ -473,64 +473,6 @@
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
         <layout class="QGridLayout" name="gridLayoutCamerasetup">
-         <item row="12" column="2">
-          <widget class="QSpinBox" name="spinBoxGpxOffset">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="maximum">
-            <number>268435455</number>
-           </property>
-          </widget>
-         </item>
-         <item row="16" column="1">
-          <spacer name="verticalSpacerBottom">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="9" column="1">
-          <widget class="QLabel" name="labelGain3030">
-           <property name="text">
-            <string>adc gain</string>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="1">
-          <widget class="QLabel" name="labelUseSoftwarePolling">
-           <property name="text">
-            <string>software polling</string>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="2">
-          <widget class="QCheckBox" name="checkBoxUseSoftwarePolling">
-           <property name="text">
-            <string>on</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="2">
-          <widget class="QSpinBox" name="spinBoxSensorGain">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="labelSensorType">
-           <property name="text">
-            <string>SENSOR TYPE</string>
-           </property>
-          </widget>
-         </item>
          <item row="11" column="2">
           <widget class="QComboBox" name="comboBoxCamCool">
            <item>
@@ -585,37 +527,46 @@
            </item>
           </widget>
          </item>
-         <item row="10" column="1">
-          <widget class="QLabel" name="labelIsCooledCameraLegacyMode">
+         <item row="10" column="2">
+          <widget class="QCheckBox" name="checkBoxIsCooledCameraLegacyMode">
            <property name="text">
-            <string>cooled camera legacy mode</string>
+            <string>on</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="1">
-          <widget class="QLabel" name="labelCameraSystem">
-           <property name="text">
-            <string>CAMERA SYSTEM</string>
+         <item row="6" column="2">
+          <widget class="QSpinBox" name="spinBoxPixel">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>64</number>
+           </property>
+           <property name="maximum">
+            <number>9999</number>
+           </property>
+           <property name="singleStep">
+            <number>64</number>
+           </property>
+           <property name="value">
+            <number>576</number>
            </property>
           </widget>
          </item>
-         <item row="2" column="3">
-          <spacer name="horizontalSpacerRight">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="7" column="1">
-          <widget class="QLabel" name="labelLed">
+         <item row="8" column="1">
+          <widget class="QLabel" name="labelGain3010">
            <property name="text">
-            <string>led</string>
+            <string>sensor gain</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLabel" name="labelOutputPixel">
+           <property name="text">
+            <string>PIXEL (number of pixel)</string>
            </property>
           </widget>
          </item>
@@ -626,10 +577,17 @@
            </property>
           </widget>
          </item>
-         <item row="15" column="1">
-          <widget class="QLabel" name="labelSensorResetLength">
+         <item row="10" column="1">
+          <widget class="QLabel" name="labelIsCooledCameraLegacyMode">
            <property name="text">
-            <string>sensor reset length</string>
+            <string>cooled camera legacy mode</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="labelSensorType">
+           <property name="text">
+            <string>SENSOR TYPE</string>
            </property>
           </widget>
          </item>
@@ -640,85 +598,19 @@
            </property>
           </widget>
          </item>
-         <item row="7" column="2">
-          <widget class="QCheckBox" name="checkBoxLed">
-           <property name="text">
-            <string>off</string>
-           </property>
-          </widget>
-         </item>
-         <item row="12" column="1">
-          <widget class="QLabel" name="labelGpxOffset">
-           <property name="text">
-            <string>gpx offset</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="2">
-          <widget class="QComboBox" name="comboBoxCameraSystem">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <item>
-            <property name="text">
-             <string>3001</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>3010</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>3030</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="5" column="1">
-          <widget class="QLabel" name="labelCamcnt">
-           <property name="text">
-            <string>CAMCNT (number of cameras)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="2">
-          <widget class="QSpinBox" name="spinBoxCamcnt">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
+         <item row="15" column="2">
+          <widget class="QSpinBox" name="spinBoxSensorResetLengthIn1ns">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="minimum">
-            <number>0</number>
+           <property name="suffix">
+            <string>ns</string>
            </property>
            <property name="maximum">
-            <number>8</number>
+            <number>262140</number>
            </property>
-           <property name="value">
-            <number>1</number>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <spacer name="horizontalSpacerLeft">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="8" column="1">
-          <widget class="QLabel" name="labelGain3010">
-           <property name="text">
-            <string>sensor gain</string>
+           <property name="singleStep">
+            <number>4</number>
            </property>
           </widget>
          </item>
@@ -763,39 +655,67 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <spacer name="verticalSpacerTop">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="15" column="2">
-          <widget class="QSpinBox" name="spinBoxSensorResetLengthIn1ns">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="suffix">
-            <string>ns</string>
-           </property>
-           <property name="maximum">
-            <number>262140</number>
-           </property>
-           <property name="singleStep">
-            <number>4</number>
+         <item row="3" column="2">
+          <widget class="QCheckBox" name="checkBoxIsFftLegacy">
+           <property name="text">
+            <string>on</string>
            </property>
           </widget>
          </item>
-         <item row="6" column="1">
-          <widget class="QLabel" name="labelOutputPixel">
+         <item row="12" column="2">
+          <widget class="QSpinBox" name="spinBoxGpxOffset">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="maximum">
+            <number>268435455</number>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="2">
+          <widget class="QSpinBox" name="spinBoxCamcnt">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <number>8</number>
+           </property>
+           <property name="value">
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QLabel" name="labelLed">
            <property name="text">
-            <string>PIXEL (number of pixel)</string>
+            <string>led</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="2">
+          <widget class="QCheckBox" name="checkBoxLed">
+           <property name="text">
+            <string>off</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="1">
+          <widget class="QLabel" name="labelGain3030">
+           <property name="text">
+            <string>adc gain</string>
+           </property>
+          </widget>
+         </item>
+         <item row="15" column="1">
+          <widget class="QLabel" name="labelSensorResetLength">
+           <property name="text">
+            <string>sensor reset length</string>
            </property>
           </widget>
          </item>
@@ -812,32 +732,52 @@
            </property>
           </widget>
          </item>
-         <item row="6" column="2">
-          <widget class="QSpinBox" name="spinBoxPixel">
+         <item row="1" column="2">
+          <widget class="QComboBox" name="comboBoxCameraSystem">
            <property name="enabled">
             <bool>true</bool>
            </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>64</number>
-           </property>
-           <property name="maximum">
-            <number>9999</number>
-           </property>
-           <property name="singleStep">
-            <number>64</number>
-           </property>
-           <property name="value">
-            <number>576</number>
+           <item>
+            <property name="text">
+             <string>3001</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>3010</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>3030</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLabel" name="labelCamcnt">
+           <property name="text">
+            <string>CAMCNT (number of cameras)</string>
            </property>
           </widget>
          </item>
-         <item row="10" column="2">
-          <widget class="QCheckBox" name="checkBoxIsCooledCameraLegacyMode">
+         <item row="2" column="0">
+          <spacer name="horizontalSpacerLeft">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="12" column="1">
+          <widget class="QLabel" name="labelGpxOffset">
            <property name="text">
-            <string>on</string>
+            <string>gpx offset</string>
            </property>
           </widget>
          </item>
@@ -848,10 +788,73 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="2">
-          <widget class="QCheckBox" name="checkBoxIsFftLegacy">
+         <item row="0" column="1">
+          <spacer name="verticalSpacerTop">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="14" column="1">
+          <widget class="QLabel" name="labelUseSoftwarePolling">
+           <property name="text">
+            <string>software polling</string>
+           </property>
+          </widget>
+         </item>
+         <item row="16" column="1">
+          <spacer name="verticalSpacerBottom">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="14" column="2">
+          <widget class="QCheckBox" name="checkBoxUseSoftwarePolling">
            <property name="text">
             <string>on</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="2">
+          <widget class="QSpinBox" name="spinBoxSensorGain">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="maximum">
+            <number>3</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <spacer name="horizontalSpacerRight">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="labelCameraSystem">
+           <property name="text">
+            <string>CAMERA SYSTEM</string>
            </property>
           </widget>
          </item>

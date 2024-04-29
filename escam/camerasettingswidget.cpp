@@ -80,6 +80,7 @@ void CameraSettingsWidget::on_comboBoxSti_currentIndexChanged(int index)
 	case settings_level_guided:
 		enabled = false;
 		break;
+	default:
 	case settings_level_free:
 		enabled = true;
 		break;
@@ -113,6 +114,7 @@ void CameraSettingsWidget::on_comboBoxBti_currentIndexChanged(int index)
 	case settings_level_guided:
 		enabled = false;
 		break;
+	default:
 	case settings_level_free:
 		enabled = true;
 		break;
@@ -141,23 +143,29 @@ void CameraSettingsWidget::on_comboBoxSensorType_currentIndexChanged(int index)
 	{
 	case settings_level_guided:
 		break;
+	default:
 	case settings_level_free:
 		enabled = true;
 		break;
 	}
 	ui->tabWidget->setTabEnabled(2, enabled);
+	ui->checkBoxIsFftLegacy->setEnabled(enabled);
 }
 
 void CameraSettingsWidget::on_comboBoxCameraSystem_currentIndexChanged(int index)
 {
 	bool enabled = true;
+	QVariant enabled_item(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+	QVariant disabled_item(0);
 	switch (_settings_level)
 	{
 	case settings_level_guided:
 		enabled = false;
 		break;
+	default:
 	case settings_level_free:
 		enabled = true;
+		disabled_item = enabled_item;
 		break;
 	}
 	switch (index)
@@ -166,40 +174,100 @@ void CameraSettingsWidget::on_comboBoxCameraSystem_currentIndexChanged(int index
 		ui->spinBoxAdcGain->setEnabled(enabled);
 		ui->comboBoxAdcMode->setEnabled(enabled);
 		ui->spinBoxAdcCustom->setEnabled(enabled);
+		// disable some sensor types
+		ui->comboBoxSensorType->setItemData(sensor_type_pda, enabled_item, Qt::UserRole - 1);
+		ui->comboBoxSensorType->setItemData(sensor_type_ir, enabled_item, Qt::UserRole - 1);
+		ui->comboBoxSensorType->setItemData(sensor_type_fft, enabled_item, Qt::UserRole - 1);
+		ui->comboBoxSensorType->setItemData(sensor_type_cmos, enabled_item, Qt::UserRole - 1);
+		ui->comboBoxSensorType->setItemData(sensor_type_hsvis, disabled_item, Qt::UserRole - 1);
+		ui->comboBoxSensorType->setItemData(sensor_type_hsir, disabled_item, Qt::UserRole - 1);
 		break;
 	case camera_system_3010:
 		ui->spinBoxAdcGain->setEnabled(enabled);
 		ui->comboBoxAdcMode->setEnabled(true);
 		ui->spinBoxAdcCustom->setEnabled(true);
+		ui->comboBoxSensorType->setItemData(sensor_type_pda, enabled_item, Qt::UserRole - 1);
+		ui->comboBoxSensorType->setItemData(sensor_type_ir, enabled_item, Qt::UserRole - 1);
+		ui->comboBoxSensorType->setItemData(sensor_type_fft, enabled_item, Qt::UserRole - 1);
+		ui->comboBoxSensorType->setItemData(sensor_type_cmos, enabled_item, Qt::UserRole - 1);
+		ui->comboBoxSensorType->setItemData(sensor_type_hsvis, disabled_item, Qt::UserRole - 1);
+		ui->comboBoxSensorType->setItemData(sensor_type_hsir, disabled_item, Qt::UserRole - 1);
 		break;
 	case camera_system_3030:
 		ui->spinBoxAdcGain->setEnabled(true);
 		ui->comboBoxAdcMode->setEnabled(true);
 		ui->spinBoxAdcCustom->setEnabled(true);
+		ui->comboBoxSensorType->setItemData(sensor_type_pda, disabled_item, Qt::UserRole - 1);
+		ui->comboBoxSensorType->setItemData(sensor_type_ir, disabled_item, Qt::UserRole - 1);
+		ui->comboBoxSensorType->setItemData(sensor_type_fft, disabled_item, Qt::UserRole - 1);
+		ui->comboBoxSensorType->setItemData(sensor_type_cmos, disabled_item, Qt::UserRole - 1);
+		ui->comboBoxSensorType->setItemData(sensor_type_hsvis, enabled_item, Qt::UserRole - 1);
+		ui->comboBoxSensorType->setItemData(sensor_type_hsir, enabled_item, Qt::UserRole - 1);
 		break;
 	}
 }
 
 void CameraSettingsWidget::on_checkBoxRegionsEqual_stateChanged(int arg1)
 {
-	bool enabled = true;
-	switch (_settings_level)
+	on_spinBoxNumberOfRegions_valueChanged(ui->spinBoxNumberOfRegions->value());
+}
+
+void CameraSettingsWidget::on_spinBoxNumberOfRegions_valueChanged(int value)
+{
+	if (_settings_level == settings_level_guided)
 	{
-	case settings_level_guided:
-		enabled = !arg1;
-		break;
-	case settings_level_free:
-		enabled = true;
-		break;
+		if (ui->comboBoxFftMode->currentIndex() == partial_binning && !ui->checkBoxRegionsEqual->checkState())
+		{
+			ui->spinBoxRegion1->setEnabled(true);
+			ui->spinBoxRegion2->setEnabled(true);
+			ui->spinBoxRegion3->setEnabled(true);
+			ui->spinBoxRegion4->setEnabled(true);
+			ui->spinBoxRegion5->setEnabled(true);
+			ui->spinBoxRegion6->setEnabled(true);
+			ui->spinBoxRegion7->setEnabled(true);
+			ui->spinBoxRegion8->setEnabled(true);
+			switch (value)
+			{
+			case 1:
+				ui->spinBoxRegion2->setEnabled(false);
+			case 2:
+				ui->spinBoxRegion3->setEnabled(false);
+			case 3:
+				ui->spinBoxRegion4->setEnabled(false);
+			case 4:
+				ui->spinBoxRegion5->setEnabled(false);
+			case 5:
+				ui->spinBoxRegion6->setEnabled(false);
+			case 6:
+				ui->spinBoxRegion7->setEnabled(false);
+			case 7:
+				ui->spinBoxRegion8->setEnabled(false);
+			}
+		}
+		else
+		{
+			ui->spinBoxRegion1->setEnabled(false);
+			ui->spinBoxRegion2->setEnabled(false);
+			ui->spinBoxRegion3->setEnabled(false);
+			ui->spinBoxRegion4->setEnabled(false);
+			ui->spinBoxRegion5->setEnabled(false);
+			ui->spinBoxRegion6->setEnabled(false);
+			ui->spinBoxRegion7->setEnabled(false);
+			ui->spinBoxRegion8->setEnabled(false);
+		}
 	}
-	ui->spinBoxRegion1->setEnabled(enabled);
-	ui->spinBoxRegion2->setEnabled(enabled);
-	ui->spinBoxRegion3->setEnabled(enabled);
-	ui->spinBoxRegion4->setEnabled(enabled);
-	ui->spinBoxRegion5->setEnabled(enabled);
-	ui->spinBoxRegion6->setEnabled(enabled);
-	ui->spinBoxRegion7->setEnabled(enabled);
-	ui->spinBoxRegion8->setEnabled(enabled);
+	else
+	{
+		ui->spinBoxRegion1->setEnabled(true);
+		ui->spinBoxRegion2->setEnabled(true);
+		ui->spinBoxRegion3->setEnabled(true);
+		ui->spinBoxRegion4->setEnabled(true);
+		ui->spinBoxRegion5->setEnabled(true);
+		ui->spinBoxRegion6->setEnabled(true);
+		ui->spinBoxRegion7->setEnabled(true);
+		ui->spinBoxRegion8->setEnabled(true);
+	}
+	return;
 }
 
 void CameraSettingsWidget::loadDefaults()
@@ -289,6 +357,7 @@ void CameraSettingsWidget::on_comboBoxFftMode_currentIndexChanged(int index)
 	case settings_level_guided:
 		enabled = false;
 		break;
+	default:
 	case settings_level_free:
 		enabled = true;
 		break;
@@ -299,48 +368,18 @@ void CameraSettingsWidget::on_comboBoxFftMode_currentIndexChanged(int index)
 		ui->spinBoxLinesBinning->setEnabled(enabled);
 		ui->spinBoxNumberOfRegions->setEnabled(enabled);
 		ui->checkBoxRegionsEqual->setEnabled(enabled);
-		ui->spinBoxRegion1->setEnabled(enabled);
-		ui->spinBoxRegion2->setEnabled(enabled);
-		ui->spinBoxRegion3->setEnabled(enabled);
-		ui->spinBoxRegion4->setEnabled(enabled);
-		ui->spinBoxRegion5->setEnabled(enabled);
-		ui->spinBoxRegion6->setEnabled(enabled);
-		ui->spinBoxRegion7->setEnabled(enabled);
-		ui->spinBoxRegion8->setEnabled(enabled);
 		break;
 	case partial_binning:
 		ui->spinBoxLinesBinning->setEnabled(enabled);
-		ui->labelNumberOfRegions->setVisible(true);
 		ui->spinBoxNumberOfRegions->setEnabled(true);
-		ui->spinBoxNumberOfRegions->setVisible(true);
-		ui->labelRegionsEqual->setVisible(true);
-		ui->checkBoxRegionsEqual->setVisible(true);
 		ui->checkBoxRegionsEqual->setEnabled(true);
-		ui->spinBoxRegion1->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
-		ui->spinBoxRegion2->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
-		ui->spinBoxRegion3->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
-		ui->spinBoxRegion4->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
-		ui->spinBoxRegion5->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
-		ui->spinBoxRegion6->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
-		ui->spinBoxRegion7->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
-		ui->spinBoxRegion8->setEnabled(!ui->checkBoxRegionsEqual->checkState() || enabled);
 		break;
 	case area_mode:
-		ui->labelLinesBinning->setVisible(true);
 		ui->spinBoxLinesBinning->setEnabled(true);
-		ui->spinBoxLinesBinning->setVisible(true);
 		ui->spinBoxNumberOfRegions->setEnabled(enabled);
 		ui->checkBoxRegionsEqual->setEnabled(enabled);
-		ui->spinBoxRegion1->setEnabled(enabled);
-		ui->spinBoxRegion2->setEnabled(enabled);
-		ui->spinBoxRegion3->setEnabled(enabled);
-		ui->spinBoxRegion4->setEnabled(enabled);
-		ui->spinBoxRegion5->setEnabled(enabled);
-		ui->spinBoxRegion6->setEnabled(enabled);
-		ui->spinBoxRegion7->setEnabled(enabled);
-		ui->spinBoxRegion8->setEnabled(enabled);
-		break;
 	}
+	on_spinBoxNumberOfRegions_valueChanged(ui->spinBoxNumberOfRegions->value());
 }
 
 void CameraSettingsWidget::on_pushButtonFilePath_clicked()
@@ -358,6 +397,7 @@ void CameraSettingsWidget::on_checkBoxWriteDataToDisc_stateChanged(int arg1)
 	case settings_level_guided:
 		enabled = arg1;
 		break;
+	default:
 	case settings_level_free:
 		enabled = true;
 		break;

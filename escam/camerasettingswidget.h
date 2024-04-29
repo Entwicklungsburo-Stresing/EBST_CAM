@@ -40,6 +40,7 @@ private slots:
 	void on_comboBoxFftMode_currentIndexChanged(int index);
 	void on_pushButtonFilePath_clicked();
 	void on_checkBoxWriteDataToDisc_stateChanged(int arg1);
+	void on_spinBoxNumberOfRegions_valueChanged(int value);
 };
 
 #endif // CAMERASETTINGSWIGET_H
