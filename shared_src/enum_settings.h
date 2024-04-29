@@ -390,3 +390,9 @@ enum DAC8568_location_t
 	 */
 	DAC8568_pcie = 1
 };
+
+enum settings_level_t
+{
+	settings_level_guided = 0,
+	settings_level_free = 1
+};
