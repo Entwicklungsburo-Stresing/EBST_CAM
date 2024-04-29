@@ -23,8 +23,8 @@ private slots:
 	void on_spinBoxXmax_valueChanged(int arg1);
 	void on_spinBoxYmin_valueChanged(int arg1);
 	void on_spinBoxYmax_valueChanged(int arg1);
-	void on_checkBoxMirrorX_stateChanged(int state);
-	void on_checkBoxMirrorY_stateChanged(int state);
+	//void on_checkBoxMirrorX_stateChanged(int state);
+	//void on_checkBoxMirrorY_stateChanged(int state);
 
 private:
 	Ui::DialogAxes* ui;
