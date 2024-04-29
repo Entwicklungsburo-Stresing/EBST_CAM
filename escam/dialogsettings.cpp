@@ -166,24 +166,14 @@ void DialogSettings::on_pushButtonDefault_clicked()
 
 void DialogSettings::on_checkBoxBoard0_stateChanged(int state)
 {
-	bool enabled = true,
-		visible = true;
+	bool enabled = true;
 	switch (ui->comboBoxSettingsLevel->currentIndex())
 	{
-		//basic
-	case 0:
+	case settings_level_guided:
 		enabled = state;
-		visible = state;
 		break;
-		//advanced
-	case 1:
-		enabled = state;
-		visible = true;
-		break;
-		//expert
-	case 2:
+	case settings_level_free:
 		enabled = true;
-		visible = true;
 		break;
 	}
 	ui->cameraSettingsTabs->setTabEnabled(0, enabled);
@@ -192,24 +182,14 @@ void DialogSettings::on_checkBoxBoard0_stateChanged(int state)
 
 void DialogSettings::on_checkBoxBoard1_stateChanged(int state)
 {
-	bool enabled = true,
-		visible = true;
+	bool enabled = true;
 	switch (ui->comboBoxSettingsLevel->currentIndex())
 	{
-		//basic
-	case 0:
+	case settings_level_guided:
 		enabled = state;
-		visible = state;
 		break;
-		//advanced
-	case 1:
-		enabled = state;
-		visible = true;
-		break;
-		//expert
-	case 2:
+	case settings_level_free:
 		enabled = true;
-		visible = true;
 		break;
 	}
 	ui->cameraSettingsTabs->setTabEnabled(1, enabled);
@@ -218,24 +198,14 @@ void DialogSettings::on_checkBoxBoard1_stateChanged(int state)
 
 void DialogSettings::on_checkBoxBoard2_stateChanged(int state)
 {
-	bool enabled = true,
-		visible = true;
+	bool enabled = true;
 	switch (ui->comboBoxSettingsLevel->currentIndex())
 	{
-		//basic
-	case 0:
+	case settings_level_guided:
 		enabled = state;
-		visible = state;
 		break;
-		//advanced
-	case 1:
-		enabled = state;
-		visible = true;
-		break;
-		//expert
-	case 2:
+	case settings_level_free:
 		enabled = true;
-		visible = true;
 		break;
 	}
 	ui->cameraSettingsTabs->setTabEnabled(2, enabled);
@@ -244,24 +214,14 @@ void DialogSettings::on_checkBoxBoard2_stateChanged(int state)
 
 void DialogSettings::on_checkBoxBoard3_stateChanged(int state)
 {
-	bool enabled = true,
-		visible = true;
+	bool enabled = true;
 	switch (ui->comboBoxSettingsLevel->currentIndex())
 	{
-		//basic
-	case 0:
+	case settings_level_guided:
 		enabled = state;
-		visible = state;
 		break;
-		//advanced
-	case 1:
-		enabled = state;
-		visible = true;
-		break;
-		//expert
-	case 2:
+	case settings_level_free:
 		enabled = true;
-		visible = true;
 		break;
 	}
 	ui->cameraSettingsTabs->setTabEnabled(3, enabled);
@@ -270,24 +230,14 @@ void DialogSettings::on_checkBoxBoard3_stateChanged(int state)
 
 void DialogSettings::on_checkBoxBoard4_stateChanged(int state)
 {
-	bool enabled = true,
-		visible = true;
+	bool enabled = true;
 	switch (ui->comboBoxSettingsLevel->currentIndex())
 	{
-		//basic
-	case 0:
+	case settings_level_guided:
 		enabled = state;
-		visible = state;
 		break;
-		//advanced
-	case 1:
-		enabled = state;
-		visible = true;
-		break;
-		//expert
-	case 2:
+	case settings_level_free:
 		enabled = true;
-		visible = true;
 		break;
 	}
 	ui->cameraSettingsTabs->setTabEnabled(4, enabled);

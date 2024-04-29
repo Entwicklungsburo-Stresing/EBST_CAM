@@ -285,17 +285,12 @@
       <widget class="QComboBox" name="comboBoxSettingsLevel">
        <item>
         <property name="text">
-         <string>basic</string>
+         <string>guided</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>advanced</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>expert</string>
+         <string>free</string>
         </property>
        </item>
       </widget>
