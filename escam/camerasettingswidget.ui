@@ -1593,6 +1593,57 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>comboBoxSti</tabstop>
+  <tabstop>comboBoxBti</tabstop>
+  <tabstop>doubleSpinBoxSTime_in_us</tabstop>
+  <tabstop>doubleSpinBoxBTimer_in_us</tabstop>
+  <tabstop>doubleSpinBoxSdatIn10ns</tabstop>
+  <tabstop>doubleSpinBoxBdatIn10ns</tabstop>
+  <tabstop>comboBoxSslope</tabstop>
+  <tabstop>comboBoxBslope</tabstop>
+  <tabstop>doubleSpinBoxXckdelayIn10ns</tabstop>
+  <tabstop>doubleSpinBoxSecIn10ns</tabstop>
+  <tabstop>doubleSpinBoxBecIn10ns</tabstop>
+  <tabstop>comboBoxTriggerModeIntegrator</tabstop>
+  <tabstop>doubleSpinBoxS1S2ReadDelayIn10ns</tabstop>
+  <tabstop>comboBoxCameraSystem</tabstop>
+  <tabstop>comboBoxSensorType</tabstop>
+  <tabstop>checkBoxIsFftLegacy</tabstop>
+  <tabstop>spinBoxCamcnt</tabstop>
+  <tabstop>spinBoxPixel</tabstop>
+  <tabstop>checkBoxLed</tabstop>
+  <tabstop>spinBoxSensorGain</tabstop>
+  <tabstop>spinBoxAdcGain</tabstop>
+  <tabstop>checkBoxIsCooledCameraLegacyMode</tabstop>
+  <tabstop>comboBoxCamCool</tabstop>
+  <tabstop>spinBoxGpxOffset</tabstop>
+  <tabstop>spinBoxIOCtrlImpactStartPixel</tabstop>
+  <tabstop>checkBoxUseSoftwarePolling</tabstop>
+  <tabstop>spinBoxSensorResetLengthIn1ns</tabstop>
+  <tabstop>spinBoxLines</tabstop>
+  <tabstop>spinBoxVfreq</tabstop>
+  <tabstop>comboBoxFftMode</tabstop>
+  <tabstop>spinBoxLinesBinning</tabstop>
+  <tabstop>spinBoxNumberOfRegions</tabstop>
+  <tabstop>checkBoxRegionsEqual</tabstop>
+  <tabstop>spinBoxRegion1</tabstop>
+  <tabstop>spinBoxRegion2</tabstop>
+  <tabstop>spinBoxRegion3</tabstop>
+  <tabstop>spinBoxRegion4</tabstop>
+  <tabstop>spinBoxRegion5</tabstop>
+  <tabstop>spinBoxRegion6</tabstop>
+  <tabstop>spinBoxRegion7</tabstop>
+  <tabstop>spinBoxRegion8</tabstop>
+  <tabstop>comboBoxBncOut</tabstop>
+  <tabstop>comboBoxOutput</tabstop>
+  <tabstop>comboBoxAdcMode</tabstop>
+  <tabstop>spinBoxAdcCustom</tabstop>
+  <tabstop>checkBoxWriteDataToDisc</tabstop>
+  <tabstop>plainTextEditFilePath</tabstop>
+  <tabstop>pushButtonFilePath</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

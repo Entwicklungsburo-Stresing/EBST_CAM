@@ -319,8 +319,23 @@
  </customwidgets>
  <tabstops>
   <tabstop>tabWidget</tabstop>
+  <tabstop>checkBoxBoard0</tabstop>
+  <tabstop>checkBoxBoard1</tabstop>
+  <tabstop>checkBoxBoard2</tabstop>
+  <tabstop>checkBoxBoard3</tabstop>
+  <tabstop>checkBoxBoard4</tabstop>
+  <tabstop>doubleSpinBoxNos</tabstop>
+  <tabstop>doubleSpinBoxNob</tabstop>
+  <tabstop>doubleSpinBoxContiniousPause_in_ms</tabstop>
+  <tabstop>comboBoxTheme</tabstop>
   <tabstop>pushButtonDefault</tabstop>
   <tabstop>comboBoxSettingsLevel</tabstop>
+  <tabstop>cameraSettingsTabs</tabstop>
+  <tabstop>cameraSettingsWidgetBoard0</tabstop>
+  <tabstop>cameraSettingsWidgetBoard1</tabstop>
+  <tabstop>cameraSettingsWidgetBoard2</tabstop>
+  <tabstop>cameraSettingsWidgetBoard3</tabstop>
+  <tabstop>cameraSettingsWidgetBoard4</tabstop>
  </tabstops>
  <resources/>
  <connections>
