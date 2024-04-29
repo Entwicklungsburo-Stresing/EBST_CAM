@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>257</width>
-    <height>312</height>
+    <height>334</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -365,6 +365,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
+  <tabstop>spinBoxBoard</tabstop>
   <tabstop>doubleSpinBoxT0</tabstop>
   <tabstop>spinBoxO1D</tabstop>
   <tabstop>spinBoxO1W</tabstop>

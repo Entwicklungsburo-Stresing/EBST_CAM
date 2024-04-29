@@ -427,6 +427,10 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>spinBoxBoard</tabstop>
+  <tabstop>spinBoxCamera</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

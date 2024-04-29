@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>178</width>
-    <height>223</height>
+    <width>188</width>
+    <height>240</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -196,6 +196,7 @@
   </layout>
  </widget>
  <tabstops>
+  <tabstop>spinBoxBoard</tabstop>
   <tabstop>spinBoxCampos</tabstop>
   <tabstop>spinBox_firstsample</tabstop>
   <tabstop>spinBox_lastsample</tabstop>

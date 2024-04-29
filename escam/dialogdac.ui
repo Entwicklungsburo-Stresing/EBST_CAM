@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>268</width>
-    <height>412</height>
+    <height>434</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -390,6 +390,19 @@ Level</string>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
+  <tabstop>spinBoxPcie</tabstop>
+  <tabstop>comboBoxLocation</tabstop>
+  <tabstop>spinBoxCamera</tabstop>
+  <tabstop>spinBoxChannel1</tabstop>
+  <tabstop>spinBoxChannel2</tabstop>
+  <tabstop>spinBoxChannel3</tabstop>
+  <tabstop>spinBoxChannel4</tabstop>
+  <tabstop>spinBoxChannel5</tabstop>
+  <tabstop>spinBoxChannel6</tabstop>
+  <tabstop>spinBoxChannel7</tabstop>
+  <tabstop>spinBoxChannel8</tabstop>
+  <tabstop>spinBoxTarget</tabstop>
+  <tabstop>pushButtonAutotune</tabstop>
   <tabstop>pushButtonDefault</tabstop>
  </tabstops>
  <resources/>
