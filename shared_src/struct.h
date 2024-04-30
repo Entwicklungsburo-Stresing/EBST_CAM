@@ -1,4 +1,4 @@
-#ifndef STRUCT_H
+﻿#ifndef STRUCT_H
 #define STRUCT_H
 
 #include <stdint.h>
@@ -21,54 +21,58 @@ struct camera_settings
 	 */
 	uint32_t use_software_polling;
 	/**
-	 * Scan trigger input mode. See enum \ref sti_mode_t in enum_settings.h for options.
+	 * Scan trigger input mode determines the signal, on which one readout is started. See enum \ref sti_mode_t in enum_settings.h for options. Further information on trigger signals can be found in the manual in chapter 6.3.
 	 */
 	uint32_t sti_mode;
 	/**
-	 * Block trigger input mode. See enum \ref bti_mode_t in enum_settings.h  for options.
+	 * Block trigger input mode determines the signal, on which one block of readouts is started. See enum \ref bti_mode_t in enum_settings.h  for options.  Further information on trigger signals can be found in the manual in chapter 6.3.
 	 */
 	uint32_t bti_mode;
 	/**
-	 * Scan timer in microseconds. Used when sti mode is stimer. When this is the case, stime is the time between two intern triggers starting scans. 28 bit.
-	 *		* Min: 1 us
-	 *		* Max: 268.435.455 us = 268,435.455 s
+	 * Scan timer in microseconds is the time between the start of two readouts. This time is used when sti mode is stimer. Stime is a 28 bit unsigned integer. Further information about the timer can be found in the manual in chapter 6.4.4.
+	 *		* min: 1 µs
+	 *		* step: 1 µs
+	 *		* max: 268,435,455 µs = 268.435455 s
 	 */
 	uint32_t stime_in_microsec;
 	/**
-	 * Block timer in microseconds. Used when bti mode is btimer. When this is the case, btime is the time between two intern triggers starting a block. 28 bit.
-	 *		* Min: 1 us
-	 *		* Max: 268.435.455 us = 268,435.455 s
+	 * Block timer in microseconds is the time between the start of two blocks of readouts. This time is useed when bti mode is btimer. Btime is a 28 bit unsigned integer. Further information about the timer can be found in the manual in chapter 6.4.4.
+	 *		* min: 1 µs
+	 *		* step: 1 µs
+	 *		* max: 268,435,455 µs = 268.435455 s
 	 */
 	uint32_t btime_in_microsec;
 	/**
-	 * Scan delay after trigger in 10 ns steps. This is the delay between the trigger starting a scan, which is determined by sti_mode and the actual start of the scan. 31 bit.
+	 * Scan delay after trigger in 10 ns steps is the delay time between the trigger starting a scan, which is determined by sti_mode and the actual start of the scan. SDAT is a 31 bit unsigned integer. Further information about sdat can be found in the manual in chapter 2.9.2 and 6.2.4.10.
 	 *		* disable: 0
-	 *		* min: 1 * 10 ns = 10 ns.
-	 *		* max: 2.147.483.647 * 10 ns = 21.474.836.470 ns = 21,474836470 s
+	 *		* min: 1 * 10 ns = 10 ns
+	 *		* step: 10 ns
+	 *		* max: 2,147,483,647 * 10 ns = 21,474,836,470 ns = 21.474836470 s
 	 */
 	uint32_t sdat_in_10ns;
 	/**
-	 * Block delay after trigger in 10 ns steps. This is the delay between the trigger starting a block, which is determined by bti_mode and the actual start of the block. 31 bit.
+	 * Block delay after trigger in 10 ns steps. This is the delay between the trigger starting a block, which is determined by bti_mode and the actual start of the block. BDAT is a 31 bit unsigned integer. Further information about bdat can be found in the manual in chapter 2.9.2 and 6.2.6.2.
 	 *		* disable: 0
-	 *		* min: 1 * 10 ns = 10 ns.
-	 *		* max: 2.147.483.647 * 10 ns = 21.474.836.470 ns = 21,474836470 s
+	 *		* min: 1 * 10 ns = 10 ns
+	 *		* step: 10 ns
+	 *		* max: 2,147,483,647 * 10 ns = 21,474,836,470 ns = 21.474836470 s
 	 */
 	uint32_t bdat_in_10ns;
 	/**
-	 * Scan trigger slope. This option determines wether positive, negative or both slopes of a trigger are used. See enum \ref sslope_t in enum_settings.h  for options.
+	 * Scan trigger slope determines whether positive, negative or both slopes of a trigger are used. See enum \ref sslope_t in enum_settings.h for options. This only applies to external triggers.
 	 */
 	uint32_t sslope;
 	/**
-	 * Block trigger slope. This option determines wether positive, negative or both slopes of a trigger are used. See enum \ref bslope_t in enum_settings.h  for options.
+	 * Block trigger slope determines whether positive, negative or both slopes of a trigger are used. See enum \ref bslope_t in enum_settings.h for options. This only applies to external triggers.
 	 */
 	uint32_t bslope;
 	/**
 	 * DEPRECATED
-	 * XCK delay in 10 ns steps. XCK delay is the time between the high slope of XCK and the actual start of the camera read out. This is done by delaying VON relative to XCK. Since P222_09 cameras are not designed to interact with the VON signal anymore. VCLKs are generated inside the camera and the delay between integrator and XCK can be achieved by using the analog delay of the camera control.
+	 * XCK delay in 10 ns steps was the time between the high slope of XCK and the actual start of the camera read out. This is done by delaying VON relative to XCK. Since P222_09 cameras are not designed to interact with the VON signal anymore. VCLKs are generated inside the camera and the delay between integrator and XCK can be achieved by using the analog delay of the camera control. Further information about xckdelay can be found in the manual in chapter 6.2.5.12.
 	 * 31 bit. xckdelay = 500ns + xckdelay_in_10ns * 10ns
 	 *		* disable: 0
 	 *		* min 1: 500 ns + 1 * 10ns = 510 ns
-	 *		* max 2.147.483.647: 500 ns + 2.147.483.647 * 10 ns = 21.474.836.970 ns = 21,474.836.970 s
+	 *		* max 2,147,483,647: 500 ns + 2,147,483,647 * 10 ns = 21,474,836,970 ns = 21.474836970 s
 	 */
 	uint32_t xckdelay_in_10ns;
 	/**

@@ -18,15 +18,15 @@ enum sti_mode_t
 	 */
 	sti_S2 = 2,
 	/**
-	 * 3: External trigger by I but enable by S2
+	 * 3: External trigger by I but only when enabled by S2.
 	 */
 	sti_S2_enable_I = 3,
 	/**
-	 * 4: Trigger with internal timer
+	 * 4: Trigger with internal timer. Select the time between two readouts with stime.
 	 */
 	sti_STimer = 4,
 	/**
-	 * 5: Automatic internal instant trigger after last scan
+	 * 5: Automatic internal instant trigger at the end of the last readout.
 	 */
 	sti_ASL = 5
 };
@@ -53,7 +53,7 @@ enum bti_mode_t
 	 */
 	bti_S1S2 = 3,
 	/**
-	 * 4: Trigger with internal timer
+	 * 4: Trigger with internal timer. Select the time between two blocks of readouts with btimer.
 	 */
 	bti_BTimer = 4,
 	/**
@@ -68,6 +68,63 @@ enum bti_mode_t
 	 * 7: S1&S2 chopper
 	 */
 	bti_S1S2chopper = 7
+};
+
+/**
+ * This enum shows all options for the setting \ref camera_settings.sslope.
+ */
+enum sslope_t
+{
+	/**
+	 * 0: Use only positive slopes of the trigger input to start a scan.
+	 */
+	sslope_pos = 0,
+	/**
+	 * 1: Use only negative slopes of the trigger input to start a scan.
+	 */
+	sslope_neg = 1,
+	/**
+	 * 2: Use both slopes of the trigger intput to start a scan.
+	 */
+	sslope_both = 2,
+};
+
+/**
+ * This enum shows all options for the setting \ref camera_settings.bslope.
+ */
+enum bslope_t
+{
+	/**
+	 * 0: Use only negative slopes of the trigger input to start a block.
+	 */
+	bslope_neg = 0,
+	/**
+	 * 1: Use only positive slopes of the trigger input to start a block.
+	 */
+	bslope_pos = 1,
+	/**
+	 * 2: Use both slopes of the trigger input to start a block.
+	 */
+	bslope_both = 2,
+};
+
+/**
+ * Trigger mode for camera control shows the options for \ref camera_settings.trigger_mode_integrator.
+ */
+enum trigger_mode_t
+{
+	/**
+	 * 0: Trigger with the start signal of the PCIe board.
+	 */
+	xck = 0,
+	/**
+	 * 1: Use the input of camera control as trigger.
+	 */
+	exttrig = 1,
+	/**
+	 * 2: Delay after trigger: Trigger with the start signal of the PCIe board, but with an additional delay after XCK.
+	 */
+	dat = 2
 };
 
 /**
@@ -121,41 +178,22 @@ enum camera_system_t
 };
 
 /**
- * Trigger mode for camera control shows the options for \ref camera_settings.trigger_mode_integrator.
+ * Shows the options for \ref camera_settings.fft_mode.
  */
-enum trigger_mode_t
+enum fft_mode_t
 {
 	/**
-	 * 0: Trigger with the start signal of the PCIe board.
+	 * 0
 	 */
-	xck = 0,
+	full_binning = 0,
 	/**
-	 * 1: Use the input of camera control as trigger.
+	 * 1
 	 */
-	exttrig = 1,
+	partial_binning = 1,
 	/**
-	 * 2: Delay after trigger: Trigger with the start signal of the PCIe board, but with an additional delay after XCK.
+	 * 2
 	 */
-	dat = 2
-};
-
-/**
- * ADC mode shows the options for \ref camera_settings.adc_mode.
- */
-enum adc_mode_t
-{
-	/**
-	 * 0: Normal operation, default.
-	 */
-	normal = 0,
-	/**
-	 * 1: ramp.
-	 */
-	ramp = 1,
-	/**
-	 * 2: custom pattern.
-	 */
-	custom_pattern = 2
+	area_mode = 2
 };
 
 /**
@@ -294,71 +332,22 @@ enum tor_out_t
 };
 
 /**
- * This enum shows all options for the setting \ref camera_settings.bnc_out.
+ * ADC mode shows the options for \ref camera_settings.adc_mode.
  */
-enum bnc_out_t
-{
-	bnc_out_xck = 0,
-	bnc_out_exp_win = 1,
-	bnc_out_adc_clk = 2,
-	bnc_out_Vin = 3
-};
-
-/**
- * This enum shows all options for the setting \ref camera_settings.sslope.
- */
-enum sslope_t
+enum adc_mode_t
 {
 	/**
-	 * 0: Use only positive slopes of the trigger input to start a scan.
+	 * 0: Normal operation, default.
 	 */
-	sslope_pos = 0,
+	normal = 0,
 	/**
-	 * 1: Use only negative slopes of the trigger inputs to start a scan.
+	 * 1: ramp.
 	 */
-	sslope_neg = 1,
+	ramp = 1,
 	/**
-	 * 2: Use both slopes of the trigger intput to start a scan.
+	 * 2: custom pattern.
 	 */
-	sslope_both = 2,
-};
-
-/**
- * This enum shows all options for the setting \ref camera_settings.bslope.
- */
-enum bslope_t
-{
-	/**
-	 * 0: Use only negative slopes of the trigger input to start a block.
-	 */
-	bslope_neg = 0,
-	/**
-	 * 1: Use only positive slopes of the trigger input to start a block.
-	 */
-	bslope_pos = 1,
-	/**
-	 * 2: Use both slopes of the trigger input to start a block.
-	 */
-	bslope_both = 2,
-};
-
-/**
- * Shows the options for \ref camera_settings.fft_mode.
- */
-enum fft_mode_t
-{
-	/**
-	 * 0
-	 */
-	full_binning = 0,
-	/**
-	 * 1
-	 */
-	partial_binning = 1,
-	/**
-	 * 2
-	 */
-	area_mode = 2
+	custom_pattern = 2
 };
 
 /**
@@ -374,6 +363,17 @@ enum split_mode_t
 	 * When in continuous mode a new file is created for every new measurement cycle (when all samples and blocks are done). When not in continuous this option is the same as no_split.
 	 */
 	measurement_wise = 1,
+};
+
+/**
+ * This enum shows all options for the setting \ref camera_settings.bnc_out.
+ */
+enum bnc_out_t
+{
+	bnc_out_xck = 0,
+	bnc_out_exp_win = 1,
+	bnc_out_adc_clk = 2,
+	bnc_out_Vin = 3
 };
 
 /**
