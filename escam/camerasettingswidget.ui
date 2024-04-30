@@ -35,14 +35,20 @@
          </item>
          <item row="9" column="3">
           <widget class="QComboBox" name="comboBoxBslope">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger slope of the block trigger&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block trigger slope&lt;/span&gt; determines whether positive, negative or both slopes of a trigger are used. This only applies to external triggers.&lt;/p&gt;&lt;p&gt;0: positive - Use only positive slopes of the trigger input to start a scan.&lt;br/&gt;1: negative - Use only negative slopes of the trigger input to start a scan.&lt;br/&gt;2: both - Use both slopes of the trigger intput to start a scan.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bslope&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <item>
             <property name="text">
-             <string>neg</string>
+             <string>negative</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>pos</string>
+             <string>positive</string>
             </property>
            </item>
            <item>
@@ -54,6 +60,12 @@
          </item>
          <item row="2" column="1">
           <widget class="QLabel" name="labelSti">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Signal, on which one readout is started.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Scan trigger input determines the signal, on which one readout is started.&lt;/p&gt;&lt;p&gt;0: I - external trigger, I input on PCIe card&lt;br/&gt;1: S1 - external trigger, S1 input on PCIe card&lt;br/&gt;2: S2 - external trigger, S2 input on PCIe card&lt;br/&gt;3: S2 enable I - external trigger by I, but only when enaled by S2&lt;br/&gt;4: STimer - trigger with internal timer. Select the time between two readouts with stimer.&lt;br/&gt;5: ASL - Automatic internal instant trigger at the end of the last readout.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sti_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information on trigger signals can be found in the manual in chapter 6.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>sti (scan trigger input)</string>
            </property>
@@ -68,6 +80,12 @@
          </item>
          <item row="3" column="3">
           <widget class="QComboBox" name="comboBoxBti">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Signal, on which one block of readouts is started.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Block trigger input determines the signal, on which one block of readouts is started.&lt;/p&gt;&lt;p&gt;0: I - external trigger, I input on PCIe card&lt;br/&gt;1: S1 - external trigger, S1 input on PCIe card&lt;br/&gt;2: S2 - external trigger, S2 input on PCIe card&lt;br/&gt;3: S1S2 - external trigger when S1 and S2 are high&lt;br/&gt;4: STimer - trigger with internal timer. Select the time between two blocks of readouts with btime.&lt;br/&gt;5: S1chopper - &lt;br/&gt;6: S2chopper - &lt;br/&gt;7: S1S2chopper - &lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bti_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information on trigger signals can be found in the manual in chapter 6.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="layoutDirection">
             <enum>Qt::LeftToRight</enum>
            </property>
@@ -115,14 +133,20 @@
          </item>
          <item row="8" column="3">
           <widget class="QComboBox" name="comboBoxSslope">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger slope of the scan trigger&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan trigger slope&lt;/span&gt; determines whether positive, negative or both slopes of a trigger are used. This only applies to external triggers.&lt;/p&gt;&lt;p&gt;0: positive - Use only positive slopes of the trigger input to start a scan.&lt;br/&gt;1: negative - Use only negative slopes of the trigger input to start a scan.&lt;br/&gt;2: both - Use both slopes of the trigger intput to start a scan.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sslope&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <item>
             <property name="text">
-             <string>pos</string>
+             <string>positive</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>neg</string>
+             <string>negative</string>
             </property>
            </item>
            <item>
@@ -134,6 +158,12 @@
          </item>
          <item row="3" column="1">
           <widget class="QLabel" name="labelBti">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Signal, on which one block of readouts is started.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Block trigger input determines the signal, on which one block of readouts is started.&lt;/p&gt;&lt;p&gt;0: I - external trigger, I input on PCIe card&lt;br/&gt;1: S1 - external trigger, S1 input on PCIe card&lt;br/&gt;2: S2 - external trigger, S2 input on PCIe card&lt;br/&gt;3: S1S2 - external trigger when S1 and S2 are high&lt;br/&gt;4: STimer - trigger with internal timer. Select the time between two blocks of readouts with btime.&lt;br/&gt;5: S1chopper - &lt;br/&gt;6: S2chopper - &lt;br/&gt;7: S1S2chopper - &lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bti_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information on trigger signals can be found in the manual in chapter 6.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>bti (block trigger input)</string>
            </property>
@@ -141,6 +171,12 @@
          </item>
          <item row="6" column="3">
           <widget class="QDoubleSpinBox" name="doubleSpinBoxSdatIn10ns">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay time between trigger and start of a scan&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan delay after trigger&lt;/span&gt; is the delay time between the trigger starting a scan, which is determined by &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt; and the actual start of the scan. &lt;span style=&quot; font-style:italic;&quot;&gt;sdat&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;- disable: 0&lt;br/&gt;- min: 1 * 10 ns = 10 ns&lt;br/&gt;- step: 10 ns&lt;br/&gt;- max: 2,147,483,647 * 10 ns = 21,474,836,470 ns = 21.474836470 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sdat_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;sdat&lt;/span&gt; can be found in the manual in chapter 2.9.2 and 6.2.4.10.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -148,18 +184,24 @@
             <bool>true</bool>
            </property>
            <property name="suffix">
-            <string>0ns</string>
+            <string>0 ns</string>
            </property>
            <property name="decimals">
             <number>0</number>
            </property>
            <property name="maximum">
-            <double>4294967295.000000000000000</double>
+            <double>2147483647.000000000000000</double>
            </property>
           </widget>
          </item>
          <item row="10" column="1">
           <widget class="QLabel" name="labelXckdelayIn10ns">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;delay between XCK and actual readout&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XCK delay&lt;/span&gt; was the time between the high slope of XCK and the actual start of the camera read out. This is done by delaying VON relative to XCK. Since P222_09 cameras are not designed to interact with the VON signal anymore. VCLKs are generated inside the camera and the delay between integrator and XCK can be achieved by using the analog delay of the camera control. The option remains here for legacy operation. &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;- xckdelay = 500ns + value * 10ns&lt;br/&gt;- disable: 0&lt;br/&gt;- min 1: 500 ns + 1 * 10ns = 510 ns&lt;br/&gt;- max 2.147.483.647: 500 ns + 2.147.483.647 * 10 ns = 21.474.836.970 ns = 21,474.836.970 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; can be found in the manual in chapter 6.2.5.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>xck delay (legacy option)</string>
            </property>
@@ -167,6 +209,12 @@
          </item>
          <item row="4" column="1">
           <widget class="QLabel" name="labelSTimer">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time between the start of two readouts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan timer&lt;/span&gt; is the time between the start of two readouts. This time is used when &lt;span style=&quot; font-style:italic;&quot;&gt;STimer&lt;/span&gt; is selected for &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; is a 28 bit unsigned integer.&lt;/p&gt;&lt;p&gt;- min: 1 µs&lt;br/&gt;- step: 1 µs&lt;br/&gt;- max: 268,435,455 µs = 268.435455 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;stime_in_microsec&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; can be found in the manual in chapter 6.4.4.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>stimer (scan timer)</string>
            </property>
@@ -194,6 +242,12 @@
          </item>
          <item row="7" column="3">
           <widget class="QDoubleSpinBox" name="doubleSpinBoxBdatIn10ns">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay time between trigger and start of block of scans&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block delay after trigger&lt;/span&gt; is the delay time between the trigger starting a block of scans, which is determined by &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; and the actual start of the block of scans. &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;- disable: 0&lt;br/&gt;- min: 1 * 10 ns = 10 ns&lt;br/&gt;- step: 10 ns&lt;br/&gt;- max: 2,147,483,647 * 10 ns = 21,474,836,470 ns = 21.474836470 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bdat_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; can be found in the manual in chapter 2.9.2 and 6.2.6.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -201,18 +255,24 @@
             <bool>true</bool>
            </property>
            <property name="suffix">
-            <string>0ns</string>
+            <string>0 ns</string>
            </property>
            <property name="decimals">
             <number>0</number>
            </property>
            <property name="maximum">
-            <double>4294967295.000000000000000</double>
+            <double>2147483647.000000000000000</double>
            </property>
           </widget>
          </item>
          <item row="2" column="3">
           <widget class="QComboBox" name="comboBoxSti">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Signal, on which one readout is started.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Scan trigger input determines the signal, on which one readout is started.&lt;/p&gt;&lt;p&gt;0: I - external trigger, I input on PCIe card&lt;br/&gt;1: S1 - external trigger, S1 input on PCIe card&lt;br/&gt;2: S2 - external trigger, S2 input on PCIe card&lt;br/&gt;3: S2 enable I - external trigger by I, but only when enaled by S2&lt;br/&gt;4: STimer - trigger with internal timer. Select the time between two readouts with stimer.&lt;br/&gt;5: ASL - Automatic internal instant trigger at the end of the last readout.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sti_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information on trigger signals can be found in the manual in chapter 6.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <item>
             <property name="text">
              <string>I</string>
@@ -254,7 +314,7 @@
             <bool>true</bool>
            </property>
            <property name="suffix">
-            <string>0ns</string>
+            <string>0 ns</string>
            </property>
            <property name="decimals">
             <number>0</number>
@@ -279,6 +339,12 @@
          </item>
          <item row="4" column="3">
           <widget class="QDoubleSpinBox" name="doubleSpinBoxSTime_in_us">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time between the start of two readouts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan timer&lt;/span&gt; is the time between the start of two readouts. This time is used when &lt;span style=&quot; font-style:italic;&quot;&gt;STimer&lt;/span&gt; is selected for &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; is a 28 bit unsigned integer.&lt;/p&gt;&lt;p&gt;- min: 1 µs&lt;br/&gt;- step: 1 µs&lt;br/&gt;- max: 268,435,455 µs = 268.435455 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;stime_in_microsec&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; can be found in the manual in chapter 6.4.4.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -286,18 +352,27 @@
             <bool>true</bool>
            </property>
            <property name="suffix">
-            <string>µs</string>
+            <string> µs</string>
            </property>
            <property name="decimals">
             <number>0</number>
            </property>
+           <property name="minimum">
+            <double>1.000000000000000</double>
+           </property>
            <property name="maximum">
-            <double>4294967.000000000000000</double>
+            <double>268435455.000000000000000</double>
            </property>
           </widget>
          </item>
          <item row="5" column="1">
           <widget class="QLabel" name="labelBTimer">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time between the start of two blocks of readouts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block timer&lt;/span&gt; is the time between the start of two blocks of readouts. This time is used when &lt;span style=&quot; font-style:italic;&quot;&gt;Btimer&lt;/span&gt; is selected for &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;btimer&lt;/span&gt; is a 28 bit unsigned integer.&lt;/p&gt;&lt;p&gt;- min: 1 µs&lt;br/&gt;- step: 1 µs&lt;br/&gt;- max: 268,435,455 µs = 268.435455 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;btime_in_microsec&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;btimer&lt;/span&gt; can be found in the manual in chapter 6.4.4.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>btimer (block timer)</string>
            </property>
@@ -324,6 +399,12 @@
          </item>
          <item row="5" column="3">
           <widget class="QDoubleSpinBox" name="doubleSpinBoxBTimer_in_us">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time between the start of two blocks of readouts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block timer&lt;/span&gt; is the time between the start of two blocks of readouts. This time is used when &lt;span style=&quot; font-style:italic;&quot;&gt;Btimer&lt;/span&gt; is selected for &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;btimer&lt;/span&gt; is a 28 bit unsigned integer.&lt;/p&gt;&lt;p&gt;- min: 1 µs&lt;br/&gt;- step: 1 µs&lt;br/&gt;- max: 268,435,455 µs = 268.435455 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;btime_in_microsec&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;btimer&lt;/span&gt; can be found in the manual in chapter 6.4.4.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -331,18 +412,27 @@
             <bool>true</bool>
            </property>
            <property name="suffix">
-            <string>µs</string>
+            <string> µs</string>
            </property>
            <property name="decimals">
             <number>0</number>
            </property>
+           <property name="minimum">
+            <double>1.000000000000000</double>
+           </property>
            <property name="maximum">
-            <double>2147483647.000000000000000</double>
+            <double>268435455.000000000000000</double>
            </property>
           </widget>
          </item>
          <item row="7" column="1">
           <widget class="QLabel" name="labelBdat">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay time between trigger and start of block of scans&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block delay after trigger&lt;/span&gt; is the delay time between the trigger starting a block of scans, which is determined by &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; and the actual start of the block of scans. &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;- disable: 0&lt;br/&gt;- min: 1 * 10 ns = 10 ns&lt;br/&gt;- step: 10 ns&lt;br/&gt;- max: 2,147,483,647 * 10 ns = 21,474,836,470 ns = 21.474836470 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bdat_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; can be found in the manual in chapter 2.9.2 and 6.2.6.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>bdat (block delay after trigger)</string>
            </property>
@@ -350,6 +440,12 @@
          </item>
          <item row="10" column="3">
           <widget class="QDoubleSpinBox" name="doubleSpinBoxXckdelayIn10ns">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;delay between XCK and actual readout&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XCK delay&lt;/span&gt; was the time between the high slope of XCK and the actual start of the camera read out. This is done by delaying VON relative to XCK. Since P222_09 cameras are not designed to interact with the VON signal anymore. VCLKs are generated inside the camera and the delay between integrator and XCK can be achieved by using the analog delay of the camera control. The option remains here for legacy operation. &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;- xckdelay = 500ns + value * 10ns&lt;br/&gt;- disable: 0&lt;br/&gt;- min 1: 500 ns + 1 * 10ns = 510 ns&lt;br/&gt;- max 2.147.483.647: 500 ns + 2.147.483.647 * 10 ns = 21.474.836.970 ns = 21,474.836.970 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; can be found in the manual in chapter 6.2.5.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -357,7 +453,7 @@
             <bool>true</bool>
            </property>
            <property name="suffix">
-            <string>0ns</string>
+            <string>0 ns</string>
            </property>
            <property name="decimals">
             <number>0</number>
@@ -369,6 +465,12 @@
          </item>
          <item row="8" column="1">
           <widget class="QLabel" name="labelSslope">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger slope of the scan trigger&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan trigger slope&lt;/span&gt; determines whether positive, negative or both slopes of a trigger are used. This only applies to external triggers.&lt;/p&gt;&lt;p&gt;0: positive - Use only positive slopes of the trigger input to start a scan.&lt;br/&gt;1: negative - Use only negative slopes of the trigger input to start a scan.&lt;br/&gt;2: both - Use both slopes of the trigger intput to start a scan.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sslope&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>sslope (scan trigger slope)</string>
            </property>
@@ -376,6 +478,12 @@
          </item>
          <item row="6" column="1">
           <widget class="QLabel" name="labelSdat">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay time between trigger and start of a scan&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan delay after trigger&lt;/span&gt; is the delay time between the trigger starting a scan, which is determined by &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt; and the actual start of the scan. &lt;span style=&quot; font-style:italic;&quot;&gt;sdat&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;- disable: 0&lt;br/&gt;- min: 1 * 10 ns = 10 ns&lt;br/&gt;- step: 10 ns&lt;br/&gt;- max: 2,147,483,647 * 10 ns = 21,474,836,470 ns = 21.474836470 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sdat_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;sdat&lt;/span&gt; can be found in the manual in chapter 2.9.2 and 6.2.4.10.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>sdat (scan delay after trigger)</string>
            </property>
@@ -396,6 +504,12 @@
          </item>
          <item row="9" column="1">
           <widget class="QLabel" name="labelBslope">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger slope of the block trigger&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block trigger slope&lt;/span&gt; determines whether positive, negative or both slopes of a trigger are used. This only applies to external triggers.&lt;/p&gt;&lt;p&gt;0: positive - Use only positive slopes of the trigger input to start a scan.&lt;br/&gt;1: negative - Use only negative slopes of the trigger input to start a scan.&lt;br/&gt;2: both - Use both slopes of the trigger intput to start a scan.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bslope&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>bslope (block trigger slope)</string>
            </property>
@@ -413,7 +527,7 @@
             <bool>true</bool>
            </property>
            <property name="suffix">
-            <string>0ns</string>
+            <string>0 ns</string>
            </property>
            <property name="decimals">
             <number>0</number>
@@ -452,7 +566,7 @@
             <bool>true</bool>
            </property>
            <property name="suffix">
-            <string>0ns</string>
+            <string>0 ns</string>
            </property>
            <property name="decimals">
             <number>0</number>
@@ -604,7 +718,7 @@
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
            <property name="suffix">
-            <string>ns</string>
+            <string> ns</string>
            </property>
            <property name="maximum">
             <number>262140</number>
