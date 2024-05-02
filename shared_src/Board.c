@@ -6010,7 +6010,7 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
 	return writeRegisterS0_32(drvno, settings_struct.camera_settings[drvno].s1s2_read_delay_in_10ns, S0Addr_S1S2ReadDelay);
 }
 
-
+#ifdef WIN32
 es_status_codes ExportMeasurementHDF5(const char* path)
 {
 	hid_t file_id, file_attr_name, file_attr_timestamp, file_attr_number_of_boards;
@@ -6252,4 +6252,4 @@ es_status_codes CheckFirstMeasurementDone(uint32_t drvno)
 
 	return es_no_error;
 }
-
+#endif

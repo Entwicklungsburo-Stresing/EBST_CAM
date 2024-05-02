@@ -8,7 +8,9 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include "Board_ll.h"
+#ifdef WIN32
 #include "hdf5.h"
+#endif
 
 // High level API
 // platform independent implementation
@@ -176,10 +178,12 @@ es_status_codes ResetScanFrequencyBit(uint32_t drvno);
 es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh);
 es_status_codes ResetBlockFrequencyBit(uint32_t drvno);
 es_status_codes SetS1S2ReadDelay(uint32_t drvno);
+#ifdef WIN32
 es_status_codes ExportMeasurementHDF5(const char* path);
 hid_t CreateNumericAttribute(hid_t parent_object_id, char* attr_name, hid_t goal_type, hid_t dataspace, const void* data);
 hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t dataspace, const void* data);
 es_status_codes CheckFirstMeasurementDone(uint32_t drvno);
+#endif
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);
