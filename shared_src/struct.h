@@ -76,35 +76,43 @@ struct camera_settings
 	 */
 	uint32_t xckdelay_in_10ns;
 	/**
-	 * Scan exposure control in 10 ns steps. SEC adds a time between the trigger and the start of the camera read out (start of XCK). Some sensors use this time for a electronic exposure control. Also mechanical shutters can be controlled with this setting. 32 bit.
+	 * Scan exposure control in 10 ns steps adds a delay time between the trigger and the start of the camera read out (start of XCK). Some sensors use this time for a electronic exposure control. Also mechanical shutters can be controlled with this setting. The SEC time is added between the end of SDAT and the start of the camera read out. SEC is a 32 bit unsigned integer. Further information about SEC can be found in the manual in chapter 4.9.1 and 6.2.4.11.
+	 *		* disable: 0
+	 *		* min: 1 * 10 ns = 10 ns
+	 *		* step: 10 ns
+	 *		* max: 4,294,967,295 * 10 ns = 42,949,672,950 ns
 	 */
 	uint32_t sec_in_10ns;
 	/**
-	 * Trigger mode of the integrator in camera control. See enum \ref trigger_mode_t in enum_settings.h for options.
+	 * Trigger mode of the integrator in the camera control box. See enum \ref trigger_mode_t in enum_settings.h for options. Further information about the trigger modes can found in the manual in chapter 7.3.7.	
 	 */
 	uint32_t trigger_mode_integrator;
 	/**
-	 * Sensor type. See enum \ref sensor_type_t in enum_settings.h for options.
+	 * Sensor type should match the sensor type of your camera. See enum \ref sensor_type_t in enum_settings.h for options.
 	 */
 	uint32_t sensor_type;
 	/**
-	 * Camera system. See enum \ref camera_system_t in enum_settings.h for options.
+	 * Camera system should match the model number of your camera. See enum \ref camera_system_t in enum_settings.h for options.
 	 */
 	uint32_t camera_system;
 	/**
-	 * Camera count. Camera count is the number of cameras which are connected to one PCIe board. 0 ... 16. 4 bit.
+	 * Camcnt is the number of cameras which are connected to one PCIe board. This could be multiple cameras connected via a chain to one PCIe board or multiple channel on one camera control box. 0 is a valid input for operating a PCIe card without any camera connected and only use its special inputs. Camcnt is a 4 bit unsigned integer.
+	 *		Min: 0
+	 *		Max: 15
 	 */
 	uint32_t camcnt;
 	/**
-	 * Pixel count. Pixel count is the number of pixels in one sensor. Only 64*n are allowed. 16 bit.
+	 * Pixel is the number of pixels in one sensor. Only 64*n are allowed. Pixel is a 16 bit unsigned integer. Typical values are: 576, 1024, 1088, 2112.
 	 */
 	uint32_t pixel;
 	/**
-	 * 0: no fft legacy mode (default), 1: fft legacy mode
+	 * Is fft legacy is a special legacy mode for operation with older FFT cameras. It should be turned off in most cases.
+	 *		=0: no fft legacy mode (default)
+	 *		>0: fft legacy mode
 	 */
 	uint32_t is_fft_legacy;
 	/**
-	 * Turn LEDs off.
+	 * LED off turns the LEDs in the camera off.
 	 *	=0 LED on
 	 *	>0 LED off
 	 */
@@ -155,7 +163,10 @@ struct camera_settings
 	 */
 	uint32_t number_of_regions;
 	/**
-	 * This controls the delay between the trigger and the moment, when the status of the S1 and S2 inputs are read. When the delay exceeds XCK, S1 and S2 are never read. delay time = value * 10ns. 32 bit.
+	 * S1 S2 read delay in 10 ns controls the delay between the trigger and the moment, when the status of the S1 and S2 inputs are read. When the delay exceeds XCK, S1 and S2 are never read. S1 S2 read delay is a 32 bit unsigned integer. Further information information about S1 S2 read delay can be found in the manual in chapter 6.2.5.13.
+	 *		* min: 0 ns
+	 *		* step: 10 ns
+	 *		* max: 4,294,967,295 * 10 ns = 42,949,672,950 ns
 	 */
 	uint32_t s1s2_read_delay_in_10ns;
 	/**
@@ -179,7 +190,11 @@ struct camera_settings
 	 */
 	uint32_t adc_custom_pattern;
 	/**
-	 * Block exposure control in 10 ns. BEC adds a time between the block trigger and the start of the block. Mechanical shutters can be controlled with this setting. 32 bit.
+	 * Block exposure control in 10 ns steps adds a delay time between the block trigger and the start start of the block. Mechanical shutters can be controlled with this setting. The BEC time is added between the end of BDAT and the start of the block. BEC is a 32 bit unsigned integer. Further information about BEC can be found in the manual in chapter 4.9.1 and 6.2.6.3.
+	 *		* disable: 0
+	 *		* min: 1 * 10 ns = 10 ns
+	 *		* step: 10 ns
+	 *		* max: 4,294,967,295 * 10 ns = 42,949,672,950 ns
 	 */
 	uint32_t bec_in_10ns;
 	/**
