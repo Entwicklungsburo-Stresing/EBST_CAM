@@ -494,7 +494,9 @@ es_status_codes Lsc::findCam(uint32_t drvno)
 
 es_status_codes Lsc::exportMeasurementHDF5(const char* path)
 {
-	return ExportMeasurementHDF5(path);
+#ifdef WIN32
+    return ExportMeasurementHDF5(path);
+#endif
 }
 
 es_status_codes Lsc::waitForMeasureReady(uint32_t board_sel)
