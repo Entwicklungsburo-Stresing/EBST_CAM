@@ -109,22 +109,41 @@ enum bslope_t
 };
 
 /**
- * Trigger mode for camera control shows the options for \ref camera_settings.trigger_mode_integrator.
+ * Trigger mode shows the options for \ref camera_settings.trigger_mode_integrator.
  */
 enum trigger_mode_t
 {
 	/**
-	 * 0: Trigger with the start signal of the PCIe board.
+	 * 0: Trigger the integrator with the start signal XCK of the PCIe board. The integrator starts simultaneously with the sensor. 
 	 */
 	xck = 0,
 	/**
-	 * 1: Use the input of camera control as trigger.
+	 * 1: Trigger the integrator with the input Ext. Trig. of the camera control. The integrator can be started separately from the sensor
 	 */
 	exttrig = 1,
 	/**
-	 * 2: Delay after trigger: Trigger with the start signal of the PCIe board, but with an additional delay after XCK.
+	 * 2: Trigger the integrator with the input Ext. Trig but with an additional delay.
 	 */
 	dat = 2
+};
+
+/**
+ * Camera system shows the options for \ref camera_settings.camera_system
+ */
+enum camera_system_t
+{
+	/**
+	 * 0: 3001
+	 */
+	camera_system_3001 = 0,
+	/**
+	 * 1: 3010
+	 */
+	camera_system_3010 = 1,
+	/**
+	 * 2: 3030
+	 */
+	camera_system_3030 = 2
 };
 
 /**
@@ -156,25 +175,6 @@ enum sensor_type_t
 	 * 5: High speed sensor for infrared light.
 	 */
 	sensor_type_hsir = 5,
-};
-
-/**
- * Camera system shows the options for \ref camera_settings.camera_system
- */
-enum camera_system_t
-{
-	/**
-	 * 0: 3001
-	 */
-	camera_system_3001 = 0,
-	/**
-	 * 1: 3010
-	 */
-	camera_system_3010 = 1,
-	/**
-	 * 2: 3030
-	 */
-	camera_system_3030 = 2
 };
 
 /**
