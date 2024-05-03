@@ -22,7 +22,7 @@ private slots:
 	void on_pushButtonDefault_pressed();
 	void on_pushButtonAutotune_pressed();
 	void on_autotuneStateChanged();
-	void reject();
+	void closeEvent(QCloseEvent *event);
 
 private:
 	uint32_t output_old[8];

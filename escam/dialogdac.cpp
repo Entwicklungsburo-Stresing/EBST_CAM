@@ -378,20 +378,22 @@ void DialogDac::on_autotuneStateChanged()
 	}
 	else
 	{
-		ui->pushButtonAutotune->setText("Stop");
+		ui->pushButtonAutotune->setText("Abort");
 		mainWindow->ui->checkBoxLoopMeasurement->setEnabled(false);
 	}
 	return;
 }
 
-void DialogDac::reject()
+void DialogDac::closeEvent(QCloseEvent *event)
 {
-	autotuneRunning = false;
-	on_autotuneStateChanged();
-	//create a delay of 1 ms
-	QTime dieTime = QTime::currentTime().addMSecs(15);
-	while (QTime::currentTime() < dieTime)
-		QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-	QDialog::reject();
+	if (autotuneRunning)
+	{
+		QErrorMessage* m = new QErrorMessage(this);
+		m->setWindowTitle("Error");
+		m->showMessage("Stop autotune before closing");
+		event->ignore();
+	}
+	else
+		event->accept();
 	return;
 }
