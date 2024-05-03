@@ -382,11 +382,13 @@ void DialogDac::on_autotuneStateChanged()
 	{
 		ui->pushButtonAutotune->setText("Autotune");
 		mainWindow->ui->checkBoxLoopMeasurement->setEnabled(true);
+		mainWindow->ui->pushButtonStartStop->setEnabled(true);
 	}
 	else
 	{
 		ui->pushButtonAutotune->setText("Abort");
 		mainWindow->ui->checkBoxLoopMeasurement->setEnabled(false);
+		mainWindow->ui->pushButtonStartStop->setEnabled(false);
 	}
 	return;
 }
