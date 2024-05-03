@@ -263,11 +263,19 @@ void DialogDac::autotunePressed()
 	int timeout = timeoutCount;
 
 	bool targetReached = false, ch1TargetReached = false, ch2TargetReached = false, ch3Target = false, ch3TargetReached = false, ch4TargetReached = false, ch5TargetReached = false, ch6TargetReached = false, ch7TargetReached = false, ch8TargetReached = false;
+
+	QSpinBox* spinBoxArray[8] = { ui->spinBoxChannel1, ui->spinBoxChannel2, ui->spinBoxChannel3, ui->spinBoxChannel4, ui->spinBoxChannel5, ui->spinBoxChannel6, ui->spinBoxChannel7, ui->spinBoxChannel8 };
+	int spinBoxArraySize = (sizeof(spinBoxArray) / sizeof(spinBoxArray[0]));
+	for (int i = 0; i < spinBoxArraySize; i++)
+	{
+		if(spinBoxArray[i]->value() >= 65000)
+			spinBoxArray[i]->setValue(64999);
+	}
 	while (!targetReached && timeout > 0 && autotuneRunning)
 	{
 		uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
 		mainWindow->startPressed();
-		//Create a delay of 3 ms
+		//Create a delay of 15 ms
 		QTime dieTime = QTime::currentTime().addMSecs(15);
 		while (QTime::currentTime() < dieTime)
 			QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
@@ -293,10 +301,9 @@ void DialogDac::autotunePressed()
 		}
 
 		QSpinBox* spinBoxArray[8] = { ui->spinBoxChannel1, ui->spinBoxChannel2, ui->spinBoxChannel3, ui->spinBoxChannel4, ui->spinBoxChannel5, ui->spinBoxChannel6, ui->spinBoxChannel7, ui->spinBoxChannel8 };
-		int arraySize = (sizeof(spinBoxArray) / sizeof(spinBoxArray[0]));
 
 		bool warningNeeded = false;
-		for (int i = 0; i < arraySize; i++)
+		for (int i = 0; i < spinBoxArraySize; i++)
 		{
 			if (spinBoxArray[i]->value() >= 60000)
 				warningNeeded = true;
