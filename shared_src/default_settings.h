@@ -33,7 +33,7 @@
 #define settingSensorGainDefault					0
 #define settingAdcGainDefault						0
 #define settingCoolingDefault						0
-#define settingGpxOffsetDefault						0
+#define settingGpxOffsetDefault						1000
 #define settingLinesDefault							64
 #define settingVfreqDefault							7
 #define settingFftModeDefault						full_binning
