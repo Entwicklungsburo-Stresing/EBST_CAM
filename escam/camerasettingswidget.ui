@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>419</width>
-    <height>521</height>
+    <width>347</width>
+    <height>464</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -231,7 +231,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;delay between XCK and actual readout&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XCK delay&lt;/span&gt; was the time between the high slope of XCK and the actual start of the camera read out. This is done by delaying VON relative to XCK. Since P222_09 cameras are not designed to interact with the VON signal anymore. VCLKs are generated inside the camera and the delay between integrator and XCK can be achieved by using the analog delay of the camera control. The option remains here for legacy operation. &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;- xckdelay = 500ns + value * 10ns&lt;br/&gt;- disable: 0&lt;br/&gt;- min 1: 500 ns + 1 * 10ns = 510 ns&lt;br/&gt;- max 2.147.483.647: 500 ns + 2.147.483.647 * 10 ns = 21.474.836.970 ns = 21,474.836.970 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; can be found in the manual in chapter 6.2.5.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XCK delay&lt;/span&gt; was the time between the high slope of XCK and the actual start of the camera read out. This is done by delaying VON relative to XCK. Since P222_09 cameras are not designed to interact with the VON signal anymore. For the following camera versions &lt;span style=&quot; font-style:italic;&quot;&gt;xck delay&lt;/span&gt; can be used:&lt;/p&gt;&lt;p&gt;- 205.X&lt;br/&gt;- 215.6 and older&lt;br/&gt;- 206.X&lt;br/&gt;- 216.X&lt;/p&gt;&lt;p&gt;VCLKs are generated inside the camera and the delay between integrator and XCK can be achieved by using the analog delay of the camera control. The option remains here for legacy operation. &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;- xckdelay = 500ns + value * 10ns&lt;br/&gt;- disable: 0&lt;br/&gt;- min 1: 500 ns + 1 * 10ns = 510 ns&lt;br/&gt;- max 2.147.483.647: 500 ns + 2.147.483.647 * 10 ns = 21.474.836.970 ns = 21,474.836.970 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; can be found in the manual in chapter 6.2.5.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>xck delay (legacy option)</string>
@@ -516,7 +516,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;delay between XCK and actual readout&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XCK delay&lt;/span&gt; was the time between the high slope of XCK and the actual start of the camera read out. This is done by delaying VON relative to XCK. Since P222_09 cameras are not designed to interact with the VON signal anymore. VCLKs are generated inside the camera and the delay between integrator and XCK can be achieved by using the analog delay of the camera control. The option remains here for legacy operation. &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;- xckdelay = 500ns + value * 10ns&lt;br/&gt;- disable: 0&lt;br/&gt;- min 1: 500 ns + 1 * 10ns = 510 ns&lt;br/&gt;- max 2.147.483.647: 500 ns + 2.147.483.647 * 10 ns = 21.474.836.970 ns = 21,474.836.970 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; can be found in the manual in chapter 6.2.5.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XCK delay&lt;/span&gt; was the time between the high slope of XCK and the actual start of the camera read out. This is done by delaying VON relative to XCK. Since P222_09 cameras are not designed to interact with the VON signal anymore. For the following camera versions &lt;span style=&quot; font-style:italic;&quot;&gt;xck delay&lt;/span&gt; can be used:&lt;/p&gt;&lt;p&gt;- 205.X&lt;br/&gt;- 215.6 and older&lt;br/&gt;- 206.X&lt;br/&gt;- 216.X&lt;/p&gt;&lt;p&gt;VCLKs are generated inside the camera and the delay between integrator and XCK can be achieved by using the analog delay of the camera control. The option remains here for legacy operation. &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;- xckdelay = 500ns + value * 10ns&lt;br/&gt;- disable: 0&lt;br/&gt;- min 1: 500 ns + 1 * 10ns = 510 ns&lt;br/&gt;- max 2.147.483.647: 500 ns + 2.147.483.647 * 10 ns = 21.474.836.970 ns = 21,474.836.970 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; can be found in the manual in chapter 6.2.5.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -637,6 +637,12 @@
         <layout class="QGridLayout" name="gridLayoutCamerasetup">
          <item row="11" column="2">
           <widget class="QComboBox" name="comboBoxCamCool">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Target temperature of the temperature regulation&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Camera cooling level&lt;/span&gt; is controlling the target temperature for the temperature regulation in cooled cameras. The cooling is done by a Peltier element which can generate a temperature difference of 40 °C. That means the target temperature can only be reached, if the ambient temperature is not higher than target + 40 °C. The regulation is optimized for -20 °C to 0 °C. The precision is 1 K at these levels. On other levels the error can rise up to 10 K. If the target temperature is reached, the LED TG (Temperature Good) will light up green.&lt;/p&gt;&lt;p&gt;0: cooling off&lt;br/&gt;1: 0 °C&lt;br/&gt;2: -10 °C&lt;br/&gt;3: -20 °C&lt;br/&gt;4: -25 °C&lt;br/&gt;5: -30 °C&lt;br/&gt;6: -40 °C&lt;br/&gt;7: min °C&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;temp_level&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about&lt;span style=&quot; font-style:italic;&quot;&gt; camera cooling level&lt;/span&gt; can be found in the manual in chapter 3.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <item>
             <property name="text">
              <string>off</string>
@@ -677,20 +683,16 @@
              <string>7</string>
             </property>
            </item>
-           <item>
-            <property name="text">
-             <string>8</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>9</string>
-            </property>
-           </item>
           </widget>
          </item>
          <item row="10" column="2">
           <widget class="QCheckBox" name="checkBoxIsCooledCameraLegacyMode">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Legacy mode for older cooled cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Cooled camera legacy&lt;/span&gt; is a special mode for operating older cooled cameras. If on, a bit in the PCIe board is set to react correctly to the cooled status messages from the camera. The following camera versions need to be run in legacy mode:&lt;/p&gt;&lt;p&gt;- 208.X&lt;br/&gt;- 218.1 and older&lt;/p&gt;&lt;p&gt;- unchecked: off&lt;br/&gt;- checked: cooled camera legacy mode on&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;is_cooled_camera_legacy_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>on</string>
            </property>
@@ -726,6 +728,12 @@
          </item>
          <item row="8" column="1">
           <widget class="QLabel" name="labelGain3010">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Controls the internal gain of some sensors&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor gain&lt;/span&gt; is controlling the internal gain function of some infrared sensors. For the some sensors gain can be switched on or off, others sensor got multiple levels of gain.&lt;/p&gt;&lt;p&gt;- camera system 3001&lt;br/&gt;gain off: 0&lt;br/&gt;gain on: 1 &lt;/p&gt;&lt;p&gt;- camera system 3030&lt;br/&gt;gain off: 0&lt;br/&gt;step: 1&lt;br/&gt;max gain: 4&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor gain can be found in the manual in chapters 3.3.1, 3.4.1.1, 4.5.2, 8.4.4, 8.7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>sensor gain</string>
            </property>
@@ -746,6 +754,12 @@
          </item>
          <item row="11" column="1">
           <widget class="QLabel" name="labelCamCool">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Target temperature of the temperature regulation&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Camera cooling level&lt;/span&gt; is controlling the target temperature for the temperature regulation in cooled cameras. The cooling is done by a Peltier element which can generate a temperature difference of 40 °C. That means the target temperature can only be reached, if the ambient temperature is not higher than target + 40 °C. The regulation is optimized for -20 °C to 0 °C. The precision is 1 K at these levels. On other levels the error can rise up to 10 K. If the target temperature is reached, the LED TG (Temperature Good) will light up green.&lt;/p&gt;&lt;p&gt;0: cooling off&lt;br/&gt;1: 0 °C&lt;br/&gt;2: -10 °C&lt;br/&gt;3: -20 °C&lt;br/&gt;4: -25 °C&lt;br/&gt;5: -30 °C&lt;br/&gt;6: -40 °C&lt;br/&gt;7: min °C&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;temp_level&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about&lt;span style=&quot; font-style:italic;&quot;&gt; camera cooling level&lt;/span&gt; can be found in the manual in chapter 3.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>camera cooling level</string>
            </property>
@@ -753,6 +767,12 @@
          </item>
          <item row="10" column="1">
           <widget class="QLabel" name="labelIsCooledCameraLegacyMode">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Legacy mode for older cooled cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Cooled camera legacy&lt;/span&gt; is a special mode for operating older cooled cameras. If on, a bit in the PCIe board is set to react correctly to the cooled status messages from the camera. The following camera versions need to be run in legacy mode:&lt;/p&gt;&lt;p&gt;- 208.X&lt;br/&gt;- 218.1 and older&lt;/p&gt;&lt;p&gt;- unchecked: off&lt;br/&gt;- checked: cooled camera legacy mode on&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;is_cooled_camera_legacy_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>cooled camera legacy mode</string>
            </property>
@@ -773,6 +793,12 @@
          </item>
          <item row="9" column="2">
           <widget class="QSpinBox" name="spinBoxAdcGain">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gain of the ADC in 3030 high speed cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;ADC gain&lt;/span&gt; is controlling the gain function of the ADC in 3030 high speed cameras.&lt;span style=&quot; font-style:italic;&quot;&gt; ADC gain&lt;/span&gt; is a 8 bit unsigned integer.&lt;/p&gt;&lt;p&gt;- min: 0&lt;br/&gt;- step: 1&lt;br/&gt;- default: 6&lt;br/&gt;- max: 12&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;adc_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about adc_gain can be found in the manual in chapters 3.4.2.1. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -836,6 +862,12 @@
          </item>
          <item row="13" column="1">
           <widget class="QLabel" name="labelIOCtrlImpactStartPixel">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Position where the information of voltage inputs or integrators are inserted&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;IOCTRL impact start pixel&lt;/span&gt; is the position in the pixel array where the information of voltage or integrator inputs are written. The number of these inputs can differ, so length of these additional information can differ, too. The setting specifies the first pixel where the information is written, so the information can be read from this one and the following pixels. IOCTRL impact start pixel is a 16 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;default: 1078&lt;br/&gt;max: 65535&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;ioctrl_impact_start_pixel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;IOCTRL impact start pixel&lt;/span&gt; can be found in the manual in chapter 7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>ioctrl impact start pixel</string>
            </property>
@@ -847,7 +879,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Legacy mode for operation for with older cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;FFT legacy &lt;/span&gt;is a special legacy mode for operation with older FFT cameras. It should be turned off in most cases.&lt;/p&gt;&lt;p&gt;unchecked - off: normal operation (default)&lt;br/&gt;checked - on: fft legacy mode&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;is_fft_legacy&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;FFT legacy &lt;/span&gt;is a special legacy mode for operation with older FFT cameras. For the following camera versions fft legacy should be turned on:&lt;/p&gt;&lt;p&gt;- 205.X&lt;br/&gt;- 215.6 and older&lt;br/&gt;- 208.X&lt;br/&gt;- 218.3 and older&lt;br/&gt;- 210.X&lt;br/&gt;- 211.2 and older&lt;br/&gt;- 206.X&lt;br/&gt;- 216.X&lt;/p&gt;&lt;p&gt;If the PCIe card version is 222.8 or older or 202.X, fft legacy should always be turned on, if you are using a FFT sensor. FFT legacy is available since 222.10.&lt;/p&gt;&lt;p&gt;unchecked - off: normal operation (default)&lt;br/&gt;checked - on: fft legacy mode&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;is_fft_legacy&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>on</string>
@@ -856,11 +888,20 @@
          </item>
          <item row="12" column="2">
           <widget class="QSpinBox" name="spinBoxGpxOffset">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset of the TDC-GPX IC on the TDC add on board&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;GPX offset&lt;/span&gt; is controlling the output offset of the TDC-GPX IC on the TDC add on board for the PCIe card. The TDC-GPX IC can be used to measure the time delay between one start and two stop signals in picosecond resolution. Adding an offset can improve the accuracy of the TDC-GPX IC. GPX offset is a 18 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;default: 1000&lt;br/&gt;max: 262,143&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;gpx_offset&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;gpx offset&lt;/span&gt; can be found in the manual in chapter 10.2. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>true</bool>
+           </property>
            <property name="maximum">
-            <number>268435455</number>
+            <number>262143</number>
            </property>
           </widget>
          </item>
@@ -917,6 +958,12 @@
          </item>
          <item row="9" column="1">
           <widget class="QLabel" name="labelGain3030">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gain of the ADC in 3030 high speed cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;ADC gain&lt;/span&gt; is controlling the gain function of the ADC in 3030 high speed cameras.&lt;span style=&quot; font-style:italic;&quot;&gt; ADC gain&lt;/span&gt; is a 8 bit unsigned integer.&lt;/p&gt;&lt;p&gt;- min: 0&lt;br/&gt;- step: 1&lt;br/&gt;- default: 6&lt;br/&gt;- max: 12&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;adc_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about adc_gain can be found in the manual in chapters 3.4.2.1. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>adc gain</string>
            </property>
@@ -931,11 +978,17 @@
          </item>
          <item row="13" column="2">
           <widget class="QSpinBox" name="spinBoxIOCtrlImpactStartPixel">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Position where the information of voltage inputs or integrators are inserted&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;IOCTRL impact start pixel&lt;/span&gt; is the position in the pixel array where the information of voltage or integrator inputs are written. The number of these inputs can differ, so length of these additional information can differ, too. The setting specifies the first pixel where the information is written, so the information can be read from this one and the following pixels. IOCTRL impact start pixel is a 16 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;default: 1078&lt;br/&gt;max: 65535&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;ioctrl_impact_start_pixel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;IOCTRL impact start pixel&lt;/span&gt; can be found in the manual in chapter 7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
            <property name="maximum">
-            <number>268435455</number>
+            <number>65535</number>
            </property>
            <property name="value">
             <number>1078</number>
@@ -998,6 +1051,12 @@
          </item>
          <item row="12" column="1">
           <widget class="QLabel" name="labelGpxOffset">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset of the TDC-GPX IC on the TDC add on board&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;GPX offset&lt;/span&gt; is controlling the output offset of the TDC-GPX IC on the TDC add on board for the PCIe card. The TDC-GPX IC can be used to measure the time delay between one start and two stop signals in picosecond resolution. Adding an offset can improve the accuracy of the TDC-GPX IC. GPX offset is a 18 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;default: 1000&lt;br/&gt;max: 262,143&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;gpx_offset&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;gpx offset&lt;/span&gt; can be found in the manual in chapter 10.2. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>gpx offset</string>
            </property>
@@ -1009,7 +1068,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Legacy mode for operation for with older cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;FFT legacy &lt;/span&gt;is a special legacy mode for operation with older FFT cameras. It should be turned off in most cases.&lt;/p&gt;&lt;p&gt;unchecked - off: normal operation (default)&lt;br/&gt;checked - on: fft legacy mode&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;is_fft_legacy&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;FFT legacy &lt;/span&gt;is a special legacy mode for operation with older FFT cameras. For the following camera versions fft legacy should be turned on:&lt;/p&gt;&lt;p&gt;- 205.X&lt;br/&gt;- 215.6 and older&lt;br/&gt;- 208.X&lt;br/&gt;- 218.3 and older&lt;br/&gt;- 210.X&lt;br/&gt;- 211.2 and older&lt;br/&gt;- 206.X&lt;br/&gt;- 216.X&lt;/p&gt;&lt;p&gt;If the PCIe card version is 222.8 or older or 202.X, fft legacy should always be turned on, if you are using a FFT sensor. FFT legacy is available since 222.10.&lt;/p&gt;&lt;p&gt;unchecked - off: normal operation (default)&lt;br/&gt;checked - on: fft legacy mode&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;is_fft_legacy&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>FFT legacy mode</string>
@@ -1058,11 +1117,17 @@
          </item>
          <item row="8" column="2">
           <widget class="QSpinBox" name="spinBoxSensorGain">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Controls the internal gain of some sensors&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor gain&lt;/span&gt; is controlling the internal gain function of some infrared sensors. For the some sensors gain can be switched on or off, others sensor got multiple levels of gain.&lt;/p&gt;&lt;p&gt;- camera system 3001&lt;br/&gt;gain off: 0&lt;br/&gt;gain on: 1 &lt;/p&gt;&lt;p&gt;- camera system 3030&lt;br/&gt;gain off: 0&lt;br/&gt;step: 1&lt;br/&gt;max gain: 4&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor gain can be found in the manual in chapters 3.3.1, 3.4.1.1, 4.5.2, 8.4.4, 8.7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
            <property name="maximum">
-            <number>3</number>
+            <number>4</number>
            </property>
           </widget>
          </item>

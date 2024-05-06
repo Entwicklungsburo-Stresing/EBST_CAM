@@ -16,8 +16,8 @@ struct camera_settings
 	/**
 	 * use_software_polling determines which method is used to copy data from DMA to user buffer.
 	 *
-	 * - >0: Use Software Polling. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. Since P222_2 this method is reliable up to about 100kHz. It generates as expected a greater CPU load than the interrupt method. With this option you can get more recent scans from GetCurrentScanNumber(), especially at lower frequencies. For high frequencies > 30kHz this method is not recommended.
-	 * - =0: Use Interrupt. Every dma_buffer_size_in_scans/2 scan the interrupt starts a copy process, which copies dma_buffer_size_in_scans/2 scans to the user buffer. 1000 is our default value for dma_buffer_size_in_scans, so interrupt is started every 500 scans.
+	 *		>0: Use Software Polling. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. Since P222_2 this method is reliable up to about 100kHz. It generates as expected a greater CPU load than the interrupt method. With this option you can get more recent scans from GetCurrentScanNumber(), especially at lower frequencies. For high frequencies > 30kHz this method is not recommended.
+	 *		=0: Use Interrupt. Every dma_buffer_size_in_scans/2 scan the interrupt starts a copy process, which copies dma_buffer_size_in_scans/2 scans to the user buffer. 1000 is our default value for dma_buffer_size_in_scans, so interrupt is started every 500 scans.
 	 */
 	uint32_t use_software_polling;
 	/**
@@ -67,8 +67,13 @@ struct camera_settings
 	 */
 	uint32_t bslope;
 	/**
-	 * DEPRECATED
-	 * XCK delay in 10 ns steps was the time between the high slope of XCK and the actual start of the camera read out. This is done by delaying VON relative to XCK. Since P222_09 cameras are not designed to interact with the VON signal anymore. VCLKs are generated inside the camera and the delay between integrator and XCK can be achieved by using the analog delay of the camera control. Further information about xckdelay can be found in the manual in chapter 6.2.5.12.
+	 * LEGACY
+	 * XCK delay in 10 ns steps was the time between the high slope of XCK and the actual start of the camera read out. This is done by delaying VON relative to XCK. Since P222_09 cameras are not designed to interact with the VON signal anymore. For the following camera versions xckdelay can be used:
+	 *		* 205.X
+	 *		* 215.6 and older
+	 *		* 206.X
+	 *		* 216.X
+	 * For newer camera versions VCLKs are generated inside the camera and the delay between integrator and XCK can be achieved by using the analog delay of the camera control. Further information about xckdelay can be found in the manual in chapter 6.2.5.12.
 	 * 31 bit. xckdelay = 500ns + xckdelay_in_10ns * 10ns
 	 *		* disable: 0
 	 *		* min 1: 500 ns + 1 * 10ns = 510 ns
@@ -97,8 +102,8 @@ struct camera_settings
 	uint32_t camera_system;
 	/**
 	 * Camcnt is the number of cameras which are connected to one PCIe board. This could be multiple cameras connected via a chain to one PCIe board or multiple channel on one camera control box. 0 is a valid input for operating a PCIe card without any camera connected and only use its special inputs. Camcnt is a 4 bit unsigned integer.
-	 *		Min: 0
-	 *		Max: 15
+	 *		* Min: 0
+	 *		* Max: 15
 	 */
 	uint32_t camcnt;
 	/**
@@ -106,40 +111,70 @@ struct camera_settings
 	 */
 	uint32_t pixel;
 	/**
-	 * Is fft legacy is a special legacy mode for operation with older FFT cameras. It should be turned off in most cases.
-	 *		=0: no fft legacy mode (default)
-	 *		>0: fft legacy mode
+	 * Is fft legacy is a special legacy mode for operation with older FFT cameras. For the following camera versions fft legacy should be turned on:
+	 *		* 205.X
+	 *		* 215.6 and older
+	 *		* 208.X
+	 *		* 218.3 and older
+	 *		* 210.X
+	 *		* 211.2 and older
+	 *		* 206.X
+	 *		* 216.X
+	 * If the PCIe card version is 222.8 or older or 202.X, fft legacy should always be turned on, if you are using a FFT sensor. FFT legacy is available since 222.10.
+	 *		* =0: off (default)
+	 *		* >0: fft legacy mode on
 	 */
 	uint32_t is_fft_legacy;
 	/**
 	 * LED off turns the LEDs in the camera off.
-	 *	=0 LED on
-	 *	>0 LED off
+	 *		* =0 LED on
+	 *		* >0 LED off
 	 */
 	uint32_t led_off;
 	/**
-	 * Sensor gain for IR sensors. 0 for no gain, >0 for gain.
-	 *	- camera system 3001/3010: 0 to 1
-	 *	- camera system 3030: 0 to 3
+	 * Sensor gain is controlling the internal gain function of some infrared sensors. For the some sensors gain can be switched on or off, others sensor got multiple levels of gain. Further information about sensor gain can be found in the manual in chapters 3.3.1, 3.4.1.1, 4.5.2, 8.4.4, 8.7.3.
+	 *	* camera system 3001/3010:
+	 *		* gain off: 0
+	 *		* gain on: 1
+	 *	* camera system 3030:
+	 *		* gain off: 0
+	 *		* step: 1
+	 *		* max gain: 4
 	 */
 	uint32_t sensor_gain;
 	/**
-	 * ADC gain. 0...12. default: 5. 8 bit
+	 * ADC gain is controlling the gain function of the ADC in 3030 high speed cameras. ADC gain is a 8 bit unsigned integer. Further information about adc_gain can be found in the manual in chapter 3.4.2.1. 
+	 *		* min: 0
+	 *		* step: 1
+	 *		* default: 6
+	 *		* max: 12
 	 */
 	uint32_t adc_gain;
 	/**
-	 * Temperature level for cooled cameras. 0...7 / 0=off, 7=min
+	 * Temperature level is controlling the target temperature for the temperature regulation in cooled cameras. The cooling is done by a Peltier element which can generate a temperature difference of 40 °C. That means the target temperature can only be reached, if the ambient temperature is not higher than target + 40 °C. The regulation is optimized for -20 °C to 0 °C. The precision is 1 K at these levels. On other levels the error can rise up to 10 K. If the target temperature is reached, the LED TG (Temperature Good) will light up green. temp_level is a 3 bit unsigned integer. Further information about temp_level can be found in the manual in chapter 3.5.
+	 *		* 0: cooling off
+	 *		* 1: 0 °C
+	 *		* 2: -10 °C
+	 *		* 3: -20 °C
+	 *		* 4: -25 °C
+	 *		* 5: -30 °C
+	 *		* 6: -40 °C
+	 *		* 7: min °C
 	 */
 	uint32_t temp_level;
 	/**
 	 * DEPRECATED
-	 * Shortrs controls the sensor reset length.
-	 *	- =0: long reset 800ns
-	 *	- >0: short reset 380ns
+	 * Shortrs controled the sensor reset length. This setting is replaced by sensor_reset_length_in_4_ns.
+	 *		* =0: long reset 800ns
+	 *		* >0: short reset 380ns
 	 */
 	uint32_t shortrs;
 	/**
-	 * GPX offset
+	 * GPX offset is controlling the output offset of the TDC-GPX IC on the TDC add on board for the PCIe card. The TDC-GPX IC can be used to measure the time delay between one start and two stop signals in picosecond resolution. Adding an offset can improve the accuracy of the TDC-GPX IC. GPX offset is a 18 bit unsigned integer. Further information about gpx_offset can be found in the manual in chapter 10.2. 
+	 *		* min: 0
+	 *		* step: 1
+	 *		* default: 1000
+	 *		* max: 262,143
 	 */
 	uint32_t gpx_offset;
 	/**
@@ -198,13 +233,18 @@ struct camera_settings
 	 */
 	uint32_t bec_in_10ns;
 	/**
-	 * DEPRECATED: This should be set when the camera is a high speed infrared camera.
-	 *	- =0 no IR
-	 *	- >0 IR
+	 * DEPRECATED
+	 * This should be set when the camera is a high speed infrared camera. This information was moved to sensor_type.
+	 *		* =0 no IR
+	 *		* >0 IR
 	 */
 	uint32_t is_hs_ir;
 	/**
-	 * Determines at which pixel number of one scan the inputs of IOCTRL are written to.
+	 * IOCTRL impact start pixel is the position in the pixel array where the information of voltage or integrator inputs are written. The number of these inputs can differ, so length of these additional information can differ, too. The setting specifies the first pixel where the information is written, so the information can be read from this one and the following pixels. IOCTRL impact start pixel is a 16 bit unsigned integer. Further information about IOCTRL impact start pixel can be found in the manual in chapter 7.3.
+	 *		* min: 0
+	 *		* step: 1
+	 *		* default: 1078
+	 *		* max: 65535
 	 */
 	uint32_t ioctrl_impact_start_pixel;
 	/**
@@ -237,8 +277,8 @@ struct camera_settings
 	uint32_t sensor_reset_length_in_4_ns;
 	/**
 	 * Experimental:
-	 * - =0: Don't write measurement data to disc.
-	 * - >0: Write measurement data to disc.
+	 *		* =0: Don't write measurement data to disc.
+	 *		* >0: Write measurement data to disc.
 	 */
 	uint32_t write_to_disc;
 	/**
@@ -246,12 +286,17 @@ struct camera_settings
 	 */
 	char file_path[file_path_size];
 	/**
-	 * DEPRECATED: Not used, because didn't work correctly. Specifies how to split files when writing measurement data to disc. See enum \ref split_mode_t in enum.h for modes. 
+	 * DEPRECATED
+	 * Not used, because didn't work correctly. Specifies how to split files when writing measurement data to disc. See enum \ref split_mode_t in enum.h for modes. 
 	 */
 	uint32_t file_split_mode;
 	/**
-	 * - =0 off
-	 * - >0 cooled camera legacy mode. This option is setting a bit in the PCIe board to react correctly to the cooled status messages from the camera.
+	 * Is cooled camera legacy is a special mode for operating older cooled cameras. If on, a bit in the PCIe board is set to react correctly to the cooled status messages from the camera. The following camera versions need to be run in legacy mode:
+	 *		* 208.X
+	 *		* 218.1 and older
+	 * 
+	 *		* =0 off
+	 *		* >0 cooled camera legacy mode on
 	 */
 	uint32_t is_cooled_camera_legacy_mode;
 	/**

@@ -1485,9 +1485,10 @@ es_status_codes SetBTimer(uint32_t drvno, uint32_t btime_in_microseconds)
 
 /**
  * \brief Initialize the TDC-GPX chip. TDC: time delay counter option.
- *
+ * 
+ * More information: https://www.sciosense.com/wp-content/uploads/2023/12/TDC-GPX-Datasheet.pdf
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param delay GPX offset is used to increase accuracy. A counter value can be added, usually 1000.
+ * \param delay GPX offset is used to increase accuracy. A counter value can be added, usually 1000. 18 bit.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
