@@ -502,7 +502,7 @@ void MainWindow::setDefaultAxes()
 
 void MainWindow::on_actionAbout_triggered()
 {
-	QString aboutText = "This is line scan camera version ";
+	QString aboutText = "This is Escam version ";
 	aboutText.append(VER_FILE_VERSION_STR);
 	aboutText.append("\n");
 	aboutText.append(VER_COPYRIGHT_STR);
