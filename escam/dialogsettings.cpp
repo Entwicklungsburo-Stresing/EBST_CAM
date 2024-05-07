@@ -5,7 +5,7 @@
 #include "lsc-gui.h"
 
 DialogSettings::DialogSettings(QWidget *parent) :
-	QDialog(parent, Qt::Dialog | Qt::WindowContextHelpButtonHint),
+	QDialog(parent, Qt::Dialog | Qt::WindowContextHelpButtonHint | Qt::WindowCloseButtonHint),
 	ui(new Ui::DialogSettings)
 {
 	ui->setupUi(this);
