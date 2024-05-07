@@ -41,6 +41,8 @@ private slots:
 	void on_pushButtonFilePath_clicked();
 	void on_checkBoxWriteDataToDisc_stateChanged(int arg1);
 	void on_spinBoxNumberOfRegions_valueChanged(int value);
+	void on_spinBoxLines_valueChanged(int value);
+	void on_spinBoxLinesBinning_valueChanged(int value);
 };
 
 #endif // CAMERASETTINGSWIGET_H

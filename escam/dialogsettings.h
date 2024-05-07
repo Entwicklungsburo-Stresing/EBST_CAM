@@ -111,10 +111,9 @@ constexpr auto settingIOCtrlT0PeriodIn10nsPath = "T0PeriodIn10ns";
 //software
 constexpr auto settingsUseSoftwarePollingPath = "use_software_polling";
 
-namespace Ui
-{
-	class DialogSettings;
-}
+QT_BEGIN_NAMESPACE
+namespace Ui { class DialogSettings; }
+QT_END_NAMESPACE
 
 class DialogSettings : public QDialog
 {
@@ -123,12 +122,12 @@ class DialogSettings : public QDialog
 public:
 	explicit DialogSettings(QWidget *parent = nullptr);
 	~DialogSettings();
+	Ui::DialogSettings* ui;
 signals:
 	void settings_saved();
 	void defaults_loaded();
 	void initializingDone();
 private:
-	Ui::DialogSettings *ui;
 	QSettings settings;
 private slots:
 	void loadDefaults();
