@@ -14,10 +14,9 @@
 struct camera_settings
 {
 	/**
-	 * use_software_polling determines which method is used to copy data from DMA to user buffer.
-	 *
-	 *		>0: Use Software Polling. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. Since P222_2 this method is reliable up to about 100kHz. It generates as expected a greater CPU load than the interrupt method. With this option you can get more recent scans from GetCurrentScanNumber(), especially at lower frequencies. For high frequencies > 30kHz this method is not recommended.
-	 *		=0: Use Interrupt. Every dma_buffer_size_in_scans/2 scan the interrupt starts a copy process, which copies dma_buffer_size_in_scans/2 scans to the user buffer. 1000 is our default value for dma_buffer_size_in_scans, so interrupt is started every 500 scans.
+	 * use_software_polling determines which method is used to copy data from DMA to user buffer. Further information about software polling can be found in the manual in chapter 5.4.8.
+	 *		* >0: Use software polling. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. Since P222_2 this method is reliable up to about 100kHz. It generates as expected a higher CPU load than the interrupt method. With this option you can get more recent scans from GetCurrentScanNumber(), especially at lower frequencies. For high frequencies > 30kHz this method is not recommended.
+	 *		* =0: Use interrupt. Every dma_buffer_size_in_scans/2 scan the interrupt starts a copy process, which copies dma_buffer_size_in_scans/2 scans to the user buffer. 1000 is our default value for dma_buffer_size_in_scans, so interrupt is started every 500 scans.
 	 */
 	uint32_t use_software_polling;
 	/**
@@ -36,7 +35,7 @@ struct camera_settings
 	 */
 	uint32_t stime_in_microsec;
 	/**
-	 * Block timer in microseconds is the time between the start of two blocks of readouts. This time is useed when bti mode is btimer. Btime is a 28 bit unsigned integer. Further information about the timer can be found in the manual in chapter 6.4.4.
+	 * Block timer in microseconds is the time between the start of two blocks of readouts. This time is used when bti mode is btimer. Btime is a 28 bit unsigned integer. Further information about the timer can be found in the manual in chapter 6.4.4.
 	 *		* min: 1 µs
 	 *		* step: 1 µs
 	 *		* max: 268,435,455 µs = 268.435455 s
@@ -164,7 +163,7 @@ struct camera_settings
 	uint32_t temp_level;
 	/**
 	 * DEPRECATED
-	 * Shortrs controled the sensor reset length. This setting is replaced by sensor_reset_length_in_4_ns.
+	 * Shortrs controlled the sensor reset length. This setting is replaced by sensor_reset_length_in_4_ns.
 	 *		* =0: long reset 800ns
 	 *		* >0: short reset 380ns
 	 */
@@ -178,15 +177,22 @@ struct camera_settings
 	 */
 	uint32_t gpx_offset;
 	/**
-	 * Count of lines for FFT sensors. 12 bit.
+	 * fft_lines is the count of vertical lines for FFT sensors. This setting should match your sensor. You can find this information in the manual. fft_lines is a 12 bit unsigned integer. Further information about FFT sensors can be found in the manual in chapters 1.4 and 11.3.3.
+	 *		* min: 1
+	 *		* step: 1
+	 *		* default: 64
+	 *		* max: 4095
 	 */
 	uint32_t fft_lines;
 	/**
-	 * Vertical frequency for FFT sensors. 8 bit.
+	 * vfreq controls the vertical clock frequency for FFT sensors. Different sensors are capable of different vertical clock speeds, so this setting should match your sensor. You can find this information in the manual. vfreq is the period of the vertical clock, so a higher vfreq means a lower frequency. vfreq is 8 bit unsigned integer. Further information about vfreq and FFT sensors can be found in the manual in chapters 1.4, 3.3.5 and 11.3.3.
+	 *		* min: 1 * 256 ns = 256 ns => 3.9 MHz
+	 *		* step: 1 * 256 ns = 256 ns
+	 *		* max: 255 * 256 ns = 65,280 ns => 15.3 kHz
 	 */
 	uint32_t vfreq;
 	/**
-	 * Mode for FFT sensors. See enum \ref fft_mode_t in enum_settings.h for options.
+	 * fft_mode controls the operating mode for FFT sensors. The vertical lines of a FFT sensor can either be summed up, read separately or summed up partially. See enum \ref fft_mode_t in enum_settings.h for options. Further information about FFT modes can be found in the manual in chapter 4.5.1.
 	 */
 	uint32_t fft_mode;
 	/**
@@ -272,7 +278,11 @@ struct camera_settings
 	 */
 	uint32_t ticnt;
 	/**
-	 * This setting controls the length of the reset pulse between two camera readouts for some sensors. value * 4ns = sensor reset length
+	 * Sensor_rese_length_in_4_ns controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without this reset for all sensors. Sensor_rese_length_in_4_ns is a 16 bit unsigned integer. Further information about sensor reset can be found in the manual in chapter 4.9.2.
+	 *		* min: 0 ns
+	 *		* step: 1 * 4 ns = 4 ns
+	 *		* default: 100 * 4 ns = 400 ns
+	 *		* max: 65535 * 4 ns = 262,140 ns
 	 */
 	uint32_t sensor_reset_length_in_4_ns;
 	/**
