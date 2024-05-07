@@ -1,4 +1,6 @@
 #include "camerasettingswidget.h"
+#include "dialogsettings.h"
+#include "ui_dialogsettings.h"
 
 CameraSettingsWidget::CameraSettingsWidget(QWidget *parent)
 	: QWidget(parent),
@@ -216,32 +218,41 @@ void CameraSettingsWidget::on_spinBoxNumberOfRegions_valueChanged(int value)
 {
 	if (_settings_level == settings_level_guided)
 	{
-		if (ui->comboBoxFftMode->currentIndex() == partial_binning && !ui->checkBoxRegionsEqual->checkState())
+		if (ui->comboBoxFftMode->currentIndex() == partial_binning)
 		{
-			ui->spinBoxRegion1->setEnabled(true);
-			ui->spinBoxRegion2->setEnabled(true);
-			ui->spinBoxRegion3->setEnabled(true);
-			ui->spinBoxRegion4->setEnabled(true);
-			ui->spinBoxRegion5->setEnabled(true);
-			ui->spinBoxRegion6->setEnabled(true);
-			ui->spinBoxRegion7->setEnabled(true);
-			ui->spinBoxRegion8->setEnabled(true);
-			switch (value)
+			// Found the DialogSettings object by trying out how many parents I have to go up. Is there a better way to do it?
+			DialogSettings* ds = static_cast<DialogSettings*>(this->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget());
+			if (ds)
 			{
-			case 1:
-				ui->spinBoxRegion2->setEnabled(false);
-			case 2:
-				ui->spinBoxRegion3->setEnabled(false);
-			case 3:
-				ui->spinBoxRegion4->setEnabled(false);
-			case 4:
-				ui->spinBoxRegion5->setEnabled(false);
-			case 5:
-				ui->spinBoxRegion6->setEnabled(false);
-			case 6:
-				ui->spinBoxRegion7->setEnabled(false);
-			case 7:
-				ui->spinBoxRegion8->setEnabled(false);
+				ds->ui->doubleSpinBoxNos->setValue(value);
+			}
+			if (!ui->checkBoxRegionsEqual->checkState())
+			{
+				ui->spinBoxRegion1->setEnabled(true);
+				ui->spinBoxRegion2->setEnabled(true);
+				ui->spinBoxRegion3->setEnabled(true);
+				ui->spinBoxRegion4->setEnabled(true);
+				ui->spinBoxRegion5->setEnabled(true);
+				ui->spinBoxRegion6->setEnabled(true);
+				ui->spinBoxRegion7->setEnabled(true);
+				ui->spinBoxRegion8->setEnabled(true);
+				switch (value)
+				{
+				case 1:
+					ui->spinBoxRegion2->setEnabled(false);
+				case 2:
+					ui->spinBoxRegion3->setEnabled(false);
+				case 3:
+					ui->spinBoxRegion4->setEnabled(false);
+				case 4:
+					ui->spinBoxRegion5->setEnabled(false);
+				case 5:
+					ui->spinBoxRegion6->setEnabled(false);
+				case 6:
+					ui->spinBoxRegion7->setEnabled(false);
+				case 7:
+					ui->spinBoxRegion8->setEnabled(false);
+				}
 			}
 		}
 		else
@@ -352,6 +363,8 @@ void CameraSettingsWidget::on_spinBoxSensorResetLengthIn1ns_valueChanged(int arg
 void CameraSettingsWidget::on_comboBoxFftMode_currentIndexChanged(int index)
 {
 	bool enabled = true;
+	// Found the DialogSettings object by trying out how many parents I have to go up. Is there a better way to do it?
+	DialogSettings* ds = static_cast<DialogSettings*>(this->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget());
 	switch (_settings_level)
 	{
 	case settings_level_guided:
@@ -368,16 +381,36 @@ void CameraSettingsWidget::on_comboBoxFftMode_currentIndexChanged(int index)
 		ui->spinBoxLinesBinning->setEnabled(enabled);
 		ui->spinBoxNumberOfRegions->setEnabled(enabled);
 		ui->checkBoxRegionsEqual->setEnabled(enabled);
+		ui->comboBoxSti->setEnabled(true);
+		if (ds)
+		{
+			ds->ui->doubleSpinBoxNos->setEnabled(true);
+		}
 		break;
 	case partial_binning:
 		ui->spinBoxLinesBinning->setEnabled(enabled);
 		ui->spinBoxNumberOfRegions->setEnabled(true);
 		ui->checkBoxRegionsEqual->setEnabled(true);
+		ui->comboBoxSti->setEnabled(enabled);
+		ui->comboBoxSti->setCurrentIndex(sti_ASL);
+		if (ds)
+		{
+			ds->ui->doubleSpinBoxNos->setValue(ui->spinBoxNumberOfRegions->value());
+			ds->ui->doubleSpinBoxNos->setEnabled(enabled);
+		}
 		break;
 	case area_mode:
 		ui->spinBoxLinesBinning->setEnabled(true);
 		ui->spinBoxNumberOfRegions->setEnabled(enabled);
 		ui->checkBoxRegionsEqual->setEnabled(enabled);
+		ui->comboBoxSti->setEnabled(enabled);
+		ui->comboBoxSti->setCurrentIndex(sti_ASL);
+		if (ds)
+		{
+			ds->ui->doubleSpinBoxNos->setValue(ui->spinBoxLines->value());
+			ds->ui->doubleSpinBoxNos->setEnabled(enabled);
+		}
+		break;
 	}
 	on_spinBoxNumberOfRegions_valueChanged(ui->spinBoxNumberOfRegions->value());
 }
@@ -482,4 +515,30 @@ void CameraSettingsWidget::initializeWidget()
 	ui->spinBoxAdcCustom->setValue(settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toDouble());
 	ui->comboBoxBncOut->setCurrentIndex(settings.value(settingBncOutPath, settingBncOutDefault).toDouble());
 	return;
+}
+
+void CameraSettingsWidget::on_spinBoxLines_valueChanged(int value)
+{
+	if (_settings_level == settings_level_guided && ui->comboBoxFftMode->currentIndex() == area_mode)
+	{
+		// Found the DialogSettings object by trying out how many parents I have to go up. Is there a better way to do it?
+		DialogSettings* ds = static_cast<DialogSettings*>(this->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget());
+		if (ds)
+		{
+			ds->ui->doubleSpinBoxNos->setValue(value / ui->spinBoxLinesBinning->value());
+		}
+	}
+}
+
+void CameraSettingsWidget::on_spinBoxLinesBinning_valueChanged(int value)
+{
+	if (_settings_level == settings_level_guided && ui->comboBoxFftMode->currentIndex() == area_mode)
+	{
+		// Found the DialogSettings object by trying out how many parents I have to go up. Is there a better way to do it?
+		DialogSettings* ds = static_cast<DialogSettings*>(this->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget());
+		if (ds)
+		{
+			ds->ui->doubleSpinBoxNos->setValue(ui->spinBoxLines->value() / value);
+		}
+	}
 }
