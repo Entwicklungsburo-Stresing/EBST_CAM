@@ -44,8 +44,8 @@
 #define settingRegionSize1Default					10
 #define settingRegionSize2Default					44
 #define settingRegionSize3Default					10
-#define settingRegionSize4Default					10
-#define settingRegionSize5Default					10
+#define settingRegionSize4Default					0
+#define settingRegionSize5Default					0
 #define settingRegionSize6Default					0
 #define settingRegionSize7Default					0
 #define settingRegionSize8Default					0
