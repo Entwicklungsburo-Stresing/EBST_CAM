@@ -1220,6 +1220,12 @@
          </item>
          <item row="5" column="2">
           <widget class="QSpinBox" name="spinBoxNumberOfRegions">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Count of in how many regions the sensor gets divided in partial binning mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Number of regions&lt;/span&gt; determines in how many regions the sensor gets divided in the FFT mode range of interest. Setting it to 1 would equal the area mode, so the minimum is 2.&lt;/p&gt;&lt;p&gt;min: 2&lt;br/&gt;step: 1&lt;br/&gt;max: 5&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;number_of_regions&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -1323,6 +1329,12 @@
          </item>
          <item row="5" column="1">
           <widget class="QLabel" name="labelNumberOfRegions">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Count of in how many regions the sensor gets divided in partial binning mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Number of regions&lt;/span&gt; determines in how many regions the sensor gets divided in the FFT mode range of interest. Setting it to 1 would equal the area mode, so the minimum is 2.&lt;/p&gt;&lt;p&gt;min: 2&lt;br/&gt;step: 1&lt;br/&gt;max: 5&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;number_of_regions&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>number of regions</string>
            </property>
@@ -1402,6 +1414,12 @@
          </item>
          <item row="4" column="1">
           <widget class="QLabel" name="labelLinesBinning">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Count of lines to sum up in area mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Area lines binning&lt;/span&gt; is the count of lines which are summed up in area mode for FFT sensors. When this is 1, every line is read out separately. When it is 2, every 2 lines are summed up in the sensor and read out as one line, so the count of samples for a complete readout gets divided by 2. The same applies for higher values. &lt;span style=&quot; font-style:italic;&quot;&gt;Area lines binning&lt;/span&gt; is a 12 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1&lt;br/&gt;step: 1&lt;br/&gt;default: 1&lt;br/&gt;max: 4095&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;lines_binning&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the area mode can be found in the manual in chapter 4.5.1.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>area lines binning</string>
            </property>
@@ -1450,6 +1468,12 @@
          </item>
          <item row="4" column="2">
           <widget class="QSpinBox" name="spinBoxLinesBinning">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Count of lines to sum up in area mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Area lines binning&lt;/span&gt; is the count of lines which are summed up in area mode for FFT sensors. When this is 1, every line is read out separately. When it is 2, every 2 lines are summed up in the sensor and read out as one line, so the count of samples for a complete readout gets divided by 2. The same applies for higher values. &lt;span style=&quot; font-style:italic;&quot;&gt;Area lines binning&lt;/span&gt; is a 12 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1&lt;br/&gt;step: 1&lt;br/&gt;default: 1&lt;br/&gt;max: 4095&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;lines_binning&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the area mode can be found in the manual in chapter 4.5.1.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -1457,7 +1481,7 @@
             <number>1</number>
            </property>
            <property name="maximum">
-            <number>9999</number>
+            <number>4095</number>
            </property>
           </widget>
          </item>
