@@ -46,9 +46,9 @@
 #define settingRegionSize3Default					10
 #define settingRegionSize4Default					10
 #define settingRegionSize5Default					10
-#define settingRegionSize6Default					10
-#define settingRegionSize7Default					10
-#define settingRegionSize8Default					10
+#define settingRegionSize6Default					0
+#define settingRegionSize7Default					0
+#define settingRegionSize8Default					0
 #define settingDacCameraDefault						55000
 #define settingDacPcieDefault						20000
 #define settingTorDefault							tor_xck

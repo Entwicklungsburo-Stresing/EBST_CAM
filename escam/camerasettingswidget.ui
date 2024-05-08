@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>347</width>
-    <height>464</height>
+    <height>458</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1192,71 +1192,13 @@
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
         <layout class="QGridLayout" name="gridLayoutFftmode">
-         <item row="0" column="1">
-          <spacer name="verticalSpacer_5">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="15" column="1">
-          <spacer name="verticalSpacer_6">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="5" column="2">
-          <widget class="QSpinBox" name="spinBoxNumberOfRegions">
+         <item row="4" column="2">
+          <widget class="QSpinBox" name="spinBoxLinesBinning">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Count of in how many regions the sensor gets divided in partial binning mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Count of lines to sum up in area mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Number of regions&lt;/span&gt; determines in how many regions the sensor gets divided in the FFT mode range of interest. Setting it to 1 would equal the area mode, so the minimum is 2.&lt;/p&gt;&lt;p&gt;min: 2&lt;br/&gt;step: 1&lt;br/&gt;max: 5&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;number_of_regions&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>8</number>
-           </property>
-          </widget>
-         </item>
-         <item row="10" column="2">
-          <widget class="QSpinBox" name="spinBoxRegion4">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>9999</number>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QSpinBox" name="spinBoxLines">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Count of vertical sensor lines&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt; is the count of vertical lines for FFT sensors. This setting should match your sensor. You can find this information in the manual. &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt; is a 12 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1&lt;br/&gt;step: 1&lt;br/&gt;default: 64&lt;br/&gt;max: 4095&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;fft_lines&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about FFT sensors can be found in the manual in chapters 1.4 and 11.3.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Area lines binning&lt;/span&gt; is the count of lines which are summed up in area mode for FFT sensors. When this is 1, every line is read out separately. When it is 2, every 2 lines are summed up in the sensor and read out as one line, so the count of samples for a complete readout gets divided by 2. The same applies for higher values. &lt;span style=&quot; font-style:italic;&quot;&gt;Area lines binning&lt;/span&gt; is a 12 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1&lt;br/&gt;step: 1&lt;br/&gt;default: 1&lt;br/&gt;max: 4095&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;lines_binning&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the area mode can be found in the manual in chapter 4.5.1.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1269,21 +1211,8 @@
            </property>
           </widget>
          </item>
-         <item row="9" column="2">
-          <widget class="QSpinBox" name="spinBoxRegion3">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>9999</number>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="2">
-          <widget class="QSpinBox" name="spinBoxRegion8">
+         <item row="8" column="2">
+          <widget class="QSpinBox" name="spinBoxRegion2">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -1299,6 +1228,25 @@
           <widget class="QLabel" name="labelRegion1">
            <property name="text">
             <string>region size 1</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="2">
+          <widget class="QSpinBox" name="spinBoxNumberOfRegions">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Count of in how many regions the sensor gets divided in partial binning mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Number of regions&lt;/span&gt; determines in how many regions the sensor gets divided in the FFT mode range of interest. Setting it to 1 would equal the area mode, so the minimum is 2.&lt;/p&gt;&lt;p&gt;min: 2&lt;br/&gt;step: 1&lt;br/&gt;max: 5&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;number_of_regions&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>2</number>
+           </property>
+           <property name="maximum">
+            <number>5</number>
            </property>
           </widget>
          </item>
@@ -1327,36 +1275,63 @@
            </item>
           </widget>
          </item>
-         <item row="5" column="1">
-          <widget class="QLabel" name="labelNumberOfRegions">
+         <item row="3" column="1">
+          <widget class="QLabel" name="labelFftMode">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Count of in how many regions the sensor gets divided in partial binning mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Operating mode for FFT sensors&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Number of regions&lt;/span&gt; determines in how many regions the sensor gets divided in the FFT mode range of interest. Setting it to 1 would equal the area mode, so the minimum is 2.&lt;/p&gt;&lt;p&gt;min: 2&lt;br/&gt;step: 1&lt;br/&gt;max: 5&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;number_of_regions&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;FFT mode&lt;/span&gt; controls the operating mode for FFT sensors. The vertical lines of a FFT sensor can either be summed up, read separately or summed up partially.&lt;/p&gt;&lt;p&gt;0: &lt;span style=&quot; font-style:italic;&quot;&gt;Full binning&lt;/span&gt; is the FFT operation mode for summing up all vertical lines for one readout. The sensor is treated as a single line sensor in this mode. This is the default operation mode.&lt;/p&gt;&lt;p&gt;1: &lt;span style=&quot; font-style:italic;&quot;&gt;Partial binning&lt;/span&gt; is the FFT operation mode for summing up a specific count of lines per readout to get the sum of specific regions of the sensor. The number of regions is determined by the setting&lt;span style=&quot; font-style:italic;&quot;&gt; number of regions&lt;/span&gt;. The size of each region is determined by the setting &lt;span style=&quot; font-style:italic;&quot;&gt;region size&lt;/span&gt;. In this mode the meaning of scans and blocks changes. One &amp;quot;scan&amp;quot; is now one region of the sensor. So &lt;span style=&quot; font-style:italic;&quot;&gt;nos&lt;/span&gt; should equal &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt; and &lt;span style=&quot; font-style:italic;&quot;&gt;STI&lt;/span&gt; should be set to &lt;span style=&quot; font-style:italic;&quot;&gt;ASL&lt;/span&gt;. One &amp;quot;block&amp;quot; is one complete readout of all regions. The time between two block triggers is the exposure time of the sensor for one complete image. &lt;span style=&quot; font-style:italic;&quot;&gt;nob&lt;/span&gt; and &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; can be chosen freely.&lt;/p&gt;&lt;p&gt;2: &lt;span style=&quot; font-style:italic;&quot;&gt;Area&lt;/span&gt; is the FFT operation mode for reading out each vertical line separately. In this mode the meaning of scans and blocks changes. One &amp;quot;scan&amp;quot; is now one line of the sensor. So &lt;span style=&quot; font-style:italic;&quot;&gt;nos&lt;/span&gt; should equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt; and &lt;span style=&quot; font-style:italic;&quot;&gt;STI&lt;/span&gt; should be set to &lt;span style=&quot; font-style:italic;&quot;&gt;ASL&lt;/span&gt;. One &amp;quot;block&amp;quot; is one complete readout of all lines. The time between two block triggers is the exposure time of the sensor for one complete image. &lt;span style=&quot; font-style:italic;&quot;&gt;nob&lt;/span&gt; and &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; can be chosen freely.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;fft_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about FFT modes can be found in the manual in chapter 4.5.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>number of regions</string>
+            <string>fft mode</string>
            </property>
           </widget>
          </item>
-         <item row="13" column="1">
-          <widget class="QLabel" name="labelRegion7">
+         <item row="9" column="1">
+          <widget class="QLabel" name="labelRegion3">
            <property name="text">
-            <string>region size 7</string>
+            <string>region size 3</string>
            </property>
           </widget>
          </item>
-         <item row="12" column="2">
-          <widget class="QSpinBox" name="spinBoxRegion6">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <item row="6" column="1">
+          <widget class="QLabel" name="labelRegionsEqual">
+           <property name="text">
+            <string>region size</string>
            </property>
-           <property name="minimum">
-            <number>1</number>
+          </widget>
+         </item>
+         <item row="11" column="1">
+          <widget class="QLabel" name="labelRegion5">
+           <property name="text">
+            <string>region size 5</string>
            </property>
-           <property name="maximum">
-            <number>9999</number>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <spacer name="verticalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="labelVfreq">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Vertical clock frequency for FFT sensors&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;VFREQ&lt;/span&gt; controls the vertical clock frequency for FFT sensors. Different sensors are capable of different vertical clock speeds, so this setting should match your sensor. You can find this information in the manual. &lt;span style=&quot; font-style:italic;&quot;&gt;VFREQ&lt;/span&gt; is the period of the vertical clock, so a higher &lt;span style=&quot; font-style:italic;&quot;&gt;VFREQ&lt;/span&gt; means a lower frequency. &lt;span style=&quot; font-style:italic;&quot;&gt;VFREQ&lt;/span&gt; is 8 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1 * 256 ns = 256 ns =&amp;gt; 3.9 MHz&lt;br/&gt;step: 1 * 256 ns = 256 ns&lt;br/&gt;max: 255 * 256 ns = 65,280 ns =&amp;gt; 15.3 kHz&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;vfreq&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about vfreq and FFT sensors can be found in the manual in chapters 1.4, 3.3.5 and 11.3.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>VFREQ (vertical frequency)</string>
            </property>
           </widget>
          </item>
@@ -1373,32 +1348,6 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="labelFftMode">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Operating mode for FFT sensors&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;FFT mode&lt;/span&gt; controls the operating mode for FFT sensors. The vertical lines of a FFT sensor can either be summed up, read separately or summed up partially.&lt;/p&gt;&lt;p&gt;0: &lt;span style=&quot; font-style:italic;&quot;&gt;Full binning&lt;/span&gt; is the FFT operation mode for summing up all vertical lines for one readout. The sensor is treated as a single line sensor in this mode. This is the default operation mode.&lt;/p&gt;&lt;p&gt;1: &lt;span style=&quot; font-style:italic;&quot;&gt;Partial binning&lt;/span&gt; is the FFT operation mode for summing up a specific count of lines per readout to get the sum of specific regions of the sensor. The number of regions is determined by the setting&lt;span style=&quot; font-style:italic;&quot;&gt; number of regions&lt;/span&gt;. The size of each region is determined by the setting &lt;span style=&quot; font-style:italic;&quot;&gt;region size&lt;/span&gt;. In this mode the meaning of scans and blocks changes. One &amp;quot;scan&amp;quot; is now one region of the sensor. So &lt;span style=&quot; font-style:italic;&quot;&gt;nos&lt;/span&gt; should equal &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt; and &lt;span style=&quot; font-style:italic;&quot;&gt;STI&lt;/span&gt; should be set to &lt;span style=&quot; font-style:italic;&quot;&gt;ASL&lt;/span&gt;. One &amp;quot;block&amp;quot; is one complete readout of all regions. The time between two block triggers is the exposure time of the sensor for one complete image. &lt;span style=&quot; font-style:italic;&quot;&gt;nob&lt;/span&gt; and &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; can be chosen freely.&lt;/p&gt;&lt;p&gt;2: &lt;span style=&quot; font-style:italic;&quot;&gt;Area&lt;/span&gt; is the FFT operation mode for reading out each vertical line separately. In this mode the meaning of scans and blocks changes. One &amp;quot;scan&amp;quot; is now one line of the sensor. So &lt;span style=&quot; font-style:italic;&quot;&gt;nos&lt;/span&gt; should equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt; and &lt;span style=&quot; font-style:italic;&quot;&gt;STI&lt;/span&gt; should be set to &lt;span style=&quot; font-style:italic;&quot;&gt;ASL&lt;/span&gt;. One &amp;quot;block&amp;quot; is one complete readout of all lines. The time between two block triggers is the exposure time of the sensor for one complete image. &lt;span style=&quot; font-style:italic;&quot;&gt;nob&lt;/span&gt; and &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; can be chosen freely.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;fft_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about FFT modes can be found in the manual in chapter 4.5.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>fft mode</string>
-           </property>
-          </widget>
-         </item>
-         <item row="13" column="2">
-          <widget class="QSpinBox" name="spinBoxRegion7">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>9999</number>
-           </property>
-          </widget>
-         </item>
          <item row="11" column="2">
           <widget class="QSpinBox" name="spinBoxRegion5">
            <property name="alignment">
@@ -1409,79 +1358,6 @@
            </property>
            <property name="maximum">
             <number>9999</number>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLabel" name="labelLinesBinning">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Count of lines to sum up in area mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Area lines binning&lt;/span&gt; is the count of lines which are summed up in area mode for FFT sensors. When this is 1, every line is read out separately. When it is 2, every 2 lines are summed up in the sensor and read out as one line, so the count of samples for a complete readout gets divided by 2. The same applies for higher values. &lt;span style=&quot; font-style:italic;&quot;&gt;Area lines binning&lt;/span&gt; is a 12 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1&lt;br/&gt;step: 1&lt;br/&gt;default: 1&lt;br/&gt;max: 4095&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;lines_binning&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the area mode can be found in the manual in chapter 4.5.1.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>area lines binning</string>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="1">
-          <widget class="QLabel" name="labelRegion8">
-           <property name="text">
-            <string>region size 8</string>
-           </property>
-          </widget>
-         </item>
-         <item row="12" column="1">
-          <widget class="QLabel" name="labelRegion6">
-           <property name="text">
-            <string>region size 6</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="2">
-          <widget class="QCheckBox" name="checkBoxRegionsEqual">
-           <property name="text">
-            <string>automatic equal</string>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="1">
-          <widget class="QLabel" name="labelRegion3">
-           <property name="text">
-            <string>region size 3</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <spacer name="horizontalSpacer_5">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="4" column="2">
-          <widget class="QSpinBox" name="spinBoxLinesBinning">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Count of lines to sum up in area mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Area lines binning&lt;/span&gt; is the count of lines which are summed up in area mode for FFT sensors. When this is 1, every line is read out separately. When it is 2, every 2 lines are summed up in the sensor and read out as one line, so the count of samples for a complete readout gets divided by 2. The same applies for higher values. &lt;span style=&quot; font-style:italic;&quot;&gt;Area lines binning&lt;/span&gt; is a 12 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1&lt;br/&gt;step: 1&lt;br/&gt;default: 1&lt;br/&gt;max: 4095&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;lines_binning&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the area mode can be found in the manual in chapter 4.5.1.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>4095</number>
            </property>
           </widget>
          </item>
@@ -1497,20 +1373,6 @@
             </size>
            </property>
           </spacer>
-         </item>
-         <item row="8" column="1">
-          <widget class="QLabel" name="labelRegion2">
-           <property name="text">
-            <string>region size 2</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLabel" name="labelRegionsEqual">
-           <property name="text">
-            <string>region size</string>
-           </property>
-          </widget>
          </item>
          <item row="2" column="2">
           <widget class="QSpinBox" name="spinBoxVfreq">
@@ -1531,23 +1393,121 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="labelVfreq">
+         <item row="12" column="1">
+          <spacer name="verticalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="2">
+          <widget class="QSpinBox" name="spinBoxLines">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Vertical clock frequency for FFT sensors&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Count of vertical sensor lines&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;VFREQ&lt;/span&gt; controls the vertical clock frequency for FFT sensors. Different sensors are capable of different vertical clock speeds, so this setting should match your sensor. You can find this information in the manual. &lt;span style=&quot; font-style:italic;&quot;&gt;VFREQ&lt;/span&gt; is the period of the vertical clock, so a higher &lt;span style=&quot; font-style:italic;&quot;&gt;VFREQ&lt;/span&gt; means a lower frequency. &lt;span style=&quot; font-style:italic;&quot;&gt;VFREQ&lt;/span&gt; is 8 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1 * 256 ns = 256 ns =&amp;gt; 3.9 MHz&lt;br/&gt;step: 1 * 256 ns = 256 ns&lt;br/&gt;max: 255 * 256 ns = 65,280 ns =&amp;gt; 15.3 kHz&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;vfreq&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about vfreq and FFT sensors can be found in the manual in chapters 1.4, 3.3.5 and 11.3.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt; is the count of vertical lines for FFT sensors. This setting should match your sensor. You can find this information in the manual. &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt; is a 12 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1&lt;br/&gt;step: 1&lt;br/&gt;default: 64&lt;br/&gt;max: 4095&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;fft_lines&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about FFT sensors can be found in the manual in chapters 1.4 and 11.3.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
-           <property name="text">
-            <string>VFREQ (vertical frequency)</string>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>4095</number>
            </property>
           </widget>
          </item>
-         <item row="11" column="1">
-          <widget class="QLabel" name="labelRegion5">
+         <item row="6" column="2">
+          <widget class="QCheckBox" name="checkBoxRegionsEqual">
            <property name="text">
-            <string>region size 5</string>
+            <string>automatic equal</string>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="2">
+          <widget class="QSpinBox" name="spinBoxRegion4">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>9999</number>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1">
+          <widget class="QLabel" name="labelRegion2">
+           <property name="text">
+            <string>region size 2</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLabel" name="labelLinesBinning">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Count of lines to sum up in area mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Area lines binning&lt;/span&gt; is the count of lines which are summed up in area mode for FFT sensors. When this is 1, every line is read out separately. When it is 2, every 2 lines are summed up in the sensor and read out as one line, so the count of samples for a complete readout gets divided by 2. The same applies for higher values. &lt;span style=&quot; font-style:italic;&quot;&gt;Area lines binning&lt;/span&gt; is a 12 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1&lt;br/&gt;step: 1&lt;br/&gt;default: 1&lt;br/&gt;max: 4095&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;lines_binning&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the area mode can be found in the manual in chapter 4.5.1.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>area lines binning</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="2">
+          <widget class="QSpinBox" name="spinBoxRegion3">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>9999</number>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLabel" name="labelNumberOfRegions">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Count of in how many regions the sensor gets divided in partial binning mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Number of regions&lt;/span&gt; determines in how many regions the sensor gets divided in the FFT mode range of interest. Setting it to 1 would equal the area mode, so the minimum is 2.&lt;/p&gt;&lt;p&gt;min: 2&lt;br/&gt;step: 1&lt;br/&gt;max: 5&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;number_of_regions&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>number of regions</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <spacer name="horizontalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="10" column="1">
+          <widget class="QLabel" name="labelRegion4">
+           <property name="text">
+            <string>region size 4</string>
            </property>
           </widget>
          </item>
@@ -1561,26 +1521,6 @@
            </property>
            <property name="maximum">
             <number>9999</number>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="2">
-          <widget class="QSpinBox" name="spinBoxRegion2">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>9999</number>
-           </property>
-          </widget>
-         </item>
-         <item row="10" column="1">
-          <widget class="QLabel" name="labelRegion4">
-           <property name="text">
-            <string>region size 4</string>
            </property>
           </widget>
          </item>
@@ -2019,9 +1959,6 @@
   <tabstop>spinBoxRegion3</tabstop>
   <tabstop>spinBoxRegion4</tabstop>
   <tabstop>spinBoxRegion5</tabstop>
-  <tabstop>spinBoxRegion6</tabstop>
-  <tabstop>spinBoxRegion7</tabstop>
-  <tabstop>spinBoxRegion8</tabstop>
   <tabstop>comboBoxBncOut</tabstop>
   <tabstop>comboBoxOutput</tabstop>
   <tabstop>comboBoxAdcMode</tabstop>
