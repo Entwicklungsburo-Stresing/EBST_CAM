@@ -86,5 +86,6 @@
 #define settingFilePathDefault						""
 #define settingFileSplitModeDefault					no_split
 #define settingIsCooledCameraLegacyModeDefault		false
+#define settingAxesMirrorXPathDefault				false
 
 #endif // DEFAULT_SETTINGS_H

@@ -16,6 +16,7 @@ public:
 	~DialogAxes();
 
 	void on_rubberband_valueChanged();
+	void on_checkBoxMirrorX_stateChanged();
 
 private slots:
 	void on_buttonBox_rejected();
@@ -23,10 +24,9 @@ private slots:
 	void on_spinBoxXmax_valueChanged(int arg1);
 	void on_spinBoxYmin_valueChanged(int arg1);
 	void on_spinBoxYmax_valueChanged(int arg1);
-	//void on_checkBoxMirrorX_stateChanged(int state);
-	//void on_checkBoxMirrorY_stateChanged(int state);
 
 private:
+	QSettings settings;
 	Ui::DialogAxes* ui;
 	qreal xmax_old = 0;
 	qreal xmin_old = 0;
