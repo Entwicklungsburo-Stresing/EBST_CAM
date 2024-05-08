@@ -18,6 +18,8 @@ DialogAxes::DialogAxes(QWidget *parent) :
 	ui->spinBoxXmin->setValue(xmin_old);
 	ui->spinBoxYmax->setValue(ymax_old);
 	ui->spinBoxYmin->setValue(ymin_old);
+	connect(this, &DialogAxes::on_checkBoxMirrorX_stateChanged, mainWindow, &MainWindow::loadCameraData);
+	ui->checkBoxMirrorX->setChecked(settings.value(settingAxesMirrorXPath, settingAxesMirrorXPathDefault).toBool());
 }
 
 DialogAxes::~DialogAxes()
@@ -85,27 +87,8 @@ void DialogAxes::on_rubberband_valueChanged()
 	ui->spinBoxYmax->setValue(mainWindow->ui->chartView->curr_ymax);
 }
 
-/*
-void DialogAxes::on_checkBoxMirrorX_stateChanged(int state)
-{
-	QList<QAbstractAxis *> axes = mainWindow->ui->chartView->chart()->axes();
-	if (axes.isEmpty()) return;
-	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
-	if(ui->checkBoxMirrorX->isChecked())
-		//axis0->setRange(mainWindow->ui->chartView->curr_xmax, mainWindow->ui->chartView->curr_xmin);
-		mainWindow->ui->chartView->chart()->axes()[0]->setRange(mainWindow->ui->chartView->curr_xmax, mainWindow->ui->chartView->curr_xmin);
-	else
-		mainWindow->ui->chartView->chart()->axes()[0]->setRange(mainWindow->ui->chartView->curr_xmin, mainWindow->ui->chartView->curr_xmax);
-}
 
-void DialogAxes::on_checkBoxMirrorY_stateChanged(int state)
+void DialogAxes::on_checkBoxMirrorX_stateChanged()
 {
-	QList<QAbstractAxis *> axes = mainWindow->ui->chartView->chart()->axes();
-	if (axes.isEmpty()) return;
-	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
-	if(ui->checkBoxMirrorY->isChecked())
-		axis1->setRange(mainWindow->ui->chartView->curr_ymax, mainWindow->ui->chartView->curr_ymin);
-	else
-		axis1->setRange(mainWindow->ui->chartView->curr_ymin, mainWindow->ui->chartView->curr_ymax);
+	settings.setValue(settingAxesMirrorXPath, ui->checkBoxMirrorX->isChecked());
 }
-*/
