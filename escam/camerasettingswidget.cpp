@@ -61,9 +61,6 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingRegionSize3Path, ui->spinBoxRegion3->value());
 	settings.setValue(settingRegionSize4Path, ui->spinBoxRegion4->value());
 	settings.setValue(settingRegionSize5Path, ui->spinBoxRegion5->value());
-	settings.setValue(settingRegionSize6Path, ui->spinBoxRegion6->value());
-	settings.setValue(settingRegionSize7Path, ui->spinBoxRegion7->value());
-	settings.setValue(settingRegionSize8Path, ui->spinBoxRegion8->value());
 	//Other
 	settings.setValue(settingWriteDataToDiscPath, ui->checkBoxWriteDataToDisc->isChecked());
 	settings.setValue(settingFilePathPath, ui->plainTextEditFilePath->toPlainText());
@@ -216,8 +213,21 @@ void CameraSettingsWidget::on_checkBoxRegionsEqual_stateChanged(int arg1)
 
 void CameraSettingsWidget::on_spinBoxNumberOfRegions_valueChanged(int value)
 {
-	if (_settings_level == settings_level_guided)
+	if (_settings_level == settings_level_free)
 	{
+		ui->spinBoxRegion1->setEnabled(true);
+		ui->spinBoxRegion2->setEnabled(true);
+		ui->spinBoxRegion3->setEnabled(true);
+		ui->spinBoxRegion4->setEnabled(true);
+		ui->spinBoxRegion5->setEnabled(true);
+	}
+	else
+	{
+		ui->spinBoxRegion1->setEnabled(false);
+		ui->spinBoxRegion2->setEnabled(false);
+		ui->spinBoxRegion3->setEnabled(false);
+		ui->spinBoxRegion4->setEnabled(false);
+		ui->spinBoxRegion5->setEnabled(false);
 		if (ui->comboBoxFftMode->currentIndex() == partial_binning)
 		{
 			// Found the DialogSettings object by trying out how many parents I have to go up. Is there a better way to do it?
@@ -226,57 +236,77 @@ void CameraSettingsWidget::on_spinBoxNumberOfRegions_valueChanged(int value)
 			{
 				ds->ui->doubleSpinBoxNos->setValue(value);
 			}
-			if (!ui->checkBoxRegionsEqual->checkState())
+			if (!(ui->checkBoxRegionsEqual->checkState()))
 			{
-				ui->spinBoxRegion1->setEnabled(true);
-				ui->spinBoxRegion2->setEnabled(true);
-				ui->spinBoxRegion3->setEnabled(true);
-				ui->spinBoxRegion4->setEnabled(true);
-				ui->spinBoxRegion5->setEnabled(true);
-				ui->spinBoxRegion6->setEnabled(true);
-				ui->spinBoxRegion7->setEnabled(true);
-				ui->spinBoxRegion8->setEnabled(true);
+				switch (value)
+				{
+				case 5:
+					ui->spinBoxRegion5->setEnabled(true);
+				case 4:
+					ui->spinBoxRegion4->setEnabled(true);
+				case 3:
+					ui->spinBoxRegion3->setEnabled(true);
+				case 2:
+					ui->spinBoxRegion2->setEnabled(true);
+				case 1:
+					ui->spinBoxRegion1->setEnabled(true);
+				}
 				switch (value)
 				{
 				case 1:
-					ui->spinBoxRegion2->setEnabled(false);
+					ui->spinBoxRegion2->setValue(0);
 				case 2:
-					ui->spinBoxRegion3->setEnabled(false);
+					ui->spinBoxRegion3->setValue(0);
 				case 3:
-					ui->spinBoxRegion4->setEnabled(false);
+					ui->spinBoxRegion4->setValue(0);
 				case 4:
-					ui->spinBoxRegion5->setEnabled(false);
+					ui->spinBoxRegion5->setValue(0);
+				}
+			}
+			else
+			{
+				int regionSize = ui->spinBoxLines->value() / value;
+				int remainder = ui->spinBoxLines->value() - (regionSize * (value - 1));
+				switch (value)
+				{
+				case 1:
+					ui->spinBoxRegion1->setValue(remainder);
+					ui->spinBoxRegion2->setValue(0);
+					ui->spinBoxRegion3->setValue(0);
+					ui->spinBoxRegion4->setValue(0);
+					ui->spinBoxRegion5->setValue(0);
+					break;
+				case 2:
+					ui->spinBoxRegion1->setValue(regionSize);
+					ui->spinBoxRegion2->setValue(remainder);
+					ui->spinBoxRegion3->setValue(0);
+					ui->spinBoxRegion4->setValue(0);
+					ui->spinBoxRegion5->setValue(0);
+					break;
+				case 3:
+					ui->spinBoxRegion1->setValue(regionSize);
+					ui->spinBoxRegion2->setValue(regionSize);
+					ui->spinBoxRegion3->setValue(remainder);
+					ui->spinBoxRegion4->setValue(0);
+					ui->spinBoxRegion5->setValue(0);
+					break;
+				case 4:
+					ui->spinBoxRegion1->setValue(regionSize);
+					ui->spinBoxRegion2->setValue(regionSize);
+					ui->spinBoxRegion3->setValue(regionSize);
+					ui->spinBoxRegion4->setValue(remainder);
+					ui->spinBoxRegion5->setValue(0);
+					break;
 				case 5:
-					ui->spinBoxRegion6->setEnabled(false);
-				case 6:
-					ui->spinBoxRegion7->setEnabled(false);
-				case 7:
-					ui->spinBoxRegion8->setEnabled(false);
+					ui->spinBoxRegion1->setValue(regionSize);
+					ui->spinBoxRegion2->setValue(regionSize);
+					ui->spinBoxRegion3->setValue(regionSize);
+					ui->spinBoxRegion4->setValue(regionSize);
+					ui->spinBoxRegion5->setValue(remainder);
+					break;
 				}
 			}
 		}
-		else
-		{
-			ui->spinBoxRegion1->setEnabled(false);
-			ui->spinBoxRegion2->setEnabled(false);
-			ui->spinBoxRegion3->setEnabled(false);
-			ui->spinBoxRegion4->setEnabled(false);
-			ui->spinBoxRegion5->setEnabled(false);
-			ui->spinBoxRegion6->setEnabled(false);
-			ui->spinBoxRegion7->setEnabled(false);
-			ui->spinBoxRegion8->setEnabled(false);
-		}
-	}
-	else
-	{
-		ui->spinBoxRegion1->setEnabled(true);
-		ui->spinBoxRegion2->setEnabled(true);
-		ui->spinBoxRegion3->setEnabled(true);
-		ui->spinBoxRegion4->setEnabled(true);
-		ui->spinBoxRegion5->setEnabled(true);
-		ui->spinBoxRegion6->setEnabled(true);
-		ui->spinBoxRegion7->setEnabled(true);
-		ui->spinBoxRegion8->setEnabled(true);
 	}
 	return;
 }
@@ -324,9 +354,6 @@ void CameraSettingsWidget::loadDefaults()
 	ui->spinBoxRegion3->setValue(settingRegionSize3Default);
 	ui->spinBoxRegion4->setValue(settingRegionSize4Default);
 	ui->spinBoxRegion5->setValue(settingRegionSize5Default);
-	ui->spinBoxRegion6->setValue(settingRegionSize6Default);
-	ui->spinBoxRegion7->setValue(settingRegionSize7Default);
-	ui->spinBoxRegion8->setValue(settingRegionSize8Default);
 	//Export data
 	ui->checkBoxWriteDataToDisc->setChecked(settingWriteToDiscDefault);
 	ui->plainTextEditFilePath->setPlainText(QDir::currentPath());
@@ -503,9 +530,6 @@ void CameraSettingsWidget::initializeWidget()
 	ui->spinBoxRegion3->setValue(settings.value(settingRegionSize3Path, settingRegionSize3Default).toDouble());
 	ui->spinBoxRegion4->setValue(settings.value(settingRegionSize4Path, settingRegionSize4Default).toDouble());
 	ui->spinBoxRegion5->setValue(settings.value(settingRegionSize5Path, settingRegionSize5Default).toDouble());
-	ui->spinBoxRegion6->setValue(settings.value(settingRegionSize6Path, settingRegionSize6Default).toDouble());
-	ui->spinBoxRegion7->setValue(settings.value(settingRegionSize7Path, settingRegionSize7Default).toDouble());
-	ui->spinBoxRegion8->setValue(settings.value(settingRegionSize8Path, settingRegionSize8Default).toDouble());
 	//Export data
 	ui->checkBoxWriteDataToDisc->setChecked(settings.value(settingWriteDataToDiscPath, settingWriteToDiscDefault).toBool());
 	ui->plainTextEditFilePath->setPlainText(settings.value(settingFilePathPath, QDir::currentPath()).toString());
@@ -528,6 +552,7 @@ void CameraSettingsWidget::on_spinBoxLines_valueChanged(int value)
 			ds->ui->doubleSpinBoxNos->setValue(value / ui->spinBoxLinesBinning->value());
 		}
 	}
+	on_spinBoxNumberOfRegions_valueChanged(ui->spinBoxNumberOfRegions->value());
 }
 
 void CameraSettingsWidget::on_spinBoxLinesBinning_valueChanged(int value)

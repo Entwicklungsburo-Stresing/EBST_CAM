@@ -196,11 +196,18 @@ struct camera_settings
 	 */
 	uint32_t fft_mode;
 	/**
-	 * Count of lines which are binned in area mode for FFT sensors. 8 bit.
+	 * lines_binning is the count of lines which are summed up in area mode for FFT sensors. When this is 1, every line is read out separately. When it is 2, every two lines are summed up in the sensor and read out as one line, so the count of samples for a complete readout gets divided by two. The same applies for higher values. lines_binning is a 12 bit unsigned integer. Further information about the area mode can be found in the manual in chapter 4.5.1.2.
+	 *		* min: 1
+	 *		* step: 1
+	 *		* default: 1
+	 *		* max: 4095
 	 */
 	uint32_t lines_binning;
 	/**
-	 * Number of regions for FFT mode range of interest. Min: 1. 16 bit.
+	 * number_of_regions determines in how many regions the sensor gets divided in the FFT mode range of interest. Setting it to 1 would equal the area mode, so the minimum is 2. The size of each region is determined by \ref camera_settings.region_size. Unused regions must be set to 0. Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.
+	 *		* min: 2
+	 *		* step: 1
+	 *		* max: 5
 	 */
 	uint32_t number_of_regions;
 	/**
@@ -211,7 +218,7 @@ struct camera_settings
 	 */
 	uint32_t s1s2_read_delay_in_10ns;
 	/**
-	 * Size for each region for region of interest mode for FFT sensors. When the first region is set to 0, all regions are automatically same sized.
+	 * Size for each region for region of interest mode for FFT sensors. When the first region is set to 0, all regions are automatically same sized. 8 bit.
 	 */
 	uint32_t region_size[8];
 	/**
