@@ -1216,9 +1216,6 @@
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
            <property name="maximum">
             <number>9999</number>
            </property>
@@ -1353,9 +1350,6 @@
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
            <property name="maximum">
             <number>9999</number>
            </property>
@@ -1437,9 +1431,6 @@
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
            <property name="maximum">
             <number>9999</number>
            </property>
@@ -1469,9 +1460,6 @@
           <widget class="QSpinBox" name="spinBoxRegion3">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>1</number>
            </property>
            <property name="maximum">
             <number>9999</number>
@@ -1515,9 +1503,6 @@
           <widget class="QSpinBox" name="spinBoxRegion1">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>1</number>
            </property>
            <property name="maximum">
             <number>9999</number>

@@ -213,8 +213,21 @@ void CameraSettingsWidget::on_checkBoxRegionsEqual_stateChanged(int arg1)
 
 void CameraSettingsWidget::on_spinBoxNumberOfRegions_valueChanged(int value)
 {
-	if (_settings_level == settings_level_guided)
+	if (_settings_level == settings_level_free)
 	{
+		ui->spinBoxRegion1->setEnabled(true);
+		ui->spinBoxRegion2->setEnabled(true);
+		ui->spinBoxRegion3->setEnabled(true);
+		ui->spinBoxRegion4->setEnabled(true);
+		ui->spinBoxRegion5->setEnabled(true);
+	}
+	else
+	{
+		ui->spinBoxRegion1->setEnabled(false);
+		ui->spinBoxRegion2->setEnabled(false);
+		ui->spinBoxRegion3->setEnabled(false);
+		ui->spinBoxRegion4->setEnabled(false);
+		ui->spinBoxRegion5->setEnabled(false);
 		if (ui->comboBoxFftMode->currentIndex() == partial_binning)
 		{
 			// Found the DialogSettings object by trying out how many parents I have to go up. Is there a better way to do it?
@@ -223,42 +236,77 @@ void CameraSettingsWidget::on_spinBoxNumberOfRegions_valueChanged(int value)
 			{
 				ds->ui->doubleSpinBoxNos->setValue(value);
 			}
-			if (!ui->checkBoxRegionsEqual->checkState())
+			if (!(ui->checkBoxRegionsEqual->checkState()))
 			{
-				ui->spinBoxRegion1->setEnabled(true);
-				ui->spinBoxRegion2->setEnabled(true);
-				ui->spinBoxRegion3->setEnabled(true);
-				ui->spinBoxRegion4->setEnabled(true);
-				ui->spinBoxRegion5->setEnabled(true);
+				switch (value)
+				{
+				case 5:
+					ui->spinBoxRegion5->setEnabled(true);
+				case 4:
+					ui->spinBoxRegion4->setEnabled(true);
+				case 3:
+					ui->spinBoxRegion3->setEnabled(true);
+				case 2:
+					ui->spinBoxRegion2->setEnabled(true);
+				case 1:
+					ui->spinBoxRegion1->setEnabled(true);
+				}
 				switch (value)
 				{
 				case 1:
-					ui->spinBoxRegion2->setEnabled(false);
+					ui->spinBoxRegion2->setValue(0);
 				case 2:
-					ui->spinBoxRegion3->setEnabled(false);
+					ui->spinBoxRegion3->setValue(0);
 				case 3:
-					ui->spinBoxRegion4->setEnabled(false);
+					ui->spinBoxRegion4->setValue(0);
 				case 4:
-					ui->spinBoxRegion5->setEnabled(false);
+					ui->spinBoxRegion5->setValue(0);
+				}
+			}
+			else
+			{
+				int regionSize = ui->spinBoxLines->value() / value;
+				int remainder = ui->spinBoxLines->value() - (regionSize * (value - 1));
+				switch (value)
+				{
+				case 1:
+					ui->spinBoxRegion1->setValue(remainder);
+					ui->spinBoxRegion2->setValue(0);
+					ui->spinBoxRegion3->setValue(0);
+					ui->spinBoxRegion4->setValue(0);
+					ui->spinBoxRegion5->setValue(0);
+					break;
+				case 2:
+					ui->spinBoxRegion1->setValue(regionSize);
+					ui->spinBoxRegion2->setValue(remainder);
+					ui->spinBoxRegion3->setValue(0);
+					ui->spinBoxRegion4->setValue(0);
+					ui->spinBoxRegion5->setValue(0);
+					break;
+				case 3:
+					ui->spinBoxRegion1->setValue(regionSize);
+					ui->spinBoxRegion2->setValue(regionSize);
+					ui->spinBoxRegion3->setValue(remainder);
+					ui->spinBoxRegion4->setValue(0);
+					ui->spinBoxRegion5->setValue(0);
+					break;
+				case 4:
+					ui->spinBoxRegion1->setValue(regionSize);
+					ui->spinBoxRegion2->setValue(regionSize);
+					ui->spinBoxRegion3->setValue(regionSize);
+					ui->spinBoxRegion4->setValue(remainder);
+					ui->spinBoxRegion5->setValue(0);
+					break;
+				case 5:
+					ui->spinBoxRegion1->setValue(regionSize);
+					ui->spinBoxRegion2->setValue(regionSize);
+					ui->spinBoxRegion3->setValue(regionSize);
+					ui->spinBoxRegion4->setValue(regionSize);
+					ui->spinBoxRegion5->setValue(remainder);
+					break;
 				}
 			}
 		}
-		else
-		{
-			ui->spinBoxRegion1->setEnabled(false);
-			ui->spinBoxRegion2->setEnabled(false);
-			ui->spinBoxRegion3->setEnabled(false);
-			ui->spinBoxRegion4->setEnabled(false);
-			ui->spinBoxRegion5->setEnabled(false);
-		}
-	}
-	else
-	{
-		ui->spinBoxRegion1->setEnabled(true);
-		ui->spinBoxRegion2->setEnabled(true);
-		ui->spinBoxRegion3->setEnabled(true);
-		ui->spinBoxRegion4->setEnabled(true);
-		ui->spinBoxRegion5->setEnabled(true);
 	}
 	return;
 }
@@ -504,6 +552,7 @@ void CameraSettingsWidget::on_spinBoxLines_valueChanged(int value)
 			ds->ui->doubleSpinBoxNos->setValue(value / ui->spinBoxLinesBinning->value());
 		}
 	}
+	on_spinBoxNumberOfRegions_valueChanged(ui->spinBoxNumberOfRegions->value());
 }
 
 void CameraSettingsWidget::on_spinBoxLinesBinning_valueChanged(int value)
