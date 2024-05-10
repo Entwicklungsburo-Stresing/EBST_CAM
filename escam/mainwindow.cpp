@@ -142,9 +142,10 @@ void MainWindow::setChartData(uint16_t* data, uint32_t* length, uint16_t numberO
 	// Allocate memory for the pointer array to the QlineSeries.
 	QLineSeries** series = static_cast<QLineSeries**>(calloc(numberOfSets, sizeof(QLineSeries*)));
 	// Iterate through all data sets.
+	
 	if (settings.value(settingAxesMirrorXPath).toBool())
 	{
-		int backIndex = length[0];
+		int backIndex = length[0] - 1;
 		for (uint32_t i = 0; i < length[0] / 2; i++)
 		{
 			uint32_t save = data[i];

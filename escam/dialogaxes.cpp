@@ -18,7 +18,7 @@ DialogAxes::DialogAxes(QWidget *parent) :
 	ui->spinBoxXmin->setValue(xmin_old);
 	ui->spinBoxYmax->setValue(ymax_old);
 	ui->spinBoxYmin->setValue(ymin_old);
-	connect(this, &DialogAxes::on_checkBoxMirrorX_stateChanged, mainWindow, &MainWindow::loadCameraData);
+	connect(ui->checkBoxMirrorX, &QCheckBox::stateChanged, mainWindow, &MainWindow::loadCameraData);
 	ui->checkBoxMirrorX->setChecked(settings.value(settingAxesMirrorXPath, settingAxesMirrorXPathDefault).toBool());
 }
 
@@ -87,8 +87,7 @@ void DialogAxes::on_rubberband_valueChanged()
 	ui->spinBoxYmax->setValue(mainWindow->ui->chartView->curr_ymax);
 }
 
-
-void DialogAxes::on_checkBoxMirrorX_stateChanged()
+void DialogAxes::on_checkBoxMirrorX_stateChanged(int state)
 {
 	settings.setValue(settingAxesMirrorXPath, ui->checkBoxMirrorX->isChecked());
 }

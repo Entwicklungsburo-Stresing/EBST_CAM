@@ -252,6 +252,9 @@ void DialogDac::on_pushButtonAutotune_pressed()
 	return;
 }
 
+/**
+ * @brief Adapts the DAC spinbox value until the target level is reached.
+ */
 void DialogDac::autotunePressed()
 {
 	if (mainWindow->ui->checkBoxLoopMeasurement->isChecked())
@@ -367,10 +370,9 @@ bool DialogDac::autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spi
 			spinBox->setValue(spinBox->value() - distance / 2);
 		}
 		else if (target > mean)
-			{
+		{
 			distance = target - mean;
 			spinBox->setValue(spinBox->value() + distance / 2);
-			int newMean = calculateMean(data, start, end);
 		}
 	}
 	return targetReached;
