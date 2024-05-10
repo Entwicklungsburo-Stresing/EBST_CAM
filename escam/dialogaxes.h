@@ -2,7 +2,7 @@
 #define DIALOGAXES_H
 
 #include <QDialog>
-
+#include "lsc-gui.h"
 namespace Ui {
 	class DialogAxes;
 }
@@ -16,7 +16,6 @@ public:
 	~DialogAxes();
 
 	void on_rubberband_valueChanged();
-	void on_checkBoxMirrorX_stateChanged();
 
 private slots:
 	void on_buttonBox_rejected();
@@ -24,10 +23,11 @@ private slots:
 	void on_spinBoxXmax_valueChanged(int arg1);
 	void on_spinBoxYmin_valueChanged(int arg1);
 	void on_spinBoxYmax_valueChanged(int arg1);
+	void on_checkBoxMirrorX_stateChanged(int state);
 
 private:
-	QSettings settings;
 	Ui::DialogAxes* ui;
+	QSettings settings;
 	qreal xmax_old = 0;
 	qreal xmin_old = 0;
 	qreal ymax_old = 0;
