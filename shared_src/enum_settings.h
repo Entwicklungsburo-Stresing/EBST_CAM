@@ -202,19 +202,19 @@ enum fft_mode_t
 enum bnc_out_t
 {
 	/**
-	 * XCK is high during the readout of the camera.
+	 * 0: XCK is high during the readout of the camera.
 	 */
 	bnc_out_xck = 0,
 	/**
-	 * Exp win stands for exposure window and is high, when the sensor is ready to be exposed to light.
+	 * 1: Exp win stands for exposure window and is high, when the sensor is ready to be exposed to light.
 	 */
 	bnc_out_exp_win = 1,
 	/**
-	 * The option ADC CLK sets the output to the ADC clock.
+	 * 2: The option ADC CLK sets the output to the ADC clock.
 	 */
 	bnc_out_adc_clk = 2,
 	/**
-	 * Vin is high when the voltage input is sampled.
+	 * 3: Vin is high when the voltage input is sampled.
 	 */
 	bnc_out_Vin = 3
 };
