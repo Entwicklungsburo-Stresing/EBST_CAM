@@ -197,6 +197,29 @@ enum fft_mode_t
 };
 
 /**
+ * This enum shows all options for the setting \ref camera_settings.bnc_out.
+ */
+enum bnc_out_t
+{
+	/**
+	 * XCK is high during the readout of the camera.
+	 */
+	bnc_out_xck = 0,
+	/**
+	 * Exp win stands for exposure window and is high, when the sensor is ready to be exposed to light.
+	 */
+	bnc_out_exp_win = 1,
+	/**
+	 * The option ADC CLK sets the output to the ADC clock.
+	 */
+	bnc_out_adc_clk = 2,
+	/**
+	 * Vin is high when the voltage input is sampled.
+	 */
+	bnc_out_Vin = 3
+};
+
+/**
  * TOR out shows the options for \ref camera_settings.tor.
  */
 enum tor_out_t
@@ -206,11 +229,11 @@ enum tor_out_t
 	 */
 	tor_xck = 0,
 	/**
-	 * 1:
+	 * 1: The signal REGO is controlled by the bit TRIG_OUT of the register CTRLA. It can be controlled with the functions OutTrigLow(), OutTrigHigh() and OutTrigPulse(). The main purpose of this signal is for creating a hardware signal controlled by software, which can be measured by a oscilloscope or used by other electronics.
 	 */
 	tor_rego = 1,
 	/**
-	 * 2: DEPRECATED: VON is the signal for the vertical clocks of the FFT sensor
+	 * 2: DEPRECATED: VON is the signal for the vertical clocks of the FFT sensor. This signal is only used when \ref camera_settings.is_fft_legacy is on. 
 	 */
 	tor_von = 2,
 	/**
@@ -218,19 +241,19 @@ enum tor_out_t
 	 */
 	tor_dma_act = 3,
 	/**
-	 * 4:
+	 * 4: ASLS stands for Auto Scab Line Start and shows when a new readout is started when \ref camera_settings.sti_mode is set to \ref sti_mode_t.sti_ASL.
 	 */
 	tor_asls = 4,
 	/**
-	 * 5: stimer is the internal trigger for the start of a readout. The repetition rate is determined by \ref camera_settings.stime_in_microsec.
+	 * 5: stimer is the internal trigger for the start of a readout when \ref camera_settings.sti_mode is set to \ref sti_mode_t.sti_STimer. The repetition rate is determined by \ref camera_settings.stime_in_microsec.
 	 */
 	tor_stimer = 5,
 	/**
-	 * 6: btimer is the internal trigger for the start of a block. The repetition rate is determined by \ref camera_settings.btime_in_microsec.
+	 * 6: btimer is the internal trigger for the start of a block when \ref camera_settings.bti_mode is set to \ref bti_mode_t.bti_BTimer. The repetition rate is determined by \ref camera_settings.btime_in_microsec.
 	 */
 	tor_btimer = 6,
 	/**
-	 * 7: ISR_ACT is high when the interrupt service routine is active.
+	 * 7: ISR_ACT is high when the interrupt service routine is active. The ISR copies the data from the DMA buffer to the user buffer, when \ref camera_settings.use_software_polling is not activated.
 	 */
 	tor_isr_act = 7,
 	/**
@@ -270,15 +293,15 @@ enum tor_out_t
 	 */
 	tor_ifc = 16,
 	/**
-	 * 17:
+	 * 17: Fibre link synchronisation signal
 	 */
 	tor_do_cc_i = 17,
 	/**
-	 * 18: Exposure window shows when it is possible to expose the camera to light.
+	 * 18: Exposure window shows when it is possible to expose the camera to light. Since the PCIe card doesn't know exactly when the sensor is ready to be exposed this is only an estimated signal. If possible use \ref bnc_out_t.bnc_out_exp_win of \ref camera_settings.bnc_out.
 	 */
 	tor_exposure_window = 18,
 	/**
-	 * 19:
+	 * 19: tor_to_cnt_out shows the signal which is controlled by the setting \ref camera_settings.tocnt. Depening on this setting, only specific XCK high periods are shown on the PCIe card output.
 	 */
 	tor_to_cnt_out = 19,
 	/**
@@ -290,7 +313,7 @@ enum tor_out_t
 	 */
 	tor_i = 21,
 	/**
-	 * 22: Shows the delay between the trigger and the moment, when the states of S1 and S2 are read.
+	 * 22: Shows the delay between the trigger and the moment, when the states of S1 and S2 are read. This delay is controlled by the settting \ref camera_settings.s1s2_read_delay_in_10ns.
 	 */
 	tor_S1S2readDelay = 22,
 	/**
@@ -318,11 +341,11 @@ enum tor_out_t
 	 */
 	tor_unused_28 = 28,
 	/**
-	 * 29:
+	 * 29: Status of enable FIFO read.
 	 */
 	tor_enffr = 29,
 	/**
-	 * 30:
+	 * 30: Status of enable FIFO write.
 	 */
 	tor_enffw = 30,
 	/**
@@ -363,17 +386,6 @@ enum split_mode_t
 	 * When in continuous mode a new file is created for every new measurement cycle (when all samples and blocks are done). When not in continuous this option is the same as no_split.
 	 */
 	measurement_wise = 1,
-};
-
-/**
- * This enum shows all options for the setting \ref camera_settings.bnc_out.
- */
-enum bnc_out_t
-{
-	bnc_out_xck = 0,
-	bnc_out_exp_win = 1,
-	bnc_out_adc_clk = 2,
-	bnc_out_Vin = 3
 };
 
 /**

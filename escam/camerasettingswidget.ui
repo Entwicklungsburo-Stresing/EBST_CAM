@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>347</width>
+    <width>345</width>
     <height>458</height>
    </rect>
   </property>
@@ -745,7 +745,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of pixels in one sensor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Pixel&lt;/span&gt; is the number of pixels in one sensor. &lt;span style=&quot; font-style:italic;&quot;&gt;Pixel&lt;/span&gt; is a 16 bit unsigned integer. &lt;/p&gt;&lt;p&gt;Typical values are: 576, 1024, 1088, 2112&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;pixel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Pixel&lt;/span&gt; is the number of pixels in one sensor. &lt;span style=&quot; font-style:italic;&quot;&gt;Pixel&lt;/span&gt; is a 16 bit unsigned integer. &lt;/p&gt;&lt;p&gt;Only integer multiples of 64 are allowed. Typical values are: 576, 1024, 1088, 2112&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;pixel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>PIXEL (number of pixel)</string>
@@ -1213,6 +1213,12 @@
          </item>
          <item row="8" column="2">
           <widget class="QSpinBox" name="spinBoxRegion2">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size of the 2nd region for the partial binning mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Region size&lt;/span&gt; is the size of each region for the partial binning mode. The sum of all active regions, which is defined by &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt;, must equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt;. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used.&lt;/p&gt;&lt;p&gt;The check box &lt;span style=&quot; font-style:italic;&quot;&gt;automatic equal&lt;/span&gt; can be activated to distribute the lines equally to the active region sizes. This only has an effect in the guided setting mode.&lt;/p&gt;&lt;p&gt;This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.&lt;br/&gt;regions_size[0] = 4&lt;br/&gt;regions_size[1] = 64&lt;br/&gt;regions_size[2] = 4&lt;br/&gt;regions_size[3] = 0&lt;br/&gt;regions_size[4] = 0&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;region_size&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -1223,6 +1229,12 @@
          </item>
          <item row="7" column="1">
           <widget class="QLabel" name="labelRegion1">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size of the 1st region for the partial binning mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Region size&lt;/span&gt; is the size of each region for the partial binning mode. The sum of all active regions, which is defined by &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt;, must equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt;. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used.&lt;/p&gt;&lt;p&gt;The check box &lt;span style=&quot; font-style:italic;&quot;&gt;automatic equal&lt;/span&gt; can be activated to distribute the lines equally to the active region sizes. This only has an effect in the guided setting mode.&lt;/p&gt;&lt;p&gt;This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.&lt;br/&gt;regions_size[0] = 4&lt;br/&gt;regions_size[1] = 64&lt;br/&gt;regions_size[2] = 4&lt;br/&gt;regions_size[3] = 0&lt;br/&gt;regions_size[4] = 0&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;region_size&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>region size 1</string>
            </property>
@@ -1287,6 +1299,12 @@
          </item>
          <item row="9" column="1">
           <widget class="QLabel" name="labelRegion3">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size of the 3rd region for the partial binning mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Region size&lt;/span&gt; is the size of each region for the partial binning mode. The sum of all active regions, which is defined by &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt;, must equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt;. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used.&lt;/p&gt;&lt;p&gt;The check box &lt;span style=&quot; font-style:italic;&quot;&gt;automatic equal&lt;/span&gt; can be activated to distribute the lines equally to the active region sizes. This only has an effect in the guided setting mode.&lt;/p&gt;&lt;p&gt;This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.&lt;br/&gt;regions_size[0] = 4&lt;br/&gt;regions_size[1] = 64&lt;br/&gt;regions_size[2] = 4&lt;br/&gt;regions_size[3] = 0&lt;br/&gt;regions_size[4] = 0&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;region_size&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>region size 3</string>
            </property>
@@ -1294,6 +1312,12 @@
          </item>
          <item row="6" column="1">
           <widget class="QLabel" name="labelRegionsEqual">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size of each region for the partial binning mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Region size&lt;/span&gt; is the size of each region for the partial binning mode. The sum of all active regions, which is defined by &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt;, must equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt;. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used.&lt;/p&gt;&lt;p&gt;The check box &lt;span style=&quot; font-style:italic;&quot;&gt;automatic equal&lt;/span&gt; can be activated to distribute the lines equally to the active region sizes. This only has an effect in the guided setting mode.&lt;/p&gt;&lt;p&gt;This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.&lt;br/&gt;regions_size[0] = 4&lt;br/&gt;regions_size[1] = 64&lt;br/&gt;regions_size[2] = 4&lt;br/&gt;regions_size[3] = 0&lt;br/&gt;regions_size[4] = 0&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;region_size&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>region size</string>
            </property>
@@ -1301,6 +1325,12 @@
          </item>
          <item row="11" column="1">
           <widget class="QLabel" name="labelRegion5">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size of the 5th region for the partial binning mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Region size&lt;/span&gt; is the size of each region for the partial binning mode. The sum of all active regions, which is defined by &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt;, must equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt;. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used.&lt;/p&gt;&lt;p&gt;The check box &lt;span style=&quot; font-style:italic;&quot;&gt;automatic equal&lt;/span&gt; can be activated to distribute the lines equally to the active region sizes. This only has an effect in the guided setting mode.&lt;/p&gt;&lt;p&gt;This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.&lt;br/&gt;regions_size[0] = 4&lt;br/&gt;regions_size[1] = 64&lt;br/&gt;regions_size[2] = 4&lt;br/&gt;regions_size[3] = 0&lt;br/&gt;regions_size[4] = 0&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;region_size&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>region size 5</string>
            </property>
@@ -1347,6 +1377,12 @@
          </item>
          <item row="11" column="2">
           <widget class="QSpinBox" name="spinBoxRegion5">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size of the 5th region for the partial binning mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Region size&lt;/span&gt; is the size of each region for the partial binning mode. The sum of all active regions, which is defined by &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt;, must equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt;. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used.&lt;/p&gt;&lt;p&gt;The check box &lt;span style=&quot; font-style:italic;&quot;&gt;automatic equal&lt;/span&gt; can be activated to distribute the lines equally to the active region sizes. This only has an effect in the guided setting mode.&lt;/p&gt;&lt;p&gt;This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.&lt;br/&gt;regions_size[0] = 4&lt;br/&gt;regions_size[1] = 64&lt;br/&gt;regions_size[2] = 4&lt;br/&gt;regions_size[3] = 0&lt;br/&gt;regions_size[4] = 0&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;region_size&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -1421,6 +1457,12 @@
          </item>
          <item row="6" column="2">
           <widget class="QCheckBox" name="checkBoxRegionsEqual">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose between automatic and manual region size selection&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Region size&lt;/span&gt; is the size of each region for the partial binning mode. The sum of all active regions, which is defined by &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt;, must equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt;. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used.&lt;/p&gt;&lt;p&gt;The check box &lt;span style=&quot; font-style:italic;&quot;&gt;automatic equal&lt;/span&gt; can be activated to distribute the lines equally to the active region sizes. This only has an effect in the guided setting mode.&lt;/p&gt;&lt;p&gt;This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.&lt;br/&gt;regions_size[0] = 4&lt;br/&gt;regions_size[1] = 64&lt;br/&gt;regions_size[2] = 4&lt;br/&gt;regions_size[3] = 0&lt;br/&gt;regions_size[4] = 0&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;region_size&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>automatic equal</string>
            </property>
@@ -1428,6 +1470,12 @@
          </item>
          <item row="10" column="2">
           <widget class="QSpinBox" name="spinBoxRegion4">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size of the 4th region for the partial binning mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Region size&lt;/span&gt; is the size of each region for the partial binning mode. The sum of all active regions, which is defined by &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt;, must equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt;. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used.&lt;/p&gt;&lt;p&gt;The check box &lt;span style=&quot; font-style:italic;&quot;&gt;automatic equal&lt;/span&gt; can be activated to distribute the lines equally to the active region sizes. This only has an effect in the guided setting mode.&lt;/p&gt;&lt;p&gt;This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.&lt;br/&gt;regions_size[0] = 4&lt;br/&gt;regions_size[1] = 64&lt;br/&gt;regions_size[2] = 4&lt;br/&gt;regions_size[3] = 0&lt;br/&gt;regions_size[4] = 0&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;region_size&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -1438,6 +1486,12 @@
          </item>
          <item row="8" column="1">
           <widget class="QLabel" name="labelRegion2">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size of the 2nd region for the partial binning mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Region size&lt;/span&gt; is the size of each region for the partial binning mode. The sum of all active regions, which is defined by &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt;, must equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt;. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used.&lt;/p&gt;&lt;p&gt;The check box &lt;span style=&quot; font-style:italic;&quot;&gt;automatic equal&lt;/span&gt; can be activated to distribute the lines equally to the active region sizes. This only has an effect in the guided setting mode.&lt;/p&gt;&lt;p&gt;This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.&lt;br/&gt;regions_size[0] = 4&lt;br/&gt;regions_size[1] = 64&lt;br/&gt;regions_size[2] = 4&lt;br/&gt;regions_size[3] = 0&lt;br/&gt;regions_size[4] = 0&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;region_size&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>region size 2</string>
            </property>
@@ -1458,6 +1512,12 @@
          </item>
          <item row="9" column="2">
           <widget class="QSpinBox" name="spinBoxRegion3">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size of the 3rd region for the partial binning mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Region size&lt;/span&gt; is the size of each region for the partial binning mode. The sum of all active regions, which is defined by &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt;, must equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt;. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used.&lt;/p&gt;&lt;p&gt;The check box &lt;span style=&quot; font-style:italic;&quot;&gt;automatic equal&lt;/span&gt; can be activated to distribute the lines equally to the active region sizes. This only has an effect in the guided setting mode.&lt;/p&gt;&lt;p&gt;This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.&lt;br/&gt;regions_size[0] = 4&lt;br/&gt;regions_size[1] = 64&lt;br/&gt;regions_size[2] = 4&lt;br/&gt;regions_size[3] = 0&lt;br/&gt;regions_size[4] = 0&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;region_size&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -1494,6 +1554,12 @@
          </item>
          <item row="10" column="1">
           <widget class="QLabel" name="labelRegion4">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size of the 4th region for the partial binning mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Region size&lt;/span&gt; is the size of each region for the partial binning mode. The sum of all active regions, which is defined by &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt;, must equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt;. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used.&lt;/p&gt;&lt;p&gt;The check box &lt;span style=&quot; font-style:italic;&quot;&gt;automatic equal&lt;/span&gt; can be activated to distribute the lines equally to the active region sizes. This only has an effect in the guided setting mode.&lt;/p&gt;&lt;p&gt;This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.&lt;br/&gt;regions_size[0] = 4&lt;br/&gt;regions_size[1] = 64&lt;br/&gt;regions_size[2] = 4&lt;br/&gt;regions_size[3] = 0&lt;br/&gt;regions_size[4] = 0&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;region_size&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>region size 4</string>
            </property>
@@ -1501,6 +1567,12 @@
          </item>
          <item row="7" column="2">
           <widget class="QSpinBox" name="spinBoxRegion1">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size of the 1st region for the partial binning mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Region size&lt;/span&gt; is the size of each region for the partial binning mode. The sum of all active regions, which is defined by &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt;, must equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt;. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used.&lt;/p&gt;&lt;p&gt;The check box &lt;span style=&quot; font-style:italic;&quot;&gt;automatic equal&lt;/span&gt; can be activated to distribute the lines equally to the active region sizes. This only has an effect in the guided setting mode.&lt;/p&gt;&lt;p&gt;This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.&lt;br/&gt;regions_size[0] = 4&lt;br/&gt;regions_size[1] = 64&lt;br/&gt;regions_size[2] = 4&lt;br/&gt;regions_size[3] = 0&lt;br/&gt;regions_size[4] = 0&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;region_size&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -1860,6 +1932,12 @@
          </item>
          <item row="1" column="1">
           <widget class="QLabel" name="labelBncOut">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mode of the output of the Camera Control box&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Xck out cc&lt;/span&gt; is the output mode for the XCK output of the Camera Control box.&lt;/p&gt;&lt;p&gt;0: &lt;span style=&quot; font-style:italic;&quot;&gt;XCK&lt;/span&gt; is high during the readout of the camera.&lt;br/&gt;1: &lt;span style=&quot; font-style:italic;&quot;&gt;EXP_WIN&lt;/span&gt; stands for exposure window and is high, when the sensor is ready to be exposed to light.&lt;br/&gt;2: The option &lt;span style=&quot; font-style:italic;&quot;&gt;ADC_CLK&lt;/span&gt; sets the output to the ADC clock.&lt;br/&gt;3: &lt;span style=&quot; font-style:italic;&quot;&gt;Vin&lt;/span&gt; is high when the voltage input is sampled.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bnc_out&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Furhter information about bnc out can be found in the manual in chapter 3.3.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>xck out cc</string>
            </property>
@@ -1867,6 +1945,12 @@
          </item>
          <item row="1" column="2">
           <widget class="QComboBox" name="comboBoxBncOut">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mode of the output of the Camera Control box&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Xck out cc&lt;/span&gt; is the output mode for the XCK output of the Camera Control box.&lt;/p&gt;&lt;p&gt;0: &lt;span style=&quot; font-style:italic;&quot;&gt;XCK&lt;/span&gt; is high during the readout of the camera.&lt;br/&gt;1: &lt;span style=&quot; font-style:italic;&quot;&gt;EXP_WIN&lt;/span&gt; stands for exposure window and is high, when the sensor is ready to be exposed to light.&lt;br/&gt;2: The option &lt;span style=&quot; font-style:italic;&quot;&gt;ADC_CLK&lt;/span&gt; sets the output to the ADC clock.&lt;br/&gt;3: &lt;span style=&quot; font-style:italic;&quot;&gt;Vin&lt;/span&gt; is high when the voltage input is sampled.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bnc_out&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Furhter information about bnc out can be found in the manual in chapter 3.3.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="currentText">
             <string>XCK</string>
            </property>
