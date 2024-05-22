@@ -221,6 +221,7 @@
     <ClCompile Include="..\shared_src\globals.c" />
     <ClCompile Include="..\shared_src\win\Board_ll.c" />
     <ClCompile Include="camerasettingswidget.cpp" />
+    <ClCompile Include="crosshairs.cpp" />
     <ClCompile Include="dialogdac.cpp" />
     <ClCompile Include="dialogdsc.cpp" />
     <ClCompile Include="dialoggreyscalesettings.cpp" />
@@ -258,6 +259,7 @@
     <QtMoc Include="camerasettingswidget.h" />
     <QtMoc Include="dialogspecialpixels.h" />
     <QtMoc Include="dialoggreyscalesettings.h" />
+    <ClInclude Include="crosshairs.h" />
     <ClInclude Include="lsc-gui.h" />
     <ClInclude Include="UIAbstractionLayer_cpp.h" />
     <QtMoc Include="dialogsettings.h">

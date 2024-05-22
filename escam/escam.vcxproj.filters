@@ -121,6 +121,9 @@
     <ClCompile Include="..\shared_src\Direct2dViewer_c.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="crosshairs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h">
@@ -178,6 +181,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\shared_src\enum_settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="crosshairs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,7 +1,9 @@
 #include "myqchartview.h"
+#include "lsc-gui.h"
 
 MyQChartView::MyQChartView(QWidget* parent) : QChartView(parent)
 {
+	xCrosshair = new Crosshairs(chart());
 	chart()->legend()->hide();
 	chart()->legend()->setAlignment(Qt::AlignBottom);
 	setRubberBand(QChartView::RectangleRubberBand);
@@ -21,7 +23,9 @@ void MyQChartView::mouseReleaseEvent(QMouseEvent* event)
 }
 
 /**
- * Displays x and y value on a tooltip in the chart when hovering over it
+ * Function is called, when mouse is moved over the chart.
+ * Takes the y value of the nearest point to the mouse position and displays it in the labelMouseCoordinates.
+ * Creates a crosshair on mouse position.
  */
 void MyQChartView::mouseMoveEvent(QMouseEvent* event)
 {
@@ -34,7 +38,8 @@ void MyQChartView::mouseMoveEvent(QMouseEvent* event)
 	for (int i = 0; i < nearestPointList.size(); i++) {
 		toolTip.append(QString(", Y%1: %2").arg(i).arg(nearestPointList.at(i).y()));
 	}
-	QToolTip::showText(mapToGlobal(pos), toolTip, this, QRect(), 1000);
+	mainWindow->ui->labelMouseCoordinates->setText(toolTip);
+	xCrosshair->updatePosition(pos);
 }
 
 /**
