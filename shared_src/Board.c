@@ -144,10 +144,9 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 			break;
 		case partial_binning:
 		{
-			uint8_t regionSize[8];
-			for (int i = 0; i < 8; i++) regionSize[i] = (uint8_t)settings_struct.camera_settings[drvno].region_size[i];
-			// keep is a deprecated setting. all bits are set to 1
-			status = SetupROI(drvno, (uint16_t)settings_struct.camera_settings[drvno].number_of_regions, settings_struct.camera_settings[drvno].fft_lines, 0xFF, regionSize, (uint8_t)settings_struct.camera_settings[drvno].vfreq);
+			uint8_t regionSize[MAX_NUMBER_OF_REGIONS];
+			for (int i = 0; i < MAX_NUMBER_OF_REGIONS; i++) regionSize[i] = (uint8_t)settings_struct.camera_settings[drvno].region_size[i];
+			status = SetupROI(drvno, (uint16_t)settings_struct.camera_settings[drvno].number_of_regions, settings_struct.camera_settings[drvno].fft_lines, regionSize, (uint8_t)settings_struct.camera_settings[drvno].vfreq);
 			break;
 		}
 		case area_mode:
@@ -265,7 +264,7 @@ es_status_codes InitCamera(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = IOCtrl_setImpactStartPixel(drvno, (uint16_t)settings_struct.camera_settings[drvno].ioctrl_impact_start_pixel);
 	if (status != es_no_error) return status;
-	for (uint8_t i = 1; i <= 7; i++)
+	for (uint8_t i = 1; i <= IOCTRL_OUTPUT_COUNT - 1; i++)
 	{
 		status = IOCtrl_setOutput(drvno, i, (uint16_t)settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[i - 1], (uint16_t)settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[i - 1]);
 		if (status != es_no_error) return status;
@@ -1080,14 +1079,13 @@ es_status_codes SetupVCLKReg(uint32_t drvno, uint32_t lines, uint8_t vfreq)
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param range specifies R 1..5
  * \param lines number of vertical clocks for next read
- * \param keep TRUE if scan should be written to FIFO
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes SetupVPB(uint32_t drvno, uint32_t range, uint32_t lines, bool keep)
+es_status_codes SetupVPB(uint32_t drvno, uint32_t range, uint32_t lines)
 {
-	ES_LOG("SetupVPB, range: 0x%x, lines: 0x%x, keep: %x\n", range, lines, keep);
+	ES_LOG("SetupVPB, range: 0x%x, lines: 0x%x\n", range, lines);
 	uint16_t adr = 0;
 	lines *= 2; //vclks=lines*2
 	switch (range)
@@ -1117,6 +1115,8 @@ es_status_codes SetupVPB(uint32_t drvno, uint32_t range, uint32_t lines, bool ke
 		adr = S0Addr_XCKDLY + 2;
 		break;
 	}
+	// keep is a deprecated setting. The idea was to get faster by throwing away data. This is in fact not possible, because the data has be read out anyway. Thus throwing away data has no advantage.
+	bool keep = true;
 	if (keep) { lines |= 0x8000; }
 	else { lines &= 0x7fff; }
 	es_status_codes  status = writeRegisterS0_8(drvno, (uint8_t)lines, adr);
@@ -4878,12 +4878,12 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].number_of_regions,
 		settings_struct.camera_settings[drvno].s1s2_read_delay_in_10ns);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "region size\t"DLLTAB);
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < MAX_NUMBER_OF_REGIONS; i++)
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].region_size[i]);
 	for (int camera = 0; camera < MAXCAMCNT; camera++)
 	{
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\ndac output board %i, camera %i\t", drvno, camera);
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < DACCOUNT; i++)
 			len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].dac_output[camera][i]);
 	}
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
@@ -4900,10 +4900,10 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].is_hs_ir,
 		settings_struct.camera_settings[drvno].ioctrl_impact_start_pixel);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "ioctrl_output_width_in_5ns\t");
-	for (int i = 0; i < 7; i++)
+	for (int i = 0; i < IOCTRL_OUTPUT_COUNT - 1; i++)
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[i]);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nIOCtrl_output_delay_in_5ns\t");
-	for (int i = 0; i < 7; i++)
+	for (int i = 0; i < IOCTRL_OUTPUT_COUNT - 1; i++)
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[i]);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
 		"\nIOCtrl_T0_period_in_10ns\t%u\n"
@@ -5916,7 +5916,6 @@ void SetAllInterruptsDone(uint32_t drvno)
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param number_of_regions determines how many region of interests are initialized, choose 2 to 8
  * \param lines number of total lines in camera
- * \param keep kept regions are determined by bits of keep
  * \param region_size determines the size of each region. array of size number_of_regions.
  * 	When region_size[0]==0 the lines are equally distributed for all regions.
  * 	I don't know what happens when  region_size[0]!=0 and region_size[1]==0. Maybe don't do this.
@@ -5927,9 +5926,8 @@ void SetAllInterruptsDone(uint32_t drvno)
  * 		- es_register_read_failed
  * 		- es_register_write_failed
  */
-es_status_codes SetupROI(uint32_t drvno, uint16_t number_of_regions, uint32_t lines, uint8_t keep, uint8_t* region_size, uint8_t vfreq)
+es_status_codes SetupROI(uint32_t drvno, uint16_t number_of_regions, uint32_t lines, uint8_t* region_size, uint8_t vfreq)
 {
-	bool keep_temp;
 	es_status_codes status = es_no_error;
 	// calculate how many lines are in each region when equally distributed
 	uint32_t lines_per_region = lines / number_of_regions;
@@ -5940,18 +5938,16 @@ es_status_codes SetupROI(uint32_t drvno, uint16_t number_of_regions, uint32_t li
 	for (int i = 1; i <= number_of_regions; i++)
 	{
 		// check whether lines should be distributed equally or by custom region size
-		keep_temp = keep & 0b1;//make the last bit bool, because this bit indicates the current range to keep or not
 		if (*region_size == 0)
 		{
-			if (i == number_of_regions) status = SetupVPB(drvno, i, lines_in_last_region, keep_temp);
-			else status = SetupVPB(drvno, i, lines_per_region, keep_temp);
+			if (i == number_of_regions) status = SetupVPB(drvno, i, lines_in_last_region);
+			else status = SetupVPB(drvno, i, lines_per_region);
 		}
 		else
 		{
-			status = SetupVPB(drvno, i, *(region_size + (i - 1)), keep_temp);
+			status = SetupVPB(drvno, i, *(region_size + (i - 1)));
 		}
 		if (status != es_no_error) return status;
-		keep >>= 1;//bitshift right to got the next keep for the next range
 	}
 	status = SetupVCLKReg(drvno, lines, vfreq);
 	if (status != es_no_error) return status;
