@@ -220,19 +220,14 @@ void MainWindow::initSettings()
 		settings_struct.camera_settings[drvno].lines_binning = settings.value(settingLinesBinningPath, settingLinesBinningDefault).toDouble();
 		settings_struct.camera_settings[drvno].number_of_regions = settings.value(settingNumberOfRegionsPath, settingNumberOfRegionsDefault).toDouble();
 		settings_struct.camera_settings[drvno].s1s2_read_delay_in_10ns = settings.value(settingS1S2ReadDelayIn10nsPath, settingS1S2ReadDelayIn10nsDefault).toDouble();;
-		if (settings.value(settingRegionSizeEqualPath, settingRegionSizeEqualDefault).toBool() == true)
-			*(settings_struct.camera_settings[drvno].region_size) = 0;
-		else
-		{
-			settings_struct.camera_settings[drvno].region_size[0] = settings.value(settingRegionSize1Path, settingRegionSize1Default).toDouble();
-			settings_struct.camera_settings[drvno].region_size[1] = settings.value(settingRegionSize2Path, settingRegionSize2Default).toDouble();
-			settings_struct.camera_settings[drvno].region_size[2] = settings.value(settingRegionSize3Path, settingRegionSize3Default).toDouble();
-			settings_struct.camera_settings[drvno].region_size[3] = settings.value(settingRegionSize4Path, settingRegionSize4Default).toDouble();
-			settings_struct.camera_settings[drvno].region_size[4] = settings.value(settingRegionSize5Path, settingRegionSize5Default).toDouble();
-			settings_struct.camera_settings[drvno].region_size[5] = settings.value(settingRegionSize6Path, settingRegionSize6Default).toDouble();
-			settings_struct.camera_settings[drvno].region_size[6] = settings.value(settingRegionSize7Path, settingRegionSize7Default).toDouble();
-			settings_struct.camera_settings[drvno].region_size[7] = settings.value(settingRegionSize8Path, settingRegionSize8Default).toDouble();
-		}
+		settings_struct.camera_settings[drvno].region_size[0] = settings.value(settingRegionSize1Path, settingRegionSize1Default).toDouble();
+		settings_struct.camera_settings[drvno].region_size[1] = settings.value(settingRegionSize2Path, settingRegionSize2Default).toDouble();
+		settings_struct.camera_settings[drvno].region_size[2] = settings.value(settingRegionSize3Path, settingRegionSize3Default).toDouble();
+		settings_struct.camera_settings[drvno].region_size[3] = settings.value(settingRegionSize4Path, settingRegionSize4Default).toDouble();
+		settings_struct.camera_settings[drvno].region_size[4] = settings.value(settingRegionSize5Path, settingRegionSize5Default).toDouble();
+		settings_struct.camera_settings[drvno].region_size[5] = settings.value(settingRegionSize6Path, settingRegionSize6Default).toDouble();
+		settings_struct.camera_settings[drvno].region_size[6] = settings.value(settingRegionSize7Path, settingRegionSize7Default).toDouble();
+		settings_struct.camera_settings[drvno].region_size[7] = settings.value(settingRegionSize8Path, settingRegionSize8Default).toDouble();
 		//export data tab
 		settings_struct.camera_settings[drvno].write_to_disc = settings.value(settingWriteDataToDiscPath, settingWriteToDiscDefault).toBool();
 		QByteArray array = settings.value(settingFilePathPath, QDir::currentPath()).toString().toLocal8Bit();
