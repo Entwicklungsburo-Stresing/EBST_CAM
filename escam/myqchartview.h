@@ -3,6 +3,7 @@
 
 #include <QtCharts>
 #include <dialogsettings.h>
+#include "crosshairs.h"
 
 class MyQChartView : public QChartView
 {
@@ -17,6 +18,8 @@ protected:
 	void mouseReleaseEvent(QMouseEvent *event) override;
 	void mouseMoveEvent(QMouseEvent* event) override;
 	QList<QPointF> findNearestPoint(qreal xValue);
+private:
+	Crosshairs *xCrosshair;
 signals:
 	void rubberBandChanged();
 };
