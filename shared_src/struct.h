@@ -6,6 +6,9 @@
 
 #define MAXPCIECARDS 5
 #define MAXCAMCNT 8
+#define MAX_NUMBER_OF_REGIONS 8
+#define DACCOUNT 8
+#define IOCTRL_OUTPUT_COUNT 8
 
 // All settings are uint32_t to ensure the correct memory layout. This is important for the communication with LabVIEW.
 // Don't change the order or you will have to change it for LabVIEW in InitMeasurement.vi.
@@ -220,11 +223,11 @@ struct camera_settings
 	/**
 	 * Size for each region for region of interest mode for FFT sensors. When the first region is set to 0, all regions are automatically same sized. 8 bit.
 	 */
-	uint32_t region_size[8];
+	uint32_t region_size[MAX_NUMBER_OF_REGIONS];
 	/**
 	 * Array for output levels of each digital to analog converter
 	 */
-	uint32_t dac_output[MAXCAMCNT][8];
+	uint32_t dac_output[MAXCAMCNT][DACCOUNT];
 	/**
 	 * Output mode for PCIe board output pin. See enum \ref tor_out_t in enum_settings.h for options.
 	 */
@@ -263,11 +266,11 @@ struct camera_settings
 	/**
 	 * This is an array, which sets the width of the IOCTRL outputs in 5ns steps.
 	 */
-	uint32_t ioctrl_output_width_in_5ns[8];
+	uint32_t ioctrl_output_width_in_5ns[IOCTRL_OUTPUT_COUNT];
 	/**
 	 * This is an array, which sets the delay of the IOCTRL outputs in 5ns steps.
 	 */
-	uint32_t ioctrl_output_delay_in_5ns[8];
+	uint32_t ioctrl_output_delay_in_5ns[IOCTRL_OUTPUT_COUNT];
 	/**
 	 * Determines the base frequency T0 of the IOCTRL pulse generator in 10ns steps.
 	 */
