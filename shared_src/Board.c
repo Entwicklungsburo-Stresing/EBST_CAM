@@ -144,8 +144,8 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 			break;
 		case partial_binning:
 		{
-			uint8_t regionSize[8];
-			for (int i = 0; i < 8; i++) regionSize[i] = (uint8_t)settings_struct.camera_settings[drvno].region_size[i];
+			uint8_t regionSize[MAX_NUMBER_OF_REGIONS];
+			for (int i = 0; i < MAX_NUMBER_OF_REGIONS; i++) regionSize[i] = (uint8_t)settings_struct.camera_settings[drvno].region_size[i];
 			status = SetupROI(drvno, (uint16_t)settings_struct.camera_settings[drvno].number_of_regions, settings_struct.camera_settings[drvno].fft_lines, regionSize, (uint8_t)settings_struct.camera_settings[drvno].vfreq);
 			break;
 		}
@@ -264,7 +264,7 @@ es_status_codes InitCamera(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = IOCtrl_setImpactStartPixel(drvno, (uint16_t)settings_struct.camera_settings[drvno].ioctrl_impact_start_pixel);
 	if (status != es_no_error) return status;
-	for (uint8_t i = 1; i <= 7; i++)
+	for (uint8_t i = 1; i <= IOCTRL_OUTPUT_COUNT - 1; i++)
 	{
 		status = IOCtrl_setOutput(drvno, i, (uint16_t)settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[i - 1], (uint16_t)settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[i - 1]);
 		if (status != es_no_error) return status;
@@ -4878,12 +4878,12 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].number_of_regions,
 		settings_struct.camera_settings[drvno].s1s2_read_delay_in_10ns);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "region size\t"DLLTAB);
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < MAX_NUMBER_OF_REGIONS; i++)
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].region_size[i]);
 	for (int camera = 0; camera < MAXCAMCNT; camera++)
 	{
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\ndac output board %i, camera %i\t", drvno, camera);
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < DACCOUNT; i++)
 			len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].dac_output[camera][i]);
 	}
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
@@ -4900,10 +4900,10 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].is_hs_ir,
 		settings_struct.camera_settings[drvno].ioctrl_impact_start_pixel);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "ioctrl_output_width_in_5ns\t");
-	for (int i = 0; i < 7; i++)
+	for (int i = 0; i < IOCTRL_OUTPUT_COUNT - 1; i++)
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[i]);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nIOCtrl_output_delay_in_5ns\t");
-	for (int i = 0; i < 7; i++)
+	for (int i = 0; i < IOCTRL_OUTPUT_COUNT - 1; i++)
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[i]);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
 		"\nIOCtrl_T0_period_in_10ns\t%u\n"
