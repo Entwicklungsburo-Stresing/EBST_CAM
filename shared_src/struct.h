@@ -221,7 +221,12 @@ struct camera_settings
 	 */
 	uint32_t s1s2_read_delay_in_10ns;
 	/**
-	 * Size for each region for region of interest mode for FFT sensors. When the first region is set to 0, all regions are automatically same sized. 8 bit.
+	 * region_size is the size of each region for the region of interest mode for FFT sensors. The sum of all active regions, which is defined by \ref number_of_regions, must equal \ref fft_lines. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used. Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3. This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.
+	 *		* regions_size[0] = 4
+	 *		* regions_size[1] = 64
+	 *		* regions_size[2] = 4
+	 *		* regions_size[3] = 0
+	 *		* regions_size[4] = 0
 	 */
 	uint32_t region_size[MAX_NUMBER_OF_REGIONS];
 	/**
@@ -280,7 +285,7 @@ struct camera_settings
 	 */
 	uint32_t dma_buffer_size_in_scans;
 	/**
-	 * Trigger output counter determines how many TO_CNT_OUT are skipped. Use tor_to_cnt_out for setting tor to see TO_CNT_OUT at the output of the PCIe board. Every tocnt+1 TO_CNT_OUT is equal with XCK. Only the lowest 7 bits are used for this setting.
+	 * Trigger output counter determines how many XCK are skipped until the output TO_CNT_OUT shows the XCK signal. Use \ref tor_out_t.tor_to_cnt_out for the setting \ref camera_settings.tor to see TO_CNT_OUT at the output of the PCIe board. Example: tocnt = 2 => skip every first and second XCK, show XCK on the PCIe output on every third XCK. Only the lowest 7 bits are used for this setting.
 	 */
 	uint32_t tocnt;
 	/**
@@ -320,7 +325,7 @@ struct camera_settings
 	 */
 	uint32_t is_cooled_camera_legacy_mode;
 	/**
-	 * Output mode for CC Box XCK output. See enum \ref bnc_out_t in enum_settings.h for options.
+	 * bnc_out is the output mode for the XCK output of the Camera Control box. See enum \ref bnc_out_t in enum_settings.h for options. Furhter information about bnc out can be found in the manual in chapter 3.3.1.
 	 */
 	uint32_t bnc_out;
 };
