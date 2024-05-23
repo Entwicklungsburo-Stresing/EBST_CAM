@@ -111,7 +111,15 @@ DialogSettings::DialogSettings(QWidget *parent) :
 		on_checkBoxBoard0_stateChanged(ui->checkBoxBoard0->isChecked());
 		ui->checkBoxBoard0->setChecked(true);
 	}
-	ui->cameraSettingsTabs->setCurrentIndex(0);
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		if ((board_sel >> drvno) & 1)
+		{
+			ui->cameraSettingsTabs->setCurrentIndex(drvno);
+			break;
+		}
+	}
 	emit initializingDone();
 }
 
