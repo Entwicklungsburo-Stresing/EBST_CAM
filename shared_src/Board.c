@@ -6008,7 +6008,7 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
 }
 
 #ifdef WIN32
-es_status_codes ExportMeasurementHDF5(const char* path)
+es_status_codes ExportMeasurementHDF5(const char* path, const char* filename)
 {
 	hid_t file_id, file_attr_name, file_attr_timestamp, file_attr_number_of_boards;
 	hid_t dataspace_scalar = H5Screate(H5S_SCALAR);
@@ -6026,7 +6026,6 @@ es_status_codes ExportMeasurementHDF5(const char* path)
 	}
 	if (!wasRunning) return es_first_measurement_not_done;
 
-	const char* filename = "measurement.h5";
 	char filepath[FILENAME_MAX];
 	sprintf(filepath, "%s\\%s", path, filename);
 	if ((file_id = H5Fcreate(filepath, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT)) == H5I_INVALID_HID) return es_create_file_failed;
