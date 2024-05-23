@@ -66,7 +66,7 @@ public:
 	es_status_codes checkFifoEmpty(uint32_t drvno, bool* empty);
 	es_status_codes checkFifoFull(uint32_t drvno, bool* full);
 	es_status_codes findCam(uint32_t drvno);
-	es_status_codes exportMeasurementHDF5(const char* path);
+	es_status_codes exportMeasurementHDF5(const char* path, const char* filename);
 	es_status_codes waitForMeasureReady(uint32_t board_sel);
 public slots:
 	es_status_codes startMeasurement();
