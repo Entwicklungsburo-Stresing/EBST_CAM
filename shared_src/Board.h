@@ -179,7 +179,7 @@ es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHig
 es_status_codes ResetBlockFrequencyBit(uint32_t drvno);
 es_status_codes SetS1S2ReadDelay(uint32_t drvno);
 #ifdef WIN32
-es_status_codes ExportMeasurementHDF5(const char* path);
+es_status_codes ExportMeasurementHDF5(const char* path, const char* filename);
 hid_t CreateNumericAttribute(hid_t parent_object_id, char* attr_name, hid_t goal_type, hid_t dataspace, const void* data);
 hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t dataspace, const void* data);
 es_status_codes CheckFirstMeasurementDone(uint32_t drvno);
