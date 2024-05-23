@@ -13,7 +13,9 @@
 // All settings are uint32_t to ensure the correct memory layout. This is important for the communication with LabVIEW.
 // Don't change the order or you will have to change it for LabVIEW in InitMeasurement.vi.
 
-// Individual settings for each PCIe board
+/**
+ * Individual settings for each PCIe board.
+ */
 struct camera_settings
 {
 	/**
@@ -304,13 +306,14 @@ struct camera_settings
 	 */
 	uint32_t sensor_reset_length_in_4_ns;
 	/**
-	 * Experimental:
+	 * Write to disc is an experimental feature for writing the measurement data on the fly to the disc. The data format is binary. It is the same data layout as the data is stored in RAM during the measurement. Additionally there is a file header at the beginning of the file. The path to the target file is given by \ref camera_settings.file_path. This feature is only available on Windows. In most cases the resulting file should be correct, but data layout errors has been observed. This is the reason why the feature is marked as experimental.
 	 *		* =0: Don't write measurement data to disc.
 	 *		* >0: Write measurement data to disc.
 	 */
 	uint32_t write_to_disc;
 	/**
-	 * File path is specifying the path where the measurement data is saved.
+	 * File path is specifying the path where the measurement data is saved, when \ref camera_settings.write_to_disc is activated. File path is a char array with the size 256, so the maximum path length is 256 characters.
+	 *		* example value: C:/Users/XY/
 	 */
 	char file_path[file_path_size];
 	/**
@@ -333,35 +336,45 @@ struct camera_settings
 	uint32_t bnc_out;
 };
 
-// In this struct are settings, that are the same for all PCIe boards.
+/**
+ * In this struct are settings, that are the same for all PCIe boards.
+ */
 struct measurement_settings
 {
 	/**
-	 * Select boards with bits. 1 for using this board, 0 for not using this board.
-	 *
-	 * - bit 0: board 0
-	 * - bit 1: board 1
-	 * - bit 2: board 2
-	 * - bit 3: board 3
-	 * - bit 4: board 4
+	 * board_sel controls which boards are used for the measurement. When multiple boards are selected the measurement is started for all boards at the same time. The exact trigger moment is controlled separately by each board. Every board has its own camera settings, which are set in the struct member \ref measurement_settings.camera_settings. Select between 1 and 5 boards. This variable works bitwise. Bit 0 controls board 0: 1 for using this board, 0 for not using this board.
+	 *		* bit 0: board 0
+	 *		* bit 1: board 1
+	 *		* bit 2: board 2
+	 *		* bit 3: board 3
+	 *		* bit 4: board 4
 	 */
 	uint32_t board_sel;
 	/**
-	 * Number of samples. 32 bit. Min: 2, max: max of uint32
+	 * nos is the number of samples. One sample is one readout of the camera. One readout is triggered on each sample trigger which is controlled by \ref camera_settings.sti. nos is a 32 bit unsigned integer. Further information about samples and blocks can be found in the manual in chapter 6.4.1.
+	 *		* min: 2
+	 *		* step: 1
+	 *		* max: 4,294,967,295
 	 */
 	uint32_t nos;
 	/**
-	 * Number of blocks. 32 bit. Min: 1, max: max of uint32
+	 * nob is the number of blocks. One block contains nos readouts and is triggered on each block trigger which is controlled by \ref camera_settings.bti. nob is a 32 bit unsigned integer. Further information about samples and blocks can be found in the manual in chapter 6.4.1.
+	 *		* min: 1
+	 *		* step: 1
+	 *		* max: 4,294,967,295
 	 */
 	uint32_t nob;
 	/**
-	 * Continuous mode switch. The continuous mode repeats automatically the measurement cycle until it is stopped. One cycle consists of number of samples * number of blocks readouts. The data is not stored permanently. Each cycle is overwriting the data from the previous cycle. The data of a specific sample/block is always at the same memory address. That means for example scan 100 in block 2 from the first measurement cycle will be overwritten by scan 100 in block 2 in the second measurement cycle. The time gap between two cycles is done software wise and is beeing controlled by the parameter cont_pause_in_microseconds. So the start of the next cycle is not strictly linked to your trigger, which means when triggering fast, triggers could be missed.
-	 *	- >0 on
-	 *	- =0 off
+	 * Continuous mode switch. The continuous mode repeats automatically the measurement cycle until it is stopped. One cycle consists of number of samples * number of blocks readouts. The data is not stored permanently. Each cycle is overwriting the data from the previous cycle. The data of a specific sample/block is always at the same memory address. That means for example scan 100 in block 2 from the first measurement cycle will be overwritten by scan 100 in block 2 in the second measurement cycle. The time gap between two cycles is done software wise and is beeing controlled by the parameter \ref measurement_settings.cont_pause_in_microseconds. So the start of the next cycle is not strictly linked to your trigger, which means when triggering fast, triggers could be missed.
+	 *		* >0 on
+	 *		* =0 off
 	 */
 	uint32_t continuous_measurement;
 	/**
-	 * Pause between two measurement cycles when continuous mode is on. See description of the parameter continuous_measurement for more information about the continuous mode.
+	 * cont_pause_in_microseconds is the pause between two measurement cycles when continuous mode is on. See description of the parameter continuous_measurement for more information about the continuous mode. cont_pause_in_microseconds is a 32 bit unsigned integer.
+	 *		* min: 0 µs
+	 *		* step: 1 µs
+	 *		* max: 4,294,967,295 µs
 	 */
 	uint32_t cont_pause_in_microseconds;
 	/**
@@ -370,7 +383,9 @@ struct measurement_settings
 	struct camera_settings camera_settings[MAXPCIECARDS];
 };
 
-// In this struct are settings, that are the same for all PCIe boards.
+/**
+ * In this struct are settings, that are the same for all PCIe boards. It is the same as \ref measurement_settings but doesn't contain \ref camera_settings. This is for compatibility reasons for Matlab, because structs in Matlab are not able to contain structs.
+ */
 struct measurement_settings_matlab
 {
 	/**
