@@ -395,16 +395,15 @@ void DialogDac::on_autotuneStateChanged()
 	return;
 }
 
-void DialogDac::closeEvent(QCloseEvent *event)
+void DialogDac::reject()
 {
 	if (autotuneRunning)
 	{
 		QErrorMessage* m = new QErrorMessage(this);
 		m->setWindowTitle("Error");
 		m->showMessage("Stop autotune before closing");
-		event->ignore();
 	}
 	else
-		event->accept();
+		QDialog::reject();
 	return;
 }

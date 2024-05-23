@@ -6007,6 +6007,16 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
 	return writeRegisterS0_32(drvno, settings_struct.camera_settings[drvno].s1s2_read_delay_in_10ns, S0Addr_S1S2ReadDelay);
 }
 
+/**
+ * \brief Exports the measurement data to a HDF5 file.
+ * \param path Chosen path to save the file.
+ * \param filename Chosen filename.
+ * \return es_status_codes:
+ *	es_measurement_running
+ *	es_first_measurement_not_done
+ *	es_create_file_failed
+ * 
+ */
 #ifdef WIN32
 es_status_codes ExportMeasurementHDF5(const char* path, const char* filename)
 {
