@@ -120,7 +120,7 @@ DllAccess es_status_codes DLLSetGlobalSettings_matlab(struct measurement_setting
 {
 	struct measurement_settings settings;
 	settings.board_sel = measurement_s.board_sel;
-	settings.contiuous_measurement = measurement_s.contiuous_measurement;
+	settings.continuous_measurement = measurement_s.continuous_measurement;
 	settings.cont_pause_in_microseconds = measurement_s.cont_pause_in_microseconds;
 	settings.nob = measurement_s.nob;
 	settings.nos = measurement_s.nos;
