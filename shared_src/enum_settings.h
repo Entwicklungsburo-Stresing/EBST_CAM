@@ -241,7 +241,7 @@ enum tor_out_t
 	 */
 	tor_dma_act = 3,
 	/**
-	 * 4: ASLS stands for Auto Scab Line Start and shows when a new readout is started when \ref camera_settings.sti_mode is set to \ref sti_mode_t.sti_ASL.
+	 * 4: ASLS stands for Auto Scan Line Start and shows when a new readout is started when \ref camera_settings.sti_mode is set to \ref sti_mode_t.sti_ASL.
 	 */
 	tor_asls = 4,
 	/**
@@ -289,11 +289,11 @@ enum tor_out_t
 	 */
 	tor_bec_mshut = 15,
 	/**
-	 * 16: IFC is the electronic exposure control signal used by some sensors and is sent to the camera. When \ref camera_settings.sec_in_10ns IFC = SEC, otherwise it is always 1.
+	 * 16: IFC is the electronic exposure control signal used by some sensors and is sent to the camera. When \ref camera_settings.sec_in_10ns is used IFC = SEC, otherwise it is always 1.
 	 */
 	tor_ifc = 16,
 	/**
-	 * 17: Fibre link synchronisation signal
+	 * 17: DO_CC_I is a fibre link synchronisation signal.
 	 */
 	tor_do_cc_i = 17,
 	/**
@@ -364,11 +364,11 @@ enum adc_mode_t
 	 */
 	normal = 0,
 	/**
-	 * 1: ramp.
+	 * 1: Every 8 channels are performing a ramp signal.
 	 */
 	ramp = 1,
 	/**
-	 * 2: custom pattern.
+	 * 2: With custom pattern all 8 ADC channels deliver a specific constant value given by \ref camera_settings.adc_custom_pattern.
 	 */
 	custom_pattern = 2
 };
