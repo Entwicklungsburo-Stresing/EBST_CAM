@@ -180,7 +180,7 @@ void MainWindow::initSettings()
 {
 	settings_struct.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
 	settings_struct.cont_pause_in_microseconds = settings.value(settingContinuousPauseInMicrosecondsPath, settingContinuousPausInMicrosecondsDefault).toDouble();
-	settings_struct.contiuous_measurement = ui->checkBoxLoopMeasurement->isChecked();
+	settings_struct.continuous_measurement = ui->checkBoxLoopMeasurement->isChecked();
 	settings_struct.nos = settings.value(settingNosPath, settingNosDefault).toDouble();
 	settings_struct.nob = settings.value(settingNobPath, settingNobDefault).toDouble();
 	//camerasetup tab

@@ -242,7 +242,7 @@ struct camera_settings
 	 */
 	uint32_t adc_mode;
 	/**
-	 * Adc custom pattern is the constant output value of all 8 ADC channls if \ref camera_settings.adc_mode is set to \ref adc_mode_t.custom_pattern. This is a 14 bit unsigned integer.
+	 * Adc custom pattern is the constant output value of all 8 ADC channels if \ref camera_settings.adc_mode is set to \ref adc_mode_t.custom_pattern. This is a 14 bit unsigned integer.
 	 *		* min: 0
 	 *		* step: 1
 	 *		* max: 16383
@@ -328,7 +328,7 @@ struct camera_settings
 	 */
 	uint32_t is_cooled_camera_legacy_mode;
 	/**
-	 * bnc_out is the output mode for the XCK output of the Camera Control box. See enum \ref bnc_out_t in enum_settings.h for options. Furhter information about bnc out can be found in the manual in chapter 3.3.1.
+	 * bnc_out is the output mode for the XCK output of the Camera Control box. See enum \ref bnc_out_t in enum_settings.h for options. Further information about bnc out can be found in the manual in chapter 3.3.1.
 	 */
 	uint32_t bnc_out;
 };
@@ -355,13 +355,13 @@ struct measurement_settings
 	 */
 	uint32_t nob;
 	/**
-	 * Continuous mode switch. The continuous mode repeats automatically the measurement cycle until it is stopped. One cycle consists of number of samples * number of blocks readouts. The data is not stored permanently. Each cycle is overwriting the data from the previous cycle. The data of a specific sample/block is always at the same memory address. That means for example scan 100 in block 2 from the first measurement cycle will be overwritten by scan 100 in block 2 in the second measurement cycle. The time gap between two cycles is done softwarewise and is beeing controlled by the parameter cont_pause_in_microseconds. So the start of the next cycle is not strictly linked to your trigger, which means when triggering fast, triggers could be missed.
+	 * Continuous mode switch. The continuous mode repeats automatically the measurement cycle until it is stopped. One cycle consists of number of samples * number of blocks readouts. The data is not stored permanently. Each cycle is overwriting the data from the previous cycle. The data of a specific sample/block is always at the same memory address. That means for example scan 100 in block 2 from the first measurement cycle will be overwritten by scan 100 in block 2 in the second measurement cycle. The time gap between two cycles is done software wise and is beeing controlled by the parameter cont_pause_in_microseconds. So the start of the next cycle is not strictly linked to your trigger, which means when triggering fast, triggers could be missed.
 	 *	- >0 on
 	 *	- =0 off
 	 */
-	uint32_t contiuous_measurement;
+	uint32_t continuous_measurement;
 	/**
-	 * Pause between two measurement cycles when continuous mode is on. See description of the parameter contiuous_measurement for more information about the continuous mode.
+	 * Pause between two measurement cycles when continuous mode is on. See description of the parameter continuous_measurement for more information about the continuous mode.
 	 */
 	uint32_t cont_pause_in_microseconds;
 	/**
@@ -386,9 +386,9 @@ struct measurement_settings_matlab
 	 */
 	uint32_t nob;
 	/**
-	 * \copydoc measurement_settings.contiuous_measurement
+	 * \copydoc measurement_settings.continuous_measurement
 	 */
-	uint32_t contiuous_measurement;
+	uint32_t continuous_measurement;
 	/**
 	 * \copydoc measurement_settings.cont_pause_in_microseconds
 	 */

@@ -293,7 +293,7 @@ enum tor_out_t
 	 */
 	tor_ifc = 16,
 	/**
-	 * 17: DO_CC_I is a fibre link synchronisation signal.
+	 * 17: DO_CC_I is a fiber link synchronisation signal.
 	 */
 	tor_do_cc_i = 17,
 	/**
@@ -301,7 +301,7 @@ enum tor_out_t
 	 */
 	tor_exposure_window = 18,
 	/**
-	 * 19: tor_to_cnt_out shows the signal which is controlled by the setting \ref camera_settings.tocnt. Depening on this setting, only specific XCK high periods are shown on the PCIe card output.
+	 * 19: tor_to_cnt_out shows the signal which is controlled by the setting \ref camera_settings.tocnt. Depending on this setting, only specific XCK high periods are shown on the PCIe card output.
 	 */
 	tor_to_cnt_out = 19,
 	/**
