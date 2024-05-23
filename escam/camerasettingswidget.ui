@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>345</width>
+    <width>347</width>
     <height>458</height>
    </rect>
   </property>
@@ -1592,13 +1592,6 @@
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="3" column="1">
-          <widget class="QLabel" name="labelAdcMode">
-           <property name="text">
-            <string>adc mode</string>
-           </property>
-          </widget>
-         </item>
          <item row="6" column="1">
           <widget class="QLabel" name="labelFilePath">
            <property name="text">
@@ -1651,6 +1644,13 @@
            </item>
           </layout>
          </item>
+         <item row="5" column="1">
+          <widget class="QLabel" name="labelWriteDataToDisc">
+           <property name="text">
+            <string>write data to disc</string>
+           </property>
+          </widget>
+         </item>
          <item row="3" column="2">
           <widget class="QComboBox" name="comboBoxAdcMode">
            <item>
@@ -1670,6 +1670,85 @@
            </item>
           </widget>
          </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="labelOutput">
+           <property name="text">
+            <string>tor (ouput signal PCIe card)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLabel" name="labelAdcMode">
+           <property name="text">
+            <string>adc mode</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <spacer name="horizontalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="2">
+          <widget class="QComboBox" name="comboBoxBncOut">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mode of the output of the Camera Control box&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Xck out cc&lt;/span&gt; is the output mode for the XCK output of the Camera Control box.&lt;/p&gt;&lt;p&gt;0: &lt;span style=&quot; font-style:italic;&quot;&gt;XCK&lt;/span&gt; is high during the readout of the camera.&lt;br/&gt;1: &lt;span style=&quot; font-style:italic;&quot;&gt;EXP_WIN&lt;/span&gt; stands for exposure window and is high, when the sensor is ready to be exposed to light.&lt;br/&gt;2: The option &lt;span style=&quot; font-style:italic;&quot;&gt;ADC_CLK&lt;/span&gt; sets the output to the ADC clock.&lt;br/&gt;3: &lt;span style=&quot; font-style:italic;&quot;&gt;Vin&lt;/span&gt; is high when the voltage input is sampled.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bnc_out&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Furhter information about bnc out can be found in the manual in chapter 3.3.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="currentText">
+            <string>XCK</string>
+           </property>
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <property name="minimumContentsLength">
+            <number>0</number>
+           </property>
+           <item>
+            <property name="text">
+             <string>XCK</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>EXP_WIN</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ADC_CLK</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Vin sample</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="9" column="2">
+          <spacer name="verticalSpacer_12">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
          <item row="6" column="3">
           <spacer name="horizontalSpacer_8">
            <property name="orientation">
@@ -1683,10 +1762,59 @@
            </property>
           </spacer>
          </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="labelOutput">
+         <item row="0" column="2">
+          <spacer name="verticalSpacer_11">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="4" column="2">
+          <widget class="QSpinBox" name="spinBoxAdcCustom">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="maximum">
+            <number>65534</number>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="2">
+          <widget class="QCheckBox" name="checkBoxWriteDataToDisc">
            <property name="text">
-            <string>tor (ouput signal PCIe card)</string>
+            <string>on</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="labelBncOut">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mode of the output of the Camera Control box&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Xck out cc&lt;/span&gt; is the output mode for the XCK output of the Camera Control box.&lt;/p&gt;&lt;p&gt;0: &lt;span style=&quot; font-style:italic;&quot;&gt;XCK&lt;/span&gt; is high during the readout of the camera.&lt;br/&gt;1: &lt;span style=&quot; font-style:italic;&quot;&gt;EXP_WIN&lt;/span&gt; stands for exposure window and is high, when the sensor is ready to be exposed to light.&lt;br/&gt;2: The option &lt;span style=&quot; font-style:italic;&quot;&gt;ADC_CLK&lt;/span&gt; sets the output to the ADC clock.&lt;br/&gt;3: &lt;span style=&quot; font-style:italic;&quot;&gt;Vin&lt;/span&gt; is high when the voltage input is sampled.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bnc_out&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Furhter information about bnc out can be found in the manual in chapter 3.3.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>xck out cc</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QLabel" name="labelTocnt">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of xck skipped before xck signal is shown&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger output counter determines how many XCK are skipped until the output TO_CNT_OUT shows the XCK signal. Use \ref tor_out_t.tor_to_cnt_out for the setting \ref camera_settings.tor to see TO_CNT_OUT at the output of the PCIe board. Example: tocnt = 2 =&amp;gt; skip every first and second XCK, show XCK on the PCIe output on every third XCK. Only the lowest 7 bits are used for this setting.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>tocnt</string>
            </property>
           </widget>
          </item>
@@ -1860,69 +1988,6 @@
            </item>
           </widget>
          </item>
-         <item row="6" column="0">
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="0" column="2">
-          <spacer name="verticalSpacer_11">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="5" column="2">
-          <widget class="QCheckBox" name="checkBoxWriteDataToDisc">
-           <property name="text">
-            <string>on</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="2">
-          <widget class="QSpinBox" name="spinBoxAdcCustom">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="maximum">
-            <number>65534</number>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1">
-          <widget class="QLabel" name="labelWriteDataToDisc">
-           <property name="text">
-            <string>write data to disc</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="2">
-          <spacer name="verticalSpacer_12">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
          <item row="4" column="1">
           <widget class="QLabel" name="labelAdcCustom">
            <property name="text">
@@ -1930,56 +1995,37 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="labelBncOut">
+         <item row="8" column="1">
+          <widget class="QLabel" name="labelTicnt">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mode of the output of the Camera Control box&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Xck out cc&lt;/span&gt; is the output mode for the XCK output of the Camera Control box.&lt;/p&gt;&lt;p&gt;0: &lt;span style=&quot; font-style:italic;&quot;&gt;XCK&lt;/span&gt; is high during the readout of the camera.&lt;br/&gt;1: &lt;span style=&quot; font-style:italic;&quot;&gt;EXP_WIN&lt;/span&gt; stands for exposure window and is high, when the sensor is ready to be exposed to light.&lt;br/&gt;2: The option &lt;span style=&quot; font-style:italic;&quot;&gt;ADC_CLK&lt;/span&gt; sets the output to the ADC clock.&lt;br/&gt;3: &lt;span style=&quot; font-style:italic;&quot;&gt;Vin&lt;/span&gt; is high when the voltage input is sampled.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bnc_out&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Furhter information about bnc out can be found in the manual in chapter 3.3.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger output counter determines how many trigger inputs are skipped before the next measurement is triggered. Every ticnt+1 trigger input the measurement is triggered according to sti_mode. Only the lowest 7 bits are used for this setting.&lt;/p&gt;&lt;p/&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>xck out cc</string>
+            <string>ticnt</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="2">
-          <widget class="QComboBox" name="comboBoxBncOut">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mode of the output of the Camera Control box&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
+         <item row="7" column="2">
+          <widget class="QSpinBox" name="spinBoxTocnt">
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Xck out cc&lt;/span&gt; is the output mode for the XCK output of the Camera Control box.&lt;/p&gt;&lt;p&gt;0: &lt;span style=&quot; font-style:italic;&quot;&gt;XCK&lt;/span&gt; is high during the readout of the camera.&lt;br/&gt;1: &lt;span style=&quot; font-style:italic;&quot;&gt;EXP_WIN&lt;/span&gt; stands for exposure window and is high, when the sensor is ready to be exposed to light.&lt;br/&gt;2: The option &lt;span style=&quot; font-style:italic;&quot;&gt;ADC_CLK&lt;/span&gt; sets the output to the ADC clock.&lt;br/&gt;3: &lt;span style=&quot; font-style:italic;&quot;&gt;Vin&lt;/span&gt; is high when the voltage input is sampled.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bnc_out&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Furhter information about bnc out can be found in the manual in chapter 3.3.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger output counter determines how many XCK are skipped until the output TO_CNT_OUT shows the XCK signal. Use \ref tor_out_t.tor_to_cnt_out for the setting \ref camera_settings.tor to see TO_CNT_OUT at the output of the PCIe board. Example: tocnt = 2 =&amp;gt; skip every first and second XCK, show XCK on the PCIe output on every third XCK. Only the lowest 7 bits are used for this setting.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
-           <property name="currentText">
-            <string>XCK</string>
+           <property name="maximum">
+            <number>127</number>
            </property>
-           <property name="currentIndex">
-            <number>0</number>
+          </widget>
+         </item>
+         <item row="8" column="2">
+          <widget class="QSpinBox" name="spinBoxTicnt">
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger output counter determines how many trigger inputs are skipped before the next measurement is triggered. Every ticnt+1 trigger input the measurement is triggered according to sti_mode. Only the lowest 7 bits are used for this setting.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
-           <property name="minimumContentsLength">
-            <number>0</number>
+           <property name="maximum">
+            <number>127</number>
            </property>
-           <item>
-            <property name="text">
-             <string>XCK</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>EXP_WIN</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>ADC_CLK</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Vin sample</string>
-            </property>
-           </item>
           </widget>
          </item>
         </layout>
