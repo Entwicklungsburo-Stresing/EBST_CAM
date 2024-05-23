@@ -178,8 +178,8 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetBDAT(drvno, settings_struct.camera_settings[drvno].bdat_in_10ns);
 	if (status != es_no_error) return status;
-	continiousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
-	ES_LOG("Setting continuous pause to %u\n", continiousPauseInMicroseconds);
+	continuousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
+	ES_LOG("Setting continuous pause to %u\n", continuousPauseInMicroseconds);
 	status = SetBEC(drvno, settings_struct.camera_settings[drvno].bec_in_10ns);
 	if (status != es_no_error) return status;
 	status = SetXckdelay(drvno, settings_struct.camera_settings[drvno].xckdelay_in_10ns);
@@ -2699,8 +2699,8 @@ es_status_codes StartMeasurement()
 #ifdef WIN32
 	memset(data_available, 0, sizeof(size_t) * MAXPCIECARDS);
 #endif
-	continiousMeasurementFlag = (bool)settings_struct.contiuous_measurement;//0 or 1
-	continiousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
+	continuousMeasurementFlag = (bool)settings_struct.continuous_measurement;//0 or 1
+	continuousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
 #ifndef MINIMAL_BUILD
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
@@ -2896,12 +2896,12 @@ es_status_codes StartMeasurement()
 		// MEASUREON ---------_____
 		//WaitforTelapsed(100);
 		// When space key or ESC key was pressed, continuous measurement stops.
-		if (continiousMeasurementFlag && checkSpaceKeyState())
-			continiousMeasurementFlag = false;
+		if (continuousMeasurementFlag && checkSpaceKeyState())
+			continuousMeasurementFlag = false;
 		if (!abortMeasurementFlag && checkEscapeKeyState())
 			abortMeasurementFlag = true;
-		WaitforTelapsed(continiousPauseInMicroseconds);
-	} while (continiousMeasurementFlag && !abortMeasurementFlag);
+		WaitforTelapsed(continuousPauseInMicroseconds);
+	} while (continuousMeasurementFlag && !abortMeasurementFlag);
 	// Reset the hardware bit measure on.
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
@@ -5368,7 +5368,7 @@ void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString
  */
 void SetContinuousMeasurement(bool on)
 {
-	continiousMeasurementFlag = on;
+	continuousMeasurementFlag = on;
 	return;
 }
 
