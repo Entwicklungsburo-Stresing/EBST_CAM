@@ -293,7 +293,7 @@ struct camera_settings
 	 */
 	uint32_t ticnt;
 	/**
-	 * Sensor_rese_length_in_4_ns controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without this reset for all sensors. Sensor_rese_length_in_4_ns is a 16 bit unsigned integer. Further information about sensor reset can be found in the manual in chapter 4.9.2.
+	 * Sensor_reset_length_in_4_ns controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without this reset for all sensors. Sensor_rese_length_in_4_ns is a 16 bit unsigned integer. Further information about sensor reset can be found in the manual in chapter 4.9.2.
 	 *		* min: 0 ns
 	 *		* step: 1 * 4 ns = 4 ns
 	 *		* default: 100 * 4 ns = 400 ns
