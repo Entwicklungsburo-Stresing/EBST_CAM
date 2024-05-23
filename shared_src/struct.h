@@ -234,15 +234,18 @@ struct camera_settings
 	 */
 	uint32_t dac_output[MAXCAMCNT][DACCOUNT];
 	/**
-	 * Output mode for PCIe board output pin. See enum \ref tor_out_t in enum_settings.h for options.
+	 * Output mode for PCIe board output pin. See enum \ref tor_out_t in enum_settings.h for options. Further information about tor can be found in the manual in chapter 6.2.4.12.
 	 */
 	uint32_t tor;
 	/**
-	 * ADC operating mode. Only available for specific ADCs, e.g. in camera system 3030. See enum \ref adc_mode_t in enum_settings.h for options.
+	 * ADC mode controls the operating mode of the ADC. This option is intended for debugging purpose and only available for specific ADCs, e.g. in camera system 3030. See enum \ref adc_mode_t in enum_settings.h for options.
 	 */
 	uint32_t adc_mode;
 	/**
-	 * Fixed value for ADC output when ADC mode is custom pattern.
+	 * Adc custom pattern is the constant output value of all 8 ADC channls if \ref camera_settings.adc_mode is set to \ref adc_mode_t.custom_pattern. This is a 14 bit unsigned integer.
+	 *		* min: 0
+	 *		* step: 1
+	 *		* max: 16383
 	 */
 	uint32_t adc_custom_pattern;
 	/**
