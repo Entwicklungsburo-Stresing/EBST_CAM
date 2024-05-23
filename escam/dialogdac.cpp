@@ -21,6 +21,7 @@ DialogDac::DialogDac(QWidget* parent)
 	connect(ui->spinBoxCamera, qOverload<int>(&QSpinBox::valueChanged), this, &DialogDac::loadSettings);
 	connect(&mainWindow->lsc, &Lsc::measureStart, this, &DialogDac::on_autotuneStateChanged);
 	connect(&mainWindow->lsc, &Lsc::measureDone, this, &DialogDac::on_autotuneStateChanged);
+	connect(&mainWindow->lsc, &Lsc::measureDone, this, &DialogDac::checkTargetReached);
 	
 	ui->spinBoxPcie->setMaximum(number_of_boards - 1);
 	if (number_of_boards == 1)
@@ -242,47 +243,41 @@ void DialogDac::loadSettings()
 void DialogDac::on_pushButtonAutotune_pressed()
 {
 	if (autotuneRunning) {
+		mainWindow->lsc.abortMeasurement();
 		autotuneRunning = false;
-		mainWindow->ui->checkBoxLoopMeasurement->setEnabled(true);
+		on_autotuneStateChanged();
 	}
 	else
 	{
+		autotuneRunning = true;
 		autotunePressed();
 	}
 	return;
 }
 
 /**
- * @brief Adapts the DAC spinbox value until the target level is reached.
+ * @brief Starts the measurement when autotune is pressed
  */
 void DialogDac::autotunePressed()
 {
-	if (mainWindow->ui->checkBoxLoopMeasurement->isChecked())
-		mainWindow->ui->checkBoxLoopMeasurement->setChecked(false);
-	mainWindow->ui->checkBoxLoopMeasurement->setEnabled(false);
-	autotuneRunning = true;
+	mainWindow->startPressed();
+	return;
+}
 
-	const int timeoutCount = 50;
-	int timeout = timeoutCount;
-
+/**
+ * @brief Checks if the target is reached. If not adjust the DAC values
+ * and call autotunePressed() again
+ * */
+void DialogDac::checkTargetReached()
+{
 	bool targetReached = false, ch1TargetReached = false, ch2TargetReached = false, ch3Target = false, ch3TargetReached = false, ch4TargetReached = false, ch5TargetReached = false, ch6TargetReached = false, ch7TargetReached = false, ch8TargetReached = false;
 
 	QSpinBox* spinBoxArray[8] = { ui->spinBoxChannel1, ui->spinBoxChannel2, ui->spinBoxChannel3, ui->spinBoxChannel4, ui->spinBoxChannel5, ui->spinBoxChannel6, ui->spinBoxChannel7, ui->spinBoxChannel8 };
 	int spinBoxArraySize = (sizeof(spinBoxArray) / sizeof(spinBoxArray[0]));
-	for (int i = 0; i < spinBoxArraySize; i++)
+
+	if (autotuneRunning && !targetReached)
 	{
-		if(spinBoxArray[i]->value() >= 65000)
-			spinBoxArray[i]->setValue(64999);
-	}
-	while (!targetReached && timeout > 0 && autotuneRunning)
-	{
-		uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
-		mainWindow->startPressed();
-		//Create a delay of 15 ms
-		QTime dieTime = QTime::currentTime().addMSecs(15);
-		while (QTime::currentTime() < dieTime)
-			QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-		mainWindow->lsc.waitForMeasureReady(board_sel);
+		//define variables used to return data
 		uint32_t drvno = QString::number(ui->spinBoxPcie->value()).toInt();
 		settings.beginGroup("board" + QString::number(drvno));
 		uint32_t sample = 20;
@@ -294,6 +289,7 @@ void DialogDac::autotunePressed()
 		data_array_size += pixel;
 		uint16_t* data = static_cast<uint16_t*>(malloc(data_array_size * sizeof(uint16_t)));
 
+		//return data
 		es_status_codes status = mainWindow->lsc.returnFrame(drvno, sample, block, camera, pixel, data);
 		if (status != es_no_error)
 		{
@@ -303,8 +299,7 @@ void DialogDac::autotunePressed()
 			return;
 		}
 
-		QSpinBox* spinBoxArray[8] = { ui->spinBoxChannel1, ui->spinBoxChannel2, ui->spinBoxChannel3, ui->spinBoxChannel4, ui->spinBoxChannel5, ui->spinBoxChannel6, ui->spinBoxChannel7, ui->spinBoxChannel8 };
-
+		//check if DAC value is high
 		bool warningNeeded = false;
 		for (int i = 0; i < spinBoxArraySize; i++)
 		{
@@ -316,7 +311,7 @@ void DialogDac::autotunePressed()
 		else
 			ui->labelAutotuneWarning->setText("");
 
-
+		//Adjust DAC value
 		if (!ch1TargetReached) ch1TargetReached = autotuneAdjust(data, autotune_ch1_start, autotune_ch1_end, spinBoxArray[0]);
 		if (!ch2TargetReached) ch2TargetReached = autotuneAdjust(data, autotune_ch2_start, autotune_ch2_end, spinBoxArray[1]);
 		if (!ch3TargetReached) ch3TargetReached = autotuneAdjust(data, autotune_ch3_start, autotune_ch3_end, spinBoxArray[2]);
@@ -326,19 +321,18 @@ void DialogDac::autotunePressed()
 		if (!ch7TargetReached) ch7TargetReached = autotuneAdjust(data, autotune_ch7_start, autotune_ch7_end, spinBoxArray[6]);
 		if (!ch8TargetReached) ch8TargetReached = autotuneAdjust(data, autotune_ch8_start, autotune_ch8_end, spinBoxArray[7]);
 
-		
-		// Create a delay of 1 ms
-		QTime dieTime2 = QTime::currentTime().addMSecs(15);
-		while (QTime::currentTime() < dieTime2)
-			QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-		
 		free(data);
-		timeout--;
+
+		// Check if all targets are reached. If not call autotunePressed() again
 		if (ch1TargetReached && ch2TargetReached && ch3TargetReached && ch4TargetReached && ch5TargetReached && ch6TargetReached && ch7TargetReached && ch8TargetReached)
+		{
 			targetReached = true;
+			autotuneRunning = false;
+			on_autotuneStateChanged();
+		}
+		else
+			autotunePressed();
 	}
-	autotuneRunning = false;
-	on_autotuneStateChanged();
 	return;
 }
 
@@ -378,6 +372,9 @@ bool DialogDac::autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spi
 	return targetReached;
 }
 
+/**
+ * @brief Changes the state of the buttons, when autotune is used
+ * */
 void DialogDac::on_autotuneStateChanged()
 {
 	if (!autotuneRunning)
@@ -388,7 +385,16 @@ void DialogDac::on_autotuneStateChanged()
 	}
 	else
 	{
+		QSpinBox* spinBoxArray[8] = { ui->spinBoxChannel1, ui->spinBoxChannel2, ui->spinBoxChannel3, ui->spinBoxChannel4, ui->spinBoxChannel5, ui->spinBoxChannel6, ui->spinBoxChannel7, ui->spinBoxChannel8 };
+		int spinBoxArraySize = (sizeof(spinBoxArray) / sizeof(spinBoxArray[0]));
+		for (int i = 0; i < spinBoxArraySize; i++)
+		{
+			if (spinBoxArray[i]->value() >= 65000)
+				spinBoxArray[i]->setValue(64999);
+		}
 		ui->pushButtonAutotune->setText("Abort");
+		if (mainWindow->ui->checkBoxLoopMeasurement->isChecked())
+			mainWindow->ui->checkBoxLoopMeasurement->setChecked(false);
 		mainWindow->ui->checkBoxLoopMeasurement->setEnabled(false);
 		mainWindow->ui->pushButtonStartStop->setEnabled(false);
 	}
