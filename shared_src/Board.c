@@ -3959,7 +3959,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	int translatedVCLKFREQ = 0;
 	if (data8 == 0) translatedVCLKFREQ = 0;
 	else translatedVCLKFREQ = VCLKFREQ_base_value + ((int)data8 * VCLKFREQ_step_value);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t24-31\tVCLKFREQ\t%u (%uns)\n", data8, translatedVCLKFREQ);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t24-31\tVCLKFREQ\t%u (%u ns)\n", data8, translatedVCLKFREQ);
 
 	/*=======================================================================*/
 
@@ -4132,441 +4132,273 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 
 	//Register PCIEFLAGS
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nPCIEFLAGS\n");
-
-	//XCKI
-	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_XCKI, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tXCKI\t%u\n", isBitHigh);
-
-	//INTTRIG
-	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_INTTRIG, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tINTTRIG\t%u\n", isBitHigh);
-
-	//ENRSTIMERHW
-	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_ENRSTIMERHW, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tENRSTIMERHW\t%u\n", isBitHigh);
-
-	//USE_ENFFW_PROTECT
-	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_USE_ENFFW_PROTECT, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tUSE_ENFFW_PROTECT\t%u\n", isBitHigh);
-
-	//BLOCKTRIG
-	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCKTRIG, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBLOCKTRIG\t%u\n", isBitHigh);
-
-	//MEASUREON
-	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_MEASUREON, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tMeasure on\t%u\n", isBitHigh);
-
-	//BON
-	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCKON, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBlock on\t%u\n", isBitHigh);
-
-	//TDC
-	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_IS_TDC, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tTDC\t%u\n", isBitHigh);
-
-	//EWS
-	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_IS_DSC, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tEWS\t%u\n", isBitHigh);
-
-	//lnk_up SFP3
-	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_linkup_sfp3, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tlinkup SFP3\t%u\n", isBitHigh);
-
-	//Error SFP3
-	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_error_sfp3, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tError SFP3\t%u\n", isBitHigh);
-
-	//lnk_up SFP2
-	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_linkup_sfp2, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tlinkup SFP2\t%u\n", isBitHigh);
-
-	//Error SFP2
-	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_error_sfp2, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tError SFP2\t%u\n", isBitHigh);
-
-	//lnk_up SFP1
-	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_linkup_sfp1, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tlinkup SFP1\t%u\n", isBitHigh);
-
-	//Error SFP1
-	status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_error_sfp1, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tError SFP1\t%u\n", isBitHigh);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_PCIEFLAGS);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x40\tPCIEFLAGS\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0\tXCKO\t%u\n", (data32 & PCIEFLAGS_bit_XCKI) >> PCIEFLAGS_bitindex_XCKI);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t1\tINTTRIG\t%u\n", (data32 & PCIEFLAGS_bit_INTTRIG) >> PCIEFLAGS_bitindex_INTTRIG);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t2\tENRSTIMERHW\t%u\n", (data32 & PCIEFLAGS_bit_ENRSTIMERHW) >> PCIEFLAGS_bitindex_ENRSTIMERHW);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t3\tUSE_ENFFW_PROTECT\t%u\n", (data32 & PCIEFLAGS_bit_USE_ENFFW_PROTECT) >> PCIEFLAGS_bitindex_USE_ENFFW_PROTECT);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t4\tBLOCKTRIG\t%u\n", (data32 & PCIEFLAGS_bit_BLOCKTRIG) >> PCIEFLAGS_bitindex_BLOCKTRIG);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t5\tMEASUREON\t%u\n", (data32 & PCIEFLAGS_bit_MEASUREON) >> PCIEFLAGS_bitindex_MEASUREON);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t6\tBLOCKON\t%u\n", (data32 & PCIEFLAGS_bit_BLOCKON) >> PCIEFLAGS_bitindex_BLOCKON);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t8\tTDC\t%u\n", (data32 & PCIEFLAGS_bit_IS_TDC) >> PCIEFLAGS_bitindex_IS_TDC);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t9\tEWS\t%u\n", (data32 & PCIEFLAGS_bit_IS_DSC) >> PCIEFLAGS_bitindex_IS_DSC);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t26\tLinkup SFP3\t%u\n", (data32 & PCIEFLAGS_bit_linkup_sfp3) >> PCIEFLAGS_bitindex_linkup_sfp3);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t27\tError SFP3\t%u\n", (data32 & PCIEFLAGS_bit_error_sfp3) >> PCIEFLAGS_bitindex_error_sfp3);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t28\tLinkup SFP2\t%u\n", (data32 & PCIEFLAGS_bit_linkup_sfp2) >> PCIEFLAGS_bitindex_linkup_sfp2);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t29\tError SFP2\t%u\n", (data32 & PCIEFLAGS_bit_error_sfp2) >> PCIEFLAGS_bitindex_error_sfp2);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t30\tLinkup SFP1\t%u\n", (data32 & PCIEFLAGS_bit_linkup_sfp1) >> PCIEFLAGS_bitindex_linkup_sfp1);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t31\tError SFP1\t%u\n", (data32 & PCIEFLAGS_bit_error_sfp1) >> PCIEFLAGS_bitindex_error_sfp1);
 
 	/*=======================================================================*/
 
 	//Register NOS
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nNOS\n");
-
-	//Number of Scans
-	uint32_t dataNOS = 0;
-	status = readRegisterS0_32(drvno, &dataNOS, S0Addr_NOS);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tNOS per Block\t%u\n", dataNOS);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_NOS);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x44\tNOS\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-31\tNOS\t%u\n", data32);
 
 	/*=======================================================================*/
 
 	//Register SCANINDEX
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nScan index\n");
-
-	//Value
-	uint32_t dataSCANINDEX = 0;
-	uint32_t bitmaskSCANINDEX = 0x7FFFFFFF;
-	status = readRegisterS0_32(drvno, &dataSCANINDEX, S0Addr_ScanIndex);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tValue\t%u\n", (dataSCANINDEX & bitmaskSCANINDEX));
-
-	//Reset
-	status = ReadBitS0_32(drvno, S0Addr_ScanIndex, ScanIndex_bitindex_counter_reset, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tReset\t%u\n", isBitHigh);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_ScanIndex);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x48\tSCANINDEX\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-30\tSCANINDEX\t%u\n", (data32 & 0x7FFFFFFF));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t31\tCounter reset\t%u\n", (data32 & ScanIndex_bit_counter_reset) >> ScanIndex_bitindex_counter_reset);
 
 	/*=======================================================================*/
 
 	//Register DMABUFSIZEINSCANS
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nDMA buffer size in scans\n");
-
-	//Value
-	uint32_t dataDMABUFSIZE = 0;
-	uint32_t bitmaskDMABUFSIZE = 0x7FFFFFFF;
-	status = readRegisterS0_32(drvno, &dataDMABUFSIZE, S0Addr_DmaBufSizeInScans);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tValue\t%u\n", (dataDMABUFSIZE & bitmaskDMABUFSIZE));
-
-	//Reset
-	status = ReadBitS0_32(drvno, S0Addr_DmaBufSizeInScans, DmaBufSizeInScans_bitindex_counter_reset, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tReset\t%u\n", isBitHigh);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_DmaBufSizeInScans);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x4c\tDMABUFSIZEINSCANS\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-30\tBuffer length\t%u\n", (data32 & 0x7FFFFFFF));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t31\tCounter reset\t%u\n", (data32 & DmaBufSizeInScans_bit_counter_reset) >> DmaBufSizeInScans_bitindex_counter_reset);
 
 	/*=======================================================================*/
 
 	//Register DMASPERINTERRUPT
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nDMAs per interrupt\n");
-
-	//Value
-	uint32_t dataDMASPERINTERRUPT = 0;
-	uint32_t bitmaskDMASPERINTERRUPT = 0x7FFFFFFF;
-	status = readRegisterS0_32(drvno, &dataDMASPERINTERRUPT, S0Addr_DMAsPerIntr);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tValue\t%u\n", (dataDMASPERINTERRUPT & bitmaskDMASPERINTERRUPT));
-
-	//Reset
-	status = ReadBitS0_32(drvno, S0Addr_DMAsPerIntr, DMAsPerIntr_bitindex_counter_reset, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tReset\t%u\n", isBitHigh);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_DMAsPerIntr);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x50\tDMASPERINTERRUPT\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-30\tDMASPERINTERRUPT\t%u\n", (data32 & 0x7FFFFFFF));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t31\tCounter reset\t%u\n", (data32 & DMAsPerIntr_bit_counter_reset) >> DMAsPerIntr_bitindex_counter_reset);
 
 	/*=======================================================================*/
 
 	//Register BLOCKS
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nNOB\n");
-
-	//Value
-	uint32_t dataBLOCKS = 0;
-	status = readRegisterS0_32(drvno, &dataBLOCKS, S0Addr_NOB);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tValue\t%u\n", dataBLOCKS);
-
+	status = readRegisterS0_32(drvno, &data32, S0Addr_NOB);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x54\tBLOCKS\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-31\tBLOCKS\t%u\n", data32);
+	
 	/*=======================================================================*/
 
 	//Register BLOCKINDEX
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nBlockindex\n");
-
-	uint32_t dataBLOCKINDEX = 0;
-	status = readRegisterS0_32(drvno, &dataBLOCKINDEX, S0Addr_BLOCKINDEX);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tValue\t%u\n", dataBLOCKINDEX);
-
+	status = readRegisterS0_32(drvno, &data32, S0Addr_BLOCKINDEX);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x58\tBLOCKINDEX\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-31\tINDEX\t%u\n", data32);
 
 	/*=======================================================================*/
 
 	//Register CAMCNT
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nCam count\n");
-
-	uint8_t dataCAMCNT = 0;
-	uint8_t bitmaskCAMCNT = 0x0F;
-	status = readRegisterS0_8(drvno, &dataCAMCNT, S0Addr_CAMCNT);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tValue\t%u\n", (dataCAMCNT & bitmaskCAMCNT));
+	status = readRegisterS0_8(drvno, &data8, S0Addr_CAMCNT);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x5c\tCAMCNT\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-3\tCAMCNT\t%u\n", (data8 & 0x0F));
 
 	/*=======================================================================*/
 
 	//Register TDC Control
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nTDC Control\n");
-
-	//Reset
-	status = ReadBitS0_32(drvno, S0Addr_TDCCtrl, TDCCtrl_bitindex_reset, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tReset\t%u\n", isBitHigh);
-
-	//Interrupt
-	status = ReadBitS0_32(drvno, S0Addr_TDCCtrl, TDCCtrl_bitindex_interrupt, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tInterrupt\t%u\n", isBitHigh);
-
-	//LF1
-	status = ReadBitS0_32(drvno, S0Addr_TDCCtrl, TDCCtrl_bitindex_load_fifo, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tLoad fifo\t%u\n", isBitHigh);
-
-	//EF1
-	status = ReadBitS0_32(drvno, S0Addr_TDCCtrl, TDCCtrl_bitindex_empty_fifo, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tEmpty fifo\t%u\n", isBitHigh);
-
-	//CSR
-	status = ReadBitS0_32(drvno, S0Addr_TDCCtrl, TDCCtrl_bitindex_cs, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCSR\t%u\n", isBitHigh);
-
-	//ADR
-	bool isAdr0 = 0, isAdr1 = 0, isAdr2 = 0, isAdr3 = 0;
-	status = ReadBitS0_32(drvno, S0Addr_TDCCtrl, TDCCtrl_bitindex_adr0, &isAdr0);
-	status = ReadBitS0_32(drvno, S0Addr_TDCCtrl, TDCCtrl_bitindex_adr1, &isAdr1);
-	status = ReadBitS0_32(drvno, S0Addr_TDCCtrl, TDCCtrl_bitindex_adr2, &isAdr2);
-	status = ReadBitS0_32(drvno, S0Addr_TDCCtrl, TDCCtrl_bitindex_adr3, &isAdr3);
-
-	int combinedAdr = (isAdr3 << 3) | (isAdr2 << 2) | (isAdr1 << 1) | isAdr0;
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tADR\t%u\n", combinedAdr);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_TDCCtrl);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x60\tTDC Control\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0\tReset\t%u\n", (data32 & TDCCtrl_bit_reset) >> TDCCtrl_bitindex_reset);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t1\tInterrupt\t%u\n", (data32 & TDCCtrl_bit_interrupt) >> TDCCtrl_bitindex_interrupt);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t2\tLoad fifo\t%u\n", (data32 & TDCCtrl_bit_load_fifo) >> TDCCtrl_bitindex_load_fifo);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t3\tEmpty fifo\t%u\n", (data32 & TDCCtrl_bit_empty_fifo) >> TDCCtrl_bitindex_empty_fifo);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t27\tCSR\t%u\n", (data32 & TDCCtrl_bit_cs) >> TDCCtrl_bitindex_cs);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t28-31\tADR\t%u\n", (data32 & 0xF0000000) >> TDCCtrl_bitindex_adr0);
 
 	/*=======================================================================*/
 
 	//Register TDC Data
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nTDC Data\n");
-
-	//Delay
-	uint32_t dataTDCDATA = 0;
-	status = readRegisterS0_32(drvno, &dataTDCDATA, S0Addr_TDCData);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tDelay\t%u\n", dataTDCDATA);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_TDCData);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x64\tTDC Data\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-31\tDelay\t%u\n", data32);
 
 	/*=======================================================================*/
 
-	//Register ROI
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nRange of interest\n");
+	//Register ROI0
+	status = readRegisterS0_32(drvno, &data32, S0Addr_ROI0);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x68\tROI0\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-15\tLower word\t%u\n", (data32 & 0xFFFF));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-31\tUpper word\t%u\n", (data32 >> 16));
 
-	//Range 0
-	uint32_t dataRange = 0;
-	status = readRegisterS0_32(drvno, &dataRange, S0Addr_ROI0);
-	uint16_t lowerBitsR0 = (uint16_t)(dataRange & 0xFFFF);
-	uint16_t upperBitsR0 = (uint16_t)(dataRange >> 16);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tLower word R0\t%u\n", lowerBitsR0);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tUpper word R0\t%u\n", upperBitsR0);
+	/*=======================================================================*/
 
-	//Range 1
-	status = readRegisterS0_32(drvno, &dataRange, S0Addr_ROI1);
-	uint16_t lowerBitsR1 = (uint16_t)(dataRange & 0xFFFF);
-	uint16_t upperBitsR1 = (uint16_t)(dataRange >> 16);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tLower word R1\t%u\n", lowerBitsR1);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tUpper word R1\t%u\n", upperBitsR1);
+	//Register ROI1
+	status = readRegisterS0_32(drvno, &data32, S0Addr_ROI1);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x6c\tROI1\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-15\tLower word\t%u\n", (data32 & 0xFFFF));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-31\tUpper word\t%u\n", (data32 >> 16));
 
-	//Range 2
-	status = readRegisterS0_32(drvno, &dataRange, S0Addr_ROI2);
-	uint16_t lowerBitsR2 = (uint16_t)(dataRange & 0xFFFF);
-	uint16_t upperBitsR2 = (uint16_t)(dataRange >> 16);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tLower word R2\t%u\n", lowerBitsR2);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tUpper word R2\t%u\n", upperBitsR2);
+	/*=======================================================================*/
+
+	//Register ROI2
+	status = readRegisterS0_32(drvno, &data32, S0Addr_ROI2);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x70\tROI2\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-15\tLower word\t%u\n", (data32 & 0xFFFF));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-31\tUpper word\t%u\n", (data32 >> 16));
 
 	/*=======================================================================*/
 
 	//Register XCKDLY
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nXCKDLY\n");
-
-	//Delay value
-	uint32_t bitmaskXCKDLY = 0x7FFFFFFF;
 	status = readRegisterS0_32(drvno, &data32, S0Addr_XCKDLY);
-	int val = 500 + ((int)((data32 & bitmaskXCKDLY)) * 10);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tDelay value\t%u (%uns)\n", ((data32 & bitmaskXCKDLY)), val);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x74\tXCKDLY\n");
+	int val = 500 + ((int)((data32 & 0x7FFFFFFF)) * 10);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-30\tDelay\t%u (%u ns)\n", (data32 & 0x7FFFFFFF), val);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t31\tEnabled\t%u\n", (data32 & 0x80000000) >> 31);
+
+	/*=======================================================================*/
+
+	//Register S1S2DLY
+	status = readRegisterS0_32(drvno, &data32, S0Addr_S1S2ReadDelay);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x78\tS1S2DLY\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-31\tDelay\t%u (%u ns)\n", data32, (data32 * 10));
 
 	/*=======================================================================*/
 
 	//Register BTIMER
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nBTIMER\n");
-
-	//Timer
-	uint32_t bitmaskBTIMER = 0x0FFFFFFF;
 	status = readRegisterS0_32(drvno, &data32, S0Addr_BTIMER);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tTimer\t%u (%uμs)\n", ((data32 & bitmaskBTIMER)), ((data32 & bitmaskBTIMER)));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x80\tBTIMER\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-27\tTimer\t%u μs\n", (data32 & 0x0FFFFFFF));
 
 	/*=======================================================================*/
 
 	//Register BDAT
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nBDAT\n");
-
-	//Delay After Trigger
-	uint32_t bitmaskBDAT = 0x7FFFFFFF;
 	status = readRegisterS0_32(drvno, &data32, S0Addr_BDAT);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tDelay After Trigger\t%u\n", ((data32 & bitmaskBDAT)));
-
-	//Enabled
-	status = ReadBitS0_32(drvno, S0Addr_BDAT, BDAT_bitindex_enabled, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tEnabled\t%u\n", isBitHigh);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x84\tBDAT\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-30\tDelay After Trigger\t%u\n", (data32 & 0x7FFFFFFF));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t31\tEnabled\t%u\n", (data32 & 0x80000000) >> BDAT_bitindex_enabled);
 
 	/*=======================================================================*/
 
 	//Register BEC
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nBEC\n");
-
-	//Exposure Control
-	uint32_t dataBEC = 0;
-	uint32_t bitmaskBEC = 0x7FFFFFFF;
-	status = readRegisterS0_32(drvno, &dataBEC, S0Addr_BEC);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tExposure Control\t%u\n", (dataBEC & bitmaskBEC));
+	status = readRegisterS0_32(drvno, &data32, S0Addr_BEC);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x88\tBEC\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-30\tExposure Control\t%u (%u ns)\n", (data32 & 0x7FFFFFFF), ((data32 & 0x7FFFFFFF) * 10));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t31\tEnabled\t%u\n", (data32 & 0x80000000) >> BEC_bitindex_enabled);
 
 	/*=======================================================================*/
 
 	//Register BFLAGS
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nBFLAGS\n");
-
-	//BSLOPE
-	status = ReadBitS0_32(drvno, S0Addr_BSLOPE, BSLOPE_bitindex_bslope, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBSLOPE\t%u\n", isBitHigh);
-
-	//B both slopes
-	status = ReadBitS0_32(drvno, S0Addr_BSLOPE, BSLOPE_bitindex_both_slopes, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBoth Slopes\t%u\n", isBitHigh);
-
-	//BSWTRIG
-	status = ReadBitS0_32(drvno, S0Addr_BSLOPE, BSLOPE_bitindex_bswtrig, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tBSLOPE\t%u\n", isBitHigh);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_BSLOPE);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x8c\tBFLAGS\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0\tBSLOPE\t%u\n", (data32 & 0x00000001) >> BSLOPE_bitindex_bslope);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t1\tBoth Slopes\t%u\n", (data32 & 0x00000002) >> BSLOPE_bitindex_both_slopes);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t2\tBSWTRIG\t%u\n", (data32 & 0x00000004) >> BSLOPE_bitindex_bswtrig);
 
 	/*=======================================================================*/
 
 	//Register A1DSC (Actual Delay Stage Counter)
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nA1DSC\n");
-
-	//CH1 DSC Value
-	uint32_t dataA1DSC = 0;
-	status = readRegisterS0_32(drvno, &dataA1DSC, S0Addr_A1DSC);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCH1 DSC\t%u\n", dataA1DSC);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_A1DSC);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x90\tA1DSC\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-31\tDSC\t%u\n", data32);
 
 	/*=======================================================================*/
 
 	//Register L1DSC (Last Delay Stage Counter)
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nL1DSC\n");
-
-	//CH1 DSC Value
-	uint32_t dataL1DSC = 0;
-	status = readRegisterS0_32(drvno, &dataL1DSC, S0Addr_L1DSC);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCH1 DSC\t%u\n", dataL1DSC);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_L1DSC);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x94\tL1DSC\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-31\tDSC\t%u\n", data32);
 
 	/*=======================================================================*/
 
 	//Register A2DSC
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nA2DSC\n");
-
-	//CH2 DSC Value
-	uint32_t dataA2DSC = 0;
-	status = readRegisterS0_32(drvno, &dataA2DSC, S0Addr_A2DSC);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCH2 DSC\t%u\n", dataA2DSC);
-
+	status = readRegisterS0_32(drvno, &data32, S0Addr_A2DSC);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x98\tA2DSC\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-31\tDSC\t%u\n", data32);
+	
 	/*=======================================================================*/
 
 	//Register L2DSC
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nL2DSC\n");
-
-	//CH2 DSC Value
-	uint32_t dataL2DSC = 0;
-	status = readRegisterS0_32(drvno, &dataL2DSC, S0Addr_L2DSC);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCH2 DSC\t%u\n", dataL2DSC);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_L2DSC);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x9c\tL2DSC\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-31\tDSC\t%u\n", data32);
 
 	/*=======================================================================*/
 
 	//Register ATDC2
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nATDC2\n");
-
-	//TDC2
-	uint32_t dataATDC2 = 0;
-	status = readRegisterS0_32(drvno, &dataATDC2, S0Addr_ATDC2);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tTDC2\t%u\n", dataATDC2);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_ATDC2);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xa0\tATDC2\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-31\tTDC2\t%u\n", data32);
 
 	/*=======================================================================*/
 
 	//Register LTDC2
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nLTDC2\n");
-
-	//TDC2
-	uint32_t dataLTDC2 = 0;
-	status = readRegisterS0_32(drvno, &dataLTDC2, S0Addr_LTDC2);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tTDC2\t%u\n", dataLTDC2);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_LTDC2);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xa4\tLTDC2\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-31\tTDC2\t%u\n", data32);
 
 	/*=======================================================================*/
 
 	//Register DSCCtrl
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nDSCCtrl\n");
-
-	//RS1
-	status = ReadBitS0_32(drvno, S0Addr_DSCCtrl, DSCCtrl_bitindex_rs1, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tRS1\t%u\n", isBitHigh);
-
-	//DIR1
-	status = ReadBitS0_32(drvno, S0Addr_DSCCtrl, DSCCtrl_bitindex_dir1, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tDIR1\t%u\n", isBitHigh);
-
-	//RS2
-	status = ReadBitS0_32(drvno, S0Addr_DSCCtrl, DSCCtrl_bitindex_rs2, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tRS2\t%u\n", isBitHigh);
-
-	//DIR2
-	status = ReadBitS0_32(drvno, S0Addr_DSCCtrl, DSCCtrl_bitindex_dir2, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tDIR2\t%u\n", isBitHigh);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_DSCCtrl);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xa8\tDSCCtrl\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0\tRS1\t%u\n", (data8 & 0x00000001) >> DSCCtrl_bitindex_rs1);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t1\tDIR1\t%u\n", (data8 & 0x00000002) >> DSCCtrl_bitindex_dir1);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t8\tRS2\t%u\n", (data8 & 0x00000100) >> DSCCtrl_bitindex_rs2);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t9\tDIR2\t%u\n", (data8 & 0x00000200) >> DSCCtrl_bitindex_dir2);
 
 	/*=======================================================================*/
 
 	//Register DAC
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nDAC\n");
-
-	//Value
-	uint32_t dataDAC = 0;
-	status = readRegisterS0_32(drvno, &dataDAC, S0Addr_DAC);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tValue\t%u\n", dataDAC);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_DAC);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xac\tDAC\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-31\tDAC\t%u\n", data32);
 
 	/*=======================================================================*/
 
 	//Register CAMSTATUS12
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nCAMSTATUS12\n");
-
-	//Status ID
-	uint32_t dataCAMSTATUS12 = 0;
-	uint32_t bitmaskCAMSTATUS12 = 0xFFFFFFF7;
-	status = readRegisterS0_32(drvno, &dataCAMSTATUS12, S0Addr_CAMSTATUS12);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tStaus ID\t%u\n", (dataCAMSTATUS12 & bitmaskCAMSTATUS12));
-
-	//Temp
-	status = ReadBitS0_32(drvno, S0Addr_CAMSTATUS12, CAMSTATUS12_bitindex_temp, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tTemp Good\t%u\n", isBitHigh);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_CAMSTATUS12);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xb0\tCAMSTATUS12\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0\tTemp Good\t%u\n", (data32 & 0x00000001) >> CAMSTATUS12_bitindex_temp);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t1-31\tStatus ID\t%u\n", (data32 & 0xFFFFFFFE));
 
 	/*=======================================================================*/
 
 	//Register CAMSTATUS34
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nCAMSTATUS34\n");
-
-	//Status ID
-	uint32_t dataCAMSTATUS34 = 0;
-	uint32_t bitmaskCAMSTATUS34 = 0xFFFFFFF7;
-	status = readRegisterS0_32(drvno, &dataCAMSTATUS34, S0Addr_CAMSTATUS34);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tStatus ID\t%u\n", (dataCAMSTATUS34 & bitmaskCAMSTATUS34));
-
-	//Temp
-	status = ReadBitS0_32(drvno, S0Addr_CAMSTATUS34, CAMSTATUS34_bitindex_temp, &isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tTemp Good\t%u\n", isBitHigh);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_CAMSTATUS34);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xb4\tCAMSTATUS34\n");
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0\tTemp Good\t%u\n", (data32 & 0x00000001) >> CAMSTATUS34_bitindex_temp);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t1-31\tStatus ID\t%u\n", (data32 & 0xFFFFFFFE));
 
 	/*=======================================================================*/
 
 	//Register Camera Type
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nCamera Type\n");
+	status = readRegisterS0_32(drvno, &data32, S0Addr_CAMERA_TYPE);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xb8\tCamera Type\n");
 
 	//Sensor Type
-	uint32_t dataCAMTYPE = 0;
-	status = readRegisterS0_32(drvno, &dataCAMTYPE, S0Addr_CAMERA_TYPE);
-	uint16_t lowerBitsCAMTYPE = (uint16_t)(dataCAMTYPE & camera_type_sensor_type_bits);
-	uint16_t upperBitsCAMTYPE = (uint16_t)((dataCAMTYPE & camera_type_camera_system_bits) >> camera_type_camera_system_bit_index);
+	uint16_t lowerBitsCAMTYPE = (uint16_t)(data32 & camera_type_sensor_type_bits);
+	uint16_t upperBitsCAMTYPE = (uint16_t)((data32 & camera_type_camera_system_bits) >> camera_type_camera_system_bit_index);
 	switch (lowerBitsCAMTYPE)
 	{
 	case sensor_type_pda:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "PDA");
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-15\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "PDA");
 		break;
 	case sensor_type_ir:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "IR");
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-15\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "IR");
 		break;
 	case sensor_type_fft:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "FFT");
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-15\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "FFT");
 		break;
 	case sensor_type_cmos:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "CMOS");
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-15\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "CMOS");
 		break;
 	case sensor_type_hsvis:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "HSVIS");
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-15\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "HSVIS");
 		break;
 	case sensor_type_hsir:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "HSIR");
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-15\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "HSIR");
 		break;
 	default:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "invalid");
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-15\tSensor Type\t%u (%s)\n", lowerBitsCAMTYPE, "invalid");
 		break;
 	}
 
@@ -4574,16 +4406,16 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	switch (upperBitsCAMTYPE)
 	{
 	case camera_system_3001:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCamera System\t%u (%s)\n", upperBitsCAMTYPE, "3001");
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-31\tCamera System\t%u (%s)\n", upperBitsCAMTYPE, "3001");
 		break;
 	case camera_system_3010:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCamera System\t%u (%s)\n", upperBitsCAMTYPE, "3010");
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-31\tCamera System\t%u (%s)\n", upperBitsCAMTYPE, "3010");
 		break;
 	case camera_system_3030:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCamera System\t%u (%s)\n", upperBitsCAMTYPE, "3030");
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-31\tCamera System\t%u (%s)\n", upperBitsCAMTYPE, "3030");
 		break;
 	default:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\tCamera System\t%u (%s)\n", upperBitsCAMTYPE, "invalid");
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-31\tCamera System\t%u (%s)\n", upperBitsCAMTYPE, "invalid");
 		break;
 	}
 
