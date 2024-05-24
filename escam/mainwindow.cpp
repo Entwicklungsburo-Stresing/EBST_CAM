@@ -115,7 +115,20 @@ void MainWindow::setChartData(QLineSeries** series, uint16_t numberOfSets)
 	QChart *chart = ui->chartView->chart();
 	chart->removeAllSeries();
 	for (uint16_t set = 0; set < numberOfSets; set++)
+	{
+		if (settings.value(settingAxesMirrorXPath).toBool())
+		{
+			QVector<QPointF> points = series[set]->pointsVector();
+			for (int i = 0; i < points.size() / 2; i++)
+			{
+				points[i].setX(points.size() - i - 1);
+				points[points.size() - i - 1].setX(i);
+				series[set]->replace(i, points[points.size() - i - 1]);
+				series[set]->replace(points.size() - i - 1, points[i]);
+			}
+		}
 		chart->addSeries(series[set]);
+	}
 	chart->createDefaultAxes();
 	QList<QAbstractAxis *> axes = ui->chartView->chart()->axes();
 	if (axes.isEmpty()) return;
@@ -140,18 +153,6 @@ void MainWindow::setChartData(uint16_t* data, uint32_t* length, uint16_t numberO
 	// Allocate memory for the pointer array to the QlineSeries.
 	QLineSeries** series = static_cast<QLineSeries**>(calloc(numberOfSets, sizeof(QLineSeries*)));
 	// Iterate through all data sets.
-	
-	if (settings.value(settingAxesMirrorXPath).toBool())
-	{
-		int backIndex = length[0] - 1;
-		for (uint32_t i = 0; i < length[0] / 2; i++)
-		{
-			uint32_t save = data[i];
-			data[i] = data[backIndex];
-			data[backIndex] = save;
-			backIndex--;
-		}
-	}
 	uint16_t* cur_data_ptr = data;
 	for(uint16_t set=0; set<numberOfSets; set++)
 	{
