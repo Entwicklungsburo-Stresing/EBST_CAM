@@ -43,7 +43,14 @@
           </widget>
          </item>
          <item row="9" column="2">
-          <widget class="QComboBox" name="comboBoxTheme"/>
+          <widget class="QComboBox" name="comboBoxTheme">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Appearance of Escam&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The setting theme decides about the appearance of Escam. The available options depend on your operating system and are default built into Qt. Some themes implement a dark / light mode depending on system wide color theme.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
          </item>
          <item row="1" column="3">
           <spacer name="horizontalSpacer_2">
@@ -259,6 +266,12 @@
          </item>
          <item row="9" column="1">
           <widget class="QLabel" name="label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Appearance of Escam&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The setting theme decides about the appearance of Escam. The available options depend on your operating system and are default built into Qt. Some themes implement a dark / light mode depending on system wide color theme.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>theme</string>
            </property>

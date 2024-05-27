@@ -290,11 +290,17 @@ struct camera_settings
 	 */
 	uint32_t dma_buffer_size_in_scans;
 	/**
-	 * Trigger output counter determines how many XCK are skipped until the output TO_CNT_OUT shows the XCK signal. Use \ref tor_out_t.tor_to_cnt_out for the setting \ref camera_settings.tor to see TO_CNT_OUT at the output of the PCIe board. Example: tocnt = 2 => skip every first and second XCK, show XCK on the PCIe output on every third XCK. Only the lowest 7 bits are used for this setting.
+	 * Trigger output counter determines how many XCK are skipped until the output TO_CNT_OUT shows the XCK signal. Use \ref tor_out_t.tor_to_cnt_out for the setting \ref camera_settings.tor to see TO_CNT_OUT at the output of the PCIe board. Example: tocnt = 2 => skip every first and second XCK, show XCK on the PCIe output on every third XCK. tocnt is a 7 bit unsigned integer. Further information about tocnt can be found in the manual in chapter 6.2.4.12.
+	 *		* min: 0 (TO_CNT_OUT = XCK)
+	 *		* step: 1
+	 *		* max: 127
 	 */
 	uint32_t tocnt;
 	/**
-	 * Trigger output counter determines how many trigger inputs are skipped before the next measurement is triggered. Every ticnt+1 trigger input the measurement is triggered according to sti_mode. Only the lowest 7 bits are used for this setting.
+	 * Trigger output counter determines how many trigger inputs are skipped before the next measurement is triggered. Every ticnt+1 trigger input the measurement is triggered according to \ref camera_settings.sti_mode. ticnt is a 7 bit unsigned integer. Further information about ticnt can be found in the manual in chapter 6.2.4.12.
+	 *		* min: 0
+	 *		* step: 1
+	 *		* max: 127
 	 */
 	uint32_t ticnt;
 	/**
