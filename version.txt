@@ -5,6 +5,7 @@
 - Add mirror x axis
 - Add HDF5 export
 - Add ToolTips and WhatsThis to settings dialog
+- Add Tocnt and Ticnt to settings dialog
 - Rename trigger mode cc to trigger mode integrator
 - Rename is_cooled_cam to is_cooled_camera_legacy_mode
 - Change settings level basic, advanced, expert to guided, free
