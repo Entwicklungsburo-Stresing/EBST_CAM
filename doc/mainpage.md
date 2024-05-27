@@ -28,9 +28,9 @@ For a simple measurement the following DLL calls should be used. While including
 
 ### Setting up escam
 After opening the program, you will be greeted by the main page. To configure the settings for the camera, open the 'Settings' tab at the top and choose 'Edit' and the 'General' tab of the settings will open. The first time you start the program on your PC, the initial values have to be imported. We have saved your setup in a config.ini file in the escam folder. So import this file at the first start. These values are stored then in windows (registry) and you do not need to import it again.
-For many elements in Escam there are additional information available through tooltips and context help. Especially in the settings dialog you can find a detailed description for every paramter in the context help. A tooltip appears after hovering with the cursor over a specific element for some seconds.
+For many elements in Escam there are additional information available through tooltips and context help. Especially in the settings dialog you can find a detailed description for every parameter in the context help. A tooltip appears after hovering with the cursor over a specific element for some seconds.
 
-<img src="screenshots/tooltip.png" alt="tooltip" width="400"/>
+<img src="tooltip.png" width="500"/>
 
 The context help can be reached through different methods:
 
@@ -40,7 +40,10 @@ The context help can be reached through different methods:
 
 A small pop up window will appear with a detailed explanation.
 
-<img src="screenshots/whatsThis-rightclick.png" alt="whatsThis" width="400"/> <img src="screenshots/whatsThis-helpButton.png" alt="whatsThis" width="400"/> <img src="screenshots/whatsThis-ContextHelp.png" alt="whatsThis" width="400"/> <img src="screenshots/whatsThis.png" alt="whatsThis" width="400"/>
+<img src="whatsThis-rightclick.png" width="500"/>
+<img src="whatsThis-helpButton.png" width="500"/>
+<img src="whatsThis-ContextHelp.png" width="500"/>
+<img src="whatsThis.png" width="500"/>
 
 ## Software structure
 ![software structure as block diagram](software_structure.drawio.svg)
