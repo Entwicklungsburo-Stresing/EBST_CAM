@@ -27,43 +27,20 @@ For a simple measurement the following DLL calls should be used. While including
 ## How to use escam
 
 ### Setting up escam
-After opening the program, you will be greeted by the main page. To configure the settings for the camera, open the 'Settings' tab at the top and choose 'Edit' and the 'General' tab of the settings will open. The first time you start the program on your PC, the initial values have to be imported. We have saved your setup in a config.ini file in the escam folder. So import this file at the first start. These values are stored then in windows (registry) and you do not need to import it again. 
+After opening the program, you will be greeted by the main page. To configure the settings for the camera, open the 'Settings' tab at the top and choose 'Edit' and the 'General' tab of the settings will open. The first time you start the program on your PC, the initial values have to be imported. We have saved your setup in a config.ini file in the escam folder. So import this file at the first start. These values are stored then in windows (registry) and you do not need to import it again.
+For many elements in Escam there are additional information available through tooltips and context help. Especially in the settings dialog you can find a detailed description for every paramter in the context help. A tooltip appears after hovering with the cursor over a specific element for some seconds.
 
-### General
-In the 'General' tab you can choose the amount of samples the camera should take in a block, and the amount of blocks. To edit the samples amount, edit the number at 'nos'. To edit the blocks amount, edit the number at 'nob'. For the concept of scans and blocks please see the manual. For a first try just enter scans 500 and blocks 1.
+<img src="screenshots/tooltip.png" alt="tooltip" width="400"/>
 
-### Camera Settings
-When opening the 'Camera Settings' tab you start at the 'Measurement' tab, where you can configure which trigger is used, if you want to trigger the samples/blocks external or configure a time at which the samples/blocks should start.
+The context help can be reached through different methods:
 
-#### Measurement
-The 'Measurement' tab is where you can configure the settings related to the measurement.
+* right clicking on an element and clicking `Whats This?`
+* clicking on the `?` button at the top of a window and then on the element of interest
+* under `Help` -> `Context help` and then clicking on the element of interest
 
-##### external Trigger: 
-In the 'Measurement' tab you can set the sti (scan trigger input) and bti (block trigger input) you can change the values from STimer or BTimer to I, S1 or S2, depending on where you have connected your trigger to the PCIe-Board. The associated stimer/btimer field should gray out when changing the input. 
+A small pop up window will appear with a detailed explanation.
 
-##### Use STimer and/or BTimer:
-If you want to use the internal timer, you can set STimer or BTimer. Set the sti/bti to STimer and BTimer and configure the time at which it should trigger at the stimer/btimer field. The time is displayed as microseconds, so if you want to trigger every millisecond, the value should be 1.000 microseconds. Use stimer to set the time between 2 reads (exposure time for the sensor). The btimer is only needed if the blocks are > 1. In this case btime sets the distance between 2 blocks.
-
-#### Camera Setup
-The 'Camera Setup' tab is where you can configure escam to your camera. 
-
-##### SENSOR TYPE
-Depending on the Type of your Sensor, pick PDA or FFT. All sensors are PDA except the FFTs with more than 1 line.
-
-##### CAMERA SYSTEM
-Depending on your Camera System, pick 3001, 3010 or 3030
-
-##### CAMCNT
-If you have 1 Camera you can leave this number at 1, if you have multiple cameras change the number to the amount of cameras you have connected to your pc. 
-
-##### PIXEL
-Depending on the Sensor you have, choose the amount of pixels your Sensor has. It is recommended to scroll through the values since there is a small set of valid numbers. 
-
-##### cooled camera
-If your camera is cooled, tick the checkbox and set the camera cooling level to your desired amount. 
-
-##### START
-Push the start button to start one block of scans. If you want a continuous run, set the loop button. After each block a new circle is started until you press the space or ESC key. ESC stops immediately, space after the block is done.
+<img src="screenshots/whatsThis-rightclick.png" alt="whatsThis" width="400"/> <img src="screenshots/whatsThis-helpButton.png" alt="whatsThis" width="400"/> <img src="screenshots/whatsThis-ContextHelp.png" alt="whatsThis" width="400"/> <img src="screenshots/whatsThis.png" alt="whatsThis" width="400"/>
 
 ## Software structure
 ![software structure as block diagram](software_structure.drawio.svg)
