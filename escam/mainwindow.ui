@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>509</width>
+    <width>529</width>
     <height>566</height>
    </rect>
   </property>
@@ -862,7 +862,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>509</width>
+     <width>529</width>
      <height>22</height>
     </rect>
    </property>
@@ -886,6 +886,7 @@
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionContext_help"/>
     <addaction name="actionDump_board_registers"/>
     <addaction name="actionAbout"/>
     <addaction name="actionAbout_Qt"/>
@@ -1068,6 +1069,11 @@
   <action name="actionExport_data">
    <property name="text">
     <string>Export data</string>
+   </property>
+  </action>
+  <action name="actionContext_help">
+   <property name="text">
+    <string>Context help</string>
    </property>
   </action>
  </widget>
