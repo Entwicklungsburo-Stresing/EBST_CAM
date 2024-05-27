@@ -476,6 +476,11 @@ void MainWindow::on_actionReset_axes_triggered()
 	setDefaultAxes();
 }
 
+void MainWindow::on_actionContext_help_triggered()
+{
+	QWhatsThis::enterWhatsThisMode();
+}
+
 void MainWindow::setDefaultAxes()
 {
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
