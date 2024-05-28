@@ -694,6 +694,9 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Start / abort the measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This button starts the measurement or aborts it while running. Be sure to set the correct settings before. You can find the settings dialog under Settings --&amp;gt; Edit.&lt;/p&gt;&lt;p&gt;Pressing the button loads all saved settings into the camera library and then starts the measurement by calling InitMeasurement() and StartMeasurement().&lt;/p&gt;&lt;p&gt;When aborting AbortingMeasurement() is called.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Start</string>
         </property>
@@ -703,6 +706,9 @@
        <widget class="QCheckBox" name="checkBoxLoopMeasurement">
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Repeat the measurement cycle until stopped by user&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The loop measurement mode repeats automatically the measurement cycle until it is stopped. One cycle consists of&lt;span style=&quot; font-style:italic;&quot;&gt; number of samples&lt;/span&gt; * &lt;span style=&quot; font-style:italic;&quot;&gt;number of blocks&lt;/span&gt; readouts. The data is not stored permanently. Each cycle is overwriting the data from the previous cycle. The data of a specific sample/block is always at the same memory address. That means for example scan 100 in block 2 from the first measurement cycle will be overwritten by scan 100 in block 2 in the second measurement cycle. The time gap between two cycles is done software wise and is beeing controlled by the parameter &lt;span style=&quot; font-style:italic;&quot;&gt;continuous pause&lt;/span&gt;. So the start of the next cycle is not strictly linked to your trigger, which means when triggering fast, triggers could be missed.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;continuous_measurement&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>loop measurement</string>
