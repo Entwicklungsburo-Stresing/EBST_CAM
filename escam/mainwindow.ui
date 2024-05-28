@@ -691,6 +691,9 @@
      <layout class="QHBoxLayout" name="horizontalLayoutControl">
       <item>
        <widget class="QPushButton" name="pushButtonStartStop">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Start / abort the measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Start</string>
         </property>
@@ -698,6 +701,9 @@
       </item>
       <item>
        <widget class="QCheckBox" name="checkBoxLoopMeasurement">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Repeat the measurement cycle until stopped by user&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>loop measurement</string>
         </property>
@@ -708,6 +714,9 @@
       </item>
       <item>
        <widget class="QGroupBox" name="groupBoxLiveView">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose how the data in the graph is refreshed during a measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="title">
          <string>Live view</string>
         </property>
@@ -715,7 +724,7 @@
          <item>
           <widget class="QRadioButton" name="radioButtonLiveViewOff">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display sample when measurement is done&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display data when the measurement is done&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>off</string>
@@ -728,7 +737,7 @@
          <item>
           <widget class="QRadioButton" name="radioButtonLiveViewFixedSample">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display fixed sample in newest block in measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display one specific sample of the newest block&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>fixed sample</string>
@@ -738,7 +747,7 @@
          <item>
           <widget class="QRadioButton" name="radioButtonLiveViewOffNewestSample">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display newest sample in newest block in measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display the newest sample of the newest block&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>newest sample</string>
@@ -767,6 +776,9 @@
      <layout class="QHBoxLayout" name="horizontalLayoutSample">
       <item>
        <widget class="QLabel" name="labelSample">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose which sample to display in the graph&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Sample</string>
         </property>
@@ -776,6 +788,9 @@
        <widget class="QSlider" name="horizontalSliderSample">
         <property name="enabled">
          <bool>false</bool>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose which sample to display in the graph&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="minimum">
          <number>1</number>
@@ -795,6 +810,9 @@
        <widget class="MyQSpinBox" name="spinBoxSample">
         <property name="enabled">
          <bool>false</bool>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose which sample to display in the graph&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="minimum">
          <number>1</number>
@@ -819,6 +837,9 @@
           <height>0</height>
          </size>
         </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose from which block the sample is displayed&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Block</string>
         </property>
@@ -828,6 +849,9 @@
        <widget class="QSlider" name="horizontalSliderBlock">
         <property name="enabled">
          <bool>false</bool>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose from which block the sample is displayed&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="minimum">
          <number>1</number>
@@ -844,6 +868,9 @@
        <widget class="MyQSpinBox" name="spinBoxBlock">
         <property name="enabled">
          <bool>false</bool>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose from which block the sample is displayed&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="minimum">
          <number>1</number>
