@@ -695,7 +695,7 @@
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Start / abort the measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="whatsThis">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This button starts the measurement or aborts it while running. Be sure to set the correct settings before. You can find the settings dialog under Settings --&amp;gt; Edit.&lt;/p&gt;&lt;p&gt;Pressing the button loads all saved settings into the camera library and then starts the measurement by calling InitMeasurement() and StartMeasurement().&lt;/p&gt;&lt;p&gt;When aborting AbortingMeasurement() is called.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This button starts the measurement or aborts it while running. Be sure to set the correct settings before. You can find the settings dialog under Settings --&amp;gt; Edit.&lt;/p&gt;&lt;p&gt;Pressing the button loads all saved settings into the camera library and then starts the measurement by calling InitMeasurement() and StartMeasurement_nonblocking(). With this the measurement is started in its own thread and doesn't block the UI of responding.&lt;/p&gt;&lt;p&gt;When aborting AbortingMeasurement() is called.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Start</string>
@@ -785,6 +785,9 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose which sample to display in the graph&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the sample slider. It controls which sample is displayed in the chart. Every camera readout have a unique identifier by its sample and block number for one measurement. So selecting a specific sample here means &amp;quot;show scan x from block y&amp;quot;. The scan and the block number are passed to ReturnFrame() and the returning data is passed on to the chart. You can control the sample by moving the slider or by using the spin box on the right. When the measurement is still running, it is possible to move the slider to a scan which haven't been completed yet. In this case only zeros will be displayed in the graph.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Sample</string>
         </property>
@@ -797,6 +800,9 @@
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose which sample to display in the graph&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the sample slider. It controls which sample is displayed in the chart. Every camera readout have a unique identifier by its sample and block number for one measurement. So selecting a specific sample here means &amp;quot;show scan x from block y&amp;quot;. The scan and the block number are passed to ReturnFrame() and the returning data is passed on to the chart. You can control the sample by moving the slider or by using the spin box on the right. When the measurement is still running, it is possible to move the slider to a scan which haven't been completed yet. In this case only zeros will be displayed in the graph.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="minimum">
          <number>1</number>
@@ -819,6 +825,9 @@
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose which sample to display in the graph&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the sample slider. It controls which sample is displayed in the chart. Every camera readout have a unique identifier by its sample and block number for one measurement. So selecting a specific sample here means &amp;quot;show scan x from block y&amp;quot;. The scan and the block number are passed to ReturnFrame() and the returning data is passed on to the chart. You can control the sample by moving the slider or by using the spin box on the right. When the measurement is still running, it is possible to move the slider to a scan which haven't been completed yet. In this case only zeros will be displayed in the graph.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="minimum">
          <number>1</number>
