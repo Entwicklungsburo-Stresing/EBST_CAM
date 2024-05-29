@@ -1220,7 +1220,7 @@ void MainWindow::showCurrentScan()
 		if (measurement_cnt > 1)
 		{
 			ui->horizontalSliderSample->setValue(ui->horizontalSliderSample->maximum());
-			ui->horizontalSliderBlock->setValue(ui->horizontalSliderSample->maximum());
+			ui->horizontalSliderBlock->setValue(ui->horizontalSliderBlock->maximum());
 		}
 		return;
 	}
