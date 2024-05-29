@@ -705,57 +705,6 @@ int64_t GetTimestampInMicroseconds()
 }
 
 /**
- * \brief Returns if trigger or key.
- *
- * Wait for raising edge of Pin #17 SubD = D6 in CtrlA register
- * ReturnKey is 0 if trigger, else key code (except space )
- * if key code is space, the loop is not canceled
- *
- * D6 depends on Slope (D5)
- * HighSlope = TRUE  : positive edge
- * HighSlope = FALSE : negative edge
- *
- * \param drvno PCIe board identifier
- * \param ExtTrigFlag =FALSE: this function is used to get the keyboard input
- * \param SpaceKey
- * \param AbrKey
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_read_failed
- */
-es_status_codes WaitTrigger(uint32_t drvno, bool ExtTrigFlag, bool *SpaceKey, bool *AbrKey)
-{
-	bool FirstLo = FALSE;
-	bool HiEdge = FALSE;
-	bool Abbr = FALSE;
-	bool Space = FALSE;
-	BYTE ReadTrigPin = 0;
-	es_status_codes status = es_no_error;
-	do
-	{
-		if (ExtTrigFlag)
-		{
-			status = readRegisterS0_8(drvno, &ReadTrigPin, S0Addr_CTRLA);
-			if (status != es_no_error) return status;
-			ReadTrigPin &= CTRLA_bit_STRIGIN;
-			if (ReadTrigPin == 0) FirstLo = TRUE; //first look for lo
-			if (FirstLo)
-			{
-				if (ReadTrigPin > 0) HiEdge = TRUE;
-			}; // then look for hi
-		}
-		else HiEdge = TRUE;
-		if (checkEscapeKeyState())
-			Abbr = TRUE;
-		if (checkSpaceKeyState())
-			Space = TRUE;
-	} while ((!HiEdge) && (!Abbr));
-	if (Abbr) *AbrKey = TRUE;	//stops immediately
-	if (Space) *SpaceKey = TRUE;	//stops after next trigger
-	return status;
-};// WaitTrigger
-
-/**
  * \brief Translate ticks to microseconds.
  * \param ticks ticks of system timer
  * \return microseconds of ticks
