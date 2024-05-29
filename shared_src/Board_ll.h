@@ -82,7 +82,6 @@ void WaitForAllInterruptsDone();
 int64_t GetTimestampInTicks();
 int64_t GetTimestampInMicroseconds();
 int64_t ConvertTicksToMicroseconds(int64_t ticks);
-es_status_codes WaitTrigger(uint32_t drvno, bool ExtTrigFlag, bool *SpaceKey, bool *AbrKey);
 es_status_codes About(uint32_t board_sel);
 es_status_codes AboutDrv(uint32_t drvno);
 es_status_codes AboutGPX(uint32_t drvno);
