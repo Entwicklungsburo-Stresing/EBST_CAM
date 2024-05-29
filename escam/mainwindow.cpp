@@ -870,6 +870,7 @@ void MainWindow::on_allBlocksDone()
 		}
 	}
 #endif
+	showCurrentScan();
 	return;
 }
 
@@ -1229,11 +1230,21 @@ void MainWindow::showCurrentScan()
 	else if (ui->radioButtonLiveViewOffNewestSample->isChecked()) radioState = 2;
 	switch (radioState)
 	{
-	case 2:
-		ui->horizontalSliderSample->setValue(static_cast<int32_t>(sample + 1));
-	// This fall through from case 2 to case 1 is intended
+	default:
+	case 0:
+		// live view off: do nothing
+		break;
 	case 1:
+		// fixed sample: show last completed block. The last completed block and not the current block is shown to vsync the picture for area sensors.
+		if (sample != settings.value(settingNosPath, settingNosDefault).toDouble() - 1 && block > 0)
+			block--;
 		ui->horizontalSliderBlock->setValue(static_cast<int32_t>(block + 1));
+		break;
+	case 2:
+		// newest sample: refresh sample and block slider
+		ui->horizontalSliderBlock->setValue(static_cast<int32_t>(block + 1));
+		ui->horizontalSliderSample->setValue(static_cast<int32_t>(sample + 1));
+		break;
 	}
 	return;
 }
