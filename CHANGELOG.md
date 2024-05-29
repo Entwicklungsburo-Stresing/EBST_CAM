@@ -36,11 +36,12 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 - Rename is_cooled_cam to is_cooled_camera_legacy_mode
 ### Other Changes
 #### Added
-- Add autotune
-- Add mirror x axis
-- Add HDF5 export
+- Add DAC autotune in DAC dialog
+- Add mirror x axis in axes dialog
+- Add HDF5 export under file -> export data
 - Add ToolTips and WhatsThis to settings dialog
 - Add Tocnt and Ticnt to settings dialog
+- Add cursor crosshair in chart
 #### Changed
 - Change settings level basic, advanced, expert to guided, free
 - Change max number of regions to 5
