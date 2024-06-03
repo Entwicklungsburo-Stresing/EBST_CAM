@@ -3981,8 +3981,8 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x28\tTOR\n");
 	//TICOUNT
 	status = readRegisterS0_8(drvno, &data8, S0Addr_TOR_STICNT);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-6\tTICNT\t%u\n", (data8 & TOR_bits_TICNT) >> TOR_bitindex_TICNT);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t7\tTICNT enabled\t%u\n", (data8 & TOR_bit_STICNT_EN) >> TOR_bitindex_TICNT_EN);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-6\tTICNT\t%u\n", (data8 & TOR_bits_STICNT) >> TOR_bitindex_STICNT);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t7\tTICNT enabled\t%u\n", (data8 & TOR_bit_STICNT_EN) >> TOR_bitindex_STICNT_EN);
 	//TOCOUNT
 	status = readRegisterS0_8(drvno, &data8, S0Addr_TOR_TOCNT);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-22\tTOCNT\t%u\n", (data8 & TOR_bits_TOCNT) >> TOR_bitindex_TOCNT);
@@ -5222,7 +5222,7 @@ void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* blo
 }
 
 /**
- * \brief Set the trigger input divider
+ * \brief Set the scan trigger input divider
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param divider

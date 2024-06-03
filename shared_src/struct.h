@@ -297,7 +297,7 @@ struct camera_settings
 	 */
 	uint32_t tocnt;
 	/**
-	 * Trigger output counter determines how many trigger inputs are skipped before the next measurement is triggered. Every sticnt+1 trigger input the measurement is triggered according to \ref camera_settings.sti_mode. sticnt is a 7 bit unsigned integer. Further information about sticnt can be found in the manual in chapter 6.2.4.12.
+	 * Scan trigger input counter determines how many scan trigger inputs are skipped before the next measurement is triggered. Every sticnt+1 trigger input the measurement is triggered according to \ref camera_settings.sti_mode. sticnt is a 7 bit unsigned integer. Further information about sticnt can be found in the manual in chapter 6.2.4.12.
 	 *		* min: 0
 	 *		* step: 1
 	 *		* max: 127

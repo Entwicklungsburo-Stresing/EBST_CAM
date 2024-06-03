@@ -121,12 +121,13 @@ enum CTRLC_bits_t
 	CTRLC_bitindex_eoi_chb = 5
 };
 
-enum TOR_TICNT_bits_t
+enum TOR_STICNT_bits_t
 {
-	TOR_bits_TICNT = 0x7F,
+	TOR_bits_STICNT = 0x7F,
 	TOR_bit_STICNT_EN = 0x80,
-	TOR_bitindex_TICNT = 0,
-	TOR_bitindex_TICNT_EN = 7,
+	TOR_bitindex_STICNT = 0,
+	TOR_bitindex_STICNT_EN = 7,
+};
 };
 
 enum TOR_TOCNT_bits_t
