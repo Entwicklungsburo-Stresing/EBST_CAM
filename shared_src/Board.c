@@ -3989,7 +3989,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t23\tTOCNT enabled\t%u\n", (data8 & TOR_bit_TOCNT_EN) >> TOR_bitindex_TOCNT_EN);
 	//TORMSB
 	status = readRegisterS0_8(drvno, &data8, S0Addr_TOR_MSB);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t24\tIS FFT\t%u\n", (data8 & TOR_MSB_bit_ISFFT_LEGACY) >> TOR_MSB_bitindex_ISFFT_LEGACY);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t24\tIS FFT LEGACY\t%u\n", (data8 & TOR_MSB_bit_ISFFT_LEGACY) >> TOR_MSB_bitindex_ISFFT_LEGACY);
 
 	int combinedTO = data8 >> TOR_MSB_bitindex_TO0 | ((data8 & TOR_MSB_bitindex_TOSEL) >> TOR_MSB_bitindex_TOSEL) << 4;
 
