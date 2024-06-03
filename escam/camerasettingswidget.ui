@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>383</width>
-    <height>458</height>
+    <height>488</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -2050,6 +2050,12 @@
              <width>30</width>
              <height>16777215</height>
             </size>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;File path for writing measurement data&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;File path is specifying the path where the measurement data is saved, when &lt;span style=&quot; font-style:italic;&quot;&gt;write data to disc&lt;/span&gt; is activated. File path is a char array with the size 256, so the maximum path length is 256 characters.&lt;/p&gt;&lt;p&gt;example value: C:/Users/XY/&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;file_path&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>...</string>
