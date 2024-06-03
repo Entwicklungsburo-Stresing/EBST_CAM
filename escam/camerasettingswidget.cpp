@@ -70,6 +70,7 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingBncOutPath, ui->comboBoxBncOut->currentIndex());
 	settings.setValue(settingTocntPath, ui->spinBoxTocnt->value());
 	settings.setValue(settingSticntPath, ui->spinBoxSticnt->value());
+	settings.setValue(settingBticntPath, ui->spinBoxBticnt->value());
 	return;
 }
 
@@ -366,6 +367,7 @@ void CameraSettingsWidget::loadDefaults()
 	ui->comboBoxBncOut->setCurrentIndex(settingBncOutDefault);
 	ui->spinBoxTocnt->setValue(settingTocntDefault);
 	ui->spinBoxSticnt->setValue(settingSticntDefault);
+	ui->spinBoxBticnt->setValue(settingBticntDefault);
 	return;
 }
 
@@ -544,6 +546,7 @@ void CameraSettingsWidget::initializeWidget()
 	ui->comboBoxBncOut->setCurrentIndex(settings.value(settingBncOutPath, settingBncOutDefault).toDouble());
 	ui->spinBoxTocnt->setValue(settings.value(settingTocntPath, settingTocntDefault).toDouble());
 	ui->spinBoxSticnt->setValue(settings.value(settingSticntPath, settingSticntDefault).toDouble());
+	ui->spinBoxBticnt->setValue(settings.value(settingBticntPath, settingBticntDefault).toDouble());
 	return;
 }
 

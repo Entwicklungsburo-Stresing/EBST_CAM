@@ -192,6 +192,8 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetSticnt(drvno, (uint8_t)settings_struct.camera_settings[drvno].sticnt);
 	if (status != es_no_error) return status;
+	status = SetBticnt(drvno, (uint8_t)settings_struct.camera_settings[drvno].bticnt);
+	if (status != es_no_error) return status;
 	status = SetTocnt(drvno, (uint8_t)settings_struct.camera_settings[drvno].tocnt);
 	if (status != es_no_error) return status;
 	status = SetSEC(drvno, settings_struct.camera_settings[drvno].sec_in_10ns);
@@ -3745,7 +3747,7 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 		"R12 ROI 2",
 		"R13 XCKDLY",
 		"R14 S1S2 read delay",
-		"R15 nc"DLLTAB,
+		"R15 BTICNT"DLLTAB,
 		"R16 BTimer",
 		"R17 BDAT",
 		"R18 BEC"DLLTAB,
@@ -4672,7 +4674,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		"sensor_gain\t"DLLTAB"%u\n"
 		"adc_gain\t"DLLTAB"%u\n"
 		"temp level\t"DLLTAB"%u\n"
-		"shortrs\t"DLLTAB"%u\n"
+		"bticnt\t"DLLTAB"%u\n"
 		"gpx offset\t"DLLTAB"%u\n"
 		"fft_lines\t"DLLTAB DLLTAB"%u\n"
 		"vfreq\t"DLLTAB DLLTAB"%u\n"
@@ -4701,7 +4703,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].sensor_gain,
 		settings_struct.camera_settings[drvno].adc_gain,
 		settings_struct.camera_settings[drvno].temp_level,
-		settings_struct.camera_settings[drvno].shortrs,
+		settings_struct.camera_settings[drvno].bticnt,
 		settings_struct.camera_settings[drvno].gpx_offset,
 		settings_struct.camera_settings[drvno].fft_lines,
 		settings_struct.camera_settings[drvno].vfreq,
@@ -5239,6 +5241,26 @@ es_status_codes SetSticnt(uint32_t drvno, uint8_t divider)
 	if (divider)
 		divider |= TOR_bit_STICNT_EN;
 	return writeRegisterS0_8(drvno, divider, S0Addr_TOR_STICNT);
+}
+
+/**
+ * \brief Set the block trigger input divider
+ *
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param divider
+ *		- =0: disable this function (every trigger is used)
+ *		- >0: omit n trigger
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ */
+es_status_codes SetBticnt(uint32_t drvno, uint8_t divider)
+{
+	ES_LOG("Set BTICNT to %u\n", divider);
+	// If divider is not 0, set the enable bit to 1
+	if (divider)
+		divider |= TOR_bit_BTICNT_EN;
+	return writeRegisterS0_8(drvno, divider, S0Addr_BTICNT);
 }
 
 /**
