@@ -4864,13 +4864,13 @@ es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
 		udata4 = 0;
 	if (data >= 0x1F)
 	{//if WE -> has space 0x20
-		status = readRegisterS0_8(drvno, &udata1, 0x1C);
+		status = readRegisterS0_8(drvno, &udata1, S0Addr_EBST);
 		if (status != es_no_error) return status;
-		status = readRegisterS0_8(drvno, &udata2, 0x1D);
+		status = readRegisterS0_8(drvno, &udata2, S0Addr_EBST + 1);
 		if (status != es_no_error) return status;
-		status = readRegisterS0_8(drvno, &udata3, 0x1E);
+		status = readRegisterS0_8(drvno, &udata3, S0Addr_EBST + 2);
 		if (status != es_no_error) return status;
-		status = readRegisterS0_8(drvno, &udata4, 0x1F);
+		status = readRegisterS0_8(drvno, &udata4, S0Addr_EBST + 3);
 		if (status != es_no_error) return status;
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i  ven ID \t= %c%c%c%c\n", drvno, udata1, udata2, udata3, udata4);
 	}
