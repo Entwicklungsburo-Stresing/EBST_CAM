@@ -297,12 +297,12 @@ struct camera_settings
 	 */
 	uint32_t tocnt;
 	/**
-	 * Trigger output counter determines how many trigger inputs are skipped before the next measurement is triggered. Every ticnt+1 trigger input the measurement is triggered according to \ref camera_settings.sti_mode. ticnt is a 7 bit unsigned integer. Further information about ticnt can be found in the manual in chapter 6.2.4.12.
+	 * Trigger output counter determines how many trigger inputs are skipped before the next measurement is triggered. Every sticnt+1 trigger input the measurement is triggered according to \ref camera_settings.sti_mode. sticnt is a 7 bit unsigned integer. Further information about sticnt can be found in the manual in chapter 6.2.4.12.
 	 *		* min: 0
 	 *		* step: 1
 	 *		* max: 127
 	 */
-	uint32_t ticnt;
+	uint32_t sticnt;
 	/**
 	 * Sensor_reset_length_in_4_ns controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without this reset for all sensors. Sensor_rese_length_in_4_ns is a 16 bit unsigned integer. Further information about sensor reset can be found in the manual in chapter 4.9.2.
 	 *		* min: 0 ns

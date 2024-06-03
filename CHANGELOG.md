@@ -10,6 +10,7 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 ### API Changes
 #### Added
 #### Changed
+- Rename ticnt to sticnt
 #### Removed
 #### Fixed
 #### Deprecated
