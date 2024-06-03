@@ -1713,12 +1713,12 @@
           </widget>
          </item>
          <item row="8" column="2">
-          <widget class="QSpinBox" name="spinBoxTicnt">
+          <widget class="QSpinBox" name="spinBoxSticnt">
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Trigger output counter&lt;/span&gt; determines how many trigger inputs are skipped before the next measurement is triggered. Every ticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan trigger input counter&lt;/span&gt; determines how many trigger inputs are skipped before the next measurement is triggered. Every sticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="maximum">
             <number>127</number>
@@ -1816,15 +1816,15 @@
           </widget>
          </item>
          <item row="8" column="1">
-          <widget class="QLabel" name="labelTicnt">
+          <widget class="QLabel" name="labelSticnt">
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Trigger output counter&lt;/span&gt; determines how many trigger inputs are skipped before the next measurement is triggered. Every ticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan trigger input counter&lt;/span&gt; determines how many trigger inputs are skipped before the next measurement is triggered. Every sticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>ticnt</string>
+            <string>sticnt</string>
            </property>
           </widget>
          </item>
@@ -2153,7 +2153,7 @@
   <tabstop>plainTextEditFilePath</tabstop>
   <tabstop>pushButtonFilePath</tabstop>
   <tabstop>spinBoxTocnt</tabstop>
-  <tabstop>spinBoxTicnt</tabstop>
+  <tabstop>spinBoxSticnt</tabstop>
  </tabstops>
  <resources/>
  <connections/>
