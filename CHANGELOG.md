@@ -68,7 +68,7 @@ Linux:
 - Set cursor to wait while dumping board registers
 - Add is_fft_legacy
 
-## 4.11.0 - 2024-02-09
+## 4.11.0 - 2024-01-09
 - Add register S1S2ReadDelay
 - Add setting s1s2_read_delay_in_10ns (deprecated setting keep is beeing replaced)
 - Add S1S2ReadDelay to TOR
