@@ -710,6 +710,9 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose how the data in the graph is refreshed during a measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The different options in live view control when the chart data is refreshed. When live view is on, the software checks multiple times per second with GetCurrentScanNumber() if there is a newer sample to display. The setting &lt;span style=&quot; font-style:italic;&quot;&gt;software polling&lt;/span&gt; can have a great impact on the frame rate. It is typically a lot higher when software polling is on.&lt;/p&gt;&lt;p&gt;off - When live view is off, the chart data is only refreshed when a measurement is finished.&lt;/p&gt;&lt;p&gt;fixed sample - After selecting fixed sample the block slider will be grayed out and the sample slider will be still usable. You can select a specific sample which will be always shown from the most recent block. Only completed blocks are displayed with this option. This mode is recommended for FFT sensors, when you want to display complete frames in the greyscale viewer.&lt;/p&gt;&lt;p&gt;newest sample - This mode will always display the most recent scan.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="title">
          <string>Live view</string>
         </property>
@@ -747,21 +750,21 @@
            </property>
           </widget>
          </item>
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
         </layout>
        </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </item>
@@ -842,6 +845,9 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose from which block the sample is displayed&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the block slider. It controls from which block the sample is displayed in the chart. Every camera readout have a unique identifier by its sample and block number for one measurement. So selecting a specific block here means &amp;quot;show scan x from block y&amp;quot;. The scan and the block number are passed to ReturnFrame() and the returning data is passed on to the chart. You can control the block by moving the slider or by using the spin box on the right. When the measurement is still running, it is possible to move the slider to a scan which haven't been completed yet. In this case only zeros will be displayed in the graph.&lt;/p&gt;&lt;p&gt;This slider also controls which block is displayed in the greyscale viewer.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Block</string>
         </property>
@@ -854,6 +860,9 @@
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose from which block the sample is displayed&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the block slider. It controls from which block the sample is displayed in the chart. Every camera readout have a unique identifier by its sample and block number for one measurement. So selecting a specific block here means &amp;quot;show scan x from block y&amp;quot;. The scan and the block number are passed to ReturnFrame() and the returning data is passed on to the chart. You can control the block by moving the slider or by using the spin box on the right. When the measurement is still running, it is possible to move the slider to a scan which haven't been completed yet. In this case only zeros will be displayed in the graph.&lt;/p&gt;&lt;p&gt;This slider also controls which block is displayed in the greyscale viewer.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="minimum">
          <number>1</number>
@@ -873,6 +882,9 @@
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose from which block the sample is displayed&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the block slider. It controls from which block the sample is displayed in the chart. Every camera readout have a unique identifier by its sample and block number for one measurement. So selecting a specific block here means &amp;quot;show scan x from block y&amp;quot;. The scan and the block number are passed to ReturnFrame() and the returning data is passed on to the chart. You can control the block by moving the slider or by using the spin box on the right. When the measurement is still running, it is possible to move the slider to a scan which haven't been completed yet. In this case only zeros will be displayed in the graph.&lt;/p&gt;&lt;p&gt;This slider also controls which block is displayed in the greyscale viewer.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="minimum">
          <number>1</number>

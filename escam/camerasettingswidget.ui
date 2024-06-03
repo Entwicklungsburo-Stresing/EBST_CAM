@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>383</width>
+    <width>346</width>
     <height>488</height>
    </rect>
   </property>
@@ -1591,167 +1591,21 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="4" column="2">
-          <widget class="QSpinBox" name="spinBoxAdcCustom">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Constant ADC output in custom pattern mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Adc mode custom pattern&lt;/span&gt; is the constant output value of all 8 ADC channls if &lt;span style=&quot; font-style:italic;&quot;&gt;adc mode&lt;/span&gt; is set to &lt;span style=&quot; font-style:italic;&quot;&gt;custom pattern&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;Adc mode custom pattern&lt;/span&gt; is a 14 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;max: 16383&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;adc_custom_pattern&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="maximum">
-            <number>16383</number>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="1">
-          <widget class="QLabel" name="labelTocnt">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of xck skipped before xck signal is shown at &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Trigger output counter&lt;/span&gt; determines how many XCK are skipped until the output &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; shows the XCK signal. Use &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; for the setting &lt;span style=&quot; font-style:italic;&quot;&gt;tor&lt;/span&gt; to see &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; at the output of the PCIe board. &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;Example: tocnt = 2 =&amp;gt; skip every first and second XCK, show XCK on the PCIe output on every third XCK.&lt;/p&gt;&lt;p&gt;min: 0 (TO_CNT_OUT = XCK)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>tocnt</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1">
-          <widget class="QLabel" name="labelSticnt">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan trigger input counter&lt;/span&gt; determines how many scan trigger inputs are skipped before the next measurement is triggered. Every sticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>sticnt</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLabel" name="labelAdcCustom">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Constant ADC output in custom pattern mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Adc mode custom pattern&lt;/span&gt; is the constant output value of all 8 ADC channls if &lt;span style=&quot; font-style:italic;&quot;&gt;adc mode&lt;/span&gt; is set to &lt;span style=&quot; font-style:italic;&quot;&gt;custom pattern&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;Adc mode custom pattern&lt;/span&gt; is a 14 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;max: 16383&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;adc_custom_pattern&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>adc mode custom value</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="labelAdcMode">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Controls the ADC operation mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;ADC mode&lt;/span&gt; controls the operating mode of the ADC. This option is intended for debugging purpose and only available for specific ADCs, e.g. in camera system 3030.&lt;/p&gt;&lt;p&gt;0: normal operation, default&lt;br/&gt;1: Every 8 channels are performing a ramp signal.&lt;br/&gt;2: With custom pattern all 8 ADC channels deliver a specific constant value given by &lt;span style=&quot; font-style:italic;&quot;&gt;adc mode custom pattern&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;adc_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>adc mode</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1">
-          <widget class="QLabel" name="labelWriteDataToDisc">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Experimental feature to write data do disc during measruement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Write data to disc&lt;/span&gt; is an experimental feature for writing the measurement data on the fly to the disc. The data format is binary. It is the same data layout as the data is stored in RAM during the measurement. Additionally there is a file header at the beginning of the file. The path to the targe file is given by &lt;span style=&quot; font-style:italic;&quot;&gt;file path&lt;/span&gt;. This feature is only available on Windows. In most cases the resulting file should be correct, but data layout errors has been observed. This is the reason why the feature is marked as experimental.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;write_to_disc&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>write data to disc</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="labelBncOut">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mode of the output of the Camera Control box&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Xck out cc&lt;/span&gt; is the output mode for the XCK output of the Camera Control box.&lt;/p&gt;&lt;p&gt;0: &lt;span style=&quot; font-style:italic;&quot;&gt;XCK&lt;/span&gt; is high during the readout of the camera.&lt;br/&gt;1: &lt;span style=&quot; font-style:italic;&quot;&gt;EXP_WIN&lt;/span&gt; stands for exposure window and is high, when the sensor is ready to be exposed to light.&lt;br/&gt;2: The option &lt;span style=&quot; font-style:italic;&quot;&gt;ADC_CLK&lt;/span&gt; sets the output to the ADC clock.&lt;br/&gt;3: &lt;span style=&quot; font-style:italic;&quot;&gt;Vin&lt;/span&gt; is high when the voltage input is sampled.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bnc_out&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Furhter information about bnc out can be found in the manual in chapter 3.3.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>xck out cc</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="2">
-          <widget class="QSpinBox" name="spinBoxTocnt">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of xck skipped before xck signal is shown at &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Trigger output counter&lt;/span&gt; determines how many XCK are skipped until the output &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; shows the XCK signal. Use &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; for the setting &lt;span style=&quot; font-style:italic;&quot;&gt;tor&lt;/span&gt; to see &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; at the output of the PCIe board. &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;Example: tocnt = 2 =&amp;gt; skip every first and second XCK, show XCK on the PCIe output on every third XCK.&lt;/p&gt;&lt;p&gt;min: 0 (TO_CNT_OUT = XCK)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="maximum">
-            <number>127</number>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="2" colspan="2">
-          <widget class="QCheckBox" name="checkBoxWriteDataToDisc">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Experimental feature to write data do disc during measruement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Write data to disc&lt;/span&gt; is an experimental feature for writing the measurement data on the fly to the disc. The data format is binary. It is the same data layout as the data is stored in RAM during the measurement. Additionally there is a file header at the beginning of the file. The path to the targe file is given by &lt;span style=&quot; font-style:italic;&quot;&gt;file path&lt;/span&gt;. This feature is only available on Windows. In most cases the resulting file should be correct, but data layout errors has been observed. This is the reason why the feature is marked as experimental.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;write_to_disc&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>on (experimental)</string>
-           </property>
-          </widget>
-         </item>
          <item row="1" column="2">
-          <widget class="QComboBox" name="comboBoxBncOut">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mode of the output of the Camera Control box&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Xck out cc&lt;/span&gt; is the output mode for the XCK output of the Camera Control box.&lt;/p&gt;&lt;p&gt;0: &lt;span style=&quot; font-style:italic;&quot;&gt;XCK&lt;/span&gt; is high during the readout of the camera.&lt;br/&gt;1: &lt;span style=&quot; font-style:italic;&quot;&gt;EXP_WIN&lt;/span&gt; stands for exposure window and is high, when the sensor is ready to be exposed to light.&lt;br/&gt;2: The option &lt;span style=&quot; font-style:italic;&quot;&gt;ADC_CLK&lt;/span&gt; sets the output to the ADC clock.&lt;br/&gt;3: &lt;span style=&quot; font-style:italic;&quot;&gt;Vin&lt;/span&gt; is high when the voltage input is sampled.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bnc_out&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Furhter information about bnc out can be found in the manual in chapter 3.3.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="currentText">
-            <string>XCK</string>
-           </property>
-           <property name="currentIndex">
-            <number>0</number>
-           </property>
-           <property name="minimumContentsLength">
-            <number>0</number>
-           </property>
-           <item>
-            <property name="text">
-             <string>XCK</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>EXP_WIN</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>ADC_CLK</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Vin sample</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="2" column="2">
           <widget class="QComboBox" name="comboBoxOutput">
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conrols the signal of the output O of the PCIe card&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1927,8 +1781,250 @@
            </item>
           </widget>
          </item>
-         <item row="6" column="0">
-          <spacer name="horizontalSpacer_4">
+         <item row="6" column="2">
+          <widget class="QSpinBox" name="spinBoxTocnt">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of xck skipped before xck signal is shown at &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Trigger output counter&lt;/span&gt; determines how many XCK are skipped until the output &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; shows the XCK signal. Use &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; for the setting &lt;span style=&quot; font-style:italic;&quot;&gt;tor&lt;/span&gt; to see &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; at the output of the PCIe board. &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;Example: tocnt = 2 =&amp;gt; skip every first and second XCK, show XCK on the PCIe output on every third XCK.&lt;/p&gt;&lt;p&gt;min: 0 (TO_CNT_OUT = XCK)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLabel" name="labelTocnt">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of xck skipped before xck signal is shown at &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Trigger output counter&lt;/span&gt; determines how many XCK are skipped until the output &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; shows the XCK signal. Use &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; for the setting &lt;span style=&quot; font-style:italic;&quot;&gt;tor&lt;/span&gt; to see &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; at the output of the PCIe board. &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;Example: tocnt = 2 =&amp;gt; skip every first and second XCK, show XCK on the PCIe output on every third XCK.&lt;/p&gt;&lt;p&gt;min: 0 (TO_CNT_OUT = XCK)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>tocnt</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="2">
+          <widget class="QSpinBox" name="spinBoxSticnt">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan trigger input counter&lt;/span&gt; determines how many scan trigger inputs are skipped before the next measurement is triggered. Every sticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QComboBox" name="comboBoxBncOut">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mode of the output of the Camera Control box&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Xck out cc&lt;/span&gt; is the output mode for the XCK output of the Camera Control box.&lt;/p&gt;&lt;p&gt;0: &lt;span style=&quot; font-style:italic;&quot;&gt;XCK&lt;/span&gt; is high during the readout of the camera.&lt;br/&gt;1: &lt;span style=&quot; font-style:italic;&quot;&gt;EXP_WIN&lt;/span&gt; stands for exposure window and is high, when the sensor is ready to be exposed to light.&lt;br/&gt;2: The option &lt;span style=&quot; font-style:italic;&quot;&gt;ADC_CLK&lt;/span&gt; sets the output to the ADC clock.&lt;br/&gt;3: &lt;span style=&quot; font-style:italic;&quot;&gt;Vin&lt;/span&gt; is high when the voltage input is sampled.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bnc_out&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Furhter information about bnc out can be found in the manual in chapter 3.3.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="currentText">
+            <string>XCK</string>
+           </property>
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <property name="minimumContentsLength">
+            <number>0</number>
+           </property>
+           <item>
+            <property name="text">
+             <string>XCK</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>EXP_WIN</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ADC_CLK</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Vin sample</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="labelOutput">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conrols the signal of the output O of the PCIe card&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Tor&lt;/span&gt; controls the output signal for the output O of the PCIe card.&lt;/p&gt;&lt;p&gt;0: XCK starts the readout of the camera and is high during the readout.&lt;br/&gt;1: The signal REGO is controlled by the bit TRIG_OUT of the register CTRLA. It can be controlled with the functions OutTrigLow(), OutTrigHigh() and OutTrigPulse(). The main purpose of this signal is for creating a hardware signal controlled by software, which can be measured by a oscilloscope or used by other electronics.&lt;br/&gt;2: DEPRECATED: VON is the signal for the vertical clocks of the FFT sensor. This signal is only used when&lt;span style=&quot; font-style:italic;&quot;&gt; fft legacy mode&lt;/span&gt; is on.&lt;br/&gt;3: DMA active is high during the direct memory access of the PCIe card.&lt;br/&gt;4: ASLS stands for Auto Scan Line Start and shows when a new readout is started when &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt; is set to &lt;span style=&quot; font-style:italic;&quot;&gt;ASL&lt;/span&gt;.&lt;br/&gt;5: stimer is the internal trigger for the start of a readout when &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt; is set to &lt;span style=&quot; font-style:italic;&quot;&gt;STimer&lt;/span&gt;. The repetition rate is determined by &lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt;.&lt;br/&gt;6: btimer is the internal trigger for the start of a block when &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; is set to &lt;span style=&quot; font-style:italic;&quot;&gt;BTimer&lt;/span&gt;. The repetition rate is determined by &lt;span style=&quot; font-style:italic;&quot;&gt;btimer&lt;/span&gt;.&lt;br/&gt;7: ISR_ACT is high when the interrupt service routine is active. The ISR copies the data from the DMA buffer to the user buffer, when &lt;span style=&quot; font-style:italic;&quot;&gt;software polling&lt;/span&gt; is not activated.&lt;br/&gt;8: Shows the state of the input S1 of the PCIe board.&lt;br/&gt;9: Shows the state of the input S2 of the PCIe board.&lt;br/&gt;10: BON is high during a block readout sequence.&lt;br/&gt;11: measureon is high during the whole measurement.&lt;br/&gt;12: SDAT is high during the time delay between the scan trigger and the start of a scan. This time depends on &lt;span style=&quot; font-style:italic;&quot;&gt;sdat&lt;/span&gt;.&lt;br/&gt;13: BDAT is high during the time delay between the block trigger and the start of a block. This time depends on &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt;.&lt;br/&gt;14: sec_mshut is high during the scan exposure window when the option &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; is used or can be manually set to high by OpenShutter().&lt;br/&gt;15: bec_mshut is high during the block exposure window when the option &lt;span style=&quot; font-style:italic;&quot;&gt;bec&lt;/span&gt; is used or can be manually set to high by OpenShutter().&lt;br/&gt;16: IFC is the electronic exposure control signal used by some sensors and is sent to the camera. When &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; is used IFC = SEC, otherwise it is always 1.&lt;br/&gt;17: DO_CC_I is a fibre link synchronisation signal.&lt;br/&gt;18: Exposure window shows when it is possible to expose the camera to light. Since the PCIe card doesn't know exactly when the sensor is ready to be exposed this is only an estimated signal. If possible use &lt;span style=&quot; font-style:italic;&quot;&gt;exp win&lt;/span&gt; of&lt;span style=&quot; font-style:italic;&quot;&gt; xck out cc&lt;/span&gt;.&lt;br/&gt;19: tor_to_cnt_out shows the signal which is controlled by the setting &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt;. Depening on this setting, only specific XCK high periods are shown on the PCIe card output.&lt;br/&gt;20: SECON is high during the scan exposure window when the option &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; is used.&lt;br/&gt;21: Shows the state of the input I of the PCIe board.&lt;br/&gt;22: Shows the delay between the trigger and the moment, when the states of S1 and S2 are read. This delay is controlled by the settting&lt;span style=&quot; font-style:italic;&quot;&gt; s1s2 read delay&lt;/span&gt;.&lt;br/&gt;23 - 28: unused&lt;br/&gt;29: Status of enable FIFO read.&lt;br/&gt;30: Status of enable FIFO write.&lt;br/&gt;31:&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;tor&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Furhter information about &lt;span style=&quot; font-style:italic;&quot;&gt;tor&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>tor (ouput signal PCIe card)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="labelBncOut">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mode of the output of the Camera Control box&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Xck out cc&lt;/span&gt; is the output mode for the XCK output of the Camera Control box.&lt;/p&gt;&lt;p&gt;0: &lt;span style=&quot; font-style:italic;&quot;&gt;XCK&lt;/span&gt; is high during the readout of the camera.&lt;br/&gt;1: &lt;span style=&quot; font-style:italic;&quot;&gt;EXP_WIN&lt;/span&gt; stands for exposure window and is high, when the sensor is ready to be exposed to light.&lt;br/&gt;2: The option &lt;span style=&quot; font-style:italic;&quot;&gt;ADC_CLK&lt;/span&gt; sets the output to the ADC clock.&lt;br/&gt;3: &lt;span style=&quot; font-style:italic;&quot;&gt;Vin&lt;/span&gt; is high when the voltage input is sampled.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bnc_out&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Furhter information about bnc out can be found in the manual in chapter 3.3.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>xck out cc</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QSpinBox" name="spinBoxAdcCustom">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Constant ADC output in custom pattern mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Adc mode custom pattern&lt;/span&gt; is the constant output value of all 8 ADC channls if &lt;span style=&quot; font-style:italic;&quot;&gt;adc mode&lt;/span&gt; is set to &lt;span style=&quot; font-style:italic;&quot;&gt;custom pattern&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;Adc mode custom pattern&lt;/span&gt; is a 14 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;max: 16383&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;adc_custom_pattern&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="maximum">
+            <number>16383</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="labelAdcMode">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Controls the ADC operation mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;ADC mode&lt;/span&gt; controls the operating mode of the ADC. This option is intended for debugging purpose and only available for specific ADCs, e.g. in camera system 3030.&lt;/p&gt;&lt;p&gt;0: normal operation, default&lt;br/&gt;1: Every 8 channels are performing a ramp signal.&lt;br/&gt;2: With custom pattern all 8 ADC channels deliver a specific constant value given by &lt;span style=&quot; font-style:italic;&quot;&gt;adc mode custom pattern&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;adc_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>adc mode</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="2">
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QPlainTextEdit" name="plainTextEditFilePath">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Ignored">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;File path for writing measurement data&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="whatsThis">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;File path is specifying the path where the measurement data is saved, when &lt;span style=&quot; font-style:italic;&quot;&gt;write data to disc&lt;/span&gt; is activated. File path is a char array with the size 256, so the maximum path length is 256 characters.&lt;/p&gt;&lt;p&gt;example value: C:/Users/XY/&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;file_path&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="verticalScrollBarPolicy">
+              <enum>Qt::ScrollBarAlwaysOff</enum>
+             </property>
+             <property name="horizontalScrollBarPolicy">
+              <enum>Qt::ScrollBarAlwaysOff</enum>
+             </property>
+             <property name="lineWrapMode">
+              <enum>QPlainTextEdit::NoWrap</enum>
+             </property>
+             <property name="plainText">
+              <string/>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButtonFilePath">
+             <property name="maximumSize">
+              <size>
+               <width>30</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;File path for writing measurement data&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="whatsThis">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;File path is specifying the path where the measurement data is saved, when &lt;span style=&quot; font-style:italic;&quot;&gt;write data to disc&lt;/span&gt; is activated. File path is a char array with the size 256, so the maximum path length is 256 characters.&lt;/p&gt;&lt;p&gt;example value: C:/Users/XY/&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;file_path&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="8" column="2">
+          <widget class="QSpinBox" name="spinBoxBticnt">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next block start&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block trigger input counter&lt;/span&gt; determines how many block trigger inputs are skipped before the next block start is triggered. Every bticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; is a 7 bit unsigned integer. Introduced in PCIe board version 222.12.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1">
+          <widget class="QLabel" name="labelBticnt">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next block start&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block trigger input counter&lt;/span&gt; determines how many block trigger inputs are skipped before the next block start is triggered. Every bticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; is a 7 bit unsigned integer. Introduced in PCIe board version 222.12.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>bticnt</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLabel" name="labelAdcCustom">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Constant ADC output in custom pattern mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Adc mode custom pattern&lt;/span&gt; is the constant output value of all 8 ADC channls if &lt;span style=&quot; font-style:italic;&quot;&gt;adc mode&lt;/span&gt; is set to &lt;span style=&quot; font-style:italic;&quot;&gt;custom pattern&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;Adc mode custom pattern&lt;/span&gt; is a 14 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;max: 16383&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;adc_custom_pattern&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>adc mode custom value</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLabel" name="labelFilePath">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;File path for writing measurement data&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;File path is specifying the path where the measurement data is saved, when &lt;span style=&quot; font-style:italic;&quot;&gt;write data to disc&lt;/span&gt; is activated. File path is a char array with the size 256, so the maximum path length is 256 characters.&lt;/p&gt;&lt;p&gt;example value: C:/Users/XY/&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;file_path&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>file path</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <spacer name="horizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -1940,41 +2036,20 @@
            </property>
           </spacer>
          </item>
-         <item row="6" column="2">
-          <widget class="QPlainTextEdit" name="plainTextEditFilePath">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Ignored">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+         <item row="4" column="1">
+          <widget class="QLabel" name="labelWriteDataToDisc">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;File path for writing measurement data&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Experimental feature to write data do disc during measruement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;File path is specifying the path where the measurement data is saved, when &lt;span style=&quot; font-style:italic;&quot;&gt;write data to disc&lt;/span&gt; is activated. File path is a char array with the size 256, so the maximum path length is 256 characters.&lt;/p&gt;&lt;p&gt;example value: C:/Users/XY/&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;file_path&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Write data to disc&lt;/span&gt; is an experimental feature for writing the measurement data on the fly to the disc. The data format is binary. It is the same data layout as the data is stored in RAM during the measurement. Additionally there is a file header at the beginning of the file. The path to the targe file is given by &lt;span style=&quot; font-style:italic;&quot;&gt;file path&lt;/span&gt;. This feature is only available on Windows. In most cases the resulting file should be correct, but data layout errors has been observed. This is the reason why the feature is marked as experimental.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;write_to_disc&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
-           <property name="verticalScrollBarPolicy">
-            <enum>Qt::ScrollBarAlwaysOff</enum>
-           </property>
-           <property name="horizontalScrollBarPolicy">
-            <enum>Qt::ScrollBarAlwaysOff</enum>
-           </property>
-           <property name="lineWrapMode">
-            <enum>QPlainTextEdit::NoWrap</enum>
-           </property>
-           <property name="plainText">
-            <string/>
-           </property>
-           <property name="textInteractionFlags">
-            <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+           <property name="text">
+            <string>write data to disc</string>
            </property>
           </widget>
          </item>
-         <item row="3" column="2">
+         <item row="2" column="2">
           <widget class="QComboBox" name="comboBoxAdcMode">
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Controls the ADC operation mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1999,92 +2074,34 @@
            </item>
           </widget>
          </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="labelOutput">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conrols the signal of the output O of the PCIe card&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Tor&lt;/span&gt; controls the output signal for the output O of the PCIe card.&lt;/p&gt;&lt;p&gt;0: XCK starts the readout of the camera and is high during the readout.&lt;br/&gt;1: The signal REGO is controlled by the bit TRIG_OUT of the register CTRLA. It can be controlled with the functions OutTrigLow(), OutTrigHigh() and OutTrigPulse(). The main purpose of this signal is for creating a hardware signal controlled by software, which can be measured by a oscilloscope or used by other electronics.&lt;br/&gt;2: DEPRECATED: VON is the signal for the vertical clocks of the FFT sensor. This signal is only used when&lt;span style=&quot; font-style:italic;&quot;&gt; fft legacy mode&lt;/span&gt; is on.&lt;br/&gt;3: DMA active is high during the direct memory access of the PCIe card.&lt;br/&gt;4: ASLS stands for Auto Scan Line Start and shows when a new readout is started when &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt; is set to &lt;span style=&quot; font-style:italic;&quot;&gt;ASL&lt;/span&gt;.&lt;br/&gt;5: stimer is the internal trigger for the start of a readout when &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt; is set to &lt;span style=&quot; font-style:italic;&quot;&gt;STimer&lt;/span&gt;. The repetition rate is determined by &lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt;.&lt;br/&gt;6: btimer is the internal trigger for the start of a block when &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; is set to &lt;span style=&quot; font-style:italic;&quot;&gt;BTimer&lt;/span&gt;. The repetition rate is determined by &lt;span style=&quot; font-style:italic;&quot;&gt;btimer&lt;/span&gt;.&lt;br/&gt;7: ISR_ACT is high when the interrupt service routine is active. The ISR copies the data from the DMA buffer to the user buffer, when &lt;span style=&quot; font-style:italic;&quot;&gt;software polling&lt;/span&gt; is not activated.&lt;br/&gt;8: Shows the state of the input S1 of the PCIe board.&lt;br/&gt;9: Shows the state of the input S2 of the PCIe board.&lt;br/&gt;10: BON is high during a block readout sequence.&lt;br/&gt;11: measureon is high during the whole measurement.&lt;br/&gt;12: SDAT is high during the time delay between the scan trigger and the start of a scan. This time depends on &lt;span style=&quot; font-style:italic;&quot;&gt;sdat&lt;/span&gt;.&lt;br/&gt;13: BDAT is high during the time delay between the block trigger and the start of a block. This time depends on &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt;.&lt;br/&gt;14: sec_mshut is high during the scan exposure window when the option &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; is used or can be manually set to high by OpenShutter().&lt;br/&gt;15: bec_mshut is high during the block exposure window when the option &lt;span style=&quot; font-style:italic;&quot;&gt;bec&lt;/span&gt; is used or can be manually set to high by OpenShutter().&lt;br/&gt;16: IFC is the electronic exposure control signal used by some sensors and is sent to the camera. When &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; is used IFC = SEC, otherwise it is always 1.&lt;br/&gt;17: DO_CC_I is a fibre link synchronisation signal.&lt;br/&gt;18: Exposure window shows when it is possible to expose the camera to light. Since the PCIe card doesn't know exactly when the sensor is ready to be exposed this is only an estimated signal. If possible use &lt;span style=&quot; font-style:italic;&quot;&gt;exp win&lt;/span&gt; of&lt;span style=&quot; font-style:italic;&quot;&gt; xck out cc&lt;/span&gt;.&lt;br/&gt;19: tor_to_cnt_out shows the signal which is controlled by the setting &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt;. Depening on this setting, only specific XCK high periods are shown on the PCIe card output.&lt;br/&gt;20: SECON is high during the scan exposure window when the option &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; is used.&lt;br/&gt;21: Shows the state of the input I of the PCIe board.&lt;br/&gt;22: Shows the delay between the trigger and the moment, when the states of S1 and S2 are read. This delay is controlled by the settting&lt;span style=&quot; font-style:italic;&quot;&gt; s1s2 read delay&lt;/span&gt;.&lt;br/&gt;23 - 28: unused&lt;br/&gt;29: Status of enable FIFO read.&lt;br/&gt;30: Status of enable FIFO write.&lt;br/&gt;31:&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;tor&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Furhter information about &lt;span style=&quot; font-style:italic;&quot;&gt;tor&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>tor (ouput signal PCIe card)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="2">
-          <widget class="QSpinBox" name="spinBoxSticnt">
+         <item row="7" column="1">
+          <widget class="QLabel" name="labelSticnt">
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan trigger input counter&lt;/span&gt; determines how many scan trigger inputs are skipped before the next measurement is triggered. Every sticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
-           <property name="maximum">
-            <number>127</number>
+           <property name="text">
+            <string>sticnt</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="2">
-          <spacer name="verticalSpacer_11">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLabel" name="labelFilePath">
+         <item row="4" column="2">
+          <widget class="QCheckBox" name="checkBoxWriteDataToDisc">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;File path for writing measurement data&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Experimental feature to write data do disc during measruement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;File path is specifying the path where the measurement data is saved, when &lt;span style=&quot; font-style:italic;&quot;&gt;write data to disc&lt;/span&gt; is activated. File path is a char array with the size 256, so the maximum path length is 256 characters.&lt;/p&gt;&lt;p&gt;example value: C:/Users/XY/&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;file_path&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Write data to disc&lt;/span&gt; is an experimental feature for writing the measurement data on the fly to the disc. The data format is binary. It is the same data layout as the data is stored in RAM during the measurement. Additionally there is a file header at the beginning of the file. The path to the targe file is given by &lt;span style=&quot; font-style:italic;&quot;&gt;file path&lt;/span&gt;. This feature is only available on Windows. In most cases the resulting file should be correct, but data layout errors has been observed. This is the reason why the feature is marked as experimental.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;write_to_disc&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>file path</string>
+            <string>on (experimental)</string>
            </property>
           </widget>
          </item>
-         <item row="10" column="2">
-          <spacer name="verticalSpacer_12">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="6" column="3">
-          <widget class="QPushButton" name="pushButtonFilePath">
-           <property name="maximumSize">
-            <size>
-             <width>30</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;File path for writing measurement data&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;File path is specifying the path where the measurement data is saved, when &lt;span style=&quot; font-style:italic;&quot;&gt;write data to disc&lt;/span&gt; is activated. File path is a char array with the size 256, so the maximum path length is 256 characters.&lt;/p&gt;&lt;p&gt;example value: C:/Users/XY/&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;file_path&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="4">
-          <spacer name="horizontalSpacer_8">
+         <item row="4" column="3">
+          <spacer name="horizontalSpacer_2">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -2096,33 +2113,20 @@
            </property>
           </spacer>
          </item>
-         <item row="9" column="1">
-          <widget class="QLabel" name="labelBticnt">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next block start&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block trigger input counter&lt;/span&gt; determines how many block trigger inputs are skipped before the next block start is triggered. Every bticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; is a 7 bit unsigned integer. Introduced in PCIe board version 222.12.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>bticnt</string>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="2">
-          <widget class="QSpinBox" name="spinBoxBticnt">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next block start&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block trigger input counter&lt;/span&gt; determines how many block trigger inputs are skipped before the next block start is triggered. Every bticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; is a 7 bit unsigned integer. Introduced in PCIe board version 222.12.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="maximum">
-            <number>127</number>
-           </property>
-          </widget>
-         </item>
         </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
