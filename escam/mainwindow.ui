@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>529</width>
+    <width>522</width>
     <height>566</height>
    </rect>
   </property>
@@ -653,19 +653,6 @@
         </item>
        </layout>
       </item>
-      <item>
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
      </layout>
     </item>
     <item>
@@ -904,8 +891,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>529</width>
-     <height>22</height>
+     <width>522</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
