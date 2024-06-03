@@ -682,7 +682,7 @@
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Start / abort the measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="whatsThis">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This button starts the measurement or aborts it while running. Be sure to set the correct settings before. You can find the settings dialog under Settings --&amp;gt; Edit.&lt;/p&gt;&lt;p&gt;Pressing the button loads all saved settings into the camera library and then starts the measurement by calling InitMeasurement() and StartMeasurement_nonblocking(). With this the measurement is started in its own thread and doesn't block the UI of responding.&lt;/p&gt;&lt;p&gt;When aborting AbortingMeasurement() is called.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This button starts the measurement or aborts it while running. Be sure to set the correct settings before. You can find the settings dialog under Settings --&amp;gt; Edit.&lt;/p&gt;&lt;p&gt;Pressing the button loads all saved settings into the camera library and then starts the measurement by calling InitMeasurement() and StartMeasurement_nonblocking(). With this the measurement is started in its own thread and doesn't block the UI of responding.&lt;/p&gt;&lt;p&gt;When aborting AbortMeasurement() is called.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Start</string>
