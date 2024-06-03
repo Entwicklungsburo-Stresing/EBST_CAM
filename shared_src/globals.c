@@ -57,6 +57,7 @@ const struct camera_settings camera_settings_default =
 	.sensor_gain = settingSensorGainDefault,
 	.adc_gain = settingAdcGainDefault,
 	.temp_level = settingCoolingDefault,
+	.bticnt = settingBticntDefault,
 	.gpx_offset = settingGpxOffsetDefault,
 	.fft_lines = settingLinesDefault,
 	.vfreq = settingVfreqDefault,

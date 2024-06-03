@@ -9,6 +9,7 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 
 ### API Changes
 #### Added
+- Add bticnt (rename deprecated setting shortrs to bticnt)
 #### Changed
 - Rename ticnt to sticnt
 #### Removed

@@ -155,6 +155,7 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p);
 void GetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block);
 void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* block);
 es_status_codes SetSticnt(uint32_t drvno, uint8_t divider);
+es_status_codes SetBticnt(uint32_t drvno, uint8_t divider);
 es_status_codes SetTocnt(uint32_t drvno, uint8_t divider);
 es_status_codes GetIsTdc(uint32_t drvno, bool* isTdc);
 es_status_codes GetIsDsc(uint32_t drvno, bool* isDsc);
