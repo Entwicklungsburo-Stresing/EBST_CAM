@@ -24,7 +24,7 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 - Rename file version.txt to CHANGELOG.md
 - Change live view fixed sample: vsync for area sensor. Only show completed blocks.
 - Make position label right aligned
-- Reduce deciaml places in crosshair to 1
+- Reduce decimal places in crosshair to 1
 #### Removed
 - Remove unused function WaitTrigger()
 #### Fixed
