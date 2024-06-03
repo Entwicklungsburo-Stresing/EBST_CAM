@@ -80,6 +80,7 @@
 #define settingContinuousPausInMicrosecondsDefault	0
 #define settingDmaBufferSizeInScansDefault			1000
 #define settingSticntDefault						0
+#define settingBticntDefault						0
 #define settingTocntDefault							0
 #define settingSensorResetLengthIn4nsDefault		100
 #define settingWriteToDiscDefault					0

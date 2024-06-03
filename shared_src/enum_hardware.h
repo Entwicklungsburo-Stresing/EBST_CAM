@@ -128,6 +128,13 @@ enum TOR_STICNT_bits_t
 	TOR_bitindex_STICNT = 0,
 	TOR_bitindex_STICNT_EN = 7,
 };
+
+enum TOR_BTICNT_bits_t
+{
+	TOR_bits_BTICNT = 0x7F,
+	TOR_bit_BTICNT_EN = 0x80,
+	TOR_bitindex_BTICNT = 0,
+	TOR_bitindex_BTICNT_EN = 7,
 };
 
 enum TOR_TOCNT_bits_t
@@ -405,6 +412,7 @@ enum s0_addresses_t
 	S0Addr_ROI2 = 0x70,
 	S0Addr_XCKDLY = 0x74,
 	S0Addr_S1S2ReadDelay = 0x78,
+	S0Addr_BTICNT = 0x7c,
 	S0Addr_BTIMER = 0x80,
 	S0Addr_BDAT = 0x84,
 	S0Addr_BEC = 0x88,

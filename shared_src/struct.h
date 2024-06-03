@@ -167,12 +167,12 @@ struct camera_settings
 	 */
 	uint32_t temp_level;
 	/**
-	 * DEPRECATED
-	 * Shortrs controlled the sensor reset length. This setting is replaced by sensor_reset_length_in_4_ns.
-	 *		* =0: long reset 800ns
-	 *		* >0: short reset 380ns
+	 * Block trigger input counter determines how many block trigger inputs are skipped before the next block start is triggered. Every bticnt+1 trigger input the next block is triggered according to \ref camera_settings.bti_mode. bticnt is a 7 bit unsigned integer. Introduced in PCIe board version 222.12.
+	 *		* min: 0
+	 *		* step: 1
+	 *		* max: 127
 	 */
-	uint32_t shortrs;
+	uint32_t bticnt;
 	/**
 	 * GPX offset is controlling the output offset of the TDC-GPX IC on the TDC add on board for the PCIe card. The TDC-GPX IC can be used to measure the time delay between one start and two stop signals in picosecond resolution. Adding an offset can improve the accuracy of the TDC-GPX IC. GPX offset is a 18 bit unsigned integer. Further information about gpx_offset can be found in the manual in chapter 10.2. 
 	 *		* min: 0
