@@ -124,7 +124,7 @@ enum CTRLC_bits_t
 enum TOR_TICNT_bits_t
 {
 	TOR_bits_TICNT = 0x7F,
-	TOR_bit_TICNT_EN = 0x80,
+	TOR_bit_STICNT_EN = 0x80,
 	TOR_bitindex_TICNT = 0,
 	TOR_bitindex_TICNT_EN = 7,
 };
@@ -381,7 +381,7 @@ enum s0_addresses_t
 	S0Addr_EBST = 0x1C, //0x1c
 	S0Addr_SDAT = 0x20, //0x20
 	S0Addr_SEC = 0x24, //0x24
-	S0Addr_TOR_TICNT = 0x28, //0x28
+	S0Addr_TOR_STICNT = 0x28, //0x28
 	S0Addr_TOR_TOCNT = 0x2A,
 	S0Addr_TOR_MSB = 0x2B,
 	S0Addr_ARREG = 0x2C, //0x2c

@@ -190,7 +190,7 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetDmaStartMode(drvno, HWDREQ_EN);
 	if (status != es_no_error) return status;
-	status = SetTicnt(drvno, (uint8_t)settings_struct.camera_settings[drvno].ticnt);
+	status = SetSticnt(drvno, (uint8_t)settings_struct.camera_settings[drvno].sticnt);
 	if (status != es_no_error) return status;
 	status = SetTocnt(drvno, (uint8_t)settings_struct.camera_settings[drvno].tocnt);
 	if (status != es_no_error) return status;
@@ -3980,9 +3980,9 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	//TOR Register
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x28\tTOR\n");
 	//TICOUNT
-	status = readRegisterS0_8(drvno, &data8, S0Addr_TOR_TICNT);
+	status = readRegisterS0_8(drvno, &data8, S0Addr_TOR_STICNT);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0-6\tTICNT\t%u\n", (data8 & TOR_bits_TICNT) >> TOR_bitindex_TICNT);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t7\tTICNT enabled\t%u\n", (data8 & TOR_bit_TICNT_EN) >> TOR_bitindex_TICNT_EN);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t7\tTICNT enabled\t%u\n", (data8 & TOR_bit_STICNT_EN) >> TOR_bitindex_TICNT_EN);
 	//TOCOUNT
 	status = readRegisterS0_8(drvno, &data8, S0Addr_TOR_TOCNT);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-22\tTOCNT\t%u\n", (data8 & TOR_bits_TOCNT) >> TOR_bitindex_TOCNT);
@@ -4741,7 +4741,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		"\nIOCtrl_T0_period_in_10ns\t%u\n"
 		"dma_buffer_size_in_scans\t%u\n"
 		"tocnt\t%u\n"
-		"ticnt\t%u\n"
+		"sticnt\t%u\n"
 		"sensor_reset_length_in_4_ns\t%u\n"
 		"write to disc\t%u\n"
 		"file path\t%s\n"
@@ -4750,7 +4750,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns,
 		settings_struct.camera_settings[drvno].dma_buffer_size_in_scans,
 		settings_struct.camera_settings[drvno].tocnt,
-		settings_struct.camera_settings[drvno].ticnt,
+		settings_struct.camera_settings[drvno].sticnt,
 		settings_struct.camera_settings[drvno].sensor_reset_length_in_4_ns,
 		settings_struct.camera_settings[drvno].write_to_disc,
 		settings_struct.camera_settings[drvno].file_path,
@@ -5232,13 +5232,13 @@ void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* blo
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes SetTicnt(uint32_t drvno, uint8_t divider)
+es_status_codes SetSticnt(uint32_t drvno, uint8_t divider)
 {
-	ES_LOG("Set TICNT to %u\n", divider);
+	ES_LOG("Set STICNT to %u\n", divider);
 	// If divider is not 0, set the enable bit to 1
 	if (divider)
-		divider |= TOR_bit_TICNT_EN;
-	return writeRegisterS0_8(drvno, divider, S0Addr_TOR_TICNT);
+		divider |= TOR_bit_STICNT_EN;
+	return writeRegisterS0_8(drvno, divider, S0Addr_TOR_STICNT);
 }
 
 /**

@@ -87,7 +87,7 @@ constexpr auto settingAdcModePath = "adcMode";
 constexpr auto settingAdcCustomValuePath = "adcCustomValue";
 constexpr auto settingBncOutPath = "bncOut";
 constexpr auto settingTocntPath = "tocnt";
-constexpr auto settingTicntPath = "ticnt";
+constexpr auto settingTicntPath = "sticnt";
 
 //appearance
 constexpr auto settingThemePath = "theme";
