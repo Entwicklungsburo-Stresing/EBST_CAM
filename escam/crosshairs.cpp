@@ -30,8 +30,8 @@ void Crosshairs::updatePosition(QPointF position)
 	m_xLine->setLine(xLine);
 	m_yLine->setLine(yLine);
 
-	QString xText = QString("%1").arg(m_chart->mapToValue(position).x()),
-		yText = QString("%1").arg(m_chart->mapToValue(position).y());
+	QString xText = QString("%1").arg(m_chart->mapToValue(position).x(), 0, 'f', 1),
+		yText = QString("%1").arg(m_chart->mapToValue(position).y(), 0, 'f', 1);
 	m_xText->setHtml(QString("<div style='background-color: #ff0000;'>") + xText + "</div>");
 	m_yText->setHtml(QString("<div style='background-color: #ff0000;'>") + yText + "</div>");
 	m_xText->setPos(position.x() - m_xText->boundingRect().width() / 2.0, m_chart->plotArea().bottom());
