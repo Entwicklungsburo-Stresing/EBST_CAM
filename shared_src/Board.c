@@ -3912,7 +3912,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//Register XCKCNT
 	status = readRegisterS0_32(drvno, &data32, S0Addr_XCKCNT);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\0x0c\tXCKCNT\t0-28\t\t%u\n", data32);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x0c\tXCKCNT\t0-28\t\t%u\n", data32);
 
 	/*=======================================================================*/
 
