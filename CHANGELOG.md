@@ -20,11 +20,13 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 - ToolTips, WhatsThis
 - Context help action
 - Explanation about WhatsThis, ToolTips in mainpage.md
+- new S0 register: XCKLEN, BONLEN
 #### Changed
 - Rename file version.txt to CHANGELOG.md
 - Change live view fixed sample: vsync for area sensor. Only show completed blocks.
 - Make position label right aligned
 - Reduce decimal places in crosshair to 1
+- Improve human readable register dump
 #### Removed
 - Remove unused function WaitTrigger()
 #### Fixed
