@@ -1487,7 +1487,7 @@ es_status_codes SetBTimer(uint32_t drvno, uint32_t btime_in_microseconds)
 
 /**
  * \brief Initialize the TDC-GPX chip. TDC: time delay counter option.
- * 
+ *
  * More information: https://www.sciosense.com/wp-content/uploads/2023/12/TDC-GPX-Datasheet.pdf
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param delay GPX offset is used to increase accuracy. A counter value can be added, usually 1000. 18 bit.
@@ -4172,7 +4172,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	//Register BLOCKS
 	status = readRegisterS0_32(drvno, &data32, S0Addr_NOB);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x54\tBLOCKS\t0-31\tBLOCKS\t%u\n", data32);
-	
+
 	/*=======================================================================*/
 
 	//Register BLOCKINDEX
@@ -4282,7 +4282,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	//Register A2DSC
 	status = readRegisterS0_32(drvno, &data32, S0Addr_A2DSC);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x98\tA2DSC\t0-31\tDSC\t%u\n", data32);
-	
+
 	/*=======================================================================*/
 
 	//Register L2DSC
@@ -5826,7 +5826,7 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
  *	es_measurement_running
  *	es_first_measurement_not_done
  *	es_create_file_failed
- * 
+ *
  */
 #ifdef WIN32
 es_status_codes ExportMeasurementHDF5(const char* path, const char* filename)
