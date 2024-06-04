@@ -425,8 +425,14 @@ enum s0_addresses_t
 	S0Addr_LTDC2 = 0xA4,
 	S0Addr_DSCCtrl = 0xA8,
 	S0Addr_DAC = 0xAC,
-	S0Addr_CAMSTATUS12 = 0xB0,
-	S0Addr_CAMSTATUS34 = 0xB4,
+	/**
+	 * XCKLEN is 32 bit unsigned integer, which shows the length of XCK in a 10 ns resolution. Introduced in PCIe card version 222_12.
+	 */
+	S0Addr_XCKLEN = 0xB0,
+	/**
+	 * BONLEN is a 32 bit unsigned integer, which shows the length of BON in a 10 ns resolution. Introduced in PCIe card version 222_12.
+	 */
+	S0Addr_BONLEN = 0xB4,
 	S0Addr_CAMERA_TYPE = 0xB8,
 };
 
@@ -815,16 +821,6 @@ enum DSCCtrl_bits_t
 	DSCCtrl_bitindex_dir1 = 1,
 	DSCCtrl_bitindex_rs2 = 8,
 	DSCCtrl_bitindex_dir2 = 9,
-};
-
-enum CAMSTATUS12_bits_t
-{
-	CAMSTATUS12_bitindex_temp = 0
-};
-
-enum CAMSTATUS34_bits_t
-{
-	CAMSTATUS34_bitindex_temp = 0
 };
 
 enum camera_type_bits_t

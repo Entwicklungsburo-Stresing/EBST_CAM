@@ -3760,8 +3760,8 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 		"R25 LTDC2",
 		"R26 DSCCtrl",
 		"R27 DAC",
-		"R28 CAMSTATUS12",
-		"R29 CAMSTATUS34",
+		"R28 XCKLEN",
+		"R29 BONLEN",
 		"R30 CAMERA TYPE"
 	}; //Look-Up-Table for the S0 Registers
 	uint32_t data = 0;
@@ -4356,19 +4356,15 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	/*=======================================================================*/
 
-	//Register CAMSTATUS12
-	status = readRegisterS0_32(drvno, &data32, S0Addr_CAMSTATUS12);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xb0\tCAMSTATUS12\n");
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0\tTemp Good\t%u\n", (data32 & 0x00000001) >> CAMSTATUS12_bitindex_temp);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t1-31\tStatus ID\t%u\n", (data32 & 0xFFFFFFFE));
+	//Register XCKLEN
+	status = readRegisterS0_32(drvno, &data32, S0Addr_XCKLEN);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xb0\tXCKLEN\t0-31\tXCKLEN\t%u (%u ns)\n", data32, data32 * 10);
 
 	/*=======================================================================*/
 
-	//Register CAMSTATUS34
-	status = readRegisterS0_32(drvno, &data32, S0Addr_CAMSTATUS34);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xb4\tCAMSTATUS34\n");
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t0\tTemp Good\t%u\n", (data32 & 0x00000001) >> CAMSTATUS34_bitindex_temp);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t1-31\tStatus ID\t%u\n", (data32 & 0xFFFFFFFE));
+	//Register BONLEN
+	status = readRegisterS0_32(drvno, &data32, S0Addr_BONLEN);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xb0\tBONLEN\t0-31\tBONLEN\t%u (%u ns)\n", data32, data32 * 10);
 
 	/*=======================================================================*/
 
