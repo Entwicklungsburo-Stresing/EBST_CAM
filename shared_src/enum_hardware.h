@@ -1,6 +1,5 @@
 #pragma once
 
-//LOW LEVEL ENUMS
 enum dma_addresses_t
 {
 	DmaAddr_DCSR = 0x000,
@@ -15,70 +14,68 @@ enum dma_addresses_t
 	DmaAddr_RDMATLPC = 0x024,
 };
 
-enum PCIEFLAGS_bits_t
+enum s0_addresses_t
 {
-	PCIEFLAGS_bit_XCKI = 0x01,
-	PCIEFLAGS_bit_INTTRIG = 0x02,
-	PCIEFLAGS_bit_ENRSTIMERHW = 0x04,
-	PCIEFLAGS_bit_USE_ENFFW_PROTECT = 0x08,
-	PCIEFLAGS_bit_BLOCKTRIG = 0x10,
-	PCIEFLAGS_bit_MEASUREON = 0x20,
-	PCIEFLAGS_bit_BLOCKON = 0x40,
-	PCIEFLAGS_bit_IS_TDC = 0x100,
-	PCIEFLAGS_bit_IS_DSC = 0x200,
-	PCIEFLAGS_bit_linkup_sfp3 = 0x4000000,
-	PCIEFLAGS_bit_error_sfp3 = 0x8000000,
-	PCIEFLAGS_bit_linkup_sfp2 = 0x10000000,
-	PCIEFLAGS_bit_error_sfp2 = 0x20000000,
-	PCIEFLAGS_bit_linkup_sfp1 = 0x40000000,
-	PCIEFLAGS_bit_error_sfp1 = 0x80000000,
-	PCIEFLAGS_bitindex_XCKI = 0,
-	PCIEFLAGS_bitindex_INTTRIG = 1,
-	PCIEFLAGS_bitindex_ENRSTIMERHW = 2,
-	PCIEFLAGS_bitindex_USE_ENFFW_PROTECT = 3,
-	PCIEFLAGS_bitindex_BLOCKTRIG = 4,
-	PCIEFLAGS_bitindex_MEASUREON = 5,
-	PCIEFLAGS_bitindex_BLOCKON = 6,
-	PCIEFLAGS_bitindex_IS_TDC = 8,
-	PCIEFLAGS_bitindex_IS_DSC = 9,
-	PCIEFLAGS_bitindex_linkup_sfp3 = 26,
-	PCIEFLAGS_bitindex_error_sfp3 = 27,
-	PCIEFLAGS_bitindex_linkup_sfp2 = 28,
-	PCIEFLAGS_bitindex_error_sfp2 = 29,
-	PCIEFLAGS_bitindex_linkup_sfp1 = 30,
-	PCIEFLAGS_bitindex_error_sfp1 = 31
-};
-
-enum IRQREG_bits_t
-{
-	IRQREG_bitindex_IRQLAT = 0,
-	IRQREG_bitindex_IRQCNT = 16,
-	IRQREG_bitindex_HWDREQ_EN = 30,
-	IRQREG_bitindex_INTRSR = 31,
-	IRQREG_bits_IRQLAT = 0x0000FFFF,
-	IRQREG_bits_IRQCNT = 0x3FFF0000,
-	IRQREG_bit_HWDREQ_EN = 0x40000000,
-	IRQREG_bit_INTRSR = 0x80000000,
-};
-
-enum CTRLB_bits_t
-{
-	CTRLB_bit_STI0 = 0x01,
-	CTRLB_bit_STI1 = 0x02,
-	CTRLB_bit_STI2 = 0x04,
-	CTRLB_bits_STI = 0x07,
-	CTRLB_bit_SHON = 0x08,
-	CTRLB_bit_BTI0 = 0x10,
-	CTRLB_bit_BTI1 = 0x20,
-	CTRLB_bit_BTI2 = 0x40,
-	CTRLB_bits_BTI = 0x70,
-	CTRLB_bitindex_STI0 = 0,
-	CTRLB_bitindex_STI1 = 1,
-	CTRLB_bitindex_STI2 = 2,
-	CTRLB_bitindex_SHON = 3,
-	CTRLB_bitindex_BTI0 = 4,
-	CTRLB_bitindex_BTI1 = 5,
-	CTRLB_bitindex_BTI2 = 6
+	S0Addr_DBR = 0x0, //0x00
+	S0Addr_CTRLA = 0x4, //0x04
+	S0Addr_CTRLB = 0x5,
+	S0Addr_CTRLC = 0x6,
+	S0Addr_XCK = 0x8, //0x08
+	S0Addr_XCKCNT = 0xc, //0x0c
+	S0Addr_PIXREG = 0x10, //0x10
+	S0Addr_FFCTRL = 0x12,
+	S0Addr_FF_FLAGS = 0x13,
+	S0Addr_FIFOCNT = 0x14, //0x14
+	S0Addr_VCLKCTRL = 0x18, //0x18
+	S0Addr_VCLKFREQ = 0x1b,
+	S0Addr_EBST = 0x1C, //0x1c
+	S0Addr_SDAT = 0x20, //0x20
+	S0Addr_SEC = 0x24, //0x24
+	S0Addr_TOR_STICNT = 0x28, //0x28
+	S0Addr_TOR_TOCNT = 0x2A,
+	S0Addr_TOR_MSB = 0x2B,
+	S0Addr_ARREG = 0x2C, //0x2c
+	S0Addr_GIOREG = 0x30,
+	S0Addr_DELAYEC = 0x34,
+	S0Addr_IRQREG = 0x38,
+	S0Addr_PCI = 0x3C,
+	S0Addr_PCIEFLAGS = 0x40,
+	S0Addr_NOS = 0x44,
+	S0Addr_ScanIndex = 0x48,
+	S0Addr_DmaBufSizeInScans = 0x04C,
+	S0Addr_DMAsPerIntr = 0x050,
+	S0Addr_NOB = 0x054,
+	S0Addr_BLOCKINDEX = 0x058,
+	S0Addr_CAMCNT = 0x05C,
+	S0Addr_TDCCtrl = 0x60,
+	S0Addr_TDCData = 0x64,
+	S0Addr_ROI0 = 0x68,
+	S0Addr_ROI1 = 0x6C,
+	S0Addr_ROI2 = 0x70,
+	S0Addr_XCKDLY = 0x74,
+	S0Addr_S1S2ReadDelay = 0x78,
+	S0Addr_BTICNT = 0x7c,
+	S0Addr_BTIMER = 0x80,
+	S0Addr_BDAT = 0x84,
+	S0Addr_BEC = 0x88,
+	S0Addr_BSLOPE = 0x8C,
+	S0Addr_A1DSC = 0x90,
+	S0Addr_L1DSC = 0x94,
+	S0Addr_A2DSC = 0x98,
+	S0Addr_L2DSC = 0x9C,
+	S0Addr_ATDC2 = 0xA0,
+	S0Addr_LTDC2 = 0xA4,
+	S0Addr_DSCCtrl = 0xA8,
+	S0Addr_DAC = 0xAC,
+	/**
+	 * XCKLEN is 32 bit unsigned integer, which shows the length of XCK in a 10 ns resolution. Introduced in PCIe card version 222_12.
+	 */
+	S0Addr_XCKLEN = 0xB0,
+	/**
+	 * BONLEN is a 32 bit unsigned integer, which shows the length of BON in a 10 ns resolution. Introduced in PCIe card version 222_12.
+	 */
+	S0Addr_BONLEN = 0xB4,
+	S0Addr_CAMERA_TYPE = 0xB8,
 };
 
 enum CTRLA_bits_t
@@ -107,6 +104,26 @@ enum CTRLA_bits_t
 	CTRLA_bitindex_BSTART = 7
 };
 
+enum CTRLB_bits_t
+{
+	CTRLB_bit_STI0 = 0x01,
+	CTRLB_bit_STI1 = 0x02,
+	CTRLB_bit_STI2 = 0x04,
+	CTRLB_bits_STI = 0x07,
+	CTRLB_bit_SHON = 0x08,
+	CTRLB_bit_BTI0 = 0x10,
+	CTRLB_bit_BTI1 = 0x20,
+	CTRLB_bit_BTI2 = 0x40,
+	CTRLB_bits_BTI = 0x70,
+	CTRLB_bitindex_STI0 = 0,
+	CTRLB_bitindex_STI1 = 1,
+	CTRLB_bitindex_STI2 = 2,
+	CTRLB_bitindex_SHON = 3,
+	CTRLB_bitindex_BTI0 = 4,
+	CTRLB_bitindex_BTI1 = 5,
+	CTRLB_bitindex_BTI2 = 6
+};
+
 enum CTRLC_bits_t
 {
 	CTRLC_bit_I = 0x01,
@@ -121,20 +138,96 @@ enum CTRLC_bits_t
 	CTRLC_bitindex_eoi_chb = 5
 };
 
+enum XCK_bits_t
+{
+	XCK_bitindex_stimer = 0,
+	/**
+	 * select timer base resolution: 0: 1us, 1: 100ns
+	 */
+	XCK_bitindex_res_ns = 28,
+	/**
+	 * divide time base resolution by 1000: 0: 1us, 1: 1ms, or when reset_ns = 1: 0: 100ns, 1: 100us
+	 */
+	XCK_bitindex_res_ms = 29,
+	XCK_bitindex_stimer_on = 30,
+	XCK_bits_stimer = 0x0FFFFFFF,
+	XCK_bit_res_ns = 0x10000000,
+	XCK_bit_res_ms = 0x20000000,
+	XCK_bit_stimer_on = 0x40000000,
+};
+
+enum FFCTRL_bits_t
+{
+	FFCTRL_bit_block_reset = 0x10,
+	FFCTRL_bit_scan_reset = 0x20,
+	FFCTRL_bit_SWTRIG = 0x40,
+	FFCTRL_bit_RSFIFO = 0x80,
+	FFCTRL_bitindex_block_reset = 4,
+	FFCTRL_bitindex_scan_reset = 5,
+	FFCTRL_bitindex_SWTRIG = 6,
+	FFCTRL_bitindex_RSFIFO = 7,
+};
+
+enum FF_FLAGS_bits_t
+{
+	FF_FLAGS_bit_block_read = 0x02,
+	FF_FLAGS_bit_scan_read = 0x04,
+	FF_FLAGS_bit_overflow = 0x08,
+	FF_FLAGS_bit_xcki = 0x10,
+	FF_FLAGS_bit_full = 0x20,
+	FF_FLAGS_bit_empty = 0x40,
+	FF_FLAGS_bit_valid = 0x80,
+	FF_FLAGS_bitindex_block_read = 1,
+	FF_FLAGS_bitindex_scan_read = 2,
+	FF_FLAGS_bitindex_overflow = 3,
+	FF_FLAGS_bitindex_xcki = 4,
+	FF_FLAGS_bitindex_full = 5,
+	FF_FLAGS_bitindex_empty = 6,
+	FF_FLAGS_bitindex_valid = 7,
+};
+
+enum FIFOCNT_bits_t
+{
+	FIFOCNT_bitindex_WRCNT7 = 7,
+	FIFOCNT_bitindex_WRCNT6 = 6,
+	FIFOCNT_bitindex_WRCNT5 = 5,
+	FIFOCNT_bitindex_WRCNT4 = 4,
+	FIFOCNT_bitindex_WRCNT3 = 3,
+	FIFOCNT_bitindex_WRCNT2 = 2,
+	FIFOCNT_bitindex_WRCNT1 = 1,
+	FIFOCNT_bitindex_WRCNT0 = 0
+};
+
+enum VCLKCTRL_bits_t
+{
+	VCLKCNT_bit_control = 0x00000FFF
+
+};
+
+/**
+ * VCLKFREQ_base_value: Base frequency for the vertical clocks.
+ * VCLKFREQ_step_value: Steps on which the VCLK increases based on VCLKFREQ Value
+ */
+enum VCLKFREQ_bits_t
+{
+	VCLKFREQ_base_value = 200,
+	VCLKFREQ_step_value = 400
+};
+
+enum SDAT_bits_t
+{
+	SDAT_bitindex_control = 0,
+	SDAT_bitindex_enable = 31,
+	SDAT_bit_control = 0x7FFFFFFF,
+	SDAT_bit_enable = 0x80000000,
+};
+
 enum TOR_STICNT_bits_t
 {
 	TOR_bits_STICNT = 0x7F,
 	TOR_bit_STICNT_EN = 0x80,
 	TOR_bitindex_STICNT = 0,
 	TOR_bitindex_STICNT_EN = 7,
-};
-
-enum TOR_BTICNT_bits_t
-{
-	TOR_bits_BTICNT = 0x7F,
-	TOR_bit_BTICNT_EN = 0x80,
-	TOR_bitindex_BTICNT = 0,
-	TOR_bitindex_BTICNT_EN = 7,
 };
 
 enum TOR_TOCNT_bits_t
@@ -210,260 +303,56 @@ enum GIOREG_bits_t
 	GIOREG_bit_I8 = 0x8000,
 };
 
-/**
- * Addresses of PCIe configuration space. See documentation of Spartan-6 FPGA Integrated Endpoint Block for details. Table 2-2.
- * https://docs.xilinx.com/v/u/en-US/s6_pcie_ug654
- */
-enum pcie_configuration_space_t
+enum IRQREG_bits_t
 {
-	PCIeAddr_VendorID = 0x00,
-	PCIeAddr_DeviceID = 0x02,
-	PCIeAddr_Command = 0x04,
-	PCIeAddr_Status = 0x06,
-	PCIeAddr_RevID = 0x08,
-	PCIeAddr_ClassCode = 0x09,
-	PCIeAddr_CacheLn = 0x0C,
-	PCIeAddr_LatTimer = 0x0D,
-	PCIeAddr_Header = 0x0E,
-	PCIeAddr_BIST = 0x0F,
-	PCIeAddr_BaseAddressRegister0 = 0x10,
-	PCIeAddr_BaseAddressRegister1 = 0x14,
-	PCIeAddr_BaseAddressRegister2 = 0x18,
-	PCIeAddr_BaseAddressRegister3 = 0x1C,
-	PCIeAddr_BaseAddressRegister4 = 0x20,
-	PCIeAddr_BaseAddressRegister5 = 0x24,
-	PCIeAddr_CardbusCisPointer = 0x28,
-	PCIeAddr_SubsystemVendorID = 0x2C,
-	PCIeAddr_SubsystemID = 0x2E,
-	PCIeAddr_ExpansionRomBaseAddress = 0x30,
-	PCIeAddr_CapPTr = 0x34,
-	PCIeAddr_Reserved1 = 0x35,
-	PCIeAddr_Reserved2 = 0x38,
-	PCIeAddr_IntrLine = 0x3C,
-	PCIeAddr_IntrPin = 0x3D,
-	PCIeAddr_MinGnt = 0x3E,
-	PCIeAddr_Maxlat = 0x3F,
-	PCIeAddr_PMCap = 0x40,
-	PCIeAddr_NxtCap1 = 0x41,
-	PCIeAddr_PMCapability = 0x42,
-	PCIeAddr_PMCSR = 0x44,
-	PCIeAddr_BSE = 0x46,
-	PCIeAddr_Data = 0x47,
-	PCIeAddr_MSICap = 0x48,
-	PCIeAddr_NxtCap2 = 0x49,
-	PCIeAddr_MsiControl = 0x4A,
-	PCIeAddr_MessageAddressLower = 0x4C,
-	PCIeAddr_MessageAddressUpper = 0x50,
-	PCIeAddr_MessageData = 0x54,
-	PCIeAddr_Reserved3 = 0x56,
-	PCIeAddr_PeCap = 0x58,
-	PCIeAddr_NxtCap3 = 0x59,
-	PCIeAddr_PeCapabilty = 0x5A,
-	PCIeAddr_PCIExpressDeviceCapabilities = 0x5C,
-	PCIeAddr_DeviceControl = 0x60,
-	PCIeAddr_DeviceStatus = 0x62,
-	PCIeAddr_PCIExpressLinkCapabilities = 0x64,
-	PCIeAddr_LinkControl = 0x68,
-	PCIeAddr_LinkStatus = 0x6A,
-	PCIeAddr_ReservedLegacyConfigurationSpace = 0x6C
+	IRQREG_bitindex_IRQLAT = 0,
+	IRQREG_bitindex_IRQCNT = 16,
+	IRQREG_bitindex_HWDREQ_EN = 30,
+	IRQREG_bitindex_INTRSR = 31,
+	IRQREG_bits_IRQLAT = 0x0000FFFF,
+	IRQREG_bits_IRQCNT = 0x3FFF0000,
+	IRQREG_bit_HWDREQ_EN = 0x40000000,
+	IRQREG_bit_INTRSR = 0x80000000,
 };
 
-/**
- * See section 7.8.3, figure 7-13 of the PCI Express Base Specification.
- * https://astralvx.com/storage/2020/11/PCI_Express_Base_4.0_Rev0.3_February19-2014.pdf
- */
-enum PciExpressDeviceCapabilities_bits_t
+enum PCIEFLAGS_bits_t
 {
-	PciExpressDeviceCapabilities_MaxPayloadSizeSupported_bits = 0x7
-};
-
-/**
- * See section 7.8.3, table 7-13 of the PCI Express Base Specification.
- * https://astralvx.com/storage/2020/11/PCI_Express_Base_4.0_Rev0.3_February19-2014.pdf
- */
-enum MaxPayloadSizeSupported_encoding_t
-{
-	maxPaxloadSize_128bytes = 0,
-	maxPaxloadSize_256bytes = 1,
-	maxPaxloadSize_512bytes = 2,
-	maxPaxloadSize_1024bytes = 3,
-	maxPaxloadSize_2048bytes = 4,
-	maxPaxloadSize_4096bytes = 5,
-	maxPaxloadSize_reserved1 = 6,
-	maxPaxloadSize_reserved2 = 7,
-};
-
-/**
- * See section 7.8.4, figure 7-14 of the PCI Express Base Specification.
- * https://astralvx.com/storage/2020/11/PCI_Express_Base_4.0_Rev0.3_February19-2014.pdf
- */
-enum DeviceControl_bits_t
-{
-	deviceControl_maxPayloadSize_bits = 0xE0,
-	deviceControl_maxReadRequestSize_bits = 0x7000,
-	deviceControl_maxPayloadSize_bitindex = 5,
-	deviceControl_maxReadRequestSize_bitindex = 12,
-};
-
-enum FFCTRL_bits_t
-{
-	FFCTRL_bit_block_reset = 0x10,
-	FFCTRL_bit_scan_reset = 0x20,
-	FFCTRL_bit_SWTRIG = 0x40,
-	FFCTRL_bit_RSFIFO = 0x80,
-	FFCTRL_bitindex_block_reset = 4,
-	FFCTRL_bitindex_scan_reset = 5,
-	FFCTRL_bitindex_SWTRIG = 6,
-	FFCTRL_bitindex_RSFIFO = 7,
-};
-
-enum FF_FLAGS_bits_t
-{
-	FF_FLAGS_bit_block_read = 0x02,
-	FF_FLAGS_bit_scan_read = 0x04,
-	FF_FLAGS_bit_overflow = 0x08,
-	FF_FLAGS_bit_xcki = 0x10,
-	FF_FLAGS_bit_full = 0x20,
-	FF_FLAGS_bit_empty = 0x40,
-	FF_FLAGS_bit_valid = 0x80,
-	FF_FLAGS_bitindex_block_read = 1,
-	FF_FLAGS_bitindex_scan_read = 2,
-	FF_FLAGS_bitindex_overflow = 3,
-	FF_FLAGS_bitindex_xcki = 4,
-	FF_FLAGS_bitindex_full = 5,
-	FF_FLAGS_bitindex_empty = 6,
-	FF_FLAGS_bitindex_valid = 7,
-};
-
-enum FIFOCNT_bits_t
-{
-	FIFOCNT_bitindex_WRCNT7 = 7,
-	FIFOCNT_bitindex_WRCNT6 = 6,
-	FIFOCNT_bitindex_WRCNT5 = 5,
-	FIFOCNT_bitindex_WRCNT4 = 4,
-	FIFOCNT_bitindex_WRCNT3 = 3,
-	FIFOCNT_bitindex_WRCNT2 = 2,
-	FIFOCNT_bitindex_WRCNT1 = 1,
-	FIFOCNT_bitindex_WRCNT0 = 0
-};
-
-enum VCLKCTRL_bits_t
-{
-	VCLKCNT_bit_control = 0x00000FFF
-
-};
-
-/**
- * VCLKFREQ_base_value: Base frequency for the vertical clocks.
- * VCLKFREQ_step_value: Steps on which the VCLK increases based on VCLKFREQ Value
- */
-enum VCLKFREQ_bits_t
-{
-	VCLKFREQ_base_value = 200,
-	VCLKFREQ_step_value = 400
-};
-
-enum SDAT_bits_t
-{
-	SDAT_bitindex_control = 0,
-	SDAT_bitindex_enable = 31,
-	SDAT_bit_control = 0x7FFFFFFF,
-	SDAT_bit_enable = 0x80000000,
-};
-
-//S0 Addresses
-enum s0_addresses_t
-{
-	S0Addr_DBR = 0x0, //0x00
-	S0Addr_CTRLA = 0x4, //0x04
-	S0Addr_CTRLB = 0x5,
-	S0Addr_CTRLC = 0x6,
-	S0Addr_XCK = 0x8, //0x08
-	S0Addr_XCKCNT = 0xc, //0x0c
-	S0Addr_PIXREG = 0x10, //0x10
-	S0Addr_FFCTRL = 0x12,
-	S0Addr_FF_FLAGS = 0x13,
-	S0Addr_FIFOCNT = 0x14, //0x14
-	S0Addr_VCLKCTRL = 0x18, //0x18
-	S0Addr_VCLKFREQ = 0x1b,
-	S0Addr_EBST = 0x1C, //0x1c
-	S0Addr_SDAT = 0x20, //0x20
-	S0Addr_SEC = 0x24, //0x24
-	S0Addr_TOR_STICNT = 0x28, //0x28
-	S0Addr_TOR_TOCNT = 0x2A,
-	S0Addr_TOR_MSB = 0x2B,
-	S0Addr_ARREG = 0x2C, //0x2c
-	S0Addr_GIOREG = 0x30,
-	S0Addr_DELAYEC = 0x34,
-	S0Addr_IRQREG = 0x38,
-	S0Addr_PCI = 0x3C,
-	S0Addr_PCIEFLAGS = 0x40,
-	S0Addr_NOS = 0x44,
-	S0Addr_ScanIndex = 0x48,
-	S0Addr_DmaBufSizeInScans = 0x04C,
-	S0Addr_DMAsPerIntr = 0x050,
-	S0Addr_NOB = 0x054,
-	S0Addr_BLOCKINDEX = 0x058,
-	S0Addr_CAMCNT = 0x05C,
-	S0Addr_TDCCtrl = 0x60,
-	S0Addr_TDCData = 0x64,
-	S0Addr_ROI0 = 0x68,
-	S0Addr_ROI1 = 0x6C,
-	S0Addr_ROI2 = 0x70,
-	S0Addr_XCKDLY = 0x74,
-	S0Addr_S1S2ReadDelay = 0x78,
-	S0Addr_BTICNT = 0x7c,
-	S0Addr_BTIMER = 0x80,
-	S0Addr_BDAT = 0x84,
-	S0Addr_BEC = 0x88,
-	S0Addr_BSLOPE = 0x8C,
-	S0Addr_A1DSC = 0x90,
-	S0Addr_L1DSC = 0x94,
-	S0Addr_A2DSC = 0x98,
-	S0Addr_L2DSC = 0x9C,
-	S0Addr_ATDC2 = 0xA0,
-	S0Addr_LTDC2 = 0xA4,
-	S0Addr_DSCCtrl = 0xA8,
-	S0Addr_DAC = 0xAC,
-	/**
-	 * XCKLEN is 32 bit unsigned integer, which shows the length of XCK in a 10 ns resolution. Introduced in PCIe card version 222_12.
-	 */
-	S0Addr_XCKLEN = 0xB0,
-	/**
-	 * BONLEN is a 32 bit unsigned integer, which shows the length of BON in a 10 ns resolution. Introduced in PCIe card version 222_12.
-	 */
-	S0Addr_BONLEN = 0xB4,
-	S0Addr_CAMERA_TYPE = 0xB8,
-};
-
-enum XCK_bits_t
-{
-	XCK_bitindex_stimer = 0,
-	/**
-	 * select timer base resolution: 0: 1us, 1: 100ns
-	 */
-	XCK_bitindex_res_ns = 28,
-	/**
-	 * divide time base resolution by 1000: 0: 1us, 1: 1ms, or when reset_ns = 1: 0: 100ns, 1: 100us
-	 */
-	XCK_bitindex_res_ms = 29,
-	XCK_bitindex_stimer_on = 30,
-	XCK_bits_stimer = 0x0FFFFFFF,
-	XCK_bit_res_ns = 0x10000000,
-	XCK_bit_res_ms = 0x20000000,
-	XCK_bit_stimer_on = 0x40000000,
+	PCIEFLAGS_bit_XCKI = 0x01,
+	PCIEFLAGS_bit_INTTRIG = 0x02,
+	PCIEFLAGS_bit_ENRSTIMERHW = 0x04,
+	PCIEFLAGS_bit_USE_ENFFW_PROTECT = 0x08,
+	PCIEFLAGS_bit_BLOCKTRIG = 0x10,
+	PCIEFLAGS_bit_MEASUREON = 0x20,
+	PCIEFLAGS_bit_BLOCKON = 0x40,
+	PCIEFLAGS_bit_IS_TDC = 0x100,
+	PCIEFLAGS_bit_IS_DSC = 0x200,
+	PCIEFLAGS_bit_linkup_sfp3 = 0x4000000,
+	PCIEFLAGS_bit_error_sfp3 = 0x8000000,
+	PCIEFLAGS_bit_linkup_sfp2 = 0x10000000,
+	PCIEFLAGS_bit_error_sfp2 = 0x20000000,
+	PCIEFLAGS_bit_linkup_sfp1 = 0x40000000,
+	PCIEFLAGS_bit_error_sfp1 = 0x80000000,
+	PCIEFLAGS_bitindex_XCKI = 0,
+	PCIEFLAGS_bitindex_INTTRIG = 1,
+	PCIEFLAGS_bitindex_ENRSTIMERHW = 2,
+	PCIEFLAGS_bitindex_USE_ENFFW_PROTECT = 3,
+	PCIEFLAGS_bitindex_BLOCKTRIG = 4,
+	PCIEFLAGS_bitindex_MEASUREON = 5,
+	PCIEFLAGS_bitindex_BLOCKON = 6,
+	PCIEFLAGS_bitindex_IS_TDC = 8,
+	PCIEFLAGS_bitindex_IS_DSC = 9,
+	PCIEFLAGS_bitindex_linkup_sfp3 = 26,
+	PCIEFLAGS_bitindex_error_sfp3 = 27,
+	PCIEFLAGS_bitindex_linkup_sfp2 = 28,
+	PCIEFLAGS_bitindex_error_sfp2 = 29,
+	PCIEFLAGS_bitindex_linkup_sfp1 = 30,
+	PCIEFLAGS_bitindex_error_sfp1 = 31
 };
 
 enum ScanIndex_bits_t
 {
 	ScanIndex_bitindex_counter_reset = 31,
 	ScanIndex_bit_counter_reset = 0x80
-};
-
-enum BLOCKINDEX_bits_t
-{
-	BLOCKINDEX_bitindex_counter_reset = 31,
-	BLOCKINDEX_bit_counter_reset = 0x80
 };
 
 enum DmaBufSizeInScans_bits_t
@@ -476,6 +365,75 @@ enum DMAsPerIntr_bits_t
 {
 	DMAsPerIntr_bitindex_counter_reset = 31,
 	DMAsPerIntr_bit_counter_reset = 0x80
+};
+
+enum BLOCKINDEX_bits_t
+{
+	BLOCKINDEX_bitindex_counter_reset = 31,
+	BLOCKINDEX_bit_counter_reset = 0x80
+};
+
+enum TDCCtrl_bits_t
+{
+	TDCCtrl_bitindex_reset = 0,
+	TDCCtrl_bitindex_interrupt = 1,
+	TDCCtrl_bitindex_load_fifo = 2,
+	TDCCtrl_bitindex_empty_fifo = 3,
+	TDCCtrl_bitindex_cs = 27,
+	TDCCtrl_bitindex_adr0 = 28,
+	TDCCtrl_bitindex_adr1 = 29,
+	TDCCtrl_bitindex_adr2 = 30,
+	TDCCtrl_bitindex_adr3 = 31,
+	TDCCtrl_bit_reset = 0x1,
+	TDCCtrl_bit_interrupt = 0x2,
+	TDCCtrl_bit_load_fifo = 0x4,
+	TDCCtrl_bit_empty_fifo = 0x8,
+	TDCCtrl_bit_cs = 0x8000000,
+	TDCCtrl_bit_adr0 = 0x10000000,
+	TDCCtrl_bit_adr1 = 0x20000000,
+	TDCCtrl_bit_adr2 = 0x40000000,
+	TDCCtrl_bit_adr3 = 0x80000000
+};
+
+enum TOR_BTICNT_bits_t
+{
+	TOR_bits_BTICNT = 0x7F,
+	TOR_bit_BTICNT_EN = 0x80,
+	TOR_bitindex_BTICNT = 0,
+	TOR_bitindex_BTICNT_EN = 7,
+};
+
+enum BDAT_bits_t
+{
+	BDAT_bitindex_enabled = 31
+};
+
+enum BEC_bits_t
+{
+	BEC_bitindex_enabled = 31
+};
+
+enum BSLOPE_bits_t
+{
+	BSLOPE_bitindex_bslope = 0,
+	BSLOPE_bitindex_both_slopes = 1,
+	BSLOPE_bitindex_bswtrig = 2
+};
+
+enum DSCCtrl_bits_t
+{
+	DSCCtrl_bitindex_rs1 = 0,
+	DSCCtrl_bitindex_dir1 = 1,
+	DSCCtrl_bitindex_rs2 = 8,
+	DSCCtrl_bitindex_dir2 = 9,
+};
+
+enum camera_type_bits_t
+{
+	camera_type_sensor_type_bits = 0x0000FFFF,
+	camera_type_camera_system_bits = 0xFFFF0000,
+	camera_type_sensor_type_bit_index = 0,
+	camera_type_camera_system_bit_index = 16,
 };
 
 enum cam_addresses_t
@@ -513,16 +471,16 @@ enum cam_addresses_t
 	cam_adaddr_sample_mode = 0x07,
 	/**
 	 * Sensor reset length register.
-	 * 
+	 *
 	 * 3030: This register controls the length of the ARG pulse which is done after the TG pulse.
 	 * min: 0ns, max: 0xFFFF * 4ns = 65535 * 4ns = 262140ns = 262,14us, typical value: 200 * 4ns = 800ns
 	 */
 	cam_adaddr_sensor_reset_length_in_4_ns = 0x08,
 	/**
-	 * stores the amount of vclks generated inside the camera. 
+	 * stores the amount of vclks generated inside the camera.
 	 * - cam_adaddr_vclks_amount1:    is used for full binning (fft_lines) or the first region of ROI
 	 * - cam_adaddr_vclks_amount2..5: are used for ROI mode. Must be set to zero for full binning
-	 	 */
+		 */
 	cam_adaddr_vclks_amount1 = 0x9,
 	cam_adaddr_vclks_amount2 = 0xA,
 	cam_adaddr_vclks_amount3 = 0xB,
@@ -641,27 +599,6 @@ enum cam_config_register_t
 };
 
 /**
- * This enum shows the encoding of the special pixel 2. The upper two bits are encoding the binary state of S1 and S2. All other bits are representing the upper half of the block index counter.
- */
-enum bits_of_pixel_block_index_high_S1_S2_t
-{
-	/**
-	 * The lower 14 bits are representing the bits 29 to 16 from block index.
-	 */
-	pixel_block_index_high_s1_s2_bits_block_index = 0x3FFF,
-	/**
-	 * 1: Input S2 is high, 0: S2 is low.
-	 */
-	pixel_block_index_high_s1_s2_bit_s2 = 0x4000,
-	/**
-	 * 1: Input S1 is high, 0: S1 is low.
-	 */
-	pixel_block_index_high_s1_s2_bit_s1 = 0x8000,
-	pixel_block_index_high_s1_s2_bitindex_s2 = 14,
-	pixel_block_index_high_s1_s2_bitindex_s1 = 15,
-};
-
-/**
  * This enum shows the meaning of the first special pixels.
  */
 enum special_pixels_enum_t
@@ -724,6 +661,27 @@ enum special_last_pixels_t
 };
 
 /**
+ * This enum shows the encoding of the special pixel 2. The upper two bits are encoding the binary state of S1 and S2. All other bits are representing the upper half of the block index counter.
+ */
+enum bits_of_pixel_block_index_high_S1_S2_t
+{
+	/**
+	 * The lower 14 bits are representing the bits 29 to 16 from block index.
+	 */
+	pixel_block_index_high_s1_s2_bits_block_index = 0x3FFF,
+	/**
+	 * 1: Input S2 is high, 0: S2 is low.
+	 */
+	pixel_block_index_high_s1_s2_bit_s2 = 0x4000,
+	/**
+	 * 1: Input S1 is high, 0: S1 is low.
+	 */
+	pixel_block_index_high_s1_s2_bit_s1 = 0x8000,
+	pixel_block_index_high_s1_s2_bitindex_s2 = 14,
+	pixel_block_index_high_s1_s2_bitindex_s1 = 15,
+};
+
+/**
  * This enum shows the meaning of the bits of the pixel camera status.
  */
 enum pixel_camera_status_bits_t
@@ -776,61 +734,6 @@ enum pixel_fpga_ver_t
 	pixel_fpga_ver_major_and_bit = 0x00FF
 };
 
-enum TDCCtrl_bits_t
-{
-	TDCCtrl_bitindex_reset = 0,
-	TDCCtrl_bitindex_interrupt = 1,
-	TDCCtrl_bitindex_load_fifo = 2,
-	TDCCtrl_bitindex_empty_fifo = 3,
-	TDCCtrl_bitindex_cs = 27,
-	TDCCtrl_bitindex_adr0 = 28,
-	TDCCtrl_bitindex_adr1 = 29,
-	TDCCtrl_bitindex_adr2 = 30,
-	TDCCtrl_bitindex_adr3 = 31,
-	TDCCtrl_bit_reset = 0x1,
-	TDCCtrl_bit_interrupt = 0x2,
-	TDCCtrl_bit_load_fifo = 0x4,
-	TDCCtrl_bit_empty_fifo = 0x8,
-	TDCCtrl_bit_cs = 0x8000000,
-	TDCCtrl_bit_adr0 = 0x10000000,
-	TDCCtrl_bit_adr1 = 0x20000000,
-	TDCCtrl_bit_adr2 = 0x40000000,
-	TDCCtrl_bit_adr3 = 0x80000000
-};
-
-enum BDAT_bits_t
-{
-	BDAT_bitindex_enabled = 31
-};
-
-enum BEC_bits_t
-{
-	BEC_bitindex_enabled = 31
-};
-
-enum BSLOPE_bits_t
-{
-	BSLOPE_bitindex_bslope = 0,
-	BSLOPE_bitindex_both_slopes = 1,
-	BSLOPE_bitindex_bswtrig = 2
-};
-
-enum DSCCtrl_bits_t
-{
-	DSCCtrl_bitindex_rs1 = 0,
-	DSCCtrl_bitindex_dir1 = 1,
-	DSCCtrl_bitindex_rs2 = 8,
-	DSCCtrl_bitindex_dir2 = 9,
-};
-
-enum camera_type_bits_t
-{
-	camera_type_sensor_type_bits = 0x0000FFFF,
-	camera_type_camera_system_bits = 0xFFFF0000,
-	camera_type_sensor_type_bit_index = 0,
-	camera_type_camera_system_bit_index = 16,
-};
-
 enum autotune_channel_ranges_t
 {
 	autotune_ch1_start = 44,
@@ -849,4 +752,99 @@ enum autotune_channel_ranges_t
 	autotune_ch7_end = 876,
 	autotune_ch8_start = 940,
 	autotune_ch8_end = 1004,
+};
+
+/**
+ * Addresses of PCIe configuration space. See documentation of Spartan-6 FPGA Integrated Endpoint Block for details. Table 2-2.
+ * https://docs.xilinx.com/v/u/en-US/s6_pcie_ug654
+ */
+enum pcie_configuration_space_t
+{
+	PCIeAddr_VendorID = 0x00,
+	PCIeAddr_DeviceID = 0x02,
+	PCIeAddr_Command = 0x04,
+	PCIeAddr_Status = 0x06,
+	PCIeAddr_RevID = 0x08,
+	PCIeAddr_ClassCode = 0x09,
+	PCIeAddr_CacheLn = 0x0C,
+	PCIeAddr_LatTimer = 0x0D,
+	PCIeAddr_Header = 0x0E,
+	PCIeAddr_BIST = 0x0F,
+	PCIeAddr_BaseAddressRegister0 = 0x10,
+	PCIeAddr_BaseAddressRegister1 = 0x14,
+	PCIeAddr_BaseAddressRegister2 = 0x18,
+	PCIeAddr_BaseAddressRegister3 = 0x1C,
+	PCIeAddr_BaseAddressRegister4 = 0x20,
+	PCIeAddr_BaseAddressRegister5 = 0x24,
+	PCIeAddr_CardbusCisPointer = 0x28,
+	PCIeAddr_SubsystemVendorID = 0x2C,
+	PCIeAddr_SubsystemID = 0x2E,
+	PCIeAddr_ExpansionRomBaseAddress = 0x30,
+	PCIeAddr_CapPTr = 0x34,
+	PCIeAddr_Reserved1 = 0x35,
+	PCIeAddr_Reserved2 = 0x38,
+	PCIeAddr_IntrLine = 0x3C,
+	PCIeAddr_IntrPin = 0x3D,
+	PCIeAddr_MinGnt = 0x3E,
+	PCIeAddr_Maxlat = 0x3F,
+	PCIeAddr_PMCap = 0x40,
+	PCIeAddr_NxtCap1 = 0x41,
+	PCIeAddr_PMCapability = 0x42,
+	PCIeAddr_PMCSR = 0x44,
+	PCIeAddr_BSE = 0x46,
+	PCIeAddr_Data = 0x47,
+	PCIeAddr_MSICap = 0x48,
+	PCIeAddr_NxtCap2 = 0x49,
+	PCIeAddr_MsiControl = 0x4A,
+	PCIeAddr_MessageAddressLower = 0x4C,
+	PCIeAddr_MessageAddressUpper = 0x50,
+	PCIeAddr_MessageData = 0x54,
+	PCIeAddr_Reserved3 = 0x56,
+	PCIeAddr_PeCap = 0x58,
+	PCIeAddr_NxtCap3 = 0x59,
+	PCIeAddr_PeCapabilty = 0x5A,
+	PCIeAddr_PCIExpressDeviceCapabilities = 0x5C,
+	PCIeAddr_DeviceControl = 0x60,
+	PCIeAddr_DeviceStatus = 0x62,
+	PCIeAddr_PCIExpressLinkCapabilities = 0x64,
+	PCIeAddr_LinkControl = 0x68,
+	PCIeAddr_LinkStatus = 0x6A,
+	PCIeAddr_ReservedLegacyConfigurationSpace = 0x6C
+};
+
+/**
+ * See section 7.8.3, figure 7-13 of the PCI Express Base Specification.
+ * https://astralvx.com/storage/2020/11/PCI_Express_Base_4.0_Rev0.3_February19-2014.pdf
+ */
+enum PciExpressDeviceCapabilities_bits_t
+{
+	PciExpressDeviceCapabilities_MaxPayloadSizeSupported_bits = 0x7
+};
+
+/**
+ * See section 7.8.3, table 7-13 of the PCI Express Base Specification.
+ * https://astralvx.com/storage/2020/11/PCI_Express_Base_4.0_Rev0.3_February19-2014.pdf
+ */
+enum MaxPayloadSizeSupported_encoding_t
+{
+	maxPaxloadSize_128bytes = 0,
+	maxPaxloadSize_256bytes = 1,
+	maxPaxloadSize_512bytes = 2,
+	maxPaxloadSize_1024bytes = 3,
+	maxPaxloadSize_2048bytes = 4,
+	maxPaxloadSize_4096bytes = 5,
+	maxPaxloadSize_reserved1 = 6,
+	maxPaxloadSize_reserved2 = 7,
+};
+
+/**
+ * See section 7.8.4, figure 7-14 of the PCI Express Base Specification.
+ * https://astralvx.com/storage/2020/11/PCI_Express_Base_4.0_Rev0.3_February19-2014.pdf
+ */
+enum DeviceControl_bits_t
+{
+	deviceControl_maxPayloadSize_bits = 0xE0,
+	deviceControl_maxReadRequestSize_bits = 0x7000,
+	deviceControl_maxPayloadSize_bitindex = 5,
+	deviceControl_maxReadRequestSize_bitindex = 12,
 };
