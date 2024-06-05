@@ -3712,7 +3712,7 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 {
 	enum N
 	{
-		number_of_registers = 47,
+		number_of_registers = 48,
 		bufferLength = 40
 	};
 	char register_names[number_of_registers][bufferLength] = {
@@ -3729,7 +3729,7 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 		"TOR"DLLTAB,
 		"ARREG"DLLTAB,
 		"GIOREG"DLLTAB,
-		"nc"DLLTAB,
+		"XCKPERIOD",
 		"IRQREG"DLLTAB,
 		"PCI board version",
 		"R0 PCIEFLAGS",
@@ -3762,7 +3762,8 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 		"R27 DAC",
 		"R28 XCKLEN",
 		"R29 BONLEN",
-		"R30 CAMERA TYPE"
+		"R30 CAMERA TYPE",
+		"R31 BON PERIOD"
 	}; //Look-Up-Table for the S0 Registers
 	uint32_t data = 0;
 	//allocate string buffer
@@ -4111,6 +4112,13 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t14\tInput 7\t%u\n", (data32 & GIOREG_bit_I7) >> GIOREG_bitindex_I7);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t15\tInput 8\t%u\n", (data32 & GIOREG_bit_I8) >> GIOREG_bitindex_I8);
 
+
+	/*=======================================================================*/
+
+	//Register XCK PERIOD
+	status = readRegisterS0_32(drvno, &data32, S0Addr_XCK_PERIOD);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x34\tXCK PERIOD\t0-31\tXCK PERIOD\t%u (%u ns)\n", data32, data32 * 10);
+
 	/*=======================================================================*/
 
 	//Register IRQREG
@@ -4383,6 +4391,12 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-31\tCamera System\t%u (%s)\n", upperBitsCAMTYPE, "invalid");
 		break;
 	}
+
+	/*=======================================================================*/
+
+	//Register BON PERIOD
+	status = readRegisterS0_32(drvno, &data32, S0Addr_BON_PERIOD);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xbc\tBON PERIOD\t0-31\tBON PERIOD\t%u (%u ns)", data32, data32 * 10);
 
 	/*=======================================================================*/
 
