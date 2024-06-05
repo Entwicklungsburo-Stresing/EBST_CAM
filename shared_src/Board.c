@@ -4122,6 +4122,12 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	/*=======================================================================*/
 
+	//Register PCIe board version
+	status = readRegisterS0_32(drvno, &data32, S0Addr_PCI);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x3C\tPCI board version\t0-31\tversion\t%u (0x%x)\n", data32, data32);
+
+	/*=======================================================================*/
+
 	//Register PCIEFLAGS
 	status = readRegisterS0_32(drvno, &data32, S0Addr_PCIEFLAGS);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x40\tPCIEFLAGS\t0\tXCKO\t%u\n", (data32 & PCIEFLAGS_bit_XCKI) >> PCIEFLAGS_bitindex_XCKI);
