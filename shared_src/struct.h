@@ -112,6 +112,9 @@ struct camera_settings
 	uint32_t camcnt;
 	/**
 	 * Pixel is the number of pixels in one sensor. Only 64*n are allowed. Pixel is a 16 bit unsigned integer. Typical values are: 576, 1024, 1088, 2112.
+	 *		* min: 64
+	 *		* step: 64
+	 *		* max: 8256
 	 */
 	uint32_t pixel;
 	/**
