@@ -4814,9 +4814,9 @@ es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
 	es_status_codes status = readRegisterS0_32(drvno, &data, S0Addr_CTRLA); // Board ID =5053
 	if (status != es_no_error) return status;
 	data = data >> 16;
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, " Board #%i    ID \t= 0x%x\n", drvno, data);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i ID\t= 0x%x\n", drvno, data);
 	data = 0x07FF;
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i     length \t= 0x%x\n", drvno, data);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i length\t= 0x%x\n", drvno, data);
 	uint8_t udata1 = 0,
 		udata2 = 0,
 		udata3 = 0,
@@ -4831,13 +4831,13 @@ es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
 		if (status != es_no_error) return status;
 		status = readRegisterS0_8(drvno, &udata4, S0Addr_EBST + 3);
 		if (status != es_no_error) return status;
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i  ven ID \t= %c%c%c%c\n", drvno, udata1, udata2, udata3, udata4);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i ven ID\t= %c%c%c%c\n", drvno, udata1, udata2, udata3, udata4);
 	}
 	if (data >= 0x3F)
 	{//if 9056 -> has space 0x40
 		status = readRegisterS0_32(drvno, &data, S0Addr_PCI);
 		if (status != es_no_error) return status;
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i   board version \t= 0x%x\n", drvno, data);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i board version\t= 0x%x\n", drvno, data);
 	}
 	return es_no_error;
 }
