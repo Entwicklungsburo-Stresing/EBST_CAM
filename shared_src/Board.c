@@ -4325,7 +4325,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//Register BONLEN
 	status = readRegisterS0_32(drvno, &data32, S0Addr_BONLEN);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xb0\tBONLEN\t0-31\tBONLEN\t%u (%u ns)\n", data32, data32 * 10);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xb4\tBONLEN\t0-31\tBONLEN\t%u (%u ns)\n", data32, data32 * 10);
 
 	/*=======================================================================*/
 
