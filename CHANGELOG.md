@@ -20,7 +20,7 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 - ToolTips, WhatsThis
 - Context help action
 - Explanation about WhatsThis, ToolTips in mainpage.md
-- new S0 register: XCKLEN, BONLEN
+- new S0 register: XCKLEN, BONLEN, XCKPERIOD, BONPERIOD
 #### Changed
 - Rename file version.txt to CHANGELOG.md
 - Change live view fixed sample: vsync for area sensor. Only show completed blocks.
