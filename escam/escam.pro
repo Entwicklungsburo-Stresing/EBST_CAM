@@ -37,6 +37,7 @@ VERSION = $${VERSION_MAJOR_QT}.$${VERSION_MINOR_QT}.$${VERSION_BUILD_QT}
 # Input
 SOURCES += \
     camerasettingswidget.cpp \
+    crosshairs.cpp \
     dialogaxes.cpp \
     dialogdac.cpp \
     dialogdsc.cpp \
@@ -85,6 +86,7 @@ win32 {
 
 HEADERS += \
     camerasettingswidget.h \
+    crosshairs.h \
     dialogaxes.h \
     dialogdac.h \
     dialogdsc.h \
