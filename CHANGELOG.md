@@ -21,6 +21,7 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 - Context help action
 - Explanation about WhatsThis, ToolTips in mainpage.md
 - new S0 register: XCKLEN, BONLEN, XCKPERIOD, BONPERIOD
+- new dialog: trigger info. This dialog displays XCKLEN, BONLEN, XCKPERIOD and BONPERIOD
 #### Changed
 - Rename file version.txt to CHANGELOG.md
 - Change live view fixed sample: vsync for area sensor. Only show completed blocks.
@@ -140,7 +141,7 @@ Linux:
 - Make DLLResetScanFrequencyBit and DLLResetBlockFrequencyBit multiple boards compatible.
 
 ## 4.8.1 - 2023-09-06
-- Add DLLFíndCam
+- Add DLLFindCam
 - Add camera found lamp
 
 ## 4.8.0 - 2023-09-06
