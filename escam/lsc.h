@@ -68,6 +68,10 @@ public:
 	es_status_codes findCam(uint32_t drvno);
 	es_status_codes exportMeasurementHDF5(const char* path, const char* filename);
 	es_status_codes waitForMeasureReady(uint32_t board_sel);
+	es_status_codes getXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns);
+	es_status_codes getXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns);
+	es_status_codes getBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns);
+	es_status_codes getBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns);
 public slots:
 	es_status_codes startMeasurement();
 signals:

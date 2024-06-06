@@ -52,6 +52,7 @@ private slots:
 	void on_actionRMS_triggered();
 	void on_actionDSC_triggered();
 	void on_actionAxes_triggered();
+	void on_actionTrigger_info_triggered();
 	void on_actionCameras_triggered();
 	void on_actionReset_axes_triggered();
 	void on_actionContext_help_triggered();

@@ -23,6 +23,7 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 #include "dialogdac.h"
 #include "dialogioctrl.h"
 #include "dialogspecialpixels.h"
+#include "dialogtriggerinfo.h"
 #ifdef WIN32
 #include "dialoggreyscalesettings.h"
 #endif
@@ -393,6 +394,19 @@ void MainWindow::on_actionRMS_triggered()
 {
 	ds_rms->initDialogRMS();
 	ds_rms->show();
+	return;
+}
+
+/**
+ * @brief This slot opens the Trigger info dialog.
+ * @return none
+ */
+void MainWindow::on_actionTrigger_info_triggered()
+{
+	DialogTriggerInfo* dti = new DialogTriggerInfo(this);
+	connect(&lsc, &Lsc::measureDone, dti, &DialogTriggerInfo::on_measureDone);
+	dti->setAttribute(Qt::WA_DeleteOnClose);
+	dti->show();
 	return;
 }
 
