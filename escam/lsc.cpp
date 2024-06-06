@@ -503,7 +503,23 @@ es_status_codes Lsc::waitForMeasureReady(uint32_t board_sel)
 	return WaitForMeasureReady(board_sel);
 }
 
+es_status_codes Lsc::getXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns)
+{
+	return GetXckLength(drvno, xckLengthIn10ns);
+}
 
+es_status_codes Lsc::getXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns)
+{
+	return GetXckPeriod(drvno, xckPeriodIn10ns);
+}
 
+es_status_codes Lsc::getBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns)
+{
+	return GetBonLength(drvno, bonLengthIn10ns);
+}
 
+es_status_codes Lsc::getBonPeriod(uint32_t drvno, uint32_t* bonPeriodIns10ns)
+{
+	return GetBonPeriod(drvno, bonPeriodIns10ns);
+}
 
