@@ -37,7 +37,10 @@ enum s0_addresses_t
 	S0Addr_ARREG = 0x2C, //0x2c
 	S0Addr_GIOREG = 0x30,
 	/**
-	 * XCK PERIOD is a 32 bit unsigned integer, which shows the period time of the first XCK period (XCK high slope to high slope) of one measurement in a 10 ns resolution. Introduced in PCIe card version 222_12.
+	 * XCK PERIOD is a 32 bit unsigned integer, which shows the period time of the first XCK period (XCK high slope to high slope) of one measurement in a 10 ns resolution. Read only. Introduced in PCIe card version 222_12.
+	 *		* min: 0
+	 *		* step: 1 => 10 ns
+	 *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
 	 */
 	S0Addr_XCK_PERIOD = 0x34,
 	S0Addr_IRQREG = 0x38,
@@ -71,16 +74,25 @@ enum s0_addresses_t
 	S0Addr_DSCCtrl = 0xA8,
 	S0Addr_DAC = 0xAC,
 	/**
-	 * XCKLEN is 32 bit unsigned integer, which shows the length of the first XCK of one measurement in a 10 ns resolution. Introduced in PCIe card version 222_12.
+	 * XCKLEN is 32 bit unsigned integer, which shows the length of the first XCK of one measurement in a 10 ns resolution. Read only. Introduced in PCIe card version 222_12.
+	 *		* min: 0
+	 *		* step: 1 => 10 ns
+	 *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
 	 */
 	S0Addr_XCKLEN = 0xB0,
 	/**
-	 * BONLEN is a 32 bit unsigned integer, which shows the length of the first BON of one measurement in a 10 ns resolution. Introduced in PCIe card version 222_12.
+	 * BONLEN is a 32 bit unsigned integer, which shows the length of the first BON of one measurement in a 10 ns resolution. Read only. Introduced in PCIe card version 222_12.
+	 *		* min: 0
+	 *		* step: 1 => 10 ns
+	 *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
 	 */
 	S0Addr_BONLEN = 0xB4,
 	S0Addr_CAMERA_TYPE = 0xB8,
 	/**
-	 * BON PERIOD is a 32 bit unsigned integer, which shows the period time of the first BON period (BON high slope to high slope) of one measurement in a 10 ns resolution. Introduced in PCIe card version 222_12.
+	 * BON PERIOD is a 32 bit unsigned integer, which shows the period time of the first BON period (BON high slope to high slope) of one measurement in a 10 ns resolution. Read only.Introduced in PCIe card version 222_12.
+	 *		* min: 0
+	 *		* step: 1 => 10 ns
+	 *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
 	 */
 	S0Addr_BON_PERIOD = 0xBC,
 };
