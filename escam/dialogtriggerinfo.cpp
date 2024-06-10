@@ -32,12 +32,12 @@ void DialogTriggerInfo::on_measureDone()
 	uint32_t data;
 	uint32_t drvno = ui->spinBoxBoard->value();
 	mainWindow->lsc.getXckLength(drvno, &data);
-	ui->doubleSpinBoxXckLength->setValue(((double)data) / 1000.);
+	ui->doubleSpinBoxXckLength->setValue(((double)data) / 100.);
 	mainWindow->lsc.getXckPeriod(drvno, &data);
-	ui->doubleSpinBoxXckPeriod->setValue(((double)data) / 1000.);
+	ui->doubleSpinBoxXckPeriod->setValue(((double)data) / 100.);
 	mainWindow->lsc.getBonLength(drvno, &data);
-	ui->doubleSpinBoxBonLength->setValue(((double)data) / 1000.);
+	ui->doubleSpinBoxBonLength->setValue(((double)data) / 100.);
 	mainWindow->lsc.getBonPeriod(drvno, &data);
-	ui->doubleSpinBoxBonPeriod->setValue(((double)data) / 1000.);
+	ui->doubleSpinBoxBonPeriod->setValue(((double)data) / 100.);
 	return;
 }
