@@ -19,6 +19,7 @@ DialogTriggerInfo::DialogTriggerInfo(QWidget *parent)
 		ui->labelBoard->setVisible(false);
 		ui->spinBoxBoard->setValue(0);
 	}
+	on_measureDone();
 }
 
 DialogTriggerInfo::~DialogTriggerInfo()
@@ -31,12 +32,12 @@ void DialogTriggerInfo::on_measureDone()
 	uint32_t data;
 	uint32_t drvno = ui->spinBoxBoard->value();
 	mainWindow->lsc.getXckLength(drvno, &data);
-	ui->doubleSpinBoxXckLength->setValue(data / 1000);
+	ui->doubleSpinBoxXckLength->setValue(((double)data) / 1000.);
 	mainWindow->lsc.getXckPeriod(drvno, &data);
-	ui->doubleSpinBoxXckPeriod->setValue(data / 1000);
+	ui->doubleSpinBoxXckPeriod->setValue(((double)data) / 1000.);
 	mainWindow->lsc.getBonLength(drvno, &data);
-	ui->doubleSpinBoxBonLength->setValue(data / 1000);
+	ui->doubleSpinBoxBonLength->setValue(((double)data) / 1000.);
 	mainWindow->lsc.getBonPeriod(drvno, &data);
-	ui->doubleSpinBoxBonPeriod->setValue(data / 1000);
+	ui->doubleSpinBoxBonPeriod->setValue(((double)data) / 1000.);
 	return;
 }
