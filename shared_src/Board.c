@@ -3969,7 +3969,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//SEC
 	status = readRegisterS0_32(drvno, &data32, S0Addr_SEC);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x24\tSEC\t0-31\t\t%u (%u ns)\n", data32, data32 * 10);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x24\tSEC\t0-31\t\t%u (%llu ns)", data32, ((uint64_t)data32) * 10);
 
 	/*=======================================================================*/
 
@@ -4117,7 +4117,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//Register XCK PERIOD
 	status = readRegisterS0_32(drvno, &data32, S0Addr_XCK_PERIOD);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x34\tXCK PERIOD\t0-31\tXCK PERIOD\t%u (%u ns)\n", data32, data32 * 10);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x34\tXCK PERIOD\t0-31\tXCK PERIOD\t%u (%llu ns)", data32, ((uint64_t)data32) * 10);
 
 	/*=======================================================================*/
 
@@ -4249,7 +4249,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//Register S1S2DLY
 	status = readRegisterS0_32(drvno, &data32, S0Addr_S1S2ReadDelay);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x78\tS1S2DLY\t0-31\tDelay\t%u (%u ns)\n", data32, (data32 * 10));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x78\tS1S2DLY\t0-31\tDelay\t%u (%llu ns)", data32, ((uint64_t)data32) * 10);
 
 	/*=======================================================================*/
 
@@ -4333,13 +4333,13 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//Register XCKLEN
 	status = readRegisterS0_32(drvno, &data32, S0Addr_XCKLEN);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xb0\tXCKLEN\t0-31\tXCKLEN\t%u (%u ns)\n", data32, data32 * 10);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xb0\tXCKLEN\t0-31\tXCKLEN\t%u (%llu ns)", data32, ((uint64_t)data32) * 10);
 
 	/*=======================================================================*/
 
 	//Register BONLEN
 	status = readRegisterS0_32(drvno, &data32, S0Addr_BONLEN);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xb4\tBONLEN\t0-31\tBONLEN\t%u (%u ns)\n", data32, data32 * 10);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xb4\tBONLEN\t0-31\tBONLEN\t%u (%llu ns)", data32, ((uint64_t)data32) * 10);
 
 	/*=======================================================================*/
 
@@ -4396,7 +4396,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//Register BON PERIOD
 	status = readRegisterS0_32(drvno, &data32, S0Addr_BON_PERIOD);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xbc\tBON PERIOD\t0-31\tBON PERIOD\t%u (%u ns)", data32, data32 * 10);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xbc\tBON PERIOD\t0-31\tBON PERIOD\t%u (%llu ns)", data32, ((uint64_t)data32) * 10);
 
 	/*=======================================================================*/
 
