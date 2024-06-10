@@ -229,6 +229,7 @@
     <ClCompile Include="dialogrms.cpp" />
     <ClCompile Include="dialogspecialpixels.cpp" />
     <ClCompile Include="dialogaxes.cpp" />
+    <ClCompile Include="dialogtriggerinfo.cpp" />
     <ClCompile Include="myqchartview.cpp" />
     <ClCompile Include="UIAbstractionLayer.c" />
     <ClCompile Include="UIAbstractionLayer_cpp.cpp" />
@@ -260,6 +261,7 @@
     <QtMoc Include="dialogspecialpixels.h" />
     <QtMoc Include="dialoggreyscalesettings.h" />
     <ClInclude Include="crosshairs.h" />
+    <QtMoc Include="dialogtriggerinfo.h" />
     <ClInclude Include="lsc-gui.h" />
     <ClInclude Include="UIAbstractionLayer_cpp.h" />
     <QtMoc Include="dialogsettings.h">
@@ -304,6 +306,7 @@
     <QtUic Include="dialogsettings.ui">
     </QtUic>
     <QtUic Include="dialogspecialpixels.ui" />
+    <QtUic Include="dialogtriggerinfo.ui" />
     <QtUic Include="mainwindow.ui">
     </QtUic>
   </ItemGroup>
