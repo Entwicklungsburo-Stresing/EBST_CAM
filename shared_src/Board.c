@@ -6093,20 +6093,20 @@ es_status_codes CheckFirstMeasurementDone(uint32_t drvno)
 
 es_status_codes GetXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns)
 {
-	return readRegister_32(drvno, xckLengthIn10ns, S0Addr_XCKLEN);
+	return readRegisterS0_32(drvno, xckLengthIn10ns, S0Addr_XCKLEN);
 }
 
 es_status_codes GetXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns)
 {
-	return readRegister_32(drvno, xckPeriodIn10ns, S0Addr_XCK_PERIOD);
+	return readRegisterS0_32(drvno, xckPeriodIn10ns, S0Addr_XCK_PERIOD);
 }
 
 es_status_codes GetBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns)
 {
-	return readRegister_32(drvno, bonLengthIn10ns, S0Addr_BONLEN);
+	return readRegisterS0_32(drvno, bonLengthIn10ns, S0Addr_BONLEN);
 }
 
 es_status_codes GetBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns)
 {
-	return readRegister_32(drvno, bonPeriodIn10ns, S0Addr_BON_PERIOD);
+	return readRegisterS0_32(drvno, bonPeriodIn10ns, S0Addr_BON_PERIOD);
 }
