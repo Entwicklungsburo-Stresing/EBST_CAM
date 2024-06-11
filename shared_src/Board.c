@@ -3969,15 +3969,15 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//SEC
 	status = readRegisterS0_32(drvno, &data32, S0Addr_SEC);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x24\tSEC\t0-31\t\t%u (%llu ns)", data32, ((uint64_t)data32) * 10);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x24\tSEC\t0-31\t\t%u (%llu ns)\n", data32, ((uint64_t)data32) * 10);
 
 	/*=======================================================================*/
 
 	//TOR Register
 	status = readRegisterS0_8(drvno, &data8, S0Addr_TOR_STICNT);
 	//TICOUNT
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x28\tTOR\t0-6\tTICNT\t%u\n", (data8 & TOR_bits_STICNT) >> TOR_bitindex_STICNT);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t7\tTICNT enabled\t%u\n", (data8 & TOR_bit_STICNT_EN) >> TOR_bitindex_STICNT_EN);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x28\tTOR\t0-6\tSTICNT\t%u\n", (data8 & TOR_bits_STICNT) >> TOR_bitindex_STICNT);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t7\tSTICNT enabled\t%u\n", (data8 & TOR_bit_STICNT_EN) >> TOR_bitindex_STICNT_EN);
 	//TOCOUNT
 	status = readRegisterS0_8(drvno, &data8, S0Addr_TOR_TOCNT);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-22\tTOCNT\t%u\n", (data8 & TOR_bits_TOCNT) >> TOR_bitindex_TOCNT);
@@ -4164,21 +4164,21 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//Register SCANINDEX
 	status = readRegisterS0_32(drvno, &data32, S0Addr_ScanIndex);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x48\tSCANINDEX\t0-30\tSCANINDEX\t%u\n", (data32 & 0x7FFFFFFF));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x48\tSCANINDEX\t0-30\tSCANINDEX\t%u\n", (data32 & ScanIndex_bits));
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t31\tCounter reset\t%u\n", (data32 & ScanIndex_bit_counter_reset) >> ScanIndex_bitindex_counter_reset);
 
 	/*=======================================================================*/
 
 	//Register DMABUFSIZEINSCANS
 	status = readRegisterS0_32(drvno, &data32, S0Addr_DmaBufSizeInScans);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x4c\tDMABUFSIZEINSCANS\t0-30\tBuffer length\t%u\n", (data32 & 0x7FFFFFFF));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x4c\tDMABUFSIZEINSCANS\t0-30\tBuffer length\t%u\n", (data32 & DmaBufSizeInScans_bits));
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t31\tCounter reset\t%u\n", (data32 & DmaBufSizeInScans_bit_counter_reset) >> DmaBufSizeInScans_bitindex_counter_reset);
 
 	/*=======================================================================*/
 
 	//Register DMASPERINTERRUPT
 	status = readRegisterS0_32(drvno, &data32, S0Addr_DMAsPerIntr);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x50\tDMASPERINTERRUPT\t0-30\tDMASPERINTERRUPT\t%u\n", (data32 & 0x7FFFFFFF));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x50\tDMASPERINTERRUPT\t0-30\tDMASPERINTERRUPT\t%u\n", (data32 & DMAsPerIntrs_bits));
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t31\tCounter reset\t%u\n", (data32 & DMAsPerIntr_bit_counter_reset) >> DMAsPerIntr_bitindex_counter_reset);
 
 	/*=======================================================================*/
@@ -4197,7 +4197,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//Register CAMCNT
 	status = readRegisterS0_8(drvno, &data8, S0Addr_CAMCNT);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x5c\tCAMCNT\t0-3\tCAMCNT\t%u\n", (data8 & 0x0F));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x5c\tCAMCNT\t0-3\tCAMCNT\t%u\n", (data8 & CAMCNT_bits));
 
 	/*=======================================================================*/
 
@@ -4220,64 +4220,71 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//Register ROI0
 	status = readRegisterS0_32(drvno, &data32, S0Addr_ROI0);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x68\tROI0\t0-15\tLower word\t%u\n", (data32 & 0xFFFF));
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-31\tUpper word\t%u\n", (data32 >> 16));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x68\tROI0\t0-15\trange 1\t%u\n", (data32 & ROI0_bits_range1) >> ROI0_bitindex_range1);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-31\trange 2\t%u\n", (data32 & ROI0_bits_range2) >> ROI0_bitindex_range2);
 
 	/*=======================================================================*/
 
 	//Register ROI1
 	status = readRegisterS0_32(drvno, &data32, S0Addr_ROI1);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x6c\tROI1\t0-15\tLower word\t%u\n", (data32 & 0xFFFF));
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-31\tUpper word\t%u\n", (data32 >> 16));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x6c\tROI1\t0-15\trange 3\t%u\n", (data32 & ROI1_bits_range3) >> ROI1_bitindex_range3);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-31\trange 4\t%u\n", (data32 & ROI1_bits_range4) >> ROI1_bitindex_range4);
 
 	/*=======================================================================*/
 
 	//Register ROI2
 	status = readRegisterS0_32(drvno, &data32, S0Addr_ROI2);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x70\tROI2\t0-15\tLower word\t%u\n", (data32 & 0xFFFF));
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-31\tUpper word\t%u\n", (data32 >> 16));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x70\tROI2\t0-15\trange 5\t%u\n", (data32 & ROI2_bits_range5) >> ROI2_bitindex_range5);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-31\trange 6\t%u\n", (data32 & ROI2_bits_range6) >> ROI2_bitindex_range6);
 
 	/*=======================================================================*/
 
 	//Register XCKDLY
 	status = readRegisterS0_32(drvno, &data32, S0Addr_XCKDLY);
-	int val = 500 + ((int)((data32 & 0x7FFFFFFF)) * 10);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x74\tXCKDLY\t0-30\tDelay\t%u (%u ns)\n", (data32 & 0x7FFFFFFF), val);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t31\tEnabled\t%u\n", (data32 & 0x80000000) >> 31);
+	uint64_t val = 500 + (((uint64_t)(data32 & XCKDELAY_bits)) * 10);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x74\tXCKDLY\t0-30\tDelay\t%u (%llu ns)\n", (data32 & XCKDELAY_bits), val);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t31\tEnabled\t%u\n", (data32 & XCKDELAY_bit_enable) >> XCKDELAY_bitindex_enable);
 
 	/*=======================================================================*/
 
 	//Register S1S2DLY
 	status = readRegisterS0_32(drvno, &data32, S0Addr_S1S2ReadDelay);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x78\tS1S2DLY\t0-31\tDelay\t%u (%llu ns)", data32, ((uint64_t)data32) * 10);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x78\tS1S2DLY\t0-31\tDelay\t%u (%llu ns)\n", data32, ((uint64_t)data32) * 10);
+
+	/*=======================================================================*/
+
+	//Register BTICNT
+	status = readRegisterS0_32(drvno, &data32, S0Addr_BTICNT);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x7c\tBTICNT\t0-6\tBTICNT\t%u\n", data32 & BTICNT_bits_BTICNT);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t7\tBTICNT enable\t%u\n", (data32 & BTICNT_bit_BTICNT_EN) >> BTICNT_bitindex_BTICNT_EN);
 
 	/*=======================================================================*/
 
 	//Register BTIMER
 	status = readRegisterS0_32(drvno, &data32, S0Addr_BTIMER);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x80\tBTIMER\t0-27\tTimer\t%u μs\n", (data32 & 0x0FFFFFFF));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x80\tBTIMER\t0-27\tTimer\t%u μs\n", (data32 & BTIMER_bits));
 
 	/*=======================================================================*/
 
 	//Register BDAT
 	status = readRegisterS0_32(drvno, &data32, S0Addr_BDAT);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x84\tBDAT\t0-30\tDelay After Trigger\t%u\n", (data32 & 0x7FFFFFFF));
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t31\tEnabled\t%u\n", (data32 & 0x80000000) >> BDAT_bitindex_enabled);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x84\tBDAT\t0-30\tDelay After Trigger\t%u (%llu ns)\n", (data32 & BDAT_bits_BDAT), (((uint64_t)(data32 & BDAT_bits_BDAT)) * 10));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t31\tEnabled\t%u\n", (data32 & BDAT_bit_enable) >> BDAT_bitindex_enabled);
 
 	/*=======================================================================*/
 
 	//Register BEC
 	status = readRegisterS0_32(drvno, &data32, S0Addr_BEC);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x88\tBEC\t0-30\tExposure Control\t%u (%u ns)\n", (data32 & 0x7FFFFFFF), ((data32 & 0x7FFFFFFF) * 10));
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t31\tEnabled\t%u\n", (data32 & 0x80000000) >> BEC_bitindex_enabled);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x88\tBEC\t0-30\tExposure Control\t%u (%llu ns)\n", (data32 & BEC_bits_BEC), (((uint64_t)(data32 & BEC_bits_BEC)) * 10));
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t31\tEnabled\t%u\n", (data32 & BEC_bit_enable) >> BEC_bitindex_enabled);
 
 	/*=======================================================================*/
 
 	//Register BFLAGS
 	status = readRegisterS0_32(drvno, &data32, S0Addr_BSLOPE);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x8c\tBFLAGS\t0\tBSLOPE\t%u\n", (data32 & 0x00000001) >> BSLOPE_bitindex_bslope);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t1\tBoth Slopes\t%u\n", (data32 & 0x00000002) >> BSLOPE_bitindex_both_slopes);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t2\tBSWTRIG\t%u\n", (data32 & 0x00000004) >> BSLOPE_bitindex_bswtrig);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x8c\tBFLAGS\t0\tBSLOPE\t%u\n", (data32 & BSLOPE_bit_bslope) >> BSLOPE_bitindex_bslope);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t1\tBoth Slopes\t%u\n", (data32 & BSLOPE_bit_both_slopes) >> BSLOPE_bitindex_both_slopes);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t2\tBSWTRIG\t%u\n", (data32 & BSLOPE_bit_both_bswtrig) >> BSLOPE_bitindex_bswtrig);
 
 	/*=======================================================================*/
 
@@ -4318,10 +4325,10 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//Register DSCCtrl
 	status = readRegisterS0_32(drvno, &data32, S0Addr_DSCCtrl);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xa8\tDSCCtrl\t0\tRS1\t%u\n", (data8 & 0x00000001) >> DSCCtrl_bitindex_rs1);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t1\tDIR1\t%u\n", (data8 & 0x00000002) >> DSCCtrl_bitindex_dir1);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t8\tRS2\t%u\n", (data8 & 0x00000100) >> DSCCtrl_bitindex_rs2);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t9\tDIR2\t%u\n", (data8 & 0x00000200) >> DSCCtrl_bitindex_dir2);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xa8\tDSCCtrl\t0\tRS1\t%u\n", (data8 & DSCCtrl_bit_rs1) >> DSCCtrl_bitindex_rs1);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t1\tDIR1\t%u\n", (data8 & DSCCtrl_bit_dir1) >> DSCCtrl_bitindex_dir1);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t8\tRS2\t%u\n", (data8 & DSCCtrl_bit_rs2) >> DSCCtrl_bitindex_rs2);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t9\tDIR2\t%u\n", (data8 & DSCCtrl_bit_dir2) >> DSCCtrl_bitindex_dir2);
 
 	/*=======================================================================*/
 
@@ -4333,13 +4340,13 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//Register XCKLEN
 	status = readRegisterS0_32(drvno, &data32, S0Addr_XCKLEN);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xb0\tXCKLEN\t0-31\tXCKLEN\t%u (%llu ns)", data32, ((uint64_t)data32) * 10);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xb0\tXCKLEN\t0-31\tXCKLEN\t%u (%llu ns)\n", data32, ((uint64_t)data32) * 10);
 
 	/*=======================================================================*/
 
 	//Register BONLEN
 	status = readRegisterS0_32(drvno, &data32, S0Addr_BONLEN);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xb4\tBONLEN\t0-31\tBONLEN\t%u (%llu ns)", data32, ((uint64_t)data32) * 10);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xb4\tBONLEN\t0-31\tBONLEN\t%u (%llu ns)\n", data32, ((uint64_t)data32) * 10);
 
 	/*=======================================================================*/
 
@@ -5236,7 +5243,7 @@ es_status_codes SetBticnt(uint32_t drvno, uint8_t divider)
 	ES_LOG("Set BTICNT to %u\n", divider);
 	// If divider is not 0, set the enable bit to 1
 	if (divider)
-		divider |= TOR_bit_BTICNT_EN;
+		divider |= BTICNT_bit_BTICNT_EN;
 	return writeRegisterS0_8(drvno, divider, S0Addr_BTICNT);
 }
 
@@ -6068,7 +6075,7 @@ hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t datas
 
 es_status_codes CheckFirstMeasurementDone(uint32_t drvno)
 {
-	uint32_t dataNOS = 0, dataScanIndex = 0, dataNOB = 0, dataBlockIndex = 0, bitmask = 0x7FFFFFFF;
+	uint32_t dataNOS = 0, dataScanIndex = 0, dataNOB = 0, dataBlockIndex = 0, bitmask = ScanIndex_bits;
 	es_status_codes status = readRegisterS0_32(drvno, &dataNOS, S0Addr_NOS);
 	if (status != es_no_error) return status;
 	status = readRegisterS0_32(drvno, &dataScanIndex, S0Addr_ScanIndex);
