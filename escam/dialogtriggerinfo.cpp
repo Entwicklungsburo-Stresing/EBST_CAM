@@ -3,7 +3,7 @@
 #include "lsc-gui.h"
 
 DialogTriggerInfo::DialogTriggerInfo(QWidget *parent)
-	: QDialog(parent)
+	: QDialog(parent, Qt::Dialog | Qt::WindowContextHelpButtonHint | Qt::WindowCloseButtonHint)
 	, ui(new Ui::DialogTriggerInfo)
 {
 	ui->setupUi(this);
