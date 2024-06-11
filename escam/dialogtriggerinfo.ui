@@ -31,6 +31,12 @@
     <layout class="QGridLayout" name="gridLayout">
      <item row="1" column="1">
       <widget class="QLabel" name="labelXckLength">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;High time duration of XCK&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XCK length&lt;/span&gt; is the high time duration of the signal XCK. XCK signals the camera to start the readout and indicates the time, which is needed for one readout.&lt;/p&gt;&lt;p&gt;The signal is measured by the PCIe card in a 10 ns resolution. The value is stored in the S0 register XCKLEN and is measured once per measurement. The signal XCK can also be set to the output O of the PCIe card by the setting TOR, which can be found under: Settings --&amp;gt; Edit --&amp;gt; Camera Settings --&amp;gt; Board X --&amp;gt; Other --&amp;gt; tor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>XCK length</string>
        </property>
@@ -38,6 +44,12 @@
      </item>
      <item row="1" column="2">
       <widget class="QDoubleSpinBox" name="doubleSpinBoxXckLength">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;High time duration of XCK&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XCK length&lt;/span&gt; is the high time duration of the signal XCK. XCK signals the camera to start the readout and indicates the time, which is needed for one readout.&lt;/p&gt;&lt;p&gt;The signal is measured by the PCIe card in a 10 ns resolution. The value is stored in the S0 register XCKLEN and is measured once per measurement. The signal XCK can also be set to the output O of the PCIe card by the setting TOR, which can be found under: Settings --&amp;gt; Edit --&amp;gt; Camera Settings --&amp;gt; Board X --&amp;gt; Other --&amp;gt; tor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
@@ -89,6 +101,12 @@
      </item>
      <item row="2" column="2">
       <widget class="QDoubleSpinBox" name="doubleSpinBoxXckPeriod">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time duration between two positive edges of XCK&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XCK period&lt;/span&gt; is the time between two positive edges of XCK. This time between two readouts is the time when the sensor will collect charges, so this is the exposure time.&lt;/p&gt;&lt;p&gt;The signal is measured by the PCIe card in a 10 ns resolution. The value is stored in the S0 register XCKPERIOD and is measured once per measurement. The signal XCK can also be set to the output O of the PCIe card by the setting TOR, which can be found under: Settings --&amp;gt; Edit --&amp;gt; Camera Settings --&amp;gt; Board X --&amp;gt; Other --&amp;gt; tor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
@@ -114,6 +132,12 @@
      </item>
      <item row="3" column="2">
       <widget class="QDoubleSpinBox" name="doubleSpinBoxBonLength">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;High time duration of BON&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;BON length&lt;/span&gt; is the high time duration of the signal BON (block on). BON signals the time which is needed for one block of readouts.&lt;/p&gt;&lt;p&gt;The signal is measured by the PCIe card in a 10 ns resolution. The value is stored in the S0 register BONLEN and is measured once per measurement. The signal BON can also be set to the output O of the PCIe card by the setting TOR, which can be found under: Settings --&amp;gt; Edit --&amp;gt; Camera Settings --&amp;gt; Board X --&amp;gt; Other --&amp;gt; tor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
@@ -139,6 +163,12 @@
      </item>
      <item row="4" column="1">
       <widget class="QLabel" name="labelBonPeriod">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time duration between two positive edges of BON&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;BON period&lt;/span&gt; is the time between two positive edges of BON (block on).&lt;/p&gt;&lt;p&gt;The signal is measured by the PCIe card in a 10 ns resolution. The value is stored in the S0 register BONPERIOD and is measured once per measurement. The signal BON can also be set to the output O of the PCIe card by the setting TOR, which can be found under: Settings --&amp;gt; Edit --&amp;gt; Camera Settings --&amp;gt; Board X --&amp;gt; Other --&amp;gt; tor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>BON period</string>
        </property>
@@ -146,6 +176,12 @@
      </item>
      <item row="4" column="2">
       <widget class="QDoubleSpinBox" name="doubleSpinBoxBonPeriod">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time duration between two positive edges of BON&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;BON period&lt;/span&gt; is the time between two positive edges of BON (block on).&lt;/p&gt;&lt;p&gt;The signal is measured by the PCIe card in a 10 ns resolution. The value is stored in the S0 register BONPERIOD and is measured once per measurement. The signal BON can also be set to the output O of the PCIe card by the setting TOR, which can be found under: Settings --&amp;gt; Edit --&amp;gt; Camera Settings --&amp;gt; Board X --&amp;gt; Other --&amp;gt; tor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
@@ -171,6 +207,12 @@
      </item>
      <item row="3" column="1">
       <widget class="QLabel" name="labelBonLength">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;High time duration of BON&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;BON length&lt;/span&gt; is the high time duration of the signal BON (block on). BON signals the time which is needed for one block of readouts.&lt;/p&gt;&lt;p&gt;The signal is measured by the PCIe card in a 10 ns resolution. The value is stored in the S0 register BONLEN and is measured once per measurement. The signal BON can also be set to the output O of the PCIe card by the setting TOR, which can be found under: Settings --&amp;gt; Edit --&amp;gt; Camera Settings --&amp;gt; Board X --&amp;gt; Other --&amp;gt; tor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>BON length</string>
        </property>
@@ -178,6 +220,12 @@
      </item>
      <item row="2" column="1">
       <widget class="QLabel" name="labelXckPeriod">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time duration between two positive edges of XCK&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XCK period&lt;/span&gt; is the time between two positive edges of XCK. This time between two readouts is the time when the sensor will collect charges, so this is the exposure time.&lt;/p&gt;&lt;p&gt;The signal is measured by the PCIe card in a 10 ns resolution. The value is stored in the S0 register XCKPERIOD and is measured once per measurement. The signal XCK can also be set to the output O of the PCIe card by the setting TOR, which can be found under: Settings --&amp;gt; Edit --&amp;gt; Camera Settings --&amp;gt; Board X --&amp;gt; Other --&amp;gt; tor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>XCK period</string>
        </property>
