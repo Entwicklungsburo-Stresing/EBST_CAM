@@ -371,25 +371,33 @@ enum PCIEFLAGS_bits_t
 enum ScanIndex_bits_t
 {
 	ScanIndex_bitindex_counter_reset = 31,
-	ScanIndex_bit_counter_reset = 0x80
+	ScanIndex_bits = 0x7FFFFFFF,
+	ScanIndex_bit_counter_reset = 0x80000000
 };
 
 enum DmaBufSizeInScans_bits_t
 {
 	DmaBufSizeInScans_bitindex_counter_reset = 31,
-	DmaBufSizeInScans_bit_counter_reset = 0x80
+	DmaBufSizeInScans_bits = 0x7FFFFFFF,
+	DmaBufSizeInScans_bit_counter_reset = 0x80000000
 };
 
 enum DMAsPerIntr_bits_t
 {
 	DMAsPerIntr_bitindex_counter_reset = 31,
-	DMAsPerIntr_bit_counter_reset = 0x80
+	DMAsPerIntrs_bits = 0x7FFFFFFF,
+	DMAsPerIntr_bit_counter_reset = 0x80000000
 };
 
 enum BLOCKINDEX_bits_t
 {
 	BLOCKINDEX_bitindex_counter_reset = 31,
 	BLOCKINDEX_bit_counter_reset = 0x80
+};
+
+enum CAMCNT_bits_t
+{
+	CAMCNT_bits = 0x0F
 };
 
 enum TDCCtrl_bits_t
@@ -414,26 +422,69 @@ enum TDCCtrl_bits_t
 	TDCCtrl_bit_adr3 = 0x80000000
 };
 
-enum TOR_BTICNT_bits_t
+enum ROI0_bits_t
 {
-	TOR_bits_BTICNT = 0x7F,
-	TOR_bit_BTICNT_EN = 0x80,
-	TOR_bitindex_BTICNT = 0,
-	TOR_bitindex_BTICNT_EN = 7,
+	ROI0_bits_range1 = 0x0000FFFF,
+	ROI0_bits_range2 = 0xFFFF0000,
+	ROI0_bitindex_range1 = 0,
+	ROI0_bitindex_range2 = 16
+};
+
+enum ROI1_bits_t
+{
+	ROI1_bits_range3 = 0x0000FFFF,
+	ROI1_bits_range4 = 0xFFFF0000,
+	ROI1_bitindex_range3 = 0,
+	ROI1_bitindex_range4 = 16
+};
+
+enum ROI2_bits_t
+{
+	ROI2_bits_range5 = 0x0000FFFF,
+	ROI2_bits_range6 = 0xFFFF0000,
+	ROI2_bitindex_range5 = 0,
+	ROI2_bitindex_range6 = 16
+};
+
+enum XCKDELAY_bits_t
+{
+	XCKDELAY_bits = 0x7FFFFFFF,
+	XCKDELAY_bit_enable = 0x80000000,
+	XCKDELAY_bitindex_enable = 31
+};
+
+enum BTICNT_bits_t
+{
+	BTICNT_bits_BTICNT = 0x7F,
+	BTICNT_bit_BTICNT_EN = 0x80,
+	BTICNT_bitindex_BTICNT = 0,
+	BTICNT_bitindex_BTICNT_EN = 7,
+};
+
+enum BTIMER_bits_t
+{
+	BTIMER_bits = 0x0FFFFFFF
 };
 
 enum BDAT_bits_t
 {
+	BDAT_bits_BDAT = 0x7FFFFFFF,
+	BDAT_bit_enable = 0x80000000,
 	BDAT_bitindex_enabled = 31
 };
 
 enum BEC_bits_t
 {
+	BEC_bits_BEC = 0x7FFFFFFF,
+	BEC_bit_enable = 0x80000000,
 	BEC_bitindex_enabled = 31
 };
 
 enum BSLOPE_bits_t
 {
+	BSLOPE_bit_bslope = 0x00000001,
+	BSLOPE_bit_both_slopes = 0x00000002,
+	BSLOPE_bit_both_bswtrig = 0x00000004,
 	BSLOPE_bitindex_bslope = 0,
 	BSLOPE_bitindex_both_slopes = 1,
 	BSLOPE_bitindex_bswtrig = 2
@@ -441,6 +492,10 @@ enum BSLOPE_bits_t
 
 enum DSCCtrl_bits_t
 {
+	DSCCtrl_bit_rs1 = 0x00000001,
+	DSCCtrl_bit_dir1 = 0x00000002,
+	DSCCtrl_bit_rs2 = 0x00000100,
+	DSCCtrl_bit_dir2 = 0x00000200,
 	DSCCtrl_bitindex_rs1 = 0,
 	DSCCtrl_bitindex_dir1 = 1,
 	DSCCtrl_bitindex_rs2 = 8,
