@@ -9,19 +9,30 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 
 ### API Changes
 #### Added
-- Add bticnt (rename deprecated setting shortrs to bticnt)
-- Add DLL functions for new registers: DLLGetXckLength(), DLLGetXckPeriod(), DLLGetBonLength(), DLLGetBonPeriod(), DLLGetXckLength_multipleBoards(), DLLGetXckPeriod_multipleBoards(), DLLGetBonLength_multipleBoards(), DLLGetBonPeriod_multipleBoards()
 #### Changed
-- Rename ticnt to sticnt
 #### Removed
 #### Fixed
 #### Deprecated
 ### Other Changes
 #### Added
+#### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+
+## 4.12.0 - 2024-06-12
+### API Changes
+#### Added
+- Add bticnt (rename deprecated setting shortrs to bticnt)
+- Add DLL functions for new registers: DLLGetXckLength(), DLLGetXckPeriod(), DLLGetBonLength(), DLLGetBonPeriod(), DLLGetXckLength_multipleBoards(), DLLGetXckPeriod_multipleBoards(), DLLGetBonLength_multipleBoards(), DLLGetBonPeriod_multipleBoards()
+#### Changed
+- Rename ticnt to sticnt
+### Other Changes
+#### Added
 - ToolTips, WhatsThis
 - Context help action
 - Explanation about WhatsThis, ToolTips in mainpage.md
-- new S0 register: XCKLEN, BONLEN, XCKPERIOD, BONPERIOD
+- new S0 register: XCKLEN, BONLEN, XCKPERIOD, BONPERIOD (since 222.12)
 - new dialog: trigger info. This dialog displays XCKLEN, BONLEN, XCKPERIOD and BONPERIOD
 #### Changed
 - Rename file version.txt to CHANGELOG.md
@@ -34,8 +45,6 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 #### Fixed
 - Fix setup project: add hdf.dll
 - Fix block slider position after allBlocksDone
-#### Deprecated
-
 
 ## 4.11.3 - 2024-05-24
 ### API Changes
