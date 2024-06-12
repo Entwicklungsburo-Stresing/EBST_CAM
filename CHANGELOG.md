@@ -10,6 +10,7 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 ### API Changes
 #### Added
 - Add bticnt (rename deprecated setting shortrs to bticnt)
+- Add DLL functions for new registers: DLLGetXckLength(), DLLGetXckPeriod(), DLLGetBonLength(), DLLGetBonPeriod(), DLLGetXckLength_multipleBoards(), DLLGetXckPeriod_multipleBoards(), DLLGetBonLength_multipleBoards(), DLLGetBonPeriod_multipleBoards()
 #### Changed
 - Rename ticnt to sticnt
 #### Removed

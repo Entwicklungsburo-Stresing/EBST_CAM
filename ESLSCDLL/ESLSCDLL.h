@@ -123,6 +123,14 @@ DllAccess es_status_codes DLLGetAllSpecialPixelInformation(uint32_t drvno, uint3
 DllAccess es_status_codes DLLGetAllSpecialPixelInformation_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp0, struct special_pixels* sp1, struct special_pixels* sp2, struct special_pixels* sp3, struct special_pixels* sp4);
 DllAccess es_status_codes DLLSetSTimer(uint32_t drvno, uint32_t stime_in_microseconds);
 DllAccess es_status_codes DLLSetBTimer(uint32_t drvno, uint32_t btime_in_microseconds);
+DllAccess es_status_codes DLLGetXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns);
+DllAccess es_status_codes DLLGetXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns);
+DllAccess es_status_codes DLLGetBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns);
+DllAccess es_status_codes DLLGetBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns);
+DllAccess es_status_codes DLLGetXckLength_multipleBoards(uint32_t drvno, uint32_t* xckLengthIn10ns0, uint32_t* xckLengthIn10ns1, uint32_t* xckLengthIn10ns2, uint32_t* xckLengthIn10ns3, uint32_t* xckLengthIn10ns4);
+DllAccess es_status_codes DLLGetXckPeriod_multipleBoards(uint32_t drvno, uint32_t* xckPeriodIn10ns0, uint32_t* xckPeriodIn10ns1, uint32_t* xckPeriodIn10ns2, uint32_t* xckPeriodIn10ns3, uint32_t* xckPeriodIn10ns4);
+DllAccess es_status_codes DLLGetBonLength_multipleBoards(uint32_t drvno, uint32_t* bonLengthIn10ns0, uint32_t* bonLengthIn10ns1, uint32_t* bonLengthIn10ns2, uint32_t* bonLengthIn10ns3, uint32_t* bonLengthIn10ns4);
+DllAccess es_status_codes DLLGetBonPeriod_multipleBoards(uint32_t drvno, uint32_t* bonPeriodIn10ns0, uint32_t* bonPeriodIn10ns1, uint32_t* bonPeriodIn10ns2, uint32_t* bonPeriodIn10ns3, uint32_t* bonPeriodIn10ns4);
 //************ read and write functions
 DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address);
 DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards(uint8_t* data0, uint8_t* data1, uint8_t* data2, uint8_t* data3, uint8_t* data4, uint32_t address);
