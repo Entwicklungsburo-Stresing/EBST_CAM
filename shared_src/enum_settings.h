@@ -133,15 +133,26 @@ enum trigger_mode_t
 enum camera_system_t
 {
 	/**
-	 * 0: 3001
+	 * 0: 3001 The following camera versions are a 3001 system:
+	 *		* 205.X
+	 *		* 208.X
+	 *		* 210.X
+	 *		* 211.X
+	 *		* 215.X
+	 *		* 218.X
 	 */
 	camera_system_3001 = 0,
 	/**
-	 * 1: 3010
+	 * 1: 3010. The following camera versions are a 3010 system:
+	 *		* 206.X
+	 *		* 216.X
+	 *		* 230.X
 	 */
 	camera_system_3010 = 1,
 	/**
-	 * 2: 3030
+	 * 2: 3030. The following camera versions are a 3030 system:
+	 *		* 209.X
+	 *		* 212.X
 	 */
 	camera_system_3030 = 2
 };
