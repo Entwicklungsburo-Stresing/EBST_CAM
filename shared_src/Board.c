@@ -3629,20 +3629,20 @@ es_status_codes readBlockTriggerState(uint32_t drvno, uint8_t btrig_ch, bool* st
 	case 2: //S1
 		status = readRegisterS0_8(drvno, &val, S0Addr_CTRLC);
 		if (status != es_no_error) return status;
-		if ((val & 0x02) > 0) *state = true;
+		if ((val & CTRLC_bit_S1) > 0) *state = true;
 		break;
 	case 3: //S2
 		status = readRegisterS0_8(drvno, &val, S0Addr_CTRLC);
 		if (status != es_no_error) return status;
-		if ((val & 0x04) > 0) *state = true;
+		if ((val & CTRLC_bit_S2) > 0) *state = true;
 		break;
 	case 4: // S1&S2
 		status = readRegisterS0_8(drvno, &val, S0Addr_CTRLC);
 		if (status != es_no_error) return status;
-		if ((val & 0x02) == 0) *state = false;
+		if ((val & CTRLC_bit_S1) == 0) *state = false;
 		status = readRegisterS0_8(drvno, &val, S0Addr_CTRLC);
 		if (status != es_no_error) return status;
-		if ((val & 0x04) == 0) *state = false;
+		if ((val & CTRLC_bit_S2) == 0) *state = false;
 		*state = true;
 		break;
 	case 5: // TSTART
