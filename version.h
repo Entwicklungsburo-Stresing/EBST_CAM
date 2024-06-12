@@ -2,8 +2,8 @@
 #define STRINGIZE(s) STRINGIZE2(s)
 
 #define VERSION_MAJOR_ESCAM         4  //Zaehlt nur alle paar jahre hoch, z.B. windows 20 mit 128 bit
-#define VERSION_PCIE_BOARD_VERSION  11 //PCI Karten Version
-#define VERSION_MINOR_ESCAM         3
+#define VERSION_PCIE_BOARD_VERSION  12 //PCI Karten Version
+#define VERSION_MINOR_ESCAM         0
 
 #define VER_FILE_VERSION            VERSION_MAJOR_ESCAM, VERSION_PCIE_BOARD_VERSION, VERSION_MINOR_ESCAM
 #define VER_FILE_VERSION_STR        STRINGIZE(VERSION_MAJOR_ESCAM)        \
