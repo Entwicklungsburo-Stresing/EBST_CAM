@@ -1108,6 +1108,178 @@ DllAccess es_status_codes DLLSetBTimer(uint32_t drvno, uint32_t btime_in_microse
 	return SetBTimer(drvno, btime_in_microseconds);
 }
 
+/**
+ * \copydoc GetXckLength
+ */
+DllAccess es_status_codes DLLGetXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns)
+{
+	return GetXckLength(drvno, xckLengthIn10ns);
+}
+
+/**
+ * \copydoc GetXckPeriod
+ */
+DllAccess es_status_codes DLLGetXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns)
+{
+	return GetXckPeriod(drvno, xckPeriodIn10ns);
+}
+
+/**
+ * \copydoc GetBonLength
+ */
+DllAccess es_status_codes DLLGetBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns)
+{
+	return GetBonLength(drvno, bonLengthIn10ns);
+}
+
+/**
+ * \copydoc GetBonPeriod
+ */
+DllAccess es_status_codes DLLGetBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns)
+{
+	return GetBonPeriod(drvno, bonPeriodIn10ns);
+}
+
+/**
+ * \brief Get the high time duration of XCK from the S0 register XCKLEN.
+ *
+ * The signal is measured once per measurement. The fist valid value can be read after the first completed XCK.
+ * The value range is:
+ *		* min: 0
+ *		* step: 1 => 10 ns
+ *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param xckLengthIn10ns0 pointer to uint32 where the XCK length of board0 is returned
+ * \param xckLengthIn10ns1 pointer to uint32 where the XCK length of board1 is returned
+ * \param xckLengthIn10ns2 pointer to uint32 where the XCK length of board2 is returned
+ * \param xckLengthIn10ns3 pointer to uint32 where the XCK length of board3 is returned
+ * \param xckLengthIn10ns4 pointer to uint32 where the XCK length of board4 is returned
+
+ * \return es_status_codes
+ */
+DllAccess es_status_codes DLLGetXckLength_multipleBoards(uint32_t drvno, uint32_t* xckLengthIn10ns0, uint32_t* xckLengthIn10ns1, uint32_t* xckLengthIn10ns2, uint32_t* xckLengthIn10ns3, uint32_t* xckLengthIn10ns4)
+{
+	es_status_codes status = es_no_error;
+	uint32_t* xckLengthIn10ns[MAXPCIECARDS] = { xckLengthIn10ns0, xckLengthIn10ns1, xckLengthIn10ns2, xckLengthIn10ns3, xckLengthIn10ns4 };
+	int usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = GetXckLength(drvno, xckLengthIn10ns[usedBoards]);
+			if (status != es_no_error) return status;
+			usedBoards++;
+		}
+	}
+	return status;
+}
+
+/**
+ * \brief Get pos edge to pos egde time of XCK time from the S0 register XCKPERIOD.
+ *
+ * The signal is measured once per measurement. The fist valid value can be read after the start of the second XCK.
+ * The value range is:
+ *		* min: 0
+ *		* step: 1 => 10 ns
+ *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param xckPeriodIn10ns0 pointer to uint32 where the XCK period of board0 is returned
+ * \param xckPeriodIn10ns1 pointer to uint32 where the XCK period of board1 is returned
+ * \param xckPeriodIn10ns2 pointer to uint32 where the XCK period of board2 is returned
+ * \param xckPeriodIn10ns3 pointer to uint32 where the XCK period of board3 is returned
+ * \param xckPeriodIn10ns4 pointer to uint32 where the XCK period of board4 is returned
+
+ * \return es_status_codes
+ */
+DllAccess es_status_codes DLLGetXckPeriod_multipleBoards(uint32_t drvno, uint32_t* xckPeriodIn10ns0, uint32_t* xckPeriodIn10ns1, uint32_t* xckPeriodIn10ns2, uint32_t* xckPeriodIn10ns3, uint32_t* xckPeriodIn10ns4)
+{
+	es_status_codes status = es_no_error;
+	uint32_t* xckPeriodIn10ns[MAXPCIECARDS] = { xckPeriodIn10ns0, xckPeriodIn10ns1, xckPeriodIn10ns2, xckPeriodIn10ns3, xckPeriodIn10ns4 };
+	int usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = GetXckPeriod(drvno, xckPeriodIn10ns[usedBoards]);
+			if (status != es_no_error) return status;
+			usedBoards++;
+		}
+	}
+	return status;
+}
+
+/**
+ * \brief Get the high time duration of BON from the S0 register BONLEN.
+ *
+ * The signal is measured once per measurement. The fist valid value can be read after the first completed BON.
+ * The value range is:
+ *		* min: 0
+ *		* step: 1 => 10 ns
+ *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param bonLengthIn10ns0 pointer to uint32 where the BON length of board0 is returned
+ * \param bonLengthIn10ns1 pointer to uint32 where the BON length of board1 is returned
+ * \param bonLengthIn10ns2 pointer to uint32 where the BON length of board2 is returned
+ * \param bonLengthIn10ns3 pointer to uint32 where the BON length of board3 is returned
+ * \param bonLengthIn10ns4 pointer to uint32 where the BON length of board4 is returned
+
+ * \return es_status_codes
+ */
+DllAccess es_status_codes DLLGetBonLength_multipleBoards(uint32_t drvno, uint32_t* bonLengthIn10ns0, uint32_t* bonLengthIn10ns1, uint32_t* bonLengthIn10ns2, uint32_t* bonLengthIn10ns3, uint32_t* bonLengthIn10ns4)
+{
+	es_status_codes status = es_no_error;
+	uint32_t* bonLengthIn10ns[MAXPCIECARDS] = { bonLengthIn10ns0, bonLengthIn10ns1, bonLengthIn10ns2, bonLengthIn10ns3, bonLengthIn10ns4 };
+	int usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = GetBonLength(drvno, bonLengthIn10ns[usedBoards]);
+			if (status != es_no_error) return status;
+			usedBoards++;
+		}
+	}
+	return status;
+}
+
+/**
+ * \brief Get the pos edge to pos edge time of BON from the S0 register BONPERIOD.
+ *
+ * The signal is measured once per measurement. The fist valid value can be read after the start of the second BON.
+ * The value range is:
+ *		* min: 0
+ *		* step: 1 => 10 ns
+ *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param bonPeriodIn10ns0 pointer to uint32 where the BON period of board0 is returned
+ * \param bonPeriodIn10ns1 pointer to uint32 where the BON period of board1 is returned
+ * \param bonPeriodIn10ns2 pointer to uint32 where the BON period of board2 is returned
+ * \param bonPeriodIn10ns3 pointer to uint32 where the BON period of board3 is returned
+ * \param bonPeriodIn10ns4 pointer to uint32 where the BON period of board4 is returned
+
+ * \return es_status_codes
+ */
+DllAccess es_status_codes DLLGetBonPeriod_multipleBoards(uint32_t drvno, uint32_t* bonPeriodIn10ns0, uint32_t* bonPeriodIn10ns1, uint32_t* bonPeriodIn10ns2, uint32_t* bonPeriodIn10ns3, uint32_t* bonPeriodIn10ns4)
+{
+	es_status_codes status = es_no_error;
+	uint32_t* bonPeriodIn10ns[MAXPCIECARDS] = { bonPeriodIn10ns0, bonPeriodIn10ns1, bonPeriodIn10ns2, bonPeriodIn10ns3, bonPeriodIn10ns4 };
+	int usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = GetBonPeriod(drvno, bonPeriodIn10ns[usedBoards]);
+			if (status != es_no_error) return status;
+			usedBoards++;
+		}
+	}
+	return status;
+}
+
 #ifdef COMPILE_FOR_LABVIEW
 /**
  * \brief Save the user event handlers created by Labview. Call this before using the event structure.

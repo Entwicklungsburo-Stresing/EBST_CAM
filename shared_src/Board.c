@@ -6098,21 +6098,65 @@ es_status_codes CheckFirstMeasurementDone(uint32_t drvno)
 }
 #endif
 
+/**
+ * \brief Get the high time duration of XCK from the S0 register XCKLEN.
+ * 
+ * The signal is measured once per measurement. The fist valid value can be read after the first completed XCK.
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param xckLengthIn10ns pointer to uint32 where the XCK length is returned
+ *		* min: 0
+ *		* step: 1 => 10 ns
+ *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
+ * \return es_status_codes
+ */
 es_status_codes GetXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns)
 {
 	return readRegisterS0_32(drvno, xckLengthIn10ns, S0Addr_XCKLEN);
 }
 
+/**
+ * \brief Get pos edge to pos egde time of XCK time from the S0 register XCKPERIOD.
+ *
+ * The signal is measured once per measurement. The fist valid value can be read after the start of the second XCK.
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param xckPeriodIn10ns pointer to uint32 where the XCK period is returned
+ *		* min: 0
+ *		* step: 1 => 10 ns
+ *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
+ * \return es_status_codes
+ */
 es_status_codes GetXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns)
 {
 	return readRegisterS0_32(drvno, xckPeriodIn10ns, S0Addr_XCK_PERIOD);
 }
 
+/**
+ * \brief Get the high time duration of BON from the S0 register BONLEN.
+ *
+ * The signal is measured once per measurement. The fist valid value can be read after the first completed BON.
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param bonLengthIn10ns pointer to uint32 where the BON length is returned
+ *		* min: 0
+ *		* step: 1 => 10 ns
+ *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
+ * \return es_status_codes
+ */
 es_status_codes GetBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns)
 {
 	return readRegisterS0_32(drvno, bonLengthIn10ns, S0Addr_BONLEN);
 }
 
+/**
+ * \brief Get the pos edge to pos edge time of BON from the S0 register BONPERIOD.
+ *
+ * The signal is measured once per measurement. The fist valid value can be read after the start of the second BON.
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param bonPeriodIn10ns pointer to uint32 where the BON period is returned
+ *		* min: 0
+ *		* step: 1 => 10 ns
+ *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
+ * \return es_status_codes
+ */
 es_status_codes GetBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns)
 {
 	return readRegisterS0_32(drvno, bonPeriodIn10ns, S0Addr_BON_PERIOD);
