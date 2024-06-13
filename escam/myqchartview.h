@@ -14,14 +14,21 @@ public:
 	qreal curr_xmin=0;
 	qreal curr_ymax=0xFFFF;
 	qreal curr_ymin=0;
+	bool pointsVisible = false;
+	void setChartData(QLineSeries** series, uint16_t numberOfSets);
+	void setChartData(uint16_t* data, uint32_t* length, uint16_t numberOfSets, QList<QString> lineSeriesNamesList);
+public slots:
+	void setDefaultAxes();
+	void on_rubberBandChanged();
+signals:
+	void rubberBandChanged();
 protected:
 	void mouseReleaseEvent(QMouseEvent *event) override;
 	void mouseMoveEvent(QMouseEvent* event) override;
 	QList<QPointF> findNearestPoint(qreal xValue);
 private:
 	Crosshairs *xCrosshair;
-signals:
-	void rubberBandChanged();
+	QSettings settings;
 };
 
 #endif // MYQCHARTVIEW_H
