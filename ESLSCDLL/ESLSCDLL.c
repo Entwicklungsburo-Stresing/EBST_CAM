@@ -1157,7 +1157,7 @@ DllAccess es_status_codes DLLGetBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn1
 
  * \return es_status_codes
  */
-DllAccess es_status_codes DLLGetXckLength_multipleBoards(uint32_t drvno, uint32_t* xckLengthIn10ns0, uint32_t* xckLengthIn10ns1, uint32_t* xckLengthIn10ns2, uint32_t* xckLengthIn10ns3, uint32_t* xckLengthIn10ns4)
+DllAccess es_status_codes DLLGetXckLength_multipleBoards(uint32_t* xckLengthIn10ns0, uint32_t* xckLengthIn10ns1, uint32_t* xckLengthIn10ns2, uint32_t* xckLengthIn10ns3, uint32_t* xckLengthIn10ns4)
 {
 	es_status_codes status = es_no_error;
 	uint32_t* xckLengthIn10ns[MAXPCIECARDS] = { xckLengthIn10ns0, xckLengthIn10ns1, xckLengthIn10ns2, xckLengthIn10ns3, xckLengthIn10ns4 };
@@ -1192,7 +1192,7 @@ DllAccess es_status_codes DLLGetXckLength_multipleBoards(uint32_t drvno, uint32_
 
  * \return es_status_codes
  */
-DllAccess es_status_codes DLLGetXckPeriod_multipleBoards(uint32_t drvno, uint32_t* xckPeriodIn10ns0, uint32_t* xckPeriodIn10ns1, uint32_t* xckPeriodIn10ns2, uint32_t* xckPeriodIn10ns3, uint32_t* xckPeriodIn10ns4)
+DllAccess es_status_codes DLLGetXckPeriod_multipleBoards(uint32_t* xckPeriodIn10ns0, uint32_t* xckPeriodIn10ns1, uint32_t* xckPeriodIn10ns2, uint32_t* xckPeriodIn10ns3, uint32_t* xckPeriodIn10ns4)
 {
 	es_status_codes status = es_no_error;
 	uint32_t* xckPeriodIn10ns[MAXPCIECARDS] = { xckPeriodIn10ns0, xckPeriodIn10ns1, xckPeriodIn10ns2, xckPeriodIn10ns3, xckPeriodIn10ns4 };
@@ -1227,7 +1227,7 @@ DllAccess es_status_codes DLLGetXckPeriod_multipleBoards(uint32_t drvno, uint32_
 
  * \return es_status_codes
  */
-DllAccess es_status_codes DLLGetBonLength_multipleBoards(uint32_t drvno, uint32_t* bonLengthIn10ns0, uint32_t* bonLengthIn10ns1, uint32_t* bonLengthIn10ns2, uint32_t* bonLengthIn10ns3, uint32_t* bonLengthIn10ns4)
+DllAccess es_status_codes DLLGetBonLength_multipleBoards(uint32_t* bonLengthIn10ns0, uint32_t* bonLengthIn10ns1, uint32_t* bonLengthIn10ns2, uint32_t* bonLengthIn10ns3, uint32_t* bonLengthIn10ns4)
 {
 	es_status_codes status = es_no_error;
 	uint32_t* bonLengthIn10ns[MAXPCIECARDS] = { bonLengthIn10ns0, bonLengthIn10ns1, bonLengthIn10ns2, bonLengthIn10ns3, bonLengthIn10ns4 };
@@ -1262,7 +1262,7 @@ DllAccess es_status_codes DLLGetBonLength_multipleBoards(uint32_t drvno, uint32_
 
  * \return es_status_codes
  */
-DllAccess es_status_codes DLLGetBonPeriod_multipleBoards(uint32_t drvno, uint32_t* bonPeriodIn10ns0, uint32_t* bonPeriodIn10ns1, uint32_t* bonPeriodIn10ns2, uint32_t* bonPeriodIn10ns3, uint32_t* bonPeriodIn10ns4)
+DllAccess es_status_codes DLLGetBonPeriod_multipleBoards(uint32_t* bonPeriodIn10ns0, uint32_t* bonPeriodIn10ns1, uint32_t* bonPeriodIn10ns2, uint32_t* bonPeriodIn10ns3, uint32_t* bonPeriodIn10ns4)
 {
 	es_status_codes status = es_no_error;
 	uint32_t* bonPeriodIn10ns[MAXPCIECARDS] = { bonPeriodIn10ns0, bonPeriodIn10ns1, bonPeriodIn10ns2, bonPeriodIn10ns3, bonPeriodIn10ns4 };
