@@ -268,12 +268,14 @@ void MyQChartView::setChartData(uint16_t* data, uint32_t* length, uint16_t numbe
 
 void MyQChartView::on_axes_changed()
 {
-	if (pointsInRect() < 50 && !pointsVisible)
+	qsizetype pointsInRect = countPointsInRect();
+	qsizetype pointsVisibleThreshold = 50;
+	if (pointsInRect < pointsVisibleThreshold && !pointsVisible)
 	{
 		pointsVisible = true;
 		mainWindow->loadCameraData();
 	}
-	else if (pointsInRect() >= 50 && pointsVisible)
+	else if (pointsInRect >= pointsVisibleThreshold && pointsVisible)
 	{
 		pointsVisible = false;
 		mainWindow->loadCameraData();
@@ -282,7 +284,7 @@ void MyQChartView::on_axes_changed()
 }
 
 // https://stackoverflow.com/questions/52777058/how-to-get-points-that-are-displayed-while-zoomed-in
-qsizetype MyQChartView::pointsInRect()
+qsizetype MyQChartView::countPointsInRect()
 {
 	QRectF inScene = this->chart()->plotArea();
 	QPolygonF inChart = this->chart()->mapFromScene(inScene);
