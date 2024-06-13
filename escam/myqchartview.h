@@ -31,7 +31,7 @@ protected:
 private:
 	Crosshairs *xCrosshair;
 	QSettings settings;
-	qsizetype pointsInRect();
+	qsizetype countPointsInRect();
 };
 
 #endif // MYQCHARTVIEW_H
