@@ -16,7 +16,8 @@ public:
 	~DialogAxes();
 
 	void on_rubberband_valueChanged();
-
+signals:
+	void spinBoxAxes_valueChanged();
 private slots:
 	void on_buttonBox_rejected();
 	void on_spinBoxXmin_valueChanged(int arg1);

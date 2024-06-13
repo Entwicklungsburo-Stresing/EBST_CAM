@@ -242,6 +242,7 @@ void MyQChartView::setChartData(uint16_t* data, uint32_t* length, uint16_t numbe
 	{
 		// Set the current data set to a new empty QLineSeries.
 		series[set] = new QLineSeries(this);
+		series[set]->setPointsVisible(pointsVisible);
 		series[set]->setName(lineSeriesNamesList[set]);
 		// Iterate through all data points for the current data set.
 		for (uint16_t i = 0; i < length[set]; i++)
@@ -254,5 +255,37 @@ void MyQChartView::setChartData(uint16_t* data, uint32_t* length, uint16_t numbe
 	setChartData(series, numberOfSets);
 	free(series);
 	return;
+}
+
+void MyQChartView::on_axes_changed()
+{
+	if (pointsInRect() < 50 && !pointsVisible)
+	{
+		pointsVisible = true;
+		mainWindow->loadCameraData();
+	}
+	else if (pointsInRect() >= 50 && pointsVisible)
+	{
+		pointsVisible = false;
+		mainWindow->loadCameraData();
+	}
+	return;
+}
+
+// https://stackoverflow.com/questions/52777058/how-to-get-points-that-are-displayed-while-zoomed-in
+qsizetype MyQChartView::pointsInRect()
+{
+	QRectF inScene = this->chart()->plotArea();
+	QPolygonF inChart = this->chart()->mapFromScene(inScene);
+	QRectF inChartRect = inChart.boundingRect();
+	QPointF inItem1 = this->chart()->mapToValue(inChartRect.topLeft(), this->chart()->series()[0]);
+	QPointF inItem2 = this->chart()->mapToValue(inChartRect.bottomRight(), this->chart()->series()[0]);
+	QRectF rect = QRectF(inItem1, inItem2).normalized();
+	QVector<QPointF> result;
+	QLineSeries* series = static_cast<QLineSeries*>(this->chart()->series()[0]);
+	QList<QPointF> points = series->points();
+	std::copy_if(points.begin(), points.end(), std::back_inserter(result),
+		[rect](auto& p) { return rect.contains(p); });
+	return result.size();
 }
 
