@@ -20,6 +20,16 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 #### Fixed
 #### Deprecated
 
+## 4.12.1 - 2024-06-13
+### API Changes
+#### Fixed
+- Fix parameters of DLLGetXckLength_multipleBoards, DLLGetXckPeriod_multipleBoards, DLLGetBonLength_multipleBoards, DLLGetBonPeriod_multipleBoards
+### Other Changes
+#### Added
+- Show data point dots when there are less than 50 data points in the current zoom level
+#### Fixed
+- Improve position label: round instead of floor
+
 ## 4.12.0 - 2024-06-12
 ### API Changes
 #### Added
