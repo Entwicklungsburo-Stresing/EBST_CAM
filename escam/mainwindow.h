@@ -34,8 +34,6 @@ public slots:
 	void startPressed();
 private:
 	QSettings settings;
-	void setChartData(QLineSeries** series, uint16_t numberOfSets);
-	void setChartData(uint16_t* data, uint32_t* length, uint16_t numberOfSets, QList<QString> lineSeriesNamesList);
 	DialogDSC* ds_dsc = new DialogDSC( this );
 	DialogRMS* ds_rms = new DialogRMS( this );
 	QThread measurementThread;
@@ -56,7 +54,6 @@ private slots:
 	void on_actionCameras_triggered();
 	void on_actionReset_axes_triggered();
 	void on_actionContext_help_triggered();
-	void setDefaultAxes();
 	void on_actionAbout_triggered();
 	void on_actionAbout_Qt_triggered();
 	void on_actionDAC_triggered();
@@ -64,7 +61,6 @@ private slots:
 	void on_actionShow_triggered();
 	void loadSettings();
 	void on_actionDump_board_registers_triggered();
-	void on_rubberBandChanged();
 	void on_checkBoxShowCamera(bool state, int camera, uint32_t drvno);
 	void on_pushButtonStartStop_pressed();
 	void on_horizontalSliderBlock_valueChanged();
