@@ -19,6 +19,7 @@ public:
 	void setChartData(uint16_t* data, uint32_t* length, uint16_t numberOfSets, QList<QString> lineSeriesNamesList);
 public slots:
 	void setDefaultAxes();
+	void on_axes_changed();
 	void on_rubberBandChanged();
 signals:
 	void rubberBandChanged();
@@ -29,6 +30,7 @@ protected:
 private:
 	Crosshairs *xCrosshair;
 	QSettings settings;
+	qsizetype pointsInRect();
 };
 
 #endif // MYQCHARTVIEW_H
