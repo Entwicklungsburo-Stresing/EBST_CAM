@@ -21,6 +21,7 @@ public slots:
 	void setDefaultAxes();
 	void on_axes_changed();
 	void on_rubberBandChanged();
+	void updateLabelMouseCoordinates(QPoint mousePos);
 signals:
 	void rubberBandChanged();
 protected:
