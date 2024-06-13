@@ -688,7 +688,7 @@ void MainWindow::loadCameraData()
 	//	ui->chartView->chart()->legend()->setVisible(true);
 	//else
 	//	ui->chartView->chart()->legend()->setVisible(false);
-
+	ui->chartView->updateLabelMouseCoordinates(ui->chartView->mapFromGlobal(QCursor::pos()));
 	free(data);
 	return;
 }

@@ -21,6 +21,7 @@ void MyQChartView::mouseReleaseEvent(QMouseEvent* event)
 {
 	QChartView::mouseReleaseEvent(event);
 	emit rubberBandChanged();
+	return;
 }
 
 /**
@@ -32,7 +33,14 @@ void MyQChartView::mouseMoveEvent(QMouseEvent* event)
 {
 	QChartView::mouseMoveEvent(event);
 	QPoint pos = event->pos();
-	QPointF mappedPos = chart()->mapToValue(pos);
+	updateLabelMouseCoordinates(pos);
+	xCrosshair->updatePosition(pos);
+	return;
+}
+
+void MyQChartView::updateLabelMouseCoordinates(QPoint mousePos)
+{
+	QPointF mappedPos = chart()->mapToValue(mousePos);
 	QList<QPointF> nearestPointList = findNearestPoint(mappedPos.x());
 	if (nearestPointList.first().x() < 0 || nearestPointList.first().y() < 0) return;
 	QString toolTip = QString("X:  %1").arg(nearestPointList.first().x());
@@ -40,8 +48,9 @@ void MyQChartView::mouseMoveEvent(QMouseEvent* event)
 		toolTip.append(QString(", Y%1: %2").arg(i).arg(nearestPointList.at(i).y()));
 	}
 	mainWindow->ui->labelMouseCoordinates->setText(toolTip);
-	xCrosshair->updatePosition(pos);
+	return;
 }
+
 
 /**
  * Returns the nearest y value for given x value.
