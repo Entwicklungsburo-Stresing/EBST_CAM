@@ -52,7 +52,7 @@ QList<QPointF> MyQChartView::findNearestPoint(qreal xValue) {
 	QList<QPointF> pointList;
 	pointList.append(QPointF(-1, -1)); //Used to exit tooltip creation if chart has no data
 
-	qreal roundedXValue = std::floor(xValue); //Used to not display next value early
+	int roundedXValue = qRound(xValue); //Used to not display next value early
 
 	if (chart()->series().empty() || roundedXValue < 0) return pointList;
 
