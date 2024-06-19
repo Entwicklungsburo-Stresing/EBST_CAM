@@ -3677,7 +3677,7 @@ es_status_codes waitForBlockReady(uint32_t board_sel)
 				if (status != es_no_error) return status;
 			}
 		}
-	} while (blockOn[0] || blockOn[1] || blockOn[2] || blockOn[3] || blockOn[4]);
+	} while ((blockOn[0] || blockOn[1] || blockOn[2] || blockOn[3] || blockOn[4]) && !abortMeasurementFlag);
 	return status;
 }
 
@@ -3704,7 +3704,7 @@ es_status_codes WaitForMeasureReady(uint32_t board_sel)
 				if (status != es_no_error) return status;
 			}
 		}
-	} while (measureOn[0] || measureOn[1] || measureOn[2] || measureOn[3] || measureOn[4]);
+	} while ((measureOn[0] || measureOn[1] || measureOn[2] || measureOn[3] || measureOn[4]) && !abortMeasurementFlag);
 	return status;
 }
 
