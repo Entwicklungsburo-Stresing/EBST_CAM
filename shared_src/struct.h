@@ -270,7 +270,7 @@ struct camera_settings
 	uint32_t is_hs_ir;
 	/**
 	 * IOCTRL impact start pixel is the position in the pixel array where the information of voltage or integrator inputs are written. The number of these inputs can differ, so length of these additional information can differ, too. The setting specifies the first pixel where the information is written, so the information can be read from this one and the following pixels. IOCTRL impact start pixel is a 16 bit unsigned integer. Further information about IOCTRL impact start pixel can be found in the manual in chapter 7.3.
-	 *		* min: 0
+	 *		* min: 23
 	 *		* step: 1
 	 *		* default: 1078
 	 *		* max: 65535
