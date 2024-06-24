@@ -428,7 +428,8 @@ void CameraSettingsWidget::on_comboBoxFftMode_currentIndexChanged(int index)
 		ui->comboBoxSti->setCurrentIndex(sti_ASL);
 		if (ds)
 		{
-			ds->ui->doubleSpinBoxNos->setValue(ui->spinBoxNumberOfRegions->value());
+			if(!enabled)
+				ds->ui->doubleSpinBoxNos->setValue(ui->spinBoxNumberOfRegions->value());
 			ds->ui->doubleSpinBoxNos->setEnabled(enabled);
 		}
 		break;
@@ -440,7 +441,8 @@ void CameraSettingsWidget::on_comboBoxFftMode_currentIndexChanged(int index)
 		ui->comboBoxSti->setCurrentIndex(sti_ASL);
 		if (ds)
 		{
-			ds->ui->doubleSpinBoxNos->setValue(ui->spinBoxLines->value());
+			if (!enabled)
+				ds->ui->doubleSpinBoxNos->setValue(ui->spinBoxLines->value());
 			ds->ui->doubleSpinBoxNos->setEnabled(enabled);
 		}
 		break;
