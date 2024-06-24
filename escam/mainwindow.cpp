@@ -1067,15 +1067,16 @@ void MainWindow::showCurrentScan()
 	// If the current scan number is one of the first 3 scans in the measurement, abort the displaying.
 	// This is here to prevent showing the first over exposed scans when in software polling mode.
 	// This also prevents showing a zero line, when no scans have been written to the user buffer yet and getCurrentScanNumber gives -1 or 0 for sample and block.
-	if (sample <= 2 && block <= 0)
-	{
-		if (measurement_cnt > 1)
-		{
-			ui->horizontalSliderSample->setValue(ui->horizontalSliderSample->maximum());
-			ui->horizontalSliderBlock->setValue(ui->horizontalSliderBlock->maximum());
-		}
-		return;
-	}
+	// 06/24: Commented out these lines. This might be a good idea when nos and/or nob are big numbers but leads to problems, when nos and nob are small.
+	//if (sample <= 2 && block <= 0)
+	//{
+	//	if (measurement_cnt > 1)
+	//	{
+	//		ui->horizontalSliderSample->setValue(ui->horizontalSliderSample->maximum());
+	//		ui->horizontalSliderBlock->setValue(ui->horizontalSliderBlock->maximum());
+	//	}
+	//	return;
+	//}
 	int radioState = 0;
 	if (ui->radioButtonLiveViewOff->isChecked()) radioState = 0;
 	else if (ui->radioButtonLiveViewFixedSample->isChecked()) radioState = 1;
