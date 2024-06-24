@@ -20,6 +20,18 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 #### Fixed
 #### Deprecated
 
+## 4.12.2 - 2024-06-24
+### API Changes
+- none
+### Other Changes
+#### Changed
+- Make WaitForBlockReady() and WaitForMeasureReady() abortable
+- Set minimum of ioctrl_impact_start_pixel to 23
+#### Fixed
+- Deactivate group separator for values with 0 suffix
+- Fix live view for small nos and nob
+- Fix nos and nob in free settings mode
+
 ## 4.12.1 - 2024-06-13
 ### API Changes
 #### Fixed
