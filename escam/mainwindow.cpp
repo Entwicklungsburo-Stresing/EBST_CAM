@@ -493,11 +493,13 @@ void MainWindow::loadSettings()
 	int nos = settings.value(settingNosPath, settingNosDefault).toDouble();
 	ui->horizontalSliderSample->setMaximum(nos);
 	ui->spinBoxSample->setMaximum(nos);
+	if (nos < ui->horizontalSliderSample->value())
+		ui->horizontalSliderSample->setValue(nos);
 	int nob = settings.value(settingNobPath, settingNobDefault).toDouble();
 	ui->horizontalSliderBlock->setMaximum(nob);
 	ui->spinBoxBlock->setMaximum(nob);
-	ui->horizontalSliderSample->setValue(nos);
-	ui->horizontalSliderBlock->setValue(nob);
+	if(nob < ui->horizontalSliderBlock->value())
+		ui->horizontalSliderBlock->setValue(nob);
 	QString theme = settings.value(settingThemePath, settingThemeDefault).toString();
 	QApplication::setStyle(QStyleFactory::create(theme));
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 0))
