@@ -88,32 +88,32 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
-    <LibraryPath>$(SolutionDir);$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)..\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_minimal|x64'">
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
-    <LibraryPath>$(SolutionDir);$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)..\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Labview|x64'">
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
-    <LibraryPath>$(SolutionDir);C:\Program Files\National Instruments;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir);C:\Program Files\National Instruments;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)..\;C:\Program Files\National Instruments;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\;C:\Program Files\National Instruments;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>$(SolutionDir);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)..\;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_minimal|x64'">
-    <LibraryPath>$(SolutionDir);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)..\;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Labview|x64'">
-    <LibraryPath>$(SolutionDir);C:\Program Files\National Instruments;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir);C:\Program Files\National Instruments;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)..\;C:\Program Files\National Instruments;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\;C:\Program Files\National Instruments;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -126,11 +126,11 @@
       <WarningLevel>Level3</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;$(SolutionDir)Jungo\wdapi1400.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)..\Jungo\wdapi1400.lib;$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;d2d1.lib;dwrite.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <ResourceCompile>
@@ -139,9 +139,9 @@
       <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)shared_src\" 
-xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"
-xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(ProjectDir)..\shared_src\" 
+xcopy /Y "$(TargetPath)" "$(ProjectDir)..\$(Platform)\$(Configuration)\"
+xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(ProjectDir)..\$(Platform)\$(Configuration)\"</Command>
       <Message>copy $(ProjectName)</Message>
     </PostBuildEvent>
     <BuildLog />
@@ -157,11 +157,11 @@ xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(SolutionDir)$(Platform)\$(Configur
       <WarningLevel>Level3</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;$(SolutionDir)Jungo\wdapi1400.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)..\Jungo\wdapi1400.lib;$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <ResourceCompile>
@@ -170,9 +170,9 @@ xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(SolutionDir)$(Platform)\$(Configur
       <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)shared_src\" 
-xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"
-xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(ProjectDir)..\shared_src\" 
+xcopy /Y "$(TargetPath)" "$(ProjectDir)..\$(Platform)\$(Configuration)\"
+xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(ProjectDir)..\$(Platform)\$(Configuration)\"</Command>
       <Message>copy $(ProjectName)</Message>
     </PostBuildEvent>
     <BuildLog />
@@ -188,11 +188,11 @@ xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(SolutionDir)$(Platform)\$(Configur
       <Optimization>Disabled</Optimization>
       <CallingConvention>StdCall</CallingConvention>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <AdditionalIncludeDirectories>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;$(SolutionDir)Jungo\wdapi1400.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)..\Jungo\wdapi1400.lib;$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;d2d1.lib;dwrite.lib;windowscodecs.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <ResourceCompile>
@@ -201,9 +201,9 @@ xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(SolutionDir)$(Platform)\$(Configur
       <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)shared_src\" 
-xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"
-xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(ProjectDir)..\shared_src\" 
+xcopy /Y "$(TargetPath)" "$(ProjectDir)..\$(Platform)\$(Configuration)\"
+xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(ProjectDir)..\$(Platform)\$(Configuration)\"</Command>
       <Message>copy $(ProjectName)</Message>
     </PostBuildEvent>
     <BuildLog />
@@ -216,19 +216,19 @@ xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(SolutionDir)$(Platform)\$(Configur
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
-      <AdditionalIncludeDirectories>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;$(SolutionDir)Jungo\wdapi1400.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)..\Jungo\wdapi1400.lib;$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;d2d1.lib;dwrite.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)shared_src\" 
-xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(ProjectDir)..\shared_src\" 
+xcopy /Y "$(TargetPath)" "$(ProjectDir)..\$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>copy $(ProjectName)</Message>
@@ -245,19 +245,19 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
-      <AdditionalIncludeDirectories>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>$(SolutionDir)Jungo\wdapi1400.lib;$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)..\Jungo\wdapi1400.lib;$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)shared_src\" 
-xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(ProjectDir)..\shared_src\" 
+xcopy /Y "$(TargetPath)" "$(ProjectDir)..\$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>copy $(ProjectName)</Message>
@@ -274,19 +274,19 @@ xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
       <WarningLevel>Level3</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
       <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;COMPILE_FOR_LABVIEW;H5_BUILT_AS_DYNAMIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>$(SolutionDir)hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;$(SolutionDir)Jungo\wdapi1400.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)..\Jungo\wdapi1400.lib;$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;d2d1.lib;dwrite.lib;windowscodecs.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(SolutionDir)shared_src\" 
-xcopy /Y "$(TargetPath)" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(ProjectDir)..\shared_src\" 
+xcopy /Y "$(TargetPath)" "$(ProjectDir)..\$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>copy $(ProjectName)</Message>
