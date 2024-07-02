@@ -134,6 +134,7 @@ enum camera_system_t
 {
 	/**
 	 * 0: 3001
+	 * 
 	 * These camera versions are a 3001 system:
 	 *		* 205.X
 	 *		* 208.X
@@ -141,6 +142,7 @@ enum camera_system_t
 	 *		* 211.X
 	 *		* 215.X
 	 *		* 218.X
+	 * 
 	 * These sensors are a 3001 system:
 	 *		* S3901/S3904
 	 *		* S3902/S3903
@@ -156,10 +158,12 @@ enum camera_system_t
 	camera_system_3001 = 0,
 	/**
 	 * 1: 3010.
+	 * 
 	 * These camera versions are a 3010 system:
 	 *		* 206.X
 	 *		* 216.X
 	 *		* 230.X
+	 * 
 	 * These sensors are a 3010 system:
 	 *		* S9037/S9038
 	 *		* S11071
@@ -168,9 +172,11 @@ enum camera_system_t
 	camera_system_3010 = 1,
 	/**
 	 * 2: 3030.
+	 * 
 	 * These camera versions are a 3030 system:
 	 *		* 209.X
 	 *		* 212.X
+	 * 
 	 * These sensors are a 3030 system:
 	 *		* S14290
 	 *		* G10786
@@ -185,6 +191,7 @@ enum sensor_type_t
 {
 	/**
 	 * 0: PDA - Photodiode Array.
+	 * 
 	 * These sensors are a PDA:
 	 *		* S3901/S3904
 	 *		* S3902/S3903
@@ -193,6 +200,7 @@ enum sensor_type_t
 	sensor_type_pda = 0,
 	/**
 	 * 1: IR - Infrared
+	 * 
 	 * These sensors are a IR:
 	 *		* G11608
 	 *		* G11620
@@ -201,6 +209,7 @@ enum sensor_type_t
 	sensor_type_ir = 1,
 	/**
 	 * 2: FFT - Full frame transfer.
+	 * 
 	 * These sensors are a FFT:
 	 *		* S12600/S12601
 	 *		* S7030/S7031
@@ -210,18 +219,21 @@ enum sensor_type_t
 	sensor_type_fft = 2,
 	/**
 	 * 3: CMOS sensor.
+	 * 
 	 * These sensors are a CMOS:
 	 *		* S12198
 	 */
 	sensor_type_cmos = 3,
 	/**
 	 * 4: HSVIS - High speed sensor for visible light.
+	 * 
 	 * These sensors are a HSVIS:
 	 *		* S14290
 	 */
 	sensor_type_hsvis = 4,
 	/**
 	 * 5: HSIR - High speed sensor for infrared light.
+	 * 
 	 * These sensors are a HSIR:
 	 *		* G10786
 	 */
