@@ -222,13 +222,13 @@
     <ClCompile Include="..\shared_src\win\Board_ll.c" />
     <ClCompile Include="camerasettingswidget.cpp" />
     <ClCompile Include="crosshairs.cpp" />
+    <ClCompile Include="dialogchartsettings.cpp" />
     <ClCompile Include="dialogdac.cpp" />
     <ClCompile Include="dialogdsc.cpp" />
     <ClCompile Include="dialoggreyscalesettings.cpp" />
     <ClCompile Include="dialogioctrl.cpp" />
     <ClCompile Include="dialogrms.cpp" />
     <ClCompile Include="dialogspecialpixels.cpp" />
-    <ClCompile Include="dialogaxes.cpp" />
     <ClCompile Include="dialogtriggerinfo.cpp" />
     <ClCompile Include="myqchartview.cpp" />
     <ClCompile Include="UIAbstractionLayer.c" />
@@ -251,7 +251,6 @@
     <ClInclude Include="..\shared_src\globals.h" />
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
     <QtMoc Include="myqchartview.h" />
-    <QtMoc Include="dialogaxes.h" />
     <ClInclude Include="..\version.h" />
     <QtMoc Include="dialogrms.h" />
     <QtMoc Include="dialogdsc.h" />
@@ -262,6 +261,7 @@
     <QtMoc Include="dialoggreyscalesettings.h" />
     <ClInclude Include="crosshairs.h" />
     <QtMoc Include="dialogtriggerinfo.h" />
+    <QtMoc Include="dialogchartsettings.h" />
     <ClInclude Include="lsc-gui.h" />
     <ClInclude Include="UIAbstractionLayer_cpp.h" />
     <QtMoc Include="dialogsettings.h">
@@ -297,7 +297,7 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="camerasettingswidget.ui" />
-    <QtUic Include="dialogaxes.ui" />
+    <QtUic Include="dialogchartsettings.ui" />
     <QtUic Include="dialogdac.ui" />
     <QtUic Include="dialogdsc.ui" />
     <QtUic Include="dialoggreyscalesettings.ui" />
