@@ -1,6 +1,8 @@
 #include "../Board_ll.h"
 #include <stdint.h>
 #include "../Board.h"
+#include <process.h>
+#include <io.h>
 
 #define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
 
@@ -1241,7 +1243,7 @@ void ErrorMsg(char ErrMsg[100])
 {
 	if (_SHOW_MSG)
 	{
-		if (MessageBoxA(GetActiveWindow(), (LPCTSTR)ErrMsg, (LPCTSTR)L"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+		if (MessageBoxA(GetActiveWindow(), (LPCSTR)ErrMsg, (LPCSTR)L"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 	}
 };
 
@@ -1255,8 +1257,8 @@ void ValMsg(uint64_t val)
 	char AString[60];
 	if (_SHOW_MSG)
 	{
-		sprintf_s(AString, 60, "%s%d 0x%I64x", "val= ", val, val);
-		if (MessageBoxA(GetActiveWindow(), (LPCTSTR)AString, (LPCTSTR)L"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+		sprintf_s(AString, 60, "%s%llu 0x%I64x", "val= ", val, val);
+		if (MessageBoxA(GetActiveWindow(), (LPCSTR)AString, (LPCSTR)L"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 	}
 };
 

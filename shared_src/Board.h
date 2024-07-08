@@ -184,9 +184,9 @@ es_status_codes GetXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns);
 es_status_codes GetBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns);
 es_status_codes GetBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns);
 #ifdef WIN32
-es_status_codes ExportMeasurementHDF5(const char* path, const char* filename);
-hid_t CreateNumericAttribute(hid_t parent_object_id, char* attr_name, hid_t goal_type, hid_t dataspace, const void* data);
-hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t dataspace, const void* data);
+es_status_codes ExportMeasurementHDF5(const char* path, char* filename);
+hid_t CreateNumericAttribute(hid_t parent_object_id, char* attr_name, hid_t goal_type, hid_t dataspace, void* data);
+hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t dataspace, void* data);
 es_status_codes CheckFirstMeasurementDone(uint32_t drvno);
 #endif
 

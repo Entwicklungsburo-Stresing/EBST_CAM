@@ -289,7 +289,7 @@ void MainWindow::on_actionExport_data_triggered()
 	QByteArray ba = filepath.toLatin1();
 	const char* pathString = ba.data();
 	QByteArray ba2 = filename.toLatin1();
-	const char* filenameString = ba2.data();
+	char* filenameString = ba2.data();
 	es_status_codes status = mainWindow->lsc.exportMeasurementHDF5(pathString, filenameString);
 
 	QDialog* messageBox = new QDialog(this);
@@ -797,7 +797,7 @@ void MainWindow::readScanFrequencyBit()
 		if ((board_sel >> drvno) & 1)
 		{
 			bool freqTooHigh = false;
-			es_status_codes status = lsc.readScanFrequencyBit(drvno, &freqTooHigh);
+			lsc.readScanFrequencyBit(drvno, &freqTooHigh);
 			isScanFrequencyTooHigh |= freqTooHigh;
 			if (isScanFrequencyTooHigh) lsc.resetScanFrequencyBit(drvno);
 		}
@@ -830,7 +830,7 @@ void MainWindow::readBlockFrequencyBit()
 		if ((board_sel >> drvno) & 1)
 		{
 			bool freqTooHigh = false;
-			es_status_codes status = lsc.readBlockFrequencyBit(drvno, &freqTooHigh);
+			lsc.readBlockFrequencyBit(drvno, &freqTooHigh);
 			isBlockFrequencyTooHigh |= freqTooHigh;
 			if (isBlockFrequencyTooHigh) lsc.resetBlockFrequencyBit(drvno);
 		}
