@@ -37,18 +37,18 @@ void Crosshairs::updatePosition(QPointF position)
 	m_xText->setPos(position.x() - m_xText->boundingRect().width() / 2.0, m_chart->plotArea().bottom());
 	m_yText->setPos(m_chart->plotArea().right(), position.y() - m_yText->boundingRect().height() / 2.0);
 
-	if (!m_chart->plotArea().contains(position))
-	{
-		m_xLine->hide();
-		m_xText->hide();
-		m_yLine->hide();
-		m_yText->hide();
-	}
-	else
+	if (m_chart->plotArea().contains(position) && settings.value(settingShowCrosshairPath, settingShowCrosshairDefault).toBool())
 	{
 		m_xLine->show();
 		m_xText->show();
 		m_yLine->show();
 		m_yText->show();
+	}
+	else
+	{
+		m_xLine->hide();
+		m_xText->hide();
+		m_yLine->hide();
+		m_yText->hide();
 	}
 }

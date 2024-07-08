@@ -21,6 +21,7 @@ DialogChartSettings::DialogChartSettings(QWidget *parent)
 	ui.spinBoxYmin->setValue(ymin_old);
 	connect(ui.checkBoxMirrorX, &QCheckBox::stateChanged, mainWindow, &MainWindow::loadCameraData);
 	ui.checkBoxMirrorX->setChecked(settings.value(settingAxesMirrorXPath, settingAxesMirrorXPathDefault).toBool());
+	ui.checkBoxShowCrosshair->setChecked(settings.value(settingShowCrosshairPath, settingShowCrosshairDefault).toBool());
 }
 
 DialogChartSettings::~DialogChartSettings()
@@ -100,5 +101,12 @@ void DialogChartSettings::on_checkBoxMirrorX_stateChanged(int state)
 {
 	(void)state;
 	settings.setValue(settingAxesMirrorXPath, ui.checkBoxMirrorX->isChecked());
+	return;
+}
+
+void DialogChartSettings::on_checkBoxShowCrosshair_stateChanged(int state)
+{
+	(void)state;
+	settings.setValue(settingShowCrosshairPath, ui.checkBoxShowCrosshair->isChecked());
 	return;
 }

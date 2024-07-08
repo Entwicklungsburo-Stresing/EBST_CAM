@@ -88,5 +88,6 @@
 #define settingFileSplitModeDefault					no_split
 #define settingIsCooledCameraLegacyModeDefault		false
 #define settingAxesMirrorXPathDefault				false
+#define settingShowCrosshairDefault					true
 
 #endif // DEFAULT_SETTINGS_H

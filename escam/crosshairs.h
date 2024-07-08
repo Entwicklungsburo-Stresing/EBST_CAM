@@ -2,6 +2,7 @@
 #define CROSSHAIRS_H
 
 #include <QtWidgets/QGraphicsItem>
+#include <dialogsettings.h>
 class QChart;
 
 class Crosshairs
@@ -14,6 +15,7 @@ private:
 	QGraphicsLineItem* m_xLine, * m_yLine;
 	QGraphicsTextItem* m_xText, * m_yText;
 	QChart* m_chart;
+	QSettings settings;
 };
 
 #endif // CROSSHAIRS_H
