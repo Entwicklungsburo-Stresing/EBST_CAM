@@ -1,19 +1,16 @@
-#ifndef DIALOGAXES_H
-#define DIALOGAXES_H
+#pragma once
 
 #include <QDialog>
+#include "ui_dialogchartsettings.h"
 #include "lsc-gui.h"
-namespace Ui {
-	class DialogAxes;
-}
 
-class DialogAxes : public QDialog
+class DialogChartSettings : public QDialog
 {
 	Q_OBJECT
 
 public:
-	explicit DialogAxes(QWidget* parent = nullptr);
-	~DialogAxes();
+	DialogChartSettings(QWidget *parent = nullptr);
+	~DialogChartSettings();
 
 	void on_rubberband_valueChanged();
 signals:
@@ -27,12 +24,10 @@ private slots:
 	void on_checkBoxMirrorX_stateChanged(int state);
 
 private:
-	Ui::DialogAxes* ui;
+	Ui::DialogChartSettingsClass ui;
 	QSettings settings;
 	qreal xmax_old = 0;
 	qreal xmin_old = 0;
 	qreal ymax_old = 0;
 	qreal ymin_old = 0;
 };
-
-#endif // DIALOGAXES_H
