@@ -22,6 +22,7 @@ private slots:
 	void on_spinBoxYmin_valueChanged(int arg1);
 	void on_spinBoxYmax_valueChanged(int arg1);
 	void on_checkBoxMirrorX_stateChanged(int state);
+	void on_checkBoxShowCrosshair_stateChanged(int state);
 
 private:
 	Ui::DialogChartSettingsClass ui;
