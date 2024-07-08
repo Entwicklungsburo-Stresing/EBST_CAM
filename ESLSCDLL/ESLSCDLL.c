@@ -148,6 +148,11 @@ DllAccess es_status_codes DLLStartMeasurement_blocking()
 	return StartMeasurement();
 }
 
+unsigned __stdcall StartMeasurementThread(void* param)
+{
+	return StartMeasurement();
+}
+
 /**
  * \brief This function is starting the measurement and returns immediately.
  *
@@ -155,7 +160,7 @@ DllAccess es_status_codes DLLStartMeasurement_blocking()
  */
 DllAccess void DLLStartMeasurement_nonblocking()
 {
-	_beginthread(&StartMeasurement, 0, NULL);
+	_beginthread(&StartMeasurementThread, 0, NULL);
 	return;
 }
 
