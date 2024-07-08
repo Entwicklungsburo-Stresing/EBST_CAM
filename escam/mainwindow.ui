@@ -886,7 +886,7 @@
      <x>0</x>
      <y>0</y>
      <width>591</width>
-     <height>23</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -921,8 +921,8 @@
     <property name="title">
      <string>Chart</string>
     </property>
+    <addaction name="actionChartSettings"/>
     <addaction name="actionCameras"/>
-    <addaction name="actionAxes"/>
     <addaction name="actionReset_axes"/>
    </widget>
    <widget class="QMenu" name="menuWindow">
@@ -1103,6 +1103,11 @@
   <action name="actionTrigger_info">
    <property name="text">
     <string>Trigger info</string>
+   </property>
+  </action>
+  <action name="actionChartSettings">
+   <property name="text">
+    <string>Settings</string>
    </property>
   </action>
  </widget>

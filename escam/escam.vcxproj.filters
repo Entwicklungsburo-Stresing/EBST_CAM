@@ -27,11 +27,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
-      <Extensions>qrc;*</Extensions>
-      <ParseFiles>false</ParseFiles>
-    </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
@@ -91,9 +86,6 @@
     <ClCompile Include="myqchartview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dialogaxes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="dialogrms.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -125,6 +117,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dialogtriggerinfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dialogchartsettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -205,9 +200,6 @@
     <QtUic Include="mainwindow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="dialogaxes.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
     <QtUic Include="dialogrms.ui">
       <Filter>Form Files</Filter>
     </QtUic>
@@ -232,6 +224,9 @@
     <QtUic Include="dialogtriggerinfo.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="dialogchartsettings.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <None Include="LscUI.qml">
@@ -246,9 +241,6 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="myqchartview.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="dialogaxes.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="dialogrms.h">
@@ -273,6 +265,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="dialogtriggerinfo.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="dialogchartsettings.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

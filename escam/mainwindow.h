@@ -49,7 +49,6 @@ private slots:
 	void on_actionEdit_triggered();
 	void on_actionRMS_triggered();
 	void on_actionDSC_triggered();
-	void on_actionAxes_triggered();
 	void on_actionTrigger_info_triggered();
 	void on_actionCameras_triggered();
 	void on_actionReset_axes_triggered();
@@ -79,6 +78,7 @@ private slots:
 	void on_blockFrequencyTooHigh();
 	void findCamera();
 	void on_readCameraTemp();
+	void on_actionChartSettings_triggered();
 };
 
 #endif // MAINWINDOW_H

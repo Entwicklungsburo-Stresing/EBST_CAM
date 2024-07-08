@@ -18,12 +18,12 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 */
 
 #include "mainwindow.h"
-#include "dialogaxes.h"
 #include "../version.h"
 #include "dialogdac.h"
 #include "dialogioctrl.h"
 #include "dialogspecialpixels.h"
 #include "dialogtriggerinfo.h"
+#include "dialogchartsettings.h"
 #ifdef WIN32
 #include "dialoggreyscalesettings.h"
 #endif
@@ -350,21 +350,6 @@ void MainWindow::on_actionDSC_triggered()
 {
 	ds_dsc->initDialogDsc();
 	ds_dsc->show();
-	return;
-}
-
-/**
- * @brief This slot opens the settings dialog for the charts axes.
- * @return none
- */
-void MainWindow::on_actionAxes_triggered()
-{
-	DialogAxes* messageBox = new DialogAxes(this);
-	connect(ui->chartView, &MyQChartView::rubberBandChanged, messageBox, &DialogAxes::on_rubberband_valueChanged);
-	connect(ui->actionReset_axes, &QAction::triggered, messageBox, &DialogAxes::on_rubberband_valueChanged);
-	connect(messageBox, &DialogAxes::spinBoxAxes_valueChanged, ui->chartView, &MyQChartView::on_axes_changed);
-	messageBox->setAttribute(Qt::WA_DeleteOnClose);
-	messageBox->show();
 	return;
 }
 
@@ -1200,5 +1185,16 @@ void MainWindow::showStatusCodeDialog(es_status_codes status)
 	d->setText(ConvertErrorCodeToMsg(status));
 	d->setIcon(QMessageBox::Critical);
 	d->exec();
+	return;
+}
+
+void MainWindow::on_actionChartSettings_triggered()
+{
+	DialogChartSettings* dialog = new DialogChartSettings(this);
+	connect(ui->chartView, &MyQChartView::rubberBandChanged, dialog, &DialogChartSettings::on_rubberband_valueChanged);
+	connect(ui->actionReset_axes, &QAction::triggered, dialog, &DialogChartSettings::on_rubberband_valueChanged);
+	connect(dialog, &DialogChartSettings::spinBoxAxes_valueChanged, ui->chartView, &MyQChartView::on_axes_changed);
+	dialog->setAttribute(Qt::WA_DeleteOnClose);
+	dialog->show();
 	return;
 }
