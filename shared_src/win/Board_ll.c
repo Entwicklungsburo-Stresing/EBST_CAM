@@ -11,7 +11,7 @@
 WDC_DEVICE_HANDLE hDev_tmp[MAXPCIECARDS];
 WDC_DEVICE_HANDLE* hDev = (WDC_DEVICE_HANDLE *)&hDev_tmp;
 volatile DWORD dmaBufferSizeInBytes[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
-volatile uint16_t* dmaBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
+uint16_t* dmaBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 volatile uint64_t IsrCounter[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 volatile UINT8 dmaBufferPartReadPos[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 WD_DMA* dmaBufferInfos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL }; //there will be saved the necessary parameters for the DMA buffer
@@ -894,9 +894,9 @@ void writeFileHeaderToFile(uint32_t drvno, char* filename_full)
 	fh.camcnt = aCAMCNT[drvno];
 	fh.measurement_cnt = measurement_cnt;
 	memset(fh.timestamp, 0, file_timestamp_size);
-	strcpy(fh.timestamp, start_timestamp);
+	strcpy_s(fh.timestamp, file_timestamp_size, start_timestamp);
 	memset(fh.filename_full, 0, file_filename_full_size);
-	strcpy(fh.filename_full, filename_full);
+	strcpy_s(fh.filename_full, file_filename_full_size, filename_full);
 	fh.split_mode = settings_struct.camera_settings[drvno].file_split_mode;
 	if (file_stream[drvno])
 	{

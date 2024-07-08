@@ -275,6 +275,7 @@ void DialogSettings::loadDefaults()
 
 void DialogSettings::on_comboBoxSettingsLevel_currentIndexChanged(int index)
 {
+	(void)index;
 	on_checkBoxBoard0_stateChanged(ui->checkBoxBoard0->isChecked());
 	on_checkBoxBoard1_stateChanged(ui->checkBoxBoard1->isChecked());
 	on_checkBoxBoard2_stateChanged(ui->checkBoxBoard2->isChecked());

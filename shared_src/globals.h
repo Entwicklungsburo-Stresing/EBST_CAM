@@ -120,7 +120,7 @@ extern uint32_t* aPIXEL;
 extern uint32_t* aCAMCNT;
 extern uint16_t** userBuffer;
 extern uint16_t** userBufferEndPtr;
-extern volatile uint16_t** userBufferWritePos;
+extern uint16_t** userBufferWritePos;
 extern uint16_t** userBufferWritePos_last;
 extern uint8_t number_of_boards;
 extern uint32_t* Nob;

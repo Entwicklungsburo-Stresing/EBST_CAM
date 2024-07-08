@@ -211,6 +211,7 @@ void CameraSettingsWidget::on_comboBoxCameraSystem_currentIndexChanged(int index
 
 void CameraSettingsWidget::on_checkBoxRegionsEqual_stateChanged(int arg1)
 {
+	(void)arg1;
 	on_spinBoxNumberOfRegions_valueChanged(ui->spinBoxNumberOfRegions->value());
 }
 
