@@ -491,7 +491,7 @@ es_status_codes Lsc::findCam(uint32_t drvno)
 /**
  * \copydoc ExportMeasurementHDF5.
  */
-es_status_codes Lsc::exportMeasurementHDF5(const char* path, const char* filename)
+es_status_codes Lsc::exportMeasurementHDF5(const char* path, char* filename)
 {
 #ifdef WIN32
     return ExportMeasurementHDF5(path, filename);
