@@ -113,9 +113,9 @@ constexpr auto settingIOCtrlOutput7DelayIn5nsPath = "Output7WidthIn5ns";
 constexpr auto settingIOCtrlT0PeriodIn10nsPath = "T0PeriodIn10ns";
 //software
 constexpr auto settingsUseSoftwarePollingPath = "use_software_polling";
-
-//axes
+//chart
 constexpr auto settingAxesMirrorXPath = "AxesMirrorXPath";
+constexpr auto settingShowCrosshairPath = "showCrosshair";
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DialogSettings; }
