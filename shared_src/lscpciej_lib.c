@@ -17,7 +17,7 @@ static inline BOOL IsValidDevice(PWDC_DEVICE pDev, const CHAR *sFunc)
 {
     if (!pDev || !(PLSCPCIEJ_DEV_CTX)(pDev->pCtx))
     {
-        snprintf(gsLSCPCIEJ_LastErr, sizeof(gsLSCPCIEJ_LastErr) - 1,
+        _snprintf_s(gsLSCPCIEJ_LastErr, sizeof(gsLSCPCIEJ_LastErr) - 1, sizeof(gsLSCPCIEJ_LastErr) - 1,
             "%s: NULL device %s\n", sFunc, !pDev ? "handle" : "context");
         ErrLog(gsLSCPCIEJ_LastErr);
         return FALSE;
@@ -510,8 +510,8 @@ BOOL LSCPCIEJ_GetAddrSpaceInfo(WDC_DEVICE_HANDLE hDev,
 
     fIsMemory = WDC_ADDR_IS_MEM(pAddrDesc);
 
-    snprintf(pAddrSpaceInfo->sName, MAX_NAME - 1, "BAR %ld", dwAddrSpace);
-    snprintf(pAddrSpaceInfo->sType, MAX_TYPE - 1, fIsMemory ? "Memory" : "I/O");
+    _snprintf_s(pAddrSpaceInfo->sName, MAX_NAME - 1, MAX_NAME - 1, "BAR %ld", dwAddrSpace);
+    _snprintf_s(pAddrSpaceInfo->sType, MAX_TYPE - 1, MAX_TYPE - 1, fIsMemory ? "Memory" : "I/O");
 
     if (WDC_AddrSpaceIsActive(pDev, dwAddrSpace))
     {
@@ -519,7 +519,7 @@ BOOL LSCPCIEJ_GetAddrSpaceInfo(WDC_DEVICE_HANDLE hDev,
         PHYS_ADDR pAddr = fIsMemory ? pItem->I.Mem.pPhysicalAddr :
             pItem->I.IO.pAddr;
 
-        snprintf(pAddrSpaceInfo->sDesc, MAX_DESC - 1,
+        _snprintf_s(pAddrSpaceInfo->sDesc, MAX_DESC - 1, MAX_DESC - 1,
             "0x%0*"PRI64"X - 0x%0*"PRI64"X (0x%"PRI64"x bytes)",
             (int)WDC_SIZE_64 * 2, pAddr,
             (int)WDC_SIZE_64 * 2, pAddr + pAddrDesc->qwBytes - 1,
@@ -527,7 +527,7 @@ BOOL LSCPCIEJ_GetAddrSpaceInfo(WDC_DEVICE_HANDLE hDev,
     }
     else
     {
-        snprintf(pAddrSpaceInfo->sDesc, MAX_DESC - 1, "Inactive address space");
+        _snprintf_s(pAddrSpaceInfo->sDesc, MAX_DESC - 1, MAX_DESC - 1, "Inactive address space");
     }
 
     /* TODO: You can modify the code above to set a different address space
@@ -546,8 +546,8 @@ void ErrLog(const CHAR *sFormat, ...)
     va_list argp;
 
     va_start(argp, sFormat);
-    vsnprintf(gsLSCPCIEJ_LastErr, sizeof(gsLSCPCIEJ_LastErr) - 1, sFormat, argp);
-#ifdef DEBUG
+    _vsnprintf_s(gsLSCPCIEJ_LastErr, sizeof(gsLSCPCIEJ_LastErr) - 1, sizeof(gsLSCPCIEJ_LastErr) - 1, sFormat, argp);
+#ifdef _DEBUG
         WDC_Err("LSCPCIEJ lib: %s", gsLSCPCIEJ_LastErr);
 #endif
     va_end(argp);
@@ -556,12 +556,12 @@ void ErrLog(const CHAR *sFormat, ...)
 /* Log a debug trace message */
 static void TraceLog(const CHAR *sFormat, ...)
 {
-#ifdef DEBUG
+#ifdef _DEBUG
     CHAR sMsg[256];
     va_list argp;
 
     va_start(argp, sFormat);
-    vsnprintf(sMsg, sizeof(sMsg) - 1, sFormat, argp);
+    _vsnprintf_s(sMsg, sizeof(sMsg) - 1, sizeof(sMsg) - 1, sFormat, argp);
     WDC_Trace("LSCPCIEJ lib: %s", sMsg);
     va_end(argp);
 #endif

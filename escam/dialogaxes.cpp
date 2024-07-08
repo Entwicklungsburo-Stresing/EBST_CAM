@@ -99,6 +99,7 @@ void DialogAxes::on_rubberband_valueChanged()
 
 void DialogAxes::on_checkBoxMirrorX_stateChanged(int state)
 {
+	(void)state;
 	settings.setValue(settingAxesMirrorXPath, ui->checkBoxMirrorX->isChecked());
 	return;
 }
