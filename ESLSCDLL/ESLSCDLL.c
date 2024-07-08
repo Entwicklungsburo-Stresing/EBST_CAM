@@ -19,6 +19,7 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 
 #include "ESLSCDLL.h"
 #include "shared_src/Direct2dViewer_c.h"
+#include <process.h>
 
 #ifdef COMPILE_FOR_LABVIEW
 LVUserEventRef measureStartLVEvent;

@@ -66,7 +66,7 @@ public:
 	es_status_codes checkFifoEmpty(uint32_t drvno, bool* empty);
 	es_status_codes checkFifoFull(uint32_t drvno, bool* full);
 	es_status_codes findCam(uint32_t drvno);
-	es_status_codes exportMeasurementHDF5(const char* path, const char* filename);
+	es_status_codes exportMeasurementHDF5(const char* path, char* filename);
 	es_status_codes waitForMeasureReady(uint32_t board_sel);
 	es_status_codes getXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns);
 	es_status_codes getXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns);

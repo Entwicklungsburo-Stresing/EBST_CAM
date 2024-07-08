@@ -5859,7 +5859,7 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
  *
  */
 #ifdef WIN32
-es_status_codes ExportMeasurementHDF5(const char* path, const char* filename)
+es_status_codes ExportMeasurementHDF5(const char* path, char* filename)
 {
 	hid_t file_id, file_attr_name, file_attr_timestamp, file_attr_number_of_boards;
 	hid_t dataspace_scalar = H5Screate(H5S_SCALAR);
@@ -5878,7 +5878,7 @@ es_status_codes ExportMeasurementHDF5(const char* path, const char* filename)
 	if (!wasRunning) return es_first_measurement_not_done;
 
 	char filepath[FILENAME_MAX];
-	sprintf(filepath, "%s\\%s", path, filename);
+	sprintf_s(filepath, FILENAME_MAX, "%s\\%s", path, filename);
 	if ((file_id = H5Fcreate(filepath, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT)) == H5I_INVALID_HID) return es_create_file_failed;
 
 	char* filenameAttr[1] = { filename };
@@ -5897,10 +5897,11 @@ es_status_codes ExportMeasurementHDF5(const char* path, const char* filename)
 	{
 		if ((board_sel >> drvno) & 1)
 		{
-			hid_t group_board_id, group_board_attr_name, group_board_attr_number_of_cameras;
+			hid_t group_board_id = 0,
+				group_board_attr_number_of_cameras = 0;
 
 			char groupBoardName[100];
-			sprintf(groupBoardName, "/Board_%d", drvno + 1);
+			sprintf_s(groupBoardName, 100, "/Board_%d", drvno + 1);
 			group_board_id = H5Gcreate(file_id, groupBoardName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 			uint32_t cameras = settings_struct.camera_settings[drvno].camcnt;
 
@@ -5909,10 +5910,12 @@ es_status_codes ExportMeasurementHDF5(const char* path, const char* filename)
 
 			for (uint32_t camera = 0; camera < cameras; camera++)
 			{
-				hid_t group_camera_id, group_camera_attr_name, group_camera_attr_system, group_camera_attr_number_of_blocks;
+				hid_t group_camera_id = 0,
+					group_camera_attr_system = 0,
+					group_camera_attr_number_of_blocks = 0;
 
 				char groupCameraName[100];
-				sprintf(groupCameraName, "Camera_%d", camera + 1);
+				sprintf_s(groupCameraName, 100, "Camera_%d", camera + 1);
 				group_camera_id = H5Gcreate(group_board_id, groupCameraName, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
 				uint32_t nos = settings_struct.nos;
@@ -5947,8 +5950,9 @@ es_status_codes ExportMeasurementHDF5(const char* path, const char* filename)
 
 				for (uint32_t block = 0; block < nob; block++)
 				{
-					hid_t group_block_id, group_block_attr_name, group_block_attr_number_of_samples;
-					hid_t group_block_gcpl;
+					hid_t group_block_id = 0,
+						group_block_attr_number_of_samples = 0,
+						group_block_gcpl = 0;
 
 					group_block_gcpl = H5Pcreate(H5P_GROUP_CREATE);
 					statusHDF5 = H5Pset_link_creation_order(group_block_gcpl, (H5P_CRT_ORDER_TRACKED | H5P_CRT_ORDER_INDEXED));
@@ -5956,7 +5960,7 @@ es_status_codes ExportMeasurementHDF5(const char* path, const char* filename)
 					// Create a group in the file.
 					// Create a String that contains the name of the group with block
 					char groupBlockName[100];
-					sprintf(groupBlockName, "Block_%d", block + 1);
+					sprintf_s(groupBlockName, 100, "Block_%d", block + 1);
 					group_block_id = H5Gcreate(group_camera_id, groupBlockName, H5P_DEFAULT, group_block_gcpl, H5P_DEFAULT);
 					H5Pclose(group_block_gcpl);
 
@@ -5965,14 +5969,13 @@ es_status_codes ExportMeasurementHDF5(const char* path, const char* filename)
 
 					for (uint32_t sample = 0; sample < nos; sample++)
 					{
-						hid_t space_id;
 						// Define the size of the array and create the data space for fixed size dataset.
 						hsize_t dims[1];
 						dims[0] = (int)settings_struct.camera_settings[drvno].pixel;
 						hid_t dataspace_id = H5Screate_simple(1, dims, NULL);
 
 						char datasetName[100];
-						sprintf(datasetName, "Sample_%d", sample + 1);
+						sprintf_s(datasetName, 100, "Sample_%d", sample + 1);
 						hid_t dataset_id = H5Dcreate2(group_block_id, datasetName, H5T_NATIVE_UINT16, dataspace_id, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 						const uint32_t pixel = settings_struct.camera_settings[drvno].pixel;
 						uint16_t* data = (uint16_t*)malloc(pixel * sizeof(uint16_t));
@@ -6022,8 +6025,8 @@ es_status_codes ExportMeasurementHDF5(const char* path, const char* filename)
 						hid_t sample_attr_cameraSystem3030 = CreateNumericAttribute(dataset_id, "Camera System 3030", H5T_NATIVE_UINT32, dataspace_scalar, &sp.cameraSystem3030);
 						H5Aclose(sample_attr_cameraSystem3030);
 
-						char* fpgaVer[100];
-						sprintf(fpgaVer, "%d.%d", sp.fpgaVerMajor, sp.fpgaVerMinor);
+						char fpgaVer[100];
+						sprintf_s(fpgaVer, 100, "%u.%u", sp.fpgaVerMajor, sp.fpgaVerMinor);
 						char* special_pixel_fpgaver[1] = { fpgaVer };
 						hid_t sample_attr_fpgaVer = CreateStringAttribute(dataset_id, "FPGA Version", dataspace_scalar, special_pixel_fpgaver);
 						H5Aclose(sample_attr_fpgaVer);
@@ -6064,7 +6067,7 @@ hid_t CreateNumericAttribute(hid_t parent_object_id, char* attr_name, hid_t goal
 	return object_id;
 }
 
-hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t dataspace, const void* data)
+hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t dataspace, void* data)
 {
 	hid_t attr_type = H5Tcopy(H5T_C_S1);
 	H5Tset_size(attr_type, H5T_VARIABLE);
