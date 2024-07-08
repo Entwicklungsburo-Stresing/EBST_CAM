@@ -1130,7 +1130,7 @@ es_status_codes AboutDrv(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = _AboutDrv(drvno, &cstring);
-	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"About driver", MB_OK);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)L"About driver", MB_OK);
 	return status;
 };
 
@@ -1147,7 +1147,7 @@ es_status_codes AboutGPX(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = _AboutGPX(drvno, &cstring);
-	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"GPX regs", MB_OK);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)L"GPX regs", MB_OK);
 	return status;
 }
 
@@ -1163,7 +1163,7 @@ es_status_codes AboutS0(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = dumpS0Registers(drvno, &cstring);
-	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"S0 regs", MB_OK);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)L"S0 regs", MB_OK);
 	return status;
 }//AboutS0
 
@@ -1179,7 +1179,7 @@ es_status_codes AboutTLPs(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = dumpTlpRegisters(drvno, &cstring);
-	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"DMA transfer payloads", MB_OK | MB_DEFBUTTON2);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)L"DMA transfer payloads", MB_OK | MB_DEFBUTTON2);
 	return status;
 }//AboutTLPs
 
@@ -1195,7 +1195,7 @@ es_status_codes AboutPCI(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = dumpPciRegisters(drvno, &cstring);
-	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"PCI regs", MB_OK);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)L"PCI regs", MB_OK);
 	return status;
 }//AboutPCI
 
@@ -1203,7 +1203,7 @@ es_status_codes AboutMeasurementSettings()
 {
 	char* cstring;
 	es_status_codes status = dumpMeasurementSettings(&cstring);
-	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"Measurement settings", MB_OK);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)L"Measurement settings", MB_OK);
 	return status;
 }
 
@@ -1211,7 +1211,7 @@ es_status_codes AboutCameraSettings(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = dumpCameraSettings(drvno, &cstring);
-	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)"Camera settings", MB_OK);
+	MessageBox(GetActiveWindow(), (LPCTSTR)cstring, (LPCTSTR)L"Camera settings", MB_OK);
 	return status;
 }
 
@@ -1241,7 +1241,7 @@ void ErrorMsg(char ErrMsg[100])
 {
 	if (_SHOW_MSG)
 	{
-		if (MessageBoxA(GetActiveWindow(), (LPCTSTR)ErrMsg, (LPCTSTR)"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+		if (MessageBoxA(GetActiveWindow(), (LPCTSTR)ErrMsg, (LPCTSTR)L"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 	}
 };
 
@@ -1256,7 +1256,7 @@ void ValMsg(uint64_t val)
 	if (_SHOW_MSG)
 	{
 		sprintf_s(AString, 60, "%s%d 0x%I64x", "val= ", val, val);
-		if (MessageBoxA(GetActiveWindow(), (LPCTSTR)AString, (LPCTSTR)"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
+		if (MessageBoxA(GetActiveWindow(), (LPCTSTR)AString, (LPCTSTR)L"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 	}
 };
 
