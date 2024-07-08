@@ -2699,7 +2699,10 @@ es_status_codes StartMeasurement()
 #endif
 	measurement_cnt = 0;
 #ifdef WIN32
-	memset(data_available, 0, sizeof(size_t) * MAXPCIECARDS);
+	for (uint32_t i = 0; i < MAXPCIECARDS; i++)
+	{
+		data_available[i] = 0;
+	}
 #endif
 	continuousMeasurementFlag = (bool)settings_struct.continuous_measurement;//0 or 1
 	continuousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
@@ -5350,20 +5353,20 @@ void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "nos:\t%u\n", vd->fh.nos);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "nob:\t%u\n", vd->fh.nob);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "camcnt:\t%u\n", vd->fh.camcnt);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "measurement cnt:\t%lu\n", vd->fh.measurement_cnt);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "measurement cnt:\t%llu\n", vd->fh.measurement_cnt);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "timestamp:\t%s\n", vd->fh.timestamp);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "filename_full:\t%s\n", vd->fh.filename_full);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "split mode:\t%u\n\n", vd->fh.split_mode);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "Data found:\n");
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "samples found:\t%u\n", vd->sample_cnt);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "blocks found:\t%u\n", vd->block_cnt);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "measurements found:\t%lu\n", vd->measurement_cnt);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "measurements found:\t%llu\n", vd->measurement_cnt);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "error counter:\t%u\n", vd->error_cnt);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last sample in data:\t%u\n", vd->last_sample);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last block in data:\t%u\n", vd->last_block);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last sample before error:\t%u\n", vd->last_sample_before_error);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last block before error:\t%u\n", vd->last_block_before_error);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last measurement before error:\t%lu\n", vd->last_measurement_before_error);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "last measurement before error:\t%llu\n", vd->last_measurement_before_error);
 	return;
 }
 
@@ -5904,7 +5907,7 @@ es_status_codes ExportMeasurementHDF5(const char* path, const char* filename)
 			group_board_attr_number_of_cameras = CreateNumericAttribute(group_board_id, "Number of Cameras", H5T_NATIVE_UINT32, dataspace_scalar, &cameras);
 			H5Aclose(group_board_attr_number_of_cameras);
 
-			for (int camera = 0; camera < cameras; camera++)
+			for (uint32_t camera = 0; camera < cameras; camera++)
 			{
 				hid_t group_camera_id, group_camera_attr_name, group_camera_attr_system, group_camera_attr_number_of_blocks;
 
