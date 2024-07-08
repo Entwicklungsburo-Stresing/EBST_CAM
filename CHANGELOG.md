@@ -15,8 +15,13 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 #### Deprecated
 ### Other Changes
 #### Added
+- new dialog Chart -> Settings:
+	- show / hide crosshair
+	- set axes min and max
+	- mirror x axis
 #### Changed
 #### Removed
+- remove Chart -> Axes
 #### Fixed
 #### Deprecated
 
