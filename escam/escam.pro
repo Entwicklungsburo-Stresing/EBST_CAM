@@ -38,7 +38,7 @@ VERSION = $${VERSION_MAJOR_QT}.$${VERSION_MINOR_QT}.$${VERSION_BUILD_QT}
 SOURCES += \
     camerasettingswidget.cpp \
     crosshairs.cpp \
-    dialogaxes.cpp \
+    dialogchartsettings.cpp \
     dialogdac.cpp \
     dialogdsc.cpp \
     dialogioctrl.cpp \
@@ -72,7 +72,7 @@ DISTFILES += \
 
 FORMS += \
     camerasettingswidget.ui \
-    dialogaxes.ui \
+    dialogchartsettings.ui \
     dialogdac.ui \
     dialogdsc.ui \
     dialogioctrl.ui \
@@ -89,7 +89,7 @@ win32 {
 HEADERS += \
     camerasettingswidget.h \
     crosshairs.h \
-    dialogaxes.h \
+    dialogchartsettings.h \
     dialogdac.h \
     dialogdsc.h \
     dialogioctrl.h \
