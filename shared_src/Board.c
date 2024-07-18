@@ -2995,13 +2995,13 @@ es_status_codes FindCam(uint32_t drvno)
 es_status_codes ResetHardwareCounter(uint32_t drvno)
 {
 	ES_LOG("Reset hardware counter\n");
-	es_status_codes status = pulseBitS0_32(drvno, DMAsPerIntr_bitindex_counter_reset, S0Addr_DMAsPerIntr);
+	es_status_codes status = pulseBitS0_32(drvno, DMAsPerIntr_bitindex_counter_reset, S0Addr_DMAsPerIntr, 100);
 	if (status != es_no_error) return status;
-	status = pulseBitS0_32(drvno, DmaBufSizeInScans_bitindex_counter_reset, S0Addr_DmaBufSizeInScans);
+	status = pulseBitS0_32(drvno, DmaBufSizeInScans_bitindex_counter_reset, S0Addr_DmaBufSizeInScans, 100);
 	if (status != es_no_error) return status;
-	status = pulseBitS0_32(drvno, BLOCKINDEX_bitindex_counter_reset, S0Addr_BLOCKINDEX);
+	status = pulseBitS0_32(drvno, BLOCKINDEX_bitindex_counter_reset, S0Addr_BLOCKINDEX, 100);
 	if (status != es_no_error) return status;
-	return pulseBitS0_32(drvno, ScanIndex_bitindex_counter_reset, S0Addr_ScanIndex);
+	return pulseBitS0_32(drvno, ScanIndex_bitindex_counter_reset, S0Addr_ScanIndex, 100);
 }
 
 /**
@@ -3038,10 +3038,11 @@ es_status_codes SetHardwareTimerStopMode(uint32_t drvno, bool stop_by_hardware)
  *		- es_register_read_failed
  * 		- es_register_write_failed
  */
-es_status_codes pulseBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address)
+es_status_codes pulseBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address, int64_t duration_in_microseconds)
 {
 	es_status_codes status = setBitS0_32(drvno, bitnumber, address);
 	if (status != es_no_error) return status;
+	WaitforTelapsed(duration_in_microseconds);
 	return resetBitS0_32(drvno, bitnumber, address);
 }
 
@@ -3056,10 +3057,11 @@ es_status_codes pulseBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t addre
  *		- es_register_read_failed
  * 		- es_register_write_failed
  */
-es_status_codes pulseBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address)
+es_status_codes pulseBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address, int64_t duration_in_microseconds)
 {
 	es_status_codes status = setBitS0_8(drvno, bitnumber, address);
 	if (status != es_no_error) return status;
+	WaitforTelapsed(duration_in_microseconds);
 	return resetBitS0_8(drvno, bitnumber, address);
 }
 
@@ -3103,10 +3105,10 @@ es_status_codes waitForBlockTrigger(uint32_t drvno)
 es_status_codes countBlocksByHardware(uint32_t drvno)
 {
 	ES_LOG("Increase hardware block counter\n");
-	es_status_codes status = pulseBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCKTRIG, S0Addr_PCIEFLAGS);
+	es_status_codes status = pulseBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCKTRIG, S0Addr_PCIEFLAGS, 100);
 	if (status != es_no_error) return status;
 	//reset scan counter
-	return pulseBitS0_32(drvno, ScanIndex_bitindex_counter_reset, S0Addr_ScanIndex);
+	return pulseBitS0_32(drvno, ScanIndex_bitindex_counter_reset, S0Addr_ScanIndex, 100);
 }
 
 /**
@@ -5688,7 +5690,7 @@ es_status_codes ReadScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh)
  */
 es_status_codes ResetScanFrequencyBit(uint32_t drvno)
 {
-	return pulseBitS0_8(drvno, FFCTRL_bitindex_scan_reset, S0Addr_FFCTRL);
+	return pulseBitS0_8(drvno, FFCTRL_bitindex_scan_reset, S0Addr_FFCTRL, 100);
 }
 
 /**
@@ -5716,7 +5718,7 @@ es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHig
  */
 es_status_codes ResetBlockFrequencyBit(uint32_t drvno)
 {
-	return pulseBitS0_8(drvno, FFCTRL_bitindex_block_reset, S0Addr_FFCTRL);
+	return pulseBitS0_8(drvno, FFCTRL_bitindex_block_reset, S0Addr_FFCTRL, 100);
 }
 
 es_status_codes GetOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t** address)
