@@ -20,6 +20,7 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 	- set axes min and max
 	- mirror x axis
 #### Changed
+- Add duration parameter to pulse bit functions
 #### Removed
 - remove Chart -> Axes
 #### Fixed
