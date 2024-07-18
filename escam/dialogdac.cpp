@@ -2,7 +2,7 @@
 #include "ui_dialogdac.h"
 
 DialogDac::DialogDac(QWidget* parent)
-	: QDialog(parent),
+	: QDialog(parent, Qt::Dialog | Qt::WindowContextHelpButtonHint | Qt::WindowCloseButtonHint),
 	ui(new Ui::DialogDac)
 {
 	ui->setupUi(this);
