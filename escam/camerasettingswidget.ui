@@ -879,19 +879,19 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sensor reset length for some sensors between two readouts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without a reset for all sensors. &lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; is a 16 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 ns&lt;br/&gt;step: 4 ns&lt;br/&gt;default: 400 ns&lt;br/&gt;max: 262,140 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_reset_length_in_4_ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor reset can be found in the manual in chapter 4.9.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without a reset for all sensors. &lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; is a 16 bit unsigned integer. The reset time range and step size depends on &lt;span style=&quot; font-style:italic;&quot;&gt;SENSOR TYPE&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;HSVIS:&lt;br/&gt;min: 0 ns&lt;br/&gt;step: 4 ns&lt;br/&gt;default: 400 ns&lt;br/&gt;max: 262,140 ns&lt;/p&gt;&lt;p&gt;HSIR:&lt;br/&gt;min: 21,440 ns&lt;br/&gt;step: 160 ns&lt;br/&gt;default: 22,400 ns&lt;br/&gt;max: 10,485,600 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_reset_length&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor reset can be found in the manual in chapter 4.9.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>true</bool>
            </property>
            <property name="suffix">
             <string> ns</string>
            </property>
            <property name="maximum">
-            <number>262140</number>
-           </property>
-           <property name="singleStep">
-            <number>4</number>
+            <number>10485600</number>
            </property>
           </widget>
          </item>
@@ -1050,7 +1050,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sensor reset length for some sensors between two readouts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without a reset for all sensors. &lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; is a 16 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 ns&lt;br/&gt;step: 4 ns&lt;br/&gt;default: 400 ns&lt;br/&gt;max: 262,140 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_reset_length_in_4_ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor reset can be found in the manual in chapter 4.9.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without a reset for all sensors. &lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; is a 16 bit unsigned integer. The reset time range and step size depends on &lt;span style=&quot; font-style:italic;&quot;&gt;SENSOR TYPE&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;HSVIS:&lt;br/&gt;min: 0 ns&lt;br/&gt;step: 4 ns&lt;br/&gt;default: 400 ns&lt;br/&gt;max: 262,140 ns&lt;/p&gt;&lt;p&gt;HSIR:&lt;br/&gt;min: 21,440 ns&lt;br/&gt;step: 160 ns&lt;br/&gt;default: 22,400 ns&lt;br/&gt;max: 10,485,600 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_reset_length&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor reset can be found in the manual in chapter 4.9.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>sensor reset length</string>

@@ -307,13 +307,19 @@ struct camera_settings
 	 */
 	uint32_t sticnt;
 	/**
-	 * Sensor_reset_length_in_4_ns controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without this reset for all sensors. Sensor_rese_length_in_4_ns is a 16 bit unsigned integer. Further information about sensor reset can be found in the manual in chapter 4.9.2.
+	 * Sensor_reset_length controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without this reset for all sensors. sensor_rese_length is a 16 bit unsigned integer. The actual reset time depends on \ref camera_settings.sensor_type. Further information about sensor reset can be found in the manual in chapter 4.9.2.
+	 * Reset times for HSVIS:
 	 *		* min: 0 ns
 	 *		* step: 1 * 4 ns = 4 ns
 	 *		* default: 100 * 4 ns = 400 ns
 	 *		* max: 65535 * 4 ns = 262,140 ns
+	 * Reset times for HSIR:
+	 *		* min: 134 * 160 ns = 21,440 ns
+	 *		* step: 1 * 160 ns = 160 ns
+	 *		* default: 140 * 160 ns = 22,400 ns
+	 *		* max: 65535 * 160 ns = 10,485,600 ns
 	 */
-	uint32_t sensor_reset_length_in_4_ns;
+	uint32_t sensor_reset_length;
 	/**
 	 * Write to disc is an experimental feature for writing the measurement data on the fly to the disc. The data format is binary. It is the same data layout as the data is stored in RAM during the measurement. Additionally there is a file header at the beginning of the file. The path to the target file is given by \ref camera_settings.file_path. This feature is only available on Windows. In most cases the resulting file should be correct, but data layout errors has been observed. This is the reason why the feature is marked as experimental.
 	 *		* =0: Don't write measurement data to disc.

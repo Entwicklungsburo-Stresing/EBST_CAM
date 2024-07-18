@@ -10,6 +10,7 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 ### API Changes
 #### Added
 #### Changed
+- Change the name of the setting sensor_reset_length_in_4_ns to sensor_reset_length. This parameter has now different meanings depending on sensor type. For HSVIS the step size is 4 ns, like before. For HSIR the step size is 160 ns.
 #### Removed
 #### Fixed
 #### Deprecated

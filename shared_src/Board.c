@@ -273,7 +273,7 @@ es_status_codes InitCamera(uint32_t drvno)
 	}
 	status = IOCtrl_setT0(drvno, settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns);
 	if (status != es_no_error) return status;
-	status = Cam_SetSensorResetLength(drvno, settings_struct.camera_settings[drvno].sensor_reset_length_in_4_ns);
+	status = Cam_SetSensorResetLength(drvno, settings_struct.camera_settings[drvno].sensor_reset_length);
 	return status;
 }
 
@@ -2238,10 +2238,10 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes Cam_SetSensorResetLength(uint32_t drvno, uint16_t sensor_reset_length_in_4_ns)
+es_status_codes Cam_SetSensorResetLength(uint32_t drvno, uint16_t sensor_reset_length)
 {
-	ES_LOG("Cam_SetSensorResetLength(), setting sensor reset length to %u (%u ns)\n", sensor_reset_length_in_4_ns, sensor_reset_length_in_4_ns * 4);
-	return SendFLCAM(drvno, maddr_cam, cam_adaddr_sensor_reset_length_in_4_ns, sensor_reset_length_in_4_ns);
+	ES_LOG("Cam_SetSensorResetLength(), setting sensor reset length to %u (HSVIS: %u ns, HSIR: %u ns)\n", sensor_reset_length, sensor_reset_length * 4, sensor_reset_length * 160);
+	return SendFLCAM(drvno, maddr_cam, cam_adaddr_sensor_reset_length, sensor_reset_length);
 }
 
 /**
@@ -4733,7 +4733,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		"dma_buffer_size_in_scans\t%u\n"
 		"tocnt\t%u\n"
 		"sticnt\t%u\n"
-		"sensor_reset_length_in_4_ns\t%u\n"
+		"sensor_reset_length\t%u\n"
 		"write to disc\t%u\n"
 		"file path\t%s\n"
 		"file split mode\t%u\n"
@@ -4742,7 +4742,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].dma_buffer_size_in_scans,
 		settings_struct.camera_settings[drvno].tocnt,
 		settings_struct.camera_settings[drvno].sticnt,
-		settings_struct.camera_settings[drvno].sensor_reset_length_in_4_ns,
+		settings_struct.camera_settings[drvno].sensor_reset_length,
 		settings_struct.camera_settings[drvno].write_to_disc,
 		settings_struct.camera_settings[drvno].file_path,
 		settings_struct.camera_settings[drvno].file_split_mode,
