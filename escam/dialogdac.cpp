@@ -249,6 +249,15 @@ void DialogDac::on_pushButtonAutotune_pressed()
 	}
 	else
 	{
+		allTargetsReached = false;
+		ch1TargetReached = false;
+		ch2TargetReached = false;
+		ch3TargetReached = false;
+		ch4TargetReached = false;
+		ch5TargetReached = false;
+		ch6TargetReached = false;
+		ch7TargetReached = false;
+		ch8TargetReached = false;
 		autotuneRunning = true;
 		autotunePressed();
 	}
@@ -270,12 +279,10 @@ void DialogDac::autotunePressed()
  * */
 void DialogDac::checkTargetReached()
 {
-	bool targetReached = false, ch1TargetReached = false, ch2TargetReached = false, ch3TargetReached = false, ch4TargetReached = false, ch5TargetReached = false, ch6TargetReached = false, ch7TargetReached = false, ch8TargetReached = false;
-
 	QSpinBox* spinBoxArray[8] = { ui->spinBoxChannel1, ui->spinBoxChannel2, ui->spinBoxChannel3, ui->spinBoxChannel4, ui->spinBoxChannel5, ui->spinBoxChannel6, ui->spinBoxChannel7, ui->spinBoxChannel8 };
 	int spinBoxArraySize = (sizeof(spinBoxArray) / sizeof(spinBoxArray[0]));
 
-	if (autotuneRunning && !targetReached)
+	if (autotuneRunning && !allTargetsReached)
 	{
 		//define variables used to return data
 		uint32_t drvno = QString::number(ui->spinBoxPcie->value()).toInt();
@@ -343,7 +350,7 @@ void DialogDac::checkTargetReached()
 		// Check if all targets are reached. If not call autotunePressed() again
 		if (ch1TargetReached && ch2TargetReached && ch3TargetReached && ch4TargetReached && ch5TargetReached && ch6TargetReached && ch7TargetReached && ch8TargetReached)
 		{
-			targetReached = true;
+			allTargetsReached = true;
 			autotuneRunning = false;
 			on_autotuneStateChanged();
 		}
@@ -353,9 +360,9 @@ void DialogDac::checkTargetReached()
 	return;
 }
 
-int DialogDac::calculateMean(uint16_t* data, int start, int end, bool isHsIr)
+double DialogDac::calculateMean(uint16_t* data, int start, int end, bool isHsIr)
 {
-	int mean = 0;
+	double mean = 0;
 	int skip = 0;
 	if (isHsIr)
 		skip = 1;
@@ -375,12 +382,12 @@ bool DialogDac::autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spi
 	bool targetReached = false;
 	int target = ui->spinBoxTarget->value();
 	int tolerance = 3;
-	int mean = calculateMean(data, start, end, isHsIr);
+	double mean = calculateMean(data, start, end, isHsIr);
 
 	if (((mean <= target + tolerance) && (mean >= target - tolerance)) || spinBox->value() >= 65000)
 		targetReached = true;
 	else {
-		int distance = 0;
+		double distance = 0;
 		if (target < mean)
 		{
 			distance = mean - target;
