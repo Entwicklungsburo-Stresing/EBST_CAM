@@ -284,6 +284,7 @@ void DialogDac::checkTargetReached()
 		uint32_t block = settings.value(settingNobPath, settingNobDefault).toDouble() - 1;
 		uint16_t camera = QString::number(ui->spinBoxCamera->value()).toInt();
 		uint32_t pixel = settings.value(settingPixelPath, settingPixelDefault).toDouble();
+		int sensor_type = settings.value(settingSensorTypePath, settingSensorTypeDefault).toInt();
 		settings.endGroup();
 		size_t data_array_size = 0;
 		data_array_size += pixel;
@@ -312,15 +313,31 @@ void DialogDac::checkTargetReached()
 			ui->labelAutotuneWarning->setText("");
 
 		//Adjust DAC value
-		if (!ch1TargetReached) ch1TargetReached = autotuneAdjust(data, autotune_ch1_start, autotune_ch1_end, spinBoxArray[0]);
-		if (!ch2TargetReached) ch2TargetReached = autotuneAdjust(data, autotune_ch2_start, autotune_ch2_end, spinBoxArray[1]);
-		if (!ch3TargetReached) ch3TargetReached = autotuneAdjust(data, autotune_ch3_start, autotune_ch3_end, spinBoxArray[2]);
-		if (!ch4TargetReached) ch4TargetReached = autotuneAdjust(data, autotune_ch4_start, autotune_ch4_end, spinBoxArray[3]);
-		if (!ch5TargetReached) ch5TargetReached = autotuneAdjust(data, autotune_ch5_start, autotune_ch5_end, spinBoxArray[4]);
-		if (!ch6TargetReached) ch6TargetReached = autotuneAdjust(data, autotune_ch6_start, autotune_ch6_end, spinBoxArray[5]);
-		if (!ch7TargetReached) ch7TargetReached = autotuneAdjust(data, autotune_ch7_start, autotune_ch7_end, spinBoxArray[6]);
-		if (!ch8TargetReached) ch8TargetReached = autotuneAdjust(data, autotune_ch8_start, autotune_ch8_end, spinBoxArray[7]);
-
+		switch (sensor_type)
+		{
+		case sensor_type_hsvis:
+			if (!ch1TargetReached) ch1TargetReached = autotuneAdjust(data, autotune_hsvis_ch1_start, autotune_hsvis_ch1_end, spinBoxArray[0], false);
+			if (!ch2TargetReached) ch2TargetReached = autotuneAdjust(data, autotune_hsvis_ch2_start, autotune_hsvis_ch2_end, spinBoxArray[1], false);
+			if (!ch3TargetReached) ch3TargetReached = autotuneAdjust(data, autotune_hsvis_ch3_start, autotune_hsvis_ch3_end, spinBoxArray[2], false);
+			if (!ch4TargetReached) ch4TargetReached = autotuneAdjust(data, autotune_hsvis_ch4_start, autotune_hsvis_ch4_end, spinBoxArray[3], false);
+			if (!ch5TargetReached) ch5TargetReached = autotuneAdjust(data, autotune_hsvis_ch5_start, autotune_hsvis_ch5_end, spinBoxArray[4], false);
+			if (!ch6TargetReached) ch6TargetReached = autotuneAdjust(data, autotune_hsvis_ch6_start, autotune_hsvis_ch6_end, spinBoxArray[5], false);
+			if (!ch7TargetReached) ch7TargetReached = autotuneAdjust(data, autotune_hsvis_ch7_start, autotune_hsvis_ch7_end, spinBoxArray[6], false);
+			if (!ch8TargetReached) ch8TargetReached = autotuneAdjust(data, autotune_hsvis_ch8_start, autotune_hsvis_ch8_end, spinBoxArray[7], false);
+			break;
+		case sensor_type_hsir:
+			if (!ch1TargetReached) ch1TargetReached = autotuneAdjust(data, autotune_hsir_ch1_start, autotune_hsir_ch1_end, spinBoxArray[0], true);
+			if (!ch2TargetReached) ch2TargetReached = autotuneAdjust(data, autotune_hsir_ch2_start, autotune_hsir_ch2_end, spinBoxArray[1], true);
+			if (!ch3TargetReached) ch3TargetReached = autotuneAdjust(data, autotune_hsir_ch3_start, autotune_hsir_ch3_end, spinBoxArray[2], true);
+			if (!ch4TargetReached) ch4TargetReached = autotuneAdjust(data, autotune_hsir_ch4_start, autotune_hsir_ch4_end, spinBoxArray[3], true);
+			if (!ch5TargetReached) ch5TargetReached = autotuneAdjust(data, autotune_hsir_ch5_start, autotune_hsir_ch5_end, spinBoxArray[4], true);
+			if (!ch6TargetReached) ch6TargetReached = autotuneAdjust(data, autotune_hsir_ch6_start, autotune_hsir_ch6_end, spinBoxArray[5], true);
+			if (!ch7TargetReached) ch7TargetReached = autotuneAdjust(data, autotune_hsir_ch7_start, autotune_hsir_ch7_end, spinBoxArray[6], true);
+			if (!ch8TargetReached) ch8TargetReached = autotuneAdjust(data, autotune_hsir_ch8_start, autotune_hsir_ch8_end, spinBoxArray[7], true);
+			break;
+		default:
+			break;
+		}
 		free(data);
 
 		// Check if all targets are reached. If not call autotunePressed() again
@@ -336,23 +353,29 @@ void DialogDac::checkTargetReached()
 	return;
 }
 
-int DialogDac::calculateMean(uint16_t* data, int start, int end)
+int DialogDac::calculateMean(uint16_t* data, int start, int end, bool isHsIr)
 {
 	int mean = 0;
-	for (int i = start; i < end; i++)
+	int skip = 0;
+	if (isHsIr)
+		skip = 1;
+	for (int i = start; i < end; i = i + 1 + skip)
 	{
 		mean += data[i];
 	}
-	mean /= (end - start);
+	if(isHsIr)
+		mean /= (end - start) / 2;
+	else
+		mean /= (end - start);
 	return mean;
 }
 
-bool DialogDac::autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spinBox)
+bool DialogDac::autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spinBox, bool isHsIr)
 {
 	bool targetReached = false;
 	int target = ui->spinBoxTarget->value();
 	int tolerance = 3;
-	int mean = calculateMean(data, start, end);
+	int mean = calculateMean(data, start, end, isHsIr);
 
 	if (((mean <= target + tolerance) && (mean >= target - tolerance)) || spinBox->value() >= 65000)
 		targetReached = true;
