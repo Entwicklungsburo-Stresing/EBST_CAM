@@ -10,22 +10,31 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 ### API Changes
 #### Added
 #### Changed
-- Change the name of the setting sensor_reset_length_in_4_ns to sensor_reset_length. This parameter has now different meanings depending on sensor type. For HSVIS the step size is 4 ns, like before. For HSIR the step size is 160 ns.
 #### Removed
 #### Fixed
 #### Deprecated
+### Other Changes
+#### Added
+#### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+
+## 4.13.0 - 2024-07-18
+### API Changes
+#### Changed
+- Change the name of the setting sensor_reset_length_in_4_ns to sensor_reset_length. This parameter has now different meanings depending on sensor type. For HSVIS the step size is 4 ns, like before. For HSIR the step size is 160 ns.
 ### Other Changes
 #### Added
 - new dialog Chart -> Settings:
 	- show / hide crosshair
 	- set axes min and max
 	- mirror x axis
+- Add autotune support for HSIR
 #### Changed
 - Add duration parameter to pulse bit functions
 #### Removed
 - remove Chart -> Axes
-#### Fixed
-#### Deprecated
 
 ## 4.12.2 - 2024-06-24
 ### API Changes
