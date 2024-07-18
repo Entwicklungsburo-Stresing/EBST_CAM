@@ -809,24 +809,44 @@ enum pixel_fpga_ver_t
 	pixel_fpga_ver_major_and_bit = 0x00FF
 };
 
-enum autotune_channel_ranges_t
+enum autotune_channel_ranges_hsvis_t
 {
-	autotune_ch1_start = 44,
-	autotune_ch1_end = 108,
-	autotune_ch2_start = 172,
-	autotune_ch2_end = 236,
-	autotune_ch3_start = 300,
-	autotune_ch3_end = 364,
-	autotune_ch4_start = 428,
-	autotune_ch4_end = 492,
-	autotune_ch5_start = 556,
-	autotune_ch5_end = 620,
-	autotune_ch6_start = 684,
-	autotune_ch6_end = 748,
-	autotune_ch7_start = 812,
-	autotune_ch7_end = 876,
-	autotune_ch8_start = 940,
-	autotune_ch8_end = 1004,
+	autotune_hsvis_ch1_start = 44,
+	autotune_hsvis_ch1_end = 108,
+	autotune_hsvis_ch2_start = 172,
+	autotune_hsvis_ch2_end = 236,
+	autotune_hsvis_ch3_start = 300,
+	autotune_hsvis_ch3_end = 364,
+	autotune_hsvis_ch4_start = 428,
+	autotune_hsvis_ch4_end = 492,
+	autotune_hsvis_ch5_start = 556,
+	autotune_hsvis_ch5_end = 620,
+	autotune_hsvis_ch6_start = 684,
+	autotune_hsvis_ch6_end = 748,
+	autotune_hsvis_ch7_start = 812,
+	autotune_hsvis_ch7_end = 876,
+	autotune_hsvis_ch8_start = 940,
+	autotune_hsvis_ch8_end = 1004,
+};
+
+enum autotune_channel_ranges_hsir_t
+{
+	autotune_hsir_ch1_start = 16,
+	autotune_hsir_ch1_end = 264,
+	autotune_hsir_ch2_start = 15,
+	autotune_hsir_ch2_end = 265,
+	autotune_hsir_ch3_start = 268,
+	autotune_hsir_ch3_end = 520,
+	autotune_hsir_ch4_start = 269,
+	autotune_hsir_ch4_end = 521,
+	autotune_hsir_ch5_start = 524,
+	autotune_hsir_ch5_end = 766,
+	autotune_hsir_ch6_start = 525,
+	autotune_hsir_ch6_end = 767,
+	autotune_hsir_ch7_start = 780,
+	autotune_hsir_ch7_end = 1032,
+	autotune_hsir_ch8_start = 781,
+	autotune_hsir_ch8_end = 1031,
 };
 
 /**
