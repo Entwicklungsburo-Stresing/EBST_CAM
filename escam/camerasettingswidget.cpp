@@ -48,7 +48,10 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingIOCtrlImpactStartPixelPath, ui->spinBoxIOCtrlImpactStartPixel->value());
 	settings.setValue(settingsUseSoftwarePollingPath, ui->checkBoxUseSoftwarePolling->isChecked());
 	settings.setValue(settingIsCooledCameraLegacyModePath, ui->checkBoxIsCooledCameraLegacyMode->isChecked());
-	settings.setValue(settingSensorResetLengthIn4nsPath, ui->spinBoxSensorResetLengthIn1ns->value() / 4);
+	if(settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble() == sensor_type_hsvis)
+		settings.setValue(settingSensorResetLengthPath, ui->spinBoxSensorResetLengthIn1ns->value() / 4);
+	else
+		settings.setValue(settingSensorResetLengthPath, ui->spinBoxSensorResetLengthIn1ns->value() / 160);
 	//FFT mode
 	settings.setValue(settingLinesPath, ui->spinBoxLines->value());
 	settings.setValue(settingVfreqPath, ui->spinBoxVfreq->value());
@@ -345,7 +348,7 @@ void CameraSettingsWidget::loadDefaults()
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settingIOCtrlImpactStartPixelDefault);
 	ui->checkBoxUseSoftwarePolling->setChecked(settingsUseSoftwarePollingDefault);
 	ui->checkBoxIsCooledCameraLegacyMode->setChecked(settingIsCooledCameraLegacyModeDefault);
-	ui->spinBoxSensorResetLengthIn1ns->setValue(settingSensorResetLengthIn4nsDefault * 4);
+	ui->spinBoxSensorResetLengthIn1ns->setValue(settingSensorResetLengthDefault * 4);
 	//FFT mode
 	ui->spinBoxLines->setValue(settingLinesDefault);
 	ui->spinBoxVfreq->setValue(settingVfreqDefault);
@@ -381,17 +384,6 @@ void CameraSettingsWidget::on_spinBoxPixel_valueChanged(int arg1)
 	else
 		newPixelValue = arg1 - arg1 % 64;
 	ui->spinBoxPixel->setValue(newPixelValue);
-}
-
-// only allow values n * 4
-void CameraSettingsWidget::on_spinBoxSensorResetLengthIn1ns_valueChanged(int arg1)
-{
-	int newValue = 0;
-	if (arg1 % 4 > 2)
-		newValue = arg1 + 4 - arg1 % 4;
-	else
-		newValue = arg1 - arg1 % 4;
-	ui->spinBoxSensorResetLengthIn1ns->setValue(newValue);
 }
 
 void CameraSettingsWidget::on_comboBoxFftMode_currentIndexChanged(int index)
@@ -526,7 +518,10 @@ void CameraSettingsWidget::initializeWidget()
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toDouble());
 	ui->checkBoxUseSoftwarePolling->setChecked(settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool());
 	ui->checkBoxIsCooledCameraLegacyMode->setChecked(settings.value(settingIsCooledCameraLegacyModePath, settingIsCooledCameraLegacyModeDefault).toBool());
-	ui->spinBoxSensorResetLengthIn1ns->setValue(settings.value(settingSensorResetLengthIn4nsPath, settingSensorResetLengthIn4nsDefault).toDouble() * 4);
+	if(settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble() == sensor_type_hsvis)
+		ui->spinBoxSensorResetLengthIn1ns->setValue(settings.value(settingSensorResetLengthPath, settingSensorResetLengthDefault).toDouble() * 4);
+	else
+		ui->spinBoxSensorResetLengthIn1ns->setValue(settings.value(settingSensorResetLengthPath, settingSensorResetLengthDefault).toDouble() * 160);
 	//FFT mode
 	ui->spinBoxLines->setValue(settings.value(settingLinesPath, settingLinesDefault).toDouble());
 	ui->spinBoxVfreq->setValue(settings.value(settingVfreqPath, settingVfreqDefault).toDouble());
