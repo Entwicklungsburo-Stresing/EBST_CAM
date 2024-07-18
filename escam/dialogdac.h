@@ -31,8 +31,8 @@ private:
 	QSettings settings;
 	bool autotuneRunning = false;
 	void autotunePressed();
-	int calculateMean(uint16_t* data, int start, int end);
-	bool autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spinBox);
+	int calculateMean(uint16_t* data, int start, int end, bool isHsIr);
+	bool autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spinBox, bool isHsir);
 };
 
 #endif // DIALOGDAC_H
