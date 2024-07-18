@@ -227,8 +227,8 @@ es_status_codes readRegisterDma_32( uint32_t drvno, uint32_t* data, uint16_t add
 es_status_codes readRegisterDma_8( uint32_t drvno, uint8_t* data, uint16_t address );
 es_status_codes writeBitsDma_32( uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address);
 es_status_codes writeBitsDma_8( uint32_t drvno, uint8_t data, uint8_t bitmask, uint16_t address);
-es_status_codes pulseBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address);
-es_status_codes pulseBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address);
+es_status_codes pulseBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address, int64_t duration_in_microseconds);
+es_status_codes pulseBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address, int64_t duration_in_microseconds);
 es_status_codes ReadBitS0_32(uint32_t drvno, uint16_t address, uint8_t bitnumber, bool* isBitHigh);
 es_status_codes ReadBitS0_8(uint32_t drvno, uint16_t address, uint8_t bitnumber, bool* isBitHigh);
 #ifdef __cplusplus
