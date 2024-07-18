@@ -82,7 +82,7 @@
 #define settingSticntDefault						0
 #define settingBticntDefault						0
 #define settingTocntDefault							0
-#define settingSensorResetLengthIn4nsDefault		100
+#define settingSensorResetLengthDefault				100
 #define settingWriteToDiscDefault					0
 #define settingFilePathDefault						""
 #define settingFileSplitModeDefault					no_split
