@@ -556,6 +556,10 @@ enum camera_register_addresses_t
 	cam_adaddr_vclks_amount4 = 0x0C,
 	cam_adaddr_vclks_amount5 = 0x0D,
 	/**
+	 * This register is used to the the sensor gain. It is introduced to support the 3 bit gain function of HSIR sensor. The sensor gain bit in the config register only supports 1 bit.
+	 */
+	cam_adaddr_sensor_gain = 0x10,
+	/**
 	 * This is a register for the camera position for multiple cameras in line. The software always sets the first camera to 0 and the cameras are handing their positions one to another.
 	 */
 	cam_adaddr_camera_position = 0x7F,
@@ -574,7 +578,6 @@ enum cam_config_register_t
 	cam_config_register_bits_led_off = 0x0080,
 	cam_config_register_bits_bnc_out = 0x0300,
 };
-
 
 /**
  * These registers are addressed when maddr = 1 and camera system = 3010.
@@ -706,6 +709,7 @@ enum dac_register_addresses_t
 	 */
 	campos_bit_index = 4,
 };
+
 /**
  * This enum shows the meaning of the first special pixels.
  */

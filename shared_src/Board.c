@@ -274,6 +274,8 @@ es_status_codes InitCamera(uint32_t drvno)
 	status = IOCtrl_setT0(drvno, settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns);
 	if (status != es_no_error) return status;
 	status = Cam_SetSensorResetLength(drvno, settings_struct.camera_settings[drvno].sensor_reset_length);
+	if (status != es_no_error) return status;
+	status = SetSensorGain(drvno, (uint16_t)settings_struct.camera_settings[drvno].sensor_gain);
 	return status;
 }
 
@@ -6168,4 +6170,9 @@ es_status_codes GetBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns)
 es_status_codes GetBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns)
 {
 	return readRegisterS0_32(drvno, bonPeriodIn10ns, S0Addr_BON_PERIOD);
+}
+
+es_status_codes SetSensorGain(uint32_t drvno, uint16_t gain)
+{
+	return SendFLCAM(drvno, maddr_cam, cam_adaddr_sensor_gain, gain);
 }
