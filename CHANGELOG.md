@@ -3,7 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
-This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/v2.0.0.html) yet.
+This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/v2.0.0.html) yet. Instead the version scheme is as follows: major version . hardware version number . minor version.
+The hardware version number is the current version at release time.
 
 ## Unreleased
 
@@ -19,6 +20,13 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 #### Removed
 #### Fixed
 #### Deprecated
+
+## 4.13.1 - 2024-07-22
+### API Changes
+- none
+### Other Changes
+#### Added
+- Add SetSensorGain(). This function sets the new register sensor gain for HSIR. The settings parameter sensor_gain is used for setting this register.
 
 ## 4.13.0 - 2024-07-18
 ### API Changes
