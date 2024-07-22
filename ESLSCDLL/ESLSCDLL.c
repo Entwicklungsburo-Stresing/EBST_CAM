@@ -480,7 +480,12 @@ DllAccess es_status_codes DLLReadScanFrequencyBit_multipleBoards(uint8_t* scanFr
 }
 
 /**
- * \copydoc ResetScanFrequencyBit
+ * \brief Resets the ScanFrequency bit.
+ *
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
  */
 DllAccess es_status_codes DLLResetScanFrequencyBit()
 {
@@ -530,7 +535,12 @@ DllAccess es_status_codes DLLReadBlockFrequencyBit_multipleBoards(uint8_t* block
 }
 
 /**
- * \copydoc ResetBlockFrequencyBit
+ * \brief Resets the BlockFrequency bit.
+ *
+ * \return es_status_codes:
+ *		- es_no_error
+ *		- es_register_read_failed
+ * 		- es_register_write_failed
  */
 DllAccess es_status_codes DLLResetBlockFrequencyBit()
 {
@@ -880,7 +890,6 @@ DllAccess es_status_codes DLLReadBitS0_8(uint32_t drvno, uint16_t address, uint8
 /**
  * \brief Read 1 bit of 1 byte of a s0 register for all boards.
  *
- * \param drvno identifier of PCIE card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param address Address of the register to read.
  * \param bitnumber Address of the bit to read.
  * \param isBitHigh0 Tells if bit is high or low.
@@ -936,7 +945,7 @@ DllAccess es_status_codes DLLSetTemp(uint8_t level)
 /**
  * \brief Set signal of output port of PCIe card for all boards selected by settings parameter board_sel.
  *
- * \param tor select output signal. See [enum tor_out](@ref tor_out) in enum_settings.h for options.
+ * \param tor select output signal. See [enum tor_out_t](@ref tor_out_t) in enum_settings.h for options.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
@@ -959,14 +968,14 @@ DllAccess es_status_codes DLLSetTORReg(uint8_t tor)
  * \brief Sets all outputs of the DAC8568 in camera 3030 or on PCIe board for all PCIe boards.
  *
  * Use this function to set the outputs, because it is resorting the channel numeration correctly.
- * \param location Switch for the different locations of DAC85689. See [enum DAC8568_location](@ref DAC8568_location) in enum_settings.h for details.
+ * \param location Switch for the different locations of DAC85689. See [enum DAC8568_location_t](@ref DAC8568_location_t) in enum_settings.h for details.
  * \param cameraPosition This is describing the camera position when there are mumltiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
  * \param output0 all output values as array for board 0 that will be converted to analog voltage (0 ... 0xFFFF)
  * \param output1 all output values as array for board 1 that will be converted to analog voltage (0 ... 0xFFFF)
  * \param output2 all output values as array for board 2 that will be converted to analog voltage (0 ... 0xFFFF)
  * \param output3 all output values as array for board 3 that will be converted to analog voltage (0 ... 0xFFFF)
  * \param output4 all output values as array for board 4 that will be converted to analog voltage (0 ... 0xFFFF)
- * \param reorder_channels used to reorder DAC channels for high speed camera
+ * \param reorder_channel used to reorder DAC channels for high speed camera
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_write_failed
@@ -1154,7 +1163,6 @@ DllAccess es_status_codes DLLGetBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn1
  *		* min: 0
  *		* step: 1 => 10 ns
  *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
- * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param xckLengthIn10ns0 pointer to uint32 where the XCK length of board0 is returned
  * \param xckLengthIn10ns1 pointer to uint32 where the XCK length of board1 is returned
  * \param xckLengthIn10ns2 pointer to uint32 where the XCK length of board2 is returned
@@ -1189,7 +1197,6 @@ DllAccess es_status_codes DLLGetXckLength_multipleBoards(uint32_t* xckLengthIn10
  *		* min: 0
  *		* step: 1 => 10 ns
  *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
- * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param xckPeriodIn10ns0 pointer to uint32 where the XCK period of board0 is returned
  * \param xckPeriodIn10ns1 pointer to uint32 where the XCK period of board1 is returned
  * \param xckPeriodIn10ns2 pointer to uint32 where the XCK period of board2 is returned
@@ -1224,7 +1231,6 @@ DllAccess es_status_codes DLLGetXckPeriod_multipleBoards(uint32_t* xckPeriodIn10
  *		* min: 0
  *		* step: 1 => 10 ns
  *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
- * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param bonLengthIn10ns0 pointer to uint32 where the BON length of board0 is returned
  * \param bonLengthIn10ns1 pointer to uint32 where the BON length of board1 is returned
  * \param bonLengthIn10ns2 pointer to uint32 where the BON length of board2 is returned
@@ -1259,7 +1265,6 @@ DllAccess es_status_codes DLLGetBonLength_multipleBoards(uint32_t* bonLengthIn10
  *		* min: 0
  *		* step: 1 => 10 ns
  *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
- * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param bonPeriodIn10ns0 pointer to uint32 where the BON period of board0 is returned
  * \param bonPeriodIn10ns1 pointer to uint32 where the BON period of board1 is returned
  * \param bonPeriodIn10ns2 pointer to uint32 where the BON period of board2 is returned
@@ -1624,7 +1629,6 @@ DllAccess es_status_codes DLLGetAllSpecialPixelInformation(uint32_t drvno, uint3
  *
  * The information impact signal 2 is given in the special pixels pixel_impact_signal_2_low and pixel_impact_signal_2_high. Impact signal 2 is either TDC 2 or DSC 2, depending on the PCIe daughter board.
  *
- * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param sample sample number (0 ... (nos-1))
  * \param block block number (0 ... (nob-1))
  * \param camera_pos camera position (0 ... (CAMCNT-1))
