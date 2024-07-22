@@ -510,25 +510,19 @@ enum camera_type_bits_t
 	camera_type_camera_system_bit_index = 16,
 };
 
-enum cam_addresses_t
+enum master_address_t
 {
-	maddr_cam = 0x00,
-	maddr_adc = 0x01,
-	maddr_ioctrl = 0x02,
-	maddr_dac = 0x03,
+	maddr_cam = 0x0,
+	maddr_adc = 0x1,
+	maddr_ioctrl = 0x2,
+	maddr_dac = 0x3,
+};
 
-	dac_hi_byte_addr = 0x01,
-	dac_lo_byte_addr = 0x02,
-
-	/**
-	 * The adaddr is structured as following:
-	 * - c: camera position
-	 * - r: register address
-	 * 0b ccc rrrr
-	 * The upper 3 bits are describing the camera position and the lower 4 bits are describing the register address. (Only 7 bits are used)
-	 */
-	campos_bit_index = 4,
-
+/**
+ * These registers are addressed when maddr = 0.
+ */
+enum camera_register_addresses_t
+{
 	cam_adaddr_config = 0x00,
 	cam_adaddr_pixel = 0x01,
 	cam_adaddr_trig_in = 0x02,
@@ -553,24 +547,58 @@ enum cam_addresses_t
 	cam_adaddr_sensor_reset_length = 0x08,
 	/**
 	 * stores the amount of vclks generated inside the camera.
-	 * - cam_adaddr_vclks_amount1:    is used for full binning (fft_lines) or the first region of ROI
+	 * - cam_adaddr_vclks_amount1: is used for full binning (fft_lines) or the first region of ROI
 	 * - cam_adaddr_vclks_amount2..5: are used for ROI mode. Must be set to zero for full binning
 		 */
-	cam_adaddr_vclks_amount1 = 0x9,
-	cam_adaddr_vclks_amount2 = 0xA,
-	cam_adaddr_vclks_amount3 = 0xB,
-	cam_adaddr_vclks_amount4 = 0xC,
-	cam_adaddr_vclks_amount5 = 0xD,
+	cam_adaddr_vclks_amount1 = 0x09,
+	cam_adaddr_vclks_amount2 = 0x0A,
+	cam_adaddr_vclks_amount3 = 0x0B,
+	cam_adaddr_vclks_amount4 = 0x0C,
+	cam_adaddr_vclks_amount5 = 0x0D,
 	/**
 	 * This is a register for the camera position for multiple cameras in line. The software always sets the first camera to 0 and the cameras are handing their positions one to another.
 	 */
 	cam_adaddr_camera_position = 0x7F,
+};
 
+enum cam_config_register_t
+{
+	cam_config_register_bitindex_sensor_gain = 0,
+	cam_config_register_bitindex_trigger_mode_cc = 1,
+	cam_config_register_bitindex_temp_level = 4,
+	cam_config_register_bitindex_led_off = 7,
+	cam_config_register_bitindex_bnc_out = 8,
+	cam_config_register_bits_sensor_gain = 0x0001,
+	cam_config_register_bits_trigger_mode_cc = 0x000E,
+	cam_config_register_bits_temp_level = 0x0070,
+	cam_config_register_bits_led_off = 0x0080,
+	cam_config_register_bits_bnc_out = 0x0300,
+};
+
+
+/**
+ * These registers are addressed when maddr = 1 and camera system = 3010.
+ */
+enum adc_ltc2271_register_adress_t
+{
 	adc_ltc2271_regaddr_reset = 0x00,
 	adc_ltc2271_regaddr_outmode = 0x02,
 	adc_ltc2271_regaddr_custompattern_msb = 0x03,
 	adc_ltc2271_regaddr_custompattern_lsb = 0x04,
+};
 
+enum adc_ltc2271_messages_t
+{
+	adc_ltc2271_msg_reset = 0x80,
+	adc_ltc2271_msg_normal_mode = 0x01,
+	adc_ltc2271_msg_custompattern = 0x05,
+};
+
+/**
+ * These registers are addressed when maddr = 1 and camera system = 3030.
+ */
+enum adc_ads5294_register_adress_t
+{
 	adc_ads5294_regaddr_reset = 0x00,
 	/**
 	 * Low frequency noise suppression mode
@@ -625,7 +653,23 @@ enum cam_addresses_t
 	// This is the 7 bit border. With the current implementation in the FPGA, only 7 bit addresses are accessible.
 	adc_ads5294_regaddr_coeff1_filter4 = 0x7F,
 	adc_ads5294_regaddr_coeff11_filter8 = 0xB9,
+};
 
+enum adc_ads5294_messages_t
+{
+	adc_ads5294_msg_reset = 0x01,
+	adc_ads5294_msg_ramp = 0x40,
+	adc_ads5294_msg_custompattern = 0x10,
+	adc_ads5294_msg_2wireMode = 0x8401,
+	adc_ads5294_msg_wordWiseOutput = 0x80FF,
+	adc_ads5294_msg_ddrClkAlign = 0x60,
+};
+
+/**
+ * These registers are addressed when maddr = 2.
+ */
+enum ioctrl_register_address_t
+{
 	ioctrl_impact_start_pixel = 0x00,
 	ioctrl_t0l = 0x01,
 	ioctrl_t0h = 0x02,
@@ -645,34 +689,23 @@ enum cam_addresses_t
 	ioctrl_d7 = 0x10,
 };
 
-enum cam_messages_t
+/**
+ * These register are addressed when maddr = 3.
+ */
+enum dac_register_addresses_t
 {
-	adc_ltc2271_msg_reset = 0x80,
-	adc_ltc2271_msg_normal_mode = 0x01,
-	adc_ltc2271_msg_custompattern = 0x05,
+	dac_hi_byte_addr = 0x01,
+	dac_lo_byte_addr = 0x02,
 
-	adc_ads5294_msg_reset = 0x01,
-	adc_ads5294_msg_ramp = 0x40,
-	adc_ads5294_msg_custompattern = 0x10,
-	adc_ads5294_msg_2wireMode = 0x8401,
-	adc_ads5294_msg_wordWiseOutput = 0x80FF,
-	adc_ads5294_msg_ddrClkAlign = 0x60,
+	/**
+	 * The adaddr is structured as following:
+	 * - c: camera position
+	 * - r: register address
+	 * 0b ccc rrrr
+	 * The upper 3 bits are describing the camera position and the lower 4 bits are describing the register address. (Only 7 bits are used)
+	 */
+	campos_bit_index = 4,
 };
-
-enum cam_config_register_t
-{
-	cam_config_register_bitindex_sensor_gain = 0,
-	cam_config_register_bitindex_trigger_mode_cc = 1,
-	cam_config_register_bitindex_temp_level = 4,
-	cam_config_register_bitindex_led_off = 7,
-	cam_config_register_bitindex_bnc_out = 8,
-	cam_config_register_bits_sensor_gain = 0x0001,
-	cam_config_register_bits_trigger_mode_cc = 0x000E,
-	cam_config_register_bits_temp_level = 0x0070,
-	cam_config_register_bits_led_off = 0x0080,
-	cam_config_register_bits_bnc_out = 0x0300,
-};
-
 /**
  * This enum shows the meaning of the first special pixels.
  */

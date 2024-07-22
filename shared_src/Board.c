@@ -2229,7 +2229,7 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
  * \brief Sets the sensor reset length register in the camera, which controls the length of the ARG pulse.
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param sensor_reset_length See \ref cam_addresses_t.cam_adaddr_sensor_reset_length for more information.
+ * \param sensor_reset_length See \ref camera_register_addresses_t.cam_adaddr_sensor_reset_length for more information.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
