@@ -6172,6 +6172,16 @@ es_status_codes GetBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns)
 	return readRegisterS0_32(drvno, bonPeriodIn10ns, S0Addr_BON_PERIOD);
 }
 
+/**
+ * \brief Set the sensor gain register in 3030 - HSIR.
+ * 
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param gain All 16 bits are sent to the camera, but only the lower two bits are currently used as gain.
+ *		* min: 0
+ *		* step: 1
+ *		* max: 4
+ * \return es_status_codes
+ */
 es_status_codes SetSensorGain(uint32_t drvno, uint16_t gain)
 {
 	return SendFLCAM(drvno, maddr_cam, cam_adaddr_sensor_gain, gain);
