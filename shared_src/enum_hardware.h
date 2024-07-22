@@ -556,7 +556,7 @@ enum camera_register_addresses_t
 	cam_adaddr_vclks_amount4 = 0x0C,
 	cam_adaddr_vclks_amount5 = 0x0D,
 	/**
-	 * This register is used to the the sensor gain. It is introduced to support the 3 bit gain function of HSIR sensor. The sensor gain bit in the config register only supports 1 bit.
+	 * This register is used to the the sensor gain. It is introduced to support the 2 bit gain function of HSIR sensor. The sensor gain bit in the config register only supports 1 bit.
 	 */
 	cam_adaddr_sensor_gain = 0x10,
 	/**
