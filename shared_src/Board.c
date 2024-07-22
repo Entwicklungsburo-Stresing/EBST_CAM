@@ -2054,8 +2054,6 @@ es_status_codes Cam3030_ADC_SetFilterSettings(uint32_t drvno, uint8_t channel, u
 }
 
 /**
- * .
- *
  * \param drvno selects PCIe board
  * \param channel 1...8
  * \param coefficient_number 0...11
@@ -2231,7 +2229,7 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
  * \brief Sets the sensor reset length register in the camera, which controls the length of the ARG pulse.
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param sensor_reset_length_in_8_ns value * 8ns = sensor reset length. range: 0ns ... 524280ns = 524.28us
+ * \param sensor_reset_length See \ref cam_addresses_t.cam_adaddr_sensor_reset_length for more information.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_write_failed
@@ -3033,6 +3031,7 @@ es_status_codes SetHardwareTimerStopMode(uint32_t drvno, bool stop_by_hardware)
  * @param drvno board number (=1 if one PCI board)
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
  * @param address register address. Only 4 byte steps are valid.
+ * @param duration_in_microseconds Duration of the bit beeing high in microseconds.
  * @return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
@@ -3052,7 +3051,8 @@ es_status_codes pulseBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t addre
  * @param drvno board number (=1 if one PCI board)
  * @param bitnumber 0...7, 0 is LSB, 7 MSB
  * @param address register address. 1 byte steps are valid.
- * @return es_status_codes:
+ * @param duration_in_microseconds Duration of the bit beeing high in microseconds.
+ *  @return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
  * 		- es_register_write_failed
@@ -5850,17 +5850,17 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
 	return writeRegisterS0_32(drvno, settings_struct.camera_settings[drvno].s1s2_read_delay_in_10ns, S0Addr_S1S2ReadDelay);
 }
 
+#ifdef WIN32
 /**
  * \brief Exports the measurement data to a HDF5 file.
+ *
  * \param path Chosen path to save the file.
  * \param filename Chosen filename.
  * \return es_status_codes:
- *	es_measurement_running
- *	es_first_measurement_not_done
- *	es_create_file_failed
- *
+ *			* es_measurement_running
+ *			* es_first_measurement_not_done
+ *			* es_create_file_failed
  */
-#ifdef WIN32
 es_status_codes ExportMeasurementHDF5(const char* path, char* filename)
 {
 	hid_t file_id, file_attr_name, file_attr_timestamp, file_attr_number_of_boards;

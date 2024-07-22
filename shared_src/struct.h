@@ -308,11 +308,13 @@ struct camera_settings
 	uint32_t sticnt;
 	/**
 	 * Sensor_reset_length controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without this reset for all sensors. sensor_rese_length is a 16 bit unsigned integer. The actual reset time depends on \ref camera_settings.sensor_type. Further information about sensor reset can be found in the manual in chapter 4.9.2.
+	 * 
 	 * Reset times for HSVIS:
 	 *		* min: 0 ns
 	 *		* step: 1 * 4 ns = 4 ns
 	 *		* default: 100 * 4 ns = 400 ns
 	 *		* max: 65535 * 4 ns = 262,140 ns
+	 * 
 	 * Reset times for HSIR:
 	 *		* min: 134 * 160 ns = 21,440 ns
 	 *		* step: 1 * 160 ns = 160 ns
@@ -366,14 +368,14 @@ struct measurement_settings
 	 */
 	uint32_t board_sel;
 	/**
-	 * nos is the number of samples. One sample is one readout of the camera. One readout is triggered on each sample trigger which is controlled by \ref camera_settings.sti. nos is a 32 bit unsigned integer. Further information about samples and blocks can be found in the manual in chapter 6.4.1.
+	 * nos is the number of samples. One sample is one readout of the camera. One readout is triggered on each sample trigger which is controlled by \ref camera_settings.sti_mode. nos is a 32 bit unsigned integer. Further information about samples and blocks can be found in the manual in chapter 6.4.1.
 	 *		* min: 2
 	 *		* step: 1
 	 *		* max: 4,294,967,295
 	 */
 	uint32_t nos;
 	/**
-	 * nob is the number of blocks. One block contains nos readouts and is triggered on each block trigger which is controlled by \ref camera_settings.bti. nob is a 32 bit unsigned integer. Further information about samples and blocks can be found in the manual in chapter 6.4.1.
+	 * nob is the number of blocks. One block contains nos readouts and is triggered on each block trigger which is controlled by \ref camera_settings.bti_mode. nob is a 32 bit unsigned integer. Further information about samples and blocks can be found in the manual in chapter 6.4.1.
 	 *		* min: 1
 	 *		* step: 1
 	 *		* max: 4,294,967,295
