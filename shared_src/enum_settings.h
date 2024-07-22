@@ -250,7 +250,7 @@ enum fft_mode_t
 	 */
 	full_binning = 0,
 	/**
-	 * 1: Partial binning is the FFT operation mode for summing up a specific count of lines per readout to get the sum of specific regions of the sensor. The number of regions is determined by the setting \ref camera_settings.number_of_regions. The size of each region is determined by the setting \camera_settings.region_size. In this mode the meaning of scans and blocks changes. One "scan" is now one region of the sensor. So \ref measurement_settings.nos should equal \ref camera_settings.number_of_regions and \ref camera_settings.sti_mode should be set to \ref sti_mode_t.sti_ASL. One "block" is one complete readout of all regions. The time between two block triggers is the exposure time of the sensor for one complete image. \ref measurement_settings.nob and \ref camera_settings.bti_mode can be chosen freely.
+	 * 1: Partial binning is the FFT operation mode for summing up a specific count of lines per readout to get the sum of specific regions of the sensor. The number of regions is determined by the setting \ref camera_settings.number_of_regions. The size of each region is determined by the setting \ref camera_settings.region_size. In this mode the meaning of scans and blocks changes. One "scan" is now one region of the sensor. So \ref measurement_settings.nos should equal \ref camera_settings.number_of_regions and \ref camera_settings.sti_mode should be set to \ref sti_mode_t.sti_ASL. One "block" is one complete readout of all regions. The time between two block triggers is the exposure time of the sensor for one complete image. \ref measurement_settings.nob and \ref camera_settings.bti_mode can be chosen freely.
 	 */
 	partial_binning = 1,
 	/**
@@ -348,7 +348,7 @@ enum tor_out_t
 	 */
 	tor_sec_mshut = 14,
 	/**
-	 * 15: bec_mshut is high during the block exposure window when the option \ref camera_setting.bec_in_10ns is used or can be manually set to high by OpenShutter().
+	 * 15: bec_mshut is high during the block exposure window when the option \ref camera_settings.bec_in_10ns is used or can be manually set to high by OpenShutter().
 	 */
 	tor_bec_mshut = 15,
 	/**
