@@ -155,6 +155,8 @@ void CameraSettingsWidget::on_comboBoxSensorType_currentIndexChanged(int index)
 	}
 	ui->tabWidget->setTabEnabled(2, enabled);
 	ui->checkBoxIsFftLegacy->setEnabled(enabled);
+	if(!enabled)
+		ui->comboBoxFftMode->setCurrentIndex(full_binning);
 }
 
 void CameraSettingsWidget::on_comboBoxCameraSystem_currentIndexChanged(int index)
@@ -186,6 +188,8 @@ void CameraSettingsWidget::on_comboBoxCameraSystem_currentIndexChanged(int index
 		ui->comboBoxSensorType->setItemData(sensor_type_cmos, enabled_item, Qt::UserRole - 1);
 		ui->comboBoxSensorType->setItemData(sensor_type_hsvis, disabled_item, Qt::UserRole - 1);
 		ui->comboBoxSensorType->setItemData(sensor_type_hsir, disabled_item, Qt::UserRole - 1);
+		if(ui->comboBoxSensorType->currentIndex() >= sensor_type_hsvis)
+			ui->comboBoxSensorType->setCurrentIndex(sensor_type_pda);
 		break;
 	case camera_system_3010:
 		ui->spinBoxAdcGain->setEnabled(enabled);
@@ -197,6 +201,8 @@ void CameraSettingsWidget::on_comboBoxCameraSystem_currentIndexChanged(int index
 		ui->comboBoxSensorType->setItemData(sensor_type_cmos, enabled_item, Qt::UserRole - 1);
 		ui->comboBoxSensorType->setItemData(sensor_type_hsvis, disabled_item, Qt::UserRole - 1);
 		ui->comboBoxSensorType->setItemData(sensor_type_hsir, disabled_item, Qt::UserRole - 1);
+		if (ui->comboBoxSensorType->currentIndex() >= sensor_type_hsvis)
+			ui->comboBoxSensorType->setCurrentIndex(sensor_type_pda);
 		break;
 	case camera_system_3030:
 		ui->spinBoxAdcGain->setEnabled(true);
@@ -208,6 +214,8 @@ void CameraSettingsWidget::on_comboBoxCameraSystem_currentIndexChanged(int index
 		ui->comboBoxSensorType->setItemData(sensor_type_cmos, disabled_item, Qt::UserRole - 1);
 		ui->comboBoxSensorType->setItemData(sensor_type_hsvis, enabled_item, Qt::UserRole - 1);
 		ui->comboBoxSensorType->setItemData(sensor_type_hsir, enabled_item, Qt::UserRole - 1);
+		if (ui->comboBoxSensorType->currentIndex() <= sensor_type_cmos)
+			ui->comboBoxSensorType->setCurrentIndex(sensor_type_hsvis);
 		break;
 	}
 }
