@@ -3081,15 +3081,15 @@ es_status_codes pulseBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t addres
 es_status_codes waitForBlockTrigger(uint32_t drvno)
 {
 	ES_LOG("Wait for block trigger\n");
-	uint8_t data = 0;
+	bool blockTriggered = false;
 	es_status_codes status;
 	while (!abortMeasurementFlag)
 	{
 		if (!abortMeasurementFlag && checkEscapeKeyState())
 			abortMeasurementFlag = true;
-		status = readRegisterS0_8(drvno, &data, S0Addr_CTRLA);
+		status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_BSTART, &blockTriggered);
 		if (status != es_no_error) return status;
-		if ((data & CTRLA_bit_BSTART) > 0)
+		if (blockTriggered)
 			return es_no_error;
 	}
 	return es_abortion;
