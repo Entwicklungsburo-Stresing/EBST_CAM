@@ -3107,10 +3107,10 @@ es_status_codes waitForBlockTrigger(uint32_t drvno)
 es_status_codes countBlocksByHardware(uint32_t drvno)
 {
 	ES_LOG("Increase hardware block counter\n");
-	es_status_codes status = pulseBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCKTRIG, S0Addr_PCIEFLAGS, 100);
+	es_status_codes status = pulseBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCKTRIG, S0Addr_PCIEFLAGS, 10);
 	if (status != es_no_error) return status;
 	//reset scan counter
-	return pulseBitS0_32(drvno, ScanIndex_bitindex_counter_reset, S0Addr_ScanIndex, 100);
+	return pulseBitS0_32(drvno, ScanIndex_bitindex_counter_reset, S0Addr_ScanIndex, 10);
 }
 
 /**
