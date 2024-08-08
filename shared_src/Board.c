@@ -443,7 +443,7 @@ es_status_codes AbortMeasurement()
 	{
 		status = StopSTimer(drvno);
 		if (status != es_no_error) return status;
-		status = resetBlockOn(drvno);
+		status = resetBlockEn(drvno);
 		if (status != es_no_error) return status;
 		status = resetMeasureOn(drvno);
 		if (status != es_no_error) return status;
@@ -475,11 +475,11 @@ es_status_codes SetAbortMeasurementFlag()
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes setBlockOn(uint32_t drvno)
+es_status_codes setBlockEn(uint32_t drvno)
 {
-	ES_LOG("Set block on\n");
+	ES_LOG("Set BLOCK_EN\n");
 	notifyBlockStart();
-	return setBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS);
+	return setBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCK_EN, S0Addr_PCIEFLAGS);
 }
 
 /**
@@ -507,11 +507,11 @@ es_status_codes setMeasureOn(uint32_t drvno)
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes resetBlockOn(uint32_t drvno)
+es_status_codes resetBlockEn(uint32_t drvno)
 {
-	ES_LOG("Reset block on\n");
+	ES_LOG("Reset BLOCK_EN\n");
 	notifyBlockDone();
-	return resetBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCKON, S0Addr_PCIEFLAGS);
+	return resetBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCK_EN, S0Addr_PCIEFLAGS);
 }
 
 /**
@@ -2790,6 +2790,7 @@ es_status_codes StartMeasurement()
 				// Check if the drvno'th bit is set
 				if ((settings_struct.board_sel >> drvno) & 1)
 				{
+					// legacy since P222_14: only for backwards compatibility with older versions
 					status = waitForBlockTrigger(drvno);
 					if (status == es_abortion)
 					{
@@ -2802,7 +2803,7 @@ es_status_codes StartMeasurement()
 				}
 			}
 			ES_LOG("Block %u triggered\n", blk_cnt);
-			// setBlockOn, StartSTimer and DoSoftwareTrigger are starting the measurement.
+			// setBlockEn, StartSTimer and DoSoftwareTrigger are starting the measurement.
 			// timer must be started in each block as the scan counter stops it by hardware at end of block
 			for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 			{
@@ -2811,7 +2812,7 @@ es_status_codes StartMeasurement()
 				{
 					status = StartSTimer(drvno);
 					if (status != es_no_error) return ReturnStartMeasurement(status);
-					status = setBlockOn(drvno);
+					status = setBlockEn(drvno);
 					if (status != es_no_error) return ReturnStartMeasurement(status);
 					//start scan for first read if STI = ASL
 					if (settings_struct.camera_settings[drvno].sti_mode == sti_ASL) status = DoSoftwareTrigger(drvno);
@@ -2852,7 +2853,7 @@ es_status_codes StartMeasurement()
 				// Check if the drvno'th bit is set
 				if ((settings_struct.board_sel >> drvno) & 1)
 				{
-					status = resetBlockOn(drvno);
+					status = resetBlockEn(drvno);
 					if (status != es_no_error) return ReturnStartMeasurement(status);
 				}
 			}
@@ -3069,6 +3070,8 @@ es_status_codes pulseBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t addres
 
 /**
  * @brief Wait in loop until block trigger occurs.
+ * 
+ * Since P222_14 this is a legacy function only for backwards compatibility. P222_14 and newer versions will always return 1 at the block trigger bit.
  * If block trigger high: return
  * If block trigger low: wait for hi
  * Checks only PCIE board no 1
@@ -3517,7 +3520,7 @@ es_status_codes CheckFifoFull(uint32_t drvno, bool* full)
  */
 es_status_codes isBlockOn(uint32_t drvno, bool* blockOn)
 {
-	return ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCKON, blockOn);
+	return ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCK_EN, blockOn);
 }
 
 /**
@@ -4029,8 +4032,8 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	case tor_s2:
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "S2)\n");
 		break;
-	case tor_bon:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "BON)\n");
+	case tor_block_on_synced:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "BLOCK_ON_SYNCED)\n");
 		break;
 	case tor_measureon:
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "MEASUREON)\n");
@@ -4062,8 +4065,8 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	case tor_S1S2readDelay:
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "S1S2readDelay)\n");
 		break;
-	case tor_unused_23:
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Unused)\n");
+	case tor_block_on:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "BLOCK_ON)\n");
 		break;
 	case tor_unused_24:
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Unused)\n");
@@ -4151,9 +4154,11 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t3\tUSE_ENFFW_PROTECT\t%u\n", (data32 & PCIEFLAGS_bit_USE_ENFFW_PROTECT) >> PCIEFLAGS_bitindex_USE_ENFFW_PROTECT);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t4\tBLOCKTRIG\t%u\n", (data32 & PCIEFLAGS_bit_BLOCKTRIG) >> PCIEFLAGS_bitindex_BLOCKTRIG);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t5\tMEASUREON\t%u\n", (data32 & PCIEFLAGS_bit_MEASUREON) >> PCIEFLAGS_bitindex_MEASUREON);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t6\tBLOCKON\t%u\n", (data32 & PCIEFLAGS_bit_BLOCKON) >> PCIEFLAGS_bitindex_BLOCKON);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t6\tBLOCK_EN\t%u\n", (data32 & PCIEFLAGS_bit_BLOCK_EN) >> PCIEFLAGS_bitindex_BLOCK_EN);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t8\tTDC\t%u\n", (data32 & PCIEFLAGS_bit_IS_TDC) >> PCIEFLAGS_bitindex_IS_TDC);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t9\tEWS\t%u\n", (data32 & PCIEFLAGS_bit_IS_DSC) >> PCIEFLAGS_bitindex_IS_DSC);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t10\tBLOCK_ON\t%u\n", (data32 & PCIEFLAGS_bit_BLOCK_ON) >> PCIEFLAGS_bitindex_BLOCK_ON);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t10\tBLOCK_ON_SYNCED\t%u\n", (data32 & PCIEFLAGS_bit_BLOCK_ON_SYNCED) >> PCIEFLAGS_bitindex_BLOCK_ON_SYNCED);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t26\tLinkup SFP3\t%u\n", (data32 & PCIEFLAGS_bit_linkup_sfp3) >> PCIEFLAGS_bitindex_linkup_sfp3);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t27\tError SFP3\t%u\n", (data32 & PCIEFLAGS_bit_error_sfp3) >> PCIEFLAGS_bitindex_error_sfp3);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t28\tLinkup SFP2\t%u\n", (data32 & PCIEFLAGS_bit_linkup_sfp2) >> PCIEFLAGS_bitindex_linkup_sfp2);

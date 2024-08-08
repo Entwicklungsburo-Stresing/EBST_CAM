@@ -328,9 +328,9 @@ enum tor_out_t
 	 */
 	tor_s2 = 9,
 	/**
-	 * 10: BON is high during a block readout sequence.
+	 * 10: BLOCK_ON_SYNCED is high during a block readout sequence. The rising edge is synced to the next scan trigger after the rising edge of BLOCK_ON. The signal is resetted by BLOCK_EN = 0.
 	 */
-	tor_bon = 10,
+	tor_block_on_synced = 10,
 	/**
 	 * 11: measureon is high during the whole measurement.
 	 */
@@ -380,9 +380,9 @@ enum tor_out_t
 	 */
 	tor_S1S2readDelay = 22,
 	/**
-	 * 23: Unused.
+	 * 23: BLOCK_ON is high during a block readout sequence. The rising edge is synced to the next block trigger after the rising edge of BLOCK_EN. The signal is resetted by BLOCK_EN = 0.
 	 */
-	tor_unused_23 = 23,
+	tor_block_on = 23,
 	/**
 	 * 24: Unused.
 	 */
