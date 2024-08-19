@@ -43,14 +43,13 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(ui->actionExit, &QAction::triggered, this, &MainWindow::close);
 	connect(&lsc, &Lsc::measureStart, this, &MainWindow::on_measureStart);
 	connect(&lsc, &Lsc::measureDone, this, &MainWindow::on_measureDone);
-	connect(&lsc, &Lsc::blockStart, this, &MainWindow::on_blockStart);
-	connect(&lsc, &Lsc::blockDone, this, &MainWindow::on_blockDone);
 	connect(&lsc, &Lsc::allBlocksDone, this, &MainWindow::on_allBlocksDone);
 	connect(liveViewTimer, &QTimer::timeout, this, &MainWindow::showCurrentScan);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readScanFrequencyBit);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::readBlockFrequencyBit);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::findCamera);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::on_readCameraTemp);
+	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::setBlockOnLamp);
 	connect(scanFrequencyTimer, &QTimer::timeout, this, &MainWindow::on_scanFrequencyTooHigh);
 	connect(blockFrequencyTimer, &QTimer::timeout, this, &MainWindow::on_blockFrequencyTooHigh);
 	connect(ui->radioButtonLiveViewFixedSample, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
@@ -730,21 +729,34 @@ void MainWindow::on_measureDone()
 	return;
 }
 
-void MainWindow::on_blockStart()
+void MainWindow::setBlockOnLamp()
 {
-	//set blockOn lamp on
-	QPalette pal = palette();
-	pal.setColor(QPalette::Window, Qt::green);
-	ui->widgetBlockOn->setPalette(pal);
-	return;
-}
-
-void MainWindow::on_blockDone()
-{
-	//set blockOn lamp off
-	QPalette pal = palette();
-	pal.setColor(QPalette::Window, Qt::darkGreen);
-	ui->widgetBlockOn->setPalette(pal);
+	bool block_on_all_boards = false;
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			bool block_on = false;
+			lsc.getBlockOn(drvno, &block_on);
+			block_on_all_boards |= block_on;
+		}
+	}
+	if (block_on_all_boards)
+	{
+		//set blockOn lamp on
+		QPalette pal = palette();
+		pal.setColor(QPalette::Window, Qt::green);
+		ui->widgetBlockOn->setPalette(pal);
+	}
+	else
+	{
+		//set blockOn lamp off
+		QPalette pal = palette();
+		pal.setColor(QPalette::Window, Qt::darkGreen);
+		ui->widgetBlockOn->setPalette(pal);
+	}
 	return;
 }
 

@@ -685,6 +685,41 @@ DllAccess es_status_codes DLLFindCam_multipleBoards(uint8_t* cameraFound0, uint8
 }
 
 /**
+ * \copydoc GetBlockOn
+ */
+DllAccess es_status_codes DLLGetBlockOn(uint32_t drvno, uint8_t* blockOn)
+{
+	return GetBlockOn(drvno, blockOn);
+}
+
+/**
+ * \brief Get the block on bit from the PCIe flags register.
+ *
+ * Since the block on bit position was change in 222.14 this function looks at a different bit depending on the firmware version.
+ * \param blockOn0 Pointer to a bool, where the block on bit of board 0 will be written.
+ * \param blockOn1 Pointer to a bool, where the block on bit of board 1 will be written.
+ * \param blockOn2 Pointer to a bool, where the block on bit of board 2 will be written.
+ * \param blockOn3 Pointer to a bool, where the block on bit of board 3 will be written.
+ * \param blockOn4 Pointer to a bool, where the block on bit of board 4 will be written.
+ * \return es_status_codes
+ */
+DllAccess es_status_codes DLLGetBlockOn_multipleBoards(uint8_t* blockOn0, uint8_t* blockOn1, uint8_t* blockOn2, uint8_t* blockOn3, uint8_t* blockOn4)
+{
+	es_status_codes status = es_no_error;
+	uint8_t* blockOn[MAXPCIECARDS] = { blockOn0, blockOn1, blockOn2, blockOn3, blockOn4 };
+	int usedBoards = 0;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = GetBlockOn(drvno, blockOn[usedBoards]);
+			if (status != es_no_error) return status;
+			usedBoards++;
+		}
+	return status;
+}
+
+/**
  * \copydoc CalcRamUsageInMB
  */
 DllAccess double DLLCalcRamUsageInMB(uint32_t nos, uint32_t nob)
