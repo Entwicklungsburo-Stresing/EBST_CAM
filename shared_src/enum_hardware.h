@@ -334,6 +334,14 @@ enum IRQREG_bits_t
 	IRQREG_bit_INTRSR = 0x80000000,
 };
 
+enum PCI_bits_t
+{
+	PCI_bitindex_minor_version = 0,
+	PCI_bitindex_major_version = 16,
+	PCI_bits_minor_version = 0x0000FFFF,
+	PCI_bits_major_version = 0xFFFF0000
+};
+
 enum PCIEFLAGS_bits_t
 {
 	PCIEFLAGS_bit_XCKI = 0x01,

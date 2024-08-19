@@ -72,6 +72,7 @@ public:
 	es_status_codes getXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns);
 	es_status_codes getBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns);
 	es_status_codes getBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns);
+	es_status_codes getBlockOn(uint32_t drvno, bool* block_on);
 public slots:
 	es_status_codes startMeasurement();
 signals:

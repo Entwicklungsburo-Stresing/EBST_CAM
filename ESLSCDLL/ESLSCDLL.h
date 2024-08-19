@@ -98,6 +98,8 @@ DllAccess es_status_codes DLLGetCameraStatusTempGood(uint32_t drvno, uint32_t sa
 DllAccess es_status_codes DLLGetCameraStatusTempGood_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* tempGood1, uint8_t* tempGood2, uint8_t* tempGood3, uint8_t* tempGood4, uint8_t* tempGood5);
 DllAccess es_status_codes DLLFindCam(uint32_t drvno);
 DllAccess es_status_codes DLLFindCam_multipleBoards(uint8_t* cameraFound0, uint8_t* cameraFound1, uint8_t* cameraFound2, uint8_t* cameraFound3, uint8_t* cameraFound4);
+DllAccess es_status_codes DLLGetBlockOn(uint32_t drvno, uint8_t* blockOn);
+DllAccess es_status_codes DLLGetBlockOn_multipleBoards(uint8_t* blockOn0, uint8_t* blockOn1, uint8_t* blockOn2, uint8_t* blockOn3, uint8_t* blockOn4);
 //************  Control CAM
 DllAccess es_status_codes DLLOutTrigHigh();
 DllAccess es_status_codes DLLOutTrigLow();
