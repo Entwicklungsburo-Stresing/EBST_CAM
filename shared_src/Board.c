@@ -6191,3 +6191,41 @@ es_status_codes SetSensorGain(uint32_t drvno, uint16_t gain)
 {
 	return SendFLCAM(drvno, maddr_cam, cam_adaddr_sensor_gain, gain);
 }
+
+/**
+ * \brief Get the PCIe card firmware version number.
+ * 
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param major_version Pointer to a uint16_t, where the major version number will be written.
+ * \param minor_version Pointer to a uint16_t, where the minor version number will be written.
+ * \return es_status_codes
+ */
+es_status_codes GetPcieCardVersion(uint32_t drvno, uint16_t* major_version, uint16_t* minor_version)
+{
+	uint32_t data = 0;
+	es_status_codes status = readRegisterS0_32(drvno, &data, S0Addr_PCI);
+	if (status != es_no_error) return status;
+	*minor_version = (data & PCI_bits_minor_version) >> PCI_bitindex_minor_version;
+	*major_version = (data & PCI_bits_major_version) >> PCI_bitindex_major_version;
+	return status;
+}
+
+/**
+ * \brief Get the block on bit from the PCIe flags register.
+ * 
+ * Since the block on bit position was change in 222.14 this function looks at a different bit depending on the firmware version.
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param block_on Pointer to a bool, where the block on bit will be written.
+ * \return es_status_codes
+ */
+es_status_codes GetBlockOn(uint32_t drvno, bool* block_on)
+{
+	uint16_t major_version = 0, minor_version = 0;
+	es_status_codes status = GetPcieCardVersion(drvno, &major_version, &minor_version);
+	// In PCIe card firmware versino 222.14 the block_on bit was renamed from BLOCK_ON to BLOCK_EN and BLOCK_ON was added as a new bit.
+	if(major_version < 0x222 || major_version == 0x222 && minor_version < 0x14)
+		status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCK_EN, block_on);
+	else
+		status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCK_ON, block_on);
+	return status;
+}

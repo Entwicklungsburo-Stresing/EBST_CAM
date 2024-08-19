@@ -523,3 +523,7 @@ es_status_codes Lsc::getBonPeriod(uint32_t drvno, uint32_t* bonPeriodIns10ns)
 	return GetBonPeriod(drvno, bonPeriodIns10ns);
 }
 
+es_status_codes Lsc::getBlockOn(uint32_t drvno, bool* block_on)
+{
+	return GetBlockOn(drvno, block_on);
+}

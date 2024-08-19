@@ -28,8 +28,6 @@ public slots:
 	void loadCameraData();
 	void on_measureStart();
 	void on_measureDone();
-	void on_blockStart();
-	void on_blockDone();
 	void on_allBlocksDone();
 	void startPressed();
 private:
@@ -79,6 +77,7 @@ private slots:
 	void findCamera();
 	void on_readCameraTemp();
 	void on_actionChartSettings_triggered();
+	void setBlockOnLamp();
 };
 
 #endif // MAINWINDOW_H
