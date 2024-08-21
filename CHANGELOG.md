@@ -10,20 +10,28 @@ The hardware version number is the current version at release time.
 
 ### API Changes
 #### Added
-- Add DLLGetBlockOn(), DLLGetBlockOn_multipleBoards()
 #### Changed
 #### Removed
 #### Fixed
 #### Deprecated
 ### Other Changes
 #### Added
+#### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+
+## 4.14.0 - 2024-08-21
+### API Changes
+#### Added
+- Add DLLGetBlockOn(), DLLGetBlockOn_multipleBoards()
+### Other Changes
+#### Added
 - Add new TOR options since 222.14: BLOCK_ON, BLOCK_ON_SYNCED
 #### Changed
 - Change block on lamp from UI abstraction layer signal to bit polling. Since 222.14 the old block on signal is not available anymore because the software handshake was removed to reduce the time between the block trigger and the block on signal.
-#### Removed
 #### Fixed
 - Improve guided settings mode
-#### Deprecated
 
 ## 4.13.1 - 2024-07-22
 ### API Changes
