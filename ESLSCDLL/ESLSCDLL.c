@@ -230,7 +230,7 @@ DllAccess es_status_codes DLLCopyAllData(uint32_t drvno, uint16_t* pdest)
 	uint16_t* pframe = NULL;
 	es_status_codes	status = GetAddressOfPixel(drvno, 0, 0, 0, 0, &pframe);
 	if (status != es_no_error) return status;
-	memcpy(pdest, pframe, (uint64_t)settings_struct.nos * (uint64_t)settings_struct.nob * (uint64_t)aCAMCNT[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
+	memcpy(pdest, pframe, (uint64_t)settings_struct.nos * (uint64_t)settings_struct.nob * (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
 	return status;
 }
 
@@ -259,7 +259,7 @@ DllAccess es_status_codes DLLCopyAllData_multipleBoards(uint16_t* pdest0, uint16
 		{
 			status = GetAddressOfPixel(drvno, 0, 0, 0, 0, &pframe);
 			if (status != es_no_error) return status;
-			memcpy(pdest[usedBoards], pframe, (uint64_t)settings_struct.nos * (uint64_t)settings_struct.nob * (uint64_t)aCAMCNT[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
+			memcpy(pdest[usedBoards], pframe, (uint64_t)settings_struct.nos * (uint64_t)settings_struct.nob * (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
 			usedBoards++;
 		}
 	return status;
@@ -281,7 +281,7 @@ DllAccess es_status_codes DLLCopyOneBlock(uint32_t drvno, uint16_t block, uint16
 	uint16_t* pframe = NULL;
 	es_status_codes	status = GetAddressOfPixel(drvno, 0, 0, block, 0, &pframe);
 	if (status != es_no_error) return status;
-	memcpy(pdest, pframe, (uint64_t)settings_struct.nos * (uint64_t)aCAMCNT[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
+	memcpy(pdest, pframe, (uint64_t)settings_struct.nos * (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
 	return status;
 }
 
@@ -311,7 +311,7 @@ DllAccess es_status_codes DLLCopyOneBlock_multipleBoards(uint16_t block, uint16_
 		{
 			status = GetAddressOfPixel(drvno, 0, 0, block, 0, &pframe);
 			if (status != es_no_error) return status;
-			memcpy(pdest[usedBoards], pframe, (uint64_t)settings_struct.nos * (uint64_t)aCAMCNT[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t)); // length in bytes
+			memcpy(pdest[usedBoards], pframe, (uint64_t)settings_struct.nos * (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t)); // length in bytes
 			usedBoards++;
 		}
 	return status;
