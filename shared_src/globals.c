@@ -1,10 +1,8 @@
 #include "globals.h"
 #include "default_settings.h"
 
-uint32_t tmp_aPIXEL[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
-uint32_t* aPIXEL = tmp_aPIXEL;
-uint32_t tmp_aCAMCNT[MAXPCIECARDS] = { 1, 1, 1, 1, 1 };
-uint32_t* aCAMCNT = tmp_aCAMCNT;
+uint32_t tmp_virtualCamcnt[MAXPCIECARDS] = { 1, 1, 1, 1, 1 };
+uint32_t* virtualCamcnt = tmp_virtualCamcnt;
 uint16_t* temp_userBuffer[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 uint16_t** userBuffer= temp_userBuffer;
 uint16_t* temp_userBufferEndPtr[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
@@ -18,10 +16,6 @@ volatile bool* timerOn = temp_timerOn;
 uint32_t temp_numberOfInterrupts[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 volatile uint32_t* numberOfInterrupts = temp_numberOfInterrupts;
 uint8_t number_of_boards = 0;
-uint32_t tmp_Nob = 1;
-uint32_t* Nob = &tmp_Nob;
-uint32_t tmp_Nosbp = 1000;
-uint32_t* Nospb = &tmp_Nosbp;
 volatile bool abortMeasurementFlag = false;
 volatile bool continuousMeasurementFlag = false;
 uint32_t continuousPauseInMicroseconds = 0;

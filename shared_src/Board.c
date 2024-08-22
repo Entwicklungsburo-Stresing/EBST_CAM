@@ -76,17 +76,14 @@ es_status_codes InitMeasurement()
 	return status;
 }
 
-void SetGlobalVariables(uint32_t drvno)
+void SetVirtualCamcnt(uint32_t drvno)
 {
-	ES_LOG("Set global variables\n");
-	*Nob = settings_struct.nob;
-	*Nospb = settings_struct.nos;
-	aPIXEL[drvno] = settings_struct.camera_settings[drvno].pixel;
+	ES_LOG("Set virtual camcnt\n");
 	if (settings_struct.camera_settings[drvno].camcnt)
-		aCAMCNT[drvno] = settings_struct.camera_settings[drvno].camcnt;
+		virtualCamcnt[drvno] = settings_struct.camera_settings[drvno].camcnt;
 	else
 		// if camcnt = 0, treat as camcnt = 1, but write 0 to register
-		aCAMCNT[drvno] = 1;
+		virtualCamcnt[drvno] = 1;
 	return;
 }
 
@@ -94,13 +91,13 @@ es_status_codes InitSoftware(uint32_t drvno)
 {
 	ES_LOG("\nInit software for board %u\n", drvno);
 	if (settings_struct.nos < 2 || settings_struct.nob < 1) return es_parameter_out_of_range;
-	SetGlobalVariables(drvno);
+	SetVirtualCamcnt(drvno);
 	abortMeasurementFlag = false;
 	es_status_codes status = allocateUserMemory(drvno);
 	if (status != es_no_error) return status;
 	uint32_t dmaBufferPartSizeInScans = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS; //500
 	if (dmaBufferPartSizeInScans)
-		numberOfInterrupts[drvno] = (*Nob * (*Nospb) * aCAMCNT[drvno]) / dmaBufferPartSizeInScans;
+		numberOfInterrupts[drvno] = (settings_struct.nob * settings_struct.nos * virtualCamcnt[drvno]) / dmaBufferPartSizeInScans;
 	ES_LOG("Number of interrupts: %u \n", numberOfInterrupts[drvno]);
 	if (settings_struct.camera_settings[drvno].use_software_polling)
 		status = disableInterrupt(drvno);
@@ -402,8 +399,8 @@ es_status_codes _InitMeasurement(uint32_t drvno)
  */
 es_status_codes SetPixelCountRegister(uint32_t drvno)
 {
-	ES_LOG("Set pixel count: %u\n", aPIXEL[drvno]);
-	return writeBitsS0_32(drvno, aPIXEL[drvno], 0xFFFF, S0Addr_PIXREG);
+	ES_LOG("Set pixel count: %u\n", settings_struct.camera_settings[drvno].pixel);
+	return writeBitsS0_32(drvno, settings_struct.camera_settings[drvno].pixel, 0xFFFF, S0Addr_PIXREG);
 }
 
 /**
@@ -1212,7 +1209,7 @@ es_status_codes allocateUserMemory(uint32_t drvno)
 	uint64_t memory_free = 0;
 	FreeMemInfo(&memory_all, &memory_free);
 	uint64_t memory_free_mb = memory_free / (1024 * 1024);
-	uint64_t needed_mem = (uint64_t)aCAMCNT[drvno] * (uint64_t)(*Nob) * (uint64_t)(*Nospb) * (uint64_t)aPIXEL[drvno] * (uint64_t)sizeof(uint16_t);
+	uint64_t needed_mem = (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.nob * (uint64_t)settings_struct.nos * (uint64_t)settings_struct.camera_settings[drvno].pixel * (uint64_t)sizeof(uint16_t);
 	uint64_t needed_mem_mb = needed_mem / (1024 * 1024);
 	ES_LOG("Allocate user memory, available memory:%ld MB, memory needed: %ld MB (%ld)\n", memory_free_mb, needed_mem_mb, needed_mem);
 	//check if enough space is available in the physical ram
@@ -1258,24 +1255,24 @@ es_status_codes SetDMABufRegs(uint32_t drvno)
 	es_status_codes status = writeBitsS0_32(drvno, settings_struct.camera_settings[drvno].dma_buffer_size_in_scans, 0xffffffff, S0Addr_DmaBufSizeInScans);
 	if (status != es_no_error) return status;
 	//scans per interrupt must be 2x per DMA_BUFFER_SIZE_IN_SCANS to copy hi/lo part
-	//aCAMCNT: double the INTR if 2 cams
+	//virtualCamcnt: double the INTR if 2 cams
 	uint32_t dmasPerInterrupt = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
 	status = writeBitsS0_32(drvno, dmasPerInterrupt, 0xffffffff, S0Addr_DMAsPerIntr);
 	if (status != es_no_error) return status;
-	ES_LOG("scansPerInterrupt/camcnt: %u \n", dmasPerInterrupt / aCAMCNT[drvno]);
+	ES_LOG("scansPerInterrupt/camcnt: %u \n", dmasPerInterrupt / virtualCamcnt[drvno]);
 	return status;
 }
 
 es_status_codes SetNosRegister(uint32_t drvno)
 {
-	ES_LOG("Set NOS register to %u", *Nospb);
-	return writeBitsS0_32(drvno, *Nospb, 0xffffffff, S0Addr_NOS);
+	ES_LOG("Set NOS register to %u", settings_struct.nos);
+	return writeBitsS0_32(drvno, settings_struct.nos, 0xffffffff, S0Addr_NOS);
 }
 
 es_status_codes SetNobRegister(uint32_t drvno)
 {
-	ES_LOG("Set NOB register to %u", *Nob);
-	return writeBitsS0_32(drvno, *Nob, 0xffffffff, S0Addr_NOB);
+	ES_LOG("Set NOB register to %u", settings_struct.nob);
+	return writeBitsS0_32(drvno, settings_struct.nob, 0xffffffff, S0Addr_NOB);
 }
 
 /**
@@ -2769,7 +2766,7 @@ es_status_codes StartMeasurement()
 		status = SetPriority();
 		if (status != es_no_error) return ReturnStartMeasurement(status);
 		// Block read for loop.
-		for (uint32_t blk_cnt = 0; blk_cnt < *Nob; blk_cnt++)
+		for (uint32_t blk_cnt = 0; blk_cnt < settings_struct.nob; blk_cnt++)
 		{
 			// Increase the block count hardware register.
 			// This must be done, before the block starts, so doing this first is a good idea.
@@ -3181,10 +3178,10 @@ es_status_codes GetLastBufPart(uint32_t drvno)
 	if (status != es_no_error) return status;
 	// dmaHalfBufferSize is 500 with default values
 	uint32_t dmaHalfBufferSize = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
-	uint32_t scans_all_cams = (*Nospb) * (*Nob) * aCAMCNT[drvno];
+	uint32_t scans_all_cams = settings_struct.nos * settings_struct.nob * virtualCamcnt[drvno];
 	uint32_t rest_overall = scans_all_cams % dmaHalfBufferSize;
-	size_t rest_in_bytes = rest_overall * aPIXEL[drvno] * sizeof(uint16_t);
-	ES_TRACE("nos: %u, nob: %u, scansPerInterrupt: %u, camcnt: %u\n", (*Nospb), *Nob, spi, aCAMCNT[drvno]);
+	size_t rest_in_bytes = rest_overall * settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t);
+	ES_TRACE("nos: %u, nob: %u, scansPerInterrupt: %u, camcnt: %u\n", settings_struct.nos, settings_struct.nob, spi, virtualCamcnt[drvno]);
 	ES_TRACE("scans_all_cams: %u \n", scans_all_cams);
 	ES_TRACE("rest_overall: %u, rest_in_bytes: %lu\n", rest_overall, rest_in_bytes);
 	if (rest_overall)
@@ -3308,16 +3305,16 @@ es_status_codes ReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uin
  */
 es_status_codes GetIndexOfPixel(uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint64_t* pIndex)
 {
-	if (pixel >= aPIXEL[drvno] || sample >= *Nospb || block >= *Nob || camera >= aCAMCNT[drvno])
+	if (pixel >= settings_struct.camera_settings[drvno].pixel || sample >= settings_struct.nos || block >= settings_struct.nob || camera >= virtualCamcnt[drvno])
 		return es_parameter_out_of_range;
 	//init index with base position of pixel
 	uint64_t index = pixel;
 	//position of index at camera position
-	index += (uint64_t)camera * ((uint64_t)aPIXEL[drvno]); // AM! was +4 for PCIe version before P202_23 to shift scan counter in 2nd camera to the left
+	index += (uint64_t)camera * ((uint64_t)settings_struct.camera_settings[drvno].pixel); // AM! was +4 for PCIe version before P202_23 to shift scan counter in 2nd camera to the left
 	//position of index at sample
-	index += (uint64_t)sample * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno];
+	index += (uint64_t)sample * (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel;
 	//position of index at block
-	index += (uint64_t)block * (uint64_t)(*Nospb) * (uint64_t)aCAMCNT[drvno] * (uint64_t)aPIXEL[drvno];
+	index += (uint64_t)block * (uint64_t)settings_struct.nos * (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel;
 	*pIndex = index;
 	return es_no_error;
 }
@@ -3374,7 +3371,7 @@ double CalcRamUsageInMB(uint32_t nos, uint32_t nob)
 	ES_LOG("Calculate ram usage in MB, nos: %u:, nob: %u\n", nos, nob);
 	double ramUsage = 0;
 	for (int i = 0; i < number_of_boards; i++)
-		ramUsage += (uint64_t)nos * (uint64_t)nob * (uint64_t)aPIXEL[i] * (uint64_t)aCAMCNT[i] * sizeof(uint16_t);
+		ramUsage += (uint64_t)nos * (uint64_t)nob * (uint64_t)settings_struct.camera_settings[i].pixel * (uint64_t)virtualCamcnt[i] * sizeof(uint16_t);
 	ramUsage = ramUsage / 1048576;
 	ES_LOG("Ram usage: %f\n", ramUsage);
 	return ramUsage;
@@ -3399,10 +3396,10 @@ double CalcRamUsageInMB(uint32_t nos, uint32_t nob)
  */
 es_status_codes CalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf, double* trms)
 {
-	if (firstSample >= lastSample || lastSample > *Nospb)
+	if (firstSample >= lastSample || lastSample > settings_struct.nos)
 	{
 		//error: firstSample must be smaller than lastSample
-		ES_LOG("Calc Trms failed. lastSample must be greater than firstSample and both in boundaries of nos, drvno: %u, firstSample: %u, lastSample: %u, TRMS_pixel: %u, CAMpos: %u, Nospb: %u\n", drvno, firstSample, lastSample, TRMS_pixel, CAMpos, *Nospb);
+		ES_LOG("Calc Trms failed. lastSample must be greater than firstSample and both in boundaries of nos, drvno: %u, firstSample: %u, lastSample: %u, TRMS_pixel: %u, CAMpos: %u, Nospb: %u\n", drvno, firstSample, lastSample, TRMS_pixel, CAMpos, settings_struct.nos);
 		*mwf = -1;
 		*trms = -1;
 		return es_parameter_out_of_range;
@@ -5101,10 +5098,10 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	uint16_t* dmaBufferEnd = dmaBufferReadPos + getDmaBufferSizeInBytes(drvno) / sizeof(uint16_t);
 	ES_TRACE("DMA buffer end: %p\n", (void*)dmaBufferEnd);
 	// Calculate the size of the complete measurement in bytes.
-	uint32_t dataToCopyInBytes = aPIXEL[drvno] * aCAMCNT[drvno] * (*Nospb) * (*Nob) * sizeof(uint16_t);
+	uint32_t dataToCopyInBytes = settings_struct.camera_settings[drvno].pixel * virtualCamcnt[drvno] * settings_struct.nos * settings_struct.nob * sizeof(uint16_t);
 	ES_TRACE("Data to copy in bytes: %u\n", dataToCopyInBytes);
 	// Calculate the size of one scan.
-	uint32_t sizeOfOneScanInBytes = aPIXEL[drvno] * sizeof(uint16_t);
+	uint32_t sizeOfOneScanInBytes = settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t);
 	ES_TRACE("Size of one scan in bytes: %u\n", sizeOfOneScanInBytes);
 	// Set userBufferWritePos_polling to the base address of userBuffer_polling. userBufferWritePos_polling indicates the current write position in the user buffer.
 	uint16_t* userBufferWritePos_polling = userBuffer[drvno];
@@ -5122,7 +5119,7 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	{
 		//ES_TRACE("dmaBufferReadPosNextScan: %p ", dmaBufferReadPosNextScan);
 		// scan counter pixel are 4 and 5 and since P202_21 at the last pixel
-		scanCounterHardware = (uint32_t)(dmaBufferReadPos[pixel_scan_index_high] << 16) | *(dmaBufferReadPos + aPIXEL[drvno] - 1);
+		scanCounterHardware = (uint32_t)(dmaBufferReadPos[pixel_scan_index_high] << 16) | *(dmaBufferReadPos + settings_struct.camera_settings[drvno].pixel - 1);
 		// block counter pixel are 2 and 3
 		uint16_t block_index_high = dmaBufferReadPos[pixel_block_index_high_s1_s2] & pixel_block_index_high_s1_s2_bits_block_index;
 		blockCounterHardware = (uint32_t)(block_index_high << 16) | dmaBufferReadPos[pixel_block_index_low];
@@ -5209,11 +5206,11 @@ void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* blo
 		scanCount = scanCounterTotal[drvno];
 	else
 		scanCount = getCurrentInterruptCounter(drvno) * dmasPerInterrupt;
-	//ES_TRACE("scan counter %lu, Nospb %u, camcnt %u\n", scanCount + offset, *Nospb, aCAMCNT[drvno]);
+	//ES_TRACE("scan counter %lu, settings_struct.nos %u, camcnt %u\n", scanCount + offset, settings_struct.nos, virtualCamcnt[drvno]);
 	int64_t samples_done_all_cams = scanCount - 1 + offset;
-	int64_t samples_done_per_cam = samples_done_all_cams / aCAMCNT[drvno];
-	*block = samples_done_per_cam / *Nospb;
-	int64_t count_of_scans_of_completed_blocks = *block * *Nospb;
+	int64_t samples_done_per_cam = samples_done_all_cams / virtualCamcnt[drvno];
+	*block = samples_done_per_cam / settings_struct.nos;
+	int64_t count_of_scans_of_completed_blocks = *block * settings_struct.nos;
 	*sample = samples_done_per_cam - count_of_scans_of_completed_blocks;
 	//ES_TRACE("block %li, scan %li, samples_done_all_cams %li, samples_done_per_cam %li, count_of_scans_of_completed_blocks %li\n", *block, *sample, samples_done_all_cams, samples_done_per_cam, count_of_scans_of_completed_blocks);
 	return;
@@ -5286,12 +5283,12 @@ es_status_codes SetTocnt(uint32_t drvno, uint8_t divider)
  */
 void FillUserBufferWithDummyData(uint32_t drvno)
 {
-	//memset(userBuffer[drvno], 0xAAAA, aPIXEL[drvno] * (*Nospb) * (*Nob) * aCAMCNT[drvno] * sizeof(uint16_t));
-	for (uint32_t scan = 0; scan < (*Nospb) * (*Nob) * aCAMCNT[drvno]; scan++)
+	//memset(userBuffer[drvno], 0xAAAA, settings_struct.camera_settings[drvno].pixel * settings_struct.nos * settings_struct.nob * virtualCamcnt[drvno] * sizeof(uint16_t));
+	for (uint32_t scan = 0; scan < settings_struct.nos * settings_struct.nob * virtualCamcnt[drvno]; scan++)
 	{
 		int add = (scan % 2) * 1000;
-		for (uint32_t pixel = 0; pixel < aPIXEL[drvno]; pixel++)
-			userBuffer[drvno][scan * aPIXEL[drvno] + pixel] = pixel * 10 + add;
+		for (uint32_t pixel = 0; pixel < settings_struct.camera_settings[drvno].pixel; pixel++)
+			userBuffer[drvno][scan * settings_struct.camera_settings[drvno].pixel + pixel] = pixel * 10 + add;
 	}
 	return;
 }
@@ -5613,10 +5610,10 @@ es_status_codes GetImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block
  */
 es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp)
 {
-	if (aPIXEL[drvno] <= 63) return es_invalid_pixel_count;
-	uint16_t* data = (uint16_t*)malloc(aPIXEL[drvno] * sizeof(uint16_t));
+	if (settings_struct.camera_settings[drvno].pixel <= 63) return es_invalid_pixel_count;
+	uint16_t* data = (uint16_t*)malloc(settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
 	if (!data) return es_allocating_memory_failed;
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, aPIXEL[drvno], data);
+	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, settings_struct.camera_settings[drvno].pixel, data);
 	if (status != es_no_error) return status;
 	//overTemp
 	if (data[pixel_camera_status] & pixel_camera_status_bit_over_temp)
@@ -5648,7 +5645,7 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 	//impactSignal2
 	sp->impactSignal2 = (uint32_t)data[pixel_impact_signal_2_high] << 16 | (uint32_t)data[pixel_impact_signal_2_low];
 	//scanIndex2
-	sp->scanIndex2 = (uint32_t)data[(aPIXEL[drvno] - 1) - pixel_scan_index2_high] << 16 | (uint32_t)data[(aPIXEL[drvno] - 1) - pixel_scan_index2_low];
+	sp->scanIndex2 = (uint32_t)data[(settings_struct.camera_settings[drvno].pixel - 1) - pixel_scan_index2_high] << 16 | (uint32_t)data[(settings_struct.camera_settings[drvno].pixel - 1) - pixel_scan_index2_low];
 	//cameraSystem3001
 	if (data[pixel_camera_status] & pixel_camera_status_bit_3001)
 		sp->cameraSystem3001 = 1;
@@ -5732,9 +5729,9 @@ es_status_codes GetOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t 
 {
 	es_status_codes status = es_no_error;
 	// allocate memory for one block of one camera
-	uint16_t* data = (uint16_t*)malloc(aPIXEL[drvno] * *Nospb * sizeof(uint16_t));
+	uint16_t* data = (uint16_t*)malloc(settings_struct.camera_settings[drvno].pixel * settings_struct.nos * sizeof(uint16_t));
 	// iterate through all samples of the requestet block
-	for (uint32_t sample = 0; sample < *Nospb; sample++)
+	for (uint32_t sample = 0; sample < settings_struct.nos; sample++)
 	{
 		uint16_t* sample_address = NULL;
 		// get the address of the current sample
@@ -5743,7 +5740,7 @@ es_status_codes GetOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t 
 		// check if sample_address is not null
 		if (sample_address)
 			// copy one sample to the new memory
-			memcpy(data + sample * aPIXEL[drvno], sample_address, aPIXEL[drvno] * sizeof(uint16_t));
+			memcpy(data + sample * settings_struct.camera_settings[drvno].pixel, sample_address, settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
 	}
 	// return the address of the new allocated data
 	*address = data;
