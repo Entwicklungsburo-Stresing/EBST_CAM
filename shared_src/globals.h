@@ -35,17 +35,6 @@ enum file_specifications_t
  */
 #define DMA_CONTIGBUF true
 
-struct global_vars
-{
-	uint16_t** userBuffer;
-	void* hDev;
-	uint32_t* aPIXEL;
-	uint32_t* aCAMCNT;
-	uint32_t* Nospb;
-	uint32_t* Nob;
-	bool* useSWTrig;
-};
-
 struct file_header
 {
 	uint32_t drvno;
@@ -116,15 +105,12 @@ struct verify_data_parameter
 	uint64_t last_measurement_before_error;
 };
 
-extern uint32_t* aPIXEL;
 extern uint32_t* aCAMCNT;
 extern uint16_t** userBuffer;
 extern uint16_t** userBufferEndPtr;
 extern uint16_t** userBufferWritePos;
 extern uint16_t** userBufferWritePos_last;
 extern uint8_t number_of_boards;
-extern uint32_t* Nob;
-extern uint32_t* Nospb;
 extern volatile bool abortMeasurementFlag;
 extern volatile uint32_t* numberOfInterrupts;
 extern volatile bool continuousMeasurementFlag;
