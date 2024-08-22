@@ -317,7 +317,7 @@ es_status_codes SetupDma( uint32_t drvno )
 		status = CleanupDma(drvno);
 		if (status != es_no_error) return status;
 	}
-	dmaBufferSizeInBytes[drvno] = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans * aPIXEL[drvno] * sizeof(uint16_t);
+	dmaBufferSizeInBytes[drvno] = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans * settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t);
 	DWORD dwOptions = DMA_FROM_DEVICE | DMA_KERNEL_BUFFER_ALLOC;// | DMA_ALLOW_64BIT_ADDRESS;// DMA_ALLOW_CACHE ;
 	if (DMA_64BIT_EN)
 		dwOptions |= DMA_ALLOW_64BIT_ADDRESS;
@@ -888,9 +888,9 @@ void writeFileHeaderToFile(uint32_t drvno, char* filename_full)
 	// Assemble the file_header
 	struct file_header fh;
 	fh.drvno = drvno;
-	fh.pixel = aPIXEL[drvno];
-	fh.nos = *Nospb;
-	fh.nob = *Nob;
+	fh.pixel = settings_struct.camera_settings[drvno].pixel;
+	fh.nos = settings_struct.nos;
+	fh.nob = settings_struct.nob;
 	fh.camcnt = aCAMCNT[drvno];
 	fh.measurement_cnt = measurement_cnt;
 	memset(fh.timestamp, 0, file_timestamp_size);
