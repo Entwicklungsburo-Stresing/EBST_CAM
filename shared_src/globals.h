@@ -105,7 +105,7 @@ struct verify_data_parameter
 	uint64_t last_measurement_before_error;
 };
 
-extern uint32_t* aCAMCNT;
+extern uint32_t* virtualCamcnt;
 extern uint16_t** userBuffer;
 extern uint16_t** userBufferEndPtr;
 extern uint16_t** userBufferWritePos;

@@ -891,7 +891,7 @@ void writeFileHeaderToFile(uint32_t drvno, char* filename_full)
 	fh.pixel = settings_struct.camera_settings[drvno].pixel;
 	fh.nos = settings_struct.nos;
 	fh.nob = settings_struct.nob;
-	fh.camcnt = aCAMCNT[drvno];
+	fh.camcnt = virtualCamcnt[drvno];
 	fh.measurement_cnt = measurement_cnt;
 	memset(fh.timestamp, 0, file_timestamp_size);
 	strcpy_s(fh.timestamp, file_timestamp_size, start_timestamp);
@@ -1280,7 +1280,7 @@ void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pix
 	}
 	Direct2dViewer = Direct2dViewer_new();
 	uint16_t* address = NULL;
-	if (aCAMCNT[drvno] <= 1)
+	if (virtualCamcnt[drvno] <= 1)
 		GetAddressOfPixel(drvno, 0, 0, block, camera, &address);
 	else
 		GetOneBlockOfOneCamera(drvno, block, camera, &address);
@@ -1306,7 +1306,7 @@ void ShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pix
 	if (Direct2dViewer != NULL)
 	{
 		uint16_t* address = NULL;
-		if (aCAMCNT[drvno] <= 1)
+		if (virtualCamcnt[drvno] <= 1)
 			GetAddressOfPixel(drvno, 0, 0, block, camera, &address);
 		else
 			GetOneBlockOfOneCamera(drvno, block, camera, &address);
