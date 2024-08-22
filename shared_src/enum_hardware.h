@@ -175,6 +175,16 @@ enum XCK_bits_t
 	XCK_bit_stimer_on = 0x40000000,
 };
 
+enum PIXREG_bits_t
+{
+	PIXREG_bitindex_pixel = 0,
+	PIXREG_bitindex_FFCTRL = 16,
+	PIXREG_bitindex_FFFLAGS = 24,
+	PIXREG_bits_pixel = 0x0000FFFF,
+	PIXREG_bits_FFCTRL = 0x00FF0000,
+	PIXREG_bits_FFFLAGS = 0xFF000000
+};
+
 enum FFCTRL_bits_t
 {
 	FFCTRL_bit_block_reset = 0x10,
@@ -418,6 +428,7 @@ enum BLOCKINDEX_bits_t
 
 enum CAMCNT_bits_t
 {
+	CAMCNT_bitindex_camcnt = 0,
 	CAMCNT_bits = 0x0F
 };
 
