@@ -1836,7 +1836,7 @@ es_status_codes InitCamera3030(uint32_t drvno)
 	if (settings_struct.camera_settings[drvno].adc_mode)
 		status = Cam3030_ADC_RampOrPattern(drvno, (uint8_t)settings_struct.camera_settings[drvno].adc_mode, (uint16_t)settings_struct.camera_settings[drvno].adc_custom_pattern);
 	if (status != es_no_error) return status;
-	for (uint32_t camera = 0; camera < settings_struct.camera_settings->camcnt; camera++)
+	for (uint32_t camera = 0; camera < settings_struct.camera_settings[drvno].camcnt; camera++)
 	{
 		status = DAC8568_enableInternalReference(drvno, DAC8568_camera, camera);
 		if (status != es_no_error) return status;
