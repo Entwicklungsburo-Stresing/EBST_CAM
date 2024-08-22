@@ -400,7 +400,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 es_status_codes SetPixelCountRegister(uint32_t drvno)
 {
 	ES_LOG("Set pixel count: %u\n", settings_struct.camera_settings[drvno].pixel);
-	return writeBitsS0_32(drvno, settings_struct.camera_settings[drvno].pixel, 0xFFFF, S0Addr_PIXREG);
+	return writeBitsS0_32(drvno, settings_struct.camera_settings[drvno].pixel, PIXREG_bits_pixel, S0Addr_PIXREG);
 }
 
 /**
@@ -567,7 +567,7 @@ es_status_codes ResetDma(uint32_t drvno)
 es_status_codes SetCamCountRegister(uint32_t drvno)
 {
 	ES_LOG("Set cam count: %u\n", settings_struct.camera_settings[drvno].camcnt);
-	return writeBitsS0_32(drvno, settings_struct.camera_settings[drvno].camcnt, 0xF, S0Addr_CAMCNT);
+	return writeBitsS0_32(drvno, settings_struct.camera_settings[drvno].camcnt, CAMCNT_bits, S0Addr_CAMCNT);
 }
 
 /**
@@ -1252,12 +1252,12 @@ es_status_codes SetDMABufRegs(uint32_t drvno)
 {
 	ES_LOG("Set DMA buffer registers, ");
 	//DMABufSizeInScans - use 1 block
-	es_status_codes status = writeBitsS0_32(drvno, settings_struct.camera_settings[drvno].dma_buffer_size_in_scans, 0xffffffff, S0Addr_DmaBufSizeInScans);
+	es_status_codes status = writeRegisterS0_32(drvno, settings_struct.camera_settings[drvno].dma_buffer_size_in_scans, S0Addr_DmaBufSizeInScans);
 	if (status != es_no_error) return status;
 	//scans per interrupt must be 2x per DMA_BUFFER_SIZE_IN_SCANS to copy hi/lo part
 	//virtualCamcnt: double the INTR if 2 cams
 	uint32_t dmasPerInterrupt = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
-	status = writeBitsS0_32(drvno, dmasPerInterrupt, 0xffffffff, S0Addr_DMAsPerIntr);
+	status = writeRegisterS0_32(drvno, dmasPerInterrupt, S0Addr_DMAsPerIntr);
 	if (status != es_no_error) return status;
 	ES_LOG("scansPerInterrupt/camcnt: %u \n", dmasPerInterrupt / virtualCamcnt[drvno]);
 	return status;
@@ -1266,13 +1266,13 @@ es_status_codes SetDMABufRegs(uint32_t drvno)
 es_status_codes SetNosRegister(uint32_t drvno)
 {
 	ES_LOG("Set NOS register to %u", settings_struct.nos);
-	return writeBitsS0_32(drvno, settings_struct.nos, 0xffffffff, S0Addr_NOS);
+	return writeRegisterS0_32(drvno, settings_struct.nos, S0Addr_NOS);
 }
 
 es_status_codes SetNobRegister(uint32_t drvno)
 {
 	ES_LOG("Set NOB register to %u", settings_struct.nob);
-	return writeBitsS0_32(drvno, settings_struct.nob, 0xffffffff, S0Addr_NOB);
+	return writeRegisterS0_32(drvno, settings_struct.nob, S0Addr_NOB);
 }
 
 /**
