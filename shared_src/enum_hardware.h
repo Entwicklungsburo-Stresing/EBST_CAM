@@ -900,21 +900,21 @@ enum autotune_channel_ranges_hsvis_t
 
 enum autotune_channel_ranges_hsir_t
 {
-	autotune_hsir_ch1_start = 16,
+	autotune_hsir_ch1_start = 12,
 	autotune_hsir_ch1_end = 264,
-	autotune_hsir_ch2_start = 15,
+	autotune_hsir_ch2_start = 13,
 	autotune_hsir_ch2_end = 265,
-	autotune_hsir_ch3_start = 268,
+	autotune_hsir_ch3_start = 266,
 	autotune_hsir_ch3_end = 520,
-	autotune_hsir_ch4_start = 269,
+	autotune_hsir_ch4_start = 267,
 	autotune_hsir_ch4_end = 521,
-	autotune_hsir_ch5_start = 524,
+	autotune_hsir_ch5_start = 522,
 	autotune_hsir_ch5_end = 766,
-	autotune_hsir_ch6_start = 525,
+	autotune_hsir_ch6_start = 523,
 	autotune_hsir_ch6_end = 767,
-	autotune_hsir_ch7_start = 780,
+	autotune_hsir_ch7_start = 778,
 	autotune_hsir_ch7_end = 1032,
-	autotune_hsir_ch8_start = 781,
+	autotune_hsir_ch8_start = 779,
 	autotune_hsir_ch8_end = 1031,
 };
 
