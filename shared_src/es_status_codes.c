@@ -1,6 +1,9 @@
 #include "es_status_codes.h"
 
-char errorMsg[100][50] =
+#define NUMBER_OF_ERROR_CODES 30
+#define BUFFER_SIZE 50
+
+char errorMsg[NUMBER_OF_ERROR_CODES][BUFFER_SIZE] =
 {
 	"No error occurred",
 	"No PCIe board found",
@@ -42,5 +45,12 @@ char errorMsg[100][50] =
  */
 char* ConvertErrorCodeToMsg(es_status_codes status)
 {
-	return errorMsg[status];
+	if (status >= 0 && status < NUMBER_OF_ERROR_CODES)
+	{
+		return errorMsg[status];
+	}
+	else
+	{
+		return errorMsg[es_unknown_error];
+	}
 }
