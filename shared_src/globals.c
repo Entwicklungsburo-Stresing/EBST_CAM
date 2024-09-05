@@ -3,13 +3,13 @@
 
 uint32_t tmp_virtualCamcnt[MAXPCIECARDS] = { 1, 1, 1, 1, 1 };
 uint32_t* virtualCamcnt = tmp_virtualCamcnt;
-uint16_t* temp_userBuffer[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
+uint16_t* temp_userBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 uint16_t** userBuffer= temp_userBuffer;
-uint16_t* temp_userBufferEndPtr[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
+uint16_t* temp_userBufferEndPtr[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 uint16_t** userBufferEndPtr = temp_userBufferEndPtr;
-uint16_t* temp_userBufferWritePos[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
+uint16_t* temp_userBufferWritePos[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 uint16_t** userBufferWritePos = temp_userBufferWritePos;
-uint16_t* temp_userBufferWritePos_last[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
+uint16_t* temp_userBufferWritePos_last[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 uint16_t** userBufferWritePos_last = temp_userBufferWritePos_last;
 volatile bool temp_timerOn[MAXPCIECARDS] = { false, false, false, false, false };
 volatile bool* timerOn = temp_timerOn;

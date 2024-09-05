@@ -1205,6 +1205,7 @@ es_status_codes allocateUserMemory(uint32_t drvno)
 {
 	//free old memory before allocating new one
 	free(userBuffer[drvno]);
+	userBuffer[drvno] = NULL;
 	uint64_t memory_all = 0;
 	uint64_t memory_free = 0;
 	FreeMemInfo(&memory_all, &memory_free);
@@ -1213,7 +1214,7 @@ es_status_codes allocateUserMemory(uint32_t drvno)
 	uint64_t needed_mem_mb = needed_mem / (1024 * 1024);
 	ES_LOG("Allocate user memory, available memory:%ld MB, memory needed: %ld MB (%ld)\n", memory_free_mb, needed_mem_mb, needed_mem);
 	//check if enough space is available in the physical ram
-	if (memory_free > (uint64_t)needed_mem)
+	if (memory_free > needed_mem)
 	{
 		uint16_t* userBufferTemp = (uint16_t*)calloc(needed_mem, 1);
 		if (userBufferTemp)

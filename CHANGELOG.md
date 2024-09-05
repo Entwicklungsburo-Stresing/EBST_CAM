@@ -22,6 +22,7 @@ The hardware version number is the current version at release time.
 * Fix possible crash when passing a error code out of bounds to ConvertErrorCodeToMsg()
 * Fix autotune for HSIR
 * Fix InitCamera3030() CAMCNT iteration
+* Fix crash after not enough RAM error
 #### Deprecated
 
 ## 4.14.0 - 2024-08-21
