@@ -354,26 +354,30 @@ enum PCI_bits_t
 
 enum PCIEFLAGS_bits_t
 {
-	PCIEFLAGS_bit_XCKI = 0x01,
-	PCIEFLAGS_bit_INTTRIG = 0x02,
-	PCIEFLAGS_bit_ENRSTIMERHW = 0x04,
-	PCIEFLAGS_bit_USE_ENFFW_PROTECT = 0x08,
-	PCIEFLAGS_bit_BLOCKTRIG = 0x10,
-	PCIEFLAGS_bit_MEASUREON = 0x20,
+	PCIEFLAGS_bit_XCKI = 0x0000001,
+	PCIEFLAGS_bit_INTTRIG = 0x0000002,
+	PCIEFLAGS_bit_ENRSTIMERHW = 0x0000004,
+	PCIEFLAGS_bit_USE_ENFFW_PROTECT = 0x0000008,
+	PCIEFLAGS_bit_BLOCKTRIG = 0x0000010,
+	PCIEFLAGS_bit_MEASUREON = 0x0000020,
 	/**
 	 * This bit is a enabling bit for starting a block. Set it to 1 when you want to start a block. The next block trigger after that moment the block will be started. The behavior of this bit changed in P222_14 from a direct control of BLOCK_ON to beeing a enabling bit.
 	 */
-	PCIEFLAGS_bit_BLOCK_EN = 0x40,
-	PCIEFLAGS_bit_IS_TDC = 0x100,
-	PCIEFLAGS_bit_IS_DSC = 0x200,
+	PCIEFLAGS_bit_BLOCK_EN = 0x0000040,
+	PCIEFLAGS_bit_IS_TDC = 0x0000100,
+	PCIEFLAGS_bit_IS_DSC = 0x0000200,
 	/**
 	 * BLOCK_ON is 1 during one measurement block. The rising edge is synced to the block trigger. It is resetted by setting BLOCK_EN to 0.
 	 */
-	PCIEFLAGS_bit_BLOCK_ON = 0x400,
+	PCIEFLAGS_bit_BLOCK_ON = 0x0000400,
 	/**
 	 * BLOCK_ON_SYNCED is 1 during one measurement block. The rising edge is synced to the next scan trigger after the rising edge of BLOCK_ON. It is resetted by setting BLOCK_EN to 0.
 	 */
-	PCIEFLAGS_bit_BLOCK_ON_SYNCED = 0x800,
+	PCIEFLAGS_bit_BLOCK_ON_SYNCED = 0x0000800,
+	PCIEFLAGS_bit_scan_trigger_detected = 0x0001000,
+	PCIEFLAGS_bit_block_trigger_detected = 0x0002000,
+	PCIEFLAGS_bit_reset_scan_trigger_detected = 0x0004000,
+	PCIEFLAGS_bit_reset_block_trigger_detected = 0x0008000,
 	PCIEFLAGS_bit_linkup_sfp3 = 0x4000000,
 	PCIEFLAGS_bit_error_sfp3 = 0x8000000,
 	PCIEFLAGS_bit_linkup_sfp2 = 0x10000000,
@@ -391,6 +395,10 @@ enum PCIEFLAGS_bits_t
 	PCIEFLAGS_bitindex_IS_DSC = 9,
 	PCIEFLAGS_bitindex_BLOCK_ON = 10,
 	PCIEFLAGS_bitindex_BLOCK_ON_SYNCED = 11,
+	PCIEFLAGS_bitindex_scan_trigger_detected = 12,
+	PCIEFLAGS_bitindex_block_trigger_detected = 13,
+	PCIEFLAGS_bitindex_reset_scan_trigger_detected = 14,
+	PCIEFLAGS_bitindex_reset_block_trigger_detected = 15,
 	PCIEFLAGS_bitindex_linkup_sfp3 = 26,
 	PCIEFLAGS_bitindex_error_sfp3 = 27,
 	PCIEFLAGS_bitindex_linkup_sfp2 = 28,
