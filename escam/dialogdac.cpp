@@ -152,6 +152,7 @@ void DialogDac::on_pushButtonDefault_pressed()
 		ui->spinBoxChannel7->blockSignals(blockStateSpinBoxChannel7);
 	}
 	settings.endGroup();
+	ui->spinBoxTarget->setValue(500);
 	spinBoxChannel_valueChanged();
 	return;
 }
