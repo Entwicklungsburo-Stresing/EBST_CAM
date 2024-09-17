@@ -18,6 +18,7 @@ The hardware version number is the current version at release time.
 #### Added
 * Add software version to settings export
 #### Changed
+* Change default of autotune to 500
 #### Removed
 #### Fixed
 * Fix possible crash when passing a error code out of bounds to ConvertErrorCodeToMsg()
