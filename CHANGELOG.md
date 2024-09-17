@@ -16,6 +16,7 @@ The hardware version number is the current version at release time.
 #### Deprecated
 ### Other Changes
 #### Added
+* Add software version to settings export
 #### Changed
 #### Removed
 #### Fixed

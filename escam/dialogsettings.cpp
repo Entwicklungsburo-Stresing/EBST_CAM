@@ -3,6 +3,7 @@
 #include <QMessageBox>
 #include <QtGlobal>
 #include "lsc-gui.h"
+#include "../version.h"
 
 DialogSettings::DialogSettings(QWidget *parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowContextHelpButtonHint | Qt::WindowCloseButtonHint),
@@ -156,6 +157,7 @@ void DialogSettings::on_accepted()
 	settings.setValue(settingSettingsLevelPath, ui->comboBoxSettingsLevel->currentIndex());
 	settings.setValue(settingNosPath, ui->doubleSpinBoxNos->value());
 	settings.setValue(settingNobPath, ui->doubleSpinBoxNob->value());
+	settings.setValue(settingSoftwareVersionPath, VER_FILE_VERSION_STR);
 	emit settings_saved();
 	return;
 }

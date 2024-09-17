@@ -116,6 +116,7 @@ constexpr auto settingsUseSoftwarePollingPath = "use_software_polling";
 //chart
 constexpr auto settingAxesMirrorXPath = "AxesMirrorXPath";
 constexpr auto settingShowCrosshairPath = "showCrosshair";
+constexpr auto settingSoftwareVersionPath = "softwareVersion";
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DialogSettings; }
