@@ -2,39 +2,87 @@
 
 enum dma_addresses_t
 {
-	DmaAddr_DCSR = 0x000,
-	DmaAddr_DDMACR = 0x004,
-	DmaAddr_WDMATLPA = 0x008,
-	DmaAddr_WDMATLPS = 0x00C,
-	DmaAddr_WDMATLPC = 0x010,
-	DmaAddr_WDMATLPP = 0x014,
-	DmaAddr_RDMATLPP = 0x018,
-	DmaAddr_RDMATLPA = 0x01C,
-	DmaAddr_RDMATLPS = 0x020,
-	DmaAddr_RDMATLPC = 0x024,
+	DmaAddr_DCSR = 0x00,
+	DmaAddr_DDMACR = 0x04,
+	DmaAddr_WDMATLPA = 0x08,
+	DmaAddr_WDMATLPS = 0x0C,
+	DmaAddr_WDMATLPC = 0x10,
+	DmaAddr_WDMATLPP = 0x14,
+	DmaAddr_RDMATLPP = 0x18,
+	DmaAddr_RDMATLPA = 0x1C,
+	DmaAddr_RDMATLPS = 0x20,
+	DmaAddr_RDMATLPC = 0x24,
 };
 
 enum s0_addresses_t
 {
-	S0Addr_DBR = 0x0, //0x00
-	S0Addr_CTRLA = 0x4, //0x04
-	S0Addr_CTRLB = 0x5,
-	S0Addr_CTRLC = 0x6,
-	S0Addr_XCK = 0x8, //0x08
-	S0Addr_XCKCNT = 0xc, //0x0c
+	S0Addr_DBR = 0x00, //0x00
+	/**
+	 * See \ref CTRLA_bits_t for details.
+	 */
+	S0Addr_CTRLA = 0x04, //0x04
+	/**
+	 * See \ref CTRLB_bits_t for details.
+	 */
+	S0Addr_CTRLB = 0x05,
+	/**
+	 * See \ref CTRLC_bits_t for details.
+	 */
+	S0Addr_CTRLC = 0x06,
+	/**
+	 * See \ref XCK_bits_t for details.
+	 */
+	S0Addr_XCK = 0x08, //0x08
+	S0Addr_XCKCNT = 0x0c, //0x0c
+	/**
+	 * See \ref PIXREG_bits_t for details.
+	 */
 	S0Addr_PIXREG = 0x10, //0x10
+	/**
+	 * See \ref FFCTRL_bits_t for details.
+	 */
 	S0Addr_FFCTRL = 0x12,
+	/**
+	 * See \ref FF_FLAGS_bits_t for details.
+	 */
 	S0Addr_FF_FLAGS = 0x13,
+	/**
+	 * See \ref FIFOCNT_bits_t for details.
+	 */
 	S0Addr_FIFOCNT = 0x14, //0x14
+	/**
+	 * See \ref VCLKCTRL_bits_t for details.
+	 */
 	S0Addr_VCLKCTRL = 0x18, //0x18
+	/**
+	 * See \ref VCLKFREQ_bits_t for details.
+	 */
 	S0Addr_VCLKFREQ = 0x1b,
 	S0Addr_EBST = 0x1C, //0x1c
+	/**
+	 * See \ref SDAT_bits_t for details.
+	 */
 	S0Addr_SDAT = 0x20, //0x20
 	S0Addr_SEC = 0x24, //0x24
+	/**
+	 * See \ref TOR_STICNT_bits_t for details.
+	 */
 	S0Addr_TOR_STICNT = 0x28, //0x28
+	/**
+	 * See \ref TOR_TOCNT_bits_t for details.
+	 */
 	S0Addr_TOR_TOCNT = 0x2A,
+	/**
+	 * See  \ref TOR_MSB_bits_t for details.
+	 */
 	S0Addr_TOR_MSB = 0x2B,
+	/**
+	 * See \ref ARREG_bits_t for details.
+	 */
 	S0Addr_ARREG = 0x2C, //0x2c
+	/**
+	 * See \ref GIOREG_bits_t for details.
+	 */
 	S0Addr_GIOREG = 0x30,
 	/**
 	 * XCK PERIOD is a 32 bit unsigned integer, which shows the period time of the first XCK period (XCK high slope to high slope) of one measurement in a 10 ns resolution. Read only. Introduced in PCIe card version 222_12.
@@ -43,27 +91,81 @@ enum s0_addresses_t
 	 *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
 	 */
 	S0Addr_XCK_PERIOD = 0x34,
+	/**
+	 * See \ref IRQREG_bits_t for details.
+	 */
 	S0Addr_IRQREG = 0x38,
+	/**
+	 * See \ref PCI_bits_t for details.
+	 */
 	S0Addr_PCI = 0x3C,
+	/**
+	 * See \ref PCIEFLAGS_bits_t for details.
+	 */
 	S0Addr_PCIEFLAGS = 0x40,
 	S0Addr_NOS = 0x44,
+	/**
+	 * See \ref ScanIndex_bits_t for details.
+	 */
 	S0Addr_ScanIndex = 0x48,
-	S0Addr_DmaBufSizeInScans = 0x04C,
-	S0Addr_DMAsPerIntr = 0x050,
-	S0Addr_NOB = 0x054,
-	S0Addr_BLOCKINDEX = 0x058,
-	S0Addr_CAMCNT = 0x05C,
+	/**
+	 * See \ref DmaBufSizeInScans_bits_t for details.
+	 */
+	S0Addr_DmaBufSizeInScans = 0x4C,
+	/**
+	 * See \ref DMAsPerIntr_bits_t for details.
+	 */
+	S0Addr_DMAsPerIntr = 0x50,
+	S0Addr_NOB = 0x54,
+	/**
+	 * See \ref BLOCKINDEX_bits_t for details.
+	 */
+	S0Addr_BLOCKINDEX = 0x58,
+	/**
+	 * See \ref CAMCNT_bits_t for details.
+	 */
+	S0Addr_CAMCNT = 0x5C,
+	/**
+	 * See \ref TDCCtrl_bits_t for details.
+	 */
 	S0Addr_TDCCtrl = 0x60,
 	S0Addr_TDCData = 0x64,
+	/**
+	 * See \ref ROI0_bits_t for details.
+	 */
 	S0Addr_ROI0 = 0x68,
+	/**
+	 * See \ref ROI1_bits_t for details.
+	 */
 	S0Addr_ROI1 = 0x6C,
+	/**
+	 * See \ref ROI2_bits_t for details.
+	 */
 	S0Addr_ROI2 = 0x70,
+	/**
+	 * See \ref XCKDELAY_bits_t for details.
+	 */
 	S0Addr_XCKDLY = 0x74,
 	S0Addr_S1S2ReadDelay = 0x78,
+	/**
+	 * See \ref BTICNT_bits_t for details.
+	 */
 	S0Addr_BTICNT = 0x7c,
+	/**
+	 * See \ref BTIMER_bits_t for details.
+	 */
 	S0Addr_BTIMER = 0x80,
+	/**
+	 * See \ref BDAT_bits_t for details.
+	 */
 	S0Addr_BDAT = 0x84,
+	/**
+	 * See \ref BEC_bits_t for details.
+	 */
 	S0Addr_BEC = 0x88,
+	/**
+	 * See \ref BSLOPE_bits_t for details.
+	 */
 	S0Addr_BSLOPE = 0x8C,
 	S0Addr_A1DSC = 0x90,
 	S0Addr_L1DSC = 0x94,
@@ -71,6 +173,9 @@ enum s0_addresses_t
 	S0Addr_L2DSC = 0x9C,
 	S0Addr_ATDC2 = 0xA0,
 	S0Addr_LTDC2 = 0xA4,
+	/**
+	 * See \ref DSCCtrl_bits_t for details.
+	 */
 	S0Addr_DSCCtrl = 0xA8,
 	S0Addr_DAC = 0xAC,
 	/**
@@ -87,6 +192,9 @@ enum s0_addresses_t
 	 *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
 	 */
 	S0Addr_BONLEN = 0xB4,
+	/**
+	 * See \ref camera_type_bits_t for details.
+	 */
 	S0Addr_CAMERA_TYPE = 0xB8,
 	/**
 	 * BON PERIOD is a 32 bit unsigned integer, which shows the period time of the first BON period (BON high slope to high slope) of one measurement in a 10 ns resolution. Read only.Introduced in PCIe card version 222_12.
@@ -99,14 +207,6 @@ enum s0_addresses_t
 
 enum CTRLA_bits_t
 {
-	CTRLA_bit_VONOFF = 0x01,
-	CTRLA_bit_IFC = 0x02,
-	CTRLA_bit_XCK = 0x04,
-	CTRLA_bit_TRIG_OUT = 0x08,
-	CTRLA_bit_BOTH_SLOPE = 0x10,
-	CTRLA_bit_SLOPE = 0x20,
-	CTRLA_bit_STRIGIN = 0x40,
-	CTRLA_bit_BSTART = 0x80,
 	CTRLA_bitindex_VONOFF = 0,
 	CTRLA_bitindex_IFC = 1,
 	CTRLA_bitindex_XCK = 2,
@@ -120,11 +220,26 @@ enum CTRLA_bits_t
 	 */
 	CTRLA_bitindex_SLOPE = 5,
 	CTRLA_bitindex_STRIGIN = 6,
-	CTRLA_bitindex_BSTART = 7
+	CTRLA_bitindex_BSTART = 7,
+	CTRLA_bit_VONOFF = 0x01,
+	CTRLA_bit_IFC = 0x02,
+	CTRLA_bit_XCK = 0x04,
+	CTRLA_bit_TRIG_OUT = 0x08,
+	CTRLA_bit_BOTH_SLOPE = 0x10,
+	CTRLA_bit_SLOPE = 0x20,
+	CTRLA_bit_STRIGIN = 0x40,
+	CTRLA_bit_BSTART = 0x80,
 };
 
 enum CTRLB_bits_t
 {
+	CTRLB_bitindex_STI0 = 0,
+	CTRLB_bitindex_STI1 = 1,
+	CTRLB_bitindex_STI2 = 2,
+	CTRLB_bitindex_SHON = 3,
+	CTRLB_bitindex_BTI0 = 4,
+	CTRLB_bitindex_BTI1 = 5,
+	CTRLB_bitindex_BTI2 = 6,
 	CTRLB_bit_STI0 = 0x01,
 	CTRLB_bit_STI1 = 0x02,
 	CTRLB_bit_STI2 = 0x04,
@@ -134,27 +249,20 @@ enum CTRLB_bits_t
 	CTRLB_bit_BTI1 = 0x20,
 	CTRLB_bit_BTI2 = 0x40,
 	CTRLB_bits_BTI = 0x70,
-	CTRLB_bitindex_STI0 = 0,
-	CTRLB_bitindex_STI1 = 1,
-	CTRLB_bitindex_STI2 = 2,
-	CTRLB_bitindex_SHON = 3,
-	CTRLB_bitindex_BTI0 = 4,
-	CTRLB_bitindex_BTI1 = 5,
-	CTRLB_bitindex_BTI2 = 6
 };
 
 enum CTRLC_bits_t
 {
+	CTRLC_bitindex_I = 0,
+	CTRLC_bitindex_S1 = 1,
+	CTRLC_bitindex_S2 = 2,
+	CTRLC_bitindex_eoi = 4,
+	CTRLC_bitindex_eoi_chb = 5,
 	CTRLC_bit_I = 0x01,
 	CTRLC_bit_S1 = 0x02,
 	CTRLC_bit_S2 = 0x04,
 	CTRLC_bit_eoi = 0x10,
 	CTRLC_bit_eoi_chb = 0x20,
-	CTRLC_bitindex_I = 0,
-	CTRLC_bitindex_S1 = 1,
-	CTRLC_bitindex_S2 = 2,
-	CTRLC_bitindex_eoi = 4,
-	CTRLC_bitindex_eoi_chb = 5
 };
 
 enum XCK_bits_t
@@ -187,25 +295,18 @@ enum PIXREG_bits_t
 
 enum FFCTRL_bits_t
 {
-	FFCTRL_bit_block_reset = 0x10,
-	FFCTRL_bit_scan_reset = 0x20,
-	FFCTRL_bit_SWTRIG = 0x40,
-	FFCTRL_bit_RSFIFO = 0x80,
 	FFCTRL_bitindex_block_reset = 4,
 	FFCTRL_bitindex_scan_reset = 5,
 	FFCTRL_bitindex_SWTRIG = 6,
 	FFCTRL_bitindex_RSFIFO = 7,
+	FFCTRL_bit_block_reset = 0x10,
+	FFCTRL_bit_scan_reset = 0x20,
+	FFCTRL_bit_SWTRIG = 0x40,
+	FFCTRL_bit_RSFIFO = 0x80,
 };
 
 enum FF_FLAGS_bits_t
 {
-	FF_FLAGS_bit_block_read = 0x02,
-	FF_FLAGS_bit_scan_read = 0x04,
-	FF_FLAGS_bit_overflow = 0x08,
-	FF_FLAGS_bit_xcki = 0x10,
-	FF_FLAGS_bit_full = 0x20,
-	FF_FLAGS_bit_empty = 0x40,
-	FF_FLAGS_bit_valid = 0x80,
 	FF_FLAGS_bitindex_block_read = 1,
 	FF_FLAGS_bitindex_scan_read = 2,
 	FF_FLAGS_bitindex_overflow = 3,
@@ -213,6 +314,13 @@ enum FF_FLAGS_bits_t
 	FF_FLAGS_bitindex_full = 5,
 	FF_FLAGS_bitindex_empty = 6,
 	FF_FLAGS_bitindex_valid = 7,
+	FF_FLAGS_bit_block_read = 0x02,
+	FF_FLAGS_bit_scan_read = 0x04,
+	FF_FLAGS_bit_overflow = 0x08,
+	FF_FLAGS_bit_xcki = 0x10,
+	FF_FLAGS_bit_full = 0x20,
+	FF_FLAGS_bit_empty = 0x40,
+	FF_FLAGS_bit_valid = 0x80,
 };
 
 enum FIFOCNT_bits_t
@@ -233,13 +341,15 @@ enum VCLKCTRL_bits_t
 
 };
 
-/**
- * VCLKFREQ_base_value: Base frequency for the vertical clocks.
- * VCLKFREQ_step_value: Steps on which the VCLK increases based on VCLKFREQ Value
- */
 enum VCLKFREQ_bits_t
 {
+	/**
+	 * Base frequency for the vertical clocks.
+	 */
 	VCLKFREQ_base_value = 200,
+	/**
+	 * Steps on which the VCLK increases based on VCLKFREQ Value.
+	 */
 	VCLKFREQ_step_value = 400
 };
 
@@ -253,18 +363,18 @@ enum SDAT_bits_t
 
 enum TOR_STICNT_bits_t
 {
-	TOR_bits_STICNT = 0x7F,
-	TOR_bit_STICNT_EN = 0x80,
 	TOR_bitindex_STICNT = 0,
 	TOR_bitindex_STICNT_EN = 7,
+	TOR_bits_STICNT = 0x7F,
+	TOR_bit_STICNT_EN = 0x80,
 };
 
 enum TOR_TOCNT_bits_t
 {
-	TOR_bits_TOCNT = 0x7F,
-	TOR_bit_TOCNT_EN = 0x80,
 	TOR_bitindex_TOCNT = 0,
 	TOR_bitindex_TOCNT_EN = 7,
+	TOR_bits_TOCNT = 0x7F,
+	TOR_bit_TOCNT_EN = 0x80,
 };
 
 /**
@@ -272,6 +382,12 @@ enum TOR_TOCNT_bits_t
  */
 enum TOR_MSB_bits_t
 {
+	TOR_MSB_bitindex_ISFFT_LEGACY = 0,
+	TOR_MSB_bitindex_TOSEL = 3,
+	TOR_MSB_bitindex_TO0 = 4,
+	TOR_MSB_bitindex_TO1 = 5,
+	TOR_MSB_bitindex_TO2 = 6,
+	TOR_MSB_bitindex_TO3 = 7,
 	TOR_MSB_BITS_TO = 0xF8,
 	TOR_MSB_bit_ISFFT_LEGACY = 0x01,
 	TOR_MSB_bit_TOSEL = 0x08,
@@ -279,12 +395,6 @@ enum TOR_MSB_bits_t
 	TOR_MSB_bit_TO1 = 0x20,
 	TOR_MSB_bit_TO2 = 0x40,
 	TOR_MSB_bit_TO3 = 0x80,
-	TOR_MSB_bitindex_ISFFT_LEGACY = 0,
-	TOR_MSB_bitindex_TOSEL = 3,
-	TOR_MSB_bitindex_TO0 = 4,
-	TOR_MSB_bitindex_TO1 = 5,
-	TOR_MSB_bitindex_TO2 = 6,
-	TOR_MSB_bitindex_TO3 = 7,
 	TOR_MSB_bit_TO_control = 0xF0
 };
 
@@ -354,41 +464,62 @@ enum PCI_bits_t
 
 enum PCIEFLAGS_bits_t
 {
+	PCIEFLAGS_bitindex_XCKI = 0,
+	PCIEFLAGS_bitindex_INTTRIG = 1,
+	PCIEFLAGS_bitindex_ENRSTIMERHW = 2,
+	PCIEFLAGS_bitindex_USE_ENFFW_PROTECT = 3,
+	PCIEFLAGS_bitindex_BLOCKTRIG = 4,
+	PCIEFLAGS_bitindex_MEASUREON = 5,
+	/**
+	 * This bit is a enabling bit for starting a block. Set it to 1 when you want to start a block. The next block trigger after that moment the block will be started. The behavior of this bit changed in P222_14 from a direct control of BLOCK_ON to beeing a enabling bit.
+	 */
+	PCIEFLAGS_bitindex_BLOCK_EN = 6,
+	PCIEFLAGS_bitindex_IS_TDC = 8,
+	PCIEFLAGS_bitindex_IS_DSC = 9,
+	/**
+	 * BLOCK_ON is 1 during one measurement block. The rising edge is synced to the block trigger. It is resetted by setting BLOCK_EN to 0.
+	 */
+	PCIEFLAGS_bitindex_BLOCK_ON = 10,
+	/**
+	 * BLOCK_ON_SYNCED is 1 during one measurement block. The rising edge is synced to the next scan trigger after the rising edge of BLOCK_ON. It is resetted by setting BLOCK_EN to 0.
+	 */
+	PCIEFLAGS_bitindex_BLOCK_ON_SYNCED = 11,
+	/**
+	 * Scan trigger detected will be set to 1 by the hardware on the slope depending on \ref camera_settings.sslope of the signal \ref camera_settings.sti. It is resetted to 0 by setting \ref PCIEFLAGS_bit_reset_scan_trigger_detected to 1.
+	 */
+	PCIEFLAGS_bitindex_scan_trigger_detected = 12,
+	/**
+	 * Block trigger detected will be set to 1 by the hardware on the slope depending on \ref camera_settings.bslope of the signal \ref camera_settings.bti. It is resetted to 0 by setting \ref PCIEFLAGS_bit_reset_block_trigger_detected to 1.
+	 */
+	PCIEFLAGS_bitindex_block_trigger_detected = 13,
+	/**
+	 * Setting reset scan trigger detected to 1 resets the bit scan trigger detected to 0.
+	 */
+	PCIEFLAGS_bitindex_reset_scan_trigger_detected = 14,
+	/**
+	 * Setting reset block trigger detected to 1 resets the bit block trigger detected to 0.
+	 */
+	PCIEFLAGS_bitindex_reset_block_trigger_detected = 15,
+	PCIEFLAGS_bitindex_linkup_sfp3 = 26,
+	PCIEFLAGS_bitindex_error_sfp3 = 27,
+	PCIEFLAGS_bitindex_linkup_sfp2 = 28,
+	PCIEFLAGS_bitindex_error_sfp2 = 29,
+	PCIEFLAGS_bitindex_linkup_sfp1 = 30,
+	PCIEFLAGS_bitindex_error_sfp1 = 31,
 	PCIEFLAGS_bit_XCKI = 0x0000001,
 	PCIEFLAGS_bit_INTTRIG = 0x0000002,
 	PCIEFLAGS_bit_ENRSTIMERHW = 0x0000004,
 	PCIEFLAGS_bit_USE_ENFFW_PROTECT = 0x0000008,
 	PCIEFLAGS_bit_BLOCKTRIG = 0x0000010,
 	PCIEFLAGS_bit_MEASUREON = 0x0000020,
-	/**
-	 * This bit is a enabling bit for starting a block. Set it to 1 when you want to start a block. The next block trigger after that moment the block will be started. The behavior of this bit changed in P222_14 from a direct control of BLOCK_ON to beeing a enabling bit.
-	 */
 	PCIEFLAGS_bit_BLOCK_EN = 0x0000040,
 	PCIEFLAGS_bit_IS_TDC = 0x0000100,
 	PCIEFLAGS_bit_IS_DSC = 0x0000200,
-	/**
-	 * BLOCK_ON is 1 during one measurement block. The rising edge is synced to the block trigger. It is resetted by setting BLOCK_EN to 0.
-	 */
 	PCIEFLAGS_bit_BLOCK_ON = 0x0000400,
-	/**
-	 * BLOCK_ON_SYNCED is 1 during one measurement block. The rising edge is synced to the next scan trigger after the rising edge of BLOCK_ON. It is resetted by setting BLOCK_EN to 0.
-	 */
 	PCIEFLAGS_bit_BLOCK_ON_SYNCED = 0x0000800,
-	/**
-	 * Scan trigger detected will be set to 1 by the hardware on the slope depending on \ref camera_settings.sslope of the signal \ref camera_settings.sti. It is resetted to 0 by setting \ref PCIEFLAGS_bit_reset_scan_trigger_detected to 1.
-	 */
 	PCIEFLAGS_bit_scan_trigger_detected = 0x0001000,
-	/**
-	 * Block trigger detected will be set to 1 by the hardware on the slope depending on \ref camera_settings.bslope of the signal \ref camera_settings.bti. It is resetted to 0 by setting \ref PCIEFLAGS_bit_reset_block_trigger_detected to 1.
-	 */
 	PCIEFLAGS_bit_block_trigger_detected = 0x0002000,
-	/**
-	 * Setting reset scan trigger detected to 1 resets the bit scan trigger detected to 0.
-	 */
 	PCIEFLAGS_bit_reset_scan_trigger_detected = 0x0004000,
-	/**
-	 * Setting reset block trigger detected to 1 resets the bit block trigger detected to 0.
-	 */
 	PCIEFLAGS_bit_reset_block_trigger_detected = 0x0008000,
 	PCIEFLAGS_bit_linkup_sfp3 = 0x4000000,
 	PCIEFLAGS_bit_error_sfp3 = 0x8000000,
@@ -396,27 +527,6 @@ enum PCIEFLAGS_bits_t
 	PCIEFLAGS_bit_error_sfp2 = 0x20000000,
 	PCIEFLAGS_bit_linkup_sfp1 = 0x40000000,
 	PCIEFLAGS_bit_error_sfp1 = 0x80000000,
-	PCIEFLAGS_bitindex_XCKI = 0,
-	PCIEFLAGS_bitindex_INTTRIG = 1,
-	PCIEFLAGS_bitindex_ENRSTIMERHW = 2,
-	PCIEFLAGS_bitindex_USE_ENFFW_PROTECT = 3,
-	PCIEFLAGS_bitindex_BLOCKTRIG = 4,
-	PCIEFLAGS_bitindex_MEASUREON = 5,
-	PCIEFLAGS_bitindex_BLOCK_EN = 6,
-	PCIEFLAGS_bitindex_IS_TDC = 8,
-	PCIEFLAGS_bitindex_IS_DSC = 9,
-	PCIEFLAGS_bitindex_BLOCK_ON = 10,
-	PCIEFLAGS_bitindex_BLOCK_ON_SYNCED = 11,
-	PCIEFLAGS_bitindex_scan_trigger_detected = 12,
-	PCIEFLAGS_bitindex_block_trigger_detected = 13,
-	PCIEFLAGS_bitindex_reset_scan_trigger_detected = 14,
-	PCIEFLAGS_bitindex_reset_block_trigger_detected = 15,
-	PCIEFLAGS_bitindex_linkup_sfp3 = 26,
-	PCIEFLAGS_bitindex_error_sfp3 = 27,
-	PCIEFLAGS_bitindex_linkup_sfp2 = 28,
-	PCIEFLAGS_bitindex_error_sfp2 = 29,
-	PCIEFLAGS_bitindex_linkup_sfp1 = 30,
-	PCIEFLAGS_bitindex_error_sfp1 = 31
 };
 
 enum ScanIndex_bits_t
@@ -476,26 +586,26 @@ enum TDCCtrl_bits_t
 
 enum ROI0_bits_t
 {
+	ROI0_bitindex_range1 = 0,
+	ROI0_bitindex_range2 = 16,
 	ROI0_bits_range1 = 0x0000FFFF,
 	ROI0_bits_range2 = 0xFFFF0000,
-	ROI0_bitindex_range1 = 0,
-	ROI0_bitindex_range2 = 16
 };
 
 enum ROI1_bits_t
 {
+	ROI1_bitindex_range3 = 0,
+	ROI1_bitindex_range4 = 16,
 	ROI1_bits_range3 = 0x0000FFFF,
 	ROI1_bits_range4 = 0xFFFF0000,
-	ROI1_bitindex_range3 = 0,
-	ROI1_bitindex_range4 = 16
 };
 
 enum ROI2_bits_t
 {
+	ROI2_bitindex_range5 = 0,
+	ROI2_bitindex_range6 = 16,
 	ROI2_bits_range5 = 0x0000FFFF,
 	ROI2_bits_range6 = 0xFFFF0000,
-	ROI2_bitindex_range5 = 0,
-	ROI2_bitindex_range6 = 16
 };
 
 enum XCKDELAY_bits_t
@@ -507,10 +617,10 @@ enum XCKDELAY_bits_t
 
 enum BTICNT_bits_t
 {
-	BTICNT_bits_BTICNT = 0x7F,
-	BTICNT_bit_BTICNT_EN = 0x80,
 	BTICNT_bitindex_BTICNT = 0,
 	BTICNT_bitindex_BTICNT_EN = 7,
+	BTICNT_bits_BTICNT = 0x7F,
+	BTICNT_bit_BTICNT_EN = 0x80,
 };
 
 enum BTIMER_bits_t
@@ -520,46 +630,46 @@ enum BTIMER_bits_t
 
 enum BDAT_bits_t
 {
+	BDAT_bitindex_enabled = 31,
 	BDAT_bits_BDAT = 0x7FFFFFFF,
 	BDAT_bit_enable = 0x80000000,
-	BDAT_bitindex_enabled = 31
 };
 
 enum BEC_bits_t
 {
+	BEC_bitindex_enabled = 31,
 	BEC_bits_BEC = 0x7FFFFFFF,
 	BEC_bit_enable = 0x80000000,
-	BEC_bitindex_enabled = 31
 };
 
 enum BSLOPE_bits_t
 {
+	BSLOPE_bitindex_bslope = 0,
+	BSLOPE_bitindex_both_slopes = 1,
+	BSLOPE_bitindex_bswtrig = 2,
 	BSLOPE_bit_bslope = 0x00000001,
 	BSLOPE_bit_both_slopes = 0x00000002,
 	BSLOPE_bit_both_bswtrig = 0x00000004,
-	BSLOPE_bitindex_bslope = 0,
-	BSLOPE_bitindex_both_slopes = 1,
-	BSLOPE_bitindex_bswtrig = 2
 };
 
 enum DSCCtrl_bits_t
 {
-	DSCCtrl_bit_rs1 = 0x00000001,
-	DSCCtrl_bit_dir1 = 0x00000002,
-	DSCCtrl_bit_rs2 = 0x00000100,
-	DSCCtrl_bit_dir2 = 0x00000200,
 	DSCCtrl_bitindex_rs1 = 0,
 	DSCCtrl_bitindex_dir1 = 1,
 	DSCCtrl_bitindex_rs2 = 8,
 	DSCCtrl_bitindex_dir2 = 9,
+	DSCCtrl_bit_rs1 = 0x00000001,
+	DSCCtrl_bit_dir1 = 0x00000002,
+	DSCCtrl_bit_rs2 = 0x00000100,
+	DSCCtrl_bit_dir2 = 0x00000200,
 };
 
 enum camera_type_bits_t
 {
-	camera_type_sensor_type_bits = 0x0000FFFF,
-	camera_type_camera_system_bits = 0xFFFF0000,
 	camera_type_sensor_type_bit_index = 0,
 	camera_type_camera_system_bit_index = 16,
+	camera_type_sensor_type_bits = 0x0000FFFF,
+	camera_type_camera_system_bits = 0xFFFF0000,
 };
 
 enum master_address_t
