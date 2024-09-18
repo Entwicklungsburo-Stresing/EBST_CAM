@@ -10,6 +10,14 @@ The hardware version number is the current version at release time.
 
 ### API Changes
 #### Added
+* Add function DLLGetScanTriggerDetected
+* Add function DLLGetBlockTriggerDetected
+* Add function DLLResetScanTriggerDetected
+* Add function DLLResetBlockTriggerDetected
+* Add function DLLGetScanTriggerDetected_multipleBoards
+* Add function DLLGetBlockTriggerDetected_multipleBoards
+* Add function DLLResetScanTriggerDetected_multipleBoards
+* Add function DLLResetBlockTriggerDetected_multipleBoards
 #### Changed
 #### Removed
 #### Fixed

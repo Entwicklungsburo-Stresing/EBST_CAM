@@ -374,9 +374,21 @@ enum PCIEFLAGS_bits_t
 	 * BLOCK_ON_SYNCED is 1 during one measurement block. The rising edge is synced to the next scan trigger after the rising edge of BLOCK_ON. It is resetted by setting BLOCK_EN to 0.
 	 */
 	PCIEFLAGS_bit_BLOCK_ON_SYNCED = 0x0000800,
+	/**
+	 * Scan trigger detected will be set to 1 by the hardware on the slope depending on \ref camera_settings.sslope of the signal \ref camera_settings.sti. It is resetted to 0 by setting \ref PCIEFLAGS_bit_reset_scan_trigger_detected to 1.
+	 */
 	PCIEFLAGS_bit_scan_trigger_detected = 0x0001000,
+	/**
+	 * Block trigger detected will be set to 1 by the hardware on the slope depending on \ref camera_settings.bslope of the signal \ref camera_settings.bti. It is resetted to 0 by setting \ref PCIEFLAGS_bit_reset_block_trigger_detected to 1.
+	 */
 	PCIEFLAGS_bit_block_trigger_detected = 0x0002000,
+	/**
+	 * Setting reset scan trigger detected to 1 resets the bit scan trigger detected to 0.
+	 */
 	PCIEFLAGS_bit_reset_scan_trigger_detected = 0x0004000,
+	/**
+	 * Setting reset block trigger detected to 1 resets the bit block trigger detected to 0.
+	 */
 	PCIEFLAGS_bit_reset_block_trigger_detected = 0x0008000,
 	PCIEFLAGS_bit_linkup_sfp3 = 0x4000000,
 	PCIEFLAGS_bit_error_sfp3 = 0x8000000,
