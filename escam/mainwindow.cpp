@@ -50,6 +50,8 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::findCamera);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::on_readCameraTemp);
 	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::setBlockOnLamp);
+	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::setScanTriggerDetected);
+	connect(lampsTimer, &QTimer::timeout, this, &MainWindow::setBlockTriggerDetected);
 	connect(scanFrequencyTimer, &QTimer::timeout, this, &MainWindow::on_scanFrequencyTooHigh);
 	connect(blockFrequencyTimer, &QTimer::timeout, this, &MainWindow::on_blockFrequencyTooHigh);
 	connect(ui->radioButtonLiveViewFixedSample, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
@@ -874,6 +876,80 @@ void MainWindow::findCamera()
 		QPalette pal = palette();
 		pal.setColor(QPalette::Window, Qt::darkGreen);
 		ui->widgetCameraFound->setPalette(pal);
+	}
+	return;
+}
+
+void MainWindow::setScanTriggerDetected()
+{
+	bool allScanTriggerDetected;
+	if (number_of_boards)
+		allScanTriggerDetected = true;
+	else
+		allScanTriggerDetected = false;
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			bool scanTriggerDetected = false;
+			es_status_codes status = lsc.getScanTriggerDetected(drvno, &scanTriggerDetected);
+			allScanTriggerDetected &= scanTriggerDetected;
+		}
+	}
+	if (allScanTriggerDetected)
+	{
+		QPalette pal = palette();
+		pal.setColor(QPalette::Window, Qt::green);
+		ui->widgetScanTriggerDetected->setPalette(pal);
+		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+			// Check if the drvno'th bit is set
+			if ((board_sel >> drvno) & 1)
+				lsc.resetScanTriggerDetected(drvno);
+	}
+	else
+	{
+		QPalette pal = palette();
+		pal.setColor(QPalette::Window, Qt::darkGreen);
+		ui->widgetScanTriggerDetected->setPalette(pal);
+	}
+	return;
+}
+
+void MainWindow::setBlockTriggerDetected()
+{
+	bool allBlockTriggerDetected;
+	if (number_of_boards)
+		allBlockTriggerDetected = true;
+	else
+		allBlockTriggerDetected = false;
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((board_sel >> drvno) & 1)
+		{
+			bool blockTriggerDetected = false;
+			es_status_codes status = lsc.getBlockTriggerDetected(drvno, &blockTriggerDetected);
+			allBlockTriggerDetected &= blockTriggerDetected;
+		}
+	}
+	if (allBlockTriggerDetected)
+	{
+		QPalette pal = palette();
+		pal.setColor(QPalette::Window, Qt::green);
+		ui->widgetBlockTriggerDetected->setPalette(pal);
+		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+			// Check if the drvno'th bit is set
+			if ((board_sel >> drvno) & 1)
+				lsc.resetBlockTriggerDetected(drvno);
+	}
+	else
+	{
+		QPalette pal = palette();
+		pal.setColor(QPalette::Window, Qt::darkGreen);
+		ui->widgetBlockTriggerDetected->setPalette(pal);
 	}
 	return;
 }

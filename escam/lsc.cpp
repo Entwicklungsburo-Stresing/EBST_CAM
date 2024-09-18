@@ -527,3 +527,24 @@ es_status_codes Lsc::getBlockOn(uint32_t drvno, bool* block_on)
 {
 	return GetBlockOn(drvno, block_on);
 }
+
+es_status_codes Lsc::getScanTriggerDetected(uint32_t drvno, bool* detected)
+{
+	return GetScanTriggerDetected(drvno, detected);
+}
+
+es_status_codes Lsc::getBlockTriggerDetected(uint32_t drvno, bool* detected)
+{
+	return GetBlockTriggerDetected(drvno, detected);
+}
+
+es_status_codes Lsc::resetScanTriggerDetected(uint32_t drvno)
+{
+	return ResetScanTriggerDetected(drvno);
+}
+
+es_status_codes Lsc::resetBlockTriggerDetected(uint32_t drvno)
+{
+	return ResetBlockTriggerDetected(drvno);
+}
+
