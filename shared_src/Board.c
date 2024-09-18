@@ -6236,3 +6236,49 @@ es_status_codes GetBlockOn(uint32_t drvno, bool* block_on)
 		status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCK_ON, block_on);
 	return status;
 }
+
+/**
+ * \brief Read the bit \ref PCIEFLAGS_bits_t.PCIEFLAGS_bit_scan_trigger_detected.
+ * 
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param detected Pointer to a bool, where the scan trigger detected bit will be written.
+ * \return es_status_codes
+ */
+es_status_codes GetScanTriggerDetected(uint32_t drvno, bool* detected)
+{
+	return ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_scan_trigger_detected, detected);
+}
+
+/**
+ * \brief Read the bit \ref PCIEFLAGS_bits_t.PCIEFLAGS_bit_block_trigger_detected.
+ *
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param detected Pointer to a bool, where the block trigger detected bit will be written.
+ * \return es_status_codes
+ */
+es_status_codes GetBlockTriggerDetected(uint32_t drvno, bool* detected)
+{
+	return ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_block_trigger_detected, detected);
+}
+
+/**
+ * \brief Reset the bit \ref PCIEFLAGS_bits_t.PCIEFLAGS_bit_scan_trigger_detected to 0.
+ *
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \return es_status_codes
+ */
+es_status_codes ResetScanTriggerDetected(uint32_t drvno)
+{
+	return pulseBitS0_32(drvno, PCIEFLAGS_bitindex_reset_scan_trigger_detected, S0Addr_PCIEFLAGS, 10);
+}
+
+/**
+ * \brief Reset the bit \ref PCIEFLAGS_bits_t.PCIEFLAGS_bit_block_trigger_detected to 0.
+ *
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \return es_status_codes
+ */
+es_status_codes ResetBlockTriggerDetected(uint32_t drvno)
+{
+	return pulseBitS0_32(drvno, PCIEFLAGS_bitindex_reset_block_trigger_detected, S0Addr_PCIEFLAGS, 10);
+}

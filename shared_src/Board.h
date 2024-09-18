@@ -186,6 +186,10 @@ es_status_codes GetBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns);
 es_status_codes SetSensorGain(uint32_t drvno, uint16_t gain);
 es_status_codes GetPcieCardVersion(uint32_t drvno, uint16_t* major_version, uint16_t* minor_version);
 es_status_codes GetBlockOn(uint32_t drvno, bool* block_on);
+es_status_codes GetScanTriggerDetected(uint32_t drvno, bool* detected);
+es_status_codes GetBlockTriggerDetected(uint32_t drvno, bool* detected);
+es_status_codes ResetScanTriggerDetected(uint32_t drvno);
+es_status_codes ResetBlockTriggerDetected(uint32_t drvno);
 #ifdef WIN32
 es_status_codes ExportMeasurementHDF5(const char* path, char* filename);
 hid_t CreateNumericAttribute(hid_t parent_object_id, char* attr_name, hid_t goal_type, hid_t dataspace, void* data);

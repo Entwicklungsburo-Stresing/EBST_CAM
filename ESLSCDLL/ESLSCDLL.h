@@ -133,6 +133,14 @@ DllAccess es_status_codes DLLGetXckLength_multipleBoards(uint32_t* xckLengthIn10
 DllAccess es_status_codes DLLGetXckPeriod_multipleBoards(uint32_t* xckPeriodIn10ns0, uint32_t* xckPeriodIn10ns1, uint32_t* xckPeriodIn10ns2, uint32_t* xckPeriodIn10ns3, uint32_t* xckPeriodIn10ns4);
 DllAccess es_status_codes DLLGetBonLength_multipleBoards(uint32_t* bonLengthIn10ns0, uint32_t* bonLengthIn10ns1, uint32_t* bonLengthIn10ns2, uint32_t* bonLengthIn10ns3, uint32_t* bonLengthIn10ns4);
 DllAccess es_status_codes DLLGetBonPeriod_multipleBoards(uint32_t* bonPeriodIn10ns0, uint32_t* bonPeriodIn10ns1, uint32_t* bonPeriodIn10ns2, uint32_t* bonPeriodIn10ns3, uint32_t* bonPeriodIn10ns4);
+DllAccess es_status_codes DLLGetScanTriggerDetected(uint32_t drvno, uint8_t* detected);
+DllAccess es_status_codes DLLGetBlockTriggerDetected(uint32_t drvno, uint8_t* detected);
+DllAccess es_status_codes DLLResetScanTriggerDetected(uint32_t drvno);
+DllAccess es_status_codes DLLResetBlockTriggerDetected(uint32_t drvno);
+DllAccess es_status_codes DLLGetScanTriggerDetected_multipleBoards(uint8_t* detected0, uint8_t* detected1, uint8_t* detected2, uint8_t* detected3, uint8_t* detected4);
+DllAccess es_status_codes DLLGetBlockTriggerDetected_multipleBoards(uint8_t* detected0, uint8_t* detected1, uint8_t* detected2, uint8_t* detected3, uint8_t* detected4);
+DllAccess es_status_codes DLLResetScanTriggerDetected_multipleBoards();
+DllAccess es_status_codes DLLResetBlockTriggerDetected_multipleBoards();
 //************ read and write functions
 DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address);
 DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards(uint8_t* data0, uint8_t* data1, uint8_t* data2, uint8_t* data3, uint8_t* data4, uint32_t address);
