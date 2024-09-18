@@ -73,6 +73,10 @@ public:
 	es_status_codes getBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns);
 	es_status_codes getBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns);
 	es_status_codes getBlockOn(uint32_t drvno, bool* block_on);
+	es_status_codes getScanTriggerDetected(uint32_t drvno, bool* detected);
+	es_status_codes getBlockTriggerDetected(uint32_t drvno, bool* detected);
+	es_status_codes resetScanTriggerDetected(uint32_t drvno);
+	es_status_codes resetBlockTriggerDetected(uint32_t drvno);
 public slots:
 	es_status_codes startMeasurement();
 signals:

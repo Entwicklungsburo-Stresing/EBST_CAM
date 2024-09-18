@@ -25,6 +25,7 @@ The hardware version number is the current version at release time.
 ### Other Changes
 #### Added
 * Add software version to settings export
+* Add lamps STD (scan trigger detected) and BTD (block trigger detected)
 #### Changed
 * Change default of autotune to 500
 #### Removed
