@@ -75,6 +75,8 @@ private slots:
 	void readBlockFrequencyBit();
 	void on_blockFrequencyTooHigh();
 	void findCamera();
+	void setScanTriggerDetected();
+	void setBlockTriggerDetected();
 	void on_readCameraTemp();
 	void on_actionChartSettings_triggered();
 	void setBlockOnLamp();
