@@ -1863,3 +1863,102 @@ DllAccess uint16_t DLLGetGammaBlack()
 }
 
 #endif
+
+/**
+* \copydoc GetScanTriggerDetected
+*/
+DllAccess es_status_codes DLLGetScanTriggerDetected(uint32_t drvno, uint8_t* detected)
+{
+	return GetScanTriggerDetected(drvno, detected);
+}
+
+/**
+* \copydoc GetBlockTriggerDetected
+*/
+DllAccess es_status_codes DLLGetBlockTriggerDetected(uint32_t drvno, uint8_t* detected)
+{
+	return GetBlockTriggerDetected(drvno, detected);
+}
+
+/**
+* \copydoc ResetScanTriggerDetected
+*/
+DllAccess es_status_codes DLLResetScanTriggerDetected(uint32_t drvno)
+{
+	return ResetScanTriggerDetected(drvno);
+}
+
+/**
+* \copydoc ResetBlockTriggerDetected
+*/
+DllAccess es_status_codes DLLResetBlockTriggerDetected(uint32_t drvno)
+{
+	return ResetBlockTriggerDetected(drvno);
+}
+
+DllAccess es_status_codes DLLGetScanTriggerDetected_multipleBoards(uint8_t* detected0, uint8_t* detected1, uint8_t* detected2, uint8_t* detected3, uint8_t* detected4)
+{
+	uint8_t* detected[MAXPCIECARDS] = { detected0, detected1, detected2, detected3, detected4 };
+	int usedBoards = 0;
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = GetScanTriggerDetected(drvno, detected[usedBoards]);
+			if (status != es_no_error) return status;
+			usedBoards++;
+		}
+	}
+	return status;
+}
+
+DllAccess es_status_codes DLLGetBlockTriggerDetected_multipleBoards(uint8_t* detected0, uint8_t* detected1, uint8_t* detected2, uint8_t* detected3, uint8_t* detected4)
+{
+	uint8_t* detected[MAXPCIECARDS] = { detected0, detected1, detected2, detected3, detected4 };
+	int usedBoards = 0;
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = GetBlockTriggerDetected(drvno, detected[usedBoards]);
+			if (status != es_no_error) return status;
+			usedBoards++;
+		}
+	}
+	return status;
+}
+
+DllAccess es_status_codes DLLResetScanTriggerDetected_multipleBoards()
+{
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = ResetScanTriggerDetected(drvno);
+			if (status != es_no_error) return status;
+		}
+	}
+	return status;
+}
+
+DllAccess es_status_codes DLLResetBlockTriggerDetected_multipleBoards()
+{
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = ResetBlockTriggerDetected(drvno);
+			if (status != es_no_error) return status;
+		}
+	}
+	return status;
+}
+
