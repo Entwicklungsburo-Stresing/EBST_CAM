@@ -6296,7 +6296,7 @@ es_status_codes WaitForBlockOn(uint32_t drvno)
 	es_status_codes status = es_no_error;
 	while (!blockOn && !abortMeasurementFlag)
 	{
-		status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCK_ON, &blockOn);
+		status = GetBlockOn(drvno, &blockOn);
 		if (status != es_no_error) return status;
 		if (checkEscapeKeyState())
 		{
