@@ -20,6 +20,7 @@ WD_PCI_CARD_INFO deviceInfo[MAXPCIECARDS];
 bool _SHOW_MSG = TRUE;
 HANDLE ghMutex[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 HANDLE registerReadWriteMutex[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
+HANDLE registerReadWriteMutexHighLevel[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 HANDLE mutexUserBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 FILE* file_stream[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 void* Direct2dViewer = NULL;
@@ -683,6 +684,9 @@ es_status_codes InitMutex(uint32_t drvno)
 	if (registerReadWriteMutex[drvno])
 		CloseHandle(registerReadWriteMutex[drvno]);
 	registerReadWriteMutex[drvno] = CreateMutex(NULL, FALSE, NULL);
+	if (registerReadWriteMutexHighLevel[drvno])
+		CloseHandle(registerReadWriteMutexHighLevel[drvno]);
+	registerReadWriteMutexHighLevel[drvno] = CreateMutex(NULL, FALSE, NULL);
 	return es_no_error;
 }
 
@@ -1371,3 +1375,15 @@ uint16_t GetGammaBlack()
 }
 
 #endif
+
+void LockHighLevelMutex(uint32_t drvno)
+{
+	WaitForSingleObject(registerReadWriteMutexHighLevel[drvno], INFINITE);
+	return;
+}
+
+void UnlockHighLevelMutex(uint32_t drvno)
+{
+	ReleaseMutex(registerReadWriteMutexHighLevel[drvno]);
+	return;
+}
