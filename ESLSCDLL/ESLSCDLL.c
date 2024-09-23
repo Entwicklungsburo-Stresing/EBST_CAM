@@ -399,7 +399,7 @@ DllAccess es_status_codes DLLwriteRegisterS0_8(uint8_t data, uint32_t address)
 */
 DllAccess es_status_codes DLLreadRegisterS0_32(uint32_t drvno, uint32_t* data, uint32_t address)
 {
-	return readRegisterS0_32(drvno, data, address);;
+	return readRegisterS0_32(drvno, data, address);
 }
 
 /**
