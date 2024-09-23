@@ -77,6 +77,8 @@ uint16_t GetGammaWhite();
 uint16_t GetGammaBlack();
 #endif
 void WaitForAllInterruptsDone();
+void LockHighLevelMutex(uint32_t drvno);
+void UnlockHighLevelMutex(uint32_t drvno);
 
 #ifdef WIN32
 int64_t GetTimestampInTicks();
