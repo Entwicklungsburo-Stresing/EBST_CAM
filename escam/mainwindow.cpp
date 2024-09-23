@@ -448,6 +448,8 @@ void MainWindow::on_actionDAC_triggered()
  */
 void MainWindow::loadSettings()
 {
+	qDebug() << "Loading settings...";
+	QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 	bool coolingOn = false;
 	bool isOvertempCam = false;
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
@@ -495,6 +497,8 @@ void MainWindow::loadSettings()
 	else
 		ui->chartView->chart()->setTheme(QChart::ChartThemeLight);
 #endif
+	QGuiApplication::restoreOverrideCursor();
+	qDebug() << "Loading settings done";
 	return;
 }
 
