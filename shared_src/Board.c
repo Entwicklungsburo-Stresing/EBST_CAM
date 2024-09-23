@@ -2817,6 +2817,8 @@ es_status_codes StartMeasurement()
 					if (status != es_no_error) return ReturnStartMeasurement(status);
 					status = setBlockEn(drvno);
 					if (status != es_no_error) return ReturnStartMeasurement(status);
+					status = WaitForBlockOn(drvno);
+					if (status != es_no_error) return ReturnStartMeasurement(status);
 					//start scan for first read if STI = ASL
 					if (settings_struct.camera_settings[drvno].sti_mode == sti_ASL) status = DoSoftwareTrigger(drvno);
 					if (status != es_no_error) return ReturnStartMeasurement(status);
@@ -6286,4 +6288,16 @@ es_status_codes ResetScanTriggerDetected(uint32_t drvno)
 es_status_codes ResetBlockTriggerDetected(uint32_t drvno)
 {
 	return pulseBitS0_32(drvno, PCIEFLAGS_bitindex_reset_block_trigger_detected, S0Addr_PCIEFLAGS, 10);
+}
+
+es_status_codes WaitForBlockOn(uint32_t drvno)
+{
+	bool blockOn = false;
+	es_status_codes status = es_no_error;
+	while (!blockOn)
+	{
+		status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCK_ON, &blockOn);
+		if (status != es_no_error) return status;
+	}
+	return status;
 }

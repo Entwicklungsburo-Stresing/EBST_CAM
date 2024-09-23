@@ -190,6 +190,7 @@ es_status_codes GetScanTriggerDetected(uint32_t drvno, bool* detected);
 es_status_codes GetBlockTriggerDetected(uint32_t drvno, bool* detected);
 es_status_codes ResetScanTriggerDetected(uint32_t drvno);
 es_status_codes ResetBlockTriggerDetected(uint32_t drvno);
+es_status_codes WaitForBlockOn(uint32_t drvno);
 #ifdef WIN32
 es_status_codes ExportMeasurementHDF5(const char* path, char* filename);
 hid_t CreateNumericAttribute(hid_t parent_object_id, char* attr_name, hid_t goal_type, hid_t dataspace, void* data);
