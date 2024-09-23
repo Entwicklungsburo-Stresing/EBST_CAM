@@ -391,7 +391,7 @@ DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards(uint8_t* data0, uin
  */
 DllAccess es_status_codes DLLwriteRegisterS0_8(uint8_t data, uint32_t address)
 {
-	return writeRegisterS0_8_allBoards(settings_struct.board_sel, data, address);
+	return writeRegisterS0_8_allBoards(data, address);
 }
 
 /**
@@ -442,7 +442,7 @@ DllAccess es_status_codes DLLreadRegisterS0_32_multipleBoards(uint32_t* data0, u
  */
 DllAccess es_status_codes DLLwriteRegisterS0_32(uint32_t data, uint32_t address)
 {
-	return writeRegisterS0_32_allBoards(settings_struct.board_sel, data, address);
+	return writeRegisterS0_32_allBoards(data, address);
 }
 
 /**
@@ -856,7 +856,7 @@ DllAccess es_status_codes DLLCloseShutter()
  */
 DllAccess es_status_codes DLLsetBitS0_32(uint32_t bitnumber, uint16_t address)
 {
-	return setBitS0_32_allBoards(settings_struct.board_sel, bitnumber, address);
+	return setBitS0_32_allBoards(bitnumber, address);
 }
 
 /**
@@ -871,7 +871,7 @@ DllAccess es_status_codes DLLsetBitS0_32(uint32_t bitnumber, uint16_t address)
  */
 DllAccess es_status_codes DLLresetBitS0_32(uint32_t bitnumber, uint16_t address)
 {
-	return resetBitS0_32_allBoards(settings_struct.board_sel, bitnumber, address);
+	return resetBitS0_32_allBoards(bitnumber, address);
 }
 
 /**

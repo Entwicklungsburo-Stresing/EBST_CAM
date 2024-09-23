@@ -637,13 +637,13 @@ es_status_codes writeBitsS0_32(uint32_t drvno, uint32_t data, uint32_t bitmask, 
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes writeBitsS0_32_allBoards(uint32_t board_sel, uint32_t data, uint32_t bitmask, uint16_t address)
+es_status_codes writeBitsS0_32_allBoards(uint32_t data, uint32_t bitmask, uint16_t address)
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
-		if ((board_sel >> drvno) & 1)
+		if ((settings_struct.board_sel >> drvno) & 1)
 		{
 			status = writeBitsDma_32(drvno, data, bitmask, address + S0_SPACE_OFFSET);
 			if (status != es_no_error) return status;
@@ -697,10 +697,10 @@ es_status_codes setBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes setBitS0_32_allBoards(uint32_t board_sel, uint32_t bitnumber, uint16_t address)
+es_status_codes setBitS0_32_allBoards(uint32_t bitnumber, uint16_t address)
 {
 	uint32_t bitmask = 0x1 << bitnumber;
-	return writeBitsS0_32_allBoards(board_sel, 0xFFFFFFFF, bitmask, address);
+	return writeBitsS0_32_allBoards(0xFFFFFFFF, bitmask, address);
 }
 
 /**
@@ -748,10 +748,10 @@ es_status_codes resetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t addre
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-es_status_codes resetBitS0_32_allBoards(uint32_t board_sel, uint32_t bitnumber, uint16_t address)
+es_status_codes resetBitS0_32_allBoards(uint32_t bitnumber, uint16_t address)
 {
 	uint32_t bitmask = 0x1 << bitnumber;
-	return writeBitsS0_32_allBoards(board_sel, 0x0, bitmask, address);
+	return writeBitsS0_32_allBoards(0x0, bitmask, address);
 }
 
 /**
@@ -796,9 +796,9 @@ es_status_codes writeRegisterS0_32(uint32_t drvno, uint32_t data, uint16_t addre
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes writeRegisterS0_32_allBoards(uint32_t board_sel, uint32_t data, uint16_t address)
+es_status_codes writeRegisterS0_32_allBoards(uint32_t data, uint16_t address)
 {
-	return writeRegister_32_allBoards(board_sel, data, address + S0_SPACE_OFFSET);
+	return writeRegister_32_allBoards(data, address + S0_SPACE_OFFSET);
 }
 
 /**
@@ -811,13 +811,13 @@ es_status_codes writeRegisterS0_32_allBoards(uint32_t board_sel, uint32_t data, 
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes writeRegister_32_allBoards(uint32_t board_sel, uint32_t data, uint16_t address)
+es_status_codes writeRegister_32_allBoards(uint32_t data, uint16_t address)
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
-		if ((board_sel >> drvno) & 1)
+		if ((settings_struct.board_sel >> drvno) & 1)
 		{
 			status = writeRegister_32(drvno, data, address);
 			if (status != es_no_error) return status;
@@ -866,9 +866,9 @@ es_status_codes writeRegisterS0_8(uint32_t drvno, uint8_t data, uint16_t address
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes writeRegisterS0_8_allBoards(uint32_t board_sel, uint8_t data, uint16_t address)
+es_status_codes writeRegisterS0_8_allBoards(uint8_t data, uint16_t address)
 {
-	return writeRegister_8_allBoards(board_sel, data, address + S0_SPACE_OFFSET);
+	return writeRegister_8_allBoards(data, address + S0_SPACE_OFFSET);
 }
 
 /**
@@ -881,13 +881,13 @@ es_status_codes writeRegisterS0_8_allBoards(uint32_t board_sel, uint8_t data, ui
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes writeRegister_8_allBoards(uint32_t board_sel, uint8_t data, uint16_t address)
+es_status_codes writeRegister_8_allBoards(uint8_t data, uint16_t address)
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
-		if ((board_sel >> drvno) & 1)
+		if ((settings_struct.board_sel>> drvno) & 1)
 		{
 			status = writeRegister_8(drvno, data, address);
 			if (status != es_no_error) return status;
@@ -921,9 +921,9 @@ es_status_codes readRegisterS0_32(uint32_t drvno, uint32_t* data, uint16_t addre
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes readRegisterS0_32_allBoards(uint32_t board_sel, uint32_t** data, uint16_t address)
+es_status_codes readRegisterS0_32_allBoards(uint32_t** data, uint16_t address)
 {
-	return readRegister_32_allBoards(board_sel, data, address + S0_SPACE_OFFSET);
+	return readRegister_32_allBoards(data, address + S0_SPACE_OFFSET);
 }
 
 /**
@@ -936,13 +936,13 @@ es_status_codes readRegisterS0_32_allBoards(uint32_t board_sel, uint32_t** data,
 	- es_no_error
 	- es_register_read_failed
  */
-es_status_codes readRegister_32_allBoards(uint32_t board_sel, uint32_t** data, uint16_t address)
+es_status_codes readRegister_32_allBoards(uint32_t** data, uint16_t address)
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
-		if ((board_sel >> drvno) & 1)
+		if ((settings_struct.board_sel >> drvno) & 1)
 		{
 			status = readRegister_32(drvno, *(data + drvno), address);
 			if (status != es_no_error) return status;
