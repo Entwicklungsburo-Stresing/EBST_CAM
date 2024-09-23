@@ -2796,13 +2796,16 @@ es_status_codes StartMeasurement()
 				if ((settings_struct.board_sel >> drvno) & 1)
 				{
 					// legacy since P222_14: only for backwards compatibility with older versions
-					status = waitForBlockTrigger(drvno);
-					if (status == es_abortion)
+					if (PcieCardVersionIsSmallerThan(drvno, 0x222, 0x14))
 					{
-						status = AbortMeasurement();
-						return ReturnStartMeasurement(status);
+						status = waitForBlockTrigger(drvno);
+						if (status == es_abortion)
+						{
+							status = AbortMeasurement();
+							return ReturnStartMeasurement(status);
+						}
+						else if (status != es_no_error) return ReturnStartMeasurement(status);
 					}
-					else if (status != es_no_error) return ReturnStartMeasurement(status);
 					// Only wait for the block trigger of one board
 					break;
 				}
