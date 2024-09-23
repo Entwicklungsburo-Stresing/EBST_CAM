@@ -125,6 +125,8 @@ extern char start_timestamp[file_timestamp_size];
 extern volatile size_t* data_available;
 extern volatile bool* timerOn;
 extern volatile bool* allInterruptsDone;
+extern uint16_t* pcieCardMajorVersion;
+extern uint16_t* pcieCardMinorVersion;
 
 #ifdef __cplusplus
 }

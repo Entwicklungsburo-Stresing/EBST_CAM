@@ -198,6 +198,8 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	status = SetTORReg(drvno, (uint8_t)settings_struct.camera_settings[drvno].tor);
 	if (status != es_no_error) return status;
 	status = SetS1S2ReadDelay(drvno);
+	if (status != es_no_error) return status;
+	status = GetPcieCardVersion(drvno, &pcieCardMajorVersion[drvno], &pcieCardMinorVersion[drvno]);
 	return status;
 }
 
@@ -6224,6 +6226,30 @@ es_status_codes GetPcieCardVersion(uint32_t drvno, uint16_t* major_version, uint
 	return status;
 }
 
+bool PcieCardVersionIsGreaterThan(uint32_t drvno, uint16_t major_version, uint16_t minor_version)
+{
+	if (pcieCardMajorVersion[drvno] > major_version || pcieCardMajorVersion[drvno] == major_version && pcieCardMinorVersion[drvno] > minor_version)
+		return true;
+	else
+		return false;
+}
+
+bool PcieCardVersionIsSmallerThan(uint32_t drvno, uint16_t major_version, uint16_t minor_version)
+{
+	if (pcieCardMajorVersion[drvno] < major_version || pcieCardMajorVersion[drvno] == major_version && pcieCardMinorVersion[drvno] < minor_version)
+		return true;
+	else
+		return false;
+}
+
+bool PcieCardVersionIsEqual(uint32_t drvno, uint16_t major_version, uint16_t minor_version)
+{
+	if (pcieCardMajorVersion[drvno] == major_version && pcieCardMinorVersion[drvno] == minor_version)
+		return true;
+	else
+		return false;
+}
+
 /**
  * \brief Get the block on bit from the PCIe flags register.
  * 
@@ -6234,10 +6260,9 @@ es_status_codes GetPcieCardVersion(uint32_t drvno, uint16_t* major_version, uint
  */
 es_status_codes GetBlockOn(uint32_t drvno, bool* block_on)
 {
-	uint16_t major_version = 0, minor_version = 0;
-	es_status_codes status = GetPcieCardVersion(drvno, &major_version, &minor_version);
+	es_status_codes status;
 	// In PCIe card firmware versino 222.14 the block_on bit was renamed from BLOCK_ON to BLOCK_EN and BLOCK_ON was added as a new bit.
-	if(major_version < 0x222 || major_version == 0x222 && minor_version < 0x14)
+	if(PcieCardVersionIsSmallerThan(drvno, 0x222, 0x14))
 		status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCK_EN, block_on);
 	else
 		status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCK_ON, block_on);
