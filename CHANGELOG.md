@@ -34,6 +34,8 @@ The hardware version number is the current version at release time.
 * Fix autotune for HSIR
 * Fix InitCamera3030() CAMCNT iteration
 * Fix crash after not enough RAM error
+* Fix writeBit functions: make it thread safe
+* Fix ASL mode. Probably broken with P222.14 and 4.14.0.
 #### Deprecated
 
 ## 4.14.0 - 2024-08-21
