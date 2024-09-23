@@ -222,11 +222,9 @@ es_status_codes readRegisterS0_16( uint32_t drvno, uint16_t* data, uint16_t addr
 es_status_codes readRegisterS0_8( uint32_t drvno, uint8_t* data, uint16_t address );
 es_status_codes writeRegisterS0_32( uint32_t drvno, uint32_t data, uint16_t address );
 es_status_codes writeRegisterS0_32_allBoards( uint32_t data, uint16_t address );
-es_status_codes writeRegister_32_allBoards(uint32_t data, uint16_t address);
 es_status_codes writeRegisterS0_16( uint32_t drvno, uint16_t data, uint16_t address );
 es_status_codes writeRegisterS0_8( uint32_t drv, uint8_t data, uint16_t address );
 es_status_codes writeRegisterS0_8_allBoards( uint8_t data, uint16_t address );
-es_status_codes writeRegister_8_allBoards( uint8_t data, uint16_t address );
 es_status_codes SendFLCAM( uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16_t data );
 es_status_codes writeRegisterDma_32( uint32_t drvno, uint32_t data, uint16_t address );
 es_status_codes writeRegisterDma_8( uint32_t drvno, uint8_t data, uint16_t address );

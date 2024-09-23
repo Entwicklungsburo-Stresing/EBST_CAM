@@ -783,7 +783,10 @@ es_status_codes resetBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t addres
  */
 es_status_codes writeRegisterS0_32(uint32_t drvno, uint32_t data, uint16_t address)
 {
-	return writeRegister_32(drvno, data, address + S0_SPACE_OFFSET);
+	LockHighLevelMutex(drvno);
+	es_status_codes status = writeRegister_32(drvno, data, address + S0_SPACE_OFFSET);
+	UnlockHighLevelMutex(drvno);
+	return status;
 }
 
 /**
@@ -798,28 +801,13 @@ es_status_codes writeRegisterS0_32(uint32_t drvno, uint32_t data, uint16_t addre
  */
 es_status_codes writeRegisterS0_32_allBoards(uint32_t data, uint16_t address)
 {
-	return writeRegister_32_allBoards(data, address + S0_SPACE_OFFSET);
-}
-
-/**
- * \brief Write 4 bytes of a register.
- *
- * \param board_sel select PCIe boards bitwise: bit 0 - board 0...
- * \param data 4 byte of data to write.
- * \param address Address of the register to write.
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_read_failed
- */
-es_status_codes writeRegister_32_allBoards(uint32_t data, uint16_t address)
-{
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = writeRegister_32(drvno, data, address);
+			status = writeRegisterS0_32(drvno, data, address);
 			if (status != es_no_error) return status;
 		}
 	}
@@ -838,7 +826,10 @@ es_status_codes writeRegister_32_allBoards(uint32_t data, uint16_t address)
  */
 es_status_codes writeRegisterS0_16(uint32_t drvno, uint16_t data, uint16_t address)
 {
-	return writeRegister_16(drvno, data, address + S0_SPACE_OFFSET);
+	LockHighLevelMutex(drvno);
+	es_status_codes status = writeRegister_16(drvno, data, address + S0_SPACE_OFFSET);
+	UnlockHighLevelMutex(drvno);
+	return status;
 }
 
 /**
@@ -853,7 +844,10 @@ es_status_codes writeRegisterS0_16(uint32_t drvno, uint16_t data, uint16_t addre
  */
 es_status_codes writeRegisterS0_8(uint32_t drvno, uint8_t data, uint16_t address)
 {
-	return writeRegister_8(drvno, data, address + S0_SPACE_OFFSET);
+	LockHighLevelMutex(drvno);
+	es_status_codes status = writeRegister_8(drvno, data, address + S0_SPACE_OFFSET);
+	UnlockHighLevelMutex(drvno);
+	return status;
 }
 
 /**
@@ -868,28 +862,13 @@ es_status_codes writeRegisterS0_8(uint32_t drvno, uint8_t data, uint16_t address
  */
 es_status_codes writeRegisterS0_8_allBoards(uint8_t data, uint16_t address)
 {
-	return writeRegister_8_allBoards(data, address + S0_SPACE_OFFSET);
-}
-
-/**
- * \brief Write the same 1 byte to a register of all boards.
- *
- * \param board_sel select PCIe boards bitwise: bit 0 - board 0...
- * \param data 1 byte data to write.
- * \param address Address of the register to write.
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_read_failed
- */
-es_status_codes writeRegister_8_allBoards(uint8_t data, uint16_t address)
-{
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		// Check if the drvno'th bit is set
-		if ((settings_struct.board_sel>> drvno) & 1)
+		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = writeRegister_8(drvno, data, address);
+			status = writeRegisterS0_8(drvno, data, address);
 			if (status != es_no_error) return status;
 		}
 	}
@@ -2544,9 +2523,14 @@ es_status_codes SetDmaRegister(uint32_t drvno, uint32_t pixel)
 es_status_codes writeBitsDma_32(uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address)
 {
 	uint32_t OldRegisterValues = 0;
+	LockHighLevelMutex(drvno);
 	//read the old Register Values in the S0 Address Reg
-	es_status_codes status = readRegisterDma_32(drvno, &OldRegisterValues, address);
-	if (status != es_no_error) return status;
+	es_status_codes status = readRegister_32(drvno, &OldRegisterValues, address);
+	if (status != es_no_error)
+	{
+		UnlockHighLevelMutex(drvno);
+		return status;
+	}
 	//step 0: delete not needed "1"s
 	data &= bitmask;
 	//step 1: save Data as setbitmask for making this part human readable
@@ -2558,7 +2542,9 @@ es_status_codes writeBitsDma_32(uint32_t drvno, uint32_t data, uint32_t bitmask,
 	//step 4: clear the low bits in the Data
 	uint32_t NewRegisterValues = OldRegVals_and_SetBits & Clearbit_mask;
 	//write the data to the S0 controller
-	return writeRegisterDma_32(drvno, NewRegisterValues, address);
+	status = writeRegister_32(drvno, NewRegisterValues, address);
+	UnlockHighLevelMutex(drvno);
+	return status;
 }
 
 /**
@@ -2576,9 +2562,14 @@ es_status_codes writeBitsDma_32(uint32_t drvno, uint32_t data, uint32_t bitmask,
 es_status_codes writeBitsDma_8(uint32_t drvno, uint8_t data, uint8_t bitmask, uint16_t address)
 {
 	uint8_t OldRegisterValues = 0;
+	LockHighLevelMutex(drvno);
 	//read the old Register Values in the S0 Address Reg
-	es_status_codes status = readRegisterDma_8(drvno, &OldRegisterValues, address);
-	if (status != es_no_error) return status;
+	es_status_codes status = readRegister_8(drvno, &OldRegisterValues, address);
+	if (status != es_no_error)
+	{
+		UnlockHighLevelMutex(drvno);
+		return status;
+	}
 	//step 0: delete not needed "1"s
 	data &= bitmask;
 	//step 1: save Data as setbitmask for making this part human readable
@@ -2590,7 +2581,9 @@ es_status_codes writeBitsDma_8(uint32_t drvno, uint8_t data, uint8_t bitmask, ui
 	//step 4: clear the low bits in the Data
 	uint8_t NewRegisterValues = OldRegVals_and_SetBits & Clearbit_mask;
 	//write the data to the S0 controller
-	return writeRegisterDma_8(drvno, NewRegisterValues, address);
+	status = writeRegister_8(drvno, NewRegisterValues, address);
+	UnlockHighLevelMutex(drvno);
+	return status;
 }
 
 /**
@@ -2605,7 +2598,10 @@ es_status_codes writeBitsDma_8(uint32_t drvno, uint8_t data, uint8_t bitmask, ui
  */
 es_status_codes writeRegisterDma_32(uint32_t drvno, uint32_t data, uint16_t address)
 {
-	return writeRegister_32(drvno, data, address);
+	LockHighLevelMutex(drvno);
+	es_status_codes status = writeRegister_32(drvno, data, address);
+	UnlockHighLevelMutex(drvno);
+	return status;
 }
 
 /**
@@ -2620,7 +2616,10 @@ es_status_codes writeRegisterDma_32(uint32_t drvno, uint32_t data, uint16_t addr
  */
 es_status_codes writeRegisterDma_8(uint32_t drvno, uint8_t data, uint16_t address)
 {
-	return writeRegister_8(drvno, data, address);
+	LockHighLevelMutex(drvno);
+	es_status_codes status = writeRegister_8(drvno, data, address);
+	UnlockHighLevelMutex(drvno);
+	return status;
 }
 
 /**
@@ -2635,7 +2634,10 @@ es_status_codes writeRegisterDma_8(uint32_t drvno, uint8_t data, uint16_t addres
  */
 es_status_codes readRegisterDma_32(uint32_t drvno, uint32_t* data, uint16_t address)
 {
-	return readRegister_32(drvno, data, address);
+	LockHighLevelMutex(drvno);
+	es_status_codes status = readRegister_32(drvno, data, address);
+	UnlockHighLevelMutex(drvno);
+	return status;
 }
 
 /**
@@ -2650,7 +2652,10 @@ es_status_codes readRegisterDma_32(uint32_t drvno, uint32_t* data, uint16_t addr
  */
 es_status_codes readRegisterDma_8(uint32_t drvno, uint8_t* data, uint16_t address)
 {
-	return readRegister_8(drvno, data, address);
+	LockHighLevelMutex(drvno);
+	es_status_codes status = readRegister_8(drvno, data, address);
+	UnlockHighLevelMutex(drvno);
+	return status;
 }
 
 /**
