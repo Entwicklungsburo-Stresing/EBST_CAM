@@ -3423,7 +3423,7 @@ double CalcRamUsageInMB(uint32_t nos, uint32_t nob)
  */
 es_status_codes CalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf, double* trms)
 {
-	if (firstSample >= lastSample || lastSample > settings_struct.nos)
+	if (firstSample >= lastSample || lastSample > settings_struct.nos || userBuffer[drvno] == 0)
 	{
 		//error: firstSample must be smaller than lastSample
 		ES_LOG("Calc Trms failed. lastSample must be greater than firstSample and both in boundaries of nos, drvno: %u, firstSample: %u, lastSample: %u, TRMS_pixel: %u, CAMpos: %u, Nospb: %u\n", drvno, firstSample, lastSample, TRMS_pixel, CAMpos, settings_struct.nos);
