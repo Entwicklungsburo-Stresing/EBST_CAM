@@ -169,7 +169,7 @@ void MainWindow::initSettings()
 		strcpy(settings_struct.camera_settings[drvno].file_path, array.data());
 		//dac
 		for (int camera = 0; camera < MAXCAMCNT; camera++)
-			for (int channel = 0; channel < 8; channel++)
+			for (int channel = 0; channel < DACCOUNT; channel++)
 				settings_struct.camera_settings[drvno].dac_output[camera][channel] = settings.value(settingDacCameraChannelBaseDir + QString::number(channel + 1) + "Pos" + QString::number(camera), settingDacCameraDefault).toDouble();
 		//debug
 		settings_struct.camera_settings[drvno].tor = settings.value(settingTorPath, settingTorDefault).toDouble();
