@@ -10,6 +10,20 @@ The hardware version number is the current version at release time.
 
 ### API Changes
 #### Added
+#### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+### Other Changes
+#### Added
+#### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+
+## 4.15.0 - 2024-09-25
+### API Changes
+#### Added
 * Add function DLLGetScanTriggerDetected
 * Add function DLLGetBlockTriggerDetected
 * Add function DLLResetScanTriggerDetected
@@ -19,18 +33,14 @@ The hardware version number is the current version at release time.
 * Add function DLLResetScanTriggerDetected_multipleBoards
 * Add function DLLResetBlockTriggerDetected_multipleBoards
 * Add setting channel_select (replace deprecated setting is_hs_ir)
-#### Changed
 #### Removed
 * Remove deprecated setting is_hs_ir
-#### Fixed
-#### Deprecated
 ### Other Changes
 #### Added
 * Add software version to settings export
 * Add lamps STD (scan trigger detected) and BTD (block trigger detected). Hardware feature implemented in P222.15.
 #### Changed
 * Change default of autotune to 500
-#### Removed
 #### Fixed
 * Fix possible crash when passing a error code out of bounds to ConvertErrorCodeToMsg()
 * Fix autotune for HSIR
@@ -39,7 +49,6 @@ The hardware version number is the current version at release time.
 * Fix writeBit functions: make it thread safe
 * Fix ASL mode. Probably broken with P222.14 and 4.14.0.
 * Fix crash with two PCIe boards
-#### Deprecated
 
 ## 4.14.0 - 2024-08-21
 ### API Changes
