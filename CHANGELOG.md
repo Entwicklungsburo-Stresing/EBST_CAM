@@ -18,14 +18,16 @@ The hardware version number is the current version at release time.
 * Add function DLLGetBlockTriggerDetected_multipleBoards
 * Add function DLLResetScanTriggerDetected_multipleBoards
 * Add function DLLResetBlockTriggerDetected_multipleBoards
+* Add setting channel_select (replace deprecated setting is_hs_ir)
 #### Changed
 #### Removed
+* Remove deprecated setting is_hs_ir
 #### Fixed
 #### Deprecated
 ### Other Changes
 #### Added
 * Add software version to settings export
-* Add lamps STD (scan trigger detected) and BTD (block trigger detected)
+* Add lamps STD (scan trigger detected) and BTD (block trigger detected). Hardware feature implemented in P222.15.
 #### Changed
 * Change default of autotune to 500
 #### Removed

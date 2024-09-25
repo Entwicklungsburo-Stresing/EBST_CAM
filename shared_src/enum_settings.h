@@ -471,3 +471,13 @@ enum settings_level_t
 	settings_level_guided = 0,
 	settings_level_free = 1
 };
+
+/**
+ * This enum shows all options for the setting \ref camera_settings.channel_select.
+ */
+enum channel_select_t
+{
+	channel_select_A = 0,
+	channel_select_B = 1,
+	channel_select_A_B = 2,
+};

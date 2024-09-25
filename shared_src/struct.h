@@ -262,12 +262,9 @@ struct camera_settings
 	 */
 	uint32_t bec_in_10ns;
 	/**
-	 * DEPRECATED
-	 * This should be set when the camera is a high speed infrared camera. This information was moved to sensor_type.
-	 *		* =0 no IR
-	 *		* >0 IR
+	 * Channel select controls which channel of a camera control box is used for the camera readout. This feature is implemented in the camera version P230_6 and newer. See enum \ref channel_select_t in enum_settings.h for options.
 	 */
-	uint32_t is_hs_ir;
+	uint32_t channel_select;
 	/**
 	 * IOCTRL impact start pixel is the position in the pixel array where the information of voltage or integrator inputs are written. The number of these inputs can differ, so length of these additional information can differ, too. The setting specifies the first pixel where the information is written, so the information can be read from this one and the following pixels. IOCTRL impact start pixel is a 16 bit unsigned integer. Further information about IOCTRL impact start pixel can be found in the manual in chapter 7.3.
 	 *		* min: 23

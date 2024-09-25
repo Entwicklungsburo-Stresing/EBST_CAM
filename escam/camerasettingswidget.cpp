@@ -52,6 +52,7 @@ void CameraSettingsWidget::on_accepted()
 		settings.setValue(settingSensorResetLengthPath, ui->spinBoxSensorResetLengthIn1ns->value() / 4);
 	else
 		settings.setValue(settingSensorResetLengthPath, ui->spinBoxSensorResetLengthIn1ns->value() / 160);
+	settings.setValue(settingChannelSelectPath, ui->comboBoxChannelSelect->currentIndex());
 	//FFT mode
 	settings.setValue(settingLinesPath, ui->spinBoxLines->value());
 	settings.setValue(settingVfreqPath, ui->spinBoxVfreq->value());
@@ -357,6 +358,7 @@ void CameraSettingsWidget::loadDefaults()
 	ui->checkBoxUseSoftwarePolling->setChecked(settingsUseSoftwarePollingDefault);
 	ui->checkBoxIsCooledCameraLegacyMode->setChecked(settingIsCooledCameraLegacyModeDefault);
 	ui->spinBoxSensorResetLengthIn1ns->setValue(settingSensorResetLengthDefault * 4);
+	ui->comboBoxChannelSelect->setCurrentIndex(settingChannelSelectDefault);
 	//FFT mode
 	ui->spinBoxLines->setValue(settingLinesDefault);
 	ui->spinBoxVfreq->setValue(settingVfreqDefault);
@@ -530,6 +532,7 @@ void CameraSettingsWidget::initializeWidget()
 		ui->spinBoxSensorResetLengthIn1ns->setValue(settings.value(settingSensorResetLengthPath, settingSensorResetLengthDefault).toDouble() * 4);
 	else
 		ui->spinBoxSensorResetLengthIn1ns->setValue(settings.value(settingSensorResetLengthPath, settingSensorResetLengthDefault).toDouble() * 160);
+	ui->comboBoxChannelSelect->setCurrentIndex(settings.value(settingChannelSelectPath, settingChannelSelectDefault).toDouble());
 	//FFT mode
 	ui->spinBoxLines->setValue(settings.value(settingLinesPath, settingLinesDefault).toDouble());
 	ui->spinBoxVfreq->setValue(settings.value(settingVfreqPath, settingVfreqDefault).toDouble());
