@@ -288,7 +288,21 @@ es_status_codes SetConfigRegister(uint32_t drvno)
 	uint16_t cool_level = ((uint8_t)settings_struct.camera_settings[drvno].temp_level << cam_config_register_bitindex_temp_level) & cam_config_register_bits_temp_level;
 	uint16_t led_off = ((uint16_t)settings_struct.camera_settings[drvno].led_off << cam_config_register_bitindex_led_off) & cam_config_register_bits_led_off;
 	uint16_t bnc_out = ((uint16_t)settings_struct.camera_settings[drvno].bnc_out << cam_config_register_bitindex_bnc_out) & cam_config_register_bits_bnc_out;
-	uint16_t configRegister = bnc_out | led_off | cool_level | trigger_mode | sensor_gain;
+	uint16_t channel_select = 0;
+	switch(settings_struct.camera_settings[drvno].channel_select)
+	{
+	case channel_select_A:
+		channel_select = cam_config_register_bit_channel_select_a;
+		break;
+	case channel_select_B:
+		channel_select = cam_config_register_bit_channel_select_b;
+		break;
+	default:
+	case channel_select_A_B:
+		channel_select = cam_config_register_bit_channel_select_a | cam_config_register_bit_channel_select_b;
+		break;
+	}
+	uint16_t configRegister = bnc_out | led_off | cool_level | trigger_mode | sensor_gain | channel_select;
 
 	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_config, configRegister);
 	if (status != es_no_error) return status;
@@ -4731,13 +4745,13 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		"adc mode\t"DLLTAB"%u\n"
 		"adc custom pattern\t%u\n"
 		"bec_in_10ns\t"DLLTAB"%u\n"
-		"is_hs_ir\t"DLLTAB DLLTAB"%u\n"
+		"channel_select\t"DLLTAB DLLTAB"%u\n"
 		"ioctrl_impact_start_pixel\t%u\n",
 		settings_struct.camera_settings[drvno].tor,
 		settings_struct.camera_settings[drvno].adc_mode,
 		settings_struct.camera_settings[drvno].adc_custom_pattern,
 		settings_struct.camera_settings[drvno].bec_in_10ns,
-		settings_struct.camera_settings[drvno].is_hs_ir,
+		settings_struct.camera_settings[drvno].channel_select,
 		settings_struct.camera_settings[drvno].ioctrl_impact_start_pixel);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "ioctrl_output_width_in_5ns\t");
 	for (int i = 0; i < IOCTRL_OUTPUT_COUNT - 1; i++)

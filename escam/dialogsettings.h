@@ -42,6 +42,7 @@ constexpr auto settingGpxOffsetPath = "gpxOffset";
 constexpr auto settingIOCtrlImpactStartPixelPath = "IOCtrlImpactStartPixel";
 constexpr auto settingIsCooledCameraLegacyModePath = "isCooledCameraLegacyMode";
 constexpr auto settingSensorResetLengthPath = "sensorResetLength";
+constexpr auto settingChannelSelectPath = "channelSelect";
 //FFT mode
 constexpr auto settingLinesPath = "lines";
 constexpr auto settingVfreqPath = "vfreq";

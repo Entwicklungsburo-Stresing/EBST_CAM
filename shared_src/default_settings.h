@@ -89,5 +89,6 @@
 #define settingIsCooledCameraLegacyModeDefault		false
 #define settingAxesMirrorXPathDefault				false
 #define settingShowCrosshairDefault					true
+#define settingChannelSelectDefault					channel_select_A_B
 
 #endif // DEFAULT_SETTINGS_H

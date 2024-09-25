@@ -704,6 +704,101 @@
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
         <layout class="QGridLayout" name="gridLayoutCamerasetup">
+         <item row="11" column="1">
+          <widget class="QLabel" name="labelCamCool">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Target temperature of the temperature regulation&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Camera cooling level&lt;/span&gt; is controlling the target temperature for the temperature regulation in cooled cameras. The cooling is done by a Peltier element which can generate a temperature difference of 40 °C. That means the target temperature can only be reached, if the ambient temperature is not higher than target + 40 °C. The regulation is optimized for -20 °C to 0 °C. The precision is 1 K at these levels. On other levels the error can rise up to 10 K. If the target temperature is reached, the LED TG (Temperature Good) will light up green.&lt;/p&gt;&lt;p&gt;0: cooling off&lt;br/&gt;1: 0 °C&lt;br/&gt;2: -10 °C&lt;br/&gt;3: -20 °C&lt;br/&gt;4: -25 °C&lt;br/&gt;5: -30 °C&lt;br/&gt;6: -40 °C&lt;br/&gt;7: min °C&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;temp_level&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about&lt;span style=&quot; font-style:italic;&quot;&gt; camera cooling level&lt;/span&gt; can be found in the manual in chapter 3.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>camera cooling level</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QComboBox" name="comboBoxSensorType">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Should match the sensor type of your camera&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor type&lt;/span&gt; should match the sensor type of your camera.&lt;/p&gt;&lt;p&gt;0: PDA - Photodiode Array.&lt;br/&gt;These sensors are a PDA:&lt;br/&gt;- S3901/S3904&lt;br/&gt;- S3902/S3903&lt;br/&gt;- S8380/S8381&lt;/p&gt;&lt;p&gt;1: IR - Infrared&lt;br/&gt;These sensors are a IR:&lt;br/&gt;- G11608&lt;br/&gt;- G11620&lt;br/&gt;- G9203-256DA G9204-512DA&lt;/p&gt;&lt;p&gt;2: FFT - Full frame transfer&lt;br/&gt;These sensors are a FFT:&lt;br/&gt;- S12600/S12601&lt;br/&gt;- S7030/S7031&lt;br/&gt;- S10420-01&lt;br/&gt;- S16010&lt;/p&gt;&lt;p&gt;3: CMOS sensor&lt;br/&gt;These sensors are a CMOS:&lt;br/&gt;- S12198&lt;/p&gt;&lt;p&gt;4: HSVIS - High speed sensor for visible light.&lt;br/&gt;These sensors are a HSVIS:&lt;br/&gt;- S14290&lt;/p&gt;&lt;p&gt;5: HSIR - High speed sensor for infrared light.&lt;br/&gt;These sensors are a HSIR:&lt;br/&gt;- G10786&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_type&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>PDA</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>IR</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>FFT</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>CMOS</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>HSVIS</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>HSIR</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <spacer name="verticalSpacerTop">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="8" column="2">
+          <widget class="QSpinBox" name="spinBoxSensorGain">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Controls the internal gain of some sensors&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor gain&lt;/span&gt; is controlling the internal gain function of some infrared sensors. For the some sensors gain can be switched on or off, others sensor got multiple levels of gain.&lt;/p&gt;&lt;p&gt;- camera system 3001&lt;br/&gt;gain off: 0&lt;br/&gt;gain on: 1 &lt;/p&gt;&lt;p&gt;- camera system 3030&lt;br/&gt;gain off: 0&lt;br/&gt;step: 1&lt;br/&gt;max gain: 4&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor gain can be found in the manual in chapters 3.3.1, 3.4.1.1, 4.5.2, 8.4.4, 8.7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="maximum">
+            <number>4</number>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLabel" name="labelCamcnt">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of cameras connected to one PCIe board&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Camcnt&lt;/span&gt; is the number of cameras which are connected to one PCIe board. This could be multiple cameras connected via a chain to one PCIe board or multiple channel on one camera control box. 0 is a valid input for operating a PCIe card without any camera connected and only use its special inputs. &lt;span style=&quot; font-style:italic;&quot;&gt;Camcnt&lt;/span&gt; is a 4 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;max: 15&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;camcnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>CAMCNT (number of cameras)</string>
+           </property>
+          </widget>
+         </item>
          <item row="11" column="2">
           <widget class="QComboBox" name="comboBoxCamCool">
            <property name="toolTip">
@@ -754,254 +849,16 @@
            </item>
           </widget>
          </item>
-         <item row="10" column="2">
-          <widget class="QCheckBox" name="checkBoxIsCooledCameraLegacyMode">
+         <item row="7" column="2">
+          <widget class="QCheckBox" name="checkBoxLed">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Legacy mode for older cooled cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Turns the LEDs off&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Cooled camera legacy&lt;/span&gt; is a special mode for operating older cooled cameras. If on, a bit in the PCIe board is set to react correctly to the cooled status messages from the camera. The following camera versions need to be run in legacy mode:&lt;/p&gt;&lt;p&gt;208.X&lt;br/&gt;218.1 and older&lt;/p&gt;&lt;p&gt;unchecked: off&lt;br/&gt;checked: cooled camera legacy mode on&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;is_cooled_camera_legacy_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;LED&lt;/span&gt; can be used to turn the LEDs in the camera off.&lt;/p&gt;&lt;p&gt;unchecked - LEDs on&lt;br/&gt;checked - LEDs off&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;led_off&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>on</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="2">
-          <widget class="QSpinBox" name="spinBoxPixel">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of pixels in one sensor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Pixel&lt;/span&gt; is the number of pixels in one sensor. &lt;span style=&quot; font-style:italic;&quot;&gt;Pixel&lt;/span&gt; is a 16 bit unsigned integer. Only integer multiples of 64 are allowed. Typical values are: 576, 1024, 1088, 2112&lt;/p&gt;&lt;p&gt;min: 64&lt;br/&gt;step: 64&lt;br/&gt;max: 8256&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;pixel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>64</number>
-           </property>
-           <property name="maximum">
-            <number>8256</number>
-           </property>
-           <property name="singleStep">
-            <number>64</number>
-           </property>
-           <property name="value">
-            <number>576</number>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1">
-          <widget class="QLabel" name="labelGain3010">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Controls the internal gain of some sensors&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor gain&lt;/span&gt; is controlling the internal gain function of some infrared sensors. For the some sensors gain can be switched on or off, others sensor got multiple levels of gain.&lt;/p&gt;&lt;p&gt;- camera system 3001&lt;br/&gt;gain off: 0&lt;br/&gt;gain on: 1 &lt;/p&gt;&lt;p&gt;- camera system 3030&lt;br/&gt;gain off: 0&lt;br/&gt;step: 1&lt;br/&gt;max gain: 4&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor gain can be found in the manual in chapters 3.3.1, 3.4.1.1, 4.5.2, 8.4.4, 8.7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>sensor gain</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLabel" name="labelOutputPixel">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of pixels in one sensor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Pixel&lt;/span&gt; is the number of pixels in one sensor. &lt;span style=&quot; font-style:italic;&quot;&gt;Pixel&lt;/span&gt; is a 16 bit unsigned integer. Only integer multiples of 64 are allowed. Typical values are: 576, 1024, 1088, 2112&lt;/p&gt;&lt;p&gt;min: 64&lt;br/&gt;step: 64&lt;br/&gt;max: 8256&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;pixel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>PIXEL (number of pixel)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="1">
-          <widget class="QLabel" name="labelCamCool">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Target temperature of the temperature regulation&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Camera cooling level&lt;/span&gt; is controlling the target temperature for the temperature regulation in cooled cameras. The cooling is done by a Peltier element which can generate a temperature difference of 40 °C. That means the target temperature can only be reached, if the ambient temperature is not higher than target + 40 °C. The regulation is optimized for -20 °C to 0 °C. The precision is 1 K at these levels. On other levels the error can rise up to 10 K. If the target temperature is reached, the LED TG (Temperature Good) will light up green.&lt;/p&gt;&lt;p&gt;0: cooling off&lt;br/&gt;1: 0 °C&lt;br/&gt;2: -10 °C&lt;br/&gt;3: -20 °C&lt;br/&gt;4: -25 °C&lt;br/&gt;5: -30 °C&lt;br/&gt;6: -40 °C&lt;br/&gt;7: min °C&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;temp_level&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about&lt;span style=&quot; font-style:italic;&quot;&gt; camera cooling level&lt;/span&gt; can be found in the manual in chapter 3.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>camera cooling level</string>
-           </property>
-          </widget>
-         </item>
-         <item row="10" column="1">
-          <widget class="QLabel" name="labelIsCooledCameraLegacyMode">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Legacy mode for older cooled cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Cooled camera legacy&lt;/span&gt; is a special mode for operating older cooled cameras. If on, a bit in the PCIe board is set to react correctly to the cooled status messages from the camera. The following camera versions need to be run in legacy mode:&lt;/p&gt;&lt;p&gt;208.X&lt;br/&gt;218.1 and older&lt;/p&gt;&lt;p&gt;unchecked: off&lt;br/&gt;checked: cooled camera legacy mode on&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;is_cooled_camera_legacy_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>cooled camera legacy mode</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="labelSensorType">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Should match the sensor type of your camera&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor type&lt;/span&gt; should match the sensor type of your camera.&lt;/p&gt;&lt;p&gt;0: PDA - Photodiode Array.&lt;br/&gt;These sensors are a PDA:&lt;br/&gt;- S3901/S3904&lt;br/&gt;- S3902/S3903&lt;br/&gt;- S8380/S8381&lt;/p&gt;&lt;p&gt;1: IR - Infrared&lt;br/&gt;These sensors are a IR:&lt;br/&gt;- G11608&lt;br/&gt;- G11620&lt;br/&gt;- G9203-256DA G9204-512DA&lt;/p&gt;&lt;p&gt;2: FFT - Full frame transfer&lt;br/&gt;These sensors are a FFT:&lt;br/&gt;- S12600/S12601&lt;br/&gt;- S7030/S7031&lt;br/&gt;- S10420-01&lt;br/&gt;- S16010&lt;/p&gt;&lt;p&gt;3: CMOS sensor&lt;br/&gt;These sensors are a CMOS:&lt;br/&gt;- S12198&lt;/p&gt;&lt;p&gt;4: HSVIS - High speed sensor for visible light.&lt;br/&gt;These sensors are a HSVIS:&lt;br/&gt;- S14290&lt;/p&gt;&lt;p&gt;5: HSIR - High speed sensor for infrared light.&lt;br/&gt;These sensors are a HSIR:&lt;br/&gt;- G10786&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_type&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>SENSOR TYPE</string>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="2">
-          <widget class="QSpinBox" name="spinBoxAdcGain">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gain of the ADC in 3030 high speed cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;ADC gain&lt;/span&gt; is controlling the gain function of the ADC in 3030 high speed cameras.&lt;span style=&quot; font-style:italic;&quot;&gt; ADC gain&lt;/span&gt; is a 8 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;default: 6&lt;br/&gt;max: 12&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;adc_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about adc_gain can be found in the manual in chapters 3.4.2.1. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="15" column="2">
-          <widget class="QSpinBox" name="spinBoxSensorResetLengthIn1ns">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sensor reset length for some sensors between two readouts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without a reset for all sensors. &lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; is a 16 bit unsigned integer. The reset time range and step size depends on &lt;span style=&quot; font-style:italic;&quot;&gt;SENSOR TYPE&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;HSVIS:&lt;br/&gt;min: 0 ns&lt;br/&gt;step: 4 ns&lt;br/&gt;default: 400 ns&lt;br/&gt;max: 262,140 ns&lt;/p&gt;&lt;p&gt;HSIR:&lt;br/&gt;min: 21,440 ns&lt;br/&gt;step: 160 ns&lt;br/&gt;default: 22,400 ns&lt;br/&gt;max: 10,485,600 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_reset_length&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor reset can be found in the manual in chapter 4.9.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="showGroupSeparator" stdset="0">
-            <bool>true</bool>
-           </property>
-           <property name="suffix">
-            <string> ns</string>
-           </property>
-           <property name="maximum">
-            <number>10485600</number>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QComboBox" name="comboBoxSensorType">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Should match the sensor type of your camera&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor type&lt;/span&gt; should match the sensor type of your camera.&lt;/p&gt;&lt;p&gt;0: PDA - Photodiode Array.&lt;br/&gt;These sensors are a PDA:&lt;br/&gt;- S3901/S3904&lt;br/&gt;- S3902/S3903&lt;br/&gt;- S8380/S8381&lt;/p&gt;&lt;p&gt;1: IR - Infrared&lt;br/&gt;These sensors are a IR:&lt;br/&gt;- G11608&lt;br/&gt;- G11620&lt;br/&gt;- G9203-256DA G9204-512DA&lt;/p&gt;&lt;p&gt;2: FFT - Full frame transfer&lt;br/&gt;These sensors are a FFT:&lt;br/&gt;- S12600/S12601&lt;br/&gt;- S7030/S7031&lt;br/&gt;- S10420-01&lt;br/&gt;- S16010&lt;/p&gt;&lt;p&gt;3: CMOS sensor&lt;br/&gt;These sensors are a CMOS:&lt;br/&gt;- S12198&lt;/p&gt;&lt;p&gt;4: HSVIS - High speed sensor for visible light.&lt;br/&gt;These sensors are a HSVIS:&lt;br/&gt;- S14290&lt;/p&gt;&lt;p&gt;5: HSIR - High speed sensor for infrared light.&lt;br/&gt;These sensors are a HSIR:&lt;br/&gt;- G10786&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_type&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>PDA</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>IR</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>FFT</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>CMOS</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>HSVIS</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>HSIR</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="13" column="1">
-          <widget class="QLabel" name="labelIOCtrlImpactStartPixel">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Position where the information of voltage inputs or integrators are inserted&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;IOCTRL impact start pixel&lt;/span&gt; is the position in the pixel array where the information of voltage or integrator inputs are written. The number of these inputs can differ, so length of these additional information can differ, too. The setting specifies the first pixel where the information is written, so the information can be read from this one and the following pixels. IOCTRL impact start pixel is a 16 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 23&lt;br/&gt;step: 1&lt;br/&gt;default: 1078&lt;br/&gt;max: 65535&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;ioctrl_impact_start_pixel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;IOCTRL impact start pixel&lt;/span&gt; can be found in the manual in chapter 7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>ioctrl impact start pixel</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="2">
-          <widget class="QCheckBox" name="checkBoxIsFftLegacy">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Legacy mode for operation for with older cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;FFT legacy &lt;/span&gt;is a special legacy mode for operation with older FFT cameras. For the following camera versions fft legacy should be turned on:&lt;/p&gt;&lt;p&gt;- 205.X&lt;br/&gt;- 206.X&lt;br/&gt;- 208.X&lt;br/&gt;- 210.X&lt;br/&gt;- 211.2 and older&lt;br/&gt;- 215.6 and older&lt;br/&gt;- 216.X&lt;br/&gt;- 218.3 and older&lt;/p&gt;&lt;p&gt;If the PCIe card version is 222.8 or older or 202.X, fft legacy should always be turned on, if you are using a FFT sensor. FFT legacy is available since 222.10.&lt;/p&gt;&lt;p&gt;unchecked - off: normal operation (default)&lt;br/&gt;checked - on: fft legacy mode&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;is_fft_legacy&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>on</string>
-           </property>
-          </widget>
-         </item>
-         <item row="12" column="2">
-          <widget class="QSpinBox" name="spinBoxGpxOffset">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset of the TDC-GPX IC on the TDC add on board&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;GPX offset&lt;/span&gt; is controlling the output offset of the TDC-GPX IC on the TDC add on board for the PCIe card. The TDC-GPX IC can be used to measure the time delay between one start and two stop signals in picosecond resolution. Adding an offset can improve the accuracy of the TDC-GPX IC. GPX offset is a 18 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;default: 1000&lt;br/&gt;max: 262,143&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;gpx_offset&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;gpx offset&lt;/span&gt; can be found in the manual in chapter 10.2. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="showGroupSeparator" stdset="0">
-            <bool>true</bool>
-           </property>
-           <property name="maximum">
-            <number>262143</number>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="2">
-          <widget class="QSpinBox" name="spinBoxCamcnt">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of cameras connected to one PCIe board&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Camcnt&lt;/span&gt; is the number of cameras which are connected to one PCIe board. This could be multiple cameras connected via a chain to one PCIe board or multiple channel on one camera control box. 0 is a valid input for operating a PCIe card without any camera connected and only use its special inputs. &lt;span style=&quot; font-style:italic;&quot;&gt;Camcnt&lt;/span&gt; is a 4 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;max: 15&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;camcnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="minimum">
-            <number>0</number>
-           </property>
-           <property name="maximum">
-            <number>15</number>
-           </property>
-           <property name="value">
-            <number>1</number>
+            <string>off</string>
            </property>
           </widget>
          </item>
@@ -1018,64 +875,68 @@
            </property>
           </widget>
          </item>
-         <item row="7" column="2">
-          <widget class="QCheckBox" name="checkBoxLed">
+         <item row="8" column="1">
+          <widget class="QLabel" name="labelGain3010">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Turns the LEDs off&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Controls the internal gain of some sensors&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;LED&lt;/span&gt; can be used to turn the LEDs in the camera off.&lt;/p&gt;&lt;p&gt;unchecked - LEDs on&lt;br/&gt;checked - LEDs off&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;led_off&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor gain&lt;/span&gt; is controlling the internal gain function of some infrared sensors. For the some sensors gain can be switched on or off, others sensor got multiple levels of gain.&lt;/p&gt;&lt;p&gt;- camera system 3001&lt;br/&gt;gain off: 0&lt;br/&gt;gain on: 1 &lt;/p&gt;&lt;p&gt;- camera system 3030&lt;br/&gt;gain off: 0&lt;br/&gt;step: 1&lt;br/&gt;max gain: 4&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor gain can be found in the manual in chapters 3.3.1, 3.4.1.1, 4.5.2, 8.4.4, 8.7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>off</string>
+            <string>sensor gain</string>
            </property>
           </widget>
          </item>
-         <item row="9" column="1">
-          <widget class="QLabel" name="labelGain3030">
+         <item row="2" column="1">
+          <widget class="QLabel" name="labelSensorType">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gain of the ADC in 3030 high speed cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Should match the sensor type of your camera&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;ADC gain&lt;/span&gt; is controlling the gain function of the ADC in 3030 high speed cameras.&lt;span style=&quot; font-style:italic;&quot;&gt; ADC gain&lt;/span&gt; is a 8 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;default: 6&lt;br/&gt;max: 12&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;adc_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about adc_gain can be found in the manual in chapters 3.4.2.1. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor type&lt;/span&gt; should match the sensor type of your camera.&lt;/p&gt;&lt;p&gt;0: PDA - Photodiode Array.&lt;br/&gt;These sensors are a PDA:&lt;br/&gt;- S3901/S3904&lt;br/&gt;- S3902/S3903&lt;br/&gt;- S8380/S8381&lt;/p&gt;&lt;p&gt;1: IR - Infrared&lt;br/&gt;These sensors are a IR:&lt;br/&gt;- G11608&lt;br/&gt;- G11620&lt;br/&gt;- G9203-256DA G9204-512DA&lt;/p&gt;&lt;p&gt;2: FFT - Full frame transfer&lt;br/&gt;These sensors are a FFT:&lt;br/&gt;- S12600/S12601&lt;br/&gt;- S7030/S7031&lt;br/&gt;- S10420-01&lt;br/&gt;- S16010&lt;/p&gt;&lt;p&gt;3: CMOS sensor&lt;br/&gt;These sensors are a CMOS:&lt;br/&gt;- S12198&lt;/p&gt;&lt;p&gt;4: HSVIS - High speed sensor for visible light.&lt;br/&gt;These sensors are a HSVIS:&lt;br/&gt;- S14290&lt;/p&gt;&lt;p&gt;5: HSIR - High speed sensor for infrared light.&lt;br/&gt;These sensors are a HSIR:&lt;br/&gt;- G10786&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_type&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>adc gain</string>
+            <string>SENSOR TYPE</string>
            </property>
           </widget>
          </item>
-         <item row="15" column="1">
-          <widget class="QLabel" name="labelSensorResetLength">
+         <item row="14" column="2">
+          <widget class="QCheckBox" name="checkBoxUseSoftwarePolling">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sensor reset length for some sensors between two readouts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose between interrupt or polling mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without a reset for all sensors. &lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; is a 16 bit unsigned integer. The reset time range and step size depends on &lt;span style=&quot; font-style:italic;&quot;&gt;SENSOR TYPE&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;HSVIS:&lt;br/&gt;min: 0 ns&lt;br/&gt;step: 4 ns&lt;br/&gt;default: 400 ns&lt;br/&gt;max: 262,140 ns&lt;/p&gt;&lt;p&gt;HSIR:&lt;br/&gt;min: 21,440 ns&lt;br/&gt;step: 160 ns&lt;br/&gt;default: 22,400 ns&lt;br/&gt;max: 10,485,600 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_reset_length&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor reset can be found in the manual in chapter 4.9.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Software polling&lt;/span&gt; determines which method is used to copy data from DMA to user buffer.&lt;/p&gt;&lt;p&gt;unchecked: Use interrupt. Every dma_buffer_size_in_scans/2 scan the interrupt starts a copy process, which copies dma_buffer_size_in_scans/2 scans to the user buffer. 1000 is our default value for dma_buffer_size_in_scans, so interrupt is started every 500 scans.&lt;/p&gt;&lt;p&gt;checked: software polling on. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. Since P222_2 this method is reliable up to about 100kHz. It generates as expected a higher CPU load than the interrupt method. With this option you can get more recent scans with live view / GetCurrentScanNumber(), especially at lower frequencies. For high frequencies &amp;gt; 30kHz this method is not recommended.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;use_software_polling&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about software polling can be found in the manual in chapter 5.4.8.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>sensor reset length</string>
+            <string>on</string>
            </property>
           </widget>
          </item>
-         <item row="13" column="2">
-          <widget class="QSpinBox" name="spinBoxIOCtrlImpactStartPixel">
+         <item row="12" column="1">
+          <widget class="QLabel" name="labelGpxOffset">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Position where the information of voltage inputs or integrators are inserted&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset of the TDC-GPX IC on the TDC add on board&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;IOCTRL impact start pixel&lt;/span&gt; is the position in the pixel array where the information of voltage or integrator inputs are written. The number of these inputs can differ, so length of these additional information can differ, too. The setting specifies the first pixel where the information is written, so the information can be read from this one and the following pixels. IOCTRL impact start pixel is a 16 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 23&lt;br/&gt;step: 1&lt;br/&gt;default: 1078&lt;br/&gt;max: 65535&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;ioctrl_impact_start_pixel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;IOCTRL impact start pixel&lt;/span&gt; can be found in the manual in chapter 7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;GPX offset&lt;/span&gt; is controlling the output offset of the TDC-GPX IC on the TDC add on board for the PCIe card. The TDC-GPX IC can be used to measure the time delay between one start and two stop signals in picosecond resolution. Adding an offset can improve the accuracy of the TDC-GPX IC. GPX offset is a 18 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;default: 1000&lt;br/&gt;max: 262,143&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;gpx_offset&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;gpx offset&lt;/span&gt; can be found in the manual in chapter 10.2. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           <property name="text">
+            <string>gpx offset</string>
            </property>
-           <property name="minimum">
-            <number>23</number>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QCheckBox" name="checkBoxIsFftLegacy">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Legacy mode for operation for with older cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
-           <property name="maximum">
-            <number>65535</number>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;FFT legacy &lt;/span&gt;is a special legacy mode for operation with older FFT cameras. For the following camera versions fft legacy should be turned on:&lt;/p&gt;&lt;p&gt;- 205.X&lt;br/&gt;- 206.X&lt;br/&gt;- 208.X&lt;br/&gt;- 210.X&lt;br/&gt;- 211.2 and older&lt;br/&gt;- 215.6 and older&lt;br/&gt;- 216.X&lt;br/&gt;- 218.3 and older&lt;/p&gt;&lt;p&gt;If the PCIe card version is 222.8 or older or 202.X, fft legacy should always be turned on, if you are using a FFT sensor. FFT legacy is available since 222.10.&lt;/p&gt;&lt;p&gt;unchecked - off: normal operation (default)&lt;br/&gt;checked - on: fft legacy mode&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;is_fft_legacy&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
-           <property name="value">
-            <number>1078</number>
+           <property name="text">
+            <string>on</string>
            </property>
           </widget>
          </item>
@@ -1107,16 +968,137 @@
            </item>
           </widget>
          </item>
-         <item row="5" column="1">
-          <widget class="QLabel" name="labelCamcnt">
+         <item row="13" column="2">
+          <widget class="QSpinBox" name="spinBoxIOCtrlImpactStartPixel">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of cameras connected to one PCIe board&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Position where the information of voltage inputs or integrators are inserted&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Camcnt&lt;/span&gt; is the number of cameras which are connected to one PCIe board. This could be multiple cameras connected via a chain to one PCIe board or multiple channel on one camera control box. 0 is a valid input for operating a PCIe card without any camera connected and only use its special inputs. &lt;span style=&quot; font-style:italic;&quot;&gt;Camcnt&lt;/span&gt; is a 4 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;max: 15&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;camcnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;IOCTRL impact start pixel&lt;/span&gt; is the position in the pixel array where the information of voltage or integrator inputs are written. The number of these inputs can differ, so length of these additional information can differ, too. The setting specifies the first pixel where the information is written, so the information can be read from this one and the following pixels. IOCTRL impact start pixel is a 16 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 23&lt;br/&gt;step: 1&lt;br/&gt;default: 1078&lt;br/&gt;max: 65535&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;ioctrl_impact_start_pixel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;IOCTRL impact start pixel&lt;/span&gt; can be found in the manual in chapter 7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>23</number>
+           </property>
+           <property name="maximum">
+            <number>65535</number>
+           </property>
+           <property name="value">
+            <number>1078</number>
+           </property>
+          </widget>
+         </item>
+         <item row="13" column="1">
+          <widget class="QLabel" name="labelIOCtrlImpactStartPixel">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Position where the information of voltage inputs or integrators are inserted&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;IOCTRL impact start pixel&lt;/span&gt; is the position in the pixel array where the information of voltage or integrator inputs are written. The number of these inputs can differ, so length of these additional information can differ, too. The setting specifies the first pixel where the information is written, so the information can be read from this one and the following pixels. IOCTRL impact start pixel is a 16 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 23&lt;br/&gt;step: 1&lt;br/&gt;default: 1078&lt;br/&gt;max: 65535&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;ioctrl_impact_start_pixel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;IOCTRL impact start pixel&lt;/span&gt; can be found in the manual in chapter 7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>CAMCNT (number of cameras)</string>
+            <string>ioctrl impact start pixel</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="2">
+          <widget class="QSpinBox" name="spinBoxAdcGain">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gain of the ADC in 3030 high speed cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;ADC gain&lt;/span&gt; is controlling the gain function of the ADC in 3030 high speed cameras.&lt;span style=&quot; font-style:italic;&quot;&gt; ADC gain&lt;/span&gt; is a 8 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;default: 6&lt;br/&gt;max: 12&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;adc_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about adc_gain can be found in the manual in chapters 3.4.2.1. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLabel" name="labelOutputPixel">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of pixels in one sensor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Pixel&lt;/span&gt; is the number of pixels in one sensor. &lt;span style=&quot; font-style:italic;&quot;&gt;Pixel&lt;/span&gt; is a 16 bit unsigned integer. Only integer multiples of 64 are allowed. Typical values are: 576, 1024, 1088, 2112&lt;/p&gt;&lt;p&gt;min: 64&lt;br/&gt;step: 64&lt;br/&gt;max: 8256&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;pixel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>PIXEL (number of pixel)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="2">
+          <widget class="QSpinBox" name="spinBoxPixel">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of pixels in one sensor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Pixel&lt;/span&gt; is the number of pixels in one sensor. &lt;span style=&quot; font-style:italic;&quot;&gt;Pixel&lt;/span&gt; is a 16 bit unsigned integer. Only integer multiples of 64 are allowed. Typical values are: 576, 1024, 1088, 2112&lt;/p&gt;&lt;p&gt;min: 64&lt;br/&gt;step: 64&lt;br/&gt;max: 8256&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;pixel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>64</number>
+           </property>
+           <property name="maximum">
+            <number>8256</number>
+           </property>
+           <property name="singleStep">
+            <number>64</number>
+           </property>
+           <property name="value">
+            <number>576</number>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="2">
+          <widget class="QCheckBox" name="checkBoxIsCooledCameraLegacyMode">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Legacy mode for older cooled cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Cooled camera legacy&lt;/span&gt; is a special mode for operating older cooled cameras. If on, a bit in the PCIe board is set to react correctly to the cooled status messages from the camera. The following camera versions need to be run in legacy mode:&lt;/p&gt;&lt;p&gt;208.X&lt;br/&gt;218.1 and older&lt;/p&gt;&lt;p&gt;unchecked: off&lt;br/&gt;checked: cooled camera legacy mode on&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;is_cooled_camera_legacy_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>on</string>
+           </property>
+          </widget>
+         </item>
+         <item row="12" column="2">
+          <widget class="QSpinBox" name="spinBoxGpxOffset">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset of the TDC-GPX IC on the TDC add on board&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;GPX offset&lt;/span&gt; is controlling the output offset of the TDC-GPX IC on the TDC add on board for the PCIe card. The TDC-GPX IC can be used to measure the time delay between one start and two stop signals in picosecond resolution. Adding an offset can improve the accuracy of the TDC-GPX IC. GPX offset is a 18 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;default: 1000&lt;br/&gt;max: 262,143&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;gpx_offset&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;gpx offset&lt;/span&gt; can be found in the manual in chapter 10.2. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>true</bool>
+           </property>
+           <property name="maximum">
+            <number>262143</number>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="1">
+          <widget class="QLabel" name="labelIsCooledCameraLegacyMode">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Legacy mode for older cooled cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Cooled camera legacy&lt;/span&gt; is a special mode for operating older cooled cameras. If on, a bit in the PCIe board is set to react correctly to the cooled status messages from the camera. The following camera versions need to be run in legacy mode:&lt;/p&gt;&lt;p&gt;208.X&lt;br/&gt;218.1 and older&lt;/p&gt;&lt;p&gt;unchecked: off&lt;br/&gt;checked: cooled camera legacy mode on&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;is_cooled_camera_legacy_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>cooled camera legacy mode</string>
            </property>
           </widget>
          </item>
@@ -1129,45 +1111,6 @@
             <size>
              <width>40</width>
              <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="12" column="1">
-          <widget class="QLabel" name="labelGpxOffset">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset of the TDC-GPX IC on the TDC add on board&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;GPX offset&lt;/span&gt; is controlling the output offset of the TDC-GPX IC on the TDC add on board for the PCIe card. The TDC-GPX IC can be used to measure the time delay between one start and two stop signals in picosecond resolution. Adding an offset can improve the accuracy of the TDC-GPX IC. GPX offset is a 18 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;default: 1000&lt;br/&gt;max: 262,143&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;gpx_offset&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;gpx offset&lt;/span&gt; can be found in the manual in chapter 10.2. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>gpx offset</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="labelIsFftLegacy">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Legacy mode for operation for with older cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;FFT legacy &lt;/span&gt;is a special legacy mode for operation with older FFT cameras. For the following camera versions fft legacy should be turned on:&lt;/p&gt;&lt;p&gt;- 205.X&lt;br/&gt;- 206.X&lt;br/&gt;- 208.X&lt;br/&gt;- 210.X&lt;br/&gt;- 211.2 and older&lt;br/&gt;- 215.6 and older&lt;br/&gt;- 216.X&lt;br/&gt;- 218.3 and older&lt;/p&gt;&lt;p&gt;If the PCIe card version is 222.8 or older or 202.X, fft legacy should always be turned on, if you are using a FFT sensor. FFT legacy is available since 222.10.&lt;/p&gt;&lt;p&gt;unchecked - off: normal operation (default)&lt;br/&gt;checked - on: fft legacy mode&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;is_fft_legacy&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>FFT legacy mode</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <spacer name="verticalSpacerTop">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
             </size>
            </property>
           </spacer>
@@ -1185,7 +1128,20 @@
            </property>
           </widget>
          </item>
-         <item row="16" column="1">
+         <item row="3" column="1">
+          <widget class="QLabel" name="labelIsFftLegacy">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Legacy mode for operation for with older cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;FFT legacy &lt;/span&gt;is a special legacy mode for operation with older FFT cameras. For the following camera versions fft legacy should be turned on:&lt;/p&gt;&lt;p&gt;- 205.X&lt;br/&gt;- 206.X&lt;br/&gt;- 208.X&lt;br/&gt;- 210.X&lt;br/&gt;- 211.2 and older&lt;br/&gt;- 215.6 and older&lt;br/&gt;- 216.X&lt;br/&gt;- 218.3 and older&lt;/p&gt;&lt;p&gt;If the PCIe card version is 222.8 or older or 202.X, fft legacy should always be turned on, if you are using a FFT sensor. FFT legacy is available since 222.10.&lt;/p&gt;&lt;p&gt;unchecked - off: normal operation (default)&lt;br/&gt;checked - on: fft legacy mode&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;is_fft_legacy&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>FFT legacy mode</string>
+           </property>
+          </widget>
+         </item>
+         <item row="17" column="1">
           <spacer name="verticalSpacerBottom">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
@@ -1198,32 +1154,38 @@
            </property>
           </spacer>
          </item>
-         <item row="14" column="2">
-          <widget class="QCheckBox" name="checkBoxUseSoftwarePolling">
+         <item row="15" column="2">
+          <widget class="QSpinBox" name="spinBoxSensorResetLengthIn1ns">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose between interrupt or polling mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sensor reset length for some sensors between two readouts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Software polling&lt;/span&gt; determines which method is used to copy data from DMA to user buffer.&lt;/p&gt;&lt;p&gt;unchecked: Use interrupt. Every dma_buffer_size_in_scans/2 scan the interrupt starts a copy process, which copies dma_buffer_size_in_scans/2 scans to the user buffer. 1000 is our default value for dma_buffer_size_in_scans, so interrupt is started every 500 scans.&lt;/p&gt;&lt;p&gt;checked: software polling on. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. Since P222_2 this method is reliable up to about 100kHz. It generates as expected a higher CPU load than the interrupt method. With this option you can get more recent scans with live view / GetCurrentScanNumber(), especially at lower frequencies. For high frequencies &amp;gt; 30kHz this method is not recommended.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;use_software_polling&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about software polling can be found in the manual in chapter 5.4.8.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>on</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="2">
-          <widget class="QSpinBox" name="spinBoxSensorGain">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Controls the internal gain of some sensors&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor gain&lt;/span&gt; is controlling the internal gain function of some infrared sensors. For the some sensors gain can be switched on or off, others sensor got multiple levels of gain.&lt;/p&gt;&lt;p&gt;- camera system 3001&lt;br/&gt;gain off: 0&lt;br/&gt;gain on: 1 &lt;/p&gt;&lt;p&gt;- camera system 3030&lt;br/&gt;gain off: 0&lt;br/&gt;step: 1&lt;br/&gt;max gain: 4&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor gain can be found in the manual in chapters 3.3.1, 3.4.1.1, 4.5.2, 8.4.4, 8.7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without a reset for all sensors. &lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; is a 16 bit unsigned integer. The reset time range and step size depends on &lt;span style=&quot; font-style:italic;&quot;&gt;SENSOR TYPE&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;HSVIS:&lt;br/&gt;min: 0 ns&lt;br/&gt;step: 4 ns&lt;br/&gt;default: 400 ns&lt;br/&gt;max: 262,140 ns&lt;/p&gt;&lt;p&gt;HSIR:&lt;br/&gt;min: 21,440 ns&lt;br/&gt;step: 160 ns&lt;br/&gt;default: 22,400 ns&lt;br/&gt;max: 10,485,600 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_reset_length&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor reset can be found in the manual in chapter 4.9.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>true</bool>
+           </property>
+           <property name="suffix">
+            <string> ns</string>
+           </property>
            <property name="maximum">
-            <number>4</number>
+            <number>10485600</number>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="1">
+          <widget class="QLabel" name="labelGain3030">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gain of the ADC in 3030 high speed cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;ADC gain&lt;/span&gt; is controlling the gain function of the ADC in 3030 high speed cameras.&lt;span style=&quot; font-style:italic;&quot;&gt; ADC gain&lt;/span&gt; is a 8 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;default: 6&lt;br/&gt;max: 12&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;adc_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about adc_gain can be found in the manual in chapters 3.4.2.1. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>adc gain</string>
            </property>
           </widget>
          </item>
@@ -1240,6 +1202,31 @@
            </property>
           </spacer>
          </item>
+         <item row="5" column="2">
+          <widget class="QSpinBox" name="spinBoxCamcnt">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of cameras connected to one PCIe board&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Camcnt&lt;/span&gt; is the number of cameras which are connected to one PCIe board. This could be multiple cameras connected via a chain to one PCIe board or multiple channel on one camera control box. 0 is a valid input for operating a PCIe card without any camera connected and only use its special inputs. &lt;span style=&quot; font-style:italic;&quot;&gt;Camcnt&lt;/span&gt; is a 4 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;max: 15&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;camcnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimum">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <number>15</number>
+           </property>
+           <property name="value">
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
          <item row="1" column="1">
           <widget class="QLabel" name="labelCameraSystem">
            <property name="toolTip">
@@ -1251,6 +1238,54 @@
            <property name="text">
             <string>CAMERA SYSTEM</string>
            </property>
+          </widget>
+         </item>
+         <item row="15" column="1">
+          <widget class="QLabel" name="labelSensorResetLength">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sensor reset length for some sensors between two readouts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without a reset for all sensors. &lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; is a 16 bit unsigned integer. The reset time range and step size depends on &lt;span style=&quot; font-style:italic;&quot;&gt;SENSOR TYPE&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;HSVIS:&lt;br/&gt;min: 0 ns&lt;br/&gt;step: 4 ns&lt;br/&gt;default: 400 ns&lt;br/&gt;max: 262,140 ns&lt;/p&gt;&lt;p&gt;HSIR:&lt;br/&gt;min: 21,440 ns&lt;br/&gt;step: 160 ns&lt;br/&gt;default: 22,400 ns&lt;br/&gt;max: 10,485,600 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_reset_length&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor reset can be found in the manual in chapter 4.9.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>sensor reset length</string>
+           </property>
+          </widget>
+         </item>
+         <item row="16" column="1">
+          <widget class="QLabel" name="labelChannelSelect">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select which channels are used during readout&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Channel select&lt;/span&gt; controls which channel of a camera control box is used for the camera readout. This feature is implemented in the camera version P230_6 and newer.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;channel_select&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>channel select</string>
+           </property>
+          </widget>
+         </item>
+         <item row="16" column="2">
+          <widget class="QComboBox" name="comboBoxChannelSelect">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select which channels are used during readout&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>Channel A</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Channel B</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Channel A &amp; B</string>
+            </property>
+           </item>
           </widget>
          </item>
         </layout>
