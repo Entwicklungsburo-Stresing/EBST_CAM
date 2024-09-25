@@ -4,7 +4,10 @@
 # [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE;C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin", "Machine")
 
 # Remove DLL target dir
-rm -r ./x64/
+if(test-path ./x64/)
+{
+	rm -r ./x64/
+}
 # Build Escam, DLL and setup in release config
 devenv.com EBST_CAM.sln /Rebuild Release
 # Build DLL all other configs
@@ -14,7 +17,10 @@ MSBuild.exe .\ESLSCDLL\ESLSCDLL.vcxproj /p:Configuration=Debug-Labview /p:Platfo
 MSBuild.exe .\ESLSCDLL\ESLSCDLL.vcxproj /p:Configuration=Release_minimal /p:Platform=x64
 MSBuild.exe .\ESLSCDLL\ESLSCDLL.vcxproj /p:Configuration=Release-Labview /p:Platform=x64
 # Recreate Release folder
-rm -r Release
+if(test-path Release)
+{
+	rm -r Release
+}
 mkdir Release
 # zip DLL
 $string = Get-Content .\version.h | Select-String -Pattern "#define VERSION_MAJOR_ESCAM"
