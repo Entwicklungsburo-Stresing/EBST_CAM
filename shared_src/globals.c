@@ -160,6 +160,7 @@ const struct camera_settings camera_settings_default =
 	.tocnt = settingTocntDefault,
 	.sticnt = settingSticntDefault,
 	.sensor_reset_length = settingSensorResetLengthDefault,
+	.channel_select = settingChannelSelectDefault,
 	.write_to_disc = settingWriteToDiscDefault,
 	.file_path = settingFilePathDefault,
 	.file_split_mode = settingFileSplitModeDefault,
