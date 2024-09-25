@@ -38,6 +38,7 @@ The hardware version number is the current version at release time.
 * Fix crash after not enough RAM error
 * Fix writeBit functions: make it thread safe
 * Fix ASL mode. Probably broken with P222.14 and 4.14.0.
+* Fix crash with two PCIe boards
 #### Deprecated
 
 ## 4.14.0 - 2024-08-21
