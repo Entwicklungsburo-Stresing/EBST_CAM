@@ -3288,33 +3288,91 @@ es_status_codes ExitDriver()
 }
 
 /**
- * \brief Get data of a single measurement.
+ * \brief Copy the data of a single sample to pdest.
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param sample sample number ( 0...(nos - 1) )
  * \param block block number ( 0...(nob - 1) )
  * \param camera camera number ( 0...(CAMCNT - 1) )
- * \param pdest Pointer where frame data will be written. Make sure that the size is >= sizeof(uint16_t) * pixel
- * \param pixel Lenght of the frame to copy. Typically = pixel
- * \return es_status_codes:
- *		- es_invalid_driver_number
- *		- es_invalid_driver_handle
- *		- es_no_error
- *		- es_parameter_out_of_range
- *		- es_memory_not_initialized
+ * \param pdest Pointer where the data will be written to. Make sure that the size is >= sizeof(uint16_t) * pixel
+ * \return es_status_codes
  */
-es_status_codes ReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, uint16_t* pdest)
+es_status_codes CopyOneSample(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest)
 {
 	//ES_TRACE( "Return frame: drvno: %u, sample: %u, block: %u, camera: %u, pdest %p, pixel: %u\n", drvno, sample, block, camera, pdest, pixel );
-	uint16_t* pframe = NULL;
-	es_status_codes status = GetAddressOfPixel(drvno, 0, sample, block, camera, &pframe);
+	if (!pdest)
+		return es_invalid_pointer;
+	uint16_t* pSrc = NULL;
+	es_status_codes status = GetOneSamplePointer(drvno, sample, block, camera, &pSrc, NULL);
 	if (status != es_no_error) return status;
-	//ES_LOG("pframe %p\n", pframe);
+	//ES_LOG("pSrc %p\n", pSrc);
 	//ES_LOG("userBuffer %p\n", userBuffer[drvno]);
-	memcpy(pdest, pframe, pixel * sizeof(uint16_t));
+	memcpy(pdest, pSrc, settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
 	return status;
 }
 
+/**
+ * \brief Copy the data of a single block to pdest.
+ *
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param block block number ( 0...(nob - 1) )
+ * \param pdest Pointer where the data will be written to. Make sure that the size of the buffer is >= sizeof(uint16_t) * pixel * nos * camcnt
+ * \return es_status_codes
+ */
+es_status_codes CopyOneBlock(uint32_t drvno, uint16_t block, uint16_t* pdest)
+{
+	if (!pdest)
+		return es_invalid_pointer;
+	uint16_t* pSrc = NULL;
+	es_status_codes	status = GetOneBlockPointer(drvno, block, &pSrc, NULL);
+	if (status != es_no_error) return status;
+	memcpy(pdest, pSrc, (uint64_t)settings_struct.nos * (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
+	return status;
+}
+
+/**
+ * \brief Copy the data of the complete measurement to pdest.
+ *
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param pdest Pointer where the data will be written to. Make sure that the size of the buffer is >= sizeof(uint16_t) * pixel * nos * camcnt * nob
+ * \return es_status_codes
+ */
+es_status_codes CopyAllData(uint32_t drvno, uint16_t* pdest)
+{
+	if (!pdest)
+		return es_invalid_pointer;
+	uint16_t* pSrc = NULL;
+	es_status_codes	status = GetAllDataPointer(drvno, &pSrc, NULL);
+	if (status != es_no_error) return status;
+	memcpy(pdest, pSrc, (uint64_t)settings_struct.nos * (uint64_t)settings_struct.nob * (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
+	return status;
+}
+
+/**
+ * \brief Copy the data of a custom length to pdest.
+ *
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param sample sample number ( 0...(nos - 1) )
+ * \param block block number ( 0...(nob - 1) )
+ * \param camera camera number ( 0...(CAMCNT - 1) )
+ * \param pixel position in one scan (0...(PIXEL-1))
+ * \param length_in_pixel Number of pixels to copy. When length_in_pixel exceeds the end of the data buffer the function returns es_parameter_out_of_range.
+ * \param pdest Pointer where the data will be written to. Make sure that the size of the buffer is >= sizeof(uint16_t) * length_in_pixel
+ * \return es_status_codes
+ */
+es_status_codes CopyDataArbitrary(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, size_t length_in_pixel, uint16_t* pdest)
+{
+	if (!pdest)
+		return es_invalid_pointer;
+	uint16_t* pSrc = NULL;
+	size_t bytes_to_end_of_buffer = 0;
+	es_status_codes	status = GetPixelPointer(drvno, pixel, sample, block, camera, &pSrc, &bytes_to_end_of_buffer);
+	if (status != es_no_error) return status;
+	if (length_in_pixel * sizeof(uint16_t) > bytes_to_end_of_buffer) return es_parameter_out_of_range;
+	memcpy(pdest, pSrc, length_in_pixel * sizeof(uint16_t));
+	return status;
+
+}
 
 /**
  * \brief Returns the index of a pixel located in userBuffer.
@@ -3325,15 +3383,16 @@ es_status_codes ReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uin
  * \param block position in blocks (0...(nob-1))
  * \param camera position in camera count (0...(CAMCNT-1)
  * \param pIndex Pointer to index of pixel.
- * \return es_status_codes:
- *		- es_no_error
- *		- es_parameter_out_of_range
- *		- es_memory_not_initialized
+ * \return es_status_codes
  */
 es_status_codes GetIndexOfPixel(uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint64_t* pIndex)
 {
+	if (!pIndex)
+		return es_invalid_pointer;
 	if (pixel >= settings_struct.camera_settings[drvno].pixel || sample >= settings_struct.nos || block >= settings_struct.nob || camera >= virtualCamcnt[drvno])
 		return es_parameter_out_of_range;
+	es_status_codes status = checkDriverHandle(drvno);
+	if (status != es_no_error) return status;
 	//init index with base position of pixel
 	uint64_t index = pixel;
 	//position of index at camera position
@@ -3343,32 +3402,86 @@ es_status_codes GetIndexOfPixel(uint32_t drvno, uint16_t pixel, uint32_t sample,
 	//position of index at block
 	index += (uint64_t)block * (uint64_t)settings_struct.nos * (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel;
 	*pIndex = index;
-	return es_no_error;
+	return status;
 }
 
 /**
- * \brief Returns the address of a pixel located in userBuffer.
- *
+ * \brief Returns the address of a specific pixel. 
+ * 
+ * It is only safe to read as much data until the end of the buffer is reached. That is determined by bytes_to_end_of_buffer. It is always safe to read 2 bytes. The address you get is valid until the next call of \ref InitMeasurement. The data behind the address changes every measurement cycle when continuous mode is on or after each call of \ref StartMeasurement.
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param pixel position in one scan (0...(PIXEL-1))
  * \param sample position in samples (0...(nos-1))
  * \param block position in blocks (0...(nob-1))
  * \param camera position in camera count (0...(CAMCNT-1))
- * \param address Pointer to get address
- * \return es_status_codes:
- *		- es_no_error
- *		- es_parameter_out_of_range
- *		- es_memory_not_initialized
+ * \param pdest Pointer to get the pointer of the specific pixel. When NULL, this functions returns es_invalid_pointer.
+ * \param bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. When NULL, this parameter is ignored.
+ * \return es_status_codes
  */
-es_status_codes GetAddressOfPixel(uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** address)
+es_status_codes GetPixelPointer(uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
 {
+	if (!userBuffer[drvno])
+		return es_memory_not_initialized;
+	if (!pdest)
+		return es_invalid_pointer;
 	uint64_t index = 0;
 	es_status_codes status = GetIndexOfPixel(drvno, pixel, sample, block, camera, &index);
 	if (status != es_no_error) return status;
-	if (!userBuffer[drvno])
-		return es_memory_not_initialized;
-	*address = &userBuffer[drvno][index];
+	*pdest = &userBuffer[drvno][index];
+	if (bytes_to_end_of_buffer)
+	{
+		uint64_t indexEnd = 0;
+		status = GetIndexOfPixel(drvno, settings_struct.camera_settings[drvno].pixel - 1, settings_struct.nos - 1, settings_struct.nob - 1, settings_struct.camera_settings[drvno].camcnt - 1, &indexEnd);
+		if (status != es_no_error) return status;
+		*bytes_to_end_of_buffer = (indexEnd - index + 1) * sizeof(uint16_t);
+	}
 	return status;
+}
+
+/**
+ * \brief Returns the address of the data buffer.
+ *
+ * It is only safe to read as much data until the end of the buffer is reached. That is determined by bytes_to_end_of_buffer. For this function bytes_to_end_of_buffer equals the size of the complete buffer (= nos * nob * pixel * camcnt * 2). The address you get is valid until the next call of \ref InitMeasurement. The data behind the address changes every measurement cycle when continuous mode is on or after each call of \ref StartMeasurement.
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param pdest Pointer to get the pointer of the data buffer. When NULL, this functions returns es_invalid_pointer.
+ * \param bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. When NULL, this parameter is ignored.
+ * \return es_status_codes
+ */
+es_status_codes GetAllDataPointer(uint32_t drvno, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
+{
+	return GetPixelPointer(drvno, 0, 0, 0, 0, pdest, bytes_to_end_of_buffer);
+}
+
+/**
+ * \brief Returns the address of a specific block.
+ *
+ * It is only safe to read as much data until the end of the buffer is reached. That is determined by bytes_to_end_of_buffer. For this function bytes_to_end_of_buffer is at least the size of one block (= nos * pixel * camcnt * 2). The address you get is valid until the next call of \ref InitMeasurement. The data behind the address changes every measurement cycle when continuous mode is on or after each call of \ref StartMeasurement.
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param block position in blocks (0...(nob-1))
+ * \param pdest Pointer to get the pointer of the specific pixel. When NULL, this functions returns es_invalid_pointer.
+ * \param bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. When NULL, this parameter is ignored.
+ * \return es_status_codes
+ */
+es_status_codes GetOneBlockPointer(uint32_t drvno, uint32_t block, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
+{
+	return GetPixelPointer(drvno, 0, 0, block, 0, pdest, bytes_to_end_of_buffer);
+}
+
+/**
+ * \brief Returns the address of a specific sample.
+ *
+ * It is only safe to read as much data until the end of the buffer is reached. That is determined by bytes_to_end_of_buffer. For this fuction bytes_to_end_of_buffer is a least the size of scan (= pixel * 2). The address you get is valid until the next call of \ref InitMeasurement. The data behind the address changes every measurement cycle when continuous mode is on or after each call of \ref StartMeasurement.
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param sample position in samples (0...(nos-1))
+ * \param block position in blocks (0...(nob-1))
+ * \param camera position in camera count (0...(CAMCNT-1))
+ * \param pdest Pointer to get the pointer of the specific pixel. When NULL, this functions returns es_invalid_pointer.
+ * \param bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. When NULL, this parameter is ignored.
+ * \return es_status_codes
+ */
+es_status_codes GetOneSamplePointer(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
+{
+	return GetPixelPointer(drvno, 0, sample, block, camera, pdest, bytes_to_end_of_buffer);
 }
 
 /**
@@ -5432,10 +5545,11 @@ void SetContinuousMeasurement(bool on)
  */
 es_status_codes GetCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* overTemp)
 {
-	uint16_t data[pixel_camera_status + 1];
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, pixel_camera_status + 1, data);
+	if (!overTemp) return es_invalid_pointer;
+	uint16_t data = 0;
+	es_status_codes status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_camera_status, 1, &data);
 	if (status != es_no_error) return status;
-	if (data[pixel_camera_status] & pixel_camera_status_bit_over_temp)
+	if (data & pixel_camera_status_bit_over_temp)
 		*overTemp = true;
 	else
 		*overTemp = false;
@@ -5460,10 +5574,11 @@ es_status_codes GetCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_
  */
 es_status_codes GetCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* tempGood)
 {
-	uint16_t data[pixel_camera_status + 1];
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, pixel_camera_status + 1, data);
+	if (!tempGood) return es_invalid_pointer;
+	uint16_t data = 0;
+	es_status_codes status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_camera_status, 1, &data);
 	if (status != es_no_error) return status;
-	if (data[pixel_camera_status] & pixel_camera_status_bit_temp_good)
+	if (data & pixel_camera_status_bit_temp_good)
 		*tempGood = true;
 	else
 		*tempGood = false;
@@ -5488,11 +5603,15 @@ es_status_codes GetCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_
  */
 es_status_codes GetBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* blockIndex)
 {
-	uint16_t data[pixel_block_index_low + 1];
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, pixel_block_index_low + 1, data);
+	if (!blockIndex) return es_invalid_pointer;
+	uint16_t blockIndexHigh = 0;
+	uint16_t blockIndexLow = 0;
+	es_status_codes status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_block_index_low, 1, &blockIndexLow);
 	if (status != es_no_error) return status;
-	uint16_t blockIndexHigh = data[pixel_block_index_high_s1_s2] & pixel_block_index_high_s1_s2_bits_block_index;
-	*blockIndex = (uint32_t)blockIndexHigh << 16 | (uint32_t)data[pixel_block_index_low];
+	status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_block_index_high_s1_s2, 1, &blockIndexHigh);
+	if (status != es_no_error) return status;
+	blockIndexHigh &= pixel_block_index_high_s1_s2_bits_block_index;
+	*blockIndex = (uint32_t)blockIndexHigh << 16 | blockIndexLow;
 	return status;
 }
 
@@ -5514,10 +5633,14 @@ es_status_codes GetBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, u
  */
 es_status_codes GetScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* scanIndex)
 {
-	uint16_t data[pixel_scan_index_low + 1];
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, pixel_scan_index_low + 1, data);
+	if (!scanIndex) return es_invalid_pointer;
+	uint16_t scanIndexHigh = 0;
+	uint16_t scanIndexLow = 0;
+	es_status_codes status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_scan_index_low, 1, &scanIndexLow);
 	if (status != es_no_error) return status;
-	*scanIndex = (uint32_t)data[pixel_scan_index_high] << 16 | (uint32_t)data[pixel_scan_index_low];
+	status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_scan_index_high, 1, &scanIndexHigh);
+	if (status != es_no_error) return status;
+	*scanIndex = (uint32_t)scanIndexHigh << 16 | (uint32_t)scanIndexLow;
 	return status;
 }
 
@@ -5539,10 +5662,11 @@ es_status_codes GetScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, ui
  */
 es_status_codes GetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
 {
-	uint16_t data[pixel_block_index_high_s1_s2 + 1];
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, pixel_block_index_high_s1_s2 + 1, data);
+	if (!state) return es_invalid_pointer;
+	uint16_t data = 0;
+	es_status_codes status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_block_index_high_s1_s2, 1, &data);
 	if (status != es_no_error) return status;
-	if (data[pixel_block_index_high_s1_s2] & pixel_block_index_high_s1_s2_bit_s1)
+	if (data & pixel_block_index_high_s1_s2_bit_s1)
 		*state = true;
 	else
 		*state = false;
@@ -5567,10 +5691,11 @@ es_status_codes GetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint
  */
 es_status_codes GetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
 {
-	uint16_t data[pixel_block_index_high_s1_s2 + 1];
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, pixel_block_index_high_s1_s2 + 1, data);
+	if (!state) return es_invalid_pointer;
+	uint16_t data = 0;
+	es_status_codes status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_block_index_high_s1_s2, 1, &data);
 	if (status != es_no_error) return status;
-	if (data[pixel_block_index_high_s1_s2] & pixel_block_index_high_s1_s2_bit_s2)
+	if (data & pixel_block_index_high_s1_s2_bit_s2)
 		*state = true;
 	else
 		*state = false;
@@ -5595,10 +5720,13 @@ es_status_codes GetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint
  */
 es_status_codes GetImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
-	uint16_t data[pixel_impact_signal_1_low + 1];
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, pixel_impact_signal_1_low + 1, data);
+	uint16_t data_high = 0;
+	uint16_t data_low = 0;
+	es_status_codes status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_impact_signal_1_high, 1, &data_high);
 	if (status != es_no_error) return status;
-	*impactSignal = (uint32_t)data[pixel_impact_signal_1_high] << 16 | (uint32_t)data[pixel_impact_signal_1_low];
+	status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_impact_signal_1_low, 1, &data_low);
+	if (status != es_no_error) return status;
+	*impactSignal = (uint32_t)data_high << 16 | (uint32_t)data_low;
 	return status;
 }
 
@@ -5620,10 +5748,13 @@ es_status_codes GetImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block
  */
 es_status_codes GetImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
-	uint16_t data[pixel_impact_signal_2_low + 1];
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, pixel_impact_signal_2_low + 1, data);
+	uint16_t data_high = 0;
+	uint16_t data_low = 0;
+	es_status_codes status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_impact_signal_2_high, 1, &data_high);
 	if (status != es_no_error) return status;
-	*impactSignal = (uint32_t)data[pixel_impact_signal_2_high] << 16 | (uint32_t)data[pixel_impact_signal_2_low];
+	status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_impact_signal_2_low, 1, &data_low);
+	if (status != es_no_error) return status;
+	*impactSignal = (uint32_t)data_high << 16 | (uint32_t)data_low;
 	return status;
 }
 
@@ -5648,7 +5779,7 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 	if (settings_struct.camera_settings[drvno].pixel <= 63) return es_invalid_pixel_count;
 	uint16_t* data = (uint16_t*)malloc(settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
 	if (!data) return es_allocating_memory_failed;
-	es_status_codes status = ReturnFrame(drvno, sample, block, camera_pos, settings_struct.camera_settings[drvno].pixel, data);
+	es_status_codes status = CopyOneSample(drvno, sample, block, camera_pos, data);
 	if (status != es_no_error) return status;
 	//overTemp
 	if (data[pixel_camera_status] & pixel_camera_status_bit_over_temp)
@@ -5760,17 +5891,27 @@ es_status_codes ResetBlockFrequencyBit(uint32_t drvno)
 	return pulseBitS0_8(drvno, FFCTRL_bitindex_block_reset, S0Addr_FFCTRL, 100);
 }
 
-es_status_codes GetOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t** address)
+/**
+ * \brief Copy the data of one block of one camera to pdest.
+ *
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param block block number ( 0...(nob - 1) )
+ * \param camera camera number ( 0...(CAMCNT - 1) )
+ * \param pdest Pointer where the data will be written to. Make sure that the size of the buffer is >= sizeof(uint16_t) * length_in_pixel
+ * \return es_status_codes
+ */
+es_status_codes CopyOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t** pdest)
 {
+	if (!pdest) return es_invalid_pointer;
 	es_status_codes status = es_no_error;
 	// allocate memory for one block of one camera
 	uint16_t* data = (uint16_t*)malloc(settings_struct.camera_settings[drvno].pixel * settings_struct.nos * sizeof(uint16_t));
-	// iterate through all samples of the requestet block
+	// iterate through all samples of the requested block
 	for (uint32_t sample = 0; sample < settings_struct.nos; sample++)
 	{
 		uint16_t* sample_address = NULL;
 		// get the address of the current sample
-		status = GetAddressOfPixel(drvno, 0, sample, block, camera, &sample_address);
+		status = GetPixelPointer(drvno, 0, sample, block, camera, &sample_address, NULL);
 		if (status != es_no_error) return status;
 		// check if sample_address is not null
 		if (sample_address)
@@ -5778,7 +5919,7 @@ es_status_codes GetOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t 
 			memcpy(data + sample * settings_struct.camera_settings[drvno].pixel, sample_address, settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
 	}
 	// return the address of the new allocated data
-	*address = data;
+	*pdest = data;
 	return status;
 }
 
@@ -6021,7 +6162,7 @@ es_status_codes ExportMeasurementHDF5(const char* path, char* filename)
 						const uint32_t pixel = settings_struct.camera_settings[drvno].pixel;
 						uint16_t* data = (uint16_t*)malloc(pixel * sizeof(uint16_t));
 
-						es_status_codes status = ReturnFrame(drvno, sample, block, camera, pixel, data);
+						es_status_codes status = CopyOneSample(drvno, sample, block, camera, data);
 						if (status != es_no_error) return status;
 						statusHDF5 = H5Dwrite(dataset_id, H5T_NATIVE_UINT16, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
 

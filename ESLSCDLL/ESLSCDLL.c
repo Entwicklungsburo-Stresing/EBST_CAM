@@ -173,13 +173,12 @@ DllAccess es_status_codes DLLAbortMeasurement()
 }
 
 /**
- * \copydoc ReturnFrame
+ * \copydoc CopyOneSample
  */
-DllAccess es_status_codes DLLReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, uint16_t* pdest)
+DllAccess es_status_codes DLLCopyOneSample(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest)
 {
-	return ReturnFrame(drvno, sample, block, camera, pixel, pdest);
+	return CopyOneSample(drvno, sample, block, camera, pdest);
 }
-
 
 /**
  * \brief Get data of a single measurement for all boards selected by settings parameter board_sel.
@@ -187,7 +186,6 @@ DllAccess es_status_codes DLLReturnFrame(uint32_t drvno, uint32_t sample, uint32
  * \param sample sample number ( 0...(nos - 1) )
  * \param block block number ( 0...(nob - 1) )
  * \param camera camera number ( 0...(CAMCNT - 1) )
- * \param pixel Lenght of the frame to copy. Typically = pixel
  * \param pdest0 Pointer where frame data for board0 will be written. Make sure that the size is >= sizeof(uint16_t) * pixel
  * \param pdest1 Pointer where frame data for board1 will be written. Make sure that the size is >= sizeof(uint16_t) * pixel
  * \param pdest2 Pointer where frame data for board2 will be written. Make sure that the size is >= sizeof(uint16_t) * pixel
@@ -199,7 +197,7 @@ DllAccess es_status_codes DLLReturnFrame(uint32_t drvno, uint32_t sample, uint32
  *		- es_no_error
  *		- es_parameter_out_of_range
  */
-DllAccess es_status_codes DLLReturnFrame_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4)
+DllAccess es_status_codes DLLCopyOneSample_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4)
 {
 	uint16_t* pdest[MAXPCIECARDS] = { pdest0, pdest1, pdest2, pdest3, pdest4 };
 	int usedBoards = 0;
@@ -208,7 +206,7 @@ DllAccess es_status_codes DLLReturnFrame_multipleBoards(uint32_t sample, uint32_
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = ReturnFrame(drvno, sample, block, camera, pixel, pdest[usedBoards]);
+			status = CopyOneSample(drvno, sample, block, camera, pdest[usedBoards]);
 			if (status != es_no_error) return status;
 			usedBoards++;
 		}
@@ -216,22 +214,11 @@ DllAccess es_status_codes DLLReturnFrame_multipleBoards(uint32_t sample, uint32_
 }
 
 /**
- * \brief Copies all pixel data to pdest.
- *
- * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param pdest address where data is written, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( uint16_t )
- * \return es_status_codes:
- *		- es_no_error
- *		- es_parameter_out_of_range
- *		- es_memory_not_initialized
+ * \copydoc CopyAllData
  */
 DllAccess es_status_codes DLLCopyAllData(uint32_t drvno, uint16_t* pdest)
 {
-	uint16_t* pframe = NULL;
-	es_status_codes	status = GetAddressOfPixel(drvno, 0, 0, 0, 0, &pframe);
-	if (status != es_no_error) return status;
-	memcpy(pdest, pframe, (uint64_t)settings_struct.nos * (uint64_t)settings_struct.nob * (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
-	return status;
+	return CopyAllData(drvno, pdest);
 }
 
 /**
@@ -251,38 +238,56 @@ DllAccess es_status_codes DLLCopyAllData_multipleBoards(uint16_t* pdest0, uint16
 {
 	uint16_t* pdest[MAXPCIECARDS] = { pdest0, pdest1, pdest2, pdest3, pdest4 };
 	int usedBoards = 0;
-	uint16_t* pframe = NULL;
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = GetAddressOfPixel(drvno, 0, 0, 0, 0, &pframe);
+			status = CopyAllData(drvno, pdest[usedBoards]);
 			if (status != es_no_error) return status;
-			memcpy(pdest[usedBoards], pframe, (uint64_t)settings_struct.nos * (uint64_t)settings_struct.nob * (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
 			usedBoards++;
 		}
 	return status;
 }
 
 /**
- * \brief Copies one block of pixel data to pdest
- *
- * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param block Selects which block to copy.
- * \param pdest address where data is written, should be a buffer with size: nos * camcnt * pixel * sizeof( uint16_t )
- * \return es_status_codes:
- *		- es_no_error
- *		- es_parameter_out_of_range
- *		- es_memory_not_initialized
+ * \copydoc CopyOneBlock
  */
 DllAccess es_status_codes DLLCopyOneBlock(uint32_t drvno, uint16_t block, uint16_t* pdest)
 {
-	uint16_t* pframe = NULL;
-	es_status_codes	status = GetAddressOfPixel(drvno, 0, 0, block, 0, &pframe);
-	if (status != es_no_error) return status;
-	memcpy(pdest, pframe, (uint64_t)settings_struct.nos * (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
-	return status;
+	return CopyOneBlock(drvno, block, pdest);
+}
+
+/**
+ * \copydoc CopyDataArbitrary
+ */
+DllAccess es_status_codes DLLCopyDataArbitrary(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, uint32_t length_in_pixel, uint16_t* pdest)
+{
+	return CopyDataArbitrary(drvno, sample, block, camera, pixel, length_in_pixel, pdest);
+}
+
+/**
+ * \copydoc GetOneSamplePointer
+ */
+DllAccess es_status_codes DLLGetOneSamplePointer(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
+{
+	return GetOneSamplePointer(drvno, sample, block, camera, pdest, bytes_to_end_of_buffer);
+}
+
+/**
+ * \copydoc GetOneBlockPointer
+ */
+DllAccess es_status_codes DLLGetOneBlockPointer(uint32_t drvno, uint32_t block, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
+{
+	return GetOneBlockPointer(drvno, block, pdest, bytes_to_end_of_buffer);
+}
+
+/**
+ * \copydoc GetArbitraryPointer
+ */
+DllAccess es_status_codes DLLGetArbitraryPointer(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t length, uint16_t* pdest, size_t* bytes_to_end_of_buffer)
+{
+	return GetArbitraryPointer(drvno, sample, block, camera, length, pdest, bytes_to_end_of_buffer);
 }
 
 /**
@@ -303,18 +308,24 @@ DllAccess es_status_codes DLLCopyOneBlock_multipleBoards(uint16_t block, uint16_
 {
 	uint16_t* pdest[MAXPCIECARDS] = { pdest0, pdest1, pdest2, pdest3, pdest4 };
 	int usedBoards = 0;
-	uint16_t* pframe = NULL;
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = GetAddressOfPixel(drvno, 0, 0, block, 0, &pframe);
+			status = CopyOneBlock(drvno, block, pdest[usedBoards]);
 			if (status != es_no_error) return status;
-			memcpy(pdest[usedBoards], pframe, (uint64_t)settings_struct.nos * (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t)); // length in bytes
 			usedBoards++;
 		}
 	return status;
+}
+
+/**
+ * \copydoc GetAllDataPointer
+ */
+DllAccess es_status_codes DLLGetAllDataPointer(uint32_t drvno, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
+{
+	return GetAllDataPointer(drvno, pdest, bytes_to_end_of_buffer);
 }
 
 /**

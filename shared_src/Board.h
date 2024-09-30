@@ -28,7 +28,15 @@ es_status_codes StartMeasurement();
 // 5b) Use this call, if you want to abort the measurement.
 es_status_codes AbortMeasurement();
 // 6) Get the data.
-es_status_codes ReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, uint16_t* pdest);
+es_status_codes CopyOneSample(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest);
+es_status_codes CopyOneBlock(uint32_t drvno, uint16_t block, uint16_t* pdest);
+es_status_codes CopyAllData(uint32_t drvno, uint16_t* pdest);
+es_status_codes CopyDataArbitrary(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, size_t length_in_pixel, uint16_t* pdest);
+es_status_codes CopyOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t** pdest);
+es_status_codes GetOneSamplePointer(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
+es_status_codes GetOneBlockPointer(uint32_t drvno, uint32_t block, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
+es_status_codes GetAllDataPointer(uint32_t drvno, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
+es_status_codes GetPixelPointer(uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
 // 7) Before exiting your software, use this call for cleanup.
 es_status_codes ExitDriver();
 
@@ -112,7 +120,6 @@ es_status_codes DoSoftwareTrigger(uint32_t drvno);
 es_status_codes IsTimerOn( uint32_t drvno, bool* on );
 es_status_codes GetLastBufPart( uint32_t drvno );
 es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint64_t* pIndex );
-es_status_codes GetAddressOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint16_t** address );
 es_status_codes CheckFifoValid(uint32_t drvno, bool* valid);
 es_status_codes CheckFifoOverflow(uint32_t drvno, bool* overflow);
 es_status_codes CheckFifoEmpty(uint32_t drvno, bool* empty);
@@ -170,7 +177,6 @@ es_status_codes GetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint
 es_status_codes GetImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal);
 es_status_codes GetImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal);
 es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp);
-es_status_codes GetOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t** data);
 void SetAllInterruptsDone(uint32_t drvno);
 es_status_codes SetCameraPosition(uint32_t drvno);
 es_status_codes SetAbortMeasurementFlag();

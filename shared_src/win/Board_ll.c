@@ -1285,9 +1285,9 @@ void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pix
 	Direct2dViewer = Direct2dViewer_new();
 	uint16_t* address = NULL;
 	if (virtualCamcnt[drvno] <= 1)
-		GetAddressOfPixel(drvno, 0, 0, block, camera, &address);
+		GetPixelPointer(drvno, 0, 0, block, camera, &address, NULL);
 	else
-		GetOneBlockOfOneCamera(drvno, block, camera, &address);
+		CopyOneBlockOfOneCamera(drvno, block, camera, &address);
 	Direct2dViewer_start2dViewer(
 		Direct2dViewer,
 		GetActiveWindow(),
@@ -1311,9 +1311,9 @@ void ShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pix
 	{
 		uint16_t* address = NULL;
 		if (virtualCamcnt[drvno] <= 1)
-			GetAddressOfPixel(drvno, 0, 0, block, camera, &address);
+			GetPixelPointer(drvno, 0, 0, block, camera, &address, NULL);
 		else
-			GetOneBlockOfOneCamera(drvno, block, camera, &address);
+			CopyOneBlockOfOneCamera(drvno, block, camera, &address);
 		Direct2dViewer_showNewBitmap(
 			Direct2dViewer,
 			address,

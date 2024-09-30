@@ -55,12 +55,17 @@ DllAccess void DLLStartMeasurement_nonblocking();
 // 5b) Use this call, if you want to abort the measurement.
 DllAccess es_status_codes DLLAbortMeasurement();
 // 6) Get the data with one of the following calls. Call it how many times you want.
-DllAccess es_status_codes DLLReturnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, uint16_t* pdest);
-DllAccess es_status_codes DLLReturnFrame_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4);
-DllAccess es_status_codes DLLCopyAllData(uint32_t drvno, uint16_t* pdest);
-DllAccess es_status_codes DLLCopyAllData_multipleBoards(uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4);
+DllAccess es_status_codes DLLCopyOneSample(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest);
+DllAccess es_status_codes DLLCopyOneSample_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4);
 DllAccess es_status_codes DLLCopyOneBlock(uint32_t drvno, uint16_t block, uint16_t* pdest);
 DllAccess es_status_codes DLLCopyOneBlock_multipleBoards(uint16_t block, uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4);
+DllAccess es_status_codes DLLCopyAllData(uint32_t drvno, uint16_t* pdest);
+DllAccess es_status_codes DLLCopyAllData_multipleBoards(uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4);
+DllAccess es_status_codes DLLCopyDataArbitrary(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, uint32_t length_in_pixel, uint16_t* pdest);
+DllAccess es_status_codes DLLGetOneSamplePointer(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
+DllAccess es_status_codes DLLGetOneBlockPointer(uint32_t drvno, uint32_t block, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
+DllAccess es_status_codes DLLGetAllDataPointer(uint32_t drvno, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
+DllAccess es_status_codes DLLGetArbitraryPointer(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t length, uint16_t* pdest, size_t* bytes_to_end_of_buffer);
 // 7) Before exiting your software, use this call for cleanup.
 DllAccess es_status_codes DLLExitDriver();
 
