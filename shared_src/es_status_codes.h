@@ -35,7 +35,8 @@ typedef enum
 	es_memory_not_initialized,
 	es_create_file_failed,
 	es_first_measurement_not_done,
-	es_measurement_running
+	es_measurement_running,
+	es_invalid_pointer = 30,
 } es_status_codes;
 
 char* ConvertErrorCodeToMsg(es_status_codes status);
