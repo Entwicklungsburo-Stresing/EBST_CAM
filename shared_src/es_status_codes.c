@@ -1,6 +1,6 @@
 #include "es_status_codes.h"
 
-#define NUMBER_OF_ERROR_CODES 30
+#define NUMBER_OF_ERROR_CODES 31
 #define BUFFER_SIZE 50
 
 char errorMsg[NUMBER_OF_ERROR_CODES][BUFFER_SIZE] =
@@ -34,7 +34,8 @@ char errorMsg[NUMBER_OF_ERROR_CODES][BUFFER_SIZE] =
 	"Memory not initialized",
 	"Creating file failed",
 	"First measurement not done",
-	"Measurement is running"
+	"Measurement is running",
+	"Invalid pointer"
 };
 
 /**
