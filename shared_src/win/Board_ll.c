@@ -1284,16 +1284,24 @@ void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pix
 	}
 	Direct2dViewer = Direct2dViewer_new();
 	uint16_t* address = NULL;
+	uint16_t* data = NULL;
 	if (virtualCamcnt[drvno] <= 1)
 		GetPixelPointer(drvno, 0, 0, block, camera, &address, NULL);
 	else
-		CopyOneBlockOfOneCamera(drvno, block, camera, &address);
+	{
+		// allocate memory for one block of one camera
+		data = (uint16_t*)malloc(settings_struct.camera_settings[drvno].pixel * settings_struct.nos * sizeof(uint16_t));
+		CopyOneBlockOfOneCamera(drvno, block, camera, data);
+		address = data;
+	}
 	Direct2dViewer_start2dViewer(
 		Direct2dViewer,
 		GetActiveWindow(),
 		address,
 		pixel,
 		nos);
+	if (data)
+		free(data);
 	return;
 }
 
@@ -1310,15 +1318,23 @@ void ShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pix
 	if (Direct2dViewer != NULL)
 	{
 		uint16_t* address = NULL;
+		uint16_t* data = NULL;
 		if (virtualCamcnt[drvno] <= 1)
 			GetPixelPointer(drvno, 0, 0, block, camera, &address, NULL);
 		else
-			CopyOneBlockOfOneCamera(drvno, block, camera, &address);
+		{
+			// allocate memory for one block of one camera
+			data = (uint16_t*)malloc(settings_struct.camera_settings[drvno].pixel * settings_struct.nos * sizeof(uint16_t));
+			CopyOneBlockOfOneCamera(drvno, block, camera, data);
+			address = data;
+		}
 		Direct2dViewer_showNewBitmap(
 			Direct2dViewer,
 			address,
 			pixel,
 			nos);
+		if (data)
+			free(data);
 	}
 	return;
 }

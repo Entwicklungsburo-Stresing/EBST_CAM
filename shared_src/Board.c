@@ -5897,29 +5897,25 @@ es_status_codes ResetBlockFrequencyBit(uint32_t drvno)
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param block block number ( 0...(nob - 1) )
  * \param camera camera number ( 0...(CAMCNT - 1) )
- * \param pdest Pointer where the data will be written to. Make sure that the size of the buffer is >= sizeof(uint16_t) * length_in_pixel
+ * \param pdest Pointer where the data will be written to. Make sure that the size of the buffer is >= sizeof(uint16_t) * pixel * nos
  * \return es_status_codes
  */
-es_status_codes CopyOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t** pdest)
+es_status_codes CopyOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t* pdest)
 {
 	if (!pdest) return es_invalid_pointer;
 	es_status_codes status = es_no_error;
-	// allocate memory for one block of one camera
-	uint16_t* data = (uint16_t*)malloc(settings_struct.camera_settings[drvno].pixel * settings_struct.nos * sizeof(uint16_t));
 	// iterate through all samples of the requested block
 	for (uint32_t sample = 0; sample < settings_struct.nos; sample++)
 	{
 		uint16_t* sample_address = NULL;
 		// get the address of the current sample
-		status = GetPixelPointer(drvno, 0, sample, block, camera, &sample_address, NULL);
+		status = GetOneSamplePointer(drvno, sample, block, camera, &sample_address, NULL);
 		if (status != es_no_error) return status;
 		// check if sample_address is not null
 		if (sample_address)
 			// copy one sample to the new memory
-			memcpy(data + sample * settings_struct.camera_settings[drvno].pixel, sample_address, settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
+			memcpy(pdest + sample * settings_struct.camera_settings[drvno].pixel, sample_address, settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
 	}
-	// return the address of the new allocated data
-	*pdest = data;
 	return status;
 }
 
