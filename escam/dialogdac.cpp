@@ -299,7 +299,7 @@ void DialogDac::checkTargetReached()
 		uint16_t* data = static_cast<uint16_t*>(malloc(data_array_size * sizeof(uint16_t)));
 
 		//return data
-		es_status_codes status = mainWindow->lsc.returnFrame(drvno, sample, block, camera, pixel, data);
+		es_status_codes status = mainWindow->lsc.copyOneSample(drvno, sample, block, camera, data);
 		if (status != es_no_error)
 		{
 			autotuneRunning = false;
