@@ -10,14 +10,7 @@ The hardware version number is the current version at release time.
 
 ### API Changes
 #### Added
-* Add function DLLCopyDataArbitrary
-* Add function DLLGetOneSamplePointer
-* Add function DLLGetOneBlockPointer
-* Add function DLLGetAllDataPointer
-* Add function DLLGetArbitraryPointer
 #### Changed
-* Rename function DLLReturnFrame to DLLCopyOneSample and remove parameter pixel
-* Rename function DLLReturnFrame_multipleBoards to DLLCopyOneSample_multipleBoards and remove parameter pixel
 #### Removed
 #### Fixed
 #### Deprecated
@@ -27,6 +20,20 @@ The hardware version number is the current version at release time.
 #### Removed
 #### Fixed
 #### Deprecated
+
+## 4.15.1 - 2024-10-01
+### API Changes
+#### Added
+* Add function DLLCopyDataArbitrary
+* Add function DLLGetOneSamplePointer
+* Add function DLLGetOneBlockPointer
+* Add function DLLGetAllDataPointer
+* Add function DLLGetPixelPointer
+#### Changed
+* Rename function DLLReturnFrame to DLLCopyOneSample and remove parameter pixel
+* Rename function DLLReturnFrame_multipleBoards to DLLCopyOneSample_multipleBoards and remove parameter pixel
+### Other Changes
+none
 
 ## 4.15.0 - 2024-09-25
 ### API Changes
