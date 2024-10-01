@@ -283,11 +283,12 @@ DllAccess es_status_codes DLLGetOneBlockPointer(uint32_t drvno, uint32_t block, 
 }
 
 /**
- * \copydoc GetArbitraryPointer
+ * \copydoc GetPixelPointer
  */
-DllAccess es_status_codes DLLGetArbitraryPointer(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t length, uint16_t* pdest, size_t* bytes_to_end_of_buffer)
+DllAccess es_status_codes DLLGetPixelPointer(uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
+
 {
-	return GetArbitraryPointer(drvno, sample, block, camera, length, pdest, bytes_to_end_of_buffer);
+	return GetPixelPointer(drvno, pixel, sample, block, camera, pdest, bytes_to_end_of_buffer);
 }
 
 /**
