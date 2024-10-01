@@ -53,7 +53,7 @@ es_status_codes Lsc::startMeasurement()
 /**
  * \copydoc CopyOneSample
  */
-es_status_codes Lsc::returnFrame(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t length, uint16_t* pdest)
+es_status_codes Lsc::copyOneSample(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest)
 {
 	return CopyOneSample(drvno, sample, block, camera, pdest);
 }
