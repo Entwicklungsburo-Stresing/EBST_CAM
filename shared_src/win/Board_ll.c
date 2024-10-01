@@ -1286,7 +1286,7 @@ void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pix
 	uint16_t* address = NULL;
 	uint16_t* data = NULL;
 	if (virtualCamcnt[drvno] <= 1)
-		GetPixelPointer(drvno, 0, 0, block, camera, &address, NULL);
+		GetOneBlockPointer(drvno, block, &address, NULL);
 	else
 	{
 		// allocate memory for one block of one camera
@@ -1320,7 +1320,7 @@ void ShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pix
 		uint16_t* address = NULL;
 		uint16_t* data = NULL;
 		if (virtualCamcnt[drvno] <= 1)
-			GetPixelPointer(drvno, 0, 0, block, camera, &address, NULL);
+			GetOneBlockPointer(drvno, block, &address, NULL);
 		else
 		{
 			// allocate memory for one block of one camera
