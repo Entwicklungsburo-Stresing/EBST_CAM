@@ -304,21 +304,23 @@ struct camera_settings
 	 */
 	uint32_t sticnt;
 	/**
-	 * Sensor_reset_length controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without this reset for all sensors. sensor_rese_length is a 16 bit unsigned integer. The actual reset time depends on \ref camera_settings.sensor_type. Further information about sensor reset can be found in the manual in chapter 4.9.2.
+	 * sensor_reset_or_hsir_ec either controls the length of the reset pulse between two camera readouts or the exposure time of the high speed infrared sensor. The purpose of this setting depends on \ref camera_settings.sensor_type. sensor_reset_or_hsir_ec is a 16 bit unsigned integer.
 	 * 
-	 * Reset times for HSVIS:
+	 * Sensor reset for HSVIS:
+	 * This reset can be used, to completely clear the sensor. Further information about sensor reset can be found in the manual in chapter 4.9.2.
 	 *		* min: 0 ns
 	 *		* step: 1 * 4 ns = 4 ns
 	 *		* default: 100 * 4 ns = 400 ns
 	 *		* max: 65535 * 4 ns = 262,140 ns
 	 * 
-	 * Reset times for HSIR:
+	 * Exposure control for HSIR:
+	 * When sensor_type is HSIR this setting controls the exposure time of the sensor. The exposure time cannot be shorter than the minimum. If the value is smaller than the minimum the exposure time will be the minumum. If the value exceeds the repetition rate of the measurement, there will be samples with a zero line.
 	 *		* min: 134 * 160 ns = 21,440 ns
 	 *		* step: 1 * 160 ns = 160 ns
 	 *		* default: 140 * 160 ns = 22,400 ns
 	 *		* max: 65535 * 160 ns = 10,485,600 ns
 	 */
-	uint32_t sensor_reset_length;
+	uint32_t sensor_reset_or_hsir_ec;
 	/**
 	 * Write to disc is an experimental feature for writing the measurement data on the fly to the disc. The data format is binary. It is the same data layout as the data is stored in RAM during the measurement. Additionally there is a file header at the beginning of the file. The path to the target file is given by \ref camera_settings.file_path. This feature is only available on Windows. In most cases the resulting file should be correct, but data layout errors has been observed. This is the reason why the feature is marked as experimental.
 	 *		* =0: Don't write measurement data to disc.

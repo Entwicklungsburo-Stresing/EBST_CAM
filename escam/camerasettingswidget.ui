@@ -1155,12 +1155,12 @@
           </spacer>
          </item>
          <item row="15" column="2">
-          <widget class="QSpinBox" name="spinBoxSensorResetLengthIn1ns">
+          <widget class="QSpinBox" name="spinBoxSensorResetOrHsirEcIn1ns">
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sensor reset length for some sensors between two readouts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without a reset for all sensors. &lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; is a 16 bit unsigned integer. The reset time range and step size depends on &lt;span style=&quot; font-style:italic;&quot;&gt;SENSOR TYPE&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;HSVIS:&lt;br/&gt;min: 0 ns&lt;br/&gt;step: 4 ns&lt;br/&gt;default: 400 ns&lt;br/&gt;max: 262,140 ns&lt;/p&gt;&lt;p&gt;HSIR:&lt;br/&gt;min: 21,440 ns&lt;br/&gt;step: 160 ns&lt;br/&gt;default: 22,400 ns&lt;br/&gt;max: 10,485,600 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_reset_length&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor reset can be found in the manual in chapter 4.9.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length or HSIR EC&lt;/span&gt; either controls the length of the reset pulse between two camera readouts or the exposure time of the high speed infrared sensor. The purpose of this setting depends on &lt;span style=&quot; font-style:italic;&quot;&gt;SENSOR TYPE.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;HSVIS:&lt;br/&gt;This reset can be used, to completely clear the sensor.&lt;/p&gt;&lt;p&gt;min: 0 ns&lt;br/&gt;step: 4 ns&lt;br/&gt;default: 400 ns&lt;br/&gt;max: 262,140 ns&lt;/p&gt;&lt;p&gt;HSIR:&lt;br/&gt;When &lt;span style=&quot; font-style:italic;&quot;&gt;SENSOR TYPE&lt;/span&gt; is HSIR this setting controls the exposure time of the sensor. The exposure time cannot be shorter than the minimum. If the value is smaller than the minimum the exposure time will be the minumum. If the value exceeds the repetition rate of the measurement, there will be samples with a zero line.&lt;/p&gt;&lt;p&gt;min: 21,440 ns&lt;br/&gt;step: 160 ns&lt;br/&gt;default: 22,400 ns&lt;br/&gt;max: 10,485,600 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_reset_or_hsir_ec&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor reset can be found in the manual in chapter 4.9.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1241,15 +1241,15 @@
           </widget>
          </item>
          <item row="15" column="1">
-          <widget class="QLabel" name="labelSensorResetLength">
+          <widget class="QLabel" name="labelSensorResetOrHsirEc">
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sensor reset length for some sensors between two readouts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; controls the length of the reset pulse between two camera readouts for some sensors. This reset can be used, to completely clear the sensor, which is not always the case without a reset for all sensors. &lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length&lt;/span&gt; is a 16 bit unsigned integer. The reset time range and step size depends on &lt;span style=&quot; font-style:italic;&quot;&gt;SENSOR TYPE&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;HSVIS:&lt;br/&gt;min: 0 ns&lt;br/&gt;step: 4 ns&lt;br/&gt;default: 400 ns&lt;br/&gt;max: 262,140 ns&lt;/p&gt;&lt;p&gt;HSIR:&lt;br/&gt;min: 21,440 ns&lt;br/&gt;step: 160 ns&lt;br/&gt;default: 22,400 ns&lt;br/&gt;max: 10,485,600 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_reset_length&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor reset can be found in the manual in chapter 4.9.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length or HSIR EC&lt;/span&gt; either controls the length of the reset pulse between two camera readouts or the exposure time of the high speed infrared sensor. The purpose of this setting depends on &lt;span style=&quot; font-style:italic;&quot;&gt;SENSOR TYPE.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;HSVIS:&lt;br/&gt;This reset can be used, to completely clear the sensor.&lt;/p&gt;&lt;p&gt;min: 0 ns&lt;br/&gt;step: 4 ns&lt;br/&gt;default: 400 ns&lt;br/&gt;max: 262,140 ns&lt;/p&gt;&lt;p&gt;HSIR:&lt;br/&gt;When &lt;span style=&quot; font-style:italic;&quot;&gt;SENSOR TYPE&lt;/span&gt; is HSIR this setting controls the exposure time of the sensor. The exposure time cannot be shorter than the minimum. If the value is smaller than the minimum the exposure time will be the minumum. If the value exceeds the repetition rate of the measurement, there will be samples with a zero line.&lt;/p&gt;&lt;p&gt;min: 21,440 ns&lt;br/&gt;step: 160 ns&lt;br/&gt;default: 22,400 ns&lt;br/&gt;max: 10,485,600 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_reset_or_hsir_ec&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor reset can be found in the manual in chapter 4.9.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>sensor reset length</string>
+            <string>sensor reset or HSIR EC</string>
            </property>
           </widget>
          </item>
@@ -2191,7 +2191,7 @@
   <tabstop>spinBoxGpxOffset</tabstop>
   <tabstop>spinBoxIOCtrlImpactStartPixel</tabstop>
   <tabstop>checkBoxUseSoftwarePolling</tabstop>
-  <tabstop>spinBoxSensorResetLengthIn1ns</tabstop>
+  <tabstop>spinBoxSensorResetOrHsirEcIn1ns</tabstop>
   <tabstop>spinBoxLines</tabstop>
   <tabstop>spinBoxVfreq</tabstop>
   <tabstop>comboBoxFftMode</tabstop>
