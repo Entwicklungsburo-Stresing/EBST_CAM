@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #endif
+#include "default_settings.h"
 
 #ifdef _USRDLL
 #define DLLTAB "\t"
@@ -95,6 +96,8 @@ es_status_codes InitSoftware(uint32_t drvno)
 	abortMeasurementFlag = false;
 	es_status_codes status = allocateUserMemory(drvno);
 	if (status != es_no_error) return status;
+	if(settings_struct.camera_settings[drvno].dma_buffer_size_in_scans == 0)
+		settings_struct.camera_settings[drvno].dma_buffer_size_in_scans = settingDmaBufferSizeInScansDefault;
 	uint32_t dmaBufferPartSizeInScans = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS; //500
 	if (dmaBufferPartSizeInScans)
 		numberOfInterrupts[drvno] = (settings_struct.nob * settings_struct.nos * virtualCamcnt[drvno]) / dmaBufferPartSizeInScans;
