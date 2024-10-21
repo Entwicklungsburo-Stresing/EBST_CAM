@@ -4883,7 +4883,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		"sensor_reset_or_hsir_ec\t%u\n"
 		"write to disc\t%u\n"
 		"file path\t%s\n"
-		"file split mode\t%u\n"
+		"shift_s1s2_to_next_scan\t%u\n"
 		"is cooled camera legacy mode\t%u\n",
 		settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns,
 		settings_struct.camera_settings[drvno].dma_buffer_size_in_scans,
@@ -4892,7 +4892,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].sensor_reset_or_hsir_ec,
 		settings_struct.camera_settings[drvno].write_to_disc,
 		settings_struct.camera_settings[drvno].file_path,
-		settings_struct.camera_settings[drvno].file_split_mode,
+		settings_struct.camera_settings[drvno].shift_s1s2_to_next_scan,
 		settings_struct.camera_settings[drvno].is_cooled_camera_legacy_mode);
 	return es_no_error;
 }
