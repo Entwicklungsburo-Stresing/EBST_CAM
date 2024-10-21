@@ -437,7 +437,7 @@ enum adc_mode_t
 };
 
 /**
- * This enum is specifying the options for \ref camera_settings.file_split_mode.
+ * This enum is specifying the options for \ref camera_settings.shift_s1s2_to_next_scan.
  */
 enum split_mode_t
 {

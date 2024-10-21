@@ -10,8 +10,10 @@ The hardware version number is the current version at release time.
 
 ### API Changes
 #### Added
+* Add setting shift_s1s2_to_next_scan
 #### Changed
 #### Removed
+* Remove deprecated setting file split mode
 #### Fixed
 #### Deprecated
 ### Other Changes

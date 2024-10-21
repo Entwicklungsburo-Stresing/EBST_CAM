@@ -163,7 +163,7 @@ const struct camera_settings camera_settings_default =
 	.channel_select = settingChannelSelectDefault,
 	.write_to_disc = settingWriteToDiscDefault,
 	.file_path = settingFilePathDefault,
-	.file_split_mode = settingFileSplitModeDefault,
+	.shift_s1s2_to_next_scan = settingShiftS1S2ToNextScanDefault,
 	.is_cooled_camera_legacy_mode = settingIsCooledCameraLegacyModeDefault
 };
 

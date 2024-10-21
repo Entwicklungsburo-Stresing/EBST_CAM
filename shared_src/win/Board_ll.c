@@ -901,7 +901,7 @@ void writeFileHeaderToFile(uint32_t drvno, char* filename_full)
 	strcpy_s(fh.timestamp, file_timestamp_size, start_timestamp);
 	memset(fh.filename_full, 0, file_filename_full_size);
 	strcpy_s(fh.filename_full, file_filename_full_size, filename_full);
-	fh.split_mode = settings_struct.camera_settings[drvno].file_split_mode;
+	fh.split_mode = 0;
 	if (file_stream[drvno])
 	{
 		// Write struct file_header to the file.

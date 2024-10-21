@@ -85,7 +85,7 @@
 #define settingSensorResetOrHsIrDefault				100
 #define settingWriteToDiscDefault					0
 #define settingFilePathDefault						""
-#define settingFileSplitModeDefault					no_split
+#define settingShiftS1S2ToNextScanDefault			false
 #define settingIsCooledCameraLegacyModeDefault		false
 #define settingAxesMirrorXPathDefault				false
 #define settingShowCrosshairDefault					true
