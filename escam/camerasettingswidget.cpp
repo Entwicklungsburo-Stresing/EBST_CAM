@@ -49,9 +49,9 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingsUseSoftwarePollingPath, ui->checkBoxUseSoftwarePolling->isChecked());
 	settings.setValue(settingIsCooledCameraLegacyModePath, ui->checkBoxIsCooledCameraLegacyMode->isChecked());
 	if(settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble() == sensor_type_hsvis)
-		settings.setValue(settingSensorResetLengthPath, ui->spinBoxSensorResetLengthIn1ns->value() / 4);
+		settings.setValue(settingSensorResetOrHsirEcPath, ui->spinBoxSensorResetOrHsirEcIn1ns->value() / 4);
 	else
-		settings.setValue(settingSensorResetLengthPath, ui->spinBoxSensorResetLengthIn1ns->value() / 160);
+		settings.setValue(settingSensorResetOrHsirEcPath, ui->spinBoxSensorResetOrHsirEcIn1ns->value() / 160);
 	settings.setValue(settingChannelSelectPath, ui->comboBoxChannelSelect->currentIndex());
 	//FFT mode
 	settings.setValue(settingLinesPath, ui->spinBoxLines->value());
@@ -357,7 +357,7 @@ void CameraSettingsWidget::loadDefaults()
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settingIOCtrlImpactStartPixelDefault);
 	ui->checkBoxUseSoftwarePolling->setChecked(settingsUseSoftwarePollingDefault);
 	ui->checkBoxIsCooledCameraLegacyMode->setChecked(settingIsCooledCameraLegacyModeDefault);
-	ui->spinBoxSensorResetLengthIn1ns->setValue(settingSensorResetLengthDefault * 4);
+	ui->spinBoxSensorResetOrHsirEcIn1ns->setValue(settingSensorResetOrHsIrDefault * 4);
 	ui->comboBoxChannelSelect->setCurrentIndex(settingChannelSelectDefault);
 	//FFT mode
 	ui->spinBoxLines->setValue(settingLinesDefault);
@@ -529,9 +529,9 @@ void CameraSettingsWidget::initializeWidget()
 	ui->checkBoxUseSoftwarePolling->setChecked(settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool());
 	ui->checkBoxIsCooledCameraLegacyMode->setChecked(settings.value(settingIsCooledCameraLegacyModePath, settingIsCooledCameraLegacyModeDefault).toBool());
 	if(settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble() == sensor_type_hsvis)
-		ui->spinBoxSensorResetLengthIn1ns->setValue(settings.value(settingSensorResetLengthPath, settingSensorResetLengthDefault).toDouble() * 4);
+		ui->spinBoxSensorResetOrHsirEcIn1ns->setValue(settings.value(settingSensorResetOrHsirEcPath, settingSensorResetOrHsIrDefault).toDouble() * 4);
 	else
-		ui->spinBoxSensorResetLengthIn1ns->setValue(settings.value(settingSensorResetLengthPath, settingSensorResetLengthDefault).toDouble() * 160);
+		ui->spinBoxSensorResetOrHsirEcIn1ns->setValue(settings.value(settingSensorResetOrHsirEcPath, settingSensorResetOrHsIrDefault).toDouble() * 160);
 	ui->comboBoxChannelSelect->setCurrentIndex(settings.value(settingChannelSelectPath, settingChannelSelectDefault).toDouble());
 	//FFT mode
 	ui->spinBoxLines->setValue(settings.value(settingLinesPath, settingLinesDefault).toDouble());

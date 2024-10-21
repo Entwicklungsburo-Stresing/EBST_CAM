@@ -147,7 +147,7 @@ void MainWindow::initSettings()
 		settings_struct.camera_settings[drvno].ioctrl_impact_start_pixel = settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toDouble();
 		settings_struct.camera_settings[drvno].use_software_polling = settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool();
 		settings_struct.camera_settings[drvno].is_cooled_camera_legacy_mode = settings.value(settingIsCooledCameraLegacyModePath, settingIsCooledCameraLegacyModeDefault).toBool();
-		settings_struct.camera_settings[drvno].sensor_reset_length = settings.value(settingSensorResetLengthPath, settingSensorResetLengthDefault).toDouble();
+		settings_struct.camera_settings[drvno].sensor_reset_or_hsir_ec = settings.value(settingSensorResetOrHsirEcPath, settingSensorResetOrHsIrDefault).toDouble();
 		settings_struct.camera_settings[drvno].channel_select = settings.value(settingChannelSelectPath, settingChannelSelectDefault).toDouble();
 		//fftmodes tab
 		settings_struct.camera_settings[drvno].fft_lines = settings.value(settingLinesPath, settingLinesDefault).toDouble();
