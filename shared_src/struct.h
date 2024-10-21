@@ -333,10 +333,10 @@ struct camera_settings
 	 */
 	char file_path[file_path_size];
 	/**
-	 * DEPRECATED
-	 * Not used, because didn't work correctly. Specifies how to split files when writing measurement data to disc. See enum \ref split_mode_t in enum.h for modes. 
+	 * TODO implement me
+	 * Since P222_17
 	 */
-	uint32_t file_split_mode;
+	uint32_t shift_s1s2_to_next_scan;
 	/**
 	 * Is cooled camera legacy is a special mode for operating older cooled cameras. If on, a bit in the PCIe board is set to react correctly to the cooled status messages from the camera. The following camera versions need to be run in legacy mode:
 	 *		* 208.X
