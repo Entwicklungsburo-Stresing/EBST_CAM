@@ -4792,31 +4792,31 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		"use_software_polling\t"DLLTAB DLLTAB"%u\n"
 		"sti_mode\t"DLLTAB DLLTAB"%u\n"
 		"bti_mode\t"DLLTAB"%u\n"
-		"stime in microseconds\t%u\n"
-		"btime in microseconds\t%u\n"
-		"sdat in 10 ns\t"DLLTAB"%u\n"
-		"bdat in 10 ns\t"DLLTAB"%u\n"
+		"stime_in_microsec\t%u\n"
+		"btime_in_microsec\t%u\n"
+		"sdat_in_10ns\t"DLLTAB"%u\n"
+		"bdat_in_10ns\t"DLLTAB"%u\n"
 		"sslope\t"DLLTAB DLLTAB"%u\n"
 		"bslope\t"DLLTAB DLLTAB"%u\n"
 		"xckdelay_in_10ns\t"DLLTAB"%u\n"
-		"shutterExpTimeIn10ns\t%u\n"
-		"trigger mode cc\t"DLLTAB"%u\n"
-		"sensor type\t"DLLTAB"%u\n"
-		"camera system\t"DLLTAB"%u\n"
+		"sec_in_10ns\t%u\n"
+		"trigger_mode_integrator\t"DLLTAB"%u\n"
+		"sensor_type\t"DLLTAB"%u\n"
+		"camera_system\t"DLLTAB"%u\n"
 		"camcnt\t"DLLTAB DLLTAB"%u\n"
 		"pixel\t"DLLTAB DLLTAB"%u\n"
 		"is_fft_legacy\t"DLLTAB DLLTAB"%u\n"
-		"led off\t"DLLTAB DLLTAB"%u\n"
+		"led_off\t"DLLTAB DLLTAB"%u\n"
 		"sensor_gain\t"DLLTAB"%u\n"
 		"adc_gain\t"DLLTAB"%u\n"
-		"temp level\t"DLLTAB"%u\n"
+		"temp_level\t"DLLTAB"%u\n"
 		"bticnt\t"DLLTAB"%u\n"
-		"gpx offset\t"DLLTAB"%u\n"
+		"gpx_offset\t"DLLTAB"%u\n"
 		"fft_lines\t"DLLTAB DLLTAB"%u\n"
 		"vfreq\t"DLLTAB DLLTAB"%u\n"
-		"ffmode\t"DLLTAB DLLTAB"%u\n"
+		"fft_mode\t"DLLTAB DLLTAB"%u\n"
 		"lines_binning\t"DLLTAB"%u\n"
-		"number of regions\t%u\n"
+		"number_of_regions\t%u\n"
 		"s1s2_read_delay_in_10ns\t"DLLTAB"%u\n",
 		settings_struct.camera_settings[drvno].use_software_polling,
 		settings_struct.camera_settings[drvno].sti_mode,
@@ -4847,19 +4847,19 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].lines_binning,
 		settings_struct.camera_settings[drvno].number_of_regions,
 		settings_struct.camera_settings[drvno].s1s2_read_delay_in_10ns);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "region size\t"DLLTAB);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "region_size\t"DLLTAB);
 	for (int i = 0; i < MAX_NUMBER_OF_REGIONS; i++)
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].region_size[i]);
 	for (int camera = 0; camera < MAXCAMCNT; camera++)
 	{
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\ndac output board %i, camera %i\t", drvno, camera);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\ndac_output board %i, camera %i\t", drvno, camera);
 		for (int i = 0; i < DACCOUNT; i++)
 			len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].dac_output[camera][i]);
 	}
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
-		"\ntor mode\t"DLLTAB DLLTAB"%u\n"
-		"adc mode\t"DLLTAB"%u\n"
-		"adc custom pattern\t%u\n"
+		"\ntor\t"DLLTAB DLLTAB"%u\n"
+		"adc_mode\t"DLLTAB"%u\n"
+		"adc_custom_pattern\t%u\n"
 		"bec_in_10ns\t"DLLTAB"%u\n"
 		"channel_select\t"DLLTAB DLLTAB"%u\n"
 		"ioctrl_impact_start_pixel\t%u\n",
@@ -4881,10 +4881,10 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		"tocnt\t%u\n"
 		"sticnt\t%u\n"
 		"sensor_reset_or_hsir_ec\t%u\n"
-		"write to disc\t%u\n"
-		"file path\t%s\n"
+		"write_to_disc\t%u\n"
+		"file_path\t%s\n"
 		"shift_s1s2_to_next_scan\t%u\n"
-		"is cooled camera legacy mode\t%u\n",
+		"is_cooled_camera_legacy_mode\t%u\n",
 		settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns,
 		settings_struct.camera_settings[drvno].dma_buffer_size_in_scans,
 		settings_struct.camera_settings[drvno].tocnt,
