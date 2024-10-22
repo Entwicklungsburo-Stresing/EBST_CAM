@@ -149,6 +149,7 @@ void MainWindow::initSettings()
 		settings_struct.camera_settings[drvno].is_cooled_camera_legacy_mode = settings.value(settingIsCooledCameraLegacyModePath, settingIsCooledCameraLegacyModeDefault).toBool();
 		settings_struct.camera_settings[drvno].sensor_reset_or_hsir_ec = settings.value(settingSensorResetOrHsirEcPath, settingSensorResetOrHsIrDefault).toDouble();
 		settings_struct.camera_settings[drvno].channel_select = settings.value(settingChannelSelectPath, settingChannelSelectDefault).toDouble();
+		settings_struct.camera_settings[drvno].shift_s1s2_to_next_scan = settings.value(settingShiftS1S2ToNextScanPath, settingShiftS1S2ToNextScanDefault).toBool();
 		//fftmodes tab
 		settings_struct.camera_settings[drvno].fft_lines = settings.value(settingLinesPath, settingLinesDefault).toDouble();
 		settings_struct.camera_settings[drvno].vfreq = settings.value(settingVfreqPath, settingVfreqDefault).toDouble();

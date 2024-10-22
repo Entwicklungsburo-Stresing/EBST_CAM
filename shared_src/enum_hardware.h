@@ -256,11 +256,13 @@ enum CTRLC_bits_t
 	CTRLC_bitindex_I = 0,
 	CTRLC_bitindex_S1 = 1,
 	CTRLC_bitindex_S2 = 2,
+	CTRLC_bitindex_shift_s = 3,
 	CTRLC_bitindex_eoi = 4,
 	CTRLC_bitindex_eoi_chb = 5,
 	CTRLC_bit_I = 0x01,
 	CTRLC_bit_S1 = 0x02,
 	CTRLC_bit_S2 = 0x04,
+	CTRLC_bit_shift_s = 0x08,
 	CTRLC_bit_eoi = 0x10,
 	CTRLC_bit_eoi_chb = 0x20,
 };

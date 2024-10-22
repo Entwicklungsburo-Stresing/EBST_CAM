@@ -53,6 +53,7 @@ void CameraSettingsWidget::on_accepted()
 	else
 		settings.setValue(settingSensorResetOrHsirEcPath, ui->spinBoxSensorResetOrHsirEcIn1ns->value() / 160);
 	settings.setValue(settingChannelSelectPath, ui->comboBoxChannelSelect->currentIndex());
+	settings.setValue(settingShiftS1S2ToNextScanPath, ui->checkBoxShiftS1S2ToNextScan->isChecked());
 	//FFT mode
 	settings.setValue(settingLinesPath, ui->spinBoxLines->value());
 	settings.setValue(settingVfreqPath, ui->spinBoxVfreq->value());
@@ -359,6 +360,7 @@ void CameraSettingsWidget::loadDefaults()
 	ui->checkBoxIsCooledCameraLegacyMode->setChecked(settingIsCooledCameraLegacyModeDefault);
 	ui->spinBoxSensorResetOrHsirEcIn1ns->setValue(settingSensorResetOrHsIrDefault * 4);
 	ui->comboBoxChannelSelect->setCurrentIndex(settingChannelSelectDefault);
+	ui->checkBoxShiftS1S2ToNextScan->setChecked(settingShiftS1S2ToNextScanDefault);
 	//FFT mode
 	ui->spinBoxLines->setValue(settingLinesDefault);
 	ui->spinBoxVfreq->setValue(settingVfreqDefault);
@@ -533,6 +535,7 @@ void CameraSettingsWidget::initializeWidget()
 	else
 		ui->spinBoxSensorResetOrHsirEcIn1ns->setValue(settings.value(settingSensorResetOrHsirEcPath, settingSensorResetOrHsIrDefault).toDouble() * 160);
 	ui->comboBoxChannelSelect->setCurrentIndex(settings.value(settingChannelSelectPath, settingChannelSelectDefault).toDouble());
+	ui->checkBoxShiftS1S2ToNextScan->setChecked(settings.value(settingShiftS1S2ToNextScanPath, settingShiftS1S2ToNextScanDefault).toBool());
 	//FFT mode
 	ui->spinBoxLines->setValue(settings.value(settingLinesPath, settingLinesDefault).toDouble());
 	ui->spinBoxVfreq->setValue(settings.value(settingVfreqPath, settingVfreqDefault).toDouble());
