@@ -203,6 +203,8 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	status = SetS1S2ReadDelay(drvno);
 	if (status != es_no_error) return status;
 	status = GetPcieCardVersion(drvno, &pcieCardMajorVersion[drvno], &pcieCardMinorVersion[drvno]);
+	if (status != es_no_error) return status;
+	status = SetShiftS1S2ToNextScan(drvno);
 	return status;
 }
 
@@ -6487,4 +6489,9 @@ es_status_codes WaitForBlockOn(uint32_t drvno)
 		}
 	}
 	return status;
+}
+
+es_status_codes SetShiftS1S2ToNextScan(uint32_t drvno)
+{
+	return writeBitsS0_8(drvno, (1 & settings_struct.camera_settings[drvno].shift_s1s2_to_next_scan) << CTRLC_bitindex_shift_s, CTRLC_bit_shift_s, S0Addr_CTRLC);
 }

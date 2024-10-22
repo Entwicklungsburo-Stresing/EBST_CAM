@@ -43,6 +43,7 @@ constexpr auto settingIOCtrlImpactStartPixelPath = "IOCtrlImpactStartPixel";
 constexpr auto settingIsCooledCameraLegacyModePath = "isCooledCameraLegacyMode";
 constexpr auto settingSensorResetOrHsirEcPath = "sensorResetOrHsirEc";
 constexpr auto settingChannelSelectPath = "channelSelect";
+constexpr auto settingShiftS1S2ToNextScanPath = "shiftS1S2ToNextScan";
 //FFT mode
 constexpr auto settingLinesPath = "lines";
 constexpr auto settingVfreqPath = "vfreq";
