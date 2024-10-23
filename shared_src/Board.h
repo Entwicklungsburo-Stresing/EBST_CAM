@@ -189,7 +189,6 @@ es_status_codes GetXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns);
 es_status_codes GetXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns);
 es_status_codes GetBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns);
 es_status_codes GetBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns);
-es_status_codes SetSensorGain(uint32_t drvno, uint16_t gain);
 es_status_codes GetPcieCardVersion(uint32_t drvno, uint16_t* major_version, uint16_t* minor_version);
 bool PcieCardVersionIsGreaterThan(uint32_t drvno, uint16_t major_version, uint16_t minor_version);
 bool PcieCardVersionIsSmallerThan(uint32_t drvno, uint16_t major_version, uint16_t minor_version);
