@@ -304,7 +304,7 @@ es_status_codes SetConfigRegister(uint32_t drvno)
 		channel_select = cam_config_register_bit_channel_select_a | cam_config_register_bit_channel_select_b;
 		break;
 	}
-	uint16_t sensor_gain_2 = ((uint16_t)settings_struct.camera_settings[drvno].sensor_gain << cam_config_register_bitindex_sensor_gain_2) & cam_config_register_bit_sensor_gain_2;
+	uint16_t sensor_gain_2 = ((uint16_t)settings_struct.camera_settings[drvno].sensor_gain << (cam_config_register_bitindex_sensor_gain_2 - 1)) & cam_config_register_bit_sensor_gain_2;
 	uint16_t configRegister = bnc_out | led_off | cool_level | trigger_mode | sensor_gain | channel_select | sensor_gain_2;
 
 	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_config, configRegister);
