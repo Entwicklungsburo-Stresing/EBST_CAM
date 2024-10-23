@@ -10,10 +10,8 @@ The hardware version number is the current version at release time.
 
 ### API Changes
 #### Added
-* Add setting shift_s1s2_to_next_scan
 #### Changed
 #### Removed
-* Remove deprecated setting file split mode
 #### Fixed
 #### Deprecated
 ### Other Changes
@@ -22,6 +20,15 @@ The hardware version number is the current version at release time.
 #### Removed
 #### Fixed
 #### Deprecated
+
+## 4.17.0 - 2024-10-23
+### API Changes
+#### Added
+* Add setting shift_s1s2_to_next_scan
+#### Changed
+* Rename setting sensor_reset_length to sensor_reset_or_hsir_ec
+#### Removed
+* Remove deprecated setting file split mode
 
 ## 4.15.1 - 2024-10-01
 ### API Changes
