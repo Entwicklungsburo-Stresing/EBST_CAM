@@ -278,11 +278,8 @@ es_status_codes InitCamera(uint32_t drvno)
 	status = IOCtrl_setT0(drvno, settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns);
 	if (status != es_no_error) return status;
 	status = Cam_SetSensorResetOrHsirEc(drvno, settings_struct.camera_settings[drvno].sensor_reset_or_hsir_ec);
-	if (status != es_no_error) return status;
-	status = SetSensorGain(drvno, (uint16_t)settings_struct.camera_settings[drvno].sensor_gain);
 	return status;
 }
-
 
 es_status_codes SetConfigRegister(uint32_t drvno)
 {
@@ -307,7 +304,8 @@ es_status_codes SetConfigRegister(uint32_t drvno)
 		channel_select = cam_config_register_bit_channel_select_a | cam_config_register_bit_channel_select_b;
 		break;
 	}
-	uint16_t configRegister = bnc_out | led_off | cool_level | trigger_mode | sensor_gain | channel_select;
+	uint16_t sensor_gain_2 = ((uint16_t)settings_struct.camera_settings[drvno].sensor_gain << cam_config_register_bitindex_sensor_gain_2) & cam_config_register_bit_sensor_gain_2;
+	uint16_t configRegister = bnc_out | led_off | cool_level | trigger_mode | sensor_gain | channel_select | sensor_gain_2;
 
 	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_config, configRegister);
 	if (status != es_no_error) return status;
@@ -6350,21 +6348,6 @@ es_status_codes GetBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns)
 es_status_codes GetBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns)
 {
 	return readRegisterS0_32(drvno, bonPeriodIn10ns, S0Addr_BON_PERIOD);
-}
-
-/**
- * \brief Set the sensor gain register in 3030 - HSIR.
- * 
- * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param gain All 16 bits are sent to the camera, but only the lower two bits are currently used as gain.
- *		* min: 0
- *		* step: 1
- *		* max: 4
- * \return es_status_codes
- */
-es_status_codes SetSensorGain(uint32_t drvno, uint16_t gain)
-{
-	return SendFLCAM(drvno, maddr_cam, cam_adaddr_sensor_gain, gain);
 }
 
 /**
