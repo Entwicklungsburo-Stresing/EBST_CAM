@@ -1290,6 +1290,12 @@
          </item>
          <item row="17" column="1">
           <widget class="QLabel" name="labelShiftS1S2ToNextScan">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shift stored values S1 and S2 in pixel 2 to next scan&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When&lt;span style=&quot; font-style:italic;&quot;&gt; shift S1S2 to next scan&lt;/span&gt; is on, the input states of S1 and S2, which are sampled in scan n, are displayed in pixel 2 in scan n+1. This option is useful for the &lt;span style=&quot; font-style:italic;&quot;&gt;SENSOR TYPE&lt;/span&gt; HSIR, because this camera displays the data sampled at trigger n in scan n+1. To match the actual states of S1 and S2 to the sensor data activate this option. This feature is supported since PCIe board version P222_17.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;shift_s1s2_to_next_scan&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>shift S1S2 to next scan</string>
            </property>
@@ -1298,10 +1304,10 @@
          <item row="17" column="2">
           <widget class="QCheckBox" name="checkBoxShiftS1S2ToNextScan">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose between interrupt or polling mode&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shift stored values S1 and S2 in pixel 2 to next scan&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Software polling&lt;/span&gt; determines which method is used to copy data from DMA to user buffer.&lt;/p&gt;&lt;p&gt;unchecked: Use interrupt. Every dma_buffer_size_in_scans/2 scan the interrupt starts a copy process, which copies dma_buffer_size_in_scans/2 scans to the user buffer. 1000 is our default value for dma_buffer_size_in_scans, so interrupt is started every 500 scans.&lt;/p&gt;&lt;p&gt;checked: software polling on. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. Since P222_2 this method is reliable up to about 100kHz. It generates as expected a higher CPU load than the interrupt method. With this option you can get more recent scans with live view / GetCurrentScanNumber(), especially at lower frequencies. For high frequencies &amp;gt; 30kHz this method is not recommended.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;use_software_polling&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about software polling can be found in the manual in chapter 5.4.8.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When&lt;span style=&quot; font-style:italic;&quot;&gt; shift S1S2 to next scan&lt;/span&gt; is on, the input states of S1 and S2, which are sampled in scan n, are displayed in pixel 2 in scan n+1. This option is useful for the &lt;span style=&quot; font-style:italic;&quot;&gt;SENSOR TYPE&lt;/span&gt; HSIR, because this camera displays the data sampled at trigger n in scan n+1. To match the actual states of S1 and S2 to the sensor data activate this option. This feature is supported since PCIe board version P222_17.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;shift_s1s2_to_next_scan&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>on</string>

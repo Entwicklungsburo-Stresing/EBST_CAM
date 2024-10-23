@@ -333,8 +333,9 @@ struct camera_settings
 	 */
 	char file_path[file_path_size];
 	/**
-	 * TODO implement me
-	 * Since P222_17
+	 * When shift S1S2 to next scan is on, the input states of S1 and S2, which are sampled in scan n, are displayed in pixel 2 in scan n+1. This option is useful for the sensor type HSIR, because this camera displays the data sampled at trigger n in scan n+1. To match the actual states of S1 and S2 to the sensor data activate this option. This feature is supported since PCIe board version P222_17.
+	 *		* =0: off
+	 *		* =1: on
 	 */
 	uint32_t shift_s1s2_to_next_scan;
 	/**
