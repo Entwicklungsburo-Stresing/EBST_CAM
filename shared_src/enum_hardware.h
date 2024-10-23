@@ -720,10 +720,6 @@ enum camera_register_addresses_t
 	cam_adaddr_vclks_amount4 = 0x0C,
 	cam_adaddr_vclks_amount5 = 0x0D,
 	/**
-	 * This register is used to the the sensor gain. It is introduced to support the 2 bit gain function of HSIR sensor. The sensor gain bit in the config register only supports 1 bit.
-	 */
-	cam_adaddr_sensor_gain = 0x10,
-	/**
 	 * This is a register for the camera position for multiple cameras in line. The software always sets the first camera to 0 and the cameras are handing their positions one to another.
 	 */
 	cam_adaddr_camera_position = 0x7F,
@@ -744,6 +740,7 @@ enum cam_config_register_t
 	 * Added in P230.6.
 	 */
 	cam_config_register_bitindex_channel_select_b = 11,
+	cam_config_register_bitindex_sensor_gain_2 = 12,
 	cam_config_register_bits_sensor_gain = 0x0001,
 	cam_config_register_bits_trigger_mode_cc = 0x000E,
 	cam_config_register_bits_temp_level = 0x0070,
@@ -751,6 +748,7 @@ enum cam_config_register_t
 	cam_config_register_bits_bnc_out = 0x0300,
 	cam_config_register_bit_channel_select_a = 0x0400,
 	cam_config_register_bit_channel_select_b = 0x0800,
+	cam_config_register_bit_sensor_gain_2 = 0x1000,
 };
 
 /**
