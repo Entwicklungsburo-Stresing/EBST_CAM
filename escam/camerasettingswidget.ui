@@ -723,7 +723,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Controls the internal gain of some sensors&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor gain&lt;/span&gt; is controlling the internal gain function of some infrared sensors. For the some sensors gain can be switched on or off, others sensor got multiple levels of gain.&lt;/p&gt;&lt;p&gt;- camera system 3001&lt;br/&gt;gain off: 0&lt;br/&gt;gain on: 1 &lt;/p&gt;&lt;p&gt;- camera system 3030&lt;br/&gt;gain off: 0&lt;br/&gt;step: 1&lt;br/&gt;max gain: 4&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor gain can be found in the manual in chapters 3.3.1, 3.4.1.1, 4.5.2, 8.4.4, 8.7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor gain&lt;/span&gt; is controlling the internal gain function of some infrared sensors. For the some sensors gain can be switched on or off, others sensor got multiple levels of gain.&lt;/p&gt;&lt;p&gt;- camera system 3001&lt;br/&gt;gain off: 0&lt;br/&gt;gain on: 1 &lt;/p&gt;&lt;p&gt;- camera system 3030&lt;br/&gt;gain off: 0&lt;br/&gt;step: 1&lt;br/&gt;max gain: 3&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor gain can be found in the manual in chapters 3.3.1, 3.4.1.1, 4.5.2, 8.4.4, 8.7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>sensor gain</string>
@@ -1045,13 +1045,13 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Controls the internal gain of some sensors&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor gain&lt;/span&gt; is controlling the internal gain function of some infrared sensors. For the some sensors gain can be switched on or off, others sensor got multiple levels of gain.&lt;/p&gt;&lt;p&gt;- camera system 3001&lt;br/&gt;gain off: 0&lt;br/&gt;gain on: 1 &lt;/p&gt;&lt;p&gt;- camera system 3030&lt;br/&gt;gain off: 0&lt;br/&gt;step: 1&lt;br/&gt;max gain: 4&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor gain can be found in the manual in chapters 3.3.1, 3.4.1.1, 4.5.2, 8.4.4, 8.7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor gain&lt;/span&gt; is controlling the internal gain function of some infrared sensors. For the some sensors gain can be switched on or off, others sensor got multiple levels of gain.&lt;/p&gt;&lt;p&gt;- camera system 3001&lt;br/&gt;gain off: 0&lt;br/&gt;gain on: 1 &lt;/p&gt;&lt;p&gt;- camera system 3030&lt;br/&gt;gain off: 0&lt;br/&gt;step: 1&lt;br/&gt;max gain: 3&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor gain can be found in the manual in chapters 3.3.1, 3.4.1.1, 4.5.2, 8.4.4, 8.7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
            <property name="maximum">
-            <number>4</number>
+            <number>3</number>
            </property>
           </widget>
          </item>
