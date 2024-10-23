@@ -146,7 +146,7 @@ struct camera_settings
 	 *	* camera system 3030:
 	 *		* gain off: 0
 	 *		* step: 1
-	 *		* max gain: 4
+	 *		* max gain: 3
 	 */
 	uint32_t sensor_gain;
 	/**
