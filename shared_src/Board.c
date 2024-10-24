@@ -59,10 +59,10 @@ void SetGlobalSettings(struct measurement_settings settings)
 es_status_codes InitMeasurement()
 {
 	ES_LOG("\n*** Init Measurement ***\n");
-	ES_LOG("struct global_settings: ");
+	ES_TRACE("struct global_settings: ");
 	for (uint32_t i = 0; i < sizeof(settings_struct) / 4; i++)
-		ES_LOG("%u ", *(&settings_struct.board_sel + i));
-	ES_LOG("\n");
+		ES_TRACE("%u ", *(&settings_struct.board_sel + i));
+	ES_TRACE("\n");
 	es_status_codes status = es_camera_not_found;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
@@ -79,12 +79,12 @@ es_status_codes InitMeasurement()
 
 void SetVirtualCamcnt(uint32_t drvno)
 {
-	ES_LOG("Set virtual camcnt\n");
 	if (settings_struct.camera_settings[drvno].camcnt)
 		virtualCamcnt[drvno] = settings_struct.camera_settings[drvno].camcnt;
 	else
 		// if camcnt = 0, treat as camcnt = 1, but write 0 to register
 		virtualCamcnt[drvno] = 1;
+	ES_LOG("Set virtual camcnt to %u\n", virtualCamcnt[drvno]);
 	return;
 }
 
@@ -478,6 +478,7 @@ es_status_codes AbortMeasurement()
  */
 es_status_codes SetAbortMeasurementFlag()
 {
+	ES_LOG("Set abort measurement flag to true\n");
 	abortMeasurementFlag = true;
 	return es_no_error;
 }
@@ -1221,7 +1222,7 @@ es_status_codes allocateUserMemory(uint32_t drvno)
 			userBuffer[drvno] = userBufferTemp;
 			userBufferWritePos[drvno] = userBufferTemp;
 			userBufferWritePos_last[drvno] = userBufferTemp;
-			ES_LOG("user buffer space: %p - %p\n", userBuffer[drvno], userBufferEndPtr[drvno]);
+			ES_TRACE("user buffer space: %p - %p\n", userBuffer[drvno], userBufferEndPtr[drvno]);
 			return es_no_error;
 		}
 		else
@@ -1264,13 +1265,13 @@ es_status_codes SetDMABufRegs(uint32_t drvno)
 
 es_status_codes SetNosRegister(uint32_t drvno)
 {
-	ES_LOG("Set NOS register to %u", settings_struct.nos);
+	ES_LOG("Set NOS register to %u\n", settings_struct.nos);
 	return writeRegisterS0_32(drvno, settings_struct.nos, S0Addr_NOS);
 }
 
 es_status_codes SetNobRegister(uint32_t drvno)
 {
-	ES_LOG("Set NOB register to %u", settings_struct.nob);
+	ES_LOG("Set NOB register to %u\n", settings_struct.nob);
 	return writeRegisterS0_32(drvno, settings_struct.nob, S0Addr_NOB);
 }
 
@@ -3841,6 +3842,7 @@ es_status_codes waitForBlockReady(uint32_t board_sel)
  */
 es_status_codes WaitForMeasureReady(uint32_t board_sel)
 {
+	ES_LOG("WaitForMeasureReady\n");
 	bool measureOn[MAXPCIECARDS] = { false, false, false, false, false };
 	es_status_codes status = es_no_error;
 	do
@@ -5426,6 +5428,7 @@ es_status_codes SetTocnt(uint32_t drvno, uint8_t divider)
  */
 void FillUserBufferWithDummyData(uint32_t drvno)
 {
+	ES_LOG("Fill user buffer with dummy data, drvno %u\n", drvno);
 	//memset(userBuffer[drvno], 0xAAAA, settings_struct.camera_settings[drvno].pixel * settings_struct.nos * settings_struct.nob * virtualCamcnt[drvno] * sizeof(uint16_t));
 	for (uint32_t scan = 0; scan < settings_struct.nos * settings_struct.nob * virtualCamcnt[drvno]; scan++)
 	{
@@ -5526,6 +5529,7 @@ void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString
  */
 void SetContinuousMeasurement(bool on)
 {
+	ES_LOG("Set continuous measurement to %u\n", on);
 	continuousMeasurementFlag = on;
 	return;
 }
@@ -5548,6 +5552,7 @@ void SetContinuousMeasurement(bool on)
  */
 es_status_codes GetCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* overTemp)
 {
+	ES_TRACE("Get camera status over temperature, drvno %u, sample %u, block %u, camera_pos %u\n", drvno, sample, block, camera_pos);
 	if (!overTemp) return es_invalid_pointer;
 	uint16_t data = 0;
 	es_status_codes status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_camera_status, 1, &data);
@@ -5577,6 +5582,7 @@ es_status_codes GetCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_
  */
 es_status_codes GetCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* tempGood)
 {
+	ES_TRACE("Get camera status temp good, drvno %u, sample %u, block %u, camera_pos %u\n", drvno, sample, block, camera_pos);
 	if (!tempGood) return es_invalid_pointer;
 	uint16_t data = 0;
 	es_status_codes status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_camera_status, 1, &data);
@@ -5606,6 +5612,7 @@ es_status_codes GetCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_
  */
 es_status_codes GetBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* blockIndex)
 {
+	ES_TRACE("Get block index, drvno %u, sample %u, block %u, camera_pos %u\n", drvno, sample, block, camera_pos);
 	if (!blockIndex) return es_invalid_pointer;
 	uint16_t blockIndexHigh = 0;
 	uint16_t blockIndexLow = 0;
@@ -5636,6 +5643,7 @@ es_status_codes GetBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, u
  */
 es_status_codes GetScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* scanIndex)
 {
+	ES_TRACE("Get scan index, drvno %u, sample %u, block %u, camera_pos %u\n", drvno, sample, block, camera_pos);
 	if (!scanIndex) return es_invalid_pointer;
 	uint16_t scanIndexHigh = 0;
 	uint16_t scanIndexLow = 0;
@@ -5665,6 +5673,7 @@ es_status_codes GetScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, ui
  */
 es_status_codes GetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
 {
+	ES_TRACE("Get S1 state, drvno %u, sample %u, block %u, camera_pos %u\n", drvno, sample, block, camera_pos);
 	if (!state) return es_invalid_pointer;
 	uint16_t data = 0;
 	es_status_codes status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_block_index_high_s1_s2, 1, &data);
@@ -5694,6 +5703,7 @@ es_status_codes GetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint
  */
 es_status_codes GetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
 {
+	ES_TRACE("Get S2 state, drvno %u, sample %u, block %u, camera_pos %u\n", drvno, sample, block, camera_pos);
 	if (!state) return es_invalid_pointer;
 	uint16_t data = 0;
 	es_status_codes status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_block_index_high_s1_s2, 1, &data);
@@ -5723,6 +5733,7 @@ es_status_codes GetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint
  */
 es_status_codes GetImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
+	ES_TRACE("Get impact signal 1, drvno %u, sample %u, block %u, camera_pos %u\n", drvno, sample, block, camera_pos);
 	uint16_t data_high = 0;
 	uint16_t data_low = 0;
 	es_status_codes status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_impact_signal_1_high, 1, &data_high);
@@ -5751,6 +5762,7 @@ es_status_codes GetImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block
  */
 es_status_codes GetImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
+	ES_TRACE("Get impact signal 2, drvno %u, sample %u, block %u, camera_pos %u\n", drvno, sample, block, camera_pos);
 	uint16_t data_high = 0;
 	uint16_t data_low = 0;
 	es_status_codes status = CopyDataArbitrary(drvno, sample, block, camera_pos, pixel_impact_signal_2_high, 1, &data_high);
@@ -5779,6 +5791,7 @@ es_status_codes GetImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block
  */
 es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp)
 {
+	ES_TRACE("Get all special pixel information, drvno %u, sample %u, block %u, camera_pos %u\n", drvno, sample, block, camera_pos);
 	if (settings_struct.camera_settings[drvno].pixel <= 63) return es_invalid_pixel_count;
 	uint16_t* data = (uint16_t*)malloc(settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));
 	if (!data) return es_allocating_memory_failed;
@@ -5849,6 +5862,7 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
  */
 es_status_codes ReadScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh)
 {
+	ES_TRACE("Read scan frequency bit, drvno %u\n", drvno);
 	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_scan_read, scanFrequencyTooHigh);
 }
 
@@ -5863,6 +5877,7 @@ es_status_codes ReadScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh)
  */
 es_status_codes ResetScanFrequencyBit(uint32_t drvno)
 {
+	ES_TRACE("Reset scan frequency bit, drvno %u\n", drvno);
 	return pulseBitS0_8(drvno, FFCTRL_bitindex_scan_reset, S0Addr_FFCTRL, 100);
 }
 
@@ -5877,6 +5892,7 @@ es_status_codes ResetScanFrequencyBit(uint32_t drvno)
  */
 es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh)
 {
+	ES_TRACE("Read block frequency bit, drvno %u\n", drvno);
 	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_block_read, blockFrequencyTooHigh);
 }
 
@@ -5891,6 +5907,7 @@ es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHig
  */
 es_status_codes ResetBlockFrequencyBit(uint32_t drvno)
 {
+	ES_TRACE("Reset block frequency bit, drvno %u\n", drvno);
 	return pulseBitS0_8(drvno, FFCTRL_bitindex_block_reset, S0Addr_FFCTRL, 100);
 }
 
@@ -6042,6 +6059,7 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
  */
 es_status_codes ExportMeasurementHDF5(const char* path, char* filename)
 {
+	ES_LOG("Export measurement to HDF5 file\n");
 	hid_t file_id, file_attr_name, file_attr_timestamp, file_attr_number_of_boards;
 	hid_t dataspace_scalar = H5Screate(H5S_SCALAR);
 	herr_t statusHDF5;
@@ -6299,6 +6317,7 @@ es_status_codes CheckFirstMeasurementDone(uint32_t drvno)
  */
 es_status_codes GetXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns)
 {
+	ES_TRACE("Get XCK length\n");
 	return readRegisterS0_32(drvno, xckLengthIn10ns, S0Addr_XCKLEN);
 }
 
@@ -6315,6 +6334,7 @@ es_status_codes GetXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns)
  */
 es_status_codes GetXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns)
 {
+	ES_TRACE("Get XCK period\n");
 	return readRegisterS0_32(drvno, xckPeriodIn10ns, S0Addr_XCK_PERIOD);
 }
 
@@ -6331,6 +6351,7 @@ es_status_codes GetXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns)
  */
 es_status_codes GetBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns)
 {
+	ES_TRACE("Get BON length\n");
 	return readRegisterS0_32(drvno, bonLengthIn10ns, S0Addr_BONLEN);
 }
 
@@ -6347,6 +6368,7 @@ es_status_codes GetBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns)
  */
 es_status_codes GetBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns)
 {
+	ES_TRACE("Get BON period\n");
 	return readRegisterS0_32(drvno, bonPeriodIn10ns, S0Addr_BON_PERIOD);
 }
 
@@ -6402,6 +6424,7 @@ bool PcieCardVersionIsEqual(uint32_t drvno, uint16_t major_version, uint16_t min
  */
 es_status_codes GetBlockOn(uint32_t drvno, bool* block_on)
 {
+	ES_TRACE("Get block on bit\n");
 	es_status_codes status;
 	// In PCIe card firmware versino 222.14 the block_on bit was renamed from BLOCK_ON to BLOCK_EN and BLOCK_ON was added as a new bit.
 	if(PcieCardVersionIsSmallerThan(drvno, 0x222, 0x14))
@@ -6420,6 +6443,7 @@ es_status_codes GetBlockOn(uint32_t drvno, bool* block_on)
  */
 es_status_codes GetScanTriggerDetected(uint32_t drvno, bool* detected)
 {
+	ES_TRACE("Get scan trigger detected bit\n");
 	return ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_scan_trigger_detected, detected);
 }
 
@@ -6432,6 +6456,7 @@ es_status_codes GetScanTriggerDetected(uint32_t drvno, bool* detected)
  */
 es_status_codes GetBlockTriggerDetected(uint32_t drvno, bool* detected)
 {
+	ES_TRACE("Get block trigger detected bit\n");
 	return ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_block_trigger_detected, detected);
 }
 
@@ -6443,6 +6468,7 @@ es_status_codes GetBlockTriggerDetected(uint32_t drvno, bool* detected)
  */
 es_status_codes ResetScanTriggerDetected(uint32_t drvno)
 {
+	ES_TRACE("Reset scan trigger detected bit\n");
 	return pulseBitS0_32(drvno, PCIEFLAGS_bitindex_reset_scan_trigger_detected, S0Addr_PCIEFLAGS, 10);
 }
 
@@ -6454,11 +6480,13 @@ es_status_codes ResetScanTriggerDetected(uint32_t drvno)
  */
 es_status_codes ResetBlockTriggerDetected(uint32_t drvno)
 {
+	ES_TRACE("Reset block trigger detected bit\n");
 	return pulseBitS0_32(drvno, PCIEFLAGS_bitindex_reset_block_trigger_detected, S0Addr_PCIEFLAGS, 10);
 }
 
 es_status_codes WaitForBlockOn(uint32_t drvno)
 {
+	ES_LOG("Wait for block on\n");
 	bool blockOn = false;
 	es_status_codes status = es_no_error;
 	while (!blockOn && !abortMeasurementFlag)

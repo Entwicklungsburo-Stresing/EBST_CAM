@@ -1279,6 +1279,7 @@ void ValMsg(uint64_t val)
 */
 void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {
+	ES_TRACE("Start 2d viewer, drvno %u, block %u, camera %u, pixel %u, nos %u\n", drvno, block, camera, pixel, nos);
 	if (Direct2dViewer != NULL)
 	{
 		Deinit2dViewer();
@@ -1316,6 +1317,7 @@ void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pix
 */
 void ShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {
+	ES_TRACE("Show new bitmap, drvno %u, block %u, camera %u, pixel %u, nos %u\n", drvno, block, camera, pixel, nos);
 	if (Direct2dViewer != NULL)
 	{
 		uint16_t* address = NULL;
@@ -1345,6 +1347,7 @@ void ShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pix
 */
 void Deinit2dViewer()
 {
+	ES_TRACE("Deinit 2d viewer\n");
 	if (Direct2dViewer != NULL)
 	{
 		SendMessage(Direct2dViewer_getWindowHandler(Direct2dViewer), WM_CLOSE, 0, 0);
@@ -1359,6 +1362,7 @@ void Deinit2dViewer()
  */
 void SetGammaValue(uint16_t white, uint16_t black)
 {
+	ES_TRACE("Set gamma value, white %u, black %u\n", white, black);
 	if (Direct2dViewer != NULL)
 	{
 		Direct2dViewer_setGammaValue(Direct2dViewer, white, black);
@@ -1372,6 +1376,7 @@ void SetGammaValue(uint16_t white, uint16_t black)
  */
 uint16_t GetGammaWhite()
 {
+	ES_TRACE("Get gamma white\n");
 	if (Direct2dViewer != NULL)
 	{
 		return Direct2dViewer_getGammaWhite(Direct2dViewer);
@@ -1384,6 +1389,7 @@ uint16_t GetGammaWhite()
  */
 uint16_t GetGammaBlack()
 {
+	ES_TRACE("Get gamma black\n");
 	if (Direct2dViewer != NULL)
 	{
 		return Direct2dViewer_getGammaBlack(Direct2dViewer);
