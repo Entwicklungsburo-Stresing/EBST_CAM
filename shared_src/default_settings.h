@@ -90,5 +90,6 @@
 #define settingAxesMirrorXPathDefault				false
 #define settingShowCrosshairDefault					true
 #define settingChannelSelectDefault					channel_select_A_B
+#define settingColorSchemeDefault					0
 
 #endif // DEFAULT_SETTINGS_H

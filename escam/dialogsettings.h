@@ -97,6 +97,7 @@ constexpr auto settingThemePath = "theme";
 constexpr auto settingThemeIndexPath = "themeIndex";
 constexpr auto settingSettingsLevelPath = "settingsLevel";
 constexpr auto settingShowCameraBaseDir = "showcamera";
+constexpr auto settingColorSchemePath = "colorScheme";
 //io control
 constexpr auto settingIOCtrlOutput1DelayIn5nsPath = "Output1DelayIn5ns";
 constexpr auto settingIOCtrlOutput1WidthIn5nsPath = "Output1WidthIn5ns";
