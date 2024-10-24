@@ -16,6 +16,11 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->cameraSettingsWidgetBoard2->drvno = 2;
 	ui->cameraSettingsWidgetBoard3->drvno = 3;
 	ui->cameraSettingsWidgetBoard4->drvno = 4;
+	ui->cameraSettingsWidgetBoard0->ds = this;
+	ui->cameraSettingsWidgetBoard1->ds = this;
+	ui->cameraSettingsWidgetBoard2->ds = this;
+	ui->cameraSettingsWidgetBoard3->ds = this;
+	ui->cameraSettingsWidgetBoard4->ds = this;
 	connect(ui->buttonBox, &QDialogButtonBox::accepted, ui->cameraSettingsWidgetBoard0, &CameraSettingsWidget::on_accepted);
 	connect(ui->buttonBox, &QDialogButtonBox::accepted, ui->cameraSettingsWidgetBoard1, &CameraSettingsWidget::on_accepted);
 	connect(ui->buttonBox, &QDialogButtonBox::accepted, ui->cameraSettingsWidgetBoard2, &CameraSettingsWidget::on_accepted);
