@@ -47,6 +47,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->comboBoxTheme->setCurrentIndex(settings.value(settingThemeIndexPath, settingThemeIndexDefault).toDouble());
 	ui->comboBoxSettingsLevel->setCurrentIndex(settings.value(settingSettingsLevelPath, settingSettingsLevelDefault).toDouble());
 	ui->comboBoxSettingsLevel->currentIndexChanged(ui->comboBoxSettingsLevel->currentIndex());
+	ui->comboBoxColorScheme->setCurrentIndex(settings.value(settingColorSchemePath, settingColorSchemeDefault).toDouble());
 
 	// hide all board select elements
 	ui->labelBoardSel->setVisible(false);
@@ -158,6 +159,7 @@ void DialogSettings::on_accepted()
 	settings.setValue(settingNosPath, ui->doubleSpinBoxNos->value());
 	settings.setValue(settingNobPath, ui->doubleSpinBoxNob->value());
 	settings.setValue(settingSoftwareVersionPath, VER_FILE_VERSION_STR);
+	settings.setValue(settingColorSchemePath, ui->comboBoxColorScheme->currentIndex());
 	emit settings_saved();
 	return;
 }
