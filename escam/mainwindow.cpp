@@ -88,8 +88,6 @@ MainWindow::MainWindow(QWidget* parent)
 	lsc.moveToThread(&measurementThread);
 	connect(&measurementThread, &QThread::started, &lsc, &Lsc::startMeasurement);
 	connect(&lsc, &Lsc::measureDone, &measurementThread, &QThread::quit);
-	connect(&lsc, &Lsc::allBlocksDone, ds_dsc, &DialogDSC::updateDSC);
-	connect(&lsc, &Lsc::allBlocksDone, ds_rms, &DialogRMS::updateRMS);
 #ifdef __linux__
 	// disable gray scale menu on Linux
 	ui->menuGreyscale_Viewer->setEnabled(false);
@@ -327,6 +325,9 @@ void MainWindow::on_actionExport_data_triggered()
  */
 void MainWindow::on_actionRMS_triggered()
 {
+	DialogRMS* ds_rms = new DialogRMS(this);
+	connect(&lsc, &Lsc::allBlocksDone, ds_rms, &DialogRMS::updateRMS);
+	ds_rms->setAttribute(Qt::WA_DeleteOnClose);
 	ds_rms->initDialogRMS();
 	ds_rms->show();
 	return;
@@ -351,6 +352,9 @@ void MainWindow::on_actionTrigger_info_triggered()
  */
 void MainWindow::on_actionDSC_triggered()
 {
+	DialogDSC* ds_dsc = new DialogDSC(this);
+	connect(&lsc, &Lsc::allBlocksDone, ds_dsc, &DialogDSC::updateDSC);
+	ds_dsc->setAttribute(Qt::WA_DeleteOnClose);
 	ds_dsc->initDialogDsc();
 	ds_dsc->show();
 	return;

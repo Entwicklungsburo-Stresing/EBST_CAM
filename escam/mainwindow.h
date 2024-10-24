@@ -32,8 +32,6 @@ public slots:
 	void startPressed();
 private:
 	QSettings settings;
-	DialogDSC* ds_dsc = new DialogDSC( this );
-	DialogRMS* ds_rms = new DialogRMS( this );
 	QThread measurementThread;
 	void copySettings(QSettings &dst, QSettings &src);
 	QTimer* liveViewTimer = new QTimer(this);
