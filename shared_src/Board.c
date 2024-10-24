@@ -6075,7 +6075,7 @@ es_status_codes ExportMeasurementHDF5(const char* path, char* filename)
 			if ((status = CheckFirstMeasurementDone(drvno)) != es_no_error) return status;
 		}
 	}
-	if (!wasRunning) return es_first_measurement_not_done;
+	if (!wasRunning && !testModeOn) return es_first_measurement_not_done;
 
 	char filepath[FILENAME_MAX];
 	sprintf_s(filepath, FILENAME_MAX, "%s\\%s", path, filename);
@@ -6282,6 +6282,10 @@ hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t datas
 
 es_status_codes CheckFirstMeasurementDone(uint32_t drvno)
 {
+	if (testModeOn && userBuffer[drvno])
+		return es_no_error;
+	else if (testModeOn && !userBuffer[drvno])
+		return es_first_measurement_not_done;
 	uint32_t dataNOS = 0, dataScanIndex = 0, dataNOB = 0, dataBlockIndex = 0, bitmask = ScanIndex_bits;
 	es_status_codes status = readRegisterS0_32(drvno, &dataNOS, S0Addr_NOS);
 	if (status != es_no_error) return status;
