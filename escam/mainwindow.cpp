@@ -908,7 +908,7 @@ void MainWindow::setScanTriggerDetected()
 		if ((board_sel >> drvno) & 1)
 		{
 			bool scanTriggerDetected = false;
-			es_status_codes status = lsc.getScanTriggerDetected(drvno, &scanTriggerDetected);
+			lsc.getScanTriggerDetected(drvno, &scanTriggerDetected);
 			allScanTriggerDetected &= scanTriggerDetected;
 		}
 	}
@@ -945,7 +945,7 @@ void MainWindow::setBlockTriggerDetected()
 		if ((board_sel >> drvno) & 1)
 		{
 			bool blockTriggerDetected = false;
-			es_status_codes status = lsc.getBlockTriggerDetected(drvno, &blockTriggerDetected);
+			lsc.getBlockTriggerDetected(drvno, &blockTriggerDetected);
 			allBlockTriggerDetected &= blockTriggerDetected;
 		}
 	}
