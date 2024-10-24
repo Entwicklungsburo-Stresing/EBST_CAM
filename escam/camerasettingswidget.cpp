@@ -247,8 +247,6 @@ void CameraSettingsWidget::on_spinBoxNumberOfRegions_valueChanged(int value)
 		ui->spinBoxRegion5->setEnabled(false);
 		if (ui->comboBoxFftMode->currentIndex() == partial_binning)
 		{
-			// Found the DialogSettings object by trying out how many parents I have to go up. Is there a better way to do it?
-			DialogSettings* ds = static_cast<DialogSettings*>(this->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget());
 			if (ds)
 			{
 				ds->ui->doubleSpinBoxNos->setValue(value);
@@ -401,8 +399,6 @@ void CameraSettingsWidget::on_spinBoxPixel_valueChanged(int arg1)
 void CameraSettingsWidget::on_comboBoxFftMode_currentIndexChanged(int index)
 {
 	bool enabled = true;
-	// Found the DialogSettings object by trying out how many parents I have to go up. Is there a better way to do it?
-	DialogSettings* ds = static_cast<DialogSettings*>(this->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget());
 	switch (_settings_level)
 	{
 	case settings_level_guided:
@@ -567,7 +563,6 @@ void CameraSettingsWidget::on_spinBoxLines_valueChanged(int value)
 	if (_settings_level == settings_level_guided && ui->comboBoxFftMode->currentIndex() == area_mode)
 	{
 		// Found the DialogSettings object by trying out how many parents I have to go up. Is there a better way to do it?
-		DialogSettings* ds = static_cast<DialogSettings*>(this->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget());
 		if (ds)
 		{
 			ds->ui->doubleSpinBoxNos->setValue(value / ui->spinBoxLinesBinning->value());
@@ -581,7 +576,6 @@ void CameraSettingsWidget::on_spinBoxLinesBinning_valueChanged(int value)
 	if (_settings_level == settings_level_guided && ui->comboBoxFftMode->currentIndex() == area_mode)
 	{
 		// Found the DialogSettings object by trying out how many parents I have to go up. Is there a better way to do it?
-		DialogSettings* ds = static_cast<DialogSettings*>(this->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget()->parentWidget());
 		if (ds)
 		{
 			ds->ui->doubleSpinBoxNos->setValue(ui->spinBoxLines->value() / value);

@@ -20,6 +20,7 @@ public:
 	CameraSettingsWidget(QWidget *parent = nullptr);
 	~CameraSettingsWidget();
 	uint32_t drvno = 0;
+	DialogSettings* ds;
 public slots:
 	void on_accepted();
 	void loadDefaults();
