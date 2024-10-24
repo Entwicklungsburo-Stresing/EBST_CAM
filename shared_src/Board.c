@@ -102,6 +102,7 @@ es_status_codes InitSoftware(uint32_t drvno)
 	if (dmaBufferPartSizeInScans)
 		numberOfInterrupts[drvno] = (settings_struct.nob * settings_struct.nos * virtualCamcnt[drvno]) / dmaBufferPartSizeInScans;
 	ES_LOG("Number of interrupts: %u \n", numberOfInterrupts[drvno]);
+	if (testModeOn) return es_device_not_found;
 	if (settings_struct.camera_settings[drvno].use_software_polling)
 		status = disableInterrupt(drvno);
 	else
