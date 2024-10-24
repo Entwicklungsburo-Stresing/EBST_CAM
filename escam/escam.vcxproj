@@ -68,7 +68,7 @@
     <IncludePath>$(ProjectDir)..\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <QtInstall>6.5.3_msvc2019_64</QtInstall>
+    <QtInstall>6.8.0_msvc2022_64</QtInstall>
     <QtModules>core;gui;widgets;charts</QtModules>
     <QtDeploy>true</QtDeploy>
   </PropertyGroup>

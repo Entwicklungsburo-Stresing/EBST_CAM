@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>343</width>
+    <width>344</width>
     <height>368</height>
    </rect>
   </property>
@@ -29,6 +29,122 @@
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <layout class="QGridLayout" name="gridLayout">
+         <item row="1" column="0">
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="11" column="1">
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="2">
+          <widget class="QCheckBox" name="checkBoxBoard0">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select if PCIe board 1 should be used for the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;PCIe board select&lt;/span&gt; controls which boards are used for the measurement. When multiple boards are selected the measurement is started for all boards at the same time. The exact trigger moment is controlled separately by each board. Every board has its own camera settings, which can be set in the &lt;span style=&quot; font-style:italic;&quot;&gt;Camera Settings&lt;/span&gt; tab. All settings in the &lt;span style=&quot; font-style:italic;&quot;&gt;General&lt;/span&gt; tab are valid for all boards. Select between 1 and 5 boards.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;board_sel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>board 0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="labelBoardSel">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the PCIe board which should be used for the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;PCIe board select&lt;/span&gt; controls which boards are used for the measurement. When multiple boards are selected the measurement is started for all boards at the same time. The exact trigger moment is controlled separately by each board. Every board has its own camera settings, which can be set in the &lt;span style=&quot; font-style:italic;&quot;&gt;Camera Settings&lt;/span&gt; tab. All settings in the &lt;span style=&quot; font-style:italic;&quot;&gt;General&lt;/span&gt; tab are valid for all boards. Select between 1 and 5 boards.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;board_sel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>PCIe Board select</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="1">
+          <widget class="QLabel" name="labelTheme">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Appearance of Escam&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The setting theme decides about the appearance of Escam. The available options depend on your operating system and are default built into Qt. Some themes implement a dark / light mode depending on system wide color theme.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>theme</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="8" column="2">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxContiniousPause_in_ms">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pause between two measurement cycles when continuous mode is on&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Continuous pause&lt;/span&gt; is the pause between two measurement cycles when continuous mode is on. The continuous mode repeats automatically the measurement cycle until it is stopped. One cycle consists of number of samples * number of blocks readouts. The data is not stored permanently. Each cycle is overwriting the data from the previous cycle. The data of a specific sample/block is always at the same memory address. That means for example scan 100 in block 2 from the first measurement cycle will be overwritten by scan 100 in block 2 in the second measurement cycle. The start of the next cycle is not strictly linked to your trigger, which means when triggering fast, triggers could be missed.&lt;/p&gt;&lt;p&gt;min: 0 ms&lt;br/&gt;step: 0.001 ms&lt;br/&gt;max:  4,294,967.295 ms&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;cont_pause_in_microseconds&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>true</bool>
+           </property>
+           <property name="suffix">
+            <string> ms</string>
+           </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="maximum">
+            <double>4294967.294999999925494</double>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLabel" name="labelNos">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of readouts per block&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Nos&lt;/span&gt; is the number of samples. One sample is one readout of the camera. One readout is triggered on each sample trigger which is controlled by &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;Nos&lt;/span&gt; is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 2&lt;br/&gt;step: 1&lt;br/&gt;max: 4,294,967,295&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;nos&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about samples and blocks can be found in the manual in chapter 6.4.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>nos (number of samples)</string>
+           </property>
+          </widget>
+         </item>
          <item row="7" column="1">
           <widget class="QLabel" name="labelNob">
            <property name="toolTip">
@@ -55,7 +171,7 @@
          <item row="1" column="3">
           <spacer name="horizontalSpacer_2">
            <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+            <enum>Qt::Orientation::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -65,38 +181,16 @@
            </property>
           </spacer>
          </item>
-         <item row="3" column="2">
-          <widget class="QCheckBox" name="checkBoxBoard2">
+         <item row="4" column="2">
+          <widget class="QCheckBox" name="checkBoxBoard3">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select if PCIe board 2 should be used for the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select if PCIe board 3 should be used for the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;PCIe board select&lt;/span&gt; controls which boards are used for the measurement. When multiple boards are selected the measurement is started for all boards at the same time. The exact trigger moment is controlled separately by each board. Every board has its own camera settings, which can be set in the &lt;span style=&quot; font-style:italic;&quot;&gt;Camera Settings&lt;/span&gt; tab. All settings in the &lt;span style=&quot; font-style:italic;&quot;&gt;General&lt;/span&gt; tab are valid for all boards. Select between 1 and 5 boards.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;board_sel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>board 2</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxNob">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of how often nos readouts are repeated&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Nob&lt;/span&gt; is the number of blocks. One block contains &lt;span style=&quot; font-style:italic;&quot;&gt;nos&lt;/span&gt; readouts and is triggered on each block trigger which is controlled by &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;Nob&lt;/span&gt; is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1&lt;br/&gt;step: 1&lt;br/&gt;max: 4,294,967,295&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;nob&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about samples and blocks can be found in the manual in chapter 6.4.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="decimals">
-            <number>0</number>
-           </property>
-           <property name="minimum">
-            <double>1.000000000000000</double>
-           </property>
-           <property name="maximum">
-            <double>4294967295.000000000000000</double>
+            <string>board 3</string>
            </property>
           </widget>
          </item>
@@ -112,7 +206,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Nos&lt;/span&gt; is the number of samples. One sample is one readout of the camera. One readout is triggered on each sample trigger which is controlled by &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;Nos&lt;/span&gt; is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 2&lt;br/&gt;step: 1&lt;br/&gt;max: 4,294,967,295&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;nos&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about samples and blocks can be found in the manual in chapter 6.4.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="decimals">
             <number>0</number>
@@ -122,96 +216,6 @@
            </property>
            <property name="maximum">
             <double>4294967295.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="10" column="1">
-          <spacer name="verticalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="0" column="1">
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLabel" name="labelNos">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of readouts per block&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Nos&lt;/span&gt; is the number of samples. One sample is one readout of the camera. One readout is triggered on each sample trigger which is controlled by &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;Nos&lt;/span&gt; is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 2&lt;br/&gt;step: 1&lt;br/&gt;max: 4,294,967,295&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;nos&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about samples and blocks can be found in the manual in chapter 6.4.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>nos (number of samples)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="labelBoardSel">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the PCIe board which should be used for the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;PCIe board select&lt;/span&gt; controls which boards are used for the measurement. When multiple boards are selected the measurement is started for all boards at the same time. The exact trigger moment is controlled separately by each board. Every board has its own camera settings, which can be set in the &lt;span style=&quot; font-style:italic;&quot;&gt;Camera Settings&lt;/span&gt; tab. All settings in the &lt;span style=&quot; font-style:italic;&quot;&gt;General&lt;/span&gt; tab are valid for all boards. Select between 1 and 5 boards.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;board_sel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>PCIe Board select</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxContiniousPause_in_ms">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pause between two measurement cycles when continuous mode is on&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Continuous pause&lt;/span&gt; is the pause between two measurement cycles when continuous mode is on. The continuous mode repeats automatically the measurement cycle until it is stopped. One cycle consists of number of samples * number of blocks readouts. The data is not stored permanently. Each cycle is overwriting the data from the previous cycle. The data of a specific sample/block is always at the same memory address. That means for example scan 100 in block 2 from the first measurement cycle will be overwritten by scan 100 in block 2 in the second measurement cycle. The start of the next cycle is not strictly linked to your trigger, which means when triggering fast, triggers could be missed.&lt;/p&gt;&lt;p&gt;min: 0 ms&lt;br/&gt;step: 0.001 ms&lt;br/&gt;max:  4,294,967.295 ms&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;cont_pause_in_microseconds&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="showGroupSeparator" stdset="0">
-            <bool>true</bool>
-           </property>
-           <property name="suffix">
-            <string> ms</string>
-           </property>
-           <property name="decimals">
-            <number>3</number>
-           </property>
-           <property name="maximum">
-            <double>4294967.294999999925494</double>
            </property>
           </widget>
          </item>
@@ -228,19 +232,6 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="2">
-          <widget class="QCheckBox" name="checkBoxBoard0">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select if PCIe board 1 should be used for the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;PCIe board select&lt;/span&gt; controls which boards are used for the measurement. When multiple boards are selected the measurement is started for all boards at the same time. The exact trigger moment is controlled separately by each board. Every board has its own camera settings, which can be set in the &lt;span style=&quot; font-style:italic;&quot;&gt;Camera Settings&lt;/span&gt; tab. All settings in the &lt;span style=&quot; font-style:italic;&quot;&gt;General&lt;/span&gt; tab are valid for all boards. Select between 1 and 5 boards.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;board_sel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>board 0</string>
-           </property>
-          </widget>
-         </item>
          <item row="2" column="2">
           <widget class="QCheckBox" name="checkBoxBoard1">
            <property name="toolTip">
@@ -251,6 +242,19 @@
            </property>
            <property name="text">
             <string>board 1</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QCheckBox" name="checkBoxBoard2">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select if PCIe board 2 should be used for the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;PCIe board select&lt;/span&gt; controls which boards are used for the measurement. When multiple boards are selected the measurement is started for all boards at the same time. The exact trigger moment is controlled separately by each board. Every board has its own camera settings, which can be set in the &lt;span style=&quot; font-style:italic;&quot;&gt;Camera Settings&lt;/span&gt; tab. All settings in the &lt;span style=&quot; font-style:italic;&quot;&gt;General&lt;/span&gt; tab are valid for all boards. Select between 1 and 5 boards.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;board_sel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>board 2</string>
            </property>
           </widget>
          </item>
@@ -267,30 +271,52 @@
            </property>
           </widget>
          </item>
-         <item row="9" column="1">
-          <widget class="QLabel" name="label">
+         <item row="7" column="2">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxNob">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Appearance of Escam&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of how often nos readouts are repeated&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The setting theme decides about the appearance of Escam. The available options depend on your operating system and are default built into Qt. Some themes implement a dark / light mode depending on system wide color theme.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Nob&lt;/span&gt; is the number of blocks. One block contains &lt;span style=&quot; font-style:italic;&quot;&gt;nos&lt;/span&gt; readouts and is triggered on each block trigger which is controlled by &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;Nob&lt;/span&gt; is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1&lt;br/&gt;step: 1&lt;br/&gt;max: 4,294,967,295&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;nob&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about samples and blocks can be found in the manual in chapter 6.4.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
-           <property name="text">
-            <string>theme</string>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="minimum">
+            <double>1.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>4294967295.000000000000000</double>
            </property>
           </widget>
          </item>
-         <item row="4" column="2">
-          <widget class="QCheckBox" name="checkBoxBoard3">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select if PCIe board 3 should be used for the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;PCIe board select&lt;/span&gt; controls which boards are used for the measurement. When multiple boards are selected the measurement is started for all boards at the same time. The exact trigger moment is controlled separately by each board. Every board has its own camera settings, which can be set in the &lt;span style=&quot; font-style:italic;&quot;&gt;Camera Settings&lt;/span&gt; tab. All settings in the &lt;span style=&quot; font-style:italic;&quot;&gt;General&lt;/span&gt; tab are valid for all boards. Select between 1 and 5 boards.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;board_sel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
+         <item row="10" column="1">
+          <widget class="QLabel" name="labelColorScheme">
            <property name="text">
-            <string>board 3</string>
+            <string>color scheme</string>
            </property>
+          </widget>
+         </item>
+         <item row="10" column="2">
+          <widget class="QComboBox" name="comboBoxColorScheme">
+           <item>
+            <property name="text">
+             <string>auto</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>light</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>dark</string>
+            </property>
+           </item>
           </widget>
          </item>
         </layout>
@@ -389,10 +415,10 @@
      <item>
       <widget class="QDialogButtonBox" name="buttonBox">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="standardButtons">
-        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+        <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok</set>
        </property>
       </widget>
      </item>

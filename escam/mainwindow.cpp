@@ -496,13 +496,17 @@ void MainWindow::loadSettings()
 		ui->horizontalSliderBlock->setValue(nob);
 	QString theme = settings.value(settingThemePath, settingThemeDefault).toString();
 	QApplication::setStyle(QStyleFactory::create(theme));
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 0))
 	QStyleHints* qstyle = QApplication::styleHints();
-	if(qstyle->colorScheme() == Qt::ColorScheme::Dark && theme != "windowsvista")
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 8, 0))
+	qstyle->setColorScheme(Qt::ColorScheme(settings.value(settingColorSchemePath, settingColorSchemeDefault).toDouble()));
+#endif
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 0))
+	if(qstyle->colorScheme() == Qt::ColorScheme::Dark)
 		ui->chartView->chart()->setTheme(QChart::ChartThemeDark);
 	else
 		ui->chartView->chart()->setTheme(QChart::ChartThemeLight);
 #endif
+
 	QGuiApplication::restoreOverrideCursor();
 	qDebug() << "Loading settings done";
 	return;
