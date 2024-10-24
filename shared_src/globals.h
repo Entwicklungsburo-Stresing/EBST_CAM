@@ -111,6 +111,7 @@ extern uint16_t** userBufferEndPtr;
 extern uint16_t** userBufferWritePos;
 extern uint16_t** userBufferWritePos_last;
 extern uint8_t number_of_boards;
+extern bool testModeOn;
 extern volatile bool abortMeasurementFlag;
 extern volatile uint32_t* numberOfInterrupts;
 extern volatile bool continuousMeasurementFlag;

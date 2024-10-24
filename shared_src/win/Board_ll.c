@@ -528,6 +528,7 @@ es_status_codes _InitDriver()
 		// set number_of_boards 1 for test mode
 		ES_LOG("No board detected. Setting number_of_boards to 1 for test mode.\n");
 		number_of_boards = 1;
+		testModeOn = true;
 		return es_device_not_found;
 	}
 	number_of_boards = (UINT8) scanResult.dwNumDevices;

@@ -3396,6 +3396,7 @@ es_status_codes GetIndexOfPixel(uint32_t drvno, uint16_t pixel, uint32_t sample,
 	if (pixel >= settings_struct.camera_settings[drvno].pixel || sample >= settings_struct.nos || block >= settings_struct.nob || camera >= virtualCamcnt[drvno])
 		return es_parameter_out_of_range;
 	es_status_codes status = checkDriverHandle(drvno);
+	if (testModeOn && status != es_no_error) status = es_no_error;
 	if (status != es_no_error) return status;
 	//init index with base position of pixel
 	uint64_t index = pixel;

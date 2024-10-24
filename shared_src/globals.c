@@ -20,6 +20,7 @@ volatile bool* timerOn = temp_timerOn;
 uint32_t temp_numberOfInterrupts[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 volatile uint32_t* numberOfInterrupts = temp_numberOfInterrupts;
 uint8_t number_of_boards = 0;
+bool testModeOn = false;
 volatile bool abortMeasurementFlag = false;
 volatile bool continuousMeasurementFlag = false;
 uint32_t continuousPauseInMicroseconds = 0;
