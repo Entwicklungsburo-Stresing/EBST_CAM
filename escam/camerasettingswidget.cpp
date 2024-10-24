@@ -562,7 +562,6 @@ void CameraSettingsWidget::on_spinBoxLines_valueChanged(int value)
 {
 	if (_settings_level == settings_level_guided && ui->comboBoxFftMode->currentIndex() == area_mode)
 	{
-		// Found the DialogSettings object by trying out how many parents I have to go up. Is there a better way to do it?
 		if (ds)
 		{
 			ds->ui->doubleSpinBoxNos->setValue(value / ui->spinBoxLinesBinning->value());
@@ -575,7 +574,6 @@ void CameraSettingsWidget::on_spinBoxLinesBinning_valueChanged(int value)
 {
 	if (_settings_level == settings_level_guided && ui->comboBoxFftMode->currentIndex() == area_mode)
 	{
-		// Found the DialogSettings object by trying out how many parents I have to go up. Is there a better way to do it?
 		if (ds)
 		{
 			ds->ui->doubleSpinBoxNos->setValue(ui->spinBoxLines->value() / value);
