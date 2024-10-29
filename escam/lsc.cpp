@@ -1,8 +1,7 @@
 ﻿#include "lsc.h"
 #include <sstream>
-#include "../shared_src/Board.h"
-#include "../ESLSCDLL/ESLSCDLL.h"
 #include "../shared_src/UIAbstractionLayer.h"
+#include "../ESLSCDLL/ESLSCDLL.h"
 
 Lsc::Lsc()
 {
@@ -261,7 +260,7 @@ es_status_codes Lsc::dac_setOutput(uint32_t drvno, uint8_t location, uint8_t cam
  */
 es_status_codes Lsc::dac_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint32_t* output, bool reorder_channels)
 {
-	return DAC8568_setAllOutputs(drvno, location, cameraPosition, output, reorder_channels);
+	return DLLDAC8568_setAllOutputs(drvno, location, cameraPosition, output, reorder_channels);
 }
 
 /**
@@ -269,7 +268,7 @@ es_status_codes Lsc::dac_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t
  */
 es_status_codes Lsc::ioctrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 {
-	return IOCtrl_setT0(drvno, period_in_10ns);
+	return DLLIOCtrl_setT0(drvno, period_in_10ns);
 }
 
 /**
@@ -277,7 +276,7 @@ es_status_codes Lsc::ioctrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
  */
 es_status_codes Lsc::ioctrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns)
 {
-	return IOCtrl_setOutput(drvno, number, width_in_5ns, delay_in_5ns);
+	return DLLIOCtrl_setOutput(drvno, number, width_in_5ns, delay_in_5ns);
 }
 
 /**
@@ -290,7 +289,7 @@ void Lsc::getCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block)
 
 void Lsc::fillUserBufferWithDummyData(uint32_t drvno)
 {
-	FillUserBufferWithDummyData(drvno);
+	DLLFillUserBufferWithDummyData();
 	emit measureStart();
 	emit blockStart();
 	emit blockDone();
@@ -301,13 +300,13 @@ void Lsc::fillUserBufferWithDummyData(uint32_t drvno)
 
 bool Lsc::IsRunning()
 {
-	return isRunning;
+	return (bool)DLLGetIsRunning();
 }
 
 std::string Lsc::getVerifiedDataDialog(struct verify_data_parameter* vd)
 {
 	char* cstring;
-	GetVerifiedDataDialog(vd, &cstring);
+	DLLGetVerifiedDataDialog(vd, &cstring);
 	std::string cppstring = cstring;
 	parseTextToHtml(&cppstring);
 	return cppstring;
@@ -318,7 +317,7 @@ std::string Lsc::getVerifiedDataDialog(struct verify_data_parameter* vd)
  */
 es_status_codes Lsc::getCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* overTemp)
 {
-	return GetCameraStatusOverTemp(drvno, sample, block, camera_pos, overTemp);
+	return DLLGetCameraStatusOverTemp(drvno, sample, block, camera_pos,(uint8_t*) overTemp);
 }
 
 /**
@@ -326,7 +325,7 @@ es_status_codes Lsc::getCameraStatusOverTemp(uint32_t drvno, uint32_t sample, ui
  */
 es_status_codes Lsc::getCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* tempGood)
 {
-	return GetCameraStatusTempGood(drvno, sample, block, camera_pos, tempGood);
+	return DLLGetCameraStatusTempGood(drvno, sample, block, camera_pos, (uint8_t*)tempGood);
 }
 
 /**
@@ -334,7 +333,7 @@ es_status_codes Lsc::getCameraStatusTempGood(uint32_t drvno, uint32_t sample, ui
  */
 es_status_codes Lsc::getBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* blockIndex)
 {
-	return GetBlockIndex(drvno, sample, block, camera_pos, blockIndex);
+	return DLLGetBlockIndex(drvno, sample, block, camera_pos, blockIndex);
 }
 
 /**
@@ -342,7 +341,7 @@ es_status_codes Lsc::getBlockIndex(uint32_t drvno, uint32_t sample, uint32_t blo
  */
 es_status_codes Lsc::getScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* scanIndex)
 {
-	return GetScanIndex(drvno, sample, block, camera_pos, scanIndex);
+	return DLLGetScanIndex(drvno, sample, block, camera_pos, scanIndex);
 }
 
 /**
@@ -350,7 +349,7 @@ es_status_codes Lsc::getScanIndex(uint32_t drvno, uint32_t sample, uint32_t bloc
  */
 es_status_codes Lsc::getS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
 {
-	return GetS1State(drvno, sample, block, camera_pos, state);
+	return DLLGetS1State(drvno, sample, block, camera_pos, state);
 }
 
 /**
@@ -358,7 +357,7 @@ es_status_codes Lsc::getS1State(uint32_t drvno, uint32_t sample, uint32_t block,
  */
 es_status_codes Lsc::getS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
 {
-	return GetS2State(drvno, sample, block, camera_pos, state);
+	return DLLGetS2State(drvno, sample, block, camera_pos, state);
 }
 
 /**
@@ -366,7 +365,7 @@ es_status_codes Lsc::getS2State(uint32_t drvno, uint32_t sample, uint32_t block,
  */
 es_status_codes Lsc::getImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
-	return GetImpactSignal1(drvno, sample, block, camera_pos, impactSignal);
+	return DLLGetImpactSignal1(drvno, sample, block, camera_pos, impactSignal);
 }
 
 /**
@@ -374,7 +373,7 @@ es_status_codes Lsc::getImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t 
  */
 es_status_codes Lsc::getImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
-	return GetImpactSignal2(drvno, sample, block, camera_pos, impactSignal);
+	return DLLGetImpactSignal2(drvno, sample, block, camera_pos, impactSignal);
 }
 
 /**
@@ -382,7 +381,7 @@ es_status_codes Lsc::getImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t 
  */
 es_status_codes Lsc::getAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp)
 {
-	return GetAllSpecialPixelInformation(drvno, sample, block, camera_pos, sp);
+	return DLLGetAllSpecialPixelInformation(drvno, sample, block, camera_pos, sp);
 }
 
 /**
@@ -390,7 +389,7 @@ es_status_codes Lsc::getAllSpecialPixelInformation(uint32_t drvno, uint32_t samp
  */
 void Lsc::setContinuousMeasurement(bool on)
 {
-	return SetContinuousMeasurement(on);
+	return DLLSetContinuousMeasurement(on);
 }
 
 /**
@@ -556,3 +555,12 @@ es_status_codes Lsc::resetBlockTriggerDetected(uint32_t drvno)
 	return DLLResetBlockTriggerDetected(drvno);
 }
 
+uint32_t Lsc::getVirtualCamcnt(uint32_t drvno)
+{
+	return DLLGetVirtualCamcnt(drvno);
+}
+
+bool Lsc::getTestModeOn()
+{
+	return DLLGetTestModeOn();
+}

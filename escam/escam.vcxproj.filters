@@ -65,22 +65,10 @@
     <ClCompile Include="lsc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared_src\lscpciej_lib.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="mainwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="myqspinbox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\shared_src\globals.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\shared_src\Board.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\shared_src\win\Board_ll.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="myqchartview.cpp">
@@ -107,12 +95,6 @@
     <ClCompile Include="dialoggreyscalesettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared_src\Direct2dViewer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\shared_src\Direct2dViewer_c.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="crosshairs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -133,18 +115,12 @@
     <QtMoc Include="dialogsettings.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClInclude Include="..\shared_src\enum_hardware.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\shared_src\es_status_codes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <QtMoc Include="lsc.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClInclude Include="..\shared_src\lscpciej_lib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <QtMoc Include="mainwindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -154,15 +130,6 @@
     <ClInclude Include="..\shared_src\struct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\shared_src\globals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\shared_src\Board.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\shared_src\Board_ll.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\shared_src\default_settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -170,12 +137,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\shared_src\Direct2dViewer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\shared_src\Direct2dViewer_c.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\shared_src\enum_settings.h">

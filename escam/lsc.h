@@ -5,7 +5,11 @@
 #include <string>
 #include <QObject>
 #include "../shared_src/es_status_codes.h"
+#include "../shared_src/enum_settings.h"
+#include "../shared_src/enum_hardware.h"
 #include "../shared_src/globals.h"
+
+#define MAXPCIECARDS 5
 
 class Lsc : public QObject
 {
@@ -78,6 +82,8 @@ public:
 	es_status_codes resetScanTriggerDetected(uint32_t drvno);
 	es_status_codes resetBlockTriggerDetected(uint32_t drvno);
 	uint8_t numberOfBoards = 0;
+	uint32_t getVirtualCamcnt(uint32_t drvno);
+	bool getTestModeOn();
 public slots:
 	es_status_codes startMeasurement();
 signals:

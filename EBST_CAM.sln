@@ -7,8 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ESLSCDLL", "ESLSCDLL\ESLSCD
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{35B0BE6D-E3DA-4070-9045-14D9B54456CA}"
 	ProjectSection(SolutionItems) = preProject
-		doc\compatibility.md = doc\compatibility.md
 		CHANGELOG.md = CHANGELOG.md
+		doc\compatibility.md = doc\compatibility.md
 		escam_deb\create_escam_deb.sh = escam_deb\create_escam_deb.sh
 		escam\escam.pro = escam\escam.pro
 		doc\mainpage.md = doc\mainpage.md
@@ -18,6 +18,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "escam", "escam\escam.vcxproj", "{4883A750-F34F-303C-8C24-F15A176128F3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3} = {5DB9F92D-DB78-4A94-91BF-3C059053DAF3}
+	EndProjectSection
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "escam_setup", "escam_setup\escam_setup.vdproj", "{69FD80D7-D739-4BC9-A0FB-B950185FABC6}"
 EndProject
