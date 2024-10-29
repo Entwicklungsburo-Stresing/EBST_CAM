@@ -1,6 +1,7 @@
 ﻿#include "lsc.h"
 #include <sstream>
-#include "../shared_src/Board.h"
+#include "shared_src/Board.h"
+#include "../ESLSCDLL/ESLSCDLL.h"
 
 Lsc::Lsc()
 {
@@ -15,7 +16,7 @@ Lsc::~Lsc()
  */
 es_status_codes Lsc::initDriver()
 {
-	return InitDriver();
+	return DLLInitDriver(&numberOfBoards);
 }
 
 /**
@@ -23,7 +24,7 @@ es_status_codes Lsc::initDriver()
  */
 es_status_codes Lsc::initPcieBoard()
 {
-	return InitBoard();
+	return DLLInitBoard();
 }
 
 /**
@@ -31,7 +32,7 @@ es_status_codes Lsc::initPcieBoard()
  */
 es_status_codes Lsc::exitDriver()
 {
-	return ExitDriver();
+	return DLLExitDriver();
 }
 
 /**
@@ -39,7 +40,7 @@ es_status_codes Lsc::exitDriver()
  */
 es_status_codes Lsc::initMeasurement()
 {
-	return InitMeasurement();
+	return DLLInitMeasurement();
 }
 
 /**
@@ -47,7 +48,7 @@ es_status_codes Lsc::initMeasurement()
  */
 es_status_codes Lsc::startMeasurement()
 {
-	return StartMeasurement();
+	return DLLStartMeasurement_blocking();
 }
 
 /**
@@ -55,13 +56,13 @@ es_status_codes Lsc::startMeasurement()
  */
 es_status_codes Lsc::copyOneSample(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest)
 {
-	return CopyOneSample(drvno, sample, block, camera, pdest);
+	return DLLCopyOneSample(drvno, sample, block, camera, pdest);
 }
 
 std::string Lsc::_dumpS0Registers(uint32_t drvno)
 {
 	char* cstring;
-	es_status_codes status = dumpS0Registers(drvno, &cstring);
+	es_status_codes status = DLLDumpS0Registers(drvno, &cstring);
 	if(status != es_no_error)
 		qCritical("dumpS0Registers failed");
 	std::string cppstring = cstring;
@@ -73,7 +74,7 @@ std::string Lsc::_dumpS0Registers(uint32_t drvno)
 std::string Lsc::_dumpHumanReadableS0Registers(uint32_t drvno)
 {
 	char* cstring;
-	es_status_codes status = dumpHumanReadableS0Registers(drvno, &cstring);
+	es_status_codes status = DLLDumpHumanReadableS0Registers(drvno, &cstring);
 	if (status != es_no_error)
 		qCritical("dumpHumanReadable failed");
 	std::string cppstring = cstring;
@@ -85,7 +86,7 @@ std::string Lsc::_dumpHumanReadableS0Registers(uint32_t drvno)
 std::string Lsc::_dumpDmaRegisters(uint32_t drvno)
 {
 	char* cstring;
-	es_status_codes status = dumpDmaRegisters(drvno, &cstring);
+	es_status_codes status = DLLDumpDmaRegisters(drvno, &cstring);
 	if(status != es_no_error)
 		qCritical("dumpDmaRegisters failed");
 	std::string cppstring = cstring;
@@ -97,7 +98,7 @@ std::string Lsc::_dumpDmaRegisters(uint32_t drvno)
 std::string Lsc::_dumpTlp(uint32_t drvno)
 {
 	char* cstring;
-	es_status_codes status = dumpTlpRegisters(drvno, &cstring);
+	es_status_codes status = DLLDumpTlpRegisters(drvno, &cstring);
 	if(status != es_no_error)
 		qCritical("dumpTlpRegisters failed");
 	std::string cppstring = cstring;
@@ -109,7 +110,7 @@ std::string Lsc::_dumpTlp(uint32_t drvno)
 std::string Lsc::_dumpMeasurementSettings()
 {
 	char* cstring;
-	es_status_codes status = dumpMeasurementSettings(&cstring);
+	es_status_codes status = DLLDumpMeasurementSettings(&cstring);
 	if(status != es_no_error)
 		qCritical("dumpSettings failed");
 	std::string cppstring = cstring;
@@ -121,7 +122,7 @@ std::string Lsc::_dumpMeasurementSettings()
 std::string Lsc::_dumpCameraSettings(uint32_t drvno)
 {
 	char* cstring;
-	es_status_codes status = dumpCameraSettings(drvno, &cstring);
+	es_status_codes status = DLLDumpCameraSettings(drvno, &cstring);
 	if (status != es_no_error)
 		qCritical("dumpSettings failed");
 	std::string cppstring = cstring;
@@ -133,7 +134,7 @@ std::string Lsc::_dumpCameraSettings(uint32_t drvno)
 std::string Lsc::_dumpPciRegisters(uint32_t drvno)
 {
 	char* cstring;
-	es_status_codes status = dumpPciRegisters(drvno, &cstring);
+	es_status_codes status = DLLDumpPciRegisters(drvno, &cstring);
 	if(status != es_no_error)
 		qCritical("dumpPciRegisters failed");
 	std::string cppstring = cstring;
@@ -145,7 +146,7 @@ std::string Lsc::_dumpPciRegisters(uint32_t drvno)
 std::string Lsc::__AboutDrv(uint32_t drvno)
 {
 	char* cstring;
-	es_status_codes status = _AboutDrv(drvno, &cstring);
+	es_status_codes status = DLLAboutDrv(drvno, &cstring);
 	if(status != es_no_error)
 		qCritical("_AboutDrv failed");
 	std::string cppstring = cstring;
@@ -157,7 +158,7 @@ std::string Lsc::__AboutDrv(uint32_t drvno)
 std::string Lsc::__AboutGPX(uint32_t drvno)
 {
 	char* cstring;
-	es_status_codes status = _AboutGPX(drvno, &cstring);
+	es_status_codes status = DLLAboutGPX(drvno, &cstring);
 	if(status != es_no_error)
 		qCritical("_AboutGPX failed");
 	std::string cppstring = cstring;
@@ -171,7 +172,7 @@ std::string Lsc::__AboutGPX(uint32_t drvno)
  */
 es_status_codes Lsc::setTorOut( uint32_t drvno, uint8_t torOut )
 {
-	return SetTORReg( drvno, torOut );
+	return DLLSetTORReg( drvno, torOut );
 }
 
 /**
@@ -179,7 +180,7 @@ es_status_codes Lsc::setTorOut( uint32_t drvno, uint8_t torOut )
  */
 es_status_codes Lsc::resetDSC( uint32_t drvno, uint8_t DSCNumber )
 {
-	return ResetDSC( drvno, DSCNumber );
+	return DLLResetDSC( drvno, DSCNumber );
 }
 
 /**
@@ -187,7 +188,7 @@ es_status_codes Lsc::resetDSC( uint32_t drvno, uint8_t DSCNumber )
  */
 es_status_codes Lsc::setDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir )
 {
-	return SetDIRDSC( drvno, DSCNumber, dir );
+	return DLLSetDIRDSC( drvno, DSCNumber, dir );
 }
 
 /**
@@ -195,7 +196,7 @@ es_status_codes Lsc::setDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir )
  */
 es_status_codes Lsc::getDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC )
 {
-	return GetDSC( drvno, DSCNumber, ADSC, LDSC);
+	return DLLGetDSC( drvno, DSCNumber, ADSC, LDSC);
 }
 
 /**
@@ -203,7 +204,7 @@ es_status_codes Lsc::getDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, 
  */
 es_status_codes Lsc::calcTRMS( uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double *mwf, double *trms )
 {
-	return CalcTrms( drvno, firstSample, lastSample, TRMS_pixel, CAMpos, mwf, trms );
+	return DLLCalcTrms( drvno, firstSample, lastSample, TRMS_pixel, CAMpos, mwf, trms );
 }
 
 /**
@@ -211,7 +212,7 @@ es_status_codes Lsc::calcTRMS( uint32_t drvno, uint32_t firstSample, uint32_t la
  */
 es_status_codes Lsc::abortMeasurement()
 {
-	return SetAbortMeasurementFlag();
+	return DLLAbortMeasurement();
 }
 
 void Lsc::parseTextToHtml(std::string* str)
@@ -245,7 +246,7 @@ void Lsc::parseTextToHtml(std::string* str)
  */
 es_status_codes Lsc::dac_setOutput(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t channel, uint16_t output)
 {
-	return DAC8568_setOutput(drvno, location, cameraPosition, channel, output);
+	return DLLDAC8568_setOutput(drvno, location, cameraPosition, channel, output);
 }
 
 /**
@@ -277,7 +278,7 @@ es_status_codes Lsc::ioctrl_setOutput(uint32_t drvno, uint32_t number, uint16_t 
  */
 void Lsc::getCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block)
 {
-	return GetCurrentScanNumber(drvno, scan, block);
+	return DLLGetCurrentScanNumber(drvno, scan, block);
 }
 
 void Lsc::fillUserBufferWithDummyData(uint32_t drvno)
@@ -390,7 +391,7 @@ void Lsc::setContinuousMeasurement(bool on)
  */
 void Lsc::showNewBitmap(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t pixel, uint32_t nos)
 {
-	return ShowNewBitmap(drvno, cur_nob, cam, pixel, nos);
+	return DLLShowNewBitmap(drvno, cur_nob, cam, pixel, nos);
 }
 
 /**
@@ -398,7 +399,7 @@ void Lsc::showNewBitmap(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t
  */
 void Lsc::start2dViewer(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t pixel, uint32_t nos)
 {
-	return Start2dViewer(drvno, cur_nob, cam, pixel, nos);
+	return DLLStart2dViewer(drvno, cur_nob, cam, pixel, nos);
 }
 
 /**
@@ -406,7 +407,7 @@ void Lsc::start2dViewer(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t
  */
 void Lsc::setGammaValue(uint16_t white, uint16_t black)
 {
-	return SetGammaValue(white, black);
+	return DLLSetGammaValue(white, black);
 }
 
 /**
@@ -414,7 +415,7 @@ void Lsc::setGammaValue(uint16_t white, uint16_t black)
  */
 uint16_t Lsc::getGammaWhite()
 {
-	return GetGammaWhite();
+	return DLLGetGammaWhite();
 }
 
 /**
@@ -422,7 +423,7 @@ uint16_t Lsc::getGammaWhite()
  */
 uint16_t Lsc::getGammaBlack()
 {
-	return GetGammaBlack();
+	return DLLGetGammaBlack();
 }
 
 /**
@@ -430,7 +431,7 @@ uint16_t Lsc::getGammaBlack()
  */
 es_status_codes Lsc::readScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh)
 {
-	return ReadScanFrequencyBit(drvno, scanFrequencyTooHigh);
+	return DLLReadScanFrequencyBit(drvno,(uint8_t*) scanFrequencyTooHigh);
 }
 
 /**
@@ -438,7 +439,7 @@ es_status_codes Lsc::readScanFrequencyBit(uint32_t drvno, bool* scanFrequencyToo
  */
 es_status_codes Lsc::resetScanFrequencyBit(uint32_t drvno)
 {
-	return ResetScanFrequencyBit(drvno);
+	return DLLResetScanFrequencyBit();
 }
 
 /**
@@ -446,7 +447,7 @@ es_status_codes Lsc::resetScanFrequencyBit(uint32_t drvno)
  */
 es_status_codes Lsc::readBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh)
 {
-	return ReadBlockFrequencyBit(drvno, blockFrequencyTooHigh);
+	return DLLReadBlockFrequencyBit(drvno,(uint8_t*) blockFrequencyTooHigh);
 }
 
 /**
@@ -454,7 +455,7 @@ es_status_codes Lsc::readBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyT
  */
 es_status_codes Lsc::resetBlockFrequencyBit(uint32_t drvno)
 {
-	return ResetBlockFrequencyBit(drvno);
+	return DLLResetBlockFrequencyBit();
 }
 
 /**
@@ -485,7 +486,7 @@ es_status_codes Lsc::checkFifoFull(uint32_t drvno, bool* full)
  */
 es_status_codes Lsc::findCam(uint32_t drvno)
 {
-	return FindCam(drvno);
+	return DLLFindCam(drvno);
 }
 
 /**

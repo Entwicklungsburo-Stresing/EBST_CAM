@@ -74,7 +74,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
 	ui->cameraSettingsTabs->setTabVisible(4, false);
 #endif
 	// show board select elements depending on number_of_boards with intended fall through
-	switch (number_of_boards)
+	switch (mainWindow->lsc.numberOfBoards)
 	{
 	case 5:
 		ui->checkBoxBoard4->setVisible(true);
@@ -119,7 +119,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
 		ui->checkBoxBoard0->setChecked(true);
 	}
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < mainWindow->lsc.numberOfBoards; drvno++)
 	{
 		if ((board_sel >> drvno) & 1)
 		{

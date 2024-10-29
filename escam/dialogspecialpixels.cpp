@@ -8,8 +8,8 @@ DialogSpecialPixels::DialogSpecialPixels(QWidget *parent)
 	ui->setupUi(this);
 	connect(ui->spinBoxBoard, qOverload<int>(&QSpinBox::valueChanged), this, &DialogSpecialPixels::updateValues);
 	connect(ui->spinBoxCamera, qOverload<int>(&QSpinBox::valueChanged), this, &DialogSpecialPixels::updateValues);
-	if (number_of_boards > 1)
-		ui->spinBoxBoard->setMaximum(number_of_boards - 1);
+	if (mainWindow->lsc.numberOfBoards > 1)
+		ui->spinBoxBoard->setMaximum(mainWindow->lsc.numberOfBoards - 1);
 	else
 	{
 		ui->spinBoxBoard->setVisible(false);

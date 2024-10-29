@@ -3941,8 +3941,6 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 	return status;
 }
 
-
-
 es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 {
 	enum N
