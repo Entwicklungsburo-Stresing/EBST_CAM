@@ -18,8 +18,10 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 */
 
 #include "ESLSCDLL.h"
+#ifdef WIN32
 #include "shared_src/Direct2dViewer_c.h"
 #include <process.h>
+#endif
 
 #ifdef COMPILE_FOR_LABVIEW
 LVUserEventRef measureStartLVEvent;
@@ -31,6 +33,8 @@ LVUserEventRef allBlocksDoneLVEvent;
 
 int nProcessCount = 0;
 int nThreadCount = 0;
+
+#ifdef WIN32
 
 /**
 \brief DllMain entry point
@@ -75,6 +79,8 @@ BOOL WINAPI DLLMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 	}
 	return(FALSE);
 }
+
+#endif
 
 /**
  * \copydoc InitDriver
@@ -148,10 +154,14 @@ DllAccess es_status_codes DLLStartMeasurement_blocking()
 	return StartMeasurement();
 }
 
+#ifdef WIN32
+
 unsigned __stdcall StartMeasurementThread(void* param)
 {
 	return StartMeasurement();
 }
+
+#endif
 
 /**
  * \brief This function is starting the measurement and returns immediately.
@@ -160,7 +170,9 @@ unsigned __stdcall StartMeasurementThread(void* param)
  */
 DllAccess void DLLStartMeasurement_nonblocking()
 {
+#ifdef WIN32
 	_beginthread(&StartMeasurementThread, 0, NULL);
+#endif
 	return;
 }
 
@@ -768,13 +780,20 @@ DllAccess es_status_codes DLLDumpPciRegisters(uint32_t drvno, char** stringPtr)
 
 DllAccess es_status_codes DLLAboutDrv(uint32_t drvno, char** stringPtr)
 {
+#ifdef WIN32
 	return AboutDrv(drvno, stringPtr);
-
+#else
+	return es_no_error;
+#endif
 }
 
 DllAccess es_status_codes DLLAboutGPX(uint32_t drvno, char** stringPtr)
 {
+#ifdef WIN32
 	return AboutGPX(drvno, stringPtr);
+#else
+	return es_no_error;
+#endif
 }
 
 /**
@@ -1837,23 +1856,13 @@ DllAccess es_status_codes DLLCalcTrms_multipleBoards(uint32_t firstSample, uint3
 }
 
 /**
- * \brief For test purposes only: output of 2 strings.
- *
- * \param testMsg1 string1
- * \param testMsg2 string2
- */
-void TestMsg(char testMsg1[20], char testMsg2[20])
-{
-	if (MessageBox(GetActiveWindow(), testMsg1, testMsg2, MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
-	return;
-}
-
-/**
 \copydoc ErrMsgBoxOn
 */
 DllAccess void DLLErrMsgBoxOn()
 {
+#ifdef WIN32
 	ErrMsgBoxOn();
+#endif
 	return;
 }
 
@@ -1862,7 +1871,9 @@ DllAccess void DLLErrMsgBoxOn()
 */
 DllAccess void DLLErrMsgBoxOff()
 {
+#ifdef WIN32
 	ErrMsgBoxOff();
+#endif
 	return;
 }
 
@@ -1872,7 +1883,9 @@ DllAccess void DLLErrMsgBoxOff()
  */
 DllAccess void DLLErrorMsg(char ErrMsg[20])
 {
+#ifdef WIN32
 	ErrorMsg(ErrMsg);
+#endif
 	return;
 }
 
@@ -1881,7 +1894,11 @@ DllAccess void DLLErrorMsg(char ErrMsg[20])
  */
 DllAccess es_status_codes DLLAbout()
 {
+#ifdef WIN32
 	return About(settings_struct.board_sel);
+#else
+	return es_no_error;
+#endif
 }
 
 /**
@@ -1889,7 +1906,9 @@ DllAccess es_status_codes DLLAbout()
 */
 DllAccess void DLLStart2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {
+#ifdef WIN32
 	Start2dViewer(drvno, block, camera, pixel, nos);
+#endif
 	return;
 }
 
@@ -1898,7 +1917,9 @@ DllAccess void DLLStart2dViewer(uint32_t drvno, uint32_t block, uint16_t camera,
 */
 DllAccess void DLLShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {
+#ifdef WIN32
 	ShowNewBitmap(drvno, block, camera, pixel, nos);
+#endif
 	return;
 }
 
@@ -1907,7 +1928,9 @@ DllAccess void DLLShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera,
 */
 DllAccess void DLLDeinit2dViewer()
 {
+#ifdef WIN32
 	Deinit2dViewer();
+#endif
 	return;
 }
 
@@ -1916,7 +1939,9 @@ DllAccess void DLLDeinit2dViewer()
 */
 DllAccess void DLLSetGammaValue(uint16_t white, uint16_t black)
 {
+#ifdef WIN32
 	SetGammaValue(white, black);
+#endif
 }
 
 /**
@@ -1924,7 +1949,11 @@ DllAccess void DLLSetGammaValue(uint16_t white, uint16_t black)
 */
 DllAccess uint16_t DLLGetGammaWhite()
 {
+#ifdef WIN32
 	return GetGammaWhite();
+#else
+	return 0;
+#endif
 }
 
 /**
@@ -1932,7 +1961,11 @@ DllAccess uint16_t DLLGetGammaWhite()
 */
 DllAccess uint16_t DLLGetGammaBlack()
 {
+#ifdef WIN32
 	return GetGammaBlack();
+#else
+	return 0;
+#endif
 }
 
 #endif

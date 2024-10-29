@@ -113,7 +113,8 @@ HEADERS += \
     ../shared_src/UIAbstractionLayer.h \
     UIAbstractionLayer_cpp.h \
     ../shared_src/default_settings.h \
-    ../version.h
+    ../version.h \
+    ../ESLSCDLL/ESLSCDLL.h
 unix {
     HEADERS += ../linux-driver/userspace/lscpcie.h
 }
@@ -123,6 +124,9 @@ win32 {
     dialoggreyscalesettings.h
 }
 
+unix {
+    LIBS += -L../ESLSCDLL/ -l:ESLSCDLL.so
+}
 win32 {
     LIBS += -L $(SolutionDir)/Jungo/wdapi1400.lib
 }

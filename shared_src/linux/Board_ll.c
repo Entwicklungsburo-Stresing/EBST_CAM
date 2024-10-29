@@ -187,8 +187,8 @@ es_status_codes SetupDma( uint32_t drvno )
 	//on linux: driver numbers are 0 and 1, on windows 1 and 2
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	uint32_t dmasPerInterrupt = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
-	dev->control->bytes_per_interrupt = dmasPerInterrupt * aPIXEL[drvno] * sizeof(uint16_t);
-	dev->control->used_dma_size = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans * aPIXEL[drvno] * sizeof(uint16_t);
+	dev->control->bytes_per_interrupt = dmasPerInterrupt * settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t);
+	dev->control->used_dma_size = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans * settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t);
 	if (dev->control->used_dma_size > dev->control->dma_buf_size)
 		dev->control->used_dma_size = dev->control->dma_buf_size;
 	ES_LOG("dmas per interrupt is %d\n", dev->s0->DMAS_PER_INTERRUPT);
@@ -278,7 +278,7 @@ void* CopyDataToUserBuffer(void* param_drvno)
 	pfds.fd = dev->handle;
 	pfds.events = POLLIN;
 	// calculate bytes to read
-	ssize_t bytes_to_read = sizeof(uint16_t) * aCAMCNT[drvno] * *Nospb * aPIXEL[drvno] * *Nob;
+	ssize_t bytes_to_read = sizeof(uint16_t) * settings_struct.camera_settings[drvno].camcnt * settings_struct.nos * settings_struct.camera_settings[drvno].pixel * settings_struct.nob;
 	ES_TRACE("bytes to read: %zd\n", bytes_to_read);
 	ssize_t bytes_read = 0;
 	ssize_t result_poll, result_read;
@@ -453,3 +453,14 @@ void WaitForAllInterruptsDone()
 {
 	return;
 }
+
+void LockHighLevelMutex(uint32_t drvno)
+{
+	return;
+}
+
+void UnlockHighLevelMutex(uint32_t drvno)
+{
+	return;
+}
+
