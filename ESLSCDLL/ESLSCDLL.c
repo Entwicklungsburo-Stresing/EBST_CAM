@@ -731,6 +731,52 @@ DllAccess es_status_codes DLLGetBlockOn_multipleBoards(uint8_t* blockOn0, uint8_
 	return status;
 }
 
+DllAccess es_status_codes DLLDumpS0Registers(uint32_t drvno, char** stringPtr)
+{
+	return dumpS0Registers(drvno, stringPtr);
+}
+
+DllAccess es_status_codes DLLDumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
+{
+	return dumpHumanReadableS0Registers(drvno, stringPtr);
+}
+
+DllAccess es_status_codes DLLDumpDmaRegisters(uint32_t drvno, char** stringPtr)
+{
+	return dumpDmaRegisters(drvno, stringPtr);
+}
+
+DllAccess es_status_codes DLLDumpTlpRegisters(uint32_t drvno, char** stringPtr)
+{
+	return dumpTlpRegisters(drvno, stringPtr);
+}
+
+DllAccess es_status_codes DLLDumpMeasurementSettings(char** stringPtr)
+{
+	return dumpMeasurementSettings(stringPtr);
+}
+
+DllAccess es_status_codes DLLDumpCameraSettings(uint32_t drvno, char** stringPtr)
+{
+	return dumpCameraSettings(drvno, stringPtr);
+}
+
+DllAccess es_status_codes DLLDumpPciRegisters(uint32_t drvno, char** stringPtr)
+{
+	return dumpPciRegisters(drvno, stringPtr);
+}
+
+DllAccess es_status_codes DLLAboutDrv(uint32_t drvno, char** stringPtr)
+{
+	return AboutDrv(drvno, stringPtr);
+
+}
+
+DllAccess es_status_codes DLLAboutGPX(uint32_t drvno, char** stringPtr)
+{
+	return AboutGPX(drvno, stringPtr);
+}
+
 /**
  * \copydoc CalcRamUsageInMB
  */
@@ -989,6 +1035,11 @@ DllAccess es_status_codes DLLSetTemp(uint8_t level)
 	return status;
 }
 
+DllAccess es_status_codes DLLSetTORReg(uint32_t drvno, uint8_t tor)
+{
+	return SetTORReg(drvno, tor);
+}
+
 /**
  * \brief Set signal of output port of PCIe card for all boards selected by settings parameter board_sel.
  *
@@ -998,7 +1049,7 @@ DllAccess es_status_codes DLLSetTemp(uint8_t level)
  *		- es_register_read_failed
  *		- es_register_write_failed
  */
-DllAccess es_status_codes DLLSetTORReg(uint8_t tor)
+DllAccess es_status_codes DLLSetTORReg_multipleBoards(uint8_t tor)
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -1543,13 +1594,18 @@ DllAccess es_status_codes DLLGetIsDsc_multipleBoards(uint8_t* isDsc0, uint8_t* i
 	return status;
 }
 
+DllAccess es_status_codes DLLResetDSC(uint32_t drvno, uint8_t DSCNumber)
+{
+	return ResetDSC(drvno, DSCNumber);
+}
+
 /**
  * @brief reset Delay Stage Counter for all boards selected by settings parameter board_sel.
  *
  * @param DSCNumber 1: DSC 1; 2: DSC 2
  * @return es_status_codes
  */
-DllAccess es_status_codes DLLResetDSC(uint8_t DSCNumber)
+DllAccess es_status_codes DLLResetDSC_multipleBoards(uint8_t DSCNumber)
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -1564,6 +1620,11 @@ DllAccess es_status_codes DLLResetDSC(uint8_t DSCNumber)
 	return status;
 }
 
+DllAccess es_status_codes DLLSetDIRDSC(uint32_t drvno, uint8_t DSCNumber, uint8_t dir)
+{
+	return SetDIRDSC(drvno, DSCNumber, dir);
+}
+
 /**
  * @brief set direction of Delay Stage Counter for all boards selected by settings parameter board_sel.
  *
@@ -1571,7 +1632,7 @@ DllAccess es_status_codes DLLResetDSC(uint8_t DSCNumber)
  * @param dir true: up; false: down
  * @return es_status_codes
  */
-DllAccess es_status_codes DLLSetDIRDSC(uint8_t DSCNumber, uint8_t dir)
+DllAccess es_status_codes DLLSetDIRDSC_multipleBoards(uint8_t DSCNumber, uint8_t dir)
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -1972,5 +2033,10 @@ DllAccess es_status_codes DLLResetBlockTriggerDetected_multipleBoards()
 		}
 	}
 	return status;
+}
+
+DllAccess es_status_codes DLLDAC8568_setOutput(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t channel, uint16_t output)
+{
+	return DAC8568_setOutput(drvno, location, cameraPosition, channel, output);
 }
 

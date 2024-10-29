@@ -1,5 +1,6 @@
 #include "dialogdac.h"
 #include "ui_dialogdac.h"
+#include "lsc-gui.h"
 
 DialogDac::DialogDac(QWidget* parent)
 	: QDialog(parent, Qt::Dialog | Qt::WindowContextHelpButtonHint | Qt::WindowCloseButtonHint),
@@ -23,8 +24,8 @@ DialogDac::DialogDac(QWidget* parent)
 	connect(&mainWindow->lsc, &Lsc::measureDone, this, &DialogDac::on_autotuneStateChanged);
 	connect(&mainWindow->lsc, &Lsc::measureDone, this, &DialogDac::checkTargetReached);
 	
-	ui->spinBoxPcie->setMaximum(number_of_boards - 1);
-	if (number_of_boards == 1)
+	ui->spinBoxPcie->setMaximum(mainWindow->lsc.numberOfBoards - 1);
+	if (mainWindow->lsc.numberOfBoards == 1)
 	{
 		ui->spinBoxPcie->setVisible(false);
 		ui->labelPcie->setVisible(false);

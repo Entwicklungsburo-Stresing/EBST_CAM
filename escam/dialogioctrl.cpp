@@ -1,5 +1,6 @@
 #include "dialogioctrl.h"
 #include "ui_dialogioctrl.h"
+#include "lsc-gui.h"
 
 DialogIoctrl::DialogIoctrl(QWidget *parent)
 	: QDialog(parent),
@@ -23,8 +24,8 @@ DialogIoctrl::DialogIoctrl(QWidget *parent)
 	connect(ui->spinBoxO6W, qOverload<int>(&QSpinBox::valueChanged), this, [this] {setOutput(6, ui->spinBoxO6W->value(), ui->spinBoxO6D->value()); });
 	connect(ui->spinBoxO7W, qOverload<int>(&QSpinBox::valueChanged), this, [this] {setOutput(7, ui->spinBoxO7W->value(), ui->spinBoxO7D->value()); });
 	connect(ui->doubleSpinBoxT0, qOverload<double>(&QDoubleSpinBox::valueChanged), this, &DialogIoctrl::setT0);
-	if (number_of_boards > 1)
-		ui->spinBoxBoard->setMaximum(number_of_boards - 1);
+	if (mainWindow->lsc.numberOfBoards > 1)
+		ui->spinBoxBoard->setMaximum(mainWindow->lsc.numberOfBoards - 1);
 	else
 	{
 		ui->spinBoxBoard->setVisible(false);

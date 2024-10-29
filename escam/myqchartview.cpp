@@ -107,7 +107,9 @@ void MyQChartView::setDefaultAxes()
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
 	qreal xmax = 0;
 	qreal ymax = 0;
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	// check if mainWindow is initialized
+	if (!mainWindow) return;
+	for (uint32_t drvno = 0; drvno < mainWindow->lsc.numberOfBoards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
@@ -154,7 +156,7 @@ void MyQChartView::on_rubberBandChanged()
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
 	qreal ymax = 0;
 	uint max_pixel = 0;
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < mainWindow->lsc.numberOfBoards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
