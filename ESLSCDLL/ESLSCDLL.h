@@ -28,6 +28,7 @@ extern LVUserEventRef blockDoneLVEvent;
 extern LVUserEventRef allBlocksDoneLVEvent;
 #endif
 
+
 #ifdef WIN32
 #define DllAccess __declspec( dllexport )
 
@@ -119,6 +120,16 @@ DllAccess es_status_codes DLLDumpCameraSettings(uint32_t drvno, char** stringPtr
 DllAccess es_status_codes DLLDumpPciRegisters(uint32_t drvno, char** stringPtr);
 DllAccess es_status_codes DLLAboutDrv(uint32_t drvno, char** stringPtr);
 DllAccess es_status_codes DLLAboutGPX(uint32_t drvno, char** stringPtr);
+DllAccess void DLLGetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString);
+DllAccess uint8_t DLLGetIsRunning();
+DllAccess es_status_codes DLLGetBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* blockIndex);
+DllAccess es_status_codes DLLGetScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* scanIndex);
+DllAccess es_status_codes DLLGetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state);
+DllAccess es_status_codes DLLGetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state);
+DllAccess es_status_codes DLLGetImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal);
+DllAccess es_status_codes DLLGetImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal);
+DllAccess uint32_t DLLGetVirtualCamcnt(uint32_t drvno);
+DllAccess bool DLLGetTestModeOn();
 //************  Control CAM
 DllAccess es_status_codes DLLOutTrigHigh();
 DllAccess es_status_codes DLLOutTrigLow();
@@ -128,9 +139,11 @@ DllAccess es_status_codes DLLCloseShutter();
 DllAccess es_status_codes DLLSetTemp(uint8_t level);
 DllAccess es_status_codes DLLSetTORReg(uint32_t drvno, uint8_t tor);
 DllAccess es_status_codes DLLSetTORReg_multipleBoards(uint8_t tor);
-DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint8_t location, uint8_t cameraPosition, uint32_t* output0, uint32_t* output1, uint32_t* output2, uint32_t* output3, uint32_t* output4, uint8_t reorder_channel);
+DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint32_t* output, uint8_t reorder_channel);
+DllAccess es_status_codes DLLDAC8568_setAllOutputs_multipleBoards(uint8_t location, uint8_t cameraPosition, uint32_t* output0, uint32_t* output1, uint32_t* output2, uint32_t* output3, uint32_t* output4, uint8_t reorder_channel);
 DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t* width_in_5ns, uint32_t* delay_in_5ns);
-DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t period_in_10ns);
+DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns);
+DllAccess es_status_codes DLLIOCtrl_setT0_multipleBoards(uint32_t period_in_10ns);
 DllAccess es_status_codes DLLIOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns);
 DllAccess es_status_codes DLLGetIsTdc(uint32_t drvno, uint8_t* isTdc);
 DllAccess es_status_codes DLLGetIsTdc_multipleBoards(uint8_t* isTdc0, uint8_t* isTdc1, uint8_t* isTdc2, uint8_t* isTdc3, uint8_t* isTdc4);
