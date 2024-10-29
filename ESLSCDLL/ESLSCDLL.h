@@ -164,6 +164,16 @@ DllAccess es_status_codes DLLGetBlockTriggerDetected_multipleBoards(uint8_t* det
 DllAccess es_status_codes DLLResetScanTriggerDetected_multipleBoards();
 DllAccess es_status_codes DLLResetBlockTriggerDetected_multipleBoards();
 DllAccess es_status_codes DLLDAC8568_setOutput(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t channel, uint16_t output);
+DllAccess es_status_codes DLLCheckFifoValid(uint32_t drvno, bool* valid);
+DllAccess es_status_codes DLLCheckFifoOverflow(uint32_t drvno, bool* overflow);
+DllAccess es_status_codes DLLCheckFifoEmpty(uint32_t drvno, bool* empty);
+DllAccess es_status_codes DLLCheckFifoFull(uint32_t drvno, bool* full);
+DllAccess es_status_codes DLLExportMeasurementHDF5(const char* path, char* filename);
+DllAccess void DLLSetMeasureStartHook(void(*hook)());
+DllAccess void DLLSetMeasureDoneHook(void(*hook)());
+DllAccess void DLLSetBlockStartHook(void(*hook)());
+DllAccess void DLLSetBlockDoneHook(void(*hook)());
+DllAccess void DLLSetAllBlocksDoneHook(void(*hook)());
 //************ read and write functions
 DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address);
 DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards(uint8_t* data0, uint8_t* data1, uint8_t* data2, uint8_t* data3, uint8_t* data4, uint32_t address);

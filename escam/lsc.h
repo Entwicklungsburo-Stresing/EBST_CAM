@@ -15,7 +15,7 @@ public:
 	~Lsc();
 	es_status_codes initDriver();
 	es_status_codes initPcieBoard();
-	es_status_codes initMeasurement();
+	es_status_codes initMeasurement(struct measurement_settings settings);
 	es_status_codes exitDriver();
 	es_status_codes copyOneSample(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest);
 	es_status_codes abortMeasurement();
