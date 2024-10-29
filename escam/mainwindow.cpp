@@ -119,7 +119,7 @@ void MainWindow::initSettings()
 	settings_struct.nos = settings.value(settingNosPath, settingNosDefault).toDouble();
 	settings_struct.nob = settings.value(settingNobPath, settingNobDefault).toDouble();
 	//camerasetup tab
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 	{
 		settings.beginGroup("board" + QString::number(drvno));
 		//measurement tab
@@ -222,7 +222,7 @@ void MainWindow::startPressed()
 		{
 		case QMessageBox::Yes:
 			// Yes was clicked
-			for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+			for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 				lsc.fillUserBufferWithDummyData(drvno);
 			break;
 		default:
@@ -375,7 +375,7 @@ void MainWindow::on_actionCameras_triggered()
 	messageBox->setLayout(layout);
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
 	uint32_t camcnt = 0;
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 	{
 		settings.beginGroup("board" + QString::number(drvno));
 		// Check if the drvno'th bit is set
@@ -462,7 +462,7 @@ void MainWindow::loadSettings()
 	bool coolingOn = false;
 	bool isOvertempCam = false;
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
@@ -525,7 +525,7 @@ void MainWindow::on_actionDump_board_registers_triggered()
 	messageBox->setLayout(layout);
 	QTabWidget* tabWidget = new QTabWidget(messageBox);
 	tabWidget->setDocumentMode(true);
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 	{
 		QScrollArea* scrollDrv = new QScrollArea(tabWidget);
 		scrollDrv->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -628,7 +628,7 @@ void MainWindow::loadCameraData()
 	// = sum of all true settingShowCameraBaseDir settings
 	uint32_t showCamcnt = 0;
 	size_t data_array_size = 0;
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
@@ -658,7 +658,7 @@ void MainWindow::loadCameraData()
 	// showedCam counts the number of cameras which are shown on the chart
 	uint32_t showedCam = 0;
 	QList<QString> lineSeriesNamesList;
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
@@ -723,7 +723,7 @@ void MainWindow::on_measureDone()
 		int64_t sample = 0;
 		int64_t block = 0;
 		uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
-		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 		{
 			// Check if the drvno'th bit is set
 			if ((board_sel >> drvno) & 1)
@@ -752,7 +752,7 @@ void MainWindow::setBlockOnLamp()
 {
 	bool block_on_all_boards = false;
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
@@ -785,7 +785,7 @@ void MainWindow::on_allBlocksDone()
 	loadCameraData();
 #ifdef WIN32
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
@@ -807,7 +807,7 @@ void MainWindow::readScanFrequencyBit()
 {
 	bool isScanFrequencyTooHigh = false;
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
@@ -840,7 +840,7 @@ void MainWindow::readBlockFrequencyBit()
 {
 	bool isBlockFrequencyTooHigh = false;
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
@@ -863,12 +863,12 @@ void MainWindow::readBlockFrequencyBit()
 void MainWindow::findCamera()
 {
 	bool allCamerasFound;
-	if (number_of_boards)
+	if (lsc.numberOfBoards)
 		allCamerasFound = true;
 	else
 		allCamerasFound = false;
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
@@ -900,12 +900,12 @@ void MainWindow::findCamera()
 void MainWindow::setScanTriggerDetected()
 {
 	bool allScanTriggerDetected;
-	if (number_of_boards)
+	if (lsc.numberOfBoards)
 		allScanTriggerDetected = true;
 	else
 		allScanTriggerDetected = false;
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
@@ -920,7 +920,7 @@ void MainWindow::setScanTriggerDetected()
 		QPalette pal = palette();
 		pal.setColor(QPalette::Window, Qt::green);
 		ui->widgetScanTriggerDetected->setPalette(pal);
-		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 			// Check if the drvno'th bit is set
 			if ((board_sel >> drvno) & 1)
 				lsc.resetScanTriggerDetected(drvno);
@@ -937,12 +937,12 @@ void MainWindow::setScanTriggerDetected()
 void MainWindow::setBlockTriggerDetected()
 {
 	bool allBlockTriggerDetected;
-	if (number_of_boards)
+	if (lsc.numberOfBoards)
 		allBlockTriggerDetected = true;
 	else
 		allBlockTriggerDetected = false;
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
@@ -957,7 +957,7 @@ void MainWindow::setBlockTriggerDetected()
 		QPalette pal = palette();
 		pal.setColor(QPalette::Window, Qt::green);
 		ui->widgetBlockTriggerDetected->setPalette(pal);
-		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 			// Check if the drvno'th bit is set
 			if ((board_sel >> drvno) & 1)
 				lsc.resetBlockTriggerDetected(drvno);
@@ -993,7 +993,7 @@ void MainWindow::on_readCameraTemp()
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
 	int64_t sample = 0;
 	int64_t block = 0;
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++) 
+	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 	{
 		// Check if the drvno'th bis is set
 		if ((board_sel >> drvno) & 1)
@@ -1146,7 +1146,7 @@ void MainWindow::showCurrentScan()
 	int64_t sample = 0;
 	int64_t block = 0;
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)

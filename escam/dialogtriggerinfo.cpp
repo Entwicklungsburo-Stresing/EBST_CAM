@@ -7,8 +7,8 @@ DialogTriggerInfo::DialogTriggerInfo(QWidget *parent)
 	, ui(new Ui::DialogTriggerInfo)
 {
 	ui->setupUi(this);
-	ui->spinBoxBoard->setMaximum(number_of_boards - 1);
-	if(number_of_boards > 1)
+	ui->spinBoxBoard->setMaximum(mainWindow->lsc.numberOfBoards - 1);
+	if(mainWindow->lsc.numberOfBoards > 1)
 	{
 		ui->spinBoxBoard->setVisible(true);
 		ui->labelBoard->setVisible(true);

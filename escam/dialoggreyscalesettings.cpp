@@ -12,8 +12,8 @@ DialogGreyscaleSettings::DialogGreyscaleSettings(QWidget *parent)
 	ui->spinBoxBoard->setValue(mainWindow->greyscale_viewer_board);
 	ui->spinBoxCamera->setValue(mainWindow->greyscale_viewer_camera);
 	// set limits to UI
-	ui->spinBoxBoard->setMaximum(number_of_boards - 1);
-	if (number_of_boards == 1)
+	ui->spinBoxBoard->setMaximum(mainWindow->lsc.numberOfBoards - 1);
+	if (mainWindow->lsc.numberOfBoards == 1)
 		ui->spinBoxBoard->setEnabled(false);
 	on_spinBoxBoard_valueChanged(mainWindow->greyscale_viewer_board);
 }

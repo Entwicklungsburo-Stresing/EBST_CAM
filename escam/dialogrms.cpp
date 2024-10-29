@@ -44,8 +44,8 @@ void DialogRMS::updateRMS()
 
 void DialogRMS::initDialogRMS()
 {
-	if (number_of_boards > 1)
-		ui->spinBoxBoard->setMaximum(number_of_boards - 1);
+	if (mainWindow->lsc.numberOfBoards > 1)
+		ui->spinBoxBoard->setMaximum(mainWindow->lsc.numberOfBoards - 1);
 	else
 	{
 		ui->spinBoxBoard->setVisible(false);
