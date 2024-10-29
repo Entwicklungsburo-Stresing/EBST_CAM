@@ -1,5 +1,5 @@
 //UI abstraction layer for Labview
-#include "shared_src/UIAbstractionLayer.h"
+#include "UIAbstractionLayer.h"
 #include "ESLSCDLL.h"
 #ifdef COMPILE_FOR_LABVIEW
 #include <sys/types.h>
