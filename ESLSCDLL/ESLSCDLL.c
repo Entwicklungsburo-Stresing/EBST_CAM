@@ -19,7 +19,7 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 
 #include "ESLSCDLL.h"
 #ifdef WIN32
-#include "shared_src/Direct2dViewer_c.h"
+#include "Direct2dViewer_c.h"
 #include <process.h>
 #endif
 

@@ -7,7 +7,7 @@
 #include "../shared_src/es_status_codes.h"
 #include "../shared_src/enum_settings.h"
 #include "../shared_src/enum_hardware.h"
-#include "../shared_src/globals.h"
+#include "../shared_src/struct.h"
 
 #define MAXPCIECARDS 5
 

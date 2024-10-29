@@ -6,7 +6,7 @@
 
 #define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
 
-#include "shared_src/Direct2dViewer_c.h"
+#include "../Direct2dViewer_c.h"
 
 WDC_DEVICE_HANDLE hDev_tmp[MAXPCIECARDS];
 WDC_DEVICE_HANDLE* hDev = (WDC_DEVICE_HANDLE *)&hDev_tmp;
