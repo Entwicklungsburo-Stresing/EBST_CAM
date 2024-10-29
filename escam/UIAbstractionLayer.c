@@ -1,5 +1,5 @@
 //UI abstraction layer for CCDExample
-#include "../shared_src/UIAbstractionLayer.h"
+#include "UIAbstractionLayer.h"
 #include "UIAbstractionLayer_cpp.h"
 #include <sys/types.h>
 #include <sys/timeb.h>

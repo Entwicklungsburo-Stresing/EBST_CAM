@@ -1,5 +1,5 @@
 #include "globals.h"
-#include "default_settings.h"
+#include "../shared_src/default_settings.h"
 
 uint32_t tmp_virtualCamcnt[MAXPCIECARDS] = { 1, 1, 1, 1, 1 };
 uint32_t* virtualCamcnt = tmp_virtualCamcnt;

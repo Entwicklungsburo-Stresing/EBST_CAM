@@ -18,7 +18,7 @@
 #ifdef COMPILE_FOR_LABVIEW
 #include "LabVIEW 2015/cintools/extcode.h"
 #endif
-#include "../shared_src/Board.h"
+#include "Board.h"
 
 #ifdef COMPILE_FOR_LABVIEW
 extern LVUserEventRef measureStartLVEvent;

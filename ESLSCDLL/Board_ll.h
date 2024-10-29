@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include "globals.h"
-#include "es_status_codes.h"
+#include "../shared_src/es_status_codes.h"
 
 #ifdef WIN32
 #ifdef _DEBUG
@@ -13,7 +13,7 @@
 #define ES_LOG(...)
 #define ES_TRACE(...)
 #endif
-#include "shared_src/lscpciej_lib.h"
+#include "lscpciej_lib.h"
 extern WDC_DEVICE_HANDLE* hDev;
 extern bool _SHOW_MSG;
 #endif

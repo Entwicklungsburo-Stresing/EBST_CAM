@@ -304,31 +304,31 @@
     <BuildLog />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\shared_src\Board.c" />
-    <ClCompile Include="..\shared_src\Direct2dViewer.cpp" />
-    <ClCompile Include="..\shared_src\Direct2dViewer_c.cpp" />
     <ClCompile Include="..\shared_src\es_status_codes.c" />
-    <ClCompile Include="..\shared_src\globals.c" />
-    <ClCompile Include="..\shared_src\lscpciej_lib.c" />
-    <ClCompile Include="..\shared_src\win\Board_ll.c" />
+    <ClCompile Include="Board.c" />
+    <ClCompile Include="Direct2dViewer.cpp" />
+    <ClCompile Include="Direct2dViewer_c.cpp" />
     <ClCompile Include="ESLSCDLL.c" />
+    <ClCompile Include="globals.c" />
+    <ClCompile Include="lscpciej_lib.c" />
     <ClCompile Include="UIAbstractionLayer.c" />
+    <ClCompile Include="win\Board_ll.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\shared_src\Board.h" />
-    <ClInclude Include="..\shared_src\Board_ll.h" />
     <ClInclude Include="..\shared_src\default_settings.h" />
-    <ClInclude Include="..\shared_src\Direct2dViewer.h" />
-    <ClInclude Include="..\shared_src\Direct2dViewer_c.h" />
     <ClInclude Include="..\shared_src\enum_hardware.h" />
     <ClInclude Include="..\shared_src\enum_settings.h" />
-    <ClInclude Include="..\shared_src\globals.h" />
     <ClInclude Include="..\shared_src\struct.h" />
     <ClInclude Include="..\shared_src\es_status_codes.h" />
-    <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
-    <ClInclude Include="..\shared_src\lscpciej_lib.h" />
+    <ClInclude Include="Board.h" />
+    <ClInclude Include="Board_ll.h" />
+    <ClInclude Include="Direct2dViewer.h" />
+    <ClInclude Include="Direct2dViewer_c.h" />
     <ClInclude Include="ESLSCDLL.h" />
+    <ClInclude Include="globals.h" />
+    <ClInclude Include="lscpciej_lib.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="UIAbstractionLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="dll_description.txt" />

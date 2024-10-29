@@ -481,3 +481,11 @@ enum channel_select_t
 	channel_select_B = 1,
 	channel_select_A_B = 2,
 };
+
+enum file_specifications_t
+{
+	file_path_size = 256,
+	file_timestamp_size = 64,
+	file_filename_full_size = 256
+};
+
