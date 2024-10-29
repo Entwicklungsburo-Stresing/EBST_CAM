@@ -128,6 +128,12 @@ extern volatile bool* timerOn;
 extern volatile bool* allInterruptsDone;
 extern uint16_t* pcieCardMajorVersion;
 extern uint16_t* pcieCardMinorVersion;
+typedef void (*hookFunction)();
+extern hookFunction measureStartHook;
+extern hookFunction measureDoneHook;
+extern hookFunction blockStartHook;
+extern hookFunction blockDoneHook;
+extern hookFunction allBlocksDoneHook;
 
 #ifdef __cplusplus
 }

@@ -2,6 +2,7 @@
 #include <sstream>
 #include "../shared_src/Board.h"
 #include "../ESLSCDLL/ESLSCDLL.h"
+#include "../shared_src/UIAbstractionLayer.h"
 
 Lsc::Lsc()
 {
@@ -24,6 +25,11 @@ es_status_codes Lsc::initDriver()
  */
 es_status_codes Lsc::initPcieBoard()
 {
+	DLLSetMeasureStartHook(notifyMeasureStart);
+	DLLSetMeasureDoneHook(notifyMeasureDone);
+	DLLSetBlockStartHook(notifyBlockStart);
+	DLLSetBlockDoneHook(notifyBlockDone);
+	DLLSetAllBlocksDoneHook(notifyAllBlocksDone);
 	return DLLInitBoard();
 }
 
@@ -38,8 +44,9 @@ es_status_codes Lsc::exitDriver()
 /**
  * \copydoc InitMeasurement
  */
-es_status_codes Lsc::initMeasurement()
+es_status_codes Lsc::initMeasurement(struct measurement_settings settings)
 {
+	DLLSetGlobalSettings(settings);
 	return DLLInitMeasurement();
 }
 
@@ -463,22 +470,22 @@ es_status_codes Lsc::resetBlockFrequencyBit(uint32_t drvno)
  */
 es_status_codes Lsc::checkFifoValid(uint32_t drvno, bool* valid)
 {
-	return CheckFifoValid(drvno, valid);
+	return DLLCheckFifoValid(drvno, valid);
 }
 
 es_status_codes Lsc::checkFifoOverflow(uint32_t drvno, bool* overflow)
 {
-	return CheckFifoOverflow(drvno, overflow);
+	return DLLCheckFifoOverflow(drvno, overflow);
 }
 
 es_status_codes Lsc::checkFifoEmpty(uint32_t drvno, bool* empty)
 {
-	return CheckFifoEmpty(drvno, empty);
+	return DLLCheckFifoEmpty(drvno, empty);
 }
 
 es_status_codes Lsc::checkFifoFull(uint32_t drvno, bool* full)
 {
-	return CheckFifoFull(drvno, full);
+	return DLLCheckFifoFull(drvno, full);
 }
 
 /**
@@ -495,57 +502,57 @@ es_status_codes Lsc::findCam(uint32_t drvno)
 es_status_codes Lsc::exportMeasurementHDF5(const char* path, char* filename)
 {
 #ifdef WIN32
-    return ExportMeasurementHDF5(path, filename);
+    return DLLExportMeasurementHDF5(path, filename);
 #endif
 }
 
 es_status_codes Lsc::waitForMeasureReady(uint32_t board_sel)
 {
-	return WaitForMeasureReady(board_sel);
+	return DLLwaitForMeasureReady();
 }
 
 es_status_codes Lsc::getXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns)
 {
-	return GetXckLength(drvno, xckLengthIn10ns);
+	return DLLGetXckLength(drvno, xckLengthIn10ns);
 }
 
 es_status_codes Lsc::getXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns)
 {
-	return GetXckPeriod(drvno, xckPeriodIn10ns);
+	return DLLGetXckPeriod(drvno, xckPeriodIn10ns);
 }
 
 es_status_codes Lsc::getBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns)
 {
-	return GetBonLength(drvno, bonLengthIn10ns);
+	return DLLGetBonLength(drvno, bonLengthIn10ns);
 }
 
 es_status_codes Lsc::getBonPeriod(uint32_t drvno, uint32_t* bonPeriodIns10ns)
 {
-	return GetBonPeriod(drvno, bonPeriodIns10ns);
+	return DLLGetBonPeriod(drvno, bonPeriodIns10ns);
 }
 
 es_status_codes Lsc::getBlockOn(uint32_t drvno, bool* block_on)
 {
-	return GetBlockOn(drvno, block_on);
+	return DLLGetBlockOn(drvno,(uint8_t*) block_on);
 }
 
 es_status_codes Lsc::getScanTriggerDetected(uint32_t drvno, bool* detected)
 {
-	return GetScanTriggerDetected(drvno, detected);
+	return DLLGetScanTriggerDetected(drvno, (uint8_t*)detected);
 }
 
 es_status_codes Lsc::getBlockTriggerDetected(uint32_t drvno, bool* detected)
 {
-	return GetBlockTriggerDetected(drvno, detected);
+	return DLLGetBlockTriggerDetected(drvno, (uint8_t*)detected);
 }
 
 es_status_codes Lsc::resetScanTriggerDetected(uint32_t drvno)
 {
-	return ResetScanTriggerDetected(drvno);
+	return DLLResetScanTriggerDetected(drvno);
 }
 
 es_status_codes Lsc::resetBlockTriggerDetected(uint32_t drvno)
 {
-	return ResetBlockTriggerDetected(drvno);
+	return DLLResetBlockTriggerDetected(drvno);
 }
 
