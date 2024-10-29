@@ -106,9 +106,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\shared_src\UIAbstractionLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="UIAbstractionLayer_cpp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -143,6 +140,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="crosshairs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UIAbstractionLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,5 @@
 #include "Board.h"
-#include "../shared_src/UIAbstractionLayer.h"
+#include "UIAbstractionLayer.h"
 #include <sys/types.h>
 #include <sys/timeb.h>
 #include <math.h> // for sqrt()
@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #endif
-#include "default_settings.h"
+#include "../shared_src/default_settings.h"
 
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)  \

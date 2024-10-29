@@ -240,7 +240,6 @@ xcopy /y /d "$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDL
   <ItemGroup>
     <ClInclude Include="..\shared_src\default_settings.h" />
     <ClInclude Include="..\shared_src\enum_settings.h" />
-    <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
     <QtMoc Include="myqchartview.h" />
     <ClInclude Include="..\version.h" />
     <QtMoc Include="dialogrms.h" />
@@ -254,6 +253,7 @@ xcopy /y /d "$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDL
     <QtMoc Include="dialogtriggerinfo.h" />
     <QtMoc Include="dialogchartsettings.h" />
     <ClInclude Include="lsc-gui.h" />
+    <ClInclude Include="UIAbstractionLayer.h" />
     <ClInclude Include="UIAbstractionLayer_cpp.h" />
     <QtMoc Include="dialogsettings.h">
     </QtMoc>

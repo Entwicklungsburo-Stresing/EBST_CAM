@@ -19,7 +19,7 @@ Copyright 2020 Entwicklungsbuero Stresing (http://www.stresing.de/)
 
 #ifndef MINIMAL_BUILD
 
-#include "shared_src/Direct2dViewer_c.h"
+#include "Direct2dViewer_c.h"
 #include "Direct2dViewer.h"
 
 /**
