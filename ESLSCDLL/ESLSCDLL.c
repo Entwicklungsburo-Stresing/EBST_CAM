@@ -594,7 +594,7 @@ DllAccess es_status_codes DLLGetBlockIndex(uint32_t drvno, uint32_t sample, uint
 
 DllAccess es_status_codes DLLGetScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* scanIndex)
 {
-	GetScanIndex(drvno, sample, block, camera_pos, scanIndex);
+	return GetScanIndex(drvno, sample, block, camera_pos, scanIndex);
 }
 
 DllAccess es_status_codes DLLGetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
