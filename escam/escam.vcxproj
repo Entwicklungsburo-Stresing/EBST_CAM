@@ -103,7 +103,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;$(ProjectDir)..\Jungo\wdapi1400.lib;shell32.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;$(ProjectDir)..\Jungo\wdapi1400.lib;$(ProjectDir)..\shared_src\ESLSCDLL.lib;shell32.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\openssl\lib;C:\Utils\my_sql\mysql-5.7.25-winx64\lib;C:\Utils\postgresql\pgsql\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -146,7 +146,8 @@
       <QtUicFileName>ui_%(Filename).h</QtUicFileName>
     </QtUic>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\bin\hdf5.dll" "$(ProjDir)build"</Command>
+      <Command>xcopy /y /d "$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\bin\hdf5.dll" "$(ProjDir)build"
+xcopy /y /d "$(ProjectDir)..\x64\$(Configuration)\ESLSCDLL.dll" "$(ProjDir)build"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -211,15 +212,11 @@
       <QtUicFileName>ui_%(Filename).h</QtUicFileName>
     </QtUic>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\bin\hdf5.dll" "$(ProjDir)build"</Command>
+      <Command>xcopy /y /d "$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\bin\hdf5.dll" "$(ProjDir)build"
+xcopy /y /d "$(ProjectDir)..\x64\$(Configuration)\ESLSCDLL.dll" "$(ProjDir)build"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\shared_src\Board.c" />
-    <ClCompile Include="..\shared_src\Direct2dViewer.cpp" />
-    <ClCompile Include="..\shared_src\Direct2dViewer_c.cpp" />
-    <ClCompile Include="..\shared_src\globals.c" />
-    <ClCompile Include="..\shared_src\win\Board_ll.c" />
     <ClCompile Include="camerasettingswidget.cpp" />
     <ClCompile Include="crosshairs.cpp" />
     <ClCompile Include="dialogchartsettings.cpp" />
@@ -237,18 +234,12 @@
     <ClCompile Include="..\shared_src\es_status_codes.c" />
     <ClCompile Include="lsc-gui.cpp" />
     <ClCompile Include="lsc.cpp" />
-    <ClCompile Include="..\shared_src\lscpciej_lib.c" />
     <ClCompile Include="mainwindow.cpp" />
     <ClCompile Include="myqspinbox.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\shared_src\Board.h" />
-    <ClInclude Include="..\shared_src\Board_ll.h" />
     <ClInclude Include="..\shared_src\default_settings.h" />
-    <ClInclude Include="..\shared_src\Direct2dViewer.h" />
-    <ClInclude Include="..\shared_src\Direct2dViewer_c.h" />
     <ClInclude Include="..\shared_src\enum_settings.h" />
-    <ClInclude Include="..\shared_src\globals.h" />
     <ClInclude Include="..\shared_src\UIAbstractionLayer.h" />
     <QtMoc Include="myqchartview.h" />
     <ClInclude Include="..\version.h" />
@@ -266,11 +257,9 @@
     <ClInclude Include="UIAbstractionLayer_cpp.h" />
     <QtMoc Include="dialogsettings.h">
     </QtMoc>
-    <ClInclude Include="..\shared_src\enum_hardware.h" />
     <ClInclude Include="..\shared_src\es_status_codes.h" />
     <QtMoc Include="lsc.h">
     </QtMoc>
-    <ClInclude Include="..\shared_src\lscpciej_lib.h" />
     <QtMoc Include="mainwindow.h">
     </QtMoc>
     <QtMoc Include="myqspinbox.h">

@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget* parent)
 	es_status_codes status = lsc.initDriver();
 	if (status != es_no_error)
 		showStatusCodeDialog(status);
-	if (!testModeOn)
+	if (!lsc.getTestModeOn())
 	{
 		status = lsc.initPcieBoard();
 		if (status != es_no_error)
@@ -1001,11 +1001,11 @@ void MainWindow::on_readCameraTemp()
 		if ((board_sel >> drvno) & 1)
 		{
 			lsc.getCurrentScanNumber(drvno, &sample, &block);
-			if (sample >= 0 && virtualCamcnt[drvno] > 0)
+			if (sample >= 0 && lsc.getVirtualCamcnt(drvno) > 0)
 			{
 				bool cameraBoardOvertemp = false;
 				bool cameraBoardCooled = false;
-				for (uint16_t camera_pos = 0; camera_pos < virtualCamcnt[drvno]; camera_pos++)
+				for (uint16_t camera_pos = 0; camera_pos < lsc.getVirtualCamcnt(drvno); camera_pos++)
 				{
 					bool cameraOvertemp = false;
 					es_status_codes status = lsc.getCameraStatusOverTemp(drvno, static_cast<uint32_t>(sample), static_cast<uint32_t>(block), camera_pos, &cameraOvertemp);
@@ -1262,7 +1262,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
  */
 void MainWindow::on_pushButtonStartStop_pressed()
 {
-	if(isRunning)
+	if(lsc.IsRunning())
 		lsc.abortMeasurement();
 	else
 		startPressed();

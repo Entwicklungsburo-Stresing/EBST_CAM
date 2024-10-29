@@ -587,6 +587,46 @@ DllAccess es_status_codes DLLGetCameraStatusOverTemp(uint32_t drvno, uint32_t sa
 	return GetCameraStatusOverTemp(drvno, sample, block, camera_pos, overTemp);
 }
 
+DllAccess es_status_codes DLLGetBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* blockIndex)
+{
+	return GetBlockIndex(drvno, sample, block, camera_pos, blockIndex);
+}
+
+DllAccess es_status_codes DLLGetScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* scanIndex)
+{
+	GetScanIndex(drvno, sample, block, camera_pos, scanIndex);
+}
+
+DllAccess es_status_codes DLLGetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
+{
+	return GetS1State(drvno, sample, block, camera_pos, state);
+}
+
+DllAccess es_status_codes DLLGetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
+{
+	return GetS2State(drvno, sample, block, camera_pos, state);
+}
+
+DllAccess es_status_codes DLLGetImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
+{
+	return GetImpactSignal1(drvno, sample, block, camera_pos, impactSignal);
+}
+
+DllAccess es_status_codes DLLGetImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
+{
+	return GetImpactSignal2(drvno, sample, block, camera_pos, impactSignal);
+}
+
+DllAccess uint32_t DLLGetVirtualCamcnt(uint32_t drvno)
+{
+	return virtualCamcnt[drvno];
+}
+
+DllAccess bool DLLGetTestModeOn()
+{
+	return testModeOn;
+}
+
 /**
  * \brief This function returns the bit overTemp of a specific scan.
  *
@@ -794,6 +834,17 @@ DllAccess es_status_codes DLLAboutGPX(uint32_t drvno, char** stringPtr)
 #else
 	return es_no_error;
 #endif
+}
+
+DllAccess void DLLGetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString)
+{
+	GetVerifiedDataDialog(vd, resultString);
+	return;
+}
+
+DllAccess uint8_t DLLGetIsRunning()
+{
+	return (uint8_t)isRunning;
 }
 
 /**
@@ -1081,6 +1132,11 @@ DllAccess es_status_codes DLLSetTORReg_multipleBoards(uint8_t tor)
 	return status;
 }
 
+DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint32_t* output, uint8_t reorder_channel)
+{
+	return DAC8568_setAllOutputs(drvno, location, cameraPosition, output, reorder_channel);
+}
+
 /**
  * \brief Sets all outputs of the DAC8568 in camera 3030 or on PCIe board for all PCIe boards.
  *
@@ -1098,7 +1154,7 @@ DllAccess es_status_codes DLLSetTORReg_multipleBoards(uint8_t tor)
  *		- es_register_write_failed
  *		- es_parameter_out_of_range
  */
-DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint8_t location, uint8_t cameraPosition, uint32_t* output0, uint32_t* output1, uint32_t* output2, uint32_t* output3, uint32_t* output4, uint8_t reorder_channel)
+DllAccess es_status_codes DLLDAC8568_setAllOutputs_multipleBoards(uint8_t location, uint8_t cameraPosition, uint32_t* output0, uint32_t* output1, uint32_t* output2, uint32_t* output3, uint32_t* output4, uint8_t reorder_channel)
 {
 	es_status_codes status = es_no_error;
 	uint32_t* output[MAXPCIECARDS] = { output0, output1, output2, output3, output4 };
@@ -1445,6 +1501,11 @@ DllAccess es_status_codes DLLIOCtrl_setOutput(uint32_t drvno, uint32_t number, u
 	return IOCtrl_setOutput(drvno, number, width_in_5ns, delay_in_5ns);
 }
 
+DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
+{
+	return IOCtrl_setT0(drvno, period_in_10ns);
+}
+
 /**
  * \brief Set period of IOCtrl pulse outputs base frequency T0 for all boards selected by settings parameter board_sel.
  *
@@ -1455,7 +1516,7 @@ DllAccess es_status_codes DLLIOCtrl_setOutput(uint32_t drvno, uint32_t number, u
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t period_in_10ns)
+DllAccess es_status_codes DLLIOCtrl_setT0_multipleBoards(uint32_t period_in_10ns)
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
