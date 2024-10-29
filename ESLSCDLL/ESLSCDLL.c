@@ -781,7 +781,7 @@ DllAccess es_status_codes DLLDumpPciRegisters(uint32_t drvno, char** stringPtr)
 DllAccess es_status_codes DLLAboutDrv(uint32_t drvno, char** stringPtr)
 {
 #ifdef WIN32
-	return AboutDrv(drvno, stringPtr);
+	return _AboutDrv(drvno, stringPtr);
 #else
 	return es_no_error;
 #endif
@@ -790,7 +790,7 @@ DllAccess es_status_codes DLLAboutDrv(uint32_t drvno, char** stringPtr)
 DllAccess es_status_codes DLLAboutGPX(uint32_t drvno, char** stringPtr)
 {
 #ifdef WIN32
-	return AboutGPX(drvno, stringPtr);
+	return _AboutGPX(drvno, stringPtr);
 #else
 	return es_no_error;
 #endif
@@ -2073,3 +2073,52 @@ DllAccess es_status_codes DLLDAC8568_setOutput(uint32_t drvno, uint8_t location,
 	return DAC8568_setOutput(drvno, location, cameraPosition, channel, output);
 }
 
+DllAccess es_status_codes DLLCheckFifoValid(uint32_t drvno, bool* valid)
+{
+	return CheckFifoValid(drvno, valid);
+}
+
+DllAccess es_status_codes DLLCheckFifoOverflow(uint32_t drvno, bool* overflow)
+{
+	return CheckFifoOverflow(drvno, overflow);
+}
+
+DllAccess es_status_codes DLLCheckFifoEmpty(uint32_t drvno, bool* empty)
+{
+	return CheckFifoEmpty(drvno, empty);
+}
+
+DllAccess es_status_codes DLLCheckFifoFull(uint32_t drvno, bool* full)
+{
+	return CheckFifoFull(drvno, full);
+}
+
+DllAccess es_status_codes DLLExportMeasurementHDF5(const char* path, char* filename)
+{
+	return ExportMeasurementHDF5(path, filename);
+}
+
+DllAccess void DLLSetMeasureStartHook(void(*hook)())
+{
+	measureStartHook = hook;
+}
+
+DllAccess void DLLSetMeasureDoneHook(void(*hook)())
+{
+	measureDoneHook = hook;
+}
+
+DllAccess void DLLSetBlockStartHook(void(*hook)())
+{
+	blockStartHook = hook;
+}
+
+DllAccess void DLLSetBlockDoneHook(void(*hook)())
+{
+	blockDoneHook = hook;
+}
+
+DllAccess void DLLSetAllBlocksDoneHook(void(*hook)())
+{
+	allBlocksDoneHook = hook;
+}

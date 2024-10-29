@@ -11,12 +11,6 @@
 #endif
 #include "default_settings.h"
 
-#ifdef _USRDLL
-#define DLLTAB "\t"
-#else
-#define DLLTAB
-#endif
-
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)  \
   (byte & 0x80 ? '1' : '0'), \
@@ -497,6 +491,8 @@ es_status_codes setBlockEn(uint32_t drvno)
 {
 	ES_LOG("Set BLOCK_EN\n");
 	notifyBlockStart();
+	if(blockStartHook)
+		blockStartHook();
 	return setBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCK_EN, S0Addr_PCIEFLAGS);
 }
 
@@ -513,6 +509,8 @@ es_status_codes setMeasureOn(uint32_t drvno)
 {
 	ES_LOG("Set measure on\n");
 	notifyMeasureStart();
+	if (measureStartHook)
+		measureStartHook();
 	return setBitS0_32(drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS);
 }
 
@@ -529,6 +527,8 @@ es_status_codes resetBlockEn(uint32_t drvno)
 {
 	ES_LOG("Reset BLOCK_EN\n");
 	notifyBlockDone();
+	if (blockDoneHook)
+		blockDoneHook();
 	return resetBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCK_EN, S0Addr_PCIEFLAGS);
 }
 
@@ -545,6 +545,8 @@ es_status_codes resetMeasureOn(uint32_t drvno)
 {
 	ES_LOG("Reset measure on\n");
 	notifyMeasureDone();
+	if (measureDoneHook)
+		measureDoneHook();
 	return resetBitS0_32(drvno, PCIEFLAGS_bitindex_MEASUREON, S0Addr_PCIEFLAGS);
 }
 
@@ -2923,6 +2925,8 @@ es_status_codes StartMeasurement()
 			}
 		}
 		notifyAllBlocksDone();
+		if(allBlocksDoneHook)
+			allBlocksDoneHook();
 		// Maybe this is not needed anymore because of WaitForAllInterruptsDone
 		// This sleep is here to prevent the measurement being interrupted too early. When operating with 2 cameras the last scan could be cut off without the sleep. This is only a workaround. The problem is that the software is waiting for RSTIMER being reset by the hardware before setting measure on and block on to low, but the last DMA is done after RSTIMER being reset. BLOCKON and MEASUREON should be reset after all DMAs are done.
 		// RSTIMER --------________
@@ -3870,24 +3874,24 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 		bufferLength = 40
 	};
 	char register_names[number_of_registers][bufferLength] = {
-		"DBR"DLLTAB,
-		"CTRLA"DLLTAB,
-		"XCKLL"DLLTAB,
+		"DBR",
+		"CTRLA",
+		"XCKLL",
 		"XCKCNTLL",
-		"PIXREG"DLLTAB,
-		"FIFOCNT"DLLTAB,
+		"PIXREG",
+		"FIFOCNT",
 		"VCLKCTRL",
-		"'EBST'"DLLTAB,
-		"DAT"DLLTAB,
-		"EC"DLLTAB,
-		"TOR"DLLTAB,
-		"ARREG"DLLTAB,
-		"GIOREG"DLLTAB,
+		"'EBST'",
+		"DAT",
+		"EC",
+		"TOR",
+		"ARREG",
+		"GIOREG",
 		"XCKPERIOD",
-		"IRQREG"DLLTAB,
+		"IRQREG",
 		"PCI board version",
 		"R0 PCIEFLAGS",
-		"R1 NOS"DLLTAB,
+		"R1 NOS",
 		"R2 SCANINDEX",
 		"R3 DMABUFSIZE",
 		"R4 DMASPERINTR",
@@ -3901,10 +3905,10 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 		"R12 ROI 2",
 		"R13 XCKDLY",
 		"R14 S1S2 read delay",
-		"R15 BTICNT"DLLTAB,
+		"R15 BTICNT",
 		"R16 BTimer",
 		"R17 BDAT",
-		"R18 BEC"DLLTAB,
+		"R18 BEC",
 		"R19 BFLAGS",
 		"R20 A1DSC",
 		"R21 L1DSC",
@@ -4642,13 +4646,13 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 		return status;
 	}
 	uint32_t maxPayloadSize = (data & deviceControl_maxPayloadSize_bits) >> deviceControl_maxPayloadSize_bitindex;
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Max_Payload_Size:\t"DLLTAB"0x%x (%u bytes)\n", maxPayloadSize, maxSizeEncoding[maxPayloadSize]);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Max_Payload_Size:\t""0x%x (%u bytes)\n", maxPayloadSize, maxSizeEncoding[maxPayloadSize]);
 	uint32_t maxReadRequestSize = (data & deviceControl_maxReadRequestSize_bits) >> deviceControl_maxReadRequestSize_bitindex;
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Max_Read_Request_Size:\t0x%x (%u bytes)\n", maxReadRequestSize, maxSizeEncoding[maxReadRequestSize]);
 	uint32_t pixel = 0;
 	status = readRegisterS0_32(drvno, &pixel, S0Addr_PIXREG);
 	pixel &= 0xFFFF;
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Number of pixels:\t"DLLTAB"%u\n", pixel);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Number of pixels:\t""%u\n", pixel);
 	status = readRegisterDma_32(drvno, &data, DmaAddr_WDMATLPS);
 	if (status != es_no_error)
 	{
@@ -4666,7 +4670,7 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nerror while reading register\n");
 		return status;
 	}
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "number of TLPs per scan is:\t"DLLTAB"%u", data);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "number of TLPs per scan is:\t""%u", data);
 	return status;
 }
 
@@ -4769,10 +4773,10 @@ es_status_codes dumpMeasurementSettings(char** stringPtr)
 	//allocate string buffer
 	*stringPtr = (char*)calloc(bufferLength, sizeof(char));
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
-		"board_sel\t"DLLTAB DLLTAB"%u\n"
-		"nos\t" DLLTAB DLLTAB"%u\n"
-		"nob\t"DLLTAB DLLTAB"%u\n"
-		"cont_pause_in_microseconds\t" DLLTAB DLLTAB"%u\n",
+		"board_sel\t" "%u\n"
+		"nos\t"  "%u\n"
+		"nob\t" "%u\n"
+		"cont_pause_in_microseconds\t"  "%u\n",
 		settings_struct.board_sel,
 		settings_struct.nos,
 		settings_struct.nob,
@@ -4791,35 +4795,35 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 	//allocate string buffer
 	*stringPtr = (char*)calloc(bufferLength, sizeof(char));
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
-		"use_software_polling\t"DLLTAB DLLTAB"%u\n"
-		"sti_mode\t"DLLTAB DLLTAB"%u\n"
-		"bti_mode\t"DLLTAB"%u\n"
+		"use_software_polling\t" "%u\n"
+		"sti_mode\t" "%u\n"
+		"bti_mode\t""%u\n"
 		"stime_in_microsec\t%u\n"
 		"btime_in_microsec\t%u\n"
-		"sdat_in_10ns\t"DLLTAB"%u\n"
-		"bdat_in_10ns\t"DLLTAB"%u\n"
-		"sslope\t"DLLTAB DLLTAB"%u\n"
-		"bslope\t"DLLTAB DLLTAB"%u\n"
-		"xckdelay_in_10ns\t"DLLTAB"%u\n"
+		"sdat_in_10ns\t""%u\n"
+		"bdat_in_10ns\t""%u\n"
+		"sslope\t" "%u\n"
+		"bslope\t" "%u\n"
+		"xckdelay_in_10ns\t""%u\n"
 		"sec_in_10ns\t%u\n"
-		"trigger_mode_integrator\t"DLLTAB"%u\n"
-		"sensor_type\t"DLLTAB"%u\n"
-		"camera_system\t"DLLTAB"%u\n"
-		"camcnt\t"DLLTAB DLLTAB"%u\n"
-		"pixel\t"DLLTAB DLLTAB"%u\n"
-		"is_fft_legacy\t"DLLTAB DLLTAB"%u\n"
-		"led_off\t"DLLTAB DLLTAB"%u\n"
-		"sensor_gain\t"DLLTAB"%u\n"
-		"adc_gain\t"DLLTAB"%u\n"
-		"temp_level\t"DLLTAB"%u\n"
-		"bticnt\t"DLLTAB"%u\n"
-		"gpx_offset\t"DLLTAB"%u\n"
-		"fft_lines\t"DLLTAB DLLTAB"%u\n"
-		"vfreq\t"DLLTAB DLLTAB"%u\n"
-		"fft_mode\t"DLLTAB DLLTAB"%u\n"
-		"lines_binning\t"DLLTAB"%u\n"
+		"trigger_mode_integrator\t""%u\n"
+		"sensor_type\t""%u\n"
+		"camera_system\t""%u\n"
+		"camcnt\t" "%u\n"
+		"pixel\t" "%u\n"
+		"is_fft_legacy\t" "%u\n"
+		"led_off\t" "%u\n"
+		"sensor_gain\t""%u\n"
+		"adc_gain\t""%u\n"
+		"temp_level\t""%u\n"
+		"bticnt\t""%u\n"
+		"gpx_offset\t""%u\n"
+		"fft_lines\t" "%u\n"
+		"vfreq\t" "%u\n"
+		"fft_mode\t" "%u\n"
+		"lines_binning\t""%u\n"
 		"number_of_regions\t%u\n"
-		"s1s2_read_delay_in_10ns\t"DLLTAB"%u\n",
+		"s1s2_read_delay_in_10ns\t""%u\n",
 		settings_struct.camera_settings[drvno].use_software_polling,
 		settings_struct.camera_settings[drvno].sti_mode,
 		settings_struct.camera_settings[drvno].bti_mode,
@@ -4849,7 +4853,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].lines_binning,
 		settings_struct.camera_settings[drvno].number_of_regions,
 		settings_struct.camera_settings[drvno].s1s2_read_delay_in_10ns);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "region_size\t"DLLTAB);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "region_size\t");
 	for (int i = 0; i < MAX_NUMBER_OF_REGIONS; i++)
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].region_size[i]);
 	for (int camera = 0; camera < MAXCAMCNT; camera++)
@@ -4859,11 +4863,11 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 			len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].dac_output[camera][i]);
 	}
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
-		"\ntor\t"DLLTAB DLLTAB"%u\n"
-		"adc_mode\t"DLLTAB"%u\n"
+		"\ntor\t" "%u\n"
+		"adc_mode\t""%u\n"
 		"adc_custom_pattern\t%u\n"
-		"bec_in_10ns\t"DLLTAB"%u\n"
-		"channel_select\t"DLLTAB DLLTAB"%u\n"
+		"bec_in_10ns\t""%u\n"
+		"channel_select\t" "%u\n"
 		"ioctrl_impact_start_pixel\t%u\n",
 		settings_struct.camera_settings[drvno].tor,
 		settings_struct.camera_settings[drvno].adc_mode,
@@ -4922,21 +4926,21 @@ es_status_codes dumpPciRegisters(uint32_t drvno, char** stringPtr)
 	// See table 2-2 in documentation of Spartan-6 FPGA Integrated Endpoint Block for register names
 	// https://docs.xilinx.com/v/u/en-US/s6_pcie_ug654
 	char register_names[number_of_registers][bufferLength] = {
-	"Device ID, Vendor ID"DLLTAB DLLTAB,
-	"Status, Command"DLLTAB DLLTAB DLLTAB,
-	"Class Code, Revision ID"DLLTAB DLLTAB,
-	"BIST, Header Type, Lat. Timer, Cache Line S."DLLTAB,
-	"Base Address 0 mem 32 bit"DLLTAB DLLTAB,
-	"Base Address 1 io"DLLTAB DLLTAB DLLTAB,
-	"Base Address 2 mem 32 bit"DLLTAB DLLTAB,
-	"Base Address 3"DLLTAB DLLTAB DLLTAB,
-	"Base Address 4"DLLTAB DLLTAB DLLTAB,
-	"Base Address 5"DLLTAB DLLTAB DLLTAB,
-	"Cardbus CIS Pointer"DLLTAB DLLTAB,
-	"Subsystem ID, Subsystem Vendor ID"DLLTAB,
-	"Expansion ROM Base Address"DLLTAB,
-	"Reserved, Cap. Pointer"DLLTAB DLLTAB,
-	"Reserved"DLLTAB DLLTAB DLLTAB DLLTAB,
+	"Device ID, Vendor ID" ,
+	"Status, Command"  ,
+	"Class Code, Revision ID" ,
+	"BIST, Header Type, Lat. Timer, Cache Line S.",
+	"Base Address 0 mem 32 bit" ,
+	"Base Address 1 io"  ,
+	"Base Address 2 mem 32 bit" ,
+	"Base Address 3"  ,
+	"Base Address 4"  ,
+	"Base Address 5"  ,
+	"Cardbus CIS Pointer" ,
+	"Subsystem ID, Subsystem Vendor ID",
+	"Expansion ROM Base Address",
+	"Reserved, Cap. Pointer" ,
+	"Reserved"   ,
 	"Max Lat., Min Gnt., Interrupt Pin, Intterupt Line",
 	"PM Capability, NxtCap, PM Cap",
 	"Data, BSE, PMCSR",

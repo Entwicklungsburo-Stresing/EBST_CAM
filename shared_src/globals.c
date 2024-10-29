@@ -34,6 +34,12 @@ size_t temp_data_available[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };
 volatile size_t* data_available = temp_data_available;
 volatile bool tmp_allInterruptsDone[MAXPCIECARDS] = { true, true, true, true, true };
 volatile bool* allInterruptsDone = tmp_allInterruptsDone;
+hookFunction measureStartHook = NULL;
+hookFunction measureDoneHook = NULL;
+hookFunction blockStartHook = NULL;
+hookFunction blockDoneHook = NULL;
+hookFunction allBlocksDoneHook = NULL;
+
 const struct camera_settings camera_settings_default =
 {
 	.use_software_polling = settingsUseSoftwarePollingDefault,
