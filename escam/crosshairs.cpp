@@ -1,5 +1,4 @@
 #include "crosshairs.h"
-#include <QtCharts/QChart>
 #include <QtGui/QPainter>
 #include <QtGui/QCursor>
 #include <QtGui/QTextDocument>
