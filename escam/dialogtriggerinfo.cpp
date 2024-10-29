@@ -20,7 +20,7 @@ DialogTriggerInfo::DialogTriggerInfo(QWidget *parent)
 		ui->spinBoxBoard->setValue(0);
 	}
 	on_measureDone();
-	connect(ui->spinBoxBoard, &QSpinBox::valueChanged, this, &DialogTriggerInfo::on_measureDone);
+	connect(ui->spinBoxBoard, qOverload<int>(&QSpinBox::valueChanged), this, &DialogTriggerInfo::on_measureDone);
 }
 
 DialogTriggerInfo::~DialogTriggerInfo()

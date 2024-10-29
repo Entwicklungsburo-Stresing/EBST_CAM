@@ -3,7 +3,9 @@
 
 #include <QtWidgets/QGraphicsItem>
 #include <dialogsettings.h>
-class QChart;
+#include <QtCharts/QChart>
+
+QT_CHARTS_USE_NAMESPACE 
 
 class Crosshairs
 {

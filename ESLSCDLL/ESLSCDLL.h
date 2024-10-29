@@ -10,12 +10,15 @@
 	the drivers must have been installed before calling!
 */
 
+#ifdef WIN32
 #include <windows.h>
+#endif
+
 // COMPILE_FOR_LABVIEW is defined in the preprocessor definitions of the project ESLSCDLL when Debug-Labview or Release-Labview is chosen as configuration
 #ifdef COMPILE_FOR_LABVIEW
 #include "LabVIEW 2015/cintools/extcode.h"
 #endif
-#include "shared_src/Board.h"
+#include "../shared_src/Board.h"
 
 #ifdef COMPILE_FOR_LABVIEW
 extern LVUserEventRef measureStartLVEvent;
@@ -25,18 +28,20 @@ extern LVUserEventRef blockDoneLVEvent;
 extern LVUserEventRef allBlocksDoneLVEvent;
 #endif
 
-#ifdef _DLL
+#ifdef WIN32
 #define DllAccess __declspec( dllexport )
 
 #else
-#define DllAccess __declspec( dllimport )
+#define DllAccess
 #endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#ifdef WIN32
 BOOL WINAPI DLLMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
+#endif
 
 //************ High level API
 // Basic operation of Stresing cameras:
@@ -186,7 +191,6 @@ DllAccess void DLLDeinit2dViewer();
 DllAccess void DLLSetGammaValue(uint16_t white, uint16_t black);
 DllAccess uint16_t DLLGetGammaWhite();
 DllAccess uint16_t DLLGetGammaBlack();
-void TestMsg(char testMsg1[20], char testMsg2[20]);
 #endif
 
 #ifdef __cplusplus
