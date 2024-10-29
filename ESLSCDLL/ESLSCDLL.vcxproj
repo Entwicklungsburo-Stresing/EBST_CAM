@@ -90,31 +90,37 @@
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
     <LibraryPath>$(ProjectDir)..\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)..\;$(IncludePath)</IncludePath>
+    <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_minimal|x64'">
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
     <LibraryPath>$(ProjectDir)..\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)..\;$(IncludePath)</IncludePath>
+    <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Labview|x64'">
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
     <LibraryPath>$(ProjectDir)..\;C:\Program Files\National Instruments;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)..\;C:\Program Files\National Instruments;$(IncludePath)</IncludePath>
+    <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>$(ProjectDir)..\;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
     <IncludePath>$(ProjectDir)..\;$(IncludePath)</IncludePath>
+    <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_minimal|x64'">
     <LibraryPath>$(ProjectDir)..\;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
     <IncludePath>$(ProjectDir)..\;$(IncludePath)</IncludePath>
+    <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Labview|x64'">
     <LibraryPath>$(ProjectDir)..\;C:\Program Files\National Instruments;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)..\;C:\Program Files\National Instruments;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -139,10 +145,10 @@
       <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(ProjectDir)..\shared_src\" 
-xcopy /Y "$(TargetPath)" "$(ProjectDir)..\$(Platform)\$(Configuration)\"
-xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(ProjectDir)..\$(Platform)\$(Configuration)\"</Command>
-      <Message>copy $(ProjectName)</Message>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
     </PostBuildEvent>
     <BuildLog />
     <ProjectReference />
@@ -170,10 +176,10 @@ xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(ProjectDir)..\$(Platform)\$(Config
       <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(ProjectDir)..\shared_src\" 
-xcopy /Y "$(TargetPath)" "$(ProjectDir)..\$(Platform)\$(Configuration)\"
-xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(ProjectDir)..\$(Platform)\$(Configuration)\"</Command>
-      <Message>copy $(ProjectName)</Message>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
     </PostBuildEvent>
     <BuildLog />
     <ProjectReference />
@@ -201,10 +207,10 @@ xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(ProjectDir)..\$(Platform)\$(Config
       <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(ProjectDir)..\shared_src\" 
-xcopy /Y "$(TargetPath)" "$(ProjectDir)..\$(Platform)\$(Configuration)\"
-xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(ProjectDir)..\$(Platform)\$(Configuration)\"</Command>
-      <Message>copy $(ProjectName)</Message>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
     </PostBuildEvent>
     <BuildLog />
     <ProjectReference />
@@ -227,11 +233,12 @@ xcopy /Y "$(OutputPath)$(ProjectName).pdb" "$(ProjectDir)..\$(Platform)\$(Config
       </AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(ProjectDir)..\shared_src\" 
-xcopy /Y "$(TargetPath)" "$(ProjectDir)..\$(Platform)\$(Configuration)\"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>copy $(ProjectName)</Message>
+      <Message>
+      </Message>
     </PostBuildEvent>
     <ResourceCompile>
       <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
@@ -256,11 +263,12 @@ xcopy /Y "$(TargetPath)" "$(ProjectDir)..\$(Platform)\$(Configuration)\"</Comman
       </AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(ProjectDir)..\shared_src\" 
-xcopy /Y "$(TargetPath)" "$(ProjectDir)..\$(Platform)\$(Configuration)\"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>copy $(ProjectName)</Message>
+      <Message>
+      </Message>
     </PostBuildEvent>
     <ResourceCompile>
       <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
@@ -285,11 +293,12 @@ xcopy /Y "$(TargetPath)" "$(ProjectDir)..\$(Platform)\$(Configuration)\"</Comman
       <SubSystem>Windows</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(OutputPath)$(ProjectName).lib" "$(ProjectDir)..\shared_src\" 
-xcopy /Y "$(TargetPath)" "$(ProjectDir)..\$(Platform)\$(Configuration)\"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PostBuildEvent>
-      <Message>copy $(ProjectName)</Message>
+      <Message>
+      </Message>
     </PostBuildEvent>
     <ResourceCompile />
     <BuildLog />

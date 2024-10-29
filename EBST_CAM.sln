@@ -51,22 +51,18 @@ Global
 		{4883A750-F34F-303C-8C24-F15A176128F3}.Debug|x64.ActiveCfg = Debug|x64
 		{4883A750-F34F-303C-8C24-F15A176128F3}.Debug|x64.Build.0 = Debug|x64
 		{4883A750-F34F-303C-8C24-F15A176128F3}.Debug-Labview|x64.ActiveCfg = Debug|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.Debug-Labview|x64.Build.0 = Debug|x64
 		{4883A750-F34F-303C-8C24-F15A176128F3}.Release_minimal|x64.ActiveCfg = Release|x64
 		{4883A750-F34F-303C-8C24-F15A176128F3}.Release_minimal|x64.Build.0 = Release|x64
 		{4883A750-F34F-303C-8C24-F15A176128F3}.Release|x64.ActiveCfg = Release|x64
 		{4883A750-F34F-303C-8C24-F15A176128F3}.Release|x64.Build.0 = Release|x64
 		{4883A750-F34F-303C-8C24-F15A176128F3}.Release-Labview|x64.ActiveCfg = Release|x64
-		{4883A750-F34F-303C-8C24-F15A176128F3}.Release-Labview|x64.Build.0 = Release|x64
 		{69FD80D7-D739-4BC9-A0FB-B950185FABC6}.Debug_minimal|x64.ActiveCfg = Debug
 		{69FD80D7-D739-4BC9-A0FB-B950185FABC6}.Debug|x64.ActiveCfg = Debug
 		{69FD80D7-D739-4BC9-A0FB-B950185FABC6}.Debug-Labview|x64.ActiveCfg = Debug
 		{69FD80D7-D739-4BC9-A0FB-B950185FABC6}.Release_minimal|x64.ActiveCfg = Release
-		{69FD80D7-D739-4BC9-A0FB-B950185FABC6}.Release_minimal|x64.Build.0 = Release
 		{69FD80D7-D739-4BC9-A0FB-B950185FABC6}.Release|x64.ActiveCfg = Release
 		{69FD80D7-D739-4BC9-A0FB-B950185FABC6}.Release|x64.Build.0 = Release
 		{69FD80D7-D739-4BC9-A0FB-B950185FABC6}.Release-Labview|x64.ActiveCfg = Release
-		{69FD80D7-D739-4BC9-A0FB-B950185FABC6}.Release-Labview|x64.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
