@@ -48,6 +48,7 @@ DllAccess es_status_codes DLLInitDriver(uint8_t* _number_of_boards);
 // 2) Initialize PCIe board. Call it once at startup.
 DllAccess es_status_codes DLLInitBoard();
 // 3) Set settings parameter according to your camera system. Call it once at startup and every time you changed settings.
+DllAccess void DLLInitSettingsStruct(struct measurement_settings* ms);
 DllAccess es_status_codes DLLSetGlobalSettings(struct measurement_settings settings);
 DllAccess es_status_codes DLLSetGlobalSettings_matlab(struct measurement_settings_matlab measurement_s, struct camera_settings camera_s0, struct camera_settings camera_s1, struct camera_settings camera_s2, struct camera_settings camera_s3, struct camera_settings camera_s4);
 // 4) Initialize Hardware and Software for the Measurement. Call it once at startup and every time you changed settings.
