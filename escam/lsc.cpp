@@ -1,7 +1,6 @@
 ﻿#include "lsc.h"
 #include <sstream>
 #include "UIAbstractionLayer.h"
-#include "../ESLSCDLL/ESLSCDLL.h"
 
 Lsc::Lsc()
 {
@@ -349,7 +348,7 @@ es_status_codes Lsc::getScanIndex(uint32_t drvno, uint32_t sample, uint32_t bloc
  */
 es_status_codes Lsc::getS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
 {
-	return DLLGetS1State(drvno, sample, block, camera_pos, state);
+	return DLLGetS1State(drvno, sample, block, camera_pos, (uint8_t*)state);
 }
 
 /**
@@ -357,7 +356,7 @@ es_status_codes Lsc::getS1State(uint32_t drvno, uint32_t sample, uint32_t block,
  */
 es_status_codes Lsc::getS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
 {
-	return DLLGetS2State(drvno, sample, block, camera_pos, state);
+	return DLLGetS2State(drvno, sample, block, camera_pos, (uint8_t*)state);
 }
 
 /**
@@ -469,22 +468,22 @@ es_status_codes Lsc::resetBlockFrequencyBit(uint32_t drvno)
  */
 es_status_codes Lsc::checkFifoValid(uint32_t drvno, bool* valid)
 {
-	return DLLCheckFifoValid(drvno, valid);
+	return DLLCheckFifoValid(drvno, (uint8_t*)valid);
 }
 
 es_status_codes Lsc::checkFifoOverflow(uint32_t drvno, bool* overflow)
 {
-	return DLLCheckFifoOverflow(drvno, overflow);
+	return DLLCheckFifoOverflow(drvno, (uint8_t*)overflow);
 }
 
 es_status_codes Lsc::checkFifoEmpty(uint32_t drvno, bool* empty)
 {
-	return DLLCheckFifoEmpty(drvno, empty);
+	return DLLCheckFifoEmpty(drvno, (uint8_t*)empty);
 }
 
 es_status_codes Lsc::checkFifoFull(uint32_t drvno, bool* full)
 {
-	return DLLCheckFifoFull(drvno, full);
+	return DLLCheckFifoFull(drvno, (uint8_t*)full);
 }
 
 /**
