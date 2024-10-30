@@ -503,7 +503,9 @@ DllAccess es_status_codes DLLReadScanFrequencyBit_multipleBoards(uint8_t* scanFr
 	return status;
 }
 
-
+/**
+ * \copydoc ResetScanFrequencyBit
+ */
 DllAccess es_status_codes DLLResetScanFrequencyBit(uint32_t drvno)
 {
 	return ResetScanFrequencyBit(drvno);
@@ -564,6 +566,9 @@ DllAccess es_status_codes DLLReadBlockFrequencyBit_multipleBoards(uint8_t* block
 	return status;
 }
 
+/**
+ * \copydoc ResetBlockFrequencyBit
+ */
 DllAccess es_status_codes DLLResetBlockFrequencyBit(uint32_t drvno)
 {
 	return ResetBlockFrequencyBit(drvno);
@@ -598,41 +603,72 @@ DllAccess es_status_codes DLLGetCameraStatusOverTemp(uint32_t drvno, uint32_t sa
 	return GetCameraStatusOverTemp(drvno, sample, block, camera_pos, overTemp);
 }
 
+/**
+ * \copydoc GetBlockIndex
+ */
 DllAccess es_status_codes DLLGetBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* blockIndex)
 {
 	return GetBlockIndex(drvno, sample, block, camera_pos, blockIndex);
 }
 
+/**
+ * \copydoc GetScanIndex
+ */
 DllAccess es_status_codes DLLGetScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* scanIndex)
 {
 	return GetScanIndex(drvno, sample, block, camera_pos, scanIndex);
 }
 
+/**
+ * \copydoc GetS1State
+ */
 DllAccess es_status_codes DLLGetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
 {
 	return GetS1State(drvno, sample, block, camera_pos, state);
 }
 
+/**
+ * \copydoc GetS2State
+ */
 DllAccess es_status_codes DLLGetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
 {
 	return GetS2State(drvno, sample, block, camera_pos, state);
 }
 
+/**
+ * \copydoc GetImpactSignal1
+ */
 DllAccess es_status_codes DLLGetImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
 	return GetImpactSignal1(drvno, sample, block, camera_pos, impactSignal);
 }
 
+/**
+ * \copydoc GetImpactSignal2
+ */
 DllAccess es_status_codes DLLGetImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
 	return GetImpactSignal2(drvno, sample, block, camera_pos, impactSignal);
 }
 
+/**
+ * \brief Get the variable virtualCamcnt
+ * 
+ * Virutal camcnt is either equal to the setting \ref camera_settings.camcnt or 1 if camcnt is 0.
+ * \param drvno PCIe board identifier
+ * \return uint32_t Number of cameras
+ */
 DllAccess uint32_t DLLGetVirtualCamcnt(uint32_t drvno)
 {
 	return virtualCamcnt[drvno];
 }
 
+/**
+ * \brief Get the variable testModeOn
+ * 
+ * The test mode is activated when no PCIe board is connected. 
+ * \return bool testModeOn
+ */
 DllAccess bool DLLGetTestModeOn()
 {
 	return testModeOn;
@@ -794,41 +830,65 @@ DllAccess es_status_codes DLLGetBlockOn_multipleBoards(uint8_t* blockOn0, uint8_
 	return status;
 }
 
+/**
+ * \copydoc dumpS0Registers
+ */
 DllAccess es_status_codes DLLDumpS0Registers(uint32_t drvno, char** stringPtr)
 {
 	return dumpS0Registers(drvno, stringPtr);
 }
 
+/**
+ * \copydoc dumpHumanReadableS0Registers
+ */
 DllAccess es_status_codes DLLDumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 {
 	return dumpHumanReadableS0Registers(drvno, stringPtr);
 }
 
+/**
+ * \copydoc dumpDmaRegisters
+ */
 DllAccess es_status_codes DLLDumpDmaRegisters(uint32_t drvno, char** stringPtr)
 {
 	return dumpDmaRegisters(drvno, stringPtr);
 }
 
+/**
+ * \copydoc dumpTlpRegisters
+ */
 DllAccess es_status_codes DLLDumpTlpRegisters(uint32_t drvno, char** stringPtr)
 {
 	return dumpTlpRegisters(drvno, stringPtr);
 }
 
+/**
+ * \copydoc dumpMeasurementSettings
+ */
 DllAccess es_status_codes DLLDumpMeasurementSettings(char** stringPtr)
 {
 	return dumpMeasurementSettings(stringPtr);
 }
 
+/**
+ * \copydoc dumpCameraSettings
+ */
 DllAccess es_status_codes DLLDumpCameraSettings(uint32_t drvno, char** stringPtr)
 {
 	return dumpCameraSettings(drvno, stringPtr);
 }
 
+/**
+ * \copydoc dumpPciRegisters
+ */
 DllAccess es_status_codes DLLDumpPciRegisters(uint32_t drvno, char** stringPtr)
 {
 	return dumpPciRegisters(drvno, stringPtr);
 }
 
+/**
+ * \copydoc _AboutDrv
+ */
 DllAccess es_status_codes DLLAboutDrv(uint32_t drvno, char** stringPtr)
 {
 #ifdef WIN32
@@ -838,6 +898,9 @@ DllAccess es_status_codes DLLAboutDrv(uint32_t drvno, char** stringPtr)
 #endif
 }
 
+/**
+ * \copydoc _AboutGPX
+ */
 DllAccess es_status_codes DLLAboutGPX(uint32_t drvno, char** stringPtr)
 {
 #ifdef WIN32
@@ -847,12 +910,21 @@ DllAccess es_status_codes DLLAboutGPX(uint32_t drvno, char** stringPtr)
 #endif
 }
 
+/**
+ * \copydoc GetVerifiedDataDialog
+ */
 DllAccess void DLLGetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString)
 {
 	GetVerifiedDataDialog(vd, resultString);
 	return;
 }
 
+/**
+ * \brief Get the variable isRunning
+ * 
+ * isRunning is 1 when a measurement is running, 0 otherwise.
+ * \return uint8_t isRunning
+ */
 DllAccess uint8_t DLLGetIsRunning()
 {
 	return (uint8_t)isRunning;
@@ -1116,6 +1188,9 @@ DllAccess es_status_codes DLLSetTemp(uint8_t level)
 	return status;
 }
 
+/**
+ * \copydoc SetTORReg
+ */
 DllAccess es_status_codes DLLSetTORReg(uint32_t drvno, uint8_t tor)
 {
 	return SetTORReg(drvno, tor);
@@ -1143,9 +1218,12 @@ DllAccess es_status_codes DLLSetTORReg_multipleBoards(uint8_t tor)
 	return status;
 }
 
-DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint32_t* output, uint8_t reorder_channel)
+/**
+ * \copydoc DAC8568_setAllOutputs
+ */
+DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint32_t* output, uint8_t reorder_channels)
 {
-	return DAC8568_setAllOutputs(drvno, location, cameraPosition, output, reorder_channel);
+	return DAC8568_setAllOutputs(drvno, location, cameraPosition, output, reorder_channels);
 }
 
 /**
@@ -1159,13 +1237,13 @@ DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t drvno, uint8_t locat
  * \param output2 all output values as array for board 2 that will be converted to analog voltage (0 ... 0xFFFF)
  * \param output3 all output values as array for board 3 that will be converted to analog voltage (0 ... 0xFFFF)
  * \param output4 all output values as array for board 4 that will be converted to analog voltage (0 ... 0xFFFF)
- * \param reorder_channel used to reorder DAC channels for high speed camera
+ * \param reorder_channels used to reorder DAC channels for high speed camera
  * \return es_status_codes
  *		- es_no_error
  *		- es_register_write_failed
  *		- es_parameter_out_of_range
  */
-DllAccess es_status_codes DLLDAC8568_setAllOutputs_multipleBoards(uint8_t location, uint8_t cameraPosition, uint32_t* output0, uint32_t* output1, uint32_t* output2, uint32_t* output3, uint32_t* output4, uint8_t reorder_channel)
+DllAccess es_status_codes DLLDAC8568_setAllOutputs_multipleBoards(uint8_t location, uint8_t cameraPosition, uint32_t* output0, uint32_t* output1, uint32_t* output2, uint32_t* output3, uint32_t* output4, uint8_t reorder_channels)
 {
 	es_status_codes status = es_no_error;
 	uint32_t* output[MAXPCIECARDS] = { output0, output1, output2, output3, output4 };
@@ -1174,7 +1252,7 @@ DllAccess es_status_codes DLLDAC8568_setAllOutputs_multipleBoards(uint8_t locati
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = DAC8568_setAllOutputs(drvno, location, cameraPosition, output[drvno], reorder_channel);
+			status = DAC8568_setAllOutputs(drvno, location, cameraPosition, output[drvno], reorder_channels);
 			if (status != es_no_error) return status;
 		}
 	}
@@ -1512,6 +1590,9 @@ DllAccess es_status_codes DLLIOCtrl_setOutput(uint32_t drvno, uint32_t number, u
 	return IOCtrl_setOutput(drvno, number, width_in_5ns, delay_in_5ns);
 }
 
+/**
+ * \copydoc IOCtrl_setT0
+ */
 DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 {
 	return IOCtrl_setT0(drvno, period_in_10ns);
@@ -1685,6 +1766,9 @@ DllAccess es_status_codes DLLGetIsDsc_multipleBoards(uint8_t* isDsc0, uint8_t* i
 	return status;
 }
 
+/**
+ * \copydoc ResetDSC
+ */
 DllAccess es_status_codes DLLResetDSC(uint32_t drvno, uint8_t DSCNumber)
 {
 	return ResetDSC(drvno, DSCNumber);
@@ -1711,6 +1795,9 @@ DllAccess es_status_codes DLLResetDSC_multipleBoards(uint8_t DSCNumber)
 	return status;
 }
 
+/**
+ * \copydoc SetDIRDSC
+ */
 DllAccess es_status_codes DLLSetDIRDSC(uint32_t drvno, uint8_t DSCNumber, uint8_t dir)
 {
 	return SetDIRDSC(drvno, DSCNumber, dir);
@@ -2040,6 +2127,9 @@ DllAccess uint16_t DLLGetGammaBlack()
 #endif
 }
 
+/**
+ * \copydoc ExportMeasurementHDF5
+ */
 DllAccess es_status_codes DLLExportMeasurementHDF5(const char* path, char* filename)
 {
 	return ExportMeasurementHDF5(path, filename);
@@ -2079,6 +2169,16 @@ DllAccess es_status_codes DLLResetBlockTriggerDetected(uint32_t drvno)
 	return ResetBlockTriggerDetected(drvno);
 }
 
+/**
+ * \brief Read the bit \ref PCIEFLAGS_bits_t.PCIEFLAGS_bit_scan_trigger_detected.
+ * 
+ * \param detected0 Pointer to a bool, where the scan trigger detected bit of board 0 will be written.
+ * \param detected1 Pointer to a bool, where the scan trigger detected bit of board 1 will be written.
+ * \param detected2 Pointer to a bool, where the scan trigger detected bit of board 2 will be written.
+ * \param detected3 Pointer to a bool, where the scan trigger detected bit of board 3 will be written.
+ * \param detected4 Pointer to a bool, where the scan trigger detected bit of board 4 will be written.
+ * \return es_status_codes
+ */
 DllAccess es_status_codes DLLGetScanTriggerDetected_multipleBoards(uint8_t* detected0, uint8_t* detected1, uint8_t* detected2, uint8_t* detected3, uint8_t* detected4)
 {
 	uint8_t* detected[MAXPCIECARDS] = { detected0, detected1, detected2, detected3, detected4 };
@@ -2097,6 +2197,16 @@ DllAccess es_status_codes DLLGetScanTriggerDetected_multipleBoards(uint8_t* dete
 	return status;
 }
 
+/**
+ * \brief Read the bit \ref PCIEFLAGS_bits_t.PCIEFLAGS_bit_block_trigger_detected.
+ *
+ * \param detected0 Pointer to a bool, where the block trigger detected bit of board 0 will be written.
+ * \param detected1 Pointer to a bool, where the block trigger detected bit of board 1 will be written.
+ * \param detected2 Pointer to a bool, where the block trigger detected bit of board 2 will be written.
+ * \param detected3 Pointer to a bool, where the block trigger detected bit of board 3 will be written.
+ * \param detected4 Pointer to a bool, where the block trigger detected bit of board 4 will be written.
+ * \return es_status_codes
+ */
 DllAccess es_status_codes DLLGetBlockTriggerDetected_multipleBoards(uint8_t* detected0, uint8_t* detected1, uint8_t* detected2, uint8_t* detected3, uint8_t* detected4)
 {
 	uint8_t* detected[MAXPCIECARDS] = { detected0, detected1, detected2, detected3, detected4 };
@@ -2115,6 +2225,11 @@ DllAccess es_status_codes DLLGetBlockTriggerDetected_multipleBoards(uint8_t* det
 	return status;
 }
 
+/**
+ * \brief Reset the bit \ref PCIEFLAGS_bits_t.PCIEFLAGS_bit_scan_trigger_detected.
+ *
+ * \return es_status_codes
+ */
 DllAccess es_status_codes DLLResetScanTriggerDetected_multipleBoards()
 {
 	es_status_codes status = es_no_error;
@@ -2130,6 +2245,11 @@ DllAccess es_status_codes DLLResetScanTriggerDetected_multipleBoards()
 	return status;
 }
 
+/**
+ * \brief Reset the bit \ref PCIEFLAGS_bits_t.PCIEFLAGS_bit_block_trigger_detected.
+ *
+ * \return es_status_codes
+ */
 DllAccess es_status_codes DLLResetBlockTriggerDetected_multipleBoards()
 {
 	es_status_codes status = es_no_error;
@@ -2145,51 +2265,91 @@ DllAccess es_status_codes DLLResetBlockTriggerDetected_multipleBoards()
 	return status;
 }
 
+/**
+ * \copydoc DAC8568_setOutput
+ */
 DllAccess es_status_codes DLLDAC8568_setOutput(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t channel, uint16_t output)
 {
 	return DAC8568_setOutput(drvno, location, cameraPosition, channel, output);
 }
 
+/**
+ * \copydoc CheckFifoValid
+ */
 DllAccess es_status_codes DLLCheckFifoValid(uint32_t drvno, bool* valid)
 {
 	return CheckFifoValid(drvno, valid);
 }
 
+/**
+ * \copydoc CheckFifoOverflow
+ */
 DllAccess es_status_codes DLLCheckFifoOverflow(uint32_t drvno, bool* overflow)
 {
 	return CheckFifoOverflow(drvno, overflow);
 }
 
+/**
+ * \copydoc CheckFifoEmpty
+ */
 DllAccess es_status_codes DLLCheckFifoEmpty(uint32_t drvno, bool* empty)
 {
 	return CheckFifoEmpty(drvno, empty);
 }
 
+/**
+ * \copydoc CheckFifoFull
+ */
 DllAccess es_status_codes DLLCheckFifoFull(uint32_t drvno, bool* full)
 {
 	return CheckFifoFull(drvno, full);
 }
 
+/**
+ * \brief Set a function which will be executed every time when a measurement starts.
+ * 
+ * \param hook Pointer to the function which will be executed.
+ */
 DllAccess void DLLSetMeasureStartHook(void(*hook)())
 {
 	measureStartHook = hook;
 }
 
+/**
+ * \brief Set a function which will be executed every time when a measurement ends.
+ *
+ * \param hook Pointer to the function which will be executed.
+ */
 DllAccess void DLLSetMeasureDoneHook(void(*hook)())
 {
 	measureDoneHook = hook;
 }
 
+/**
+ * \brief Set a function which will be executed every time when a block starts.
+ *
+ * \param hook Pointer to the function which will be executed.
+ */
 DllAccess void DLLSetBlockStartHook(void(*hook)())
 {
 	blockStartHook = hook;
 }
 
+/**
+ * \brief Set a function which will be executed every time when a block ends.
+ *
+ * \param hook Pointer to the function which will be executed.
+ */
 DllAccess void DLLSetBlockDoneHook(void(*hook)())
 {
 	blockDoneHook = hook;
 }
 
+/**
+ * \brief Set a function which will be executed every time when all blocks are done.
+ *
+ * \param hook Pointer to the function which will be executed.
+ */
 DllAccess void DLLSetAllBlocksDoneHook(void(*hook)())
 {
 	allBlocksDoneHook = hook;
