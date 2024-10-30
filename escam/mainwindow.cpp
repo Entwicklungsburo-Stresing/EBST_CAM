@@ -213,9 +213,7 @@ void MainWindow::startPressed()
 		switch (ret)
 		{
 		case QMessageBox::Yes:
-			// Yes was clicked
-			for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
-				lsc.fillUserBufferWithDummyData(drvno);
+			lsc.fillUserBufferWithDummyData();
 			break;
 		default:
 		case QMessageBox::No:

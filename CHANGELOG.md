@@ -28,7 +28,7 @@ This release changes the way how the GUI Escam interacts with the Stresing libra
 * Add function DLLCheckFifoOverflow
 * Add function DLLCheckFifoEmpty
 * Add function DLLCheckFifoFull
-* Add function DLLExportMeasurementHDF5
+* Add function DLLExportMeasurementHDF5 (exclude in minimal build)
 * Add function DLLSetMeasureStartHook
 * Add function DLLSetMeasureDoneHook
 * Add function DLLSetBlockStartHook
@@ -47,12 +47,16 @@ This release changes the way how the GUI Escam interacts with the Stresing libra
 * Add function DLLResetDSC_multipleBoards
 * Add function DLLSetDIRDSC_multipleBoards
 * Add function DLLDAC8568_setOutput
+* Add function DLLResetScanFrequencyBit_multipleBoards
+* Add function DLLResetBlockFrequencyBit_multipleBoards
 #### Changed
 * Change DLLDAC8568_setAllOutputs to single board function
 * Change DLLIOCtrl_setT0 to single board function
 * Change DLLSetTORReg to single board function
 * Change DLLResetDSC to single board function
 * Change DLLSetDIRDSC to single board function
+* Change DLLResetScanFrequencyBit to single board function
+* Change DLLResetBlockFrequencyBit to single board function
 #### Removed
 * Remove function TestMsg
 #### Fixed
@@ -60,6 +64,7 @@ This release changes the way how the GUI Escam interacts with the Stresing libra
 ### Other Changes
 #### Added
 #### Changed
+* Use DLL functions in Escam instead Board.h functions
 #### Removed
 #### Fixed
 #### Deprecated

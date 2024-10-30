@@ -287,7 +287,7 @@ void Lsc::getCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block)
 	return DLLGetCurrentScanNumber(drvno, scan, block);
 }
 
-void Lsc::fillUserBufferWithDummyData(uint32_t drvno)
+void Lsc::fillUserBufferWithDummyData()
 {
 	DLLFillUserBufferWithDummyData();
 	emit measureStart();
@@ -445,7 +445,7 @@ es_status_codes Lsc::readScanFrequencyBit(uint32_t drvno, bool* scanFrequencyToo
  */
 es_status_codes Lsc::resetScanFrequencyBit(uint32_t drvno)
 {
-	return DLLResetScanFrequencyBit();
+	return DLLResetScanFrequencyBit(drvno);
 }
 
 /**
@@ -461,7 +461,7 @@ es_status_codes Lsc::readBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyT
  */
 es_status_codes Lsc::resetBlockFrequencyBit(uint32_t drvno)
 {
-	return DLLResetBlockFrequencyBit();
+	return DLLResetBlockFrequencyBit(drvno);
 }
 
 /**
@@ -505,7 +505,7 @@ es_status_codes Lsc::exportMeasurementHDF5(const char* path, char* filename)
 #endif
 }
 
-es_status_codes Lsc::waitForMeasureReady(uint32_t board_sel)
+es_status_codes Lsc::waitForMeasureReady()
 {
 	return DLLwaitForMeasureReady();
 }

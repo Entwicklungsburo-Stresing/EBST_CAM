@@ -3819,7 +3819,7 @@ es_status_codes readBlockTriggerState(uint32_t drvno, uint8_t btrig_ch, bool* st
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes waitForBlockReady(uint32_t board_sel)
+es_status_codes waitForBlockReady()
 {
 	bool blockOn[MAXPCIECARDS] = { false, false, false, false, false };
 	es_status_codes status = es_no_error;
@@ -3828,7 +3828,7 @@ es_status_codes waitForBlockReady(uint32_t board_sel)
 		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		{
 			// Check if the drvno'th bit is set
-			if ((board_sel >> drvno) & 1)
+			if ((settings_struct.board_sel >> drvno) & 1)
 			{
 				status = isBlockOn(drvno, &blockOn[drvno]);
 				if (status != es_no_error) return status;
@@ -3846,7 +3846,7 @@ es_status_codes waitForBlockReady(uint32_t board_sel)
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes WaitForMeasureReady(uint32_t board_sel)
+es_status_codes WaitForMeasureReady()
 {
 	ES_LOG("WaitForMeasureReady\n");
 	bool measureOn[MAXPCIECARDS] = { false, false, false, false, false };
@@ -3856,7 +3856,7 @@ es_status_codes WaitForMeasureReady(uint32_t board_sel)
 		for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		{
 			// Check if the drvno'th bit is set
-			if ((board_sel >> drvno) & 1)
+			if ((settings_struct.board_sel >> drvno) & 1)
 			{
 				status = isMeasureOn(drvno, &measureOn[drvno]);
 				if (status != es_no_error) return status;

@@ -99,10 +99,12 @@ DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t*
 DllAccess void DLLGetCurrentScanNumber_multipleBoards(int64_t* sample0, int64_t* block0, int64_t* sample1, int64_t* block1, int64_t* sample2, int64_t* block2, int64_t* sample3, int64_t* block3, int64_t* sample4, int64_t* block4);
 DllAccess es_status_codes DLLReadScanFrequencyBit(uint32_t drvno, uint8_t* scanFrequencyTooHigh);
 DllAccess es_status_codes DLLReadScanFrequencyBit_multipleBoards(uint8_t* scanFrequencyTooHigh0, uint8_t* scanFrequencyTooHigh1, uint8_t* scanFrequencyTooHigh2, uint8_t* scanFrequencyTooHigh3, uint8_t* scanFrequencyTooHigh4);
-DllAccess es_status_codes DLLResetScanFrequencyBit();
+DllAccess es_status_codes DLLResetScanFrequencyBit(uint32_t drvno);
+DllAccess es_status_codes DLLResetScanFrequencyBit_multipleBoards();
 DllAccess es_status_codes DLLReadBlockFrequencyBit(uint32_t drvno, uint8_t* blockFrequencyTooHigh);
 DllAccess es_status_codes DLLReadBlockFrequencyBit_multipleBoards(uint8_t* blockFrequencyTooHigh0, uint8_t* blockFrequencyTooHigh1, uint8_t* blockFrequencyTooHigh2, uint8_t* blockFrequencyTooHigh3, uint8_t* blockFrequencyTooHigh4);
-DllAccess es_status_codes DLLResetBlockFrequencyBit();
+DllAccess es_status_codes DLLResetBlockFrequencyBit(uint32_t drvno);
+DllAccess es_status_codes DLLResetBlockFrequencyBit_multipleBoards();
 DllAccess es_status_codes DLLGetCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* overTemp);
 DllAccess es_status_codes DLLGetCameraStatusOverTemp_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* overTemp1, uint8_t* overTemp2, uint8_t* overTemp3, uint8_t* overTemp4, uint8_t* overTemp5);
 DllAccess es_status_codes DLLGetCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* tempGood);
@@ -181,7 +183,6 @@ DllAccess es_status_codes DLLCheckFifoValid(uint32_t drvno, bool* valid);
 DllAccess es_status_codes DLLCheckFifoOverflow(uint32_t drvno, bool* overflow);
 DllAccess es_status_codes DLLCheckFifoEmpty(uint32_t drvno, bool* empty);
 DllAccess es_status_codes DLLCheckFifoFull(uint32_t drvno, bool* full);
-DllAccess es_status_codes DLLExportMeasurementHDF5(const char* path, char* filename);
 DllAccess void DLLSetMeasureStartHook(void(*hook)());
 DllAccess void DLLSetMeasureDoneHook(void(*hook)());
 DllAccess void DLLSetBlockStartHook(void(*hook)());
@@ -214,6 +215,7 @@ DllAccess void DLLDeinit2dViewer();
 DllAccess void DLLSetGammaValue(uint16_t white, uint16_t black);
 DllAccess uint16_t DLLGetGammaWhite();
 DllAccess uint16_t DLLGetGammaBlack();
+DllAccess es_status_codes DLLExportMeasurementHDF5(const char* path, char* filename);
 #endif
 
 #ifdef __cplusplus
