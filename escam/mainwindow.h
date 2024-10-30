@@ -23,7 +23,6 @@ public:
 	Ui::MainWindow *ui;
 	uint32_t greyscale_viewer_board = 0;
 	uint32_t greyscale_viewer_camera = 0;
-	void initSettings();
 public slots:
 	void loadCameraData();
 	void on_measureStart();
