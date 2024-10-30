@@ -18,7 +18,9 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 */
 
 #include "ESLSCDLL.h"
+#include "Board.h"
 #ifdef WIN32
+#include <windows.h>
 #include "Direct2dViewer_c.h"
 #include <process.h>
 #endif
@@ -622,17 +624,17 @@ DllAccess es_status_codes DLLGetScanIndex(uint32_t drvno, uint32_t sample, uint3
 /**
  * \copydoc GetS1State
  */
-DllAccess es_status_codes DLLGetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
+DllAccess es_status_codes DLLGetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* state)
 {
-	return GetS1State(drvno, sample, block, camera_pos, state);
+	return GetS1State(drvno, sample, block, camera_pos, (bool*)state);
 }
 
 /**
  * \copydoc GetS2State
  */
-DllAccess es_status_codes DLLGetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
+DllAccess es_status_codes DLLGetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* state)
 {
-	return GetS2State(drvno, sample, block, camera_pos, state);
+	return GetS2State(drvno, sample, block, camera_pos, (bool*)state);
 }
 
 /**
@@ -669,9 +671,9 @@ DllAccess uint32_t DLLGetVirtualCamcnt(uint32_t drvno)
  * The test mode is activated when no PCIe board is connected. 
  * \return bool testModeOn
  */
-DllAccess bool DLLGetTestModeOn()
+DllAccess uint8_t DLLGetTestModeOn()
 {
-	return testModeOn;
+	return (uint8_t)testModeOn;
 }
 
 /**
@@ -2276,33 +2278,33 @@ DllAccess es_status_codes DLLDAC8568_setOutput(uint32_t drvno, uint8_t location,
 /**
  * \copydoc CheckFifoValid
  */
-DllAccess es_status_codes DLLCheckFifoValid(uint32_t drvno, bool* valid)
+DllAccess es_status_codes DLLCheckFifoValid(uint32_t drvno, uint8_t* valid)
 {
-	return CheckFifoValid(drvno, valid);
+	return CheckFifoValid(drvno, (bool*)valid);
 }
 
 /**
  * \copydoc CheckFifoOverflow
  */
-DllAccess es_status_codes DLLCheckFifoOverflow(uint32_t drvno, bool* overflow)
+DllAccess es_status_codes DLLCheckFifoOverflow(uint32_t drvno, uint8_t* overflow)
 {
-	return CheckFifoOverflow(drvno, overflow);
+	return CheckFifoOverflow(drvno, (bool*)overflow);
 }
 
 /**
  * \copydoc CheckFifoEmpty
  */
-DllAccess es_status_codes DLLCheckFifoEmpty(uint32_t drvno, bool* empty)
+DllAccess es_status_codes DLLCheckFifoEmpty(uint32_t drvno, uint8_t* empty)
 {
-	return CheckFifoEmpty(drvno, empty);
+	return CheckFifoEmpty(drvno, (bool*)empty);
 }
 
 /**
  * \copydoc CheckFifoFull
  */
-DllAccess es_status_codes DLLCheckFifoFull(uint32_t drvno, bool* full)
+DllAccess es_status_codes DLLCheckFifoFull(uint32_t drvno, uint8_t* full)
 {
-	return CheckFifoFull(drvno, full);
+	return CheckFifoFull(drvno, (bool*)full);
 }
 
 /**
