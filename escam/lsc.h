@@ -4,10 +4,7 @@
 #include <stdint.h>
 #include <string>
 #include <QObject>
-#include "../shared_src/es_status_codes.h"
-#include "../shared_src/enum_settings.h"
-#include "../shared_src/enum_hardware.h"
-#include "../shared_src/struct.h"
+#include "../ESLSCDLL/ESLSCDLL.h"
 
 #define MAXPCIECARDS 5
 

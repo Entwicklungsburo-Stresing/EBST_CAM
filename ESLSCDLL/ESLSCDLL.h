@@ -10,15 +10,17 @@
 	the drivers must have been installed before calling!
 */
 
-#ifdef WIN32
-#include <windows.h>
-#endif
+#include <stdint.h>
+#include "../shared_src/es_status_codes.h"
+#include "../shared_src/struct.h"
+#include "../shared_src/enum_hardware.h"
+#include "../shared_src/enum_settings.h"
+#include "../shared_src/default_settings.h"
 
 // COMPILE_FOR_LABVIEW is defined in the preprocessor definitions of the project ESLSCDLL when Debug-Labview or Release-Labview is chosen as configuration
 #ifdef COMPILE_FOR_LABVIEW
 #include "LabVIEW 2015/cintools/extcode.h"
 #endif
-#include "Board.h"
 
 #ifdef COMPILE_FOR_LABVIEW
 extern LVUserEventRef measureStartLVEvent;
@@ -27,7 +29,6 @@ extern LVUserEventRef blockStartLVEvent;
 extern LVUserEventRef blockDoneLVEvent;
 extern LVUserEventRef allBlocksDoneLVEvent;
 #endif
-
 
 #ifdef WIN32
 #define DllAccess __declspec( dllexport )
@@ -38,10 +39,6 @@ extern LVUserEventRef allBlocksDoneLVEvent;
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#ifdef WIN32
-BOOL WINAPI DLLMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
 #endif
 
 //************ High level API
@@ -126,12 +123,12 @@ DllAccess void DLLGetVerifiedDataDialog(struct verify_data_parameter* vd, char**
 DllAccess uint8_t DLLGetIsRunning();
 DllAccess es_status_codes DLLGetBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* blockIndex);
 DllAccess es_status_codes DLLGetScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* scanIndex);
-DllAccess es_status_codes DLLGetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state);
-DllAccess es_status_codes DLLGetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state);
+DllAccess es_status_codes DLLGetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* state);
+DllAccess es_status_codes DLLGetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* state);
 DllAccess es_status_codes DLLGetImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal);
 DllAccess es_status_codes DLLGetImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal);
 DllAccess uint32_t DLLGetVirtualCamcnt(uint32_t drvno);
-DllAccess bool DLLGetTestModeOn();
+DllAccess uint8_t DLLGetTestModeOn();
 //************  Control CAM
 DllAccess es_status_codes DLLOutTrigHigh();
 DllAccess es_status_codes DLLOutTrigLow();
@@ -179,10 +176,10 @@ DllAccess es_status_codes DLLGetBlockTriggerDetected_multipleBoards(uint8_t* det
 DllAccess es_status_codes DLLResetScanTriggerDetected_multipleBoards();
 DllAccess es_status_codes DLLResetBlockTriggerDetected_multipleBoards();
 DllAccess es_status_codes DLLDAC8568_setOutput(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t channel, uint16_t output);
-DllAccess es_status_codes DLLCheckFifoValid(uint32_t drvno, bool* valid);
-DllAccess es_status_codes DLLCheckFifoOverflow(uint32_t drvno, bool* overflow);
-DllAccess es_status_codes DLLCheckFifoEmpty(uint32_t drvno, bool* empty);
-DllAccess es_status_codes DLLCheckFifoFull(uint32_t drvno, bool* full);
+DllAccess es_status_codes DLLCheckFifoValid(uint32_t drvno, uint8_t* valid);
+DllAccess es_status_codes DLLCheckFifoOverflow(uint32_t drvno, uint8_t* overflow);
+DllAccess es_status_codes DLLCheckFifoEmpty(uint32_t drvno, uint8_t* empty);
+DllAccess es_status_codes DLLCheckFifoFull(uint32_t drvno, uint8_t* full);
 DllAccess void DLLSetMeasureStartHook(void(*hook)());
 DllAccess void DLLSetMeasureDoneHook(void(*hook)());
 DllAccess void DLLSetBlockStartHook(void(*hook)());
