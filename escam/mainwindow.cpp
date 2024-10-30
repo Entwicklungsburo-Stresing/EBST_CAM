@@ -108,16 +108,6 @@ MainWindow::~MainWindow()
 }
 
 /**
- * @brief Initializes Settings Struct before measurement started.
- * @return none
- */
-void MainWindow::initSettings()
-{
-
-}
-
-
-/**
  * @brief Slot to start measurement. Called by on_pushButtonStartStop_pressed.
  * @return none
  */
