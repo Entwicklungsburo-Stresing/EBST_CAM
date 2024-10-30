@@ -8,10 +8,53 @@ The hardware version number is the current version at release time.
 
 ## Unreleased
 
+This release changes the way how the GUI Escam interacts with the Stresing library. For a better separation between GUI and library and a better consistency to other software like Labview, Escam now interacts with the dynamically linked DLL ESLSCDLL.
+
 ### API Changes
 #### Added
+* Add function DLLGetVerifiedDataDialog
+* Add function DLLGetIsRunning
+* Add function DLLGetBlockIndex
+* Add function DLLGetScanIndex
+* Add function DLLGetS1State
+* Add function DLLGetS2State
+* Add function DLLGetImpactSignal1
+* Add function DLLGetImpactSignal2
+* Add function DLLGetVirtualCamcnt
+* Add function DLLGetTestModeOn
+* Add function DLLDAC8568_setAllOutputs_multipleBoards
+* Add function DLLIOCtrl_setT0_multipleBoards
+* Add function DLLCheckFifoValid
+* Add function DLLCheckFifoOverflow
+* Add function DLLCheckFifoEmpty
+* Add function DLLCheckFifoFull
+* Add function DLLExportMeasurementHDF5
+* Add function DLLSetMeasureStartHook
+* Add function DLLSetMeasureDoneHook
+* Add function DLLSetBlockStartHook
+* Add function DLLSetBlockDoneHook
+* Add function DLLSetAllBlocksDoneHook
+* Add function DLLDumpS0Registers
+* Add function DLLDumpHumanReadableS0Registers
+* Add function DLLDumpDmaRegisters
+* Add function DLLDumpTlpRegisters
+* Add function DLLDumpMeasurementSettings
+* Add function DLLDumpCameraSettings
+* Add function DLLDumpPciRegisters
+* Add function DLLAboutDrv
+* Add function DLLAboutGPX
+* Add function DLLSetTORReg_multipleBoards
+* Add function DLLResetDSC_multipleBoards
+* Add function DLLSetDIRDSC_multipleBoards
+* Add function DLLDAC8568_setOutput
 #### Changed
+* Change DLLDAC8568_setAllOutputs to single board function
+* Change DLLIOCtrl_setT0 to single board function
+* Change DLLSetTORReg to single board function
+* Change DLLResetDSC to single board function
+* Change DLLSetDIRDSC to single board function
 #### Removed
+* Remove function TestMsg
 #### Fixed
 #### Deprecated
 ### Other Changes
