@@ -4646,13 +4646,13 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 		return status;
 	}
 	uint32_t maxPayloadSize = (data & deviceControl_maxPayloadSize_bits) >> deviceControl_maxPayloadSize_bitindex;
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Max_Payload_Size:\t""0x%x (%u bytes)\n", maxPayloadSize, maxSizeEncoding[maxPayloadSize]);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Max_Payload_Size:\t0x%x (%u bytes)\n", maxPayloadSize, maxSizeEncoding[maxPayloadSize]);
 	uint32_t maxReadRequestSize = (data & deviceControl_maxReadRequestSize_bits) >> deviceControl_maxReadRequestSize_bitindex;
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Max_Read_Request_Size:\t0x%x (%u bytes)\n", maxReadRequestSize, maxSizeEncoding[maxReadRequestSize]);
 	uint32_t pixel = 0;
 	status = readRegisterS0_32(drvno, &pixel, S0Addr_PIXREG);
 	pixel &= 0xFFFF;
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Number of pixels:\t""%u\n", pixel);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Number of pixels:\t%u\n", pixel);
 	status = readRegisterDma_32(drvno, &data, DmaAddr_WDMATLPS);
 	if (status != es_no_error)
 	{
@@ -4670,7 +4670,7 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\nerror while reading register\n");
 		return status;
 	}
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "number of TLPs per scan is:\t""%u", data);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "number of TLPs per scan is:\t%u", data);
 	return status;
 }
 
@@ -4773,10 +4773,10 @@ es_status_codes dumpMeasurementSettings(char** stringPtr)
 	//allocate string buffer
 	*stringPtr = (char*)calloc(bufferLength, sizeof(char));
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
-		"board_sel\t" "%u\n"
-		"nos\t"  "%u\n"
-		"nob\t" "%u\n"
-		"cont_pause_in_microseconds\t"  "%u\n",
+		"board_sel\t%u\n"
+		"nos\t%u\n"
+		"nob\t%u\n"
+		"cont_pause_in_microseconds\t%u\n",
 		settings_struct.board_sel,
 		settings_struct.nos,
 		settings_struct.nob,
@@ -4795,35 +4795,35 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 	//allocate string buffer
 	*stringPtr = (char*)calloc(bufferLength, sizeof(char));
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
-		"use_software_polling\t" "%u\n"
-		"sti_mode\t" "%u\n"
-		"bti_mode\t""%u\n"
+		"use_software_polling\t%u\n"
+		"sti_mode\t%u\n"
+		"bti_mode\t%u\n"
 		"stime_in_microsec\t%u\n"
 		"btime_in_microsec\t%u\n"
-		"sdat_in_10ns\t""%u\n"
-		"bdat_in_10ns\t""%u\n"
-		"sslope\t" "%u\n"
-		"bslope\t" "%u\n"
-		"xckdelay_in_10ns\t""%u\n"
+		"sdat_in_10ns\t%u\n"
+		"bdat_in_10ns\t%u\n"
+		"sslope\t%u\n"
+		"bslope\t%u\n"
+		"xckdelay_in_10ns\t%u\n"
 		"sec_in_10ns\t%u\n"
-		"trigger_mode_integrator\t""%u\n"
-		"sensor_type\t""%u\n"
-		"camera_system\t""%u\n"
-		"camcnt\t" "%u\n"
-		"pixel\t" "%u\n"
-		"is_fft_legacy\t" "%u\n"
-		"led_off\t" "%u\n"
-		"sensor_gain\t""%u\n"
-		"adc_gain\t""%u\n"
-		"temp_level\t""%u\n"
-		"bticnt\t""%u\n"
-		"gpx_offset\t""%u\n"
-		"fft_lines\t" "%u\n"
-		"vfreq\t" "%u\n"
-		"fft_mode\t" "%u\n"
-		"lines_binning\t""%u\n"
+		"trigger_mode_integrator\t%u\n"
+		"sensor_type\t%u\n"
+		"camera_system\t%u\n"
+		"camcnt\t%u\n"
+		"pixel\t%u\n"
+		"is_fft_legacy\t%u\n"
+		"led_off\t%u\n"
+		"sensor_gain\t%u\n"
+		"adc_gain\t%u\n"
+		"temp_level\t%u\n"
+		"bticnt\t%u\n"
+		"gpx_offset\t%u\n"
+		"fft_lines\t%u\n"
+		"vfreq\t%u\n"
+		"fft_mode\t%u\n"
+		"lines_binning\t%u\n"
 		"number_of_regions\t%u\n"
-		"s1s2_read_delay_in_10ns\t""%u\n",
+		"s1s2_read_delay_in_10ns\t%u\n",
 		settings_struct.camera_settings[drvno].use_software_polling,
 		settings_struct.camera_settings[drvno].sti_mode,
 		settings_struct.camera_settings[drvno].bti_mode,
@@ -4863,11 +4863,11 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 			len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "%u ", settings_struct.camera_settings[drvno].dac_output[camera][i]);
 	}
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len,
-		"\ntor\t" "%u\n"
-		"adc_mode\t""%u\n"
+		"\ntor\t%u\n"
+		"adc_mode\t%u\n"
 		"adc_custom_pattern\t%u\n"
-		"bec_in_10ns\t""%u\n"
-		"channel_select\t" "%u\n"
+		"bec_in_10ns\t%u\n"
+		"channel_select\t%u\n"
 		"ioctrl_impact_start_pixel\t%u\n",
 		settings_struct.camera_settings[drvno].tor,
 		settings_struct.camera_settings[drvno].adc_mode,
@@ -4926,21 +4926,21 @@ es_status_codes dumpPciRegisters(uint32_t drvno, char** stringPtr)
 	// See table 2-2 in documentation of Spartan-6 FPGA Integrated Endpoint Block for register names
 	// https://docs.xilinx.com/v/u/en-US/s6_pcie_ug654
 	char register_names[number_of_registers][bufferLength] = {
-	"Device ID, Vendor ID" ,
-	"Status, Command"  ,
-	"Class Code, Revision ID" ,
+	"Device ID, Vendor ID",
+	"Status, Command",
+	"Class Code, Revision ID",
 	"BIST, Header Type, Lat. Timer, Cache Line S.",
-	"Base Address 0 mem 32 bit" ,
-	"Base Address 1 io"  ,
-	"Base Address 2 mem 32 bit" ,
-	"Base Address 3"  ,
-	"Base Address 4"  ,
-	"Base Address 5"  ,
-	"Cardbus CIS Pointer" ,
+	"Base Address 0 mem 32 bit",
+	"Base Address 1 io",
+	"Base Address 2 mem 32 bit",
+	"Base Address 3",
+	"Base Address 4",
+	"Base Address 5",
+	"Cardbus CIS Pointer",
 	"Subsystem ID, Subsystem Vendor ID",
 	"Expansion ROM Base Address",
-	"Reserved, Cap. Pointer" ,
-	"Reserved"   ,
+	"Reserved, Cap. Pointer",
+	"Reserved",
 	"Max Lat., Min Gnt., Interrupt Pin, Intterupt Line",
 	"PM Capability, NxtCap, PM Cap",
 	"Data, BSE, PMCSR",
@@ -5976,7 +5976,7 @@ es_status_codes SetupROI(uint32_t drvno, uint16_t number_of_regions, uint32_t li
 	uint32_t lines_per_region = lines / number_of_regions;
 	// calculate the rest of lines when equally distributed
 	uint32_t lines_in_last_region = lines - lines_per_region * (number_of_regions - 1);
-	ES_LOG("Setup ROI: lines_per_region: %u , lines_in_last_region: %u\n", lines_per_region, lines_in_last_region);
+	ES_LOG("Setup ROI: lines_per_region: %u, lines_in_last_region: %u\n", lines_per_region, lines_in_last_region);
 	// go from region 1 to number_of_regions
 	for (int i = 1; i <= number_of_regions; i++)
 	{
