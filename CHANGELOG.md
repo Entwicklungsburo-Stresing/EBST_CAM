@@ -64,7 +64,7 @@ This release changes the way how the GUI Escam interacts with the Stresing libra
 ### Other Changes
 #### Added
 #### Changed
-* Use DLL functions in Escam instead Board.h functions
+* Use DLL functions in Escam instead of Board.h functions
 #### Removed
 #### Fixed
 #### Deprecated

@@ -239,6 +239,7 @@ xcopy /y /d "$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDL
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared_src\default_settings.h" />
+    <ClInclude Include="..\shared_src\enum_hardware.h" />
     <ClInclude Include="..\shared_src\enum_settings.h" />
     <QtMoc Include="myqchartview.h" />
     <ClInclude Include="..\version.h" />

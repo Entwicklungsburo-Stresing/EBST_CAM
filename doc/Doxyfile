@@ -965,20 +965,20 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = ../shared_src/Board.c \
-                         ../ESLSCDLL/ESLSCDLL.c \
+INPUT                  = ../ESLSCDLL/ESLSCDLL.c \
                          ../shared_src/struct.h \
-                         ../shared_src/win/Board_ll.c \
-                         ../shared_src/Direct2dViewer_c.cpp \
-                         ../shared_src/Direct2dViewer.cpp \
-                         ../shared_src/Direct2dViewer.h \
+                         ../ESLSCDLL/Direct2dViewer.cpp \
+                         ../ESLSCDLL/Direct2dViewer.h \
                          mainpage.md \
                          ../shared_src/es_status_codes.h \
                          ../shared_src/es_status_codes.c \
-                         ../shared_src/globals.h \
-                         ../shared_src/globals.c \
+                         ../ESLSCDLL/globals.h \
+                         ../ESLSCDLL/globals.c \
                          ../shared_src/enum_hardware.h \
-                         ../shared_src/enum_settings.h
+                         ../shared_src/enum_settings.h \
+                         ../ESLSCDLL/Board.c \
+                         ../ESLSCDLL/win/Board_ll.c \
+                         ../ESLSCDLL/Direct2dViewer_c.cpp
 
 # This tag can be used to specify the character encoding of the source files
 # that Doxygen parses. Internally Doxygen uses the UTF-8 encoding. Doxygen uses
