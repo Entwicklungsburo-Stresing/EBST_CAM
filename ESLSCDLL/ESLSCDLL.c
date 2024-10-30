@@ -106,6 +106,23 @@ DllAccess es_status_codes DLLInitBoard()
 }
 
 /**
+ * \brief Use this function to properly initialize the struct measurement_settings to its default values.
+ * 
+ * \param ms Pointer to the struct measurement_settings that should be initialized.
+ */
+DllAccess void DLLInitSettingsStruct(struct measurement_settings* ms)
+{
+	ms->board_sel = settingBoardSelDefault;
+	ms->continuous_measurement = settingContinuousMeasurementDefault;
+	ms->cont_pause_in_microseconds = settingContinuousPausInMicrosecondsDefault;
+	ms->nob = settingNobDefault;
+	ms->nos = settingNosDefault;
+	for (uint32_t drvno = 0; drvno < MAXPCIECARDS; drvno++)
+		memcpy(&ms->camera_settings[drvno], &camera_settings_default, sizeof(struct camera_settings));
+	return;
+}
+
+/**
  * \copydoc SetGlobalSettings
  */
 DllAccess es_status_codes DLLSetGlobalSettings(struct measurement_settings settings)
