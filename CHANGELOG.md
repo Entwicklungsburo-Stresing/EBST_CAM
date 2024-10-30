@@ -49,6 +49,7 @@ This release changes the way how the GUI Escam interacts with the Stresing libra
 * Add function DLLDAC8568_setOutput
 * Add function DLLResetScanFrequencyBit_multipleBoards
 * Add function DLLResetBlockFrequencyBit_multipleBoards
+* Add function DLLInitSettingsStruct
 #### Changed
 * Change DLLDAC8568_setAllOutputs to single board function
 * Change DLLIOCtrl_setT0 to single board function
