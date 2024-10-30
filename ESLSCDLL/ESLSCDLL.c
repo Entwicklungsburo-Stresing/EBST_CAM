@@ -503,6 +503,12 @@ DllAccess es_status_codes DLLReadScanFrequencyBit_multipleBoards(uint8_t* scanFr
 	return status;
 }
 
+
+DllAccess es_status_codes DLLResetScanFrequencyBit(uint32_t drvno)
+{
+	return ResetScanFrequencyBit(drvno);
+}
+
 /**
  * \brief Resets the ScanFrequency bit.
  *
@@ -511,7 +517,7 @@ DllAccess es_status_codes DLLReadScanFrequencyBit_multipleBoards(uint8_t* scanFr
  *		- es_register_read_failed
  * 		- es_register_write_failed
  */
-DllAccess es_status_codes DLLResetScanFrequencyBit()
+DllAccess es_status_codes DLLResetScanFrequencyBit_multipleBoards()
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -558,6 +564,11 @@ DllAccess es_status_codes DLLReadBlockFrequencyBit_multipleBoards(uint8_t* block
 	return status;
 }
 
+DllAccess es_status_codes DLLResetBlockFrequencyBit(uint32_t drvno)
+{
+	return ResetBlockFrequencyBit(drvno);
+}
+
 /**
  * \brief Resets the BlockFrequency bit.
  *
@@ -566,7 +577,7 @@ DllAccess es_status_codes DLLReadBlockFrequencyBit_multipleBoards(uint8_t* block
  *		- es_register_read_failed
  * 		- es_register_write_failed
  */
-DllAccess es_status_codes DLLResetBlockFrequencyBit()
+DllAccess es_status_codes DLLResetBlockFrequencyBit_multipleBoards()
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -1265,7 +1276,7 @@ DllAccess es_status_codes DLLisBlockOn_multipleBoards(uint8_t* blockOn0, uint8_t
  */
 DllAccess es_status_codes DLLwaitForMeasureReady()
 {
-	return WaitForMeasureReady(settings_struct.board_sel);
+	return WaitForMeasureReady();
 }
 
 /**
@@ -1277,7 +1288,7 @@ DllAccess es_status_codes DLLwaitForMeasureReady()
  */
 DllAccess es_status_codes DLLwaitForBlockReady()
 {
-	return waitForBlockReady(settings_struct.board_sel);
+	return waitForBlockReady();
 }
 
 /**
@@ -2029,6 +2040,11 @@ DllAccess uint16_t DLLGetGammaBlack()
 #endif
 }
 
+DllAccess es_status_codes DLLExportMeasurementHDF5(const char* path, char* filename)
+{
+	return ExportMeasurementHDF5(path, filename);
+}
+
 #endif
 
 /**
@@ -2152,11 +2168,6 @@ DllAccess es_status_codes DLLCheckFifoEmpty(uint32_t drvno, bool* empty)
 DllAccess es_status_codes DLLCheckFifoFull(uint32_t drvno, bool* full)
 {
 	return CheckFifoFull(drvno, full);
-}
-
-DllAccess es_status_codes DLLExportMeasurementHDF5(const char* path, char* filename)
-{
-	return ExportMeasurementHDF5(path, filename);
 }
 
 DllAccess void DLLSetMeasureStartHook(void(*hook)())
