@@ -487,11 +487,11 @@ enum PCIEFLAGS_bits_t
 	 */
 	PCIEFLAGS_bitindex_BLOCK_ON_SYNCED = 11,
 	/**
-	 * Scan trigger detected will be set to 1 by the hardware on the slope depending on \ref camera_settings.sslope of the signal \ref camera_settings.sti. It is resetted to 0 by setting \ref PCIEFLAGS_bit_reset_scan_trigger_detected to 1.
+	 * Scan trigger detected will be set to 1 by the hardware on the slope depending on \ref camera_settings.sslope of the signal \ref camera_settings.sti_mode. It is resetted to 0 by setting \ref PCIEFLAGS_bit_reset_scan_trigger_detected to 1.
 	 */
 	PCIEFLAGS_bitindex_scan_trigger_detected = 12,
 	/**
-	 * Block trigger detected will be set to 1 by the hardware on the slope depending on \ref camera_settings.bslope of the signal \ref camera_settings.bti. It is resetted to 0 by setting \ref PCIEFLAGS_bit_reset_block_trigger_detected to 1.
+	 * Block trigger detected will be set to 1 by the hardware on the slope depending on \ref camera_settings.bslope of the signal \ref camera_settings.bti_mode. It is resetted to 0 by setting \ref PCIEFLAGS_bit_reset_block_trigger_detected to 1.
 	 */
 	PCIEFLAGS_bitindex_block_trigger_detected = 13,
 	/**

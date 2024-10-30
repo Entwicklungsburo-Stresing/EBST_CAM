@@ -651,7 +651,6 @@ es_status_codes writeBitsS0_32(uint32_t drvno, uint32_t data, uint32_t bitmask, 
 /**
  * @brief Set specified bits to 1 in S0 register at memory address.
  *
- * @param board_sel select PCIe boards bitwise: bit 0 - board 0...
  * @param data 4 bytes (32 bits) data to write
  * @param bitmask Bitmask to select specific bits, which should be written. 0xFFFFFFFF - all bits 32 bits are written, 0 - no bits are written.
  * @param address Address of the register in S0 space.
@@ -712,7 +711,6 @@ es_status_codes setBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address
 /**
  * @brief Set bit to 1 in S0 register at memory address.
  *
- * @param board_sel select PCIe boards bitwise: bit 0 - board 0...
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
  * @param address register address. Only 4 byte steps are valid.
  * @return es_status_codes:
@@ -763,7 +761,6 @@ es_status_codes resetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t addre
 /**
  * @brief Set bit to 0 in register at memory address.
  *
- * @param board_sel select PCIe boards bitwise: bit 0 - board 0...
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
  * @param address register address. Only 4 byte steps are valid.
  * @return es_status_codes:
@@ -815,7 +812,6 @@ es_status_codes writeRegisterS0_32(uint32_t drvno, uint32_t data, uint16_t addre
 /**
  * \brief Write 4 bytes of a register in S0 space.
  *
- * \param board_sel select PCIe boards bitwise: bit 0 - board 0...
  * \param data Data to write.
  * \param address Address of the register to read.
  * \return es_status_codes:
@@ -876,7 +872,6 @@ es_status_codes writeRegisterS0_8(uint32_t drvno, uint8_t data, uint16_t address
 /**
  * \brief Write the same 1 byte to a register in S0 space of all boards.
  *
- * \param board_sel select PCIe boards bitwise: bit 0 - board 0...
  * \param data Data to write.
  * \param address Address of the register to write.
  * \return es_status_codes:
@@ -916,7 +911,6 @@ es_status_codes readRegisterS0_32(uint32_t drvno, uint32_t* data, uint16_t addre
 /**
  * \brief Read 4 bytes of a register in S0 space of all boards.
  *
- * @param board_sel select PCIe boards bitwise: bit 0 - board 0...
  * \param data Read buffer.
  * \param address Address of the register to read.
  * \return es_status_codes:
@@ -931,7 +925,6 @@ es_status_codes readRegisterS0_32_allBoards(uint32_t** data, uint16_t address)
 /**
  * @brief Reads 4 bytes on DMA area of all PCIe boards.
  *
- * @param board_sel select PCIe boards bitwise: bit 0 - board 0...
  * @param data buffer array for data
  * @param address Offset from BaseAdress - in Bytes ! 0..3= Regs of Board.
  * @return es_status_codes
@@ -3814,7 +3807,6 @@ es_status_codes readBlockTriggerState(uint32_t drvno, uint8_t btrig_ch, bool* st
 /**
  * \brief Returns when block on bit is 0.
  *
- * \param board_sel select PCIe boards bitwise: bit 0 - board 0...
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
@@ -3841,7 +3833,6 @@ es_status_codes waitForBlockReady()
 /**
  * \brief Returns when measure on bit is 0.
  *
- * \param board_sel select PCIe boards bitwise: bit 0 - board 0...
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
@@ -3866,6 +3857,13 @@ es_status_codes WaitForMeasureReady()
 	return status;
 }
 
+/**
+ * \brief Read all S0 registers and write them to a string in hex.
+ * 
+ * \param drvno PCIe board identifier
+ * \param stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
+ * \return es_status_codes
+ */
 es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 {
 	enum N
@@ -3945,6 +3943,13 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 	return status;
 }
 
+/**
+ * \brief Read all S0 registers and write them to a string in a human readable format.
+ *
+ * \param drvno PCIe board identifier
+ * \param stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
+ * \return es_status_codes
+ */
 es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 {
 	enum N
@@ -4568,6 +4573,13 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	return status;
 }
 
+/**
+ * \brief Read all DMA registers and write them to a string in hex.
+ *
+ * \param drvno PCIe board identifier
+ * \param stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
+ * \return es_status_codes
+ */
 es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr)
 {
 	enum N
@@ -4617,6 +4629,13 @@ es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr)
 	return status;
 }
 
+/**
+ * \brief Read all TLP registers and write them to a string.
+ *
+ * \param drvno PCIe board identifier
+ * \param stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
+ * \return es_status_codes
+ */
 es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 {
 	enum N
@@ -4762,6 +4781,12 @@ es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
 	*/
 }
 
+/**
+ * \brief Dump all measurement settings to a string.
+ *
+ * \param stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
+ * \return es_status_codes
+ */
 es_status_codes dumpMeasurementSettings(char** stringPtr)
 {
 	enum N
@@ -4784,6 +4809,13 @@ es_status_codes dumpMeasurementSettings(char** stringPtr)
 	return es_no_error;
 }
 
+/**
+ * \brief Dump all camera settings to a string.
+ *
+ * \param drvno PCIe board identifier
+ * \param stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
+ * \return es_status_codes
+ */
 es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 {
 	enum N
@@ -4904,10 +4936,10 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 }
 
 /**
- * \brief
+ * \brief Read all PCIe registers and write them to a string.
  *
- * \param drvno
- * \param stringPtr
+ * \param drvno PCIe board identifier
+ * \param stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
  * \return es_status_codes:
  *		- es_no_error
  *		- es_register_read_failed
@@ -5489,6 +5521,12 @@ es_status_codes GetIsDsc(uint32_t drvno, bool* isDsc)
 	return status;
 }
 
+/**
+ * \brief Check the consistency of the file given in vd and return the results in resultString.
+ * 
+ * \param vd Pointer to a verify_data_parameter struct. The member filename_full must be set.
+ * \param resultString Pointer to a char*. The result string is written to this pointer. The buffer is allocated in this function and must be freed by the caller.
+ */
 void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString)
 {
 #ifndef MINIMAL_BUILD
@@ -6051,6 +6089,7 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
 }
 
 #ifdef WIN32
+
 /**
  * \brief Exports the measurement data to a HDF5 file.
  *
@@ -6427,18 +6466,18 @@ bool PcieCardVersionIsEqual(uint32_t drvno, uint16_t major_version, uint16_t min
  * 
  * Since the block on bit position was change in 222.14 this function looks at a different bit depending on the firmware version.
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param block_on Pointer to a bool, where the block on bit will be written.
+ * \param blockOn Pointer to a bool, where the block on bit will be written.
  * \return es_status_codes
  */
-es_status_codes GetBlockOn(uint32_t drvno, bool* block_on)
+es_status_codes GetBlockOn(uint32_t drvno, bool* blockOn)
 {
 	ES_TRACE("Get block on bit\n");
 	es_status_codes status;
 	// In PCIe card firmware versino 222.14 the block_on bit was renamed from BLOCK_ON to BLOCK_EN and BLOCK_ON was added as a new bit.
 	if(PcieCardVersionIsSmallerThan(drvno, 0x222, 0x14))
-		status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCK_EN, block_on);
+		status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCK_EN, blockOn);
 	else
-		status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCK_ON, block_on);
+		status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCK_ON, blockOn);
 	return status;
 }
 
