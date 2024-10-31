@@ -63,4 +63,4 @@ Board_ll.o: linux/Board_ll.c Board_ll.h \
 	$(CC) -c $(CFLAGS) -o Board_ll.o linux/Board_ll.c
 
 clean:
-	rm *.so *.o
+	rm -f *.so *.o
