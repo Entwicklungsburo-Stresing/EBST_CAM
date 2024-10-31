@@ -493,7 +493,7 @@ DllAccess es_status_codes DLLwriteRegisterS0_32(uint32_t data, uint32_t address)
  */
 DllAccess es_status_codes DLLReadScanFrequencyBit(uint32_t drvno, uint8_t* scanFrequencyTooHigh)
 {
-	return ReadScanFrequencyBit(drvno, scanFrequencyTooHigh);
+	return ReadScanFrequencyBit(drvno, (bool*)scanFrequencyTooHigh);
 }
 
 /**
@@ -515,7 +515,7 @@ DllAccess es_status_codes DLLReadScanFrequencyBit_multipleBoards(uint8_t* scanFr
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = ReadScanFrequencyBit(drvno, scanFrequencyTooHigh[usedBoards]);
+			status = ReadScanFrequencyBit(drvno, (bool*)scanFrequencyTooHigh[usedBoards]);
 			if (status != es_no_error) return status;
 			usedBoards++;
 		}
@@ -556,7 +556,7 @@ DllAccess es_status_codes DLLResetScanFrequencyBit_multipleBoards()
  */
 DllAccess es_status_codes DLLReadBlockFrequencyBit(uint32_t drvno, uint8_t* blockFrequencyTooHigh)
 {
-	return ReadBlockFrequencyBit(drvno, blockFrequencyTooHigh);
+	return ReadBlockFrequencyBit(drvno, (bool*)blockFrequencyTooHigh);
 }
 
 /**
@@ -578,7 +578,7 @@ DllAccess es_status_codes DLLReadBlockFrequencyBit_multipleBoards(uint8_t* block
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = ReadBlockFrequencyBit(drvno, blockFrequencyTooHigh[usedBoards]);
+			status = ReadBlockFrequencyBit(drvno, (bool*)blockFrequencyTooHigh[usedBoards]);
 			if (status != es_no_error) return status;
 			usedBoards++;
 		}
@@ -619,7 +619,7 @@ DllAccess es_status_codes DLLResetBlockFrequencyBit_multipleBoards()
  */
 DllAccess es_status_codes DLLGetCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* overTemp)
 {
-	return GetCameraStatusOverTemp(drvno, sample, block, camera_pos, overTemp);
+	return GetCameraStatusOverTemp(drvno, sample, block, camera_pos, (bool*)overTemp);
 }
 
 /**
@@ -721,7 +721,7 @@ DllAccess es_status_codes DLLGetCameraStatusOverTemp_multipleBoards(uint32_t sam
 	{
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = GetCameraStatusOverTemp(drvno, sample, block, camera_pos, tempArr[usedBoards]);
+			status = GetCameraStatusOverTemp(drvno, sample, block, camera_pos, (bool*)tempArr[usedBoards]);
 			if (status != es_no_error) return status;
 			usedBoards++;
 		}
@@ -735,7 +735,7 @@ DllAccess es_status_codes DLLGetCameraStatusOverTemp_multipleBoards(uint32_t sam
  */
 DllAccess es_status_codes DLLGetCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* tempGood)
 {
-	return GetCameraStatusTempGood(drvno, sample, block, camera_pos, tempGood);
+	return GetCameraStatusTempGood(drvno, sample, block, camera_pos, (bool*)tempGood);
 }
 
 /**
@@ -766,7 +766,7 @@ DllAccess es_status_codes DLLGetCameraStatusTempGood_multipleBoards(uint32_t sam
 	{
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = GetCameraStatusTempGood(drvno, sample, block, camera_pos, tempArr[usedBoards]);
+			status = GetCameraStatusTempGood(drvno, sample, block, camera_pos, (bool*)tempArr[usedBoards]);
 			if (status != es_no_error) return status;
 			usedBoards++;
 		}
@@ -819,7 +819,7 @@ DllAccess es_status_codes DLLFindCam_multipleBoards(uint8_t* cameraFound0, uint8
  */
 DllAccess es_status_codes DLLGetBlockOn(uint32_t drvno, uint8_t* blockOn)
 {
-	return GetBlockOn(drvno, blockOn);
+	return GetBlockOn(drvno, (bool*)blockOn);
 }
 
 /**
@@ -842,7 +842,7 @@ DllAccess es_status_codes DLLGetBlockOn_multipleBoards(uint8_t* blockOn0, uint8_
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = GetBlockOn(drvno, blockOn[usedBoards]);
+			status = GetBlockOn(drvno, (bool*)blockOn[usedBoards]);
 			if (status != es_no_error) return status;
 			usedBoards++;
 		}
@@ -1109,7 +1109,7 @@ DllAccess es_status_codes DLLresetBitS0_32(uint32_t bitnumber, uint16_t address)
  */
 DllAccess es_status_codes DLLReadBitS0_32(uint32_t drvno, uint16_t address, uint8_t bitnumber, uint8_t* isBitHigh)
 {
-	return ReadBitS0_32(drvno, address, bitnumber, isBitHigh);
+	return ReadBitS0_32(drvno, address, bitnumber, (bool*)isBitHigh);
 }
 
 /**
@@ -1136,7 +1136,7 @@ DllAccess es_status_codes DLLReadBitS0_32_multipleBoards(uint16_t address, uint8
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = ReadBitS0_32(drvno, address, bitnumber, isBitHigh[usedBoards]);
+			status = ReadBitS0_32(drvno, address, bitnumber, (bool*)isBitHigh[usedBoards]);
 			if (status != es_no_error) return status;
 			usedBoards++;
 		}
@@ -1149,7 +1149,7 @@ DllAccess es_status_codes DLLReadBitS0_32_multipleBoards(uint16_t address, uint8
  */
 DllAccess es_status_codes DLLReadBitS0_8(uint32_t drvno, uint16_t address, uint8_t bitnumber, uint8_t* isBitHigh)
 {
-	return ReadBitS0_8(drvno, address, bitnumber, isBitHigh);
+	return ReadBitS0_8(drvno, address, bitnumber, (bool*)isBitHigh);
 }
 
 /**
@@ -1176,7 +1176,7 @@ DllAccess es_status_codes DLLReadBitS0_8_multipleBoards(uint16_t address, uint8_
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = ReadBitS0_8(drvno, address, bitnumber, isBitHigh[usedBoards]);
+			status = ReadBitS0_8(drvno, address, bitnumber, (bool*)isBitHigh[usedBoards]);
 			if (status != es_no_error) return status;
 			usedBoards++;
 		}
@@ -1293,7 +1293,7 @@ DllAccess void DLLFreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
  */
 DllAccess es_status_codes DLLisMeasureOn(uint32_t drvno, uint8_t* measureOn)
 {
-	return isMeasureOn(drvno, measureOn);
+	return isMeasureOn(drvno, (bool*)measureOn);
 }
 
 /**
@@ -1318,7 +1318,7 @@ DllAccess es_status_codes DLLisMeasureOn_multipleBoards(uint8_t* measureOn0, uin
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = isMeasureOn(drvno, measureOn[usedBoards]);
+			status = isMeasureOn(drvno, (bool*)measureOn[usedBoards]);
 			if (status != es_no_error) return status;
 			usedBoards++;
 		}
@@ -1331,7 +1331,7 @@ DllAccess es_status_codes DLLisMeasureOn_multipleBoards(uint8_t* measureOn0, uin
  */
 DllAccess es_status_codes DLLisBlockOn(uint32_t drvno, uint8_t* blockOn)
 {
-	return isBlockOn(drvno, blockOn);
+	return isBlockOn(drvno, (bool*)blockOn);
 }
 
 /**
@@ -1356,7 +1356,7 @@ DllAccess es_status_codes DLLisBlockOn_multipleBoards(uint8_t* blockOn0, uint8_t
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = isBlockOn(drvno, blockOn[usedBoards]);
+			status = isBlockOn(drvno, (bool*)blockOn[usedBoards]);
 			if (status != es_no_error) return status;
 			usedBoards++;
 		}
@@ -1714,7 +1714,7 @@ DllAccess void DLLGetCurrentScanNumber_multipleBoards(int64_t* sample0, int64_t*
  */
 DllAccess es_status_codes DLLGetIsTdc(uint32_t drvno, uint8_t* isTdc)
 {
-	return GetIsTdc(drvno, isTdc);
+	return GetIsTdc(drvno, (bool*)isTdc);
 }
 
 /**
@@ -1739,7 +1739,7 @@ DllAccess es_status_codes DLLGetIsTdc_multipleBoards(uint8_t* isTdc0, uint8_t* i
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = GetIsTdc(drvno, isTdc[usedBoards]);
+			status = GetIsTdc(drvno, (bool*)isTdc[usedBoards]);
 			if (status != es_no_error) return status;
 			usedBoards++;
 		}
@@ -1752,7 +1752,7 @@ DllAccess es_status_codes DLLGetIsTdc_multipleBoards(uint8_t* isTdc0, uint8_t* i
  */
 DllAccess es_status_codes DLLGetIsDsc(uint32_t drvno, uint8_t* isDsc)
 {
-	return GetIsDsc(drvno, isDsc);
+	return GetIsDsc(drvno, (bool*)isDsc);
 }
 
 /**
@@ -1777,7 +1777,7 @@ DllAccess es_status_codes DLLGetIsDsc_multipleBoards(uint8_t* isDsc0, uint8_t* i
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = GetIsDsc(drvno, isDsc[usedBoards]);
+			status = GetIsDsc(drvno, (bool*)isDsc[usedBoards]);
 			if (status != es_no_error) return status;
 			usedBoards++;
 		}
@@ -2151,7 +2151,11 @@ DllAccess uint16_t DLLGetGammaBlack()
  */
 DllAccess es_status_codes DLLExportMeasurementHDF5(const char* path, char* filename)
 {
+#ifdef WIN32
 	return ExportMeasurementHDF5(path, filename);
+#else
+	return es_no_error;
+#endif
 }
 
 #endif
@@ -2161,7 +2165,7 @@ DllAccess es_status_codes DLLExportMeasurementHDF5(const char* path, char* filen
 */
 DllAccess es_status_codes DLLGetScanTriggerDetected(uint32_t drvno, uint8_t* detected)
 {
-	return GetScanTriggerDetected(drvno, detected);
+	return GetScanTriggerDetected(drvno, (bool*)detected);
 }
 
 /**
@@ -2169,7 +2173,7 @@ DllAccess es_status_codes DLLGetScanTriggerDetected(uint32_t drvno, uint8_t* det
 */
 DllAccess es_status_codes DLLGetBlockTriggerDetected(uint32_t drvno, uint8_t* detected)
 {
-	return GetBlockTriggerDetected(drvno, detected);
+	return GetBlockTriggerDetected(drvno, (bool*)detected);
 }
 
 /**
@@ -2208,7 +2212,7 @@ DllAccess es_status_codes DLLGetScanTriggerDetected_multipleBoards(uint8_t* dete
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = GetScanTriggerDetected(drvno, detected[usedBoards]);
+			status = GetScanTriggerDetected(drvno, (bool*)detected[usedBoards]);
 			if (status != es_no_error) return status;
 			usedBoards++;
 		}
@@ -2236,7 +2240,7 @@ DllAccess es_status_codes DLLGetBlockTriggerDetected_multipleBoards(uint8_t* det
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = GetBlockTriggerDetected(drvno, detected[usedBoards]);
+			status = GetBlockTriggerDetected(drvno, (bool*)detected[usedBoards]);
 			if (status != es_no_error) return status;
 			usedBoards++;
 		}
