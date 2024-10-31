@@ -1,31 +1,31 @@
-#include "UIAbstractionLayer_cpp.h"
+#include "hooks_cpp.h"
 #include "lsc-gui.h"
 
-void notifyMeasureStartCpp()
+void emitMeasureStartSignalCpp()
 {
 	emit mainWindow->lsc.measureStart();
 	return;
 }
 
-void notifyMeasureDoneCpp()
+void emitMeasureDoneSignalCpp()
 {
 	emit mainWindow->lsc.measureDone();
 	return;
 }
 
-void notifyBlockStartCpp()
+void emitBlockStartSignalCpp()
 {
 	emit mainWindow->lsc.blockStart();
 	return;
 }
 
-void notifyBlockDoneCpp()
+void emitBlockDoneSignalCpp()
 {
 	emit mainWindow->lsc.blockDone();
 	return;
 }
 
-void notifyAllBlocksDoneCpp()
+void emitAllBlocksDoneSignalCpp()
 {
 	emit mainWindow->lsc.allBlocksDone();
 	return;
