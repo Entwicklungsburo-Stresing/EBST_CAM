@@ -1,6 +1,6 @@
 ﻿#include "lsc.h"
 #include <sstream>
-#include "UIAbstractionLayer.h"
+#include "hooks.h"
 
 Lsc::Lsc()
 {
@@ -23,11 +23,11 @@ es_status_codes Lsc::initDriver()
  */
 es_status_codes Lsc::initPcieBoard()
 {
-	DLLSetMeasureStartHook(notifyMeasureStart);
-	DLLSetMeasureDoneHook(notifyMeasureDone);
-	DLLSetBlockStartHook(notifyBlockStart);
-	DLLSetBlockDoneHook(notifyBlockDone);
-	DLLSetAllBlocksDoneHook(notifyAllBlocksDone);
+	DLLSetMeasureStartHook(emitMeasureStartSignal);
+	DLLSetMeasureDoneHook(emitMeasureDoneSignal);
+	DLLSetBlockStartHook(emitBlockStartSignal);
+	DLLSetBlockDoneHook(emitBlockDoneSignal);
+	DLLSetAllBlocksDoneHook(emitAllBlocksDoneSignal);
 	return DLLInitBoard();
 }
 
