@@ -21,7 +21,6 @@ Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
 #include "Board.h"
 #ifdef WIN32
 #include <windows.h>
-#include "Direct2dViewer_c.h"
 #include <process.h>
 #endif
 
