@@ -11,7 +11,4 @@ CsimpleExample.o: CsimpleExample.c
 	$(CC) -c $(CFLAGS) -o CsimpleExample.o CsimpleExample.c
 
 clean:
-	rm -f *~ *.o
-
-distclean: clean
-	rm -f lsc-cli
+	rm -f *~ *.o CsimpleExample
