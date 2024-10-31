@@ -53,17 +53,9 @@ SOURCES += \
     myqspinbox.cpp \
     UIAbstractionLayer.c \
     UIAbstractionLayer_cpp.cpp \
-    ../shared_src/es_status_codes.c \
-    ../shared_src/Board.c \
-    ../shared_src/globals.c
+    ../shared_src/es_status_codes.c
 win32 {
-    SOURCES += ../shared_src/win/Board_ll.c \
-        ../shared_src/lscpciej_lib.c \
-        dialoggreyscalesettings.cpp
-}
-unix {
-    SOURCES += ../linux-driver/userspace/lscpcie.c \
-    ../shared_src/linux/Board_ll.c
+    SOURCES += dialoggreyscalesettings.cpp
 }
 
 DISTFILES += \
@@ -104,28 +96,21 @@ HEADERS += \
     myqspinbox.h \
     UIAbstractionLayer_cpp.h \
     ../shared_src/es_status_codes.h \
-    ../shared_src/Board.h \
-    ../shared_src/globals.h \
     ../shared_src/enum_hardware.h \
     ../shared_src/enum_settings.h \
     ../shared_src/struct.h \
-    ../shared_src/Board_ll.h \
-    ../shared_src/UIAbstractionLayer.h \
+    ../ESLSCDLL/ESLSCDLL.h \
+    UIAbstractionLayer.h \
     UIAbstractionLayer_cpp.h \
     ../shared_src/default_settings.h \
-    ../version.h \
-    ../ESLSCDLL/ESLSCDLL.h
-unix {
-    HEADERS += ../linux-driver/userspace/lscpcie.h
-}
+    ../version.h
 win32 {
     HEADERS += 	\
-    ../shared_src/lscpciej_lib.h \
     dialoggreyscalesettings.h
 }
 
 unix {
-    LIBS += -L../ESLSCDLL/ -l:ESLSCDLL.so
+    LIBS += -L../ESLSCDLL -lESLSCDLL
 }
 win32 {
     LIBS += -L $(SolutionDir)/Jungo/wdapi1400.lib

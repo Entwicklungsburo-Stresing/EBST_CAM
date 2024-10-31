@@ -25,6 +25,16 @@ else
     return
 fi
 
+# so file
+if [ -f ../ESLSCDLL/libESLSCDLL.so ]
+then
+    mkdir -p ${PKG_DIR}/usr/local/lib
+    cp ../ESLSCDLL/libESLSCDLL.so ${PKG_DIR}/usr/local/lib
+else
+    echo "libESLSCDLL.so not found. Please compile libESLSCDLL.so before running this script."
+    return
+fi
+
 # kernel module
 mkdir -p ${PKG_DIR}/usr/lib/modules-load.d
 echo "# Load ${MODULENAME}.ko at boot\n${MODULENAME}" > ${PKG_DIR}/usr/lib/modules-load.d/${MODULENAME}.conf
