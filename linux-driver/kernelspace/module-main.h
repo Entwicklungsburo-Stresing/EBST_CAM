@@ -35,8 +35,10 @@ extern int debug;
  * to the real number of pixlels of your camera. 4000 kb seems to be the
  * maximum which the Linux kernel allows to allocate. So DEFAULT_NUMBER_OF_PIXELS
  * cannot be higher than 2048.
+ * 
+ * Update: Since lscpie.c doesn't allow 2048, I set this to 1088 now.
 */
-#define DEFAULT_NUMBER_OF_PIXELS    2048
+#define DEFAULT_NUMBER_OF_PIXELS    1088
 #define DEFAULT_DMA_NUM_SCANS       1000
 /**
  * DEFAULT_NUMBER_OF_CAMERAS is not a critical parameter for the kernel module.
