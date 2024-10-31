@@ -4,16 +4,13 @@ This documentation is about the [software](https://github.com/Entwicklungsburo-S
 
 ## How to use Stresing software
 
-There are two possibilities to use this software.
+Use the compiled library ESLSCDLL.dll or libESLSCDLL.so and operate the camera from your software with DLL calls. There are several examples available that are operating the camera with the DLL for [LabVIEW](https://github.com/Entwicklungsburo-Stresing/lv64), [Python](https://github.com/Entwicklungsburo-Stresing/stresing_python), [Matlab](https://github.com/Entwicklungsburo-Stresing/stresing_matlab) and C. Additionally there is a fully featured GUI called Escam, written in C++ with Qt. Escam and the C example CsimpleExample are located in the [EBST_CAM](https://github.com/Entwicklungsburo-Stresing/EBST_CAM) repository.
 
-1. Use the compiled library ESLSCDLL.dll and operate the camera from your software with DLL calls. There are some examples available that are operating the camera with the DLL for [LabVIEW](https://github.com/Entwicklungsburo-Stresing/lv64), [Python](https://github.com/Entwicklungsburo-Stresing/stresing_python) and [Matlab](https://github.com/Entwicklungsburo-Stresing/stresing_matlab).
-2. Include the source files in your project and compile it as one software project. Escam and lsc-cli are using this way to operate the camera, both located in the [EBST_CAM](https://github.com/Entwicklungsburo-Stresing/EBST_CAM) repository.
-
-Have a look at the block diagrams at the bottom of this page. They are illustrating both ways of using the Stresing software.
+Have a look at the block diagrams at the bottom of this page to get an overview of the software structure.
 
 ## How to operate Stresing cameras
 
-For a simple measurement the following DLL calls should be used. While including the source code of the project, the calls are similar just without the DLL in the function name. For a complete API documentation go to the DLL documentation [page](_e_s_l_s_c_d_l_l_8c.html).
+For a simple measurement the following DLL calls should be used. For a complete API documentation go to the DLL documentation [page](_e_s_l_s_c_d_l_l_8c.html).
 
 1. [DLLInitDriver](@ref DLLInitDriver): Initialize the driver. Call it once at startup. 
 2. [DLLInitBoard](@ref DLLInitBoard): Initialize PCIe board. Call it once at startup.
@@ -27,7 +24,7 @@ For a simple measurement the following DLL calls should be used. While including
 ## How to use escam
 
 ### Setting up escam
-After opening the program, you will be greeted by the main page. To configure the settings for the camera, open the 'Settings' tab at the top and choose 'Edit' and the 'General' tab of the settings will open. The first time you start the program on your PC, the initial values have to be imported. We have saved your setup in a config.ini file in the escam folder. So import this file at the first start. These values are stored then in windows (registry) and you do not need to import it again.
+After opening the program, you will be greeted by the main page. To configure the settings for the camera, open the 'Settings' tab at the top and choose 'Edit' and the 'General' tab of the settings will open. The first time you start the program on your PC, the initial values have to be imported. We have saved your setup in a config.ini file. So import this file at the first start. These values are stored then in windows (registry) and you do not need to import it again.
 For many elements in Escam there are additional information available through tooltips and context help. Especially in the settings dialog you can find a detailed description for every parameter in the context help. A tooltip appears after hovering with the cursor over a specific element for some seconds.
 
 <img src="tooltip.png" width="500"/>
