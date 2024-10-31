@@ -42,3 +42,5 @@ escam/Makefile
 linux-driver/kernelspace/lscpcie.mod
 UpgradeLog.htm
 *.user
+.*
+modules.order
