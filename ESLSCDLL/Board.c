@@ -6439,7 +6439,7 @@ es_status_codes GetPcieCardVersion(uint32_t drvno, uint16_t* major_version, uint
 
 bool PcieCardVersionIsGreaterThan(uint32_t drvno, uint16_t major_version, uint16_t minor_version)
 {
-	if (pcieCardMajorVersion[drvno] > major_version || pcieCardMajorVersion[drvno] == major_version && pcieCardMinorVersion[drvno] > minor_version)
+	if ((pcieCardMajorVersion[drvno] > major_version) || ((pcieCardMajorVersion[drvno] == major_version) && (pcieCardMinorVersion[drvno] > minor_version)))
 		return true;
 	else
 		return false;
@@ -6447,7 +6447,7 @@ bool PcieCardVersionIsGreaterThan(uint32_t drvno, uint16_t major_version, uint16
 
 bool PcieCardVersionIsSmallerThan(uint32_t drvno, uint16_t major_version, uint16_t minor_version)
 {
-	if (pcieCardMajorVersion[drvno] < major_version || pcieCardMajorVersion[drvno] == major_version && pcieCardMinorVersion[drvno] < minor_version)
+	if ((pcieCardMajorVersion[drvno] < major_version) || ((pcieCardMajorVersion[drvno] == major_version) && (pcieCardMinorVersion[drvno] < minor_version)))
 		return true;
 	else
 		return false;
@@ -6455,7 +6455,7 @@ bool PcieCardVersionIsSmallerThan(uint32_t drvno, uint16_t major_version, uint16
 
 bool PcieCardVersionIsEqual(uint32_t drvno, uint16_t major_version, uint16_t minor_version)
 {
-	if (pcieCardMajorVersion[drvno] == major_version && pcieCardMinorVersion[drvno] == minor_version)
+	if ((pcieCardMajorVersion[drvno] == major_version) && (pcieCardMinorVersion[drvno] == minor_version))
 		return true;
 	else
 		return false;
