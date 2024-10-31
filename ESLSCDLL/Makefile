@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -shared -fPIC 
+CFLAGS = -Wall -shared -fPIC  -g
 OBJECTS   = es_status_codes.o \
 			Board.o \
 			UIAbstractionLayer.o \
@@ -12,6 +12,7 @@ LIBS      = -lpthread -lm
 
 libESLSCDLL.so: $(OBJECTS)  
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS)
+	chmod -x $(TARGET)
 
 ESLSCDLL.o: ESLSCDLL.c
 	$(CC) -c $(CFLAGS) -o ESLSCDLL.o ESLSCDLL.c
