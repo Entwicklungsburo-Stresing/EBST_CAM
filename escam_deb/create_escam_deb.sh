@@ -28,8 +28,8 @@ fi
 # so file
 if [ -f ../ESLSCDLL/libESLSCDLL.so ]
 then
-    mkdir -p ${PKG_DIR}/usr/local/lib
-    cp ../ESLSCDLL/libESLSCDLL.so ${PKG_DIR}/usr/local/lib
+    mkdir -p ${PKG_DIR}/usr/lib
+    cp ../ESLSCDLL/libESLSCDLL.so ${PKG_DIR}/usr/lib
 else
     echo "libESLSCDLL.so not found. Please compile libESLSCDLL.so before running this script."
     return
@@ -82,4 +82,4 @@ chmod +x ${PKG_DIR}/DEBIAN/prerm
 mkdir -p ${PKG_DIR}/etc/udev/rules.d
 echo "SUBSYSTEM==\"lscpcie\", MODE=\"0666\"" > ${PKG_DIR}/etc/udev/rules.d/98-stresing-lscpcie.rules
 
-dpkg-deb --build ${PKG_DIR}
+dpkg-deb --root-owner-group --build ${PKG_DIR}
