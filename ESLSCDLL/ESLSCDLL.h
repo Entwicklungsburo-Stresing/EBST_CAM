@@ -11,6 +11,8 @@
 */
 
 #include <stdint.h>
+#include <stddef.h>
+#include <string.h>
 #include "../shared_src/es_status_codes.h"
 #include "../shared_src/struct.h"
 #include "../shared_src/enum_hardware.h"
