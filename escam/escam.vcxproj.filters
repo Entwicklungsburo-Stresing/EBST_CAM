@@ -47,10 +47,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="UIAbstractionLayer.c">
+    <ClCompile Include="hooks.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UIAbstractionLayer_cpp.cpp">
+    <ClCompile Include="hooks_cpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dialogsettings.cpp">
@@ -106,7 +106,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="UIAbstractionLayer_cpp.h">
+    <ClInclude Include="hooks_cpp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <QtMoc Include="dialogsettings.h">
@@ -142,7 +142,7 @@
     <ClInclude Include="crosshairs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UIAbstractionLayer.h">
+    <ClInclude Include="hooks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\shared_src\enum_hardware.h">

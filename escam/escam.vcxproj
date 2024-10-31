@@ -228,8 +228,8 @@ xcopy /y /d "$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDL
     <ClCompile Include="dialogspecialpixels.cpp" />
     <ClCompile Include="dialogtriggerinfo.cpp" />
     <ClCompile Include="myqchartview.cpp" />
-    <ClCompile Include="UIAbstractionLayer.c" />
-    <ClCompile Include="UIAbstractionLayer_cpp.cpp" />
+    <ClCompile Include="hooks.c" />
+    <ClCompile Include="hooks_cpp.cpp" />
     <ClCompile Include="dialogsettings.cpp" />
     <ClCompile Include="..\shared_src\es_status_codes.c" />
     <ClCompile Include="lsc-gui.cpp" />
@@ -254,8 +254,8 @@ xcopy /y /d "$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDL
     <QtMoc Include="dialogtriggerinfo.h" />
     <QtMoc Include="dialogchartsettings.h" />
     <ClInclude Include="lsc-gui.h" />
-    <ClInclude Include="UIAbstractionLayer.h" />
-    <ClInclude Include="UIAbstractionLayer_cpp.h" />
+    <ClInclude Include="hooks.h" />
+    <ClInclude Include="hooks_cpp.h" />
     <QtMoc Include="dialogsettings.h">
     </QtMoc>
     <ClInclude Include="..\shared_src\es_status_codes.h" />
