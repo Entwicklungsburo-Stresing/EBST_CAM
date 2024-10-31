@@ -910,11 +910,7 @@ DllAccess es_status_codes DLLDumpPciRegisters(uint32_t drvno, char** stringPtr)
  */
 DllAccess es_status_codes DLLAboutDrv(uint32_t drvno, char** stringPtr)
 {
-#ifdef WIN32
 	return _AboutDrv(drvno, stringPtr);
-#else
-	return es_no_error;
-#endif
 }
 
 /**
@@ -922,11 +918,7 @@ DllAccess es_status_codes DLLAboutDrv(uint32_t drvno, char** stringPtr)
  */
 DllAccess es_status_codes DLLAboutGPX(uint32_t drvno, char** stringPtr)
 {
-#ifdef WIN32
 	return _AboutGPX(drvno, stringPtr);
-#else
-	return es_no_error;
-#endif
 }
 
 /**
