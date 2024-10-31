@@ -7,8 +7,22 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 The hardware version number is the current version at release time.
 
 ## Unreleased
+### API Changes
+#### Added
+#### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+### Other Changes
+#### Added
+#### Changed
+#### Removed
+#### Fixed
+#### Deprecated
 
-This release changes the way how the GUI Escam interacts with the Stresing library. For a better separation between GUI and library and a better consistency to other software like Labview, Escam now interacts with the dynamically linked DLL ESLSCDLL.
+## 4.17.1 - 2024-10-31
+
+This release changes the way how the GUI Escam interacts with the Stresing library. For a better separation between GUI and library and a better consistency to other software like Labview, Escam now interacts with the dynamically linked DLL ESLSCDLL. Additionally there is a new simple example in C, which can be compiled for both Windows and Linux. The example is using the ESLSCDLL as well.
 
 ### API Changes
 #### Added
@@ -60,15 +74,13 @@ This release changes the way how the GUI Escam interacts with the Stresing libra
 * Change DLLResetBlockFrequencyBit to single board function
 #### Removed
 * Remove function TestMsg
-#### Fixed
-#### Deprecated
 ### Other Changes
 #### Added
+* Add CsimpleExample
 #### Changed
 * Use DLL functions in Escam instead of Board.h functions
 #### Removed
-#### Fixed
-#### Deprecated
+* Remove lsc-cli
 
 ## 4.17.0 - 2024-10-23
 ### API Changes
