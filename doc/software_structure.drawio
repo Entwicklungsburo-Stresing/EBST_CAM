@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17">
   <diagram id="tgUKfehqLVmL-b8HQxhW" name="Page-1">
-    <mxGraphModel dx="3804" dy="2304" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2924" dy="2305" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -152,7 +152,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="p_urfczNU5dsdLXzHAFD-66" value="LabVIEW" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="p_urfczNU5dsdLXzHAFD-66" value="LabVIEW&lt;div&gt;(lv64)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-234" y="-900" width="130" height="30" as="geometry" />
         </mxCell>
         <mxCell id="p_urfczNU5dsdLXzHAFD-104" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=30;strokeWidth=1;" parent="1" source="p_urfczNU5dsdLXzHAFD-70" target="p_urfczNU5dsdLXzHAFD-103" edge="1">
@@ -174,7 +174,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="p_urfczNU5dsdLXzHAFD-70" value="escam" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="p_urfczNU5dsdLXzHAFD-70" value="&lt;div&gt;C++ / Qt GUI&lt;/div&gt;(escam)" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="150" y="-900" width="130" height="30" as="geometry" />
         </mxCell>
         <mxCell id="p_urfczNU5dsdLXzHAFD-73" value="lscpcie.h" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -240,7 +240,7 @@
         <mxCell id="sNTQXGuIR_XhQcSb0ZdP-1" value="version.h" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="325" y="-410" width="130" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="6YcGXZJfUUBrcVZ9Filc-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="sNTQXGuIR_XhQcSb0ZdP-4" target="W871qx_Sbcsv2SWxShGU-3">
+        <mxCell id="6YcGXZJfUUBrcVZ9Filc-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="sNTQXGuIR_XhQcSb0ZdP-4" target="W871qx_Sbcsv2SWxShGU-3" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="375" y="-710" />
@@ -248,7 +248,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="6YcGXZJfUUBrcVZ9Filc-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="sNTQXGuIR_XhQcSb0ZdP-4" target="p_urfczNU5dsdLXzHAFD-61">
+        <mxCell id="6YcGXZJfUUBrcVZ9Filc-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="sNTQXGuIR_XhQcSb0ZdP-4" target="p_urfczNU5dsdLXzHAFD-61" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="375" y="-710" />
@@ -256,7 +256,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="sNTQXGuIR_XhQcSb0ZdP-4" value="Python" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="sNTQXGuIR_XhQcSb0ZdP-4" value="Python&lt;div&gt;(stresing_python)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="310" y="-900" width="130" height="30" as="geometry" />
         </mxCell>
         <mxCell id="sNTQXGuIR_XhQcSb0ZdP-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="sNTQXGuIR_XhQcSb0ZdP-5" target="p_urfczNU5dsdLXzHAFD-61" edge="1">
@@ -267,7 +267,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="sNTQXGuIR_XhQcSb0ZdP-5" value="MATLAB" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="sNTQXGuIR_XhQcSb0ZdP-5" value="MATLAB&lt;div&gt;(stresing_matlab)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-380" y="-900" width="130" height="30" as="geometry" />
         </mxCell>
         <mxCell id="W871qx_Sbcsv2SWxShGU-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="W871qx_Sbcsv2SWxShGU-1" target="W871qx_Sbcsv2SWxShGU-3" edge="1">
@@ -286,7 +286,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="W871qx_Sbcsv2SWxShGU-1" value="CsimpleExample" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="W871qx_Sbcsv2SWxShGU-1" value="C&lt;br&gt;(CsimpleExample)" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry y="-900" width="130" height="30" as="geometry" />
         </mxCell>
         <mxCell id="W871qx_Sbcsv2SWxShGU-3" value="libESLSCDLL.so" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
