@@ -10,7 +10,11 @@ The hardware version number is the current version at release time.
 ### API Changes
 #### Added
 #### Changed
+* Rename DLLwaitForMeasureReady to DLLWaitForMeasureDone
+* Rename DLLwaitForBlockReady to DLLWaitForBlockDone
+* Rename DLLisMeasureOn to DLLGetMeasureOn
 #### Removed
+* Remove DLLisBlockOn (use DLLGetBlockOn instead)
 #### Fixed
 #### Deprecated
 ### Other Changes

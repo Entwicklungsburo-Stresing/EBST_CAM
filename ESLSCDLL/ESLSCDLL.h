@@ -89,12 +89,10 @@ DllAccess void DLLRegisterLVEvents(LVUserEventRef* measureStartEvent, LVUserEven
 DllAccess char* DLLConvertErrorCodeToMsg(es_status_codes status);
 DllAccess void DLLFillUserBufferWithDummyData();
 //************ Cam infos
-DllAccess es_status_codes DLLwaitForMeasureReady();
-DllAccess es_status_codes DLLwaitForBlockReady();
-DllAccess es_status_codes DLLisMeasureOn(uint32_t drvno, uint8_t* measureOn);
-DllAccess es_status_codes DLLisMeasureOn_multipleBoards(uint8_t* measureOn0, uint8_t* measureOn1, uint8_t* measureOn2, uint8_t* measureOn3, uint8_t* measureOn4);
-DllAccess es_status_codes DLLisBlockOn(uint32_t drvno, uint8_t* blockOn);
-DllAccess es_status_codes DLLisBlockOn_multipleBoards(uint8_t* blockOn0, uint8_t* blockOn1, uint8_t* blockOn2, uint8_t* blockOn3, uint8_t* blockOn4);
+DllAccess es_status_codes DLLWaitForMeasureDone();
+DllAccess es_status_codes DLLWaitForBlockDone();
+DllAccess es_status_codes DLLGetMeasureOn(uint32_t drvno, uint8_t* measureOn);
+DllAccess es_status_codes DLLGetMeasureOn_multipleBoards(uint8_t* measureOn0, uint8_t* measureOn1, uint8_t* measureOn2, uint8_t* measureOn3, uint8_t* measureOn4);
 DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block);
 DllAccess void DLLGetCurrentScanNumber_multipleBoards(int64_t* sample0, int64_t* block0, int64_t* sample1, int64_t* block1, int64_t* sample2, int64_t* block2, int64_t* sample3, int64_t* block3, int64_t* sample4, int64_t* block4);
 DllAccess es_status_codes DLLReadScanFrequencyBit(uint32_t drvno, uint8_t* scanFrequencyTooHigh);

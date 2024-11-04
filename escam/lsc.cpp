@@ -504,9 +504,9 @@ es_status_codes Lsc::exportMeasurementHDF5(const char* path, char* filename)
 #endif
 }
 
-es_status_codes Lsc::waitForMeasureReady()
+es_status_codes Lsc::waitForMeasureDone()
 {
-	return DLLwaitForMeasureReady();
+	return DLLWaitForMeasureDone();
 }
 
 es_status_codes Lsc::getXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns)
