@@ -184,7 +184,7 @@ unsigned __stdcall StartMeasurementThread(void* param)
 /**
  * \brief This function is starting the measurement and returns immediately.
  *
- * StartMeasurement is run a new thread. When there are multiple boards, all boards are starting the measurement. You can check the status of the measurement with DllisMeasureOn and DllisBlockOn or create a blocking call with DLLwaitForMeasureReady and DLLwaitForBlockReady.
+ * StartMeasurement is run a new thread. When there are multiple boards, all boards are starting the measurement. You can check the status of the measurement with DllisMeasureOn and DllisBlockOn or create a blocking call with DLLWaitForMeasureDone and DLLWaitForBlockDone.
  */
 DllAccess void DLLStartMeasurement_nonblocking()
 {
@@ -1280,11 +1280,11 @@ DllAccess void DLLFreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 
 
 /**
- * \copydoc isMeasureOn
+ * \copydoc GetMeasureOn
  */
-DllAccess es_status_codes DLLisMeasureOn(uint32_t drvno, uint8_t* measureOn)
+DllAccess es_status_codes DLLGetMeasureOn(uint32_t drvno, uint8_t* measureOn)
 {
-	return isMeasureOn(drvno, (bool*)measureOn);
+	return GetMeasureOn(drvno, (bool*)measureOn);
 }
 
 /**
@@ -1299,7 +1299,7 @@ DllAccess es_status_codes DLLisMeasureOn(uint32_t drvno, uint8_t* measureOn)
  *		- es_no_error
  *		- es_register_read_failed
  */
-DllAccess es_status_codes DLLisMeasureOn_multipleBoards(uint8_t* measureOn0, uint8_t* measureOn1, uint8_t* measureOn2, uint8_t* measureOn3, uint8_t* measureOn4)
+DllAccess es_status_codes DLLGetMeasureOn_multipleBoards(uint8_t* measureOn0, uint8_t* measureOn1, uint8_t* measureOn2, uint8_t* measureOn3, uint8_t* measureOn4)
 {
 	es_status_codes status = es_no_error;
 	uint8_t* measureOn[MAXPCIECARDS] = { measureOn0, measureOn1, measureOn2, measureOn3, measureOn4 };
@@ -1309,45 +1309,7 @@ DllAccess es_status_codes DLLisMeasureOn_multipleBoards(uint8_t* measureOn0, uin
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = isMeasureOn(drvno, (bool*)measureOn[usedBoards]);
-			if (status != es_no_error) return status;
-			usedBoards++;
-		}
-	}
-	return status;
-}
-
-/**
- * \copydoc isBlockOn
- */
-DllAccess es_status_codes DLLisBlockOn(uint32_t drvno, uint8_t* blockOn)
-{
-	return isBlockOn(drvno, (bool*)blockOn);
-}
-
-/**
- * \brief Check if blockon bit is set for all boards selected by settings parameter board_sel.
- *
- * \param blockOn0 True when blockon bit is set in board 0.
- * \param blockOn1 True when blockon bit is set in board 1.
- * \param blockOn2 True when blockon bit is set in board 2.
- * \param blockOn3 True when blockon bit is set in board 3.
- * \param blockOn4 True when blockon bit is set in board 4.
- *  \return es_status_codes:
- *		- es_no_error
- *		- es_register_read_failed
- */
-DllAccess es_status_codes DLLisBlockOn_multipleBoards(uint8_t* blockOn0, uint8_t* blockOn1, uint8_t* blockOn2, uint8_t* blockOn3, uint8_t* blockOn4)
-{
-	es_status_codes status = es_no_error;
-	uint8_t* blockOn[MAXPCIECARDS] = { blockOn0, blockOn1, blockOn2, blockOn3, blockOn4 };
-	int usedBoards = 0;
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
-	{
-		// Check if the drvno'th bit is set
-		if ((settings_struct.board_sel >> drvno) & 1)
-		{
-			status = isBlockOn(drvno, (bool*)blockOn[usedBoards]);
+			status = GetMeasureOn(drvno, (bool*)measureOn[usedBoards]);
 			if (status != es_no_error) return status;
 			usedBoards++;
 		}
@@ -1362,9 +1324,9 @@ DllAccess es_status_codes DLLisBlockOn_multipleBoards(uint8_t* blockOn0, uint8_t
  *		- es_no_error
  *		- es_register_read_failed
  */
-DllAccess es_status_codes DLLwaitForMeasureReady()
+DllAccess es_status_codes DLLWaitForMeasureDone()
 {
-	return WaitForMeasureReady();
+	return WaitForMeasureDone();
 }
 
 /**
@@ -1374,9 +1336,9 @@ DllAccess es_status_codes DLLwaitForMeasureReady()
  *		- es_no_error
  *		- es_register_read_failed
  */
-DllAccess es_status_codes DLLwaitForBlockReady()
+DllAccess es_status_codes DLLWaitForBlockDone()
 {
-	return waitForBlockReady();
+	return WaitForBlockDone();
 }
 
 /**

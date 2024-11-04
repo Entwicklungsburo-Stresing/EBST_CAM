@@ -68,7 +68,7 @@ public:
 	es_status_codes checkFifoFull(uint32_t drvno, bool* full);
 	es_status_codes findCam(uint32_t drvno);
 	es_status_codes exportMeasurementHDF5(const char* path, char* filename);
-	es_status_codes waitForMeasureReady();
+	es_status_codes waitForMeasureDone();
 	es_status_codes getXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns);
 	es_status_codes getXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns);
 	es_status_codes getBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns);

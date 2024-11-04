@@ -3650,20 +3650,6 @@ es_status_codes CheckFifoFull(uint32_t drvno, bool* full)
 }
 
 /**
- * \brief Check if blockon bit is set.
- *
- * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param blockOn True when blockon bit is set.
- *  \return es_status_codes:
- *		- es_no_error
- *		- es_register_read_failed
- */
-es_status_codes isBlockOn(uint32_t drvno, bool* blockOn)
-{
-	return ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCK_EN, blockOn);
-}
-
-/**
  * \brief Check if measure on bit is set.
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
@@ -3672,7 +3658,7 @@ es_status_codes isBlockOn(uint32_t drvno, bool* blockOn)
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes isMeasureOn(uint32_t drvno, bool* measureOn)
+es_status_codes GetMeasureOn(uint32_t drvno, bool* measureOn)
 {
 	return ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_MEASUREON, measureOn);
 }
@@ -3811,7 +3797,7 @@ es_status_codes readBlockTriggerState(uint32_t drvno, uint8_t btrig_ch, bool* st
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes waitForBlockReady()
+es_status_codes WaitForBlockDone()
 {
 	bool blockOn[MAXPCIECARDS] = { false, false, false, false, false };
 	es_status_codes status = es_no_error;
@@ -3822,7 +3808,7 @@ es_status_codes waitForBlockReady()
 			// Check if the drvno'th bit is set
 			if ((settings_struct.board_sel >> drvno) & 1)
 			{
-				status = isBlockOn(drvno, &blockOn[drvno]);
+				status = GetBlockOn(drvno, &blockOn[drvno]);
 				if (status != es_no_error) return status;
 			}
 		}
@@ -3837,9 +3823,9 @@ es_status_codes waitForBlockReady()
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes WaitForMeasureReady()
+es_status_codes WaitForMeasureDone()
 {
-	ES_LOG("WaitForMeasureReady\n");
+	ES_LOG("WaitForMeasureDone\n");
 	bool measureOn[MAXPCIECARDS] = { false, false, false, false, false };
 	es_status_codes status = es_no_error;
 	do
@@ -3849,7 +3835,7 @@ es_status_codes WaitForMeasureReady()
 			// Check if the drvno'th bit is set
 			if ((settings_struct.board_sel >> drvno) & 1)
 			{
-				status = isMeasureOn(drvno, &measureOn[drvno]);
+				status = GetMeasureOn(drvno, &measureOn[drvno]);
 				if (status != es_no_error) return status;
 			}
 		}
