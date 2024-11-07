@@ -2294,6 +2294,7 @@ DllAccess void DLLSetMeasureStartHook(void(*hook)())
 /**
  * \brief Set a function which will be executed every time when a measurement ends.
  *
+ * Regardless of \ref measurement_settings.continuous_measurement this hook is call only one time at the end of the measurement. When \ref measurement_settings.continuous_measurement is enabled, is is called after the loop is disabled.
  * \param hook Pointer to the function which will be executed.
  */
 DllAccess void DLLSetMeasureDoneHook(void(*hook)())
@@ -2324,6 +2325,7 @@ DllAccess void DLLSetBlockDoneHook(void(*hook)())
 /**
  * \brief Set a function which will be executed every time when all blocks are done.
  *
+ * When \ref measurement_settings.continuous_measurement is disabled, this it is called one time at the end of the measurement. When \ref measurement_settings.continuous_measurement is enabled, it is called one time at the end of each measurement cycle. The hook is called before the pause set by \ref measurement_settings.cont_pause_in_microseconds.
  * \param hook Pointer to the function which will be executed.
  */
 DllAccess void DLLSetAllBlocksDoneHook(void(*hook)())
