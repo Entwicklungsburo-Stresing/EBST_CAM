@@ -10,11 +10,7 @@ The hardware version number is the current version at release time.
 ### API Changes
 #### Added
 #### Changed
-* Rename DLLwaitForMeasureReady to DLLWaitForMeasureDone
-* Rename DLLwaitForBlockReady to DLLWaitForBlockDone
-* Rename DLLisMeasureOn to DLLGetMeasureOn
 #### Removed
-* Remove DLLisBlockOn (use DLLGetBlockOn instead)
 #### Fixed
 #### Deprecated
 ### Other Changes
@@ -23,6 +19,19 @@ The hardware version number is the current version at release time.
 #### Removed
 #### Fixed
 #### Deprecated
+
+## 4.17.2 - 2024-11-18
+### API Changes
+#### Changed
+* Rename DLLwaitForMeasureReady to DLLWaitForMeasureDone
+* Rename DLLwaitForBlockReady to DLLWaitForBlockDone
+* Rename DLLisMeasureOn to DLLGetMeasureOn
+#### Removed
+* Remove DLLisBlockOn (use DLLGetBlockOn instead)
+### Other Changes
+#### Added
+* Add Cam_DoSoftReset
+* Add Cam_Initialize
 
 ## 4.17.1 - 2024-10-31
 
