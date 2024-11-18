@@ -11,6 +11,7 @@ extern "C" {
 #ifdef WIN32
 #include "hdf5.h"
 #endif
+#include "Camera.h"
 
 // High level API
 // platform independent implementation

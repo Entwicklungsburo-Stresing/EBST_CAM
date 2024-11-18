@@ -10,7 +10,6 @@
 #include <string.h>
 #endif
 #include "../shared_src/default_settings.h"
-#include "Camera.h"
 
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)  \
