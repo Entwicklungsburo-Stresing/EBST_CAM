@@ -51,9 +51,9 @@ SOURCES += \
     mainwindow.cpp \
     myqchartview.cpp \
     myqspinbox.cpp \
-    UIAbstractionLayer.c \
-    UIAbstractionLayer_cpp.cpp \
-    ../shared_src/es_status_codes.c
+    ../shared_src/es_status_codes.c \
+    hooks.c \
+    hooks_cpp.cpp
 win32 {
     SOURCES += dialoggreyscalesettings.cpp
 }
@@ -94,16 +94,15 @@ HEADERS += \
     mainwindow.h \
     myqchartview.h \
     myqspinbox.h \
-    UIAbstractionLayer_cpp.h \
     ../shared_src/es_status_codes.h \
     ../shared_src/enum_hardware.h \
     ../shared_src/enum_settings.h \
     ../shared_src/struct.h \
     ../ESLSCDLL/ESLSCDLL.h \
-    UIAbstractionLayer.h \
-    UIAbstractionLayer_cpp.h \
     ../shared_src/default_settings.h \
-    ../version.h
+    ../version.h \
+    hooks.h \
+    hooks_cpp.h
 win32 {
     HEADERS += 	\
     dialoggreyscalesettings.h
