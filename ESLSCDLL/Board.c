@@ -218,6 +218,8 @@ es_status_codes InitCamera(uint32_t drvno)
 	ES_LOG("\nInit camera %u\n", drvno);
 	es_status_codes status = FindCam(drvno);
 	if (status != es_no_error) return status;
+	status = Cam_DoSoftReset(drvno);
+	if (status != es_no_error) return status;
 	status = SetCameraPosition(drvno);
 	if (status != es_no_error) return status;
 	// when cooled camera legacy mode: disable PCIe FIFO when cool cam transmits cool status
@@ -273,6 +275,8 @@ es_status_codes InitCamera(uint32_t drvno)
 	status = IOCtrl_setT0(drvno, settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns);
 	if (status != es_no_error) return status;
 	status = Cam_SetSensorResetOrHsirEc(drvno, settings_struct.camera_settings[drvno].sensor_reset_or_hsir_ec);
+	if (status != es_no_error) return status;
+	status = Cam_Initialize(drvno);
 	return status;
 }
 
@@ -6538,4 +6542,32 @@ es_status_codes WaitForBlockOn(uint32_t drvno)
 es_status_codes SetShiftS1S2ToNextScan(uint32_t drvno)
 {
 	return writeBitsS0_8(drvno, (1 & settings_struct.camera_settings[drvno].shift_s1s2_to_next_scan) << CTRLC_bitindex_shift_s, CTRLC_bit_shift_s, S0Addr_CTRLC);
+}
+
+/**
+ * \brief Do a soft reset of the camera.
+ * 
+ * Do this first in the camera initialisation routine.
+ * 
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \return es_status_codes
+ */
+es_status_codes Cam_DoSoftReset(uint32_t drvno)
+{
+	ES_LOG("Do camera soft reset\n");
+	return SendFLCAM(drvno, maddr_cam, cam_adaddr_software_reset, 0);
+}
+
+/**
+ * \brief Trigger initialisation in the camera.
+ * 
+ * Do this last in the camera initialisation routine.
+ * 
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \return es_status_codes
+ */
+es_status_codes Cam_Initialize(uint32_t drvno)
+{
+	ES_LOG("Do init in camera\n");
+	return SendFLCAM(drvno, maddr_cam, cam_adaddr_camera_init, 0);
 }
