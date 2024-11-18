@@ -26,6 +26,7 @@ The hardware version number is the current version at release time.
 * Rename DLLwaitForMeasureReady to DLLWaitForMeasureDone
 * Rename DLLwaitForBlockReady to DLLWaitForBlockDone
 * Rename DLLisMeasureOn to DLLGetMeasureOn
+* Rename DLLisMeasureOn_multipleBoards to DLLGetMeasureOn_multipleBoards
 #### Removed
 * Remove DLLisBlockOn (use DLLGetBlockOn instead)
 ### Other Changes
