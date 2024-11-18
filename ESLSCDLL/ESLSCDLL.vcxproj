@@ -306,6 +306,7 @@
   <ItemGroup>
     <ClCompile Include="..\shared_src\es_status_codes.c" />
     <ClCompile Include="Board.c" />
+    <ClCompile Include="Camera.c" />
     <ClCompile Include="Direct2dViewer.cpp" />
     <ClCompile Include="Direct2dViewer_c.cpp" />
     <ClCompile Include="ESLSCDLL.c" />
@@ -322,6 +323,7 @@
     <ClInclude Include="..\shared_src\es_status_codes.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="Board_ll.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Direct2dViewer.h" />
     <ClInclude Include="Direct2dViewer_c.h" />
     <ClInclude Include="ESLSCDLL.h" />

@@ -6,7 +6,8 @@ OBJECTS   = es_status_codes.o \
 			globals.o \
 			lscpcie.o \
 			Board_ll.o \
-			ESLSCDLL.o
+			ESLSCDLL.o \
+			Camera.o
 TARGET    = libESLSCDLL.so
 LIBS      = -lpthread -lm
 
@@ -29,6 +30,11 @@ Board.o: Board.c Board.h \
 		../shared_src/struct.h \
 		UIAbstractionLayer.h
 	$(CC) -c $(CFLAGS) -o Board.o Board.c
+
+Camera.o: Camera.c Camera.h \
+		../shared_src/enum_hardware.h \
+		../shared_src/es_status_codes.h
+	$(CC) -c $(CFLAGS) -o Camera.o Camera.c
 
 UIAbstractionLayer.o: UIAbstractionLayer.c UIAbstractionLayer.h
 	$(CC) -c $(CFLAGS) -o UIAbstractionLayer.o UIAbstractionLayer.c
