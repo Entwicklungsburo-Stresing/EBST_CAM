@@ -687,6 +687,9 @@ enum master_address_t
  */
 enum camera_register_addresses_t
 {
+	/**
+	 * See details in \ref cam_config_register_t.
+	 */
 	cam_adaddr_config = 0x00,
 	cam_adaddr_pixel = 0x01,
 	cam_adaddr_trig_in = 0x02,
@@ -719,6 +722,14 @@ enum camera_register_addresses_t
 	cam_adaddr_vclks_amount3 = 0x0B,
 	cam_adaddr_vclks_amount4 = 0x0C,
 	cam_adaddr_vclks_amount5 = 0x0D,
+	/**
+	 * Send any data to this address to initialize the camera. This should be done last in the initialisation routine, after reset and after writing all other registers.
+	 */
+	cam_adaddr_camera_init = 0x10,
+	/**
+	 * Send any data to this address to do a software reset. This should be done first in the initialisation routine.
+	 */
+	cam_adaddr_software_reset = 0x7E,
 	/**
 	 * This is a register for the camera position for multiple cameras in line. The software always sets the first camera to 0 and the cameras are handing their positions one to another.
 	 */
