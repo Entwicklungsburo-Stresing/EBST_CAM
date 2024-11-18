@@ -5,7 +5,7 @@
 #include <dialogsettings.h>
 #include <QtCharts/QChart>
 
-#if (QT_VERSION < QT_VERSION_CHECK(6, 8, 0))
+#if (QT_VERSION < QT_VERSION_CHECK(6, 2, 0))
 QT_CHARTS_USE_NAMESPACE 
 #endif
 
