@@ -2294,7 +2294,7 @@ DllAccess void DLLSetMeasureStartHook(void(*hook)())
 /**
  * \brief Set a function which will be executed every time when a measurement ends.
  *
- * Regardless of \ref measurement_settings.continuous_measurement this hook is call only one time at the end of the measurement. When \ref measurement_settings.continuous_measurement is enabled, is is called after the loop is disabled.
+ * Regardless of \ref measurement_settings.continuous_measurement this hook is call only one time at the end of the measurement. When \ref measurement_settings.continuous_measurement is enabled, is is called after the loop is disabled. The hook is called after the pause set by \ref measurement_settings.cont_pause_in_microseconds. When this hook is called all data is available, so \ref DLLGetCurrentScanNumber should return sample = nos-1 and block = nob-1.
  * \param hook Pointer to the function which will be executed.
  */
 DllAccess void DLLSetMeasureDoneHook(void(*hook)())
@@ -2315,6 +2315,7 @@ DllAccess void DLLSetBlockStartHook(void(*hook)())
 /**
  * \brief Set a function which will be executed every time when a block ends.
  *
+ * The end of a block doesn't indicate the availability of the data. Which data is available to copy is indicated by \ref DLLGetCurrentScanNumber. The copy method is controlled by \ref camera_settings.use_software_polling. When the block size is not aligned to \ref camera_settings.dma_buffer_size_in_scans and \ref camera_settings.use_software_polling is turned off, there will be no interrupt at the end of a block and so the data won't be available in this moment. Turn \ref camera_settings.use_software_polling on to avoid this.
  * \param hook Pointer to the function which will be executed.
  */
 DllAccess void DLLSetBlockDoneHook(void(*hook)())

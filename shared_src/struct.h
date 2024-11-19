@@ -19,9 +19,11 @@
 struct camera_settings
 {
 	/**
-	 * use_software_polling determines which method is used to copy data from DMA to user buffer. Further information about software polling can be found in the manual in chapter 5.4.8.
-	 *		* >0: Use software polling. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. Since P222_2 this method is reliable up to about 100kHz. It generates as expected a higher CPU load than the interrupt method. With this option you can get more recent scans from GetCurrentScanNumber(), especially at lower frequencies. For high frequencies > 30kHz this method is not recommended.
-	 *		* =0: Use interrupt. Every dma_buffer_size_in_scans/2 scan the interrupt starts a copy process, which copies dma_buffer_size_in_scans/2 scans to the user buffer. 1000 is our default value for dma_buffer_size_in_scans, so interrupt is started every 500 scans.
+	 * use_software_polling determines which method is used to copy data from DMA to user buffer.
+	 *		* >0: Use software polling. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. Since the PCIe card firmware version P222_2 this method is reliable up to about 100kHz. It generates as expected a higher CPU load than the interrupt method. With this option you can get more recent scans from \ref DLLGetCurrentScanNumber, especially at lower frequencies.
+	 *		* =0: Use interrupt. Every \ref camera_settings.dma_buffer_size_in_scans/2 scan the interrupt starts a copy process, which copies dma_buffer_size_in_scans/2 scans to the user buffer. 1000 is our default value for \ref camera_settings.dma_buffer_size_in_scans, so the interrupt is triggered every 500 scans.
+	 * 
+	 * Further information about software polling can be found in the manual in chapter 5.4.8.
 	 */
 	uint32_t use_software_polling;
 	/**
@@ -286,7 +288,7 @@ struct camera_settings
 	 */
 	uint32_t ioctrl_T0_period_in_10ns;
 	/**
-	 * Size of DMA buffer in scans. 1000 is our default. 60 is also working with high speed (exposure time = 0,02ms). 30 could be with one wrong scan every 10000 scans.
+	 * Size of the DMA buffer in scans. The default is 1000. This setting controls how often the interrupt is triggered to copy data from the DMA buffer to the user buffer. This setting only has an effect when \ref camera_settings.use_software_polling is turned off. A lower number means more interrupts in a shorter time and so more recent data available. Which data is available is indicated by \ref DLLGetCurrentScanNumber. Too many interrupts in a too short time can lead to errors. 60 is working with high speed (exposure time = 0,02ms). When this setting is 30, there could a wrong scan every 10000 scans.
 	 */
 	uint32_t dma_buffer_size_in_scans;
 	/**
