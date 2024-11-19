@@ -23,7 +23,6 @@ uint8_t number_of_boards = 0;
 bool testModeOn = false;
 volatile bool abortMeasurementFlag = false;
 volatile bool continuousMeasurementFlag = false;
-uint32_t continuousPauseInMicroseconds = 0;
 bool isRunning = false;
 bool wasRunning = false;
 int64_t temp_scanCounterTotal[MAXPCIECARDS] = { 0, 0, 0, 0, 0 };

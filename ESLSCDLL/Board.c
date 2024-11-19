@@ -173,8 +173,6 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetBDAT(drvno, settings_struct.camera_settings[drvno].bdat_in_10ns);
 	if (status != es_no_error) return status;
-	continuousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
-	ES_LOG("Setting continuous pause to %u\n", continuousPauseInMicroseconds);
 	status = SetBEC(drvno, settings_struct.camera_settings[drvno].bec_in_10ns);
 	if (status != es_no_error) return status;
 	status = SetXckdelay(drvno, settings_struct.camera_settings[drvno].xckdelay_in_10ns);
@@ -1943,7 +1941,6 @@ es_status_codes StartMeasurement()
 	}
 #endif
 	continuousMeasurementFlag = (bool)settings_struct.continuous_measurement;//0 or 1
-	continuousPauseInMicroseconds = settings_struct.cont_pause_in_microseconds;
 #ifndef MINIMAL_BUILD
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
@@ -2151,7 +2148,7 @@ es_status_codes StartMeasurement()
 			continuousMeasurementFlag = false;
 		if (!abortMeasurementFlag && checkEscapeKeyState())
 			abortMeasurementFlag = true;
-		WaitforTelapsed(continuousPauseInMicroseconds);
+		WaitforTelapsed(settings_struct.cont_pause_in_microseconds);
 	} while (continuousMeasurementFlag && !abortMeasurementFlag);
 	// Reset the hardware bit measure on.
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
