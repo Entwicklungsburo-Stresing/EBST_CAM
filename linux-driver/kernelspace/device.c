@@ -17,6 +17,7 @@
 #include "proc.h"
 #include "debug.h"
 #include <linux/fs.h>
+#include <asm/io.h>
 
 /* device parameters */
 struct dev_struct lscpcie_devices[MAX_BOARDS];
