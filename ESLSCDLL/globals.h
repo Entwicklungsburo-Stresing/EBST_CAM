@@ -38,7 +38,6 @@ extern bool testModeOn;
 extern volatile bool abortMeasurementFlag;
 extern volatile uint32_t* numberOfInterrupts;
 extern volatile bool continuousMeasurementFlag;
-extern uint32_t continuousPauseInMicroseconds;
 extern struct measurement_settings settings_struct;
 extern const struct camera_settings camera_settings_default;
 extern bool isRunning;
