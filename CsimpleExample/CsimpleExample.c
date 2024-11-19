@@ -1,6 +1,42 @@
 ﻿#include <stdio.h>
 #include <stdlib.h>
+#include <inttypes.h>
 #include "../ESLSCDLL/ESLSCDLL.h"
+
+void measureStartCallback()
+{
+	int64_t sample, block;
+	DLLGetCurrentScanNumber(0, &sample, &block);
+	printf("Measure start callback, sample: %"PRId64", block %"PRId64"\n", sample, block);
+}
+
+void measureDoneCallback()
+{
+	int64_t sample, block;
+	DLLGetCurrentScanNumber(0, &sample, &block);
+	printf("Measure done callback, sample: %"PRId64", block %"PRId64"\n", sample, block);
+}
+
+void blockStartCallback()
+{
+	int64_t sample, block;
+	DLLGetCurrentScanNumber(0, &sample, &block);
+	printf("Block start callback, sample: %"PRId64", block %"PRId64"\n", sample, block);
+}
+
+void blockDoneCallback()
+{
+	int64_t sample, block;
+	DLLGetCurrentScanNumber(0, &sample, &block);
+	printf("Block done callback, sample: %"PRId64", block %"PRId64"\n", sample, block);
+}
+
+void allBlocksDoneCallback()
+{
+	int64_t sample, block;
+	DLLGetCurrentScanNumber(0, &sample, &block);
+	printf("All blocks done callback, sample: %"PRId64", block %"PRId64"\n", sample, block);
+}
 
 int main()
 {
@@ -22,13 +58,19 @@ int main()
 	}
 	printf("Initialising Board done\n");
 
+	DLLSetAllBlocksDoneHook(allBlocksDoneCallback);
+	DLLSetBlockDoneHook(blockDoneCallback);
+	DLLSetBlockStartHook(blockStartCallback);
+	DLLSetMeasureDoneHook(measureDoneCallback);
+	DLLSetMeasureStartHook(measureStartCallback);
+
 	struct measurement_settings settings;
 
 	DLLInitSettingsStruct(&settings);
 
 	settings.board_sel = 1;
-	settings.nos = 1000;
-	settings.nob = 1;
+	settings.nos = 567;
+	settings.nob = 10;
 	settings.camera_settings[0].bti_mode = bti_BTimer;
 	settings.camera_settings[0].sti_mode = sti_STimer;
 	settings.camera_settings[0].sslope = sslope_pos;
@@ -48,6 +90,7 @@ int main()
 	settings.camera_settings[0].dac_output[0][6] = 55000;
 	settings.camera_settings[0].dac_output[0][7] = 55000;
 	settings.camera_settings[0].dma_buffer_size_in_scans = 1000;
+	settings.camera_settings[0].use_software_polling = 1;
 	printf("Setting global settings...\n");
 	status = DLLSetGlobalSettings(settings);
 	if (status != es_no_error)
