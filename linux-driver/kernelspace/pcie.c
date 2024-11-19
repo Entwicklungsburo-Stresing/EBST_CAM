@@ -13,7 +13,7 @@
 #include "device.h"
 #include "proc.h"
 #include "debug.h"
-
+#include <linux/version.h>
 
 int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 {
@@ -83,7 +83,11 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 	dev->control->io_size = pci_resource_len(pci_dev, 2);
 	PDEBUG(D_PCI, "remapping pci ressource2\n");
 	dev->dma_reg =
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 8, 0)
+		ioremap(dev->physical_pci_base,dev->control->io_size);
+#else
 		ioremap_nocache(dev->physical_pci_base, dev->control->io_size);
+#endif
 	assert(dev->dma_reg != 0,
 	       "ioremap of address space failed", goto out_error, -1);
 	PDEBUG(D_PCI, "mapped address space 2 to %p\n", dev->dma_reg);

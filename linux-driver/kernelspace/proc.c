@@ -14,6 +14,7 @@
 #include "debug.h"
 #include <linux/proc_fs.h>
 #include <linux/uaccess.h>
+#include <linux/version.h>
 
 /* This proc entry is created upon loading the module. It tells the number of
    devices and can be used to add a debugging device. */
@@ -126,11 +127,24 @@ ssize_t lscpcie_write_proc(struct file *filp, const char __user *buf,
 	return i >= 0 ? i + 1 : i;
 }
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 8, 0)
+int lscpcie_open_proc(struct inode *inode, struct file *file)
+{
+	return 0;
+}
+
+struct proc_ops proc_fops = {
+	.proc_open = lscpcie_open_proc,
+	.proc_read = lscpcie_read_proc
+};
+#else
 struct file_operations proc_fops = {
 	.owner = THIS_MODULE,
 	.read = lscpcie_read_proc,
 	.write = lscpcie_write_proc
 };
+#endif
+
 
 void proc_init_module(void)
 {
@@ -212,11 +226,20 @@ ssize_t lscpcie_read_data_proc(struct file *filp, char __user *buf,
 	return result;
 }
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 8, 0)
+struct proc_ops proc_data_fops = {
+	.proc_open = lscpcie_open_data_proc,
+	.proc_read = lscpcie_read_data_proc
+};
+#else
 struct file_operations proc_data_fops = {
 	.owner = THIS_MODULE,
 	.open = lscpcie_open_data_proc,
 	.read = lscpcie_read_data_proc
 };
+#endif
+
+
 
 /* init proc files per device instance */
 

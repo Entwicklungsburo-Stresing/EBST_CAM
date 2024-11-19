@@ -13,6 +13,7 @@
 #include "debug.h"
 #include <linux/fs.h>
 #include <linux/mm.h>
+#include <asm/io.h>
 
 /* mapping into
     - page 0: io remap of dma/s0 registers
