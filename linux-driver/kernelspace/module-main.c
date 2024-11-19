@@ -19,7 +19,7 @@
 #include <linux/module.h>
 #include <linux/proc_fs.h>
 #include <linux/pci.h>
-
+#include <linux/version.h>
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Bernhard Lang");
@@ -109,8 +109,11 @@ static int __init lscpcie_module_init(void)
 		debug_module = 1;
 
 	printk(KERN_WARNING NAME " loading module.\n");
-
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 8, 0)
+	lscpcie_class = class_create(NAME);
+#else
 	lscpcie_class = class_create(THIS_MODULE, NAME);
+#endif
 	if (IS_ERR(lscpcie_class)) {
 		printk(KERN_ERR "Error creating %s class \n", NAME);
 		return PTR_ERR(lscpcie_class);
