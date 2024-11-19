@@ -263,7 +263,7 @@ es_status_codes Lsc::dac_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t
 }
 
 /**
- * \copydoc IOCtrl_setT0
+ * \copydoc CamIOCtrl_setT0
  */
 es_status_codes Lsc::ioctrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 {
@@ -271,7 +271,7 @@ es_status_codes Lsc::ioctrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 }
 
 /**
- * \copydoc IOCtrl_setOutput
+ * \copydoc CamIOCtrl_setOutput
  */
 es_status_codes Lsc::ioctrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns)
 {

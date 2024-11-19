@@ -1192,7 +1192,7 @@ DllAccess es_status_codes DLLSetTemp(uint8_t level)
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = SetTemp(drvno, level);
+			status = Cam_SetTemp(drvno, level);
 			if (status != es_no_error) return status;
 		}
 	return status;
@@ -1555,19 +1555,19 @@ DllAccess char* DLLConvertErrorCodeToMsg(es_status_codes status)
 }
 
 /**
- * \copydoc IOCtrl_setOutput
+ * \copydoc CamIOCtrl_setOutput
  */
 DllAccess es_status_codes DLLIOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns)
 {
-	return IOCtrl_setOutput(drvno, number, width_in_5ns, delay_in_5ns);
+	return CamIOCtrl_setOutput(drvno, number, width_in_5ns, delay_in_5ns);
 }
 
 /**
- * \copydoc IOCtrl_setT0
+ * \copydoc CamIOCtrl_setT0
  */
 DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 {
-	return IOCtrl_setT0(drvno, period_in_10ns);
+	return CamIOCtrl_setT0(drvno, period_in_10ns);
 }
 
 /**
@@ -1588,7 +1588,7 @@ DllAccess es_status_codes DLLIOCtrl_setT0_multipleBoards(uint32_t period_in_10ns
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = IOCtrl_setT0(drvno, period_in_10ns);
+			status = CamIOCtrl_setT0(drvno, period_in_10ns);
 			if (status != es_no_error) return status;
 		}
 	}
@@ -1613,7 +1613,7 @@ DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t* width_in_5ns, uint32
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			status = IOCtrl_setAllOutputs(drvno, width_in_5ns, delay_in_5ns);
+			status = CamIOCtrl_setAllOutputs(drvno, width_in_5ns, delay_in_5ns);
 			if (status != es_no_error) return status;
 		}
 	}
