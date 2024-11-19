@@ -12,14 +12,14 @@
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes InitCamera(uint32_t drvno)
+es_status_codes Cam_Init(uint32_t drvno)
 {
 	ES_LOG("\nInit camera %u\n", drvno);
 	es_status_codes status = FindCam(drvno);
 	if (status != es_no_error) return status;
 	status = Cam_DoSoftReset(drvno);
 	if (status != es_no_error) return status;
-	status = SetCameraPosition(drvno);
+	status = Cam_SetPosition(drvno);
 	if (status != es_no_error) return status;
 	// when cooled camera legacy mode: disable PCIe FIFO when cool cam transmits cool status
 	if (settings_struct.camera_settings[drvno].is_cooled_camera_legacy_mode)
@@ -31,15 +31,15 @@ es_status_codes InitCamera(uint32_t drvno)
 	status = Cam_SetTriggerInput(drvno);
 	if (status != es_no_error) return status;
 	//set led off
-	status = SetLedOff(drvno, (uint8_t)settings_struct.camera_settings[drvno].led_off);
+	status = Cam_SetLedOff(drvno, (uint8_t)settings_struct.camera_settings[drvno].led_off);
 	if (status != es_no_error) return status;
 	//set gain switch (mostly for IR sensors)
-	status = SetConfigRegister(drvno);
+	status = Cam_SetConfigRegister(drvno);
 	if (status != es_no_error) return status;
 
 	if (settings_struct.camera_settings[drvno].sensor_type == sensor_type_fft)
 	{
-		status = SetupFFT(drvno);
+		status = Cam_SetupFFT(drvno);
 		if (status != es_no_error) return status;
 	}
 
@@ -47,29 +47,29 @@ es_status_codes InitCamera(uint32_t drvno)
 	switch (settings_struct.camera_settings[drvno].camera_system)
 	{
 	case camera_system_3001:
-		status = InitCamera3001(drvno);
+		status = Cam3001_Init(drvno);
 		break;
 	case camera_system_3010:
-		status = InitCamera3010(drvno, (uint8_t)settings_struct.camera_settings[drvno].adc_mode, (uint16_t)settings_struct.camera_settings[drvno].adc_custom_pattern);
+		status = Cam3010_Init(drvno, (uint8_t)settings_struct.camera_settings[drvno].adc_mode, (uint16_t)settings_struct.camera_settings[drvno].adc_custom_pattern);
 		break;
 	case camera_system_3030:
-		status = InitCamera3030(drvno);
+		status = Cam3030_Init(drvno);
 		break;
 	default:
 		return es_parameter_out_of_range;
 	}
 	if (status != es_no_error) return status;
 	//for cooled Cam
-	status = SetTemp(drvno, (uint8_t)settings_struct.camera_settings[drvno].temp_level);
+	status = Cam_SetTemp(drvno, (uint8_t)settings_struct.camera_settings[drvno].temp_level);
 	if (status != es_no_error) return status;
-	status = IOCtrl_setImpactStartPixel(drvno, (uint16_t)settings_struct.camera_settings[drvno].ioctrl_impact_start_pixel);
+	status = CamIOCtrl_setImpactStartPixel(drvno, (uint16_t)settings_struct.camera_settings[drvno].ioctrl_impact_start_pixel);
 	if (status != es_no_error) return status;
 	for (uint8_t i = 1; i <= IOCTRL_OUTPUT_COUNT - 1; i++)
 	{
-		status = IOCtrl_setOutput(drvno, i, (uint16_t)settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[i - 1], (uint16_t)settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[i - 1]);
+		status = CamIOCtrl_setOutput(drvno, i, (uint16_t)settings_struct.camera_settings[drvno].ioctrl_output_width_in_5ns[i - 1], (uint16_t)settings_struct.camera_settings[drvno].ioctrl_output_delay_in_5ns[i - 1]);
 		if (status != es_no_error) return status;
 	}
-	status = IOCtrl_setT0(drvno, settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns);
+	status = CamIOCtrl_setT0(drvno, settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns);
 	if (status != es_no_error) return status;
 	status = Cam_SetSensorResetOrHsirEc(drvno, settings_struct.camera_settings[drvno].sensor_reset_or_hsir_ec);
 	if (status != es_no_error) return status;
@@ -88,7 +88,7 @@ es_status_codes InitCamera(uint32_t drvno)
 es_status_codes Cam_DoSoftReset(uint32_t drvno)
 {
 	ES_LOG("Do camera soft reset\n");
-	return SendFLCAM(drvno, maddr_cam, cam_adaddr_software_reset, 0);
+	return Cam_SendData(drvno, maddr_cam, cam_adaddr_software_reset, 0);
 }
 
 /**
@@ -102,7 +102,7 @@ es_status_codes Cam_DoSoftReset(uint32_t drvno)
 es_status_codes Cam_Initialize(uint32_t drvno)
 {
 	ES_LOG("Do init in camera\n");
-	return SendFLCAM(drvno, maddr_cam, cam_adaddr_camera_init, 0);
+	return Cam_SendData(drvno, maddr_cam, cam_adaddr_camera_init, 0);
 }
 
 /**
@@ -114,7 +114,7 @@ es_status_codes Cam_Initialize(uint32_t drvno)
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes InitCamera3001(uint32_t drvno)
+es_status_codes Cam3001_Init(uint32_t drvno)
 {
 	(void)drvno;
 	ES_LOG("Init camera 3001\n");
@@ -134,7 +134,7 @@ es_status_codes InitCamera3001(uint32_t drvno)
  *		- es_no_error
  *		- es_register_write_failed
  */
-es_status_codes InitCamera3010(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern)
+es_status_codes Cam3010_Init(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern)
 {
 	ES_LOG("Init camera 3010, adc_mode: %u, custom_pattern: %u\n", adc_mode, custom_pattern);
 	es_status_codes status = Cam3010_ADC_reset(drvno);
@@ -152,7 +152,7 @@ es_status_codes InitCamera3010(uint32_t drvno, uint8_t adc_mode, uint16_t custom
  * 	80h = 10000000b for e.g.
  * 	This has to be done after every startup.
  * 	Then the ADC can be programmed further via SPI in the next frames.
- * 	Called by InitCamera3010
+ * 	Called by Cam3010_Init
  * \param drvno selects PCIe board
  * \return es_status_codes:
  *		- es_no_error
@@ -163,7 +163,7 @@ es_status_codes InitCamera3010(uint32_t drvno, uint8_t adc_mode, uint16_t custom
 es_status_codes Cam3010_ADC_reset(uint32_t drvno)
 {
 	ES_LOG("Camera 3010 ADC reset\n");
-	return SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_reset, adc_ltc2271_msg_reset);
+	return Cam_SendData(drvno, maddr_adc, adc_ltc2271_regaddr_reset, adc_ltc2271_msg_reset);
 }
 
 /**
@@ -181,13 +181,13 @@ es_status_codes Cam3010_ADC_setOutputMode(uint32_t drvno, uint8_t adc_mode, uint
 
 	if (2 == adc_mode) {
 		ES_LOG("Camera 3010 ADC set output mode to 4-lane mode and test pattern\n");
-		es_status_codes status = SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_custompattern);
+		es_status_codes status = Cam_SendData(drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_custompattern);
 		if (status != es_no_error) return status;
 		return Cam3010_ADC_sendTestPattern(drvno, custom_pattern);
 	}
 	else {
 		ES_LOG("Camera 3010 ADC set output mode to 4-lane mode and normal operation\n");
-		return SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_normal_mode);
+		return Cam_SendData(drvno, maddr_adc, adc_ltc2271_regaddr_outmode, adc_ltc2271_msg_normal_mode);
 	}
 }
 
@@ -207,9 +207,9 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
 	uint8_t  highByte = custom_pattern >> 8;
 	uint8_t  lowByte = custom_pattern & 0x00FF;
 
-	status = SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_msb, highByte);
+	status = Cam_SendData(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_msb, highByte);
 	if (status != es_no_error) return status;
-	status = SendFLCAM(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_lsb, lowByte);
+	status = Cam_SendData(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_lsb, lowByte);
 
 	ES_LOG("Camera 3010, ADC test pattern MSB: %u, LSB: %u\n", highByte, lowByte);
 	return status;
@@ -226,7 +226,7 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes InitCamera3030(uint32_t drvno)
+es_status_codes Cam3030_Init(uint32_t drvno)
 {
 	ES_LOG("Init camera 3030\n");
 	es_status_codes status = Cam3030_ADC_reset(drvno);
@@ -258,7 +258,7 @@ es_status_codes InitCamera3030(uint32_t drvno)
  * \brief ADC reset routine for Camera System 3030.
  *
  * 	Resets register of ADC ADS5294 to default state (output interface is 1 wire!).
- * 	Called by InitCamera3030
+ * 	Called by Cam3030_Init
  * \param drvno selects PCIe board
  * \return es_status_codes:
  *		- es_no_error
@@ -268,7 +268,7 @@ es_status_codes InitCamera3030(uint32_t drvno)
  */
 es_status_codes Cam3030_ADC_reset(uint32_t drvno)
 {
-	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_reset, adc_ads5294_msg_reset);
+	return Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_reset, adc_ads5294_msg_reset);
 }
 
 /**
@@ -276,7 +276,7 @@ es_status_codes Cam3030_ADC_reset(uint32_t drvno)
  *
  * 	Enables two wire LVDS data transfer mode of ADC ADS5294.
  * 	Only works with PAL versions P209_2 and above.
- * 	Called by InitCamera3030 - comment for older versions and rebuild
+ * 	Called by Cam3030_Init - comment for older versions and rebuild
  * 	or use on e-lab test computer desktop LabView folder lv64hs (bool switch in 3030 init tab)
  * \param drvno selects PCIe board
  * \return es_status_codes:
@@ -287,18 +287,18 @@ es_status_codes Cam3030_ADC_reset(uint32_t drvno)
  */
 es_status_codes Cam3030_ADC_twoWireModeEN(uint32_t drvno)
 {
-	es_status_codes status = SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_2wireMode, adc_ads5294_msg_2wireMode);
+	es_status_codes status = Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_2wireMode, adc_ads5294_msg_2wireMode);
 	if (status != es_no_error) return status;
-	status = SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_wordWiseOutput, adc_ads5294_msg_wordWiseOutput);
+	status = Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_wordWiseOutput, adc_ads5294_msg_wordWiseOutput);
 	if (status != es_no_error) return status;
-	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_ddrClkAlign, adc_ads5294_msg_ddrClkAlign);
+	return Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_ddrClkAlign, adc_ads5294_msg_ddrClkAlign);
 }
 
 /**
  * \brief ADC gain config routine for Camera System 3030.
  *
  * 	Sets gain of ADC ADS5294 0...15 by calling SetADGain() subroutine.
- * 	Called by InitCamera3030
+ * 	Called by Cam3030_Init
  * \param drvno selects PCIe board
  * \param gain of ADC
  * \return es_status_codes:
@@ -359,7 +359,7 @@ es_status_codes SetADGain(uint32_t drvno, uint8_t fkt, uint8_t g1, uint8_t g2, u
 	data |= b;
 	data = (uint16_t)(data << 4);
 	data |= f;
-	es_status_codes status = SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_gain_1_to_4, data);	//gain1..4
+	es_status_codes status = Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_gain_1_to_4, data);	//gain1..4
 	if (status != es_no_error) return status;
 	data = h;
 	data = (uint16_t)(data << 4);
@@ -368,14 +368,14 @@ es_status_codes SetADGain(uint32_t drvno, uint8_t fkt, uint8_t g1, uint8_t g2, u
 	data |= g;
 	data = (uint16_t)(data << 4);
 	data |= c;
-	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_gain_5_to_8, data);	//gain7..8
+	return Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_gain_5_to_8, data);	//gain7..8
 }
 
 /**
  * \brief ADC debug mode for Camera System 3030.
  *
  * Lets ADC send a ramp or a custom pattern (value) instead of ADC sample data.
- * Called by InitCamera3030 when adc_mode > 0.
+ * Called by Cam3030_Init when adc_mode > 0.
  * \param drvno selects PCIe board
  * \param adc_mode 1: ramp, 2: custom pattern
  * \param custom_pattern (only used when adc_mode = 2)
@@ -391,15 +391,15 @@ es_status_codes Cam3030_ADC_RampOrPattern(uint32_t drvno, uint8_t adc_mode, uint
 	switch (adc_mode)
 	{
 	case 1: //ramp
-		status = SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_ramp);
+		status = Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_ramp);
 		break;
 	case 2: //custom pattern
 		//to activate custom pattern the following messages are necessary: d - data
 		//at address 0x25 (mode and higher bits): 0b00000000000100dd
-		status = SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_custompattern | ((custom_pattern >> 12) & 0x3));
+		status = Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_mode, adc_ads5294_msg_custompattern | ((custom_pattern >> 12) & 0x3));
 		if (status != es_no_error) return status;
 		//at address 0x26 (lower bits): 0bdddddddddddd0000
-		status = SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_custompattern, (uint16_t)(custom_pattern << 4));
+		status = Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_custompattern, (uint16_t)(custom_pattern << 4));
 		break;
 	default:
 		break;
@@ -425,7 +425,7 @@ es_status_codes Cam3030_ADC_Global_En_Filter(uint32_t drvno, bool enable)
 	uint16_t payload = 0;
 	// the global_en_filter bit is on bit 1 of register 0x29
 	if (enable) payload = 1 << 1;
-	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_global_en_filter, payload);
+	return Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_global_en_filter, payload);
 }
 
 /**
@@ -455,7 +455,7 @@ es_status_codes Cam3030_ADC_SetFilterSettings(uint32_t drvno, uint8_t channel, u
 	ES_TRACE("Cam3030_ADC_SetFilterSettings(), setting channel %u, coeff_set %u, decimation_factor %u, odd_tap %u, use_filter %u, hpf_corner %u, en_hpf %u\n", channel, coeff_set, decimation_factor, odd_tap, use_filter, hpf_corner, en_hpf);
 	uint16_t payload = (use_filter & 1) | (odd_tap & 1) << 2 | (decimation_factor & 7) << 4 | (coeff_set & 7) << 7 | (hpf_corner & 7) << 10 | (en_hpf & 1) << 14;
 	if (channel > 8 || channel < 1) return es_parameter_out_of_range;
-	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_filter1 + channel - 1, payload);
+	return Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_filter1 + channel - 1, payload);
 }
 
 /**
@@ -477,7 +477,7 @@ es_status_codes Cam3030_ADC_SetFilterCustomCoefficient(uint32_t drvno, uint8_t c
 	uint16_t payload = (coefficient & 0xFFF) | (enable & 1) << 15;
 	if (channel > 8 || channel < 1 || coefficient_number > 11) return es_parameter_out_of_range;
 	uint8_t address = adc_ads5294_regaddr_coeff0_filter1 + coefficient_number + (channel - 1) * 12;
-	return SendFLCAM(drvno, maddr_adc, address, payload);
+	return Cam_SendData(drvno, maddr_adc, address, payload);
 }
 
 /**
@@ -499,7 +499,7 @@ es_status_codes Cam3030_ADC_SetFilterCustomCoefficient(uint32_t drvno, uint8_t c
 es_status_codes Cam3030_ADC_SetDataRate(uint32_t drvno, uint8_t data_rate)
 {
 	ES_TRACE("Cam3030_ADC_SetDataRate(), setting data rate to %u\n", data_rate);
-	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_data_rate, data_rate & 0x3);
+	return Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_data_rate, data_rate & 0x3);
 }
 
 /**
@@ -523,7 +523,7 @@ es_status_codes Cam3030_ADC_SetLFNS(uint32_t drvno, bool enable)
 		payload = 0xFF;
 	else
 		payload = 0;
-	return SendFLCAM(drvno, maddr_adc, adc_ads5294_regaddr_LFNSM, payload);
+	return Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_LFNSM, payload);
 }
 
 /**
@@ -544,7 +544,7 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 {
 	ES_LOG("Cam3030_ADC_SetSampleMode(), setting sample mode to %u\n", sample_mode);
 	// send the sample mode to the camera
-	es_status_codes status = SendFLCAM(drvno, maddr_cam, cam_adaddr_sample_mode, sample_mode);
+	es_status_codes status = Cam_SendData(drvno, maddr_cam, cam_adaddr_sample_mode, sample_mode);
 	// When sample mode is 0, the camera should work the same like before this feature was implemented.
 	if (sample_mode == 0)
 	{
@@ -644,7 +644,7 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 es_status_codes Cam_SetSensorResetOrHsirEc(uint32_t drvno, uint16_t sensor_reset_or_hsir_ec)
 {
 	ES_LOG("Cam_SetSensorResetOrHsirEc(), setting sensor reset length to %u (HSVIS: %u ns, HSIR: %u ns)\n", sensor_reset_or_hsir_ec, sensor_reset_or_hsir_ec * 4, sensor_reset_or_hsir_ec * 160);
-	return SendFLCAM(drvno, maddr_cam, cam_adaddr_sensor_reset_length, sensor_reset_or_hsir_ec);
+	return Cam_SendData(drvno, maddr_cam, cam_adaddr_sensor_reset_length, sensor_reset_or_hsir_ec);
 }
 
 /**
@@ -658,11 +658,11 @@ es_status_codes Cam_SetSensorResetOrHsirEc(uint32_t drvno, uint16_t sensor_reset
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes SetTemp(uint32_t drvno, uint8_t level)
+es_status_codes Cam_SetTemp(uint32_t drvno, uint8_t level)
 {
 	if (level >= 8) level = 0;
 	ES_LOG("Set temperature level: %u\n", level);
-	return SendFLCAM(drvno, maddr_cam, cam_adaddr_coolTemp, level);
+	return Cam_SendData(drvno, maddr_cam, cam_adaddr_coolTemp, level);
 }
 
 /**
@@ -686,9 +686,9 @@ es_status_codes SetTemp(uint32_t drvno, uint8_t level)
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes SendFLCAM(uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16_t data)
+es_status_codes Cam_SendData(uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16_t data)
 {
-	ES_TRACE("SendFLCAM(): maddr 0x%x, adaddr: 0x%x, data 0x%x (%u)\n", maddr, adaddr, data, data);
+	ES_TRACE("Cam_SendData(): maddr 0x%x, adaddr: 0x%x, data 0x%x (%u)\n", maddr, adaddr, data, data);
 	es_status_codes status = FindCam(drvno);
 	if (status != es_no_error) return status;
 	uint32_t ldata = 0;
@@ -716,7 +716,7 @@ es_status_codes SendFLCAM(uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16_
  * - vfreq		(bits 14...1)	- for cams with FFT_v2 FPGAs, that generate their own vclks inside the cam
  * - is_fft		(bit 0)			- as before but legacy to run FFT_v1 cameras
  */
-es_status_codes SetVfreqRegister(uint32_t drvno) // was vclk register
+es_status_codes Cam_SetVfreqRegister(uint32_t drvno) // was vclk register
 {
 	es_status_codes status = es_no_error;
 	uint16_t is_area_mode = 0;
@@ -728,29 +728,29 @@ es_status_codes SetVfreqRegister(uint32_t drvno) // was vclk register
 		is_fft = 0;
 	uint16_t vfreqFPGA = (uint16_t)settings_struct.camera_settings[drvno].vfreq << 5; //multiplikation mit 32 damit FPGA vclks aehnlich lang wie die PCIe vclks sind
 	uint16_t vfreqRegsiter = (is_area_mode | (vfreqFPGA & 0x3FFF) << 1 | is_fft);
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclk, vfreqRegsiter);
+	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclk, vfreqRegsiter);
 	return status;
 }
 
-es_status_codes SetupFullBinningInCamera(uint32_t drvno)
+es_status_codes Cam_SetupFullBinning(uint32_t drvno)
 {
 	es_status_codes status = es_no_error;
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount1, (uint16_t)settings_struct.camera_settings[drvno].fft_lines); if (status != es_no_error) return status;
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount2, (uint16_t)0x0000); if (status != es_no_error) return status;
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount3, (uint16_t)0x0000); if (status != es_no_error) return status;
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount4, (uint16_t)0x0000); if (status != es_no_error) return status;
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount5, (uint16_t)0x0000); if (status != es_no_error) return status;
+	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclks_amount1, (uint16_t)settings_struct.camera_settings[drvno].fft_lines); if (status != es_no_error) return status;
+	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclks_amount2, (uint16_t)0x0000); if (status != es_no_error) return status;
+	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclks_amount3, (uint16_t)0x0000); if (status != es_no_error) return status;
+	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclks_amount4, (uint16_t)0x0000); if (status != es_no_error) return status;
+	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclks_amount5, (uint16_t)0x0000); if (status != es_no_error) return status;
 	return status;
 }
 
-es_status_codes SetupPartialBinningInCamera(uint32_t drvno)
+es_status_codes Cam_SetupPartialBinning(uint32_t drvno)
 {
 	es_status_codes status = es_no_error;
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount1, (uint16_t)settings_struct.camera_settings[drvno].region_size[0]); if (status != es_no_error) return status;
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount2, (uint16_t)settings_struct.camera_settings[drvno].region_size[1]); if (status != es_no_error) return status;
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount3, (uint16_t)settings_struct.camera_settings[drvno].region_size[2]); if (status != es_no_error) return status;
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount4, (uint16_t)settings_struct.camera_settings[drvno].region_size[3]); if (status != es_no_error) return status;
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_vclks_amount5, (uint16_t)settings_struct.camera_settings[drvno].region_size[4]); if (status != es_no_error) return status;
+	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclks_amount1, (uint16_t)settings_struct.camera_settings[drvno].region_size[0]); if (status != es_no_error) return status;
+	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclks_amount2, (uint16_t)settings_struct.camera_settings[drvno].region_size[1]); if (status != es_no_error) return status;
+	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclks_amount3, (uint16_t)settings_struct.camera_settings[drvno].region_size[2]); if (status != es_no_error) return status;
+	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclks_amount4, (uint16_t)settings_struct.camera_settings[drvno].region_size[3]); if (status != es_no_error) return status;
+	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclks_amount5, (uint16_t)settings_struct.camera_settings[drvno].region_size[4]); if (status != es_no_error) return status;
 	return status;
 }
 
@@ -766,9 +766,9 @@ es_status_codes SetupPartialBinningInCamera(uint32_t drvno)
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes SetLedOff(uint32_t drvno, uint8_t LED_OFF)
+es_status_codes Cam_SetLedOff(uint32_t drvno, uint8_t LED_OFF)
 {
-	return SendFLCAM(drvno, maddr_cam, cam_adaddr_LEDoff, (uint16_t)LED_OFF);
+	return Cam_SendData(drvno, maddr_cam, cam_adaddr_LEDoff, (uint16_t)LED_OFF);
 }
 /**
  * \brief This functions sets the camera position register of the first camera to 0.
@@ -782,11 +782,11 @@ es_status_codes SetLedOff(uint32_t drvno, uint8_t LED_OFF)
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes SetCameraPosition(uint32_t drvno)
+es_status_codes Cam_SetPosition(uint32_t drvno)
 {
 	ES_LOG("Set camera position of first camera in row to 1\n");
 	// 0x8000 is a test value. Camera position is set to 0
-	return SendFLCAM(drvno, maddr_cam, cam_adaddr_camera_position, 0x8000);
+	return Cam_SendData(drvno, maddr_cam, cam_adaddr_camera_position, 0x8000);
 }
 
 /**
@@ -800,10 +800,10 @@ es_status_codes SetCameraPosition(uint32_t drvno)
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes IOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixel)
+es_status_codes CamIOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixel)
 {
 	ES_LOG("Set IOCtrl impact start pixel: %u\n", startPixel);
-	return SendFLCAM(drvno, maddr_ioctrl, ioctrl_impact_start_pixel, startPixel);
+	return Cam_SendData(drvno, maddr_ioctrl, ioctrl_impact_start_pixel, startPixel);
 }
 
 /**
@@ -820,7 +820,7 @@ es_status_codes IOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixel)
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes IOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns)
+es_status_codes CamIOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns)
 {
 	ES_LOG("Set IOCtrl output %u, width %u, delay %u\n", number, width_in_5ns, delay_in_5ns);
 	uint8_t addrWidth = 0;
@@ -858,9 +858,9 @@ es_status_codes IOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width
 	default:
 		return es_parameter_out_of_range;
 	}
-	es_status_codes status = SendFLCAM(drvno, maddr_ioctrl, addrWidth, width_in_5ns);
+	es_status_codes status = Cam_SendData(drvno, maddr_ioctrl, addrWidth, width_in_5ns);
 	if (status != es_no_error) return status;
-	return SendFLCAM(drvno, maddr_ioctrl, addrDelay, delay_in_5ns);
+	return Cam_SendData(drvno, maddr_ioctrl, addrDelay, delay_in_5ns);
 }
 
 /**
@@ -874,12 +874,12 @@ es_status_codes IOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width
  *		- es_register_write_failed
  *		- es_parameter_out_of_range
  */
-es_status_codes IOCtrl_setAllOutputs(uint32_t drvno, uint32_t* width_in_5ns, uint32_t* delay_in_5ns)
+es_status_codes CamIOCtrl_setAllOutputs(uint32_t drvno, uint32_t* width_in_5ns, uint32_t* delay_in_5ns)
 {
 	es_status_codes status = es_no_error;
 	for (uint8_t i = 0; i <= 6; i++)
 	{
-		status = IOCtrl_setOutput(drvno, i + 1, (uint16_t)width_in_5ns[i], (uint16_t)delay_in_5ns[i]);
+		status = CamIOCtrl_setOutput(drvno, i + 1, (uint16_t)width_in_5ns[i], (uint16_t)delay_in_5ns[i]);
 		if (status != es_no_error) return status;
 	}
 	return status;
@@ -896,41 +896,41 @@ es_status_codes IOCtrl_setAllOutputs(uint32_t drvno, uint32_t* width_in_5ns, uin
  *		- es_register_read_failed
  *		- es_camera_not_found
  */
-es_status_codes IOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
+es_status_codes CamIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 {
 	ES_LOG("Set IOCtrl T0 period %u\n", period_in_10ns);
 	uint16_t period_in_10ns_L = (uint16_t)period_in_10ns;
 	uint16_t period_in_10ns_H = (uint16_t)(period_in_10ns >> 16);
-	es_status_codes status = SendFLCAM(drvno, maddr_ioctrl, ioctrl_t0h, period_in_10ns_H);
+	es_status_codes status = Cam_SendData(drvno, maddr_ioctrl, ioctrl_t0h, period_in_10ns_H);
 	if (status != es_no_error) return status;
-	return SendFLCAM(drvno, maddr_ioctrl, ioctrl_t0l, period_in_10ns_L);
+	return Cam_SendData(drvno, maddr_ioctrl, ioctrl_t0l, period_in_10ns_L);
 }
 
-es_status_codes DAC8568_sendDataCam(uint32_t drvno, uint32_t data, uint8_t cameraPosition)
+es_status_codes Cam_DAC8568_sendData(uint32_t drvno, uint32_t data, uint8_t cameraPosition)
 {
 	uint16_t hi_bytes = (uint16_t)(data >> 16);
 	uint16_t lo_bytes = (uint16_t)data;
 	uint8_t adaddr = dac_hi_byte_addr | cameraPosition << campos_bit_index;
-	es_status_codes status = SendFLCAM(drvno, maddr_dac, adaddr, hi_bytes);
+	es_status_codes status = Cam_SendData(drvno, maddr_dac, adaddr, hi_bytes);
 	if (status != es_no_error) return status;
 	adaddr = dac_lo_byte_addr | cameraPosition << campos_bit_index;
-	status = SendFLCAM(drvno, maddr_dac, adaddr, lo_bytes);
+	status = Cam_SendData(drvno, maddr_dac, adaddr, lo_bytes);
 	return status;
 }
 
 es_status_codes Cam_SetPixelRegister(uint32_t drvno)
 {
 	ES_LOG("Set pixel register in camera to %u\n", settings_struct.camera_settings[drvno].pixel);
-	return SendFLCAM(drvno, maddr_cam, cam_adaddr_pixel, (uint16_t)settings_struct.camera_settings[drvno].pixel);
+	return Cam_SendData(drvno, maddr_cam, cam_adaddr_pixel, (uint16_t)settings_struct.camera_settings[drvno].pixel);
 }
 
 es_status_codes Cam_SetTriggerInput(uint32_t drvno)
 {
 	ES_LOG("Set trigger input in camera to %u\n", settings_struct.camera_settings[drvno].trigger_mode_integrator);
-	return SendFLCAM(drvno, maddr_cam, cam_adaddr_trig_in, (uint16_t)settings_struct.camera_settings[drvno].trigger_mode_integrator);
+	return Cam_SendData(drvno, maddr_cam, cam_adaddr_trig_in, (uint16_t)settings_struct.camera_settings[drvno].trigger_mode_integrator);
 }
 
-es_status_codes SetConfigRegister(uint32_t drvno)
+es_status_codes Cam_SetConfigRegister(uint32_t drvno)
 {
 	es_status_codes status = es_no_error;
 
@@ -956,24 +956,24 @@ es_status_codes SetConfigRegister(uint32_t drvno)
 	uint16_t sensor_gain_2 = ((uint16_t)settings_struct.camera_settings[drvno].sensor_gain << (cam_config_register_bitindex_sensor_gain_2 - 1)) & cam_config_register_bit_sensor_gain_2;
 	uint16_t configRegister = bnc_out | led_off | cool_level | trigger_mode | sensor_gain | channel_select | sensor_gain_2;
 
-	status = SendFLCAM(drvno, maddr_cam, cam_adaddr_config, configRegister);
+	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_config, configRegister);
 	if (status != es_no_error) return status;
 	return status;
 }
 
-es_status_codes SetupFFT(uint32_t drvno)
+es_status_codes Cam_SetupFFT(uint32_t drvno)
 {
 	es_status_codes status = es_no_error;
-	status = SetVfreqRegister(drvno); if (status != es_no_error) return status;
+	status = Cam_SetVfreqRegister(drvno); if (status != es_no_error) return status;
 
 	switch (settings_struct.camera_settings[drvno].fft_mode)
 	{
 	case full_binning:
-		status = SetupFullBinningInCamera(drvno);
+		status = Cam_SetupFullBinning(drvno);
 		break;
 	case partial_binning:
 	{
-		status = SetupPartialBinningInCamera(drvno);
+		status = Cam_SetupPartialBinning(drvno);
 		break;
 	}
 	case area_mode:

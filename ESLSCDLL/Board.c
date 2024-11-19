@@ -226,7 +226,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 	status = InitPcieBoard(drvno);
 	if (status != es_no_error) return status;
 	if (settings_struct.camera_settings[drvno].camcnt > 0)
-		status = InitCamera(drvno);
+		status = Cam_Init(drvno);
 	return status;
 }
 
@@ -1530,7 +1530,7 @@ es_status_codes DAC8568_sendData(uint32_t drvno, uint8_t location, uint8_t camer
 	{
 	case DAC8568_camera:
 	{
-		status = DAC8568_sendDataCam(drvno, data, cameraPosition);
+		status = Cam_DAC8568_sendData(drvno, data, cameraPosition);
 		if (status != es_no_error) return status;
 		break;
 	}
