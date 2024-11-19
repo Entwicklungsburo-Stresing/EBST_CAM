@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/usr/bin/env sh
 
 VERSION_MAJOR=$(grep "#define VERSION_MAJOR_ESCAM" ../version.h | grep -o '[0-9]\+')
 VERSION_PCIE_BOARD_VERSION=$(grep "#define VERSION_PCIE_BOARD_VERSION" ../version.h | grep -o '[0-9]\+')
