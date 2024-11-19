@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "../shared_src/enum_hardware.h"
 #include "Board.h"
+#include <inttypes.h>
 
 /**
  * \brief Initialize camera registers.
@@ -14,7 +15,7 @@
  */
 es_status_codes Cam_Init(uint32_t drvno)
 {
-	ES_LOG("\nInit camera %u\n", drvno);
+	ES_LOG("\nInit camera %"PRIu32"\n", drvno);
 	es_status_codes status = FindCam(drvno);
 	if (status != es_no_error) return status;
 	status = Cam_DoSoftReset(drvno);
@@ -126,7 +127,7 @@ es_status_codes Cam3001_Init(uint32_t drvno)
  *
  * 	Sets registers in camera and ADC LTC2271.
  * 	FL3010 is intended for sensor S12198 !
- * 	with frame rate 8kHz = min. 125µs exp time
+ * 	with frame rate 8kHz = min. 125ï¿½s exp time
  * \param drvno selects PCIe board
  * \param adc_mode 0: normal mode, 2: custom pattern
  * \param custom_pattern fixed output for test mode, ignored when test mode FALSE
@@ -136,7 +137,7 @@ es_status_codes Cam3001_Init(uint32_t drvno)
  */
 es_status_codes Cam3010_Init(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern)
 {
-	ES_LOG("Init camera 3010, adc_mode: %u, custom_pattern: %u\n", adc_mode, custom_pattern);
+	ES_LOG("Init camera 3010, adc_mode: %"PRIu8", custom_pattern: %"PRIu16"\n", adc_mode, custom_pattern);
 	es_status_codes status = Cam3010_ADC_reset(drvno);
 	if (status != es_no_error) return status;
 	return Cam3010_ADC_setOutputMode(drvno, adc_mode, custom_pattern);
@@ -211,7 +212,7 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
 	if (status != es_no_error) return status;
 	status = Cam_SendData(drvno, maddr_adc, adc_ltc2271_regaddr_custompattern_lsb, lowByte);
 
-	ES_LOG("Camera 3010, ADC test pattern MSB: %u, LSB: %u\n", highByte, lowByte);
+	ES_LOG("Camera 3010, ADC test pattern MSB: %"PRIu8", LSB: %"PRIu8"\n", highByte, lowByte);
 	return status;
 }
 
@@ -421,7 +422,7 @@ es_status_codes Cam3030_ADC_RampOrPattern(uint32_t drvno, uint8_t adc_mode, uint
  */
 es_status_codes Cam3030_ADC_Global_En_Filter(uint32_t drvno, bool enable)
 {
-	ES_LOG("Cam3030_ADC_Global_En_Filter: %u\n", enable);
+	ES_LOG("Cam3030_ADC_Global_En_Filter: %d\n", enable);
 	uint16_t payload = 0;
 	// the global_en_filter bit is on bit 1 of register 0x29
 	if (enable) payload = 1 << 1;
@@ -452,7 +453,7 @@ es_status_codes Cam3030_ADC_Global_En_Filter(uint32_t drvno, bool enable)
  */
 es_status_codes Cam3030_ADC_SetFilterSettings(uint32_t drvno, uint8_t channel, uint8_t coeff_set, uint8_t decimation_factor, uint8_t odd_tap, uint8_t use_filter, uint8_t hpf_corner, uint8_t en_hpf)
 {
-	ES_TRACE("Cam3030_ADC_SetFilterSettings(), setting channel %u, coeff_set %u, decimation_factor %u, odd_tap %u, use_filter %u, hpf_corner %u, en_hpf %u\n", channel, coeff_set, decimation_factor, odd_tap, use_filter, hpf_corner, en_hpf);
+	ES_TRACE("Cam3030_ADC_SetFilterSettings(), setting channel %"PRIu8", coeff_set %"PRIu8", decimation_factor %"PRIu8", odd_tap %"PRIu8", use_filter %"PRIu8", hpf_corner %"PRIu8", en_hpf %"PRIu8"\n", channel, coeff_set, decimation_factor, odd_tap, use_filter, hpf_corner, en_hpf);
 	uint16_t payload = (use_filter & 1) | (odd_tap & 1) << 2 | (decimation_factor & 7) << 4 | (coeff_set & 7) << 7 | (hpf_corner & 7) << 10 | (en_hpf & 1) << 14;
 	if (channel > 8 || channel < 1) return es_parameter_out_of_range;
 	return Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_filter1 + channel - 1, payload);
@@ -473,7 +474,7 @@ es_status_codes Cam3030_ADC_SetFilterSettings(uint32_t drvno, uint8_t channel, u
  */
 es_status_codes Cam3030_ADC_SetFilterCustomCoefficient(uint32_t drvno, uint8_t channel, uint8_t coefficient_number, uint8_t enable, uint16_t coefficient)
 {
-	ES_TRACE("Cam3030_ADC_SetFilterCustomCoefficient(), setting channel %u, coefficient %u to %u\n", channel, coefficient_number, coefficient);
+	ES_TRACE("Cam3030_ADC_SetFilterCustomCoefficient(), setting channel %"PRIu8", coefficient %"PRIu8" to %"PRIu16"\n", channel, coefficient_number, coefficient);
 	uint16_t payload = (coefficient & 0xFFF) | (enable & 1) << 15;
 	if (channel > 8 || channel < 1 || coefficient_number > 11) return es_parameter_out_of_range;
 	uint8_t address = adc_ads5294_regaddr_coeff0_filter1 + coefficient_number + (channel - 1) * 12;
@@ -498,7 +499,7 @@ es_status_codes Cam3030_ADC_SetFilterCustomCoefficient(uint32_t drvno, uint8_t c
  */
 es_status_codes Cam3030_ADC_SetDataRate(uint32_t drvno, uint8_t data_rate)
 {
-	ES_TRACE("Cam3030_ADC_SetDataRate(), setting data rate to %u\n", data_rate);
+	ES_TRACE("Cam3030_ADC_SetDataRate(), setting data rate to %"PRIu8"\n", data_rate);
 	return Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_data_rate, data_rate & 0x3);
 }
 
@@ -517,7 +518,7 @@ es_status_codes Cam3030_ADC_SetDataRate(uint32_t drvno, uint8_t data_rate)
  */
 es_status_codes Cam3030_ADC_SetLFNS(uint32_t drvno, bool enable)
 {
-	ES_TRACE("Cam3030_ADC_SetLFNS(), Enable %u\n", enable);
+	ES_TRACE("Cam3030_ADC_SetLFNS(), Enable %d\n", enable);
 	uint16_t payload;
 	if (enable)
 		payload = 0xFF;
@@ -542,7 +543,7 @@ es_status_codes Cam3030_ADC_SetLFNS(uint32_t drvno, bool enable)
  */
 es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 {
-	ES_LOG("Cam3030_ADC_SetSampleMode(), setting sample mode to %u\n", sample_mode);
+	ES_LOG("Cam3030_ADC_SetSampleMode(), setting sample mode to %"PRIu8"\n", sample_mode);
 	// send the sample mode to the camera
 	es_status_codes status = Cam_SendData(drvno, maddr_cam, cam_adaddr_sample_mode, sample_mode);
 	// When sample mode is 0, the camera should work the same like before this feature was implemented.
@@ -643,7 +644,7 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
  */
 es_status_codes Cam_SetSensorResetOrHsirEc(uint32_t drvno, uint16_t sensor_reset_or_hsir_ec)
 {
-	ES_LOG("Cam_SetSensorResetOrHsirEc(), setting sensor reset length to %u (HSVIS: %u ns, HSIR: %u ns)\n", sensor_reset_or_hsir_ec, sensor_reset_or_hsir_ec * 4, sensor_reset_or_hsir_ec * 160);
+	ES_LOG("Cam_SetSensorResetOrHsirEc(), setting sensor reset length to %"PRIu16" (HSVIS: %"PRIu16" ns, HSIR: %"PRIu16" ns)\n", sensor_reset_or_hsir_ec, sensor_reset_or_hsir_ec * 4, sensor_reset_or_hsir_ec * 160);
 	return Cam_SendData(drvno, maddr_cam, cam_adaddr_sensor_reset_length, sensor_reset_or_hsir_ec);
 }
 
@@ -661,7 +662,7 @@ es_status_codes Cam_SetSensorResetOrHsirEc(uint32_t drvno, uint16_t sensor_reset
 es_status_codes Cam_SetTemp(uint32_t drvno, uint8_t level)
 {
 	if (level >= 8) level = 0;
-	ES_LOG("Set temperature level: %u\n", level);
+	ES_LOG("Set temperature level: %"PRIu8"\n", level);
 	return Cam_SendData(drvno, maddr_cam, cam_adaddr_coolTemp, level);
 }
 
@@ -688,7 +689,7 @@ es_status_codes Cam_SetTemp(uint32_t drvno, uint8_t level)
  */
 es_status_codes Cam_SendData(uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16_t data)
 {
-	ES_TRACE("Cam_SendData(): maddr 0x%x, adaddr: 0x%x, data 0x%x (%u)\n", maddr, adaddr, data, data);
+	ES_TRACE("Cam_SendData(): maddr 0x%x, adaddr: 0x%x, data 0x%x (%"PRIu16")\n", maddr, adaddr, data, data);
 	es_status_codes status = FindCam(drvno);
 	if (status != es_no_error) return status;
 	uint32_t ldata = 0;
@@ -802,7 +803,7 @@ es_status_codes Cam_SetPosition(uint32_t drvno)
  */
 es_status_codes CamIOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixel)
 {
-	ES_LOG("Set IOCtrl impact start pixel: %u\n", startPixel);
+	ES_LOG("Set IOCtrl impact start pixel: %"PRIu16"\n", startPixel);
 	return Cam_SendData(drvno, maddr_ioctrl, ioctrl_impact_start_pixel, startPixel);
 }
 
@@ -822,7 +823,7 @@ es_status_codes CamIOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixe
  */
 es_status_codes CamIOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns)
 {
-	ES_LOG("Set IOCtrl output %u, width %u, delay %u\n", number, width_in_5ns, delay_in_5ns);
+	ES_LOG("Set IOCtrl output %"PRIu32", width %"PRIu16", delay %"PRIu16"\n", number, width_in_5ns, delay_in_5ns);
 	uint8_t addrWidth = 0;
 	uint8_t addrDelay = 0;
 	switch (number)
@@ -898,7 +899,7 @@ es_status_codes CamIOCtrl_setAllOutputs(uint32_t drvno, uint32_t* width_in_5ns, 
  */
 es_status_codes CamIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 {
-	ES_LOG("Set IOCtrl T0 period %u\n", period_in_10ns);
+	ES_LOG("Set IOCtrl T0 period %"PRIu32"\n", period_in_10ns);
 	uint16_t period_in_10ns_L = (uint16_t)period_in_10ns;
 	uint16_t period_in_10ns_H = (uint16_t)(period_in_10ns >> 16);
 	es_status_codes status = Cam_SendData(drvno, maddr_ioctrl, ioctrl_t0h, period_in_10ns_H);
@@ -920,13 +921,13 @@ es_status_codes Cam_DAC8568_sendData(uint32_t drvno, uint32_t data, uint8_t came
 
 es_status_codes Cam_SetPixelRegister(uint32_t drvno)
 {
-	ES_LOG("Set pixel register in camera to %u\n", settings_struct.camera_settings[drvno].pixel);
+	ES_LOG("Set pixel register in camera to %"PRIu32"\n", settings_struct.camera_settings[drvno].pixel);
 	return Cam_SendData(drvno, maddr_cam, cam_adaddr_pixel, (uint16_t)settings_struct.camera_settings[drvno].pixel);
 }
 
 es_status_codes Cam_SetTriggerInput(uint32_t drvno)
 {
-	ES_LOG("Set trigger input in camera to %u\n", settings_struct.camera_settings[drvno].trigger_mode_integrator);
+	ES_LOG("Set trigger input in camera to %"PRIu32"\n", settings_struct.camera_settings[drvno].trigger_mode_integrator);
 	return Cam_SendData(drvno, maddr_cam, cam_adaddr_trig_in, (uint16_t)settings_struct.camera_settings[drvno].trigger_mode_integrator);
 }
 

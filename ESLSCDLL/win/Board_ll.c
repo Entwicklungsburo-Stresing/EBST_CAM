@@ -58,7 +58,7 @@ es_status_codes CleanupDma(uint32_t drvno)
  */
 void isr( uint32_t drvno )
 {
-	ES_TRACE( "ISR Counter drvno %u: %d\n", drvno, IsrCounter[drvno]);
+	ES_TRACE( "ISR Counter drvno %"PRIu32": %"PRIu64"\n", drvno, IsrCounter[drvno]);
 	// Set INTRSR flag for TRIGO
 	es_status_codes status = setBitS0_32(drvno, IRQREG_bitindex_INTRSR, S0Addr_IRQREG );
 	if (status != es_no_error) return;
@@ -68,8 +68,8 @@ void isr( uint32_t drvno )
 	// Error when too much ISRs -> memcpy out of range
 	if (IsrCounter[drvno] >= numberOfInterrupts[drvno])
 	{
-		ES_LOG( "numberOfInterrupts: %u \n", numberOfInterrupts[drvno]);
-		ES_LOG( "ISR Counter overflow: %u \n", IsrCounter[drvno]);
+		ES_LOG( "numberOfInterrupts: %"PRIu32" \n", numberOfInterrupts[drvno]);
+		ES_LOG( "ISR Counter overflow: %"PRIu64" \n", IsrCounter[drvno]);
 		status = resetBitS0_32( drvno, IRQREG_bitindex_INTRSR, S0Addr_IRQREG );//reset INTRSR flag for TRIGO
 		return;
 	}
@@ -89,7 +89,7 @@ void isr( uint32_t drvno )
 	userBufferWritePos[drvno] += dmaBufferPartSizeInBytes / sizeof( uint16_t );
 	data_available[drvno] += dmaBufferPartSizeInBytes / sizeof(uint16_t);
 	ES_TRACE("increase userBufferWritePos to 0x%p \n", userBufferWritePos[drvno]);
-	ES_TRACE("increase data_available to %u \n", data_available[drvno]);
+	ES_TRACE("increase data_available to %zu \n", data_available[drvno]);
 	// Reset INTRSR flag for TRIGO
 	status = resetBitS0_32(drvno, IRQREG_bitindex_INTRSR, S0Addr_IRQREG );
 	IsrCounter[drvno]++;
@@ -420,7 +420,7 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 	ES_TRACE("copyRestData: userBufferWritePos: 0x%p \n", userBufferWritePos[drvno]);
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes);
 	data_available[drvno] += rest_in_bytes / sizeof(uint16_t);
-	ES_TRACE("copyRestData: increased available data to : %u \n", data_available[drvno]);
+	ES_TRACE("copyRestData: increased available data to : %zu \n", data_available[drvno]);
 	return;
 }
 
@@ -435,7 +435,7 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
  */
 es_status_codes _InitBoard(uint32_t drvno)
 {
-	ES_LOG("Initialize board %u\n", drvno);
+	ES_LOG("Initialize board %"PRIu32"\n", drvno);
 	DWORD dwStatus = 0;
 	ES_LOG( "Info: scan result: a board found:%lx , dev=%lx, ven=%lx \n", scanResult.dwNumDevices, scanResult.deviceId[drvno].dwDeviceId, scanResult.deviceId[drvno].dwVendorId );
 	//gives the information received from PciScanDevices to PciGetDeviceInfo
@@ -550,7 +550,7 @@ es_status_codes CleanupDriver(uint32_t drvno)
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
-	ES_LOG("Cleanup driver drv: %u\n", drvno);
+	ES_LOG("Cleanup driver drv: %"PRIu32"\n", drvno);
 	status = disableInterrupt(drvno);
 	if (status != es_no_error) return status;
 	if (dmaBuffer[drvno])
@@ -741,7 +741,7 @@ uint8_t WaitforTelapsed(int64_t microseconds)
 		//ES_TRACE("Wait for %u microseconds\n", microseconds);
 		int64_t start_timestamp = GetTimestampInMicroseconds();
 		int64_t destination_timestamp = start_timestamp + microseconds;
-		//ES_LOG("start time: %lld\n", start_timestamp);
+		//ES_LOG("start time: %"PRId64"\n", start_timestamp);
 		// detect overflow
 		if (destination_timestamp < start_timestamp) return 0;
 		// wait until time elapsed
@@ -753,7 +753,7 @@ uint8_t WaitforTelapsed(int64_t microseconds)
 				return 0;
 			}
 		}
-		//ES_LOG("end time:  %lld\n", GetTimestampInMicroseconds());
+		//ES_LOG("end time:  %"PRId64"\n", GetTimestampInMicroseconds());
 	}
 	return 1;
 }
@@ -846,7 +846,7 @@ void openFile(uint32_t drvno)
 	char filename_full[file_filename_full_size];
 	memset(filename_full, 0, file_filename_full_size);
 	// Create filenames
-	sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%u.dat", settings_struct.camera_settings[drvno].file_path, start_timestamp, drvno);
+	sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%"PRIu32".dat", settings_struct.camera_settings[drvno].file_path, start_timestamp, drvno);
 	// Check if the file exists
 	if (_access_s(filename_full, 0) != 0)
 	{
@@ -915,7 +915,7 @@ void writeToDisc(uint32_t* drvno_ptr)
 {
 	uint32_t drvno = *drvno_ptr;
 	free(drvno_ptr);
-	ES_LOG("Start write to disc, drvno %u\n", drvno);
+	ES_LOG("Start write to disc, drvno %"PRIu32"\n", drvno);
 	openFile(drvno);
 	size_t data_count_to_write = 0;
 	size_t data_written_all = 0;
@@ -936,7 +936,7 @@ void writeToDisc(uint32_t* drvno_ptr)
 				data_count_to_write = userBufferEndPtr[drvno] - userBufferWritePos_last[drvno];
 				ES_TRACE("data_count_to_write is exceeding the user buffer. Write the last part of the user buffer to disc.\n");
 			}
-			ES_TRACE("Write %u bytes to disk, drvno %u, data_available %u, data_written_all %u\n", data_count_to_write, drvno, data_available[drvno], data_written_all);
+			ES_TRACE("Write %zu bytes to disk, drvno %"PRIu32", data_available %zu, data_written_all %zu\n", data_count_to_write, drvno, data_available[drvno], data_written_all);
 			ES_TRACE("write data to disc from userBufferWritePos_last: 0x%p \n", userBufferWritePos_last[drvno]);
 			// write data to disc
 			data_written = fwrite(userBufferWritePos_last[drvno], sizeof(uint16_t), data_count_to_write, file_stream[drvno]);
@@ -944,10 +944,10 @@ void writeToDisc(uint32_t* drvno_ptr)
 			if (!data_written)
 			{
 				_get_errno(&errnumber);
-				ES_TRACE("Error: %u\n", errnumber);
+				ES_TRACE("Error: %d\n", errnumber);
 			}
 			_flushall();
-			ES_TRACE("data_written: %u \n", data_written);
+			ES_TRACE("data_written: %zu \n", data_written);
 			// advance user buffer pointer
 			userBufferWritePos_last[drvno] += data_written;
 			// check if userBufferWritePos_last reached the end of userBuffer
@@ -959,11 +959,11 @@ void writeToDisc(uint32_t* drvno_ptr)
 			ES_TRACE("advanced userBufferWritePos_last to: 0x%p \n", userBufferWritePos_last[drvno]);
 			// increase the counter for overall written data
 			data_written_all += data_written;
-			ES_TRACE("data_written_all: %u \n", data_written_all);
+			ES_TRACE("data_written_all: %zu \n", data_written_all);
 		}
 	}
 	closeFile(drvno);
-	ES_LOG("Write to disc done, drvno: %u\n", drvno);
+	ES_LOG("Write to disc done, drvno: %"PRIu32"\n", drvno);
 	return;
 }
 
@@ -1262,7 +1262,7 @@ void ValMsg(uint64_t val)
 	char AString[60];
 	if (_SHOW_MSG)
 	{
-		sprintf_s(AString, 60, "%s%llu 0x%I64x", "val= ", val, val);
+		sprintf_s(AString, 60, "%s%"PRIu64" 0x%I64x", "val= ", val, val);
 		if (MessageBoxA(GetActiveWindow(), (LPCSTR)AString, (LPCSTR)L"ERROR", MB_OK | MB_ICONEXCLAMATION) == IDOK) {};
 	}
 };
@@ -1279,7 +1279,7 @@ void ValMsg(uint64_t val)
 */
 void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {
-	ES_TRACE("Start 2d viewer, drvno %u, block %u, camera %u, pixel %u, nos %u\n", drvno, block, camera, pixel, nos);
+	ES_TRACE("Start 2d viewer, drvno %"PRIu32", block %"PRIu32", camera %"PRIu16", pixel %"PRIu16", nos %"PRIu32"\n", drvno, block, camera, pixel, nos);
 	if (Direct2dViewer != NULL)
 	{
 		Deinit2dViewer();
@@ -1317,7 +1317,7 @@ void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pix
 */
 void ShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {
-	ES_TRACE("Show new bitmap, drvno %u, block %u, camera %u, pixel %u, nos %u\n", drvno, block, camera, pixel, nos);
+	ES_TRACE("Show new bitmap, drvno %"PRIu32", block %"PRIu32", camera %"PRIu16", pixel %"PRIu16", nos %"PRIu32"\n", drvno, block, camera, pixel, nos);
 	if (Direct2dViewer != NULL)
 	{
 		uint16_t* address = NULL;
@@ -1362,7 +1362,7 @@ void Deinit2dViewer()
  */
 void SetGammaValue(uint16_t white, uint16_t black)
 {
-	ES_TRACE("Set gamma value, white %u, black %u\n", white, black);
+	ES_TRACE("Set gamma value, white %"PRIu16", black %"PRIu16"\n", white, black);
 	if (Direct2dViewer != NULL)
 	{
 		Direct2dViewer_setGammaValue(Direct2dViewer, white, black);

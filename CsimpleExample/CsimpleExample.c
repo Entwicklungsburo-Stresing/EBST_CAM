@@ -48,7 +48,7 @@ int main()
 		printf("Initialising driver failed, error: %d, %s\n", status, DLLConvertErrorCodeToMsg(status));
 		return status;
 	}
-	printf("Initialising driver done, found %d boards\n", _number_of_boards);
+	printf("Initialising driver done, found %"PRIu8" boards\n", _number_of_boards);
 	printf("Initialising board...\n");
 	status = DLLInitBoard();
 	if (status != es_no_error)
@@ -126,7 +126,7 @@ int main()
 	printf("Copy one sample done\n");
 	for (int i = 0; i < 200; i++)
 	{
-		printf("Pixel %i: %u\n", i, pdest[i]);
+		printf("Pixel %i: %"PRIu16"\n", i, pdest[i]);
 	}
 	printf("Exiting driver...\n");
 	status = DLLExitDriver();
