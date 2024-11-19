@@ -83,6 +83,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
 		ui->cameraSettingsTabs->setTabVisible(4, true);
 #endif
 		on_checkBoxBoard4_stateChanged(ui->checkBoxBoard4->isChecked());
+		[[fallthrough]];
 	case 4:
 		ui->checkBoxBoard3->setVisible(true);
 		ui->checkBoxBoard3->setChecked(settings.value(settingBoard3Path, settingBoard3Default).toBool());
@@ -90,6 +91,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
 		ui->cameraSettingsTabs->setTabVisible(3, true);
 #endif
 		on_checkBoxBoard3_stateChanged(ui->checkBoxBoard3->isChecked());
+		[[fallthrough]];
 	case 3:
 		ui->checkBoxBoard2->setVisible(true);
 		ui->checkBoxBoard2->setChecked(settings.value(settingBoard2Path, settingBoard2Default).toBool());
@@ -97,6 +99,7 @@ DialogSettings::DialogSettings(QWidget *parent) :
 		ui->cameraSettingsTabs->setTabVisible(2, true);
 #endif
 		on_checkBoxBoard2_stateChanged(ui->checkBoxBoard2->isChecked());
+		[[fallthrough]];
 	case 2:
 		ui->checkBoxBoard1->setVisible(true);
 		ui->labelBoardSel->setVisible(true);

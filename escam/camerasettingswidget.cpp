@@ -257,12 +257,16 @@ void CameraSettingsWidget::on_spinBoxNumberOfRegions_valueChanged(int value)
 				{
 				case 5:
 					ui->spinBoxRegion5->setEnabled(true);
+					[[fallthrough]];
 				case 4:
 					ui->spinBoxRegion4->setEnabled(true);
+					[[fallthrough]];
 				case 3:
 					ui->spinBoxRegion3->setEnabled(true);
+					[[fallthrough]];
 				case 2:
 					ui->spinBoxRegion2->setEnabled(true);
+					[[fallthrough]];
 				case 1:
 					ui->spinBoxRegion1->setEnabled(true);
 				}
@@ -270,10 +274,13 @@ void CameraSettingsWidget::on_spinBoxNumberOfRegions_valueChanged(int value)
 				{
 				case 1:
 					ui->spinBoxRegion2->setValue(0);
+					[[fallthrough]];
 				case 2:
 					ui->spinBoxRegion3->setValue(0);
+					[[fallthrough]];
 				case 3:
 					ui->spinBoxRegion4->setValue(0);
+					[[fallthrough]];
 				case 4:
 					ui->spinBoxRegion5->setValue(0);
 				}

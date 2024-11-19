@@ -500,7 +500,11 @@ es_status_codes Lsc::findCam(uint32_t drvno)
 es_status_codes Lsc::exportMeasurementHDF5(const char* path, char* filename)
 {
 #ifdef WIN32
-    return DLLExportMeasurementHDF5(path, filename);
+	return DLLExportMeasurementHDF5(path, filename);
+#else
+	(void)path;
+	(void)filename;
+	return es_no_error;
 #endif
 }
 

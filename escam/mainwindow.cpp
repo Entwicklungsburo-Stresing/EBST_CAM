@@ -498,6 +498,8 @@ void MainWindow::loadSettings()
 		ui->chartView->chart()->setTheme(QChart::ChartThemeDark);
 	else
 		ui->chartView->chart()->setTheme(QChart::ChartThemeLight);
+#else
+	(void)qstyle;
 #endif
 
 	QGuiApplication::restoreOverrideCursor();
@@ -996,10 +998,10 @@ void MainWindow::on_readCameraTemp()
 				for (uint16_t camera_pos = 0; camera_pos < lsc.getVirtualCamcnt(drvno); camera_pos++)
 				{
 					bool cameraOvertemp = false;
-					es_status_codes status = lsc.getCameraStatusOverTemp(drvno, static_cast<uint32_t>(sample), static_cast<uint32_t>(block), camera_pos, &cameraOvertemp);
+					lsc.getCameraStatusOverTemp(drvno, static_cast<uint32_t>(sample), static_cast<uint32_t>(block), camera_pos, &cameraOvertemp);
 					cameraBoardOvertemp |= cameraOvertemp;
 					bool cameraCooled = false;
-					status = lsc.getCameraStatusTempGood(drvno, static_cast<uint32_t>(sample), static_cast<uint32_t>(block), camera_pos, &cameraCooled);
+					lsc.getCameraStatusTempGood(drvno, static_cast<uint32_t>(sample), static_cast<uint32_t>(block), camera_pos, &cameraCooled);
 					cameraBoardCooled |= cameraCooled;
 				}
 				isOvertemp |= cameraBoardOvertemp;
