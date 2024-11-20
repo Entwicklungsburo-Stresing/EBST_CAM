@@ -20,15 +20,7 @@ enum s0_addresses_t
 	/**
 	 * See \ref CTRLA_bits_t for details.
 	 */
-	S0Addr_CTRLA = 0x04, //0x04
-	/**
-	 * See \ref CTRLB_bits_t for details.
-	 */
-	S0Addr_CTRLB = 0x05,
-	/**
-	 * See \ref CTRLC_bits_t for details.
-	 */
-	S0Addr_CTRLC = 0x06,
+	S0Addr_CTRL = 0x04,
 	/**
 	 * See \ref XCK_bits_t for details.
 	 */
@@ -205,66 +197,65 @@ enum s0_addresses_t
 	S0Addr_BON_PERIOD = 0xBC,
 };
 
-enum CTRLA_bits_t
+
+enum CTRL_bits_t
 {
-	CTRLA_bitindex_VONOFF = 0,
-	CTRLA_bitindex_IFC = 1,
-	CTRLA_bitindex_XCK = 2,
-	CTRLA_bitindex_TRIG_OUT = 3,
+	// CTRLA
+	CTRL_bitindex_VONOFF = 0,
+	CTRL_bitindex_IFC = 1,
+	CTRL_bitindex_XCK = 2,
+	CTRL_bitindex_TRIG_OUT = 3,
 	/**
 	 * 0: slope selected by SLOPE, 1: both slopes
 	 */
-	CTRLA_bitindex_BOTH_SLOPE = 4,
+	CTRL_bitindex_BOTH_SLOPE = 4,
 	/**
 	 * 0: negative slope, 1: positive slope.
 	 */
-	CTRLA_bitindex_SLOPE = 5,
-	CTRLA_bitindex_STRIGIN = 6,
-	CTRLA_bitindex_BSTART = 7,
-	CTRLA_bit_VONOFF = 0x01,
-	CTRLA_bit_IFC = 0x02,
-	CTRLA_bit_XCK = 0x04,
-	CTRLA_bit_TRIG_OUT = 0x08,
-	CTRLA_bit_BOTH_SLOPE = 0x10,
-	CTRLA_bit_SLOPE = 0x20,
-	CTRLA_bit_STRIGIN = 0x40,
-	CTRLA_bit_BSTART = 0x80,
-};
-
-enum CTRLB_bits_t
-{
-	CTRLB_bitindex_STI0 = 0,
-	CTRLB_bitindex_STI1 = 1,
-	CTRLB_bitindex_STI2 = 2,
-	CTRLB_bitindex_SHON = 3,
-	CTRLB_bitindex_BTI0 = 4,
-	CTRLB_bitindex_BTI1 = 5,
-	CTRLB_bitindex_BTI2 = 6,
-	CTRLB_bit_STI0 = 0x01,
-	CTRLB_bit_STI1 = 0x02,
-	CTRLB_bit_STI2 = 0x04,
-	CTRLB_bits_STI = 0x07,
-	CTRLB_bit_SHON = 0x08,
-	CTRLB_bit_BTI0 = 0x10,
-	CTRLB_bit_BTI1 = 0x20,
-	CTRLB_bit_BTI2 = 0x40,
-	CTRLB_bits_BTI = 0x70,
-};
-
-enum CTRLC_bits_t
-{
-	CTRLC_bitindex_I = 0,
-	CTRLC_bitindex_S1 = 1,
-	CTRLC_bitindex_S2 = 2,
-	CTRLC_bitindex_shift_s = 3,
-	CTRLC_bitindex_eoi = 4,
-	CTRLC_bitindex_eoi_chb = 5,
-	CTRLC_bit_I = 0x01,
-	CTRLC_bit_S1 = 0x02,
-	CTRLC_bit_S2 = 0x04,
-	CTRLC_bit_shift_s = 0x08,
-	CTRLC_bit_eoi = 0x10,
-	CTRLC_bit_eoi_chb = 0x20,
+	CTRL_bitindex_SLOPE = 5,
+	CTRL_bitindex_STRIGIN = 6,
+	CTRL_bitindex_BSTART = 7,
+	// CTRLB
+	CTRL_bitindex_STI0 = 8,
+	CTRL_bitindex_STI1 = 9,
+	CTRL_bitindex_STI2 = 10,
+	CTRL_bitindex_SHON = 11,
+	CTRL_bitindex_BTI0 = 12,
+	CTRL_bitindex_BTI1 = 13,
+	CTRL_bitindex_BTI2 = 14,
+	// CTRLC
+	CTRL_bitindex_I = 16,
+	CTRL_bitindex_S1 = 17,
+	CTRL_bitindex_S2 = 18,
+	CTRL_bitindex_shift_s = 19,
+	CTRL_bitindex_eoi = 20,
+	CTRL_bitindex_eoi_chb = 21,
+	// CTRLA
+	CTRL_bit_VONOFF = 0x01,
+	CTRL_bit_IFC = 0x02,
+	CTRL_bit_XCK = 0x04,
+	CTRL_bit_TRIG_OUT = 0x08,
+	CTRL_bit_BOTH_SLOPE = 0x10,
+	CTRL_bit_SLOPE = 0x20,
+	CTRL_bit_STRIGIN = 0x40,
+	CTRL_bit_BSTART = 0x80,
+	// CTRLB
+	CTRL_bit_STI0 = 0x0100,
+	CTRL_bit_STI1 = 0x0200,
+	CTRL_bit_STI2 = 0x0400,
+	CTRL_bits_STI = 0x0700,
+	CTRL_bit_SHON = 0x0800,
+	CTRL_bit_BTI0 = 0x1000,
+	CTRL_bit_BTI1 = 0x2000,
+	CTRL_bit_BTI2 = 0x4000,
+	CTRL_bits_BTI = 0x7000,
+	// CTRLC
+	CTRL_bit_I = 0x010000,
+	CTRL_bit_S1 = 0x020000,
+	CTRL_bit_S2 = 0x040000,
+	CTRL_bit_shift_s = 0x080000,
+	CTRL_bit_eoi = 0x100000,
+	CTRL_bit_eoi_chb = 0x200000,
 };
 
 enum XCK_bits_t
