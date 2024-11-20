@@ -348,9 +348,9 @@ struct camera_settings
 	 */
 	uint32_t is_cooled_camera_legacy_mode;
 	/**
-	 * bnc_out is the output mode for the XCK output of the Camera Control box. See enum \ref bnc_out_t in enum_settings.h for options. Further information about bnc out can be found in the manual in chapter 3.3.1.
+	 * monitor is the output mode for the monitor output of the Camera Control. See enum \ref monitor_t in enum_settings.h for options. Further information about monitor can be found in the manual in chapter 3.3.1.
 	 */
-	uint32_t bnc_out;
+	uint32_t monitor;
 };
 
 /**

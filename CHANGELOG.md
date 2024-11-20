@@ -10,6 +10,7 @@ The hardware version number is the current version at release time.
 ### API Changes
 #### Added
 #### Changed
+* Rename setting bnc_out to monitor
 #### Removed
 #### Fixed
 #### Deprecated
