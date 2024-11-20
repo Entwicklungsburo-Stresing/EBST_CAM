@@ -7,11 +7,7 @@
  * \brief Initialize camera registers.
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes Cam_Init(uint32_t drvno)
 {
@@ -84,7 +80,7 @@ es_status_codes Cam_Init(uint32_t drvno)
  * Do this first in the camera initialisation routine.
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \return es_status_codes
+ * \return \ref es_status_codes
  */
 es_status_codes Cam_DoSoftReset(uint32_t drvno)
 {
@@ -98,7 +94,7 @@ es_status_codes Cam_DoSoftReset(uint32_t drvno)
  * Do this last in the camera initialisation routine.
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \return es_status_codes
+ * \return \ref es_status_codes
  */
 es_status_codes Cam_Initialize(uint32_t drvno)
 {
@@ -111,9 +107,7 @@ es_status_codes Cam_Initialize(uint32_t drvno)
  *
  * 	Sets register in camera.
  * \param drvno selects PCIe board
- * \return es_status_codes
- *		- es_no_error
- *		- es_register_write_failed
+ * \return \ref es_status_codes
  */
 es_status_codes Cam3001_Init(uint32_t drvno)
 {
@@ -131,9 +125,7 @@ es_status_codes Cam3001_Init(uint32_t drvno)
  * \param drvno selects PCIe board
  * \param adc_mode 0: normal mode, 2: custom pattern
  * \param custom_pattern fixed output for test mode, ignored when test mode FALSE
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
+ * \return \ref es_status_codes
  */
 es_status_codes Cam3010_Init(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern)
 {
@@ -155,11 +147,7 @@ es_status_codes Cam3010_Init(uint32_t drvno, uint8_t adc_mode, uint16_t custom_p
  * 	Then the ADC can be programmed further via SPI in the next frames.
  * 	Called by Cam3010_Init
  * \param drvno selects PCIe board
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes Cam3010_ADC_reset(uint32_t drvno)
 {
@@ -172,11 +160,7 @@ es_status_codes Cam3010_ADC_reset(uint32_t drvno)
  * \param drvno selects PCIe board
  * \param adc_mode
  * \param custom_pattern
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes Cam3010_ADC_setOutputMode(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern) {
 
@@ -196,11 +180,7 @@ es_status_codes Cam3010_ADC_setOutputMode(uint32_t drvno, uint8_t adc_mode, uint
  * \brief
  * \param drvno selects PCIe board
  * \param custom_pattern
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_pattern) {
 	es_status_codes status;
@@ -221,11 +201,7 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
  *
  * 	Sets registers in ADC ADS5294.
  * \param drvno selects PCIe board
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes Cam3030_Init(uint32_t drvno)
 {
@@ -261,11 +237,7 @@ es_status_codes Cam3030_Init(uint32_t drvno)
  * 	Resets register of ADC ADS5294 to default state (output interface is 1 wire!).
  * 	Called by Cam3030_Init
  * \param drvno selects PCIe board
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes Cam3030_ADC_reset(uint32_t drvno)
 {
@@ -280,11 +252,7 @@ es_status_codes Cam3030_ADC_reset(uint32_t drvno)
  * 	Called by Cam3030_Init - comment for older versions and rebuild
  * 	or use on e-lab test computer desktop LabView folder lv64hs (bool switch in 3030 init tab)
  * \param drvno selects PCIe board
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes Cam3030_ADC_twoWireModeEN(uint32_t drvno)
 {
@@ -302,9 +270,7 @@ es_status_codes Cam3030_ADC_twoWireModeEN(uint32_t drvno)
  * 	Called by Cam3030_Init
  * \param drvno selects PCIe board
  * \param gain of ADC
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
+ * \return \ref es_status_codes
  */
 es_status_codes Cam3030_ADC_SetGain(uint32_t drvno, uint8_t gain)
 {
@@ -324,11 +290,7 @@ es_status_codes Cam3030_ADC_SetGain(uint32_t drvno, uint8_t gain)
  * \param g6 channel 6
  * \param g7 channel 7
  * \param g8 channel 8
- * \return es_status_codes
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes SetADGain(uint32_t drvno, uint8_t fkt, uint8_t g1, uint8_t g2, uint8_t g3, uint8_t g4, uint8_t g5, uint8_t g6, uint8_t g7, uint8_t g8)
 {
@@ -380,11 +342,7 @@ es_status_codes SetADGain(uint32_t drvno, uint8_t fkt, uint8_t g1, uint8_t g2, u
  * \param drvno selects PCIe board
  * \param adc_mode 1: ramp, 2: custom pattern
  * \param custom_pattern (only used when adc_mode = 2)
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes Cam3030_ADC_RampOrPattern(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern)
 {
@@ -414,11 +372,7 @@ es_status_codes Cam3030_ADC_RampOrPattern(uint32_t drvno, uint8_t adc_mode, uint
  * Global enable must be set to true, if you want to use at least one filter. Filters can be enabled / disabled separately by Cam3030_ADC_SetFilter(). When the global filter enable is true, all channels are either passed through the filter or through a dummy delay so that the overall latency of all channels is 20 clock cycles.
  * \param drvno selects PCIe board
  * \param enable true:
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes Cam3030_ADC_Global_En_Filter(uint32_t drvno, bool enable)
 {
@@ -444,12 +398,7 @@ es_status_codes Cam3030_ADC_Global_En_Filter(uint32_t drvno, bool enable)
  * \param use_filter 1: enable filter, 0: disable filter
  * \param hpf_corner high pass filter corner in values k from 2 to 10
  * \param en_hpf 1: high pass filter enabled, 0: disabled
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
- *		- es_parameter_out_of_range
+ * \return \ref es_status_codes
  */
 es_status_codes Cam3030_ADC_SetFilterSettings(uint32_t drvno, uint8_t channel, uint8_t coeff_set, uint8_t decimation_factor, uint8_t odd_tap, uint8_t use_filter, uint8_t hpf_corner, uint8_t en_hpf)
 {
@@ -465,12 +414,7 @@ es_status_codes Cam3030_ADC_SetFilterSettings(uint32_t drvno, uint8_t channel, u
  * \param coefficient_number 0...11
  * \param enable 0: disable, 1: enable
  * \param coefficient 12 bit signed value
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
- *		- es_parameter_out_of_range
+ * \return \ref es_status_codes
  */
 es_status_codes Cam3030_ADC_SetFilterCustomCoefficient(uint32_t drvno, uint8_t channel, uint8_t coefficient_number, uint8_t enable, uint16_t coefficient)
 {
@@ -491,11 +435,7 @@ es_status_codes Cam3030_ADC_SetFilterCustomCoefficient(uint32_t drvno, uint8_t c
  *		- 1: 1/2 of ADC sampling rate
  *		- 2: 1/4 of ADC sampling rate
  *		- 3: 1/8 of ADC sampling rate
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes Cam3030_ADC_SetDataRate(uint32_t drvno, uint8_t data_rate)
 {
@@ -510,11 +450,7 @@ es_status_codes Cam3030_ADC_SetDataRate(uint32_t drvno, uint8_t data_rate)
  * \param enable
  *		- true: enable noise suppression mode
  *		- false: disable noise suppression mode
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes Cam3030_ADC_SetLFNS(uint32_t drvno, bool enable)
 {
@@ -535,11 +471,7 @@ es_status_codes Cam3030_ADC_SetLFNS(uint32_t drvno, bool enable)
  *		- 0: 1 sample per pixel (default), adc clk = sen clk = adc data rate = 25MHz
  *		- 1: average over 2 samples per pixel, adc clk = 50MHz,  sen clk = adc data rate = 12,5Mhz. Notice here: 4 samples are taken during 1 pixel, but the first two samples are thrown away, because the video signal has not reached it's high during sampling time. The "throwing away" is done with the ADC filters.
  *		- 2: 1 sample per pixel, adc clk = 25 MHz, 12,5 MHz. 2 samples are taken during 1 pixel, but one is thrown away.
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 {
@@ -636,11 +568,7 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param sensor_reset_or_hsir_ec See \ref camera_register_addresses_t.cam_adaddr_sensor_reset_length for more information.
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes Cam_SetSensorResetOrHsirEc(uint32_t drvno, uint16_t sensor_reset_or_hsir_ec)
 {
@@ -653,11 +581,7 @@ es_status_codes Cam_SetSensorResetOrHsirEc(uint32_t drvno, uint16_t sensor_reset
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param level level 0..7 / 0=off, 7=min -> see cooling manual
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes Cam_SetTemp(uint32_t drvno, uint8_t level)
 {
@@ -681,11 +605,7 @@ es_status_codes Cam_SetTemp(uint32_t drvno, uint8_t level)
  * \param maddr master address for specifying device (2 for ADC)
  * \param adaddr register address
  * \param data data
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes Cam_SendData(uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16_t data)
 {
@@ -761,11 +681,7 @@ es_status_codes Cam_SetupPartialBinning(uint32_t drvno)
  * 	Sets corresponding camera register: maddr = 0, adadr = 5;
  * \param drvno selects PCIe board
  * \param LED_OFF 1 -> leds off, 0 -> led on
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes Cam_SetLedOff(uint32_t drvno, uint8_t LED_OFF)
 {
@@ -777,11 +693,7 @@ es_status_codes Cam_SetLedOff(uint32_t drvno, uint8_t LED_OFF)
  * When there are more cameras in line, the cameras are handing their positions one to another.
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes Cam_SetPosition(uint32_t drvno)
 {
@@ -795,11 +707,7 @@ es_status_codes Cam_SetPosition(uint32_t drvno)
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param startPixel Position of IOCtrl data in pixel
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes CamIOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixel)
 {
@@ -814,12 +722,7 @@ es_status_codes CamIOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixe
  * \param number Number of output: 1 ... 7
  * \param width_in_5ns Set width of pulse in 5ns steps.
  * \param delay_in_5ns Set delay of pulse in 5ns steps.
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_parameter_out_of_range
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes CamIOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns)
 {
@@ -870,10 +773,7 @@ es_status_codes CamIOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t wi
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param width_in_5ns Set width of pulse in 5ns steps. Array with 7 entries.
  * \param delay_in_5ns Set delay of pulse in 5ns steps. Array with 7 entries.
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_parameter_out_of_range
+ * \return \ref es_status_codes
  */
 es_status_codes CamIOCtrl_setAllOutputs(uint32_t drvno, uint32_t* width_in_5ns, uint32_t* delay_in_5ns)
 {
@@ -891,11 +791,7 @@ es_status_codes CamIOCtrl_setAllOutputs(uint32_t drvno, uint32_t* width_in_5ns, 
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param period_in_10ns Period of T0 in 10ns steps.
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
- *		- es_register_read_failed
- *		- es_camera_not_found
+ * \return \ref es_status_codes
  */
 es_status_codes CamIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 {
