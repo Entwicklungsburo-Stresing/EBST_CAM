@@ -978,7 +978,9 @@ INPUT                  = ../ESLSCDLL/ESLSCDLL.c \
                          ../shared_src/enum_settings.h \
                          ../ESLSCDLL/Board.c \
                          ../ESLSCDLL/win/Board_ll.c \
-                         ../ESLSCDLL/Direct2dViewer_c.cpp
+                         ../ESLSCDLL/Direct2dViewer_c.cpp \
+                         ../ESLSCDLL/Camera.h \
+                         ../ESLSCDLL/Camera.c
 
 # This tag can be used to specify the character encoding of the source files
 # that Doxygen parses. Internally Doxygen uses the UTF-8 encoding. Doxygen uses
