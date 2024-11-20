@@ -35,7 +35,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block timer&lt;/span&gt; is the time between the start of two blocks of readouts. This time is used when &lt;span style=&quot; font-style:italic;&quot;&gt;Btimer&lt;/span&gt; is selected for &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;btimer&lt;/span&gt; is a 28 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1 µs&lt;br/&gt;step: 1 µs&lt;br/&gt;max: 268,435,455 µs = 268.435455 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;btime_in_microsec&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;btimer&lt;/span&gt; can be found in the manual in chapter 6.4.4.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="showGroupSeparator" stdset="0">
             <bool>true</bool>
@@ -63,7 +63,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block trigger input counter&lt;/span&gt; determines how many block trigger inputs are skipped before the next block start is triggered. Every bticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; is a 7 bit unsigned integer. Introduced in PCIe board version 222.12.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="maximum">
             <number>127</number>
@@ -157,7 +157,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Block trigger input determines the signal, on which one block of readouts is started.&lt;/p&gt;&lt;p&gt;0: I - external trigger, I input on PCIe card&lt;br/&gt;1: S1 - external trigger, S1 input on PCIe card&lt;br/&gt;2: S2 - external trigger, S2 input on PCIe card&lt;br/&gt;3: S1S2 - external trigger when S1 and S2 are high&lt;br/&gt;4: STimer - trigger with internal timer. Select the time between two blocks of readouts with btime.&lt;br/&gt;5: S1chopper - &lt;br/&gt;6: S2chopper - &lt;br/&gt;7: S1S2chopper - &lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bti_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information on trigger signals can be found in the manual in chapter 6.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="layoutDirection">
-            <enum>Qt::LeftToRight</enum>
+            <enum>Qt::LayoutDirection::LeftToRight</enum>
            </property>
            <item>
             <property name="text">
@@ -249,7 +249,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block exposure control &lt;/span&gt;adds a delay time between the block trigger &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; and the start of the block. Mechanical shutters can be controlled with this setting. The &lt;span style=&quot; font-style:italic;&quot;&gt;bec&lt;/span&gt; time is added between the end of &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; and the start of the block. &lt;span style=&quot; font-style:italic;&quot;&gt;bec&lt;/span&gt; is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 4,294,967,295 * 10 ns = 42,949,672,950 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bec_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;bec&lt;/span&gt; can be found in the manual in chapter 4.9.1 and 6.2.6.3. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="suffix">
             <string>0 ns</string>
@@ -335,7 +335,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan delay after trigger&lt;/span&gt; is the delay time between the trigger starting a scan, which is determined by &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt; and the actual start of the scan. &lt;span style=&quot; font-style:italic;&quot;&gt;sdat&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 2,147,483,647 * 10 ns = 21,474,836,470 ns = 21.474836470 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sdat_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;sdat&lt;/span&gt; can be found in the manual in chapter 2.9.2 and 6.2.4.10.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="suffix">
             <string>0 ns</string>
@@ -357,10 +357,10 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan exposure control &lt;/span&gt;adds a delay time between the scan trigger &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt; and the start of the camera read out (start of XCK). Some sensors use this time for a electronic exposure control. Also mechanical shutters can be controlled with this setting. The &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; time is added between the end of &lt;span style=&quot; font-style:italic;&quot;&gt;sdat&lt;/span&gt; and the start of the camera read out. &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 4,294,967,295 * 10 ns = 42,949,672,950 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sec_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; can be found in the manual in chapter 4.9.1 and 6.2.4.11. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="correctionMode">
-            <enum>QAbstractSpinBox::CorrectToPreviousValue</enum>
+            <enum>QAbstractSpinBox::CorrectionMode::CorrectToPreviousValue</enum>
            </property>
            <property name="suffix">
             <string>0 ns</string>
@@ -433,7 +433,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan trigger input counter&lt;/span&gt; determines how many scan trigger inputs are skipped before the next measurement is triggered. Every sticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="maximum">
             <number>127</number>
@@ -443,7 +443,7 @@
          <item row="2" column="0">
           <spacer name="horizontalSpacer_3">
            <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+            <enum>Qt::Orientation::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -475,7 +475,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XCK delay&lt;/span&gt; was the time between the high slope of XCK and the actual start of the camera read out. This is done by delaying VON relative to XCK. Since P222_09 cameras are not designed to interact with the VON signal anymore. For the following camera versions &lt;span style=&quot; font-style:italic;&quot;&gt;xck delay&lt;/span&gt; can be used:&lt;/p&gt;&lt;p&gt;- 205.X&lt;br/&gt;- 215.6 and older&lt;br/&gt;- 206.X&lt;br/&gt;- 216.X&lt;/p&gt;&lt;p&gt;VCLKs are generated inside the camera and the delay between integrator and XCK can be achieved by using the analog delay of the camera control. The option remains here for legacy operation. &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;xckdelay = 500ns + value * 10ns&lt;br/&gt;disable: 0&lt;br/&gt;min 1: 500 ns + 1 * 10ns = 510 ns&lt;br/&gt;max 2.147.483.647: 500 ns + 2.147.483.647 * 10 ns = 21.474.836.970 ns = 21,474.836.970 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; can be found in the manual in chapter 6.2.5.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="suffix">
             <string>0 ns</string>
@@ -523,7 +523,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block delay after trigger&lt;/span&gt; is the delay time between the trigger starting a block of scans, which is determined by &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; and the actual start of the block of scans. &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 2,147,483,647 * 10 ns = 21,474,836,470 ns = 21.474836470 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bdat_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; can be found in the manual in chapter 2.9.2 and 6.2.6.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="suffix">
             <string>0 ns</string>
@@ -539,7 +539,7 @@
          <item row="0" column="1">
           <spacer name="verticalSpacer_4">
            <property name="orientation">
-            <enum>Qt::Vertical</enum>
+            <enum>Qt::Orientation::Vertical</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -558,7 +558,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;S1 S2 read delay&lt;/span&gt; controls the delay between the trigger and the moment, when the status of the S1 and S2 inputs are read. When the delay exceeds XCK, S1 and S2 are never read. &lt;span style=&quot; font-style:italic;&quot;&gt;S1 S2 read delay &lt;/span&gt;is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 4,294,967,295 * 10 ns = 42,949,672,950 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;s1s2_read_delay_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information information about &lt;span style=&quot; font-style:italic;&quot;&gt;S1 S2 read delay &lt;/span&gt;can be found in the manual in chapter 6.2.5.13.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="suffix">
             <string>0 ns</string>
@@ -587,7 +587,7 @@
          <item row="21" column="1">
           <spacer name="verticalSpacer_3">
            <property name="orientation">
-            <enum>Qt::Vertical</enum>
+            <enum>Qt::Orientation::Vertical</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -626,7 +626,7 @@
          <item row="14" column="4">
           <spacer name="horizontalSpacer_7">
            <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+            <enum>Qt::Orientation::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -645,7 +645,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan timer&lt;/span&gt; is the time between the start of two readouts. This time is used when &lt;span style=&quot; font-style:italic;&quot;&gt;STimer&lt;/span&gt; is selected for &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; is a 28 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1 µs&lt;br/&gt;step: 1 µs&lt;br/&gt;max: 268,435,455 µs = 268.435455 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;stime_in_microsec&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; can be found in the manual in chapter 6.4.4.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="showGroupSeparator" stdset="0">
             <bool>true</bool>
@@ -686,7 +686,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Trigger output counter&lt;/span&gt; determines how many XCK are skipped until the output &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; shows the XCK signal. Use &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; for the setting &lt;span style=&quot; font-style:italic;&quot;&gt;tor&lt;/span&gt; to see &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; at the output of the PCIe board. &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;Example: tocnt = 2 =&amp;gt; skip every first and second XCK, show XCK on the PCIe output on every third XCK.&lt;/p&gt;&lt;p&gt;min: 0 (TO_CNT_OUT = XCK)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="maximum">
             <number>127</number>
@@ -765,7 +765,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor reset length or HSIR EC&lt;/span&gt; either controls the length of the reset pulse between two camera readouts or the exposure time of the high speed infrared sensor. The purpose of this setting depends on &lt;span style=&quot; font-style:italic;&quot;&gt;SENSOR TYPE.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;HSVIS:&lt;br/&gt;This reset can be used, to completely clear the sensor.&lt;/p&gt;&lt;p&gt;min: 0 ns&lt;br/&gt;step: 4 ns&lt;br/&gt;default: 400 ns&lt;br/&gt;max: 262,140 ns&lt;/p&gt;&lt;p&gt;HSIR:&lt;br/&gt;When &lt;span style=&quot; font-style:italic;&quot;&gt;SENSOR TYPE&lt;/span&gt; is HSIR this setting controls the exposure time of the sensor. The exposure time cannot be shorter than the minimum. If the value is smaller than the minimum the exposure time will be the minumum. If the value exceeds the repetition rate of the measurement, there will be samples with a zero line.&lt;/p&gt;&lt;p&gt;min: 21,440 ns&lt;br/&gt;step: 160 ns&lt;br/&gt;default: 22,400 ns&lt;br/&gt;max: 10,485,600 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_reset_or_hsir_ec&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor reset can be found in the manual in chapter 4.9.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="showGroupSeparator" stdset="0">
             <bool>true</bool>
@@ -833,7 +833,7 @@
          <item row="2" column="0">
           <spacer name="horizontalSpacerLeft">
            <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+            <enum>Qt::Orientation::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -930,7 +930,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;IOCTRL impact start pixel&lt;/span&gt; is the position in the pixel array where the information of voltage or integrator inputs are written. The number of these inputs can differ, so length of these additional information can differ, too. The setting specifies the first pixel where the information is written, so the information can be read from this one and the following pixels. IOCTRL impact start pixel is a 16 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 23&lt;br/&gt;step: 1&lt;br/&gt;default: 1078&lt;br/&gt;max: 65535&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;ioctrl_impact_start_pixel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;IOCTRL impact start pixel&lt;/span&gt; can be found in the manual in chapter 7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="minimum">
             <number>23</number>
@@ -946,7 +946,7 @@
          <item row="2" column="3">
           <spacer name="horizontalSpacerRight">
            <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+            <enum>Qt::Orientation::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -959,7 +959,7 @@
          <item row="18" column="1">
           <spacer name="verticalSpacerBottom">
            <property name="orientation">
-            <enum>Qt::Vertical</enum>
+            <enum>Qt::Orientation::Vertical</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -981,7 +981,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Camcnt&lt;/span&gt; is the number of cameras which are connected to one PCIe board. This could be multiple cameras connected via a chain to one PCIe board or multiple channel on one camera control box. 0 is a valid input for operating a PCIe card without any camera connected and only use its special inputs. &lt;span style=&quot; font-style:italic;&quot;&gt;Camcnt&lt;/span&gt; is a 4 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;max: 15&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;camcnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="minimum">
             <number>0</number>
@@ -997,7 +997,7 @@
          <item row="0" column="1">
           <spacer name="verticalSpacerTop">
            <property name="orientation">
-            <enum>Qt::Vertical</enum>
+            <enum>Qt::Orientation::Vertical</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -1016,7 +1016,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;GPX offset&lt;/span&gt; is controlling the output offset of the TDC-GPX IC on the TDC add on board for the PCIe card. The TDC-GPX IC can be used to measure the time delay between one start and two stop signals in picosecond resolution. Adding an offset can improve the accuracy of the TDC-GPX IC. GPX offset is a 18 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;default: 1000&lt;br/&gt;max: 262,143&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;gpx_offset&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;gpx offset&lt;/span&gt; can be found in the manual in chapter 10.2. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="showGroupSeparator" stdset="0">
             <bool>true</bool>
@@ -1048,7 +1048,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Sensor gain&lt;/span&gt; is controlling the internal gain function of some infrared sensors. For the some sensors gain can be switched on or off, others sensor got multiple levels of gain.&lt;/p&gt;&lt;p&gt;- camera system 3001&lt;br/&gt;gain off: 0&lt;br/&gt;gain on: 1 &lt;/p&gt;&lt;p&gt;- camera system 3030&lt;br/&gt;gain off: 0&lt;br/&gt;step: 1&lt;br/&gt;max gain: 3&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sensor_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about sensor gain can be found in the manual in chapters 3.3.1, 3.4.1.1, 4.5.2, 8.4.4, 8.7.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="maximum">
             <number>3</number>
@@ -1067,7 +1067,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Pixel&lt;/span&gt; is the number of pixels in one sensor. &lt;span style=&quot; font-style:italic;&quot;&gt;Pixel&lt;/span&gt; is a 16 bit unsigned integer. Only integer multiples of 64 are allowed. Typical values are: 576, 1024, 1088, 2112&lt;/p&gt;&lt;p&gt;min: 64&lt;br/&gt;step: 64&lt;br/&gt;max: 8256&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;pixel&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="minimum">
             <number>64</number>
@@ -1092,7 +1092,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;ADC gain&lt;/span&gt; is controlling the gain function of the ADC in 3030 high speed cameras.&lt;span style=&quot; font-style:italic;&quot;&gt; ADC gain&lt;/span&gt; is a 8 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;default: 6&lt;br/&gt;max: 12&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;adc_gain&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about adc_gain can be found in the manual in chapters 3.4.2.1. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
           </widget>
          </item>
@@ -1334,7 +1334,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Area lines binning&lt;/span&gt; is the count of lines which are summed up in area mode for FFT sensors. When this is 1, every line is read out separately. When it is 2, every 2 lines are summed up in the sensor and read out as one line, so the count of samples for a complete readout gets divided by 2. The same applies for higher values. &lt;span style=&quot; font-style:italic;&quot;&gt;Area lines binning&lt;/span&gt; is a 12 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1&lt;br/&gt;step: 1&lt;br/&gt;default: 1&lt;br/&gt;max: 4095&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;lines_binning&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the area mode can be found in the manual in chapter 4.5.1.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="minimum">
             <number>1</number>
@@ -1353,7 +1353,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Region size&lt;/span&gt; is the size of each region for the partial binning mode. The sum of all active regions, which is defined by &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt;, must equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt;. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used.&lt;/p&gt;&lt;p&gt;The check box &lt;span style=&quot; font-style:italic;&quot;&gt;automatic equal&lt;/span&gt; can be activated to distribute the lines equally to the active region sizes. This only has an effect in the guided setting mode.&lt;/p&gt;&lt;p&gt;This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.&lt;br/&gt;regions_size[0] = 4&lt;br/&gt;regions_size[1] = 64&lt;br/&gt;regions_size[2] = 4&lt;br/&gt;regions_size[3] = 0&lt;br/&gt;regions_size[4] = 0&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;region_size&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="maximum">
             <number>9999</number>
@@ -1382,7 +1382,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Number of regions&lt;/span&gt; determines in how many regions the sensor gets divided in the FFT mode range of interest. Setting it to 1 would equal the area mode, so the minimum is 2.&lt;/p&gt;&lt;p&gt;min: 2&lt;br/&gt;step: 1&lt;br/&gt;max: 5&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;number_of_regions&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="minimum">
             <number>2</number>
@@ -1472,7 +1472,7 @@
          <item row="0" column="1">
           <spacer name="verticalSpacer_5">
            <property name="orientation">
-            <enum>Qt::Vertical</enum>
+            <enum>Qt::Orientation::Vertical</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -1517,7 +1517,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Region size&lt;/span&gt; is the size of each region for the partial binning mode. The sum of all active regions, which is defined by &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt;, must equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt;. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used.&lt;/p&gt;&lt;p&gt;The check box &lt;span style=&quot; font-style:italic;&quot;&gt;automatic equal&lt;/span&gt; can be activated to distribute the lines equally to the active region sizes. This only has an effect in the guided setting mode.&lt;/p&gt;&lt;p&gt;This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.&lt;br/&gt;regions_size[0] = 4&lt;br/&gt;regions_size[1] = 64&lt;br/&gt;regions_size[2] = 4&lt;br/&gt;regions_size[3] = 0&lt;br/&gt;regions_size[4] = 0&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;region_size&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="maximum">
             <number>9999</number>
@@ -1527,7 +1527,7 @@
          <item row="1" column="3">
           <spacer name="horizontalSpacer_6">
            <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+            <enum>Qt::Orientation::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -1546,7 +1546,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;VFREQ&lt;/span&gt; controls the vertical clock frequency for FFT sensors. Different sensors are capable of different vertical clock speeds, so this setting should match your sensor. You can find this information in the manual. &lt;span style=&quot; font-style:italic;&quot;&gt;VFREQ&lt;/span&gt; is the period of the vertical clock, so a higher &lt;span style=&quot; font-style:italic;&quot;&gt;VFREQ&lt;/span&gt; means a lower frequency. &lt;span style=&quot; font-style:italic;&quot;&gt;VFREQ&lt;/span&gt; is 8 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1 * 256 ns = 256 ns =&amp;gt; 3.9 MHz&lt;br/&gt;step: 1 * 256 ns = 256 ns&lt;br/&gt;max: 255 * 256 ns = 65,280 ns =&amp;gt; 15.3 kHz&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;vfreq&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about vfreq and FFT sensors can be found in the manual in chapters 1.4, 3.3.5 and 11.3.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="minimum">
             <number>1</number>
@@ -1559,7 +1559,7 @@
          <item row="12" column="1">
           <spacer name="verticalSpacer_6">
            <property name="orientation">
-            <enum>Qt::Vertical</enum>
+            <enum>Qt::Orientation::Vertical</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -1578,7 +1578,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt; is the count of vertical lines for FFT sensors. This setting should match your sensor. You can find this information in the manual. &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt; is a 12 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1&lt;br/&gt;step: 1&lt;br/&gt;default: 64&lt;br/&gt;max: 4095&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;fft_lines&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about FFT sensors can be found in the manual in chapters 1.4 and 11.3.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="minimum">
             <number>1</number>
@@ -1610,7 +1610,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Region size&lt;/span&gt; is the size of each region for the partial binning mode. The sum of all active regions, which is defined by &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt;, must equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt;. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used.&lt;/p&gt;&lt;p&gt;The check box &lt;span style=&quot; font-style:italic;&quot;&gt;automatic equal&lt;/span&gt; can be activated to distribute the lines equally to the active region sizes. This only has an effect in the guided setting mode.&lt;/p&gt;&lt;p&gt;This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.&lt;br/&gt;regions_size[0] = 4&lt;br/&gt;regions_size[1] = 64&lt;br/&gt;regions_size[2] = 4&lt;br/&gt;regions_size[3] = 0&lt;br/&gt;regions_size[4] = 0&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;region_size&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="maximum">
             <number>9999</number>
@@ -1652,7 +1652,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Region size&lt;/span&gt; is the size of each region for the partial binning mode. The sum of all active regions, which is defined by &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt;, must equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt;. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used.&lt;/p&gt;&lt;p&gt;The check box &lt;span style=&quot; font-style:italic;&quot;&gt;automatic equal&lt;/span&gt; can be activated to distribute the lines equally to the active region sizes. This only has an effect in the guided setting mode.&lt;/p&gt;&lt;p&gt;This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.&lt;br/&gt;regions_size[0] = 4&lt;br/&gt;regions_size[1] = 64&lt;br/&gt;regions_size[2] = 4&lt;br/&gt;regions_size[3] = 0&lt;br/&gt;regions_size[4] = 0&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;region_size&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="maximum">
             <number>9999</number>
@@ -1675,7 +1675,7 @@
          <item row="1" column="0">
           <spacer name="horizontalSpacer_5">
            <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+            <enum>Qt::Orientation::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -1707,7 +1707,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Region size&lt;/span&gt; is the size of each region for the partial binning mode. The sum of all active regions, which is defined by &lt;span style=&quot; font-style:italic;&quot;&gt;number of regions&lt;/span&gt;, must equal &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt;. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used.&lt;/p&gt;&lt;p&gt;The check box &lt;span style=&quot; font-style:italic;&quot;&gt;automatic equal&lt;/span&gt; can be activated to distribute the lines equally to the active region sizes. This only has an effect in the guided setting mode.&lt;/p&gt;&lt;p&gt;This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.&lt;br/&gt;regions_size[0] = 4&lt;br/&gt;regions_size[1] = 64&lt;br/&gt;regions_size[2] = 4&lt;br/&gt;regions_size[3] = 0&lt;br/&gt;regions_size[4] = 0&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;region_size&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="maximum">
             <number>9999</number>
@@ -1726,7 +1726,7 @@
        <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
-          <enum>Qt::Vertical</enum>
+          <enum>Qt::Orientation::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -1747,7 +1747,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Adc mode custom pattern&lt;/span&gt; is the constant output value of all 8 ADC channls if &lt;span style=&quot; font-style:italic;&quot;&gt;adc mode&lt;/span&gt; is set to &lt;span style=&quot; font-style:italic;&quot;&gt;custom pattern&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;Adc mode custom pattern&lt;/span&gt; is a 14 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0&lt;br/&gt;step: 1&lt;br/&gt;max: 16383&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;adc_custom_pattern&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="maximum">
             <number>16383</number>
@@ -1796,7 +1796,7 @@
          <item row="4" column="3">
           <spacer name="horizontalSpacer_2">
            <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+            <enum>Qt::Orientation::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -1809,7 +1809,7 @@
          <item row="4" column="0">
           <spacer name="horizontalSpacer">
            <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+            <enum>Qt::Orientation::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -1865,19 +1865,19 @@
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;File path is specifying the path where the measurement data is saved, when &lt;span style=&quot; font-style:italic;&quot;&gt;write data to disc&lt;/span&gt; is activated. File path is a char array with the size 256, so the maximum path length is 256 characters.&lt;/p&gt;&lt;p&gt;example value: C:/Users/XY/&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;file_path&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="verticalScrollBarPolicy">
-              <enum>Qt::ScrollBarAlwaysOff</enum>
+              <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
              </property>
              <property name="horizontalScrollBarPolicy">
-              <enum>Qt::ScrollBarAlwaysOff</enum>
+              <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
              </property>
              <property name="lineWrapMode">
-              <enum>QPlainTextEdit::NoWrap</enum>
+              <enum>QPlainTextEdit::LineWrapMode::NoWrap</enum>
              </property>
              <property name="plainText">
               <string/>
              </property>
              <property name="textInteractionFlags">
-              <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+              <set>Qt::TextInteractionFlag::TextSelectableByKeyboard|Qt::TextInteractionFlag::TextSelectableByMouse</set>
              </property>
             </widget>
            </item>
@@ -1903,7 +1903,7 @@
           </layout>
          </item>
          <item row="0" column="2">
-          <widget class="QComboBox" name="comboBoxBncOut">
+          <widget class="QComboBox" name="comboBoxMonitor">
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mode of the output of the Camera Control box&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
@@ -1955,7 +1955,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLabel" name="labelBncOut">
+          <widget class="QLabel" name="labelMonitor">
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mode of the output of the Camera Control box&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
@@ -1963,7 +1963,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Xck out cc&lt;/span&gt; is the output mode for the XCK output of the Camera Control box.&lt;/p&gt;&lt;p&gt;0: &lt;span style=&quot; font-style:italic;&quot;&gt;XCK&lt;/span&gt; is high during the readout of the camera.&lt;br/&gt;1: &lt;span style=&quot; font-style:italic;&quot;&gt;EXP_WIN&lt;/span&gt; stands for exposure window and is high, when the sensor is ready to be exposed to light.&lt;br/&gt;2: The option &lt;span style=&quot; font-style:italic;&quot;&gt;ADC_CLK&lt;/span&gt; sets the output to the ADC clock.&lt;br/&gt;3: &lt;span style=&quot; font-style:italic;&quot;&gt;Vin&lt;/span&gt; is high when the voltage input is sampled.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bnc_out&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Furhter information about bnc out can be found in the manual in chapter 3.3.1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>xck out cc</string>
+            <string>monitor</string>
            </property>
           </widget>
          </item>
@@ -2173,7 +2173,7 @@
        <item>
         <spacer name="verticalSpacer_2">
          <property name="orientation">
-          <enum>Qt::Vertical</enum>
+          <enum>Qt::Orientation::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -2229,7 +2229,7 @@
   <tabstop>spinBoxRegion3</tabstop>
   <tabstop>spinBoxRegion4</tabstop>
   <tabstop>spinBoxRegion5</tabstop>
-  <tabstop>comboBoxBncOut</tabstop>
+  <tabstop>comboBoxMonitor</tabstop>
   <tabstop>comboBoxOutput</tabstop>
   <tabstop>comboBoxAdcMode</tabstop>
   <tabstop>spinBoxAdcCustom</tabstop>

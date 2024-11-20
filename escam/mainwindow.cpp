@@ -179,7 +179,7 @@ void MainWindow::startPressed()
 		library_settings.camera_settings[drvno].tor = settings.value(settingTorPath, settingTorDefault).toDouble();
 		library_settings.camera_settings[drvno].adc_mode = settings.value(settingAdcModePath, settingAdcModeDefault).toDouble();
 		library_settings.camera_settings[drvno].adc_custom_pattern = settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toDouble();
-		library_settings.camera_settings[drvno].bnc_out = settings.value(settingBncOutPath, settingBncOutDefault).toDouble();
+		library_settings.camera_settings[drvno].monitor = settings.value(settingMonitorPath, settingMonitorDefault).toDouble();
 		library_settings.camera_settings[drvno].tocnt = settings.value(settingTocntPath, settingTocntDefault).toDouble();
 		library_settings.camera_settings[drvno].sticnt = settings.value(settingSticntPath, settingSticntDefault).toDouble();
 		library_settings.camera_settings[drvno].bticnt = settings.value(settingBticntPath, settingBticntDefault).toDouble();

@@ -835,7 +835,7 @@ es_status_codes Cam_SetConfigRegister(uint32_t drvno)
 	uint16_t trigger_mode = ((uint16_t)settings_struct.camera_settings[drvno].trigger_mode_integrator << cam_config_register_bitindex_trigger_mode_cc) & cam_config_register_bits_trigger_mode_cc;
 	uint16_t cool_level = ((uint8_t)settings_struct.camera_settings[drvno].temp_level << cam_config_register_bitindex_temp_level) & cam_config_register_bits_temp_level;
 	uint16_t led_off = ((uint16_t)settings_struct.camera_settings[drvno].led_off << cam_config_register_bitindex_led_off) & cam_config_register_bits_led_off;
-	uint16_t bnc_out = ((uint16_t)settings_struct.camera_settings[drvno].bnc_out << cam_config_register_bitindex_bnc_out) & cam_config_register_bits_bnc_out;
+	uint16_t monitor = ((uint16_t)settings_struct.camera_settings[drvno].monitor << cam_config_register_bitindex_monitor) & cam_config_register_bits_monitor;
 	uint16_t channel_select = 0;
 	switch (settings_struct.camera_settings[drvno].channel_select)
 	{
@@ -851,7 +851,7 @@ es_status_codes Cam_SetConfigRegister(uint32_t drvno)
 		break;
 	}
 	uint16_t sensor_gain_2 = ((uint16_t)settings_struct.camera_settings[drvno].sensor_gain << (cam_config_register_bitindex_sensor_gain_2 - 1)) & cam_config_register_bit_sensor_gain_2;
-	uint16_t configRegister = bnc_out | led_off | cool_level | trigger_mode | sensor_gain | channel_select | sensor_gain_2;
+	uint16_t configRegister = monitor | led_off | cool_level | trigger_mode | sensor_gain | channel_select | sensor_gain_2;
 
 	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_config, configRegister);
 	if (status != es_no_error) return status;
