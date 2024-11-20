@@ -29,9 +29,7 @@ void* Direct2dViewer = NULL;
  * \brief
  *
  * \param drvno PCIe board identifier.
- * \return es_status_codes:
- *		- es_no_error
- *		- es_unlocking_dma_failed
+ * \return \ref es_status_codes
  */
 es_status_codes CleanupDma(uint32_t drvno)
 {
@@ -114,9 +112,7 @@ void *interrupt_handler_array[MAXPCIECARDS] = { &interrupt_handler0, &interrupt_
  * @param drvno PCIe board identifier
  * @param data buffer for data
  * @param address Offset from BaseAdress - in Bytes ! 0..3= Regs of Board.
- * @return es_status_codes
-	- es_no_error
-	- es_register_read_failed
+ * @return \ref es_status_codes
  */
 es_status_codes readRegister_32(uint32_t drvno, uint32_t* data, uint16_t address)
 {
@@ -140,9 +136,7 @@ es_status_codes readRegister_32(uint32_t drvno, uint32_t* data, uint16_t address
  * @param drvno PCIe board identifier
  * @param data buffer for data
  * @param address Offset from BaseAdress - in Bytes ! 0..3= Regs of Board.
- * @return es_status_codes
-	- es_no_error
-	- es_register_read_failed
+ * @return \ref es_status_codes
  */
 es_status_codes readRegister_16(uint32_t drvno, uint16_t* data, uint16_t address)
 {
@@ -166,9 +160,7 @@ es_status_codes readRegister_16(uint32_t drvno, uint16_t* data, uint16_t address
  * @param drvno board number (=1 if one PCI board)
  * @param data pointer to where data is stored
  * @param address offset of register from base address (count in bytes)
- * @return es_status_codes:
-	- es_no_error
-	- es_register_read_failed
+ * @return \ref es_status_codes
  */
 es_status_codes readRegister_8(uint32_t drvno, uint8_t* data, uint16_t address)
 {
@@ -192,9 +184,7 @@ es_status_codes readRegister_8(uint32_t drvno, uint8_t* data, uint16_t address)
  * \param drvno PCIe board identifier.
  * \param data data to write
  * \param address Register offset from BaseAdress - in bytes
- * \return es_status_codes
-	- es_no_error
-	- es_register_write_failed
+ * \return \ref es_status_codes
  */
 es_status_codes writeRegister_32(uint32_t drvno, uint32_t data, uint16_t address)
 {
@@ -219,9 +209,7 @@ es_status_codes writeRegister_32(uint32_t drvno, uint32_t data, uint16_t address
  * \param drvno PCIe board identifier.
  * \param data data to write
  * \param address Register offset from BaseAdress - in bytes
- * \return es_status_codes
-	- es_no_error
-	- es_register_write_failed
+ * \return \ref es_status_codes
  */
 es_status_codes writeRegister_16(uint32_t drvno, uint16_t data, uint16_t address)
 {
@@ -246,9 +234,7 @@ es_status_codes writeRegister_16(uint32_t drvno, uint16_t data, uint16_t address
  * \param drvno board number (=1 if one PCI board)
  * \param data byte value to write
  * \param address Offset from BaseAdress of register (count in bytes)
- * \return es_status_codes
- 	- es_no_error
- 	- es_register_write_failed
+ * \return \ref es_status_codes
  */
 es_status_codes writeRegister_8(uint32_t drvno, uint8_t data, uint16_t address)
 {
@@ -270,10 +256,7 @@ es_status_codes writeRegister_8(uint32_t drvno, uint8_t data, uint16_t address)
  * Check drvno for being legit
  * 
  * \param drvno driver number
- * \return es_status_codes:
- *		- es_invalid_driver_number
- *		- es_invalid_driver_handle
- *		- es_no_error
+ * \return \ref es_status_codes
  */
 es_status_codes checkDriverHandle(uint32_t drvno)
 {
@@ -299,12 +282,7 @@ uint64_t getPhysicalDmaAddress( uint32_t drvno)
  * 
  * Gets address of DMASubBuf from driver and copy it later to our pDMABigBuf.
  * \param drvno PCIe board identifier.
- * \return es_status_codes:
- *		- es_no_error
- *		- es_getting_dma_buffer_failed
- * 		- es_register_read_failed
- *		- es_register_write_failed
- *		- es_enabling_interrupts_failed
+ * \return \ref es_status_codes
  */
 es_status_codes SetupDma( uint32_t drvno )
 {
@@ -365,9 +343,7 @@ es_status_codes enableInterrupt( uint32_t drvno )
  * \brief Disable interrupt.
  * 
  * \param drvno PCIe board identifier.
- * \return es_status_codes:
- *		- es_no_error
- *		- es_disabling_interrupt_failed
+ * \return \ref es_status_codes
  */
 es_status_codes disableInterrupt(uint32_t drvno)
 {
@@ -428,10 +404,7 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
  * \brief Initializes PCIe board on a platform specific way.
  * 
  * \param drvno PCIe board identifier.
- * \return es_status_codes:
- *		- es_no_error
- *		- es_getting_device_info_failed
- *		- es_open_device_failed
+ * \return \ref es_status_codes
  */
 es_status_codes _InitBoard(uint32_t drvno)
 {
@@ -468,12 +441,7 @@ es_status_codes _InitBoard(uint32_t drvno)
 /**
  *  \brief Windows specific function for initializing driver.
  * 
- * \return es_status_codes:
- *		- es_setting_driver_name_failed
- *		- es_debug_init_failed
- *		- es_driver_init_failed
- *		- es_device_not_found
- *		- es_no_error
+ * \return \ref es_status_codes
  */
 es_status_codes _InitDriver()
 {
@@ -539,12 +507,7 @@ es_status_codes _InitDriver()
  * \brief Cleanup driver. Call this before Exit driver.
  *
  * \param drvno PCIe board identifier.
- * \return es_status_codes:
- *		- es_invalid_driver_number
- *		- es_invalid_driver_handle
- *		- es_no_error
- *		- es_unlocking_dma_failed
- *		- es_disabling_interrupt_failed
+ * \return \ref es_status_codes
  */
 es_status_codes CleanupDriver(uint32_t drvno)
 {
@@ -566,8 +529,7 @@ es_status_codes CleanupDriver(uint32_t drvno)
 /**
  * \brief Exit driver. Call this after Cleanup driver.
  * 
- * \return es_status_codes:
- *		- es_no_error
+ * \return \ref es_status_codes
  */
 es_status_codes _ExitDriver()
 {
@@ -585,9 +547,7 @@ es_status_codes _ExitDriver()
  * @param drvno board number (=1 if one PCI board)
  * @param data pointer to where data is stored
  * @param address offset of register (count in bytes)
- * @return es_status_codes:
- *		- es_no_error
- *		- es_register_read_failed
+ * @return \ref es_status_codes
  */
 es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address )
 {
@@ -608,9 +568,7 @@ es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address 
  * \param drvno board number (=1 if one PCI board)
  * \param data long value to write
  * \param address offset from base address of register (count in bytes)
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_write_failed
+ * \return \ref es_status_codes
  */
 es_status_codes writeConfig_32(uint32_t drvno, uint32_t data, uint16_t address)
 {
@@ -779,9 +737,7 @@ uint16_t checkSpaceKeyState()
 /**
  * \brief Set thread to high priority level.
  * 
- * \return es_status_codes:
- *		- es_no_error
- *		- es_setting_thread_priority_failed
+ * \return \ref es_status_codes
  */
 es_status_codes SetPriority()
 {
@@ -796,9 +752,7 @@ es_status_codes SetPriority()
 /**
  * \brief Reset thread priority to normal.
  * 
- * \return es_status_codes:
- *		- es_no_error
- *		- es_setting_thread_priority_failed
+ * \return \ref es_status_codes
  */
 es_status_codes ResetPriority()
 {
@@ -1092,7 +1046,7 @@ void WaitForAllInterruptsDone()
 /**
  * \brief Display information about registers and settings in pop up windows.
  * 
- * \return es_status_codes
+ * \return \ref es_status_codes
  */
 es_status_codes About(uint32_t board_sel)
 {
@@ -1128,10 +1082,7 @@ es_status_codes About(uint32_t board_sel)
 * - vendor ID = EBST
 * - PCI board version (same as label on PCI board)
 * \param drvno board number (=1 if one PCI board)
-* \return es_status_codes
-* 	- es_no_error
-* 	- es_register_read_failed
-*	- es_no_space0
+* \return \ref es_status_codes
 */
 es_status_codes AboutDrv(uint32_t drvno)
 {
@@ -1145,10 +1096,7 @@ es_status_codes AboutDrv(uint32_t drvno)
  * \brief Reads registers 0 to 12 of TDC-GPX chip. Time delay counter option.
  *
  * \param drvno PCIe board identifier
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_read_failed
- *		- es_register_write_failed
+ * \return \ref es_status_codes
  */
 es_status_codes AboutGPX(uint32_t drvno)
 {
@@ -1162,9 +1110,7 @@ es_status_codes AboutGPX(uint32_t drvno)
  * \brief Read registers of space0. Space0 are the control registers of the PCIe board.
  *
  * \param drvno PCIe board identifier
- * \return es_status_codes
- *		- es_no_error
- *		- es_register_read_failed
+ * \return \ref es_status_codes
  */
 es_status_codes AboutS0(uint32_t drvno)
 {
@@ -1178,9 +1124,7 @@ es_status_codes AboutS0(uint32_t drvno)
  * \brief
  *
  * \param drvno PCIe board identifier.
- * \return es_status_codes
- * 		- es_no_error
- *		- es_register_read_failed
+ * \return \ref es_status_codes
  */
 es_status_codes AboutTLPs(uint32_t drvno)
 {
@@ -1194,9 +1138,7 @@ es_status_codes AboutTLPs(uint32_t drvno)
  * \brief
  *
  * \param drvno PCIe board identifier.
- * \return es_status_codes:
- *		- es_no_error
- *		- es_register_read_failed
+ * \return \ref es_status_codes
  */
 es_status_codes AboutPCI(uint32_t drvno)
 {
