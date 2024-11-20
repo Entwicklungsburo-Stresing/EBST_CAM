@@ -1,6 +1,4 @@
-#ifndef MYQCHARTVIEW_H
-#define MYQCHARTVIEW_H
-
+#pragma once
 #include <QtCharts>
 #include <dialogsettings.h>
 #include "crosshairs.h"
@@ -33,5 +31,3 @@ private:
 	QSettings settings;
 	qsizetype countPointsInRect();
 };
-
-#endif // MYQCHARTVIEW_H
