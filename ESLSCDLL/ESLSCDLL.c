@@ -1569,8 +1569,8 @@ DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t*
  */
 DllAccess void DLLGetCurrentScanNumber_multipleBoards(int64_t* sample0, int64_t* block0, int64_t* sample1, int64_t* block1, int64_t* sample2, int64_t* block2, int64_t* sample3, int64_t* block3, int64_t* sample4, int64_t* block4)
 {
-	uint64_t* sample[MAXPCIECARDS] = { sample0, sample1, sample2, sample3, sample4 };
-	uint64_t* block[MAXPCIECARDS] = { block0, block1, block2, block3, block4 };
+	int64_t* sample[MAXPCIECARDS] = { sample0, sample1, sample2, sample3, sample4 };
+	int64_t* block[MAXPCIECARDS] = { block0, block1, block2, block3, block4 };
 	int usedBoards = 0;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		// Check if the drvno'th bit is set
