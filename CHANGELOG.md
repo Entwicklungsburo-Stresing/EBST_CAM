@@ -16,6 +16,8 @@ The hardware version number is the current version at release time.
 #### Deprecated
 ### Other Changes
 #### Added
+* Add support for Linux kernel 6.8
+* Add hook example to CsimpleExample
 #### Changed
 #### Removed
 #### Fixed
