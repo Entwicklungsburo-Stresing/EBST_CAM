@@ -1,5 +1,4 @@
-#ifndef DIALOGRMS_H
-#define DIALOGRMS_H
+#pragma once
 
 #include <QDialog>
 #include "dialogsettings.h"
@@ -29,5 +28,3 @@ private slots:
 	void on_spinBox_lastsample_valueChanged(int value);
 	void on_spinBoxBoard_valueChanged(int index);
 };
-
-#endif // DIALOGRMS_H

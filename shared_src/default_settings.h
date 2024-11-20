@@ -1,5 +1,4 @@
-#ifndef DEFAULT_SETTINGS_H
-#define DEFAULT_SETTINGS_H
+#pragma once
 
 #include "../shared_src/enum_settings.h"
 
@@ -91,5 +90,3 @@
 #define settingShowCrosshairDefault					true
 #define settingChannelSelectDefault					channel_select_A_B
 #define settingColorSchemeDefault					0
-
-#endif // DEFAULT_SETTINGS_H

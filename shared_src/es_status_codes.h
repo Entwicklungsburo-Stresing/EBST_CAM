@@ -1,5 +1,4 @@
-#ifndef ES_STATUS_CODES_H
-#define ES_STATUS_CODES_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,4 +42,3 @@ char* ConvertErrorCodeToMsg(es_status_codes status);
 #ifdef __cplusplus
 }
 #endif
-#endif // ES_STATUS_CODES_H

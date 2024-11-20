@@ -1,5 +1,4 @@
-#ifndef BOARD_H
-#define BOARD_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -217,4 +216,3 @@ es_status_codes ReadBitS0_8(uint32_t drvno, uint16_t address, uint8_t bitnumber,
 #ifdef __cplusplus
 }
 #endif
-#endif // BOARD_H

@@ -1,5 +1,4 @@
-#ifndef DIALOGTRIGGERINFO_H
-#define DIALOGTRIGGERINFO_H
+#pragma once
 
 #include <QDialog>
 
@@ -20,5 +19,3 @@ public slots:
 private:
 	Ui::DialogTriggerInfo *ui;
 };
-
-#endif // DIALOGTRIGGERINFO_H
