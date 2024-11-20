@@ -292,7 +292,7 @@ void* CopyDataToUserBuffer(void* param_drvno)
 		result_poll = poll(&pfds, 1, 1000);
 		if(result_poll == -1)
 		{
-			ES_LOG("Exit copy data thread with error, drvno %u, errno %u\n", drvno, result_poll);
+			ES_LOG("Exit copy data thread with error, drvno %u, errno %zu\n", drvno, result_poll);
 			break;
 		}
 		else if(result_poll)
@@ -306,7 +306,7 @@ void* CopyDataToUserBuffer(void* param_drvno)
 			ES_TRACE("userBufferWritePos %p\n", (void*)userBufferWritePos[drvno]);
 			if (result_read < 0)
 			{
-				ES_LOG("Exit copy data thread with error, drvno %u, errno %u\n", drvno, result_read);
+				ES_LOG("Exit copy data thread with error, drvno %u, errno %zu\n", drvno, result_read);
 				break;
 			}
 		}
