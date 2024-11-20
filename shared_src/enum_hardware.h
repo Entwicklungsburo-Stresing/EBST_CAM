@@ -16,62 +16,42 @@ enum dma_addresses_t
 
 enum s0_addresses_t
 {
-	S0Addr_DBR = 0x00, //0x00
+	S0Addr_DBR = 0x00,
 	/**
-	 * See \ref CTRLA_bits_t for details.
+	 * See \ref CTRL_bits_t for details.
 	 */
 	S0Addr_CTRL = 0x04,
 	/**
 	 * See \ref XCK_bits_t for details.
 	 */
-	S0Addr_XCK = 0x08, //0x08
-	S0Addr_XCKCNT = 0x0c, //0x0c
+	S0Addr_XCK = 0x08,
+	S0Addr_XCKCNT = 0x0c,
 	/**
-	 * See \ref PIXREG_bits_t for details.
+	 * See \ref PIXREG_FFCTRL_FFFLAGS_bits_t for details.
 	 */
-	S0Addr_PIXREG = 0x10, //0x10
-	/**
-	 * See \ref FFCTRL_bits_t for details.
-	 */
-	S0Addr_FFCTRL = 0x12,
-	/**
-	 * See \ref FF_FLAGS_bits_t for details.
-	 */
-	S0Addr_FF_FLAGS = 0x13,
+	S0Addr_PIXREG_FFCTRL_FFFLAGS = 0x10,
 	/**
 	 * See \ref FIFOCNT_bits_t for details.
 	 */
-	S0Addr_FIFOCNT = 0x14, //0x14
+	S0Addr_FIFOCNT = 0x14,
 	/**
-	 * See \ref VCLKCTRL_bits_t for details.
+	 * See \ref VCLKCTRL_VCLKFREQ_bits_t for details.
 	 */
-	S0Addr_VCLKCTRL = 0x18, //0x18
-	/**
-	 * See \ref VCLKFREQ_bits_t for details.
-	 */
-	S0Addr_VCLKFREQ = 0x1b,
-	S0Addr_EBST = 0x1C, //0x1c
+	S0Addr_VCLKCTRL_VCLKFREQ = 0x18,
+	S0Addr_EBST = 0x1C,
 	/**
 	 * See \ref SDAT_bits_t for details.
 	 */
-	S0Addr_SDAT = 0x20, //0x20
-	S0Addr_SEC = 0x24, //0x24
+	S0Addr_SDAT = 0x20,
+	S0Addr_SEC = 0x24,
 	/**
-	 * See \ref TOR_STICNT_bits_t for details.
+	 * See \ref TOR_STICNT_TOCNT_bits_t for details.
 	 */
-	S0Addr_TOR_STICNT = 0x28, //0x28
-	/**
-	 * See \ref TOR_TOCNT_bits_t for details.
-	 */
-	S0Addr_TOR_TOCNT = 0x2A,
-	/**
-	 * See  \ref TOR_MSB_bits_t for details.
-	 */
-	S0Addr_TOR_MSB = 0x2B,
+	S0Addr_TOR_STICNT_TOCNT = 0x28,
 	/**
 	 * See \ref ARREG_bits_t for details.
 	 */
-	S0Addr_ARREG = 0x2C, //0x2c
+	S0Addr_ARREG = 0x2C,
 	/**
 	 * See \ref GIOREG_bits_t for details.
 	 */
@@ -197,7 +177,6 @@ enum s0_addresses_t
 	S0Addr_BON_PERIOD = 0xBC,
 };
 
-
 enum CTRL_bits_t
 {
 	// CTRLA
@@ -276,44 +255,32 @@ enum XCK_bits_t
 	XCK_bit_stimer_on = 0x40000000,
 };
 
-enum PIXREG_bits_t
+enum PIXREG_FFCTRL_FFFLAGS_bits_t
 {
 	PIXREG_bitindex_pixel = 0,
-	PIXREG_bitindex_FFCTRL = 16,
-	PIXREG_bitindex_FFFLAGS = 24,
+	FFCTRL_bitindex_block_reset = 16,
+	FFCTRL_bitindex_scan_reset = 17,
+	FFCTRL_bitindex_SWTRIG = 18,
+	FFCTRL_bitindex_RSFIFO = 19,
+	FF_FLAGS_bitindex_block_read = 25,
+	FF_FLAGS_bitindex_scan_read = 26,
+	FF_FLAGS_bitindex_overflow = 27,
+	FF_FLAGS_bitindex_xcki = 28,
+	FF_FLAGS_bitindex_full = 29,
+	FF_FLAGS_bitindex_empty = 30,
+	FF_FLAGS_bitindex_valid = 31,
 	PIXREG_bits_pixel = 0x0000FFFF,
-	PIXREG_bits_FFCTRL = 0x00FF0000,
-	PIXREG_bits_FFFLAGS = 0xFF000000
-};
-
-enum FFCTRL_bits_t
-{
-	FFCTRL_bitindex_block_reset = 4,
-	FFCTRL_bitindex_scan_reset = 5,
-	FFCTRL_bitindex_SWTRIG = 6,
-	FFCTRL_bitindex_RSFIFO = 7,
-	FFCTRL_bit_block_reset = 0x10,
-	FFCTRL_bit_scan_reset = 0x20,
-	FFCTRL_bit_SWTRIG = 0x40,
-	FFCTRL_bit_RSFIFO = 0x80,
-};
-
-enum FF_FLAGS_bits_t
-{
-	FF_FLAGS_bitindex_block_read = 1,
-	FF_FLAGS_bitindex_scan_read = 2,
-	FF_FLAGS_bitindex_overflow = 3,
-	FF_FLAGS_bitindex_xcki = 4,
-	FF_FLAGS_bitindex_full = 5,
-	FF_FLAGS_bitindex_empty = 6,
-	FF_FLAGS_bitindex_valid = 7,
-	FF_FLAGS_bit_block_read = 0x02,
-	FF_FLAGS_bit_scan_read = 0x04,
-	FF_FLAGS_bit_overflow = 0x08,
-	FF_FLAGS_bit_xcki = 0x10,
-	FF_FLAGS_bit_full = 0x20,
-	FF_FLAGS_bit_empty = 0x40,
-	FF_FLAGS_bit_valid = 0x80,
+	FFCTRL_bit_block_reset = 0x100000,
+	FFCTRL_bit_scan_reset = 0x200000,
+	FFCTRL_bit_SWTRIG = 0x400000,
+	FFCTRL_bit_RSFIFO = 0x800000,
+	FF_FLAGS_bit_block_read = 0x02000000,
+	FF_FLAGS_bit_scan_read = 0x04000000,
+	FF_FLAGS_bit_overflow = 0x08000000,
+	FF_FLAGS_bit_xcki = 0x10000000,
+	FF_FLAGS_bit_full = 0x20000000,
+	FF_FLAGS_bit_empty = 0x40000000,
+	FF_FLAGS_bit_valid = 0x80000000,
 };
 
 enum FIFOCNT_bits_t
@@ -328,14 +295,12 @@ enum FIFOCNT_bits_t
 	FIFOCNT_bitindex_WRCNT0 = 0
 };
 
-enum VCLKCTRL_bits_t
+enum VCLKCTRL_VCLKFREQ_bits_t
 {
-	VCLKCNT_bit_control = 0x00000FFF
-
-};
-
-enum VCLKFREQ_bits_t
-{
+	VCLKCTRL_bitindex = 0,
+	VCLKFREQ_bitindex = 24,
+	VCLKCNT_bit_control = 0x00000FFF,
+	VCLKFREQ_bits = 0xFF000000,
 	/**
 	 * Base frequency for the vertical clocks.
 	 */
@@ -354,41 +319,30 @@ enum SDAT_bits_t
 	SDAT_bit_enable = 0x80000000,
 };
 
-enum TOR_STICNT_bits_t
+enum TOR_STICNT_TOCNT_bits_t
 {
 	TOR_bitindex_STICNT = 0,
 	TOR_bitindex_STICNT_EN = 7,
+	TOR_bitindex_TOCNT = 16,
+	TOR_bitindex_TOCNT_EN = 23,
+	TOR_bitindex_ISFFT_LEGACY = 24,
+	TOR_bitindex_TOSEL = 27,
+	TOR_bitindex_TO0 = 28,
+	TOR_bitindex_TO1 = 29,
+	TOR_bitindex_TO2 = 30,
+	TOR_bitindex_TO3 = 31,
 	TOR_bits_STICNT = 0x7F,
 	TOR_bit_STICNT_EN = 0x80,
-};
-
-enum TOR_TOCNT_bits_t
-{
-	TOR_bitindex_TOCNT = 0,
-	TOR_bitindex_TOCNT_EN = 7,
-	TOR_bits_TOCNT = 0x7F,
-	TOR_bit_TOCNT_EN = 0x80,
-};
-
-/**
- * TOR MSB 8 bits at 0x2B
- */
-enum TOR_MSB_bits_t
-{
-	TOR_MSB_bitindex_ISFFT_LEGACY = 0,
-	TOR_MSB_bitindex_TOSEL = 3,
-	TOR_MSB_bitindex_TO0 = 4,
-	TOR_MSB_bitindex_TO1 = 5,
-	TOR_MSB_bitindex_TO2 = 6,
-	TOR_MSB_bitindex_TO3 = 7,
-	TOR_MSB_BITS_TO = 0xF8,
-	TOR_MSB_bit_ISFFT_LEGACY = 0x01,
-	TOR_MSB_bit_TOSEL = 0x08,
-	TOR_MSB_bit_TO0 = 0x10,
-	TOR_MSB_bit_TO1 = 0x20,
-	TOR_MSB_bit_TO2 = 0x40,
-	TOR_MSB_bit_TO3 = 0x80,
-	TOR_MSB_bit_TO_control = 0xF0
+	TOR_bits_TOCNT = 0x7F0000,
+	TOR_bit_TOCNT_EN = 0x800000,
+	TOR_BITS_TO = 0xF8000000,
+	TOR_bit_ISFFT_LEGACY = 0x01000000,
+	TOR_bit_TOSEL = 0x08000000,
+	TOR_bit_TO0 = 0x10000000,
+	TOR_bit_TO1 = 0x20000000,
+	TOR_bit_TO2 = 0x40000000,
+	TOR_bit_TO3 = 0x80000000,
+	TOR_bit_TO_control = 0xF0000000
 };
 
 enum ARREG_bits_t

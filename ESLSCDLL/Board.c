@@ -216,7 +216,7 @@ es_status_codes _InitMeasurement(uint32_t drvno)
 es_status_codes SetPixelCountRegister(uint32_t drvno)
 {
 	ES_LOG("Set pixel count: %"PRIu32"\n", settings_struct.camera_settings[drvno].pixel);
-	return writeBitsS0_32(drvno, settings_struct.camera_settings[drvno].pixel, PIXREG_bits_pixel, S0Addr_PIXREG);
+	return writeBitsS0_32(drvno, settings_struct.camera_settings[drvno].pixel, PIXREG_bits_pixel, S0Addr_PIXREG_FFCTRL_FFFLAGS);
 }
 
 /**
@@ -384,9 +384,9 @@ es_status_codes SetSensorType(uint32_t drvno, uint16_t sensor_type)
 	ES_LOG("Setting sensor type: %"PRIu16"\n", sensor_type);
 	es_status_codes status;
 	if (sensor_type == sensor_type_fft && settings_struct.camera_settings[drvno].is_fft_legacy)
-		status = setBitS0_8(drvno, TOR_MSB_bitindex_ISFFT_LEGACY, S0Addr_TOR_MSB);
+		status = setBitS0_32(drvno, TOR_bitindex_ISFFT_LEGACY, S0Addr_TOR_STICNT_TOCNT);
 	else
-		status = resetBitS0_8(drvno, TOR_MSB_bitindex_ISFFT_LEGACY, S0Addr_TOR_MSB);
+		status = resetBitS0_32(drvno, TOR_bitindex_ISFFT_LEGACY, S0Addr_TOR_STICNT_TOCNT);
 	if (status != es_no_error) return status;
 	uint32_t data = sensor_type << camera_type_sensor_type_bit_index;
 	return writeBitsS0_32(drvno, data, camera_type_sensor_type_bits, S0Addr_CAMERA_TYPE);
@@ -781,9 +781,7 @@ es_status_codes SetupFullBinning(uint32_t drvno, uint32_t lines, uint8_t vfreq)
 es_status_codes SetupVCLKReg(uint32_t drvno, uint32_t lines, uint8_t vfreq)
 {
 	ES_LOG("Setup VCLK register. drvno: %"PRIu32", lines: %"PRIu32", vfreq: %"PRIu8"\n", drvno, lines, vfreq);
-	es_status_codes status = writeRegisterS0_32(drvno, lines * 2, S0Addr_VCLKCTRL);// write no of vclks=2*lines
-	if (status != es_no_error) return status;
-	return writeRegisterS0_8(drvno, vfreq, S0Addr_VCLKFREQ);
+	return writeRegisterS0_32(drvno, (((uint32_t)vfreq) << VCLKFREQ_bitindex) & lines * 2, S0Addr_VCLKCTRL_VCLKFREQ); // write no of vclks=2*lines
 }
 
 /**
@@ -885,9 +883,9 @@ es_status_codes StopSTimer(uint32_t drvno)
 es_status_codes RSFifo(uint32_t drvno)
 {
 	ES_LOG("Reset FIFO\n");
-	es_status_codes status = setBitS0_8(drvno, FFCTRL_bitindex_RSFIFO, S0Addr_FFCTRL);
+	es_status_codes status = setBitS0_32(drvno, FFCTRL_bitindex_RSFIFO, S0Addr_PIXREG_FFCTRL_FFFLAGS);
 	if (status != es_no_error) return status;
-	return resetBitS0_8(drvno, FFCTRL_bitindex_RSFIFO, S0Addr_FFCTRL);
+	return resetBitS0_32(drvno, FFCTRL_bitindex_RSFIFO, S0Addr_PIXREG_FFCTRL_FFFLAGS);
 }
 
 /**
@@ -1009,14 +1007,14 @@ es_status_codes SetTORReg(uint32_t drvno, uint8_t tor)
 	// bit		31	30	29	28	27
 	// meaning	TO3	TO2	TO1	TO0	TOSELG
 	// use lower 4 bits of input tor for the upper nibble TO0 - TO3
-	uint8_t tor_upper_nibble = tor << TOR_MSB_bitindex_TO0;
+	uint32_t tor_upper_nibble = tor << TOR_bitindex_TO0;
 	// use bit 5 of input tor for bit TOSELG
-	uint8_t toselg = tor & 0x10;
+	uint32_t toselg = tor & 0x10;
 	toselg = toselg >> 4;
 	// shift the bit to the correct position
-	toselg = toselg << TOR_MSB_bitindex_TOSEL;
-	uint8_t data = tor_upper_nibble | toselg;
-	return writeBitsS0_8(drvno, data, TOR_MSB_BITS_TO, S0Addr_TOR_MSB);
+	toselg = toselg << TOR_bitindex_TOSEL;
+	uint32_t data = tor_upper_nibble | toselg;
+	return writeBitsS0_32(drvno, data, TOR_BITS_TO, S0Addr_TOR_STICNT_TOCNT);
 }
 
 /**
@@ -2148,9 +2146,9 @@ es_status_codes StartSTimer(uint32_t drvno)
 es_status_codes DoSoftwareTrigger(uint32_t drvno)
 {
 	ES_LOG("Do software trigger\n");
-	es_status_codes status = setBitS0_8(drvno, FFCTRL_bitindex_SWTRIG, S0Addr_FFCTRL);
+	es_status_codes status = setBitS0_32(drvno, FFCTRL_bitindex_SWTRIG, S0Addr_PIXREG_FFCTRL_FFFLAGS);
 	if (status != es_no_error) return status;
-	return resetBitS0_8(drvno, FFCTRL_bitindex_SWTRIG, S0Addr_FFCTRL);
+	return resetBitS0_32(drvno, FFCTRL_bitindex_SWTRIG, S0Addr_PIXREG_FFCTRL_FFFLAGS);
 }
 
 /**
@@ -2554,7 +2552,7 @@ void GetRmsVal(uint32_t nos, uint16_t* TRMSVals, double* mwf, double* trms)
 es_status_codes CheckFifoValid(uint32_t drvno, bool* valid)
 {	// not empty & XCK = low -> true
 	ES_LOG("checkFifoFlags\n");
-	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_valid, valid);
+	return ReadBitS0_32(drvno, S0Addr_PIXREG_FFCTRL_FFFLAGS, FF_FLAGS_bitindex_valid, valid);
 }
 
 /**
@@ -2569,7 +2567,7 @@ es_status_codes CheckFifoValid(uint32_t drvno, bool* valid)
 es_status_codes CheckFifoOverflow(uint32_t drvno, bool* overflow)
 {
 	ES_LOG("checkFifoOverflow\n");
-	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_overflow, overflow);
+	return ReadBitS0_32(drvno, S0Addr_PIXREG_FFCTRL_FFFLAGS, FF_FLAGS_bitindex_overflow, overflow);
 }
 
 /**
@@ -2582,7 +2580,7 @@ es_status_codes CheckFifoOverflow(uint32_t drvno, bool* overflow)
 es_status_codes CheckFifoEmpty(uint32_t drvno, bool* empty)
 {
 	ES_LOG("checkFifoEmpty\n");
-	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_empty, empty);
+	return ReadBitS0_32(drvno, S0Addr_PIXREG_FFCTRL_FFFLAGS, FF_FLAGS_bitindex_empty, empty);
 }
 
 /**
@@ -2595,7 +2593,7 @@ es_status_codes CheckFifoEmpty(uint32_t drvno, bool* empty)
 es_status_codes CheckFifoFull(uint32_t drvno, bool* full)
 {
 	ES_LOG("checkFifoFull\n");
-	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_full, full);
+	return ReadBitS0_32(drvno, S0Addr_PIXREG_FFCTRL_FFFLAGS, FF_FLAGS_bitindex_full, full);
 }
 
 /**
@@ -2977,29 +2975,27 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 
 	//Register PIXREG
-	status = readRegisterS0_16(drvno, &data16, S0Addr_PIXREG);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x10\tPIXREG\t0-15\t\t%"PRIu16"\n", data16);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_PIXREG_FFCTRL_FFFLAGS);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x10\tPIXREG\t0-15\t\t%"PRIu32"\n", (data32 & PIXREG_bits_pixel) >> PIXREG_bitindex_pixel);
 
 	/*=======================================================================*/
 
 	//FFCTRL
-	status = readRegisterS0_8(drvno, &data8, S0Addr_FFCTRL);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x12\tFFCTRL\t4\tRSBTH\t%"PRIu8"\n", (data8 & FFCTRL_bit_block_reset) >> FFCTRL_bitindex_block_reset);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t5\tRSSTH\t%"PRIu8"\n", (data8 & FFCTRL_bit_scan_reset) >> FFCTRL_bitindex_scan_reset);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t6\tSWTrig\t%"PRIu8"\n", (data8 & FFCTRL_bit_SWTRIG) >> FFCTRL_bitindex_SWTRIG);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t7\tRS_FF\t%"PRIu8"\n", (data8 & FFCTRL_bit_RSFIFO) >> FFCTRL_bitindex_RSFIFO);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x12\tFFCTRL\t4\tRSBTH\t%"PRIu32"\n", (data32 & FFCTRL_bit_block_reset) >> FFCTRL_bitindex_block_reset);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t5\tRSSTH\t%"PRIu32"\n", (data32 & FFCTRL_bit_scan_reset) >> FFCTRL_bitindex_scan_reset);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t6\tSWTrig\t%"PRIu32"\n", (data32 & FFCTRL_bit_SWTRIG) >> FFCTRL_bitindex_SWTRIG);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t7\tRS_FF\t%"PRIu32"\n", (data32 & FFCTRL_bit_RSFIFO) >> FFCTRL_bitindex_RSFIFO);
 
 	/*=======================================================================*/
 
 	//FF_FLAGS
-	status = readRegisterS0_8(drvno, &data8, S0Addr_FF_FLAGS);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x13\tFF_FLAGS\t1\tBTFH\t%"PRIu8"\n", (data8 & FF_FLAGS_bit_block_read) >> FF_FLAGS_bitindex_block_read);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t2\tSTFH\t%"PRIu8"\n", (data8 & FF_FLAGS_bit_scan_read) >> FF_FLAGS_bitindex_scan_read);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t3\tOVFL\t%"PRIu8"\n", (data8 & FF_FLAGS_bit_overflow) >> FF_FLAGS_bitindex_overflow);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t4\tXCKI\t%"PRIu8"\n", (data8 & FF_FLAGS_bit_xcki) >> FF_FLAGS_bitindex_xcki);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t5\tFF\t%"PRIu8"\n", (data8 & FF_FLAGS_bit_full) >> FF_FLAGS_bitindex_full);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t6\tEF\t%"PRIu8"\n", (data8 & FF_FLAGS_bit_empty) >> FF_FLAGS_bitindex_empty);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t7\tVALID\t%"PRIu8"\n", (data8 & FF_FLAGS_bit_valid) >> FF_FLAGS_bitindex_valid);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x13\tFF_FLAGS\t1\tBTFH\t%"PRIu32"\n", (data32 & FF_FLAGS_bit_block_read) >> FF_FLAGS_bitindex_block_read);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t2\tSTFH\t%"PRIu32"\n", (data32 & FF_FLAGS_bit_scan_read) >> FF_FLAGS_bitindex_scan_read);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t3\tOVFL\t%"PRIu32"\n", (data32 & FF_FLAGS_bit_overflow) >> FF_FLAGS_bitindex_overflow);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t4\tXCKI\t%"PRIu32"\n", (data32 & FF_FLAGS_bit_xcki) >> FF_FLAGS_bitindex_xcki);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t5\tFF\t%"PRIu32"\n", (data32 & FF_FLAGS_bit_full) >> FF_FLAGS_bitindex_full);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t6\tEF\t%"PRIu32"\n", (data32 & FF_FLAGS_bit_empty) >> FF_FLAGS_bitindex_empty);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t7\tVALID\t%"PRIu32"\n", (data32 & FF_FLAGS_bit_valid) >> FF_FLAGS_bitindex_valid);
 
 	/*=======================================================================*/
 
@@ -3010,15 +3006,14 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 
 	//VCLKCTRL
-	status = readRegisterS0_32(drvno, &data32, S0Addr_VCLKCTRL);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_VCLKCTRL_VCLKFREQ);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x18\tVCLKCTRL\t0-11\tVCLKCNT\t%"PRIu32"\n", (data32 & VCLKCNT_bit_control));
 
 	//Register VCLKFREQ
-	status = readRegisterS0_8(drvno, &data8, S0Addr_VCLKFREQ);
 	int translatedVCLKFREQ = 0;
-	if (data8 == 0) translatedVCLKFREQ = 0;
-	else translatedVCLKFREQ = VCLKFREQ_base_value + ((int)data8 * VCLKFREQ_step_value);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t24-31\tVCLKFREQ\t%"PRIu8" (%d ns)\n", data8, translatedVCLKFREQ);
+	if (data32 & VCLKFREQ_bits == 0) translatedVCLKFREQ = 0;
+	else translatedVCLKFREQ = VCLKFREQ_base_value + ((data32 >> VCLKFREQ_bitindex) * VCLKFREQ_step_value);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t24-31\tVCLKFREQ\t%"PRIu32" (%d ns)\n", data32 >> VCLKFREQ_bitindex, translatedVCLKFREQ);
 
 	/*=======================================================================*/
 
@@ -3036,19 +3031,17 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 
 	//TOR Register
-	status = readRegisterS0_8(drvno, &data8, S0Addr_TOR_STICNT);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_TOR_STICNT_TOCNT);
 	//TICOUNT
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x28\tTOR\t0-6\tSTICNT\t%"PRIu8"\n", (data8 & TOR_bits_STICNT) >> TOR_bitindex_STICNT);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t7\tSTICNT enabled\t%"PRIu8"\n", (data8 & TOR_bit_STICNT_EN) >> TOR_bitindex_STICNT_EN);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x28\tTOR\t0-6\tSTICNT\t%"PRIu32"\n", (data32 & TOR_bits_STICNT) >> TOR_bitindex_STICNT);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t7\tSTICNT enabled\t%"PRIu32"\n", (data32 & TOR_bit_STICNT_EN) >> TOR_bitindex_STICNT_EN);
 	//TOCOUNT
-	status = readRegisterS0_8(drvno, &data8, S0Addr_TOR_TOCNT);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-22\tTOCNT\t%"PRIu8"\n", (data8 & TOR_bits_TOCNT) >> TOR_bitindex_TOCNT);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t23\tTOCNT enabled\t%"PRIu8"\n", (data8 & TOR_bit_TOCNT_EN) >> TOR_bitindex_TOCNT_EN);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-22\tTOCNT\t%"PRIu32"\n", (data32 & TOR_bits_TOCNT) >> TOR_bitindex_TOCNT);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t23\tTOCNT enabled\t%"PRIu32"\n", (data32 & TOR_bit_TOCNT_EN) >> TOR_bitindex_TOCNT_EN);
 	//TORMSB
-	status = readRegisterS0_8(drvno, &data8, S0Addr_TOR_MSB);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t24\tIS FFT LEGACY\t%"PRIu8"\n", (data8 & TOR_MSB_bit_ISFFT_LEGACY) >> TOR_MSB_bitindex_ISFFT_LEGACY);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t24\tIS FFT LEGACY\t%"PRIu8"\n", (data32 & TOR_bit_ISFFT_LEGACY) >> TOR_bitindex_ISFFT_LEGACY);
 
-	int combinedTO = data8 >> TOR_MSB_bitindex_TO0 | ((data8 & TOR_MSB_bitindex_TOSEL) >> TOR_MSB_bitindex_TOSEL) << 4;
+	int combinedTO = data32 >> TOR_bitindex_TO0 | ((data32 & TOR_bitindex_TOSEL) >> TOR_bitindex_TOSEL) << 4;
 
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t27-31\tValue\t%d (", combinedTO);
 
@@ -3571,7 +3564,7 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 	uint32_t maxReadRequestSize = (data & deviceControl_maxReadRequestSize_bits) >> deviceControl_maxReadRequestSize_bitindex;
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Max_Read_Request_Size:\t0x%x (%"PRIu32" bytes)\n", maxReadRequestSize, maxSizeEncoding[maxReadRequestSize]);
 	uint32_t pixel = 0;
-	status = readRegisterS0_32(drvno, &pixel, S0Addr_PIXREG);
+	status = readRegisterS0_32(drvno, &pixel, S0Addr_PIXREG_FFCTRL_FFFLAGS);
 	pixel &= 0xFFFF;
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Number of pixels:\t%"PRIu32"\n", pixel);
 	status = readRegisterDma_32(drvno, &data, DmaAddr_WDMATLPS);
@@ -4189,7 +4182,7 @@ es_status_codes SetSticnt(uint32_t drvno, uint8_t divider)
 	// If divider is not 0, set the enable bit to 1
 	if (divider)
 		divider |= TOR_bit_STICNT_EN;
-	return writeRegisterS0_8(drvno, divider, S0Addr_TOR_STICNT);
+	return writeBitsS0_32(drvno, divider << TOR_bitindex_STICNT, TOR_bits_STICNT | TOR_bit_STICNT_EN, S0Addr_TOR_STICNT_TOCNT);
 }
 
 /**
@@ -4225,7 +4218,7 @@ es_status_codes SetTocnt(uint32_t drvno, uint8_t divider)
 	// If divider is not 0, set the enable bit to 1
 	if (divider)
 		divider |= TOR_bit_TOCNT_EN;
-	return writeRegisterS0_8(drvno, divider, S0Addr_TOR_TOCNT);
+	return writeBitsS0_32(drvno, divider << TOR_bitindex_TOCNT, TOR_bits_TOCNT | TOR_bit_TOCNT_EN, S0Addr_TOR_STICNT_TOCNT);
 }
 
 /**
@@ -4634,7 +4627,7 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 es_status_codes ReadScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh)
 {
 	ES_TRACE("Read scan frequency bit, drvno %"PRIu32"\n", drvno);
-	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_scan_read, scanFrequencyTooHigh);
+	return ReadBitS0_32(drvno, S0Addr_PIXREG_FFCTRL_FFFLAGS, FF_FLAGS_bitindex_scan_read, scanFrequencyTooHigh);
 }
 
 /**
@@ -4646,7 +4639,7 @@ es_status_codes ReadScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh)
 es_status_codes ResetScanFrequencyBit(uint32_t drvno)
 {
 	ES_TRACE("Reset scan frequency bit, drvno %"PRIu32"\n", drvno);
-	return pulseBitS0_8(drvno, FFCTRL_bitindex_scan_reset, S0Addr_FFCTRL, 100);
+	return pulseBitS0_32(drvno, FFCTRL_bitindex_scan_reset, S0Addr_PIXREG_FFCTRL_FFFLAGS, 100);
 }
 
 /**
@@ -4659,7 +4652,7 @@ es_status_codes ResetScanFrequencyBit(uint32_t drvno)
 es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh)
 {
 	ES_TRACE("Read block frequency bit, drvno %"PRIu32"\n", drvno);
-	return ReadBitS0_8(drvno, S0Addr_FF_FLAGS, FF_FLAGS_bitindex_block_read, blockFrequencyTooHigh);
+	return ReadBitS0_32(drvno, S0Addr_PIXREG_FFCTRL_FFFLAGS, FF_FLAGS_bitindex_block_read, blockFrequencyTooHigh);
 }
 
 /**
@@ -4671,7 +4664,7 @@ es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHig
 es_status_codes ResetBlockFrequencyBit(uint32_t drvno)
 {
 	ES_TRACE("Reset block frequency bit, drvno %"PRIu32"\n", drvno);
-	return pulseBitS0_8(drvno, FFCTRL_bitindex_block_reset, S0Addr_FFCTRL, 100);
+	return pulseBitS0_32(drvno, FFCTRL_bitindex_block_reset, S0Addr_PIXREG_FFCTRL_FFFLAGS, 100);
 }
 
 /**
