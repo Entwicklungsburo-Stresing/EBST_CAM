@@ -1,6 +1,4 @@
-#ifndef CAMERASETTINGSWIGET_H
-#define CAMERASETTINGSWIGET_H
-
+#pragma once
 
 #include <QWidget>
 #include <QSettings>
@@ -44,5 +42,3 @@ private slots:
 	void on_spinBoxLines_valueChanged(int value);
 	void on_spinBoxLinesBinning_valueChanged(int value);
 };
-
-#endif // CAMERASETTINGSWIGET_H

@@ -1,5 +1,4 @@
-#ifndef GLOBALS_H
-#define GLOBALS_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -60,4 +59,3 @@ extern hookFunction allBlocksDoneHook;
 #ifdef __cplusplus
 }
 #endif
-#endif // GLOBALS_H

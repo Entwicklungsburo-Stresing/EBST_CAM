@@ -1,6 +1,4 @@
-#ifndef DIALOGIOCTRL_H
-#define DIALOGIOCTRL_H
-
+#pragma once
 #include <QDialog>
 #include "lsc-gui.h"
 
@@ -30,5 +28,3 @@ private:
 	uint16_t outputDelay_old[7];
 	uint32_t t0_old;
 };
-
-#endif // DIALOGIOCTRL_H

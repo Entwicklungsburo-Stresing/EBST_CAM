@@ -1,5 +1,4 @@
-#ifndef DIALOGDAC_H
-#define DIALOGDAC_H
+#pragma once
 
 #include <QDialog>
 #include "lsc-gui.h"
@@ -35,5 +34,3 @@ private:
 	double calculateMean(uint16_t* data, int start, int end, bool isHsIr);
 	bool autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spinBox, bool isHsir);
 };
-
-#endif // DIALOGDAC_H

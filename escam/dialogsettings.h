@@ -1,5 +1,4 @@
-#ifndef DIALOGSETTINGS_H
-#define DIALOGSETTINGS_H
+#pragma once
 
 #include <QDialog>
 #include <QSettings>
@@ -150,5 +149,3 @@ private slots:
 	void on_checkBoxBoard3_stateChanged(int state);
 	void on_checkBoxBoard4_stateChanged(int state);
 };
-
-#endif // DIALOGSETTINGS_H

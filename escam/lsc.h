@@ -1,5 +1,4 @@
-#ifndef LSC_H
-#define LSC_H
+#pragma once
 
 #include <stdint.h>
 #include <string>
@@ -93,5 +92,3 @@ private:
 	uint8_t _torOut = tor_xck;
 	void parseTextToHtml(std::string* str);
 };
-
-#endif // LSC_H

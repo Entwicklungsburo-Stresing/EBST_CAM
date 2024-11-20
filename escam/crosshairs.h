@@ -1,5 +1,4 @@
-#ifndef CROSSHAIRS_H
-#define CROSSHAIRS_H
+#pragma once
 
 #include <QtWidgets/QGraphicsItem>
 #include <dialogsettings.h>
@@ -21,5 +20,3 @@ private:
 	QChart* m_chart;
 	QSettings settings;
 };
-
-#endif // CROSSHAIRS_H

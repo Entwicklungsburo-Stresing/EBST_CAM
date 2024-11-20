@@ -1,5 +1,4 @@
-#ifndef DIALOGDSC_H
-#define DIALOGDSC_H
+#pragma once
 
 #include <QDialog>
 
@@ -27,5 +26,3 @@ private slots:
 public slots:
 	void updateDSC();
 };
-
-#endif // DIALOGDSC_H

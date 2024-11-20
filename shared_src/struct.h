@@ -1,6 +1,4 @@
-﻿#ifndef STRUCT_H
-#define STRUCT_H
-
+﻿#pragma once
 #include <stdint.h>
 #include "enum_settings.h"
 
@@ -498,5 +496,3 @@ struct verify_data_parameter
 	uint32_t last_block_before_error;
 	uint64_t last_measurement_before_error;
 };
-
-#endif // STRUCT_H

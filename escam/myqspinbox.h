@@ -1,5 +1,4 @@
-#ifndef MYQSPINBOX_H
-#define MYQSPINBOX_H
+#pragma once
 
 #include <QSpinBox>
 
@@ -18,4 +17,3 @@ signals:
     void valueManuallyChanged(int val);
 };
 
-#endif // MYQSPINBOX_H

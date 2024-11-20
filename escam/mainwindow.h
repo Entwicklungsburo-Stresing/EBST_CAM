@@ -1,6 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
+#pragma once
 #include <QMainWindow>
 #include <QSettings>
 #include "ui_mainwindow.h"
@@ -78,5 +76,3 @@ private slots:
 	void on_actionChartSettings_triggered();
 	void setBlockOnLamp();
 };
-
-#endif // MAINWINDOW_H

@@ -1,5 +1,4 @@
-#ifndef BOARDLL_H
-#define BOARDLL_H
+#pragma once
 
 #include <stdint.h>
 #include "globals.h"
@@ -97,5 +96,3 @@ void ErrMsgBoxOff(); // switch to suppress error message boxes
 void ErrorMsg(char ErrMsg[100]);
 void ValMsg(uint64_t val);
 #endif
-
-#endif // BOARDLL_H
