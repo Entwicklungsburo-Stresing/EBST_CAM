@@ -128,14 +128,9 @@ ssize_t lscpcie_write_proc(struct file *filp, const char __user *buf,
 }
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 8, 0)
-int lscpcie_open_proc(struct inode *inode, struct file *file)
-{
-	return 0;
-}
-
 struct proc_ops proc_fops = {
-	.proc_open = lscpcie_open_proc,
-	.proc_read = lscpcie_read_proc
+	.proc_read = lscpcie_read_proc,
+	.proc_write = lscpcie_write_proc
 };
 #else
 struct file_operations proc_fops = {
