@@ -19,7 +19,7 @@ struct camera_settings
 	/**
 	 * use_software_polling determines which method is used to copy data from DMA to user buffer.
 	 *		* >0: Use software polling. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. Since the PCIe card firmware version P222_2 this method is reliable up to about 100kHz. It generates as expected a higher CPU load than the interrupt method. With this option you can get more recent scans from \ref DLLGetCurrentScanNumber, especially at lower frequencies.
-	 *		* =0: Use interrupt. Every \ref camera_settings.dma_buffer_size_in_scans/2 scan the interrupt starts a copy process, which copies dma_buffer_size_in_scans/2 scans to the user buffer. 1000 is our default value for \ref camera_settings.dma_buffer_size_in_scans, so the interrupt is triggered every 500 scans.
+	 *		* =0: Use interrupt. Every \ref camera_settings.dma_buffer_size_in_scans /2 scan the interrupt starts a copy process, which copies dma_buffer_size_in_scans/2 scans to the user buffer. 1000 is our default value for \ref camera_settings.dma_buffer_size_in_scans, so the interrupt is triggered every 500 scans.
 	 * 
 	 * Further information about software polling can be found in the manual in chapter 5.4.8.
 	 */
