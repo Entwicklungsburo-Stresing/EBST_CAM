@@ -751,7 +751,7 @@ es_status_codes ReadBitS0_8(uint32_t drvno, uint16_t address, uint8_t bitnumber,
 es_status_codes OpenShutter(uint32_t drvno)
 {
 	ES_LOG("Open shutter\n");
-	return setBitS0_8(drvno, CTRLB_bitindex_SHON, S0Addr_CTRLB);
+	return setBitS0_32(drvno, CTRL_bitindex_SHON, S0Addr_CTRL);
 }
 
 /**
@@ -977,7 +977,7 @@ es_status_codes SetNobRegister(uint32_t drvno)
 es_status_codes CloseShutter(uint32_t drvno)
 {
 	ES_LOG("Close shutter\n");
-	return resetBitS0_8(drvno, CTRLB_bitindex_SHON, S0Addr_CTRLB);
+	return resetBitS0_32(drvno, CTRL_bitindex_SHON, S0Addr_CTRL);
 }
 
 /**
@@ -1037,21 +1037,21 @@ es_status_codes SetSSlope(uint32_t drvno, uint32_t sslope)
 	{
 		// high slope
 	case sslope_pos:
-		status = setBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
+		status = setBitS0_32(drvno, CTRL_bitindex_SLOPE, S0Addr_CTRL);
 		if (status != es_no_error) return status;
-		status = resetBitS0_32(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
+		status = resetBitS0_32(drvno, CTRL_bitindex_BOTH_SLOPE, S0Addr_CTRL);
 		break;
 		// low slope
 	case sslope_neg:
-		status = resetBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
+		status = resetBitS0_32(drvno, CTRL_bitindex_SLOPE, S0Addr_CTRL);
 		if (status != es_no_error) return status;
-		status = resetBitS0_32(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
+		status = resetBitS0_32(drvno, CTRL_bitindex_BOTH_SLOPE, S0Addr_CTRL);
 		break;
 		// both slope
 	case sslope_both:
-		status = setBitS0_32(drvno, CTRLA_bitindex_SLOPE, S0Addr_CTRLA);
+		status = setBitS0_32(drvno, CTRL_bitindex_SLOPE, S0Addr_CTRL);
 		if (status != es_no_error) return status;
-		status = setBitS0_32(drvno, CTRLA_bitindex_BOTH_SLOPE, S0Addr_CTRLA);
+		status = setBitS0_32(drvno, CTRL_bitindex_BOTH_SLOPE, S0Addr_CTRL);
 		break;
 	default:
 		return es_parameter_out_of_range;
@@ -1090,7 +1090,7 @@ es_status_codes SetBSlope(uint32_t drvno, uint32_t slope)
 es_status_codes SetSTI(uint32_t drvno, uint8_t sti_mode)
 {
 	ES_LOG("Set STI: %"PRIu8"\n", sti_mode);
-	return writeBitsS0_8(drvno, sti_mode, CTRLB_bit_STI0 | CTRLB_bit_STI1 | CTRLB_bit_STI2, S0Addr_CTRLB);
+	return writeBitsS0_32(drvno, ((uint32_t)sti_mode) << CTRL_bitindex_STI0, CTRL_bit_STI0 | CTRL_bit_STI1 | CTRL_bit_STI2, S0Addr_CTRL);
 }
 
 /**
@@ -1110,7 +1110,7 @@ es_status_codes SetSTI(uint32_t drvno, uint8_t sti_mode)
 es_status_codes SetBTI(uint32_t drvno, uint8_t bti_mode)
 {
 	ES_LOG("Set BTI: %"PRIu8"\n", bti_mode);
-	return writeBitsS0_8(drvno, (uint8_t)(bti_mode << CTRLB_bitindex_BTI0), CTRLB_bit_BTI0 | CTRLB_bit_BTI1 | CTRLB_bit_BTI2, S0Addr_CTRLB);
+	return writeBitsS0_32(drvno, ((uint32_t)bti_mode) << CTRL_bitindex_BTI0, CTRL_bit_BTI0 | CTRL_bit_BTI1 | CTRL_bit_BTI2, S0Addr_CTRL);
 }
 
 /**
@@ -2104,7 +2104,7 @@ es_status_codes waitForBlockTrigger(uint32_t drvno)
 	{
 		if (!abortMeasurementFlag && checkEscapeKeyState())
 			abortMeasurementFlag = true;
-		status = ReadBitS0_8(drvno, S0Addr_CTRLA, CTRLA_bitindex_BSTART, &blockTriggered);
+		status = ReadBitS0_32(drvno, S0Addr_CTRL, CTRL_bitindex_BSTART, &blockTriggered);
 		if (status != es_no_error) return status;
 		if (blockTriggered)
 			return es_no_error;
@@ -2621,7 +2621,7 @@ es_status_codes GetMeasureOn(uint32_t drvno, bool* measureOn)
  */
 es_status_codes OutTrigLow(uint32_t drvno)
 {
-	return resetBitS0_32(drvno, CTRLA_bitindex_TRIG_OUT, S0Addr_CTRLA);
+	return resetBitS0_32(drvno, CTRL_bitindex_TRIG_OUT, S0Addr_CTRL);
 }
 
 /**
@@ -2633,7 +2633,7 @@ es_status_codes OutTrigLow(uint32_t drvno)
  */
 es_status_codes OutTrigHigh(uint32_t drvno)
 {
-	return setBitS0_32(drvno, CTRLA_bitindex_TRIG_OUT, S0Addr_CTRLA);
+	return setBitS0_32(drvno, CTRL_bitindex_TRIG_OUT, S0Addr_CTRL);
 }
 
 /**
@@ -2669,7 +2669,7 @@ es_status_codes OutTrigPulse(uint32_t drvno, int64_t pulseWidthInMicroseconds)
  */
 es_status_codes readBlockTriggerState(uint32_t drvno, uint8_t btrig_ch, bool* state)
 {
-	uint8_t val = 0;
+	uint32_t val = 0;
 	*state = false;
 	es_status_codes status = es_no_error;
 	switch (btrig_ch)
@@ -2679,33 +2679,33 @@ es_status_codes readBlockTriggerState(uint32_t drvno, uint8_t btrig_ch, bool* st
 		*state = true;
 		break;
 	case 1: //I
-		status = readRegisterS0_8(drvno, &val, S0Addr_CTRLA);
+		status = readRegisterS0_32(drvno, &val, S0Addr_CTRL);
 		if (status != es_no_error) return status;
-		if ((val & CTRLA_bit_STRIGIN) > 0) *state = true;
+		if ((val & CTRL_bit_STRIGIN) > 0) *state = true;
 		break;
 	case 2: //S1
-		status = readRegisterS0_8(drvno, &val, S0Addr_CTRLC);
+		status = readRegisterS0_32(drvno, &val, S0Addr_CTRL);
 		if (status != es_no_error) return status;
-		if ((val & CTRLC_bit_S1) > 0) *state = true;
+		if ((val & CTRL_bit_S1) > 0) *state = true;
 		break;
 	case 3: //S2
-		status = readRegisterS0_8(drvno, &val, S0Addr_CTRLC);
+		status = readRegisterS0_32(drvno, &val, S0Addr_CTRL);
 		if (status != es_no_error) return status;
-		if ((val & CTRLC_bit_S2) > 0) *state = true;
+		if ((val & CTRL_bit_S2) > 0) *state = true;
 		break;
 	case 4: // S1&S2
-		status = readRegisterS0_8(drvno, &val, S0Addr_CTRLC);
+		status = readRegisterS0_32(drvno, &val, S0Addr_CTRL);
 		if (status != es_no_error) return status;
-		if ((val & CTRLC_bit_S1) == 0) *state = false;
-		status = readRegisterS0_8(drvno, &val, S0Addr_CTRLC);
+		if ((val & CTRL_bit_S1) == 0) *state = false;
+		status = readRegisterS0_32(drvno, &val, S0Addr_CTRL);
 		if (status != es_no_error) return status;
-		if ((val & CTRLC_bit_S2) == 0) *state = false;
+		if ((val & CTRL_bit_S2) == 0) *state = false;
 		*state = true;
 		break;
 	case 5: // TSTART
-		status = readRegisterS0_8(drvno, &val, S0Addr_CTRLA);
+		status = readRegisterS0_32(drvno, &val, S0Addr_CTRL);
 		if (status != es_no_error) return status;
-		if ((val & CTRLA_bit_BSTART) > 0) *state = true;
+		if ((val & CTRL_bit_BSTART) > 0) *state = true;
 		break;
 	}
 	return status;
@@ -2870,25 +2870,24 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 
 	//CTRLA
-	es_status_codes status = readRegisterS0_8(drvno, &data8, S0Addr_CTRLA);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "0x04\tCTRLA\t0\tVON\t%"PRIu8"\n", (data8 & CTRLA_bit_VONOFF) >> CTRLA_bitindex_VONOFF);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t2\tXCK\t %"PRIu8"\n", (data8 & CTRLA_bit_XCK) >> CTRLA_bitindex_XCK);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t3\tTRIG OUT\t%"PRIu8"\n", (data8 & CTRLA_bit_TRIG_OUT) >> CTRLA_bitindex_TRIG_OUT);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t4\tBOTH SLOPE\t%"PRIu8"\n", (data8 & CTRLA_bit_BOTH_SLOPE) >> CTRLA_bitindex_BOTH_SLOPE);
-	isBitHigh = (data8 & CTRLA_bit_SLOPE) >> CTRLA_bitindex_SLOPE;
+	es_status_codes status = readRegisterS0_32(drvno, &data32, S0Addr_CTRL);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "0x04\tCTRLA\t0\tVON\t%"PRIu32"\n", (data32 & CTRL_bit_VONOFF) >> CTRL_bitindex_VONOFF);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t2\tXCK\t %"PRIu32"\n", (data32 & CTRL_bit_XCK) >> CTRL_bitindex_XCK);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t3\tTRIG OUT\t%"PRIu32"\n", (data32 & CTRL_bit_TRIG_OUT) >> CTRL_bitindex_TRIG_OUT);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t4\tBOTH SLOPE\t%"PRIu32"\n", (data32 & CTRL_bit_BOTH_SLOPE) >> CTRL_bitindex_BOTH_SLOPE);
+	isBitHigh = (data32 & CTRL_bit_SLOPE) >> CTRL_bitindex_SLOPE;
 	if (isBitHigh)
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t5\tSLOPE\t%d (pos)\n", isBitHigh);
 	else
 		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t5\tSLOPE\t%d (neg)\n", isBitHigh);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t6\tSTRIGIN\t%"PRIu8"\n", (data8 & CTRLA_bit_STRIGIN) >> CTRLA_bitindex_STRIGIN);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t7\tBSTART\t%"PRIu8"\n", (data8 & CTRLA_bit_BSTART) >> CTRLA_bitindex_BSTART);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t6\tSTRIGIN\t%"PRIu32"\n", (data32 & CTRL_bit_STRIGIN) >> CTRL_bitindex_STRIGIN);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t7\tBSTART\t%"PRIu32"\n", (data32 & CTRL_bit_BSTART) >> CTRL_bitindex_BSTART);
 
 	/*=======================================================================*/
 
 	//CTRLB
-	status = readRegisterS0_8(drvno, &data8, S0Addr_CTRLB);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x05\tCTRLB\t0-2\tSTI\t");
-	int combinedValueSTI = (data8 & CTRLB_bits_STI);
+	int combinedValueSTI = (data32 & CTRL_bits_STI) >> CTRL_bitindex_STI0;
 
 	switch (combinedValueSTI) {
 	case sti_I:
@@ -2916,9 +2915,9 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	}
 
 	//CTRLB SHON
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t3\tSHON\t%"PRIu8"\n\t\t4-6\tBTI\t", (data8 & CTRLB_bit_SHON) >> CTRLB_bitindex_SHON);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t3\tSHON\t%"PRIu32"\n\t\t4-6\tBTI\t", (data32 & CTRL_bit_SHON) >> CTRL_bitindex_SHON);
 
-	int combinedValueBTI = ((data8 & CTRLB_bits_BTI)) >> CTRLB_bitindex_BTI0;
+	int combinedValueBTI = ((data32 & CTRL_bits_BTI)) >> CTRL_bitindex_BTI0;
 
 	switch (combinedValueBTI)
 	{
@@ -2954,12 +2953,11 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 
 	//CTRLC
-	status = readRegisterS0_8(drvno, &data8, S0Addr_CTRLC);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x06\tCTRLC\t0\tI\t%"PRIu8"\n", (data8 & CTRLC_bit_I) >> CTRLC_bitindex_I);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t1\tS1\t%"PRIu8"\n", (data8 & CTRLC_bit_S1) >> CTRLC_bitindex_S1);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t2\tS2\t%"PRIu8"\n", (data8 & CTRLC_bit_S2) >> CTRLC_bitindex_S2);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t4\tEOI\t%"PRIu8"\n", (data8 & CTRLC_bit_eoi) >> CTRLC_bitindex_eoi);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t5\tEOI-CHB\t%"PRIu8"\n", (data8 & CTRLC_bit_eoi_chb) >> CTRLC_bitindex_eoi_chb);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x06\tCTRLC\t0\tI\t%"PRIu32"\n", (data32 & CTRL_bit_I) >> CTRL_bitindex_I);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t1\tS1\t%"PRIu32"\n", (data32 & CTRL_bit_S1) >> CTRL_bitindex_S1);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t2\tS2\t%"PRIu32"\n", (data32 & CTRL_bit_S2) >> CTRL_bitindex_S2);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t4\tEOI\t%"PRIu32"\n", (data32 & CTRL_bit_eoi) >> CTRL_bitindex_eoi);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t5\tEOI-CHB\t%"PRIu32"\n", (data32 & CTRL_bit_eoi_chb) >> CTRL_bitindex_eoi_chb);
 
 	/*=======================================================================*/
 
@@ -3924,7 +3922,7 @@ es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
 	int len = 0;
 	uint32_t data = 0;
 	// read ISA Id from S0Base+7
-	es_status_codes status = readRegisterS0_32(drvno, &data, S0Addr_CTRLA); // Board ID =5053
+	es_status_codes status = readRegisterS0_32(drvno, &data, S0Addr_CTRL); // Board ID =5053
 	if (status != es_no_error) return status;
 	data = data >> 16;
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i ID\t= 0x%x\n", drvno, data);
@@ -5247,5 +5245,5 @@ es_status_codes WaitForBlockOn(uint32_t drvno)
 
 es_status_codes SetShiftS1S2ToNextScan(uint32_t drvno)
 {
-	return writeBitsS0_8(drvno, (1 & settings_struct.camera_settings[drvno].shift_s1s2_to_next_scan) << CTRLC_bitindex_shift_s, CTRLC_bit_shift_s, S0Addr_CTRLC);
+	return writeBitsS0_32(drvno, (1 & settings_struct.camera_settings[drvno].shift_s1s2_to_next_scan) << CTRL_bitindex_shift_s, CTRL_bit_shift_s, S0Addr_CTRL);
 }
