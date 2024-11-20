@@ -72,7 +72,7 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingTorPath, ui->comboBoxOutput->currentIndex());
 	settings.setValue(settingAdcModePath, ui->comboBoxAdcMode->currentIndex());
 	settings.setValue(settingAdcCustomValuePath, ui->spinBoxAdcCustom->value());
-	settings.setValue(settingBncOutPath, ui->comboBoxBncOut->currentIndex());
+	settings.setValue(settingMonitorPath, ui->comboBoxMonitor->currentIndex());
 	settings.setValue(settingTocntPath, ui->spinBoxTocnt->value());
 	settings.setValue(settingSticntPath, ui->spinBoxSticnt->value());
 	settings.setValue(settingBticntPath, ui->spinBoxBticnt->value());
@@ -385,7 +385,7 @@ void CameraSettingsWidget::loadDefaults()
 	ui->comboBoxOutput->setCurrentIndex(settingTorDefault);
 	ui->comboBoxAdcMode->setCurrentIndex(settingAdcModeDefault);
 	ui->spinBoxAdcCustom->setValue(settingAdcCustomValueDefault);
-	ui->comboBoxBncOut->setCurrentIndex(settingBncOutDefault);
+	ui->comboBoxMonitor->setCurrentIndex(settingMonitorDefault);
 	ui->spinBoxTocnt->setValue(settingTocntDefault);
 	ui->spinBoxSticnt->setValue(settingSticntDefault);
 	ui->spinBoxBticnt->setValue(settingBticntDefault);
@@ -558,7 +558,7 @@ void CameraSettingsWidget::initializeWidget()
 	ui->comboBoxOutput->setCurrentIndex(settings.value(settingTorPath, settingTorDefault).toDouble());
 	ui->comboBoxAdcMode->setCurrentIndex(settings.value(settingAdcModePath, settingAdcModeDefault).toDouble());
 	ui->spinBoxAdcCustom->setValue(settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toDouble());
-	ui->comboBoxBncOut->setCurrentIndex(settings.value(settingBncOutPath, settingBncOutDefault).toDouble());
+	ui->comboBoxMonitor->setCurrentIndex(settings.value(settingMonitorPath, settingMonitorDefault).toDouble());
 	ui->spinBoxTocnt->setValue(settings.value(settingTocntPath, settingTocntDefault).toDouble());
 	ui->spinBoxSticnt->setValue(settings.value(settingSticntPath, settingSticntDefault).toDouble());
 	ui->spinBoxBticnt->setValue(settings.value(settingBticntPath, settingBticntDefault).toDouble());

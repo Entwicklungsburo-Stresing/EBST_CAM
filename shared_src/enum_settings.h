@@ -260,26 +260,26 @@ enum fft_mode_t
 };
 
 /**
- * This enum shows all options for the setting \ref camera_settings.bnc_out.
+ * This enum shows all options for the setting \ref camera_settings.monitor.
  */
-enum bnc_out_t
+enum monitor_t
 {
 	/**
 	 * XCK is high during the readout of the camera.
 	 */
-	bnc_out_xck = 0,
+	monitor_xck = 0,
 	/**
 	 * Exp win stands for exposure window and is high, when the sensor is ready to be exposed to light.
 	 */
-	bnc_out_exp_win = 1,
+	monitor_win = 1,
 	/**
 	 * The option ADC CLK sets the output to the ADC clock.
 	 */
-	bnc_out_adc_clk = 2,
+	monitor_adc_clk = 2,
 	/**
 	 * Vin is high when the voltage input is sampled.
 	 */
-	bnc_out_Vin = 3
+	monitor_Vin = 3
 };
 
 /**
@@ -360,7 +360,7 @@ enum tor_out_t
 	 */
 	tor_do_cc_i = 17,
 	/**
-	 * Exposure window shows when it is possible to expose the camera to light. Since the PCIe card doesn't know exactly when the sensor is ready to be exposed this is only an estimated signal. If possible use \ref bnc_out_t.bnc_out_exp_win of \ref camera_settings.bnc_out.
+	 * Exposure window shows when it is possible to expose the camera to light. Since the PCIe card doesn't know exactly when the sensor is ready to be exposed this is only an estimated signal. If possible use \ref monitor_t.monitor_win of \ref camera_settings.monitor.
 	 */
 	tor_exposure_window = 18,
 	/**
