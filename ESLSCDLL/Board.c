@@ -4140,9 +4140,9 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 /**
  * \brief Gives scan and block number of the last scan written to userBuffer.
  *
- * When settings parameter \ref camera_settings.user_software_polling is true this function converts scanCounterTotal to scan and block.
+ * When settings parameter \ref camera_settings.use_software_polling is true this function converts scanCounterTotal to scan and block.
  * This is necessary, because scanCounterTotal is just counting each scan not regarding camcnt and blocks.
- * When \ref camera_settings.user_software_polling is false the scan and block number of the last interrupt is given.
+ * When \ref camera_settings.use_software_polling is false the scan and block number of the last interrupt is given.
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param sample Scan number of the last scan in userBuffer. -1 when no scan has been written yet, otherwise 0...(nos-1)
