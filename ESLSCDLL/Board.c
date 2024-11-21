@@ -3022,7 +3022,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//Register VCLKFREQ
 	int translatedVCLKFREQ = 0;
-	if (data32 & VCLKFREQ_bits == 0) translatedVCLKFREQ = 0;
+	if ((data32 & VCLKFREQ_bits) == 0) translatedVCLKFREQ = 0;
 	else translatedVCLKFREQ = VCLKFREQ_base_value + ((data32 >> VCLKFREQ_bitindex) * VCLKFREQ_step_value);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t24-31\tVCLKFREQ\t%"PRIu32" (%d ns)\n", data32 >> VCLKFREQ_bitindex, translatedVCLKFREQ);
 
