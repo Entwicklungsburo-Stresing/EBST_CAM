@@ -258,10 +258,10 @@ enum XCK_bits_t
 enum PIXREG_FFCTRL_FFFLAGS_bits_t
 {
 	PIXREG_bitindex_pixel = 0,
-	FFCTRL_bitindex_block_reset = 16,
-	FFCTRL_bitindex_scan_reset = 17,
-	FFCTRL_bitindex_SWTRIG = 18,
-	FFCTRL_bitindex_RSFIFO = 19,
+	FFCTRL_bitindex_block_reset = 20,
+	FFCTRL_bitindex_scan_reset = 21,
+	FFCTRL_bitindex_SWTRIG = 22,
+	FFCTRL_bitindex_RSFIFO = 23,
 	FF_FLAGS_bitindex_block_read = 25,
 	FF_FLAGS_bitindex_scan_read = 26,
 	FF_FLAGS_bitindex_overflow = 27,
