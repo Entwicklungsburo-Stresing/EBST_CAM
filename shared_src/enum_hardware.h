@@ -285,14 +285,8 @@ enum PIXREG_FFCTRL_FFFLAGS_bits_t
 
 enum FIFOCNT_bits_t
 {
-	FIFOCNT_bitindex_WRCNT7 = 7,
-	FIFOCNT_bitindex_WRCNT6 = 6,
-	FIFOCNT_bitindex_WRCNT5 = 5,
-	FIFOCNT_bitindex_WRCNT4 = 4,
-	FIFOCNT_bitindex_WRCNT3 = 3,
-	FIFOCNT_bitindex_WRCNT2 = 2,
-	FIFOCNT_bitindex_WRCNT1 = 1,
-	FIFOCNT_bitindex_WRCNT0 = 0
+	FIFOCNT_bitindex_WRCNT = 0,
+	FIFOCNT_bits_WRCNT = 0xFF
 };
 
 enum VCLKCTRL_VCLKFREQ_bits_t
