@@ -788,50 +788,63 @@ es_status_codes SetupVCLKReg(uint32_t drvno, uint32_t lines, uint8_t vfreq)
  * \brief sets Vertical Partial Binning in registers R10,R11 and R12. Only for FFT sensors.
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param range specifies R 1..5
+ * \param range Determines the range, for which the value lines will be written.
+ *		* min = 1
+ *		* step = 1
+ *		* max = 5
  * \param lines number of vertical clocks for next read
+ *		* min = 1
+ *		* step = 1
+ *		* max = 2047
  * \return \ref es_status_codes
  */
 es_status_codes SetupVPB(uint32_t drvno, uint32_t range, uint32_t lines)
 {
 	ES_LOG("SetupVPB, range: 0x%x, lines: 0x%x\n", range, lines);
 	uint16_t adr = 0;
+	int shift = 0;
+	uint32_t bits = 0;
+	uint32_t keep = 0;
 	lines *= 2; //vclks=lines*2
 	switch (range)
 	{
 	case 1:
 		adr = S0Addr_ROI0;
+		shift = ROI0_bitindex_range1;
+		bits = ROI0_bits_range1;
+		keep = ROI0_bit_range1_keep;
 		break;
 	case 2:
-		adr = S0Addr_ROI0 + 2;
+		adr = S0Addr_ROI0;
+		shift = ROI0_bitindex_range2;
+		bits = ROI0_bits_range2;
+		keep = ROI0_bit_range2_keep;
 		break;
 	case 3:
 		adr = S0Addr_ROI1;
+		shift = ROI1_bitindex_range3;
+		bits = ROI1_bits_range3;
+		keep = ROI1_bit_range3_keep;
 		break;
 	case 4:
-		adr = S0Addr_ROI1 + 2;
+		adr = S0Addr_ROI1;
+		shift = ROI1_bitindex_range4;
+		bits = ROI1_bits_range4;
+		keep = ROI1_bit_range4_keep;
 		break;
 	case 5:
 		adr = S0Addr_ROI2;
+		shift = ROI2_bitindex_range5;
+		bits = ROI2_bits_range5;
+		keep = ROI2_bit_range5_keep;
 		break;
-	case 6:
-		adr = S0Addr_ROI2 + 2;
-		break;
-	case 7:
-		adr = S0Addr_XCKDLY;
-		break;
-	case 8:
-		adr = S0Addr_XCKDLY + 2;
-		break;
+	default:
+		return es_parameter_out_of_range;
 	}
-	// keep is a deprecated setting. The idea was to get faster by throwing away data. This is in fact not possible, because the data has be read out anyway. Thus throwing away data has no advantage.
-	bool keep = true;
-	if (keep) { lines |= 0x8000; }
-	else { lines &= 0x7fff; }
-	es_status_codes  status = writeRegisterS0_8(drvno, (uint8_t)lines, adr);
-	if (status != es_no_error) return status;
-	return writeRegisterS0_8(drvno, (uint8_t)(lines >> 8), adr + 1);
-}// SetupVPB
+	// keep is a deprecated setting. The idea was to get faster by throwing away data. This is in fact not possible, because the data has be read out anyway. Thus throwing away data has no advantage. The keep bit is always set to 1.
+	uint32_t data = (lines << shift) & bits | keep;
+	return writeBitsS0_32(drvno, data, bits | keep, adr);
+}
 
 /**
  * \brief Turn partial binning on.
@@ -3290,7 +3303,6 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	//Register ROI2
 	status = readRegisterS0_32(drvno, &data32, S0Addr_ROI2);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x70\tROI2\t0-15\trange 5\t%"PRIu32"\n", (data32 & ROI2_bits_range5) >> ROI2_bitindex_range5);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t16-31\trange 6\t%"PRIu32"\n", (data32 & ROI2_bits_range6) >> ROI2_bitindex_range6);
 
 	/*=======================================================================*/
 
@@ -3919,21 +3931,12 @@ es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i ID\t= 0x%x\n", drvno, data);
 	data = 0x07FF;
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i length\t= 0x%x\n", drvno, data);
-	uint8_t udata1 = 0,
-		udata2 = 0,
-		udata3 = 0,
-		udata4 = 0;
+	char udata1[4];
 	if (data >= 0x1F)
 	{//if WE -> has space 0x20
-		status = readRegisterS0_8(drvno, &udata1, S0Addr_EBST);
+		status = readRegisterS0_32(drvno, (uint32_t*)&udata1, S0Addr_EBST);
 		if (status != es_no_error) return status;
-		status = readRegisterS0_8(drvno, &udata2, S0Addr_EBST + 1);
-		if (status != es_no_error) return status;
-		status = readRegisterS0_8(drvno, &udata3, S0Addr_EBST + 2);
-		if (status != es_no_error) return status;
-		status = readRegisterS0_8(drvno, &udata4, S0Addr_EBST + 3);
-		if (status != es_no_error) return status;
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i ven ID\t= %c%c%c%c\n", drvno, udata1, udata2, udata3, udata4);
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i ven ID\t= %s\n", drvno, udata1);
 	}
 	if (data >= 0x3F)
 	{//if 9056 -> has space 0x40
@@ -4198,7 +4201,7 @@ es_status_codes SetBticnt(uint32_t drvno, uint8_t divider)
 	// If divider is not 0, set the enable bit to 1
 	if (divider)
 		divider |= BTICNT_bit_BTICNT_EN;
-	return writeRegisterS0_8(drvno, divider, S0Addr_BTICNT);
+	return writeRegisterS0_32(drvno, (uint32_t)divider, S0Addr_BTICNT);
 }
 
 /**

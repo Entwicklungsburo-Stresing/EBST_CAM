@@ -528,25 +528,33 @@ enum TDCCtrl_bits_t
 enum ROI0_bits_t
 {
 	ROI0_bitindex_range1 = 0,
+	ROI0_bitindex_range1_keep = 15,
 	ROI0_bitindex_range2 = 16,
-	ROI0_bits_range1 = 0x0000FFFF,
-	ROI0_bits_range2 = 0xFFFF0000,
+	ROI0_bitindex_range2_keep = 31,
+	ROI0_bits_range1 = 0x00000FFF,
+	ROI0_bit_range1_keep = 0x00008000,
+	ROI0_bits_range2 = 0x0FFF0000,
+	ROI0_bit_range2_keep = 0x80000000,
 };
 
 enum ROI1_bits_t
 {
 	ROI1_bitindex_range3 = 0,
+	ROI0_bitindex_range3_keep = 15,
 	ROI1_bitindex_range4 = 16,
-	ROI1_bits_range3 = 0x0000FFFF,
-	ROI1_bits_range4 = 0xFFFF0000,
+	ROI0_bitindex_range4_keep = 31,
+	ROI1_bits_range3 = 0x00000FFF,
+	ROI1_bit_range3_keep = 0x00008000,
+	ROI1_bits_range4 = 0x0FFF0000,
+	ROI1_bit_range4_keep = 0x80000000,
 };
 
 enum ROI2_bits_t
 {
 	ROI2_bitindex_range5 = 0,
-	ROI2_bitindex_range6 = 16,
-	ROI2_bits_range5 = 0x0000FFFF,
-	ROI2_bits_range6 = 0xFFFF0000,
+	ROI2_bitindex_range5_keep = 15,
+	ROI2_bits_range5 = 0x00000FFF,
+	ROI2_bit_range5_keep = 0x00008000,
 };
 
 enum XCKDELAY_bits_t
