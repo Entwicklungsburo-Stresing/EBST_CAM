@@ -2860,8 +2860,6 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	int len = 0;
 	*stringPtr = (char*)calloc(bufferSize, sizeof(char));
 	bool isBitHigh;
-	uint8_t data8 = 0;
-	uint16_t data16 = 0;
 	uint32_t data32 = 0;
 
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "address\tname\tbit\tname\tvalue\n");
@@ -3000,8 +2998,8 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 
 	//FIFOCNT
-	status = readRegisterS0_8(drvno, &data8, S0Addr_FIFOCNT);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x14\tFIFOCNT\t0-7\tWRCNT\t%"PRIu8"\n", data8);
+	status = readRegisterS0_32(drvno, &data32, (S0Addr_FIFOCNT & FIFOCNT_bits_WRCNT) >> FIFOCNT_bitindex_WRCNT);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x14\tFIFOCNT\t0-7\tWRCNT\t%"PRIu32"\n", data32);
 
 	/*=======================================================================*/
 
@@ -3142,9 +3140,9 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 
 	//Register ARREG
-	status = readRegisterS0_16(drvno, &data16, S0Addr_ARREG);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x2c\tARREG\t0-14\tROI Ranges\t%"PRIu16"\n", (data16 & ARREG_bit_pb_control) >> ARREG_bitindex_pb_control);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t15\tPartial Binning\t%"PRIu16"\n", (data16 & ARREG_bit_partial_binning) >> ARREG_bitindex_partial_binning);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_ARREG);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x2c\tARREG\t0-14\tROI Ranges\t%"PRIu32"\n", (data32 & ARREG_bit_pb_control) >> ARREG_bitindex_pb_control);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t15\tPartial Binning\t%"PRIu32"\n", (data32 & ARREG_bit_partial_binning) >> ARREG_bitindex_partial_binning);
 
 	/*=======================================================================*/
 
@@ -3253,8 +3251,8 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 
 	//Register CAMCNT
-	status = readRegisterS0_8(drvno, &data8, S0Addr_CAMCNT);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x5c\tCAMCNT\t0-3\tCAMCNT\t%"PRIu8"\n", (data8 & CAMCNT_bits));
+	status = readRegisterS0_32(drvno, &data32, S0Addr_CAMCNT);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x5c\tCAMCNT\t0-3\tCAMCNT\t%"PRIu32"\n", (data32 & CAMCNT_bits) >> CAMCNT_bitindex_camcnt);
 
 	/*=======================================================================*/
 
@@ -3382,10 +3380,10 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//Register DSCCtrl
 	status = readRegisterS0_32(drvno, &data32, S0Addr_DSCCtrl);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xa8\tDSCCtrl\t0\tRS1\t%"PRIu8"\n", (data8 & DSCCtrl_bit_rs1) >> DSCCtrl_bitindex_rs1);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t1\tDIR1\t%"PRIu8"\n", (data8 & DSCCtrl_bit_dir1) >> DSCCtrl_bitindex_dir1);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t8\tRS2\t%"PRIu8"\n", (data8 & DSCCtrl_bit_rs2) >> DSCCtrl_bitindex_rs2);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t9\tDIR2\t%"PRIu8"\n", (data8 & DSCCtrl_bit_dir2) >> DSCCtrl_bitindex_dir2);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xa8\tDSCCtrl\t0\tRS1\t%"PRIu32"\n", (data32 & DSCCtrl_bit_rs1) >> DSCCtrl_bitindex_rs1);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t1\tDIR1\t%"PRIu32"\n", (data32 & DSCCtrl_bit_dir1) >> DSCCtrl_bitindex_dir1);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t8\tRS2\t%"PRIu32"\n", (data32 & DSCCtrl_bit_rs2) >> DSCCtrl_bitindex_rs2);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t9\tDIR2\t%"PRIu32"\n", (data32 & DSCCtrl_bit_dir2) >> DSCCtrl_bitindex_dir2);
 
 	/*=======================================================================*/
 
