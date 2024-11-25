@@ -2085,7 +2085,7 @@ es_status_codes pulseBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t addre
  * @param bitnumber 0...7, 0 is LSB, 7 MSB
  * @param address register address. 1 byte steps are valid.
  * @param duration_in_microseconds Duration of the bit beeing high in microseconds.
- *  @return \ref es_status_codes
+ * @return \ref es_status_codes
  */
 es_status_codes pulseBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address, int64_t duration_in_microseconds)
 {
