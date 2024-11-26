@@ -65,6 +65,8 @@ DllAccess es_status_codes DLLCopyOneSample(uint32_t drvno, uint32_t sample, uint
 DllAccess es_status_codes DLLCopyOneSample_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4);
 DllAccess es_status_codes DLLCopyOneBlock(uint32_t drvno, uint16_t block, uint16_t* pdest);
 DllAccess es_status_codes DLLCopyOneBlock_multipleBoards(uint16_t block, uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4);
+DllAccess es_status_codes DLLCopyOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t* pdest);
+DllAccess es_status_codes DLLCopyOneBlockOfOneCamera_multipleBoards(uint32_t block, uint16_t camera, uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4);
 DllAccess es_status_codes DLLCopyAllData(uint32_t drvno, uint16_t* pdest);
 DllAccess es_status_codes DLLCopyAllData_multipleBoards(uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4);
 DllAccess es_status_codes DLLCopyDataArbitrary(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, uint32_t length_in_pixel, uint16_t* pdest);

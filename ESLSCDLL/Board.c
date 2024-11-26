@@ -4670,6 +4670,8 @@ es_status_codes ResetBlockFrequencyBit(uint32_t drvno)
 
 /**
  * \brief Copy the data of one block of one camera to pdest.
+ * 
+ * If \ref camera_settings.camcnt is 1, use CopyOneBlock instead. This function copies the data sample by sample because the data of one block of one camera is not stored in a contiguous memory block if camcnt is greater than 1.
  *
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param block block number ( 0...(nob - 1) )
