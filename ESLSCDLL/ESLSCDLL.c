@@ -315,7 +315,7 @@ DllAccess es_status_codes DLLGetPixelPointer(uint32_t drvno, uint16_t pixel, uin
 }
 
 /**
- * \brief Copies one block of pixel data of all used boards selected by settings parameter \ref camera_settings.board_sel to pdest.
+ * \brief Copies one block of pixel data of all used boards selected by settings parameter \ref measurement_settings.board_sel to pdest.
  *
  * \param block Selects which block to copy.
  * \param pdest0 address where data is written for board 0, should be a buffer with size: nos * camcnt * pixel * sizeof( uint16_t )
@@ -356,7 +356,11 @@ DllAccess es_status_codes DLLCopyOneBlockOfOneCamera(uint32_t drvno, uint32_t bl
  *
  * \param block block number ( 0...(nob - 1) )
  * \param camera camera number ( 0...(CAMCNT - 1) )
- * \param pdest Pointer where the data will be written to. Make sure that the size of the buffer is >= sizeof(uint16_t) * pixel * nos
+ * \param pdest0 Pointer where the data will be written to for board 0. Make sure that the size of the buffer is >= sizeof(uint16_t) * pixel * nos
+ * \param pdest1 Pointer where the data will be written to for board 1. Make sure that the size of the buffer is >= sizeof(uint16_t) * pixel * nos
+ * \param pdest2 Pointer where the data will be written to for board 2. Make sure that the size of the buffer is >= sizeof(uint16_t) * pixel * nos
+ * \param pdest3 Pointer where the data will be written to for board 3. Make sure that the size of the buffer is >= sizeof(uint16_t) * pixel * nos
+ * \param pdest4 Pointer where the data will be written to for board 4. Make sure that the size of the buffer is >= sizeof(uint16_t) * pixel * nos
  * \return \ref es_status_codes
  */
 DllAccess es_status_codes DLLCopyOneBlockOfOneCamera_multipleBoards(uint32_t block, uint16_t camera, uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4)
