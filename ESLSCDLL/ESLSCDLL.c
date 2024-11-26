@@ -211,7 +211,7 @@ DllAccess es_status_codes DLLCopyOneSample(uint32_t drvno, uint32_t sample, uint
 }
 
 /**
- * \brief Get data of a single measurement for all boards selected by settings parameter board_sel.
+ * \brief Get data of a single measurement for all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * \param sample sample number ( 0...(nos - 1) )
  * \param block block number ( 0...(nob - 1) )
@@ -248,7 +248,7 @@ DllAccess es_status_codes DLLCopyAllData(uint32_t drvno, uint16_t* pdest)
 }
 
 /**
- * \brief Copies all pixel data to pdest for all used boards set in settings parameter board_sel.
+ * \brief Copies all pixel data to pdest for all used boards set in settings parameter \ref measurement_settings.board_sel.
  *
  * \param pdest0 Address where data is written for board 0, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( uint16_t )
  * \param pdest1 Address where data is written for board 1, should be a buffer with size: nos * nob * camcnt * pixel * sizeof( uint16_t )
@@ -315,7 +315,7 @@ DllAccess es_status_codes DLLGetPixelPointer(uint32_t drvno, uint16_t pixel, uin
 }
 
 /**
- * \brief Copies one block of pixel data of all used boards selected by settings parameter board_sel to pdest.
+ * \brief Copies one block of pixel data of all used boards selected by settings parameter \ref camera_settings.board_sel to pdest.
  *
  * \param block Selects which block to copy.
  * \param pdest0 address where data is written for board 0, should be a buffer with size: nos * camcnt * pixel * sizeof( uint16_t )
@@ -416,7 +416,7 @@ DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t drvno, uint8_t* data, uin
 }
 
 /**
- * \brief Read 1 byte of a register in S0 space of all boards selected by settings parameter board_sel.
+ * \brief Read 1 byte of a register in S0 space of all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * \param data0 Read buffer of board 0.
  * \param data1 Read buffer of board 1.
@@ -445,7 +445,7 @@ DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards(uint8_t* data0, uin
 }
 
 /**
- * \brief Write the same 1 byte to a register in S0 space of all boards selected by settings parameter board_sel.
+ * \brief Write the same 1 byte to a register in S0 space of all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * \param data Data to write.
  * \param address Address of the register to write.
@@ -465,7 +465,7 @@ DllAccess es_status_codes DLLreadRegisterS0_32(uint32_t drvno, uint32_t* data, u
 }
 
 /**
- * \brief Read 4 bytes of a register in S0 space of all boards selected by settings parameter board_sel.
+ * \brief Read 4 bytes of a register in S0 space of all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * \param data0 Read buffer for board 0.
  * \param data1 Read buffer for board 1.
@@ -492,7 +492,7 @@ DllAccess es_status_codes DLLreadRegisterS0_32_multipleBoards(uint32_t* data0, u
 }
 
 /**
- * \brief Write 4 bytes of a register in S0 space for all boards selected by settings parameter board_sel.
+ * \brief Write 4 bytes of a register in S0 space for all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * \param data Data to write.
  * \param address Address of the register to read.
@@ -512,7 +512,7 @@ DllAccess es_status_codes DLLReadScanFrequencyBit(uint32_t drvno, uint8_t* scanF
 }
 
 /**
- * \brief Reads the ScanFrequency bit and checks if its high or low for all boards selected by settings parameter board_sel.
+ * \brief Reads the ScanFrequency bit and checks if its high or low for all boards selected by settings parameter \ref measurement_settings.board_sel.
  * 
  * \param scanFrequencyTooHigh0 True when scan frequency too high bit is set for board 0
  * \param scanFrequencyTooHigh1 True when scan frequency too high bit is set for board 1
@@ -572,7 +572,7 @@ DllAccess es_status_codes DLLReadBlockFrequencyBit(uint32_t drvno, uint8_t* bloc
 }
 
 /**
- * \brief Reads the ScanFrequency bit and checks if its high or low for all boards selected by settings parameter board_sel.
+ * \brief Reads the ScanFrequency bit and checks if its high or low for all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * \param blockFrequencyTooHigh0 True when block frequency too high bit is set for board 0
  * \param blockFrequencyTooHigh1 True when block frequency too high bit is set for board 1
@@ -959,7 +959,7 @@ DllAccess double DLLCalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double 
 }
 
 /**
- * \brief Set trigger out(Reg CtrlA:D3) for all boards selected by settings parameter board_sel. Can be used to control timing issues in software.
+ * \brief Set trigger out(Reg CtrlA:D3) for all boards selected by settings parameter \ref measurement_settings.board_sel. Can be used to control timing issues in software.
  *
  * The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual.
  * \return \ref es_status_codes
@@ -978,7 +978,7 @@ DllAccess es_status_codes DLLOutTrigHigh()
 }
 
 /**
- * \brief Reset trigger out(Reg CtrlA:D3) for all boards selected by settings parameter board_sel. Can be used to control timing issues in software.
+ * \brief Reset trigger out(Reg CtrlA:D3) for all boards selected by settings parameter \ref measurement_settings.board_sel. Can be used to control timing issues in software.
  *
  * The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual.
  * \return \ref es_status_codes
@@ -997,7 +997,7 @@ DllAccess es_status_codes DLLOutTrigLow()
 }
 
 /**
- * \brief Pulses trigger out(Reg CtrlA:D3) for all boards selected by setings parameter board_sel. Can be used to control timing issues in software.
+ * \brief Pulses trigger out(Reg CtrlA:D3) for all boards selected by setings parameter \ref measurement_settings.board_sel. Can be used to control timing issues in software.
  *
  * The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual
  * \param pulseWidthInMicroseconds duration of pulse in us
@@ -1017,7 +1017,7 @@ DllAccess es_status_codes DLLOutTrigPulse(int64_t pulseWidthInMicroseconds)
 }
 
 /**
- * \brief Open shutter for sensors with EC (exposure control) / sets IFC signal = high for all boards selected by settings parameter board_sel.
+ * \brief Open shutter for sensors with EC (exposure control) / sets IFC signal = high for all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * \return \ref es_status_codes
  */
@@ -1035,7 +1035,7 @@ DllAccess es_status_codes DLLOpenShutter()
 }
 
 /**
- * \brief Sets the IFC bit of interface for sensors with shutter function for all boards set by settings parameter board_sel. IFC=low.
+ * \brief Sets the IFC bit of interface for sensors with shutter function for all boards set by settings parameter \ref measurement_settings.board_sel. IFC=low.
  *
  * \return \ref es_status_codes
  */
@@ -1053,7 +1053,7 @@ DllAccess es_status_codes DLLCloseShutter()
 }
 
 /**
- * @brief Set bit to 1 in S0 register at memory address for all boards selected by settings parameter board_sel.
+ * @brief Set bit to 1 in S0 register at memory address for all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
  * @param address register address. Only 4 byte steps are valid.
@@ -1065,7 +1065,7 @@ DllAccess es_status_codes DLLsetBitS0_32(uint32_t bitnumber, uint16_t address)
 }
 
 /**
- * @brief Set bit to 0 in register at memory address for all boards selected by settings parameter board_sel.
+ * @brief Set bit to 0 in register at memory address for all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
  * @param address register address. Only 4 byte steps are valid.
@@ -1153,7 +1153,7 @@ DllAccess es_status_codes DLLReadBitS0_8_multipleBoards(uint16_t address, uint8_
 }
 
 /**
- * \brief Set temperature level for cooled cameras for all boards selected by settings parameter board_sel.
+ * \brief Set temperature level for cooled cameras for all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * \param level level 0..7 / 0=off, 7=min -> see cooling manual
  * \return \ref es_status_codes
@@ -1180,7 +1180,7 @@ DllAccess es_status_codes DLLSetTORReg(uint32_t drvno, uint8_t tor)
 }
 
 /**
- * \brief Set signal of output port of PCIe card for all boards selected by settings parameter board_sel.
+ * \brief Set signal of output port of PCIe card for all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * \param tor select output signal. See [enum tor_out_t](@ref tor_out_t) in enum_settings.h for options.
  * \return \ref es_status_codes
@@ -1255,7 +1255,7 @@ DllAccess es_status_codes DLLGetMeasureOn(uint32_t drvno, uint8_t* measureOn)
 }
 
 /**
- * \brief Check if measure on bit is set for all boards selected by settings parameter board_sel.
+ * \brief Check if measure on bit is set for all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * \param measureOn0 True when measureon bit is set in board 0.
  * \param measureOn1 True when measureon bit is set in board 1.
@@ -1283,7 +1283,7 @@ DllAccess es_status_codes DLLGetMeasureOn_multipleBoards(uint8_t* measureOn0, ui
 }
 
 /**
- * \brief Returns when measure on bit is 0 in all boards selected by settings parameter board_sel.
+ * \brief Returns when measure on bit is 0 in all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * \return \ref es_status_codes
  */
@@ -1293,7 +1293,7 @@ DllAccess es_status_codes DLLWaitForMeasureDone()
 }
 
 /**
- * \brief Returns when block on bit is 0 in all boards selected by settings parameter board_sel.
+ * \brief Returns when block on bit is 0 in all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * \return \ref es_status_codes
  */
@@ -1532,7 +1532,7 @@ DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10n
 }
 
 /**
- * \brief Set period of IOCtrl pulse outputs base frequency T0 for all boards selected by settings parameter board_sel.
+ * \brief Set period of IOCtrl pulse outputs base frequency T0 for all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * \param period_in_10ns Period of T0 in 10ns steps.
  * \return \ref es_status_codes
@@ -1553,7 +1553,7 @@ DllAccess es_status_codes DLLIOCtrl_setT0_multipleBoards(uint32_t period_in_10ns
 }
 
 /**
- * \brief Set parameters of all pulses outputs of IOCTRL for all boards selected by settings parameter board_sel.
+ * \brief Set parameters of all pulses outputs of IOCTRL for all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * \param width_in_5ns Set width of pulse in 5ns steps. Array with 7 entries.
  * \param delay_in_5ns Set delay of pulse in 5ns steps. Array with 7 entries.
@@ -1584,7 +1584,7 @@ DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t*
 }
 
 /**
- * \brief Gives scan and block number of the last scan written to userBuffer for all boards selected by settings paramter board_sel.
+ * \brief Gives scan and block number of the last scan written to userBuffer for all boards selected by settings paramter \ref measurement_settings.board_sel.
  *
  * When settings parameter USE_SOFTWARE_POLLING is true this function converts scanCounterTotal to scan and block.
  * This is necessary, because scanCounterTotal is just counting each scan not regarding camcnt and blocks.
@@ -1625,7 +1625,7 @@ DllAccess es_status_codes DLLGetIsTdc(uint32_t drvno, uint8_t* isTdc)
 }
 
 /**
- * \brief Read TDC flag in PCIEFLAGS register of all boards selected by settings parameter board_sel.
+ * \brief Read TDC flag in PCIEFLAGS register of all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * \param isTdc0 TDC flag of board 0. 1: TDC board detected, 0: no TDC board detected
  * \param isTdc1 TDC flag of board 1. 1: TDC board detected, 0: no TDC board detected
@@ -1697,7 +1697,7 @@ DllAccess es_status_codes DLLResetDSC(uint32_t drvno, uint8_t DSCNumber)
 }
 
 /**
- * @brief reset Delay Stage Counter for all boards selected by settings parameter board_sel.
+ * @brief reset Delay Stage Counter for all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * @param DSCNumber 1: DSC 1; 2: DSC 2
  * @return \ref es_status_codes
@@ -1726,7 +1726,7 @@ DllAccess es_status_codes DLLSetDIRDSC(uint32_t drvno, uint8_t DSCNumber, uint8_
 }
 
 /**
- * @brief set direction of Delay Stage Counter for all boards selected by settings parameter board_sel.
+ * @brief set direction of Delay Stage Counter for all boards selected by settings parameter \ref measurement_settings.board_sel.
  *
  * @param DSCNumber 1: DSC 1; 2: DSC 2
  * @param dir true: up; false: down
@@ -1756,7 +1756,7 @@ DllAccess es_status_codes DLLGetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t*
 }
 
 /**
- * \brief return all values of Delay Stage Counter for all boards selected by settings parameter board_sel
+ * \brief return all values of Delay Stage Counter for all boards selected by settings parameter \ref measurement_settings.board_sel
  *
  * \param DSCNumber 1: DSC 1; 2: DSC 2
  * \param ADSC0 current DSC of board 0
@@ -1791,7 +1791,7 @@ DllAccess es_status_codes DLLGetDSC_multipleBoards(uint8_t DSCNumber, uint32_t* 
 }
 
 /**
- * \brief Initialize the TDC-GPX chip for all boards selected by settings parameter board_sel. TDC: time delay counter option.
+ * \brief Initialize the TDC-GPX chip for all boards selected by settings parameter \ref measurement_settings.board_sel. TDC: time delay counter option.
  *
  * \param delay GPX offset is used to increase accuracy. A counter value can be added, usually 1000.
  * \return \ref es_status_codes
@@ -1888,7 +1888,7 @@ DllAccess es_status_codes DLLCalcTrms(uint32_t drvno, uint32_t firstSample, uint
 /**
  * \brief Calculate TRMS noise value of one pixel for all used boards.
  *
- * Calculates RMS of TRMS_pixel in the range of samples from firstSample to lastSample. Only calculates RMS from one block. Boards set by settings parameter board_sel are used.
+ * Calculates RMS of TRMS_pixel in the range of samples from firstSample to lastSample. Only calculates RMS from one block. Boards set by settings parameter \ref measurement_settings.board_sel are used.
  * \param firstSample start sample to calculate RMS. 0...(nos-2). Typical value: 10, to skip overexposed first samples
  * \param lastSample last sample to calculate RMS. firstSample+1...(nos-1).
  * \param TRMS_pixel pixel for calculating noise (0...(PIXEL-1))
