@@ -9,6 +9,8 @@ The hardware version number is the current version at release time.
 ## Unreleased
 ### API Changes
 #### Added
+* Add DLLCopyOneBlockOfOneCamera
+* Add DLLCopyOneBlockOfOneCamera_multipleBoards
 #### Changed
 * Rename setting bnc_out to monitor
 #### Removed
@@ -21,6 +23,7 @@ The hardware version number is the current version at release time.
 #### Changed
 #### Removed
 #### Fixed
+* Fix greyscale viewer crash for camcnt > 1
 #### Deprecated
 
 ## 4.17.2 - 2024-11-18
