@@ -342,6 +342,40 @@ DllAccess es_status_codes DLLCopyOneBlock_multipleBoards(uint16_t block, uint16_
 }
 
 /**
+ * \copydoc CopyOneBlockOfOneCamera
+ */
+DllAccess es_status_codes DLLCopyOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t* pdest)
+{
+	return CopyOneBlockOfOneCamera(drvno, block, camera, pdest);
+}
+
+/**
+ * \brief Copy the data of one block of one camera of all used boards selected by settings parameter \ref measurement_settings.board_sel to pdest.
+ *
+ * If \ref camera_settings.camcnt is 1, use CopyOneBlock instead. This function copies the data sample by sample because the data of one block of one camera is not stored in a contiguous memory block if camcnt is greater than 1.
+ *
+ * \param block block number ( 0...(nob - 1) )
+ * \param camera camera number ( 0...(CAMCNT - 1) )
+ * \param pdest Pointer where the data will be written to. Make sure that the size of the buffer is >= sizeof(uint16_t) * pixel * nos
+ * \return \ref es_status_codes
+ */
+DllAccess es_status_codes DLLCopyOneBlockOfOneCamera_multipleBoards(uint32_t block, uint16_t camera, uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4)
+{
+	uint16_t* pdest[MAXPCIECARDS] = { pdest0, pdest1, pdest2, pdest3, pdest4 };
+	int usedBoards = 0;
+	es_status_codes status = es_no_error;
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+		// Check if the drvno'th bit is set
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = CopyOneBlockOfOneCamera(drvno, block, camera, pdest[usedBoards]);
+			if (status != es_no_error) return status;
+			usedBoards++;
+		}
+	return status;
+}
+
+/**
  * \copydoc GetAllDataPointer
  */
 DllAccess es_status_codes DLLGetAllDataPointer(uint32_t drvno, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
