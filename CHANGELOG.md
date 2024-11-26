@@ -9,22 +9,30 @@ The hardware version number is the current version at release time.
 ## Unreleased
 ### API Changes
 #### Added
-* Add DLLCopyOneBlockOfOneCamera
-* Add DLLCopyOneBlockOfOneCamera_multipleBoards
 #### Changed
-* Rename setting bnc_out to monitor
 #### Removed
 #### Fixed
 #### Deprecated
 ### Other Changes
 #### Added
-* Add support for Linux kernel 6.8
-* Add hook example to CsimpleExample
 #### Changed
 #### Removed
 #### Fixed
-* Fix greyscale viewer crash for camcnt > 1
 #### Deprecated
+
+## 4.17.3 - 2024-11-26
+### API Changes
+#### Added
+* Add DLLCopyOneBlockOfOneCamera
+* Add DLLCopyOneBlockOfOneCamera_multipleBoards
+#### Changed
+* Rename setting bnc_out to monitor
+### Other Changes
+#### Added
+* Add support for Linux kernel 6.8
+* Add hook example to CsimpleExample
+#### Fixed
+* Fix greyscale viewer crash for camcnt > 1
 
 ## 4.17.2 - 2024-11-18
 ### API Changes
