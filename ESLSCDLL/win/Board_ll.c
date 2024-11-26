@@ -24,6 +24,7 @@ HANDLE registerReadWriteMutexHighLevel[MAXPCIECARDS] = { NULL, NULL, NULL, NULL,
 HANDLE mutexUserBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 FILE* file_stream[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 void* Direct2dViewer = NULL;
+uint16_t* greyscale_data = NULL;
 
 /**
  * \brief
@@ -1228,15 +1229,17 @@ void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pix
 	}
 	Direct2dViewer = Direct2dViewer_new();
 	uint16_t* address = NULL;
-	uint16_t* data = NULL;
 	if (virtualCamcnt[drvno] <= 1)
 		GetOneBlockPointer(drvno, block, &address, NULL);
 	else
 	{
+		// check if greyscale_data was allocated before, if so free it
+		if (greyscale_data)
+			free(greyscale_data);
 		// allocate memory for one block of one camera
-		data = (uint16_t*)malloc(settings_struct.camera_settings[drvno].pixel * settings_struct.nos * sizeof(uint16_t));
-		CopyOneBlockOfOneCamera(drvno, block, camera, data);
-		address = data;
+		greyscale_data = (uint16_t*)malloc(settings_struct.camera_settings[drvno].pixel * settings_struct.nos * sizeof(uint16_t));
+		CopyOneBlockOfOneCamera(drvno, block, camera, greyscale_data);
+		address = greyscale_data;
 	}
 	Direct2dViewer_start2dViewer(
 		Direct2dViewer,
@@ -1244,8 +1247,6 @@ void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pix
 		address,
 		pixel,
 		nos);
-	if (data)
-		free(data);
 	return;
 }
 
@@ -1263,23 +1264,23 @@ void ShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pix
 	if (Direct2dViewer != NULL)
 	{
 		uint16_t* address = NULL;
-		uint16_t* data = NULL;
 		if (virtualCamcnt[drvno] <= 1)
 			GetOneBlockPointer(drvno, block, &address, NULL);
 		else
 		{
+			// check if greyscale_data was allocated before, if so free it
+			if(greyscale_data)
+				free(greyscale_data);
 			// allocate memory for one block of one camera
-			data = (uint16_t*)malloc(settings_struct.camera_settings[drvno].pixel * settings_struct.nos * sizeof(uint16_t));
-			CopyOneBlockOfOneCamera(drvno, block, camera, data);
-			address = data;
+			greyscale_data = (uint16_t*)malloc(settings_struct.camera_settings[drvno].pixel * settings_struct.nos * sizeof(uint16_t));
+			CopyOneBlockOfOneCamera(drvno, block, camera, greyscale_data);
+			address = greyscale_data;
 		}
 		Direct2dViewer_showNewBitmap(
 			Direct2dViewer,
 			address,
 			pixel,
 			nos);
-		if (data)
-			free(data);
 	}
 	return;
 }
