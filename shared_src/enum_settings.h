@@ -128,6 +128,62 @@ enum trigger_mode_t
 };
 
 /**
+ * Sensor type shows the options for \ref camera_settings.sensor_type.
+ */
+enum sensor_type_t
+{
+	/**
+	 * PDA - Photodiode Array.
+	 *
+	 * These sensors are a PDA:
+	 *		* S3901/S3904
+	 *		* S3902/S3903
+	 *		* S8380/S8381
+	 */
+	sensor_type_pda = 0,
+	/**
+	 * IR - Infrared
+	 *
+	 * These sensors are a IR:
+	 *		* G11608
+	 *		* G11620
+	 *		* G9203-256DA G9204-512DA
+	 */
+	sensor_type_ir = 1,
+	/**
+	 * FFT - Full frame transfer.
+	 *
+	 * These sensors are a FFT:
+	 *		* S12600/S12601
+	 *		* S7030/S7031
+	 *		* S10420-01
+	 *		* S16010
+	 */
+	sensor_type_fft = 2,
+	/**
+	 * CMOS sensor.
+	 *
+	 * These sensors are a CMOS:
+	 *		* S12198
+	 */
+	sensor_type_cmos = 3,
+	/**
+	 * HSVIS - High speed sensor for visible light.
+	 *
+	 * These sensors are a HSVIS:
+	 *		* S14290
+	 */
+	sensor_type_hsvis = 4,
+	/**
+	 * HSIR - High speed sensor for infrared light.
+	 *
+	 * These sensors are a HSIR:
+	 *		* G10786
+	 */
+	sensor_type_hsir = 5,
+};
+
+/**
  * Camera system shows the options for \ref camera_settings.camera_system
  */
 enum camera_system_t
@@ -185,62 +241,6 @@ enum camera_system_t
 };
 
 /**
- * Sensor type shows the options for \ref camera_settings.sensor_type.
- */
-enum sensor_type_t
-{
-	/**
-	 * PDA - Photodiode Array.
-	 * 
-	 * These sensors are a PDA:
-	 *		* S3901/S3904
-	 *		* S3902/S3903
-	 *		* S8380/S8381
-	 */
-	sensor_type_pda = 0,
-	/**
-	 * IR - Infrared
-	 * 
-	 * These sensors are a IR:
-	 *		* G11608
-	 *		* G11620
-	 *		* G9203-256DA G9204-512DA
-	 */
-	sensor_type_ir = 1,
-	/**
-	 * FFT - Full frame transfer.
-	 * 
-	 * These sensors are a FFT:
-	 *		* S12600/S12601
-	 *		* S7030/S7031
-	 *		* S10420-01
-	 *		* S16010
-	 */
-	sensor_type_fft = 2,
-	/**
-	 * CMOS sensor.
-	 * 
-	 * These sensors are a CMOS:
-	 *		* S12198
-	 */
-	sensor_type_cmos = 3,
-	/**
-	 * HSVIS - High speed sensor for visible light.
-	 * 
-	 * These sensors are a HSVIS:
-	 *		* S14290
-	 */
-	sensor_type_hsvis = 4,
-	/**
-	 * HSIR - High speed sensor for infrared light.
-	 * 
-	 * These sensors are a HSIR:
-	 *		* G10786
-	 */
-	sensor_type_hsir = 5,
-};
-
-/**
  * Shows the options for \ref camera_settings.fft_mode.
  */
 enum fft_mode_t
@@ -260,29 +260,6 @@ enum fft_mode_t
 };
 
 /**
- * This enum shows all options for the setting \ref camera_settings.monitor.
- */
-enum monitor_t
-{
-	/**
-	 * XCK is high during the readout of the camera.
-	 */
-	monitor_xck = 0,
-	/**
-	 * Exp win stands for exposure window and is high, when the sensor is ready to be exposed to light.
-	 */
-	monitor_win = 1,
-	/**
-	 * The option ADC CLK sets the output to the ADC clock.
-	 */
-	monitor_adc_clk = 2,
-	/**
-	 * Vin is high when the voltage input is sampled.
-	 */
-	monitor_Vin = 3
-};
-
-/**
  * TOR out shows the options for \ref camera_settings.tor.
  */
 enum tor_out_t
@@ -296,7 +273,7 @@ enum tor_out_t
 	 */
 	tor_rego = 1,
 	/**
-	 * DEPRECATED: VON is the signal for the vertical clocks of the FFT sensor. This signal is only used when \ref camera_settings.is_fft_legacy is on. 
+	 * DEPRECATED: VON is the signal for the vertical clocks of the FFT sensor. This signal is only used when \ref camera_settings.is_fft_legacy is on.
 	 */
 	tor_von = 2,
 	/**
@@ -412,7 +389,7 @@ enum tor_out_t
 	 */
 	tor_enffw = 30,
 	/**
-	 * 
+	 *
 	 */
 	tor_enffwrprot = 31
 };
@@ -437,18 +414,36 @@ enum adc_mode_t
 };
 
 /**
- * This enum is specifying the options for \ref camera_settings.shift_s1s2_to_next_scan.
+ * This enum shows all options for the setting \ref camera_settings.channel_select.
  */
-enum split_mode_t
+enum channel_select_t
+{
+	channel_select_A = 0,
+	channel_select_B = 1,
+	channel_select_A_B = 2,
+};
+
+/**
+ * This enum shows all options for the setting \ref camera_settings.monitor.
+ */
+enum monitor_t
 {
 	/**
-	 * A new file is created at the begin of the measurement and all following data is written to it.
+	 * XCK is high during the readout of the camera.
 	 */
-	no_split = 0,
+	monitor_xck = 0,
 	/**
-	 * When in continuous mode a new file is created for every new measurement cycle (when all samples and blocks are done). When not in continuous this option is the same as no_split.
+	 * Exp win stands for exposure window and is high, when the sensor is ready to be exposed to light.
 	 */
-	measurement_wise = 1,
+	monitor_win = 1,
+	/**
+	 * The option ADC CLK sets the output to the ADC clock.
+	 */
+	monitor_adc_clk = 2,
+	/**
+	 * Vin is high when the voltage input is sampled.
+	 */
+	monitor_Vin = 3
 };
 
 /**
@@ -472,15 +467,6 @@ enum settings_level_t
 	settings_level_free = 1
 };
 
-/**
- * This enum shows all options for the setting \ref camera_settings.channel_select.
- */
-enum channel_select_t
-{
-	channel_select_A = 0,
-	channel_select_B = 1,
-	channel_select_A_B = 2,
-};
 
 enum file_specifications_t
 {
@@ -488,4 +474,3 @@ enum file_specifications_t
 	file_timestamp_size = 64,
 	file_filename_full_size = 256
 };
-
