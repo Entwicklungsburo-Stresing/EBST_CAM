@@ -77,6 +77,8 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingAdcCustomValuePath, ui->spinBoxAdcCustom->value());
 	settings.setValue(settingWriteDataToDiscPath, ui->checkBoxWriteDataToDisc->isChecked());
 	settings.setValue(settingFilePathPath, ui->plainTextEditFilePath->toPlainText());
+	settings.setValue(settingManipulateDataModePath, ui->comboBoxManipulateDataMode->currentIndex());
+	settings.setValue(settingManipulateDataCustomFactorPath, ui->doubleSpinBoxManipulateDataCustomFactor->value());
 	return;
 }
 
@@ -390,6 +392,8 @@ void CameraSettingsWidget::loadDefaults()
 	ui->spinBoxAdcCustom->setValue(settingAdcCustomValueDefault);
 	ui->checkBoxWriteDataToDisc->setChecked(settingWriteToDiscDefault);
 	ui->plainTextEditFilePath->setPlainText(QDir::currentPath());
+	ui->comboBoxManipulateDataMode->setCurrentIndex(settingManipulateDataModeDefault);
+	ui->doubleSpinBoxManipulateDataCustomFactor->setValue(settingManipulateDataCustomFactorDefault);
 	return;
 }
 
@@ -563,6 +567,8 @@ void CameraSettingsWidget::initializeWidget()
 	ui->spinBoxAdcCustom->setValue(settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toDouble());
 	ui->checkBoxWriteDataToDisc->setChecked(settings.value(settingWriteDataToDiscPath, settingWriteToDiscDefault).toBool());
 	ui->plainTextEditFilePath->setPlainText(settings.value(settingFilePathPath, QDir::currentPath()).toString());
+	ui->comboBoxManipulateDataMode->setCurrentIndex(settings.value(settingManipulateDataModePath, settingManipulateDataModeDefault).toDouble());
+	ui->doubleSpinBoxManipulateDataCustomFactor->setValue(settings.value(settingManipulateDataCustomFactorPath, settingManipulateDataCustomFactorDefault).toDouble());
 	return;
 }
 

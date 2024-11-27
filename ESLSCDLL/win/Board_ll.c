@@ -80,6 +80,7 @@ void isr( uint32_t drvno )
 	// The copy process is done here
 	ES_TRACE("copy from DMA 0x%p to userBufferWritePos 0x%p \n", dmaBufferReadPos, userBufferWritePos[drvno]);
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, dmaBufferPartSizeInBytes );
+	manipulateData(drvno, userBufferWritePos[drvno], (uint32_t)(dmaBufferPartSizeInBytes / (sizeof(uint16_t) * settings_struct.camera_settings[drvno].pixel) ));
 	dmaBufferPartReadPos[drvno]++;
 	// number of ISR per dmaBuf - 1
 	if (dmaBufferPartReadPos[drvno] >= DMA_BUFFER_PARTS)
@@ -396,6 +397,7 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 	ES_TRACE("copyRestData: dmaBufferReadPos: 0x%p \n", dmaBufferReadPos);
 	ES_TRACE("copyRestData: userBufferWritePos: 0x%p \n", userBufferWritePos[drvno]);
 	memcpy( userBufferWritePos[drvno], dmaBufferReadPos, rest_in_bytes);
+	manipulateData(drvno, userBufferWritePos[drvno], (uint32_t)(rest_in_bytes / (sizeof(uint16_t) * settings_struct.camera_settings[drvno].pixel)));
 	data_available[drvno] += rest_in_bytes / sizeof(uint16_t);
 	ES_TRACE("copyRestData: increased available data to : %zu \n", data_available[drvno]);
 	return;

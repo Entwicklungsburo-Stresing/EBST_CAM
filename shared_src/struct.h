@@ -351,6 +351,8 @@ struct camera_settings
 	 * monitor is the output mode for the monitor output of the Camera Control. See enum \ref monitor_t in enum_settings.h for options. Further information about monitor can be found in the manual in chapter 3.3.1.
 	 */
 	uint32_t monitor;
+	uint32_t manipulate_data_mode;
+	double manipulate_data_custom_factor;
 };
 
 /**
