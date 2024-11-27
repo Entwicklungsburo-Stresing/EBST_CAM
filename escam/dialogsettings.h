@@ -5,6 +5,7 @@
 #include "lsc.h"
 #include "../shared_src/default_settings.h"
 
+// The order is the same as in dialogsettings.ui and camerasettingswidget.ui
 // measurement settings
 constexpr auto settingBoardSelPath = "boardSel";
 constexpr auto settingBoard0Path = "board0";

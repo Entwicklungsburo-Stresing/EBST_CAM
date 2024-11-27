@@ -20,6 +20,7 @@ CameraSettingsWidget::~CameraSettingsWidget()
 void CameraSettingsWidget::on_accepted()
 {
 	// Here the settings on the UI are saved to the system
+	// The order is the same as in the widget camerasettingswidget.ui and dialogsettings.h
 	// Measurement
 	settings.setValue(settingStiPath, ui->comboBoxSti->currentIndex());
 	settings.setValue(settingBtiPath, ui->comboBoxBti->currentIndex());
@@ -503,6 +504,7 @@ void CameraSettingsWidget::initializeWidget()
 
 	// Here the saved settings on the system are applied to the UI.
 	// For some settings there are two calls, to trigger the according slot for graying out options. I don't know why this is necessary, but without it the slots are not triggered.
+	// The order is the same as in the widget camerasettingswidget.ui and dialogsettings.h
 	//Measurement
 	ui->comboBoxSti->setCurrentIndex(settings.value(settingStiPath, settingStiDefault).toDouble());
 	ui->comboBoxBti->setCurrentIndex(settings.value(settingBtiPath, settingBtiDefault).toDouble());
