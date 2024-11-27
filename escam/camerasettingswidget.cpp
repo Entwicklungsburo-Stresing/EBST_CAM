@@ -19,35 +19,38 @@ CameraSettingsWidget::~CameraSettingsWidget()
 
 void CameraSettingsWidget::on_accepted()
 {
-	//Here the settings on the UI are saved to the system
-	//Measurement
+	// Here the settings on the UI are saved to the system
+	// Measurement
 	settings.setValue(settingStiPath, ui->comboBoxSti->currentIndex());
 	settings.setValue(settingBtiPath, ui->comboBoxBti->currentIndex());
+	settings.setValue(settingSslopePath, ui->comboBoxSslope->currentIndex());
+	settings.setValue(settingBslopePath, ui->comboBoxBslope->currentIndex());
 	settings.setValue(settingStime_in_microseconds_Path, ui->doubleSpinBoxSTime_in_us->value());
 	settings.setValue(settingBtime_in_microseconds_Path, ui->doubleSpinBoxBTimer_in_us->value());
 	settings.setValue(settingSdat_in_10nsPath, ui->doubleSpinBoxSdatIn10ns->value());
 	settings.setValue(settingBdat_in_10nsPath, ui->doubleSpinBoxBdatIn10ns->value());
-	settings.setValue(settingSslopePath, ui->comboBoxSslope->currentIndex());
-	settings.setValue(settingBslopePath, ui->comboBoxBslope->currentIndex());
-	settings.setValue(settingXckdelayIn10nsPath, ui->doubleSpinBoxXckdelayIn10ns->value());
 	settings.setValue(settingShutterSecIn10nsPath, ui->doubleSpinBoxSecIn10ns->value());
 	settings.setValue(settingShutterBecIn10nsPath, ui->doubleSpinBoxBecIn10ns->value());
+	settings.setValue(settingSticntPath, ui->spinBoxSticnt->value());
+	settings.setValue(settingBticntPath, ui->spinBoxBticnt->value());
+	settings.setValue(settingTocntPath, ui->spinBoxTocnt->value());
 	settings.setValue(settingTriggerModeIntegratorPath, ui->comboBoxTriggerModeIntegrator->currentIndex());
+	settings.setValue(settingXckdelayIn10nsPath, ui->doubleSpinBoxXckdelayIn10ns->value());
 	settings.setValue(settingS1S2ReadDelayIn10nsPath, ui->doubleSpinBoxS1S2ReadDelayIn10ns->value());
 	//Camera setup
+	settings.setValue(settingCameraSystemPath, ui->comboBoxCameraSystem->currentIndex());
 	settings.setValue(settingSensorTypePath, ui->comboBoxSensorType->currentIndex());
 	settings.setValue(settingIsFftLegacyPath, ui->checkBoxIsFftLegacy->isChecked());
-	settings.setValue(settingCameraSystemPath, ui->comboBoxCameraSystem->currentIndex());
 	settings.setValue(settingCamcntPath, ui->spinBoxCamcnt->value());
 	settings.setValue(settingPixelPath, ui->spinBoxPixel->value());
 	settings.setValue(settingLedPath, ui->checkBoxLed->isChecked());
 	settings.setValue(settingSensorGainPath, ui->spinBoxSensorGain->value());
 	settings.setValue(settingAdcGainPath, ui->spinBoxAdcGain->value());
+	settings.setValue(settingIsCooledCameraLegacyModePath, ui->checkBoxIsCooledCameraLegacyMode->isChecked());
 	settings.setValue(settingCoolingPath, ui->comboBoxCamCool->currentIndex());
 	settings.setValue(settingGpxOffsetPath, ui->spinBoxGpxOffset->value());
 	settings.setValue(settingIOCtrlImpactStartPixelPath, ui->spinBoxIOCtrlImpactStartPixel->value());
 	settings.setValue(settingsUseSoftwarePollingPath, ui->checkBoxUseSoftwarePolling->isChecked());
-	settings.setValue(settingIsCooledCameraLegacyModePath, ui->checkBoxIsCooledCameraLegacyMode->isChecked());
 	if(settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble() == sensor_type_hsvis)
 		settings.setValue(settingSensorResetOrHsirEcPath, ui->spinBoxSensorResetOrHsirEcIn1ns->value() / 4);
 	else
@@ -67,15 +70,12 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingRegionSize4Path, ui->spinBoxRegion4->value());
 	settings.setValue(settingRegionSize5Path, ui->spinBoxRegion5->value());
 	//Other
-	settings.setValue(settingWriteDataToDiscPath, ui->checkBoxWriteDataToDisc->isChecked());
-	settings.setValue(settingFilePathPath, ui->plainTextEditFilePath->toPlainText());
+	settings.setValue(settingMonitorPath, ui->comboBoxMonitor->currentIndex());
 	settings.setValue(settingTorPath, ui->comboBoxOutput->currentIndex());
 	settings.setValue(settingAdcModePath, ui->comboBoxAdcMode->currentIndex());
 	settings.setValue(settingAdcCustomValuePath, ui->spinBoxAdcCustom->value());
-	settings.setValue(settingMonitorPath, ui->comboBoxMonitor->currentIndex());
-	settings.setValue(settingTocntPath, ui->spinBoxTocnt->value());
-	settings.setValue(settingSticntPath, ui->spinBoxSticnt->value());
-	settings.setValue(settingBticntPath, ui->spinBoxBticnt->value());
+	settings.setValue(settingWriteDataToDiscPath, ui->checkBoxWriteDataToDisc->isChecked());
+	settings.setValue(settingFilePathPath, ui->plainTextEditFilePath->toPlainText());
 	return;
 }
 
@@ -338,31 +338,35 @@ void CameraSettingsWidget::loadDefaults()
 	//measurement
 	ui->comboBoxSti->setCurrentIndex(settingStiDefault);
 	ui->comboBoxBti->setCurrentIndex(settingBtiDefault);
+	ui->comboBoxSslope->setCurrentIndex(settingSslopeDefault);
+	ui->comboBoxBslope->setCurrentIndex(settingBslopeDefault);
 	ui->doubleSpinBoxSTime_in_us->setValue(settingStime_in_microseconds_Default);
 	ui->doubleSpinBoxBTimer_in_us->setValue(settingBtime_in_microseconds_Default);
 	ui->doubleSpinBoxSdatIn10ns->setValue(settingSdat_in_10nsDefault);
 	ui->doubleSpinBoxBdatIn10ns->setValue(settingBdat_in_10nsDefault);
-	ui->comboBoxSslope->setCurrentIndex(settingSslopeDefault);
-	ui->comboBoxBslope->setCurrentIndex(settingBslopeDefault);
-	ui->doubleSpinBoxXckdelayIn10ns->setValue(settingXckdelayIn10nsDefault);
 	ui->doubleSpinBoxSecIn10ns->setValue(settingShutterSecIn10nsDefault);
 	ui->doubleSpinBoxBecIn10ns->setValue(settingShutterBecIn10nsDefault);
+	ui->spinBoxBticnt->setValue(settingBticntDefault);
+	ui->spinBoxSticnt->setValue(settingSticntDefault);
+	ui->spinBoxTocnt->setValue(settingTocntDefault);
 	ui->comboBoxTriggerModeIntegrator->setCurrentIndex(settingTriggerModeIntegratorDefault);
+	ui->doubleSpinBoxXckdelayIn10ns->setValue(settingXckdelayIn10nsDefault);
+	ui->doubleSpinBoxS1S2ReadDelayIn10ns->setValue(settingS1S2ReadDelayIn10nsDefault);
 	//camera setup
-	ui->comboBoxSensorType->setCurrentIndex(settingSensorTypeDefault);
-	ui->comboBoxSensorType->currentIndexChanged(settingSensorTypeDefault);
 	ui->comboBoxCameraSystem->setCurrentIndex(settingCameraSystemDefault);
 	ui->comboBoxCameraSystem->currentIndexChanged(settingCameraSystemDefault);
+	ui->comboBoxSensorType->setCurrentIndex(settingSensorTypeDefault);
+	ui->comboBoxSensorType->currentIndexChanged(settingSensorTypeDefault);
 	ui->spinBoxCamcnt->setValue(settingCamcntDefault);
 	ui->spinBoxPixel->setValue(settingPixelDefault);
 	ui->checkBoxLed->setChecked(settingLedDefault);
 	ui->spinBoxSensorGain->setValue(settingSensorGainDefault);
 	ui->spinBoxAdcGain->setValue(settingAdcGainDefault);
+	ui->checkBoxIsCooledCameraLegacyMode->setChecked(settingIsCooledCameraLegacyModeDefault);
 	ui->comboBoxCamCool->setCurrentIndex(settingCoolingDefault);
 	ui->spinBoxGpxOffset->setValue(settingGpxOffsetDefault);
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settingIOCtrlImpactStartPixelDefault);
 	ui->checkBoxUseSoftwarePolling->setChecked(settingsUseSoftwarePollingDefault);
-	ui->checkBoxIsCooledCameraLegacyMode->setChecked(settingIsCooledCameraLegacyModeDefault);
 	ui->spinBoxSensorResetOrHsirEcIn1ns->setValue(settingSensorResetOrHsIrDefault * 4);
 	ui->comboBoxChannelSelect->setCurrentIndex(settingChannelSelectDefault);
 	ui->checkBoxShiftS1S2ToNextScan->setChecked(settingShiftS1S2ToNextScanDefault);
@@ -378,17 +382,13 @@ void CameraSettingsWidget::loadDefaults()
 	ui->spinBoxRegion3->setValue(settingRegionSize3Default);
 	ui->spinBoxRegion4->setValue(settingRegionSize4Default);
 	ui->spinBoxRegion5->setValue(settingRegionSize5Default);
-	//Export data
-	ui->checkBoxWriteDataToDisc->setChecked(settingWriteToDiscDefault);
-	ui->plainTextEditFilePath->setPlainText(QDir::currentPath());
-	//debug
+	//other
+	ui->comboBoxMonitor->setCurrentIndex(settingMonitorDefault);
 	ui->comboBoxOutput->setCurrentIndex(settingTorDefault);
 	ui->comboBoxAdcMode->setCurrentIndex(settingAdcModeDefault);
 	ui->spinBoxAdcCustom->setValue(settingAdcCustomValueDefault);
-	ui->comboBoxMonitor->setCurrentIndex(settingMonitorDefault);
-	ui->spinBoxTocnt->setValue(settingTocntDefault);
-	ui->spinBoxSticnt->setValue(settingSticntDefault);
-	ui->spinBoxBticnt->setValue(settingBticntDefault);
+	ui->checkBoxWriteDataToDisc->setChecked(settingWriteToDiscDefault);
+	ui->plainTextEditFilePath->setPlainText(QDir::currentPath());
 	return;
 }
 
@@ -506,33 +506,36 @@ void CameraSettingsWidget::initializeWidget()
 	//Measurement
 	ui->comboBoxSti->setCurrentIndex(settings.value(settingStiPath, settingStiDefault).toDouble());
 	ui->comboBoxBti->setCurrentIndex(settings.value(settingBtiPath, settingBtiDefault).toDouble());
+	ui->comboBoxSslope->setCurrentIndex(settings.value(settingSslopePath, settingSslopeDefault).toDouble());
+	ui->comboBoxBslope->setCurrentIndex(settings.value(settingBslopePath, settingBslopeDefault).toDouble());
 	ui->doubleSpinBoxSTime_in_us->setValue(settings.value(settingStime_in_microseconds_Path, settingStime_in_microseconds_Default).toDouble());
 	ui->doubleSpinBoxBTimer_in_us->setValue(settings.value(settingBtime_in_microseconds_Path, settingBtime_in_microseconds_Default).toDouble());
 	ui->doubleSpinBoxSdatIn10ns->setValue(settings.value(settingSdat_in_10nsPath, settingSdat_in_10nsDefault).toDouble());
 	ui->doubleSpinBoxBdatIn10ns->setValue(settings.value(settingBdat_in_10nsPath, settingSdat_in_10nsDefault).toDouble());
-	ui->comboBoxSslope->setCurrentIndex(settings.value(settingSslopePath, settingSslopeDefault).toDouble());
-	ui->comboBoxBslope->setCurrentIndex(settings.value(settingBslopePath, settingBslopeDefault).toDouble());
-	ui->doubleSpinBoxXckdelayIn10ns->setValue(settings.value(settingXckdelayIn10nsPath, settingXckdelayIn10nsDefault).toDouble());
 	ui->doubleSpinBoxSecIn10ns->setValue(settings.value(settingShutterSecIn10nsPath, settingShutterSecIn10nsDefault).toDouble());
 	ui->doubleSpinBoxBecIn10ns->setValue(settings.value(settingShutterBecIn10nsPath, settingShutterBecIn10nsDefault).toDouble());
+	ui->spinBoxSticnt->setValue(settings.value(settingSticntPath, settingSticntDefault).toDouble());
+	ui->spinBoxBticnt->setValue(settings.value(settingBticntPath, settingBticntDefault).toDouble());
+	ui->spinBoxTocnt->setValue(settings.value(settingTocntPath, settingTocntDefault).toDouble());
 	ui->comboBoxTriggerModeIntegrator->setCurrentIndex(settings.value(settingTriggerModeIntegratorPath, settingTriggerModeIntegratorDefault).toDouble());
+	ui->doubleSpinBoxXckdelayIn10ns->setValue(settings.value(settingXckdelayIn10nsPath, settingXckdelayIn10nsDefault).toDouble());
 	ui->doubleSpinBoxS1S2ReadDelayIn10ns->setValue(settings.value(settingS1S2ReadDelayIn10nsPath, settingS1S2ReadDelayIn10nsDefault).toDouble());
 	//Camera setup
+	ui->comboBoxCameraSystem->setCurrentIndex(settings.value(settingCameraSystemPath, settingCameraSystemDefault).toDouble());
+	ui->comboBoxCameraSystem->currentIndexChanged(settings.value(settingCameraSystemPath, settingCameraSystemDefault).toDouble());
 	ui->comboBoxSensorType->setCurrentIndex(settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble());
 	ui->comboBoxSensorType->currentIndexChanged(settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble());
 	ui->checkBoxIsFftLegacy->setChecked(settings.value(settingIsFftLegacyPath, settingIsFftlegacyDefault).toBool());
-	ui->comboBoxCameraSystem->setCurrentIndex(settings.value(settingCameraSystemPath, settingCameraSystemDefault).toDouble());
-	ui->comboBoxCameraSystem->currentIndexChanged(settings.value(settingCameraSystemPath, settingCameraSystemDefault).toDouble());
 	ui->spinBoxCamcnt->setValue(settings.value(settingCamcntPath, settingCamcntDefault).toDouble());
 	ui->spinBoxPixel->setValue(settings.value(settingPixelPath, settingPixelDefault).toDouble());
 	ui->checkBoxLed->setChecked(settings.value(settingLedPath, settingLedDefault).toBool());
 	ui->spinBoxSensorGain->setValue(settings.value(settingSensorGainPath, settingSensorGainDefault).toDouble());
 	ui->spinBoxAdcGain->setValue(settings.value(settingAdcGainPath, settingAdcGainDefault).toDouble());
+	ui->checkBoxIsCooledCameraLegacyMode->setChecked(settings.value(settingIsCooledCameraLegacyModePath, settingIsCooledCameraLegacyModeDefault).toBool());
 	ui->comboBoxCamCool->setCurrentIndex(settings.value(settingCoolingPath, settingCoolingDefault).toDouble());
 	ui->spinBoxGpxOffset->setValue(settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toDouble());
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toDouble());
 	ui->checkBoxUseSoftwarePolling->setChecked(settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool());
-	ui->checkBoxIsCooledCameraLegacyMode->setChecked(settings.value(settingIsCooledCameraLegacyModePath, settingIsCooledCameraLegacyModeDefault).toBool());
 	if(settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble() == sensor_type_hsvis)
 		ui->spinBoxSensorResetOrHsirEcIn1ns->setValue(settings.value(settingSensorResetOrHsirEcPath, settingSensorResetOrHsIrDefault).toDouble() * 4);
 	else
@@ -551,17 +554,13 @@ void CameraSettingsWidget::initializeWidget()
 	ui->spinBoxRegion3->setValue(settings.value(settingRegionSize3Path, settingRegionSize3Default).toDouble());
 	ui->spinBoxRegion4->setValue(settings.value(settingRegionSize4Path, settingRegionSize4Default).toDouble());
 	ui->spinBoxRegion5->setValue(settings.value(settingRegionSize5Path, settingRegionSize5Default).toDouble());
-	//Export data
-	ui->checkBoxWriteDataToDisc->setChecked(settings.value(settingWriteDataToDiscPath, settingWriteToDiscDefault).toBool());
-	ui->plainTextEditFilePath->setPlainText(settings.value(settingFilePathPath, QDir::currentPath()).toString());
-	//Debug
+	//other
+	ui->comboBoxMonitor->setCurrentIndex(settings.value(settingMonitorPath, settingMonitorDefault).toDouble());
 	ui->comboBoxOutput->setCurrentIndex(settings.value(settingTorPath, settingTorDefault).toDouble());
 	ui->comboBoxAdcMode->setCurrentIndex(settings.value(settingAdcModePath, settingAdcModeDefault).toDouble());
 	ui->spinBoxAdcCustom->setValue(settings.value(settingAdcCustomValuePath, settingAdcCustomValueDefault).toDouble());
-	ui->comboBoxMonitor->setCurrentIndex(settings.value(settingMonitorPath, settingMonitorDefault).toDouble());
-	ui->spinBoxTocnt->setValue(settings.value(settingTocntPath, settingTocntDefault).toDouble());
-	ui->spinBoxSticnt->setValue(settings.value(settingSticntPath, settingSticntDefault).toDouble());
-	ui->spinBoxBticnt->setValue(settings.value(settingBticntPath, settingBticntDefault).toDouble());
+	ui->checkBoxWriteDataToDisc->setChecked(settings.value(settingWriteDataToDiscPath, settingWriteToDiscDefault).toBool());
+	ui->plainTextEditFilePath->setPlainText(settings.value(settingFilePathPath, QDir::currentPath()).toString());
 	return;
 }
 
