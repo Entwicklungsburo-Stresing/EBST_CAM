@@ -41,6 +41,7 @@ hookFunction allBlocksDoneHook = NULL;
 
 const struct camera_settings camera_settings_default =
 {
+	// The order is the same as in struct.h
 	.use_software_polling = settingsUseSoftwarePollingDefault,
 	.sti_mode = settingStiDefault,
 	.bti_mode = settingBtiDefault,
@@ -57,6 +58,7 @@ const struct camera_settings camera_settings_default =
 	.camera_system = settingCameraSystemDefault,
 	.camcnt = settingCamcntDefault,
 	.pixel = settingPixelDefault,
+	.is_fft_legacy = settingIsFftlegacyDefault,
 	.led_off = settingLedDefault,
 	.sensor_gain = settingSensorGainDefault,
 	.adc_gain = settingAdcGainDefault,
@@ -144,8 +146,8 @@ const struct camera_settings camera_settings_default =
 	.tor = settingTorDefault,
 	.adc_mode = settingAdcModeDefault,
 	.adc_custom_pattern = settingAdcCustomValueDefault,
-	.monitor = settingMonitorDefault,
 	.bec_in_10ns = settingBecIn10nsDefault,
+	.channel_select = settingChannelSelectDefault,
 	.ioctrl_impact_start_pixel = settingIOCtrlImpactStartPixelDefault,
 	.ioctrl_output_width_in_5ns[0] = settingIOCtrlOutput1WidthIn5nsDefault,
 	.ioctrl_output_width_in_5ns[1] = settingIOCtrlOutput2WidthIn5nsDefault,
@@ -166,11 +168,11 @@ const struct camera_settings camera_settings_default =
 	.tocnt = settingTocntDefault,
 	.sticnt = settingSticntDefault,
 	.sensor_reset_or_hsir_ec = settingSensorResetOrHsIrDefault,
-	.channel_select = settingChannelSelectDefault,
 	.write_to_disc = settingWriteToDiscDefault,
 	.file_path = settingFilePathDefault,
 	.shift_s1s2_to_next_scan = settingShiftS1S2ToNextScanDefault,
-	.is_cooled_camera_legacy_mode = settingIsCooledCameraLegacyModeDefault
+	.is_cooled_camera_legacy_mode = settingIsCooledCameraLegacyModeDefault,
+	.monitor = settingMonitorDefault
 };
 
 struct measurement_settings settings_struct =

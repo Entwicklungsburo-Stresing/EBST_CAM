@@ -113,6 +113,7 @@ MainWindow::~MainWindow()
  */
 void MainWindow::startPressed()
 {
+	// The order is the same as in struct.h
 	struct measurement_settings library_settings;
 	library_settings.board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
 	library_settings.nos = settings.value(settingNosPath, settingNosDefault).toDouble();
