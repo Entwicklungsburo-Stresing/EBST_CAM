@@ -211,7 +211,7 @@ es_status_codes Cam3030_Init(uint32_t drvno)
 	//two wire mode output interface for pal versions P209_2 and above
 	status = Cam3030_ADC_twoWireModeEN(drvno);
 	if (status != es_no_error) return status;
-	status = Cam3030_ADC_SetGain(drvno, (uint8_t)settings_struct.camera_settings[drvno].adc_gain);
+	status = Cam3030_ADC_SetGainAllChannels(drvno, (uint8_t)settings_struct.camera_settings[drvno].adc_gain);
 	if (status != es_no_error) return status;
 	if (settings_struct.camera_settings[drvno].adc_mode)
 		status = Cam3030_ADC_RampOrPattern(drvno, (uint8_t)settings_struct.camera_settings[drvno].adc_mode, (uint16_t)settings_struct.camera_settings[drvno].adc_custom_pattern);
@@ -266,15 +266,15 @@ es_status_codes Cam3030_ADC_twoWireModeEN(uint32_t drvno)
 /**
  * \brief ADC gain config routine for Camera System 3030.
  *
- * 	Sets gain of ADC ADS5294 0...15 by calling SetADGain() subroutine.
+ * 	Sets gain of ADC ADS5294 0...15 by calling Cam3030_ADC_SetGain() subroutine.
  * 	Called by Cam3030_Init
  * \param drvno selects PCIe board
  * \param gain of ADC
  * \return \ref es_status_codes
  */
-es_status_codes Cam3030_ADC_SetGain(uint32_t drvno, uint8_t gain)
+es_status_codes Cam3030_ADC_SetGainAllChannels(uint32_t drvno, uint8_t gain)
 {
-	return SetADGain(drvno, 1, gain, gain, gain, gain, gain, gain, gain, gain);
+	return Cam3030_ADC_SetGain(drvno, 1, gain, gain, gain, gain, gain, gain, gain, gain);
 }
 
 /**
@@ -292,7 +292,7 @@ es_status_codes Cam3030_ADC_SetGain(uint32_t drvno, uint8_t gain)
  * \param g8 channel 8
  * \return \ref es_status_codes
  */
-es_status_codes SetADGain(uint32_t drvno, uint8_t fkt, uint8_t g1, uint8_t g2, uint8_t g3, uint8_t g4, uint8_t g5, uint8_t g6, uint8_t g7, uint8_t g8)
+es_status_codes Cam3030_ADC_SetGain(uint32_t drvno, uint8_t fkt, uint8_t g1, uint8_t g2, uint8_t g3, uint8_t g4, uint8_t g5, uint8_t g6, uint8_t g7, uint8_t g8)
 {
 	uint16_t data = 0;
 	uint8_t a, b, c, d, e, f, g, h;

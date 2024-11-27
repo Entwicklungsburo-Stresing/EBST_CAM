@@ -27,8 +27,8 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
 es_status_codes Cam3030_Init(uint32_t drvno);
 es_status_codes Cam3030_ADC_reset(uint32_t drvno);
 es_status_codes Cam3030_ADC_twoWireModeEN(uint32_t drvno);
-es_status_codes Cam3030_ADC_SetGain(uint32_t drvno, uint8_t gain);
-es_status_codes SetADGain(uint32_t drvno, uint8_t fkt, uint8_t g1, uint8_t g2, uint8_t g3, uint8_t g4, uint8_t g5, uint8_t g6, uint8_t g7, uint8_t g8);
+es_status_codes Cam3030_ADC_SetGainAllChannels(uint32_t drvno, uint8_t gain);
+es_status_codes Cam3030_ADC_SetGain(uint32_t drvno, uint8_t fkt, uint8_t g1, uint8_t g2, uint8_t g3, uint8_t g4, uint8_t g5, uint8_t g6, uint8_t g7, uint8_t g8);
 es_status_codes Cam3030_ADC_RampOrPattern(uint32_t drvno, uint8_t adc_mode, uint16_t custom_pattern);
 es_status_codes Cam3030_ADC_Global_En_Filter(uint32_t drvno, bool enable);
 es_status_codes Cam3030_ADC_SetFilterSettings(uint32_t drvno, uint8_t channel, uint8_t coeff_set, uint8_t decimation_factor, uint8_t odd_tap, uint8_t use_filter, uint8_t hpf_corner, uint8_t en_hpf);
