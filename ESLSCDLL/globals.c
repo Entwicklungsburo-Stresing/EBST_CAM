@@ -172,7 +172,9 @@ const struct camera_settings camera_settings_default =
 	.file_path = settingFilePathDefault,
 	.shift_s1s2_to_next_scan = settingShiftS1S2ToNextScanDefault,
 	.is_cooled_camera_legacy_mode = settingIsCooledCameraLegacyModeDefault,
-	.monitor = settingMonitorDefault
+	.monitor = settingMonitorDefault,
+	.manipulate_data_mode = settingManipulateDataModeDefault,
+	.manipulate_data_custom_factor = settingManipulateDataCustomFactorDefault,
 };
 
 struct measurement_settings settings_struct =

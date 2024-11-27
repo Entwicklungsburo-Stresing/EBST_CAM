@@ -884,7 +884,8 @@ enum special_pixels_enum_t
 	/**
 	 * Special pixel for fpga ver number.
 	 */
-	pixel_fpga_ver = 11
+	pixel_fpga_ver = 11,
+	pixel_first_sensor_pixel = 12
 };
 
 /**
@@ -892,6 +893,7 @@ enum special_pixels_enum_t
  */
 enum special_last_pixels_t
 {
+	pixel_last_sensor_pixel = 2,
 	/**
 	 * Higher 16 bits of scan index counter.
 	 */

@@ -446,6 +446,13 @@ enum monitor_t
 	monitor_Vin = 3
 };
 
+enum manipulate_data_mode_t
+{
+	manipulate_data_mode_none = 0,
+	manipulate_data_mode_preset_linearization_polynom = 1,
+	manipulate_data_mode_custom_factor = 2
+};
+
 /**
  * This enum is describing the possible locations of the IC DAC8568 used in DAC8568_sendData().
  */
