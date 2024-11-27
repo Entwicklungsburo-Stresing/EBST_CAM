@@ -195,6 +195,8 @@ void MainWindow::startPressed()
 		library_settings.camera_settings[drvno].shift_s1s2_to_next_scan = settings.value(settingShiftS1S2ToNextScanPath, settingShiftS1S2ToNextScanDefault).toBool();
 		library_settings.camera_settings[drvno].is_cooled_camera_legacy_mode = settings.value(settingIsCooledCameraLegacyModePath, settingIsCooledCameraLegacyModeDefault).toBool();
 		library_settings.camera_settings[drvno].monitor = settings.value(settingMonitorPath, settingMonitorDefault).toDouble();
+		library_settings.camera_settings[drvno].manipulate_data_mode = settings.value(settingManipulateDataModePath, settingManipulateDataModeDefault).toDouble();
+		library_settings.camera_settings[drvno].manipulate_data_custom_factor = settings.value(settingManipulateDataCustomFactorPath, settingManipulateDataCustomFactorDefault).toDouble();
 		settings.endGroup();
 	}
 	es_status_codes status = lsc.initMeasurement(library_settings);

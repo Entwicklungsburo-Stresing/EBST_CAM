@@ -236,6 +236,7 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 {
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
 	memcpy(userBufferWritePos[drvno], dev->mapped_buffer + dev->control->read_pos, rest_in_bytes);
+	manipulateData(userBufferWritePos[drvno], rest_in_bytes / (sizeof(uint16_t) * settings_struct.camera_settings[drvno].pixel ));
 	return;
 }
 
@@ -298,6 +299,7 @@ void* CopyDataToUserBuffer(void* param_drvno)
 		else if(result_poll)
 		{
 			result_read = read(dev->handle, ((uint8_t *)userBuffer[drvno]) + bytes_read , (size_t)bytes_to_read);
+			manipulateData(userBufferWritePos[drvno], result_read / (sizeof(uint16_t) * settings_struct.camera_settings[drvno].pixel));
 			ES_TRACE("Copy to user buffer intterupt %u done, result: %zd\n", dev->control->irq_count, result_read);
 			bytes_to_read -= result_read;
 			bytes_read += result_read;

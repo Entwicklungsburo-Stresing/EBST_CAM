@@ -90,3 +90,5 @@
 #define settingShowCrosshairDefault					true
 #define settingChannelSelectDefault					channel_select_A_B
 #define settingColorSchemeDefault					0
+#define settingManipulateDataModeDefault			manipulate_data_mode_none
+#define settingManipulateDataCustomFactorDefault	1

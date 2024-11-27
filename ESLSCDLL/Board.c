@@ -5243,3 +5243,55 @@ es_status_codes SetShiftS1S2ToNextScan(uint32_t drvno)
 {
 	return writeBitsS0_32(drvno, (1 & settings_struct.camera_settings[drvno].shift_s1s2_to_next_scan) << CTRL_bitindex_shift_s, CTRL_bit_shift_s, S0Addr_CTRL);
 }
+
+/**
+ * \brief Manipulate the incoming data buffer with a preset Polynomial.
+ * 
+ * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param startAddress
+ * \param numberOfScansToManipulate
+ */
+void manipulateData(uint32_t drvno, uint16_t* startAddress, uint32_t numberOfScansToManipulate)
+{
+	double a, b, c, d, e, oldValue, newValue;
+	// Decide which manipulation mode is used
+	switch (settings_struct.camera_settings[drvno].manipulate_data_mode)
+	{
+	default:
+	case(manipulate_data_mode_none):
+		return;
+	case(manipulate_data_mode_preset_linearization_polynom):
+		a = 0.0000001,
+		b = 0.0000001,
+		c = 0.000001,
+		d = 0.1,
+		e = 0.001;
+		break;
+	case(manipulate_data_mode_custom_factor):
+		a = 0.,
+		b = 0.,
+		c = 0.,
+		d = settings_struct.camera_settings[drvno].manipulate_data_custom_factor,
+		e = 0.;
+		break;
+	}
+	// Iterate through all scans
+	for (uint32_t scan = 0; scan < numberOfScansToManipulate; scan++)
+	{
+		// Iterate through all pixels and leave out the special pixels
+		for (uint32_t i = pixel_first_sensor_pixel; i < settings_struct.camera_settings[drvno].pixel - pixel_last_sensor_pixel; i++)
+		{
+			uint32_t pixel = scan * settings_struct.camera_settings[drvno].pixel + i;
+			oldValue = (double)startAddress[pixel];
+			// Calculate the new manipulated value with the given factors and a polynomial of degree 4
+			newValue = a * oldValue * oldValue * oldValue * oldValue + b * oldValue * oldValue * oldValue + c * oldValue * oldValue + d * oldValue + e;
+			// Check if the new value is in the range of a uint16_t
+			if (newValue > UINT16_MAX)
+				startAddress[pixel] = UINT16_MAX;
+			else if (newValue < 0)
+				startAddress[pixel] = 0;
+			else
+				startAddress[pixel] = (uint16_t)newValue;
+		}
+	}
+}
