@@ -5,52 +5,62 @@
 #include "lsc.h"
 #include "../shared_src/default_settings.h"
 
-//measurement
-constexpr auto settingNosPath = "nos";
-constexpr auto settingNobPath = "nob";
-constexpr auto settingStiPath = "sti";
-constexpr auto settingBtiPath = "bti";
-constexpr auto settingStime_in_microseconds_Path = "stimer";
-constexpr auto settingBtime_in_microseconds_Path = "btimer";
-constexpr auto settingSdat_in_10nsPath = "sdat";
-constexpr auto settingBdat_in_10nsPath = "bdat";
-constexpr auto settingSslopePath = "sslope";
-constexpr auto settingBslopePath = "bslope";
-constexpr auto settingXckdelayIn10nsPath = "xckdelay_in_10ns";
-constexpr auto settingShutterSecIn10nsPath = "shutterSecIn10ns";
-constexpr auto settingShutterBecIn10nsPath = "shutterBecIn10ns";
-constexpr auto settingTriggerModeIntegratorPath = "triggerModeIntegrator";
-constexpr auto settingContinuousPauseInMicrosecondsPath = "contPauseInMicroseconds";
-//camera setup
+// measurement settings
 constexpr auto settingBoardSelPath = "boardSel";
 constexpr auto settingBoard0Path = "board0";
 constexpr auto settingBoard1Path = "board1";
 constexpr auto settingBoard2Path = "board2";
 constexpr auto settingBoard3Path = "board3";
 constexpr auto settingBoard4Path = "board4";
+constexpr auto settingNosPath = "nos";
+constexpr auto settingNobPath = "nob";
+constexpr auto settingContinuousPauseInMicrosecondsPath = "contPauseInMicroseconds";
+constexpr auto settingThemePath = "theme";
+constexpr auto settingThemeIndexPath = "themeIndex";
+constexpr auto settingSettingsLevelPath = "settingsLevel";
+constexpr auto settingColorSchemePath = "colorScheme";
+// camera settings
+// measurement
+constexpr auto settingStiPath = "sti";
+constexpr auto settingBtiPath = "bti";
+constexpr auto settingSslopePath = "sslope";
+constexpr auto settingBslopePath = "bslope";
+constexpr auto settingStime_in_microseconds_Path = "stimer";
+constexpr auto settingBtime_in_microseconds_Path = "btimer";
+constexpr auto settingSdat_in_10nsPath = "sdat";
+constexpr auto settingBdat_in_10nsPath = "bdat";
+constexpr auto settingShutterSecIn10nsPath = "shutterSecIn10ns";
+constexpr auto settingShutterBecIn10nsPath = "shutterBecIn10ns";
+constexpr auto settingSticntPath = "sticnt";
+constexpr auto settingBticntPath = "bticnt";
+constexpr auto settingTocntPath = "tocnt";
+constexpr auto settingTriggerModeIntegratorPath = "triggerModeIntegrator";
+constexpr auto settingXckdelayIn10nsPath = "xckdelay_in_10ns";
+constexpr auto settingS1S2ReadDelayIn10nsPath = "S1S2ReadDelayIn10ns";
+// camera setup
+constexpr auto settingCameraSystemPath = "cameraSystem";
 constexpr auto settingSensorTypePath = "sensorType";
 constexpr auto settingIsFftLegacyPath = "isFftLegacy";
-constexpr auto settingCameraSystemPath = "cameraSystem";
 constexpr auto settingCamcntPath = "camcnt";
 constexpr auto settingPixelPath = "pixelcnt";
 constexpr auto settingLedPath = "led";
 constexpr auto settingSensorGainPath = "sensorGain";
 constexpr auto settingAdcGainPath = "adcGain";
+constexpr auto settingIsCooledCameraLegacyModePath = "isCooledCameraLegacyMode";
 constexpr auto settingCoolingPath = "cooling";
 constexpr auto settingGpxOffsetPath = "gpxOffset";
 constexpr auto settingIOCtrlImpactStartPixelPath = "IOCtrlImpactStartPixel";
-constexpr auto settingIsCooledCameraLegacyModePath = "isCooledCameraLegacyMode";
+constexpr auto settingsUseSoftwarePollingPath = "use_software_polling";
 constexpr auto settingSensorResetOrHsirEcPath = "sensorResetOrHsirEc";
 constexpr auto settingChannelSelectPath = "channelSelect";
 constexpr auto settingShiftS1S2ToNextScanPath = "shiftS1S2ToNextScan";
-//FFT mode
+// FFT mode
 constexpr auto settingLinesPath = "lines";
 constexpr auto settingVfreqPath = "vfreq";
 constexpr auto settingFftModePath = "fftmode";
 constexpr auto settingLinesBinningPath = "linesbinning";
 constexpr auto settingNumberOfRegionsPath = "numberOfRegions";
 constexpr auto settingRegionSizeEqualPath = "regionSizeEqual";
-constexpr auto settingS1S2ReadDelayIn10nsPath = "S1S2ReadDelayIn10ns";
 constexpr auto settingRegionSize1Path = "regionSize1";
 constexpr auto settingRegionSize2Path = "regionSize2";
 constexpr auto settingRegionSize3Path = "regionSize3";
@@ -59,11 +69,14 @@ constexpr auto settingRegionSize5Path = "regionSize5";
 constexpr auto settingRegionSize6Path = "regionSize6";
 constexpr auto settingRegionSize7Path = "regionSize7";
 constexpr auto settingRegionSize8Path = "regionSize8";
-//Export data
+// other
+constexpr auto settingMonitorPath = "monitor";
+constexpr auto settingTorPath = "tor";
+constexpr auto settingAdcModePath = "adcMode";
+constexpr auto settingAdcCustomValuePath = "adcCustomValue";
 constexpr auto settingWriteDataToDiscPath = "writeDataToDisc";
-constexpr auto settingSplitModePath = "splitMode";
 constexpr auto settingFilePathPath = "filePath";
-//DAC
+// DAC
 constexpr auto settingDacCameraChannel1Path = "dacCameraChannel1Pos";
 constexpr auto settingDacCameraChannel2Path = "dacCameraChannel2Pos";
 constexpr auto settingDacCameraChannel3Path = "dacCameraChannel3Pos";
@@ -81,23 +94,7 @@ constexpr auto settingDacPcieChannel5Path = "dacPcieChannel5";
 constexpr auto settingDacPcieChannel6Path = "dacPcieChannel6";
 constexpr auto settingDacPcieChannel7Path = "dacPcieChannel7";
 constexpr auto settingDacPcieChannel8Path = "dacPcieChannel8";
-
-//debug
-constexpr auto settingTorPath = "tor";
-constexpr auto settingAdcModePath = "adcMode";
-constexpr auto settingAdcCustomValuePath = "adcCustomValue";
-constexpr auto settingMonitorPath = "monitor";
-constexpr auto settingTocntPath = "tocnt";
-constexpr auto settingSticntPath = "sticnt";
-constexpr auto settingBticntPath = "bticnt";
-
-//appearance
-constexpr auto settingThemePath = "theme";
-constexpr auto settingThemeIndexPath = "themeIndex";
-constexpr auto settingSettingsLevelPath = "settingsLevel";
-constexpr auto settingShowCameraBaseDir = "showcamera";
-constexpr auto settingColorSchemePath = "colorScheme";
-//io control
+// IO control
 constexpr auto settingIOCtrlOutput1DelayIn5nsPath = "Output1DelayIn5ns";
 constexpr auto settingIOCtrlOutput1WidthIn5nsPath = "Output1WidthIn5ns";
 constexpr auto settingIOCtrlOutput2DelayIn5nsPath = "Output2DelayIn5ns";
@@ -113,12 +110,11 @@ constexpr auto settingIOCtrlOutput6WidthIn5nsPath = "Output6WidthIn5ns";
 constexpr auto settingIOCtrlOutput7WidthIn5nsPath = "Output7DelayIn5ns";
 constexpr auto settingIOCtrlOutput7DelayIn5nsPath = "Output7WidthIn5ns";
 constexpr auto settingIOCtrlT0PeriodIn10nsPath = "T0PeriodIn10ns";
-//software
-constexpr auto settingsUseSoftwarePollingPath = "use_software_polling";
-//chart
+// chart
 constexpr auto settingAxesMirrorXPath = "AxesMirrorXPath";
 constexpr auto settingShowCrosshairPath = "showCrosshair";
 constexpr auto settingSoftwareVersionPath = "softwareVersion";
+constexpr auto settingShowCameraBaseDir = "showcamera";
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DialogSettings; }
