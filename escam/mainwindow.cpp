@@ -1117,10 +1117,10 @@ void MainWindow::on_actionImport_triggered()
 }
 
 /**
- * \brief This is a helper function to copy settings.
+ * @brief This is a helper function to copy settings.
  * 
- * \param dst
- * \param src
+ * @param dst
+ * @param src
  */
 void MainWindow::copySettings(QSettings &dst, QSettings &src)
 {

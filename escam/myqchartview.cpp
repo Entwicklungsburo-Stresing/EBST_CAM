@@ -55,8 +55,8 @@ void MyQChartView::updateLabelMouseCoordinates(QPoint mousePos)
 /**
  * Returns the nearest y value for given x value.
  *
- * \param xValue
- * \return nearestPoint
+ * @param xValue
+ * @return nearestPoint
  */
 QList<QPointF> MyQChartView::findNearestPoint(qreal xValue) {
 	QList<QPointF> pointList;

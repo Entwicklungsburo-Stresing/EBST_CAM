@@ -18,42 +18,42 @@ enum s0_addresses_t
 {
 	S0Addr_DBR = 0x00,
 	/**
-	 * See \ref CTRL_bits_t for details.
+	 * See @ref CTRL_bits_t for details.
 	 */
 	S0Addr_CTRL = 0x04,
 	/**
-	 * See \ref XCK_bits_t for details.
+	 * See @ref XCK_bits_t for details.
 	 */
 	S0Addr_XCK = 0x08,
 	S0Addr_XCKCNT = 0x0c,
 	/**
-	 * See \ref PIXREG_FFCTRL_FFFLAGS_bits_t for details.
+	 * See @ref PIXREG_FFCTRL_FFFLAGS_bits_t for details.
 	 */
 	S0Addr_PIXREG_FFCTRL_FFFLAGS = 0x10,
 	/**
-	 * See \ref FIFOCNT_bits_t for details.
+	 * See @ref FIFOCNT_bits_t for details.
 	 */
 	S0Addr_FIFOCNT = 0x14,
 	/**
-	 * See \ref VCLKCTRL_VCLKFREQ_bits_t for details.
+	 * See @ref VCLKCTRL_VCLKFREQ_bits_t for details.
 	 */
 	S0Addr_VCLKCTRL_VCLKFREQ = 0x18,
 	S0Addr_EBST = 0x1C,
 	/**
-	 * See \ref SDAT_bits_t for details.
+	 * See @ref SDAT_bits_t for details.
 	 */
 	S0Addr_SDAT = 0x20,
 	S0Addr_SEC = 0x24,
 	/**
-	 * See \ref TOR_STICNT_TOCNT_bits_t for details.
+	 * See @ref TOR_STICNT_TOCNT_bits_t for details.
 	 */
 	S0Addr_TOR_STICNT_TOCNT = 0x28,
 	/**
-	 * See \ref ARREG_bits_t for details.
+	 * See @ref ARREG_bits_t for details.
 	 */
 	S0Addr_ARREG = 0x2C,
 	/**
-	 * See \ref GIOREG_bits_t for details.
+	 * See @ref GIOREG_bits_t for details.
 	 */
 	S0Addr_GIOREG = 0x30,
 	/**
@@ -64,79 +64,79 @@ enum s0_addresses_t
 	 */
 	S0Addr_XCK_PERIOD = 0x34,
 	/**
-	 * See \ref IRQREG_bits_t for details.
+	 * See @ref IRQREG_bits_t for details.
 	 */
 	S0Addr_IRQREG = 0x38,
 	/**
-	 * See \ref PCI_bits_t for details.
+	 * See @ref PCI_bits_t for details.
 	 */
 	S0Addr_PCI = 0x3C,
 	/**
-	 * See \ref PCIEFLAGS_bits_t for details.
+	 * See @ref PCIEFLAGS_bits_t for details.
 	 */
 	S0Addr_PCIEFLAGS = 0x40,
 	S0Addr_NOS = 0x44,
 	/**
-	 * See \ref ScanIndex_bits_t for details.
+	 * See @ref ScanIndex_bits_t for details.
 	 */
 	S0Addr_ScanIndex = 0x48,
 	/**
-	 * See \ref DmaBufSizeInScans_bits_t for details.
+	 * See @ref DmaBufSizeInScans_bits_t for details.
 	 */
 	S0Addr_DmaBufSizeInScans = 0x4C,
 	/**
-	 * See \ref DMAsPerIntr_bits_t for details.
+	 * See @ref DMAsPerIntr_bits_t for details.
 	 */
 	S0Addr_DMAsPerIntr = 0x50,
 	S0Addr_NOB = 0x54,
 	/**
-	 * See \ref BLOCKINDEX_bits_t for details.
+	 * See @ref BLOCKINDEX_bits_t for details.
 	 */
 	S0Addr_BLOCKINDEX = 0x58,
 	/**
-	 * See \ref CAMCNT_bits_t for details.
+	 * See @ref CAMCNT_bits_t for details.
 	 */
 	S0Addr_CAMCNT = 0x5C,
 	/**
-	 * See \ref TDCCtrl_bits_t for details.
+	 * See @ref TDCCtrl_bits_t for details.
 	 */
 	S0Addr_TDCCtrl = 0x60,
 	S0Addr_TDCData = 0x64,
 	/**
-	 * See \ref ROI0_bits_t for details.
+	 * See @ref ROI0_bits_t for details.
 	 */
 	S0Addr_ROI0 = 0x68,
 	/**
-	 * See \ref ROI1_bits_t for details.
+	 * See @ref ROI1_bits_t for details.
 	 */
 	S0Addr_ROI1 = 0x6C,
 	/**
-	 * See \ref ROI2_bits_t for details.
+	 * See @ref ROI2_bits_t for details.
 	 */
 	S0Addr_ROI2 = 0x70,
 	/**
-	 * See \ref XCKDELAY_bits_t for details.
+	 * See @ref XCKDELAY_bits_t for details.
 	 */
 	S0Addr_XCKDLY = 0x74,
 	S0Addr_S1S2ReadDelay = 0x78,
 	/**
-	 * See \ref BTICNT_bits_t for details.
+	 * See @ref BTICNT_bits_t for details.
 	 */
 	S0Addr_BTICNT = 0x7c,
 	/**
-	 * See \ref BTIMER_bits_t for details.
+	 * See @ref BTIMER_bits_t for details.
 	 */
 	S0Addr_BTIMER = 0x80,
 	/**
-	 * See \ref BDAT_bits_t for details.
+	 * See @ref BDAT_bits_t for details.
 	 */
 	S0Addr_BDAT = 0x84,
 	/**
-	 * See \ref BEC_bits_t for details.
+	 * See @ref BEC_bits_t for details.
 	 */
 	S0Addr_BEC = 0x88,
 	/**
-	 * See \ref BSLOPE_bits_t for details.
+	 * See @ref BSLOPE_bits_t for details.
 	 */
 	S0Addr_BSLOPE = 0x8C,
 	S0Addr_A1DSC = 0x90,
@@ -146,7 +146,7 @@ enum s0_addresses_t
 	S0Addr_ATDC2 = 0xA0,
 	S0Addr_LTDC2 = 0xA4,
 	/**
-	 * See \ref DSCCtrl_bits_t for details.
+	 * See @ref DSCCtrl_bits_t for details.
 	 */
 	S0Addr_DSCCtrl = 0xA8,
 	S0Addr_DAC = 0xAC,
@@ -165,7 +165,7 @@ enum s0_addresses_t
 	 */
 	S0Addr_BONLEN = 0xB4,
 	/**
-	 * See \ref camera_type_bits_t for details.
+	 * See @ref camera_type_bits_t for details.
 	 */
 	S0Addr_CAMERA_TYPE = 0xB8,
 	/**
@@ -426,11 +426,11 @@ enum PCIEFLAGS_bits_t
 	 */
 	PCIEFLAGS_bitindex_BLOCK_ON_SYNCED = 11,
 	/**
-	 * Scan trigger detected will be set to 1 by the hardware on the slope depending on \ref camera_settings.sslope of the signal \ref camera_settings.sti_mode. It is resetted to 0 by setting \ref PCIEFLAGS_bit_reset_scan_trigger_detected to 1.
+	 * Scan trigger detected will be set to 1 by the hardware on the slope depending on @ref camera_settings.sslope of the signal @ref camera_settings.sti_mode. It is resetted to 0 by setting @ref PCIEFLAGS_bit_reset_scan_trigger_detected to 1.
 	 */
 	PCIEFLAGS_bitindex_scan_trigger_detected = 12,
 	/**
-	 * Block trigger detected will be set to 1 by the hardware on the slope depending on \ref camera_settings.bslope of the signal \ref camera_settings.bti_mode. It is resetted to 0 by setting \ref PCIEFLAGS_bit_reset_block_trigger_detected to 1.
+	 * Block trigger detected will be set to 1 by the hardware on the slope depending on @ref camera_settings.bslope of the signal @ref camera_settings.bti_mode. It is resetted to 0 by setting @ref PCIEFLAGS_bit_reset_block_trigger_detected to 1.
 	 */
 	PCIEFLAGS_bitindex_block_trigger_detected = 13,
 	/**
@@ -635,7 +635,7 @@ enum master_address_t
 enum camera_register_addresses_t
 {
 	/**
-	 * See details in \ref cam_config_register_t.
+	 * See details in @ref cam_config_register_t.
 	 */
 	cam_adaddr_config = 0x00,
 	cam_adaddr_pixel = 0x01,
