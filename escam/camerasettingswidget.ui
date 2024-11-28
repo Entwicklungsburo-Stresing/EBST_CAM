@@ -1808,6 +1808,12 @@
          </item>
          <item row="6" column="1">
           <widget class="QLabel" name="labelManipulateDataMode">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Built in data manipulation&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With &lt;span style=&quot; font-style:italic;&quot;&gt;manipulate data mode&lt;/span&gt; you can activate / deactivate a built in data manipulation during the measurement. This is potentially used to linearize the sensor data for specific sensors.&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-style:italic;&quot;&gt;none&lt;/span&gt;: Default. Don't manipulate the data. This is the defaut. Keep the data as raw as it is.&lt;br/&gt;- &lt;span style=&quot; font-style:italic;&quot;&gt;preset linearization&lt;/span&gt;: Manipulate the data with a preset polynom. This option is here for future use only and not for production use yet.&lt;br/&gt;- &lt;span style=&quot; font-style:italic;&quot;&gt;custom factor&lt;/span&gt;: Use the factor given by &lt;span style=&quot; font-style:italic;&quot;&gt;custom factor&lt;/span&gt; to manipulate the data.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;manipulate_data_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>manipulate data mode</string>
            </property>
@@ -2164,6 +2170,12 @@
          </item>
          <item row="6" column="2">
           <widget class="QComboBox" name="comboBoxManipulateDataMode">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Built in data manipulation&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With &lt;span style=&quot; font-style:italic;&quot;&gt;manipulate data mode&lt;/span&gt; you can activate / deactivate a built in data manipulation during the measurement. This is potentially used to linearize the sensor data for specific sensors.&lt;/p&gt;&lt;p&gt;- &lt;span style=&quot; font-style:italic;&quot;&gt;none&lt;/span&gt;: Default. Don't manipulate the data. This is the defaut. Keep the data as raw as it is.&lt;br/&gt;- &lt;span style=&quot; font-style:italic;&quot;&gt;preset linearization&lt;/span&gt;: Manipulate the data with a preset polynom. This option is here for future use only and not for production use yet.&lt;br/&gt;- &lt;span style=&quot; font-style:italic;&quot;&gt;custom factor&lt;/span&gt;: Use the factor given by &lt;span style=&quot; font-style:italic;&quot;&gt;custom factor&lt;/span&gt; to manipulate the data.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;manipulate_data_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <item>
             <property name="text">
              <string>none</string>
@@ -2196,6 +2208,12 @@
          </item>
          <item row="7" column="1">
           <widget class="QLabel" name="labelManipulateDataCustomFactor">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Factor for manipulatin mode &lt;span style=&quot; font-style:italic;&quot;&gt;custom factor&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;custom factor&lt;/span&gt; is used when &lt;span style=&quot; font-style:italic;&quot;&gt;manipulate data mode&lt;/span&gt; is set to &lt;span style=&quot; font-style:italic;&quot;&gt;custom factor&lt;/span&gt;. This factor is multiplied with the data of each pixel. &lt;span style=&quot; font-style:italic;&quot;&gt;custom factor&lt;/span&gt; is a 64 bit double.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;manipulate_data_custom_factor&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>custom factor</string>
            </property>
@@ -2203,6 +2221,12 @@
          </item>
          <item row="7" column="2">
           <widget class="QDoubleSpinBox" name="doubleSpinBoxManipulateDataCustomFactor">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Factor for manipulatin mode &lt;span style=&quot; font-style:italic;&quot;&gt;custom factor&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;custom factor&lt;/span&gt; is used when &lt;span style=&quot; font-style:italic;&quot;&gt;manipulate data mode&lt;/span&gt; is set to &lt;span style=&quot; font-style:italic;&quot;&gt;custom factor&lt;/span&gt;. This factor is multiplied with the data of each pixel. &lt;span style=&quot; font-style:italic;&quot;&gt;custom factor&lt;/span&gt; is a 64 bit double.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;manipulate_data_custom_factor&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
