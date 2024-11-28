@@ -334,9 +334,6 @@
     <ClInclude Include="UIAbstractionLayer.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="dll_description.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="ESLSCDLL.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
