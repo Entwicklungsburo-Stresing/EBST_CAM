@@ -422,23 +422,23 @@ struct measurement_settings
 struct measurement_settings_matlab
 {
 	/**
-	 * \copydoc measurement_settings.board_sel
+	 * @copydoc measurement_settings.board_sel
 	 */
 	uint32_t board_sel;
 	/**
-	 * \copydoc measurement_settings.nos
+	 * @copydoc measurement_settings.nos
 	 */
 	uint32_t nos;
 	/**
-	 * \copydoc measurement_settings.nob
+	 * @copydoc measurement_settings.nob
 	 */
 	uint32_t nob;
 	/**
-	 * \copydoc measurement_settings.continuous_measurement
+	 * @copydoc measurement_settings.continuous_measurement
 	 */
 	uint32_t continuous_measurement;
 	/**
-	 * \copydoc measurement_settings.cont_pause_in_microseconds
+	 * @copydoc measurement_settings.cont_pause_in_microseconds
 	 */
 	uint32_t cont_pause_in_microseconds;
 };

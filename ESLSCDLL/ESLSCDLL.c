@@ -87,7 +87,7 @@ BOOL WINAPI DLLMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 #endif
 
 /**
- * \copydoc InitDriver
+ * @copydoc InitDriver
  * @param _number_of_boards Pointer for returning recognized number of PCIe boards.
  */
 DllAccess es_status_codes DLLInitDriver(uint8_t* _number_of_boards)
@@ -100,7 +100,7 @@ DllAccess es_status_codes DLLInitDriver(uint8_t* _number_of_boards)
 
 
 /**
- * \copydoc InitBoard
+ * @copydoc InitBoard
  */
 DllAccess es_status_codes DLLInitBoard()
 {
@@ -125,7 +125,7 @@ DllAccess void DLLInitSettingsStruct(struct measurement_settings* ms)
 }
 
 /**
- * \copydoc SetGlobalSettings
+ * @copydoc SetGlobalSettings
  */
 DllAccess es_status_codes DLLSetGlobalSettings(struct measurement_settings settings)
 {
@@ -160,7 +160,7 @@ DllAccess es_status_codes DLLSetGlobalSettings_matlab(struct measurement_setting
 }
 
 /**
- * \copydoc InitMeasurement
+ * @copydoc InitMeasurement
  */
 DllAccess es_status_codes DLLInitMeasurement()
 {
@@ -168,7 +168,7 @@ DllAccess es_status_codes DLLInitMeasurement()
 }
 
 /**
- * \copydoc StartMeasurement
+ * @copydoc StartMeasurement
  */
 DllAccess es_status_codes DLLStartMeasurement_blocking()
 {
@@ -200,7 +200,7 @@ DllAccess void DLLStartMeasurement_nonblocking()
 }
 
 /**
- * \copydoc SetAbortMeasurementFlag
+ * @copydoc SetAbortMeasurementFlag
  */
 DllAccess es_status_codes DLLAbortMeasurement()
 {
@@ -208,7 +208,7 @@ DllAccess es_status_codes DLLAbortMeasurement()
 }
 
 /**
- * \copydoc CopyOneSample
+ * @copydoc CopyOneSample
  */
 DllAccess es_status_codes DLLCopyOneSample(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest)
 {
@@ -245,7 +245,7 @@ DllAccess es_status_codes DLLCopyOneSample_multipleBoards(uint32_t sample, uint3
 }
 
 /**
- * \copydoc CopyAllData
+ * @copydoc CopyAllData
  */
 DllAccess es_status_codes DLLCopyAllData(uint32_t drvno, uint16_t* pdest)
 {
@@ -279,7 +279,7 @@ DllAccess es_status_codes DLLCopyAllData_multipleBoards(uint16_t* pdest0, uint16
 }
 
 /**
- * \copydoc CopyOneBlock
+ * @copydoc CopyOneBlock
  */
 DllAccess es_status_codes DLLCopyOneBlock(uint32_t drvno, uint16_t block, uint16_t* pdest)
 {
@@ -287,7 +287,7 @@ DllAccess es_status_codes DLLCopyOneBlock(uint32_t drvno, uint16_t block, uint16
 }
 
 /**
- * \copydoc CopyDataArbitrary
+ * @copydoc CopyDataArbitrary
  */
 DllAccess es_status_codes DLLCopyDataArbitrary(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, uint32_t length_in_pixel, uint16_t* pdest)
 {
@@ -295,7 +295,7 @@ DllAccess es_status_codes DLLCopyDataArbitrary(uint32_t drvno, uint32_t sample, 
 }
 
 /**
- * \copydoc GetOneSamplePointer
+ * @copydoc GetOneSamplePointer
  */
 DllAccess es_status_codes DLLGetOneSamplePointer(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
 {
@@ -303,7 +303,7 @@ DllAccess es_status_codes DLLGetOneSamplePointer(uint32_t drvno, uint32_t sample
 }
 
 /**
- * \copydoc GetOneBlockPointer
+ * @copydoc GetOneBlockPointer
  */
 DllAccess es_status_codes DLLGetOneBlockPointer(uint32_t drvno, uint32_t block, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
 {
@@ -311,7 +311,7 @@ DllAccess es_status_codes DLLGetOneBlockPointer(uint32_t drvno, uint32_t block, 
 }
 
 /**
- * \copydoc GetPixelPointer
+ * @copydoc GetPixelPointer
  */
 DllAccess es_status_codes DLLGetPixelPointer(uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
 
@@ -347,7 +347,7 @@ DllAccess es_status_codes DLLCopyOneBlock_multipleBoards(uint16_t block, uint16_
 }
 
 /**
- * \copydoc CopyOneBlockOfOneCamera
+ * @copydoc CopyOneBlockOfOneCamera
  */
 DllAccess es_status_codes DLLCopyOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t* pdest)
 {
@@ -385,7 +385,7 @@ DllAccess es_status_codes DLLCopyOneBlockOfOneCamera_multipleBoards(uint32_t blo
 }
 
 /**
- * \copydoc GetAllDataPointer
+ * @copydoc GetAllDataPointer
  */
 DllAccess es_status_codes DLLGetAllDataPointer(uint32_t drvno, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
 {
@@ -393,7 +393,7 @@ DllAccess es_status_codes DLLGetAllDataPointer(uint32_t drvno, uint16_t** pdest,
 }
 
 /**
- * \copydoc ExitDriver
+ * @copydoc ExitDriver
  */
 DllAccess es_status_codes DLLExitDriver()
 {
@@ -417,7 +417,7 @@ DllAccess int DLLGetThreadCount()
 }
 
 /**
-\copydoc readRegisterS0_8
+@copydoc readRegisterS0_8
 */
 DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address)
 {
@@ -466,7 +466,7 @@ DllAccess es_status_codes DLLwriteRegisterS0_8(uint8_t data, uint32_t address)
 }
 
 /**
-\copydoc readRegisterS0_32
+@copydoc readRegisterS0_32
 */
 DllAccess es_status_codes DLLreadRegisterS0_32(uint32_t drvno, uint32_t* data, uint32_t address)
 {
@@ -513,7 +513,7 @@ DllAccess es_status_codes DLLwriteRegisterS0_32(uint32_t data, uint32_t address)
 }
 
 /**
- * \copydoc ReadScanFrequencyBit
+ * @copydoc ReadScanFrequencyBit
  */
 DllAccess es_status_codes DLLReadScanFrequencyBit(uint32_t drvno, uint8_t* scanFrequencyTooHigh)
 {
@@ -547,7 +547,7 @@ DllAccess es_status_codes DLLReadScanFrequencyBit_multipleBoards(uint8_t* scanFr
 }
 
 /**
- * \copydoc ResetScanFrequencyBit
+ * @copydoc ResetScanFrequencyBit
  */
 DllAccess es_status_codes DLLResetScanFrequencyBit(uint32_t drvno)
 {
@@ -573,7 +573,7 @@ DllAccess es_status_codes DLLResetScanFrequencyBit_multipleBoards()
 }
 
 /**
- * \copydoc ReadBlockFrequencyBit
+ * @copydoc ReadBlockFrequencyBit
  */
 DllAccess es_status_codes DLLReadBlockFrequencyBit(uint32_t drvno, uint8_t* blockFrequencyTooHigh)
 {
@@ -607,7 +607,7 @@ DllAccess es_status_codes DLLReadBlockFrequencyBit_multipleBoards(uint8_t* block
 }
 
 /**
- * \copydoc ResetBlockFrequencyBit
+ * @copydoc ResetBlockFrequencyBit
  */
 DllAccess es_status_codes DLLResetBlockFrequencyBit(uint32_t drvno)
 {
@@ -633,7 +633,7 @@ DllAccess es_status_codes DLLResetBlockFrequencyBit_multipleBoards()
 }
 
 /**
- * \copydoc GetCameraStatusOverTemp
+ * @copydoc GetCameraStatusOverTemp
  */
 DllAccess es_status_codes DLLGetCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* overTemp)
 {
@@ -641,7 +641,7 @@ DllAccess es_status_codes DLLGetCameraStatusOverTemp(uint32_t drvno, uint32_t sa
 }
 
 /**
- * \copydoc GetBlockIndex
+ * @copydoc GetBlockIndex
  */
 DllAccess es_status_codes DLLGetBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* blockIndex)
 {
@@ -649,7 +649,7 @@ DllAccess es_status_codes DLLGetBlockIndex(uint32_t drvno, uint32_t sample, uint
 }
 
 /**
- * \copydoc GetScanIndex
+ * @copydoc GetScanIndex
  */
 DllAccess es_status_codes DLLGetScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* scanIndex)
 {
@@ -657,7 +657,7 @@ DllAccess es_status_codes DLLGetScanIndex(uint32_t drvno, uint32_t sample, uint3
 }
 
 /**
- * \copydoc GetS1State
+ * @copydoc GetS1State
  */
 DllAccess es_status_codes DLLGetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* state)
 {
@@ -665,7 +665,7 @@ DllAccess es_status_codes DLLGetS1State(uint32_t drvno, uint32_t sample, uint32_
 }
 
 /**
- * \copydoc GetS2State
+ * @copydoc GetS2State
  */
 DllAccess es_status_codes DLLGetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* state)
 {
@@ -673,7 +673,7 @@ DllAccess es_status_codes DLLGetS2State(uint32_t drvno, uint32_t sample, uint32_
 }
 
 /**
- * \copydoc GetImpactSignal1
+ * @copydoc GetImpactSignal1
  */
 DllAccess es_status_codes DLLGetImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
@@ -681,7 +681,7 @@ DllAccess es_status_codes DLLGetImpactSignal1(uint32_t drvno, uint32_t sample, u
 }
 
 /**
- * \copydoc GetImpactSignal2
+ * @copydoc GetImpactSignal2
  */
 DllAccess es_status_codes DLLGetImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
@@ -745,7 +745,7 @@ DllAccess es_status_codes DLLGetCameraStatusOverTemp_multipleBoards(uint32_t sam
 
 
 /**
- * \copydoc GetCameraStatusTempGood
+ * @copydoc GetCameraStatusTempGood
  */
 DllAccess es_status_codes DLLGetCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint8_t* tempGood)
 {
@@ -785,7 +785,7 @@ DllAccess es_status_codes DLLGetCameraStatusTempGood_multipleBoards(uint32_t sam
 }
 
 /**
- * \copydoc FindCam
+ * @copydoc FindCam
  */
 DllAccess es_status_codes DLLFindCam(uint32_t drvno)
 {
@@ -825,7 +825,7 @@ DllAccess es_status_codes DLLFindCam_multipleBoards(uint8_t* cameraFound0, uint8
 }
 
 /**
- * \copydoc GetBlockOn
+ * @copydoc GetBlockOn
  */
 DllAccess es_status_codes DLLGetBlockOn(uint32_t drvno, uint8_t* blockOn)
 {
@@ -860,7 +860,7 @@ DllAccess es_status_codes DLLGetBlockOn_multipleBoards(uint8_t* blockOn0, uint8_
 }
 
 /**
- * \copydoc dumpS0Registers
+ * @copydoc dumpS0Registers
  */
 DllAccess es_status_codes DLLDumpS0Registers(uint32_t drvno, char** stringPtr)
 {
@@ -868,7 +868,7 @@ DllAccess es_status_codes DLLDumpS0Registers(uint32_t drvno, char** stringPtr)
 }
 
 /**
- * \copydoc dumpHumanReadableS0Registers
+ * @copydoc dumpHumanReadableS0Registers
  */
 DllAccess es_status_codes DLLDumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 {
@@ -876,7 +876,7 @@ DllAccess es_status_codes DLLDumpHumanReadableS0Registers(uint32_t drvno, char**
 }
 
 /**
- * \copydoc dumpDmaRegisters
+ * @copydoc dumpDmaRegisters
  */
 DllAccess es_status_codes DLLDumpDmaRegisters(uint32_t drvno, char** stringPtr)
 {
@@ -884,7 +884,7 @@ DllAccess es_status_codes DLLDumpDmaRegisters(uint32_t drvno, char** stringPtr)
 }
 
 /**
- * \copydoc dumpTlpRegisters
+ * @copydoc dumpTlpRegisters
  */
 DllAccess es_status_codes DLLDumpTlpRegisters(uint32_t drvno, char** stringPtr)
 {
@@ -892,7 +892,7 @@ DllAccess es_status_codes DLLDumpTlpRegisters(uint32_t drvno, char** stringPtr)
 }
 
 /**
- * \copydoc dumpMeasurementSettings
+ * @copydoc dumpMeasurementSettings
  */
 DllAccess es_status_codes DLLDumpMeasurementSettings(char** stringPtr)
 {
@@ -900,7 +900,7 @@ DllAccess es_status_codes DLLDumpMeasurementSettings(char** stringPtr)
 }
 
 /**
- * \copydoc dumpCameraSettings
+ * @copydoc dumpCameraSettings
  */
 DllAccess es_status_codes DLLDumpCameraSettings(uint32_t drvno, char** stringPtr)
 {
@@ -908,7 +908,7 @@ DllAccess es_status_codes DLLDumpCameraSettings(uint32_t drvno, char** stringPtr
 }
 
 /**
- * \copydoc dumpPciRegisters
+ * @copydoc dumpPciRegisters
  */
 DllAccess es_status_codes DLLDumpPciRegisters(uint32_t drvno, char** stringPtr)
 {
@@ -916,7 +916,7 @@ DllAccess es_status_codes DLLDumpPciRegisters(uint32_t drvno, char** stringPtr)
 }
 
 /**
- * \copydoc _AboutDrv
+ * @copydoc _AboutDrv
  */
 DllAccess es_status_codes DLLAboutDrv(uint32_t drvno, char** stringPtr)
 {
@@ -924,7 +924,7 @@ DllAccess es_status_codes DLLAboutDrv(uint32_t drvno, char** stringPtr)
 }
 
 /**
- * \copydoc _AboutGPX
+ * @copydoc _AboutGPX
  */
 DllAccess es_status_codes DLLAboutGPX(uint32_t drvno, char** stringPtr)
 {
@@ -932,7 +932,7 @@ DllAccess es_status_codes DLLAboutGPX(uint32_t drvno, char** stringPtr)
 }
 
 /**
- * \copydoc GetVerifiedDataDialog
+ * @copydoc GetVerifiedDataDialog
  */
 DllAccess void DLLGetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString)
 {
@@ -952,7 +952,7 @@ DllAccess uint8_t DLLGetIsRunning()
 }
 
 /**
- * \copydoc CalcRamUsageInMB
+ * @copydoc CalcRamUsageInMB
  */
 DllAccess double DLLCalcRamUsageInMB(uint32_t nos, uint32_t nob)
 {
@@ -960,7 +960,7 @@ DllAccess double DLLCalcRamUsageInMB(uint32_t nos, uint32_t nob)
 }
 
 /**
- * \copydoc CalcMeasureTimeInSeconds
+ * @copydoc CalcMeasureTimeInSeconds
  */
 DllAccess double DLLCalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms)
 {
@@ -1086,7 +1086,7 @@ DllAccess es_status_codes DLLresetBitS0_32(uint32_t bitnumber, uint32_t address)
 }
 
 /**
- * \copydoc ReadBitS0_32
+ * @copydoc ReadBitS0_32
  */
 DllAccess es_status_codes DLLReadBitS0_32(uint32_t drvno, uint32_t address, uint8_t bitnumber, uint8_t* isBitHigh)
 {
@@ -1124,7 +1124,7 @@ DllAccess es_status_codes DLLReadBitS0_32_multipleBoards(uint32_t address, uint8
 }
 
 /**
- * \copydoc ReadBitS0_8
+ * @copydoc ReadBitS0_8
  */
 DllAccess es_status_codes DLLReadBitS0_8(uint32_t drvno, uint32_t address, uint8_t bitnumber, uint8_t* isBitHigh)
 {
@@ -1181,7 +1181,7 @@ DllAccess es_status_codes DLLSetTemp(uint8_t level)
 }
 
 /**
- * \copydoc SetTORReg
+ * @copydoc SetTORReg
  */
 DllAccess es_status_codes DLLSetTORReg(uint32_t drvno, uint8_t tor)
 {
@@ -1208,7 +1208,7 @@ DllAccess es_status_codes DLLSetTORReg_multipleBoards(uint8_t tor)
 }
 
 /**
- * \copydoc DAC8568_setAllOutputs
+ * @copydoc DAC8568_setAllOutputs
  */
 DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint32_t* output, uint8_t reorder_channels)
 {
@@ -1246,7 +1246,7 @@ DllAccess es_status_codes DLLDAC8568_setAllOutputs_multipleBoards(uint8_t locati
 }
 
 /**
- * \copydoc FreeMemInfo
+ * @copydoc FreeMemInfo
  */
 DllAccess void DLLFreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 {
@@ -1256,7 +1256,7 @@ DllAccess void DLLFreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 
 
 /**
- * \copydoc GetMeasureOn
+ * @copydoc GetMeasureOn
  */
 DllAccess es_status_codes DLLGetMeasureOn(uint32_t drvno, uint8_t* measureOn)
 {
@@ -1312,7 +1312,7 @@ DllAccess es_status_codes DLLWaitForBlockDone()
 }
 
 /**
- * \copydoc SetSTimer
+ * @copydoc SetSTimer
  */
 DllAccess es_status_codes DLLSetSTimer(uint32_t drvno, uint32_t stime_in_microseconds)
 {
@@ -1320,7 +1320,7 @@ DllAccess es_status_codes DLLSetSTimer(uint32_t drvno, uint32_t stime_in_microse
 }
 
 /**
- * \copydoc SetBTimer
+ * @copydoc SetBTimer
  */
 DllAccess es_status_codes DLLSetBTimer(uint32_t drvno, uint32_t btime_in_microseconds)
 {
@@ -1328,7 +1328,7 @@ DllAccess es_status_codes DLLSetBTimer(uint32_t drvno, uint32_t btime_in_microse
 }
 
 /**
- * \copydoc GetXckLength
+ * @copydoc GetXckLength
  */
 DllAccess es_status_codes DLLGetXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns)
 {
@@ -1336,7 +1336,7 @@ DllAccess es_status_codes DLLGetXckLength(uint32_t drvno, uint32_t* xckLengthIn1
 }
 
 /**
- * \copydoc GetXckPeriod
+ * @copydoc GetXckPeriod
  */
 DllAccess es_status_codes DLLGetXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns)
 {
@@ -1344,7 +1344,7 @@ DllAccess es_status_codes DLLGetXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn1
 }
 
 /**
- * \copydoc GetBonLength
+ * @copydoc GetBonLength
  */
 DllAccess es_status_codes DLLGetBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns)
 {
@@ -1352,7 +1352,7 @@ DllAccess es_status_codes DLLGetBonLength(uint32_t drvno, uint32_t* bonLengthIn1
 }
 
 /**
- * \copydoc GetBonPeriod
+ * @copydoc GetBonPeriod
  */
 DllAccess es_status_codes DLLGetBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns)
 {
@@ -1517,7 +1517,7 @@ DllAccess void DLLRegisterLVEvents(LVUserEventRef* measureStartEvent, LVUserEven
 #endif
 
 /**
- * \copydoc ConvertErrorCodeToMsg
+ * @copydoc ConvertErrorCodeToMsg
  */
 DllAccess char* DLLConvertErrorCodeToMsg(es_status_codes status)
 {
@@ -1525,7 +1525,7 @@ DllAccess char* DLLConvertErrorCodeToMsg(es_status_codes status)
 }
 
 /**
- * \copydoc CamIOCtrl_setOutput
+ * @copydoc CamIOCtrl_setOutput
  */
 DllAccess es_status_codes DLLIOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns)
 {
@@ -1533,7 +1533,7 @@ DllAccess es_status_codes DLLIOCtrl_setOutput(uint32_t drvno, uint32_t number, u
 }
 
 /**
- * \copydoc CamIOCtrl_setT0
+ * @copydoc CamIOCtrl_setT0
  */
 DllAccess es_status_codes DLLIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 {
@@ -1584,7 +1584,7 @@ DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t* width_in_5ns, uint32
 }
 
 /**
- * \copydoc GetCurrentScanNumber
+ * @copydoc GetCurrentScanNumber
  */
 DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block)
 {
@@ -1626,7 +1626,7 @@ DllAccess void DLLGetCurrentScanNumber_multipleBoards(int64_t* sample0, int64_t*
 }
 
 /**
- * \copydoc GetIsTdc
+ * @copydoc GetIsTdc
  */
 DllAccess es_status_codes DLLGetIsTdc(uint32_t drvno, uint8_t* isTdc)
 {
@@ -1662,7 +1662,7 @@ DllAccess es_status_codes DLLGetIsTdc_multipleBoards(uint8_t* isTdc0, uint8_t* i
 }
 
 /**
- * \copydoc GetIsDsc
+ * @copydoc GetIsDsc
  */
 DllAccess es_status_codes DLLGetIsDsc(uint32_t drvno, uint8_t* isDsc)
 {
@@ -1698,7 +1698,7 @@ DllAccess es_status_codes DLLGetIsDsc_multipleBoards(uint8_t* isDsc0, uint8_t* i
 }
 
 /**
- * \copydoc ResetDSC
+ * @copydoc ResetDSC
  */
 DllAccess es_status_codes DLLResetDSC(uint32_t drvno, uint8_t DSCNumber)
 {
@@ -1727,7 +1727,7 @@ DllAccess es_status_codes DLLResetDSC_multipleBoards(uint8_t DSCNumber)
 }
 
 /**
- * \copydoc SetDIRDSC
+ * @copydoc SetDIRDSC
  */
 DllAccess es_status_codes DLLSetDIRDSC(uint32_t drvno, uint8_t DSCNumber, uint8_t dir)
 {
@@ -1757,7 +1757,7 @@ DllAccess es_status_codes DLLSetDIRDSC_multipleBoards(uint8_t DSCNumber, uint8_t
 }
 
 /**
- * \copydoc GetDSC
+ * @copydoc GetDSC
  */
 DllAccess es_status_codes DLLGetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC)
 {
@@ -1821,7 +1821,7 @@ DllAccess es_status_codes DLLInitGPX(uint32_t delay)
 }
 
 /**
- * \copydoc SetContinuousMeasurement
+ * @copydoc SetContinuousMeasurement
  */
 DllAccess void DLLSetContinuousMeasurement(uint8_t on)
 {
@@ -1830,7 +1830,7 @@ DllAccess void DLLSetContinuousMeasurement(uint8_t on)
 }
 
 /**
- * \copydoc GetAllSpecialPixelInformation
+ * @copydoc GetAllSpecialPixelInformation
  */
 DllAccess es_status_codes DLLGetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp)
 {
@@ -1887,7 +1887,7 @@ DllAccess void DLLFillUserBufferWithDummyData()
 #ifndef MINIMAL_BUILD
 
 /**
- * \copydoc CalcTrms
+ * @copydoc CalcTrms
  */
 DllAccess es_status_codes DLLCalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf, double* trms)
 {
@@ -1934,7 +1934,7 @@ DllAccess es_status_codes DLLCalcTrms_multipleBoards(uint32_t firstSample, uint3
 }
 
 /**
-\copydoc ErrMsgBoxOn
+@copydoc ErrMsgBoxOn
 */
 DllAccess void DLLErrMsgBoxOn()
 {
@@ -1945,7 +1945,7 @@ DllAccess void DLLErrMsgBoxOn()
 }
 
 /**
-\copydoc ErrMsgBoxOff
+@copydoc ErrMsgBoxOff
 */
 DllAccess void DLLErrMsgBoxOff()
 {
@@ -1957,7 +1957,7 @@ DllAccess void DLLErrMsgBoxOff()
 
 
 /**
- * \copydoc ErrorMsg
+ * @copydoc ErrorMsg
  */
 DllAccess void DLLErrorMsg(char ErrMsg[20])
 {
@@ -1968,7 +1968,7 @@ DllAccess void DLLErrorMsg(char ErrMsg[20])
 }
 
 /**
- * \copydoc About
+ * @copydoc About
  */
 DllAccess es_status_codes DLLAbout()
 {
@@ -1980,7 +1980,7 @@ DllAccess es_status_codes DLLAbout()
 }
 
 /**
-* \copydoc Start2dViewer
+* @copydoc Start2dViewer
 */
 DllAccess void DLLStart2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {
@@ -1991,7 +1991,7 @@ DllAccess void DLLStart2dViewer(uint32_t drvno, uint32_t block, uint16_t camera,
 }
 
 /**
-* \copydoc ShowNewBitmap
+* @copydoc ShowNewBitmap
 */
 DllAccess void DLLShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {
@@ -2002,7 +2002,7 @@ DllAccess void DLLShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera,
 }
 
 /**
-* \copydoc Deinit2dViewer
+* @copydoc Deinit2dViewer
 */
 DllAccess void DLLDeinit2dViewer()
 {
@@ -2013,7 +2013,7 @@ DllAccess void DLLDeinit2dViewer()
 }
 
 /**
-* \copydoc SetGammaValue
+* @copydoc SetGammaValue
 */
 DllAccess void DLLSetGammaValue(uint16_t white, uint16_t black)
 {
@@ -2023,7 +2023,7 @@ DllAccess void DLLSetGammaValue(uint16_t white, uint16_t black)
 }
 
 /**
-* \copydoc GetGammaWhite
+* @copydoc GetGammaWhite
 */
 DllAccess uint16_t DLLGetGammaWhite()
 {
@@ -2035,7 +2035,7 @@ DllAccess uint16_t DLLGetGammaWhite()
 }
 
 /**
-* \copydoc GetGammaBlack
+* @copydoc GetGammaBlack
 */
 DllAccess uint16_t DLLGetGammaBlack()
 {
@@ -2047,7 +2047,7 @@ DllAccess uint16_t DLLGetGammaBlack()
 }
 
 /**
- * \copydoc ExportMeasurementHDF5
+ * @copydoc ExportMeasurementHDF5
  */
 DllAccess es_status_codes DLLExportMeasurementHDF5(const char* path, char* filename)
 {
@@ -2061,7 +2061,7 @@ DllAccess es_status_codes DLLExportMeasurementHDF5(const char* path, char* filen
 #endif
 
 /**
-* \copydoc GetScanTriggerDetected
+* @copydoc GetScanTriggerDetected
 */
 DllAccess es_status_codes DLLGetScanTriggerDetected(uint32_t drvno, uint8_t* detected)
 {
@@ -2069,7 +2069,7 @@ DllAccess es_status_codes DLLGetScanTriggerDetected(uint32_t drvno, uint8_t* det
 }
 
 /**
-* \copydoc GetBlockTriggerDetected
+* @copydoc GetBlockTriggerDetected
 */
 DllAccess es_status_codes DLLGetBlockTriggerDetected(uint32_t drvno, uint8_t* detected)
 {
@@ -2077,7 +2077,7 @@ DllAccess es_status_codes DLLGetBlockTriggerDetected(uint32_t drvno, uint8_t* de
 }
 
 /**
-* \copydoc ResetScanTriggerDetected
+* @copydoc ResetScanTriggerDetected
 */
 DllAccess es_status_codes DLLResetScanTriggerDetected(uint32_t drvno)
 {
@@ -2085,7 +2085,7 @@ DllAccess es_status_codes DLLResetScanTriggerDetected(uint32_t drvno)
 }
 
 /**
-* \copydoc ResetBlockTriggerDetected
+* @copydoc ResetBlockTriggerDetected
 */
 DllAccess es_status_codes DLLResetBlockTriggerDetected(uint32_t drvno)
 {
@@ -2189,7 +2189,7 @@ DllAccess es_status_codes DLLResetBlockTriggerDetected_multipleBoards()
 }
 
 /**
- * \copydoc DAC8568_setOutput
+ * @copydoc DAC8568_setOutput
  */
 DllAccess es_status_codes DLLDAC8568_setOutput(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t channel, uint16_t output)
 {
@@ -2197,7 +2197,7 @@ DllAccess es_status_codes DLLDAC8568_setOutput(uint32_t drvno, uint8_t location,
 }
 
 /**
- * \copydoc CheckFifoValid
+ * @copydoc CheckFifoValid
  */
 DllAccess es_status_codes DLLCheckFifoValid(uint32_t drvno, uint8_t* valid)
 {
@@ -2205,7 +2205,7 @@ DllAccess es_status_codes DLLCheckFifoValid(uint32_t drvno, uint8_t* valid)
 }
 
 /**
- * \copydoc CheckFifoOverflow
+ * @copydoc CheckFifoOverflow
  */
 DllAccess es_status_codes DLLCheckFifoOverflow(uint32_t drvno, uint8_t* overflow)
 {
@@ -2213,7 +2213,7 @@ DllAccess es_status_codes DLLCheckFifoOverflow(uint32_t drvno, uint8_t* overflow
 }
 
 /**
- * \copydoc CheckFifoEmpty
+ * @copydoc CheckFifoEmpty
  */
 DllAccess es_status_codes DLLCheckFifoEmpty(uint32_t drvno, uint8_t* empty)
 {
@@ -2221,7 +2221,7 @@ DllAccess es_status_codes DLLCheckFifoEmpty(uint32_t drvno, uint8_t* empty)
 }
 
 /**
- * \copydoc CheckFifoFull
+ * @copydoc CheckFifoFull
  */
 DllAccess es_status_codes DLLCheckFifoFull(uint32_t drvno, uint8_t* full)
 {
