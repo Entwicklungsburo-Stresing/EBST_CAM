@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   Board_ll.h
+ * @brief  All the low level platform specific implementations for interacting with the Stresing PCIe board.
+ * 
+ * @author Florian Hahn
+ * @date   23.10.2020
+ *********************************************************************/
+
 #pragma once
 
 #include <stdint.h>

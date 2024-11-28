@@ -1,14 +1,13 @@
+/*****************************************************************//**
+ * @file   ESLSCDLL.h
+ * @brief  Library header for ESLSCDLL
+ * 
+ * The library ESLSCDLL can be compiled on Windows into ESLSCDLL.dll and on Linux into libESLSCDLL.so.
+ * @author Gerhard Stresing, Bastian Brabec, Florian Hahn
+ * @date   before 2016
+ *********************************************************************/
+
 #pragma once
-/*   **********************************************
-	DLL for CCD Camera driver of
-
-	Entwicklungsbuero Stresing
-	Germany
-
-	this DLL translates DLL calls from Labview or others
-	to the unit Board.c
-	the drivers must have been installed before calling!
-*/
 
 #include <stdint.h>
 #include <stddef.h>

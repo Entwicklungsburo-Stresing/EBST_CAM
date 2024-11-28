@@ -1,3 +1,12 @@
+/*****************************************************************//**
+ * @file   Board.h
+ * @brief  All functions for interacting with the Stresing PCIe board.
+ * 
+ * All functions are written in a plattform independent way. All stuff that needs to be done in a plattform dependent way is done in Board_ll.h.
+ * @author Gerhard Stresing, Bastian Brabec, Florian Hahn
+ * @date   before February 2016
+ *********************************************************************/
+
 #pragma once
 
 #ifdef __cplusplus
