@@ -68,7 +68,7 @@ es_status_codes Cam_Init(uint32_t drvno)
 	}
 	status = CamIOCtrl_setT0(drvno, settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns);
 	if (status != es_no_error) return status;
-	status = Cam_SetSensorResetOrHsirEc(drvno, settings_struct.camera_settings[drvno].sensor_reset_or_hsir_ec);
+	status = Cam_SetSensorResetOrHsirEc(drvno, (uint16_t)settings_struct.camera_settings[drvno].sensor_reset_or_hsir_ec);
 	if (status != es_no_error) return status;
 	status = Cam_Initialize(drvno);
 	return status;
@@ -218,12 +218,12 @@ es_status_codes Cam3030_Init(uint32_t drvno)
 	if (status != es_no_error) return status;
 	for (uint32_t camera = 0; camera < settings_struct.camera_settings[drvno].camcnt; camera++)
 	{
-		status = DAC8568_enableInternalReference(drvno, DAC8568_camera, camera);
+		status = DAC8568_enableInternalReference(drvno, DAC8568_camera, (uint8_t)camera);
 		if (status != es_no_error) return status;
 		bool is_hs_ir = false;
 		if (settings_struct.camera_settings[drvno].sensor_type == sensor_type_hsir)
 			is_hs_ir = true;
-		status = DAC8568_setAllOutputs(drvno, DAC8568_camera, camera, settings_struct.camera_settings[drvno].dac_output[camera], !is_hs_ir);
+		status = DAC8568_setAllOutputs(drvno, DAC8568_camera, (uint8_t)camera, settings_struct.camera_settings[drvno].dac_output[camera], !is_hs_ir);
 		if (status != es_no_error) return status;
 	}
 	// Sample mode is currently not in use. 11/22, P209_8

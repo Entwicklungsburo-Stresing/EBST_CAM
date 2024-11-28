@@ -403,7 +403,7 @@ es_status_codes SetCameraSystem(uint32_t drvno, uint16_t camera_system)
 {
 	ES_LOG("Setting camera system: %"PRIu16"\n", camera_system);
 	uint32_t data = camera_system << camera_type_camera_system_bit_index;
-	return writeBitsS0_32(drvno, data, camera_type_camera_system_bits, S0Addr_CAMERA_TYPE);
+	return writeBitsS0_32(drvno, data, (uint32_t)camera_type_camera_system_bits, S0Addr_CAMERA_TYPE);
 }
 
 /**
@@ -818,7 +818,7 @@ es_status_codes SetupVPB(uint32_t drvno, uint32_t range, uint32_t lines)
 		adr = S0Addr_ROI0;
 		shift = ROI0_bitindex_range2;
 		bits = ROI0_bits_range2;
-		keep = ROI0_bit_range2_keep;
+		keep = (uint32_t)ROI0_bit_range2_keep;
 		break;
 	case 3:
 		adr = S0Addr_ROI1;
@@ -830,7 +830,7 @@ es_status_codes SetupVPB(uint32_t drvno, uint32_t range, uint32_t lines)
 		adr = S0Addr_ROI1;
 		shift = ROI1_bitindex_range4;
 		bits = ROI1_bits_range4;
-		keep = ROI1_bit_range4_keep;
+		keep = (uint32_t)ROI1_bit_range4_keep;
 		break;
 	case 5:
 		adr = S0Addr_ROI2;
@@ -919,6 +919,9 @@ es_status_codes allocateUserMemory(uint32_t drvno)
 	uint64_t needed_mem = (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.nob * (uint64_t)settings_struct.nos * (uint64_t)settings_struct.camera_settings[drvno].pixel * (uint64_t)sizeof(uint16_t);
 	uint64_t needed_mem_mb = needed_mem / (1024 * 1024);
 	ES_LOG("Allocate user memory, available memory:%"PRIu64" MB, memory needed: %"PRIu64" MB (%"PRIu64")\n", memory_free_mb, needed_mem_mb, needed_mem);
+	// turn off warning that variables are not used
+	(void)needed_mem_mb;
+	(void)memory_free_mb;
 	//check if enough space is available in the physical ram
 	if (memory_free > needed_mem)
 	{
@@ -1027,7 +1030,7 @@ es_status_codes SetTORReg(uint32_t drvno, uint8_t tor)
 	// shift the bit to the correct position
 	toselg = toselg << TOR_bitindex_TOSEL;
 	uint32_t data = tor_upper_nibble | toselg;
-	return writeBitsS0_32(drvno, data, TOR_BITS_TO, S0Addr_TOR_STICNT_TOCNT);
+	return writeBitsS0_32(drvno, data, (uint32_t)TOR_BITS_TO, S0Addr_TOR_STICNT_TOCNT);
 }
 
 /**
@@ -1228,7 +1231,7 @@ es_status_codes SetGPXCtrl(uint32_t drvno, uint8_t GPXAddress, uint32_t GPXData)
 	uint32_t data = 0;
 	//shift gpx addr to the right place for the gpx ctrl reg
 	data = (uint32_t)(GPXAddress << TDCCtrl_bitindex_adr0);
-	uint32_t bitmask = TDCCtrl_bit_cs | TDCCtrl_bit_adr0 | TDCCtrl_bit_adr1 | TDCCtrl_bit_adr2 | TDCCtrl_bit_adr3;
+	uint32_t bitmask = TDCCtrl_bit_cs | TDCCtrl_bit_adr0 | TDCCtrl_bit_adr1 | TDCCtrl_bit_adr2 | (uint32_t)TDCCtrl_bit_adr3;
 	es_status_codes status = writeBitsS0_32(drvno, data, bitmask, S0Addr_TDCCtrl);
 	if (status != es_no_error) return status;
 	return writeRegisterS0_32(drvno, GPXData, S0Addr_TDCData);
@@ -1249,7 +1252,7 @@ es_status_codes ReadGPXCtrl(uint32_t drvno, uint8_t GPXAddress, uint32_t* GPXDat
 	data = (uint32_t)GPXAddress << TDCCtrl_bitindex_adr0;
 	//set CSexpand bit set CS Bit
 	data |= TDCCtrl_bit_cs;
-	uint32_t bitmask = TDCCtrl_bit_cs | TDCCtrl_bit_adr0 | TDCCtrl_bit_adr1 | TDCCtrl_bit_adr2 | TDCCtrl_bit_adr3;
+	uint32_t bitmask = TDCCtrl_bit_cs | TDCCtrl_bit_adr0 | TDCCtrl_bit_adr1 | TDCCtrl_bit_adr2 | (uint32_t)TDCCtrl_bit_adr3;
 	es_status_codes status = writeBitsS0_32(drvno, data, bitmask, S0Addr_TDCCtrl);
 	if (status != es_no_error) return status;
 	return readRegisterS0_32(drvno, GPXData, S0Addr_TDCData);
@@ -2340,7 +2343,7 @@ es_status_codes CopyDataArbitrary(uint32_t drvno, uint32_t sample, uint32_t bloc
 		return es_invalid_pointer;
 	uint16_t* pSrc = NULL;
 	size_t bytes_to_end_of_buffer = 0;
-	es_status_codes	status = GetPixelPointer(drvno, pixel, sample, block, camera, &pSrc, &bytes_to_end_of_buffer);
+	es_status_codes	status = GetPixelPointer(drvno, (uint16_t)pixel, sample, block, camera, &pSrc, &bytes_to_end_of_buffer);
 	if (status != es_no_error) return status;
 	if (length_in_pixel * sizeof(uint16_t) > bytes_to_end_of_buffer) return es_parameter_out_of_range;
 	memcpy(pdest, pSrc, length_in_pixel * sizeof(uint16_t));
@@ -2406,7 +2409,7 @@ es_status_codes GetPixelPointer(uint32_t drvno, uint16_t pixel, uint32_t sample,
 	if (bytes_to_end_of_buffer)
 	{
 		uint64_t indexEnd = 0;
-		status = GetIndexOfPixel(drvno, settings_struct.camera_settings[drvno].pixel - 1, settings_struct.nos - 1, settings_struct.nob - 1, settings_struct.camera_settings[drvno].camcnt - 1, &indexEnd);
+		status = GetIndexOfPixel(drvno, (uint16_t)settings_struct.camera_settings[drvno].pixel - 1, settings_struct.nos - 1, settings_struct.nob - 1, (uint16_t)settings_struct.camera_settings[drvno].camcnt - 1, &indexEnd);
 		if (status != es_no_error) return status;
 		*bytes_to_end_of_buffer = (indexEnd - index + 1) * sizeof(uint16_t);
 	}
@@ -3521,7 +3524,7 @@ es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr)
 	es_status_codes status = es_no_error;
 	for (uint16_t i = 0; i < number_of_registers; i++)
 	{
-		es_status_codes status = readRegisterDma_32(drvno, &data, i * 4);
+		status = readRegisterDma_32(drvno, &data, i * 4);
 		if (status != es_no_error)
 		{
 			//write error to buffer
@@ -4235,7 +4238,7 @@ void FillUserBufferWithDummyData(uint32_t drvno)
 	{
 		int add = (scan % 2) * 1000;
 		for (uint32_t pixel = 0; pixel < settings_struct.camera_settings[drvno].pixel; pixel++)
-			userBuffer[drvno][scan * settings_struct.camera_settings[drvno].pixel + pixel] = pixel * 10 + add;
+			userBuffer[drvno][scan * settings_struct.camera_settings[drvno].pixel + pixel] = (uint16_t)(pixel * 10 + add);
 	}
 	return;
 }
@@ -4912,14 +4915,14 @@ es_status_codes ExportMeasurementHDF5(const char* path, char* filename)
 						const uint32_t pixel = settings_struct.camera_settings[drvno].pixel;
 						uint16_t* data = (uint16_t*)malloc(pixel * sizeof(uint16_t));
 
-						es_status_codes status = CopyOneSample(drvno, sample, block, camera, data);
+						status = CopyOneSample(drvno, sample, block, (uint16_t)camera, data);
 						if (status != es_no_error) return status;
 						statusHDF5 = H5Dwrite(dataset_id, H5T_NATIVE_UINT16, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
 
 						free(data);
 
 						struct special_pixels sp;
-						status = GetAllSpecialPixelInformation(drvno, sample, block, camera, &sp);
+						status = GetAllSpecialPixelInformation(drvno, sample, block, (uint16_t)camera, &sp);
 
 						// Create the attribute for the special pixels
 						hid_t sample_attr_s1State = CreateNumericAttribute(dataset_id, "S1 State", H5T_NATIVE_UINT32, dataspace_scalar, &sp.s1State);
