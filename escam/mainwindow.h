@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   mainwindow.h
+ * @brief  Main window class of Escam.
+ * 
+ * @author Florian Hahn
+ * @date   28.01.2021
+ *********************************************************************/
+
 #pragma once
 #include <QMainWindow>
 #include <QSettings>

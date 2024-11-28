@@ -321,6 +321,7 @@
     <ClInclude Include="..\shared_src\enum_settings.h" />
     <ClInclude Include="..\shared_src\struct.h" />
     <ClInclude Include="..\shared_src\es_status_codes.h" />
+    <ClInclude Include="..\version.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="Board_ll.h" />
     <ClInclude Include="Camera.h" />

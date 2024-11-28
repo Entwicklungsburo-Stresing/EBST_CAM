@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   crosshairs.h
+ * @brief  Class to display crosshairs on the chart.
+ * 
+ * @author Dennis Vollenweider
+ * @date   22.05.2024
+ *********************************************************************/
+
 #pragma once
 
 #include <QtWidgets/QGraphicsItem>

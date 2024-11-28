@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   dialogspecialpixels.h
+ * @brief  Dialog for reading the special pixels of the current sample.
+ * 
+ * @author Florian Hahn
+ * @date   01.03.2023
+ *********************************************************************/
+
 #pragma once
 
 #include <QDialog>

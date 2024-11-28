@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   dialogdac.h
+ * @brief  Dialog to set the DAC values.
+ * 
+ * @author Florian Hahn
+ * @date   04.08.2021
+ *********************************************************************/
+
 #pragma once
 
 #include <QDialog>
