@@ -1,5 +1,5 @@
 #pragma once
-/** \file Direct2dViewer_c.h  Direct2dViewer_c.h is a wrapper of Direct2dViewer.cpp to provide a C API.
+/** @file Direct2dViewer_c.h  Direct2dViewer_c.h is a wrapper of Direct2dViewer.cpp to provide a C API.
 Inspired by this tutorial to call cpp methods from c: https://bytes.com/topic/c/insights/921728-calling-c-class-methods-c
 */
 
