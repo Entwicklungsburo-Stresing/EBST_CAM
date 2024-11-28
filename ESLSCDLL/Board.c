@@ -4151,7 +4151,7 @@ void GetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block)
 }
 
 /**
- * \copydoc GetCurrentScanNumber
+ * @copydoc GetCurrentScanNumber
  * @param offset from current scan number
  */
 void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* block)
