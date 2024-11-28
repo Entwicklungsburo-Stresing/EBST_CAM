@@ -1,7 +1,13 @@
-//{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by ESLSCDLL.rc
+/*****************************************************************//**
+ * @file   resource.h
+ * @brief  Microsoft Visual C++ generated include file.
+ * 
+ * Used by ESLSCDLL.rc
+ * @author Gerhard Stresing
+ * @date   before 2016
+ *********************************************************************/
 
+//{{NO_DEPENDENCIES}}
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED

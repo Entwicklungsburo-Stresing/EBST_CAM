@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   es_status_codes.h
+ * @brief  Status codes for the return values of the functions in this library.
+ * 
+ * @author Florian Hahn
+ * @date   23.03.2021
+ *********************************************************************/
+
 #pragma once
 
 #ifdef __cplusplus

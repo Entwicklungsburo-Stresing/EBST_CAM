@@ -1,4 +1,12 @@
-﻿#pragma once
+﻿/*****************************************************************//**
+ * @file   struct.h
+ * @brief  Settings struct for the ESLSCDLL API.
+ * 
+ * @author Florian Hahn
+ * @date   19.03.2021
+ *********************************************************************/
+
+#pragma once
 #include <stdint.h>
 #include "enum_settings.h"
 
