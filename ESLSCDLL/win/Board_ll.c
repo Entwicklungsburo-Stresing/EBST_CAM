@@ -27,10 +27,10 @@ void* Direct2dViewer = NULL;
 uint16_t* greyscale_data = NULL;
 
 /**
- * \brief
+ * @brief
  *
- * \param drvno PCIe board identifier.
- * \return \ref es_status_codes
+ * @param drvno PCIe board identifier.
+ * @return @ref es_status_codes
  */
 es_status_codes CleanupDma(uint32_t drvno)
 {
@@ -49,11 +49,11 @@ es_status_codes CleanupDma(uint32_t drvno)
 }
 
 /**
- * \brief This interrupt routine copies data from the DMA buffer to the user buffer. If write to disk is true, the data is also written to disc.
+ * @brief This interrupt routine copies data from the DMA buffer to the user buffer. If write to disk is true, the data is also written to disc.
  * 
  * This routine is called every DMASPERINTR=500 scans. The size of a drivers contiguous memory is limited, so we must copy the data from a small buffer to a bigger buffer. The copy process is split in lower/upper half blocks.
  * 
- * \param drvno PCIe board identifier.
+ * @param drvno PCIe board identifier.
  */
 void isr( uint32_t drvno )
 {
@@ -114,7 +114,7 @@ void (*interrupt_handler_array[MAXPCIECARDS])() = { &interrupt_handler0, &interr
  * @param drvno PCIe board identifier
  * @param data buffer for data
  * @param address Offset from BaseAdress - in Bytes ! 0..3= Regs of Board.
- * @return \ref es_status_codes
+ * @return @ref es_status_codes
  */
 es_status_codes readRegister_32(uint32_t drvno, uint32_t* data, uint32_t address)
 {
@@ -138,7 +138,7 @@ es_status_codes readRegister_32(uint32_t drvno, uint32_t* data, uint32_t address
  * @param drvno PCIe board identifier
  * @param data buffer for data
  * @param address Offset from BaseAdress - in Bytes ! 0..3= Regs of Board.
- * @return \ref es_status_codes
+ * @return @ref es_status_codes
  */
 es_status_codes readRegister_16(uint32_t drvno, uint16_t* data, uint32_t address)
 {
@@ -162,7 +162,7 @@ es_status_codes readRegister_16(uint32_t drvno, uint16_t* data, uint32_t address
  * @param drvno board number (=1 if one PCI board)
  * @param data pointer to where data is stored
  * @param address offset of register from base address (count in bytes)
- * @return \ref es_status_codes
+ * @return @ref es_status_codes
  */
 es_status_codes readRegister_8(uint32_t drvno, uint8_t* data, uint32_t address)
 {
@@ -181,12 +181,12 @@ es_status_codes readRegister_8(uint32_t drvno, uint8_t* data, uint32_t address)
 };
 
 /**
- * \brief Writes 32 bits (4 bytes) to register.
+ * @brief Writes 32 bits (4 bytes) to register.
  *
- * \param drvno PCIe board identifier.
- * \param data data to write
- * \param address Register offset from BaseAdress - in bytes
- * \return \ref es_status_codes
+ * @param drvno PCIe board identifier.
+ * @param data data to write
+ * @param address Register offset from BaseAdress - in bytes
+ * @return @ref es_status_codes
  */
 es_status_codes writeRegister_32(uint32_t drvno, uint32_t data, uint32_t address)
 {
@@ -206,12 +206,12 @@ es_status_codes writeRegister_32(uint32_t drvno, uint32_t data, uint32_t address
 };
 
 /**
- * \brief Writes 16 bits (2 bytes) to register.
+ * @brief Writes 16 bits (2 bytes) to register.
  *
- * \param drvno PCIe board identifier.
- * \param data data to write
- * \param address Register offset from BaseAdress - in bytes
- * \return \ref es_status_codes
+ * @param drvno PCIe board identifier.
+ * @param data data to write
+ * @param address Register offset from BaseAdress - in bytes
+ * @return @ref es_status_codes
  */
 es_status_codes writeRegister_16(uint32_t drvno, uint16_t data, uint32_t address)
 {
@@ -231,12 +231,12 @@ es_status_codes writeRegister_16(uint32_t drvno, uint16_t data, uint32_t address
 };
 
 /**
- * \brief Write byte (8 bit) to register in space0 of PCIe board, except r10-r1f.
+ * @brief Write byte (8 bit) to register in space0 of PCIe board, except r10-r1f.
  *
- * \param drvno board number (=1 if one PCI board)
- * \param data byte value to write
- * \param address Offset from BaseAdress of register (count in bytes)
- * \return \ref es_status_codes
+ * @param drvno board number (=1 if one PCI board)
+ * @param data byte value to write
+ * @param address Offset from BaseAdress of register (count in bytes)
+ * @return @ref es_status_codes
  */
 es_status_codes writeRegister_8(uint32_t drvno, uint8_t data, uint32_t address)
 {
@@ -257,8 +257,8 @@ es_status_codes writeRegister_8(uint32_t drvno, uint8_t data, uint32_t address)
 /**
  * Check drvno for being legit
  * 
- * \param drvno driver number
- * \return \ref es_status_codes
+ * @param drvno driver number
+ * @return @ref es_status_codes
  */
 es_status_codes checkDriverHandle(uint32_t drvno)
 {
@@ -280,11 +280,11 @@ uint64_t getPhysicalDmaAddress( uint32_t drvno)
 }
 
 /**
- * \brief Allocate DMA buffer - should only be called once.
+ * @brief Allocate DMA buffer - should only be called once.
  * 
  * Gets address of DMASubBuf from driver and copy it later to our pDMABigBuf.
- * \param drvno PCIe board identifier.
- * \return \ref es_status_codes
+ * @param drvno PCIe board identifier.
+ * @return @ref es_status_codes
  */
 es_status_codes SetupDma( uint32_t drvno )
 {
@@ -342,10 +342,10 @@ es_status_codes enableInterrupt( uint32_t drvno )
 }
 
 /**
- * \brief Disable interrupt.
+ * @brief Disable interrupt.
  * 
- * \param drvno PCIe board identifier.
- * \return \ref es_status_codes
+ * @param drvno PCIe board identifier.
+ * @return @ref es_status_codes
  */
 es_status_codes disableInterrupt(uint32_t drvno)
 {
@@ -366,9 +366,9 @@ es_status_codes disableInterrupt(uint32_t drvno)
 }
 
 /**
- * \brief Reset the buffer write pointers and software ISR counter.
+ * @brief Reset the buffer write pointers and software ISR counter.
  * 
- * \param drvno PCIe board identifier.
+ * @param drvno PCIe board identifier.
  */
 void ResetBufferWritePos(uint32_t drvno)
 {
@@ -381,10 +381,10 @@ void ResetBufferWritePos(uint32_t drvno)
 }
 
 /**
- * \brief DMA copies in blocks of dmaBufferSizeInWords/DMA_BUFFER_PARTS - the rest is copied here
+ * @brief DMA copies in blocks of dmaBufferSizeInWords/DMA_BUFFER_PARTS - the rest is copied here
  *
- * \param drvno PCIe board identifier.
- * \param rest_in_bytes bytes which were not copied by INTR.
+ * @param drvno PCIe board identifier.
+ * @param rest_in_bytes bytes which were not copied by INTR.
  */
 void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 {
@@ -404,10 +404,10 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 }
 
 /**
- * \brief Initializes PCIe board on a platform specific way.
+ * @brief Initializes PCIe board on a platform specific way.
  * 
- * \param drvno PCIe board identifier.
- * \return \ref es_status_codes
+ * @param drvno PCIe board identifier.
+ * @return @ref es_status_codes
  */
 es_status_codes _InitBoard(uint32_t drvno)
 {
@@ -441,9 +441,9 @@ es_status_codes _InitBoard(uint32_t drvno)
 }
 
 /**
- *  \brief Windows specific function for initializing driver.
+ * @brief Windows specific function for initializing driver.
  * 
- * \return \ref es_status_codes
+ * @return @ref es_status_codes
  */
 es_status_codes _InitDriver()
 {
@@ -506,10 +506,10 @@ es_status_codes _InitDriver()
 }
 
 /**
- * \brief Cleanup driver. Call this before Exit driver.
+ * @brief Cleanup driver. Call this before Exit driver.
  *
- * \param drvno PCIe board identifier.
- * \return \ref es_status_codes
+ * @param drvno PCIe board identifier.
+ * @return @ref es_status_codes
  */
 es_status_codes CleanupDriver(uint32_t drvno)
 {
@@ -529,9 +529,9 @@ es_status_codes CleanupDriver(uint32_t drvno)
 }
 
 /**
- * \brief Exit driver. Call this after Cleanup driver.
+ * @brief Exit driver. Call this after Cleanup driver.
  * 
- * \return \ref es_status_codes
+ * @return @ref es_status_codes
  */
 es_status_codes _ExitDriver()
 {
@@ -549,7 +549,7 @@ es_status_codes _ExitDriver()
  * @param drvno board number (=1 if one PCI board)
  * @param data pointer to where data is stored
  * @param address offset of register (count in bytes)
- * @return \ref es_status_codes
+ * @return @ref es_status_codes
  */
 es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint32_t address )
 {
@@ -565,12 +565,12 @@ es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint32_t address 
 }
 
 /**
- * \brief Write long (32 bit) to register in space0 of PCIe board.
+ * @brief Write long (32 bit) to register in space0 of PCIe board.
  *
- * \param drvno board number (=1 if one PCI board)
- * \param data long value to write
- * \param address offset from base address of register (count in bytes)
- * \return \ref es_status_codes
+ * @param drvno board number (=1 if one PCI board)
+ * @param data long value to write
+ * @param address offset from base address of register (count in bytes)
+ * @return @ref es_status_codes
  */
 es_status_codes writeConfig_32(uint32_t drvno, uint32_t data, uint32_t address)
 {
@@ -588,10 +588,10 @@ es_status_codes writeConfig_32(uint32_t drvno, uint32_t data, uint32_t address)
 
 /**
  *
- * \brief Get the free and installed memory info.
+ * @brief Get the free and installed memory info.
  * 
- * \param pmemory_all how much is installed
- * \param pmemory_free how much is free
+ * @param pmemory_all how much is installed
+ * @param pmemory_free how much is free
  */
 void FreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 {
@@ -652,10 +652,10 @@ es_status_codes InitMutex(uint32_t drvno)
 }
 
 /**
-* \brief Reads system timer.
+* @brief Reads system timer.
 *
 * Read 2x ticks and calculate the difference between the calls in microseconds with DLLTickstous, init timer by calling DLLInitSysTimer before use.
-* \return act ticks
+* @return act ticks
 */
 int64_t GetTimestampInTicks()
 {
@@ -672,9 +672,9 @@ int64_t GetTimestampInMicroseconds()
 }
 
 /**
- * \brief Translate ticks to microseconds.
- * \param ticks ticks of system timer
- * \return microseconds of ticks
+ * @brief Translate ticks to microseconds.
+ * @param ticks ticks of system timer
+ * @return microseconds of ticks
 */
 int64_t ConvertTicksToMicroseconds(int64_t ticks)
 {
@@ -689,10 +689,10 @@ int64_t ConvertTicksToMicroseconds(int64_t ticks)
 }
 
 /**
- * \brief This functions returns after a time given in microseconds. The time is measured in CPU ticks. The function is escapable by pressing ESC.
+ * @brief This functions returns after a time given in microseconds. The time is measured in CPU ticks. The function is escapable by pressing ESC.
  *
- * \param microseconds Time to wait in microseconds.
- * \return 1 when success, 0 when aborted by ESC or failure
+ * @param microseconds Time to wait in microseconds.
+ * @return 1 when success, 0 when aborted by ESC or failure
  */
 uint8_t WaitforTelapsed(int64_t microseconds)
 {
@@ -737,9 +737,9 @@ uint16_t checkSpaceKeyState()
 }
 
 /**
- * \brief Set thread to high priority level.
+ * @brief Set thread to high priority level.
  * 
- * \return \ref es_status_codes
+ * @return @ref es_status_codes
  */
 es_status_codes SetPriority()
 {
@@ -752,9 +752,9 @@ es_status_codes SetPriority()
 }
 
 /**
- * \brief Reset thread priority to normal.
+ * @brief Reset thread priority to normal.
  * 
- * \return \ref es_status_codes
+ * @return @ref es_status_codes
  */
 es_status_codes ResetPriority()
 {
@@ -838,10 +838,10 @@ void setTimestamp()
 }
 
 /**
- * \brief Creates a file at filename_full and writes struct file_header to it.
+ * @brief Creates a file at filename_full and writes struct file_header to it.
  * 
- * \param drvno PCIe board identifier.
- * \param filename_full Path and file name to the file where the header is written.
+ * @param drvno PCIe board identifier.
+ * @param filename_full Path and file name to the file where the header is written.
  */
 void writeFileHeaderToFile(uint32_t drvno, char* filename_full)
 {
@@ -932,9 +932,9 @@ void startWriteToDiscThead(uint32_t drvno)
 }
 
 /**
- * \brief Check a file for its data consistency.
+ * @brief Check a file for its data consistency.
  * 
- * \param vd see struct verify_data_parameter in globals.h for details
+ * @param vd see struct verify_data_parameter in globals.h for details
  */
 void VerifyData(struct verify_data_parameter* vd)
 {
@@ -1003,10 +1003,10 @@ void VerifyData(struct verify_data_parameter* vd)
 }
 
 /**
- * \brief Open the file at filename_full and write the header to fh.
+ * @brief Open the file at filename_full and write the header to fh.
  * 
- * \param fh struct file_header*
- * \param filename_full Path and file name to the file.
+ * @param fh struct file_header*
+ * @param filename_full Path and file name to the file.
  */
 void getFileHeaderFromFile(struct file_header* fh, char* filename_full)
 {
@@ -1046,9 +1046,9 @@ void WaitForAllInterruptsDone()
 }
 
 /**
- * \brief Display information about registers and settings in pop up windows.
+ * @brief Display information about registers and settings in pop up windows.
  * 
- * \return \ref es_status_codes
+ * @return @ref es_status_codes
  */
 es_status_codes About(uint32_t board_sel)
 {
@@ -1076,15 +1076,15 @@ es_status_codes About(uint32_t board_sel)
 }
 
 /**
-* \brief Shows window with infos about the PCIe board.
+* @brief Shows window with infos about the PCIe board.
 *
 * - version of driver
 * - ID = 53xx
 * - length of space0 BAR =0x3f
 * - vendor ID = EBST
 * - PCI board version (same as label on PCI board)
-* \param drvno board number (=1 if one PCI board)
-* \return \ref es_status_codes
+* @param drvno board number (=1 if one PCI board)
+* @return @ref es_status_codes
 */
 es_status_codes AboutDrv(uint32_t drvno)
 {
@@ -1095,10 +1095,10 @@ es_status_codes AboutDrv(uint32_t drvno)
 };
 
 /**
- * \brief Reads registers 0 to 12 of TDC-GPX chip. Time delay counter option.
+ * @brief Reads registers 0 to 12 of TDC-GPX chip. Time delay counter option.
  *
- * \param drvno PCIe board identifier
- * \return \ref es_status_codes
+ * @param drvno PCIe board identifier
+ * @return @ref es_status_codes
  */
 es_status_codes AboutGPX(uint32_t drvno)
 {
@@ -1109,10 +1109,10 @@ es_status_codes AboutGPX(uint32_t drvno)
 }
 
 /**
- * \brief Read registers of space0. Space0 are the control registers of the PCIe board.
+ * @brief Read registers of space0. Space0 are the control registers of the PCIe board.
  *
- * \param drvno PCIe board identifier
- * \return \ref es_status_codes
+ * @param drvno PCIe board identifier
+ * @return @ref es_status_codes
  */
 es_status_codes AboutS0(uint32_t drvno)
 {
@@ -1123,10 +1123,10 @@ es_status_codes AboutS0(uint32_t drvno)
 }//AboutS0
 
 /**
- * \brief
+ * @brief
  *
- * \param drvno PCIe board identifier.
- * \return \ref es_status_codes
+ * @param drvno PCIe board identifier.
+ * @return @ref es_status_codes
  */
 es_status_codes AboutTLPs(uint32_t drvno)
 {
@@ -1137,10 +1137,10 @@ es_status_codes AboutTLPs(uint32_t drvno)
 }//AboutTLPs
 
 /**
- * \brief
+ * @brief
  *
- * \param drvno PCIe board identifier.
- * \return \ref es_status_codes
+ * @param drvno PCIe board identifier.
+ * @return @ref es_status_codes
  */
 es_status_codes AboutPCI(uint32_t drvno)
 {
@@ -1168,7 +1168,7 @@ es_status_codes AboutCameraSettings(uint32_t drvno)
 
 
 /**
- * \brief Switch on error message boxes of our software. Default is On.
+ * @brief Switch on error message boxes of our software. Default is On.
  */
 void ErrMsgBoxOn()
 {
@@ -1176,7 +1176,7 @@ void ErrMsgBoxOn()
 }
 
 /**
- * \brief Disable error message boxes, if not needed.
+ * @brief Disable error message boxes, if not needed.
  */
 void ErrMsgBoxOff()
 {
@@ -1184,9 +1184,9 @@ void ErrMsgBoxOff()
 }
 
 /**
- * \brief Display error message. If ErrMsgBoxOn is set.
+ * @brief Display error message. If ErrMsgBoxOn is set.
  *
- * \param ErrMsg Message. Buffer size: 100.
+ * @param ErrMsg Message. Buffer size: 100.
  */
 void ErrorMsg(char ErrMsg[100])
 {
@@ -1197,9 +1197,9 @@ void ErrorMsg(char ErrMsg[100])
 };
 
 /**
- * \brief Simple display of unsigned integer as error message for test purpose.
+ * @brief Simple display of unsigned integer as error message for test purpose.
  *
- * \param val unsigned integer 64 bit
+ * @param val unsigned integer 64 bit
  */
 void ValMsg(uint64_t val)
 {
@@ -1214,12 +1214,12 @@ void ValMsg(uint64_t val)
 #ifndef MINIMAL_BUILD
 
 /**
-\brief Start 2d viewer.
-\param drvno board number
-\param block current number of block
-\param camera which camera to display (when camcnt is >1)
-\param pixel count of pixel of one line
-\param nos samples in one block
+@brief Start 2d viewer.
+@param drvno board number
+@param block current number of block
+@param camera which camera to display (when camcnt is >1)
+@param pixel count of pixel of one line
+@param nos samples in one block
 */
 void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {
@@ -1252,12 +1252,12 @@ void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pix
 }
 
 /**
-\brief Update the displayed bitmap.
-\param drvno board number
-\param block current number of blocks
-\param camera which camera to display (when camcnt is >1)
-\param pixel count of pixel of one line
-\param nos samples in one block
+@brief Update the displayed bitmap.
+@param drvno board number
+@param block current number of blocks
+@param camera which camera to display (when camcnt is >1)
+@param pixel count of pixel of one line
+@param nos samples in one block
 */
 void ShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {
@@ -1287,7 +1287,7 @@ void ShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pix
 }
 
 /**
-\brief Call when closing 2d viewer or at least before opening a new 2d viewer.
+@brief Call when closing 2d viewer or at least before opening a new 2d viewer.
 */
 void Deinit2dViewer()
 {

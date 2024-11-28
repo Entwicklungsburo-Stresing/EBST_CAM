@@ -18,18 +18,18 @@ struct camera_settings
 {
 	/**
 	 * use_software_polling determines which method is used to copy data from DMA to user buffer.
-	 *		* >0: Use software polling. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. Since the PCIe card firmware version P222_2 this method is reliable up to about 100kHz. It generates as expected a higher CPU load than the interrupt method. With this option you can get more recent scans from \ref DLLGetCurrentScanNumber, especially at lower frequencies.
-	 *		* =0: Use interrupt. Every \ref camera_settings.dma_buffer_size_in_scans /2 scan the interrupt starts a copy process, which copies dma_buffer_size_in_scans/2 scans to the user buffer. 1000 is our default value for \ref camera_settings.dma_buffer_size_in_scans, so the interrupt is triggered every 500 scans.
+	 *		* >0: Use software polling. When there is new available data in the DMA buffer, a thread copies the data one scan at a time to the user buffer. Since the PCIe card firmware version P222_2 this method is reliable up to about 100kHz. It generates as expected a higher CPU load than the interrupt method. With this option you can get more recent scans from @ref DLLGetCurrentScanNumber, especially at lower frequencies.
+	 *		* =0: Use interrupt. Every @ref camera_settings.dma_buffer_size_in_scans /2 scan the interrupt starts a copy process, which copies dma_buffer_size_in_scans/2 scans to the user buffer. 1000 is our default value for @ref camera_settings.dma_buffer_size_in_scans, so the interrupt is triggered every 500 scans.
 	 * 
 	 * Further information about software polling can be found in the manual in chapter 5.4.8.
 	 */
 	uint32_t use_software_polling;
 	/**
-	 * Scan trigger input mode determines the signal, on which one readout is started. See enum \ref sti_mode_t in enum_settings.h for options. Further information on trigger signals can be found in the manual in chapter 6.3.
+	 * Scan trigger input mode determines the signal, on which one readout is started. See enum @ref sti_mode_t in enum_settings.h for options. Further information on trigger signals can be found in the manual in chapter 6.3.
 	 */
 	uint32_t sti_mode;
 	/**
-	 * Block trigger input mode determines the signal, on which one block of readouts is started. See enum \ref bti_mode_t in enum_settings.h  for options.  Further information on trigger signals can be found in the manual in chapter 6.3.
+	 * Block trigger input mode determines the signal, on which one block of readouts is started. See enum @ref bti_mode_t in enum_settings.h  for options.  Further information on trigger signals can be found in the manual in chapter 6.3.
 	 */
 	uint32_t bti_mode;
 	/**
@@ -63,11 +63,11 @@ struct camera_settings
 	 */
 	uint32_t bdat_in_10ns;
 	/**
-	 * Scan trigger slope determines whether positive, negative or both slopes of a trigger are used. See enum \ref sslope_t in enum_settings.h for options. This only applies to external triggers.
+	 * Scan trigger slope determines whether positive, negative or both slopes of a trigger are used. See enum @ref sslope_t in enum_settings.h for options. This only applies to external triggers.
 	 */
 	uint32_t sslope;
 	/**
-	 * Block trigger slope determines whether positive, negative or both slopes of a trigger are used. See enum \ref bslope_t in enum_settings.h for options. This only applies to external triggers.
+	 * Block trigger slope determines whether positive, negative or both slopes of a trigger are used. See enum @ref bslope_t in enum_settings.h for options. This only applies to external triggers.
 	 */
 	uint32_t bslope;
 	/**
@@ -93,15 +93,15 @@ struct camera_settings
 	 */
 	uint32_t sec_in_10ns;
 	/**
-	 * Trigger mode of the integrator in the camera control box. See enum \ref trigger_mode_t in enum_settings.h for options. Further information about the trigger modes can found in the manual in chapter 7.3.7.	
+	 * Trigger mode of the integrator in the camera control box. See enum @ref trigger_mode_t in enum_settings.h for options. Further information about the trigger modes can found in the manual in chapter 7.3.7.	
 	 */
 	uint32_t trigger_mode_integrator;
 	/**
-	 * Sensor type should match the sensor type of your camera. See enum \ref sensor_type_t in enum_settings.h for options.
+	 * Sensor type should match the sensor type of your camera. See enum @ref sensor_type_t in enum_settings.h for options.
 	 */
 	uint32_t sensor_type;
 	/**
-	 * Camera system should match the model number of your camera. See enum \ref camera_system_t in enum_settings.h for options.
+	 * Camera system should match the model number of your camera. See enum @ref camera_system_t in enum_settings.h for options.
 	 */
 	uint32_t camera_system;
 	/**
@@ -170,7 +170,7 @@ struct camera_settings
 	 */
 	uint32_t temp_level;
 	/**
-	 * Block trigger input counter determines how many block trigger inputs are skipped before the next block start is triggered. Every bticnt+1 trigger input the next block is triggered according to \ref camera_settings.bti_mode. bticnt is a 7 bit unsigned integer. Introduced in PCIe board version 222.12.
+	 * Block trigger input counter determines how many block trigger inputs are skipped before the next block start is triggered. Every bticnt+1 trigger input the next block is triggered according to @ref camera_settings.bti_mode. bticnt is a 7 bit unsigned integer. Introduced in PCIe board version 222.12.
 	 *		* min: 0
 	 *		* step: 1
 	 *		* max: 127
@@ -200,7 +200,7 @@ struct camera_settings
 	 */
 	uint32_t vfreq;
 	/**
-	 * fft_mode controls the operating mode for FFT sensors. The vertical lines of a FFT sensor can either be summed up, read separately or summed up partially. See enum \ref fft_mode_t in enum_settings.h for options. Further information about FFT modes can be found in the manual in chapter 4.5.1.
+	 * fft_mode controls the operating mode for FFT sensors. The vertical lines of a FFT sensor can either be summed up, read separately or summed up partially. See enum @ref fft_mode_t in enum_settings.h for options. Further information about FFT modes can be found in the manual in chapter 4.5.1.
 	 */
 	uint32_t fft_mode;
 	/**
@@ -212,7 +212,7 @@ struct camera_settings
 	 */
 	uint32_t lines_binning;
 	/**
-	 * number_of_regions determines in how many regions the sensor gets divided in the FFT mode range of interest. Setting it to 1 would equal the area mode, so the minimum is 2. The size of each region is determined by \ref camera_settings.region_size. Unused regions must be set to 0. Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.
+	 * number_of_regions determines in how many regions the sensor gets divided in the FFT mode range of interest. Setting it to 1 would equal the area mode, so the minimum is 2. The size of each region is determined by @ref camera_settings.region_size. Unused regions must be set to 0. Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.
 	 *		* min: 2
 	 *		* step: 1
 	 *		* max: 5
@@ -226,7 +226,7 @@ struct camera_settings
 	 */
 	uint32_t s1s2_read_delay_in_10ns;
 	/**
-	 * region_size is the size of each region for the region of interest mode for FFT sensors. The sum of all active regions, which is defined by \ref number_of_regions, must equal \ref fft_lines. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used. Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3. This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.
+	 * region_size is the size of each region for the region of interest mode for FFT sensors. The sum of all active regions, which is defined by @ref number_of_regions, must equal @ref fft_lines. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used. Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3. This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.
 	 *		* regions_size[0] = 4
 	 *		* regions_size[1] = 64
 	 *		* regions_size[2] = 4
@@ -239,15 +239,15 @@ struct camera_settings
 	 */
 	uint32_t dac_output[MAXCAMCNT][DACCOUNT];
 	/**
-	 * Output mode for PCIe board output pin. See enum \ref tor_out_t in enum_settings.h for options. Further information about tor can be found in the manual in chapter 6.2.4.12.
+	 * Output mode for PCIe board output pin. See enum @ref tor_out_t in enum_settings.h for options. Further information about tor can be found in the manual in chapter 6.2.4.12.
 	 */
 	uint32_t tor;
 	/**
-	 * ADC mode controls the operating mode of the ADC. This option is intended for debugging purpose and only available for specific ADCs, e.g. in camera system 3030. See enum \ref adc_mode_t in enum_settings.h for options.
+	 * ADC mode controls the operating mode of the ADC. This option is intended for debugging purpose and only available for specific ADCs, e.g. in camera system 3030. See enum @ref adc_mode_t in enum_settings.h for options.
 	 */
 	uint32_t adc_mode;
 	/**
-	 * Adc custom pattern is the constant output value of all 8 ADC channels if \ref camera_settings.adc_mode is set to \ref adc_mode_t.custom_pattern. This is a 14 bit unsigned integer.
+	 * Adc custom pattern is the constant output value of all 8 ADC channels if @ref camera_settings.adc_mode is set to @ref adc_mode_t.custom_pattern. This is a 14 bit unsigned integer.
 	 *		* min: 0
 	 *		* step: 1
 	 *		* max: 16383
@@ -262,7 +262,7 @@ struct camera_settings
 	 */
 	uint32_t bec_in_10ns;
 	/**
-	 * Channel select controls which channel of a camera control box is used for the camera readout. This feature is implemented in the camera version P230_6 and newer. See enum \ref channel_select_t in enum_settings.h for options.
+	 * Channel select controls which channel of a camera control box is used for the camera readout. This feature is implemented in the camera version P230_6 and newer. See enum @ref channel_select_t in enum_settings.h for options.
 	 */
 	uint32_t channel_select;
 	/**
@@ -286,25 +286,25 @@ struct camera_settings
 	 */
 	uint32_t ioctrl_T0_period_in_10ns;
 	/**
-	 * Size of the DMA buffer in scans. The default is 1000. This setting controls how often the interrupt is triggered to copy data from the DMA buffer to the user buffer. This setting only has an effect when \ref camera_settings.use_software_polling is turned off. A lower number means more interrupts in a shorter time and so more recent data available. Which data is available is indicated by \ref DLLGetCurrentScanNumber. Too many interrupts in a too short time can lead to errors. 60 is working with high speed (exposure time = 0,02ms). When this setting is 30, there could a wrong scan every 10000 scans.
+	 * Size of the DMA buffer in scans. The default is 1000. This setting controls how often the interrupt is triggered to copy data from the DMA buffer to the user buffer. This setting only has an effect when @ref camera_settings.use_software_polling is turned off. A lower number means more interrupts in a shorter time and so more recent data available. Which data is available is indicated by @ref DLLGetCurrentScanNumber. Too many interrupts in a too short time can lead to errors. 60 is working with high speed (exposure time = 0,02ms). When this setting is 30, there could a wrong scan every 10000 scans.
 	 */
 	uint32_t dma_buffer_size_in_scans;
 	/**
-	 * Trigger output counter determines how many XCK are skipped until the output TO_CNT_OUT shows the XCK signal. Use \ref tor_out_t.tor_to_cnt_out for the setting \ref camera_settings.tor to see TO_CNT_OUT at the output of the PCIe board. Example: tocnt = 2 => skip every first and second XCK, show XCK on the PCIe output on every third XCK. tocnt is a 7 bit unsigned integer. Further information about tocnt can be found in the manual in chapter 6.2.4.12.
+	 * Trigger output counter determines how many XCK are skipped until the output TO_CNT_OUT shows the XCK signal. Use @ref tor_out_t.tor_to_cnt_out for the setting @ref camera_settings.tor to see TO_CNT_OUT at the output of the PCIe board. Example: tocnt = 2 => skip every first and second XCK, show XCK on the PCIe output on every third XCK. tocnt is a 7 bit unsigned integer. Further information about tocnt can be found in the manual in chapter 6.2.4.12.
 	 *		* min: 0 (TO_CNT_OUT = XCK)
 	 *		* step: 1
 	 *		* max: 127
 	 */
 	uint32_t tocnt;
 	/**
-	 * Scan trigger input counter determines how many scan trigger inputs are skipped before the next measurement is triggered. Every sticnt+1 trigger input the measurement is triggered according to \ref camera_settings.sti_mode. sticnt is a 7 bit unsigned integer. Further information about sticnt can be found in the manual in chapter 6.2.4.12.
+	 * Scan trigger input counter determines how many scan trigger inputs are skipped before the next measurement is triggered. Every sticnt+1 trigger input the measurement is triggered according to @ref camera_settings.sti_mode. sticnt is a 7 bit unsigned integer. Further information about sticnt can be found in the manual in chapter 6.2.4.12.
 	 *		* min: 0
 	 *		* step: 1
 	 *		* max: 127
 	 */
 	uint32_t sticnt;
 	/**
-	 * sensor_reset_or_hsir_ec either controls the length of the reset pulse between two camera readouts or the exposure time of the high speed infrared sensor. The purpose of this setting depends on \ref camera_settings.sensor_type. sensor_reset_or_hsir_ec is a 16 bit unsigned integer.
+	 * sensor_reset_or_hsir_ec either controls the length of the reset pulse between two camera readouts or the exposure time of the high speed infrared sensor. The purpose of this setting depends on @ref camera_settings.sensor_type. sensor_reset_or_hsir_ec is a 16 bit unsigned integer.
 	 * 
 	 * Sensor reset for HSVIS:
 	 * This reset can be used, to completely clear the sensor. Further information about sensor reset can be found in the manual in chapter 4.9.2.
@@ -322,13 +322,13 @@ struct camera_settings
 	 */
 	uint32_t sensor_reset_or_hsir_ec;
 	/**
-	 * Write to disc is an experimental feature for writing the measurement data on the fly to the disc. The data format is binary. It is the same data layout as the data is stored in RAM during the measurement. Additionally there is a file header at the beginning of the file. The path to the target file is given by \ref camera_settings.file_path. This feature is only available on Windows. In most cases the resulting file should be correct, but data layout errors has been observed. This is the reason why the feature is marked as experimental.
+	 * Write to disc is an experimental feature for writing the measurement data on the fly to the disc. The data format is binary. It is the same data layout as the data is stored in RAM during the measurement. Additionally there is a file header at the beginning of the file. The path to the target file is given by @ref camera_settings.file_path. This feature is only available on Windows. In most cases the resulting file should be correct, but data layout errors has been observed. This is the reason why the feature is marked as experimental.
 	 *		* =0: Don't write measurement data to disc.
 	 *		* >0: Write measurement data to disc.
 	 */
 	uint32_t write_to_disc;
 	/**
-	 * File path is specifying the path where the measurement data is saved, when \ref camera_settings.write_to_disc is activated. File path is a char array with the size 256, so the maximum path length is 256 characters.
+	 * File path is specifying the path where the measurement data is saved, when @ref camera_settings.write_to_disc is activated. File path is a char array with the size 256, so the maximum path length is 256 characters.
 	 *		* example value: C:/Users/XY/
 	 */
 	char file_path[file_path_size];
@@ -348,15 +348,15 @@ struct camera_settings
 	 */
 	uint32_t is_cooled_camera_legacy_mode;
 	/**
-	 * monitor is the output mode for the monitor output of the Camera Control. See enum \ref monitor_t in enum_settings.h for options. Further information about monitor can be found in the manual in chapter 3.3.1.
+	 * monitor is the output mode for the monitor output of the Camera Control. See enum @ref monitor_t in enum_settings.h for options. Further information about monitor can be found in the manual in chapter 3.3.1.
 	 */
 	uint32_t monitor;
 	/**
-	 * With manipulate_data_mode you can activate / deactivate a built in data manipulation during the measurement. This is potentially used to linearize the sensor data for specific sensors. See \ref manipulate_data_mode_t in enum.h for options.
+	 * With manipulate_data_mode you can activate / deactivate a built in data manipulation during the measurement. This is potentially used to linearize the sensor data for specific sensors. See @ref manipulate_data_mode_t in enum.h for options.
 	 */
 	uint32_t manipulate_data_mode;
 	/**
-	 * manipulate_data_custom_factor is used when \ref camera_settings.manipulate_data_mode is set to \ref manipulate_data_mode_t.manipulate_data_mode_custom_factor. This factor is multiplied with the data of each pixel.
+	 * manipulate_data_custom_factor is used when @ref camera_settings.manipulate_data_mode is set to @ref manipulate_data_mode_t.manipulate_data_mode_custom_factor. This factor is multiplied with the data of each pixel.
 	 */
 	double manipulate_data_custom_factor;
 };
@@ -367,7 +367,7 @@ struct camera_settings
 struct measurement_settings
 {
 	/**
-	 * board_sel controls which boards are used for the measurement. When multiple boards are selected the measurement is started for all boards at the same time. The exact trigger moment is controlled separately by each board. Every board has its own camera settings, which are set in the struct member \ref measurement_settings.camera_settings. Select between 1 and 5 boards. This variable works bitwise. Bit 0 controls board 0: 1 for using this board, 0 for not using this board.
+	 * board_sel controls which boards are used for the measurement. When multiple boards are selected the measurement is started for all boards at the same time. The exact trigger moment is controlled separately by each board. Every board has its own camera settings, which are set in the struct member @ref measurement_settings.camera_settings. Select between 1 and 5 boards. This variable works bitwise. Bit 0 controls board 0: 1 for using this board, 0 for not using this board.
 	 *		* bit 0: board 0
 	 *		* bit 1: board 1
 	 *		* bit 2: board 2
@@ -376,21 +376,21 @@ struct measurement_settings
 	 */
 	uint32_t board_sel;
 	/**
-	 * nos is the number of samples. One sample is one readout of the camera. One readout is triggered on each sample trigger which is controlled by \ref camera_settings.sti_mode. nos is a 32 bit unsigned integer. Further information about samples and blocks can be found in the manual in chapter 6.4.1.
+	 * nos is the number of samples. One sample is one readout of the camera. One readout is triggered on each sample trigger which is controlled by @ref camera_settings.sti_mode. nos is a 32 bit unsigned integer. Further information about samples and blocks can be found in the manual in chapter 6.4.1.
 	 *		* min: 2
 	 *		* step: 1
 	 *		* max: 4,294,967,295
 	 */
 	uint32_t nos;
 	/**
-	 * nob is the number of blocks. One block contains nos readouts and is triggered on each block trigger which is controlled by \ref camera_settings.bti_mode. nob is a 32 bit unsigned integer. Further information about samples and blocks can be found in the manual in chapter 6.4.1.
+	 * nob is the number of blocks. One block contains nos readouts and is triggered on each block trigger which is controlled by @ref camera_settings.bti_mode. nob is a 32 bit unsigned integer. Further information about samples and blocks can be found in the manual in chapter 6.4.1.
 	 *		* min: 1
 	 *		* step: 1
 	 *		* max: 4,294,967,295
 	 */
 	uint32_t nob;
 	/**
-	 * Continuous mode switch. The continuous mode repeats automatically the measurement cycle until it is stopped. One cycle consists of number of samples * number of blocks readouts. The data is not stored permanently. Each cycle is overwriting the data from the previous cycle. The data of a specific sample/block is always at the same memory address. That means for example scan 100 in block 2 from the first measurement cycle will be overwritten by scan 100 in block 2 in the second measurement cycle. The time gap between two cycles is done software wise and is beeing controlled by the parameter \ref measurement_settings.cont_pause_in_microseconds. So the start of the next cycle is not strictly linked to your trigger, which means when triggering fast, triggers could be missed.
+	 * Continuous mode switch. The continuous mode repeats automatically the measurement cycle until it is stopped. One cycle consists of number of samples * number of blocks readouts. The data is not stored permanently. Each cycle is overwriting the data from the previous cycle. The data of a specific sample/block is always at the same memory address. That means for example scan 100 in block 2 from the first measurement cycle will be overwritten by scan 100 in block 2 in the second measurement cycle. The time gap between two cycles is done software wise and is beeing controlled by the parameter @ref measurement_settings.cont_pause_in_microseconds. So the start of the next cycle is not strictly linked to your trigger, which means when triggering fast, triggers could be missed.
 	 *		* >0 on
 	 *		* =0 off
 	 */
@@ -409,7 +409,7 @@ struct measurement_settings
 };
 
 /**
- * In this struct are settings, that are the same for all PCIe boards. It is the same as \ref measurement_settings but doesn't contain \ref camera_settings. This is for compatibility reasons for Matlab, because structs in Matlab are not able to contain structs.
+ * In this struct are settings, that are the same for all PCIe boards. It is the same as @ref measurement_settings but doesn't contain @ref camera_settings. This is for compatibility reasons for Matlab, because structs in Matlab are not able to contain structs.
  */
 struct measurement_settings_matlab
 {

@@ -1,7 +1,7 @@
 #pragma once
 
 /**
- * Scan trigger input mode shows the options for \ref camera_settings.sti_mode
+ * Scan trigger input mode shows the options for @ref camera_settings.sti_mode
  */
 enum sti_mode_t
 {
@@ -32,7 +32,7 @@ enum sti_mode_t
 };
 
 /**
- * Block trigger input mode shows the options for \ref camera_settings.bti_mode
+ * Block trigger input mode shows the options for @ref camera_settings.bti_mode
  */
 enum bti_mode_t
 {
@@ -71,7 +71,7 @@ enum bti_mode_t
 };
 
 /**
- * This enum shows all options for the setting \ref camera_settings.sslope.
+ * This enum shows all options for the setting @ref camera_settings.sslope.
  */
 enum sslope_t
 {
@@ -90,7 +90,7 @@ enum sslope_t
 };
 
 /**
- * This enum shows all options for the setting \ref camera_settings.bslope.
+ * This enum shows all options for the setting @ref camera_settings.bslope.
  */
 enum bslope_t
 {
@@ -109,7 +109,7 @@ enum bslope_t
 };
 
 /**
- * Trigger mode shows the options for \ref camera_settings.trigger_mode_integrator.
+ * Trigger mode shows the options for @ref camera_settings.trigger_mode_integrator.
  */
 enum trigger_mode_t
 {
@@ -128,7 +128,7 @@ enum trigger_mode_t
 };
 
 /**
- * Sensor type shows the options for \ref camera_settings.sensor_type.
+ * Sensor type shows the options for @ref camera_settings.sensor_type.
  */
 enum sensor_type_t
 {
@@ -184,7 +184,7 @@ enum sensor_type_t
 };
 
 /**
- * Camera system shows the options for \ref camera_settings.camera_system
+ * Camera system shows the options for @ref camera_settings.camera_system
  */
 enum camera_system_t
 {
@@ -241,7 +241,7 @@ enum camera_system_t
 };
 
 /**
- * Shows the options for \ref camera_settings.fft_mode.
+ * Shows the options for @ref camera_settings.fft_mode.
  */
 enum fft_mode_t
 {
@@ -250,17 +250,17 @@ enum fft_mode_t
 	 */
 	full_binning = 0,
 	/**
-	 * Partial binning is the FFT operation mode for summing up a specific count of lines per readout to get the sum of specific regions of the sensor. The number of regions is determined by the setting \ref camera_settings.number_of_regions. The size of each region is determined by the setting \ref camera_settings.region_size. In this mode the meaning of scans and blocks changes. One "scan" is now one region of the sensor. So \ref measurement_settings.nos should equal \ref camera_settings.number_of_regions and \ref camera_settings.sti_mode should be set to \ref sti_mode_t.sti_ASL. One "block" is one complete readout of all regions. The time between two block triggers is the exposure time of the sensor for one complete image. \ref measurement_settings.nob and \ref camera_settings.bti_mode can be chosen freely.
+	 * Partial binning is the FFT operation mode for summing up a specific count of lines per readout to get the sum of specific regions of the sensor. The number of regions is determined by the setting @ref camera_settings.number_of_regions. The size of each region is determined by the setting @ref camera_settings.region_size. In this mode the meaning of scans and blocks changes. One "scan" is now one region of the sensor. So @ref measurement_settings.nos should equal @ref camera_settings.number_of_regions and @ref camera_settings.sti_mode should be set to @ref sti_mode_t.sti_ASL. One "block" is one complete readout of all regions. The time between two block triggers is the exposure time of the sensor for one complete image. @ref measurement_settings.nob and @ref camera_settings.bti_mode can be chosen freely.
 	 */
 	partial_binning = 1,
 	/**
-	 * Area mode is the FFT operation mode for reading out each vertical line separately. In this mode the meaning of scans and blocks changes. One "scan" is now one line of the sensor. So \ref measurement_settings.nos should equal \ref camera_settings.fft_lines and \ref camera_settings.sti_mode should be set to \ref sti_mode_t.sti_ASL. One "block" is one complete readout of all lines. The time between two block triggers is the exposure time of the sensor for one complete image. \ref measurement_settings.nob and \ref camera_settings.bti_mode can be chosen freely.
+	 * Area mode is the FFT operation mode for reading out each vertical line separately. In this mode the meaning of scans and blocks changes. One "scan" is now one line of the sensor. So @ref measurement_settings.nos should equal @ref camera_settings.fft_lines and @ref camera_settings.sti_mode should be set to @ref sti_mode_t.sti_ASL. One "block" is one complete readout of all lines. The time between two block triggers is the exposure time of the sensor for one complete image. @ref measurement_settings.nob and @ref camera_settings.bti_mode can be chosen freely.
 	 */
 	area_mode = 2
 };
 
 /**
- * TOR out shows the options for \ref camera_settings.tor.
+ * TOR out shows the options for @ref camera_settings.tor.
  */
 enum tor_out_t
 {
@@ -273,7 +273,7 @@ enum tor_out_t
 	 */
 	tor_rego = 1,
 	/**
-	 * DEPRECATED: VON is the signal for the vertical clocks of the FFT sensor. This signal is only used when \ref camera_settings.is_fft_legacy is on.
+	 * DEPRECATED: VON is the signal for the vertical clocks of the FFT sensor. This signal is only used when @ref camera_settings.is_fft_legacy is on.
 	 */
 	tor_von = 2,
 	/**
@@ -281,19 +281,19 @@ enum tor_out_t
 	 */
 	tor_dma_act = 3,
 	/**
-	 * ASLS stands for Auto Scan Line Start and shows when a new readout is started when \ref camera_settings.sti_mode is set to \ref sti_mode_t.sti_ASL.
+	 * ASLS stands for Auto Scan Line Start and shows when a new readout is started when @ref camera_settings.sti_mode is set to @ref sti_mode_t.sti_ASL.
 	 */
 	tor_asls = 4,
 	/**
-	 * stimer is the internal trigger for the start of a readout when \ref camera_settings.sti_mode is set to \ref sti_mode_t.sti_STimer. The repetition rate is determined by \ref camera_settings.stime_in_microsec.
+	 * stimer is the internal trigger for the start of a readout when @ref camera_settings.sti_mode is set to @ref sti_mode_t.sti_STimer. The repetition rate is determined by @ref camera_settings.stime_in_microsec.
 	 */
 	tor_stimer = 5,
 	/**
-	 * btimer is the internal trigger for the start of a block when \ref camera_settings.bti_mode is set to \ref bti_mode_t.bti_BTimer. The repetition rate is determined by \ref camera_settings.btime_in_microsec.
+	 * btimer is the internal trigger for the start of a block when @ref camera_settings.bti_mode is set to @ref bti_mode_t.bti_BTimer. The repetition rate is determined by @ref camera_settings.btime_in_microsec.
 	 */
 	tor_btimer = 6,
 	/**
-	 * ISR_ACT is high when the interrupt service routine is active. The ISR copies the data from the DMA buffer to the user buffer, when \ref camera_settings.use_software_polling is not activated.
+	 * ISR_ACT is high when the interrupt service routine is active. The ISR copies the data from the DMA buffer to the user buffer, when @ref camera_settings.use_software_polling is not activated.
 	 */
 	tor_isr_act = 7,
 	/**
@@ -313,23 +313,23 @@ enum tor_out_t
 	 */
 	tor_measureon = 11,
 	/**
-	 * SDAT is high during the time delay between the scan trigger and the start of a scan. This time depends on \ref camera_settings.sdat_in_10ns.
+	 * SDAT is high during the time delay between the scan trigger and the start of a scan. This time depends on @ref camera_settings.sdat_in_10ns.
 	 */
 	tor_sdat = 12,
 	/**
-	 * BDAT is high during the time delay between the block trigger and the start of a block. This time depends on \ref camera_settings.bdat_in_10ns.
+	 * BDAT is high during the time delay between the block trigger and the start of a block. This time depends on @ref camera_settings.bdat_in_10ns.
 	 */
 	tor_bdat = 13,
 	/**
-	 * sec_mshut is high during the scan exposure window when the option \ref camera_settings.sec_in_10ns is used or can be manually set to high by OpenShutter().
+	 * sec_mshut is high during the scan exposure window when the option @ref camera_settings.sec_in_10ns is used or can be manually set to high by OpenShutter().
 	 */
 	tor_sec_mshut = 14,
 	/**
-	 * bec_mshut is high during the block exposure window when the option \ref camera_settings.bec_in_10ns is used or can be manually set to high by OpenShutter().
+	 * bec_mshut is high during the block exposure window when the option @ref camera_settings.bec_in_10ns is used or can be manually set to high by OpenShutter().
 	 */
 	tor_bec_mshut = 15,
 	/**
-	 * IFC is the electronic exposure control signal used by some sensors and is sent to the camera. When \ref camera_settings.sec_in_10ns is used IFC = SEC, otherwise it is always 1.
+	 * IFC is the electronic exposure control signal used by some sensors and is sent to the camera. When @ref camera_settings.sec_in_10ns is used IFC = SEC, otherwise it is always 1.
 	 */
 	tor_ifc = 16,
 	/**
@@ -337,15 +337,15 @@ enum tor_out_t
 	 */
 	tor_do_cc_i = 17,
 	/**
-	 * Exposure window shows when it is possible to expose the camera to light. Since the PCIe card doesn't know exactly when the sensor is ready to be exposed this is only an estimated signal. If possible use \ref monitor_t.monitor_win of \ref camera_settings.monitor.
+	 * Exposure window shows when it is possible to expose the camera to light. Since the PCIe card doesn't know exactly when the sensor is ready to be exposed this is only an estimated signal. If possible use @ref monitor_t.monitor_win of @ref camera_settings.monitor.
 	 */
 	tor_exposure_window = 18,
 	/**
-	 * tor_to_cnt_out shows the signal which is controlled by the setting \ref camera_settings.tocnt. Depending on this setting, only specific XCK high periods are shown on the PCIe card output.
+	 * tor_to_cnt_out shows the signal which is controlled by the setting @ref camera_settings.tocnt. Depending on this setting, only specific XCK high periods are shown on the PCIe card output.
 	 */
 	tor_to_cnt_out = 19,
 	/**
-	 * SECON is high during the scan exposure window when the option \ref camera_settings.sec_in_10ns is used.
+	 * SECON is high during the scan exposure window when the option @ref camera_settings.sec_in_10ns is used.
 	 */
 	tor_secon = 20,
 	/**
@@ -353,7 +353,7 @@ enum tor_out_t
 	 */
 	tor_i = 21,
 	/**
-	 * Shows the delay between the trigger and the moment, when the states of S1 and S2 are read. This delay is controlled by the settting \ref camera_settings.s1s2_read_delay_in_10ns.
+	 * Shows the delay between the trigger and the moment, when the states of S1 and S2 are read. This delay is controlled by the settting @ref camera_settings.s1s2_read_delay_in_10ns.
 	 */
 	tor_S1S2readDelay = 22,
 	/**
@@ -395,7 +395,7 @@ enum tor_out_t
 };
 
 /**
- * ADC mode shows the options for \ref camera_settings.adc_mode.
+ * ADC mode shows the options for @ref camera_settings.adc_mode.
  */
 enum adc_mode_t
 {
@@ -408,13 +408,13 @@ enum adc_mode_t
 	 */
 	ramp = 1,
 	/**
-	 * With custom pattern all 8 ADC channels deliver a specific constant value given by \ref camera_settings.adc_custom_pattern.
+	 * With custom pattern all 8 ADC channels deliver a specific constant value given by @ref camera_settings.adc_custom_pattern.
 	 */
 	custom_pattern = 2
 };
 
 /**
- * This enum shows all options for the setting \ref camera_settings.channel_select.
+ * This enum shows all options for the setting @ref camera_settings.channel_select.
  */
 enum channel_select_t
 {
@@ -424,7 +424,7 @@ enum channel_select_t
 };
 
 /**
- * This enum shows all options for the setting \ref camera_settings.monitor.
+ * This enum shows all options for the setting @ref camera_settings.monitor.
  */
 enum monitor_t
 {
@@ -447,7 +447,7 @@ enum monitor_t
 };
 
 /**
- * This enum shows all options for the setting \ref camera_settings.manipulate_data_mode.
+ * This enum shows all options for the setting @ref camera_settings.manipulate_data_mode.
  */
 enum manipulate_data_mode_t
 {

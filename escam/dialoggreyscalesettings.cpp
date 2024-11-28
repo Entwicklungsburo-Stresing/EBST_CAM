@@ -24,7 +24,7 @@ DialogGreyscaleSettings::~DialogGreyscaleSettings()
 }
 
 /**
- * \brief This slots changes the white gamma value in greyscale viewer.
+ * @brief This slots changes the white gamma value in greyscale viewer.
  *
  */
 void DialogGreyscaleSettings::on_spinBoxWhite_valueChanged(int value)
@@ -34,7 +34,7 @@ void DialogGreyscaleSettings::on_spinBoxWhite_valueChanged(int value)
 }
 
 /**
- * \brief This slots changes the black gamma value in greyscale viewer.
+ * @brief This slots changes the black gamma value in greyscale viewer.
  *
  */
 void DialogGreyscaleSettings::on_spinBoxBlack_valueChanged(int value)
