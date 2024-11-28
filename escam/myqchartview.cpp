@@ -9,7 +9,6 @@ MyQChartView::MyQChartView(QWidget* parent) : QChartView(parent)
 	chart()->legend()->setAlignment(Qt::AlignBottom);
 	setRubberBand(QChartView::RectangleRubberBand);
 	setMouseTracking(true);
-	QSettings settings;
 	curr_xmax = settings.value(settingPixelPath, settingPixelDefault).toReal() - 1;
 	if (settings.value(settingCameraSystemPath, settingCameraSystemDefault).toDouble() == 2)
 		curr_ymax = 0x3FFF;
@@ -239,16 +238,16 @@ void MyQChartView::setChartData(QLineSeries** series, uint16_t numberOfSets)
 
 /**
  * @brief This overloaded function takes data with a C pointer and a length, converts it into QLineSeries and passes it to setChartData.
- * @param data Pointer to data.
- * @param length Length of data.
+ * @param chartData Pointer to data.
+ * @param length Length of chartData.
  * @param numberOfSets Number of data sets which are stored in data pointer.
  */
-void MyQChartView::setChartData(uint16_t* data, uint32_t* length, uint16_t numberOfSets, QList<QString> lineSeriesNamesList)
+void MyQChartView::setChartData(uint16_t* chartData, uint32_t* length, uint16_t numberOfSets, QList<QString> lineSeriesNamesList)
 {
 	// Allocate memory for the pointer array to the QlineSeries.
 	QLineSeries** series = static_cast<QLineSeries**>(calloc(numberOfSets, sizeof(QLineSeries*)));
 	// Iterate through all data sets.
-	uint16_t* cur_data_ptr = data;
+	uint16_t* cur_data_ptr = chartData;
 	for (uint16_t set = 0; set < numberOfSets; set++)
 	{
 		// Set the current data set to a new empty QLineSeries.

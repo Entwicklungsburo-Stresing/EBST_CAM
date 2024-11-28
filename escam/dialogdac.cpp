@@ -286,7 +286,7 @@ void DialogDac::checkTargetReached()
 
 	if (autotuneRunning && !allTargetsReached)
 	{
-		//define variables used to return data
+		//define variables used to return camera_data
 		uint32_t drvno = QString::number(ui->spinBoxPcie->value()).toInt();
 		settings.beginGroup("board" + QString::number(drvno));
 		uint32_t sample = 20;
@@ -297,15 +297,15 @@ void DialogDac::checkTargetReached()
 		settings.endGroup();
 		size_t data_array_size = 0;
 		data_array_size += pixel;
-		uint16_t* data = static_cast<uint16_t*>(malloc(data_array_size * sizeof(uint16_t)));
+		uint16_t* camera_data = static_cast<uint16_t*>(malloc(data_array_size * sizeof(uint16_t)));
 
-		//return data
-		es_status_codes status = mainWindow->lsc.copyOneSample(drvno, sample, block, camera, data);
+		//return camera_data
+		es_status_codes status = mainWindow->lsc.copyOneSample(drvno, sample, block, camera, camera_data);
 		if (status != es_no_error)
 		{
 			autotuneRunning = false;
 			on_autotuneStateChanged();
-			free(data);
+			free(camera_data);
 			return;
 		}
 
@@ -325,29 +325,29 @@ void DialogDac::checkTargetReached()
 		switch (sensor_type)
 		{
 		case sensor_type_hsvis:
-			if (!ch1TargetReached) ch1TargetReached = autotuneAdjust(data, autotune_hsvis_ch1_start, autotune_hsvis_ch1_end, spinBoxArray[0], false);
-			if (!ch2TargetReached) ch2TargetReached = autotuneAdjust(data, autotune_hsvis_ch2_start, autotune_hsvis_ch2_end, spinBoxArray[1], false);
-			if (!ch3TargetReached) ch3TargetReached = autotuneAdjust(data, autotune_hsvis_ch3_start, autotune_hsvis_ch3_end, spinBoxArray[2], false);
-			if (!ch4TargetReached) ch4TargetReached = autotuneAdjust(data, autotune_hsvis_ch4_start, autotune_hsvis_ch4_end, spinBoxArray[3], false);
-			if (!ch5TargetReached) ch5TargetReached = autotuneAdjust(data, autotune_hsvis_ch5_start, autotune_hsvis_ch5_end, spinBoxArray[4], false);
-			if (!ch6TargetReached) ch6TargetReached = autotuneAdjust(data, autotune_hsvis_ch6_start, autotune_hsvis_ch6_end, spinBoxArray[5], false);
-			if (!ch7TargetReached) ch7TargetReached = autotuneAdjust(data, autotune_hsvis_ch7_start, autotune_hsvis_ch7_end, spinBoxArray[6], false);
-			if (!ch8TargetReached) ch8TargetReached = autotuneAdjust(data, autotune_hsvis_ch8_start, autotune_hsvis_ch8_end, spinBoxArray[7], false);
+			if (!ch1TargetReached) ch1TargetReached = autotuneAdjust(camera_data, autotune_hsvis_ch1_start, autotune_hsvis_ch1_end, spinBoxArray[0], false);
+			if (!ch2TargetReached) ch2TargetReached = autotuneAdjust(camera_data, autotune_hsvis_ch2_start, autotune_hsvis_ch2_end, spinBoxArray[1], false);
+			if (!ch3TargetReached) ch3TargetReached = autotuneAdjust(camera_data, autotune_hsvis_ch3_start, autotune_hsvis_ch3_end, spinBoxArray[2], false);
+			if (!ch4TargetReached) ch4TargetReached = autotuneAdjust(camera_data, autotune_hsvis_ch4_start, autotune_hsvis_ch4_end, spinBoxArray[3], false);
+			if (!ch5TargetReached) ch5TargetReached = autotuneAdjust(camera_data, autotune_hsvis_ch5_start, autotune_hsvis_ch5_end, spinBoxArray[4], false);
+			if (!ch6TargetReached) ch6TargetReached = autotuneAdjust(camera_data, autotune_hsvis_ch6_start, autotune_hsvis_ch6_end, spinBoxArray[5], false);
+			if (!ch7TargetReached) ch7TargetReached = autotuneAdjust(camera_data, autotune_hsvis_ch7_start, autotune_hsvis_ch7_end, spinBoxArray[6], false);
+			if (!ch8TargetReached) ch8TargetReached = autotuneAdjust(camera_data, autotune_hsvis_ch8_start, autotune_hsvis_ch8_end, spinBoxArray[7], false);
 			break;
 		case sensor_type_hsir:
-			if (!ch1TargetReached) ch1TargetReached = autotuneAdjust(data, autotune_hsir_ch1_start, autotune_hsir_ch1_end, spinBoxArray[0], true);
-			if (!ch2TargetReached) ch2TargetReached = autotuneAdjust(data, autotune_hsir_ch2_start, autotune_hsir_ch2_end, spinBoxArray[1], true);
-			if (!ch3TargetReached) ch3TargetReached = autotuneAdjust(data, autotune_hsir_ch3_start, autotune_hsir_ch3_end, spinBoxArray[2], true);
-			if (!ch4TargetReached) ch4TargetReached = autotuneAdjust(data, autotune_hsir_ch4_start, autotune_hsir_ch4_end, spinBoxArray[3], true);
-			if (!ch5TargetReached) ch5TargetReached = autotuneAdjust(data, autotune_hsir_ch5_start, autotune_hsir_ch5_end, spinBoxArray[4], true);
-			if (!ch6TargetReached) ch6TargetReached = autotuneAdjust(data, autotune_hsir_ch6_start, autotune_hsir_ch6_end, spinBoxArray[5], true);
-			if (!ch7TargetReached) ch7TargetReached = autotuneAdjust(data, autotune_hsir_ch7_start, autotune_hsir_ch7_end, spinBoxArray[6], true);
-			if (!ch8TargetReached) ch8TargetReached = autotuneAdjust(data, autotune_hsir_ch8_start, autotune_hsir_ch8_end, spinBoxArray[7], true);
+			if (!ch1TargetReached) ch1TargetReached = autotuneAdjust(camera_data, autotune_hsir_ch1_start, autotune_hsir_ch1_end, spinBoxArray[0], true);
+			if (!ch2TargetReached) ch2TargetReached = autotuneAdjust(camera_data, autotune_hsir_ch2_start, autotune_hsir_ch2_end, spinBoxArray[1], true);
+			if (!ch3TargetReached) ch3TargetReached = autotuneAdjust(camera_data, autotune_hsir_ch3_start, autotune_hsir_ch3_end, spinBoxArray[2], true);
+			if (!ch4TargetReached) ch4TargetReached = autotuneAdjust(camera_data, autotune_hsir_ch4_start, autotune_hsir_ch4_end, spinBoxArray[3], true);
+			if (!ch5TargetReached) ch5TargetReached = autotuneAdjust(camera_data, autotune_hsir_ch5_start, autotune_hsir_ch5_end, spinBoxArray[4], true);
+			if (!ch6TargetReached) ch6TargetReached = autotuneAdjust(camera_data, autotune_hsir_ch6_start, autotune_hsir_ch6_end, spinBoxArray[5], true);
+			if (!ch7TargetReached) ch7TargetReached = autotuneAdjust(camera_data, autotune_hsir_ch7_start, autotune_hsir_ch7_end, spinBoxArray[6], true);
+			if (!ch8TargetReached) ch8TargetReached = autotuneAdjust(camera_data, autotune_hsir_ch8_start, autotune_hsir_ch8_end, spinBoxArray[7], true);
 			break;
 		default:
 			break;
 		}
-		free(data);
+		free(camera_data);
 
 		// Check if all targets are reached. If not call autotunePressed() again
 		if (ch1TargetReached && ch2TargetReached && ch3TargetReached && ch4TargetReached && ch5TargetReached && ch6TargetReached && ch7TargetReached && ch8TargetReached)
@@ -362,7 +362,7 @@ void DialogDac::checkTargetReached()
 	return;
 }
 
-double DialogDac::calculateMean(uint16_t* data, int start, int end, bool isHsIr)
+double DialogDac::calculateMean(uint16_t* camera_data, int start, int end, bool isHsIr)
 {
 	double mean = 0;
 	int skip = 0;
@@ -370,7 +370,7 @@ double DialogDac::calculateMean(uint16_t* data, int start, int end, bool isHsIr)
 		skip = 1;
 	for (int i = start; i < end; i = i + 1 + skip)
 	{
-		mean += data[i];
+		mean += camera_data[i];
 	}
 	if(isHsIr)
 		mean /= (end - start) / 2;
@@ -379,12 +379,12 @@ double DialogDac::calculateMean(uint16_t* data, int start, int end, bool isHsIr)
 	return mean;
 }
 
-bool DialogDac::autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spinBox, bool isHsIr)
+bool DialogDac::autotuneAdjust(uint16_t* camera_data, int start, int end, QSpinBox* spinBox, bool isHsIr)
 {
 	bool targetReached = false;
 	int target = ui->spinBoxTarget->value();
 	int tolerance = 3;
-	double mean = calculateMean(data, start, end, isHsIr);
+	double mean = calculateMean(camera_data, start, end, isHsIr);
 
 	if (((mean <= target + tolerance) && (mean >= target - tolerance)) || spinBox->value() >= 65000)
 		targetReached = true;
