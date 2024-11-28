@@ -351,7 +351,13 @@ struct camera_settings
 	 * monitor is the output mode for the monitor output of the Camera Control. See enum \ref monitor_t in enum_settings.h for options. Further information about monitor can be found in the manual in chapter 3.3.1.
 	 */
 	uint32_t monitor;
+	/**
+	 * With manipulate_data_mode you can activate / deactivate a built in data manipulation during the measurement. This is potentially used to linearize the sensor data for specific sensors. See \ref manipulate_data_mode_t in enum.h for options.
+	 */
 	uint32_t manipulate_data_mode;
+	/**
+	 * manipulate_data_custom_factor is used when \ref camera_settings.manipulate_data_mode is set to \ref manipulate_data_mode_t.manipulate_data_mode_custom_factor. This factor is multiplied with the data of each pixel.
+	 */
 	double manipulate_data_custom_factor;
 };
 
