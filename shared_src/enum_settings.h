@@ -446,10 +446,22 @@ enum monitor_t
 	monitor_Vin = 3
 };
 
+/**
+ * This enum shows all options for the setting \ref camera_settings.manipulate_data_mode.
+ */
 enum manipulate_data_mode_t
 {
+	/**
+	 * Don't manipulate the data. This is the defaut. Keep the data as raw as it is.
+	 */
 	manipulate_data_mode_none = 0,
+	/**
+	 * Manipulate the data with a preset polynom. This option is here for future use only and not for production use yet.
+	 */
 	manipulate_data_mode_preset_linearization_polynom = 1,
+	/**
+	 * Use the constant custom factor given by @ref camera_settings.manipulate_data_custom_factor to manipulate the data.
+	 */
 	manipulate_data_mode_custom_factor = 2
 };
 

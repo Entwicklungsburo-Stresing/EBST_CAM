@@ -5249,7 +5249,7 @@ es_status_codes SetShiftS1S2ToNextScan(uint32_t drvno)
 }
 
 /**
- * \brief Manipulate the incoming data buffer with a preset Polynomial.
+ * \brief Manipulate the incoming data buffer with a preset polynomial.
  * 
  * \param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * \param startAddress
