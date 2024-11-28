@@ -1068,7 +1068,7 @@ DllAccess es_status_codes DLLCloseShutter()
  * @param address register address. Only 4 byte steps are valid.
  * @return \ref es_status_codes
  */
-DllAccess es_status_codes DLLsetBitS0_32(uint32_t bitnumber, uint16_t address)
+DllAccess es_status_codes DLLsetBitS0_32(uint32_t bitnumber, uint32_t address)
 {
 	return setBitS0_32_allBoards(bitnumber, address);
 }
@@ -1080,7 +1080,7 @@ DllAccess es_status_codes DLLsetBitS0_32(uint32_t bitnumber, uint16_t address)
  * @param address register address. Only 4 byte steps are valid.
  * @return \ref es_status_codes
  */
-DllAccess es_status_codes DLLresetBitS0_32(uint32_t bitnumber, uint16_t address)
+DllAccess es_status_codes DLLresetBitS0_32(uint32_t bitnumber, uint32_t address)
 {
 	return resetBitS0_32_allBoards(bitnumber, address);
 }
@@ -1088,7 +1088,7 @@ DllAccess es_status_codes DLLresetBitS0_32(uint32_t bitnumber, uint16_t address)
 /**
  * \copydoc ReadBitS0_32
  */
-DllAccess es_status_codes DLLReadBitS0_32(uint32_t drvno, uint16_t address, uint8_t bitnumber, uint8_t* isBitHigh)
+DllAccess es_status_codes DLLReadBitS0_32(uint32_t drvno, uint32_t address, uint8_t bitnumber, uint8_t* isBitHigh)
 {
 	return ReadBitS0_32(drvno, address, bitnumber, (bool*)isBitHigh);
 }
@@ -1105,7 +1105,7 @@ DllAccess es_status_codes DLLReadBitS0_32(uint32_t drvno, uint16_t address, uint
  * \param isBitHigh4 board 4: Tells if bit is 1 or 0.
  * \return \ref es_status_codes
  */
-DllAccess es_status_codes DLLReadBitS0_32_multipleBoards(uint16_t address, uint8_t bitnumber, uint8_t* isBitHigh0, uint8_t* isBitHigh1, uint8_t* isBitHigh2, uint8_t* isBitHigh3, uint8_t* isBitHigh4)
+DllAccess es_status_codes DLLReadBitS0_32_multipleBoards(uint32_t address, uint8_t bitnumber, uint8_t* isBitHigh0, uint8_t* isBitHigh1, uint8_t* isBitHigh2, uint8_t* isBitHigh3, uint8_t* isBitHigh4)
 {
 	es_status_codes status = es_no_error;
 	uint8_t* isBitHigh[MAXPCIECARDS] = { isBitHigh0, isBitHigh1, isBitHigh2, isBitHigh3, isBitHigh4 };
@@ -1126,7 +1126,7 @@ DllAccess es_status_codes DLLReadBitS0_32_multipleBoards(uint16_t address, uint8
 /**
  * \copydoc ReadBitS0_8
  */
-DllAccess es_status_codes DLLReadBitS0_8(uint32_t drvno, uint16_t address, uint8_t bitnumber, uint8_t* isBitHigh)
+DllAccess es_status_codes DLLReadBitS0_8(uint32_t drvno, uint32_t address, uint8_t bitnumber, uint8_t* isBitHigh)
 {
 	return ReadBitS0_8(drvno, address, bitnumber, (bool*)isBitHigh);
 }
@@ -1143,7 +1143,7 @@ DllAccess es_status_codes DLLReadBitS0_8(uint32_t drvno, uint16_t address, uint8
  * \param isBitHigh4 Tells if bit is high or low.
  * \return \ref es_status_codes
  */
-DllAccess es_status_codes DLLReadBitS0_8_multipleBoards(uint16_t address, uint8_t bitnumber, uint8_t* isBitHigh0, uint8_t* isBitHigh1, uint8_t* isBitHigh2, uint8_t* isBitHigh3, uint8_t* isBitHigh4)
+DllAccess es_status_codes DLLReadBitS0_8_multipleBoards(uint32_t address, uint8_t bitnumber, uint8_t* isBitHigh0, uint8_t* isBitHigh1, uint8_t* isBitHigh2, uint8_t* isBitHigh3, uint8_t* isBitHigh4)
 {
 	es_status_codes status = es_no_error;
 	uint8_t* isBitHigh[MAXPCIECARDS] = { isBitHigh0, isBitHigh1, isBitHigh2, isBitHigh3, isBitHigh4 };

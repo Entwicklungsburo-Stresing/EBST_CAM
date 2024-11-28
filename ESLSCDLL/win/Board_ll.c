@@ -116,7 +116,7 @@ void *interrupt_handler_array[MAXPCIECARDS] = { &interrupt_handler0, &interrupt_
  * @param address Offset from BaseAdress - in Bytes ! 0..3= Regs of Board.
  * @return \ref es_status_codes
  */
-es_status_codes readRegister_32(uint32_t drvno, uint32_t* data, uint16_t address)
+es_status_codes readRegister_32(uint32_t drvno, uint32_t* data, uint32_t address)
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
@@ -140,7 +140,7 @@ es_status_codes readRegister_32(uint32_t drvno, uint32_t* data, uint16_t address
  * @param address Offset from BaseAdress - in Bytes ! 0..3= Regs of Board.
  * @return \ref es_status_codes
  */
-es_status_codes readRegister_16(uint32_t drvno, uint16_t* data, uint16_t address)
+es_status_codes readRegister_16(uint32_t drvno, uint16_t* data, uint32_t address)
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
@@ -164,7 +164,7 @@ es_status_codes readRegister_16(uint32_t drvno, uint16_t* data, uint16_t address
  * @param address offset of register from base address (count in bytes)
  * @return \ref es_status_codes
  */
-es_status_codes readRegister_8(uint32_t drvno, uint8_t* data, uint16_t address)
+es_status_codes readRegister_8(uint32_t drvno, uint8_t* data, uint32_t address)
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
@@ -188,7 +188,7 @@ es_status_codes readRegister_8(uint32_t drvno, uint8_t* data, uint16_t address)
  * \param address Register offset from BaseAdress - in bytes
  * \return \ref es_status_codes
  */
-es_status_codes writeRegister_32(uint32_t drvno, uint32_t data, uint16_t address)
+es_status_codes writeRegister_32(uint32_t drvno, uint32_t data, uint32_t address)
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
@@ -213,7 +213,7 @@ es_status_codes writeRegister_32(uint32_t drvno, uint32_t data, uint16_t address
  * \param address Register offset from BaseAdress - in bytes
  * \return \ref es_status_codes
  */
-es_status_codes writeRegister_16(uint32_t drvno, uint16_t data, uint16_t address)
+es_status_codes writeRegister_16(uint32_t drvno, uint16_t data, uint32_t address)
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
@@ -238,7 +238,7 @@ es_status_codes writeRegister_16(uint32_t drvno, uint16_t data, uint16_t address
  * \param address Offset from BaseAdress of register (count in bytes)
  * \return \ref es_status_codes
  */
-es_status_codes writeRegister_8(uint32_t drvno, uint8_t data, uint16_t address)
+es_status_codes writeRegister_8(uint32_t drvno, uint8_t data, uint32_t address)
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
@@ -552,7 +552,7 @@ es_status_codes _ExitDriver()
  * @param address offset of register (count in bytes)
  * @return \ref es_status_codes
  */
-es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address )
+es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint32_t address )
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
@@ -573,7 +573,7 @@ es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address 
  * \param address offset from base address of register (count in bytes)
  * \return \ref es_status_codes
  */
-es_status_codes writeConfig_32(uint32_t drvno, uint32_t data, uint16_t address)
+es_status_codes writeConfig_32(uint32_t drvno, uint32_t data, uint32_t address)
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
