@@ -436,7 +436,10 @@ es_status_codes _InitBoard(uint32_t drvno)
 		ES_LOG( "DeviceOpen: Failed opening a handle to the device: %s\n", LSCPCIEJ_GetLastErr() );
 		return es_open_device_failed;
 	}
-	ES_LOG( "DRVInit hDev id % x, hDev PCI slot %x, hDev PCI bus %x, hDev PCI function %x, hDevNumAddrSp %x \n"	, hDev[drvno]->id, hDev[drvno]->slot.dwSlot, hDev[drvno]->slot.dwBus, hDev[drvno]->slot.dwFunction, hDev[drvno]->dwNumAddrSpaces );
+#if _DEBUG
+	PWDC_DEVICE pDev = (PWDC_DEVICE)hDev[drvno];
+	ES_LOG("DRVInit hDev id %x, hDev PCI slot %x, hDev PCI bus %x, hDev PCI function %x, hDevNumAddrSp %x \n", pDev->id, pDev->slot.dwSlot, pDev->slot.dwBus, pDev->slot.dwFunction, pDev->dwNumAddrSpaces);
+#endif
 	return es_no_error ;
 }
 
