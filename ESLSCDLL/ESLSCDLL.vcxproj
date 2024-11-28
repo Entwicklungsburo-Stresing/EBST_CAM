@@ -129,7 +129,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
@@ -160,7 +160,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
@@ -190,7 +190,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <CallingConvention>StdCall</CallingConvention>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -220,7 +220,7 @@
       <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;H5_BUILT_AS_DYNAMIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
       <AdditionalIncludeDirectories>$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
     </ClCompile>
@@ -250,7 +250,7 @@
       <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;MINIMAL_BUILD;H5_BUILT_AS_DYNAMIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
       <AdditionalIncludeDirectories>$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
     </ClCompile>
@@ -279,7 +279,7 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <CallingConvention>StdCall</CallingConvention>
       <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;COMPILE_FOR_LABVIEW;H5_BUILT_AS_DYNAMIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
