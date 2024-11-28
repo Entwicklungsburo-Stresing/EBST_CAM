@@ -9,6 +9,20 @@ The hardware version number is the current version at release time.
 ## Unreleased
 ### API Changes
 #### Added
+#### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+### Other Changes
+#### Added
+#### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+
+## 4.17.4 - 2024-12-28
+### API Changes
+#### Added
 * Add setting manipulate_data_mode
 * Add setting manipulate_data_custom_factor
 #### Changed
@@ -19,15 +33,6 @@ The hardware version number is the current version at release time.
 	* DLLReadBitS0_32_multipleBoards
 	* DLLReadBitS0_8
 	* DLLReadBitS0_8_multipleBoards
-#### Removed
-#### Fixed
-#### Deprecated
-### Other Changes
-#### Added
-#### Changed
-#### Removed
-#### Fixed
-#### Deprecated
 
 ## 4.17.3 - 2024-11-26
 ### API Changes
