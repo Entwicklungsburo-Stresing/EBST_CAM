@@ -150,7 +150,10 @@
 xcopy /y /d "$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDLL.dll" "$(ProjDir)build"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>del $(ProjectDir).qmake.stash</Command>
+      <Command>if exist $(ProjectDir).qmake.stash (
+echo Deleting .qmake.stash
+del $(ProjectDir).qmake.stash
+) </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -218,6 +221,12 @@ xcopy /y /d "$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDL
       <Command>xcopy /y /d "$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\bin\hdf5.dll" "$(ProjDir)build"
 xcopy /y /d "$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDLL.dll" "$(ProjDir)build"</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>if exist $(ProjectDir).qmake.stash (
+echo Deleting .qmake.stash
+del $(ProjectDir).qmake.stash
+) </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="camerasettingswidget.cpp" />

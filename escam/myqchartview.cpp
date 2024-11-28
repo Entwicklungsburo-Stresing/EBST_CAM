@@ -213,7 +213,7 @@ void MyQChartView::setChartData(QLineSeries** series, uint16_t numberOfSets)
 	{
 		if (settings.value(settingAxesMirrorXPath).toBool())
 		{
-			QVector<QPointF> points = series[set]->pointsVector();
+			QList<QPointF> points = series[set]->points();
 			for (int i = 0; i < points.size() / 2; i++)
 			{
 				points[i].setX(points.size() - i - 1);

@@ -82,35 +82,44 @@ HRESULT Direct2dViewer::Initialize( HWND hWndParent )
 
 		RegisterClassEx( &wcex );
 
-		// Create the application window.
-		//
-		// Because the CreateWindow function takes its size in pixels, we
-		// obtain the system DPI and use it to scale the window size.
-		FLOAT dpiX, dpiY;
-		m_pD2DFactory->GetDesktopDpi( &dpiX, &dpiY );
+		// In terms of using the correct DPI, to create a window at a specific size
+		// like this, the procedure is to first create the window hidden. Then we get
+		// the actual DPI from the HWND (which will be assigned by whichever monitor
+		// the window is created on). Then we use SetWindowPos to resize it to the
+		// correct DPI-scaled size, then we use ShowWindow to show it.
 
-		// Create the application window.
 		m_hwnd = CreateWindow(
 			L"Direct2dViewer",
 			L"2D Viewer",
 			WS_OVERLAPPEDWINDOW,
 			CW_USEDEFAULT,
 			CW_USEDEFAULT,
-			static_cast<INT>(ceil( 640.f * dpiX / 96.f )),
-			static_cast<INT>(ceil( 480.f * dpiY / 96.f )),
+			0,
+			0,
 			hWndParent,
 			NULL,
 			HINST_THISCOMPONENT,
 			this
 		);
-		hr = m_hwnd ? S_OK : E_FAIL;
-		if (SUCCEEDED( hr ))
+
+		if (m_hwnd)
 		{
-			ShowWindow( m_hwnd, SW_SHOWNORMAL );
-			UpdateWindow( m_hwnd );
+			// Because the SetWindowPos function takes its size in pixels, we
+			// obtain the window's DPI, and use it to scale the window size.
+			float dpi = (float)GetDpiForWindow(m_hwnd);
+
+			SetWindowPos(
+				m_hwnd,
+				NULL,
+				NULL,
+				NULL,
+				static_cast<int>(ceil(640.f * dpi / 96.f)),
+				static_cast<int>(ceil(480.f * dpi / 96.f)),
+				SWP_NOMOVE);
+			ShowWindow(m_hwnd, SW_SHOWNORMAL);
+			UpdateWindow(m_hwnd);
 		}
 	}
-
 	return hr;
 }
 
