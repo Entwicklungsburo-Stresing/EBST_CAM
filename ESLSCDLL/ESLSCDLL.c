@@ -52,6 +52,9 @@ An optional entry point into a dynamic-link library (DLL). When the system start
 */
 BOOL WINAPI DLLMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
+	// Turn off warnings about unused parameters
+	(void)lpvReserved;
+	(void)hinstDLL;
 	switch (fdwReason)
 	{
 	case DLL_PROCESS_ATTACH:
@@ -176,6 +179,8 @@ DllAccess es_status_codes DLLStartMeasurement_blocking()
 
 unsigned __stdcall StartMeasurementThread(void* param)
 {
+	// Turn off warnings about unused parameters
+	(void)param;
 	return StartMeasurement();
 }
 
