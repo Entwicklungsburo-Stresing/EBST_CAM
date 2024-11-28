@@ -191,7 +191,11 @@ void MainWindow::startPressed()
 		library_settings.camera_settings[drvno].sensor_reset_or_hsir_ec = settings.value(settingSensorResetOrHsirEcPath, settingSensorResetOrHsIrDefault).toDouble();
 		library_settings.camera_settings[drvno].write_to_disc = settings.value(settingWriteDataToDiscPath, settingWriteToDiscDefault).toBool();
 		QByteArray array = settings.value(settingFilePathPath, QDir::currentPath()).toString().toLocal8Bit();
+#ifdef WIN32
+		strcpy_s(library_settings.camera_settings[drvno].file_path, file_path_size, array.data());
+#else
 		strcpy(library_settings.camera_settings[drvno].file_path, array.data());
+#endif
 		library_settings.camera_settings[drvno].shift_s1s2_to_next_scan = settings.value(settingShiftS1S2ToNextScanPath, settingShiftS1S2ToNextScanDefault).toBool();
 		library_settings.camera_settings[drvno].is_cooled_camera_legacy_mode = settings.value(settingIsCooledCameraLegacyModePath, settingIsCooledCameraLegacyModeDefault).toBool();
 		library_settings.camera_settings[drvno].monitor = settings.value(settingMonitorPath, settingMonitorDefault).toDouble();
@@ -247,7 +251,11 @@ void MainWindow::on_actionVerify_data_file_triggered()
 	QString fileName = QFileDialog::getOpenFileName(this, "Verify data", nullptr, tr("data files (*.dat);;all files (*)"));
 	if (fileName.isEmpty()) return;
 	struct verify_data_parameter vd;
+#ifdef WIN32
+	strcpy_s(vd.filename_full, file_filename_full_size, fileName.toStdString().c_str());
+#else
 	strcpy(vd.filename_full, fileName.toStdString().c_str());
+#endif
 	QDialog* messageBox = new QDialog(this);
 	messageBox->setAttribute(Qt::WA_DeleteOnClose);
 	messageBox->setSizeGripEnabled(true);
@@ -380,7 +388,11 @@ void MainWindow::on_actionCameras_triggered()
 				checkbox->setChecked(settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toBool());
 				layout->addWidget(checkbox);
 				// Lambda syntax is used to pass additional argument i
+#if (QT_VERSION < QT_VERSION_CHECK(6, 7, 0))
 				connect(checkbox, &QCheckBox::stateChanged, this, [checkbox, this, cam, drvno] {on_checkBoxShowCamera(checkbox->isChecked(), cam, drvno); loadCameraData(); });
+#else
+				connect(checkbox, &QCheckBox::checkStateChanged, this, [checkbox, this, cam, drvno] {on_checkBoxShowCamera(checkbox->isChecked(), cam, drvno); loadCameraData(); });
+#endif
 			}
 		}
 		settings.endGroup();
@@ -641,8 +653,8 @@ void MainWindow::loadCameraData()
 			settings.endGroup();
 		}
 	}
-	uint16_t* data = static_cast<uint16_t*>(malloc(data_array_size * sizeof(uint16_t)));
-	uint16_t* cur_data_ptr = data;
+	uint16_t* camera_data = static_cast<uint16_t*>(malloc(data_array_size * sizeof(uint16_t)));
+	uint16_t* cur_data_ptr = camera_data;
 	uint32_t block = static_cast<uint32_t>(ui->horizontalSliderBlock->value() - 1);
 	uint32_t sample = static_cast<uint32_t>(ui->horizontalSliderSample->value() - 1);
 	// showedCam counts the number of cameras which are shown on the chart
@@ -676,7 +688,7 @@ void MainWindow::loadCameraData()
 		}
 	}
 	if(showedCam)
-		ui->chartView->setChartData(data, pixel_array, static_cast<uint16_t>(showCamcnt), lineSeriesNamesList);
+		ui->chartView->setChartData(camera_data, pixel_array, static_cast<uint16_t>(showCamcnt), lineSeriesNamesList);
 
 	// Deactivate legend, because it is blinking. Activate it, when a solution is found
 	//if (showedCam > 1)
@@ -684,7 +696,7 @@ void MainWindow::loadCameraData()
 	//else
 	//	ui->chartView->chart()->legend()->setVisible(false);
 	ui->chartView->updateLabelMouseCoordinates(ui->chartView->mapFromGlobal(QCursor::pos()));
-	free(data);
+	free(camera_data);
 	return;
 }
 

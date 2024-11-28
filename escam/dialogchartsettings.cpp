@@ -19,7 +19,11 @@ DialogChartSettings::DialogChartSettings(QWidget *parent)
 	ui.spinBoxXmin->setValue(xmin_old);
 	ui.spinBoxYmax->setValue(ymax_old);
 	ui.spinBoxYmin->setValue(ymin_old);
+#if (QT_VERSION < QT_VERSION_CHECK(6, 7, 0))
 	connect(ui.checkBoxMirrorX, &QCheckBox::stateChanged, mainWindow, &MainWindow::loadCameraData);
+#else
+	connect(ui.checkBoxMirrorX, &QCheckBox::checkStateChanged, mainWindow, &MainWindow::loadCameraData);
+#endif
 	ui.checkBoxMirrorX->setChecked(settings.value(settingAxesMirrorXPath, settingAxesMirrorXPathDefault).toBool());
 	ui.checkBoxShowCrosshair->setChecked(settings.value(settingShowCrosshairPath, settingShowCrosshairDefault).toBool());
 }

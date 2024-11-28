@@ -31,6 +31,6 @@ private:
 	bool autotuneRunning = false;
 	bool allTargetsReached = false, ch1TargetReached = false, ch2TargetReached = false, ch3TargetReached = false, ch4TargetReached = false, ch5TargetReached = false, ch6TargetReached = false, ch7TargetReached = false, ch8TargetReached = false;
 	void autotunePressed();
-	double calculateMean(uint16_t* data, int start, int end, bool isHsIr);
-	bool autotuneAdjust(uint16_t* data, int start, int end, QSpinBox* spinBox, bool isHsir);
+	double calculateMean(uint16_t* camera_data, int start, int end, bool isHsIr);
+	bool autotuneAdjust(uint16_t* camera_data, int start, int end, QSpinBox* spinBox, bool isHsir);
 };

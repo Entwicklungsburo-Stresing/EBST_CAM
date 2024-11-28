@@ -980,7 +980,12 @@ INPUT                  = ../ESLSCDLL/ESLSCDLL.c \
                          ../ESLSCDLL/win/Board_ll.c \
                          ../ESLSCDLL/Direct2dViewer_c.cpp \
                          ../ESLSCDLL/Camera.h \
-                         ../ESLSCDLL/Camera.c
+                         ../ESLSCDLL/Camera.c \
+                         ../ESLSCDLL/Board.h \
+                         ../ESLSCDLL/ESLSCDLL.c \
+                         ../ESLSCDLL/Board_ll.h \
+                         ../ESLSCDLL/ESLSCDLL.h \
+                         ../ESLSCDLL/Direct2dViewer_c.h
 
 # This tag can be used to specify the character encoding of the source files
 # that Doxygen parses. Internally Doxygen uses the UTF-8 encoding. Doxygen uses
