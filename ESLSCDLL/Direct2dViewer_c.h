@@ -1,8 +1,13 @@
-#pragma once
-/** @file Direct2dViewer_c.h  Direct2dViewer_c.h is a wrapper of Direct2dViewer.cpp to provide a C API.
-Inspired by this tutorial to call cpp methods from c: https://bytes.com/topic/c/insights/921728-calling-c-class-methods-c
-*/
+/*****************************************************************//**
+ * @file   Direct2dViewer_c.h
+ * @brief  Wrapper for Direct2dViewer.cpp to provide a C API.
+ * 
+ * Inspired by this tutorial to call cpp methods from c: https://bytes.com/topic/c/insights/921728-calling-c-class-methods-c
+ * @author Florian Hahn
+ * @date   30.09.2019
+ *********************************************************************/
 
+#pragma once
 #ifndef MINIMAL_BUILD
 
 #include <windows.h>

@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   default_settings.h
+ * @brief  Default settings for initializing the settings struct and the settings dialog.
+ * 
+ * @author Florian Hahn
+ * @date   24.06.2021
+ *********************************************************************/
+
 #pragma once
 
 #include "../shared_src/enum_settings.h"

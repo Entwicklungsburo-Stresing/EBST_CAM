@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   enum_hardware.h
+ * @brief  All constants and addresses given by the hardware.
+ * 
+ * @author Florian Hahn
+ * @date   23.10.2020
+ *********************************************************************/
+
 #pragma once
 
 enum dma_addresses_t

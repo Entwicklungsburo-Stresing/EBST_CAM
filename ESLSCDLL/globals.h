@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   globals.h
+ * @brief  Global variables that are used in this library
+ * 
+ * @author Florian Hahn
+ * @date   26.05.2021
+ *********************************************************************/
+
 #pragma once
 
 #ifdef __cplusplus
