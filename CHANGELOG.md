@@ -12,6 +12,13 @@ The hardware version number is the current version at release time.
 * Add setting manipulate_data_mode
 * Add setting manipulate_data_custom_factor
 #### Changed
+* Change parameter address from uint16_t to uint32_t in
+	* DLLsetBitS0_32
+	* DLLresetBitS0_32
+	* DLLReadBitS0_32
+	* DLLReadBitS0_32_multipleBoards
+	* DLLReadBitS0_8
+	* DLLReadBitS0_8_multipleBoards
 #### Removed
 #### Fixed
 #### Deprecated

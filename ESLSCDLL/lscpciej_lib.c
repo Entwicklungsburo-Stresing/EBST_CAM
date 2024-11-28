@@ -564,6 +564,8 @@ static void TraceLog(const CHAR *sFormat, ...)
     _vsnprintf_s(sMsg, sizeof(sMsg) - 1, sizeof(sMsg) - 1, sFormat, argp);
     WDC_Trace("LSCPCIEJ lib: %s", sMsg);
     va_end(argp);
+#else
+    (void)sFormat;
 #endif
 }
 
