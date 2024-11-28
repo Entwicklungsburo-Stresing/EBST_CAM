@@ -93,9 +93,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="dll_description.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="ESLSCDLL.rc" />
   </ItemGroup>
 </Project>
