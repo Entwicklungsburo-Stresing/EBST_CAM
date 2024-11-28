@@ -25,7 +25,7 @@
 
 pthread_mutex_t mutex[MAXPCIECARDS];
 
-es_status_codes readRegister_32( uint32_t drvno, uint32_t* data, uint16_t address )
+es_status_codes readRegister_32( uint32_t drvno, uint32_t* data, uint32_t address )
 {
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (!dev) return es_register_read_failed;
@@ -33,7 +33,7 @@ es_status_codes readRegister_32( uint32_t drvno, uint32_t* data, uint16_t addres
 	return es_no_error;
 }
 
-es_status_codes readRegister_16( uint32_t drvno, uint16_t* data, uint16_t address )
+es_status_codes readRegister_16( uint32_t drvno, uint16_t* data, uint32_t address )
 {
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (!dev) return es_register_read_failed;
@@ -41,7 +41,7 @@ es_status_codes readRegister_16( uint32_t drvno, uint16_t* data, uint16_t addres
 	return es_no_error;
 }
 
-es_status_codes readRegister_8( uint32_t drvno, uint8_t* data, uint16_t address )
+es_status_codes readRegister_8( uint32_t drvno, uint8_t* data, uint32_t address )
 {
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (!dev) return es_register_read_failed;
@@ -49,7 +49,7 @@ es_status_codes readRegister_8( uint32_t drvno, uint8_t* data, uint16_t address 
 	return es_no_error;
 }
 
-es_status_codes writeRegister_32( uint32_t drvno, uint32_t data, uint16_t address )
+es_status_codes writeRegister_32( uint32_t drvno, uint32_t data, uint32_t address )
 {
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (!dev) return es_register_write_failed;
@@ -67,7 +67,7 @@ es_status_codes writeRegister_32( uint32_t drvno, uint32_t data, uint16_t addres
 	- es_no_error
 	- es_register_write_failed
  */
-es_status_codes writeRegister_32twoBoards(uint32_t data1, uint32_t data2, uint16_t address)
+es_status_codes writeRegister_32twoBoards(uint32_t data1, uint32_t data2, uint32_t address)
 {
 	struct dev_descr *dev = lscpcie_get_descriptor(0);
 	if (!dev) return es_register_write_failed;
@@ -78,7 +78,7 @@ es_status_codes writeRegister_32twoBoards(uint32_t data1, uint32_t data2, uint16
 	return es_no_error;
 }
 
-es_status_codes writeRegister_16( uint32_t drvno, uint16_t data, uint16_t address )
+es_status_codes writeRegister_16( uint32_t drvno, uint16_t data, uint32_t address )
 {
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (!dev) return es_register_write_failed;
@@ -86,7 +86,7 @@ es_status_codes writeRegister_16( uint32_t drvno, uint16_t data, uint16_t addres
 	return es_no_error;
 }
 
-es_status_codes writeRegister_8( uint32_t drvno, uint8_t data, uint16_t address )
+es_status_codes writeRegister_8( uint32_t drvno, uint8_t data, uint32_t address )
 {
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (!dev) return es_register_write_failed;
@@ -104,7 +104,7 @@ es_status_codes writeRegister_8( uint32_t drvno, uint8_t data, uint16_t address 
 	- es_no_error
 	- es_register_write_failed
  */
-es_status_codes writeRegister_8twoBoards(uint8_t data1, uint8_t data2, uint16_t address)
+es_status_codes writeRegister_8twoBoards(uint8_t data1, uint8_t data2, uint32_t address)
 {
 	struct dev_descr *dev = lscpcie_get_descriptor(0);
 	if (!dev) return es_register_write_failed;
@@ -127,7 +127,7 @@ es_status_codes writeRegister_8twoBoards(uint8_t data1, uint8_t data2, uint16_t 
  *		- es_no_error
  *		- es_register_read_failed
  */
-es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address )
+es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint32_t address )
 {
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (!dev) return es_register_read_failed;
@@ -137,7 +137,7 @@ es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint16_t address 
 		return es_no_error;
 }
 
-es_status_codes writeConfig_32( uint32_t drvno, uint32_t data, uint16_t address )
+es_status_codes writeConfig_32( uint32_t drvno, uint32_t data, uint32_t address )
 {
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	if (!dev) return es_register_write_failed;
@@ -236,7 +236,7 @@ void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 {
 	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
 	memcpy(userBufferWritePos[drvno], dev->mapped_buffer + dev->control->read_pos, rest_in_bytes);
-	manipulateData(userBufferWritePos[drvno], rest_in_bytes / (sizeof(uint16_t) * settings_struct.camera_settings[drvno].pixel ));
+	manipulateData(drvno, userBufferWritePos[drvno], rest_in_bytes / (sizeof(uint16_t) * settings_struct.camera_settings[drvno].pixel ));
 	return;
 }
 
@@ -299,7 +299,7 @@ void* CopyDataToUserBuffer(void* param_drvno)
 		else if(result_poll)
 		{
 			result_read = read(dev->handle, ((uint8_t *)userBuffer[drvno]) + bytes_read , (size_t)bytes_to_read);
-			manipulateData(userBufferWritePos[drvno], result_read / (sizeof(uint16_t) * settings_struct.camera_settings[drvno].pixel));
+			manipulateData(drvno, userBufferWritePos[drvno], result_read / (sizeof(uint16_t) * settings_struct.camera_settings[drvno].pixel));
 			ES_TRACE("Copy to user buffer intterupt %u done, result: %zd\n", dev->control->irq_count, result_read);
 			bytes_to_read -= result_read;
 			bytes_read += result_read;
