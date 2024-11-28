@@ -11,7 +11,7 @@ Lsc::~Lsc()
 }
 
 /**
- * \copydoc InitDriver
+ * @copydoc InitDriver
  */
 es_status_codes Lsc::initDriver()
 {
@@ -19,7 +19,7 @@ es_status_codes Lsc::initDriver()
 }
 
 /**
- * \copydoc InitBoard
+ * @copydoc InitBoard
  */
 es_status_codes Lsc::initPcieBoard()
 {
@@ -32,7 +32,7 @@ es_status_codes Lsc::initPcieBoard()
 }
 
 /**
- * \copydoc ExitDriver
+ * @copydoc ExitDriver
  */
 es_status_codes Lsc::exitDriver()
 {
@@ -40,7 +40,7 @@ es_status_codes Lsc::exitDriver()
 }
 
 /**
- * \copydoc InitMeasurement
+ * @copydoc InitMeasurement
  */
 es_status_codes Lsc::initMeasurement(struct measurement_settings settings)
 {
@@ -49,7 +49,7 @@ es_status_codes Lsc::initMeasurement(struct measurement_settings settings)
 }
 
 /**
- * \copydoc StartMeasurement
+ * @copydoc StartMeasurement
  */
 es_status_codes Lsc::startMeasurement()
 {
@@ -57,7 +57,7 @@ es_status_codes Lsc::startMeasurement()
 }
 
 /**
- * \copydoc CopyOneSample
+ * @copydoc CopyOneSample
  */
 es_status_codes Lsc::copyOneSample(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest)
 {
@@ -173,7 +173,7 @@ std::string Lsc::__AboutGPX(uint32_t drvno)
 }
 
 /**
- * \copydoc SetTORReg
+ * @copydoc SetTORReg
  */
 es_status_codes Lsc::setTorOut( uint32_t drvno, uint8_t torOut )
 {
@@ -181,7 +181,7 @@ es_status_codes Lsc::setTorOut( uint32_t drvno, uint8_t torOut )
 }
 
 /**
- * \copydoc ResetDSC
+ * @copydoc ResetDSC
  */
 es_status_codes Lsc::resetDSC( uint32_t drvno, uint8_t DSCNumber )
 {
@@ -189,7 +189,7 @@ es_status_codes Lsc::resetDSC( uint32_t drvno, uint8_t DSCNumber )
 }
 
 /**
- * \copydoc SetDIRDSC
+ * @copydoc SetDIRDSC
  */
 es_status_codes Lsc::setDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir )
 {
@@ -197,7 +197,7 @@ es_status_codes Lsc::setDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir )
 }
 
 /**
- * \copydoc GetDSC
+ * @copydoc GetDSC
  */
 es_status_codes Lsc::getDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC )
 {
@@ -205,7 +205,7 @@ es_status_codes Lsc::getDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, 
 }
 
 /**
- * \copydoc CalcTrms
+ * @copydoc CalcTrms
  */
 es_status_codes Lsc::calcTRMS( uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double *mwf, double *trms )
 {
@@ -213,7 +213,7 @@ es_status_codes Lsc::calcTRMS( uint32_t drvno, uint32_t firstSample, uint32_t la
 }
 
 /**
- * \copydoc SetAbortMeasurementFlag
+ * @copydoc SetAbortMeasurementFlag
  */
 es_status_codes Lsc::abortMeasurement()
 {
@@ -247,7 +247,7 @@ void Lsc::parseTextToHtml(std::string* str)
 }
 
 /**
- * \copydoc DAC8568_setOutput
+ * @copydoc DAC8568_setOutput
  */
 es_status_codes Lsc::dac_setOutput(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t channel, uint16_t output)
 {
@@ -255,7 +255,7 @@ es_status_codes Lsc::dac_setOutput(uint32_t drvno, uint8_t location, uint8_t cam
 }
 
 /**
- * \copydoc DAC8568_setAllOutputs
+ * @copydoc DAC8568_setAllOutputs
  */
 es_status_codes Lsc::dac_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint32_t* output, bool reorder_channels)
 {
@@ -263,7 +263,7 @@ es_status_codes Lsc::dac_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t
 }
 
 /**
- * \copydoc CamIOCtrl_setT0
+ * @copydoc CamIOCtrl_setT0
  */
 es_status_codes Lsc::ioctrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 {
@@ -271,7 +271,7 @@ es_status_codes Lsc::ioctrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 }
 
 /**
- * \copydoc CamIOCtrl_setOutput
+ * @copydoc CamIOCtrl_setOutput
  */
 es_status_codes Lsc::ioctrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns)
 {
@@ -279,7 +279,7 @@ es_status_codes Lsc::ioctrl_setOutput(uint32_t drvno, uint32_t number, uint16_t 
 }
 
 /**
- * \copydoc GetCurrentScanNumber
+ * @copydoc GetCurrentScanNumber
  */
 void Lsc::getCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block)
 {
@@ -312,7 +312,7 @@ std::string Lsc::getVerifiedDataDialog(struct verify_data_parameter* vd)
 }
 
 /**
- * \copydoc GetCameraStatusOverTemp
+ * @copydoc GetCameraStatusOverTemp
  */
 es_status_codes Lsc::getCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* overTemp)
 {
@@ -320,7 +320,7 @@ es_status_codes Lsc::getCameraStatusOverTemp(uint32_t drvno, uint32_t sample, ui
 }
 
 /**
- * \copydoc GetCameraStatusTempGood
+ * @copydoc GetCameraStatusTempGood
  */
 es_status_codes Lsc::getCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* tempGood)
 {
@@ -328,7 +328,7 @@ es_status_codes Lsc::getCameraStatusTempGood(uint32_t drvno, uint32_t sample, ui
 }
 
 /**
- * \copydoc GetBlockIndex
+ * @copydoc GetBlockIndex
  */
 es_status_codes Lsc::getBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* blockIndex)
 {
@@ -336,7 +336,7 @@ es_status_codes Lsc::getBlockIndex(uint32_t drvno, uint32_t sample, uint32_t blo
 }
 
 /**
- * \copydoc GetScanIndex
+ * @copydoc GetScanIndex
  */
 es_status_codes Lsc::getScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* scanIndex)
 {
@@ -344,7 +344,7 @@ es_status_codes Lsc::getScanIndex(uint32_t drvno, uint32_t sample, uint32_t bloc
 }
 
 /**
- * \copydoc GetS1State
+ * @copydoc GetS1State
  */
 es_status_codes Lsc::getS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
 {
@@ -352,7 +352,7 @@ es_status_codes Lsc::getS1State(uint32_t drvno, uint32_t sample, uint32_t block,
 }
 
 /**
- * \copydoc GetS2State
+ * @copydoc GetS2State
  */
 es_status_codes Lsc::getS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
 {
@@ -360,7 +360,7 @@ es_status_codes Lsc::getS2State(uint32_t drvno, uint32_t sample, uint32_t block,
 }
 
 /**
- * \copydoc GetImpactSignal1
+ * @copydoc GetImpactSignal1
  */
 es_status_codes Lsc::getImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
@@ -368,7 +368,7 @@ es_status_codes Lsc::getImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t 
 }
 
 /**
- * \copydoc GetImpactSignal2
+ * @copydoc GetImpactSignal2
  */
 es_status_codes Lsc::getImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
@@ -376,7 +376,7 @@ es_status_codes Lsc::getImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t 
 }
 
 /**
- * \copydoc GetAllSpecialPixelInformation
+ * @copydoc GetAllSpecialPixelInformation
  */
 es_status_codes Lsc::getAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp)
 {
@@ -384,7 +384,7 @@ es_status_codes Lsc::getAllSpecialPixelInformation(uint32_t drvno, uint32_t samp
 }
 
 /**
- * \copydoc SetContinuousMeasurement
+ * @copydoc SetContinuousMeasurement
  */
 void Lsc::setContinuousMeasurement(bool on)
 {
@@ -392,7 +392,7 @@ void Lsc::setContinuousMeasurement(bool on)
 }
 
 /**
- * \copydoc ShowNewBitmap
+ * @copydoc ShowNewBitmap
  */
 void Lsc::showNewBitmap(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t pixel, uint32_t nos)
 {
@@ -400,7 +400,7 @@ void Lsc::showNewBitmap(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t
 }
 
 /**
- * \copydoc Start2dViewer
+ * @copydoc Start2dViewer
  */
 void Lsc::start2dViewer(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t pixel, uint32_t nos)
 {
@@ -408,7 +408,7 @@ void Lsc::start2dViewer(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t
 }
 
 /**
- * \copydoc SetGammaValue
+ * @copydoc SetGammaValue
  */
 void Lsc::setGammaValue(uint16_t white, uint16_t black)
 {
@@ -416,7 +416,7 @@ void Lsc::setGammaValue(uint16_t white, uint16_t black)
 }
 
 /**
- * \copydoc GetGammaWhite
+ * @copydoc GetGammaWhite
  */
 uint16_t Lsc::getGammaWhite()
 {
@@ -424,7 +424,7 @@ uint16_t Lsc::getGammaWhite()
 }
 
 /**
- * \copydoc GetGammaBlack
+ * @copydoc GetGammaBlack
  */
 uint16_t Lsc::getGammaBlack()
 {
@@ -432,7 +432,7 @@ uint16_t Lsc::getGammaBlack()
 }
 
 /**
- * \copydoc ReadScanFrequencyBit
+ * @copydoc ReadScanFrequencyBit
  */
 es_status_codes Lsc::readScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh)
 {
@@ -440,7 +440,7 @@ es_status_codes Lsc::readScanFrequencyBit(uint32_t drvno, bool* scanFrequencyToo
 }
 
 /**
- * \copydoc ResetScanFrequencyBit
+ * @copydoc ResetScanFrequencyBit
  */
 es_status_codes Lsc::resetScanFrequencyBit(uint32_t drvno)
 {
@@ -448,7 +448,7 @@ es_status_codes Lsc::resetScanFrequencyBit(uint32_t drvno)
 }
 
 /**
- * \copydoc ReadBlockFrequencyBit
+ * @copydoc ReadBlockFrequencyBit
  */
 es_status_codes Lsc::readBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh)
 {
@@ -456,7 +456,7 @@ es_status_codes Lsc::readBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyT
 }
 
 /**
- * \copydoc ResetBlockFrequencyBit
+ * @copydoc ResetBlockFrequencyBit
  */
 es_status_codes Lsc::resetBlockFrequencyBit(uint32_t drvno)
 {
@@ -464,7 +464,7 @@ es_status_codes Lsc::resetBlockFrequencyBit(uint32_t drvno)
 }
 
 /**
- * \copydoc CheckFifoValid
+ * @copydoc CheckFifoValid
  */
 es_status_codes Lsc::checkFifoValid(uint32_t drvno, bool* valid)
 {
@@ -487,7 +487,7 @@ es_status_codes Lsc::checkFifoFull(uint32_t drvno, bool* full)
 }
 
 /**
- * \copydoc FindCam
+ * @copydoc FindCam
  */
 es_status_codes Lsc::findCam(uint32_t drvno)
 {
@@ -495,7 +495,7 @@ es_status_codes Lsc::findCam(uint32_t drvno)
 }
 
 /**
- * \copydoc ExportMeasurementHDF5.
+ * @copydoc ExportMeasurementHDF5.
  */
 es_status_codes Lsc::exportMeasurementHDF5(const char* path, char* filename)
 {
