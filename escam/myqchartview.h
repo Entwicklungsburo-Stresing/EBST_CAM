@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   myqchartview.h
+ * @brief  Class MyQChartView for modifying QChartView
+ * 
+ * @author Florian Hahn
+ * @date   01.07.2021
+ *********************************************************************/
+
 #pragma once
 #include <QtCharts>
 #include <dialogsettings.h>

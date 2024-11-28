@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   dialogioctrl.h
+ * @brief  Dialog for setting the IO control values.
+ * 
+ * @author Florian Hahn
+ * @date   02.09.2021
+ *********************************************************************/
+
 #pragma once
 #include <QDialog>
 #include "lsc-gui.h"

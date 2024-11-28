@@ -1,4 +1,15 @@
-﻿#include <stdio.h>
+﻿/*****************************************************************//**
+ * @file   CsimpleExample.c
+ * @brief  Simple CLI example in C for using ESLSCDLL.dll or libESLSCDLL.so.
+ * 
+ * This is example is doing one measurement with DLLStartMeasurement_blocking(). 
+ * During the measurement the library callbacks are used to print the current status.
+ * After the measurement the 200 first pixels of the first sample are printed.
+ * @author Florian Hahn
+ * @date   30.10.2024
+ *********************************************************************/
+
+#include <stdio.h>
 #include <stdlib.h>
 #include <inttypes.h>
 #include "../ESLSCDLL/ESLSCDLL.h"

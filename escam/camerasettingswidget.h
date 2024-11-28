@@ -1,3 +1,12 @@
+/*****************************************************************//**
+ * @file   camerasettingswidget.h
+ * @brief  Widget used to set camera settings.
+ * 
+ * This widget will be displayed as many times as there are PCIe boards. It is used in dialogsettings.
+ * @author Florian Hahn
+ * @date   06.02.2023
+ *********************************************************************/
+
 #pragma once
 
 #include <QWidget>

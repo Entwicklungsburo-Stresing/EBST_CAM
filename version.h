@@ -1,3 +1,10 @@
+/*****************************************************************//**
+ * @file   version.h
+ * @brief  Current version of this library
+ * 
+ * @author Gerhard Stresing
+ * @date   before 2016
+ *********************************************************************/
 #pragma once
 #define STRINGIZE2(s) #s
 #define STRINGIZE(s) STRINGIZE2(s)

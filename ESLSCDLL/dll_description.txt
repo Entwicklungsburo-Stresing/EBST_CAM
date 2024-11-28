@@ -1,6 +1,0 @@
-project settings for DLL:
-to avoid linker error LNK1019
-set properties for compiler of DLL
-C/C++-> Preprocessor-> Preprocessor Definitions = ;ESLSCDLL_EXPORTS;WINNT
-set preferences for compiler of calling program to
-Linker-> Input-> Additional Dependencies = ESLSCDLL.LIB

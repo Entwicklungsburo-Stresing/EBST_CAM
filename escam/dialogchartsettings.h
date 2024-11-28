@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   dialogchartsettings.h
+ * @brief  Dialog to set the chart settings.
+ * 
+ * @author Florian Hahn
+ * @date   02.07.2021
+ *********************************************************************/
+
 #pragma once
 
 #include <QDialog>

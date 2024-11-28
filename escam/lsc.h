@@ -1,3 +1,12 @@
+/*****************************************************************//**
+ * @file   lsc.h
+ * @brief  Main class for camera functions.
+ * 
+ * Mostly this is a wrapper for the ESLSCDLL functions to get the library calls into a C++ class.
+ * @author Florian Hahn
+ * @date   28.01.2021
+ *********************************************************************/
+
 #pragma once
 
 #include <stdint.h>

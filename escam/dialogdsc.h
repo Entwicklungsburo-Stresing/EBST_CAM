@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   dialogdsc.h
+ * @brief  Dialog to set the DSC values.
+ * 
+ * @author Florian Hahn
+ * @date   03.08.2021
+ *********************************************************************/
+
 #pragma once
 
 #include <QDialog>
