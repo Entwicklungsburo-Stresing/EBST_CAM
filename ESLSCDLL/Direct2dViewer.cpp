@@ -602,12 +602,12 @@ void Direct2dViewer::CalcCursorPos()
 	DOUBLE widthScaleFactor = (_cursorPos.x - _margin.left) / (renderTargetSize.width - _margin.right - _margin.left);
 	if (widthScaleFactor < 0 || widthScaleFactor > 1) _cursorPos.pixel = -1;
 	else _cursorPos.pixel = static_cast<INT>(widthScaleFactor * _bitmapSource.width);
-	if (_cursorPos.pixel == _bitmapSource.width) _cursorPos.pixel = _bitmapSource.width - 1;
+	if (_cursorPos.pixel == static_cast<INT>(_bitmapSource.width)) _cursorPos.pixel = _bitmapSource.width - 1;
 	// vertical
 	DOUBLE heightScaleFactor = (_cursorPos.y - _margin.top) / (renderTargetSize.height - _margin.bottom - _margin.top);
 	if (heightScaleFactor < 0 || heightScaleFactor > 1)_cursorPos.line = -2; //-2 because it is displayed with +1
 	else _cursorPos.line = static_cast<INT>(heightScaleFactor * _bitmapSource.height);
-	if (_cursorPos.line == _bitmapSource.height) _cursorPos.line = _bitmapSource.height - 1;
+	if (_cursorPos.line == static_cast<INT>(_bitmapSource.height)) _cursorPos.line = _bitmapSource.height - 1;
 	return;
 }
 

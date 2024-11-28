@@ -106,7 +106,7 @@ void DLLCALLCONV interrupt_handler1() { isr( 1 ); }
 void DLLCALLCONV interrupt_handler2() { isr( 2 ); }
 void DLLCALLCONV interrupt_handler3() { isr( 3 ); }
 void DLLCALLCONV interrupt_handler4() { isr( 4 ); }
-void *interrupt_handler_array[MAXPCIECARDS] = { &interrupt_handler0, &interrupt_handler1, &interrupt_handler2, &interrupt_handler3, &interrupt_handler4 };
+void (*interrupt_handler_array[MAXPCIECARDS])() = { &interrupt_handler0, &interrupt_handler1, &interrupt_handler2, &interrupt_handler3, &interrupt_handler4 };
 
 /**
  * @brief Reads 4 bytes on DMA area.
@@ -436,8 +436,7 @@ es_status_codes _InitBoard(uint32_t drvno)
 		ES_LOG( "DeviceOpen: Failed opening a handle to the device: %s\n", LSCPCIEJ_GetLastErr() );
 		return es_open_device_failed;
 	}
-	PWDC_DEVICE pDev = ((PWDC_DEVICE)hDev[drvno]);
-	ES_LOG( "DRVInit hDev id % x, hDev PCI slot %x, hDev PCI bus %x, hDev PCI function %x, hDevNumAddrSp %x \n"	, pDev->id, pDev->slot.dwSlot, pDev->slot.dwBus, pDev->slot.dwFunction, pDev->dwNumAddrSpaces );
+	ES_LOG( "DRVInit hDev id % x, hDev PCI slot %x, hDev PCI bus %x, hDev PCI function %x, hDevNumAddrSp %x \n"	, hDev[drvno]->id, hDev[drvno]->slot.dwSlot, hDev[drvno]->slot.dwBus, hDev[drvno]->slot.dwFunction, hDev[drvno]->dwNumAddrSpaces );
 	return es_no_error ;
 }
 
@@ -700,11 +699,11 @@ uint8_t WaitforTelapsed(int64_t microseconds)
 	if (microseconds)
 	{
 		//ES_TRACE("Wait for %u microseconds\n", microseconds);
-		int64_t start_timestamp = GetTimestampInMicroseconds();
-		int64_t destination_timestamp = start_timestamp + microseconds;
-		//ES_LOG("start time: %"PRId64"\n", start_timestamp);
+		int64_t _start_timestamp = GetTimestampInMicroseconds();
+		int64_t destination_timestamp = _start_timestamp + microseconds;
+		//ES_LOG("start time: %"PRId64"\n", _start_timestamp);
 		// detect overflow
-		if (destination_timestamp < start_timestamp) return 0;
+		if (destination_timestamp < _start_timestamp) return 0;
 		// wait until time elapsed
 		while (destination_timestamp > GetTimestampInMicroseconds())
 		{
