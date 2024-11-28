@@ -415,7 +415,7 @@ es_status_codes SetCameraSystem(uint32_t drvno, uint16_t camera_system)
  * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0.
  * @return \ref es_status_codes
  */
-es_status_codes writeBitsS0_32(uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address)
+es_status_codes writeBitsS0_32(uint32_t drvno, uint32_t data, uint32_t bitmask, uint32_t address)
 {
 	return writeBitsDma_32(drvno, data, bitmask, address + S0_SPACE_OFFSET);
 }
@@ -428,7 +428,7 @@ es_status_codes writeBitsS0_32(uint32_t drvno, uint32_t data, uint32_t bitmask, 
  * @param address Address of the register in S0 space.
  * @return \ref es_status_codes
  */
-es_status_codes writeBitsS0_32_allBoards(uint32_t data, uint32_t bitmask, uint16_t address)
+es_status_codes writeBitsS0_32_allBoards(uint32_t data, uint32_t bitmask, uint32_t address)
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -452,7 +452,7 @@ es_status_codes writeBitsS0_32_allBoards(uint32_t data, uint32_t bitmask, uint16
  * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0.
  * @return \ref es_status_codes
  */
-es_status_codes writeBitsS0_8(uint32_t drvno, uint8_t data, uint8_t bitmask, uint16_t address)
+es_status_codes writeBitsS0_8(uint32_t drvno, uint8_t data, uint8_t bitmask, uint32_t address)
 {
 	return writeBitsDma_8(drvno, data, bitmask, address + S0_SPACE_OFFSET);
 }
@@ -465,7 +465,7 @@ es_status_codes writeBitsS0_8(uint32_t drvno, uint8_t data, uint8_t bitmask, uin
  * @param address register address. Only 4 byte steps are valid.
  * @return \ref es_status_codes
  */
-es_status_codes setBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address)
+es_status_codes setBitS0_32(uint32_t drvno, uint32_t bitnumber, uint32_t address)
 {
 	uint32_t bitmask = 0x1 << bitnumber;
 	return writeBitsS0_32(drvno, 0xFFFFFFFF, bitmask, address);
@@ -478,7 +478,7 @@ es_status_codes setBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address
  * @param address register address. Only 4 byte steps are valid.
  * @return \ref es_status_codes
  */
-es_status_codes setBitS0_32_allBoards(uint32_t bitnumber, uint16_t address)
+es_status_codes setBitS0_32_allBoards(uint32_t bitnumber, uint32_t address)
 {
 	uint32_t bitmask = 0x1 << bitnumber;
 	return writeBitsS0_32_allBoards(0xFFFFFFFF, bitmask, address);
@@ -492,7 +492,7 @@ es_status_codes setBitS0_32_allBoards(uint32_t bitnumber, uint16_t address)
  * @param address register address. 1 byte steps are valid.
  * @return \ref es_status_codes
  */
-es_status_codes setBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address)
+es_status_codes setBitS0_8(uint32_t drvno, uint32_t bitnumber, uint32_t address)
 {
 	uint8_t bitmask = (uint8_t)(0x1 << bitnumber);
 	return writeBitsS0_8(drvno, 0xFF, bitmask, address);
@@ -506,7 +506,7 @@ es_status_codes setBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address)
  * @param address register address. Only 4 byte steps are valid.
  * @return \ref es_status_codes
  */
-es_status_codes resetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address)
+es_status_codes resetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint32_t address)
 {
 	uint32_t bitmask = 0x1 << bitnumber;
 	return writeBitsS0_32(drvno, 0x0, bitmask, address);
@@ -519,7 +519,7 @@ es_status_codes resetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t addre
  * @param address register address. Only 4 byte steps are valid.
  * @return \ref es_status_codes
  */
-es_status_codes resetBitS0_32_allBoards(uint32_t bitnumber, uint16_t address)
+es_status_codes resetBitS0_32_allBoards(uint32_t bitnumber, uint32_t address)
 {
 	uint32_t bitmask = 0x1 << bitnumber;
 	return writeBitsS0_32_allBoards(0x0, bitmask, address);
@@ -533,7 +533,7 @@ es_status_codes resetBitS0_32_allBoards(uint32_t bitnumber, uint16_t address)
  * @param address register address. 1 byte steps are valid.
  * @return \ref es_status_codes
  */
-es_status_codes resetBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address)
+es_status_codes resetBitS0_8(uint32_t drvno, uint32_t bitnumber, uint32_t address)
 {
 	uint8_t bitmask = (uint8_t)(0x1 << bitnumber);
 	return writeBitsS0_8(drvno, 0x0, bitmask, address);
@@ -547,7 +547,7 @@ es_status_codes resetBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t addres
  * \param address Address of the register to read.
  * \return \ref es_status_codes
  */
-es_status_codes writeRegisterS0_32(uint32_t drvno, uint32_t data, uint16_t address)
+es_status_codes writeRegisterS0_32(uint32_t drvno, uint32_t data, uint32_t address)
 {
 	LockHighLevelMutex(drvno);
 	es_status_codes status = writeRegister_32(drvno, data, address + S0_SPACE_OFFSET);
@@ -562,7 +562,7 @@ es_status_codes writeRegisterS0_32(uint32_t drvno, uint32_t data, uint16_t addre
  * \param address Address of the register to read.
  * \return \ref es_status_codes
  */
-es_status_codes writeRegisterS0_32_allBoards(uint32_t data, uint16_t address)
+es_status_codes writeRegisterS0_32_allBoards(uint32_t data, uint32_t address)
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -585,7 +585,7 @@ es_status_codes writeRegisterS0_32_allBoards(uint32_t data, uint16_t address)
  * \param address Address of the register to read.
  * \return \ref es_status_codes
  */
-es_status_codes writeRegisterS0_16(uint32_t drvno, uint16_t data, uint16_t address)
+es_status_codes writeRegisterS0_16(uint32_t drvno, uint16_t data, uint32_t address)
 {
 	LockHighLevelMutex(drvno);
 	es_status_codes status = writeRegister_16(drvno, data, address + S0_SPACE_OFFSET);
@@ -601,7 +601,7 @@ es_status_codes writeRegisterS0_16(uint32_t drvno, uint16_t data, uint16_t addre
  * \param address Address of the register to read.
  * \return \ref es_status_codes
  */
-es_status_codes writeRegisterS0_8(uint32_t drvno, uint8_t data, uint16_t address)
+es_status_codes writeRegisterS0_8(uint32_t drvno, uint8_t data, uint32_t address)
 {
 	LockHighLevelMutex(drvno);
 	es_status_codes status = writeRegister_8(drvno, data, address + S0_SPACE_OFFSET);
@@ -616,7 +616,7 @@ es_status_codes writeRegisterS0_8(uint32_t drvno, uint8_t data, uint16_t address
  * \param address Address of the register to write.
  * \return \ref es_status_codes
  */
-es_status_codes writeRegisterS0_8_allBoards(uint8_t data, uint16_t address)
+es_status_codes writeRegisterS0_8_allBoards(uint8_t data, uint32_t address)
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -639,7 +639,7 @@ es_status_codes writeRegisterS0_8_allBoards(uint8_t data, uint16_t address)
  * \param address Address of the register to read.
  * \return \ref es_status_codes
  */
-es_status_codes readRegisterS0_32(uint32_t drvno, uint32_t* data, uint16_t address)
+es_status_codes readRegisterS0_32(uint32_t drvno, uint32_t* data, uint32_t address)
 {
 	return readRegister_32(drvno, data, address + S0_SPACE_OFFSET);
 }
@@ -651,7 +651,7 @@ es_status_codes readRegisterS0_32(uint32_t drvno, uint32_t* data, uint16_t addre
  * \param address Address of the register to read.
  * \return \ref es_status_codes
  */
-es_status_codes readRegisterS0_32_allBoards(uint32_t** data, uint16_t address)
+es_status_codes readRegisterS0_32_allBoards(uint32_t** data, uint32_t address)
 {
 	return readRegister_32_allBoards(data, address + S0_SPACE_OFFSET);
 }
@@ -663,7 +663,7 @@ es_status_codes readRegisterS0_32_allBoards(uint32_t** data, uint16_t address)
  * @param address Offset from BaseAdress - in Bytes ! 0..3= Regs of Board.
  * @return \ref es_status_codes
  */
-es_status_codes readRegister_32_allBoards(uint32_t** data, uint16_t address)
+es_status_codes readRegister_32_allBoards(uint32_t** data, uint32_t address)
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -686,7 +686,7 @@ es_status_codes readRegister_32_allBoards(uint32_t** data, uint16_t address)
  * \param address Address of the register to read.
  * \return \ref es_status_codes
  */
-es_status_codes readRegisterS0_16(uint32_t drvno, uint16_t* data, uint16_t address)
+es_status_codes readRegisterS0_16(uint32_t drvno, uint16_t* data, uint32_t address)
 {
 	return readRegister_16(drvno, data, address + S0_SPACE_OFFSET);
 }
@@ -699,7 +699,7 @@ es_status_codes readRegisterS0_16(uint32_t drvno, uint16_t* data, uint16_t addre
  * \param address Address of the register to read.
  * \return \ref es_status_codes
  */
-es_status_codes readRegisterS0_8(uint32_t drvno, uint8_t* data, uint16_t address)
+es_status_codes readRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address)
 {
 	return readRegister_8(drvno, data, address + S0_SPACE_OFFSET);
 }
@@ -712,7 +712,7 @@ es_status_codes readRegisterS0_8(uint32_t drvno, uint8_t* data, uint16_t address
  * \param isBitHigh Tells if bit is high or low.
  * \return \ref es_status_codes
  */
-es_status_codes ReadBitS0_32(uint32_t drvno, uint16_t address, uint8_t bitnumber, bool* isBitHigh)
+es_status_codes ReadBitS0_32(uint32_t drvno, uint32_t address, uint8_t bitnumber, bool* isBitHigh)
 {
 	uint32_t data = 0;
 	es_status_codes status = readRegisterS0_32(drvno, &data, address);
@@ -731,7 +731,7 @@ es_status_codes ReadBitS0_32(uint32_t drvno, uint16_t address, uint8_t bitnumber
  * \param isBitHigh Tells if bit is high or low.
  * \return \ref es_status_codes
  */
-es_status_codes ReadBitS0_8(uint32_t drvno, uint16_t address, uint8_t bitnumber, bool* isBitHigh)
+es_status_codes ReadBitS0_8(uint32_t drvno, uint32_t address, uint8_t bitnumber, bool* isBitHigh)
 {
 	uint8_t data = 0;
 	es_status_codes status = readRegisterS0_8(drvno, &data, address);
@@ -1574,7 +1574,7 @@ es_status_codes SetDmaRegister(uint32_t drvno, uint32_t pixel)
  * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0.
  * @return \ref es_status_codes
  */
-es_status_codes writeBitsDma_32(uint32_t drvno, uint32_t data, uint32_t bitmask, uint16_t address)
+es_status_codes writeBitsDma_32(uint32_t drvno, uint32_t data, uint32_t bitmask, uint32_t address)
 {
 	uint32_t OldRegisterValues = 0;
 	LockHighLevelMutex(drvno);
@@ -1610,7 +1610,7 @@ es_status_codes writeBitsDma_32(uint32_t drvno, uint32_t data, uint32_t bitmask,
  * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0.
  * @return \ref es_status_codes
  */
-es_status_codes writeBitsDma_8(uint32_t drvno, uint8_t data, uint8_t bitmask, uint16_t address)
+es_status_codes writeBitsDma_8(uint32_t drvno, uint8_t data, uint8_t bitmask, uint32_t address)
 {
 	uint8_t OldRegisterValues = 0;
 	LockHighLevelMutex(drvno);
@@ -1645,7 +1645,7 @@ es_status_codes writeBitsDma_8(uint32_t drvno, uint8_t data, uint8_t bitmask, ui
  * \param address Address of the register to read.
  * \return \ref es_status_codes
  */
-es_status_codes writeRegisterDma_32(uint32_t drvno, uint32_t data, uint16_t address)
+es_status_codes writeRegisterDma_32(uint32_t drvno, uint32_t data, uint32_t address)
 {
 	LockHighLevelMutex(drvno);
 	es_status_codes status = writeRegister_32(drvno, data, address);
@@ -1661,7 +1661,7 @@ es_status_codes writeRegisterDma_32(uint32_t drvno, uint32_t data, uint16_t addr
  * \param address Address of the register to read.
  * \return \ref es_status_codes
  */
-es_status_codes writeRegisterDma_8(uint32_t drvno, uint8_t data, uint16_t address)
+es_status_codes writeRegisterDma_8(uint32_t drvno, uint8_t data, uint32_t address)
 {
 	LockHighLevelMutex(drvno);
 	es_status_codes status = writeRegister_8(drvno, data, address);
@@ -1677,7 +1677,7 @@ es_status_codes writeRegisterDma_8(uint32_t drvno, uint8_t data, uint16_t addres
  * \param address Address of the register to read.
  * \return \ref es_status_codes
  */
-es_status_codes readRegisterDma_32(uint32_t drvno, uint32_t* data, uint16_t address)
+es_status_codes readRegisterDma_32(uint32_t drvno, uint32_t* data, uint32_t address)
 {
 	LockHighLevelMutex(drvno);
 	es_status_codes status = readRegister_32(drvno, data, address);
@@ -1693,7 +1693,7 @@ es_status_codes readRegisterDma_32(uint32_t drvno, uint32_t* data, uint16_t addr
  * \param address Address of the register to read.
  * \return \ref es_status_codes
  */
-es_status_codes readRegisterDma_8(uint32_t drvno, uint8_t* data, uint16_t address)
+es_status_codes readRegisterDma_8(uint32_t drvno, uint8_t* data, uint32_t address)
 {
 	LockHighLevelMutex(drvno);
 	es_status_codes status = readRegister_8(drvno, data, address);
@@ -2073,7 +2073,7 @@ es_status_codes SetHardwareTimerStopMode(uint32_t drvno, bool stop_by_hardware)
  * @param duration_in_microseconds Duration of the bit beeing high in microseconds.
  * @return \ref es_status_codes
  */
-es_status_codes pulseBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t address, int64_t duration_in_microseconds)
+es_status_codes pulseBitS0_32(uint32_t drvno, uint32_t bitnumber, uint32_t address, int64_t duration_in_microseconds)
 {
 	es_status_codes status = setBitS0_32(drvno, bitnumber, address);
 	if (status != es_no_error) return status;
@@ -2090,7 +2090,7 @@ es_status_codes pulseBitS0_32(uint32_t drvno, uint32_t bitnumber, uint16_t addre
  * @param duration_in_microseconds Duration of the bit beeing high in microseconds.
  * @return \ref es_status_codes
  */
-es_status_codes pulseBitS0_8(uint32_t drvno, uint32_t bitnumber, uint16_t address, int64_t duration_in_microseconds)
+es_status_codes pulseBitS0_8(uint32_t drvno, uint32_t bitnumber, uint32_t address, int64_t duration_in_microseconds)
 {
 	es_status_codes status = setBitS0_8(drvno, bitnumber, address);
 	if (status != es_no_error) return status;
