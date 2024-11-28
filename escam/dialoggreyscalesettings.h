@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   dialoggreyscalesettings.h
+ * @brief  Dialog to set the gamma values for the greyscale viewer.
+ * 
+ * @author Florian Hahn
+ * @date   09.03.2023
+ *********************************************************************/
+
 #pragma once
 
 #include <QDialog>

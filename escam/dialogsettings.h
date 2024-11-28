@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   dialogsettings.h
+ * @brief  Dialog for setting the measurement settings.
+ * 
+ * @author Florian Hahn
+ * @date   03.02.2021
+ *********************************************************************/
+
 #pragma once
 
 #include <QDialog>

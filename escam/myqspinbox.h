@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   myqspinbox.h
+ * @brief  Class MyQSpinBox for modyfing QSpinBox.
+ * 
+ * @author Florian Hahn
+ * @date   29.01.2021
+ *********************************************************************/
+
 #pragma once
 
 #include <QSpinBox>

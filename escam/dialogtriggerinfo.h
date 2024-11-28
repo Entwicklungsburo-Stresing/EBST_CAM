@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   dialogtriggerinfo.h
+ * @brief  Dialog for displaying the trigger information.
+ * 
+ * @author Florian Hahn
+ * @date   06.06.2024
+ *********************************************************************/
+
 #pragma once
 
 #include <QDialog>
