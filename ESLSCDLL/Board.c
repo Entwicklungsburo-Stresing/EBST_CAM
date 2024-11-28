@@ -2221,7 +2221,7 @@ es_status_codes InitBoard()
 		memcpy(&settings_struct.camera_settings[drvno], &camera_settings_default, sizeof(struct camera_settings));
 	ES_LOG("Number of boards: %"PRIu8"\n", number_of_boards);
 	if (number_of_boards < 1) return es_open_device_failed;
-	es_status_codes status;
+	es_status_codes status = es_no_error;
 	for (int drvno = 0; drvno < number_of_boards; drvno++)
 	{
 		status = _InitBoard(drvno);
@@ -4069,6 +4069,7 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	uint32_t blockCounterHardware;
 	bool measurementStopped = false;
 	struct timeb timebuffer_measurementStopped;
+	ftime(&timebuffer_measurementStopped);
 	struct timeb timebuffer_now;
 	while (!allDataCopied)
 	{
