@@ -240,8 +240,7 @@ del $(ProjectDir).qmake.stash
     <ClCompile Include="dialogspecialpixels.cpp" />
     <ClCompile Include="dialogtriggerinfo.cpp" />
     <ClCompile Include="myqchartview.cpp" />
-    <ClCompile Include="hooks.c" />
-    <ClCompile Include="hooks_cpp.cpp" />
+    <ClCompile Include="hooks.cpp" />
     <ClCompile Include="dialogsettings.cpp" />
     <ClCompile Include="..\shared_src\es_status_codes.c" />
     <ClCompile Include="lsc-gui.cpp" />
@@ -267,7 +266,6 @@ del $(ProjectDir).qmake.stash
     <QtMoc Include="dialogchartsettings.h" />
     <ClInclude Include="lsc-gui.h" />
     <ClInclude Include="hooks.h" />
-    <ClInclude Include="hooks_cpp.h" />
     <QtMoc Include="dialogsettings.h">
     </QtMoc>
     <ClInclude Include="..\shared_src\es_status_codes.h" />

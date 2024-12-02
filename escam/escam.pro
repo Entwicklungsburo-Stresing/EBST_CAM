@@ -52,8 +52,7 @@ SOURCES += \
     myqchartview.cpp \
     myqspinbox.cpp \
     ../shared_src/es_status_codes.c \
-    hooks.c \
-    hooks_cpp.cpp
+    hooks.c
 win32 {
     SOURCES += dialoggreyscalesettings.cpp
 }
@@ -101,8 +100,7 @@ HEADERS += \
     ../ESLSCDLL/ESLSCDLL.h \
     ../shared_src/default_settings.h \
     ../version.h \
-    hooks.h \
-    hooks_cpp.h
+    hooks.h
 win32 {
     HEADERS += 	\
     dialoggreyscalesettings.h
