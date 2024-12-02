@@ -47,10 +47,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="hooks.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="hooks_cpp.cpp">
+    <ClCompile Include="hooks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dialogsettings.cpp">
@@ -106,9 +103,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="hooks_cpp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <QtMoc Include="dialogsettings.h">
       <Filter>Header Files</Filter>
     </QtMoc>
