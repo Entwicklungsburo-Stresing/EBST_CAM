@@ -52,7 +52,7 @@ SOURCES += \
     myqchartview.cpp \
     myqspinbox.cpp \
     ../shared_src/es_status_codes.c \
-    hooks.c
+    hooks.cpp
 win32 {
     SOURCES += dialoggreyscalesettings.cpp
 }
