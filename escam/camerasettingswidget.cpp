@@ -545,7 +545,7 @@ void CameraSettingsWidget::initializeWidget()
 	if(settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble() == sensor_type_hsvis)
 		ui->spinBoxSensorResetOrHsirEcIn1ns->setValue(settings.value(settingSensorResetOrHsirEcPath, settingSensorResetOrHsIrDefault).toDouble() * 4);
 	else
-		ui->spinBoxSensorResetOrHsirEcIn1ns->setValue(settings.value(settingSensorResetOrHsirEcPath, settingSensorResetOrHsIrDefault).toDouble() * 160);
+		ui->spinBoxSensorResetOrHsirEcIn1ns->setValue(settings.value(settingSensorResetOrHsirEcPath, settingSensorResetOrHsIrDefault / 50).toDouble() * 160);
 	ui->comboBoxChannelSelect->setCurrentIndex(settings.value(settingChannelSelectPath, settingChannelSelectDefault).toDouble());
 	ui->checkBoxShiftS1S2ToNextScan->setChecked(settings.value(settingShiftS1S2ToNextScanPath, settingShiftS1S2ToNextScanDefault).toBool());
 	//FFT mode
