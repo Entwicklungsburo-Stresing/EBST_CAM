@@ -842,7 +842,7 @@ es_status_codes SetupVPB(uint32_t drvno, uint32_t range, uint32_t lines)
 		return es_parameter_out_of_range;
 	}
 	// keep is a deprecated setting. The idea was to get faster by throwing away data. This is in fact not possible, because the data has be read out anyway. Thus throwing away data has no advantage. The keep bit is always set to 1.
-	uint32_t data = (lines << shift) & bits | keep;
+	uint32_t data = ((lines << shift) & bits) | keep;
 	return writeBitsS0_32(drvno, data, bits | keep, adr);
 }
 
