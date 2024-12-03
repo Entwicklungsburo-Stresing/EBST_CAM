@@ -4069,9 +4069,8 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	uint32_t scanCounterHardware;
 	uint32_t blockCounterHardware;
 	bool measurementStopped = false;
-	struct timeb timebuffer_measurementStopped;
-	ftime(&timebuffer_measurementStopped);
-	struct timeb timebuffer_now;
+	uint64_t timebuffer_measurementStopped = GetTimestampInMilliseconds();
+	uint64_t timebuffer_now = GetTimestampInMilliseconds();
 	while (!allDataCopied)
 	{
 		//ES_TRACE("dmaBufferReadPosNextScan: %p ", dmaBufferReadPosNextScan);
@@ -4116,12 +4115,12 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 		{
 			ES_LOG("Measurement aborted. Starting countdown for PollDmaBufferToUserBuffer\n");
 			measurementStopped = true;
-			ftime(&timebuffer_measurementStopped);
+			timebuffer_measurementStopped = GetTimestampInMilliseconds();
 		}
 		if (measurementStopped)
 		{
-			ftime(&timebuffer_now);
-			int64_t diff_in_ms = (int64_t)(1000.0 * (timebuffer_now.time - timebuffer_measurementStopped.time) + (timebuffer_now.millitm - timebuffer_measurementStopped.millitm));
+			timebuffer_now = GetTimestampInMilliseconds();
+			int64_t diff_in_ms = (int64_t)(timebuffer_now - timebuffer_measurementStopped);
 			if (diff_in_ms > 100)
 			{
 				ES_LOG("Aborted. Exit PollDmaBufferToUserBuffer\n");
