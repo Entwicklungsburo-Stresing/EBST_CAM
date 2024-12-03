@@ -9,6 +9,7 @@
 #include "../../linux-driver/kernelspace/registers.h"
 #include "../../linux-driver/userspace/local-config.h"
 #include <poll.h>
+#include <time.h>
 
 #define lscpcie_read_reg8(dev, addr, data) \
   do *data = *(uint8_t*)(((uint8_t *)dev->dma_reg) + addr); while (0)
@@ -462,6 +463,25 @@ void LockHighLevelMutex(uint32_t drvno)
 }
 
 void UnlockHighLevelMutex(uint32_t drvno)
+{
+	return;
+}
+
+int64_t GetTimestampInMicroseconds()
+{
+	struct timespec ts;
+	clock_gettime(CLOCK_MONOTONIC, &ts);
+	return (int64_t)ts.tv_sec * 1000000 + ts.tv_nsec / 1000;
+}
+
+int64_t GetTimestampInMilliseconds()
+{
+	struct timespec ts;
+	clock_gettime(CLOCK_MONOTONIC, &ts);
+	return (int64_t)ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
+}
+
+void initPerformanceCounter()
 {
 	return;
 }
