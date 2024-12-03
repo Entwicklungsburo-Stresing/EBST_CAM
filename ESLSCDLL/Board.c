@@ -4069,8 +4069,8 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
 	uint32_t scanCounterHardware;
 	uint32_t blockCounterHardware;
 	bool measurementStopped = false;
-	uint64_t timebuffer_measurementStopped = GetTimestampInMilliseconds();
-	uint64_t timebuffer_now = GetTimestampInMilliseconds();
+	int64_t timebuffer_measurementStopped = GetTimestampInMilliseconds();
+	int64_t timebuffer_now = GetTimestampInMilliseconds();
 	while (!allDataCopied)
 	{
 		//ES_TRACE("dmaBufferReadPosNextScan: %p ", dmaBufferReadPosNextScan);
