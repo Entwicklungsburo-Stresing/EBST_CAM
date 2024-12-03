@@ -25,6 +25,7 @@ HANDLE mutexUserBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 FILE* file_stream[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 void* Direct2dViewer = NULL;
 uint16_t* greyscale_data = NULL;
+LARGE_INTEGER freq;
 
 /**
  * @brief
@@ -654,6 +655,11 @@ es_status_codes InitMutex(uint32_t drvno)
 	return es_no_error;
 }
 
+void initPerformanceCounter()
+{
+	QueryPerformanceFrequency(&freq);
+}
+
 /**
 * @brief Reads system timer.
 *
@@ -674,6 +680,11 @@ int64_t GetTimestampInMicroseconds()
 	return ConvertTicksToMicroseconds(timestampInTicks);
 }
 
+int64_t GetTimestampInMilliseconds()
+{
+	return GetTimestampInMicroseconds() / 1000;
+}
+
 /**
  * @brief Translate ticks to microseconds.
  * @param ticks ticks of system timer
@@ -682,8 +693,6 @@ int64_t GetTimestampInMicroseconds()
 int64_t ConvertTicksToMicroseconds(int64_t ticks)
 {
 	int64_t ticksPerSecond = 0;
-	LARGE_INTEGER freq;
-	QueryPerformanceFrequency(&freq);
 	ticksPerSecond = freq.QuadPart;
 	int64_t microseconds = 0;
 	if(ticksPerSecond)

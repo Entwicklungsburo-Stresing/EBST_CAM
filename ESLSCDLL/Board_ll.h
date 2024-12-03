@@ -86,10 +86,12 @@ uint16_t GetGammaBlack();
 void WaitForAllInterruptsDone();
 void LockHighLevelMutex(uint32_t drvno);
 void UnlockHighLevelMutex(uint32_t drvno);
+int64_t GetTimestampInMicroseconds();
+int64_t GetTimestampInMilliseconds();
+void initPerformanceCounter();
 
 #ifdef WIN32
 int64_t GetTimestampInTicks();
-int64_t GetTimestampInMicroseconds();
 int64_t ConvertTicksToMicroseconds(int64_t ticks);
 es_status_codes About(uint32_t board_sel);
 es_status_codes AboutDrv(uint32_t drvno);
