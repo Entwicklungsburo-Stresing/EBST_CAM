@@ -2,17 +2,17 @@
 #include <chrono>
 #include "lsc-gui.h"
 
-std::chrono::steady_clock::time_point timepoint_measureStart;
-std::chrono::steady_clock::time_point timepoint_measureDone;
-std::chrono::steady_clock::time_point timepoint_blockStart;
-std::chrono::steady_clock::time_point timepoint_blockDone;
-std::chrono::steady_clock::time_point timepoint_allBlocksDone;
-const int64_t min_diff_in_ms = 50;
+std::chrono::steady_clock::time_point timepoint_measureStart = std::chrono::steady_clock::now();
+std::chrono::steady_clock::time_point timepoint_measureDone = std::chrono::steady_clock::now();
+std::chrono::steady_clock::time_point timepoint_blockStart = std::chrono::steady_clock::now();
+std::chrono::steady_clock::time_point timepoint_blockDone = std::chrono::steady_clock::now();
+std::chrono::steady_clock::time_point timepoint_allBlocksDone = std::chrono::steady_clock::now();
+const std::chrono::milliseconds min_diff_in_ms = std::chrono::milliseconds(100);
 
 void emitMeasureStartSignal()
 {
 	auto timepoint_measureStart_new = std::chrono::steady_clock::now();
-	int64_t diff_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(timepoint_measureStart_new - timepoint_measureStart).count();
+	std::chrono::milliseconds diff_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(timepoint_measureStart_new - timepoint_measureStart);
 	if (diff_in_ms > min_diff_in_ms)
 	{
 		emit mainWindow->lsc.measureStart();
@@ -24,7 +24,7 @@ void emitMeasureStartSignal()
 void emitMeasureDoneSignal()
 {
 	auto timepoint_measureDone_new = std::chrono::steady_clock::now();
-	int64_t diff_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(timepoint_measureDone_new - timepoint_measureDone).count();
+	std::chrono::milliseconds diff_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(timepoint_measureDone_new - timepoint_measureDone);
 	if (diff_in_ms > min_diff_in_ms)
 	{
 		emit mainWindow->lsc.measureDone();
@@ -36,7 +36,7 @@ void emitMeasureDoneSignal()
 void emitBlockStartSignal()
 {
 	auto timepoint_blockStart_new = std::chrono::steady_clock::now();
-	int64_t diff_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(timepoint_blockStart_new - timepoint_blockStart).count();
+	std::chrono::milliseconds diff_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(timepoint_blockStart_new - timepoint_blockStart);
 	if (diff_in_ms > min_diff_in_ms)
 	{
 		emit mainWindow->lsc.blockStart();
@@ -48,7 +48,7 @@ void emitBlockStartSignal()
 void emitBlockDoneSignal()
 {
 	auto timepoint_blockDone_new = std::chrono::steady_clock::now();
-	int64_t diff_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(timepoint_blockDone_new - timepoint_blockDone).count();
+	std::chrono::milliseconds diff_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(timepoint_blockDone_new - timepoint_blockDone);
 	if (diff_in_ms > min_diff_in_ms)
 	{
 		emit mainWindow->lsc.blockDone();
@@ -60,7 +60,7 @@ void emitBlockDoneSignal()
 void emitAllBlocksDoneSignal()
 {
 	auto timepoint_allBlocksDone_new = std::chrono::steady_clock::now();
-	int64_t diff_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(timepoint_allBlocksDone_new - timepoint_allBlocksDone).count();
+	std::chrono::milliseconds diff_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(timepoint_allBlocksDone_new - timepoint_allBlocksDone);
 	if (diff_in_ms > min_diff_in_ms)
 	{
 		emit mainWindow->lsc.allBlocksDone();
