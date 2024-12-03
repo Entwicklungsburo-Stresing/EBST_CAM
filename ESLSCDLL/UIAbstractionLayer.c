@@ -1,28 +1,26 @@
 //UI abstraction layer for Labview
 #include "UIAbstractionLayer.h"
 #include "ESLSCDLL.h"
+#include "Board.h"
 #ifdef COMPILE_FOR_LABVIEW
-#include <sys/types.h>
-#include <sys/timeb.h>
-
-struct _timeb timebuffer_measureStart;
-struct _timeb timebuffer_measureDone;
-struct _timeb timebuffer_blockStart;
-struct _timeb timebuffer_blockDone;
-struct _timeb timebuffer_allBlocksDone;
+int64_t timebuffer_new = 0;
+int64_t timebuffer_measureStart = 0;
+int64_t timebuffer_measureDone = 0;
+int64_t timebuffer_blockStart = 0;
+int64_t timebuffer_blockDone = 0;
+int64_t timebuffer_allBlocksDone = 0;
 const int64_t min_diff_in_ms = 50;
 #endif
 
 void notifyMeasureStart()
 {
 #ifdef COMPILE_FOR_LABVIEW
-	struct _timeb timebuffer_measureStart_new;
-	ftime((struct timeb *const)&timebuffer_measureStart_new);
-	int64_t diff_in_ms = (int64_t)(1000.0 * (timebuffer_measureStart_new.time - timebuffer_measureStart.time) + (timebuffer_measureStart_new.millitm - timebuffer_measureStart.millitm));
+	timebuffer_new = GetTimestampInMilliseconds();
+	int64_t diff_in_ms = timebuffer_new - timebuffer_measureStart;
 	if (diff_in_ms > min_diff_in_ms)
 	{
 		PostLVUserEvent(measureStartLVEvent, NULL);
-		ftime((struct timeb* const)&timebuffer_measureStart);
+		timebuffer_measureStart = timebuffer_new;
 	}
 #endif
 	return;
@@ -31,13 +29,12 @@ void notifyMeasureStart()
 void notifyMeasureDone()
 {
 #ifdef COMPILE_FOR_LABVIEW
-	struct _timeb timebuffer_measureDone_new;
-	ftime((struct timeb* const)&timebuffer_measureDone_new);
-	int64_t diff_in_ms = (int64_t)(1000.0 * (timebuffer_measureDone_new.time - timebuffer_measureDone.time) + (timebuffer_measureDone_new.millitm - timebuffer_measureDone.millitm));
+	timebuffer_new = GetTimestampInMilliseconds();
+	int64_t diff_in_ms = timebuffer_new - timebuffer_measureDone;
 	if (diff_in_ms > min_diff_in_ms)
 	{
 		PostLVUserEvent(measureDoneLVEvent, NULL);
-		ftime((struct timeb* const)&timebuffer_measureDone);
+		timebuffer_measureDone = timebuffer_new;
 	}
 #endif
 	return;
@@ -46,13 +43,12 @@ void notifyMeasureDone()
 void notifyBlockStart()
 {
 #ifdef COMPILE_FOR_LABVIEW
-	struct _timeb timebuffer_blockStart_new;
-	ftime((struct timeb* const)&timebuffer_blockStart_new);
-	int64_t diff_in_ms = (int64_t)(1000.0 * (timebuffer_blockStart_new.time - timebuffer_blockStart.time) + (timebuffer_blockStart_new.millitm - timebuffer_blockStart.millitm));
+	timebuffer_new = GetTimestampInMilliseconds();
+	int64_t diff_in_ms = timebuffer_new - timebuffer_blockStart;
 	if (diff_in_ms > min_diff_in_ms)
 	{
 		PostLVUserEvent(blockStartLVEvent, NULL);
-		ftime((struct timeb* const)&timebuffer_blockStart);
+		timebuffer_blockStart = timebuffer_new;
 	}
 #endif
 	return;
@@ -61,13 +57,12 @@ void notifyBlockStart()
 void notifyBlockDone()
 {
 #ifdef COMPILE_FOR_LABVIEW
-	struct _timeb timebuffer_blockDone_new;
-	ftime((struct timeb* const)&timebuffer_blockDone_new);
-	int64_t diff_in_ms = (int64_t)(1000.0 * (timebuffer_blockDone_new.time - timebuffer_blockDone.time) + (timebuffer_blockDone_new.millitm - timebuffer_blockDone.millitm));
+	timebuffer_new = GetTimestampInMilliseconds();
+	int64_t diff_in_ms = timebuffer_new - timebuffer_blockDone;
 	if (diff_in_ms > min_diff_in_ms)
 	{
 		PostLVUserEvent(blockDoneLVEvent, NULL);
-		ftime((struct timeb* const)&timebuffer_blockDone);
+		timebuffer_blockDone = timebuffer_new;
 	}
 #endif
 	return;
@@ -76,13 +71,12 @@ void notifyBlockDone()
 void notifyAllBlocksDone()
 {
 #ifdef COMPILE_FOR_LABVIEW
-	struct _timeb timebuffer_allBlocksDone_new;
-	ftime((struct timeb* const)&timebuffer_allBlocksDone_new);
-	int64_t diff_in_ms = (int64_t)(1000.0 * (timebuffer_allBlocksDone_new.time - timebuffer_allBlocksDone.time) + (timebuffer_allBlocksDone_new.millitm - timebuffer_allBlocksDone.millitm));
+	timebuffer_new = GetTimestampInMilliseconds();
+	int64_t diff_in_ms = timebuffer_new - timebuffer_allBlocksDone;
 	if (diff_in_ms > min_diff_in_ms)
 	{
 		PostLVUserEvent(allBlocksDoneLVEvent, NULL);
-		ftime((struct timeb* const)&timebuffer_allBlocksDone);
+		timebuffer_allBlocksDone = timebuffer_new;
 	}
 #endif
 	return;

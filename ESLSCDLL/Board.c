@@ -94,6 +94,7 @@ es_status_codes InitSoftware(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetupDma(drvno);
 	if (status != es_no_error) return status;
+	initPerformanceCounter();
 	return status;
 }
 
