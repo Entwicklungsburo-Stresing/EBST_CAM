@@ -9,6 +9,7 @@ The hardware version number is the current version at release time.
 ## Unreleased
 ### API Changes
 #### Added
+* Add setting ec_legacy_mode
 #### Changed
 #### Removed
 #### Fixed
