@@ -201,6 +201,7 @@ void MainWindow::startPressed()
 		library_settings.camera_settings[drvno].monitor = settings.value(settingMonitorPath, settingMonitorDefault).toDouble();
 		library_settings.camera_settings[drvno].manipulate_data_mode = settings.value(settingManipulateDataModePath, settingManipulateDataModeDefault).toDouble();
 		library_settings.camera_settings[drvno].manipulate_data_custom_factor = settings.value(settingManipulateDataCustomFactorPath, settingManipulateDataCustomFactorDefault).toDouble();
+		library_settings.camera_settings[drvno].ec_legacy_mode = settings.value(settingEcLegacyModePath, settingEcLegacyModeDefault).toDouble();	
 		settings.endGroup();
 	}
 	es_status_codes status = lsc.initMeasurement(library_settings);

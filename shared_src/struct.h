@@ -367,6 +367,7 @@ struct camera_settings
 	 * manipulate_data_custom_factor is used when @ref camera_settings.manipulate_data_mode is set to @ref manipulate_data_mode_t.manipulate_data_mode_custom_factor. This factor is multiplied with the data of each pixel.
 	 */
 	double manipulate_data_custom_factor;
+	uint32_t ec_legacy_mode;
 };
 
 /**

@@ -175,6 +175,7 @@ const struct camera_settings camera_settings_default =
 	.monitor = settingMonitorDefault,
 	.manipulate_data_mode = settingManipulateDataModeDefault,
 	.manipulate_data_custom_factor = settingManipulateDataCustomFactorDefault,
+	.ec_legacy_mode = settingEcLegacyModeDefault,
 };
 
 struct measurement_settings settings_struct =

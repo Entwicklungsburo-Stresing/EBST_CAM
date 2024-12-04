@@ -79,6 +79,7 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingFilePathPath, ui->plainTextEditFilePath->toPlainText());
 	settings.setValue(settingManipulateDataModePath, ui->comboBoxManipulateDataMode->currentIndex());
 	settings.setValue(settingManipulateDataCustomFactorPath, ui->doubleSpinBoxManipulateDataCustomFactor->value());
+	settings.setValue(settingEcLegacyModePath, ui->checkBoxEcLegacyMode->isChecked());
 	return;
 }
 
@@ -394,6 +395,7 @@ void CameraSettingsWidget::loadDefaults()
 	ui->plainTextEditFilePath->setPlainText(QDir::currentPath());
 	ui->comboBoxManipulateDataMode->setCurrentIndex(settingManipulateDataModeDefault);
 	ui->doubleSpinBoxManipulateDataCustomFactor->setValue(settingManipulateDataCustomFactorDefault);
+	ui->checkBoxEcLegacyMode->setChecked(settingEcLegacyModeDefault);
 	return;
 }
 
@@ -569,6 +571,7 @@ void CameraSettingsWidget::initializeWidget()
 	ui->plainTextEditFilePath->setPlainText(settings.value(settingFilePathPath, QDir::currentPath()).toString());
 	ui->comboBoxManipulateDataMode->setCurrentIndex(settings.value(settingManipulateDataModePath, settingManipulateDataModeDefault).toDouble());
 	ui->doubleSpinBoxManipulateDataCustomFactor->setValue(settings.value(settingManipulateDataCustomFactorPath, settingManipulateDataCustomFactorDefault).toDouble());
+	ui->checkBoxEcLegacyMode->setChecked(settings.value(settingEcLegacyModePath, settingEcLegacyModeDefault).toBool());
 	return;
 }
 

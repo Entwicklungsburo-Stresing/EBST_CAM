@@ -87,6 +87,7 @@ constexpr auto settingWriteDataToDiscPath = "writeDataToDisc";
 constexpr auto settingFilePathPath = "filePath";
 constexpr auto settingManipulateDataModePath = "manipulateDataMode";
 constexpr auto settingManipulateDataCustomFactorPath = "manipulateDataCustomFactor";
+constexpr auto settingEcLegacyModePath = "ecLegacyMode";
 // DAC
 constexpr auto settingDacCameraChannel1Path = "dacCameraChannel1Pos";
 constexpr auto settingDacCameraChannel2Path = "dacCameraChannel2Pos";
