@@ -2240,6 +2240,12 @@
          </item>
          <item row="8" column="1">
           <widget class="QLabel" name="labelEcLegacyMode">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Legacy mode for old 3030 cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;EC legacy mode&lt;/span&gt; is a special mode for operating older high speed cameras, camera system 3030. The following camera versions need to be run in legacy mode:&lt;/p&gt;&lt;p&gt;209.12 and older&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;ec_legacy_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>EC legacy mode</string>
            </property>
@@ -2247,6 +2253,12 @@
          </item>
          <item row="8" column="2">
           <widget class="QCheckBox" name="checkBoxEcLegacyMode">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Legacy mode for old 3030 cameras&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;EC legacy mode&lt;/span&gt; is a special mode for operating older high speed cameras, camera system 3030. The following camera versions need to be run in legacy mode:&lt;/p&gt;&lt;p&gt;209.12 and older&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;ec_legacy_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>on</string>
            </property>

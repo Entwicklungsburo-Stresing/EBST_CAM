@@ -367,6 +367,13 @@ struct camera_settings
 	 * manipulate_data_custom_factor is used when @ref camera_settings.manipulate_data_mode is set to @ref manipulate_data_mode_t.manipulate_data_mode_custom_factor. This factor is multiplied with the data of each pixel.
 	 */
 	double manipulate_data_custom_factor;
+	/**
+	 * ec_legacy_mode is a special mode for operating older high speed cameras, camera system 3030. The following camera versions need to be run in legacy mode:
+	 *		* 209.12 and older
+	 * 
+	 *		* = 0 off
+	 *		* > 0 ec legacy mode on
+	 */
 	uint32_t ec_legacy_mode;
 };
 
