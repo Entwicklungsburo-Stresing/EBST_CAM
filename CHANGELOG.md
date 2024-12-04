@@ -9,7 +9,6 @@ The hardware version number is the current version at release time.
 ## Unreleased
 ### API Changes
 #### Added
-* Add setting ec_legacy_mode
 #### Changed
 #### Removed
 #### Fixed
@@ -20,6 +19,11 @@ The hardware version number is the current version at release time.
 #### Removed
 #### Fixed
 #### Deprecated
+
+## 4.17.4 - 2024-12-04
+### API Changes
+#### Added
+* Add setting ec_legacy_mode
 
 ## 4.17.4 - 2024-11-28
 ### API Changes
