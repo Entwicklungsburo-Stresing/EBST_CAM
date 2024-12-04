@@ -94,7 +94,6 @@ es_status_codes InitSoftware(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetupDma(drvno);
 	if (status != es_no_error) return status;
-	initPerformanceCounter();
 	return status;
 }
 
@@ -2243,6 +2242,7 @@ es_status_codes InitDriver()
 {
 	ES_LOG("\n*** Init driver ***\n");
 	es_status_codes status = _InitDriver();
+	initPerformanceCounter();
 	ES_LOG("*** Init driver done***\n\n");
 	return status;
 }
