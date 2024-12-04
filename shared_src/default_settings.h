@@ -100,3 +100,4 @@
 #define settingColorSchemeDefault					0
 #define settingManipulateDataModeDefault			manipulate_data_mode_none
 #define settingManipulateDataCustomFactorDefault	1
+#define settingEcLegacyModeDefault					false

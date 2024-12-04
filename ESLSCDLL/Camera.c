@@ -566,6 +566,7 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 /**
  * @brief Sets the sensor reset length register in the camera, which controls the length of the ARG pulse.
  *
+ * The behavior of this function is also controlled by \ref camera_settings.ec_legacy_mode. When this is enabled, the function will the address of cam_adaddr_sensor_reset_length as IFC mode register. The IFC mode register was used to control the length of the ARG pulse in the camera.
  * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param sensor_reset_or_hsir_ec See @ref camera_register_addresses_t.cam_adaddr_sensor_reset_length for more information.
  * @return @ref es_status_codes
@@ -573,7 +574,29 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
 es_status_codes Cam_SetSensorResetOrHsirEc(uint32_t drvno, uint16_t sensor_reset_or_hsir_ec)
 {
 	ES_LOG("Cam_SetSensorResetOrHsirEc(), setting sensor reset length to %"PRIu16" (HSVIS: %"PRIu16" ns, HSIR: %"PRIu16" ns)\n", sensor_reset_or_hsir_ec, sensor_reset_or_hsir_ec * 4, sensor_reset_or_hsir_ec * 160);
-	return Cam_SendData(drvno, maddr_cam, cam_adaddr_sensor_reset_length, sensor_reset_or_hsir_ec);
+	es_status_codes status = es_no_error;
+	// Check if the ec_legacy_mode is enabled
+	if (settings_struct.camera_settings[drvno].ec_legacy_mode)
+	{
+		// Before the introduction of the register cam_adaddr_sensor_reset_length, there was a register at the same address 0x08 in the camera, which was used as IFC mode. Depending on sec_in_10ns the IFC mode needs to be set as follows.
+		ES_LOG("EC legacy mode is enabled, use address of cam_adaddr_sensor_reset_length as IFC mode register\n");
+		// ifc_mode = 0: use external IFC signal
+		// ifc_mode = 1: internal IFC signal with short reset 400ns
+		// ifc_mode = 2: internal IFC signal with long reset 800ns
+		uint16_t ifc_mode = 0;
+		if(settings_struct.camera_settings[drvno].sec_in_10ns == 0)
+			// long internal reset 800ns
+			ifc_mode = 2;
+		else
+			// use the IFC signal for the sensor reset
+			ifc_mode = 0;
+		ES_LOG("Set IFC mode to %"PRIu16"\n", ifc_mode);
+		status = Cam_SendData(drvno, maddr_cam, cam_adaddr_sensor_reset_length, ifc_mode);
+	}
+	else
+		status = Cam_SendData(drvno, maddr_cam, cam_adaddr_sensor_reset_length, sensor_reset_or_hsir_ec);
+
+	return status;
 }
 
 /**
