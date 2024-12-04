@@ -20,7 +20,7 @@ The hardware version number is the current version at release time.
 #### Fixed
 #### Deprecated
 
-## 4.17.4 - 2024-12-28
+## 4.17.4 - 2024-11-28
 ### API Changes
 #### Added
 * Add setting manipulate_data_mode
