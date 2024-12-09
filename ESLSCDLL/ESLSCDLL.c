@@ -1360,7 +1360,7 @@ DllAccess es_status_codes DLLGetBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn1
 }
 
 /**
- * @brief Get the high time duration of XCK from the S0 register XCKLEN.
+ * @brief Get the high time duration of XCK from the S0 register @ref S0Addr_XCKLEN.
  *
  * The signal is measured once per measurement. The fist valid value can be read after the first completed XCK.
  * The value range is:
@@ -1394,7 +1394,7 @@ DllAccess es_status_codes DLLGetXckLength_multipleBoards(uint32_t* xckLengthIn10
 }
 
 /**
- * @brief Get pos edge to pos egde time of XCK time from the S0 register XCKPERIOD.
+ * @brief Get pos edge to pos edge time of XCK time from the S0 register @ref S0Addr_XCK_PERIOD.
  *
  * The signal is measured once per measurement. The fist valid value can be read after the start of the second XCK.
  * The value range is:
@@ -1428,7 +1428,7 @@ DllAccess es_status_codes DLLGetXckPeriod_multipleBoards(uint32_t* xckPeriodIn10
 }
 
 /**
- * @brief Get the high time duration of BON from the S0 register BONLEN.
+ * @brief Get the high time duration of BON from the S0 register @ref S0Addr_BONLEN.
  *
  * The signal is measured once per measurement. The fist valid value can be read after the first completed BON.
  * The value range is:
@@ -1462,7 +1462,7 @@ DllAccess es_status_codes DLLGetBonLength_multipleBoards(uint32_t* bonLengthIn10
 }
 
 /**
- * @brief Get the pos edge to pos edge time of BON from the S0 register BONPERIOD.
+ * @brief Get the pos edge to pos edge time of BON from the S0 register @ref S0Addr_BON_PERIOD.
  *
  * The signal is measured once per measurement. The fist valid value can be read after the start of the second BON.
  * The value range is:
