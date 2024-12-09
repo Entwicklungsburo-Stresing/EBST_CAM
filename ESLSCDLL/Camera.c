@@ -6,7 +6,7 @@
 /**
  * @brief Initialize camera registers.
  *
- * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @return @ref es_status_codes
  */
 es_status_codes Cam_Init(uint32_t drvno)
@@ -79,7 +79,7 @@ es_status_codes Cam_Init(uint32_t drvno)
  *
  * Do this first in the camera initialisation routine.
  *
- * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @return @ref es_status_codes
  */
 es_status_codes Cam_DoSoftReset(uint32_t drvno)
@@ -93,7 +93,7 @@ es_status_codes Cam_DoSoftReset(uint32_t drvno)
  *
  * Do this last in the camera initialisation routine.
  *
- * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @return @ref es_status_codes
  */
 es_status_codes Cam_Initialize(uint32_t drvno)
@@ -281,7 +281,7 @@ es_status_codes Cam3030_ADC_SetGainAllChannels(uint32_t drvno, uint8_t gain)
  * @brief Set gain for ADS5294.
  *
  * @param fkt =0 reset to db=0, fkt=1 set to g1..g8
- * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param g1 channel 1
  * @param g2 channel 2
  * @param g3 channel 3
@@ -567,7 +567,7 @@ es_status_codes Cam3030_ADC_SetSampleMode(uint32_t drvno, uint8_t sample_mode)
  * @brief Sets the sensor reset length register in the camera, which controls the length of the ARG pulse.
  *
  * The behavior of this function is also controlled by \ref camera_settings.ec_legacy_mode. When this is enabled, the function will the address of cam_adaddr_sensor_reset_length as IFC mode register. The IFC mode register was used to control the length of the ARG pulse in the camera.
- * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param sensor_reset_or_hsir_ec See @ref camera_register_addresses_t.cam_adaddr_sensor_reset_length for more information.
  * @return @ref es_status_codes
  */
@@ -602,7 +602,7 @@ es_status_codes Cam_SetSensorResetOrHsirEc(uint32_t drvno, uint16_t sensor_reset
 /**
  * @brief Set temperature level for cooled cameras.
  *
- * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param level level 0..7 / 0=off, 7=min -> see cooling manual
  * @return @ref es_status_codes
  */
@@ -624,7 +624,7 @@ es_status_codes Cam_SetTemp(uint32_t drvno, uint8_t level)
  * - d26 makes load pulse
  * - all written to DB0 in Space0 = Long0
  * - for AD set maddr=01, adaddr address of reg
- * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param maddr master address for specifying device (2 for ADC)
  * @param adaddr register address
  * @param data data
@@ -715,7 +715,7 @@ es_status_codes Cam_SetLedOff(uint32_t drvno, uint8_t LED_OFF)
  *
  * When there are more cameras in line, the cameras are handing their positions one to another.
  *
- * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @return @ref es_status_codes
  */
 es_status_codes Cam_SetPosition(uint32_t drvno)
@@ -728,7 +728,7 @@ es_status_codes Cam_SetPosition(uint32_t drvno)
 /**
  * @brief Set the pixel where IOCtrl starts inserting its data.
  *
- * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param startPixel Position of IOCtrl data in pixel
  * @return @ref es_status_codes
  */
@@ -741,7 +741,7 @@ es_status_codes CamIOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixe
 /**
  * @brief Set paramters of one pulse output of IOCTRL.
  *
- * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param number Number of output: 1 ... 7
  * @param width_in_5ns Set width of pulse in 5ns steps.
  * @param delay_in_5ns Set delay of pulse in 5ns steps.
@@ -793,7 +793,7 @@ es_status_codes CamIOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t wi
 /**
  * @brief Set parameters of all pulses output of IOCTRL.
  *
- * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param width_in_5ns Set width of pulse in 5ns steps. Array with 7 entries.
  * @param delay_in_5ns Set delay of pulse in 5ns steps. Array with 7 entries.
  * @return @ref es_status_codes
@@ -812,7 +812,7 @@ es_status_codes CamIOCtrl_setAllOutputs(uint32_t drvno, uint32_t* width_in_5ns, 
 /**
  * @brief Set period of IOCtrl pulse outputs base frequency T0.
  *
- * @param drvno identifier of PCIe card, 0 ... MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param period_in_10ns Period of T0 in 10ns steps.
  * @return @ref es_status_codes
  */
