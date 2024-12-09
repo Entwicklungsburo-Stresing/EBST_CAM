@@ -10,17 +10,38 @@
 #include <stdint.h>
 #include "enum_settings.h"
 
+/**
+ * @brief Maximum number of PCIe cards.
+ * 
+ * If your mainboard allows you could us up to 5 PCIe cards and measure with all of them simultaneously.
+ */
 #define MAXPCIECARDS 5
+/**
+ * @brief Maximum number of cameras per PCIe card.
+ * 
+ * Multiple cameras can be connected in line and measure simultaneously.
+ */
 #define MAXCAMCNT 8
+/**
+ * @brief Maximum for the setting @ref camera_settings.number_of_regions.
+ * 
+ * The actual maximum is 5, but we use 8 to ensure the correct memory layout.
+ */
 #define MAX_NUMBER_OF_REGIONS 8
+/**
+ * @brief Number of DAC channels in the high speed camera.
+ */
 #define DACCOUNT 8
+/**
+ * @brief Number of output channels in the IOCTRL.
+ */
 #define IOCTRL_OUTPUT_COUNT 8
 
 // All settings are uint32_t to ensure the correct memory layout. This is important for the communication with LabVIEW.
 // Don't change the order or you will have to change it for LabVIEW in InitMeasurement.vi.
 
 /**
- * Individual settings for each PCIe board.
+ * @brief Individual settings for each PCIe board.
  */
 struct camera_settings
 {
@@ -220,7 +241,7 @@ struct camera_settings
 	 */
 	uint32_t lines_binning;
 	/**
-	 * number_of_regions determines in how many regions the sensor gets divided in the FFT mode range of interest. Setting it to 1 would equal the area mode, so the minimum is 2. The size of each region is determined by @ref camera_settings.region_size. Unused regions must be set to 0. Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.
+	 * number_of_regions determines in how many regions the sensor gets divided when @ref camera_settings.fft_mode is set to @ref fft_mode_t.partial_binning. Setting it to 1 would equal the area mode, so the minimum is 2. The size of each region is determined by @ref camera_settings.region_size. Unused regions must be set to 0. Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3.
 	 *		* min: 2
 	 *		* step: 1
 	 *		* max: 5
@@ -378,7 +399,7 @@ struct camera_settings
 };
 
 /**
- * In this struct are settings, that are the same for all PCIe boards.
+ * @brief In this struct are settings, that are the same for all PCIe boards.
  */
 struct measurement_settings
 {
@@ -425,7 +446,9 @@ struct measurement_settings
 };
 
 /**
- * In this struct are settings, that are the same for all PCIe boards. It is the same as @ref measurement_settings but doesn't contain @ref camera_settings. This is for compatibility reasons for Matlab, because structs in Matlab are not able to contain structs.
+ * @brief In this struct are settings, that are the same for all PCIe boards.
+ * 
+ * It is the same as @ref measurement_settings but doesn't contain @ref camera_settings. This is for compatibility reasons for Matlab, because structs in Matlab are not able to contain structs.
  */
 struct measurement_settings_matlab
 {
