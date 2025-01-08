@@ -20,7 +20,7 @@ The hardware version number is the current version at release time.
 #### Fixed
 #### Deprecated
 
-## 4.17.4 - 2024-12-04
+## 4.17.5 - 2024-12-04
 ### API Changes
 #### Added
 * Add setting ec_legacy_mode
