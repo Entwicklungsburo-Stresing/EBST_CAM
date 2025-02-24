@@ -62,7 +62,6 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingLinesPath, ui->spinBoxLines->value());
 	settings.setValue(settingVfreqPath, ui->spinBoxVfreq->value());
 	settings.setValue(settingFftModePath, ui->comboBoxFftMode->currentIndex());
-	settings.setValue(settingLinesBinningPath, ui->spinBoxLinesBinning->value());
 	settings.setValue(settingNumberOfRegionsPath, ui->spinBoxNumberOfRegions->value());
 	settings.setValue(settingRegionSizeEqualPath, ui->checkBoxRegionsEqual->isChecked());
 	settings.setValue(settingRegionSize1Path, ui->spinBoxRegion1->value());
@@ -378,7 +377,6 @@ void CameraSettingsWidget::loadDefaults()
 	ui->spinBoxLines->setValue(settingLinesDefault);
 	ui->spinBoxVfreq->setValue(settingVfreqDefault);
 	ui->comboBoxFftMode->setCurrentIndex(settingFftModeDefault);
-	ui->spinBoxLinesBinning->setValue(settingLinesBinningDefault);
 	ui->spinBoxNumberOfRegions->setValue(settingNumberOfRegionsDefault);
 	ui->checkBoxRegionsEqual->setChecked(settingRegionSizeEqualDefault);
 	ui->spinBoxRegion1->setValue(settingRegionSize1Default);
@@ -426,7 +424,6 @@ void CameraSettingsWidget::on_comboBoxFftMode_currentIndexChanged(int index)
 	switch (index)
 	{
 	case full_binning:
-		ui->spinBoxLinesBinning->setEnabled(enabled);
 		ui->spinBoxNumberOfRegions->setEnabled(enabled);
 		ui->checkBoxRegionsEqual->setEnabled(enabled);
 		ui->comboBoxSti->setEnabled(true);
@@ -436,7 +433,6 @@ void CameraSettingsWidget::on_comboBoxFftMode_currentIndexChanged(int index)
 		}
 		break;
 	case partial_binning:
-		ui->spinBoxLinesBinning->setEnabled(enabled);
 		ui->spinBoxNumberOfRegions->setEnabled(true);
 		ui->checkBoxRegionsEqual->setEnabled(true);
 		ui->comboBoxSti->setEnabled(enabled);
@@ -449,7 +445,6 @@ void CameraSettingsWidget::on_comboBoxFftMode_currentIndexChanged(int index)
 		}
 		break;
 	case area_mode:
-		ui->spinBoxLinesBinning->setEnabled(true);
 		ui->spinBoxNumberOfRegions->setEnabled(enabled);
 		ui->checkBoxRegionsEqual->setEnabled(enabled);
 		ui->comboBoxSti->setEnabled(enabled);
@@ -554,7 +549,6 @@ void CameraSettingsWidget::initializeWidget()
 	ui->spinBoxLines->setValue(settings.value(settingLinesPath, settingLinesDefault).toDouble());
 	ui->spinBoxVfreq->setValue(settings.value(settingVfreqPath, settingVfreqDefault).toDouble());
 	ui->comboBoxFftMode->setCurrentIndex(settings.value(settingFftModePath, settingFftModeDefault).toDouble());
-	ui->spinBoxLinesBinning->setValue(settings.value(settingLinesBinningPath, settingLinesBinningDefault).toDouble());
 	ui->spinBoxNumberOfRegions->setValue(settings.value(settingNumberOfRegionsPath, settingNumberOfRegionsDefault).toDouble());
 	ui->checkBoxRegionsEqual->setChecked(settings.value(settingRegionSizeEqualPath, settingRegionSizeEqualDefault).toBool());
 	ui->spinBoxRegion1->setValue(settings.value(settingRegionSize1Path, settingRegionSize1Default).toDouble());
@@ -581,19 +575,8 @@ void CameraSettingsWidget::on_spinBoxLines_valueChanged(int value)
 	{
 		if (ds)
 		{
-			ds->ui->doubleSpinBoxNos->setValue(value / ui->spinBoxLinesBinning->value());
+			ds->ui->doubleSpinBoxNos->setValue(value);
 		}
 	}
 	on_spinBoxNumberOfRegions_valueChanged(ui->spinBoxNumberOfRegions->value());
-}
-
-void CameraSettingsWidget::on_spinBoxLinesBinning_valueChanged(int value)
-{
-	if (_settings_level == settings_level_guided && ui->comboBoxFftMode->currentIndex() == area_mode)
-	{
-		if (ds)
-		{
-			ds->ui->doubleSpinBoxNos->setValue(ui->spinBoxLines->value() / value);
-		}
-	}
 }
