@@ -97,6 +97,11 @@ MainWindow::MainWindow(QWidget* parent)
 #endif
 	// disable axes menu until first finish of measurement to avoid crash
 	ui->actionAxes->setEnabled(false);
+	// Hide the verify data file action in release mode
+#ifndef _DEBUG
+	ui->actionVerify_data_file->setVisible(false);
+	ui->actionVerify_data_file->setEnabled(false);
+#endif
 }
 
 /**
