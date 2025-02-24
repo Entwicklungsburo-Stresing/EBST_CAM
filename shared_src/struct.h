@@ -378,7 +378,7 @@ struct camera_settings
 	 */
 	uint32_t is_cooled_camera_legacy_mode;
 	/**
-	 * monitor is the output mode for the monitor output of the Camera Control. See enum @ref monitor_t in enum_settings.h for options. Further information about monitor can be found in the manual in chapter 3.3.1.
+	 * monitor is the output mode for the monitor output of the camera. See enum @ref monitor_t in enum_settings.h for options. Further information about monitor can be found in the manual in chapter 3.3.1.
 	 */
 	uint32_t monitor;
 	/**
