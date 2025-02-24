@@ -13,10 +13,12 @@ The hardware version number is the current version at release time.
 #### Removed
 #### Fixed
 #### Deprecated
+* Deprecate lines binning
 ### Other Changes
 #### Added
 #### Changed
 #### Removed
+* Remove area lines binning from settings dialog
 #### Fixed
 #### Deprecated
 
