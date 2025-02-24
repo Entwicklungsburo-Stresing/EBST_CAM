@@ -17,6 +17,7 @@ The hardware version number is the current version at release time.
 ### Other Changes
 #### Added
 #### Changed
+* Hide verify data in release mode
 #### Removed
 * Remove area lines binning from settings dialog
 #### Fixed
