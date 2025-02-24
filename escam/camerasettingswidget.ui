@@ -1659,7 +1659,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt; is the count of vertical lines for FFT sensors. This setting should match your sensor. You can find this information in the manual. &lt;span style=&quot; font-style:italic;&quot;&gt;FFT LINES&lt;/span&gt; is a 12 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1&lt;br/&gt;step: 1&lt;br/&gt;default: 64&lt;br/&gt;max: 4095&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;fft_lines&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about FFT sensors can be found in the manual in chapters 1.4 and 11.3.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>FFT LINES (sensor lines)</string>
+            <string>FFT LINES (VCLKs)</string>
            </property>
           </widget>
          </item>
