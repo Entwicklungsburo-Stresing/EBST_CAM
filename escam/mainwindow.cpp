@@ -150,7 +150,7 @@ void MainWindow::startPressed()
 		library_settings.camera_settings[drvno].fft_lines = settings.value(settingLinesPath, settingLinesDefault).toDouble();
 		library_settings.camera_settings[drvno].vfreq = settings.value(settingVfreqPath, settingVfreqDefault).toDouble();
 		library_settings.camera_settings[drvno].fft_mode = settings.value(settingFftModePath, settingFftModeDefault).toDouble();
-		library_settings.camera_settings[drvno].lines_binning = settings.value(settingLinesBinningPath, settingLinesBinningDefault).toDouble();
+		library_settings.camera_settings[drvno].lines_binning = settingLinesBinningDefault;
 		library_settings.camera_settings[drvno].number_of_regions = settings.value(settingNumberOfRegionsPath, settingNumberOfRegionsDefault).toDouble();
 		library_settings.camera_settings[drvno].s1s2_read_delay_in_10ns = settings.value(settingS1S2ReadDelayIn10nsPath, settingS1S2ReadDelayIn10nsDefault).toDouble();
 		library_settings.camera_settings[drvno].region_size[0] = settings.value(settingRegionSize1Path, settingRegionSize1Default).toDouble();

@@ -233,6 +233,7 @@ struct camera_settings
 	 */
 	uint32_t fft_mode;
 	/**
+	 * DEPRECATED
 	 * lines_binning is the count of lines which are summed up in area mode for FFT sensors. When this is 1, every line is read out separately. When it is 2, every two lines are summed up in the sensor and read out as one line, so the count of samples for a complete readout gets divided by two. The same applies for higher values. lines_binning is a 12 bit unsigned integer. Further information about the area mode can be found in the manual in chapter 4.5.1.2.
 	 *		* min: 1
 	 *		* step: 1
