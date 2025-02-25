@@ -36,8 +36,9 @@ private:
 	uint32_t output_old[8];
 	Ui::DialogDac *ui;
 	QSettings settings;
-	bool autotuneRunning = false;
-	bool allTargetsReached = false, ch1TargetReached = false, ch2TargetReached = false, ch3TargetReached = false, ch4TargetReached = false, ch5TargetReached = false, ch6TargetReached = false, ch7TargetReached = false, ch8TargetReached = false;
+	// Because of the signal slot mechanism of Qt the following boolean can be called from different threads. That is the reason why they are volatile. Otherwise it was observed, that the autotune dialog gets stuck.
+	volatile bool autotuneRunning = false;
+	volatile bool allTargetsReached = false, ch1TargetReached = false, ch2TargetReached = false, ch3TargetReached = false, ch4TargetReached = false, ch5TargetReached = false, ch6TargetReached = false, ch7TargetReached = false, ch8TargetReached = false;
 	void autotunePressed();
 	double calculateMean(uint16_t* camera_data, int start, int end, bool isHsIr);
 	bool autotuneAdjust(uint16_t* camera_data, int start, int end, QSpinBox* spinBox, bool isHsir);
