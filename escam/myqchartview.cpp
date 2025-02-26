@@ -106,9 +106,13 @@ void MyQChartView::setDefaultAxes()
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
 	qreal xmax = 0;
 	qreal ymax = 0;
+	// use numberOfBoards = 1 when mainWindow is not initialized
+	uint32_t numberOfBoardsTmp = 1;
 	// check if mainWindow is initialized
-	if (!mainWindow) return;
-	for (uint32_t drvno = 0; drvno < mainWindow->lsc.numberOfBoards; drvno++)
+	// It seems that mainWindow is not initialized during the constructor of MainWindow. This check prevets a crash.
+	if (mainWindow)
+		numberOfBoardsTmp = mainWindow->lsc.numberOfBoards;
+	for (uint32_t drvno = 0; drvno < numberOfBoardsTmp; drvno++)
 	{
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
