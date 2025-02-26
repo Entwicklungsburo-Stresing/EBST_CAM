@@ -19,11 +19,6 @@ DialogChartSettings::DialogChartSettings(QWidget *parent)
 	ui.spinBoxXmin->setValue(xmin_old);
 	ui.spinBoxYmax->setValue(ymax_old);
 	ui.spinBoxYmin->setValue(ymin_old);
-#if (QT_VERSION < QT_VERSION_CHECK(6, 7, 0))
-	connect(ui.checkBoxMirrorX, &QCheckBox::stateChanged, mainWindow, &MainWindow::loadCameraData);
-#else
-	connect(ui.checkBoxMirrorX, &QCheckBox::checkStateChanged, mainWindow, &MainWindow::loadCameraData);
-#endif
 	ui.checkBoxMirrorX->setChecked(settings.value(settingAxesMirrorXPath, settingAxesMirrorXPathDefault).toBool());
 	ui.checkBoxShowCrosshair->setChecked(settings.value(settingShowCrosshairPath, settingShowCrosshairDefault).toBool());
 }
@@ -101,14 +96,24 @@ void DialogChartSettings::on_rubberband_valueChanged()
 	return;
 }
 
+#if (QT_VERSION < QT_VERSION_CHECK(6, 7, 0))
 void DialogChartSettings::on_checkBoxMirrorX_stateChanged(int state)
+#else
+void DialogChartSettings::on_checkBoxMirrorX_checkStateChanged(Qt::CheckState state)
+#endif
 {
 	(void)state;
 	settings.setValue(settingAxesMirrorXPath, ui.checkBoxMirrorX->isChecked());
+	mainWindow->loadCameraData();
 	return;
 }
 
+
+#if (QT_VERSION < QT_VERSION_CHECK(6, 7, 0))
 void DialogChartSettings::on_checkBoxShowCrosshair_stateChanged(int state)
+#else
+void DialogChartSettings::on_checkBoxShowCrosshair_checkStateChanged(Qt::CheckState state)
+#endif
 {
 	(void)state;
 	settings.setValue(settingShowCrosshairPath, ui.checkBoxShowCrosshair->isChecked());
