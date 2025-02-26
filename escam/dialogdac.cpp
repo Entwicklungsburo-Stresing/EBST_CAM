@@ -244,6 +244,13 @@ void DialogDac::loadSettings()
 
 void DialogDac::on_pushButtonAutotune_pressed()
 {
+	if (mainWindow->lsc.IsRunning())
+	{
+		QErrorMessage* m = new QErrorMessage(this);
+		m->setWindowTitle("Error");
+		m->showMessage("Stop measurement before starting autotune");
+		return;
+	}
 	if (autotuneRunning) {
 		mainWindow->lsc.abortMeasurement();
 		autotuneRunning = false;
