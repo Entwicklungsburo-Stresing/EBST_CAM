@@ -13,15 +13,28 @@ The hardware version number is the current version at release time.
 #### Removed
 #### Fixed
 #### Deprecated
-* Deprecate lines binning
 ### Other Changes
 #### Added
 #### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+
+## 4.17.6 - 2025-02-26
+### API Changes
+#### Deprecated
+* Deprecate setting lines_binning
+### Other Changes
+#### Changed
 * Hide verify data in release mode
+* Update Qt to 6.8.2
+* Small UI changes
 #### Removed
 * Remove area lines binning from settings dialog
 #### Fixed
-#### Deprecated
+* Fix autotune getting stuck sometimes
+* Fix autotune behavior when measurement is running
+* Fix mirror crosshair checkbox behavior
 
 ## 4.17.5 - 2024-12-04
 ### API Changes
