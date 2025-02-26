@@ -29,8 +29,13 @@ private slots:
 	void on_spinBoxXmax_valueChanged(int arg1);
 	void on_spinBoxYmin_valueChanged(int arg1);
 	void on_spinBoxYmax_valueChanged(int arg1);
+#if (QT_VERSION < QT_VERSION_CHECK(6, 7, 0))
 	void on_checkBoxMirrorX_stateChanged(int state);
 	void on_checkBoxShowCrosshair_stateChanged(int state);
+#else
+	void on_checkBoxMirrorX_checkStateChanged(Qt::CheckState state);
+	void on_checkBoxShowCrosshair_checkStateChanged(Qt::CheckState state);
+#endif
 
 private:
 	Ui::DialogChartSettingsClass ui;
