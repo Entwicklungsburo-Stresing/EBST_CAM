@@ -20,8 +20,6 @@ DialogDac::DialogDac(QWidget* parent)
 	connect(ui->spinBoxPcie, qOverload<int>(&QSpinBox::valueChanged), this, &DialogDac::loadSettings);
 	connect(ui->comboBoxLocation, qOverload<int>(&QComboBox::currentIndexChanged), this, &DialogDac::loadSettings);
 	connect(ui->spinBoxCamera, qOverload<int>(&QSpinBox::valueChanged), this, &DialogDac::loadSettings);
-	connect(&mainWindow->lsc, &Lsc::measureStart, this, &DialogDac::on_autotuneStateChanged);
-	connect(&mainWindow->lsc, &Lsc::measureDone, this, &DialogDac::on_autotuneStateChanged);
 	connect(&mainWindow->lsc, &Lsc::measureDone, this, &DialogDac::checkTargetReached);
 	
 	ui->spinBoxPcie->setMaximum(mainWindow->lsc.numberOfBoards - 1);
@@ -258,7 +256,6 @@ void DialogDac::on_pushButtonAutotune_pressed()
 	}
 	else
 	{
-		allTargetsReached = false;
 		ch1TargetReached = false;
 		ch2TargetReached = false;
 		ch3TargetReached = false;
@@ -268,6 +265,7 @@ void DialogDac::on_pushButtonAutotune_pressed()
 		ch7TargetReached = false;
 		ch8TargetReached = false;
 		autotuneRunning = true;
+		on_autotuneStateChanged();
 		autotunePressed();
 	}
 	return;
@@ -291,7 +289,7 @@ void DialogDac::checkTargetReached()
 	QSpinBox* spinBoxArray[8] = { ui->spinBoxChannel1, ui->spinBoxChannel2, ui->spinBoxChannel3, ui->spinBoxChannel4, ui->spinBoxChannel5, ui->spinBoxChannel6, ui->spinBoxChannel7, ui->spinBoxChannel8 };
 	int spinBoxArraySize = (sizeof(spinBoxArray) / sizeof(spinBoxArray[0]));
 
-	if (autotuneRunning && !allTargetsReached)
+	if (autotuneRunning)
 	{
 		//define variables used to return camera_data
 		uint32_t drvno = QString::number(ui->spinBoxPcie->value()).toInt();
@@ -327,7 +325,6 @@ void DialogDac::checkTargetReached()
 			ui->labelAutotuneWarning->setText("Warning: DAC value is high!");
 		else
 			ui->labelAutotuneWarning->setText("");
-
 		//Adjust DAC value
 		switch (sensor_type)
 		{
@@ -359,12 +356,13 @@ void DialogDac::checkTargetReached()
 		// Check if all targets are reached. If not call autotunePressed() again
 		if (ch1TargetReached && ch2TargetReached && ch3TargetReached && ch4TargetReached && ch5TargetReached && ch6TargetReached && ch7TargetReached && ch8TargetReached)
 		{
-			allTargetsReached = true;
 			autotuneRunning = false;
 			on_autotuneStateChanged();
 		}
 		else
+		{
 			autotunePressed();
+		}
 	}
 	return;
 }
