@@ -178,6 +178,7 @@ es_status_codes ResetBlockTriggerDetected(uint32_t drvno);
 es_status_codes WaitForBlockOn(uint32_t drvno);
 es_status_codes SetShiftS1S2ToNextScan(uint32_t drvno);
 void manipulateData(uint32_t drvno, uint16_t* startAddress, uint32_t numberOfScansToManipulate);
+void clearKeyStates();
 #ifdef WIN32
 es_status_codes ExportMeasurementHDF5(const char* path, char* filename);
 hid_t CreateNumericAttribute(hid_t parent_object_id, char* attr_name, hid_t goal_type, hid_t dataspace, void* data);

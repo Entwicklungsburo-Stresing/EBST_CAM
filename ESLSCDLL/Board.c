@@ -1733,6 +1733,8 @@ es_status_codes StartMeasurement()
 		isRunning = true;
 	abortMeasurementFlag = false;
 	es_status_codes status = es_no_error;
+	// Clear old events of ESC and SPACE to make sure that only buttons pressed during the measurement are counted.
+	clearKeyStates();
 #ifndef MINIMAL_BUILD
 	setTimestamp();
 #endif
@@ -5298,4 +5300,11 @@ void manipulateData(uint32_t drvno, uint16_t* startAddress, uint32_t numberOfSca
 				startAddress[pixel] = (uint16_t)newValue;
 		}
 	}
+}
+
+void clearKeyStates()
+{
+	checkEscapeKeyState();
+	checkSpaceKeyState();
+	return;
 }
