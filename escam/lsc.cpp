@@ -23,8 +23,6 @@ es_status_codes Lsc::initDriver()
  */
 es_status_codes Lsc::initPcieBoard()
 {
-	DLLSetMeasureStartHook(emitMeasureStartSignal);
-	DLLSetMeasureDoneHook(emitMeasureDoneSignal);
 	DLLSetBlockStartHook(emitBlockStartSignal);
 	DLLSetBlockDoneHook(emitBlockDoneSignal);
 	DLLSetAllBlocksDoneHook(emitAllBlocksDoneSignal);
@@ -53,7 +51,10 @@ es_status_codes Lsc::initMeasurement(struct measurement_settings settings)
  */
 es_status_codes Lsc::startMeasurement()
 {
-	return DLLStartMeasurement_blocking();
+	emit measureStart();
+	es_status_codes status = DLLStartMeasurement_blocking();
+	emit measureDone();
+	return status;
 }
 
 /**
