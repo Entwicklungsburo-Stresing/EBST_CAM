@@ -18,6 +18,9 @@ The hardware version number is the current version at release time.
 #### Changed
 #### Removed
 #### Fixed
+* Fix axes scale at startup for camera system 3030
+* Fix aborting autotune
+* Fix autotune exiting behavior
 #### Deprecated
 
 ## 4.17.6 - 2025-02-26
