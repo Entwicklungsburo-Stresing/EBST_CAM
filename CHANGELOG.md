@@ -15,15 +15,22 @@ The hardware version number is the current version at release time.
 #### Deprecated
 ### Other Changes
 #### Added
-* Add warning when data manipulation is enabled
 #### Changed
 #### Removed
+#### Fixed
+#### Deprecated
+
+## 4.17.7 - 2025-02-27
+### API Changes
+* none
+### Other Changes
+#### Added
+* Add warning when data manipulation is enabled
 #### Fixed
 * Fix axes scale at startup for camera system 3030
 * Fix aborting autotune
 * Fix autotune exiting behavior
 * Fix esc and space button handling
-#### Deprecated
 
 ## 4.17.6 - 2025-02-26
 ### API Changes
