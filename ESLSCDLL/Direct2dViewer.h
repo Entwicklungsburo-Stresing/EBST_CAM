@@ -19,7 +19,7 @@
 #endif
 
 #ifndef _WIN32_WINNT        // Allow use of features specific to Windows 7 or later.
-#define _WIN32_WINNT 0x0700 // Change this to the appropriate value to target other versions of Windows.
+#define _WIN32_WINNT 0x0A00 // Change this to the appropriate value to target other versions of Windows.
 #endif
 
 #ifndef UNICODE
@@ -28,9 +28,8 @@
 
 #define WIN32_LEAN_AND_MEAN     // Exclude rarely-used stuff from Windows headers
 // Windows Header Files:
-#include <windows.h>
+#include <Windows.h>
 #include <Windowsx.h>
-
 // C RunTime Header Files
 #include <stdlib.h>
 
