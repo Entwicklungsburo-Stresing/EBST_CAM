@@ -467,6 +467,7 @@ void MainWindow::loadSettings()
 	QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 	bool coolingOn = false;
 	bool isOvertempCam = false;
+	bool showManipulateDataWarning = false;
 	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
 	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 	{
@@ -481,10 +482,16 @@ void MainWindow::loadSettings()
 			int cameraSystem = settings.value(settingCameraSystemPath, settingCameraSystemDefault).toDouble();
 			if (cameraSystem == camera_system_3030) isOvertempCam = true;
 			coolingOn |= coolingOnBoard;
+			if (settings.value(settingManipulateDataModePath, settingManipulateDataModeDefault).toDouble() != manipulate_data_mode_none)
+				showManipulateDataWarning = true;
 			settings.endGroup();
 			lsc.setTorOut(drvno, tor);
 		}
 	}
+	if (showManipulateDataWarning)
+		statusBar()->showMessage("Data manipulation is enabled.");
+	else
+		statusBar()->clearMessage();
 	if (isOvertempCam) 
 	{
 		ui->widgetOvertempParent->setVisible(true);
