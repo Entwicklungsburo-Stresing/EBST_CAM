@@ -23,6 +23,7 @@ es_status_codes Lsc::initDriver()
  */
 es_status_codes Lsc::initPcieBoard()
 {
+	// The signals mesaureStart and measureDone are emitted in Lsc::startMeasurement, which is a more dependable way of doing it.
 	DLLSetBlockStartHook(emitBlockStartSignal);
 	DLLSetBlockDoneHook(emitBlockDoneSignal);
 	DLLSetAllBlocksDoneHook(emitAllBlocksDoneSignal);
@@ -51,6 +52,8 @@ es_status_codes Lsc::initMeasurement(struct measurement_settings settings)
  */
 es_status_codes Lsc::startMeasurement()
 {
+	// Emitting measureStart and measureDone here is a more dependable way of emitting these signals than using the hooks.
+	// Using the hooks, the autotune function missed the measureDone signal in rare cases.
 	emit measureStart();
 	es_status_codes status = DLLStartMeasurement_blocking();
 	emit measureDone();
