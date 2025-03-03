@@ -2,6 +2,9 @@
 #include "../shared_src/default_settings.h"
 
 uint32_t tmp_virtualCamcnt[MAXPCIECARDS] = { 1, 1, 1, 1, 1 };
+/**
+ * virtualCamcnt is either equal to the setting @ref camera_settings.camcnt or 1 if this setting is 0.
+ */
 uint32_t* virtualCamcnt = tmp_virtualCamcnt;
 uint16_t* temp_userBuffer[MAXPCIECARDS] = { NULL, NULL, NULL, NULL, NULL };
 uint16_t** userBuffer= temp_userBuffer;
