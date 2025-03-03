@@ -477,6 +477,10 @@ struct measurement_settings_matlab
 
 struct file_header
 {
+	uint32_t software_version_major;
+	uint32_t software_version_pcie;
+	uint32_t software_version_minor;
+	uint32_t number_of_boards;
 	uint32_t drvno;
 	uint32_t pixel;
 	uint32_t nos;
@@ -484,8 +488,6 @@ struct file_header
 	uint32_t camcnt;
 	uint64_t measurement_cnt;
 	char timestamp[file_timestamp_size];
-	char filename_full[file_filename_full_size];
-	uint32_t split_mode;
 };
 
 struct special_pixels

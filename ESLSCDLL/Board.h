@@ -46,6 +46,7 @@ es_status_codes GetOneSamplePointer(uint32_t drvno, uint32_t sample, uint32_t bl
 es_status_codes GetOneBlockPointer(uint32_t drvno, uint32_t block, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
 es_status_codes GetAllDataPointer(uint32_t drvno, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
 es_status_codes GetPixelPointer(uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
+es_status_codes SaveMeasurementDataToFile(const char* path, char* filename);
 // 7) Before exiting your software, use this call for cleanup.
 es_status_codes ExitDriver();
 
@@ -180,11 +181,11 @@ es_status_codes SetShiftS1S2ToNextScan(uint32_t drvno);
 void manipulateData(uint32_t drvno, uint16_t* startAddress, uint32_t numberOfScansToManipulate);
 void clearKeyStates();
 #ifdef WIN32
-es_status_codes ExportMeasurementHDF5(const char* path, char* filename);
+es_status_codes SaveMeasurementDataToFileHDF5(const char* path, char* filename);
 hid_t CreateNumericAttribute(hid_t parent_object_id, char* attr_name, hid_t goal_type, hid_t dataspace, void* data);
 hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t dataspace, void* data);
-es_status_codes CheckFirstMeasurementDone(uint32_t drvno);
 #endif
+es_status_codes CheckFirstMeasurementDone(uint32_t drvno);
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);

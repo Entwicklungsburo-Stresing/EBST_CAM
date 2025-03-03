@@ -4309,6 +4309,10 @@ void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString
 	if (vd->error_cnt) len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "Data inconsistent, check counters below\n\n");
 	else len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "Data found as expected\n\n");
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "Data found in file header:\n");
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "software_version_major:\t%"PRIu32"\n", vd->fh.software_version_major);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "software_version_pcie:\t%"PRIu32"\n", vd->fh.software_version_pcie);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "software_version_minor:\t%"PRIu32"\n", vd->fh.software_version_minor);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "number_of_boards:\t%"PRIu32"\n", vd->fh.number_of_boards);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "drvno:\t%"PRIu32"\n", vd->fh.drvno);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "pixel:\t%"PRIu32"\n", vd->fh.pixel);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "nos:\t%"PRIu32"\n", vd->fh.nos);
@@ -4316,8 +4320,6 @@ void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "camcnt:\t%"PRIu32"\n", vd->fh.camcnt);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "measurement cnt:\t%"PRIu64"\n", vd->fh.measurement_cnt);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "timestamp:\t%s\n", vd->fh.timestamp);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "filename_full:\t%s\n", vd->fh.filename_full);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "split mode:\t%"PRIu32"\n\n", vd->fh.split_mode);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "Data found:\n");
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "samples found:\t%"PRIu32"\n", vd->sample_cnt);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "blocks found:\t%"PRIu32"\n", vd->block_cnt);
@@ -4787,6 +4789,27 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
 	return writeRegisterS0_32(drvno, settings_struct.camera_settings[drvno].s1s2_read_delay_in_10ns, S0Addr_S1S2ReadDelay);
 }
 
+/**
+ * \brief Export the measurement data to a file.
+ * 
+ * Depending on the file extension, the data is saved in a binary or HDF5 file.
+ * 
+ * \param path Path to save the file.
+ * \param filename Filename with either .bin or .h5 extension.
+ * \return @ref es_status_codes
+ */
+es_status_codes SaveMeasurementDataToFile(const char* path, char* filename)
+{
+	// Check filename for filetype
+	char* extension = strrchr(filename, '.');
+	if (extension == NULL) return es_invalid_file_extention;
+#ifdef WIN32
+	else if (strcmp(extension, ".h5") == 0) return SaveMeasurementDataToFileHDF5(path, filename);
+#endif
+	else if (strcmp(extension, ".bin") == 0) return SaveMeasurementDataToFileBIN(path, filename);
+	else return es_invalid_file_extention;
+}
+
 #ifdef WIN32
 
 /**
@@ -4796,7 +4819,7 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
  * @param filename Chosen filename.
  * @return @ref es_status_codes
  */
-es_status_codes ExportMeasurementHDF5(const char* path, char* filename)
+es_status_codes SaveMeasurementDataToFileHDF5(const char* path, char* filename)
 {
 	ES_LOG("Export measurement to HDF5 file\n");
 	hid_t file_id, file_attr_name, file_attr_timestamp, file_attr_number_of_boards;
@@ -5017,6 +5040,7 @@ hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t datas
 	H5Awrite(object_id, attr_type, data);
 	return object_id;
 }
+#endif
 
 es_status_codes CheckFirstMeasurementDone(uint32_t drvno)
 {
@@ -5045,7 +5069,6 @@ es_status_codes CheckFirstMeasurementDone(uint32_t drvno)
 
 	return es_no_error;
 }
-#endif
 
 /**
  * @brief Get the high time duration of XCK from the S0 register @ref S0Addr_XCKLEN.

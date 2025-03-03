@@ -3,6 +3,7 @@
 #include "../Board.h"
 #include <process.h>
 #include <io.h>
+#include "../../version.h"
 
 #define LSCPCIEJ_STRESING_DRIVER_NAME "lscpciej"
 
@@ -797,6 +798,80 @@ int64_t getCurrentInterruptCounter(uint32_t drvno)
 		return IsrCounter[drvno];
 }
 
+/**
+ * \brief Export the measurement data to a binary file.
+ *
+ * \param path Path to save the file.
+ * \param filename Filename.
+ * \return @ref es_status_codes
+ */
+es_status_codes SaveMeasurementDataToFileBIN(const char* path, char* filename)
+{
+	ES_LOG("Export measurement to bin file\n");
+	// Get length of path and filename
+	size_t path_length = strlen(path);
+	size_t filename_length = strlen(filename);
+	//  + 1 for the 0 termination + 1 when / is missing
+	size_t filename_full_size = path_length + filename_length + 2;
+	// Allocate memory for the full path and filename
+	char* filename_full = (char*)malloc(filename_full_size);
+	// Check if memory allocation was successful
+	if (!filename_full)
+	{
+		ES_LOG("Memory allocation failed\n");
+		return es_allocating_memory_failed;
+	}
+	// Set all bytes to 0
+	memset(filename_full, 0, filename_full_size);
+	// Copy path to filename_full
+	strcpy_s(filename_full, filename_full_size, path);
+	// Check if the path is terminated with /
+	char last_char = path[path_length - 1];
+	if (last_char != '/' && last_char != '\\')
+	{
+		// Append / to filename_full
+		filename_full[path_length] = '/';
+		// Terminate the string with 0
+		filename_full[path_length + 1] = 0;
+	}
+	// Concatenate filename to filename_full
+	strcat_s(filename_full, filename_full_size, filename);
+	FILE* file = NULL;
+	fopen_s(&file, filename_full, "wb");
+	free(filename_full);
+	if (!file)
+	{
+		ES_LOG("File could not be opened\n");
+		return es_create_file_failed;
+	}
+	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
+	{
+		ES_LOG("Writing header drvno %"PRIu32"\n", drvno);
+		// Assemble the file_header
+		struct file_header fh;
+		fh.software_version_major = VERSION_MAJOR_ESCAM;
+		fh.software_version_pcie = VERSION_PCIE_BOARD_VERSION;
+		fh.software_version_minor = VERSION_MINOR_ESCAM;
+		fh.number_of_boards = number_of_boards;
+		fh.drvno = drvno;
+		fh.pixel = settings_struct.camera_settings[drvno].pixel;
+		fh.nos = settings_struct.nos;
+		fh.nob = settings_struct.nob;
+		fh.camcnt = virtualCamcnt[drvno];
+		fh.measurement_cnt = measurement_cnt;
+		memset(fh.timestamp, 0, file_timestamp_size);
+		strcpy_s(fh.timestamp, file_timestamp_size, start_timestamp);
+		// Write struct file_header to the file.
+		fwrite(&fh, 1, sizeof(struct file_header), file);
+		// Write data to the file.
+		ES_LOG("Writing measurement data drvno %"PRIu32"\n", drvno);
+		fwrite(userBuffer[drvno], sizeof(uint16_t), (uint64_t)settings_struct.nos * (uint64_t)settings_struct.nob * (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel, file);
+	}
+	ES_LOG("Close file\n");
+	fclose(file);
+	return;
+}
+
 #ifndef MINIMAL_BUILD
 
 void openFile(uint32_t drvno)
@@ -860,6 +935,10 @@ void writeFileHeaderToFile(uint32_t drvno, char* filename_full)
 	ES_LOG("Writing file header\n");
 	// Assemble the file_header
 	struct file_header fh;
+	fh.software_version_major = VERSION_MAJOR_ESCAM;
+	fh.software_version_pcie = VERSION_PCIE_BOARD_VERSION;
+	fh.software_version_minor = VERSION_MINOR_ESCAM;
+	fh.number_of_boards = number_of_boards;
 	fh.drvno = drvno;
 	fh.pixel = settings_struct.camera_settings[drvno].pixel;
 	fh.nos = settings_struct.nos;
@@ -868,9 +947,6 @@ void writeFileHeaderToFile(uint32_t drvno, char* filename_full)
 	fh.measurement_cnt = measurement_cnt;
 	memset(fh.timestamp, 0, file_timestamp_size);
 	strcpy_s(fh.timestamp, file_timestamp_size, start_timestamp);
-	memset(fh.filename_full, 0, file_filename_full_size);
-	strcpy_s(fh.filename_full, file_filename_full_size, filename_full);
-	fh.split_mode = 0;
 	if (file_stream[drvno])
 	{
 		// Write struct file_header to the file.

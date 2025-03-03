@@ -2046,19 +2046,15 @@ DllAccess uint16_t DLLGetGammaBlack()
 #endif
 }
 
-/**
- * @copydoc ExportMeasurementHDF5
- */
-DllAccess es_status_codes DLLExportMeasurementHDF5(const char* path, char* filename)
-{
-#ifdef WIN32
-	return ExportMeasurementHDF5(path, filename);
-#else
-	return es_no_error;
 #endif
-}
 
-#endif
+/**
+ * @copydoc SaveMeasurementDataToFile
+ */
+DllAccess es_status_codes DLLSaveMeasurementDataToFile(const char* path, char* filename)
+{
+	return SaveMeasurementDataToFile(path, filename);
+}
 
 /**
 * @copydoc GetScanTriggerDetected

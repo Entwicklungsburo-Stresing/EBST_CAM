@@ -287,7 +287,7 @@ void MainWindow::on_actionVerify_data_file_triggered()
  */
 void MainWindow::on_actionExport_data_triggered()
 {
-	QString path = QFileDialog::getSaveFileName(this, "Export data", "measurement.h5", tr("HDF5 files(*.h5)"), nullptr, QFileDialog::ShowDirsOnly);
+	QString path = QFileDialog::getSaveFileName(this, "Export data", "measurement.h5", "HDF5 files(*.h5);; binary files (*.bin)", nullptr, QFileDialog::ShowDirsOnly);
 	if (path.isEmpty()) return;
 	QFileInfo fi(path);
 	QString filename = fi.fileName();
@@ -296,7 +296,7 @@ void MainWindow::on_actionExport_data_triggered()
 	const char* pathString = ba.data();
 	QByteArray ba2 = filename.toLatin1();
 	char* filenameString = ba2.data();
-	es_status_codes status = mainWindow->lsc.exportMeasurementHDF5(pathString, filenameString);
+	es_status_codes status = mainWindow->lsc.SaveMeasurementDataToFile(pathString, filenameString);
 
 	QDialog* messageBox = new QDialog(this);
 	messageBox->setAttribute(Qt::WA_DeleteOnClose);

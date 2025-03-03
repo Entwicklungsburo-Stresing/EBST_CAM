@@ -10,11 +10,13 @@ The hardware version number is the current version at release time.
 ### API Changes
 #### Added
 #### Changed
+* Rename DLLExportMeasurementHDF5 to DLLSaveMeasurementDataToFile
 #### Removed
 #### Fixed
 #### Deprecated
 ### Other Changes
 #### Added
+* Add possibility to export data in binary
 #### Changed
 #### Removed
 #### Fixed
