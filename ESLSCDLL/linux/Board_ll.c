@@ -319,8 +319,8 @@ void* CopyDataToUserBuffer(void* param_drvno)
 		}
 	}
 	ES_TRACE("Unlock mutex %u\n", drvno);
-	pthread_mutex_unlock(&mutex[drvno]);
-	ES_TRACE("Unlocked mutex %u with %u\n", drvno, errno);
+	int errno = pthread_mutex_unlock(&mutex[drvno]);
+	ES_TRACE("Unlocked mutex %u with %i\n", drvno, errno);
 	ES_LOG("All copy to user buffer interrupts done, drvno %u\n", drvno);
 	free(drvno_ptr);
 	return NULL;
