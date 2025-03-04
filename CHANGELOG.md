@@ -9,6 +9,7 @@ The hardware version number is the current version at release time.
 ## Unreleased
 ### API Changes
 #### Added
+* Add DLLImportMeasurementDataFromFile
 #### Changed
 * Rename DLLExportMeasurementHDF5 to DLLSaveMeasurementDataToFile
 #### Removed
@@ -17,7 +18,10 @@ The hardware version number is the current version at release time.
 ### Other Changes
 #### Added
 * Add possibility to export data in binary
+* Add import data for binary files
 #### Changed
+* Change default of setting crosshair to false
+* Allow exporting dummy data when camera not found
 #### Removed
 #### Fixed
 #### Deprecated
