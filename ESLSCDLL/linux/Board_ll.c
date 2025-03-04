@@ -235,7 +235,7 @@ void ResetBufferWritePos(uint32_t drvno)
 
 void copyRestData(uint32_t drvno, size_t rest_in_bytes)
 {
-	struct dev_descr *dev = lscpcie_get_descriptor(drvno - 1);
+	struct dev_descr *dev = lscpcie_get_descriptor(drvno);
 	memcpy(userBufferWritePos[drvno], dev->mapped_buffer + dev->control->read_pos, rest_in_bytes);
 	manipulateData(drvno, userBufferWritePos[drvno], rest_in_bytes / (sizeof(uint16_t) * settings_struct.camera_settings[drvno].pixel ));
 	return;
