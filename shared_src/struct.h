@@ -481,6 +481,7 @@ struct file_header
 	uint32_t software_version_pcie;
 	uint32_t software_version_minor;
 	uint32_t number_of_boards;
+	uint32_t board_sel;
 	uint32_t drvno;
 	uint32_t pixel;
 	uint32_t nos;

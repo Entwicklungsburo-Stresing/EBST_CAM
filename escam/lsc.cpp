@@ -506,6 +506,12 @@ es_status_codes Lsc::SaveMeasurementDataToFile(const char* path, char* filename)
 	return DLLSaveMeasurementDataToFile(path, filename);
 }
 
+es_status_codes Lsc::importMeasurementDataFromFile(const char* fileName)
+{
+	return DLLImportMeasurementDataFromFile(fileName);
+}
+
+
 es_status_codes Lsc::waitForMeasureDone()
 {
 	return DLLWaitForMeasureDone();

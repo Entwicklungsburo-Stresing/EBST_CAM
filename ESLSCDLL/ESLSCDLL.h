@@ -78,6 +78,7 @@ DllAccess es_status_codes DLLSaveMeasurementDataToFile(const char* path, char* f
 DllAccess es_status_codes DLLExitDriver();
 
 //************ Mid level API
+DllAccess es_status_codes DLLImportMeasurementDataFromFile(const char* filename);
 //************ system info & control
 DllAccess void DLLFreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free);
 DllAccess int DLLGetProcessCount();

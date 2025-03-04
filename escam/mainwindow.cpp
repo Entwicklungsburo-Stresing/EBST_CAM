@@ -325,6 +325,48 @@ void MainWindow::on_actionExport_data_triggered()
 }
 
 /**
+ * @brief This slot imports measurement data from a HDF5 file or a binary file.
+ * @return none
+ */
+void MainWindow::on_actionImport_data_triggered()
+{
+	QString fileName = QFileDialog::getOpenFileName(this, "Import data", "", "HDF5 files(*.h5);; binary files (*.bin);;all files (*)");
+	if (fileName.isEmpty()) return;
+	QByteArray fileName_byteArray = fileName.toLocal8Bit();
+	const char* fileName_char = fileName_byteArray.data();
+	es_status_codes status = mainWindow->lsc.importMeasurementDataFromFile(fileName_char);
+	QDialog* messageBox = new QDialog(this);
+	messageBox->setAttribute(Qt::WA_DeleteOnClose);
+	QVBoxLayout* layout = new QVBoxLayout(messageBox);
+	messageBox->setLayout(layout);
+	QLabel* labelExport = new QLabel(messageBox);
+	labelExport->setTextInteractionFlags(Qt::TextSelectableByMouse);
+	labelExport->setTextFormat(Qt::RichText);
+	labelExport->setAlignment(Qt::AlignTop);
+	QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, messageBox);
+	connect(dialogButtonBox, &QDialogButtonBox::accepted, messageBox, &QDialog::accept);
+	layout->addWidget(labelExport);
+	layout->addWidget(dialogButtonBox);
+	messageBox->setWindowTitle("Import data");
+	if (status != es_no_error)
+	{
+		QString errorMsg = QString::fromStdString("Error importing data:\n");
+		errorMsg.append(QString::fromStdString(ConvertErrorCodeToMsg(status)));
+		labelExport->setText(errorMsg);
+		messageBox->show();
+		return;
+	}
+	labelExport->setText(QString::fromStdString("Data imported successfully."));
+	messageBox->show();
+	emit lsc.measureStart();
+	emit lsc.blockStart();
+	emit lsc.blockDone();
+	emit lsc.allBlocksDone();
+	emit lsc.measureDone();
+	return;
+}
+
+/**
  * @brief This slot opens the RMS dialog.
  * @return none
  */

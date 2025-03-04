@@ -416,7 +416,7 @@ void VerifyData(struct verify_data_parameter* vd)
 	return;
 }
 
-void getFileHeaderFromFile(struct file_header* fh, char* filename_full)
+void getFileHeaderFromFile(struct file_header* fh, const char* filename_full)
 {
 	//TODO
 	return;
