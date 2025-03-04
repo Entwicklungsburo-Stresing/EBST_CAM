@@ -1,6 +1,6 @@
 /*****************************************************************//**
  * @file   mainwindow.h
- * @brief  Main window class of Escam.
+ * @brief  Main window class header of Escam.
  * 
  * @author Florian Hahn
  * @date   28.01.2021
