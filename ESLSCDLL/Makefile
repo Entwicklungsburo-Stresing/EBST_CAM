@@ -1,5 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -shared -fPIC  -g
+LDFLAGS = -L/usr/lib/x86_64-linux-gnu/hdf5/serial
 OBJECTS   = es_status_codes.o \
 			Board.o \
 			UIAbstractionLayer.o \
@@ -9,10 +10,10 @@ OBJECTS   = es_status_codes.o \
 			ESLSCDLL.o \
 			Camera.o
 TARGET    = libESLSCDLL.so
-LIBS      = -lpthread -lm
+LIBS      = -lpthread -lm -lhdf5
 
 libESLSCDLL.so: $(OBJECTS)  
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS)
 	chmod -x $(TARGET)
 
 ESLSCDLL.o: ESLSCDLL.c
