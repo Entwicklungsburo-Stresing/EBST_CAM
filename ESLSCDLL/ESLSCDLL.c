@@ -2057,6 +2057,14 @@ DllAccess es_status_codes DLLSaveMeasurementDataToFile(const char* path, char* f
 }
 
 /**
+ * @copydoc ImportMeasurementDataFromFile
+ */
+DllAccess es_status_codes DLLImportMeasurementDataFromFile(const char* filename)
+{
+	return ImportMeasurementDataFromFile(filename);
+}
+
+/**
 * @copydoc GetScanTriggerDetected
 */
 DllAccess es_status_codes DLLGetScanTriggerDetected(uint32_t drvno, uint8_t* detected)

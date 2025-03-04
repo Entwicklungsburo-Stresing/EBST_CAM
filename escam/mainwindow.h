@@ -70,6 +70,7 @@ private slots:
 	void adjustLiveView();
 	void on_actionVerify_data_file_triggered();
 	void on_actionExport_data_triggered();
+	void on_actionImport_data_triggered();
 	void on_actionspecial_pixels_triggered();
 	void on_actionGreyscaleSettings_triggered();
 	void on_checkBoxLoopMeasurement_stateChanged(int state);

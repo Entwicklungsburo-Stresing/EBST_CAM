@@ -45,6 +45,7 @@ typedef enum
 	es_measurement_running = 29,
 	es_invalid_pointer = 30,
 	es_invalid_file_extention = 31,
+	es_open_file_failed = 32,
 } es_status_codes;
 
 char* ConvertErrorCodeToMsg(es_status_codes status);

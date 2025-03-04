@@ -4817,6 +4817,36 @@ es_status_codes SaveMeasurementDataToFile(const char* path, char* filename)
 	else return es_invalid_file_extention;
 }
 
+es_status_codes ImportMeasurementDataFromFile(const char* filename)
+{
+	if (isRunning) return es_measurement_running;
+	// Check filename for filetype
+	char* extension = strrchr(filename, '.');
+	if (extension == NULL) return es_invalid_file_extention;
+#ifdef WIN32
+	//else if (strcmp(extension, ".h5") == 0) return ImportMeasurementDataFromFileHDF5(filename);
+#endif
+	else if (strcmp(extension, ".bin") == 0) return ImportMeasurementDataFromFileBIN(filename);
+	else return es_invalid_file_extention;
+}
+
+es_status_codes ImportMeasurementDataFromFileBIN(const char* filename)
+{
+	struct file_header fh;
+	getFileHeaderFromFile(&fh, filename);
+	// Apply settings from header
+	settings_struct.board_sel = fh.board_sel;
+	settings_struct.nos = fh.nos;
+	settings_struct.nob = fh.nob;
+	uint32_t drvno = fh.drvno;
+	settings_struct.camera_settings[drvno].camcnt = fh.camcnt;
+	settings_struct.camera_settings[drvno].pixel = fh.pixel;
+	es_status_codes status = InitSoftware(drvno);
+	if (status != es_no_error) return status;
+	status = CopyFromFileToUserBufferBIN(filename);
+	return es_no_error;
+}
+
 #ifdef WIN32
 
 /**
