@@ -48,7 +48,6 @@ extern volatile bool continuousMeasurementFlag;
 extern struct measurement_settings settings_struct;
 extern const struct camera_settings camera_settings_default;
 extern bool isRunning;
-extern bool wasRunning;
 extern int64_t* scanCounterTotal;
 extern uint64_t measurement_cnt;
 extern char start_timestamp[file_timestamp_size];
