@@ -68,6 +68,68 @@ sudo apt install libqt5charts
 
 There is a top level `Makefile` to build everything. Just type `make`.
 
+#### Debugging
+example launch.json for vscode:
+```
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Debug escam",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/escam/build/escam", // Replace with the path to your executable
+			"args": [], // Add any arguments your program needs
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"environment": [
+				{
+					"name": "LD_LIBRARY_PATH",
+					"value": "${workspaceFolder}/ESLSCDLL/:${env:LD_LIBRARY_PATH}"
+				}
+			],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": [
+				{
+					"description": "Enable pretty-printing for gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				}
+			],
+			"preLaunchTask": "build", // Ensure you have a corresponding task in tasks.json
+			"miDebuggerPath": "/usr/bin/gdb", // Path to gdb
+			"logging": {
+				"engineLogging": true
+			},
+			"launchCompleteCommand": "exec-run",
+			"internalConsoleOptions": "openOnSessionStart"
+		}
+	]
+}
+```
+example tasks.json vor vscode:
+```
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "make",
+			"args": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": ["$gcc"],
+			"detail": "Task to build the project using make."
+		}
+	]
+}
+```
+
+
 #### Compile Escam
 Two possibilities:
 1. Open escam.pro with [Qt Creator](https://www.qt.io/product/development-tools) and press build.
