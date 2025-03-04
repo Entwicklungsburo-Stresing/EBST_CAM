@@ -889,7 +889,7 @@ void openFile(uint32_t drvno)
 	char filename_full[file_filename_full_size];
 	memset(filename_full, 0, file_filename_full_size);
 	// Create filenames
-	sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%"PRIu32".dat", settings_struct.camera_settings[drvno].file_path, start_timestamp, drvno);
+	sprintf_s(filename_full, file_filename_full_size, "%s%s_board-%"PRIu32".bin", settings_struct.camera_settings[drvno].file_path, start_timestamp, drvno);
 	// Check if the file exists
 	if (_access_s(filename_full, 0) != 0)
 	{

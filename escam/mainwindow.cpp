@@ -254,7 +254,7 @@ void MainWindow::on_actionEdit_triggered()
  */
 void MainWindow::on_actionVerify_data_file_triggered()
 {
-	QString fileName = QFileDialog::getOpenFileName(this, "Verify data", nullptr, tr("data files (*.dat);;all files (*)"));
+	QString fileName = QFileDialog::getOpenFileName(this, "Verify data", nullptr, "binary files (*.bin);;all files (*)");
 	if (fileName.isEmpty()) return;
 	struct verify_data_parameter vd;
 #ifdef WIN32
