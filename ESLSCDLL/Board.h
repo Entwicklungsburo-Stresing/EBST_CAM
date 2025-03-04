@@ -18,6 +18,8 @@ extern "C" {
 #include "Board_ll.h"
 #ifdef WIN32
 #include "hdf5.h"
+#else
+#include <hdf5/serial/hdf5.h>
 #endif
 #include "Camera.h"
 
@@ -182,11 +184,9 @@ es_status_codes WaitForBlockOn(uint32_t drvno);
 es_status_codes SetShiftS1S2ToNextScan(uint32_t drvno);
 void manipulateData(uint32_t drvno, uint16_t* startAddress, uint32_t numberOfScansToManipulate);
 void clearKeyStates();
-#ifdef WIN32
 es_status_codes SaveMeasurementDataToFileHDF5(const char* path, char* filename);
 hid_t CreateNumericAttribute(hid_t parent_object_id, char* attr_name, hid_t goal_type, hid_t dataspace, void* data);
 hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t dataspace, void* data);
-#endif
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);
