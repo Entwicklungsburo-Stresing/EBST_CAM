@@ -95,7 +95,7 @@
 #define settingShiftS1S2ToNextScanDefault			false
 #define settingIsCooledCameraLegacyModeDefault		false
 #define settingAxesMirrorXPathDefault				false
-#define settingShowCrosshairDefault					true
+#define settingShowCrosshairDefault					false
 #define settingChannelSelectDefault					channel_select_A_B
 #define settingColorSchemeDefault					0
 #define settingManipulateDataModeDefault			manipulate_data_mode_none
