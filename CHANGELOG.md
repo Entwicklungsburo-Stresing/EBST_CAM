@@ -19,6 +19,7 @@ The hardware version number is the current version at release time.
 #### Added
 * Add possibility to export data in binary
 * Add import data for binary files
+* Implement HDF5 export on Linux
 #### Changed
 * Change default of setting crosshair to false
 * Allow exporting dummy data when camera not found
