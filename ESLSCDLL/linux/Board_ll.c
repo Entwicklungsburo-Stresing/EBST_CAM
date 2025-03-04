@@ -490,3 +490,8 @@ es_status_codes SaveMeasurementDataToFileBIN(const char* path, char* filename)
 {
 	return es_no_error;
 }
+
+es_status_codes CopyFromFileToUserBufferBIN(const char* filename)
+{
+	return es_no_error;
+}
