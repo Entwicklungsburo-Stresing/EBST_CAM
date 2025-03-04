@@ -4821,9 +4821,7 @@ es_status_codes ImportMeasurementDataFromFile(const char* filename)
 	// Check filename for filetype
 	char* extension = strrchr(filename, '.');
 	if (extension == NULL) return es_invalid_file_extention;
-#ifdef WIN32
 	//else if (strcmp(extension, ".h5") == 0) return ImportMeasurementDataFromFileHDF5(filename);
-#endif
 	else if (strcmp(extension, ".bin") == 0) return ImportMeasurementDataFromFileBIN(filename);
 	else return es_invalid_file_extention;
 }
