@@ -1,21 +1,10 @@
-/*
-This file is part of ESLSCDLL.
-
-ESLSCDLL is free software : you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-ESLSCDLL is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Foobar.If not, see < http://www.gnu.org/licenses/>.
-
-Copyright 2020 Entwicklungsbuero G. Stresing (http://www.stresing.de/)
-*/
+/*****************************************************************//**
+ * @file   mainwindow.h
+ * @brief  Main window class of Escam.
+ *
+ * @author Florian Hahn
+ * @date   28.01.2021
+ *********************************************************************/
 
 #include "mainwindow.h"
 #include "../version.h"
