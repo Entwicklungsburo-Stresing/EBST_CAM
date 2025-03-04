@@ -185,7 +185,6 @@ es_status_codes SaveMeasurementDataToFileHDF5(const char* path, char* filename);
 hid_t CreateNumericAttribute(hid_t parent_object_id, char* attr_name, hid_t goal_type, hid_t dataspace, void* data);
 hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t dataspace, void* data);
 #endif
-es_status_codes CheckFirstMeasurementDone(uint32_t drvno);
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);

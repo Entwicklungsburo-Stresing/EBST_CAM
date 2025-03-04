@@ -1966,7 +1966,6 @@ es_status_codes StartMeasurement()
 		}
 	}
 	ES_LOG("*** Measurement done ***\n\n");
-	wasRunning = true;
 	return ReturnStartMeasurement(status);
 }
 
@@ -4800,6 +4799,13 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
  */
 es_status_codes SaveMeasurementDataToFile(const char* path, char* filename)
 {
+	if (isRunning) return es_measurement_running;
+	// Check if memory is initialized yet
+	for (uint32_t drvno = 0; drvno < MAXPCIECARDS; drvno++)
+	{
+		if (settings_struct.board_sel >> drvno & 1 && !userBuffer[drvno])
+			return es_memory_not_initialized;
+	}
 	// Check filename for filetype
 	char* extension = strrchr(filename, '.');
 	if (extension == NULL) return es_invalid_file_extention;
@@ -4826,17 +4832,6 @@ es_status_codes SaveMeasurementDataToFileHDF5(const char* path, char* filename)
 	hid_t dataspace_scalar = H5Screate(H5S_SCALAR);
 	herr_t statusHDF5;
 	es_status_codes status;
-	uint32_t board_sel = settings_struct.board_sel;
-
-	if (isRunning) return es_measurement_running;
-	for (uint32_t drvno = 0; drvno < MAXPCIECARDS; drvno++)
-	{
-		if (board_sel >> drvno & 1)
-		{
-			if ((status = CheckFirstMeasurementDone(drvno)) != es_no_error) return status;
-		}
-	}
-	if (!wasRunning && !testModeOn) return es_first_measurement_not_done;
 
 	char filepath[FILENAME_MAX];
 	sprintf_s(filepath, FILENAME_MAX, "%s\\%s", path, filename);
@@ -4856,7 +4851,7 @@ es_status_codes SaveMeasurementDataToFileHDF5(const char* path, char* filename)
 
 	for (uint32_t drvno = 0; drvno < MAXPCIECARDS; drvno++)
 	{
-		if ((board_sel >> drvno) & 1)
+		if ((settings_struct.board_sel >> drvno) & 1)
 		{
 			hid_t group_board_id = 0,
 				group_board_attr_number_of_cameras = 0;
@@ -5041,34 +5036,6 @@ hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t datas
 	return object_id;
 }
 #endif
-
-es_status_codes CheckFirstMeasurementDone(uint32_t drvno)
-{
-	if (testModeOn && userBuffer[drvno])
-		return es_no_error;
-	else if (testModeOn && !userBuffer[drvno])
-		return es_first_measurement_not_done;
-	uint32_t dataNOS = 0, dataScanIndex = 0, dataNOB = 0, dataBlockIndex = 0, bitmask = ScanIndex_bits;
-	es_status_codes status = readRegisterS0_32(drvno, &dataNOS, S0Addr_NOS);
-	if (status != es_no_error) return status;
-	status = readRegisterS0_32(drvno, &dataScanIndex, S0Addr_ScanIndex);
-	if (status != es_no_error) return status;
-	if ((dataNOS != (dataScanIndex & bitmask)) || dataNOS == 0 || dataScanIndex == 0)
-	{
-		return es_first_measurement_not_done;
-	}
-
-	status = readRegisterS0_32(drvno, &dataNOB, S0Addr_NOB);
-	if (status != es_no_error) return status;
-	status = readRegisterS0_32(drvno, &dataBlockIndex, S0Addr_BLOCKINDEX);
-	if (status != es_no_error) return status;
-	if ((dataNOB != (dataBlockIndex & bitmask)) || dataNOB == 0 || dataBlockIndex == 0)
-	{
-		return es_first_measurement_not_done;
-	}
-
-	return es_no_error;
-}
 
 /**
  * @brief Get the high time duration of XCK from the S0 register @ref S0Addr_XCKLEN.
