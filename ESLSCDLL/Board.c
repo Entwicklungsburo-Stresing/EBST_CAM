@@ -11,6 +11,7 @@
 #include <string.h>
 #endif
 #include "../shared_src/default_settings.h"
+#include "../version.h"
 
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)  \
@@ -4828,7 +4829,7 @@ es_status_codes SaveMeasurementDataToFile(const char* path, char* filename)
 es_status_codes SaveMeasurementDataToFileHDF5(const char* path, char* filename)
 {
 	ES_LOG("Export measurement to HDF5 file\n");
-	hid_t file_id, file_attr_name, file_attr_timestamp, file_attr_number_of_boards;
+	hid_t file_id;
 	hid_t dataspace_scalar = H5Screate(H5S_SCALAR);
 	herr_t statusHDF5;
 	es_status_codes status;
@@ -4837,15 +4838,25 @@ es_status_codes SaveMeasurementDataToFileHDF5(const char* path, char* filename)
 	sprintf_s(filepath, FILENAME_MAX, "%s\\%s", path, filename);
 	if ((file_id = H5Fcreate(filepath, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT)) == H5I_INVALID_HID) return es_create_file_failed;
 
+	uint32_t major_version = VERSION_MAJOR_ESCAM;
+	hid_t file_attr_version_major = CreateNumericAttribute(file_id, "Major version", H5T_NATIVE_UINT32, dataspace_scalar, &major_version);
+	H5Aclose(file_attr_version_major);
+	uint32_t pcie_version = VERSION_PCIE_BOARD_VERSION;
+	hid_t file_attr_version_pcie = CreateNumericAttribute(file_id, "Pcie version", H5T_NATIVE_UINT32, dataspace_scalar, &pcie_version);
+	H5Aclose(file_attr_version_pcie);
+	uint32_t minor_version = VERSION_MINOR_ESCAM;
+	hid_t file_attr_version_minor = CreateNumericAttribute(file_id, "Minor version", H5T_NATIVE_UINT32, dataspace_scalar, &minor_version);
+	H5Aclose(file_attr_version_minor);
+
 	char* filenameAttr[1] = { filename };
-	file_attr_name = CreateStringAttribute(file_id, "File Name", dataspace_scalar, filenameAttr);
+	hid_t file_attr_name = CreateStringAttribute(file_id, "File Name", dataspace_scalar, filenameAttr);
 	H5Aclose(file_attr_name);
 
-	file_attr_number_of_boards = CreateNumericAttribute(file_id, "Number of Boards", H5T_NATIVE_UINT8, dataspace_scalar, &number_of_boards);
+	hid_t file_attr_number_of_boards = CreateNumericAttribute(file_id, "Number of Boards", H5T_NATIVE_UINT8, dataspace_scalar, &number_of_boards);
 	H5Aclose(file_attr_number_of_boards);
 
 	char* timestamp[1] = { start_timestamp };
-	file_attr_timestamp = CreateStringAttribute(file_id, "Timestamp", dataspace_scalar, timestamp);
+	hid_t file_attr_timestamp = CreateStringAttribute(file_id, "Timestamp", dataspace_scalar, timestamp);
 	H5Aclose(file_attr_timestamp);
 
 
