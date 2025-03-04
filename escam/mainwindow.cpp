@@ -330,7 +330,7 @@ void MainWindow::on_actionExport_data_triggered()
  */
 void MainWindow::on_actionImport_data_triggered()
 {
-	QString fileName = QFileDialog::getOpenFileName(this, "Import data", "", "HDF5 files(*.h5);; binary files (*.bin);;all files (*)");
+	QString fileName = QFileDialog::getOpenFileName(this, "Import data", "", "HDF5 files(*.h5);; binary files (*.bin)");
 	if (fileName.isEmpty()) return;
 	QByteArray fileName_byteArray = fileName.toLocal8Bit();
 	const char* fileName_char = fileName_byteArray.data();
