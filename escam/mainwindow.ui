@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>672</width>
+    <width>675</width>
     <height>580</height>
    </rect>
   </property>
@@ -1143,7 +1143,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>672</width>
+     <width>675</width>
      <height>21</height>
     </rect>
    </property>
@@ -1153,6 +1153,7 @@
     </property>
     <addaction name="actionVerify_data_file"/>
     <addaction name="actionExport_data"/>
+    <addaction name="actionImport_data"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
@@ -1366,6 +1367,11 @@
   <action name="actionChartSettings">
    <property name="text">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionImport_data">
+   <property name="text">
+    <string>Import data</string>
    </property>
   </action>
  </widget>

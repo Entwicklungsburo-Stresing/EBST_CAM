@@ -853,6 +853,7 @@ es_status_codes SaveMeasurementDataToFileBIN(const char* path, char* filename)
 		fh.software_version_pcie = VERSION_PCIE_BOARD_VERSION;
 		fh.software_version_minor = VERSION_MINOR_ESCAM;
 		fh.number_of_boards = number_of_boards;
+		fh.board_sel = settings_struct.board_sel;
 		fh.drvno = drvno;
 		fh.pixel = settings_struct.camera_settings[drvno].pixel;
 		fh.nos = settings_struct.nos;
@@ -869,7 +870,29 @@ es_status_codes SaveMeasurementDataToFileBIN(const char* path, char* filename)
 	}
 	ES_LOG("Close file\n");
 	fclose(file);
-	return;
+	return es_no_error;
+}
+
+es_status_codes CopyFromFileToUserBufferBIN(const char* filename)
+{
+	ES_LOG("Copy from file to user buffer\n");
+	FILE* file = NULL;
+	fopen_s(&file, filename, "rb");
+	if (!file)
+	{
+		ES_LOG("File could not be opened\n");
+		return es_open_file_failed;
+	}
+	// Read struct file_header from the file.
+	struct file_header fh;
+	fread(&fh, 1, sizeof(struct file_header), file);
+	uint32_t drvno = fh.drvno;
+	// Read data from the file.
+	ES_LOG("Reading measurement data drvno %"PRIu32"\n", drvno);
+	fread(userBuffer[drvno], sizeof(uint16_t), (uint64_t)settings_struct.nos * (uint64_t)settings_struct.nob * (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.camera_settings[drvno].pixel, file);
+	ES_LOG("Close file\n");
+	fclose(file);
+	return es_no_error;
 }
 
 #ifndef MINIMAL_BUILD
@@ -896,7 +919,7 @@ void openFile(uint32_t drvno)
 		ES_LOG("File doesn't exist. Creating file.\n");
 		// Create file and write the file header to it.
 		fopen_s(&file_stream[drvno], filename_full, "abc");
-		writeFileHeaderToFile(drvno, filename_full);
+		writeFileHeaderToFile(drvno);
 		if (ghMutex[drvno])
 			CloseHandle(ghMutex[drvno]);
 		ghMutex[drvno] = CreateMutex(NULL, FALSE, NULL);
@@ -930,7 +953,7 @@ void setTimestamp()
  * @param drvno PCIe board identifier.
  * @param filename_full Path and file name to the file where the header is written.
  */
-void writeFileHeaderToFile(uint32_t drvno, char* filename_full)
+void writeFileHeaderToFile(uint32_t drvno)
 {
 	ES_LOG("Writing file header\n");
 	// Assemble the file_header
@@ -939,6 +962,7 @@ void writeFileHeaderToFile(uint32_t drvno, char* filename_full)
 	fh.software_version_pcie = VERSION_PCIE_BOARD_VERSION;
 	fh.software_version_minor = VERSION_MINOR_ESCAM;
 	fh.number_of_boards = number_of_boards;
+	fh.board_sel = settings_struct.board_sel;
 	fh.drvno = drvno;
 	fh.pixel = settings_struct.camera_settings[drvno].pixel;
 	fh.nos = settings_struct.nos;
@@ -1096,7 +1120,7 @@ void VerifyData(struct verify_data_parameter* vd)
  * @param fh struct file_header*
  * @param filename_full Path and file name to the file.
  */
-void getFileHeaderFromFile(struct file_header* fh, char* filename_full)
+void getFileHeaderFromFile(struct file_header* fh, const char* filename_full)
 {
 	FILE* stream;
 	// Open file in read binary mode

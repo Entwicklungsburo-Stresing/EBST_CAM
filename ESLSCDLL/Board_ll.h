@@ -67,15 +67,16 @@ uint32_t getDmaBufferSizeInBytes(uint32_t drvno);
 int64_t getCurrentInterruptCounter(uint32_t drvno);
 uint8_t WaitforTelapsed(int64_t microseconds);
 es_status_codes SaveMeasurementDataToFileBIN(const char* path, char* filename);
+es_status_codes CopyFromFileToUserBufferBIN(const char* filename);
 #ifndef MINIMAL_BUILD
 void openFile(uint32_t drvno);
 void closeFile(uint32_t drvno);
 void setTimestamp();
-void writeFileHeaderToFile(uint32_t drvno, char* filename_full);
+void writeFileHeaderToFile(uint32_t drvno);
 void writeToDisc(uint32_t* drvno_ptr);
 void startWriteToDiscThead(uint32_t drvno);
 void VerifyData(struct verify_data_parameter* vd);
-void getFileHeaderFromFile(struct file_header* fh, char* filename_full);
+void getFileHeaderFromFile(struct file_header* fh, const char* filename_full);
 // direct 2d viewer
 void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos);
 void ShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos);

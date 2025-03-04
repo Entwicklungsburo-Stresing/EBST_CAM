@@ -54,6 +54,8 @@ es_status_codes ExitDriver();
 // Mid level API
 // platform independent implementation
 // hardware abstraction
+es_status_codes ImportMeasurementDataFromFile(const char* filename);
+es_status_codes ImportMeasurementDataFromFileBIN(const char* filename);
 es_status_codes setBlockEn( uint32_t drvno );
 es_status_codes resetBlockEn( uint32_t drvno );
 es_status_codes setMeasureOn( uint32_t drvno );

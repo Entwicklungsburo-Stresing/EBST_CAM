@@ -1,6 +1,6 @@
 #include "es_status_codes.h"
 
-#define NUMBER_OF_ERROR_CODES 32
+#define NUMBER_OF_ERROR_CODES 33
 #define BUFFER_SIZE 50
 
 char errorMsg[NUMBER_OF_ERROR_CODES][BUFFER_SIZE] =
@@ -36,7 +36,8 @@ char errorMsg[NUMBER_OF_ERROR_CODES][BUFFER_SIZE] =
 	"First measurement not done",
 	"Measurement is running",
 	"Invalid pointer",
-	"Invalid file extension"
+	"Invalid file extension",
+	"Opening file failed"
 };
 
 /**
