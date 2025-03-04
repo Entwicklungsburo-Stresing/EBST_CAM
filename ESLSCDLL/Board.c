@@ -4810,9 +4810,7 @@ es_status_codes SaveMeasurementDataToFile(const char* path, char* filename)
 	// Check filename for filetype
 	char* extension = strrchr(filename, '.');
 	if (extension == NULL) return es_invalid_file_extention;
-#ifdef WIN32
 	else if (strcmp(extension, ".h5") == 0) return SaveMeasurementDataToFileHDF5(path, filename);
-#endif
 	else if (strcmp(extension, ".bin") == 0) return SaveMeasurementDataToFileBIN(path, filename);
 	else return es_invalid_file_extention;
 }
@@ -4846,9 +4844,6 @@ es_status_codes ImportMeasurementDataFromFileBIN(const char* filename)
 	status = CopyFromFileToUserBufferBIN(filename);
 	return es_no_error;
 }
-
-#ifdef WIN32
-
 /**
  * @brief Exports the measurement data to a HDF5 file.
  *
@@ -4865,7 +4860,11 @@ es_status_codes SaveMeasurementDataToFileHDF5(const char* path, char* filename)
 	es_status_codes status;
 
 	char filepath[FILENAME_MAX];
+#ifdef WIN32
 	sprintf_s(filepath, FILENAME_MAX, "%s\\%s", path, filename);
+#else
+	sprintf(filepath, "%s/%s", path, filename);
+#endif
 	if ((file_id = H5Fcreate(filepath, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT)) == H5I_INVALID_HID) return es_create_file_failed;
 
 	uint32_t major_version = VERSION_MAJOR_ESCAM;
@@ -5041,7 +5040,7 @@ es_status_codes SaveMeasurementDataToFileHDF5(const char* path, char* filename)
 					{
 						char link_name[100];
 						H5Lget_name_by_idx(group_block_id, ".", H5_INDEX_CRT_ORDER, H5_ITER_INC, i, link_name, 100, H5P_DEFAULT);
-						ES_LOG("Link name: %s\n", link_name);
+						//ES_LOG("Link name: %s\n", link_name);
 					}
 
 					statusHDF5 = H5Gclose(group_block_id);
@@ -5053,10 +5052,12 @@ es_status_codes SaveMeasurementDataToFileHDF5(const char* path, char* filename)
 	}
 	// Close the file.
 	statusHDF5 = H5Fclose(file_id);
+	// supress warning
+	statusHDF5 = statusHDF5;
 	return es_no_error;
 }
 
-hid_t CreateNumericAttribute(hid_t parent_object_id, char* attr_name, hid_t goal_type, hid_t dataspace, const void* data)
+hid_t CreateNumericAttribute(hid_t parent_object_id, char* attr_name, hid_t goal_type, hid_t dataspace, void* data)
 {
 	hid_t attr_type = H5Tcopy(goal_type);
 
@@ -5076,7 +5077,6 @@ hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t datas
 	H5Awrite(object_id, attr_type, data);
 	return object_id;
 }
-#endif
 
 /**
  * @brief Get the high time duration of XCK from the S0 register @ref S0Addr_XCKLEN.

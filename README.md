@@ -54,8 +54,9 @@ If `MSVCP140.dll` and `VCRUNTIME140.dll` are missing, Microsoft Visual C++ Redis
 * C++ compiler g++
 * libqt5charts5-dev
 * Linux Kernel 5.4 - 6.8
+* HDF5
 ```
-sudo apt install qt5-default qt5-qmake g++ libqt5charts5-dev make
+sudo apt install qt5-default qt5-qmake g++ libqt5charts5-dev make libhdf5-dev
 ```
 
 ### Run Dependencies
