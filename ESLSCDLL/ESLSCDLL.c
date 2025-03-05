@@ -2033,7 +2033,6 @@ DllAccess uint16_t DLLGetGammaBlack()
 #endif
 }
 
-#endif
 
 /**
  * @copydoc SaveMeasurementDataToFile
@@ -2050,6 +2049,8 @@ DllAccess es_status_codes DLLImportMeasurementDataFromFile(const char* filename)
 {
 	return ImportMeasurementDataFromFile(filename);
 }
+
+#endif
 
 /**
 * @copydoc GetScanTriggerDetected
