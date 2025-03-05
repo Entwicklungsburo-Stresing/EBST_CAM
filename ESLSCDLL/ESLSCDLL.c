@@ -2038,9 +2038,9 @@ DllAccess uint16_t DLLGetGammaBlack()
 /**
  * @copydoc SaveMeasurementDataToFile
  */
-DllAccess es_status_codes DLLSaveMeasurementDataToFile(const char* path, char* filename)
+DllAccess es_status_codes DLLSaveMeasurementDataToFile(const char* filename)
 {
-	return SaveMeasurementDataToFile(path, filename);
+	return SaveMeasurementDataToFile(filename);
 }
 
 /**
