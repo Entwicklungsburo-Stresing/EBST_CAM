@@ -4790,6 +4790,8 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
 	return writeRegisterS0_32(drvno, settings_struct.camera_settings[drvno].s1s2_read_delay_in_10ns, S0Addr_S1S2ReadDelay);
 }
 
+#ifndef MINIMAL_BUILD
+
 /**
  * \brief Export the measurement data to a file.
  * 
@@ -5062,6 +5064,8 @@ hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t datas
 	H5Awrite(object_id, attr_type, data);
 	return object_id;
 }
+
+#endif
 
 /**
  * @brief Get the high time duration of XCK from the S0 register @ref S0Addr_XCKLEN.
