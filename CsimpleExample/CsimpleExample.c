@@ -60,14 +60,6 @@ int main()
 		return status;
 	}
 	printf("Initialising driver done, found %"PRIu8" boards\n", _number_of_boards);
-	printf("Initialising board...\n");
-	status = DLLInitBoard();
-	if (status != es_no_error)
-	{
-		printf("Initialising board failed, error: %d, %s\n", status, DLLConvertErrorCodeToMsg(status));
-		return status;
-	}
-	printf("Initialising Board done\n");
 
 	DLLSetAllBlocksDoneHook(allBlocksDoneCallback);
 	DLLSetBlockDoneHook(blockDoneCallback);
@@ -102,16 +94,8 @@ int main()
 	settings.camera_settings[0].dac_output[0][7] = 55000;
 	settings.camera_settings[0].dma_buffer_size_in_scans = 1000;
 	settings.camera_settings[0].use_software_polling = 1;
-	printf("Setting global settings...\n");
-	status = DLLSetGlobalSettings(settings);
-	if (status != es_no_error)
-	{
-		printf("Setting global settings failed, error: %d, %s\n", status, DLLConvertErrorCodeToMsg(status));
-		return status;
-	}
-	printf("Setting global settings done\n");
 	printf("Initialising measurement...\n");
-	status = DLLInitMeasurement();
+	status = DLLInitMeasurement(settings);
 	if (status != es_no_error)
 	{
 		printf("Initialising measurement failed, error: %d, %s\n", status, DLLConvertErrorCodeToMsg(status));

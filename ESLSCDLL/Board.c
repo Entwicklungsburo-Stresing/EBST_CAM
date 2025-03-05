@@ -2212,7 +2212,7 @@ es_status_codes GetLastBufPart(uint32_t drvno)
 /**
  * @brief Initializes the PCIe board.
  *
- * Call this after InitDriver and before InitMeasurement. It is only needed to be called once.
+ * Is called by InitDriver. It is only needed to be called once.
  * @return @ref es_status_codes
  */
 es_status_codes InitBoard()
@@ -2246,6 +2246,7 @@ es_status_codes InitDriver()
 	es_status_codes status = _InitDriver();
 	initPerformanceCounter();
 	ES_LOG("*** Init driver done***\n\n");
+	InitBoard();
 	return status;
 }
 

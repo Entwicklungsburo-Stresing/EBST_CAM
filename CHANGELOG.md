@@ -7,12 +7,18 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 The hardware version number is the current version at release time.
 
 ## Unreleased
+This release reduces the number of needed library calls for a simple operation of the cameras.
 ### API Changes
 #### Added
-* Add DLLImportMeasurementDataFromFile
+* Add function DLLImportMeasurementDataFromFile
+* Add function DLLInitMeasurement_matlab
 #### Changed
-* Rename DLLExportMeasurementHDF5 to DLLSaveMeasurementDataToFile
+* Rename function DLLExportMeasurementHDF5 to DLLSaveMeasurementDataToFile
+* Change parameters of DLLInitMeasurement: add struct measurement_settings
 #### Removed
+* Remove function DLLInitBoard
+* Remove function DLLSetGlobalSettings
+* Remove function DLLSetGlobalSettings_matlab
 #### Fixed
 #### Deprecated
 ### Other Changes

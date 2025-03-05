@@ -51,12 +51,6 @@ MainWindow::MainWindow(QWidget* parent)
 	es_status_codes status = lsc.initDriver();
 	if (status != es_no_error)
 		showStatusCodeDialog(status);
-	if (!lsc.getTestModeOn())
-	{
-		status = lsc.initPcieBoard();
-		if (status != es_no_error)
-			showStatusCodeDialog(status);
-	}
 	// Check if there are settings saved on this system
 	if (!settings.contains(settingBoardSelPath))
 	{
