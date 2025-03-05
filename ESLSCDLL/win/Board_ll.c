@@ -798,6 +798,8 @@ int64_t getCurrentInterruptCounter(uint32_t drvno)
 		return IsrCounter[drvno];
 }
 
+#ifndef MINIMAL_BUILD
+
 /**
  * \brief Export the measurement data to a binary file.
  *
@@ -864,8 +866,6 @@ es_status_codes CopyFromFileToUserBufferBIN(const char* filename)
 	fclose(file);
 	return es_no_error;
 }
-
-#ifndef MINIMAL_BUILD
 
 void openFile(uint32_t drvno)
 {

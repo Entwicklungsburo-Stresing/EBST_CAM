@@ -46,7 +46,9 @@ es_status_codes GetOneSamplePointer(uint32_t drvno, uint32_t sample, uint32_t bl
 es_status_codes GetOneBlockPointer(uint32_t drvno, uint32_t block, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
 es_status_codes GetAllDataPointer(uint32_t drvno, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
 es_status_codes GetPixelPointer(uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
+#ifndef MINIMAL_BUILD
 es_status_codes SaveMeasurementDataToFile(const char* filename);
+#endif
 // 7) Before exiting your software, use this call for cleanup.
 es_status_codes ExitDriver();
 
@@ -55,8 +57,10 @@ es_status_codes ExitDriver();
 // platform independent implementation
 // hardware abstraction
 es_status_codes InitBoard();
+#ifndef MINIMAL_BUILD
 es_status_codes ImportMeasurementDataFromFile(const char* filename);
 es_status_codes ImportMeasurementDataFromFileBIN(const char* filename);
+#endif
 es_status_codes setBlockEn( uint32_t drvno );
 es_status_codes resetBlockEn( uint32_t drvno );
 es_status_codes setMeasureOn( uint32_t drvno );
