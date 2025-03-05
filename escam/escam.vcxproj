@@ -104,7 +104,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;$(ProjectDir)..\Jungo\wdapi1400.lib;$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDLL.lib;shell32.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\openssl\lib;C:\Utils\my_sql\mysql-5.7.25-winx64\lib;C:\Utils\postgresql\pgsql\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -178,7 +178,7 @@ del $(ProjectDir).qmake.stash
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;$(ProjectDir)..\Jungo\wdapi1400.lib;$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDLL.lib;shell32.lib;dwrite.lib;d2d1.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\openssl\lib;C:\Utils\my_sql\mysql-5.7.25-winx64\lib;C:\Utils\postgresql\pgsql\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
