@@ -893,7 +893,11 @@ enum special_pixels_enum_t
 	 * Special pixel for fpga ver number.
 	 */
 	pixel_fpga_ver = 11,
-	pixel_first_sensor_pixel = 12
+	pixel_first_sensor_pixel = 12,
+	/**
+	 * Number of special pixels. 12 in the beginning and 2 at the end of one scan.
+	 */
+	pixel_number_of_special_pixels = 14,
 };
 
 /**

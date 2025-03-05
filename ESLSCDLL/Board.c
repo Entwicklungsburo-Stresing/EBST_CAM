@@ -4951,17 +4951,17 @@ es_status_codes SaveMeasurementDataToFileHDF5(const char* filename)
 					for (uint32_t sample = 0; sample < nos; sample++)
 					{
 						// Define the size of the array and create the data space for fixed size dataset.
+						uint32_t number_of_sensor_pixels = settings_struct.camera_settings[drvno].pixel - pixel_number_of_special_pixels;
 						hsize_t dims[1];
-						dims[0] = (int)settings_struct.camera_settings[drvno].pixel;
+						dims[0] = number_of_sensor_pixels;
 						hid_t dataspace_id = H5Screate_simple(1, dims, NULL);
 
 						char datasetName[100];
 						sprintf_s(datasetName, 100, "Sample_%"PRIu32, sample + 1);
 						hid_t dataset_id = H5Dcreate2(group_block_id, datasetName, H5T_NATIVE_UINT16, dataspace_id, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-						const uint32_t pixel = settings_struct.camera_settings[drvno].pixel;
-						uint16_t* data = (uint16_t*)malloc(pixel * sizeof(uint16_t));
 
-						status = CopyOneSample(drvno, sample, block, (uint16_t)camera, data);
+						uint16_t* data = (uint16_t*)malloc(number_of_sensor_pixels * sizeof(uint16_t));
+						status = CopyDataArbitrary(drvno, sample, block, (uint16_t)camera, pixel_first_sensor_pixel, number_of_sensor_pixels, data);
 						if (status != es_no_error) return status;
 						statusHDF5 = H5Dwrite(dataset_id, H5T_NATIVE_UINT16, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
 
