@@ -4795,11 +4795,10 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
  * 
  * Depending on the file extension, the data is saved in a binary or HDF5 file.
  * 
- * \param path Path to save the file.
- * \param filename Filename with either .bin or .h5 extension.
+ * \param filename Filename with complete absolute path and either .bin or .h5 extension.
  * \return @ref es_status_codes
  */
-es_status_codes SaveMeasurementDataToFile(const char* path, char* filename)
+es_status_codes SaveMeasurementDataToFile(const char* filename)
 {
 	if (isRunning) return es_measurement_running;
 	// Check if memory is initialized yet
@@ -4811,8 +4810,8 @@ es_status_codes SaveMeasurementDataToFile(const char* path, char* filename)
 	// Check filename for filetype
 	char* extension = strrchr(filename, '.');
 	if (extension == NULL) return es_invalid_file_extention;
-	else if (strcmp(extension, ".h5") == 0) return SaveMeasurementDataToFileHDF5(path, filename);
-	else if (strcmp(extension, ".bin") == 0) return SaveMeasurementDataToFileBIN(path, filename);
+	else if (strcmp(extension, ".h5") == 0) return SaveMeasurementDataToFileHDF5(filename);
+	else if (strcmp(extension, ".bin") == 0) return SaveMeasurementDataToFileBIN(filename);
 	else return es_invalid_file_extention;
 }
 
@@ -4846,11 +4845,10 @@ es_status_codes ImportMeasurementDataFromFileBIN(const char* filename)
 /**
  * @brief Exports the measurement data to a HDF5 file.
  *
- * @param path Chosen path to save the file.
- * @param filename Chosen filename.
+ * @param filename Filename with complete absolute path.
  * @return @ref es_status_codes
  */
-es_status_codes SaveMeasurementDataToFileHDF5(const char* path, char* filename)
+es_status_codes SaveMeasurementDataToFileHDF5(const char* filename)
 {
 	ES_LOG("Export measurement to HDF5 file\n");
 	hid_t file_id;
@@ -4858,13 +4856,7 @@ es_status_codes SaveMeasurementDataToFileHDF5(const char* path, char* filename)
 	herr_t statusHDF5;
 	es_status_codes status;
 
-	char filepath[FILENAME_MAX];
-#ifdef WIN32
-	sprintf_s(filepath, FILENAME_MAX, "%s\\%s", path, filename);
-#else
-	sprintf(filepath, "%s/%s", path, filename);
-#endif
-	if ((file_id = H5Fcreate(filepath, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT)) == H5I_INVALID_HID) return es_create_file_failed;
+	if ((file_id = H5Fcreate(filename, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT)) == H5I_INVALID_HID) return es_create_file_failed;
 
 	uint32_t major_version = VERSION_MAJOR_ESCAM;
 	hid_t file_attr_version_major = CreateNumericAttribute(file_id, "Major version", H5T_NATIVE_UINT32, dataspace_scalar, &major_version);
@@ -4875,14 +4867,8 @@ es_status_codes SaveMeasurementDataToFileHDF5(const char* path, char* filename)
 	uint32_t minor_version = VERSION_MINOR_ESCAM;
 	hid_t file_attr_version_minor = CreateNumericAttribute(file_id, "Minor version", H5T_NATIVE_UINT32, dataspace_scalar, &minor_version);
 	H5Aclose(file_attr_version_minor);
-
-	char* filenameAttr[1] = { filename };
-	hid_t file_attr_name = CreateStringAttribute(file_id, "File Name", dataspace_scalar, filenameAttr);
-	H5Aclose(file_attr_name);
-
 	hid_t file_attr_number_of_boards = CreateNumericAttribute(file_id, "Number of Boards", H5T_NATIVE_UINT8, dataspace_scalar, &number_of_boards);
 	H5Aclose(file_attr_number_of_boards);
-
 	char* timestamp[1] = { start_timestamp };
 	hid_t file_attr_timestamp = CreateStringAttribute(file_id, "Timestamp", dataspace_scalar, timestamp);
 	H5Aclose(file_attr_timestamp);

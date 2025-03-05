@@ -74,7 +74,7 @@ public:
 	es_status_codes checkFifoEmpty(uint32_t drvno, bool* empty);
 	es_status_codes checkFifoFull(uint32_t drvno, bool* full);
 	es_status_codes findCam(uint32_t drvno);
-	es_status_codes SaveMeasurementDataToFile(const char* path, char* filename);
+	es_status_codes SaveMeasurementDataToFile(const char* filename);
 	es_status_codes importMeasurementDataFromFile(const char* fileName);
 	es_status_codes waitForMeasureDone();
 	es_status_codes getXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns);

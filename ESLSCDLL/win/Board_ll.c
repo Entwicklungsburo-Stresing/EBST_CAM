@@ -801,44 +801,14 @@ int64_t getCurrentInterruptCounter(uint32_t drvno)
 /**
  * \brief Export the measurement data to a binary file.
  *
- * \param path Path to save the file.
- * \param filename Filename.
+ * \param filename Filename with complete absolute path.
  * \return @ref es_status_codes
  */
-es_status_codes SaveMeasurementDataToFileBIN(const char* path, char* filename)
+es_status_codes SaveMeasurementDataToFileBIN(const char* filename)
 {
 	ES_LOG("Export measurement to bin file\n");
-	// Get length of path and filename
-	size_t path_length = strlen(path);
-	size_t filename_length = strlen(filename);
-	//  + 1 for the 0 termination + 1 when / is missing
-	size_t filename_full_size = path_length + filename_length + 2;
-	// Allocate memory for the full path and filename
-	char* filename_full = (char*)malloc(filename_full_size);
-	// Check if memory allocation was successful
-	if (!filename_full)
-	{
-		ES_LOG("Memory allocation failed\n");
-		return es_allocating_memory_failed;
-	}
-	// Set all bytes to 0
-	memset(filename_full, 0, filename_full_size);
-	// Copy path to filename_full
-	strcpy_s(filename_full, filename_full_size, path);
-	// Check if the path is terminated with /
-	char last_char = path[path_length - 1];
-	if (last_char != '/' && last_char != '\\')
-	{
-		// Append / to filename_full
-		filename_full[path_length] = '/';
-		// Terminate the string with 0
-		filename_full[path_length + 1] = 0;
-	}
-	// Concatenate filename to filename_full
-	strcat_s(filename_full, filename_full_size, filename);
 	FILE* file = NULL;
-	fopen_s(&file, filename_full, "wb");
-	free(filename_full);
+	fopen_s(&file, filename, "wb");
 	if (!file)
 	{
 		ES_LOG("File could not be opened\n");

@@ -15,6 +15,7 @@ This release reduces the number of needed library calls for a simple operation o
 #### Changed
 * Rename function DLLExportMeasurementHDF5 to DLLSaveMeasurementDataToFile
 * Change parameters of DLLInitMeasurement: add struct measurement_settings
+* Change parameters of DLLSaveMeasurementDataToFile: remove parameter path, filename is now the file name with the complete path
 #### Removed
 * Remove function DLLInitBoard
 * Remove function DLLSetGlobalSettings

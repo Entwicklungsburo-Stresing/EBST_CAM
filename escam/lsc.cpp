@@ -494,9 +494,9 @@ es_status_codes Lsc::findCam(uint32_t drvno)
 /**
  * @copydoc SaveMeasurementDataToFile.
  */
-es_status_codes Lsc::SaveMeasurementDataToFile(const char* path, char* filename)
+es_status_codes Lsc::SaveMeasurementDataToFile(const char* filename)
 {
-	return DLLSaveMeasurementDataToFile(path, filename);
+	return DLLSaveMeasurementDataToFile(filename);
 }
 
 es_status_codes Lsc::importMeasurementDataFromFile(const char* fileName)
