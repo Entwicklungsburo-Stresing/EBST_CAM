@@ -12,10 +12,8 @@ Have a look at the block diagrams at the bottom of this page to get an overview 
 
 For a simple measurement the following DLL calls should be used. For a complete API documentation go to the DLL documentation [page](_e_s_l_s_c_d_l_l_8c.html).
 
-1. [DLLInitDriver](@ref DLLInitDriver): Initialize the driver. Call it once at startup. 
-2. [DLLInitBoard](@ref DLLInitBoard): Initialize PCIe board. Call it once at startup.
-3. [DLLSetGlobalSettings](@ref DLLSetGlobalSettings) or [DLLSetGlobalSettings_matlab](@ref DLLSetGlobalSettings_matlab): Set settings parameter according to your camera system. Call it once at startup and every time you changed settings.
-4. [DLLInitMeasurement](@ref DLLInitMeasurement): Initialize Hardware and Software for the Measurement. Call it once at startup and every time you changed settings.
+1. [DLLInitDriver](@ref DLLInitDriver): Initialize the driver. Call it once at startup.
+4. [DLLInitMeasurement](@ref DLLInitMeasurement):  Set settings parameter according to your camera system. Initialize Hardware and Software for the Measurement. Call it once at startup and every time you changed settings.
 5. [DLLStartMeasurement_blocking](@ref DLLStartMeasurement_blocking) or [DLLStartMeasurement_nonblocking](@ref DLLStartMeasurement_nonblocking): Start the measurement. Call it every time you want to measure.
 6. [DLLAbortMeasurement](@ref DLLAbortMeasurement): Use this call, if you want to abort the measurement.
 7. [DLLCopyOneSample](@ref DLLCopyOneSample), [DLLCopyAllData](@ref DLLCopyAllData), or [DLLCopyOneBlock](@ref DLLCopyOneBlock): Get the data with one of the following 3 calls. Call it how many times you want.

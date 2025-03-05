@@ -46,20 +46,17 @@ extern "C" {
 // Basic operation of Stresing cameras:
 // 1) Initialize the driver. Call it once at startup.
 DllAccess es_status_codes DLLInitDriver(uint8_t* _number_of_boards);
-// 2) Initialize PCIe board. Call it once at startup.
-DllAccess es_status_codes DLLInitBoard();
-// 3) Set settings parameter according to your camera system. Call it once at startup and every time you changed settings.
+// 2) Use this function to properly initialize the struct measurement_settings to its default values.
 DllAccess void DLLInitSettingsStruct(struct measurement_settings* ms);
-DllAccess es_status_codes DLLSetGlobalSettings(struct measurement_settings settings);
-DllAccess es_status_codes DLLSetGlobalSettings_matlab(struct measurement_settings_matlab measurement_s, struct camera_settings camera_s0, struct camera_settings camera_s1, struct camera_settings camera_s2, struct camera_settings camera_s3, struct camera_settings camera_s4);
-// 4) Initialize Hardware and Software for the Measurement. Call it once at startup and every time you changed settings.
-DllAccess es_status_codes DLLInitMeasurement();
-// 5) Start the measurement. Call it every time you want to measure.
+// 3) Initialize Hardware and Software for the Measurement. Call it once at startup and every time you changed settings.
+DllAccess es_status_codes DLLInitMeasurement(struct measurement_settings settings);
+DllAccess es_status_codes DLLInitMeasurement_matlab(struct measurement_settings_matlab measurement_s, struct camera_settings camera_s0, struct camera_settings camera_s1, struct camera_settings camera_s2, struct camera_settings camera_s3, struct camera_settings camera_s4);
+// 4) Start the measurement. Call it every time you want to measure.
 DllAccess es_status_codes DLLStartMeasurement_blocking();
 DllAccess void DLLStartMeasurement_nonblocking();
-// 5b) Use this call, if you want to abort the measurement.
+// 4b) Use this call, if you want to abort the measurement.
 DllAccess es_status_codes DLLAbortMeasurement();
-// 6) Get the data with one of the following calls. Call it how many times you want.
+// 5) Get the data with one of the following calls. Call it how many times you want.
 DllAccess es_status_codes DLLCopyOneSample(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest);
 DllAccess es_status_codes DLLCopyOneSample_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest0, uint16_t* pdest1, uint16_t* pdest2, uint16_t* pdest3, uint16_t* pdest4);
 DllAccess es_status_codes DLLCopyOneBlock(uint32_t drvno, uint16_t block, uint16_t* pdest);
@@ -74,7 +71,7 @@ DllAccess es_status_codes DLLGetOneBlockPointer(uint32_t drvno, uint32_t block, 
 DllAccess es_status_codes DLLGetAllDataPointer(uint32_t drvno, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
 DllAccess es_status_codes DLLGetPixelPointer(uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
 DllAccess es_status_codes DLLSaveMeasurementDataToFile(const char* path, char* filename);
-// 7) Before exiting your software, use this call for cleanup.
+// 6) Before exiting your software, use this call for cleanup.
 DllAccess es_status_codes DLLExitDriver();
 
 //************ Mid level API

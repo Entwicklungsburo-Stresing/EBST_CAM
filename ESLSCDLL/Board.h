@@ -28,9 +28,7 @@ extern "C" {
 // Basic operation of Stresing cameras:
 // 1) Initialize the driver. Call it once at startup.
 es_status_codes InitDriver();
-// 2) Initialize PCIe board. Call it once at startup.
-es_status_codes InitBoard();
-// 3) Set settings parameter according to your camera system. Call it once at startup and every time you changed settings.
+// 2) Set settings parameter according to your camera system. Call it once at startup and every time you changed settings.
 void SetGlobalSettings(struct measurement_settings settings);
 // 4) Initialize Hardware and Software for the Measurement. Call it once at startup and every time you changed settings.
 es_status_codes InitMeasurement();
@@ -56,6 +54,7 @@ es_status_codes ExitDriver();
 // Mid level API
 // platform independent implementation
 // hardware abstraction
+es_status_codes InitBoard();
 es_status_codes ImportMeasurementDataFromFile(const char* filename);
 es_status_codes ImportMeasurementDataFromFileBIN(const char* filename);
 es_status_codes setBlockEn( uint32_t drvno );

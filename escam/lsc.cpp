@@ -15,19 +15,13 @@ Lsc::~Lsc()
  */
 es_status_codes Lsc::initDriver()
 {
-	return DLLInitDriver(&numberOfBoards);
-}
-
-/**
- * @copydoc InitBoard
- */
-es_status_codes Lsc::initPcieBoard()
-{
+	es_status_codes status = DLLInitDriver(&numberOfBoards);
+	if (status != es_no_error) return status;
 	// The signals mesaureStart and measureDone are emitted in Lsc::startMeasurement, which is a more dependable way of doing it.
 	DLLSetBlockStartHook(emitBlockStartSignal);
 	DLLSetBlockDoneHook(emitBlockDoneSignal);
 	DLLSetAllBlocksDoneHook(emitAllBlocksDoneSignal);
-	return DLLInitBoard();
+	return status;
 }
 
 /**
@@ -43,8 +37,7 @@ es_status_codes Lsc::exitDriver()
  */
 es_status_codes Lsc::initMeasurement(struct measurement_settings settings)
 {
-	DLLSetGlobalSettings(settings);
-	return DLLInitMeasurement();
+	return DLLInitMeasurement(settings);
 }
 
 /**
