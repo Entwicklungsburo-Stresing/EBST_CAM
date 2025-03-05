@@ -98,15 +98,6 @@ DllAccess es_status_codes DLLInitDriver(uint8_t* _number_of_boards)
 	return status;
 }
 
-
-/**
- * @copydoc InitBoard
- */
-DllAccess es_status_codes DLLInitBoard()
-{
-	return InitBoard();
-}
-
 /**
  * @brief Use this function to properly initialize the struct measurement_settings to its default values.
  * 
@@ -125,26 +116,30 @@ DllAccess void DLLInitSettingsStruct(struct measurement_settings* ms)
 }
 
 /**
- * @copydoc SetGlobalSettings
+ * @copydoc InitMeasurement
+ * 
+ * @param settings struct measurement_settings
  */
-DllAccess es_status_codes DLLSetGlobalSettings(struct measurement_settings settings)
+DllAccess es_status_codes DLLInitMeasurement(struct measurement_settings settings)
 {
 	SetGlobalSettings(settings);
-	return es_no_error;
+	return InitMeasurement();
 }
 
 /**
- * @brief Set settings with Matlab compatible structs.
+ * @brief Initialize measurement with Matlab compatible parameters.
  *
+ * Call this every time you changed settings before starting the measurement. When you didn't change any settings, you can start the next measurement without calling InitMeasurement every time.
+ * 
  * @param measurement_s Measurement settings struct without embedded camera settings struct.
  * @param camera_s0 Camera settings for PCIe board 0
  * @param camera_s1 Camera settings for PCIe board 1
  * @param camera_s2 Camera settings for PCIe board 2
  * @param camera_s3 Camera settings for PCIe board 3
  * @param camera_s4 Camera settings for PCIe board 4
- * @return
+ * @return @ref es_status_codes
  */
-DllAccess es_status_codes DLLSetGlobalSettings_matlab(struct measurement_settings_matlab measurement_s, struct camera_settings camera_s0, struct camera_settings camera_s1, struct camera_settings camera_s2, struct camera_settings camera_s3, struct camera_settings camera_s4)
+DllAccess es_status_codes DLLInitMeasurement_matlab(struct measurement_settings_matlab measurement_s, struct camera_settings camera_s0, struct camera_settings camera_s1, struct camera_settings camera_s2, struct camera_settings camera_s3, struct camera_settings camera_s4)
 {
 	struct measurement_settings settings;
 	settings.board_sel = measurement_s.board_sel;
@@ -156,14 +151,6 @@ DllAccess es_status_codes DLLSetGlobalSettings_matlab(struct measurement_setting
 	for (int i = 0; i < MAXPCIECARDS; i++)
 		settings.camera_settings[i] = camera_s[i];
 	SetGlobalSettings(settings);
-	return es_no_error;
-}
-
-/**
- * @copydoc InitMeasurement
- */
-DllAccess es_status_codes DLLInitMeasurement()
-{
 	return InitMeasurement();
 }
 
