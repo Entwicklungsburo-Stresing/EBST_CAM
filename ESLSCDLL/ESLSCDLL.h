@@ -70,7 +70,7 @@ DllAccess es_status_codes DLLGetOneSamplePointer(uint32_t drvno, uint32_t sample
 DllAccess es_status_codes DLLGetOneBlockPointer(uint32_t drvno, uint32_t block, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
 DllAccess es_status_codes DLLGetAllDataPointer(uint32_t drvno, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
 DllAccess es_status_codes DLLGetPixelPointer(uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** pdest, size_t* bytes_to_end_of_buffer);
-DllAccess es_status_codes DLLSaveMeasurementDataToFile(const char* path, char* filename);
+DllAccess es_status_codes DLLSaveMeasurementDataToFile(const char* filename);
 // 6) Before exiting your software, use this call for cleanup.
 DllAccess es_status_codes DLLExitDriver();
 
