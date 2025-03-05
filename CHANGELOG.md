@@ -7,6 +7,20 @@ This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/
 The hardware version number is the current version at release time.
 
 ## Unreleased
+### API Changes
+#### Added
+#### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+### Other Changes
+#### Added
+#### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+
+## 4.17.8 - 2025-03-05
 This release reduces the number of needed library calls for a simple operation of the cameras.
 ### API Changes
 #### Added
@@ -16,12 +30,11 @@ This release reduces the number of needed library calls for a simple operation o
 * Rename function DLLExportMeasurementHDF5 to DLLSaveMeasurementDataToFile
 * Change parameters of DLLInitMeasurement: add struct measurement_settings
 * Change parameters of DLLSaveMeasurementDataToFile: remove parameter path, filename is now the file name with the complete path
+* Remove special pixels from hdf5 data space
 #### Removed
 * Remove function DLLInitBoard
 * Remove function DLLSetGlobalSettings
 * Remove function DLLSetGlobalSettings_matlab
-#### Fixed
-#### Deprecated
 ### Other Changes
 #### Added
 * Add possibility to export data in binary
@@ -30,9 +43,6 @@ This release reduces the number of needed library calls for a simple operation o
 #### Changed
 * Change default of setting crosshair to false
 * Allow exporting dummy data when camera not found
-#### Removed
-#### Fixed
-#### Deprecated
 
 ## 4.17.7 - 2025-02-27
 ### API Changes
