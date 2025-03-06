@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>205</width>
-    <height>240</height>
+    <height>248</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,6 +38,12 @@
      </item>
      <item row="2" column="1">
       <widget class="QLabel" name="labelMshut">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shutter signal on output O&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This shutter signal is emitted by the output O of the PCIe card when the signal SEC_MSHUT or BEC_MSHUT is used for the setting tor. You can find this setting under Settings -&amp;gt; Edit -&amp;gt; Other -&amp;gt; tor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Shutter signal MSHUT</string>
        </property>
@@ -106,6 +112,12 @@
      </item>
      <item row="1" column="1">
       <widget class="QLabel" name="labelPcieBoard">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose which PCIe board to control&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;PCIe board chooses on which PCIe board the shutter are controlled by this dialog.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>PCIe board</string>
        </property>
@@ -134,13 +146,26 @@
      </item>
      <item row="2" column="2">
       <widget class="QCheckBox" name="checkBoxMshut">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shutter signal on output O&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This shutter signal is emitted by the output O of the PCIe card when the signal SEC_MSHUT or BEC_MSHUT is used for the setting tor. You can find this setting under Settings -&amp;gt; Edit -&amp;gt; Other -&amp;gt; tor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>open</string>
        </property>
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QSpinBox" name="spinBoxPcieBoard"/>
+      <widget class="QSpinBox" name="spinBoxPcieBoard">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose which PCIe board to control&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;PCIe board chooses on which PCIe board the shutter are controlled by this dialog.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

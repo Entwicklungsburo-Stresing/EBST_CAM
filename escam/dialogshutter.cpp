@@ -1,7 +1,7 @@
 #include "dialogshutter.h"
 
 DialogShutter::DialogShutter(QWidget *parent)
-	: QDialog(parent)
+	: QDialog(parent, Qt::Dialog | Qt::WindowContextHelpButtonHint | Qt::WindowCloseButtonHint)
 {
 	ui.setupUi(this);
 	// Set the maximum value of the spin box to the number of boards - 1
