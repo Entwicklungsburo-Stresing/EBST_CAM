@@ -13,6 +13,7 @@
 #include "dialogspecialpixels.h"
 #include "dialogtriggerinfo.h"
 #include "dialogchartsettings.h"
+#include "dialogshutter.h"
 #ifdef WIN32
 #include "dialoggreyscalesettings.h"
 #endif
@@ -355,6 +356,18 @@ void MainWindow::on_actionRMS_triggered()
 	ds_rms->setAttribute(Qt::WA_DeleteOnClose);
 	ds_rms->initDialogRMS();
 	ds_rms->show();
+	return;
+}
+
+/**
+ * @brief This slot opens the shutter dialog.
+ * @return none
+ */
+void MainWindow::on_actionShutter_triggered()
+{
+	DialogShutter* ds = new DialogShutter(this);
+	ds->setAttribute(Qt::WA_DeleteOnClose);
+	ds->show();
 	return;
 }
 

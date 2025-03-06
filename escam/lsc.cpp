@@ -564,3 +564,13 @@ bool Lsc::getTestModeOn()
 {
 	return DLLGetTestModeOn();
 }
+
+es_status_codes Lsc::openShutter(uint32_t drvno)
+{
+	return DLLOpenShutter(drvno);
+}
+
+es_status_codes Lsc::closeShutter(uint32_t drvno)
+{
+	return DLLCloseShutter(drvno);
+}
