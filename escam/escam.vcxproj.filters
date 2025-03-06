@@ -101,6 +101,9 @@
     <ClCompile Include="dialogchartsettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dialogshutter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="dialogsettings.h">
@@ -142,6 +145,9 @@
     <ClInclude Include="..\shared_src\enum_hardware.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <QtMoc Include="dialogshutter.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -183,6 +189,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogchartsettings.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogshutter.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

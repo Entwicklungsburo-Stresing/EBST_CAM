@@ -49,6 +49,7 @@ private:
 private slots:
 	void on_actionEdit_triggered();
 	void on_actionRMS_triggered();
+	void on_actionShutter_triggered();
 	void on_actionDSC_triggered();
 	void on_actionTrigger_info_triggered();
 	void on_actionCameras_triggered();
