@@ -1151,14 +1151,21 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionVerify_data_file"/>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
     <addaction name="actionExport_data"/>
     <addaction name="actionImport_data"/>
+    <addaction name="actionVerify_data_file"/>
+    <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="title">
      <string>Settings</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
     </property>
     <addaction name="actionEdit"/>
     <addaction name="actionExport"/>
@@ -1167,6 +1174,9 @@
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
     </property>
     <addaction name="actionContext_help"/>
     <addaction name="actionDump_board_registers"/>
@@ -1180,6 +1190,9 @@
     <property name="title">
      <string>Chart</string>
     </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
     <addaction name="actionChartSettings"/>
     <addaction name="actionCameras"/>
     <addaction name="actionReset_axes"/>
@@ -1188,16 +1201,22 @@
     <property name="title">
      <string>Window</string>
     </property>
-    <addaction name="actionRMS"/>
-    <addaction name="actionDSC"/>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
     <addaction name="actionDAC"/>
+    <addaction name="actionDSC"/>
     <addaction name="actionIO_Control"/>
+    <addaction name="actionRMS"/>
     <addaction name="actionspecial_pixels"/>
     <addaction name="actionTrigger_info"/>
    </widget>
    <widget class="QMenu" name="menuGreyscale_Viewer">
     <property name="title">
      <string>Greyscale Viewer</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
     </property>
     <addaction name="actionShow"/>
     <addaction name="actionGreyscaleSettings"/>
@@ -1283,6 +1302,9 @@
    <property name="text">
     <string>RMS</string>
    </property>
+   <property name="toolTip">
+    <string>root mean square</string>
+   </property>
   </action>
   <action name="actionGPX">
    <property name="text">
@@ -1293,15 +1315,24 @@
    <property name="text">
     <string>DSC</string>
    </property>
+   <property name="toolTip">
+    <string>delay stage counter</string>
+   </property>
   </action>
   <action name="actionDAC">
    <property name="text">
     <string>DAC</string>
    </property>
+   <property name="toolTip">
+    <string>digital analog converter</string>
+   </property>
   </action>
   <action name="actionIO_Control">
    <property name="text">
     <string>IO Control</string>
+   </property>
+   <property name="toolTip">
+    <string>input output control</string>
    </property>
   </action>
   <action name="actionGreyscale_viewer">
@@ -1336,7 +1367,7 @@
   </action>
   <action name="actionspecial_pixels">
    <property name="text">
-    <string>special pixels</string>
+    <string>Special pixels</string>
    </property>
   </action>
   <action name="actionGreyscaleSettings">
