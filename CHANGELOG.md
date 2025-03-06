@@ -9,7 +9,11 @@ The hardware version number is the current version at release time.
 ## Unreleased
 ### API Changes
 #### Added
+* Add function DLLOpenShutter_multipleBoards
+* Add function DLLCloseShutter_multipleBoards
 #### Changed
+* Change function DLLOpenShutter to single board function, add parameter drvno.
+* Change function DLLCloseShutter to single board function, add parameter drvno.
 #### Removed
 #### Fixed
 #### Deprecated

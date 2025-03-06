@@ -1013,11 +1013,19 @@ DllAccess es_status_codes DLLOutTrigPulse(int64_t pulseWidthInMicroseconds)
 }
 
 /**
+ * @copydoc OpenShutter
+ */
+DllAccess es_status_codes DLLOpenShutter(uint32_t drvno)
+{
+	return OpenShutter(drvno);
+}
+
+/**
  * @brief Open shutter for sensors with EC (exposure control) / sets IFC signal = high for all boards selected by settings parameter @ref measurement_settings.board_sel.
  *
  * @return @ref es_status_codes
  */
-DllAccess es_status_codes DLLOpenShutter()
+DllAccess es_status_codes DLLOpenShutter_multipleBoards()
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -1031,11 +1039,21 @@ DllAccess es_status_codes DLLOpenShutter()
 }
 
 /**
+ * @copydoc CloseShutter
+ */
+DllAccess es_status_codes DLLCloseShutter(uint32_t drvno)
+{
+
+	return CloseShutter(drvno);
+
+}
+
+/**
  * @brief Sets the IFC bit of interface for sensors with shutter function for all boards set by settings parameter @ref measurement_settings.board_sel. IFC=low.
  *
  * @return @ref es_status_codes
  */
-DllAccess es_status_codes DLLCloseShutter()
+DllAccess es_status_codes DLLCloseShutter_multipleBoards()
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
