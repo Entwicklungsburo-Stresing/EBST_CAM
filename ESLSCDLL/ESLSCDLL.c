@@ -2290,3 +2290,11 @@ DllAccess void DLLSetAllBlocksDoneHook(void(*hook)())
 {
 	allBlocksDoneHook = hook;
 }
+
+/**
+ * \copydoc SetGeneralOutput
+ */
+DllAccess es_status_codes DLLSetGeneralOutput(uint32_t drvno, uint8_t output, uint8_t state)
+{
+	return SetGeneralOutput(drvno, output, state);
+}

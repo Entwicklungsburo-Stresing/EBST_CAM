@@ -5328,3 +5328,21 @@ void clearKeyStates()
 	checkSpaceKeyState();
 	return;
 }
+
+/**
+ * \brief Control the general outputs of the PCIe card addition board.
+ * 
+ * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param output 0 ... 7
+ * \param state true = high, false = low
+ * \return @ref es_status_codes
+ */
+es_status_codes SetGeneralOutput(uint32_t drvno, uint8_t output, bool state)
+{
+	ES_LOG("Set general output %"PRIu8" to state %d\n", output, state);
+	if (output > 7) return es_parameter_out_of_range;
+	if(state)
+		return setBitS0_32(drvno, output, S0Addr_GIOREG);
+	else
+		return resetBitS0_32(drvno, output, S0Addr_GIOREG);
+}
