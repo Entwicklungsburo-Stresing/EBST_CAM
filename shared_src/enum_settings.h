@@ -494,10 +494,17 @@ enum settings_level_t
 	settings_level_free = 1
 };
 
-
 enum file_specifications_t
 {
 	file_path_size = 256,
 	file_timestamp_size = 64,
 	file_filename_full_size = 256
+};
+
+enum stimer_resolution_t
+{
+	simer_resolution_1us = 0,
+	simer_resolution_100us = 1,
+	simer_resolution_1000us = 2,
+	simer_resolution_100ns = 3,
 };
