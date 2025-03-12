@@ -894,3 +894,10 @@ Lsc-gui:
 
 ## v2.1.0 - 2020-07-29
 - Fix hDev not beeing initialized in pro DLL which led to partially not working pro DLL
+
+## 2019-04-19
+- Driver version wdapi1400.dll
+
+## 2016
+- Driver version wdapi1210.dll
+- 64 bit
