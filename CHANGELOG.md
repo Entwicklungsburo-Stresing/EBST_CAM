@@ -1,4 +1,4 @@
-# Changelog
+# Changelog EBST_CAM
 
 All notable changes to this project will be documented in this file.
 
