@@ -79,7 +79,8 @@ int main()
 	settings.camera_settings[0].sslope = sslope_pos;
 	settings.camera_settings[0].bslope = bslope_pos;
 	settings.camera_settings[0].btime_in_microsec = 60000;
-	settings.camera_settings[0].stime_in_microsec = 10;
+	settings.camera_settings[0].stime = 10;
+	settings.camera_settings[0].stime_resolution_mode = simer_resolution_1us;
 	settings.camera_settings[0].camcnt = 1;
 	settings.camera_settings[0].pixel = 1024;
 	settings.camera_settings[0].sensor_type = sensor_type_hsvis;

@@ -113,7 +113,7 @@ void MainWindow::startPressed()
 		library_settings.camera_settings[drvno].use_software_polling = settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool();
 		library_settings.camera_settings[drvno].sti_mode = settings.value(settingStiPath, settingStiDefault).toDouble();
 		library_settings.camera_settings[drvno].bti_mode = settings.value(settingBtiPath, settingBtiDefault).toDouble();
-		library_settings.camera_settings[drvno].stime_in_microsec = settings.value(settingStime_in_microseconds_Path, settingStime_in_microseconds_Default).toDouble();
+		library_settings.camera_settings[drvno].stime = settings.value(settingStimePath, settingStime_Default).toDouble();
 		library_settings.camera_settings[drvno].btime_in_microsec = settings.value(settingBtime_in_microseconds_Path, settingBtime_in_microseconds_Default).toDouble();
 		library_settings.camera_settings[drvno].sdat_in_10ns = settings.value(settingSdat_in_10nsPath, settingSdat_in_10nsDefault).toDouble();
 		library_settings.camera_settings[drvno].bdat_in_10ns = settings.value(settingBdat_in_10nsPath, settingBdat_in_10nsDefault).toDouble();
@@ -187,7 +187,8 @@ void MainWindow::startPressed()
 		library_settings.camera_settings[drvno].monitor = settings.value(settingMonitorPath, settingMonitorDefault).toDouble();
 		library_settings.camera_settings[drvno].manipulate_data_mode = settings.value(settingManipulateDataModePath, settingManipulateDataModeDefault).toDouble();
 		library_settings.camera_settings[drvno].manipulate_data_custom_factor = settings.value(settingManipulateDataCustomFactorPath, settingManipulateDataCustomFactorDefault).toDouble();
-		library_settings.camera_settings[drvno].ec_legacy_mode = settings.value(settingEcLegacyModePath, settingEcLegacyModeDefault).toBool();	
+		library_settings.camera_settings[drvno].ec_legacy_mode = settings.value(settingEcLegacyModePath, settingEcLegacyModeDefault).toBool();
+		library_settings.camera_settings[drvno].stime_resolution_mode = settings.value(settingStimeResolutionModePath, settingStimeResolutionModeDefault).toDouble();
 		settings.endGroup();
 	}
 	es_status_codes status = lsc.initMeasurement(library_settings);

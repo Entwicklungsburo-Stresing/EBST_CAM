@@ -293,7 +293,7 @@ enum tor_out_t
 	 */
 	tor_asls = 4,
 	/**
-	 * stimer is the internal trigger for the start of a readout when @ref camera_settings.sti_mode is set to @ref sti_mode_t.sti_STimer. The repetition rate is determined by @ref camera_settings.stime_in_microsec.
+	 * stimer is the internal trigger for the start of a readout when @ref camera_settings.sti_mode is set to @ref sti_mode_t.sti_STimer. The repetition rate is determined by @ref camera_settings.stime.
 	 */
 	tor_stimer = 5,
 	/**
@@ -501,10 +501,36 @@ enum file_specifications_t
 	file_filename_full_size = 256
 };
 
+/**
+ * The enum stimer_resolution_t shows all options of the setting @ref camera_settings.stime_resolution_mode.
+ */
 enum stimer_resolution_t
 {
+	/**
+	 * default option
+	 * * Min: 4 us
+	 * * Step : 1 us
+	 * * Max: 268,435,455 us = 268,435.455 s = 4.47 min 
+	 */
 	simer_resolution_1us = 0,
+	/**
+	 * * Min: 400 us
+	 * * Step: 100 us
+	 * * Max: 26,843,545,500 us = 26,843.5455 s = 447.39 min = 7.46 h
+	 */
 	simer_resolution_100us = 1,
+	/**
+	 * * Min: 4 ms
+	 * * Step: 1 ms
+	 * * Max: 268,435,455 ms = 268,435.455 s = 4473.9 min = 74.6 h
+	 */
 	simer_resolution_1ms = 2,
+	/**
+	 * * Min: 400 ns
+	 * * Step : 100 ns
+	 * * Max: 26,843,545,500 ns = 26.8435455 s
+	 */
 	simer_resolution_100ns = 3,
 };
+
+

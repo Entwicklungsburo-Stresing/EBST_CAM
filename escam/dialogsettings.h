@@ -34,7 +34,7 @@ constexpr auto settingStiPath = "sti";
 constexpr auto settingBtiPath = "bti";
 constexpr auto settingSslopePath = "sslope";
 constexpr auto settingBslopePath = "bslope";
-constexpr auto settingStime_in_microseconds_Path = "stimer";
+constexpr auto settingStimePath = "stimer";
 constexpr auto settingBtime_in_microseconds_Path = "btimer";
 constexpr auto settingSdat_in_10nsPath = "sdat";
 constexpr auto settingBdat_in_10nsPath = "bdat";
@@ -88,6 +88,7 @@ constexpr auto settingFilePathPath = "filePath";
 constexpr auto settingManipulateDataModePath = "manipulateDataMode";
 constexpr auto settingManipulateDataCustomFactorPath = "manipulateDataCustomFactor";
 constexpr auto settingEcLegacyModePath = "ecLegacyMode";
+constexpr auto settingStimeResolutionModePath = "stimeResolutionMode";
 // DAC
 constexpr auto settingDacCameraChannel1Path = "dacCameraChannel1Pos";
 constexpr auto settingDacCameraChannel2Path = "dacCameraChannel2Pos";

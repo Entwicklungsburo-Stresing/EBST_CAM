@@ -12,6 +12,7 @@ The hardware version number is the current version at release time.
 * Add function DLLOpenShutter_multipleBoards
 * Add function DLLCloseShutter_multipleBoards
 * Add function DLLSetGeneralOutput
+* Add setting stime_resolution_mode
 #### Changed
 * Change function DLLOpenShutter to single board function, add parameter drvno.
 * Change function DLLCloseShutter to single board function, add parameter drvno.
