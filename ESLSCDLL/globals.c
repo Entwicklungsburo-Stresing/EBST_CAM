@@ -52,7 +52,7 @@ const struct camera_settings camera_settings_default =
 	.use_software_polling = settingsUseSoftwarePollingDefault,
 	.sti_mode = settingStiDefault,
 	.bti_mode = settingBtiDefault,
-	.stime_in_microsec = settingStime_in_microseconds_Default,
+	.stime = settingStime_Default,
 	.btime_in_microsec = settingBtime_in_microseconds_Default,
 	.sdat_in_10ns = settingSdat_in_10nsDefault,
 	.bdat_in_10ns = settingSdat_in_10nsDefault,
@@ -183,6 +183,7 @@ const struct camera_settings camera_settings_default =
 	.manipulate_data_mode = settingManipulateDataModeDefault,
 	.manipulate_data_custom_factor = settingManipulateDataCustomFactorDefault,
 	.ec_legacy_mode = settingEcLegacyModeDefault,
+	.stime_resolution_mode = settingStimeResolutionModeDefault,
 };
 
 struct measurement_settings settings_struct =

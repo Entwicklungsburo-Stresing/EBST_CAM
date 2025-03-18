@@ -31,7 +31,7 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingBtiPath, ui->comboBoxBti->currentIndex());
 	settings.setValue(settingSslopePath, ui->comboBoxSslope->currentIndex());
 	settings.setValue(settingBslopePath, ui->comboBoxBslope->currentIndex());
-	settings.setValue(settingStime_in_microseconds_Path, ui->doubleSpinBoxSTime_in_us->value());
+	settings.setValue(settingStimePath, ui->doubleSpinBoxSTime->value());
 	settings.setValue(settingBtime_in_microseconds_Path, ui->doubleSpinBoxBTimer_in_us->value());
 	settings.setValue(settingSdat_in_10nsPath, ui->doubleSpinBoxSdatIn10ns->value());
 	settings.setValue(settingBdat_in_10nsPath, ui->doubleSpinBoxBdatIn10ns->value());
@@ -103,10 +103,10 @@ void CameraSettingsWidget::on_comboBoxSti_currentIndexChanged(int index)
 	switch (index)
 	{
 	case sti_STimer:
-		ui->doubleSpinBoxSTime_in_us->setEnabled(true);
+		ui->doubleSpinBoxSTime->setEnabled(true);
 		break;
 	default:
-		ui->doubleSpinBoxSTime_in_us->setEnabled(enabled);
+		ui->doubleSpinBoxSTime->setEnabled(enabled);
 	}
 	switch (index)
 	{
@@ -348,7 +348,7 @@ void CameraSettingsWidget::loadDefaults()
 	ui->comboBoxBti->setCurrentIndex(settingBtiDefault);
 	ui->comboBoxSslope->setCurrentIndex(settingSslopeDefault);
 	ui->comboBoxBslope->setCurrentIndex(settingBslopeDefault);
-	ui->doubleSpinBoxSTime_in_us->setValue(settingStime_in_microseconds_Default);
+	ui->doubleSpinBoxSTime->setValue(settingStime_Default);
 	ui->doubleSpinBoxBTimer_in_us->setValue(settingBtime_in_microseconds_Default);
 	ui->doubleSpinBoxSdatIn10ns->setValue(settingSdat_in_10nsDefault);
 	ui->doubleSpinBoxBdatIn10ns->setValue(settingBdat_in_10nsDefault);
@@ -516,7 +516,7 @@ void CameraSettingsWidget::initializeWidget()
 	ui->comboBoxBti->setCurrentIndex(settings.value(settingBtiPath, settingBtiDefault).toDouble());
 	ui->comboBoxSslope->setCurrentIndex(settings.value(settingSslopePath, settingSslopeDefault).toDouble());
 	ui->comboBoxBslope->setCurrentIndex(settings.value(settingBslopePath, settingBslopeDefault).toDouble());
-	ui->doubleSpinBoxSTime_in_us->setValue(settings.value(settingStime_in_microseconds_Path, settingStime_in_microseconds_Default).toDouble());
+	ui->doubleSpinBoxSTime->setValue(settings.value(settingStimePath, settingStime_Default).toDouble());
 	ui->doubleSpinBoxBTimer_in_us->setValue(settings.value(settingBtime_in_microseconds_Path, settingBtime_in_microseconds_Default).toDouble());
 	ui->doubleSpinBoxSdatIn10ns->setValue(settings.value(settingSdat_in_10nsPath, settingSdat_in_10nsDefault).toDouble());
 	ui->doubleSpinBoxBdatIn10ns->setValue(settings.value(settingBdat_in_10nsPath, settingSdat_in_10nsDefault).toDouble());

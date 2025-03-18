@@ -156,7 +156,7 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetBTI(drvno, (uint8_t)settings_struct.camera_settings[drvno].bti_mode);
 	if (status != es_no_error) return status;
-	status = SetSTimer(drvno, settings_struct.camera_settings[drvno].stime_in_microsec, simer_resolution_1ms);
+	status = SetSTimer(drvno, settings_struct.camera_settings[drvno].stime, settings_struct.camera_settings[drvno].stime_resolution_mode);
 	if (status != es_no_error) return status;
 	status = SetBTimer(drvno, settings_struct.camera_settings[drvno].btime_in_microsec);
 	if (status != es_no_error) return status;
@@ -1138,10 +1138,6 @@ es_status_codes SetBTI(uint32_t drvno, uint8_t bti_mode)
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param stime Trigger time. The resolution of the time depends on resolution_mode. 28 bit.
- *		* simer_resolution_1us: Min: 4 us, Max: 268,435,455 us = 268,435.455 s = 4.47 min (default)
- *		* simer_resolution_100us: Min: 400 us, Max: 26,843,545,500 us = 26,843.5455 s =  447.39 min = 7.46 h
- *		* simer_resolution_1ms: Min: 4 ms, Max: 268,435,455 ms = 268,435.455 s =  4473.9 min = 74.6 h
- *		* simer_resolution_100ns: Min: 400 ns, Max: 26,843,545,500 ns = 26.8435455 s
  * @param resolution_mode Resolution of the time. See @ref stimer_resolution_t in enum.h for options.
  * @return @ref es_status_codes
  */
@@ -1149,7 +1145,6 @@ es_status_codes SetSTimer(uint32_t drvno, uint32_t stime, uint8_t resolution_mod
 {
 	ES_LOG("Set stime in microseconds: %"PRIu32"\n", stime);
 	es_status_codes status = es_no_error;
-	// There is an unimplemented feature for STimer to adjust the resolution of the counter. See register XCK in manual.
 	switch (resolution_mode)
 	{
 	case simer_resolution_1us:
@@ -3774,7 +3769,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		"use_software_polling\t%"PRIu32"\n"
 		"sti_mode\t%"PRIu32"\n"
 		"bti_mode\t%"PRIu32"\n"
-		"stime_in_microsec\t%"PRIu32"\n"
+		"stime\t%"PRIu32"\n"
 		"btime_in_microsec\t%"PRIu32"\n"
 		"sdat_in_10ns\t%"PRIu32"\n"
 		"bdat_in_10ns\t%"PRIu32"\n"
@@ -3803,7 +3798,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].use_software_polling,
 		settings_struct.camera_settings[drvno].sti_mode,
 		settings_struct.camera_settings[drvno].bti_mode,
-		settings_struct.camera_settings[drvno].stime_in_microsec,
+		settings_struct.camera_settings[drvno].stime,
 		settings_struct.camera_settings[drvno].btime_in_microsec,
 		settings_struct.camera_settings[drvno].sdat_in_10ns,
 		settings_struct.camera_settings[drvno].bdat_in_10ns,
