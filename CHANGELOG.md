@@ -15,6 +15,7 @@ The hardware version number is the current version at release time.
 #### Changed
 * Change function DLLOpenShutter to single board function, add parameter drvno.
 * Change function DLLCloseShutter to single board function, add parameter drvno.
+* Change parameters of DLLSetSTimer to: uint32_t drvno, uint32_t stime, uint8_t resolution_mode
 #### Removed
 #### Fixed
 #### Deprecated
