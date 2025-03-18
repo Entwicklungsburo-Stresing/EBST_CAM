@@ -156,7 +156,7 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetBTI(drvno, (uint8_t)settings_struct.camera_settings[drvno].bti_mode);
 	if (status != es_no_error) return status;
-	status = SetSTimer(drvno, settings_struct.camera_settings[drvno].stime, settings_struct.camera_settings[drvno].stime_resolution_mode);
+	status = SetSTimer(drvno, settings_struct.camera_settings[drvno].stime, (uint8_t)settings_struct.camera_settings[drvno].stime_resolution_mode);
 	if (status != es_no_error) return status;
 	status = SetBTimer(drvno, settings_struct.camera_settings[drvno].btime_in_microsec);
 	if (status != es_no_error) return status;
