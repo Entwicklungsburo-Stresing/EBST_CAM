@@ -1,3 +1,8 @@
+/*****************************************************************//**
+ * @file   dialogchartsettings.cpp
+ * @copydoc dialogchartsettings.h
+ *********************************************************************/
+
 #include "dialogchartsettings.h"
 #include "lsc-gui.h"
 

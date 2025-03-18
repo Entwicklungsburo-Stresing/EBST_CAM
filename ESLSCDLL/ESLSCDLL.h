@@ -1,6 +1,6 @@
 /*****************************************************************//**
  * @file   ESLSCDLL.h
- * @brief  Library header for ESLSCDLL
+ * @brief  Library ESLSCDLL for operating Stresing cameras.
  * 
  * The library ESLSCDLL can be compiled on Windows into ESLSCDLL.dll and on Linux into libESLSCDLL.so.
  * @author Gerhard Stresing, Bastian Brabec, Florian Hahn

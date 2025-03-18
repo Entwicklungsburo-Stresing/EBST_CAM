@@ -1,3 +1,8 @@
+/*****************************************************************//**
+ * @file   es_status_codes.c
+ * @copydoc es_status_codes.h
+ *********************************************************************/
+
 #include "es_status_codes.h"
 
 #define NUMBER_OF_ERROR_CODES 33

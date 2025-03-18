@@ -1,3 +1,8 @@
+/*****************************************************************//**
+ * @file   crosshairs.cpp
+ * @copydoc crosshairs.h
+ *********************************************************************/
+
 #include "crosshairs.h"
 #include <QtGui/QPainter>
 #include <QtGui/QCursor>

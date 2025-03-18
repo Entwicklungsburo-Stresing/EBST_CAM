@@ -1,3 +1,8 @@
+/*****************************************************************//**
+ * @file   Camera.c
+ * @copydoc Camera.h
+ *********************************************************************/
+
 #include "Camera.h"
 #include "../shared_src/enum_hardware.h"
 #include "Board.h"

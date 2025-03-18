@@ -1,3 +1,8 @@
+/*****************************************************************//**
+ * @file   camerasettingswidget.cpp
+ * @copydoc camerasettingswidget.h
+ *********************************************************************/
+
 #include "camerasettingswidget.h"
 #include "dialogsettings.h"
 #include "ui_dialogsettings.h"

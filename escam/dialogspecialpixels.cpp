@@ -1,3 +1,8 @@
+/*****************************************************************//**
+ * @file   dialogspecialpixels.cpp
+ * @copydoc dialogspecialpixels.h
+ *********************************************************************/
+
 #include "dialogspecialpixels.h"
 #include "lsc-gui.h"
 
