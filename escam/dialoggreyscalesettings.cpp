@@ -1,3 +1,8 @@
+/*****************************************************************//**
+ * @file   dialoggreyscalesettings.cpp
+ * @copydoc dialoggreyscalesettings.h
+ *********************************************************************/
+
 #include "dialoggreyscalesettings.h"
 #include "lsc-gui.h"
 

@@ -10,6 +10,7 @@
  *********************************************************************/
 
 #pragma once
+
 #ifndef MINIMAL_BUILD
 
 // Modify the following defines if you have to target a platform prior to the ones specified below.

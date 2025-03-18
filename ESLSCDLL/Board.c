@@ -1,3 +1,8 @@
+/*****************************************************************//**
+ * @file   Board.c
+ * @copydoc Board.h
+ *********************************************************************/
+
 #include "Board.h"
 #include "UIAbstractionLayer.h"
 #include <sys/types.h>

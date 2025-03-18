@@ -1,3 +1,8 @@
+/*****************************************************************//**
+ * @file   dialogtriggerinfo.cpp
+ * @copydoc dialogtriggerinfo.h
+ *********************************************************************/
+
 #include "dialogtriggerinfo.h"
 #include "ui_dialogtriggerinfo.h"
 #include "lsc-gui.h"

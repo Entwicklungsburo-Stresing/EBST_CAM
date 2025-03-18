@@ -1,3 +1,8 @@
+/*****************************************************************//**
+ * @file   dialogdsc.cpp
+ * @copydoc dialogdsc.h
+ *********************************************************************/
+
 #include "dialogdsc.h"
 #include "ui_dialogdsc.h"
 #include "lsc-gui.h"

@@ -8,6 +8,7 @@
  *********************************************************************/
 
 #pragma once
+
 #ifndef MINIMAL_BUILD
 
 #include <windows.h>

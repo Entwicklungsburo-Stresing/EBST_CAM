@@ -1,3 +1,8 @@
+/*****************************************************************//**
+ * @file   dialogioctrl.cpp
+ * @copydoc dialogioctrl.h
+ *********************************************************************/
+
 #include "dialogioctrl.h"
 #include "ui_dialogioctrl.h"
 #include "lsc-gui.h"

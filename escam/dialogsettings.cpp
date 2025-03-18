@@ -1,3 +1,8 @@
+/*****************************************************************//**
+ * @file   dialogsettings.cpp
+ * @copydoc dialogsettings.h
+ *********************************************************************/
+
 #include "dialogsettings.h"
 #include "ui_dialogsettings.h"
 #include <QMessageBox>

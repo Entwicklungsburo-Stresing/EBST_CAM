@@ -1,3 +1,8 @@
+/*****************************************************************//**
+ * @file   dialogshutter.cpp
+ * @copydoc dialogshutter.h
+ *********************************************************************/
+
 #include "dialogshutter.h"
 
 DialogShutter::DialogShutter(QWidget *parent)

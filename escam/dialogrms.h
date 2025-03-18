@@ -5,6 +5,7 @@
  * @author Florian Hahn
  * @date   03.08.2021
  *********************************************************************/
+
 #pragma once
 
 #include <QDialog>

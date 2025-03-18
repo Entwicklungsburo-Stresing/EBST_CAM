@@ -7,6 +7,7 @@
  *********************************************************************/
 
 #pragma once
+
 #include <QtCharts>
 #include <dialogsettings.h>
 #include "crosshairs.h"

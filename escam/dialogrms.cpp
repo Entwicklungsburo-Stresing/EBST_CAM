@@ -1,3 +1,8 @@
+/*****************************************************************//**
+ * @file   dialogrms.cpp
+ * @copydoc dialogrms.h
+ *********************************************************************/
+
 #include "dialogrms.h"
 #include "ui_dialogrms.h"
 #include "lsc-gui.h"

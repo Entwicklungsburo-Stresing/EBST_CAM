@@ -7,6 +7,7 @@
  *********************************************************************/
 
 #pragma once
+
 #include <stdint.h>
 #include "enum_settings.h"
 

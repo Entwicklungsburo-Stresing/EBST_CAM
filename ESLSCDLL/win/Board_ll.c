@@ -1,3 +1,8 @@
+/*****************************************************************//**
+ * @file   Board_ll.c
+ * @copydoc Board_ll.h
+ *********************************************************************/
+
 #include "../Board_ll.h"
 #include <stdint.h>
 #include "../Board.h"
@@ -921,7 +926,6 @@ void setTimestamp()
  * @brief Creates a file at filename_full and writes struct file_header to it.
  * 
  * @param drvno PCIe board identifier.
- * @param filename_full Path and file name to the file where the header is written.
  */
 void writeFileHeaderToFile(uint32_t drvno)
 {
