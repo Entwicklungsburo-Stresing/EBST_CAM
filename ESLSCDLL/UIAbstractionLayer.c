@@ -1,4 +1,8 @@
-//UI abstraction layer for Labview
+/*****************************************************************//**
+ * @file   UIAbstractionLayer.c
+ * @copydoc UIAbstractionLayer.h
+ *********************************************************************/
+
 #include "UIAbstractionLayer.h"
 #include "ESLSCDLL.h"
 #include "Board.h"

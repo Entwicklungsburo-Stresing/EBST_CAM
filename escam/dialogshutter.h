@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file   dialogshutter.h
+ * @brief  Dialog for controlling the shutters.
+ * 
+ * @author Florian
+ * @date   06.03.2025
+ *********************************************************************/
+
 #pragma once
 
 #include <QDialog>
