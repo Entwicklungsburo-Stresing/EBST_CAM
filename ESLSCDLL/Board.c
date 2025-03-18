@@ -3971,26 +3971,19 @@ es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
 	*stringPtr = (char*)calloc(bufferLength, sizeof(char));
 	int len = 0;
 	uint32_t data = 0;
-	// read ISA Id from S0Base+7
-	es_status_codes status = readRegisterS0_32(drvno, &data, S0Addr_CTRL); // Board ID =5053
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i\n", drvno);
+	// 4 bytes of S0 address EBST + 1 byte 0 string termination
+	char udata1[5] = {0};
+	es_status_codes status = readRegisterS0_32(drvno, (uint32_t*)&udata1, S0Addr_EBST);
 	if (status != es_no_error) return status;
-	data = data >> 16;
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i ID\t= 0x%x\n", drvno, data);
-	data = 0x07FF;
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i length\t= 0x%x\n", drvno, data);
-	char udata1[4];
-	if (data >= 0x1F)
-	{//if WE -> has space 0x20
-		status = readRegisterS0_32(drvno, (uint32_t*)&udata1, S0Addr_EBST);
-		if (status != es_no_error) return status;
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i ven ID\t= %s\n", drvno, udata1);
-	}
-	if (data >= 0x3F)
-	{//if 9056 -> has space 0x40
-		status = readRegisterS0_32(drvno, &data, S0Addr_PCI);
-		if (status != es_no_error) return status;
-		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Board #%i board version\t= 0x%x\n", drvno, data);
-	}
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "EBST register\t%s\n", udata1);
+	status = readRegisterS0_32(drvno, &data, S0Addr_PCI);
+	if (status != es_no_error) return status;
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "FPGA version\t0x%x\n", data);
+	// Get device ID and vendor ID
+	status = readConfig_32(drvno, &data, PCIeAddr_VendorID);
+	if (status != es_no_error) return status;
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "Device ID, Vendor ID\t0x%x\n", data);
 	return es_no_error;
 }
 
