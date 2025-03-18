@@ -505,6 +505,6 @@ enum stimer_resolution_t
 {
 	simer_resolution_1us = 0,
 	simer_resolution_100us = 1,
-	simer_resolution_1000us = 2,
+	simer_resolution_1ms = 2,
 	simer_resolution_100ns = 3,
 };
