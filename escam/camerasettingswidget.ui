@@ -2342,16 +2342,24 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
+  <tabstop>tabWidget</tabstop>
   <tabstop>comboBoxSti</tabstop>
   <tabstop>comboBoxBti</tabstop>
   <tabstop>comboBoxSslope</tabstop>
   <tabstop>comboBoxBslope</tabstop>
   <tabstop>doubleSpinBoxSTime</tabstop>
+  <tabstop>radioButton100ns</tabstop>
+  <tabstop>radioButton1us</tabstop>
+  <tabstop>radioButton100us</tabstop>
+  <tabstop>radioButton1ms</tabstop>
   <tabstop>doubleSpinBoxBTimer_in_us</tabstop>
   <tabstop>doubleSpinBoxSdatIn10ns</tabstop>
   <tabstop>doubleSpinBoxBdatIn10ns</tabstop>
   <tabstop>doubleSpinBoxSecIn10ns</tabstop>
   <tabstop>doubleSpinBoxBecIn10ns</tabstop>
+  <tabstop>spinBoxSticnt</tabstop>
+  <tabstop>spinBoxBticnt</tabstop>
+  <tabstop>spinBoxTocnt</tabstop>
   <tabstop>comboBoxTriggerModeIntegrator</tabstop>
   <tabstop>doubleSpinBoxXckdelayIn10ns</tabstop>
   <tabstop>doubleSpinBoxS1S2ReadDelayIn10ns</tabstop>
@@ -2369,6 +2377,8 @@
   <tabstop>spinBoxIOCtrlImpactStartPixel</tabstop>
   <tabstop>checkBoxUseSoftwarePolling</tabstop>
   <tabstop>spinBoxSensorResetOrHsirEcIn1ns</tabstop>
+  <tabstop>comboBoxChannelSelect</tabstop>
+  <tabstop>checkBoxShiftS1S2ToNextScan</tabstop>
   <tabstop>spinBoxLines</tabstop>
   <tabstop>spinBoxVfreq</tabstop>
   <tabstop>comboBoxFftMode</tabstop>
@@ -2386,6 +2396,9 @@
   <tabstop>checkBoxWriteDataToDisc</tabstop>
   <tabstop>plainTextEditFilePath</tabstop>
   <tabstop>pushButtonFilePath</tabstop>
+  <tabstop>comboBoxManipulateDataMode</tabstop>
+  <tabstop>doubleSpinBoxManipulateDataCustomFactor</tabstop>
+  <tabstop>checkBoxEcLegacyMode</tabstop>
  </tabstops>
  <resources/>
  <connections/>
