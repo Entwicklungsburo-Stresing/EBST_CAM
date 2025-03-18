@@ -220,7 +220,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time between the start of two readouts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan timer&lt;/span&gt; is the time between the start of two readouts. This time is used when &lt;span style=&quot; font-style:italic;&quot;&gt;STimer&lt;/span&gt; is selected for &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; is a 28 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1 µs&lt;br/&gt;step: 1 µs&lt;br/&gt;max: 268,435,455 µs = 268.435455 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;stime_in_microsec&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; can be found in the manual in chapter 6.4.4.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan timer&lt;/span&gt; is the time between the start of two readouts. This time is used when &lt;span style=&quot; font-style:italic;&quot;&gt;STimer&lt;/span&gt; is selected for &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. The resolution of the timer depends on the setting &lt;span style=&quot; font-style:italic;&quot;&gt;stime resolution.&lt;/span&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; is a 28 bit unsigned integer.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;stime&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; can be found in the manual in chapter 6.4.4.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>stimer (scan timer)</string>
@@ -637,12 +637,12 @@
           </spacer>
          </item>
          <item row="6" column="3">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxSTime_in_us">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxSTime">
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time between the start of two readouts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan timer&lt;/span&gt; is the time between the start of two readouts. This time is used when &lt;span style=&quot; font-style:italic;&quot;&gt;STimer&lt;/span&gt; is selected for &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; is a 28 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1 µs&lt;br/&gt;step: 1 µs&lt;br/&gt;max: 268,435,455 µs = 268.435455 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;stime_in_microsec&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; can be found in the manual in chapter 6.4.4.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan timer&lt;/span&gt; is the time between the start of two readouts. This time is used when &lt;span style=&quot; font-style:italic;&quot;&gt;STimer&lt;/span&gt; is selected for &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. The resolution of the timer depends on the setting &lt;span style=&quot; font-style:italic;&quot;&gt;stime resolution.&lt;/span&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; is a 28 bit unsigned integer.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;stime&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; can be found in the manual in chapter 6.4.4.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -2259,7 +2259,7 @@
   <tabstop>comboBoxBti</tabstop>
   <tabstop>comboBoxSslope</tabstop>
   <tabstop>comboBoxBslope</tabstop>
-  <tabstop>doubleSpinBoxSTime_in_us</tabstop>
+  <tabstop>doubleSpinBoxSTime</tabstop>
   <tabstop>doubleSpinBoxBTimer_in_us</tabstop>
   <tabstop>doubleSpinBoxSdatIn10ns</tabstop>
   <tabstop>doubleSpinBoxBdatIn10ns</tabstop>

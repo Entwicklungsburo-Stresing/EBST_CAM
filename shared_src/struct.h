@@ -63,12 +63,9 @@ struct camera_settings
 	 */
 	uint32_t bti_mode;
 	/**
-	 * Scan timer in microseconds is the time between the start of two readouts. This time is used when sti mode is stimer. Stime is a 28 bit unsigned integer. Further information about the timer can be found in the manual in chapter 6.4.4.
-	 *		* min: 1 µs
-	 *		* step: 1 µs
-	 *		* max: 268,435,455 µs = 268.435455 s
+	 * Stime is the time between the start of two readouts. This time is used when @ref camera_settings.sti_mode is set to @ref sti_mode_t.sti_STimer. The resolution of this timer depends on the setting @ref camera_settings.stime_resolution_mode. Stime is a 28 bit unsigned integer. Further information about the timer can be found in the manual in chapter 6.4.4.
 	 */
-	uint32_t stime_in_microsec;
+	uint32_t stime;
 	/**
 	 * Block timer in microseconds is the time between the start of two blocks of readouts. This time is used when bti mode is btimer. Btime is a 28 bit unsigned integer. Further information about the timer can be found in the manual in chapter 6.4.4.
 	 *		* min: 1 µs
@@ -398,6 +395,10 @@ struct camera_settings
 	 *		* > 0 ec legacy mode on
 	 */
 	uint32_t ec_legacy_mode;
+	/**
+	 * stime_resolution_mode determines the resolution of the timer controlled by @ref camera_settings.stime. See @ref stimer_resolution_t in enum_settings.h for options.
+	 */
+	uint32_t stime_resolution_mode;
 };
 
 /**

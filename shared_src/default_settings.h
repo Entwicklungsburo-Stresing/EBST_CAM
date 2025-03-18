@@ -15,7 +15,7 @@
 #define settingNobDefault							1
 #define settingStiDefault							sti_STimer
 #define settingBtiDefault							bti_BTimer
-#define settingStime_in_microseconds_Default		1000
+#define settingStime_Default						1000
 #define settingBtime_in_microseconds_Default		1000000
 #define settingSdat_in_10nsDefault					0
 #define settingBdat_in_10nsDefault					0
@@ -101,3 +101,4 @@
 #define settingManipulateDataModeDefault			manipulate_data_mode_none
 #define settingManipulateDataCustomFactorDefault	1
 #define settingEcLegacyModeDefault					false
+#define settingStimeResolutionModeDefault			simer_resolution_1us
