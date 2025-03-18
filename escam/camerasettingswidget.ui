@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>348</width>
-    <height>556</height>
+    <width>452</width>
+    <height>586</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,306 @@
       <layout class="QVBoxLayout" name="verticalLayoutMeasurement">
        <item>
         <layout class="QGridLayout" name="gridLayoutMeasurement">
-         <item row="7" column="3">
+         <item row="2" column="0">
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="19" column="3">
+          <widget class="QComboBox" name="comboBoxTriggerModeIntegrator">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger mode of the integrator in the camera control&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Trigger mode integrator&lt;/span&gt; controls when the integrator of the camera control box starts to integrate.&lt;/p&gt;&lt;p&gt;0: XCK - Trigger the integrator with the start signal XCK of the PCIe board. The integrator starts simultaneously with the sensor.&lt;br/&gt;1: EXTTRIG - Trigger the integrator with the input Ext. Trig. of the camera control. The integrator can be started separately from the sensor&lt;br/&gt;2: DAT - Trigger the integrator with the input Ext. Trig but with an additional delay.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;trigger_mode_integrator&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the trigger modes can found in the manual in chapter 7.3.7.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>XCK</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>External</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>DAT</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="18" column="1">
+          <widget class="QLabel" name="labelTocnt">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of xck skipped before xck signal is shown at &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Trigger output counter&lt;/span&gt; determines how many XCK are skipped until the output &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; shows the XCK signal. Use &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; for the setting &lt;span style=&quot; font-style:italic;&quot;&gt;tor&lt;/span&gt; to see &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; at the output of the PCIe board. &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;Example: tocnt = 2 =&amp;gt; skip every first and second XCK, show XCK on the PCIe output on every third XCK.&lt;/p&gt;&lt;p&gt;min: 0 (TO_CNT_OUT = XCK)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>tocnt</string>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="3">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxBdatIn10ns">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay time between trigger and start of block of scans&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block delay after trigger&lt;/span&gt; is the delay time between the trigger starting a block of scans, which is determined by &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; and the actual start of the block of scans. &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 2,147,483,647 * 10 ns = 21,474,836,470 ns = 21.474836470 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bdat_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; can be found in the manual in chapter 2.9.2 and 6.2.6.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+           <property name="suffix">
+            <string>0 ns</string>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <double>2147483647.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <spacer name="verticalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLabel" name="labelBslope">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger slope of the block trigger&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block trigger slope&lt;/span&gt; determines whether positive, negative or both slopes of a trigger are used. This only applies to external triggers.&lt;/p&gt;&lt;p&gt;0: positive - Use only positive slopes of the trigger input to start a scan.&lt;br/&gt;1: negative - Use only negative slopes of the trigger input to start a scan.&lt;br/&gt;2: both - Use both slopes of the trigger intput to start a scan.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bslope&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>bslope (block trigger slope)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="3">
+          <widget class="QComboBox" name="comboBoxBslope">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger slope of the block trigger&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block trigger slope&lt;/span&gt; determines whether positive, negative or both slopes of a trigger are used. This only applies to external triggers.&lt;/p&gt;&lt;p&gt;0: positive - Use only positive slopes of the trigger input to start a scan.&lt;br/&gt;1: negative - Use only negative slopes of the trigger input to start a scan.&lt;br/&gt;2: both - Use both slopes of the trigger intput to start a scan.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bslope&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>negative</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>positive</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>both</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="21" column="3">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxS1S2ReadDelayIn10ns">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay between trigger and S1 S2 read time&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;S1 S2 read delay&lt;/span&gt; controls the delay between the trigger and the moment, when the status of the S1 and S2 inputs are read. When the delay exceeds XCK, S1 and S2 are never read. &lt;span style=&quot; font-style:italic;&quot;&gt;S1 S2 read delay &lt;/span&gt;is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 4,294,967,295 * 10 ns = 42,949,672,950 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;s1s2_read_delay_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information information about &lt;span style=&quot; font-style:italic;&quot;&gt;S1 S2 read delay &lt;/span&gt;can be found in the manual in chapter 6.2.5.13.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+           <property name="suffix">
+            <string>0 ns</string>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <double>4294967295.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLabel" name="labelBti">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Signal, on which one block of readouts is started.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Block trigger input determines the signal, on which one block of readouts is started.&lt;/p&gt;&lt;p&gt;0: I - external trigger, I input on PCIe card&lt;br/&gt;1: S1 - external trigger, S1 input on PCIe card&lt;br/&gt;2: S2 - external trigger, S2 input on PCIe card&lt;br/&gt;3: S1S2 - external trigger when S1 and S2 are high&lt;br/&gt;4: STimer - trigger with internal timer. Select the time between two blocks of readouts with btime.&lt;br/&gt;5: S1chopper - &lt;br/&gt;6: S2chopper - &lt;br/&gt;7: S1S2chopper - &lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bti_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information on trigger signals can be found in the manual in chapter 6.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>bti (block trigger input)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="15" column="4">
+          <spacer name="horizontalSpacer_7">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="20" column="3">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxXckdelayIn10ns">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;delay between XCK and actual readout&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XCK delay&lt;/span&gt; was the time between the high slope of XCK and the actual start of the camera read out. This is done by delaying VON relative to XCK. Since P222_09 cameras are not designed to interact with the VON signal anymore. For the following camera versions &lt;span style=&quot; font-style:italic;&quot;&gt;xck delay&lt;/span&gt; can be used:&lt;/p&gt;&lt;p&gt;- 205.X&lt;br/&gt;- 215.6 and older&lt;br/&gt;- 206.X&lt;br/&gt;- 216.X&lt;/p&gt;&lt;p&gt;VCLKs are generated inside the camera and the delay between integrator and XCK can be achieved by using the analog delay of the camera control. The option remains here for legacy operation. &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;xckdelay = 500ns + value * 10ns&lt;br/&gt;disable: 0&lt;br/&gt;min 1: 500 ns + 1 * 10ns = 510 ns&lt;br/&gt;max 2.147.483.647: 500 ns + 2.147.483.647 * 10 ns = 21.474.836.970 ns = 21,474.836.970 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; can be found in the manual in chapter 6.2.5.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+           <property name="suffix">
+            <string>0 ns</string>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <double>4294967295.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="15" column="1">
+          <widget class="QLabel" name="labelBec">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Electronically controlled exposure time before each block of scans&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block exposure control &lt;/span&gt;adds a delay time between the block trigger &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; and the start of the block. Mechanical shutters can be controlled with this setting. The &lt;span style=&quot; font-style:italic;&quot;&gt;bec&lt;/span&gt; time is added between the end of &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; and the start of the block. &lt;span style=&quot; font-style:italic;&quot;&gt;bec&lt;/span&gt; is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 4,294,967,295 * 10 ns = 42,949,672,950 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bec_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;bec&lt;/span&gt; can be found in the manual in chapter 4.9.1 and 6.2.6.3. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>bec (block exposure control)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="3">
+          <widget class="QComboBox" name="comboBoxSslope">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger slope of the scan trigger&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan trigger slope&lt;/span&gt; determines whether positive, negative or both slopes of a trigger are used. This only applies to external triggers.&lt;/p&gt;&lt;p&gt;0: positive - Use only positive slopes of the trigger input to start a scan.&lt;br/&gt;1: negative - Use only negative slopes of the trigger input to start a scan.&lt;br/&gt;2: both - Use both slopes of the trigger intput to start a scan.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sslope&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>positive</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>negative</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>both</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="19" column="1">
+          <widget class="QLabel" name="labelTriggerModeIntegrator">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger mode of the integrator in the camera control&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Trigger mode integrator&lt;/span&gt; controls when the integrator of the camera control box starts to integrate.&lt;/p&gt;&lt;p&gt;0: XCK - Trigger the integrator with the start signal XCK of the PCIe board. The integrator starts simultaneously with the sensor.&lt;br/&gt;1: EXTTRIG - Trigger the integrator with the input Ext. Trig. of the camera control. The integrator can be started separately from the sensor&lt;br/&gt;2: DAT - Trigger the integrator with the input Ext. Trig but with an additional delay.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;trigger_mode_integrator&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the trigger modes can found in the manual in chapter 7.3.7.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>trigger mode integrator</string>
+           </property>
+          </widget>
+         </item>
+         <item row="20" column="1">
+          <widget class="QLabel" name="labelXckdelayIn10ns">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;delay between XCK and actual readout&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XCK delay&lt;/span&gt; was the time between the high slope of XCK and the actual start of the camera read out. This is done by delaying VON relative to XCK. Since P222_09 cameras are not designed to interact with the VON signal anymore. For the following camera versions &lt;span style=&quot; font-style:italic;&quot;&gt;xck delay&lt;/span&gt; can be used:&lt;/p&gt;&lt;p&gt;- 205.X&lt;br/&gt;- 215.6 and older&lt;br/&gt;- 206.X&lt;br/&gt;- 216.X&lt;/p&gt;&lt;p&gt;VCLKs are generated inside the camera and the delay between integrator and XCK can be achieved by using the analog delay of the camera control. The option remains here for legacy operation. &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;xckdelay = 500ns + value * 10ns&lt;br/&gt;disable: 0&lt;br/&gt;min 1: 500 ns + 1 * 10ns = 510 ns&lt;br/&gt;max 2.147.483.647: 500 ns + 2.147.483.647 * 10 ns = 21.474.836.970 ns = 21,474.836.970 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; can be found in the manual in chapter 6.2.5.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>xck delay (legacy option)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QLabel" name="labelStimeResolution">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time resolution of stimer&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;stime resolution&lt;/span&gt; determines the resolution of the timer controlled by &lt;span style=&quot; font-style:italic;&quot;&gt;stimer.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;100 ns&lt;br/&gt;Min: 400 ns&lt;br/&gt;Step: 100 ns&lt;br/&gt;Max: 26,843,545,500 ns = 26.8435455 s&lt;/p&gt;&lt;p&gt;1 µs (default)&lt;br/&gt;Min: 4 µs&lt;br/&gt;Step : 1 µs&lt;br/&gt;Max: 268,435,455 µs = 268,435.455 s = 4.47 min&lt;/p&gt;&lt;p&gt;100 µs&lt;br/&gt;Min: 400 µs&lt;br/&gt;Step: 100 µs&lt;br/&gt;Max: 26,843,545,500 µs = 26,843.5455 s = 447.39 min = 7.46 h&lt;/p&gt;&lt;p&gt;1 ms&lt;br/&gt;Min: 4 ms&lt;br/&gt;Step: 1 ms&lt;br/&gt;Max: 268,435,455 ms = 268,435.455 s = 4473.9 min = 74.6 h&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;stime_resolution_mode&lt;/span&gt; of the ESLSCDLL API.&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>stime resolution</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="3">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxSTime">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time between the start of two readouts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan timer&lt;/span&gt; is the time between the start of two readouts. This time is used when &lt;span style=&quot; font-style:italic;&quot;&gt;STimer&lt;/span&gt; is selected for &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. The resolution of the timer depends on the setting &lt;span style=&quot; font-style:italic;&quot;&gt;stime resolution.&lt;/span&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; is a 28 bit unsigned integer.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;stime&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; can be found in the manual in chapter 6.4.4.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>false</bool>
+           </property>
+           <property name="suffix">
+            <string> µs</string>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="minimum">
+            <double>4.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>268435455.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="3">
           <widget class="QDoubleSpinBox" name="doubleSpinBoxBTimer_in_us">
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time between the start of two blocks of readouts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -54,59 +353,44 @@
            </property>
           </widget>
          </item>
-         <item row="16" column="3">
-          <widget class="QSpinBox" name="spinBoxBticnt">
+         <item row="4" column="1">
+          <widget class="QLabel" name="labelSslope">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next block start&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger slope of the scan trigger&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block trigger input counter&lt;/span&gt; determines how many block trigger inputs are skipped before the next block start is triggered. Every bticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; is a 7 bit unsigned integer. Introduced in PCIe board version 222.12.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-           <property name="maximum">
-            <number>127</number>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="1">
-          <widget class="QLabel" name="labelBTimer">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time between the start of two blocks of readouts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block timer&lt;/span&gt; is the time between the start of two blocks of readouts. This time is used when &lt;span style=&quot; font-style:italic;&quot;&gt;Btimer&lt;/span&gt; is selected for &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;btimer&lt;/span&gt; is a 28 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1 µs&lt;br/&gt;step: 1 µs&lt;br/&gt;max: 268,435,455 µs = 268.435455 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;btime_in_microsec&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;btimer&lt;/span&gt; can be found in the manual in chapter 6.4.4.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan trigger slope&lt;/span&gt; determines whether positive, negative or both slopes of a trigger are used. This only applies to external triggers.&lt;/p&gt;&lt;p&gt;0: positive - Use only positive slopes of the trigger input to start a scan.&lt;br/&gt;1: negative - Use only negative slopes of the trigger input to start a scan.&lt;br/&gt;2: both - Use both slopes of the trigger intput to start a scan.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sslope&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>btimer (block timer)</string>
+            <string>sslope (scan trigger slope)</string>
            </property>
           </widget>
          </item>
-         <item row="18" column="3">
-          <widget class="QComboBox" name="comboBoxTriggerModeIntegrator">
+         <item row="9" column="1">
+          <widget class="QLabel" name="labelSdat">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger mode of the integrator in the camera control&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay time between trigger and start of a scan&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Trigger mode integrator&lt;/span&gt; controls when the integrator of the camera control box starts to integrate.&lt;/p&gt;&lt;p&gt;0: XCK - Trigger the integrator with the start signal XCK of the PCIe board. The integrator starts simultaneously with the sensor.&lt;br/&gt;1: EXTTRIG - Trigger the integrator with the input Ext. Trig. of the camera control. The integrator can be started separately from the sensor&lt;br/&gt;2: DAT - Trigger the integrator with the input Ext. Trig but with an additional delay.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;trigger_mode_integrator&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the trigger modes can found in the manual in chapter 7.3.7.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan delay after trigger&lt;/span&gt; is the delay time between the trigger starting a scan, which is determined by &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt; and the actual start of the scan. &lt;span style=&quot; font-style:italic;&quot;&gt;sdat&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 2,147,483,647 * 10 ns = 21,474,836,470 ns = 21.474836470 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sdat_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;sdat&lt;/span&gt; can be found in the manual in chapter 2.9.2 and 6.2.4.10.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
-           <item>
-            <property name="text">
-             <string>XCK</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>External</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>DAT</string>
-            </property>
-           </item>
+           <property name="text">
+            <string>sdat (scan delay after trigger)</string>
+           </property>
           </widget>
+         </item>
+         <item row="22" column="1">
+          <spacer name="verticalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
          </item>
          <item row="2" column="3">
           <widget class="QComboBox" name="comboBoxSti">
@@ -146,6 +430,79 @@
              <string>ASL</string>
             </property>
            </item>
+          </widget>
+         </item>
+         <item row="21" column="1">
+          <widget class="QLabel" name="labelS1S2ReadDelayIn10ns">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay between trigger and S1 S2 read time&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;S1 S2 read delay&lt;/span&gt; controls the delay between the trigger and the moment, when the status of the S1 and S2 inputs are read. When the delay exceeds XCK, S1 and S2 are never read. &lt;span style=&quot; font-style:italic;&quot;&gt;S1 S2 read delay &lt;/span&gt;is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 4,294,967,295 * 10 ns = 42,949,672,950 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;s1s2_read_delay_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information information about &lt;span style=&quot; font-style:italic;&quot;&gt;S1 S2 read delay &lt;/span&gt;can be found in the manual in chapter 6.2.5.13.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>S1 &amp; S2 read delay</string>
+           </property>
+          </widget>
+         </item>
+         <item row="17" column="1">
+          <widget class="QLabel" name="labelBticnt">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next block start&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block trigger input counter&lt;/span&gt; determines how many block trigger inputs are skipped before the next block start is triggered. Every bticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; is a 7 bit unsigned integer. Introduced in PCIe board version 222.12.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>bticnt</string>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="3">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxSecIn10ns">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Electronically controlled exposure time before each scan&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan exposure control &lt;/span&gt;adds a delay time between the scan trigger &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt; and the start of the camera read out (start of XCK). Some sensors use this time for a electronic exposure control. Also mechanical shutters can be controlled with this setting. The &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; time is added between the end of &lt;span style=&quot; font-style:italic;&quot;&gt;sdat&lt;/span&gt; and the start of the camera read out. &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 4,294,967,295 * 10 ns = 42,949,672,950 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sec_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; can be found in the manual in chapter 4.9.1 and 6.2.4.11. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+           <property name="correctionMode">
+            <enum>QAbstractSpinBox::CorrectionMode::CorrectToPreviousValue</enum>
+           </property>
+           <property name="suffix">
+            <string>0 ns</string>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <double>4294967295.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="15" column="3">
+          <widget class="QDoubleSpinBox" name="doubleSpinBoxBecIn10ns">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Electronically controlled exposure time before each block of scans&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block exposure control &lt;/span&gt;adds a delay time between the block trigger &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; and the start of the block. Mechanical shutters can be controlled with this setting. The &lt;span style=&quot; font-style:italic;&quot;&gt;bec&lt;/span&gt; time is added between the end of &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; and the start of the block. &lt;span style=&quot; font-style:italic;&quot;&gt;bec&lt;/span&gt; is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 4,294,967,295 * 10 ns = 42,949,672,950 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bec_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;bec&lt;/span&gt; can be found in the manual in chapter 4.9.1 and 6.2.6.3. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+           <property name="suffix">
+            <string>0 ns</string>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <double>4294967295.000000000000000</double>
+           </property>
           </widget>
          </item>
          <item row="3" column="3">
@@ -201,16 +558,116 @@
            </item>
           </widget>
          </item>
-         <item row="14" column="1">
-          <widget class="QLabel" name="labelBec">
+         <item row="8" column="1">
+          <widget class="QLabel" name="labelBTimer">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Electronically controlled exposure time before each block of scans&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time between the start of two blocks of readouts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block exposure control &lt;/span&gt;adds a delay time between the block trigger &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; and the start of the block. Mechanical shutters can be controlled with this setting. The &lt;span style=&quot; font-style:italic;&quot;&gt;bec&lt;/span&gt; time is added between the end of &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; and the start of the block. &lt;span style=&quot; font-style:italic;&quot;&gt;bec&lt;/span&gt; is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 4,294,967,295 * 10 ns = 42,949,672,950 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bec_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;bec&lt;/span&gt; can be found in the manual in chapter 4.9.1 and 6.2.6.3. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block timer&lt;/span&gt; is the time between the start of two blocks of readouts. This time is used when &lt;span style=&quot; font-style:italic;&quot;&gt;Btimer&lt;/span&gt; is selected for &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;btimer&lt;/span&gt; is a 28 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 1 µs&lt;br/&gt;step: 1 µs&lt;br/&gt;max: 268,435,455 µs = 268.435455 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;btime_in_microsec&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;btimer&lt;/span&gt; can be found in the manual in chapter 6.4.4.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>bec (block exposure control)</string>
+            <string>btimer (block timer)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="1">
+          <widget class="QLabel" name="labelBdat">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay time between trigger and start of block of scans&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block delay after trigger&lt;/span&gt; is the delay time between the trigger starting a block of scans, which is determined by &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; and the actual start of the block of scans. &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 2,147,483,647 * 10 ns = 21,474,836,470 ns = 21.474836470 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bdat_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; can be found in the manual in chapter 2.9.2 and 6.2.6.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>bdat (block delay after trigger)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="18" column="3">
+          <widget class="QSpinBox" name="spinBoxTocnt">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of xck skipped before xck signal is shown at &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Trigger output counter&lt;/span&gt; determines how many XCK are skipped until the output &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; shows the XCK signal. Use &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; for the setting &lt;span style=&quot; font-style:italic;&quot;&gt;tor&lt;/span&gt; to see &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; at the output of the PCIe board. &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;Example: tocnt = 2 =&amp;gt; skip every first and second XCK, show XCK on the PCIe output on every third XCK.&lt;/p&gt;&lt;p&gt;min: 0 (TO_CNT_OUT = XCK)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+         </item>
+         <item row="17" column="3">
+          <widget class="QSpinBox" name="spinBoxBticnt">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next block start&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block trigger input counter&lt;/span&gt; determines how many block trigger inputs are skipped before the next block start is triggered. Every bticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; is a 7 bit unsigned integer. Introduced in PCIe board version 222.12.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+         </item>
+         <item row="16" column="3">
+          <widget class="QSpinBox" name="spinBoxSticnt">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan trigger input counter&lt;/span&gt; determines how many scan trigger inputs are skipped before the next measurement is triggered. Every sticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+           <property name="maximum">
+            <number>127</number>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="1">
+          <widget class="QLabel" name="labelSec">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Electronically controlled exposure time before each scan&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan exposure control &lt;/span&gt;adds a delay time between the scan trigger &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt; and the start of the camera read out (start of XCK). Some sensors use this time for a electronic exposure control. Also mechanical shutters can be controlled with this setting. The &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; time is added between the end of &lt;span style=&quot; font-style:italic;&quot;&gt;sdat&lt;/span&gt; and the start of the camera read out. &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 4,294,967,295 * 10 ns = 42,949,672,950 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sec_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; can be found in the manual in chapter 4.9.1 and 6.2.4.11. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>sec (scan exposure control)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="labelSti">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Signal, on which one readout is started.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Scan trigger input determines the signal, on which one readout is started.&lt;/p&gt;&lt;p&gt;0: I - external trigger, I input on PCIe card&lt;br/&gt;1: S1 - external trigger, S1 input on PCIe card&lt;br/&gt;2: S2 - external trigger, S2 input on PCIe card&lt;br/&gt;3: S2 enable I - external trigger by I, but only when enaled by S2&lt;br/&gt;4: STimer - trigger with internal timer. Select the time between two readouts with stimer.&lt;br/&gt;5: ASL - Automatic internal instant trigger at the end of the last readout.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sti_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information on trigger signals can be found in the manual in chapter 6.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>sti (scan trigger input)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="16" column="1">
+          <widget class="QLabel" name="labelSticnt">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan trigger input counter&lt;/span&gt; determines how many scan trigger inputs are skipped before the next measurement is triggered. Every sticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>sticnt</string>
            </property>
           </widget>
          </item>
@@ -227,106 +684,7 @@
            </property>
           </widget>
          </item>
-         <item row="18" column="1">
-          <widget class="QLabel" name="labelTriggerModeIntegrator">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger mode of the integrator in the camera control&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Trigger mode integrator&lt;/span&gt; controls when the integrator of the camera control box starts to integrate.&lt;/p&gt;&lt;p&gt;0: XCK - Trigger the integrator with the start signal XCK of the PCIe board. The integrator starts simultaneously with the sensor.&lt;br/&gt;1: EXTTRIG - Trigger the integrator with the input Ext. Trig. of the camera control. The integrator can be started separately from the sensor&lt;br/&gt;2: DAT - Trigger the integrator with the input Ext. Trig but with an additional delay.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;trigger_mode_integrator&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about the trigger modes can found in the manual in chapter 7.3.7.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>trigger mode integrator</string>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="3">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxBecIn10ns">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Electronically controlled exposure time before each block of scans&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block exposure control &lt;/span&gt;adds a delay time between the block trigger &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; and the start of the block. Mechanical shutters can be controlled with this setting. The &lt;span style=&quot; font-style:italic;&quot;&gt;bec&lt;/span&gt; time is added between the end of &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; and the start of the block. &lt;span style=&quot; font-style:italic;&quot;&gt;bec&lt;/span&gt; is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 4,294,967,295 * 10 ns = 42,949,672,950 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bec_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;bec&lt;/span&gt; can be found in the manual in chapter 4.9.1 and 6.2.6.3. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-           <property name="suffix">
-            <string>0 ns</string>
-           </property>
-           <property name="decimals">
-            <number>0</number>
-           </property>
-           <property name="maximum">
-            <double>4294967295.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="13" column="1">
-          <widget class="QLabel" name="labelSec">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Electronically controlled exposure time before each scan&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan exposure control &lt;/span&gt;adds a delay time between the scan trigger &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt; and the start of the camera read out (start of XCK). Some sensors use this time for a electronic exposure control. Also mechanical shutters can be controlled with this setting. The &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; time is added between the end of &lt;span style=&quot; font-style:italic;&quot;&gt;sdat&lt;/span&gt; and the start of the camera read out. &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 4,294,967,295 * 10 ns = 42,949,672,950 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sec_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; can be found in the manual in chapter 4.9.1 and 6.2.4.11. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>sec (scan exposure control)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="15" column="1">
-          <widget class="QLabel" name="labelSticnt">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan trigger input counter&lt;/span&gt; determines how many scan trigger inputs are skipped before the next measurement is triggered. Every sticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>sticnt</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1">
-          <widget class="QLabel" name="labelSdat">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay time between trigger and start of a scan&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan delay after trigger&lt;/span&gt; is the delay time between the trigger starting a scan, which is determined by &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt; and the actual start of the scan. &lt;span style=&quot; font-style:italic;&quot;&gt;sdat&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 2,147,483,647 * 10 ns = 21,474,836,470 ns = 21.474836470 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sdat_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;sdat&lt;/span&gt; can be found in the manual in chapter 2.9.2 and 6.2.4.10.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>sdat (scan delay after trigger)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="3">
-          <widget class="QComboBox" name="comboBoxSslope">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger slope of the scan trigger&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan trigger slope&lt;/span&gt; determines whether positive, negative or both slopes of a trigger are used. This only applies to external triggers.&lt;/p&gt;&lt;p&gt;0: positive - Use only positive slopes of the trigger input to start a scan.&lt;br/&gt;1: negative - Use only negative slopes of the trigger input to start a scan.&lt;br/&gt;2: both - Use both slopes of the trigger intput to start a scan.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sslope&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>positive</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>negative</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>both</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="8" column="3">
+         <item row="9" column="3">
           <widget class="QDoubleSpinBox" name="doubleSpinBoxSdatIn10ns">
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay time between trigger and start of a scan&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -348,350 +706,79 @@
            </property>
           </widget>
          </item>
-         <item row="13" column="3">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxSecIn10ns">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Electronically controlled exposure time before each scan&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan exposure control &lt;/span&gt;adds a delay time between the scan trigger &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt; and the start of the camera read out (start of XCK). Some sensors use this time for a electronic exposure control. Also mechanical shutters can be controlled with this setting. The &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; time is added between the end of &lt;span style=&quot; font-style:italic;&quot;&gt;sdat&lt;/span&gt; and the start of the camera read out. &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 4,294,967,295 * 10 ns = 42,949,672,950 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sec_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;sec&lt;/span&gt; can be found in the manual in chapter 4.9.1 and 6.2.4.11. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-           <property name="correctionMode">
-            <enum>QAbstractSpinBox::CorrectionMode::CorrectToPreviousValue</enum>
-           </property>
-           <property name="suffix">
-            <string>0 ns</string>
-           </property>
-           <property name="decimals">
-            <number>0</number>
-           </property>
-           <property name="maximum">
-            <double>4294967295.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="3">
-          <widget class="QComboBox" name="comboBoxBslope">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger slope of the block trigger&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block trigger slope&lt;/span&gt; determines whether positive, negative or both slopes of a trigger are used. This only applies to external triggers.&lt;/p&gt;&lt;p&gt;0: positive - Use only positive slopes of the trigger input to start a scan.&lt;br/&gt;1: negative - Use only negative slopes of the trigger input to start a scan.&lt;br/&gt;2: both - Use both slopes of the trigger intput to start a scan.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bslope&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
+         <item row="7" column="3">
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <property name="text">
-             <string>negative</string>
-            </property>
+            <widget class="QRadioButton" name="radioButton100ns">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time resolution of stimer&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="whatsThis">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;stime resolution&lt;/span&gt; determines the resolution of the timer controlled by &lt;span style=&quot; font-style:italic;&quot;&gt;stimer.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;100 ns&lt;br/&gt;Min: 400 ns&lt;br/&gt;Step: 100 ns&lt;br/&gt;Max: 26,843,545,500 ns = 26.8435455 s&lt;/p&gt;&lt;p&gt;1 µs (default)&lt;br/&gt;Min: 4 µs&lt;br/&gt;Step : 1 µs&lt;br/&gt;Max: 268,435,455 µs = 268,435.455 s = 4.47 min&lt;/p&gt;&lt;p&gt;100 µs&lt;br/&gt;Min: 400 µs&lt;br/&gt;Step: 100 µs&lt;br/&gt;Max: 26,843,545,500 µs = 26,843.5455 s = 447.39 min = 7.46 h&lt;/p&gt;&lt;p&gt;1 ms&lt;br/&gt;Min: 4 ms&lt;br/&gt;Step: 1 ms&lt;br/&gt;Max: 268,435,455 ms = 268,435.455 s = 4473.9 min = 74.6 h&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;stime_resolution_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>100 ns</string>
+             </property>
+             <attribute name="buttonGroup">
+              <string notr="true">buttonGroupStimeResolution</string>
+             </attribute>
+            </widget>
            </item>
            <item>
-            <property name="text">
-             <string>positive</string>
-            </property>
+            <widget class="QRadioButton" name="radioButton1us">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time resolution of stimer&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="whatsThis">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;stime resolution&lt;/span&gt; determines the resolution of the timer controlled by &lt;span style=&quot; font-style:italic;&quot;&gt;stimer.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;100 ns&lt;br/&gt;Min: 400 ns&lt;br/&gt;Step: 100 ns&lt;br/&gt;Max: 26,843,545,500 ns = 26.8435455 s&lt;/p&gt;&lt;p&gt;1 µs (default)&lt;br/&gt;Min: 4 µs&lt;br/&gt;Step : 1 µs&lt;br/&gt;Max: 268,435,455 µs = 268,435.455 s = 4.47 min&lt;/p&gt;&lt;p&gt;100 µs&lt;br/&gt;Min: 400 µs&lt;br/&gt;Step: 100 µs&lt;br/&gt;Max: 26,843,545,500 µs = 26,843.5455 s = 447.39 min = 7.46 h&lt;/p&gt;&lt;p&gt;1 ms&lt;br/&gt;Min: 4 ms&lt;br/&gt;Step: 1 ms&lt;br/&gt;Max: 268,435,455 ms = 268,435.455 s = 4473.9 min = 74.6 h&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;stime_resolution_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>1 µs</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+             <attribute name="buttonGroup">
+              <string notr="true">buttonGroupStimeResolution</string>
+             </attribute>
+            </widget>
            </item>
            <item>
-            <property name="text">
-             <string>both</string>
-            </property>
+            <widget class="QRadioButton" name="radioButton100us">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time resolution of stimer&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="whatsThis">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;stime resolution&lt;/span&gt; determines the resolution of the timer controlled by &lt;span style=&quot; font-style:italic;&quot;&gt;stimer.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;100 ns&lt;br/&gt;Min: 400 ns&lt;br/&gt;Step: 100 ns&lt;br/&gt;Max: 26,843,545,500 ns = 26.8435455 s&lt;/p&gt;&lt;p&gt;1 µs (default)&lt;br/&gt;Min: 4 µs&lt;br/&gt;Step : 1 µs&lt;br/&gt;Max: 268,435,455 µs = 268,435.455 s = 4.47 min&lt;/p&gt;&lt;p&gt;100 µs&lt;br/&gt;Min: 400 µs&lt;br/&gt;Step: 100 µs&lt;br/&gt;Max: 26,843,545,500 µs = 26,843.5455 s = 447.39 min = 7.46 h&lt;/p&gt;&lt;p&gt;1 ms&lt;br/&gt;Min: 4 ms&lt;br/&gt;Step: 1 ms&lt;br/&gt;Max: 268,435,455 ms = 268,435.455 s = 4473.9 min = 74.6 h&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;stime_resolution_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>100 µs</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+             <attribute name="buttonGroup">
+              <string notr="true">buttonGroupStimeResolution</string>
+             </attribute>
+            </widget>
            </item>
-          </widget>
-         </item>
-         <item row="16" column="1">
-          <widget class="QLabel" name="labelBticnt">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next block start&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block trigger input counter&lt;/span&gt; determines how many block trigger inputs are skipped before the next block start is triggered. Every bticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt;. &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; is a 7 bit unsigned integer. Introduced in PCIe board version 222.12.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>bticnt</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="labelSti">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Signal, on which one readout is started.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Scan trigger input determines the signal, on which one readout is started.&lt;/p&gt;&lt;p&gt;0: I - external trigger, I input on PCIe card&lt;br/&gt;1: S1 - external trigger, S1 input on PCIe card&lt;br/&gt;2: S2 - external trigger, S2 input on PCIe card&lt;br/&gt;3: S2 enable I - external trigger by I, but only when enaled by S2&lt;br/&gt;4: STimer - trigger with internal timer. Select the time between two readouts with stimer.&lt;br/&gt;5: ASL - Automatic internal instant trigger at the end of the last readout.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sti_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information on trigger signals can be found in the manual in chapter 6.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>sti (scan trigger input)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="15" column="3">
-          <widget class="QSpinBox" name="spinBoxSticnt">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of triggers skipped before the next measurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan trigger input counter&lt;/span&gt; determines how many scan trigger inputs are skipped before the next measurement is triggered. Every sticnt+1 trigger input the measurement is triggered according to &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 (normal operation, every trigger is used)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member s&lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;ticnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-           <property name="maximum">
-            <number>127</number>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <spacer name="horizontalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="20" column="1">
-          <widget class="QLabel" name="labelS1S2ReadDelayIn10ns">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay between trigger and S1 S2 read time&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;S1 S2 read delay&lt;/span&gt; controls the delay between the trigger and the moment, when the status of the S1 and S2 inputs are read. When the delay exceeds XCK, S1 and S2 are never read. &lt;span style=&quot; font-style:italic;&quot;&gt;S1 S2 read delay &lt;/span&gt;is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 4,294,967,295 * 10 ns = 42,949,672,950 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;s1s2_read_delay_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information information about &lt;span style=&quot; font-style:italic;&quot;&gt;S1 S2 read delay &lt;/span&gt;can be found in the manual in chapter 6.2.5.13.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>S1 &amp; S2 read delay</string>
-           </property>
-          </widget>
-         </item>
-         <item row="19" column="3">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxXckdelayIn10ns">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;delay between XCK and actual readout&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XCK delay&lt;/span&gt; was the time between the high slope of XCK and the actual start of the camera read out. This is done by delaying VON relative to XCK. Since P222_09 cameras are not designed to interact with the VON signal anymore. For the following camera versions &lt;span style=&quot; font-style:italic;&quot;&gt;xck delay&lt;/span&gt; can be used:&lt;/p&gt;&lt;p&gt;- 205.X&lt;br/&gt;- 215.6 and older&lt;br/&gt;- 206.X&lt;br/&gt;- 216.X&lt;/p&gt;&lt;p&gt;VCLKs are generated inside the camera and the delay between integrator and XCK can be achieved by using the analog delay of the camera control. The option remains here for legacy operation. &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;xckdelay = 500ns + value * 10ns&lt;br/&gt;disable: 0&lt;br/&gt;min 1: 500 ns + 1 * 10ns = 510 ns&lt;br/&gt;max 2.147.483.647: 500 ns + 2.147.483.647 * 10 ns = 21.474.836.970 ns = 21,474.836.970 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; can be found in the manual in chapter 6.2.5.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-           <property name="suffix">
-            <string>0 ns</string>
-           </property>
-           <property name="decimals">
-            <number>0</number>
-           </property>
-           <property name="maximum">
-            <double>4294967295.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLabel" name="labelSslope">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger slope of the scan trigger&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan trigger slope&lt;/span&gt; determines whether positive, negative or both slopes of a trigger are used. This only applies to external triggers.&lt;/p&gt;&lt;p&gt;0: positive - Use only positive slopes of the trigger input to start a scan.&lt;br/&gt;1: negative - Use only negative slopes of the trigger input to start a scan.&lt;br/&gt;2: both - Use both slopes of the trigger intput to start a scan.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;sslope&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>sslope (scan trigger slope)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="1">
-          <widget class="QLabel" name="labelBdat">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay time between trigger and start of block of scans&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block delay after trigger&lt;/span&gt; is the delay time between the trigger starting a block of scans, which is determined by &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; and the actual start of the block of scans. &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 2,147,483,647 * 10 ns = 21,474,836,470 ns = 21.474836470 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bdat_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; can be found in the manual in chapter 2.9.2 and 6.2.6.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>bdat (block delay after trigger)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="3">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxBdatIn10ns">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay time between trigger and start of block of scans&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block delay after trigger&lt;/span&gt; is the delay time between the trigger starting a block of scans, which is determined by &lt;span style=&quot; font-style:italic;&quot;&gt;bti&lt;/span&gt; and the actual start of the block of scans. &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;disable: 0&lt;br/&gt;min: 1 * 10 ns = 10 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 2,147,483,647 * 10 ns = 21,474,836,470 ns = 21.474836470 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bdat_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;bdat&lt;/span&gt; can be found in the manual in chapter 2.9.2 and 6.2.6.2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-           <property name="suffix">
-            <string>0 ns</string>
-           </property>
-           <property name="decimals">
-            <number>0</number>
-           </property>
-           <property name="maximum">
-            <double>2147483647.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <spacer name="verticalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Orientation::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="20" column="3">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxS1S2ReadDelayIn10ns">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay between trigger and S1 S2 read time&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;S1 S2 read delay&lt;/span&gt; controls the delay between the trigger and the moment, when the status of the S1 and S2 inputs are read. When the delay exceeds XCK, S1 and S2 are never read. &lt;span style=&quot; font-style:italic;&quot;&gt;S1 S2 read delay &lt;/span&gt;is a 32 bit unsigned integer.&lt;/p&gt;&lt;p&gt;min: 0 ns&lt;br/&gt;step: 10 ns&lt;br/&gt;max: 4,294,967,295 * 10 ns = 42,949,672,950 ns&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;s1s2_read_delay_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information information about &lt;span style=&quot; font-style:italic;&quot;&gt;S1 S2 read delay &lt;/span&gt;can be found in the manual in chapter 6.2.5.13.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-           <property name="suffix">
-            <string>0 ns</string>
-           </property>
-           <property name="decimals">
-            <number>0</number>
-           </property>
-           <property name="maximum">
-            <double>4294967295.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="19" column="1">
-          <widget class="QLabel" name="labelXckdelayIn10ns">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;delay between XCK and actual readout&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XCK delay&lt;/span&gt; was the time between the high slope of XCK and the actual start of the camera read out. This is done by delaying VON relative to XCK. Since P222_09 cameras are not designed to interact with the VON signal anymore. For the following camera versions &lt;span style=&quot; font-style:italic;&quot;&gt;xck delay&lt;/span&gt; can be used:&lt;/p&gt;&lt;p&gt;- 205.X&lt;br/&gt;- 215.6 and older&lt;br/&gt;- 206.X&lt;br/&gt;- 216.X&lt;/p&gt;&lt;p&gt;VCLKs are generated inside the camera and the delay between integrator and XCK can be achieved by using the analog delay of the camera control. The option remains here for legacy operation. &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; is a 31 bit unsigned integer.&lt;/p&gt;&lt;p&gt;xckdelay = 500ns + value * 10ns&lt;br/&gt;disable: 0&lt;br/&gt;min 1: 500 ns + 1 * 10ns = 510 ns&lt;br/&gt;max 2.147.483.647: 500 ns + 2.147.483.647 * 10 ns = 21.474.836.970 ns = 21,474.836.970 s&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay_in_10ns&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;xckdelay&lt;/span&gt; can be found in the manual in chapter 6.2.5.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>xck delay (legacy option)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="21" column="1">
-          <spacer name="verticalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Orientation::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="5" column="1">
-          <widget class="QLabel" name="labelBslope">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trigger slope of the block trigger&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Block trigger slope&lt;/span&gt; determines whether positive, negative or both slopes of a trigger are used. This only applies to external triggers.&lt;/p&gt;&lt;p&gt;0: positive - Use only positive slopes of the trigger input to start a scan.&lt;br/&gt;1: negative - Use only negative slopes of the trigger input to start a scan.&lt;br/&gt;2: both - Use both slopes of the trigger intput to start a scan.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bslope&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>bslope (block trigger slope)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="labelBti">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Signal, on which one block of readouts is started.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Block trigger input determines the signal, on which one block of readouts is started.&lt;/p&gt;&lt;p&gt;0: I - external trigger, I input on PCIe card&lt;br/&gt;1: S1 - external trigger, S1 input on PCIe card&lt;br/&gt;2: S2 - external trigger, S2 input on PCIe card&lt;br/&gt;3: S1S2 - external trigger when S1 and S2 are high&lt;br/&gt;4: STimer - trigger with internal timer. Select the time between two blocks of readouts with btime.&lt;br/&gt;5: S1chopper - &lt;br/&gt;6: S2chopper - &lt;br/&gt;7: S1S2chopper - &lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;bti_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information on trigger signals can be found in the manual in chapter 6.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>bti (block trigger input)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="4">
-          <spacer name="horizontalSpacer_7">
-           <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="6" column="3">
-          <widget class="QDoubleSpinBox" name="doubleSpinBoxSTime">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time between the start of two readouts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Scan timer&lt;/span&gt; is the time between the start of two readouts. This time is used when &lt;span style=&quot; font-style:italic;&quot;&gt;STimer&lt;/span&gt; is selected for &lt;span style=&quot; font-style:italic;&quot;&gt;sti&lt;/span&gt;. The resolution of the timer depends on the setting &lt;span style=&quot; font-style:italic;&quot;&gt;stime resolution.&lt;/span&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; is a 28 bit unsigned integer.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;stime&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;stimer&lt;/span&gt; can be found in the manual in chapter 6.4.4.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-           <property name="showGroupSeparator" stdset="0">
-            <bool>true</bool>
-           </property>
-           <property name="suffix">
-            <string> µs</string>
-           </property>
-           <property name="decimals">
-            <number>0</number>
-           </property>
-           <property name="minimum">
-            <double>1.000000000000000</double>
-           </property>
-           <property name="maximum">
-            <double>268435455.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="17" column="1">
-          <widget class="QLabel" name="labelTocnt">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of xck skipped before xck signal is shown at &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Trigger output counter&lt;/span&gt; determines how many XCK are skipped until the output &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; shows the XCK signal. Use &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; for the setting &lt;span style=&quot; font-style:italic;&quot;&gt;tor&lt;/span&gt; to see &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; at the output of the PCIe board. &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;Example: tocnt = 2 =&amp;gt; skip every first and second XCK, show XCK on the PCIe output on every third XCK.&lt;/p&gt;&lt;p&gt;min: 0 (TO_CNT_OUT = XCK)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>tocnt</string>
-           </property>
-          </widget>
-         </item>
-         <item row="17" column="3">
-          <widget class="QSpinBox" name="spinBoxTocnt">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amount of xck skipped before xck signal is shown at &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Trigger output counter&lt;/span&gt; determines how many XCK are skipped until the output &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; shows the XCK signal. Use &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; for the setting &lt;span style=&quot; font-style:italic;&quot;&gt;tor&lt;/span&gt; to see &lt;span style=&quot; font-style:italic;&quot;&gt;TO_CNT_OUT&lt;/span&gt; at the output of the PCIe board. &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; is a 7 bit unsigned integer.&lt;/p&gt;&lt;p&gt;Example: tocnt = 2 =&amp;gt; skip every first and second XCK, show XCK on the PCIe output on every third XCK.&lt;/p&gt;&lt;p&gt;min: 0 (TO_CNT_OUT = XCK)&lt;br/&gt;step: 1&lt;br/&gt;max: 127&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;p&gt;Further information about &lt;span style=&quot; font-style:italic;&quot;&gt;tocnt&lt;/span&gt; can be found in the manual in chapter 6.2.4.12.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-           <property name="maximum">
-            <number>127</number>
-           </property>
-          </widget>
+           <item>
+            <widget class="QRadioButton" name="radioButton1ms">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time resolution of stimer&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="whatsThis">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;stime resolution&lt;/span&gt; determines the resolution of the timer controlled by &lt;span style=&quot; font-style:italic;&quot;&gt;stimer.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;100 ns&lt;br/&gt;Min: 400 ns&lt;br/&gt;Step: 100 ns&lt;br/&gt;Max: 26,843,545,500 ns = 26.8435455 s&lt;/p&gt;&lt;p&gt;1 µs (default)&lt;br/&gt;Min: 4 µs&lt;br/&gt;Step : 1 µs&lt;br/&gt;Max: 268,435,455 µs = 268,435.455 s = 4.47 min&lt;/p&gt;&lt;p&gt;100 µs&lt;br/&gt;Min: 400 µs&lt;br/&gt;Step: 100 µs&lt;br/&gt;Max: 26,843,545,500 µs = 26,843.5455 s = 447.39 min = 7.46 h&lt;/p&gt;&lt;p&gt;1 ms&lt;br/&gt;Min: 4 ms&lt;br/&gt;Step: 1 ms&lt;br/&gt;Max: 268,435,455 ms = 268,435.455 s = 4473.9 min = 74.6 h&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;stime_resolution_mode&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>1 ms</string>
+             </property>
+             <attribute name="buttonGroup">
+              <string notr="true">buttonGroupStimeResolution</string>
+             </attribute>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </item>
@@ -2302,4 +2389,7 @@
  </tabstops>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroupStimeResolution"/>
+ </buttongroups>
 </ui>
