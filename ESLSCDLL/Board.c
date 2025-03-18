@@ -3861,7 +3861,12 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		"write_to_disc\t%"PRIu32"\n"
 		"file_path\t%s\n"
 		"shift_s1s2_to_next_scan\t%"PRIu32"\n"
-		"is_cooled_camera_legacy_mode\t%"PRIu32"\n",
+		"is_cooled_camera_legacy_mode\t%"PRIu32"\n"
+		"monitor\t%"PRIu32"\n"
+		"manipulate_data_mode\t%"PRIu32"\n"
+		"manipulate_data_custom_factor\t%f\n"
+		"ec_legacy_mode\t%"PRIu32"\n"
+		"stime_resolution_mode\t%"PRIu32"\n",
 		settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns,
 		settings_struct.camera_settings[drvno].dma_buffer_size_in_scans,
 		settings_struct.camera_settings[drvno].tocnt,
@@ -3870,7 +3875,12 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].write_to_disc,
 		settings_struct.camera_settings[drvno].file_path,
 		settings_struct.camera_settings[drvno].shift_s1s2_to_next_scan,
-		settings_struct.camera_settings[drvno].is_cooled_camera_legacy_mode);
+		settings_struct.camera_settings[drvno].is_cooled_camera_legacy_mode,
+		settings_struct.camera_settings[drvno].monitor,
+		settings_struct.camera_settings[drvno].manipulate_data_mode,
+		settings_struct.camera_settings[drvno].manipulate_data_custom_factor,
+		settings_struct.camera_settings[drvno].ec_legacy_mode,
+		settings_struct.camera_settings[drvno].stime_resolution_mode);
 	return es_no_error;
 }
 
