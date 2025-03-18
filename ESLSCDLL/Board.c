@@ -156,7 +156,7 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetBTI(drvno, (uint8_t)settings_struct.camera_settings[drvno].bti_mode);
 	if (status != es_no_error) return status;
-	status = SetSTimer(drvno, settings_struct.camera_settings[drvno].stime_in_microsec, simer_resolution_1us);
+	status = SetSTimer(drvno, settings_struct.camera_settings[drvno].stime_in_microsec, simer_resolution_1ms);
 	if (status != es_no_error) return status;
 	status = SetBTimer(drvno, settings_struct.camera_settings[drvno].btime_in_microsec);
 	if (status != es_no_error) return status;
@@ -1138,10 +1138,10 @@ es_status_codes SetBTI(uint32_t drvno, uint8_t bti_mode)
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param stime Trigger time. The resolution of the time depends on resolution_mode. 28 bit.
- *		* simer_resolution_1us: Min: 1 us, Max: 268,435,455 us = 268,435.455 s = 4.47 min (default)
- *		* simer_resolution_100us: Min: 100 us, Max: 26,843,545,500 us = 26,843.5455 s =  447.39 min = 7.46 h
- *		* simer_resolution_1000us: Min: 1000 us, Max: 268,435,455 ms = 268,435.455 s =  4473.9 min = 74.6 h
- *		* simer_resolution_100ns: Min: 100 ns, Max: 26,843,545,500 ns = 26.8435455 s
+ *		* simer_resolution_1us: Min: 4 us, Max: 268,435,455 us = 268,435.455 s = 4.47 min (default)
+ *		* simer_resolution_100us: Min: 400 us, Max: 26,843,545,500 us = 26,843.5455 s =  447.39 min = 7.46 h
+ *		* simer_resolution_1ms: Min: 4 ms, Max: 268,435,455 ms = 268,435.455 s =  4473.9 min = 74.6 h
+ *		* simer_resolution_100ns: Min: 400 ns, Max: 26,843,545,500 ns = 26.8435455 s
  * @param resolution_mode Resolution of the time. See @ref stimer_resolution_t in enum.h for options.
  * @return @ref es_status_codes
  */
@@ -1157,21 +1157,25 @@ es_status_codes SetSTimer(uint32_t drvno, uint32_t stime, uint8_t resolution_mod
 		if (status != es_no_error) return status;
 		status = resetBitS0_32(drvno, XCK_bitindex_res_ms, S0Addr_XCK);
 		if (status != es_no_error) return status;
+		break;
 	case simer_resolution_100us:
 		status = setBitS0_32(drvno, XCK_bitindex_res_ns, S0Addr_XCK);
 		if (status != es_no_error) return status;
 		status = setBitS0_32(drvno, XCK_bitindex_res_ms, S0Addr_XCK);
 		if (status != es_no_error) return status;
-	case simer_resolution_1000us:
+		break;
+	case simer_resolution_1ms:
 		status = resetBitS0_32(drvno, XCK_bitindex_res_ns, S0Addr_XCK);
 		if (status != es_no_error) return status;
 		status = setBitS0_32(drvno, XCK_bitindex_res_ms, S0Addr_XCK);
 		if (status != es_no_error) return status;
+		break;
 	case simer_resolution_100ns:
 		status = setBitS0_32(drvno, XCK_bitindex_res_ns, S0Addr_XCK);
 		if (status != es_no_error) return status;
 		status = resetBitS0_32(drvno, XCK_bitindex_res_ms, S0Addr_XCK);
 		if (status != es_no_error) return status;
+		break;
 	default:
 		return es_parameter_out_of_range;
 	}
