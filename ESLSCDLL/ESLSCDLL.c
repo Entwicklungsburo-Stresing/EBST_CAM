@@ -1305,9 +1305,9 @@ DllAccess es_status_codes DLLWaitForBlockDone()
 /**
  * @copydoc SetSTimer
  */
-DllAccess es_status_codes DLLSetSTimer(uint32_t drvno, uint32_t stime_in_microseconds)
+DllAccess es_status_codes DLLSetSTimer(uint32_t drvno, uint32_t stime, uint8_t resolution_mode)
 {
-	return SetSTimer(drvno, stime_in_microseconds, simer_resolution_1us);
+	return SetSTimer(drvno, stime, resolution_mode);
 }
 
 /**
