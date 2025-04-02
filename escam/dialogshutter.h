@@ -21,8 +21,11 @@ public:
 	~DialogShutter();
 private slots:
 	void on_checkBoxMshut_checkStateChanged(Qt::CheckState checkState);
-	void on_checkBoxShutterX_checkStateChanged(Qt::CheckState checkState, int shutterNumber);
+	void on_checkBoxShutterX_checkStateChanged();
+	void on_buttonBox_accepted();
+	void loadSavedValues();
 private:
 	Ui::DialogShutterClass ui;
+	QSettings settings;
 
 };

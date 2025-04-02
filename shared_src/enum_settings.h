@@ -532,5 +532,3 @@ enum stimer_resolution_t
 	 */
 	simer_resolution_100ns = 3,
 };
-
-
