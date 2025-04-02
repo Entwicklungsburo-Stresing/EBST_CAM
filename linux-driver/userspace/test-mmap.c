@@ -1,3 +1,10 @@
+/*****************************************************************//**
+ * @file		test-mmap.c
+ * @author		Bernhard Lang
+ * @date		05.11.2020
+ * @copyright	Copyright 2020-2021 Bernhard Lang, University of Geneva, Entwicklungsbuero Stresing (http://www.stresing.de/). This program is free software; you can redistribute it and/or modify it under the terms of the LPGL-3.0 as published by the Free Software Foundation.
+ *********************************************************************/
+
 #include <stdint.h> // for types, get this into types.h with kernel flag
 #include "lscpcie.h"
 #include "../kernelspace/ioctl.h"
