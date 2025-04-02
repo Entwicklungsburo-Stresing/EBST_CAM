@@ -202,6 +202,7 @@
     <None Include="LscUIForm.ui.qml">
       <Filter>Distribution Files</Filter>
     </None>
+    <None Include="LICENSE" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\shared_src\CCD.ico" />
