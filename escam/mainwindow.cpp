@@ -464,14 +464,11 @@ void MainWindow::on_actionContext_help_triggered()
 void MainWindow::on_actionAbout_triggered()
 {
 	QString aboutText = "This is Escam version ";
-	aboutText.append(VER_FILE_VERSION_STR);
-	aboutText.append("\n");
-	aboutText.append(VER_COPYRIGHT_STR);
-	aboutText.append("\n");
-	aboutText.append(VER_COMPANY_NAME);
-	aboutText.append("\n");
-	aboutText.append("stresing.de");
-	QMessageBox::about(this, "About", aboutText);
+	aboutText.append(VER_FILE_VERSION_STR"\n");
+	aboutText.append(VER_COPYRIGHT_STR"\n");
+	aboutText.append("This software is released under the LPGL-3.0\n");
+	aboutText.append("https://stresing.de");
+	QMessageBox::about(this, "About Escam", aboutText);
 	return;
 }
 
