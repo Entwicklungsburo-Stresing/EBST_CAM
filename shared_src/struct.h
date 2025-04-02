@@ -1,9 +1,9 @@
 ﻿/*****************************************************************//**
- * @file   struct.h
- * @brief  Settings struct for the ESLSCDLL API.
- * 
- * @author Florian Hahn
- * @date   19.03.2021
+ * @file		struct.h
+ * @brief		Settings struct for the ESLSCDLL API.
+ * @author		Florian Hahn
+ * @date		19.03.2021
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

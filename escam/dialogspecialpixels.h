@@ -1,9 +1,9 @@
 /*****************************************************************//**
- * @file   dialogspecialpixels.h
- * @brief  Dialog for reading the special pixels of the current sample.
- * 
- * @author Florian Hahn
- * @date   01.03.2023
+ * @file		dialogspecialpixels.h
+ * @brief		Dialog for reading the special pixels of the current sample.
+ * @author		Florian Hahn
+ * @date		01.03.2023
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

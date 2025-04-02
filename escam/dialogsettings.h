@@ -1,9 +1,9 @@
 /*****************************************************************//**
- * @file   dialogsettings.h
- * @brief  Dialog for setting the measurement settings.
- * 
- * @author Florian Hahn
- * @date   03.02.2021
+ * @file		dialogsettings.h
+ * @brief		Dialog for setting the measurement settings.
+ * @author		Florian Hahn
+ * @date		03.02.2021
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

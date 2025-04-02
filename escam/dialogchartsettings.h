@@ -1,9 +1,9 @@
 /*****************************************************************//**
- * @file   dialogchartsettings.h
- * @brief  Dialog to set the chart settings.
- * 
- * @author Florian Hahn
- * @date   02.07.2021
+ * @file		dialogchartsettings.h
+ * @brief		Dialog to set the chart settings.
+ * @author		Florian Hahn
+ * @date		02.07.2021
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

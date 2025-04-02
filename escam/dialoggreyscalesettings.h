@@ -1,9 +1,9 @@
 /*****************************************************************//**
- * @file   dialoggreyscalesettings.h
- * @brief  Dialog to set the gamma values for the greyscale viewer.
- * 
- * @author Florian Hahn
- * @date   09.03.2023
+ * @file		dialoggreyscalesettings.h
+ * @brief		Dialog to set the gamma values for the greyscale viewer.
+ * @author		Florian Hahn
+ * @date		09.03.2023
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

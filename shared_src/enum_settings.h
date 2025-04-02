@@ -1,9 +1,9 @@
 /*****************************************************************//**
- * @file   enum_settings.h
- * @brief  All settings options and software constants
- * 
- * @author Florian Hahn
- * @date   23.10.2023
+ * @file		enum_settings.h
+ * @brief		All settings options and software constants
+ * @author		Florian Hahn
+ * @date		23.10.2023
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

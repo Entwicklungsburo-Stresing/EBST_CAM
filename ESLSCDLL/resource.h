@@ -1,10 +1,10 @@
 /*****************************************************************//**
- * @file   resource.h
- * @brief  Microsoft Visual C++ generated include file.
- * 
- * Used by ESLSCDLL.rc
- * @author Gerhard Stresing
- * @date   before 2016
+ * @file		resource.h
+ * @brief		Microsoft Visual C++ generated include file.
+ * @details		Used by ESLSCDLL.rc
+ * @author		Gerhard Stresing
+ * @date		before 2016
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 //{{NO_DEPENDENCIES}}

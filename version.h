@@ -1,9 +1,8 @@
 /*****************************************************************//**
- * @file   version.h
- * @brief  Current version of this library
- * 
- * @author Gerhard Stresing
- * @date   before 2016
+ * @file		version.h
+ * @brief		Current version of this library
+ * @author		Gerhard Stresing
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

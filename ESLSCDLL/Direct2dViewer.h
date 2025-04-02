@@ -1,12 +1,10 @@
 /*****************************************************************//**
- * @file   Direct2dViewer.h
- * @brief  Direct2d Viewer for bitmaps
- * 
- * It was created by using Microsofts example "SimpleDirect2DApplication", originally released under MIT license.
- * 
- * https://github.com/microsoft/Windows-classic-samples/tree/master/Samples/Win7Samples/multimedia/Direct2D/SimpleDirect2DApplication
- * @author Florian Hahn
- * @date   30.09.2019
+ * @file		Direct2dViewer.h
+ * @brief		Direct2d Viewer for bitmaps
+ * @details		This file was created by using Microsofts example "SimpleDirect2DApplication", originally released under MIT license. https://github.com/microsoft/Windows-classic-samples/tree/master/Samples/Win7Samples/multimedia/Direct2D/SimpleDirect2DApplication
+ * @author		Florian Hahn
+ * @date		30.09.2019
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

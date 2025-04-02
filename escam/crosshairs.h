@@ -1,10 +1,10 @@
 /*****************************************************************//**
- * @file   crosshairs.h
- * @brief  Class to display crosshairs on the chart.
- * 
- * @author Dennis Vollenweider
- * @date   22.05.2024
- *********************************************************************/
+ * @file		crosshairs.h
+ * @brief		Class to display crosshairs on the chart.
+ * @author		Dennis Vollenweider
+ * @date		22.05.2024
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
+*********************************************************************/
 
 #pragma once
 
