@@ -1,12 +1,9 @@
-/* proc.c
- *
- * Copyright 2020-2021 Entwicklungsbuero Stresing (http://www.stresing.de/)
- * Copyright 2020-2021 Bernhard Lang, University of Geneva
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 2 of the License.
- */
+/*****************************************************************//**
+ * @file		proc.c
+ * @author		Bernhard Lang
+ * @date		05.11.2020
+ * @copyright	Copyright 2020-2021 Bernhard Lang, University of Geneva, Entwicklungsbuero Stresing (http://www.stresing.de/) This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.
+ *********************************************************************/
 
 #include "proc.h"
 #include "device.h"
