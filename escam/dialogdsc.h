@@ -1,9 +1,9 @@
 /*****************************************************************//**
- * @file   dialogdsc.h
- * @brief  Dialog to set the DSC values.
- * 
- * @author Florian Hahn
- * @date   03.08.2021
+ * @file		dialogdsc.h
+ * @brief		Dialog to set the DSC values.
+ * @author		Florian Hahn
+ * @date		03.08.2021
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

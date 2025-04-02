@@ -1,9 +1,9 @@
 /*****************************************************************//**
- * @file   default_settings.h
- * @brief  Default settings for initializing the settings struct and the settings dialog.
- * 
- * @author Florian Hahn
- * @date   24.06.2021
+ * @file		default_settings.h
+ * @brief		Default settings for initializing the settings struct and the settings dialog.
+ * @author		Florian Hahn
+ * @date		24.06.2021
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

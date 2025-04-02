@@ -1,9 +1,9 @@
 /*****************************************************************//**
- * @file   dialogtriggerinfo.h
- * @brief  Dialog for displaying the trigger information.
- * 
- * @author Florian Hahn
- * @date   06.06.2024
+ * @file		dialogtriggerinfo.h
+ * @brief		Dialog for displaying the trigger information.
+ * @author		Florian Hahn
+ * @date		06.06.2024
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once
