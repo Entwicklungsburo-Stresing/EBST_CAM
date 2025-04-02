@@ -756,7 +756,7 @@ es_status_codes ReadBitS0_8(uint32_t drvno, uint32_t address, uint8_t bitnumber,
  */
 es_status_codes OpenShutter(uint32_t drvno)
 {
-	ES_LOG("Open shutter\n");
+	ES_LOG("Open shutter MSHUT, drvno %"PRIu32"\n", drvno);
 	return setBitS0_32(drvno, CTRL_bitindex_SHON, S0Addr_CTRL);
 }
 
@@ -996,7 +996,7 @@ es_status_codes SetNobRegister(uint32_t drvno)
  */
 es_status_codes CloseShutter(uint32_t drvno)
 {
-	ES_LOG("Close shutter\n");
+	ES_LOG("Close shutter MSHUT, drvno %"PRIu32"\n", drvno);;
 	return resetBitS0_32(drvno, CTRL_bitindex_SHON, S0Addr_CTRL);
 }
 
@@ -5378,4 +5378,21 @@ es_status_codes SetGeneralOutput(uint32_t drvno, uint8_t output, bool state)
 		return setBitS0_32(drvno, output, S0Addr_GIOREG);
 	else
 		return resetBitS0_32(drvno, output, S0Addr_GIOREG);
+}
+
+/**
+ * @brief Sets all shutter states in one call.
+ * 
+ * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param shutter_states 16 bit value where each bit of the lower 4 represents the state of one shutter.
+ *		* bit 0: shutter 1, 0: closed, 1: open
+ *		* bit 1: shutter 2, 0: closed, 1: open
+ *		* bit 2: shutter 3, 0: closed, 1: open
+ *		* bit 3: shutter 4, 0: closed, 1: open
+ * @return @ref es_status_codes
+ */
+es_status_codes SetShutterStates(uint32_t drvno, uint16_t shutter_states)
+{
+	ES_LOG("Set shutter states to 0x%"PRIx16", drvno %"PRIu32"\n", shutter_states, drvno);
+	return Cam_SendData(drvno, maddr_ioctrl, ioctrl_shutter, shutter_states);
 }

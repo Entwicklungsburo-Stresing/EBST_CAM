@@ -128,6 +128,12 @@ constexpr auto settingAxesMirrorXPath = "AxesMirrorXPath";
 constexpr auto settingShowCrosshairPath = "showCrosshair";
 constexpr auto settingSoftwareVersionPath = "softwareVersion";
 constexpr auto settingShowCameraBaseDir = "showcamera";
+// Shutter
+constexpr auto settingShutter1Path = "shutter1";
+constexpr auto settingShutter2Path = "shutter2";
+constexpr auto settingShutter3Path = "shutter3";
+constexpr auto settingShutter4Path = "shutter4";
+constexpr auto settingShutterMshutPath = "shutterMshut";
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DialogSettings; }
