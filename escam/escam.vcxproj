@@ -315,6 +315,7 @@ del $(ProjectDir).qmake.stash
     </QtUic>
   </ItemGroup>
   <ItemGroup>
+    <None Include="LICENSE" />
     <None Include="LscUI.qml" />
     <None Include="LscUIForm.ui.qml" />
   </ItemGroup>
