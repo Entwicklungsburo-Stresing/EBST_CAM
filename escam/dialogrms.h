@@ -1,9 +1,9 @@
 /*****************************************************************//**
- * @file   dialogrms.h
- * @brief  Dialog calculating the RMS value of the camera data.
- * 
- * @author Florian Hahn
- * @date   03.08.2021
+ * @file		dialogrms.h
+ * @brief		Dialog calculating the RMS value of the camera data.
+ * @author		Florian Hahn
+ * @date		03.08.2021
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

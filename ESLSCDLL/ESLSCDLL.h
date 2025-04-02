@@ -1,10 +1,10 @@
 /*****************************************************************//**
- * @file   ESLSCDLL.h
- * @brief  Library ESLSCDLL for operating Stresing cameras.
- * 
- * The library ESLSCDLL can be compiled on Windows into ESLSCDLL.dll and on Linux into libESLSCDLL.so.
- * @author Gerhard Stresing, Bastian Brabec, Florian Hahn
- * @date   before 2016
+ * @file		ESLSCDLL.h
+ * @brief		Library ESLSCDLL for operating Stresing cameras.
+ * @details		The library ESLSCDLL can be compiled on Windows into ESLSCDLL.dll and on Linux into libESLSCDLL.so.
+ * @author		Gerhard Stresing, Bastian Brabec, Florian Hahn
+ * @date		before 2016
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

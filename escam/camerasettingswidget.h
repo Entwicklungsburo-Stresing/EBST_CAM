@@ -1,10 +1,10 @@
 /*****************************************************************//**
- * @file   camerasettingswidget.h
- * @brief  Widget used to set camera settings.
- * 
- * This widget will be displayed as many times as there are PCIe boards. It is used in dialogsettings.
- * @author Florian Hahn
- * @date   06.02.2023
+ * @file		camerasettingswidget.h
+ * @brief		Widget used to set camera settings.
+ * @details		This widget will be displayed as many times as there are PCIe boards. It is used in dialogsettings.
+ * @author		Florian Hahn
+ * @date		06.02.2023
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

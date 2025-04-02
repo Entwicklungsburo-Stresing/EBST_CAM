@@ -1,9 +1,9 @@
 /*****************************************************************//**
- * @file   mainwindow.h
- * @brief  Main window class of Escam.
- * 
- * @author Florian Hahn
- * @date   28.01.2021
+ * @file		mainwindow.h
+ * @brief		Main window class of Escam.
+ * @author		Florian Hahn
+ * @date		28.01.2021
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

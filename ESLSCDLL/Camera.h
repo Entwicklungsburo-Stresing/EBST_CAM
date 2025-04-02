@@ -1,10 +1,10 @@
 /*****************************************************************//**
- * @file   Camera.h
- * @brief  Functions for interacting with the camera
- * 
- * In this file are all the functions that are interacting with the camera. Interaction with the camera always includes Cam_SendData(), so all functions here call this function.
- * @author Florian Hahn
- * @date   18.11.2024
+ * @file		Camera.h
+ * @brief		Functions for interacting with the camera
+ * @details		In this file are all the functions that are interacting with the camera. Interaction with the camera always includes Cam_SendData(), so all functions here call this function.
+ * @author		Florian Hahn
+ * @date		18.11.2024
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

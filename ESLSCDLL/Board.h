@@ -1,10 +1,10 @@
 /*****************************************************************//**
- * @file   Board.h
- * @brief  All functions for interacting with the Stresing PCIe board.
- * 
- * All functions are written in a plattform independent way. All stuff that needs to be done in a plattform dependent way is done in Board_ll.h.
- * @author Gerhard Stresing, Bastian Brabec, Florian Hahn
- * @date   before February 2016
+ * @file		Board.h
+ * @brief		All functions for interacting with the Stresing PCIe board.
+ * @details		All functions are written in a platform independent way. All stuff that needs to be done in a platform dependent way is done in Board_ll.h.
+ * @author		Gerhard Stresing, Bastian Brabec, Florian Hahn
+ * @date		before February 2016
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once
