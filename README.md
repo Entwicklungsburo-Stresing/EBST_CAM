@@ -8,13 +8,13 @@ doc				| documentation with [Doxygen](https://www.doxygen.nl/) of the library AP
 escam			| cross plattform [Qt](https://www.qt.io/) GUI written in C++						| Windows, Linux
 escam_deb		| script to create a .deb package													| Linux
 escam_setup		| [Microsoft Visual Studio Installer Project](https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2017InstallerProjects) to create a setup for escam | Windows
-ESLSCDLL		| software library .dll / .sh														| Windows, Linux
+ESLSCDLL		| software library .dll / .so														| Windows, Linux
 hdf				| library for exporting data to [hdf5](https://www.hdfgroup.org/solutions/hdf5/)	| Windows
 Jungo			| library for using the Windows Driver												| Windows
 linux-driver	| Linux driver																		| Linux
 shared_src		| shared source files for escam, ESLSCDLL, CsimpleExample							| Windows, Linux
 
-# Windows
+## Windows
 
 ### Build Dependencies
 * [Visual Studio](https://visualstudio.microsoft.com/) with C++ Toolbox (Plattform Toolset: v143, Windows SDK Version: 10.0.18362.0).
@@ -32,7 +32,7 @@ Debug_minimal	| Debug build for escam and CsimpleExample and minimal debug build
 Debug-Labview	| Debug build for DLL with Labview libriaries for communication with Labview software.
 Release			| Release build for escam, DLL and CsimpleExample. Use this for production usage for escam and for DLL usage with Python, Matlab or other usage.
 Release_minimal	| Release build for escam and CsimpleExample and minimal release build for DLL. Use this for production usage for escam and for DLL usage with Python, Matlab or other usage when you don't need additional functions like the greyscale viewer, hdf5, math functions or other additional appearing windows.
-Release-Labview	| Release build for DLL with Labview libriaries for communication with Labview software. Use this for production usage with Labview.
+Release-Labview	| Release build for DLL with Labview libraries for communication with Labview software. Use this for production usage with Labview.
 
 ### Installing Windows driver
 Run `install_run_as_admin.bat` from [Stresing14.00_Driver_Distribution_Package](http://stresing.de/dwnl/ebstdrv14v00.rar) as admin. 
@@ -46,7 +46,7 @@ For the use of `ESLSCDLL.dll` [Microsoft Visual C++ Redistributable](https://aka
 ### Troubleshooting
 If `MSVCP140.dll` and `VCRUNTIME140.dll` are missing, Microsoft Visual C++ Redistributable is not installed. [Install](https://aka.ms/vs/16/release/vc_redist.x64.exe) it.
 
-# Linux
+## Linux
 
 ### Build Dependencies
 * Qt 5.15 - 6.8 (for escam Qt GUI)
