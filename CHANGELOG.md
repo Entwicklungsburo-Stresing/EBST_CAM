@@ -13,6 +13,7 @@ The hardware version number is the current version at release time.
 * Add function DLLCloseShutter_multipleBoards
 * Add function DLLSetGeneralOutput
 * Add setting stime_resolution_mode
+* Add function DLLSetShutterStates
 #### Changed
 * Change function DLLOpenShutter to single board function, add parameter drvno.
 * Change function DLLCloseShutter to single board function, add parameter drvno.
@@ -22,6 +23,7 @@ The hardware version number is the current version at release time.
 #### Deprecated
 ### Other Changes
 #### Added
+* Implement shutter control in dialogshutter
 #### Changed
 #### Removed
 #### Fixed
