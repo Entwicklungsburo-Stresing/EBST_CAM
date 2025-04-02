@@ -629,16 +629,31 @@ enum camera_type_bits_t
 	camera_type_camera_system_bits = 0xFFFF0000,
 };
 
+/**
+ * This enum describes the options for the master address when sending data with @ref Cam_SendData.
+ */
 enum master_address_t
 {
+	/**
+	 * This address space accesses the registers which control the camera. The registers are described in @ref camera_register_addresses_t.
+	 */
 	maddr_cam = 0x0,
+	/**
+	 * This address space accesses the registers which control the ADC. Depending on the camera system the registers are described in @ref adc_ltc2271_register_adress_t or @ref adc_ads5294_register_adress_t.
+	 */
 	maddr_adc = 0x1,
+	/**
+	 * This address space accesses the registers which control either the add on device IOCTRL or special functions in the camera control. The registers are described in @ref ioctrl_register_address_t.
+	 */
 	maddr_ioctrl = 0x2,
+	/**
+	 * This address space accesses the registers which control the DAC. The registers are described in @ref dac_register_addresses_t.
+	 */
 	maddr_dac = 0x3,
 };
 
 /**
- * These registers are addressed when maddr = 0.
+ * These registers are addressed when @ref master_address_t.maddr_cam is used.
  */
 enum camera_register_addresses_t
 {
@@ -718,7 +733,7 @@ enum cam_config_register_t
 };
 
 /**
- * These registers are addressed when maddr = 1 and camera system = 3010.
+ * These registers are addressed when @ref master_address_t.maddr_adc and @ref camera_system_t.camera_system_3010 for @ref camera_settings.camera_system are used.
  */
 enum adc_ltc2271_register_adress_t
 {
@@ -736,7 +751,7 @@ enum adc_ltc2271_messages_t
 };
 
 /**
- * These registers are addressed when maddr = 1 and camera system = 3030.
+ * These registers are addressed when @ref master_address_t.maddr_adc and @ref camera_system_t.camera_system_3030 for @ref camera_settings.camera_system are used.
  */
 enum adc_ads5294_register_adress_t
 {
@@ -807,7 +822,7 @@ enum adc_ads5294_messages_t
 };
 
 /**
- * These registers are addressed when maddr = 2.
+ * These registers are addressed when @ref master_address_t.maddr_ioctrl is used.
  */
 enum ioctrl_register_address_t
 {
@@ -828,10 +843,41 @@ enum ioctrl_register_address_t
 	ioctrl_d6 = 0x0E,
 	ioctrl_t7 = 0x0F,
 	ioctrl_d7 = 0x10,
+	/**
+	 * Controls the state of the shutters. See details in @ref ioctrl_shutter_t.
+	 */
+	ioctrl_shutter = 0x11,
 };
 
 /**
- * These register are addressed when maddr = 3.
+ * These are the bits of the @ref ioctrl_register_address_t.ioctrl_shutter register.
+ */
+enum ioctrl_shutter_t
+{
+	/**
+	 * State of shutter 1. 1: open, 0: closed
+	 */
+	ioctrl_shutter_bitindex_shutter1 = 0,
+	/**
+	 * State of shutter 2. 1: open, 0: closed
+	 */
+	ioctrl_shutter_bitindex_shutter2 = 1,
+	/**
+	 * State of shutter 3. 1: open, 0: closed
+	 */
+	ioctrl_shutter_bitindex_shutter3 = 2,
+	/**
+	 * State of shutter 4. 1: open, 0: closed
+	 */
+	ioctrl_shutter_bitindex_shutter4 = 3,
+	ioctrl_shutter_bit_shutter1 = 0x01,
+	ioctrl_shutter_bit_shutter2 = 0x02,
+	ioctrl_shutter_bit_shutter3 = 0x04,
+	ioctrl_shutter_bit_shutter4 = 0x08,
+};
+
+/**
+ * These register are addressed when @ref master_address_t.maddr_dac is used.
  */
 enum dac_register_addresses_t
 {

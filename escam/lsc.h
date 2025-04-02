@@ -88,6 +88,7 @@ public:
 	es_status_codes resetBlockTriggerDetected(uint32_t drvno);
 	es_status_codes openShutter(uint32_t drvno);
 	es_status_codes closeShutter(uint32_t drvno);
+	es_status_codes setShutterStates(uint32_t drvno, uint16_t shutter_states);
 	uint8_t numberOfBoards = 0;
 	uint32_t getVirtualCamcnt(uint32_t drvno);
 	bool getTestModeOn();
