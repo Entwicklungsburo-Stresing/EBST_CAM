@@ -2,7 +2,7 @@
  * @file		ioctl.h
  * @author		Bernhard Lang
  * @date		05.11.2020
- * @copyright	Copyright 2020-2021 Bernhard Lang, University of Geneva, Entwicklungsbuero Stresing (http://www.stresing.de/) This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.
+ * @copyright	Copyright 2020-2021 Bernhard Lang, University of Geneva, Entwicklungsbuero Stresing (http://www.stresing.de/) This file is dual licensed. As part of the the userspace library lscpcie and libESLSCLDLL.so is is licensed under the LPGL-3.0. As part of the kernel module lscpcie.ko it is licensed under the GPL-2.0.
  *********************************************************************/
 
 
