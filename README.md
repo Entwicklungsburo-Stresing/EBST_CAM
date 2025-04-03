@@ -14,6 +14,9 @@ Jungo			| library for using the Windows Driver												| Windows
 linux-driver	| Linux driver																		| Linux
 shared_src		| shared source files for escam, ESLSCDLL, CsimpleExample							| Windows, Linux
 
+## License
+The software library ESLSCDLL and the GUI Escam are released under the [LPGL-3.0](https://www.gnu.org/licenses/lgpl-3.0.html.en). This applies for files in `escam/`, `ESLSCDLL/`, `linux-driver/userspace/` and `shared_src/`. The Linux Kernel object and its source code in `linux-driver/kernelspace/` is released under the [GPL-2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html.en). The CLI C example `CsimpleExample/` is released as public domain under the [Unlicense](https://unlicense.org/).
+
 ## Windows
 
 ### Build Dependencies
