@@ -463,12 +463,20 @@ void MainWindow::on_actionContext_help_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
+	QMessageBox d(this);
+	d.setWindowTitle("About Escam");
+	d.setTextFormat(Qt::RichText);
 	QString aboutText = "This is Escam version ";
 	aboutText.append(VER_FILE_VERSION_STR"\n");
 	aboutText.append(VER_COPYRIGHT_STR"\n");
-	aboutText.append("This software is released under the LPGL-3.0\n");
-	aboutText.append("https://stresing.de");
-	QMessageBox::about(this, "About Escam", aboutText);
+	aboutText = Qt::convertFromPlainText(aboutText);
+	aboutText.append("This software is released under the <a href=\"https://www.gnu.org/licenses/lgpl-3.0.html.en\">LPGL-3.0</a><br>");
+	aboutText.append("<a href=\"https://stresing.de\">https://stresing.de</a><br>");
+	aboutText.append("<a href=\"https://github.com/Entwicklungsburo-Stresing/\">https://github.com/Entwicklungsburo-Stresing/</a>");
+	d.setText(aboutText);
+	d.setIcon(QMessageBox::NoIcon);
+	d.setStandardButtons(QMessageBox::Ok);
+	d.exec();
 	return;
 }
 
