@@ -619,20 +619,12 @@ es_status_codes Cam_SetTemp(uint32_t drvno, uint8_t level)
 }
 
 /**
- * @brief Sends data via fiber link, e.g. used for sending data to ADC (ADS5294).
- *
- * Send setup:
- * - d0:d15 = data for AD-Reg  ADS5294
- * - d16:d23 = ADR of  AD-Reg
- * - d24 = ADDR0		AD=1
- * - d25 = ADDR1		AD=0
- * - d26 makes load pulse
- * - all written to DB0 in Space0 = Long0
- * - for AD set maddr=01, adaddr address of reg
+ * @brief Sends data via the fiber link to the camera.
+ * @details The register @ref S0Addr_DBR is used for sending data via the fiber link.
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param maddr master address for specifying device (2 for ADC)
- * @param adaddr register address
- * @param data data
+ * @param maddr master address for specifying which address space is used. See \ref master_address_t for options.
+ * @param adaddr register address. Which register is written to depends on the address space which is defined maddr. It is either @ref camera_register_addresses_t, @ref adc_ltc2271_register_adress_t, @ref adc_ads5294_register_adress_t, @ref ioctrl_register_address_t or @ref dac_register_addresses_t.
+ * @param data 16 bit data to send
  * @return @ref es_status_codes
  */
 es_status_codes Cam_SendData(uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16_t data)
@@ -640,17 +632,12 @@ es_status_codes Cam_SendData(uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint
 	ES_TRACE("Cam_SendData(): maddr 0x%x, adaddr: 0x%x, data 0x%x (%"PRIu16")\n", maddr, adaddr, data, data);
 	es_status_codes status = FindCam(drvno);
 	if (status != es_no_error) return status;
-	uint32_t ldata = 0;
-	ldata = maddr;
-	ldata = ldata << 8;
-	ldata |= adaddr;
-	ldata = ldata << 16;
-	ldata |= data;
+	uint32_t ldata = ((maddr << DBR_bitindex_maddr) & DBR_bits_maddr) | ((adaddr << DBR_bitindex_adaddr) & DBR_bits_adaddr) | ((data << DBR_bitindex_data) & DBR_bits_data);
 	status = writeRegisterS0_32(drvno, ldata, S0Addr_DBR);
 	if (status != es_no_error) return status;
 	WaitforTelapsed(500);
 	//load val
-	ldata |= 0x4000000;
+	ldata |= DBR_bit_load;
 	status = writeRegisterS0_32(drvno, ldata, S0Addr_DBR);
 	if (status != es_no_error) return status;
 	WaitforTelapsed(500);
