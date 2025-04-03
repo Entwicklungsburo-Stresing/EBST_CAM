@@ -991,7 +991,7 @@ enum ioctrl_register_address_t
 	ioctrl_t7 = 0x0F,
 	ioctrl_d7 = 0x10,
 	/**
-	 * Controls the state of the shutters. See details in @ref ioctrl_shutter_t.
+	 * Controls the state of the shutters. See details in @ref ioctrl_shutter_t. Added in P230.08.
 	 */
 	ioctrl_shutter = 0x11,
 };
