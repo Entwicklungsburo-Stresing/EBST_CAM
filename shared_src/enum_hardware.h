@@ -24,6 +24,9 @@ enum dma_addresses_t
 
 enum s0_addresses_t
 {
+	/**
+	 * Data bus register. This register is used by \ref Cam_SendData to send data via the fiber link. See details in \ref DBR_bits_t.
+	 */
 	S0Addr_DBR = 0x00,
 	/**
 	 * See @ref CTRL_bits_t for details.
@@ -185,6 +188,66 @@ enum s0_addresses_t
 	S0Addr_BON_PERIOD = 0xBC,
 };
 
+/**
+ * These are the bits of @ref S0Addr_DBR.
+ */
+enum DBR_bits_t
+{
+	/**
+	 * 16 bit data to be sent via the fiber link.
+	 */
+	DBR_bits_data = 0x0000FFFF,
+	/**
+	 * 7 bit address. Depending on @ref DBR_bits_maddr it is either @ref camera_register_addresses_t, @ref adc_ltc2271_register_adress_t, @ref adc_ads5294_register_adress_t, @ref ioctrl_register_address_t or @ref dac_register_addresses_t.
+	 */
+	DBR_bits_adaddr = 0x007F0000,
+	/**
+	 * Neither writable nor readable. Handled by hardware.
+	 */
+	DBR_bit_block_on = 0x00800000,
+	/**
+	 * 2 bit master address. See @ref master_address_t for options.
+	 */
+	DBR_bits_maddr = 0x03000000,
+	/**
+	 * Set this bit to 1 to load the data into the register.
+	 */
+	DBR_bit_load = 0x04000000,
+	/**
+	 * Neither writable nor readable. Handled by hardware.
+	 */
+	DBR_bit_FFRDEN = 0x08000000,
+	/**
+	 * Neither writable nor readable. Handled by hardware.
+	 */
+	DBR_bit_FFXCK_ALLCAM = 0x10000000,
+	/**
+	 * Neither writable nor readable. Handled by hardware.
+	 */
+	DBR_bit_VON = 0x20000000,
+	/**
+	 * Neither writable nor readable. Handled by hardware.
+	 */
+	DBR_bit_IFC = 0x40000000,
+	/**
+	 * Neither writable nor readable. Handled by hardware.
+	 */
+	DBR_bit_XCK = 0x80000000,
+	DBR_bitindex_data = 0,
+	DBR_bitindex_adaddr = 16,
+	DBR_bitindex_block_on = 23,
+	DBR_bitindex_maddr = 24,
+	DBR_bitindex_load = 26,
+	DBR_bitindex_FFRDEN = 27,
+	DBR_bitindex_FFXCK_ALLCAM = 28,
+	DBR_bitindex_VON = 29,
+	DBR_bitindex_IFC = 30,
+	DBR_bitindex_XCK = 31,
+};
+
+/**
+ * These are the bits of @ref S0Addr_CTRL.
+ */
 enum CTRL_bits_t
 {
 	// CTRLA
@@ -245,6 +308,9 @@ enum CTRL_bits_t
 	CTRL_bit_eoi_chb = 0x200000,
 };
 
+/**
+ * These are the bits of @ref S0Addr_XCK.
+ */
 enum XCK_bits_t
 {
 	XCK_bitindex_stimer = 0,
@@ -263,6 +329,9 @@ enum XCK_bits_t
 	XCK_bit_stimer_on = 0x40000000,
 };
 
+/**
+ * These are the bits of @ref S0Addr_PIXREG_FFCTRL_FFFLAGS.
+ */
 enum PIXREG_FFCTRL_FFFLAGS_bits_t
 {
 	PIXREG_bitindex_pixel = 0,
@@ -291,12 +360,18 @@ enum PIXREG_FFCTRL_FFFLAGS_bits_t
 	FF_FLAGS_bit_valid = 0x80000000,
 };
 
+/**
+ * These are the bits of @ref S0Addr_FIFOCNT.
+ */
 enum FIFOCNT_bits_t
 {
 	FIFOCNT_bitindex_WRCNT = 0,
 	FIFOCNT_bits_WRCNT = 0xFF
 };
 
+/**
+ * These are the bits of @ref S0Addr_VCLKCTRL_VCLKFREQ.
+ */
 enum VCLKCTRL_VCLKFREQ_bits_t
 {
 	VCLKCTRL_bitindex = 0,
@@ -313,6 +388,9 @@ enum VCLKCTRL_VCLKFREQ_bits_t
 	VCLKFREQ_step_value = 400
 };
 
+/**
+ * These are the bits of @ref S0Addr_SDAT.
+ */
 enum SDAT_bits_t
 {
 	SDAT_bitindex_control = 0,
@@ -321,6 +399,9 @@ enum SDAT_bits_t
 	SDAT_bit_enable = 0x80000000,
 };
 
+/**
+ * These are the bits of @ref S0Addr_TOR_STICNT_TOCNT.
+ */
 enum TOR_STICNT_TOCNT_bits_t
 {
 	TOR_bitindex_STICNT = 0,
@@ -347,6 +428,9 @@ enum TOR_STICNT_TOCNT_bits_t
 	TOR_bit_TO_control = 0xF0000000
 };
 
+/**
+ * These are the bits of @ref S0Addr_ARREG.
+ */
 enum ARREG_bits_t
 {
 	ARREG_bitindex_pb_control = 0,
@@ -355,6 +439,9 @@ enum ARREG_bits_t
 	ARREG_bit_partial_binning = 0x8000
 };
 
+/**
+ * These are the bits of @ref S0Addr_GIOREG.
+ */
 enum GIOREG_bits_t
 {
 	GIOREG_bitindex_O1 = 0,
@@ -391,6 +478,9 @@ enum GIOREG_bits_t
 	GIOREG_bit_I8 = 0x8000,
 };
 
+/**
+ * These are the bits of @ref S0Addr_IRQREG.
+ */
 enum IRQREG_bits_t
 {
 	IRQREG_bitindex_IRQLAT = 0,
@@ -403,6 +493,9 @@ enum IRQREG_bits_t
 	IRQREG_bit_INTRSR = 0x80000000,
 };
 
+/**
+ * These are the bits of @ref S0Addr_PCI.
+ */
 enum PCI_bits_t
 {
 	PCI_bitindex_minor_version = 0,
@@ -411,6 +504,9 @@ enum PCI_bits_t
 	PCI_bits_major_version = 0xFFFF0000
 };
 
+/**
+ * These are the bits of @ref S0Addr_PCIEFLAGS.
+ */
 enum PCIEFLAGS_bits_t
 {
 	PCIEFLAGS_bitindex_XCKI = 0,
@@ -478,6 +574,9 @@ enum PCIEFLAGS_bits_t
 	PCIEFLAGS_bit_error_sfp1 = 0x80000000,
 };
 
+/**
+ * These are the bits of @ref S0Addr_ScanIndex.
+ */
 enum ScanIndex_bits_t
 {
 	ScanIndex_bitindex_counter_reset = 31,
@@ -485,6 +584,9 @@ enum ScanIndex_bits_t
 	ScanIndex_bit_counter_reset = 0x80000000
 };
 
+/**
+ * These are the bits of @ref S0Addr_DmaBufSizeInScans.
+ */
 enum DmaBufSizeInScans_bits_t
 {
 	DmaBufSizeInScans_bitindex_counter_reset = 31,
@@ -492,6 +594,9 @@ enum DmaBufSizeInScans_bits_t
 	DmaBufSizeInScans_bit_counter_reset = 0x80000000
 };
 
+/**
+ * These are the bits of @ref S0Addr_DMAsPerIntr.
+ */
 enum DMAsPerIntr_bits_t
 {
 	DMAsPerIntr_bitindex_counter_reset = 31,
@@ -499,18 +604,27 @@ enum DMAsPerIntr_bits_t
 	DMAsPerIntr_bit_counter_reset = 0x80000000
 };
 
+/**
+ * These are the bits of @ref S0Addr_BLOCKINDEX.
+ */
 enum BLOCKINDEX_bits_t
 {
 	BLOCKINDEX_bitindex_counter_reset = 31,
 	BLOCKINDEX_bit_counter_reset = 0x80
 };
 
+/**
+ * These are the bits of @ref S0Addr_CAMCNT.
+ */
 enum CAMCNT_bits_t
 {
 	CAMCNT_bitindex_camcnt = 0,
 	CAMCNT_bits = 0x0F
 };
 
+/**
+ * These are the bits of @ref S0Addr_TDCCtrl.
+ */
 enum TDCCtrl_bits_t
 {
 	TDCCtrl_bitindex_reset = 0,
@@ -533,6 +647,9 @@ enum TDCCtrl_bits_t
 	TDCCtrl_bit_adr3 = 0x80000000
 };
 
+/**
+ * These are the bits of @ref S0Addr_ROI0.
+ */
 enum ROI0_bits_t
 {
 	ROI0_bitindex_range1 = 0,
@@ -545,6 +662,9 @@ enum ROI0_bits_t
 	ROI0_bit_range2_keep = 0x80000000,
 };
 
+/**
+ * These are the bits of @ref S0Addr_ROI1.
+ */
 enum ROI1_bits_t
 {
 	ROI1_bitindex_range3 = 0,
@@ -557,6 +677,9 @@ enum ROI1_bits_t
 	ROI1_bit_range4_keep = 0x80000000,
 };
 
+/**
+ * These are the bits of @ref S0Addr_ROI2.
+ */
 enum ROI2_bits_t
 {
 	ROI2_bitindex_range5 = 0,
@@ -565,6 +688,9 @@ enum ROI2_bits_t
 	ROI2_bit_range5_keep = 0x00008000,
 };
 
+/**
+ * These are the bits of @ref S0Addr_XCKDLY.
+ */
 enum XCKDELAY_bits_t
 {
 	XCKDELAY_bits = 0x7FFFFFFF,
@@ -572,6 +698,9 @@ enum XCKDELAY_bits_t
 	XCKDELAY_bitindex_enable = 31
 };
 
+/**
+ * These are the bits of @ref S0Addr_BTICNT.
+ */
 enum BTICNT_bits_t
 {
 	BTICNT_bitindex_BTICNT = 0,
@@ -580,11 +709,17 @@ enum BTICNT_bits_t
 	BTICNT_bit_BTICNT_EN = 0x80,
 };
 
+/**
+ * These are the bits of @ref S0Addr_BTIMER.
+ */
 enum BTIMER_bits_t
 {
 	BTIMER_bits = 0x0FFFFFFF
 };
 
+/**
+ * These are the bits of @ref S0Addr_BDAT.
+ */
 enum BDAT_bits_t
 {
 	BDAT_bitindex_enabled = 31,
@@ -592,6 +727,9 @@ enum BDAT_bits_t
 	BDAT_bit_enable = 0x80000000,
 };
 
+/**
+ * These are the bits of @ref S0Addr_BEC.
+ */
 enum BEC_bits_t
 {
 	BEC_bitindex_enabled = 31,
@@ -599,6 +737,9 @@ enum BEC_bits_t
 	BEC_bit_enable = 0x80000000,
 };
 
+/**
+ * These are the bits of @ref S0Addr_BSLOPE.
+ */
 enum BSLOPE_bits_t
 {
 	BSLOPE_bitindex_bslope = 0,
@@ -609,6 +750,9 @@ enum BSLOPE_bits_t
 	BSLOPE_bit_both_bswtrig = 0x00000004,
 };
 
+/**
+ * These are the bits of @ref S0Addr_DSCCtrl.
+ */
 enum DSCCtrl_bits_t
 {
 	DSCCtrl_bitindex_rs1 = 0,
@@ -621,6 +765,9 @@ enum DSCCtrl_bits_t
 	DSCCtrl_bit_dir2 = 0x00000200,
 };
 
+/**
+ * These are the bits of @ref S0Addr_CAMERA_TYPE.
+ */
 enum camera_type_bits_t
 {
 	camera_type_sensor_type_bit_index = 0,
