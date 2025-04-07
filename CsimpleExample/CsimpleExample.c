@@ -1,7 +1,7 @@
 ﻿/*****************************************************************//**
  * @file		CsimpleExample.c
  * @brief		Simple CLI example in C for using ESLSCDLL.dll or libESLSCDLL.so.
- * @details This example is doing one measurement with DLLStartMeasurement_blocking(). During the measurement the library callbacks are used to print the current status. After the measurement the 200 first pixels of the first sample are printed.
+ * @details		This example is doing one measurement with DLLStartMeasurement_blocking(). During the measurement the library callbacks are used to print the current status. After the measurement the 200 first pixels of the first sample are printed.
  * @author		Florian Hahn
  * @date		30.10.2024
  * @copyright	Copyright Entwicklungsbuero Stresing. This software is released as public domain under the Unlicense.
