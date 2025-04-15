@@ -905,3 +905,12 @@ Lsc-gui:
 ## 2016
 - Driver version wdapi1210.dll
 - 64 bit
+
+## 2013
+- Driver V4
+
+## 2010
+- Driver V3
+
+## 2008
+- Driver V2
