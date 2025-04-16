@@ -809,21 +809,21 @@ enum SEQCTRL_bits_t
 	seqctrl_bits_sequence_length = 0x007F,
 	/**
 	 * These bits select the trigger source for the sequence.
-	 *		* 0: STI, Scan trigger input, controlled by @ref camera_settings.sti_mode
-	 *		* 1: SSLOPE, scan trigger with @ref camera_settings.sslope applied
-	 *		* 2: SCAN_GATED, scan trigger gated by block on
-	 *		* 3: STICNT, scan trigger with @ref camera_settings.sticnt applied
-	 *		* 4: SDAT, scan trigger after @ref camera_settings.sdat_in_10ns
-	 *		* 5: SEC, scan trigger after @ref camera_settings.sec_in_10ns
-	 *		* 6: XCK, start of XCK
-	 *		* 7: BTI, block trigger input, controlled by @ref camera_settings.bti_mode
-	 *		* 8: BSLOPE, block trigger with @ref camera_settings.bslope applied
-	 *		* 9: BTICNT, block trigger with @ref camera_settings.bticnt applied
-	 *		* 10: BDAT, block trigger after @ref camera_settings.bdat_in_10ns
-	 *		* 11: BEC, block trigger after @ref camera_settings.bec_in_10ns
-	 *		* 12: BLOCK_ON, block on signal
-	 *		* 13: BLOCK_ON_SYNCED, block on signal synced to the next scan trigger
-	 *		* 14: unused
+	 *		* 0:  manual
+	 *		* 1:  STI, Scan trigger input, controlled by @ref camera_settings.sti_mode
+	 *		* 2:  SSLOPE, scan trigger with @ref camera_settings.sslope applied
+	 *		* 3:  SCAN_GATED, scan trigger gated by block on
+	 *		* 4:  STICNT, scan trigger with @ref camera_settings.sticnt applied
+	 *		* 5:  SDAT, scan trigger after @ref camera_settings.sdat_in_10ns
+	 *		* 6:  SEC, scan trigger after @ref camera_settings.sec_in_10ns
+	 *		* 7:  XCK, start of XCK
+	 *		* 8:  BTI, block trigger input, controlled by @ref camera_settings.bti_mode
+	 *		* 9:  BSLOPE, block trigger with @ref camera_settings.bslope applied
+	 *		* 10: BTICNT, block trigger with @ref camera_settings.bticnt applied
+	 *		* 11: BDAT, block trigger after @ref camera_settings.bdat_in_10ns
+	 *		* 12: BEC, block trigger after @ref camera_settings.bec_in_10ns
+	 *		* 13: BLOCK_ON, block on signal
+	 *		* 14: BLOCK_ON_SYNCED, block on signal synced to the next scan trigger
 	 *		* 15: unused
 	 */
 	seqctrl_bits_trigger_select = 0x0F00,
