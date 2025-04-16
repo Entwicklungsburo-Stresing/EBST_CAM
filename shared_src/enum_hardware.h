@@ -186,6 +186,26 @@ enum s0_addresses_t
 	 *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
 	 */
 	S0Addr_BON_PERIOD = 0xBC,
+	/**
+	 * First 32 bits of the possible 128 bits of the sequence of the servo control.
+	 */
+	S0Addr_STATESEQ0 = 0xC0,
+	/**
+	 * Second 32 bits of the possible 128 bits of the sequence of the servo control.
+	 */
+	S0Addr_STATESEQ1 = 0xC4,
+	/**
+	 * Third 32 bits of the possible 128 bits of the sequence of the servo control.
+	 */
+	S0Addr_STATESEQ2 = 0xC8,
+	/**
+	 * Last 32 bits of the possible 128 bits of the sequence of the servo control.
+	 */
+	S0Addr_STATESEQ3 = 0xCC,
+	/**
+	 * See @ref SEQCTRL_bits_t for details.
+	 */
+	S0Addr_SEQCTRL = 0xD0,
 };
 
 /**
@@ -774,6 +794,41 @@ enum camera_type_bits_t
 	camera_type_camera_system_bit_index = 16,
 	camera_type_sensor_type_bits = 0x0000FFFF,
 	camera_type_camera_system_bits = 0xFFFF0000,
+};
+
+/**
+ * These are the bits of @ref S0Addr_SEQCTRL.
+ */
+enum SEQCTRL_bits_t
+{
+	/**
+	 * These bits determine the length of the sequence of the servo motor control.
+	 *		* min: 0 is a length of 1
+	 *		* max: 0x7F is a length of 128
+	 */
+	seqctrl_bits_sequence_length = 0x007F,
+	/**
+	 * These bits select the trigger source for the sequence.
+	 *		* 0: STI, Scan trigger input, controlled by @ref camera_settings.sti_mode
+	 *		* 1: SSLOPE, scan trigger with @ref camera_settings.sslope applied
+	 *		* 2: SCAN_GATED, scan trigger gated by block on
+	 *		* 3: STICNT, scan trigger with @ref camera_settings.sticnt applied
+	 *		* 4: SDAT, scan trigger after @ref camera_settings.sdat_in_10ns
+	 *		* 5: SEC, scan trigger after @ref camera_settings.sec_in_10ns
+	 *		* 6: XCK, start of XCK
+	 *		* 7: BTI, block trigger input, controlled by @ref camera_settings.bti_mode
+	 *		* 8: BSLOPE, block trigger with @ref camera_settings.bslope applied
+	 *		* 9: BTICNT, block trigger with @ref camera_settings.bticnt applied
+	 *		* 10: BDAT, block trigger after @ref camera_settings.bdat_in_10ns
+	 *		* 11: BEC, block trigger after @ref camera_settings.bec_in_10ns
+	 *		* 12: BLOCK_ON, block on signal
+	 *		* 13: BLOCK_ON_SYNCED, block on signal synced to the next scan trigger
+	 *		* 14: unused
+	 *		* 15: unused
+	 */
+	seqctrl_bits_trigger_select = 0x0F00,
+	seqctrl_bitindex_sequence_length = 0,
+	seqctrl_bitindex_trigger_select = 8,
 };
 
 /**
