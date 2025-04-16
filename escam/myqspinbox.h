@@ -1,6 +1,6 @@
 /*****************************************************************//**
  * @file		myqspinbox.h
- * @brief		Class MyQSpinBox for modyfing QSpinBox.
+ * @brief		Class MyQSpinBox for modifying QSpinBox.
  * @author		Florian Hahn
  * @date		29.01.2021
  * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.

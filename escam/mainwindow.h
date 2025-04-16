@@ -75,6 +75,7 @@ private slots:
 	void on_actionImport_data_triggered();
 	void on_actionspecial_pixels_triggered();
 	void on_actionGreyscaleSettings_triggered();
+	void on_actionServo_triggered();
 	void on_checkBoxLoopMeasurement_stateChanged(int state);
 	void readScanFrequencyBit();
 	void on_scanFrequencyTooHigh();

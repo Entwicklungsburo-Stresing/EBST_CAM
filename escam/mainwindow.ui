@@ -1208,6 +1208,7 @@
     <addaction name="actionDSC"/>
     <addaction name="actionIO_Control"/>
     <addaction name="actionRMS"/>
+    <addaction name="actionServo"/>
     <addaction name="actionShutter"/>
     <addaction name="actionspecial_pixels"/>
     <addaction name="actionTrigger_info"/>
@@ -1409,6 +1410,11 @@
   <action name="actionShutter">
    <property name="text">
     <string>Shutter</string>
+   </property>
+  </action>
+  <action name="actionServo">
+   <property name="text">
+    <string>Servo</string>
    </property>
   </action>
  </widget>

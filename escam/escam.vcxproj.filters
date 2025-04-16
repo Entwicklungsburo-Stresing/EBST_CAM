@@ -104,6 +104,9 @@
     <ClCompile Include="dialogshutter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dialogservo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="dialogsettings.h">
@@ -146,6 +149,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <QtMoc Include="dialogshutter.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="dialogservo.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -192,6 +198,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogshutter.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogservo.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
