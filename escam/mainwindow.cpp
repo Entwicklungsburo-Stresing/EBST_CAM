@@ -11,6 +11,7 @@
 #include "dialogtriggerinfo.h"
 #include "dialogchartsettings.h"
 #include "dialogshutter.h"
+#include "dialogservo.h"
 #ifdef WIN32
 #include "dialoggreyscalesettings.h"
 #endif
@@ -1332,6 +1333,14 @@ void MainWindow::on_actionGreyscaleSettings_triggered()
 	dialog->show();
 	return;
 #endif
+}
+
+void MainWindow::on_actionServo_triggered()
+{
+	DialogServo* dialog = new DialogServo(this);
+	dialog->setAttribute(Qt::WA_DeleteOnClose);
+	dialog->show();
+	return;
 }
 
 void MainWindow::showStatusCodeDialog(es_status_codes status)

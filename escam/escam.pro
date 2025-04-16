@@ -47,6 +47,7 @@ SOURCES += \
     dialogspecialpixels.cpp \
     dialogtriggerinfo.cpp \
     dialogshutter.cpp \
+    dialogservo.cpp \
     lsc.cpp \
     lsc-gui.cpp \
     mainwindow.cpp \
@@ -73,6 +74,7 @@ FORMS += \
     dialogspecialpixels.ui \
     dialogtriggerinfo.ui \
     dialogshutter.ui \
+    dialogservo.ui \
     mainwindow.ui
 win32 {
     FORMS += \
@@ -91,6 +93,7 @@ HEADERS += \
     dialogspecialpixels.h \
     dialogtriggerinfo.h \
     dialogshutter.h \
+    dialogservo.h \
     lsc.h \
     lsc-gui.h \
     mainwindow.h \

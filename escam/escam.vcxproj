@@ -238,6 +238,7 @@ del $(ProjectDir).qmake.stash
     <ClCompile Include="dialoggreyscalesettings.cpp" />
     <ClCompile Include="dialogioctrl.cpp" />
     <ClCompile Include="dialogrms.cpp" />
+    <ClCompile Include="dialogservo.cpp" />
     <ClCompile Include="dialogshutter.cpp" />
     <ClCompile Include="dialogspecialpixels.cpp" />
     <ClCompile Include="dialogtriggerinfo.cpp" />
@@ -267,6 +268,7 @@ del $(ProjectDir).qmake.stash
     <QtMoc Include="dialogtriggerinfo.h" />
     <QtMoc Include="dialogchartsettings.h" />
     <QtMoc Include="dialogshutter.h" />
+    <QtMoc Include="dialogservo.h" />
     <ClInclude Include="lsc-gui.h" />
     <ClInclude Include="hooks.h" />
     <QtMoc Include="dialogsettings.h">
@@ -306,6 +308,7 @@ del $(ProjectDir).qmake.stash
     <QtUic Include="dialoggreyscalesettings.ui" />
     <QtUic Include="dialogioctrl.ui" />
     <QtUic Include="dialogrms.ui" />
+    <QtUic Include="dialogservo.ui" />
     <QtUic Include="dialogsettings.ui">
     </QtUic>
     <QtUic Include="dialogshutter.ui" />
