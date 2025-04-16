@@ -827,8 +827,10 @@ enum SEQCTRL_bits_t
 	 *		* 15: unused
 	 */
 	seqctrl_bits_trigger_select = 0x0F00,
+	seqctrl_bit_manual_mode = 0x1000,
 	seqctrl_bitindex_sequence_length = 0,
 	seqctrl_bitindex_trigger_select = 8,
+	seqctrl_bitindex_manual_mode = 12,
 };
 
 /**
