@@ -525,6 +525,7 @@ void CameraSettingsWidget::initializeWidget()
 	ui->comboBoxBslope->setCurrentIndex(settings.value(settingBslopePath, settingBslopeDefault).toDouble());
 	ui->doubleSpinBoxSTime->setValue(settings.value(settingStimePath, settingStime_Default).toDouble());
 	ui->buttonGroupStimeResolution->button(settings.value(settingStimeResolutionModePath, settingStimeResolutionModeDefault).toDouble())->setChecked(true);
+	on_buttonGroupStimeResolution_idClicked(settings.value(settingStimeResolutionModePath, settingStimeResolutionModeDefault).toDouble());
 	ui->doubleSpinBoxBTimer_in_us->setValue(settings.value(settingBtime_in_microseconds_Path, settingBtime_in_microseconds_Default).toDouble());
 	ui->doubleSpinBoxSdatIn10ns->setValue(settings.value(settingSdat_in_10nsPath, settingSdat_in_10nsDefault).toDouble());
 	ui->doubleSpinBoxBdatIn10ns->setValue(settings.value(settingBdat_in_10nsPath, settingSdat_in_10nsDefault).toDouble());
