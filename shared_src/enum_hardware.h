@@ -804,10 +804,10 @@ enum STATECTRL_bits_t
 	 *		* 14: BLOCK_ON_SYNCED, block on signal synced to the next scan trigger
 	 *		* 15: unused
 	 */
-	seqctrl_bits_trigger_select = 0x000F,
-	seqctrl_bit_manual_mode = 0x0010,
-	seqctrl_bitindex_trigger_select = 0,
-	seqctrl_bitindex_manual_mode = 8,
+	statectrl_bits_trigger_select = 0x000F,
+	statectrl_bit_manual_mode = 0x0010,
+	statectrl_bitindex_trigger_select = 0,
+	statectrl_bitindex_manual_mode = 8,
 };
 
 /**
