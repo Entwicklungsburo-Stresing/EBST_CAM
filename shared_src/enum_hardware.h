@@ -187,25 +187,9 @@ enum s0_addresses_t
 	 */
 	S0Addr_BON_PERIOD = 0xBC,
 	/**
-	 * First 32 bits of the possible 128 bits of the sequence of the servo control.
+	 * See @ref STATECTRL_bits_t for details.
 	 */
-	S0Addr_STATESEQ0 = 0xC0,
-	/**
-	 * Second 32 bits of the possible 128 bits of the sequence of the servo control.
-	 */
-	S0Addr_STATESEQ1 = 0xC4,
-	/**
-	 * Third 32 bits of the possible 128 bits of the sequence of the servo control.
-	 */
-	S0Addr_STATESEQ2 = 0xC8,
-	/**
-	 * Last 32 bits of the possible 128 bits of the sequence of the servo control.
-	 */
-	S0Addr_STATESEQ3 = 0xCC,
-	/**
-	 * See @ref SEQCTRL_bits_t for details.
-	 */
-	S0Addr_SEQCTRL = 0xD0,
+	S0Addr_STATECTRL = 0xC0,
 };
 
 /**
@@ -797,16 +781,10 @@ enum camera_type_bits_t
 };
 
 /**
- * These are the bits of @ref S0Addr_SEQCTRL.
+ * These are the bits of @ref S0Addr_STATECTRL.
  */
-enum SEQCTRL_bits_t
+enum STATECTRL_bits_t
 {
-	/**
-	 * These bits determine the length of the sequence of the servo motor control.
-	 *		* min: 0 is a length of 1
-	 *		* max: 0x7F is a length of 128
-	 */
-	seqctrl_bits_sequence_length = 0x007F,
 	/**
 	 * These bits select the trigger source for the sequence.
 	 *		* 0:  manual
@@ -826,11 +804,10 @@ enum SEQCTRL_bits_t
 	 *		* 14: BLOCK_ON_SYNCED, block on signal synced to the next scan trigger
 	 *		* 15: unused
 	 */
-	seqctrl_bits_trigger_select = 0x0F00,
-	seqctrl_bit_manual_mode = 0x1000,
-	seqctrl_bitindex_sequence_length = 0,
-	seqctrl_bitindex_trigger_select = 8,
-	seqctrl_bitindex_manual_mode = 12,
+	seqctrl_bits_trigger_select = 0x000F,
+	seqctrl_bit_manual_mode = 0x0010,
+	seqctrl_bitindex_trigger_select = 0,
+	seqctrl_bitindex_manual_mode = 8,
 };
 
 /**
