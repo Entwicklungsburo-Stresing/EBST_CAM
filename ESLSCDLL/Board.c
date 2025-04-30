@@ -5396,3 +5396,18 @@ es_status_codes SetShutterStates(uint32_t drvno, uint16_t shutter_states)
 	ES_LOG("Set shutter states to 0x%"PRIx16", drvno %"PRIu32"\n", shutter_states, drvno);
 	return Cam_SendData(drvno, maddr_ioctrl, ioctrl_shutter, shutter_states);
 }
+
+es_status_codes SetStateControlRegister(uint32_t drvno, uint16_t state)
+{
+	ES_LOG("Set state control register to 0x%"PRIx16", drvno %"PRIu32"\n", state, drvno);
+	return writeBitsS0_32(drvno, (state << statectrl_bitindex_trigger_select), statectrl_bits_trigger_select, S0Addr_STATECTRL);
+}
+
+es_status_codes SetManualState(uint32_t drvno, bool state)
+{
+	ES_LOG("Set manual state to %d, drvno %"PRIu32"\n", state, drvno);
+	if(state)
+		return setBitS0_32(drvno, statectrl_bitindex_manual_mode, S0Addr_STATECTRL);
+	else
+		return resetBitS0_32(drvno, statectrl_bitindex_manual_mode, S0Addr_STATECTRL);
+}
