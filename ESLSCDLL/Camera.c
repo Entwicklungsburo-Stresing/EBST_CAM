@@ -23,11 +23,6 @@ es_status_codes Cam_Init(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = Cam_SetPosition(drvno);
 	if (status != es_no_error) return status;
-	// when cooled camera legacy mode: disable PCIe FIFO when cool cam transmits cool status
-	if (settings_struct.camera_settings[drvno].is_cooled_camera_legacy_mode)
-		status = Use_ENFFW_protection(drvno, true);
-	else
-		status = Use_ENFFW_protection(drvno, false);
 	status = Cam_SetPixelRegister(drvno);
 	if (status != es_no_error) return status;
 	status = Cam_SetTriggerInput(drvno);
