@@ -16,15 +16,15 @@ public:
 	~DialogServo();
 
 private slots:
-	void on_dec_changed();
-	void on_hex_changed();
-	void on_bin_changed();
+	void on_spinBoxSeqLength_valueChanged(int val);
+	void on_lineEditDec_textChanged();
+	void on_lineEditHex_textChanged();
+	void on_lineEditBin_textChanged();
 private:
 	Ui::dialogservoClass* ui;
 	QString convertDecimalToBinary(QString decimalString);
-	QString convertDecimalToHex(QString decimalString);
 	QString convertHexToBinary(QString hexString);
-	QString convertHexToDecimal(QString hexString);
 	QString convertBinaryToDecimal(QString binaryString);
 	QString convertBinaryToHex(QString binaryString);
+	bool checkDecimal(QString decimalString);
 };
