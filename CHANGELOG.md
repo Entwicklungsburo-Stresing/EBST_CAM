@@ -9,6 +9,20 @@ The hardware version number is the current version at release time.
 ## Unreleased
 ### API Changes
 #### Added
+#### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+### Other Changes
+#### Added
+#### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+
+## 4.18.0 - 2025-05-21
+### API Changes
+#### Added
 * Add function DLLOpenShutter_multipleBoards
 * Add function DLLCloseShutter_multipleBoards
 * Add function DLLSetGeneralOutput
@@ -18,16 +32,12 @@ The hardware version number is the current version at release time.
 * Change function DLLOpenShutter to single board function, add parameter drvno.
 * Change function DLLCloseShutter to single board function, add parameter drvno.
 * Change parameters of DLLSetSTimer to: uint32_t drvno, uint32_t stime, uint8_t resolution_mode
-#### Removed
-#### Fixed
-#### Deprecated
 ### Other Changes
 #### Added
 * Implement shutter control in dialogshutter
-#### Changed
-#### Removed
-#### Fixed
-#### Deprecated
+* Add license information
+### Changed
+* Update Qt to 6.8.3
 
 ## 4.17.8 - 2025-03-05
 This release reduces the number of needed library calls for a simple operation of the cameras.
