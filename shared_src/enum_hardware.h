@@ -326,11 +326,11 @@ enum XCK_bits_t
 	 * divide time base resolution by 1000: 0: 1us, 1: 1ms, or when reset_ns = 1: 0: 100ns, 1: 100us
 	 */
 	XCK_bitindex_res_ms = 29,
-	XCK_bitindex_stimer_on = 30,
+	XCK_bitindex_arm_scan_trigger = 30,
 	XCK_bits_stimer = 0x0FFFFFFF,
 	XCK_bit_res_ns = 0x10000000,
 	XCK_bit_res_ms = 0x20000000,
-	XCK_bit_stimer_on = 0x40000000,
+	XCK_bit_arm_scan_trigger = 0x40000000,
 };
 
 /**

@@ -106,7 +106,9 @@ es_status_codes InitSoftware(uint32_t drvno)
 es_status_codes InitPcieBoard(uint32_t drvno)
 {
 	ES_LOG("\nInit hardware board %"PRIu32"\n", drvno);
-	es_status_codes status = StopSTimer(drvno);
+	es_status_codes status = GetPcieCardVersion(drvno, &pcieCardMajorVersion[drvno], &pcieCardMinorVersion[drvno]);
+	if (status != es_no_error) return status;
+	status = DisarmScanTrigger(drvno);
 	if (status != es_no_error) return status;
 	status = RSFifo(drvno);
 	if (status != es_no_error) return status;
@@ -191,8 +193,6 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetS1S2ReadDelay(drvno);
 	if (status != es_no_error) return status;
-	status = GetPcieCardVersion(drvno, &pcieCardMajorVersion[drvno], &pcieCardMinorVersion[drvno]);
-	if (status != es_no_error) return status;
 	status = SetShiftS1S2ToNextScan(drvno);
 	// when cooled camera legacy mode: disable PCIe FIFO when cool cam transmits cool status
 	if (settings_struct.camera_settings[drvno].is_cooled_camera_legacy_mode)
@@ -260,7 +260,7 @@ es_status_codes AbortMeasurement()
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 	{
-		status = StopSTimer(drvno);
+		status = DisarmScanTrigger(drvno);
 		if (status != es_no_error) return status;
 		status = resetBlockEn(drvno);
 		if (status != es_no_error) return status;
@@ -886,16 +886,22 @@ es_status_codes ResetPartialBinning(uint32_t drvno)
 }
 
 /**
- * @brief Stop S Timer.
+ * @brief Disarm scan trigger.
  *
  * Clear Bit30 of XCK-Reg: 0= timer off
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @return @ref es_status_codes
  */
-es_status_codes StopSTimer(uint32_t drvno)
+es_status_codes DisarmScanTrigger(uint32_t drvno)
 {
-	ES_LOG("Stop S Timer\n");
-	return resetBitS0_32(drvno, XCK_bitindex_stimer_on, S0Addr_XCK);
+	if (PcieCardVersionIsSmallerThan(drvno, 0x222, 0x18))
+	{
+		ES_LOG("Disarm scan trigger\n");
+		return resetBitS0_32(drvno, XCK_bitindex_arm_scan_trigger, S0Addr_XCK);
+	}
+	else
+		// Since version 222_18 XCK_bitindex_arm_scan_trigger is read only.
+		return es_no_error;
 }
 
 /**
@@ -1746,11 +1752,17 @@ es_status_codes readRegisterDma_8(uint32_t drvno, uint8_t* data, uint32_t addres
  */
 es_status_codes SetDmaStartMode(uint32_t drvno, bool start_by_hardware)
 {
-	ES_LOG("Set DMA start mode: %d\n", start_by_hardware);
-	uint32_t data = 0;
-	if (start_by_hardware)
-		data = IRQREG_bit_HWDREQ_EN;
-	return writeBitsS0_32(drvno, data, IRQREG_bit_HWDREQ_EN, S0Addr_IRQREG);
+	if (PcieCardVersionIsSmallerThan(drvno, 0x222, 0x18))
+	{
+		ES_LOG("Set DMA start mode: %d\n", start_by_hardware);
+		uint32_t data = 0;
+		if (start_by_hardware)
+			data = IRQREG_bit_HWDREQ_EN;
+		return writeBitsS0_32(drvno, data, IRQREG_bit_HWDREQ_EN, S0Addr_IRQREG);
+	}
+	else
+		// IRQREG_bit_HWDREQ_EN is always 1 since version 222_18, so it is not necessary / possible to set it
+		return es_no_error;
 }
 
 /**
@@ -1882,14 +1894,14 @@ es_status_codes StartMeasurement()
 				}
 			}
 			ES_LOG("Block %"PRIu32" triggered\n", blk_cnt);
-			// setBlockEn, StartSTimer and DoSoftwareTrigger are starting the measurement.
+			// setBlockEn, ArmScanTrigger and DoSoftwareTrigger are starting the measurement.
 			// timer must be started in each block as the scan counter stops it by hardware at end of block
 			for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 			{
 				// Check if the drvno'th bit is set
 				if ((settings_struct.board_sel >> drvno) & 1)
 				{
-					status = StartSTimer(drvno);
+					status = ArmScanTrigger(drvno);
 					if (status != es_no_error) return ReturnStartMeasurement(status);
 					status = setBlockEn(drvno);
 					if (status != es_no_error) return ReturnStartMeasurement(status);
@@ -1921,7 +1933,7 @@ es_status_codes StartMeasurement()
 						}
 						if (!abortMeasurementFlag && checkEscapeKeyState())
 							abortMeasurementFlag = true;
-						status = IsTimerOn(drvno, (bool*)&timerOn[drvno]);
+						status = GetArmScanTriggerStatus(drvno, (bool*)&timerOn[drvno]);
 						if (status != es_no_error) return ReturnStartMeasurement(status);
 					}
 				}
@@ -1965,7 +1977,7 @@ es_status_codes StartMeasurement()
 			// Check if the drvno'th bit is set
 			if ((settings_struct.board_sel >> drvno) & 1)
 			{
-				status = StopSTimer(drvno);
+				status = DisarmScanTrigger(drvno);
 				if (status != es_no_error) return ReturnStartMeasurement(status);
 				if (!settings_struct.camera_settings[drvno].use_software_polling)
 				{
@@ -2090,15 +2102,21 @@ es_status_codes ResetHardwareCounter(uint32_t drvno)
 */
 es_status_codes SetHardwareTimerStopMode(uint32_t drvno, bool stop_by_hardware)
 {
-	ES_LOG("Set hardware timer stop mode: %d\n", stop_by_hardware);
-	es_status_codes status;
-	if (stop_by_hardware)
-		//when SCANINDEX reaches NOS, the timer is stopped by hardware.
-		status = setBitS0_32(drvno, PCIEFLAGS_bitindex_ENRSTIMERHW, S0Addr_PCIEFLAGS);
+	if (PcieCardVersionIsSmallerThan(drvno, 0x222, 0x18))
+	{
+		ES_LOG("Set hardware timer stop mode: %d\n", stop_by_hardware);
+		es_status_codes status;
+		if (stop_by_hardware)
+			//when SCANINDEX reaches NOS, the timer is stopped by hardware.
+			status = setBitS0_32(drvno, PCIEFLAGS_bitindex_ENRSTIMERHW, S0Addr_PCIEFLAGS);
+		else
+			//stop only with write to RS_Timer Reg
+			status = resetBitS0_32(drvno, PCIEFLAGS_bitindex_ENRSTIMERHW, S0Addr_PCIEFLAGS);
+		return status;
+	}
 	else
-		//stop only with write to RS_Timer Reg
-		status = resetBitS0_32(drvno, PCIEFLAGS_bitindex_ENRSTIMERHW, S0Addr_PCIEFLAGS);
-	return status;
+		// PCIEFLAGS_bitindex_ENRSTIMERHW is always 1 since version 222_18, so it is not necessary / possible to set it
+		return es_no_error;
 }
 
 /**
@@ -2184,10 +2202,16 @@ es_status_codes countBlocksByHardware(uint32_t drvno)
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @return @ref es_status_codes
  */
-es_status_codes StartSTimer(uint32_t drvno)
+es_status_codes ArmScanTrigger(uint32_t drvno)
 {
-	ES_LOG("Start S Timer\n");
-	return setBitS0_32(drvno, XCK_bitindex_stimer_on, S0Addr_XCK);
+	if (PcieCardVersionIsSmallerThan(drvno, 0x222, 0x18))
+	{
+		ES_LOG("Arm scan trigger\n");
+		return setBitS0_32(drvno, XCK_bitindex_arm_scan_trigger, S0Addr_XCK);
+	}
+	else
+		// Since version 222_18 XCK_bitindex_arm_scan_trigger is read only.
+		return es_no_error;
 }
 
 /**
@@ -2211,9 +2235,9 @@ es_status_codes DoSoftwareTrigger(uint32_t drvno)
  * @param on
  * @return @ref es_status_codes
  */
-es_status_codes IsTimerOn(uint32_t drvno, bool* on)
+es_status_codes GetArmScanTriggerStatus(uint32_t drvno, bool* on)
 {
-	return ReadBitS0_32(drvno, S0Addr_XCK, XCK_bitindex_stimer_on, on);
+	return ReadBitS0_32(drvno, S0Addr_XCK, XCK_bitindex_arm_scan_trigger, on);
 }
 
 /**
@@ -3017,7 +3041,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x08\tXCK\t0-27\tXCK STIMER\t%"PRIu32"\n", (data32 & XCK_bits_stimer) >> XCK_bitindex_stimer);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t28\tRes_ns\t%"PRIu32"\n", (data32 & XCK_bit_res_ns) >> XCK_bitindex_res_ns);
 	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t29\tRes_ms\t%"PRIu32"\n", (data32 & XCK_bit_res_ms) >> XCK_bitindex_res_ms);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t30\tstimer on\t%"PRIu32"\n", (data32 & XCK_bit_stimer_on) >> XCK_bitindex_stimer_on);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\t\t30\tarm scan trigger\t%"PRIu32"\n", (data32 & XCK_bit_arm_scan_trigger) >> XCK_bitindex_arm_scan_trigger);
 
 	/*=======================================================================*/
 
@@ -5227,7 +5251,7 @@ es_status_codes GetBlockOn(uint32_t drvno, bool* blockOn)
 {
 	ES_TRACE("Get block on bit\n");
 	es_status_codes status;
-	// In PCIe card firmware versino 222.14 the block_on bit was renamed from BLOCK_ON to BLOCK_EN and BLOCK_ON was added as a new bit.
+	// In PCIe card firmware version 222.14 the block_on bit was renamed from BLOCK_ON to BLOCK_EN and BLOCK_ON was added as a new bit.
 	if(PcieCardVersionIsSmallerThan(drvno, 0x222, 0x14))
 		status = ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_BLOCK_EN, blockOn);
 	else
