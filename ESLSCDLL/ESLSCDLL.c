@@ -1029,9 +1029,7 @@ DllAccess es_status_codes DLLOpenShutter_multipleBoards()
  */
 DllAccess es_status_codes DLLCloseShutter(uint32_t drvno)
 {
-
 	return CloseShutter(drvno);
-
 }
 
 /**
