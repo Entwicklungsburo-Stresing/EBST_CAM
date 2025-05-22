@@ -76,7 +76,6 @@ es_status_codes SetupFullBinning( uint32_t drvno, uint32_t lines, uint8_t vfreq 
 es_status_codes SetupROI(uint32_t drvno, uint16_t number_of_regions, uint32_t lines, uint8_t* region_size, uint8_t vfreq);
 es_status_codes SetupArea(uint32_t drvno, uint32_t lines_binning, uint8_t vfreq);
 es_status_codes SetupVCLKReg( uint32_t drvno, uint32_t lines, uint8_t vfreq );
-es_status_codes StopSTimer( uint32_t drvno );
 es_status_codes RSFifo( uint32_t drvno );
 es_status_codes allocateUserMemory( uint32_t drvno );
 es_status_codes SetDMABufRegs( uint32_t drvno );
@@ -113,9 +112,10 @@ es_status_codes SetHardwareTimerStopMode( uint32_t drvno, bool stop_by_hardware 
 es_status_codes ResetHardwareCounter( uint32_t drvno );
 es_status_codes waitForBlockTrigger(uint32_t drvno);
 es_status_codes countBlocksByHardware( uint32_t drvno );
-es_status_codes StartSTimer( uint32_t drvno );
+es_status_codes ArmScanTrigger( uint32_t drvno );
+es_status_codes DisarmScanTrigger(uint32_t drvno);
 es_status_codes DoSoftwareTrigger(uint32_t drvno);
-es_status_codes IsTimerOn( uint32_t drvno, bool* on );
+es_status_codes GetArmScanTriggerStatus( uint32_t drvno, bool* on );
 es_status_codes GetLastBufPart( uint32_t drvno );
 es_status_codes GetIndexOfPixel( uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t CAM, uint64_t* pIndex );
 es_status_codes CheckFifoValid(uint32_t drvno, bool* valid);
