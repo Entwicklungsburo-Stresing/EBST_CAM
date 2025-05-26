@@ -180,14 +180,14 @@ enum s0_addresses_t
 	 */
 	S0Addr_CAMERA_TYPE = 0xB8,
 	/**
-	 * BON PERIOD is a 32 bit unsigned integer, which shows the period time of the first BON period (BON high slope to high slope) of one measurement in a 10 ns resolution. Read only.Introduced in PCIe card version 222_12.
+	 * BON PERIOD is a 32 bit unsigned integer, which shows the period time of the first BON period (BON high slope to high slope) of one measurement in a 10 ns resolution. Read only. Introduced in PCIe card version 222_12.
 	 *		* min: 0
 	 *		* step: 1 => 10 ns
 	 *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
 	 */
 	S0Addr_BON_PERIOD = 0xBC,
 	/**
-	 * See @ref STATECTRL_bits_t for details.
+	 * See @ref STATECTRL_bits_t for details. Added in PCIe card version 222_18.
 	 */
 	S0Addr_STATECTRL = 0xC0,
 };
@@ -787,7 +787,7 @@ enum STATECTRL_bits_t
 {
 	/**
 	 * These bits select the trigger source for the sequence.
-	 *		* 0:  manual
+	 *		* 0:  manual mode
 	 *		* 1:  STI, Scan trigger input, controlled by @ref camera_settings.sti_mode
 	 *		* 2:  SSLOPE, scan trigger with @ref camera_settings.sslope applied
 	 *		* 3:  SCAN_GATED, scan trigger gated by block on
@@ -805,9 +805,25 @@ enum STATECTRL_bits_t
 	 *		* 15: unused
 	 */
 	statectrl_bits_trigger_select = 0x000F,
-	statectrl_bit_manual_mode = 0x0010,
+	statectrl_bit_manual_trigger = 0x0010,
 	statectrl_bitindex_trigger_select = 0,
-	statectrl_bitindex_manual_mode = 8,
+	statectrl_bitindex_manual_trigger = 8,
+	statectrl_trigger_select_manual = 0,
+	statectrl_trigger_select_sti = 1,
+	statectrl_trigger_select_sslope = 2,
+	statectrl_trigger_select_scan_gated = 3,
+	statectrl_trigger_select_sticnt = 4,
+	statectrl_trigger_select_sdat = 5,
+	statectrl_trigger_select_sec = 6,
+	statectrl_trigger_select_xck = 7,
+	statectrl_trigger_select_bti = 8,
+	statectrl_trigger_select_bslope = 9,
+	statectrl_trigger_select_bticnt = 10,
+	statectrl_trigger_select_bdat = 11,
+	statectrl_trigger_select_bec = 12,
+	statectrl_trigger_select_block_on = 13,
+	statectrl_trigger_select_block_on_synced = 14,
+	statectrl_trigger_select_unused = 15,
 };
 
 /**
