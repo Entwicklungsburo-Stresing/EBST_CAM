@@ -10,12 +10,17 @@ The hardware version number is the current version at release time.
 ### API Changes
 #### Added
 #### Changed
+* Rename setting btime_in_microsec to btime
+* Rename setting stime_resolution_mode to timer_resolution_mode
+* Remove parameter resolution_mode from DLLSetSTimer
+* Rename parameter btime_in_microseconds of DLLSetBTimer to btime
 #### Removed
 #### Fixed
 #### Deprecated
 ### Other Changes
 #### Added
 #### Changed
+* Move timer resolution to own function SetTimerResolution
 #### Removed
 #### Fixed
 #### Deprecated

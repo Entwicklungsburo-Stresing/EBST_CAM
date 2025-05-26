@@ -63,16 +63,13 @@ struct camera_settings
 	 */
 	uint32_t bti_mode;
 	/**
-	 * Stime is the time between the start of two readouts. This time is used when @ref camera_settings.sti_mode is set to @ref sti_mode_t.sti_STimer. The resolution of this timer depends on the setting @ref camera_settings.stime_resolution_mode. Stime is a 28 bit unsigned integer. Further information about the timer can be found in the manual in chapter 6.4.4.
+	 * Stime is the time between the start of two readouts. This time is used when @ref camera_settings.sti_mode is set to @ref sti_mode_t.sti_STimer. The resolution of this timer depends on the setting @ref camera_settings.timer_resolution_mode. Stime is a 28 bit unsigned integer. Further information about the timer can be found in the manual in chapter 6.4.4.
 	 */
 	uint32_t stime;
 	/**
-	 * Block timer in microseconds is the time between the start of two blocks of readouts. This time is used when bti mode is btimer. Btime is a 28 bit unsigned integer. Further information about the timer can be found in the manual in chapter 6.4.4.
-	 *		* min: 1 µs
-	 *		* step: 1 µs
-	 *		* max: 268,435,455 µs = 268.435455 s
+	 * Block time is the time between the start of two blocks of readouts. This time is used when \ref camera_settings.bti_mode is set to \ref  bti_mode_t.bti_BTimer. The resolution of this timer depends on the setting @ref camera_settings.timer_resolution_mode. Btime is a 28 bit unsigned integer. Further information about the timer can be found in the manual in chapter 6.4.4.
 	 */
-	uint32_t btime_in_microsec;
+	uint32_t btime;
 	/**
 	 * Scan delay after trigger in 10 ns steps is the delay time between the trigger starting a scan, which is determined by sti_mode and the actual start of the scan. SDAT is a 31 bit unsigned integer. Further information about sdat can be found in the manual in chapter 2.9.2 and 6.2.4.10.
 	 *		* disable: 0
@@ -396,9 +393,9 @@ struct camera_settings
 	 */
 	uint32_t ec_legacy_mode;
 	/**
-	 * stime_resolution_mode determines the resolution of the timer controlled by @ref camera_settings.stime. See @ref stimer_resolution_t in enum_settings.h for options.
+	 * timer_resolution_mode determines the resolution of the timer controlled by @ref camera_settings.stime and @ref camera_settings.btime. See @ref timer_resolution_t in enum_settings.h for options.
 	 */
-	uint32_t stime_resolution_mode;
+	uint32_t timer_resolution_mode;
 };
 
 /**

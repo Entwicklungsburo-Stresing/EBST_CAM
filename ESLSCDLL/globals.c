@@ -53,7 +53,7 @@ const struct camera_settings camera_settings_default =
 	.sti_mode = settingStiDefault,
 	.bti_mode = settingBtiDefault,
 	.stime = settingStime_Default,
-	.btime_in_microsec = settingBtime_in_microseconds_Default,
+	.btime = settingBtimeDefault,
 	.sdat_in_10ns = settingSdat_in_10nsDefault,
 	.bdat_in_10ns = settingSdat_in_10nsDefault,
 	.sslope = settingSslopeDefault,
@@ -183,7 +183,7 @@ const struct camera_settings camera_settings_default =
 	.manipulate_data_mode = settingManipulateDataModeDefault,
 	.manipulate_data_custom_factor = settingManipulateDataCustomFactorDefault,
 	.ec_legacy_mode = settingEcLegacyModeDefault,
-	.stime_resolution_mode = settingStimeResolutionModeDefault,
+	.timer_resolution_mode = settingTimerResolutionModeDefault,
 };
 
 struct measurement_settings settings_struct =

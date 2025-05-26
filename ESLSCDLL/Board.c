@@ -158,9 +158,11 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetBTI(drvno, (uint8_t)settings_struct.camera_settings[drvno].bti_mode);
 	if (status != es_no_error) return status;
-	status = SetSTimer(drvno, settings_struct.camera_settings[drvno].stime, (uint8_t)settings_struct.camera_settings[drvno].stime_resolution_mode);
+	status = SetTimerResolution(drvno, (uint8_t)settings_struct.camera_settings[drvno].timer_resolution_mode);
 	if (status != es_no_error) return status;
-	status = SetBTimer(drvno, settings_struct.camera_settings[drvno].btime_in_microsec);
+	status = SetSTimer(drvno, settings_struct.camera_settings[drvno].stime);
+	if (status != es_no_error) return status;
+	status = SetBTimer(drvno, settings_struct.camera_settings[drvno].btime);
 	if (status != es_no_error) return status;
 	bool isTdc = false;
 	status = GetIsTdc(drvno, &isTdc);
@@ -1145,38 +1147,36 @@ es_status_codes SetBTI(uint32_t drvno, uint8_t bti_mode)
 }
 
 /**
- * @brief Sets time for scan timer.
+ * @brief Set timer resolution.
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param stime Trigger time. The resolution of the time depends on resolution_mode. 28 bit.
- * @param resolution_mode Resolution of the time. See @ref stimer_resolution_t in enum.h for options.
+ * @param resolution_mode Resolution of the time. See @ref timer_resolution_t in enum.h for options.
  * @return @ref es_status_codes
  */
-es_status_codes SetSTimer(uint32_t drvno, uint32_t stime, uint8_t resolution_mode)
+es_status_codes SetTimerResolution(uint32_t drvno, uint8_t resolution_mode)
 {
-	ES_LOG("Set stime in microseconds: %"PRIu32"\n", stime);
 	es_status_codes status = es_no_error;
 	switch (resolution_mode)
 	{
-	case simer_resolution_1us:
+	case timer_resolution_1us:
 		status = resetBitS0_32(drvno, XCK_bitindex_res_ns, S0Addr_XCK);
 		if (status != es_no_error) return status;
 		status = resetBitS0_32(drvno, XCK_bitindex_res_ms, S0Addr_XCK);
 		if (status != es_no_error) return status;
 		break;
-	case simer_resolution_100us:
+	case timer_resolution_100us:
 		status = setBitS0_32(drvno, XCK_bitindex_res_ns, S0Addr_XCK);
 		if (status != es_no_error) return status;
 		status = setBitS0_32(drvno, XCK_bitindex_res_ms, S0Addr_XCK);
 		if (status != es_no_error) return status;
 		break;
-	case simer_resolution_1ms:
+	case timer_resolution_1ms:
 		status = resetBitS0_32(drvno, XCK_bitindex_res_ns, S0Addr_XCK);
 		if (status != es_no_error) return status;
 		status = setBitS0_32(drvno, XCK_bitindex_res_ms, S0Addr_XCK);
 		if (status != es_no_error) return status;
 		break;
-	case simer_resolution_100ns:
+	case timer_resolution_100ns:
 		status = setBitS0_32(drvno, XCK_bitindex_res_ns, S0Addr_XCK);
 		if (status != es_no_error) return status;
 		status = resetBitS0_32(drvno, XCK_bitindex_res_ms, S0Addr_XCK);
@@ -1185,6 +1185,18 @@ es_status_codes SetSTimer(uint32_t drvno, uint32_t stime, uint8_t resolution_mod
 	default:
 		return es_parameter_out_of_range;
 	}
+}
+
+/**
+ * @brief Sets time for scan timer.
+ *
+ * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param stime Trigger time. The resolution of the time depends on the resolution mode set by SetTimerResolution(). 28 bit.
+ * @return @ref es_status_codes
+ */
+es_status_codes SetSTimer(uint32_t drvno, uint32_t stime)
+{
+	ES_LOG("Set stime in microseconds: %"PRIu32"\n", stime);
 	return writeBitsS0_32(drvno, stime, XCK_bits_stimer, S0Addr_XCK);
 }
 
@@ -1192,15 +1204,15 @@ es_status_codes SetSTimer(uint32_t drvno, uint32_t stime, uint8_t resolution_mod
  * @brief Sets time for block timer.
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param btime_in_microseconds Block time in microseconds, 28 bit. Min: 1 us, Max: 268.435.455 us = 268,435.455 s
+ * @param btime Block time. The resolution of the time depends on the resolution mode set by SetTimerResolution(). 28 bit.
  * @return @ref es_status_codes
  */
-es_status_codes SetBTimer(uint32_t drvno, uint32_t btime_in_microseconds)
+es_status_codes SetBTimer(uint32_t drvno, uint32_t btime)
 {
-	ES_LOG("Set btime in microseconds: %"PRIu32"\n", btime_in_microseconds);
-	if (btime_in_microseconds)
+	ES_LOG("Set btime in microseconds: %"PRIu32"\n", btime);
+	if (btime)
 	{
-		uint32_t data = btime_in_microseconds | 0x80000000;
+		uint32_t data = btime | 0x80000000;
 		return writeRegisterS0_32(drvno, data, S0Addr_BTIMER);
 	}
 	else
@@ -3858,7 +3870,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		"sti_mode\t%"PRIu32"\n"
 		"bti_mode\t%"PRIu32"\n"
 		"stime\t%"PRIu32"\n"
-		"btime_in_microsec\t%"PRIu32"\n"
+		"btime\t%"PRIu32"\n"
 		"sdat_in_10ns\t%"PRIu32"\n"
 		"bdat_in_10ns\t%"PRIu32"\n"
 		"sslope\t%"PRIu32"\n"
@@ -3887,7 +3899,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].sti_mode,
 		settings_struct.camera_settings[drvno].bti_mode,
 		settings_struct.camera_settings[drvno].stime,
-		settings_struct.camera_settings[drvno].btime_in_microsec,
+		settings_struct.camera_settings[drvno].btime,
 		settings_struct.camera_settings[drvno].sdat_in_10ns,
 		settings_struct.camera_settings[drvno].bdat_in_10ns,
 		settings_struct.camera_settings[drvno].sslope,
@@ -3954,7 +3966,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		"manipulate_data_mode\t%"PRIu32"\n"
 		"manipulate_data_custom_factor\t%f\n"
 		"ec_legacy_mode\t%"PRIu32"\n"
-		"stime_resolution_mode\t%"PRIu32"\n",
+		"timer_resolution_mode\t%"PRIu32"\n",
 		settings_struct.camera_settings[drvno].ioctrl_T0_period_in_10ns,
 		settings_struct.camera_settings[drvno].dma_buffer_size_in_scans,
 		settings_struct.camera_settings[drvno].tocnt,
@@ -3968,7 +3980,7 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 		settings_struct.camera_settings[drvno].manipulate_data_mode,
 		settings_struct.camera_settings[drvno].manipulate_data_custom_factor,
 		settings_struct.camera_settings[drvno].ec_legacy_mode,
-		settings_struct.camera_settings[drvno].stime_resolution_mode);
+		settings_struct.camera_settings[drvno].timer_resolution_mode);
 	return es_no_error;
 }
 

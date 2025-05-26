@@ -1303,17 +1303,17 @@ DllAccess es_status_codes DLLWaitForBlockDone()
 /**
  * @copydoc SetSTimer
  */
-DllAccess es_status_codes DLLSetSTimer(uint32_t drvno, uint32_t stime, uint8_t resolution_mode)
+DllAccess es_status_codes DLLSetSTimer(uint32_t drvno, uint32_t stime)
 {
-	return SetSTimer(drvno, stime, resolution_mode);
+	return SetSTimer(drvno, stime);
 }
 
 /**
  * @copydoc SetBTimer
  */
-DllAccess es_status_codes DLLSetBTimer(uint32_t drvno, uint32_t btime_in_microseconds)
+DllAccess es_status_codes DLLSetBTimer(uint32_t drvno, uint32_t btime)
 {
-	return SetBTimer(drvno, btime_in_microseconds);
+	return SetBTimer(drvno, btime);
 }
 
 /**

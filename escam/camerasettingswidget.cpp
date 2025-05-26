@@ -12,11 +12,11 @@ CameraSettingsWidget::CameraSettingsWidget(QWidget *parent)
 	ui(new Ui::CameraSettingsWidgetClass())
 {
 	ui->setupUi(this);
-	// These IDs represents the enum stimer_resolution_t from enum_settings.h
-	ui->buttonGroupStimeResolution->setId(ui->radioButton100ns, 3);
-	ui->buttonGroupStimeResolution->setId(ui->radioButton1us, 0);
-	ui->buttonGroupStimeResolution->setId(ui->radioButton100us, 1);
-	ui->buttonGroupStimeResolution->setId(ui->radioButton1ms, 2);
+	// These IDs represents the enum timer_resolution_t from enum_settings.h
+	ui->buttonGroupTimerResolution->setId(ui->radioButton100ns, 3);
+	ui->buttonGroupTimerResolution->setId(ui->radioButton1us, 0);
+	ui->buttonGroupTimerResolution->setId(ui->radioButton100us, 1);
+	ui->buttonGroupTimerResolution->setId(ui->radioButton1ms, 2);
 #if __linux__
 	// disable option software polling on Linux
 	ui->checkBoxUseSoftwarePolling->setChecked(false);
@@ -37,8 +37,8 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingSslopePath, ui->comboBoxSslope->currentIndex());
 	settings.setValue(settingBslopePath, ui->comboBoxBslope->currentIndex());
 	settings.setValue(settingStimePath, ui->doubleSpinBoxSTime->value());
-	settings.setValue(settingStimeResolutionModePath, ui->buttonGroupStimeResolution->checkedId());
-	settings.setValue(settingBtime_in_microseconds_Path, ui->doubleSpinBoxBTimer_in_us->value());
+	settings.setValue(settingTimerResolutionModePath, ui->buttonGroupTimerResolution->checkedId());
+	settings.setValue(settingBtimePath, ui->doubleSpinBoxBTimer->value());
 	settings.setValue(settingSdat_in_10nsPath, ui->doubleSpinBoxSdatIn10ns->value());
 	settings.setValue(settingBdat_in_10nsPath, ui->doubleSpinBoxBdatIn10ns->value());
 	settings.setValue(settingShutterSecIn10nsPath, ui->doubleSpinBoxSecIn10ns->value());
@@ -143,11 +143,11 @@ void CameraSettingsWidget::on_comboBoxBti_currentIndexChanged(int index)
 	switch (index)
 	{
 	case bti_BTimer:
-		ui->doubleSpinBoxBTimer_in_us->setEnabled(true);
+		ui->doubleSpinBoxBTimer->setEnabled(true);
 		ui->comboBoxBslope->setEnabled(enabled);
 		break;
 	default:
-		ui->doubleSpinBoxBTimer_in_us->setEnabled(enabled);
+		ui->doubleSpinBoxBTimer->setEnabled(enabled);
 		ui->comboBoxBslope->setEnabled(true);
 	}
 }
@@ -355,8 +355,8 @@ void CameraSettingsWidget::loadDefaults()
 	ui->comboBoxSslope->setCurrentIndex(settingSslopeDefault);
 	ui->comboBoxBslope->setCurrentIndex(settingBslopeDefault);
 	ui->doubleSpinBoxSTime->setValue(settingStime_Default);
-	ui->buttonGroupStimeResolution->button(settingStimeResolutionModeDefault)->setChecked(true);
-	ui->doubleSpinBoxBTimer_in_us->setValue(settingBtime_in_microseconds_Default);
+	ui->buttonGroupTimerResolution->button(settingTimerResolutionModeDefault)->setChecked(true);
+	ui->doubleSpinBoxBTimer->setValue(settingBtimeDefault);
 	ui->doubleSpinBoxSdatIn10ns->setValue(settingSdat_in_10nsDefault);
 	ui->doubleSpinBoxBdatIn10ns->setValue(settingBdat_in_10nsDefault);
 	ui->doubleSpinBoxSecIn10ns->setValue(settingShutterSecIn10nsDefault);
@@ -524,9 +524,9 @@ void CameraSettingsWidget::initializeWidget()
 	ui->comboBoxSslope->setCurrentIndex(settings.value(settingSslopePath, settingSslopeDefault).toDouble());
 	ui->comboBoxBslope->setCurrentIndex(settings.value(settingBslopePath, settingBslopeDefault).toDouble());
 	ui->doubleSpinBoxSTime->setValue(settings.value(settingStimePath, settingStime_Default).toDouble());
-	ui->buttonGroupStimeResolution->button(settings.value(settingStimeResolutionModePath, settingStimeResolutionModeDefault).toDouble())->setChecked(true);
-	on_buttonGroupStimeResolution_idClicked(settings.value(settingStimeResolutionModePath, settingStimeResolutionModeDefault).toDouble());
-	ui->doubleSpinBoxBTimer_in_us->setValue(settings.value(settingBtime_in_microseconds_Path, settingBtime_in_microseconds_Default).toDouble());
+	ui->buttonGroupTimerResolution->button(settings.value(settingTimerResolutionModePath, settingTimerResolutionModeDefault).toDouble())->setChecked(true);
+	on_buttonGroupTimerResolution_idClicked(settings.value(settingTimerResolutionModePath, settingTimerResolutionModeDefault).toDouble());
+	ui->doubleSpinBoxBTimer->setValue(settings.value(settingBtimePath, settingBtimeDefault).toDouble());
 	ui->doubleSpinBoxSdatIn10ns->setValue(settings.value(settingSdat_in_10nsPath, settingSdat_in_10nsDefault).toDouble());
 	ui->doubleSpinBoxBdatIn10ns->setValue(settings.value(settingBdat_in_10nsPath, settingSdat_in_10nsDefault).toDouble());
 	ui->doubleSpinBoxSecIn10ns->setValue(settings.value(settingShutterSecIn10nsPath, settingShutterSecIn10nsDefault).toDouble());
@@ -595,21 +595,25 @@ void CameraSettingsWidget::on_spinBoxLines_valueChanged(int value)
 	on_spinBoxNumberOfRegions_valueChanged(ui->spinBoxNumberOfRegions->value());
 }
 
-void CameraSettingsWidget::on_buttonGroupStimeResolution_idClicked(int id)
+void CameraSettingsWidget::on_buttonGroupTimerResolution_idClicked(int id)
 {
 	switch (id)
 	{
-	case simer_resolution_100ns:
+	case timer_resolution_100ns:
 		ui->doubleSpinBoxSTime->setSuffix("00 ns");
+		ui->doubleSpinBoxBTimer->setSuffix("00 ns");
 		break;
-	case simer_resolution_1us:
+	case timer_resolution_1us:
 		ui->doubleSpinBoxSTime->setSuffix(" µs");
+		ui->doubleSpinBoxBTimer->setSuffix(" µs");
 		break;
-	case simer_resolution_100us:
+	case timer_resolution_100us:
 		ui->doubleSpinBoxSTime->setSuffix("00 µs");
+		ui->doubleSpinBoxBTimer->setSuffix("00 µs");
 		break;
-	case simer_resolution_1ms:
+	case timer_resolution_1ms:
 		ui->doubleSpinBoxSTime->setSuffix(" ms");
+		ui->doubleSpinBoxBTimer->setSuffix(" ms");
 		break;
 	}
 }
