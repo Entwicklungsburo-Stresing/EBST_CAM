@@ -2848,7 +2848,7 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 {
 	enum N
 	{
-		number_of_registers = 48,
+		number_of_registers = 49,
 		bufferLength = 40
 	};
 	char register_names[number_of_registers][bufferLength] = {
@@ -2899,7 +2899,8 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 		"R28 XCKLEN",
 		"R29 BONLEN",
 		"R30 CAMERA TYPE",
-		"R31 BON PERIOD"
+		"R31 BON PERIOD",
+		"R32 STATECTRL"
 	}; //Look-Up-Table for the S0 Registers
 	uint32_t data = 0;
 	//allocate string buffer
@@ -3537,9 +3538,67 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 
 	//Register BON PERIOD
 	status = readRegisterS0_32(drvno, &data32, S0Addr_BON_PERIOD);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xbc\tBON PERIOD\t0-31\tBON PERIOD\t%"PRIu32" (%"PRIu64" ns)", data32, ((uint64_t)data32) * 10);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xbc\tBON PERIOD\t0-31\tBON PERIOD\t%"PRIu32" (%"PRIu64" ns)\n", data32, ((uint64_t)data32) * 10);
 
 	/*=======================================================================*/
+
+	//Register STATECTRL
+	status = readRegisterS0_32(drvno, &data32, S0Addr_STATECTRL);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0xc0\tSTATECTRL\t0-3\ttrigger select\t%"PRIu32" ", data32);
+	switch ((data32 & statectrl_bits_trigger_select) >> statectrl_bitindex_trigger_select)
+	{
+	case statectrl_trigger_select_manual:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "(%s)\n", "manual");
+		break;
+	case statectrl_trigger_select_sti:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "(%s)\n", "STI");
+		break;
+	case statectrl_trigger_select_sslope:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "(%s)\n", "SSlope");
+		break;
+	case statectrl_trigger_select_scan_gated:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "(%s)\n", "Scan Gated");
+		break;
+	case statectrl_trigger_select_sticnt:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "(%s)\n", "STICNT");
+		break;
+	case statectrl_trigger_select_sdat:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "(%s)\n", "SDAT");
+		break;
+	case statectrl_trigger_select_sec:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "(%s)\n", "SEC");
+		break;
+	case statectrl_trigger_select_xck:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "(%s)\n", "XCK");
+		break;
+	case statectrl_trigger_select_bti:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "(%s)\n", "BTI");
+		break;
+	case statectrl_trigger_select_bslope:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "(%s)\n", "BSlope");
+		break;
+	case statectrl_trigger_select_bticnt:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "(%s)\n", "BTICNT");
+		break;
+	case statectrl_trigger_select_bdat:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "(%s)\n", "BDAT");
+		break;
+	case statectrl_trigger_select_bec:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "(%s)\n", "BEC");
+		break;
+	case statectrl_trigger_select_block_on:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "(%s)\n", "BLOCK_ON");
+		break;
+	case statectrl_trigger_select_block_on_synced:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "(%s)\n", "BLOCK_ON_SYNCED");
+		break;
+	default:
+	case statectrl_trigger_select_unused:
+		len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "(%s)\n", "unused");
+		break;
+	}
+	/*=======================================================================*/
+
 
 	return status;
 }
@@ -5436,7 +5495,7 @@ es_status_codes SetManualState(uint32_t drvno, bool state)
 {
 	ES_LOG("Set manual state to %d, drvno %"PRIu32"\n", state, drvno);
 	if(state)
-		return setBitS0_32(drvno, statectrl_bitindex_manual_mode, S0Addr_STATECTRL);
+		return setBitS0_32(drvno, statectrl_bitindex_manual_trigger, S0Addr_STATECTRL);
 	else
-		return resetBitS0_32(drvno, statectrl_bitindex_manual_mode, S0Addr_STATECTRL);
+		return resetBitS0_32(drvno, statectrl_bitindex_manual_trigger, S0Addr_STATECTRL);
 }
