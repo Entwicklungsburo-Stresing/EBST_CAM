@@ -2947,7 +2947,7 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 {
 	enum N
 	{
-		bufferSize = 3000
+		bufferSize = 4000
 	};
 	int len = 0;
 	*stringPtr = (char*)calloc(bufferSize, sizeof(char));
