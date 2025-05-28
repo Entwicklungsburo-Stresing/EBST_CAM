@@ -17,6 +17,12 @@ shared_src		| shared source files for escam, ESLSCDLL, CsimpleExample							| Wi
 ## License
 The software library ESLSCDLL and the GUI Escam are released under the [LPGL-3.0](https://www.gnu.org/licenses/lgpl-3.0.html.en). This applies for files in `escam/`, `ESLSCDLL/`, `linux-driver/userspace/` and `shared_src/`. The Linux Kernel object and its source code in `linux-driver/kernelspace/` is released under the [GPL-2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html.en). The CLI C example `CsimpleExample/` is released as public domain under the [Unlicense](https://unlicense.org/).
 
+## Disclaimer for Critical Applications
+
+As we use Xilinx/AMD FPGAs in all our hardware, we copy here the disclaimer from Xilinx/AMD, which apply for all our products.
+
+Xilinx products are not designed or intended to be fail-safe, or for use in any application requiring fail-safe performance, such as life-support or safety devices or systems, Class III medical devices, nuclear facilities, applications related to the deployment of airbags, or any other applications that could lead to death, personal injury, or severe property or environmental damage (individually and collectively, "Critical Applications"). Customer assumes the sole risk and liability of any use of Xilinx products in Critical Applications, subject only to applicable laws and regulations governing limitations on product liability.
+
 ## Escam
 ![Screenshot of Escam](./doc/escam.png)
 
