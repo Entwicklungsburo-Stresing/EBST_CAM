@@ -43,7 +43,7 @@ void SetGlobalSettings(struct measurement_settings settings)
 /**
  * @brief Initialize measurement (using board select).
  *
- * Call this every time you changed settings before starting the measurement. When you didn't change any settings, you can start the next measurement without calling InitMeasurement everytime.
+ * Call this every time you changed settings before starting the measurement. When you didn't change any settings, you can start the next measurement without calling InitMeasurement every time.
  * @return @ref es_status_codes
  */
 es_status_codes InitMeasurement()
