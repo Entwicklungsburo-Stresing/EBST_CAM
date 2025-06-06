@@ -10,15 +10,15 @@ DialogServo::DialogServo(QWidget *parent)
 {
 	ui->setupUi(this);
 
-	QRegularExpression decRegex("[0-9]{1,39}$");
+	QRegularExpression decRegex("^[0-9]*$");
 	QValidator *decValidator = new QRegularExpressionValidator(decRegex, this);
 	ui->lineEditDec->setValidator(decValidator);
 
-	QRegularExpression hexRegex("[0-9A-Fa-f]{1,32}$");
+	QRegularExpression hexRegex("^[0-9A-Fa-f]*$");
 	QValidator *hexValidator = new QRegularExpressionValidator(hexRegex, this);
 	ui->lineEditHex->setValidator(hexValidator);
 
-	QRegularExpression binRegex("[01]{1,128}$");
+	QRegularExpression binRegex("^[01]*$");
 	QValidator *binValidator = new QRegularExpressionValidator(binRegex, this);
 	ui->lineEditBin->setValidator(binValidator);
 }
@@ -38,20 +38,49 @@ void DialogServo::on_spinBoxSeqLength_valueChanged(int val) {
 void DialogServo::on_lineEditDec_textChanged()
 {
 	QString dec = ui->lineEditDec->text();
+	QString maxDec = convertBinaryToDecimal(QString("1").repeated(ui->spinBoxSeqLength->value()));
+	if (dec.length() == maxDec.length()) {
+		for (int i = 0; i < maxDec.length(); ++i) {
+			if (maxDec[i].digitValue() < dec[i].digitValue()) {
+				ui->lineEditDec->setText(maxDec);
+				dec = maxDec;
+				break;
+			}
+			else if (maxDec[i].digitValue() > dec[i].digitValue()) {
+				break;
+			}
+		}
+	}
 	QString binAsString = convertDecimalToBinary(dec);
 	QString hexAsString = convertBinaryToHex(binAsString);
 
+	ui->lineEditHex->blockSignals(true);
+	ui->lineEditBin->blockSignals(true);
+
 	ui->lineEditHex->setText(hexAsString);
 	ui->lineEditBin->setText(binAsString);
+
+	ui->lineEditHex->blockSignals(false);
+	ui->lineEditBin->blockSignals(false);
+	return;
 }
 
 void DialogServo::on_lineEditHex_textChanged()
 {
 	QString hex = ui->lineEditHex->text();
+	QString maxHex = convertBinaryToHex(QString("1").repeated(ui->spinBoxSeqLength->value()));
+	
 	QString binAsString = convertHexToBinary(hex);
 	QString decAsString = convertBinaryToDecimal(binAsString);
+
+	ui->lineEditDec->blockSignals(true);
+	ui->lineEditBin->blockSignals(true);
+
 	ui->lineEditDec->setText(decAsString);
 	ui->lineEditBin->setText(binAsString);
+
+	ui->lineEditDec->blockSignals(false);
+	ui->lineEditBin->blockSignals(false);
 	return;
 }
 
@@ -60,21 +89,28 @@ void DialogServo::on_lineEditBin_textChanged()
 	QString bin = ui->lineEditBin->text();
 	QString decAsString = convertBinaryToDecimal(bin);
 	QString hexAsString = convertBinaryToHex(bin);
+
+	ui->lineEditDec->blockSignals(true);
+	ui->lineEditHex->blockSignals(true);
+
 	ui->lineEditDec->setText(decAsString);
 	ui->lineEditHex->setText(hexAsString);
+
+	ui->lineEditDec->blockSignals(false);
+	ui->lineEditHex->blockSignals(false);
 	return;
 }
 
-QString DialogServo::convertDecimalToBinary(QString decimalString)
+QString DialogServo::convertDecimalToBinary(QString decimal)
 {
-	std::string decimal = decimalString.toStdString();
+	std::string decimalAsStdString = decimal.toStdString();
 
-	if (decimal.empty() || decimal == "0") {
+	if (decimalAsStdString.empty() || decimalAsStdString == "0") {
 		return QString("0");
 	}
 
 	std::string binary = "";
-	std::string temp = decimal;
+	std::string temp = decimalAsStdString;
 
 	while (temp != "0") {
 		int remainder = 0;
@@ -103,9 +139,9 @@ QString DialogServo::convertDecimalToBinary(QString decimalString)
 	return QString::fromStdString(binary);
 }
 
-QString DialogServo::convertHexToBinary(QString hexString)
+QString DialogServo::convertHexToBinary(QString hex)
 {
-	std::string hexAsStdString = hexString.toUpper().toStdString();
+	std::string hexAsStdString = hex.toUpper().toStdString();
 	constexpr unsigned int numberBase{ 16 };
 	std::string result;
 	
@@ -134,9 +170,9 @@ QString DialogServo::convertHexToBinary(QString hexString)
 	return QString::fromStdString(binaryAsStdString);
 }
 
-QString DialogServo::convertBinaryToDecimal(QString binaryString)
+QString DialogServo::convertBinaryToDecimal(QString binary)
 {
-	std::string binaryAsStdString = binaryString.toStdString();
+	std::string binaryAsStdString = binary.toStdString();
 	constexpr unsigned int numberBase{ 10 };
 	std::string result;
 
@@ -161,21 +197,21 @@ QString DialogServo::convertBinaryToDecimal(QString binaryString)
 	return QString::fromStdString(result);
 }
 
-QString DialogServo::convertBinaryToHex(QString binaryString)
+QString DialogServo::convertBinaryToHex(QString binary)
 {
-	if (binaryString.isEmpty()) {
+	if (binary.isEmpty()) {
 		return QString("0");
 	}
 
-	int remainder = binaryString.length() % 4;
+	int remainder = binary.length() % 4;
 	if (remainder != 0) {
 		QString padding = QString(4 - remainder, '0');
-		binaryString.prepend(padding);
+		binary.prepend(padding);
 	}
 
 	QString result = "";
-	for (int i = 0; i < binaryString.length(); i += 4) {
-		QString chunk = binaryString.mid(i, 4);
+	for (int i = 0; i < binary.length(); i += 4) {
+		QString chunk = binary.mid(i, 4);
 		bool ok;
 		int decimalValue = chunk.toInt(&ok, 2);
 
@@ -187,26 +223,8 @@ QString DialogServo::convertBinaryToHex(QString binaryString)
 		}
 	}
 
-	while (result.length() > 1 && result.startsWith('0')) {
+	/*while (result.length() > 1 && result.startsWith('0')) {
 		result.remove(0, 1);
-	}
+	}*/
 	return result;
 }
-
-bool DialogServo::checkDecimal(QString decimalString)
-{
-	QString binary(ui->spinBoxSeqLength->value(), '1');
-	QString maxValue = convertBinaryToDecimal(binary);
-
-	if (decimalString.length() < maxValue.length()) {
-		return true;
-	}
-
-	for (int i = 0; i < maxValue.length(); ++i) {
-		if (decimalString[i] > maxValue[i]) {
-			return false;
-		}
-	}
-	return true;
-}
-

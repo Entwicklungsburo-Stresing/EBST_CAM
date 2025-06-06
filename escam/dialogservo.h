@@ -26,5 +26,4 @@ private:
 	QString convertHexToBinary(QString hexString);
 	QString convertBinaryToDecimal(QString binaryString);
 	QString convertBinaryToHex(QString binaryString);
-	bool checkDecimal(QString decimalString);
 };
