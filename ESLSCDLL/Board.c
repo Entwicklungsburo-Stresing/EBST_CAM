@@ -1185,6 +1185,7 @@ es_status_codes SetTimerResolution(uint32_t drvno, uint8_t resolution_mode)
 	default:
 		return es_parameter_out_of_range;
 	}
+	return status;
 }
 
 /**
