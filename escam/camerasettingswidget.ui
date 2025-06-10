@@ -697,9 +697,6 @@
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
-           <property name="showGroupSeparator" stdset="0">
-            <bool>false</bool>
-           </property>
            <property name="suffix">
             <string> µs</string>
            </property>
@@ -762,9 +759,6 @@
            </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-           <property name="showGroupSeparator" stdset="0">
-            <bool>true</bool>
            </property>
            <property name="suffix">
             <string> µs</string>
