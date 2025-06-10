@@ -142,7 +142,6 @@ QString DialogServo::convertDecimalToBinary(QString decimal)
 QString DialogServo::convertHexToBinary(QString hex)
 {
 	std::string hexAsStdString = hex.toUpper().toStdString();
-	constexpr unsigned int numberBase{ 16 };
 	std::string result;
 	
 	if (hexAsStdString.empty()) {
