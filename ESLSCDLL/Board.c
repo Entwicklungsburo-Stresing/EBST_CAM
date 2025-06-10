@@ -3090,8 +3090,8 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 	/*=======================================================================*/
 
 	//FIFOCNT
-	status = readRegisterS0_32(drvno, &data32, (S0Addr_FIFOCNT & FIFOCNT_bits_WRCNT) >> FIFOCNT_bitindex_WRCNT);
-	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x14\tFIFOCNT\t0-7\tWRCNT\t%"PRIu32"\n", data32);
+	status = readRegisterS0_32(drvno, &data32, S0Addr_FIFOCNT);
+	len += sprintf_s(*stringPtr + len, bufferSize - (size_t)len, "\n0x14\tFIFOCNT\t0-7\tWRCNT\t%"PRIu32"\n", (data32 & FIFOCNT_bits_WRCNT) >> FIFOCNT_bitindex_WRCNT);
 
 	/*=======================================================================*/
 
