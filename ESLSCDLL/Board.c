@@ -2469,7 +2469,7 @@ es_status_codes GetIndexOfPixel(uint32_t drvno, uint16_t pixel, uint32_t sample,
  * @param block position in blocks (0...(nob-1))
  * @param camera position in camera count (0...(CAMCNT-1))
  * @param pdest Pointer to get the pointer of the specific pixel. When NULL, this functions returns es_invalid_pointer.
- * @param bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. When NULL, this parameter is ignored.
+ * @param bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. This is the size in bytes of the buffer from the position you are asking for and the end of the buffer. When NULL, this parameter is ignored.
  * @return @ref es_status_codes
  */
 es_status_codes GetPixelPointer(uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
@@ -2498,7 +2498,7 @@ es_status_codes GetPixelPointer(uint32_t drvno, uint16_t pixel, uint32_t sample,
  * It is only safe to read as much data until the end of the buffer is reached. That is determined by bytes_to_end_of_buffer. For this function bytes_to_end_of_buffer equals the size of the complete buffer (= nos * nob * pixel * camcnt * 2). The address you get is valid until the next call of @ref InitMeasurement. The data behind the address changes every measurement cycle when continuous mode is on or after each call of @ref StartMeasurement.
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param pdest Pointer to get the pointer of the data buffer. When NULL, this functions returns es_invalid_pointer.
- * @param bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. When NULL, this parameter is ignored.
+ * @param bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. This is the size in bytes of the whole measurement data memory for one board. When NULL, this parameter is ignored.
  * @return @ref es_status_codes
  */
 es_status_codes GetAllDataPointer(uint32_t drvno, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
@@ -2513,7 +2513,7 @@ es_status_codes GetAllDataPointer(uint32_t drvno, uint16_t** pdest, size_t* byte
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param block position in blocks (0...(nob-1))
  * @param pdest Pointer to get the pointer of the specific pixel. When NULL, this functions returns es_invalid_pointer.
- * @param bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. When NULL, this parameter is ignored.
+ * @param bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. This is the size in bytes of the buffer from the position you are asking for and the end of the buffer. When NULL, this parameter is ignored.
  * @return @ref es_status_codes
  */
 es_status_codes GetOneBlockPointer(uint32_t drvno, uint32_t block, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
@@ -2530,7 +2530,7 @@ es_status_codes GetOneBlockPointer(uint32_t drvno, uint32_t block, uint16_t** pd
  * @param block position in blocks (0...(nob-1))
  * @param camera position in camera count (0...(CAMCNT-1))
  * @param pdest Pointer to get the pointer of the specific pixel. When NULL, this functions returns es_invalid_pointer.
- * @param bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. When NULL, this parameter is ignored.
+ * @param bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. This is the size in bytes of the buffer from the position you are asking for and the end of the buffer. When NULL, this parameter is ignored.
  * @return @ref es_status_codes
  */
 es_status_codes GetOneSamplePointer(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** pdest, size_t* bytes_to_end_of_buffer)

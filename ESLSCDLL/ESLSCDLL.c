@@ -18,7 +18,14 @@ LVUserEventRef blockDoneLVEvent;
 LVUserEventRef allBlocksDoneLVEvent;
 #endif
 
+/**
+ * \brief Internal use only.
+ */
 int nProcessCount = 0;
+
+/**
+ * \brief Internal use only.
+ */
 int nThreadCount = 0;
 
 #ifdef WIN32
@@ -150,6 +157,9 @@ DllAccess es_status_codes DLLStartMeasurement_blocking()
 
 #ifdef WIN32
 
+/**
+ * \ brief Internal use only.
+ */
 unsigned __stdcall StartMeasurementThread(void* param)
 {
 	// Turn off warnings about unused parameters
@@ -2235,7 +2245,7 @@ DllAccess void DLLSetMeasureStartHook(void(*hook)())
 /**
  * @brief Set a function which will be executed every time when a measurement ends.
  *
- * Regardless of @ref measurement_settings.continuous_measurement this hook is call only one time at the end of the measurement. When @ref measurement_settings.continuous_measurement is enabled, is is called after the loop is disabled. The hook is called after the pause set by @ref measurement_settings.cont_pause_in_microseconds. When this hook is called all data is available, so @ref DLLGetCurrentScanNumber should return sample = nos-1 and block = nob-1.
+ * Regardless of @ref measurement_settings.continuous_measurement this hook is call only one time at the end of the measurement. When @ref measurement_settings.continuous_measurement is enabled, it is called after the loop is disabled. The hook is called after the pause set by @ref measurement_settings.cont_pause_in_microseconds. When this hook is called all data is available, so @ref DLLGetCurrentScanNumber should return sample = nos-1 and block = nob-1.
  * @param hook Pointer to the function which will be executed.
  */
 DllAccess void DLLSetMeasureDoneHook(void(*hook)())
