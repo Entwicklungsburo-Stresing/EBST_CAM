@@ -172,7 +172,7 @@ unsigned __stdcall StartMeasurementThread(void* param)
 /**
  * @brief This function is starting the measurement and returns immediately.
  *
- * StartMeasurement is run a new thread. When there are multiple boards, all boards are starting the measurement. You can check the status of the measurement with DllisMeasureOn and DllisBlockOn or create a blocking call with DLLWaitForMeasureDone and DLLWaitForBlockDone.
+ * StartMeasurement is run a new thread. When there are multiple boards, all boards are starting the measurement. You can check the status of the measurement with @ref DLLGetMeasureOn and @ref DLLGetBlockOn or create a blocking call with @ref DLLWaitForMeasureDone and @ref DLLWaitForBlockDone.
  */
 DllAccess void DLLStartMeasurement_nonblocking()
 {
