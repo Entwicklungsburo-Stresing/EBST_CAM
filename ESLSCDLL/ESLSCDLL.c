@@ -19,12 +19,12 @@ LVUserEventRef allBlocksDoneLVEvent;
 #endif
 
 /**
- * \brief Internal use only.
+ * @brief Internal use only.
  */
 int nProcessCount = 0;
 
 /**
- * \brief Internal use only.
+ * @brief Internal use only.
  */
 int nThreadCount = 0;
 
@@ -158,7 +158,7 @@ DllAccess es_status_codes DLLStartMeasurement_blocking()
 #ifdef WIN32
 
 /**
- * \ brief Internal use only.
+ * @brief Internal use only.
  */
 unsigned __stdcall StartMeasurementThread(void* param)
 {
