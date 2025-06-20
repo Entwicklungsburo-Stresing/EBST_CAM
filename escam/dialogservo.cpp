@@ -51,14 +51,14 @@ void DialogServo::on_lineEditDec_textChanged()
 			}
 		}
 	}
-	QString binAsString = convertDecimalToBinary(dec);
-	QString hexAsString = convertBinaryToHex(binAsString);
+	QString bin = convertDecimalToBinary(dec);
+	QString hex = convertBinaryToHex(bin);
 
 	ui->lineEditHex->blockSignals(true);
 	ui->lineEditBin->blockSignals(true);
 
-	ui->lineEditHex->setText(hexAsString);
-	ui->lineEditBin->setText(binAsString);
+	ui->lineEditHex->setText(hex);
+	ui->lineEditBin->setText(bin);
 
 	ui->lineEditHex->blockSignals(false);
 	ui->lineEditBin->blockSignals(false);
@@ -69,15 +69,27 @@ void DialogServo::on_lineEditHex_textChanged()
 {
 	QString hex = ui->lineEditHex->text();
 	QString maxHex = convertBinaryToHex(QString("1").repeated(ui->spinBoxSeqLength->value()));
-	
-	QString binAsString = convertHexToBinary(hex);
-	QString decAsString = convertBinaryToDecimal(binAsString);
+	if (hex.isEmpty()) {
+		return;
+	}
+	if (hex.length() > maxHex.length()) {
+		ui->lineEditHex->setText(maxHex);
+		hex = maxHex;
+	} else if (hex.length() == maxHex.length()) {
+		if (QString(maxHex[0]).toInt(nullptr, 16) < QString(hex[0]).toInt(nullptr, 16)) {
+			ui->lineEditHex->setText(maxHex);
+			hex = maxHex;
+		}
+	}
+
+	QString bin = convertHexToBinary(hex);
+	QString dec = convertBinaryToDecimal(bin);
 
 	ui->lineEditDec->blockSignals(true);
 	ui->lineEditBin->blockSignals(true);
 
-	ui->lineEditDec->setText(decAsString);
-	ui->lineEditBin->setText(binAsString);
+	ui->lineEditDec->setText(dec);
+	ui->lineEditBin->setText(bin);
 
 	ui->lineEditDec->blockSignals(false);
 	ui->lineEditBin->blockSignals(false);
@@ -87,14 +99,14 @@ void DialogServo::on_lineEditHex_textChanged()
 void DialogServo::on_lineEditBin_textChanged()
 {
 	QString bin = ui->lineEditBin->text();
-	QString decAsString = convertBinaryToDecimal(bin);
-	QString hexAsString = convertBinaryToHex(bin);
+	QString dec = convertBinaryToDecimal(bin);
+	QString hex = convertBinaryToHex(bin);
 
 	ui->lineEditDec->blockSignals(true);
 	ui->lineEditHex->blockSignals(true);
 
-	ui->lineEditDec->setText(decAsString);
-	ui->lineEditHex->setText(hexAsString);
+	ui->lineEditDec->setText(dec);
+	ui->lineEditHex->setText(hex);
 
 	ui->lineEditDec->blockSignals(false);
 	ui->lineEditHex->blockSignals(false);
@@ -221,9 +233,5 @@ QString DialogServo::convertBinaryToHex(QString binary)
 			result.append(QChar('A' + decimalValue - 10));
 		}
 	}
-
-	/*while (result.length() > 1 && result.startsWith('0')) {
-		result.remove(0, 1);
-	}*/
 	return result;
 }
