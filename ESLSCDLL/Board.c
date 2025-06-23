@@ -4927,12 +4927,12 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
 #ifndef MINIMAL_BUILD
 
 /**
- * \brief Export the measurement data to a file.
+ * @brief Export the measurement data to a file.
  * 
  * Depending on the file extension, the data is saved in a binary or HDF5 file.
  * 
- * \param filename Filename with complete absolute path and either .bin or .h5 extension.
- * \return @ref es_status_codes
+ * @param filename Filename with complete absolute path and either .bin or .h5 extension.
+ * @return @ref es_status_codes
  */
 es_status_codes SaveMeasurementDataToFile(const char* filename)
 {

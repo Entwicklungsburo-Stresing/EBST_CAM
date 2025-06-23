@@ -2286,7 +2286,7 @@ DllAccess void DLLSetAllBlocksDoneHook(void(*hook)())
 }
 
 /**
- * \copydoc SetGeneralOutput
+ * @copydoc SetGeneralOutput
  */
 DllAccess es_status_codes DLLSetGeneralOutput(uint32_t drvno, uint8_t output, uint8_t state)
 {
@@ -2294,7 +2294,7 @@ DllAccess es_status_codes DLLSetGeneralOutput(uint32_t drvno, uint8_t output, ui
 }
 
 /**
- * \copydoc SetShutterStates
+ * @copydoc SetShutterStates
  */
 DllAccess es_status_codes DLLSetShutterStates(uint32_t drvno, uint16_t shutter_states)
 {
