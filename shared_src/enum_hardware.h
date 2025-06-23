@@ -1052,19 +1052,19 @@ enum ioctrl_register_address_t
 enum ioctrl_shutter_t
 {
 	/**
-	 * State of shutter 1. 1: open, 0: closed
+	 * State of shutter 1. 0: open, 1: closed
 	 */
 	ioctrl_shutter_bitindex_shutter1 = 0,
 	/**
-	 * State of shutter 2. 1: open, 0: closed
+	 * State of shutter 2. 0: open, 1: closed
 	 */
 	ioctrl_shutter_bitindex_shutter2 = 1,
 	/**
-	 * State of shutter 3. 1: open, 0: closed
+	 * State of shutter 3. 0: open, 1: closed
 	 */
 	ioctrl_shutter_bitindex_shutter3 = 2,
 	/**
-	 * State of shutter 4. 1: open, 0: closed
+	 * State of shutter 4. 0: open, 1: closed
 	 */
 	ioctrl_shutter_bitindex_shutter4 = 3,
 	ioctrl_shutter_bit_shutter1 = 0x01,
