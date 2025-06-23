@@ -377,7 +377,7 @@ struct camera_settings
 	 */
 	uint32_t monitor;
 	/**
-	 * With manipulate_data_mode you can activate / deactivate a built in data manipulation during the measurement. This is potentially used to linearize the sensor data for specific sensors. See @ref manipulate_data_mode_t in enum.h for options.
+	 * With manipulate_data_mode you can activate / deactivate a built in data manipulation during the measurement. This is potentially used to linearize the sensor data for specific sensors. See @ref manipulate_data_mode_t in enum_settings.h for options.
 	 */
 	uint32_t manipulate_data_mode;
 	/**
