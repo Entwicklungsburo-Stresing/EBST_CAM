@@ -9,14 +9,13 @@
 
 Lsc::Lsc()
 {
-	driverInstructions = "Check if driver is loaded correctly.";
 }
 Lsc::~Lsc()
 {
 }
 
 /**
- * @copydoc InitDriver
+ * @copydoc DLLInitDriver
  */
 es_status_codes Lsc::initDriver()
 {
@@ -30,7 +29,7 @@ es_status_codes Lsc::initDriver()
 }
 
 /**
- * @copydoc ExitDriver
+ * @copydoc DLLExitDriver
  */
 es_status_codes Lsc::exitDriver()
 {
@@ -38,7 +37,7 @@ es_status_codes Lsc::exitDriver()
 }
 
 /**
- * @copydoc InitMeasurement
+ * @copydoc DLLInitMeasurement
  */
 es_status_codes Lsc::initMeasurement(struct measurement_settings settings)
 {
@@ -46,7 +45,7 @@ es_status_codes Lsc::initMeasurement(struct measurement_settings settings)
 }
 
 /**
- * @copydoc StartMeasurement
+ * @copydoc DLLStartMeasurement_blocking
  */
 es_status_codes Lsc::startMeasurement()
 {
@@ -59,7 +58,7 @@ es_status_codes Lsc::startMeasurement()
 }
 
 /**
- * @copydoc CopyOneSample
+ * @copydoc DLLCopyOneSample
  */
 es_status_codes Lsc::copyOneSample(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest)
 {
@@ -175,15 +174,15 @@ std::string Lsc::__AboutGPX(uint32_t drvno)
 }
 
 /**
- * @copydoc SetTORReg
+ * @copydoc DLLSetTORReg
  */
-es_status_codes Lsc::setTorOut( uint32_t drvno, uint8_t torOut )
+es_status_codes Lsc::setTorOut( uint32_t drvno, uint8_t tor )
 {
-	return DLLSetTORReg( drvno, torOut );
+	return DLLSetTORReg( drvno, tor );
 }
 
 /**
- * @copydoc ResetDSC
+ * @copydoc DLLResetDSC
  */
 es_status_codes Lsc::resetDSC( uint32_t drvno, uint8_t DSCNumber )
 {
@@ -191,7 +190,7 @@ es_status_codes Lsc::resetDSC( uint32_t drvno, uint8_t DSCNumber )
 }
 
 /**
- * @copydoc SetDIRDSC
+ * @copydoc DLLSetDIRDSC
  */
 es_status_codes Lsc::setDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir )
 {
@@ -199,7 +198,7 @@ es_status_codes Lsc::setDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir )
 }
 
 /**
- * @copydoc GetDSC
+ * @copydoc DLLGetDSC
  */
 es_status_codes Lsc::getDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC )
 {
@@ -207,7 +206,7 @@ es_status_codes Lsc::getDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, 
 }
 
 /**
- * @copydoc CalcTrms
+ * @copydoc DLLCalcTrms
  */
 es_status_codes Lsc::calcTRMS( uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double *mwf, double *trms )
 {
@@ -215,7 +214,7 @@ es_status_codes Lsc::calcTRMS( uint32_t drvno, uint32_t firstSample, uint32_t la
 }
 
 /**
- * @copydoc SetAbortMeasurementFlag
+ * @copydoc DLLAbortMeasurement
  */
 es_status_codes Lsc::abortMeasurement()
 {
@@ -249,7 +248,7 @@ void Lsc::parseTextToHtml(std::string* str)
 }
 
 /**
- * @copydoc DAC8568_setOutput
+ * @copydoc DLLDAC8568_setOutput
  */
 es_status_codes Lsc::dac_setOutput(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t channel, uint16_t output)
 {
@@ -257,7 +256,7 @@ es_status_codes Lsc::dac_setOutput(uint32_t drvno, uint8_t location, uint8_t cam
 }
 
 /**
- * @copydoc DAC8568_setAllOutputs
+ * @copydoc DLLDAC8568_setAllOutputs
  */
 es_status_codes Lsc::dac_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint32_t* output, bool reorder_channels)
 {
@@ -265,7 +264,7 @@ es_status_codes Lsc::dac_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t
 }
 
 /**
- * @copydoc CamIOCtrl_setT0
+ * @copydoc DLLIOCtrl_setT0
  */
 es_status_codes Lsc::ioctrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 {
@@ -273,7 +272,7 @@ es_status_codes Lsc::ioctrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 }
 
 /**
- * @copydoc CamIOCtrl_setOutput
+ * @copydoc DLLIOCtrl_setOutput
  */
 es_status_codes Lsc::ioctrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns)
 {
@@ -281,13 +280,16 @@ es_status_codes Lsc::ioctrl_setOutput(uint32_t drvno, uint32_t number, uint16_t 
 }
 
 /**
- * @copydoc GetCurrentScanNumber
+ * @copydoc DLLGetCurrentScanNumber
  */
-void Lsc::getCurrentScanNumber(uint32_t drvno, int64_t* scan, int64_t* block)
+void Lsc::getCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block)
 {
-	return DLLGetCurrentScanNumber(drvno, scan, block);
+	return DLLGetCurrentScanNumber(drvno, sample, block);
 }
 
+/**
+ * @copydoc DLLFillUserBufferWithDummyData
+ */
 void Lsc::fillUserBufferWithDummyData()
 {
 	DLLFillUserBufferWithDummyData();
@@ -299,6 +301,9 @@ void Lsc::fillUserBufferWithDummyData()
 	return;
 }
 
+/**
+ * @copydoc DLLGetIsRunning
+ */
 bool Lsc::IsRunning()
 {
 	return (bool)DLLGetIsRunning();
@@ -314,7 +319,7 @@ std::string Lsc::getVerifiedDataDialog(struct verify_data_parameter* vd)
 }
 
 /**
- * @copydoc GetCameraStatusOverTemp
+ * @copydoc DLLGetCameraStatusOverTemp
  */
 es_status_codes Lsc::getCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* overTemp)
 {
@@ -322,7 +327,7 @@ es_status_codes Lsc::getCameraStatusOverTemp(uint32_t drvno, uint32_t sample, ui
 }
 
 /**
- * @copydoc GetCameraStatusTempGood
+ * @copydoc DLLGetCameraStatusTempGood
  */
 es_status_codes Lsc::getCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* tempGood)
 {
@@ -330,7 +335,7 @@ es_status_codes Lsc::getCameraStatusTempGood(uint32_t drvno, uint32_t sample, ui
 }
 
 /**
- * @copydoc GetBlockIndex
+ * @copydoc DLLGetBlockIndex
  */
 es_status_codes Lsc::getBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* blockIndex)
 {
@@ -338,7 +343,7 @@ es_status_codes Lsc::getBlockIndex(uint32_t drvno, uint32_t sample, uint32_t blo
 }
 
 /**
- * @copydoc GetScanIndex
+ * @copydoc DLLGetScanIndex
  */
 es_status_codes Lsc::getScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* scanIndex)
 {
@@ -346,7 +351,7 @@ es_status_codes Lsc::getScanIndex(uint32_t drvno, uint32_t sample, uint32_t bloc
 }
 
 /**
- * @copydoc GetS1State
+ * @copydoc DLLGetS1State
  */
 es_status_codes Lsc::getS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
 {
@@ -354,7 +359,7 @@ es_status_codes Lsc::getS1State(uint32_t drvno, uint32_t sample, uint32_t block,
 }
 
 /**
- * @copydoc GetS2State
+ * @copydoc DLLGetS2State
  */
 es_status_codes Lsc::getS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
 {
@@ -362,7 +367,7 @@ es_status_codes Lsc::getS2State(uint32_t drvno, uint32_t sample, uint32_t block,
 }
 
 /**
- * @copydoc GetImpactSignal1
+ * @copydoc DLLGetImpactSignal1
  */
 es_status_codes Lsc::getImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
@@ -370,7 +375,7 @@ es_status_codes Lsc::getImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t 
 }
 
 /**
- * @copydoc GetImpactSignal2
+ * @copydoc DLLGetImpactSignal2
  */
 es_status_codes Lsc::getImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
@@ -378,7 +383,7 @@ es_status_codes Lsc::getImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t 
 }
 
 /**
- * @copydoc GetAllSpecialPixelInformation
+ * @copydoc DLLGetAllSpecialPixelInformation
  */
 es_status_codes Lsc::getAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp)
 {
@@ -386,7 +391,7 @@ es_status_codes Lsc::getAllSpecialPixelInformation(uint32_t drvno, uint32_t samp
 }
 
 /**
- * @copydoc SetContinuousMeasurement
+ * @copydoc DLLSetContinuousMeasurement
  */
 void Lsc::setContinuousMeasurement(bool on)
 {
@@ -394,23 +399,23 @@ void Lsc::setContinuousMeasurement(bool on)
 }
 
 /**
- * @copydoc ShowNewBitmap
+ * @copydoc DLLShowNewBitmap
  */
-void Lsc::showNewBitmap(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t pixel, uint32_t nos)
+void Lsc::showNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {
-	return DLLShowNewBitmap(drvno, cur_nob, cam, pixel, nos);
+	return DLLShowNewBitmap(drvno, block, camera, pixel, nos);
 }
 
 /**
- * @copydoc Start2dViewer
+ * @copydoc DLLStart2dViewer
  */
-void Lsc::start2dViewer(uint32_t drvno, uint32_t cur_nob, uint16_t cam, uint16_t pixel, uint32_t nos)
+void Lsc::start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {
-	return DLLStart2dViewer(drvno, cur_nob, cam, pixel, nos);
+	return DLLStart2dViewer(drvno, block, camera, pixel, nos);
 }
 
 /**
- * @copydoc SetGammaValue
+ * @copydoc DLLSetGammaValue
  */
 void Lsc::setGammaValue(uint16_t white, uint16_t black)
 {
@@ -426,7 +431,7 @@ uint16_t Lsc::getGammaWhite()
 }
 
 /**
- * @copydoc GetGammaBlack
+ * @copydoc DLLGetGammaBlack
  */
 uint16_t Lsc::getGammaBlack()
 {
@@ -434,7 +439,7 @@ uint16_t Lsc::getGammaBlack()
 }
 
 /**
- * @copydoc ReadScanFrequencyBit
+ * @copydoc DLLReadScanFrequencyBit
  */
 es_status_codes Lsc::readScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh)
 {
@@ -442,7 +447,7 @@ es_status_codes Lsc::readScanFrequencyBit(uint32_t drvno, bool* scanFrequencyToo
 }
 
 /**
- * @copydoc ResetScanFrequencyBit
+ * @copydoc DLLResetScanFrequencyBit
  */
 es_status_codes Lsc::resetScanFrequencyBit(uint32_t drvno)
 {
@@ -450,7 +455,7 @@ es_status_codes Lsc::resetScanFrequencyBit(uint32_t drvno)
 }
 
 /**
- * @copydoc ReadBlockFrequencyBit
+ * @copydoc DLLReadBlockFrequencyBit
  */
 es_status_codes Lsc::readBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh)
 {
@@ -458,7 +463,7 @@ es_status_codes Lsc::readBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyT
 }
 
 /**
- * @copydoc ResetBlockFrequencyBit
+ * @copydoc DLLResetBlockFrequencyBit
  */
 es_status_codes Lsc::resetBlockFrequencyBit(uint32_t drvno)
 {
@@ -466,30 +471,39 @@ es_status_codes Lsc::resetBlockFrequencyBit(uint32_t drvno)
 }
 
 /**
- * @copydoc CheckFifoValid
+ * @copydoc DLLCheckFifoValid
  */
 es_status_codes Lsc::checkFifoValid(uint32_t drvno, bool* valid)
 {
 	return DLLCheckFifoValid(drvno, (uint8_t*)valid);
 }
 
+/**
+ * @copydoc DLLCheckFifoOverflow
+ */
 es_status_codes Lsc::checkFifoOverflow(uint32_t drvno, bool* overflow)
 {
 	return DLLCheckFifoOverflow(drvno, (uint8_t*)overflow);
 }
 
+/**
+ * @copydoc DLLCheckFifoEmpty
+ */
 es_status_codes Lsc::checkFifoEmpty(uint32_t drvno, bool* empty)
 {
 	return DLLCheckFifoEmpty(drvno, (uint8_t*)empty);
 }
 
+/**
+ * @copydoc DLLCheckFifoFull
+ */
 es_status_codes Lsc::checkFifoFull(uint32_t drvno, bool* full)
 {
 	return DLLCheckFifoFull(drvno, (uint8_t*)full);
 }
 
 /**
- * @copydoc FindCam
+ * @copydoc DLLFindCam
  */
 es_status_codes Lsc::findCam(uint32_t drvno)
 {
@@ -497,89 +511,136 @@ es_status_codes Lsc::findCam(uint32_t drvno)
 }
 
 /**
- * @copydoc SaveMeasurementDataToFile.
+ * @copydoc DLLSaveMeasurementDataToFile.
  */
-es_status_codes Lsc::SaveMeasurementDataToFile(const char* filename)
+es_status_codes Lsc::saveMeasurementDataToFile(const char* filename)
 {
 	return DLLSaveMeasurementDataToFile(filename);
 }
 
+/**
+ * @copydoc DLLImportMeasurementDataFromFile
+ */
 es_status_codes Lsc::importMeasurementDataFromFile(const char* fileName)
 {
 	return DLLImportMeasurementDataFromFile(fileName);
 }
 
-
+/**
+ * @copydoc DLLWaitForMeasureDone
+ */
 es_status_codes Lsc::waitForMeasureDone()
 {
 	return DLLWaitForMeasureDone();
 }
 
+/**
+ * @copydoc DLLGetXckLength
+ */
 es_status_codes Lsc::getXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns)
 {
 	return DLLGetXckLength(drvno, xckLengthIn10ns);
 }
 
+/**
+ * @copydoc DLLGetXckPeriod
+ */
 es_status_codes Lsc::getXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns)
 {
 	return DLLGetXckPeriod(drvno, xckPeriodIn10ns);
 }
 
+/**
+ * @copydoc DLLGetBonLength
+ */
 es_status_codes Lsc::getBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns)
 {
 	return DLLGetBonLength(drvno, bonLengthIn10ns);
 }
 
-es_status_codes Lsc::getBonPeriod(uint32_t drvno, uint32_t* bonPeriodIns10ns)
+/**
+ * @copydoc DLLGetBonPeriod
+ */
+es_status_codes Lsc::getBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns)
 {
-	return DLLGetBonPeriod(drvno, bonPeriodIns10ns);
+	return DLLGetBonPeriod(drvno, bonPeriodIn10ns);
 }
 
-es_status_codes Lsc::getBlockOn(uint32_t drvno, bool* block_on)
+/**
+ * @copydoc GetBlockOn
+ */
+es_status_codes Lsc::getBlockOn(uint32_t drvno, bool* blockOn)
 {
-	return DLLGetBlockOn(drvno,(uint8_t*) block_on);
+	return DLLGetBlockOn(drvno,(uint8_t*)blockOn);
 }
 
+/**
+ * @copydoc DLLGetScanTriggerDetected
+ */
 es_status_codes Lsc::getScanTriggerDetected(uint32_t drvno, bool* detected)
 {
 	return DLLGetScanTriggerDetected(drvno, (uint8_t*)detected);
 }
 
+/**
+ * @copydoc DLLGetBlockTriggerDetected
+ */
 es_status_codes Lsc::getBlockTriggerDetected(uint32_t drvno, bool* detected)
 {
 	return DLLGetBlockTriggerDetected(drvno, (uint8_t*)detected);
 }
 
+/**
+ * @copydoc DLLResetScanTriggerDetected
+ */
 es_status_codes Lsc::resetScanTriggerDetected(uint32_t drvno)
 {
 	return DLLResetScanTriggerDetected(drvno);
 }
 
+/**
+ * @copydoc DLLResetBlockTriggerDetected
+ */
 es_status_codes Lsc::resetBlockTriggerDetected(uint32_t drvno)
 {
 	return DLLResetBlockTriggerDetected(drvno);
 }
 
+/**
+ * @copydoc DLLGetVirtualCamcnt
+ */
 uint32_t Lsc::getVirtualCamcnt(uint32_t drvno)
 {
 	return DLLGetVirtualCamcnt(drvno);
 }
 
+/**
+ * @copydoc DLLGetTestModeOn
+ */
 bool Lsc::getTestModeOn()
 {
 	return DLLGetTestModeOn();
 }
 
+/**
+ * @copydoc DLLOpenShutter
+ */
 es_status_codes Lsc::openShutter(uint32_t drvno)
 {
 	return DLLOpenShutter(drvno);
 }
 
+/**
+ * @copydoc DLLCloseShutter
+ */
 es_status_codes Lsc::closeShutter(uint32_t drvno)
 {
 	return DLLCloseShutter(drvno);
 }
 
+/**
+ * @copydoc DLLSetShutterStates
+ */
 es_status_codes Lsc::setShutterStates(uint32_t drvno, uint16_t shutter_states)
 {
 	return DLLSetShutterStates(drvno, shutter_states);

@@ -31,7 +31,6 @@ public:
 	es_status_codes setDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir );
 	es_status_codes getDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC );
 	es_status_codes calcTRMS( uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double *mwf, double *trms );
-	std::string driverInstructions;
 	std::string _dumpS0Registers(uint32_t drvno);
 	std::string _dumpHumanReadableS0Registers(uint32_t drvno);
 	std::string _dumpDmaRegisters(uint32_t drvno);
@@ -74,14 +73,14 @@ public:
 	es_status_codes checkFifoEmpty(uint32_t drvno, bool* empty);
 	es_status_codes checkFifoFull(uint32_t drvno, bool* full);
 	es_status_codes findCam(uint32_t drvno);
-	es_status_codes SaveMeasurementDataToFile(const char* filename);
+	es_status_codes saveMeasurementDataToFile(const char* filename);
 	es_status_codes importMeasurementDataFromFile(const char* fileName);
 	es_status_codes waitForMeasureDone();
 	es_status_codes getXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns);
 	es_status_codes getXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns);
 	es_status_codes getBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns);
 	es_status_codes getBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns);
-	es_status_codes getBlockOn(uint32_t drvno, bool* block_on);
+	es_status_codes getBlockOn(uint32_t drvno, bool* blockOn);
 	es_status_codes getScanTriggerDetected(uint32_t drvno, bool* detected);
 	es_status_codes getBlockTriggerDetected(uint32_t drvno, bool* detected);
 	es_status_codes resetScanTriggerDetected(uint32_t drvno);

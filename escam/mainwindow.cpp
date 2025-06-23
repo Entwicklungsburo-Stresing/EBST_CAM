@@ -276,7 +276,7 @@ void MainWindow::on_actionExport_data_triggered()
 	if (path.isEmpty()) return;
 	QByteArray fileName_byteArray = path.toLatin1();
 	const char* fileName_char = fileName_byteArray.data();
-	es_status_codes status = mainWindow->lsc.SaveMeasurementDataToFile(fileName_char);
+	es_status_codes status = mainWindow->lsc.saveMeasurementDataToFile(fileName_char);
 
 	QDialog* messageBox = new QDialog(this);
 	messageBox->setAttribute(Qt::WA_DeleteOnClose);
