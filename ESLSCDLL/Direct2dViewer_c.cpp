@@ -73,7 +73,7 @@ HWND Direct2dViewer_getWindowHandler( void *D2dV )
 
 /**
  * @copydoc Direct2dViewer::SetGammaValue
- * @param D2dV Handle of Direct2dViewer instance.
+ * @param[in] D2dV Handle of Direct2dViewer instance.
  */
 void Direct2dViewer_setGammaValue( void *D2dV, UINT16 white, UINT16 black )
 {
@@ -84,7 +84,7 @@ void Direct2dViewer_setGammaValue( void *D2dV, UINT16 white, UINT16 black )
 
 /**
  * @copydoc Direct2dViewer::GetGammaWhite
- * @param D2dV Handle of Direct2dViewer instance.
+ * @param[in] D2dV Handle of Direct2dViewer instance.
  */
 UINT16 Direct2dViewer_getGammaWhite( void *D2dV )
 {
@@ -94,7 +94,7 @@ UINT16 Direct2dViewer_getGammaWhite( void *D2dV )
 
 /**
  * @copydoc Direct2dViewer::GetGammaBlack
- * @param D2dV Handle of Direct2dViewer instance.
+ * @param[in] D2dV Handle of Direct2dViewer instance.
  */
 UINT16 Direct2dViewer_getGammaBlack( void *D2dV )
 {

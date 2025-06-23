@@ -33,7 +33,7 @@
  * @brief Set global settings struct.
  *
  * Call this every time you changed settings before InitMeasurement.
- * @param settings struct measurement_settings
+ * @param[in] settings struct measurement_settings
  */
 void SetGlobalSettings(struct measurement_settings settings)
 {
@@ -647,9 +647,9 @@ es_status_codes writeRegisterS0_8_allBoards(uint8_t data, uint32_t address)
 /**
  * @brief Read 4 bytes of a register in S0 space.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param data Read buffer.
- * @param address Address of the register to read.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] data Read buffer.
+ * @param[in] address Address of the register to read.
  * @return @ref es_status_codes
  */
 es_status_codes readRegisterS0_32(uint32_t drvno, uint32_t* data, uint32_t address)
@@ -707,9 +707,9 @@ es_status_codes readRegisterS0_16(uint32_t drvno, uint16_t* data, uint32_t addre
 /**
  * @brief Read 1 byte of a register in S0 space.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param data Read buffer.
- * @param address Address of the register to read.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] data Read buffer.
+ * @param[in] address Address of the register to read.
  * @return @ref es_status_codes
  */
 es_status_codes readRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address)
@@ -719,10 +719,10 @@ es_status_codes readRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address
 /**
  * @brief Read 1 bit of a 4 byte s0 register.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param address Address of the register to read.
- * @param bitnumber Address of the bit to read.
- * @param isBitHigh Tells if bit is high or low.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] address Address of the register to read.
+ * @param[in] bitnumber Address of the bit to read.
+ * @param[out] isBitHigh Tells if bit is high or low.
  * @return @ref es_status_codes
  */
 es_status_codes ReadBitS0_32(uint32_t drvno, uint32_t address, uint8_t bitnumber, bool* isBitHigh)
@@ -738,10 +738,10 @@ es_status_codes ReadBitS0_32(uint32_t drvno, uint32_t address, uint8_t bitnumber
 /**
  * @brief Read 1 bit of 1 byte of a s0 register.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param address Address of the register to read.
- * @param bitnumber Address of the bit to read.
- * @param isBitHigh Tells if bit is high or low.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] address Address of the register to read.
+ * @param[in] bitnumber Address of the bit to read.
+ * @param[out] isBitHigh Tells if bit is high or low.
  * @return @ref es_status_codes
  */
 es_status_codes ReadBitS0_8(uint32_t drvno, uint32_t address, uint8_t bitnumber, bool* isBitHigh)
@@ -758,7 +758,7 @@ es_status_codes ReadBitS0_8(uint32_t drvno, uint32_t address, uint8_t bitnumber,
 /**
  * @brief Open shutter for sensors with EC (exposure control) / sets IFC signal = high.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @return @ref es_status_codes
  */
 es_status_codes OpenShutter(uint32_t drvno)
@@ -1004,7 +1004,7 @@ es_status_codes SetNobRegister(uint32_t drvno)
 /**
  * @brief Sets the IFC bit of interface for sensors with shutter function. IFC=low
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @return @ref es_status_codes
  */
 es_status_codes CloseShutter(uint32_t drvno)
@@ -1031,8 +1031,8 @@ es_status_codes SetSEC(uint32_t drvno, uint32_t ecin10ns)
 /**
  * @brief Set signal of output port of PCIe card.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param tor select output signal. See enum tor_out in enum.h for options.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] tor select output signal. See enum tor_out in enum.h for options.
  * @return @ref es_status_codes
  */
 es_status_codes SetTORReg(uint32_t drvno, uint8_t tor)
@@ -1191,8 +1191,8 @@ es_status_codes SetTimerResolution(uint32_t drvno, uint8_t resolution_mode)
 /**
  * @brief Sets time for scan timer.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param stime Trigger time. The resolution of the time depends on the resolution mode set by SetTimerResolution(). 28 bit.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] stime Trigger time. The resolution of the time depends on the resolution mode set by SetTimerResolution(). 28 bit.
  * @return @ref es_status_codes
  */
 es_status_codes SetSTimer(uint32_t drvno, uint32_t stime)
@@ -1204,8 +1204,8 @@ es_status_codes SetSTimer(uint32_t drvno, uint32_t stime)
 /**
  * @brief Sets time for block timer.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param btime Block time. The resolution of the time depends on the resolution mode set by SetTimerResolution(). 28 bit.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] btime Block time. The resolution of the time depends on the resolution mode set by SetTimerResolution(). 28 bit.
  * @return @ref es_status_codes
  */
 es_status_codes SetBTimer(uint32_t drvno, uint32_t btime)
@@ -1441,11 +1441,11 @@ es_status_codes DAC8568_sendData(uint32_t drvno, uint8_t location, uint8_t camer
  * @brief Sets all outputs of the DAC8568 in camera 3030 or on PCIe board.
  *
  * Use this function to set the outputs, because it is resorting the channel numeration correctly.
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param location Switch for the different locations of DAC85689. See enum @ref DAC8568_location_t in enum.h for details.
- * @param cameraPosition This is describing the camera position when there are multiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
- * @param output all output values that will be converted to analog voltage (0 ... 0xFFFF)
- * @param reorder_channels used to reorder DAC channels for high speed camera
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] location Switch for the different locations of DAC85689. See enum @ref DAC8568_location_t in enum.h for details.
+ * @param[in] cameraPosition This is describing the camera position when there are multiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
+ * @param[in] output all output values that will be converted to analog voltage (0 ... 0xFFFF)
+ * @param[in] reorder_channels used to reorder DAC channels for high speed camera
  * @return @ref es_status_codes
  */
 es_status_codes DAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint32_t* output, bool reorder_channels)
@@ -1473,11 +1473,11 @@ es_status_codes DAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t 
 /**
  * @brief Sets the output of the DAC8568 on PCB 2189-7.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param location Switch for the different locations of DAC85689. See enum @ref DAC8568_location_t in enum_settings.h for details.
- * @param cameraPosition This is describing the camera position when there are multiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
- * @param channel select one of eight output channel (0 ... 7)
- * @param output output value that will be converted to analog voltage (0 ... 0xFFFF)
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] location Switch for the different locations of DAC85689. See enum @ref DAC8568_location_t in enum_settings.h for details.
+ * @param[in] cameraPosition This is describing the camera position when there are multiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
+ * @param[in] channel select one of eight output channel (0 ... 7)
+ * @param[in] output output value that will be converted to analog voltage (0 ... 0xFFFF)
  * @return @ref es_status_codes
  */
 es_status_codes DAC8568_setOutput(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint8_t channel, uint16_t output)
@@ -2046,7 +2046,7 @@ es_status_codes ReturnStartMeasurement(es_status_codes status)
 /**
  * @brief Test if SFP module is there and fiber is linked up.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @return @ref es_status_codes
  */
 es_status_codes FindCam(uint32_t drvno)
@@ -2343,11 +2343,11 @@ es_status_codes ExitDriver()
 /**
  * @brief Copy the data of a single sample to pdest.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param sample sample number ( 0...(nos - 1) )
- * @param block block number ( 0...(nob - 1) )
- * @param camera camera number ( 0...(CAMCNT - 1) )
- * @param pdest Pointer where the data will be written to. Make sure that the size is >= sizeof(uint16_t) * pixel
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] sample sample number ( 0...(nos - 1) )
+ * @param[in] block block number ( 0...(nob - 1) )
+ * @param[in] camera camera number ( 0...(CAMCNT - 1) )
+ * @param[out] pdest Pointer where the data will be written to. Make sure that the size is >= sizeof(uint16_t) * pixel
  * @return @ref es_status_codes
  */
 es_status_codes CopyOneSample(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest)
@@ -2367,9 +2367,9 @@ es_status_codes CopyOneSample(uint32_t drvno, uint32_t sample, uint32_t block, u
 /**
  * @brief Copy the data of a single block to pdest.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param block block number ( 0...(nob - 1) )
- * @param pdest Pointer where the data will be written to. Make sure that the size of the buffer is >= sizeof(uint16_t) * pixel * nos * camcnt
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] block block number ( 0...(nob - 1) )
+ * @param[out] pdest Pointer where the data will be written to. Make sure that the size of the buffer is >= sizeof(uint16_t) * pixel * nos * camcnt
  * @return @ref es_status_codes
  */
 es_status_codes CopyOneBlock(uint32_t drvno, uint16_t block, uint16_t* pdest)
@@ -2386,8 +2386,8 @@ es_status_codes CopyOneBlock(uint32_t drvno, uint16_t block, uint16_t* pdest)
 /**
  * @brief Copy the data of the complete measurement to pdest.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param pdest Pointer where the data will be written to. Make sure that the size of the buffer is >= sizeof(uint16_t) * pixel * nos * camcnt * nob
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] pdest Pointer where the data will be written to. Make sure that the size of the buffer is >= sizeof(uint16_t) * pixel * nos * camcnt * nob
  * @return @ref es_status_codes
  */
 es_status_codes CopyAllData(uint32_t drvno, uint16_t* pdest)
@@ -2404,13 +2404,13 @@ es_status_codes CopyAllData(uint32_t drvno, uint16_t* pdest)
 /**
  * @brief Copy the data of a custom length to pdest.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param sample sample number ( 0...(nos - 1) )
- * @param block block number ( 0...(nob - 1) )
- * @param camera camera number ( 0...(CAMCNT - 1) )
- * @param pixel position in one scan (0...(PIXEL-1))
- * @param length_in_pixel Number of pixels to copy. When length_in_pixel exceeds the end of the data buffer the function returns es_parameter_out_of_range.
- * @param pdest Pointer where the data will be written to. Make sure that the size of the buffer is >= sizeof(uint16_t) * length_in_pixel
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] sample sample number ( 0...(nos - 1) )
+ * @param[in] block block number ( 0...(nob - 1) )
+ * @param[in] camera camera number ( 0...(CAMCNT - 1) )
+ * @param[in] pixel position in one scan (0...(PIXEL-1))
+ * @param[in] length_in_pixel Number of pixels to copy. When length_in_pixel exceeds the end of the data buffer the function returns es_parameter_out_of_range.
+ * @param[out] pdest Pointer where the data will be written to. Make sure that the size of the buffer is >= sizeof(uint16_t) * length_in_pixel
  * @return @ref es_status_codes
  */
 es_status_codes CopyDataArbitrary(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint32_t pixel, size_t length_in_pixel, uint16_t* pdest)
@@ -2463,13 +2463,13 @@ es_status_codes GetIndexOfPixel(uint32_t drvno, uint16_t pixel, uint32_t sample,
  * @brief Returns the address of a specific pixel. 
  * 
  * It is only safe to read as much data until the end of the buffer is reached. That is determined by bytes_to_end_of_buffer. It is always safe to read 2 bytes. The address you get is valid until the next call of @ref InitMeasurement. The data behind the address changes every measurement cycle when continuous mode is on or after each call of @ref StartMeasurement.
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param pixel position in one scan (0...(PIXEL-1))
- * @param sample position in samples (0...(nos-1))
- * @param block position in blocks (0...(nob-1))
- * @param camera position in camera count (0...(CAMCNT-1))
- * @param pdest Pointer to get the pointer of the specific pixel. When NULL, this functions returns es_invalid_pointer.
- * @param bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. This is the size in bytes of the buffer from the position you are asking for and the end of the buffer. When NULL, this parameter is ignored.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] pixel position in one scan (0...(PIXEL-1))
+ * @param[in] sample position in samples (0...(nos-1))
+ * @param[in] block position in blocks (0...(nob-1))
+ * @param[in] camera position in camera count (0...(CAMCNT-1))
+ * @param[out] pdest Pointer to get the pointer of the specific pixel. When NULL, this functions returns es_invalid_pointer.
+ * @param[out] bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. This is the size in bytes of the buffer from the position you are asking for and the end of the buffer. When NULL, this parameter is ignored.
  * @return @ref es_status_codes
  */
 es_status_codes GetPixelPointer(uint32_t drvno, uint16_t pixel, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
@@ -2496,9 +2496,9 @@ es_status_codes GetPixelPointer(uint32_t drvno, uint16_t pixel, uint32_t sample,
  * @brief Returns the address of the data buffer.
  *
  * It is only safe to read as much data until the end of the buffer is reached. That is determined by bytes_to_end_of_buffer. For this function bytes_to_end_of_buffer equals the size of the complete buffer (= nos * nob * pixel * camcnt * 2). The address you get is valid until the next call of @ref InitMeasurement. The data behind the address changes every measurement cycle when continuous mode is on or after each call of @ref StartMeasurement.
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param pdest Pointer to get the pointer of the data buffer. When NULL, this functions returns es_invalid_pointer.
- * @param bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. This is the size in bytes of the whole measurement data memory for one board. When NULL, this parameter is ignored.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] pdest Pointer to get the pointer of the data buffer. When NULL, this functions returns es_invalid_pointer.
+ * @param[out] bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. This is the size in bytes of the whole measurement data memory for one board. When NULL, this parameter is ignored.
  * @return @ref es_status_codes
  */
 es_status_codes GetAllDataPointer(uint32_t drvno, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
@@ -2510,10 +2510,10 @@ es_status_codes GetAllDataPointer(uint32_t drvno, uint16_t** pdest, size_t* byte
  * @brief Returns the address of a specific block.
  *
  * It is only safe to read as much data until the end of the buffer is reached. That is determined by bytes_to_end_of_buffer. For this function bytes_to_end_of_buffer is at least the size of one block (= nos * pixel * camcnt * 2). The address you get is valid until the next call of @ref InitMeasurement. The data behind the address changes every measurement cycle when continuous mode is on or after each call of @ref StartMeasurement.
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param block position in blocks (0...(nob-1))
- * @param pdest Pointer to get the pointer of the specific pixel. When NULL, this functions returns es_invalid_pointer.
- * @param bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. This is the size in bytes of the buffer from the position you are asking for and the end of the buffer. When NULL, this parameter is ignored.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] block position in blocks (0...(nob-1))
+ * @param[out] pdest Pointer to get the pointer of the specific pixel. When NULL, this functions returns es_invalid_pointer.
+ * @param[out] bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. This is the size in bytes of the buffer from the position you are asking for and the end of the buffer. When NULL, this parameter is ignored.
  * @return @ref es_status_codes
  */
 es_status_codes GetOneBlockPointer(uint32_t drvno, uint32_t block, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
@@ -2525,12 +2525,12 @@ es_status_codes GetOneBlockPointer(uint32_t drvno, uint32_t block, uint16_t** pd
  * @brief Returns the address of a specific sample.
  *
  * It is only safe to read as much data until the end of the buffer is reached. That is determined by bytes_to_end_of_buffer. For this fuction bytes_to_end_of_buffer is a least the size of scan (= pixel * 2). The address you get is valid until the next call of @ref InitMeasurement. The data behind the address changes every measurement cycle when continuous mode is on or after each call of @ref StartMeasurement.
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param sample position in samples (0...(nos-1))
- * @param block position in blocks (0...(nob-1))
- * @param camera position in camera count (0...(CAMCNT-1))
- * @param pdest Pointer to get the pointer of the specific pixel. When NULL, this functions returns es_invalid_pointer.
- * @param bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. This is the size in bytes of the buffer from the position you are asking for and the end of the buffer. When NULL, this parameter is ignored.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] sample position in samples (0...(nos-1))
+ * @param[in] block position in blocks (0...(nob-1))
+ * @param[in] camera position in camera count (0...(CAMCNT-1))
+ * @param[out] pdest Pointer to get the pointer of the specific pixel. When NULL, this functions returns es_invalid_pointer.
+ * @param[out] bytes_to_end_of_buffer Pointer to get the number of bytes to the end of the buffer. This is the size in bytes of the buffer from the position you are asking for and the end of the buffer. When NULL, this parameter is ignored.
  * @return @ref es_status_codes
  */
 es_status_codes GetOneSamplePointer(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t** pdest, size_t* bytes_to_end_of_buffer)
@@ -2542,9 +2542,9 @@ es_status_codes GetOneSamplePointer(uint32_t drvno, uint32_t sample, uint32_t bl
  * @brief Calculate the theoretical time needed for one measurement.
  *
  * nos * nob * exposure_time_in_ms / 1000
- * @param nos number of samples
- * @param nob number of blocks
- * @param exposure_time_in_ms exposure time in ms
+ * @param[in] nos number of samples
+ * @param[in] nob number of blocks
+ * @param[out] exposure_time_in_ms exposure time in ms
  * @return time in seconds
  */
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms)
@@ -2556,8 +2556,8 @@ double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time
 /**
  * @brief Calculate needed RAM in MB for given nos and nob.
  *
- * @param nos number of samples
- * @param nob number of blocks
+ * @param[in] nos number of samples
+ * @param[in] nob number of blocks
  * @return RAM in MB
  */
 double CalcRamUsageInMB(uint32_t nos, uint32_t nob)
@@ -2575,13 +2575,13 @@ double CalcRamUsageInMB(uint32_t nos, uint32_t nob)
  * @brief Calculate TRMS noise value of one pixel.
  *
  * Calculates RMS of TRMS_pixel in the range of samples from firstSample to lastSample. Only calculates RMS from one block.
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param firstSample start sample to calculate RMS. 0...(nos-2). Typical value: 10, to skip overexposed first samples
- * @param lastSample last sample to calculate RMS. firstSample+1...(nos-1).
- * @param TRMS_pixel pixel for calculating noise (0...(PIXEL-1))
- * @param CAMpos index for camcount (0...(CAMCNT-1))
- * @param mwf pointer for mean value
- * @param trms pointer for noise
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] firstSample start sample to calculate RMS. 0...(nos-2). Typical value: 10, to skip overexposed first samples
+ * @param[in] lastSample last sample to calculate RMS. firstSample+1...(nos-1).
+ * @param[in] TRMS_pixel pixel for calculating noise (0...(PIXEL-1))
+ * @param[in] CAMpos index for camcount (0...(CAMCNT-1))
+ * @param[out] mwf pointer for mean value
+ * @param[out] trms pointer for noise
  * @return @ref es_status_codes
  */
 es_status_codes CalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf, double* trms)
@@ -2637,8 +2637,8 @@ void GetRmsVal(uint32_t nos, uint16_t* TRMSVals, double* mwf, double* trms)
 /**
  * @brief Checks content of FIFO.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param valid Is true (not 0) if FIFO keeps >= 1 complete lines (linecounter>0).
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] valid Is true (not 0) if FIFO keeps >= 1 complete lines (linecounter>0).
  * @return @ref es_status_codes
  */
 es_status_codes CheckFifoValid(uint32_t drvno, bool* valid)
@@ -2651,9 +2651,8 @@ es_status_codes CheckFifoValid(uint32_t drvno, bool* valid)
  * @brief Check ovl flag (overflow of FIFO).
  *
  * If occurred stays active until a call of FFRS.
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param overflow
- * @return Is true (not 0) if overflow occurred (linecounter>0).
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] overflow Is true (not 0) if overflow occurred (linecounter>0).
  * @return @ref es_status_codes
  */
 es_status_codes CheckFifoOverflow(uint32_t drvno, bool* overflow)
@@ -2665,8 +2664,8 @@ es_status_codes CheckFifoOverflow(uint32_t drvno, bool* overflow)
 /**
  * @brief Check empty flag (FIFO empty).
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param empty
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] empty TODO: missing doc
  * @return @ref es_status_codes
  */
 es_status_codes CheckFifoEmpty(uint32_t drvno, bool* empty)
@@ -2678,8 +2677,8 @@ es_status_codes CheckFifoEmpty(uint32_t drvno, bool* empty)
 /**
  * @brief Check full flag (FIFO full).
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param full
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] full TODO missing doc
  * @return @ref es_status_codes
  */
 es_status_codes CheckFifoFull(uint32_t drvno, bool* full)
@@ -2691,16 +2690,14 @@ es_status_codes CheckFifoFull(uint32_t drvno, bool* full)
 /**
  * @brief Check if measure on bit is set.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param measureOn True when measureon bit is set.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] measureOn True when measureon bit is set.
  * @return @ref es_status_codes
  */
 es_status_codes GetMeasureOn(uint32_t drvno, bool* measureOn)
 {
 	return ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_MEASUREON, measureOn);
 }
-
-
 
 /**
  * @brief Reset trigger out(Reg CtrlA:D3) of PCI board. Can be used to control timing issues in software.
@@ -2853,8 +2850,8 @@ es_status_codes WaitForMeasureDone()
 /**
  * @brief Read all S0 registers and write them to a string in hex.
  * 
- * @param drvno PCIe board identifier
- * @param stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
+ * @param[in] drvno PCIe board identifier
+ * @param[out] stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
  * @return @ref es_status_codes
  */
 es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
@@ -2940,8 +2937,8 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 /**
  * @brief Read all S0 registers and write them to a string in a human readable format.
  *
- * @param drvno PCIe board identifier
- * @param stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
+ * @param[in] drvno PCIe board identifier
+ * @param[out] stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
  * @return @ref es_status_codes
  */
 es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
@@ -3619,8 +3616,8 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 /**
  * @brief Read all DMA registers and write them to a string in hex.
  *
- * @param drvno PCIe board identifier
- * @param stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
+ * @param[in] drvno PCIe board identifier
+ * @param[out] stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
  * @return @ref es_status_codes
  */
 es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr)
@@ -3675,8 +3672,8 @@ es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr)
 /**
  * @brief Read all TLP registers and write them to a string.
  *
- * @param drvno PCIe board identifier
- * @param stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
+ * @param[in] drvno PCIe board identifier
+ * @param[out] stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
  * @return @ref es_status_codes
  */
 es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
@@ -3739,8 +3736,8 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 /**
  * @brief Reads registers 0 to 12 of TDC-GPX chip. Time delay counter option.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param stringPtr
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] stringPtr
  * @return @ref es_status_codes
  */
 es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
@@ -3824,7 +3821,7 @@ es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
 /**
  * @brief Dump all measurement settings to a string.
  *
- * @param stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
+ * @param[out] stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
  * @return @ref es_status_codes
  */
 es_status_codes dumpMeasurementSettings(char** stringPtr)
@@ -3852,8 +3849,8 @@ es_status_codes dumpMeasurementSettings(char** stringPtr)
 /**
  * @brief Dump all camera settings to a string.
  *
- * @param drvno PCIe board identifier
- * @param stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
+ * @param[in] drvno PCIe board identifier
+ * @param[out] stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
  * @return @ref es_status_codes
  */
 es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
@@ -3988,8 +3985,8 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 /**
  * @brief Read all PCIe registers and write them to a string.
  *
- * @param drvno PCIe board identifier
- * @param stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
+ * @param[in] drvno PCIe board identifier
+ * @param[out] stringPtr Pointer to a string buffer. The buffer will be allocated by this function. The caller is responsible to free the buffer.
  * @return @ref es_status_codes
  */
 es_status_codes dumpPciRegisters(uint32_t drvno, char** stringPtr)
@@ -4058,8 +4055,8 @@ es_status_codes dumpPciRegisters(uint32_t drvno, char** stringPtr)
 * - win3 : length of space0 BAR =0x3f
 * - win4 : vendor ID = EBST
 * - win5 : PCI board version (same as label on PCI board)
-* @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
-* @param stringPtr string with driver information is given back here
+* @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+* @param[out] stringPtr string with driver information is given back here
 * @return @ref es_status_codes
 */
 es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
@@ -4091,8 +4088,8 @@ es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
 /**
  * @brief reset Delay Stage Counter
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param DSCNumber 1: DSC 1; 2: DSC 2
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] DSCNumber 1: DSC 1; 2: DSC 2
  * @return @ref es_status_codes
  */
 es_status_codes ResetDSC(uint32_t drvno, uint8_t DSCNumber)
@@ -4114,9 +4111,9 @@ es_status_codes ResetDSC(uint32_t drvno, uint8_t DSCNumber)
 /**
  * @brief set direction of Delay Stage Counter
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param DSCNumber 1: DSC 1; 2: DSC 2
- * @param dir true: up; false: down
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] DSCNumber 1: DSC 1; 2: DSC 2
+ * @param[in] dir true: up; false: down
  * @return @ref es_status_codes
  */
 es_status_codes SetDIRDSC(uint32_t drvno, uint8_t DSCNumber, bool dir)
@@ -4139,10 +4136,10 @@ es_status_codes SetDIRDSC(uint32_t drvno, uint8_t DSCNumber, bool dir)
 /**
  * @brief return all values of Delay Stage Counter
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param DSCNumber 1: DSC 1; 2: DSC 2
- * @param ADSC current DSC
- * @param LDSC last DSC
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] DSCNumber 1: DSC 1; 2: DSC 2
+ * @param[out] ADSC current DSC
+ * @param[out] LDSC last DSC
  * @return @ref es_status_codes
  */
 es_status_codes GetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC)
@@ -4277,9 +4274,9 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
  * This is necessary, because scanCounterTotal is just counting each scan not regarding camcnt and blocks.
  * When @ref camera_settings.use_software_polling is false the scan and block number of the last interrupt is given.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param sample Scan number of the last scan in userBuffer. -1 when no scan has been written yet, otherwise 0...(nos-1)
- * @param block Block number of the last scan in userBuffer. -1 when no scans has been written yet, otherwise 0...(nob-1)
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] sample Scan number of the last scan in userBuffer. -1 when no scan has been written yet, otherwise 0...(nos-1)
+ * @param[out] block Block number of the last scan in userBuffer. -1 when no scans has been written yet, otherwise 0...(nob-1)
  */
 void GetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block)
 {
@@ -4384,8 +4381,8 @@ void FillUserBufferWithDummyData(uint32_t drvno)
 /**
  * @brief Read TDC flag in PCIEFLAGS register.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param isTdc	TDC flag is written to this bool*. TRUE: TDC board detected, FALSE: no TDC board detected
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] isTdc	TDC flag is written to this bool*. TRUE: TDC board detected, FALSE: no TDC board detected
  * @return @ref es_status_codes
  */
 es_status_codes GetIsTdc(uint32_t drvno, bool* isTdc)
@@ -4405,8 +4402,8 @@ es_status_codes GetIsTdc(uint32_t drvno, bool* isTdc)
 /**
  * @brief Read DSC flag in PCIEFLAGS register.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param isDsc	DSC flag is written to this bool*. TRUE: DSC board detected, FALSE: no DSC board detected
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] isDsc DSC flag is written to this bool*. TRUE: DSC board detected, FALSE: no DSC board detected
  * @return @ref es_status_codes
  */
 es_status_codes GetIsDsc(uint32_t drvno, bool* isDsc)
@@ -4426,8 +4423,8 @@ es_status_codes GetIsDsc(uint32_t drvno, bool* isDsc)
 /**
  * @brief Check the consistency of the file given in vd and return the results in resultString.
  * 
- * @param vd Pointer to a verify_data_parameter struct. The member filename_full must be set.
- * @param resultString Pointer to a char*. The result string is written to this pointer. The buffer is allocated in this function and must be freed by the caller.
+ * @param[in] vd Pointer to a verify_data_parameter struct. The member filename_full must be set.
+ * @param[out] resultString Pointer to a char*. The result string is written to this pointer. The buffer is allocated in this function and must be freed by the caller.
  */
 void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString)
 {
@@ -4471,7 +4468,7 @@ void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString
 /**
  * @brief Control looping the measurement.
  *
- * @param on 1: measurement runs in a loop, 0: measurement only runs once.
+ * @param[in] on 1: measurement runs in a loop, 0: measurement only runs once.
  */
 void SetContinuousMeasurement(bool on)
 {
@@ -4485,11 +4482,11 @@ void SetContinuousMeasurement(bool on)
  *
  * The information over temperature is given in the special pixel camera status (pixel_camera_status) in bit pixel_camera_status_bit_over_temp.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param sample sample number (0 ... (nos-1))
- * @param block block number (0 ... (nob-1))
- * @param camera_pos camera position (0 ... (CAMCNT-1))
- * @param overTemp Pointer to a bool, where the information overTemp will be written. true - over temperature detected, false - no over temperature detected
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] sample sample number (0 ... (nos-1))
+ * @param[in] block block number (0 ... (nob-1))
+ * @param[in] camera_pos camera position (0 ... (CAMCNT-1))
+ * @param[out] overTemp Pointer to a bool, where the information overTemp will be written. true - over temperature detected, false - no over temperature detected
  * @return @ref es_status_codes
  */
 es_status_codes GetCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* overTemp)
@@ -4511,11 +4508,11 @@ es_status_codes GetCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_
  *
  * The information temperature good is given in the special pixel camera status (pixel_camera_status) in bit pixel_camera_status_bit_temp_good. This bit is used only in cooled cameras.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param sample sample number (0 ... (nos-1))
- * @param block block number (0 ... (nob-1))
- * @param camera_pos camera position (0 ... (CAMCNT-1))
- * @param tempGood Pointer to a bool, where the information tempGood will be written. true - target temperature reached, false - target temperature not reached
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] sample sample number (0 ... (nos-1))
+ * @param[in] block block number (0 ... (nob-1))
+ * @param[in] camera_pos camera position (0 ... (CAMCNT-1))
+ * @param[out] tempGood Pointer to a bool, where the information tempGood will be written. true - target temperature reached, false - target temperature not reached
  * @return @ref es_status_codes
  */
 es_status_codes GetCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* tempGood)
@@ -4537,11 +4534,11 @@ es_status_codes GetCameraStatusTempGood(uint32_t drvno, uint32_t sample, uint32_
  *
  * The information block index is given in the special pixels pixel_block_index_low and pixel_block_index_high_s1_s2.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param sample sample number (0 ... (nos-1))
- * @param block block number (0 ... (nob-1))
- * @param camera_pos camera position (0 ... (CAMCNT-1))
- * @param blockIndex Pointer to a uint32_t, where the information block index will be written. Block index is a 30 bit counter, so the highest two bits are not used.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] sample sample number (0 ... (nos-1))
+ * @param[in] block block number (0 ... (nob-1))
+ * @param[in] camera_pos camera position (0 ... (CAMCNT-1))
+ * @param[out] blockIndex Pointer to a uint32_t, where the information block index will be written. Block index is a 30 bit counter, so the highest two bits are not used.
  * @return @ref es_status_codes
  */
 es_status_codes GetBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* blockIndex)
@@ -4564,11 +4561,11 @@ es_status_codes GetBlockIndex(uint32_t drvno, uint32_t sample, uint32_t block, u
  *
  * The information block index is given in the special pixels pixel_scan_index_low and pixel_scan_index_high.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param sample sample number (0 ... (nos-1))
- * @param block block number (0 ... (nob-1))
- * @param camera_pos camera position (0 ... (CAMCNT-1))
- * @param scanIndex Pointer to a uint32_t, where the information scan index will be written. Scan index is a 32 bit counter.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] sample sample number (0 ... (nos-1))
+ * @param[in] block block number (0 ... (nob-1))
+ * @param[in] camera_pos camera position (0 ... (CAMCNT-1))
+ * @param[out] scanIndex Pointer to a uint32_t, where the information scan index will be written. Scan index is a 32 bit counter.
  * @return @ref es_status_codes
  */
 es_status_codes GetScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* scanIndex)
@@ -4590,11 +4587,11 @@ es_status_codes GetScanIndex(uint32_t drvno, uint32_t sample, uint32_t block, ui
  *
  * The information S1 is given in the special pixel pixel_block_index_high_s1_s2 in bit pixel_block_index_high_s1_s2_bit_s1.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param sample sample number (0 ... (nos-1))
- * @param block block number (0 ... (nob-1))
- * @param camera_pos camera position (0 ... (CAMCNT-1))
- * @param state Pointer to a bool, where the information S1 state will be written. true - S1 is high, false - S1 is low
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] sample sample number (0 ... (nos-1))
+ * @param[in] block block number (0 ... (nob-1))
+ * @param[in] camera_pos camera position (0 ... (CAMCNT-1))
+ * @param[out] state Pointer to a bool, where the information S1 state will be written. true - S1 is high, false - S1 is low
  * @return @ref es_status_codes
  */
 es_status_codes GetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
@@ -4616,11 +4613,11 @@ es_status_codes GetS1State(uint32_t drvno, uint32_t sample, uint32_t block, uint
  *
  * The information S2 is given in the special pixel pixel_block_index_high_s1_s2 in bit pixel_block_index_high_s1_s2_bit_s2.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param sample sample number (0 ... (nos-1))
- * @param block block number (0 ... (nob-1))
- * @param camera_pos camera position (0 ... (CAMCNT-1))
- * @param state Pointer to a bool, where the information S2 state will be written. true - S2 is high, false - S2 is low
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] sample sample number (0 ... (nos-1))
+ * @param[in] block block number (0 ... (nob-1))
+ * @param[in] camera_pos camera position (0 ... (CAMCNT-1))
+ * @param[out] state Pointer to a bool, where the information S2 state will be written. true - S2 is high, false - S2 is low
  * @return @ref es_status_codes
  */
 es_status_codes GetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* state)
@@ -4642,11 +4639,11 @@ es_status_codes GetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint
  *
  * The information impact signal 1 is given in the special pixels pixel_impact_signal_1_low and pixel_impact_signal_1_high. Impact signal 1 is either TDC 1 or DSC 1, depending on the PCIe daughter board.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param sample sample number (0 ... (nos-1))
- * @param block block number (0 ... (nob-1))
- * @param camera_pos camera position (0 ... (CAMCNT-1))
- * @param impactSignal Pointer to a uint32_t, where the information impact signal will be written.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] sample sample number (0 ... (nos-1))
+ * @param[in] block block number (0 ... (nob-1))
+ * @param[in] camera_pos camera position (0 ... (CAMCNT-1))
+ * @param[out] impactSignal Pointer to a uint32_t, where the information impact signal will be written.
  * @return @ref es_status_codes
  */
 es_status_codes GetImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
@@ -4667,11 +4664,11 @@ es_status_codes GetImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block
  *
  * The information impact signal 2 is given in the special pixels pixel_impact_signal_2_low and pixel_impact_signal_2_high. Impact signal 2 is either TDC 2 or DSC 2, depending on the PCIe daughter board.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param sample sample number (0 ... (nos-1))
- * @param block block number (0 ... (nob-1))
- * @param camera_pos camera position (0 ... (CAMCNT-1))
- * @param impactSignal Pointer to a uint32_t, where the information impact signal will be written.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] sample sample number (0 ... (nos-1))
+ * @param[in] block block number (0 ... (nob-1))
+ * @param[in] camera_pos camera position (0 ... (CAMCNT-1))
+ * @param[out] impactSignal Pointer to a uint32_t, where the information impact signal will be written.
  * @return @ref es_status_codes
  */
 es_status_codes GetImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
@@ -4692,11 +4689,11 @@ es_status_codes GetImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block
  *
  * The information impact signal 2 is given in the special pixels pixel_impact_signal_2_low and pixel_impact_signal_2_high. Impact signal 2 is either TDC 2 or DSC 2, depending on the PCIe daughter board.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param sample sample number (0 ... (nos-1))
- * @param block block number (0 ... (nob-1))
- * @param camera_pos camera position (0 ... (CAMCNT-1))
- * @param sp struct special_pixels Pointer to struct special_pixel, where all special pixel information will be written.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] sample sample number (0 ... (nos-1))
+ * @param[in] block block number (0 ... (nob-1))
+ * @param[in] camera_pos camera position (0 ... (CAMCNT-1))
+ * @param[out] sp struct special_pixels Pointer to struct special_pixel, where all special pixel information will be written.
  * @return @ref es_status_codes
  */
 es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp)
@@ -4764,8 +4761,8 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 /**
  * @brief Reads the ScanFrequency bit and checks if its high or low.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param scanFrequencyTooHigh True when scanFrequency bit is set
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] scanFrequencyTooHigh True when scanFrequency bit is set
  * @return @ref es_status_codes
  */
 es_status_codes ReadScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh)
@@ -4777,7 +4774,7 @@ es_status_codes ReadScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh)
 /**
  * @brief Resets the ScanFrequency bit.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @return @ref es_status_codes
  */
 es_status_codes ResetScanFrequencyBit(uint32_t drvno)
@@ -4789,8 +4786,8 @@ es_status_codes ResetScanFrequencyBit(uint32_t drvno)
 /**
  * @brief Reads the BlockFrequency bit and checks if its high or low.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param blockFrequencyTooHigh True when BlockFrequency bit is set.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] blockFrequencyTooHigh True when BlockFrequency bit is set.
  * @return @ref es_status_codes
  */
 es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh)
@@ -4802,7 +4799,7 @@ es_status_codes ReadBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHig
 /**
  * @brief Resets the BlockFrequency bit.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @return @ref es_status_codes
  */
 es_status_codes ResetBlockFrequencyBit(uint32_t drvno)
@@ -4816,10 +4813,10 @@ es_status_codes ResetBlockFrequencyBit(uint32_t drvno)
  * 
  * If @ref camera_settings.camcnt is 1, use CopyOneBlock instead. This function copies the data sample by sample because the data of one block of one camera is not stored in a contiguous memory block if camcnt is greater than 1.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param block block number ( 0...(nob - 1) )
- * @param camera camera number ( 0...(CAMCNT - 1) )
- * @param pdest Pointer where the data will be written to. Make sure that the size of the buffer is >= sizeof(uint16_t) * pixel * nos
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] block block number ( 0...(nob - 1) )
+ * @param[in] camera camera number ( 0...(CAMCNT - 1) )
+ * @param[out] pdest Pointer where the data will be written to. Make sure that the size of the buffer is >= sizeof(uint16_t) * pixel * nos
  * @return @ref es_status_codes
  */
 es_status_codes CopyOneBlockOfOneCamera(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t* pdest)
@@ -4931,7 +4928,7 @@ es_status_codes SetS1S2ReadDelay(uint32_t drvno)
  * 
  * Depending on the file extension, the data is saved in a binary or HDF5 file.
  * 
- * @param filename Filename with complete absolute path and either .bin or .h5 extension.
+ * @param[in] filename Filename with complete absolute path and either .bin or .h5 extension.
  * @return @ref es_status_codes
  */
 es_status_codes SaveMeasurementDataToFile(const char* filename)
@@ -4951,6 +4948,12 @@ es_status_codes SaveMeasurementDataToFile(const char* filename)
 	else return es_invalid_file_extention;
 }
 
+/**
+ * @brief TODO. missing documentation.
+ * 
+ * @param[in] filename
+ * @return 
+ */
 es_status_codes ImportMeasurementDataFromFile(const char* filename)
 {
 	if (isRunning) return es_measurement_running;
@@ -5205,8 +5208,8 @@ hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t datas
  * @brief Get the high time duration of XCK from the S0 register @ref S0Addr_XCKLEN.
  * 
  * The signal is measured once per measurement. The fist valid value can be read after the first completed XCK.
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param xckLengthIn10ns pointer to uint32 where the XCK length is returned
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] xckLengthIn10ns pointer to uint32 where the XCK length is returned
  *		* min: 0
  *		* step: 1 => 10 ns
  *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
@@ -5222,8 +5225,8 @@ es_status_codes GetXckLength(uint32_t drvno, uint32_t* xckLengthIn10ns)
  * @brief Get pos edge to pos egde time of XCK time from the S0 register @ref S0Addr_XCK_PERIOD.
  *
  * The signal is measured once per measurement. The fist valid value can be read after the start of the second XCK.
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param xckPeriodIn10ns pointer to uint32 where the XCK period is returned
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] xckPeriodIn10ns pointer to uint32 where the XCK period is returned
  *		* min: 0
  *		* step: 1 => 10 ns
  *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
@@ -5239,8 +5242,8 @@ es_status_codes GetXckPeriod(uint32_t drvno, uint32_t* xckPeriodIn10ns)
  * @brief Get the high time duration of BON from the S0 register @ref S0Addr_BONLEN.
  *
  * The signal is measured once per measurement. The fist valid value can be read after the first completed BON.
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param bonLengthIn10ns pointer to uint32 where the BON length is returned
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] bonLengthIn10ns pointer to uint32 where the BON length is returned
  *		* min: 0
  *		* step: 1 => 10 ns
  *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
@@ -5256,8 +5259,8 @@ es_status_codes GetBonLength(uint32_t drvno, uint32_t* bonLengthIn10ns)
  * @brief Get the pos edge to pos edge time of BON from the S0 register @ref S0Addr_BON_PERIOD.
  *
  * The signal is measured once per measurement. The fist valid value can be read after the start of the second BON.
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param bonPeriodIn10ns pointer to uint32 where the BON period is returned
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] bonPeriodIn10ns pointer to uint32 where the BON period is returned
  *		* min: 0
  *		* step: 1 => 10 ns
  *		* max: 0xFFFFFFFF = 4,294,967,295 => 42,949,672,950 ns
@@ -5315,8 +5318,8 @@ bool PcieCardVersionIsEqual(uint32_t drvno, uint16_t major_version, uint16_t min
  * @brief Get the block on bit from the PCIe flags register.
  * 
  * Since the block on bit position was change in 222.14 this function looks at a different bit depending on the firmware version.
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param blockOn Pointer to a bool, where the block on bit will be written.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] blockOn Pointer to a bool, where the block on bit will be written.
  * @return @ref es_status_codes
  */
 es_status_codes GetBlockOn(uint32_t drvno, bool* blockOn)
@@ -5334,8 +5337,8 @@ es_status_codes GetBlockOn(uint32_t drvno, bool* blockOn)
 /**
  * @brief Read the bit @ref PCIEFLAGS_bits_t.PCIEFLAGS_bit_scan_trigger_detected.
  * 
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param detected Pointer to a bool, where the scan trigger detected bit will be written.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] detected Pointer to a bool, where the scan trigger detected bit will be written.
  * @return @ref es_status_codes
  */
 es_status_codes GetScanTriggerDetected(uint32_t drvno, bool* detected)
@@ -5347,8 +5350,8 @@ es_status_codes GetScanTriggerDetected(uint32_t drvno, bool* detected)
 /**
  * @brief Read the bit @ref PCIEFLAGS_bits_t.PCIEFLAGS_bit_block_trigger_detected.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param detected Pointer to a bool, where the block trigger detected bit will be written.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[out] detected Pointer to a bool, where the block trigger detected bit will be written.
  * @return @ref es_status_codes
  */
 es_status_codes GetBlockTriggerDetected(uint32_t drvno, bool* detected)
@@ -5360,7 +5363,7 @@ es_status_codes GetBlockTriggerDetected(uint32_t drvno, bool* detected)
 /**
  * @brief Reset the bit @ref PCIEFLAGS_bits_t.PCIEFLAGS_bit_scan_trigger_detected to 0.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @return @ref es_status_codes
  */
 es_status_codes ResetScanTriggerDetected(uint32_t drvno)
@@ -5372,7 +5375,7 @@ es_status_codes ResetScanTriggerDetected(uint32_t drvno)
 /**
  * @brief Reset the bit @ref PCIEFLAGS_bits_t.PCIEFLAGS_bit_block_trigger_detected to 0.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @return @ref es_status_codes
  */
 es_status_codes ResetBlockTriggerDetected(uint32_t drvno)
@@ -5466,9 +5469,9 @@ void clearKeyStates()
 /**
  * \brief Control the general outputs of the PCIe card addition board.
  * 
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param output 0 ... 7
- * \param state true = high, false = low
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param[in] output 0 ... 7
+ * \param[in] state true = high, false = low
  * \return @ref es_status_codes
  */
 es_status_codes SetGeneralOutput(uint32_t drvno, uint8_t output, bool state)
@@ -5484,8 +5487,8 @@ es_status_codes SetGeneralOutput(uint32_t drvno, uint8_t output, bool state)
 /**
  * @brief Sets all shutter states in one call.
  * 
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param shutter_states 16 bit value where each bit of the lower 4 represents the state of one shutter.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] shutter_states 16 bit value where each bit of the lower 4 represents the state of one shutter.
  *		* bit 0: shutter 1, 1: closed, 0: open
  *		* bit 1: shutter 2, 1: closed, 0: open
  *		* bit 2: shutter 3, 1: closed, 0: open
