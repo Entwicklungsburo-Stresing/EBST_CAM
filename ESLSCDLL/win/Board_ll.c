@@ -600,8 +600,8 @@ es_status_codes writeConfig_32(uint32_t drvno, uint32_t data, uint32_t address)
  *
  * @brief Get the free and installed memory info.
  * 
- * @param pmemory_all how much is installed
- * @param pmemory_free how much is free
+ * @param[out] pmemory_all how much is installed
+ * @param[out] pmemory_free how much is free
  */
 void FreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 {
@@ -1272,7 +1272,7 @@ void ErrMsgBoxOff()
 /**
  * @brief Display error message. If ErrMsgBoxOn is set.
  *
- * @param ErrMsg Message. Buffer size: 100.
+ * @param[in] ErrMsg Message. Buffer size: 100.
  */
 void ErrorMsg(char ErrMsg[100])
 {
@@ -1301,11 +1301,11 @@ void ValMsg(uint64_t val)
 
 /**
 @brief Start 2d viewer.
-@param drvno board number
-@param block current number of block
-@param camera which camera to display (when camcnt is >1)
-@param pixel count of pixel of one line
-@param nos samples in one block
+@param[in] drvno board number
+@param[in] block current number of block
+@param[in] camera which camera to display (when camcnt is >1)
+@param[in] pixel count of pixel of one line
+@param[in] nos samples in one block
 */
 void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {
@@ -1339,11 +1339,11 @@ void Start2dViewer(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pix
 
 /**
 @brief Update the displayed bitmap.
-@param drvno board number
-@param block current number of blocks
-@param camera which camera to display (when camcnt is >1)
-@param pixel count of pixel of one line
-@param nos samples in one block
+@param[in] drvno board number
+@param[in] block current number of blocks
+@param[in] camera which camera to display (when camcnt is >1)
+@param[in] pixel count of pixel of one line
+@param[in] nos samples in one block
 */
 void ShowNewBitmap(uint32_t drvno, uint32_t block, uint16_t camera, uint16_t pixel, uint32_t nos)
 {

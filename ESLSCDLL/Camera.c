@@ -728,10 +728,10 @@ es_status_codes CamIOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixe
 /**
  * @brief Set paramters of one pulse output of IOCTRL.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param number Number of output: 1 ... 7
- * @param width_in_5ns Set width of pulse in 5ns steps.
- * @param delay_in_5ns Set delay of pulse in 5ns steps.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] number Number of output: 1 ... 7
+ * @param[in] width_in_5ns Set width of pulse in 5ns steps.
+ * @param[in] delay_in_5ns Set delay of pulse in 5ns steps.
  * @return @ref es_status_codes
  */
 es_status_codes CamIOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns)
@@ -799,8 +799,8 @@ es_status_codes CamIOCtrl_setAllOutputs(uint32_t drvno, uint32_t* width_in_5ns, 
 /**
  * @brief Set period of IOCtrl pulse outputs base frequency T0.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param period_in_10ns Period of T0 in 10ns steps.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] period_in_10ns Period of T0 in 10ns steps.
  * @return @ref es_status_codes
  */
 es_status_codes CamIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)

@@ -510,8 +510,8 @@ HWND Direct2dViewer::getWindowHandler()
 
 /**
 @brief Set gamma value.
-@param white set value for maximum brightness. Default: 0xFFFF (16 bit),  0x3FFF (14 bit)
-@param black set value for minimum brightness. Default: 0
+@param[in] white set value for maximum brightness. Default: 0xFFFF (16 bit),  0x3FFF (14 bit)
+@param[in] black set value for minimum brightness. Default: 0
 */
 void Direct2dViewer::SetGammaValue( UINT16 white, UINT16 black )
 {

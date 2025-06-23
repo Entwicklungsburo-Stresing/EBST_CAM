@@ -48,7 +48,7 @@ char errorMsg[NUMBER_OF_ERROR_CODES][BUFFER_SIZE] =
 /**
  * @brief Converts a es_status_codes to a human readable error message.
  * 
- * @param status es_status_codes
+ * @param[in] status es_status_codes
  * @return char*
  */
 char* ConvertErrorCodeToMsg(es_status_codes status)
