@@ -1032,7 +1032,7 @@ es_status_codes SetSEC(uint32_t drvno, uint32_t ecin10ns)
  * @brief Set signal of output port of PCIe card.
  *
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param[in] tor select output signal. See enum tor_out in enum.h for options.
+ * @param[in] tor select output signal. See enum tor_out in enum_settings.h for options.
  * @return @ref es_status_codes
  */
 es_status_codes SetTORReg(uint32_t drvno, uint8_t tor)
@@ -1150,7 +1150,7 @@ es_status_codes SetBTI(uint32_t drvno, uint8_t bti_mode)
  * @brief Set timer resolution.
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param resolution_mode Resolution of the time. See @ref timer_resolution_t in enum.h for options.
+ * @param resolution_mode Resolution of the time. See @ref timer_resolution_t in enum_settings.h for options.
  * @return @ref es_status_codes
  */
 es_status_codes SetTimerResolution(uint32_t drvno, uint8_t resolution_mode)
@@ -1442,7 +1442,7 @@ es_status_codes DAC8568_sendData(uint32_t drvno, uint8_t location, uint8_t camer
  *
  * Use this function to set the outputs, because it is resorting the channel numeration correctly.
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param[in] location Switch for the different locations of DAC85689. See enum @ref DAC8568_location_t in enum.h for details.
+ * @param[in] location Switch for the different locations of DAC85689. See enum @ref DAC8568_location_t in enum_settings.h for details.
  * @param[in] cameraPosition This is describing the camera position when there are multiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
  * @param[in] output all output values that will be converted to analog voltage (0 ... 0xFFFF)
  * @param[in] reorder_channels used to reorder DAC channels for high speed camera
