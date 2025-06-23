@@ -5486,10 +5486,10 @@ es_status_codes SetGeneralOutput(uint32_t drvno, uint8_t output, bool state)
  * 
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param shutter_states 16 bit value where each bit of the lower 4 represents the state of one shutter.
- *		* bit 0: shutter 1, 0: closed, 1: open
- *		* bit 1: shutter 2, 0: closed, 1: open
- *		* bit 2: shutter 3, 0: closed, 1: open
- *		* bit 3: shutter 4, 0: closed, 1: open
+ *		* bit 0: shutter 1, 1: closed, 0: open
+ *		* bit 1: shutter 2, 1: closed, 0: open
+ *		* bit 2: shutter 3, 1: closed, 0: open
+ *		* bit 3: shutter 4, 1: closed, 0: open
  * @return @ref es_status_codes
  */
 es_status_codes SetShutterStates(uint32_t drvno, uint16_t shutter_states)
