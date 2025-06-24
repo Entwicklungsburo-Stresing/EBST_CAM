@@ -60,7 +60,7 @@ Section: base\n\
 Priority: optional\n\
 Architecture: amd64\n\
 Depends: dkms, linux-headers-generic\n\
-Recommends: libqt5charts5\n\
+Recommends: libqt6charts6, libhdf5-dev\n\
 Maintainer: Stresing <info@stresing.de>\n\
 Description: Software for line scan camera of Stresing\n\
  Enticklungsbuero Stresing\n\
