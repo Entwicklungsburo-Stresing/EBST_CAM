@@ -10,12 +10,11 @@ escam_deb		| script to create a .deb package													| Linux
 escam_setup		| [Microsoft Visual Studio Installer Project](https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2017InstallerProjects) to create a setup for escam | Windows
 ESLSCDLL		| software library .dll / .so														| Windows, Linux
 hdf				| library for exporting data to [hdf5](https://www.hdfgroup.org/solutions/hdf5/)	| Windows
-Jungo			| library for using the Windows Driver												| Windows
 linux-driver	| Linux driver																		| Linux
 shared_src		| shared source files for escam, ESLSCDLL, CsimpleExample							| Windows, Linux
 
 ## License
-The software library ESLSCDLL and the GUI Escam are released under the [LPGL-3.0](https://www.gnu.org/licenses/lgpl-3.0.html.en). This applies for files in `escam/`, `ESLSCDLL/`, `linux-driver/userspace/` and `shared_src/`. The Linux Kernel object and its source code in `linux-driver/kernelspace/` is released under the [GPL-2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html.en). The CLI C example `CsimpleExample/` is released as public domain under the [Unlicense](https://unlicense.org/).
+The software library ESLSCDLL and the GUI Escam are released under the [LPGL-3.0](https://www.gnu.org/licenses/lgpl-3.0.html.en). This applies for files in `escam/`, `ESLSCDLL/`, `linux-driver/userspace/` and `shared_src/`. The Linux Kernel object and its source code in `linux-driver/kernelspace/` is released under the [GPL-2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html.en). The CLI C example `CsimpleExample/` is released as public domain under the [Unlicense](https://unlicense.org/). The used library hdf5 is release by the HDFGroup under the [3-clause BSD License](https://github.com/HDFGroup/hdf5/?tab=License-1-ov-file#readme).
 
 ## Disclaimer for Critical Applications
 
@@ -35,7 +34,31 @@ Xilinx products are not designed or intended to be fail-safe, or for use in any 
 * Visual Studio Extention: [Microsoft Visual Studio Installer Project](https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2017InstallerProjects) (optional, for creating setup.exe for escam)
 
 ### Compile
-Open `EBST_CAM.sln` with Visual Studio and press build. There are different compiling configurations available. There is a build script to build all: `makeall.ps1`.
+Download the latest DLL binary `ESLSCDLL-4.XX.X.zip` from [releases](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases) and place the files into `EBST_CAM/ESLSCDLL/x64` to create the following folder structure:
+```
+EBST_CAM/
+├─	ESLSCDLL/
+│	├─	x64/
+│	│	├─	Debug/
+│	│	│	├─	ESLSCDLL.dll
+│	│	│	├─	ESLSCDLL.lib
+│	│	├─	Debug_minimal/
+│	│	│	├─	ESLSCDLL.dll
+│	│	│	├─	ESLSCDLL.lib
+│	│	├─	Debug-Labview/
+│	│	│	├─	ESLSCDLL.dll
+│	│	│	├─	ESLSCDLL.lib
+│	│	├─	Release/
+│	│	│	├─	ESLSCDLL.dll
+│	│	│	├─	ESLSCDLL.lib
+│	│	├─	Release_minimal/
+│	│	│	├─	ESLSCDLL.dll
+│	│	│	├─	ESLSCDLL.lib
+│	│	├─	Release-Labview/
+│	│	│	├─	ESLSCDLL.dll
+│	│	│	├─	ESLSCDLL.lib
+```
+Open `EBST_CAM.sln` with Visual Studio and press build. There are different compiling configurations available. There is a build script to build all: `makeall.ps1`. Due to license restrictions of underlying software components there is no compilable version of ESLSCDLL.dll for Windows available.
 
 configuration	| description
 :---			| :---
@@ -47,7 +70,7 @@ Release_minimal	| Release build for escam and CsimpleExample and minimal release
 Release-Labview	| Release build for DLL with Labview libraries for communication with Labview software. Use this for production usage with Labview.
 
 ### Installing Windows driver
-Run `install_run_as_admin.bat` from [Stresing14.00_Driver_Distribution_Package](http://stresing.de/dwnl/ebstdrv14v00.rar) as admin. 
+Run `install_run_as_admin.bat` from [Stresing14.00_Driver_Distribution_Package](http://stresing.de/dwnl/ebstdrv14v00.zip) as admin. 
 
 ### Installing escam
 Compile solution first and use `escam_setup/build/setup.exe` or use `setup.exe` from a [release](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases). If Microsoft Visual C++ Redistributable is missing, this setup should install it automatically.
@@ -64,17 +87,16 @@ If `MSVCP140.dll` and `VCRUNTIME140.dll` are missing, Microsoft Visual C++ Redis
 * Qt 5.15 - 6.8 (for escam Qt GUI)
 * make
 * C++ compiler g++
-* libqt5charts5-dev
+* libqt6charts6
 * Linux Kernel 5.4 - 6.8
 * HDF5
 ```
-sudo apt install qt5-default qt5-qmake g++ libqt5charts5-dev make libhdf5-dev
+sudo apt install qmake6 g++ libqt6charts6 make libhdf5-dev
 ```
 
 ### Run Dependencies
-* libqt5charts5
 ```
-sudo apt install libqt5charts
+sudo apt install libqt6charts6
 ```
 
 ### Compiling
