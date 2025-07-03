@@ -2,6 +2,9 @@
 
 This documentation is about the [software](https://github.com/Entwicklungsburo-Stresing) for operating the specialized line scan cameras of [Entwicklungsbuero Stresing](https://stresing.de). For instructions about compiling have a look at the readme in the [EBST_CAM](https://github.com/Entwicklungsburo-Stresing/EBST_CAM) repository. For more detailed information about your camera refer to your given manual FLbook.pdf.
 
+## Software versions
+The [online version](https://entwicklungsburo-stresing.github.io) of this documentation always describes the latest software version of the [EBST_CAM](https://github.com/Entwicklungsburo-Stresing/EBST_CAM) repository. If you are looking for a older version of the documentation, you can find it [here](https://github.com/Entwicklungsburo-Stresing/Entwicklungsburo-Stresing.github.io/tags). Changes between the versions are documented in the [changlog](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/blob/master/CHANGELOG.md) and the [release notes](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases).
+
 ## How to use Stresing software
 
 Use the compiled library ESLSCDLL.dll or libESLSCDLL.so and operate the camera from your software with DLL calls. There are several examples available that are operating the camera with the DLL for [LabVIEW](https://github.com/Entwicklungsburo-Stresing/lv64), [Python](https://github.com/Entwicklungsburo-Stresing/stresing_python), [Matlab](https://github.com/Entwicklungsburo-Stresing/stresing_matlab) and C. Additionally there is a fully featured GUI called Escam, written in C++ with Qt. Escam and the C example CsimpleExample are located in the [EBST_CAM](https://github.com/Entwicklungsburo-Stresing/EBST_CAM) repository.
