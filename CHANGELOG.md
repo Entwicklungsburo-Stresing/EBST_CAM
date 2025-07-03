@@ -10,20 +10,30 @@ The hardware version number is the current version at release time.
 ### API Changes
 #### Added
 #### Changed
-* Rename setting btime_in_microsec to btime
-* Rename setting stime_resolution_mode to timer_resolution_mode
-* Remove parameter resolution_mode from DLLSetSTimer
-* Rename parameter btime_in_microseconds of DLLSetBTimer to btime
 #### Removed
 #### Fixed
 #### Deprecated
 ### Other Changes
 #### Added
 #### Changed
-* Move timer resolution to own function SetTimerResolution
 #### Removed
 #### Fixed
 #### Deprecated
+
+## 4.18.1 - 2025-07-03
+### API Changes
+#### Changed
+* Rename setting btime_in_microsec to btime
+* Rename setting stime_resolution_mode to timer_resolution_mode
+* Remove parameter resolution_mode from DLLSetSTimer
+* Rename parameter btime_in_microseconds of DLLSetBTimer to btime
+### Other Changes
+#### Changed
+* Move timer resolution to own function SetTimerResolution
+* Rename all startSTimer, stopStimer etc functions to ArmScanTrigger
+* Only set IRQREG_bit_HWDREQ_EN in SetDmaStartMode() when older version than 222_18.
+* Only set PCIEFLAGS_bitindex_ENRSTIMERHWin SetHardwareTimerStopMode() when older version than 222_18.
+* Only set XCK_bitindex_arm_scan_trigger when older version than 222_18, is read only now
 
 ## 4.18.0 - 2025-05-21
 ### API Changes
