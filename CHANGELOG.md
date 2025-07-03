@@ -47,6 +47,7 @@ The hardware version number is the current version at release time.
 * Change function DLLOpenShutter to single board function, add parameter drvno.
 * Change function DLLCloseShutter to single board function, add parameter drvno.
 * Change parameters of DLLSetSTimer to: uint32_t drvno, uint32_t stime, uint8_t resolution_mode
+* Change setting name stime_in_microsec to stime
 ### Other Changes
 #### Added
 * Implement shutter control in dialogshutter
