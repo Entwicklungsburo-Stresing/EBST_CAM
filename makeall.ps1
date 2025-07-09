@@ -25,7 +25,32 @@ mkdir .\ESLSCDLL\x64\
 # Build ESLSCDLL
 cd ..\ESLSCDLL
 .\makeall.ps1
-cd ..\EBST_CAM
+# Copy ESLSCDLL source files to EBST_CAM
+cd ESLSCDLL
+cp Board.h ..\..\EBST_CAM\ESLSCDLL
+cp Board.c ..\..\EBST_CAM\ESLSCDLL
+cp Board_ll.h ..\..\EBST_CAM\ESLSCDLL
+cp linux\Board_ll.c ..\..\EBST_CAM\ESLSCDLL\linux
+cp win\Board_ll.c ..\..\EBST_CAM\ESLSCDLL\win
+cp Camera.h ..\..\EBST_CAM\ESLSCDLL
+cp Camera.c ..\..\EBST_CAM\ESLSCDLL
+cp Direct2dViewer_c.h ..\..\EBST_CAM\ESLSCDLL
+cp Direct2dViewer_c.cpp ..\..\EBST_CAM\ESLSCDLL
+cp ESLSCDLL.h ..\..\EBST_CAM\ESLSCDLL
+cp ESLSCDLL.c ..\..\EBST_CAM\ESLSCDLL
+cp globals.h ..\..\EBST_CAM\ESLSCDLL
+cp globals.c ..\..\EBST_CAM\ESLSCDLL
+cp resource.h ..\..\EBST_CAM\ESLSCDLL
+cp UIAbstractionLayer.h ..\..\EBST_CAM\ESLSCDLL
+cp UIAbstractionLayer.c ..\..\EBST_CAM\ESLSCDLL
+cd ..\shared_src
+cp default_settings.h ..\..\EBST_CAM\shared_src
+cp enum_hardware.h ..\..\EBST_CAM\shared_src
+cp enum_settings.h ..\..\EBST_CAM\shared_src
+cp es_status_codes.c ..\..\EBST_CAM\shared_src
+cp es_status_codes.h ..\..\EBST_CAM\shared_src
+cp struct.h ..\..\EBST_CAM\shared_src
+cd ..\..\EBST_CAM
 ## Copy ESLSCDLL
 cp -r ..\ESLSCDLL\Release\ESLSCDLL-$major.$pcie.$minor\* .\ESLSCDLL\x64\
 
