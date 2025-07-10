@@ -16,6 +16,8 @@ The hardware version number is the current version at release time.
 ### Other Changes
 #### Added
 #### Changed
+* Change default theme to windows11
+* Change settings paths to match settings struct 
 #### Removed
 #### Fixed
 #### Deprecated
