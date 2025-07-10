@@ -252,11 +252,11 @@ struct camera_settings
 	uint32_t s1s2_read_delay_in_10ns;
 	/**
 	 * region_size is the size of each region for the region of interest mode for FFT sensors. The sum of all active regions, which is defined by @ref number_of_regions, must equal @ref fft_lines. Inactive regions must be set to 0. region_size is a 32 bit unsigned integer array with the size of 8 but only 8 bit of each element are used. Further information about the range of interest mode can be found in the manual in chapter 4.5.1.3. This is an example for a region_size setting with fft_lines = 70 and number_of_regions = 3. Using this example the sensor will be read out 3 times. The first and the third read out contain the summed up intensity of the upper and the lower 4 lines. The second read out contains the intensity of the summed up 64 lines in between.
-	 *		* regions_size[0] = 4
-	 *		* regions_size[1] = 64
-	 *		* regions_size[2] = 4
-	 *		* regions_size[3] = 0
-	 *		* regions_size[4] = 0
+	 *		* region_size[0] = 4
+	 *		* region_size[1] = 64
+	 *		* region_size[2] = 4
+	 *		* region_size[3] = 0
+	 *		* region_size[4] = 0
 	 */
 	uint32_t region_size[MAX_NUMBER_OF_REGIONS];
 	/**
