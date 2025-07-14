@@ -20,10 +20,12 @@ private slots:
 	void on_lineEditDec_textChanged();
 	void on_lineEditHex_textChanged();
 	void on_lineEditBin_textChanged();
+	void on_lineEditBin_editingFinished();
 private:
 	Ui::dialogservoClass* ui;
 	QString convertDecimalToBinary(QString decimalString);
 	QString convertHexToBinary(QString hexString);
 	QString convertBinaryToDecimal(QString binaryString);
 	QString convertBinaryToHex(QString binaryString);
+	QString addLeadingZerosToBin(QString bin);
 };
