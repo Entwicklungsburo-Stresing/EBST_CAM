@@ -487,7 +487,8 @@ es_status_codes _InitDriver()
 	/* Open a handle to the driver and initialize the WDC library */
 	ES_LOG("open WDC\n");
 	//No WDC Err messages can be sent to debug monitor before WDC_DriverOpen call
-***REMOVED***	ES_LOG("\n*** Init driver ***\n");
+	dwStatus = WDC_DriverOpen( WDC_DRV_OPEN_DEFAULT, LSCPCIEJ_DEFAULT_LICENSE_STRING );// WDC_DRV_OPEN_REG_LIC, LSCPCIEJ_DEFAULT_LICENSE_STRING);
+	ES_LOG("\n*** Init driver ***\n");
 	if (WD_STATUS_SUCCESS != dwStatus)
 	{
 		ErrLog( "Failed to initialize the WDC library. Error 0x%lx - %s\n",
