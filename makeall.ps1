@@ -3,6 +3,11 @@
 # Also you need to add the path of devenv.com and MsBuild.exe to your environment variable PATH:
 # [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE;C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin", "Machine")
 
+param(
+    [ValidateSet("Build", "Rebuild")]
+    [string]$buildAction = "Rebuild"
+)
+
 $string = Get-Content .\version.h | Select-String -Pattern "#define VERSION_MAJOR_ESCAM"
 $major = $string -replace "[^0-9]", ''
 $string = Get-Content .\version.h | Select-String -Pattern "#define VERSION_PCIE_BOARD_VERSION"
@@ -24,7 +29,7 @@ mkdir .\ESLSCDLL\x64\
 
 # Build ESLSCDLL
 cd ..\ESLSCDLL
-.\makeall.ps1
+.\makeall.ps1 $buildAction
 # Copy ESLSCDLL source files to EBST_CAM
 cd ESLSCDLL
 cp Board.h ..\..\EBST_CAM\ESLSCDLL
@@ -55,7 +60,7 @@ cd ..\..\EBST_CAM
 cp -r ..\ESLSCDLL\Release\ESLSCDLL-$major.$pcie.$minor\* .\ESLSCDLL\x64\
 
 # Build Escam, and setup in release config
-devenv.com EBST_CAM.sln /Rebuild Release
+devenv.com EBST_CAM.sln /$buildAction Release
 
 cp -r ..\ESLSCDLL\Release\* .\Release\
 # zip setup
