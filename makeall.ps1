@@ -29,7 +29,7 @@ mkdir .\ESLSCDLL\x64\
 
 # Build ESLSCDLL
 cd ..\ESLSCDLL
-.\makeall.ps1 $buildAction
+.\makeall.ps1 -buildAction $buildAction
 # Copy ESLSCDLL source files to EBST_CAM
 cd ESLSCDLL
 cp Board.h ..\..\EBST_CAM\ESLSCDLL
