@@ -57,11 +57,13 @@ extern volatile bool* allInterruptsDone;
 extern uint16_t* pcieCardMajorVersion;
 extern uint16_t* pcieCardMinorVersion;
 typedef void (*hookFunction)();
+typedef void (*hookFunctionUint32)(uint32_t);
+typedef void (*hookFunctionUint64)(uint64_t);
 extern hookFunction measureStartHook;
 extern hookFunction measureDoneHook;
-extern hookFunction blockStartHook;
-extern hookFunction blockDoneHook;
-extern hookFunction allBlocksDoneHook;
+extern hookFunctionUint32 blockStartHook;
+extern hookFunctionUint32 blockDoneHook;
+extern hookFunctionUint64 allBlocksDoneHook;
 
 #ifdef __cplusplus
 }

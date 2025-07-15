@@ -253,9 +253,10 @@ es_status_codes ClearAllUserRegs(uint32_t drvno)
 /**
  * @brief Use this function to abort measurement.
  *
+ * @param block_index Block index of the current block that is aborted.
  * @return @ref es_status_codes
  */
-es_status_codes AbortMeasurement()
+es_status_codes AbortMeasurement(uint32_t block_index)
 {
 	ES_LOG("Abort Measurement\n");
 	abortMeasurementFlag = true;
@@ -264,7 +265,7 @@ es_status_codes AbortMeasurement()
 	{
 		status = DisarmScanTrigger(drvno);
 		if (status != es_no_error) return status;
-		status = resetBlockEn(drvno);
+		status = resetBlockEn(drvno, block_index);
 		if (status != es_no_error) return status;
 		status = resetMeasureOn(drvno);
 		if (status != es_no_error) return status;
@@ -292,14 +293,15 @@ es_status_codes SetAbortMeasurementFlag()
  * @brief Sets BlockOn bit in PCIEFLAGS and notifies UI about it.
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param block_index Index of the block that will start.
  * @return @ref es_status_codes
  */
-es_status_codes setBlockEn(uint32_t drvno)
+es_status_codes setBlockEn(uint32_t drvno, uint32_t block_index)
 {
 	ES_LOG("Set BLOCK_EN\n");
 	notifyBlockStart();
 	if(blockStartHook)
-		blockStartHook();
+		blockStartHook(block_index);
 	return setBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCK_EN, S0Addr_PCIEFLAGS);
 }
 
@@ -322,14 +324,15 @@ es_status_codes setMeasureOn(uint32_t drvno)
  * @brief Resets BlockOn bit in PCIEFLAGS and notifies UI about it.
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param block_index Index of the block that has ended.
  * @return @ref es_status_codes
  */
-es_status_codes resetBlockEn(uint32_t drvno)
+es_status_codes resetBlockEn(uint32_t drvno, uint32_t block_index)
 {
 	ES_LOG("Reset BLOCK_EN\n");
 	notifyBlockDone();
 	if (blockDoneHook)
-		blockDoneHook();
+		blockDoneHook(block_index);
 	return resetBitS0_32(drvno, PCIEFLAGS_bitindex_BLOCK_EN, S0Addr_PCIEFLAGS);
 }
 
@@ -1897,7 +1900,7 @@ es_status_codes StartMeasurement()
 						status = waitForBlockTrigger(drvno);
 						if (status == es_abortion)
 						{
-							status = AbortMeasurement();
+							status = AbortMeasurement(blk_cnt);
 							return ReturnStartMeasurement(status);
 						}
 						else if (status != es_no_error) return ReturnStartMeasurement(status);
@@ -1916,7 +1919,7 @@ es_status_codes StartMeasurement()
 				{
 					status = ArmScanTrigger(drvno);
 					if (status != es_no_error) return ReturnStartMeasurement(status);
-					status = setBlockEn(drvno);
+					status = setBlockEn(drvno, blk_cnt);
 					if (status != es_no_error) return ReturnStartMeasurement(status);
 					status = WaitForBlockOn(drvno);
 					if (status != es_no_error) return ReturnStartMeasurement(status);
@@ -1941,7 +1944,7 @@ es_status_codes StartMeasurement()
 					{
 						if ((FindCam(drvno) != es_no_error) || abortMeasurementFlag)
 						{
-							status = AbortMeasurement();
+							status = AbortMeasurement(blk_cnt);
 							return ReturnStartMeasurement(status);
 						}
 						if (!abortMeasurementFlag && checkEscapeKeyState())
@@ -1959,7 +1962,7 @@ es_status_codes StartMeasurement()
 				// Check if the drvno'th bit is set
 				if ((settings_struct.board_sel >> drvno) & 1)
 				{
-					status = resetBlockEn(drvno);
+					status = resetBlockEn(drvno, blk_cnt);
 					if (status != es_no_error) return ReturnStartMeasurement(status);
 				}
 			}
@@ -2001,7 +2004,7 @@ es_status_codes StartMeasurement()
 		}
 		notifyAllBlocksDone();
 		if(allBlocksDoneHook)
-			allBlocksDoneHook();
+			allBlocksDoneHook(measurement_cnt);
 		// Maybe this is not needed anymore because of WaitForAllInterruptsDone
 		// This sleep is here to prevent the measurement being interrupted too early. When operating with 2 cameras the last scan could be cut off without the sleep. This is only a workaround. The problem is that the software is waiting for RSTIMER being reset by the hardware before setting measure on and block on to low, but the last DMA is done after RSTIMER being reset. BLOCKON and MEASUREON should be reset after all DMAs are done.
 		// RSTIMER --------________

@@ -189,9 +189,9 @@ DllAccess es_status_codes DLLCheckFifoEmpty(uint32_t drvno, uint8_t* empty);
 DllAccess es_status_codes DLLCheckFifoFull(uint32_t drvno, uint8_t* full);
 DllAccess void DLLSetMeasureStartHook(void(*hook)());
 DllAccess void DLLSetMeasureDoneHook(void(*hook)());
-DllAccess void DLLSetBlockStartHook(void(*hook)());
-DllAccess void DLLSetBlockDoneHook(void(*hook)());
-DllAccess void DLLSetAllBlocksDoneHook(void(*hook)());
+DllAccess void DLLSetBlockStartHook(void(*hook)(uint32_t));
+DllAccess void DLLSetBlockDoneHook(void(*hook)(uint32_t));
+DllAccess void DLLSetAllBlocksDoneHook(void(*hook)(uint64_t));
 DllAccess es_status_codes DLLSetGeneralOutput(uint32_t drvno, uint8_t output, uint8_t state);
 DllAccess es_status_codes DLLSetShutterStates(uint32_t drvno, uint16_t shutter_states);
 //************ read and write functions

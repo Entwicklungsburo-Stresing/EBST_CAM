@@ -16,11 +16,19 @@ The hardware version number is the current version at release time.
 ### Other Changes
 #### Added
 #### Changed
-* Change default theme to windows11
-* Change settings paths to match settings struct 
 #### Removed
 #### Fixed
 #### Deprecated
+
+## 4.18.2 - 2025-07-15
+### API Changes
+#### Added
+* Add parameter blockIndex to blockStartHook and blockEndHook
+* Add parameter measurement_cnt to allBlocksDoneHook
+### Other Changes
+#### Changed
+* Change default theme to windows11
+* Change settings paths to match settings struct 
 
 ## 4.18.1 - 2025-07-03
 ### API Changes

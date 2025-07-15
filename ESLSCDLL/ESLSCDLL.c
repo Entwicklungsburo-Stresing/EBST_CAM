@@ -2255,9 +2255,9 @@ DllAccess void DLLSetMeasureDoneHook(void(*hook)())
 /**
  * @brief Set a function which will be executed every time when a block starts.
  *
- * @param[in] hook Pointer to the function which will be executed.
+ * @param[in] hook Pointer to the function which will be executed. The function should accept a single parameter of type uint32_t, which is the block index (0...nob-1).
  */
-DllAccess void DLLSetBlockStartHook(void(*hook)())
+DllAccess void DLLSetBlockStartHook(void(*hook)(uint32_t))
 {
 	blockStartHook = hook;
 }
@@ -2266,9 +2266,9 @@ DllAccess void DLLSetBlockStartHook(void(*hook)())
  * @brief Set a function which will be executed every time when a block ends.
  *
  * The end of a block doesn't indicate the availability of the data. Which data is available to copy is indicated by @ref DLLGetCurrentScanNumber. The copy method is controlled by @ref camera_settings.use_software_polling. When the block size is not aligned to @ref camera_settings.dma_buffer_size_in_scans and @ref camera_settings.use_software_polling is turned off, there will be no interrupt at the end of a block and so the data won't be available in this moment. Turn @ref camera_settings.use_software_polling on to avoid this.
- * @param[in] hook Pointer to the function which will be executed.
+ * @param[in] hook Pointer to the function which will be executed. The function should accept a single parameter of type uint32_t, which is the block index (0...nob-1).
  */
-DllAccess void DLLSetBlockDoneHook(void(*hook)())
+DllAccess void DLLSetBlockDoneHook(void(*hook)(uint32_t))
 {
 	blockDoneHook = hook;
 }
@@ -2277,9 +2277,9 @@ DllAccess void DLLSetBlockDoneHook(void(*hook)())
  * @brief Set a function which will be executed every time when all blocks are done.
  *
  * When @ref measurement_settings.continuous_measurement is disabled, it is called one time at the end of the measurement. When @ref measurement_settings.continuous_measurement is enabled, it is called one time at the end of each measurement cycle. The hook is called before the pause set by @ref measurement_settings.cont_pause_in_microseconds.
- * @param[in] hook Pointer to the function which will be executed.
+ * @param[in] hook Pointer to the function which will be executed. The function should accept a single parameter of type uint64_t, which is the number of measurement cycles done when @ref measurement_settings.continuous_measurement is enabled.
  */
-DllAccess void DLLSetAllBlocksDoneHook(void(*hook)())
+DllAccess void DLLSetAllBlocksDoneHook(void(*hook)(uint64_t))
 {
 	allBlocksDoneHook = hook;
 }

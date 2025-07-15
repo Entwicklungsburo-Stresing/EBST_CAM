@@ -42,9 +42,9 @@ volatile bool tmp_allInterruptsDone[MAXPCIECARDS] = { true, true, true, true, tr
 volatile bool* allInterruptsDone = tmp_allInterruptsDone;
 hookFunction measureStartHook = NULL;
 hookFunction measureDoneHook = NULL;
-hookFunction blockStartHook = NULL;
-hookFunction blockDoneHook = NULL;
-hookFunction allBlocksDoneHook = NULL;
+hookFunctionUint32 blockStartHook = NULL;
+hookFunctionUint32 blockDoneHook = NULL;
+hookFunctionUint64 allBlocksDoneHook = NULL;
 
 const struct camera_settings camera_settings_default =
 {

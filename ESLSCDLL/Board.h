@@ -35,7 +35,7 @@ es_status_codes InitMeasurement();
 // 5) Start the measurement. Call it every time you want to measure.
 es_status_codes StartMeasurement();
 // 5b) Use this call, if you want to abort the measurement.
-es_status_codes AbortMeasurement();
+es_status_codes AbortMeasurement(uint32_t block_index);
 // 6) Get the data.
 es_status_codes CopyOneSample(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera, uint16_t* pdest);
 es_status_codes CopyOneBlock(uint32_t drvno, uint16_t block, uint16_t* pdest);
@@ -61,8 +61,8 @@ es_status_codes InitBoard();
 es_status_codes ImportMeasurementDataFromFile(const char* filename);
 es_status_codes ImportMeasurementDataFromFileBIN(const char* filename);
 #endif
-es_status_codes setBlockEn( uint32_t drvno );
-es_status_codes resetBlockEn( uint32_t drvno );
+es_status_codes setBlockEn(uint32_t drvno, uint32_t block_index);
+es_status_codes resetBlockEn(uint32_t drvno, uint32_t block_index);
 es_status_codes setMeasureOn( uint32_t drvno );
 es_status_codes resetMeasureOn( uint32_t drvno );
 es_status_codes ResetDma( uint32_t drvno );
