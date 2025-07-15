@@ -12,6 +12,6 @@
 
 extern void emitMeasureStartSignal();
 extern void emitMeasureDoneSignal();
-extern void emitBlockStartSignal();
-extern void emitBlockDoneSignal();
-extern void emitAllBlocksDoneSignal();
+extern void emitBlockStartSignal(uint32_t blockIndex);
+extern void emitBlockDoneSignal(uint32_t blockIndex);
+extern void emitAllBlocksDoneSignal(uint64_t measurementCnt);

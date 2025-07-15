@@ -16,48 +16,51 @@ void measureStartCallback()
 {
 	int64_t sample, block;
 	DLLGetCurrentScanNumber(0, &sample, &block);
-	printf("Measure start callback, sample: %"PRId64", block %"PRId64"\n", sample, block);
+	printf("Measure start callback, DLLGetCurrentScanNumber(): sample: %"PRId64", block %"PRId64"\n", sample, block);
 }
 
 void measureDoneCallback()
 {
 	int64_t sample, block;
 	DLLGetCurrentScanNumber(0, &sample, &block);
-	printf("Measure done callback, sample: %"PRId64", block %"PRId64"\n", sample, block);
+	printf("Measure done callback, DLLGetCurrentScanNumber():  sample: %"PRId64", block %"PRId64"\n", sample, block);
 }
 
-void blockStartCallback()
+void blockStartCallback(uint32_t blockIndex)
 {
+	printf("Block %"PRIu32" started\n", blockIndex);
 	int64_t sample, block;
 	DLLGetCurrentScanNumber(0, &sample, &block);
-	printf("Block start callback, sample: %"PRId64", block %"PRId64"\n", sample, block);
+	printf("Block start callback, DLLGetCurrentScanNumber(): sample: %"PRId64", block %"PRId64"\n", sample, block);
 }
 
-void blockDoneCallback()
+void blockDoneCallback(uint32_t blockIndex)
 {
+	printf("Block %"PRIu32" ended\n", blockIndex);
 	int64_t sample, block;
 	DLLGetCurrentScanNumber(0, &sample, &block);
-	printf("Block done callback, sample: %"PRId64", block %"PRId64"\n", sample, block);
+	printf("Block done callback, DLLGetCurrentScanNumber(): sample: %"PRId64", block %"PRId64"\n", sample, block);
 }
 
-void allBlocksDoneCallback()
+void allBlocksDoneCallback(uint64_t measurementCnt)
 {
+	printf("Measurement cycle %"PRIu64" done\n", measurementCnt);
 	int64_t sample, block;
 	DLLGetCurrentScanNumber(0, &sample, &block);
-	printf("All blocks done callback, sample: %"PRId64", block %"PRId64"\n", sample, block);
+	printf("All blocks done callback, DLLGetCurrentScanNumber(): sample: %"PRId64", block %"PRId64"\n", sample, block);
 }
 
 int main()
 {
-	printf("Initialising driver...\n");
+	printf("Initializing driver...\n");
 	uint8_t _number_of_boards = 0;
 	es_status_codes status = DLLInitDriver(&_number_of_boards);
 	if (status != es_no_error)
 	{
-		printf("Initialising driver failed, error: %d, %s\n", status, DLLConvertErrorCodeToMsg(status));
+		printf("Initializing driver failed, error: %d, %s\n", status, DLLConvertErrorCodeToMsg(status));
 		return status;
 	}
-	printf("Initialising driver done, found %"PRIu8" boards\n", _number_of_boards);
+	printf("Initializing driver done, found %"PRIu8" boards\n", _number_of_boards);
 
 	DLLSetAllBlocksDoneHook(allBlocksDoneCallback);
 	DLLSetBlockDoneHook(blockDoneCallback);
@@ -93,14 +96,14 @@ int main()
 	settings.camera_settings[0].dac_output[0][7] = 55000;
 	settings.camera_settings[0].dma_buffer_size_in_scans = 1000;
 	settings.camera_settings[0].use_software_polling = 1;
-	printf("Initialising measurement...\n");
+	printf("Initializing measurement...\n");
 	status = DLLInitMeasurement(settings);
 	if (status != es_no_error)
 	{
-		printf("Initialising measurement failed, error: %d, %s\n", status, DLLConvertErrorCodeToMsg(status));
+		printf("Initializing measurement failed, error: %d, %s\n", status, DLLConvertErrorCodeToMsg(status));
 		return status;
 	}
-	printf("Initialising measurement done\n");
+	printf("Initializing measurement done\n");
 	printf("Starting measurement...\n");
 	status = DLLStartMeasurement_blocking();
 	if (status != es_no_error)
@@ -111,6 +114,11 @@ int main()
 	printf("Measurement done\n");
 	printf("Getting the first sample...\n");
 	uint16_t* pdest = malloc(settings.camera_settings[0].pixel * sizeof(uint16_t));
+	if(!pdest)
+	{
+		printf("Memory allocation failed for pdest\n");
+		return es_allocating_memory_failed;
+	}
 	status = DLLCopyOneSample(0, 0, 0, 0, pdest);
 	if (status != es_no_error)
 	{

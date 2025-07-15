@@ -38,8 +38,9 @@ void emitMeasureDoneSignal()
 	return;
 }
 
-void emitBlockStartSignal()
+void emitBlockStartSignal(uint32_t blockIndex)
 {
+	(void)blockIndex; // blockIndex is not used in this function
 	auto timepoint_blockStart_new = std::chrono::steady_clock::now();
 	std::chrono::milliseconds diff_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(timepoint_blockStart_new - timepoint_blockStart);
 	if (diff_in_ms > min_diff_in_ms)
@@ -50,8 +51,9 @@ void emitBlockStartSignal()
 	return;
 }
 
-void emitBlockDoneSignal()
+void emitBlockDoneSignal(uint32_t blockIndex)
 {
+	(void)blockIndex; // blockIndex is not used in this function
 	auto timepoint_blockDone_new = std::chrono::steady_clock::now();
 	std::chrono::milliseconds diff_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(timepoint_blockDone_new - timepoint_blockDone);
 	if (diff_in_ms > min_diff_in_ms)
@@ -62,8 +64,9 @@ void emitBlockDoneSignal()
 	return;
 }
 
-void emitAllBlocksDoneSignal()
+void emitAllBlocksDoneSignal(uint64_t measurementCnt)
 {
+	(void)measurementCnt; // measurementCnt is not used in this function
 	auto timepoint_allBlocksDone_new = std::chrono::steady_clock::now();
 	std::chrono::milliseconds diff_in_ms = std::chrono::duration_cast<std::chrono::milliseconds>(timepoint_allBlocksDone_new - timepoint_allBlocksDone);
 	if (diff_in_ms > min_diff_in_ms)
