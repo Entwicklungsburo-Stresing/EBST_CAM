@@ -28,9 +28,15 @@ DialogServo::~DialogServo()
 	delete ui;
 }
 
-void DialogServo::on_spinBoxSeqLength_valueChanged(int val) {
-	if (ui->lineEditBin->text().length() > val) {
+void DialogServo::on_spinBoxSeqLength_valueChanged(int val)
+{
+	if (ui->lineEditBin->text().length() > val)
+	{
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+		ui->lineEditBin->setText(ui->lineEditBin->text().right(val));
+#else
 		ui->lineEditBin->setText(ui->lineEditBin->text().last(val));
+#endif
 	}
 }
 
