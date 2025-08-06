@@ -891,7 +891,7 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select which channels are used during readout&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="whatsThis">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Channel select&lt;/span&gt; controls which channel of a camera control box is used for the camera readout. This feature is implemented in the camera version P230_6 and newer.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;channel_select&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Channel select&lt;/span&gt; controls which channel of a camera control box is used for the camera readout. This feature is implemented in the camera version P230_6 and newer.&lt;/p&gt;&lt;p&gt; Examples:&lt;/p&gt;&lt;p&gt;1 camera control with 2 channels and &lt;span style=&quot; font-style:italic;&quot;&gt;Channel A &amp;amp; B&lt;/span&gt; is used: &lt;span style=&quot; font-style:italic;&quot;&gt;camcnt&lt;/span&gt; = 2.&lt;/p&gt;&lt;p&gt;1 camera control with 2 channels and &lt;span style=&quot; font-style:italic;&quot;&gt;Channel A&lt;/span&gt; or &lt;span style=&quot; font-style:italic;&quot;&gt;Channel B&lt;/span&gt; is used: &lt;span style=&quot; font-style:italic;&quot;&gt;camcnt&lt;/span&gt; = 1.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;channel_select&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>channel select</string>
@@ -1272,6 +1272,9 @@
           <widget class="QComboBox" name="comboBoxChannelSelect">
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select which channels are used during readout&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Channel select&lt;/span&gt; controls which channel of a camera control box is used for the camera readout. This feature is implemented in the camera version P230_6 and newer.&lt;/p&gt;&lt;p&gt; Examples:&lt;/p&gt;&lt;p&gt;1 camera control with 2 channels and &lt;span style=&quot; font-style:italic;&quot;&gt;Channel A &amp;amp; B&lt;/span&gt; is used: &lt;span style=&quot; font-style:italic;&quot;&gt;camcnt&lt;/span&gt; = 2.&lt;/p&gt;&lt;p&gt;1 camera control with 2 channels and &lt;span style=&quot; font-style:italic;&quot;&gt;Channel A&lt;/span&gt; or &lt;span style=&quot; font-style:italic;&quot;&gt;Channel B&lt;/span&gt; is used: &lt;span style=&quot; font-style:italic;&quot;&gt;camcnt&lt;/span&gt; = 1.&lt;/p&gt;&lt;p&gt;This setting corresponds to the settings struct member &lt;span style=&quot; font-style:italic;&quot;&gt;channel_select&lt;/span&gt; of the ESLSCDLL API.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <item>
             <property name="text">
