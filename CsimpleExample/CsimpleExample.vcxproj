@@ -121,7 +121,8 @@
     <PostBuildEvent>
       <Message>Copy DLL to output location</Message>
       <Command>xcopy /y /d "$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\bin\hdf5.dll" "$(TargetDir)"
-xcopy /y /d "$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDLL.dll" "$(TargetDir)"</Command>
+xcopy /y /d "$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDLL.dll" "$(TargetDir)"
+xcopy /y /d "$(ProjectDir)..\ESLSCDLL\lscpciej\$(Configuration)\lscpciej.dll" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -143,7 +144,8 @@ xcopy /y /d "$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDL
     <PostBuildEvent>
       <Message>Copy DLL to output location</Message>
       <Command>xcopy /y /d "$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\bin\hdf5.dll" "$(TargetDir)"
-xcopy /y /d "$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDLL.dll" "$(TargetDir)"</Command>
+xcopy /y /d "$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDLL.dll" "$(TargetDir)"
+xcopy /y /d "$(ProjectDir)..\ESLSCDLL\lscpciej\$(Configuration)\lscpciej.dll" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
