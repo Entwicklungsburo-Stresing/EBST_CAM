@@ -40,8 +40,34 @@ cp -r ..\lscpciej\Release\lscpciej-*\* .\ESLSCDLL\lscpciej\
 
 # Build Escam, and setup in release config
 devenv.com EBST_CAM.sln /$buildAction Release
-
-cp -r ..\ESLSCDLL\Release\* .\Release\
+# Build DLL all other configs
+MSBuild.exe .\ESLSCDLL\ESLSCDLL.vcxproj /p:Configuration=Debug /p:Platform=x64 /t:$buildAction
+MSBuild.exe .\ESLSCDLL\ESLSCDLL.vcxproj /p:Configuration=Debug_minimal /p:Platform=x64 /t:$buildAction
+MSBuild.exe .\ESLSCDLL\ESLSCDLL.vcxproj /p:Configuration=Debug-Labview /p:Platform=x64 /t:$buildAction
+MSBuild.exe .\ESLSCDLL\ESLSCDLL.vcxproj /p:Configuration=Release_minimal /p:Platform=x64 /t:$buildAction
+MSBuild.exe .\ESLSCDLL\ESLSCDLL.vcxproj /p:Configuration=Release-Labview /p:Platform=x64 /t:$buildAction
+mkdir Release\ESLSCDLL-$major.$pcie.$minor\
+mkdir Release\ESLSCDLL-$major.$pcie.$minor\Debug
+mkdir Release\ESLSCDLL-$major.$pcie.$minor\Debug_minimal
+mkdir Release\ESLSCDLL-$major.$pcie.$minor\Debug-Labview
+mkdir Release\ESLSCDLL-$major.$pcie.$minor\Release
+mkdir Release\ESLSCDLL-$major.$pcie.$minor\Release_minimal
+mkdir Release\ESLSCDLL-$major.$pcie.$minor\Release-Labview
+cp .\ESLSCDLL\x64\Debug\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$pcie.$minor\Debug\
+cp .\ESLSCDLL\x64\Debug\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$pcie.$minor\Debug\
+cp .\ESLSCDLL\x64\Debug\ESLSCDLL.pdb .\Release\ESLSCDLL-$major.$pcie.$minor\Debug\
+cp .\ESLSCDLL\x64\Debug_minimal\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$pcie.$minor\Debug_minimal\
+cp .\ESLSCDLL\x64\Debug_minimal\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$pcie.$minor\Debug_minimal\
+cp .\ESLSCDLL\x64\Debug_minimal\ESLSCDLL.pdb .\Release\ESLSCDLL-$major.$pcie.$minor\Debug_minimal\
+cp .\ESLSCDLL\x64\Debug-Labview\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$pcie.$minor\Debug-Labview\
+cp .\ESLSCDLL\x64\Debug-Labview\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$pcie.$minor\Debug-Labview\
+cp .\ESLSCDLL\x64\Debug-Labview\ESLSCDLL.pdb .\Release\ESLSCDLL-$major.$pcie.$minor\Debug-Labview\
+cp .\ESLSCDLL\x64\Release\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$pcie.$minor\Release\
+cp .\ESLSCDLL\x64\Release\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$pcie.$minor\Release\
+cp .\ESLSCDLL\x64\Release_minimal\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$pcie.$minor\Release_minimal\
+cp .\ESLSCDLL\x64\Release_minimal\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$pcie.$minor\Release_minimal\
+cp .\ESLSCDLL\x64\Release-Labview\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$pcie.$minor\Release-Labview\
+cp .\ESLSCDLL\x64\Release-Labview\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$pcie.$minor\Release-Labview\
 # zip setup
 mkdir Release\Escam-setup-$major.$pcie.$minor\
 cp -r .\escam_setup\Release\* .\Release\Escam-setup-$major.$pcie.$minor\

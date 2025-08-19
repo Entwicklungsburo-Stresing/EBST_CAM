@@ -167,7 +167,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(ProjectDir)lscpciej\$(Configuration)\lscpciej.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)lscpciej\Debug\lscpciej.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <ResourceCompile>
@@ -198,7 +198,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(ProjectDir)lscpciej\$(Configuration)\lscpciej.lib;$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;d2d1.lib;dwrite.lib;windowscodecs.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)lscpciej\Debug\lscpciej.lib;$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;d2d1.lib;dwrite.lib;windowscodecs.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <ResourceCompile>
@@ -258,7 +258,7 @@
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>$(ProjectDir)lscpciej\$(Configuration)\lscpciej.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)lscpciej\Release\lscpciej.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
     </Link>
@@ -287,7 +287,7 @@
     <Link>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>$(ProjectDir)lscpciej\$(Configuration)\lscpciej.lib;$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;d2d1.lib;dwrite.lib;windowscodecs.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)lscpciej\Release\lscpciej.lib;$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;d2d1.lib;dwrite.lib;windowscodecs.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
@@ -328,7 +328,6 @@
     <ClInclude Include="Direct2dViewer_c.h" />
     <ClInclude Include="ESLSCDLL.h" />
     <ClInclude Include="globals.h" />
-    <ClInclude Include="lscpciej_lib.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="UIAbstractionLayer.h" />
   </ItemGroup>

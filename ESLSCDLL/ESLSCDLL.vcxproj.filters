@@ -76,9 +76,6 @@
     <ClInclude Include="globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lscpciej_lib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="UIAbstractionLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
