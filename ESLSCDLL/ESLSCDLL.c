@@ -1160,6 +1160,14 @@ DllAccess es_status_codes DLLReadBitS0_8_multipleBoards(uint32_t address, uint8_
 }
 
 /**
+ * @copydoc Cam_SendData
+ */
+DllAccess es_status_codes DLLCam_SendData(uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16_t data)
+{
+	return Cam_SendData(drvno, maddr, adaddr, data);
+}
+
+/**
  * @brief Set temperature level for cooled cameras for all boards selected by settings parameter @ref measurement_settings.board_sel.
  *
  * @param[in] level level 0..7 / 0=off, 7=min -> see cooling manual

@@ -207,6 +207,7 @@ DllAccess es_status_codes DLLReadBitS0_32(uint32_t drvno, uint32_t address, uint
 DllAccess es_status_codes DLLReadBitS0_32_multipleBoards(uint32_t address, uint8_t bitnumber, uint8_t* isBitHigh0, uint8_t* isBitHigh1, uint8_t* isBitHigh2, uint8_t* isBitHigh3, uint8_t* isBitHigh4);
 DllAccess es_status_codes DLLReadBitS0_8(uint32_t drvno, uint32_t address, uint8_t bitnumber, uint8_t* isBitHigh);
 DllAccess es_status_codes DLLReadBitS0_8_multipleBoards(uint32_t address, uint8_t bitnumber, uint8_t* isBitHigh0, uint8_t* isBitHigh1, uint8_t* isBitHigh2, uint8_t* isBitHigh3, uint8_t* isBitHigh4);
+DllAccess es_status_codes DLLCam_SendData(uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16_t data);
 #ifndef MINIMAL_BUILD
 DllAccess es_status_codes DLLCalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf, double* trms);
 DllAccess es_status_codes DLLCalcTrms_multipleBoards(uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf0, double* trms0, double* mwf1, double* trms1, double* mwf2, double* trms2, double* mwf3, double* trms3, double* mwf4, double* trms4);

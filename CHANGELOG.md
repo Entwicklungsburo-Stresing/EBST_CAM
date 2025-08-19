@@ -9,6 +9,7 @@ The hardware version number is the current version at release time.
 ## Unreleased
 ### API Changes
 #### Added
+* Add function DLLCam_SendData
 #### Changed
 #### Removed
 #### Fixed
