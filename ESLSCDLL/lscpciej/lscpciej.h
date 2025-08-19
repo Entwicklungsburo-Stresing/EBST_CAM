@@ -19,6 +19,8 @@
 extern "C" {
 #endif
 
+typedef void(__stdcall* LSCPCIEJ_INT_HANDLER_STUB)(void);
+
 DllAccess es_status_codes lscpciej_CleanupDma(uint32_t drvno);
 DllAccess es_status_codes lscpciej_readRegister_32(uint32_t drvno, uint32_t* data, uint32_t address);
 DllAccess es_status_codes lscpciej_readRegister_16(uint32_t drvno, uint16_t* data, uint32_t address);
@@ -28,8 +30,8 @@ DllAccess es_status_codes lscpciej_writeRegister_16(uint32_t drvno, uint16_t dat
 DllAccess es_status_codes lscpciej_writeRegister_8(uint32_t drvno, uint8_t data, uint32_t address);
 DllAccess es_status_codes lscpciej_checkDriverHandle(uint32_t drvno);
 DllAccess uint64_t lscpciej_getPhysicalDmaAddress(uint32_t drvno);
-DllAccess es_status_codes lscpciej_SetupDma(uint32_t drvno, uint16_t* dmaBufferPtr, DWORD dmaBufferSizeInBytes);
-DllAccess es_status_codes lscpciej_enableInterrupt(uint32_t drvno, void* interrupt_handler);
+DllAccess es_status_codes lscpciej_SetupDma(uint32_t drvno, uint16_t** dmaBufferPtr, DWORD dmaBufferSizeInBytes);
+DllAccess es_status_codes lscpciej_enableInterrupt(uint32_t drvno, LSCPCIEJ_INT_HANDLER_STUB interrupt_handler);
 DllAccess es_status_codes lscpciej_disableInterrupt(uint32_t drvno);
 DllAccess es_status_codes lscpciej_InitBoard(uint32_t drvno);
 DllAccess es_status_codes lscpciej_InitDriver(uint8_t* number_of_boards);

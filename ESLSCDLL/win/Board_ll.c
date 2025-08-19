@@ -89,12 +89,12 @@ void isr( uint32_t drvno )
 	return;
 }
 
-void __stdcall interrupt_handler0() { isr( 0 ); }
-void __stdcall interrupt_handler1() { isr( 1 ); }
-void __stdcall interrupt_handler2() { isr( 2 ); }
-void __stdcall interrupt_handler3() { isr( 3 ); }
-void __stdcall interrupt_handler4() { isr( 4 ); }
-void (*interrupt_handler_array[MAXPCIECARDS])() = { &interrupt_handler0, &interrupt_handler1, &interrupt_handler2, &interrupt_handler3, &interrupt_handler4 };
+void __stdcall interrupt_handler0(void) { isr( 0 ); }
+void __stdcall interrupt_handler1(void) { isr( 1 ); }
+void __stdcall interrupt_handler2(void) { isr( 2 ); }
+void __stdcall interrupt_handler3(void) { isr( 3 ); }
+void __stdcall interrupt_handler4(void) { isr( 4 ); }
+LSCPCIEJ_INT_HANDLER_STUB interrupt_handler_array[MAXPCIECARDS] = { &interrupt_handler0, &interrupt_handler1, &interrupt_handler2, &interrupt_handler3, &interrupt_handler4 };
 
 /**
  * @brief Reads 4 bytes on DMA area.
@@ -241,7 +241,7 @@ es_status_codes SetupDma( uint32_t drvno )
 		if (status != es_no_error) return status;
 	}
 	dmaBufferSizeInBytes[drvno] = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans * settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t);
-	return lscpciej_SetupDma(drvno, dmaBuffer[drvno], dmaBufferSizeInBytes[drvno]);
+	return lscpciej_SetupDma(drvno, &dmaBuffer[drvno], dmaBufferSizeInBytes[drvno]);
 }
 
 es_status_codes enableInterrupt( uint32_t drvno )
