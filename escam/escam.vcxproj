@@ -148,7 +148,8 @@
     </QtUic>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\bin\hdf5.dll" "$(ProjDir)build"
-xcopy /y /d "$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDLL.dll" "$(ProjDir)build"</Command>
+xcopy /y /d "$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDLL.dll" "$(ProjDir)build"
+xcopy /y /d "$(ProjectDir)..\ESLSCDLL\lscpciej\$(Configuration)\lscpciej.dll" "$(ProjDir)build"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>if exist $(ProjectDir).qmake.stash (
@@ -220,7 +221,8 @@ del $(ProjectDir).qmake.stash
     </QtUic>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\bin\hdf5.dll" "$(ProjDir)build"
-xcopy /y /d "$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDLL.dll" "$(ProjDir)build"</Command>
+xcopy /y /d "$(ProjectDir)..\ESLSCDLL\$(PlatformTarget)\$(Configuration)\ESLSCDLL.dll" "$(ProjDir)build"
+xcopy /y /d "$(ProjectDir)..\ESLSCDLL\lscpciej\$(Configuration)\lscpciej.dll" "$(ProjDir)build"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>if exist $(ProjectDir).qmake.stash (

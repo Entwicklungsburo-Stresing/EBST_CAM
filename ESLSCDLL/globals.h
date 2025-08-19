@@ -27,13 +27,6 @@ extern "C" {
 #define S0_SPACE_OFFSET 0x80
 #define HWDREQ_EN true // enables hardware start of DMA by XCK h->l slope
 #define DMA_BUFFER_PARTS 2
-/**
- * @brief DMA_CONTIGBUF: DMA buffer type switch.
- * 
- * true: DMA buffer is set by driver (data must be copied afterwards to user space).
- * false: DMA buffer is set by application (pointer must be passed to SetupPCIE_DMA).
- */
-#define DMA_CONTIGBUF true
 
 extern uint32_t* virtualCamcnt;
 extern uint16_t** userBuffer;

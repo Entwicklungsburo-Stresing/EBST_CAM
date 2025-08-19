@@ -26,6 +26,8 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "escam_setup", "escam_setup\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CsimpleExample", "CsimpleExample\CsimpleExample.vcxproj", "{7E68DA27-4577-4682-8D5E-068BA72665B5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ESLSCDLL", "ESLSCDLL\ESLSCDLL.vcxproj", "{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_minimal|x64 = Debug_minimal|x64
@@ -63,6 +65,18 @@ Global
 		{7E68DA27-4577-4682-8D5E-068BA72665B5}.Release|x64.ActiveCfg = Release|x64
 		{7E68DA27-4577-4682-8D5E-068BA72665B5}.Release|x64.Build.0 = Release|x64
 		{7E68DA27-4577-4682-8D5E-068BA72665B5}.Release-Labview|x64.ActiveCfg = Release|x64
+		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Debug_minimal|x64.ActiveCfg = Debug_minimal|x64
+		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Debug_minimal|x64.Build.0 = Debug_minimal|x64
+		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Debug|x64.ActiveCfg = Debug|x64
+		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Debug|x64.Build.0 = Debug|x64
+		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Debug-Labview|x64.ActiveCfg = Debug-Labview|x64
+		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Debug-Labview|x64.Build.0 = Debug-Labview|x64
+		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Release_minimal|x64.ActiveCfg = Release_minimal|x64
+		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Release_minimal|x64.Build.0 = Release_minimal|x64
+		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Release|x64.ActiveCfg = Release|x64
+		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Release|x64.Build.0 = Release|x64
+		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Release-Labview|x64.ActiveCfg = Release-Labview|x64
+		{5DB9F92D-DB78-4A94-91BF-3C059053DAF3}.Release-Labview|x64.Build.0 = Release-Labview|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
