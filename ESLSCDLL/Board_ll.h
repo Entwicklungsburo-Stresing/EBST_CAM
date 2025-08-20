@@ -11,9 +11,9 @@
 #include <stdint.h>
 #include "globals.h"
 #include "../shared_src/es_status_codes.h"
-#include "lscpciej/lscpciej.h"
 
 #ifdef WIN32
+#include "lscpciej/lscpciej.h"
 #ifdef _DEBUG
 #define ES_LOG(...) lscpciej_log_error(__VA_ARGS__);
 #define ES_TRACE(...) lscpciej_log_trace(__VA_ARGS__);

@@ -328,6 +328,7 @@
     <ClInclude Include="Direct2dViewer_c.h" />
     <ClInclude Include="ESLSCDLL.h" />
     <ClInclude Include="globals.h" />
+    <ClInclude Include="lscpciej\lscpciej.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="UIAbstractionLayer.h" />
   </ItemGroup>
