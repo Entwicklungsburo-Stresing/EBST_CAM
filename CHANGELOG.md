@@ -9,7 +9,6 @@ The hardware version number is the current version at release time.
 ## Unreleased
 ### API Changes
 #### Added
-* Add function DLLCam_SendData
 #### Changed
 #### Removed
 #### Fixed
@@ -20,6 +19,20 @@ The hardware version number is the current version at release time.
 #### Removed
 #### Fixed
 #### Deprecated
+
+## 4.18.3 - 2025-08-20
+This release makes ESLSCDLL on Windows compilable again and introduces lscpciej.dll in version 1.0.1, which is a closed source DLL of the Windows software stack. ESLSCDLL.dll depends now on lscpciej.dll and as before on wdapi1400.dll.
+### API Changes
+#### Added
+* Add function DLLCam_SendData
+* Add campos to struct special_pixels
+### Other Changes
+#### Added
+* Add campos to special pixels
+#### Changed
+* Change ok buttons to close and automatically save changes with out confirming
+* Moved the Cameras and Reset axes menu actions to chart settings
+* Update Qt to 6.9.1
 
 ## 4.18.2 - 2025-07-15
 ### API Changes
