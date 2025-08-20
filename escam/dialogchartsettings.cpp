@@ -134,7 +134,7 @@ void DialogChartSettings::populateCameras()
 				ui.verticalLayoutCameras->addWidget(checkbox);
 				// Lambda syntax is used to pass additional argument i
 #if (QT_VERSION < QT_VERSION_CHECK(6, 7, 0))
-				connect(checkbox, &QCheckBox::stateChanged, this, [checkbox, this, cam, drvno] {on_checkBoxShowCamera(checkbox->isChecked(), cam, drvno); mainWindow->loadCameraData(); })
+				connect(checkbox, &QCheckBox::stateChanged, this, [checkbox, this, cam, drvno] {on_checkBoxShowCamera(checkbox->isChecked(), cam, drvno); mainWindow->loadCameraData(); });
 #else
 				connect(checkbox, &QCheckBox::checkStateChanged, this, [checkbox, this, cam, drvno] {on_checkBoxShowCamera(checkbox->isChecked(), cam, drvno); mainWindow->loadCameraData(); });
 #endif
