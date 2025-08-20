@@ -69,7 +69,7 @@ cp .\ESLSCDLL\x64\Release_minimal\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$pcie.$
 cp .\ESLSCDLL\x64\Release-Labview\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$pcie.$minor\Release-Labview\
 cp .\ESLSCDLL\x64\Release-Labview\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$pcie.$minor\Release-Labview\
 # zip DLL
-Compress-Archive -Path .\Release\ESLSCDLL-$major.$pcie.$minor\ -DestinationPath .\Release\ESLSCDLL$major.$pcie.$minor.zip
+Compress-Archive -Path .\Release\ESLSCDLL-$major.$pcie.$minor\ -DestinationPath .\Release\ESLSCDLL-$major.$pcie.$minor.zip
 # zip setup
 mkdir Release\Escam-setup-$major.$pcie.$minor\
 cp -r .\escam_setup\Release\* .\Release\Escam-setup-$major.$pcie.$minor\
