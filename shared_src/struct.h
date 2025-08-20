@@ -505,6 +505,7 @@ struct special_pixels
 	uint32_t s2State;
 	uint32_t impactSignal1;
 	uint32_t impactSignal2;
+	uint32_t campos;
 	uint32_t cameraSystem3001;
 	uint32_t cameraSystem3010;
 	uint32_t cameraSystem3030;

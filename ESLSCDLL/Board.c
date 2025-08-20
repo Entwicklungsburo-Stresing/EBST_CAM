@@ -4707,16 +4707,6 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 	if (!data) return es_allocating_memory_failed;
 	es_status_codes status = CopyOneSample(drvno, sample, block, camera_pos, data);
 	if (status != es_no_error) return status;
-	//overTemp
-	if (data[pixel_camera_status] & pixel_camera_status_bit_over_temp)
-		sp->overTemp = 1;
-	else
-		sp->overTemp = 0;
-	//tempGood
-	if (data[pixel_camera_status] & pixel_camera_status_bit_temp_good)
-		sp->tempGood = 1;
-	else
-		sp->tempGood = 0;
 	//blockIndex
 	uint16_t blockIndexHigh = data[pixel_block_index_high_s1_s2] & pixel_block_index_high_s1_s2_bits_block_index;
 	sp->blockIndex = (uint32_t)blockIndexHigh << 16 | (uint32_t)data[pixel_block_index_low];
@@ -4738,6 +4728,18 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 	sp->impactSignal2 = (uint32_t)data[pixel_impact_signal_2_high] << 16 | (uint32_t)data[pixel_impact_signal_2_low];
 	//scanIndex2
 	sp->scanIndex2 = (uint32_t)data[(settings_struct.camera_settings[drvno].pixel - 1) - pixel_scan_index2_high] << 16 | (uint32_t)data[(settings_struct.camera_settings[drvno].pixel - 1) - pixel_scan_index2_low];
+	//overTemp
+	if (data[pixel_camera_status] & pixel_camera_status_bit_over_temp)
+		sp->overTemp = 1;
+	else
+		sp->overTemp = 0;
+	//tempGood
+	if (data[pixel_camera_status] & pixel_camera_status_bit_temp_good)
+		sp->tempGood = 1;
+	else
+		sp->tempGood = 0;
+	//campos
+	sp->campos = ((uint32_t)data[pixel_camera_status] & pixel_camera_status_bits_campos) >> pixel_camera_status_bitindex_campos;
 	//cameraSystem3001
 	if (data[pixel_camera_status] & pixel_camera_status_bit_3001)
 		sp->cameraSystem3001 = 1;
