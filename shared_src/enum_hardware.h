@@ -1216,7 +1216,6 @@ enum pixel_camera_status_bits_t
 	pixel_camera_status_bitindex_3010 = 12,
 	pixel_camera_status_bitindex_3030 = 13,
 };
-};
 
 /**
  * This enum shows the starting number of the major and minor version for the fpga version number.
