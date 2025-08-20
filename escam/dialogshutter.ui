@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>205</width>
+    <width>208</width>
     <height>251</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>DialogShutter</string>
+   <string>Shutter</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -185,7 +185,7 @@
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="standardButtons">
-      <set>QDialogButtonBox::StandardButton::Ok</set>
+      <set>QDialogButtonBox::StandardButton::Close</set>
      </property>
     </widget>
    </item>
@@ -196,13 +196,13 @@
  <connections>
   <connection>
    <sender>buttonBox</sender>
-   <signal>accepted()</signal>
+   <signal>rejected()</signal>
    <receiver>DialogShutterClass</receiver>
-   <slot>accept()</slot>
+   <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>214</y>
+     <x>159</x>
+     <y>241</y>
     </hint>
     <hint type="destinationlabel">
      <x>124</x>

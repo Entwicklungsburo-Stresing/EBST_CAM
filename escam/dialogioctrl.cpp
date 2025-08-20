@@ -28,6 +28,22 @@ DialogIoctrl::DialogIoctrl(QWidget *parent)
 	connect(ui->spinBoxO5W, qOverload<int>(&QSpinBox::valueChanged), this, [this] {setOutput(5, ui->spinBoxO5W->value(), ui->spinBoxO5D->value()); });
 	connect(ui->spinBoxO6W, qOverload<int>(&QSpinBox::valueChanged), this, [this] {setOutput(6, ui->spinBoxO6W->value(), ui->spinBoxO6D->value()); });
 	connect(ui->spinBoxO7W, qOverload<int>(&QSpinBox::valueChanged), this, [this] {setOutput(7, ui->spinBoxO7W->value(), ui->spinBoxO7D->value()); });
+
+	connect(ui->spinBoxO1D, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO2D, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO3D, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO4D, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO5D, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO6D, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO7D, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO1W, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO2W, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO3W, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO4W, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO5W, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO6W, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO7W, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
+
 	connect(ui->doubleSpinBoxT0, qOverload<double>(&QDoubleSpinBox::valueChanged), this, &DialogIoctrl::setT0);
 	if (mainWindow->lsc.numberOfBoards > 1)
 		ui->spinBoxBoard->setMaximum(mainWindow->lsc.numberOfBoards - 1);
@@ -54,20 +70,14 @@ void DialogIoctrl::setOutput(uint8_t outputNumber, uint16_t width_in_5ns, uint16
 void DialogIoctrl::setT0(uint32_t period_in_10ns)
 {
 	uint32_t drvno = ui->spinBoxBoard->value();
+	settings.beginGroup("board" + QString::number(drvno));
+	settings.setValue(settingIOCtrlT0PeriodIn10nsPath, ui->doubleSpinBoxT0->value());
+	settings.endGroup();
 	mainWindow->lsc.ioctrl_setT0(drvno, period_in_10ns);
 	return;
 }
 
-void DialogIoctrl::on_buttonBox_rejected()
-{
-	// Set outputs to old values
-	for (uint8_t output = 0; output <= 6; output++)
-		setOutput(output+1, outputWidth_old[output], outputDelay_old[output]);
-	return;
-}
-
-void DialogIoctrl::on_buttonBox_accepted()
-{
+void DialogIoctrl::spinBox_valueChanged() {
 	uint32_t drvno = ui->spinBoxBoard->value();
 	// Save output values
 	settings.beginGroup("board" + QString::number(drvno));
@@ -92,6 +102,26 @@ void DialogIoctrl::on_buttonBox_accepted()
 
 void DialogIoctrl::on_pushButtonDefault_pressed()
 {
+	uint32_t drvno = ui->spinBoxBoard->value();
+	// Save output values
+	settings.beginGroup("board" + QString::number(drvno));
+	settings.setValue(settingIOCtrlOutput1DelayIn5nsPath, settingIOCtrlOutput1DelayIn5nsDefault);
+	settings.setValue(settingIOCtrlOutput2DelayIn5nsPath, settingIOCtrlOutput2DelayIn5nsDefault);
+	settings.setValue(settingIOCtrlOutput3DelayIn5nsPath, settingIOCtrlOutput3DelayIn5nsDefault);
+	settings.setValue(settingIOCtrlOutput4DelayIn5nsPath, settingIOCtrlOutput4DelayIn5nsDefault);
+	settings.setValue(settingIOCtrlOutput5DelayIn5nsPath, settingIOCtrlOutput5DelayIn5nsDefault);
+	settings.setValue(settingIOCtrlOutput6DelayIn5nsPath, settingIOCtrlOutput6DelayIn5nsDefault);
+	settings.setValue(settingIOCtrlOutput7DelayIn5nsPath, settingIOCtrlOutput7DelayIn5nsDefault);
+	settings.setValue(settingIOCtrlOutput1WidthIn5nsPath, settingIOCtrlOutput1WidthIn5nsDefault);
+	settings.setValue(settingIOCtrlOutput2WidthIn5nsPath, settingIOCtrlOutput2WidthIn5nsDefault);
+	settings.setValue(settingIOCtrlOutput3WidthIn5nsPath, settingIOCtrlOutput3WidthIn5nsDefault);
+	settings.setValue(settingIOCtrlOutput4WidthIn5nsPath, settingIOCtrlOutput4WidthIn5nsDefault);
+	settings.setValue(settingIOCtrlOutput5WidthIn5nsPath, settingIOCtrlOutput5WidthIn5nsDefault);
+	settings.setValue(settingIOCtrlOutput6WidthIn5nsPath, settingIOCtrlOutput6WidthIn5nsDefault);
+	settings.setValue(settingIOCtrlOutput7WidthIn5nsPath, settingIOCtrlOutput7WidthIn5nsDefault);
+	settings.setValue(settingIOCtrlT0PeriodIn10nsPath, ui->doubleSpinBoxT0->value());
+	settings.endGroup();
+
 	ui->spinBoxO1D->setValue(settingIOCtrlOutput1DelayIn5nsDefault);
 	ui->spinBoxO2D->setValue(settingIOCtrlOutput2DelayIn5nsDefault);
 	ui->spinBoxO3D->setValue(settingIOCtrlOutput3DelayIn5nsDefault);

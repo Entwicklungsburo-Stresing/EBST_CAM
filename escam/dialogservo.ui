@@ -99,7 +99,7 @@
      <item row="2" column="1">
       <widget class="QLineEdit" name="lineEditHex">
        <property name="text">
-        <string>4d2</string>
+        <string>0</string>
        </property>
        <property name="maxLength">
         <number>39</number>
@@ -227,7 +227,7 @@
      <item row="1" column="1">
       <widget class="QLineEdit" name="lineEditDec">
        <property name="text">
-        <string>1234</string>
+        <string>0</string>
        </property>
        <property name="maxLength">
         <number>39</number>
@@ -299,7 +299,10 @@
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="standardButtons">
-      <set>QDialogButtonBox::StandardButton::Ok</set>
+      <set>QDialogButtonBox::StandardButton::Close</set>
+     </property>
+     <property name="centerButtons">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
@@ -310,13 +313,13 @@
  <connections>
   <connection>
    <sender>buttonBox</sender>
-   <signal>accepted()</signal>
+   <signal>rejected()</signal>
    <receiver>dialogservoClass</receiver>
-   <slot>accept()</slot>
+   <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>533</x>
-     <y>375</y>
+     <x>503</x>
+     <y>295</y>
     </hint>
     <hint type="destinationlabel">
      <x>442</x>

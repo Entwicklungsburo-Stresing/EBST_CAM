@@ -399,66 +399,6 @@ void MainWindow::on_actionDSC_triggered()
 	return;
 }
 
-/**
- * @brief This slot opens the settings dialog for selecting the cameras to be displayed on the chart.
- * @return none
- */
-void MainWindow::on_actionCameras_triggered()
-{
-	QDialog* messageBox = new QDialog(this);
-	messageBox->setAttribute(Qt::WA_DeleteOnClose);
-	QVBoxLayout* layout = new QVBoxLayout(messageBox);
-	messageBox->setLayout(layout);
-	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
-	uint32_t camcnt = 0;
-	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
-	{
-		settings.beginGroup("board" + QString::number(drvno));
-		// Check if the drvno'th bit is set
-		if ((board_sel >> drvno) & 1)
-		{
-			camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toDouble();
-			// If camcnt is 0, treat as camcnt 1
-			if (camcnt == 0)
-				camcnt = 1;
-			for (uint16_t cam = 0; cam < camcnt; cam++)
-			{
-				QCheckBox* checkbox = new QCheckBox(messageBox);
-				checkbox->setText("Board " + QString::number(drvno) + ", Camera " + QString::number(cam));
-				checkbox->setChecked(settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toBool());
-				layout->addWidget(checkbox);
-				// Lambda syntax is used to pass additional argument i
-#if (QT_VERSION < QT_VERSION_CHECK(6, 7, 0))
-				connect(checkbox, &QCheckBox::stateChanged, this, [checkbox, this, cam, drvno] {on_checkBoxShowCamera(checkbox->isChecked(), cam, drvno); loadCameraData(); });
-#else
-				connect(checkbox, &QCheckBox::checkStateChanged, this, [checkbox, this, cam, drvno] {on_checkBoxShowCamera(checkbox->isChecked(), cam, drvno); loadCameraData(); });
-#endif
-			}
-		}
-		settings.endGroup();
-	}
-	QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, messageBox);
-	connect(dialogButtonBox, &QDialogButtonBox::accepted, messageBox, &QDialog::accept);
-	layout->addWidget(dialogButtonBox);
-	messageBox->setWindowTitle("Cameras");
-	messageBox->show();
-
-	return;
-}
-
-void MainWindow::on_checkBoxShowCamera(bool state, int camera, uint32_t drvno)
-{
-	settings.beginGroup("board" + QString::number(drvno));
-	settings.setValue(settingShowCameraBaseDir + QString::number(camera), state);
-	settings.endGroup();
-	return;
-}
-
-void MainWindow::on_actionReset_axes_triggered()
-{
-	ui->chartView->setDefaultAxes();
-}
-
 void MainWindow::on_actionContext_help_triggered()
 {
 	QWhatsThis::enterWhatsThisMode();
@@ -478,7 +418,7 @@ void MainWindow::on_actionAbout_triggered()
 	aboutText.append("<a href=\"https://github.com/Entwicklungsburo-Stresing/\">https://github.com/Entwicklungsburo-Stresing/</a>");
 	d.setText(aboutText);
 	d.setIcon(QMessageBox::NoIcon);
-	d.setStandardButtons(QMessageBox::Ok);
+	d.setStandardButtons(QMessageBox::Close);
 	d.exec();
 	return;
 }
@@ -661,8 +601,8 @@ void MainWindow::on_actionDump_board_registers_triggered()
 	scrollSettings->setWidget(labelSettings);
 	tabWidget->addTab(scrollSettings, "Measurement settings");
 	layout->addWidget(tabWidget);
-	QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok, tabWidget);
-	connect(dialogButtonBox, &QDialogButtonBox::accepted, messageBox, &QDialog::accept);
+	QDialogButtonBox* dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Close, tabWidget);
+	connect(dialogButtonBox, &QDialogButtonBox::rejected, messageBox, &QDialog::reject);
 	layout->addWidget(dialogButtonBox);
 	messageBox->setWindowTitle("Register dump");
 	messageBox->show();
@@ -1359,7 +1299,6 @@ void MainWindow::on_actionChartSettings_triggered()
 {
 	DialogChartSettings* dialog = new DialogChartSettings(this);
 	connect(ui->chartView, &MyQChartView::rubberBandChanged, dialog, &DialogChartSettings::on_rubberband_valueChanged);
-	connect(ui->actionReset_axes, &QAction::triggered, dialog, &DialogChartSettings::on_rubberband_valueChanged);
 	connect(dialog, &DialogChartSettings::spinBoxAxes_valueChanged, ui->chartView, &MyQChartView::on_axes_changed);
 	dialog->setAttribute(Qt::WA_DeleteOnClose);
 	dialog->show();

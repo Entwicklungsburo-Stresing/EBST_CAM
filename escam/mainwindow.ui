@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>675</width>
+    <width>680</width>
     <height>580</height>
    </rect>
   </property>
@@ -689,7 +689,7 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>65</width>
+           <width>66</width>
            <height>22</height>
           </rect>
          </property>
@@ -1143,7 +1143,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>675</width>
+     <width>680</width>
      <height>21</height>
     </rect>
    </property>
@@ -1194,8 +1194,6 @@
      <bool>true</bool>
     </property>
     <addaction name="actionChartSettings"/>
-    <addaction name="actionCameras"/>
-    <addaction name="actionReset_axes"/>
    </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="title">
@@ -1255,28 +1253,12 @@
     <enum>QAction::MenuRole::ApplicationSpecificRole</enum>
    </property>
   </action>
-  <action name="actionCameras">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Cameras...</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::MenuRole::PreferencesRole</enum>
-   </property>
-  </action>
   <action name="actionAxes">
    <property name="text">
     <string>Axes...</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::PreferencesRole</enum>
-   </property>
-  </action>
-  <action name="actionReset_axes">
-   <property name="text">
-    <string>Reset axes</string>
    </property>
   </action>
   <action name="actionAbout">

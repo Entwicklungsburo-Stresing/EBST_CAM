@@ -53,8 +53,6 @@ private slots:
 	void on_actionShutter_triggered();
 	void on_actionDSC_triggered();
 	void on_actionTrigger_info_triggered();
-	void on_actionCameras_triggered();
-	void on_actionReset_axes_triggered();
 	void on_actionContext_help_triggered();
 	void on_actionAbout_triggered();
 	void on_actionAbout_Qt_triggered();
@@ -63,7 +61,6 @@ private slots:
 	void on_actionShow_triggered();
 	void loadSettings();
 	void on_actionDump_board_registers_triggered();
-	void on_checkBoxShowCamera(bool state, int camera, uint32_t drvno);
 	void on_pushButtonStartStop_pressed();
 	void on_horizontalSliderBlock_valueChanged();
 	void on_actionExport_triggered();

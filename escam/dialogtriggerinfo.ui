@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>244</width>
-    <height>206</height>
+    <height>221</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <spacer name="verticalSpacer_2">
      <property name="orientation">
-      <enum>Qt::Vertical</enum>
+      <enum>Qt::Orientation::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
@@ -51,13 +51,13 @@
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XCK length&lt;/span&gt; is the high time duration of the signal XCK. XCK signals the camera to start the readout and indicates the time, which is needed for one readout.&lt;/p&gt;&lt;p&gt;The signal is measured by the PCIe card in a 10 ns resolution. The value is stored in the S0 register XCKLEN and is measured once per measurement. The signal XCK can also be set to the output O of the PCIe card by the setting TOR, which can be found under: Settings --&amp;gt; Edit --&amp;gt; Camera Settings --&amp;gt; Board X --&amp;gt; Other --&amp;gt; tor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
        <property name="readOnly">
         <bool>true</bool>
        </property>
        <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::NoButtons</enum>
+        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
        </property>
        <property name="showGroupSeparator" stdset="0">
         <bool>true</bool>
@@ -76,7 +76,7 @@
      <item row="3" column="3">
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -89,7 +89,7 @@
      <item row="3" column="0">
       <spacer name="horizontalSpacer">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -108,13 +108,13 @@
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;XCK period&lt;/span&gt; is the time between two positive edges of XCK. This time between two readouts is the time when the sensor will collect charges, so this is the exposure time.&lt;/p&gt;&lt;p&gt;The signal is measured by the PCIe card in a 10 ns resolution. The value is stored in the S0 register XCKPERIOD and is measured once per measurement. The signal XCK can also be set to the output O of the PCIe card by the setting TOR, which can be found under: Settings --&amp;gt; Edit --&amp;gt; Camera Settings --&amp;gt; Board X --&amp;gt; Other --&amp;gt; tor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
        <property name="readOnly">
         <bool>true</bool>
        </property>
        <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::NoButtons</enum>
+        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
        </property>
        <property name="showGroupSeparator" stdset="0">
         <bool>true</bool>
@@ -139,13 +139,13 @@
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;BON length&lt;/span&gt; is the high time duration of the signal BON (block on). BON signals the time which is needed for one block of readouts.&lt;/p&gt;&lt;p&gt;The signal is measured by the PCIe card in a 10 ns resolution. The value is stored in the S0 register BONLEN and is measured once per measurement. The signal BON can also be set to the output O of the PCIe card by the setting TOR, which can be found under: Settings --&amp;gt; Edit --&amp;gt; Camera Settings --&amp;gt; Board X --&amp;gt; Other --&amp;gt; tor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
        <property name="readOnly">
         <bool>true</bool>
        </property>
        <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::NoButtons</enum>
+        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
        </property>
        <property name="showGroupSeparator" stdset="0">
         <bool>true</bool>
@@ -183,13 +183,13 @@
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;BON period&lt;/span&gt; is the time between two positive edges of BON (block on).&lt;/p&gt;&lt;p&gt;The signal is measured by the PCIe card in a 10 ns resolution. The value is stored in the S0 register BONPERIOD and is measured once per measurement. The signal BON can also be set to the output O of the PCIe card by the setting TOR, which can be found under: Settings --&amp;gt; Edit --&amp;gt; Camera Settings --&amp;gt; Board X --&amp;gt; Other --&amp;gt; tor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
        <property name="readOnly">
         <bool>true</bool>
        </property>
        <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::NoButtons</enum>
+        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
        </property>
        <property name="showGroupSeparator" stdset="0">
         <bool>true</bool>
@@ -241,7 +241,7 @@
      <item row="0" column="2">
       <widget class="QSpinBox" name="spinBoxBoard">
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
        <property name="maximum">
         <number>4</number>
@@ -253,7 +253,7 @@
    <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
-      <enum>Qt::Vertical</enum>
+      <enum>Qt::Orientation::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
@@ -266,10 +266,10 @@
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::StandardButton::Close</set>
      </property>
     </widget>
    </item>
@@ -286,13 +286,13 @@
  <connections>
   <connection>
    <sender>buttonBox</sender>
-   <signal>accepted()</signal>
+   <signal>rejected()</signal>
    <receiver>DialogTriggerInfo</receiver>
-   <slot>accept()</slot>
+   <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>227</x>
-     <y>169</y>
+     <x>234</x>
+     <y>211</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -308,7 +308,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>234</x>
-     <y>175</y>
+     <y>211</y>
     </hint>
     <hint type="destinationlabel">
      <x>243</x>

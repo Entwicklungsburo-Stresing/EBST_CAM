@@ -26,10 +26,12 @@ public:
 private slots:
 	void setOutput(uint8_t outputNumber, uint16_t width_in_5ns, uint16_t delay_in_5ns);
 	void setT0(uint32_t period_in_10ns);
-	void on_buttonBox_rejected();
-	void on_buttonBox_accepted();
+	//void on_buttonBox_rejected();
+	//void on_buttonBox_accepted();
 	void on_pushButtonDefault_pressed();
 	void on_spinBoxBoard_valueChanged();
+	void spinBox_valueChanged();
+
 private:
 	Ui::DialogIoctrl *ui;
 	QSettings settings;

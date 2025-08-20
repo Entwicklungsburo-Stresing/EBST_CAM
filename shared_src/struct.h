@@ -288,6 +288,10 @@ struct camera_settings
 	uint32_t bec_in_10ns;
 	/**
 	 * Channel select controls which channel of a camera control box is used for the camera readout. This feature is implemented in the camera version P230_6 and newer. See enum @ref channel_select_t in enum_settings.h for options.
+	 * 
+	 * Examples:
+	 *		* 1 camera control with 2 channels and @ref channel_select_t.channel_select_A_B is used: @ref camera_settings.camcnt = 2.
+	 *		* 1 camera control with 2 channels and @ref channel_select_t.channel_select_A or @ref channel_select_t.channel_select_B is used: @ref camera_settings.camcnt = 1.
 	 */
 	uint32_t channel_select;
 	/**

@@ -74,7 +74,7 @@ void DialogShutter::on_checkBoxShutterX_checkStateChanged()
 	return;
 }
 
-void DialogShutter::on_buttonBox_accepted()
+void DialogShutter::on_buttonBox_rejected()
 {
 	uint32_t drvno = ui.spinBoxPcieBoard->value();
 	// Save output values

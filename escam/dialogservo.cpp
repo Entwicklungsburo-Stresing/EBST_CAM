@@ -25,7 +25,6 @@ DialogServo::DialogServo(QWidget *parent)
 
 DialogServo::~DialogServo()
 {
-	delete ui;
 }
 
 void DialogServo::on_spinBoxSeqLength_valueChanged(int val)

@@ -24,11 +24,13 @@ public:
 signals:
 	void spinBoxAxes_valueChanged();
 private slots:
-	void on_buttonBox_rejected();
 	void on_spinBoxXmin_valueChanged(int arg1);
 	void on_spinBoxXmax_valueChanged(int arg1);
 	void on_spinBoxYmin_valueChanged(int arg1);
 	void on_spinBoxYmax_valueChanged(int arg1);
+	void populateCameras();
+	void on_checkBoxShowCamera(bool state, int camera, uint32_t drvno);
+	void on_pushButtonDefault_pressed();
 #if (QT_VERSION < QT_VERSION_CHECK(6, 7, 0))
 	void on_checkBoxMirrorX_stateChanged(int state);
 	void on_checkBoxShowCrosshair_stateChanged(int state);

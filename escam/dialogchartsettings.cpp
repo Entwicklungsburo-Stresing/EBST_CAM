@@ -26,27 +26,11 @@ DialogChartSettings::DialogChartSettings(QWidget *parent)
 	ui.spinBoxYmin->setValue(ymin_old);
 	ui.checkBoxMirrorX->setChecked(settings.value(settingAxesMirrorXPath, settingAxesMirrorXPathDefault).toBool());
 	ui.checkBoxShowCrosshair->setChecked(settings.value(settingShowCrosshairPath, settingShowCrosshairDefault).toBool());
+	populateCameras();
 }
 
 DialogChartSettings::~DialogChartSettings()
 {}
-
-void DialogChartSettings::on_buttonBox_rejected()
-{
-	QList<QAbstractAxis*> axes = mainWindow->ui->chartView->chart()->axes();
-	if (axes.isEmpty()) return;
-	QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
-	QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
-	axis0->setMax(xmax_old);
-	axis0->setMin(xmin_old);
-	axis1->setMax(ymax_old);
-	axis1->setMin(ymin_old);
-	mainWindow->ui->chartView->curr_xmax = xmax_old;
-	mainWindow->ui->chartView->curr_xmin = xmin_old;
-	mainWindow->ui->chartView->curr_ymax = ymax_old;
-	mainWindow->ui->chartView->curr_ymin = ymin_old;
-	return;
-}
 
 void DialogChartSettings::on_spinBoxXmin_valueChanged(int arg1)
 {
@@ -123,4 +107,54 @@ void DialogChartSettings::on_checkBoxShowCrosshair_checkStateChanged(Qt::CheckSt
 	(void)state;
 	settings.setValue(settingShowCrosshairPath, ui.checkBoxShowCrosshair->isChecked());
 	return;
+}
+
+/**
+ * @brief This slot opens the settings dialog for selecting the cameras to be displayed on the chart.
+ * @return none
+ */
+void DialogChartSettings::populateCameras()
+{
+	uint32_t board_sel = settings.value(settingBoardSelPath, settingBoardSelDefault).toDouble();
+	uint32_t camcnt = 0;
+	for (uint32_t drvno = 0; drvno < mainWindow->lsc.numberOfBoards; drvno++)
+	{
+		settings.beginGroup("board" + QString::number(drvno));
+		if ((board_sel >> drvno) & 1)
+		// Check if the drvno'th bit is set
+		{
+			camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toDouble();
+			// If camcnt is 0, treat as camcnt 1
+			if (camcnt == 0)
+				camcnt = 1;
+			for (uint16_t cam = 0; cam < camcnt; cam++)
+			{
+				QCheckBox* checkbox = new QCheckBox(("Board " + QString::number(drvno) + ", Camera " + QString::number(cam)), this);
+				checkbox->setChecked(settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toBool());
+				ui.verticalLayoutCameras->addWidget(checkbox);
+				// Lambda syntax is used to pass additional argument i
+#if (QT_VERSION < QT_VERSION_CHECK(6, 7, 0))
+				connect(checkbox, &QCheckBox::stateChanged, this, [checkbox, this, cam, drvno] {on_checkBoxShowCamera(checkbox->isChecked(), cam, drvno); mainWindow->loadCameraData(); })
+#else
+				connect(checkbox, &QCheckBox::checkStateChanged, this, [checkbox, this, cam, drvno] {on_checkBoxShowCamera(checkbox->isChecked(), cam, drvno); mainWindow->loadCameraData(); });
+#endif
+			}
+		}
+		settings.endGroup();
+	}
+	return;
+}
+
+void DialogChartSettings::on_checkBoxShowCamera(bool state, int camera, uint32_t drvno)
+{
+	settings.beginGroup("board" + QString::number(drvno));
+	settings.setValue(settingShowCameraBaseDir + QString::number(camera), state);
+	settings.endGroup();
+	return;
+}
+
+void DialogChartSettings::on_pushButtonDefault_pressed()
+{
+	mainWindow->ui->chartView->setDefaultAxes();
+	on_rubberband_valueChanged();
 }

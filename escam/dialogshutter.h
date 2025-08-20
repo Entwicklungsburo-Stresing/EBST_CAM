@@ -22,7 +22,7 @@ public:
 private slots:
 	void on_checkBoxMshut_checkStateChanged(Qt::CheckState checkState);
 	void on_checkBoxShutterX_checkStateChanged();
-	void on_buttonBox_accepted();
+	void on_buttonBox_rejected();
 	void loadSavedValues();
 private:
 	Ui::DialogShutterClass ui;
