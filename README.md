@@ -28,37 +28,13 @@ Xilinx products are not designed or intended to be fail-safe, or for use in any 
 ## Windows
 
 ### Build Dependencies
-* [Visual Studio](https://visualstudio.microsoft.com/) with C++ Toolbox (Plattform Toolset: v143, Windows SDK Version: 10.0.18362.0).
-* Visual Studio Extention: [Qt Visual Studio Tools](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2019) + [MSVC Qt 6.8](https://www.qt.io/download) (both needed for Escam)
+* [Visual Studio](https://visualstudio.microsoft.com/) with C++ Toolbox (Plattform Toolset: v143, Windows SDK Version: 10.0 (latest version) ).
+* Visual Studio Extention: [Qt Visual Studio Tools](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2019) + [MSVC Qt 6.9](https://www.qt.io/download) (both needed for Escam)
 * Labview Libraries: Optional, for DLL usage with Labview. If you want to compile the DLL for usage with other software than Labview, set compile options "Debug" and "Release" instead of "Debug-Labview" and "Release-Labview".
 * Visual Studio Extention: [Microsoft Visual Studio Installer Project](https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2017InstallerProjects) (optional, for creating setup.exe for escam)
 
 ### Compile
-Download the latest DLL binary `ESLSCDLL-4.XX.X.zip` from [releases](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases) and place the files into `EBST_CAM/ESLSCDLL/x64` to create the following folder structure:
-```
-EBST_CAM/
-├─	ESLSCDLL/
-│	├─	x64/
-│	│	├─	Debug/
-│	│	│	├─	ESLSCDLL.dll
-│	│	│	├─	ESLSCDLL.lib
-│	│	├─	Debug_minimal/
-│	│	│	├─	ESLSCDLL.dll
-│	│	│	├─	ESLSCDLL.lib
-│	│	├─	Debug-Labview/
-│	│	│	├─	ESLSCDLL.dll
-│	│	│	├─	ESLSCDLL.lib
-│	│	├─	Release/
-│	│	│	├─	ESLSCDLL.dll
-│	│	│	├─	ESLSCDLL.lib
-│	│	├─	Release_minimal/
-│	│	│	├─	ESLSCDLL.dll
-│	│	│	├─	ESLSCDLL.lib
-│	│	├─	Release-Labview/
-│	│	│	├─	ESLSCDLL.dll
-│	│	│	├─	ESLSCDLL.lib
-```
-Open `EBST_CAM.sln` with Visual Studio and press build. There are different compiling configurations available. There is a build script to build all: `makeall.ps1`. Due to license restrictions of underlying software components there is no compilable version of ESLSCDLL.dll for Windows available.
+Open `EBST_CAM.sln` with Visual Studio and press build. There are different compiling configurations available. There is a build script to build all: `makeall.ps1`.
 
 configuration	| description
 :---			| :---
@@ -84,14 +60,14 @@ If `MSVCP140.dll` and `VCRUNTIME140.dll` are missing, Microsoft Visual C++ Redis
 ## Linux
 
 ### Build Dependencies
-* Qt 5.15 - 6.8 (for escam Qt GUI)
+* Qt 5.15 - 6.9 (for escam Qt GUI)
 * make
 * C++ compiler g++
 * libqt6charts6
 * Linux Kernel 5.4 - 6.8
 * HDF5
 ```
-sudo apt install qmake6 g++ libqt6charts6 make libhdf5-dev
+sudo apt install qmake6 g++ libqt6charts6 make libhdf5-dev qt6-charts-dev
 ```
 
 ### Run Dependencies
@@ -181,7 +157,7 @@ make
 ```
 
 ### Installing driver and escam
-Use a .deb from [release](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases) or create your own. Before running the script `create_escam_deb.sh` you need to compile escam.
+Use a .deb from [release](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases) or create your own. The released debian packages are built for the current Ubuntu LTS version. Before running the script `create_escam_deb.sh` you need to compile escam.
 ```
 cd escam_deb
 ./create_escam_deb.sh
