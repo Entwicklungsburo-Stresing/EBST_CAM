@@ -1188,28 +1188,34 @@ enum pixel_camera_status_bits_t
 	/**
 	 * Over temperature. 1: over temperature detected, 0: temperature normal
 	 */
-	pixel_camera_status_bitindex_over_temp = 0,
+	pixel_camera_status_bit_over_temp = 0x1,
 	/**
 	 * Temperature good. Only for cooled cameras. 1: target cooling temperature reached, 0: target temperature not reached
 	 */
-	pixel_camera_status_bitindex_temp_good = 1,
+	pixel_camera_status_bit_temp_good = 0x2,
+	/**
+	 * Camera position is the index of the camera when multiple cameras are connected to the same PCIe card. 0 : first camera, 1: second camera, 7: eighth camera. Added in P209.19, P230.09.
+	 */
+	pixel_camera_status_bits_campos = 0x01C,
 	/**
 	 * 1: Connected camera is system 3001.
 	 */
-	pixel_camera_status_bitindex_3001 = 11,
+	pixel_camera_status_bit_3001 = 0x0800,
 	/**
 	 * 1: Connected camera is system 3010.
 	 */
-	pixel_camera_status_bitindex_3010 = 12,
+	pixel_camera_status_bit_3010 = 0x1000,
 	/**
 	 * 1: Connected camera is system 3030.
 	 */
-	pixel_camera_status_bitindex_3030 = 13,
-	pixel_camera_status_bit_over_temp = 0x1,
-	pixel_camera_status_bit_temp_good = 0x2,
-	pixel_camera_status_bit_3001 = 0x0800,
-	pixel_camera_status_bit_3010 = 0x1000,
 	pixel_camera_status_bit_3030 = 0x2000,
+	pixel_camera_status_bitindex_over_temp = 0,
+	pixel_camera_status_bitindex_temp_good = 1,
+	pixel_camera_status_bitindex_campos = 2,
+	pixel_camera_status_bitindex_3001 = 11,
+	pixel_camera_status_bitindex_3010 = 12,
+	pixel_camera_status_bitindex_3030 = 13,
+};
 };
 
 /**
