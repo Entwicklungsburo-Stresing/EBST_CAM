@@ -30,7 +30,7 @@ This release makes ESLSCDLL on Windows compilable again and introduces lscpciej.
 #### Added
 * Add campos to special pixels
 #### Changed
-* Change ok buttons to close and automatically save changes with out confirming
+* Change ok buttons to close and automatically save changes without confirming
 * Moved the Cameras and Reset axes menu actions to chart settings
 * Update Qt to 6.9.1
 
