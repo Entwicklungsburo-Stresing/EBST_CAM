@@ -29,20 +29,20 @@ DialogIoctrl::DialogIoctrl(QWidget *parent)
 	connect(ui->spinBoxO6W, qOverload<int>(&QSpinBox::valueChanged), this, [this] {setOutput(6, ui->spinBoxO6W->value(), ui->spinBoxO6D->value()); });
 	connect(ui->spinBoxO7W, qOverload<int>(&QSpinBox::valueChanged), this, [this] {setOutput(7, ui->spinBoxO7W->value(), ui->spinBoxO7D->value()); });
 
-	connect(ui->spinBoxO1D, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
-	connect(ui->spinBoxO2D, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
-	connect(ui->spinBoxO3D, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
-	connect(ui->spinBoxO4D, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
-	connect(ui->spinBoxO5D, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
-	connect(ui->spinBoxO6D, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
-	connect(ui->spinBoxO7D, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
-	connect(ui->spinBoxO1W, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
-	connect(ui->spinBoxO2W, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
-	connect(ui->spinBoxO3W, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
-	connect(ui->spinBoxO4W, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
-	connect(ui->spinBoxO5W, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
-	connect(ui->spinBoxO6W, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
-	connect(ui->spinBoxO7W, &QSpinBox::valueChanged, this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO1D, qOverload<int>(&QSpinBox::valueChanged), this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO2D, qOverload<int>(&QSpinBox::valueChanged), this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO3D, qOverload<int>(&QSpinBox::valueChanged), this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO4D, qOverload<int>(&QSpinBox::valueChanged), this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO5D, qOverload<int>(&QSpinBox::valueChanged), this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO6D, qOverload<int>(&QSpinBox::valueChanged), this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO7D, qOverload<int>(&QSpinBox::valueChanged), this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO1W, qOverload<int>(&QSpinBox::valueChanged), this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO2W, qOverload<int>(&QSpinBox::valueChanged), this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO3W, qOverload<int>(&QSpinBox::valueChanged), this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO4W, qOverload<int>(&QSpinBox::valueChanged), this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO5W, qOverload<int>(&QSpinBox::valueChanged), this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO6W, qOverload<int>(&QSpinBox::valueChanged), this, &DialogIoctrl::spinBox_valueChanged);
+	connect(ui->spinBoxO7W, qOverload<int>(&QSpinBox::valueChanged), this, &DialogIoctrl::spinBox_valueChanged);
 
 	connect(ui->doubleSpinBoxT0, qOverload<double>(&QDoubleSpinBox::valueChanged), this, &DialogIoctrl::setT0);
 	if (mainWindow->lsc.numberOfBoards > 1)
