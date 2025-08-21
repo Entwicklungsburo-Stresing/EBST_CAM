@@ -33,6 +33,7 @@ LARGE_INTEGER freq;
  */
 es_status_codes CleanupDma(uint32_t drvno)
 {
+	dmaBuffer[drvno] = NULL;
 	return lscpciej_CleanupDma(drvno);
 }
 
