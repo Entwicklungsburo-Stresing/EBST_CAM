@@ -20,6 +20,11 @@ The hardware version number is the current version at release time.
 #### Fixed
 #### Deprecated
 
+## 4.18.4 - 2025-08-21
+### Other Changes
+#### Fixed
+* Fix crash at CleanDma, Called by DLLExitDriver() and DLLInitMeasurement()
+
 ## 4.18.3 - 2025-08-20
 This release makes ESLSCDLL on Windows compilable again and introduces lscpciej.dll in version 1.0.1, which is a closed source DLL of the Windows software stack. ESLSCDLL.dll depends now on lscpciej.dll and as before on wdapi1400.dll.
 ### API Changes
