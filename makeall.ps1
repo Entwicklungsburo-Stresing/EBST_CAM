@@ -21,22 +21,22 @@ if(test-path Release)
 	rm -r Release
 }
 mkdir Release
-if(test-path .\ESLSCDLL\lscpciej\)
-{
-	rm -r .\ESLSCDLL\lscpciej\
-}
-mkdir .\ESLSCDLL\lscpciej\
-# Build lscpciej
-cd ..\lscpciej
-.\makeall.ps1 -buildAction $buildAction
-# Copy lscpciej source files to EBST_CAM
-cd lscpciej
-cp lscpciej.h ..\..\EBST_CAM\ESLSCDLL\lscpciej
-cd ..\shared_src
-cp es_status_codes.c ..\..\EBST_CAM\shared_src
-cp es_status_codes.h ..\..\EBST_CAM\shared_src
-cd ..\..\EBST_CAM
-cp -r ..\lscpciej\Release\lscpciej-*\* .\ESLSCDLL\lscpciej\
+# if(test-path .\ESLSCDLL\lscpciej\)
+# {
+# 	rm -r .\ESLSCDLL\lscpciej\
+# }
+# mkdir .\ESLSCDLL\lscpciej\
+# # Build lscpciej
+# cd ..\lscpciej
+# .\makeall.ps1 -buildAction $buildAction
+# # Copy lscpciej source files to EBST_CAM
+# cd lscpciej
+# cp lscpciej.h ..\..\EBST_CAM\ESLSCDLL\lscpciej
+# cd ..\shared_src
+# cp es_status_codes.c ..\..\EBST_CAM\shared_src
+# cp es_status_codes.h ..\..\EBST_CAM\shared_src
+# cd ..\..\EBST_CAM
+# cp -r ..\lscpciej\Release\lscpciej-*\* .\ESLSCDLL\lscpciej\
 
 # Build Escam, and setup in release config
 devenv.com EBST_CAM.sln /$buildAction Release
