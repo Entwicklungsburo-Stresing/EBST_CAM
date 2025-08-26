@@ -52,7 +52,7 @@ uint64_t getPhysicalDmaAddress( uint32_t drvno);
 void ResetBufferWritePos(uint32_t drvno);
 void copyRestData(uint32_t drvno, size_t rest_in_bytes);
 es_status_codes _InitBoard(uint32_t drvno);
-es_status_codes _InitDriver();
+es_status_codes _InitDriver(uint8_t* _number_of_boards);
 es_status_codes _ExitDriver();
 es_status_codes CleanupDriver(uint32_t drvno);
 es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno);

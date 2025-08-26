@@ -27,7 +27,7 @@ extern "C" {
 // platform independent implementation
 // Basic operation of Stresing cameras:
 // 1) Initialize the driver. Call it once at startup.
-es_status_codes InitDriver();
+es_status_codes InitDriver(uint8_t* _number_of_boards);
 // 2) Set settings parameter according to your camera system. Call it once at startup and every time you changed settings.
 void SetGlobalSettings(struct measurement_settings settings);
 // 4) Initialize Hardware and Software for the Measurement. Call it once at startup and every time you changed settings.

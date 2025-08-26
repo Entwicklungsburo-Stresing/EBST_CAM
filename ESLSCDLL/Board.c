@@ -2315,11 +2315,11 @@ es_status_codes InitBoard()
  * Call this before any other action. It is only needed to be called once at startup.
  * @return @ref es_status_codes
  */
-es_status_codes InitDriver()
+es_status_codes InitDriver(uint8_t* _number_of_boards)
 {
 	ES_LOG("\n*** Init driver ***\n");
 	initPerformanceCounter();
-	es_status_codes status = _InitDriver();
+	es_status_codes status = _InitDriver(_number_of_boards);
 	if (status != es_no_error) return status;
 	ES_LOG("*** Init driver done***\n\n");
 	return InitBoard();

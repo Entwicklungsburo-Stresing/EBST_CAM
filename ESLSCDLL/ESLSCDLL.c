@@ -85,10 +85,7 @@ BOOL WINAPI DLLMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
  */
 DllAccess es_status_codes DLLInitDriver(uint8_t* _number_of_boards)
 {
-	es_status_codes status = InitDriver();
-	if (status == es_no_error)
-		*_number_of_boards = number_of_boards;
-	return status;
+	return InitDriver(_number_of_boards);
 }
 
 /**
