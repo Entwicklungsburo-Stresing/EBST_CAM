@@ -411,7 +411,7 @@ DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t drvno, uint8_t* data, uin
  * @param[out] data2 Read buffer of board 2.
  * @param[out] data3 Read buffer of board 3.
  * @param[out] data4 Read buffer of board 4.
- * @param[in] address Address of the register to read.
+ * @param[in] address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards(uint8_t* data0, uint8_t* data1, uint8_t* data2, uint8_t* data3, uint8_t* data4, uint32_t address)
@@ -460,7 +460,7 @@ DllAccess es_status_codes DLLreadRegisterS0_32(uint32_t drvno, uint32_t* data, u
  * @param[out] data2 Read buffer for board 2.
  * @param[out] data3 Read buffer for board 3.
  * @param[out] data4 Read buffer for board 4.
- * @param[in] address Address of the register to read.
+ * @param[in] address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 DllAccess es_status_codes DLLreadRegisterS0_32_multipleBoards(uint32_t* data0, uint32_t* data1, uint32_t* data2, uint32_t* data3, uint32_t* data4, uint32_t address)
@@ -1091,7 +1091,7 @@ DllAccess es_status_codes DLLReadBitS0_32(uint32_t drvno, uint32_t address, uint
 /**
  * @brief Read 1 bit of a 4 bytes s0 register for all boards.
  *
- * @param[in] address Address of the register to read.
+ * @param[in] address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
  * @param[in] bitnumber Address of the bit to read.
  * @param[out] isBitHigh0 board 0: Tells if bit is 1 or 0.
  * @param[out] isBitHigh1 board 1: Tells if bit is 1 or 0.
@@ -1129,7 +1129,7 @@ DllAccess es_status_codes DLLReadBitS0_8(uint32_t drvno, uint32_t address, uint8
 /**
  * @brief Read 1 bit of 1 byte of a s0 register for all boards.
  *
- * @param[in] address Address of the register to read.
+ * @param[in] address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
  * @param[in] bitnumber Address of the bit to read.
  * @param[out] isBitHigh0 Tells if bit is high or low.
  * @param[out] isBitHigh1 Tells if bit is high or low.

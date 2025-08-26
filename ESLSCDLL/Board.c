@@ -427,7 +427,7 @@ es_status_codes SetCameraSystem(uint32_t drvno, uint16_t camera_system)
  *
  * @param data 4 bytes (32 bits) data to write
  * @param bitmask Bitmask to select specific bits, which should be written. 0xFFFFFFFF - all bits 32 bits are written, 0 - no bits are written.
- * @param address Address of the register in S0 space.
+ * @param address Address of the register in S0 space. All available addresses are listed in enum @ref s0_addresses_t.
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0.
  * @return @ref es_status_codes
  */
@@ -441,7 +441,7 @@ es_status_codes writeBitsS0_32(uint32_t drvno, uint32_t data, uint32_t bitmask, 
  *
  * @param data 4 bytes (32 bits) data to write
  * @param bitmask Bitmask to select specific bits, which should be written. 0xFFFFFFFF - all bits 32 bits are written, 0 - no bits are written.
- * @param address Address of the register in S0 space.
+ * @param address Address of the register in S0 space. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes writeBitsS0_32_allBoards(uint32_t data, uint32_t bitmask, uint32_t address)
@@ -464,7 +464,7 @@ es_status_codes writeBitsS0_32_allBoards(uint32_t data, uint32_t bitmask, uint32
  *
  * @param data 1 bytes (8 bits) data to write
  * @param bitmask Bitmask to select specific bits, which should be written. 0xFF - all bits 8 bits are written, 0 - no bits are written.
- * @param address Address of the register in S0 space.
+ * @param address Address of the register in S0 space. All available addresses are listed in enum @ref s0_addresses_t.
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0.
  * @return @ref es_status_codes
  */
@@ -478,7 +478,7 @@ es_status_codes writeBitsS0_8(uint32_t drvno, uint8_t data, uint8_t bitmask, uin
  *
  * @param drvno board number (=1 if one PCI board)
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
- * @param address register address. Only 4 byte steps are valid.
+ * @param address register address. Only 4 byte steps are valid. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes setBitS0_32(uint32_t drvno, uint32_t bitnumber, uint32_t address)
@@ -491,7 +491,7 @@ es_status_codes setBitS0_32(uint32_t drvno, uint32_t bitnumber, uint32_t address
  * @brief Set bit to 1 in S0 register at memory address.
  *
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
- * @param address register address. Only 4 byte steps are valid.
+ * @param address register address. Only 4 byte steps are valid. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes setBitS0_32_allBoards(uint32_t bitnumber, uint32_t address)
@@ -505,7 +505,7 @@ es_status_codes setBitS0_32_allBoards(uint32_t bitnumber, uint32_t address)
  *
  * @param drvno board number (=1 if one PCI board)
  * @param bitnumber 0...7, 0 is LSB, 7 MSB
- * @param address register address. 1 byte steps are valid.
+ * @param address register address. 1 byte steps are valid. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes setBitS0_8(uint32_t drvno, uint32_t bitnumber, uint32_t address)
@@ -519,7 +519,7 @@ es_status_codes setBitS0_8(uint32_t drvno, uint32_t bitnumber, uint32_t address)
  *
  * @param drvno board number (=1 if one PCI board)
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
- * @param address register address. Only 4 byte steps are valid.
+ * @param address register address. Only 4 byte steps are valid. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes resetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint32_t address)
@@ -532,7 +532,7 @@ es_status_codes resetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint32_t addre
  * @brief Set bit to 0 in register at memory address.
  *
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
- * @param address register address. Only 4 byte steps are valid.
+ * @param address register address. Only 4 byte steps are valid. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes resetBitS0_32_allBoards(uint32_t bitnumber, uint32_t address)
@@ -546,7 +546,7 @@ es_status_codes resetBitS0_32_allBoards(uint32_t bitnumber, uint32_t address)
  *
  * @param drvno board number (=1 if one PCI board)
  * @param bitnumber 0...7, 0 is LSB, 7 MSB
- * @param address register address. 1 byte steps are valid.
+ * @param address register address. 1 byte steps are valid. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes resetBitS0_8(uint32_t drvno, uint32_t bitnumber, uint32_t address)
@@ -560,7 +560,7 @@ es_status_codes resetBitS0_8(uint32_t drvno, uint32_t bitnumber, uint32_t addres
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param data Data to write.
- * @param address Address of the register to read.
+ * @param address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes writeRegisterS0_32(uint32_t drvno, uint32_t data, uint32_t address)
@@ -575,7 +575,7 @@ es_status_codes writeRegisterS0_32(uint32_t drvno, uint32_t data, uint32_t addre
  * @brief Write 4 bytes of a register in S0 space.
  *
  * @param data Data to write.
- * @param address Address of the register to read.
+ * @param address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes writeRegisterS0_32_allBoards(uint32_t data, uint32_t address)
@@ -598,7 +598,7 @@ es_status_codes writeRegisterS0_32_allBoards(uint32_t data, uint32_t address)
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param data Data to write.
- * @param address Address of the register to read.
+ * @param address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes writeRegisterS0_16(uint32_t drvno, uint16_t data, uint32_t address)
@@ -614,7 +614,7 @@ es_status_codes writeRegisterS0_16(uint32_t drvno, uint16_t data, uint32_t addre
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param data Data to write.
- * @param address Address of the register to read.
+ * @param address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes writeRegisterS0_8(uint32_t drvno, uint8_t data, uint32_t address)
@@ -629,7 +629,7 @@ es_status_codes writeRegisterS0_8(uint32_t drvno, uint8_t data, uint32_t address
  * @brief Write the same 1 byte to a register in S0 space of all boards.
  *
  * @param data Data to write.
- * @param address Address of the register to write.
+ * @param address Address of the register to write. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes writeRegisterS0_8_allBoards(uint8_t data, uint32_t address)
@@ -652,7 +652,7 @@ es_status_codes writeRegisterS0_8_allBoards(uint8_t data, uint32_t address)
  *
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param[out] data Read buffer.
- * @param[in] address Address of the register to read.
+ * @param[in] address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes readRegisterS0_32(uint32_t drvno, uint32_t* data, uint32_t address)
@@ -664,7 +664,7 @@ es_status_codes readRegisterS0_32(uint32_t drvno, uint32_t* data, uint32_t addre
  * @brief Read 4 bytes of a register in S0 space of all boards.
  *
  * @param data Read buffer.
- * @param address Address of the register to read.
+ * @param address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes readRegisterS0_32_allBoards(uint32_t** data, uint32_t address)
@@ -699,7 +699,7 @@ es_status_codes readRegister_32_allBoards(uint32_t** data, uint32_t address)
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param data Read buffer.
- * @param address Address of the register to read.
+ * @param address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes readRegisterS0_16(uint32_t drvno, uint16_t* data, uint32_t address)
@@ -712,7 +712,7 @@ es_status_codes readRegisterS0_16(uint32_t drvno, uint16_t* data, uint32_t addre
  *
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param[out] data Read buffer.
- * @param[in] address Address of the register to read.
+ * @param[in] address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes readRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address)
@@ -723,7 +723,7 @@ es_status_codes readRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address
  * @brief Read 1 bit of a 4 byte s0 register.
  *
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param[in] address Address of the register to read.
+ * @param[in] address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
  * @param[in] bitnumber Address of the bit to read.
  * @param[out] isBitHigh Tells if bit is high or low.
  * @return @ref es_status_codes
@@ -742,7 +742,7 @@ es_status_codes ReadBitS0_32(uint32_t drvno, uint32_t address, uint8_t bitnumber
  * @brief Read 1 bit of 1 byte of a s0 register.
  *
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param[in] address Address of the register to read.
+ * @param[in] address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
  * @param[in] bitnumber Address of the bit to read.
  * @param[out] isBitHigh Tells if bit is high or low.
  * @return @ref es_status_codes
@@ -1628,7 +1628,7 @@ es_status_codes SetDmaRegister(uint32_t drvno, uint32_t pixel)
  *
  * @param data 4 bytes (32 bits) data to write
  * @param bitmask Bitmask to select specific bits, which should be written. 0xFFFFFFFF - all bits 32 bits are written, 0 - no bits are written.
- * @param address Address of the register in DMA space.
+ * @param address Address of the register in DMA space. All available addresses are listed in enum  @ref dma_addresses.
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0.
  * @return @ref es_status_codes
  */
@@ -1664,7 +1664,7 @@ es_status_codes writeBitsDma_32(uint32_t drvno, uint32_t data, uint32_t bitmask,
  *
  * @param data 1 bytes (8 bits) data to write
  * @param bitmask Bitmask to select specific bits, which should be written. 0xFF - all bits 8 bits are written, 0 - no bits are written.
- * @param address Address of the register in DMA space.
+ * @param address Address of the register in DMA space. All available addresses are listed in enum  @ref dma_addresses.
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0.
  * @return @ref es_status_codes
  */
@@ -1700,7 +1700,7 @@ es_status_codes writeBitsDma_8(uint32_t drvno, uint8_t data, uint8_t bitmask, ui
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param data Read buffer.
- * @param address Address of the register to read.
+ * @param address Address of the register to read. All available addresses are listed in enum  @ref dma_addresses.
  * @return @ref es_status_codes
  */
 es_status_codes writeRegisterDma_32(uint32_t drvno, uint32_t data, uint32_t address)
@@ -1716,7 +1716,7 @@ es_status_codes writeRegisterDma_32(uint32_t drvno, uint32_t data, uint32_t addr
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param data Read buffer.
- * @param address Address of the register to read.
+ * @param address Address of the register to read. All available addresses are listed in enum  @ref dma_addresses.
  * @return @ref es_status_codes
  */
 es_status_codes writeRegisterDma_8(uint32_t drvno, uint8_t data, uint32_t address)
@@ -1732,7 +1732,7 @@ es_status_codes writeRegisterDma_8(uint32_t drvno, uint8_t data, uint32_t addres
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param data Read buffer.
- * @param address Address of the register to read.
+ * @param address Address of the register to read.  All available addresses are listed in enum  @ref dma_addresses.
  * @return @ref es_status_codes
  */
 es_status_codes readRegisterDma_32(uint32_t drvno, uint32_t* data, uint32_t address)
@@ -1748,7 +1748,7 @@ es_status_codes readRegisterDma_32(uint32_t drvno, uint32_t* data, uint32_t addr
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param data Read buffer.
- * @param address Address of the register to read.
+ * @param address Address of the register to read.  All available addresses are listed in enum  @ref dma_addresses.
  * @return @ref es_status_codes
  */
 es_status_codes readRegisterDma_8(uint32_t drvno, uint8_t* data, uint32_t address)
@@ -2140,7 +2140,7 @@ es_status_codes SetHardwareTimerStopMode(uint32_t drvno, bool stop_by_hardware)
  *
  * @param drvno board number (=1 if one PCI board)
  * @param bitnumber 0...31, 0 is LSB, 31 MSB
- * @param address register address. Only 4 byte steps are valid.
+ * @param address register address. Only 4 byte steps are valid. All available addresses are listed in enum @ref s0_addresses_t.
  * @param duration_in_microseconds Duration of the bit beeing high in microseconds.
  * @return @ref es_status_codes
  */
@@ -2157,7 +2157,7 @@ es_status_codes pulseBitS0_32(uint32_t drvno, uint32_t bitnumber, uint32_t addre
  *
  * @param drvno board number (=1 if one PCI board)
  * @param bitnumber 0...7, 0 is LSB, 7 MSB
- * @param address register address. 1 byte steps are valid.
+ * @param address register address. 1 byte steps are valid. All available addresses are listed in enum @ref s0_addresses_t.
  * @param duration_in_microseconds Duration of the bit beeing high in microseconds.
  * @return @ref es_status_codes
  */
