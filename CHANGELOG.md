@@ -18,6 +18,7 @@ The hardware version number is the current version at release time.
 #### Changed
 #### Removed
 #### Fixed
+* Fix test mode when no PCIe card is connected
 #### Deprecated
 
 ## 4.18.4 - 2025-08-21
