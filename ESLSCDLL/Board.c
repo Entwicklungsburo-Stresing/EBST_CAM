@@ -2318,11 +2318,11 @@ es_status_codes InitBoard()
 es_status_codes InitDriver()
 {
 	ES_LOG("\n*** Init driver ***\n");
-	es_status_codes status = _InitDriver();
 	initPerformanceCounter();
+	es_status_codes status = _InitDriver();
+	if (status != es_no_error) return status;
 	ES_LOG("*** Init driver done***\n\n");
-	InitBoard();
-	return status;
+	return InitBoard();
 }
 
 /**

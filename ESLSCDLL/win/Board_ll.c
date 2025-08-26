@@ -327,6 +327,7 @@ es_status_codes _InitDriver()
 	es_status_codes status = lscpciej_InitDriver(&number_of_boards);
 	if (status == es_device_not_found)
 	{
+		ES_LOG("No PCIe card found. Set test mode to true.\n");
 		testModeOn = true;
 	}
 	return status;
