@@ -467,8 +467,14 @@ void MainWindow::loadSettings()
 			lsc.setTorOut(drvno, tor);
 		}
 	}
+	bool testModeOn = lsc.getTestModeOn();
+	QString statusBarString = "";
 	if (showManipulateDataWarning)
-		statusBar()->showMessage("Data manipulation is enabled.");
+		statusBarString.append("Data manipulation is enabled.");
+	if (testModeOn)
+		statusBarString.append("No PCIe card found. Test mode.");
+	if(showManipulateDataWarning || testModeOn)
+		statusBar()->showMessage(statusBarString);
 	else
 		statusBar()->clearMessage();
 	if (isOvertempCam) 
