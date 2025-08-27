@@ -1628,7 +1628,7 @@ es_status_codes SetDmaRegister(uint32_t drvno, uint32_t pixel)
  *
  * @param data 4 bytes (32 bits) data to write
  * @param bitmask Bitmask to select specific bits, which should be written. 0xFFFFFFFF - all bits 32 bits are written, 0 - no bits are written.
- * @param address Address of the register in DMA space. All available addresses are listed in enum  @ref dma_addresses.
+ * @param address Address of the register in DMA space. All available addresses are listed in enum  @ref dma_addresses_t.
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0.
  * @return @ref es_status_codes
  */
@@ -1664,7 +1664,7 @@ es_status_codes writeBitsDma_32(uint32_t drvno, uint32_t data, uint32_t bitmask,
  *
  * @param data 1 bytes (8 bits) data to write
  * @param bitmask Bitmask to select specific bits, which should be written. 0xFF - all bits 8 bits are written, 0 - no bits are written.
- * @param address Address of the register in DMA space. All available addresses are listed in enum  @ref dma_addresses.
+ * @param address Address of the register in DMA space. All available addresses are listed in enum  @ref dma_addresses_t.
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0.
  * @return @ref es_status_codes
  */
@@ -1700,7 +1700,7 @@ es_status_codes writeBitsDma_8(uint32_t drvno, uint8_t data, uint8_t bitmask, ui
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param data Read buffer.
- * @param address Address of the register to read. All available addresses are listed in enum  @ref dma_addresses.
+ * @param address Address of the register to read. All available addresses are listed in enum  @ref dma_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes writeRegisterDma_32(uint32_t drvno, uint32_t data, uint32_t address)
@@ -1716,7 +1716,7 @@ es_status_codes writeRegisterDma_32(uint32_t drvno, uint32_t data, uint32_t addr
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param data Read buffer.
- * @param address Address of the register to read. All available addresses are listed in enum  @ref dma_addresses.
+ * @param address Address of the register to read. All available addresses are listed in enum  @ref dma_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes writeRegisterDma_8(uint32_t drvno, uint8_t data, uint32_t address)
@@ -1732,7 +1732,7 @@ es_status_codes writeRegisterDma_8(uint32_t drvno, uint8_t data, uint32_t addres
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param data Read buffer.
- * @param address Address of the register to read.  All available addresses are listed in enum  @ref dma_addresses.
+ * @param address Address of the register to read.  All available addresses are listed in enum  @ref dma_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes readRegisterDma_32(uint32_t drvno, uint32_t* data, uint32_t address)
@@ -1748,7 +1748,7 @@ es_status_codes readRegisterDma_32(uint32_t drvno, uint32_t* data, uint32_t addr
  *
  * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param data Read buffer.
- * @param address Address of the register to read.  All available addresses are listed in enum  @ref dma_addresses.
+ * @param address Address of the register to read.  All available addresses are listed in enum  @ref dma_addresses_t.
  * @return @ref es_status_codes
  */
 es_status_codes readRegisterDma_8(uint32_t drvno, uint8_t* data, uint32_t address)
