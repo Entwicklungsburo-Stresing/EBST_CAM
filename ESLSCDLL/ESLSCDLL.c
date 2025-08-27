@@ -1092,7 +1092,7 @@ DllAccess es_status_codes DLLReadBitS0_32(uint32_t drvno, uint32_t address, uint
  * @brief Read 1 bit of a 4 bytes s0 register for all boards.
  *
  * @param[in] address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
- * @param[in] bitnumber Address of the bit to read.
+ * @param[in] bitnumber Address of the bit to read. 0...31
  * @param[out] isBitHigh0 board 0: Tells if bit is 1 or 0.
  * @param[out] isBitHigh1 board 1: Tells if bit is 1 or 0.
  * @param[out] isBitHigh2 board 2: Tells if bit is 1 or 0.
@@ -1130,7 +1130,7 @@ DllAccess es_status_codes DLLReadBitS0_8(uint32_t drvno, uint32_t address, uint8
  * @brief Read 1 bit of 1 byte of a s0 register for all boards.
  *
  * @param[in] address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
- * @param[in] bitnumber Address of the bit to read.
+ * @param[in] bitnumber Address of the bit to read. 0...7
  * @param[out] isBitHigh0 Tells if bit is high or low.
  * @param[out] isBitHigh1 Tells if bit is high or low.
  * @param[out] isBitHigh2 Tells if bit is high or low.

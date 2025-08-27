@@ -724,7 +724,7 @@ es_status_codes readRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address
  *
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param[in] address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
- * @param[in] bitnumber Address of the bit to read.
+ * @param[in] bitnumber Address of the bit to read. 0...31
  * @param[out] isBitHigh Tells if bit is high or low.
  * @return @ref es_status_codes
  */
@@ -743,7 +743,7 @@ es_status_codes ReadBitS0_32(uint32_t drvno, uint32_t address, uint8_t bitnumber
  *
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param[in] address Address of the register to read. All available addresses are listed in enum @ref s0_addresses_t.
- * @param[in] bitnumber Address of the bit to read.
+ * @param[in] bitnumber Address of the bit to read. 0...7
  * @param[out] isBitHigh Tells if bit is high or low.
  * @return @ref es_status_codes
  */
