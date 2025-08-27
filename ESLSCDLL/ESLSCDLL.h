@@ -135,14 +135,18 @@ DllAccess es_status_codes DLLGetImpactSignal2(uint32_t drvno, uint32_t sample, u
 DllAccess uint32_t DLLGetVirtualCamcnt(uint32_t drvno);
 DllAccess uint8_t DLLGetTestModeOn();
 //************  Control CAM
-DllAccess es_status_codes DLLOutTrigHigh();
-DllAccess es_status_codes DLLOutTrigLow();
-DllAccess es_status_codes DLLOutTrigPulse(int64_t PulseWidth);
+DllAccess es_status_codes DLLOutTrigHigh(uint32_t drvno);
+DllAccess es_status_codes DLLOutTrigHigh_multipleBoards();
+DllAccess es_status_codes DLLOutTrigLow(uint32_t drvno);
+DllAccess es_status_codes DLLOutTrigLow_multipleBoards();
+DllAccess es_status_codes DLLOutTrigPulse(uint32_t drvno, int64_t PulseWidth);
+DllAccess es_status_codes DLLOutTrigPulse_multipleBoards(int64_t PulseWidth);
 DllAccess es_status_codes DLLOpenShutter(uint32_t drvno);
 DllAccess es_status_codes DLLOpenShutter_multipleBoards();
 DllAccess es_status_codes DLLCloseShutter(uint32_t drvno);
 DllAccess es_status_codes DLLCloseShutter_multipleBoards();
-DllAccess es_status_codes DLLSetTemp(uint8_t level);
+DllAccess es_status_codes DLLSetTemp(uint32_t drvno, uint8_t level);
+DllAccess es_status_codes DLLSetTemp_multipleBoards(uint8_t level);
 DllAccess es_status_codes DLLSetTORReg(uint32_t drvno, uint8_t tor);
 DllAccess es_status_codes DLLSetTORReg_multipleBoards(uint8_t tor);
 DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint32_t* output, uint8_t reorder_channels);
@@ -161,7 +165,6 @@ DllAccess es_status_codes DLLSetDIRDSC(uint32_t drvno, uint8_t DSCNumber, uint8_
 DllAccess es_status_codes DLLSetDIRDSC_multipleBoards(uint8_t DSCNumber, uint8_t dir);
 DllAccess es_status_codes DLLGetDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC);
 DllAccess es_status_codes DLLGetDSC_multipleBoards(uint8_t DSCNumber, uint32_t* ADSC0, uint32_t* LDSC0, uint32_t* ADSC1, uint32_t* LDSC1, uint32_t* ADSC2, uint32_t* LDSC2, uint32_t* ADSC3, uint32_t* LDSC3, uint32_t* ADSC4, uint32_t* LDSC4);
-DllAccess es_status_codes DLLInitGPX(uint32_t delay);
 DllAccess es_status_codes DLLGetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp);
 DllAccess es_status_codes DLLGetAllSpecialPixelInformation_multipleBoards(uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp0, struct special_pixels* sp1, struct special_pixels* sp2, struct special_pixels* sp3, struct special_pixels* sp4);
 DllAccess es_status_codes DLLSetSTimer(uint32_t drvno, uint32_t stime);
@@ -197,12 +200,16 @@ DllAccess es_status_codes DLLSetShutterStates(uint32_t drvno, uint16_t shutter_s
 //************ read and write functions
 DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address);
 DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards(uint8_t* data0, uint8_t* data1, uint8_t* data2, uint8_t* data3, uint8_t* data4, uint32_t address);
-DllAccess es_status_codes DLLwriteRegisterS0_8(uint8_t data, uint32_t address);
+DllAccess es_status_codes DLLwriteRegisterS0_8(uint32_t drvno, uint8_t data, uint32_t address);
+DllAccess es_status_codes DLLwriteRegisterS0_8_multipleBoards(uint8_t data, uint32_t address);
 DllAccess es_status_codes DLLreadRegisterS0_32(uint32_t drvno, uint32_t* data, uint32_t address);
 DllAccess es_status_codes DLLreadRegisterS0_32_multipleBoards(uint32_t* data0, uint32_t* data1, uint32_t* data2, uint32_t* data3, uint32_t* data4, uint32_t address);
-DllAccess es_status_codes DLLwriteRegisterS0_32(uint32_t data, uint32_t address);
-DllAccess es_status_codes DLLsetBitS0_32(uint32_t bitnumber, uint32_t address);
-DllAccess es_status_codes DLLresetBitS0_32(uint32_t bitnumber, uint32_t address);
+DllAccess es_status_codes DLLwriteRegisterS0_32(uint32_t drvno, uint32_t data, uint32_t address);
+DllAccess es_status_codes DLLwriteRegisterS0_32_multipleBoards(uint32_t data, uint32_t address);
+DllAccess es_status_codes DLLsetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint32_t address);
+DllAccess es_status_codes DLLsetBitS0_32_multipleBoards(uint32_t bitnumber, uint32_t address);
+DllAccess es_status_codes DLLresetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint32_t address);
+DllAccess es_status_codes DLLresetBitS0_32_multipleBoards(uint32_t bitnumber, uint32_t address);
 DllAccess es_status_codes DLLReadBitS0_32(uint32_t drvno, uint32_t address, uint8_t bitnumber, uint8_t* isBitHigh);
 DllAccess es_status_codes DLLReadBitS0_32_multipleBoards(uint32_t address, uint8_t bitnumber, uint8_t* isBitHigh0, uint8_t* isBitHigh1, uint8_t* isBitHigh2, uint8_t* isBitHigh3, uint8_t* isBitHigh4);
 DllAccess es_status_codes DLLReadBitS0_8(uint32_t drvno, uint32_t address, uint8_t bitnumber, uint8_t* isBitHigh);

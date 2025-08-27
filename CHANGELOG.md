@@ -9,8 +9,25 @@ The hardware version number is the current version at release time.
 ## Unreleased
 ### API Changes
 #### Added
+* Add function DLLOutTrigHigh_multipleBoards
+* Add function DLLOutTrigLow_multipleBoards
+* Add function DLLOutTrigPulse_multipleBoards
+* Add function DLLSetTemp_multipleBoards
+* Add function DLLwriteRegisterS0_8_multipleBoards
+* Add function DLLwriteRegisterS0_32_multipleBoards
+* Add function DLLsetBitS0_32_multipleBoards
+* Add function DLLresetBitS0_32_multipleBoards
 #### Changed
+* Add parameter drvno to DLLOutTrigHigh
+* Add parameter drvno to DLLOutTrigLow
+* Add parameter drvno to DLLOutTrigPulse
+* Add parameter drvno to DLLSetTemp
+* Add parameter drvno to DLLwriteRegisterS0_8
+* Add parameter drvno to DLLwriteRegisterS0_32
+* Add parameter drvno to DLLsetBitS0_32
+* Add parameter drvno to DLLresetBitS0_32
 #### Removed
+* Remove function DLLInitGPX
 #### Fixed
 #### Deprecated
 ### Other Changes

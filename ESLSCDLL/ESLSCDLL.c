@@ -433,13 +433,17 @@ DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards(uint8_t* data0, uin
 }
 
 /**
- * @brief Write the same 1 byte to a register in S0 space of all boards selected by settings parameter @ref measurement_settings.board_sel.
- *
- * @param[in] data Data to write.
- * @param[in] address Address of the register to write.
- * @return @ref es_status_codes
+ * @copydoc writeRegisterS0_8
  */
-DllAccess es_status_codes DLLwriteRegisterS0_8(uint8_t data, uint32_t address)
+DllAccess es_status_codes DLLwriteRegisterS0_8(uint32_t drvno, uint8_t data, uint32_t address)
+{
+	return writeRegisterS0_8(drvno, data, address);
+}
+
+/**
+ * @copydoc writeRegisterS0_8_allBoards
+ */
+DllAccess es_status_codes DLLwriteRegisterS0_8_multipleBoards(uint8_t data, uint32_t address)
 {
 	return writeRegisterS0_8_allBoards(data, address);
 }
@@ -480,13 +484,17 @@ DllAccess es_status_codes DLLreadRegisterS0_32_multipleBoards(uint32_t* data0, u
 }
 
 /**
- * @brief Write 4 bytes of a register in S0 space for all boards selected by settings parameter @ref measurement_settings.board_sel.
- *
- * @param[in] data Data to write.
- * @param[in] address Address of the register to read.
- * @return @ref es_status_codes
+ * @copydoc writeRegisterS0_32
  */
-DllAccess es_status_codes DLLwriteRegisterS0_32(uint32_t data, uint32_t address)
+DllAccess es_status_codes DLLwriteRegisterS0_32(uint32_t drvno, uint32_t data, uint32_t address)
+{
+	return writeRegisterS0_32(drvno, data, address);
+}
+
+/**
+ * @copydoc writeRegisterS0_32_allBoards
+ */
+DllAccess es_status_codes DLLwriteRegisterS0_32_multipleBoards(uint32_t data, uint32_t address)
 {
 	return writeRegisterS0_32_allBoards(data, address);
 }
@@ -947,12 +955,21 @@ DllAccess double DLLCalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double 
 }
 
 /**
- * @brief Set trigger out(Reg CtrlA:D3) for all boards selected by settings parameter @ref measurement_settings.board_sel. Can be used to control timing issues in software.
+ * @copydoc OutTrigHigh
+ */
+DllAccess es_status_codes DLLOutTrigHigh(uint32_t drvno)
+{
+	return OutTrigHigh(drvno);
+
+}
+
+/**
+ * @brief Set trigger out(Reg CtrlA:D3) for all boards selected by settings parameter @ref measurement_settings.board_sel.
  *
  * The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual.
  * @return @ref es_status_codes
  */
-DllAccess es_status_codes DLLOutTrigHigh()
+DllAccess es_status_codes DLLOutTrigHigh_multipleBoards()
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -966,12 +983,21 @@ DllAccess es_status_codes DLLOutTrigHigh()
 }
 
 /**
- * @brief Reset trigger out(Reg CtrlA:D3) for all boards selected by settings parameter @ref measurement_settings.board_sel. Can be used to control timing issues in software.
+ * @copydoc OutTrigLow
+ */
+DllAccess es_status_codes DLLOutTrigLow(uint32_t drvno)
+{
+	return OutTrigLow(drvno);
+}
+
+
+/**
+ * @brief Reset trigger out(Reg CtrlA:D3) for all boards selected by settings parameter @ref measurement_settings.board_sel.
  *
  * The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual.
  * @return @ref es_status_codes
  */
-DllAccess es_status_codes DLLOutTrigLow()
+DllAccess es_status_codes DLLOutTrigLow_multipleBoards()
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -985,13 +1011,21 @@ DllAccess es_status_codes DLLOutTrigLow()
 }
 
 /**
- * @brief Pulses trigger out(Reg CtrlA:D3) for all boards selected by setings parameter @ref measurement_settings.board_sel. Can be used to control timing issues in software.
+ * @copydoc OutTrigPulse
+ */
+DllAccess es_status_codes DLLOutTrigPulse(uint32_t drvno, int64_t pulseWidthInMicroseconds)
+{
+	return OutTrigPulse(drvno, pulseWidthInMicroseconds);
+}
+
+/**
+ * @brief Pulses trigger out(Reg CtrlA:D3) for all boards selected by setings parameter @ref measurement_settings.board_sel.
  *
  * The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual
  * @param[in] pulseWidthInMicroseconds duration of pulse in us
  * @return @ref es_status_codes
  */
-DllAccess es_status_codes DLLOutTrigPulse(int64_t pulseWidthInMicroseconds)
+DllAccess es_status_codes DLLOutTrigPulse_multipleBoards(int64_t pulseWidthInMicroseconds)
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -1057,25 +1091,33 @@ DllAccess es_status_codes DLLCloseShutter_multipleBoards()
 }
 
 /**
- * @brief Set bit to 1 in S0 register at memory address for all boards selected by settings parameter @ref measurement_settings.board_sel.
- *
- * @param[in] bitnumber 0...31, 0 is LSB, 31 MSB
- * @param[in] address register address. Only 4 byte steps are valid.
- * @return @ref es_status_codes
+ * @copydoc setBitS0_32
  */
-DllAccess es_status_codes DLLsetBitS0_32(uint32_t bitnumber, uint32_t address)
+DllAccess es_status_codes DLLsetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint32_t address)
+{
+	return setBitS0_32(drvno, bitnumber, address);
+}
+
+/**
+ * @copydoc setBitS0_32_allBoards
+ */
+DllAccess es_status_codes DLLsetBitS0_32_multipleBoards(uint32_t bitnumber, uint32_t address)
 {
 	return setBitS0_32_allBoards(bitnumber, address);
 }
 
 /**
- * @brief Set bit to 0 in register at memory address for all boards selected by settings parameter @ref measurement_settings.board_sel.
- *
- * @param[in] bitnumber 0...31, 0 is LSB, 31 MSB
- * @param[in] address register address. Only 4 byte steps are valid.
- * @return @ref es_status_codes
+ * @copydoc resetBitS0_32
  */
-DllAccess es_status_codes DLLresetBitS0_32(uint32_t bitnumber, uint32_t address)
+DllAccess es_status_codes DLLresetBitS0_32(uint32_t drvno, uint32_t bitnumber, uint32_t address)
+{
+	return resetBitS0_32(drvno, bitnumber, address);
+}
+
+/**
+ * @copydoc resetBitS0_32_allBoards
+ */
+DllAccess es_status_codes DLLresetBitS0_32_multipleBoards(uint32_t bitnumber, uint32_t address)
 {
 	return resetBitS0_32_allBoards(bitnumber, address);
 }
@@ -1165,12 +1207,21 @@ DllAccess es_status_codes DLLCam_SendData(uint32_t drvno, uint8_t maddr, uint8_t
 }
 
 /**
+ * @copydoc Cam_SetTemp
+ */
+DllAccess es_status_codes DLLSetTemp(uint32_t drvno, uint8_t level)
+{
+	return Cam_SetTemp(drvno, level);
+}
+
+
+/**
  * @brief Set temperature level for cooled cameras for all boards selected by settings parameter @ref measurement_settings.board_sel.
  *
  * @param[in] level level 0..7 / 0=off, 7=min -> see cooling manual
  * @return @ref es_status_codes
  */
-DllAccess es_status_codes DLLSetTemp(uint8_t level)
+DllAccess es_status_codes DLLSetTemp_multipleBoards(uint8_t level)
 {
 	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
@@ -1797,27 +1848,6 @@ DllAccess es_status_codes DLLGetDSC_multipleBoards(uint8_t DSCNumber, uint32_t* 
 			status = GetDSC(drvno, DSCNumber, ADSC[usedBoards], LDSC[usedBoards]);
 			if (status != es_no_error) return status;
 			usedBoards++;
-		}
-	}
-	return status;
-}
-
-/**
- * @brief Initialize the TDC-GPX chip for all boards selected by settings parameter @ref measurement_settings.board_sel. TDC: time delay counter option.
- *
- * @param[in] delay GPX offset is used to increase accuracy. A counter value can be added, usually 1000.
- * @return @ref es_status_codes
- */
-DllAccess es_status_codes DLLInitGPX(uint32_t delay)
-{
-	es_status_codes status = es_no_error;
-	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
-	{
-		// Check if the drvno'th bit is set
-		if ((settings_struct.board_sel >> drvno) & 1)
-		{
-			status = InitGPX(drvno, delay);
-			if (status != es_no_error) return status;
 		}
 	}
 	return status;
