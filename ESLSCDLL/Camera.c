@@ -602,8 +602,8 @@ es_status_codes Cam_SetSensorResetOrHsirEc(uint32_t drvno, uint16_t sensor_reset
 /**
  * @brief Set temperature level for cooled cameras.
  *
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param level level 0..7 / 0=off, 7=min -> see cooling manual
+ * @param drvno[in] identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param level[in] level 0..7 / 0=off, 7=min -> see cooling manual
  * @return @ref es_status_codes
  */
 es_status_codes Cam_SetTemp(uint32_t drvno, uint8_t level)
@@ -616,10 +616,10 @@ es_status_codes Cam_SetTemp(uint32_t drvno, uint8_t level)
 /**
  * @brief Sends data via the fiber link to the camera.
  * @details The register @ref S0Addr_DBR is used for sending data via the fiber link.
- * @param drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param maddr master address for specifying which address space is used. See \ref master_address_t for options.
- * @param adaddr register address. Which register is written to depends on the address space which is defined maddr. It is either @ref camera_register_addresses_t, @ref adc_ltc2271_register_adress_t, @ref adc_ads5294_register_adress_t, @ref ioctrl_register_address_t or @ref dac_register_addresses_t.
- * @param data 16 bit data to send
+ * @param drvno[in] identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param maddr[in] master address for specifying which address space is used. See \ref master_address_t for options.
+ * @param adaddr[in] register address. Which register is written to depends on the address space which is defined maddr. It is either @ref camera_register_addresses_t, @ref adc_ltc2271_register_adress_t, @ref adc_ads5294_register_adress_t, @ref ioctrl_register_address_t or @ref dac_register_addresses_t.
+ * @param data[in] 16 bit data to send
  * @return @ref es_status_codes
  */
 es_status_codes Cam_SendData(uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint16_t data)
