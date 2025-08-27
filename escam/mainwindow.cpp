@@ -312,8 +312,14 @@ void MainWindow::on_actionExport_data_triggered()
  */
 void MainWindow::on_actionImport_data_triggered()
 {
-	QString fileName = QFileDialog::getOpenFileName(this, "Import data", "", "binary files (*.bin)"); // HDF5 files(*.h5) not yet allowed, because it isn't implemented yet
+	QString fileName = QFileDialog::getOpenFileName(this, "Import data", "", "binary files (*.bin);;HDF5 files (*.h5)"); // HDF5 files(*.h5) not yet allowed, because it isn't implemented yet
 	if (fileName.isEmpty()) return;
+	if (fileName.endsWith(".h5", Qt::CaseInsensitive)) {
+
+	}
+	if (fileName.endsWith(".bin", Qt::CaseInsensitive)) {
+
+	}
 	QByteArray fileName_byteArray = fileName.toLocal8Bit();
 	const char* fileName_char = fileName_byteArray.data();
 	es_status_codes status = mainWindow->lsc.importMeasurementDataFromFile(fileName_char);

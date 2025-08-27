@@ -4990,9 +4990,164 @@ es_status_codes ImportMeasurementDataFromFile(const char* filename)
 	// Check filename for filetype
 	char* extension = strrchr(filename, '.');
 	if (extension == NULL) return es_invalid_file_extention;
-	//else if (strcmp(extension, ".h5") == 0) return ImportMeasurementDataFromFileHDF5(filename);
+	else if (strcmp(extension, ".h5") == 0) return ImportMeasurementDataFromFileHDF5(filename);
 	else if (strcmp(extension, ".bin") == 0) return ImportMeasurementDataFromFileBIN(filename);
 	else return es_invalid_file_extention;
+}
+
+void read_uint32_attr(hid_t obj_id, const char* attr_name, uint32_t* value) {
+	hid_t attr = H5Aopen(obj_id, attr_name, H5P_DEFAULT);
+	H5Aread(attr, H5T_NATIVE_UINT32, value);
+	H5Aclose(attr);
+}
+
+es_status_codes ImportMeasurementDataFromFileHDF5(const char* filename)
+{
+	hid_t file_id;
+	herr_t statusHDF5;
+	es_status_codes status;
+	
+	if ((file_id = H5Fopen(filename, H5F_ACC_RDONLY, H5P_DEFAULT)) == H5I_INVALID_HID) return es_open_file_failed;
+
+	uint32_t major_version;
+	read_uint32_attr(file_id, "Major version", &major_version);
+	
+	uint32_t pcie_version;
+	read_uint32_attr(file_id, "Pcie version", &pcie_version);
+
+	uint32_t minor_version;
+	read_uint32_attr(file_id, "Minor version", &minor_version);
+
+	uint32_t number_of_boards_file;
+	read_uint32_attr(file_id, "Number of Boards", (uint32_t*)&number_of_boards_file);
+
+	for (uint32_t board_idx = 0; board_idx < number_of_boards_file; board_idx++)
+	{
+		char group_board_name[100];
+		sprintf_s(group_board_name, 100, "/Board_%"PRIu32, board_idx + 1);
+
+		//Check if group exists
+		if (H5Lexists(file_id, group_board_name, H5P_DEFAULT) <= 0) continue;
+
+		hid_t group_board_id = H5Gopen(file_id, group_board_name, H5P_DEFAULT);
+		if (group_board_id < 0) continue;
+
+		uint32_t number_of_cameras;
+		read_uint32_attr(group_board_id, "Number of Cameras", &number_of_cameras);
+
+		settings_struct.board_sel |= (1 << board_idx);
+		settings_struct.camera_settings[board_idx].camcnt = number_of_cameras;
+
+		if (number_of_cameras > 0) {
+			hid_t group_camera_id = H5Gopen(group_board_id, "Camera_1", H5P_DEFAULT);
+			if (group_camera_id >= 0)
+			{
+				uint32_t number_of_blocks;
+				read_uint32_attr(group_camera_id, "Number of Blocks", &number_of_blocks);
+				settings_struct.nob = number_of_blocks;
+
+				if (number_of_blocks > 0)
+				{
+					hid_t group_block_id = H5Gopen(group_camera_id, "Block_1", H5P_DEFAULT);
+					if (group_block_id >= 0)
+					{
+						uint32_t number_of_samples;
+						read_uint32_attr(group_block_id, "Number of Samples", &number_of_samples);
+						settings_struct.nos = number_of_samples;
+
+						if (number_of_samples > 0)
+						{
+							hid_t dataset_id = H5Dopen(group_block_id, "Sample_1", H5P_DEFAULT);
+							if (dataset_id >= 0)
+							{
+								hid_t dataspace_id = H5Dget_space(dataset_id);
+								hsize_t dims[1];
+								H5Sget_simple_extent_dims(dataspace_id, dims, NULL);
+
+								settings_struct.camera_settings[board_idx].pixel = (uint32_t)dims[0] + pixel_number_of_special_pixels;
+
+								H5Sclose(dataspace_id);
+								H5Dclose(dataset_id);
+							}
+						}
+						H5Gclose(group_block_id);
+					}
+				}
+				H5Gclose(group_camera_id);
+			}
+		}
+		H5Gclose(group_board_id);
+	}
+
+	for (uint32_t drvno = 0; drvno < MAXPCIECARDS; drvno++)
+	{
+		if ((settings_struct.board_sel >> drvno) & 1)
+		{
+			status = InitSoftware(drvno);
+			if (status != es_no_error)
+			{
+				H5Fclose(file_id);
+				return status;
+			}
+		}
+	}
+
+	for (uint32_t board_idx = 0; board_idx < number_of_boards_file; board_idx++)
+	{
+		if ((settings_struct.board_sel >> board_idx) & 1)
+		{
+			char group_board_name[100];
+			sprintf_s(group_board_name, 100, "/Board_%"PRIu32, board_idx + 1);
+			hid_t group_board_id = H5Gopen(file_id, group_board_name, H5P_DEFAULT);
+			if (group_board_id < 0) continue;
+			for (uint32_t camera = 0; camera < settings_struct.camera_settings[board_idx].camcnt; camera++)
+			{
+				char group_camera_name[100];
+				sprintf_s(group_camera_name, 100, "Camera_%"PRIu32, camera + 1);
+				hid_t group_camera_id = H5Gopen(group_board_id, group_camera_name, H5P_DEFAULT);
+				if (group_camera_id < 0) continue;
+				for (uint32_t block = 0; block < settings_struct.nob; block++)
+				{
+					char group_block_name[100];
+					sprintf_s(group_block_name, 100, "Block_%"PRIu32, block + 1);
+					hid_t group_block_id = H5Gopen(group_camera_id, group_block_name, H5P_DEFAULT);
+					if (group_block_id < 0) continue;
+					for (uint32_t sample = 0; sample < settings_struct.nos; sample++)
+					{
+						char dataset_sample_name[100];
+						sprintf_s(dataset_sample_name, 100, "Sample_%"PRIu32, sample + 1);
+						hid_t dataset_id = H5Dopen(group_block_id, dataset_sample_name, H5P_DEFAULT);
+						if (dataset_id < 0) continue;
+						hid_t dataspace_id = H5Dget_space(dataset_id);
+						hsize_t dims[1];
+						H5Sget_simple_extent_dims(dataspace_id, dims, NULL);
+
+						uint16_t* data = (uint16_t*)malloc(dims[0] * sizeof(uint16_t));
+						if (data)
+						{
+							statusHDF5 = H5Dread(dataset_id, H5T_NATIVE_UINT16, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+
+							uint16_t* user_buffer_pos = NULL;
+							status = GetOneSamplePointer(board_idx, sample, block, (uint16_t)camera, &user_buffer_pos, NULL);
+							if (status == es_no_error && user_buffer_pos)
+							{
+								memset(user_buffer_pos, 0, settings_struct.camera_settings[board_idx].pixel * sizeof(uint16_t));
+								memcpy(user_buffer_pos + pixel_first_sensor_pixel, data, dims[0] * sizeof(uint16_t));
+							}
+							free(data);
+						}
+						H5Sclose(dataspace_id);
+						H5Dclose(dataset_id);
+					}
+					H5Gclose(group_block_id);
+				}
+				H5Gclose(group_camera_id);
+			}
+			H5Gclose(group_board_id);
+		}
+	}
+	H5Fclose(file_id);
+	return es_no_error;
 }
 
 es_status_codes ImportMeasurementDataFromFileBIN(const char* filename)
@@ -5019,7 +5174,6 @@ es_status_codes ImportMeasurementDataFromFileBIN(const char* filename)
  */
 es_status_codes SaveMeasurementDataToFileHDF5(const char* filename)
 {
-	ES_LOG("Export measurement to HDF5 file\n");
 	hid_t file_id;
 	hid_t dataspace_scalar = H5Screate(H5S_SCALAR);
 	herr_t statusHDF5;
@@ -5167,6 +5321,9 @@ es_status_codes SaveMeasurementDataToFileHDF5(const char* filename)
 						hid_t sample_attr_tempGood = CreateNumericAttribute(dataset_id, "Temperature Good", H5T_NATIVE_UINT32, dataspace_scalar, &sp.tempGood);
 						H5Aclose(sample_attr_tempGood);
 
+						hid_t sample_attr_campos = CreateNumericAttribute(dataset_id, "Camera Position", H5T_NATIVE_UINT32, dataspace_scalar, &sp.campos);
+						H5Aclose(sample_attr_campos);
+
 						hid_t sample_attr_cameraSystem3001 = CreateNumericAttribute(dataset_id, "Camera System 3001", H5T_NATIVE_UINT32, dataspace_scalar, &sp.cameraSystem3001);
 						H5Aclose(sample_attr_cameraSystem3001);
 
@@ -5194,7 +5351,6 @@ es_status_codes SaveMeasurementDataToFileHDF5(const char* filename)
 					{
 						char link_name[100];
 						H5Lget_name_by_idx(group_block_id, ".", H5_INDEX_CRT_ORDER, H5_ITER_INC, i, link_name, 100, H5P_DEFAULT);
-						//ES_LOG("Link name: %s\n", link_name);
 					}
 
 					statusHDF5 = H5Gclose(group_block_id);

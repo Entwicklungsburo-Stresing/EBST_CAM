@@ -60,6 +60,7 @@ es_status_codes InitBoard();
 #ifndef MINIMAL_BUILD
 es_status_codes ImportMeasurementDataFromFile(const char* filename);
 es_status_codes ImportMeasurementDataFromFileBIN(const char* filename);
+es_status_codes ImportMeasurementDataFromFileHDF5(const char* filename);
 #endif
 es_status_codes setBlockEn(uint32_t drvno, uint32_t block_index);
 es_status_codes resetBlockEn(uint32_t drvno, uint32_t block_index);
