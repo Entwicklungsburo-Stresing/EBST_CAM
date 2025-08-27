@@ -5133,6 +5133,82 @@ es_status_codes ImportMeasurementDataFromFileHDF5(const char* filename)
 							{
 								memset(user_buffer_pos, 0, settings_struct.camera_settings[board_idx].pixel * sizeof(uint16_t));
 								memcpy(user_buffer_pos + pixel_first_sensor_pixel, data, dims[0] * sizeof(uint16_t));
+
+								struct special_pixels sp = { 0 };
+								read_uint32_attr(dataset_id, "S1 State", &sp.s1State);
+								read_uint32_attr(dataset_id, "S2 State", &sp.s2State);
+								read_uint32_attr(dataset_id, "Block Index", &sp.blockIndex);
+								read_uint32_attr(dataset_id, "Scan Index", &sp.scanIndex);
+								read_uint32_attr(dataset_id, "Scan Index 2", &sp.scanIndex2);
+								read_uint32_attr(dataset_id, "Impact Signal 1", &sp.impactSignal1);
+								read_uint32_attr(dataset_id, "Impact Signal 2", &sp.impactSignal2);
+								read_uint32_attr(dataset_id, "Over Temperature", &sp.overTemp);
+								read_uint32_attr(dataset_id, "Temperature Good", &sp.tempGood);
+								read_uint32_attr(dataset_id, "Camera Position", &sp.campos);
+								read_uint32_attr(dataset_id, "Camera System 3001", &sp.cameraSystem3001);
+								read_uint32_attr(dataset_id, "Camera System 3010", &sp.cameraSystem3010);
+								read_uint32_attr(dataset_id, "Camera System 3030", &sp.cameraSystem3030);
+
+								// Block index (pixels 2 and 3)
+								user_buffer_pos[pixel_block_index_low] = (uint16_t)(sp.blockIndex & 0xFFFF);
+								uint16_t blockIndexHigh = (uint16_t)((sp.blockIndex >> 16) & pixel_block_index_high_s1_s2_bits_block_index);
+
+								// Add S1 and S2 states to the high block index pixel
+								if (sp.s1State) blockIndexHigh |= pixel_block_index_high_s1_s2_bit_s1;
+								if (sp.s2State) blockIndexHigh |= pixel_block_index_high_s1_s2_bit_s2;
+								user_buffer_pos[pixel_block_index_high_s1_s2] = blockIndexHigh;
+
+								// Scan index (pixels 4 and 5)
+								user_buffer_pos[pixel_scan_index_low] = (uint16_t)(sp.scanIndex & 0xFFFF);
+								user_buffer_pos[pixel_scan_index_high] = (uint16_t)((sp.scanIndex >> 16) & 0xFFFF);
+
+								// Impact signals (pixels 6, 7, 8, 9)
+								user_buffer_pos[pixel_impact_signal_1_low] = (uint16_t)(sp.impactSignal1 & 0xFFFF);
+								user_buffer_pos[pixel_impact_signal_1_high] = (uint16_t)((sp.impactSignal1 >> 16) & 0xFFFF);
+								user_buffer_pos[pixel_impact_signal_2_low] = (uint16_t)(sp.impactSignal2 & 0xFFFF);
+								user_buffer_pos[pixel_impact_signal_2_high] = (uint16_t)((sp.impactSignal2 >> 16) & 0xFFFF);
+
+								// Camera status pixel (pixel 10)
+								uint16_t camera_status = 0;
+								camera_status |= (sp.overTemp * pixel_camera_status_bit_over_temp);
+								camera_status |= (sp.tempGood * pixel_camera_status_bit_temp_good);
+								camera_status |= ((sp.campos << pixel_camera_status_bitindex_campos) & pixel_camera_status_bits_campos);
+								camera_status |= (sp.cameraSystem3001 * pixel_camera_status_bit_3001);
+								camera_status |= (sp.cameraSystem3010 * pixel_camera_status_bit_3010);
+								camera_status |= (sp.cameraSystem3030 * pixel_camera_status_bit_3030);
+								user_buffer_pos[pixel_camera_status] = camera_status;
+
+								// Scan index 2 (last pixels - note the reverse indexing)
+								uint32_t lastPixel = settings_struct.camera_settings[board_idx].pixel - 1;
+								user_buffer_pos[lastPixel - pixel_scan_index2_low] = (uint16_t)(sp.scanIndex2 & 0xFFFF);
+								user_buffer_pos[lastPixel - pixel_scan_index2_high] = (uint16_t)((sp.scanIndex2 >> 16) & 0xFFFF);
+
+								// Read FPGA version string attribute and convert to major and minor version in pixel_fpga_ver
+								hid_t fpga_ver_attr = H5Aopen(dataset_id, "FPGA Version", H5P_DEFAULT);
+								if (fpga_ver_attr >= 0)
+								{
+									hid_t attr_type = H5Aget_type(fpga_ver_attr);
+									hid_t mem_type = H5Tget_native_type(attr_type, H5T_DIR_ASCEND);
+									H5Tset_cset(mem_type, H5T_CSET_UTF8);
+									hsize_t attr_size = H5Tget_size(attr_type);
+									char** fpga_ver_str = NULL;
+									herr_t read_status = -1;
+									read_status = H5Aread(fpga_ver_attr, mem_type, &fpga_ver_str);
+									if (read_status >= 0 && fpga_ver_str != NULL)
+									{
+										char* dot_pos = strchr(fpga_ver_str, '.');
+										if (dot_pos)
+										{
+											*dot_pos = '\0';
+											sp.fpgaVerMajor = (uint32_t)atoi(fpga_ver_str);
+											sp.fpgaVerMinor = (uint32_t)atoi(dot_pos + 1);
+										}
+										H5free_memory(fpga_ver_str);
+									}
+									H5Tclose(attr_type);
+									H5Aclose(fpga_ver_attr);
+								}
+								user_buffer_pos[pixel_fpga_ver] = (uint16_t)((sp.fpgaVerMinor << pixel_fpga_ver_minor_bit) | (sp.fpgaVerMajor & pixel_fpga_ver_major_and_bit));
 							}
 							free(data);
 						}
