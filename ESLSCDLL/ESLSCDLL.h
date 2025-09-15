@@ -47,7 +47,7 @@ extern "C" {
 // 1) Initialize the driver. Call it once at startup.
 DllAccess es_status_codes DLLInitDriver(uint8_t* _number_of_boards);
 // 2) Use this function to properly initialize the struct measurement_settings to its default values.
-DllAccess void DLLInitSettingsStruct(struct measurement_settings* ms);
+DllAccess es_status_codes DLLInitSettingsStruct(struct measurement_settings* ms);
 // 3) Initialize Hardware and Software for the Measurement. Call it once at startup and every time you changed settings.
 DllAccess es_status_codes DLLInitMeasurement(struct measurement_settings settings);
 DllAccess es_status_codes DLLInitMeasurement_matlab(struct measurement_settings_matlab measurement_s, struct camera_settings camera_s0, struct camera_settings camera_s1, struct camera_settings camera_s2, struct camera_settings camera_s3, struct camera_settings camera_s4);
@@ -81,7 +81,7 @@ DllAccess es_status_codes DLLExitDriver();
 DllAccess es_status_codes DLLImportMeasurementDataFromFile(const char* filename);
 #endif
 //************ system info & control
-DllAccess void DLLFreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free);
+DllAccess es_status_codes DLLFreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free);
 DllAccess int DLLGetProcessCount();
 DllAccess int DLLGetThreadCount();
 DllAccess double DLLCalcRamUsageInMB(uint32_t nos, uint32_t nob);
@@ -97,8 +97,8 @@ DllAccess es_status_codes DLLWaitForMeasureDone();
 DllAccess es_status_codes DLLWaitForBlockDone();
 DllAccess es_status_codes DLLGetMeasureOn(uint32_t drvno, uint8_t* measureOn);
 DllAccess es_status_codes DLLGetMeasureOn_multipleBoards(uint8_t* measureOn0, uint8_t* measureOn1, uint8_t* measureOn2, uint8_t* measureOn3, uint8_t* measureOn4);
-DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block);
-DllAccess void DLLGetCurrentScanNumber_multipleBoards(int64_t* sample0, int64_t* block0, int64_t* sample1, int64_t* block1, int64_t* sample2, int64_t* block2, int64_t* sample3, int64_t* block3, int64_t* sample4, int64_t* block4);
+DllAccess es_status_codes DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block);
+DllAccess es_status_codes DLLGetCurrentScanNumber_multipleBoards(int64_t* sample0, int64_t* block0, int64_t* sample1, int64_t* block1, int64_t* sample2, int64_t* block2, int64_t* sample3, int64_t* block3, int64_t* sample4, int64_t* block4);
 DllAccess es_status_codes DLLReadScanFrequencyBit(uint32_t drvno, uint8_t* scanFrequencyTooHigh);
 DllAccess es_status_codes DLLReadScanFrequencyBit_multipleBoards(uint8_t* scanFrequencyTooHigh0, uint8_t* scanFrequencyTooHigh1, uint8_t* scanFrequencyTooHigh2, uint8_t* scanFrequencyTooHigh3, uint8_t* scanFrequencyTooHigh4);
 DllAccess es_status_codes DLLResetScanFrequencyBit(uint32_t drvno);

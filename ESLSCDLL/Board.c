@@ -730,6 +730,8 @@ es_status_codes readRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address
  */
 es_status_codes ReadBitS0_32(uint32_t drvno, uint32_t address, uint8_t bitnumber, bool* isBitHigh)
 {
+	if (!isBitHigh)
+		return es_invalid_pointer;
 	uint32_t data = 0;
 	es_status_codes status = readRegisterS0_32(drvno, &data, address);
 	if (data & (1 << bitnumber)) *isBitHigh = true;
@@ -749,6 +751,8 @@ es_status_codes ReadBitS0_32(uint32_t drvno, uint32_t address, uint8_t bitnumber
  */
 es_status_codes ReadBitS0_8(uint32_t drvno, uint32_t address, uint8_t bitnumber, bool* isBitHigh)
 {
+	if(!isBitHigh)
+		return es_invalid_pointer;
 	uint8_t data = 0;
 	es_status_codes status = readRegisterS0_8(drvno, &data, address);
 
@@ -936,7 +940,9 @@ es_status_codes allocateUserMemory(uint32_t drvno)
 	userBuffer[drvno] = NULL;
 	uint64_t memory_all = 0;
 	uint64_t memory_free = 0;
-	FreeMemInfo(&memory_all, &memory_free);
+	es_status_codes status = FreeMemInfo(&memory_all, &memory_free);
+	if(status != es_no_error)
+		return status;
 	uint64_t memory_free_mb = memory_free / (1024 * 1024);
 	uint64_t needed_mem = (uint64_t)virtualCamcnt[drvno] * (uint64_t)settings_struct.nob * (uint64_t)settings_struct.nos * (uint64_t)settings_struct.camera_settings[drvno].pixel * (uint64_t)sizeof(uint16_t);
 	uint64_t needed_mem_mb = needed_mem / (1024 * 1024);
@@ -1453,6 +1459,8 @@ es_status_codes DAC8568_sendData(uint32_t drvno, uint8_t location, uint8_t camer
  */
 es_status_codes DAC8568_setAllOutputs(uint32_t drvno, uint8_t location, uint8_t cameraPosition, uint32_t* output, bool reorder_channels)
 {
+	if(!output)
+		return es_invalid_pointer;
 	es_status_codes status = es_no_error;
 	int* reorder_ch;
 	if (reorder_channels)
@@ -2318,6 +2326,8 @@ es_status_codes InitBoard()
 es_status_codes InitDriver(uint8_t* _number_of_boards)
 {
 	ES_LOG("\n*** Init driver ***\n");
+	if (!_number_of_boards)
+		return es_invalid_pointer;
 	initPerformanceCounter();
 	es_status_codes status = _InitDriver(_number_of_boards);
 	if (status != es_no_error) return status;
@@ -2589,6 +2599,8 @@ double CalcRamUsageInMB(uint32_t nos, uint32_t nob)
  */
 es_status_codes CalcTrms(uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf, double* trms)
 {
+	if(!mwf || !trms)
+		return es_invalid_pointer;
 	if (firstSample >= lastSample || lastSample > settings_struct.nos || userBuffer[drvno] == 0)
 	{
 		//error: firstSample must be smaller than lastSample
@@ -2859,6 +2871,8 @@ es_status_codes WaitForMeasureDone()
  */
 es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
 {
+	if (!stringPtr)
+		return es_invalid_pointer;
 	enum N
 	{
 		number_of_registers = 49,
@@ -2946,6 +2960,8 @@ es_status_codes dumpS0Registers(uint32_t drvno, char** stringPtr)
  */
 es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
 {
+	if (!stringPtr)
+		return es_invalid_pointer;
 	enum N
 	{
 		bufferSize = 4000
@@ -3625,6 +3641,8 @@ es_status_codes dumpHumanReadableS0Registers(uint32_t drvno, char** stringPtr)
  */
 es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr)
 {
+	if(!stringPtr)
+		return es_invalid_pointer;
 	enum N
 	{
 		number_of_registers = 18,
@@ -3681,6 +3699,8 @@ es_status_codes dumpDmaRegisters(uint32_t drvno, char** stringPtr)
  */
 es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
 {
+	if(!stringPtr)
+		return es_invalid_pointer;
 	enum N
 	{
 		bufferLength = 500
@@ -3745,6 +3765,8 @@ es_status_codes dumpTlpRegisters(uint32_t drvno, char** stringPtr)
  */
 es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
 {
+	if(!stringPtr)
+		return es_invalid_pointer;
 	es_status_codes status = es_no_error;
 	enum N
 	{
@@ -3829,6 +3851,8 @@ es_status_codes _AboutGPX(uint32_t drvno, char** stringPtr)
  */
 es_status_codes dumpMeasurementSettings(char** stringPtr)
 {
+	if(!stringPtr)
+		return es_invalid_pointer;
 	enum N
 	{
 		bufferLength = 2000,
@@ -3858,6 +3882,8 @@ es_status_codes dumpMeasurementSettings(char** stringPtr)
  */
 es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
 {
+	if(!stringPtr)
+		return es_invalid_pointer;
 	enum N
 	{
 		bufferLength = 2000,
@@ -3994,6 +4020,8 @@ es_status_codes dumpCameraSettings(uint32_t drvno, char** stringPtr)
  */
 es_status_codes dumpPciRegisters(uint32_t drvno, char** stringPtr)
 {
+	if(!stringPtr)
+		return es_invalid_pointer;
 	uint32_t data = 0;
 	int length = 0;
 	es_status_codes status = es_no_error;
@@ -4064,6 +4092,8 @@ es_status_codes dumpPciRegisters(uint32_t drvno, char** stringPtr)
 */
 es_status_codes _AboutDrv(uint32_t drvno, char** stringPtr)
 {
+	if(!stringPtr)
+		return es_invalid_pointer;
 	enum N
 	{
 		bufferLength = 500,
@@ -4281,18 +4311,19 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
  * @param[out] sample Scan number of the last scan in userBuffer. -1 when no scan has been written yet, otherwise 0...(nos-1)
  * @param[out] block Block number of the last scan in userBuffer. -1 when no scans has been written yet, otherwise 0...(nob-1)
  */
-void GetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block)
+es_status_codes GetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block)
 {
-	GetScanNumber(drvno, 0, sample, block);
-	return;
+	return GetScanNumber(drvno, 0, sample, block);
 }
 
 /**
  * @copydoc GetCurrentScanNumber
  * @param offset from current scan number
  */
-void GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* block)
+es_status_codes GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* block)
 {
+	if (!sample || !block)
+		return es_invalid_pointer;
 	int64_t scanCount = 0;
 	uint32_t dmasPerInterrupt = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
 	if (settings_struct.camera_settings[drvno].use_software_polling)
@@ -4391,15 +4422,7 @@ void FillUserBufferWithDummyData(uint32_t drvno)
 es_status_codes GetIsTdc(uint32_t drvno, bool* isTdc)
 {
 	ES_LOG("Get is TDC, drvno %"PRIu32"\n", drvno);
-	uint32_t data = 0;
-	es_status_codes status = readRegisterS0_32(drvno, &data, S0Addr_PCIEFLAGS);
-	if (status != es_no_error) return status;
-	// Check if TDC bit is set
-	if (PCIEFLAGS_bit_IS_TDC & data)
-		*isTdc = true;
-	else
-		*isTdc = false;
-	return status;
+	return ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_IS_TDC, isTdc);
 }
 
 /**
@@ -4412,15 +4435,7 @@ es_status_codes GetIsTdc(uint32_t drvno, bool* isTdc)
 es_status_codes GetIsDsc(uint32_t drvno, bool* isDsc)
 {
 	ES_LOG("Get is DSC, drvno %"PRIu32"\n", drvno);
-	uint32_t data = 0;
-	es_status_codes status = readRegisterS0_32(drvno, &data, S0Addr_PCIEFLAGS);
-	if (status != es_no_error) return status;
-	// Check if DSC bit is set
-	if (PCIEFLAGS_bit_IS_DSC & data)
-		*isDsc = true;
-	else
-		*isDsc = false;
-	return status;
+	return ReadBitS0_32(drvno, S0Addr_PCIEFLAGS, PCIEFLAGS_bitindex_IS_DSC, isDsc);
 }
 
 /**
@@ -4431,6 +4446,8 @@ es_status_codes GetIsDsc(uint32_t drvno, bool* isDsc)
  */
 void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString)
 {
+	if (!vd || !resultString)
+		return;
 #ifndef MINIMAL_BUILD
 	VerifyData(vd);
 #endif
@@ -4651,6 +4668,8 @@ es_status_codes GetS2State(uint32_t drvno, uint32_t sample, uint32_t block, uint
  */
 es_status_codes GetImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
+	if (!impactSignal)
+		return es_invalid_pointer;
 	ES_TRACE("Get impact signal 1, drvno %"PRIu32", sample %"PRIu32", block %"PRIu32", camera_pos %"PRIu16"\n", drvno, sample, block, camera_pos);
 	uint16_t data_high = 0;
 	uint16_t data_low = 0;
@@ -4676,6 +4695,8 @@ es_status_codes GetImpactSignal1(uint32_t drvno, uint32_t sample, uint32_t block
  */
 es_status_codes GetImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, uint32_t* impactSignal)
 {
+	if (!impactSignal)
+		return es_invalid_pointer;
 	ES_TRACE("Get impact signal 2, drvno %"PRIu32", sample %"PRIu32", block %"PRIu32", camera_pos %"PRIu16"\n", drvno, sample, block, camera_pos);
 	uint16_t data_high = 0;
 	uint16_t data_low = 0;
@@ -4701,6 +4722,8 @@ es_status_codes GetImpactSignal2(uint32_t drvno, uint32_t sample, uint32_t block
  */
 es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, struct special_pixels* sp)
 {
+	if (!sp)
+		return es_invalid_pointer;
 	ES_TRACE("Get all special pixel information, drvno %"PRIu32", sample %"PRIu32", block %"PRIu32", camera_pos %"PRIu16"\n", drvno, sample, block, camera_pos);
 	if (settings_struct.camera_settings[drvno].pixel <= 63) return es_invalid_pixel_count;
 	uint16_t* data = (uint16_t*)malloc(settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t));

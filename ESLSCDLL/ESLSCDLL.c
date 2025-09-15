@@ -93,8 +93,10 @@ DllAccess es_status_codes DLLInitDriver(uint8_t* _number_of_boards)
  * 
  * @param[in] ms Pointer to the struct measurement_settings that should be initialized.
  */
-DllAccess void DLLInitSettingsStruct(struct measurement_settings* ms)
+DllAccess es_status_codes DLLInitSettingsStruct(struct measurement_settings* ms)
 {
+	if(!ms)
+		return es_invalid_pointer;
 	ms->board_sel = settingBoardSelDefault;
 	ms->continuous_measurement = settingContinuousMeasurementDefault;
 	ms->cont_pause_in_microseconds = settingContinuousPausInMicrosecondsDefault;
@@ -102,7 +104,7 @@ DllAccess void DLLInitSettingsStruct(struct measurement_settings* ms)
 	ms->nos = settingNosDefault;
 	for (uint32_t drvno = 0; drvno < MAXPCIECARDS; drvno++)
 		memcpy(&ms->camera_settings[drvno], &camera_settings_default, sizeof(struct camera_settings));
-	return;
+	return es_no_error;
 }
 
 /**
@@ -798,6 +800,8 @@ DllAccess es_status_codes DLLFindCam_multipleBoards(uint8_t* cameraFound0, uint8
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
+			if (!cameraFound[usedBoards])
+				return es_invalid_pointer;
 			es_status_codes status = FindCam(drvno);
 			if (status == es_no_error)
 				*cameraFound[usedBoards] = true;
@@ -1302,10 +1306,9 @@ DllAccess es_status_codes DLLDAC8568_setAllOutputs_multipleBoards(uint8_t locati
 /**
  * @copydoc FreeMemInfo
  */
-DllAccess void DLLFreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
+DllAccess es_status_codes DLLFreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 {
-	FreeMemInfo(pmemory_all, pmemory_free);
-	return;
+	return FreeMemInfo(pmemory_all, pmemory_free);
 }
 
 
@@ -1640,10 +1643,9 @@ DllAccess es_status_codes DLLIOCtrl_setAllOutputs(uint32_t* width_in_5ns, uint32
 /**
  * @copydoc GetCurrentScanNumber
  */
-DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block)
+DllAccess es_status_codes DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block)
 {
-	GetCurrentScanNumber(drvno, sample, block);
-	return;
+	return GetCurrentScanNumber(drvno, sample, block);
 }
 
 /**
@@ -1664,16 +1666,18 @@ DllAccess void DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t*
  * @param[out] block3 Block number of the last scan in userBuffer of board 3. -1 when no scans has been written yet, otherwise 0...(nob-1)
  * @param[out] block4 Block number of the last scan in userBuffer of board 4. -1 when no scans has been written yet, otherwise 0...(nob-1)
  */
-DllAccess void DLLGetCurrentScanNumber_multipleBoards(int64_t* sample0, int64_t* block0, int64_t* sample1, int64_t* block1, int64_t* sample2, int64_t* block2, int64_t* sample3, int64_t* block3, int64_t* sample4, int64_t* block4)
+DllAccess es_status_codes DLLGetCurrentScanNumber_multipleBoards(int64_t* sample0, int64_t* block0, int64_t* sample1, int64_t* block1, int64_t* sample2, int64_t* block2, int64_t* sample3, int64_t* block3, int64_t* sample4, int64_t* block4)
 {
 	int64_t* sample[MAXPCIECARDS] = { sample0, sample1, sample2, sample3, sample4 };
 	int64_t* block[MAXPCIECARDS] = { block0, block1, block2, block3, block4 };
 	int usedBoards = 0;
+	es_status_codes status = es_no_error;
 	for (uint32_t drvno = 0; drvno < number_of_boards; drvno++)
 		// Check if the drvno'th bit is set
 		if ((settings_struct.board_sel >> drvno) & 1)
 		{
-			GetCurrentScanNumber(drvno, sample[usedBoards], block[usedBoards]);
+			status = GetCurrentScanNumber(drvno, sample[usedBoards], block[usedBoards]);
+			if (status != es_no_error) return status;
 			usedBoards++;
 		}
 	return;

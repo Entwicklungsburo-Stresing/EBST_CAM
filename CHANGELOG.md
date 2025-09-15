@@ -26,6 +26,9 @@ The hardware version number is the current version at release time.
 * Add parameter drvno to DLLwriteRegisterS0_32
 * Add parameter drvno to DLLsetBitS0_32
 * Add parameter drvno to DLLresetBitS0_32
+* Change return type of DLLFreeMemInfo to es_status_codes
+* Change return type of DLLGetCurrentScanNumber to es_status_codes
+* Change return type of DLLGetCurrentScanNumber_multipleBoards to es_status_codes
 #### Removed
 * Remove function DLLInitGPX
 #### Fixed
@@ -36,6 +39,7 @@ The hardware version number is the current version at release time.
 #### Removed
 #### Fixed
 * Fix test mode when no PCIe card is connected
+* Harden DLL against wrong parameters
 #### Deprecated
 
 ## 4.18.4 - 2025-08-21

@@ -109,6 +109,8 @@ es_status_codes readRegister_32(uint32_t drvno, uint32_t* data, uint32_t address
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
+	if(!data)
+		return es_invalid_pointer;
 	WaitForSingleObject(registerReadWriteMutex[drvno], INFINITE);
 	status = lscpciej_readRegister_32(drvno, data, address);
 	ReleaseMutex(registerReadWriteMutex[drvno]);
@@ -127,6 +129,8 @@ es_status_codes readRegister_16(uint32_t drvno, uint16_t* data, uint32_t address
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
+	if (!data)
+		return es_invalid_pointer;
 	WaitForSingleObject(registerReadWriteMutex[drvno], INFINITE);
 	status = lscpciej_readRegister_16(drvno, data, address);
 	ReleaseMutex(registerReadWriteMutex[drvno]);
@@ -145,6 +149,8 @@ es_status_codes readRegister_8(uint32_t drvno, uint8_t* data, uint32_t address)
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
+	if (!data)
+		return es_invalid_pointer;
 	WaitForSingleObject(registerReadWriteMutex[drvno], INFINITE);
 	status = lscpciej_readRegister_8(drvno, data, address);
 	ReleaseMutex(registerReadWriteMutex[drvno]);
@@ -407,8 +413,10 @@ es_status_codes writeConfig_32(uint32_t drvno, uint32_t data, uint32_t address)
  * @param[out] pmemory_all how much is installed
  * @param[out] pmemory_free how much is free
  */
-void FreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
+es_status_codes FreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 {
+	if(!pmemory_all || !pmemory_free)
+		return es_invalid_pointer;
 	// Use to convert bytes to KB
 #define DIV 1024
 	// Specify the width of the field in which to print the numbers. 

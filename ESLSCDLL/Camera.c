@@ -787,6 +787,8 @@ es_status_codes CamIOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t wi
  */
 es_status_codes CamIOCtrl_setAllOutputs(uint32_t drvno, uint32_t* width_in_5ns, uint32_t* delay_in_5ns)
 {
+	if (!width_in_5ns || !delay_in_5ns)
+		return es_invalid_pointer;
 	es_status_codes status = es_no_error;
 	for (uint8_t i = 0; i <= 6; i++)
 	{
