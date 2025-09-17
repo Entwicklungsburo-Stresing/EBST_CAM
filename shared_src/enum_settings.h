@@ -65,15 +65,21 @@ enum bti_mode_t
 	 */
 	bti_BTimer = 4,
 	/**
-	 * S1 chopper
+	 * OBSOLETE
+	 * This option is removed since PCIe card version P222.16. In higher versions this option is the same like S1.
+	 * External trigger on input S1 of PCIe board. The chopper option is intended for high speed systems (100kHz). Here the block trigger runs much higher than the real block repetition. Below 30 kHz the S1 option is sufficient.
 	 */
 	bti_S1chopper = 5,
 	/**
-	 * S2 chopper
+	 * OBSOLETE
+	 * This option is removed since PCIe card version P222.16. In higher versions this option is the same like S2.
+	 * External trigger on input S2 of PCIe board. The chopper option is intended for high speed systems (100kHz). Here the block trigger runs much higher than the real block repetition. Below 30 kHz the S2 option is sufficient.
 	 */
 	bti_S2chopper = 6,
 	/**
-	 * S1&S2 chopper
+	 * OBSOLETE
+	 * This option is removed since PCIe card version P222.16. In higher versions this option is the same like S1S2.
+	 * External trigger when inputs S1 and S2 are high. The chopper option is intended for high speed systems (100kHz). Here the block trigger runs much higher than the real block repetition. Below 30 kHz the S1S2 option is sufficient.
 	 */
 	bti_S1S2chopper = 7
 };

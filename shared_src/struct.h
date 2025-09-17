@@ -59,7 +59,7 @@ struct camera_settings
 	 */
 	uint32_t sti_mode;
 	/**
-	 * Block trigger input mode determines the signal, on which one block of readouts is started. See enum @ref bti_mode_t in enum_settings.h  for options.  Further information on trigger signals can be found in the manual in chapter 6.3.
+	 * Block trigger input mode determines the signal, on which one block of readouts is started. See enum @ref bti_mode_t in enum_settings.h for options. Further information on trigger signals can be found in the manual in chapter 6.3.
 	 */
 	uint32_t bti_mode;
 	/**
