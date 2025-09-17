@@ -9,6 +9,20 @@ The hardware version number is the current version at release time.
 ## Unreleased
 ### API Changes
 #### Added
+#### Changedes_status_codes
+#### Removed
+#### Fixed
+#### Deprecated
+### Other Changes
+#### Added
+#### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+
+## 4.18.5 - 2025-09-17
+### API Changes
+#### Added
 * Add function DLLOutTrigHigh_multipleBoards
 * Add function DLLOutTrigLow_multipleBoards
 * Add function DLLOutTrigPulse_multipleBoards
@@ -31,10 +45,7 @@ The hardware version number is the current version at release time.
 * Change return type of DLLGetCurrentScanNumber_multipleBoards to es_status_codes
 #### Removed
 * Remove function DLLInitGPX
-#### Fixed
-#### Deprecated
 ### Other Changes
-#### Added
 #### Changed
 * Update Qt to 6.9.2
 #### Removed
@@ -42,7 +53,6 @@ The hardware version number is the current version at release time.
 #### Fixed
 * Fix test mode when no PCIe card is connected
 * Harden DLL against wrong parameters
-#### Deprecated
 
 ## 4.18.4 - 2025-08-21
 ### Other Changes
