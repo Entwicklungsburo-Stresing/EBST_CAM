@@ -36,7 +36,9 @@ The hardware version number is the current version at release time.
 ### Other Changes
 #### Added
 #### Changed
+* Update Qt to 6.9.2
 #### Removed
+* Remove chopper options from BTI, obsolete since P222.16
 #### Fixed
 * Fix test mode when no PCIe card is connected
 * Harden DLL against wrong parameters
