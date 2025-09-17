@@ -4310,6 +4310,7 @@ void PollDmaBufferToUserBuffer(uint32_t* drvno_p)
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param[out] sample Scan number of the last scan in userBuffer. -1 when no scan has been written yet, otherwise 0...(nos-1)
  * @param[out] block Block number of the last scan in userBuffer. -1 when no scans has been written yet, otherwise 0...(nob-1)
+ * @return @ref es_status_codes
  */
 es_status_codes GetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block)
 {
@@ -4319,6 +4320,7 @@ es_status_codes GetCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* b
 /**
  * @copydoc GetCurrentScanNumber
  * @param offset from current scan number
+ * @return @ref es_status_codes
  */
 es_status_codes GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, int64_t* block)
 {
@@ -4337,7 +4339,7 @@ es_status_codes GetScanNumber(uint32_t drvno, int64_t offset, int64_t* sample, i
 	int64_t count_of_scans_of_completed_blocks = *block * settings_struct.nos;
 	*sample = samples_done_per_cam - count_of_scans_of_completed_blocks;
 	//ES_TRACE("block %li, scan %li, samples_done_all_cams %li, samples_done_per_cam %li, count_of_scans_of_completed_blocks %li\n", *block, *sample, samples_done_all_cams, samples_done_per_cam, count_of_scans_of_completed_blocks);
-	return;
+	return es_no_error;
 }
 
 /**

@@ -412,6 +412,7 @@ es_status_codes writeConfig_32(uint32_t drvno, uint32_t data, uint32_t address)
  * 
  * @param[out] pmemory_all how much is installed
  * @param[out] pmemory_free how much is free
+ * @return @ref es_status_codes
  */
 es_status_codes FreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 {
@@ -447,7 +448,7 @@ es_status_codes FreeMemInfo(uint64_t* pmemory_all, uint64_t* pmemory_free)
 	// Show the amount of extended memory available.
 	//_tprintf(TEXT("There are %*I64d free  KB of extended memory.\n"),
 	//	WIDTH, statex.ullAvailExtendedVirtual / DIV);
-	return;
+	return es_no_error;
 }
 
 es_status_codes StartCopyDataToUserBufferThread(uint32_t drvno)

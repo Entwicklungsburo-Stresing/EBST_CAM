@@ -92,6 +92,7 @@ DllAccess es_status_codes DLLInitDriver(uint8_t* _number_of_boards)
  * @brief Use this function to properly initialize the struct measurement_settings to its default values.
  * 
  * @param[in] ms Pointer to the struct measurement_settings that should be initialized.
+ * @return @ref es_status_codes
  */
 DllAccess es_status_codes DLLInitSettingsStruct(struct measurement_settings* ms)
 {
@@ -111,6 +112,7 @@ DllAccess es_status_codes DLLInitSettingsStruct(struct measurement_settings* ms)
  * @copydoc InitMeasurement
  * 
  * @param[in] settings struct measurement_settings
+ * @return @ref es_status_codes
  */
 DllAccess es_status_codes DLLInitMeasurement(struct measurement_settings settings)
 {
@@ -1665,6 +1667,7 @@ DllAccess es_status_codes DLLGetCurrentScanNumber(uint32_t drvno, int64_t* sampl
  * @param[out] block2 Block number of the last scan in userBuffer of board 2. -1 when no scans has been written yet, otherwise 0...(nob-1)
  * @param[out] block3 Block number of the last scan in userBuffer of board 3. -1 when no scans has been written yet, otherwise 0...(nob-1)
  * @param[out] block4 Block number of the last scan in userBuffer of board 4. -1 when no scans has been written yet, otherwise 0...(nob-1)
+ * @return @ref es_status_codes
  */
 DllAccess es_status_codes DLLGetCurrentScanNumber_multipleBoards(int64_t* sample0, int64_t* block0, int64_t* sample1, int64_t* block1, int64_t* sample2, int64_t* block2, int64_t* sample3, int64_t* block3, int64_t* sample4, int64_t* block4)
 {
@@ -1680,7 +1683,7 @@ DllAccess es_status_codes DLLGetCurrentScanNumber_multipleBoards(int64_t* sample
 			if (status != es_no_error) return status;
 			usedBoards++;
 		}
-	return;
+	return status;
 }
 
 /**

@@ -178,13 +178,14 @@ es_status_codes checkDriverHandle(uint32_t drvno)
  * 
  * @param pmemory_all how much is installed
  * @param pmemory_free how much is free
+ * @return @ref es_status_codes
  */
-void FreeMemInfo( uint64_t *pmemory_all, uint64_t *pmemory_free )
+es_status_codes FreeMemInfo( uint64_t *pmemory_all, uint64_t *pmemory_free )
 {
 	//TODO implement me
 	*pmemory_all = (uint64_t) -1;
 	*pmemory_free = (uint64_t) -1;
-	return;
+	return es_no_error;
 }
 
 es_status_codes SetupDma( uint32_t drvno )

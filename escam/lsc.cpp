@@ -282,7 +282,7 @@ es_status_codes Lsc::ioctrl_setOutput(uint32_t drvno, uint32_t number, uint16_t 
 /**
  * @copydoc DLLGetCurrentScanNumber
  */
-void Lsc::getCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block)
+es_status_codes Lsc::getCurrentScanNumber(uint32_t drvno, int64_t* sample, int64_t* block)
 {
 	return DLLGetCurrentScanNumber(drvno, sample, block);
 }
