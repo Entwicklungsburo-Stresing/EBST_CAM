@@ -64,14 +64,12 @@ es_status_codes writeRegister_32( uint32_t drvno, uint32_t data, uint32_t addres
 }
 
 /**
- * \brief Writes 32 bits (4 bytes) to register. Two boards sync version.
+ * @brief Writes 32 bits (4 bytes) to register. Two boards sync version.
  *
- * \param data1 data to write board 1
- * \param data2 data to write board 2
- * \param address Register offset from BaseAdress - in bytes
- * \return es_status_codes:
-	- es_no_error
-	- es_register_write_failed
+ * @param data1 data to write board 1
+ * @param data2 data to write board 2
+ * @param address Register offset from BaseAdress - in bytes
+ * @return @ref es_status_codes
  */
 es_status_codes writeRegister_32twoBoards(uint32_t data1, uint32_t data2, uint32_t address)
 {
@@ -101,14 +99,12 @@ es_status_codes writeRegister_8( uint32_t drvno, uint8_t data, uint32_t address 
 }
 
 /**
- * \brief Writes 8 bits (1 bytes) to register. Two boards sync version.
+ * @brief Writes 8 bits (1 bytes) to register. Two boards sync version.
  *
- * \param data1 data to write board 1
- * \param data2 data to write board 2
- * \param address Register offset from BaseAdress - in bytes
- * \return es_status_codes:
-	- es_no_error
-	- es_register_write_failed
+ * @param data1 data to write board 1
+ * @param data2 data to write board 2
+ * @param address Register offset from BaseAdress - in bytes
+ * @return @ref es_status_codes
  */
 es_status_codes writeRegister_8twoBoards(uint8_t data1, uint8_t data2, uint32_t address)
 {
@@ -129,9 +125,7 @@ es_status_codes writeRegister_8twoBoards(uint8_t data1, uint8_t data2, uint32_t 
  * @param drvno board number (=1 if one PCI board)
  * @param data pointer to where data is stored
  * @param address offset of register (count in bytes)
- * @return es_status_codes:
- *		- es_no_error
- *		- es_register_read_failed
+ * @return @ref es_status_codes
  */
 es_status_codes readConfig_32( uint32_t drvno, uint32_t* data, uint32_t address )
 {
@@ -154,13 +148,10 @@ es_status_codes writeConfig_32( uint32_t drvno, uint32_t data, uint32_t address 
 }
 
 /**
- * \brief Check drvno for beeing legit
+ * @brief Check drvno for beeing legit
  * 
- * \param drvno driver number
- * \return es_status_codes:
- *		- es_invalid_driver_number
- *		- es_invalid_driver_handle
- *		- es_no_error
+ * @param drvno driver number
+ * @return @ref es_status_codes
  */
 es_status_codes checkDriverHandle(uint32_t drvno)
 {
