@@ -8,8 +8,8 @@
 #include "Direct2dViewer.h"
 
 /**
-@brief Initialize members.
-*/
+ * @brief Initialize members.
+ */
 Direct2dViewer::Direct2dViewer() :
 	m_hwnd( NULL ),
 	m_pD2DFactory( NULL ),
@@ -24,8 +24,8 @@ Direct2dViewer::Direct2dViewer() :
 }
 
 /**
-@brief Release resources.
-*/
+ * @brief Release resources.
+ */
 Direct2dViewer::~Direct2dViewer()
 {
 	SafeRelease( &m_pD2DFactory );
@@ -39,9 +39,8 @@ Direct2dViewer::~Direct2dViewer()
 }
 
 /**
-@brief Creates the application window and initializes
-	device-independent resources.
-*/
+ * @brief Creates the application window and initializes device-independent resources.
+ */
 HRESULT Direct2dViewer::Initialize( HWND hWndParent )
 {
 	HRESULT hr = S_OK;
@@ -110,13 +109,13 @@ HRESULT Direct2dViewer::Initialize( HWND hWndParent )
 }
 
 /**
-@brief Create resources which are not bound
-	to any device. Their lifetime effectively extends for the
-	duration of the app. These resources include the Direct2D,
-	DirectWrite, and WIC factories; and a DirectWrite Text Format object
-	(used for identifying particular font characteristics) and
-	a Direct2D geometry.
-*/
+ * @brief Create resources which are not bound to any device.
+ * 
+ * Their lifetime effectively extends for the duration of the app.
+ * These resources include the Direct2D, DirectWrite, and WIC factories;
+ * and a DirectWrite Text Format object (used for identifying particular
+ * font characteristics) and a Direct2D geometry.
+ */
 HRESULT Direct2dViewer::CreateDeviceIndependentResources()
 {
 	static const WCHAR msc_fontName[] = L"Verdana";
@@ -188,11 +187,11 @@ HRESULT Direct2dViewer::CreateDeviceIndependentResources()
 }
 
 /**
-@brief This method creates resources which are bound to a particular
-Direct3D device. It's all centralized here, in case the resources
-need to be recreated in case of Direct3D device loss (eg. display
-change, remoting, removal of video card, etc).
-*/
+ * @brief This method creates resources which are bound to a particular Direct3D device.
+ * It's all centralized here, in case the resources
+ * need to be recreated in case of Direct3D device loss (eg. display
+ * change, remoting, removal of video card, etc).
+ */
 HRESULT Direct2dViewer::CreateDeviceResources()
 {
 	HRESULT hr = S_OK;
@@ -230,8 +229,8 @@ HRESULT Direct2dViewer::CreateDeviceResources()
 
 
 /**
-@brief Discard device-specific resources which need to be recreated
-when a Direct3D device is lost.
+ * @brief Discard device-specific resources which need to be recreated
+ * when a Direct3D device is lost.
 */
 void Direct2dViewer::DiscardDeviceResources()
 {
@@ -241,16 +240,15 @@ void Direct2dViewer::DiscardDeviceResources()
 }
 
 /**
-@brief Called whenever the application needs to display the client
-window.
-
-Note that this function will not render anything if the window
-is occluded (e.g. when the screen is locked).
-Also, this function will automatically discard device-specific
-resources if the Direct3D device disappears during function
-invocation, and will recreate the resources the next time it's
-invoked.
-*/
+ * @brief Called whenever the application needs to display the client window.
+ * 
+ * Note that this function will not render anything if the window
+ * is occluded (e.g. when the screen is locked).
+ * Also, this function will automatically discard device-specific
+ * resources if the Direct3D device disappears during function
+ * invocation, and will recreate the resources the next time it's
+ * invoked.
+ */
 HRESULT Direct2dViewer::OnRender()
 {
 	HRESULT hr = S_OK;
@@ -302,9 +300,9 @@ HRESULT Direct2dViewer::OnRender()
 }
 
 /**
-@brief If the application receives a WM_SIZE message, this method
-resize the render target appropriately.
-*/
+ * @brief If the application receives a WM_SIZE message, this method
+ * resize the render target appropriately.
+ */
 void Direct2dViewer::OnResize(UINT width, UINT height)
 {
 	if (m_pRenderTarget)
@@ -321,8 +319,8 @@ void Direct2dViewer::OnResize(UINT width, UINT height)
 }
 
 /**
-@brief The window message handler.
-*/
+ * @brief The window message handler.
+ */
 LRESULT CALLBACK Direct2dViewer::WndProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	LRESULT result = 0;
@@ -388,9 +386,9 @@ LRESULT CALLBACK Direct2dViewer::WndProc( HWND hwnd, UINT message, WPARAM wParam
 }
 
 /**
-@brief Creates a Direct2D bitmap from memory.
-	Interpretes data in memory as 16 bit greyscale per pixel.
-*/
+ * @brief Creates a Direct2D bitmap from memory.
+ * Interpretes data in memory as 16 bit greyscale per pixel.
+ */
 HRESULT Direct2dViewer::loadBitmap()
 {
 	HRESULT hr = S_OK;
@@ -488,9 +486,9 @@ HRESULT Direct2dViewer::loadBitmap()
 /**
  * @brief Set information about which data is used for displaying a bitmap.
  * 
- * @param addr Address where the bitmap data is located.
- * @param width Width of the bitmap.
- * @param height Height of the bitmap.
+ * @param[in] addr Address where the bitmap data is located.
+ * @param[in] width Width of the bitmap.
+ * @param[in] height Height of the bitmap.
  */
 void Direct2dViewer::setBitmapSource( void *addr, UINT width, UINT height )
 {
@@ -501,18 +499,18 @@ void Direct2dViewer::setBitmapSource( void *addr, UINT width, UINT height )
 }
 
 /**
-@brief Returns the window handler of 2d viewer
-*/
+ * @brief Returns the window handler of 2d viewer
+ */
 HWND Direct2dViewer::getWindowHandler()
 {
 	return m_hwnd;
 }
 
 /**
-@brief Set gamma value.
-@param[in] white set value for maximum brightness. Default: 0xFFFF (16 bit),  0x3FFF (14 bit)
-@param[in] black set value for minimum brightness. Default: 0
-*/
+ * @brief Set gamma value.
+ * @param[in] white set value for maximum brightness. Default: 0xFFFF (16 bit),  0x3FFF (14 bit)
+ * @param[in] black set value for minimum brightness. Default: 0
+ */
 void Direct2dViewer::SetGammaValue( UINT16 white, UINT16 black )
 {
 	if (black >= white) black = white - 1;
@@ -524,29 +522,29 @@ void Direct2dViewer::SetGammaValue( UINT16 white, UINT16 black )
 }
 
 /**
-@brief return gamma value white
-*/
+ * @brief return gamma value white
+ */
 UINT16 Direct2dViewer::GetGammaWhite()
 {
 	return _gamma.white;
 }
 
 /**
-@brief return gamma value black
-*/
+ * @brief return gamma value black
+ */
 UINT16 Direct2dViewer::GetGammaBlack()
 {
 	return _gamma.black;
 }
 
 /**
-@brief Starts 2d viewer with a initial bitmap.
-Use this to start 2d viewer. Call constructor before.
-@param hWndParent Window handler of parent window.
-@param bitmapAddr Address to first byte of bitmap data.
-@param width Width of bitmap.
-@param height Height of bitmap.
-*/
+ * @brief Starts 2d viewer with a initial bitmap.
+ * Use this to start 2d viewer. Call constructor before.
+ * @param[in] hWndParent Window handler of parent window.
+ * @param[in] bitmapAddr Address to first byte of bitmap data.
+ * @param[in] width Width of bitmap.
+ * @param[in] height Height of bitmap.
+ */
 HRESULT Direct2dViewer::start2dViewer( HWND hWndParent, void *bitmapAddr, UINT width, UINT height )
 {
 	//tell 2D viewer which data to use
@@ -557,11 +555,11 @@ HRESULT Direct2dViewer::start2dViewer( HWND hWndParent, void *bitmapAddr, UINT w
 }
 
 /**
-@brief Show a new bitmap in 2d viewer.
-@param addr Address to first byte of bitmap data.
-@param width Width of bitmap.
-@param height Height of bitmap.
-*/
+ * @brief Show a new bitmap in 2d viewer.
+ * @param addr Address to first byte of bitmap data.
+ * @param width Width of bitmap.
+ * @param height Height of bitmap.
+ */
 void Direct2dViewer::showNewBitmap( void *addr, UINT width, UINT height )
 {
 	//tell 2D viewer which data to use
@@ -572,8 +570,8 @@ void Direct2dViewer::showNewBitmap( void *addr, UINT width, UINT height )
 }
 
 /**
-@brief Reload the displayed bitmap in 2d viewer.
-*/
+ * @brief Reload the displayed bitmap in 2d viewer.
+ */
 void Direct2dViewer::repaintWindow()
 {
 	//send message to 2d viewer window to repaint
@@ -581,6 +579,9 @@ void Direct2dViewer::repaintWindow()
 	return;
 }
 
+/**
+ * @brief Calculate cursor position in pixel and line of bitmap.
+ */
 void Direct2dViewer::CalcCursorPos()
 {
 	D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
@@ -597,6 +598,9 @@ void Direct2dViewer::CalcCursorPos()
 	return;
 }
 
+/**
+ * @brief Draw scale on top and left side of bitmap.
+ */
 void Direct2dViewer::DrawScale()
 {
 	D2D1_SIZE_F renderTargetSize = m_pRenderTarget->GetSize();
@@ -646,6 +650,12 @@ void Direct2dViewer::DrawScale()
 	return;
 }
 
+/**
+ * @brief Draw a number at a given position.
+ * 
+ * @param[in] location Position where the number is drawn.
+ * @param[in] number Number to draw.
+ */
 void Direct2dViewer::DrawNumber( D2D1_POINT_2F location, int number )
 {
 	std::wstring number_wstring = std::to_wstring( number );
@@ -659,7 +669,12 @@ void Direct2dViewer::DrawNumber( D2D1_POINT_2F location, int number )
 	return;
 }
 
-
+/**
+ * @brief Draw a vertical line.
+ * @param[in] startPoint Start point of line.
+ * @param[in] length Length of line.
+ * @param[in] strokeWidth Width of line.
+ */
 void Direct2dViewer::DrawVerticalLine( D2D1_POINT_2F startPoint, FLOAT length, FLOAT strokeWidth )
 {
 	D2D1_POINT_2F endPoint = startPoint;
@@ -674,6 +689,12 @@ void Direct2dViewer::DrawVerticalLine( D2D1_POINT_2F startPoint, FLOAT length, F
 	return;
 }
 
+/**
+ * @brief Draw a horizontal line.
+ * @param[in] startPoint Start point of line.
+ * @param[in] length Length of line.
+ * @param[in] strokeWidth Width of line.
+ */
 void Direct2dViewer::DrawHorizontalLine( D2D1_POINT_2F startPoint, FLOAT length, FLOAT strokeWidth )
 {
 	D2D1_POINT_2F endPoint = startPoint;
@@ -688,6 +709,11 @@ void Direct2dViewer::DrawHorizontalLine( D2D1_POINT_2F startPoint, FLOAT length,
 	return;
 }
 
+/**
+ * @brief Set number of pixels and lines to skip when drawing scale.
+ * @param[in] x Number of pixels to skip for horizontal scale.
+ * @param[in] y Number of lines to skip for vertical scale.
+ */
 void Direct2dViewer::Scale_setSkipLines( int x, int y )
 {
 	_scale.skip_x = x;

@@ -519,7 +519,7 @@ DllAccess es_status_codes DLLReadScanFrequencyBit(uint32_t drvno, uint8_t* scanF
  * @param[out] scanFrequencyTooHigh2 True when scan frequency too high bit is set for board 2
  * @param[out] scanFrequencyTooHigh3 True when scan frequency too high bit is set for board 3
  * @param[out] scanFrequencyTooHigh4 True when scan frequency too high bit is set for board 4
- * @return 
+ * @return @ref es_status_codes
  */
 DllAccess es_status_codes DLLReadScanFrequencyBit_multipleBoards(uint8_t* scanFrequencyTooHigh0, uint8_t* scanFrequencyTooHigh1, uint8_t* scanFrequencyTooHigh2, uint8_t* scanFrequencyTooHigh3, uint8_t* scanFrequencyTooHigh4)
 {
@@ -579,7 +579,7 @@ DllAccess es_status_codes DLLReadBlockFrequencyBit(uint32_t drvno, uint8_t* bloc
  * @param[out] blockFrequencyTooHigh2 True when block frequency too high bit is set for board 2
  * @param[out] blockFrequencyTooHigh3 True when block frequency too high bit is set for board 3
  * @param[out] blockFrequencyTooHigh4 True when block frequency too high bit is set for board 4
- * @return
+ * @return @ref es_status_codes
  */
 DllAccess es_status_codes DLLReadBlockFrequencyBit_multipleBoards(uint8_t* blockFrequencyTooHigh0, uint8_t* blockFrequencyTooHigh1, uint8_t* blockFrequencyTooHigh2, uint8_t* blockFrequencyTooHigh3, uint8_t* blockFrequencyTooHigh4)
 {
