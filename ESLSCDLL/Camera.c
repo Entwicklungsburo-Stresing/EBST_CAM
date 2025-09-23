@@ -119,9 +119,9 @@ es_status_codes Cam3001_Init(uint32_t drvno)
 /**
  * @brief Init routine for Camera System 3010.
  *
- * 	Sets registers in camera and ADC LTC2271.
- * 	FL3010 is intended for sensor S12198 !
- * 	with frame rate 8kHz = min. 125�s exp time
+ * Sets registers in camera and ADC LTC2271.
+ * FL3010 is intended for sensor S12198 !
+ * with frame rate 8kHz = min. 125�s exp time
  * @param[in] drvno selects PCIe board
  * @param[in] adc_mode 0: normal mode, 2: custom pattern
  * @param[in] custom_pattern fixed output for test mode, ignored when test mode FALSE
@@ -135,17 +135,16 @@ es_status_codes Cam3010_Init(uint32_t drvno, uint8_t adc_mode, uint16_t custom_p
 	return Cam3010_ADC_setOutputMode(drvno, adc_mode, custom_pattern);
 }
 
-
 /**
  * @brief ADC reset routine for Camera System 3010.
  *
- * 	ADC LTC2271 needs a reset via SPI first. Bit D7
- * 	of the reset register A0 with address 00h is set to 1.
- * 	D6:D0 are don't care. So address is 00h and data is
- * 	80h = 10000000b for e.g.
- * 	This has to be done after every startup.
- * 	Then the ADC can be programmed further via SPI in the next frames.
- * 	Called by Cam3010_Init
+ * ADC LTC2271 needs a reset via SPI first. Bit D7
+ * of the reset register A0 with address 00h is set to 1.
+ * D6:D0 are don't care. So address is 00h and data is
+ * 80h = 10000000b for e.g.
+ * This has to be done after every startup.
+ * Then the ADC can be programmed further via SPI in the next frames.
+ * Called by Cam3010_Init
  * @param[in] drvno selects PCIe board
  * @return @ref es_status_codes
  */
@@ -156,7 +155,7 @@ es_status_codes Cam3010_ADC_reset(uint32_t drvno)
 }
 
 /**
- * @brief
+ * @brief Set output mode of ADC LTC2271 for Camera System 3010.
  * @param[in] drvno selects PCIe board
  * @param[in] adc_mode
  * @param[in] custom_pattern
@@ -177,7 +176,7 @@ es_status_codes Cam3010_ADC_setOutputMode(uint32_t drvno, uint8_t adc_mode, uint
 }
 
 /**
- * @brief
+ * @brief Activate test pattern in ADC LTC2271 for Camera System 3010.
  * @param[in] drvno selects PCIe board
  * @param[in] custom_pattern
  * @return @ref es_status_codes
@@ -199,7 +198,7 @@ es_status_codes Cam3010_ADC_sendTestPattern(uint32_t drvno, uint16_t custom_patt
 /**
  * @brief Init routine for Camera System 3030.
  *
- * 	Sets registers in ADC ADS5294.
+ * Sets registers in ADC ADS5294.
  * @param[in] drvno selects PCIe board
  * @return @ref es_status_codes
  */
@@ -234,8 +233,8 @@ es_status_codes Cam3030_Init(uint32_t drvno)
 /**
  * @brief ADC reset routine for Camera System 3030.
  *
- * 	Resets register of ADC ADS5294 to default state (output interface is 1 wire!).
- * 	Called by Cam3030_Init
+ * Resets register of ADC ADS5294 to default state (output interface is 1 wire!).
+ * Called by Cam3030_Init
  * @param[in] drvno selects PCIe board
  * @return @ref es_status_codes
  */
@@ -247,10 +246,10 @@ es_status_codes Cam3030_ADC_reset(uint32_t drvno)
 /**
  * @brief ADC output interface config routine for Camera System 3030.
  *
- * 	Enables two wire LVDS data transfer mode of ADC ADS5294.
- * 	Only works with PAL versions P209_2 and above.
- * 	Called by Cam3030_Init - comment for older versions and rebuild
- * 	or use on e-lab test computer desktop LabView folder lv64hs (bool switch in 3030 init tab)
+ * Enables two wire LVDS data transfer mode of ADC ADS5294.
+ * Only works with PAL versions P209_2 and above.
+ * Called by Cam3030_Init - comment for older versions and rebuild
+ * or use on e-lab test computer desktop LabView folder lv64hs (bool switch in 3030 init tab)
  * @param[in] drvno selects PCIe board
  * @return @ref es_status_codes
  */
@@ -266,8 +265,8 @@ es_status_codes Cam3030_ADC_twoWireModeEN(uint32_t drvno)
 /**
  * @brief ADC gain config routine for Camera System 3030.
  *
- * 	Sets gain of ADC ADS5294 0...15 by calling Cam3030_ADC_SetGain() subroutine.
- * 	Called by Cam3030_Init
+ * Sets gain of ADC ADS5294 0...15 by calling Cam3030_ADC_SetGain() subroutine.
+ * Called by Cam3030_Init
  * @param[in] drvno selects PCIe board
  * @param[in] gain of ADC
  * @return @ref es_status_codes
@@ -280,7 +279,7 @@ es_status_codes Cam3030_ADC_SetGainAllChannels(uint32_t drvno, uint8_t gain)
 /**
  * @brief Set gain for ADS5294.
  *
- * @param[in] fkt =0 reset to db=0, fkt=1 set to g1..g8
+ * @param fkt =0 reset to db=0, fkt=1 set to g1..g8
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param[in] g1 channel 1
  * @param[in] g2 channel 2
@@ -646,8 +645,10 @@ es_status_codes Cam_SendData(uint32_t drvno, uint8_t maddr, uint8_t adaddr, uint
  * - en_area	(bit 15)		- as before
  * - vfreq		(bits 14...1)	- for cams with FFT_v2 FPGAs, that generate their own vclks inside the cam
  * - is_fft		(bit 0)			- as before but legacy to run FFT_v1 cameras
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @return @ref es_status_codes
  */
-es_status_codes Cam_SetVfreqRegister(uint32_t drvno) // was vclk register
+es_status_codes Cam_SetVfreqRegister(uint32_t drvno)
 {
 	es_status_codes status = es_no_error;
 	uint16_t is_area_mode = 0;
@@ -663,6 +664,13 @@ es_status_codes Cam_SetVfreqRegister(uint32_t drvno) // was vclk register
 	return status;
 }
 
+/**
+ * @brief Sets the full binning mode by writing the fft_lines value to the first vclk amount register and 0 to the others.
+ *
+ * This function is used when the camera is operated in full binning mode (fft_mode = full_binning).
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @return @ref es_status_codes
+ */
 es_status_codes Cam_SetupFullBinning(uint32_t drvno)
 {
 	es_status_codes status = es_no_error;
@@ -674,6 +682,13 @@ es_status_codes Cam_SetupFullBinning(uint32_t drvno)
 	return status;
 }
 
+/**
+ * @brief Sets the partial binning mode by writing the region sizes to the vclk amount registers.
+ *
+ * This function is used when the camera is operated in partial binning mode (fft_mode = partial_binning).
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @return @ref es_status_codes
+ */
 es_status_codes Cam_SetupPartialBinning(uint32_t drvno)
 {
 	es_status_codes status = es_no_error;
@@ -688,7 +703,7 @@ es_status_codes Cam_SetupPartialBinning(uint32_t drvno)
 /**
  * @brief Disables all camera leds to suppress stray light.
  *
- * 	Sets corresponding camera register: maddr = 0, adadr = 5;
+ * Sets corresponding camera register: maddr = 0, adadr = 5;
  * @param[in] drvno selects PCIe board
  * @param[in] LED_OFF 1 -> leds off, 0 -> led on
  * @return @ref es_status_codes
@@ -815,6 +830,13 @@ es_status_codes CamIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 	return Cam_SendData(drvno, maddr_ioctrl, ioctrl_t0l, period_in_10ns_L);
 }
 
+/**
+ * @brief Send 32 bit data to DAC8568.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] data 32 bit data to send to DAC8568
+ * @param[in] cameraPosition Position of camera. 0 ... 7
+ * @return @ref es_status_codes
+ */
 es_status_codes Cam_DAC8568_sendData(uint32_t drvno, uint32_t data, uint8_t cameraPosition)
 {
 	uint16_t hi_bytes = (uint16_t)(data >> 16);
@@ -827,18 +849,33 @@ es_status_codes Cam_DAC8568_sendData(uint32_t drvno, uint32_t data, uint8_t came
 	return status;
 }
 
+/**
+ * @brief Set pixel register in camera.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @return @ref es_status_codes
+ */
 es_status_codes Cam_SetPixelRegister(uint32_t drvno)
 {
 	ES_LOG("Set pixel register in camera to %"PRIu32"\n", settings_struct.camera_settings[drvno].pixel);
 	return Cam_SendData(drvno, maddr_cam, cam_adaddr_pixel, (uint16_t)settings_struct.camera_settings[drvno].pixel);
 }
 
+/**
+ * @brief Set trigger input register in camera.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @return @ref es_status_codes
+ */
 es_status_codes Cam_SetTriggerInput(uint32_t drvno)
 {
 	ES_LOG("Set trigger input in camera to %"PRIu32"\n", settings_struct.camera_settings[drvno].trigger_mode_integrator);
 	return Cam_SendData(drvno, maddr_cam, cam_adaddr_trig_in, (uint16_t)settings_struct.camera_settings[drvno].trigger_mode_integrator);
 }
 
+/**
+ * @brief Set configuration register in camera.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @return @ref es_status_codes
+ */
 es_status_codes Cam_SetConfigRegister(uint32_t drvno)
 {
 	es_status_codes status = es_no_error;
@@ -870,6 +907,13 @@ es_status_codes Cam_SetConfigRegister(uint32_t drvno)
 	return status;
 }
 
+/**
+ * @brief Setup camera for FFT operation depending on fft_mode setting.
+ *
+ * This function sets the vfreq register and depending on the fft_mode setting either sets up full binning or partial binning.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @return @ref es_status_codes
+ */
 es_status_codes Cam_SetupFFT(uint32_t drvno)
 {
 	es_status_codes status = es_no_error;
