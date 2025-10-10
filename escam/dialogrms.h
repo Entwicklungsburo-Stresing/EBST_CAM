@@ -9,6 +9,7 @@
 #pragma once
 
 #include <QDialog>
+#include <QSettings>
 #include "dialogsettings.h"
 
 namespace Ui {
@@ -35,4 +36,7 @@ private slots:
 	void on_spinBox_firstsample_valueChanged(int value);
 	void on_spinBox_lastsample_valueChanged(int value);
 	void on_spinBoxBoard_valueChanged(int index);
+	void on_spinBox_pixel_valueChanged(int value);
+	void updateSampleSize();
+
 };

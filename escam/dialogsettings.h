@@ -134,6 +134,11 @@ constexpr auto settingShutter2Path = "shutter2";
 constexpr auto settingShutter3Path = "shutter3";
 constexpr auto settingShutter4Path = "shutter4";
 constexpr auto settingShutterMshutPath = "shutterMshut";
+// RMS
+constexpr auto settingRMSCameraPositionPath = "rmsCameraPosition";
+constexpr auto settingRMSFirstSamplePath = "rmsFirstSamplePath";
+constexpr auto settingRMSLastSamplePath = "rmsLastSamplePath";
+constexpr auto settingRMSPixelPath = "rmsPixelPath";
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DialogSettings; }
