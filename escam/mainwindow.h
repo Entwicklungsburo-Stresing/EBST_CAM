@@ -84,4 +84,5 @@ private slots:
 	void on_readCameraTemp();
 	void on_actionChartSettings_triggered();
 	void setBlockOnLamp();
+	void closeAllShutters();
 };

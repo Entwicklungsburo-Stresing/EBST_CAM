@@ -45,6 +45,8 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(ui->radioButtonLiveViewFixedSample, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
 	connect(ui->radioButtonLiveViewOff, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
 	connect(ui->radioButtonLiveViewOffNewestSample, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
+	// Close all shutters on exiting the application before the application actually closes
+	connect(qApp, &QApplication::aboutToQuit, this, &MainWindow::closeAllShutters);
 
 
 	es_status_codes status = lsc.initDriver();
@@ -86,6 +88,9 @@ MainWindow::MainWindow(QWidget* parent)
 	ui->actionServo->setVisible(false);
 	ui->actionServo->setEnabled(false);
 #endif
+
+	// Close Shutters on initialization
+	closeAllShutters();
 }
 
 /**
@@ -1308,5 +1313,15 @@ void MainWindow::on_actionChartSettings_triggered()
 	connect(dialog, &DialogChartSettings::spinBoxAxes_valueChanged, ui->chartView, &MyQChartView::on_axes_changed);
 	dialog->setAttribute(Qt::WA_DeleteOnClose);
 	dialog->show();
+	return;
+}
+
+void MainWindow::closeAllShutters()
+{
+	uint16_t shutterStates = 0;
+	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
+	{
+		lsc.setShutterStates(drvno, shutterStates);
+	}
 	return;
 }
