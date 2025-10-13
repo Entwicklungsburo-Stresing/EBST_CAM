@@ -29,10 +29,43 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="6" column="1">
-      <widget class="QLabel" name="labelShutter2">
+     <item row="5" column="3">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="5" column="2">
+      <widget class="QCheckBox" name="checkBoxShutter1">
        <property name="text">
-        <string>Shutter 2</string>
+        <string>close</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QCheckBox" name="checkBoxMshut">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shutter signal on output O&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This shutter signal is emitted by the output O of the PCIe card when the signal SEC_MSHUT or BEC_MSHUT is used for the setting tor. You can find this setting under Settings -&amp;gt; Edit -&amp;gt; Other -&amp;gt; tor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>open</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLabel" name="labelCameraControl">
+       <property name="text">
+        <string>Camera Control</string>
        </property>
       </widget>
      </item>
@@ -49,6 +82,30 @@
        </property>
       </widget>
      </item>
+     <item row="5" column="1">
+      <widget class="QLabel" name="labelShutter1">
+       <property name="text">
+        <string>Shutter 1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="2">
+      <widget class="QCheckBox" name="checkBoxShutter3">
+       <property name="text">
+        <string>close</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QSpinBox" name="spinBoxPcieBoard">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose which PCIe board to control&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;PCIe board chooses on which PCIe board the shutter are controlled by this dialog.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
      <item row="5" column="0">
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
@@ -62,51 +119,10 @@
        </property>
       </spacer>
      </item>
-     <item row="3" column="1">
-      <widget class="QLabel" name="labelCameraControl">
+     <item row="6" column="1">
+      <widget class="QLabel" name="labelShutter2">
        <property name="text">
-        <string>Camera Control</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="2">
-      <widget class="QCheckBox" name="checkBoxShutter1">
-       <property name="text">
-        <string>close</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="3">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="6" column="2">
-      <widget class="QCheckBox" name="checkBoxShutter2">
-       <property name="text">
-        <string>close</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="2">
-      <widget class="QCheckBox" name="checkBoxShutter3">
-       <property name="text">
-        <string>close</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QLabel" name="labelShutter1">
-       <property name="text">
-        <string>Shutter 1</string>
+        <string>Shutter 2</string>
        </property>
       </widget>
      </item>
@@ -137,6 +153,13 @@
        </property>
       </widget>
      </item>
+     <item row="6" column="2">
+      <widget class="QCheckBox" name="checkBoxShutter2">
+       <property name="text">
+        <string>close</string>
+       </property>
+      </widget>
+     </item>
      <item row="8" column="1">
       <widget class="QLabel" name="labelShutter4">
        <property name="text">
@@ -144,26 +167,17 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="2">
-      <widget class="QCheckBox" name="checkBoxMshut">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shutter signal on output O&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This shutter signal is emitted by the output O of the PCIe card when the signal SEC_MSHUT or BEC_MSHUT is used for the setting tor. You can find this setting under Settings -&amp;gt; Edit -&amp;gt; Other -&amp;gt; tor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
+     <item row="9" column="1">
+      <widget class="QLabel" name="labelAllShutter">
        <property name="text">
-        <string>open</string>
+        <string>All shutter</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
-      <widget class="QSpinBox" name="spinBoxPcieBoard">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose which PCIe board to control&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;PCIe board chooses on which PCIe board the shutter are controlled by this dialog.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <item row="9" column="2">
+      <widget class="QCheckBox" name="checkBoxAllShutter">
+       <property name="text">
+        <string>close</string>
        </property>
       </widget>
      </item>

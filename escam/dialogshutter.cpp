@@ -53,10 +53,15 @@ void DialogShutter::on_checkBoxMshut_checkStateChanged(Qt::CheckState checkState
 		break;
 	}
 	return;
+
 }
 
 void DialogShutter::on_checkBoxShutterX_checkStateChanged()
 {
+	// Uncheck the "All shutter" check box
+	ui.checkBoxAllShutter->blockSignals(true);
+	ui.checkBoxAllShutter->setCheckState(Qt::Unchecked);
+	ui.checkBoxAllShutter->blockSignals(false);
 	// Get the state of the check boxes
 	Qt::CheckState state_shutter1 = ui.checkBoxShutter1->checkState();
 	Qt::CheckState state_shutter2 = ui.checkBoxShutter2->checkState();
@@ -110,4 +115,25 @@ void DialogShutter::loadSavedValues()
 	settings.endGroup();
 	// Set the shutter states
 	on_checkBoxShutterX_checkStateChanged();
+}
+
+void DialogShutter::on_checkBoxAllShutter_checkStateChanged(Qt::CheckState checkState)
+{
+	if (ui.checkBoxAllShutter->checkState() == Qt::Checked)
+	{
+		// Save all shutters as checked
+		settings.beginGroup("board" + QString::number(ui.spinBoxPcieBoard->value()));
+		settings.setValue(settingShutter1Path, Qt::Checked);
+		settings.setValue(settingShutter2Path, Qt::Checked);
+		settings.setValue(settingShutter3Path, Qt::Checked);
+		settings.setValue(settingShutter4Path, Qt::Checked);
+		settings.endGroup();
+		// Set all check boxes to checked
+		ui.checkBoxShutter1->setCheckState(Qt::Checked);
+		ui.checkBoxShutter2->setCheckState(Qt::Checked);
+		ui.checkBoxShutter3->setCheckState(Qt::Checked);
+		ui.checkBoxShutter4->setCheckState(Qt::Checked);
+		ui.checkBoxAllShutter->setCheckState(Qt::Checked);
+	}
+	return;
 }

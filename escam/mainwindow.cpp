@@ -45,9 +45,6 @@ MainWindow::MainWindow(QWidget* parent)
 	connect(ui->radioButtonLiveViewFixedSample, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
 	connect(ui->radioButtonLiveViewOff, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
 	connect(ui->radioButtonLiveViewOffNewestSample, &QRadioButton::toggled, this, &MainWindow::adjustLiveView);
-	// Close all shutters on exiting the application before the application actually closes
-	connect(qApp, &QApplication::aboutToQuit, this, &MainWindow::closeAllShutters);
-
 
 	es_status_codes status = lsc.initDriver();
 	if (status != es_no_error)
@@ -1252,6 +1249,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 		lampsTimer->stop();
 		liveViewTimer->stop();
 		lsc.abortMeasurement();
+		closeAllShutters();
 		lsc.exitDriver();
 		settings.setValue("centralwidget/geometry", saveGeometry());
 		settings.setValue("centralwidget/state", saveState());
@@ -1318,10 +1316,15 @@ void MainWindow::on_actionChartSettings_triggered()
 
 void MainWindow::closeAllShutters()
 {
-	uint16_t shutterStates = 0;
+	uint16_t shutter_states = 0;
+	shutter_states |= 1 << ioctrl_shutter_bitindex_shutter1;
+	shutter_states |= 1 << ioctrl_shutter_bitindex_shutter2;
+	shutter_states |= 1 << ioctrl_shutter_bitindex_shutter3;
+	shutter_states |= 1 << ioctrl_shutter_bitindex_shutter4;
+
 	for (uint32_t drvno = 0; drvno < lsc.numberOfBoards; drvno++)
 	{
-		lsc.setShutterStates(drvno, shutterStates);
+		lsc.setShutterStates(drvno, shutter_states);
 	}
 	return;
 }
