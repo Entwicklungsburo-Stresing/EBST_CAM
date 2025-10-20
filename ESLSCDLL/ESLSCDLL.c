@@ -1280,7 +1280,7 @@ DllAccess es_status_codes DLLDAC8568_setAllOutputs(uint32_t drvno, uint8_t locat
  *
  * Use this function to set the outputs, because it is resorting the channel numeration correctly.
  * @param[in] location Switch for the different locations of DAC85689. See [enum DAC8568_location_t](@ref DAC8568_location_t) in enum_settings.h for details.
- * @param[in] cameraPosition This is describing the camera position when there are mumltiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
+ * @param[in] cameraPosition This is describing the camera position when there are multiple cameras in line. Possible values: 0....8. This parameter is only used when location == DAC8568_camera.
  * @param[in] output0 all output values as array for board 0 that will be converted to analog voltage (0 ... 0xFFFF)
  * @param[in] output1 all output values as array for board 1 that will be converted to analog voltage (0 ... 0xFFFF)
  * @param[in] output2 all output values as array for board 2 that will be converted to analog voltage (0 ... 0xFFFF)

@@ -876,7 +876,7 @@ enum camera_register_addresses_t
 	 *
 	 * 3030 HSVIS: This register controls the length of the ARG pulse which is done after the TG pulse.
 	 * min: 0ns, max: 0xFFFF * 4ns = 65535 * 4ns = 262140ns = 262,14us, typical value: 200 * 4ns = 800ns
-	 * HSIR: min: 134 * 160 ns = 21,440 ns, max: 0xFFFF * 160 ns = 10,485,600 ns, default: 140 * 160 ns = 22,400 ns
+	 * HSIR: min: 134 * 160 ns = 21,440 ns, max: 0xFFFF * 160 ns = 10,485,600 ns, default: 140 * 160 ns = 22,400 ns. Since P209.13.
 	 */
 	cam_adaddr_sensor_reset_length = 0x08,
 	/**
@@ -894,7 +894,7 @@ enum camera_register_addresses_t
 	 */
 	cam_adaddr_camera_init = 0x10,
 	/**
-	 * Send any data to this address to do a software reset. This should be done first in the initialisation routine.
+	 * Send any data to this address to do a software reset. This should be done first in the initialization routine.
 	 */
 	cam_adaddr_software_reset = 0x7E,
 	/**
