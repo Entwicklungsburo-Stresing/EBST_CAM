@@ -628,7 +628,7 @@ es_status_codes writeRegisterS0_8(uint32_t drvno, uint8_t data, uint32_t address
 /**
  * @brief Write the same 1 byte to a register in S0 space of all boards.
  *
- * @param data[in] Data to write.
+ * @param[in] data Data to write.
  * @param[in] address Address of the register to write. All available addresses are listed in enum @ref s0_addresses_t.
  * @return @ref es_status_codes
  */
@@ -2743,7 +2743,7 @@ es_status_codes OutTrigHigh(uint32_t drvno)
  *
  * The Reg TOR:D31 must have been set to 1 and D30:D27 to zero to see the signal -> see manual
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param pulseWidthInMicroseconds[in] duration of pulse in us
+ * @param[in] pulseWidthInMicroseconds duration of pulse in us
  * @return @ref es_status_codes
  */
 es_status_codes OutTrigPulse(uint32_t drvno, int64_t pulseWidthInMicroseconds)
@@ -2758,15 +2758,15 @@ es_status_codes OutTrigPulse(uint32_t drvno, int64_t pulseWidthInMicroseconds)
  * @brief Reads the binary state of an ext. trigger input.
  *
  * Direct read of inputs for polling.
- * @param drvno board number
- * @param btrig_ch specify input channel
+ * @param[in] drvno board number
+ * @param[in] btrig_ch specify input channel
  * 			- btrig_ch=0 not used
  * 			- btrig_ch=1 is PCIe trig in I
  * 			- btrig_ch=2 is S1
  * 			- btrig_ch=3 is S2
  * 			- btrig_ch=4 is S1&S2
  * 			- btrig_ch=5 is TSTART (GTI - DAT - EC)
- * @param state false when low, otherwise true
+ * @param[out] state false when low, otherwise true
  * @return @ref es_status_codes
  */
 es_status_codes readBlockTriggerState(uint32_t drvno, uint8_t btrig_ch, bool* state)
