@@ -901,16 +901,9 @@ enum camera_register_addresses_t
 	 */
 	cam_adaddr_sen_tg_1st_half_length = 0x0F,
 	/**
-	 * sen_tg_2nd_half_length controls the length of the second part of the transfer gate (TG) pulse of the high speed camera. The second part is when TG is 1 and P1H is 1. The register is a 16 bit value. The step size depends on the CLK_SEL setting of the hardware switch. The default of this register is 0, which produces the default length of the TG pulse. Added in P209.20.
-	 * *  `length = x * period of SEN_CLK`
-	 * CLK_SEL|SEN_CLK| min = 1 | max = 0xFFFF
-	 * -|-|-|-
-	 * 11 | 25 MHz | 40 ns | 2.621.400 ns
-	 * 10 | 18,75 MHz | 53.3 ns | 3.493.015,5 ns
-	 * 01 | 12,5 MHz | 80 ns | 5.242.800 ns
-	 * 00 | 6,25 MHz | 160 ns | 10.485.600 ns
+	 * Send any data to this address to initialize the camera. This should be done last in the initialization routine, after reset and after writing all other registers.
 	 */
-	cam_adaddr_sen_tg_2nd_half_length = 0x10,
+	cam_adaddr_camera_init = 0x10,
 	/**
 	 * sen_p1h_ovr_lengt controls the length of first P1H pulse of the high speed camera. The register is a 16 bit value. The step size depends on the CLK_SEL setting of the hardware switch. The default of this register is 0, which produces the default length of the P1H pulse. Added in P209.20.
 	 * *  `length = x * period of SEN_CLK`
@@ -923,9 +916,17 @@ enum camera_register_addresses_t
 	 */
 	cam_adaddr_sen_p1h_ovr_length = 0x11,
 	/**
-	 * Send any data to this address to initialize the camera. This should be done last in the initialization routine, after reset and after writing all other registers.
+	 * sen_tg_2nd_half_length controls the length of the second part of the transfer gate (TG) pulse of the high speed camera. The second part is when TG is 1 and P1H is 1. The register is a 16 bit value. The step size depends on the CLK_SEL setting of the hardware switch. The default of this register is 0, which produces the default length of the TG pulse. Added in P209.20.
+	 * *  `length = x * period of SEN_CLK`
+	 * CLK_SEL|SEN_CLK| min = 1 | max = 0xFFFF
+	 * -|-|-|-
+	 * 11 | 25 MHz | 40 ns | 2.621.400 ns
+	 * 10 | 18,75 MHz | 53.3 ns | 3.493.015,5 ns
+	 * 01 | 12,5 MHz | 80 ns | 5.242.800 ns
+	 * 00 | 6,25 MHz | 160 ns | 10.485.600 ns
 	 */
-	cam_adaddr_camera_init = 0x10,
+	cam_adaddr_sen_tg_2nd_half_length = 0x12,
+	cam_adaddr_fan_ctrl = 0x13,
 	/**
 	 * Send any data to this address to do a software reset. This should be done first in the initialization routine.
 	 */
