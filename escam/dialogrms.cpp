@@ -55,9 +55,9 @@ void DialogRMS::updateRMS()
 	ui->label_trms->setText( strms );
 	if(ui->checkBoxTarget->isChecked())
 	{
-		double targetRMS = ui->spinBoxRMSTarget->value();
-		if(trms <= targetRMS)
-			stopMeasurementOnRMSTargetReached();
+		double targetRMS = ui->doubleSpinBoxRMSTarget->value();
+		if (trms >= targetRMS)
+			mainWindow->lsc.abortMeasurement();
 	}
 }
 
@@ -74,7 +74,7 @@ void DialogRMS::initDialogRMS()
 	return;
 }
 
-void DialogRMS::on_spinBox_firstsample_valueChanged(int value)
+void DialogRMS::on_spinBox_firstsample_valueChanged()
 {
 	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
 	settings.setValue(settingRMSFirstSamplePath, ui->spinBox_firstsample->value());
@@ -82,7 +82,7 @@ void DialogRMS::on_spinBox_firstsample_valueChanged(int value)
 	return;
 }
 
-void DialogRMS::on_spinBox_lastsample_valueChanged(int value)
+void DialogRMS::on_spinBox_lastsample_valueChanged()
 {
 	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
 	settings.setValue(settingRMSLastSamplePath, ui->spinBox_lastsample->value());
@@ -90,7 +90,7 @@ void DialogRMS::on_spinBox_lastsample_valueChanged(int value)
 	return;
 }
 
-void DialogRMS::on_spinBox_pixel_valueChanged(int value)
+void DialogRMS::on_spinBox_pixel_valueChanged()
 {
 	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
 	settings.setValue(settingRMSPixelPath, ui->spinBox_pixel->value());
@@ -127,11 +127,5 @@ void DialogRMS::updateSampleSize()
 	ui->spinBox_firstsample->setMaximum(nos - 1);
 	if (ui->spinBox_lastsample->value() > nos)
 		ui->spinBox_lastsample->setValue(nos);
-	return;
-}
-
-void DialogRMS::stopMeasurementOnRMSTargetReached()
-{
-	
 	return;
 }
