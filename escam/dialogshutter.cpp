@@ -117,7 +117,7 @@ void DialogShutter::loadSavedValues()
 	on_checkBoxShutterX_checkStateChanged();
 }
 
-void DialogShutter::on_checkBoxAllShutter_checkStateChanged(Qt::CheckState checkState)
+void DialogShutter::on_checkBoxAllShutter_checkStateChanged()
 {
 	if (ui.checkBoxAllShutter->checkState() == Qt::Checked)
 	{

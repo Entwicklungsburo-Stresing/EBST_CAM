@@ -1,3 +1,4 @@
+
 /*****************************************************************//**
  * @file   Board.c
  * @copydoc Board.h
@@ -5215,8 +5216,7 @@ es_status_codes ImportMeasurementDataFromFileHDF5(const char* filename)
 									hid_t attr_type = H5Aget_type(fpga_ver_attr);
 									hid_t mem_type = H5Tget_native_type(attr_type, H5T_DIR_ASCEND);
 									H5Tset_cset(mem_type, H5T_CSET_UTF8);
-									hsize_t attr_size = H5Tget_size(attr_type);
-									char** fpga_ver_str = NULL;
+									char* fpga_ver_str = NULL;
 									herr_t read_status = -1;
 									read_status = H5Aread(fpga_ver_attr, mem_type, &fpga_ver_str);
 									if (read_status >= 0 && fpga_ver_str != NULL)
