@@ -31,6 +31,7 @@ public slots:
 private:
 	Ui::DialogRMS *ui;
 	QSettings settings;
+	void stopMeasurementOnRMSTargetReached();
 
 private slots:
 	void on_spinBox_firstsample_valueChanged(int value);

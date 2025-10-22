@@ -53,6 +53,12 @@ void DialogRMS::updateRMS()
 	//show values
 	ui->label_mwf->setText( smwf );
 	ui->label_trms->setText( strms );
+	if(ui->checkBoxTarget->isChecked())
+	{
+		double targetRMS = ui->spinBoxRMSTarget->value();
+		if(trms <= targetRMS)
+			stopMeasurementOnRMSTargetReached();
+	}
 }
 
 void DialogRMS::initDialogRMS()
@@ -121,5 +127,11 @@ void DialogRMS::updateSampleSize()
 	ui->spinBox_firstsample->setMaximum(nos - 1);
 	if (ui->spinBox_lastsample->value() > nos)
 		ui->spinBox_lastsample->setValue(nos);
+	return;
+}
+
+void DialogRMS::stopMeasurementOnRMSTargetReached()
+{
+	
 	return;
 }
