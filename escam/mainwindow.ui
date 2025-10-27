@@ -1210,6 +1210,7 @@
     <addaction name="actionShutter"/>
     <addaction name="actionspecial_pixels"/>
     <addaction name="actionTrigger_info"/>
+    <addaction name="actionFan_control"/>
    </widget>
    <widget class="QMenu" name="menuGreyscale_Viewer">
     <property name="title">
@@ -1397,6 +1398,11 @@
   <action name="actionServo">
    <property name="text">
     <string>Servo</string>
+   </property>
+  </action>
+  <action name="actionFan_control">
+   <property name="text">
+    <string>Fan control</string>
    </property>
   </action>
  </widget>

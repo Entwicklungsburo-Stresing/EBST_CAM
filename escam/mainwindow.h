@@ -85,4 +85,5 @@ private slots:
 	void on_actionChartSettings_triggered();
 	void setBlockOnLamp();
 	void closeAllShutters();
+	void on_actionFan_control_triggered();
 };

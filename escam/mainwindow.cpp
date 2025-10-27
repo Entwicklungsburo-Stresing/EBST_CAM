@@ -12,6 +12,7 @@
 #include "dialogchartsettings.h"
 #include "dialogshutter.h"
 #include "dialogservo.h"
+#include "dialogfancontrol.h"
 #ifdef WIN32
 #include "dialoggreyscalesettings.h"
 #endif
@@ -1332,5 +1333,13 @@ void MainWindow::closeAllShutters()
 	{
 		lsc.setShutterStates(drvno, shutter_states);
 	}
+	return;
+}
+
+void MainWindow::on_actionFan_control_triggered()
+{
+	DialogFanControl* dialog = new DialogFanControl(this);
+	dialog->setAttribute(Qt::WA_DeleteOnClose);
+	dialog->show();
 	return;
 }
