@@ -645,3 +645,8 @@ es_status_codes Lsc::setShutterStates(uint32_t drvno, uint16_t shutter_states)
 {
 	return DLLSetShutterStates(drvno, shutter_states);
 }
+
+es_status_codes Lsc::setFanControlState(uint32_t drvno, uint16_t state)
+{
+	return DLLSetFanControlState(drvno, state);
+}

@@ -197,6 +197,7 @@ DllAccess void DLLSetBlockDoneHook(void(*hook)(uint32_t));
 DllAccess void DLLSetAllBlocksDoneHook(void(*hook)(uint64_t));
 DllAccess es_status_codes DLLSetGeneralOutput(uint32_t drvno, uint8_t output, uint8_t state);
 DllAccess es_status_codes DLLSetShutterStates(uint32_t drvno, uint16_t shutter_states);
+DllAccess es_status_codes DLLSetFanControlState(uint32_t drvno, uint16_t state);
 //************ read and write functions
 DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address);
 DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards(uint8_t* data0, uint8_t* data1, uint8_t* data2, uint8_t* data3, uint8_t* data4, uint32_t address);

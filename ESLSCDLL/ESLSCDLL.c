@@ -2341,3 +2341,11 @@ DllAccess es_status_codes DLLSetShutterStates(uint32_t drvno, uint16_t shutter_s
 {
 	return SetShutterStates(drvno, shutter_states);
 }
+
+/**
+ * @copydoc SetFanControlState
+ */
+DllAccess es_status_codes DLLSetFanControlState(uint32_t drvno, uint16_t state)
+{
+	return SetFanControlState(drvno, state);
+}

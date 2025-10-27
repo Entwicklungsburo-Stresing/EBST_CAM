@@ -196,6 +196,7 @@ es_status_codes SetGeneralOutput(uint32_t drvno, uint8_t output, bool state);
 es_status_codes SetShutterStates(uint32_t drvno, uint16_t shutter_states);
 es_status_codes SetStateControlRegister(uint32_t drvno, uint16_t state);
 es_status_codes SetManualState(uint32_t drvno, bool state);
+es_status_codes SetFanControlState(uint32_t drvno, uint16_t state);
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);

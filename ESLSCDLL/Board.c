@@ -5880,3 +5880,18 @@ es_status_codes SetManualState(uint32_t drvno, bool state)
 	else
 		return resetBitS0_32(drvno, statectrl_bitindex_manual_trigger, S0Addr_STATECTRL);
 }
+
+/**
+ * @brief Sets the fan control state.
+ * 
+ * \param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * \param[in] state 16 bit value, which represents the fan control state. Can be either 0 or 1.
+ *		* 0: fan off
+ * 		* 1: fan on
+ * \return 
+ */
+es_status_codes SetFanControlState(uint32_t drvno, uint16_t state)
+{
+	ES_LOG("Set fan control state to 0x%"PRIx16", drvno %"PRIu32"\n", state, drvno);
+	return Cam_SendData(drvno, maddr_cam, cam_adaddr_fan_ctrl, state);
+}
