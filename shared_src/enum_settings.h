@@ -457,7 +457,7 @@ enum monitor_t
 	/**
 	 * Vin is high when the voltage input is sampled.
 	 */
-	monitor_Vin = 3
+	monitor_Vin_Fan_control = 3
 };
 
 /**
