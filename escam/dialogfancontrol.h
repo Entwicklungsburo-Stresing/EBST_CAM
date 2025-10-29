@@ -26,7 +26,7 @@ public:
 	~DialogFanControl();
 
 private slots:
-	void on_checkBoxFanControlSet_stateChanged(int state);
+	void on_comboBoxMonitor_currentIndexChanged(int index);
 	void on_checkBoxFanOn_stateChanged(int state);
 
 private:

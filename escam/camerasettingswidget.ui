@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>452</width>
+    <width>456</width>
     <height>619</height>
    </rect>
   </property>
@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="measurement">
       <attribute name="title">
@@ -1847,7 +1847,7 @@
            </item>
            <item>
             <property name="text">
-             <string>Vin sample</string>
+             <string>Vin sample / Fan control</string>
             </property>
            </item>
           </widget>
