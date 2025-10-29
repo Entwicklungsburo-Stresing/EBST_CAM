@@ -138,6 +138,8 @@ void DialogChartSettings::populateCameras()
 #else
 				connect(checkbox, &QCheckBox::checkStateChanged, this, [checkbox, this, cam, drvno] {on_checkBoxShowCamera(checkbox->isChecked(), cam, drvno); mainWindow->loadCameraData(); });
 #endif
+				(mainWindow->lsc.numberOfBoards == 1 && camcnt == 1) ? checkbox->setEnabled(false) : checkbox->setEnabled(true);
+				connect(checkbox, &QCheckBox::clicked, this, &DialogChartSettings::lastEnabledCameraCheck);
 			}
 		}
 		settings.endGroup();
@@ -157,4 +159,49 @@ void DialogChartSettings::on_pushButtonDefault_pressed()
 {
 	mainWindow->ui->chartView->setDefaultAxes();
 	on_rubberband_valueChanged();
+	return;
+}
+
+/**
+ * @brief This slot checks if there is at least one camera enabled to be displayed on the chart, and deactivates the last enabled cameras checkbox if so.
+ * @return none
+ */
+void DialogChartSettings::lastEnabledCameraCheck()
+{
+	int enabledCount = 0;
+	QList<QCheckBox*> allCheckBoxes;
+	int cameraCount = ui.verticalLayoutCameras->count();
+
+	for (int i = 0; i < cameraCount; ++i)
+	{
+		QLayoutItem* item = ui.verticalLayoutCameras->itemAt(i);
+		if (!item) continue;
+		QCheckBox* checkbox = qobject_cast<QCheckBox*>(item->widget());
+		if (checkbox)
+		{
+			allCheckBoxes.append(checkbox);
+			if (checkbox->isChecked())
+				enabledCount++;
+		}
+	}
+
+	if (enabledCount == 1)
+	{
+		for (QCheckBox* checkbox : allCheckBoxes)
+		{
+			if (checkbox->isChecked())
+			{
+				checkbox->setEnabled(false);
+				break;
+			}
+		}
+	}
+	else
+	{
+		for (QCheckBox* checkbox : allCheckBoxes)
+		{
+			checkbox->setEnabled(true);
+		}
+	}
+	return;
 }

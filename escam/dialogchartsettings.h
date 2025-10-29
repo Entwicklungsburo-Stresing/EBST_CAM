@@ -31,6 +31,7 @@ private slots:
 	void populateCameras();
 	void on_checkBoxShowCamera(bool state, int camera, uint32_t drvno);
 	void on_pushButtonDefault_pressed();
+	void lastEnabledCameraCheck();
 #if (QT_VERSION < QT_VERSION_CHECK(6, 7, 0))
 	void on_checkBoxMirrorX_stateChanged(int state);
 	void on_checkBoxShowCrosshair_stateChanged(int state);
