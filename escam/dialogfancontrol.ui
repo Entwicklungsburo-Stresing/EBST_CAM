@@ -6,99 +6,139 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>305</width>
-    <height>124</height>
+    <width>324</width>
+    <height>135</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Fan control</string>
   </property>
-  <widget class="QWidget" name="gridLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>5</x>
-     <y>10</y>
-     <width>302</width>
-     <height>80</height>
-    </rect>
-   </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="2" column="0">
-     <widget class="QLabel" name="labelFanOn">
-      <property name="text">
-       <string>Fan on</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QCheckBox" name="checkBoxFanOn">
-      <property name="layoutDirection">
-       <enum>Qt::LayoutDirection::RightToLeft</enum>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QSpinBox" name="spinBoxPcie"/>
-    </item>
-    <item row="1" column="1">
-     <widget class="QComboBox" name="comboBoxMonitor">
-      <item>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="2" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="0">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="1" column="1">
+      <widget class="QLabel" name="labelFanControlSet">
        <property name="text">
-        <string>XCK</string>
+        <string>Camera settings monitor</string>
        </property>
-      </item>
-      <item>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QSpinBox" name="spinBoxPcie"/>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="labelPcie">
        <property name="text">
-        <string>EXP_WIN</string>
+        <string>PCIe Board</string>
        </property>
-      </item>
-      <item>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="2" column="2">
+      <widget class="QCheckBox" name="checkBoxFanOn">
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::RightToLeft</enum>
+       </property>
        <property name="text">
-        <string>ADC_CLK</string>
+        <string/>
        </property>
-      </item>
-      <item>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="labelFanOn">
        <property name="text">
-        <string>Vin sample / Fan control</string>
+        <string>Fan on</string>
        </property>
-      </item>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="labelFanControlSet">
-      <property name="text">
-       <string>Camera settings monitor</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="labelPcie">
-      <property name="text">
-       <string>PCIe Board</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QDialogButtonBox" name="buttonBox">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>100</y>
-     <width>271</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::StandardButton::Close</set>
-   </property>
-  </widget>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QComboBox" name="comboBoxMonitor">
+       <item>
+        <property name="text">
+         <string>XCK</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>EXP_WIN</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>ADC_CLK</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Vin sample / Fan control</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="0">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::StandardButton::Close</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
