@@ -26,10 +26,12 @@ public:
 	~DialogFanControl();
 
 private slots:
+	void on_spinBoxBoard_valueChanged(int index);
 	void on_comboBoxMonitor_currentIndexChanged(int index);
 	void on_checkBoxFanOn_stateChanged(int state);
 
 private:
+	void initDialogFanControl();
 	Ui::DialogFanControlClass *ui;
 	QSettings settings;
 };
