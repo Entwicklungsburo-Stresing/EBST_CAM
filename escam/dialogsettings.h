@@ -139,6 +139,8 @@ constexpr auto settingRMSCameraPositionPath = "rmsCameraPosition";
 constexpr auto settingRMSFirstSamplePath = "rmsFirstSamplePath";
 constexpr auto settingRMSLastSamplePath = "rmsLastSamplePath";
 constexpr auto settingRMSPixelPath = "rmsPixelPath";
+// Fan control
+constexpr auto settingFanControlFanStatePath = "fanControlFanState";
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DialogSettings; }

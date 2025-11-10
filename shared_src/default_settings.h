@@ -102,6 +102,11 @@
 #define settingManipulateDataCustomFactorDefault	1
 #define settingEcLegacyModeDefault					false
 #define settingTimerResolutionModeDefault			timer_resolution_1us
+#define settingShutter1Default						false
+#define settingShutter2Default						false
+#define settingShutter3Default						false
+#define settingShutter4Default						false
 #define settingRMSFirstSampleDefault				10
 #define settingRMSLastSampleDefault					100
 #define settingRMSPixelDefault						20
+#define settingFanControlFanStateDefault			1

@@ -103,10 +103,10 @@ void DialogShutter::loadSavedValues()
 	bool blockStateCheckBoxShutter2 = ui.checkBoxShutter2->blockSignals(true);
 	bool blockStateCheckBoxShutter3 = ui.checkBoxShutter3->blockSignals(true);
 	bool blockStateCheckBoxShutter4 = ui.checkBoxShutter4->blockSignals(true);
-	ui.checkBoxShutter1->setCheckState(settings.value(settingShutter1Path, Qt::Unchecked).value<Qt::CheckState>());
-	ui.checkBoxShutter2->setCheckState(settings.value(settingShutter2Path, Qt::Unchecked).value<Qt::CheckState>());
-	ui.checkBoxShutter3->setCheckState(settings.value(settingShutter3Path, Qt::Unchecked).value<Qt::CheckState>());
-	ui.checkBoxShutter4->setCheckState(settings.value(settingShutter4Path, Qt::Unchecked).value<Qt::CheckState>());
+	ui.checkBoxShutter1->setCheckState(settings.value(settingShutter1Path, settingShutter1Default).value<Qt::CheckState>());
+	ui.checkBoxShutter2->setCheckState(settings.value(settingShutter2Path, settingShutter2Default).value<Qt::CheckState>());
+	ui.checkBoxShutter3->setCheckState(settings.value(settingShutter3Path, settingShutter3Default).value<Qt::CheckState>());
+	ui.checkBoxShutter4->setCheckState(settings.value(settingShutter4Path, settingShutter4Default).value<Qt::CheckState>());
 	// Unblock signals for the check boxes
 	ui.checkBoxShutter1->blockSignals(blockStateCheckBoxShutter1);
 	ui.checkBoxShutter2->blockSignals(blockStateCheckBoxShutter2);
