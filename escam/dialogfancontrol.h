@@ -31,8 +31,9 @@ private slots:
 	void on_checkBoxFanOn_stateChanged(int state);
 
 private:
-	void initDialogFanControl();
 	Ui::DialogFanControlClass *ui;
 	QSettings settings;
+	void initDialogFanControl();
+	void updateFanCheckboxState(int monitorIndex);
 };
 

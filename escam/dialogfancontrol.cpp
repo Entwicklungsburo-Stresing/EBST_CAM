@@ -5,11 +5,6 @@ DialogFanControl::DialogFanControl(QWidget *parent)
 	, ui(new Ui::DialogFanControlClass())
 {
 	ui->setupUi(this);
-	settings.beginGroup("board" + QString::number(ui->spinBoxPcie->value()));
-	ui->comboBoxMonitor->setCurrentIndex(settings.value(settingMonitorPath, settingMonitorDefault).toInt());
-	settings.value(settingMonitorPath, settingMonitorDefault).toInt() == monitor_Vin_Fan_control ? ui->checkBoxFanOn->setEnabled(true) : ui->checkBoxFanOn->setEnabled(false);
-	settings.endGroup();
-
 	initDialogFanControl();
 }
 
@@ -25,13 +20,13 @@ DialogFanControl::~DialogFanControl()
 void DialogFanControl::initDialogFanControl()
 {
 	if (mainWindow->lsc.numberOfBoards > 1)
-		ui->spinBoxPcie->setMaximum(mainWindow->lsc.numberOfBoards - 1);
+		ui->spinBoxBoard->setMaximum(mainWindow->lsc.numberOfBoards - 1);
 	else
 	{
-		ui->spinBoxPcie->setVisible(false);
-		ui->labelPcie->setVisible(false);
+		ui->spinBoxBoard->setVisible(false);
+		ui->labelBoard->setVisible(false);
 	}
-	on_spinBoxBoard_valueChanged(ui->spinBoxPcie->value());
+	on_spinBoxBoard_valueChanged(ui->spinBoxBoard->value());
 	return;
 }
 
@@ -46,7 +41,8 @@ void DialogFanControl::on_spinBoxBoard_valueChanged(int index)
 	int fanState = settings.value(settingFanControlFanStatePath, settingFanControlFanStateDefault).toInt();
 	settings.endGroup();
 	ui->comboBoxMonitor->setCurrentIndex(monitorIndex);
-	ui->checkBoxFanOn->setChecked(fanState == 1 ? true : false);
+	ui->checkBoxFanOn->setChecked(fanState == 1);
+	updateFanCheckboxState(monitorIndex);
 	return;
 }
 
@@ -56,11 +52,11 @@ void DialogFanControl::on_spinBoxBoard_valueChanged(int index)
  */
 void DialogFanControl::on_comboBoxMonitor_currentIndexChanged(int index)
 {
-	uint32_t drvno = ui->spinBoxPcie->value();
+	uint32_t drvno = ui->spinBoxBoard->value();
 	settings.beginGroup("board" + QString::number(drvno));
 	settings.setValue(settingMonitorPath, index);
 	settings.endGroup();
-	index == monitor_Vin_Fan_control ? ui->checkBoxFanOn->setEnabled(true) : ui->checkBoxFanOn->setEnabled(false);
+	updateFanCheckboxState(index);
 	return;
 }
 
@@ -70,12 +66,18 @@ void DialogFanControl::on_comboBoxMonitor_currentIndexChanged(int index)
  */
 void DialogFanControl::on_checkBoxFanOn_stateChanged(int state)
 {
-	uint32_t drvno = ui->spinBoxPcie->value();
-	uint16_t fanState = (state == Qt::CheckState::Checked) ? 1 : 0;
+	uint32_t drvno = ui->spinBoxBoard->value();
+	uint16_t fanState = (state == Qt::Checked) ? 1 : 0;
 	settings.beginGroup("board" + QString::number(drvno));
 	settings.setValue(settingFanControlFanStatePath, fanState);
 	mainWindow->lsc.setFanControlState(drvno, fanState);
+	settings.endGroup();
 	return;
+}
+
+void DialogFanControl::updateFanCheckboxState(int monitorIndex)
+{
+	ui->checkBoxFanOn->setEnabled(monitorIndex == monitor_Vin_Fan_control);
 }
 
 
