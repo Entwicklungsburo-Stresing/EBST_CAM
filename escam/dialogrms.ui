@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>201</width>
-    <height>234</height>
+    <width>202</width>
+    <height>260</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,31 +29,29 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
+     <item row="1" column="2">
+      <widget class="QSpinBox" name="spinBoxCampos">
+       <property name="minimum">
+        <number>0</number>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
+       <property name="maximum">
+        <number>7</number>
        </property>
-      </spacer>
+      </widget>
      </item>
-     <item row="0" column="3">
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
+     <item row="2" column="1">
+      <widget class="QLabel" name="labelFirstSample">
+       <property name="text">
+        <string>first sample</string>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
+      </widget>
+     </item>
+     <item row="6" column="2">
+      <widget class="QLabel" name="label_trms">
+       <property name="text">
+        <string>0</string>
        </property>
-      </spacer>
+      </widget>
      </item>
      <item row="2" column="2">
       <widget class="QSpinBox" name="spinBox_firstsample">
@@ -68,24 +66,17 @@
        </property>
       </widget>
      </item>
+     <item row="6" column="1">
+      <widget class="QLabel" name="labelTrms">
+       <property name="text">
+        <string>trms</string>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="1">
       <widget class="QLabel" name="labelBoard">
        <property name="text">
         <string>Board</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="2">
-      <widget class="QSpinBox" name="spinBox_pixel">
-       <property name="maximum">
-        <number>10000</number>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="2">
-      <widget class="QLabel" name="label_mwf">
-       <property name="text">
-        <string>0</string>
        </property>
       </widget>
      </item>
@@ -96,12 +87,25 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="labelFirstSample">
+     <item row="5" column="1">
+      <widget class="QLabel" name="labelMwf">
        <property name="text">
-        <string>first sample</string>
+        <string>mwf</string>
        </property>
       </widget>
+     </item>
+     <item row="0" column="3">
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item row="3" column="1">
       <widget class="QLabel" name="labelLastSample">
@@ -110,32 +114,28 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
-      <widget class="QLabel" name="labelPixel">
-       <property name="text">
-        <string>pixel</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QLabel" name="labelTrms">
-       <property name="text">
-        <string>trms</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QSpinBox" name="spinBoxCampos">
-       <property name="minimum">
-        <number>0</number>
-       </property>
+     <item row="4" column="2">
+      <widget class="QSpinBox" name="spinBox_pixel">
        <property name="maximum">
-        <number>7</number>
+        <number>10000</number>
        </property>
       </widget>
      </item>
-     <item row="6" column="2">
-      <widget class="QLabel" name="label_trms">
+     <item row="0" column="0">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="5" column="2">
+      <widget class="QLabel" name="label_mwf">
        <property name="text">
         <string>0</string>
        </property>
@@ -154,10 +154,10 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="1">
-      <widget class="QLabel" name="labelMwf">
+     <item row="4" column="1">
+      <widget class="QLabel" name="labelPixel">
        <property name="text">
-        <string>mwf</string>
+        <string>pixel</string>
        </property>
       </widget>
      </item>
