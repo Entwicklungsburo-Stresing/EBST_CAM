@@ -205,3 +205,49 @@ void DialogChartSettings::lastEnabledCameraCheck()
 	}
 	return;
 }
+
+void DialogChartSettings::on_pushButtonSaveReference_pressed()
+{
+	uint32_t drvno = 0;
+	settings.beginGroup("board" + QString::number(drvno));
+	uint32_t sample = mainWindow->ui->spinBoxSample->value() - 1;
+	uint32_t block = mainWindow->ui->spinBoxBlock->value() - 1;
+	uint16_t camera = 0;
+	uint32_t pixel = settings.value(settingPixelPath, settingPixelDefault).toDouble();
+	settings.endGroup();
+	size_t data_array_size = 0;
+	data_array_size += pixel;
+	uint16_t* camera_data = static_cast<uint16_t*>(malloc(data_array_size * sizeof(uint16_t)));
+	es_status_codes status = mainWindow->lsc.copyOneSample(drvno, sample, block, camera, camera_data);
+	if (status != es_no_error)
+	{
+		free(camera_data);
+		return;
+	}
+
+
+	QLineSeries* series = new QLineSeries();
+	series->setName("Reference Signal");
+	for (uint32_t i = 0; i < pixel; i++)
+	{
+		series->append(static_cast<qreal>(i), static_cast<qreal>(camera_data[i]));
+	}
+	mainWindow->ui->chartView->chart()->addSeries(series);
+	free(camera_data);
+	return;
+}
+
+void DialogChartSettings::on_pushButtonClearReference_pressed()
+{
+	QList<QAbstractSeries*> allSeries = mainWindow->ui->chartView->chart()->series();
+	for (QAbstractSeries* series : allSeries)
+	{
+		if (series->name() == "Reference Signal")
+		{
+			mainWindow->ui->chartView->chart()->removeSeries(series);
+			delete series;
+			break;
+		}
+	}
+	return;
+}
