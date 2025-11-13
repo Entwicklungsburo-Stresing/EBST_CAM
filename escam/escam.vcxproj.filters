@@ -110,6 +110,15 @@
     <ClCompile Include="dialogfancontrol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dialogioctrl_legacy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="iocrtlwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ioctrlwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="dialogsettings.h">
@@ -158,6 +167,15 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="dialogfancontrol.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="dialogioctrl_legacy.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="iocrtlwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ioctrlwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -210,6 +228,12 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogfancontrol.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogioctrl_legacy.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ioctrlwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

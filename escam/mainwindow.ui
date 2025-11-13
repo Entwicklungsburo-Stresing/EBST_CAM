@@ -1205,6 +1205,7 @@
     <addaction name="actionDAC"/>
     <addaction name="actionDSC"/>
     <addaction name="actionIO_Control"/>
+    <addaction name="actionIO_Control_legacy"/>
     <addaction name="actionRMS"/>
     <addaction name="actionServo"/>
     <addaction name="actionShutter"/>
@@ -1403,6 +1404,11 @@
   <action name="actionFan_control">
    <property name="text">
     <string>Fan control</string>
+   </property>
+  </action>
+  <action name="actionIO_Control_legacy">
+   <property name="text">
+    <string>IO Control (legacy)</string>
    </property>
   </action>
  </widget>

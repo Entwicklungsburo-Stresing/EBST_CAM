@@ -58,6 +58,7 @@ private slots:
 	void on_actionAbout_Qt_triggered();
 	void on_actionDAC_triggered();
 	void on_actionIO_Control_triggered();
+	void on_actionIO_Control_legacy_triggered();
 	void on_actionShow_triggered();
 	void loadSettings();
 	void on_actionDump_board_registers_triggered();

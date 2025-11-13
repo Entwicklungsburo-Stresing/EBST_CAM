@@ -7,6 +7,7 @@
 #include "../version.h"
 #include "dialogdac.h"
 #include "dialogioctrl.h"
+#include "dialogioctrl_legacy.h"
 #include "dialogspecialpixels.h"
 #include "dialogtriggerinfo.h"
 #include "dialogchartsettings.h"
@@ -1059,6 +1060,14 @@ void MainWindow::on_readCameraTemp()
 void MainWindow::on_actionIO_Control_triggered()
 {
 	DialogIoctrl* dialogIoctrl = new DialogIoctrl(this);
+	dialogIoctrl->setAttribute(Qt::WA_DeleteOnClose);
+	dialogIoctrl->show();
+	return;
+}
+
+void MainWindow::on_actionIO_Control_legacy_triggered()
+{
+	DialogIoctrlLegacy* dialogIoctrl = new DialogIoctrlLegacy(this);
 	dialogIoctrl->setAttribute(Qt::WA_DeleteOnClose);
 	dialogIoctrl->show();
 	return;
