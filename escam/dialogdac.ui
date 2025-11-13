@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>244</width>
-    <height>448</height>
+    <width>264</width>
+    <height>440</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,6 +29,111 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
+     <item row="13" column="2">
+      <widget class="QSpinBox" name="spinBoxTarget">
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="maximum">
+        <number>16383</number>
+       </property>
+       <property name="value">
+        <number>500</number>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="2">
+      <widget class="QSpinBox" name="spinBoxChannel4">
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="maximum">
+        <number>65535</number>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLabel" name="labelChannel4">
+       <property name="text">
+        <string>Channel 4</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLabel" name="labelChannel3">
+       <property name="text">
+        <string>Channel 3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="2">
+      <widget class="QSpinBox" name="spinBoxChannel3">
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="maximum">
+        <number>65535</number>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QSpinBox" name="spinBoxChannel2">
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="maximum">
+        <number>65535</number>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="2">
+      <widget class="QSpinBox" name="spinBoxChannel5">
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="maximum">
+        <number>65535</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QComboBox" name="comboBoxLocation">
+       <item>
+        <property name="text">
+         <string>Camera</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>PCIe Card</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="11" column="1">
+      <widget class="QLabel" name="labelChannel8">
+       <property name="text">
+        <string>Channel 8</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QSpinBox" name="spinBoxChannel1">
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="maximum">
+        <number>65535</number>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLabel" name="labelChannel5">
+       <property name="text">
+        <string>Channel 5</string>
+       </property>
+      </widget>
+     </item>
      <item row="2" column="2">
       <widget class="QSpinBox" name="spinBoxCamera">
        <property name="alignment">
@@ -36,8 +141,42 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="2">
-      <widget class="QSpinBox" name="spinBoxChannel1">
+     <item row="3" column="1">
+      <widget class="QLabel" name="labelChannel1">
+       <property name="text">
+        <string>Channel 1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="labelLocation">
+       <property name="text">
+        <string>Location</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="labelCamera">
+       <property name="text">
+        <string>Camera</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="4">
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="9" column="2">
+      <widget class="QSpinBox" name="spinBoxChannel6">
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
@@ -59,39 +198,8 @@
        </property>
       </spacer>
      </item>
-     <item row="1" column="2">
-      <widget class="QComboBox" name="comboBoxLocation">
-       <item>
-        <property name="text">
-         <string>Camera</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>PCIe Card</string>
-        </property>
-       </item>
-      </widget>
-     </item>
      <item row="10" column="2">
       <widget class="QSpinBox" name="spinBoxChannel7">
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="1">
-      <widget class="QLabel" name="labelChannel5">
-       <property name="text">
-        <string>Channel 5</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="2">
-      <widget class="QSpinBox" name="spinBoxChannel4">
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
@@ -107,177 +215,7 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="2">
-      <widget class="QSpinBox" name="spinBoxChannel3">
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="labelPcie">
-       <property name="text">
-        <string>PCIe board</string>
-       </property>
-      </widget>
-     </item>
-     <item row="11" column="1">
-      <widget class="QLabel" name="labelChannel8">
-       <property name="text">
-        <string>Channel 8</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="2">
-      <widget class="QSpinBox" name="spinBoxChannel2">
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QLabel" name="labelChannel3">
-       <property name="text">
-        <string>Channel 3</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QSpinBox" name="spinBoxPcie">
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="1">
-      <widget class="QLabel" name="labelChannel7">
-       <property name="text">
-        <string>Channel 7</string>
-       </property>
-      </widget>
-     </item>
-     <item row="11" column="2">
-      <widget class="QSpinBox" name="spinBoxChannel8">
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="2">
-      <widget class="QSpinBox" name="spinBoxChannel5">
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLabel" name="labelChannel2">
-       <property name="text">
-        <string>Channel 2</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="labelLocation">
-       <property name="text">
-        <string>Location</string>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="2">
-      <widget class="QSpinBox" name="spinBoxChannel6">
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="labelCamera">
-       <property name="text">
-        <string>Camera</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLabel" name="labelChannel1">
-       <property name="text">
-        <string>Channel 1</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QLabel" name="labelChannel4">
-       <property name="text">
-        <string>Channel 4</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="3">
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <spacer name="verticalSpacer_3">
-     <property name="orientation">
-      <enum>Qt::Orientation::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item>
-    <widget class="QLabel" name="labelAutotuneHint">
-     <property name="text">
-      <string>Cover the sensor before starting autotune.</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayoutAutotune">
-     <item>
-      <spacer name="horizontalSpacer_5">
-       <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
+     <item row="13" column="1">
       <widget class="QLabel" name="labelTarget">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -306,20 +244,45 @@ Level</string>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QSpinBox" name="spinBoxTarget">
+     <item row="10" column="1">
+      <widget class="QLabel" name="labelChannel7">
+       <property name="text">
+        <string>Channel 7</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QSpinBox" name="spinBoxPcie">
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="2">
+      <widget class="QSpinBox" name="spinBoxChannel8">
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
        <property name="maximum">
-        <number>16383</number>
-       </property>
-       <property name="value">
-        <number>500</number>
+        <number>65535</number>
        </property>
       </widget>
      </item>
-     <item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="labelPcie">
+       <property name="text">
+        <string>PCIe board</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLabel" name="labelChannel2">
+       <property name="text">
+        <string>Channel 2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="3">
       <widget class="QPushButton" name="pushButtonAutotune">
        <property name="whatsThis">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ensure no measurement is in progress, the sensor is not exposed to light, and settings are correctly configured. Remember to select your target before clicking on autotune for optimal results.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -329,18 +292,12 @@ Level</string>
        </property>
       </widget>
      </item>
-     <item>
-      <spacer name="horizontalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
+     <item row="12" column="1" colspan="3">
+      <widget class="QLabel" name="labelAutotuneHint">
+       <property name="text">
+        <string>Cover the sensor before starting autotune.</string>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
+      </widget>
      </item>
     </layout>
    </item>
@@ -403,8 +360,6 @@ Level</string>
   <tabstop>spinBoxChannel6</tabstop>
   <tabstop>spinBoxChannel7</tabstop>
   <tabstop>spinBoxChannel8</tabstop>
-  <tabstop>spinBoxTarget</tabstop>
-  <tabstop>pushButtonAutotune</tabstop>
   <tabstop>pushButtonDefault</tabstop>
  </tabstops>
  <resources/>
