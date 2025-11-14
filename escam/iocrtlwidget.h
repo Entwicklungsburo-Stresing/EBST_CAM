@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 
 #include <QWidget>
 #include "ui_iocrtlwidget.h"
@@ -12,6 +12,6 @@ public:
 	~IocrtlWidget();
 
 private:
-	Ui::IocrtlWidgetClass ui;
-};
+	//Ui::IocrtlWidgetClass ui;
+};*/
 

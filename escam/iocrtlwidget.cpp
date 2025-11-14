@@ -1,4 +1,4 @@
-#include "iocrtlwidget.h"
+/*#include "iocrtlwidget.h"
 
 IocrtlWidget::IocrtlWidget(QWidget *parent)
 	: QWidget(parent)
@@ -7,5 +7,5 @@ IocrtlWidget::IocrtlWidget(QWidget *parent)
 }
 
 IocrtlWidget::~IocrtlWidget()
-{}
+{}*/
 
