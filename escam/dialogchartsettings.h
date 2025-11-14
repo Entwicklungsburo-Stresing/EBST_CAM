@@ -49,4 +49,6 @@ private:
 	qreal xmin_old = 0;
 	qreal ymax_old = 0;
 	qreal ymin_old = 0;
+	QLineSeries* referenceSeries = nullptr;
+	void checkIfReferenceExistsAndDelete();
 };
