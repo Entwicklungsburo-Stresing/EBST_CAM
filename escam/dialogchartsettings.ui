@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>200</width>
+    <width>317</width>
     <height>266</height>
    </rect>
   </property>
@@ -35,21 +35,7 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="3" column="1">
-      <widget class="QLabel" name="labelYmin">
-       <property name="text">
-        <string>y min</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="labelShowCrosshair">
-       <property name="text">
-        <string>crosshair</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
+     <item row="1" column="3">
       <widget class="QSpinBox" name="spinBoxXmin">
        <property name="maximum">
         <number>999999999</number>
@@ -60,6 +46,79 @@
       <widget class="QLabel" name="labelXmin">
        <property name="text">
         <string>x min</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="3">
+      <widget class="QCheckBox" name="checkBoxMirrorX">
+       <property name="text">
+        <string>on</string>
+       </property>
+       <property name="tristate">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="2">
+      <widget class="QPushButton" name="pushButtonSaveReference">
+       <property name="text">
+        <string>Save reference</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="labelXmax">
+       <property name="text">
+        <string>x max</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <widget class="QSpinBox" name="spinBoxYmin">
+       <property name="maximum">
+        <number>999999999</number>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLabel" name="labelMirrorX">
+       <property name="text">
+        <string>Mirror X-Axis</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QCheckBox" name="checkBoxShowCrosshair">
+       <property name="text">
+        <string>on</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="3">
+      <widget class="QPushButton" name="pushButtonClearReference">
+       <property name="text">
+        <string>Clear reference</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLabel" name="labelYmax">
+       <property name="text">
+        <string>y max</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="3">
+      <widget class="QSpinBox" name="spinBoxYmax">
+       <property name="maximum">
+        <number>999999999</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="labelShowCrosshair">
+       <property name="text">
+        <string>crosshair</string>
        </property>
       </widget>
      </item>
@@ -76,66 +135,31 @@
        </property>
       </spacer>
      </item>
-     <item row="3" column="2">
-      <widget class="QSpinBox" name="spinBoxYmin">
-       <property name="maximum">
-        <number>999999999</number>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="labelXmax">
+     <item row="6" column="1">
+      <widget class="QLabel" name="labelReference">
        <property name="text">
-        <string>x max</string>
+        <string>Reference data</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
-      <widget class="QCheckBox" name="checkBoxShowCrosshair">
-       <property name="text">
-        <string>on</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLabel" name="labelYmax">
-       <property name="text">
-        <string>y max</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
+     <item row="2" column="3">
       <widget class="QSpinBox" name="spinBoxXmax">
        <property name="maximum">
         <number>999999999</number>
        </property>
       </widget>
      </item>
-     <item row="5" column="1">
-      <widget class="QLabel" name="labelMirrorX">
+     <item row="3" column="1">
+      <widget class="QLabel" name="labelYmin">
        <property name="text">
-        <string>Mirror X-Axis</string>
+        <string>y min</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="2">
-      <widget class="QSpinBox" name="spinBoxYmax">
-       <property name="maximum">
-        <number>999999999</number>
-       </property>
-      </widget>
+     <item row="7" column="1">
+      <layout class="QVBoxLayout" name="verticalLayoutCameras"/>
      </item>
-     <item row="5" column="2">
-      <widget class="QCheckBox" name="checkBoxMirrorX">
-       <property name="text">
-        <string>on</string>
-       </property>
-       <property name="tristate">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
+     <item row="1" column="4">
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Orientation::Horizontal</enum>
@@ -147,9 +171,6 @@
         </size>
        </property>
       </spacer>
-     </item>
-     <item row="6" column="1">
-      <layout class="QVBoxLayout" name="verticalLayoutCameras"/>
      </item>
     </layout>
    </item>
