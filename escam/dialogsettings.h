@@ -123,6 +123,12 @@ constexpr auto settingIOCtrlOutput6WidthIn5nsPath = "ioctrl_output_width_in_5ns_
 constexpr auto settingIOCtrlOutput7WidthIn5nsPath = "ioctrl_output_delay_in_5ns_7";
 constexpr auto settingIOCtrlOutput7DelayIn5nsPath = "ioctrl_output_width_in_5ns_7";
 constexpr auto settingIOCtrlT0PeriodIn10nsPath = "ioctrl_T0_period_in_10ns";
+constexpr auto settingTriggerSourcePath = "trigger_source";
+// Delay, Width, Sequence and SequenceLength are part of the group channel 1 to 8
+constexpr auto settingIoctrlDelayIn1nsPath = "ioctrl_delay_in_1ns";
+constexpr auto settingIoctrlWidthIn1nsPath = "ioctrl_width_in_1ns";
+constexpr auto settingIoctrlSequencePath = "ioctrl_sequence_path";
+constexpr auto settingIoctrlSequenceLengthPath = "ioctrl_sequence_length";
 // chart
 constexpr auto settingAxesMirrorXPath = "AxesMirrorXPath";
 constexpr auto settingShowCrosshairPath = "showCrosshair";

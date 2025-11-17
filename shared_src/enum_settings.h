@@ -538,3 +538,22 @@ enum timer_resolution_t
 	 */
 	timer_resolution_100ns = 3,
 };
+
+enum trigger_source_t
+{
+	trigger_source_manual = 0,
+	trigger_source_sti = 1,
+	trigger_source_sslope = 2,
+	trigger_source_scan_gated = 3,
+	trigger_source_sticnt = 4,
+	trigger_source_sdat = 5,
+	trigger_source_sec = 6,
+	trigger_source_xck = 7,
+	trigger_source_bti = 8,
+	trigger_source_bslope = 9,
+	trigger_source_bticnt = 10,
+	trigger_source_bdat = 11,
+	trigger_source_bec = 12,
+	trigger_source_block_on = 13,
+	trigger_source_block_on_synced = 14
+};

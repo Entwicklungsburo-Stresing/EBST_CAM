@@ -22,12 +22,14 @@ class DialogIoctrl : public QDialog
 public:
 	DialogIoctrl(QWidget *parent = Q_NULLPTR);
 	~DialogIoctrl();
-
-//private slots:
-
-
+signals:
+	void settingsLoaded(int drvno);
+	void defaults_loaded();
 private:
 	Ui::DialogIoctrl *ui;
 	QSettings settings;
-
+private slots:
+	void on_comboBoxTrigSource_currentIndexChanged(int index);
+	void loadSettings();
+	void on_spinBoxBoard_valueChanged(int value);
 };

@@ -30,7 +30,7 @@
    <item>
     <layout class="QGridLayout" name="gridLayout">
      <item row="1" column="2">
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="comboBoxTrigSource">
        <item>
         <property name="text">
          <string>manual</string>
@@ -121,7 +121,7 @@
         <string>Trigger source</string>
        </property>
        <property name="buddy">
-        <cstring>comboBox</cstring>
+        <cstring>comboBoxTrigSource</cstring>
        </property>
       </widget>
      </item>

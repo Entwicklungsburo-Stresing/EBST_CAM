@@ -54,8 +54,17 @@
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
+       <property name="correctionMode">
+        <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
+       </property>
+       <property name="suffix">
+        <string> ns</string>
+       </property>
        <property name="maximum">
         <number>65535</number>
+       </property>
+       <property name="singleStep">
+        <number>32</number>
        </property>
       </widget>
      </item>
@@ -129,8 +138,17 @@
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
+       <property name="correctionMode">
+        <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
+       </property>
+       <property name="suffix">
+        <string> ns</string>
+       </property>
        <property name="maximum">
         <number>65535</number>
+       </property>
+       <property name="singleStep">
+        <number>32</number>
        </property>
       </widget>
      </item>

@@ -110,3 +110,8 @@
 #define settingRMSLastSampleDefault					100
 #define settingRMSPixelDefault						20
 #define settingFanControlFanStateDefault			1
+#define settingIoctrlDelayIn1nsDefault				0
+#define settingIoctrlWidthIn1nsDefault				3200
+#define settingTriggerSourceDefault					trigger_source_xck
+#define settingIoctrlSequenceDefault				"0"
+#define settingIoctrlSequenceLengthDefault			128
