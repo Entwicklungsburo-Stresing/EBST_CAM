@@ -14,6 +14,7 @@
 #include "dialogshutter.h"
 #include "dialogservo.h"
 #include "dialogfancontrol.h"
+#include "dialogreferencemeasurement.h"
 #ifdef WIN32
 #include "dialoggreyscalesettings.h"
 #endif
@@ -1346,9 +1347,17 @@ void MainWindow::closeAllShutters()
 	return;
 }
 
-void MainWindow::on_actionFan_control_triggered()
+void MainWindow::on_actionFanControl_triggered()
 {
 	DialogFanControl* dialog = new DialogFanControl(this);
+	dialog->setAttribute(Qt::WA_DeleteOnClose);
+	dialog->show();
+	return;
+}
+
+void MainWindow::on_actionReferenceMeasurement_triggered()
+{
+	DialogReferenceMeasurement* dialog = new DialogReferenceMeasurement(this);
 	dialog->setAttribute(Qt::WA_DeleteOnClose);
 	dialog->show();
 	return;

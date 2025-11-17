@@ -1194,6 +1194,7 @@
      <bool>true</bool>
     </property>
     <addaction name="actionChartSettings"/>
+    <addaction name="actionReferenceMeasurement"/>
    </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="title">
@@ -1211,7 +1212,7 @@
     <addaction name="actionShutter"/>
     <addaction name="actionspecial_pixels"/>
     <addaction name="actionTrigger_info"/>
-    <addaction name="actionFan_control"/>
+    <addaction name="actionFanControl"/>
    </widget>
    <widget class="QMenu" name="menuGreyscale_Viewer">
     <property name="title">
@@ -1401,7 +1402,7 @@
     <string>Servo</string>
    </property>
   </action>
-  <action name="actionFan_control">
+  <action name="actionFanControl">
    <property name="text">
     <string>Fan control</string>
    </property>
@@ -1409,6 +1410,11 @@
   <action name="actionIO_Control_legacy">
    <property name="text">
     <string>IO Control (legacy)</string>
+   </property>
+  </action>
+  <action name="actionReferenceMeasurement">
+   <property name="text">
+    <string>Reference Measurement</string>
    </property>
   </action>
  </widget>
