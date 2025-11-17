@@ -246,7 +246,6 @@ del $(ProjectDir).qmake.stash
     <ClCompile Include="dialogshutter.cpp" />
     <ClCompile Include="dialogspecialpixels.cpp" />
     <ClCompile Include="dialogtriggerinfo.cpp" />
-    <ClCompile Include="iocrtlwidget.cpp" />
     <ClCompile Include="ioctrlwidget.cpp" />
     <ClCompile Include="myqchartview.cpp" />
     <ClCompile Include="hooks.cpp" />
@@ -277,7 +276,6 @@ del $(ProjectDir).qmake.stash
     <QtMoc Include="dialogservo.h" />
     <QtMoc Include="dialogfancontrol.h" />
     <QtMoc Include="dialogioctrl_legacy.h" />
-    <QtMoc Include="iocrtlwidget.h" />
     <QtMoc Include="ioctrlwidget.h" />
     <ClInclude Include="lsc-gui.h" />
     <ClInclude Include="hooks.h" />
