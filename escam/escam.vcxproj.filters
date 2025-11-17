@@ -116,6 +116,9 @@
     <ClCompile Include="ioctrlwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dialogreferencemeasurement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="dialogsettings.h">
@@ -170,6 +173,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="ioctrlwidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="dialogreferencemeasurement.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -228,6 +234,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="ioctrlwidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogreferencemeasurement.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
