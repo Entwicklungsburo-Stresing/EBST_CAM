@@ -28,8 +28,13 @@ public:
 private:
 	Ui::DialogReferenceMeasurementClass* ui;
 	QSettings settings;
+	void initDialog();
+	void checkIfReferenceExistsAndDelete(int referenceIndex);
+	QList<QLineSeries*> referenceSeriesList;
 	
 
 private slots:
+	void on_pushButtonSaveReference_pressed(int referenceIndex);
+	void on_pushButtonClearReference_pressed(int referenceIndex);
 };
 

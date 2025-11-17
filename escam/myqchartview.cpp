@@ -219,11 +219,10 @@ void MyQChartView::setChartData(QLineSeries** series, uint16_t numberOfSets)
 	// Remove all existing series except the reference series
 	for (QAbstractSeries* series : chart->series())
 	{
-		if (series->name() != "Reference Series") {
+		if (!series->name().startsWith("reference_series")) {
 			chart->removeSeries(series);
 		}
 	}
-	//chart->removeAllSeries();
 	
 	for (uint16_t set = 0; set < numberOfSets; set++)
 	{
