@@ -2349,3 +2349,35 @@ DllAccess es_status_codes DLLSetFanControlState(uint32_t drvno, uint16_t state)
 {
 	return SetFanControlState(drvno, state);
 }
+
+/**
+ * @copydoc CamIOCtrl_setSequenceLength
+ */
+DllAccess es_status_codes DLLCamIOCtrl_setSequenceLength(uint32_t drvno, uint8_t channel, uint8_t sequence_length)
+{
+	return CamIOCtrl_setSequenceLength(drvno, channel, sequence_length);
+}
+
+/**
+ * @copydoc CamIOCtrl_setSequence
+ */
+DllAccess es_status_codes DLLCamIOCtrl_setSequence(uint32_t drvno, uint8_t channel, uint16_t* sequence)
+{
+	return CamIOCtrl_setSequence(drvno, channel, sequence);
+}
+
+/**
+ * @copydoc CamIOCtrl_setPulseDelay
+ */
+DllAccess es_status_codes DLLCamIOCtrl_setPulseDelay(uint32_t drvno, uint8_t channel, uint32_t pulse_delay_in_1ns)
+{
+	return CamIOCtrl_setPulseDelay(drvno, channel, pulse_delay_in_1ns);
+}
+
+/**
+ * @copydoc CamIOCtrl_setPulseWidth
+ */
+DllAccess es_status_codes DLLCamIOCtrl_setPulseWidth(uint32_t drvno, uint8_t channel, uint32_t pulse_width_in_1ns)
+{
+	return CamIOCtrl_setPulseWidth(drvno, channel, pulse_width_in_1ns);
+}

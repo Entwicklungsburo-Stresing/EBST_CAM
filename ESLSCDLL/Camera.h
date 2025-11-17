@@ -49,4 +49,8 @@ es_status_codes CamIOCtrl_setImpactStartPixel(uint32_t drvno, uint16_t startPixe
 es_status_codes CamIOCtrl_setOutput(uint32_t drvno, uint32_t number, uint16_t width_in_5ns, uint16_t delay_in_5ns);
 es_status_codes CamIOCtrl_setAllOutputs(uint32_t drvno, uint32_t* width_in_5ns, uint32_t* delay_in_5ns);
 es_status_codes CamIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns);
+es_status_codes CamIOCtrl_setSequenceLength(uint32_t drvno, uint8_t channel, uint8_t sequence_length);
+es_status_codes CamIOCtrl_setSequence(uint32_t drvno, uint8_t channel, uint16_t* sequence);
+es_status_codes CamIOCtrl_setPulseDelay(uint32_t drvno, uint8_t channel, uint32_t pulse_delay_in_1ns);
+es_status_codes CamIOCtrl_setPulseWidth(uint32_t drvno, uint8_t channel, uint32_t pulse_width_in_1ns);
 es_status_codes Cam_DAC8568_sendData(uint32_t drvno, uint32_t data, uint8_t cameraPosition);

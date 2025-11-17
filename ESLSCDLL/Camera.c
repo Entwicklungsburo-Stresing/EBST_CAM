@@ -831,6 +831,131 @@ es_status_codes CamIOCtrl_setT0(uint32_t drvno, uint32_t period_in_10ns)
 }
 
 /**
+ * @brief Return the base address enum according to channel.
+ * 
+ * @param[in] channel 1...8
+ * @return 8 bit base address
+ */
+uint8_t getIOCtrlChannelBaseAddress(uint8_t channel)
+{
+	switch (channel)
+	{
+	case 1:
+		return ioctrl_ch1_base_address;
+	case 2:
+		return ioctrl_ch2_base_address;
+	case 3:
+		return ioctrl_ch3_base_address;
+	case 4:
+		return ioctrl_ch4_base_address;
+	case 5:
+		return ioctrl_ch5_base_address;
+	case 6:
+		return ioctrl_ch6_base_address;
+	case 7:
+		return ioctrl_ch7_base_address;
+	case 8:
+		return ioctrl_ch8_base_address;
+	default:
+		return 0xFFFF; // invalid
+	}
+}
+
+/**
+ * @brief Set the sequence length for one IOCtrl channel.
+ * 
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] channel 1...8
+ * @param[in] sequence_length Length of sequence 1...128
+ * @return @ref es_status_codes
+ */
+es_status_codes CamIOCtrl_setSequenceLength(uint32_t drvno, uint8_t channel, uint8_t sequence_length)
+{
+	if (channel < 1 || channel > 8)
+		return es_parameter_out_of_range;
+	if(sequence_length < 1 || sequence_length > 128)
+		return es_parameter_out_of_range;
+	uint8_t baseAddress = getIOCtrlChannelBaseAddress(channel);
+	if (baseAddress == 0xFFFF)
+		return es_parameter_out_of_range;
+	return Cam_SendData(drvno, maddr_ioctrl, baseAddress + ioctrl_relative_binSeq_len, sequence_length);
+}
+
+/**
+ * @brief Set the sequence for one IOCtrl channel.
+ * 
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] channel 1...8
+ * @param[in] sequence Sequence is a array with 128 bits passed as a uint16_t array with 8 elements.
+ * @return @ref es_status_codes
+ */
+es_status_codes CamIOCtrl_setSequence(uint32_t drvno, uint8_t channel, uint16_t* sequence)
+{
+	if (channel < 1 || channel > 8)
+		return es_parameter_out_of_range;
+	if (!sequence)
+		return es_invalid_pointer;
+	uint8_t baseAddress = getIOCtrlChannelBaseAddress(channel);
+	if (baseAddress == 0xFFFF)
+		return es_parameter_out_of_range;
+	es_status_codes status = es_no_error;
+	for(uint8_t i = 0; i < 8; i++)
+	{
+		status = Cam_SendData(drvno, maddr_ioctrl, baseAddress + ioctrl_relative_binSeq_seg1 + i, sequence[i]);
+		if (status != es_no_error) return status;
+	}
+	return status;
+}
+
+/**
+ * @brief Set the delay of one IOCtrl channel pulse.
+ * 
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] channel 1...8
+ * @param[in] pulse_delay_in_1ns Delay of IOCtrl pulse of one channel.
+ *		* Min: 0 ns
+ *		* Step: 32 ns (Values between are rounded down to the next valid step)
+ *		* Max: 	2.097.120 ns (which is 65.535 * 32 ns)
+ * @return @ref es_status_codes
+ */
+es_status_codes CamIOCtrl_setPulseDelay(uint32_t drvno, uint8_t channel, uint32_t pulse_delay_in_1ns)
+{
+	if (channel < 1 || channel > 8)
+		return es_parameter_out_of_range;
+	if (pulse_delay_in_1ns > 2097120)
+		pulse_delay_in_1ns = 2097120;
+	uint16_t pulse_delay_in_32ns = (uint16_t)(pulse_delay_in_1ns / 32);
+	uint8_t baseAddress = getIOCtrlChannelBaseAddress(channel);
+	if (baseAddress == 0xFFFF)
+		return es_parameter_out_of_range;
+	return Cam_SendData(drvno, maddr_ioctrl, baseAddress + ioctrl_relative_pls_delay, pulse_delay_in_32ns);
+}
+
+/**
+ * @brief Set the width of one IOCtrl channel pulse.
+ *
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] channel 1...8
+ * @param[in] pulse_width_in_1ns Width of IOCtrl pulse of one channel.
+ *		* Min: 0 ns
+ *		* Step: 32 ns (Values between are rounded down to the next valid step)
+ *		* Max: 	2.097.120 ns (which is 65.535 * 32 ns)
+ * @return @ref es_status_codes
+ */
+es_status_codes CamIOCtrl_setPulseWidth(uint32_t drvno, uint8_t channel, uint32_t pulse_width_in_1ns)
+{
+	if (channel < 1 || channel > 8)
+		return es_parameter_out_of_range;
+	if (pulse_width_in_1ns > 2097120)
+		pulse_width_in_1ns = 2097120;
+	uint16_t pulse_width_in_32ns = (uint16_t)(pulse_width_in_1ns / 32);
+	uint8_t baseAddress = getIOCtrlChannelBaseAddress(channel);
+	if (baseAddress == 0xFFFF)
+		return es_parameter_out_of_range;
+	return Cam_SendData(drvno, maddr_ioctrl, baseAddress + ioctrl_relative_pls_width, pulse_width_in_32ns);
+}
+
+/**
  * @brief Send 32 bit data to DAC8568.
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param[in] data 32 bit data to send to DAC8568

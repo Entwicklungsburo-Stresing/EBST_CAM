@@ -1102,7 +1102,7 @@ enum ioctrl_register_address_t
 	ioctrl_ch2_binSeq_seg8 = 0x33,
 	ioctrl_ch2_pls_delay = 0x34,
 	ioctrl_ch2_pls_width = 0x35,
-	ioctrl_ch3_base_adress = 0x36,
+	ioctrl_ch3_base_address = 0x36,
 	ioctrl_ch3_binSeq_len = 0x36,
 	ioctrl_ch3_binSeq_seg1 = 0x37,
 	ioctrl_ch3_binSeq_seg2 = 0x38,
@@ -1201,6 +1201,21 @@ enum ioctrl_shutter_t
 	ioctrl_shutter_bit_shutter2 = 0x02,
 	ioctrl_shutter_bit_shutter3 = 0x04,
 	ioctrl_shutter_bit_shutter4 = 0x08,
+};
+
+enum ioctrl_relative_addresses_t
+{
+	ioctrl_relative_binSeq_len = 0x0,
+	ioctrl_relative_binSeq_seg1 = 0x01,
+	ioctrl_relative_binSeq_seg2 = 0x02,
+	ioctrl_relative_binSeq_seg3 = 0x03,
+	ioctrl_relative_binSeq_seg4 = 0x04,
+	ioctrl_relative_binSeq_seg5 = 0x05,
+	ioctrl_relative_binSeq_seg6 = 0x06,
+	ioctrl_relative_binSeq_seg7 = 0x07,
+	ioctrl_relative_binSeq_seg8 = 0x08,
+	ioctrl_relative_pls_delay = 0x09,
+	ioctrl_relative_pls_width = 0x0A,
 };
 
 /**
