@@ -857,7 +857,7 @@ uint8_t getIOCtrlChannelBaseAddress(uint8_t channel)
 	case 8:
 		return ioctrl_ch8_base_address;
 	default:
-		return 0xFFFF; // invalid
+		return 0xFF; // invalid
 	}
 }
 
@@ -876,7 +876,7 @@ es_status_codes CamIOCtrl_setSequenceLength(uint32_t drvno, uint8_t channel, uin
 	if(sequence_length < 1 || sequence_length > 128)
 		return es_parameter_out_of_range;
 	uint8_t baseAddress = getIOCtrlChannelBaseAddress(channel);
-	if (baseAddress == 0xFFFF)
+	if (baseAddress == 0xFF)
 		return es_parameter_out_of_range;
 	return Cam_SendData(drvno, maddr_ioctrl, baseAddress + ioctrl_relative_binSeq_len, sequence_length);
 }
@@ -896,7 +896,7 @@ es_status_codes CamIOCtrl_setSequence(uint32_t drvno, uint8_t channel, uint16_t*
 	if (!sequence)
 		return es_invalid_pointer;
 	uint8_t baseAddress = getIOCtrlChannelBaseAddress(channel);
-	if (baseAddress == 0xFFFF)
+	if (baseAddress == 0xFF)
 		return es_parameter_out_of_range;
 	es_status_codes status = es_no_error;
 	for(uint8_t i = 0; i < 8; i++)
@@ -926,7 +926,7 @@ es_status_codes CamIOCtrl_setPulseDelay(uint32_t drvno, uint8_t channel, uint32_
 		pulse_delay_in_1ns = 2097120;
 	uint16_t pulse_delay_in_32ns = (uint16_t)(pulse_delay_in_1ns / 32);
 	uint8_t baseAddress = getIOCtrlChannelBaseAddress(channel);
-	if (baseAddress == 0xFFFF)
+	if (baseAddress == 0xFF)
 		return es_parameter_out_of_range;
 	return Cam_SendData(drvno, maddr_ioctrl, baseAddress + ioctrl_relative_pls_delay, pulse_delay_in_32ns);
 }
@@ -950,7 +950,7 @@ es_status_codes CamIOCtrl_setPulseWidth(uint32_t drvno, uint8_t channel, uint32_
 		pulse_width_in_1ns = 2097120;
 	uint16_t pulse_width_in_32ns = (uint16_t)(pulse_width_in_1ns / 32);
 	uint8_t baseAddress = getIOCtrlChannelBaseAddress(channel);
-	if (baseAddress == 0xFFFF)
+	if (baseAddress == 0xFF)
 		return es_parameter_out_of_range;
 	return Cam_SendData(drvno, maddr_ioctrl, baseAddress + ioctrl_relative_pls_width, pulse_width_in_32ns);
 }
