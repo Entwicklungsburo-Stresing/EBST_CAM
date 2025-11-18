@@ -31,8 +31,8 @@ void IoctrlWidget::loadDefaults()
 {
 	ui.spinBoxDelay->setValue(settingIoctrlDelayIn1nsDefault);
 	ui.spinBoxWidth->setValue(settingIoctrlWidthIn1nsDefault);
-	ui.lineEditHex->setText(settingIoctrlSequenceDefault);
 	ui.spinBoxSeqLength->setValue(settingIoctrlSequenceLengthDefault);
+	ui.lineEditHex->setText(settingIoctrlSequenceDefault);
 	settings.beginGroup(QString("board%1/ch%2").arg(_drvno).arg(channel));
 	settings.setValue(settingIoctrlDelayIn1nsPath, ui.spinBoxDelay->value());
 	settings.setValue(settingIoctrlWidthIn1nsPath, ui.spinBoxWidth->value());
