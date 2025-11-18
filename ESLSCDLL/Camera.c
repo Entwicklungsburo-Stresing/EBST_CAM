@@ -240,6 +240,7 @@ es_status_codes Cam3030_Init(uint32_t drvno)
  */
 es_status_codes Cam3030_ADC_reset(uint32_t drvno)
 {
+	ES_LOG("Camera 3030 ADC reset\n");
 	return Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_reset, adc_ads5294_msg_reset);
 }
 
@@ -255,6 +256,7 @@ es_status_codes Cam3030_ADC_reset(uint32_t drvno)
  */
 es_status_codes Cam3030_ADC_twoWireModeEN(uint32_t drvno)
 {
+	ES_LOG("Camera 3030 ADC enable 2-wire mode\n");
 	es_status_codes status = Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_2wireMode, adc_ads5294_msg_2wireMode);
 	if (status != es_no_error) return status;
 	status = Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_wordWiseOutput, adc_ads5294_msg_wordWiseOutput);
@@ -321,6 +323,7 @@ es_status_codes Cam3030_ADC_SetGain(uint32_t drvno, uint8_t fkt, uint8_t g1, uin
 	data |= b;
 	data = (uint16_t)(data << 4);
 	data |= f;
+	ES_LOG("Cam3030_ADC_SetGain: data gain1..4: 0x%04"PRIx16"\n", data);
 	es_status_codes status = Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_gain_1_to_4, data);	//gain1..4
 	if (status != es_no_error) return status;
 	data = h;
@@ -330,6 +333,7 @@ es_status_codes Cam3030_ADC_SetGain(uint32_t drvno, uint8_t fkt, uint8_t g1, uin
 	data |= g;
 	data = (uint16_t)(data << 4);
 	data |= c;
+	ES_LOG("Cam3030_ADC_SetGain: data gain5..8: 0x%04"PRIx16"\n", data);
 	return Cam_SendData(drvno, maddr_adc, adc_ads5294_regaddr_gain_5_to_8, data);	//gain7..8
 }
 
@@ -660,6 +664,12 @@ es_status_codes Cam_SetVfreqRegister(uint32_t drvno)
 		is_fft = 0;
 	uint16_t vfreqFPGA = (uint16_t)settings_struct.camera_settings[drvno].vfreq << 5; //multiplikation mit 32 damit FPGA vclks aehnlich lang wie die PCIe vclks sind
 	uint16_t vfreqRegsiter = (is_area_mode | (vfreqFPGA & 0x3FFF) << 1 | is_fft);
+	ES_LOG("Cam_SetVfreqRegister(), vfreq: %"PRIu32", vfreqFPGA: %"PRIu16", is_area_mode: 0x%"PRIx16", is_fft: %"PRIu16", vfreqRegsiter: 0x%"PRIx16"\n",
+		settings_struct.camera_settings[drvno].vfreq,
+		vfreqFPGA,
+		is_area_mode,
+		is_fft,
+		vfreqRegsiter);
 	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclk, vfreqRegsiter);
 	return status;
 }
@@ -673,6 +683,7 @@ es_status_codes Cam_SetVfreqRegister(uint32_t drvno)
  */
 es_status_codes Cam_SetupFullBinning(uint32_t drvno)
 {
+	ES_LOG("Cam_SetupFullBinning(), fft_lines: "PRIu32"\n", settings_struct.camera_settings[drvno].fft_lines);
 	es_status_codes status = es_no_error;
 	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclks_amount1, (uint16_t)settings_struct.camera_settings[drvno].fft_lines); if (status != es_no_error) return status;
 	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclks_amount2, (uint16_t)0x0000); if (status != es_no_error) return status;
@@ -691,6 +702,13 @@ es_status_codes Cam_SetupFullBinning(uint32_t drvno)
  */
 es_status_codes Cam_SetupPartialBinning(uint32_t drvno)
 {
+	ES_LOG("Cam_SetupPartialBinning()\n");
+	ES_LOG("Region sizes: %"PRIu32", %"PRIu32", %"PRIu32", %"PRIu32", %"PRIu32"\n",
+		settings_struct.camera_settings[drvno].region_size[0],
+		settings_struct.camera_settings[drvno].region_size[1],
+		settings_struct.camera_settings[drvno].region_size[2],
+		settings_struct.camera_settings[drvno].region_size[3],
+		settings_struct.camera_settings[drvno].region_size[4]);
 	es_status_codes status = es_no_error;
 	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclks_amount1, (uint16_t)settings_struct.camera_settings[drvno].region_size[0]); if (status != es_no_error) return status;
 	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclks_amount2, (uint16_t)settings_struct.camera_settings[drvno].region_size[1]); if (status != es_no_error) return status;
@@ -935,7 +953,7 @@ es_status_codes CamIOCtrl_setPulseDelay(uint32_t drvno, uint8_t channel, uint32_
 	uint8_t baseAddress = getIOCtrlChannelBaseAddress(channel);
 	if (baseAddress == 0xFF)
 		return es_parameter_out_of_range;
-	ES_LOG("Set IOCtrl channel %"PRIu8" pulse delay: %"PRIu16" ns\n", channel, pulse_delay_in_32ns);
+	ES_LOG("Set IOCtrl channel %"PRIu8" pulse delay: %"PRIu32" ns\n", channel, ((uint32_t)pulse_delay_in_32ns) * 8);
 	return Cam_SendData(drvno, maddr_ioctrl, baseAddress + ioctrl_relative_pls_delay, pulse_delay_in_32ns);
 }
 
@@ -960,7 +978,7 @@ es_status_codes CamIOCtrl_setPulseWidth(uint32_t drvno, uint8_t channel, uint32_
 	uint8_t baseAddress = getIOCtrlChannelBaseAddress(channel);
 	if (baseAddress == 0xFF)
 		return es_parameter_out_of_range;
-	ES_LOG("Set IOCtrl channel %"PRIu8" pulse width: %"PRIu16" ns\n", channel, pulse_width_in_32ns);
+	ES_LOG("Set IOCtrl channel %"PRIu8" pulse width: %"PRIu32" ns\n", channel, ((uint32_t)pulse_width_in_32ns) * 32);
 	return Cam_SendData(drvno, maddr_ioctrl, baseAddress + ioctrl_relative_pls_width, pulse_width_in_32ns);
 }
 
@@ -1035,7 +1053,15 @@ es_status_codes Cam_SetConfigRegister(uint32_t drvno)
 	}
 	uint16_t sensor_gain_2 = ((uint16_t)settings_struct.camera_settings[drvno].sensor_gain << (cam_config_register_bitindex_sensor_gain_2 - 1)) & cam_config_register_bit_sensor_gain_2;
 	uint16_t configRegister = monitor | led_off | cool_level | trigger_mode | sensor_gain | channel_select | sensor_gain_2;
-
+	ES_LOG("Set configuration register in camera to 0x%"PRIx16"\n", configRegister);
+	ES_LOG("config register details: sensor_gain: %"PRIu16", trigger_mode: %"PRIu16", cool_level: %"PRIu16", led_off: %"PRIu16", monitor: %"PRIu16", channel_select: 0x%"PRIx16", sensor_gain_2: %"PRIu16"\n",
+		settings_struct.camera_settings[drvno].sensor_gain,
+		settings_struct.camera_settings[drvno].trigger_mode_integrator,
+		settings_struct.camera_settings[drvno].temp_level,
+		settings_struct.camera_settings[drvno].led_off,
+		settings_struct.camera_settings[drvno].monitor,
+		channel_select,
+		settings_struct.camera_settings[drvno].sensor_gain);
 	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_config, configRegister);
 	if (status != es_no_error) return status;
 	return status;
