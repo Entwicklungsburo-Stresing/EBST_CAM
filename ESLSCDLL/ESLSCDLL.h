@@ -202,6 +202,7 @@ DllAccess es_status_codes DLLCamIOCtrl_setSequenceLength(uint32_t drvno, uint8_t
 DllAccess es_status_codes DLLCamIOCtrl_setSequence(uint32_t drvno, uint8_t channel, uint16_t* sequence);
 DllAccess es_status_codes DLLCamIOCtrl_setPulseDelay(uint32_t drvno, uint8_t channel, uint32_t pulse_delay_in_1ns);
 DllAccess es_status_codes DLLCamIOCtrl_setPulseWidth(uint32_t drvno, uint8_t channel, uint32_t pulse_width_in_1ns);
+DllAccess es_status_codes DLLSetStateControlRegister(uint32_t drvno, uint16_t state);
 //************ read and write functions
 DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address);
 DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards(uint8_t* data0, uint8_t* data1, uint8_t* data2, uint8_t* data3, uint8_t* data4, uint32_t address);

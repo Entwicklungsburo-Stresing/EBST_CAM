@@ -2381,3 +2381,11 @@ DllAccess es_status_codes DLLCamIOCtrl_setPulseWidth(uint32_t drvno, uint8_t cha
 {
 	return CamIOCtrl_setPulseWidth(drvno, channel, pulse_width_in_1ns);
 }
+
+/**
+ * @copydoc SetStateControlRegister
+ */
+DllAccess es_status_codes DLLSetStateControlRegister(uint32_t drvno, uint16_t state)
+{
+	return SetStateControlRegister(drvno, state);
+}

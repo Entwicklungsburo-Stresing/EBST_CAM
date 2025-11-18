@@ -96,6 +96,7 @@ public:
 	es_status_codes camIOCtrl_setSequence(uint32_t drvno, uint8_t channel, uint16_t* sequence);
 	es_status_codes camIOCtrl_setPulseDelay(uint32_t drvno, uint8_t channel, uint32_t pulse_delay_in_1ns);
 	es_status_codes camIOCtrl_setPulseWidth(uint32_t drvno, uint8_t channel, uint32_t pulse_width_in_1ns);
+	es_status_codes setStateControlRegister(uint32_t drvno, uint16_t state);
 public slots:
 	es_status_codes startMeasurement();
 signals:

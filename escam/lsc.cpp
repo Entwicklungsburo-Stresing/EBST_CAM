@@ -685,3 +685,11 @@ es_status_codes Lsc::camIOCtrl_setPulseWidth(uint32_t drvno, uint8_t channel, ui
 {
 	return DLLCamIOCtrl_setPulseWidth(drvno, channel, pulse_width_in_1ns);
 }
+
+/**
+ * @copydoc DLLSetStateControlRegister
+ */
+es_status_codes Lsc::setStateControlRegister(uint32_t drvno, uint16_t state)
+{
+	return DLLSetStateControlRegister(drvno, state);
+}

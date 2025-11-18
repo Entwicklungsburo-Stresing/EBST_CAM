@@ -57,6 +57,7 @@ void DialogIoctrl::on_comboBoxTrigSource_currentIndexChanged(int index)
 	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
 	settings.setValue(settingTriggerSourcePath, index);
 	settings.endGroup();
+	mainWindow->lsc.setStateControlRegister(ui->spinBoxBoard->value(), index);
 	return;
 }
 
