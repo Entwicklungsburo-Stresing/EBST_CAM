@@ -113,5 +113,5 @@
 #define settingIoctrlDelayIn1nsDefault				0
 #define settingIoctrlWidthIn1nsDefault				3200
 #define settingTriggerSourceDefault					trigger_source_xck
-#define settingIoctrlSequenceDefault				"0"
+#define settingIoctrlSequenceDefault				"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
 #define settingIoctrlSequenceLengthDefault			128

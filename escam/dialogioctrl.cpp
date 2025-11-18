@@ -64,8 +64,9 @@ void DialogIoctrl::on_comboBoxTrigSource_currentIndexChanged(int index)
 void DialogIoctrl::loadSettings()
 {
 	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
-	ui->comboBoxTrigSource->setCurrentIndex(settings.value(settingTriggerSourcePath, settingTriggerSourceDefault).toInt());
+	int index = settings.value(settingTriggerSourcePath, settingTriggerSourceDefault).toInt();
 	settings.endGroup();
+	ui->comboBoxTrigSource->setCurrentIndex(index);
 	emit settingsLoaded((ui->spinBoxBoard->value()));
 	return;
 }
@@ -75,4 +76,10 @@ void DialogIoctrl::on_spinBoxBoard_valueChanged(int value)
 	(void)value;
 	loadSettings();
 	return;
+}
+
+void DialogIoctrl::on_pushButtonDefault_pressed()
+{
+	ui->comboBoxTrigSource->setCurrentIndex(settingTriggerSourceDefault);
+	emit defaults_loaded();
 }

@@ -70,8 +70,8 @@ void DialogFanControl::on_checkBoxFanOn_stateChanged(int state)
 	uint16_t fanState = (state == Qt::Checked) ? 1 : 0;
 	settings.beginGroup("board" + QString::number(drvno));
 	settings.setValue(settingFanControlFanStatePath, fanState);
-	mainWindow->lsc.setFanControlState(drvno, fanState);
 	settings.endGroup();
+	mainWindow->lsc.setFanControlState(drvno, fanState);
 	return;
 }
 

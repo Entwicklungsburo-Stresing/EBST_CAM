@@ -29,6 +29,7 @@ CameraSettingsWidget::~CameraSettingsWidget()
 
 void CameraSettingsWidget::on_accepted()
 {
+	settings.beginGroup("board" + QString::number(drvno));
 	// Here the settings on the UI are saved to the system
 	// The order is the same as in the widget camerasettingswidget.ui and dialogsettings.h
 	// Measurement
@@ -90,6 +91,7 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingManipulateDataModePath, ui->comboBoxManipulateDataMode->currentIndex());
 	settings.setValue(settingManipulateDataCustomFactorPath, ui->doubleSpinBoxManipulateDataCustomFactor->value());
 	settings.setValue(settingEcLegacyModePath, ui->checkBoxEcLegacyMode->isChecked());
+	settings.endGroup();
 	return;
 }
 
@@ -580,6 +582,7 @@ void CameraSettingsWidget::initializeWidget()
 	ui->comboBoxManipulateDataMode->setCurrentIndex(settings.value(settingManipulateDataModePath, settingManipulateDataModeDefault).toDouble());
 	ui->doubleSpinBoxManipulateDataCustomFactor->setValue(settings.value(settingManipulateDataCustomFactorPath, settingManipulateDataCustomFactorDefault).toDouble());
 	ui->checkBoxEcLegacyMode->setChecked(settings.value(settingEcLegacyModePath, settingEcLegacyModeDefault).toBool());
+	settings.endGroup();
 	return;
 }
 

@@ -97,22 +97,27 @@ void DialogShutter::loadSavedValues()
 {
 	uint32_t drvno = ui.spinBoxPcieBoard->value();
 	settings.beginGroup("board" + QString::number(drvno));
-	ui.checkBoxMshut->setCheckState(settings.value(settingShutterMshutPath, Qt::Unchecked).value<Qt::CheckState>());
+	Qt::CheckState checkStateMShut = settings.value(settingShutterMshutPath, Qt::Unchecked).value<Qt::CheckState>();
+	Qt::CheckState checkState1 = settings.value(settingShutter1Path, settingShutter1Default).value<Qt::CheckState>();
+	Qt::CheckState checkState2 = settings.value(settingShutter2Path, settingShutter2Default).value<Qt::CheckState>();
+	Qt::CheckState checkState3 = settings.value(settingShutter3Path, settingShutter3Default).value<Qt::CheckState>();
+	Qt::CheckState checkState4 = settings.value(settingShutter4Path, settingShutter4Default).value<Qt::CheckState>();
+	settings.endGroup();
+	ui.checkBoxMshut->setCheckState(checkStateMShut);
 	// Block signals for the check boxes
 	bool blockStateCheckBoxShutter1 = ui.checkBoxShutter1->blockSignals(true);
 	bool blockStateCheckBoxShutter2 = ui.checkBoxShutter2->blockSignals(true);
 	bool blockStateCheckBoxShutter3 = ui.checkBoxShutter3->blockSignals(true);
 	bool blockStateCheckBoxShutter4 = ui.checkBoxShutter4->blockSignals(true);
-	ui.checkBoxShutter1->setCheckState(settings.value(settingShutter1Path, settingShutter1Default).value<Qt::CheckState>());
-	ui.checkBoxShutter2->setCheckState(settings.value(settingShutter2Path, settingShutter2Default).value<Qt::CheckState>());
-	ui.checkBoxShutter3->setCheckState(settings.value(settingShutter3Path, settingShutter3Default).value<Qt::CheckState>());
-	ui.checkBoxShutter4->setCheckState(settings.value(settingShutter4Path, settingShutter4Default).value<Qt::CheckState>());
+	ui.checkBoxShutter1->setCheckState(checkState1);
+	ui.checkBoxShutter2->setCheckState(checkState2);
+	ui.checkBoxShutter3->setCheckState(checkState3);
+	ui.checkBoxShutter4->setCheckState(checkState4);
 	// Unblock signals for the check boxes
 	ui.checkBoxShutter1->blockSignals(blockStateCheckBoxShutter1);
 	ui.checkBoxShutter2->blockSignals(blockStateCheckBoxShutter2);
 	ui.checkBoxShutter3->blockSignals(blockStateCheckBoxShutter3);
 	ui.checkBoxShutter4->blockSignals(blockStateCheckBoxShutter4);
-	settings.endGroup();
 	// Set the shutter states
 	on_checkBoxShutterX_checkStateChanged();
 }

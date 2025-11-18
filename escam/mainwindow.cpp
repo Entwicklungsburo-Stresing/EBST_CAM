@@ -643,6 +643,7 @@ void MainWindow::loadCameraData()
 		// Check if the drvno'th bit is set
 		if ((board_sel >> drvno) & 1)
 		{
+			// It might be dangerous to do stuff between beginGroup and endGroup. This could lead to a nested group if the stuff triggers another loading / saving of settings. It seems like it is safe here.
 			settings.beginGroup("board" + QString::number(drvno));
 			camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toDouble();
 			// if camcnt is 0, treat as 1

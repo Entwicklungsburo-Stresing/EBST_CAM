@@ -32,4 +32,5 @@ private slots:
 	void on_comboBoxTrigSource_currentIndexChanged(int index);
 	void loadSettings();
 	void on_spinBoxBoard_valueChanged(int value);
+	void on_pushButtonDefault_pressed();
 };

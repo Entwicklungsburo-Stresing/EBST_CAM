@@ -29,19 +29,31 @@ IoctrlWidget::~IoctrlWidget()
 
 void IoctrlWidget::loadDefaults()
 {
+	ui.spinBoxDelay->setValue(settingIoctrlDelayIn1nsDefault);
+	ui.spinBoxWidth->setValue(settingIoctrlWidthIn1nsDefault);
+	ui.lineEditHex->setText(settingIoctrlSequenceDefault);
+	ui.spinBoxSeqLength->setValue(settingIoctrlSequenceLengthDefault);
+	settings.beginGroup(QString("board%1/ch%2").arg(_drvno).arg(channel));
+	settings.setValue(settingIoctrlDelayIn1nsPath, ui.spinBoxDelay->value());
+	settings.setValue(settingIoctrlWidthIn1nsPath, ui.spinBoxWidth->value());
+	settings.setValue(settingIoctrlSequencePath, ui.lineEditHex->text());
+	settings.setValue(settingIoctrlSequenceLengthPath, ui.spinBoxSeqLength->value());
+	settings.endGroup();
 	return;
 }
 
 void IoctrlWidget::loadSettings(int drvno)
 {
-	settings.beginGroup("board" + QString::number(drvno));
-	settings.beginGroup("ch" + QString::number(channel));
-	ui.spinBoxDelay->setValue(settings.value(settingIoctrlDelayIn1nsPath, settingIoctrlDelayIn1nsDefault).toInt());
-	ui.spinBoxWidth->setValue(settings.value(settingIoctrlWidthIn1nsPath, settingIoctrlWidthIn1nsDefault).toInt());
-	ui.lineEditHex->setText(settings.value(settingIoctrlSequencePath, settingIoctrlSequenceDefault).toString());
-	ui.spinBoxSeqLength->setValue(settings.value(settingIoctrlSequenceLengthPath, settingIoctrlSequenceLengthDefault).toInt());
+	settings.beginGroup(QString("board%1/ch%2").arg(drvno).arg(channel));
+	int delay = settings.value(settingIoctrlDelayIn1nsPath, settingIoctrlDelayIn1nsDefault).toInt();
+	int width = settings.value(settingIoctrlWidthIn1nsPath, settingIoctrlWidthIn1nsDefault).toInt();
+	QString sequence = settings.value(settingIoctrlSequencePath, settingIoctrlSequenceDefault).toString();
+	int sequenceLength = settings.value(settingIoctrlSequenceLengthPath, settingIoctrlSequenceLengthDefault).toInt();
 	settings.endGroup();
-	settings.endGroup();
+	ui.spinBoxDelay->setValue(delay);
+	ui.spinBoxWidth->setValue(width);
+	ui.lineEditHex->setText(sequence);
+	ui.spinBoxSeqLength->setValue(sequenceLength);
 	_drvno = drvno;
 	return;
 }
@@ -57,10 +69,8 @@ void IoctrlWidget::on_spinBoxSeqLength_valueChanged(int val)
 #endif
 	}
 	mainWindow->lsc.camIOCtrl_setSequenceLength(_drvno, channel, val);
-	settings.beginGroup("board" + QString::number(_drvno));
-	settings.beginGroup("ch" + QString::number(channel));
+	settings.beginGroup(QString("board%1/ch%2").arg(_drvno).arg(channel));
 	settings.setValue(settingIoctrlSequenceLengthPath, val);
-	settings.endGroup();
 	settings.endGroup();
 }
 
@@ -330,10 +340,8 @@ void IoctrlWidget::sendSequence()
 	}
 
 	mainWindow->lsc.camIOCtrl_setSequence(_drvno, channel, sequence);
-	settings.beginGroup("board" + QString::number(_drvno));
-	settings.beginGroup("ch" + QString::number(channel));
+	settings.beginGroup(QString("board%1/ch%2").arg(_drvno).arg(channel));
 	settings.setValue(settingIoctrlSequencePath, hex);
-	settings.endGroup();
 	settings.endGroup();
 	return;
 }
@@ -341,10 +349,8 @@ void IoctrlWidget::sendSequence()
 void IoctrlWidget::on_spinBoxDelay_valueChanged(int val)
 {
 	mainWindow->lsc.camIOCtrl_setPulseDelay(_drvno, channel, val);
-	settings.beginGroup("board" + QString::number(_drvno));
-	settings.beginGroup("ch" + QString::number(channel));
+	settings.beginGroup(QString("board%1/ch%2").arg(_drvno).arg(channel));
 	settings.setValue(settingIoctrlDelayIn1nsPath, val);
-	settings.endGroup();
 	settings.endGroup();
 	return;
 }
@@ -352,10 +358,8 @@ void IoctrlWidget::on_spinBoxDelay_valueChanged(int val)
 void IoctrlWidget::on_spinBoxWidth_valueChanged(int val)
 {
 	mainWindow->lsc.camIOCtrl_setPulseWidth(_drvno, channel, val);
-	settings.beginGroup("board" + QString::number(_drvno));
-	settings.beginGroup("ch" + QString::number(channel));
+	settings.beginGroup(QString("board%1/ch%2").arg(_drvno).arg(channel));
 	settings.setValue(settingIoctrlWidthIn1nsPath, val);
-	settings.endGroup();
 	settings.endGroup();
 	return;
 }

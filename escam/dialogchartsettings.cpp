@@ -119,18 +119,22 @@ void DialogChartSettings::populateCameras()
 	uint32_t camcnt = 0;
 	for (uint32_t drvno = 0; drvno < mainWindow->lsc.numberOfBoards; drvno++)
 	{
-		settings.beginGroup("board" + QString::number(drvno));
 		if ((board_sel >> drvno) & 1)
 		// Check if the drvno'th bit is set
 		{
+			settings.beginGroup("board" + QString::number(drvno));
 			camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toDouble();
+			settings.endGroup();
 			// If camcnt is 0, treat as camcnt 1
 			if (camcnt == 0)
 				camcnt = 1;
 			for (uint16_t cam = 0; cam < camcnt; cam++)
 			{
 				QCheckBox* checkbox = new QCheckBox(("Board " + QString::number(drvno) + ", Camera " + QString::number(cam)), this);
-				checkbox->setChecked(settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toBool());
+				settings.beginGroup("board" + QString::number(drvno));
+				bool showCam = settings.value(settingShowCameraBaseDir + QString::number(cam), settingShowCameraDefault).toBool();
+				settings.endGroup();
+				checkbox->setChecked(showCam);
 				ui.verticalLayoutCameras->addWidget(checkbox);
 				// Lambda syntax is used to pass additional argument i
 #if (QT_VERSION < QT_VERSION_CHECK(6, 7, 0))
@@ -142,7 +146,6 @@ void DialogChartSettings::populateCameras()
 				connect(checkbox, &QCheckBox::clicked, this, &DialogChartSettings::lastEnabledCameraCheck);
 			}
 		}
-		settings.endGroup();
 	}
 	return;
 }
