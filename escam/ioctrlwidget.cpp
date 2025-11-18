@@ -55,6 +55,7 @@ void IoctrlWidget::loadSettings(int drvno)
 	ui.lineEditHex->setText(sequence);
 	ui.spinBoxSeqLength->setValue(sequenceLength);
 	_drvno = drvno;
+	sendAllSettings();
 	return;
 }
 
@@ -361,5 +362,14 @@ void IoctrlWidget::on_spinBoxWidth_valueChanged(int val)
 	settings.beginGroup(QString("board%1/ch%2").arg(_drvno).arg(channel));
 	settings.setValue(settingIoctrlWidthIn1nsPath, val);
 	settings.endGroup();
+	return;
+}
+
+void IoctrlWidget::sendAllSettings()
+{
+	mainWindow->lsc.camIOCtrl_setPulseWidth(_drvno, channel, ui.spinBoxWidth->value());
+	mainWindow->lsc.camIOCtrl_setPulseDelay(_drvno, channel, ui.spinBoxDelay->value());
+	sendSequence();
+	mainWindow->lsc.camIOCtrl_setSequenceLength(_drvno, channel, ui.spinBoxSeqLength->value());
 	return;
 }

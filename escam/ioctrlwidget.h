@@ -33,5 +33,6 @@ private:
 	QSettings settings;
 	uint32_t _drvno = 0;
 	void sendSequence();
+	void sendAllSettings();
 };
 
