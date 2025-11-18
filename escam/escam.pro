@@ -43,6 +43,7 @@ SOURCES += \
     dialogdsc.cpp \
     dialogioctrl.cpp \
     dialogioctrl_legacy.cpp \
+    ioctrlwidget.cpp \
     dialogrms.cpp \
     dialogsettings.cpp \
     dialogspecialpixels.cpp \
@@ -72,6 +73,7 @@ FORMS += \
     dialogdsc.ui \
     dialogioctrl.ui \
     dialogioctrl_legacy.ui \
+    ioctrlwidget.ui \
     dialogrms.ui \
     dialogsettings.ui \
     dialogspecialpixels.ui \
@@ -93,6 +95,7 @@ HEADERS += \
     dialogdsc.h \
     dialogioctrl.h \
     dialogioctrl_legacy.h \
+    ioctrlwidget.h \
     dialogrms.h \
     dialogsettings.h \
     dialogspecialpixels.h \
