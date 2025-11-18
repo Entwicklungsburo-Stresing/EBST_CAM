@@ -926,8 +926,8 @@ es_status_codes CamIOCtrl_setSequence(uint32_t drvno, uint8_t channel, uint16_t*
 	es_status_codes status = es_no_error;
 	for(uint8_t i = 0; i < 8; i++)
 	{
-		// (8 - i) reversed the order of the words. We want: lowest word first and lsb first. Lsb first is already correct, and (8 - i) gives us lowest word first.
-		status = Cam_SendData(drvno, maddr_ioctrl, baseAddress + ioctrl_relative_binSeq_seg1 + (8 - i), sequence[i]);
+		// (7 - i) reversed the order of the words. We want: lowest word first and lsb first. Lsb first is already correct, and (7 - i) gives us lowest word first.
+		status = Cam_SendData(drvno, maddr_ioctrl, baseAddress + ioctrl_relative_binSeq_seg1 + (7 - i), sequence[i]);
 		if (status != es_no_error) return status;
 	}
 	return status;
