@@ -917,10 +917,10 @@ es_status_codes CamIOCtrl_setSequence(uint32_t drvno, uint8_t channel, uint16_t*
 	uint8_t baseAddress = getIOCtrlChannelBaseAddress(channel);
 	if (baseAddress == 0xFF)
 		return es_parameter_out_of_range;
-	ES_LOG("Set IOCtrl channel %"PRIu8" sequence:", channel);
+	ES_LOG("Set IOCtrl channel %"PRIu8" sequence: 0x", channel);
 	for (uint8_t i = 0; i < 8; i++)
 	{
-		ES_LOG(" 0x%"PRIx16"", sequence[i]);
+		ES_LOG(" %04"PRIx16, sequence[i]);
 	}
 	ES_LOG("\n");
 	es_status_codes status = es_no_error;
