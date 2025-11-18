@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include "dialogsettings.h"
+#include "lsc-gui.h"
 
 IoctrlWidget::IoctrlWidget(QWidget *parent)
 	: QWidget(parent)
@@ -55,6 +56,12 @@ void IoctrlWidget::on_spinBoxSeqLength_valueChanged(int val)
 		ui.lineEditBin->setText(ui.lineEditBin->text().last(val));
 #endif
 	}
+	mainWindow->lsc.camIOCtrl_setSequenceLength(_drvno, channel, val);
+	settings.beginGroup("board" + QString::number(_drvno));
+	settings.beginGroup("ch" + QString::number(channel));
+	settings.setValue(settingIoctrlSequenceLengthPath, val);
+	settings.endGroup();
+	settings.endGroup();
 }
 
 void IoctrlWidget::on_lineEditDec_textChanged()
@@ -92,6 +99,7 @@ void IoctrlWidget::on_lineEditDec_textChanged()
 
 	ui.lineEditHex->blockSignals(false);
 	ui.lineEditBin->blockSignals(false);
+	sendSequence();
 	return;
 }
 
@@ -124,6 +132,7 @@ void IoctrlWidget::on_lineEditHex_textChanged()
 
 	ui.lineEditDec->blockSignals(false);
 	ui.lineEditBin->blockSignals(false);
+	sendSequence();
 	return;
 }
 
@@ -151,6 +160,7 @@ void IoctrlWidget::on_lineEditBin_textChanged()
 
 	ui.lineEditDec->blockSignals(false);
 	ui.lineEditHex->blockSignals(false);
+	sendSequence();
 	return;
 }
 
@@ -290,4 +300,62 @@ QString IoctrlWidget::addLeadingZerosToBin(QString bin)
 		bin.prepend(QString(length - bin.length(), '0'));
 	}
 	return bin;
+}
+
+void IoctrlWidget::sendSequence()
+{
+	QString hex = ui.lineEditHex->text();
+
+	// Build 8-element uint16_t sequence (128 bits = 32 hex chars).
+	// Pad the user hex to the low-order bits and zero-extend to 32 hex digits.
+	const int totalHexDigits = 32; // 8 * 4 hex digits = 128 bits
+	int userHexDigits = hex.length();
+	// ensure hex uses uppercase and no prefix
+	QString hexNormalized = hex.toUpper();
+
+	// left-pad the user's hex so it represents the least-significant bits of the 128-bit word
+	// first ensure the userHexDigits are right-justified (should already be), then pad to full width
+	if (userHexDigits < totalHexDigits) {
+		hexNormalized = QString(totalHexDigits - userHexDigits, '0') + hexNormalized;
+	}
+
+	uint16_t sequence[8] = { 0 };
+	for (int i = 0; i < 8; ++i) {
+		// each sequence element covers 4 hex digits (16 bits)
+		QString seg = hexNormalized.mid(i * 4, 4);
+		bool ok = false;
+		uint32_t val = seg.toUInt(&ok, 16);
+		if (!ok) val = 0;
+		sequence[i] = static_cast<uint16_t>(val & 0xFFFFu);
+	}
+
+	mainWindow->lsc.camIOCtrl_setSequence(_drvno, channel, sequence);
+	settings.beginGroup("board" + QString::number(_drvno));
+	settings.beginGroup("ch" + QString::number(channel));
+	settings.setValue(settingIoctrlSequencePath, hex);
+	settings.endGroup();
+	settings.endGroup();
+	return;
+}
+
+void IoctrlWidget::on_spinBoxDelay_valueChanged(int val)
+{
+	mainWindow->lsc.camIOCtrl_setPulseDelay(_drvno, channel, val);
+	settings.beginGroup("board" + QString::number(_drvno));
+	settings.beginGroup("ch" + QString::number(channel));
+	settings.setValue(settingIoctrlDelayIn1nsPath, val);
+	settings.endGroup();
+	settings.endGroup();
+	return;
+}
+
+void IoctrlWidget::on_spinBoxWidth_valueChanged(int val)
+{
+	mainWindow->lsc.camIOCtrl_setPulseWidth(_drvno, channel, val);
+	settings.beginGroup("board" + QString::number(_drvno));
+	settings.beginGroup("ch" + QString::number(channel));
+	settings.setValue(settingIoctrlWidthIn1nsPath, val);
+	settings.endGroup();
+	settings.endGroup();
+	return;
 }

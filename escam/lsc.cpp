@@ -646,7 +646,42 @@ es_status_codes Lsc::setShutterStates(uint32_t drvno, uint16_t shutter_states)
 	return DLLSetShutterStates(drvno, shutter_states);
 }
 
+/**
+ * @copydoc DLLSetFanControlState
+ */
 es_status_codes Lsc::setFanControlState(uint32_t drvno, uint16_t state)
 {
 	return DLLSetFanControlState(drvno, state);
+}
+
+/**
+ * @copydoc DLLCamIOCtrl_setSequenceLength
+ */
+es_status_codes Lsc::camIOCtrl_setSequenceLength(uint32_t drvno, uint8_t channel, uint8_t sequence_length)
+{
+	return DLLCamIOCtrl_setSequenceLength(drvno, channel, sequence_length);
+}
+
+/**
+ * @copydoc DLLCamIOCtrl_setSequence
+ */
+es_status_codes Lsc::camIOCtrl_setSequence(uint32_t drvno, uint8_t channel, uint16_t* sequence)
+{
+	return DLLCamIOCtrl_setSequence(drvno, channel, sequence);
+}
+
+/**
+ * @copydoc DLLCamIOCtrl_setPulseDelay
+ */
+es_status_codes Lsc::camIOCtrl_setPulseDelay(uint32_t drvno, uint8_t channel, uint32_t pulse_delay_in_1ns)
+{
+	return DLLCamIOCtrl_setPulseDelay(drvno, channel, pulse_delay_in_1ns);
+}
+
+/**
+ * @copydoc DLLCamIOCtrl_setPulseWidth
+ */
+es_status_codes Lsc::camIOCtrl_setPulseWidth(uint32_t drvno, uint8_t channel, uint32_t pulse_width_in_1ns)
+{
+	return DLLCamIOCtrl_setPulseWidth(drvno, channel, pulse_width_in_1ns);
 }

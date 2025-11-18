@@ -92,6 +92,10 @@ public:
 	uint8_t numberOfBoards = 0;
 	uint32_t getVirtualCamcnt(uint32_t drvno);
 	bool getTestModeOn();
+	es_status_codes camIOCtrl_setSequenceLength(uint32_t drvno, uint8_t channel, uint8_t sequence_length);
+	es_status_codes camIOCtrl_setSequence(uint32_t drvno, uint8_t channel, uint16_t* sequence);
+	es_status_codes camIOCtrl_setPulseDelay(uint32_t drvno, uint8_t channel, uint32_t pulse_delay_in_1ns);
+	es_status_codes camIOCtrl_setPulseWidth(uint32_t drvno, uint8_t channel, uint32_t pulse_width_in_1ns);
 public slots:
 	es_status_codes startMeasurement();
 signals:

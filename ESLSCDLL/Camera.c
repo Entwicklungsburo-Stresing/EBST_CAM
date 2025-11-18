@@ -871,6 +871,7 @@ uint8_t getIOCtrlChannelBaseAddress(uint8_t channel)
  */
 es_status_codes CamIOCtrl_setSequenceLength(uint32_t drvno, uint8_t channel, uint8_t sequence_length)
 {
+	ES_LOG("Set IOCtrl channel %"PRIu8" sequence length: %"PRIu8"\n", channel, sequence_length);
 	if (channel < 1 || channel > 8)
 		return es_parameter_out_of_range;
 	if(sequence_length < 1 || sequence_length > 128)
@@ -891,6 +892,11 @@ es_status_codes CamIOCtrl_setSequenceLength(uint32_t drvno, uint8_t channel, uin
  */
 es_status_codes CamIOCtrl_setSequence(uint32_t drvno, uint8_t channel, uint16_t* sequence)
 {
+	ES_LOG("Set IOCtrl channel %"PRIu8" sequence:", channel);
+	for(uint8_t i = 0; i < 8; i++)
+	{
+		ES_LOG(" 0x%"PRIx16"", sequence[i]);
+	}
 	if (channel < 1 || channel > 8)
 		return es_parameter_out_of_range;
 	if (!sequence)
@@ -920,6 +926,7 @@ es_status_codes CamIOCtrl_setSequence(uint32_t drvno, uint8_t channel, uint16_t*
  */
 es_status_codes CamIOCtrl_setPulseDelay(uint32_t drvno, uint8_t channel, uint32_t pulse_delay_in_1ns)
 {
+	ES_LOG("Set IOCtrl channel %"PRIu8" pulse delay: %"PRIu32" ns\n", channel, pulse_delay_in_1ns);
 	if (channel < 1 || channel > 8)
 		return es_parameter_out_of_range;
 	if (pulse_delay_in_1ns > 2097120)
@@ -944,6 +951,7 @@ es_status_codes CamIOCtrl_setPulseDelay(uint32_t drvno, uint8_t channel, uint32_
  */
 es_status_codes CamIOCtrl_setPulseWidth(uint32_t drvno, uint8_t channel, uint32_t pulse_width_in_1ns)
 {
+	ES_LOG("Set IOCtrl channel %"PRIu8" pulse width: %"PRIu32" ns\n", channel, pulse_width_in_1ns);
 	if (channel < 1 || channel > 8)
 		return es_parameter_out_of_range;
 	if (pulse_width_in_1ns > 2097120)

@@ -71,6 +71,7 @@ void DialogIoctrl::loadSettings()
 
 void DialogIoctrl::on_spinBoxBoard_valueChanged(int value)
 {
+	(void)value;
 	loadSettings();
 	return;
 }

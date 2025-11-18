@@ -21,6 +21,8 @@ private slots:
 	void on_lineEditHex_textChanged();
 	void on_lineEditBin_textChanged();
 	void on_lineEditBin_editingFinished();
+	void on_spinBoxWidth_valueChanged(int val);
+	void on_spinBoxDelay_valueChanged(int val);
 private:
 	QString convertDecimalToBinary(QString decimalString);
 	QString convertHexToBinary(QString hexString);
@@ -30,6 +32,6 @@ private:
 	Ui::IoctrlWidgetClass ui;
 	QSettings settings;
 	uint32_t _drvno = 0;
-
+	void sendSequence();
 };
 
