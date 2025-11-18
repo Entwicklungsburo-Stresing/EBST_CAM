@@ -38,7 +38,7 @@ void IoctrlWidget::loadSettings(int drvno)
 	settings.beginGroup("ch" + QString::number(channel));
 	ui.spinBoxDelay->setValue(settings.value(settingIoctrlDelayIn1nsPath, settingIoctrlDelayIn1nsDefault).toInt());
 	ui.spinBoxWidth->setValue(settings.value(settingIoctrlWidthIn1nsPath, settingIoctrlWidthIn1nsDefault).toInt());
-	ui.lineEditDec->setText(settings.value(settingIoctrlSequencePath, settingIoctrlSequenceDefault).toString());
+	ui.lineEditHex->setText(settings.value(settingIoctrlSequencePath, settingIoctrlSequenceDefault).toString());
 	ui.spinBoxSeqLength->setValue(settings.value(settingIoctrlSequenceLengthPath, settingIoctrlSequenceLengthDefault).toInt());
 	settings.endGroup();
 	settings.endGroup();
