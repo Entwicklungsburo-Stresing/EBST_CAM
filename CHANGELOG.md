@@ -9,15 +9,36 @@ The hardware version number is the current version at release time.
 ## Unreleased
 ### API Changes
 #### Added
+* Add function DLLSetFanControlState
+* Add function DLLCamIOCtrl_setSequenceLength
+* Add function DLLCamIOCtrl_setSequence
+* Add function DLLCamIOCtrl_setPulseDelay
+* Add function DLLCamIOCtrl_setPulseWidth
+* Add function DLLSetStateControlRegister
 #### Changedes_status_codes
 #### Removed
 #### Fixed
 #### Deprecated
 ### Other Changes
 #### Added
+* Add saving functionality for RMS window
+* Add measurement stop option on specific RMS value
+* Add closing all shutters on start of
+* Add import measurement data from HDF5 file
+* Add dialog fan control
+* Add new IOCtrl window
+* Add reference graph option to Chart -> Settings
 #### Changed
+* Update Qt to 6.9.3
+* Improve shutter window
+* Improve window behaviors when resizing
+* Rename old IOCtrl window to IOCtrl (legacy)
+* Improve logging
+* Update lscpciej to 1.0.2
 #### Removed
 #### Fixed
+* Prevent last active camera from being disabled
+* Fix settings group handling
 #### Deprecated
 
 ## 4.18.5 - 2025-09-17
