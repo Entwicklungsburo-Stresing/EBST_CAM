@@ -9,6 +9,20 @@ The hardware version number is the current version at release time.
 ## Unreleased
 ### API Changes
 #### Added
+#### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+### Other Changes
+#### Added
+#### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+
+## 4.20.0 - 2025-11-19
+### API Changes
+#### Added
 * Add function DLLSetFanControlState
 * Add function DLLCamIOCtrl_setSequenceLength
 * Add function DLLCamIOCtrl_setSequence
@@ -16,10 +30,6 @@ The hardware version number is the current version at release time.
 * Add function DLLCamIOCtrl_setPulseWidth
 * Add function DLLSetStateControlRegister
 * Add function DLLTriggerStateControlManually
-#### Changed
-#### Removed
-#### Fixed
-#### Deprecated
 ### Other Changes
 #### Added
 * Add saving functionality for RMS window
@@ -36,11 +46,9 @@ The hardware version number is the current version at release time.
 * Rename old IOCtrl window to IOCtrl (legacy)
 * Improve logging
 * Update lscpciej to 1.0.2
-#### Removed
 #### Fixed
 * Prevent last active camera from being disabled
 * Fix settings group handling
-#### Deprecated
 
 ## 4.18.5 - 2025-09-17
 ### API Changes
