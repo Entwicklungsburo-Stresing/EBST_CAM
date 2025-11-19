@@ -81,7 +81,6 @@ BOOL WINAPI DLLMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 
 /**
  * @copydoc InitDriver
- * @param[out] _number_of_boards Pointer for returning recognized number of PCIe boards.
  */
 DllAccess es_status_codes DLLInitDriver(uint8_t* _number_of_boards)
 {

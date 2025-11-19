@@ -1021,7 +1021,7 @@ es_status_codes SetDMABufRegs(uint32_t drvno)
 }
 
 /**
- * @brief Set the register nos to @ref settings_struct.nos.
+ * @brief Set the register nos to @ref measurement_settings.nos.
  * 
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @return @ref es_status_codes
@@ -1033,7 +1033,7 @@ es_status_codes SetNosRegister(uint32_t drvno)
 }
 
 /**
- * @brief Set the register nob to @ref settings_struct.nob.
+ * @brief Set the register nob to @ref measurement_settings.nob.
  * 
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @return @ref es_status_codes
@@ -2335,7 +2335,7 @@ es_status_codes InitBoard()
  * @brief Initialize the driver.
  *
  * Call this before any other action. It is only needed to be called once at startup.
- * @param[out] _number_of_boards
+ * @param[out] _number_of_boards Pointer for returning recognized number of PCIe boards.
  * @return @ref es_status_codes
  */
 es_status_codes InitDriver(uint8_t* _number_of_boards)
@@ -5870,7 +5870,6 @@ es_status_codes SetStateControlRegister(uint32_t drvno, uint16_t state)
  * When the trigger source of the state control register is set to @ref STATECTRL_bits_t.statectrl_trigger_select_manual by @ref SetStateControlRegister. This function can be used to trigger the state change manually.
  * 
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param[in] state true: set the signal to 1, false: set the signal to 0.
  * @return @ref es_status_codes
  */
 es_status_codes TriggerStateControlManually(uint32_t drvno)
@@ -5885,7 +5884,7 @@ es_status_codes TriggerStateControlManually(uint32_t drvno)
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param[in] state 16 bit value, which represents the fan control state. Can be either 0 or 1.
  *		* 0: fan off
- * 		* 1: fan on
+ *		* 1: fan on
  * @return @ref es_status_codes
  */
 es_status_codes SetFanControlState(uint32_t drvno, uint16_t state)

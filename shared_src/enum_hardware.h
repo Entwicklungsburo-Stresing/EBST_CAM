@@ -786,43 +786,80 @@ enum camera_type_bits_t
 enum STATECTRL_bits_t
 {
 	/**
-	 * The bits 0xF select the trigger source for the sequence. Represented as an unsigned integer the following options are available:
-	 *		* 0:  manual mode
-	 *		* 1:  STI, Scan trigger input, controlled by @ref camera_settings.sti_mode
-	 *		* 2:  SSLOPE, scan trigger with @ref camera_settings.sslope applied
-	 *		* 3:  SCAN_GATED, scan trigger gated by block on
-	 *		* 4:  STICNT, scan trigger with @ref camera_settings.sticnt applied
-	 *		* 5:  SDAT, scan trigger after @ref camera_settings.sdat_in_10ns
-	 *		* 6:  SEC, scan trigger after @ref camera_settings.sec_in_10ns
-	 *		* 7:  XCK, start of XCK
-	 *		* 8:  BTI, block trigger input, controlled by @ref camera_settings.bti_mode
-	 *		* 9:  BSLOPE, block trigger with @ref camera_settings.bslope applied
-	 *		* 10: BTICNT, block trigger with @ref camera_settings.bticnt applied
-	 *		* 11: BDAT, block trigger after @ref camera_settings.bdat_in_10ns
-	 *		* 12: BEC, block trigger after @ref camera_settings.bec_in_10ns
-	 *		* 13: BLOCK_ON, block on signal
-	 *		* 14: BLOCK_ON_SYNCED, block on signal synced to the next scan trigger
-	 *		* 15: unused
+	 * The bits 0xF select the trigger source for the sequence. Represented as an unsigned integer the options from @ref statectrl_trigger_select_manual to @ref statectrl_trigger_select_block_on_synced are available.
 	 */
 	statectrl_bits_trigger_select = 0x000F,
+	/**
+	 * When @ref statectrl_bits_trigger_select is set to @ref statectrl_trigger_select_manual, you can use this bit to control the output manually.
+	 *		* 0: signal low
+	 *		* 1: signal high
+	 */
 	statectrl_bit_manual_trigger = 0x0010,
 	statectrl_bitindex_trigger_select = 0,
 	statectrl_bitindex_manual_trigger = 8,
+	/**
+	 * Manual mode
+	 */
 	statectrl_trigger_select_manual = 0,
+	/**
+	 * Scan trigger input, controlled by @ref camera_settings.sti_mode
+	 */
 	statectrl_trigger_select_sti = 1,
+	/**
+	 * Scan trigger with @ref camera_settings.sslope applied
+	 */
 	statectrl_trigger_select_sslope = 2,
+	/**
+	 * Scan trigger gated by block on
+	 */
 	statectrl_trigger_select_scan_gated = 3,
+	/**
+	 * Scan trigger with @ref camera_settings.sticnt applied
+	 */
 	statectrl_trigger_select_sticnt = 4,
+	/**
+	 * Scan trigger after @ref camera_settings.sdat_in_10ns
+	 */
 	statectrl_trigger_select_sdat = 5,
+	/**
+	 * Scan trigger after @ref camera_settings.sec_in_10ns
+	 */
 	statectrl_trigger_select_sec = 6,
+	/**
+	 * Start of XCK
+	 */
 	statectrl_trigger_select_xck = 7,
+	/**
+	 * Block trigger input, controlled by @ref camera_settings.bti_mode
+	 */
 	statectrl_trigger_select_bti = 8,
+	/**
+	 * Block trigger with @ref camera_settings.bslope applied
+	 */
 	statectrl_trigger_select_bslope = 9,
+	/**
+	 * Block trigger with @ref camera_settings.bticnt applied
+	 */
 	statectrl_trigger_select_bticnt = 10,
+	/**
+	 * Block trigger after @ref camera_settings.bdat_in_10ns
+	 */
 	statectrl_trigger_select_bdat = 11,
+	/**
+	 * Block trigger after @ref camera_settings.bec_in_10ns
+	 */
 	statectrl_trigger_select_bec = 12,
+	/**
+	 * Block on signal
+	 */
 	statectrl_trigger_select_block_on = 13,
+	/**
+	 * Block on signal synced to the next scan trigger
+	 */
 	statectrl_trigger_select_block_on_synced = 14,
+	/**
+	 * Unused
+	 */
 	statectrl_trigger_select_unused = 15,
 };
 
