@@ -28,14 +28,17 @@ public:
 private:
 	Ui::DialogReferenceMeasurementClass* ui;
 	QSettings settings;
-	void initDialog();
-	void checkIfReferenceExistsAndDelete(int referenceIndex);
 	QList<QLineSeries*> referenceSeriesList;
-	
+	void initDialog();
+	void handleReference(QString id);
+	void saveReference(QString seriesName);
+	void clearReference(QString seriesName);
+	void loadReferenceButtonState();
 
 private slots:
 	void on_spinBoxBoard_valueChanged();
-	void on_pushButtonSaveReference_pressed(int referenceIndex);
-	void on_pushButtonClearReference_pressed(int referenceIndex);
+	void on_spinBoxCamera_valueChanged();
+	void on_pushButtonHandleReference1_pressed();
+	void on_pushButtonHandleReference2_pressed();
 };
 
