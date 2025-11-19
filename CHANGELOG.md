@@ -15,7 +15,7 @@ The hardware version number is the current version at release time.
 * Add function DLLCamIOCtrl_setPulseDelay
 * Add function DLLCamIOCtrl_setPulseWidth
 * Add function DLLSetStateControlRegister
-#### Changedes_status_codes
+#### Changed
 #### Removed
 #### Fixed
 #### Deprecated
