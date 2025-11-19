@@ -5029,7 +5029,6 @@ void read_uint32_attr(hid_t obj_id, const char* attr_name, uint32_t* value) {
 es_status_codes ImportMeasurementDataFromFileHDF5(const char* filename)
 {
 	hid_t file_id;
-	herr_t statusHDF5;
 	es_status_codes status;
 	
 	if ((file_id = H5Fopen(filename, H5F_ACC_RDONLY, H5P_DEFAULT)) == H5I_INVALID_HID) return es_open_file_failed;
@@ -5150,7 +5149,7 @@ es_status_codes ImportMeasurementDataFromFileHDF5(const char* filename)
 						uint16_t* data = (uint16_t*)malloc(dims[0] * sizeof(uint16_t));
 						if (data)
 						{
-							statusHDF5 = H5Dread(dataset_id, H5T_NATIVE_UINT16, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+							H5Dread(dataset_id, H5T_NATIVE_UINT16, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
 
 							uint16_t* user_buffer_pos = NULL;
 							status = GetOneSamplePointer(board_idx, sample, block, (uint16_t)camera, &user_buffer_pos, NULL);

@@ -683,7 +683,7 @@ es_status_codes Cam_SetVfreqRegister(uint32_t drvno)
  */
 es_status_codes Cam_SetupFullBinning(uint32_t drvno)
 {
-	ES_LOG("Cam_SetupFullBinning(), fft_lines: "PRIu32"\n", settings_struct.camera_settings[drvno].fft_lines);
+	ES_LOG("Cam_SetupFullBinning(), fft_lines: %"PRIu32"\n", settings_struct.camera_settings[drvno].fft_lines);
 	es_status_codes status = es_no_error;
 	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclks_amount1, (uint16_t)settings_struct.camera_settings[drvno].fft_lines); if (status != es_no_error) return status;
 	status = Cam_SendData(drvno, maddr_cam, cam_adaddr_vclks_amount2, (uint16_t)0x0000); if (status != es_no_error) return status;
