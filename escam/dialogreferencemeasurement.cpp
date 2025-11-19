@@ -26,7 +26,11 @@ void DialogReferenceMeasurement::initDialog()
 		ui->spinBoxBoard->setVisible(false);
 		ui->labelBoard->setVisible(false);
 	}
+	on_spinBoxBoard_valueChanged();
+}
 
+void DialogReferenceMeasurement::on_spinBoxBoard_valueChanged()
+{
 	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
 	uint32_t camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toDouble();
 	settings.endGroup();
@@ -37,17 +41,19 @@ void DialogReferenceMeasurement::initDialog()
 		ui->spinBoxCamera->setVisible(false);
 		ui->labelCamera->setVisible(false);
 	}
+	return;
 }
 
 void DialogReferenceMeasurement::on_pushButtonSaveReference_pressed(int referenceIndex)
 {
 	checkIfReferenceExistsAndDelete(referenceIndex);
-	uint32_t drvno = ui->spinBoxBoard->value();
+	uint32_t drvno = QString::number(ui->spinBoxBoard->value()).toInt();
 	settings.beginGroup("board" + QString::number(drvno));
-	uint32_t sample = mainWindow->ui->spinBoxSample->value() - 1;
-	uint32_t block = mainWindow->ui->spinBoxBlock->value() - 1;
-	uint16_t camera = ui->spinBoxCamera->value();
+	uint32_t sample = 20;
+	uint32_t block = settings.value(settingNobPath, settingNobDefault).toDouble() - 1;
+	uint16_t camera = QString::number(ui->spinBoxCamera->value()).toInt();
 	uint32_t pixel = settings.value(settingPixelPath, settingPixelDefault).toDouble();
+	int sensor_type = settings.value(settingSensorTypePath, settingSensorTypeDefault).toInt();
 	settings.endGroup();
 	size_t data_array_size = 0;
 	data_array_size += pixel;
@@ -58,16 +64,15 @@ void DialogReferenceMeasurement::on_pushButtonSaveReference_pressed(int referenc
 		free(camera_data);
 		return;
 	}
-
 	QLineSeries* referenceSeries = new QLineSeries();
-	referenceSeries->setName("reference_series" + referenceIndex);
+	referenceSeries->setName("reference_series" + QString::number(referenceIndex));
 	for (uint32_t i = 0; i < pixel; i++)
 	{
 		referenceSeries->append(static_cast<qreal>(i), static_cast<qreal>(camera_data[i]));
 	}
 	free(camera_data);
 	mainWindow->ui->chartView->chart()->addSeries(referenceSeries);
-	referenceSeriesList[referenceIndex] = referenceSeries;
+	referenceSeriesList.append(referenceSeries);
 	return;
 }
 
@@ -80,11 +85,15 @@ void DialogReferenceMeasurement::on_pushButtonClearReference_pressed(int referen
 
 void DialogReferenceMeasurement::checkIfReferenceExistsAndDelete(int referenceIndex)
 {
-	if (referenceSeriesList[referenceIndex] != nullptr)
+	for (QLineSeries* series : referenceSeriesList)
 	{
-		mainWindow->ui->chartView->chart()->removeSeries(referenceSeriesList[referenceIndex]);
-		delete referenceSeriesList[referenceIndex];
-		referenceSeriesList[referenceIndex] = nullptr;
+		if (series->name() == "reference_series" + QString::number(referenceIndex))
+		{
+			mainWindow->ui->chartView->chart()->removeSeries(series);
+			delete series;
+			referenceSeriesList.removeOne(series);
+			return;
+		}
 	}
 	return;
 }

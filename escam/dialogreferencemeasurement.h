@@ -34,6 +34,7 @@ private:
 	
 
 private slots:
+	void on_spinBoxBoard_valueChanged();
 	void on_pushButtonSaveReference_pressed(int referenceIndex);
 	void on_pushButtonClearReference_pressed(int referenceIndex);
 };
