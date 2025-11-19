@@ -786,7 +786,7 @@ enum camera_type_bits_t
 enum STATECTRL_bits_t
 {
 	/**
-	 * These bits select the trigger source for the sequence.
+	 * The bits 0xF select the trigger source for the sequence. Represented as an unsigned integer the following options are available:
 	 *		* 0:  manual mode
 	 *		* 1:  STI, Scan trigger input, controlled by @ref camera_settings.sti_mode
 	 *		* 2:  SSLOPE, scan trigger with @ref camera_settings.sslope applied

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>249</width>
-    <height>183</height>
+    <height>205</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,6 +29,13 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="2">
+      <widget class="QSpinBox" name="spinBoxBoard">
+       <property name="maximum">
+        <number>4</number>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="2">
       <widget class="QComboBox" name="comboBoxTrigSource">
        <item>
@@ -108,29 +115,18 @@
        </item>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="labelBoard">
-       <property name="text">
-        <string>board</string>
+     <item row="1" column="3">
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="labelTrigSource">
-       <property name="text">
-        <string>Trigger source</string>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
        </property>
-       <property name="buddy">
-        <cstring>comboBoxTrigSource</cstring>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QSpinBox" name="spinBoxBoard">
-       <property name="maximum">
-        <number>4</number>
-       </property>
-      </widget>
+      </spacer>
      </item>
      <item row="1" column="0">
       <spacer name="horizontalSpacer">
@@ -145,18 +141,36 @@
        </property>
       </spacer>
      </item>
-     <item row="1" column="3">
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
+     <item row="1" column="1">
+      <widget class="QLabel" name="labelTrigSource">
+       <property name="text">
+        <string>Trigger source</string>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
+       <property name="buddy">
+        <cstring>comboBoxTrigSource</cstring>
        </property>
-      </spacer>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="labelBoard">
+       <property name="text">
+        <string>board</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="labelTriggerManually">
+       <property name="text">
+        <string>Trigger manually</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QPushButton" name="pushButtonTriggerManually">
+       <property name="text">
+        <string>Trigger</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

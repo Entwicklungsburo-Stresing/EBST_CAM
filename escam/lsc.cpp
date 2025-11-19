@@ -693,3 +693,11 @@ es_status_codes Lsc::setStateControlRegister(uint32_t drvno, uint16_t state)
 {
 	return DLLSetStateControlRegister(drvno, state);
 }
+
+/**
+ * @copydoc DLLTriggerStateControlManually
+ */
+es_status_codes Lsc::triggerStateControlManually(uint32_t drvno)
+{
+	return DLLTriggerStateControlManually(drvno);
+}

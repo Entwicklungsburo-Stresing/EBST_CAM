@@ -5855,7 +5855,7 @@ es_status_codes SetShutterStates(uint32_t drvno, uint16_t shutter_states)
  * @brief Set the state control register.
  * 
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param[in] state TODO missing documentation
+ * @param[in] state Selects the trigger source for state changes. All available options are defined in @ref STATECTRL_bits_t.
  * @return @ref es_status_codes
  */
 es_status_codes SetStateControlRegister(uint32_t drvno, uint16_t state)
@@ -5865,29 +5865,28 @@ es_status_codes SetStateControlRegister(uint32_t drvno, uint16_t state)
 }
 
 /**
- * @brief TODO missing documentation
+ * @brief Trigger the state control manually.
+ * 
+ * When the trigger source of the state control register is set to @ref STATECTRL_bits_t.statectrl_trigger_select_manual by @ref SetStateControlRegister. This function can be used to trigger the state change manually.
  * 
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * @param[in] state TODO missing documentation
+ * @param[in] state true: set the signal to 1, false: set the signal to 0.
  * @return @ref es_status_codes
  */
-es_status_codes SetManualState(uint32_t drvno, bool state)
+es_status_codes TriggerStateControlManually(uint32_t drvno)
 {
-	ES_LOG("Set manual state to %d, drvno %"PRIu32"\n", state, drvno);
-	if(state)
-		return setBitS0_32(drvno, statectrl_bitindex_manual_trigger, S0Addr_STATECTRL);
-	else
-		return resetBitS0_32(drvno, statectrl_bitindex_manual_trigger, S0Addr_STATECTRL);
+	ES_LOG("Trigger state control manually, drvno %"PRIu32"\n", drvno);
+	return pulseBitS0_32(drvno, statectrl_bitindex_manual_trigger, S0Addr_STATECTRL, 10);
 }
 
 /**
  * @brief Sets the fan control state.
  * 
- * \param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
- * \param[in] state 16 bit value, which represents the fan control state. Can be either 0 or 1.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] state 16 bit value, which represents the fan control state. Can be either 0 or 1.
  *		* 0: fan off
  * 		* 1: fan on
- * \return 
+ * @return @ref es_status_codes
  */
 es_status_codes SetFanControlState(uint32_t drvno, uint16_t state)
 {

@@ -58,6 +58,10 @@ void DialogIoctrl::on_comboBoxTrigSource_currentIndexChanged(int index)
 	settings.setValue(settingTriggerSourcePath, index);
 	settings.endGroup();
 	mainWindow->lsc.setStateControlRegister(ui->spinBoxBoard->value(), index);
+	if (index == statectrl_trigger_select_manual)
+		ui->pushButtonTriggerManually->setEnabled(true);
+	else
+		ui->pushButtonTriggerManually->setEnabled(false);
 	return;
 }
 
@@ -82,4 +86,11 @@ void DialogIoctrl::on_pushButtonDefault_pressed()
 {
 	ui->comboBoxTrigSource->setCurrentIndex(settingTriggerSourceDefault);
 	emit defaults_loaded();
+	return;
+}
+
+void DialogIoctrl::on_pushButtonTriggerManually_pressed()
+{
+	mainWindow->lsc.triggerStateControlManually(ui->spinBoxBoard->value());
+	return;
 }

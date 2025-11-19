@@ -2389,3 +2389,11 @@ DllAccess es_status_codes DLLSetStateControlRegister(uint32_t drvno, uint16_t st
 {
 	return SetStateControlRegister(drvno, state);
 }
+
+/**
+ * @copydoc TriggerStateControlManually
+ */
+DllAccess es_status_codes DLLTriggerStateControlManually(uint32_t drvno)
+{
+	return TriggerStateControlManually(drvno);
+}

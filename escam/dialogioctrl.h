@@ -33,4 +33,5 @@ private slots:
 	void loadSettings();
 	void on_spinBoxBoard_valueChanged(int value);
 	void on_pushButtonDefault_pressed();
+	void on_pushButtonTriggerManually_pressed();
 };

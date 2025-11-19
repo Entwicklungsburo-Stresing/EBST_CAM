@@ -195,7 +195,7 @@ hid_t CreateStringAttribute(hid_t parent_object_id, char* attr_name, hid_t datas
 es_status_codes SetGeneralOutput(uint32_t drvno, uint8_t output, bool state);
 es_status_codes SetShutterStates(uint32_t drvno, uint16_t shutter_states);
 es_status_codes SetStateControlRegister(uint32_t drvno, uint16_t state);
-es_status_codes SetManualState(uint32_t drvno, bool state);
+es_status_codes TriggerStateControlManually(uint32_t drvno);
 es_status_codes SetFanControlState(uint32_t drvno, uint16_t state);
 
 // helper functions
