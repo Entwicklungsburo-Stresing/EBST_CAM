@@ -121,24 +121,17 @@ void DialogReferenceMeasurement::saveReference(QString seriesName)
 	settings.endGroup();
 	size_t data_array_size = 0;
 	data_array_size += pixel;
-	uint16_t* camera_data = static_cast<uint16_t*>(malloc(data_array_size * sizeof(uint16_t)));
-	es_status_codes status = mainWindow->lsc.copyOneSample(drvno, sample, block, camera, camera_data);
-	//std::vector<uint16_t> camera_data(pixel);
-	//es_status_codes status = mainWindow->lsc.copyOneSample(drvno, sample, block, camera, camera_data.data());
-
-	if (status != es_no_error)
-	{
-		free(camera_data);
-		return;
-	}
+	std::vector<uint16_t> camera_data(pixel);
+	es_status_codes status = mainWindow->lsc.copyOneSample(drvno, sample, block, camera, camera_data.data());
+	if (status != es_no_error) return;
 	
 	QLineSeries* referenceSeries = new QLineSeries();
 	referenceSeries->setName(seriesName);
+	uint16_t* data_ptr = camera_data.data();
 	for (uint32_t i = 0; i < pixel; i++)
 	{
-		referenceSeries->append(static_cast<qreal>(i), static_cast<qreal>(camera_data[i]));
+		referenceSeries->append(static_cast<qreal>(i), static_cast<qreal>(data_ptr[i]));
 	}
-	free(camera_data);
 	mainWindow->ui->chartView->chart()->addSeries(referenceSeries);
 	referenceSeriesList.append(referenceSeries);
 	return;
@@ -178,8 +171,22 @@ void DialogReferenceMeasurement::loadReferenceButtonState()
 	bool reference2Exists = false;
 	for (QLineSeries* series : referenceSeriesList)
 	{
-		if (series->name() == referenceName1) reference1Exists = true;
-		if (series->name() == referenceName2) reference2Exists = true;
+		if (series->name() == referenceName1) 
+		{ 
+			reference1Exists = true;
+			// Paint the Reference 1 label text in the color of the QLineSeries
+			QColor seriesColor = series->color();
+			QPalette palette = ui->labelReference1->palette();
+			palette.setColor(QPalette::WindowText, seriesColor);
+		}
+		if (series->name() == referenceName2) 
+		{
+			reference2Exists = true;
+			// Paint the Reference 2 label text in the color of the QLineSeries
+			QColor seriesColor = series->color();
+			QPalette palette = ui->labelReference2->palette();
+			palette.setColor(QPalette::WindowText, seriesColor);
+		}
 		if (reference1Exists && reference2Exists) break;
 	}
 	reference1Exists ? ui->pushButtonHandleReference1->setText("Clear") : ui->pushButtonHandleReference1->setText("Save");
