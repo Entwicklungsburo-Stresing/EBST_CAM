@@ -6,6 +6,7 @@ DialogReferenceMeasurement::DialogReferenceMeasurement(QWidget *parent)
 {
 	ui->setupUi(this);
 	initDialog();
+	connect(QApplication::styleHints(), &QStyleHints::colorSchemeChanged, this, &DialogReferenceMeasurement::on_spinBoxBoard_valueChanged);
 }
 
 DialogReferenceMeasurement::~DialogReferenceMeasurement()
@@ -45,7 +46,7 @@ void DialogReferenceMeasurement::on_spinBoxBoard_valueChanged()
 		ui->spinBoxCamera->setVisible(false);
 		ui->labelCamera->setVisible(false);
 	}
-	loadReferenceButtonState();
+	updateReferenceButtonState();
 	return;
 }
 
@@ -55,7 +56,7 @@ void DialogReferenceMeasurement::on_spinBoxBoard_valueChanged()
  */
 void DialogReferenceMeasurement::on_spinBoxCamera_valueChanged()
 {
-	loadReferenceButtonState();
+	updateReferenceButtonState();
 	return;
 }
 
@@ -133,7 +134,7 @@ void DialogReferenceMeasurement::saveReference(QString seriesName)
 		referenceSeries->append(static_cast<qreal>(i), static_cast<qreal>(data_ptr[i]));
 	}
 	mainWindow->ui->chartView->chart()->addSeries(referenceSeries);
-	referenceSeriesList.append(referenceSeries);
+	addReferenceColorToLabel((seriesName.endsWith("1") ? "1" : "2"), referenceSeries->color());
 	return;
 }
 
@@ -144,14 +145,18 @@ void DialogReferenceMeasurement::saveReference(QString seriesName)
  */
 void DialogReferenceMeasurement::clearReference(QString seriesName)
 {
-	for (QLineSeries* series : referenceSeriesList)
+	for (QAbstractSeries* abstractSeries : mainWindow->ui->chartView->chart()->series())
 	{
-		if (series->name() == seriesName)
+		QLineSeries* series = qobject_cast<QLineSeries*>(abstractSeries);
+		if (series)
 		{
-			mainWindow->ui->chartView->chart()->removeSeries(series);
-			delete series;
-			referenceSeriesList.removeOne(series);
-			return;
+			if (series->name() == seriesName)
+			{
+				mainWindow->ui->chartView->chart()->removeSeries(series);
+				delete series;
+				removeReferenceColorFromLabel(seriesName.endsWith("1") ? "1" : "2");
+				return;
+			}
 		}
 	}
 	return;
@@ -161,7 +166,7 @@ void DialogReferenceMeasurement::clearReference(QString seriesName)
  * @brief Creates the name of the currently selected camera, and checks if reference measurements exist for it. Updates the button text accordingly.
  * @return none
  */
-void DialogReferenceMeasurement::loadReferenceButtonState()
+void DialogReferenceMeasurement::updateReferenceButtonState()
 {
 	uint32_t drvno = ui->spinBoxBoard->value();
 	uint16_t camera = ui->spinBoxCamera->value();
@@ -169,28 +174,42 @@ void DialogReferenceMeasurement::loadReferenceButtonState()
 	QString referenceName2 = "reference_series_" + QString::number(drvno) + "_" + QString::number(camera) + "_2";
 	bool reference1Exists = false;
 	bool reference2Exists = false;
-	for (QLineSeries* series : referenceSeriesList)
+	for (QAbstractSeries* abstractSeries : mainWindow->ui->chartView->chart()->series())
 	{
-		if (series->name() == referenceName1) 
-		{ 
-			reference1Exists = true;
-			// Paint the Reference 1 label text in the color of the QLineSeries
-			QColor seriesColor = series->color();
-			QPalette palette = ui->labelReference1->palette();
-			palette.setColor(QPalette::WindowText, seriesColor);
-		}
-		if (series->name() == referenceName2) 
+		QLineSeries* series = qobject_cast<QLineSeries*>(abstractSeries);
+		if (series)
 		{
-			reference2Exists = true;
-			// Paint the Reference 2 label text in the color of the QLineSeries
-			QColor seriesColor = series->color();
-			QPalette palette = ui->labelReference2->palette();
-			palette.setColor(QPalette::WindowText, seriesColor);
+			if (series->name() == referenceName1)
+			{
+				reference1Exists = true;
+				addReferenceColorToLabel("1", series->color());
+			}
+			if (series->name() == referenceName2)
+			{
+				reference2Exists = true;
+				addReferenceColorToLabel("2", series->color());
+			}
 		}
 		if (reference1Exists && reference2Exists) break;
 	}
 	reference1Exists ? ui->pushButtonHandleReference1->setText("Clear") : ui->pushButtonHandleReference1->setText("Save");
 	reference2Exists ? ui->pushButtonHandleReference2->setText("Clear") : ui->pushButtonHandleReference2->setText("Save");
+
+	if (!reference1Exists) removeReferenceColorFromLabel("1");
+	if (!reference2Exists) removeReferenceColorFromLabel("2");
 	return;
 }
 
+void DialogReferenceMeasurement::addReferenceColorToLabel(QString id, QColor color)
+{
+	QLabel* referenceLabel = (id == "1") ? ui->labelReference1 : ui->labelReference2;
+	referenceLabel->setStyleSheet("QLabel { color : " + color.name() + "; }");
+	return;
+}
+
+void DialogReferenceMeasurement::removeReferenceColorFromLabel(QString id)
+{
+	QLabel* referenceLabel = (id == "1") ? ui->labelReference1 : ui->labelReference2;
+	referenceLabel->setStyleSheet("");
+	return;
+}

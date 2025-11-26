@@ -28,12 +28,13 @@ public:
 private:
 	Ui::DialogReferenceMeasurementClass* ui;
 	QSettings settings;
-	QList<QLineSeries*> referenceSeriesList;
 	void initDialog();
 	void handleReference(QString id);
 	void saveReference(QString seriesName);
 	void clearReference(QString seriesName);
-	void loadReferenceButtonState();
+	void updateReferenceButtonState();
+	void addReferenceColorToLabel(QString id, QColor color);
+	void removeReferenceColorFromLabel(QString id);
 
 private slots:
 	void on_spinBoxBoard_valueChanged();
