@@ -87,7 +87,7 @@ void DialogReferenceMeasurement::on_pushButtonHandleReference2_pressed()
 /**
  * @brief This slot saves or clears the reference measurement.
  * Reference name format: reference_series_<board>_<camera>_<id>
- * @param id Identifier for the reference measurement (e.g., "1" or "2")
+ * @param id Identifier for the reference measurement (e.g. "1" or "2")
  * @return none
  */
 void DialogReferenceMeasurement::handleReference(QString id)
@@ -117,6 +117,7 @@ void DialogReferenceMeasurement::handleReference(QString id)
  */
 void DialogReferenceMeasurement::saveReference(QString seriesName)
 {
+	// Gather data to copy a sample
 	uint32_t drvno = ui->spinBoxBoard->value();
 	settings.beginGroup("board" + QString::number(drvno));
 	uint32_t sample = mainWindow->ui->horizontalSliderSample->value() - 1;
@@ -130,6 +131,7 @@ void DialogReferenceMeasurement::saveReference(QString seriesName)
 	es_status_codes status = mainWindow->lsc.copyOneSample(drvno, sample, block, camera, camera_data.data());
 	if (status != es_no_error) return;
 	
+	// Create reference from sample data
 	QLineSeries* referenceSeries = new QLineSeries();
 	referenceSeries->setName(seriesName);
 	uint16_t* data_ptr = camera_data.data();
@@ -137,8 +139,10 @@ void DialogReferenceMeasurement::saveReference(QString seriesName)
 	{
 		referenceSeries->append(static_cast<qreal>(i), static_cast<qreal>(data_ptr[i]));
 	}
+	// Add reference to the chart and update the label color
 	mainWindow->ui->chartView->chart()->addSeries(referenceSeries);
 	addReferenceColorToLabel((seriesName.endsWith("1") ? "1" : "2"), referenceSeries->color());
+
 	// Attach axes to the new series, because when measurement is not running while creating a reference, data is displayed incorrectly (amplified)
 	QAbstractAxis* xAxis = mainWindow->ui->chartView->chart()->axes(Qt::Horizontal).first();
 	QAbstractAxis* yAxis = mainWindow->ui->chartView->chart()->axes(Qt::Vertical).first();
@@ -187,11 +191,13 @@ void DialogReferenceMeasurement::updateReferenceButtonState()
 	QString referenceName2 = "reference_series_" + QString::number(drvno) + "_" + QString::number(camera) + "_2";
 	bool reference1Exists = false;
 	bool reference2Exists = false;
+	// Go through every series in the chart
 	for (QAbstractSeries* abstractSeries : mainWindow->ui->chartView->chart()->series())
 	{
 		QLineSeries* series = qobject_cast<QLineSeries*>(abstractSeries);
 		if (series)
 		{
+			// If the series exists, the state is saved and the label text color is set to the line series color
 			if (series->name() == referenceName1)
 			{
 				reference1Exists = true;
@@ -205,14 +211,22 @@ void DialogReferenceMeasurement::updateReferenceButtonState()
 		}
 		if (reference1Exists && reference2Exists) break;
 	}
+	// Update button text if reference exists
 	reference1Exists ? ui->pushButtonHandleReference1->setText("Clear") : ui->pushButtonHandleReference1->setText("Save");
 	reference2Exists ? ui->pushButtonHandleReference2->setText("Clear") : ui->pushButtonHandleReference2->setText("Save");
 
+	// Remove the added text color from the label if series doesn't exist
 	if (!reference1Exists) removeReferenceColorFromLabel("1");
 	if (!reference2Exists) removeReferenceColorFromLabel("2");
 	return;
 }
 
+/**
+ * Add the color of the reference series to the text of the reference label.
+ * @param id First or second reference
+ * @param color The color to paint the label in
+ * @return none
+ */
 void DialogReferenceMeasurement::addReferenceColorToLabel(QString id, QColor color)
 {
 	QLabel* referenceLabel = (id == "1") ? ui->labelReference1 : ui->labelReference2;
@@ -220,6 +234,11 @@ void DialogReferenceMeasurement::addReferenceColorToLabel(QString id, QColor col
 	return;
 }
 
+/**
+ * Remove the color of the reference series from the reference label.
+ * @param id First or second reference
+ * @return none
+ */
 void DialogReferenceMeasurement::removeReferenceColorFromLabel(QString id)
 {
 	QLabel* referenceLabel = (id == "1") ? ui->labelReference1 : ui->labelReference2;
