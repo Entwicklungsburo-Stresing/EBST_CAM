@@ -139,6 +139,15 @@ void DialogReferenceMeasurement::saveReference(QString seriesName)
 	}
 	mainWindow->ui->chartView->chart()->addSeries(referenceSeries);
 	addReferenceColorToLabel((seriesName.endsWith("1") ? "1" : "2"), referenceSeries->color());
+	// Attach axes to the new series, because when measurement is not running while creating a reference, data is displayed incorrectly (amplified)
+	QAbstractAxis* xAxis = mainWindow->ui->chartView->chart()->axes(Qt::Horizontal).first();
+	QAbstractAxis* yAxis = mainWindow->ui->chartView->chart()->axes(Qt::Vertical).first();
+	if (xAxis && yAxis)
+	{
+		referenceSeries->attachAxis(xAxis);
+		referenceSeries->attachAxis(yAxis);
+	}
+	mainWindow->ui->chartView->chart()->update();
 	return;
 }
 
