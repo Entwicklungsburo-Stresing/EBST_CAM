@@ -3,7 +3,7 @@
  * @brief		Global variables that are used in this library
  * @author		Florian Hahn
  * @date		26.05.2021
- * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

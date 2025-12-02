@@ -3,7 +3,7 @@
  * @brief		Class MyQChartView for modifying QChartView
  * @author		Florian Hahn
  * @date		01.07.2021
- * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

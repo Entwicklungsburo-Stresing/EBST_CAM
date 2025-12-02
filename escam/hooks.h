@@ -3,7 +3,7 @@
  * @brief		Functions for setting up the callback functions of ESLSCDLL.
  * @author		Florian Hahn
  * @date		31.10.2024
- * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

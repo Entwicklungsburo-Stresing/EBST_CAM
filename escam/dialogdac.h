@@ -3,7 +3,7 @@
  * @brief		Dialog to set the DAC values.
  * @author		Florian Hahn
  * @date		04.08.2021
- * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once

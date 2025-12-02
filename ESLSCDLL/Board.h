@@ -4,7 +4,7 @@
  * @details		All functions are written in a platform independent way. All stuff that needs to be done in a platform dependent way is done in Board_ll.h.
  * @author		Gerhard Stresing, Bastian Brabec, Florian Hahn
  * @date		before February 2016
- * @copyright	Copyright Entwicklungsbuero Stresing. This software is release under the LPGL-3.0.
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LPGL-3.0.
  *********************************************************************/
 
 #pragma once
