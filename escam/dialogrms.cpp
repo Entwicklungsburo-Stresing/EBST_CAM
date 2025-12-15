@@ -22,10 +22,13 @@ DialogRMS::DialogRMS(QWidget *parent) :
 	connect(mainWindow->ui->spinBoxSample, qOverload<int>(&QSpinBox::valueChanged), this, &DialogRMS::updateSampleSize);
 	
 	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
-	ui->spinBox_firstsample->setValue(settings.value(settingRMSFirstSamplePath, settingRMSFirstSampleDefault).toInt());
-	ui->spinBox_lastsample->setValue(settings.value(settingRMSLastSamplePath, settingRMSLastSampleDefault).toInt());
-	ui->spinBox_pixel->setValue(settings.value(settingRMSPixelPath, settingRMSPixelDefault).toInt());
+	int firstSample = settings.value(settingRMSFirstSamplePath, settingRMSFirstSampleDefault).toInt();
+	int lastSample = settings.value(settingRMSLastSamplePath, settingRMSLastSampleDefault).toInt();
+	int pixel = settings.value(settingRMSPixelPath, settingRMSPixelDefault).toInt();
 	settings.endGroup();
+	ui->spinBox_firstsample->setValue(firstSample);
+	ui->spinBox_lastsample->setValue(lastSample);
+	ui->spinBox_pixel->setValue(pixel);
 	updateSampleSize();
 }
 
