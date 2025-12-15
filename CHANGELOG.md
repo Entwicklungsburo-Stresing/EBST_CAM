@@ -20,6 +20,17 @@ The hardware version number is the current version at release time.
 #### Fixed
 #### Deprecated
 
+## 4.20.1 - 2025-12-15
+### API Changes
+* none
+### Other Changes
+#### Added
+* Add new window for reference measurement
+#### Changed
+* Change License of Escam to GPLv3
+#### Fixed
+* Fix settings group in dialog rms
+
 ## 4.20.0 - 2025-11-19
 ### API Changes
 #### Added
