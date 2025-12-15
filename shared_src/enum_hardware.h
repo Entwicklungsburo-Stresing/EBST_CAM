@@ -3,7 +3,7 @@
  * @brief		All constants and addresses given by the hardware.
  * @author		Florian Hahn
  * @date		23.10.2020
- * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LPGL-3.0.
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LGPL-3.0.
  *********************************************************************/
 
 #pragma once

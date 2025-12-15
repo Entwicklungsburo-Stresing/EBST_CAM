@@ -4,7 +4,7 @@
  * @details		Inspired by this tutorial to call cpp methods from c: https://bytes.com/topic/c/insights/921728-calling-c-class-methods-c
  * @author		Florian Hahn
  * @date		30.09.2019
- * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LPGL-3.0.
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LGPL-3.0.
  *********************************************************************/
 
 #pragma once

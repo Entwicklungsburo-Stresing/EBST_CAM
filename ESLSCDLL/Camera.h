@@ -4,7 +4,7 @@
  * @details		In this file are all the functions that are interacting with the camera. Interaction with the camera always includes Cam_SendData(), so all functions here call this function.
  * @author		Florian Hahn
  * @date		18.11.2024
- * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LPGL-3.0.
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LGPL-3.0.
  *********************************************************************/
 
 #pragma once

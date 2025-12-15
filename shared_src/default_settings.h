@@ -3,7 +3,7 @@
  * @brief		Default settings for initializing the settings struct and the settings dialog.
  * @author		Florian Hahn
  * @date		24.06.2021
- * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LPGL-3.0.
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LGPL-3.0.
  *********************************************************************/
 
 #pragma once

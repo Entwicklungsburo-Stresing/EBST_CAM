@@ -3,7 +3,7 @@
  * @brief		All settings options and software constants
  * @author		Florian Hahn
  * @date		23.10.2023
- * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LPGL-3.0.
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LGPL-3.0.
  *********************************************************************/
 
 #pragma once

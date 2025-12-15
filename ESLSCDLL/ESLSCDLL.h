@@ -4,7 +4,7 @@
  * @details		The library ESLSCDLL can be compiled on Windows into ESLSCDLL.dll and on Linux into libESLSCDLL.so.
  * @author		Gerhard Stresing, Bastian Brabec, Florian Hahn
  * @date		before 2016
- * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LPGL-3.0.
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LGPL-3.0.
  *********************************************************************/
 
 #pragma once
