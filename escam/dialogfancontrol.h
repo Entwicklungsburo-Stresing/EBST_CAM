@@ -3,7 +3,7 @@
  * @brief		Dialog to control the fan.
  * @author		Dennis Vollenweider
  * @date		27.10.2025
- * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LPGL-3.0.
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the GPL-3.0.
  *********************************************************************/
 
 #pragma once

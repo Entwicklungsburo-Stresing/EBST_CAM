@@ -424,7 +424,7 @@ void MainWindow::on_actionAbout_triggered()
 	aboutText.append(VER_FILE_VERSION_STR"\n");
 	aboutText.append(VER_COPYRIGHT_STR"\n");
 	aboutText = Qt::convertFromPlainText(aboutText);
-	aboutText.append("This software is released under the <a href=\"https://www.gnu.org/licenses/lgpl-3.0.html.en\">LPGL-3.0</a><br>");
+	aboutText.append("This software is released under the <a href=\"https://www.gnu.org/licenses/gpl-3.0.html.en\">GPL-3.0</a><br>");
 	aboutText.append("<a href=\"https://stresing.de\">https://stresing.de</a><br>");
 	aboutText.append("<a href=\"https://github.com/Entwicklungsburo-Stresing/\">https://github.com/Entwicklungsburo-Stresing/</a>");
 	d.setText(aboutText);

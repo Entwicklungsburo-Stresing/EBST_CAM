@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file		ioctrlwidget.h
+ * @brief		Widget for dialog ioctrl.
+ * @author		Florian Hahn
+ * @date		13.11.2025
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the GPL-3.0.
+ *********************************************************************/
+
 #pragma once
 
 #include <QWidget>

@@ -4,7 +4,7 @@
  * @details		Mostly this is a wrapper for the ESLSCDLL functions to get the library calls into a C++ class.
  * @author		Florian Hahn
  * @date		28.01.2021
- * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LPGL-3.0.
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the GPL-3.0.
  *********************************************************************/
 
 #pragma once

@@ -4,7 +4,7 @@
  * @details		This widget will be displayed as many times as there are PCIe boards. It is used in dialogsettings.
  * @author		Florian Hahn
  * @date		06.02.2023
- * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LPGL-3.0.
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the GPL-3.0.
  *********************************************************************/
 
 #pragma once

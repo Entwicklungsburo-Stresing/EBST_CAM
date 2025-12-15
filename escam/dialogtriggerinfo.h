@@ -3,7 +3,7 @@
  * @brief		Dialog for displaying the trigger information.
  * @author		Florian Hahn
  * @date		06.06.2024
- * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LPGL-3.0.
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the GPL-3.0.
  *********************************************************************/
 
 #pragma once

@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * @file		dialogservo.h
+ * @brief		Dialog for controlling the servo unit.
+ * @author		Florian Hahn
+ * @date		16.04.2025
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the GPL-3.0.
+ *********************************************************************/
+
 #pragma once
 
 #include <QDialog>

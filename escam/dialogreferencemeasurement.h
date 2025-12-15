@@ -3,7 +3,7 @@
  * @brief		Dialog to create reference measurements.
  * @author		Dennis Vollenweider
  * @date		17.11.2025
- * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LPGL-3.0.
+ * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the GPL-3.0.
  *********************************************************************/
 
 #pragma once
