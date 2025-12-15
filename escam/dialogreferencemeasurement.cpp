@@ -8,9 +8,11 @@ DialogReferenceMeasurement::DialogReferenceMeasurement(QWidget *parent)
 	initDialog();
 	// Update reference label color, when theme is changed. Lambda is used to make the program wait until other process are finished before,
 	// because the series colors in the chart were not updating quick enough
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 0))
 	connect(QApplication::styleHints(), &QStyleHints::colorSchemeChanged, this, [this]() {
 		QMetaObject::invokeMethod(this, &DialogReferenceMeasurement::on_spinBoxBoard_valueChanged, Qt::QueuedConnection);
 	});
+#endif
 }
 
 DialogReferenceMeasurement::~DialogReferenceMeasurement()
