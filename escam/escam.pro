@@ -51,6 +51,7 @@ SOURCES += \
     dialogshutter.cpp \
     dialogservo.cpp \
     dialogfancontrol.cpp \
+    dialogreferencemeasurement.cpp \
     lsc.cpp \
     lsc-gui.cpp \
     mainwindow.cpp \
@@ -81,6 +82,7 @@ FORMS += \
     dialogshutter.ui \
     dialogservo.ui \
     dialogfancontrol.ui \
+    dialogreferencemeasurement.ui \
     mainwindow.ui
 win32 {
     FORMS += \
@@ -103,6 +105,7 @@ HEADERS += \
     dialogshutter.h \
     dialogservo.h \
     dialogfancontrol.h \
+    dialogreferencemeasurement.h \
     lsc.h \
     lsc-gui.h \
     mainwindow.h \
