@@ -119,6 +119,12 @@
     <ClCompile Include="dialogreferencemeasurement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dialogpulsegenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pulsegeneratorwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="dialogsettings.h">
@@ -176,6 +182,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="dialogreferencemeasurement.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="dialogpulsegenerator.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="pulsegeneratorwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -237,6 +249,12 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="dialogreferencemeasurement.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="dialogpulsegenerator.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="pulsegeneratorwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
