@@ -11,18 +11,7 @@ PulseGeneratorWidget::PulseGeneratorWidget(QWidget *parent)
 	, ui(new Ui::PulseGeneratorWidgetClass())
 {
 	ui->setupUi(this);
-	ui->lineEditDec->setText("0");
-	QRegularExpression decRegex("^[0-9]*$");
-	QValidator* decValidator = new QRegularExpressionValidator(decRegex, this);
-	ui->lineEditDec->setValidator(decValidator);
 
-	QRegularExpression hexRegex("^[0-9A-Fa-f]*$");
-	QValidator* hexValidator = new QRegularExpressionValidator(hexRegex, this);
-	ui->lineEditHex->setValidator(hexValidator);
-
-	QRegularExpression binRegex("^[01]*$");
-	QValidator* binValidator = new QRegularExpressionValidator(binRegex, this);
-	ui->lineEditBin->setValidator(binValidator);
 	on_checkBoxSequenceOn_checkStateChanged(Qt::Unchecked);
 }
 
@@ -387,7 +376,6 @@ void PulseGeneratorWidget::on_doubleSpinBoxDelayMilliseconds_valueChanged(double
 
 void PulseGeneratorWidget::on_doubleSpinBoxDelayMicroseconds_valueChanged(double val)
 {
-	// Take the given value, convert to seconds and milliseconds, and set the other spin boxes accordingly.
 	double milliseconds = val / 1000;
 	double seconds = val / 1000000;
 	ui->doubleSpinBoxDelayMilliseconds->blockSignals(true);
@@ -412,7 +400,6 @@ void PulseGeneratorWidget::delayChanged(int val)
 
 void PulseGeneratorWidget::on_doubleSpinBoxWidthSeconds_valueChanged(double val)
 {
-	// Take the given value, convert to milliseconds and microseconds, and set the other spin boxes accordingly.
 	double microseconds = val * 1000000;
 	double milliseconds = val * 1000;
 	ui->doubleSpinBoxWidthMicroseconds->blockSignals(true);
@@ -428,7 +415,6 @@ void PulseGeneratorWidget::on_doubleSpinBoxWidthSeconds_valueChanged(double val)
 
 void PulseGeneratorWidget::on_doubleSpinBoxWidthMilliseconds_valueChanged(double val)
 {
-	// Take the given value, convert to seconds and microseconds, and set the other spin boxes accordingly.
 	double microseconds = val * 1000.00;
 	double seconds = val / 1000.00;
 	ui->doubleSpinBoxWidthMicroseconds->blockSignals(true);
@@ -444,7 +430,6 @@ void PulseGeneratorWidget::on_doubleSpinBoxWidthMilliseconds_valueChanged(double
 
 void PulseGeneratorWidget::on_doubleSpinBoxWidthMicroseconds_valueChanged(double val)
 {
-	// Take the given value, convert to seconds and milliseconds, and set the other spin boxes accordingly.
 	double milliseconds = val / 1000;
 	double seconds = val / 1000000;
 	ui->doubleSpinBoxWidthMilliseconds->blockSignals(true);
