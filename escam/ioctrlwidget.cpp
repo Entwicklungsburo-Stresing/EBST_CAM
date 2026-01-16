@@ -10,18 +10,8 @@ IoctrlWidget::IoctrlWidget(QWidget *parent)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
-	ui.lineEditDec->setText("0");
-	QRegularExpression decRegex("^[0-9]*$");
-	QValidator* decValidator = new QRegularExpressionValidator(decRegex, this);
-	ui.lineEditDec->setValidator(decValidator);
-
-	QRegularExpression hexRegex("^[0-9A-Fa-f]*$");
-	QValidator* hexValidator = new QRegularExpressionValidator(hexRegex, this);
-	ui.lineEditHex->setValidator(hexValidator);
-
-	QRegularExpression binRegex("^[01]*$");
-	QValidator* binValidator = new QRegularExpressionValidator(binRegex, this);
-	ui.lineEditBin->setValidator(binValidator);
+	connect(ui.widgetNumericConverter, &NumericConverterWidget::sequenceChanged, this, &IoctrlWidget::sendSequence);
+	connect(ui.widgetNumericConverter, &NumericConverterWidget::sequenceLengthChanged, this, &IoctrlWidget::sequenceLengthChanged);
 }
 
 IoctrlWidget::~IoctrlWidget()
@@ -31,13 +21,13 @@ void IoctrlWidget::loadDefaults()
 {
 	ui.spinBoxDelay->setValue(settingIoctrlDelayIn1nsDefault);
 	ui.spinBoxWidth->setValue(settingIoctrlWidthIn1nsDefault);
-	ui.spinBoxSeqLength->setValue(settingIoctrlSequenceLengthDefault);
-	ui.lineEditHex->setText(settingIoctrlSequenceDefault);
+	ui.widgetNumericConverter->setSequenceLength(settingIoctrlSequenceLengthDefault);
+	ui.widgetNumericConverter->setHex(settingIoctrlSequenceDefault);
 	settings.beginGroup(QString("board%1/ch%2").arg(_drvno).arg(channel));
 	settings.setValue(settingIoctrlDelayIn1nsPath, ui.spinBoxDelay->value());
 	settings.setValue(settingIoctrlWidthIn1nsPath, ui.spinBoxWidth->value());
-	settings.setValue(settingIoctrlSequencePath, ui.lineEditHex->text());
-	settings.setValue(settingIoctrlSequenceLengthPath, ui.spinBoxSeqLength->value());
+	settings.setValue(settingIoctrlSequencePath, ui.widgetNumericConverter->getHex());
+	settings.setValue(settingIoctrlSequenceLengthPath, ui.widgetNumericConverter->getSequenceLength().toInt());
 	settings.endGroup();
 	return;
 }
@@ -52,270 +42,26 @@ void IoctrlWidget::loadSettings(int drvno)
 	settings.endGroup();
 	ui.spinBoxDelay->setValue(delay);
 	ui.spinBoxWidth->setValue(width);
-	ui.lineEditHex->setText(sequence);
-	ui.spinBoxSeqLength->setValue(sequenceLength);
+	ui.widgetNumericConverter->setHex(sequence);
+	ui.widgetNumericConverter->setSequenceLength(sequenceLength);
 	_drvno = drvno;
 	sendAllSettings();
 	return;
 }
 
-void IoctrlWidget::on_spinBoxSeqLength_valueChanged(int val)
+void IoctrlWidget::sequenceLengthChanged()
 {
-	if (ui.lineEditBin->text().length() > val)
-	{
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-		ui.lineEditBin->setText(ui.lineEditBin->text().right(val));
-#else
-		ui.lineEditBin->setText(ui.lineEditBin->text().last(val));
-#endif
-	}
+	int val = ui.widgetNumericConverter->getSequenceLength().toInt();
 	mainWindow->lsc.camIOCtrl_setSequenceLength(_drvno, channel, val);
 	settings.beginGroup(QString("board%1/ch%2").arg(_drvno).arg(channel));
-	settings.setValue(settingIoctrlSequenceLengthPath, val);
+	settings.setValue(settingPulseGeneratorSequenceLengthPath, val);
 	settings.endGroup();
-}
-
-void IoctrlWidget::on_lineEditDec_textChanged()
-{
-	QString dec = ui.lineEditDec->text();
-	if (dec.isEmpty()) {
-		return;
-	}
-	QString maxDec = convertBinaryToDecimal(QString("1").repeated(ui.spinBoxSeqLength->value()));
-	if (dec.length() > maxDec.length()) {
-		ui.lineEditDec->setText(maxDec);
-		dec = maxDec;
-	}
-	if (dec.length() == maxDec.length()) {
-
-		for (int i = 0; i < maxDec.length(); ++i) {
-			if (maxDec[i].digitValue() < dec[i].digitValue()) {
-				ui.lineEditDec->setText(maxDec);
-				dec = maxDec;
-				break;
-			}
-			else if (maxDec[i].digitValue() > dec[i].digitValue()) {
-				break;
-			}
-		}
-	}
-	QString bin = convertDecimalToBinary(dec);
-	QString hex = convertBinaryToHex(bin);
-
-	ui.lineEditHex->blockSignals(true);
-	ui.lineEditBin->blockSignals(true);
-
-	ui.lineEditHex->setText(hex);
-	ui.lineEditBin->setText(addLeadingZerosToBin(bin));
-
-	ui.lineEditHex->blockSignals(false);
-	ui.lineEditBin->blockSignals(false);
-	sendSequence();
 	return;
-}
-
-void IoctrlWidget::on_lineEditHex_textChanged()
-{
-	QString hex = ui.lineEditHex->text();
-	QString maxHex = convertBinaryToHex(QString("1").repeated(ui.spinBoxSeqLength->value()));
-	if (hex.isEmpty()) {
-		return;
-	}
-	if (hex.length() > maxHex.length()) {
-		ui.lineEditHex->setText(maxHex);
-		hex = maxHex;
-	}
-	else if (hex.length() == maxHex.length()) {
-		if (QString(maxHex[0]).toInt(nullptr, 16) < QString(hex[0]).toInt(nullptr, 16)) {
-			ui.lineEditHex->setText(maxHex);
-			hex = maxHex;
-		}
-	}
-
-	QString bin = convertHexToBinary(hex);
-	QString dec = convertBinaryToDecimal(bin);
-
-	ui.lineEditDec->blockSignals(true);
-	ui.lineEditBin->blockSignals(true);
-
-	ui.lineEditDec->setText(dec);
-	ui.lineEditBin->setText(addLeadingZerosToBin(bin));
-
-	ui.lineEditDec->blockSignals(false);
-	ui.lineEditBin->blockSignals(false);
-	sendSequence();
-	return;
-}
-
-void IoctrlWidget::on_lineEditBin_textChanged()
-{
-
-	if (ui.lineEditBin->text().isEmpty()) {
-		return;
-	}
-	int cursorPosition = ui.lineEditBin->cursorPosition();
-	if (ui.lineEditBin->text().length() >= ui.spinBoxSeqLength->value()) {
-		ui.lineEditBin->setText(ui.lineEditBin->text().right(ui.spinBoxSeqLength->value()));
-	}
-	// Saves the cursor position before changing the text to prevent it from jumping to the end. - 1 because it is 0-based index
-	ui.lineEditBin->setCursorPosition(cursorPosition - 1);
-	QString bin = ui.lineEditBin->text();
-	QString dec = convertBinaryToDecimal(bin);
-	QString hex = convertBinaryToHex(bin);
-
-	ui.lineEditDec->blockSignals(true);
-	ui.lineEditHex->blockSignals(true);
-
-	ui.lineEditDec->setText(dec);
-	ui.lineEditHex->setText(hex);
-
-	ui.lineEditDec->blockSignals(false);
-	ui.lineEditHex->blockSignals(false);
-	sendSequence();
-	return;
-}
-
-void IoctrlWidget::on_lineEditBin_editingFinished() {
-	ui.lineEditBin->blockSignals(true);
-	QString bin = ui.lineEditBin->text();
-	ui.lineEditBin->setText(addLeadingZerosToBin(bin));
-	ui.lineEditBin->blockSignals(false);
-}
-
-QString IoctrlWidget::convertDecimalToBinary(QString decimal)
-{
-	std::string decimalAsStdString = decimal.toStdString();
-
-	if (decimalAsStdString.empty() || decimalAsStdString == "0") {
-		return QString("0");
-	}
-
-	std::string binary = "";
-	std::string temp = decimalAsStdString;
-
-	while (temp != "0") {
-		int remainder = 0;
-		std::string dividedNumberAsString = "";
-		for (const char digit : temp) {
-			int current = remainder * 10 + (digit - '0');
-
-			remainder = current % 2;
-			dividedNumberAsString += (current / 2) + '0';
-		}
-
-		binary += (remainder + '0');
-		size_t firstNonZero = dividedNumberAsString.find_first_not_of('0');
-		if (firstNonZero != std::string::npos) {
-			temp = dividedNumberAsString.substr(firstNonZero);
-		}
-		else {
-			temp = "0";
-		}
-	}
-	std::reverse(binary.begin(), binary.end());
-	while (binary.length() > 1 && binary[0] == '0') {
-		binary.erase(0, 1);
-	}
-
-	return QString::fromStdString(binary);
-}
-
-QString IoctrlWidget::convertHexToBinary(QString hex)
-{
-	std::string hexAsStdString = hex.toUpper().toStdString();
-	std::string result;
-
-	if (hexAsStdString.empty()) {
-		return QString("0");
-	}
-
-	std::string binaryAsStdString = "";
-	for (const char hexChar : hexAsStdString) {
-		int decimalValue = 0;
-		if (hexChar >= '0' && hexChar <= '9') {
-			decimalValue = hexChar - '0';
-		}
-		else if (hexChar >= 'A' && hexChar <= 'F') {
-			decimalValue = hexChar - 'A' + 10;
-		}
-
-		std::bitset<4> binarySet(decimalValue);
-		binaryAsStdString += binarySet.to_string();
-	}
-
-	while (binaryAsStdString.length() > 1 && binaryAsStdString[0] == '0') {
-		binaryAsStdString.erase(0, 1);
-	}
-
-	return QString::fromStdString(binaryAsStdString);
-}
-
-QString IoctrlWidget::convertBinaryToDecimal(QString binary)
-{
-	std::string binaryAsStdString = binary.toStdString();
-	constexpr unsigned int numberBase{ 10 };
-	std::string result;
-	do {
-		unsigned int remainder = 0;
-		std::string dividedNumberAsString = "";
-		for (const char bit : binaryAsStdString) {
-			remainder = remainder * 2 + (bit - '0');
-
-			if (remainder >= numberBase) {
-				remainder -= numberBase;
-				dividedNumberAsString += '1';
-			}
-			else {
-				dividedNumberAsString += '0';
-			}
-		}
-		binaryAsStdString = dividedNumberAsString;
-		result.insert(0, 1, '0' + remainder);
-	} while (std::count(binaryAsStdString.begin(), binaryAsStdString.end(), '1'));
-
-	return QString::fromStdString(result);
-}
-
-QString IoctrlWidget::convertBinaryToHex(QString binary)
-{
-	if (binary.isEmpty()) {
-		return QString("0");
-	}
-
-	int remainder = binary.length() % 4;
-	if (remainder != 0) {
-		QString padding = QString(4 - remainder, '0');
-		binary.prepend(padding);
-	}
-
-	QString result = "";
-	for (int i = 0; i < binary.length(); i += 4) {
-		QString chunk = binary.mid(i, 4);
-		bool ok;
-		int decimalValue = chunk.toInt(&ok, 2);
-
-		if (decimalValue < 10) {
-			result.append(QString::number(decimalValue));
-		}
-		else {
-			result.append(QChar('A' + decimalValue - 10));
-		}
-	}
-	return result;
-}
-
-QString IoctrlWidget::addLeadingZerosToBin(QString bin)
-{
-	int length = ui.spinBoxSeqLength->value();
-	if (bin.length() < length) {
-		bin.prepend(QString(length - bin.length(), '0'));
-	}
-	return bin;
 }
 
 void IoctrlWidget::sendSequence()
 {
-	QString hex = ui.lineEditHex->text();
+	QString hex = ui.widgetNumericConverter->getHex();
 
 	// Build 8-element uint16_t sequence (128 bits = 32 hex chars).
 	// Pad the user hex to the low-order bits and zero-extend to 32 hex digits.
@@ -370,6 +116,85 @@ void IoctrlWidget::sendAllSettings()
 	mainWindow->lsc.camIOCtrl_setPulseWidth(_drvno, channel, ui.spinBoxWidth->value());
 	mainWindow->lsc.camIOCtrl_setPulseDelay(_drvno, channel, ui.spinBoxDelay->value());
 	sendSequence();
-	mainWindow->lsc.camIOCtrl_setSequenceLength(_drvno, channel, ui.spinBoxSeqLength->value());
+	mainWindow->lsc.camIOCtrl_setSequenceLength(_drvno, channel, ui.widgetNumericConverter->getSequenceLength().toInt());
+	return;
+}
+
+IoctrlWidget::TimeResult IoctrlWidget::processTimeInput(const QString& input, long long maxNs)
+{
+	TimeResult result = { -1, "", false };
+	static QRegularExpression regex("^\\s*([0-9.,]+)\\s*(s|ms|us|ns)?\\s*$"); // Allows the input of whole or decimal numbers with either "." or "," and an optional unit
+	QRegularExpressionMatch match = regex.match(input.toLower().trimmed());
+	
+	if (!match.hasMatch()) return result;
+
+	double originalValue = match.captured(1).replace(',', '.').toDouble();
+	QString unit = match.captured(2);
+	if (unit.isEmpty()) unit = "ns";
+	double factor = 1.0;
+	if (unit == "s") factor = 1e9;
+	else if (unit == "ms") factor = 1e6;
+	else if (unit == "us") factor = 1e3;
+	else if (unit == "ns") factor = 1.0;
+	else return result; // Indicate invalid unit
+
+	long long nsRaw = static_cast<long long>(std::round(originalValue * factor));
+	if (nsRaw > maxNs) nsRaw = maxNs; // Exceeds hardware limit
+	if (nsRaw < 0) nsRaw = 0; // Negative value
+	long long nsRounded = ((nsRaw + 16) / 32) * 32;
+	double displayValue = static_cast<double>(nsRounded) / factor;
+	result.ns = nsRounded;
+	result.formatted = QString::number(displayValue, 'g', 6) + " " + unit;
+	result.valid = true;
+	return result;
+}
+
+void IoctrlWidget::on_lineEditDelay_editingFinished()
+{
+	QString input = ui.lineEditDelay->text();
+	TimeResult tr = processTimeInput(input, delayLimit);
+	if (tr.valid) {
+		ui.lineEditDelay->blockSignals(true);
+		ui.lineEditDelay->setText(tr.formatted);
+		ui.lineEditDelay->blockSignals(false);
+		ui.lineEditDelay->setStyleSheet("");
+		delayChanged(static_cast<int>(tr.ns));
+	} else {
+		ui.lineEditDelay->setStyleSheet("border: 1px solid red;");
+	}
+	return;
+}
+
+void IoctrlWidget::delayChanged(int delay)
+{
+	mainWindow->lsc.camIOCtrl_setPulseDelay(_drvno, channel, delay);
+	settings.beginGroup(QString("board%1/ch%2").arg(_drvno).arg(channel));
+	settings.setValue(settingIoctrlDelayIn1nsPath, delay);
+	settings.endGroup();
+	return;
+}
+
+void IoctrlWidget::on_lineEditWidth_editingFinished()
+{
+	QString input = ui.lineEditWidth->text();
+	TimeResult tr = processTimeInput(input, widthLimit);
+	if (tr.valid) {
+		ui.lineEditWidth->blockSignals(true);
+		ui.lineEditWidth->setText(tr.formatted);
+		ui.lineEditWidth->blockSignals(false);
+		ui.lineEditWidth->setStyleSheet("");
+		widthChanged(static_cast<int>(tr.ns));
+	} else {
+		ui.lineEditWidth->setStyleSheet("border: 1px solid red;");
+	}
+	return;
+}
+
+void IoctrlWidget::widthChanged(int width)
+{
+	mainWindow->lsc.camIOCtrl_setPulseWidth(_drvno, channel, width);
+	settings.beginGroup(QString("board%1/ch%2").arg(_drvno).arg(channel));
+	settings.setValue(settingIoctrlWidthIn1nsPath, width);
+	settings.endGroup();
 	return;
 }

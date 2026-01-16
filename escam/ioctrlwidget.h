@@ -24,23 +24,29 @@ public slots:
 	void loadDefaults();
 	void loadSettings(int drvno);
 private slots:
-	void on_spinBoxSeqLength_valueChanged(int val);
-	void on_lineEditDec_textChanged();
-	void on_lineEditHex_textChanged();
-	void on_lineEditBin_textChanged();
-	void on_lineEditBin_editingFinished();
+	void sequenceLengthChanged();
 	void on_spinBoxWidth_valueChanged(int val);
 	void on_spinBoxDelay_valueChanged(int val);
+	void on_lineEditDelay_editingFinished();
+	void on_lineEditWidth_editingFinished();
 private:
-	QString convertDecimalToBinary(QString decimalString);
-	QString convertHexToBinary(QString hexString);
-	QString convertBinaryToDecimal(QString binaryString);
-	QString convertBinaryToHex(QString binaryString);
-	QString addLeadingZerosToBin(QString bin);
 	Ui::IoctrlWidgetClass ui;
 	QSettings settings;
 	uint32_t _drvno = 0;
 	void sendSequence();
 	void sendAllSettings();
+	struct TimeResult {
+		long long ns;
+		QString formatted;
+		bool valid;
+	};
+	TimeResult processTimeInput(const QString& input, long long maxNs);
+	void delayChanged(int delay);
+	void widthChanged(int width);
+	long long delayLimit = 2097120;
+	long long widthLimit = 2097120;
+
+
+
 };
 
