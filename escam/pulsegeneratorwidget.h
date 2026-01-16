@@ -20,11 +20,7 @@ public slots:
 	void loadDefaults();
 	void loadSettings(int drvno);
 private slots:
-	void on_spinBoxSeqLength_valueChanged(int val);
-	void on_lineEditDec_textChanged();
-	void on_lineEditHex_textChanged();
-	void on_lineEditBin_textChanged();
-	void on_lineEditBin_editingFinished();
+	void sequenceLengthChanged();
 	void on_checkBoxSequenceOn_checkStateChanged(Qt::CheckState checked);
 	void on_doubleSpinBoxDelaySeconds_valueChanged(double val);
 	void on_doubleSpinBoxDelayMilliseconds_valueChanged(double val);
@@ -34,11 +30,6 @@ private slots:
 	void on_doubleSpinBoxWidthMicroseconds_valueChanged(double val);
 private:
 	Ui::PulseGeneratorWidgetClass *ui;
-	QString convertDecimalToBinary(QString decimalString);
-	QString convertHexToBinary(QString hexString);
-	QString convertBinaryToDecimal(QString binaryString);
-	QString convertBinaryToHex(QString binaryString);
-	QString addLeadingZerosToBin(QString bin);
 	QSettings settings;
 	uint32_t _drvno = 0;
 	void sendSequence();
