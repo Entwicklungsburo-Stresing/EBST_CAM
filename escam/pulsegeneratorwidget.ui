@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>469</width>
-    <height>155</height>
+    <height>117</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,31 +17,11 @@
    <property name="leftMargin">
     <number>9</number>
    </property>
-   <item row="2" column="0">
-    <widget class="NumericConverterWidget" name="widgetNumericConverter" native="true"/>
-   </item>
    <item row="1" column="0">
     <layout class="QGridLayout" name="gridLayout" columnstretch="1,0,100,1">
-     <item row="1" column="1">
-      <widget class="QLabel" name="labelWidth">
-       <property name="text">
-        <string>Width</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QCheckBox" name="checkBoxSequenceOn">
-       <property name="layoutDirection">
-        <enum>Qt::LayoutDirection::RightToLeft</enum>
-       </property>
-       <property name="text">
-        <string>on</string>
-       </property>
-       <property name="checked">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
+     <property name="horizontalSpacing">
+      <number>6</number>
+     </property>
      <item row="1" column="3">
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
@@ -54,20 +34,6 @@
         </size>
        </property>
       </spacer>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="labelDelay">
-       <property name="text">
-        <string>Delay</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="labelSequenceOn">
-       <property name="text">
-        <string>Sequence</string>
-       </property>
-      </widget>
      </item>
      <item row="0" column="2">
       <layout class="QHBoxLayout" name="horizontalLayoutDelay">
@@ -112,6 +78,19 @@
        </item>
       </layout>
      </item>
+     <item row="2" column="2">
+      <widget class="QCheckBox" name="checkBoxSequenceOn">
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::RightToLeft</enum>
+       </property>
+       <property name="text">
+        <string>on</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="2">
       <layout class="QHBoxLayout" name="horizontalLayoutWidth">
        <item>
@@ -155,6 +134,13 @@
        </item>
       </layout>
      </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="labelSequenceOn">
+       <property name="text">
+        <string>Sequence</string>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="0">
       <spacer name="horizontalSpacer">
        <property name="orientation">
@@ -167,6 +153,30 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="labelDelay">
+       <property name="text">
+        <string>Delay</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="labelWidth">
+       <property name="text">
+        <string>Width</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1" colspan="2">
+      <widget class="NumericConverterWidget" name="widgetNumericConverter" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
