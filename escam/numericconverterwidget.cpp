@@ -84,6 +84,7 @@ void NumericConverterWidget::on_spinBoxSeqLength_valueChanged(int val)
 		ui->lineEditBin->setText(ui->lineEditBin->text().last(val));
 #endif
 	}
+	emit sequenceLengthChanged();
 }
 
 void NumericConverterWidget::on_lineEditDec_textChanged()
@@ -121,6 +122,7 @@ void NumericConverterWidget::on_lineEditDec_textChanged()
 
 	ui->lineEditHex->blockSignals(false);
 	ui->lineEditBin->blockSignals(false);
+	emit sequenceChanged();
 	return;
 }
 
@@ -153,6 +155,7 @@ void NumericConverterWidget::on_lineEditHex_textChanged()
 
 	ui->lineEditDec->blockSignals(false);
 	ui->lineEditBin->blockSignals(false);
+	emit sequenceChanged();
 	return;
 }
 
@@ -180,6 +183,7 @@ void NumericConverterWidget::on_lineEditBin_textChanged()
 
 	ui->lineEditDec->blockSignals(false);
 	ui->lineEditHex->blockSignals(false);
+	emit sequenceChanged();
 	return;
 }
 

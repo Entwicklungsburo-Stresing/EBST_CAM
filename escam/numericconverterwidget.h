@@ -35,5 +35,8 @@ private:
 	QString convertBinaryToDecimal(QString binaryString);
 	QString convertBinaryToHex(QString binaryString);
 	QString addLeadingZerosToBin(QString bin);
+signals: 
+	void sequenceLengthChanged();
+	void sequenceChanged();
 };
 
