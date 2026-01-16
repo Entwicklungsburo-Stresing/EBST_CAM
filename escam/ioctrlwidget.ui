@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>210</width>
+    <width>215</width>
     <height>219</height>
    </rect>
   </property>
@@ -29,19 +29,44 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout" columnstretch="1,0,100,1">
-     <item row="3" column="1">
-      <widget class="QLabel" name="labelDec">
+     <item row="4" column="2">
+      <widget class="QLineEdit" name="lineEditHex">
+       <property name="maximumSize">
+        <size>
+         <width>900</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Decimal representation of the bit sequence&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hexadeciamal representation of the bit sequence&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="whatsThis">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence represents the high / low states of the output signal. On each trigger an output signal is generated depending on the current position in the sequence. All three representations (Dec, Hex, Bin) are editing the same output sequence. The sequence is LSB first, so the first digit from the right in Bin is the first high / low state of the output signal. When the last digit is reached the sequence starts back at the LSB. Also each DLLInitMeasurement() resets the sequence cursor to the first position, so that happens every time when pressing start in the main window of Escam.&lt;/p&gt;&lt;p&gt;The sequence is set by the function DLLCamIOCtrl_setSequence.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
-        <string>Dec</string>
+        <string>0</string>
+       </property>
+       <property name="maxLength">
+        <number>39</number>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLabel" name="labelHex">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hexadeciamal representation of the bit sequence&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence represents the high / low states of the output signal. On each trigger an output signal is generated depending on the current position in the sequence. All three representations (Dec, Hex, Bin) are editing the same output sequence. The sequence is LSB first, so the first digit from the right in Bin is the first high / low state of the output signal. When the last digit is reached the sequence starts back at the LSB. Also each DLLInitMeasurement() resets the sequence cursor to the first position, so that happens every time when pressing start in the main window of Escam.&lt;/p&gt;&lt;p&gt;The sequence is set by the function DLLCamIOCtrl_setSequence.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Hex</string>
        </property>
        <property name="buddy">
-        <cstring>lineEditDec</cstring>
+        <cstring>lineEditHex</cstring>
        </property>
       </widget>
      </item>
@@ -58,13 +83,42 @@
        </property>
       </spacer>
      </item>
-     <item row="1" column="2">
-      <widget class="QSpinBox" name="spinBoxWidth">
+     <item row="3" column="1">
+      <widget class="QLabel" name="labelDec">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;High time of the output signal&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Decimal representation of the bit sequence&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Width is the time between the rising edge of the output signal and the falling edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Width is controlled by the function DLLCamIOCtrl_setPulseWidth.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence represents the high / low states of the output signal. On each trigger an output signal is generated depending on the current position in the sequence. All three representations (Dec, Hex, Bin) are editing the same output sequence. The sequence is LSB first, so the first digit from the right in Bin is the first high / low state of the output signal. When the last digit is reached the sequence starts back at the LSB. Also each DLLInitMeasurement() resets the sequence cursor to the first position, so that happens every time when pressing start in the main window of Escam.&lt;/p&gt;&lt;p&gt;The sequence is set by the function DLLCamIOCtrl_setSequence.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Dec</string>
+       </property>
+       <property name="buddy">
+        <cstring>lineEditDec</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="labelSequence">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;High / low sequence of the output&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence represents the high / low states of the output signal. On each trigger an output signal is generated depending on the current position in the sequence. All three representations (Dec, Hex, Bin) are editing the same output sequence. The sequence is LSB first, so the first digit from the right in Bin is the first high / low state of the output signal. When the last digit is reached the sequence starts back at the LSB. Also each DLLInitMeasurement() resets the sequence cursor to the first position, so that happens every time when pressing start in the main window of Escam.&lt;/p&gt;&lt;p&gt;The sequence is set by the function DLLCamIOCtrl_setSequence.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Sequence</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QSpinBox" name="spinBoxDelay">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time between the trigger and the rising edge&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay is the time between the rising edge of the trigger signal and the rising edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Delay is controlled by the function DLLCamIOCtrl_setPulseDelay.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -80,39 +134,69 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
+     <item row="3" column="2">
+      <widget class="QLineEdit" name="lineEditDec">
+       <property name="maximumSize">
         <size>
-         <width>40</width>
-         <height>20</height>
+         <width>900</width>
+         <height>16777215</height>
         </size>
        </property>
-      </spacer>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Decimal representation of the bit sequence&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence represents the high / low states of the output signal. On each trigger an output signal is generated depending on the current position in the sequence. All three representations (Dec, Hex, Bin) are editing the same output sequence. The sequence is LSB first, so the first digit from the right in Bin is the first high / low state of the output signal. When the last digit is reached the sequence starts back at the LSB. Also each DLLInitMeasurement() resets the sequence cursor to the first position, so that happens every time when pressing start in the main window of Escam.&lt;/p&gt;&lt;p&gt;The sequence is set by the function DLLCamIOCtrl_setSequence.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="maxLength">
+        <number>39</number>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="labelWidth">
+     <item row="5" column="2">
+      <widget class="QLineEdit" name="lineEditBin">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>900</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Binary representation of the bit sequence&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence represents the high / low states of the output signal. On each trigger an output signal is generated depending on the current position in the sequence. All three representations (Dec, Hex, Bin) are editing the same output sequence. The sequence is LSB first, so the first digit from the right in Bin is the first high / low state of the output signal. When the last digit is reached the sequence starts back at the LSB. Also each DLLInitMeasurement() resets the sequence cursor to the first position, so that happens every time when pressing start in the main window of Escam.&lt;/p&gt;&lt;p&gt;The sequence is set by the function DLLCamIOCtrl_setSequence.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>0000000000000000000000000000000000000000000000000000000000000000</string>
+       </property>
+       <property name="maxLength">
+        <number>128</number>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QSpinBox" name="spinBoxWidth">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;High time of the output signal&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="whatsThis">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Width is the time between the rising edge of the output signal and the falling edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Width is controlled by the function DLLCamIOCtrl_setPulseWidth.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>Width</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QSpinBox" name="spinBoxDelay">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time between the trigger and the rising edge&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay is the time between the rising edge of the trigger signal and the rising edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Delay is controlled by the function DLLCamIOCtrl_setPulseDelay.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -144,6 +228,19 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="labelWidth">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;High time of the output signal&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Width is the time between the rising edge of the output signal and the falling edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Width is controlled by the function DLLCamIOCtrl_setPulseWidth.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Width</string>
+       </property>
+      </widget>
+     </item>
      <item row="6" column="2">
       <widget class="QSpinBox" name="spinBoxSeqLength">
        <property name="toolTip">
@@ -163,31 +260,6 @@
        </property>
        <property name="value">
         <number>128</number>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="2">
-      <widget class="QLineEdit" name="lineEditHex">
-       <property name="maximumSize">
-        <size>
-         <width>900</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hexadeciamal representation of the bit sequence&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence represents the high / low states of the output signal. On each trigger an output signal is generated depending on the current position in the sequence. All three representations (Dec, Hex, Bin) are editing the same output sequence. The sequence is LSB first, so the first digit from the right in Bin is the first high / low state of the output signal. When the last digit is reached the sequence starts back at the LSB. Also each DLLInitMeasurement() resets the sequence cursor to the first position, so that happens every time when pressing start in the main window of Escam.&lt;/p&gt;&lt;p&gt;The sequence is set by the function DLLCamIOCtrl_setSequence.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="maxLength">
-        <number>39</number>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -223,90 +295,18 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
-      <widget class="QLabel" name="labelHex">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hexadeciamal representation of the bit sequence&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <item row="3" column="0">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
-       <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence represents the high / low states of the output signal. On each trigger an output signal is generated depending on the current position in the sequence. All three representations (Dec, Hex, Bin) are editing the same output sequence. The sequence is LSB first, so the first digit from the right in Bin is the first high / low state of the output signal. When the last digit is reached the sequence starts back at the LSB. Also each DLLInitMeasurement() resets the sequence cursor to the first position, so that happens every time when pressing start in the main window of Escam.&lt;/p&gt;&lt;p&gt;The sequence is set by the function DLLCamIOCtrl_setSequence.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>Hex</string>
-       </property>
-       <property name="buddy">
-        <cstring>lineEditHex</cstring>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="2">
-      <widget class="QLineEdit" name="lineEditBin">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
+       <property name="sizeHint" stdset="0">
         <size>
-         <width>900</width>
-         <height>16777215</height>
+         <width>40</width>
+         <height>20</height>
         </size>
        </property>
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Binary representation of the bit sequence&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence represents the high / low states of the output signal. On each trigger an output signal is generated depending on the current position in the sequence. All three representations (Dec, Hex, Bin) are editing the same output sequence. The sequence is LSB first, so the first digit from the right in Bin is the first high / low state of the output signal. When the last digit is reached the sequence starts back at the LSB. Also each DLLInitMeasurement() resets the sequence cursor to the first position, so that happens every time when pressing start in the main window of Escam.&lt;/p&gt;&lt;p&gt;The sequence is set by the function DLLCamIOCtrl_setSequence.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>0000000000000000000000000000000000000000000000000000000000000000</string>
-       </property>
-       <property name="maxLength">
-        <number>128</number>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QLineEdit" name="lineEditDec">
-       <property name="maximumSize">
-        <size>
-         <width>900</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Decimal representation of the bit sequence&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence represents the high / low states of the output signal. On each trigger an output signal is generated depending on the current position in the sequence. All three representations (Dec, Hex, Bin) are editing the same output sequence. The sequence is LSB first, so the first digit from the right in Bin is the first high / low state of the output signal. When the last digit is reached the sequence starts back at the LSB. Also each DLLInitMeasurement() resets the sequence cursor to the first position, so that happens every time when pressing start in the main window of Escam.&lt;/p&gt;&lt;p&gt;The sequence is set by the function DLLCamIOCtrl_setSequence.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="maxLength">
-        <number>39</number>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="labelSequence">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;High / low sequence of the output&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence represents the high / low states of the output signal. On each trigger an output signal is generated depending on the current position in the sequence. All three representations (Dec, Hex, Bin) are editing the same output sequence. The sequence is LSB first, so the first digit from the right in Bin is the first high / low state of the output signal. When the last digit is reached the sequence starts back at the LSB. Also each DLLInitMeasurement() resets the sequence cursor to the first position, so that happens every time when pressing start in the main window of Escam.&lt;/p&gt;&lt;p&gt;The sequence is set by the function DLLCamIOCtrl_setSequence.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>Sequence</string>
-       </property>
-      </widget>
+      </spacer>
      </item>
     </layout>
    </item>
