@@ -147,6 +147,11 @@ constexpr auto settingRMSLastSamplePath = "rmsLastSample";
 constexpr auto settingRMSPixelPath = "rmsPixel";
 // Fan control
 constexpr auto settingFanControlFanStatePath = "fanControlFanState";
+// Pulse generator
+constexpr auto settingPulseGeneratorDelayIn1nsPath = "pulse_generator_delay_in_1ns";
+constexpr auto settingPulseGeneratorWidthIn1nsPath = "pulse_generator_width_in_1ns";
+constexpr auto settingPulseGeneratorSequencePath = "pulse_generator_sequence";
+constexpr auto settingPulseGeneratorSequenceLengthPath = "pulse_generator_sequence_length";
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DialogSettings; }
