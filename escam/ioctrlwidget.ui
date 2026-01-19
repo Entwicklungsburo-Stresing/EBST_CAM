@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>178</width>
-    <height>188</height>
+    <width>120</width>
+    <height>134</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -34,11 +34,11 @@
     </spacer>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout" columnstretch="1,0,100,1">
+    <layout class="QGridLayout" name="gridLayout" columnstretch="1,0,0,0">
      <property name="horizontalSpacing">
       <number>6</number>
      </property>
-     <item row="5" column="1" colspan="2">
+     <item row="3" column="1" colspan="2">
       <widget class="NumericConverterWidget" name="widgetNumericConverter" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
@@ -48,87 +48,36 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="2">
-      <widget class="QSpinBox" name="spinBoxWidth">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;High time of the output signal&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Width is the time between the rising edge of the output signal and the falling edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Width is controlled by the function DLLCamIOCtrl_setPulseWidth.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-       <property name="correctionMode">
-        <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
-       </property>
-       <property name="suffix">
-        <string> ns</string>
-       </property>
-       <property name="maximum">
-        <number>2097120</number>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="3">
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="5" column="0">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="0" column="2">
-      <widget class="QSpinBox" name="spinBoxDelay">
+     <item row="0" column="1">
+      <widget class="QLabel" name="labelDelayAlt">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time between the trigger and the rising edge&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay is the time between the rising edge of the trigger signal and the rising edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Delay is controlled by the function DLLCamIOCtrl_setPulseDelay.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay is the time between the rising edge of the trigger signal and the rising edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Acceptable units: &lt;span style=&quot; font-weight:700;&quot;&gt;s&lt;/span&gt; / &lt;span style=&quot; font-weight:700;&quot;&gt;ms&lt;/span&gt; / &lt;span style=&quot; font-weight:700;&quot;&gt;us&lt;/span&gt; / &lt;span style=&quot; font-weight:700;&quot;&gt;ns&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Delay is controlled by the function DLLCamIOCtrl_setPulseDelay.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-       <property name="correctionMode">
-        <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
-       </property>
-       <property name="suffix">
-        <string> ns</string>
-       </property>
-       <property name="maximum">
-        <number>2097120</number>
+       <property name="text">
+        <string>Delay</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="labelDelayAlt">
+     <item row="0" column="2">
+      <widget class="QLineEdit" name="lineEditDelay">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Accepted units: &lt;span style=&quot; font-weight:700;&quot;&gt;s &lt;/span&gt;/&lt;span style=&quot; font-weight:700;&quot;&gt; ms &lt;/span&gt;/&lt;span style=&quot; font-weight:700;&quot;&gt; us &lt;/span&gt;/&lt;span style=&quot; font-weight:700;&quot;&gt; ns&lt;br/&gt;&lt;/span&gt;Accepted formats:&lt;br/&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;32ns / 32 ns&lt;br/&gt;12.34us / 12.34 us / 12,34us / 12,34 us&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="whatsThis">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay is the time between the rising edge of the trigger signal and the rising edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Acceptable units: &lt;span style=&quot; font-weight:700;&quot;&gt;s&lt;/span&gt; / &lt;span style=&quot; font-weight:700;&quot;&gt;ms&lt;/span&gt; / &lt;span style=&quot; font-weight:700;&quot;&gt;us&lt;/span&gt; / &lt;span style=&quot; font-weight:700;&quot;&gt;ns&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Delay is controlled by the function DLLCamIOCtrl_setPulseDelay.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
-        <string>Delay Alt</string>
+        <string>0 ns</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="2" column="1">
       <widget class="QLabel" name="labelSequence">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;High / low sequence of the output&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -141,65 +90,58 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="labelWidth">
+     <item row="3" column="0">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLineEdit" name="lineEditWidth">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Accepted units: &lt;span style=&quot; font-weight:700;&quot;&gt;s &lt;/span&gt;/&lt;span style=&quot; font-weight:700;&quot;&gt; ms &lt;/span&gt;/&lt;span style=&quot; font-weight:700;&quot;&gt; us &lt;/span&gt;/&lt;span style=&quot; font-weight:700;&quot;&gt; ns&lt;br/&gt;&lt;/span&gt;Accepted formats:&lt;br/&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;32ns / 32 ns&lt;br/&gt;12.34us / 12.34 us / 12,34us / 12,34 us&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Width is the time between the rising edge of the output signal and the falling edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Acceptable units: &lt;span style=&quot; font-weight:700;&quot;&gt;s &lt;/span&gt;/ &lt;span style=&quot; font-weight:700;&quot;&gt;ms&lt;/span&gt; / &lt;span style=&quot; font-weight:700;&quot;&gt;us&lt;/span&gt; / &lt;span style=&quot; font-weight:700;&quot;&gt;ns&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Width is controlled by the function DLLCamIOCtrl_setPulseWidth.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>0 ns</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="labelWidthAlt">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;High time of the output signal&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Width is the time between the rising edge of the output signal and the falling edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Width is controlled by the function DLLCamIOCtrl_setPulseWidth.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Width is the time between the rising edge of the output signal and the falling edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Acceptable units: &lt;span style=&quot; font-weight:700;&quot;&gt;s &lt;/span&gt;/ &lt;span style=&quot; font-weight:700;&quot;&gt;ms&lt;/span&gt; / &lt;span style=&quot; font-weight:700;&quot;&gt;us&lt;/span&gt; / &lt;span style=&quot; font-weight:700;&quot;&gt;ns&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Width is controlled by the function DLLCamIOCtrl_setPulseWidth.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>Width</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="labelDelay">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time between the trigger and the rising edge&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay is the time between the rising edge of the trigger signal and the rising edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Delay is controlled by the function DLLCamIOCtrl_setPulseDelay.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>Delay</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLabel" name="labelWidthAlt">
-       <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Width is the time between the rising edge of the output signal and the falling edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Acceptable units: &lt;span style=&quot; font-weight:700;&quot;&gt;s &lt;/span&gt;/ &lt;span style=&quot; font-weight:700;&quot;&gt;ms&lt;/span&gt; / &lt;span style=&quot; font-weight:700;&quot;&gt;us&lt;/span&gt; / &lt;span style=&quot; font-weight:700;&quot;&gt;ns&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Width is controlled by the function DLLCamIOCtrl_setPulseWidth.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>Width Alt</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLineEdit" name="lineEditDelay">
-       <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay is the time between the rising edge of the trigger signal and the rising edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Acceptable units: &lt;span style=&quot; font-weight:700;&quot;&gt;s&lt;/span&gt; / &lt;span style=&quot; font-weight:700;&quot;&gt;ms&lt;/span&gt; / &lt;span style=&quot; font-weight:700;&quot;&gt;us&lt;/span&gt; / &lt;span style=&quot; font-weight:700;&quot;&gt;ns&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Delay is controlled by the function DLLCamIOCtrl_setPulseDelay.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>0 ns</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QLineEdit" name="lineEditWidth">
-       <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Width is the time between the rising edge of the output signal and the falling edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Acceptable units: &lt;span style=&quot; font-weight:700;&quot;&gt;s &lt;/span&gt;/ &lt;span style=&quot; font-weight:700;&quot;&gt;ms&lt;/span&gt; / &lt;span style=&quot; font-weight:700;&quot;&gt;us&lt;/span&gt; / &lt;span style=&quot; font-weight:700;&quot;&gt;ns&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Width is controlled by the function DLLCamIOCtrl_setPulseWidth.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>0 ns</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
       </widget>
      </item>

@@ -25,8 +25,6 @@ public slots:
 	void loadSettings(int drvno);
 private slots:
 	void sequenceLengthChanged();
-	void on_spinBoxWidth_valueChanged(int val);
-	void on_spinBoxDelay_valueChanged(int val);
 	void on_lineEditDelay_editingFinished();
 	void on_lineEditWidth_editingFinished();
 private:
@@ -45,8 +43,6 @@ private:
 	void widthChanged(int width);
 	long long delayLimit = 2097120;
 	long long widthLimit = 2097120;
-
-
-
+	QString formatNsToHumanReadable(long long ns);
 };
 

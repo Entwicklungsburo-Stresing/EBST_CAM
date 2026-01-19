@@ -39,6 +39,9 @@
       <layout class="QHBoxLayout" name="horizontalLayoutDelay">
        <item>
         <widget class="QDoubleSpinBox" name="doubleSpinBoxDelaySeconds">
+         <property name="whatsThis">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay is the time between the rising edge of the trigger signal and the rising edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Delay is controlled by the function DLLCamIOCtrl_setPulseDelay.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="suffix">
           <string> s</string>
          </property>
@@ -52,6 +55,9 @@
        </item>
        <item>
         <widget class="QDoubleSpinBox" name="doubleSpinBoxDelayMilliseconds">
+         <property name="whatsThis">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay is the time between the rising edge of the trigger signal and the rising edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Delay is controlled by the function DLLCamIOCtrl_setPulseDelay.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="suffix">
           <string> ms</string>
          </property>
@@ -65,6 +71,9 @@
        </item>
        <item>
         <widget class="QDoubleSpinBox" name="doubleSpinBoxDelayMicroseconds">
+         <property name="whatsThis">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay is the time between the rising edge of the trigger signal and the rising edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Delay is controlled by the function DLLCamIOCtrl_setPulseDelay.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="suffix">
           <string> us</string>
          </property>
@@ -95,6 +104,9 @@
       <layout class="QHBoxLayout" name="horizontalLayoutWidth">
        <item>
         <widget class="QDoubleSpinBox" name="doubleSpinBoxWidthSeconds">
+         <property name="whatsThis">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Width is the time between the rising edge of the output signal and the falling edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Width is controlled by the function DLLCamIOCtrl_setPulseWidth.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="suffix">
           <string> s</string>
          </property>
@@ -108,6 +120,9 @@
        </item>
        <item>
         <widget class="QDoubleSpinBox" name="doubleSpinBoxWidthMilliseconds">
+         <property name="whatsThis">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Width is the time between the rising edge of the output signal and the falling edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Width is controlled by the function DLLCamIOCtrl_setPulseWidth.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="suffix">
           <string> ms</string>
          </property>
@@ -121,6 +136,9 @@
        </item>
        <item>
         <widget class="QDoubleSpinBox" name="doubleSpinBoxWidthMicroseconds">
+         <property name="whatsThis">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Width is the time between the rising edge of the output signal and the falling edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Width is controlled by the function DLLCamIOCtrl_setPulseWidth.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="suffix">
           <string> us</string>
          </property>
@@ -136,6 +154,9 @@
      </item>
      <item row="2" column="1">
       <widget class="QLabel" name="labelSequenceOn">
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence represents the high / low states of the output signal. On each trigger an output signal is generated depending on the current position in the sequence. All three representations (Dec, Hex, Bin) are editing the same output sequence. The sequence is LSB first, so the first digit from the right in Bin is the first high / low state of the output signal. When the last digit is reached the sequence starts back at the LSB. Also each DLLInitMeasurement() resets the sequence cursor to the first position, so that happens every time when pressing start in the main window of Escam.&lt;/p&gt;&lt;p&gt;The sequence is set by the function DLLCamIOCtrl_setSequence.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Sequence</string>
        </property>
@@ -156,6 +177,9 @@
      </item>
      <item row="0" column="1">
       <widget class="QLabel" name="labelDelay">
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delay is the time between the rising edge of the trigger signal and the rising edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Delay is controlled by the function DLLCamIOCtrl_setPulseDelay.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Delay</string>
        </property>
@@ -163,6 +187,9 @@
      </item>
      <item row="1" column="1">
       <widget class="QLabel" name="labelWidth">
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Width is the time between the rising edge of the output signal and the falling edge of the output signal.&lt;/p&gt;&lt;p&gt;Min: 0 ns&lt;br/&gt;Step: 32 ns (Values between are rounded down to the next valid step)&lt;br/&gt;Max: 2.097.120 ns (which is 65.535 * 32 ns)&lt;/p&gt;&lt;p&gt;Width is controlled by the function DLLCamIOCtrl_setPulseWidth.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Width</string>
        </property>

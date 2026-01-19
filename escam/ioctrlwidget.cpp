@@ -17,21 +17,30 @@ IoctrlWidget::IoctrlWidget(QWidget *parent)
 IoctrlWidget::~IoctrlWidget()
 {}
 
+/**
+* @brief Load default settings into the widget and save them to QSettings.
+* @return none
+*/
 void IoctrlWidget::loadDefaults()
 {
-	ui.spinBoxDelay->setValue(settingIoctrlDelayIn1nsDefault);
-	ui.spinBoxWidth->setValue(settingIoctrlWidthIn1nsDefault);
+	ui.lineEditDelay->setText(formatNsToHumanReadable(settingIoctrlDelayIn1nsDefault));
+	ui.lineEditWidth->setText(formatNsToHumanReadable(settingIoctrlWidthIn1nsDefault));
 	ui.widgetNumericConverter->setSequenceLength(settingIoctrlSequenceLengthDefault);
 	ui.widgetNumericConverter->setHex(settingIoctrlSequenceDefault);
 	settings.beginGroup(QString("board%1/ch%2").arg(_drvno).arg(channel));
-	settings.setValue(settingIoctrlDelayIn1nsPath, ui.spinBoxDelay->value());
-	settings.setValue(settingIoctrlWidthIn1nsPath, ui.spinBoxWidth->value());
+	settings.setValue(settingIoctrlDelayIn1nsPath, (int)settingIoctrlDelayIn1nsDefault);
+	settings.setValue(settingIoctrlWidthIn1nsPath, (int)settingIoctrlWidthIn1nsDefault);
 	settings.setValue(settingIoctrlSequencePath, ui.widgetNumericConverter->getHex());
 	settings.setValue(settingIoctrlSequenceLengthPath, ui.widgetNumericConverter->getSequenceLength().toInt());
 	settings.endGroup();
 	return;
 }
 
+/**
+* @brief Load saved settings from QSettings into the widget.
+* @param drvno The driver number (board number) to load settings for.
+* @return none
+*/
 void IoctrlWidget::loadSettings(int drvno)
 {
 	settings.beginGroup(QString("board%1/ch%2").arg(drvno).arg(channel));
@@ -40,8 +49,6 @@ void IoctrlWidget::loadSettings(int drvno)
 	QString sequence = settings.value(settingIoctrlSequencePath, settingIoctrlSequenceDefault).toString();
 	int sequenceLength = settings.value(settingIoctrlSequenceLengthPath, settingIoctrlSequenceLengthDefault).toInt();
 	settings.endGroup();
-	ui.spinBoxDelay->setValue(delay);
-	ui.spinBoxWidth->setValue(width);
 	ui.widgetNumericConverter->setHex(sequence);
 	ui.widgetNumericConverter->setSequenceLength(sequenceLength);
 	_drvno = drvno;
@@ -49,6 +56,10 @@ void IoctrlWidget::loadSettings(int drvno)
 	return;
 }
 
+/**
+* @brief Slot called when the sequence length is changed in the NumericConverterWidget.
+* @return none
+*/
 void IoctrlWidget::sequenceLengthChanged()
 {
 	int val = ui.widgetNumericConverter->getSequenceLength().toInt();
@@ -59,6 +70,10 @@ void IoctrlWidget::sequenceLengthChanged()
 	return;
 }
 
+/**
+* @brief Send the current sequence from the NumericConverterWidget to the hardware and save it to QSettings.
+* @return none
+*/
 void IoctrlWidget::sendSequence()
 {
 	QString hex = ui.widgetNumericConverter->getHex();
@@ -93,54 +108,79 @@ void IoctrlWidget::sendSequence()
 	return;
 }
 
-void IoctrlWidget::on_spinBoxDelay_valueChanged(int val)
-{
-	mainWindow->lsc.camIOCtrl_setPulseDelay(_drvno, channel, val);
-	settings.beginGroup(QString("board%1/ch%2").arg(_drvno).arg(channel));
-	settings.setValue(settingIoctrlDelayIn1nsPath, val);
-	settings.endGroup();
-	return;
-}
-
-void IoctrlWidget::on_spinBoxWidth_valueChanged(int val)
-{
-	mainWindow->lsc.camIOCtrl_setPulseWidth(_drvno, channel, val);
-	settings.beginGroup(QString("board%1/ch%2").arg(_drvno).arg(channel));
-	settings.setValue(settingIoctrlWidthIn1nsPath, val);
-	settings.endGroup();
-	return;
-}
-
+/**
+* @brief Send all current settings (delay, width, sequence, sequence length) to the hardware and save them to QSettings.
+* @return none
+*/
 void IoctrlWidget::sendAllSettings()
 {
-	mainWindow->lsc.camIOCtrl_setPulseWidth(_drvno, channel, ui.spinBoxWidth->value());
-	mainWindow->lsc.camIOCtrl_setPulseDelay(_drvno, channel, ui.spinBoxDelay->value());
+	TimeResult trDelay = processTimeInput(ui.lineEditDelay->text(), delayLimit);
+	TimeResult trWidth = processTimeInput(ui.lineEditWidth->text(), widthLimit);
+	mainWindow->lsc.camIOCtrl_setPulseWidth(_drvno, channel, trWidth.ns);
+	mainWindow->lsc.camIOCtrl_setPulseDelay(_drvno, channel, trDelay.ns);
 	sendSequence();
 	mainWindow->lsc.camIOCtrl_setSequenceLength(_drvno, channel, ui.widgetNumericConverter->getSequenceLength().toInt());
 	return;
 }
 
+/**
+* @brief Process a time input string, converting it to nanoseconds and formatting it.
+* @param input The input time string (e.g., "1.5 ms", "200 us").
+* @param maxNs The maximum allowed time in nanoseconds.
+* @return A TimeResult struct containing the nanoseconds value, formatted string, and validity flag.
+*/
 IoctrlWidget::TimeResult IoctrlWidget::processTimeInput(const QString& input, long long maxNs)
 {
 	TimeResult result = { -1, "", false };
-	static QRegularExpression regex("^\\s*([0-9.,]+)\\s*(s|ms|us|ns)?\\s*$"); // Allows the input of whole or decimal numbers with either "." or "," and an optional unit
+	/*
+	 * Regex Breakdown: ^\s*(\d+(?:[.,]\d*)?|[.,]\d+)\s*(s|ms|us|\u00B5s|ns)?\s*$
+	 * ----------------------------------------------------------------------------
+	 * ^\s*				: Start of string, allow optional leading whitespace.
+	 * (                : Start of Group 1 (Value):
+	 * \d+				: Match one or more digits...
+	 * (?:[.,]\d*)?		: ...optionally followed by a decimal separator (. or ,) and zero or more digits.
+	 * |				: OR
+	 * [.,]\d+			: Match a decimal separator followed by at least one digit (e.g., ".5").
+	 * )                : End of Group 1.
+	 * \s*				: Allow optional whitespace between value and unit.
+	 * (s|ms|us|\u00B5s|ns)? : Group 2 (Unit): Optional match of s, ms, us, µs (\u00B5s), or ns.
+	 * \s*$             : Allow optional trailing whitespace and require end of string.
+	 */
+	static QRegularExpression regex("^\\s*(\\d+(?:[.,]\\d*)?|[.,]\\d+)\\s*(s|ms|us|\u00B5s|ns)?\\s*$");
 	QRegularExpressionMatch match = regex.match(input.toLower().trimmed());
 	
 	if (!match.hasMatch()) return result;
 
-	double originalValue = match.captured(1).replace(',', '.').toDouble();
+	// Extract captured groups
+	QString numberPart = match.captured(1).replace(',', '.');
 	QString unit = match.captured(2);
+
+	// Convert number part to double
+	bool ok = false;
+	double originalValue = match.captured(1).replace(',', '.').toDouble(&ok);
+	if (!ok) return result;
+
 	if (unit.isEmpty()) unit = "ns";
+	
+	// Find correct factor based on unit
 	double factor = 1.0;
 	if (unit == "s") factor = 1e9;
 	else if (unit == "ms") factor = 1e6;
-	else if (unit == "us") factor = 1e3;
+	else if (unit == "us" || unit == QString("\u00B5s"))
+	{
+		factor = 1e3;
+		unit = QString("\u00B5s");
+	}
 	else if (unit == "ns") factor = 1.0;
 	else return result; // Indicate invalid unit
 
+	// Convert to nanoseconds and apply rounding
 	long long nsRaw = static_cast<long long>(std::round(originalValue * factor));
+
 	if (nsRaw > maxNs) nsRaw = maxNs; // Exceeds hardware limit
 	if (nsRaw < 0) nsRaw = 0; // Negative value
+
+	// Round to nearest multiple of 32 ns
 	long long nsRounded = ((nsRaw + 16) / 32) * 32;
 	double displayValue = static_cast<double>(nsRounded) / factor;
 	result.ns = nsRounded;
@@ -149,6 +189,10 @@ IoctrlWidget::TimeResult IoctrlWidget::processTimeInput(const QString& input, lo
 	return result;
 }
 
+/**
+* @brief Slot called when the delay line edit editing is finished. Processes the input and updates the delay.
+* @return none
+*/
 void IoctrlWidget::on_lineEditDelay_editingFinished()
 {
 	QString input = ui.lineEditDelay->text();
@@ -160,11 +204,16 @@ void IoctrlWidget::on_lineEditDelay_editingFinished()
 		ui.lineEditDelay->setStyleSheet("");
 		delayChanged(static_cast<int>(tr.ns));
 	} else {
-		ui.lineEditDelay->setStyleSheet("border: 1px solid red;");
+		ui.lineEditDelay->setStyleSheet("border: 1px solid red; border-radius: 4px; background-color: #FFF0F0;");
 	}
 	return;
 }
 
+/**
+* @brief Update the pulse delay in the hardware and save it to QSettings.
+* @param delay The new delay value in nanoseconds.
+* @return none
+*/
 void IoctrlWidget::delayChanged(int delay)
 {
 	mainWindow->lsc.camIOCtrl_setPulseDelay(_drvno, channel, delay);
@@ -174,6 +223,10 @@ void IoctrlWidget::delayChanged(int delay)
 	return;
 }
 
+/**
+* @brief Slot called when the width line edit editing is finished. Processes the input and updates the width.
+* @return none
+*/
 void IoctrlWidget::on_lineEditWidth_editingFinished()
 {
 	QString input = ui.lineEditWidth->text();
@@ -185,11 +238,16 @@ void IoctrlWidget::on_lineEditWidth_editingFinished()
 		ui.lineEditWidth->setStyleSheet("");
 		widthChanged(static_cast<int>(tr.ns));
 	} else {
-		ui.lineEditWidth->setStyleSheet("border: 1px solid red;");
+		ui.lineEditWidth->setStyleSheet("border: 1px solid red; border-radius: 4px; background-color: #FFF0F0;");
 	}
 	return;
 }
 
+/**
+* @brief Update the pulse width in the hardware and save it to QSettings.
+* @param width The new width value in nanoseconds.
+* @return none
+*/
 void IoctrlWidget::widthChanged(int width)
 {
 	mainWindow->lsc.camIOCtrl_setPulseWidth(_drvno, channel, width);
@@ -197,4 +255,12 @@ void IoctrlWidget::widthChanged(int width)
 	settings.setValue(settingIoctrlWidthIn1nsPath, width);
 	settings.endGroup();
 	return;
+}
+
+QString IoctrlWidget::formatNsToHumanReadable(long long ns)
+{
+	if (ns >= 1000000000LL) return QString::number(ns / 1e9, 'g', 6) + " s";
+	else if (ns >= 1000000LL) return QString::number(ns / 1e6, 'g', 6) + " ms";
+	else if (ns >= 1000LL) return QString::number(ns / 1e3, 'g', 6) + " \u00B5s";
+	else return QString::number(ns) + " ns";
 }
