@@ -1407,17 +1407,32 @@ enum pixel_fpga_ver_t
 	/**
 	 * Starting Bit of Major Version Number.
 	 */
-	pixel_fpga_ver_major_bit = 0,
+	pixel_fpga_ver_major_bit = 11,
 
 	/**
 	 * Starting Bit of Minor Version Number.
 	 */
-	pixel_fpga_ver_minor_bit = 8,
+	pixel_fpga_ver_minor_bit = 5,
+
+	/**
+	 * Starting Bit of Patch Version Number.
+	 */
+	pixel_fpga_ver_patch_bit = 0,
 
 	/**
 	 * Used for correcting the pixel to only get the major version of the version number.
 	 */
-	pixel_fpga_ver_major_and_bit = 0x00FF
+	pixel_fpga_ver_major_and_bit = 0x3800,
+
+	/**
+	 * Used for correcting the pixel to only get the minor version of the version number.
+	 */
+	pixel_fpga_ver_minor_and_bit = 0x07E0,
+
+	/**
+	 * Used for correcting the pixel to only get the patch version of the version number.
+	 */
+	pixel_fpga_ver_patch_and_bit = 0x001F,
 };
 
 enum autotune_channel_ranges_hsvis_t

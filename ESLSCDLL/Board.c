@@ -4804,9 +4804,11 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 	else
 		sp->cameraSystem3030 = 0;
 	//fpga ver
-	sp->fpgaVerMinor = data[pixel_fpga_ver] >> pixel_fpga_ver_minor_bit;
 
-	sp->fpgaVerMajor = data[pixel_fpga_ver] & pixel_fpga_ver_major_and_bit;
+	sp->fpgaVerMajor = (data[pixel_fpga_ver] & pixel_fpga_ver_major_and_bit) >> pixel_fpga_ver_major_bit;
+	sp->fpgaVerMinor = (data[pixel_fpga_ver] & pixel_fpga_ver_minor_and_bit) >> pixel_fpga_ver_minor_bit;
+	sp->fpgaVerPatch = data[pixel_fpga_ver] & pixel_fpga_ver_patch_and_bit;
+
 	free(data);
 	return status;
 }
