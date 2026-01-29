@@ -169,15 +169,30 @@ unsigned __stdcall StartMeasurementThread(void* param)
 
 #endif
 
+#ifdef LINUX
+void *call_start_measurement(void *) {
+  // needed because SM has not the signature expected by pthread_create
+  StartMeasurement();
+  return NULL;
+}
+
+#endif
+
+
 /**
  * @brief This function is starting the measurement and returns immediately.
  *
  * StartMeasurement is run a new thread. When there are multiple boards, all boards are starting the measurement. You can check the status of the measurement with @ref DLLGetMeasureOn and @ref DLLGetBlockOn or create a blocking call with @ref DLLWaitForMeasureDone and @ref DLLWaitForBlockDone.
  */
+
 DllAccess void DLLStartMeasurement_nonblocking()
 {
 #ifdef WIN32
 	_beginthread(&StartMeasurementThread, 0, NULL);
+#endif
+#ifdef LINUX
+        pthread_t thread;
+	pthread_create(&thread, NULL, call_start_measurement, NULL);
 #endif
 	return;
 }
