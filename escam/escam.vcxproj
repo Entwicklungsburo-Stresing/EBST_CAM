@@ -341,9 +341,11 @@ del $(ProjectDir).qmake.stash
     <QtUic Include="pulsegeneratorwidget.ui" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="escam.pro" />
     <None Include="LICENSE" />
     <None Include="LscUI.qml" />
     <None Include="LscUIForm.ui.qml" />
+    <None Include="Makefile" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\shared_src\CCD.ico" />

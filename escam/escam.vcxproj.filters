@@ -275,6 +275,8 @@
       <Filter>Distribution Files</Filter>
     </None>
     <None Include="LICENSE" />
+    <None Include="Makefile" />
+    <None Include="escam.pro" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\shared_src\CCD.ico" />
