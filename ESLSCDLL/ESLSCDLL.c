@@ -169,6 +169,19 @@ unsigned __stdcall StartMeasurementThread(void* param)
 
 #endif
 
+#ifdef __linux__
+
+/**
+ * @brief Internal use only.
+ */
+void* call_start_measurement(void*)
+{
+	// needed because SM has not the signature expected by pthread_create
+	StartMeasurement();
+	return NULL;
+}
+#endif
+
 /**
  * @brief This function is starting the measurement and returns immediately.
  *
@@ -179,7 +192,11 @@ DllAccess void DLLStartMeasurement_nonblocking()
 #ifdef WIN32
 	_beginthread(&StartMeasurementThread, 0, NULL);
 #endif
-	return;
+#ifdef __linux__
+	pthread_t thread;
+	pthread_create(&thread, NULL, call_start_measurement, NULL);
+#endif 
+return;
 }
 
 /**
