@@ -94,5 +94,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="LICENSE" />
+    <None Include="Makefile" />
   </ItemGroup>
 </Project>

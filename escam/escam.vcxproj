@@ -20,7 +20,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <OutputDirectory>build\</OutputDirectory>
     <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
     <CharacterSet>NotSet</CharacterSet>
@@ -29,7 +29,7 @@
     <PrimaryOutput>lsc-gui</PrimaryOutput>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <OutputDirectory>build\</OutputDirectory>
     <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
     <CharacterSet>NotSet</CharacterSet>
@@ -241,6 +241,7 @@ del $(ProjectDir).qmake.stash
     <ClCompile Include="dialoggreyscalesettings.cpp" />
     <ClCompile Include="dialogioctrl.cpp" />
     <ClCompile Include="dialogioctrl_legacy.cpp" />
+    <ClCompile Include="dialogpulsegenerator.cpp" />
     <ClCompile Include="dialogreferencemeasurement.cpp" />
     <ClCompile Include="dialogrms.cpp" />
     <ClCompile Include="dialogservo.cpp" />
@@ -256,11 +257,15 @@ del $(ProjectDir).qmake.stash
     <ClCompile Include="lsc.cpp" />
     <ClCompile Include="mainwindow.cpp" />
     <ClCompile Include="myqspinbox.cpp" />
+    <ClCompile Include="numericconverterwidget.cpp" />
+    <ClCompile Include="pulsegeneratorwidget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared_src\default_settings.h" />
     <ClInclude Include="..\shared_src\enum_hardware.h" />
     <ClInclude Include="..\shared_src\enum_settings.h" />
+    <QtMoc Include="numericconverterwidget.h" />
+    <QtMoc Include="pulsegeneratorwidget.h" />
     <QtMoc Include="myqchartview.h" />
     <ClInclude Include="..\version.h" />
     <QtMoc Include="dialogrms.h" />
@@ -279,6 +284,7 @@ del $(ProjectDir).qmake.stash
     <QtMoc Include="dialogioctrl_legacy.h" />
     <QtMoc Include="ioctrlwidget.h" />
     <QtMoc Include="dialogreferencemeasurement.h" />
+    <QtMoc Include="dialogpulsegenerator.h" />
     <ClInclude Include="lsc-gui.h" />
     <ClInclude Include="hooks.h" />
     <QtMoc Include="dialogsettings.h">
@@ -319,6 +325,7 @@ del $(ProjectDir).qmake.stash
     <QtUic Include="dialoggreyscalesettings.ui" />
     <QtUic Include="dialogioctrl.ui" />
     <QtUic Include="dialogioctrl_legacy.ui" />
+    <QtUic Include="dialogpulsegenerator.ui" />
     <QtUic Include="dialogreferencemeasurement.ui" />
     <QtUic Include="dialogrms.ui" />
     <QtUic Include="dialogservo.ui" />
@@ -330,11 +337,15 @@ del $(ProjectDir).qmake.stash
     <QtUic Include="ioctrlwidget.ui" />
     <QtUic Include="mainwindow.ui">
     </QtUic>
+    <QtUic Include="numericconverterwidget.ui" />
+    <QtUic Include="pulsegeneratorwidget.ui" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="escam.pro" />
     <None Include="LICENSE" />
     <None Include="LscUI.qml" />
     <None Include="LscUIForm.ui.qml" />
+    <None Include="Makefile" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\shared_src\CCD.ico" />

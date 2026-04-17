@@ -115,3 +115,7 @@
 #define settingTriggerSourceDefault					trigger_source_xck
 #define settingIoctrlSequenceDefault				"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
 #define settingIoctrlSequenceLengthDefault			128
+#define settingPulseGeneratorDelayIn1nsDefault		0
+#define settingPulseGeneratorWidthIn1nsDefault		3200
+#define settingPulseGeneratorSequenceDefault		"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+#define settingPulseGeneratorSequenceLengthDefault	128

@@ -1213,6 +1213,7 @@
     <addaction name="actionspecial_pixels"/>
     <addaction name="actionTrigger_info"/>
     <addaction name="actionFanControl"/>
+    <addaction name="actionPulse_Generator"/>
    </widget>
    <widget class="QMenu" name="menuGreyscale_Viewer">
     <property name="title">
@@ -1415,6 +1416,11 @@
   <action name="actionReferenceMeasurement">
    <property name="text">
     <string>Reference Measurement</string>
+   </property>
+  </action>
+  <action name="actionPulse_Generator">
+   <property name="text">
+    <string>Pulse Generator</string>
    </property>
   </action>
  </widget>

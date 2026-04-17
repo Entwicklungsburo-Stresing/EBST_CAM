@@ -44,6 +44,7 @@ SOURCES += \
     dialogioctrl.cpp \
     dialogioctrl_legacy.cpp \
     ioctrlwidget.cpp \
+    dialogpulsegenerator.cpp \
     dialogrms.cpp \
     dialogsettings.cpp \
     dialogspecialpixels.cpp \
@@ -57,6 +58,8 @@ SOURCES += \
     mainwindow.cpp \
     myqchartview.cpp \
     myqspinbox.cpp \
+    numericconverterwidget.cpp \
+    pulsegeneratorwidget.cpp \
     ../shared_src/es_status_codes.c \
     hooks.cpp
 win32 {
@@ -75,6 +78,7 @@ FORMS += \
     dialogioctrl.ui \
     dialogioctrl_legacy.ui \
     ioctrlwidget.ui \
+    dialogpulsegenerator.ui \
     dialogrms.ui \
     dialogsettings.ui \
     dialogspecialpixels.ui \
@@ -83,6 +87,8 @@ FORMS += \
     dialogservo.ui \
     dialogfancontrol.ui \
     dialogreferencemeasurement.ui \
+    numericconverterwidget.ui \
+    pulsegeneratorwidget.ui \
     mainwindow.ui
 win32 {
     FORMS += \
@@ -98,6 +104,7 @@ HEADERS += \
     dialogioctrl.h \
     dialogioctrl_legacy.h \
     ioctrlwidget.h \
+    dialogpulsegenerator.h \
     dialogrms.h \
     dialogsettings.h \
     dialogspecialpixels.h \
@@ -111,6 +118,8 @@ HEADERS += \
     mainwindow.h \
     myqchartview.h \
     myqspinbox.h \
+    numericconverterwidget.h \
+    pulsegeneratorwidget.h \
     ../shared_src/es_status_codes.h \
     ../shared_src/enum_hardware.h \
     ../shared_src/enum_settings.h \

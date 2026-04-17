@@ -88,4 +88,5 @@ private slots:
 	void closeAllShutters();
 	void on_actionFanControl_triggered();
 	void on_actionReferenceMeasurement_triggered();
+	void on_actionPulse_Generator_triggered();
 };
