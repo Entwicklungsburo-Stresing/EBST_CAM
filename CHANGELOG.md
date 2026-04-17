@@ -3,8 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
-This project doesn't use strictly [Semantic Versioning](https://semver.org/spec/v2.0.0.html) yet. Instead the version scheme is as follows: major version . hardware version number . minor version.
-The hardware version number is the current version at release time.
+This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html) since version 4.21.0. Before the version scheme was as the following: major version . hardware version number . minor version.
+The hardware version number was the current hardware version of the PCIe card at release time.
 
 ## Unreleased
 ### API Changes
@@ -19,6 +19,21 @@ The hardware version number is the current version at release time.
 #### Removed
 #### Fixed
 #### Deprecated
+
+## 4.21.0 - 2026-04-17
+Version 4.21.0 introduces [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+### API Changes
+#### Fixed
+* Implement DllStartMeasurement_nonblocking for Linux
+### Other Changes
+#### Added
+* Add pulse generator dialog in Escam
+#### Changed
+* Change the parsing of the version pixel to the new format
+* Retarget VS projects to v145
+* Update Qt to 6.11.0
+#### Fixed
+* Fix `linux-driver\kernelspace\registers-common.h` for newer Linux kernel versions
 
 ## 4.20.1 - 2025-12-15
 ### API Changes
