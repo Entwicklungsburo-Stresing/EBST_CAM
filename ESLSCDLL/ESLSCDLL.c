@@ -187,6 +187,7 @@ void* call_start_measurement(void*)
  *
  * StartMeasurement is run a new thread. When there are multiple boards, all boards are starting the measurement. You can check the status of the measurement with @ref DLLGetMeasureOn and @ref DLLGetBlockOn or create a blocking call with @ref DLLWaitForMeasureDone and @ref DLLWaitForBlockDone.
  */
+
 DllAccess void DLLStartMeasurement_nonblocking()
 {
 #ifdef WIN32

@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -shared -fPIC  -g
+CFLAGS = -Wall -shared -fPIC -DLINUX -g
 LDFLAGS = -L/usr/lib/x86_64-linux-gnu/hdf5/serial
 OBJECTS   = es_status_codes.o \
 			Board.o \
