@@ -261,12 +261,12 @@ struct dma_reg_struct {
 };
 
 struct control_struct {
-	uconst uint32_t number_of_pixels;
-	uconst uint32_t number_of_cameras;
-	uconst uint32_t dma_num_scans;
-	uconst uint32_t dma_buf_size;
-	uconst uint64_t dma_physical_start;
-	uconst uint32_t io_size;
+	uint32_t number_of_pixels;
+	uint32_t number_of_cameras;
+	uint32_t dma_num_scans;
+	uint32_t dma_buf_size;
+	uint64_t dma_physical_start;
+	uint32_t io_size;
 	uint32_t bytes_per_interrupt;
 	uint32_t used_dma_size;
 	volatile int32_t write_pos;
