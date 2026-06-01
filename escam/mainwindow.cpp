@@ -86,8 +86,6 @@ MainWindow::MainWindow(QWidget* parent)
 #ifndef _DEBUG
 	ui->actionVerify_data_file->setVisible(false);
 	ui->actionVerify_data_file->setEnabled(false);
-	ui->actionServo->setVisible(false);
-	ui->actionServo->setEnabled(false);
 #endif
 
 	// Close Shutters on initialization
