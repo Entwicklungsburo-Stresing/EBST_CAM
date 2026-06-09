@@ -4809,6 +4809,9 @@ es_status_codes GetAllSpecialPixelInformation(uint32_t drvno, uint32_t sample, u
 	sp->fpgaVerMinor = (data[pixel_fpga_ver] & pixel_fpga_ver_minor_and_bit) >> pixel_fpga_ver_minor_bit;
 	sp->fpgaVerPatch = data[pixel_fpga_ver] & pixel_fpga_ver_patch_and_bit;
 
+	sp->fpgaVerMinorLegacy = data[pixel_fpga_ver] >> pixel_fpga_ver_legacy_minor_bit;
+	sp->fpgaVerMajorLegacy = data[pixel_fpga_ver] & pixel_fpga_ver_legacy_major_and_bit;
+
 	free(data);
 	return status;
 }

@@ -512,6 +512,8 @@ struct special_pixels
 	uint32_t fpgaVerMajor;
 	uint32_t fpgaVerMinor;
 	uint32_t fpgaVerPatch;
+	uint32_t fpgaVerMajorLegacy;
+	uint32_t fpgaVerMinorLegacy;
 };
 
 struct verify_data_parameter
