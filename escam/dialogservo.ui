@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>286</width>
-    <height>286</height>
+    <width>490</width>
+    <height>385</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,70 +28,26 @@
     </spacer>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout" columnstretch="1,0,100,1">
-     <item row="1" column="1">
-      <widget class="QLabel" name="labelDec">
-       <property name="text">
-        <string>Dec</string>
-       </property>
-       <property name="buddy">
-        <cstring>lineEditDec</cstring>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="1">
-      <widget class="QLabel" name="labelPo2">
+    <layout class="QGridLayout" name="gridLayout" columnstretch="1,0,0,0">
+     <item row="8" column="1">
+      <widget class="QLabel" name="labelPos2">
        <property name="text">
         <string>Servo position 2</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="2">
-      <widget class="QLineEdit" name="lineEditHex">
-       <property name="maximumSize">
-        <size>
-         <width>450</width>
-         <height>16777215</height>
-        </size>
-       </property>
+     <item row="4" column="1">
+      <widget class="QLabel" name="labelBin">
        <property name="text">
-        <string>0</string>
+        <string>Bin</string>
        </property>
-       <property name="maxLength">
-        <number>39</number>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       <property name="buddy">
+        <cstring>lineEditBin</cstring>
        </property>
       </widget>
      </item>
-     <item row="3" column="2">
-      <widget class="QLineEdit" name="lineEditBin">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>450</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>0000000000000000000000000000000000000000000000000000000000000000</string>
-       </property>
-       <property name="maxLength">
-        <number>128</number>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="2">
-      <widget class="QComboBox" name="comboBox">
+     <item row="6" column="2">
+      <widget class="QComboBox" name="comboBoxTriggerSource">
        <item>
         <property name="text">
          <string>manual</string>
@@ -169,79 +125,22 @@
        </item>
       </widget>
      </item>
-     <item row="6" column="1">
+     <item row="10" column="1">
+      <widget class="QLabel" name="labelManualTrig">
+       <property name="text">
+        <string>manual trigger</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
       <widget class="QLabel" name="labelPos1">
        <property name="text">
         <string>Servo position 1</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="2">
-      <widget class="QSpinBox" name="spinBoxSeqLength">
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>128</number>
-       </property>
-       <property name="value">
-        <number>128</number>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLabel" name="labelSeqLength">
-       <property name="text">
-        <string>Sequence length</string>
-       </property>
-       <property name="buddy">
-        <cstring>spinBoxSeqLength</cstring>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QLabel" name="labelTrigSource">
-       <property name="text">
-        <string>Trigger source</string>
-       </property>
-       <property name="buddy">
-        <cstring>comboBox</cstring>
-       </property>
-      </widget>
-     </item>
      <item row="8" column="2">
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QRadioButton" name="radioButton">
-         <property name="text">
-          <string>position 1</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radioButton_2">
-         <property name="text">
-          <string>position 2</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="8" column="1">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Manual position</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="2">
-      <widget class="QSpinBox" name="spinBoxPos1">
+      <widget class="QSpinBox" name="spinBoxPos2">
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
@@ -251,6 +150,86 @@
       </widget>
      </item>
      <item row="1" column="2">
+      <widget class="QSpinBox" name="spinBoxBoard">
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="2">
+      <widget class="QSpinBox" name="spinBoxPos1">
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="maximum">
+        <number>65535</number>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>0</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="3" column="2">
+      <widget class="QLineEdit" name="lineEditHex">
+       <property name="maximumSize">
+        <size>
+         <width>450</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="maxLength">
+        <number>39</number>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1" colspan="2">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QRadioButton" name="radioButtonTrigSeq">
+         <property name="text">
+          <string>trigger sequence</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButtonCalibratePos1">
+         <property name="text">
+          <string>calibrate position 1</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButtonCalibratePos2">
+         <property name="text">
+          <string>calibaret position 2</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="2">
       <widget class="QLineEdit" name="lineEditDec">
        <property name="maximumSize">
         <size>
@@ -269,20 +248,42 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
+     <item row="4" column="2">
+      <widget class="QLineEdit" name="lineEditBin">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="sizeHint" stdset="0">
+       <property name="maximumSize">
         <size>
-         <width>0</width>
-         <height>20</height>
+         <width>450</width>
+         <height>16777215</height>
         </size>
        </property>
-      </spacer>
+       <property name="text">
+        <string>0000000000000000000000000000000000000000000000000000000000000000</string>
+       </property>
+       <property name="maxLength">
+        <number>128</number>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
      </item>
-     <item row="2" column="1">
+     <item row="6" column="1">
+      <widget class="QLabel" name="labelTrigSource">
+       <property name="text">
+        <string>Trigger source</string>
+       </property>
+       <property name="buddy">
+        <cstring>comboBoxTriggerSource</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
       <widget class="QLabel" name="labelHex">
        <property name="text">
         <string>Hex</string>
@@ -292,27 +293,7 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="QLabel" name="labelBin">
-       <property name="text">
-        <string>Bin</string>
-       </property>
-       <property name="buddy">
-        <cstring>lineEditBin</cstring>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="2">
-      <widget class="QSpinBox" name="spinBoxPos2">
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
+     <item row="2" column="3">
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Orientation::Horizontal</enum>
@@ -324,6 +305,71 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLabel" name="labelSeqLength">
+       <property name="text">
+        <string>Sequence length</string>
+       </property>
+       <property name="buddy">
+        <cstring>spinBoxSeqLength</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="labelBoard">
+       <property name="text">
+        <string>board</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="labelDec">
+       <property name="text">
+        <string>Dec</string>
+       </property>
+       <property name="buddy">
+        <cstring>lineEditDec</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="2">
+      <widget class="QSpinBox" name="spinBoxSeqLength">
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>128</number>
+       </property>
+       <property name="value">
+        <number>128</number>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="2">
+      <widget class="QPushButton" name="pushButtonManualTrig">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string>Trigger</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -341,14 +387,22 @@
     </spacer>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="standardButtons">
-      <set>QDialogButtonBox::StandardButton::Close</set>
-     </property>
-     <property name="centerButtons">
-      <bool>false</bool>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QPushButton" name="pushButtonDefault">
+       <property name="text">
+        <string>Default</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="standardButtons">
+        <set>QDialogButtonBox::StandardButton::Close</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
@@ -362,12 +416,12 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>503</x>
-     <y>295</y>
+     <x>729</x>
+     <y>739</y>
     </hint>
     <hint type="destinationlabel">
-     <x>442</x>
-     <y>330</y>
+     <x>643</x>
+     <y>650</y>
     </hint>
    </hints>
   </connection>

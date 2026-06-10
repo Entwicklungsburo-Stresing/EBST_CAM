@@ -9,6 +9,8 @@
 #pragma once
 
 #include <QDialog>
+#include "lsc-gui.h"
+#include "lsc.h"
 #include "ui_dialogservo.h"
 
 namespace Ui {
@@ -24,13 +26,24 @@ public:
 	~DialogServo();
 
 private slots:
+    void on_spinBoxBoard_valueChanged();
 	void on_spinBoxSeqLength_valueChanged(int val);
 	void on_lineEditDec_textChanged();
 	void on_lineEditHex_textChanged();
 	void on_lineEditBin_textChanged();
 	void on_lineEditBin_editingFinished();
+    void on_spinBoxPos1_valueChanged();
+    void on_spinBoxPos2_valueChanged();
+    void on_comboBoxTriggerSource_currentIndexChanged();
+    void on_pushButtonManualTrig_clicked();
+    void on_radioButtonCalibratePos1_toggled();
+    void on_radioButtonCalibratePos2_toggled();
+    void on_radioButtonTrigSeq_toggled();
+    void on_pushButtonDefault_clicked();
 private:
 	Ui::dialogservoClass* ui;
+    QSettings settings;
+    void loadSettings();
 	QString convertDecimalToBinary(QString decimalString);
 	QString convertHexToBinary(QString hexString);
 	QString convertBinaryToDecimal(QString binaryString);
