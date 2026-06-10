@@ -152,6 +152,14 @@ constexpr auto settingPulseGeneratorDelayIn1nsPath = "pulse_generator_delay_in_1
 constexpr auto settingPulseGeneratorWidthIn1nsPath = "pulse_generator_width_in_1ns";
 constexpr auto settingPulseGeneratorSequencePath = "pulse_generator_sequence";
 constexpr auto settingPulseGeneratorSequenceLengthPath = "pulse_generator_sequence_length";
+// Servo
+constexpr auto settingServoSequenceLengthPath = "servoSequenceLength";
+constexpr auto settingServoDecPath = "servoDec";
+constexpr auto settingServoHexPath = "servoHex";
+constexpr auto settingServoBinPath = "servoBin";
+constexpr auto settingServoTriggerSourcePath = "servoTriggerSource";
+constexpr auto settingServoPos1Path = "servoPos1";
+constexpr auto settingServoPos2Path = "servoPos2";
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DialogSettings; }

@@ -119,3 +119,10 @@
 #define settingPulseGeneratorWidthIn1nsDefault		3200
 #define settingPulseGeneratorSequenceDefault		"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
 #define settingPulseGeneratorSequenceLengthDefault	128
+#define settingServoSequenceLengthDefault			128
+#define settingServoDecDefault                      "0"
+#define settingServoHexDefault                      "0"
+#define settingServoBinDefault                      "0"
+#define settingServoTriggerSourceDefault            trigger_source_xck
+#define settingServoPos1Default                     0
+#define settingServoPos2Default                     0 
