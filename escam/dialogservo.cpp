@@ -47,13 +47,6 @@ void DialogServo::on_spinBoxBoard_valueChanged()
 
 void DialogServo::loadSettings()
 {
-	ui->lineEditBin->blockSignals(true);
-	ui->lineEditDec->blockSignals(true);
-	ui->lineEditHex->blockSignals(true);
-	ui->spinBoxSeqLength->blockSignals(true);
-	ui->spinBoxPos1->blockSignals(true);
-	ui->spinBoxPos2->blockSignals(true);
-
 	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
 	ui->spinBoxSeqLength->setValue(settings.value(settingServoSequenceLengthPath, settingServoSequenceLengthDefault).toInt());
 	ui->lineEditBin->setText(settings.value(settingServoBinPath, settingServoBinDefault).toString());
@@ -62,26 +55,13 @@ void DialogServo::loadSettings()
 	ui->comboBoxTriggerSource->setCurrentIndex(settings.value(settingServoTriggerSourcePath, settingServoTriggerSourceDefault).toInt());
 	ui->spinBoxPos1->setValue(settings.value(settingServoPos1Path, settingServoPos1Default).toInt());
 	ui->spinBoxPos2->setValue(settings.value(settingServoPos2Path, settingServoPos2Default).toInt());
+	ui->spinBoxStepPeriod->setValue(settings.value(settingServoStpPeriodPath, settingServoStpPeriodDefault).toInt());
 	settings.endGroup();
-
-	ui->lineEditBin->blockSignals(false);
-	ui->lineEditDec->blockSignals(false);
-	ui->lineEditHex->blockSignals(false);
-	ui->spinBoxSeqLength->blockSignals(false);
-	ui->spinBoxPos1->blockSignals(false);
-	ui->spinBoxPos2->blockSignals(false);
-
 	return;
 }
 
-void DialogServo::on_pushButtonDefault_clicked() {
-	ui->lineEditBin->blockSignals(true);
-	ui->lineEditDec->blockSignals(true);
-	ui->lineEditHex->blockSignals(true);
-	ui->spinBoxSeqLength->blockSignals(true);
-	ui->spinBoxPos1->blockSignals(true);
-	ui->spinBoxPos2->blockSignals(true);
-
+void DialogServo::on_pushButtonDefault_clicked()
+{
 	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
 	ui->spinBoxSeqLength->setValue(settingServoSequenceLengthDefault);
 	ui->lineEditBin->setText(settingServoBinDefault);
@@ -91,14 +71,6 @@ void DialogServo::on_pushButtonDefault_clicked() {
 	ui->spinBoxPos1->setValue(settingServoPos1Default);
 	ui->spinBoxPos2->setValue(settingServoPos2Default);
 	settings.endGroup();
-
-	ui->lineEditBin->blockSignals(false);
-	ui->lineEditDec->blockSignals(false);
-	ui->lineEditHex->blockSignals(false);
-	ui->spinBoxSeqLength->blockSignals(false);
-	ui->spinBoxPos1->blockSignals(false);
-	ui->spinBoxPos2->blockSignals(false);
-
 	return;
 }
 
@@ -431,5 +403,14 @@ void DialogServo::on_radioButtonCalibratePos2_toggled()
 
 void DialogServo::on_radioButtonTrigSeq_toggled()
 {
+	return;
+}
+
+void DialogServo::on_spinBoxStepPeriod_valueChanged(int value)
+{
+	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
+	settings.setValue(settingServoStpPeriodPath, value);
+	settings.endGroup();
+	mainWindow->lsc.camSetGalvoStpPeriod(ui->spinBoxBoard->value(), 0, value);
 	return;
 }

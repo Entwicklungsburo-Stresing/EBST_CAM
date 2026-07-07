@@ -22,7 +22,7 @@ The hardware version number was the current hardware version of the PCIe card at
 #### Deprecated
 ### Other Changes
 #### Added
-* Connect BinSeq, BinSeqLen and State1, State2 to the Servo window.
+* Connect BinSeq, BinSeqLen, State1, State2, step period to the Servo window.
 * Add all galvo addresses to enum_hardware.h.
 #### Changed
 #### Removed

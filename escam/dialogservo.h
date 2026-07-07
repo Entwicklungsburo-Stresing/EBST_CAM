@@ -40,6 +40,7 @@ private slots:
 	void on_radioButtonCalibratePos2_toggled();
 	void on_radioButtonTrigSeq_toggled();
 	void on_pushButtonDefault_clicked();
+	void on_spinBoxStepPeriod_valueChanged(int value);
 private:
 	Ui::dialogservoClass* ui;
 	QSettings settings;

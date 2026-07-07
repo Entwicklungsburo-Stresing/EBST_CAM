@@ -160,6 +160,7 @@ constexpr auto settingServoBinPath = "servoBin";
 constexpr auto settingServoTriggerSourcePath = "servoTriggerSource";
 constexpr auto settingServoPos1Path = "servoPos1";
 constexpr auto settingServoPos2Path = "servoPos2";
+constexpr auto settingServoStpPeriodPath = "servoStpPeriod";
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DialogSettings; }
