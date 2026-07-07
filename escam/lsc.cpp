@@ -701,3 +701,100 @@ es_status_codes Lsc::triggerStateControlManually(uint32_t drvno)
 {
 	return DLLTriggerStateControlManually(drvno);
 }
+
+/**
+ * @copydoc DLLCam_SetGalvoBinSeq
+ */
+es_status_codes Lsc::camSetGalvoBinSeq(uint32_t drvno, uint8_t channel, uint16_t* sequence)
+{
+	return DLLCam_SetGalvoBinSeq(drvno, channel, sequence);
+}
+
+/**
+ * @brief Convert the sequence to an uint16_t array and pass it to the library 
+ * 
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] channel galvo channel number (0 or 1)
+ * @param[in] sequence Sequence in QString format
+ * @return @ref es_status_codes
+ */
+es_status_codes Lsc::camSetGalvoBinSeq(uint32_t drvno, uint8_t channel, QString sequence)
+{
+	// Convert the sequence (binary string) to an uint16_t[8] array and pass it to the C API
+	QString seq = sequence.trimmed();
+	if (seq.isEmpty()) {
+		return es_parameter_out_of_range;
+	}
+
+	// Ensure the sequence has exactly 128 bits (8 * 16). If longer, take the rightmost 128 bits (LSB).
+	// If shorter, left-pad with zeros.
+	const int totalBits = 8 * 16;
+	if (seq.length() > totalBits) {
+		seq = seq.right(totalBits);
+	}
+	else if (seq.length() < totalBits) {
+		seq = QString(totalBits - seq.length(), '0') + seq;
+	}
+
+	uint16_t seqArr[8] = { 0 };
+	for (int i = 0; i < 8; ++i) {
+		QString chunk = seq.mid(i * 16, 16);
+		bool ok = false;
+		uint32_t val = chunk.toUInt(&ok, 2);
+		if (!ok) {
+			return es_parameter_out_of_range;
+		}
+		seqArr[i] = static_cast<uint16_t>(val & 0xFFFFu);
+	}
+
+	return camSetGalvoBinSeq(drvno, channel, seqArr);
+}
+
+/**
+ * @copydoc DLLCam_SetGalvoBinSeqLen
+ */
+es_status_codes Lsc::camSetGalvoBinSeqLen(uint32_t drvno, uint8_t channel, uint16_t seq_len)
+{
+	return DLLCam_SetGalvoBinSeqLen(drvno, channel, seq_len);
+}
+
+/**
+ * @copydoc DLLCam_SetGalvoSeqDelay
+ */
+es_status_codes Lsc::camSetGalvoSeqDelay(uint32_t drvno, uint8_t channel, uint16_t delay)
+{
+	return DLLCam_SetGalvoSeqDelay(drvno, channel, delay);
+}
+
+/**
+ * @copydoc DLLCam_SetGalvoStpPeriod
+ */
+es_status_codes Lsc::camSetGalvoStpPeriod(uint32_t drvno, uint8_t channel, uint16_t period)
+{
+	return DLLCam_SetGalvoStpPeriod(drvno, channel, period);
+}
+
+/**
+ * @copydoc DLLCam_SetGalvoSeqOffset
+ */
+es_status_codes Lsc::camSetGalvoSeqOffset(uint32_t drvno, uint8_t channel, uint16_t offset)
+{
+	return DLLCam_SetGalvoSeqOffset(drvno, channel, offset);
+}
+
+/**
+ * @copydoc DLLCam_SetGalvoRestState1
+ */
+es_status_codes Lsc::camSetGalvoRestState1(uint32_t drvno, uint8_t channel, uint16_t rest_state)
+{
+	return DLLCam_SetGalvoRestState1(drvno, channel, rest_state);
+}
+
+/**
+ * @copydoc DLLCam_SetGalvoRestState2
+ */
+es_status_codes Lsc::camSetGalvoRestState2(uint32_t drvno, uint8_t channel, uint16_t rest_state)
+{
+	return DLLCam_SetGalvoRestState2(drvno, channel, rest_state);
+}
+

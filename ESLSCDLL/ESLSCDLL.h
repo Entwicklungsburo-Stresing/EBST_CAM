@@ -204,6 +204,13 @@ DllAccess es_status_codes DLLCamIOCtrl_setPulseDelay(uint32_t drvno, uint8_t cha
 DllAccess es_status_codes DLLCamIOCtrl_setPulseWidth(uint32_t drvno, uint8_t channel, uint32_t pulse_width_in_1ns);
 DllAccess es_status_codes DLLSetStateControlRegister(uint32_t drvno, uint16_t state);
 DllAccess es_status_codes DLLTriggerStateControlManually(uint32_t drvno);
+DllAccess es_status_codes DLLCam_SetGalvoBinSeq(uint32_t drvno, uint8_t channel, uint16_t* sequence);
+DllAccess es_status_codes DLLCam_SetGalvoSeqDelay(uint32_t drvno, uint8_t channel, uint16_t delay);
+DllAccess es_status_codes DLLCam_SetGalvoStpPeriod(uint32_t drvno, uint8_t channel, uint16_t period);
+DllAccess es_status_codes DLLCam_SetGalvoSeqOffset(uint32_t drvno, uint8_t channel, uint16_t offset);
+DllAccess es_status_codes DLLCam_SetGalvoRestState1(uint32_t drvno, uint8_t channel, uint16_t rest_state);
+DllAccess es_status_codes DLLCam_SetGalvoRestState2(uint32_t drvno, uint8_t channel, uint16_t rest_state);
+DllAccess es_status_codes DLLCam_SetGalvoBinSeqLen(uint32_t drvno, uint8_t channel, uint16_t seq_len);
 //************ read and write functions
 DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address);
 DllAccess es_status_codes DLLreadRegisterS0_8_multipleBoards(uint8_t* data0, uint8_t* data1, uint8_t* data2, uint8_t* data3, uint8_t* data4, uint32_t address);

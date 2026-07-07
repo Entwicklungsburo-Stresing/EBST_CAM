@@ -3,11 +3,18 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
-This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html) since version 4.21.0. Before the version scheme was as the following: major version . hardware version number . minor version.
+This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html) since version 4.21.0 and [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/). Before the version scheme was as the following: major version . hardware version number . minor version.
 The hardware version number was the current hardware version of the PCIe card at release time.
 
 ## Unreleased
 ### API Changes
+* Add function DLLCam_SetGalvoBinSeq
+* Add function DLLCam_SetGalvoSeqDelay
+* Add function DLLCam_SetGalvoStpPeriod
+* Add function DLLCam_SetGalvoSeqOffset
+* Add function DLLCam_SetGalvoRestState1
+* Add function DLLCam_SetGalvoRestState2
+* Add function DLLCam_SetGalvoBinSeqLen
 #### Added
 #### Changed
 #### Removed
@@ -15,6 +22,8 @@ The hardware version number was the current hardware version of the PCIe card at
 #### Deprecated
 ### Other Changes
 #### Added
+* Connect BinSeq, BinSeqLen and State1, State2 to the Servo window.
+* Add all galvo addresses to enum_hardware.h.
 #### Changed
 #### Removed
 #### Fixed

@@ -54,3 +54,10 @@ es_status_codes CamIOCtrl_setSequence(uint32_t drvno, uint8_t channel, uint16_t*
 es_status_codes CamIOCtrl_setPulseDelay(uint32_t drvno, uint8_t channel, uint32_t pulse_delay_in_1ns);
 es_status_codes CamIOCtrl_setPulseWidth(uint32_t drvno, uint8_t channel, uint32_t pulse_width_in_1ns);
 es_status_codes Cam_DAC8568_sendData(uint32_t drvno, uint32_t data, uint8_t cameraPosition);
+es_status_codes Cam_SetGalvoBinSeq(uint32_t drvno, uint8_t channel, uint16_t* sequence);
+es_status_codes Cam_SetGalvoSeqDelay(uint32_t drvno, uint8_t channel, uint16_t delay);
+es_status_codes Cam_SetGalvoStpPeriod(uint32_t drvno, uint8_t channel, uint16_t period);
+es_status_codes Cam_SetGalvoSeqOffset(uint32_t drvno, uint8_t channel, uint16_t offset);
+es_status_codes Cam_SetGalvoRestState1(uint32_t drvno, uint8_t channel, uint16_t rest_state);
+es_status_codes Cam_SetGalvoRestState2(uint32_t drvno, uint8_t channel, uint16_t rest_state);
+es_status_codes Cam_SetGalvoBinSeqLen(uint32_t drvno, uint8_t channel, uint16_t seq_len);

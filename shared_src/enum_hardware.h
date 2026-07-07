@@ -1262,6 +1262,70 @@ enum dac_register_addresses_t
 {
 	dac_hi_byte_addr = 0x01,
 	dac_lo_byte_addr = 0x02,
+	/**
+	 * sequence length
+	 */
+	dac_galvo_ch1_binSeq_len = 0x50,
+	dac_galvo_ch1_binSeq_seg1 = 0x51,
+	dac_galvo_ch1_binSeq_seg2 = 0x52,
+	dac_galvo_ch1_binSeq_seg3 = 0x53,
+	dac_galvo_ch1_binSeq_seg4 = 0x54,
+	dac_galvo_ch1_binSeq_seg5 = 0x55,
+	dac_galvo_ch1_binSeq_seg6 = 0x56,
+	dac_galvo_ch1_binSeq_seg7 = 0x57,
+	dac_galvo_ch1_binSeq_seg8 = 0x58,
+	/**
+	 * GCS trigger delay
+	 */
+	dac_galvo_ch1_seq_delay = 0x59,
+	/**
+	 * Time between single DAC step
+	 */
+	dac_galvo_ch1_stp_period = 0x5A,
+	/**
+	 * Binary sequence start offset
+	 */
+	dac_galvo_ch1_seq_offset = 0x5B,
+	/**
+	 * Resting state / angular position 1
+	 */
+	dac_galvo_ch1_restState1 = 0x5E,
+	/**
+	 * Resting state / angular position 2
+	 */
+	dac_galvo_ch1_restState2 = 0x5F,
+	/**
+	 * sequence length
+	 */
+	dac_galvo_ch2_binSeq_len = 0x60,
+	dac_galvo_ch2_binSeq_seg1 = 0x61,
+	dac_galvo_ch2_binSeq_seg2 = 0x62,
+	dac_galvo_ch2_binSeq_seg3 = 0x63,
+	dac_galvo_ch2_binSeq_seg4 = 0x64,
+	dac_galvo_ch2_binSeq_seg5 = 0x65,
+	dac_galvo_ch2_binSeq_seg6 = 0x66,
+	dac_galvo_ch2_binSeq_seg7 = 0x67,
+	dac_galvo_ch2_binSeq_seg8 = 0x68,
+	/**
+	 * GCS trigger delay
+	 */
+	dac_galvo_ch2_seq_delay = 0x69,
+	/**
+	 * Time between single DAC step
+	 */
+	dac_galvo_ch2_stp_period = 0x6A,
+	/**
+	 * Binary sequence start offset
+	 */
+	dac_galvo_ch2_seq_offset = 0x6B,
+	/**
+	 * Resting state / angular position 1
+	 */
+	dac_galvo_ch2_restState1 = 0x6E,
+	/**
+	 * Resting state / angular position 2
+	 */
+	dac_galvo_ch2_restState2 = 0x6F,
 
 	/**
 	 * The adaddr is structured as following:

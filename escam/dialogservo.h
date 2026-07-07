@@ -32,8 +32,8 @@ private slots:
 	void on_lineEditHex_textChanged();
 	void on_lineEditBin_textChanged();
 	void on_lineEditBin_editingFinished();
-    void on_spinBoxPos1_valueChanged();
-    void on_spinBoxPos2_valueChanged();
+    void on_spinBoxPos1_valueChanged(int value);
+    void on_spinBoxPos2_valueChanged(int value);
     void on_comboBoxTriggerSource_currentIndexChanged();
     void on_pushButtonManualTrig_clicked();
     void on_radioButtonCalibratePos1_toggled();

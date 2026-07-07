@@ -2413,3 +2413,59 @@ DllAccess es_status_codes DLLTriggerStateControlManually(uint32_t drvno)
 {
 	return TriggerStateControlManually(drvno);
 }
+
+/**
+ * @copydoc Cam_SetGalvoBinSeq
+ */
+DllAccess es_status_codes DLLCam_SetGalvoBinSeq(uint32_t drvno, uint8_t channel, uint16_t* sequence)
+{
+	return Cam_SetGalvoBinSeq(drvno, channel, sequence);
+}
+
+/**
+ * @copydoc Cam_SetGalvoSeqDelay
+ */
+DllAccess es_status_codes DLLCam_SetGalvoSeqDelay(uint32_t drvno, uint8_t channel, uint16_t delay)
+{
+	return Cam_SetGalvoSeqDelay(drvno, channel, delay);
+}
+
+/**
+ * @copydoc Cam_SetGalvoStpPeriod
+ */
+DllAccess es_status_codes DLLCam_SetGalvoStpPeriod(uint32_t drvno, uint8_t channel, uint16_t period)
+{
+	return Cam_SetGalvoStpPeriod(drvno, channel, period);
+}
+
+/**
+ * @copydoc Cam_SetGalvoSeqOffset
+ */
+DllAccess es_status_codes DLLCam_SetGalvoSeqOffset(uint32_t drvno, uint8_t channel, uint16_t offset)
+{
+	return Cam_SetGalvoSeqOffset(drvno, channel, offset);
+}
+
+/**
+ * @copydoc Cam_SetGalvoRestState1
+ */
+DllAccess es_status_codes DLLCam_SetGalvoRestState1(uint32_t drvno, uint8_t channel, uint16_t rest_state)
+{
+	return Cam_SetGalvoRestState1(drvno, channel, rest_state);
+}
+
+/**
+ * @copydoc Cam_SetGalvoRestState2
+ */
+DllAccess es_status_codes DLLCam_SetGalvoRestState2(uint32_t drvno, uint8_t channel, uint16_t rest_state)
+{
+	return Cam_SetGalvoRestState2(drvno, channel, rest_state);
+}
+
+/**
+ * @copydoc Cam_SetGalvoBinSeqLen
+ */
+DllAccess es_status_codes DLLCam_SetGalvoBinSeqLen(uint32_t drvno, uint8_t channel, uint16_t seq_len)
+{
+	return Cam_SetGalvoBinSeqLen(drvno, channel, seq_len);
+}

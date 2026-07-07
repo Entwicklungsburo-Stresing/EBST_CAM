@@ -102,21 +102,21 @@ void DialogServo::on_pushButtonDefault_clicked() {
 	return;
 }
 
-void DialogServo::on_spinBoxPos1_valueChanged() {
-	uint32_t spinBoxValue = ui->spinBoxPos1->value();
+void DialogServo::on_spinBoxPos1_valueChanged(int value)
+{
 	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
-	settings.setValue(settingServoPos1Path, spinBoxValue);
+	settings.setValue(settingServoPos1Path, value);
 	settings.endGroup();
-
+	mainWindow->lsc.camSetGalvoRestState1(ui->spinBoxBoard->value(), 0, value);
 	return;
 }
 
-void DialogServo::on_spinBoxPos2_valueChanged() {
-	uint32_t spinBoxValue = ui->spinBoxPos2->value();
+void DialogServo::on_spinBoxPos2_valueChanged(int value)
+{
 	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
-	settings.setValue(settingServoPos2Path, spinBoxValue);
+	settings.setValue(settingServoPos2Path, value);
 	settings.endGroup();
-
+	mainWindow->lsc.camSetGalvoRestState2(ui->spinBoxBoard->value(), 0, value);
 	return;
 }
 
@@ -130,6 +130,7 @@ void DialogServo::on_spinBoxSeqLength_valueChanged(int val)
 		ui->lineEditBin->setText(ui->lineEditBin->text().last(val));
 #endif
 	}
+	mainWindow->lsc.camSetGalvoBinSeqLen(ui->spinBoxBoard->value(), 0, val);
 }
 
 void DialogServo::on_lineEditDec_textChanged()
@@ -164,6 +165,7 @@ void DialogServo::on_lineEditDec_textChanged()
 
 	ui->lineEditHex->setText(hex);
 	ui->lineEditBin->setText(addLeadingZerosToBin(bin));
+	mainWindow->lsc.camSetGalvoBinSeq(ui->spinBoxBoard->value(), 0, ui->lineEditBin->text());
 
 	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
 	settings.setValue(settingServoBinPath, bin);
@@ -202,6 +204,7 @@ void DialogServo::on_lineEditHex_textChanged()
 
 	ui->lineEditDec->setText(dec);
 	ui->lineEditBin->setText(addLeadingZerosToBin(bin));
+	mainWindow->lsc.camSetGalvoBinSeq(ui->spinBoxBoard->value(), 0, ui->lineEditBin->text());
 
 	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
 	settings.setValue(settingServoBinPath, bin);
@@ -252,6 +255,7 @@ void DialogServo::on_lineEditBin_editingFinished() {
 	QString bin = ui->lineEditBin->text();
 	ui->lineEditBin->setText(addLeadingZerosToBin(bin));
 	ui->lineEditBin->blockSignals(false);
+	mainWindow->lsc.camSetGalvoBinSeq(ui->spinBoxBoard->value(), 0, ui->lineEditBin->text());
 }
 
 QString DialogServo::convertDecimalToBinary(QString decimal)
@@ -411,22 +415,7 @@ void DialogServo::on_comboBoxTriggerSource_currentIndexChanged()
 
 void DialogServo::on_pushButtonManualTrig_clicked()
 {
-	uint32_t drvno = ui->spinBoxBoard->value();
-
-	if (ui->lineEditBin->text().isEmpty() || ui->lineEditBin->text() == "0") {
-		return;
-	}
-
-	if (ui->lineEditBin->text().right(1) == "1")
-	{
-		mainWindow->lsc.triggerStateControlManually(drvno);
-		ui->lineEditBin->setText(ui->lineEditBin->text().left(ui->lineEditBin->text().length() - 1));
-	}
-	else
-	{
-		ui->lineEditBin->setText(ui->lineEditBin->text().left(ui->lineEditBin->text().length() - 1));
-	}
-
+	mainWindow->lsc.triggerStateControlManually(ui->spinBoxBoard->value());
 	return;
 }
 

@@ -1098,3 +1098,222 @@ es_status_codes Cam_SetupFFT(uint32_t drvno)
 
 	return status;
 }
+
+/**
+ * @brief Set the galvo sequence.
+ * 
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] channel galvo channel number (0 or 1)
+ * @param[in] sequence pointer to the sequence array. This must be a pointer to an array of 8 uint16_t values.
+ * @return @ref es_status_codes
+ */
+es_status_codes Cam_SetGalvoBinSeq(uint32_t drvno, uint8_t channel, uint16_t* sequence)
+{
+	es_status_codes status = es_no_error;
+	if (channel == 0)
+	{
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch1_binSeq_seg1, sequence[0]);
+		if (status != es_no_error) return status;
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch1_binSeq_seg2, sequence[1]);
+		if (status != es_no_error) return status;
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch1_binSeq_seg3, sequence[2]);
+		if (status != es_no_error) return status;
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch1_binSeq_seg4, sequence[3]);
+		if (status != es_no_error) return status;
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch1_binSeq_seg5, sequence[4]);
+		if (status != es_no_error) return status;
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch1_binSeq_seg6, sequence[5]);
+		if (status != es_no_error) return status;
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch1_binSeq_seg7, sequence[6]);
+		if (status != es_no_error) return status;
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch1_binSeq_seg8, sequence[7]);
+		if (status != es_no_error) return status;
+	}
+	else if (channel == 1)
+	{
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch2_binSeq_seg1, sequence[0]);
+		if (status != es_no_error) return status;
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch2_binSeq_seg2, sequence[1]);
+		if (status != es_no_error) return status;
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch2_binSeq_seg3, sequence[2]);
+		if (status != es_no_error) return status;
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch2_binSeq_seg4, sequence[3]);
+		if (status != es_no_error) return status;
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch2_binSeq_seg5, sequence[4]);
+		if (status != es_no_error) return status;
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch2_binSeq_seg6, sequence[5]);
+		if (status != es_no_error) return status;
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch2_binSeq_seg7, sequence[6]);
+		if (status != es_no_error) return status;
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch2_binSeq_seg8, sequence[7]);
+		if (status != es_no_error) return status;
+	}
+	else
+	{
+		ES_LOG("Invalid channel number %"PRIu8" for Cam_SetGalvoBinSeq()\n", channel);
+		return es_parameter_out_of_range;
+	}
+	return status;
+}
+
+/**
+ * @brief Set the galvo sequence delay.
+ * 
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+  * @param[in] channel galvo channel number (0 or 1)
+ * @param[in] delay sequence delay value
+ * @return @ref es_status_codes
+ */
+es_status_codes Cam_SetGalvoSeqDelay(uint32_t drvno, uint8_t channel, uint16_t delay)
+{
+	es_status_codes status = es_no_error;
+	if (channel == 0)
+	{
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch1_seq_delay, delay);
+	}
+	else if (channel == 1)
+	{
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch2_seq_delay, delay);
+	}
+	else
+	{
+		ES_LOG("Invalid channel number %"PRIu8" for Cam_SetGalvoSeqDelay()\n", channel);
+		return es_parameter_out_of_range;
+	}
+	return status;
+}
+
+/**
+ * @brief Set the galvo step period.
+ * 
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+  * @param[in] channel galvo channel number (0 or 1)
+ * @param[in] period step period
+ * @return @ref es_status_codes
+ */
+es_status_codes Cam_SetGalvoStpPeriod(uint32_t drvno, uint8_t channel, uint16_t period)
+{
+	es_status_codes status = es_no_error;
+	if (channel == 0)
+	{
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch1_stp_period, period);
+	}
+	else if (channel == 1)
+	{
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch2_stp_period, period);
+	}
+	else
+	{
+		ES_LOG("Invalid channel number %"PRIu8" for Cam_SetSensorStpPeriod()\n", channel);
+		return es_parameter_out_of_range;
+	}
+	return status;
+}
+
+/**
+ * @brief Set the galvo sequence offset.
+ * 
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+  * @param[in] channel galvo channel number (0 or 1)
+ * @param[in] offset sequence offset value
+ * @return @ref es_status_codes
+ */
+es_status_codes Cam_SetGalvoSeqOffset(uint32_t drvno, uint8_t channel, uint16_t offset)
+{
+	es_status_codes status = es_no_error;
+	if (channel == 0)
+	{
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch1_seq_offset, offset);
+	}
+	else if (channel == 1)
+	{
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch2_seq_offset, offset);
+	}
+	else
+	{
+		ES_LOG("Invalid channel number %"PRIu8" for Cam_SetGalvoSeqOffset()\n", channel);
+		return es_parameter_out_of_range;
+	}
+	return status;
+}
+
+/**
+ * @brief Set the galvo rest state 1.
+ * 
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+  * @param[in] channel galvo channel number (0 or 1)
+ * @param[in] rest_state rest state value
+ * @return @ref es_status_codes
+ */
+es_status_codes Cam_SetGalvoRestState1(uint32_t drvno, uint8_t channel, uint16_t rest_state)
+{
+	es_status_codes status = es_no_error;
+	if (channel == 0)
+	{
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch1_restState1, rest_state);
+	}
+	else if (channel == 1)
+	{
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch2_restState1, rest_state);
+	}
+	else
+	{
+		ES_LOG("Invalid channel number %"PRIu8" for Cam_SetGalvoRestState()\n", channel);
+		return es_parameter_out_of_range;
+	}
+	return status;
+}
+
+/**
+* @brief Set the galvo rest state 2.
+* 
+* @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+* @param[in] channel galvo channel number (0 or 1)
+* @param[in] rest_state rest state value
+* @return @ref es_status_codes
+*/
+es_status_codes Cam_SetGalvoRestState2(uint32_t drvno, uint8_t channel, uint16_t rest_state)
+{
+	es_status_codes status = es_no_error;
+	if (channel == 0)
+	{
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch1_restState2, rest_state);
+	}
+	else if (channel == 1)
+	{
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch2_restState2, rest_state);
+	}
+	else
+	{
+		ES_LOG("Invalid channel number %"PRIu8" for Cam_SetGalvoRestState()\n", channel);
+		return es_parameter_out_of_range;
+	}
+	return status;
+}
+
+/**
+ * @brief Set the galvo binary sequence length.
+ * 
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+  * @param[in] channel galvo channel number (0 or 1)
+ * @param[in] seq_len binary sequence length
+ * @return @ref es_status_codes
+ */
+es_status_codes Cam_SetGalvoBinSeqLen(uint32_t drvno, uint8_t channel, uint16_t seq_len)
+{
+	es_status_codes status = es_no_error;
+	if (channel == 0)
+	{
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch1_binSeq_len, seq_len);
+	}
+	else if (channel == 1)
+	{
+		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch2_binSeq_len, seq_len);
+	}
+	else
+	{
+		ES_LOG("Invalid channel number %"PRIu8" for Cam_SetGalvoSeqLen()\n", channel);
+		return es_parameter_out_of_range;
+	}
+	return status;
+}
