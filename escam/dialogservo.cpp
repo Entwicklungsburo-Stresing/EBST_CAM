@@ -3,122 +3,121 @@
 #include <algorithm>
 #include <bitset>
 
-DialogServo::DialogServo(QWidget *parent)
+DialogServo::DialogServo(QWidget* parent)
 	: QDialog(parent),
 	ui(new Ui::dialogservoClass)
 {
 	ui->setupUi(this);
 
-    ui->spinBoxBoard->setMaximum(MAXPCIECARDS);
-    if (mainWindow->lsc.numberOfBoards > 1)
-    {
-        ui->labelBoard->setVisible(true);
-        ui->spinBoxBoard->setVisible(true);
-    } 
-    else
-    {
-        ui->labelBoard->setVisible(false);
-        ui->spinBoxBoard->setVisible(false);
-    }
+	ui->spinBoxBoard->setMaximum(MAXPCIECARDS);
+	if (mainWindow->lsc.numberOfBoards > 1)
+	{
+		ui->labelBoard->setVisible(true);
+		ui->spinBoxBoard->setVisible(true);
+	}
+	else
+	{
+		ui->labelBoard->setVisible(false);
+		ui->spinBoxBoard->setVisible(false);
+	}
 
 	QRegularExpression decRegex("^[0-9]*$");
-	QValidator *decValidator = new QRegularExpressionValidator(decRegex, this);
+	QValidator* decValidator = new QRegularExpressionValidator(decRegex, this);
 	ui->lineEditDec->setValidator(decValidator);
 
 	QRegularExpression hexRegex("^[0-9A-Fa-f]*$");
-	QValidator *hexValidator = new QRegularExpressionValidator(hexRegex, this);
+	QValidator* hexValidator = new QRegularExpressionValidator(hexRegex, this);
 	ui->lineEditHex->setValidator(hexValidator);
 
 	QRegularExpression binRegex("^[01]*$");
-	QValidator *binValidator = new QRegularExpressionValidator(binRegex, this);
+	QValidator* binValidator = new QRegularExpressionValidator(binRegex, this);
 	ui->lineEditBin->setValidator(binValidator);
 
-    loadSettings();
+	loadSettings();
 }
 
 DialogServo::~DialogServo()
-{
-}
+{}
 
 void DialogServo::on_spinBoxBoard_valueChanged()
 {
-    loadSettings();
-    return;
+	loadSettings();
+	return;
 }
 
 void DialogServo::loadSettings()
 {
-    ui->lineEditBin->blockSignals(true);
-    ui->lineEditDec->blockSignals(true);
-    ui->lineEditHex->blockSignals(true);
-    ui->spinBoxSeqLength->blockSignals(true);
-    ui->spinBoxPos1->blockSignals(true);
-    ui->spinBoxPos2->blockSignals(true);
-    
-    settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
-    ui->spinBoxSeqLength->setValue(settings.value(settingServoSequenceLengthPath, settingServoSequenceLengthDefault).toInt());
-    ui->lineEditBin->setText(settings.value(settingServoBinPath, settingServoBinDefault).toString());
-    ui->lineEditDec->setText(settings.value(settingServoDecPath, settingServoDecDefault).toString());
-    ui->lineEditHex->setText(settings.value(settingServoHexPath, settingServoHexDefault).toString());
-    ui->comboBoxTriggerSource->setCurrentIndex(settings.value(settingServoTriggerSourcePath, settingServoTriggerSourceDefault).toInt());
-    ui->spinBoxPos1->setValue(settings.value(settingServoPos1Path, settingServoPos1Default).toInt());
-    ui->spinBoxPos2->setValue(settings.value(settingServoPos2Path, settingServoPos2Default).toInt());
-    settings.endGroup();
+	ui->lineEditBin->blockSignals(true);
+	ui->lineEditDec->blockSignals(true);
+	ui->lineEditHex->blockSignals(true);
+	ui->spinBoxSeqLength->blockSignals(true);
+	ui->spinBoxPos1->blockSignals(true);
+	ui->spinBoxPos2->blockSignals(true);
 
-    ui->lineEditBin->blockSignals(false);
-    ui->lineEditDec->blockSignals(false);
-    ui->lineEditHex->blockSignals(false);
-    ui->spinBoxSeqLength->blockSignals(false);
-    ui->spinBoxPos1->blockSignals(false);
-    ui->spinBoxPos2->blockSignals(false);
+	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
+	ui->spinBoxSeqLength->setValue(settings.value(settingServoSequenceLengthPath, settingServoSequenceLengthDefault).toInt());
+	ui->lineEditBin->setText(settings.value(settingServoBinPath, settingServoBinDefault).toString());
+	ui->lineEditDec->setText(settings.value(settingServoDecPath, settingServoDecDefault).toString());
+	ui->lineEditHex->setText(settings.value(settingServoHexPath, settingServoHexDefault).toString());
+	ui->comboBoxTriggerSource->setCurrentIndex(settings.value(settingServoTriggerSourcePath, settingServoTriggerSourceDefault).toInt());
+	ui->spinBoxPos1->setValue(settings.value(settingServoPos1Path, settingServoPos1Default).toInt());
+	ui->spinBoxPos2->setValue(settings.value(settingServoPos2Path, settingServoPos2Default).toInt());
+	settings.endGroup();
 
-    return;
+	ui->lineEditBin->blockSignals(false);
+	ui->lineEditDec->blockSignals(false);
+	ui->lineEditHex->blockSignals(false);
+	ui->spinBoxSeqLength->blockSignals(false);
+	ui->spinBoxPos1->blockSignals(false);
+	ui->spinBoxPos2->blockSignals(false);
+
+	return;
 }
 
 void DialogServo::on_pushButtonDefault_clicked() {
-    ui->lineEditBin->blockSignals(true);
-    ui->lineEditDec->blockSignals(true);
-    ui->lineEditHex->blockSignals(true);
-    ui->spinBoxSeqLength->blockSignals(true);
-    ui->spinBoxPos1->blockSignals(true);
-    ui->spinBoxPos2->blockSignals(true);
+	ui->lineEditBin->blockSignals(true);
+	ui->lineEditDec->blockSignals(true);
+	ui->lineEditHex->blockSignals(true);
+	ui->spinBoxSeqLength->blockSignals(true);
+	ui->spinBoxPos1->blockSignals(true);
+	ui->spinBoxPos2->blockSignals(true);
 
-    settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
-    ui->spinBoxSeqLength->setValue(settingServoSequenceLengthDefault);
-    ui->lineEditBin->setText(settingServoBinDefault);
-    ui->lineEditDec->setText(settingServoDecDefault);
-    ui->lineEditHex->setText(settingServoHexDefault);
-    ui->comboBoxTriggerSource->setCurrentIndex(settingServoTriggerSourceDefault);
-    ui->spinBoxPos1->setValue(settingServoPos1Default);
-    ui->spinBoxPos2->setValue(settingServoPos2Default);
-    settings.endGroup();
+	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
+	ui->spinBoxSeqLength->setValue(settingServoSequenceLengthDefault);
+	ui->lineEditBin->setText(settingServoBinDefault);
+	ui->lineEditDec->setText(settingServoDecDefault);
+	ui->lineEditHex->setText(settingServoHexDefault);
+	ui->comboBoxTriggerSource->setCurrentIndex(settingServoTriggerSourceDefault);
+	ui->spinBoxPos1->setValue(settingServoPos1Default);
+	ui->spinBoxPos2->setValue(settingServoPos2Default);
+	settings.endGroup();
 
-    ui->lineEditBin->blockSignals(false);
-    ui->lineEditDec->blockSignals(false);
-    ui->lineEditHex->blockSignals(false);
-    ui->spinBoxSeqLength->blockSignals(false);
-    ui->spinBoxPos1->blockSignals(false);
-    ui->spinBoxPos2->blockSignals(false);
+	ui->lineEditBin->blockSignals(false);
+	ui->lineEditDec->blockSignals(false);
+	ui->lineEditHex->blockSignals(false);
+	ui->spinBoxSeqLength->blockSignals(false);
+	ui->spinBoxPos1->blockSignals(false);
+	ui->spinBoxPos2->blockSignals(false);
 
-    return;
+	return;
 }
 
 void DialogServo::on_spinBoxPos1_valueChanged() {
-    uint32_t spinBoxValue = ui->spinBoxPos1->value();
-    settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
-    settings.setValue(settingServoPos1Path, spinBoxValue);
-    settings.endGroup();
+	uint32_t spinBoxValue = ui->spinBoxPos1->value();
+	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
+	settings.setValue(settingServoPos1Path, spinBoxValue);
+	settings.endGroup();
 
-    return;
+	return;
 }
 
 void DialogServo::on_spinBoxPos2_valueChanged() {
-    uint32_t spinBoxValue = ui->spinBoxPos2->value();
-    settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
-    settings.setValue(settingServoPos2Path, spinBoxValue);
-    settings.endGroup();
+	uint32_t spinBoxValue = ui->spinBoxPos2->value();
+	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
+	settings.setValue(settingServoPos2Path, spinBoxValue);
+	settings.endGroup();
 
-    return;
+	return;
 }
 
 void DialogServo::on_spinBoxSeqLength_valueChanged(int val)
@@ -140,7 +139,7 @@ void DialogServo::on_lineEditDec_textChanged()
 		return;
 	}
 	QString maxDec = convertBinaryToDecimal(QString("1").repeated(ui->spinBoxSeqLength->value()));
-	if( dec.length() > maxDec.length()) {
+	if (dec.length() > maxDec.length()) {
 		ui->lineEditDec->setText(maxDec);
 		dec = maxDec;
 	}
@@ -165,12 +164,12 @@ void DialogServo::on_lineEditDec_textChanged()
 
 	ui->lineEditHex->setText(hex);
 	ui->lineEditBin->setText(addLeadingZerosToBin(bin));
-    
-    settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
-    settings.setValue(settingServoBinPath, bin);
-    settings.setValue(settingServoDecPath, dec);
-    settings.setValue(settingServoHexPath, hex);
-    settings.endGroup();
+
+	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
+	settings.setValue(settingServoBinPath, bin);
+	settings.setValue(settingServoDecPath, dec);
+	settings.setValue(settingServoHexPath, hex);
+	settings.endGroup();
 
 	ui->lineEditHex->blockSignals(false);
 	ui->lineEditBin->blockSignals(false);
@@ -187,7 +186,8 @@ void DialogServo::on_lineEditHex_textChanged()
 	if (hex.length() > maxHex.length()) {
 		ui->lineEditHex->setText(maxHex);
 		hex = maxHex;
-	} else if (hex.length() == maxHex.length()) {
+	}
+	else if (hex.length() == maxHex.length()) {
 		if (QString(maxHex[0]).toInt(nullptr, 16) < QString(hex[0]).toInt(nullptr, 16)) {
 			ui->lineEditHex->setText(maxHex);
 			hex = maxHex;
@@ -203,11 +203,11 @@ void DialogServo::on_lineEditHex_textChanged()
 	ui->lineEditDec->setText(dec);
 	ui->lineEditBin->setText(addLeadingZerosToBin(bin));
 
-    settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
-    settings.setValue(settingServoBinPath, bin);
-    settings.setValue(settingServoDecPath, dec);
-    settings.setValue(settingServoHexPath, hex);
-    settings.endGroup();
+	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
+	settings.setValue(settingServoBinPath, bin);
+	settings.setValue(settingServoDecPath, dec);
+	settings.setValue(settingServoHexPath, hex);
+	settings.endGroup();
 
 	ui->lineEditDec->blockSignals(false);
 	ui->lineEditBin->blockSignals(false);
@@ -236,11 +236,11 @@ void DialogServo::on_lineEditBin_textChanged()
 	ui->lineEditDec->setText(dec);
 	ui->lineEditHex->setText(hex);
 
-    settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
-    settings.setValue(settingServoBinPath, bin);
-    settings.setValue(settingServoDecPath, dec);
-    settings.setValue(settingServoHexPath, hex);
-    settings.endGroup();
+	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
+	settings.setValue(settingServoBinPath, bin);
+	settings.setValue(settingServoDecPath, dec);
+	settings.setValue(settingServoHexPath, hex);
+	settings.endGroup();
 
 	ui->lineEditDec->blockSignals(false);
 	ui->lineEditHex->blockSignals(false);
@@ -296,7 +296,7 @@ QString DialogServo::convertHexToBinary(QString hex)
 {
 	std::string hexAsStdString = hex.toUpper().toStdString();
 	std::string result;
-	
+
 	if (hexAsStdString.empty()) {
 		return QString("0");
 	}
@@ -314,7 +314,7 @@ QString DialogServo::convertHexToBinary(QString hex)
 		std::bitset<4> binarySet(decimalValue);
 		binaryAsStdString += binarySet.to_string();
 	}
-	
+
 	while (binaryAsStdString.length() > 1 && binaryAsStdString[0] == '0') {
 		binaryAsStdString.erase(0, 1);
 	}
@@ -387,60 +387,60 @@ QString DialogServo::addLeadingZerosToBin(QString bin)
 
 void DialogServo::on_comboBoxTriggerSource_currentIndexChanged()
 {
-    uint32_t drvno = ui->spinBoxBoard->value();
-    int index = ui->comboBoxTriggerSource->currentIndex();
-    mainWindow->lsc.setStateControlRegister(drvno, index);
+	uint32_t drvno = ui->spinBoxBoard->value();
+	int index = ui->comboBoxTriggerSource->currentIndex();
+	mainWindow->lsc.setStateControlRegister(drvno, index);
 
-    settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
-    settings.setValue(settingServoTriggerSourcePath, index);
-    settings.endGroup();
+	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
+	settings.setValue(settingServoTriggerSourcePath, index);
+	settings.endGroup();
 
-    if (index == statectrl_trigger_select_manual)
-    {
-        ui->labelManualTrig->setVisible(true);
-        ui->pushButtonManualTrig->setVisible(true);
-    }
-    else
-    {
-        ui->labelManualTrig->setVisible(false);
-        ui->pushButtonManualTrig->setVisible(false);
-    }
+	if (index == statectrl_trigger_select_manual)
+	{
+		ui->labelManualTrig->setVisible(true);
+		ui->pushButtonManualTrig->setVisible(true);
+	}
+	else
+	{
+		ui->labelManualTrig->setVisible(false);
+		ui->pushButtonManualTrig->setVisible(false);
+	}
 
-    return;
+	return;
 }
 
 void DialogServo::on_pushButtonManualTrig_clicked()
 {
-    uint32_t drvno = ui->spinBoxBoard->value();
+	uint32_t drvno = ui->spinBoxBoard->value();
 
-    if (ui->lineEditBin->text().isEmpty() || ui->lineEditBin->text() == "0") {
-        return;
-    }
+	if (ui->lineEditBin->text().isEmpty() || ui->lineEditBin->text() == "0") {
+		return;
+	}
 
-    if (ui->lineEditBin->text().right(1) == "1")
-    {
-        mainWindow->lsc.triggerStateControlManually(drvno);
-        ui->lineEditBin->setText(ui->lineEditBin->text().left(ui->lineEditBin->text().length() - 1));
-    }
-    else
-    {
-        ui->lineEditBin->setText(ui->lineEditBin->text().left(ui->lineEditBin->text().length() - 1));
-    }
+	if (ui->lineEditBin->text().right(1) == "1")
+	{
+		mainWindow->lsc.triggerStateControlManually(drvno);
+		ui->lineEditBin->setText(ui->lineEditBin->text().left(ui->lineEditBin->text().length() - 1));
+	}
+	else
+	{
+		ui->lineEditBin->setText(ui->lineEditBin->text().left(ui->lineEditBin->text().length() - 1));
+	}
 
-    return;
+	return;
 }
 
 void DialogServo::on_radioButtonCalibratePos1_toggled()
 {
-   return;
+	return;
 }
 
 void DialogServo::on_radioButtonCalibratePos2_toggled()
 {
-    return;
+	return;
 }
 
 void DialogServo::on_radioButtonTrigSeq_toggled()
 {
-    return;
+	return;
 }
