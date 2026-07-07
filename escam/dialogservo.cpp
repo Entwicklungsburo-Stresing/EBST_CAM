@@ -94,6 +94,9 @@ void DialogServo::on_spinBoxPos2_valueChanged(int value)
 
 void DialogServo::on_spinBoxSeqLength_valueChanged(int val)
 {
+	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
+	settings.setValue(settingServoSequenceLengthPath, val);
+	settings.endGroup();
 	if (ui->lineEditBin->text().length() > val)
 	{
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
