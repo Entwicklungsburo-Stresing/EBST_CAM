@@ -7,7 +7,7 @@
 #include "lsc-gui.h"
 #include "numericconverterwidget.h"
 
-PulseGeneratorWidget::PulseGeneratorWidget(QWidget *parent)
+PulseGeneratorWidget::PulseGeneratorWidget(QWidget* parent)
 	: QWidget(parent)
 	, ui(new Ui::PulseGeneratorWidgetClass())
 {

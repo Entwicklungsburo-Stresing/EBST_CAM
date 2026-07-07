@@ -1,6 +1,6 @@
 #include "dialogpulsegenerator.h"
 
-DialogPulseGenerator::DialogPulseGenerator(QWidget *parent)
+DialogPulseGenerator::DialogPulseGenerator(QWidget* parent)
 	: QDialog(parent)
 	, ui(new Ui::DialogPulseGeneratorClass())
 {

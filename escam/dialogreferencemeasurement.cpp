@@ -1,6 +1,6 @@
 #include "dialogreferencemeasurement.h"
 
-DialogReferenceMeasurement::DialogReferenceMeasurement(QWidget *parent)
+DialogReferenceMeasurement::DialogReferenceMeasurement(QWidget* parent)
 	: QDialog(parent)
 	, ui(new Ui::DialogReferenceMeasurementClass())
 {
@@ -11,7 +11,7 @@ DialogReferenceMeasurement::DialogReferenceMeasurement(QWidget *parent)
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 0))
 	connect(QApplication::styleHints(), &QStyleHints::colorSchemeChanged, this, [this]() {
 		QMetaObject::invokeMethod(this, &DialogReferenceMeasurement::on_spinBoxBoard_valueChanged, Qt::QueuedConnection);
-	});
+		});
 #endif
 }
 
@@ -93,7 +93,7 @@ void DialogReferenceMeasurement::on_pushButtonHandleReference2_pressed()
  * @return none
  */
 void DialogReferenceMeasurement::handleReference(QString id)
-{ 
+{
 	uint32_t drvno = ui->spinBoxBoard->value();
 	uint16_t camera = ui->spinBoxCamera->value();
 	QString name = "reference_series_" + QString::number(drvno) + "_" + QString::number(camera) + "_" + id;
@@ -132,7 +132,7 @@ void DialogReferenceMeasurement::saveReference(QString seriesName)
 	std::vector<uint16_t> camera_data(pixel);
 	es_status_codes status = mainWindow->lsc.copyOneSample(drvno, sample, block, camera, camera_data.data());
 	if (status != es_no_error) return;
-	
+
 	// Create reference from sample data
 	QLineSeries* referenceSeries = new QLineSeries();
 	referenceSeries->setName(seriesName);

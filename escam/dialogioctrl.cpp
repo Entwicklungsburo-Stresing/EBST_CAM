@@ -7,11 +7,11 @@
 #include "ui_dialogioctrl.h"
 #include "lsc-gui.h"
 
-DialogIoctrl::DialogIoctrl(QWidget *parent)
+DialogIoctrl::DialogIoctrl(QWidget* parent)
 	: QDialog(parent),
 	ui(new Ui::DialogIoctrl)
 {
-	ui->setupUi(this);	
+	ui->setupUi(this);
 	if (mainWindow->lsc.numberOfBoards > 1)
 		ui->spinBoxBoard->setMaximum(mainWindow->lsc.numberOfBoards - 1);
 	else

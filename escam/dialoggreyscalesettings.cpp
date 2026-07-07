@@ -6,7 +6,7 @@
 #include "dialoggreyscalesettings.h"
 #include "lsc-gui.h"
 
-DialogGreyscaleSettings::DialogGreyscaleSettings(QWidget *parent)
+DialogGreyscaleSettings::DialogGreyscaleSettings(QWidget* parent)
 	: QDialog(parent)
 	, ui(new Ui::DialogGreyscaleSettingsClass())
 {

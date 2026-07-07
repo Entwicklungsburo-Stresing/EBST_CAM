@@ -20,7 +20,7 @@ class DialogIoctrlLegacy : public QDialog
 	Q_OBJECT
 
 public:
-	DialogIoctrlLegacy(QWidget *parent = Q_NULLPTR);
+	DialogIoctrlLegacy(QWidget* parent = Q_NULLPTR);
 	~DialogIoctrlLegacy();
 
 private slots:
@@ -33,7 +33,7 @@ private slots:
 	void spinBox_valueChanged();
 
 private:
-	Ui::DialogIoctrlLegacy *ui;
+	Ui::DialogIoctrlLegacy* ui;
 	QSettings settings;
 	uint16_t outputWidth_old[7];
 	uint16_t outputDelay_old[7];

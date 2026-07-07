@@ -20,7 +20,7 @@ class DialogDac : public QDialog
 	Q_OBJECT
 
 public:
-	DialogDac(QWidget *parent = Q_NULLPTR);
+	DialogDac(QWidget* parent = Q_NULLPTR);
 	~DialogDac();
 
 private slots:
@@ -34,7 +34,7 @@ private slots:
 
 private:
 	uint32_t output_old[8];
-	Ui::DialogDac *ui;
+	Ui::DialogDac* ui;
 	QSettings settings;
 	// Because of the signal slot mechanism of Qt the following boolean can be called from different threads. That is the reason why they are volatile. Otherwise it was observed, that the autotune dialog gets stuck.
 	volatile bool autotuneRunning = false;

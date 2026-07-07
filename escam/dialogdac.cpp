@@ -26,7 +26,7 @@ DialogDac::DialogDac(QWidget* parent)
 	connect(ui->comboBoxLocation, qOverload<int>(&QComboBox::currentIndexChanged), this, &DialogDac::loadSettings);
 	connect(ui->spinBoxCamera, qOverload<int>(&QSpinBox::valueChanged), this, &DialogDac::loadSettings);
 	connect(&mainWindow->lsc, &Lsc::measureDone, this, &DialogDac::checkTargetReached);
-	
+
 	ui->spinBoxPcie->setMaximum(mainWindow->lsc.numberOfBoards - 1);
 	if (mainWindow->lsc.numberOfBoards == 1)
 	{
@@ -91,8 +91,7 @@ void DialogDac::spinBoxChannel_valueChanged()
 }
 
 DialogDac::~DialogDac()
-{
-}
+{}
 
 void DialogDac::on_pushButtonDefault_pressed()
 {
@@ -388,7 +387,7 @@ double DialogDac::calculateMean(uint16_t* camera_data, int start, int end, bool 
 	{
 		mean += camera_data[i];
 	}
-	if(isHsIr)
+	if (isHsIr)
 		mean /= (end - start) / 2;
 	else
 		mean /= (end - start);

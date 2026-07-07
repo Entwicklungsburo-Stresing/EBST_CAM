@@ -7,13 +7,13 @@
 #include "ui_dialogtriggerinfo.h"
 #include "lsc-gui.h"
 
-DialogTriggerInfo::DialogTriggerInfo(QWidget *parent)
+DialogTriggerInfo::DialogTriggerInfo(QWidget* parent)
 	: QDialog(parent, Qt::Dialog | Qt::WindowContextHelpButtonHint | Qt::WindowCloseButtonHint)
 	, ui(new Ui::DialogTriggerInfo)
 {
 	ui->setupUi(this);
 	ui->spinBoxBoard->setMaximum(mainWindow->lsc.numberOfBoards - 1);
-	if(mainWindow->lsc.numberOfBoards > 1)
+	if (mainWindow->lsc.numberOfBoards > 1)
 	{
 		ui->spinBoxBoard->setVisible(true);
 		ui->labelBoard->setVisible(true);

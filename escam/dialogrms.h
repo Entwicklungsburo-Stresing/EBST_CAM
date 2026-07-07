@@ -13,7 +13,7 @@
 #include "dialogsettings.h"
 
 namespace Ui {
-class DialogRMS;
+	class DialogRMS;
 }
 
 class DialogRMS : public QDialog
@@ -21,7 +21,7 @@ class DialogRMS : public QDialog
 	Q_OBJECT
 
 public:
-	explicit DialogRMS(QWidget *parent = nullptr);
+	explicit DialogRMS(QWidget* parent = nullptr);
 	~DialogRMS();
 	void initDialogRMS();
 
@@ -29,7 +29,7 @@ public slots:
 	void updateRMS();
 
 private:
-	Ui::DialogRMS *ui;
+	Ui::DialogRMS* ui;
 	QSettings settings;
 	void stopMeasurementOnRMSTargetReached();
 

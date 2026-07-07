@@ -17,7 +17,7 @@ class DialogChartSettings : public QDialog
 	Q_OBJECT
 
 public:
-	DialogChartSettings(QWidget *parent = nullptr);
+	DialogChartSettings(QWidget* parent = nullptr);
 	~DialogChartSettings();
 
 	void on_rubberband_valueChanged();

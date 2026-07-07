@@ -13,7 +13,7 @@ class PulseGeneratorWidget : public QWidget
 	Q_OBJECT
 
 public:
-	PulseGeneratorWidget(QWidget *parent = nullptr);
+	PulseGeneratorWidget(QWidget* parent = nullptr);
 	~PulseGeneratorWidget();
 	int channel = 0;
 public slots:
@@ -29,7 +29,7 @@ private slots:
 	void on_doubleSpinBoxWidthMilliseconds_valueChanged(double val);
 	void on_doubleSpinBoxWidthMicroseconds_valueChanged(double val);
 private:
-	Ui::PulseGeneratorWidgetClass *ui;
+	Ui::PulseGeneratorWidgetClass* ui;
 	QSettings settings;
 	uint32_t _drvno = 0;
 	void sendSequence();

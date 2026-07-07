@@ -72,9 +72,9 @@ QList<QPointF> MyQChartView::findNearestPoint(qreal xValue) {
 
 	QList<QAbstractSeries*> seriesList = chart()->series();
 	const QLineSeries* series = static_cast<const QLineSeries*>(chart()->series().at(0));
-	
+
 	if (roundedXValue > series->points().last().x()) return pointList;
-	
+
 	pointList.pop_front(); //Deletes exit value created earlier
 
 	//Loops trough the series and appends points to the pointList depending on how many series there are in the chart
@@ -103,8 +103,8 @@ QList<QPointF> MyQChartView::findNearestPoint(qreal xValue) {
 		}
 		pointList.append(nearestPoint);
 	}
-		return pointList;
-	}
+	return pointList;
+}
 
 void MyQChartView::setDefaultAxes()
 {
@@ -223,7 +223,7 @@ void MyQChartView::setChartData(QLineSeries** series, uint16_t numberOfSets)
 			chart->removeSeries(existingSeries);
 		}
 	}
-	
+
 	for (uint16_t set = 0; set < numberOfSets; set++)
 	{
 		if (settings.value(settingAxesMirrorXPath).toBool())

@@ -17,7 +17,7 @@ class DialogShutter : public QDialog
 	Q_OBJECT
 
 public:
-	DialogShutter(QWidget *parent = nullptr);
+	DialogShutter(QWidget* parent = nullptr);
 	~DialogShutter();
 private slots:
 	void on_checkBoxMshut_checkStateChanged(Qt::CheckState checkState);

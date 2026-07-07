@@ -22,7 +22,7 @@ class DialogFanControl : public QDialog
 	Q_OBJECT
 
 public:
-	DialogFanControl(QWidget *parent = Q_NULLPTR);
+	DialogFanControl(QWidget* parent = Q_NULLPTR);
 	~DialogFanControl();
 
 private slots:
@@ -31,7 +31,7 @@ private slots:
 	void on_checkBoxFanOn_stateChanged(int state);
 
 private:
-	Ui::DialogFanControlClass *ui;
+	Ui::DialogFanControlClass* ui;
 	QSettings settings;
 	void initDialogFanControl();
 	void updateFanCheckboxState(int monitorIndex);

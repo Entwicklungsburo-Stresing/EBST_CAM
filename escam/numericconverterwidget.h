@@ -12,7 +12,7 @@ class NumericConverterWidget : public QWidget
 	Q_OBJECT
 
 public:
-	NumericConverterWidget(QWidget *parent = nullptr);
+	NumericConverterWidget(QWidget* parent = nullptr);
 	~NumericConverterWidget();
 	void setDecimal(QString dec);
 	QString getDecimal();
@@ -29,13 +29,13 @@ private slots:
 	void on_lineEditBin_textChanged();
 	void on_lineEditBin_editingFinished();
 private:
-	Ui::NumericConverterWidgetClass *ui;
+	Ui::NumericConverterWidgetClass* ui;
 	QString convertDecimalToBinary(QString decimalString);
 	QString convertHexToBinary(QString hexString);
 	QString convertBinaryToDecimal(QString binaryString);
 	QString convertBinaryToHex(QString binaryString);
 	QString addLeadingZerosToBin(QString bin);
-signals: 
+signals:
 	void sequenceLengthChanged();
 	void sequenceChanged();
 };

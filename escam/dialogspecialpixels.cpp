@@ -8,7 +8,7 @@
 #include <format>
 #include <bitset>
 
-DialogSpecialPixels::DialogSpecialPixels(QWidget *parent)
+DialogSpecialPixels::DialogSpecialPixels(QWidget* parent)
 	: QDialog(parent)
 	, ui(new Ui::DialogSpecialPixelsClass())
 {

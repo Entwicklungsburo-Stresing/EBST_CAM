@@ -21,11 +21,11 @@ class DialogGreyscaleSettings : public QDialog
 	Q_OBJECT
 
 public:
-	DialogGreyscaleSettings(QWidget *parent = nullptr);
+	DialogGreyscaleSettings(QWidget* parent = nullptr);
 	~DialogGreyscaleSettings();
 
 private:
-	Ui::DialogGreyscaleSettingsClass *ui;
+	Ui::DialogGreyscaleSettingsClass* ui;
 	QSettings settings;
 
 private slots:

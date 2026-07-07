@@ -24,10 +24,10 @@ class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 public:
-	MainWindow(QWidget *parent = nullptr);
+	MainWindow(QWidget* parent = nullptr);
 	~MainWindow();
 	Lsc lsc;
-	Ui::MainWindow *ui;
+	Ui::MainWindow* ui;
 	uint32_t greyscale_viewer_board = 0;
 	uint32_t greyscale_viewer_camera = 0;
 public slots:
@@ -39,13 +39,13 @@ public slots:
 private:
 	QSettings settings;
 	QThread measurementThread;
-	void copySettings(QSettings &dst, QSettings &src);
+	void copySettings(QSettings& dst, QSettings& src);
 	QTimer* liveViewTimer = new QTimer(this);
 	QTimer* lampsTimer = new QTimer(this);
 	QTimer* scanFrequencyTimer = new QTimer(this);
 	QTimer* blockFrequencyTimer = new QTimer(this);
 	bool measureOn = false;
-	void closeEvent(QCloseEvent *event);
+	void closeEvent(QCloseEvent* event);
 	void showStatusCodeDialog(es_status_codes status);
 private slots:
 	void on_actionEdit_triggered();

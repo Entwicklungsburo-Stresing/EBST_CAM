@@ -20,13 +20,13 @@ class DialogIoctrl : public QDialog
 	Q_OBJECT
 
 public:
-	DialogIoctrl(QWidget *parent = Q_NULLPTR);
+	DialogIoctrl(QWidget* parent = Q_NULLPTR);
 	~DialogIoctrl();
 signals:
 	void settingsLoaded(int drvno);
 	void defaults_loaded();
 private:
-	Ui::DialogIoctrl *ui;
+	Ui::DialogIoctrl* ui;
 	QSettings settings;
 private slots:
 	void on_comboBoxTrigSource_currentIndexChanged(int index);

@@ -6,7 +6,7 @@
 #include "dialogsettings.h"
 #include "lsc-gui.h"
 
-NumericConverterWidget::NumericConverterWidget(QWidget *parent)
+NumericConverterWidget::NumericConverterWidget(QWidget* parent)
 	: QWidget(parent)
 	, ui(new Ui::NumericConverterWidgetClass())
 {

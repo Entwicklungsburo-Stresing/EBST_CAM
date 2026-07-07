@@ -5,13 +5,13 @@
 
 #include "myqspinbox.h"
 
-/**
- * @brief Constructor of class MyQSpinBox.
- * Connects signal valueChanged with custom slot On_valueChanged.
- * @param parent
- */
+ /**
+  * @brief Constructor of class MyQSpinBox.
+  * Connects signal valueChanged with custom slot On_valueChanged.
+  * @param parent
+  */
 MyQSpinBox::MyQSpinBox(QWidget* parent)
-		: QSpinBox(parent)
+	: QSpinBox(parent)
 {
 	connect(this, qOverload<int>(&MyQSpinBox::valueChanged), this, &MyQSpinBox::On_valueChanged);
 }
@@ -34,6 +34,6 @@ void MyQSpinBox::setValue(int val)
  */
 void MyQSpinBox::On_valueChanged(int val)
 {
-	if(!valueBeingSet)
+	if (!valueBeingSet)
 		emit valueManuallyChanged(val);
 }

@@ -24,7 +24,7 @@ class CameraSettingsWidget : public QWidget
 {
 	Q_OBJECT
 public:
-	CameraSettingsWidget(QWidget *parent = nullptr);
+	CameraSettingsWidget(QWidget* parent = nullptr);
 	~CameraSettingsWidget();
 	uint32_t drvno = 0;
 	DialogSettings* ds;
@@ -34,7 +34,7 @@ public slots:
 	void changeSettingsLevel(int settings_level);
 	void initializeWidget();
 private:
-	Ui::CameraSettingsWidgetClass *ui;
+	Ui::CameraSettingsWidgetClass* ui;
 	QSettings settings;
 	int _settings_level = 0;
 private slots:

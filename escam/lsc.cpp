@@ -8,11 +8,9 @@
 #include "hooks.h"
 
 Lsc::Lsc()
-{
-}
+{}
 Lsc::~Lsc()
-{
-}
+{}
 
 /**
  * @copydoc DLLInitDriver
@@ -69,7 +67,7 @@ std::string Lsc::_dumpS0Registers(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = DLLDumpS0Registers(drvno, &cstring);
-	if(status != es_no_error)
+	if (status != es_no_error)
 		qCritical("dumpS0Registers failed");
 	std::string cppstring = cstring;
 	free(cstring);
@@ -93,7 +91,7 @@ std::string Lsc::_dumpDmaRegisters(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = DLLDumpDmaRegisters(drvno, &cstring);
-	if(status != es_no_error)
+	if (status != es_no_error)
 		qCritical("dumpDmaRegisters failed");
 	std::string cppstring = cstring;
 	free(cstring);
@@ -105,7 +103,7 @@ std::string Lsc::_dumpTlp(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = DLLDumpTlpRegisters(drvno, &cstring);
-	if(status != es_no_error)
+	if (status != es_no_error)
 		qCritical("dumpTlpRegisters failed");
 	std::string cppstring = cstring;
 	free(cstring);
@@ -117,7 +115,7 @@ std::string Lsc::_dumpMeasurementSettings()
 {
 	char* cstring;
 	es_status_codes status = DLLDumpMeasurementSettings(&cstring);
-	if(status != es_no_error)
+	if (status != es_no_error)
 		qCritical("dumpSettings failed");
 	std::string cppstring = cstring;
 	free(cstring);
@@ -141,7 +139,7 @@ std::string Lsc::_dumpPciRegisters(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = DLLDumpPciRegisters(drvno, &cstring);
-	if(status != es_no_error)
+	if (status != es_no_error)
 		qCritical("dumpPciRegisters failed");
 	std::string cppstring = cstring;
 	free(cstring);
@@ -153,7 +151,7 @@ std::string Lsc::__AboutDrv(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = DLLAboutDrv(drvno, &cstring);
-	if(status != es_no_error)
+	if (status != es_no_error)
 		qCritical("_AboutDrv failed");
 	std::string cppstring = cstring;
 	free(cstring);
@@ -165,7 +163,7 @@ std::string Lsc::__AboutGPX(uint32_t drvno)
 {
 	char* cstring;
 	es_status_codes status = DLLAboutGPX(drvno, &cstring);
-	if(status != es_no_error)
+	if (status != es_no_error)
 		qCritical("_AboutGPX failed");
 	std::string cppstring = cstring;
 	free(cstring);
@@ -176,41 +174,41 @@ std::string Lsc::__AboutGPX(uint32_t drvno)
 /**
  * @copydoc DLLSetTORReg
  */
-es_status_codes Lsc::setTorOut( uint32_t drvno, uint8_t tor )
+es_status_codes Lsc::setTorOut(uint32_t drvno, uint8_t tor)
 {
-	return DLLSetTORReg( drvno, tor );
+	return DLLSetTORReg(drvno, tor);
 }
 
 /**
  * @copydoc DLLResetDSC
  */
-es_status_codes Lsc::resetDSC( uint32_t drvno, uint8_t DSCNumber )
+es_status_codes Lsc::resetDSC(uint32_t drvno, uint8_t DSCNumber)
 {
-	return DLLResetDSC( drvno, DSCNumber );
+	return DLLResetDSC(drvno, DSCNumber);
 }
 
 /**
  * @copydoc DLLSetDIRDSC
  */
-es_status_codes Lsc::setDIRDSC( uint32_t drvno, uint8_t DSCNumber, bool dir )
+es_status_codes Lsc::setDIRDSC(uint32_t drvno, uint8_t DSCNumber, bool dir)
 {
-	return DLLSetDIRDSC( drvno, DSCNumber, dir );
+	return DLLSetDIRDSC(drvno, DSCNumber, dir);
 }
 
 /**
  * @copydoc DLLGetDSC
  */
-es_status_codes Lsc::getDSC( uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC )
+es_status_codes Lsc::getDSC(uint32_t drvno, uint8_t DSCNumber, uint32_t* ADSC, uint32_t* LDSC)
 {
-	return DLLGetDSC( drvno, DSCNumber, ADSC, LDSC);
+	return DLLGetDSC(drvno, DSCNumber, ADSC, LDSC);
 }
 
 /**
  * @copydoc DLLCalcTrms
  */
-es_status_codes Lsc::calcTRMS( uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double *mwf, double *trms )
+es_status_codes Lsc::calcTRMS(uint32_t drvno, uint32_t firstSample, uint32_t lastSample, uint32_t TRMS_pixel, uint16_t CAMpos, double* mwf, double* trms)
 {
-	return DLLCalcTrms( drvno, firstSample, lastSample, TRMS_pixel, CAMpos, mwf, trms );
+	return DLLCalcTrms(drvno, firstSample, lastSample, TRMS_pixel, CAMpos, mwf, trms);
 }
 
 /**
@@ -323,7 +321,7 @@ std::string Lsc::getVerifiedDataDialog(struct verify_data_parameter* vd)
  */
 es_status_codes Lsc::getCameraStatusOverTemp(uint32_t drvno, uint32_t sample, uint32_t block, uint16_t camera_pos, bool* overTemp)
 {
-	return DLLGetCameraStatusOverTemp(drvno, sample, block, camera_pos,(uint8_t*) overTemp);
+	return DLLGetCameraStatusOverTemp(drvno, sample, block, camera_pos, (uint8_t*)overTemp);
 }
 
 /**
@@ -443,7 +441,7 @@ uint16_t Lsc::getGammaBlack()
  */
 es_status_codes Lsc::readScanFrequencyBit(uint32_t drvno, bool* scanFrequencyTooHigh)
 {
-	return DLLReadScanFrequencyBit(drvno,(uint8_t*) scanFrequencyTooHigh);
+	return DLLReadScanFrequencyBit(drvno, (uint8_t*)scanFrequencyTooHigh);
 }
 
 /**
@@ -459,7 +457,7 @@ es_status_codes Lsc::resetScanFrequencyBit(uint32_t drvno)
  */
 es_status_codes Lsc::readBlockFrequencyBit(uint32_t drvno, bool* blockFrequencyTooHigh)
 {
-	return DLLReadBlockFrequencyBit(drvno,(uint8_t*) blockFrequencyTooHigh);
+	return DLLReadBlockFrequencyBit(drvno, (uint8_t*)blockFrequencyTooHigh);
 }
 
 /**
@@ -571,7 +569,7 @@ es_status_codes Lsc::getBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns)
  */
 es_status_codes Lsc::getBlockOn(uint32_t drvno, bool* blockOn)
 {
-	return DLLGetBlockOn(drvno,(uint8_t*)blockOn);
+	return DLLGetBlockOn(drvno, (uint8_t*)blockOn);
 }
 
 /**
@@ -711,8 +709,8 @@ es_status_codes Lsc::camSetGalvoBinSeq(uint32_t drvno, uint8_t channel, uint16_t
 }
 
 /**
- * @brief Convert the sequence to an uint16_t array and pass it to the library 
- * 
+ * @brief Convert the sequence to an uint16_t array and pass it to the library
+ *
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param[in] channel galvo channel number (0 or 1)
  * @param[in] sequence Sequence in QString format

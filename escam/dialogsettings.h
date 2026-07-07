@@ -13,8 +13,8 @@
 #include "lsc.h"
 #include "../shared_src/default_settings.h"
 
-// The order is the same as in dialogsettings.ui and camerasettingswidget.ui
-// measurement settings
+ // The order is the same as in dialogsettings.ui and camerasettingswidget.ui
+ // measurement settings
 constexpr auto settingBoardSelPath = "board_sel";
 constexpr auto settingBoard0Path = "board0";
 constexpr auto settingBoard1Path = "board1";
@@ -170,7 +170,7 @@ class DialogSettings : public QDialog
 	Q_OBJECT
 
 public:
-	explicit DialogSettings(QWidget *parent = nullptr);
+	explicit DialogSettings(QWidget* parent = nullptr);
 	~DialogSettings();
 	Ui::DialogSettings* ui;
 signals:

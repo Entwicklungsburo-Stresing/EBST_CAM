@@ -7,7 +7,7 @@
 #include "dialogsettings.h"
 #include "ui_dialogsettings.h"
 
-CameraSettingsWidget::CameraSettingsWidget(QWidget *parent)
+CameraSettingsWidget::CameraSettingsWidget(QWidget* parent)
 	: QWidget(parent),
 	ui(new Ui::CameraSettingsWidgetClass())
 {
@@ -64,7 +64,7 @@ void CameraSettingsWidget::on_accepted()
 	settings.setValue(settingGpxOffsetPath, ui->spinBoxGpxOffset->value());
 	settings.setValue(settingIOCtrlImpactStartPixelPath, ui->spinBoxIOCtrlImpactStartPixel->value());
 	settings.setValue(settingsUseSoftwarePollingPath, ui->checkBoxUseSoftwarePolling->isChecked());
-	if(settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble() == sensor_type_hsvis)
+	if (settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble() == sensor_type_hsvis)
 		settings.setValue(settingSensorResetOrHsirEcPath, ui->spinBoxSensorResetOrHsirEcIn1ns->value() / 4);
 	else
 		settings.setValue(settingSensorResetOrHsirEcPath, ui->spinBoxSensorResetOrHsirEcIn1ns->value() / 160);
@@ -173,7 +173,7 @@ void CameraSettingsWidget::on_comboBoxSensorType_currentIndexChanged(int index)
 	}
 	ui->tabWidget->setTabEnabled(2, enabled);
 	ui->checkBoxIsFftLegacy->setEnabled(enabled);
-	if(!enabled)
+	if (!enabled)
 		ui->comboBoxFftMode->setCurrentIndex(full_binning);
 }
 
@@ -206,7 +206,7 @@ void CameraSettingsWidget::on_comboBoxCameraSystem_currentIndexChanged(int index
 		ui->comboBoxSensorType->setItemData(sensor_type_cmos, enabled_item, Qt::UserRole - 1);
 		ui->comboBoxSensorType->setItemData(sensor_type_hsvis, disabled_item, Qt::UserRole - 1);
 		ui->comboBoxSensorType->setItemData(sensor_type_hsir, disabled_item, Qt::UserRole - 1);
-		if(ui->comboBoxSensorType->currentIndex() >= sensor_type_hsvis)
+		if (ui->comboBoxSensorType->currentIndex() >= sensor_type_hsvis)
 			ui->comboBoxSensorType->setCurrentIndex(sensor_type_pda);
 		break;
 	case camera_system_3010:
@@ -453,7 +453,7 @@ void CameraSettingsWidget::on_comboBoxFftMode_currentIndexChanged(int index)
 		ui->comboBoxSti->setCurrentIndex(sti_ASL);
 		if (ds)
 		{
-			if(!enabled)
+			if (!enabled)
 				ds->ui->doubleSpinBoxNos->setValue(ui->spinBoxNumberOfRegions->value());
 			ds->ui->doubleSpinBoxNos->setEnabled(enabled);
 		}
@@ -555,7 +555,7 @@ void CameraSettingsWidget::initializeWidget()
 	ui->spinBoxGpxOffset->setValue(settings.value(settingGpxOffsetPath, settingGpxOffsetDefault).toDouble());
 	ui->spinBoxIOCtrlImpactStartPixel->setValue(settings.value(settingIOCtrlImpactStartPixelPath, settingIOCtrlImpactStartPixelDefault).toDouble());
 	ui->checkBoxUseSoftwarePolling->setChecked(settings.value(settingsUseSoftwarePollingPath, settingsUseSoftwarePollingDefault).toBool());
-	if(settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble() == sensor_type_hsvis)
+	if (settings.value(settingSensorTypePath, settingSensorTypeDefault).toDouble() == sensor_type_hsvis)
 		ui->spinBoxSensorResetOrHsirEcIn1ns->setValue(settings.value(settingSensorResetOrHsirEcPath, settingSensorResetOrHsIrDefault).toDouble() * 4);
 	else
 		ui->spinBoxSensorResetOrHsirEcIn1ns->setValue(settings.value(settingSensorResetOrHsirEcPath, settingSensorResetOrHsIrDefault / 50).toDouble() * 160);

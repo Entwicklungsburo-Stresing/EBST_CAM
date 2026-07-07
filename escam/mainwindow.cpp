@@ -20,10 +20,10 @@
 #include "dialoggreyscalesettings.h"
 #endif
 
-/**
- * @brief Constructor of Class MainWindow.
- * @param parent
- */
+ /**
+  * @brief Constructor of Class MainWindow.
+  * @param parent
+  */
 MainWindow::MainWindow(QWidget* parent)
 	: QMainWindow(parent)
 	, ui(new Ui::MainWindow)
@@ -230,11 +230,11 @@ void MainWindow::startPressed()
  */
 void MainWindow::on_actionEdit_triggered()
 {
-	DialogSettings* ds = new DialogSettings( this );
-	ds->setAttribute( Qt::WA_DeleteOnClose );
+	DialogSettings* ds = new DialogSettings(this);
+	ds->setAttribute(Qt::WA_DeleteOnClose);
 	ds->show();
-	connect( ds, &DialogSettings::settings_saved, this, &MainWindow::loadSettings );
-	connect( ds, &DialogSettings::settings_saved, ui->chartView, &MyQChartView::setDefaultAxes );
+	connect(ds, &DialogSettings::settings_saved, this, &MainWindow::loadSettings);
+	connect(ds, &DialogSettings::settings_saved, ui->chartView, &MyQChartView::setDefaultAxes);
 	return;
 }
 
@@ -296,7 +296,7 @@ void MainWindow::on_actionExport_data_triggered()
 	layout->addWidget(dialogButtonBox);
 	messageBox->setWindowTitle("Export data");
 	if (status != es_no_error)
-	{ 
+	{
 		QString errorMsg = QString::fromStdString("Error exporting data:\n");
 		errorMsg.append(QString::fromStdString(ConvertErrorCodeToMsg(status)));
 		labelExport->setText(errorMsg);
@@ -483,11 +483,11 @@ void MainWindow::loadSettings()
 		statusBarString.append("Data manipulation is enabled.");
 	if (testModeOn)
 		statusBarString.append("No PCIe card found. Test mode.");
-	if(showManipulateDataWarning || testModeOn)
+	if (showManipulateDataWarning || testModeOn)
 		statusBar()->showMessage(statusBarString);
 	else
 		statusBar()->clearMessage();
-	if (isOvertempCam) 
+	if (isOvertempCam)
 	{
 		ui->widgetOvertempParent->setVisible(true);
 	}
@@ -503,7 +503,7 @@ void MainWindow::loadSettings()
 	int nob = settings.value(settingNobPath, settingNobDefault).toDouble();
 	ui->horizontalSliderBlock->setMaximum(nob);
 	ui->spinBoxBlock->setMaximum(nob);
-	if(nob < ui->horizontalSliderBlock->value())
+	if (nob < ui->horizontalSliderBlock->value())
 		ui->horizontalSliderBlock->setValue(nob);
 	QString theme = settings.value(settingThemePath, settingThemeDefault).toString();
 	QApplication::setStyle(QStyleFactory::create(theme));
@@ -512,7 +512,7 @@ void MainWindow::loadSettings()
 	qstyle->setColorScheme(Qt::ColorScheme(settings.value(settingColorSchemePath, settingColorSchemeDefault).toDouble()));
 #endif
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 0))
-	if(qstyle->colorScheme() == Qt::ColorScheme::Dark)
+	if (qstyle->colorScheme() == Qt::ColorScheme::Dark)
 		ui->chartView->chart()->setTheme(QChart::ChartThemeDark);
 	else
 		ui->chartView->chart()->setTheme(QChart::ChartThemeLight);
@@ -696,7 +696,7 @@ void MainWindow::loadCameraData()
 			settings.endGroup();
 		}
 	}
-	if(showedCam)
+	if (showedCam)
 		ui->chartView->setChartData(camera_data, pixel_array, static_cast<uint16_t>(showCamcnt), lineSeriesNamesList);
 
 	// Deactivate legend, because it is blinking. Activate it, when a solution is found
@@ -1147,11 +1147,11 @@ void MainWindow::on_actionImport_triggered()
 
 /**
  * @brief This is a helper function to copy settings.
- * 
+ *
  * @param dst
  * @param src
  */
-void MainWindow::copySettings(QSettings &dst, QSettings &src)
+void MainWindow::copySettings(QSettings& dst, QSettings& src)
 {
 	QStringList keys = src.allKeys();
 	for (QStringList::iterator i = keys.begin(); i != keys.end(); i++)
@@ -1252,7 +1252,7 @@ void MainWindow::adjustLiveView()
 	return;
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
+void MainWindow::closeEvent(QCloseEvent* event)
 {
 	if (lsc.IsRunning())
 	{
@@ -1280,7 +1280,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
  */
 void MainWindow::on_pushButtonStartStop_pressed()
 {
-	if(lsc.IsRunning())
+	if (lsc.IsRunning())
 		lsc.abortMeasurement();
 	else
 		startPressed();

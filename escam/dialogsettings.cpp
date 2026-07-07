@@ -10,7 +10,7 @@
 #include "lsc-gui.h"
 #include "../version.h"
 
-DialogSettings::DialogSettings(QWidget *parent) :
+DialogSettings::DialogSettings(QWidget* parent) :
 	QDialog(parent, Qt::Dialog | Qt::WindowContextHelpButtonHint | Qt::WindowCloseButtonHint),
 	ui(new Ui::DialogSettings)
 {
@@ -179,7 +179,7 @@ void DialogSettings::on_accepted()
 
 void DialogSettings::on_pushButtonDefault_clicked()
 {
-	QMessageBox::StandardButton reply = QMessageBox::question(this, "Warning", "All settings are going to be replaced by its default values. Are you sure?", QMessageBox::Yes|QMessageBox::No);
+	QMessageBox::StandardButton reply = QMessageBox::question(this, "Warning", "All settings are going to be replaced by its default values. Are you sure?", QMessageBox::Yes | QMessageBox::No);
 	if (reply == QMessageBox::Yes)
 	{
 		loadDefaults();

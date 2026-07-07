@@ -7,7 +7,7 @@
 #include "ui_dialogioctrl_legacy.h"
 #include "lsc-gui.h"
 
-DialogIoctrlLegacy::DialogIoctrlLegacy(QWidget *parent)
+DialogIoctrlLegacy::DialogIoctrlLegacy(QWidget* parent)
 	: QDialog(parent),
 	ui(new Ui::DialogIoctrlLegacy)
 {
@@ -57,8 +57,7 @@ DialogIoctrlLegacy::DialogIoctrlLegacy(QWidget *parent)
 }
 
 DialogIoctrlLegacy::~DialogIoctrlLegacy()
-{
-}
+{}
 
 void DialogIoctrlLegacy::setOutput(uint8_t outputNumber, uint16_t width_in_5ns, uint16_t delay_in_5ns)
 {

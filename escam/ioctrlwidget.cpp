@@ -6,7 +6,7 @@
 #include "dialogsettings.h"
 #include "lsc-gui.h"
 
-IoctrlWidget::IoctrlWidget(QWidget *parent)
+IoctrlWidget::IoctrlWidget(QWidget* parent)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
@@ -148,7 +148,7 @@ IoctrlWidget::TimeResult IoctrlWidget::processTimeInput(const QString& input, lo
 	 */
 	static QRegularExpression regex("^\\s*(\\d+(?:[.,]\\d*)?|[.,]\\d+)\\s*(s|ms|us|\u00B5s|ns)?\\s*$");
 	QRegularExpressionMatch match = regex.match(input.toLower().trimmed());
-	
+
 	if (!match.hasMatch()) return result;
 
 	// Extract captured groups
@@ -161,7 +161,7 @@ IoctrlWidget::TimeResult IoctrlWidget::processTimeInput(const QString& input, lo
 	if (!ok) return result;
 
 	if (unit.isEmpty()) unit = "ns";
-	
+
 	// Find correct factor based on unit
 	double factor = 1.0;
 	if (unit == "s") factor = 1e9;
@@ -203,7 +203,8 @@ void IoctrlWidget::on_lineEditDelay_editingFinished()
 		ui.lineEditDelay->blockSignals(false);
 		ui.lineEditDelay->setStyleSheet("");
 		delayChanged(static_cast<int>(tr.ns));
-	} else {
+	}
+	else {
 		ui.lineEditDelay->setStyleSheet("border: 1px solid red; border-radius: 4px; background-color: #FFF0F0;");
 	}
 	return;
@@ -237,7 +238,8 @@ void IoctrlWidget::on_lineEditWidth_editingFinished()
 		ui.lineEditWidth->blockSignals(false);
 		ui.lineEditWidth->setStyleSheet("");
 		widthChanged(static_cast<int>(tr.ns));
-	} else {
+	}
+	else {
 		ui.lineEditWidth->setStyleSheet("border: 1px solid red; border-radius: 4px; background-color: #FFF0F0;");
 	}
 	return;

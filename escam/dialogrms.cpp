@@ -7,7 +7,7 @@
 #include "ui_dialogrms.h"
 #include "lsc-gui.h"
 
-DialogRMS::DialogRMS(QWidget *parent) :
+DialogRMS::DialogRMS(QWidget* parent) :
 	QDialog(parent),
 	ui(new Ui::DialogRMS)
 {
@@ -20,7 +20,7 @@ DialogRMS::DialogRMS(QWidget *parent) :
 	connect(ui->spinBox_lastsample, qOverload<int>(&QSpinBox::valueChanged), this, &DialogRMS::updateRMS);
 	connect(ui->spinBox_pixel, qOverload<int>(&QSpinBox::valueChanged), this, &DialogRMS::updateRMS);
 	connect(mainWindow->ui->spinBoxSample, qOverload<int>(&QSpinBox::valueChanged), this, &DialogRMS::updateSampleSize);
-	
+
 	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
 	int firstSample = settings.value(settingRMSFirstSamplePath, settingRMSFirstSampleDefault).toInt();
 	int lastSample = settings.value(settingRMSLastSamplePath, settingRMSLastSampleDefault).toInt();
@@ -49,14 +49,14 @@ void DialogRMS::updateRMS()
 	QString smwf, strms;
 
 	//calculate trms
-	mainWindow->lsc.calcTRMS( drvno, firstSample, lastSample, pixel, campos, &mwf, &trms );
+	mainWindow->lsc.calcTRMS(drvno, firstSample, lastSample, pixel, campos, &mwf, &trms);
 	//convert the numbers to strings
-	smwf = QString::number( mwf );
-	strms = QString::number( trms );
+	smwf = QString::number(mwf);
+	strms = QString::number(trms);
 	//show values
-	ui->label_mwf->setText( smwf );
-	ui->label_trms->setText( strms );
-	if(ui->checkBoxTarget->isChecked())
+	ui->label_mwf->setText(smwf);
+	ui->label_trms->setText(strms);
+	if (ui->checkBoxTarget->isChecked())
 	{
 		double targetRMS = ui->doubleSpinBoxRMSTarget->value();
 		if (trms >= targetRMS)

@@ -21,7 +21,7 @@ class DialogSpecialPixels : public QDialog
 	Q_OBJECT
 
 public:
-	DialogSpecialPixels(QWidget *parent = nullptr);
+	DialogSpecialPixels(QWidget* parent = nullptr);
 	~DialogSpecialPixels();
 public slots:
 	void updateValues();
@@ -29,7 +29,7 @@ public slots:
 	void updateBlock(int block);
 
 private:
-	Ui::DialogSpecialPixelsClass *ui;
+	Ui::DialogSpecialPixelsClass* ui;
 	uint32_t _sample = 0;
 	uint32_t _block = 0;
 	QSettings settings;

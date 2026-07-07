@@ -1,6 +1,6 @@
 #include "dialogfancontrol.h"
 
-DialogFanControl::DialogFanControl(QWidget *parent)
+DialogFanControl::DialogFanControl(QWidget* parent)
 	: QDialog(parent)
 	, ui(new Ui::DialogFanControlClass())
 {

@@ -6,12 +6,12 @@
 #include "dialogchartsettings.h"
 #include "lsc-gui.h"
 
-DialogChartSettings::DialogChartSettings(QWidget *parent)
+DialogChartSettings::DialogChartSettings(QWidget* parent)
 	: QDialog(parent)
 {
 	ui.setupUi(this);
 	QList<QAbstractAxis*> axes = mainWindow->ui->chartView->chart()->axes();
-	if(!axes.isEmpty())
+	if (!axes.isEmpty())
 	{
 		QValueAxis* axis0 = static_cast<QValueAxis*>(axes[0]);
 		QValueAxis* axis1 = static_cast<QValueAxis*>(axes[1]);
@@ -120,7 +120,7 @@ void DialogChartSettings::populateCameras()
 	for (uint32_t drvno = 0; drvno < mainWindow->lsc.numberOfBoards; drvno++)
 	{
 		if ((board_sel >> drvno) & 1)
-		// Check if the drvno'th bit is set
+			// Check if the drvno'th bit is set
 		{
 			settings.beginGroup("board" + QString::number(drvno));
 			camcnt = settings.value(settingCamcntPath, settingCamcntDefault).toDouble();

@@ -5,7 +5,7 @@
 
 #include "dialogshutter.h"
 
-DialogShutter::DialogShutter(QWidget *parent)
+DialogShutter::DialogShutter(QWidget* parent)
 	: QDialog(parent, Qt::Dialog | Qt::WindowContextHelpButtonHint | Qt::WindowCloseButtonHint)
 {
 	ui.setupUi(this);
@@ -67,7 +67,7 @@ void DialogShutter::on_checkBoxShutterX_checkStateChanged()
 	Qt::CheckState state_shutter2 = ui.checkBoxShutter2->checkState();
 	Qt::CheckState state_shutter3 = ui.checkBoxShutter3->checkState();
 	Qt::CheckState state_shutter4 = ui.checkBoxShutter4->checkState();
-	
+
 	// Put all shutter states into one variable
 	uint16_t shutter_states = 0;
 	shutter_states |= ((state_shutter1 == Qt::Checked) ? 1 : 0) << ioctrl_shutter_bitindex_shutter1;
