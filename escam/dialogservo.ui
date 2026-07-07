@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>490</width>
-    <height>385</height>
+    <width>406</width>
+    <height>345</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,21 +28,104 @@
     </spacer>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout" columnstretch="1,0,0,0">
-     <item row="8" column="1">
-      <widget class="QLabel" name="labelPos2">
+    <layout class="QGridLayout" name="gridLayout" columnstretch="1,0,0,1">
+     <item row="10" column="2">
+      <widget class="QPushButton" name="pushButtonManualTrig">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
+       </property>
        <property name="text">
-        <string>Servo position 2</string>
+        <string>Trigger</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
-      <widget class="QLabel" name="labelBin">
+     <item row="2" column="2">
+      <widget class="QLineEdit" name="lineEditDec">
+       <property name="maximumSize">
+        <size>
+         <width>450</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="text">
-        <string>Bin</string>
+        <string>0</string>
+       </property>
+       <property name="maxLength">
+        <number>39</number>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="labelDec">
+       <property name="text">
+        <string>Dec</string>
        </property>
        <property name="buddy">
-        <cstring>lineEditBin</cstring>
+        <cstring>lineEditDec</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLabel" name="labelPos1">
+       <property name="text">
+        <string>Servo position 1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QLineEdit" name="lineEditBin">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>450</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>0000000000000000000000000000000000000000000000000000000000000000</string>
+       </property>
+       <property name="maxLength">
+        <number>128</number>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLabel" name="labelSeqLength">
+       <property name="text">
+        <string>Sequence length</string>
+       </property>
+       <property name="buddy">
+        <cstring>spinBoxSeqLength</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QSpinBox" name="spinBoxBoard">
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -125,34 +208,20 @@
        </item>
       </widget>
      </item>
-     <item row="10" column="1">
-      <widget class="QLabel" name="labelManualTrig">
+     <item row="8" column="1">
+      <widget class="QLabel" name="labelPos2">
        <property name="text">
-        <string>manual trigger</string>
+        <string>Servo position 2</string>
        </property>
       </widget>
      </item>
-     <item row="7" column="1">
-      <widget class="QLabel" name="labelPos1">
+     <item row="4" column="1">
+      <widget class="QLabel" name="labelBin">
        <property name="text">
-        <string>Servo position 1</string>
+        <string>Bin</string>
        </property>
-      </widget>
-     </item>
-     <item row="8" column="2">
-      <widget class="QSpinBox" name="spinBoxPos2">
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-       <property name="maximum">
-        <number>65535</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QSpinBox" name="spinBoxBoard">
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       <property name="buddy">
+        <cstring>lineEditBin</cstring>
        </property>
       </widget>
      </item>
@@ -178,6 +247,56 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="5" column="2">
+      <widget class="QSpinBox" name="spinBoxSeqLength">
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>128</number>
+       </property>
+       <property name="value">
+        <number>128</number>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLabel" name="labelTrigSource">
+       <property name="text">
+        <string>Trigger source</string>
+       </property>
+       <property name="buddy">
+        <cstring>comboBoxTriggerSource</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="1">
+      <widget class="QLabel" name="labelManualTrig">
+       <property name="text">
+        <string>manual trigger</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="2">
+      <widget class="QSpinBox" name="spinBoxPos2">
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="maximum">
+        <number>65535</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="labelBoard">
+       <property name="text">
+        <string>board</string>
+       </property>
+      </widget>
      </item>
      <item row="3" column="2">
       <widget class="QLineEdit" name="lineEditHex">
@@ -229,60 +348,6 @@
        </item>
       </layout>
      </item>
-     <item row="2" column="2">
-      <widget class="QLineEdit" name="lineEditDec">
-       <property name="maximumSize">
-        <size>
-         <width>450</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="maxLength">
-        <number>39</number>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="2">
-      <widget class="QLineEdit" name="lineEditBin">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>450</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>0000000000000000000000000000000000000000000000000000000000000000</string>
-       </property>
-       <property name="maxLength">
-        <number>128</number>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QLabel" name="labelTrigSource">
-       <property name="text">
-        <string>Trigger source</string>
-       </property>
-       <property name="buddy">
-        <cstring>comboBoxTriggerSource</cstring>
-       </property>
-      </widget>
-     </item>
      <item row="3" column="1">
       <widget class="QLabel" name="labelHex">
        <property name="text">
@@ -300,76 +365,11 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>0</width>
+         <width>40</width>
          <height>20</height>
         </size>
        </property>
       </spacer>
-     </item>
-     <item row="5" column="1">
-      <widget class="QLabel" name="labelSeqLength">
-       <property name="text">
-        <string>Sequence length</string>
-       </property>
-       <property name="buddy">
-        <cstring>spinBoxSeqLength</cstring>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="labelBoard">
-       <property name="text">
-        <string>board</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="labelDec">
-       <property name="text">
-        <string>Dec</string>
-       </property>
-       <property name="buddy">
-        <cstring>lineEditDec</cstring>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="2">
-      <widget class="QSpinBox" name="spinBoxSeqLength">
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>128</number>
-       </property>
-       <property name="value">
-        <number>128</number>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="2">
-      <widget class="QPushButton" name="pushButtonManualTrig">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="layoutDirection">
-        <enum>Qt::LayoutDirection::LeftToRight</enum>
-       </property>
-       <property name="text">
-        <string>Trigger</string>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>
