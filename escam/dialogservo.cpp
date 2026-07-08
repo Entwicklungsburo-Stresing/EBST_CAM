@@ -106,6 +106,7 @@ void DialogServo::on_spinBoxSeqLength_valueChanged(int val)
 #endif
 	}
 	mainWindow->lsc.camSetGalvoBinSeqLen(ui->spinBoxBoard->value(), 0, val);
+	return;
 }
 
 void DialogServo::on_lineEditDec_textChanged()
@@ -415,5 +416,17 @@ void DialogServo::on_spinBoxStepPeriod_valueChanged(int value)
 	settings.setValue(settingServoStpPeriodPath, value);
 	settings.endGroup();
 	mainWindow->lsc.camSetGalvoStpPeriod(ui->spinBoxBoard->value(), 0, value);
+	return;
+}
+
+void DialogServo::on_pushButtonSendAll_clicked()
+{
+	on_spinBoxSeqLength_valueChanged(ui->spinBoxSeqLength->value());
+	on_lineEditBin_textChanged();
+	on_lineEditBin_editingFinished();
+	on_spinBoxPos1_valueChanged(ui->spinBoxPos1->value());
+	on_spinBoxPos2_valueChanged(ui->spinBoxPos2->value());
+	on_comboBoxTriggerSource_currentIndexChanged();
+	on_spinBoxStepPeriod_valueChanged(ui->spinBoxStepPeriod->value());
 	return;
 }

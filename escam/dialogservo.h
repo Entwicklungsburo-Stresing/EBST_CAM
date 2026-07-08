@@ -41,6 +41,7 @@ private slots:
 	void on_radioButtonTrigSeq_toggled();
 	void on_pushButtonDefault_clicked();
 	void on_spinBoxStepPeriod_valueChanged(int value);
+	void on_pushButtonSendAll_clicked();
 private:
 	Ui::dialogservoClass* ui;
 	QSettings settings;
