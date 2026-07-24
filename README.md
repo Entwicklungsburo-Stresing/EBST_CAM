@@ -1,5 +1,5 @@
 ﻿# EBST_CAM
-This repository contains software for operating the line scan cameras of [Entwicklungsbüro Stresing](http://stresing.de). There are multiple projects for different plattforms. This readme is giving an overview of these projects and contains instructions for compiling. If you are looking for more documentation about the software, look [here](https://entwicklungsburo-stresing.github.io/). Also refer to your given manual FLbook.pdf for more documentation.
+This repository contains software for operating the line scan cameras of [Entwicklungsbüro Stresing](https://stresing.de). There are multiple projects for different plattforms. This readme is giving an overview of these projects and contains instructions for compiling. If you are looking for more documentation about the software, look [here](https://entwicklungsburo-stresing.github.io/). Also refer to your given manual FLbook.pdf for more documentation.
 
 project			| description																		| plattform
 :---			| :---																				| :---
@@ -46,7 +46,7 @@ Release_minimal	| Release build for escam and CsimpleExample and minimal release
 Release-Labview	| Release build for DLL with Labview libraries for communication with Labview software. Use this for production usage with Labview.
 
 ### Installing Windows driver
-Run `install_run_as_admin.bat` from [Stresing14.00_Driver_Distribution_Package](http://stresing.de/dwnl/ebstdrv14v00.zip) as admin. 
+Run `install_run_as_admin.bat` from [Stresing14.00_Driver_Distribution_Package](https://stresing.de/dwnl/ebstdrv14v00.zip) as admin. 
 
 ### Installing escam
 Compile solution first and use `escam_setup/build/setup.exe` or use `setup.exe` from a [release](https://github.com/Entwicklungsburo-Stresing/EBST_CAM/releases). If Microsoft Visual C++ Redistributable is missing, this setup should install it automatically.
