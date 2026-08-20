@@ -4487,8 +4487,8 @@ void GetVerifiedDataDialog(struct verify_data_parameter* vd, char** resultString
 	else len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "Data found as expected\n\n");
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "Data found in file header:\n");
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "software_version_major:\t%"PRIu32"\n", vd->fh.software_version_major);
-	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "software_version_pcie:\t%"PRIu32"\n", vd->fh.software_version_pcie);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "software_version_minor:\t%"PRIu32"\n", vd->fh.software_version_minor);
+	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "software_version_patch:\t%"PRIu32"\n", vd->fh.software_version_patch);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "number_of_boards:\t%"PRIu32"\n", vd->fh.number_of_boards);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "drvno:\t%"PRIu32"\n", vd->fh.drvno);
 	len += sprintf_s(*resultString + len, bufferLength - (size_t)len, "pixel:\t%"PRIu32"\n", vd->fh.pixel);
@@ -5041,11 +5041,11 @@ es_status_codes ImportMeasurementDataFromFileHDF5(const char* filename)
 	uint32_t major_version;
 	read_uint32_attr(file_id, "Major version", &major_version);
 	
-	uint32_t pcie_version;
-	read_uint32_attr(file_id, "Pcie version", &pcie_version);
-
 	uint32_t minor_version;
 	read_uint32_attr(file_id, "Minor version", &minor_version);
+
+	uint32_t patch_version;
+	read_uint32_attr(file_id, "Patch version", &patch_version);
 
 	uint32_t number_of_boards_file;
 	read_uint32_attr(file_id, "Number of Boards", (uint32_t*)&number_of_boards_file);
@@ -5296,10 +5296,10 @@ es_status_codes SaveMeasurementDataToFileHDF5(const char* filename)
 	uint32_t major_version = VERSION_MAJOR_ESCAM;
 	hid_t file_attr_version_major = CreateNumericAttribute(file_id, "Major version", H5T_NATIVE_UINT32, dataspace_scalar, &major_version);
 	H5Aclose(file_attr_version_major);
-	uint32_t pcie_version = VERSION_PCIE_BOARD_VERSION;
+	uint32_t pcie_version = VERSION_MINOR_ESCAM;
 	hid_t file_attr_version_pcie = CreateNumericAttribute(file_id, "Pcie version", H5T_NATIVE_UINT32, dataspace_scalar, &pcie_version);
 	H5Aclose(file_attr_version_pcie);
-	uint32_t minor_version = VERSION_MINOR_ESCAM;
+	uint32_t minor_version = VERSION_PATCH_ESCAM;
 	hid_t file_attr_version_minor = CreateNumericAttribute(file_id, "Minor version", H5T_NATIVE_UINT32, dataspace_scalar, &minor_version);
 	H5Aclose(file_attr_version_minor);
 	hid_t file_attr_number_of_boards = CreateNumericAttribute(file_id, "Number of Boards", H5T_NATIVE_UINT8, dataspace_scalar, &number_of_boards);
@@ -5585,7 +5585,7 @@ es_status_codes GetBonPeriod(uint32_t drvno, uint32_t* bonPeriodIn10ns)
  * 
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param[out] major_version Pointer to a uint16_t, where the major version number will be written.
- * @param[out] minor_version Pointer to a uint16_t, where the minor version number will be written.
+ * @param[out] patch_version Pointer to a uint16_t, where the minor version number will be written.
  * @return @ref es_status_codes
  */
 es_status_codes GetPcieCardVersion(uint32_t drvno, uint16_t* major_version, uint16_t* minor_version)
@@ -5604,7 +5604,7 @@ es_status_codes GetPcieCardVersion(uint32_t drvno, uint16_t* major_version, uint
  * This function compares the input the PCIe card version that is saved in the global variable. The global variable is written during InitPcieBoard which is called by InitMeasurement.
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param[in] major_version Major version before the dot
- * @param[in] minor_version Minor version after the dot
+ * @param[in] patch_version Minor version after the dot
  * @return True if the input version is greater than hardware version, false otherwise.
  */
 bool PcieCardVersionIsGreaterThan(uint32_t drvno, uint16_t major_version, uint16_t minor_version)
@@ -5621,7 +5621,7 @@ bool PcieCardVersionIsGreaterThan(uint32_t drvno, uint16_t major_version, uint16
  * This function compares the input the PCIe card version that is saved in the global variable. The global variable is written during InitPcieBoard which is called by InitMeasurement.
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param[in] major_version Major version before the dot
- * @param[in] minor_version Minor version after the dot
+ * @param[in] patch_version Minor version after the dot
  * @return True if the input version is smaller than hardware version, false otherwise.
  */
 bool PcieCardVersionIsSmallerThan(uint32_t drvno, uint16_t major_version, uint16_t minor_version)
@@ -5638,7 +5638,7 @@ bool PcieCardVersionIsSmallerThan(uint32_t drvno, uint16_t major_version, uint16
  * This function compares the input the PCIe card version that is saved in the global variable. The global variable is written during InitPcieBoard which is called by InitMeasurement.
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
  * @param[in] major_version Major version before the dot
- * @param[in] minor_version Minor version after the dot
+ * @param[in] patch_version Minor version after the dot
  * @return True if the input version is equal hardware version, false otherwise.
  */
 bool PcieCardVersionIsEqual(uint32_t drvno, uint16_t major_version, uint16_t minor_version)

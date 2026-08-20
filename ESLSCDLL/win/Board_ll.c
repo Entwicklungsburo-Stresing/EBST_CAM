@@ -708,8 +708,8 @@ es_status_codes SaveMeasurementDataToFileBIN(const char* filename)
 		// Assemble the file_header
 		struct file_header fh;
 		fh.software_version_major = VERSION_MAJOR_ESCAM;
-		fh.software_version_pcie = VERSION_PCIE_BOARD_VERSION;
 		fh.software_version_minor = VERSION_MINOR_ESCAM;
+		fh.software_version_patch = VERSION_PATCH_ESCAM;
 		fh.number_of_boards = number_of_boards;
 		fh.board_sel = settings_struct.board_sel;
 		fh.drvno = drvno;
@@ -831,8 +831,8 @@ void writeFileHeaderToFile(uint32_t drvno)
 	// Assemble the file_header
 	struct file_header fh;
 	fh.software_version_major = VERSION_MAJOR_ESCAM;
-	fh.software_version_pcie = VERSION_PCIE_BOARD_VERSION;
 	fh.software_version_minor = VERSION_MINOR_ESCAM;
+	fh.software_version_patch = VERSION_PATCH_ESCAM;
 	fh.number_of_boards = number_of_boards;
 	fh.board_sel = settings_struct.board_sel;
 	fh.drvno = drvno;

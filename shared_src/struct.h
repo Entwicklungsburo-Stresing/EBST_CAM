@@ -481,8 +481,8 @@ struct measurement_settings_matlab
 struct file_header
 {
 	uint32_t software_version_major;
-	uint32_t software_version_pcie;
 	uint32_t software_version_minor;
+	uint32_t software_version_patch;
 	uint32_t number_of_boards;
 	uint32_t board_sel;
 	uint32_t drvno;
