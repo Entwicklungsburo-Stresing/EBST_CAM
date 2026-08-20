@@ -1,31 +1,29 @@
 How to release a new version number
 
-version pattern:  "Major Version"."PCIE Board Version"."Minor Version"
+Version pattern: "Major Version"."Minor Version"."Patch Version"
 
-
-How to new version number:
-- Increase major version only when there are very big changes in software and / or hardware.
-- Increase PCIe board version when the PAL version has increased.
-- Set minor version to 0 when major or PCIe board version have increased.
-- Increase minor version in every other case when you want to release a new version number.
-
+How to determine the new version number:
+- Increase the major version only when there are very big changes in software and/or hardware (e.g. breaking changes, major architectural rework).
+- Increase the minor version for new features or larger additions that remain backward compatible.
+- Set the patch version to 0 when the major or minor version has been increased.
+- Increase the patch version in every other case when you want to release a new version number (e.g. bug fixes, small changes).
 
 Describe your changes:
-Put a new version chapter in CHANGELOG.md at the beginning of the file e.g. 3.20.3. Descripe all changes since the last version number there.
-
+Put a new version chapter in CHANGELOG.md at the beginning of the file, e.g. 3.2.3. Describe all changes since the last version number there.
 
 Places where the version number has to be changed:
 version.h
 escam/escam.pro
 escam_setup/escam_setup.vdproj
 
-To change the version number in escam_setup.vdproj click in the "Solution Explorer" (right top) in Visual Studio on the project escam_setup. Then change "version" in the properties (right bottom). A window appears. Press yes to accept to change the product code.
-
+To change the version number in escam_setup.vdproj, click on the project escam_setup in the "Solution Explorer" (top right) in Visual Studio. Then change "version" in the properties (bottom right). A window will appear asking whether to change the product code. Click "Yes" to accept.
 
 Optional:
-After you committed the verion number change (best practice is to do this in an own commit), tag the commit with its version number e.g.:
-git tag 3.20.3
+After committing the version number change (best practice is to do this in its own commit), tag the commit with its version number, e.g.:
+
+git tag 3.2.3
 
 Push the tag to the remote repositories:
+
 git push --tags
 git push --tags github
