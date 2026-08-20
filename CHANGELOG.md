@@ -8,13 +8,6 @@ The hardware version number was the current hardware version of the PCIe card at
 
 ## Unreleased
 ### API Changes
-* Add function DLLCam_SetGalvoBinSeq
-* Add function DLLCam_SetGalvoSeqDelay
-* Add function DLLCam_SetGalvoStpPeriod
-* Add function DLLCam_SetGalvoSeqOffset
-* Add function DLLCam_SetGalvoRestState1
-* Add function DLLCam_SetGalvoRestState2
-* Add function DLLCam_SetGalvoBinSeqLen
 #### Added
 #### Changed
 #### Removed
@@ -22,12 +15,30 @@ The hardware version number was the current hardware version of the PCIe card at
 #### Deprecated
 ### Other Changes
 #### Added
-* Connect BinSeq, BinSeqLen, State1, State2, step period to the Servo window.
-* Add all galvo addresses to enum_hardware.h.
 #### Changed
 #### Removed
 #### Fixed
 #### Deprecated
+
+## 4.22.0 - 2026-08-20
+### API Changes
+#### Added
+* Add function DLLCam_SetGalvoBinSeq
+* Add function DLLCam_SetGalvoSeqDelay
+* Add function DLLCam_SetGalvoStpPeriod
+* Add function DLLCam_SetGalvoSeqOffset
+* Add function DLLCam_SetGalvoRestState1
+* Add function DLLCam_SetGalvoRestState2
+* Add function DLLCam_SetGalvoBinSeqLen
+### Other Changes
+#### Added
+* Add servo dialog in Escam
+* Connect BinSeq, BinSeqLen, State1, State2, step period to the Servo window.
+* Add all galvo addresses to enum_hardware.h.
+#### Changed
+* Update Qt to 6.11.1
+* Reset DMA only when the required size changes
+* Repository now uses "conventional commits" commit style
 
 ## 4.21.0 - 2026-04-17
 Version 4.21.0 introduces [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
