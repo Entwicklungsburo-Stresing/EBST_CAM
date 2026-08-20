@@ -241,6 +241,17 @@ es_status_codes SetupDma( uint32_t drvno )
 {
 	es_status_codes status = checkDriverHandle(drvno);
 	if (status != es_no_error) return status;
+
+	uint32_t requiredSizeInBytes = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans
+		* settings_struct.camera_settings[drvno].pixel
+		* sizeof(uint16_t);
+	
+	if (dmaBuffer[drvno] && dmaBufferSizeInBytes[drvno] == requiredSizeInBytes)
+	{
+		ES_LOG("Setup DMA reuse existing DMA buffer (drvno %u, %u bytes)\n", drvno, requiredSizeInBytes);
+		return es_no_error;
+	}
+
 	ES_LOG( "Setup DMA\n" );
 	//If DMA is already set up, clean it before
 	if (dmaBuffer[drvno])
@@ -248,7 +259,7 @@ es_status_codes SetupDma( uint32_t drvno )
 		status = CleanupDma(drvno);
 		if (status != es_no_error) return status;
 	}
-	dmaBufferSizeInBytes[drvno] = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans * settings_struct.camera_settings[drvno].pixel * sizeof(uint16_t);
+	dmaBufferSizeInBytes[drvno] = requiredSizeInBytes;
 	return lscpciej_SetupDma(drvno, &dmaBuffer[drvno], dmaBufferSizeInBytes[drvno]);
 }
 
