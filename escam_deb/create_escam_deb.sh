@@ -1,9 +1,9 @@
 #!/usr/bin/env sh
 
 VERSION_MAJOR=$(grep "#define VERSION_MAJOR_ESCAM" ../version.h | grep -o '[0-9]\+')
-VERSION_PCIE_BOARD_VERSION=$(grep "#define VERSION_PCIE_BOARD_VERSION" ../version.h | grep -o '[0-9]\+')
-VERSION_MINOR=$(grep "#define VERSION_MINOR" ../version.h | grep -o '[0-9]\+')
-VERSION_STR=${VERSION_MAJOR}.${VERSION_PCIE_BOARD_VERSION}-${VERSION_MINOR}
+VERSION_MINOR=$(grep "#define VERSION_MINOR_ESCAM" ../version.h | grep -o '[0-9]\+')
+VERSION_PATCH=$(grep "#define VERSION_PATCH_ESCAM" ../version.h | grep -o '[0-9]\+')
+VERSION_STR=${VERSION_MAJOR}.${VERSION_MINOR}-${VERSION_PATCH}
 PACKAGENAME=escam
 PKG_DIR=${PACKAGENAME}_${VERSION_STR}
 MODULENAME=lscpcie

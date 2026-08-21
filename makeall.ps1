@@ -10,10 +10,10 @@ param(
 
 $string = Get-Content .\version.h | Select-String -Pattern "#define VERSION_MAJOR_ESCAM"
 $major = $string -replace "[^0-9]", ''
-$string = Get-Content .\version.h | Select-String -Pattern "#define VERSION_PCIE_BOARD_VERSION"
-$pcie = $string -replace "[^0-9]", ''
 $string = Get-Content .\version.h | Select-String -Pattern "#define VERSION_MINOR_ESCAM"
 $minor = $string -replace "[^0-9]", ''
+$string = Get-Content .\version.h | Select-String -Pattern "#define VERSION_PATCH_ESCAM"
+$patch = $string -replace "[^0-9]", ''
 
 # Recreate Release folder
 if(test-path Release)
@@ -46,31 +46,31 @@ MSBuild.exe .\ESLSCDLL\ESLSCDLL.vcxproj /p:Configuration=Debug_minimal /p:Platfo
 MSBuild.exe .\ESLSCDLL\ESLSCDLL.vcxproj /p:Configuration=Debug-Labview /p:Platform=x64 /t:$buildAction
 MSBuild.exe .\ESLSCDLL\ESLSCDLL.vcxproj /p:Configuration=Release_minimal /p:Platform=x64 /t:$buildAction
 MSBuild.exe .\ESLSCDLL\ESLSCDLL.vcxproj /p:Configuration=Release-Labview /p:Platform=x64 /t:$buildAction
-mkdir Release\ESLSCDLL-$major.$pcie.$minor\
-mkdir Release\ESLSCDLL-$major.$pcie.$minor\Debug
-mkdir Release\ESLSCDLL-$major.$pcie.$minor\Debug_minimal
-mkdir Release\ESLSCDLL-$major.$pcie.$minor\Debug-Labview
-mkdir Release\ESLSCDLL-$major.$pcie.$minor\Release
-mkdir Release\ESLSCDLL-$major.$pcie.$minor\Release_minimal
-mkdir Release\ESLSCDLL-$major.$pcie.$minor\Release-Labview
-cp .\ESLSCDLL\x64\Debug\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$pcie.$minor\Debug\
-cp .\ESLSCDLL\x64\Debug\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$pcie.$minor\Debug\
-cp .\ESLSCDLL\x64\Debug\ESLSCDLL.pdb .\Release\ESLSCDLL-$major.$pcie.$minor\Debug\
-cp .\ESLSCDLL\x64\Debug_minimal\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$pcie.$minor\Debug_minimal\
-cp .\ESLSCDLL\x64\Debug_minimal\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$pcie.$minor\Debug_minimal\
-cp .\ESLSCDLL\x64\Debug_minimal\ESLSCDLL.pdb .\Release\ESLSCDLL-$major.$pcie.$minor\Debug_minimal\
-cp .\ESLSCDLL\x64\Debug-Labview\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$pcie.$minor\Debug-Labview\
-cp .\ESLSCDLL\x64\Debug-Labview\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$pcie.$minor\Debug-Labview\
-cp .\ESLSCDLL\x64\Debug-Labview\ESLSCDLL.pdb .\Release\ESLSCDLL-$major.$pcie.$minor\Debug-Labview\
-cp .\ESLSCDLL\x64\Release\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$pcie.$minor\Release\
-cp .\ESLSCDLL\x64\Release\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$pcie.$minor\Release\
-cp .\ESLSCDLL\x64\Release_minimal\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$pcie.$minor\Release_minimal\
-cp .\ESLSCDLL\x64\Release_minimal\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$pcie.$minor\Release_minimal\
-cp .\ESLSCDLL\x64\Release-Labview\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$pcie.$minor\Release-Labview\
-cp .\ESLSCDLL\x64\Release-Labview\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$pcie.$minor\Release-Labview\
+mkdir Release\ESLSCDLL-$major.$minor.$patch\
+mkdir Release\ESLSCDLL-$major.$minor.$patch\Debug
+mkdir Release\ESLSCDLL-$major.$minor.$patch\Debug_minimal
+mkdir Release\ESLSCDLL-$major.$minor.$patch\Debug-Labview
+mkdir Release\ESLSCDLL-$major.$minor.$patch\Release
+mkdir Release\ESLSCDLL-$major.$minor.$patch\Release_minimal
+mkdir Release\ESLSCDLL-$major.$minor.$patch\Release-Labview
+cp .\ESLSCDLL\x64\Debug\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$minor.$patch\Debug\
+cp .\ESLSCDLL\x64\Debug\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$minor.$patch\Debug\
+cp .\ESLSCDLL\x64\Debug\ESLSCDLL.pdb .\Release\ESLSCDLL-$major.$minor.$patch\Debug\
+cp .\ESLSCDLL\x64\Debug_minimal\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$minor.$patch\Debug_minimal\
+cp .\ESLSCDLL\x64\Debug_minimal\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$minor.$patch\Debug_minimal\
+cp .\ESLSCDLL\x64\Debug_minimal\ESLSCDLL.pdb .\Release\ESLSCDLL-$major.$minor.$patch\Debug_minimal\
+cp .\ESLSCDLL\x64\Debug-Labview\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$minor.$patch\Debug-Labview\
+cp .\ESLSCDLL\x64\Debug-Labview\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$minor.$patch\Debug-Labview\
+cp .\ESLSCDLL\x64\Debug-Labview\ESLSCDLL.pdb .\Release\ESLSCDLL-$major.$minor.$patch\Debug-Labview\
+cp .\ESLSCDLL\x64\Release\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$minor.$patch\Release\
+cp .\ESLSCDLL\x64\Release\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$minor.$patch\Release\
+cp .\ESLSCDLL\x64\Release_minimal\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$minor.$patch\Release_minimal\
+cp .\ESLSCDLL\x64\Release_minimal\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$minor.$patch\Release_minimal\
+cp .\ESLSCDLL\x64\Release-Labview\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$minor.$patch\Release-Labview\
+cp .\ESLSCDLL\x64\Release-Labview\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$minor.$patch\Release-Labview\
 # zip DLL
-Compress-Archive -Path .\Release\ESLSCDLL-$major.$pcie.$minor\ -DestinationPath .\Release\ESLSCDLL-$major.$pcie.$minor.zip
+Compress-Archive -Path .\Release\ESLSCDLL-$major.$minor.$patch\ -DestinationPath .\Release\ESLSCDLL-$major.$minor.$patch.zip
 # zip setup
-mkdir Release\Escam-setup-$major.$pcie.$minor\
-cp -r .\escam_setup\Release\* .\Release\Escam-setup-$major.$pcie.$minor\
-Compress-Archive -Path .\Release\Escam-setup-$major.$pcie.$minor\ -DestinationPath .\Release\Escam-setup-$major.$pcie.$minor.zip
+mkdir Release\Escam-setup-$major.$minor.$patch\
+cp -r .\escam_setup\Release\* .\Release\Escam-setup-$major.$minor.$patch\
+Compress-Archive -Path .\Release\Escam-setup-$major.$minor.$patch\ -DestinationPath .\Release\Escam-setup-$major.$minor.$patch.zip
