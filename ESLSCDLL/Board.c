@@ -151,7 +151,7 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 	if (status != es_no_error) return status;
 	status = SetSensorType(drvno, (uint16_t)settings_struct.camera_settings[drvno].sensor_type);
 	if (status != es_no_error) return status;
-	if (settings_struct.camera_settings[drvno].sensor_type == sensor_type_fft)
+	if (settings_struct.camera_settings[drvno].sensor_type == sensor_type_fft && settings_struct.camera_settings[drvno].is_fft_legacy)
 	{
 		switch (settings_struct.camera_settings[drvno].fft_mode)
 		{
@@ -172,6 +172,7 @@ es_status_codes InitPcieBoard(uint32_t drvno)
 			return es_parameter_out_of_range;
 		}
 	}
+	else status = ResetFFTRegisters(drvno);
 	if (status != es_no_error) return status;
 	status = SetSSlope(drvno, settings_struct.camera_settings[drvno].sslope);
 	if (status != es_no_error) return status;
@@ -5895,4 +5896,24 @@ es_status_codes SetFanControlState(uint32_t drvno, uint16_t state)
 {
 	ES_LOG("Set fan control state to 0x%"PRIx16", drvno %"PRIu32"\n", state, drvno);
 	return Cam_SendData(drvno, maddr_cam, cam_adaddr_fan_ctrl, state);
+}
+
+/**
+ * @brief Set all legacy FFT registers to 0.
+ * 
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @return @ref es_status_codes
+ */
+es_status_codes ResetFFTRegisters(uint32_t drvno)
+{
+	es_status_codes status = writeRegisterS0_32(drvno, 0, S0Addr_VCLKCTRL_VCLKFREQ);
+	if (status != es_no_error) return status;
+	status = writeRegisterS0_32(drvno, 0, S0Addr_ARREG);
+	if (status != es_no_error) return status;
+	status = writeRegisterS0_32(drvno, 0, S0Addr_ROI0);
+	if (status != es_no_error) return status;
+	status = writeRegisterS0_32(drvno, 0, S0Addr_ROI1);
+	if (status != es_no_error) return status;
+	status = writeRegisterS0_32(drvno, 0, S0Addr_ROI2);
+	return status;
 }

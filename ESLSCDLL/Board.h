@@ -197,6 +197,7 @@ es_status_codes SetShutterStates(uint32_t drvno, uint16_t shutter_states);
 es_status_codes SetStateControlRegister(uint32_t drvno, uint16_t state);
 es_status_codes TriggerStateControlManually(uint32_t drvno);
 es_status_codes SetFanControlState(uint32_t drvno, uint16_t state);
+es_status_codes ResetFFTRegisters(uint32_t drvno);
 
 // helper functions
 double CalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);
