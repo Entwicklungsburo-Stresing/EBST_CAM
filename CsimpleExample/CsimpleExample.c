@@ -94,7 +94,7 @@ int main()
 	settings.camera_settings[0].dac_output[0][5] = 55000;
 	settings.camera_settings[0].dac_output[0][6] = 55000;
 	settings.camera_settings[0].dac_output[0][7] = 55000;
-	settings.camera_settings[0].dma_buffer_size_in_scans = 1000;
+	settings.camera_settings[0].dma_buffer_size_in_scans = 100;
 	settings.camera_settings[0].use_software_polling = 1;
 	printf("Initializing measurement...\n");
 	status = DLLInitMeasurement(settings);

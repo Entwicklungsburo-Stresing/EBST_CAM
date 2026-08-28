@@ -178,7 +178,7 @@ void MainWindow::startPressed()
 		library_settings.camera_settings[drvno].ioctrl_output_delay_in_5ns[5] = settings.value(settingIOCtrlOutput6DelayIn5nsPath, settingIOCtrlOutput6DelayIn5nsDefault).toDouble();
 		library_settings.camera_settings[drvno].ioctrl_output_delay_in_5ns[6] = settings.value(settingIOCtrlOutput7DelayIn5nsPath, settingIOCtrlOutput7DelayIn5nsDefault).toDouble();
 		library_settings.camera_settings[drvno].ioctrl_T0_period_in_10ns = settings.value(settingIOCtrlT0PeriodIn10nsPath, settingIOCtrlT0PeriodIn10nsDefault).toDouble();
-		library_settings.camera_settings[drvno].dma_buffer_size_in_scans = 1000;
+		library_settings.camera_settings[drvno].dma_buffer_size_in_scans = 100;
 		library_settings.camera_settings[drvno].tocnt = settings.value(settingTocntPath, settingTocntDefault).toDouble();
 		library_settings.camera_settings[drvno].sticnt = settings.value(settingSticntPath, settingSticntDefault).toDouble();
 		library_settings.camera_settings[drvno].sensor_reset_or_hsir_ec = settings.value(settingSensorResetOrHsirEcPath, settingSensorResetOrHsIrDefault).toDouble();

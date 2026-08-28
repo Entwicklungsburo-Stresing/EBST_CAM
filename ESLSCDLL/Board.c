@@ -103,7 +103,7 @@ es_status_codes InitSoftware(uint32_t drvno)
 	if(settings_struct.camera_settings[drvno].dma_buffer_size_in_scans == 0)
 		settings_struct.camera_settings[drvno].dma_buffer_size_in_scans = settingDmaBufferSizeInScansDefault;
 	// Calculate dmaBufferPartSizeInScans
-	uint32_t dmaBufferPartSizeInScans = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS; //500
+	uint32_t dmaBufferPartSizeInScans = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
 	// Calculate numberOfInterrupts
 	if (dmaBufferPartSizeInScans)
 		numberOfInterrupts[drvno] = (settings_struct.nob * settings_struct.nos * virtualCamcnt[drvno]) / dmaBufferPartSizeInScans;
@@ -2294,7 +2294,6 @@ es_status_codes GetLastBufPart(uint32_t drvno)
 	// Get scans per interrupt
 	es_status_codes status = readRegisterS0_32(drvno, &spi, S0Addr_DMAsPerIntr);
 	if (status != es_no_error) return status;
-	// dmaHalfBufferSize is 500 with default values
 	uint32_t dmaHalfBufferSize = settings_struct.camera_settings[drvno].dma_buffer_size_in_scans / DMA_BUFFER_PARTS;
 	uint32_t scans_all_cams = settings_struct.nos * settings_struct.nob * virtualCamcnt[drvno];
 	uint32_t rest_overall = scans_all_cams % dmaHalfBufferSize;

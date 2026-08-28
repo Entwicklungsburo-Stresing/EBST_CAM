@@ -16,8 +16,11 @@ The hardware version number was the current hardware version of the PCIe card at
 ### Other Changes
 #### Added
 #### Changed
+* Update Qt to 6.11.2
 #### Removed
 #### Fixed
+* Lower default DMA buffer size to 100 to reduce the risk of getting the error "Getting DMA buffer failed"
+* Deactivate legacy FFT code to prevent a stalling meaurement in range of interest mode
 #### Deprecated
 
 ## 4.22.0 - 2026-08-20

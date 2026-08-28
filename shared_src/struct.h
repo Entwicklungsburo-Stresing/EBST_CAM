@@ -315,7 +315,7 @@ struct camera_settings
 	 */
 	uint32_t ioctrl_T0_period_in_10ns;
 	/**
-	 * Size of the DMA buffer in scans. The default is 1000. This setting controls the size of the contiguous DMA buffer that is allocated during the initialisatíon and as an effect how often the interrupt is triggered to copy data from the DMA buffer to the user buffer. An interrupt is present only when @ref camera_settings.use_software_polling is turned off. A lower number means a smaller contiguous DMA buffer and more interrupts in a shorter time and so more recent data available. Which data is available is indicated by @ref DLLGetCurrentScanNumber. Too many interrupts in a too short time can lead to errors. 60 is working with high speed (exposure time = 0,02ms). When this setting is 30, there could be a wrong scan every 10000 scans.
+	 * Size of the DMA buffer in scans. The default is 100. This setting controls the size of the contiguous DMA buffer that is allocated during the initialisatíon and as an effect how often the interrupt is triggered to copy data from the DMA buffer to the user buffer. An interrupt is present only when @ref camera_settings.use_software_polling is turned off. A lower number means a smaller contiguous DMA buffer and more interrupts in a shorter time and so more recent data available. Which data is available is indicated by @ref DLLGetCurrentScanNumber. Too many interrupts in a too short time can lead to errors. 60 is working with high speed (exposure time = 0,02ms). When this setting is 30, there could be a wrong scan every 10000 scans. The default value was lowered in 08/26 (4.22.1), because with modern OS the risk of getting an error while reserving a big contiguous memory block gets higher.
 	 */
 	uint32_t dma_buffer_size_in_scans;
 	/**

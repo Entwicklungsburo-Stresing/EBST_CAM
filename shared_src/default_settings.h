@@ -85,7 +85,7 @@
 #define settingIOCtrlT0PeriodIn10nsDefault			1000
 #define settingContinuousMeasurementDefault			0
 #define settingContinuousPausInMicrosecondsDefault	0
-#define settingDmaBufferSizeInScansDefault			1000
+#define settingDmaBufferSizeInScansDefault			100
 #define settingSticntDefault						0
 #define settingBticntDefault						0
 #define settingTocntDefault							0
