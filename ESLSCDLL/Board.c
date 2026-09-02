@@ -1813,11 +1813,11 @@ es_status_codes SetDmaStartMode(uint32_t drvno, bool start_by_hardware)
  */
 es_status_codes StartMeasurement()
 {
-	ES_LOG("\n*** Start Measurement ***\n");
 	if (isRunning)
 		return es_already_running;
 	else
 		isRunning = true;
+	ES_LOG("\n*** Start Measurement ***\n");
 	abortMeasurementFlag = false;
 	es_status_codes status = es_no_error;
 	// Clear old events of ESC and SPACE to make sure that only buttons pressed during the measurement are counted.
