@@ -419,6 +419,24 @@ void DialogServo::on_spinBoxStepPeriod_valueChanged(int value)
 	return;
 }
 
+void DialogServo::on_spinBoxSeqDelay_valueChanged(int value)
+{
+	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
+	settings.setValue(settingServoSeqDelayPath, value);
+	settings.endGroup();
+	mainWindow->lsc.camSetGalvoSeqDelay(ui->spinBoxBoard->value(), 0, value);
+	return;
+}
+
+void DialogServo::on_spinBoxSeqOffset_valueChanged(int value)
+{
+	settings.beginGroup("board" + QString::number(ui->spinBoxBoard->value()));
+	settings.setValue(settingServoSeqOffsetPath, value);
+	settings.endGroup();
+	mainWindow->lsc.camSetGalvoSeqOffset(ui->spinBoxBoard->value(), 0, value);
+	return;
+}
+
 void DialogServo::on_pushButtonSendAll_clicked()
 {
 	on_spinBoxSeqLength_valueChanged(ui->spinBoxSeqLength->value());
@@ -428,5 +446,7 @@ void DialogServo::on_pushButtonSendAll_clicked()
 	on_spinBoxPos2_valueChanged(ui->spinBoxPos2->value());
 	on_comboBoxTriggerSource_currentIndexChanged();
 	on_spinBoxStepPeriod_valueChanged(ui->spinBoxStepPeriod->value());
+	on_spinBoxSeqDelay_valueChanged(ui->spinBoxSeqDelay->value());
+	on_spinBoxSeqOffset_valueChanged(ui->spinBoxSeqOffset->value());
 	return;
 }

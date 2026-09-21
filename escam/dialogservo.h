@@ -42,6 +42,9 @@ private slots:
 	void on_pushButtonDefault_clicked();
 	void on_spinBoxStepPeriod_valueChanged(int value);
 	void on_pushButtonSendAll_clicked();
+	void on_spinBoxSeqDelay_valueChanged(int value);
+	void on_spinBoxSeqOffset_valueChanged(int value);
+
 private:
 	Ui::dialogservoClass* ui;
 	QSettings settings;
