@@ -1266,14 +1266,14 @@ enum dac_register_addresses_t
 	 * sequence length
 	 */
 	dac_galvo_ch1_binSeq_len = 0x50,
-	dac_galvo_ch1_binSeq_seg1 = 0x51,
-	dac_galvo_ch1_binSeq_seg2 = 0x52,
-	dac_galvo_ch1_binSeq_seg3 = 0x53,
-	dac_galvo_ch1_binSeq_seg4 = 0x54,
-	dac_galvo_ch1_binSeq_seg5 = 0x55,
-	dac_galvo_ch1_binSeq_seg6 = 0x56,
-	dac_galvo_ch1_binSeq_seg7 = 0x57,
-	dac_galvo_ch1_binSeq_seg8 = 0x58,
+	dac_galvo_ch1_binSeq_seg1 = 0x58,
+	dac_galvo_ch1_binSeq_seg2 = 0x57,
+	dac_galvo_ch1_binSeq_seg3 = 0x56,
+	dac_galvo_ch1_binSeq_seg4 = 0x55,
+	dac_galvo_ch1_binSeq_seg5 = 0x54,
+	dac_galvo_ch1_binSeq_seg6 = 0x53,
+	dac_galvo_ch1_binSeq_seg7 = 0x52,
+	dac_galvo_ch1_binSeq_seg8 = 0x51,
 	/**
 	 * GCS trigger delay
 	 */
@@ -1298,14 +1298,14 @@ enum dac_register_addresses_t
 	 * sequence length
 	 */
 	dac_galvo_ch2_binSeq_len = 0x60,
-	dac_galvo_ch2_binSeq_seg1 = 0x61,
-	dac_galvo_ch2_binSeq_seg2 = 0x62,
-	dac_galvo_ch2_binSeq_seg3 = 0x63,
-	dac_galvo_ch2_binSeq_seg4 = 0x64,
-	dac_galvo_ch2_binSeq_seg5 = 0x65,
-	dac_galvo_ch2_binSeq_seg6 = 0x66,
-	dac_galvo_ch2_binSeq_seg7 = 0x67,
-	dac_galvo_ch2_binSeq_seg8 = 0x68,
+	dac_galvo_ch2_binSeq_seg1 = 0x68,
+	dac_galvo_ch2_binSeq_seg2 = 0x67,
+	dac_galvo_ch2_binSeq_seg3 = 0x66,
+	dac_galvo_ch2_binSeq_seg4 = 0x65,
+	dac_galvo_ch2_binSeq_seg5 = 0x64,
+	dac_galvo_ch2_binSeq_seg6 = 0x63,
+	dac_galvo_ch2_binSeq_seg7 = 0x62,
+	dac_galvo_ch2_binSeq_seg8 = 0x61,
 	/**
 	 * GCS trigger delay
 	 */
