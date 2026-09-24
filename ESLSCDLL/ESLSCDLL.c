@@ -2469,3 +2469,19 @@ DllAccess es_status_codes DLLCam_SetGalvoBinSeqLen(uint32_t drvno, uint8_t chann
 {
 	return Cam_SetGalvoBinSeqLen(drvno, channel, seq_len);
 }
+
+/**
+ * @copydoc Cam_SetGalvoResetMode
+ */
+DllAccess es_status_codes DLLCam_SetGalvoResetMode(uint32_t drvno, uint8_t channel, uint8_t reset_mode)
+{
+	return Cam_SetGalvoResetMode(drvno, channel, reset_mode);
+}
+
+/**
+ * @copydoc Cam_GalvoManualReset
+ */
+DllAccess es_status_codes DLLCam_GalvoManualReset(uint32_t drvno, uint8_t channel)
+{
+	return Cam_GalvoManualReset(drvno, channel);
+}

@@ -1327,3 +1327,33 @@ es_status_codes Cam_SetGalvoBinSeqLen(uint32_t drvno, uint8_t channel, uint16_t 
 	if (status == es_no_error) galvo_binSeq_len_reg[drvno][channel] = reg;
 	return status;
 }
+
+/**
+ * @brief Set the reset mode of the galvo sequence.
+ * @param[in] reset_mode See @ref galvo_reset_mode_t, 0 .. 3
+ */
+es_status_codes Cam_SetGalvoResetMode(uint32_t drvno, uint8_t channel, uint8_t reset_mode)
+{
+	ES_LOG("Set galvo reset mode %"PRIu8", channel %"PRIu8", drvno %"PRIu32"\n", reset_mode, channel, drvno);
+	if (drvno >= MAXPCIECARDS || channel >= GALVO_CHANNEL_COUNT) return es_parameter_out_of_range;
+	if (reset_mode > galvo_reset_mode_max) return es_parameter_out_of_range;
+	uint16_t reg = (galvo_binSeq_len_reg[drvno][channel] & ~galvo_binSeq_len_bits_reset_mode)
+		| (uint16_t)(reset_mode << galvo_binSeq_len_bitindex_reset_mode);
+	reg &= ~galvo_binSeq_len_bit_manual_reset;
+	es_status_codes status = Cam_WriteGalvoBinSeqLenRegister(drvno, channel, reg);
+	if (status == es_no_error) galvo_binSeq_len_reg[drvno][channel] = reg;
+	return status;
+}
+
+/**
+ * @brief Pulse the manual reset bit (bit 12) of the galvo sequence. Sequence length and reset mode are kept.
+ */
+es_status_codes Cam_GalvoManualReset(uint32_t drvno, uint8_t channel)
+{
+	ES_LOG("Galvo manual reset, channel %"PRIu8", drvno %"PRIu32"\n", channel, drvno);
+	if (drvno >= MAXPCIECARDS || channel >= GALVO_CHANNEL_COUNT) return es_parameter_out_of_range;
+	uint16_t reg = galvo_binSeq_len_reg[drvno][channel] & ~galvo_binSeq_len_bit_manual_reset;
+	es_status_codes status = Cam_WriteGalvoBinSeqLenRegister(drvno, channel, reg | galvo_binSeq_len_bit_manual_reset);
+	if (status != es_no_error) return status;
+	return Cam_WriteGalvoBinSeqLenRegister(drvno, channel, reg);
+}
