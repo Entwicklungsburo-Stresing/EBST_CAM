@@ -1291,11 +1291,44 @@ es_status_codes Cam_SetGalvoRestState2(uint32_t drvno, uint8_t channel, uint16_t
 	return status;
 }
 
+/**
+* @brief Number of galvo channels. Channel 0 uses @ref dac_galvo_ch1_binSeq_len, channel 1 uses @ref dac_galvo_ch2_binSeq_len.
+*/
 #define GALVO_CHANNEL_COUNT 2
 
+/**
+ * @brief Shadow copy of the galvo sequence length registers, one per PCIe board and galvo channel.
+ * 
+ * The registers @ref dac_galvo_ch1_binSeq_len and @ref dac_galvo_ch2_binSeq_len are write-only and each write overwrites all 16 bits (see @ref galvo_binSeq_len_bits_t):
+ * 
+ * @li bits 11..0: sequence length
+ * @li bit 12: manual reset
+ * @li bits 15..13: reset mode, see @ref galvo_reset_mode_t
+ * 
+ * This array holds the value last written successfully, so single bit field can be changed without overwriting the others. It is only valid if all writes
+ * to these registers go through the Cam_*Galvo* functions in this file.
+ */
 static uint16_t galvo_binSeq_len_reg[MAXPCIECARDS][GALVO_CHANNEL_COUNT] = { 0 };
 
-es_status_codes Cam_WriteGalvoBinSeqLenRegister(uint32_t drvno, uint8_t channel, uint16_t value)
+/**
+ * @brief True if @ref galvo_binSeq_len_reg of this board and channel has been written at least once
+ * and therefore contains a known register value.
+ */
+static bool galvo_binSeq_len_reg_valid[MAXPCIECARDS][GALVO_CHANNEL_COUNT] = { false };
+
+/**
+ * @brief Write a raw value to the galvo sequence length register of the given channel.
+ *
+ * Selects @ref dac_galvo_ch1_binSeq_len or @ref dac_galvo_ch2_binSeq_len depending on the channel
+ * and sends the complete 16 bit value to the camera. Does not update @ref galvo_binSeq_len_reg,
+ * the caller has to do that after a successful write.
+ *
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] channel galvo channel number (0 or 1)
+ * @param[in] value complete register value, see @ref galvo_binSeq_len_bits_t
+ * @return @ref es_status_codes
+ */
+static es_status_codes Cam_WriteGalvoBinSeqLenRegister(uint32_t drvno, uint8_t channel, uint16_t value)
 {
 	if (drvno >= MAXPCIECARDS) return es_parameter_out_of_range;
 	uint8_t adaddr;
@@ -1313,8 +1346,8 @@ es_status_codes Cam_WriteGalvoBinSeqLenRegister(uint32_t drvno, uint8_t channel,
  * @brief Set the galvo binary sequence length.
  * 
  * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
-  * @param[in] channel galvo channel number (0 or 1)
- * @param[in] seq_len binary sequence length
+ * @param[in] channel galvo channel number (0 or 1)
+ * @param[in] seq_len binary sequence length 0 ... 0x0FFF
  * @return @ref es_status_codes
  */
 es_status_codes Cam_SetGalvoBinSeqLen(uint32_t drvno, uint8_t channel, uint16_t seq_len)
@@ -1324,34 +1357,55 @@ es_status_codes Cam_SetGalvoBinSeqLen(uint32_t drvno, uint8_t channel, uint16_t 
 	uint16_t reg = (galvo_binSeq_len_reg[drvno][channel] & ~galvo_binSeq_len_bits_len) | seq_len;
 	reg &= ~galvo_binSeq_len_bit_manual_reset;
 	es_status_codes status = Cam_WriteGalvoBinSeqLenRegister(drvno, channel, reg);
-	if (status == es_no_error) galvo_binSeq_len_reg[drvno][channel] = reg;
+	if (status == es_no_error)
+	{
+		galvo_binSeq_len_reg[drvno][channel] = reg;
+		galvo_binSeq_len_reg_valid[drvno][channel] = true;
+	}
 	return status;
 }
 
 /**
- * @brief Set the reset mode of the galvo sequence.
- * @param[in] reset_mode See @ref galvo_reset_mode_t, 0 .. 3
+ * @brief Set sequence length and reset mode of the galvo in one register write.
+ * 
+ * Does not change reset mode or manual reset
+ * 
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] channel galvo channel number (0 or 1)
+ * @param[in] seq_len 0 ... 0x0FFF
+ * @param[in] reset_mode see @ref galvo_reset_mode_t
+ * @return @ref es_status_codes
  */
-es_status_codes Cam_SetGalvoResetMode(uint32_t drvno, uint8_t channel, uint8_t reset_mode)
+es_status_codes Cam_SetGalvoBinSeqLenAndResetMode(uint32_t drvno, uint8_t channel, uint16_t seq_len, uint8_t reset_mode)
 {
-	ES_LOG("Set galvo reset mode %"PRIu8", channel %"PRIu8", drvno %"PRIu32"\n", reset_mode, channel, drvno);
 	if (drvno >= MAXPCIECARDS || channel >= GALVO_CHANNEL_COUNT) return es_parameter_out_of_range;
+	if (seq_len > galvo_binSeq_len_bits_len) return es_parameter_out_of_range;
 	if (reset_mode > galvo_reset_mode_max) return es_parameter_out_of_range;
-	uint16_t reg = (galvo_binSeq_len_reg[drvno][channel] & ~galvo_binSeq_len_bits_reset_mode)
-		| (uint16_t)(reset_mode << galvo_binSeq_len_bitindex_reset_mode);
-	reg &= ~galvo_binSeq_len_bit_manual_reset;
+	uint16_t reg = (uint16_t)((reset_mode << galvo_binSeq_len_bitindex_reset_mode) | seq_len);
 	es_status_codes status = Cam_WriteGalvoBinSeqLenRegister(drvno, channel, reg);
-	if (status == es_no_error) galvo_binSeq_len_reg[drvno][channel] = reg;
+	if (status == es_no_error)
+	{
+		galvo_binSeq_len_reg[drvno][channel] = reg;
+		galvo_binSeq_len_reg_valid[drvno][channel] = true;
+	}
 	return status;
 }
 
 /**
  * @brief Pulse the manual reset bit (bit 12) of the galvo sequence. Sequence length and reset mode are kept.
+ * @param[in] drvno identifier of PCIe card, 0 ... @ref MAXPCIECARDS, when there is only one PCIe board: always 0
+ * @param[in] channel galvo channel number (0 or 1)
+ * @return @ref es_status_codes
  */
 es_status_codes Cam_GalvoManualReset(uint32_t drvno, uint8_t channel)
 {
 	ES_LOG("Galvo manual reset, channel %"PRIu8", drvno %"PRIu32"\n", channel, drvno);
 	if (drvno >= MAXPCIECARDS || channel >= GALVO_CHANNEL_COUNT) return es_parameter_out_of_range;
+	if (!galvo_binSeq_len_reg_valid[drvno][channel])
+	{
+		ES_LOG("Galvo seq len register not initialized, call Cam_SetGalvoBinSeqLenAndResetMode first\n");
+		return es_parameter_out_of_range;
+	}
 	uint16_t reg = galvo_binSeq_len_reg[drvno][channel] & ~galvo_binSeq_len_bit_manual_reset;
 	es_status_codes status = Cam_WriteGalvoBinSeqLenRegister(drvno, channel, reg | galvo_binSeq_len_bit_manual_reset);
 	if (status != es_no_error) return status;

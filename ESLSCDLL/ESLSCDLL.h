@@ -211,7 +211,7 @@ DllAccess es_status_codes DLLCam_SetGalvoSeqOffset(uint32_t drvno, uint8_t chann
 DllAccess es_status_codes DLLCam_SetGalvoRestState1(uint32_t drvno, uint8_t channel, uint16_t rest_state);
 DllAccess es_status_codes DLLCam_SetGalvoRestState2(uint32_t drvno, uint8_t channel, uint16_t rest_state);
 DllAccess es_status_codes DLLCam_SetGalvoBinSeqLen(uint32_t drvno, uint8_t channel, uint16_t seq_len);
-DllAccess es_status_codes DLLCam_SetGalvoResetMode(uint32_t drvno, uint8_t channel, uint8_t reset_mode);
+DllAccess es_status_codes DLLCam_SetGalvoBinSeqLenAndResetMode(uint32_t drvno, uint8_t channel, uint16_t seq_len, uint8_t reset_mode);
 DllAccess es_status_codes DLLCam_GalvoManualReset(uint32_t drvno, uint8_t channel);
 //************ read and write functions
 DllAccess es_status_codes DLLreadRegisterS0_8(uint32_t drvno, uint8_t* data, uint32_t address);

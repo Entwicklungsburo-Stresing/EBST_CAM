@@ -757,6 +757,14 @@ es_status_codes Lsc::camSetGalvoBinSeqLen(uint32_t drvno, uint8_t channel, uint1
 }
 
 /**
+ * @copydoc DLLCam_SetGalvoBinSeqLenAndResetMode
+ */
+es_status_codes Lsc::camSetGalvoBinSeqLenAndResetMode(uint32_t drvno, uint8_t channel, uint16_t seq_len, uint8_t reset_mode)
+{
+	return DLLCam_SetGalvoBinSeqLenAndResetMode(drvno, channel, seq_len, reset_mode);
+}
+
+/**
  * @copydoc DLLCam_SetGalvoSeqDelay
  */
 es_status_codes Lsc::camSetGalvoSeqDelay(uint32_t drvno, uint8_t channel, uint16_t delay)
@@ -794,14 +802,6 @@ es_status_codes Lsc::camSetGalvoRestState1(uint32_t drvno, uint8_t channel, uint
 es_status_codes Lsc::camSetGalvoRestState2(uint32_t drvno, uint8_t channel, uint16_t rest_state)
 {
 	return DLLCam_SetGalvoRestState2(drvno, channel, rest_state);
-}
-
-/**
- * @copydoc DLLCam_SetGalvoResetMode
- */
-es_status_codes Lsc::camSetGalvoResetMode(uint32_t drvno, uint8_t channel, uint8_t reset_mode)
-{
-	return DLLCam_SetGalvoResetMode(drvno, channel, reset_mode);
 }
 
 /**

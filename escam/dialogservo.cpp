@@ -58,6 +58,8 @@ void DialogServo::loadSettings()
 	ui->spinBoxStepPeriod->setValue(settings.value(settingServoStpPeriodPath, settingServoStpPeriodDefault).toInt());
 	ui->comboBoxResetMode->setCurrentIndex(settings.value(settingServoResetModePath, settingServoResetModeDefault).toInt());
 	settings.endGroup();
+	sendSeqLenAndResetMode();
+	updateManualResetVisibility();
 	return;
 }
 
@@ -71,6 +73,7 @@ void DialogServo::on_pushButtonDefault_clicked()
 	ui->comboBoxTriggerSource->setCurrentIndex(settingServoTriggerSourceDefault);
 	ui->spinBoxPos1->setValue(settingServoPos1Default);
 	ui->spinBoxPos2->setValue(settingServoPos2Default);
+	ui->comboBoxResetMode->setCurrentIndex(settingServoResetModeDefault);
 	settings.endGroup();
 	return;
 }
@@ -440,7 +443,7 @@ void DialogServo::on_spinBoxSeqOffset_valueChanged(int value)
 
 void DialogServo::on_pushButtonSendAll_clicked()
 {
-	on_spinBoxSeqLength_valueChanged(ui->spinBoxSeqLength->value());
+	sendSeqLenAndResetMode();
 	on_lineEditBin_textChanged();
 	on_lineEditBin_editingFinished();
 	on_spinBoxPos1_valueChanged(ui->spinBoxPos1->value());
@@ -449,6 +452,7 @@ void DialogServo::on_pushButtonSendAll_clicked()
 	on_spinBoxStepPeriod_valueChanged(ui->spinBoxStepPeriod->value());
 	on_spinBoxSeqDelay_valueChanged(ui->spinBoxSeqDelay->value());
 	on_spinBoxSeqOffset_valueChanged(ui->spinBoxSeqOffset->value());
+
 	return;
 }
 
@@ -459,18 +463,9 @@ void DialogServo::on_comboBoxResetMode_currentIndexChanged(int index)
 	settings.setValue(settingServoResetModePath, index);
 	settings.endGroup();
 
-	mainWindow->lsc.camSetGalvoResetMode(drvno, 0, static_cast<uint8_t>(index));
+	sendSeqLenAndResetMode();
 
-	if (index == 3)
-	{
-		ui->labelManualReset->setVisible(true);
-		ui->pushButtonManualReset->setVisible(true);
-	}
-	else
-	{
-		ui->labelManualReset->setVisible(false);
-		ui->pushButtonManualReset->setVisible(false);
-	}
+	updateManualResetVisibility();
 	return;
 }
 
@@ -478,4 +473,21 @@ void DialogServo::on_pushButtonManualReset_clicked()
 {
 	mainWindow->lsc.camGalvoManualReset(ui->spinBoxBoard->value(), 0);
 	return;
+}
+
+void DialogServo::sendSeqLenAndResetMode()
+{
+	mainWindow->lsc.camSetGalvoBinSeqLenAndResetMode(
+		ui->spinBoxBoard->value(),
+		0,
+		static_cast<uint16_t>(ui->spinBoxSeqLength->value()),
+		static_cast<uint8_t>(ui->comboBoxResetMode->currentIndex())
+	);
+}
+
+void DialogServo::updateManualResetVisibility()
+{
+	bool manual = ui->comboBoxResetMode->currentIndex() == galvo_reset_mode_manual;
+	ui->labelManualReset->setVisible(manual);
+	ui->pushButtonManualReset->setVisible(manual);
 }

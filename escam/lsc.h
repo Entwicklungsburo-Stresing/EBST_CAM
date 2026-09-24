@@ -101,12 +101,12 @@ public:
 	es_status_codes camSetGalvoBinSeq(uint32_t drvno, uint8_t channel, uint16_t* sequence);
 	es_status_codes camSetGalvoBinSeq(uint32_t drvno, uint8_t channel, QString sequence);
 	es_status_codes camSetGalvoBinSeqLen(uint32_t drvno, uint8_t channel, uint16_t seq_len);
+	es_status_codes camSetGalvoBinSeqLenAndResetMode(uint32_t drvno, uint8_t channel, uint16_t seq_len, uint8_t reset_mode);
 	es_status_codes camSetGalvoSeqDelay(uint32_t drvno, uint8_t channel, uint16_t delay);
 	es_status_codes camSetGalvoStpPeriod(uint32_t drvno, uint8_t channel, uint16_t period);
 	es_status_codes camSetGalvoSeqOffset(uint32_t drvno, uint8_t channel, uint16_t offset);
 	es_status_codes camSetGalvoRestState1(uint32_t drvno, uint8_t channel, uint16_t rest_state);
 	es_status_codes camSetGalvoRestState2(uint32_t drvno, uint8_t channel, uint16_t rest_state);
-	es_status_codes camSetGalvoResetMode(uint32_t drvno, uint8_t channel, uint8_t reset_mode);
 	es_status_codes camGalvoManualReset(uint32_t drvno, uint8_t channel);
 public slots:
 	es_status_codes startMeasurement();
