@@ -129,3 +129,4 @@
 #define settingServoStpPeriodDefault				0
 #define settingServoSeqDelayDefault					0
 #define settingServoSeqOffsetDefault				0
+#define settingServoResetModeDefault				0

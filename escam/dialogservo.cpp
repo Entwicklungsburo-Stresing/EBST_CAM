@@ -56,6 +56,7 @@ void DialogServo::loadSettings()
 	ui->spinBoxPos1->setValue(settings.value(settingServoPos1Path, settingServoPos1Default).toInt());
 	ui->spinBoxPos2->setValue(settings.value(settingServoPos2Path, settingServoPos2Default).toInt());
 	ui->spinBoxStepPeriod->setValue(settings.value(settingServoStpPeriodPath, settingServoStpPeriodDefault).toInt());
+	ui->comboBoxResetMode->setCurrentIndex(settings.value(settingServoResetModePath, settingServoResetModeDefault).toInt());
 	settings.endGroup();
 	return;
 }
@@ -448,5 +449,33 @@ void DialogServo::on_pushButtonSendAll_clicked()
 	on_spinBoxStepPeriod_valueChanged(ui->spinBoxStepPeriod->value());
 	on_spinBoxSeqDelay_valueChanged(ui->spinBoxSeqDelay->value());
 	on_spinBoxSeqOffset_valueChanged(ui->spinBoxSeqOffset->value());
+	return;
+}
+
+void DialogServo::on_comboBoxResetMode_currentIndexChanged(int index)
+{
+	uint32_t drvno = ui->spinBoxBoard->value();
+	settings.beginGroup("board" + QString::number(drvno));
+	settings.setValue(settingServoResetModePath, index);
+	settings.endGroup();
+
+	mainWindow->lsc.camSetGalvoResetMode(drvno, 0, static_cast<uint8_t>(index));
+
+	if (index == 3)
+	{
+		ui->labelManualReset->setVisible(true);
+		ui->pushButtonManualReset->setVisible(true);
+	}
+	else
+	{
+		ui->labelManualReset->setVisible(false);
+		ui->pushButtonManualReset->setVisible(false);
+	}
+	return;
+}
+
+void DialogServo::on_pushButtonManualReset_clicked()
+{
+	mainWindow->lsc.camGalvoManualReset(ui->spinBoxBoard->value(), 0);
 	return;
 }

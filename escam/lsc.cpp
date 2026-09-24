@@ -796,3 +796,18 @@ es_status_codes Lsc::camSetGalvoRestState2(uint32_t drvno, uint8_t channel, uint
 	return DLLCam_SetGalvoRestState2(drvno, channel, rest_state);
 }
 
+/**
+ * @copydoc DLLCam_SetGalvoResetMode
+ */
+es_status_codes Lsc::camSetGalvoResetMode(uint32_t drvno, uint8_t channel, uint8_t reset_mode)
+{
+	return DLLCam_SetGalvoResetMode(drvno, channel, reset_mode);
+}
+
+/**
+ * @copydoc DLLCam_GalvoManualReset
+ */
+es_status_codes Lsc::camGalvoManualReset(uint32_t drvno, uint8_t channel)
+{
+	return DLLCam_GalvoManualReset(drvno, channel);
+}

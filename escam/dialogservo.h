@@ -44,6 +44,8 @@ private slots:
 	void on_pushButtonSendAll_clicked();
 	void on_spinBoxSeqDelay_valueChanged(int value);
 	void on_spinBoxSeqOffset_valueChanged(int value);
+	void on_comboBoxResetMode_currentIndexChanged(int index);
+	void on_pushButtonManualReset_clicked();
 
 private:
 	Ui::dialogservoClass* ui;

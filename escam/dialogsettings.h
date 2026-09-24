@@ -163,6 +163,7 @@ constexpr auto settingServoPos2Path = "servoPos2";
 constexpr auto settingServoStpPeriodPath = "servoStpPeriod";
 constexpr auto settingServoSeqDelayPath = "servoDelay";
 constexpr auto settingServoSeqOffsetPath = "servoOffset";
+constexpr auto settingServoResetModePath = "servoResetMode";
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DialogSettings; }
