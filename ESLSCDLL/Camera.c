@@ -1291,6 +1291,24 @@ es_status_codes Cam_SetGalvoRestState2(uint32_t drvno, uint8_t channel, uint16_t
 	return status;
 }
 
+#define GALVO_CHANNEL_COUNT 2
+
+static uint16_t galvo_binSeq_len_reg[MAXPCIECARDS][GALVO_CHANNEL_COUNT] = { 0 };
+
+es_status_codes Cam_WriteGalvoBinSeqLenRegister(uint32_t drvno, uint8_t channel, uint16_t value)
+{
+	if (drvno >= MAXPCIECARDS) return es_parameter_out_of_range;
+	uint8_t adaddr;
+	if (channel == 0) adaddr = dac_galvo_ch1_binSeq_len;
+	else if (channel == 1) adaddr = dac_galvo_ch2_binSeq_len;
+	else
+	{
+		ES_LOG("Invalid galvo channel number %"PRIu8"\n", channel);
+		return es_parameter_out_of_range;
+	}
+	return Cam_SendData(drvno, maddr_dac, adaddr, value);
+}
+
 /**
  * @brief Set the galvo binary sequence length.
  * 
@@ -1301,19 +1319,11 @@ es_status_codes Cam_SetGalvoRestState2(uint32_t drvno, uint8_t channel, uint16_t
  */
 es_status_codes Cam_SetGalvoBinSeqLen(uint32_t drvno, uint8_t channel, uint16_t seq_len)
 {
-	es_status_codes status = es_no_error;
-	if (channel == 0)
-	{
-		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch1_binSeq_len, seq_len);
-	}
-	else if (channel == 1)
-	{
-		status = Cam_SendData(drvno, maddr_dac, dac_galvo_ch2_binSeq_len, seq_len);
-	}
-	else
-	{
-		ES_LOG("Invalid channel number %"PRIu8" for Cam_SetGalvoSeqLen()\n", channel);
-		return es_parameter_out_of_range;
-	}
+	if (drvno >= MAXPCIECARDS || channel >= GALVO_CHANNEL_COUNT) return es_parameter_out_of_range;
+	if (seq_len > galvo_binSeq_len_bits_len) return es_parameter_out_of_range;
+	uint16_t reg = (galvo_binSeq_len_reg[drvno][channel] & ~galvo_binSeq_len_bits_len) | seq_len;
+	reg &= ~galvo_binSeq_len_bit_manual_reset;
+	es_status_codes status = Cam_WriteGalvoBinSeqLenRegister(drvno, channel, reg);
+	if (status == es_no_error) galvo_binSeq_len_reg[drvno][channel] = reg;
 	return status;
 }

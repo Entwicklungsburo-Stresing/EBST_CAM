@@ -61,3 +61,4 @@ es_status_codes Cam_SetGalvoSeqOffset(uint32_t drvno, uint8_t channel, uint16_t 
 es_status_codes Cam_SetGalvoRestState1(uint32_t drvno, uint8_t channel, uint16_t rest_state);
 es_status_codes Cam_SetGalvoRestState2(uint32_t drvno, uint8_t channel, uint16_t rest_state);
 es_status_codes Cam_SetGalvoBinSeqLen(uint32_t drvno, uint8_t channel, uint16_t seq_len);
+es_status_codes Cam_WriteGalvoBinSeqLenRegister(uint32_t drvno, uint8_t channel, uint16_t value);
