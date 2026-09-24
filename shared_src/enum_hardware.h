@@ -1338,6 +1338,30 @@ enum dac_register_addresses_t
 };
 
 /**
+ * Bits of the galvo sequence length registers @ref dac_galvo_ch1_binSeq_len and @ref dac_galvo_ch2_binSeq_len.
+ */
+enum galvo_binSeq_len_bits_t
+{
+	galvo_binSeq_len_bits_len = 0x0FFF,
+	galvo_binSeq_len_bitindex_manual_reset = 12,
+	galvo_binSeq_len_bit_manual_reset = 0x1000,
+	galvo_binSeq_len_bitindex_reset_mode = 13,
+	galvo_binSeq_len_bits_reset_mode = 0xE000,
+};
+
+/**
+ * Reset modes of the galvo sequence (bits 15..13 of the sequence length register).
+ */
+enum galvo_reset_mode_t
+{
+	galvo_reset_mode_standard = 0,
+	galvo_reset_mode_block_on = 1,
+	galvo_reset_mode_generic_cam_state = 2,
+	galvo_reset_mode_manual = 3,
+	galvo_reset_mode_max = galvo_reset_mode_manual,
+};
+
+/**
  * This enum shows the meaning of the first special pixels.
  */
 enum special_pixels_enum_t
