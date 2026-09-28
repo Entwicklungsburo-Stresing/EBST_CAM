@@ -65,6 +65,15 @@ MainWindow::MainWindow(QWidget* parent)
 		connect(&d, &QMessageBox::accepted, this, &MainWindow::on_actionImport_triggered);
 		d.exec();
 	}
+
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 0))
+	// Workaround: Checked radio buttons invisible in inactive windows with windows 11 theme. Recreating the style rebuilds the palette.
+	connect(QApplication::styleHints(), &QStyleHints::colorSchemeChanged, this, [this]() {
+		QString theme = settings.value(settingThemePath, settingThemeDefault).toString();
+		QApplication::setStyle(QStyleFactory::create(theme));
+		});
+#endif
+
 	loadSettings();
 	ui->chartView->setDefaultAxes();
 
