@@ -20,6 +20,20 @@ The hardware version number was the current hardware version of the PCIe card at
 #### Fixed
 #### Deprecated
 
+## 4.23.0 - 2026-10-07
+### API Changes
+#### Added
+* Add function DLLCam_SetGalvoBinSeqLenAndResetMode
+* Add function DLLCam_GalvoManualReset
+### Other Changes
+#### Added
+* Add delay and offset to servo window
+#### Changed
+* Update Qt to 6.12.0
+#### Fixed
+* Flip galvo sequence register order
+* Small UI fixes
+
 ## 4.22.1 - 2026-09-03
 ### API Changes
 * none
