@@ -57,6 +57,8 @@ struct dev_struct {
 	dev_t device;
 	int irq_line;
 	bool link_lost;
+	struct pci_dev *root_port;	/* port whose AER mask we changed */
+	u32 root_port_old_uemask;
 };
 
 
