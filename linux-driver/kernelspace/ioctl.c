@@ -60,6 +60,9 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	    && !access_ok((void __user *) arg, _IOC_SIZE(cmd)))
 		return -EFAULT;
 
+	if (!dev || dev->link_lost)
+		return -ENODEV;
+
 	switch (cmd) {
 	case LSCPCIE_IOCTL_NUM_BOARDS:
 		PDEBUG(D_IOCTL, "ioctl get number of boards\n");

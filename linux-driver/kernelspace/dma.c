@@ -165,6 +165,22 @@ static enum irqreturn isr(int irqn, void *dev_id)
 	int old_write_pos;
 	u8 fifo_flags;
 	struct dev_struct *dev = (struct dev_struct *) dev_id;
+	struct control_struct *c = dev ? dev->control : NULL;
+
+	if (!c || !dev->s0_reg || dev->link_lost)
+		return IRQ_NONE;
+
+	/* link down: MMIO reads return all ones */
+	if (read_s0_dword(dev, PCIE_VERS) == 0xffffffff)
+		return IRQ_NONE;
+
+	/* user space has not configured the buffer yet, or values are bogus */
+	if (c->used_dma_size == 0 || c->bytes_per_interrupt == 0 ||
+	    c->used_dma_size > dev->dma_mem_size) {
+		wake_up_interruptible(&dev->readq);
+		return IRQ_HANDLED;
+	}
+
 	dev->control->irq_count++;
 	PDEBUG(D_INTERRUPT, "got interrupt %d\n", dev->control->irq_count);
 

@@ -56,6 +56,7 @@ struct dev_struct {
 	int minor;
 	dev_t device;
 	int irq_line;
+	bool link_lost;
 };
 
 

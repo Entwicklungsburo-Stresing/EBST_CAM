@@ -104,6 +104,8 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 	PDEBUG(D_PCI, "setting PCI device as bus master\n");
 	pci_set_master(pci_dev);
 
+	pci_save_state(pci_dev);	/* needed by slot_reset after a link error */
+
 	result = dma_init(dev);
 	if (result < 0)
 		goto out_error;
@@ -136,7 +138,8 @@ void remove_lscpcie(struct pci_dev *pci_dev)
 		return;
 	}
 
-	if (dev->s0_reg && dev->control && pci_device_is_present(pci_dev))
+	if (dev->s0_reg && dev->control && !dev->link_lost &&
+	    pci_device_is_present(pci_dev))
 		abort_measurement(dev);
 	dma_end(dev);
 

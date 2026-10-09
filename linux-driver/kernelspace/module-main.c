@@ -12,11 +12,14 @@
 #include "file.h"
 #include "device.h"
 #include "debug.h"
+#include "registers.h"
+#include "dma.h"
 
 #include <linux/module.h>
 #include <linux/proc_fs.h>
 #include <linux/pci.h>
 #include <linux/version.h>
+#include <linux/delay.h>
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Bernhard Lang");
@@ -88,12 +91,126 @@ static struct pci_device_id ids[] = {
 
 MODULE_DEVICE_TABLE(pci, ids);
 
+/* bring the card back to a known state after a link or bus reset,
+   returns 0 only if the card demonstrably works again */
+static int lscpcie_revive(struct pci_dev *pdev, struct dev_struct *dev)
+{
+	u32 id = 0;
+	u16 cmd = 0;
+	int i;
+
+	if (!dev->control || !dev->s0_reg)
+		return -ENODEV;
+
+	/* wait until the endpoint answers config reads again */
+	for (i = 0; i < 100; i++) {
+		pci_read_config_dword(pdev, PCI_VENDOR_ID, &id);
+		if ((id & 0xffff) == VENDOR_ID)
+			break;
+		msleep(20);
+	}
+	if ((id & 0xffff) != VENDOR_ID) {
+		dev_err(&pdev->dev, "no answer from card after reset\n");
+		return -ENODEV;
+	}
+
+	pci_restore_state(pdev);	/* BARs, command, MSI, PCIe caps */
+	pcie_set_mps(pdev, 128);
+	pci_set_master(pdev);
+	pci_save_state(pdev);		/* restore_state clears the saved flag */
+
+	pci_read_config_word(pdev, PCI_COMMAND, &cmd);
+	if (!(cmd & PCI_COMMAND_MEMORY) || !(cmd & PCI_COMMAND_MASTER) ||
+	    !pdev->msi_enabled) {
+		dev_err(&pdev->dev, "config state not restored (cmd 0x%04x, msi %d)\n",
+			cmd, pdev->msi_enabled);
+		return -EIO;
+	}
+
+	/* registers must answer, all ones means the link is still down */
+	if (read_s0_dword(dev, PCIE_VERS) == 0xffffffff) {
+		dev_err(&pdev->dev, "registers still read as all ones\n");
+		return -EIO;
+	}
+
+	/* put the FPGA side into a known idle state and empty the ring */
+	abort_measurement(dev);
+	dev->control->write_pos = 0;
+	dev->control->read_pos = 0;
+	return 0;
+}
+
+static void lscpcie_mark_lost(struct dev_struct *dev)
+{
+	dev->link_lost = true;
+	wake_up_interruptible(&dev->readq);
+	wake_up_interruptible(&dev->writeq);
+	wake_up_interruptible(&dev->proc_readq);
+}
+
+static pci_ers_result_t lscpcie_error_detected(struct pci_dev *pdev,
+					       pci_channel_state_t state)
+{
+	struct dev_struct *dev = pci_get_drvdata(pdev);
+
+	dev_err(&pdev->dev, "PCIe error, channel state %d\n", state);
+	if (dev)
+		lscpcie_mark_lost(dev);
+	if (state == pci_channel_io_perm_failure)
+		return PCI_ERS_RESULT_DISCONNECT;
+	return PCI_ERS_RESULT_NEED_RESET;
+}
+
+static pci_ers_result_t lscpcie_slot_reset(struct pci_dev *pdev)
+{
+	struct dev_struct *dev = pci_get_drvdata(pdev);
+
+	if (!dev || lscpcie_revive(pdev, dev))
+		return PCI_ERS_RESULT_DISCONNECT;
+	return PCI_ERS_RESULT_RECOVERED;
+}
+
+static void lscpcie_resume(struct pci_dev *pdev)
+{
+	struct dev_struct *dev = pci_get_drvdata(pdev);
+
+	if (dev)
+		dev->link_lost = false;
+	dev_info(&pdev->dev, "card recovered, the running measurement was lost\n");
+}
+
+/* also used for manual resets through /sys/.../reset */
+static void lscpcie_reset_prepare(struct pci_dev *pdev)
+{
+	struct dev_struct *dev = pci_get_drvdata(pdev);
+
+	if (dev)
+		lscpcie_mark_lost(dev);
+}
+
+static void lscpcie_reset_done(struct pci_dev *pdev)
+{
+	struct dev_struct *dev = pci_get_drvdata(pdev);
+
+	if (dev && !lscpcie_revive(pdev, dev))
+		dev->link_lost = false;
+}
+
+static const struct pci_error_handlers lscpcie_err_handler = {
+	.error_detected = lscpcie_error_detected,
+	.slot_reset     = lscpcie_slot_reset,
+	.resume         = lscpcie_resume,
+	.reset_prepare  = lscpcie_reset_prepare,
+	.reset_done     = lscpcie_reset_done,
+};
+
 /* pci initialisation and removal functions */
 static struct pci_driver pci_driver = {
 	.name = NAME,
 	.id_table = ids,
 	.probe = probe_lscpcie,
-	.remove = remove_lscpcie
+	.remove = remove_lscpcie,
+	.err_handler = &lscpcie_err_handler
 };
 
 /* general infrastruture and pci registration, devices are initialised

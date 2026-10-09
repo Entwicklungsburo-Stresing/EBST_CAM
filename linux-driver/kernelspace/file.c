@@ -23,6 +23,11 @@ int lscpcie_open(struct inode *inode, struct file *filp)
 	int minor = iminor(inode);
 	struct dev_struct *dev = device_data(minor);
 
+	if (!dev || !dev->control)
+		return -ENODEV;
+	if (dev->link_lost)
+		return -EIO;
+
 	PDEBUG(D_START_STOP, "opening lscpcie file\n");
 
 	if ((filp->f_mode & FMODE_WRITE)
@@ -235,6 +240,22 @@ ssize_t read_chunk(struct dev_struct *dev, size_t len, char __user * buf)
 	return len;
 }
 
+/* lock-free, never sleeps: safe in wait_event conditions and poll */
+static int bytes_avail_nosleep(struct dev_struct *dev)
+{
+	int size = dev->control->used_dma_size;
+	int w = READ_ONCE(dev->control->write_pos);
+	int r = READ_ONCE(dev->control->read_pos);
+	int n;
+
+	if (size <= 0 || w < 0 || r < 0 || w >= size || r >= size)
+		return 0;
+	n = w - r;
+	if (n < 0)
+		n += size;
+	return n;
+}
+
 ssize_t lscpcie_read(struct file *filp, char __user * buf, size_t len,
 		     loff_t * off)
 {
@@ -255,13 +276,18 @@ ssize_t lscpcie_read(struct file *filp, char __user * buf, size_t len,
 	/* wait for bytes in ringbuffer */
 	PDEBUG(D_READOUT, "reading: waiting for %lu data bytes\n", len);
 	while (!(available_bytes = bytes_in_buffer(dev))) {
+		if (dev->link_lost) {
+			up(&dev->read_sem);
+			return -EIO;
+		}
 		if (filp->f_flags & O_NONBLOCK) {
 			up(&dev->read_sem);
 			return -EAGAIN;
 		}
 		PDEBUG(D_READOUT, "\"%s\" reading: going to sleep\n",
 		       current->comm);
-		if (wait_event_interruptible(dev->readq, bytes_in_buffer(dev))) {
+		if (wait_event_interruptible(dev->readq,
+				bytes_avail_nosleep(dev) > 0 || dev->link_lost)) {
 			up(&dev->read_sem);
 			return -ERESTARTSYS;
 		}
@@ -272,6 +298,12 @@ ssize_t lscpcie_read(struct file *filp, char __user * buf, size_t len,
 	if (available_bytes < 0) {	/* error */
 		up(&dev->read_sem);
 		return available_bytes;
+	}
+
+	/* the control page is writable from user space, don't trust it */
+	if ((u32) dev->control->read_pos >= dev->control->used_dma_size) {
+		up(&dev->read_sem);
+		return -EIO;
 	}
 
 	if (len > available_bytes)
@@ -310,24 +342,28 @@ ssize_t lscpcie_read(struct file *filp, char __user * buf, size_t len,
 	return copied_bytes;
 }
 
-unsigned int lscpcie_poll(struct file *filp, poll_table *wait) {
+unsigned int lscpcie_poll(struct file *filp, poll_table *wait)
+{
 	struct dev_struct *dev = filp->private_data;
+	struct control_struct *c = dev->control;
 	unsigned int mask = 0;
-
-	down(&dev->write_sem);
-	down(&dev->read_sem);
+	int size, avail;
 
 	poll_wait(filp, &dev->readq, wait);
 	poll_wait(filp, &dev->writeq, wait);
 
-	if (dev->control->read_pos != dev->control->write_pos)
-		mask |= POLLIN | POLLRDNORM;
-	if (((dev->control->write_pos + 1) % dev->control->used_dma_size)
-		!= dev->control->read_pos)
-		mask |= POLLOUT | POLLWRNORM;
+	if (dev->link_lost)
+		return POLLERR | POLLHUP;
 
-	up(&dev->read_sem);
-	up(&dev->write_sem);
+	size = c ? c->used_dma_size : 0;
+	if (size <= 0)
+		return 0;
+
+	avail = bytes_avail_nosleep(dev);
+	if (avail > 0)
+		mask |= POLLIN | POLLRDNORM;
+	if (avail < size - 1)
+		mask |= POLLOUT | POLLWRNORM;
 
 	return mask;
 }
