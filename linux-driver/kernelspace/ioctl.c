@@ -53,11 +53,11 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 
 	/* check read write */
 	if (_IOC_DIR(cmd) & _IOC_READ
-	    & !access_ok((void __user *) arg, _IOC_SIZE(cmd)))
+	    && !access_ok((void __user *) arg, _IOC_SIZE(cmd)))
 		return -EFAULT;
 
 	if (_IOC_DIR(cmd) & _IOC_WRITE
-	    & !access_ok((void __user *) arg, _IOC_SIZE(cmd)))
+	    && !access_ok((void __user *) arg, _IOC_SIZE(cmd)))
 		return -EFAULT;
 
 	switch (cmd) {

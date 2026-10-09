@@ -27,6 +27,7 @@ struct class *lscpcie_class = 0;
 
 /* keep track of information what has been initialised so far */
 static int module_status = 0;
+static bool chrdev_registered = false;
 
 /* module parameters */
 int num_pixels[MAX_BOARDS] = { -1, -1, -1, -1, -1 };
@@ -126,7 +127,7 @@ static int __init lscpcie_module_init(void)
 	if (major) {
                 /* major device number given at module load */
 		dev = MKDEV(major, 0);
-		result = register_chrdev_region(dev, 1, NAME);
+		result = register_chrdev_region(dev, MAX_BOARDS, NAME);
 	} else {
                 /* let the kernel pick the next available major */
 		result = alloc_chrdev_region(&dev, 0, MAX_BOARDS, NAME);
@@ -136,8 +137,9 @@ static int __init lscpcie_module_init(void)
 	if (result < 0) {
 		printk(KERN_WARNING NAME
 		       ": can't obtain major device number %d\n", major);
-		return result;
+		goto failed;
 	}
+	chrdev_registered = true;
 
 	PMDEBUG("got major %d\n", major);
 
@@ -183,9 +185,10 @@ void clean_up_lscpcie_module(void)
 			device_clean_up(&lscpcie_devices[i]);
 	proc_clean_up_module();
 
-	if (major) {
+	if (chrdev_registered) {
 		PMDEBUG("unregistering major\n");
-		unregister_chrdev_region(MKDEV(major, 0), 1);
+		unregister_chrdev_region(MKDEV(major, 0), MAX_BOARDS);
+		chrdev_registered = false;
 	}
 
 	if (lscpcie_class && !IS_ERR(lscpcie_class)) {

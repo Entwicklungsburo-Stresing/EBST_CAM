@@ -152,6 +152,7 @@ void device_clean_up(struct dev_struct *dev)
 	}
 	PDEBUG(D_MODULE, "done cleaning up device %d\n", dev->minor);
 
+	dev->init_status &= ~(DEV_CLASS_CREATED | DEV_CDEV_CREATED);
 	dev->minor = -1;
 }
 
@@ -175,5 +176,5 @@ void device_set_status(struct dev_struct *dev, u16 mask, u16 bits)
 	if (dev->control)
 		dev->control->status = (dev->control->status & ~mask) | bits;
 	else
-		dev->init_status = (dev->control->status & ~mask) | bits;
+		dev->init_status = (dev->init_status & ~mask) | bits;
 }

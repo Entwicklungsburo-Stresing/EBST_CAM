@@ -25,6 +25,13 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 	if (result < 0)
 		return result;
 
+	result = pci_request_regions(pci_dev, NAME);
+	if (result) {
+		dev_err(&pci_dev->dev, "failed to request PCI BARs\n");
+		pci_disable_device(pci_dev);
+		return result;
+	}
+
 	for (i = 0; i < MAX_BOARDS; i++)
 		if (lscpcie_devices[i].minor < 0)
 			break;
@@ -72,21 +79,19 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 		goto out_error;
 	}
 	device_set_status(dev, DEV_IRQ_ALLOCATED, DEV_IRQ_ALLOCATED);
-	dev->irq_line = pci_dev->irq;
+	dev->irq_line = pci_irq_vector(pci_dev, 0);
 	PDEBUG(D_INTERRUPT, "interrupt line is %d\n", dev->irq_line);
 
 	PDEBUG(D_PCI, "obtaining pci ressource2\n");
 	dev->physical_pci_base = pci_resource_start(pci_dev, 2);
 	dev->control->io_size = pci_resource_len(pci_dev, 2);
 	PDEBUG(D_PCI, "remapping pci ressource2\n");
-	dev->dma_reg =
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 8, 0)
-		ioremap(dev->physical_pci_base,dev->control->io_size);
-#else
-		ioremap_nocache(dev->physical_pci_base, dev->control->io_size);
-#endif
-	assert(dev->dma_reg != 0,
-	       "ioremap of address space failed", goto out_error, -1);
+	dev->dma_reg = pci_iomap(pci_dev, 2, 0);
+	if (!dev->dma_reg) {
+		printk(KERN_ERR NAME ": mapping of BAR 2 failed\n");
+		result = -ENOMEM;
+		goto out_error;
+	}
 	PDEBUG(D_PCI, "mapped address space 2 to %p\n", dev->dma_reg);
 	dev->s0_reg = (struct s0_reg_struct*) (((u8*) dev->dma_reg) + 0x80);
 	PDEBUG(D_PCI, "mapped s0 address space 2 to %p\n", dev->s0_reg);
@@ -110,40 +115,42 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 	printk(KERN_ERR NAME": registering pci device failed, error %d\n",
 	       result);
 	remove_lscpcie(pci_dev);
+	pci_set_drvdata(pci_dev, NULL);
 	return result;
 }
 
 void remove_lscpcie(struct pci_dev *pci_dev)
 {
 	struct dev_struct *dev = pci_get_drvdata(pci_dev);
-	int dev_no = dev - lscpcie_devices;
 
 	PDEBUG(D_PCI, "removing lscpcie\n");
 
-	if (dev) {
-		abort_measurement(dev);
-		dma_end(dev);
-
-		if (device_test_status(dev, DEV_IRQ_ALLOCATED)) {
-			pci_free_irq_vectors(pci_dev);
-			PDEBUG(D_INTERRUPT, "interrupt vectors freed\n");
-			device_set_status(dev, DEV_IRQ_ALLOCATED, 0);
-		}
-		PDEBUG(D_MODULE, "removing device %d\n", dev_no);
-		if (dev->dma_reg) {
-			iounmap(dev->dma_reg);
-			dev->dma_reg = 0;
-			dev->s0_reg = 0;
-		}
+	if (!dev) {
+		pci_release_regions(pci_dev);
+		pci_disable_device(pci_dev);
+		return;
 	}
 
-	device_set_status(dev, DEV_HARDWARE_PRESENT | DEV_PCI_ENABLED, 0);
+	if (dev->s0_reg && dev->control && pci_device_is_present(pci_dev))
+		abort_measurement(dev);
+	dma_end(dev);
+
+	if (device_test_status(dev, DEV_IRQ_ALLOCATED)) {
+		pci_free_irq_vectors(pci_dev);
+		PDEBUG(D_INTERRUPT, "interrupt vectors freed\n");
+		device_set_status(dev, DEV_IRQ_ALLOCATED, 0);
+	}
+	if (dev->dma_reg) {
+		pci_iounmap(pci_dev, dev->dma_reg);
+		dev->dma_reg = NULL;
+		dev->s0_reg = NULL;
+	}
+
 	PDEBUG(D_PCI, "disabling pci device\n");
 	pci_clear_master(pci_dev);
+	pci_release_regions(pci_dev);
 	pci_disable_device(pci_dev);
-	if (dev) {
-		device_set_status(dev, DEV_HARDWARE_PRESENT|DEV_PCI_ENABLED, 0);
-		device_clean_up(dev);
-	}
+	device_set_status(dev, DEV_HARDWARE_PRESENT | DEV_PCI_ENABLED, 0);
+	device_clean_up(dev);
 	PDEBUG(D_PCI, "done removing pci device\n");
 }
