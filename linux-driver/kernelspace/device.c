@@ -130,12 +130,7 @@ void device_clean_up(struct dev_struct *dev)
 {
 	PDEBUG(D_MODULE, "removing device %ld\n", dev - lscpcie_devices);
 	proc_clean_up(dev);
-	dma_finish(dev);
-	if (dev->dma_reg) {
-		iounmap(dev->dma_reg);
-		dev->dma_reg = 0;
-		dev->s0_reg = 0;
-	}
+	dma_finish(dev);	
 	if (dev->control) {
 		dev->init_debug_mode = dev->control->debug_mode;
 		dev->init_status = dev->control->status;
