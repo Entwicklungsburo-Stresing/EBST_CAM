@@ -171,7 +171,8 @@ static enum irqreturn isr(int irqn, void *dev_id)
 		return IRQ_NONE;
 
 	/* link down: MMIO reads return all ones */
-	if (read_s0_dword(dev, PCIE_VERS) == 0xffffffff)
+	fifo_flags = read_s0_byte(dev, FF_FLAGS);
+	if (fifo_flags == 0xff)
 		return IRQ_NONE;
 
 	/* user space has not configured the buffer yet, or values are bogus */
@@ -185,7 +186,6 @@ static enum irqreturn isr(int irqn, void *dev_id)
 	PDEBUG(D_INTERRUPT, "got interrupt %d\n", dev->control->irq_count);
 
 	old_write_pos = dev->control->write_pos;
-	fifo_flags = read_s0_byte(dev, FF_FLAGS);
 
 	set_bits_s0_dword(dev, IRQREG.REG32, (1 << IRQ_REG_ISR_active),
 			  (1 << IRQ_REG_ISR_active));
