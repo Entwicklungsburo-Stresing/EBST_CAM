@@ -12,36 +12,37 @@
 #include "debug.h"
 #include <linux/version.h>
 
-/* Workaround for malformed completions sent by the card.
+/* Workaround for bad completions sent by the card.
 
-   The FPGA occasionally answers a 32-bit register read (seen on PCIEFLAGS,
-   BAR2 + 0xC0) with a malformed completion while DMA is running. The root
-   port logs it as Malformed TLP, which is fatal by default, so DPC takes the
-   link down and the running measurement is lost. Logged header:
-   4a000001 03000004 00000040 00000000 (CplD, 1 DW, completer = the card).
+   The FPGA occasionally sends a bad completion for a 32-bit register read (seen on e.g. PCIEFLAGS,
+   BAR2 + 0xC0). Depending on the root port this is logged as Malformed TLP or as Unexpected Completion.
+   If the error is unmasked and fatal, AER or DPC resets the link and the running measurement
+   is lost. Logged header: 4a000001 0x000004 000000xx 00000000 (CplD, 1 DW,
+   completer = the card).
 
-   Masking Malformed TLP on the root port above the card stops the link reset,
-   which is in effect what happens on Windows. Only the root port the card is
-   attached to is touched, and the original mask is restored when the driver
-   is removed. Disable with the module parameter mask_malformed_tlp=0. */
-static bool mask_malformed_tlp = true;
-module_param(mask_malformed_tlp, bool, 0444);
-MODULE_PARM_DESC(mask_malformed_tlp,
-		 "mask Malformed TLP on the upstream root port (default 1)");
+   Masking both errors on the root port above the card prevents the link reset.
+   Only the root port the card is attached to is touched, and the original mask is restored when the driver
+   is removed. Disable with the module parameter mask_root_port_errors=0. */
 
-static void lscpcie_mask_root_port_malf(struct dev_struct *dev,
+#define LSCPCIE_RP_MASKED_ERRORS (PCI_ERR_UNC_MALF_TLP | PCI_ERR_UNC_UNX_COMP)
+static bool mask_root_port_errors = true;
+module_param(mask_root_port_errors, bool, 0444);
+MODULE_PARM_DESC(mask_root_port_errors,
+		 "mask Malformed TLP and Unexpected Completion on the upstream root port (default 1)");
+
+static void lscpcie_mask_root_port_errors(struct dev_struct *dev,
 					struct pci_dev *pci_dev)
 {
 	struct pci_dev *rp;
 	u16 aer;
 	u32 val;
 
-	if (!mask_malformed_tlp)
+	if (!mask_root_port_errors)
 		return;
 
 	rp = pcie_find_root_port(pci_dev);
 	if (!rp) {
-		dev_warn(&pci_dev->dev, "no root port found, Malformed TLP not masked\n");
+		dev_warn(&pci_dev->dev, "no root port found, errors not masked\n");
 		return;
 	}
 	aer = pci_find_ext_capability(rp, PCI_EXT_CAP_ID_ERR);
@@ -54,13 +55,13 @@ static void lscpcie_mask_root_port_malf(struct dev_struct *dev,
 	pci_read_config_dword(rp, aer + PCI_ERR_UNCOR_MASK, &val);
 	dev->root_port_old_uemask = val;
 	pci_write_config_dword(rp, aer + PCI_ERR_UNCOR_MASK,
-			       val | PCI_ERR_UNC_MALF_TLP);
+			       val | LSCPCIE_RP_MASKED_ERRORS);
 	dev->root_port = pci_dev_get(rp);
-	dev_info(&pci_dev->dev, "masked Malformed TLP on root port %s (UEMsk 0x%08x -> 0x%08x)\n",
-		 pci_name(rp), val, val | PCI_ERR_UNC_MALF_TLP);
+	dev_info(&pci_dev->dev, "masked MalfTLP/UnxCmplt on root port %s (UEMsk 0x%08x -> 0x%08x)\n",
+		 pci_name(rp), val, val | LSCPCIE_RP_MASKED_ERRORS);
 }
 
-static void lscpcie_unmask_root_port_malf(struct dev_struct *dev)
+static void lscpcie_restore_root_port_mask(struct dev_struct *dev)
 {
 	struct pci_dev *rp = dev->root_port;
 	u16 aer;
@@ -72,10 +73,11 @@ static void lscpcie_unmask_root_port_malf(struct dev_struct *dev)
 	aer = pci_find_ext_capability(rp, PCI_EXT_CAP_ID_ERR);
 	if (aer) {
 		pci_read_config_dword(rp, aer + PCI_ERR_UNCOR_STATUS, &status);
-		if (status & PCI_ERR_UNC_MALF_TLP) {
-			dev_info(&rp->dev, "lscpcie: Malformed TLP was recorded while masked\n");
+		status &= LSCPCIE_RP_MASKED_ERRORS;
+		if (status) {
+			dev_info(&rp->dev, "lscpcie: masked error recorded (UESta 0x%08x)\n", status);
 			pci_write_config_dword(rp, aer + PCI_ERR_UNCOR_STATUS,
-					       PCI_ERR_UNC_MALF_TLP);
+					       status);
 		}
 		pci_write_config_dword(rp, aer + PCI_ERR_UNCOR_MASK,
 				       dev->root_port_old_uemask);
@@ -178,7 +180,7 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 
 	pci_save_state(pci_dev);	/* needed by slot_reset after a link error */
 
-	lscpcie_mask_root_port_malf(dev, pci_dev);
+	lscpcie_mask_root_port_errors(dev, pci_dev);
 
 	result = dma_init(dev);
 	if (result < 0)
@@ -216,7 +218,7 @@ void remove_lscpcie(struct pci_dev *pci_dev)
 	    pci_device_is_present(pci_dev))
 		abort_measurement(dev);
 	dma_end(dev);
-	lscpcie_unmask_root_port_malf(dev);
+	lscpcie_restore_root_port_mask(dev);
 
 	if (device_test_status(dev, DEV_IRQ_ALLOCATED)) {
 		pci_free_irq_vectors(pci_dev);
