@@ -72,39 +72,41 @@ long lscpcie_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 			result = -EFAULT;
 		break;
 
-       case LSCPCIE_IOCTL_GET_CONF:
-	       PDEBUG(D_IOCTL, "ioctl get config register\n");
-	       result =
-		   get_user(reg_info.address,
-			    &((reg_info_t __user *) arg)->address);
-	       if (result)
-		       result = -EFAULT;
-	       result =
-		   pci_read_config_dword(dev->pci_dev, reg_info.address,
-					 &val32);
-	       if (result < 0)
-		       return result;
-	       result =
-		   put_user(val32, &((reg_info_t __user *) arg)->value);
-	       if (result)
-		       result = -EFAULT;
-	       break;
+	case LSCPCIE_IOCTL_GET_CONF:
+		PDEBUG(D_IOCTL, "ioctl get config register\n");
+		/* abort if the user buffer is not accessible */
+		if (get_user(reg_info.address,
+			     &((reg_info_t __user *) arg)->address))
+			return -EFAULT;
 
-       case LSCPCIE_IOCTL_SET_CONF:
-	       PDEBUG(D_IOCTL, "ioctl set register 8\n");
-	       result
-		   =
-		   copy_from_user(&reg_info, (reg_info_t __user *) arg,
-				  sizeof(reg_info_t));
-	       if (result)
-		       result = -EFAULT;
-	       PDEBUG(D_IOCTL, "register 0x%08x <- 0x%08x\n",
-		      reg_info.address, reg_info.value);
-	       result
-		   =
-		   pci_write_config_dword(dev->pci_dev, reg_info.address,
-					  reg_info.value);
-	       break;
+		/* read the dword at reg_info.address from the card's PCI config space */
+		result = pci_read_config_dword(dev->pci_dev, reg_info.address,
+					       &val32);
+		/* config accessors return PCIBIOS_* codes, convert to errno */
+		if (result)
+			return pcibios_err_to_errno(result);
+
+		/* return the value to the caller's reg_info_t */
+		if (put_user(val32, &((reg_info_t __user *) arg)->value))
+			return -EFAULT;
+		break;
+
+	case LSCPCIE_IOCTL_SET_CONF:
+		PDEBUG(D_IOCTL, "ioctl set config register\n");
+		/* abort if the user buffer is not accessible */
+		if (copy_from_user(&reg_info, (reg_info_t __user *) arg,
+				   sizeof(reg_info_t)))
+			return -EFAULT;
+
+		PDEBUG(D_IOCTL, "register 0x%08x <- 0x%08x\n",
+		       reg_info.address, reg_info.value);
+		/* write the dword at reg_info.address in the card's PCI config space */
+		result = pci_write_config_dword(dev->pci_dev, reg_info.address,
+						reg_info.value);
+		/* config accessors return PCIBIOS_* codes, convert to errno */
+		if (result)
+			return pcibios_err_to_errno(result);
+		break;
 	default:
 		PDEBUG(D_IOCTL, ": ioctl unknown\n");
 		return -ENOTTY;
