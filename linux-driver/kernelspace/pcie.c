@@ -79,7 +79,12 @@ int probe_lscpcie(struct pci_dev *pci_dev, const struct pci_device_id *id)
 		goto out_error;
 	}
 	device_set_status(dev, DEV_IRQ_ALLOCATED, DEV_IRQ_ALLOCATED);
-	dev->irq_line = pci_irq_vector(pci_dev, 0);
+	result = pci_irq_vector(pci_dev, 0);
+	if (result < 0) {
+		printk(KERN_ERR NAME": couldn't get irq vector\n");
+		goto out_error;
+	}
+	dev->irq_line = result;
 	PDEBUG(D_INTERRUPT, "interrupt line is %d\n", dev->irq_line);
 
 	PDEBUG(D_PCI, "obtaining pci ressource2\n");

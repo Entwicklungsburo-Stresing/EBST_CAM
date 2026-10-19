@@ -55,7 +55,7 @@ struct dev_struct {
 	atomic_t write_available;
 	int minor;
 	dev_t device;
-	u8 irq_line;
+	int irq_line;
 };
 
 
