@@ -1591,10 +1591,14 @@ es_status_codes SetDmaRegister(uint32_t drvno, uint32_t pixel)
 	if (status != es_no_error) return status;
 	int tlpmode = data & PciExpressDeviceCapabilities_MaxPayloadSizeSupported_bits;
 	if (FORCETLPS128) tlpmode = 0;
-	//delete the old values
-	data &= 0xFFFFFF1F;
-	//set maxreadrequestsize
-	data |= (0x2 << 12);
+	status = readConfig_32(drvno, &data, PCIeAddr_DeviceControl);
+	if (status != es_no_error) return status;
+	data &= 0x0000FFFF;
+	// delete old max payload size and max read request size
+	data &= ~(deviceControl_maxPayloadSize_bits | deviceControl_maxReadRequestSize_bits);
+	// set max read request size to 512 bytes
+	data |= (0x2 << deviceControl_maxReadRequestSize_bitindex);
+	
 	//default = 0x20 A.M. Dec'20 //with0x21: crash
 	uint32_t tlp_size = 0x20;
 	switch (tlpmode)
