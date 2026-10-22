@@ -15,6 +15,14 @@ The hardware version number was the current hardware version of the PCIe card at
 #### Deprecated
 ### Other Changes
 #### Added
+#### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+
+## 4.24.0 - 2026-10-22
+### Other Changes
+#### Added
 * Linux driver: recover from PCIe link errors (AER/DPC) instead of losing the card until reboot. (#228)
 * Linux driver: new module parameter "mask_root_port_errors" (default on). Masks Malformed TLP and Unexpected Completion on the root port above the card, so an occasional bad completion from the card no longer resets the link. The original mask is restored when the driver is unloaded. (#228)
 #### Changed
