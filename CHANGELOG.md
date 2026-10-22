@@ -15,9 +15,15 @@ The hardware version number was the current hardware version of the PCIe card at
 #### Deprecated
 ### Other Changes
 #### Added
+* Linux driver: recover from PCIe link errors (AER/DPC) instead of losing the card until reboot. (#228)
+* Linux driver: new module parameter "mask_root_port_errors" (default on). Masks Malformed TLP and Unexpected Completion on the root port above the card, so an occasional bad completion from the card no longer resets the link. The original mask is restored when the driver is unloaded. (#228)
 #### Changed
 #### Removed
 #### Fixed
+* Wrong value written to the PCIe Device Control register when starting a measurement.
+* Linux driver: Several probe, remove and module cleanup bugs.
+* Linux driver: IRQ number was truncated to 8 bit.
+* Linux driver: config register ioctls continued with uninitialized data when copying from user space failed.
 #### Deprecated
 
 ## 4.23.0 - 2026-10-07
