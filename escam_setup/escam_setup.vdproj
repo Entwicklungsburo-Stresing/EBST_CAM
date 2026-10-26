@@ -262,7 +262,7 @@
         {
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_05BEE66998D9452DA25E6946DF02D8BF"
             {
-            "SourcePath" = "8:C:\\Windows\\System32\\wdapi1400.dll"
+            "SourcePath" = "8:..\\ESLSCDLL\\lscpciej\\wdapi1400.dll"
             "TargetName" = "8:wdapi1400.dll"
             "Tag" = "8:"
             "Folder" = "8:_A1F1AB1AEA5C4300AACB65433A54E330"
