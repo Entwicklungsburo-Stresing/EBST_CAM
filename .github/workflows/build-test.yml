@@ -44,7 +44,7 @@ jobs:
         if: steps.cache-qt.outputs.cache-hit != 'true'
         shell: pwsh
         run: |
-          python -m pip install aqtinstall
+          python -m pip install "aqtinstall @ git+https://github.com/miurahr/aqtinstall.git@c3ab4ca8d9f7f3b624c924e6c3b2ef664a8d4188"
           python -m aqt install-qt windows desktop ${{ steps.qt.outputs.version }} win64_${{ steps.qt.outputs.arch }} -m qtcharts --outputdir C:\Qt
 
       # 5. Register the Qt version under the name used in escam.vcxproj
