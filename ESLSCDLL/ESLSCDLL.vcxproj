@@ -100,8 +100,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Labview|x64'">
     <OutDir>$(ProjectDir)$(PlatformTarget)\$(Configuration)\</OutDir>
-    <LibraryPath>$(ProjectDir)..\;C:\Program Files\National Instruments;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)..\;C:\Program Files\National Instruments;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)..\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\;$(IncludePath)</IncludePath>
     <IntDir>$(ProjectDir)$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -117,8 +117,8 @@
     <IntDir>$(ProjectDir)$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Labview|x64'">
-    <LibraryPath>$(ProjectDir)..\;C:\Program Files\National Instruments;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)..\;C:\Program Files\National Instruments;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)..\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -198,7 +198,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(ProjectDir)lscpciej\Debug\lscpciej.lib;$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;d2d1.lib;dwrite.lib;windowscodecs.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)lscpciej\Debug\lscpciej.lib;$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;d2d1.lib;dwrite.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <ResourceCompile>
@@ -287,7 +287,7 @@
     <Link>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>$(ProjectDir)lscpciej\Release\lscpciej.lib;$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;d2d1.lib;dwrite.lib;windowscodecs.lib;LabVIEW 2015\cintools\labview.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)lscpciej\Release\lscpciej.lib;$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;d2d1.lib;dwrite.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>

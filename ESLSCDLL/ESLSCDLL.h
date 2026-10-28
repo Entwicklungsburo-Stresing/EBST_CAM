@@ -20,7 +20,7 @@
 
 // COMPILE_FOR_LABVIEW is defined in the preprocessor definitions of the project ESLSCDLL when Debug-Labview or Release-Labview is chosen as configuration
 #ifdef COMPILE_FOR_LABVIEW
-#include "LabVIEW 2015/cintools/extcode.h"
+typedef uint32_t LVUserEventRef;
 #endif
 
 #ifdef COMPILE_FOR_LABVIEW
