@@ -16,6 +16,7 @@ The hardware version number was the current hardware version of the PCIe card at
 ### Other Changes
 #### Added
 #### Changed
+* LabVIEW DLL: PostLVUserEvent is now resolved at runtime. Building the LabVIEW configurations no longer requires LabVIEW cintools (extcode.h, labview.lib)
 #### Removed
 #### Fixed
 #### Deprecated
