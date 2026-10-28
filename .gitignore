@@ -43,5 +43,7 @@ linux-driver/kernelspace/lscpcie.mod
 UpgradeLog.htm
 *.user
 .*
+!.github/
+!.github/**
 modules.order
 CsimpleExample/CsimpleExample
