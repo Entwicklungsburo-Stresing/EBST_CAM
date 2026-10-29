@@ -6,21 +6,21 @@
 #include "UIAbstractionLayer.h"
 #include "ESLSCDLL.h"
 #include "Board.h"
-#ifdef COMPILE_FOR_LABVIEW
+#ifdef WIN32
 #include <windows.h>
-int64_t timebuffer_new = 0;
 int64_t timebuffer_measureStart = 0;
 int64_t timebuffer_measureDone = 0;
 int64_t timebuffer_blockStart = 0;
 int64_t timebuffer_blockDone = 0;
 int64_t timebuffer_allBlocksDone = 0;
+int64_t timebuffer_new = 0;
 const int64_t min_diff_in_ms = 50;
 
 /**
  * @brief Function pointer type for LabVIEW's PostLVUserEvent
  * @details Matches the declaration in LabVIEW 2015/cintools/extcode.h:
  * TH_REENTRANT EXTERNC MgErr _FUNCC PostLVUserEvent(LVUserEventRef ref, void* data);
- * with MgErr = int32and _FUNCC = __cdecl on Windows. The signature must match exactly, otherwise the call corrupts the stack.
+ * with MgErr = int32 and _FUNCC = __cdecl on Windows. The signature must match exactly, otherwise the call corrupts the stack.
  */
 typedef int32_t(__cdecl* PostLVUserEvent_t)(LVUserEventRef ref, void* data);
 
@@ -39,13 +39,16 @@ static int postLVUserEventResolved = 0;
  * @details PostLVUserEvent is exported by the LabVIEW development environment (LabVIEW.exe, the main module of the process)
  * or by the LabVIEW run-time engine (lvrt.dll or lvffrt.dll) used by built LabVIEW applications.
  * Previously labview.lib from LabVIEW cintools linked a stub into this DLL that looked up the function
- * at runtime. This function does the same lookup itself, so building the LabVIEW configurations does not need cintools.
- * The lookup is done once the first call. GetModuleHandleA only returns modules that are already loaded, nothing new is loeaded.
+ * at runtime. This function does the same lookup itself, so no LabVIEW files are needed to build this DLL.
+ * The lookup is only done on Windows. On Linux the notify functions do nothing.
+ * The lookup is done once on the first call. GetModuleHandleA only returns modules that are already loaded, nothing new is loaded.
  * If no LabVIEW module is found, e.g. because the DLL is not called from LabVIEW, the event is skipped
  * @param[in] ref LabVIEW user event refnum, registered with DLLRegisterLVEvents.
  */
 static void postLVUserEvent(LVUserEventRef ref)
 {
+	// 0 is not a valid refnum: no event was registered with DLLRegisterLVEvents, e.g. the DLL is not used by LabVIEW
+	if (ref == 0) return;
 	if (!postLVUserEventResolved)
 	{
 		const char* modules[] = { NULL, "lvrt.dll", "lvffrt.dll"};
@@ -64,7 +67,7 @@ static void postLVUserEvent(LVUserEventRef ref)
 
 void notifyMeasureStart()
 {
-#ifdef COMPILE_FOR_LABVIEW
+#ifdef WIN32
 	timebuffer_new = GetTimestampInMilliseconds();
 	int64_t diff_in_ms = timebuffer_new - timebuffer_measureStart;
 	if (diff_in_ms > min_diff_in_ms)
@@ -78,7 +81,7 @@ void notifyMeasureStart()
 
 void notifyMeasureDone()
 {
-#ifdef COMPILE_FOR_LABVIEW
+#ifdef WIN32
 	timebuffer_new = GetTimestampInMilliseconds();
 	int64_t diff_in_ms = timebuffer_new - timebuffer_measureDone;
 	if (diff_in_ms > min_diff_in_ms)
@@ -92,7 +95,7 @@ void notifyMeasureDone()
 
 void notifyBlockStart()
 {
-#ifdef COMPILE_FOR_LABVIEW
+#ifdef WIN32
 	timebuffer_new = GetTimestampInMilliseconds();
 	int64_t diff_in_ms = timebuffer_new - timebuffer_blockStart;
 	if (diff_in_ms > min_diff_in_ms)
@@ -106,7 +109,7 @@ void notifyBlockStart()
 
 void notifyBlockDone()
 {
-#ifdef COMPILE_FOR_LABVIEW
+#ifdef WIN32
 	timebuffer_new = GetTimestampInMilliseconds();
 	int64_t diff_in_ms = timebuffer_new - timebuffer_blockDone;
 	if (diff_in_ms > min_diff_in_ms)
@@ -120,12 +123,12 @@ void notifyBlockDone()
 
 void notifyAllBlocksDone()
 {
-#ifdef COMPILE_FOR_LABVIEW
+#ifdef WIN32
 	timebuffer_new = GetTimestampInMilliseconds();
 	int64_t diff_in_ms = timebuffer_new - timebuffer_allBlocksDone;
 	if (diff_in_ms > min_diff_in_ms)
 	{
-		postLVUserEvent(allBlocksDoneLVEvent);	
+		postLVUserEvent(allBlocksDoneLVEvent);
 		timebuffer_allBlocksDone = timebuffer_new;
 	}
 #endif

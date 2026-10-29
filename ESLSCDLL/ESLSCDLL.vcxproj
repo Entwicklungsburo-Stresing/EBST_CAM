@@ -1,20 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug-Labview|x64">
-      <Configuration>Debug-Labview</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug_minimal|x64">
       <Configuration>Debug_minimal</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release-Labview|x64">
-      <Configuration>Release-Labview</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release_minimal|x64">
@@ -44,20 +36,11 @@
     <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Labview|x64'" Label="Configuration">
-    <PlatformToolset>v145</PlatformToolset>
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_minimal|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v145</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Labview|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
@@ -70,16 +53,10 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_minimal|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release-Labview|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_minimal|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Labview|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -98,12 +75,6 @@
     <IncludePath>$(ProjectDir)..\;$(IncludePath)</IncludePath>
     <IntDir>$(ProjectDir)$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Labview|x64'">
-    <OutDir>$(ProjectDir)$(PlatformTarget)\$(Configuration)\</OutDir>
-    <LibraryPath>$(ProjectDir)..\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)..\;$(IncludePath)</IncludePath>
-    <IntDir>$(ProjectDir)$(PlatformTarget)\$(Configuration)\</IntDir>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>$(ProjectDir)..\;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)$(PlatformTarget)\$(Configuration)\</OutDir>
@@ -114,12 +85,6 @@
     <LibraryPath>$(ProjectDir)..\;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)$(PlatformTarget)\$(Configuration)\</OutDir>
     <IncludePath>$(ProjectDir)..\;$(IncludePath)</IncludePath>
-    <IntDir>$(ProjectDir)$(PlatformTarget)\$(Configuration)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Labview|x64'">
-    <LibraryPath>$(ProjectDir)..\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)..\;$(IncludePath)</IncludePath>
-    <OutDir>$(ProjectDir)$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -168,37 +133,6 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>$(ProjectDir)lscpciej\Debug\lscpciej.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AssemblyDebug>true</AssemblyDebug>
-    </Link>
-    <ResourceCompile>
-      <Culture>0x0407</Culture>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
-    </ResourceCompile>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-      <Message>
-      </Message>
-    </PostBuildEvent>
-    <BuildLog />
-    <ProjectReference />
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Labview|x64'">
-    <ClCompile>
-      <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;COMPILE_FOR_LABVIEW;_DEBUG;H5_BUILT_AS_DYNAMIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <WarningLevel>Level4</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <CallingConvention>StdCall</CallingConvention>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>$(ProjectDir)lscpciej\Debug\lscpciej.lib;$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;d2d1.lib;dwrite.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <ResourceCompile>
@@ -273,34 +207,6 @@
     <ResourceCompile>
       <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
     </ResourceCompile>
-    <BuildLog />
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-Labview|x64'">
-    <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <WarningLevel>Level4</WarningLevel>
-      <CallingConvention>StdCall</CallingConvention>
-      <PreprocessorDefinitions>WIN32;WD_DRIVER_NAME_CHANGE;_USRDLL;COMPILE_FOR_LABVIEW;H5_BUILT_AS_DYNAMIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\include</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>$(ProjectDir)lscpciej\Release\lscpciej.lib;$(ProjectDir)..\hdf\HDF_Group\HDF5\1.14.3\lib\hdf5.lib;d2d1.lib;dwrite.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
-      <SubSystem>Windows</SubSystem>
-    </Link>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>
-      </Message>
-    </PostBuildEvent>
-    <ResourceCompile />
     <BuildLog />
   </ItemDefinitionGroup>
   <ItemGroup>

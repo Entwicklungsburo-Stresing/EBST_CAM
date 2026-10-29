@@ -43,31 +43,22 @@ devenv.com EBST_CAM.sln /$buildAction Release
 # Build DLL all other configs
 MSBuild.exe .\ESLSCDLL\ESLSCDLL.vcxproj /p:Configuration=Debug /p:Platform=x64 /t:$buildAction
 MSBuild.exe .\ESLSCDLL\ESLSCDLL.vcxproj /p:Configuration=Debug_minimal /p:Platform=x64 /t:$buildAction
-MSBuild.exe .\ESLSCDLL\ESLSCDLL.vcxproj /p:Configuration=Debug-Labview /p:Platform=x64 /t:$buildAction
 MSBuild.exe .\ESLSCDLL\ESLSCDLL.vcxproj /p:Configuration=Release_minimal /p:Platform=x64 /t:$buildAction
-MSBuild.exe .\ESLSCDLL\ESLSCDLL.vcxproj /p:Configuration=Release-Labview /p:Platform=x64 /t:$buildAction
 mkdir Release\ESLSCDLL-$major.$minor.$patch\
 mkdir Release\ESLSCDLL-$major.$minor.$patch\Debug
 mkdir Release\ESLSCDLL-$major.$minor.$patch\Debug_minimal
-mkdir Release\ESLSCDLL-$major.$minor.$patch\Debug-Labview
 mkdir Release\ESLSCDLL-$major.$minor.$patch\Release
 mkdir Release\ESLSCDLL-$major.$minor.$patch\Release_minimal
-mkdir Release\ESLSCDLL-$major.$minor.$patch\Release-Labview
 cp .\ESLSCDLL\x64\Debug\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$minor.$patch\Debug\
 cp .\ESLSCDLL\x64\Debug\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$minor.$patch\Debug\
 cp .\ESLSCDLL\x64\Debug\ESLSCDLL.pdb .\Release\ESLSCDLL-$major.$minor.$patch\Debug\
 cp .\ESLSCDLL\x64\Debug_minimal\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$minor.$patch\Debug_minimal\
 cp .\ESLSCDLL\x64\Debug_minimal\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$minor.$patch\Debug_minimal\
 cp .\ESLSCDLL\x64\Debug_minimal\ESLSCDLL.pdb .\Release\ESLSCDLL-$major.$minor.$patch\Debug_minimal\
-cp .\ESLSCDLL\x64\Debug-Labview\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$minor.$patch\Debug-Labview\
-cp .\ESLSCDLL\x64\Debug-Labview\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$minor.$patch\Debug-Labview\
-cp .\ESLSCDLL\x64\Debug-Labview\ESLSCDLL.pdb .\Release\ESLSCDLL-$major.$minor.$patch\Debug-Labview\
 cp .\ESLSCDLL\x64\Release\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$minor.$patch\Release\
 cp .\ESLSCDLL\x64\Release\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$minor.$patch\Release\
 cp .\ESLSCDLL\x64\Release_minimal\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$minor.$patch\Release_minimal\
 cp .\ESLSCDLL\x64\Release_minimal\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$minor.$patch\Release_minimal\
-cp .\ESLSCDLL\x64\Release-Labview\ESLSCDLL.dll .\Release\ESLSCDLL-$major.$minor.$patch\Release-Labview\
-cp .\ESLSCDLL\x64\Release-Labview\ESLSCDLL.lib .\Release\ESLSCDLL-$major.$minor.$patch\Release-Labview\
 # zip DLL
 Compress-Archive -Path .\Release\ESLSCDLL-$major.$minor.$patch\ -DestinationPath .\Release\ESLSCDLL-$major.$minor.$patch.zip
 # zip setup

@@ -1,7 +1,7 @@
 /*****************************************************************//**
  * @file		UIAbstractionLayer.h
  * @brief		Functions for notifying the UI about the progress of the measurement.
- * @details		Previously these functions were used by Escam and LabVIEW to notify the UI about the progress of the measurement. Now this functionality is replaced by hooks.h for Escam. LabVIEW still uses these functions.
+ * @details		Previously these functions were used by Escam and LabVIEW to notify the UI about the progress of the measurement. Now this functionality is replaced by hooks.h for Escam. LabVIEW still uses these functions via user events registered with DLLRegisterLVEvents (Windows only).
  * @author		Florian Hahn
  * @date		21.01.2021
  * @copyright	Copyright Entwicklungsbuero Stresing. This software is released under the LGPL-3.0.

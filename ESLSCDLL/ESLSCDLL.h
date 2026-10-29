@@ -18,20 +18,15 @@
 #include "../shared_src/enum_settings.h"
 #include "../shared_src/default_settings.h"
 
-// COMPILE_FOR_LABVIEW is defined in the preprocessor definitions of the project ESLSCDLL when Debug-Labview or Release-Labview is chosen as configuration
-#ifdef COMPILE_FOR_LABVIEW
-// Minimal declaration from LabVIEW's extcode.h, so that the LabVIEW configurations can be built without a LabVIEW installation.
-// In extcode.h: typedef MagicCookie LVUserEventRef; with MagicCookie = uint32.
+// Minimal declaration from LabVIEW's extcode.h, so that LabVIEW user events can be used without a LabVIEW installation at build time.
+// In extcode.h: typedef MagicCookie LVUserEventRef; with MagicCookie = uInt32.
 typedef uint32_t LVUserEventRef;
-#endif
 
-#ifdef COMPILE_FOR_LABVIEW
 extern LVUserEventRef measureStartLVEvent;
 extern LVUserEventRef measureDoneLVEvent;
 extern LVUserEventRef blockStartLVEvent;
 extern LVUserEventRef blockDoneLVEvent;
 extern LVUserEventRef allBlocksDoneLVEvent;
-#endif
 
 #ifdef WIN32
 #define DllAccess __declspec( dllexport )
@@ -89,9 +84,7 @@ DllAccess int DLLGetThreadCount();
 DllAccess double DLLCalcRamUsageInMB(uint32_t nos, uint32_t nob);
 DllAccess double DLLCalcMeasureTimeInSeconds(uint32_t nos, uint32_t nob, double exposure_time_in_ms);
 DllAccess void DLLSetContinuousMeasurement(uint8_t on);
-#ifdef COMPILE_FOR_LABVIEW
 DllAccess void DLLRegisterLVEvents(LVUserEventRef* measureStartEvent, LVUserEventRef* measureDoneEvent, LVUserEventRef* blockStartEvent, LVUserEventRef* blockDoneEvent, LVUserEventRef* allBlocksDoneEvent);
-#endif
 DllAccess char* DLLConvertErrorCodeToMsg(es_status_codes status);
 DllAccess void DLLFillUserBufferWithDummyData();
 //************ Cam infos

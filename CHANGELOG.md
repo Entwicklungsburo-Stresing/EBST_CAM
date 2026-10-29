@@ -9,6 +9,7 @@ The hardware version number was the current hardware version of the PCIe card at
 ## Unreleased
 ### API Changes
 #### Added
+* DLLRegisterLVEvents is now available in all builds. LabVIEW user events are posted on Windows when the DLL is called from LabVIEW.
 #### Changed
 #### Removed
 #### Fixed
@@ -16,8 +17,9 @@ The hardware version number was the current hardware version of the PCIe card at
 ### Other Changes
 #### Added
 #### Changed
-* LabVIEW DLL: PostLVUserEvent is now resolved at runtime. Building the LabVIEW configurations no longer requires LabVIEW cintools (extcode.h, labview.lib)
+* LabVIEW user events: PostLVUserEvent is now resolved at runtime. Building the DLL no longer requires LabVIEW cintools (extcode.h, labview.lib)
 #### Removed
+* Build configurations Debug-Labview and Release-Labview. The regular Debug and Release DLL can now be used with LabVIEW. The ESLSCDLL release ZIP no longer contains the folders Debug-Labview and Release-Labview.
 #### Fixed
 #### Deprecated
 

@@ -10,13 +10,11 @@
 #include <process.h>
 #endif
 
-#ifdef COMPILE_FOR_LABVIEW
 LVUserEventRef measureStartLVEvent;
 LVUserEventRef measureDoneLVEvent;
 LVUserEventRef blockStartLVEvent;
 LVUserEventRef blockDoneLVEvent;
 LVUserEventRef allBlocksDoneLVEvent;
-#endif
 
 /**
  * @brief Internal use only.
@@ -1570,14 +1568,14 @@ DllAccess es_status_codes DLLGetBonPeriod_multipleBoards(uint32_t* bonPeriodIn10
 	return status;
 }
 
-#ifdef COMPILE_FOR_LABVIEW
 /**
- * @brief Save the user event handlers created by Labview. Call this before using the event structure.
+ * @brief Save the user event handlers created by LabVIEW. Call this before using the event structure.
  *
  * @param[in] measureStartEvent Event handler for the event measure start.
  * @param[in] measureDoneEvent Event handler for the event measure done.
  * @param[in] blockStartEvent Event handler for the event block start.
  * @param[in] blockDoneEvent Event handler for the event block done.
+ * @param[in] allBlocksDoneEvent Event handler for the event all blocks done.
  * @return none
  */
 DllAccess void DLLRegisterLVEvents(LVUserEventRef* measureStartEvent, LVUserEventRef* measureDoneEvent, LVUserEventRef* blockStartEvent, LVUserEventRef* blockDoneEvent, LVUserEventRef* allBlocksDoneEvent)
@@ -1589,7 +1587,6 @@ DllAccess void DLLRegisterLVEvents(LVUserEventRef* measureStartEvent, LVUserEven
 	allBlocksDoneLVEvent = *allBlocksDoneEvent;
 	return;
 }
-#endif
 
 /**
  * @copydoc ConvertErrorCodeToMsg
