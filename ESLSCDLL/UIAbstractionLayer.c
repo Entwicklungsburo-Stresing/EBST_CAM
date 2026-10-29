@@ -16,11 +16,34 @@ int64_t timebuffer_blockDone = 0;
 int64_t timebuffer_allBlocksDone = 0;
 const int64_t min_diff_in_ms = 50;
 
-// Signature of PostLVUserEvent is defined in LabVIEW 2015/cintools/extcode.h
+/**
+ * @brief Function pointer type for LabVIEW's PostLVUserEvent
+ * @details Matches the declaration in LabVIEW 2015/cintools/extcode.h:
+ * TH_REENTRANT EXTERNC MgErr _FUNCC PostLVUserEvent(LVUserEventRef ref, void* data);
+ * with MgErr = int32and _FUNCC = __cdecl on Windows. The signature must match exactly, otherwise the call corrupts the stack.
+ */
 typedef int32_t(__cdecl* PostLVUserEvent_t)(LVUserEventRef ref, void* data);
+
+/**
+ * @brief Address of PostLVUserEvent in the calling LabVIEW process. NULL if not found (yet).
+ */
 static PostLVUserEvent_t pPostLVUserEvent = NULL;
+
+/**
+ * @brief 1 after the lookup of PostLVUserEvent has been done, so it is only done once.
+ */
 static int postLVUserEventResolved = 0;
 
+/**
+ * @brief Post a LabVIEW user event without linking against labview.lib
+ * @details PostLVUserEvent is exported by the LabVIEW development environment (LabVIEW.exe, the main module of the process)
+ * or by the LabVIEW run-time engine (lvrt.dll or lvffrt.dll) used by built LabVIEW applications.
+ * Previously labview.lib from LabVIEW cintools linked a stub into this DLL that looked up the function
+ * at runtime. This function does the same lookup itself, so building the LabVIEW configurations does not need cintools.
+ * The lookup is done once the first call. GetModuleHandleA only returns modules that are already loaded, nothing new is loeaded.
+ * If no LabVIEW module is found, e.g. because the DLL is not called from LabVIEW, the event is skipped
+ * @param[in] ref LabVIEW user event refnum, registered with DLLRegisterLVEvents.
+ */
 static void postLVUserEvent(LVUserEventRef ref)
 {
 	if (!postLVUserEventResolved)

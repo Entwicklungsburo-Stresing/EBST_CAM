@@ -20,6 +20,8 @@
 
 // COMPILE_FOR_LABVIEW is defined in the preprocessor definitions of the project ESLSCDLL when Debug-Labview or Release-Labview is chosen as configuration
 #ifdef COMPILE_FOR_LABVIEW
+// Minimal declaration from LabVIEW's extcode.h, so that the LabVIEW configurations can be built without a LabVIEW installation.
+// In extcode.h: typedef MagicCookie LVUserEventRef; with MagicCookie = uint32.
 typedef uint32_t LVUserEventRef;
 #endif
 
