@@ -87,20 +87,23 @@ jobs:
           & $tool.FullName
           Pop-Location
 
-      # 9. Same call as in makeall.ps1
-      - name: Build solution (Release)
+      # 9. makeall.ps1 calls devenv.com and MSBuild.exe by name, so put them on the PATH
+      - name: Add devenv and MSBuild to PATH
         shell: pwsh
         run: |
-          & "$env:VS_PATH\Common7\IDE\devenv.com" EBST_CAM.sln /Rebuild Release /Out build.log
-          if ($LASTEXITCODE -ne 0) { throw "devenv failed with exit code $LASTEXITCODE" }
+          "$env:VS_PATH\Common7\IDE" >> $env:GITHUB_PATH
+          "$env:VS_PATH\MSBuild\Current\Bin" >> $env:GITHUB_PATH
 
-      # 10. Keep the results (and the log, even on failure) for download
+      # 10. Build all configurations and create the ZIPs in Release/, same as locally
+      - name: Build all configurations (makeall.ps1)
+        shell: pwsh
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true    # abort if devenv or MSBuild returns an error
+          .\makeall.ps1 -buildAction Rebuild
+
+      # 11. Keep the ZIPs for download
       - name: Upload build output
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: windows-build
-          path: |
-            build.log
-            escam/build/escam.exe
-            escam_setup/Release/
+          path: Release/*.zip
