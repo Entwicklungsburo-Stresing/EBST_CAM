@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
   push:
     branches: [ ci/release-automation ]
+    tags: [ '[0-9]+.[0-9]+.[0-9]+']
 
 # Values used in several steps.
 env:
@@ -19,7 +20,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
-      # 2. Find out which Qt version the project expects 
+      # 2. On a tag: make sure the tag matches the version in version.h, escam.pro and escam_setup.vdproj
+      - name: Check version
+        if: github.ref_type == 'tag'
+        shell: pwsh
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          function Get-Number($file, $pattern) {
+            (Select-String $file -Pattern $pattern).Matches[0].Groups[1].Value
+          }
+          $versionH = @('MAJOR', 'MINOR', 'PATCH') | ForEach-Object { Get-Number version.h "#define VERSION_$($_)_ESCAM\s+(\d+)" }
+          $escamPro = @('MAJOR', 'MINOR', 'BUILD') | ForEach-Object { Get-Number escam/escam.pro "VERSION_$($_)_QT\s*=\s*(\d+)" }
+          $vdproj   = Get-Number escam_setup/escam_setup.vdproj '"ProductVersion" = "8:([\d.]+)"'
+          $found = [ordered]@{
+            'version.h'          = $versionH -join '.'
+            'escam.pro'          = $escamPro -join '.'
+            'escam_setup.vdproj' = $vdproj
+          }
+          $found.GetEnumerator() | ForEach-Object { Write-Host "$($_.Key): $($_.Value)" }
+          $wrong = $found.GetEnumerator() | Where-Object { $_.Value -ne $tag }
+          if ($wrong) { throw "Tag $tag does not match: $(($wrong | ForEach-Object { $_.Key }) -join ', ')" }
+
+      # 3. Find out which Qt version the project expects 
       - name: Read Qt version from escam.vcxproj
         id: qt 
         shell: pwsh
@@ -31,7 +53,7 @@ jobs:
           "version=$version" >> $env:GITHUB_OUTPUT
           "arch=$arch"       >> $env:GITHUB_OUTPUT
 
-      # 3. Restore Qt from cache if this version was downloaded before
+      # 4. Restore Qt from cache if this version was downloaded before
       - name: Cache Qt 
         id: cache-qt
         uses: actions/cache@v4
@@ -39,7 +61,7 @@ jobs:
           path: C:\Qt
           key: qt-${{ steps.qt.outputs.name }}-charts
 
-      # 4. Download Qt with aqtinstall (only on cache miss)
+      # 5. Download Qt with aqtinstall (only on cache miss)
       - name: Install Qt
         if: steps.cache-qt.outputs.cache-hit != 'true'
         shell: pwsh
@@ -47,7 +69,7 @@ jobs:
           python -m pip install "aqtinstall @ git+https://github.com/miurahr/aqtinstall.git@c3ab4ca8d9f7f3b624c924e6c3b2ef664a8d4188"
           python -m aqt install-qt windows desktop ${{ steps.qt.outputs.version }} win64_${{ steps.qt.outputs.arch }} -m qtcharts --outputdir C:\Qt
 
-      # 5. Register the Qt version under the name used in escam.vcxproj
+      # 6. Register the Qt version under the name used in escam.vcxproj
       - name: Register Qt version for QtMsBuild
         shell: pwsh
         run: |
@@ -55,7 +77,7 @@ jobs:
           New-Item -Path $key -Force | Out-Null
           Set-ItemProperty -Path $key -Name InstallDir -Value "C:\Qt\${{ steps.qt.outputs.version }}\${{ steps.qt.outputs.arch }}"
 
-      # 6. Extract QtMsBuild (the MSBuild rules for /moc/uic/rcc) from the Qt VS Tools package
+      # 7. Extract QtMsBuild (the MSBuild rules for /moc/uic/rcc) from the Qt VS Tools package
       - name: Provide QtMsBuild
         shell: pwsh
         run: |
@@ -69,7 +91,7 @@ jobs:
           }
           "QtMsBuild=$qtMsBuild" >> $env:GITHUB_ENV
 
-      # 7. Find the Visual Studio installation
+      # 8. Find the Visual Studio installation
       - name: Locate Visual Studio
         shell: pwsh
         run: |
@@ -77,7 +99,7 @@ jobs:
           Write-Host "Visual Studio: $vs"
           "VS_PATH=$vs" >> $env:GITHUB_ENV
 
-      # 8. Without this, building .vdproj from the command line fails with HRESULT 8000000A
+      # 9. Without this, building .vdproj from the command line fails with HRESULT 8000000A
       - name: Disable out-of-process build for vdproj
         shell: pwsh
         run: |
@@ -87,21 +109,21 @@ jobs:
           & $tool.FullName
           Pop-Location
 
-      # 9. makeall.ps1 calls devenv.com and MSBuild.exe by name, so put them on the PATH
+      # 10. makeall.ps1 calls devenv.com and MSBuild.exe by name, so put them on the PATH
       - name: Add devenv and MSBuild to PATH
         shell: pwsh
         run: |
           "$env:VS_PATH\Common7\IDE" >> $env:GITHUB_PATH
           "$env:VS_PATH\MSBuild\Current\Bin" >> $env:GITHUB_PATH
 
-      # 10. Build all configurations and create the ZIPs in Release/, same as locally
+      # 11. Build all configurations and create the ZIPs in Release/, same as locally
       - name: Build all configurations (makeall.ps1)
         shell: pwsh
         run: |
           $PSNativeCommandUseErrorActionPreference = $true    # abort if devenv or MSBuild returns an error
           .\makeall.ps1 -buildAction Rebuild
 
-      # 11. Keep the ZIPs for download
+      # 12. Keep the ZIPs for download
       - name: Upload build output
         uses: actions/upload-artifact@v4
         with:
