@@ -1,4 +1,4 @@
-name: Build test (Windows)
+name: Build
 
 # When does the workflow run?
 on:
@@ -129,3 +129,35 @@ jobs:
         with:
           name: windows-build
           path: Release/*.zip
+
+  build-linux:
+    runs-on: ubuntu-24.04
+
+    steps:
+      # 1. Clone the repository into the VM
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Install compiler, Qt 6 and HDF5 from the Ubuntu repositories
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ make qmake6 qt6-base-dev qt6-charts-dev libhdf5-dev
+
+      # 3. The Makefile calls "qmake", Ubuntu only provides "qmake6"
+      - name: Provide qmake
+        run: sudo ln -sf /usr/lib/qt6/bin/qmake6 /usr/local/bin/qmake
+
+      # 4. Build ESLSCDLL, CsimpleExample, escam and the .deb package
+      - name: Build (make)
+        run: make
+
+      # 5. Keep the .deb and the shared library for download
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: |
+            escam_deb/*.deb
+            ESLSCDLL/libESLSCDLL.so
+          if-no-files-found: error
