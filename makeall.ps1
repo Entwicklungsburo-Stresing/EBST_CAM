@@ -65,3 +65,17 @@ Compress-Archive -Path .\Release\ESLSCDLL-$major.$minor.$patch\ -DestinationPath
 mkdir Release\Escam-setup-$major.$minor.$patch\
 cp -r .\escam_setup\Release\* .\Release\Escam-setup-$major.$minor.$patch\
 Compress-Archive -Path .\Release\Escam-setup-$major.$minor.$patch\ -DestinationPath .\Release\Escam-setup-$major.$minor.$patch.zip
+
+# zip portable version: extract the MSI with an administrative install (no installation on this computer)
+$msi = Get-ChildItem .\escam_setup\Release\*.msi | Select-Object -First 1
+if (-not $msi) { throw "No MSI found in escam_setup\Release. Was escam_setup built? (Installer Projects extension installed?)" }
+$adminDir = Join-Path $env:TEMP "escam-admin-$major.$minor.$patch"
+if (Test-Path $adminDir) { Remove-Item $adminDir -Recurse -Force }
+$process = Start-Process msiexec.exe -ArgumentList '/a', "`"$($msi.FullName)`"", '/qn', "TARGETDIR=`"$adminDir`"" -Wait -PassThru
+if ($process.ExitCode -ne 0) { throw "msiexec /a failed with exit code $($process.ExitCode)" }
+$escamExe = Get-ChildItem $adminDir -Recurse -Filter escam.exe | Select-Object -First 1
+if (-not $escamExe) { throw "escam.exe not found in $adminDir" }
+Copy-Item $escamExe.DirectoryName .\Release\Escam-portable-$major.$minor.$patch -Recurse
+Remove-Item .\Release\Escam-portable-$major.$minor.$patch\*.msi -ErrorAction SilentlyContinue
+Compress-Archive -Path .\Release\Escam-portable-$major.$minor.$patch\ -DestinationPath .\Release\Escam-portable-$major.$minor.$patch.zip
+Remove-Item $adminDir -Recurse -Force
