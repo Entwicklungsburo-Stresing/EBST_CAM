@@ -161,3 +161,49 @@ jobs:
             escam_deb/*.deb
             ESLSCDLL/libESLSCDLL.so
           if-no-files-found: error
+
+  release:
+    # Only for version tags, and only if both builds succeeded
+    if: github.ref_type == 'tag'
+    needs: [ build-windows, build-linux ]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+
+    steps:
+      # 1. Clone the repository (for CHANGELOG.md)
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Download the artifacts of both build jobs into artifacts/<artifact name>/
+      - name: Download build output
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      # 3. Take the section of this version from CHANGELOG.md as release text
+      - name: Extract release notes from CHANGELOG.md
+        run: |
+          awk -v v="$GITHUB_REF_NAME" '
+            $1 == "##" && $2 == v { found = 1; next }
+            found && /^## / { exit }
+            found { print }
+          ' CHANGELOG.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "No section '## [$GITHUB_REF_NAME]' found in CHANGELOG.md"
+            exit 1
+          fi
+          cat release-notes.md
+
+      # 4. Create the release as draft and attach all files
+      - name: Create GitHub release (draft)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --draft \
+            --verify-tag \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file release-notes.md \
+            artifacts/windows-build/*.zip \
+            artifacts/linux-build/escam_deb/*.deb
