@@ -1,0 +1,109 @@
+name: Release
+
+# Runs for version tags like 4.25.0
+on:
+  push:
+    tags: [ '[0-9]+.[0-9]+.[0-9]+' ]
+
+jobs:
+  # Make sure the tag matches the version in version.h, escam.pro and escam_setup.vdproj.
+  # Runs first, so a wrong tag fails within seconds instead of after the build.
+  check-version:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check version
+        shell: pwsh
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          function Get-Number($file, $pattern) {
+            (Select-String $file -Pattern $pattern).Matches[0].Groups[1].Value
+          }
+          $versionH = @('MAJOR', 'MINOR', 'PATCH') | ForEach-Object { Get-Number version.h "#define VERSION_$($_)_ESCAM\s+(\d+)" }
+          $escamPro = @('MAJOR', 'MINOR', 'BUILD') | ForEach-Object { Get-Number escam/escam.pro "VERSION_$($_)_QT\s*=\s*(\d+)" }
+          $vdproj   = Get-Number escam_setup/escam_setup.vdproj '"ProductVersion" = "8:([\d.]+)"'
+          $found = [ordered]@{
+            'version.h'          = $versionH -join '.'
+            'escam.pro'          = $escamPro -join '.'
+            'escam_setup.vdproj' = $vdproj
+          }
+          $found.GetEnumerator() | ForEach-Object { Write-Host "$($_.Key): $($_.Value)" }
+          $wrong = $found.GetEnumerator() | Where-Object { $_.Value -ne $tag }
+          if ($wrong) { throw "Tag $tag does not match: $(($wrong | ForEach-Object { $_.Key }) -join ', ')" }
+
+  # Build Windows and Linux with build.yml
+  build:
+    needs: check-version
+    uses: ./.github/workflows/build.yml
+
+  # Create the GitHub release from the build output
+  release:
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write    # needed to create a release
+
+    steps:
+      # 1. Clone the repository (for CHANGELOG.md)
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Download the artifacts of both build jobs into artifacts/<artifact name>/
+      - name: Download build output
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      # 3. Build the release text: compare link + section of this version from CHANGELOG.md
+      - name: Extract release notes from CHANGELOG.md
+        run: |
+          # previous version = next version heading below this one in CHANGELOG.md
+          prev=$(awk -v v="$GITHUB_REF_NAME" '
+            $1 == "##" && $2 == v { found = 1; next }
+            found && $1 == "##" && $2 ~ /^[0-9]+\.[0-9]+\.[0-9]+$/ { print $2; exit }
+          ' CHANGELOG.md)
+
+          # section of this version, without empty ### / #### headings
+          awk -v v="$GITHUB_REF_NAME" '
+            $1 == "##" && $2 == v { found = 1; print; next }
+            found && /^## / { exit }
+            !found { next }
+            /^### /  { h3 = $0; h4 = ""; next }
+            /^#### / { h4 = $0; next }
+            /^[[:space:]]*$/ { next }
+            {
+              if (h3 != "") { print h3; h3 = "" }
+              if (h4 != "") { print h4; h4 = "" }
+              print
+            }
+          ' CHANGELOG.md > section.md
+
+          if [ ! -s section.md ]; then
+            echo "No section '## $GITHUB_REF_NAME' found in CHANGELOG.md"
+            exit 1
+          fi
+
+          {
+            if [ -n "$prev" ]; then
+              echo "**Full Changelog**: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/compare/$prev...$GITHUB_REF_NAME"
+              echo
+            fi
+            cat section.md
+          } > release-notes.md
+          cat release-notes.md
+
+      # 4. Create the release as draft and attach all files
+      - name: Create GitHub release (draft)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --draft \
+            --verify-tag \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file release-notes.md \
+            artifacts/windows-build/*.zip \
+            artifacts/linux-build/escam_deb/*.deb
