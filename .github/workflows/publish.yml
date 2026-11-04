@@ -1,0 +1,41 @@
+name: Publish
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  nextcloud:
+    runs-on: ubuntu-24.04
+    env:
+      TAG: ${{ github.event.release.tag_name }}
+
+    steps:
+      # 1. Download all files attached to the release and the "Source code (zip)"
+      - name: Download release files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --dir files
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --archive zip --dir files
+          ls -l files
+
+      # 2. Create the version folder and upload all files via WebDAV
+      - name: Upload to Nextcloud
+        env:
+          NC_USER: ${{ secrets.NEXTCLOUD_USER }}
+          NC_PASSWORD: ${{ secrets.NEXTCLOUD_PASSWORD }}
+        run: |
+          folder="https://nextcloud.stresing.de/remote.php/dav/files/$NC_USER/Shared/Release/$TAG"
+
+          # MKCOL creates the folder: 201 = created, 405 = already exists (e.g. on re-run)
+          code=$(curl -s -o /dev/null -w '%{http_code}' --retry 3 -u "$NC_USER:$NC_PASSWORD" -X MKCOL "$folder")
+          if [ "$code" != 201 ] && [ "$code" != 405 ]; then
+            echo "Could not create $TAG folder: HTTP $code"
+            exit 1
+          fi
+
+          for file in files/*; do
+            echo "Uploading $(basename "$file")"
+            curl -fsS --retry 3 -u "$NC_USER:$NC_PASSWORD" -T "$file" "$folder/$(basename "$file")"
+          done
