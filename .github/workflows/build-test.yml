@@ -184,15 +184,39 @@ jobs:
       # 3. Take the section of this version from CHANGELOG.md as release text
       - name: Extract release notes from CHANGELOG.md
         run: |
-          awk -v v="$GITHUB_REF_NAME" '
+          # previous version = next version heading below this one in CHANGELOG.md
+          prev=$(awk -v v="$GITHUB_REF_NAME" '
             $1 == "##" && $2 == v { found = 1; next }
+            found && $1 == "##" && $2 ~ /^[0-9]+\.[0-9]+\.[0-9]+$/ { print $2; exit }
+          ' CHANGELOG.md)
+
+          # section of this version, without empty ### / #### headings
+          awk -v v="$GITHUB_REF_NAME" '
+            $1 == "##" && $2 == v { found = 1; print; next }
             found && /^## / { exit }
-            found { print }
-          ' CHANGELOG.md > release-notes.md
-          if [ ! -s release-notes.md ]; then
-            echo "No section '## [$GITHUB_REF_NAME]' found in CHANGELOG.md"
+            !found { next }
+            /^### /  { h3 = $0; h4 = ""; next }
+            /^#### / { h4 = $0; next }
+            /^[[:space:]]*$/ { next }
+            {
+              if (h3 != "") { print h3; h3 = "" }
+              if (h4 != "") { print h4; h4 = "" }
+              print
+            }
+          ' CHANGELOG.md > section.md
+
+          if [ ! -s section.md ]; then
+            echo "No section '## $GITHUB_REF_NAME' found in CHANGELOG.md"
             exit 1
           fi
+
+          {
+            if [ -n "$prev" ]; then
+              echo "**Full Changelog**: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/compare/$prev...$GITHUB_REF_NAME"
+              echo
+            fi
+            cat section.md
+          } > release-notes.md
           cat release-notes.md
 
       # 4. Create the release as draft and attach all files
