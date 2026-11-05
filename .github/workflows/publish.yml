@@ -124,38 +124,24 @@ jobs:
           fi
           gh run download "$run_id" --repo "$GITHUB_REPOSITORY" --name linux-build --dir so
 
-      # 5. Replace DLL and .so, set the version, turn "Unreleased" into the new version section
+      # 5. Replace DLL and .so, add the update to "Unreleased" in CHANGELOG.md
       - name: Update stresing_python
         working-directory: stresing_python
         run: |
           cp "../dll/ESLSCDLL-$TAG/Release/ESLSCDLL.dll" stresing/ESLSCDLL.dll
           cp ../so/ESLSCDLL/libESLSCDLL.so stresing/libESLSCDLL.so
-          sed -i "s/^version = \".*\"/version = \"$TAG\"/" pyproject.toml
 
-          awk -v v="$TAG" -v d="$(date +%F)" '
-            function flush() {
-              if (n > 0) printf "%s\n%s", h, buf
-              h = ""; buf = ""; n = 0
-            }
-            /^## Unreleased/ {
-              print "## Unreleased"
-              print "### Added"; print "### Changed"; print "### Removed"; print "### Fixed"; print "### Deprecated"
-              print ""; print ""
-              print "## " v " - " d
-              insec = 1; next
-            }
-            insec && /^## / { flush(); print ""; insec = 0 }
-            insec && /^### / {
-              flush(); h = $0
-              if (h == "### Changed") { buf = "* Update ESLSCDLL to " v "\n"; n = 1 }
-              next
-            }
-            insec && /^[[:space:]]*$/ { next }
-            insec { buf = buf $0 "\n"; n++; next }
+          awk -v v="$TAG" '
             { print }
-            END { if (insec) flush() }
+            /^## Unreleased/ { unreleased = 1; next }
+            unreleased && /^## / { unreleased = 0 }
+            unreleased && $0 == "### Changed" { print "* Update ESLSCDLL to " v; unreleased = 0 }
           ' CHANGELOG.md > CHANGELOG.new
           mv CHANGELOG.new CHANGELOG.md
+          if ! grep -q "^\* Update ESLSCDLL to $TAG$" CHANGELOG.md; then
+            echo "No \"### Changed\" under \"## Unreleased\" in CHANGELOG.md"
+            exit 1
+          fi
           git diff --stat
 
          # 6. PR text: diff of the public headers since the previous version
@@ -168,6 +154,7 @@ jobs:
           diff=$(git -C ebst_cam diff "$prev" "$TAG" -- ESLSCDLL/ESLSCDLL.h 'shared_src/*.h')
           {
             echo "Update ESLSCDLL to [$TAG]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$TAG)."
+            echo "After merging, release with Actions -> Release -> Run workflow."
             echo
             echo "Before merging, check if the interface changes below affect stresing_python (functions, structs, enums)."
             echo
@@ -201,12 +188,17 @@ jobs:
           git config user.name "$APP_SLUG[bot]"
           git config user.email "$user_id+$APP_SLUG[bot]@users.noreply.github.com"
 
-          git switch -c "release/$TAG"
-          git commit -am "chore: release version $TAG"
-          git push origin "release/$TAG"
+          git switch -c "eslscdll/$TAG"
+          git commit -am "chore: update ESLSCDLL to $TAG"
+          git push origin "eslscdll/$TAG"
 
+<<<<<<< Updated upstream
           gh pr create --repo "$TARGET" --base master --head "release/$TAG" \
             --title "chore: release version $TAG" --body-file ../pr-body.md
+=======
+          gh pr create --repo "$TARGET" --base master --head "eslscdll/$TAG" \
+            --title "chore: update ESLSCDLL to $TAG" --body-file ../pr-body.md
+>>>>>>> Stashed changes
 
   # Open a pull request in lv64 with the new ESLSCDLL build
   lv64:
@@ -302,10 +294,9 @@ jobs:
           git config user.name "$APP_SLUG[bot]"
           git config user.email "$user_id+$APP_SLUG[bot]@users.noreply.github.com"
 
-          git switch -c "release/$TAG"
-          git commit -am "chore: release version $TAG"
-          git push origin "release/$TAG"
-
+          git switch -c "eslscdll/$TAG"
+          git commit -am "chore: update ESLSCDLL to $TAG"
+          git push origin "eslscdll/$TAG"
           
-          gh pr create --repo "$TARGET" --base master --head "release/$TAG" \
-            --title "chore: release version $TAG" --body-file ../pr-body.md
+          gh pr create --repo "$TARGET" --base master --head "eslscdll/$TAG" \
+            --title "chore: update ESLSCDLL to $TAG" --body-file ../pr-body.md
