@@ -191,20 +191,22 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
         run: |
+          # never touch an existing release branch, it may already contain manual changes
+          if git ls-remote --exit-code --heads origin "release/$TAG" > /dev/null; then
+            echo "Branch release/$TAG already exists, leaving it untouched"
+            exit 0
+          fi
+
           user_id=$(gh api "/users/$APP_SLUG[bot]" --jq .id)
           git config user.name "$APP_SLUG[bot]"
           git config user.email "$user_id+$APP_SLUG[bot]@users.noreply.github.com"
 
           git switch -c "release/$TAG"
           git commit -am "chore: release version $TAG"
-          git push --force origin "release/$TAG"
+          git push origin "release/$TAG"
 
-          if gh pr view "release/$TAG" --repo "$TARGET" > /dev/null 2>&1; then
-            echo "Pull request for release/$TAG already exists"
-          else
-            gh pr create --repo "$TARGET" --base master --head "release/$TAG" \
-              --title "chore: release version $TAG" --body-file ../pr-body.md
-          fi
+          gh pr create --repo "$TARGET" --base master --head "release/$TAG" \
+            --title "chore: release version $TAG" --body-file ../pr-body.md
 
   # Open a pull request in lv64 with the new ESLSCDLL build
   lv64:
@@ -290,17 +292,20 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
         run: |
+          # never touch an existing release branch, it may already contain manual changes
+          if git ls-remote --exit-code --heads origin "release/$TAG" > /dev/null; then
+            echo "Branch release/$TAG already exists, leaving it untouched"
+            exit 0
+          fi
+
           user_id=$(gh api "/users/$APP_SLUG[bot]" --jq .id)
           git config user.name "$APP_SLUG[bot]"
           git config user.email "$user_id+$APP_SLUG[bot]@users.noreply.github.com"
 
           git switch -c "release/$TAG"
           git commit -am "chore: release version $TAG"
-          git push --force origin "release/$TAG"
+          git push origin "release/$TAG"
 
-          if gh pr view "release/$TAG" --repo "$TARGET" > /dev/null 2>&1; then
-            echo "Pull request for release/$TAG already exists"
-          else
-            gh pr create --repo "$TARGET" --base master --head "release/$TAG" \
-              --title "chore: release version $TAG" --body-file ../pr-body.md
-          fi
+          
+          gh pr create --repo "$TARGET" --base master --head "release/$TAG" \
+            --title "chore: release version $TAG" --body-file ../pr-body.md
