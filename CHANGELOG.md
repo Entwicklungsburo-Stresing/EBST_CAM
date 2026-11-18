@@ -18,6 +18,7 @@ The hardware version number was the current hardware version of the PCIe card at
 #### Added
 #### Changed
 * LabVIEW user events: PostLVUserEvent is now resolved at runtime. Building the DLL no longer requires LabVIEW cintools (extcode.h, labview.lib)
+* Release files are built automatically with GitHub Actions. The Linux package (.deb) is built on Ubuntu 24.04 and requires Ubuntu 24.04 or newer.
 #### Removed
 * Build configurations Debug-Labview and Release-Labview. The regular Debug and Release DLL can now be used with LabVIEW. The ESLSCDLL release ZIP no longer contains the folders Debug-Labview and Release-Labview.
 #### Fixed
