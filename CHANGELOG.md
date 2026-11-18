@@ -9,7 +9,6 @@ The hardware version number was the current hardware version of the PCIe card at
 ## Unreleased
 ### API Changes
 #### Added
-* DLLRegisterLVEvents is now available in all builds. LabVIEW user events are posted on Windows when the DLL is called from LabVIEW.
 #### Changed
 #### Removed
 #### Fixed
@@ -17,12 +16,20 @@ The hardware version number was the current hardware version of the PCIe card at
 ### Other Changes
 #### Added
 #### Changed
+#### Removed
+#### Fixed
+#### Deprecated
+
+## 4.25.0 - 2026-11-18
+### API Changes
+#### Added
+* DLLRegisterLVEvents is now available in all builds. LabVIEW user events are posted on Windows when the DLL is called from LabVIEW.
+### Other Changes
+#### Changed
 * LabVIEW user events: PostLVUserEvent is now resolved at runtime. Building the DLL no longer requires LabVIEW cintools (extcode.h, labview.lib)
 * Release files are built automatically with GitHub Actions. The Linux package (.deb) is built on Ubuntu 24.04 and requires Ubuntu 24.04 or newer.
 #### Removed
 * Build configurations Debug-Labview and Release-Labview. The regular Debug and Release DLL can now be used with LabVIEW. The ESLSCDLL release ZIP no longer contains the folders Debug-Labview and Release-Labview.
-#### Fixed
-#### Deprecated
 
 ## 4.24.0 - 2026-10-22
 ### Other Changes
