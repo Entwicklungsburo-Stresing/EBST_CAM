@@ -4,7 +4,10 @@ name: Build
 on:
   workflow_dispatch:
   push:
-    branches: [ ci/release-automation ]
+    branches: [ master ]
+    paths-ignore:
+      - '**.md'
+      - 'doc/**'
   workflow_call:
 
 jobs:
